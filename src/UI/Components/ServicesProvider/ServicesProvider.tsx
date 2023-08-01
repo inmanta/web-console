@@ -38,6 +38,6 @@ export const ServicesProvider: React.FunctionComponent<Props> = ({
         <Dependant services={services} mainServiceName={serviceName} />
       ),
     },
-    data
+    data,
   );
 };

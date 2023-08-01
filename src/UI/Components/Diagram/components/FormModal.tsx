@@ -55,7 +55,7 @@ const FormModal = ({
   const onEntityChosen = (
     _event,
     value: string | SelectOptionObject,
-    isPlaceholder
+    isPlaceholder,
   ) => {
     if (isPlaceholder) {
       setSelected(undefined);
@@ -64,7 +64,7 @@ const FormModal = ({
       const chosenModel = services.find((service) => service.name === value);
       if (chosenModel) {
         const selectedFields = fieldCreator.attributesToFields(
-          chosenModel.attributes
+          chosenModel.attributes,
         );
         setFields(selectedFields);
         setFormState(createFormState(selectedFields));
@@ -154,7 +154,7 @@ const FormModal = ({
                   key={service.service_identity + service.name}
                   value={service.name}
                 />
-              ))
+              )),
             )}
           </Select>
         </FlexItem>

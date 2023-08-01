@@ -10,20 +10,20 @@ export class ServiceConfigFinalizer
   implements ConfigFinalizer<"GetServiceConfig">
 {
   constructor(
-    private readonly serviceStateHelper: StateHelperWithEnv<"GetService">
+    private readonly serviceStateHelper: StateHelperWithEnv<"GetService">,
   ) {}
 
   finalize(
     configData: RemoteData.Type<string, Config>,
     serviceName: string,
-    environment: string
+    environment: string,
   ): RemoteData.Type<string, Config> {
     const serviceData = this.serviceStateHelper.useGetHooked(
       {
         kind: "GetService",
         name: serviceName,
       },
-      environment
+      environment,
     );
     if (!RemoteData.isSuccess(configData)) return configData;
     if (!RemoteData.isSuccess(serviceData)) return serviceData;

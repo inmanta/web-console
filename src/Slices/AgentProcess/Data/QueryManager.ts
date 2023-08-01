@@ -6,7 +6,7 @@ import { StateHelper } from "./StateHelper";
 
 export function GetAgentProcessQueryManager(
   store: Store,
-  apiHelper: ApiHelper
+  apiHelper: ApiHelper,
 ) {
   return QueryManager.OneTimeWithEnv<"GetAgentProcess">(
     apiHelper,
@@ -14,6 +14,6 @@ export function GetAgentProcessQueryManager(
     ({ id }) => [id],
     "GetAgentProcess",
     ({ id }) => `/api/v2/agents/process/${id}?report=True`,
-    identity
+    identity,
   );
 }

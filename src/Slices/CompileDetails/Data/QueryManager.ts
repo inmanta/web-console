@@ -7,7 +7,7 @@ import { StateHelper } from "./StateHelper";
 export function CompileDetailsQueryManager(
   store: Store,
   apiHelper: ApiHelper,
-  scheduler: Scheduler
+  scheduler: Scheduler,
 ) {
   return QueryManager.ContinuousWithEnv<"GetCompileDetails">(
     apiHelper,
@@ -17,6 +17,6 @@ export function CompileDetailsQueryManager(
     ({ id }) => [id],
     "GetCompileDetails",
     ({ id }) => `/api/v2/compilereport/${id}`,
-    identity
+    identity,
   );
 }

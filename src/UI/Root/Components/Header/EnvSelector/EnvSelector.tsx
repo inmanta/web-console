@@ -58,7 +58,7 @@ export const EnvSelector: React.FC<Props> = ({
           {words("dashboard.logout")}
         </StyledItem>
       )}
-    </div>
+    </div>,
   );
 
   return (

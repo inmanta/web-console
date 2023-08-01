@@ -22,11 +22,11 @@ const setup = () => {
   const scheduler = new StaticScheduler();
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolver(store, apiHelper, scheduler, scheduler)
+    new QueryManagerResolver(store, apiHelper, scheduler, scheduler),
   );
 
   const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolver(store, apiHelper, new KeycloakAuthHelper())
+    new CommandManagerResolver(store, apiHelper, new KeycloakAuthHelper()),
   );
 
   const request = (query: string) => ({
@@ -58,7 +58,7 @@ test("Given Notification Center page Then fetches notifications", async () => {
     await apiHelper.resolve(Either.right(Mock.response));
   });
   expect(
-    screen.getAllByRole("listitem", { name: "NotificationItem" })
+    screen.getAllByRole("listitem", { name: "NotificationItem" }),
   ).toHaveLength(3);
 });
 
@@ -82,12 +82,12 @@ test("Given Notification Center page When user filters on severity Then executes
 
   await act(async () => {
     await apiHelper.resolve(
-      Either.right({ ...Mock.response, data: [Mock.read, Mock.unread] })
+      Either.right({ ...Mock.response, data: [Mock.read, Mock.unread] }),
     );
   });
 
   expect(
-    screen.getAllByRole("listitem", { name: "NotificationItem" })
+    screen.getAllByRole("listitem", { name: "NotificationItem" }),
   ).toHaveLength(2);
 
   await act(async () => {
@@ -120,14 +120,14 @@ test("Given Notification Center page When user filters on read Then executes cor
 
   await act(async () => {
     await apiHelper.resolve(
-      Either.right({ ...Mock.response, data: [Mock.read, Mock.unread] })
+      Either.right({ ...Mock.response, data: [Mock.read, Mock.unread] }),
     );
   });
 
   expect(
     screen.getAllByRole("listitem", {
       name: "NotificationItem",
-    })
+    }),
   ).toHaveLength(2);
 
   await act(async () => {
@@ -149,7 +149,7 @@ test("Given Notification Center page When user filters on message Then executes 
   await act(async () => {
     await userEvent.type(
       screen.getByRole("searchbox", { name: "MessageFilter" }),
-      "abc{enter}"
+      "abc{enter}",
     );
   });
 
@@ -159,14 +159,14 @@ test("Given Notification Center page When user filters on message Then executes 
 
   await act(async () => {
     await apiHelper.resolve(
-      Either.right({ ...Mock.response, data: [Mock.read, Mock.unread] })
+      Either.right({ ...Mock.response, data: [Mock.read, Mock.unread] }),
     );
   });
 
   expect(
     screen.getAllByRole("listitem", {
       name: "NotificationItem",
-    })
+    }),
   ).toHaveLength(2);
 
   await act(async () => {
@@ -185,7 +185,7 @@ test("Given Notification Center page When user filters on title Then executes co
   await act(async () => {
     await userEvent.type(
       screen.getByRole("searchbox", { name: "TitleFilter" }),
-      "abc{enter}"
+      "abc{enter}",
     );
   });
 
@@ -195,14 +195,14 @@ test("Given Notification Center page When user filters on title Then executes co
 
   await act(async () => {
     await apiHelper.resolve(
-      Either.right({ ...Mock.response, data: [Mock.read, Mock.unread] })
+      Either.right({ ...Mock.response, data: [Mock.read, Mock.unread] }),
     );
   });
 
   expect(
     screen.getAllByRole("listitem", {
       name: "NotificationItem",
-    })
+    }),
   ).toHaveLength(2);
   await act(async () => {
     await userEvent.click(screen.getByRole("button", { name: "close abc" }));
@@ -231,13 +231,13 @@ test("Given Notification Center page When user clicks next page Then fetches nex
 
   await act(async () => {
     await apiHelper.resolve(
-      Either.right({ ...Mock.response, data: [Mock.read, Mock.unread] })
+      Either.right({ ...Mock.response, data: [Mock.read, Mock.unread] }),
     );
   });
 
   expect(
     screen.getAllByRole("listitem", {
       name: "NotificationItem",
-    })
+    }),
   ).toHaveLength(2);
 });

@@ -33,6 +33,6 @@ export const RemoteDataView = <T,>({
       ),
       success: SuccessView,
     },
-    data
+    data,
   );
 };

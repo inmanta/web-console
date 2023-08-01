@@ -17,7 +17,7 @@ export class CompileStageReportTablePresenter
 
   constructor(
     private readonly datePresenter: DatePresenter,
-    private readonly compileStarted?: string | null
+    private readonly compileStarted?: string | null,
   ) {}
 
   createRows(sourceData: CompileStageReport[]): CompileStageReportRow[] {

@@ -11,10 +11,10 @@ test("SummaryChart renders with multiple instances", () => {
     <SummaryChart
       by_label={Service.withInstanceSummary.instance_summary.by_label}
       total={Service.withInstanceSummary.instance_summary.total.toString()}
-    />
+    />,
   );
   expect(
-    screen.getByRole("img", { name: words("catalog.summary.title") })
+    screen.getByRole("img", { name: words("catalog.summary.title") }),
   ).toBeVisible();
 });
 
@@ -23,9 +23,9 @@ test("SummaryChart renders with no instances", () => {
     <SummaryChart
       by_label={{ danger: 0, no_label: 0, warning: 0, info: 0, success: 0 }}
       total="0"
-    />
+    />,
   );
   expect(
-    screen.getByRole("img", { name: words("catalog.summary.title") })
+    screen.getByRole("img", { name: words("catalog.summary.title") }),
   ).toBeVisible();
 });

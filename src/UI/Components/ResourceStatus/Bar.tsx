@@ -38,7 +38,7 @@ export const ResourceStatusBar: React.FC<Props> = ({
 };
 
 function getResourcesInDoneState(
-  by_state: Record<string, ParsedNumber>
+  by_state: Record<string, ParsedNumber>,
 ): number {
   return Object.entries(by_state)
     .filter(([key]) => !Resource.TRANSIENT_STATES.includes(key))
@@ -48,7 +48,7 @@ function getResourcesInDoneState(
 
 export function infoToLegendItem(
   info: InfoWithTotal,
-  onClick: (ids: Resource.Status[]) => void
+  onClick: (ids: Resource.Status[]) => void,
 ): LegendItemDetails {
   return {
     id: info.keys[0],
@@ -61,7 +61,7 @@ export function infoToLegendItem(
 
 function addTotal(
   info: Info,
-  byState: Record<string, ParsedNumber>
+  byState: Record<string, ParsedNumber>,
 ): InfoWithTotal {
   return {
     ...info,

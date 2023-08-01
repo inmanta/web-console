@@ -47,7 +47,7 @@ export const AutoCompleteInputProvider: React.FC<Props> = ({
   const selectedValue = getCurrentValue(
     attributeValue,
     filter,
-    !!serviceIdentity
+    !!serviceIdentity,
   );
   return RemoteData.fold(
     {
@@ -78,7 +78,7 @@ export const AutoCompleteInputProvider: React.FC<Props> = ({
               value: id,
               alreadySelected: alreadySelected.includes(id),
             };
-          }
+          },
         );
         return (
           <AutoCompleteInput
@@ -97,14 +97,14 @@ export const AutoCompleteInputProvider: React.FC<Props> = ({
         );
       },
     },
-    data
+    data,
   );
 };
 
 const getCurrentValue = (
   attributeValue: string | string[],
   filter: ServiceInstanceParams.Filter,
-  serviceIdentity?: boolean
+  serviceIdentity?: boolean,
 ): string | string[] => {
   if (attributeValue) {
     return attributeValue;

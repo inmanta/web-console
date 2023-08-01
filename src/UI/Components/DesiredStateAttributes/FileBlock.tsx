@@ -57,7 +57,7 @@ export const FileBlock: React.FC<{ hash: string }> = ({ hash }) => {
             <CodeHighlighter code={content} language="text" close={close} />
           ),
         },
-        fileContent
+        fileContent,
       )}
     </>
   );

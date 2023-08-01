@@ -15,5 +15,5 @@ test.each`
   "GIVEN parseNumberWithType WHEN value ($value) and type ($type) THEN returns $parsedValue",
   ({ value, type, parsedValue }) => {
     expect(parseNumberWithType(type, value)).toEqual(parsedValue);
-  }
+  },
 );

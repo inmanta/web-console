@@ -47,7 +47,7 @@ export const GraphCard: React.FC<GraphCardProps> = ({
             label={words(`dashboard.${metrics.name as MetricName}.label.x`)}
             title={words(`dashboard.${metrics.name as MetricName}.title`)}
             description={words(
-              `dashboard.${metrics.name as MetricName}.description`
+              `dashboard.${metrics.name as MetricName}.description`,
             )}
             isStacked={isStacked}
             legendData={formatLegendData(metrics, isStacked)}

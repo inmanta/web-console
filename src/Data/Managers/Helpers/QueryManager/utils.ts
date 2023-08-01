@@ -6,7 +6,7 @@ export function urlEncodeParams<Q extends SubQuery<Kind>>(query: Q) {
       const encodedValue =
         typeof value === "string" ? encodeURIComponent(value) : value;
       return [key, encodedValue];
-    })
+    }),
   );
   return encodedQuery as Q;
 }

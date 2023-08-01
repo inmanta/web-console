@@ -7,7 +7,7 @@ export const useUrlStateWithSort = provide(handleUrlStateWithSort);
 export function handleUrlStateWithSort<Key extends string = string>(
   config: Pick<StateConfig<Sort.Type<Key>>, "route" | "default">,
   location: Location,
-  replace: Replace
+  replace: Replace,
 ): [Sort.Type<Key>, Update<Sort.Type<Key>>] {
   return handleUrlState<Sort.Type<Key>>(
     {
@@ -19,6 +19,6 @@ export function handleUrlStateWithSort<Key extends string = string>(
       equals: Sort.equals,
     },
     location,
-    replace
+    replace,
   );
 }

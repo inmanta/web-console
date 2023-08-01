@@ -9,6 +9,6 @@ import { Command } from "@/Core/Command";
  */
 export interface TriggerProvider {
   useGetTrigger<Kind extends Command.Kind>(
-    command: Command.Type
+    command: Command.Type,
   ): Command.Trigger<Kind>;
 }

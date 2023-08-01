@@ -77,7 +77,7 @@ export const ImageUpload: React.FC<Props> = ({
     }
 
     setError(
-      words("error.image.size")(file.name, ImageHelper.formatFileSize(file))
+      words("error.image.size")(file.name, ImageHelper.formatFileSize(file)),
     );
     return;
   };

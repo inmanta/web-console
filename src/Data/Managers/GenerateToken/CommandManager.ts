@@ -11,9 +11,9 @@ export function GenerateTokenCommandManager(apiHelper: ApiHelper) {
           await apiHelper.post<Command.ApiData<"GenerateToken">>(
             "/api/v2/environment_auth",
             environment,
-            tokenInfo
-          )
+            tokenInfo,
+          ),
         );
-    }
+    },
   );
 }

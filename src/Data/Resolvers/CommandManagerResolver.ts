@@ -61,7 +61,7 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
   constructor(
     private readonly store: Store,
     private readonly apiHelper: ApiHelper,
-    private readonly authHelper: AuthHelper
+    private readonly authHelper: AuthHelper,
   ) {
     this.managers = this.getManagers();
   }
@@ -72,24 +72,24 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
 
   private getManagers(): CommandManager[] {
     const environmentDetailsStateHelper = GetEnvironmentDetailsStateHelper(
-      this.store
+      this.store,
     );
     const environmentSettingUpdater = new EnvironmentSettingUpdater(
       this.apiHelper,
-      GetEnvironmentSettingStateHelper(this.store)
+      GetEnvironmentSettingStateHelper(this.store),
     );
     const getDesiredStatesStateHelper = GetDesiredStatesStateHelper(this.store);
     const desiredStatesUpdater = new DesiredStatesUpdater(
       getDesiredStatesStateHelper,
-      this.apiHelper
+      this.apiHelper,
     );
     const callbacksUpdater = new CallbacksUpdater(
       CallbacksStateHelper(this.store),
-      this.apiHelper
+      this.apiHelper,
     );
     const environmentDetailsUpdater = new EnvironmentDetailsUpdater(
       this.store,
-      this.apiHelper
+      this.apiHelper,
     );
 
     return [
@@ -97,29 +97,29 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
         this.apiHelper,
         new EnvironmentsUpdater(
           GetEnvironmentsStateHelper(this.store),
-          this.apiHelper
-        )
+          this.apiHelper,
+        ),
       ),
       new ClearEnvironmentCommandManager(this.apiHelper),
       new CreateProjectCommandManager(
         this.apiHelper,
-        new ProjectsUpdater(GetProjectsStateHelper(this.store), this.apiHelper)
+        new ProjectsUpdater(GetProjectsStateHelper(this.store), this.apiHelper),
       ),
       new CreateEnvironmentCommandManager(
         this.apiHelper,
         new EnvironmentsUpdater(
           GetEnvironmentsStateHelper(this.store),
-          this.apiHelper
-        )
+          this.apiHelper,
+        ),
       ),
       new GetSupportArchiveCommandManager(this.apiHelper),
       ServiceConfigCommandManager(
         this.apiHelper,
-        ServiceConfigStateHelper(this.store)
+        ServiceConfigStateHelper(this.store),
       ),
       InstanceConfigCommandManager(
         this.apiHelper,
-        InstanceConfigStateHelper(this.store)
+        InstanceConfigStateHelper(this.store),
       ),
       CreateInstanceCommandManager(this.apiHelper),
       TriggerInstanceUpdateCommandManager(this.apiHelper),
@@ -132,12 +132,12 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
       HaltEnvironmentCommandManager(
         this.apiHelper,
         environmentDetailsStateHelper,
-        environmentDetailsUpdater
+        environmentDetailsUpdater,
       ),
       ResumeEnvironmentCommandManager(
         this.apiHelper,
         environmentDetailsStateHelper,
-        environmentDetailsUpdater
+        environmentDetailsUpdater,
       ),
       DeleteCallbackCommandManager(this.apiHelper, callbacksUpdater),
       CreateCallbackCommandManager(this.apiHelper, callbacksUpdater),
@@ -146,18 +146,18 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
         new EnvironmentDetailsUpdater(this.store, this.apiHelper),
         new EnvironmentsUpdater(
           GetEnvironmentsStateHelper(this.store),
-          this.apiHelper
-        )
+          this.apiHelper,
+        ),
       ),
       UpdateEnvironmentSettingCommandManager(
         this.apiHelper,
         environmentSettingUpdater,
-        environmentDetailsUpdater
+        environmentDetailsUpdater,
       ),
       ResetEnvironmentSettingCommandManager(
         this.apiHelper,
         environmentSettingUpdater,
-        environmentDetailsUpdater
+        environmentDetailsUpdater,
       ),
       GenerateTokenCommandManager(this.apiHelper),
       DeployCommandManager(this.apiHelper),
@@ -166,7 +166,7 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
       DeleteVersionCommandManager(this.apiHelper),
       ControlAgentCommandManager(
         this.apiHelper,
-        new GetAgentsUpdater(this.store, this.apiHelper)
+        new GetAgentsUpdater(this.store, this.apiHelper),
       ),
       TriggerCompileCommandManager(this.apiHelper),
       TriggerDryRun.CommandManager(this.apiHelper),

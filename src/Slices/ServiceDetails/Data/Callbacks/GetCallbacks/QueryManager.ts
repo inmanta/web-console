@@ -5,7 +5,7 @@ import { getUrl } from "@S/ServiceDetails/Data/Callbacks/getUrl";
 
 export function CallbacksQueryManager(
   apiHelper: ApiHelper,
-  stateHelper: StateHelperWithEnv<"GetCallbacks">
+  stateHelper: StateHelperWithEnv<"GetCallbacks">,
 ) {
   return QueryManager.OneTimeWithEnv<"GetCallbacks">(
     apiHelper,
@@ -13,6 +13,6 @@ export function CallbacksQueryManager(
     () => [],
     "GetCallbacks",
     getUrl,
-    identity
+    identity,
   );
 }

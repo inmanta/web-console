@@ -21,6 +21,6 @@ export function DiagnosticsStateHelper(store: Store) {
       }, data);
       store.dispatch.diagnostics.setData({ id, value });
     },
-    (state, { id }) => state.diagnostics.byServiceInstanceId[id]
+    (state, { id }) => state.diagnostics.byServiceInstanceId[id],
   );
 }

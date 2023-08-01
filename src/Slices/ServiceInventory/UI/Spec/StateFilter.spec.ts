@@ -15,7 +15,7 @@ test("GIVEN The Service Inventory WHEN the user filters on state ('creating') TH
         data: [ServiceInstance.a, ServiceInstance.b],
         links: Pagination.links,
         metadata: Pagination.metadata,
-      })
+      }),
     );
   });
 
@@ -35,7 +35,7 @@ test("GIVEN The Service Inventory WHEN the user filters on state ('creating') TH
   });
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
-    `/lsm/v1/service_inventory/${Service.a.name}?include_deployment_progress=True&limit=20&filter.state=creating&sort=created_at.desc`
+    `/lsm/v1/service_inventory/${Service.a.name}?include_deployment_progress=True&limit=20&filter.state=creating&sort=created_at.desc`,
   );
 
   await act(async () => {
@@ -44,7 +44,7 @@ test("GIVEN The Service Inventory WHEN the user filters on state ('creating') TH
         data: [ServiceInstance.a],
         links: Pagination.links,
         metadata: Pagination.metadata,
-      })
+      }),
     );
   });
 

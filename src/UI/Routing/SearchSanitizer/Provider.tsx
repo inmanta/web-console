@@ -16,7 +16,7 @@ export const Provider: React.FC<React.PropsWithChildren<unknown>> = ({
     sanitizer,
     routeManager,
     pathname,
-    search
+    search,
   );
 
   useEffect(() => {
@@ -35,7 +35,7 @@ const getSearchResult = (
   sanitizer: SearchSanitizer,
   routeManager: RouteManager,
   pathname: string,
-  search: string
+  search: string,
 ): [string | null, RouteKind | null] => {
   const match = routeManager.getRouteMatchFromUrl(pathname);
   if (typeof match === "undefined") return [null, null];

@@ -30,11 +30,11 @@ function setup(service) {
   const apiHelper = new DeferredApiHelper();
   const authHelper = new KeycloakAuthHelper();
   const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolver(store, apiHelper, scheduler, scheduler)
+    new QueryManagerResolver(store, apiHelper, scheduler, scheduler),
   );
 
   const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolver(store, apiHelper, authHelper)
+    new CommandManagerResolver(store, apiHelper, authHelper),
   );
 
   const component = (
@@ -82,7 +82,7 @@ test("Given the CreateInstance View When creating an instance with attributes Th
 
   await act(async () => {
     await userEvent.click(
-      screen.getByRole("button", { name: words("confirm") })
+      screen.getByRole("button", { name: words("confirm") }),
     );
   });
 
@@ -128,12 +128,12 @@ test("Given the CreateInstance View When creating an instance with Inter-service
   });
   await act(async () => {
     apiHelper.resolve(
-      Either.right({ data: [ServiceInstance.a, ServiceInstance.b] })
+      Either.right({ data: [ServiceInstance.a, ServiceInstance.b] }),
     );
   });
 
   const relationInputField = screen.getByPlaceholderText(
-    words("common.serviceInstance.relation")
+    words("common.serviceInstance.relation"),
   );
   await act(async () => {
     await userEvent.type(relationInputField, "a");
@@ -145,7 +145,7 @@ test("Given the CreateInstance View When creating an instance with Inter-service
   });
   await act(async () => {
     await apiHelper.resolve(
-      Either.right({ data: [ServiceInstance.a, ServiceInstance.b] })
+      Either.right({ data: [ServiceInstance.a, ServiceInstance.b] }),
     );
   });
   await act(async () => {
@@ -158,7 +158,7 @@ test("Given the CreateInstance View When creating an instance with Inter-service
   });
   await act(async () => {
     apiHelper.resolve(
-      Either.right({ data: [ServiceInstance.a, ServiceInstance.b] })
+      Either.right({ data: [ServiceInstance.a, ServiceInstance.b] }),
     );
   });
 
@@ -174,7 +174,7 @@ test("Given the CreateInstance View When creating an instance with Inter-service
   await act(async () => {
     await userEvent.click(options2[1]);
     await userEvent.click(
-      screen.getByRole("button", { name: words("confirm") })
+      screen.getByRole("button", { name: words("confirm") }),
     );
   });
 
@@ -196,16 +196,16 @@ test("Given the CreateInstance View When creating entity with default values The
 
   //check if direct attributes have correct default value
   expect(screen.queryByLabelText("TextInput-string")).toHaveValue(
-    "default_string"
+    "default_string",
   );
   expect(screen.queryByLabelText("TextInput-editableString")).toHaveValue(
-    "default_string"
+    "default_string",
   );
   expect(screen.queryByLabelText("TextInput-string?")).toHaveValue(
-    "default_string"
+    "default_string",
   );
   expect(screen.queryByLabelText("TextInput-editableString?")).toHaveValue(
-    "default_string"
+    "default_string",
   );
 
   expect(screen.queryByLabelText("Toggle-bool")).toBeChecked();
@@ -214,64 +214,64 @@ test("Given the CreateInstance View When creating entity with default values The
   expect(screen.queryByTestId("editableBool?-true")).toBeChecked();
 
   expect(screen.queryByLabelText("TextFieldInput-string[]")).toHaveTextContent(
-    "1.1.1.1"
+    "1.1.1.1",
   );
   expect(screen.queryByLabelText("TextFieldInput-string[]")).toHaveTextContent(
-    "8.8.8.8"
+    "8.8.8.8",
   );
   expect(
-    screen.queryByLabelText("TextFieldInput-editableString[]")
+    screen.queryByLabelText("TextFieldInput-editableString[]"),
   ).toHaveTextContent("1.1.1.1");
   expect(
-    screen.queryByLabelText("TextFieldInput-editableString[]")
+    screen.queryByLabelText("TextFieldInput-editableString[]"),
   ).toHaveTextContent("8.8.8.8");
   expect(screen.queryByLabelText("TextFieldInput-string[]?")).toHaveTextContent(
-    "1.1.1.1"
+    "1.1.1.1",
   );
   expect(screen.queryByLabelText("TextFieldInput-string[]?")).toHaveTextContent(
-    "8.8.8.8"
+    "8.8.8.8",
   );
   expect(
-    screen.queryByLabelText("TextFieldInput-editableString[]?")
+    screen.queryByLabelText("TextFieldInput-editableString[]?"),
   ).toHaveTextContent("1.1.1.1");
   expect(
-    screen.queryByLabelText("TextFieldInput-editableString[]?")
+    screen.queryByLabelText("TextFieldInput-editableString[]?"),
   ).toHaveTextContent("8.8.8.8");
 
   expect(screen.queryByLabelText("EnumFieldInput-enum")).toHaveTextContent(
-    "OPTION_ONE"
+    "OPTION_ONE",
   );
   expect(
-    screen.queryByLabelText("EnumFieldInput-editableEnum")
+    screen.queryByLabelText("EnumFieldInput-editableEnum"),
   ).toHaveTextContent("OPTION_ONE");
   expect(screen.queryByLabelText("EnumFieldInput-enum?")).toHaveTextContent(
-    "OPTION_ONE"
+    "OPTION_ONE",
   );
   expect(
-    screen.queryByLabelText("EnumFieldInput-editableEnum?")
+    screen.queryByLabelText("EnumFieldInput-editableEnum?"),
   ).toHaveTextContent("OPTION_ONE");
 
   expect(screen.queryByLabelText("TextInput-dict")).toHaveValue(
-    '{"default":"value"}'
+    '{"default":"value"}',
   );
   expect(screen.queryByLabelText("TextInput-editableDict")).toHaveValue(
-    '{"default":"value"}'
+    '{"default":"value"}',
   );
   expect(screen.queryByLabelText("TextInput-dict?")).toHaveValue(
-    '{"default":"value"}'
+    '{"default":"value"}',
   );
   expect(screen.queryByLabelText("TextInput-editableDict?")).toHaveValue(
-    '{"default":"value"}'
+    '{"default":"value"}',
   );
 
   //check if embedded entities buttons are correctly displayed
   const embedded_base = screen.getByLabelText(
-    "DictListFieldInput-embedded_base"
+    "DictListFieldInput-embedded_base",
   );
 
   await act(async () => {
     await userEvent.click(
-      screen.getByRole("button", { name: "embedded_base" })
+      screen.getByRole("button", { name: "embedded_base" }),
     );
   });
 
@@ -279,79 +279,79 @@ test("Given the CreateInstance View When creating entity with default values The
 
   await act(async () => {
     await userEvent.click(
-      within(embedded_base).getByRole("button", { name: "1" })
+      within(embedded_base).getByRole("button", { name: "1" }),
     );
   });
   expect(
-    within(embedded_base).queryByLabelText("TextInput-string")
+    within(embedded_base).queryByLabelText("TextInput-string"),
   ).toHaveValue("default_string");
   expect(
-    within(embedded_base).queryByLabelText("TextInput-editableString")
+    within(embedded_base).queryByLabelText("TextInput-editableString"),
   ).toHaveValue("default_string");
   expect(
-    within(embedded_base).queryByLabelText("TextInput-string?")
+    within(embedded_base).queryByLabelText("TextInput-string?"),
   ).toHaveValue("default_string");
   expect(
-    within(embedded_base).queryByLabelText("TextInput-editableString?")
+    within(embedded_base).queryByLabelText("TextInput-editableString?"),
   ).toHaveValue("default_string");
 
   expect(within(embedded_base).queryByLabelText("Toggle-bool")).toBeChecked();
   expect(
-    within(embedded_base).queryByLabelText("Toggle-editableBool")
+    within(embedded_base).queryByLabelText("Toggle-editableBool"),
   ).toBeChecked();
   expect(within(embedded_base).queryByTestId("bool?-true")).toBeChecked();
   expect(
-    within(embedded_base).queryByTestId("editableBool?-true")
+    within(embedded_base).queryByTestId("editableBool?-true"),
   ).toBeChecked();
 
   expect(
-    within(embedded_base).queryByLabelText("TextFieldInput-string[]")
+    within(embedded_base).queryByLabelText("TextFieldInput-string[]"),
   ).toHaveTextContent("1.1.1.1");
   expect(
-    within(embedded_base).queryByLabelText("TextFieldInput-string[]")
+    within(embedded_base).queryByLabelText("TextFieldInput-string[]"),
   ).toHaveTextContent("8.8.8.8");
   expect(
-    within(embedded_base).queryByLabelText("TextFieldInput-editableString[]")
+    within(embedded_base).queryByLabelText("TextFieldInput-editableString[]"),
   ).toHaveTextContent("1.1.1.1");
   expect(
-    within(embedded_base).queryByLabelText("TextFieldInput-editableString[]")
+    within(embedded_base).queryByLabelText("TextFieldInput-editableString[]"),
   ).toHaveTextContent("8.8.8.8");
   expect(
-    within(embedded_base).queryByLabelText("TextFieldInput-string[]?")
+    within(embedded_base).queryByLabelText("TextFieldInput-string[]?"),
   ).toHaveTextContent("1.1.1.1");
   expect(
-    within(embedded_base).queryByLabelText("TextFieldInput-string[]?")
+    within(embedded_base).queryByLabelText("TextFieldInput-string[]?"),
   ).toHaveTextContent("8.8.8.8");
   expect(
-    within(embedded_base).queryByLabelText("TextFieldInput-editableString[]?")
+    within(embedded_base).queryByLabelText("TextFieldInput-editableString[]?"),
   ).toHaveTextContent("1.1.1.1");
   expect(
-    within(embedded_base).queryByLabelText("TextFieldInput-editableString[]?")
+    within(embedded_base).queryByLabelText("TextFieldInput-editableString[]?"),
   ).toHaveTextContent("8.8.8.8");
 
   expect(
-    within(embedded_base).queryByLabelText("EnumFieldInput-enum")
+    within(embedded_base).queryByLabelText("EnumFieldInput-enum"),
   ).toHaveTextContent("OPTION_ONE");
   expect(
-    within(embedded_base).queryByLabelText("EnumFieldInput-editableEnum")
+    within(embedded_base).queryByLabelText("EnumFieldInput-editableEnum"),
   ).toHaveTextContent("OPTION_ONE");
   expect(
-    within(embedded_base).queryByLabelText("EnumFieldInput-enum?")
+    within(embedded_base).queryByLabelText("EnumFieldInput-enum?"),
   ).toHaveTextContent("OPTION_ONE");
   expect(
-    within(embedded_base).queryByLabelText("EnumFieldInput-editableEnum?")
+    within(embedded_base).queryByLabelText("EnumFieldInput-editableEnum?"),
   ).toHaveTextContent("OPTION_ONE");
 
   expect(within(embedded_base).queryByLabelText("TextInput-dict")).toHaveValue(
-    '{"default":"value"}'
+    '{"default":"value"}',
   );
   expect(
-    within(embedded_base).queryByLabelText("TextInput-editableDict")
+    within(embedded_base).queryByLabelText("TextInput-editableDict"),
   ).toHaveValue('{"default":"value"}');
   expect(within(embedded_base).queryByLabelText("TextInput-dict?")).toHaveValue(
-    '{"default":"value"}'
+    '{"default":"value"}',
   );
   expect(
-    within(embedded_base).queryByLabelText("TextInput-editableDict?")
+    within(embedded_base).queryByLabelText("TextInput-editableDict?"),
   ).toHaveValue('{"default":"value"}');
 });

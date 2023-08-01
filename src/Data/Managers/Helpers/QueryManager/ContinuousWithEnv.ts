@@ -34,17 +34,17 @@ export function ContinuousWithEnv<Kind extends Query.Kind>(
   getDependencies: GetDependenciesWithEnv<Kind>,
   kind: Kind,
   getUrl: GetUrlWithEnv<Kind>,
-  toUsed: ToUsed<Kind>
+  toUsed: ToUsed<Kind>,
 ): ContinuousQueryManager<Kind> {
   async function update(
     query: Query.SubQuery<Kind>,
     url: string,
-    environment: string
+    environment: string,
   ): Promise<void> {
     stateHelper.set(
       RemoteData.fromEither(await apiHelper.get(url, environment)),
       query,
-      environment
+      environment,
     );
   }
 
@@ -54,9 +54,12 @@ export function ContinuousWithEnv<Kind extends Query.Kind>(
     const [url, setUrl] = useState(getUrl(urlEncodeParams(query), environment));
     const previousEnvironment = usePrevious(environment);
 
-    useEffect(() => {
-      setUrl(getUrl(urlEncodeParams(query), environment));
-    }, getDependencies(query, environment));
+    useEffect(
+      () => {
+        setUrl(getUrl(urlEncodeParams(query), environment));
+      },
+      getDependencies(query, environment),
+    );
 
     const task = {
       effect: async () =>
@@ -82,7 +85,7 @@ export function ContinuousWithEnv<Kind extends Query.Kind>(
     return [
       RemoteData.mapSuccess(
         (data) => toUsed(data, setUrl),
-        stateHelper.useGetHooked(query, environment)
+        stateHelper.useGetHooked(query, environment),
       ),
       () => update(query, url, environment),
     ];
@@ -90,7 +93,7 @@ export function ContinuousWithEnv<Kind extends Query.Kind>(
 
   function matches(
     query: Query.SubQuery<Kind>,
-    matchingKind: QueryManagerKind
+    matchingKind: QueryManagerKind,
   ): boolean {
     return query.kind === kind && matchingKind === "Continuous";
   }

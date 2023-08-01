@@ -6,15 +6,15 @@ export function CommandManagerWithEnv<Kind extends Command.Kind>(
   kind: Kind,
   customGetTrigger: (
     command: Command.SubCommand<Kind>,
-    environment: string
-  ) => Command.Trigger<Kind>
+    environment: string,
+  ) => Command.Trigger<Kind>,
 ): CommandManager {
   function matches(command: Command.SubCommand<Kind>): boolean {
     return command.kind === kind;
   }
 
   function useGetTrigger(
-    command: Command.SubCommand<Kind>
+    command: Command.SubCommand<Kind>,
   ): Command.Trigger<Kind> {
     const { environmentHandler } = useContext(DependencyContext);
     const environment = environmentHandler.useId();

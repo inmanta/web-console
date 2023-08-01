@@ -15,9 +15,9 @@ test.each`
   "GIVEN BaseUrlFinder.getBasePathname WHEN ($origin,$pathname) THEN returns $returnText",
   ({ origin, pathname, basePathname }) => {
     expect(
-      new PrimaryBaseUrlManager(origin, pathname).getBasePathname()
+      new PrimaryBaseUrlManager(origin, pathname).getBasePathname(),
     ).toEqual(basePathname);
-  }
+  },
 );
 
 test.each`
@@ -40,7 +40,7 @@ test.each`
   "GIVEN BaseUrlFinder WHEN url = $fullUrl THEN returns $returnText",
   ({ origin, pathname, baseUrl }) => {
     expect(new PrimaryBaseUrlManager(origin, pathname).getBaseUrl()).toEqual(
-      baseUrl
+      baseUrl,
     );
-  }
+  },
 );

@@ -16,9 +16,9 @@ test.each`
   "GIVEN RouteManager.getRelatedUrlWithoutParams WHEN $inputUrl THEN returns $outputUrl",
   async ({ inputUrl, outputUrl }) => {
     expect(routeManager.getRelatedUrlWithoutParams(inputUrl)).toEqual(
-      outputUrl
+      outputUrl,
     );
-  }
+  },
 );
 
 const { Home, Catalog, Inventory, CreateInstance, History, Events, Diagnose } =
@@ -38,7 +38,7 @@ it.each`
     const routes = routeManager.getLineageFromRoute(route);
     expect(routes).toHaveLength(length);
     expect(routes).toEqual(result);
-  }
+  },
 );
 
 it.each`
@@ -54,7 +54,7 @@ it.each`
   "GIVEN getRouteWithParamsFromUrl WHEN passed '$url' THEN returns $resultTxt",
   ({ url, result }) => {
     expect(routeManager.getRouteMatchFromUrl(url)).toEqual(result);
-  }
+  },
 );
 
 test("Given getUrlForApiUri When uri is unknown Then returns undefined", () => {
@@ -63,7 +63,7 @@ test("Given getUrlForApiUri When uri is unknown Then returns undefined", () => {
 
 test("Given getUrlForApiUri When uri is known Then returns url", () => {
   expect(routeManager.getUrlForApiUri("/api/v2/compilereport/123")).toMatch(
-    "/compilereports/123"
+    "/compilereports/123",
   );
 });
 
@@ -113,7 +113,7 @@ test("GIVEN '/lsm/catalog/xyz/inventory' THEN breadcrumbs should be ['Home', 'Ca
 
 test("GIVEN '/lsm/catalog/xyz/inventory/123/history' THEN breadcrumbs should be ['Home','Catalog', 'Inventory', 'History']", () => {
   const crumbs = routeManager.getCrumbs(
-    "/lsm/catalog/xyz/inventory/123/history"
+    "/lsm/catalog/xyz/inventory/123/history",
   );
   expect(crumbs).toHaveLength(4);
   expect(crumbs).toEqual([

@@ -12,7 +12,7 @@ import { EntityConnection, ServiceEntityBlock } from "./shapes";
 
 export default function diagramInit(
   canvas,
-  connectionRules: ConnectionRules
+  connectionRules: ConnectionRules,
 ): DiagramHandlers {
   /**
    * https://resources.jointjs.com/docs/jointjs/v3.6/joint.html#dia.Graph
@@ -61,13 +61,13 @@ export default function diagramInit(
       if (srcViewAsElement) {
         const connectedElements = graph.getNeighbors(srcViewAsElement);
         const isConnected = connectedElements.find(
-          (connectedElement) => connectedElement.cid === tgtView.model.cid
+          (connectedElement) => connectedElement.cid === tgtView.model.cid,
         );
         const isAllowed = checkIfConnectionIsAllowed(
           graph,
           tgtView,
           srcView,
-          connectionRules
+          connectionRules,
         );
 
         return isConnected === undefined && isAllowed && baseValidators;
@@ -112,9 +112,9 @@ export default function diagramInit(
       document.dispatchEvent(
         new CustomEvent("openDictsModal", {
           detail: event.target.parentElement.attributes.dict.value,
-        })
+        }),
       );
-    }
+    },
   );
 
   paper.on(
@@ -128,11 +128,11 @@ export default function diagramInit(
 
       elementAsShape.appendColumns(
         isCollapsed ? originalAttrs : originalAttrs.slice(0, 4),
-        false
+        false,
       );
       elementAsShape.attr(
         "button/xlink:href",
-        isCollapsed ? collapseButton : expandButton
+        isCollapsed ? collapseButton : expandButton,
       );
 
       const bbox = elementAsShape.getBBox();
@@ -140,7 +140,7 @@ export default function diagramInit(
       elementAsShape.attr("spacer/y", bbox.height - 33);
 
       elementAsShape.set("isCollapsed", !isCollapsed);
-    }
+    },
   );
 
   paper.on("cell:pointerup", function (cellView) {
@@ -174,7 +174,7 @@ export default function diagramInit(
 
       //cellView.model has the same structure as dia.Element needed as parameter to .getNeighbors() yet typescript complains
       const connectedElements = graph.getNeighbors(
-        cellView.model as dia.Element
+        cellView.model as dia.Element,
       );
 
       elements.forEach((element) => {
@@ -182,7 +182,7 @@ export default function diagramInit(
           graph,
           cellView,
           element,
-          connectionRules
+          connectionRules,
         );
         if (!isAllowed) {
           return;
@@ -239,7 +239,7 @@ export default function diagramInit(
     (evt: dia.Event, ox: number, oy: number, delta: number) => {
       evt.preventDefault();
       zoom(ox, oy, delta);
-    }
+    },
   );
 
   paper.on(
@@ -247,7 +247,7 @@ export default function diagramInit(
     (_, evt: dia.Event, ox: number, oy: number, delta: number) => {
       evt.preventDefault();
       zoom(ox, oy, delta);
-    }
+    },
   );
 
   /**
@@ -276,14 +276,14 @@ export default function diagramInit(
     addInstance: (
       instance: InstanceWithReferences,
       services: ServiceModel[],
-      isMainInstance: boolean
+      isMainInstance: boolean,
     ) => {
       const appendedInstance = appendInstance(
         paper,
         graph,
         instance,
         services,
-        isMainInstance
+        isMainInstance,
       );
       const { x, y } = appendedInstance.getBBox();
       scroller.center(x, y + 200);
@@ -295,7 +295,7 @@ export default function diagramInit(
         graph,
         service,
         instance,
-        addingCoreInstance
+        addingCoreInstance,
       );
       scroller.center(instanceCoordinates.x, instanceCoordinates.y + 200);
     },
@@ -310,12 +310,12 @@ export interface DiagramHandlers {
   addInstance: (
     instance: InstanceWithReferences,
     services: ServiceModel[],
-    isMainInstance: boolean
+    isMainInstance: boolean,
   ) => void;
   addEntity: (
     entity: InstanceAttributeModel,
     service: ServiceModel,
-    addingCoreInstance: boolean
+    addingCoreInstance: boolean,
   ) => void;
   zoom: (delta: 1 | -1) => void;
 }

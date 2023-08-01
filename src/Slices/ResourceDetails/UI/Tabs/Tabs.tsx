@@ -52,7 +52,7 @@ export const Tabs: React.FC<Props> = ({
 };
 
 const requiresTab = (
-  data: Query.UsedApiData<"GetResourceDetails">
+  data: Query.UsedApiData<"GetResourceDetails">,
 ): TabDescriptor<TabKey> => ({
   id: TabKey.Requires,
   title: words("resources.requires.title"),
@@ -61,7 +61,7 @@ const requiresTab = (
 });
 
 const attributesTab = (
-  data: Query.UsedApiData<"GetResourceDetails">
+  data: Query.UsedApiData<"GetResourceDetails">,
 ): TabDescriptor<TabKey> => ({
   id: TabKey.Attributes,
   title: words("resources.attributes.title"),
@@ -71,7 +71,7 @@ const attributesTab = (
 
 const historyTab = (
   id: string,
-  data: Query.UsedApiData<"GetResourceDetails">
+  data: Query.UsedApiData<"GetResourceDetails">,
 ): TabDescriptor<TabKey> => ({
   id: TabKey.History,
   title: words("resources.history.title"),

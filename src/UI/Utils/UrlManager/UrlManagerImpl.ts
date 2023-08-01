@@ -3,7 +3,7 @@ import { FeatureManager, UrlManager } from "@/Core";
 export class UrlManagerImpl implements UrlManager {
   constructor(
     private readonly featureManager: FeatureManager,
-    private readonly baseUrl: string
+    private readonly baseUrl: string,
   ) {}
 
   getDashboardUrl(environment: string): string {

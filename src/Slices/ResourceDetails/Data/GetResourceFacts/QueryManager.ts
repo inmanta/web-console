@@ -5,7 +5,7 @@ import { QueryManager } from "@/Data/Managers/Helpers";
 export function GetResourceFactsQueryManager(
   apiHelper: ApiHelper,
   stateHelper: StateHelper<"GetResourceFacts">,
-  scheduler: Scheduler
+  scheduler: Scheduler,
 ) {
   return QueryManager.ContinuousWithEnv<"GetResourceFacts">(
     apiHelper,
@@ -15,6 +15,6 @@ export function GetResourceFactsQueryManager(
     ({ resourceId }) => [resourceId],
     "GetResourceFacts",
     ({ resourceId }) => `/api/v2/resource/${resourceId}/facts`,
-    identity
+    identity,
   );
 }

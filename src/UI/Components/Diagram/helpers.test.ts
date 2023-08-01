@@ -6,7 +6,7 @@ describe("extractRelationsIds", () => {
   it("Service With no relations in the model gives empty array", () => {
     const ids = extractRelationsIds(
       Service.ServiceWithAllAttrs,
-      ServiceInstance.allAttrs
+      ServiceInstance.allAttrs,
     );
     expect(ids).toHaveLength(0);
   });
@@ -14,7 +14,7 @@ describe("extractRelationsIds", () => {
   it("Service With relations in active and candidate sets gives an array with candidate attributes first", () => {
     const ids = extractRelationsIds(
       Service.withRelationsOnly,
-      ServiceInstance.with_relations
+      ServiceInstance.with_relations,
     );
 
     const expectedId = (
@@ -44,7 +44,7 @@ describe("extractRelationsIds", () => {
   it("Service with relations in the model but not in the instance gives empty array", () => {
     const ids = extractRelationsIds(
       Service.withRelationsOnly,
-      ServiceInstance.allAttrs
+      ServiceInstance.allAttrs,
     );
 
     expect(ids).toHaveLength(0);
@@ -59,7 +59,7 @@ describe("createConnectionRules", () => {
   it("array with service without embedded services and relations gives back empty object", () => {
     const rules = createConnectionRules(
       [{ ...Service.a, embedded_entities: [], inter_service_relations: [] }],
-      {}
+      {},
     );
     expect(rules).toStrictEqual({
       service_name_a: [],
@@ -68,7 +68,7 @@ describe("createConnectionRules", () => {
   it("array with service with embedded services and relations gives proper object", () => {
     const rules = createConnectionRules(
       [Service.a, Service.withRelationsOnly],
-      {}
+      {},
     );
     expect(rules).toStrictEqual({
       allocated: [],

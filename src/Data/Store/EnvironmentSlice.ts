@@ -108,7 +108,7 @@ export const environmentSlice: EnvironmentSlice = {
 
 function mergeData(
   prev: EnvironmentSettingsData,
-  next: EnvironmentSettingsData
+  next: EnvironmentSettingsData,
 ): EnvironmentSettingsData {
   if (RemoteData.isSuccess(prev) && RemoteData.isSuccess(next)) {
     return RemoteData.success({

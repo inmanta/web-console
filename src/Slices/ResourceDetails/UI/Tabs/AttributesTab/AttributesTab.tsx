@@ -15,12 +15,12 @@ interface Props {
 export const AttributesTab: React.FC<Props> = ({ data }) => {
   const classifier = new AttributeClassifier(
     new JsonFormatter(),
-    new XmlFormatter()
+    new XmlFormatter(),
   );
 
   const classifiedAttributes = RemoteData.mapSuccess(
     (resource) => classifier.classify(resource.attributes),
-    data
+    data,
   );
 
   return (

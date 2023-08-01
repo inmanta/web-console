@@ -9,7 +9,7 @@ test("Given a ClipboardCopyButton, when the button is hovered, then a tooltip sh
     <ClipboardCopyButton
       tooltipContent={"Tooltip content"}
       value="Full text to be copied"
-    />
+    />,
   );
   const button = await screen.findByLabelText("Copy to clipboard");
   await act(async () => {

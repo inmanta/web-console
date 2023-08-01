@@ -4,7 +4,7 @@ import { Query, RangeOperator } from "@/Core";
 
 export function getUrl(
   { pageSize, filter, sort }: Query.SubQuery<"GetParameters">,
-  timezone = moment.tz.guess()
+  timezone = moment.tz.guess(),
 ): string {
   const filterParam =
     filter && Object.keys(filter).length > 0
@@ -16,15 +16,15 @@ export function getUrl(
               updated: filter.updated?.map(
                 (timestampWithOperator) =>
                   `${RangeOperator.serializeOperator(
-                    timestampWithOperator.operator
+                    timestampWithOperator.operator,
                   )}:${moment
                     .tz(timestampWithOperator.date, timezone)
                     .utc()
-                    .format("YYYY-MM-DD+HH:mm:ss")}`
+                    .format("YYYY-MM-DD+HH:mm:ss")}`,
               ),
             },
           },
-          { allowDots: true, arrayFormat: "repeat" }
+          { allowDots: true, arrayFormat: "repeat" },
         )}`
       : "";
   const sortParam = sort ? `&sort=${sort.name}.${sort.order}` : "";

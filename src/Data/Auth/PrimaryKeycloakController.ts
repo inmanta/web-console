@@ -8,7 +8,7 @@ export class PrimaryKeycloakController implements KeycloakController {
   constructor(
     private readonly shouldUseAuth: string | undefined,
     private readonly externalConfig: undefined | KeycloakConfig,
-    private readonly keycloakUrl: string | undefined
+    private readonly keycloakUrl: string | undefined,
   ) {
     this.instance = new Keycloak(this.getConfig());
   }

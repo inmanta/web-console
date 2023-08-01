@@ -12,19 +12,19 @@ export class DesiredStatesUpdater
 {
   constructor(
     private readonly stateHelper: StateHelperWithEnv<"GetDesiredStates">,
-    private readonly apiHelper: ApiHelper
+    private readonly apiHelper: ApiHelper,
   ) {}
 
   async update(
     query: Query.SubQuery<"GetDesiredStates">,
-    environment: string
+    environment: string,
   ): Promise<void> {
     this.stateHelper.set(
       RemoteData.fromEither(
-        await this.apiHelper.get(getUrl(query), environment)
+        await this.apiHelper.get(getUrl(query), environment),
       ),
       query,
-      environment
+      environment,
     );
   }
 }

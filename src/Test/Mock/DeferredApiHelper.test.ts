@@ -60,7 +60,7 @@ test("GIVEN DeferredApiHelper WHEN resolveRequest THEN resolves first matching r
 
   await helper.resolveRequest(
     { method: "GET", url: "url2", environment: "env2" },
-    { test: 123 }
+    { test: 123 },
   );
   expect(helper.pendingRequests).toHaveLength(2);
   expect(helper.pendingRequests).toEqual([
@@ -73,7 +73,7 @@ test("GIVEN DeferredApiHelper WHEN resolveRequest THEN resolves first matching r
   ]);
   await helper.resolveRequest(
     { method: "POST", url: "url3", environment: "env3", body: { test: "abc" } },
-    { test: "def" }
+    { test: "def" },
   );
   expect(helper.pendingRequests).toHaveLength(1);
   expect(helper.resolvedRequests[1]).toEqual({
@@ -90,14 +90,14 @@ test("GIVEN DeferredApiHelper WHEN resolveRequest THEN resolves first matching r
   expect(() =>
     helper.resolveRequest(
       { method: "GET", url: "url2", environment: "env2" },
-      { test: 123 }
-    )
+      { test: 123 },
+    ),
   ).toThrow();
   helper.get("url1", "env1");
   expect(() =>
     helper.resolveRequest(
       { method: "GET", url: "url2", environment: "env2" },
-      { test: 123 }
-    )
+      { test: 123 },
+    ),
   ).toThrow();
 });

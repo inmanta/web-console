@@ -31,7 +31,7 @@ export const VersionResourceTable: React.FC<Props> = ({
   const onSort: OnSort = (event, index, order) => {
     setSort({
       name: tablePresenter.getColumnNameForIndex(
-        index
+        index,
       ) as Resource.SortKeyFromVersion,
       order,
     });

@@ -20,6 +20,6 @@ describe("getUrl for facts", () => {
       };
 
       expect(getUrl(query)).toEqual(url);
-    }
+    },
   );
 });

@@ -7,7 +7,7 @@ import { getUrl } from "./getUrl";
 export function GetFactsQueryManager(
   store: Store,
   apiHelper: ApiHelper,
-  scheduler: Scheduler
+  scheduler: Scheduler,
 ) {
   return QueryManager.ContinuousWithEnv<"GetFacts">(
     apiHelper,
@@ -32,6 +32,6 @@ export function GetFactsQueryManager(
         handlers: getPaginationHandlers(links, metadata, setUrl),
         metadata,
       };
-    }
+    },
   );
 }

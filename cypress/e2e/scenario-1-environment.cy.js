@@ -4,7 +4,7 @@ const testName = (id) => "TestName " + id;
 beforeEach(() => {
   cy.fixture("test-icon.png", { encoding: null }).as("icon");
   cy.intercept("POST", "/api/v2/environment_settings/**").as(
-    "postEnvConfigEdit"
+    "postEnvConfigEdit",
   );
 
   // delete projects excluding test one before each test to have unified conditions for each test case
@@ -54,7 +54,7 @@ const fillCreateEnvForm = ({
       {
         action: "drag-drop",
         force: true,
-      }
+      },
     );
   }
 };
@@ -93,7 +93,7 @@ describe("Environment", () => {
     cy.get('[aria-label="Overview-Success"] > :first-child').click();
     cy.url().should(
       "eq",
-      Cypress.config().baseUrl + "/console/environment/create"
+      Cypress.config().baseUrl + "/console/environment/create",
     );
     fillCreateEnvForm({
       envName: testName(1),
@@ -105,7 +105,7 @@ describe("Environment", () => {
 
   it("1.2 Create new  environment", function () {
     cy.intercept("/lsm/v1/service_catalog?instance_summary=True").as(
-      "getCatalog"
+      "getCatalog",
     );
 
     //fill the form and submit
@@ -127,7 +127,7 @@ describe("Environment", () => {
     cy.get(".pf-c-breadcrumb__item").eq(0).click();
     cy.get('[aria-label="Environment card"]').should(
       "any.contain",
-      testName(2)
+      testName(2),
     );
   });
 
@@ -189,7 +189,7 @@ describe("Environment", () => {
     cy.get('[aria-label="Description-submit-edit"]').click();
     cy.get('[aria-label="Description-value"]').should(
       "contain",
-      "New Value Description"
+      "New Value Description",
     );
 
     //change Repository Branch value
@@ -201,7 +201,7 @@ describe("Environment", () => {
     cy.get('[aria-label="Repository Settings-submit-edit"]:enabled').click();
     cy.get('[aria-label="repo_branch-value"]').should(
       "contain",
-      "New Value Repo Branch"
+      "New Value Repo Branch",
     );
 
     //change Repository url value
@@ -215,7 +215,7 @@ describe("Environment", () => {
     cy.get('[aria-label="Repository Settings-submit-edit"]:enabled').click();
     cy.get('[aria-label="repo_url-value"]').should(
       "contain",
-      "New Value Repo Url"
+      "New Value Repo Url",
     );
 
     //change Project Name value
@@ -223,7 +223,7 @@ describe("Environment", () => {
     cy.get('[aria-label="Project Name-toggle-edit"]:enabled').click();
     cy.get('[aria-label="Project Name-typeahead"]').clear();
     cy.get('[aria-label="Project Name-typeahead"]').type(
-      "New Value Project Name"
+      "New Value Project Name",
     );
 
     cy.get("button").contains('Create "New Value Project Name"').click();

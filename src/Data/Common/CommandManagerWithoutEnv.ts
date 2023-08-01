@@ -6,8 +6,8 @@ export class CommandManagerWithoutEnv<Kind extends Command.Kind>
   constructor(
     private readonly kind: Kind,
     private readonly customGetTrigger: (
-      command: Command.SubCommand<Kind>
-    ) => Command.Trigger<Kind>
+      command: Command.SubCommand<Kind>,
+    ) => Command.Trigger<Kind>,
   ) {}
 
   matches(command: Command.SubCommand<Kind>): boolean {

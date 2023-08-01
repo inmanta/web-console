@@ -66,8 +66,8 @@ export const ForceStateAction: React.FC<Props> = ({
     setConfirmationText(
       words("inventory.statustab.forceState.message")(
         instance_identity,
-        event.target.text
-      )
+        event.target.text,
+      ),
     );
     handleModalToggle();
   };

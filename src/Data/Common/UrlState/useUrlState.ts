@@ -9,7 +9,7 @@ export const useUrlState = provide(handleUrlState);
 export function handleUrlState<Data>(
   config: StateConfig<Data>,
   location: Location,
-  replace: Replace
+  replace: Replace,
 ): [Data, Update<Data>] {
   const parsedSearch = searchHelper.parse(location.search);
   const state = getKeyOrEmpty(parsedSearch, "state");

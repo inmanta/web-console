@@ -48,9 +48,9 @@ export const View: React.FC<ViewProps> = ({
   const count = RemoteData.withFallback(
     RemoteData.mapSuccess(
       (info) => info.data.filter((n) => !n.read).length,
-      data
+      data,
     ),
-    undefined
+    undefined,
   );
 
   const getOnUpdate =
@@ -72,7 +72,7 @@ export const View: React.FC<ViewProps> = ({
     getOnUpdate(
       data.value.data
         .filter((notification) => !notification.read)
-        .map((notification) => notification.id)
+        .map((notification) => notification.id),
     )({ read: true });
   };
 
@@ -97,7 +97,7 @@ export const View: React.FC<ViewProps> = ({
                   />
                 )),
             },
-            data
+            data,
           )}
         </CustomNotificationDrawerList>
       </CustomNotificationDrawerBody>

@@ -10,13 +10,13 @@ export function getUrl(
     sort,
     pageSize,
   }: Query.SubQuery<"GetInstanceEvents">,
-  timezone = moment.tz.guess()
+  timezone = moment.tz.guess(),
 ): string {
   const filterParam =
     filter && Object.keys(filter).length > 0
       ? `&${qs.stringify(
           { filter: filterToParam(filter, timezone) },
-          { allowDots: true, arrayFormat: "repeat" }
+          { allowDots: true, arrayFormat: "repeat" },
         )}`
       : "";
   const sortParam = sort ? `&sort=${sort.name}.${sort.order}` : "";
@@ -31,11 +31,11 @@ const filterToParam = (filter: Filter, timezone: string) => {
   const serializedTimestampOperatorFilters = timestamp?.map(
     (timestampWithOperator) =>
       `${RangeOperator.serializeOperator(
-        timestampWithOperator.operator
+        timestampWithOperator.operator,
       )}:${moment
         .tz(timestampWithOperator.date, timezone)
         .utc()
-        .format("YYYY-MM-DD+HH:mm:ss")}`
+        .format("YYYY-MM-DD+HH:mm:ss")}`,
   );
 
   return {

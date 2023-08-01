@@ -8,7 +8,10 @@ interface RawResponse {
 export class FileFetcherImpl implements FileFetcher {
   private environment: Maybe.Type<string> = Maybe.none();
 
-  constructor(private readonly apiHelper: ApiHelper, environment?: string) {
+  constructor(
+    private readonly apiHelper: ApiHelper,
+    environment?: string,
+  ) {
     if (typeof environment === "undefined") return;
     this.environment = Maybe.some(environment);
   }
@@ -34,13 +37,13 @@ export class FileFetcherImpl implements FileFetcher {
     return this.unpack(
       await this.apiHelper.get<RawResponse>(
         this.getUrl(fileId),
-        this.getEnvironment()
-      )
+        this.getEnvironment(),
+      ),
     );
   }
 
   private unpack(
-    either: Either.Type<string, RawResponse>
+    either: Either.Type<string, RawResponse>,
   ): Either.Type<string, string> {
     if (Either.isRight(either)) {
       const response = either.value;

@@ -24,7 +24,7 @@ export const CompileStageReportTable: React.FC<Props> = ({
 }) => {
   const tablePresenter = new CompileStageReportTablePresenter(
     new MomentDatePresenter(),
-    compileStarted
+    compileStarted,
   );
   const rows = tablePresenter.createRows(reports);
   const heads = tablePresenter

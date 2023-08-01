@@ -26,14 +26,14 @@ test("Given InstanceActions component When the instance is terminated Then the a
 
   const setStateCommandManager = TriggerSetStateCommandManager(
     new KeycloakAuthHelper(),
-    apiHelper
+    apiHelper,
   );
 
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([
       deleteCommandManager,
       setStateCommandManager,
-    ])
+    ]),
   );
   const component = (
     <MemoryRouter>
@@ -61,6 +61,6 @@ test("Given InstanceActions component When the instance is terminated Then the a
   expect(
     await screen.findByRole("button", {
       name: words("inventory.statusTab.history"),
-    })
+    }),
   ).toBeVisible();
 });

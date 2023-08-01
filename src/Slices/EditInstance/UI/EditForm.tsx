@@ -37,7 +37,7 @@ export const EditForm: React.FC<Props> = ({ serviceEntity, instance }) => {
   });
   const handleRedirect = useCallback(
     () => navigate(url),
-    [navigate] /* eslint-disable-line react-hooks/exhaustive-deps */
+    [navigate] /* eslint-disable-line react-hooks/exhaustive-deps */,
   );
   const attributeInputConverter = new AttributeInputConverterImpl();
   const currentAttributes =
@@ -55,7 +55,7 @@ export const EditForm: React.FC<Props> = ({ serviceEntity, instance }) => {
 
   const onSubmit = async (
     attributes: InstanceAttributeModel,
-    setIsDirty: (values: boolean) => void
+    setIsDirty: (values: boolean) => void,
   ) => {
     //as setState used in setIsDirty doesn't change immidiate we cannot use it only before handleRedirect() as it would trigger prompt from ServiceInstanceForm
     setIsDirty(false);

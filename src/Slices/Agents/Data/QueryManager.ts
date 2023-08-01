@@ -7,7 +7,7 @@ import { getUrl } from "./getUrl";
 export function GetAgentsQueryManager(
   store: Store,
   apiHelper: ApiHelper,
-  scheduler: Scheduler
+  scheduler: Scheduler,
 ) {
   return QueryManager.ContinuousWithEnv<"GetAgents">(
     apiHelper,
@@ -32,6 +32,6 @@ export function GetAgentsQueryManager(
         handlers: getPaginationHandlers(links, metadata, setUrl),
         metadata,
       };
-    }
+    },
   );
 }

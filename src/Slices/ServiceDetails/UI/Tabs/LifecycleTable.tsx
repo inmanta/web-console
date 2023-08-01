@@ -62,7 +62,7 @@ export const LifecycleTable: React.FunctionComponent<{
             trigger
               .split("_")
               .map((word) => word.charAt(0).toUpperCase() + word.substring(1))
-              .join(" ")
+              .join(" "),
           )}
       </Badge>
     );

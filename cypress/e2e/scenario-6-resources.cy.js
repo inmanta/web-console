@@ -83,7 +83,7 @@ describe("Scenario 6 : Resources", () => {
     // Expect 0/0 resources to be visible
     cy.get('[aria-label="Deployment state summary"]').should(
       "contain",
-      isIso ? "0 / 0" : "5 / 5"
+      isIso ? "0 / 0" : "5 / 5",
     );
     // Expect table to be empty in case of ISO project
     isIso &&
@@ -127,7 +127,7 @@ describe("Scenario 6 : Resources", () => {
       // frontend_model::TestResource
       cy.get('[aria-label="Resource Table Row"]', { timeout: 30000 }).should(
         "have.length",
-        2
+        2,
       );
       cy.get('[aria-label="Resource Table Row"]')
         .eq(0)
@@ -171,7 +171,7 @@ describe("Scenario 6 : Resources", () => {
       // Expect it to be empty
       cy.get('[aria-label="ResourceRequires-Empty"]').should(
         "contain",
-        "No requirements found"
+        "No requirements found",
       );
 
       // Click on history tab
@@ -180,7 +180,7 @@ describe("Scenario 6 : Resources", () => {
       // Expect One row to be visible
       cy.get('[aria-label="Resource History Table Row"]').should(
         "have.length",
-        1
+        1,
       );
 
       // Expect row to have 0 Requires
@@ -225,7 +225,7 @@ describe("Scenario 6 : Resources", () => {
       // Expect it to have : 9 log messages
       cy.get('[aria-label="ResourceLogRow"]', { timeout: 40000 }).should(
         "to.have.length.of.at.least",
-        8
+        8,
       );
 
       // Expect last log message to be "Setting deployed due to known good status"
@@ -239,7 +239,7 @@ describe("Scenario 6 : Resources", () => {
       // Expect to find "Setting deployed due to known good status" displayed in expansion.
       cy.get(".pf-c-description-list__text").should(
         "contain",
-        "Setting deployed due to known good status"
+        "Setting deployed due to known good status",
       );
     });
 
@@ -268,7 +268,7 @@ describe("Scenario 6 : Resources", () => {
       // Expect the amount of rows to be max  6
       cy.get('[aria-label="ResourceLogRow"]').should(
         "to.have.length.of.at.most",
-        6
+        6,
       );
 
       // Click on clear filters
@@ -277,7 +277,7 @@ describe("Scenario 6 : Resources", () => {
       // Expect amount of rows to be bigger than before filtering.
       cy.get('[aria-label="ResourceLogRow"]').should(
         "to.have.length.of.at.least",
-        8
+        8,
       );
     });
 
@@ -316,7 +316,7 @@ describe("Scenario 6 : Resources", () => {
       // Expect to find 7 rows now in the resource table.
       cy.get('[aria-label="Resource Table Row"]', { timeout: 60000 }).should(
         "have.length",
-        7
+        7,
       );
       // Expect to find a resource with value: a, b, c
       cy.get('[aria-label="Resource Table Row"]').eq(0).should("contain", "a");
@@ -338,7 +338,7 @@ describe("Scenario 6 : Resources", () => {
       // Click open collapsible row for resource waiting-entity
       cy.get(
         '[aria-label="Toggle-frontend_model::TestResource[internal,name=waiting-entity]"]',
-        { timeout: 20000 }
+        { timeout: 20000 },
       ).click();
       // Expect to find three rows with
       cy.get('[aria-label="ResourceRequires-Success"]', {
@@ -350,13 +350,13 @@ describe("Scenario 6 : Resources", () => {
         expect($rows).to.have.length(4);
 
         expect($rows.eq(1).find("button"), "a-row").to.have.text(
-          "frontend_model::TestResource[internal,name=a]"
+          "frontend_model::TestResource[internal,name=a]",
         );
         expect($rows.eq(2).find("button"), "b-row").to.have.text(
-          "frontend_model::TestResource[internal,name=b]"
+          "frontend_model::TestResource[internal,name=b]",
         );
         expect($rows.eq(3).find("button"), "c-row").to.have.text(
-          "frontend_model::TestResource[internal,name=c]"
+          "frontend_model::TestResource[internal,name=c]",
         );
       });
 
@@ -383,13 +383,13 @@ describe("Scenario 6 : Resources", () => {
         expect($rows).to.have.length(4);
 
         expect($rows.eq(1).find("button"), "a-row").to.have.text(
-          "frontend_model::TestResource[internal,name=a]"
+          "frontend_model::TestResource[internal,name=a]",
         );
         expect($rows.eq(2).find("button"), "b-row").to.have.text(
-          "frontend_model::TestResource[internal,name=b]"
+          "frontend_model::TestResource[internal,name=b]",
         );
         expect($rows.eq(3).find("button"), "c-row").to.have.text(
-          "frontend_model::TestResource[internal,name=c]"
+          "frontend_model::TestResource[internal,name=c]",
         );
       });
 
@@ -398,7 +398,7 @@ describe("Scenario 6 : Resources", () => {
 
       cy.get('[aria-label="Resource History Table Row"]').should(
         "have.length",
-        1
+        1,
       );
 
       // expect to find one collapsible with 3 Requires
@@ -449,7 +449,7 @@ describe("Scenario 6 : Resources", () => {
 
       cy.get('[aria-label="Resource Table Row"]', { timeout: 30000 }).should(
         "have.length",
-        5
+        5,
       );
       cy.get('[aria-label="Resource Table Row"]')
         .eq(0)
@@ -501,7 +501,7 @@ describe("Scenario 6 : Resources", () => {
       // Expect it to be empty
       cy.get('[aria-label="ResourceRequires-Empty"]').should(
         "contain",
-        "No requirements found"
+        "No requirements found",
       );
 
       // Click on history tab
@@ -510,7 +510,7 @@ describe("Scenario 6 : Resources", () => {
       // Expect One row to be visible
       cy.get('[aria-label="Resource History Table Row"]').should(
         "have.length",
-        1
+        1,
       );
 
       // Expect row to have 0 Requires
@@ -553,7 +553,7 @@ describe("Scenario 6 : Resources", () => {
       // Expect it to have : 15 log messages
       cy.get('[aria-label="ResourceLogRow"]', { timeout: 40000 }).should(
         "to.have.length.of.at.least",
-        15
+        15,
       );
 
       // Expect last log message to be "Setting deployed due to known good status"
@@ -567,7 +567,7 @@ describe("Scenario 6 : Resources", () => {
       // Expect to find "Setting deployed due to known good status" displayed in expansion.
       cy.get(".pf-c-description-list__text").should(
         "contain",
-        "Setting deployed due to known good status"
+        "Setting deployed due to known good status",
       );
     });
   }

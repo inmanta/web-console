@@ -5,7 +5,7 @@ import { QueryManager } from "@/Data/Managers/Helpers";
 export function ServicesQueryManager(
   apiHelper: ApiHelper,
   stateHelper: StateHelperWithEnv<"GetServices">,
-  scheduler: Scheduler
+  scheduler: Scheduler,
 ) {
   return QueryManager.ContinuousWithEnv<"GetServices">(
     apiHelper,
@@ -15,6 +15,6 @@ export function ServicesQueryManager(
     () => [],
     "GetServices",
     () => `/lsm/v1/service_catalog?instance_summary=True`,
-    identity
+    identity,
   );
 }

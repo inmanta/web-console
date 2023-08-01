@@ -16,7 +16,7 @@ export const TableProvider: React.FC<Props> = ({
   ...props
 }) => {
   const tablePresenter = new CompileReportsTablePresenter(
-    new MomentDatePresenter()
+    new MomentDatePresenter(),
   );
   const rows = tablePresenter.createRows(compileReports);
   return (

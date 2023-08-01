@@ -95,7 +95,7 @@ export const CellWithCopyExpert: React.FC<Props> = ({
     const result = await trigger(
       (label + "_attributes") as AttributeSet,
       newValue,
-      path.split("$").join(".")
+      path.split("$").join("."),
     );
 
     if (Maybe.isSome(result)) {
@@ -162,7 +162,7 @@ export const CellWithCopyExpert: React.FC<Props> = ({
         <Text>
           {words("inventory.editAttribute.text")(
             value,
-            newAttribute.toString()
+            newAttribute.toString(),
           )}
         </Text>
         <ConfirmUserActionForm

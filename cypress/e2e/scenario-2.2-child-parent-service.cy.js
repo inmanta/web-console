@@ -103,10 +103,10 @@ if (Cypress.env("edition") === "iso") {
           // there can only be 2 table-data cells available
           expect($td).to.have.length(2);
           expect($td.eq(0), "first item").to.have.text(
-            "frontend_model::TestResource[internal,name=default-0001]"
+            "frontend_model::TestResource[internal,name=default-0001]",
           );
           expect($td.eq(1), "second item").to.have.text("deployed");
-        }
+        },
       );
 
       // click on service catalog in breadcrumb
@@ -130,7 +130,7 @@ if (Cypress.env("edition") === "iso") {
       // Check if only one row has been added to the table.
       cy.get('[aria-label="InstanceRow-Intro"]', { timeout: 20000 }).should(
         "have.length",
-        1
+        1,
       );
     });
     it("2.2.2 Remove Parent Service and Child Service", () => {
@@ -148,7 +148,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get(".pf-c-description-list").contains("Delete").click();
       cy.get(".pf-c-modal-box__title-text").should(
         "contain",
-        "Delete instance"
+        "Delete instance",
       );
       cy.get(".pf-c-form__actions").contains("Yes").click();
 
@@ -177,7 +177,7 @@ if (Cypress.env("edition") === "iso") {
         .click();
       cy.get(".pf-c-modal-box__title-text").should(
         "contain",
-        "Delete instance"
+        "Delete instance",
       );
       cy.get(".pf-c-form__actions").contains("Yes").click();
 

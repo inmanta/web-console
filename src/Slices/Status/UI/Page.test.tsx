@@ -45,26 +45,26 @@ export class MockArchiveHelper implements ArchiveHelper {
 function setup(useMockArchiveHelper = false) {
   const store = getStoreInstance();
   store.dispatch.serverStatus.setData(
-    RemoteData.success(ServerStatus.withoutLsm)
+    RemoteData.success(ServerStatus.withoutLsm),
   );
   const apiHelper = new DeferredApiHelper();
   const getServerStatusQueryManager = GetServerStatusContinuousQueryManager(
     apiHelper,
     GetServerStatusStateHelper(store),
-    new StaticScheduler()
+    new StaticScheduler(),
   );
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolver([getServerStatusQueryManager])
+    new DynamicQueryManagerResolver([getServerStatusQueryManager]),
   );
   const getSupportArchiveCommandManager = new GetSupportArchiveCommandManager(
-    apiHelper
+    apiHelper,
   );
   const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolver([getSupportArchiveCommandManager])
+    new DynamicCommandManagerResolver([getSupportArchiveCommandManager]),
   );
 
   const featureManager = new PrimaryFeatureManager(
-    GetServerStatusStateHelper(store)
+    GetServerStatusStateHelper(store),
   );
 
   const archiveHelper: MockArchiveHelper | PrimaryArchiveHelper =
@@ -111,17 +111,17 @@ test("GIVEN StatusPage THEN shows server status", async () => {
   expect(
     screen.getByRole("listitem", {
       name: "StatusItem-Inmanta Service Orchestrator",
-    })
+    }),
   ).toBeVisible();
   expect(
     screen.getByRole("listitem", {
       name: "StatusItem-lsm",
-    })
+    }),
   ).toBeVisible();
   expect(
     screen.getByRole("listitem", {
       name: "StatusItem-lsm.database",
-    })
+    }),
   ).toBeVisible();
 });
 
@@ -131,12 +131,12 @@ test("GIVEN StatusPage without support extension THEN download button is not pre
 
   await act(async () => {
     await apiHelper.resolve(
-      Either.right({ data: ServerStatus.withoutSupport })
+      Either.right({ data: ServerStatus.withoutSupport }),
     );
   });
 
   expect(
-    screen.queryByRole("button", { name: "DownloadArchiveButton" })
+    screen.queryByRole("button", { name: "DownloadArchiveButton" }),
   ).not.toBeInTheDocument();
 });
 
@@ -149,7 +149,7 @@ test("GIVEN StatusPage with support extension THEN download button is present", 
   });
 
   expect(
-    screen.getByRole("button", { name: "DownloadArchiveButton" })
+    screen.getByRole("button", { name: "DownloadArchiveButton" }),
   ).toBeVisible();
 });
 
@@ -165,7 +165,7 @@ test("GIVEN StatusPage with support extension WHEN user click download THEN an a
     name: "DownloadArchiveButton",
   });
   expect(downloadButton).toHaveTextContent(
-    words("status.supportArchive.action.download")
+    words("status.supportArchive.action.download"),
   );
 
   await act(async () => {
@@ -173,7 +173,7 @@ test("GIVEN StatusPage with support extension WHEN user click download THEN an a
   });
 
   expect(downloadButton).toHaveTextContent(
-    words("status.supportArchive.action.downloading")
+    words("status.supportArchive.action.downloading"),
   );
 
   expect(apiHelper.pendingRequests).toEqual([
@@ -182,13 +182,13 @@ test("GIVEN StatusPage with support extension WHEN user click download THEN an a
 
   await act(async () => {
     await apiHelper.resolve(
-      Either.right({ data: ServerStatus.supportArchiveBase64 })
+      Either.right({ data: ServerStatus.supportArchiveBase64 }),
     );
   });
   await waitFor(() =>
     expect(downloadButton).toHaveTextContent(
-      words("status.supportArchive.action.download")
-    )
+      words("status.supportArchive.action.download"),
+    ),
   );
 });
 
@@ -203,7 +203,7 @@ test("GIVEN StatusPage with support extension WHEN user click download THEN butt
     name: "DownloadArchiveButton",
   });
   expect(downloadButton).toHaveTextContent(
-    words("status.supportArchive.action.download")
+    words("status.supportArchive.action.download"),
   );
 
   await act(async () => {
@@ -211,7 +211,7 @@ test("GIVEN StatusPage with support extension WHEN user click download THEN butt
   });
 
   expect(downloadButton).toHaveTextContent(
-    words("status.supportArchive.action.downloading")
+    words("status.supportArchive.action.downloading"),
   );
 
   expect(apiHelper.pendingRequests).toEqual([
@@ -220,19 +220,19 @@ test("GIVEN StatusPage with support extension WHEN user click download THEN butt
 
   await act(async () => {
     await apiHelper.resolve(
-      Either.right({ data: ServerStatus.supportArchiveBase64 })
+      Either.right({ data: ServerStatus.supportArchiveBase64 }),
     );
   });
   expect(downloadButton).toHaveTextContent(
-    words("status.supportArchive.action.generating")
+    words("status.supportArchive.action.generating"),
   );
   (archiveHelper as MockArchiveHelper).resolve(
-    new Blob(["testing"], { type: "application/octet-stream" })
+    new Blob(["testing"], { type: "application/octet-stream" }),
   );
   await waitFor(() =>
     expect(downloadButton).toHaveTextContent(
-      words("status.supportArchive.action.download")
-    )
+      words("status.supportArchive.action.download"),
+    ),
   );
 });
 
@@ -256,7 +256,7 @@ test("GIVEN StatusPage with support extension WHEN user click download and respo
   });
 
   expect(downloadButton).toHaveTextContent(
-    words("status.supportArchive.action.download")
+    words("status.supportArchive.action.download"),
   );
   const errorContainer = screen.getByRole("generic", {
     name: "ArchiveErrorContainer",

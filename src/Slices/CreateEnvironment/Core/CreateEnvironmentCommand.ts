@@ -11,7 +11,7 @@ export interface Manifest {
   body: CreateEnvironmentParams;
   command: Command;
   trigger: (
-    body: CreateEnvironmentParams
+    body: CreateEnvironmentParams,
   ) => Promise<Either.Type<string, { data: EnvironmentModel }>>;
 }
 

@@ -69,7 +69,7 @@ export function showLinkTools(linkView: dia.LinkView) {
 export function appendInfoTool(
   elementView: dia.CellView,
   serviceAttributes: AttributeModel[],
-  serviceInstance: InstanceAttributeModel
+  serviceInstance: InstanceAttributeModel,
 ) {
   const tools: dia.ToolView[] = [];
 
@@ -121,7 +121,7 @@ export function appendInfoTool(
         };
       });
       document.dispatchEvent(
-        new CustomEvent("openDictsModal", { detail: stringifiedDicts })
+        new CustomEvent("openDictsModal", { detail: stringifiedDicts }),
       );
     },
   });
@@ -148,15 +148,15 @@ export function appendInstance(
   graph: dia.Graph,
   serviceWithReferences: InstanceWithReferences,
   services: ServiceModel[],
-  isMainInstance: boolean
+  isMainInstance: boolean,
 ): ServiceEntityBlock {
   const serviceInstance = serviceWithReferences.instance.data;
   const ServiceInstanceModel = services.find(
-    (model) => model.name === serviceInstance.service_entity
+    (model) => model.name === serviceInstance.service_entity,
   ) as ServiceModel;
 
   const instanceAsTable = new ServiceEntityBlock().setName(
-    serviceInstance.service_entity
+    serviceInstance.service_entity,
   );
 
   if (!isMainInstance) {
@@ -172,7 +172,7 @@ export function appendInstance(
       ServiceInstanceModel.attributes,
       serviceInstance.candidate_attributes,
       ServiceInstanceModel.embedded_entities,
-      "candidate"
+      "candidate",
     );
   } else {
     handleAttributes(
@@ -182,13 +182,13 @@ export function appendInstance(
       ServiceInstanceModel.attributes,
       serviceInstance.active_attributes as InstanceAttributeModel,
       ServiceInstanceModel.embedded_entities,
-      "active"
+      "active",
     );
   }
   const appendedInstances = serviceWithReferences.relatedInstances.map(
     (relatedInstance) => {
       return appendInstance(paper, graph, relatedInstance, services, false);
-    }
+    },
   );
   connectEntities(graph, instanceAsTable, appendedInstances);
 
@@ -218,11 +218,11 @@ export function appendEmbeddedEntity(
   paper: dia.Paper,
   graph: dia.Graph,
   embeddedEntity: EmbeddedEntity,
-  entityAttributes: InstanceAttributeModel
+  entityAttributes: InstanceAttributeModel,
 ): ServiceEntityBlock[] {
   //Create shape for Entity
   const flatAttributes = embeddedEntity.attributes.map(
-    (attribute) => attribute.name
+    (attribute) => attribute.name,
   );
 
   if (Array.isArray(entityAttributes)) {
@@ -240,7 +240,7 @@ export function appendEmbeddedEntity(
       appendInfoTool(
         instanceAsTable.findView(paper),
         embeddedEntity.attributes,
-        entityInstance
+        entityInstance,
       );
 
       createdInstances.push(instanceAsTable);
@@ -251,7 +251,7 @@ export function appendEmbeddedEntity(
           paper,
           graph,
           entity,
-          entityInstance[entity.name] as InstanceAttributeModel
+          entityInstance[entity.name] as InstanceAttributeModel,
         );
         connectEntities(graph, instanceAsTable, appendedEntity);
       });
@@ -270,7 +270,7 @@ export function appendEmbeddedEntity(
     appendInfoTool(
       instanceAsTable.findView(paper),
       embeddedEntity.attributes,
-      entityAttributes
+      entityAttributes,
     );
 
     //iterate through embedded entities to create and connect them
@@ -279,7 +279,7 @@ export function appendEmbeddedEntity(
         paper,
         graph,
         entity,
-        entityAttributes[entity.name] as InstanceAttributeModel
+        entityAttributes[entity.name] as InstanceAttributeModel,
       );
       connectEntities(graph, instanceAsTable, appendedEntity);
     });
@@ -303,7 +303,7 @@ export function appendEntity(
   graph: dia.Graph,
   serviceModel: ServiceModel,
   entity: InstanceAttributeModel,
-  isCore: boolean
+  isCore: boolean,
 ): g.Rect {
   //Create shape for Entity
   const instanceAsTable = new ServiceEntityBlock().setName(serviceModel.name);
@@ -318,7 +318,7 @@ export function appendEntity(
     instanceAsTable,
     serviceModel.attributes,
     entity,
-    []
+    [],
   );
 
   //auto-layout provided by JointJS
@@ -344,7 +344,7 @@ export function appendEntity(
 function appendColumns(
   serviceEntity: ServiceEntityBlock,
   attributesKeywords: string[],
-  serviceInstanceAttributes: InstanceAttributeModel
+  serviceInstanceAttributes: InstanceAttributeModel,
 ) {
   serviceEntity.appendColumns(
     attributesKeywords.map((key) => {
@@ -352,7 +352,7 @@ function appendColumns(
         name: key,
         value: serviceInstanceAttributes[key] as string,
       };
-    })
+    }),
   );
 }
 
@@ -366,7 +366,7 @@ function appendColumns(
 function connectEntities(
   graph: dia.Graph,
   source: ServiceEntityBlock,
-  targets: ServiceEntityBlock[]
+  targets: ServiceEntityBlock[],
 ) {
   targets.map((target) => {
     const link = new EntityConnection();
@@ -395,7 +395,7 @@ function handleAttributes(
   attributesModel: AttributeModel[],
   attributes: InstanceAttributeModel,
   embedded_entities: EmbeddedEntity[],
-  presentedAttr?: "candidate" | "active"
+  presentedAttr?: "candidate" | "active",
 ) {
   const attributesNames = attributesModel.map((attribute) => attribute.name);
   handleInfoIcon(instanceAsTable, presentedAttr);
@@ -411,7 +411,7 @@ function handleAttributes(
       paper,
       graph,
       entity,
-      attributes[entity.name] as InstanceAttributeModel
+      attributes[entity.name] as InstanceAttributeModel,
     );
     appendedEntities.map((entity) => {
       handleInfoIcon(entity, presentedAttr);
@@ -428,7 +428,7 @@ function handleAttributes(
  */
 function handleInfoIcon(
   instanceAsTable: ServiceEntityBlock,
-  presentedAttrs?: "candidate" | "active"
+  presentedAttrs?: "candidate" | "active",
 ) {
   const infoAttrs = {
     preserveAspectRatio: "none",

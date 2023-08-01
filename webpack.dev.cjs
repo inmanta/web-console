@@ -54,23 +54,23 @@ module.exports = merge(common, {
           path.resolve(__dirname, "node_modules/@patternfly/react-styles/css"),
           path.resolve(
             __dirname,
-            "node_modules/@patternfly/react-core/dist/styles/base.css"
+            "node_modules/@patternfly/react-core/dist/styles/base.css",
           ),
           path.resolve(
             __dirname,
-            "node_modules/@patternfly/react-core/dist/esm/@patternfly/patternfly"
+            "node_modules/@patternfly/react-core/dist/esm/@patternfly/patternfly",
           ),
           path.resolve(
             __dirname,
-            "node_modules/@patternfly/react-core/node_modules/@patternfly/react-styles/css"
+            "node_modules/@patternfly/react-core/node_modules/@patternfly/react-styles/css",
           ),
           path.resolve(
             __dirname,
-            "node_modules/@patternfly/react-table/node_modules/@patternfly/react-styles/css"
+            "node_modules/@patternfly/react-table/node_modules/@patternfly/react-styles/css",
           ),
           path.resolve(
             __dirname,
-            "node_modules/@patternfly/react-inline-edit-extension/node_modules/@patternfly/react-styles/css"
+            "node_modules/@patternfly/react-inline-edit-extension/node_modules/@patternfly/react-styles/css",
           ),
           path.resolve(__dirname, "node_modules/@inmanta/rappid/rappid.css"),
         ],

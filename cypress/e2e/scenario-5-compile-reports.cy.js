@@ -88,7 +88,7 @@ describe("5 Compile reports", () => {
       expect($rows.eq(0), "top-row-message").to.contain(
         isIso
           ? "Recompile model to export service definition"
-          : "Compile triggered from the console"
+          : "Compile triggered from the console",
       );
       expect($rows.eq(0), "top-row-status").to.contain("success");
     });
@@ -101,7 +101,7 @@ describe("5 Compile reports", () => {
       const $rows = $tableBody.find("tr");
 
       expect($rows.eq(0), "top-row-message").to.contain(
-        "Compile triggered from the console"
+        "Compile triggered from the console",
       );
 
       expect($rows).length.to.be.at.least(isIso ? 2 : 5);
@@ -112,7 +112,7 @@ describe("5 Compile reports", () => {
       const $rows = $tableBody.find("tr");
 
       expect($rows.eq(0), "top-row-message").to.contain(
-        "Compile triggered from the console"
+        "Compile triggered from the console",
       );
       expect($rows.eq(0), "top-row-status").to.contain("success");
     });
@@ -148,7 +148,7 @@ describe("5 Compile reports", () => {
         expect($rowGroups.eq(0), "Command-row").to.contain("Empty");
         expect($rowGroups.eq(1), "Return-code-row").to.contain("0");
         expect($rowGroups.eq(2), "Output-stream-row").to.contain(
-          "Using extra environment variables during compile"
+          "Using extra environment variables during compile",
         );
       });
   });
@@ -193,13 +193,13 @@ describe("5 Compile reports", () => {
 
         // Expect latest row to be having the message: Recompile model because state transition
         expect($rows.eq(0), "top-row-message").to.contain(
-          "Recompile model because state transition"
+          "Recompile model because state transition",
         );
         expect($rows.eq(1), "second-row-message").to.contain(
-          "Recompile model because state transition"
+          "Recompile model because state transition",
         );
         expect($rows.eq(2), "third-row-message").to.contain(
-          "Recompile model because state transition (validate)"
+          "Recompile model because state transition (validate)",
         );
         expect($rows.eq(0), "top-row-status").to.contain("success");
         expect($rows.eq(1), "second-row-status").to.contain("success");
@@ -273,7 +273,7 @@ describe("5 Compile reports", () => {
 
         // Expect one row to be having the message: Recompile model because state transition (validate)
         expect($rows.eq(0), "top-row-message").to.contain(
-          "Recompile model because state transition (validate)"
+          "Recompile model because state transition (validate)",
         );
         expect($rows.eq(0), "top-row-status").to.contain("failed");
       });
@@ -320,7 +320,7 @@ describe("5 Compile reports", () => {
       // expect resource to be deleted
       cy.get(".pf-c-table__toggle", { timeout: 25000 }).should(
         "have.length",
-        1
+        1,
       );
 
       // go back to Compile Reports
@@ -334,7 +334,7 @@ describe("5 Compile reports", () => {
 
         // Expect one row to be having the message: Recompile model because state transition (validate)
         expect($rows.eq(0), "top-row-message").to.contain(
-          "Recompile model because state transition (validate)"
+          "Recompile model because state transition (validate)",
         );
         expect($rows.eq(0), "top-row-status").to.contain("failed");
       });
@@ -350,7 +350,7 @@ describe("5 Compile reports", () => {
 
         // Expect one row to be having the message: Recompile model because state transition (validate)
         expect($rows.eq(0), "top-row-message").to.contain(
-          "Compile triggered from the console"
+          "Compile triggered from the console",
         );
         expect($rows.eq(0), "top-row-status").to.contain("success");
       });
@@ -382,7 +382,7 @@ describe("5 Compile reports", () => {
 
         // Expect one row to be having the message: Recompile model because state transition (validate)
         expect($rows.eq(0), "top-row-message").to.contain(
-          "Recompile model because state transition (validate)"
+          "Recompile model because state transition (validate)",
         );
         expect($rows.eq(0), "top-row-status").to.contain("failed");
       });

@@ -8,7 +8,7 @@ import { getUrl } from "./getUrl";
 export function EnvironmentDetailsContinuousQueryManager(
   store: Store,
   apiHelper: ApiHelper,
-  scheduler: Scheduler
+  scheduler: Scheduler,
 ) {
   return QueryManager.Continuous<"GetEnvironmentDetails">(
     apiHelper,
@@ -18,6 +18,6 @@ export function EnvironmentDetailsContinuousQueryManager(
     ({ id }) => [id],
     "GetEnvironmentDetails",
     ({ details, id }) => getUrl(details, id),
-    identity
+    identity,
   );
 }

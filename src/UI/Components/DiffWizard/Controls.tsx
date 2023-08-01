@@ -33,7 +33,7 @@ export const Controls: React.FC<Props> = ({ data, refs, from, to }) => (
               />
             ),
         },
-        data
+        data,
       )}
     </GridItem>
     <GridItem span={10}>

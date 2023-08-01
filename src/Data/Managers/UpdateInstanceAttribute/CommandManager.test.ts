@@ -10,8 +10,8 @@ test("GIVEN getBody THEN generates correct body with message", async () => {
       "test_target",
       ServiceInstance.a.version,
       ServiceInstance.a.service_entity,
-      ServiceInstance.a.id
-    )
+      ServiceInstance.a.id,
+    ),
   ).toEqual({
     patch_id:
       ServiceInstance.a.service_entity +

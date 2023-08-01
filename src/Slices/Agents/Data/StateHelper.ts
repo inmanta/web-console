@@ -12,6 +12,6 @@ export function StateHelper(store: Store) {
         data: value,
       });
     },
-    (state, query, environment) => state.agents.listByEnv[environment]
+    (state, query, environment) => state.agents.listByEnv[environment],
   );
 }

@@ -27,11 +27,11 @@ function setup() {
   const resourceLogsQueryManager = ResourceLogsQueryManager(
     apiHelper,
     resourceLogsStateHelper,
-    new StaticScheduler()
+    new StaticScheduler(),
   );
 
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolver([resourceLogsQueryManager])
+    new DynamicQueryManagerResolver([resourceLogsQueryManager]),
   );
 
   const component = (
@@ -55,7 +55,7 @@ test("GIVEN ResourceLogsView THEN shows resource logs", async () => {
   render(component);
 
   expect(
-    screen.getByRole("generic", { name: "ResourceLogs-Loading" })
+    screen.getByRole("generic", { name: "ResourceLogs-Loading" }),
   ).toBeVisible();
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
@@ -70,7 +70,7 @@ test("GIVEN ResourceLogsView THEN shows resource logs", async () => {
   });
 
   expect(
-    await screen.findByRole("grid", { name: "ResourceLogsTable" })
+    await screen.findByRole("grid", { name: "ResourceLogsTable" }),
   ).toBeVisible();
 
   const rows = await screen.findAllByRole("rowgroup", {
@@ -99,7 +99,7 @@ test("GIVEN ResourceLogsView WHEN filtered on message THEN only shows relevant l
       Either.right({
         ...ResourceLogs.response,
         data: [ResourceLogs.response.data[0]],
-      })
+      }),
     );
   });
 

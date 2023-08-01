@@ -20,7 +20,7 @@ export const EventsFilterWidget: React.FC<Props> = ({
   states,
 }) => {
   const [filterKind, setFilterKind] = useState<FilterKind>(
-    FilterKind.EventType
+    FilterKind.EventType,
   );
 
   const updateSource = (sources: string[]) =>

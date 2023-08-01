@@ -26,7 +26,7 @@ test("GIVEN ServiceInventory WHEN on 2nd page with outdated 1st page and user cl
           after: 25,
           page_size: 20,
         },
-      })
+      }),
     );
   });
 

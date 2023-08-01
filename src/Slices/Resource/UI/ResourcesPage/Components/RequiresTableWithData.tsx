@@ -50,6 +50,6 @@ export const RequiresTableWithData: React.FC<Props> = ({ id, deps }) => {
           />
         ),
     },
-    data
+    data,
   );
 };

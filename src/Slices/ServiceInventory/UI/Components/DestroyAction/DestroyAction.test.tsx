@@ -25,11 +25,11 @@ function setup() {
   });
 
   dependencies.environmentModifier.setEnvironment(
-    ServiceInstance.a.environment
+    ServiceInstance.a.environment,
   );
 
   const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolver(storeInstance, apiHelper, authHelper)
+    new CommandManagerResolver(storeInstance, apiHelper, authHelper),
   );
   const refetch = jest.fn();
   return {
@@ -66,7 +66,7 @@ describe("DeleteModal ", () => {
     const { component } = setup();
     render(component());
     const modalButton = await screen.findByText(
-      words("inventory.destroyInstance.button")
+      words("inventory.destroyInstance.button"),
     );
     await act(async () => {
       await userEvent.click(modalButton);
@@ -79,7 +79,7 @@ describe("DeleteModal ", () => {
     const { component } = setup();
     render(component());
     const modalButton = await screen.findByText(
-      words("inventory.destroyInstance.button")
+      words("inventory.destroyInstance.button"),
     );
     await act(async () => {
       await userEvent.click(modalButton);
@@ -95,7 +95,7 @@ describe("DeleteModal ", () => {
     const { component, apiHelper, refetch } = setup();
     render(component());
     const modalButton = await screen.findByText(
-      words("inventory.destroyInstance.button")
+      words("inventory.destroyInstance.button"),
     );
     await act(async () => {
       await userEvent.click(modalButton);
@@ -127,7 +127,7 @@ describe("DeleteModal ", () => {
     expect(
       await screen.findByRole("button", {
         name: words("inventory.destroyInstance.button"),
-      })
+      }),
     ).toBeEnabled();
   });
 });

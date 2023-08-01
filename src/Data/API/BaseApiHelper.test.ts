@@ -26,8 +26,8 @@ test("BaseApiHelper.get handles a failed a GET request", async () => {
   const response = await apiHelper.get(url, env);
   expect(response).toEqual(
     Either.left(
-      `The following error occured while communicating with the server: 400 Bad Request \nSomething happened`
-    )
+      `The following error occured while communicating with the server: 400 Bad Request \nSomething happened`,
+    ),
   );
 });
 
@@ -38,7 +38,7 @@ test("BaseApiHelper.post executes a POST request with correct url & env", async 
 
   fetchMock.mockResponse(JSON.stringify({ data: [] }));
   expect(await apiHelper.post(url, env, {})).toEqual(
-    Either.right({ data: [] })
+    Either.right({ data: [] }),
   );
 
   const [receivedUrl, requestInit] = fetchMock.mock.calls[0];

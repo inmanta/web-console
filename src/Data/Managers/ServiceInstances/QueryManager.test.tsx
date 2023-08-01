@@ -32,12 +32,12 @@ const setup = () => {
       effect: jest.fn(() => task.effect()),
       update: jest.fn((result) => task.update(result)),
     }),
-    tasks
+    tasks,
   );
   const queryManager = ServiceInstancesQueryManager(
     apiHelper,
     stateHelper,
-    scheduler
+    scheduler,
   );
 
   const Component: React.FC = () => {

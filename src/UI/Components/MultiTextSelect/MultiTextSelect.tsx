@@ -4,7 +4,7 @@ import { Select, SelectOption } from "@patternfly/react-core";
 interface Props {
   selected: string[];
   setSelected: (
-    selected: string[] | ((prevState: string[]) => string[])
+    selected: string[] | ((prevState: string[]) => string[]),
   ) => void;
   options: string[];
   isDisabled?: boolean;

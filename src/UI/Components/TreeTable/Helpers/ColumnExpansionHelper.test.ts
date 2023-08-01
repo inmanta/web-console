@@ -4,25 +4,25 @@ test("Given the ColumnExpansionHelper with parameters used by the attributes tab
   const columnExpansionHelper = new ColumnExpansionHelper(60, 3, 10);
   const defaultState = columnExpansionHelper.getDefaultState(
     ["candidate", "active", "rollback"],
-    []
+    [],
   );
   expect(defaultState).toEqual({ candidate: 20, active: 20, rollback: 20 });
 
   const activeExpanded = columnExpansionHelper.expandColumn(
     defaultState,
-    "active"
+    "active",
   );
   expect(activeExpanded).toEqual({ candidate: 10, active: 40, rollback: 10 });
 
   const anotherExpanded = columnExpansionHelper.expandColumn(
     activeExpanded,
-    "candidate"
+    "candidate",
   );
   expect(anotherExpanded).toEqual({ candidate: 40, active: 10, rollback: 10 });
 
   const defaultWithOneEmpty = columnExpansionHelper.getDefaultState(
     ["candidate", "active", "rollback"],
-    ["candidate"]
+    ["candidate"],
   );
   expect(defaultWithOneEmpty).toEqual({
     candidate: 10,
@@ -32,7 +32,7 @@ test("Given the ColumnExpansionHelper with parameters used by the attributes tab
 
   const defaultWithTwoEmpty = columnExpansionHelper.getDefaultState(
     ["candidate", "active", "rollback"],
-    ["candidate", "active"]
+    ["candidate", "active"],
   );
   expect(defaultWithTwoEmpty).toEqual({
     candidate: 10,
@@ -42,7 +42,7 @@ test("Given the ColumnExpansionHelper with parameters used by the attributes tab
 
   const defaultWithAllEmpty = columnExpansionHelper.getDefaultState(
     ["candidate", "active", "rollback"],
-    ["candidate", "active", "rollback"]
+    ["candidate", "active", "rollback"],
   );
   expect(defaultWithAllEmpty).toEqual({
     candidate: 20,

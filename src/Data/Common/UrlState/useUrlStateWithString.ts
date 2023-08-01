@@ -7,7 +7,7 @@ export const useUrlStateWithString = provide(handleUrlStateWithString);
 export function handleUrlStateWithString<Data extends string>(
   config: Pick<StateConfig<Data>, "default" | "key" | "route">,
   location: Location,
-  replace: Replace
+  replace: Replace,
 ): [Data, Update<Data>] {
   return handleUrlState<Data>(
     {
@@ -19,6 +19,6 @@ export function handleUrlStateWithString<Data extends string>(
       equals: (a: Data, b: Data) => a === b,
     },
     location,
-    replace
+    replace,
   );
 }

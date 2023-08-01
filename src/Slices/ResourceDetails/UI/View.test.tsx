@@ -30,9 +30,9 @@ function setup() {
       ResourceDetailsQueryManager(
         apiHelper,
         ResourceDetailsStateHelper(store),
-        scheduler
+        scheduler,
       ),
-    ])
+    ]),
   );
 
   const component = (
@@ -60,7 +60,7 @@ test("GIVEN The Resource details view THEN details data is fetched immediately",
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0].url).toEqual(
-    `/api/v2/resource/${Resource.encodedId}`
+    `/api/v2/resource/${Resource.encodedId}`,
   );
 
   await act(async () => {
@@ -68,7 +68,7 @@ test("GIVEN The Resource details view THEN details data is fetched immediately",
   });
 
   expect(
-    await screen.findByText(ResourceDetails.a.attributes.path)
+    await screen.findByText(ResourceDetails.a.attributes.path),
   ).toBeVisible();
 });
 
@@ -83,7 +83,9 @@ test("GIVEN The Resource details view WHEN the user clicks on the requires tab T
 
   await act(async () => {
     await userEvent.click(
-      screen.getAllByRole("tab", { name: words("resources.requires.title") })[0]
+      screen.getAllByRole("tab", {
+        name: words("resources.requires.title"),
+      })[0],
     );
   });
 
@@ -91,7 +93,7 @@ test("GIVEN The Resource details view WHEN the user clicks on the requires tab T
   expect(apiHelper.pendingRequests).toHaveLength(0);
 
   expect(
-    await screen.findByRole("grid", { name: "ResourceRequires-Success" })
+    await screen.findByRole("grid", { name: "ResourceRequires-Success" }),
   ).toBeVisible();
 });
 
@@ -103,6 +105,6 @@ test("GIVEN The Resource details view THEN shows status label", async () => {
   });
 
   expect(
-    screen.getByRole("generic", { name: "Status-deployed" })
+    screen.getByRole("generic", { name: "Status-deployed" }),
   ).toBeVisible();
 });

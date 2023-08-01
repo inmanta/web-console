@@ -12,7 +12,7 @@ export class SchedulerImpl implements Scheduler {
   constructor(
     private readonly delay: number,
     private readonly taskWrapper?: (task: Task) => Task,
-    tasks?: Dictionary<Task>
+    tasks?: Dictionary<Task>,
   ) {
     this.tasks =
       typeof tasks !== "undefined" ? tasks : new DictionaryImpl<Task>();

@@ -34,17 +34,17 @@ export function TriggerInstanceUpdateCommandManager(apiHelper: ApiHelper) {
               fields,
               updatedAttributes,
               command.service_entity,
-              command.version
-            )
+              command.version,
+            ),
           );
         } else {
           return await apiHelper.patch(
             getUrl(command),
             environment,
-            getBodyV1(fields, currentAttributes, updatedAttributes)
+            getBodyV1(fields, currentAttributes, updatedAttributes),
           );
         }
-      }
+      },
   );
 }
 
@@ -56,7 +56,7 @@ const create_UUID = () => {
       const r = (dt + Math.random() * 16) % 16 | 0;
       dt = Math.floor(dt / 16);
       return (c == "x" ? r : (r & 0x3) | 0x8).toString(16);
-    }
+    },
   );
   return uuid;
 };
@@ -64,14 +64,14 @@ const create_UUID = () => {
 export const getBodyV1 = (
   fields: Field[],
   currentAttributes: InstanceAttributeModel | null,
-  updatedAttributes: InstanceAttributeModel
+  updatedAttributes: InstanceAttributeModel,
 ): { attributes: InstanceAttributeModel } => {
   // Make sure correct types are used
   const parsedAttributes = sanitizeAttributes(fields, updatedAttributes);
   // Only the difference should be sent
   const attributeDiff = new AttributeResultConverterImpl().calculateDiff(
     parsedAttributes,
-    currentAttributes
+    currentAttributes,
   );
 
   return { attributes: attributeDiff };
@@ -81,7 +81,7 @@ export const getBodyV2 = (
   fields: Field[],
   updatedAttributes: InstanceAttributeModel,
   service_id: string,
-  version: ParsedNumber
+  version: ParsedNumber,
 ): { edit: Array<PatchField>; patch_id: string } => {
   // Make sure correct types are used
   const parsedAttributes = sanitizeAttributes(fields, updatedAttributes);

@@ -14,10 +14,10 @@ export const ColumnHeaders: React.FC<Props> = ({ columns, emptyColumns }) => {
   const columnExpansionHelper = new ColumnExpansionHelper(
     60,
     columns.length,
-    10
+    10,
   );
   const [columnWidths, setColumnWidths] = useState<Record<string, number>>(
-    columnExpansionHelper.getDefaultState(columns, emptyColumns)
+    columnExpansionHelper.getDefaultState(columns, emptyColumns),
   );
   return (
     <>
@@ -31,16 +31,16 @@ export const ColumnHeaders: React.FC<Props> = ({ columns, emptyColumns }) => {
             columnExpansionHelper.isExpanded(columnWidths[column]) &&
             !isEqual(
               columnWidths,
-              columnExpansionHelper.getDefaultState(columns, emptyColumns)
+              columnExpansionHelper.getDefaultState(columns, emptyColumns),
             )
           }
           onClick={() =>
             columnExpansionHelper.isExpanded(columnWidths[column])
               ? setColumnWidths(
-                  columnExpansionHelper.getDefaultState(columns, emptyColumns)
+                  columnExpansionHelper.getDefaultState(columns, emptyColumns),
                 )
               : setColumnWidths(
-                  columnExpansionHelper.expandColumn(columnWidths, column)
+                  columnExpansionHelper.expandColumn(columnWidths, column),
                 )
           }
         />

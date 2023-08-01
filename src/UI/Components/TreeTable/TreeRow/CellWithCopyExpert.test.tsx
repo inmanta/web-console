@@ -34,19 +34,19 @@ function setup(props, expertMode = false) {
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
   const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolver(store, apiHelper, scheduler, scheduler)
+    new QueryManagerResolver(store, apiHelper, scheduler, scheduler),
   );
   const updateAttribute = UpdateInstanceAttributeCommandManager(
     new KeycloakAuthHelper(),
-    apiHelper
+    apiHelper,
   );
   const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolver([updateAttribute])
+    new DynamicCommandManagerResolver([updateAttribute]),
   );
   const onClickFn = jest.fn();
   const environmentHandler = EnvironmentHandlerImpl(
     useLocation,
-    dependencies.routeManager
+    dependencies.routeManager,
   );
   const environmentModifier = EnvironmentModifierImpl();
 
@@ -63,7 +63,7 @@ function setup(props, expertMode = false) {
           enable_lsm_expert_mode: expertMode,
         },
       },
-    ])
+    ]),
   );
 
   store.dispatch.environment.setSettingsData({
@@ -159,7 +159,7 @@ test("Given CellWithCopyExpert When a cell has entity and on click Then it is re
         ...ServiceInstance.a,
         service_identity_attribute_value: undefined,
       },
-    })
+    }),
   );
 
   const cell = await screen.findByText(props.value);
@@ -187,7 +187,7 @@ test("Given CellWithCopyExpert When a cell has entity, multiple values and on cl
         ...ServiceInstance.a,
         service_identity_attribute_value: undefined,
       },
-    })
+    }),
   );
   apiHelper.resolve(
     Either.right({
@@ -195,7 +195,7 @@ test("Given CellWithCopyExpert When a cell has entity, multiple values and on cl
         ...ServiceInstance.b,
         service_identity_attribute_value: undefined,
       },
-    })
+    }),
   );
 
   const firstCell = await screen.findByText(someValue);
@@ -232,7 +232,7 @@ test("Given CellWithCopyExpert When a cell has access to expertMode Then button 
         ...ServiceInstance.a,
         service_identity_attribute_value: undefined,
       },
-    })
+    }),
   );
   const button = await screen.findByRole("button");
   await act(async () => {
@@ -273,7 +273,7 @@ test("Given CellWithCopyExpert When a cell has access to expertMode and input wi
         ...ServiceInstance.a,
         service_identity_attribute_value: undefined,
       },
-    })
+    }),
   );
 
   const button = await screen.findByRole("button");
@@ -345,7 +345,7 @@ test("Given CellWithCopyExpert When a cell has access to expertMode and input wi
   });
 
   expect(
-    apiHelper.pendingRequests.find((request) => request.method === "PATCH")
+    apiHelper.pendingRequests.find((request) => request.method === "PATCH"),
   ).toMatchObject({
     method: "PATCH",
     url: "/lsm/v2/service_inventory/mpn/09042edf-3032-490d-bcaf-cc45615ba782/expert",

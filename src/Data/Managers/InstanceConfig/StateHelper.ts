@@ -12,6 +12,6 @@ export function InstanceConfigStateHelper(store: Store) {
         value,
       });
     },
-    (state, query) => state.instanceConfig.byId[query.id]
+    (state, query) => state.instanceConfig.byId[query.id],
   );
 }
