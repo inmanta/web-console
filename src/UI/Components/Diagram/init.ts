@@ -1,12 +1,17 @@
-import { dia, shapes, ui } from "@inmanta/rappid";
+import { dia, highlighters, shapes, ui } from "@inmanta/rappid";
 import { InstanceAttributeModel, ServiceModel } from "@/Core";
 import { InstanceWithReferences } from "@/Data/Managers/GetInstanceWithRelations/interface";
 import { appendEntity, appendInstance, showLinkTools } from "./actions";
 import { anchorNamespace } from "./anchors";
+import { checkIfConnectionIsAllowed } from "./helpers";
+import { ConnectionRules } from "./interfaces";
 import { routerNamespace } from "./routers";
 import { EntityConnection } from "./shapes";
 
-export default function diagramInit(canvas): DiagramHandlers {
+export default function diagramInit(
+  canvas,
+  connectionRules: ConnectionRules
+): DiagramHandlers {
   /**
    * https://resources.jointjs.com/docs/jointjs/v3.6/joint.html#dia.Graph
    */
@@ -43,7 +48,29 @@ export default function diagramInit(canvas): DiagramHandlers {
     },
     defaultLink: () => new EntityConnection(),
     validateConnection: (srcView, srcMagnet, tgtView, tgtMagnet) => {
-      return srcMagnet !== tgtMagnet && srcView.cid !== tgtView.cid;
+      const baseValidators =
+        srcMagnet !== tgtMagnet && srcView.cid !== tgtView.cid;
+
+      const srcViewAsElement = graph
+        .getElements()
+        .find((element) => element.cid === srcView.model.cid);
+
+      //find srcView as Element to get Neighbors and check if it's already connected to the target
+      if (srcViewAsElement) {
+        const connectedElements = graph.getNeighbors(srcViewAsElement);
+        const isConnected = connectedElements.find(
+          (connectedElement) => connectedElement.cid === tgtView.model.cid
+        );
+        const isAllowed = checkIfConnectionIsAllowed(
+          graph,
+          tgtView,
+          srcView,
+          connectionRules
+        );
+
+        return isConnected === undefined && isAllowed && baseValidators;
+      }
+      return baseValidators;
     },
   });
 
@@ -110,10 +137,61 @@ export default function diagramInit(canvas): DiagramHandlers {
     // additional listeners to add logic for appended tools, if there will be need for any validation on remove then I think we will need custom handle anyway
     // halo.on("action:remove:pointerdown", function (evt) {
     // });
-    // halo.on("action:link:pointerdown", function (evt) {
-    // });
-    // halo.on("action:link:add", function (evt) {
-    // });
+    halo.on("action:link:pointerdown", function () {
+      const area = paper.getArea();
+      const elements = paper
+        .findViewsInArea(area)
+        .filter((shape) => shape.cid !== cellView.cid);
+
+      //to getNeighbors I need to use Element, and cellView.model could technically work, typeScript gives an error
+      const cellViewAsElement = graph
+        .getElements()
+        .find((element) => element.cid === cellView.model.cid);
+
+      if (cellViewAsElement) {
+        const connectedElements = graph.getNeighbors(cellViewAsElement);
+
+        elements.forEach((element) => {
+          const isAllowed = checkIfConnectionIsAllowed(
+            graph,
+            cellView,
+            element,
+            connectionRules
+          );
+          if (!isAllowed) {
+            return;
+          }
+          //if shape isn't found then it means it's not connected, so available to highlight
+          const unconnectedShape = connectedElements.find(
+            (connectedElement) => {
+              return connectedElement.cid === element.model.cid;
+            }
+          );
+
+          if (unconnectedShape === undefined) {
+            highlighters.mask.add(element, "body", "available-to-connect", {
+              padding: 0,
+              attrs: {
+                stroke: "#00FF19",
+                "stroke-opacity": 0.3,
+                "stroke-width": 5,
+                filter: "drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4))",
+              },
+            });
+          }
+        });
+      }
+    });
+
+    //this event is fired even if we hang connection outside other shape
+    halo.on("action:link:add", function () {
+      const area = paper.getArea();
+      const shapes = paper.findViewsInArea(area);
+
+      shapes.map((shape) => {
+        highlighters.mask.remove(shape), "available-to-connect";
+      });
+    });
 
     halo.on("action:edit:pointerdown", function (evt) {
       evt.stopPropagation();
