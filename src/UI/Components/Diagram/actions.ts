@@ -435,6 +435,7 @@ function handleInfoIcon(
     cursor: "pointer",
     x: "calc(0.85*w)",
   };
+
   if (presentedAttrs === "candidate") {
     instanceAsTable.attr({
       info: {
