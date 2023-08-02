@@ -201,10 +201,12 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
   getName(): string {
     return this.attr(["headerLabel", "text"]);
   }
+
   setTabColor(color: string) {
     this.attr(["header", "fill"], color);
     return this.attr(["header", "stroke"], color);
   }
+
   appendColumns(data: Array<ColumnData>, initializeButton = true) {
     this._setColumns(data, initializeButton);
 
