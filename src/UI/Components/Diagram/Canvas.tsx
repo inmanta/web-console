@@ -31,7 +31,7 @@ const Canvas = ({
 
   const handleEvent = (event) => {
     const customEvent = event as CustomEvent;
-    setStringifiedDict(customEvent.detail);
+    setStringifiedDict(JSON.parse(customEvent.detail));
     setIsDialogOpen(true);
   };
 
