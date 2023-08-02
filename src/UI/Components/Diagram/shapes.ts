@@ -100,8 +100,8 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
         span: 2,
       };
 
-      //out-of-the-box headeredRecord doesn't truncate attribute name, only it's value
-      const reproducedDisplayText = util.breakText(
+      //out-of-the-box headeredRecord doesn't truncate attribute name, only their values
+      const truncatedName = util.breakText(
         item.name.toString(),
         { width: 80, height: 22 },
         {
@@ -113,10 +113,11 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
         },
       );
 
-      if (reproducedDisplayText.includes(`\u2026`)) {
+      if (truncatedName.includes(`\u2026`)) {
         this.attr(`itemLabel_${item.name}/data-tooltip`, item.name);
         this.attr(`itemLabel_${item.name}/data-tooltip-position`, "right");
-        names.push({ ...nameObject, label: reproducedDisplayText });
+
+        names.push({ ...nameObject, label: truncatedName });
       } else {
         names.push(nameObject);
       }

@@ -106,6 +106,7 @@ const FormModal = ({
         } else {
           selection.push(value as string);
         }
+
         return set(clone, path, selection);
       });
     } else {
@@ -132,8 +133,10 @@ const FormModal = ({
           value: service.name + displayedPrefix,
           model: service,
         });
+
         getOptions(service.embedded_entities, values, joinedPrefix);
       });
+
       return values;
     };
 
