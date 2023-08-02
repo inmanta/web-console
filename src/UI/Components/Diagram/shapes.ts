@@ -82,7 +82,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
       id: string;
       label: string;
     }> = [];
-    let dataToIterate = data;
+    let dataToIterate = [...data];
 
     if (initialSetting && data.length > 4) {
       this.set("dataToDisplay", data);
