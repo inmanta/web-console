@@ -235,13 +235,8 @@ export function appendEmbeddedEntity(
 
       appendColumns(instanceAsTable, flatAttributes, entityInstance);
 
-      //add to graph and then check for dictionaries
+      //add to graph
       instanceAsTable.addTo(graph);
-      appendInfoTool(
-        instanceAsTable.findView(paper),
-        embeddedEntity.attributes,
-        entityInstance,
-      );
 
       createdInstances.push(instanceAsTable);
 
