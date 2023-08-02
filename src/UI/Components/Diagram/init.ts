@@ -10,7 +10,7 @@ import { EntityConnection } from "./shapes";
 
 export default function diagramInit(
   canvas,
-  connectionRules: ConnectionRules
+  connectionRules: ConnectionRules,
 ): DiagramHandlers {
   /**
    * https://resources.jointjs.com/docs/jointjs/v3.6/joint.html#dia.Graph
@@ -59,13 +59,13 @@ export default function diagramInit(
       if (srcViewAsElement) {
         const connectedElements = graph.getNeighbors(srcViewAsElement);
         const isConnected = connectedElements.find(
-          (connectedElement) => connectedElement.cid === tgtView.model.cid
+          (connectedElement) => connectedElement.cid === tgtView.model.cid,
         );
         const isAllowed = checkIfConnectionIsAllowed(
           graph,
           tgtView,
           srcView,
-          connectionRules
+          connectionRules,
         );
 
         return isConnected === undefined && isAllowed && baseValidators;
@@ -156,7 +156,7 @@ export default function diagramInit(
             graph,
             cellView,
             element,
-            connectionRules
+            connectionRules,
           );
           if (!isAllowed) {
             return;
@@ -165,7 +165,7 @@ export default function diagramInit(
           const unconnectedShape = connectedElements.find(
             (connectedElement) => {
               return connectedElement.cid === element.model.cid;
-            }
+            },
           );
 
           if (unconnectedShape === undefined) {
