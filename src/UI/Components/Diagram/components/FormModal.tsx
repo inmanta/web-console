@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Alert,
   Button,
@@ -12,7 +12,12 @@ import {
 } from "@patternfly/react-core";
 import { set } from "lodash";
 import styled from "styled-components";
-import { Field, InstanceAttributeModel, ServiceModel } from "@/Core";
+import {
+  EmbeddedEntity,
+  Field,
+  InstanceAttributeModel,
+  ServiceModel,
+} from "@/Core";
 import { words } from "@/UI/words";
 import {
   createFormState,
@@ -20,6 +25,12 @@ import {
   FieldCreator,
 } from "../../ServiceInstanceForm";
 import { FieldInput } from "../../ServiceInstanceForm/Components";
+
+interface PossibleForm {
+  key: string;
+  value: string;
+  model: ServiceModel | EmbeddedEntity | undefined;
+}
 
 const FormModal = ({
   isOpen,
@@ -30,17 +41,24 @@ const FormModal = ({
   isOpen: boolean;
   toggleIsOpen: (value: boolean) => void;
   services: ServiceModel[];
-  onConfirm: (entity: InstanceAttributeModel, entityName: string) => void;
+  onConfirm: (
+    entity: InstanceAttributeModel,
+    selected: {
+      name: string;
+      model: ServiceModel | EmbeddedEntity;
+    },
+  ) => void;
 }) => {
+  const [possibleForms, setPossibleForms] = useState<PossibleForm[]>([]);
   const [fields, setFields] = useState<Field[]>([]);
   const [formState, setFormState] = useState<InstanceAttributeModel>({});
-  // TODO: indication if we are editing instance or not
-  //   instance !== undefined
-  //       ? createEditFormState(fields, "v2", instance.candidate_attributes)
-  //       : createFormState(fields)
   const [isSelectOpen, setIsSelectOpen] = useState(false);
   const [selected, setSelected] = useState<
-    string | SelectOptionObject | undefined
+    | {
+        name: string;
+        model: ServiceModel | EmbeddedEntity;
+      }
+    | undefined
   >(undefined);
 
   const fieldCreator = new FieldCreator(new CreateModifierHandler());
@@ -58,20 +76,25 @@ const FormModal = ({
     isPlaceholder,
   ) => {
     if (isPlaceholder) {
-      setSelected(undefined);
+      clearStates();
     } else {
-      setSelected(value);
-      const chosenModel = services.find((service) => service.name === value);
-      if (chosenModel) {
+      const chosenModel = possibleForms.find(
+        (service) => service.value === value,
+      );
+
+      if (chosenModel && chosenModel.model) {
+        setSelected({ name: value as string, model: chosenModel.model });
         const selectedFields = fieldCreator.attributesToFields(
-          chosenModel.attributes,
+          chosenModel.model.attributes,
         );
+
         setFields(selectedFields);
         setFormState(createFormState(selectedFields));
       }
     }
     setIsSelectOpen(false);
   };
+
   const getUpdate = (path: string, value: unknown, multi = false): void => {
     if (multi) {
       setFormState((prev) => {
@@ -93,6 +116,33 @@ const FormModal = ({
     }
   };
 
+  useEffect(() => {
+    const getOptions = (
+      services: (ServiceModel | EmbeddedEntity)[],
+      values: PossibleForm[],
+      prefix = "",
+    ) => {
+      services.forEach((service) => {
+        const joinedPrefix =
+          (prefix !== "" ? prefix + "." : prefix) + service.name;
+        const displayedPrefix = prefix !== "" ? ` (${prefix})` : "";
+
+        values.push({
+          key: service.name + "-" + prefix,
+          value: service.name + displayedPrefix,
+          model: service,
+        });
+        getOptions(service.embedded_entities, values, joinedPrefix);
+      });
+      return values;
+    };
+
+    setPossibleForms(
+      getOptions(services, [
+        { key: "default_option", value: "Choose a Service", model: undefined },
+      ]),
+    );
+  }, [services]);
   return (
     <StyledModal
       isOpen={isOpen}
@@ -120,8 +170,9 @@ const FormModal = ({
           aria-label="confirm-button"
           variant="primary"
           width={200}
+          isDisabled={selected === undefined}
           onClick={() => {
-            onConfirm(formState, selected as string);
+            if (selected) onConfirm(formState, selected);
             clearStates();
             toggleIsOpen(false);
           }}
@@ -136,26 +187,19 @@ const FormModal = ({
       >
         <FlexItem>
           <Select
-            selections={selected}
+            selections={selected?.name}
             onToggle={() => setIsSelectOpen(!isSelectOpen)}
             isOpen={isSelectOpen}
             onSelect={onEntityChosen}
             maxHeight={300}
           >
-            {[
+            {possibleForms.map(({ key, value }) => (
               <SelectOption
-                key="default_option"
-                value={"Choose a Service"}
-                isPlaceholder
-              />,
-            ].concat(
-              services.map((service) => (
-                <SelectOption
-                  key={service.service_identity + service.name}
-                  value={service.name}
-                />
-              )),
-            )}
+                key={key}
+                value={value}
+                isPlaceholder={value === "Choose a Service"}
+              />
+            ))}
           </Select>
         </FlexItem>
         <FlexItem>

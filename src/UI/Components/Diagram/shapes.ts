@@ -94,12 +94,32 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
       if (!item.name) {
         return;
       }
-
-      names.push({
+      const nameObject = {
         id: item.name,
         label: item.name,
         span: 2,
-      });
+      };
+
+      //out-of-the-box headeredRecord doesn't truncate attribute name, only it's value
+      const reproducedDisplayText = util.breakText(
+        item.name.toString(),
+        { width: 80, height: 22 },
+        {
+          "font-size": this.attr("itemLabels_1/fontSize"),
+          "font-family": this.attr("itemLabels_1/fontFamily"),
+        },
+        {
+          ellipsis: true,
+        },
+      );
+
+      if (reproducedDisplayText.includes(`\u2026`)) {
+        this.attr(`itemLabel_${item.name}/data-tooltip`, item.name);
+        this.attr(`itemLabel_${item.name}/data-tooltip-position`, "right");
+        names.push({ ...nameObject, label: reproducedDisplayText });
+      } else {
+        names.push(nameObject);
+      }
 
       const value: { id: string; label: string } = {
         id: `${item.name}_value`,
