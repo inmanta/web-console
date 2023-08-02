@@ -1,0 +1,6 @@
+change-type: minor
+description: "Add embedded entities into the forms and highlight logic, add automatic truncating for attributes names"
+issue-nr: 5001
+destination-branches:
+  - master
+  - iso6
