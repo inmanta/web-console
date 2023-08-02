@@ -178,6 +178,7 @@ export default function diagramInit(
       );
 
       elements.forEach((element) => {
+        element.getBBox();
         const isAllowed = checkIfConnectionIsAllowed(
           graph,
           cellView,
