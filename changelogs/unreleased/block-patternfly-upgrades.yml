@@ -1,0 +1,6 @@
+change-type: minor
+description: 'Block major upgrades to patternfly v5'
+destination-branches:
+- master
+- iso6
+
