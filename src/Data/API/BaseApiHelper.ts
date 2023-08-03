@@ -25,6 +25,7 @@ export class BaseApiHelper implements ApiHelper {
         method: "HEAD",
         headers: this.getHeaders(),
       });
+
       return response.status;
     } catch (error) {
       return 500;
@@ -210,7 +211,17 @@ export class BaseApiHelper implements ApiHelper {
     ...params: Parameters<typeof fetch>
   ): Promise<Either.Type<Error, Data>> {
     try {
-      const response = await fetch(...params);
+      let response;
+      await fetch(...params)
+        .then(async (res) => {
+          response = res;
+        })
+        .catch(() => {
+          throw new Error(
+            "\nConnection to the server was either denied or blocked. \nPlease check server status.",
+          );
+        });
+
       if (response.ok) {
         const data = await transform(response);
         return Either.right(data);
