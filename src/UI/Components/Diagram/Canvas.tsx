@@ -23,7 +23,7 @@ const Canvas = ({
   const canvas = useRef<HTMLDivElement>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
-  const [stringifiedDict, setStringifiedDict] = useState<DictDialogData | null>(
+  const [dictToDisplay, setDictToDisplay] = useState<DictDialogData | null>(
     null,
   );
   const [diagramHandlers, setDiagramHandlers] =
@@ -31,7 +31,7 @@ const Canvas = ({
 
   const handleEvent = (event) => {
     const customEvent = event as CustomEvent;
-    setStringifiedDict(JSON.parse(customEvent.detail));
+    setDictToDisplay(JSON.parse(customEvent.detail));
     setIsDialogOpen(true);
   };
 
@@ -61,16 +61,16 @@ const Canvas = ({
     <Container>
       <Modal
         isOpen={isDialogOpen}
-        title={"Dictionary values"}
+        title={"Values of " + dictToDisplay?.title}
         variant={"small"}
         onClose={() => {
           setIsDialogOpen(false);
-          setStringifiedDict(null);
+          setDictToDisplay(null);
         }}
       >
-        {stringifiedDict && (
+        {dictToDisplay && (
           <pre>
-            <code>{`${stringifiedDict.title}: ${stringifiedDict.value}`}</code>
+            <code>{JSON.stringify(dictToDisplay.value, null, 2)}</code>
           </pre>
         )}
       </Modal>

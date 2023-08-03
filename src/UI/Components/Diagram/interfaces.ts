@@ -11,7 +11,7 @@ interface RouterOptions {
 }
 interface DictDialogData {
   title: string;
-  value: string;
+  value: unknown;
 }
 interface Rule {
   name: string;
