@@ -56,7 +56,7 @@ export const TimestampPicker: React.FC<Props> = ({
     }
   };
 
-  const onTimeChange = (time) => {
+  const onTimeChange = (_event, time) => {
     setTimeText(time);
     if (timestamp && isValidDate(timestamp) && time.split(":").length === 2) {
       const [hour, minute] = time.split(":");
