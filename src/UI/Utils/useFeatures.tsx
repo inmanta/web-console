@@ -18,6 +18,11 @@ const useFeatures = (): string[] => {
     const checkFileChange = async () => {
       try {
         const response = await fetch("/console/config.js");
+        if (!response.ok) {
+          throw new Error(
+            "The configuration file couldn't be found at /console/config.js. Running the application without features.",
+          );
+        }
         const content = await response.text();
         const extractedFeatures = extractFeatures(content);
 
