@@ -1,4 +1,5 @@
 import { dia, shapes, util } from "@inmanta/rappid";
+import expandButton from "./icons/expand-icon.svg";
 import { ColumnData } from "./interfaces";
 /**
  * https://resources.jointjs.com/tutorial/custom-elements
@@ -16,11 +17,13 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
         itemHeight: 22,
         itemOffset: 0,
         itemOverflow: true,
+        isCollapsed: false,
         attrs: {
           body: {
             stroke: "#FFFFFF",
             fill: "#FFFFFF",
             strokeWidth: 1,
+            cursor: "default",
           },
           header: {
             fill: "#F0AB00",
@@ -41,6 +44,9 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
             cursor: "grab",
           },
           group_1: {
+            cursor: "default",
+          },
+          itemBodies: {
             cursor: "default",
           },
           itemLabels: {
@@ -66,7 +72,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
     );
   }
 
-  protected _setColumns(data: Array<ColumnData> = []) {
+  protected _setColumns(data: Array<ColumnData> = [], initialSetting = true) {
     const names: Array<{
       id: string;
       label: string;
@@ -76,17 +82,45 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
       id: string;
       label: string;
     }> = [];
+    let dataToIterate = [...data];
 
-    data.forEach((item) => {
+    if (initialSetting && data.length > 4) {
+      this.set("dataToDisplay", data);
+      this.set("isCollapsed", true);
+      dataToIterate = data.slice(0, 4);
+    }
+
+    dataToIterate.forEach((item) => {
       if (!item.name) {
         return;
       }
-
-      names.push({
+      const nameObject = {
         id: item.name,
         label: item.name,
         span: 2,
-      });
+      };
+
+      //out-of-the-box headeredRecord doesn't truncate attribute name, only their values
+      const truncatedName = util.breakText(
+        item.name.toString(),
+        { width: 80, height: 22 },
+        {
+          "font-size": this.attr("itemLabels_1/fontSize"),
+          "font-family": this.attr("itemLabels_1/fontFamily"),
+        },
+        {
+          ellipsis: true,
+        },
+      );
+
+      if (truncatedName.includes(`\u2026`)) {
+        this.attr(`itemLabel_${item.name}/data-tooltip`, item.name);
+        this.attr(`itemLabel_${item.name}/data-tooltip-position`, "right");
+
+        names.push({ ...nameObject, label: truncatedName });
+      } else {
+        names.push(nameObject);
+      }
 
       const value: { id: string; label: string } = {
         id: `${item.name}_value`,
@@ -158,6 +192,14 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
         tagName: "image",
         selector: "info",
       },
+      {
+        tagName: "rect",
+        selector: "spacer",
+      },
+      {
+        tagName: "image",
+        selector: "button",
+      },
     ];
   }
 
@@ -180,13 +222,51 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
   getName(): string {
     return this.attr(["headerLabel", "text"]);
   }
+
   setTabColor(color: string) {
     this.attr(["header", "fill"], color);
     return this.attr(["header", "stroke"], color);
   }
-  appendColumns(data: Array<ColumnData>) {
-    this._setColumns(data);
+
+  appendColumns(data: Array<ColumnData>, initializeButton = true) {
+    this._setColumns(data, initializeButton);
+
+    if (initializeButton && this.get("isCollapsed")) {
+      this.appendButton();
+    }
     return this;
+  }
+
+  appendButton() {
+    this.set("padding", {
+      bottom: 44,
+      left: 10,
+      right: 10,
+      top: 40,
+    });
+
+    const bbox = this.getBBox();
+    this.attr("spacer", {
+      fill: "#000",
+      stroke: "#000",
+      opacity: 0.1,
+      strokeWidth: 1,
+      y: bbox.height - 33,
+      width: 180,
+      height: 1,
+      cursor: "default",
+    });
+
+    this.attr("button", {
+      event: "element:button:pointerdown",
+      "xlink:href": expandButton,
+      preserveAspectRatio: "none",
+      cursor: "pointer",
+      y: bbox.height - 24,
+      x: bbox.width / 2 - 8,
+      width: 16,
+      height: 16,
+    });
   }
 
   toJSON() {

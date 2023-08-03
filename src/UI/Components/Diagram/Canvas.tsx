@@ -31,7 +31,7 @@ const Canvas = ({
 
   const handleEvent = (event) => {
     const customEvent = event as CustomEvent;
-    setStringifiedDict(customEvent.detail);
+    setStringifiedDict(JSON.parse(customEvent.detail));
     setIsDialogOpen(true);
   };
 
@@ -78,14 +78,12 @@ const Canvas = ({
         isOpen={isFormModalOpen}
         toggleIsOpen={(value: boolean) => setIsFormModalOpen(value)}
         services={services}
-        onConfirm={(entity, entityName) => {
+        onConfirm={(entity, selected) => {
           if (diagramHandlers) {
             diagramHandlers.addEntity(
               entity,
-              services.find(
-                (service) => service.name === entityName,
-              ) as ServiceModel,
-              entityName === mainServiceName,
+              selected.model as ServiceModel,
+              selected.name === mainServiceName,
             );
           }
         }}
