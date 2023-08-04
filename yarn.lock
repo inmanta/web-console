@@ -1122,7 +1122,7 @@ __metadata:
     "@babel/core": ^7.22.9
     "@babel/plugin-transform-typescript": ^7.22.9
     "@inmanta/rappid": ^3.7.0
-    "@patternfly/react-charts": ^6.94.21
+    "@patternfly/react-charts": ^7.0.0
     "@patternfly/react-core": ^4.276.6
     "@patternfly/react-icons": ^4.93.6
     "@patternfly/react-styles": ^4.92.6
@@ -1640,35 +1640,43 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@patternfly/react-charts@npm:^6.94.21":
-  version: 6.94.21
-  resolution: "@patternfly/react-charts@npm:6.94.21"
+"@patternfly/patternfly@npm:5.0.2":
+  version: 5.0.2
+  resolution: "@patternfly/patternfly@npm:5.0.2"
+  checksum: 5b386efb172b553cf90622c613170c63ead66d388c4cb62bdf264ee9ba7f03df2fcaab497fd2d1390482e7e93dca36eab428a370e21578205a30b857c100bc10
+  languageName: node
+  linkType: hard
+
+"@patternfly/react-charts@npm:^7.0.0":
+  version: 7.1.0
+  resolution: "@patternfly/react-charts@npm:7.1.0"
   dependencies:
-    "@patternfly/react-styles": ^4.92.8
-    "@patternfly/react-tokens": ^4.94.7
+    "@patternfly/react-styles": ^5.1.0
+    "@patternfly/react-tokens": ^5.1.0
     hoist-non-react-statics: ^3.3.0
     lodash: ^4.17.19
-    tslib: ^2.0.0
-    victory-area: ^36.6.7
-    victory-axis: ^36.6.7
-    victory-bar: ^36.6.7
-    victory-chart: ^36.6.7
-    victory-core: ^36.6.7
-    victory-create-container: ^36.6.7
-    victory-cursor-container: ^36.6.7
-    victory-group: ^36.6.7
-    victory-legend: ^36.6.7
-    victory-line: ^36.6.7
-    victory-pie: ^36.6.7
-    victory-scatter: ^36.6.7
-    victory-stack: ^36.6.7
-    victory-tooltip: ^36.6.7
-    victory-voronoi-container: ^36.6.7
-    victory-zoom-container: ^36.6.7
+    tslib: ^2.5.0
+    victory-area: ^36.6.11
+    victory-axis: ^36.6.11
+    victory-bar: ^36.6.11
+    victory-box-plot: ^36.6.11
+    victory-chart: ^36.6.11
+    victory-core: ^36.6.11
+    victory-create-container: ^36.6.11
+    victory-cursor-container: ^36.6.11
+    victory-group: ^36.6.11
+    victory-legend: ^36.6.11
+    victory-line: ^36.6.11
+    victory-pie: ^36.6.11
+    victory-scatter: ^36.6.11
+    victory-stack: ^36.6.11
+    victory-tooltip: ^36.6.11
+    victory-voronoi-container: ^36.6.11
+    victory-zoom-container: ^36.6.11
   peerDependencies:
-    react: ^16.8 || ^17 || ^18
-    react-dom: ^16.8 || ^17 || ^18
-  checksum: 2da954fdfb4069cb3cbdc62a73c5c31eba3645279941312cb3e97a95851253c2c0822d656c26d598661452d48f4b8e28cdfb4e29e4c95326a36a97f5e331761f
+    react: ^17 || ^18
+    react-dom: ^17 || ^18
+  checksum: 499c80a296f1c9f615f5576426b2b52534da2492d1436ef6b778b93716221ef0725348a8276de549f3af6e242bfe936f24a8a136afd3f8e43b378049485e57b0
   languageName: node
   linkType: hard
 
@@ -1707,6 +1715,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@patternfly/react-styles@npm:^5.1.0":
+  version: 5.1.0
+  resolution: "@patternfly/react-styles@npm:5.1.0"
+  dependencies:
+    "@patternfly/patternfly": 5.0.2
+  checksum: 0dd938f8f537f7a39e23b00a7d038c98f902bd705d5771e77969fb1281140dcd783190aa5f0d70be0bca28276da3533714e09518a6cf0fcef9a5d2f91a2b0859
+  languageName: node
+  linkType: hard
+
 "@patternfly/react-table@npm:^4.113.2":
   version: 4.113.3
   resolution: "@patternfly/react-table@npm:4.113.3"
@@ -1728,6 +1745,15 @@ __metadata:
   version: 4.94.7
   resolution: "@patternfly/react-tokens@npm:4.94.7"
   checksum: 726fe4d9edd996b228f02c02586e51969af72b846f8b14fa3090f476bb831bd8a12f8530d51baafe9d5aa21fb007553b57e2d96da5f3b03f6f9e174e5d640af9
+  languageName: node
+  linkType: hard
+
+"@patternfly/react-tokens@npm:^5.1.0":
+  version: 5.1.0
+  resolution: "@patternfly/react-tokens@npm:5.1.0"
+  dependencies:
+    "@patternfly/patternfly": 5.0.2
+  checksum: fb240efd00f211667feb92984af439a2aae65172225c16fcca4fe0cf7a286a5095ca91430b747f88e3affa342dda8f42c21fd1543c034de025b1b7f1d3a5c0a2
   languageName: node
   linkType: hard
 
@@ -14835,7 +14861,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"victory-area@npm:^36.6.7":
+"victory-area@npm:^36.6.11":
   version: 36.6.11
   resolution: "victory-area@npm:36.6.11"
   dependencies:
@@ -14849,7 +14875,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"victory-axis@npm:^36.6.11, victory-axis@npm:^36.6.7":
+"victory-axis@npm:^36.6.11":
   version: 36.6.11
   resolution: "victory-axis@npm:36.6.11"
   dependencies:
@@ -14862,7 +14888,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"victory-bar@npm:^36.6.7":
+"victory-bar@npm:^36.6.11":
   version: 36.6.11
   resolution: "victory-bar@npm:36.6.11"
   dependencies:
@@ -14873,6 +14899,20 @@ __metadata:
   peerDependencies:
     react: ">=16.6.0"
   checksum: 960a59890148c35b5ffa6319684d8b379c0c57bdc0eb4836d071b03f6d3b8fbc5f30eda3e9caa2cb5ed1b1e4b046edfe55f45c0c4030e2b70f4d91dc6d5f03aa
+  languageName: node
+  linkType: hard
+
+"victory-box-plot@npm:^36.6.11":
+  version: 36.6.11
+  resolution: "victory-box-plot@npm:36.6.11"
+  dependencies:
+    lodash: ^4.17.19
+    prop-types: ^15.8.1
+    victory-core: ^36.6.11
+    victory-vendor: ^36.6.11
+  peerDependencies:
+    react: ">=16.6.0"
+  checksum: 0681b154000bf7b7263039379afc83434fcda53dd044625311c70677866b395967879f05d9ca97944dfe32f6eb17cfd8f85586c826d51e41eb0948ef61ba5508
   languageName: node
   linkType: hard
 
@@ -14890,7 +14930,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"victory-chart@npm:^36.6.7":
+"victory-chart@npm:^36.6.11":
   version: 36.6.11
   resolution: "victory-chart@npm:36.6.11"
   dependencies:
@@ -14907,7 +14947,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"victory-core@npm:^36.6.11, victory-core@npm:^36.6.7":
+"victory-core@npm:^36.6.11":
   version: 36.6.11
   resolution: "victory-core@npm:36.6.11"
   dependencies:
@@ -14921,7 +14961,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"victory-create-container@npm:^36.6.7":
+"victory-create-container@npm:^36.6.11":
   version: 36.6.11
   resolution: "victory-create-container@npm:36.6.11"
   dependencies:
@@ -14938,7 +14978,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"victory-cursor-container@npm:^36.6.11, victory-cursor-container@npm:^36.6.7":
+"victory-cursor-container@npm:^36.6.11":
   version: 36.6.11
   resolution: "victory-cursor-container@npm:36.6.11"
   dependencies:
@@ -14951,7 +14991,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"victory-group@npm:^36.6.7":
+"victory-group@npm:^36.6.11":
   version: 36.6.11
   resolution: "victory-group@npm:36.6.11"
   dependencies:
@@ -14966,7 +15006,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"victory-legend@npm:^36.6.7":
+"victory-legend@npm:^36.6.11":
   version: 36.6.11
   resolution: "victory-legend@npm:36.6.11"
   dependencies:
@@ -14979,7 +15019,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"victory-line@npm:^36.6.7":
+"victory-line@npm:^36.6.11":
   version: 36.6.11
   resolution: "victory-line@npm:36.6.11"
   dependencies:
@@ -14993,7 +15033,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"victory-pie@npm:^36.6.7":
+"victory-pie@npm:^36.6.11":
   version: 36.6.11
   resolution: "victory-pie@npm:36.6.11"
   dependencies:
@@ -15020,7 +15060,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"victory-scatter@npm:^36.6.7":
+"victory-scatter@npm:^36.6.11":
   version: 36.6.11
   resolution: "victory-scatter@npm:36.6.11"
   dependencies:
@@ -15061,7 +15101,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"victory-stack@npm:^36.6.7":
+"victory-stack@npm:^36.6.11":
   version: 36.6.11
   resolution: "victory-stack@npm:36.6.11"
   dependencies:
@@ -15076,7 +15116,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"victory-tooltip@npm:^36.6.11, victory-tooltip@npm:^36.6.7":
+"victory-tooltip@npm:^36.6.11":
   version: 36.6.11
   resolution: "victory-tooltip@npm:36.6.11"
   dependencies:
@@ -15111,7 +15151,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"victory-voronoi-container@npm:^36.6.11, victory-voronoi-container@npm:^36.6.7":
+"victory-voronoi-container@npm:^36.6.11":
   version: 36.6.11
   resolution: "victory-voronoi-container@npm:36.6.11"
   dependencies:
@@ -15127,7 +15167,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"victory-zoom-container@npm:^36.6.11, victory-zoom-container@npm:^36.6.7":
+"victory-zoom-container@npm:^36.6.11":
   version: 36.6.11
   resolution: "victory-zoom-container@npm:36.6.11"
   dependencies:
