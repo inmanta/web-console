@@ -24,3 +24,7 @@ updates:
         update-types: ["version-update:semver-major"]
       - dependency-name: "@patternfly/react-tokens"
         update-types: ["version-update:semver-major"]
+      - dependency-name: "styled-components"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@types/styled-components"
+        update-types: ["version-update:semver-major"]
