@@ -1,0 +1,6 @@
+change-type: patch
+description: "Fix display of dict values in the instance composer"
+issue-nr: 4825
+destination-branches:
+  - master
+  - iso6

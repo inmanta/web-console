@@ -1,4 +1,4 @@
-import { dia, elementTools, g, layout, linkTools } from "@inmanta/rappid";
+import { dia, g, layout, linkTools } from "@inmanta/rappid";
 import dagre, { graphlib } from "dagre";
 import {
   AttributeModel,
@@ -10,7 +10,6 @@ import { InstanceWithReferences } from "@/Data/Managers/GetInstanceWithRelations
 import { words } from "@/UI/words";
 import activeImage from "./icons/active-icon.svg";
 import candidateImage from "./icons/candidate-icon.svg";
-import { DictDialogData } from "./interfaces";
 import { EntityConnection, ServiceEntityBlock } from "./shapes";
 
 /**
@@ -54,83 +53,6 @@ export function showLinkTools(linkView: dia.LinkView) {
     ],
   });
   linkView.addTools(tools);
-}
-
-/**
- * Function to conditionally display the info icon that displays dictionary values in the modal
- * https://resources.jointjs.com/docs/jointjs/v3.6/joint.html#dia.LinkView
- * https://resources.jointjs.com/docs/jointjs/v3.6/joint.html#linkTools
- *
- * @param {dia.LinkView} elementView  - The view for the joint.dia.Link model.
- * @param {AttributeModel[]} serviceAttributes  - The view for the joint.dia.Link model.
- * @param {InstanceAttributeModel} serviceInstance  - The view for the joint.dia.Link model.
- * @returns {void}
- */
-export function appendInfoTool(
-  elementView: dia.CellView,
-  serviceAttributes: AttributeModel[],
-  serviceInstance: InstanceAttributeModel,
-) {
-  const tools: dia.ToolView[] = [];
-
-  //search for any dictionary attributes
-  const dictionaries = serviceAttributes
-    .filter((attributeDef) => attributeDef.type.includes("dict"))
-    .map((dictionaryAttr) => dictionaryAttr.name);
-
-  if (!dictionaries.length) {
-    return;
-  }
-
-  //if they are then create and add infoButton and append it to the view
-  const dictionariesButton = new elementTools.Button({
-    markup: [
-      {
-        tagName: "circle",
-        selector: "button",
-        attributes: {
-          r: 7,
-          fill: "#8A8D90",
-          cursor: "pointer",
-        },
-      },
-      {
-        tagName: "path",
-        selector: "icon",
-        attributes: {
-          d: "M -2 4 2 4 M 0 3 0 0 M -2 -1 1 -1 M -1 -4 1 -4",
-          fill: "none",
-          stroke: "#FFFFFF",
-          "stroke-width": 2,
-          "pointer-events": "none",
-        },
-      },
-    ],
-    x: "90%",
-    y: "11%",
-    offset: {
-      x: 0,
-      y: 0,
-    },
-    rotate: true,
-    action: function () {
-      const stringifiedDicts: DictDialogData[] = dictionaries.map((keyword) => {
-        return {
-          title: keyword,
-          value: JSON.stringify(serviceInstance[keyword], null, 2),
-        };
-      });
-      document.dispatchEvent(
-        new CustomEvent("openDictsModal", { detail: stringifiedDicts }),
-      );
-    },
-  });
-  tools.push(dictionariesButton);
-
-  const toolsView = new dia.ToolsView({
-    tools,
-  });
-  elementView.addTools(toolsView);
 }
 
 /**
@@ -260,13 +182,8 @@ export function appendEmbeddedEntity(
 
     appendColumns(instanceAsTable, flatAttributes, entityAttributes);
 
-    //add to graph and then check for dictionaries
+    //add to graph
     instanceAsTable.addTo(graph);
-    appendInfoTool(
-      instanceAsTable.findView(paper),
-      embeddedEntity.attributes,
-      entityAttributes,
-    );
 
     //iterate through embedded entities to create and connect them
     embeddedEntity.embedded_entities.map((entity) => {
@@ -396,9 +313,8 @@ function handleAttributes(
   handleInfoIcon(instanceAsTable, presentedAttr);
 
   appendColumns(instanceAsTable, attributesNames, attributes);
-  //add to graph and then check for dictionaries
+  //add to graph
   instanceAsTable.addTo(graph);
-  appendInfoTool(instanceAsTable.findView(paper), attributesModel, attributes);
 
   //iterate through embedded entities to create and connect them
   embedded_entities.map((entity) => {
