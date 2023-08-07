@@ -117,6 +117,16 @@ test("TreeTableHelper createRows returns correctly ordered list", () => {
       ],
     },
     {
+      kind: "Flat",
+      id: "description",
+      primaryCell: { label: "name", value: "description" },
+      valueCells: [
+        { label: "candidate", value: "" },
+        { label: "active", value: "Server" },
+        { label: "rollback", value: "Server" },
+      ],
+    },
+    {
       kind: "Leaf",
       id: "deallocation_ctx$network_interfaces[name=eth1].allocated_id",
       isExpandedByParent: false,
@@ -129,16 +139,6 @@ test("TreeTableHelper createRows returns correctly ordered list", () => {
         { label: "candidate", value: "" },
         { label: "active", value: "" },
         { label: "rollback", value: "456789" },
-      ],
-    },
-    {
-      kind: "Flat",
-      id: "description",
-      primaryCell: { label: "name", value: "description" },
-      valueCells: [
-        { label: "candidate", value: "" },
-        { label: "active", value: "Server" },
-        { label: "rollback", value: "Server" },
       ],
     },
   ];

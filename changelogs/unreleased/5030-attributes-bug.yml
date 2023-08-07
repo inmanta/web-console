@@ -1,0 +1,6 @@
+change-type: minor
+description: "Resolve the issue when nested attributes opens under wrong row"
+issue-nr: 5030
+destination-branches:
+  - master
+  - iso6
