@@ -1,6 +1,6 @@
 change-type: patch
-description: "Build(deps): Bump @patternfly/react-charts from 6.94.21 to 7.0.0 "
+description: 'Build(deps): Bump @patternfly/react-charts from 6.94.21 to 7.0.0'
 destination-branches:
-  - master
-  - iso6
+- master
+- iso6
 sections: {}
