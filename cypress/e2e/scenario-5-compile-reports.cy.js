@@ -180,7 +180,7 @@ describe("5 Compile reports", () => {
       cy.get("#name").type("basic-service");
       cy.get("button").contains("Confirm").click();
 
-      cy.get(".pf-c-chart").should("be.visible");
+      cy.get(".pf-v5-c-chart").should("be.visible");
 
       // Go to compiled Reports page
       cy.get(".pf-c-nav__link").contains("Compile Reports").click();
