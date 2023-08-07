@@ -89,7 +89,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get(".pf-m-current").should("contain", "Details");
 
       // Expect 0 Instances
-      cy.get(".pf-c-chart").within(() => {
+      cy.get(".pf-v5-c-chart").within(() => {
         cy.get("svg")
           .find("title")
           .should("contain", "Number of instances by label");
@@ -224,7 +224,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get("button").contains("Details").click();
 
       // Expect the number in the chart to be 1
-      cy.get(".pf-c-chart").within(() => {
+      cy.get(".pf-v5-c-chart").within(() => {
         cy.get("svg")
           .find("title")
           .should("contain", "Number of instances by label");
@@ -266,7 +266,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get("button").contains("Confirm").click();
 
       // Expect the number in the chart to be 2
-      cy.get(".pf-c-chart").within(() => {
+      cy.get(".pf-v5-c-chart").within(() => {
         cy.get("svg")
           .find("title")
           .should("contain", "Number of instances by label");
@@ -318,7 +318,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get(".pf-m-current").should("contain", "Details");
 
       // Expect the number in the chart to be 2
-      cy.get(".pf-c-chart").within(() => {
+      cy.get(".pf-v5-c-chart").within(() => {
         cy.get("svg")
           .find("title")
           .should("contain", "Number of instances by label");

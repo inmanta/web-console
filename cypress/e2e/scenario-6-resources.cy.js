@@ -117,7 +117,7 @@ describe("Scenario 6 : Resources", () => {
       cy.get("#name").type("basic-service");
       cy.get("button").contains("Confirm").click();
 
-      cy.get(".pf-c-chart").should("be.visible");
+      cy.get(".pf-v5-c-chart").should("be.visible");
 
       // Go back to Resources page
       cy.get(".pf-c-nav__link").contains("Resources").click();
@@ -308,7 +308,7 @@ describe("Scenario 6 : Resources", () => {
 
       cy.get("button").contains("Confirm").click();
 
-      cy.get(".pf-c-chart").should("be.visible");
+      cy.get(".pf-v5-c-chart").should("be.visible");
 
       // Go to Resource page
       cy.get(".pf-c-nav__link").contains("Resources").click();
