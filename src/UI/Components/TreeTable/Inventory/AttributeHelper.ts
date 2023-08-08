@@ -215,12 +215,12 @@ export class InventoryAttributeHelper
     activeNodes: AttributeNodeDict,
     rollbackNodes: AttributeNodeDict,
   ): MultiAttributeNodeDict<InventoryAttributes> {
+    //sorting of the attributes moved to helpers to avoid sorting issues - check issue #5030 for example
     const paths = Object.keys({
       ...candidateNodes,
       ...activeNodes,
       ...rollbackNodes,
-    });
-
+    }).sort();
     return paths.reduce<MultiAttributeNodeDict<InventoryAttributes>>(
       (acc, cur) => {
         const conform = isMultiLeaf(

@@ -75,51 +75,6 @@ test("TreeTableHelper createRows returns correctly ordered list", () => {
   );
   const expectedRows = [
     {
-      kind: "Flat",
-      id: "e",
-      primaryCell: {
-        label: "name",
-        value: "e",
-      },
-      valueCells: [
-        {
-          label: "type",
-          value: "string",
-        },
-        {
-          label: "description",
-          value: "",
-        },
-      ],
-    },
-    {
-      kind: "Root",
-      id: "f",
-      primaryCell: {
-        label: "name",
-        value: "f",
-      },
-    },
-    {
-      kind: "Leaf",
-      id: "f$g",
-      level: 1,
-      primaryCell: {
-        label: "name",
-        value: "g",
-      },
-      valueCells: [
-        {
-          label: "type",
-          value: "dict?",
-        },
-        {
-          label: "description",
-          value: "sample",
-        },
-      ],
-    },
-    {
       kind: "Root",
       id: "a",
       primaryCell: {
@@ -171,6 +126,51 @@ test("TreeTableHelper createRows returns correctly ordered list", () => {
         {
           label: "description",
           value: "desc",
+        },
+      ],
+    },
+    {
+      kind: "Flat",
+      id: "e",
+      primaryCell: {
+        label: "name",
+        value: "e",
+      },
+      valueCells: [
+        {
+          label: "type",
+          value: "string",
+        },
+        {
+          label: "description",
+          value: "",
+        },
+      ],
+    },
+    {
+      kind: "Root",
+      id: "f",
+      primaryCell: {
+        label: "name",
+        value: "f",
+      },
+    },
+    {
+      kind: "Leaf",
+      id: "f$g",
+      level: 1,
+      primaryCell: {
+        label: "name",
+        value: "g",
+      },
+      valueCells: [
+        {
+          label: "type",
+          value: "dict?",
+        },
+        {
+          label: "description",
+          value: "sample",
         },
       ],
     },
