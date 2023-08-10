@@ -1,0 +1,5 @@
+change-type: patch
+description: "Resolve the issue causing test to fail due to the typeError on pipeline"
+destination-branches:
+  - master
+  - iso6
