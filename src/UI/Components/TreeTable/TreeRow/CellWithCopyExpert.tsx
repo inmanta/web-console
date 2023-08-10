@@ -9,6 +9,7 @@ import {
 } from "@patternfly/react-core";
 import { TimesIcon, PencilAltIcon } from "@patternfly/react-icons";
 import { Td } from "@patternfly/react-table";
+import { set } from "lodash";
 import styled from "styled-components";
 import { Maybe, ParsedNumber } from "@/Core";
 import { AttributeSet } from "@/Core/Domain/ServiceInstanceParams";
@@ -37,6 +38,7 @@ interface Props {
   version: ParsedNumber;
   serviceEntity: string;
   attributeType: string;
+  parentObject: object | null;
 }
 
 export const CellWithCopyExpert: React.FC<Props> = ({
@@ -50,6 +52,7 @@ export const CellWithCopyExpert: React.FC<Props> = ({
   version,
   serviceEntity,
   attributeType,
+  parentObject,
 }) => {
   const { commandResolver, environmentModifier } =
     useContext(DependencyContext);
@@ -79,7 +82,7 @@ export const CellWithCopyExpert: React.FC<Props> = ({
     }
   };
   const onSubmit = async () => {
-    const newValue = newAttribute;
+    let newValue = newAttribute;
     //if string[] then we need to convert initial value to the same format to be able to compare
     if (
       newValue === value ||
@@ -92,10 +95,16 @@ export const CellWithCopyExpert: React.FC<Props> = ({
     }
 
     setIsSpinnerVisible(true);
+
+    if (parentObject) {
+      newValue = parentObject[path.split("$")[0]];
+      set(newValue as object, path.split("$").slice(1).join("."), newAttribute);
+    }
+
     const result = await trigger(
       (label + "_attributes") as AttributeSet,
       newValue,
-      path.split("$").join("."),
+      parentObject !== null ? path.split("$")[0] : path.split("$").join("."),
     );
 
     if (Maybe.isSome(result)) {

@@ -255,7 +255,7 @@ test("Given CellWithCopyExpert When a cell has access to expertMode Then button 
 test("Given CellWithCopyExpert When a cell has access to expertMode and input will be populated with new values and submit button will be pressed and confirmed Then request will be sent", async () => {
   const newValue = "newValue";
   const props = {
-    label: "attribute",
+    label: "candidates",
     value: "someValue",
     hasRelation: true,
     serviceName: "test_service",
@@ -352,7 +352,7 @@ test("Given CellWithCopyExpert When a cell has access to expertMode and input wi
     environment: "aaa",
     body: {
       patch_id: "mpn-update-09042edf-3032-490d-bcaf-cc45615ba782-2",
-      attribute_set_name: "attribute_attributes",
+      attribute_set_name: "candidates_attributes",
       edit: [
         {
           edit_id:
@@ -360,6 +360,97 @@ test("Given CellWithCopyExpert When a cell has access to expertMode and input wi
           operation: "replace",
           target: "mgmt_prefix",
           value: "newValue",
+        },
+      ],
+      current_version: 2,
+      comment: "Triggered from the console",
+    },
+  });
+});
+
+test("Given CellWithCopyExpert When a cell has access to expertMode and input will be populated with new values and submit button will be pressed and confirmed Then request will be sent", async () => {
+  const newValue = "test-123";
+  const props = {
+    label: "candidates",
+    value: "someValue",
+    hasRelation: true,
+    serviceName: "test_service",
+    path: "parent$editedValue",
+    instanceId: "09042edf-3032-490d-bcaf-cc45615ba782",
+    version: 2,
+    serviceEntity: "mpn",
+    attributeType: "string",
+    parentObject: {
+      value: "1234",
+      value1: "test",
+      parent: {
+        id: "09042sev-1235-f234-ktgd-cc45615ba782",
+        editedValue: "someValue",
+        unedited: "value",
+      },
+    },
+  };
+  const { component, apiHelper } = setup(props, true);
+  render(component);
+  apiHelper.resolve(
+    Either.right({
+      data: {
+        ...ServiceInstance.a,
+        service_identity_attribute_value: undefined,
+      },
+    }),
+  );
+
+  const editButton = await screen.findByRole("button");
+
+  await act(async () => {
+    await userEvent.click(editButton);
+  });
+
+  const input = await screen.findByPlaceholderText("New Attribute");
+  expect(input).toBeVisible();
+
+  // set value and click check/submit button
+  await act(async () => {
+    await userEvent.clear(input);
+    await userEvent.type(input, newValue);
+  });
+  expect(input).toHaveValue(newValue);
+
+  const submitButton = await screen.findByTestId("inline-submit");
+  expect(submitButton).toBeVisible();
+  await act(async () => {
+    await userEvent.click(submitButton);
+  });
+
+  const dialog = await screen.findByRole("dialog");
+  expect(dialog).toBeVisible();
+
+  const dialogSubmit = await screen.findByTestId("dialog-submit");
+
+  await act(async () => {
+    await userEvent.click(dialogSubmit);
+  });
+
+  expect(
+    apiHelper.pendingRequests.find((request) => request.method === "PATCH"),
+  ).toMatchObject({
+    method: "PATCH",
+    url: "/lsm/v2/service_inventory/mpn/09042edf-3032-490d-bcaf-cc45615ba782/expert",
+    environment: "aaa",
+    body: {
+      patch_id: "mpn-update-09042edf-3032-490d-bcaf-cc45615ba782-2",
+      attribute_set_name: "candidates_attributes",
+      edit: [
+        {
+          edit_id: "mpn-parent-update-09042edf-3032-490d-bcaf-cc45615ba782-2",
+          operation: "replace",
+          target: "parent",
+          value: {
+            id: "09042sev-1235-f234-ktgd-cc45615ba782",
+            editedValue: newValue,
+            unedited: "value",
+          },
         },
       ],
       current_version: 2,

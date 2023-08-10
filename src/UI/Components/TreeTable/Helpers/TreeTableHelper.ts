@@ -21,6 +21,8 @@ export interface TreeTableHelper {
   ): { rows: TreeRow[]; openAll: () => void; closeAll: () => void };
 
   getEmptyAttributeSets(): string[];
+
+  getAttributes(): Attributes;
 }
 
 export abstract class BaseTreeTableHelper<A extends AttributeTree>
@@ -84,5 +86,8 @@ export abstract class BaseTreeTableHelper<A extends AttributeTree>
   }
   getEmptyAttributeSets(): string[] {
     return [];
+  }
+  getAttributes(): Attributes {
+    return this.attributes as Attributes;
   }
 }
