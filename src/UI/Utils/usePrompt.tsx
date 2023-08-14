@@ -37,13 +37,21 @@ function useConfirmExit(confirmExit: () => boolean, when = true) {
 export function usePrompt(message: string, when = true) {
   useEffect(() => {
     if (when) {
-      window.onbeforeunload = function () {
-        return message;
-      };
+      Object.defineProperty(window, "onbeforeunload", {
+        value: function () {
+          return message;
+        },
+        configurable: true,
+        enumerable: true,
+      });
     }
 
     return () => {
-      window.onbeforeunload = null;
+      Object.defineProperty(window, "onbeforeunload", {
+        value: null,
+        configurable: true,
+        enumerable: true,
+      });
     };
   }, [message, when]);
 

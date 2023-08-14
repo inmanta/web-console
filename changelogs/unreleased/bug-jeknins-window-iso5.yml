@@ -1,0 +1,4 @@
+change-type: patch
+description: "Resolve issue with window.onbeforeunload on jenkins for ISO-5"
+destination-branches:
+  - iso5
