@@ -62,6 +62,7 @@ const dict = {
   "codehighlighter.lineNumbers.off": "Hide line numbers",
   "codehighlighter.zoom.on": "Enlarge",
   "codehighlighter.zoom.off": "Back to original size",
+  "codehighlighter.scrollToBottom": "Scroll down and resume auto-scroll",
 
   /**
    * Inventory related text

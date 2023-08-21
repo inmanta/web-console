@@ -17,6 +17,7 @@ import {
   ExpandArrowsAltIcon,
   InfoCircleIcon,
   ListOlIcon,
+  LongArrowAltDownIcon,
   TextWidthIcon,
 } from "@patternfly/react-icons";
 import copy from "copy-to-clipboard";
@@ -51,7 +52,7 @@ export const CodeHighlighter: React.FC<Props> = ({
   const [wrapLongLines, setWraplongLines] = useState(true);
   const codeBlockRef = useRef<HTMLDivElement>(null);
   const [allowScrollState, setAllowScrollState] = useState(true);
-  const minHeight = "8em";
+  const minHeight = "10em";
 
   const onCopy = () => {
     copy(code);
@@ -106,6 +107,13 @@ export const CodeHighlighter: React.FC<Props> = ({
     </ToggleTooltip>,
   ];
 
+  const resumeAutoScroll = () => {
+    const preBlock = codeBlockRef.current?.querySelector("pre");
+
+    setScrollPositionBottom(preBlock);
+    setAllowScrollState(true);
+  };
+
   const actions = (
     <>
       <CenteredCopyButton
@@ -139,6 +147,11 @@ export const CodeHighlighter: React.FC<Props> = ({
           </SidebarButton>
         )}
       </ToggleTooltip>
+      <Tooltip content={words("codehighlighter.scrollToBottom")}>
+        <SidebarButton variant="plain" onClick={resumeAutoScroll}>
+          <LongArrowAltDownIcon />
+        </SidebarButton>
+      </Tooltip>
       <IconSettings actions={dropdownActions} />
     </>
   );
@@ -165,11 +178,6 @@ export const CodeHighlighter: React.FC<Props> = ({
     if (oldScrollPosition > currentScrollPosition && allowScrollState) {
       element.dataset.oldScrollPosition = element.scrollTop.toString();
       setAllowScrollState(false);
-    }
-
-    // resume the automatic scrolling if the current scroll position is at the bottom.
-    if (currentScrollPosition === element.scrollTop) {
-      setAllowScrollState(true);
     }
   };
 
