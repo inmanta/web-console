@@ -166,6 +166,11 @@ export const CodeHighlighter: React.FC<Props> = ({
       element.dataset.oldScrollPosition = element.scrollTop.toString();
       setAllowScrollState(false);
     }
+
+    // resume the automatic scrolling if the current scroll position is at the bottom.
+    if (currentScrollPosition === element.scrollTop) {
+      setAllowScrollState(true);
+    }
   };
 
   useEffect(() => {
