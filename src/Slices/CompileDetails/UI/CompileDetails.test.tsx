@@ -1,6 +1,6 @@
 import React from "react";
 import { MemoryRouter } from "react-router-dom";
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { Either } from "@/Core";
 import {
@@ -40,13 +40,15 @@ function setup() {
 
 test("CompileDetailsView shows failed view", async () => {
   const { component, apiHelper } = setup();
-  render(component);
+  await render(component);
 
   expect(
     await screen.findByRole("generic", { name: "CompileDetailsView-Loading" }),
   ).toBeInTheDocument();
 
-  apiHelper.resolve(Either.left("error"));
+  await act(async () => {
+    apiHelper.resolve(Either.left("error"));
+  });
 
   expect(
     await screen.findByRole("generic", { name: "CompileDetailsView-Failed" }),
@@ -55,13 +57,15 @@ test("CompileDetailsView shows failed view", async () => {
 
 test("CompileDetailsView shows completed table with success: true", async () => {
   const { component, apiHelper } = setup();
-  render(component);
+  await render(component);
 
   expect(
     await screen.findByRole("generic", { name: "CompileDetailsView-Loading" }),
   ).toBeInTheDocument();
 
-  apiHelper.resolve(Either.right({ data: Mock.data }));
+  await act(async () => {
+    await apiHelper.resolve(Either.right({ data: Mock.data }));
+  });
 
   expect(
     await screen.findByRole("generic", { name: "CompileDetailsView-Success" }),
@@ -71,13 +75,15 @@ test("CompileDetailsView shows completed table with success: true", async () => 
 
 test("CompileDetailsView shows completed table with success: false, error indication should appear", async () => {
   const { component, apiHelper } = setup();
-  render(component);
+  await render(component);
 
   expect(
     await screen.findByRole("generic", { name: "CompileDetailsView-Loading" }),
   ).toBeInTheDocument();
 
-  apiHelper.resolve(Either.right({ data: Mock.DataFailed }));
+  await act(async () => {
+    apiHelper.resolve(Either.right({ data: Mock.DataFailed }));
+  });
 
   expect(
     await screen.findByRole("generic", { name: "CompileDetailsView-Success" }),

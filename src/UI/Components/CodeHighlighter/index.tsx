@@ -156,8 +156,10 @@ export const CodeHighlighter: React.FC<Props> = ({
     </>
   );
 
-  const setScrollPositionBottom = (element) => {
-    if (element && scrollBottom && allowScrollState) {
+  const setScrollPositionBottom = (
+    element: HTMLPreElement | null | undefined,
+  ) => {
+    if (scrollBottom && element && allowScrollState && isScrollable(element)) {
       element.scrollTo(0, element.scrollHeight);
     }
   };
@@ -185,8 +187,10 @@ export const CodeHighlighter: React.FC<Props> = ({
   // The linting escape rule was needed to ignore a false positive in the linting.
   // The method "setScrollPositionBottom" doesn't need to be included in the dependencies.
   useEffect(() => {
-    const preBlock = codeBlockRef.current?.querySelector("pre");
-    setScrollPositionBottom(preBlock);
+    if (!isEmpty(code)) {
+      const preBlock = codeBlockRef.current?.querySelector("pre");
+      setScrollPositionBottom(preBlock);
+    }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [code]);
@@ -240,6 +244,13 @@ export const CodeHighlighter: React.FC<Props> = ({
     </>
   );
 };
+
+function isScrollable(element) {
+  return (
+    element.scrollWidth > element.clientWidth ||
+    element.scrollHeight > element.clientHeight
+  );
+}
 
 function isEmpty(code: string) {
   return !(code && code.length > 0);
