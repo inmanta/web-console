@@ -166,7 +166,7 @@ export const CodeHighlighter: React.FC<Props> = ({
     allowScrollState && setAllowScrollState(false);
   };
 
-  // block scroll if the user scrolls changes.
+  // block scroll if the user scrolls.
   useEffect(() => {
     const preBlock = codeBlockRef.current?.querySelector("pre");
 
