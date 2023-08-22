@@ -109,8 +109,8 @@ export const CodeHighlighter: React.FC<Props> = ({
 
   const resumeAutoScroll = () => {
     const preBlock = codeBlockRef.current?.querySelector("pre");
+    preBlock && preBlock.scrollTo(0, preBlock.scrollHeight);
 
-    setScrollPositionBottom(preBlock);
     setAllowScrollState(true);
   };
 
@@ -162,39 +162,34 @@ export const CodeHighlighter: React.FC<Props> = ({
     }
   };
 
-  const updateScrollPosition = ({ target }) => {
-    const element = target as HTMLElement;
-
-    element.dataset.scrollPosition = element.scrollTop.toString();
-
-    if (!element.dataset.oldScrollPosition) {
-      element.dataset.oldScrollPosition = element.scrollTop.toString();
-    }
-
-    const currentScrollPosition = parseFloat(element.dataset.scrollPosition);
-    const oldScrollPosition = parseFloat(element.dataset.oldScrollPosition);
-
-    // check if we are scrolling upwards and block the automatic scroll to bottom.
-    if (oldScrollPosition > currentScrollPosition && allowScrollState) {
-      element.dataset.oldScrollPosition = element.scrollTop.toString();
-      setAllowScrollState(false);
-    }
+  const blockScrollPosition = () => {
+    allowScrollState && setAllowScrollState(false);
   };
 
+  // block scroll if the user scrolls changes.
   useEffect(() => {
     const preBlock = codeBlockRef.current?.querySelector("pre");
 
     if (scrollBottom && preBlock?.firstChild?.nodeName === "CODE") {
-      preBlock?.addEventListener("scroll", updateScrollPosition);
-      setScrollPositionBottom(preBlock);
+      preBlock?.addEventListener("wheel", blockScrollPosition);
     }
 
     return () => {
       if (!allowScrollState) {
-        preBlock?.removeEventListener("scroll", updateScrollPosition);
+        preBlock?.removeEventListener("wheel", blockScrollPosition);
       }
     };
   });
+
+  // Scroll to bottom when the code is being updated in the component.
+  // The linting escape rule was needed to ignore a false positive in the linting.
+  // The method "setScrollPositionBottom" doesn't need to be included in the dependencies.
+  useEffect(() => {
+    const preBlock = codeBlockRef.current?.querySelector("pre");
+    setScrollPositionBottom(preBlock);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [code]);
 
   return (
     <>
