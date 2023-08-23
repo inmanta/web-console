@@ -5,6 +5,7 @@ import {
   RemoteData,
   ServerStatus,
   StateHelper,
+  StatusLicense,
 } from "@/Core";
 import { VoidLogger } from "./VoidLogger";
 
@@ -71,5 +72,13 @@ export class PrimaryFeatureManager implements FeatureManager {
 
   getEdition(): string {
     return this.get().edition;
+  }
+
+  getLicenseInformation(): StatusLicense | undefined {
+    const serverStatus = this.get();
+    const licenceInformation = serverStatus.slices.find(
+      (slice) => slice.name === "license.license",
+    );
+    return licenceInformation?.status;
   }
 }
