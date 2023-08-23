@@ -380,6 +380,10 @@ const dict = {
   "resources.facts.columns.name": "Name",
   "resources.facts.columns.updated": "Last Updated",
   "resources.facts.columns.value": "Value",
+  "resources.deploy.tooltip":
+    "Request the agents to check the current state of each resource in a state different from the deployed state and make the current state of those resources in line with the desired state.",
+  "resources.repair.tooltip":
+    "Request the agents to check the current state of each resource and make the current state in-line with the desired state.",
 
   /** Compile report related text */
   "compileReports.title": "Compile Reports",
