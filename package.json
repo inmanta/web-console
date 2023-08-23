@@ -67,7 +67,7 @@
     "@types/react-router-dom": "^5.3.3",
     "@types/react-syntax-highlighter": "^15.5.7",
     "@types/styled-components": "^5.1.26",
-    "@types/webpack": "^5.28.1",
+    "@types/webpack": "^5.28.2",
     "@types/xml-formatter": "^2.1.1",
     "@typescript-eslint/eslint-plugin": "^6.2.1",
     "@typescript-eslint/parser": "^6.4.0",
