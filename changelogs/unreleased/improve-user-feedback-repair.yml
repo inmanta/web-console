@@ -1,0 +1,8 @@
+change-type: patch
+description: 'Improve the user-feedback when pressing either the repair or deploy button on the ressource page.'
+issue-nr: 4349
+destination-branches:
+- master
+- iso6
+sections: 
+  minor-improvement: "{{description}}"
