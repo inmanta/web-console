@@ -626,11 +626,11 @@ const dict = {
    * Banners
    */
   "banner.entitlement.expired": (days: number) =>
-    `Your entitlement certificate has expired ${days} days ago!`,
+    `Your license has expired ${days} days ago!`,
   "banner.certificate.expired": (days: number) =>
-    `Your certificate has expired ${days} days ago!`,
+    `Your license has expired ${days} days ago!`,
   "banner.certificate.will.expire": (days: number) =>
-    `Your certificate will expire in ${days} days.`,
+    `Your license will expire in ${days} days.`,
 
   /**
    * Common

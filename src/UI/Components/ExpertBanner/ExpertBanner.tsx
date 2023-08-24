@@ -7,7 +7,7 @@ export const ExpertBanner = () => {
 
   return environmentModifier.useIsExpertModeEnabled() ? (
     <React.Fragment>
-      <Banner isSticky variant="danger">
+      <Banner isSticky variant="danger" id="expert-mode-banner">
         LSM expert mode is enabled, proceed with caution.
       </Banner>
     </React.Fragment>
