@@ -10,8 +10,8 @@ export const LicenseBanner: React.FC = () => {
   const { featureManager } = useContext(DependencyContext);
   const status = featureManager.getLicenseInformation();
   const expirationMessage = getExpirationMessage(
-    status.entitlement_valid_until,
-    status.cert_valid_until,
+    status?.entitlement_valid_until,
+    status?.cert_valid_until,
   );
 
   return expirationMessage ? (
@@ -47,6 +47,10 @@ const checkExpiration = (validUntilDate: string) => {
  * or either null if not expired.
  */
 const getExpirationMessage = (entitlementDate, certificateDate) => {
+  if (!entitlementDate || !certificateDate) {
+    return null;
+  }
+
   const diffTimeCertificate = checkExpiration(certificateDate);
   const diffTimeEntitlement = checkExpiration(entitlementDate);
 
