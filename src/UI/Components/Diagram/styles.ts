@@ -58,7 +58,7 @@ export const CanvasWrapper = styled.div`
 
   .joint-halo.joint-theme-default.toolbar.type-element .handle {
     cursor: pointer;
-    &.remove {
+    &.delete {
       position: static;
       background-image: url(${removeBttn});
       margin: 0;

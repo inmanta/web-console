@@ -15,7 +15,7 @@ import { EntityConnection, ServiceEntityBlock } from "./shapes";
  * @param {dia.LinkView} linkView  - The view for the joint.dia.Link model.
  * @returns {void}
  */
-export function showLinkTools(linkView: dia.LinkView) {
+export function showLinkTools(graph: dia.Graph, linkView: dia.LinkView) {
   const tools = new dia.ToolsView({
     tools: [
       new linkTools.Remove({
@@ -44,6 +44,48 @@ export function showLinkTools(linkView: dia.LinkView) {
             },
           },
         ],
+        action: (_evt, linkView: dia.LinkView, toolView: dia.ToolView) => {
+          const source = linkView.model.source();
+          const target = linkView.model.target();
+
+          const sourceCell = graph.getCell(source.id as dia.Cell.ID);
+          const targetCell = graph.getCell(target.id as dia.Cell.ID);
+
+          // resolve any possible embedded connections between cells
+          if (
+            sourceCell.get("isEmbedded") &&
+            sourceCell.get("embeddedTo") === target.id
+          ) {
+            sourceCell.set("embeddedTo", null);
+          }
+
+          if (
+            targetCell.get("isEmbedded") &&
+            targetCell.get("embeddedTo") === source.id
+          ) {
+            targetCell.set("embeddedTo", null);
+          }
+
+          // resolve any possible relation connections between cells
+          const sourceRelations = sourceCell.get("relatedTo");
+          const targetRelations = targetCell.get("relatedTo");
+
+          if (sourceCell.get("relatedTo") === target.id) {
+            sourceCell.set(
+              "relatedTo",
+              sourceRelations.filter((id) => id !== source.id),
+            );
+          }
+
+          if (targetRelations.includes(source.id)) {
+            targetCell.set(
+              "relatedTo",
+              targetRelations.filter((id) => id !== source.id),
+            );
+          }
+
+          linkView.model.remove({ ui: true, tool: toolView.cid });
+        },
       }),
     ],
   });
