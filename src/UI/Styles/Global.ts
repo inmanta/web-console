@@ -27,6 +27,7 @@ export const GlobalStyles = createGlobalStyle`
   }
   .pf-c-page__sidebar-body {
     height: 100%;
+    max-height: calc(100vh - var(--pf-c-page__header--MinHeight) - 60px);
   }
   .pf-c-chip__text {
     max-width: fit-content;
