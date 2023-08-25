@@ -1,0 +1,8 @@
+change-type: patch
+description: 'A banner will now be shown if your license is about to expire, or if it already has expired.'
+issue-nr: 4708
+destination-branches:
+- master
+- iso6
+sections: 
+  minor-improvement: "{{description}}"

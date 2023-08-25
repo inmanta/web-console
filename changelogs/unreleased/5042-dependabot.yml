@@ -1,0 +1,7 @@
+change-type: patch
+description: 'Build(deps-dev): Bump @babel/plugin-transform-typescript from 7.22.9
+    to 7.22.10'
+destination-branches:
+- master
+- iso6
+sections: {}

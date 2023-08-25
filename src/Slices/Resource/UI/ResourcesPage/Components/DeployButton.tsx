@@ -1,27 +1,13 @@
-import React, { useContext } from "react";
-import { Button } from "@patternfly/react-core";
-import { ActionDisabledTooltip } from "@/UI/Components";
-import { DependencyContext } from "@/UI/Dependency";
+import React from "react";
 import { words } from "@/UI/words";
+import { ResourcePageActionButton } from "./ActionButton";
 
 export const DeployButton: React.FC = () => {
-  const { environmentModifier, commandResolver } =
-    useContext(DependencyContext);
-  const isHalted = environmentModifier.useIsHalted();
-  const trigger = commandResolver.useGetTrigger<"Deploy">({ kind: "Deploy" });
   return (
-    <ActionDisabledTooltip
-      isDisabled={isHalted}
-      ariaLabel={words("resources.deploySummary.deploy")}
-      tooltipContent={words("environment.halt.tooltip")}
-    >
-      <Button
-        variant="secondary"
-        isDisabled={isHalted}
-        onClick={() => trigger()}
-      >
-        {words("resources.deploySummary.deploy")}
-      </Button>
-    </ActionDisabledTooltip>
+    <ResourcePageActionButton
+      kind="Deploy"
+      tooltip={words("resources.deploy.tooltip")}
+      textContent={words("resources.deploySummary.deploy")}
+    />
   );
 };

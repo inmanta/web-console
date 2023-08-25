@@ -3,7 +3,7 @@ import { Icon, Split, SplitItem, Tooltip } from "@patternfly/react-core";
 import { ExclamationTriangleIcon } from "@patternfly/react-icons";
 import { Tr, Td } from "@patternfly/react-table";
 import styled from "styled-components";
-import { ParsedNumber } from "@/Core";
+import { ParsedNumber, Attributes } from "@/Core";
 import { Toggle } from "@/UI/Components/Toggle";
 import { ClipboardCopyButton } from "../../ClipboardCopyButton";
 import { CellWithCopy } from "./CellWithCopy";
@@ -17,6 +17,7 @@ interface RowProps {
   serviceEntity: string;
   version: ParsedNumber;
   showExpertMode: boolean;
+  attributes: Attributes;
 }
 
 const warningMessage =
@@ -28,6 +29,7 @@ export const TreeRowView: React.FC<RowProps> = ({
   serviceEntity,
   version,
   showExpertMode,
+  attributes,
 }) => {
   switch (row.kind) {
     case "Flat":
@@ -52,6 +54,7 @@ export const TreeRowView: React.FC<RowProps> = ({
                 version={version}
                 serviceEntity={serviceEntity}
                 attributeType={row.type ? row.type : "undefined"}
+                parentObject={null}
               />
             ) : (
               <CellWithCopy
@@ -164,6 +167,7 @@ export const TreeRowView: React.FC<RowProps> = ({
                 version={version}
                 serviceEntity={serviceEntity}
                 attributeType={row.type ? row.type : "undefined"}
+                parentObject={attributes[label]}
               />
             ) : (
               <CellWithCopy
