@@ -216,11 +216,12 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
   }
 
   setName(name: string, options?: object) {
+    this.set("entityName", name);
     return this.attr(["headerLabel", "text"], name, options);
   }
 
   getName(): string {
-    return this.attr(["headerLabel", "text"]);
+    return this.get("entityName");
   }
 
   setTabColor(color: string) {
@@ -234,6 +235,11 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
     if (initializeButton && this.get("isCollapsed")) {
       this.appendButton();
     }
+    return this;
+  }
+
+  editColumns(data: Array<ColumnData>, shouldBeCollapsed = true) {
+    this._setColumns(data, shouldBeCollapsed);
     return this;
   }
 

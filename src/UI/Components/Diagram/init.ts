@@ -1,12 +1,17 @@
 import { dia, highlighters, shapes, ui } from "@inmanta/rappid";
 import { InstanceAttributeModel, ServiceModel } from "@/Core";
 import { InstanceWithReferences } from "@/Data/Managers/GetInstanceWithRelations/interface";
-import { appendEntity, appendInstance, showLinkTools } from "./actions";
+import {
+  appendColumns,
+  appendEntity,
+  appendInstance,
+  showLinkTools,
+} from "./actions";
 import { anchorNamespace } from "./anchors";
 import { checkIfConnectionIsAllowed } from "./helpers";
 import collapseButton from "./icons/collapse-icon.svg";
 import expandButton from "./icons/expand-icon.svg";
-import { ConnectionRules } from "./interfaces";
+import { ConnectionRules, serializedCell } from "./interfaces";
 import { routerNamespace } from "./routers";
 import { EntityConnection, ServiceEntityBlock } from "./shapes";
 
@@ -288,17 +293,32 @@ export default function diagramInit(
       );
       const { x, y } = appendedInstance.getBBox();
       scroller.center(x, y + 200);
+
+      const jsonGraph = graph.toJSON();
+      return jsonGraph.cells as serializedCell[];
     },
 
-    addEntity: (instance, service, addingCoreInstance) => {
-      const instanceCoordinates = appendEntity(
-        paper,
+    addEntity: (instance, service, addingCoreInstance, isEmbedded) => {
+      const shape = appendEntity(
         graph,
         service,
         instance,
         addingCoreInstance,
+        isEmbedded,
       );
-      scroller.center(instanceCoordinates.x, instanceCoordinates.y + 200);
+      const shapeCoordinates = shape.getBBox();
+      scroller.center(shapeCoordinates.x, shapeCoordinates.y + 200);
+      return shape;
+    },
+    editEntity: (cellView, serviceModel, attributeValues) => {
+      //line below resolves issue that appendColumns did update values in the model, but visual representation wasn't updated
+      cellView.model.set("items", []);
+      appendColumns(
+        cellView.model as ServiceEntityBlock,
+        serviceModel.attributes.map((attr) => attr.name),
+        attributeValues,
+        false,
+      );
     },
     zoom: (delta) => {
       scroller.zoom(0.05 * delta, { min: 0.4, max: 1.2, grid: 0.05 });
@@ -312,11 +332,17 @@ export interface DiagramHandlers {
     instance: InstanceWithReferences,
     services: ServiceModel[],
     isMainInstance: boolean,
-  ) => void;
+  ) => serializedCell[];
   addEntity: (
     entity: InstanceAttributeModel,
     service: ServiceModel,
     addingCoreInstance: boolean,
+    isEmbedded: boolean,
+  ) => ServiceEntityBlock;
+  editEntity: (
+    cellView: dia.CellView,
+    serviceModel: ServiceModel,
+    attributeValues: InstanceAttributeModel,
   ) => void;
   zoom: (delta: 1 | -1) => void;
 }
