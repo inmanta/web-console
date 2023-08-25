@@ -62,6 +62,7 @@ const dict = {
   "codehighlighter.lineNumbers.off": "Hide line numbers",
   "codehighlighter.zoom.on": "Enlarge",
   "codehighlighter.zoom.off": "Back to original size",
+  "codehighlighter.scrollToBottom": "Scroll down and resume auto-scroll",
 
   /**
    * Inventory related text
@@ -379,6 +380,10 @@ const dict = {
   "resources.facts.columns.name": "Name",
   "resources.facts.columns.updated": "Last Updated",
   "resources.facts.columns.value": "Value",
+  "resources.deploy.tooltip":
+    "Request the agents to check the current state of each resource in a state different from the deployed state and make the current state of those resources in line with the desired state.",
+  "resources.repair.tooltip":
+    "Request the agents to check the current state of each resource and make the current state in-line with the desired state.",
 
   /** Compile report related text */
   "compileReports.title": "Compile Reports",
@@ -620,6 +625,16 @@ const dict = {
   "notification.drawer.clear": "Clear",
   "notification.instanceForm.prompt":
     "Are you sure you want to leave this page? You have unsaved changes",
+
+  /**
+   * Banners
+   */
+  "banner.entitlement.expired": (days: number) =>
+    `Your license has expired ${days} days ago!`,
+  "banner.certificate.expired": (days: number) =>
+    `Your license has expired ${days} days ago!`,
+  "banner.certificate.will.expire": (days: number) =>
+    `Your license will expire in ${days} days.`,
 
   /**
    * Common

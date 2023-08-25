@@ -749,6 +749,14 @@ test("Given the ResourcesView When clicking on deploy, then the approriate backe
     );
   });
 
+  expect(
+    await screen.findByRole("button", {
+      name: words("resources.deploySummary.deploy"),
+    }),
+  ).toBeDisabled();
+
+  expect(screen.getByTestId("dot-indication")).toBeInTheDocument();
+
   expect(apiHelper.pendingRequests).toEqual([
     {
       method: "POST",
@@ -780,6 +788,12 @@ test("Given the ResourcesView When clicking on repair, then the approriate backe
       }),
     );
   });
+
+  expect(
+    await screen.findByRole("button", {
+      name: words("resources.deploySummary.repair"),
+    }),
+  ).toBeDisabled();
 
   expect(apiHelper.pendingRequests).toEqual([
     {

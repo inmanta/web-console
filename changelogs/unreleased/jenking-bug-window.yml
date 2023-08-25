@@ -1,0 +1,6 @@
+change-type: patch
+description: "Resolve the issue causing test to fail due to the typeError on pipeline"
+issue-nr: 5040
+destination-branches:
+  - master
+  - iso6

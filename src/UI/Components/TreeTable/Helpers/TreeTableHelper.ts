@@ -21,6 +21,8 @@ export interface TreeTableHelper {
   ): { rows: TreeRow[]; openAll: () => void; closeAll: () => void };
 
   getEmptyAttributeSets(): string[];
+
+  getAttributes(): Attributes;
 }
 
 export abstract class BaseTreeTableHelper<A extends AttributeTree>
@@ -75,14 +77,17 @@ export abstract class BaseTreeTableHelper<A extends AttributeTree>
     const nodes = this.attributeHelper.getMultiAttributeNodes(this.attributes);
 
     return {
-      rows: Object.entries(nodes)
-        .map(([key, node]) => treeRowCreator.create(key, node))
-        .sort((a, b) => a.id.localeCompare(b.id)),
+      rows: Object.entries(nodes).map(([key, node]) =>
+        treeRowCreator.create(key, node),
+      ),
       openAll: createOpenAll,
       closeAll: createCloseAll,
     };
   }
   getEmptyAttributeSets(): string[] {
     return [];
+  }
+  getAttributes(): Attributes {
+    return this.attributes as Attributes;
   }
 }

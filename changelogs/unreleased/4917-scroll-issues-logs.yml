@@ -1,0 +1,7 @@
+change-type: minor
+description: 'Adjust the scrolling behavior for the log output.'
+issue-nr: 4917
+destination-branches:
+- master
+- iso6
+

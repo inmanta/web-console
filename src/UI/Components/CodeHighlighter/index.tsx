@@ -17,6 +17,7 @@ import {
   ExpandArrowsAltIcon,
   InfoCircleIcon,
   ListOlIcon,
+  LongArrowAltDownIcon,
   TextWidthIcon,
 } from "@patternfly/react-icons";
 import copy from "copy-to-clipboard";
@@ -51,7 +52,7 @@ export const CodeHighlighter: React.FC<Props> = ({
   const [wrapLongLines, setWraplongLines] = useState(true);
   const codeBlockRef = useRef<HTMLDivElement>(null);
   const [allowScrollState, setAllowScrollState] = useState(true);
-  const minHeight = "8em";
+  const minHeight = "10em";
 
   const onCopy = () => {
     copy(code);
@@ -106,6 +107,13 @@ export const CodeHighlighter: React.FC<Props> = ({
     </ToggleTooltip>,
   ];
 
+  const resumeAutoScroll = () => {
+    const preBlock = codeBlockRef.current?.querySelector("pre");
+    preBlock && preBlock.scrollTo(0, preBlock.scrollHeight);
+
+    setAllowScrollState(true);
+  };
+
   const actions = (
     <>
       <CenteredCopyButton
@@ -139,49 +147,55 @@ export const CodeHighlighter: React.FC<Props> = ({
           </SidebarButton>
         )}
       </ToggleTooltip>
+      {scrollBottom && (
+        <Tooltip content={words("codehighlighter.scrollToBottom")}>
+          <SidebarButton variant="plain" onClick={resumeAutoScroll}>
+            <LongArrowAltDownIcon />
+          </SidebarButton>
+        </Tooltip>
+      )}
       <IconSettings actions={dropdownActions} />
     </>
   );
 
-  const setScrollPositionBottom = (element) => {
-    if (element && scrollBottom && allowScrollState) {
+  const setScrollPositionBottom = (
+    element: HTMLPreElement | null | undefined,
+  ) => {
+    if (scrollBottom && element && allowScrollState && isScrollable(element)) {
       element.scrollTo(0, element.scrollHeight);
     }
   };
 
-  const updateScrollPosition = ({ target }) => {
-    const element = target as HTMLElement;
-
-    element.dataset.scrollPosition = element.scrollTop.toString();
-
-    if (!element.dataset.oldScrollPosition) {
-      element.dataset.oldScrollPosition = element.scrollTop.toString();
-    }
-
-    const currentScrollPosition = parseFloat(element.dataset.scrollPosition);
-    const oldScrollPosition = parseFloat(element.dataset.oldScrollPosition);
-
-    // check if we are scrolling upwards and block the automatic scroll to bottom.
-    if (oldScrollPosition > currentScrollPosition && allowScrollState) {
-      element.dataset.oldScrollPosition = element.scrollTop.toString();
-      setAllowScrollState(false);
-    }
+  const blockScrollPosition = () => {
+    allowScrollState && setAllowScrollState(false);
   };
 
+  // block scroll if the user scrolls.
   useEffect(() => {
     const preBlock = codeBlockRef.current?.querySelector("pre");
 
     if (scrollBottom && preBlock?.firstChild?.nodeName === "CODE") {
-      preBlock?.addEventListener("scroll", updateScrollPosition);
-      setScrollPositionBottom(preBlock);
+      preBlock?.addEventListener("wheel", blockScrollPosition);
     }
 
     return () => {
       if (!allowScrollState) {
-        preBlock?.removeEventListener("scroll", updateScrollPosition);
+        preBlock?.removeEventListener("wheel", blockScrollPosition);
       }
     };
   });
+
+  // Scroll to bottom when the code is being updated in the component.
+  // The linting escape rule was needed to ignore a false positive in the linting.
+  // The method "setScrollPositionBottom" doesn't need to be included in the dependencies.
+  useEffect(() => {
+    if (!isEmpty(code)) {
+      const preBlock = codeBlockRef.current?.querySelector("pre");
+      setScrollPositionBottom(preBlock);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [code]);
 
   return (
     <>
@@ -232,6 +246,13 @@ export const CodeHighlighter: React.FC<Props> = ({
     </>
   );
 };
+
+function isScrollable(element) {
+  return (
+    element.scrollWidth > element.clientWidth ||
+    element.scrollHeight > element.clientHeight
+  );
+}
 
 function isEmpty(code: string) {
   return !(code && code.length > 0);

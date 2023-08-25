@@ -65,6 +65,13 @@ export class CatalogAttributeHelper
         };
       });
     }
-    return entries;
+
+    //sorting of the attributes moved to helpers to avoid sorting issues - check issue #5030 for example
+    return Object.keys(entries)
+      .sort()
+      .reduce((acc, key) => {
+        acc[key] = entries[key];
+        return acc;
+      }, {}) as MultiAttributeNodeDict<CatalogAttributeTree["target"]>;
   }
 }

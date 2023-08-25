@@ -119,7 +119,7 @@ if (Cypress.env("edition") === "iso") {
         .find('[aria-label="SaveAction"]')
         .click();
       cy.get('[aria-label="Warning"]').should("not.exist");
-      cy.get(".pf-c-banner.pf-m-danger.pf-m-sticky")
+      cy.get("[id='expert-mode-banner']")
         .should("exist")
         .and("contain", "LSM expert mode is enabled, proceed with caution.");
 
@@ -351,7 +351,7 @@ if (Cypress.env("edition") === "iso") {
         .find('[aria-label="SaveAction"]')
         .click();
       cy.get('[aria-label="Warning"]').should("not.exist");
-      cy.get(".pf-c-banner.pf-m-danger.pf-m-sticky").should("not.exist");
+      cy.get("[id='expert-mode-banner']").should("not.exist");
     });
   });
 }

@@ -87,6 +87,7 @@ export const TreeTable: React.FC<Props> = ({
             version={version as number}
             serviceEntity={serviceName as string}
             showExpertMode={isExpertAvailable}
+            attributes={treeTableHelper.getAttributes()}
           />
         ))}
       </Tbody>

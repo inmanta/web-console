@@ -14,26 +14,21 @@ interface Props {
 export const CompareSelectionLabel: React.FC<Props> = ({
   selection,
   onDelete,
-}) => (
-  <Container>
-    <Title>{words("desiredState.compare.selectionLabel")}</Title>
-    <Selection>
-      <SelectionText>
-        {Maybe.isSome(selection) && (
-          <>
-            <b>{selection.value}</b> &amp;
-          </>
-        )}{" "}
-        ...
-      </SelectionText>
-      {Maybe.isSome(selection) && (
+}) => {
+  return Maybe.isSome(selection) ? (
+    <Container>
+      <Title>{words("desiredState.compare.selectionLabel")}</Title>
+      <Selection>
+        <SelectionText>
+          <b>{selection.value}</b>;
+        </SelectionText>
         <SelectionAction onClick={onDelete} variant="plain">
           <TimesIcon size="sm" />
         </SelectionAction>
-      )}
-    </Selection>
-  </Container>
-);
+      </Selection>
+    </Container>
+  ) : null;
+};
 
 const Container = styled.div`
   display: inline-flex;
