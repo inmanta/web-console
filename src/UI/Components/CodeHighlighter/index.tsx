@@ -147,11 +147,13 @@ export const CodeHighlighter: React.FC<Props> = ({
           </SidebarButton>
         )}
       </ToggleTooltip>
-      <Tooltip content={words("codehighlighter.scrollToBottom")}>
-        <SidebarButton variant="plain" onClick={resumeAutoScroll}>
-          <LongArrowAltDownIcon />
-        </SidebarButton>
-      </Tooltip>
+      {scrollBottom && (
+        <Tooltip content={words("codehighlighter.scrollToBottom")}>
+          <SidebarButton variant="plain" onClick={resumeAutoScroll}>
+            <LongArrowAltDownIcon />
+          </SidebarButton>
+        </Tooltip>
+      )}
       <IconSettings actions={dropdownActions} />
     </>
   );
