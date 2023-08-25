@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import { dia } from "@inmanta/rappid";
 import {
   Alert,
   Button,
@@ -25,27 +26,32 @@ import {
   FieldCreator,
 } from "../../ServiceInstanceForm";
 import { FieldInput } from "../../ServiceInstanceForm/Components";
+import { ServiceEntityBlock } from "../shapes";
 
 interface PossibleForm {
   key: string;
   value: string;
   model: ServiceModel | EmbeddedEntity | undefined;
+  isEmbedded: boolean;
 }
 
 const FormModal = ({
   isOpen,
   toggleIsOpen,
   services,
+  cellView,
   onConfirm,
 }: {
   isOpen: boolean;
   toggleIsOpen: (value: boolean) => void;
   services: ServiceModel[];
+  cellView: dia.CellView | null;
   onConfirm: (
     entity: InstanceAttributeModel,
     selected: {
       name: string;
       model: ServiceModel | EmbeddedEntity;
+      isEmbedded: boolean;
     },
   ) => void;
 }) => {
@@ -57,11 +63,10 @@ const FormModal = ({
     | {
         name: string;
         model: ServiceModel | EmbeddedEntity;
+        isEmbedded: boolean;
       }
     | undefined
   >(undefined);
-
-  const fieldCreator = new FieldCreator(new CreateModifierHandler());
 
   const clearStates = () => {
     setIsSelectOpen(false);
@@ -70,30 +75,46 @@ const FormModal = ({
     setSelected(undefined);
   };
 
-  const onEntityChosen = (
-    _event,
-    value: string | SelectOptionObject,
-    isPlaceholder,
-  ) => {
-    if (isPlaceholder) {
-      clearStates();
-    } else {
-      const chosenModel = possibleForms.find(
-        (service) => service.value === value,
-      );
-
-      if (chosenModel && chosenModel.model) {
-        setSelected({ name: value as string, model: chosenModel.model });
-        const selectedFields = fieldCreator.attributesToFields(
-          chosenModel.model.attributes,
+  const onEntityChosen = useCallback(
+    (
+      _event,
+      value: string | SelectOptionObject,
+      isPlaceholder: boolean | undefined,
+      possibleForms: PossibleForm[],
+    ) => {
+      if (isPlaceholder) {
+        clearStates();
+      } else {
+        const chosenModel = possibleForms.find(
+          (service) => service.value === value,
         );
 
-        setFields(selectedFields);
-        setFormState(createFormState(selectedFields));
+        if (chosenModel && chosenModel.model) {
+          setSelected({
+            name: value as string,
+            model: chosenModel.model,
+            isEmbedded: chosenModel.isEmbedded,
+          });
+
+          const fieldCreator = new FieldCreator(new CreateModifierHandler());
+          const selectedFields = fieldCreator.attributesToFields(
+            chosenModel.model.attributes,
+          );
+
+          setFields(selectedFields);
+          if (cellView) {
+            setFormState(
+              (cellView.model as ServiceEntityBlock).get("instanceAttributes"),
+            );
+          } else {
+            setFormState(createFormState(selectedFields));
+          }
+        }
       }
-    }
-    setIsSelectOpen(false);
-  };
+      setIsSelectOpen(false);
+    },
+    [cellView],
+  );
 
   const getUpdate = (path: string, value: unknown, multi = false): void => {
     if (multi) {
@@ -132,6 +153,7 @@ const FormModal = ({
           key: service.name + "-" + prefix,
           value: service.name + displayedPrefix,
           model: service,
+          isEmbedded: prefix !== "",
         });
 
         getOptions(service.embedded_entities, values, joinedPrefix);
@@ -140,16 +162,28 @@ const FormModal = ({
       return values;
     };
 
-    setPossibleForms(
-      getOptions(services, [
-        { key: "default_option", value: "Choose a Service", model: undefined },
-      ]),
-    );
-  }, [services]);
+    const tempPossibleForms = getOptions(services, [
+      {
+        key: "default_option",
+        value: "Choose a Service",
+        model: undefined,
+        isEmbedded: false,
+      },
+    ]);
+    setPossibleForms(tempPossibleForms);
+    if (cellView) {
+      onEntityChosen(
+        null,
+        (cellView.model as ServiceEntityBlock).getName(),
+        false,
+        tempPossibleForms,
+      );
+    }
+  }, [services, cellView, onEntityChosen]);
   return (
     <StyledModal
       isOpen={isOpen}
-      title={"Add Entity"}
+      title={cellView ? "Edit Entity" : "Add Entity"}
       variant={"small"}
       onClose={() => {
         clearStates();
@@ -193,8 +227,11 @@ const FormModal = ({
             selections={selected?.name}
             onToggle={() => setIsSelectOpen(!isSelectOpen)}
             isOpen={isSelectOpen}
-            onSelect={onEntityChosen}
+            onSelect={(evt, value, isPlaceholder) => {
+              onEntityChosen(evt, value, isPlaceholder, possibleForms);
+            }}
             maxHeight={300}
+            isDisabled={cellView !== null}
           >
             {possibleForms.map(({ key, value }) => (
               <SelectOption
