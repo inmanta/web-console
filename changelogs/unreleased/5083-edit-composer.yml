@@ -1,0 +1,6 @@
+change-type: minor
+description: "Add edit form for composer"
+issue-nr: 5083
+destination-branches:
+  - master
+  - iso6

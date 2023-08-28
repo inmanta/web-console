@@ -1,16 +1,11 @@
-import { dia, g, layout, linkTools } from "@inmanta/rappid";
+import { dia, layout, linkTools } from "@inmanta/rappid";
 import dagre, { graphlib } from "dagre";
-import {
-  AttributeModel,
-  EmbeddedEntity,
-  InstanceAttributeModel,
-  ServiceModel,
-} from "@/Core";
+import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from "@/Core";
 import { InstanceWithReferences } from "@/Data/Managers/GetInstanceWithRelations/interface";
 import { words } from "@/UI/words";
 import activeImage from "./icons/active-icon.svg";
 import candidateImage from "./icons/candidate-icon.svg";
-import { EntityConnection, ServiceEntityBlock } from "./shapes";
+import { Colors, EntityConnection, ServiceEntityBlock } from "./shapes";
 
 /**
  * Function to display the methods to alter the connection objects - currently, the only function visible is the one removing connections.
@@ -71,6 +66,7 @@ export function appendInstance(
   serviceWithReferences: InstanceWithReferences,
   services: ServiceModel[],
   isMainInstance: boolean,
+  relatedTo: string | null = null,
 ): ServiceEntityBlock {
   const serviceInstance = serviceWithReferences.instance.data;
   const ServiceInstanceModel = services.find(
@@ -81,8 +77,12 @@ export function appendInstance(
     serviceInstance.service_entity,
   );
 
+  instanceAsTable.set("id", serviceWithReferences.instance.data.id);
+  instanceAsTable.set("relatedTo", relatedTo);
+  instanceAsTable.set("isEmbedded", false);
+
   if (!isMainInstance) {
-    instanceAsTable.setTabColor("#0066CC");
+    instanceAsTable.setTabColor(Colors.base);
   }
 
   //check for any presentable attributes, where candidate attrs have priority, if there is a set, then append them to  JointJS shape and try to display and connect embedded entities
@@ -91,9 +91,8 @@ export function appendInstance(
       graph,
       paper,
       instanceAsTable,
-      ServiceInstanceModel.attributes,
+      ServiceInstanceModel,
       serviceInstance.candidate_attributes,
-      ServiceInstanceModel.embedded_entities,
       "candidate",
     );
   } else {
@@ -101,15 +100,21 @@ export function appendInstance(
       graph,
       paper,
       instanceAsTable,
-      ServiceInstanceModel.attributes,
+      ServiceInstanceModel,
       serviceInstance.active_attributes as InstanceAttributeModel,
-      ServiceInstanceModel.embedded_entities,
       "active",
     );
   }
   const appendedInstances = serviceWithReferences.relatedInstances.map(
     (relatedInstance) => {
-      return appendInstance(paper, graph, relatedInstance, services, false);
+      return appendInstance(
+        paper,
+        graph,
+        relatedInstance,
+        services,
+        false,
+        serviceWithReferences.instance.data.id,
+      );
     },
   );
   connectEntities(graph, instanceAsTable, appendedInstances);
@@ -141,6 +146,8 @@ export function appendEmbeddedEntity(
   graph: dia.Graph,
   embeddedEntity: EmbeddedEntity,
   entityAttributes: InstanceAttributeModel,
+  embeddedTo: string | null,
+  holderType: string,
 ): ServiceEntityBlock[] {
   //Create shape for Entity
   const flatAttributes = embeddedEntity.attributes.map(
@@ -152,10 +159,13 @@ export function appendEmbeddedEntity(
 
     (entityAttributes as InstanceAttributeModel[]).map((entityInstance) => {
       const instanceAsTable = new ServiceEntityBlock()
-        .setTabColor("#0066CC")
+        .setTabColor(Colors.embedded)
         .setName(embeddedEntity.name);
 
       appendColumns(instanceAsTable, flatAttributes, entityInstance);
+      instanceAsTable.set("isEmbedded", true);
+      instanceAsTable.set("holderType", holderType);
+      instanceAsTable.set("embeddedTo", embeddedTo);
 
       //add to graph
       instanceAsTable.addTo(graph);
@@ -169,6 +179,8 @@ export function appendEmbeddedEntity(
           graph,
           entity,
           entityInstance[entity.name] as InstanceAttributeModel,
+          instanceAsTable.id as string,
+          embeddedEntity.name,
         );
         connectEntities(graph, instanceAsTable, appendedEntity);
       });
@@ -177,10 +189,13 @@ export function appendEmbeddedEntity(
     return createdInstances;
   } else {
     const instanceAsTable = new ServiceEntityBlock()
-      .setTabColor("#0066CC")
+      .setTabColor(Colors.embedded)
       .setName(embeddedEntity.name);
 
     appendColumns(instanceAsTable, flatAttributes, entityAttributes);
+    instanceAsTable.set("isEmbedded", true);
+    instanceAsTable.set("holderType", holderType);
+    instanceAsTable.set("embeddedTo", embeddedTo);
 
     //add to graph
     instanceAsTable.addTo(graph);
@@ -192,6 +207,8 @@ export function appendEmbeddedEntity(
         graph,
         entity,
         entityAttributes[entity.name] as InstanceAttributeModel,
+        instanceAsTable.id as string,
+        entity.name,
       );
       connectEntities(graph, instanceAsTable, appendedEntity);
     });
@@ -208,31 +225,33 @@ export function appendEmbeddedEntity(
  * @param {ServiceModel} serviceModel that we want to base created entity on
  * @param {InstanceAttributeModel} entity created in the from
  * @param {boolean} isCore defines whether created entity is main one in given View
- * @returns {g.Rect} created JointJS shape
+ * @returns {ServiceEntityBlock} created JointJS shape
  */
 export function appendEntity(
-  paper: dia.Paper,
   graph: dia.Graph,
   serviceModel: ServiceModel,
   entity: InstanceAttributeModel,
   isCore: boolean,
-): g.Rect {
+  isEmbedded = false,
+): ServiceEntityBlock {
   //Create shape for Entity
   const instanceAsTable = new ServiceEntityBlock().setName(serviceModel.name);
 
   if (!isCore) {
-    instanceAsTable.setTabColor("#0066CC");
+    instanceAsTable.setTabColor(Colors.base);
   }
+  if (isEmbedded) {
+    instanceAsTable.setTabColor(Colors.embedded);
+  }
+  instanceAsTable.set("isEmbedded", isEmbedded);
 
-  handleAttributes(
-    graph,
-    paper,
-    instanceAsTable,
-    serviceModel.attributes,
-    entity,
-    [],
+  const attributesNames = serviceModel.attributes.map(
+    (attribute) => attribute.name,
   );
 
+  appendColumns(instanceAsTable, attributesNames, entity);
+  //add to graph
+  instanceAsTable.addTo(graph);
   //auto-layout provided by JointJS
   layout.DirectedGraph.layout(graph, {
     dagre: dagre,
@@ -242,7 +261,7 @@ export function appendEntity(
     rankDir: "TB",
   });
 
-  return instanceAsTable.getBBox();
+  return instanceAsTable;
 }
 
 /**
@@ -253,19 +272,24 @@ export function appendEntity(
  * @param {InstanceAttributeModel} serviceInstanceAttributes - attributes of given instance/entity
  * @returns {void}
  */
-function appendColumns(
+export function appendColumns(
   serviceEntity: ServiceEntityBlock,
   attributesKeywords: string[],
   serviceInstanceAttributes: InstanceAttributeModel,
+  isInitial = true,
 ) {
-  serviceEntity.appendColumns(
-    attributesKeywords.map((key) => {
-      return {
-        name: key,
-        value: serviceInstanceAttributes[key] as string,
-      };
-    }),
-  );
+  serviceEntity.set("instanceAttributes", serviceInstanceAttributes);
+  const attributes = attributesKeywords.map((key) => {
+    return {
+      name: key,
+      value: serviceInstanceAttributes[key] as string,
+    };
+  });
+  if (isInitial) {
+    serviceEntity.appendColumns(attributes);
+  } else {
+    serviceEntity.editColumns(attributes, serviceEntity.attributes.isCollapsed);
+  }
 }
 
 /**
@@ -294,9 +318,8 @@ function connectEntities(
  * @param {dia.Graph} graph JointJS graph object
  * @param {dia.Paper} paper JointJS paper object
  * @param {ServiceEntityBlock} instanceAsTable created Entity
- * @param attributesModel - attributes model of given instance/entity
- * @param attributes - attributes of given instance/entity
- * @param embedded_entities - embedded entities of given instance/entity
+ * @param serviceModel - serviceModel model of given instance/entity
+ * @param attributesValues - attributes of given instance/entity
  * @param {"candidate" | "active"=} presentedAttrs *optional* indentify used set of attributes if they are taken from Service Instance
  * @returns {void}
  */
@@ -304,15 +327,14 @@ function handleAttributes(
   graph: dia.Graph,
   paper: dia.Paper,
   instanceAsTable: ServiceEntityBlock,
-  attributesModel: AttributeModel[],
-  attributes: InstanceAttributeModel,
-  embedded_entities: EmbeddedEntity[],
+  serviceModel: ServiceModel,
+  attributesValues: InstanceAttributeModel,
   presentedAttr?: "candidate" | "active",
 ) {
-  const attributesNames = attributesModel.map((attribute) => attribute.name);
+  const { attributes, embedded_entities } = serviceModel;
+  const attributesNames = attributes.map((attribute) => attribute.name);
   handleInfoIcon(instanceAsTable, presentedAttr);
-
-  appendColumns(instanceAsTable, attributesNames, attributes);
+  appendColumns(instanceAsTable, attributesNames, attributesValues);
   //add to graph
   instanceAsTable.addTo(graph);
 
@@ -322,7 +344,9 @@ function handleAttributes(
       paper,
       graph,
       entity,
-      attributes[entity.name] as InstanceAttributeModel,
+      attributesValues[entity.name] as InstanceAttributeModel,
+      instanceAsTable.id as string,
+      serviceModel.name,
     );
     appendedEntities.map((entity) => {
       handleInfoIcon(entity, presentedAttr);
