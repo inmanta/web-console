@@ -103,7 +103,6 @@ const FormModal = ({
 
           setFields(selectedFields);
           if (cellView) {
-            console.log(cellView);
             setFormState(
               (cellView.model as ServiceEntityBlock).get("instanceAttributes"),
             );
