@@ -5,12 +5,7 @@ import { InstanceWithReferences } from "@/Data/Managers/GetInstanceWithRelations
 import { words } from "@/UI/words";
 import activeImage from "./icons/active-icon.svg";
 import candidateImage from "./icons/candidate-icon.svg";
-import {
-  baseEntityColor,
-  embeddedEntityColor,
-  EntityConnection,
-  ServiceEntityBlock,
-} from "./shapes";
+import { Colors, EntityConnection, ServiceEntityBlock } from "./shapes";
 
 /**
  * Function to display the methods to alter the connection objects - currently, the only function visible is the one removing connections.
@@ -87,7 +82,7 @@ export function appendInstance(
   instanceAsTable.set("isEmbedded", false);
 
   if (!isMainInstance) {
-    instanceAsTable.setTabColor(baseEntityColor);
+    instanceAsTable.setTabColor(Colors.base);
   }
 
   //check for any presentable attributes, where candidate attrs have priority, if there is a set, then append them to  JointJS shape and try to display and connect embedded entities
@@ -164,7 +159,7 @@ export function appendEmbeddedEntity(
 
     (entityAttributes as InstanceAttributeModel[]).map((entityInstance) => {
       const instanceAsTable = new ServiceEntityBlock()
-        .setTabColor(embeddedEntityColor)
+        .setTabColor(Colors.embedded)
         .setName(embeddedEntity.name);
 
       appendColumns(instanceAsTable, flatAttributes, entityInstance);
@@ -194,7 +189,7 @@ export function appendEmbeddedEntity(
     return createdInstances;
   } else {
     const instanceAsTable = new ServiceEntityBlock()
-      .setTabColor(embeddedEntityColor)
+      .setTabColor(Colors.embedded)
       .setName(embeddedEntity.name);
 
     appendColumns(instanceAsTable, flatAttributes, entityAttributes);
@@ -243,10 +238,10 @@ export function appendEntity(
   const instanceAsTable = new ServiceEntityBlock().setName(serviceModel.name);
 
   if (!isCore) {
-    instanceAsTable.setTabColor(baseEntityColor);
+    instanceAsTable.setTabColor(Colors.base);
   }
   if (isEmbedded) {
-    instanceAsTable.setTabColor(embeddedEntityColor);
+    instanceAsTable.setTabColor(Colors.embedded);
   }
   instanceAsTable.set("isEmbedded", isEmbedded);
 
