@@ -1,6 +1,13 @@
 import { dia, shapes, util } from "@inmanta/rappid";
 import expandButton from "./icons/expand-icon.svg";
 import { ColumnData } from "./interfaces";
+
+export const Colors = {
+  base: "#0066CC",
+  core: "#F0AB00",
+  embedded: "#009596",
+};
+
 /**
  * https://resources.jointjs.com/tutorial/custom-elements
  * https://resources.jointjs.com/tutorial/ts-shape
@@ -26,8 +33,8 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
             cursor: "default",
           },
           header: {
-            fill: "#F0AB00",
-            stroke: "#F0AB00",
+            fill: Colors.core,
+            stroke: Colors.core,
             strokeWidth: 1,
             cursor: "grab",
           },
