@@ -172,9 +172,14 @@ const FormModal = ({
     ]);
     setPossibleForms(tempPossibleForms);
     if (cellView) {
+      const entity = cellView.model as ServiceEntityBlock;
+      const entityName = entity.getName();
+
       onEntityChosen(
         null,
-        (cellView.model as ServiceEntityBlock).getName(),
+        entity.get("isEmbedded")
+          ? `${entityName} (${entity.get("holderType")})`
+          : entityName,
         false,
         tempPossibleForms,
       );
