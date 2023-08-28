@@ -103,6 +103,7 @@ const FormModal = ({
 
           setFields(selectedFields);
           if (cellView) {
+            console.log(cellView);
             setFormState(
               (cellView.model as ServiceEntityBlock).get("instanceAttributes"),
             );
@@ -172,9 +173,14 @@ const FormModal = ({
     ]);
     setPossibleForms(tempPossibleForms);
     if (cellView) {
+      const entity = cellView.model as ServiceEntityBlock;
+      const entityName = entity.getName();
+
       onEntityChosen(
         null,
-        (cellView.model as ServiceEntityBlock).getName(),
+        entity.get("isEmbedded")
+          ? `${entityName} (${entity.get("holderType")})`
+          : entityName,
         false,
         tempPossibleForms,
       );

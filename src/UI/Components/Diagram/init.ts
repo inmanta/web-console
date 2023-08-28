@@ -222,9 +222,13 @@ export default function diagramInit(
       });
     });
 
-    halo.on("action:edit:pointerdown", function (evt) {
-      evt.stopPropagation();
-      console.log("open edit form");
+    halo.on("action:edit:pointerdown", function (event) {
+      event.stopPropagation();
+      document.dispatchEvent(
+        new CustomEvent("openEditModal", {
+          detail: cellView,
+        }),
+      );
     });
 
     halo.render();

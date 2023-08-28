@@ -75,38 +75,45 @@ describe("createConnectionRules", () => {
       circuits: [
         {
           name: "allocated",
+          lowerLimit: 1,
           upperLimit: 1,
         },
         {
           name: "customer_endpoint",
+          lowerLimit: 1,
           upperLimit: 1,
         },
         {
           name: "csp_endpoint",
+          lowerLimit: 1,
           upperLimit: 1,
         },
       ],
       csp_endpoint: [
         {
           name: "allocated",
+          lowerLimit: 1,
           upperLimit: 1,
         },
       ],
       customer_endpoint: [
         {
           name: "allocated",
+          lowerLimit: 1,
           upperLimit: 1,
         },
       ],
       service_name_a: [
         {
           name: "circuits",
+          lowerLimit: 1,
           upperLimit: 4,
         },
       ],
       with_relations: [
         {
           name: "test_entity",
+          lowerLimit: 1,
           upperLimit: 5,
         },
       ],
@@ -118,12 +125,14 @@ describe("createConnectionRules", () => {
       another_embedded: [
         {
           name: "another_embedded_single",
+          lowerLimit: null,
           upperLimit: 1,
         },
       ],
       another_embedded_single: [
         {
           name: "test_entity",
+          lowerLimit: null,
           upperLimit: null,
         },
       ],
@@ -131,6 +140,7 @@ describe("createConnectionRules", () => {
       embedded: [
         {
           name: "embedded_single",
+          lowerLimit: null,
           upperLimit: 1,
         },
       ],
@@ -139,22 +149,27 @@ describe("createConnectionRules", () => {
       test_service: [
         {
           name: "embedded",
+          lowerLimit: null,
           upperLimit: 2,
         },
         {
           name: "another_embedded",
+          lowerLimit: null,
           upperLimit: null,
         },
         {
           name: "not_editable",
+          lowerLimit: 1,
           upperLimit: 1,
         },
         {
           name: "editable_embedded_entity_relation_with_rw_attributes",
+          lowerLimit: 1,
           upperLimit: 4,
         },
         {
           name: "subnet",
+          lowerLimit: null,
           upperLimit: null,
         },
       ],
