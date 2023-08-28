@@ -223,8 +223,20 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
   }
 
   setName(name: string, options?: object) {
+    const shortenName = util.breakText(
+      name,
+      { width: 140, height: 30 },
+      {
+        "font-size": this.attr("headerLabel/fontSize"),
+        "font-family": this.attr("headerLabel/fontFamily"),
+      },
+      {
+        ellipsis: true,
+      },
+    );
+
     this.set("entityName", name);
-    return this.attr(["headerLabel", "text"], name, options);
+    return this.attr(["headerLabel", "text"], shortenName, options);
   }
 
   getName(): string {
