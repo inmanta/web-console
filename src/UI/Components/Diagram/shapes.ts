@@ -239,6 +239,31 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
     return this.attr(["headerLabel", "text"], shortenName, options);
   }
 
+  getRelations(): Map<string, string> | null {
+    const relations = this.get("relatedTo");
+    return relations ? relations : null;
+  }
+
+  addRelation(id: string, instanceName: string): void {
+    const currentRelation = this.getRelations();
+
+    if (currentRelation) {
+      this.set("relatedTo", currentRelation.set(id, instanceName));
+    } else {
+      const relationMap = new Map();
+      relationMap.set(id, instanceName);
+      this.set("relatedTo", relationMap.set(id, instanceName));
+    }
+  }
+
+  removeRelation(id: string): void {
+    const currentRelation = this.getRelations();
+    if (currentRelation) {
+      currentRelation.delete(id);
+      this.set("relatedTo", currentRelation);
+    }
+  }
+
   getName(): string {
     return this.get("entityName");
   }
@@ -296,8 +321,8 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
 
   toJSON() {
     const json = super.toJSON();
-    // keeping only the `columns` attribute
-    delete json.items;
+    // keeping only the `items` attribute as columns are omitted in our use-case
+    delete json.columns;
     return json;
   }
 }

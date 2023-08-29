@@ -82,7 +82,7 @@ interface serializedCell {
   };
   angle?: number;
   entityName?: string;
-  relatedTo?: string;
+  relatedTo?: Map<string, string>;
   isEmbedded?: boolean;
   instanceAttributes?: Record<string, unknown>;
   holderType?: string;

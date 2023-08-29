@@ -171,8 +171,12 @@ export default function diagramInit(
     const source = linkView.model.source();
     const target = linkView.model.target();
 
-    const sourceCell = graph.getCell(source.id as dia.Cell.ID);
-    const targetCell = graph.getCell(target.id as dia.Cell.ID);
+    const sourceCell = graph.getCell(
+      source.id as dia.Cell.ID,
+    ) as ServiceEntityBlock;
+    const targetCell = graph.getCell(
+      target.id as dia.Cell.ID,
+    ) as ServiceEntityBlock;
 
     if (
       sourceCell.get("isEmbedded") &&
@@ -185,6 +189,29 @@ export default function diagramInit(
       targetCell.get("isEmbeddedTo") !== null
     ) {
       targetCell.set("isEmbeddedTo", sourceCell.id);
+    }
+
+    const sourceRelations = sourceCell.getRelations();
+    const targetRelations = targetCell.getRelations();
+    const targetName = targetCell.getName();
+    const sourceName = sourceCell.getName();
+
+    if (sourceRelations) {
+      const doesSourceHaveRule = connectionRules[sourceName].find(
+        (rule) => rule.name === targetName,
+      );
+      if (doesSourceHaveRule) {
+        sourceCell.addRelation(targetCell.id as string, targetName);
+      }
+    }
+
+    if (targetRelations) {
+      const doesTargetHaveRule = connectionRules[targetName].find(
+        (rule) => rule.name === sourceName,
+      );
+      if (doesTargetHaveRule) {
+        targetCell.addRelation(sourceCell.id as string, sourceName);
+      }
     }
   });
 

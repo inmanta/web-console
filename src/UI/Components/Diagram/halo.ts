@@ -1,6 +1,7 @@
 import { dia, highlighters, ui } from "@inmanta/rappid";
 import { checkIfConnectionIsAllowed } from "./helpers";
 import { ConnectionRules } from "./interfaces";
+import { ServiceEntityBlock } from "./shapes";
 
 const createHalo = (
   graph: dia.Graph,
@@ -33,6 +34,23 @@ const createHalo = (
 
   // additional listeners to add logic for appended tools, if there will be need for any validation on remove then I think we will need custom handle anyway
   halo.on("action:delete:pointerdown", function () {
+    //cellView.model has the same structure as dia.Element needed as parameter to .getNeighbors() yet typescript complains
+    const connectedElements = graph.getNeighbors(cellView.model as dia.Element);
+
+    connectedElements.forEach((element) => {
+      const elementAsService = element as ServiceEntityBlock;
+      const isEmbedded = element.get("isEmbedded");
+
+      if (isEmbedded && element.get("embeddedTo")) {
+        element.set("embeddedTo", null);
+      }
+      const relations = elementAsService.getRelations();
+
+      if (relations) {
+        elementAsService.removeRelation(cellView.model.id as string);
+      }
+    });
+
     graph.removeLinks(cellView.model);
     cellView.remove();
     halo.remove();
