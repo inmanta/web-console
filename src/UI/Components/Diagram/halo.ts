@@ -42,6 +42,7 @@ const createHalo = (
       const isEmbedded = element.get("isEmbedded");
       const isEmbeddedToTHisCell =
         element.get("embeddedTo") === cellView.model.id;
+
       if (isEmbedded && isEmbeddedToTHisCell) {
         element.set("embeddedTo", null);
       }
