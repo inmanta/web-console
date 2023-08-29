@@ -40,8 +40,9 @@ const createHalo = (
     connectedElements.forEach((element) => {
       const elementAsService = element as ServiceEntityBlock;
       const isEmbedded = element.get("isEmbedded");
-
-      if (isEmbedded && element.get("embeddedTo")) {
+      const isEmbeddedToTHisCell =
+        element.get("embeddedTo") === cellView.model.id;
+      if (isEmbedded && isEmbeddedToTHisCell) {
         element.set("embeddedTo", null);
       }
       const relations = elementAsService.getRelations();
