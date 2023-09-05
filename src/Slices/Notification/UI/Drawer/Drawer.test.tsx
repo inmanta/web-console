@@ -1,6 +1,7 @@
 import React from "react";
 import { Router } from "react-router-dom";
-import { Page, PageHeader } from "@patternfly/react-core";
+import { Page } from "@patternfly/react-core";
+import { PageHeader } from "@patternfly/react-core/deprecated";
 import { act, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";

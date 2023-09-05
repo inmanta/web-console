@@ -1,6 +1,9 @@
 import React from "react";
 import {
   FormGroup,
+  FormHelperText,
+  HelperText,
+  HelperTextItem,
   Popover,
   TextArea,
   TextInput,
@@ -46,16 +49,15 @@ export const TextFormInput: React.FC<Props> = ({
               type="button"
               aria-label={`More info for ${attributeName} field`}
               onClick={(e) => e.preventDefault()}
-              className="pf-c-form__group-label-help"
+              className="pf-v5-c-form__group-label-help"
             >
-              <HelpIcon noVerticalAlign />
+              <HelpIcon />
             </button>
           </Popover>
         ) : (
           <></>
         )
       }
-      helperText={description}
     >
       {isTextarea ? (
         <TextArea
@@ -83,6 +85,11 @@ export const TextFormInput: React.FC<Props> = ({
           isDisabled={shouldBeDisabled}
         />
       )}
+      <FormHelperText>
+        <HelperText>
+          <HelperTextItem>{description}</HelperTextItem>
+        </HelperText>
+      </FormHelperText>
     </FormGroup>
   );
 };

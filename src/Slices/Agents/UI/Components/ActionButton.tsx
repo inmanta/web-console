@@ -41,7 +41,7 @@ export const ActionButton: React.FC<Props> = ({ name, paused }) => {
       <Button
         variant="secondary"
         isDisabled={isHalted}
-        isSmall
+        size="sm"
         onClick={onSubmit}
       >
         {paused

@@ -50,7 +50,7 @@ export const View: React.FC<Diff.Identifiers> = ({ from, to }) => {
           </ToolbarContent>
         </ToolBarContainer>
       </PageSection>
-      <PageSection variant="light" hasShadowBottom sticky="top">
+      <PageSection variant="light" hasShadowBottom>
         <DiffWizard.Controls
           data={filteredData}
           refs={refs}
@@ -85,5 +85,5 @@ const StyledPageSection = styled(PageSection)`
 `;
 
 const ToolBarContainer = styled(Toolbar)`
-  z-index: var(--pf-global--ZIndex--xl);
+  z-index: var(--pf-v5-global--ZIndex--xl);
 `;

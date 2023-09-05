@@ -170,7 +170,7 @@ test("Given the CreateInstance View When creating an instance with Inter-service
     await userEvent.click(relationInputField);
   });
   const options2 = await screen.findAllByRole("option");
-  expect(options2[0]).toHaveClass("pf-m-disabled");
+  expect(options2[0]).toHaveClass("pf-v5-m-disabled");
   await act(async () => {
     await userEvent.click(options2[1]);
     await userEvent.click(

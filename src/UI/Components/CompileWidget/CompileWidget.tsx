@@ -1,11 +1,11 @@
 import React, { useState } from "react";
+import { Tooltip } from "@patternfly/react-core";
 import {
   Dropdown,
   DropdownToggle,
   DropdownToggleAction,
   DropdownItem,
-  Tooltip,
-} from "@patternfly/react-core";
+} from "@patternfly/react-core/deprecated";
 import styled from "styled-components";
 import { words } from "@/UI/words";
 

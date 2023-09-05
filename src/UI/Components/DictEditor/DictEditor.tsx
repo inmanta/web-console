@@ -1,7 +1,12 @@
 import React from "react";
 import { Button, TextInput } from "@patternfly/react-core";
 import { TrashAltIcon } from "@patternfly/react-icons";
-import { TableComposable, Tbody, Td, Tr } from "@patternfly/react-table";
+import {
+  Table /* data-codemods */,
+  Tbody,
+  Td,
+  Tr,
+} from "@patternfly/react-table";
 import { omit } from "lodash-es";
 import styled from "styled-components";
 import { ParsedNumber } from "@/Core";
@@ -34,7 +39,7 @@ export const DictEditor: React.FC<Props> = ({
   };
 
   return (
-    <TableComposable variant="compact" borders={false}>
+    <Table variant="compact" borders={false}>
       <Tbody>
         {getEntries(value).map((entry) => (
           <Row
@@ -56,7 +61,7 @@ export const DictEditor: React.FC<Props> = ({
           aria-label="Row-newEntry"
         />
       </Tbody>
-    </TableComposable>
+    </Table>
   );
 };
 
@@ -114,7 +119,7 @@ const Row: React.FC<RowProps> = ({
           onClick={onClear}
           variant={isDeleteable ? "link" : "plain"}
           isDanger
-          isSmall
+          size="sm"
           isDisabled={!isDeleteable}
           aria-label="DeleteEntryAction"
         >

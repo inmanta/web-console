@@ -4,7 +4,6 @@ import {
   Card,
   CardBody,
   CardFooter,
-  CardHeader,
   CardTitle,
   EmptyState,
   EmptyStateIcon,
@@ -56,7 +55,7 @@ export const CardView: React.FC<Props> = ({ environments, ...props }) => {
 };
 
 const CreateNewEnvironmentCard: React.FC<{ url: string }> = ({ url }) => (
-  <StyledCard isHoverable isCompact>
+  <StyledCard isClickable isCompact>
     <Bullseye>
       <Link pathname={url}>
         <StyledCardContent>
@@ -80,36 +79,38 @@ interface EnvironmentCardProps {
 const EnvironmentCard: React.FC<EnvironmentCardProps> = ({
   environment,
   pathname,
-}) => (
-  <StyledCard isHoverable isCompact aria-label={"Environment card"}>
+}) => {
+  return (
     <StyledLink pathname={pathname} search={`env=${environment.id}`}>
-      <StyledHeader>
-        {environment.icon ? (
-          <StyledIcon
-            src={`data:${environment.icon}`}
-            alt={words("home.environment.icon")(environment.name)}
-            aria-label={`${environment.name}-icon`}
-          />
-        ) : (
-          <FillerIcon aria-label={`${environment.name}-icon`}>
-            {environment.name[0].toUpperCase()}
-          </FillerIcon>
-        )}
-        <StyledTitle>{environment.name}</StyledTitle>
-      </StyledHeader>
-      <CardBody>
-        <StyledCardContent>{environment.description}</StyledCardContent>
-      </CardBody>
-      <CardFooter>
-        <StyledFooterDiv>{environment.projectName}</StyledFooterDiv>
-      </CardFooter>
+      <StyledCard isClickable isCompact aria-label={"Environment card"}>
+        <StyledTitle component="h4">
+          {environment.icon ? (
+            <StyledIcon
+              src={`data:${environment.icon}`}
+              alt={words("home.environment.icon")(environment.name)}
+              aria-label={`${environment.name}-icon`}
+            />
+          ) : (
+            <FillerIcon aria-label={`${environment.name}-icon`}>
+              {environment.name[0].toUpperCase()}
+            </FillerIcon>
+          )}
+          {environment.name}
+        </StyledTitle>
+        <CardBody>
+          <StyledCardContent>{environment.description}</StyledCardContent>
+        </CardBody>
+        <CardFooter>
+          <StyledFooterDiv>{environment.projectName}</StyledFooterDiv>
+        </CardFooter>
+      </StyledCard>
     </StyledLink>
-  </StyledCard>
-);
+  );
+};
 
 const StyledLink = styled(Link)`
   text-decoration: auto;
-  color: var(--pf-global--Color--100);
+  color: var(--pf-v5-global--Color--100);
 `;
 
 const StyledCardContent = styled.div`
@@ -118,13 +119,14 @@ const StyledCardContent = styled.div`
 `;
 
 const StyledFooterDiv = styled.div`
-  color: var(--pf-global--secondary-color--100);
+  color: var(--pf-v5-global--secondary-color--100);
 `;
 
 const StyledIcon = styled.img`
   width: 40px;
   height: 40px;
   object-fit: contain;
+  display: inline-block;
 `;
 
 const FillerIcon = styled.div`
@@ -134,20 +136,25 @@ const FillerIcon = styled.div`
   line-height: 40px;
   text-align: center;
   color: white;
-  background-color: var(--pf-global--default-color--100);
+  background-color: var(--pf-v5-global--custom-color--100);
   border-radius: 50%;
 `;
 
-const StyledHeader = styled(CardHeader)`
-  height: 64px;
-`;
-
 const StyledTitle = styled(CardTitle)`
-  margin-left: 9px;
+  display: flex;
+  gap: 10px;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  font-weight: var(--pf-v5-global--FontWeight--bold);
+}
 `;
 
 const StyledCard = styled(Card)`
   height: 30ch;
+  &.pf-m-clickable:hover {
+    box-shadow: var(--pf-v5-global--BoxShadow--lg);
+  }
 `;
 
 const AlignedEmptyState = styled(EmptyState)`

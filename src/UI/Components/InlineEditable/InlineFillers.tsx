@@ -8,7 +8,7 @@ export const InlineEditButtonFiller = styled.div`
 
 export const InlineLabelItem = styled(FlexItem)`
   && {
-    line-height: var(--pf-global--LineHeight--md);
+    line-height: var(--pf-v5-global--LineHeight--md);
     margin-bottom: 7px;
   }
 `;

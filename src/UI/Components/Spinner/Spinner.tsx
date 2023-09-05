@@ -1,5 +1,5 @@
 import React from "react";
-import { Spinner as PrimarySpinner } from "@patternfly/react-core";
+import { Icon, Spinner as PrimarySpinner } from "@patternfly/react-core";
 import styled from "styled-components";
 
 interface Props {
@@ -9,15 +9,23 @@ interface Props {
 export const Spinner: React.FC<Props> = ({ variant }) => {
   switch (variant) {
     case "light":
-      return <SecondarySpinner isSVG size="lg" />;
+      return (
+        <Icon size="lg">
+          <SecondarySpinner />
+        </Icon>
+      );
     case "small":
-      return <PrimarySpinner isSVG size="md" />;
+      return (
+        <Icon size="md">
+          <PrimarySpinner />
+        </Icon>
+      );
     case "main":
     default:
-      return <PrimarySpinner isSVG />;
+      return <PrimarySpinner />;
   }
 };
 
 const SecondarySpinner = styled(PrimarySpinner)`
-  --pf-c-spinner--Color: white;
+  --pf-v5-c-spinner--Color: white;
 `;

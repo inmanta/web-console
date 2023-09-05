@@ -24,7 +24,7 @@ export const ParametersTableRow: React.FC<Props> = ({ row }) => (
       <CellWithCopy
         label={words("parameters.columns.value")}
         value={row.value}
-        className={"pf-m-truncate"}
+        className={"pf-v5-m-truncate"}
       />
     </Tr>
   </Tbody>

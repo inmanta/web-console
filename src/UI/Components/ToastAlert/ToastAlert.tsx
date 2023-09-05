@@ -23,7 +23,6 @@ export const ToastAlert: React.FC<Props> = ({
   return message ? (
     <AlertGroup isToast>
       <Alert
-        aria-label="ToastAlert"
         variant={type}
         title={title}
         actionClose={<AlertActionCloseButton onClose={() => setMessage("")} />}

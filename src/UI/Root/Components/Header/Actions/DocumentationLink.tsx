@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
-import { Button, PageHeaderToolsItem } from "@patternfly/react-core";
+import { Button } from "@patternfly/react-core";
+import { PageHeaderToolsItem } from "@patternfly/react-core/deprecated";
 import { OutlinedQuestionCircleIcon } from "@patternfly/react-icons";
 import { DependencyContext } from "@/UI/Dependency";
 

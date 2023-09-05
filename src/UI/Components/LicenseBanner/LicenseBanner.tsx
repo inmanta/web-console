@@ -15,7 +15,7 @@ export const LicenseBanner: React.FC = () => {
   );
 
   return expirationMessage ? (
-    <Banner isSticky variant="danger">
+    <Banner isSticky variant="red">
       {expirationMessage}
     </Banner>
   ) : null;

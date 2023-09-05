@@ -115,5 +115,5 @@ const StyledPageSection = styled(PageSection)`
 `;
 
 const ToolBarContainer = styled(Toolbar)`
-  z-index: var(--pf-global--ZIndex--xl);
+  z-index: var(--pf-v5-global--ZIndex--xl);
 `;

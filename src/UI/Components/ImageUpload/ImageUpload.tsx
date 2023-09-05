@@ -105,7 +105,7 @@ export const ImageUpload: React.FC<Props> = ({
         filename={filename || ""}
         filenameAriaLabel={ariaLabel}
         filenamePlaceholder="Drag and drop an image or select one"
-        onDataChange={onDataChange}
+        onDataChange={(_event, newDataUrl) => onDataChange(newDataUrl)}
         onReadStarted={onReadStarted}
         onReadFinished={onReadFinished}
         onClearClick={onClear}

@@ -1,13 +1,15 @@
 import React, { MutableRefObject, useContext, useState } from "react";
 import {
-  Dropdown,
-  DropdownItem,
-  KebabToggle,
   NotificationDrawer,
   NotificationDrawerBody,
   NotificationDrawerHeader,
   NotificationDrawerList,
 } from "@patternfly/react-core";
+import {
+  Dropdown,
+  DropdownItem,
+  KebabToggle,
+} from "@patternfly/react-core/deprecated";
 import styled from "styled-components";
 import { RemoteData } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
@@ -107,7 +109,7 @@ export const View: React.FC<ViewProps> = ({
 
 const CustomNotificationDrawerBody = styled(NotificationDrawerBody)`
   padding-bottom: 300px;
-  background-color: var(--pf-global--BackgroundColor--200);
+  background-color: var(--pf-v5-global--BackgroundColor--200);
 `;
 
 const CustomNotificationDrawerList = styled(NotificationDrawerList)`
@@ -138,7 +140,7 @@ const ActionList: React.FC<ActionListProps> = ({
       onSelect={() => setIsOpen(false)}
       toggle={
         <KebabToggle
-          onToggle={setIsOpen}
+          onToggle={(_event, val) => setIsOpen(val)}
           aria-label="NotificationListActions"
         />
       }

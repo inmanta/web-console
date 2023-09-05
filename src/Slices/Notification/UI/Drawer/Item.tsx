@@ -1,12 +1,14 @@
 import React, { useContext, useState } from "react";
 import {
-  Dropdown,
-  DropdownItem,
-  KebabToggle,
   NotificationDrawerListItem,
   NotificationDrawerListItemBody,
   NotificationDrawerListItemHeader,
 } from "@patternfly/react-core";
+import {
+  Dropdown,
+  DropdownItem,
+  KebabToggle,
+} from "@patternfly/react-core/deprecated";
 import { RouteKindWithId } from "@/Core";
 import { useNavigateTo, words } from "@/UI";
 import { DependencyContext } from "@/UI/Dependency";
@@ -70,7 +72,12 @@ const ActionList: React.FC<Props> = ({ notification, onUpdate }) => {
       position="right"
       onSelect={() => setIsOpen(false)}
       toggle={
-        <KebabToggle onToggle={onToggle} aria-label="NotificationItemActions" />
+        <KebabToggle
+          onToggle={(_event, value: boolean, e: React.ChangeEvent) =>
+            onToggle(value, e)
+          }
+          aria-label="NotificationItemActions"
+        />
       }
       isOpen={isOpen}
       isPlain

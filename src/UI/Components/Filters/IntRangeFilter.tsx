@@ -85,7 +85,7 @@ export const IntRangeFilter: React.FC<Props> = ({
               <ToolbarItem>
                 <TextInput
                   value={from || ""}
-                  onChange={onFromChange}
+                  onChange={(_event, value: string) => onFromChange(value)}
                   type="number"
                   aria-label={`${categoryName} range from`}
                 />
@@ -98,7 +98,7 @@ export const IntRangeFilter: React.FC<Props> = ({
               <ToolbarItem>
                 <TextInput
                   value={to || ""}
-                  onChange={onToChange}
+                  onChange={(_event, value: string) => onToChange(value)}
                   type="number"
                   aria-label={`${categoryName} range to`}
                 />

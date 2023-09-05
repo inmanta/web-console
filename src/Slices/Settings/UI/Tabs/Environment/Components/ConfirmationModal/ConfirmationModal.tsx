@@ -95,12 +95,7 @@ export const ConfirmationModal: React.FC<Props> = ({
       <Form onSubmit={onSubmit}>
         {errorMessage && (
           <FormAlert>
-            <Alert
-              variant="danger"
-              title="Something went wrong"
-              isInline
-              aria-label="Environment Error Alert"
-            >
+            <Alert variant="danger" title="Something went wrong" isInline>
               {errorMessage}
             </Alert>
           </FormAlert>
@@ -113,14 +108,13 @@ export const ConfirmationModal: React.FC<Props> = ({
           }
           type="text"
           fieldId="environmentName"
-          validated={validated}
         >
           <TextInput
             id="environmentName"
             aria-label={`${actionType} environment check`}
             value={candidateEnv}
             validated={validated}
-            onChange={setCandidateEnv}
+            onChange={(_event, val) => setCandidateEnv(val)}
             autoFocus
           />
         </FormGroup>

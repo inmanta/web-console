@@ -1,5 +1,9 @@
 import React, { useContext, useState } from "react";
-import { Dropdown, DropdownItem, KebabToggle } from "@patternfly/react-core";
+import {
+  Dropdown,
+  DropdownItem,
+  KebabToggle,
+} from "@patternfly/react-core/deprecated";
 import { DependencyContext, words } from "@/UI";
 
 interface Props {

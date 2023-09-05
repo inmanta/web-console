@@ -1,6 +1,6 @@
 import {
   global_danger_color_100,
-  global_default_color_200,
+  global_Color_200,
   global_info_color_100,
   global_success_color_100,
   global_warning_color_100,
@@ -34,7 +34,7 @@ export const getColorForVisualSeverity = (severity: VisualSeverity): string => {
     case "warning":
       return global_warning_color_100.var;
     case "default":
-      return global_default_color_200.var;
+      return global_Color_200.var;
     case "info":
       return global_info_color_100.var;
     case "success":

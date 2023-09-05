@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { DropdownItem } from "@patternfly/react-core";
+import { DropdownItem } from "@patternfly/react-core/deprecated";
 import { Maybe } from "@/Core";
 import { Link } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";

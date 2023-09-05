@@ -96,7 +96,7 @@ const isError = (notification: Notification) =>
 const isUnread = (notification: Notification) => notification.read === false;
 
 const PlainBadge = styled(NotificationBadge)`
-  --pf-c-button--m-plain--hover--Color: var(--pf-global--Color--200);
-  --pf-c-button--m-plain--focus--Color: var(--pf-global--Color--200);
-  --pf-c-button--m-plain--active--Color: var(--pf-global--Color--200);
+  --pf-v5-c-button--m-plain--hover--Color: var(--pf-v5-global--Color--200);
+  --pf-v5-c-button--m-plain--focus--Color: var(--pf-v5-global--Color--200);
+  --pf-v5-c-button--m-plain--active--Color: var(--pf-v5-global--Color--200);
 `;

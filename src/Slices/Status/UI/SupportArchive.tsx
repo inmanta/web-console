@@ -37,7 +37,6 @@ export const SupportArchive: React.FC = () => {
       {error && (
         <AlertGroup isToast isLiveRegion>
           <Alert
-            aria-label="ArchiveErrorContainer"
             variant="danger"
             title="Something went wrong with downloading the support archive"
             actionClose={

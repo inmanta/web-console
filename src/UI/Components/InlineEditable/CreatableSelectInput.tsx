@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { FormGroup, Select, SelectOption } from "@patternfly/react-core";
+import { FormGroup } from "@patternfly/react-core";
+import { Select, SelectOption } from "@patternfly/react-core/deprecated";
 import { Either } from "@/Core";
 import { InlinePlainAlert } from "./InlinePlainAlert";
 

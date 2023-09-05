@@ -10,12 +10,11 @@ import {
   Text,
   Title,
   TextVariants,
-  KebabToggle,
-  Dropdown,
   Flex,
   Modal,
   ModalVariant,
 } from "@patternfly/react-core";
+import { KebabToggle, Dropdown } from "@patternfly/react-core/deprecated";
 import styled from "styled-components";
 import { Maybe, ServiceModel } from "@/Core";
 import { Spacer, ConfirmUserActionForm, ToastAlert } from "@/UI/Components";

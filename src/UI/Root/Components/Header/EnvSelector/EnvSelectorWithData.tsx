@@ -1,5 +1,6 @@
 import React from "react";
-import { Alert, ContextSelector } from "@patternfly/react-core";
+import { Alert } from "@patternfly/react-core";
+import { ContextSelector } from "@patternfly/react-core/deprecated";
 import { FlatEnvironment, RemoteData } from "@/Core";
 import { words } from "@/UI/words";
 import {

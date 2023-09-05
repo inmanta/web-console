@@ -64,11 +64,11 @@ const ColumnHeader: React.FC<SingleHeaderProps> = ({
   isCollapsible,
   onClick,
 }) => (
-  <StyledHeader key={column} $width={width} className="pf-c-table__sort">
-    <button onClick={onClick} className="pf-c-table__button">
-      <div className="pf-c-table__button-content">
-        <span className="pf-c-table__text">{column}</span>
-        <span className="pf-c-table__sort-indicator">
+  <StyledHeader key={column} $width={width} className="pf-v5-c-table__sort">
+    <button onClick={onClick} className="pf-v5-c-table__button">
+      <div className="pf-v5-c-table__button-content">
+        <span className="pf-v5-c-table__text">{column}</span>
+        <span className="pf-v5-c-table__sort-indicator">
           {isExpandable && <ArrowsAltHIcon />}
           {isCollapsible && <HorizontalCompressIcon />}
         </span>

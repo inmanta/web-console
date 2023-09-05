@@ -1,5 +1,11 @@
 import React from "react";
-import { FormGroup, Switch } from "@patternfly/react-core";
+import {
+  FormGroup,
+  FormHelperText,
+  HelperText,
+  HelperTextItem,
+  Switch,
+} from "@patternfly/react-core";
 
 interface Props {
   isChecked: boolean | undefined;
@@ -23,9 +29,13 @@ export const BooleanToggleInput: React.FC<Props> = ({
       fieldId={attributeName}
       key={attributeName}
       label={attributeName}
-      helperText={description}
       isRequired={true}
     >
+      <FormHelperText>
+        <HelperText>
+          <HelperTextItem>{description}</HelperTextItem>
+        </HelperText>
+      </FormHelperText>
       <Switch
         isChecked={isChecked}
         onChange={handleInputChange}

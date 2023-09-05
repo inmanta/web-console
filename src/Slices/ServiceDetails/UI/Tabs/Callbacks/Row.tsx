@@ -90,5 +90,5 @@ const StyledText = styled(Text)`
   padding-left: 36px;
 `;
 const StyledButton = styled(Button)`
-  color: var(--pf-c-table--cell--Color) !important;
+  color: var(--pf-v5-c-table--cell--Color) !important;
 `;

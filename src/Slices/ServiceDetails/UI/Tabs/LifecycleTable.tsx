@@ -1,6 +1,10 @@
 import React from "react";
 import { Badge, Tooltip } from "@patternfly/react-core";
-import { Table, TableHeader, TableBody } from "@patternfly/react-table";
+import {
+  Table,
+  TableHeader,
+  TableBody,
+} from "@patternfly/react-table/deprecated";
 import { LifecycleModel } from "@/Core";
 
 export const LifecycleTable: React.FunctionComponent<{

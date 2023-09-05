@@ -1,7 +1,11 @@
 import React from "react";
 import { Card, CardBody } from "@patternfly/react-core";
 import { ListIcon, ModuleIcon } from "@patternfly/react-icons";
-import { Table, TableBody, TableHeader } from "@patternfly/react-table";
+import {
+  Table,
+  TableBody,
+  TableHeader,
+} from "@patternfly/react-table/deprecated";
 import { JsonFormatter, XmlFormatter } from "@/Data";
 import {
   AttributeClassifier,

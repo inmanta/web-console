@@ -82,8 +82,8 @@ export const TokenForm: React.FC<Props> = ({
         id="token"
         type="text"
         aria-label="TokenOutput"
-        isReadOnly
         value={Maybe.withFallback(token, "")}
+        readOnlyVariant="default"
       />
       <ClipboardCopyButton
         value={Maybe.withFallback(token, "")}
@@ -98,7 +98,6 @@ export const TokenForm: React.FC<Props> = ({
         variant="danger"
         title="Something went wrong"
         actionClose={<AlertActionCloseButton onClose={onErrorClose} />}
-        aria-label="GenerateTokenError"
       >
         <p>{error.value}</p>
       </Alert>
