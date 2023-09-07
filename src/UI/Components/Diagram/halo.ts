@@ -8,6 +8,10 @@ const createHalo = (
   paper: dia.Paper,
   cellView: dia.CellView,
   connectionRules: ConnectionRules,
+  updateInstancesToSend: (
+    cell: ServiceEntityBlock,
+    action: "update" | "create" | "delete",
+  ) => void,
 ) => {
   const halo = new ui.Halo({
     cellView: cellView,
@@ -43,16 +47,26 @@ const createHalo = (
       const isEmbeddedToTHisCell =
         element.get("embeddedTo") === cellView.model.id;
 
+      let didElementChange = false;
+
       if (isEmbedded && isEmbeddedToTHisCell) {
         element.set("embeddedTo", null);
+        didElementChange = true;
       }
       const relations = elementAsService.getRelations();
 
       if (relations) {
-        elementAsService.removeRelation(cellView.model.id as string);
+        didElementChange =
+          didElementChange === true ||
+          elementAsService.removeRelation(cellView.model.id as string);
+      }
+
+      if (didElementChange) {
+        updateInstancesToSend(elementAsService, "update");
       }
     });
 
+    updateInstancesToSend(cellView.model as ServiceEntityBlock, "delete");
     graph.removeLinks(cellView.model);
     cellView.remove();
     halo.remove();

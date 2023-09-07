@@ -1,6 +1,12 @@
 import { InstanceAttributeModel } from "@/Core";
 import { Service, ServiceInstance } from "@/Test";
-import { createConnectionRules, extractRelationsIds } from "./helpers";
+import { testApiInstance, testEmbeddedApiInstances } from "./Mock";
+import {
+  createConnectionRules,
+  embedObjects,
+  extractRelationsIds,
+} from "./helpers";
+import { InstanceForApi } from "./interfaces";
 
 describe("extractRelationsIds", () => {
   it("Service With no relations in the model gives empty array", () => {
@@ -174,5 +180,170 @@ describe("createConnectionRules", () => {
         },
       ],
     });
+  });
+});
+
+describe("embedObjects", () => {
+  it("correctly creates object if it is created with embedded objects", () => {
+    const createdObject: InstanceForApi = {
+      ...testApiInstance,
+      action: "create",
+    };
+    const createdEmbedded: InstanceForApi[] = testEmbeddedApiInstances.map(
+      (instance) => {
+        return { ...instance, action: "create" };
+      },
+    );
+    const result = embedObjects(createdEmbedded, createdObject);
+    expect(result).toMatchObject({
+      instance_id: "ae6c9dd7-5392-4374-9f13-df3bb42bf0db",
+      service_entity: "embedded-entity-service",
+      config: {},
+      action: "create",
+      value: {
+        name: "test-emb",
+        service_id: "ebd-123",
+        vlan_assigment_r1: {
+          address: "1.2.3.5/32",
+          vlan_id: 1,
+          router_ip: "1.2.3.4",
+          interface_name: "eth0",
+        },
+        vlan_assigment_r2: {
+          address: "1.2.3.3/32",
+          vlan_id: 123,
+          router_ip: "1.2.3.1",
+          interface_name: "eth12",
+        },
+        should_deploy_fail: false,
+      },
+    });
+  });
+
+  it("correctly creates object if it is core values are edited", () => {
+    const createdObject: InstanceForApi = {
+      ...testApiInstance,
+      action: "update",
+    };
+    const createdEmbedded: InstanceForApi[] = testEmbeddedApiInstances;
+    const expectedResult = {
+      instance_id: "ae6c9dd7-5392-4374-9f13-df3bb42bf0db",
+      service_entity: "embedded-entity-service",
+      config: {},
+      action: "update",
+      value: {
+        name: "test-emb",
+        service_id: "ebd-123",
+        vlan_assigment_r1: {
+          address: "1.2.3.5/32",
+          vlan_id: 1,
+          router_ip: "1.2.3.4",
+          interface_name: "eth0",
+        },
+        vlan_assigment_r2: {
+          address: "1.2.3.3/32",
+          vlan_id: 123,
+          router_ip: "1.2.3.1",
+          interface_name: "eth12",
+        },
+        should_deploy_fail: false,
+      },
+    };
+    const result = embedObjects(createdEmbedded, createdObject);
+    expect(result).toMatchObject(expectedResult);
+
+    const createdEmbedded2: InstanceForApi[] = testEmbeddedApiInstances.map(
+      (instance) => {
+        return { ...instance, action: "update" };
+      },
+    );
+    const result2 = embedObjects(createdEmbedded2, createdObject);
+    expect(result2).toMatchObject(expectedResult);
+
+    const createdEmbedded3: InstanceForApi[] = [
+      { ...testEmbeddedApiInstances[0], action: null },
+      { ...testEmbeddedApiInstances[1], action: "create" },
+    ];
+    const result3 = embedObjects(createdEmbedded3, createdObject);
+    expect(result3).toMatchObject(expectedResult);
+  });
+
+  it("correctly creates object if only embedded values are edited", () => {
+    //simulate that One isn't changed, second is edited
+    const createdObject: InstanceForApi = testApiInstance;
+    const createdEmbedded: InstanceForApi[] = [
+      { ...testEmbeddedApiInstances[0], action: null },
+      { ...testEmbeddedApiInstances[1], action: "update" },
+    ];
+    const expectedResult = {
+      instance_id: "ae6c9dd7-5392-4374-9f13-df3bb42bf0db",
+      service_entity: "embedded-entity-service",
+      config: {},
+      action: "update",
+      value: {
+        name: "test-emb",
+        service_id: "ebd-123",
+        vlan_assigment_r1: {
+          address: "1.2.3.5/32",
+          vlan_id: 1,
+          router_ip: "1.2.3.4",
+          interface_name: "eth0",
+        },
+        vlan_assigment_r2: {
+          address: "1.2.3.3/32",
+          vlan_id: 123,
+          router_ip: "1.2.3.1",
+          interface_name: "eth12",
+        },
+        should_deploy_fail: false,
+      },
+    };
+    const result = embedObjects(createdEmbedded, createdObject);
+    expect(result).toMatchObject(expectedResult);
+
+    //simulate that One isn't changed, second is added
+    const createdEmbedded2: InstanceForApi[] = [
+      { ...testEmbeddedApiInstances[0], action: null },
+      { ...testEmbeddedApiInstances[1], action: "create" },
+    ];
+
+    const result2 = embedObjects(createdEmbedded2, createdObject);
+    expect(result2).toMatchObject(expectedResult);
+
+    //simulate that One is changed, second is added
+    const createdEmbedded3: InstanceForApi[] = [
+      { ...testEmbeddedApiInstances[0], action: "update" },
+      { ...testEmbeddedApiInstances[1], action: "create" },
+    ];
+    const result3 = embedObjects(createdEmbedded3, createdObject);
+    expect(result3).toMatchObject(expectedResult);
+  });
+
+  it("correctly creates object if it is embedded values are deleted", () => {
+    const createdObject: InstanceForApi = testApiInstance;
+    const createdEmbedded: InstanceForApi[] = [
+      { ...testEmbeddedApiInstances[0], action: null },
+      { ...testEmbeddedApiInstances[1], action: "delete" },
+    ];
+    const expectedResult = {
+      instance_id: "ae6c9dd7-5392-4374-9f13-df3bb42bf0db",
+      service_entity: "embedded-entity-service",
+      config: {},
+      action: "update",
+      value: {
+        name: "test-emb",
+        service_id: "ebd-123",
+        vlan_assigment_r1: {
+          address: "1.2.3.5/32",
+          vlan_id: 1,
+          router_ip: "1.2.3.4",
+          interface_name: "eth0",
+        },
+        vlan_assigment_r2: null,
+        should_deploy_fail: false,
+      },
+    };
+    const result = embedObjects(createdEmbedded, createdObject);
+    expect(result).obj(expectedResult);
   });
 });

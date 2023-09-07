@@ -244,24 +244,25 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
     return relations ? relations : null;
   }
 
-  addRelation(id: string, instanceName: string): void {
+  addRelation(id: string, relationName: string): void {
     const currentRelation = this.getRelations();
 
     if (currentRelation) {
-      this.set("relatedTo", currentRelation.set(id, instanceName));
+      this.set("relatedTo", currentRelation.set(id, relationName));
     } else {
       const relationMap = new Map();
-      relationMap.set(id, instanceName);
-      this.set("relatedTo", relationMap.set(id, instanceName));
+      this.set("relatedTo", relationMap.set(id, relationName));
     }
   }
 
-  removeRelation(id: string): void {
+  removeRelation(id: string): boolean {
     const currentRelation = this.getRelations();
+    let wasThereRelationToRemove = false;
     if (currentRelation) {
-      currentRelation.delete(id);
+      wasThereRelationToRemove = currentRelation.delete(id);
       this.set("relatedTo", currentRelation);
     }
+    return wasThereRelationToRemove;
   }
 
   getName(): string {

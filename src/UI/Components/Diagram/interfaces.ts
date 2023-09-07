@@ -22,6 +22,16 @@ interface ConnectionRules {
   [serviceName: string]: Rule[];
 }
 
+interface InstanceForApi {
+  instance_id: string;
+  service_entity: string;
+  config: unknown;
+  action: null | "update" | "create" | "delete";
+  value: { [key: string]: unknown } | null | undefined;
+  edit: { [key: string]: unknown }[] | null | undefined;
+  embeddedTo: string | null | undefined;
+  relatedTo: Map<string, string> | null | undefined;
+}
 interface serializedCell {
   type: string;
   source?: {
@@ -96,4 +106,5 @@ export {
   Rule,
   ConnectionRules,
   serializedCell,
+  InstanceForApi,
 };

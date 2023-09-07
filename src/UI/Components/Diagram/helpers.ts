@@ -1,6 +1,7 @@
 import { dia } from "@inmanta/rappid";
 import { EmbeddedEntity, ServiceInstanceModel, ServiceModel } from "@/Core";
-import { ConnectionRules, Rule } from "./interfaces";
+import { create_UUID } from "@/Slices/EditInstance/Data";
+import { ConnectionRules, InstanceForApi, Rule } from "./interfaces";
 import { ServiceEntityBlock } from "./shapes";
 
 export const extractRelationsIds = (
@@ -219,4 +220,80 @@ const doesElementsIsEmbeddedWithExhaustedConnections = (
     return connectedHolder.length > 0 && doesSourceMatchHolderType;
   }
   return false;
+};
+
+export const embedObjects = (
+  instances: InstanceForApi[],
+  instance: InstanceForApi,
+) => {
+  let areEmbeddedEdited = false;
+  const matchingInstances = instances.filter(
+    (checkedInstance) => checkedInstance.embeddedTo === instance.instance_id,
+  );
+
+  const notMatchingInstances = instances.filter(
+    (checkedInstance) => checkedInstance.embeddedTo !== instance.instance_id,
+  );
+
+  const groupedEmbedded: { [key: string]: InstanceForApi[] } =
+    matchingInstances.reduce(function (r, a) {
+      r[a.service_entity] = r[a.service_entity] || [];
+      r[a.service_entity].push(a);
+      return r;
+    }, Object.create({}));
+
+  for (const [key, instancesToEmbed] of Object.entries(groupedEmbedded)) {
+    if (instance.value) {
+      if (instancesToEmbed.length > 1) {
+        const updated: { [key: string]: unknown }[] = [];
+        instancesToEmbed.forEach((instance) => {
+          const updatedInstance = embedObjects(notMatchingInstances, instance);
+          areEmbeddedEdited =
+            areEmbeddedEdited !== true &&
+            instance.action === null &&
+            updatedInstance.action !== null;
+
+          if (updatedInstance.action !== "delete") {
+            updated.push(updatedInstance.value as { [key: string]: unknown });
+          }
+        });
+        instance.value[key] = updated;
+      } else {
+        const data = embedObjects(notMatchingInstances, instancesToEmbed[0]);
+        areEmbeddedEdited = instance.action === null && data.action !== null;
+        if (data.action !== "delete") {
+          instance.value[key] = data.value;
+        }
+      }
+    }
+  }
+
+  if (instance.relatedTo) {
+    instance.relatedTo.forEach((attrName, id) => {
+      if (instance.value) {
+        instance.value[attrName] = id;
+      }
+    });
+  }
+
+  if (areEmbeddedEdited && instance.action === null) {
+    instance.action = "update";
+  }
+
+  if (instance.action === "update") {
+    instance.edit = [
+      {
+        edit_id: `${instance.instance_id}_order-${
+          instance.action
+        }-${create_UUID()}}`,
+        operation: "replace",
+        target: ".",
+        value: instance.value,
+      },
+    ];
+    delete instance.value;
+  }
+  delete instance.embeddedTo;
+  delete instance.relatedTo;
+  return instance;
 };

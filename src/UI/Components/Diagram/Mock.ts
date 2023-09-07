@@ -1,4 +1,5 @@
 import { ServiceInstanceModel, ServiceModel } from "@/Core";
+import { InstanceForApi } from "./interfaces";
 
 export const testInstance: ServiceInstanceModel = {
   id: "d938d5bb-8bf1-4b41-9e17-ae0b5069cbbf",
@@ -867,3 +868,50 @@ export const testService: ServiceModel = {
   },
   strict_modifier_enforcement: true,
 };
+
+export const testApiInstance: InstanceForApi = {
+  instance_id: "ae6c9dd7-5392-4374-9f13-df3bb42bf0db",
+  service_entity: "embedded-entity-service",
+  config: {},
+  action: null,
+  value: {
+    name: "test-emb",
+    service_id: "ebd-123",
+    should_deploy_fail: false,
+  },
+  edit: null,
+  relatedTo: null,
+  embeddedTo: null,
+};
+export const testEmbeddedApiInstances: InstanceForApi[] = [
+  {
+    instance_id: "10591ae5-6840-4816-9851-6bee74afc2a5",
+    service_entity: "vlan_assigment_r1",
+    config: {},
+    action: null,
+    value: {
+      address: "1.2.3.5/32",
+      vlan_id: 1,
+      router_ip: "1.2.3.4",
+      interface_name: "eth0",
+    },
+    edit: null,
+    embeddedTo: "ae6c9dd7-5392-4374-9f13-df3bb42bf0db",
+    relatedTo: null,
+  },
+  {
+    instance_id: "c0293b05-04d1-4fb4-93f1-f60d93d9739c",
+    service_entity: "vlan_assigment_r2",
+    config: {},
+    action: null,
+    value: {
+      address: "1.2.3.3/32",
+      vlan_id: 123,
+      router_ip: "1.2.3.1",
+      interface_name: "eth12",
+    },
+    edit: null,
+    embeddedTo: "ae6c9dd7-5392-4374-9f13-df3bb42bf0db",
+    relatedTo: null,
+  },
+];

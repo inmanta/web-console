@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import "@inmanta/rappid/rappid.css";
 import { dia } from "@inmanta/rappid";
 import styled from "styled-components";
@@ -6,11 +6,14 @@ import { ServiceModel } from "@/Core";
 import { InstanceWithReferences } from "@/Data/Managers/GetInstanceWithRelations/interface";
 import diagramInit, { DiagramHandlers } from "@/UI/Components/Diagram/init";
 import { CanvasWrapper } from "@/UI/Components/Diagram/styles";
+import { DependencyContext } from "@/UI/Dependency";
+import { PrimaryBaseUrlManager } from "@/UI/Routing";
 import DictModal from "./components/DictModal";
 import FormModal from "./components/FormModal";
 import Toolbar from "./components/Toolbar";
-import { createConnectionRules } from "./helpers";
-import { DictDialogData } from "./interfaces";
+import { createConnectionRules, embedObjects } from "./helpers";
+import { DictDialogData, InstanceForApi } from "./interfaces";
+import { ServiceEntityBlock } from "./shapes";
 
 const Canvas = ({
   services,
@@ -21,6 +24,13 @@ const Canvas = ({
   mainServiceName: string;
   instance?: InstanceWithReferences;
 }) => {
+  const { environmentHandler } = useContext(DependencyContext);
+  const environment = environmentHandler.useId();
+  const baseUrlManager = new PrimaryBaseUrlManager(
+    globalThis.location.origin,
+    globalThis.location.pathname,
+  );
+  const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
   const canvas = useRef<HTMLDivElement>(null);
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [cellToEdit, setCellToEdit] = useState<dia.CellView | null>(null);
@@ -29,7 +39,9 @@ const Canvas = ({
   );
   const [diagramHandlers, setDiagramHandlers] =
     useState<DiagramHandlers | null>(null);
-  const [instancesToSend, setInstancesToSend] = useState<object>({});
+  const [instancesToSend, setInstancesToSend] = useState<
+    Map<string, InstanceForApi>
+  >(new Map());
 
   const handleDictEvent = (event) => {
     const customEvent = event as CustomEvent;
@@ -41,18 +53,93 @@ const Canvas = ({
     setIsFormModalOpen(true);
   };
 
+  const handleDeploy = async () => {
+    const mapToArray = Array.from(instancesToSend, (instance) => instance[1]); //only value, the id is stored in the object anyway
+    const topServicesNames = services.map((service) => service.name);
+    const topInstances = mapToArray.filter((instance) =>
+      topServicesNames.includes(instance.service_entity),
+    );
+    const embeddedInstances = mapToArray.filter(
+      (instance) => !topServicesNames.includes(instance.service_entity),
+    );
+
+    await fetch(`${baseUrl}/lsm/v2/order`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Inmanta-tid": environment,
+      },
+      body: JSON.stringify({
+        service_order_items: topInstances
+          .map((instance) => embedObjects(embeddedInstances, instance))
+          .filter((item) => item.action !== null),
+      }),
+    });
+  };
+
+  const handleUpdate = (
+    cell: ServiceEntityBlock,
+    action: "update" | "create" | "delete",
+  ) => {
+    const newInstance: InstanceForApi = {
+      instance_id: cell.id as string,
+      service_entity: cell.getName(),
+      config: {},
+      action: null,
+      value: cell.get("instanceAttributes"),
+      edit: null,
+      embeddedTo: cell.get("embeddedTo"),
+      relatedTo: cell.getRelations(),
+    };
+    setInstancesToSend((prevInstances) => {
+      const updatedInstance = prevInstances.get(cell.id as string);
+      switch (action) {
+        case "update":
+          newInstance.action =
+            updatedInstance?.action === "create" ? "create" : "update";
+          return new Map(prevInstances.set(cell.id as string, newInstance));
+        case "create":
+          newInstance.action = action;
+          return new Map(prevInstances.set(cell.id as string, newInstance));
+        default:
+          if (
+            updatedInstance &&
+            (updatedInstance.action === null ||
+              updatedInstance.action === "update")
+          ) {
+            return new Map(
+              prevInstances.set(cell.id as string, {
+                instance_id: cell.id as string,
+                service_entity: cell.getName(),
+                config: {},
+                action: "delete",
+                value: null,
+                edit: null,
+                embeddedTo: null,
+                relatedTo: null,
+              }),
+            );
+          } else {
+            const newInstances = new Map(prevInstances);
+            newInstances.delete(cell.id as string);
+            return newInstances;
+          }
+      }
+    });
+  };
+
   useEffect(() => {
     const connectionRules = createConnectionRules(services, {});
-    const actions = diagramInit(canvas, connectionRules);
+    const actions = diagramInit(canvas, connectionRules, handleUpdate);
     setDiagramHandlers(actions);
 
     if (instance) {
       const isMainInstance = true;
       const cells = actions.addInstance(instance, services, isMainInstance);
-      const newInstances = {};
+      const newInstances = new Map();
       cells.forEach((cell) => {
         if (cell.type === "app.ServiceEntityBlock") {
-          newInstances[cell.id] = {
+          newInstances.set(cell.id, {
             instance_id: cell.id,
             service_entity: cell.entityName,
             config: {},
@@ -60,7 +147,7 @@ const Canvas = ({
             value: cell.instanceAttributes,
             embeddedTo: cell.embeddedTo,
             relatedTo: cell.relatedTo,
-          };
+          });
         }
       });
       setInstancesToSend(newInstances);
@@ -101,15 +188,13 @@ const Canvas = ({
           if (diagramHandlers) {
             if (cellToEdit) {
               //deep copy
-              diagramHandlers.editEntity(
+              const shape = diagramHandlers.editEntity(
                 cellToEdit,
                 selected.model as ServiceModel,
                 entity,
               );
 
-              const instances = JSON.parse(JSON.stringify(instancesToSend));
-              instances[cellToEdit.model.id] = entity;
-              setInstancesToSend(instances);
+              handleUpdate(shape, "update");
             } else {
               const shape = diagramHandlers.addEntity(
                 entity,
@@ -117,11 +202,7 @@ const Canvas = ({
                 selected.name === mainServiceName,
                 selected.isEmbedded,
               );
-
-              //deep copy
-              const instances = JSON.parse(JSON.stringify(instancesToSend));
-              instances[shape.id] = entity;
-              setInstancesToSend(instances);
+              handleUpdate(shape, "create");
             }
           }
         }}
@@ -131,6 +212,7 @@ const Canvas = ({
           setIsFormModalOpen(true);
         }}
         serviceName={mainServiceName}
+        handleDeploy={handleDeploy}
       />
       <CanvasWrapper id="canvas-wrapper">
         <div className="canvas" ref={canvas} />
