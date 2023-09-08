@@ -132,7 +132,7 @@
   "dependencies": {
     "@inmanta/rappid": "^3.7.0",
     "@patternfly/react-charts": "^7.0.0",
-    "@patternfly/react-core": "^4.276.6",
+    "@patternfly/react-core": "^4.276.12",
     "@patternfly/react-icons": "^4.93.6",
     "@patternfly/react-styles": "^4.92.6",
     "@patternfly/react-table": "^4.113.2",
