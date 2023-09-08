@@ -11,7 +11,7 @@ import { PrimaryBaseUrlManager } from "@/UI/Routing";
 import DictModal from "./components/DictModal";
 import FormModal from "./components/FormModal";
 import Toolbar from "./components/Toolbar";
-import { createConnectionRules, embedObjects } from "./helpers";
+import { createConnectionRules, shapesDataTransform } from "./helpers";
 import { DictDialogData, InstanceForApi } from "./interfaces";
 import { ServiceEntityBlock } from "./shapes";
 
@@ -71,7 +71,7 @@ const Canvas = ({
       },
       body: JSON.stringify({
         service_order_items: topInstances
-          .map((instance) => embedObjects(embeddedInstances, instance))
+          .map((instance) => shapesDataTransform(embeddedInstances, instance))
           .filter((item) => item.action !== null),
       }),
     });

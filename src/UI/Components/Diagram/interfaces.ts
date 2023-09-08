@@ -27,10 +27,10 @@ interface InstanceForApi {
   service_entity: string;
   config: unknown;
   action: null | "update" | "create" | "delete";
-  value: { [key: string]: unknown } | null | undefined;
-  edit: { [key: string]: unknown }[] | null | undefined;
-  embeddedTo: string | null | undefined;
-  relatedTo: Map<string, string> | null | undefined;
+  value?: { [key: string]: unknown } | null;
+  edit?: { [key: string]: unknown }[] | null;
+  embeddedTo?: string | null;
+  relatedTo?: Map<string, string> | null;
 }
 interface serializedCell {
   type: string;

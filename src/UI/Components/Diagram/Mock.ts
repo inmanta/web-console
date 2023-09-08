@@ -879,9 +879,6 @@ export const testApiInstance: InstanceForApi = {
     service_id: "ebd-123",
     should_deploy_fail: false,
   },
-  edit: null,
-  relatedTo: null,
-  embeddedTo: null,
 };
 export const testEmbeddedApiInstances: InstanceForApi[] = [
   {
@@ -895,9 +892,7 @@ export const testEmbeddedApiInstances: InstanceForApi[] = [
       router_ip: "1.2.3.4",
       interface_name: "eth0",
     },
-    edit: null,
     embeddedTo: "ae6c9dd7-5392-4374-9f13-df3bb42bf0db",
-    relatedTo: null,
   },
   {
     instance_id: "c0293b05-04d1-4fb4-93f1-f60d93d9739c",
@@ -910,8 +905,59 @@ export const testEmbeddedApiInstances: InstanceForApi[] = [
       router_ip: "1.2.3.1",
       interface_name: "eth12",
     },
-    edit: null,
     embeddedTo: "ae6c9dd7-5392-4374-9f13-df3bb42bf0db",
-    relatedTo: null,
+  },
+];
+export const testParentService: InstanceForApi = {
+  instance_id: "6af44f75-ba4b-4fba-9186-cc61c3c9463c",
+  service_entity: "parent-service",
+  config: {},
+  action: null,
+  value: {
+    name: "test",
+    service_id: "test123",
+    should_deploy_fail: false,
+  },
+};
+export const relatedServices: InstanceForApi[] = [
+  {
+    instance_id: "13920268-cce0-4491-93b5-11316aa2fc37",
+    service_entity: "child-service",
+    config: {},
+    action: "create",
+    value: {
+      name: "test123456789",
+      service_id: "123test",
+      should_deploy_fail: false,
+    },
+    relatedTo: new Map().set(
+      "6af44f75-ba4b-4fba-9186-cc61c3c9463c",
+      "parent_entity",
+    ),
+  },
+  {
+    instance_id: "a4218978-c9ad-4fd8-95e4-b9e9a8c3c653",
+    service_entity: "container-service",
+    config: {},
+    action: "create",
+    value: {
+      name: "test12345",
+      service_id: "test12345",
+      should_deploy_fail: false,
+    },
+  },
+  {
+    instance_id: "0ede01ac-25c0-4029-9c7e-62ec6f1dcd54",
+    service_entity: "child_container",
+    config: {},
+    action: "create",
+    value: {
+      name: "child123",
+    },
+    embeddedTo: "a4218978-c9ad-4fd8-95e4-b9e9a8c3c653",
+    relatedTo: new Map().set(
+      "6af44f75-ba4b-4fba-9186-cc61c3c9463c",
+      "parent_entity",
+    ),
   },
 ];

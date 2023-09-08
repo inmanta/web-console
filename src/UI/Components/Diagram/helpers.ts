@@ -222,9 +222,10 @@ const doesElementsIsEmbeddedWithExhaustedConnections = (
   return false;
 };
 
-export const embedObjects = (
+export const shapesDataTransform = (
   instances: InstanceForApi[],
   instance: InstanceForApi,
+  isEmbedded = false,
 ) => {
   let areEmbeddedEdited = false;
   const matchingInstances = instances.filter(
@@ -241,17 +242,21 @@ export const embedObjects = (
       r[a.service_entity].push(a);
       return r;
     }, Object.create({}));
-
   for (const [key, instancesToEmbed] of Object.entries(groupedEmbedded)) {
     if (instance.value) {
       if (instancesToEmbed.length > 1) {
         const updated: { [key: string]: unknown }[] = [];
         instancesToEmbed.forEach((instance) => {
-          const updatedInstance = embedObjects(notMatchingInstances, instance);
+          const updatedInstance = shapesDataTransform(
+            notMatchingInstances,
+            instance,
+            true,
+          );
           areEmbeddedEdited =
             areEmbeddedEdited !== true &&
             instance.action === null &&
-            updatedInstance.action !== null;
+            (updatedInstance.action !== null ||
+              updatedInstance.action === "delete");
 
           if (updatedInstance.action !== "delete") {
             updated.push(updatedInstance.value as { [key: string]: unknown });
@@ -259,8 +264,14 @@ export const embedObjects = (
         });
         instance.value[key] = updated;
       } else {
-        const data = embedObjects(notMatchingInstances, instancesToEmbed[0]);
-        areEmbeddedEdited = instance.action === null && data.action !== null;
+        const data = shapesDataTransform(
+          notMatchingInstances,
+          instancesToEmbed[0],
+          true,
+        );
+        areEmbeddedEdited =
+          instance.action === null &&
+          (data.action !== null || data.action === "delete");
         if (data.action !== "delete") {
           instance.value[key] = data.value;
         }
@@ -275,22 +286,21 @@ export const embedObjects = (
       }
     });
   }
-
   if (areEmbeddedEdited && instance.action === null) {
     instance.action = "update";
   }
 
-  if (instance.action === "update") {
-    instance.edit = [
-      {
-        edit_id: `${instance.instance_id}_order-${
-          instance.action
-        }-${create_UUID()}}`,
-        operation: "replace",
-        target: ".",
-        value: instance.value,
-      },
-    ];
+  if (instance.action === "update" && !isEmbedded) {
+    if (!!instance.value && !instance.edit) {
+      instance.edit = [
+        {
+          edit_id: `${instance.instance_id}_order_update-${create_UUID()}`,
+          operation: "replace",
+          target: ".",
+          value: instance.value,
+        },
+      ];
+    }
     delete instance.value;
   }
   delete instance.embeddedTo;
