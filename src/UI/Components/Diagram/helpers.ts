@@ -222,6 +222,15 @@ const doesElementsIsEmbeddedWithExhaustedConnections = (
   return false;
 };
 
+/**
+ * Function that will merge state from Instance Composer to proper object for order_api endpoint.
+ * Instance composer state is being split into multiple objects that could be embedded into other available, so we need to recursively
+ * go through all of them to group, and sort them
+ * @param instances all of the instances that were created/edited in the instance, not including the one passed in second parameter
+ * @param instance instance which is used taken into consideration as the parent of the possible embedded
+ * @param isEmbedded boolean informing whether instance passed is embedded or not
+ * @returns
+ */
 export const shapesDataTransform = (
   instances: InstanceForApi[],
   instance: InstanceForApi,
@@ -236,12 +245,14 @@ export const shapesDataTransform = (
     (checkedInstance) => checkedInstance.embeddedTo !== instance.instance_id,
   );
 
+  //iterate through matching (embedded)instances and group them according to property type to be able to put them in the Array if needed at once
   const groupedEmbedded: { [key: string]: InstanceForApi[] } =
     matchingInstances.reduce(function (r, a) {
       r[a.service_entity] = r[a.service_entity] || [];
       r[a.service_entity].push(a);
       return r;
     }, Object.create({}));
+
   for (const [key, instancesToEmbed] of Object.entries(groupedEmbedded)) {
     if (instance.value) {
       if (instancesToEmbed.length > 1) {
@@ -252,6 +263,7 @@ export const shapesDataTransform = (
             instance,
             true,
           );
+
           areEmbeddedEdited =
             areEmbeddedEdited !== true &&
             instance.action === null &&
@@ -262,6 +274,7 @@ export const shapesDataTransform = (
             updated.push(updatedInstance.value as { [key: string]: unknown });
           }
         });
+
         instance.value[key] = updated;
       } else {
         const data = shapesDataTransform(
@@ -269,9 +282,11 @@ export const shapesDataTransform = (
           instancesToEmbed[0],
           true,
         );
+
         areEmbeddedEdited =
           instance.action === null &&
           (data.action !== null || data.action === "delete");
+
         if (data.action !== "delete") {
           instance.value[key] = data.value;
         }
@@ -279,6 +294,7 @@ export const shapesDataTransform = (
     }
   }
 
+  //convert relatedTo property into valid attribute
   if (instance.relatedTo) {
     instance.relatedTo.forEach((attrName, id) => {
       if (instance.value) {
@@ -286,10 +302,13 @@ export const shapesDataTransform = (
       }
     });
   }
+
+  //if any of its embedded instances were edited, and its action is indicating no changes to main attributes, change it to "update"
   if (areEmbeddedEdited && instance.action === null) {
     instance.action = "update";
   }
 
+  //if its action is "update" and instance isn't embedded change value property to edit as that's what api expect in the body
   if (instance.action === "update" && !isEmbedded) {
     if (!!instance.value && !instance.edit) {
       instance.edit = [
@@ -303,6 +322,7 @@ export const shapesDataTransform = (
     }
     delete instance.value;
   }
+
   delete instance.embeddedTo;
   delete instance.relatedTo;
   return instance;
