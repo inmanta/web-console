@@ -72,6 +72,7 @@ export const DeleteModal: React.FC<Props> = ({
         </Button>
       </ActionDisabledTooltip>
       <Modal
+        disableFocusTrap
         isOpen={isOpen}
         title={words("inventory.deleteInstance.title")}
         variant={"small"}

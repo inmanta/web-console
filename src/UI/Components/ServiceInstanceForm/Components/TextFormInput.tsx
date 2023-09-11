@@ -62,7 +62,7 @@ export const TextFormInput: React.FC<Props> = ({
       {isTextarea ? (
         <TextArea
           value={attributeValue || ""}
-          onChange={handleInputChange}
+          onChange={(event, value) => handleInputChange(value, event)}
           id={attributeName}
           name={attributeName}
           placeholder={placeholder}
@@ -81,7 +81,7 @@ export const TextFormInput: React.FC<Props> = ({
           aria-describedby={`${attributeName}-helper`}
           aria-label={`TextInput-${attributeName}`}
           value={attributeValue || ""}
-          onChange={handleInputChange}
+          onChange={(event, value) => handleInputChange(value, event)}
           isDisabled={shouldBeDisabled}
         />
       )}

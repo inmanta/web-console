@@ -103,7 +103,7 @@ const Row: React.FC<RowProps> = ({
           onChange={onKeyChange}
           type="text"
           aria-label="editEntryKey"
-          isReadOnly={!isKeyEditable}
+          readOnly={!isKeyEditable}
         />
       </SlimTd>
       <SlimTd>

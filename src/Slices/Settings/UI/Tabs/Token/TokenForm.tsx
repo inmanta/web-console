@@ -49,7 +49,9 @@ export const TokenForm: React.FC<Props> = ({
             text="agent"
             aria-label="AgentOption"
             isSelected={isClientTypeSelected("agent")}
-            onChange={getClientTypeSelector("agent")}
+            onChange={(_event, selected) =>
+              getClientTypeSelector("agent")(selected)
+            }
             isDisabled={isBusy}
           />
           <ToggleGroupItem
@@ -57,7 +59,9 @@ export const TokenForm: React.FC<Props> = ({
             text="api"
             aria-label="ApiOption"
             isSelected={isClientTypeSelected("api")}
-            onChange={getClientTypeSelector("api")}
+            onChange={(_event, selected) =>
+              getClientTypeSelector("api")(selected)
+            }
             isDisabled={isBusy}
           />
           <ToggleGroupItem
@@ -65,7 +69,9 @@ export const TokenForm: React.FC<Props> = ({
             text="compiler"
             aria-label="CompilerOption"
             isSelected={isClientTypeSelected("compiler")}
-            onChange={getClientTypeSelector("compiler")}
+            onChange={(_event, selected) =>
+              getClientTypeSelector("compiler")(selected)
+            }
             isDisabled={isBusy}
           />
         </ToggleGroup>
@@ -94,6 +100,7 @@ export const TokenForm: React.FC<Props> = ({
     </StyledInputGroup>
     {Maybe.isSome(error) && (
       <Alert
+        data-testid="ToastError"
         isInline
         variant="danger"
         title="Something went wrong"

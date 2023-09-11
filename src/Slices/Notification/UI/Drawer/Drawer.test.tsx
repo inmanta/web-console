@@ -152,9 +152,7 @@ test("Given Drawer When user clicks on 'Read all' Then all notifications are rea
     );
   });
   await act(async () => {
-    await userEvent.click(
-      screen.getByRole("menuitem", { name: "Mark all as read" }),
-    );
+    await userEvent.click(screen.getByTestId("menuitem"));
   });
 
   expect(apiHelper.pendingRequests).toEqual([

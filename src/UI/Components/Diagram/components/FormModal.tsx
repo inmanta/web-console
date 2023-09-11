@@ -150,6 +150,7 @@ const FormModal = ({
   }, [services]);
   return (
     <StyledModal
+      disableFocusTrap
       isOpen={isOpen}
       title={"Add Entity"}
       variant={"small"}

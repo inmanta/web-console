@@ -28,7 +28,11 @@ export const EnvSelectorWithData: React.FC<Props> = ({
             aria-label="EnvSelector-Failed"
             toggleText={words("error")}
           />
-          <Alert variant="danger" title={words("error")}>
+          <Alert
+            variant="danger"
+            title={words("error")}
+            data-testid="AlertError"
+          >
             <p>{error}</p>
           </Alert>
         </>

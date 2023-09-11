@@ -1,14 +1,15 @@
 import React, { useContext, useState } from "react";
 import {
+  DropdownList,
+  MenuToggle,
+  MenuToggleElement,
   NotificationDrawerListItem,
   NotificationDrawerListItemBody,
   NotificationDrawerListItemHeader,
-} from "@patternfly/react-core";
-import {
   Dropdown,
   DropdownItem,
-  KebabToggle,
-} from "@patternfly/react-core/deprecated";
+} from "@patternfly/react-core";
+import { EllipsisVIcon } from "@patternfly/react-icons";
 import { RouteKindWithId } from "@/Core";
 import { useNavigateTo, words } from "@/UI";
 import { DependencyContext } from "@/UI/Dependency";
@@ -62,26 +63,28 @@ export const Item: React.FC<Props> = ({ notification, onUpdate }) => {
 const ActionList: React.FC<Props> = ({ notification, onUpdate }) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const onToggle = (value: boolean, e: React.ChangeEvent): void => {
-    e.stopPropagation();
-    setIsOpen(value);
+  const onToggle = (): void => {
+    setIsOpen(!isOpen);
   };
 
   return (
     <Dropdown
-      position="right"
+      toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
+        <MenuToggle
+          ref={toggleRef}
+          aria-label="kebab dropdown toggle"
+          variant="plain"
+          isExpanded={isOpen}
+          onClick={onToggle}
+        >
+          <EllipsisVIcon />
+        </MenuToggle>
+      )}
       onSelect={() => setIsOpen(false)}
-      toggle={
-        <KebabToggle
-          onToggle={(_event, value: boolean, e: React.ChangeEvent) =>
-            onToggle(value, e)
-          }
-          aria-label="NotificationItemActions"
-        />
-      }
       isOpen={isOpen}
       isPlain
-      dropdownItems={[
+    >
+      <DropdownList>
         <DropdownItem
           key="read"
           component="button"
@@ -92,7 +95,7 @@ const ActionList: React.FC<Props> = ({ notification, onUpdate }) => {
           isDisabled={!notification.read}
         >
           {words("notification.unread")}
-        </DropdownItem>,
+        </DropdownItem>
         <DropdownItem
           key="cleared"
           component="button"
@@ -102,8 +105,48 @@ const ActionList: React.FC<Props> = ({ notification, onUpdate }) => {
           }}
         >
           {words("notification.drawer.clear")}
-        </DropdownItem>,
-      ]}
-    />
+        </DropdownItem>
+      </DropdownList>
+    </Dropdown>
   );
+
+  // return (
+  //   <Dropdown
+  //     position="right"
+  //     onSelect={() => setIsOpen(false)}
+  //     toggle={
+  //       <KebabToggle
+  //         onToggle={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>, value: boolean) =>
+  //           onToggle(value, e)
+  //         }
+  //         aria-label="NotificationItemActions"
+  //       />
+  //     }
+  //     isOpen={isOpen}
+  //     isPlain
+  //     dropdownItems={[
+  //       <DropdownItem
+  //         key="read"
+  //         component="button"
+  //         onClick={(event) => {
+  //           event.stopPropagation();
+  //           onUpdate({ read: false });
+  //         }}
+  //         isDisabled={!notification.read}
+  //       >
+  //         {words("notification.unread")}
+  //       </DropdownItem>,
+  //       <DropdownItem
+  //         key="cleared"
+  //         component="button"
+  //         onClick={(event) => {
+  //           event.stopPropagation();
+  //           onUpdate({ read: true, cleared: true });
+  //         }}
+  //       >
+  //         {words("notification.drawer.clear")}
+  //       </DropdownItem>,
+  //     ]}
+  //   />
+  // );
 };

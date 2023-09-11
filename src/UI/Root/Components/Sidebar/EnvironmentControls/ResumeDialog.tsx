@@ -25,6 +25,7 @@ export const ResumeDialog: React.FC = () => {
         </GreenButton>
       </Tooltip>
       <Modal
+        disableFocusTrap
         variant="small"
         title={words("environment.resume.title")}
         isOpen={isModalOpen}

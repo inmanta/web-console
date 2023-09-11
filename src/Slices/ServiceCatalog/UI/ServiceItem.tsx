@@ -133,6 +133,7 @@ export const ServiceItem: React.FunctionComponent<Props> = ({ service }) => {
         </DataListAction>
       </DataListItemRow>
       <Modal
+        disableFocusTrap
         variant={ModalVariant.small}
         isOpen={isDeleteModalOpen}
         title={words("catalog.delete.modal.title")}

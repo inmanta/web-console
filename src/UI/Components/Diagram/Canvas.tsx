@@ -60,6 +60,7 @@ const Canvas = ({
   return (
     <Container>
       <Modal
+        disableFocusTrap
         isOpen={isDialogOpen}
         title={"Values of " + dictToDisplay?.title}
         variant={"small"}

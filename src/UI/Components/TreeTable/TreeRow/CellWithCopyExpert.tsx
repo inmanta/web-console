@@ -166,6 +166,7 @@ export const CellWithCopyExpert: React.FC<Props> = ({
         </Icon>
       )}
       <Modal
+        disableFocusTrap
         variant={"small"}
         isOpen={isModalOpen}
         title={words("inventory.editAttribute.header")}

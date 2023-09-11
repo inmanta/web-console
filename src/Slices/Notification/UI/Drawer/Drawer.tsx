@@ -93,6 +93,7 @@ export const View: React.FC<ViewProps> = ({
               success: ({ data }) =>
                 data.map((notification) => (
                   <Item
+                    data-testid="menuitem"
                     {...{ notification }}
                     key={notification.id}
                     onUpdate={getOnUpdate([notification.id])}

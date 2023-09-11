@@ -5,22 +5,22 @@ import { words } from "@/UI/words";
 
 interface Props {
   name: string;
-  value: boolean;
-  onChange: (value: boolean) => void;
+  isChecked: boolean;
+  onChange: (checked: boolean) => void;
   defaults: Config;
   isDisabled?: boolean;
 }
 
 export const DefaultSwitch: React.FC<Props> = ({
   name,
-  value,
+  isChecked,
   onChange,
   defaults,
   isDisabled,
 }) => (
   <BooleanSwitch
     name={name}
-    value={value}
+    isChecked={isChecked}
     onChange={onChange}
     getLabel={getLabel(defaults[name])}
     isDisabled={isDisabled}

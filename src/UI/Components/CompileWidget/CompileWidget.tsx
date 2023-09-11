@@ -71,7 +71,7 @@ const Widget: React.FC<WidgetProps> = ({
           </StyledDropdownToggleAction>,
         ]}
         splitButtonVariant="action"
-        onToggle={onToggle}
+        onToggle={(_event, value) => onToggle(value)}
         toggleVariant="primary"
       />
     }

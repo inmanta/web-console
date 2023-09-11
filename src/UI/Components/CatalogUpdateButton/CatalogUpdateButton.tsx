@@ -65,6 +65,7 @@ export const CatalogUpdateButton: React.FC = () => {
         </Button>
       </StyledWrapper>
       <Modal
+        disableFocusTrap
         variant={ModalVariant.small}
         isOpen={isOpen}
         title={words("catalog.update.modal.title")}

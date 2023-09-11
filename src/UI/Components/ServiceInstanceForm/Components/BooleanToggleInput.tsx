@@ -38,7 +38,7 @@ export const BooleanToggleInput: React.FC<Props> = ({
       </FormHelperText>
       <Switch
         isChecked={isChecked}
-        onChange={handleInputChange}
+        onChange={(event, value) => handleInputChange(value, event)}
         aria-label={`Toggle-${attributeName}`}
         isDisabled={shouldBeDisabled}
       />

@@ -14,14 +14,14 @@ export const getSeverityForNotification = (
     case "error":
       return "danger";
     case "message":
-      return "default";
+      return "custom";
     default:
       return severity;
   }
 };
 
 export type VisualSeverity =
-  | "default"
+  | "custom"
   | "success"
   | "danger"
   | "warning"
@@ -33,7 +33,7 @@ export const getColorForVisualSeverity = (severity: VisualSeverity): string => {
       return global_danger_color_100.var;
     case "warning":
       return global_warning_color_100.var;
-    case "default":
+    case "custom":
       return global_Color_200.var;
     case "info":
       return global_info_color_100.var;

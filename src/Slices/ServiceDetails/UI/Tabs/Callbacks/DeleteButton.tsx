@@ -41,6 +41,7 @@ export const DeleteButton: React.FunctionComponent<DeleteProps> = ({
         setMessage={setErrorMessage}
       />
       <Modal
+        disableFocusTrap
         variant={ModalVariant.small}
         isOpen={isOpen}
         title="Delete Callback"

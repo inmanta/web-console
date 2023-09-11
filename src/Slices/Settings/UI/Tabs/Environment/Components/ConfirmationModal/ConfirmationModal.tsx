@@ -64,6 +64,7 @@ export const ConfirmationModal: React.FC<Props> = ({
 
   return (
     <Modal
+      disableFocusTrap
       variant="small"
       aria-label={`${actionType} environment modal`}
       title={words("home.environment.delete.warning")}
