@@ -1231,7 +1231,7 @@ __metadata:
     "@patternfly/react-core": ^4.276.12
     "@patternfly/react-icons": ^4.93.6
     "@patternfly/react-styles": ^4.92.6
-    "@patternfly/react-table": ^4.113.2
+    "@patternfly/react-table": ^4.113.4
     "@patternfly/react-tokens": ^4.94.6
     "@react-keycloak/web": ^3.4.0
     "@testing-library/dom": ^9.3.1
@@ -1834,24 +1834,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@patternfly/react-core@npm:^4.276.11":
-  version: 4.276.11
-  resolution: "@patternfly/react-core@npm:4.276.11"
-  dependencies:
-    "@patternfly/react-icons": ^4.93.7
-    "@patternfly/react-styles": ^4.92.8
-    "@patternfly/react-tokens": ^4.94.7
-    focus-trap: 6.9.2
-    react-dropzone: 9.0.0
-    tippy.js: 5.1.2
-    tslib: ^2.0.0
-  peerDependencies:
-    react: ^16.8 || ^17 || ^18
-    react-dom: ^16.8 || ^17 || ^18
-  checksum: 1bacb8ba497ec3f3e8fe181192ee6af6ecad82e31b3462b13ba7a952583a1cd3caae51634a766dfa5f52cda162e61e9bb9520ae35f0721c0ab963a1e0164ca0f
-  languageName: node
-  linkType: hard
-
 "@patternfly/react-core@npm:^4.276.12":
   version: 4.276.12
   resolution: "@patternfly/react-core@npm:4.276.12"
@@ -1896,11 +1878,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@patternfly/react-table@npm:^4.113.2":
-  version: 4.113.3
-  resolution: "@patternfly/react-table@npm:4.113.3"
+"@patternfly/react-table@npm:^4.113.4":
+  version: 4.113.4
+  resolution: "@patternfly/react-table@npm:4.113.4"
   dependencies:
-    "@patternfly/react-core": ^4.276.11
+    "@patternfly/react-core": ^4.276.12
     "@patternfly/react-icons": ^4.93.7
     "@patternfly/react-styles": ^4.92.8
     "@patternfly/react-tokens": ^4.94.7
@@ -1909,7 +1891,7 @@ __metadata:
   peerDependencies:
     react: ^16.8 || ^17 || ^18
     react-dom: ^16.8 || ^17 || ^18
-  checksum: 218d17a21d34132f5475cdcf077428dfc3af475689f948a5a5239b03bfda9fa85790bdb13c2795e96c0e703f1161f361b398268717462f7078f2e1540ab2eaad
+  checksum: 35c254a126e7f29abbe81b567c12e943cf9a68e4d79cbdc35ce6f1a28733c0b905a6a33ce547c3092490e1a45852be3829eaf166bbc9ccb895d2d5d4c027dd37
   languageName: node
   linkType: hard
 
