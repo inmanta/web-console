@@ -1245,7 +1245,7 @@ __metadata:
     "@types/json-bigint": ^1.0.1
     "@types/lodash": ^4.14.197
     "@types/lodash-es": ^4.17.8
-    "@types/node": ^20.4.5
+    "@types/node": ^20.6.0
     "@types/qs": ^6.9.8
     "@types/react-dom": ^18.2.7
     "@types/react-router-dom": ^5.3.3
@@ -2552,10 +2552,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^20.4.5":
-  version: 20.4.5
-  resolution: "@types/node@npm:20.4.5"
-  checksum: 36a0304a8dc346a1b2d2edac4c4633eecf70875793d61a5274d0df052d7a7af7a8e34f29884eac4fbd094c4f0201477dcb39c0ecd3307ca141688806538d1138
+"@types/node@npm:^20.6.0":
+  version: 20.6.0
+  resolution: "@types/node@npm:20.6.0"
+  checksum: 52611801af5cf151c6fac1963aa4a8a8ca2e388a9e9ed82b01b70bca762088ded5b32cc789c5564220d5d7dccba2b8dd34446a3d4fc74736805e1f2cf262e29d
   languageName: node
   linkType: hard
 
