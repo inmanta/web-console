@@ -17,6 +17,7 @@ const DictModal = ({ dictToDisplay, setDictToDisplay }: DictModal) => {
 
   return (
     <Modal
+      aria-label="dictModal"
       isOpen={dictToDisplay !== null}
       title={"Values of " + dictToDisplay?.title}
       variant="medium"

@@ -1,0 +1,6 @@
+change-type: minor
+description: "Add component test for Instance Composer"
+issue-nr: 5093
+destination-branches:
+  - master
+  - iso6

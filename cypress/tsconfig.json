@@ -1,0 +1,18 @@
+{
+  "extends": "../tsconfig",
+  "compilerOptions": {
+    "target": "es5",
+    "lib": ["es5", "dom"],
+    "types": ["cypress", "node"],
+    "baseUrl": "../",
+    "rootDir": "../"
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.jsx",
+    "jestSetupAfterEnv.cjs",
+    "plugins/index.js"
+  ],
+  "exclude": ["node_modules"]
+}
