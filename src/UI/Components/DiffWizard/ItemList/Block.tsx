@@ -46,6 +46,7 @@ export const Block: React.FC<Props> = ({ item, refs, classify }) => {
         isCompact
         isRounded
         aria-label="DiffBlock"
+        data-testid="DiffBlock"
       >
         <StyledHeader
           onExpand={onExpand}

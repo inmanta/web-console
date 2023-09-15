@@ -82,7 +82,12 @@ const EnvironmentCard: React.FC<EnvironmentCardProps> = ({
 }) => {
   return (
     <StyledLink pathname={pathname} search={`env=${environment.id}`}>
-      <StyledCard isClickable isCompact aria-label={"Environment card"}>
+      <StyledCard
+        isClickable
+        isCompact
+        aria-label={"Environment card"}
+        data-testid="Environment card"
+      >
         <StyledTitle component="h4">
           {environment.icon ? (
             <StyledIcon

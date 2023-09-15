@@ -72,7 +72,7 @@ const ActionList: React.FC<Props> = ({ notification, onUpdate }) => {
       toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
         <MenuToggle
           ref={toggleRef}
-          aria-label="kebab dropdown toggle"
+          aria-label="NotificationListItemActions"
           variant="plain"
           isExpanded={isOpen}
           onClick={onToggle}

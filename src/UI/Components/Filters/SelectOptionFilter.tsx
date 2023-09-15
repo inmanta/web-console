@@ -25,7 +25,7 @@ export const SelectOptionFilter: React.FC<Props> = ({
 }) => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
-  const onSelect = (event, selection) => {
+  const onSelect = (_event, selection) => {
     update(uniq(toggleValueInList(selection, selectedStates)));
     setIsFilterOpen(false);
   };

@@ -100,7 +100,7 @@ const Row: React.FC<RowProps> = ({
       <SlimTd>
         <StyledTextInput
           value={key}
-          onChange={onKeyChange}
+          onChange={(_event, value) => onKeyChange(value)}
           type="text"
           aria-label="editEntryKey"
           readOnly={!isKeyEditable}
@@ -109,7 +109,7 @@ const Row: React.FC<RowProps> = ({
       <SlimTd>
         <StyledTextInput
           value={value}
-          onChange={onValueChange}
+          onChange={(_event, value) => onValueChange(value)}
           type="text"
           aria-label="editEntryValue"
         />

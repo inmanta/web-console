@@ -112,7 +112,7 @@ export const CreateEnvironmentForm: React.FC<Props> = ({
       <TextAreaField
         value={createEnvironmentBody.description || ""}
         label={words("createEnv.description")}
-        onChange={setDescription}
+        onChange={(_event, value) => setDescription(value)}
       />
       <TextField
         value={createEnvironmentBody.repository || ""}

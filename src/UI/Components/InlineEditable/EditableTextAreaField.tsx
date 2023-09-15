@@ -31,7 +31,7 @@ const EditView: EditViewComponent = ({ value, onChange, label }) => (
   <>
     <TextArea
       value={value}
-      onChange={onChange}
+      onChange={(_event, value) => onChange(value)}
       aria-label={`${label}-input`}
       maxLength={255}
       rows={2}

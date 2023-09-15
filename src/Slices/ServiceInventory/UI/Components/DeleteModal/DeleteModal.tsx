@@ -49,6 +49,7 @@ export const DeleteModal: React.FC<Props> = ({
   return (
     <>
       <ToastAlert
+        data-testid="ToastAlert"
         title={words("inventory.deleteInstance.failed")}
         message={errorMessage}
         setMessage={setErrorMessage}

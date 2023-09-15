@@ -78,6 +78,7 @@ export const View: React.FC<Props> = ({ version }) => {
   return (
     <>
       <ToastAlert
+        data-testid="ToastAlert"
         title={words("desiredState.complianceCheck.failed")}
         message={errorMessage}
         setMessage={setErrorMessage}

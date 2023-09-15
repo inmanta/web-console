@@ -19,7 +19,7 @@ export const TextField: React.FC<Props> = ({
       <TextInput
         aria-label={`${label}-input`}
         value={value}
-        onChange={onChange}
+        onChange={(_event, value) => onChange(value)}
       />
     </FormGroup>
   );

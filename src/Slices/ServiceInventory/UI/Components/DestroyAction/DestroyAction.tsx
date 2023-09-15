@@ -41,6 +41,7 @@ export const DestroyAction: React.FC<Props> = ({
   return (
     <>
       <ToastAlert
+        data-testid="ToastAlert"
         title={words("inventory.destroyInstance.failed")}
         message={errorMessage}
         setMessage={setErrorMessage}

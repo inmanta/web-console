@@ -36,6 +36,7 @@ export const DeleteButton: React.FunctionComponent<DeleteProps> = ({
   return (
     <>
       <ToastAlert
+        data-testid="ToastAlert"
         title={words("catalog.callbacks.delete.failed")}
         message={errorMessage}
         setMessage={setErrorMessage}

@@ -25,7 +25,7 @@ export const CreatableSelectInput: React.FC<Props> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [submitError, setSubmitError] = useState("");
-  const onSelectOption = (event, selection) => {
+  const onSelectOption = (_event, selection) => {
     setIsOpen(false);
     onSelect(selection);
   };

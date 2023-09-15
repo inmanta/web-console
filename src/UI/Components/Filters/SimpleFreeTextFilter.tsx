@@ -44,7 +44,7 @@ export const SimpleFreeTextFilter: React.FC<Props> = ({
             name={`${filterPropertyName}FilterInput`}
             type="search"
             aria-label={`${filterPropertyName}Filter`}
-            onChange={update}
+            onChange={(_event, value) => update(value)}
             value={searchEntry}
             placeholder={placeholder}
           />

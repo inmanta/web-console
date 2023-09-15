@@ -96,7 +96,12 @@ export const ConfirmationModal: React.FC<Props> = ({
       <Form onSubmit={onSubmit}>
         {errorMessage && (
           <FormAlert>
-            <Alert variant="danger" title="Something went wrong" isInline>
+            <Alert
+              data-testid="ErrorAlert"
+              variant="danger"
+              title="Something went wrong"
+              isInline
+            >
               {errorMessage}
             </Alert>
           </FormAlert>

@@ -53,6 +53,7 @@ export const ServiceItem: React.FunctionComponent<Props> = ({ service }) => {
   return (
     <DataListItem id={service.name} aria-labelledby={serviceKey}>
       <ToastAlert
+        data-testid="ToastAlert"
         title={words("catalog.delete.failed")}
         message={errorMessage}
         setMessage={setErrorMessage}

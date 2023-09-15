@@ -54,6 +54,7 @@ export const CatalogUpdateButton: React.FC = () => {
   return (
     <>
       <ToastAlert
+        data-testid="ToastAlert"
         title={toastTitle}
         message={message}
         setMessage={setMessage}

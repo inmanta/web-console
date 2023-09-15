@@ -50,7 +50,7 @@ export const View: React.FC<Props> = ({ data, onClick }) => {
       failed: () => (
         <>
           <ToastAlert
-            data-testid="ToastError"
+            data-testid="ToastAlert"
             message={error}
             title={words("error")}
             setMessage={setError}
