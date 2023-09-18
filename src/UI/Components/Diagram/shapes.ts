@@ -1,6 +1,13 @@
 import { dia, shapes, util } from "@inmanta/rappid";
 import expandButton from "./icons/expand-icon.svg";
 import { ColumnData } from "./interfaces";
+
+export const Colors = {
+  base: "#0066CC",
+  core: "#F0AB00",
+  embedded: "#009596",
+};
+
 /**
  * https://resources.jointjs.com/tutorial/custom-elements
  * https://resources.jointjs.com/tutorial/ts-shape
@@ -26,8 +33,8 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
             cursor: "default",
           },
           header: {
-            fill: "#F0AB00",
-            stroke: "#F0AB00",
+            fill: Colors.core,
+            stroke: Colors.core,
             strokeWidth: 1,
             cursor: "grab",
           },
@@ -216,11 +223,12 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
   }
 
   setName(name: string, options?: object) {
+    this.set("entityName", name);
     return this.attr(["headerLabel", "text"], name, options);
   }
 
   getName(): string {
-    return this.attr(["headerLabel", "text"]);
+    return this.get("entityName");
   }
 
   setTabColor(color: string) {
@@ -234,6 +242,11 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
     if (initializeButton && this.get("isCollapsed")) {
       this.appendButton();
     }
+    return this;
+  }
+
+  editColumns(data: Array<ColumnData>, shouldBeCollapsed = true) {
+    this._setColumns(data, shouldBeCollapsed);
     return this;
   }
 

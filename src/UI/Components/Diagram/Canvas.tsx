@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import "@inmanta/rappid/rappid.css";
+import { dia } from "@inmanta/rappid";
 import { Modal } from "@patternfly/react-core";
 import styled from "styled-components";
 import { ServiceModel } from "@/Core";
@@ -23,16 +24,23 @@ const Canvas = ({
   const canvas = useRef<HTMLDivElement>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
+  const [cellToEdit, setCellToEdit] = useState<dia.CellView | null>(null);
   const [dictToDisplay, setDictToDisplay] = useState<DictDialogData | null>(
     null,
   );
   const [diagramHandlers, setDiagramHandlers] =
     useState<DiagramHandlers | null>(null);
+  const [instancesToSend, setInstancesToSend] = useState<object>({});
 
-  const handleEvent = (event) => {
+  const handleDictEvent = (event) => {
     const customEvent = event as CustomEvent;
     setDictToDisplay(JSON.parse(customEvent.detail));
     setIsDialogOpen(true);
+  };
+  const handleEditEvent = (event) => {
+    const customEvent = event as CustomEvent;
+    setCellToEdit(customEvent.detail);
+    setIsFormModalOpen(true);
   };
 
   useEffect(() => {
@@ -42,7 +50,22 @@ const Canvas = ({
 
     if (instance) {
       const isMainInstance = true;
-      actions.addInstance(instance, services, isMainInstance);
+      const cells = actions.addInstance(instance, services, isMainInstance);
+      const newInstances = {};
+      cells.forEach((cell) => {
+        if (cell.type === "app.ServiceEntityBlock") {
+          newInstances[cell.id] = {
+            instance_id: cell.id,
+            service_entity: cell.entityName,
+            config: {},
+            action: null,
+            value: cell.instanceAttributes,
+            embeddedTo: cell.embeddedTo,
+            relatedTo: cell.relatedTo,
+          };
+        }
+      });
+      setInstancesToSend(newInstances);
     }
 
     return () => {
@@ -51,12 +74,15 @@ const Canvas = ({
   }, [instance, services, mainServiceName]);
 
   useEffect(() => {
-    document.addEventListener("openDictsModal", handleEvent);
+    document.addEventListener("openDictsModal", handleDictEvent);
+    document.addEventListener("openEditModal", handleEditEvent);
 
     return () => {
-      document.removeEventListener("openDictsModal", handleEvent);
+      document.removeEventListener("openDictsModal", handleDictEvent);
+      document.removeEventListener("openEditModal", handleEditEvent);
     };
   }, []);
+
   return (
     <Container>
       <Modal
@@ -77,20 +103,47 @@ const Canvas = ({
       </Modal>
       <FormModal
         isOpen={isFormModalOpen}
-        toggleIsOpen={(value: boolean) => setIsFormModalOpen(value)}
+        toggleIsOpen={(value: boolean) => {
+          if (cellToEdit && !value) {
+            setCellToEdit(null);
+          }
+          setIsFormModalOpen(value);
+        }}
         services={services}
+        cellView={cellToEdit}
         onConfirm={(entity, selected) => {
           if (diagramHandlers) {
-            diagramHandlers.addEntity(
-              entity,
-              selected.model as ServiceModel,
-              selected.name === mainServiceName,
-            );
+            if (cellToEdit) {
+              //deep copy
+              diagramHandlers.editEntity(
+                cellToEdit,
+                selected.model as ServiceModel,
+                entity,
+              );
+
+              const instances = JSON.parse(JSON.stringify(instancesToSend));
+              instances[cellToEdit.model.id] = entity;
+              setInstancesToSend(instances);
+            } else {
+              const shape = diagramHandlers.addEntity(
+                entity,
+                selected.model as ServiceModel,
+                selected.name === mainServiceName,
+                selected.isEmbedded,
+              );
+
+              //deep copy
+              const instances = JSON.parse(JSON.stringify(instancesToSend));
+              instances[shape.id] = entity;
+              setInstancesToSend(instances);
+            }
           }
         }}
       />
       <Toolbar
-        openEntityModal={() => setIsFormModalOpen(true)}
+        openEntityModal={() => {
+          setIsFormModalOpen(true);
+        }}
         serviceName={mainServiceName}
       />
       <CanvasWrapper id="canvas-wrapper">

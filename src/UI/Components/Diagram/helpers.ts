@@ -54,6 +54,7 @@ export const createConnectionRules = (
     service.embedded_entities.map((entity) => {
       tempRules.push({
         name: entity.name,
+        lowerLimit: entity.lower_limit || null,
         upperLimit: entity.upper_limit || null,
       });
 
@@ -64,6 +65,7 @@ export const createConnectionRules = (
       service.inter_service_relations.map((relation) => {
         tempRules.push({
           name: relation.entity_type,
+          lowerLimit: relation.lower_limit || null,
           upperLimit: relation.upper_limit || null,
         });
       });
