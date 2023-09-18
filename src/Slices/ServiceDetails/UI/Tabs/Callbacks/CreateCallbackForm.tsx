@@ -105,6 +105,7 @@ export const CreateCallbackForm: React.FC<Props> = ({
           <Td colSpan={numberOfColumns}>
             <ExpandableRowContent>
               <Alert
+                data-testid="Alert Danger"
                 isInline
                 variant="danger"
                 title="Something went wrong"
