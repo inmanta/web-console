@@ -155,6 +155,7 @@
     "react": "^18.2.0",
     "react-diff-viewer": "^3.1.1",
     "react-dom": "^18.2.0",
+    "react-dropzone": "^14.2.3",
     "react-router-dom": "^6.15.0",
     "react-syntax-highlighter": "^15.5.0",
     "styled-components": "^5.3.11",
