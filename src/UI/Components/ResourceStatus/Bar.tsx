@@ -1,4 +1,5 @@
 import React from "react";
+import styled from "styled-components";
 import { ParsedNumber, Resource } from "@/Core";
 import { words } from "@/UI";
 import { LegendBar, LegendItemDetails } from "@/UI/Components/LegendBar";
@@ -27,7 +28,7 @@ export const ResourceStatusBar: React.FC<Props> = ({
     .map((info) => infoToLegendItem(info, onClick));
 
   return (
-    <LegendBar
+    <StretchedLegendBar
       items={items}
       total={{
         format: (total) => `${done} / ${total}`,
@@ -97,3 +98,8 @@ const infos: Info[] = groups.map((group) => ({
   keys: group,
   color: colorConfig[group[0]],
 }));
+
+const StretchedLegendBar = styled(LegendBar)`
+  flex-grow: 1;
+  margin-right: var(--pf-v5-global--spacer--lg);
+`;

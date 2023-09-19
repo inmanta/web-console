@@ -73,6 +73,7 @@ export const EditForm: React.FC<Props> = ({ serviceEntity, instance }) => {
     <>
       {errorMessage && (
         <ToastAlert
+          data-testid="ToastAlert"
           title={words("inventory.editInstance.failed")}
           message={errorMessage}
           setMessage={setErrorMessage}

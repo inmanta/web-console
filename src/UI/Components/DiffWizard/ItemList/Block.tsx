@@ -46,6 +46,7 @@ export const Block: React.FC<Props> = ({ item, refs, classify }) => {
         isCompact
         isRounded
         aria-label="DiffBlock"
+        data-testid="DiffBlock"
       >
         <StyledHeader
           onExpand={onExpand}
@@ -181,20 +182,20 @@ const StyledCard = styled(Card)`
 `;
 
 const StyledTitle = styled(CardTitle)`
-  --pf-c-card__title--FontSize: 0.8rem;
+  --pf-v5-c-card__title--FontSize: 0.8rem;
 `;
 
 const StyledHeader = styled(CardHeader)`
-  --pf-c-card--first-child--PaddingTop: 8px;
-  --pf-c-card--child--PaddingRight: 16px;
-  --pf-c-card--child--PaddingBottom: 8px;
-  --pf-c-card--child--PaddingLeft: 16px;
+  --pf-v5-c-card--first-child--PaddingTop: 8px;
+  --pf-v5-c-card--child--PaddingRight: 16px;
+  --pf-v5-c-card--child--PaddingBottom: 8px;
+  --pf-v5-c-card--child--PaddingLeft: 16px;
 `;
 
 const StyledBody = styled(CardBody)`
-  --pf-c-card--child--PaddingRight: 0;
-  --pf-c-card--child--PaddingBottom: 0;
-  --pf-c-card--child--PaddingLeft: 0;
+  --pf-v5-c-card--child--PaddingRight: 0;
+  --pf-v5-c-card--child--PaddingBottom: 0;
+  --pf-v5-c-card--child--PaddingLeft: 0;
 `;
 
 const StyledStatusDescriptor = styled(StatusDescriptor)`

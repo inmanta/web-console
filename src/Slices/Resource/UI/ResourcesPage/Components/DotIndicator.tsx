@@ -16,7 +16,7 @@ export const DotIndication = styled.span`
     position: absolute;
     top: 5px;
     content: "";
-    background-color: var(--pf-global--primary-color--100);
+    background-color: var(--pf-v5-global--primary-color--100);
     width: 8px;
     height: 8px;
     border-radius: 50%;

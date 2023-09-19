@@ -61,5 +61,5 @@ export const GraphCard: React.FC<GraphCardProps> = ({
   );
 };
 export const StyledDescription = styled.span`
-  color: var(--pf-global--Color--200);
+  color: var(--pf-v5-global--Color--200);
 `;

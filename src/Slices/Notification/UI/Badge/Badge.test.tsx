@@ -46,7 +46,7 @@ test("Given Badge WHEN request fails THEN error is shown", async () => {
   await act(async () => {
     await apiHelper.resolve(Either.left("error"));
   });
-  expect(screen.getByRole("generic", { name: "ToastAlert" })).toBeVisible();
+  expect(screen.getByTestId("ToastAlert")).toBeVisible();
 });
 
 test.each`

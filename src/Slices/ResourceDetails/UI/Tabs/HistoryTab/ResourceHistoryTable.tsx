@@ -1,7 +1,7 @@
 import React from "react";
 import {
   OnSort,
-  TableComposable,
+  Table /* data-codemods */,
   TableVariant,
   Th,
   Thead,
@@ -60,7 +60,7 @@ export const ResourceHistoryTable: React.FC<Props> = ({
     });
 
   return (
-    <TableComposable {...props} variant={TableVariant.compact}>
+    <Table {...props} variant={TableVariant.compact}>
       <Thead>
         <Tr>
           <Th />
@@ -77,6 +77,6 @@ export const ResourceHistoryTable: React.FC<Props> = ({
           numberOfColumns={tablePresenter.getNumberOfColumns()}
         />
       ))}
-    </TableComposable>
+    </Table>
   );
 };

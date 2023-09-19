@@ -1,14 +1,10 @@
 import React, { useContext, useState } from "react";
+import { Card, CardBody, CardHeader, CardTitle } from "@patternfly/react-core";
 import {
-  Card,
-  CardActions,
-  CardBody,
-  CardHeader,
-  CardTitle,
   Dropdown,
   DropdownItem,
   KebabToggle,
-} from "@patternfly/react-core";
+} from "@patternfly/react-core/deprecated";
 import styled from "styled-components";
 import { Link } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
@@ -60,20 +56,27 @@ export const RejectionCard: React.FC<Props> = ({
 
   return (
     <Card>
-      <CardHeader>
+      <CardHeader
+        actions={{
+          actions: (
+            <>
+              <Dropdown
+                onSelect={() => setIsOpen((value) => !value)}
+                toggle={
+                  <KebabToggle onToggle={() => setIsOpen((value) => !value)} />
+                }
+                isOpen={isOpen}
+                isPlain
+                dropdownItems={dropdownItems}
+                position={"right"}
+              />
+            </>
+          ),
+          hasNoOffset: false,
+          className: undefined,
+        }}
+      >
         <CardTitle>{words("diagnose.rejection.title")}</CardTitle>
-        <CardActions>
-          <Dropdown
-            onSelect={() => setIsOpen((value) => !value)}
-            toggle={
-              <KebabToggle onToggle={() => setIsOpen((value) => !value)} />
-            }
-            isOpen={isOpen}
-            isPlain
-            dropdownItems={dropdownItems}
-            position={"right"}
-          />
-        </CardActions>
       </CardHeader>
       {error && <StyledCardTitle>{error.type}</StyledCardTitle>}
       <CardBody>

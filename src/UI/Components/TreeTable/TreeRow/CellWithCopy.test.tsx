@@ -1,6 +1,6 @@
 import React from "react";
 import { MemoryRouter } from "react-router-dom";
-import { TableComposable, Tbody, Tr } from "@patternfly/react-table";
+import { Table /* data-codemods */, Tbody, Tr } from "@patternfly/react-table";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
@@ -51,13 +51,13 @@ function setup(props) {
       >
         <StoreProvider store={store}>
           <TreeTableCellContext.Provider value={{ onClick: onClickFn }}>
-            <TableComposable>
+            <Table>
               <Tbody>
                 <Tr>
                   <CellWithCopy {...props} />
                 </Tr>
               </Tbody>
-            </TableComposable>
+            </Table>
           </TreeTableCellContext.Provider>
         </StoreProvider>
       </DependencyProvider>

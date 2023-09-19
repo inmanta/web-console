@@ -86,8 +86,8 @@ const AttributeValue: React.FC<{
 };
 
 const StyledDescriptionList = styled(DescriptionList)`
-  --pf-c-description-list--m-horizontal__term--width: 24ch;
-  --pf-c-description-list--RowGap: 0.5rem;
+  --pf-v5-c-description-list--m-horizontal__term--width: 24ch;
+  --pf-v5-c-description-list--RowGap: 0.5rem;
 `;
 
 const StyledDescriptionListTerm = styled(DescriptionListTerm)`

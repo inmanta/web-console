@@ -65,7 +65,7 @@ export const Tabs: React.FC<Props> = ({
       {configTabDisabled && (
         <Tooltip
           content={words("config.disabled")}
-          reference={configTooltipRef}
+          triggerRef={configTooltipRef}
         />
       )}
     </>

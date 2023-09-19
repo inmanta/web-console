@@ -1,5 +1,9 @@
 import React, { useState } from "react";
-import { Select, SelectOption, SelectVariant } from "@patternfly/react-core";
+import {
+  Select,
+  SelectOption,
+  SelectVariant,
+} from "@patternfly/react-core/deprecated";
 
 export enum AttributeRule {
   Empty = "empty",
@@ -28,7 +32,7 @@ export const AttributeRulePicker: React.FC<Props> = ({
     <Select
       variant={SelectVariant.single}
       toggleAriaLabel="Select Quality"
-      onToggle={setFilterOpen}
+      onToggle={(_event, val) => setFilterOpen(val)}
       onSelect={onSelect}
       selections={rule}
       isOpen={isFilterOpen}

@@ -48,7 +48,7 @@ export const Tabs: React.FC<Props> = ({ activeTab, setActiveTab }) => {
       {tokenTabDisabled && (
         <Tooltip
           content={words("settings.tabs.token.disabledInfo")}
-          reference={tokenTooltipRef}
+          triggerRef={tokenTooltipRef}
         />
       )}
     </>

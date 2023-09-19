@@ -1,6 +1,10 @@
 import React, { useState } from "react";
-import { Dropdown, DropdownItem, KebabToggle } from "@patternfly/react-core";
-import { Tbody, TableComposable, Thead, Tr, Th } from "@patternfly/react-table";
+import {
+  Dropdown,
+  DropdownItem,
+  KebabToggle,
+} from "@patternfly/react-core/deprecated";
+import { Tbody, Thead, Tr, Th, Table } from "@patternfly/react-table";
 import styled from "styled-components";
 import { ParsedNumber } from "@/Core";
 import { words } from "@/UI/words";
@@ -41,7 +45,7 @@ export const TreeTable: React.FC<Props> = ({
     >
       <Thead>
         <StyledTr>
-          <Th key={firstColumn} className="pf-m-width-40">
+          <Th key={firstColumn} className="pf-v5-m-width-40">
             <Indent level={0} noToggle>
               {firstColumn}
             </Indent>
@@ -95,12 +99,12 @@ export const TreeTable: React.FC<Props> = ({
   );
 };
 
-const StyledTableComposable = styled(TableComposable)`
-  --pf-c-table__expandable-row--after--border-width--base: 0px;
+const StyledTableComposable = styled(Table)`
+  --pf-v5-c-table__expandable-row--after--border-width--base: 0px;
 `;
 const StyledTr = styled(Tr)`
-  --pf-c-table--cell--Overflow: visible;
+  --pf-v5-c-table--cell--Overflow: visible;
 `;
 const StyledToggle = styled(KebabToggle)`
-  --pf-c-dropdown__toggle--PaddingBottom: 0;
+  --pf-v5-c-dropdown__toggle--PaddingBottom: 0;
 `;

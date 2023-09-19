@@ -60,7 +60,7 @@ const DiffView: React.FC<{
 
   return (
     <>
-      <PageSection variant="light" hasShadowBottom sticky="top">
+      <PageSection variant="light" hasShadowBottom>
         <DiffWizard.Controls
           data={diffData}
           refs={refs}

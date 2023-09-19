@@ -3,7 +3,7 @@ import {
   EmptyState,
   EmptyStateBody,
   EmptyStateIcon,
-  Title,
+  EmptyStateHeader,
 } from "@patternfly/react-core";
 import { ExclamationCircleIcon } from "@patternfly/react-icons";
 import { words } from "@/UI/words";
@@ -15,10 +15,11 @@ interface Props {
 
 export const EmptyView: React.FC<Props> = ({ title, message, ...props }) => (
   <EmptyState {...props}>
-    <EmptyStateIcon icon={ExclamationCircleIcon} />
-    <Title size="lg" headingLevel="h4">
-      {title || words("empty.title")}
-    </Title>
+    <EmptyStateHeader
+      titleText={<>{title || words("empty.title")}</>}
+      icon={<EmptyStateIcon icon={ExclamationCircleIcon} />}
+      headingLevel="h4"
+    />
     <EmptyStateBody>{message}</EmptyStateBody>
   </EmptyState>
 );

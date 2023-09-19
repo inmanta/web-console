@@ -1,5 +1,10 @@
 import React from "react";
-import { TableComposable, Th, Thead, Tr } from "@patternfly/react-table";
+import {
+  Table /* data-codemods */,
+  Th,
+  Thead,
+  Tr,
+} from "@patternfly/react-table";
 import { useUrlStateWithExpansion } from "@/Data";
 import { words } from "@/UI/words";
 import { Callback } from "@S/ServiceDetails/Core/Callback";
@@ -20,7 +25,7 @@ export const CallbacksTable: React.FC<Props> = ({
     route: "Catalog",
   });
   return (
-    <TableComposable aria-label="CallbacksTable">
+    <Table aria-label="CallbacksTable">
       <Thead>
         <Tr>
           <Th>{words("catalog.callbacks.url")}</Th>
@@ -41,6 +46,6 @@ export const CallbacksTable: React.FC<Props> = ({
           numberOfColumns={5}
         />
       ))}
-    </TableComposable>
+    </Table>
   );
 };

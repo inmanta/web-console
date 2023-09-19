@@ -114,7 +114,7 @@ test("GIVEN CompileButton WHEN clicked THEN triggers recompile", async () => {
     await userEvent.click(button);
   });
 
-  const toast = screen.getByRole("generic", { name: "ToastAlert" });
+  const toast = screen.getByTestId("ToastAlert");
   expect(toast).toBeVisible();
   expect(toast).toHaveTextContent(words("common.compileWidget.toast")(false));
 
@@ -178,7 +178,7 @@ test("GIVEN CompileButton WHEN clicked on toggle and clicked on Update & Recompi
     await userEvent.click(button);
   });
 
-  const toast = screen.getByRole("generic", { name: "ToastAlert" });
+  const toast = screen.getByTestId("ToastAlert");
   expect(toast).toBeVisible();
   expect(toast).toHaveTextContent(words("common.compileWidget.toast")(true));
 
@@ -244,9 +244,7 @@ test("GIVEN CompileButton WHEN 'isToastVisible' parameter is false and recompile
     await userEvent.click(button);
   });
 
-  expect(
-    screen.queryByRole("generic", { name: "ToastAlert" }),
-  ).not.toBeInTheDocument();
+  expect(screen.queryByTestId("ToastAlert")).not.toBeInTheDocument();
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({

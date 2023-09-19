@@ -4,6 +4,9 @@ import {
   Chip,
   ChipGroup,
   FormGroup,
+  FormHelperText,
+  HelperText,
+  HelperTextItem,
   Popover,
   TextInputGroup,
   TextInputGroupMain,
@@ -48,8 +51,7 @@ export const TextListFormInput: React.FC<Props> = ({
   };
 
   const handleChangeInput = (
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    event: React.FormEvent<HTMLInputElement>,
+    _event: React.FormEvent<HTMLInputElement>,
     value: string,
   ) => {
     setInputValue(value);
@@ -91,17 +93,21 @@ export const TextListFormInput: React.FC<Props> = ({
               type="button"
               aria-label={`More info for ${attributeName} field`}
               onClick={(e) => e.preventDefault()}
-              className="pf-c-form__group-label-help"
+              className="pf-v5-c-form__group-label-help"
             >
-              <HelpIcon noVerticalAlign />
+              <HelpIcon />
             </button>
           </Popover>
         ) : (
           <></>
         )
       }
-      helperText={description}
     >
+      <FormHelperText>
+        <HelperText>
+          <HelperTextItem>{description}</HelperTextItem>
+        </HelperText>
+      </FormHelperText>
       <TextInputGroup isDisabled={shouldBeDisabled}>
         <TextInputGroupMain
           value={inputValue}

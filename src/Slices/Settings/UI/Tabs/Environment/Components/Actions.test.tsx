@@ -171,9 +171,7 @@ test("GIVEN Environment Actions and delete modal WHEN delete executed and error 
     await apiHelper.resolve(Maybe.some("error message"));
   });
 
-  const errorAlert = screen.getByRole("generic", {
-    name: "Environment Error Alert",
-  });
+  const errorAlert = screen.getByTestId("ErrorAlert");
   expect(within(errorAlert).getByText("error message")).toBeVisible();
 });
 

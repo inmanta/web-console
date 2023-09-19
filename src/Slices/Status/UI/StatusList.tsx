@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { List } from "@patternfly/react-core";
+import { Icon, List } from "@patternfly/react-core";
 import {
   ClusterIcon,
   DesktopIcon,
@@ -39,17 +39,29 @@ export const StatusList: React.FC<Props> = ({
         details={toDetails(
           omit(status, ["product", "extensions", "slices", "features"]),
         )}
-        icon={<TagIcon color="var(--pf-global--palette--blue-500)" />}
+        icon={
+          <Icon style={{ color: "var(--pf-v5-global--palette--blue-500)" }}>
+            <TagIcon />
+          </Icon>
+        }
       />
       <StatusItem
         name="API"
         details={[["url", apiUrl]]}
-        icon={<ClusterIcon color="var(--pf-global--palette--blue-500)" />}
+        icon={
+          <Icon style={{ color: "var(--pf-v5-global--primary-color--200)" }}>
+            <ClusterIcon />
+          </Icon>
+        }
       />
       <StatusItem
         name="Web Console"
         details={[["commit hash", featureManager.getCommitHash()]]}
-        icon={<DesktopIcon color="var(--pf-global--palette--blue-500)" />}
+        icon={
+          <Icon style={{ color: "var(--pf-v5-global--palette--blue-500)" }}>
+            <DesktopIcon />
+          </Icon>
+        }
       />
       {status.extensions.map((extension) => (
         <StatusItem
@@ -57,7 +69,11 @@ export const StatusList: React.FC<Props> = ({
           name={extension.name}
           details={toDetails(omit(extension, "name"))}
           icon={
-            <IntegrationIcon color="var(--pf-global--palette--light-blue-400)" />
+            <Icon
+              style={{ color: "var(--pf-v5-global--palette--light-blue-400)" }}
+            >
+              <IntegrationIcon />
+            </Icon>
           }
           category="extension"
         />
@@ -67,7 +83,11 @@ export const StatusList: React.FC<Props> = ({
           key={`slice-${slice.name}`}
           name={slice.name}
           details={toDetails(slice.status)}
-          icon={<ModuleIcon color="var(--pf-global--palette--green-500)" />}
+          icon={
+            <Icon style={{ color: "var(--pf-v5-global--palette--green-500)" }}>
+              <ModuleIcon />
+            </Icon>
+          }
           category="component"
         />
       ))}

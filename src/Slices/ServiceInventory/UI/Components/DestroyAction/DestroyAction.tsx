@@ -41,6 +41,7 @@ export const DestroyAction: React.FC<Props> = ({
   return (
     <>
       <ToastAlert
+        data-testid="ToastAlert"
         title={words("inventory.destroyInstance.failed")}
         message={errorMessage}
         setMessage={setErrorMessage}
@@ -49,6 +50,7 @@ export const DestroyAction: React.FC<Props> = ({
         <TrashAltIcon /> {words("inventory.destroyInstance.button")}
       </Button>
       <Modal
+        disableFocusTrap
         variant={"small"}
         isOpen={isOpen}
         title={words("inventory.destroyInstance.title")}

@@ -28,6 +28,7 @@ export const HaltDialog: React.FC = () => {
         </Button>
       </Tooltip>
       <Modal
+        disableFocusTrap
         variant="small"
         title={words("environment.halt.title")}
         isOpen={isModalOpen}

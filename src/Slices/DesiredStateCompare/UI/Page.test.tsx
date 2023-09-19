@@ -56,7 +56,7 @@ test("GIVEN DesiredStateCompare THEN shows list of diff blocks", async () => {
     await apiHelper.resolve(Either.right(DesiredStateDiff.response));
   });
 
-  const blocks = await screen.findAllByRole("article", { name: "DiffBlock" });
+  const blocks = await screen.findAllByTestId("DiffBlock");
   expect(blocks).toHaveLength(11);
 });
 
@@ -106,9 +106,7 @@ test("GIVEN DesiredStateCompare WHEN StatusFilter = 'Added' THEN only 'Added' re
     screen.getAllByRole("listitem", { name: "DiffSummaryListItem" }),
   ).toHaveLength(11);
 
-  expect(
-    await screen.findAllByRole("article", { name: "DiffBlock" }),
-  ).toHaveLength(11);
+  expect(await screen.findAllByTestId("DiffBlock")).toHaveLength(11);
 
   expect(
     screen.queryByRole("listbox", { name: "StatusFilterOptions" }),
@@ -150,9 +148,7 @@ test("GIVEN DesiredStateCompare WHEN StatusFilter = 'Added' THEN only 'Added' re
     await screen.findAllByRole("listitem", { name: "DiffSummaryListItem" }),
   ).toHaveLength(2);
 
-  expect(
-    await screen.findAllByRole("article", { name: "DiffBlock" }),
-  ).toHaveLength(2);
+  expect(await screen.findAllByTestId("DiffBlock")).toHaveLength(2);
 });
 
 test("GIVEN DesiredStateCompare WHEN File Resource THEN it shows prompt that can fetch file content", async () => {
@@ -163,7 +159,8 @@ test("GIVEN DesiredStateCompare WHEN File Resource THEN it shows prompt that can
     await apiHelper.resolve(Either.right(DesiredStateDiff.response));
   });
 
-  const blocks = screen.getAllByRole("article", { name: "DiffBlock" });
+  const blocks = await screen.findAllByTestId("DiffBlock");
+
   await act(async () => {
     await userEvent.click(
       within(blocks[1]).getByRole("button", {

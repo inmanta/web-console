@@ -1,7 +1,7 @@
 import { LabelProps } from "@patternfly/react-core";
 import {
   global_danger_color_100,
-  global_default_color_100,
+  global_Color_100,
   global_disabled_color_200,
   global_info_color_100,
   global_palette_purple_300,
@@ -29,9 +29,9 @@ export const labelColorConfig: Record<
 
 export const colorConfig: Record<Resource.Status, string> = {
   [Resource.Status.deployed]: global_success_color_100.var,
-  [Resource.Status.skipped]: global_default_color_100.var,
-  [Resource.Status.skipped_for_undefined]: global_default_color_100.var,
-  [Resource.Status.cancelled]: global_default_color_100.var,
+  [Resource.Status.skipped]: global_Color_100.var,
+  [Resource.Status.skipped_for_undefined]: global_Color_100.var,
+  [Resource.Status.cancelled]: global_Color_100.var,
   [Resource.Status.failed]: global_danger_color_100.var,
   [Resource.Status.unavailable]: global_warning_color_100.var,
   [Resource.Status.undefined]: global_warning_color_100.var,

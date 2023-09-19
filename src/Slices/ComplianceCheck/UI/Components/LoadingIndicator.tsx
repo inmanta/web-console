@@ -6,7 +6,7 @@ export const LoadingIndicator: React.FC<{ progress: string }> = ({
   progress,
 }) => (
   <Bullseye style={{ paddingBottom: "24px" }}>
-    <Spinner isSVG size="lg" /> <Progress>{progress}</Progress>
+    <Spinner size="lg" /> <Progress>{progress}</Progress>
   </Bullseye>
 );
 

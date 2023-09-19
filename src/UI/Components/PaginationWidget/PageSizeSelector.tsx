@@ -1,5 +1,9 @@
 import React, { useState } from "react";
-import { Dropdown, DropdownItem, DropdownToggle } from "@patternfly/react-core";
+import {
+  Dropdown,
+  DropdownItem,
+  DropdownToggle,
+} from "@patternfly/react-core/deprecated";
 import { CaretDownIcon, CheckIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { PageSize } from "@/Core";
@@ -43,7 +47,7 @@ export const PageSizeSelector: React.FC<Props> = ({
       dropdownItems={dropdownItems}
       toggle={
         <DropdownToggle
-          onToggle={onToggle}
+          onToggle={(_event, isOpen: boolean) => onToggle(isOpen)}
           toggleIndicator={null}
           aria-label="Page Size Selector dropdown"
         >
@@ -57,8 +61,8 @@ export const PageSizeSelector: React.FC<Props> = ({
 const StyledCheckIcon = styled(CheckIcon)`
   align-self: center;
   width: auto;
-  padding-left: var(--pf-global--spacer--sm);
+  padding-left: var(--pf-v5-global--spacer--sm);
   margin-left: auto;
-  font-size: var(--pf-global--icon--FontSize--sm);
-  color: var(--pf-global--active-color--100);
+  font-size: var(--pf-v5-global--icon--FontSize--sm);
+  color: var(--pf-v5-global--active-color--100);
 `;

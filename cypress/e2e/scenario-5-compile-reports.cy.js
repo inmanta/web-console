@@ -77,7 +77,7 @@ describe("5 Compile reports", () => {
     cy.get('[aria-label="Environment card"]').contains(PROJECT).click();
 
     // go to compile reports page
-    cy.get(".pf-c-nav__link").contains("Compile Reports").click();
+    cy.get(".pf-v5-c-nav__link").contains("Compile Reports").click();
 
     // expect it to have 1 item shown in the table
     cy.get("tbody").should(($tableBody) => {
@@ -121,15 +121,17 @@ describe("5 Compile reports", () => {
     cy.get("button").contains("Show Details").eq(0).click();
 
     // Expect to be redirected to compile details page
-    cy.get(".pf-c-title").contains("Compile Details").should("to.be.visible");
+    cy.get(".pf-v5-c-title")
+      .contains("Compile Details")
+      .should("to.be.visible");
 
     // Expect message to be : Compile triggered from the console
-    cy.get(".pf-c-description-list__group")
+    cy.get(".pf-v5-c-description-list__group")
       .eq(3)
       .should("contain", "Compile triggered from the console");
 
     // Expect to have no environment variables
-    cy.get(".pf-c-code-block__content").should("have.text", "{}");
+    cy.get(".pf-v5-c-code-block__content").should("have.text", "{}");
 
     // Expect to have 2 stages in collapsible
     cy.get("tbody").should(($rowElements) => {
@@ -140,8 +142,8 @@ describe("5 Compile reports", () => {
     cy.get("#expand-toggle0").click();
 
     // expect to see Command Empty, Return code 0 an output stream and no error stream.
-    cy.get(".pf-c-table__expandable-row.pf-m-expanded")
-      .find(".pf-c-description-list__group")
+    cy.get(".pf-v5-c-table__expandable-row.pf-m-expanded")
+      .find(".pf-v5-c-description-list__group")
       .should(($rowGroups) => {
         expect($rowGroups).to.have.length(4);
 
@@ -160,7 +162,7 @@ describe("5 Compile reports", () => {
 
       // click on test environment card
       cy.get('[aria-label="Environment card"]').contains(PROJECT).click();
-      cy.get(".pf-c-nav__link").contains("Service Catalog").click();
+      cy.get(".pf-v5-c-nav__link").contains("Service Catalog").click();
 
       // Click on Show Inventory on basic service
       cy.get("#basic-service").contains("Show inventory").click();
@@ -183,7 +185,7 @@ describe("5 Compile reports", () => {
       cy.get(".pf-v5-c-chart").should("be.visible");
 
       // Go to compiled Reports page
-      cy.get(".pf-c-nav__link").contains("Compile Reports").click();
+      cy.get(".pf-v5-c-nav__link").contains("Compile Reports").click();
 
       // Expect all compiles to be succesful
       cy.get("tbody", { timeout: 60000 }).should(($tableBody) => {
@@ -212,10 +214,12 @@ describe("5 Compile reports", () => {
       cy.get("button").contains("Show Details").eq(0).click();
 
       // Expect to be redirected to compile details page
-      cy.get(".pf-c-title").contains("Compile Details").should("to.be.visible");
+      cy.get(".pf-v5-c-title")
+        .contains("Compile Details")
+        .should("to.be.visible");
 
       // Expect trigger to be lsm_export
-      cy.get(".pf-c-description-list__group")
+      cy.get(".pf-v5-c-description-list__group")
         .eq(4)
         .should("contain", "lsm_export");
 
@@ -234,7 +238,7 @@ describe("5 Compile reports", () => {
       cy.get('[aria-label="Environment card"]')
         .contains("lsm-frontend")
         .click();
-      cy.get(".pf-c-nav__link").contains("Service Catalog").click();
+      cy.get(".pf-v5-c-nav__link").contains("Service Catalog").click();
 
       // Click on Show Inventory on basic-service
       cy.get("#basic-service").contains("Show inventory").click();
@@ -255,7 +259,7 @@ describe("5 Compile reports", () => {
 
       // Expect to see a rejected service instance in the table
       cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
-        const $rows = $tableBody.find(".pf-c-table__expandable-row");
+        const $rows = $tableBody.find(".pf-v5-c-table__expandable-row");
 
         expect($rows).to.have.length(2);
 
@@ -263,7 +267,7 @@ describe("5 Compile reports", () => {
       });
 
       // Go to the compile report page
-      cy.get(".pf-c-nav__link").contains("Compile Reports").click();
+      cy.get(".pf-v5-c-nav__link").contains("Compile Reports").click();
 
       // expect the last compile to be failed.
       cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
@@ -282,13 +286,15 @@ describe("5 Compile reports", () => {
       cy.get("button").contains("Show Details").eq(0).click();
 
       // Expect to be redirected to compile details page
-      cy.get(".pf-c-title").contains("Compile Details").should("to.be.visible");
+      cy.get(".pf-v5-c-title")
+        .contains("Compile Details")
+        .should("to.be.visible");
 
       // Expect trigger to be lsm
-      cy.get(".pf-c-description-list__group").eq(4).should("contain", "lsm");
+      cy.get(".pf-v5-c-description-list__group").eq(4).should("contain", "lsm");
 
       // Expect Error Type : inmanta.ast.AttributeException
-      cy.get(".pf-c-description-list__description")
+      cy.get(".pf-v5-c-description-list__description")
         .eq(6)
         .should("contain", "inmanta.ast.AttributeException");
     });
@@ -301,7 +307,7 @@ describe("5 Compile reports", () => {
       cy.get('[aria-label="Environment card"]')
         .contains("lsm-frontend")
         .click();
-      cy.get(".pf-c-nav__link").contains("Service Catalog").click();
+      cy.get(".pf-v5-c-nav__link").contains("Service Catalog").click();
 
       // Click on Show Inventory on basic-service
       cy.get("#basic-service").contains("Show inventory").click();
@@ -310,21 +316,21 @@ describe("5 Compile reports", () => {
       cy.get("#expand-toggle0").click();
 
       // delete instance
-      cy.get(".pf-c-description-list", { timeout: 60000 })
+      cy.get(".pf-v5-c-description-list", { timeout: 60000 })
         .contains("Delete")
         .click();
 
       // confirm modal
-      cy.get(".pf-c-form__actions").contains("Yes").click();
+      cy.get(".pf-v5-c-form__actions").contains("Yes").click();
 
       // expect resource to be deleted
-      cy.get(".pf-c-table__toggle", { timeout: 25000 }).should(
+      cy.get(".pf-v5-c-table__toggle", { timeout: 25000 }).should(
         "have.length",
         1,
       );
 
       // go back to Compile Reports
-      cy.get(".pf-c-nav__link").contains("Compile Reports").click();
+      cy.get(".pf-v5-c-nav__link").contains("Compile Reports").click();
 
       // Expect no new compiles to be visible. The last compile report is a failed one.
       cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
@@ -366,10 +372,10 @@ describe("5 Compile reports", () => {
         .click();
 
       // Go to the compile report page
-      cy.get(".pf-c-nav__link").contains("Compile Reports").click();
+      cy.get(".pf-v5-c-nav__link").contains("Compile Reports").click();
 
       // Click on filter dropdown
-      cy.get(".pf-c-select").eq(1).click();
+      cy.get(".pf-v5-c-select").eq(1).click();
 
       // select failed
       cy.get("button").contains("failed").click();
@@ -388,7 +394,7 @@ describe("5 Compile reports", () => {
       });
 
       // click on clear all filters
-      cy.get(".pf-c-toolbar__item").find("button").eq(6).click();
+      cy.get(".pf-v5-c-toolbar__item").find("button").eq(6).click();
 
       // expect to have the original length of the table
       cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
@@ -407,12 +413,12 @@ describe("5 Compile reports", () => {
         .click();
 
       // Go to the compile report page
-      cy.get(".pf-c-nav__link").contains("Compile Reports").click();
+      cy.get(".pf-v5-c-nav__link").contains("Compile Reports").click();
 
       // click on pagination
       cy.get('[aria-label="Page Size Selector dropdown"]').click();
       // select 5
-      cy.get(".pf-c-dropdown__menu-item").contains("5").first().click();
+      cy.get(".pf-v5-c-dropdown__menu-item").contains("5").first().click();
 
       // expect only 5 rows to be visible now
       cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
@@ -435,7 +441,7 @@ describe("5 Compile reports", () => {
       cy.get('[aria-label="Page Size Selector dropdown"]').click();
 
       // select 10
-      cy.get(".pf-c-dropdown__menu-item").contains("10").first().click();
+      cy.get(".pf-v5-c-dropdown__menu-item").contains("10").first().click();
 
       // expect 7 rows to be visible now again
       cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {

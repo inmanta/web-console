@@ -72,7 +72,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="Environment card"]')
         .contains("lsm-frontend")
         .click();
-      cy.get(".pf-c-nav__item").contains("Service Catalog").click();
+      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
 
       // Click on kebab menu and select Show Details on basic-service
       cy.get("#basic-service", { timeout: 60000 })
@@ -152,7 +152,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get("button").contains("Config").click();
 
       // Expect it to be an empty table
-      cy.get(".pf-c-empty-state")
+      cy.get(".pf-v5-c-empty-state")
         .should("contain", "There is nothing here")
         .and("contain", "No settings found");
 
@@ -172,7 +172,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="Environment card"]')
         .contains("lsm-frontend")
         .click();
-      cy.get(".pf-c-nav__item").contains("Service Catalog").click();
+      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
 
       // click on Show Inventory on basic-service
       cy.get("#basic-service", { timeout: 60000 })
@@ -241,7 +241,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="Environment card"]')
         .contains("lsm-frontend")
         .click();
-      cy.get(".pf-c-nav__item").contains("Service Catalog").click();
+      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
 
       // click on Show Inventory on basic-service
       cy.get("#basic-service", { timeout: 60000 })
@@ -262,7 +262,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#vlan_id_r2").type("8");
       cy.get("#service_id").type("0008");
       cy.get("#name").type("failed");
-      cy.get(".pf-c-switch").first().click();
+      cy.get(".pf-v5-c-switch").first().click();
       cy.get("button").contains("Confirm").click();
 
       // Expect the number in the chart to be 2
@@ -293,7 +293,7 @@ if (Cypress.env("edition") === "iso") {
         });
 
       // long timeout justified by the fact that a few compiles are already queued at this point and status change will only be changed after.
-      cy.get(".pf-c-label.pf-m-red", { timeout: 120000 }).should(
+      cy.get(".pf-v5-c-label.pf-m-red", { timeout: 120000 }).should(
         "contain",
         "failed",
       );
@@ -335,7 +335,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="Environment card"]')
         .contains("lsm-frontend")
         .click();
-      cy.get(".pf-c-nav__item").contains("Service Catalog").click();
+      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
 
       // Click on kebab menu and select Show Details on basic-service
       cy.get("#basic-service", { timeout: 60000 })
@@ -356,14 +356,16 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="callbackId"]').type(
         "60b18097-1525-47f2-95ae-1d941d9c0c85",
       );
-      cy.get(".pf-c-select").first().click();
-      cy.get(".pf-c-select__menu-item").contains("INFO").click();
-      cy.get(".pf-c-select").eq(1).click();
-      cy.get(".pf-c-select__menu-item").contains("ALLOCATION_UPDATE").click();
+      cy.get(".pf-v5-c-select").first().click();
+      cy.get(".pf-v5-c-select__menu-item").contains("INFO").click();
+      cy.get(".pf-v5-c-select").eq(1).click();
+      cy.get(".pf-v5-c-select__menu-item")
+        .contains("ALLOCATION_UPDATE")
+        .click();
       cy.get("button").contains("Add").click();
 
       // Expect an error to show up : Something went wrong
-      cy.get('[aria-label="Danger Alert"]').should("to.be.visible");
+      cy.get('[data-testid="Alert Danger"]').should("to.be.visible");
 
       // Change the input field for url to : http://localhost:1234
       cy.get('[aria-label="callbackUrl"]').clear();
@@ -384,40 +386,40 @@ if (Cypress.env("edition") === "iso") {
       cy.get("button").contains("http://localhost:1234").click();
 
       // Expect to see all values except ALLOCATION_UPDATE to have text-decoration: line-through
-      cy.get(".pf-c-description-list__description ul").should(($ul) => {
+      cy.get(".pf-v5-c-description-list__description ul").should(($ul) => {
         const $list = $ul.find("li");
         expect($list).to.have.length(10);
       });
 
-      cy.get(".pf-c-description-list__description li")
+      cy.get(".pf-v5-c-description-list__description li")
         .first()
         .should("have.css", "text-decoration")
         .and("contain", "none solid");
-      cy.get(".pf-c-description-list__description li")
+      cy.get(".pf-v5-c-description-list__description li")
         .eq(1)
         .should("have.css", "text-decoration")
         .and("contain", "line-through solid");
-      cy.get(".pf-c-description-list__description li")
+      cy.get(".pf-v5-c-description-list__description li")
         .eq(2)
         .should("have.css", "text-decoration")
         .and("contain", "line-through solid");
-      cy.get(".pf-c-description-list__description li")
+      cy.get(".pf-v5-c-description-list__description li")
         .eq(3)
         .should("have.css", "text-decoration")
         .and("contain", "line-through solid");
-      cy.get(".pf-c-description-list__description li")
+      cy.get(".pf-v5-c-description-list__description li")
         .eq(4)
         .should("have.css", "text-decoration")
         .and("contain", "line-through solid");
-      cy.get(".pf-c-description-list__description li")
+      cy.get(".pf-v5-c-description-list__description li")
         .eq(5)
         .should("have.css", "text-decoration")
         .and("contain", "line-through solid");
-      cy.get(".pf-c-description-list__description li")
+      cy.get(".pf-v5-c-description-list__description li")
         .eq(6)
         .should("have.css", "text-decoration")
         .and("contain", "line-through solid");
-      cy.get(".pf-c-description-list__description li")
+      cy.get(".pf-v5-c-description-list__description li")
         .eq(7)
         .should("have.css", "text-decoration")
         .and("contain", "line-through solid");
@@ -451,7 +453,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="Environment card"]')
         .contains("lsm-frontend")
         .click();
-      cy.get(".pf-c-nav__item").contains("Service Catalog").click();
+      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
 
       // Click on Delete button
       cy.get("#basic-service", { timeout: 60000 })
@@ -472,7 +474,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#submit").click();
 
       // Expect Toast : Deleting service entity failed
-      cy.get('[aria-label="ToastAlert"]').should("to.be.visible");
+      cy.get('[data-testid="ToastAlert"]').should("to.be.visible");
 
       // Click on Show Invetory on basic-service
       cy.get("#basic-service", { timeout: 60000 })
@@ -483,7 +485,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#expand-toggle0").click();
 
       // Click on delete instance
-      cy.get(".pf-c-table__expandable-row-content", { timeout: 20000 })
+      cy.get(".pf-v5-c-table__expandable-row-content", { timeout: 20000 })
         .eq(0)
         .find("button")
         .contains("Delete")
@@ -499,7 +501,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#expand-toggle1").click();
 
       // Click on delete instance
-      cy.get(".pf-c-table__expandable-row-content", { timeout: 20000 })
+      cy.get(".pf-v5-c-table__expandable-row-content", { timeout: 20000 })
         .eq(1)
         .find("button")
         .contains("Delete")

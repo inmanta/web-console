@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { DropFileEventHandler } from "react-dropzone";
+import { DropEvent, FileRejection } from "react-dropzone";
 import {
   Alert,
   AlertActionCloseButton,
@@ -40,7 +40,10 @@ export const ImageUpload: React.FC<Props> = ({
     setFilename(extension ? `icon.${extension}` : "icon");
   };
 
-  const onDataChange: FileUploadProps["onDataChange"] = (newDataUrl) => {
+  const onDataChange: FileUploadProps["onDataChange"] = (
+    _event,
+    newDataUrl,
+  ) => {
     setDataUrl(newDataUrl);
     onComplete(ImageHelper.stripDataScheme(newDataUrl));
     setFilenameFromDataUrl(newDataUrl);
@@ -64,21 +67,27 @@ export const ImageUpload: React.FC<Props> = ({
     setIsLoading(false);
   };
 
-  const onDropRejected: DropFileEventHandler = ([file]) => {
-    const error = ImageHelper.validateFile(file);
-    if (Maybe.isNone(error)) {
-      setError(words("error.image.unknown")(file.name));
-      return;
-    }
+  const onDropRejected = (
+    fileRejections: FileRejection[],
+    _event: DropEvent,
+  ) => {
+    fileRejections.forEach((FileRejection: FileRejection) => {
+      const file = FileRejection.file;
+      const errors = ImageHelper.validateFile(file);
+      if (Maybe.isNone(errors)) {
+        setError(words("error.image.unknown")(file.name));
+        return;
+      }
 
-    if (error.value === "TYPE") {
-      setError(words("error.image.type")(file.name, file.type));
-      return;
-    }
+      if (errors.value === "TYPE") {
+        setError(words("error.image.type")(file.name, file.type));
+        return;
+      }
 
-    setError(
-      words("error.image.size")(file.name, ImageHelper.formatFileSize(file)),
-    );
+      setError(
+        words("error.image.size")(file.name, ImageHelper.formatFileSize(file)),
+      );
+    });
     return;
   };
 
@@ -112,7 +121,7 @@ export const ImageUpload: React.FC<Props> = ({
         isLoading={isLoading}
         browseButtonText="Select"
         dropzoneProps={{
-          accept: ".webp,.svg,.png,.jpg,.jpeg",
+          accept: { "image/jpeg": [".webp", ".svg", ".png", ".jpg", ".jpeg"] },
           maxSize: 64000,
           onDropRejected,
         }}
