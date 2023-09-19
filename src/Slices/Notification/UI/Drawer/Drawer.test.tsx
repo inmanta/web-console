@@ -1,6 +1,7 @@
 import React from "react";
 import { Router } from "react-router-dom";
-import { Page, PageHeader } from "@patternfly/react-core";
+import { Page } from "@patternfly/react-core";
+import { PageHeader } from "@patternfly/react-core/deprecated";
 import { act, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
@@ -107,11 +108,13 @@ test("Given Drawer When clicking on 'Clear all' Then all notifications are clear
   await act(async () => {
     await apiHelper.resolve(Either.right(Mock.response));
   });
+
   await act(async () => {
     await userEvent.click(
       screen.getByRole("button", { name: "NotificationListActions" }),
     );
   });
+
   await act(async () => {
     await userEvent.click(screen.getByRole("menuitem", { name: "Clear all" }));
   });
@@ -121,6 +124,7 @@ test("Given Drawer When clicking on 'Clear all' Then all notifications are clear
     updateRequest("abcdefgh02", { read: true, cleared: true }),
     updateRequest("abcdefgh03", { read: true, cleared: true }),
   ]);
+
   await act(async () => {
     await apiHelper.resolve(Maybe.none());
     await apiHelper.resolve(Maybe.none());
@@ -244,7 +248,7 @@ test("Given Drawer When user clicks a notification toggle with an uri then do no
   });
 
   const items = screen.getAllByRole("button", {
-    name: "NotificationItemActions",
+    name: "NotificationListActions",
   });
   await act(async () => {
     await userEvent.click(items[0]);
@@ -262,7 +266,7 @@ test("Given Drawer When user clicks on 'unread' for 1 notification Then it becom
 
   const items = screen.getAllByRole("listitem", { name: "NotificationItem" });
   const actions = within(items[2]).getByRole("button", {
-    name: "NotificationItemActions",
+    name: "NotificationListItemActions",
   });
 
   await act(async () => {
@@ -305,8 +309,9 @@ test("Given Drawer When user clicks on 'Clear' for 1 notification Then it is cle
   });
 
   const items = screen.getAllByRole("listitem", { name: "NotificationItem" });
+
   const actions = within(items[2]).getByRole("button", {
-    name: "NotificationItemActions",
+    name: "NotificationListItemActions",
   });
 
   await act(async () => {

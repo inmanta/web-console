@@ -1,5 +1,8 @@
 import React from "react";
-import { PageHeaderTools, PageHeaderToolsGroup } from "@patternfly/react-core";
+import {
+  PageHeaderTools,
+  PageHeaderToolsGroup,
+} from "@patternfly/react-core/deprecated";
 import { Badge } from "@/Slices/Notification/UI/Badge";
 import { EnvSelectorWithProvider } from "../EnvSelector";
 import { DocumentationLink } from "./DocumentationLink";

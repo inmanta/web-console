@@ -143,7 +143,6 @@ export function appendInstance(
   );
 
   instanceAsTable.set("id", serviceWithReferences.instance.data.id);
-
   instanceAsTable.set("isEmbedded", false);
 
   if (!isMainInstance) {

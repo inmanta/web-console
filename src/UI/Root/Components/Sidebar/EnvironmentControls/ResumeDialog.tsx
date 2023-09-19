@@ -25,6 +25,7 @@ export const ResumeDialog: React.FC = () => {
         </GreenButton>
       </Tooltip>
       <Modal
+        disableFocusTrap
         variant="small"
         title={words("environment.resume.title")}
         isOpen={isModalOpen}
@@ -53,6 +54,6 @@ export const ResumeDialog: React.FC = () => {
 
 const GreenButton = styled(Button)`
   && {
-    background-color: var(--pf-global--success-color--100);
+    background-color: var(--pf-v5-global--success-color--100);
   }
 `;

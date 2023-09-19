@@ -4,7 +4,8 @@ import {
   EmptyState,
   EmptyStateBody,
   EmptyStateIcon,
-  Title,
+  EmptyStateHeader,
+  EmptyStateFooter,
 } from "@patternfly/react-core";
 import { ExclamationTriangleIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
@@ -27,18 +28,21 @@ export const ErrorView: React.FC<Props> = ({
 }) => (
   <Delayed delay={delay}>
     <EmptyState {...props}>
-      <EmptyStateIcon icon={ExclamationTriangleIcon} />
-      <Title headingLevel="h4" size="lg">
-        {title || words("error")}
-      </Title>
+      <EmptyStateHeader
+        titleText={<>{title || words("error")}</>}
+        icon={<EmptyStateIcon icon={ExclamationTriangleIcon} />}
+        headingLevel="h4"
+      />
       <EmptyStateBody>
         <StyledErrorMessage>{message}</StyledErrorMessage>
       </EmptyStateBody>
-      {retry && (
-        <Button variant="primary" onClick={retry}>
-          {words("retry")}
-        </Button>
-      )}
+      <EmptyStateFooter>
+        {retry && (
+          <Button variant="primary" onClick={retry}>
+            {words("retry")}
+          </Button>
+        )}
+      </EmptyStateFooter>
     </EmptyState>
   </Delayed>
 );

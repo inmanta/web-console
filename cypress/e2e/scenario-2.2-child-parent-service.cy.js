@@ -71,7 +71,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="Environment card"]')
         .contains("lsm-frontend")
         .click();
-      cy.get(".pf-c-nav__item").contains("Service Catalog").click();
+      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
       cy.get("#parent-service").contains("Show inventory").click();
       cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
       // Add an instance and fill form
@@ -89,7 +89,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#expand-toggle0").click();
 
       // Go to ressource tab expect it be empty
-      cy.get(".pf-c-tabs__item-text").contains("Resources").click();
+      cy.get(".pf-v5-c-tabs__item-text").contains("Resources").click();
       cy.get('[aria-label="ResourceTable-Empty"]').should("to.be.visible");
 
       cy.intercept("**/resources**").as("GetVersion");
@@ -121,7 +121,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#add-instance-button").click();
       cy.get("#service_id").type("0002");
       cy.get("#name").type("child");
-      cy.get(".pf-c-select").click();
+      cy.get(".pf-v5-c-select").click();
       cy.get('[aria-label="parent_entity-select-input"]').first().click();
       cy.get("button").contains("Confirm").click();
       // Expect to be redirected to service inventory
@@ -139,18 +139,18 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="Environment card"]')
         .contains("lsm-frontend")
         .click();
-      cy.get(".pf-c-nav__item").contains("Service Catalog").click();
+      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
       cy.get("#parent-service").contains("Show inventory").click();
 
       // open row from element
       cy.get("#expand-toggle0", { timeout: 20000 }).click();
       // try delete item (Should not be possible)
-      cy.get(".pf-c-description-list").contains("Delete").click();
-      cy.get(".pf-c-modal-box__title-text").should(
+      cy.get(".pf-v5-c-description-list").contains("Delete").click();
+      cy.get(".pf-v5-c-modal-box__title-text").should(
         "contain",
         "Delete instance",
       );
-      cy.get(".pf-c-form__actions").contains("Yes").click();
+      cy.get(".pf-v5-c-form__actions").contains("Yes").click();
 
       // check status change before compile
       cy.get('[aria-label="InstanceRow-Intro"]:first', { timeout: 20000 })
@@ -172,14 +172,14 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#expand-toggle0").click();
 
       // try delete item (Should be possible)
-      cy.get(".pf-c-description-list", { timeout: 20000 })
+      cy.get(".pf-v5-c-description-list", { timeout: 20000 })
         .contains("Delete")
         .click();
-      cy.get(".pf-c-modal-box__title-text").should(
+      cy.get(".pf-v5-c-modal-box__title-text").should(
         "contain",
         "Delete instance",
       );
-      cy.get(".pf-c-form__actions").contains("Yes").click();
+      cy.get(".pf-v5-c-form__actions").contains("Yes").click();
 
       cy.get('[aria-label="ServiceInventory-Empty"]', {
         timeout: 220000,

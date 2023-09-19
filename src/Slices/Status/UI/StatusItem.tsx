@@ -47,7 +47,7 @@ export const StatusItem: React.FC<Props> = ({
 );
 
 const Category = styled.span`
-  color: var(--pf-global--palette--black-500);
+  color: var(--pf-v5-global--palette--black-500);
 `;
 
 const InlineTitle = styled(Title)`
@@ -56,6 +56,6 @@ const InlineTitle = styled(Title)`
 `;
 
 const CompactDescriptionList = styled(DescriptionList)`
-  --pf-c-description-list--m-compact--RowGap: 0;
+  --pf-v5-c-description-list--m-compact--RowGap: 0;
   margin-bottom: 16px;
 `;

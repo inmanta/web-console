@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { FormGroup, Select, SelectOption } from "@patternfly/react-core";
+import {
+  FormGroup,
+  FormHelperText,
+  HelperText,
+  HelperTextItem,
+} from "@patternfly/react-core";
+import { Select, SelectOption } from "@patternfly/react-core/deprecated";
 import { ParsedNumber } from "@/Core";
 import { words } from "@/UI/words";
 
@@ -44,8 +50,12 @@ export const SelectFormInput: React.FC<Props> = ({
       isRequired={!isOptional}
       fieldId={attributeName}
       label={attributeName}
-      helperText={description}
     >
+      <FormHelperText>
+        <HelperText>
+          <HelperTextItem>{description}</HelperTextItem>
+        </HelperText>
+      </FormHelperText>
       <Select
         aria-label={`${attributeName}-select-input`}
         toggleAriaLabel={`${attributeName}-select-toggle`}

@@ -31,7 +31,7 @@ export const Details: React.FC<Props> = ({ event_types }) => {
 };
 
 const StyledDescriptionList = styled(DescriptionList)`
-  --pf-c-description-list--m-horizontal__term--width: 20ch;
+  --pf-v5-c-description-list--m-horizontal__term--width: 20ch;
 `;
 
 const CheckedList: React.FC<{ all: string[]; available: string[] }> = ({

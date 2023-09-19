@@ -1,0 +1,6 @@
+description: "Upgrade the UI library to Patternfly V5."
+issue-nr: 5076
+change-type: patch
+destination-branches: [master, iso6]
+sections:
+  other-note: "{{description}}"

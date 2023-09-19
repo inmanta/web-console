@@ -5,6 +5,7 @@ import {
   InputGroup,
   TextInput,
   ButtonVariant,
+  InputGroupItem,
 } from "@patternfly/react-core";
 import { SearchIcon } from "@patternfly/react-icons";
 import { uniq } from "lodash-es";
@@ -40,23 +41,27 @@ export const VersionFilter: React.FC<Props> = ({
       showToolbarItem={isVisible}
     >
       <InputGroup>
-        <TextInput
-          data-testid="VersionFilterInput"
-          name="versionInput"
-          type="number"
-          aria-label="VersionFilter"
-          onChange={setIdInput}
-          value={idInput}
-          placeholder="Filter by version..."
-          onKeyDown={onIdInput}
-        />
-        <Button
-          variant={ButtonVariant.control}
-          aria-label="search button for search input"
-          onClick={onIdInput}
-        >
-          <SearchIcon />
-        </Button>
+        <InputGroupItem isFill>
+          <TextInput
+            data-testid="VersionFilterInput"
+            name="versionInput"
+            type="number"
+            aria-label="VersionFilter"
+            onChange={(_event, val) => setIdInput(val)}
+            value={idInput}
+            placeholder="Filter by version..."
+            onKeyDown={onIdInput}
+          />
+        </InputGroupItem>
+        <InputGroupItem>
+          <Button
+            variant={ButtonVariant.control}
+            aria-label="search button for search input"
+            onClick={onIdInput}
+          >
+            <SearchIcon />
+          </Button>
+        </InputGroupItem>
       </InputGroup>
     </ToolbarFilter>
   );

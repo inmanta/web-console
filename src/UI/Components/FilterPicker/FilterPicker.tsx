@@ -1,10 +1,10 @@
 import React, { useState } from "react";
+import { ToolbarItem } from "@patternfly/react-core";
 import {
-  ToolbarItem,
   Select,
   SelectVariant,
   SelectOption,
-} from "@patternfly/react-core";
+} from "@patternfly/react-core/deprecated";
 import { FilterIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 
@@ -32,7 +32,7 @@ export const FilterPicker: React.FC<Props> = ({
       <Select
         variant={SelectVariant.single}
         toggleAriaLabel="FilterPicker"
-        onToggle={setFilterOpen}
+        onToggle={(_event, val) => setFilterOpen(val)}
         onSelect={onSelect}
         toggleIcon={<FilterIcon />}
         selections={filterKind}

@@ -110,7 +110,7 @@ const StyledBody = styled(Tbody)<{
   $failed?: boolean;
 }>`
   ${({ $failed }) =>
-    $failed ? "background-color: var(--pf-global--palette--red-50)" : ""};
+    $failed ? "background-color: var(--pf-v5-global--palette--red-50)" : ""};
 `;
 
 const PaddedDescriptionList = styled(DescriptionList)`

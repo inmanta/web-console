@@ -146,7 +146,7 @@ export const CellWithCopyExpert: React.FC<Props> = ({
           label={label}
           value={newAttribute}
           type={attributeType}
-          onChange={(value) => setNewAttribute(value)}
+          onChange={(_event, value) => setNewAttribute(value)}
           toggleModal={() => {
             setIsModalOpen(!isModalOpen);
           }}
@@ -160,8 +160,13 @@ export const CellWithCopyExpert: React.FC<Props> = ({
       ) : (
         value
       )}
-      {isSpinnerVisible && <StyledSpinner isSVG size="sm" />}
+      {isSpinnerVisible && (
+        <Icon size="sm">
+          <StyledSpinner />
+        </Icon>
+      )}
       <Modal
+        disableFocusTrap
         variant={"small"}
         isOpen={isModalOpen}
         title={words("inventory.editAttribute.header")}
@@ -203,6 +208,6 @@ export const CellWithCopyExpert: React.FC<Props> = ({
 };
 
 const StyledSpinner = styled(Spinner)`
-  --pf-c-spinner--Color: var(--pf-global--Color--100);
+  --pf-v5-c-spinner--Color: var(--pf-v5-global--Color--100);
   margin-left: 8px;
 `;

@@ -258,9 +258,7 @@ test("GIVEN StatusPage with support extension WHEN user click download and respo
   expect(downloadButton).toHaveTextContent(
     words("status.supportArchive.action.download"),
   );
-  const errorContainer = screen.getByRole("generic", {
-    name: "ArchiveErrorContainer",
-  });
+  const errorContainer = screen.getByTestId("ToastAlert");
   expect(errorContainer).toBeVisible();
   expect(within(errorContainer).getByText("error")).toBeVisible();
 });

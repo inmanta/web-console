@@ -4,5 +4,5 @@ import styled from "styled-components";
 export const PageTitle = styled(Title).attrs(() => ({
   headingLevel: "h1",
 }))`
-  padding-bottom: var(--pf-global--spacer--md);
+  padding-bottom: var(--pf-v5-global--spacer--md);
 `;

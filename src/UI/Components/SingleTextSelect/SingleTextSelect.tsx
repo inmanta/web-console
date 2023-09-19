@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Select, SelectOption } from "@patternfly/react-core";
+import { Select, SelectOption } from "@patternfly/react-core/deprecated";
 
 interface Props {
   selected: string | null;
@@ -36,7 +36,7 @@ export const SingleTextSelect: React.FC<Props> = ({
   return (
     <Select
       variant="typeahead"
-      onToggle={onToggle}
+      onToggle={(_event, isExpanded) => onToggle(isExpanded)}
       onSelect={onSelect}
       selections={[selected]}
       isOpen={isOpen}

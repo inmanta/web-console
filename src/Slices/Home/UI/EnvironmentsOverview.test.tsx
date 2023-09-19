@@ -28,9 +28,8 @@ it.each`
   async ({ filterValue, numberOfResults }) => {
     const { component } = setup();
     render(component);
-    const initialCards = await screen.findAllByRole("article", {
-      name: "Environment card",
-    });
+    const initialCards = await screen.findAllByTestId("Environment card");
+
     expect(initialCards).toHaveLength(4);
     const input = await screen.findByPlaceholderText(
       words("home.filters.env.placeholder"),
@@ -42,20 +41,16 @@ it.each`
       await userEvent.type(input, filterValue);
     });
 
-    expect(
-      screen.queryAllByRole("article", {
-        name: "Environment card",
-      }),
-    ).toHaveLength(numberOfResults);
+    expect(screen.queryAllByTestId("Environment card")).toHaveLength(
+      numberOfResults,
+    );
   },
 );
 
 test("Given environments overview When filtering by project Then only the matching environments should be rendered", async () => {
   const { component } = setup();
   render(component);
-  const initialCards = await screen.findAllByRole("article", {
-    name: "Environment card",
-  });
+  const initialCards = await screen.findAllByTestId("Environment card");
 
   expect(initialCards).toHaveLength(4);
 
@@ -71,19 +66,13 @@ test("Given environments overview When filtering by project Then only the matchi
     await userEvent.click(option);
   });
 
-  expect(
-    screen.queryAllByRole("article", {
-      name: "Environment card",
-    }),
-  ).toHaveLength(2);
+  expect(screen.queryAllByTestId("Environment card")).toHaveLength(2);
 });
 
 test("Given environments overview When filtering by name and project Then only the environments that match both should be rendered", async () => {
   const { component } = setup();
   render(component);
-  const initialCards = await screen.findAllByRole("article", {
-    name: "Environment card",
-  });
+  const initialCards = await screen.findAllByTestId("Environment card");
   expect(initialCards).toHaveLength(4);
   const projectInput = await screen.findByPlaceholderText(
     words("home.filters.project.placeholder"),
@@ -108,11 +97,7 @@ test("Given environments overview When filtering by name and project Then only t
     await userEvent.type(nameInput, "test");
   });
 
-  expect(
-    await screen.findByRole("article", {
-      name: "Environment card",
-    }),
-  ).toBeVisible();
+  expect(await screen.findByTestId("Environment card")).toBeVisible();
 });
 
 test("Given environments overview When rendering environment with icon Then the icon is shown", async () => {
