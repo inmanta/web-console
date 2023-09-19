@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import "@inmanta/rappid/rappid.css";
 import { dia } from "@inmanta/rappid";
-import { Modal } from "@patternfly/react-core";
 import styled from "styled-components";
 import { ServiceModel } from "@/Core";
 import { InstanceWithReferences } from "@/Data/Managers/GetInstanceWithRelations/interface";
 import diagramInit, { DiagramHandlers } from "@/UI/Components/Diagram/init";
 import { CanvasWrapper } from "@/UI/Components/Diagram/styles";
+import DictModal from "./components/DictModal";
 import FormModal from "./components/FormModal";
 import Toolbar from "./components/Toolbar";
 import { createConnectionRules } from "./helpers";
@@ -22,7 +22,6 @@ const Canvas = ({
   instance?: InstanceWithReferences;
 }) => {
   const canvas = useRef<HTMLDivElement>(null);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [cellToEdit, setCellToEdit] = useState<dia.CellView | null>(null);
   const [dictToDisplay, setDictToDisplay] = useState<DictDialogData | null>(
@@ -35,7 +34,6 @@ const Canvas = ({
   const handleDictEvent = (event) => {
     const customEvent = event as CustomEvent;
     setDictToDisplay(JSON.parse(customEvent.detail));
-    setIsDialogOpen(true);
   };
   const handleEditEvent = (event) => {
     const customEvent = event as CustomEvent;
@@ -85,22 +83,10 @@ const Canvas = ({
 
   return (
     <Container>
-      <Modal
-        disableFocusTrap
-        isOpen={isDialogOpen}
-        title={"Values of " + dictToDisplay?.title}
-        variant={"small"}
-        onClose={() => {
-          setIsDialogOpen(false);
-          setDictToDisplay(null);
-        }}
-      >
-        {dictToDisplay && (
-          <pre>
-            <code>{JSON.stringify(dictToDisplay.value, null, 2)}</code>
-          </pre>
-        )}
-      </Modal>
+      <DictModal
+        dictToDisplay={dictToDisplay}
+        setDictToDisplay={setDictToDisplay}
+      />
       <FormModal
         isOpen={isFormModalOpen}
         toggleIsOpen={(value: boolean) => {

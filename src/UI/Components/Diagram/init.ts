@@ -1,4 +1,4 @@
-import { dia, highlighters, shapes, ui } from "@inmanta/rappid";
+import { dia, shapes, ui } from "@inmanta/rappid";
 import { InstanceAttributeModel, ServiceModel } from "@/Core";
 import { InstanceWithReferences } from "@/Data/Managers/GetInstanceWithRelations/interface";
 import {
@@ -8,6 +8,7 @@ import {
   showLinkTools,
 } from "./actions";
 import { anchorNamespace } from "./anchors";
+import createHalo from "./halo";
 import { checkIfConnectionIsAllowed } from "./helpers";
 import collapseButton from "./icons/collapse-icon.svg";
 import expandButton from "./icons/expand-icon.svg";
@@ -152,94 +153,66 @@ export default function diagramInit(
     // We don't want a Halo for links.
     if (cellView.model instanceof dia.Link) return;
 
-    const halo = new ui.Halo({
-      cellView: cellView,
-      type: "toolbar",
-    });
-
-    halo.removeHandle("clone");
-    halo.removeHandle("resize");
-    halo.removeHandle("rotate");
-    halo.removeHandle("fork");
-    halo.removeHandle("unlink");
-
-    halo.addHandle({
-      name: "edit",
-      position: ui.Halo.HandlePosition.S,
-    });
-
-    // additional listeners to add logic for appended tools, if there will be need for any validation on remove then I think we will need custom handle anyway
-    // halo.on("action:remove:pointerdown", function (evt) {
-    // });
-    halo.on("action:link:pointerdown", function () {
-      const area = paper.getArea();
-      const elements = paper
-        .findViewsInArea(area)
-        .filter((shape) => shape.cid !== cellView.cid);
-
-      //cellView.model has the same structure as dia.Element needed as parameter to .getNeighbors() yet typescript complains
-      const connectedElements = graph.getNeighbors(
-        cellView.model as dia.Element,
-      );
-
-      elements.forEach((element) => {
-        element.getBBox();
-        const isAllowed = checkIfConnectionIsAllowed(
-          graph,
-          cellView,
-          element,
-          connectionRules,
-        );
-        if (!isAllowed) {
-          return;
-        }
-        //if shape isn't found then it means it's not connected, so available to highlight
-        const unconnectedShape = connectedElements.find((connectedElement) => {
-          return connectedElement.cid === element.model.cid;
-        });
-
-        if (unconnectedShape === undefined) {
-          highlighters.mask.add(element, "body", "available-to-connect", {
-            padding: 0,
-            attrs: {
-              stroke: "#00FF19",
-              "stroke-opacity": 0.3,
-              "stroke-width": 5,
-              filter: "drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4))",
-            },
-          });
-        }
-      });
-    });
-
-    //this event is fired even if we hang connection outside other shape
-    halo.on("action:link:add", function () {
-      const area = paper.getArea();
-      const shapes = paper.findViewsInArea(area);
-
-      shapes.map((shape) => {
-        highlighters.mask.remove(shape), "available-to-connect";
-      });
-    });
-
-    halo.on("action:edit:pointerdown", function (event) {
-      event.stopPropagation();
-      document.dispatchEvent(
-        new CustomEvent("openEditModal", {
-          detail: cellView,
-        }),
-      );
-    });
+    const halo = createHalo(graph, paper, cellView, connectionRules);
 
     halo.render();
   });
 
   paper.on("link:mouseenter", (linkView: dia.LinkView) => {
-    showLinkTools(linkView);
+    showLinkTools(graph, linkView);
   });
 
   paper.on("link:mouseleave", (linkView: dia.LinkView) => {
     linkView.removeTools();
+  });
+
+  paper.on("link:connect", (linkView: dia.LinkView) => {
+    //only id values are stored in the linkView
+    const source = linkView.model.source();
+    const target = linkView.model.target();
+
+    const sourceCell = graph.getCell(
+      source.id as dia.Cell.ID,
+    ) as ServiceEntityBlock;
+    const targetCell = graph.getCell(
+      target.id as dia.Cell.ID,
+    ) as ServiceEntityBlock;
+
+    if (
+      sourceCell.get("isEmbedded") &&
+      sourceCell.get("isEmbeddedTo") !== null
+    ) {
+      sourceCell.set("isEmbeddedTo", targetCell.id);
+    }
+    if (
+      targetCell.get("isEmbedded") &&
+      targetCell.get("isEmbeddedTo") !== null
+    ) {
+      targetCell.set("isEmbeddedTo", sourceCell.id);
+    }
+
+    const sourceRelations = sourceCell.getRelations();
+    const targetRelations = targetCell.getRelations();
+    const targetName = targetCell.getName();
+    const sourceName = sourceCell.getName();
+
+    if (sourceRelations) {
+      const doesSourceHaveRule = connectionRules[sourceName].find(
+        (rule) => rule.name === targetName,
+      );
+      if (doesSourceHaveRule) {
+        sourceCell.addRelation(targetCell.id as string, targetName);
+      }
+    }
+
+    if (targetRelations) {
+      const doesTargetHaveRule = connectionRules[targetName].find(
+        (rule) => rule.name === sourceName,
+      );
+      if (doesTargetHaveRule) {
+        targetCell.addRelation(sourceCell.id as string, sourceName);
+      }
+    }
   });
 
   paper.on("blank:pointerdown", (evt: dia.Event) => scroller.startPanning(evt));

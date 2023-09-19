@@ -15,7 +15,7 @@ import { Colors, EntityConnection, ServiceEntityBlock } from "./shapes";
  * @param {dia.LinkView} linkView  - The view for the joint.dia.Link model.
  * @returns {void}
  */
-export function showLinkTools(linkView: dia.LinkView) {
+export function showLinkTools(graph: dia.Graph, linkView: dia.LinkView) {
   const tools = new dia.ToolsView({
     tools: [
       new linkTools.Remove({
@@ -44,6 +44,46 @@ export function showLinkTools(linkView: dia.LinkView) {
             },
           },
         ],
+        action: (_evt, linkView: dia.LinkView, toolView: dia.ToolView) => {
+          const source = linkView.model.source();
+          const target = linkView.model.target();
+
+          const sourceCell = graph.getCell(
+            source.id as dia.Cell.ID,
+          ) as ServiceEntityBlock;
+          const targetCell = graph.getCell(
+            target.id as dia.Cell.ID,
+          ) as ServiceEntityBlock;
+
+          // resolve any possible embedded connections between cells
+          if (
+            sourceCell.get("isEmbedded") &&
+            sourceCell.get("embeddedTo") === target.id
+          ) {
+            sourceCell.set("embeddedTo", null);
+          }
+
+          if (
+            targetCell.get("isEmbedded") &&
+            targetCell.get("embeddedTo") === source.id
+          ) {
+            targetCell.set("embeddedTo", null);
+          }
+
+          // resolve any possible relation connections between cells
+          const sourceRelations = sourceCell.getRelations();
+          const targetRelations = targetCell.getRelations();
+
+          if (sourceRelations && sourceRelations.has(target.id as string)) {
+            sourceCell.removeRelation(target.id as string);
+          }
+
+          if (targetRelations && targetRelations.has(source.id as string)) {
+            targetCell.removeRelation(source.id as string);
+          }
+
+          linkView.model.remove({ ui: true, tool: toolView.cid });
+        },
       }),
     ],
   });
@@ -58,6 +98,8 @@ export function showLinkTools(linkView: dia.LinkView) {
  * @param {dia.Paper} paper JointJS paper object
  * @param {ServiceInstanceModel} serviceInstance that we want to display
  * @param {ServiceModel} service that hold definitions for attributes which we want to display as instance Object doesn't differentiate core attributes from i.e. embedded entities
+ * @param {boolean} isMainInstance boolean value determining if the instance is the core one
+ * @param {string} relatedTo id of the service instance with which appended instance has relation
  * @returns {ServiceEntityBlock} appendedInstance to allow connect related Instances added concurrently
  */
 export function appendInstance(
@@ -66,7 +108,7 @@ export function appendInstance(
   serviceWithReferences: InstanceWithReferences,
   services: ServiceModel[],
   isMainInstance: boolean,
-  relatedTo: string | null = null,
+  relatedTo: { id: string; name: string } | null = null,
 ): ServiceEntityBlock {
   const serviceInstance = serviceWithReferences.instance.data;
   const ServiceInstanceModel = services.find(
@@ -78,7 +120,9 @@ export function appendInstance(
   );
 
   instanceAsTable.set("id", serviceWithReferences.instance.data.id);
-  instanceAsTable.set("relatedTo", relatedTo);
+  if (relatedTo) {
+    instanceAsTable.addRelation(relatedTo.id, relatedTo.name);
+  }
   instanceAsTable.set("isEmbedded", false);
 
   if (!isMainInstance) {
@@ -107,14 +151,10 @@ export function appendInstance(
   }
   const appendedInstances = serviceWithReferences.relatedInstances.map(
     (relatedInstance) => {
-      return appendInstance(
-        paper,
-        graph,
-        relatedInstance,
-        services,
-        false,
-        serviceWithReferences.instance.data.id,
-      );
+      return appendInstance(paper, graph, relatedInstance, services, false, {
+        id: serviceWithReferences.instance.data.id,
+        name: serviceWithReferences.instance.data.service_entity,
+      });
     },
   );
   connectEntities(graph, instanceAsTable, appendedInstances);
