@@ -3,7 +3,7 @@ import { Router } from "react-router-dom";
 import { Page } from "@patternfly/react-core";
 import { PageHeader } from "@patternfly/react-core/deprecated";
 import { act, render, screen, within } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { createMemoryHistory } from "history";
 import { Either, Maybe } from "@/Core";

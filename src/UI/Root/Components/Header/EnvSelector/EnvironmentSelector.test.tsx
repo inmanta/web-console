@@ -2,7 +2,7 @@ import React from "react";
 import { MemoryRouter } from "react-router";
 import { Router } from "react-router-dom";
 import { act, render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { userEvent } from "@testing-library/user-event";
 import { createMemoryHistory } from "history";
 import { RemoteData } from "@/Core";
 import { Environment, dependencies } from "@/Test";

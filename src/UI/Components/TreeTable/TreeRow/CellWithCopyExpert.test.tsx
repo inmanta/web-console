@@ -2,7 +2,7 @@ import React from "react";
 import { MemoryRouter, useLocation } from "react-router-dom";
 import { Table /* data-codemods */, Tbody, Tr } from "@patternfly/react-table";
 import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { act } from "react-dom/test-utils";
 import { Either, RemoteData } from "@/Core";

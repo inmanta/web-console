@@ -1,6 +1,6 @@
 import React from "react";
 import { act, render, screen, waitFor, within } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { ArchiveHelper, Deferred, Either, RemoteData } from "@/Core";
 import {

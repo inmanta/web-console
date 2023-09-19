@@ -1,5 +1,5 @@
 import { render, screen, act } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { userEvent } from "@testing-library/user-event";
 import { Either, Maybe } from "@/Core";
 import { ServiceInstance, Pagination, InstanceResource } from "@/Test";
 import { ServiceInventoryPrepper } from "./ServiceInventoryPrepper";

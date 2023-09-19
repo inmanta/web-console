@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
 import { act, render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { userEvent } from "@testing-library/user-event";
 import { Resource } from "@/Core";
 import { DeployStateFilter } from "./DeployStateFilter";
 
