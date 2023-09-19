@@ -115,7 +115,7 @@ export const EditableMultiTextField: React.FC<Props> = ({
                       <TextInput
                         aria-label={`${label}-input`}
                         value={value}
-                        onChange={onChange(label)}
+                        onChange={(_event, value) => onChange(label)(value)}
                         onKeyDown={onKeyDown}
                       />
                     </FlexItem>

@@ -4,7 +4,7 @@ import {
   DropdownItem,
   DropdownPosition,
   KebabToggle,
-} from "@patternfly/react-core";
+} from "@patternfly/react-core/deprecated";
 import { FilterIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { words } from "@/UI/words";

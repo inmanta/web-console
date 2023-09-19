@@ -1,5 +1,11 @@
 import React from "react";
-import { FormGroup, Radio } from "@patternfly/react-core";
+import {
+  FormGroup,
+  FormHelperText,
+  HelperText,
+  HelperTextItem,
+  Radio,
+} from "@patternfly/react-core";
 import { words } from "@/UI/words";
 
 interface Props {
@@ -27,13 +33,17 @@ export const BooleanFormInput: React.FC<Props> = ({
         fieldId={attributeName}
         key={attributeName}
         label={attributeName}
-        helperText={description}
         isRequired={!isOptional}
       >
+        <FormHelperText>
+          <HelperText>
+            <HelperTextItem>{description}</HelperTextItem>
+          </HelperText>
+        </FormHelperText>
         <Radio
           isDisabled={shouldBeDisabled}
           isChecked={isChecked === true}
-          onChange={handleInputChange}
+          onChange={(event, value) => handleInputChange(value, event)}
           label={words("true")}
           name={`${attributeName}`}
           id={`${attributeName}-true`}
@@ -54,7 +64,7 @@ export const BooleanFormInput: React.FC<Props> = ({
           <Radio
             isDisabled={shouldBeDisabled}
             isChecked={isChecked === null}
-            onChange={handleInputChange}
+            onChange={(event, value) => handleInputChange(value, event)}
             label={words("null")}
             name={`${attributeName}`}
             id={`${attributeName}-none`}

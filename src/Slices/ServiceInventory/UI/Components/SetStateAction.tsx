@@ -1,10 +1,10 @@
 import React, { useContext, useState } from "react";
+import { Text } from "@patternfly/react-core";
 import {
   Dropdown,
   DropdownItem,
   DropdownToggle,
-  Text,
-} from "@patternfly/react-core";
+} from "@patternfly/react-core/deprecated";
 import { CaretDownIcon } from "@patternfly/react-icons";
 import { Maybe, VersionedServiceInstanceIdentifier } from "@/Core";
 import { ActionDisabledTooltip } from "@/UI/Components";

@@ -30,7 +30,7 @@ export const CatalogUpdateButton: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [toastTitle, setToastTitle] = useState("");
-  const [toastType, setToastType] = useState(AlertVariant.default);
+  const [toastType, setToastType] = useState(AlertVariant.custom);
 
   const handleModalToggle = () => {
     setIsOpen(!isOpen);
@@ -54,6 +54,7 @@ export const CatalogUpdateButton: React.FC = () => {
   return (
     <>
       <ToastAlert
+        data-testid="ToastAlert"
         title={toastTitle}
         message={message}
         setMessage={setMessage}
@@ -65,6 +66,7 @@ export const CatalogUpdateButton: React.FC = () => {
         </Button>
       </StyledWrapper>
       <Modal
+        disableFocusTrap
         variant={ModalVariant.small}
         isOpen={isOpen}
         title={words("catalog.update.modal.title")}
@@ -84,6 +86,6 @@ const StyledWrapper = styled.div`
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
-    padding: var(--pf-global--spacer--md);
+    padding: var(--pf-v5-global--spacer--md);
 }
 `;

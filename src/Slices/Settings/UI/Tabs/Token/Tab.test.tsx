@@ -90,9 +90,7 @@ test("GIVEN TokenTab WHEN generate fails THEN the error is shown", async () => {
     await apiHelper.resolve(Either.left("error message"));
   });
 
-  const errorContainer = screen.getByRole("generic", {
-    name: "GenerateTokenError",
-  });
+  const errorContainer = screen.getByTestId("ToastError");
 
   expect(errorContainer).toBeVisible();
   expect(within(errorContainer).getByText("error message")).toBeVisible();

@@ -64,6 +64,7 @@ export const ConfirmationModal: React.FC<Props> = ({
 
   return (
     <Modal
+      disableFocusTrap
       variant="small"
       aria-label={`${actionType} environment modal`}
       title={words("home.environment.delete.warning")}
@@ -96,10 +97,10 @@ export const ConfirmationModal: React.FC<Props> = ({
         {errorMessage && (
           <FormAlert>
             <Alert
+              data-testid="ErrorAlert"
               variant="danger"
               title="Something went wrong"
               isInline
-              aria-label="Environment Error Alert"
             >
               {errorMessage}
             </Alert>
@@ -113,14 +114,13 @@ export const ConfirmationModal: React.FC<Props> = ({
           }
           type="text"
           fieldId="environmentName"
-          validated={validated}
         >
           <TextInput
             id="environmentName"
             aria-label={`${actionType} environment check`}
             value={candidateEnv}
             validated={validated}
-            onChange={setCandidateEnv}
+            onChange={(_event, val) => setCandidateEnv(val)}
             autoFocus
           />
         </FormGroup>

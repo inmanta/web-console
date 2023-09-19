@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
-  TableComposable,
+  Table /* data-codemods */,
   Tbody,
   Td,
   Th,
@@ -43,7 +43,7 @@ export const FactsTable: React.FC<Props> = ({ facts }) => {
   }, [facts, sort]);
 
   return (
-    <TableComposable variant="compact" aria-label="Facts-Success">
+    <Table variant="compact" aria-label="Facts-Success">
       <Thead>
         <Tr>
           {factsColumnHeads.map(({ displayName }, idx) => (
@@ -75,17 +75,17 @@ export const FactsTable: React.FC<Props> = ({ facts }) => {
           </Tr>
         ))}
       </Tbody>
-    </TableComposable>
+    </Table>
   );
 };
 
 const DateCell = styled(Td)`
-  --pf-c-table--cell--Width: 20ch;
+  --pf-v5-c-table--cell--Width: 20ch;
 `;
 
 const NameCell = styled(Td)<{ chars: number }>`
-  --pf-c-table--cell--Width: calc(${(p) => p.chars}ch + 40px);
-  --pf-c-table--cell--MinWidth: 120px;
+  --pf-v5-c-table--cell--Width: calc(${(p) => p.chars}ch + 40px);
+  --pf-v5-c-table--cell--MinWidth: 120px;
 `;
 
 function indexToColumnName(index: number): string {

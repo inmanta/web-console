@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Dropdown, KebabToggle } from "@patternfly/react-core";
+import { Dropdown, KebabToggle } from "@patternfly/react-core/deprecated";
 import { ParsedNumber } from "@/Core";
 import { CompareAction } from "./CompareAction";
 import { DeleteAction } from "./DeleteAction";

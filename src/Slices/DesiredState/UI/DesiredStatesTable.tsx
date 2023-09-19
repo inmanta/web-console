@@ -1,6 +1,6 @@
 import React from "react";
 import {
-  TableComposable,
+  Table /* data-codemods */,
   TableVariant,
   Th,
   Thead,
@@ -28,13 +28,13 @@ export const DesiredStatesTable: React.FC<Props> = ({ rows, ...props }) => {
   ));
 
   return (
-    <TableComposable {...props} variant={TableVariant.compact}>
+    <Table {...props} variant={TableVariant.compact}>
       <Thead>
         <Tr>{heads}</Tr>
       </Thead>
       {rows.map((row) => (
         <DesiredStatesTableRow row={row} key={row.version.toString()} />
       ))}
-    </TableComposable>
+    </Table>
   );
 };

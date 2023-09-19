@@ -15,7 +15,8 @@ export const StatusLabel: React.FC<{ status: CompileStatus }> = ({
     case CompileStatus.inprogress:
       return (
         <Label color="blue">
-          <PaddedLabel>{status}</PaddedLabel> {<Spinner variant="small" />}
+          <PaddedLabel>{status}</PaddedLabel>
+          <Spinner variant="small" />
         </Label>
       );
     case CompileStatus.queued:

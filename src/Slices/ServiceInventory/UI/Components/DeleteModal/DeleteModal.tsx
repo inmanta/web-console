@@ -49,6 +49,7 @@ export const DeleteModal: React.FC<Props> = ({
   return (
     <>
       <ToastAlert
+        data-testid="ToastAlert"
         title={words("inventory.deleteInstance.failed")}
         message={errorMessage}
         setMessage={setErrorMessage}
@@ -72,6 +73,7 @@ export const DeleteModal: React.FC<Props> = ({
         </Button>
       </ActionDisabledTooltip>
       <Modal
+        disableFocusTrap
         isOpen={isOpen}
         title={words("inventory.deleteInstance.title")}
         variant={"small"}

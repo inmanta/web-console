@@ -2,7 +2,6 @@ import React, { useContext } from "react";
 import {
   Button,
   Card,
-  CardActions,
   CardBody,
   CardHeader,
   Tooltip,
@@ -39,15 +38,24 @@ export const ConfigDetails: React.FC<Props> = ({
     </Card>
   ) : (
     <Card>
-      <CardHeader>
-        <CardActions>
-          <Tooltip content={words("config.reset.description")} entryDelay={200}>
-            <Button isSmall onClick={() => trigger({ kind: "RESET" })}>
-              {words("config.reset")}
-            </Button>
-          </Tooltip>
-        </CardActions>
-      </CardHeader>
+      <CardHeader
+        actions={{
+          actions: (
+            <>
+              <Tooltip
+                content={words("config.reset.description")}
+                entryDelay={200}
+              >
+                <Button size="sm" onClick={() => trigger({ kind: "RESET" })}>
+                  {words("config.reset")}
+                </Button>
+              </Tooltip>
+            </>
+          ),
+          hasNoOffset: false,
+          className: undefined,
+        }}
+      ></CardHeader>
       <CardBody>
         <SettingsList
           config={config}

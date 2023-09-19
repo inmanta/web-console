@@ -1,12 +1,10 @@
 import React, { useState } from "react";
+import { Icon, Label, Spinner, ToolbarGroup } from "@patternfly/react-core";
 import {
-  Label,
   Select,
   SelectOption,
   SelectOptionObject,
-  Spinner,
-  ToolbarGroup,
-} from "@patternfly/react-core";
+} from "@patternfly/react-core/deprecated";
 import { global_Color_100 } from "@patternfly/react-tokens";
 import styled from "styled-components";
 import { Maybe, RemoteData } from "@/Core";
@@ -39,12 +37,12 @@ export const SelectReportAction: React.FC<Props> = ({
   };
 
   return (
-    <ToolbarGroup alignment={{ default: "alignLeft" }}>
+    <ToolbarGroup align={{ default: "alignLeft" }}>
       <Picker
         reportsData={reportsData}
         selectedReport={selectedReport}
         isOpen={isOpen}
-        setIsOpen={setIsOpen}
+        setIsOpen={(_event, value) => setIsOpen(value)}
         onSelect={onSelect}
       />
     </ToolbarGroup>
@@ -55,7 +53,14 @@ interface PickerProps {
   reportsData: RemoteReportList;
   selectedReport: MaybeReport;
   isOpen: boolean;
-  setIsOpen: (open: boolean) => void;
+  setIsOpen: (
+    event:
+      | Event
+      | React.MouseEvent<Element, MouseEvent>
+      | React.ChangeEvent<Element>
+      | React.KeyboardEvent<Element>,
+    open: boolean,
+  ) => void;
   onSelect: (
     event: React.MouseEvent<Element, MouseEvent> | React.ChangeEvent<Element>,
     value: string | SelectOptionObject,
@@ -112,7 +117,10 @@ const Progress: React.FC<{ report: DomainProgress }> = ({
     </StyledLabel>
   ) : (
     <StyledLabel variant="filled" color="orange" isCompact>
-      <StyledSpinner isSVG size="sm" /> {current} / {tot}
+      <Icon size="sm">
+        <StyledSpinner />
+      </Icon>{" "}
+      {current} / {tot}
     </StyledLabel>
   );
 };
@@ -122,6 +130,6 @@ const StyledLabel = styled(Label)`
 `;
 
 const StyledSpinner = styled(Spinner)`
-  --pf-c-spinner--Color: ${global_Color_100.var};
+  --pf-v5-c-spinner--Color: ${global_Color_100.var};
   margin-right: 8px;
 `;

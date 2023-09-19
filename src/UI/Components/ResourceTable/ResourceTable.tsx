@@ -1,5 +1,9 @@
 import React from "react";
-import { Table, TableHeader, TableBody } from "@patternfly/react-table";
+import {
+  Table,
+  TableHeader,
+  TableBody,
+} from "@patternfly/react-table/deprecated";
 import { InstanceResourceModel } from "@/Core";
 import { ResourceLink } from "@/UI/Components/ResourceLink";
 import { ResourceStatusLabel } from "@/UI/Components/ResourceStatus";

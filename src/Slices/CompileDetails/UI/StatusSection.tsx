@@ -124,9 +124,9 @@ const StyledList = styled(DescriptionList)`
 `;
 
 const GreenCheckCircle = styled(CheckCircleIcon)`
-  color: var(--pf-global--success-color--100);
+  color: var(--pf-v5-global--success-color--100);
 `;
 
 const RedExclamationCircle = styled(ExclamationCircleIcon)`
-  color: var(--pf-global--danger-color--100);
+  color: var(--pf-v5-global--danger-color--100);
 `;

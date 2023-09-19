@@ -5,6 +5,7 @@ import {
   InputGroup,
   TextInput,
   ButtonVariant,
+  InputGroupItem,
 } from "@patternfly/react-core";
 import { SearchIcon } from "@patternfly/react-icons";
 
@@ -43,23 +44,27 @@ export const FreeTextFilter: React.FC<Props> = ({
       showToolbarItem={!isHidden}
     >
       <InputGroup>
-        <TextInput
-          data-testid={`${filterPropertyName}FilterInput`}
-          name={`${filterPropertyName}FilterInput`}
-          type="search"
-          aria-label={`${filterPropertyName}Filter`}
-          onChange={setTextInput}
-          value={textInput}
-          placeholder={placeholder}
-          onKeyDown={onTextInput}
-        />
-        <Button
-          variant={ButtonVariant.control}
-          aria-label="submit search"
-          onClick={onTextInput}
-        >
-          <SearchIcon />
-        </Button>
+        <InputGroupItem isFill>
+          <TextInput
+            data-testid={`${filterPropertyName}FilterInput`}
+            name={`${filterPropertyName}FilterInput`}
+            type="search"
+            aria-label={`${filterPropertyName}Filter`}
+            onChange={(_event, val) => setTextInput(val)}
+            value={textInput}
+            placeholder={placeholder}
+            onKeyDown={onTextInput}
+          />
+        </InputGroupItem>
+        <InputGroupItem>
+          <Button
+            variant={ButtonVariant.control}
+            aria-label="submit search"
+            onClick={onTextInput}
+          >
+            <SearchIcon />
+          </Button>
+        </InputGroupItem>
       </InputGroup>
     </ToolbarFilter>
   );

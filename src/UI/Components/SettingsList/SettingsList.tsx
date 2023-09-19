@@ -7,8 +7,8 @@ interface Props {
   onChange: (name: string, value: boolean) => void;
   Switch: React.FC<{
     name: string;
-    value: boolean;
-    onChange: (value: boolean) => void;
+    isChecked: boolean;
+    onChange: (checked: boolean) => void;
     isDisabled?: boolean;
   }>;
   isDisabled?: boolean;
@@ -28,8 +28,8 @@ export const SettingsList: React.FC<Props> = ({
   const settings = configToSettings(config);
   if (settings.length <= 0) return null;
 
-  const handleChange = (name: string) => (value: boolean) =>
-    onChange(name, value);
+  const handleChange = (name: string) => (checked: boolean) =>
+    onChange(name, checked);
 
   return (
     <Flex aria-label="SettingsList">
@@ -47,7 +47,7 @@ export const SettingsList: React.FC<Props> = ({
           <FlexItem key={name}>
             <Switch
               name={name}
-              value={value}
+              isChecked={value}
               onChange={handleChange(name)}
               isDisabled={isDisabled}
             />

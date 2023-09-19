@@ -13,7 +13,7 @@ export const StringInput: React.FC<Props> = ({ info }) => {
     <Container hasWarning={info.isUpdateable(info)}>
       <TextInput
         value={info.value}
-        onChange={info.set}
+        onChange={(_event, value) => info.set(value)}
         aria-label="string input"
         type="text"
       />

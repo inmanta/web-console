@@ -82,7 +82,7 @@ class ErrorBoundary extends Component<Props, State> {
   `;
   public StyledParagraph = styled.p`
     font-style: italic;
-    color: var(--pf-global--palette--blue-400);
+    color: var(--pf-v5-global--palette--blue-400);
   `;
 }
 

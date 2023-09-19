@@ -1,11 +1,10 @@
 import React, { useState } from "react";
+import { Button, ToolbarGroup } from "@patternfly/react-core";
 import {
-  Button,
   Select,
   SelectOption,
   SelectVariant,
-  ToolbarGroup,
-} from "@patternfly/react-core";
+} from "@patternfly/react-core/deprecated";
 import styled from "styled-components";
 import { Diff } from "@/Core";
 import { StatusDescriptor } from "@/UI/Components/DiffWizard/StatusDescriptor";
@@ -33,12 +32,12 @@ export const StatusFilter: React.FC<Props> = ({ statuses, setStatuses }) => {
       : [words("showAll"), () => setStatuses(Diff.statuses)];
 
   return (
-    <ToolbarGroup alignment={{ default: "alignLeft" }}>
+    <ToolbarGroup align={{ default: "alignLeft" }}>
       <Select
         variant={SelectVariant.checkbox}
         toggleAriaLabel="StatusFilter"
         aria-label="StatusFilterOptions"
-        onToggle={onToggle}
+        onToggle={(_event, isOpen) => onToggle(isOpen)}
         onSelect={onSelect}
         selections={statuses}
         isCheckboxSelectionBadgeHidden

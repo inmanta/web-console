@@ -1,7 +1,7 @@
 import React from "react";
 import {
   OnSort,
-  TableComposable,
+  Table /* data-codemods */,
   Tbody,
   Td,
   Th,
@@ -41,7 +41,7 @@ export const EventsTableWrapper: React.FC<React.PropsWithChildren<Props>> = ({
     );
 
   return (
-    <TableComposable aria-label={props["aria-label"]}>
+    <Table aria-label={props["aria-label"]}>
       <Thead>
         <Tr>
           <Th />
@@ -57,7 +57,7 @@ export const EventsTableWrapper: React.FC<React.PropsWithChildren<Props>> = ({
       ) : (
         children
       )}
-    </TableComposable>
+    </Table>
   );
 };
 

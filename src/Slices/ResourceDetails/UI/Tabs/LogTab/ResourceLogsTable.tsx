@@ -1,7 +1,7 @@
 import React from "react";
 import {
   OnSort,
-  TableComposable,
+  Table /* data-codemods */,
   Th,
   Thead,
   Tr,
@@ -37,7 +37,7 @@ export const ResourceLogsTable: React.FC<Props> = ({
   };
 
   return (
-    <TableComposable aria-label="ResourceLogsTable" variant="compact">
+    <Table aria-label="ResourceLogsTable" variant="compact">
       <Thead>
         <Tr>
           <Th />
@@ -66,7 +66,7 @@ export const ResourceLogsTable: React.FC<Props> = ({
           toggleActionType={toggleActionType}
         />
       ))}
-    </TableComposable>
+    </Table>
   );
 };
 
@@ -75,9 +75,9 @@ function getUniqueId(log: ResourceLog): string {
 }
 
 const LogLevelTh = styled(Th)`
-  --pf-c-table--cell--MinWidth: 10ch;
+  --pf-v5-c-table--cell--MinWidth: 10ch;
 `;
 
 const ActionTypeTh = styled(Th)`
-  --pf-c-table--cell--MinWidth: 12ch;
+  --pf-v5-c-table--cell--MinWidth: 12ch;
 `;

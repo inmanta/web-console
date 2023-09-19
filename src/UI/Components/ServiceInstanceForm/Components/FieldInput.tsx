@@ -58,7 +58,7 @@ export const FieldInput: React.FC<Props> = ({
           attributeName={field.name}
           isOptional={field.isOptional}
           isChecked={get(formState, makePath(path, field.name)) as boolean}
-          handleInputChange={(value) =>
+          handleInputChange={(value, _event) =>
             getUpdate(makePath(path, field.name), toOptionalBoolean(value))
           }
           description={field.description}
@@ -73,7 +73,7 @@ export const FieldInput: React.FC<Props> = ({
           aria-label={`BooleanToggleInput-${field.name}`}
           attributeName={field.name}
           isChecked={get(formState, makePath(path, field.name)) as boolean}
-          handleInputChange={(value) =>
+          handleInputChange={(value, _event) =>
             getUpdate(makePath(path, field.name), toOptionalBoolean(value))
           }
           description={field.description}
@@ -100,7 +100,7 @@ export const FieldInput: React.FC<Props> = ({
               undefined
           }
           type={field.inputType}
-          handleInputChange={(value) =>
+          handleInputChange={(value, _event) =>
             getUpdate(makePath(path, field.name), value)
           }
           placeholder={getPlaceholderForType(field.type)}
@@ -121,7 +121,7 @@ export const FieldInput: React.FC<Props> = ({
             get(originalState, makePath(path, field.name)) !== undefined
           }
           type={field.inputType}
-          handleInputChange={(value) =>
+          handleInputChange={(value, _event) =>
             getUpdate(makePath(path, field.name), value)
           }
           placeholder={getPlaceholderForType(field.type)}
@@ -143,7 +143,7 @@ export const FieldInput: React.FC<Props> = ({
             get(originalState, makePath(path, field.name)) !== undefined
           }
           type={field.inputType}
-          handleInputChange={(value) =>
+          handleInputChange={(value, _event) =>
             getUpdate(makePath(path, field.name), value)
           }
           placeholder={getPlaceholderForType(field.type)}

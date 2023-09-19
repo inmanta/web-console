@@ -1,5 +1,9 @@
 import React, { useContext, useState } from "react";
-import { Dropdown, DropdownItem, KebabToggle } from "@patternfly/react-core";
+import {
+  Dropdown,
+  DropdownItem,
+  KebabToggle,
+} from "@patternfly/react-core/deprecated";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 
@@ -26,7 +30,7 @@ export const ActionList: React.FC<Props> = ({ read, id, onUpdate }) => {
       position="right"
       isOpen={isOpen}
       onSelect={() => setIsOpen(false)}
-      toggle={<KebabToggle onToggle={setIsOpen} />}
+      toggle={<KebabToggle onToggle={(_event, val) => setIsOpen(val)} />}
       dropdownItems={[
         <DropdownItem
           key="read"

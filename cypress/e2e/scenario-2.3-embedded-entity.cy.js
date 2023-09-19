@@ -73,7 +73,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="Environment card"]')
         .contains("lsm-frontend")
         .click();
-      cy.get(".pf-c-nav__item").contains("Service Catalog").click();
+      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
       cy.get("#embedded-entity-service").contains("Show inventory").click();
 
       // make sure the call to get inventory has been executed
@@ -115,7 +115,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="Environment card"]')
         .contains("lsm-frontend")
         .click();
-      cy.get(".pf-c-nav__item").contains("Service Catalog").click();
+      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
       // Expect to find one badge on the embedded-service row.
       cy.get("#embedded-entity-service")
         .get('[aria-label="Number of instances by label"]')
@@ -126,12 +126,15 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#expand-toggle0").click();
 
       // expect row to be expanded
-      cy.get(".pf-c-table__expandable-row-content").should("to.be.visible");
+      cy.get(".pf-v5-c-table__expandable-row-content").should("to.be.visible");
 
       // Expect to find status tab
-      cy.get(".pf-c-tabs__list li:first").should("have.class", "pf-m-current");
+      cy.get(".pf-v5-c-tabs__list li:first").should(
+        "have.class",
+        "pf-m-current",
+      );
 
-      cy.get(".pf-c-description-list").contains("Diagnose").click();
+      cy.get(".pf-v5-c-description-list").contains("Diagnose").click();
 
       // Diagonse sub-page should open and be empty
       cy.get("h1").contains("Diagnose Service Instance").should("be.visible");
@@ -144,7 +147,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="Environment card"]')
         .contains("lsm-frontend")
         .click();
-      cy.get(".pf-c-nav__item").contains("Service Catalog").click();
+      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
       // Expect to find one badge on the embedded-service row.
       cy.get("#embedded-entity-service")
         .get('[aria-label="Number of instances by label"]')
@@ -154,22 +157,25 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#expand-toggle0").click();
 
       // expect row to be expanded
-      cy.get(".pf-c-table__expandable-row-content").should("to.be.visible");
+      cy.get(".pf-v5-c-table__expandable-row-content").should("to.be.visible");
 
       // Expect to find status tab
-      cy.get(".pf-c-tabs__list li:first").should("have.class", "pf-m-current");
+      cy.get(".pf-v5-c-tabs__list li:first").should(
+        "have.class",
+        "pf-m-current",
+      );
       //await for instance state to change to up
       cy.get('[data-label="State"]')
-        .find(".pf-c-label.pf-m-green", { timeout: 60000 })
+        .find(".pf-v5-c-label.pf-m-green", { timeout: 60000 })
         .should("contain", "up");
 
-      cy.get(".pf-c-description-list").contains("History").click();
+      cy.get(".pf-v5-c-description-list").contains("History").click();
 
       // History sub-page should open and be empty then go to Home page
       cy.get("h1").contains("Service Instance History").should("be.visible");
       // due to lack of Id in rows I had to assert that each toggle button is separeate history log
-      cy.get(".pf-c-table")
-        .find(".pf-c-table__toggle")
+      cy.get(".pf-v5-c-table")
+        .find(".pf-v5-c-table__toggle")
         .should("have.length", 3);
       cy.visit("/console/");
     });
@@ -180,28 +186,28 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="Environment card"]')
         .contains("lsm-frontend")
         .click();
-      cy.get(".pf-c-nav__item").contains("Service Catalog").click();
+      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
       cy.get("#embedded-entity-service").contains("Show inventory").click();
 
       // expand first row
       cy.get("#expand-toggle0", { timeout: 20000 }).click();
 
       // delete but cancel deletion in modal
-      cy.get(".pf-c-description-list", { timeout: 60000 })
+      cy.get(".pf-v5-c-description-list", { timeout: 60000 })
         .contains("Delete")
         .click();
-      cy.get(".pf-c-modal-box__title-text").should(
+      cy.get(".pf-v5-c-modal-box__title-text").should(
         "contain",
         "Delete instance",
       );
-      cy.get(".pf-c-form__actions").contains("No").click();
+      cy.get(".pf-v5-c-form__actions").contains("No").click();
 
-      cy.get(".pf-c-description-list").contains("Delete").click();
-      cy.get(".pf-c-modal-box__title-text").should(
+      cy.get(".pf-v5-c-description-list").contains("Delete").click();
+      cy.get(".pf-v5-c-modal-box__title-text").should(
         "contain",
         "Delete instance",
       );
-      cy.get(".pf-c-form__actions").contains("Yes").click();
+      cy.get(".pf-v5-c-form__actions").contains("Yes").click();
 
       // check response if instance has been deleted succesfully.
       cy.get('[aria-label="ServiceInventory-Empty"]', {

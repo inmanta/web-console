@@ -1,7 +1,7 @@
 import React from "react";
 import {
   OnSort,
-  TableComposable,
+  Table /* data-codemods */,
   TableVariant,
   Th,
   Thead,
@@ -57,13 +57,13 @@ export const AgentsTable: React.FC<Props> = ({
     });
 
   return (
-    <TableComposable {...props} variant={TableVariant.compact}>
+    <Table {...props} variant={TableVariant.compact}>
       <Thead>
         <Tr>{heads}</Tr>
       </Thead>
       {rows.map((row) => (
         <AgentsTableRow row={row} key={row.name} />
       ))}
-    </TableComposable>
+    </Table>
   );
 };

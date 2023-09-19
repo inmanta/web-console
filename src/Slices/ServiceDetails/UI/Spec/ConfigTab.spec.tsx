@@ -121,7 +121,7 @@ test("GIVEN ServiceCatalog WHEN click on config tab THEN shows config tab", asyn
     await userEvent.click(configButton);
   });
 
-  expect(screen.getByRole("article", { name: "ServiceConfig" })).toBeVisible();
+  expect(screen.getByTestId("ServiceConfig")).toBeVisible();
 });
 
 test("GIVEN ServiceCatalog WHEN config tab is active THEN shows SettingsList", async () => {
