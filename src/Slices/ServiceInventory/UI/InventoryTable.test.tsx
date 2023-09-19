@@ -1,7 +1,7 @@
 import React from "react";
 import { MemoryRouter, useLocation } from "react-router";
 import { render, screen, within, act } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { Either, RemoteData } from "@/Core";
 import {
