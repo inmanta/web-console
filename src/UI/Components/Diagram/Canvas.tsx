@@ -12,7 +12,7 @@ import DictModal from "./components/DictModal";
 import FormModal from "./components/FormModal";
 import Toolbar from "./components/Toolbar";
 import { createConnectionRules, shapesDataTransform } from "./helpers";
-import { DictDialogData, InstanceForApi } from "./interfaces";
+import { ActionEnum, DictDialogData, InstanceForApi } from "./interfaces";
 import { ServiceEntityBlock } from "./shapes";
 
 const Canvas = ({
@@ -77,10 +77,7 @@ const Canvas = ({
     });
   };
 
-  const handleUpdate = (
-    cell: ServiceEntityBlock,
-    action: "update" | "create" | "delete",
-  ) => {
+  const handleUpdate = (cell: ServiceEntityBlock, action: ActionEnum) => {
     const newInstance: InstanceForApi = {
       instance_id: cell.id as string,
       service_entity: cell.getName(),
@@ -194,7 +191,7 @@ const Canvas = ({
                 entity,
               );
 
-              handleUpdate(shape, "update");
+              handleUpdate(shape, ActionEnum.UPDATE);
             } else {
               const shape = diagramHandlers.addEntity(
                 entity,
@@ -202,7 +199,7 @@ const Canvas = ({
                 selected.name === mainServiceName,
                 selected.isEmbedded,
               );
-              handleUpdate(shape, "create");
+              handleUpdate(shape, ActionEnum.CREATE);
             }
           }
         }}
