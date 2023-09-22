@@ -13,8 +13,9 @@ import { Colors, EntityConnection, ServiceEntityBlock } from "./shapes";
  * https://resources.jointjs.com/docs/jointjs/v3.6/joint.html#dia.LinkView
  * https://resources.jointjs.com/docs/jointjs/v3.6/joint.html#linkTools
  *
+ *  * @param {dia.Graph} graph JointJS graph object
  * @param {dia.LinkView} linkView  - The view for the joint.dia.Link model.
- * @param {(): void} linkView  - The view for the joint.dia.Link model.
+ * @function {(cell: ServiceEntityBlock, action: ActionEnum): void} linkView  - The view for the joint.dia.Link model.
  * @returns {void}
  */
 export function showLinkTools(
@@ -184,7 +185,7 @@ export function appendInstance(
       );
     } else {
       //If cell is already in the graph, we need to check if it got in its inter-service relations the one with id that corresponds with created instanceAsTable
-      let connected = false;
+      let isConnected = false;
       const cellAsBlock = cellAdded as ServiceEntityBlock;
       const relations = cellAsBlock.getRelations();
 
@@ -195,14 +196,14 @@ export function appendInstance(
         })).find(({ id }) => id === instanceAsTable.id);
 
         if (connectedInstance) {
-          connected = true;
+          isConnected = true;
           connectEntities(graph, instanceAsTable, [cellAsBlock]);
         }
       }
 
       //If doesn't, or the one we are looking for isn't among the ones stored, we need go through every connected shape and do the same assertion,
       //as the fact that we have that cell as relatedInstance tells us that either that or its embedded entities has connection
-      if (!connected) {
+      if (!isConnected) {
         const neighbors = graph.getNeighbors(cellAdded as dia.Element);
         neighbors.map((cell) => {
           const neighborRelations = (cell as ServiceEntityBlock).getRelations();
@@ -212,7 +213,7 @@ export function appendInstance(
               ([id, attrName]) => ({ id, attrName }),
             ).find(({ id }) => id === instanceAsTable.id);
             if (connectedInstance) {
-              connected = true;
+              isConnected = true;
               connectEntities(graph, instanceAsTable, [
                 cell as ServiceEntityBlock,
               ]);
