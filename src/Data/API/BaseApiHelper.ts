@@ -6,15 +6,14 @@ import {
   Maybe,
   objectHasKey,
   isObject,
-  JsonParser,
   ErrorWithHTTPCode,
 } from "@/Core";
 import { words } from "@/UI/words";
 import { BigIntJsonParser } from "./BigIntJsonParser";
 
 export class BaseApiHelper implements ApiHelper {
+  jsonParser = new BigIntJsonParser();
   constructor(
-    private readonly jsonParser: JsonParser = new BigIntJsonParser(),
     private readonly baseUrl: string = "",
     private readonly keycloak?: Keycloak,
   ) {}
@@ -121,7 +120,7 @@ export class BaseApiHelper implements ApiHelper {
         ...this.getHeaders(environment),
       },
       method: "POST",
-      body: JSON.stringify(body),
+      body: this.jsonParser.stringify(body),
     });
   }
 
@@ -136,7 +135,7 @@ export class BaseApiHelper implements ApiHelper {
         ...this.getHeaders(environment),
       },
       method: "POST",
-      body: JSON.stringify(body),
+      body: this.jsonParser.stringify(body),
     });
   }
 
@@ -150,7 +149,7 @@ export class BaseApiHelper implements ApiHelper {
         ...this.getHeaders(),
       },
       method: "POST",
-      body: JSON.stringify(body),
+      body: this.jsonParser.stringify(body),
     });
   }
 
@@ -164,7 +163,7 @@ export class BaseApiHelper implements ApiHelper {
         ...this.getHeaders(),
       },
       method: "PUT",
-      body: JSON.stringify(body),
+      body: this.jsonParser.stringify(body),
     });
   }
 
@@ -179,7 +178,7 @@ export class BaseApiHelper implements ApiHelper {
         ...this.getHeaders(environment),
       },
       method: "PATCH",
-      body: JSON.stringify(body),
+      body: this.jsonParser.stringify(body),
     });
   }
 
