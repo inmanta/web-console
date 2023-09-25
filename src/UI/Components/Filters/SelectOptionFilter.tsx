@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import { ToolbarFilter } from "@patternfly/react-core";
-import { Select, SelectOption } from "@patternfly/react-core/deprecated";
 import { SearchIcon } from "@patternfly/react-icons";
 import { uniq } from "lodash-es";
 import { toggleValueInList } from "@/Core";
+import { MultiTextSelect } from "../MultiTextSelect";
 
 interface Props {
   filterPropertyName: string;
@@ -23,14 +23,11 @@ export const SelectOptionFilter: React.FC<Props> = ({
   filterPropertyName,
   placeholder,
 }) => {
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
-
-  const onSelect = (_event, selection) => {
+  const onSelect = (selection) => {
     update(uniq(toggleValueInList(selection, selectedStates)));
-    setIsFilterOpen(false);
   };
 
-  const removeChip = (cat, id) => {
+  const removeChip = (_cat, id) => {
     update(selectedStates.filter((value) => value !== id));
   };
 
@@ -41,21 +38,17 @@ export const SelectOptionFilter: React.FC<Props> = ({
       categoryName={filterPropertyName}
       showToolbarItem={isVisible}
     >
-      <Select
-        aria-label={filterPropertyName}
-        onToggle={(_event, val) => setIsFilterOpen(val)}
-        onSelect={onSelect}
-        selections={selectedStates}
-        isOpen={isFilterOpen}
+      <MultiTextSelect
+        toggleAriaLabel={filterPropertyName}
+        options={possibleStates.map((option) => {
+          return { value: option, children: option };
+        })}
+        setSelected={onSelect}
         placeholderText={placeholder}
-        variant="typeaheadmulti"
-        toggleIcon={<SearchIcon />}
-        chipGroupProps={{ numChips: 0 }}
-      >
-        {possibleStates.map((state) => (
-          <SelectOption key={state} value={state} />
-        ))}
-      </Select>
+        selected={selectedStates}
+        hasChips
+        toggleIcon={<SearchIcon aria-hidden />}
+      />
     </ToolbarFilter>
   );
 };

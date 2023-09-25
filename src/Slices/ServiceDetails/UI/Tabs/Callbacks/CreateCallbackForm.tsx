@@ -92,7 +92,9 @@ export const CreateCallbackForm: React.FC<Props> = ({
         </Td>
         <StyledTd className={inlineStyles.inlineEditInput}>
           <MultiTextSelect
-            options={EventTypesList}
+            options={EventTypesList.map((option) => {
+              return { value: option, children: option };
+            })}
             selected={eventTypes}
             setSelected={setEventTypes}
             toggleAriaLabel="EventTypes"

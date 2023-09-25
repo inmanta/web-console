@@ -16,10 +16,14 @@ import { TimesIcon } from "@patternfly/react-icons";
 interface Props {
   selected: string | null;
   setSelected: (selected: string | null) => void;
+  onSearchTextChanged?: (value: string) => void;
+  onCreate?: (value: string) => void;
   options: SelectOptionProps[];
   isDisabled?: boolean;
   toggleAriaLabel?: string;
   placeholderText?: string;
+  hasCreation?: boolean;
+  toggleIcon?: React.ReactNode;
 }
 
 export const SingleTextSelect: React.FC<Props> = ({
@@ -28,6 +32,9 @@ export const SingleTextSelect: React.FC<Props> = ({
   options,
   toggleAriaLabel,
   placeholderText,
+  hasCreation = false,
+  onCreate = () => {},
+  onSearchTextChanged = () => {},
   ...props
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -49,13 +56,19 @@ export const SingleTextSelect: React.FC<Props> = ({
           .includes(filterValue.toLocaleLowerCase());
       });
 
-      if (!newSelectOptions.length) {
+      if (!newSelectOptions.length && !hasCreation) {
         newSelectOptions = [
           {
             isDisabled: false,
             children: `No results found for "${filterValue}"`,
             value: "no results",
           },
+        ];
+      }
+
+      if (!newSelectOptions.length && hasCreation) {
+        newSelectOptions = [
+          { children: `Create new option "${inputValue}"`, value: "create" },
         ];
       }
 
@@ -67,7 +80,7 @@ export const SingleTextSelect: React.FC<Props> = ({
     setSelectOptions(newSelectOptions);
     setActiveItem(null);
     setFocusedItemIndex(null);
-
+    onSearchTextChanged(inputValue);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterValue, options]);
 
@@ -80,10 +93,16 @@ export const SingleTextSelect: React.FC<Props> = ({
     value: string | number | undefined,
   ) => {
     if (value && value !== "no results") {
-      setInputValue(value as string);
       setFilterValue("");
-      setSelected(value as string);
+      if (value === "create") {
+        setSelected(inputValue);
+        onCreate(inputValue);
+      } else {
+        setInputValue(value as string);
+        setSelected(value as string);
+      }
     }
+
     setIsOpen(false);
     setFocusedItemIndex(null);
     setActiveItem(null);
@@ -96,6 +115,7 @@ export const SingleTextSelect: React.FC<Props> = ({
     setInputValue(value);
     setFilterValue(value);
   };
+
   const handleMenuArrowKeys = (key: string) => {
     let indexToFocus;
 
@@ -204,7 +224,7 @@ export const SingleTextSelect: React.FC<Props> = ({
               aria-label="Clear input value"
               disabled={props.isDisabled}
             >
-              <TimesIcon aria-hidden />
+              {props.toggleIcon ? props.toggleIcon : <TimesIcon aria-hidden />}
             </Button>
           )}
         </TextInputGroupUtilities>

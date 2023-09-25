@@ -1,16 +1,13 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   FormGroup,
   FormHelperText,
   HelperText,
   HelperTextItem,
 } from "@patternfly/react-core";
-import {
-  Select,
-  SelectOption,
-  SelectVariant,
-} from "@patternfly/react-core/deprecated";
 import { words } from "@/UI/words";
+import { MultiTextSelect } from "../../MultiTextSelect";
+import { SingleTextSelect } from "../../SingleTextSelect";
 
 interface Option {
   displayName: string;
@@ -20,21 +17,21 @@ interface Option {
 
 interface Props {
   options: Option[];
+  selected: string | string[] | null;
   serviceEntity: string;
   attributeName: string;
-  attributeValue: string | string[];
   description?: string;
   isOptional: boolean;
   shouldBeDisabled?: boolean;
-  handleInputChange: (value, event) => void;
+  handleInputChange: (value) => void;
   onSearchTextChanged: (value: string) => void;
   multi?: boolean;
 }
 export const AutoCompleteInput: React.FC<Props> = ({
   options,
+  selected,
   serviceEntity,
   attributeName,
-  attributeValue,
   description,
   isOptional,
   shouldBeDisabled = false,
@@ -43,19 +40,9 @@ export const AutoCompleteInput: React.FC<Props> = ({
   multi,
   ...props
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const onSelect = (event, value) => {
-    setIsOpen(false);
-    handleInputChange(value, event);
-  };
-
-  const selectOptions = options
-    .sort((a, b) => a.displayName.localeCompare(b.displayName))
-    .map(({ displayName, value, alreadySelected }) => (
-      <SelectOption key={value} value={value} isDisabled={alreadySelected}>
-        {displayName}
-      </SelectOption>
-    ));
+  const initialOptions = options.map((option) => {
+    return { value: option.value, children: option.displayName };
+  });
 
   return (
     <FormGroup
@@ -63,24 +50,29 @@ export const AutoCompleteInput: React.FC<Props> = ({
       isRequired={!isOptional}
       fieldId={attributeName}
       label={`An instance of ${serviceEntity}`}
+      aria-label={`${attributeName}-select-input`}
     >
-      <Select
-        aria-label={`${attributeName}-select-input`}
-        toggleAriaLabel={`${attributeName}-select-toggle`}
-        variant={multi ? SelectVariant.typeaheadMulti : SelectVariant.typeahead}
-        onFilter={() => selectOptions}
-        onToggle={() => {
-          setIsOpen(!isOpen);
-        }}
-        isOpen={isOpen}
-        isDisabled={shouldBeDisabled}
-        onSelect={onSelect}
-        selections={attributeValue}
-        placeholderText={words("common.serviceInstance.relation")}
-        onTypeaheadInputChanged={onSearchTextChanged}
-      >
-        {selectOptions}
-      </Select>
+      {multi ? (
+        <MultiTextSelect
+          options={initialOptions}
+          toggleAriaLabel={`${attributeName}-select-toggle`}
+          isDisabled={shouldBeDisabled}
+          setSelected={handleInputChange}
+          selected={selected as string[]}
+          placeholderText={words("common.serviceInstance.relation")}
+          onSearchTextChanged={onSearchTextChanged}
+        />
+      ) : (
+        <SingleTextSelect
+          options={initialOptions}
+          toggleAriaLabel={`${attributeName}-select-toggle`}
+          isDisabled={shouldBeDisabled}
+          setSelected={handleInputChange}
+          selected={selected as string | null}
+          placeholderText={words("common.serviceInstance.relation")}
+          onSearchTextChanged={onSearchTextChanged}
+        />
+      )}
       <FormHelperText>
         <HelperText>
           <HelperTextItem>{description}</HelperTextItem>

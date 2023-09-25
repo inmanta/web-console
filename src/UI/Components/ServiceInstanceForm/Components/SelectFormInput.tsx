@@ -4,8 +4,11 @@ import {
   FormHelperText,
   HelperText,
   HelperTextItem,
+  MenuToggle,
+  MenuToggleElement,
+  Select,
+  SelectOption,
 } from "@patternfly/react-core";
-import { Select, SelectOption } from "@patternfly/react-core/deprecated";
 import { ParsedNumber } from "@/Core";
 import { words } from "@/UI/words";
 
@@ -38,6 +41,18 @@ export const SelectFormInput: React.FC<Props> = ({
     .sort()
     .map((key) => <SelectOption key={key} value={key} />);
 
+  const toggle = (toggleRef: React.Ref<MenuToggleElement>) => (
+    <MenuToggle
+      ref={toggleRef}
+      onClick={() => setIsOpen((value) => !value)}
+      isExpanded={isOpen}
+      isDisabled={shouldBeDisabled}
+      aria-label={`${attributeName}-select-toggle`}
+    >
+      {attributeValue === "" ? undefined : attributeValue}
+    </MenuToggle>
+  );
+
   useEffect(() => {
     const optionsArray = Object.keys(options);
     if (optionsArray.length === 1) {
@@ -58,16 +73,11 @@ export const SelectFormInput: React.FC<Props> = ({
       </FormHelperText>
       <Select
         aria-label={`${attributeName}-select-input`}
-        toggleAriaLabel={`${attributeName}-select-toggle`}
-        variant="single"
-        onToggle={() => {
-          setIsOpen(!isOpen);
-        }}
+        toggle={toggle}
         isOpen={isOpen}
         onSelect={onSelect}
-        selections={attributeValue === "" ? undefined : attributeValue}
-        placeholderText={words("common.serviceInstance.select")(attributeName)}
-        isDisabled={shouldBeDisabled}
+        selected={attributeValue === "" ? undefined : attributeValue}
+        placeholder={words("common.serviceInstance.select")(attributeName)}
       >
         {selectOptions}
       </Select>
