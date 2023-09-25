@@ -67,7 +67,7 @@ export const CreateCallbackForm: React.FC<Props> = ({
             aria-label="callbackUrl"
             value={url || ""}
             type="text"
-            onChange={setUrl}
+            onChange={(_event, val) => setUrl(val)}
           />
         </Td>
         <Td className={inlineStyles.inlineEditInput}>
@@ -75,7 +75,7 @@ export const CreateCallbackForm: React.FC<Props> = ({
             aria-label="callbackId"
             value={id || ""}
             type="text"
-            onChange={setId}
+            onChange={(_event, val) => setId(val)}
           />
         </Td>
         <Td className={inlineStyles.inlineEditInput}>
@@ -105,6 +105,7 @@ export const CreateCallbackForm: React.FC<Props> = ({
           <Td colSpan={numberOfColumns}>
             <ExpandableRowContent>
               <Alert
+                data-testid="Alert Danger"
                 isInline
                 variant="danger"
                 title="Something went wrong"

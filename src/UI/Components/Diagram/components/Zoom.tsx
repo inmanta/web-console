@@ -88,17 +88,17 @@ const Container = styled(Flex)`
 `;
 
 const StyledButton = styled(Button)`
-  --pf-c-button--PaddingTop: 5px;
-  --pf-c-button--PaddingRight: 3px;
-  --pf-c-button--PaddingBottom: 3px;
-  --pf-c-button--PaddingLeft: 3px;
+  --pf-v5-c-button--PaddingTop: 5px;
+  --pf-v5-c-button--PaddingRight: 3px;
+  --pf-v5-c-button--PaddingBottom: 3px;
+  --pf-v5-c-button--PaddingLeft: 3px;
   height: 30px;
   width: 30px;
 `;
 
 const StyledButtonTwo = styled(Button)`
-  --pf-c-button--PaddingTop: px;
-  --pf-c-button--PaddingBottom: 0px;
+  --pf-v5-c-button--PaddingTop: px;
+  --pf-v5-c-button--PaddingBottom: 0px;
   width: 101px;
   height: 30px;
 `;

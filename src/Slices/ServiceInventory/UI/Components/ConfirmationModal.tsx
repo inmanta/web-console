@@ -33,6 +33,7 @@ const ConfirmationModal: React.FC<ModalProps> = ({
   return (
     <React.Fragment>
       <Modal
+        disableFocusTrap
         data-testid={`${id}-state-modal`}
         variant={ModalVariant.small}
         titleIconVariant="danger"

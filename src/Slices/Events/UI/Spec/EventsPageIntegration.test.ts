@@ -1,5 +1,5 @@
 import { render, screen, act, within } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { userEvent } from "@testing-library/user-event";
 import { Either } from "@/Core";
 import { Service, Pagination } from "@/Test";
 import * as InstanceEvent from "@S/Events/Data/Mock";

@@ -9,15 +9,15 @@ interface Props {
 export const Spinner: React.FC<Props> = ({ variant }) => {
   switch (variant) {
     case "light":
-      return <SecondarySpinner isSVG size="lg" />;
+      return <SecondarySpinner size="lg" />;
     case "small":
-      return <PrimarySpinner isSVG size="md" />;
+      return <PrimarySpinner size="sm" />;
     case "main":
     default:
-      return <PrimarySpinner isSVG />;
+      return <PrimarySpinner />;
   }
 };
 
 const SecondarySpinner = styled(PrimarySpinner)`
-  --pf-c-spinner--Color: white;
+  --pf-v5-c-spinner--Color: white;
 `;

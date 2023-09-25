@@ -3,14 +3,16 @@ import { Light as SyntaxHighlighter } from "react-syntax-highlighter";
 import {
   Button,
   ClipboardCopyButton,
-  Dropdown,
-  DropdownItem,
   Flex,
   FlexItem,
-  KebabToggle,
   Label,
   Tooltip,
 } from "@patternfly/react-core";
+import {
+  Dropdown,
+  DropdownItem,
+  KebabToggle,
+} from "@patternfly/react-core/deprecated";
 import {
   CloseIcon,
   CompressArrowsAltIcon,
@@ -219,7 +221,8 @@ export const CodeHighlighter: React.FC<Props> = ({
                     minHeight,
                     resize: "vertical",
                     scrollbarGutter: "stable",
-                    borderRight: "1px solid var(--pf-global--BorderColor--100)",
+                    borderRight:
+                      "1px solid var(--pf-v5-global--BorderColor--100)",
                   }}
                   showLineNumbers={showLineNumbers}
                   showInlineLineNumbers
@@ -277,7 +280,7 @@ const SmallFlexItem = styled(FlexItem)`
 `;
 
 const BorderedArea = styled.div`
-  border: 1px solid var(--pf-global--BorderColor--100);
+  border: 1px solid var(--pf-v5-global--BorderColor--100);
   width: 100%;
   margin-bottom: 1em;
 `;

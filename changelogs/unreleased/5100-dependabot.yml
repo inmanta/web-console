@@ -1,0 +1,7 @@
+change-type: patch
+description: 'Build(deps-dev): Bump eslint-import-resolver-webpack from 0.13.2 to
+    0.13.7'
+destination-branches:
+- master
+- iso6
+sections: {}

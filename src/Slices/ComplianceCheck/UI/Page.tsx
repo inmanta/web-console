@@ -78,6 +78,7 @@ export const View: React.FC<Props> = ({ version }) => {
   return (
     <>
       <ToastAlert
+        data-testid="ToastAlert"
         title={words("desiredState.complianceCheck.failed")}
         message={errorMessage}
         setMessage={setErrorMessage}
@@ -115,5 +116,5 @@ const StyledPageSection = styled(PageSection)`
 `;
 
 const ToolBarContainer = styled(Toolbar)`
-  z-index: var(--pf-global--ZIndex--xl);
+  z-index: var(--pf-v5-global--ZIndex--xl);
 `;

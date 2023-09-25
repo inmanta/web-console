@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { ToolbarFilter, Select, SelectOption } from "@patternfly/react-core";
+import { ToolbarFilter } from "@patternfly/react-core";
+import { Select, SelectOption } from "@patternfly/react-core/deprecated";
 import { SearchIcon } from "@patternfly/react-icons";
 import { uniq } from "lodash-es";
 import { toggleValueInList } from "@/Core";
@@ -24,7 +25,7 @@ export const SelectOptionFilter: React.FC<Props> = ({
 }) => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
-  const onSelect = (event, selection) => {
+  const onSelect = (_event, selection) => {
     update(uniq(toggleValueInList(selection, selectedStates)));
     setIsFilterOpen(false);
   };
@@ -42,7 +43,7 @@ export const SelectOptionFilter: React.FC<Props> = ({
     >
       <Select
         aria-label={filterPropertyName}
-        onToggle={setIsFilterOpen}
+        onToggle={(_event, val) => setIsFilterOpen(val)}
         onSelect={onSelect}
         selections={selectedStates}
         isOpen={isFilterOpen}

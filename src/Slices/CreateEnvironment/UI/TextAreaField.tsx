@@ -1,11 +1,20 @@
 import React from "react";
-import { FormGroup, TextArea } from "@patternfly/react-core";
+import {
+  FormGroup,
+  FormHelperText,
+  HelperText,
+  HelperTextItem,
+  TextArea,
+} from "@patternfly/react-core";
 
 interface Props {
   label: string;
   isRequired?: boolean;
   value: string;
-  onChange: (value: string) => void;
+  onChange: (
+    event: React.ChangeEvent<HTMLTextAreaElement>,
+    value: string,
+  ) => void;
 }
 
 export const TextAreaField: React.FC<Props> = ({
@@ -17,12 +26,7 @@ export const TextAreaField: React.FC<Props> = ({
   const helperText = `Characters: (${value.length} / 255)`;
 
   return (
-    <FormGroup
-      fieldId={label}
-      label={label}
-      isRequired={isRequired}
-      helperText={helperText}
-    >
+    <FormGroup fieldId={label} label={label} isRequired={isRequired}>
       <TextArea
         value={value}
         onChange={onChange}
@@ -30,6 +34,11 @@ export const TextAreaField: React.FC<Props> = ({
         maxLength={255}
         rows={2}
       />
+      <FormHelperText>
+        <HelperText>
+          <HelperTextItem>{helperText}</HelperTextItem>
+        </HelperText>
+      </FormHelperText>
     </FormGroup>
   );
 };

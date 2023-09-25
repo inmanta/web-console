@@ -41,25 +41,25 @@ const descriptorStyles = css`
 
 const Added = styled.div`
   ${descriptorStyles};
-  background-color: var(--pf-global--success-color--100);
+  background-color: var(--pf-v5-global--success-color--100);
 `;
 
 const Deleted = styled.div`
   ${descriptorStyles};
-  background-color: var(--pf-global--danger-color--100);
+  background-color: var(--pf-v5-global--danger-color--100);
 `;
 
 const Modified = styled.div`
   ${descriptorStyles};
-  background-color: var(--pf-global--warning-color--100);
+  background-color: var(--pf-v5-global--warning-color--100);
 `;
 
 const Unmodified = styled.div`
   ${descriptorStyles};
-  background-color: var(--pf-global--default-color--100);
+  background-color: var(--pf-v5-global--default-color--100);
 `;
 
 const Missing = styled.div`
   ${descriptorStyles};
-  background-color: var(--pf-global--info-color--100);
+  background-color: var(--pf-v5-global--info-color--100);
 `;

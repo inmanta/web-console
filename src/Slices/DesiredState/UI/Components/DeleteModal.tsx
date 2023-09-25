@@ -30,6 +30,7 @@ export const DeleteModal: React.FC<Props> = ({ version, isOpened }) => {
   };
   return (
     <Modal
+      disableFocusTrap
       isOpen={isOpened}
       title={words("inventory.deleteVersion.title")}
       variant={"small"}

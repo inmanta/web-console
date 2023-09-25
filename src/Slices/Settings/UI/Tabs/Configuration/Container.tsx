@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Alert, AlertActionCloseButton } from "@patternfly/react-core";
-import { TableComposable, Tbody } from "@patternfly/react-table";
+import { Tbody, Table } from "@patternfly/react-table";
 import styled from "styled-components";
 import { EnvironmentSettings } from "@/Core";
 import { words } from "@/UI";
@@ -77,6 +77,6 @@ const Wrapper = styled.div`
   overflow-x: auto;
 `;
 
-const StyledTable = styled(TableComposable)`
+const StyledTable = styled(Table)`
   width: auto;
 `;

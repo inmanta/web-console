@@ -1,6 +1,6 @@
 import React from "react";
 import { screen, render, act } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { EnvironmentDetails, RemoteData } from "@/Core";
 import {

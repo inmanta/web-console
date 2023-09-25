@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, Route, Routes } from "react-router-dom";
 import { cleanup, render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { userEvent } from "@testing-library/user-event";
 import { act } from "react-dom/test-utils";
 import CustomRouter from "../Routing/CustomRouter";
 import history from "../Routing/history";

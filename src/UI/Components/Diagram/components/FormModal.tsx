@@ -7,10 +7,12 @@ import {
   FlexItem,
   Form,
   Modal,
+} from "@patternfly/react-core";
+import {
   Select,
   SelectOption,
   SelectOptionObject,
-} from "@patternfly/react-core";
+} from "@patternfly/react-core/deprecated";
 import { set } from "lodash";
 import styled from "styled-components";
 import {
@@ -187,6 +189,7 @@ const FormModal = ({
   }, [services, cellView, onEntityChosen]);
   return (
     <StyledModal
+      disableFocusTrap
       isOpen={isOpen}
       title={cellView ? "Edit Entity" : "Add Entity"}
       variant={"small"}
@@ -282,8 +285,8 @@ const StyledModal = styled(Modal)`
   height: 600px;
 `;
 const StyledButton = styled(Button)`
-  --pf-c-button--PaddingTop: px;
-  --pf-c-button--PaddingBottom: 0px;
+  --pf-v5-c-button--PaddingTop: px;
+  --pf-v5-c-button--PaddingBottom: 0px;
   width: 101px;
   height: 30px;
 `;

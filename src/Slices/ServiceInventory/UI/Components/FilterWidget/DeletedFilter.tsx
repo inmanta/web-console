@@ -1,10 +1,10 @@
 import React, { useState } from "react";
+import { ToolbarFilter } from "@patternfly/react-core";
 import {
   Select,
   SelectOption,
   SelectVariant,
-  ToolbarFilter,
-} from "@patternfly/react-core";
+} from "@patternfly/react-core/deprecated";
 import { ServiceInstanceParams } from "@/Core";
 
 interface Props {
@@ -41,7 +41,7 @@ export const DeletedFilter: React.FC<Props> = ({
       <Select
         variant={SelectVariant.single}
         toggleAriaLabel="Select Deleted"
-        onToggle={setFilterOpen}
+        onToggle={(_event, val) => setFilterOpen(val)}
         onSelect={onSelect}
         selections={deleted}
         isOpen={isFilterOpen}

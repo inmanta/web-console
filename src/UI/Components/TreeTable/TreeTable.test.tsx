@@ -1,6 +1,6 @@
 import React from "react";
 import { render, screen, fireEvent, within, act } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { userEvent } from "@testing-library/user-event";
 import { Attributes, EntityLike } from "@/Core";
 import { CommandResolverImpl, KeycloakAuthHelper } from "@/Data";
 import { UpdateInstanceAttributeCommandManager } from "@/Data/Managers/UpdateInstanceAttribute";

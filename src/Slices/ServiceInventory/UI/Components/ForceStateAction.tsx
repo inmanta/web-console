@@ -1,10 +1,10 @@
 import React, { useContext, useState } from "react";
+import { Text } from "@patternfly/react-core";
 import {
   Dropdown,
   DropdownItem,
   DropdownToggle,
-  Text,
-} from "@patternfly/react-core";
+} from "@patternfly/react-core/deprecated";
 import { CaretDownIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { Maybe, VersionedServiceInstanceIdentifier } from "@/Core";
@@ -123,30 +123,30 @@ export const ForceStateAction: React.FC<Props> = ({
 };
 
 const StyledDropdown = styled(Dropdown)`
-  --pf-c-dropdown__toggle--before--BorderTopColor: var(
-    --pf-global--danger-color--100
+  --pf-v5-c-dropdown__toggle--before--BorderTopColor: var(
+    --pf-v5-global--danger-color--100
   );
-  --pf-c-dropdown__toggle--before--BorderRightColor: var(
-    --pf-global--danger-color--100
+  --pf-v5-c-dropdown__toggle--before--BorderRightColor: var(
+    --pf-v5-global--danger-color--100
   );
-  --pf-c-dropdown__toggle--before--BorderLeftColor: var(
-    --pf-global--danger-color--100
+  --pf-v5-c-dropdown__toggle--before--BorderLeftColor: var(
+    --pf-v5-global--danger-color--100
   );
-  --pf-c-dropdown__toggle--before--BorderBottomColor: var(
-    --pf-global--danger-color--100
+  --pf-v5-c-dropdown__toggle--before--BorderBottomColor: var(
+    --pf-v5-global--danger-color--100
   );
-  --pf-c-dropdown--m-expanded__toggle--before--BorderBottomColor: var(
-    --pf-global--danger-color--100
+  --pf-v5-c-dropdown--m-expanded__toggle--before--BorderBottomColor: var(
+    --pf-v5-global--danger-color--100
   );
-  --pf-c-dropdown__toggle--hover--before--BorderBottomColor: var(
-    --pf-global--danger-color--100
+  --pf-v5-c-dropdown__toggle--hover--before--BorderBottomColor: var(
+    --pf-v5-global--danger-color--100
   );
-  --pf-c-dropdown__toggle--focus--before--BorderBottomColor: var(
-    --pf-global--danger-color--100
+  --pf-v5-c-dropdown__toggle--focus--before--BorderBottomColor: var(
+    --pf-v5-global--danger-color--100
   );
-  --pf-c-dropdown__toggle--active--before--BorderBottomColor: var(
-    --pf-global--danger-color--100
+  --pf-v5-c-dropdown__toggle--active--before--BorderBottomColor: var(
+    --pf-v5-global--danger-color--100
   );
-  --pf-c-dropdown__toggle--Color: var(--pf-global--danger-color--100);
-  --pf-c-dropdown__toggle--Color: var(--pf-global--danger-color--100);
+  --pf-v5-c-dropdown__toggle--Color: var(--pf-v5-global--danger-color--100);
+  --pf-v5-c-dropdown__toggle--Color: var(--pf-v5-global--danger-color--100);
 `;

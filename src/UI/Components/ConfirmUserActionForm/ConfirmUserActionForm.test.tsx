@@ -1,6 +1,6 @@
 import React from "react";
 import { act, render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { userEvent } from "@testing-library/user-event";
 import { ConfirmUserActionForm } from "./ConfirmUserActionForm";
 
 test("GIVEN DeleteForm WHEN user clicks 'No' THEN closeModal is executed", async () => {

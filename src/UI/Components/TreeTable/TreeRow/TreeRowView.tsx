@@ -47,7 +47,7 @@ export const TreeRowView: React.FC<RowProps> = ({
                 value={label === "description" && value === "null" ? "" : value}
                 hasRelation={hasRelation}
                 serviceName={serviceName}
-                className={"pf-m-truncate"}
+                className={"pf-v5-m-truncate"}
                 key={`${label}-${value}-expert`}
                 path={row.id}
                 instanceId={id}
@@ -62,7 +62,7 @@ export const TreeRowView: React.FC<RowProps> = ({
                 value={label === "description" && value === "null" ? "" : value}
                 hasRelation={hasRelation}
                 serviceName={serviceName}
-                className={"pf-m-truncate"}
+                className={"pf-v5-m-truncate"}
                 key={`${label}-${value}`}
               />
             ),
@@ -160,7 +160,7 @@ export const TreeRowView: React.FC<RowProps> = ({
                 value={label === "description" && value === "null" ? "" : value}
                 hasRelation={hasRelation}
                 serviceName={serviceName}
-                className={"pf-m-truncate"}
+                className={"pf-v5-m-truncate"}
                 key={`${label}-${value}-expert`}
                 path={row.id}
                 instanceId={id}
@@ -175,7 +175,7 @@ export const TreeRowView: React.FC<RowProps> = ({
                 value={label === "description" && value === "null" ? "" : value}
                 hasRelation={hasRelation}
                 serviceName={serviceName}
-                className={"pf-m-truncate"}
+                className={"pf-v5-m-truncate"}
                 key={`${label}-${value}`}
               />
             ),
@@ -191,6 +191,6 @@ const Spacer = styled.span`
 
 const StyledTr = styled(Tr)`
   > * {
-    --pf-c-table--cell--FontSize: 16px;
+    --pf-v5-c-table--cell--FontSize: 16px;
   }
 `;

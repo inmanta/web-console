@@ -1,6 +1,6 @@
 import React from "react";
 import { act, render, screen, within } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { Either } from "@/Core";
 import {
@@ -82,7 +82,7 @@ test("GIVEN ComplianceCheck page THEN user sees latest dry run report", async ()
     await apiHelper.resolve(Either.right(Mock.reportResponse));
   });
 
-  const blocks = await screen.findAllByRole("article", { name: "DiffBlock" });
+  const blocks = await screen.findAllByTestId("DiffBlock");
   expect(blocks).toHaveLength(11);
 });
 
@@ -254,9 +254,7 @@ test("GIVEN ComplianceCheck page WHEN StatusFilter = 'Added' THEN only 'Added' r
     screen.getAllByRole("listitem", { name: "DiffSummaryListItem" }),
   ).toHaveLength(11);
 
-  expect(
-    await screen.findAllByRole("article", { name: "DiffBlock" }),
-  ).toHaveLength(11);
+  expect(await screen.findAllByTestId("DiffBlock")).toHaveLength(11);
 
   expect(
     screen.queryByRole("listbox", { name: "StatusFilterOptions" }),
@@ -297,7 +295,5 @@ test("GIVEN ComplianceCheck page WHEN StatusFilter = 'Added' THEN only 'Added' r
     await screen.findAllByRole("listitem", { name: "DiffSummaryListItem" }),
   ).toHaveLength(2);
 
-  expect(
-    await screen.findAllByRole("article", { name: "DiffBlock" }),
-  ).toHaveLength(2);
+  expect(await screen.findAllByTestId("DiffBlock")).toHaveLength(2);
 });

@@ -1,7 +1,7 @@
 import React from "react";
 import { MemoryRouter } from "react-router-dom";
 import { act, render, screen, within } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { Either, Maybe, RemoteData } from "@/Core";
 import {
@@ -171,9 +171,7 @@ test("GIVEN Environment Actions and delete modal WHEN delete executed and error 
     await apiHelper.resolve(Maybe.some("error message"));
   });
 
-  const errorAlert = screen.getByRole("generic", {
-    name: "Environment Error Alert",
-  });
+  const errorAlert = screen.getByTestId("ErrorAlert");
   expect(within(errorAlert).getByText("error message")).toBeVisible();
 });
 

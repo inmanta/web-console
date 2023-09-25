@@ -81,7 +81,7 @@ export const TimestampFilter: React.FC<Props> = ({
 
   return (
     <Flex
-      style={{ gap: "var(--pf-global--spacer--md)" }}
+      style={{ gap: "var(--pf-v5-global--spacer--md)" }}
       flexWrap={{ lg: "nowrap" }}
     >
       {isVisible && (

@@ -1,5 +1,10 @@
 import React from "react";
-import { TableComposable, Th, Thead, Tr } from "@patternfly/react-table";
+import {
+  Table /* data-codemods */,
+  Th,
+  Thead,
+  Tr,
+} from "@patternfly/react-table";
 import { ServiceModel } from "@/Core";
 import { useUrlStateWithExpansion } from "@/Data";
 import { InstanceState } from "@/UI/Components";
@@ -32,7 +37,7 @@ export const HistoryTable: React.FC<Props> = ({ service, logs }) => {
 
   return (
     <div aria-label="ServiceInstanceHistory-Success">
-      <TableComposable>
+      <Table>
         <Thead>
           <Tr>
             <Th />
@@ -59,7 +64,7 @@ export const HistoryTable: React.FC<Props> = ({ service, logs }) => {
             state={<State service={service} state={dict[id].state} />}
           />
         ))}
-      </TableComposable>
+      </Table>
     </div>
   );
 };

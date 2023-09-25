@@ -1,5 +1,11 @@
 import React from "react";
-import { List, ListItem, ListVariant, Tooltip } from "@patternfly/react-core";
+import {
+  Icon,
+  List,
+  ListItem,
+  ListVariant,
+  Tooltip,
+} from "@patternfly/react-core";
 import {
   OutlinedQuestionCircleIcon,
   ListIcon,
@@ -20,17 +26,23 @@ export const AttributesSummaryView: React.FC<{
   >
     <ListItem aria-label={`Candidate-${candidate ? "NotEmpty" : "Empty"}`}>
       <Tooltip content={words("attributes.candidate")} entryDelay={200}>
-        <OutlinedQuestionCircleIcon color={getColor(candidate)} />
+        <Icon style={{ color: getColor(candidate) }}>
+          <OutlinedQuestionCircleIcon />
+        </Icon>
       </Tooltip>
     </ListItem>
     <ListItem aria-label={`Active-${active ? "NotEmpty" : "Empty"}`}>
       <Tooltip content={words("attributes.active")} entryDelay={200}>
-        <ListIcon color={getColor(active)} />
+        <Icon style={{ color: getColor(active) }}>
+          <ListIcon />
+        </Icon>
       </Tooltip>
     </ListItem>
     <ListItem aria-label={`Rollback-${rollback ? "NotEmpty" : "Empty"}`}>
       <Tooltip content={words("attributes.rollback")} entryDelay={200}>
-        <UndoIcon color={getColor(rollback)} />
+        <Icon style={{ color: getColor(rollback) }}>
+          <UndoIcon />
+        </Icon>
       </Tooltip>
     </ListItem>
   </List>

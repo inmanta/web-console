@@ -1,5 +1,5 @@
 import React from "react";
-import { Tooltip } from "@patternfly/react-core";
+import { Icon, Tooltip } from "@patternfly/react-core";
 import { ExclamationTriangleIcon } from "@patternfly/react-icons";
 import { global_warning_color_100 } from "@patternfly/react-tokens";
 import styled from "styled-components";
@@ -7,7 +7,9 @@ import styled from "styled-components";
 export const Warning: React.FC<{ className?: string }> = ({ className }) => (
   <Tooltip content="Changed value has not been saved">
     <IconWrapper className={className} aria-label="Warning">
-      <ExclamationTriangleIcon color={global_warning_color_100.var} />
+      <Icon style={{ color: global_warning_color_100.var }}>
+        <ExclamationTriangleIcon />
+      </Icon>
     </IconWrapper>
   </Tooltip>
 );

@@ -1,7 +1,7 @@
 import React from "react";
 import { MemoryRouter } from "react-router-dom";
 import { act, render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { userEvent } from "@testing-library/user-event";
 import {
   CommandResolverImpl,
   getStoreInstance,
@@ -50,7 +50,7 @@ function setup() {
 
 test("GIVEN ConfirmationModal WHEN enter is pressed and form is invalid THEN modal is not closed", async () => {
   const { component, onClose } = setup();
-  render(component);
+  await render(component);
   await act(async () => {
     await userEvent.keyboard("{enter}");
   });
@@ -59,7 +59,7 @@ test("GIVEN ConfirmationModal WHEN enter is pressed and form is invalid THEN mod
 
 test("GIVEN ConfirmationModal THEN focus is on the input field", async () => {
   const { component } = setup();
-  render(component);
+  await render(component);
   expect(
     screen.getByRole<HTMLInputElement>("textbox", {
       name: "delete environment check",

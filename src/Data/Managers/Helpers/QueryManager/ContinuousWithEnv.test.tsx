@@ -1,11 +1,10 @@
 import React, { useContext } from "react";
 import { MemoryRouter, useLocation, useNavigate } from "react-router-dom";
 import { act, render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { Either, RemoteData } from "@/Core";
 import { QueryManagerResolver, QueryResolverImpl } from "@/Data";
-
 import { getStoreInstance } from "@/Data/Store";
 import { DeferredApiHelper, dependencies, StaticScheduler } from "@/Test";
 import {

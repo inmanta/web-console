@@ -55,6 +55,7 @@ export const CreateInstance: React.FC<Props> = ({ serviceEntity }) => {
     <>
       {errorMessage && (
         <ToastAlert
+          data-testid="ToastAlert"
           title={words("inventory.addInstance.failed")}
           message={errorMessage}
           setMessage={setErrorMessage}

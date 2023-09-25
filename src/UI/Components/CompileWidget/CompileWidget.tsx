@@ -1,11 +1,11 @@
 import React, { useState } from "react";
+import { Tooltip } from "@patternfly/react-core";
 import {
   Dropdown,
   DropdownToggle,
   DropdownToggleAction,
   DropdownItem,
-  Tooltip,
-} from "@patternfly/react-core";
+} from "@patternfly/react-core/deprecated";
 import styled from "styled-components";
 import { words } from "@/UI/words";
 
@@ -71,7 +71,7 @@ const Widget: React.FC<WidgetProps> = ({
           </StyledDropdownToggleAction>,
         ]}
         splitButtonVariant="action"
-        onToggle={onToggle}
+        onToggle={(_event, value) => onToggle(value)}
         toggleVariant="primary"
       />
     }
