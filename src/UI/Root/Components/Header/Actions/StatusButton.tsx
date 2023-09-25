@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Button } from "@patternfly/react-core";
-import { PageHeaderToolsItem } from "@patternfly/react-core/deprecated";
+import { Button, ToolbarItem } from "@patternfly/react-core";
 import { RunningIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { Link } from "@/UI/Components";
@@ -9,6 +8,7 @@ import { DependencyContext } from "@/UI/Dependency";
 export const StatusButton: React.FC = () => {
   const [statusColor, setStatusColor] = useState("currentColor");
   const { routeManager } = useContext(DependencyContext);
+
   useEffect(() => {
     document.addEventListener("status-down", () => {
       setStatusColor("red");
@@ -25,14 +25,15 @@ export const StatusButton: React.FC = () => {
       });
     };
   }, []);
+
   return (
-    <PageHeaderToolsItem>
+    <ToolbarItem>
       <Link pathname={routeManager.getUrl("Status", undefined)} envOnly>
         <Button aria-label="ServerStatus action" variant="plain">
           <StyledIcon color={statusColor} />
         </Button>
       </Link>
-    </PageHeaderToolsItem>
+    </ToolbarItem>
   );
 };
 

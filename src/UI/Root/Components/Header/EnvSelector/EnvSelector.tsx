@@ -1,12 +1,13 @@
 import React, { useContext } from "react";
-import { Icon, Tooltip } from "@patternfly/react-core";
 import {
+  Divider,
   Dropdown,
-  DropdownGroup,
   DropdownItem,
-  DropdownSeparator,
-  DropdownToggle,
-} from "@patternfly/react-core/deprecated";
+  DropdownList,
+  Icon,
+  MenuToggle,
+  Tooltip,
+} from "@patternfly/react-core";
 import { UserCircleIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { DependencyContext } from "@/UI/Dependency";
@@ -34,13 +35,13 @@ export const EnvSelector: React.FC<Props> = ({
   const { keycloakController } = useContext(DependencyContext);
 
   const envs = [
-    <DropdownGroup label={words("home.environment.selector")} key="envs-group">
+    <DropdownList label={words("home.environment.selector")} key="envs-group">
       {items.map((item, index) => (
         <StyledItem onClick={() => onSelect(item)} key={`env-${index}-${item}`}>
           {item.length > 28 ? item.slice(0, 20) + "..." : item}
         </StyledItem>
       ))}
-    </DropdownGroup>,
+    </DropdownList>,
   ];
 
   //add footer at the end
@@ -63,8 +64,9 @@ export const EnvSelector: React.FC<Props> = ({
   return (
     <StyledDropdown
       isOpen={isOpen}
-      toggle={
-        <StyledToggle id="toggle-button" onToggle={() => setIsOpen(!isOpen)}>
+      onOpenChange={(open) => setIsOpen(!open)}
+      toggle={() => (
+        <MenuToggle id="toggle-button">
           {keycloakController.isEnabled() ? (
             <StyledDiv>
               <StyledIcon size="lg">
@@ -86,10 +88,11 @@ export const EnvSelector: React.FC<Props> = ({
                 : toggleText}
             </>
           )}
-        </StyledToggle>
-      }
-      dropdownItems={envs}
-    />
+        </MenuToggle>
+      )}
+    >
+      {envs}
+    </StyledDropdown>
   );
 };
 
@@ -101,19 +104,11 @@ const StyledDropdown = styled(Dropdown)`
   --pf-v5-c-dropdown__toggle--PaddingRight: 1rem;
   --pf-v5-c-dropdown__toggle--PaddingLeft: 1rem;
 `;
-const StyledToggle = styled(DropdownToggle)`
-  height: 100%;
-  max-width: 360px;
-  min-width: 260px;
-  &::before {
-    border-top: 0;
-  }
-`;
 const StyledItem = styled(DropdownItem)`
   max-width: 260px;
   min-width: 260px;
 `;
-const StyledSeparator = styled(DropdownSeparator)`
+const StyledSeparator = styled(Divider)`
   padding: 0 15px;
   margin: 10px 0 5px !important;
 `;

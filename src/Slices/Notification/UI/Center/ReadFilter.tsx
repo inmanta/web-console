@@ -1,5 +1,5 @@
 import React from "react";
-import { ToolbarFilter } from "@patternfly/react-core";
+import { SelectOptionProps, ToolbarFilter } from "@patternfly/react-core";
 import { SingleTextSelect } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { Filter } from "@S/Notification/Core/Query";
@@ -13,6 +13,9 @@ interface Props {
 }
 
 export const ReadFilter: React.FC<Props> = ({ filter, setFilter }) => {
+  const options: SelectOptionProps[] = list.map((option) => {
+    return { value: options, children: option };
+  });
   const onSelect = (selection) => {
     setFilter({
       ...filter,
@@ -34,7 +37,7 @@ export const ReadFilter: React.FC<Props> = ({ filter, setFilter }) => {
     >
       <SingleTextSelect
         aria-label="ReadOptions"
-        options={list}
+        options={options}
         selected={filterToSelected(filter)}
         setSelected={onSelect}
         toggleAriaLabel="Read"

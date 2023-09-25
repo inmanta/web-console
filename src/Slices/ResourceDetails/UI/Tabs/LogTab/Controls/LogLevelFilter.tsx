@@ -1,5 +1,5 @@
 import React from "react";
-import { ToolbarFilter } from "@patternfly/react-core";
+import { SelectOptionProps, ToolbarFilter } from "@patternfly/react-core";
 import { LogLevelsList } from "@/Core";
 import { SingleTextSelect } from "@/UI/Components";
 import { words } from "@/UI/words";
@@ -11,6 +11,9 @@ interface Props {
 }
 
 export const LogLevelFilter: React.FC<Props> = ({ filter, setFilter }) => {
+  const options: SelectOptionProps[] = LogLevelsList.map((option) => {
+    return { value: option, children: option };
+  });
   const update = (level: string) =>
     setFilter({
       ...filter,
@@ -34,7 +37,7 @@ export const LogLevelFilter: React.FC<Props> = ({ filter, setFilter }) => {
       categoryName="Minimal Log Level"
     >
       <SingleTextSelect
-        options={LogLevelsList}
+        options={options}
         selected={filter.minimal_log_level || null}
         setSelected={onSelect}
         toggleAriaLabel="MinimalLogLevel"
