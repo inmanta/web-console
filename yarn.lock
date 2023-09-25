@@ -1379,7 +1379,7 @@ __metadata:
     jest-environment-jsdom: ^29.6.4
     jest-fetch-mock: ^3.0.3
     jest-junit: ^16.0.0
-    json-bigint: ^1.0.0
+    json-bigint: "https://github.com/sidorares/json-bigint.git#3391780b2a3f613bb51536c47e6cddbca31013eb"
     jszip: ^3.10.1
     keycloak-js: ^22.0.1
     lint-staged: ^14.0.1
@@ -10633,12 +10633,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"json-bigint@npm:^1.0.0":
+"json-bigint@https://github.com/sidorares/json-bigint.git#3391780b2a3f613bb51536c47e6cddbca31013eb":
   version: 1.0.0
-  resolution: "json-bigint@npm:1.0.0"
+  resolution: "json-bigint@https://github.com/sidorares/json-bigint.git#commit=3391780b2a3f613bb51536c47e6cddbca31013eb"
   dependencies:
     bignumber.js: ^9.0.0
-  checksum: c67bb93ccb3c291e60eb4b62931403e378906aab113ec1c2a8dd0f9a7f065ad6fd9713d627b732abefae2e244ac9ce1721c7a3142b2979532f12b258634ce6f6
+  checksum: ea2e403b224460496e58d0396029faafc68af9c73c8f4a1b737d6473eb310f9e223a78c1d9e532fd19df9cd67a2fd4a7be069429bf73207b11b4805df240d4cd
   languageName: node
   linkType: hard
 
