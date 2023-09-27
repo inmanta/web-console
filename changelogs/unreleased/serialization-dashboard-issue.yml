@@ -1,0 +1,5 @@
+change-type: minor
+description: "BigInt serialization is now updated to handle Floats"
+destination-branches:
+  - master
+  - iso6
