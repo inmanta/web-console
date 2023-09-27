@@ -1,5 +1,5 @@
 change-type: minor
-description: "BigInt serialization is now enabled by default"
+description: "BigInt serialization is now updated and enabled by default"
 issue-nr: 5147
 destination-branches:
   - master
