@@ -251,6 +251,7 @@ export function appendEmbeddedEntity(
   embeddedTo: string | null,
   holderType: string,
   instanceToConnectRelation?: ServiceEntityBlock,
+  presentedAttr?: "candidate" | "active",
 ): ServiceEntityBlock[] {
   //Create shape for Entity
   const flatAttributes = embeddedEntity.attributes.map(
@@ -274,18 +275,22 @@ export function appendEmbeddedEntity(
       instanceAsTable.addTo(graph);
 
       createdInstances.push(instanceAsTable);
-
       //iterate through embedded entities to create and connect them
       embeddedEntity.embedded_entities.map((entity) => {
-        const appendedEntity = appendEmbeddedEntity(
+        const appendedEntities = appendEmbeddedEntity(
           paper,
           graph,
           entity,
           entityInstance[entity.name] as InstanceAttributeModel,
           instanceAsTable.id as string,
           embeddedEntity.name,
+          instanceToConnectRelation,
+          presentedAttr,
         );
-        connectEntities(graph, instanceAsTable, appendedEntity);
+        appendedEntities.map((appendedEntities) => {
+          handleInfoIcon(appendedEntities, presentedAttr);
+        });
+        connectEntities(graph, instanceAsTable, appendedEntities);
       });
 
       embeddedEntity.inter_service_relations?.map((relation) => {
@@ -322,7 +327,7 @@ export function appendEmbeddedEntity(
     instanceAsTable.addTo(graph);
 
     //iterate through embedded entities to create and connect them
-    embeddedEntity.embedded_entities.map((entity) => {
+    embeddedEntity.embedded_entities.forEach((entity) => {
       const appendedEntity = appendEmbeddedEntity(
         paper,
         graph,
@@ -331,6 +336,9 @@ export function appendEmbeddedEntity(
         instanceAsTable.id as string,
         entity.name,
       );
+      appendedEntity.forEach((entity) => {
+        handleInfoIcon(entity, presentedAttr);
+      });
       connectEntities(graph, instanceAsTable, appendedEntity);
     });
 
@@ -373,12 +381,12 @@ export function appendEntity(
   //Create shape for Entity
   const instanceAsTable = new ServiceEntityBlock().setName(serviceModel.name);
 
-  if (!isCore) {
-    instanceAsTable.setTabColor(Colors.base);
-  }
   if (isEmbedded) {
     instanceAsTable.setTabColor(Colors.embedded);
+  } else if (!isCore) {
+    instanceAsTable.setTabColor(Colors.base);
   }
+
   instanceAsTable.set("isEmbedded", isEmbedded);
 
   if (
@@ -495,12 +503,14 @@ function handleAttributes(
       instanceAsTable.id as string,
       serviceModel.name,
       instanceToConnectRelation,
+      presentedAttr,
     );
     appendedEntities.map((entity) => {
       handleInfoIcon(entity, presentedAttr);
     });
     connectEntities(graph, instanceAsTable, appendedEntities);
   });
+
   serviceModel.inter_service_relations?.forEach((relation) => {
     const relationId = attributesValues[relation.name];
 

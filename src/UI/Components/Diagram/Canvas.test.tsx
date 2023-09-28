@@ -1,12 +1,18 @@
 import React from "react";
 import { MemoryRouter, useLocation } from "react-router-dom";
-import { render, screen, act } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import {
+  render,
+  act,
+  queries,
+  within as baseWithin,
+} from "@testing-library/react";
+import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { RemoteData, ServiceModel } from "@/Core";
 import { getStoreInstance } from "@/Data";
 import { InstanceWithReferences } from "@/Data/Managers/GetInstanceWithRelations/interface";
 import { dependencies } from "@/Test";
+import * as customQueries from "@/Test/Utils/custom-queries";
 import {
   DependencyProvider,
   EnvironmentHandlerImpl,
@@ -15,6 +21,14 @@ import {
 import Canvas from "@/UI/Components/Diagram/Canvas";
 import services from "./Mocks/services.json";
 import "@testing-library/jest-dom";
+import { Colors } from "./shapes";
+
+const allQueries = {
+  ...queries,
+  ...customQueries,
+};
+
+const screen = baseWithin(document.body, allQueries);
 
 const setup = (instance?: InstanceWithReferences) => {
   const store = getStoreInstance();
@@ -140,67 +154,289 @@ beforeEach(() => {
     })),
   });
   window.SVGPathElement = jest.fn();
+
+  Object.defineProperty(global.SVGElement.prototype, "getComputedTextLength", {
+    writable: true,
+    value: jest.fn().mockReturnValue(0),
+  });
+
+  Object.defineProperty(global.SVGElement.prototype, "getBBox", {
+    writable: true,
+    value: jest.fn().mockReturnValue({
+      x: 0,
+      y: 0,
+    }),
+  });
 });
 
-const createShape = async (shapeName: string, name: string, id: string) => {
-  const button = screen.getByLabelText("new-entity-button");
-  await act(async () => {
-    await userEvent.click(button);
-  });
-
-  const select = screen.getByLabelText("Options menu");
-  await act(async () => {
-    await userEvent.click(select);
-  });
-  await act(async () => {
-    await userEvent.click(screen.getByRole("option", { name: shapeName }));
-  });
-  const input1 = screen.getByLabelText("TextInput-name");
-  await act(async () => {
-    await userEvent.type(input1, name);
-  });
-  const input2 = screen.getByLabelText("TextInput-service_id");
-  await act(async () => {
-    await userEvent.type(input2, id);
-  });
-  console.log(screen.getByLabelText("TextInput-service_id"));
-  await act(async () => {
-    await userEvent.click(screen.getByLabelText("confirm-button"));
-  });
-};
-// const validateShape = (
-//   shapeName: string,
-//   name: string,
-//   id: string,
-//   headerColor: string,
-// ) => {
-//   const headerLabel = document.querySelector('[joint-selector="headerLabel"]');
-//   expect(headerLabel).toHaveTextContent(shapeName);
-//   const header = document.querySelector('[joint-selector="header"]');
-//   expect(header).toHaveAttribute(`fill:"#F0AB00"`);
-//   // cy.getJointSelector("headerLabel").contains(shapeName).should("be.visible");
-//   // cy.getJointSelector("itemLabel_name_value").should("have.text", name);
-//   // cy.getJointSelector("itemLabel_should_deploy_fail").should(
-//   //   "have.text",
-//   //   "should_deploy" + "\u2026",
-//   // );
-//   // cy.getJointSelector("itemLabel_should_deploy_fail").trigger("mouseover");
-//   // cy.contains("should_deploy_fail").should("be.visible");
-//   // cy.getJointSelector("itemLabel_should_deploy_fail").trigger("mouseout");
-//   // cy.getJointSelector("itemLabel_should_deploy_fail_value").should(
-//   //   "have.text",
-//   //   "false",
-//   // );
-//   // cy.getJointSelector("itemLabel_service_id_value").should("have.text", id);
-// };
-
 describe("Canvas.tsx", () => {
-  it("render", async () => {
+  it("renders canvas correctly", async () => {
+    const component = setup();
+    render(component);
+  });
+
+  it("renders created core service successfully", async () => {
+    const component = setup();
+    render(component);
+    const shapeName = "parent-service";
+    const name = "name-001";
+    const id = "id-001";
+    const button = screen.getByLabelText("new-entity-button");
+    await act(async () => {
+      await userEvent.click(button);
+    });
+
+    const select = screen.getByLabelText("Options menu");
+    await act(async () => {
+      await userEvent.click(select);
+    });
+    await act(async () => {
+      await userEvent.click(screen.getByRole("option", { name: shapeName }));
+    });
+
+    const input1 = screen.getByLabelText("TextInput-name");
+    await act(async () => {
+      await userEvent.type(input1, name);
+    });
+
+    const input2 = screen.getByLabelText("TextInput-service_id");
+    await act(async () => {
+      await userEvent.type(input2, id);
+    });
+
+    await act(async () => {
+      await userEvent.click(screen.getByLabelText("confirm-button"));
+    });
+
+    //validate shape
+    const headerLabel = await screen.findByJointSelector("headerLabel");
+    expect(headerLabel).toHaveTextContent(shapeName);
+
+    const header = screen.getByJointSelector("header");
+    expect(header).toHaveAttribute("fill", Colors.core);
+
+    const nameValue = screen.getByJointSelector("itemLabel_name_value");
+    expect(nameValue).toHaveTextContent(name);
+
+    const shouldDeployValue = screen.getByJointSelector(
+      "itemLabel_should_deploy_fail_value",
+    );
+    expect(shouldDeployValue).toHaveTextContent("false");
+
+    expect(
+      screen.getByJointSelector("itemLabel_service_id_value"),
+    ).toHaveTextContent(id);
+  });
+
+  it("renders created non-core service successfully", async () => {
+    const component = setup();
+    render(component);
+    const shapeName = "child-service";
+    const name = "name-001";
+    const id = "id-001";
+
+    //create shape
+    const button = screen.getByLabelText("new-entity-button");
+    await act(async () => {
+      await userEvent.click(button);
+    });
+
+    const select = screen.getByLabelText("Options menu");
+    await act(async () => {
+      await userEvent.click(select);
+    });
+    await act(async () => {
+      await userEvent.click(screen.getByRole("option", { name: shapeName }));
+    });
+
+    const input1 = screen.getByLabelText("TextInput-name");
+    await act(async () => {
+      await userEvent.type(input1, name);
+    });
+
+    const input2 = screen.getByLabelText("TextInput-service_id");
+    await act(async () => {
+      await userEvent.type(input2, id);
+    });
+
+    await act(async () => {
+      await userEvent.click(screen.getByLabelText("confirm-button"));
+    });
+    //validate shape
+    const headerLabel = await screen.findByJointSelector("headerLabel");
+    expect(headerLabel).toHaveTextContent(shapeName);
+
+    const header = screen.getByJointSelector("header");
+    expect(header).toHaveAttribute("fill", Colors.base);
+
+    const nameValue = screen.getByJointSelector("itemLabel_name_value");
+    expect(nameValue).toHaveTextContent(name);
+
+    const shouldDeployValue = screen.getByJointSelector(
+      "itemLabel_should_deploy_fail_value",
+    );
+    expect(shouldDeployValue).toHaveTextContent("false");
+
+    expect(
+      screen.getByJointSelector("itemLabel_service_id_value"),
+    ).toHaveTextContent(id);
+  });
+
+  it("renders created embedded entity successfully", async () => {
     const component = setup();
     render(component);
     const name = "name-001";
-    const id = "id-001";
-    await createShape("parent-service", name, id);
-    // await validateShape("parent-service", name, id, "#F0AB00");
+    const button = screen.getByLabelText("new-entity-button");
+
+    await act(async () => {
+      await userEvent.click(button);
+    });
+
+    //create shape
+    const select = screen.getByLabelText("Options menu");
+    await act(async () => {
+      await userEvent.click(select);
+    });
+
+    await act(async () => {
+      await userEvent.click(
+        screen.getByRole("option", {
+          name: "child_container (container-service)",
+        }),
+      );
+    });
+
+    const input1 = screen.getByLabelText("TextInput-name");
+    await act(async () => {
+      await userEvent.type(input1, name);
+    });
+
+    await act(async () => {
+      await userEvent.click(screen.getByLabelText("confirm-button"));
+    });
+
+    //validate shape
+    const headerLabel = screen.getByJointSelector("headerLabel");
+    expect(headerLabel).toHaveTextContent("child_container");
+
+    const header = screen.getByJointSelector("header");
+    expect(header).toHaveAttribute("fill", Colors.embedded);
+
+    const nameValue = screen.getByJointSelector("itemLabel_name_value");
+    expect(nameValue).toHaveTextContent(name);
   });
+
+  // it("renders created and connected service with embedded entity successfully", async () => {
+  //   const component = setup();
+  //   render(component);
+  //   const name = "name-001";
+  //   const id = "id-001";
+
+  //   //create shape
+  //   const button = screen.getByLabelText("new-entity-button");
+  //   await act(async () => {
+  //     await userEvent.click(button);
+  //   });
+
+  //   const select = screen.getByLabelText("Options menu");
+  //   await act(async () => {
+  //     await userEvent.click(select);
+  //   });
+  //   await act(async () => {
+  //     await userEvent.click(
+  //       screen.getByRole("option", { name: "container-service" }),
+  //     );
+  //   });
+
+  //   const input1 = screen.getByLabelText("TextInput-name");
+  //   await act(async () => {
+  //     await userEvent.type(input1, name);
+  //   });
+
+  //   const input2 = screen.getByLabelText("TextInput-service_id");
+  //   await act(async () => {
+  //     await userEvent.type(input2, id);
+  //   });
+
+  //   await act(async () => {
+  //     await userEvent.click(screen.getByLabelText("confirm-button"));
+  //   });
+
+  //   const containerName = "name-002";
+
+  //   await act(async () => {
+  //     await userEvent.click(button);
+  //   });
+
+  //   //create embedded shape
+  //   const containerSelect = screen.getByLabelText("Options menu");
+  //   await act(async () => {
+  //     await userEvent.click(containerSelect);
+  //   });
+  //   await act(async () => {
+  //     await userEvent.click(
+  //       screen.getByRole("option", {
+  //         name: "child_container (container-service)",
+  //       }),
+  //     );
+  //   });
+
+  //   const containerInput = screen.getByLabelText("TextInput-name");
+  //   await act(async () => {
+  //     await userEvent.type(containerInput, containerName);
+  //   });
+
+  //   await act(async () => {
+  //     await userEvent.click(screen.getByLabelText("confirm-button"));
+  //   });
+  // });
+
+  // it("renders created services with inter-service relation successfully", async () => {
+  //   const component = setup();
+  //   render(component);
+  //   const name = "name-001";
+  //   const id = "id-001";
+  //   await createShape("parent-service", name, id);
+  //   await validateShape("parent-service", name, id, "#F0AB00");
+  // });
+
+  // it("renders edits correctly services", async () => {
+  //   const component = setup();
+  //   render(component);
+  //   const name = "name-001";
+  //   const id = "id-001";
+  //   await createShape("parent-service", name, id);
+  //   await validateShape("parent-service", name, id, "#F0AB00");
+  // });
+
+  // it("renders deletes correctly services", async () => {
+  //   const component = setup();
+  //   render(component);
+  //   const name = "name-001";
+  //   const id = "id-001";
+  //   await createShape("parent-service", name, id);
+  //   await validateShape("parent-service", name, id, "#F0AB00");
+  // });
+
+  // it("renders deletes correctly connections between services", async () => {
+  //   const component = setup();
+  //   render(component);
+  //   const name = "name-001";
+  //   const id = "id-001";
+  //   //embedded
+  //   await createShape("parent-service", name, id);
+  //   await validateShape("parent-service", name, id, "#F0AB00");
+  //   //inter-service
+  // });
+
+  // it("renders truncated values and label correctly, appends tooltips onto them", async () => {
+  //   const component = setup();
+  //   render(component);
+  //   const name = "name-001";
+  //   const id = "id-001";
+  //   //embedded
+  //   await createShape("parent-service", name, id);
+  //   await validateShape("parent-service", name, id, "#F0AB00");
+  //   //inter-service
+  // });
 });

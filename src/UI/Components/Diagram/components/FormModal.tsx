@@ -36,6 +36,11 @@ interface PossibleForm {
   model: ServiceModel | EmbeddedEntity | undefined;
   isEmbedded: boolean;
 }
+interface Selected {
+  name: string;
+  model: ServiceModel | EmbeddedEntity;
+  isEmbedded: boolean;
+}
 
 const FormModal = ({
   isOpen,
@@ -48,27 +53,13 @@ const FormModal = ({
   toggleIsOpen: (value: boolean) => void;
   services: ServiceModel[];
   cellView: dia.CellView | null;
-  onConfirm: (
-    entity: InstanceAttributeModel,
-    selected: {
-      name: string;
-      model: ServiceModel | EmbeddedEntity;
-      isEmbedded: boolean;
-    },
-  ) => void;
+  onConfirm: (entity: InstanceAttributeModel, selected: Selected) => void;
 }) => {
   const [possibleForms, setPossibleForms] = useState<PossibleForm[]>([]);
   const [fields, setFields] = useState<Field[]>([]);
   const [formState, setFormState] = useState<InstanceAttributeModel>({});
   const [isSelectOpen, setIsSelectOpen] = useState(false);
-  const [selected, setSelected] = useState<
-    | {
-        name: string;
-        model: ServiceModel | EmbeddedEntity;
-        isEmbedded: boolean;
-      }
-    | undefined
-  >(undefined);
+  const [selected, setSelected] = useState<Selected | undefined>(undefined);
 
   const clearStates = () => {
     setIsSelectOpen(false);
@@ -285,7 +276,7 @@ const StyledModal = styled(Modal)`
   height: 600px;
 `;
 const StyledButton = styled(Button)`
-  --pf-v5-c-button--PaddingTop: px;
+  --pf-v5-c-button--PaddingTop: 0px;
   --pf-v5-c-button--PaddingBottom: 0px;
   width: 101px;
   height: 30px;
