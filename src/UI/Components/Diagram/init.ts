@@ -12,13 +12,14 @@ import createHalo from "./halo";
 import { checkIfConnectionIsAllowed } from "./helpers";
 import collapseButton from "./icons/collapse-icon.svg";
 import expandButton from "./icons/expand-icon.svg";
-import { ConnectionRules, serializedCell } from "./interfaces";
+import { ActionEnum, ConnectionRules, serializedCell } from "./interfaces";
 import { routerNamespace } from "./routers";
 import { EntityConnection, ServiceEntityBlock } from "./shapes";
 
 export default function diagramInit(
   canvas,
   connectionRules: ConnectionRules,
+  updateInstancesToSend: (cell: ServiceEntityBlock, action: ActionEnum) => void,
 ): DiagramHandlers {
   /**
    * https://resources.jointjs.com/docs/jointjs/v3.6/joint.html#dia.Graph
@@ -153,13 +154,19 @@ export default function diagramInit(
     // We don't want a Halo for links.
     if (cellView.model instanceof dia.Link) return;
 
-    const halo = createHalo(graph, paper, cellView, connectionRules);
+    const halo = createHalo(
+      graph,
+      paper,
+      cellView,
+      connectionRules,
+      updateInstancesToSend,
+    );
 
     halo.render();
   });
 
   paper.on("link:mouseenter", (linkView: dia.LinkView) => {
-    showLinkTools(graph, linkView);
+    showLinkTools(graph, linkView, updateInstancesToSend);
   });
 
   paper.on("link:mouseleave", (linkView: dia.LinkView) => {
@@ -170,6 +177,8 @@ export default function diagramInit(
     //only id values are stored in the linkView
     const source = linkView.model.source();
     const target = linkView.model.target();
+    let didSourceChanged = false;
+    let didTargetChanged = false;
 
     const sourceCell = graph.getCell(
       source.id as dia.Cell.ID,
@@ -183,12 +192,14 @@ export default function diagramInit(
       sourceCell.get("isEmbeddedTo") !== null
     ) {
       sourceCell.set("isEmbeddedTo", targetCell.id);
+      didSourceChanged = true;
     }
     if (
       targetCell.get("isEmbedded") &&
       targetCell.get("isEmbeddedTo") !== null
     ) {
       targetCell.set("isEmbeddedTo", sourceCell.id);
+      didTargetChanged = true;
     }
 
     const sourceRelations = sourceCell.getRelations();
@@ -200,8 +211,10 @@ export default function diagramInit(
       const doesSourceHaveRule = connectionRules[sourceName].find(
         (rule) => rule.name === targetName,
       );
+
       if (doesSourceHaveRule) {
         sourceCell.addRelation(targetCell.id as string, targetName);
+        didSourceChanged = true;
       }
     }
 
@@ -209,9 +222,18 @@ export default function diagramInit(
       const doesTargetHaveRule = connectionRules[targetName].find(
         (rule) => rule.name === sourceName,
       );
+
       if (doesTargetHaveRule) {
         targetCell.addRelation(sourceCell.id as string, sourceName);
+        didTargetChanged = true;
       }
+    }
+
+    if (didSourceChanged) {
+      updateInstancesToSend(sourceCell, ActionEnum.UPDATE);
+    }
+    if (didTargetChanged) {
+      updateInstancesToSend(targetCell, ActionEnum.UPDATE);
     }
   });
 
@@ -296,6 +318,7 @@ export default function diagramInit(
         attributeValues,
         false,
       );
+      return cellView.model as ServiceEntityBlock;
     },
     zoom: (delta) => {
       scroller.zoom(0.05 * delta, { min: 0.4, max: 1.2, grid: 0.05 });
@@ -320,6 +343,6 @@ export interface DiagramHandlers {
     cellView: dia.CellView,
     serviceModel: ServiceModel,
     attributeValues: InstanceAttributeModel,
-  ) => void;
+  ) => ServiceEntityBlock;
   zoom: (delta: 1 | -1) => void;
 }

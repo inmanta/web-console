@@ -10,9 +10,11 @@ import entityIcon from "../icons/new-entity-icon.png";
 
 const Toolbar = ({
   openEntityModal,
+  handleDeploy,
   serviceName,
 }: {
   openEntityModal: () => void;
+  handleDeploy: () => void;
   serviceName: string;
 }) => {
   const { routeManager } = useContext(DependencyContext);
@@ -73,7 +75,7 @@ const Toolbar = ({
           >
             {words("cancel")}
           </StyledButtonTwo>
-          <StyledButtonTwo variant="primary" width={200}>
+          <StyledButtonTwo variant="primary" width={200} onClick={handleDeploy}>
             {words("deploy")}
           </StyledButtonTwo>
         </Flex>

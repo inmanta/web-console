@@ -48,7 +48,7 @@ export function TriggerInstanceUpdateCommandManager(apiHelper: ApiHelper) {
   );
 }
 
-const create_UUID = () => {
+export const create_UUID = () => {
   let dt = new Date().getTime();
   const uuid = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
     /[xy]/g,
