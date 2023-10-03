@@ -9,4 +9,3 @@ jest.setTimeout(10000);
 
 //JointJS mock to make library work
 window.SVGAngle = jest.fn();
-window.SVGAngle = jest.fn();
