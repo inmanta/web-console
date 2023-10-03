@@ -25,6 +25,8 @@ interface Props {
   onSearchTextChanged?: (value: string) => void;
   hasChips?: boolean;
   toggleIcon?: React.ReactNode;
+  hasCheckboxes?: boolean;
+  footer?: React.ReactNode;
 }
 
 export const MultiTextSelect: React.FC<Props> = ({
@@ -35,6 +37,7 @@ export const MultiTextSelect: React.FC<Props> = ({
   placeholderText,
   onSearchTextChanged = () => {},
   hasChips = false,
+  hasCheckboxes = false,
   ...props
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -47,6 +50,7 @@ export const MultiTextSelect: React.FC<Props> = ({
 
   useEffect(() => {
     let newSelectOptions: SelectOptionProps[] = options;
+    console.log(options, inputValue, selectOptions);
 
     // Filter menu items based on the text input value when one exists
     if (inputValue) {
@@ -67,6 +71,16 @@ export const MultiTextSelect: React.FC<Props> = ({
         ];
       }
 
+      if (
+        options.some(
+          (option) =>
+            option.children?.toLocaleString().toLocaleLowerCase() ===
+            inputValue.toLocaleLowerCase(),
+        )
+      ) {
+        setSelected(inputValue as string);
+      }
+
       if (!isOpen) {
         setIsOpen(true);
       }
@@ -77,7 +91,7 @@ export const MultiTextSelect: React.FC<Props> = ({
     setActiveItem(null);
     onSearchTextChanged(inputValue);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [inputValue, options]);
+  }, [inputValue]);
 
   const handleMenuArrowKeys = (key: string) => {
     let indexToFocus;
@@ -154,7 +168,6 @@ export const MultiTextSelect: React.FC<Props> = ({
     value: string,
   ) => {
     setInputValue(value);
-    onSearchTextChanged(value);
   };
 
   const onSelect = (value: string) => {
@@ -191,11 +204,11 @@ export const MultiTextSelect: React.FC<Props> = ({
           disabled={props.isDisabled}
         >
           {hasChips && (
-            <ChipGroup aria-label="Current selections">
-              {selected.map((selection, index) => (
+            <ChipGroup aria-label="Current selections" numChips={0}>
+              {selected.map((selection) => (
                 <Chip
                   disabled={props.isDisabled}
-                  key={index}
+                  key={selection}
                   onClick={(ev) => {
                     ev.stopPropagation();
                     onSelect(selection);
@@ -214,7 +227,7 @@ export const MultiTextSelect: React.FC<Props> = ({
               variant="plain"
               onClick={() => {
                 setInputValue("");
-                setSelected([]);
+                setSelected("");
                 textInputRef?.current?.focus();
               }}
               aria-label="Clear input value"
@@ -231,7 +244,6 @@ export const MultiTextSelect: React.FC<Props> = ({
     <Select
       id="multi-typeahead-select"
       isOpen={isOpen}
-      selected={selected}
       onSelect={(_ev, selection) => onSelect(selection as string)}
       onOpenChange={() => setIsOpen(false)}
       toggle={toggle}
@@ -239,9 +251,11 @@ export const MultiTextSelect: React.FC<Props> = ({
       <SelectList isAriaMultiselectable id="select-multi-typeahead-listbox">
         {selectOptions.map((option, index) => (
           <SelectOption
+            {...(!option.isDisabled && { hasCheckbox: hasCheckboxes })}
             disabled={props.isDisabled}
             key={option.value || option.children}
             isFocused={focusedItemIndex === index}
+            isSelected={option.isSelected}
             className={option.className}
             id={`select-multi-typeahead-${option.value.replace(" ", "-")}`}
             {...option}
@@ -249,6 +263,7 @@ export const MultiTextSelect: React.FC<Props> = ({
           />
         ))}
       </SelectList>
+      {props.footer}
     </Select>
   );
 };

@@ -1,14 +1,9 @@
-import React, { useState } from "react";
-import { Button, ToolbarGroup } from "@patternfly/react-core";
-import {
-  Select,
-  SelectOption,
-  SelectVariant,
-} from "@patternfly/react-core/deprecated";
-import styled from "styled-components";
+import React from "react";
+import { Button, MenuFooter, ToolbarGroup } from "@patternfly/react-core";
 import { Diff } from "@/Core";
 import { StatusDescriptor } from "@/UI/Components/DiffWizard/StatusDescriptor";
 import { words } from "@/UI/words";
+import { MultiTextSelect } from "../../MultiTextSelect";
 
 interface Props {
   statuses: Diff.Status[];
@@ -16,9 +11,7 @@ interface Props {
 }
 
 export const StatusFilter: React.FC<Props> = ({ statuses, setStatuses }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const onToggle = (isOpen) => setIsOpen(isOpen);
-  const onSelect = (event, selection) => {
+  const onSelect = (selection) => {
     if (statuses.includes(selection)) {
       setStatuses(statuses.filter((item) => item !== selection));
     } else {
@@ -33,36 +26,27 @@ export const StatusFilter: React.FC<Props> = ({ statuses, setStatuses }) => {
 
   return (
     <ToolbarGroup align={{ default: "alignLeft" }}>
-      <Select
-        variant={SelectVariant.checkbox}
-        toggleAriaLabel="StatusFilter"
+      <MultiTextSelect
         aria-label="StatusFilterOptions"
-        onToggle={(_event, isOpen) => onToggle(isOpen)}
-        onSelect={onSelect}
-        selections={statuses}
-        isCheckboxSelectionBadgeHidden
-        isOpen={isOpen}
+        toggleAriaLabel="StatusFilter"
         placeholderText="Filter by Status"
+        selected={statuses}
+        setSelected={onSelect}
         footer={
-          <Button variant="link" isInline onClick={allCallback}>
-            {allLabel}
-          </Button>
+          <MenuFooter>
+            <Button variant="link" isInline onClick={allCallback}>
+              {allLabel}
+            </Button>
+          </MenuFooter>
         }
-      >
-        {Diff.statuses.map((status) => (
-          <SelectOption
-            key={status}
-            value={status}
-            aria-label="StatusFilterOption"
-          >
-            <StyledStatusDescriptor status={status} /> {status}
-          </SelectOption>
-        ))}
-      </Select>
+        options={Diff.statuses.map((option: Diff.Status) => {
+          return {
+            value: option,
+            children: option,
+            icon: <StatusDescriptor status={option} />,
+          };
+        })}
+      />
     </ToolbarGroup>
   );
 };
-
-const StyledStatusDescriptor = styled(StatusDescriptor)`
-  display: inline-block;
-`;

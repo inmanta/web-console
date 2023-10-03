@@ -63,6 +63,10 @@ export const CreateCallbackForm: React.FC<Props> = ({
     }
   };
 
+  const onSelect = (selected) => {
+    setEventTypes(selected);
+  };
+
   return (
     <Tbody>
       <Tr>
@@ -96,7 +100,7 @@ export const CreateCallbackForm: React.FC<Props> = ({
               return { value: option, children: option };
             })}
             selected={eventTypes}
-            setSelected={setEventTypes}
+            setSelected={onSelect}
             toggleAriaLabel="EventTypes"
           />
         </StyledTd>

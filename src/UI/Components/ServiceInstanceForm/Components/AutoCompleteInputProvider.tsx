@@ -37,6 +37,7 @@ export const AutoCompleteInputProvider: React.FC<Props> = ({
     filter,
     pageSize: PageSize.from("100"),
   });
+
   const onSearchTextChanged = (searchText: string) => {
     if (serviceIdentity) {
       setFilter({ identity: { key: serviceIdentity, value: searchText } });
@@ -76,7 +77,7 @@ export const AutoCompleteInputProvider: React.FC<Props> = ({
             return {
               displayName,
               value: id,
-              alreadySelected: alreadySelected.includes(id),
+              isSelected: alreadySelected.includes(id),
             };
           },
         );

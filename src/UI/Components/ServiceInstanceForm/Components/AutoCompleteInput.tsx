@@ -12,7 +12,7 @@ import { SingleTextSelect } from "../../SingleTextSelect";
 interface Option {
   displayName: string;
   value: string;
-  alreadySelected?: boolean;
+  isSelected?: boolean;
 }
 
 interface Props {
@@ -24,7 +24,7 @@ interface Props {
   isOptional: boolean;
   shouldBeDisabled?: boolean;
   handleInputChange: (value) => void;
-  onSearchTextChanged: (value: string) => void;
+  onSearchTextChanged?: (value: string) => void;
   multi?: boolean;
 }
 export const AutoCompleteInput: React.FC<Props> = ({
@@ -41,7 +41,11 @@ export const AutoCompleteInput: React.FC<Props> = ({
   ...props
 }) => {
   const initialOptions = options.map((option) => {
-    return { value: option.value, children: option.displayName };
+    return {
+      value: option.value,
+      children: option.displayName,
+      isSelected: option.isSelected,
+    };
   });
 
   return (

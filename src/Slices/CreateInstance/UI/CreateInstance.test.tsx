@@ -131,10 +131,16 @@ test("Given the CreateInstance View When creating an instance with Inter-service
       Either.right({ data: [ServiceInstance.a, ServiceInstance.b] }),
     );
   });
+  await act(async () => {
+    apiHelper.resolve(
+      Either.right({ data: [ServiceInstance.a, ServiceInstance.b] }),
+    );
+  });
 
   const relationInputField = screen.getByPlaceholderText(
     words("common.serviceInstance.relation"),
   );
+
   await act(async () => {
     await userEvent.type(relationInputField, "a");
   });
@@ -143,10 +149,9 @@ test("Given the CreateInstance View When creating an instance with Inter-service
     url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=100&filter.order_id=a`,
     environment: "env",
   });
+
   await act(async () => {
-    await apiHelper.resolve(
-      Either.right({ data: [ServiceInstance.a, ServiceInstance.b] }),
-    );
+    await apiHelper.resolve(Either.right({ data: [ServiceInstance.a] }));
   });
   await act(async () => {
     await userEvent.type(relationInputField, "{selectall}{backspace}ab");
@@ -157,22 +162,33 @@ test("Given the CreateInstance View When creating an instance with Inter-service
     environment: "env",
   });
   await act(async () => {
+    apiHelper.resolve(Either.right({ data: [] }));
+  });
+
+  const options = await screen.findAllByRole("option");
+  expect(options[0].textContent).toHaveTextContent('No results found for "ab"');
+
+  await act(async () => {
+    await userEvent.type(relationInputField, "{backspace}{backspace}");
+  });
+  expect(apiHelper.pendingRequests[0]).toEqual({
+    method: "GET",
+    url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=100&filter.order_id=`,
+    environment: "env",
+  });
+  await act(async () => {
     apiHelper.resolve(
       Either.right({ data: [ServiceInstance.a, ServiceInstance.b] }),
     );
   });
 
-  const options = await screen.findAllByRole("option");
   await act(async () => {
     await userEvent.click(options[0]);
   });
+
+  expect(options[0]).toHaveClass("pf-m-selected");
   await act(async () => {
-    await userEvent.click(relationInputField);
-  });
-  const options2 = await screen.findAllByRole("option");
-  expect(options2[0]).toHaveClass("pf-m-disabled");
-  await act(async () => {
-    await userEvent.click(options2[1]);
+    await userEvent.click(options[1]);
     await userEvent.click(
       screen.getByRole("button", { name: words("confirm") }),
     );

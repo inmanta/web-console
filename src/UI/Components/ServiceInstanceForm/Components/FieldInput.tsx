@@ -121,9 +121,10 @@ export const FieldInput: React.FC<Props> = ({
             get(originalState, makePath(path, field.name)) !== undefined
           }
           type={field.inputType}
-          handleInputChange={(value, _event) =>
-            getUpdate(makePath(path, field.name), value)
-          }
+          handleInputChange={(value, _event) => {
+            console.log(value);
+            getUpdate(makePath(path, field.name), value);
+          }}
           placeholder={getPlaceholderForType(field.type)}
           typeHint={getTypeHintForType(field.type)}
           key={field.name}
@@ -221,9 +222,10 @@ export const FieldInput: React.FC<Props> = ({
             get(formState, makePath(path, field.name), []) as string[]
           }
           isOptional={field.isOptional}
-          handleInputChange={(value) =>
-            getUpdate(makePath(path, field.name), value, true)
-          }
+          handleInputChange={(value) => {
+            console.log("VALUE: ", value);
+            getUpdate(makePath(path, field.name), value, true);
+          }}
           multi={true}
         />
       );

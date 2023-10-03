@@ -72,6 +72,16 @@ export const SingleTextSelect: React.FC<Props> = ({
         ];
       }
 
+      if (
+        options.some(
+          (option) =>
+            option.children?.toLocaleString() ===
+            filterValue.toLocaleLowerCase(),
+        )
+      ) {
+        setSelected(filterValue as string);
+      }
+
       if (!isOpen) {
         setIsOpen(true);
       }
@@ -82,10 +92,20 @@ export const SingleTextSelect: React.FC<Props> = ({
     setFocusedItemIndex(null);
     onSearchTextChanged(inputValue);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filterValue, options]);
+  }, [filterValue]);
+
+  useEffect(() => {
+    setSelectOptions(options);
+  }, [options]);
 
   const onToggleClick = () => {
     setIsOpen(!isOpen);
+  };
+
+  const getDisplayValue = (value: string | number | undefined) => {
+    const selectedItem = options.find((option) => option.value === value);
+
+    return selectedItem?.children || value;
   };
 
   const onSelect = (
@@ -98,7 +118,7 @@ export const SingleTextSelect: React.FC<Props> = ({
         setSelected(inputValue);
         onCreate(inputValue);
       } else {
-        setInputValue(value as string);
+        setInputValue(getDisplayValue(value) as string);
         setSelected(value as string);
       }
     }
@@ -236,12 +256,12 @@ export const SingleTextSelect: React.FC<Props> = ({
     <Select
       id="typeahead-select"
       isOpen={isOpen}
-      selected={selected}
       onSelect={onSelect}
       onOpenChange={() => {
         setIsOpen(false);
       }}
       toggle={toggle}
+      selected={selected}
     >
       <SelectList id="select-typeahead-listbox">
         {selectOptions.map((option, index) => (
@@ -249,6 +269,7 @@ export const SingleTextSelect: React.FC<Props> = ({
             isDisabled={props.isDisabled}
             key={option.value || option.children}
             isFocused={focusedItemIndex === index}
+            isSelected={option.isSelected}
             className={option.className}
             onClick={() => setSelected(option.value)}
             id={`select-typeahead-${option.value.replace(" ", "-")}`}
