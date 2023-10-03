@@ -19,6 +19,7 @@ import {
   PrimaryRouteManager,
 } from "@/UI";
 import Canvas from "@/UI/Components/Diagram/Canvas";
+import { mockedInstanceWithReferences } from "./Mock";
 import services from "./Mocks/services.json";
 import "@testing-library/jest-dom";
 import { Colors } from "./shapes";
@@ -27,7 +28,7 @@ const allQueries = {
   ...queries,
   ...customQueries,
 };
-
+const user = userEvent.setup();
 const screen = baseWithin(document.body, allQueries);
 
 const setup = (instance?: InstanceWithReferences) => {
@@ -74,6 +75,64 @@ const setup = (instance?: InstanceWithReferences) => {
       </StoreProvider>
     </MemoryRouter>
   );
+};
+
+const deleteAndAssert = async (
+  name: string,
+  assertionTwo: number,
+  assertionThree: number,
+) => {
+  const childContainer = await screen.findByText(name);
+  await act(async () => {
+    await user.click(childContainer);
+  });
+
+  const handle3 = document.querySelector('[data-action="delete"]') as Element;
+
+  await act(async () => {
+    await user.click(handle3);
+  });
+  //Delay has to be done as library base itself on listeners that are async
+  await new Promise((r) => setTimeout(r, 10));
+
+  const updatedEntities3 = document.querySelectorAll(
+    '[data-type="app.ServiceEntityBlock"]',
+  );
+  const updatedConnectors3 = document.querySelectorAll(
+    '[data-type="app.Link"]',
+  );
+
+  expect(updatedEntities3).toHaveLength(assertionTwo);
+  expect(updatedConnectors3).toHaveLength(assertionThree);
+};
+
+const createShapeWithNameAndId = async (shapeName: string, name, id) => {
+  const button = screen.getByLabelText("new-entity-button");
+  await act(async () => {
+    await user.click(button);
+  });
+
+  const select = screen.getByLabelText("Options menu");
+  await act(async () => {
+    await user.click(select);
+  });
+  await act(async () => {
+    await user.click(screen.getByRole("option", { name: shapeName }));
+  });
+
+  const input1 = screen.getByLabelText("TextInput-name");
+  await act(async () => {
+    await user.type(input1, name);
+  });
+
+  const input2 = screen.getByLabelText("TextInput-service_id");
+  await act(async () => {
+    await user.type(input2, id);
+  });
+
+  await act(async () => {
+    await user.click(screen.getByLabelText("confirm-button"));
+  });
 };
 
 beforeEach(() => {
@@ -167,6 +226,16 @@ beforeEach(() => {
       y: 0,
     }),
   });
+
+  Object.defineProperty(global.SVGElement.prototype, "getScreenCTM", {
+    writable: true,
+    value: jest.fn().mockReturnValue(0),
+  });
+
+  Object.defineProperty(Document.prototype, "elementFromPoint", {
+    writable: true,
+    value: jest.fn().mockReturnValue(null),
+  });
 });
 
 describe("Canvas.tsx", () => {
@@ -181,32 +250,8 @@ describe("Canvas.tsx", () => {
     const shapeName = "parent-service";
     const name = "name-001";
     const id = "id-001";
-    const button = screen.getByLabelText("new-entity-button");
-    await act(async () => {
-      await userEvent.click(button);
-    });
 
-    const select = screen.getByLabelText("Options menu");
-    await act(async () => {
-      await userEvent.click(select);
-    });
-    await act(async () => {
-      await userEvent.click(screen.getByRole("option", { name: shapeName }));
-    });
-
-    const input1 = screen.getByLabelText("TextInput-name");
-    await act(async () => {
-      await userEvent.type(input1, name);
-    });
-
-    const input2 = screen.getByLabelText("TextInput-service_id");
-    await act(async () => {
-      await userEvent.type(input2, id);
-    });
-
-    await act(async () => {
-      await userEvent.click(screen.getByLabelText("confirm-button"));
-    });
+    await createShapeWithNameAndId(shapeName, name, id);
 
     //validate shape
     const headerLabel = await screen.findByJointSelector("headerLabel");
@@ -235,33 +280,8 @@ describe("Canvas.tsx", () => {
     const name = "name-001";
     const id = "id-001";
 
-    //create shape
-    const button = screen.getByLabelText("new-entity-button");
-    await act(async () => {
-      await userEvent.click(button);
-    });
+    await createShapeWithNameAndId(shapeName, name, id);
 
-    const select = screen.getByLabelText("Options menu");
-    await act(async () => {
-      await userEvent.click(select);
-    });
-    await act(async () => {
-      await userEvent.click(screen.getByRole("option", { name: shapeName }));
-    });
-
-    const input1 = screen.getByLabelText("TextInput-name");
-    await act(async () => {
-      await userEvent.type(input1, name);
-    });
-
-    const input2 = screen.getByLabelText("TextInput-service_id");
-    await act(async () => {
-      await userEvent.type(input2, id);
-    });
-
-    await act(async () => {
-      await userEvent.click(screen.getByLabelText("confirm-button"));
-    });
     //validate shape
     const headerLabel = await screen.findByJointSelector("headerLabel");
     expect(headerLabel).toHaveTextContent(shapeName);
@@ -289,17 +309,17 @@ describe("Canvas.tsx", () => {
     const button = screen.getByLabelText("new-entity-button");
 
     await act(async () => {
-      await userEvent.click(button);
+      await user.click(button);
     });
 
     //create shape
     const select = screen.getByLabelText("Options menu");
     await act(async () => {
-      await userEvent.click(select);
+      await user.click(select);
     });
 
     await act(async () => {
-      await userEvent.click(
+      await user.click(
         screen.getByRole("option", {
           name: "child_container (container-service)",
         }),
@@ -308,15 +328,15 @@ describe("Canvas.tsx", () => {
 
     const input1 = screen.getByLabelText("TextInput-name");
     await act(async () => {
-      await userEvent.type(input1, name);
+      await user.type(input1, name);
     });
 
     await act(async () => {
-      await userEvent.click(screen.getByLabelText("confirm-button"));
+      await user.click(screen.getByLabelText("confirm-button"));
     });
 
     //validate shape
-    const headerLabel = screen.getByJointSelector("headerLabel");
+    const headerLabel = await screen.findByJointSelector("headerLabel");
     expect(headerLabel).toHaveTextContent("child_container");
 
     const header = screen.getByJointSelector("header");
@@ -326,55 +346,28 @@ describe("Canvas.tsx", () => {
     expect(nameValue).toHaveTextContent(name);
   });
 
-  // it("renders created and connected service with embedded entity successfully", async () => {
+  // it("highlights available entities to connect", async () => {
   //   const component = setup();
   //   render(component);
   //   const name = "name-001";
   //   const id = "id-001";
+  //   await createShapeWithNameAndId("container-service", name, id);
 
   //   //create shape
   //   const button = screen.getByLabelText("new-entity-button");
-  //   await act(async () => {
-  //     await userEvent.click(button);
-  //   });
-
-  //   const select = screen.getByLabelText("Options menu");
-  //   await act(async () => {
-  //     await userEvent.click(select);
-  //   });
-  //   await act(async () => {
-  //     await userEvent.click(
-  //       screen.getByRole("option", { name: "container-service" }),
-  //     );
-  //   });
-
-  //   const input1 = screen.getByLabelText("TextInput-name");
-  //   await act(async () => {
-  //     await userEvent.type(input1, name);
-  //   });
-
-  //   const input2 = screen.getByLabelText("TextInput-service_id");
-  //   await act(async () => {
-  //     await userEvent.type(input2, id);
-  //   });
-
-  //   await act(async () => {
-  //     await userEvent.click(screen.getByLabelText("confirm-button"));
-  //   });
-
   //   const containerName = "name-002";
 
   //   await act(async () => {
-  //     await userEvent.click(button);
+  //     await user.click(button);
   //   });
 
   //   //create embedded shape
   //   const containerSelect = screen.getByLabelText("Options menu");
   //   await act(async () => {
-  //     await userEvent.click(containerSelect);
+  //     await user.click(containerSelect);
   //   });
   //   await act(async () => {
-  //     await userEvent.click(
+  //     await user.click(
   //       screen.getByRole("option", {
   //         name: "child_container (container-service)",
   //       }),
@@ -383,60 +376,154 @@ describe("Canvas.tsx", () => {
 
   //   const containerInput = screen.getByLabelText("TextInput-name");
   //   await act(async () => {
-  //     await userEvent.type(containerInput, containerName);
+  //     await user.type(containerInput, containerName);
   //   });
 
   //   await act(async () => {
-  //     await userEvent.click(screen.getByLabelText("confirm-button"));
+  //     await user.click(screen.getByLabelText("confirm-button"));
   //   });
+  //   await new Promise((r) => setTimeout(r, 10));
+
+  //   const shapes = document.querySelectorAll(
+  //     '[data-type="app.ServiceEntityBlock"]',
+  //   );
+
+  //   await act(async () => {
+  //     await user.click(shapes[0]);
+  //   });
+
+  //   const handle = document.querySelector('[data-action="link"]') as Element;
+  //   await act(async () => {
+  //     await user.pointer(
+  //       // click at link element
+  //       { keys: "[MouseLeft>]", target: handle },
+  //     );
+  //   });
+
+  //   await new Promise((r) => setTimeout(r, 10));
+
+  //   const highlight = document.querySelector(".joint-highlight-mask");
+  //   await new Promise((r) => setTimeout(r, 10));
+
+  //   expect(highlight).toBeVisible();
   // });
 
-  // it("renders created services with inter-service relation successfully", async () => {
-  //   const component = setup();
-  //   render(component);
-  //   const name = "name-001";
-  //   const id = "id-001";
-  //   await createShape("parent-service", name, id);
-  //   await validateShape("parent-service", name, id, "#F0AB00");
-  // });
+  it("edits correctly services", async () => {
+    const component = setup();
+    render(component);
 
-  // it("renders edits correctly services", async () => {
-  //   const component = setup();
-  //   render(component);
-  //   const name = "name-001";
-  //   const id = "id-001";
-  //   await createShape("parent-service", name, id);
-  //   await validateShape("parent-service", name, id, "#F0AB00");
-  // });
+    const shapeName = "container-service";
+    const name = "name-001";
+    const id = "id-001";
+    await createShapeWithNameAndId(shapeName, name, id);
 
-  // it("renders deletes correctly services", async () => {
-  //   const component = setup();
-  //   render(component);
-  //   const name = "name-001";
-  //   const id = "id-001";
-  //   await createShape("parent-service", name, id);
-  //   await validateShape("parent-service", name, id, "#F0AB00");
-  // });
+    const headerLabel = await screen.findByJointSelector("headerLabel");
+    expect(headerLabel).toHaveTextContent(shapeName);
 
-  // it("renders deletes correctly connections between services", async () => {
-  //   const component = setup();
-  //   render(component);
-  //   const name = "name-001";
-  //   const id = "id-001";
-  //   //embedded
-  //   await createShape("parent-service", name, id);
-  //   await validateShape("parent-service", name, id, "#F0AB00");
-  //   //inter-service
-  // });
+    const shape = document.querySelector(
+      '[data-type="app.ServiceEntityBlock"]',
+    ) as Element;
 
-  // it("renders truncated values and label correctly, appends tooltips onto them", async () => {
-  //   const component = setup();
-  //   render(component);
-  //   const name = "name-001";
-  //   const id = "id-001";
-  //   //embedded
-  //   await createShape("parent-service", name, id);
-  //   await validateShape("parent-service", name, id, "#F0AB00");
-  //   //inter-service
-  // });
+    await act(async () => {
+      await user.click(shape);
+    });
+
+    const handle = document.querySelector('[data-action="edit"]') as Element;
+
+    await act(async () => {
+      await user.click(handle);
+    });
+
+    const dialog = await screen.findByRole("dialog");
+
+    expect(dialog).toBeVisible();
+
+    const selectMenu = screen.getByLabelText("Options menu");
+    expect(selectMenu).toBeDisabled();
+    expect(selectMenu).toHaveTextContent("container-service");
+
+    const nameInput = screen.getByLabelText("TextInput-name");
+    expect(nameInput).toHaveValue(name);
+
+    const newName = "new-name";
+    await act(async () => {
+      await user.type(nameInput, `{selectAll}{backspace}${newName}`);
+    });
+
+    const confirmButton = screen.getByLabelText("confirm-button");
+    await act(async () => {
+      await user.click(confirmButton);
+    });
+
+    const nameValue = screen.getByJointSelector("itemLabel_name_value");
+    expect(nameValue).toHaveTextContent(newName);
+  });
+
+  it("renders deleting single instance correctly", async () => {
+    const component = setup();
+    render(component);
+
+    const shapeName = "container-service";
+    const name = "name-001";
+    const id = "id-001";
+
+    await createShapeWithNameAndId(shapeName, name, id);
+
+    const headerLabel = await screen.findByJointSelector("headerLabel");
+    expect(headerLabel).toHaveTextContent(shapeName);
+
+    const shape = document.querySelector(
+      '[data-type="app.ServiceEntityBlock"]',
+    ) as Element;
+
+    await act(async () => {
+      await user.click(shape);
+    });
+
+    const handle = document.querySelector('[data-action="delete"]') as Element;
+
+    await act(async () => {
+      await user.click(handle);
+    });
+
+    const shape2 = document.querySelector(
+      '[data-type="app.ServiceEntityBlock"]',
+    ) as Element;
+
+    expect(shape2).toBeNull();
+  });
+
+  it("renders correctly fetched instances", async () => {
+    const component = setup(mockedInstanceWithReferences);
+    render(component);
+
+    const attrIndicators = await screen.findAllByJointSelector("info");
+    const entities = document.querySelectorAll(
+      '[data-type="app.ServiceEntityBlock"]',
+    );
+    const connectors = document.querySelectorAll('[data-type="app.Link"]');
+
+    expect(entities).toHaveLength(4);
+    expect(attrIndicators).toHaveLength(4);
+    expect(connectors).toHaveLength(3);
+  });
+
+  it("deletes correctly ", async () => {
+    const component = setup(mockedInstanceWithReferences);
+    render(component);
+
+    const attrIndicators = await screen.findAllByJointSelector("info");
+    const entities = document.querySelectorAll(
+      '[data-type="app.ServiceEntityBlock"]',
+    );
+    const connectors = document.querySelectorAll('[data-type="app.Link"]');
+
+    expect(entities).toHaveLength(4);
+    expect(attrIndicators).toHaveLength(4);
+    expect(connectors).toHaveLength(3);
+
+    await deleteAndAssert("parent-service", 3, 1);
+    await deleteAndAssert("child-service", 2, 1);
+    await deleteAndAssert("child_container", 1, 0);
+  });
 });

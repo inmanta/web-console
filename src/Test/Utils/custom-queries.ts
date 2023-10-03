@@ -5,16 +5,16 @@ import {
   MatcherOptions,
 } from "@testing-library/react";
 
+const getMultipleError = (attrName: string) => (_c, selectorValue) =>
+  `Found multiple elements with the ${attrName} attribute of: ${selectorValue}`;
+const getMissingError = (attrName: string) => (_c, selectorValue) =>
+  `Unable to find an element with the ${attrName} attribute of: ${selectorValue}`;
+
 const queryAllByJointSelector = (
   container: HTMLElement,
   id: Matcher,
   options?: MatcherOptions | undefined,
 ) => queryHelpers.queryAllByAttribute("joint-selector", container, id, options);
-
-const getMultipleError = (_c, jointSelectorValue) =>
-  `Found multiple elements with the joint-selector attribute of: ${jointSelectorValue}`;
-const getMissingError = (_c, jointSelectorValue) =>
-  `Unable to find an element with the joint-selector attribute of: ${jointSelectorValue}`;
 
 const [
   queryByJointSelector,
@@ -22,7 +22,11 @@ const [
   getByJointSelector,
   findAllByJointSelector,
   findByJointSelector,
-] = buildQueries(queryAllByJointSelector, getMultipleError, getMissingError);
+] = buildQueries(
+  queryAllByJointSelector,
+  getMultipleError("joint-selector"),
+  getMissingError("joint-selector"),
+);
 
 export {
   queryByJointSelector,
