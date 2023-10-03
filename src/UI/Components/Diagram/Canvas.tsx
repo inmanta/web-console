@@ -7,12 +7,11 @@ import { InstanceWithReferences } from "@/Data/Managers/GetInstanceWithRelations
 import diagramInit, { DiagramHandlers } from "@/UI/Components/Diagram/init";
 import { CanvasWrapper } from "@/UI/Components/Diagram/styles";
 import { DependencyContext } from "@/UI/Dependency";
-import { PrimaryBaseUrlManager } from "@/UI/Routing";
 import DictModal from "./components/DictModal";
 import FormModal from "./components/FormModal";
 import Toolbar from "./components/Toolbar";
 import { createConnectionRules, shapesDataTransform } from "./helpers";
-import { DictDialogData, InstanceForApi } from "./interfaces";
+import { ActionEnum, DictDialogData, InstanceForApi } from "./interfaces";
 import { ServiceEntityBlock } from "./shapes";
 
 const Canvas = ({
@@ -24,13 +23,9 @@ const Canvas = ({
   mainServiceName: string;
   instance?: InstanceWithReferences;
 }) => {
-  const { environmentHandler } = useContext(DependencyContext);
+  const { environmentHandler, urlManager } = useContext(DependencyContext);
   const environment = environmentHandler.useId();
-  const baseUrlManager = new PrimaryBaseUrlManager(
-    globalThis.location.origin,
-    globalThis.location.pathname,
-  );
-  const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
+  const baseUrl = urlManager.getApiUrl();
   const canvas = useRef<HTMLDivElement>(null);
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [cellToEdit, setCellToEdit] = useState<dia.CellView | null>(null);
@@ -77,10 +72,7 @@ const Canvas = ({
     });
   };
 
-  const handleUpdate = (
-    cell: ServiceEntityBlock,
-    action: "update" | "create" | "delete",
-  ) => {
+  const handleUpdate = (cell: ServiceEntityBlock, action: ActionEnum) => {
     const newInstance: InstanceForApi = {
       instance_id: cell.id as string,
       service_entity: cell.getName(),
@@ -195,7 +187,7 @@ const Canvas = ({
                 entity,
               );
 
-              handleUpdate(shape, "update");
+              handleUpdate(shape, ActionEnum.UPDATE);
             } else {
               const shape = diagramHandlers.addEntity(
                 entity,
@@ -203,7 +195,7 @@ const Canvas = ({
                 selected.name === mainServiceName,
                 selected.isEmbedded,
               );
-              handleUpdate(shape, "create");
+              handleUpdate(shape, ActionEnum.CREATE);
             }
           }
         }}

@@ -1,5 +1,10 @@
 import { dia } from "@inmanta/rappid";
-import { EmbeddedEntity, ServiceInstanceModel, ServiceModel } from "@/Core";
+import {
+  EmbeddedEntity,
+  InstanceAttributeModel,
+  ServiceInstanceModel,
+  ServiceModel,
+} from "@/Core";
 import { create_UUID } from "@/Slices/EditInstance/Data";
 import { ConnectionRules, InstanceForApi, Rule } from "./interfaces";
 import { ServiceEntityBlock } from "./shapes";
@@ -226,9 +231,9 @@ const doesElementsIsEmbeddedWithExhaustedConnections = (
  * Function that will merge state from Instance Composer to proper object for order_api endpoint.
  * Instance composer state is being split into multiple objects that could be embedded into other available, so we need to recursively
  * go through all of them to group, and sort them
- * @param instances all of the instances that were created/edited in the instance, not including the one passed in second parameter
- * @param instance instance which is used taken into consideration as the parent of the possible embedded
- * @param isEmbedded boolean informing whether instance passed is embedded or not
+ * @param {InstanceForApi[]} instances all of the instances that were created/edited in the instance, not including the one passed in second parameter
+ * @param {InstanceForApi} instance instance which is used taken into consideration as the parent of the possible embedded
+ * @param {boolean=} isEmbedded boolean informing whether instance passed is embedded or not
  * @returns
  */
 export const shapesDataTransform = (
@@ -246,17 +251,17 @@ export const shapesDataTransform = (
   );
 
   //iterate through matching (embedded)instances and group them according to property type to be able to put them in the Array if needed at once
-  const groupedEmbedded: { [key: string]: InstanceForApi[] } =
-    matchingInstances.reduce(function (r, a) {
-      r[a.service_entity] = r[a.service_entity] || [];
-      r[a.service_entity].push(a);
-      return r;
+  const groupedEmbedded: { [instanceId: string]: InstanceForApi[] } =
+    matchingInstances.reduce((reducer, instance) => {
+      reducer[instance.service_entity] = reducer[instance.service_entity] || [];
+      reducer[instance.service_entity].push(instance);
+      return reducer;
     }, Object.create({}));
 
   for (const [key, instancesToEmbed] of Object.entries(groupedEmbedded)) {
     if (instance.value) {
       if (instancesToEmbed.length > 1) {
-        const updated: { [key: string]: unknown }[] = [];
+        const updated: InstanceAttributeModel[] = [];
         instancesToEmbed.forEach((instance) => {
           const updatedInstance = shapesDataTransform(
             notMatchingInstances,
@@ -265,13 +270,12 @@ export const shapesDataTransform = (
           );
 
           areEmbeddedEdited =
-            areEmbeddedEdited !== true &&
-            instance.action === null &&
-            (updatedInstance.action !== null ||
-              updatedInstance.action === "delete");
+            !areEmbeddedEdited &&
+            !instance.action &&
+            updatedInstance.action !== null;
 
           if (updatedInstance.action !== "delete") {
-            updated.push(updatedInstance.value as { [key: string]: unknown });
+            updated.push(updatedInstance.value as InstanceAttributeModel);
           }
         });
 
@@ -283,9 +287,7 @@ export const shapesDataTransform = (
           true,
         );
 
-        areEmbeddedEdited =
-          instance.action === null &&
-          (data.action !== null || data.action === "delete");
+        areEmbeddedEdited = instance.action === null && data.action !== null;
 
         if (data.action !== "delete") {
           instance.value[key] = data.value;
@@ -304,7 +306,7 @@ export const shapesDataTransform = (
   }
 
   //if any of its embedded instances were edited, and its action is indicating no changes to main attributes, change it to "update"
-  if (areEmbeddedEdited && instance.action === null) {
+  if (areEmbeddedEdited) {
     instance.action = "update";
   }
 

@@ -12,17 +12,14 @@ import createHalo from "./halo";
 import { checkIfConnectionIsAllowed } from "./helpers";
 import collapseButton from "./icons/collapse-icon.svg";
 import expandButton from "./icons/expand-icon.svg";
-import { ConnectionRules, serializedCell } from "./interfaces";
+import { ActionEnum, ConnectionRules, serializedCell } from "./interfaces";
 import { routerNamespace } from "./routers";
 import { EntityConnection, ServiceEntityBlock } from "./shapes";
 
 export default function diagramInit(
   canvas,
   connectionRules: ConnectionRules,
-  updateInstancesToSend: (
-    cell: ServiceEntityBlock,
-    action: "update" | "create" | "delete",
-  ) => void,
+  updateInstancesToSend: (cell: ServiceEntityBlock, action: ActionEnum) => void,
 ): DiagramHandlers {
   /**
    * https://resources.jointjs.com/docs/jointjs/v3.6/joint.html#dia.Graph
@@ -233,10 +230,10 @@ export default function diagramInit(
     }
 
     if (didSourceChanged) {
-      updateInstancesToSend(sourceCell, "update");
+      updateInstancesToSend(sourceCell, ActionEnum.UPDATE);
     }
     if (didTargetChanged) {
-      updateInstancesToSend(targetCell, "update");
+      updateInstancesToSend(targetCell, ActionEnum.UPDATE);
     }
   });
 

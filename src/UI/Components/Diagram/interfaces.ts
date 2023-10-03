@@ -1,5 +1,10 @@
 import { ParsedNumber } from "@/Core";
 
+enum ActionEnum {
+  UPDATE = "update",
+  CREATE = "create",
+  DELETE = "delete",
+}
 interface ColumnData {
   name: string;
   [key: string]: string;
@@ -98,8 +103,10 @@ interface serializedCell {
   holderType?: string;
   embeddedTo?: string;
 }
+type relationId = string | null | undefined;
 
 export {
+  ActionEnum,
   ColumnData,
   RouterOptions,
   DictDialogData,
@@ -107,4 +114,5 @@ export {
   ConnectionRules,
   serializedCell,
   InstanceForApi,
+  relationId,
 };
