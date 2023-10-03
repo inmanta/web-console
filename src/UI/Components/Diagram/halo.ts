@@ -53,9 +53,10 @@ const createHalo = (
       const relations = elementAsService.getRelations();
 
       if (relations) {
-        didElementChange =
-          didElementChange === true ||
-          elementAsService.removeRelation(cellView.model.id as string);
+        const wasThereRelationToRemove = elementAsService.removeRelation(
+          cellView.model.id as string,
+        );
+        didElementChange = didElementChange || wasThereRelationToRemove;
       }
 
       if (didElementChange) {

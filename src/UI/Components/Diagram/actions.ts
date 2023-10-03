@@ -130,7 +130,7 @@ export function appendInstance(
   graph: dia.Graph,
   serviceWithReferences: InstanceWithReferences,
   services: ServiceModel[],
-  isMainInstance: boolean,
+  isMainInstance = false,
   instanceToConnectRelation?: ServiceEntityBlock,
 ): ServiceEntityBlock {
   const serviceInstance = serviceWithReferences.instance.data;
@@ -172,7 +172,7 @@ export function appendInstance(
     );
   }
   serviceWithReferences.relatedInstances.forEach((relatedInstance) => {
-    const isMainInstanceBoolean = false;
+    const isInstanceMain = false;
     const cellAdded = graph.getCell(relatedInstance.instance.data.id);
     if (!cellAdded) {
       appendInstance(
@@ -180,7 +180,7 @@ export function appendInstance(
         graph,
         relatedInstance,
         services,
-        isMainInstanceBoolean,
+        isInstanceMain,
         instanceAsTable,
       );
     } else {

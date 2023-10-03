@@ -7,7 +7,6 @@ import { InstanceWithReferences } from "@/Data/Managers/GetInstanceWithRelations
 import diagramInit, { DiagramHandlers } from "@/UI/Components/Diagram/init";
 import { CanvasWrapper } from "@/UI/Components/Diagram/styles";
 import { DependencyContext } from "@/UI/Dependency";
-import { PrimaryBaseUrlManager } from "@/UI/Routing";
 import DictModal from "./components/DictModal";
 import FormModal from "./components/FormModal";
 import Toolbar from "./components/Toolbar";
@@ -24,13 +23,9 @@ const Canvas = ({
   mainServiceName: string;
   instance?: InstanceWithReferences;
 }) => {
-  const { environmentHandler } = useContext(DependencyContext);
+  const { environmentHandler, urlManager } = useContext(DependencyContext);
   const environment = environmentHandler.useId();
-  const baseUrlManager = new PrimaryBaseUrlManager(
-    globalThis.location.origin,
-    globalThis.location.pathname,
-  );
-  const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
+  const baseUrl = urlManager.getApiUrl();
   const canvas = useRef<HTMLDivElement>(null);
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [cellToEdit, setCellToEdit] = useState<dia.CellView | null>(null);
