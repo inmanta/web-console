@@ -63,6 +63,9 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
             fill: "#000000",
             //pointerEvents: "none",
             cursor: "default",
+            itemText: {
+              textWrap: false,
+            },
           },
           itemLabels_1: {
             fill: "#7F7F7F",
@@ -124,7 +127,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
         this.attr(`itemLabel_${item.name}/data-tooltip`, item.name);
         this.attr(`itemLabel_${item.name}/data-tooltip-position`, "right");
 
-        names.push({ ...nameObject, label: truncatedName });
+        names.push({ ...nameObject, label: item.name.slice(0, 11) + `\u2026` });
       } else {
         names.push(nameObject);
       }
@@ -139,6 +142,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
         !Array.isArray(item.value) &&
         item.value !== null
       ) {
+        console.log(typeof item.value, item.value);
         value.label = "{...}";
 
         ///Add event and add data to display in Dictionary Modal
@@ -157,7 +161,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
         if (item.value !== undefined && item.value !== null) {
           //reproduce internal formatting of the text base on actual dimensions, if text includes elipsis add Tooltip
           const reproducedDisplayText = util.breakText(
-            item.value.toString(),
+            item.value.toString().replace(/\s+/g, " "),
             { width: 80, height: 22 },
             {
               "font-size": this.attr("itemLabels_1/fontSize"),
@@ -169,6 +173,9 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
           );
 
           if (reproducedDisplayText.includes(`\u2026`)) {
+            value.label =
+              item.value.toString().replace(/\s+/g, " ").slice(0, 10) +
+              `\u2026`;
             this.attr(`itemLabel_${item.name}_value/data-tooltip`, item.value);
           }
         }

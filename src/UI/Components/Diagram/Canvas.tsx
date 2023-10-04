@@ -129,6 +129,7 @@ const Canvas = ({
       const isMainInstance = true;
       const cells = actions.addInstance(instance, services, isMainInstance);
       const newInstances = new Map();
+
       cells.forEach((cell) => {
         if (cell.type === "app.ServiceEntityBlock") {
           newInstances.set(cell.id, {
