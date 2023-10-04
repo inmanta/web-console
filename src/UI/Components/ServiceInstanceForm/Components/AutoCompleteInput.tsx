@@ -65,6 +65,7 @@ export const AutoCompleteInput: React.FC<Props> = ({
           selected={selected as string[]}
           placeholderText={words("common.serviceInstance.relation")}
           onSearchTextChanged={onSearchTextChanged}
+          hasChips
         />
       ) : (
         <SingleTextSelect

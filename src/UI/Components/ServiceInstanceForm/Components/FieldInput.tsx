@@ -223,7 +223,6 @@ export const FieldInput: React.FC<Props> = ({
           }
           isOptional={field.isOptional}
           handleInputChange={(value) => {
-            console.log("VALUE: ", value);
             getUpdate(makePath(path, field.name), value, true);
           }}
           multi={true}

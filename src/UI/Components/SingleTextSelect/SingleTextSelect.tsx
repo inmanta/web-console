@@ -47,47 +47,14 @@ export const SingleTextSelect: React.FC<Props> = ({
   const textInputRef = useRef<HTMLInputElement>();
 
   useEffect(() => {
-    let newSelectOptions: SelectOptionProps[] = options;
-
-    if (filterValue) {
-      newSelectOptions = options.filter((option) => {
-        return String(option.children)
-          .toLowerCase()
-          .includes(filterValue.toLocaleLowerCase());
-      });
-
-      if (!newSelectOptions.length && !hasCreation) {
-        newSelectOptions = [
-          {
-            isDisabled: false,
-            children: `No results found for "${filterValue}"`,
-            value: "no results",
-          },
-        ];
-      }
-
-      if (!newSelectOptions.length && hasCreation) {
-        newSelectOptions = [
-          { children: `Create new option "${inputValue}"`, value: "create" },
-        ];
-      }
-
-      if (
-        options.some(
-          (option) =>
-            option.children?.toLocaleString() ===
-            filterValue.toLocaleLowerCase(),
-        )
-      ) {
-        setSelected(filterValue as string);
-      }
+    if (filterValue && checkIfOptionMatchInput(options, filterValue)) {
+      setSelected(filterValue as string);
 
       if (!isOpen) {
         setIsOpen(true);
       }
     }
 
-    setSelectOptions(newSelectOptions);
     setActiveItem(null);
     setFocusedItemIndex(null);
     onSearchTextChanged(inputValue);
@@ -95,7 +62,21 @@ export const SingleTextSelect: React.FC<Props> = ({
   }, [filterValue]);
 
   useEffect(() => {
-    setSelectOptions(options);
+    if (options.length === 0 && !hasCreation) {
+      setSelectOptions([
+        {
+          children: `No results found for "${filterValue}"`,
+          value: "no results",
+        },
+      ]);
+    } else if (options.length === 0 && hasCreation) {
+      setSelectOptions([
+        { children: `Create new option "${inputValue}"`, value: "create" },
+      ]);
+    } else {
+      setSelectOptions(options);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [options]);
 
   const onToggleClick = () => {
@@ -279,5 +260,14 @@ export const SingleTextSelect: React.FC<Props> = ({
         ))}
       </SelectList>
     </Select>
+  );
+};
+
+export const checkIfOptionMatchInput = (
+  options: SelectOptionProps[],
+  input: string,
+) => {
+  return options.some(
+    (option) => option.children?.toLocaleString() === input.toLocaleLowerCase(),
   );
 };

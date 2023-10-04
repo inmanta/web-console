@@ -14,6 +14,7 @@ import {
   TextInputGroupUtilities,
 } from "@patternfly/react-core";
 import { TimesIcon } from "@patternfly/react-icons";
+import { checkIfOptionMatchInput } from "../SingleTextSelect";
 
 interface Props {
   selected: string[];
@@ -49,49 +50,40 @@ export const MultiTextSelect: React.FC<Props> = ({
   const textInputRef = useRef<HTMLInputElement>();
 
   useEffect(() => {
-    let newSelectOptions: SelectOptionProps[] = options;
-    console.log(options, inputValue, selectOptions);
-
     // Filter menu items based on the text input value when one exists
-    if (inputValue) {
-      newSelectOptions = options.filter((menuItem) =>
-        String(menuItem.children)
-          .toLowerCase()
-          .includes(inputValue.toLowerCase()),
-      );
-
-      // When no options are found after filtering, display 'No results found'
-      if (!newSelectOptions.length) {
-        newSelectOptions = [
-          {
-            isDisabled: false,
-            children: `No results found for "${inputValue}"`,
-            value: "no results",
-          },
-        ];
-      }
-
-      if (
-        options.some(
-          (option) =>
-            option.children?.toLocaleString().toLocaleLowerCase() ===
-            inputValue.toLocaleLowerCase(),
-        )
-      ) {
-        setSelected(inputValue as string);
-      }
+    if (inputValue && checkIfOptionMatchInput(options, inputValue)) {
+      setSelected(inputValue as string);
 
       if (!isOpen) {
         setIsOpen(true);
       }
     }
 
-    setSelectOptions(newSelectOptions);
     setFocusedItemIndex(null);
     setActiveItem(null);
     onSearchTextChanged(inputValue);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inputValue]);
+
+  useEffect(() => {
+    if (options.length === 0) {
+      setSelectOptions([
+        {
+          children: `No results found for "${inputValue}"`,
+          value: "no results",
+        },
+      ]);
+    } else {
+      setSelectOptions(options);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [options]);
+
+  const getDisplayValue = (value: string | number | undefined) => {
+    const selectedItem = options.find((option) => option.value === value);
+
+    return selectedItem?.children || value;
+  };
 
   const handleMenuArrowKeys = (key: string) => {
     let indexToFocus;
@@ -172,7 +164,7 @@ export const MultiTextSelect: React.FC<Props> = ({
 
   const onSelect = (value: string) => {
     if (value && value !== "no results") {
-      setSelected(value);
+      setSelected(value as string);
     }
 
     textInputRef.current?.focus();
@@ -214,7 +206,7 @@ export const MultiTextSelect: React.FC<Props> = ({
                     onSelect(selection);
                   }}
                 >
-                  {selection}
+                  {getDisplayValue(selection)}
                 </Chip>
               ))}
             </ChipGroup>
