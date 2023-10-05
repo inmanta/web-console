@@ -137,7 +137,6 @@ export function appendInstance(
   const serviceInstanceModel = services.find(
     (model) => model.name === serviceInstance.service_entity,
   ) as ServiceModel;
-
   const instanceAsTable = new ServiceEntityBlock().setName(
     serviceInstance.service_entity,
   );
@@ -171,6 +170,7 @@ export function appendInstance(
       instanceToConnectRelation,
     );
   }
+
   serviceWithReferences.relatedInstances.forEach((relatedInstance) => {
     const isInstanceMain = false;
     const cellAdded = graph.getCell(relatedInstance.instance.data.id);
@@ -221,7 +221,6 @@ export function appendInstance(
           }
         });
       }
-
       connectEntities(graph, instanceAsTable, [cellAsBlock]);
     }
   });

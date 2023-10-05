@@ -17,6 +17,7 @@ const DictModal = ({ dictToDisplay, setDictToDisplay }: DictModal) => {
 
   return (
     <Modal
+      disableFocusTrap
       isOpen={dictToDisplay !== null}
       title={"Values of " + dictToDisplay?.title}
       variant="medium"

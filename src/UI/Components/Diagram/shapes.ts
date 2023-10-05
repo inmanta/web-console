@@ -142,7 +142,6 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
         !Array.isArray(item.value) &&
         item.value !== null
       ) {
-        console.log(typeof item.value, item.value);
         value.label = "{...}";
 
         ///Add event and add data to display in Dictionary Modal

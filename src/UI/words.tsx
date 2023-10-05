@@ -152,6 +152,8 @@ const dict = {
   "inventory.form.placeholder.stringList": "Add a list of values",
   "inventory.form.placeholder.dict": '{"key": "value"}',
   "inventory.instanceComposer.editButton": "Edit in Composer",
+  "inventory.instanceComposer.dictModal": (valueName: string) =>
+    `Values of ${valueName}`,
   "inventory.deleteInstance.button": "Delete",
   "inventory.deleteInstance.failed": "Deleting instance failed",
   "inventory.deleteInstance.title": "Delete instance",
