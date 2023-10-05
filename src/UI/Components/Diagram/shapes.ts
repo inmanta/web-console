@@ -142,7 +142,6 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
         !Array.isArray(item.value) &&
         item.value !== null
       ) {
-        console.log(typeof item.value, item.value);
         value.label = "{...}";
 
         ///Add event and add data to display in Dictionary Modal
@@ -212,7 +211,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
       },
       {
         tagName: "image",
-        selector: "button",
+        selector: "toggleButton",
       },
     ];
   }
@@ -315,8 +314,8 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
       cursor: "default",
     });
 
-    this.attr("button", {
-      event: "element:button:pointerdown",
+    this.attr("toggleButton", {
+      event: "element:toggleButton:pointerdown",
       "xlink:href": expandButton,
       preserveAspectRatio: "none",
       cursor: "pointer",

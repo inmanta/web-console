@@ -16,9 +16,11 @@ export const extractRelationsIds = (
   const relationKeys = service.inter_service_relations?.map(
     (relation) => relation.name,
   );
+
   if (!relationKeys) {
     return [];
   }
+
   if (instance.candidate_attributes !== null) {
     return relationKeys
       .map((key) =>

@@ -125,7 +125,7 @@ export default function diagramInit(
   );
 
   paper.on(
-    "element:button:pointerdown",
+    "element:toggleButton:pointerdown",
     (elementView: dia.ElementView, event: dia.Event) => {
       event.preventDefault();
       const elementAsShape = elementView.model as ServiceEntityBlock;
@@ -138,12 +138,12 @@ export default function diagramInit(
         false,
       );
       elementAsShape.attr(
-        "button/xlink:href",
+        "toggleButton/xlink:href",
         isCollapsed ? collapseButton : expandButton,
       );
 
       const bbox = elementAsShape.getBBox();
-      elementAsShape.attr("button/y", bbox.height - 24);
+      elementAsShape.attr("toggleButton/y", bbox.height - 24);
       elementAsShape.attr("spacer/y", bbox.height - 33);
 
       elementAsShape.set("isCollapsed", !isCollapsed);

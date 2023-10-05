@@ -1,5 +1,5 @@
 import React from "react";
-import { MemoryRouter, useLocation } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import {
   render,
   act,
@@ -17,9 +17,16 @@ import {
   DependencyProvider,
   EnvironmentHandlerImpl,
   PrimaryRouteManager,
+  words,
 } from "@/UI";
 import Canvas from "@/UI/Components/Diagram/Canvas";
-import { mockedInstanceWithReferences } from "./Mock";
+import CustomRouter from "@/UI/Routing/CustomRouter";
+import history from "@/UI/Routing/history";
+import {
+  mockedInstanceTwo,
+  mockedInstanceTwoServiceModel,
+  mockedInstanceWithReferences,
+} from "./Mock";
 import services from "./Mocks/services.json";
 import "@testing-library/jest-dom";
 import { Colors } from "./shapes";
@@ -31,7 +38,10 @@ const allQueries = {
 const user = userEvent.setup();
 const screen = baseWithin(document.body, allQueries);
 
-const setup = (instance?: InstanceWithReferences) => {
+const setup = (
+  instance?: InstanceWithReferences,
+  serviceModels: ServiceModel[] = services as unknown as ServiceModel[],
+) => {
   const store = getStoreInstance();
 
   const environmentHandler = EnvironmentHandlerImpl(
@@ -59,21 +69,32 @@ const setup = (instance?: InstanceWithReferences) => {
       },
     ]),
   );
-
+  history.push("/?env=aaa");
   return (
-    <MemoryRouter initialEntries={[{ search: "?env=aaa" }]}>
+    <CustomRouter history={history}>
       <StoreProvider store={store}>
         <DependencyProvider
           dependencies={{ ...dependencies, environmentHandler }}
         >
-          <Canvas
-            services={services as unknown as ServiceModel[]}
-            mainServiceName={"parent-service"}
-            instance={instance}
-          />
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <Canvas
+                  services={serviceModels}
+                  mainServiceName={"parent-service"}
+                  instance={instance}
+                />
+              }
+            />
+            <Route
+              path="/lsm/catalog/parent-service/inventory"
+              element={<></>}
+            />
+          </Routes>
         </DependencyProvider>
       </StoreProvider>
-    </MemoryRouter>
+    </CustomRouter>
   );
 };
 
@@ -93,7 +114,7 @@ const deleteAndAssert = async (
     await user.click(handle3);
   });
   //Delay has to be done as library base itself on listeners that are async
-  await new Promise((r) => setTimeout(r, 10));
+  await new Promise(process.nextTick);
 
   const updatedEntities3 = document.querySelectorAll(
     '[data-type="app.ServiceEntityBlock"]',
@@ -163,11 +184,7 @@ beforeEach(() => {
       flipY: jest.fn().mockImplementation(() => global.SVGSVGElement),
       inverse: jest.fn().mockImplementation(() => global.SVGSVGElement),
       multiply: jest.fn().mockImplementation(() => global.SVGSVGElement),
-      rotate: jest.fn().mockImplementation(() => ({
-        translate: jest.fn().mockImplementation(() => ({
-          rotate: jest.fn(),
-        })),
-      })),
+      rotate: jest.fn().mockImplementation(() => global.SVGSVGElement),
       rotateFromVector: jest
         .fn()
         .mockImplementation(() => global.SVGSVGElement),
@@ -178,6 +195,15 @@ beforeEach(() => {
       translate: jest.fn().mockImplementation(() => ({
         multiply: jest.fn().mockImplementation(() => ({
           multiply: jest.fn().mockImplementation(() => global.SVGSVGElement),
+        })),
+        rotate: jest.fn().mockImplementation(() => ({
+          translate: jest.fn().mockImplementation(() => ({
+            rotate: jest.fn().mockImplementation(() => ({
+              translate: jest
+                .fn()
+                .mockImplementation(() => global.SVGSVGElement),
+            })),
+          })),
         })),
       })),
     })),
@@ -244,6 +270,19 @@ describe("Canvas.tsx", () => {
     render(component);
   });
 
+  it("navigating out of the View works correctly", async () => {
+    const component = setup();
+    render(component);
+    expect(window.location.pathname).toEqual("/");
+
+    await act(async () => {
+      await user.click(screen.getByRole("button", { name: "Cancel" }));
+    });
+    expect(window.location.pathname).toEqual(
+      "/lsm/catalog/parent-service/inventory",
+    );
+  });
+
   it("renders created core service successfully", async () => {
     const component = setup();
     render(component);
@@ -302,6 +341,75 @@ describe("Canvas.tsx", () => {
     ).toHaveTextContent(id);
   });
 
+  it("renders shapes with expandable attributes + with Dict value", async () => {
+    const component = setup(mockedInstanceTwo, [mockedInstanceTwoServiceModel]);
+    render(component);
+
+    //wrapper that holds attr values
+    const attrs = await screen.findByJointSelector("labelsGroup_1");
+
+    expect(attrs.childNodes).toHaveLength(4);
+
+    const button = await screen.findByJointSelector("toggleButton");
+    await act(async () => {
+      await user.click(button);
+    });
+
+    const attrsTwo = await screen.findByJointSelector("labelsGroup_1");
+    expect(attrsTwo.childNodes).toHaveLength(9);
+
+    const refreshedButton = await screen.findByJointSelector("toggleButton");
+    await act(async () => {
+      await user.click(refreshedButton);
+    });
+
+    const attrsThree = await screen.findByJointSelector("labelsGroup_1");
+    expect(attrsThree.childNodes).toHaveLength(4);
+  });
+
+  it("renders shapes dict Value that can be viewed in dict Modal", async () => {
+    const component = setup(mockedInstanceTwo, [mockedInstanceTwoServiceModel]);
+    render(component);
+
+    const button = await screen.findByJointSelector("toggleButton");
+    await act(async () => {
+      await user.click(button);
+    });
+
+    const dictValue = await screen.findByJointSelector(
+      "itemLabel_dictOne_value",
+    );
+    await act(async () => {
+      await user.click(dictValue.children[0]);
+    });
+
+    const modal = await screen.findByRole("dialog");
+    expect(modal).toBeVisible();
+
+    const title = document.querySelector(".pf-v5-c-modal-box__title");
+    expect(title).toHaveTextContent(
+      words("inventory.instanceComposer.dictModal")("dictOne"),
+    );
+
+    const value = document.querySelector(".pf-v5-c-code-block__code");
+    expect(value).toHaveTextContent("{}");
+
+    const copyButton = await screen.findByLabelText("Copy to clipboard");
+    await act(async () => {
+      await user.click(copyButton);
+    });
+
+    const clipboardText = await navigator.clipboard.readText();
+    expect(clipboardText).toEqual("{}");
+
+    const closeButton = await screen.findByLabelText("Close");
+    await act(async () => {
+      await user.click(closeButton);
+    });
+
+    expect(modal).not.toBeVisible();
+  });
+
   it("renders created embedded entity successfully", async () => {
     const component = setup();
     render(component);
@@ -346,6 +454,7 @@ describe("Canvas.tsx", () => {
     expect(nameValue).toHaveTextContent(name);
   });
 
+  // // this test case fail to highlight after click on link button
   // it("highlights available entities to connect", async () => {
   //   const component = setup();
   //   render(component);
@@ -382,7 +491,7 @@ describe("Canvas.tsx", () => {
   //   await act(async () => {
   //     await user.click(screen.getByLabelText("confirm-button"));
   //   });
-  //   await new Promise((r) => setTimeout(r, 10));
+  //   await new Promise(process.nextTick);
 
   //   const shapes = document.querySelectorAll(
   //     '[data-type="app.ServiceEntityBlock"]',
@@ -400,12 +509,75 @@ describe("Canvas.tsx", () => {
   //     );
   //   });
 
-  //   await new Promise((r) => setTimeout(r, 10));
+  //   await new Promise(process.nextTick);
 
   //   const highlight = document.querySelector(".joint-highlight-mask");
-  //   await new Promise((r) => setTimeout(r, 10));
+  //   await new Promise(process.nextTick);
 
   //   expect(highlight).toBeVisible();
+  // });
+
+  // // this test case fail to connect shapes after pressing on link button in one shape and releasing it on another
+  // it("connects core entity with embedded/related one together", async () => {
+  //   const component = setup();
+  //   render(component);
+  //   const name = "name-001";
+  //   const id = "id-001";
+  //   await createShapeWithNameAndId("container-service", name, id);
+
+  //   //create shape
+  //   const button = screen.getByLabelText("new-entity-button");
+  //   const containerName = "name-002";
+
+  //   await act(async () => {
+  //     await user.click(button);
+  //   });
+
+  //   //create embedded shape
+  //   const containerSelect = screen.getByLabelText("Options menu");
+  //   await act(async () => {
+  //     await user.click(containerSelect);
+  //   });
+  //   await act(async () => {
+  //     await user.click(
+  //       screen.getByRole("option", {
+  //         name: "child_container (container-service)",
+  //       }),
+  //     );
+  //   });
+
+  //   const containerInput = screen.getByLabelText("TextInput-name");
+  //   await act(async () => {
+  //     await user.type(containerInput, containerName);
+  //   });
+
+  //   await act(async () => {
+  //     await user.click(screen.getByLabelText("confirm-button"));
+  //   });
+  //   await new Promise(process.nextTick);
+
+  //   const shapes = document.querySelectorAll(
+  //     '[data-type="app.ServiceEntityBlock"]',
+  //   );
+
+  //   await act(async () => {
+  //     await user.click(shapes[0]);
+  //   });
+
+  //   const handle = document.querySelector('[data-action="link"]') as Element;
+  //   await act(async () => {
+  //     await user.pointer(
+  //       // click at link element
+  //       { keys: "[MouseLeft>]", target: handle },
+  //       { keys: "[/MouseLeft]", target: shapes[1] },
+  //     );
+  //   });
+
+  //   await new Promise(process.nextTick);
+
+  //   const links = document.querySelectorAll('[data-type="app.Link"]');
+
+  //   expect(links).toHaveLength(1);
   // });
 
   it("edits correctly services", async () => {
@@ -508,7 +680,7 @@ describe("Canvas.tsx", () => {
     expect(connectors).toHaveLength(3);
   });
 
-  it("deletes correctly ", async () => {
+  it("deletes shape correctly ", async () => {
     const component = setup(mockedInstanceWithReferences);
     render(component);
 
@@ -526,4 +698,58 @@ describe("Canvas.tsx", () => {
     await deleteAndAssert("child-service", 2, 1);
     await deleteAndAssert("child_container", 1, 0);
   });
+
+  // // For some reason click on deleteButton doesn't trigger action
+  // it("deletes links correctly ", async () => {
+  //   //links in this test case cover all of the possible
+  //   const component = setup(mockedInstanceWithReferences);
+  //   render(component);
+
+  //   await screen.findAllByJointSelector("info");
+  //   const connectors = document.querySelectorAll('[data-type="app.Link"]');
+
+  //   expect(connectors).toHaveLength(3);
+
+  //   fireEvent.mouseEnter(connectors[0]);
+  //   //Delay has to be done as library base itself on listeners that are async
+  //   await new Promise(process.nextTick);
+
+  //   const deleteButton = document.querySelector(
+  //     '[data-tool-name="button"]',
+  //   ) as Element;
+
+  //   await act(async () => {
+  //     await user.click(deleteButton);
+  //   });
+
+  //   const connectors2 = document.querySelectorAll('[data-type="app.Link"]');
+
+  //   expect(connectors2).toHaveLength(2);
+  // });
+
+  it("creates valid object for order_api when creating entity from scratch", () => {});
+  it("creates valid object for order_api when editing entity", () => {});
+
+  // it("zoom-in/zoom-out", async () => {
+  //   // TODO: Resolve "TypeError: viewport.getCTM is not a function"
+  //   const component = setup();
+  //   render(component);
+
+  //   const paper = document.querySelector(".joint-layers") as Element;
+  //   //default value, that is set by the library but for some reason it doesn't apply it here(probably due to the mocked functions)
+  //   paper.setAttribute("transform", "matrix(1,0,0,1,40,40)");
+
+  //   const zoomIn = document.querySelector(".zoom-in") as Element;
+  //   const zoomOut = document.querySelector(".zoom-out") as Element;
+
+  //   await act(async () => {
+  //     await user.click(zoomOut);
+  //   });
+  //   expect(paper.getAttribute("transform")).toEqual("matrix(1,05,05,1,42,42)");
+
+  //   await act(async () => {
+  //     await user.click(zoomIn);
+  //   });
+  //   expect(paper.getAttribute("transform")).toEqual("matrix(1,0,0,1,40,40)");
+  // });
 });

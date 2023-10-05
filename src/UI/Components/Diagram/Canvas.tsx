@@ -83,6 +83,7 @@ const Canvas = ({
       embeddedTo: cell.get("embeddedTo"),
       relatedTo: cell.getRelations(),
     };
+
     setInstancesToSend((prevInstances) => {
       const updatedInstance = prevInstances.get(cell.id as string);
       switch (action) {
