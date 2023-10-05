@@ -114,7 +114,7 @@ const deleteAndAssert = async (
     await user.click(handle3);
   });
   //Delay has to be done as library base itself on listeners that are async
-  await new Promise((r) => setTimeout(r, 10));
+  await new Promise(process.nextTick);
 
   const updatedEntities3 = document.querySelectorAll(
     '[data-type="app.ServiceEntityBlock"]',
@@ -350,7 +350,7 @@ describe("Canvas.tsx", () => {
 
     expect(attrs.childNodes).toHaveLength(4);
 
-    const button = await screen.findByJointSelector("button");
+    const button = await screen.findByJointSelector("toggleButton");
     await act(async () => {
       await user.click(button);
     });
@@ -358,7 +358,7 @@ describe("Canvas.tsx", () => {
     const attrsTwo = await screen.findByJointSelector("labelsGroup_1");
     expect(attrsTwo.childNodes).toHaveLength(9);
 
-    const refreshedButton = await screen.findByJointSelector("button");
+    const refreshedButton = await screen.findByJointSelector("toggleButton");
     await act(async () => {
       await user.click(refreshedButton);
     });
@@ -371,7 +371,7 @@ describe("Canvas.tsx", () => {
     const component = setup(mockedInstanceTwo, [mockedInstanceTwoServiceModel]);
     render(component);
 
-    const button = await screen.findByJointSelector("button");
+    const button = await screen.findByJointSelector("toggleButton");
     await act(async () => {
       await user.click(button);
     });
@@ -454,6 +454,7 @@ describe("Canvas.tsx", () => {
     expect(nameValue).toHaveTextContent(name);
   });
 
+  // // this test case fail to highlight after click on link button
   // it("highlights available entities to connect", async () => {
   //   const component = setup();
   //   render(component);
@@ -490,7 +491,7 @@ describe("Canvas.tsx", () => {
   //   await act(async () => {
   //     await user.click(screen.getByLabelText("confirm-button"));
   //   });
-  //   await new Promise((r) => setTimeout(r, 10));
+  //   await new Promise(process.nextTick);
 
   //   const shapes = document.querySelectorAll(
   //     '[data-type="app.ServiceEntityBlock"]',
@@ -508,14 +509,15 @@ describe("Canvas.tsx", () => {
   //     );
   //   });
 
-  //   await new Promise((r) => setTimeout(r, 10));
+  //   await new Promise(process.nextTick);
 
   //   const highlight = document.querySelector(".joint-highlight-mask");
-  //   await new Promise((r) => setTimeout(r, 10));
+  //   await new Promise(process.nextTick);
 
   //   expect(highlight).toBeVisible();
   // });
 
+  // // this test case fail to connect shapes after pressing on link button in one shape and releasing it on another
   // it("connects core entity with embedded/related one together", async () => {
   //   const component = setup();
   //   render(component);
@@ -552,7 +554,7 @@ describe("Canvas.tsx", () => {
   //   await act(async () => {
   //     await user.click(screen.getByLabelText("confirm-button"));
   //   });
-  //   await new Promise((r) => setTimeout(r, 10));
+  //   await new Promise(process.nextTick);
 
   //   const shapes = document.querySelectorAll(
   //     '[data-type="app.ServiceEntityBlock"]',
@@ -571,7 +573,7 @@ describe("Canvas.tsx", () => {
   //     );
   //   });
 
-  //   await new Promise((r) => setTimeout(r, 10));
+  //   await new Promise(process.nextTick);
 
   //   const links = document.querySelectorAll('[data-type="app.Link"]');
 
@@ -697,6 +699,7 @@ describe("Canvas.tsx", () => {
     await deleteAndAssert("child_container", 1, 0);
   });
 
+  // // For some reason click on deleteButton doesn't trigger action
   // it("deletes links correctly ", async () => {
   //   //links in this test case cover all of the possible
   //   const component = setup(mockedInstanceWithReferences);
@@ -709,7 +712,7 @@ describe("Canvas.tsx", () => {
 
   //   fireEvent.mouseEnter(connectors[0]);
   //   //Delay has to be done as library base itself on listeners that are async
-  //   await new Promise((r) => setTimeout(r, 10));
+  //   await new Promise(process.nextTick);
 
   //   const deleteButton = document.querySelector(
   //     '[data-tool-name="button"]',
@@ -733,7 +736,7 @@ describe("Canvas.tsx", () => {
   //   render(component);
 
   //   const paper = document.querySelector(".joint-layers") as Element;
-  //   //default value, that is set in the browser
+  //   //default value, that is set by the library but for some reason it doesn't apply it here(probably due to the mocked functions)
   //   paper.setAttribute("transform", "matrix(1,0,0,1,40,40)");
 
   //   const zoomIn = document.querySelector(".zoom-in") as Element;
