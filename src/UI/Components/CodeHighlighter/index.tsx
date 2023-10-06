@@ -1,13 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Light as SyntaxHighlighter } from "react-syntax-highlighter";
-import {
-  Button,
-  ClipboardCopyButton,
-  Flex,
-  FlexItem,
-  Label,
-  Tooltip,
-} from "@patternfly/react-core";
+import { Flex, FlexItem, Icon, Label, Tooltip } from "@patternfly/react-core";
 import {
   Dropdown,
   DropdownItem,
@@ -16,6 +9,7 @@ import {
 import {
   CloseIcon,
   CompressArrowsAltIcon,
+  CopyIcon,
   ExpandArrowsAltIcon,
   InfoCircleIcon,
   ListOlIcon,
@@ -55,6 +49,7 @@ export const CodeHighlighter: React.FC<Props> = ({
   const codeBlockRef = useRef<HTMLDivElement>(null);
   const [allowScrollState, setAllowScrollState] = useState(true);
   const minHeight = "10em";
+  const [height, setHeight] = useState(minHeight);
 
   const onCopy = () => {
     copy(code);
@@ -63,23 +58,10 @@ export const CodeHighlighter: React.FC<Props> = ({
       setCopied(false);
     }, 1000);
   };
-  const [height, setHeight] = useState(minHeight);
-  const onZoomIn = () => {
-    if (getNumberOfLines(code) < 10) {
-      setHeight("fit-content");
-    } else {
-      setHeight("90vh");
-    }
-    setZoomed(true);
-    scrollRowIntoView(codeBlockRef, { block: "start", behavior: "smooth" });
-  };
-  const onZoomOut = () => {
-    setHeight(minHeight);
-    setZoomed(false);
-  };
 
   const dropdownActions = [
     <ToggleTooltip
+      id="wrap-longlines-tooltip"
       enabled={wrapLongLines}
       enabledContent={words("codehighlighter.lineWrapping.off")}
       disabledContent={words("codehighlighter.lineWrapping.on")}
@@ -93,6 +75,7 @@ export const CodeHighlighter: React.FC<Props> = ({
       </StyledDropdownItem>
     </ToggleTooltip>,
     <ToggleTooltip
+      id="show-linenumbers-tooltip"
       enabled={showLineNumbers}
       enabledContent={words("codehighlighter.lineNumbers.off")}
       disabledContent={words("codehighlighter.lineNumbers.on")}
@@ -118,42 +101,42 @@ export const CodeHighlighter: React.FC<Props> = ({
 
   const actions = (
     <>
-      <CenteredCopyButton
-        id="copy-button"
-        textId="code-content"
-        aria-label="Copy to clipboard"
-        onClick={onCopy}
-        exitDelay={600}
-        maxWidth="110px"
-        variant="plain"
+      <ToggleTooltip
+        id="copy-tooltip"
+        enabled={copied}
+        disabledContent="Copy to clipboard"
+        enabledContent="Successfully copied to clipboard!"
       >
-        {copied ? "Successfully copied to clipboard!" : "Copy to clipboard"}
-      </CenteredCopyButton>
+        <Icon onClick={onCopy}>
+          <CopyIcon />
+        </Icon>
+      </ToggleTooltip>
       {close && (
-        <SidebarButton variant="plain" aria-label="Close icon" onClick={close}>
+        <Icon onClick={close} aria-label="close-icon">
           <CloseIcon />
-        </SidebarButton>
+        </Icon>
       )}
       <ToggleTooltip
+        id="zoomed-tooltip"
         enabled={zoomed}
         enabledContent={words("codehighlighter.zoom.off")}
         disabledContent={words("codehighlighter.zoom.on")}
       >
         {zoomed ? (
-          <SidebarButton variant="plain" onClick={onZoomOut}>
+          <Icon onClick={() => setZoomed(false)}>
             <CompressArrowsAltIcon />
-          </SidebarButton>
+          </Icon>
         ) : (
-          <SidebarButton variant="plain" onClick={onZoomIn}>
+          <Icon onClick={() => setZoomed(true)}>
             <ExpandArrowsAltIcon />
-          </SidebarButton>
+          </Icon>
         )}
       </ToggleTooltip>
       {scrollBottom && (
         <Tooltip content={words("codehighlighter.scrollToBottom")}>
-          <SidebarButton variant="plain" onClick={resumeAutoScroll}>
+          <Icon onClick={resumeAutoScroll}>
             <LongArrowAltDownIcon />
-          </SidebarButton>
+          </Icon>
         </Tooltip>
       )}
       <IconSettings actions={dropdownActions} />
@@ -171,6 +154,20 @@ export const CodeHighlighter: React.FC<Props> = ({
   const blockScrollPosition = () => {
     allowScrollState && setAllowScrollState(false);
   };
+
+  useEffect(() => {
+    if (zoomed) {
+      if (getNumberOfLines(code) < 10) {
+        setHeight("fit-content");
+      } else {
+        setHeight("90vh");
+      }
+      scrollRowIntoView(codeBlockRef, { block: "start", behavior: "smooth" });
+    } else {
+      setHeight(minHeight);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [zoomed]);
 
   // block scroll if the user scrolls.
   useEffect(() => {
@@ -241,7 +238,7 @@ export const CodeHighlighter: React.FC<Props> = ({
                   {code}
                 </SyntaxHighlighter>
               </FlexItemWithOverflow>
-              <SmallFlexItem>{actions}</SmallFlexItem>
+              <IconContainer>{actions}</IconContainer>
             </Flex>
           </BorderedArea>
         )}
@@ -275,8 +272,15 @@ const FlexItemWithOverflow = styled(FlexItem)`
   width: 100vw;
 `;
 
-const SmallFlexItem = styled(FlexItem)`
+const IconContainer = styled.div`
   width: 4em;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
+  & div {
+    cursor: pointer;
+  }
 `;
 
 const BorderedArea = styled.div`
@@ -308,10 +312,6 @@ const centeredSidebarStyles = css`
   width: 100%;
 `;
 
-const SidebarButton = styled(Button)`
-  ${centeredSidebarStyles}
-`;
-
 const CenteredDropdown = styled(Dropdown)`
   ${centeredSidebarStyles}
 `;
@@ -319,23 +319,23 @@ const CenteredToggle = styled(KebabToggle)`
   ${centeredSidebarStyles}
 `;
 
-const CenteredCopyButton = styled(ClipboardCopyButton)`
-  ${centeredSidebarStyles}
-`;
-
 const ToggleTooltip: React.FC<{
+  id: string;
   enabled: boolean;
   enabledContent: string;
   disabledContent: string;
   children?: React.ReactNode;
-}> = ({ enabled, enabledContent, disabledContent, children }) => {
+}> = ({ id, enabled, enabledContent, disabledContent, children }) => {
   return (
     <Tooltip
+      id={id}
       entryDelay={200}
-      content={enabled ? enabledContent : disabledContent}
+      animationDuration={0}
+      position="left"
+      content={<div>{enabled ? enabledContent : disabledContent}</div>}
       style={{ width: "150px" }}
     >
-      <span>{children}</span>
+      <>{children}</>
     </Tooltip>
   );
 };
