@@ -21,7 +21,7 @@ import bash from "react-syntax-highlighter/dist/esm/languages/hljs/bash";
 import json from "react-syntax-highlighter/dist/esm/languages/hljs/json";
 import xml from "react-syntax-highlighter/dist/esm/languages/hljs/xml";
 import docco from "react-syntax-highlighter/dist/esm/styles/hljs/docco";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import { scrollRowIntoView } from "@/UI/Utils";
 import { words } from "@/UI/words";
 
@@ -30,6 +30,7 @@ SyntaxHighlighter.registerLanguage("xml", xml);
 SyntaxHighlighter.registerLanguage("bash", bash);
 
 interface Props {
+  keyId: string;
   code: string;
   language: "json" | "xml" | "text" | "python" | "bash";
   scrollBottom?: boolean;
@@ -41,6 +42,7 @@ export const CodeHighlighter: React.FC<Props> = ({
   language,
   scrollBottom = false,
   close,
+  keyId,
 }) => {
   const [copied, setCopied] = useState(false);
   const [zoomed, setZoomed] = useState(false);
@@ -61,34 +63,28 @@ export const CodeHighlighter: React.FC<Props> = ({
 
   const dropdownActions = [
     <ToggleTooltip
-      id="wrap-longlines-tooltip"
       enabled={wrapLongLines}
       enabledContent={words("codehighlighter.lineWrapping.off")}
       disabledContent={words("codehighlighter.lineWrapping.on")}
-      key="wraplonglines"
+      key={`wraplonglines-${keyId}`}
     >
-      <StyledDropdownItem
-        $isEnabled={wrapLongLines}
-        onClick={() => setWraplongLines(!wrapLongLines)}
-      >
-        <TextWidthIcon />
-      </StyledDropdownItem>
+      <DropdownItem onClick={() => setWraplongLines(!wrapLongLines)}>
+        <Icon style={{ opacity: wrapLongLines ? "1" : "0.4" }}>
+          <TextWidthIcon />
+        </Icon>
+      </DropdownItem>
     </ToggleTooltip>,
     <ToggleTooltip
-      id="show-linenumbers-tooltip"
       enabled={showLineNumbers}
       enabledContent={words("codehighlighter.lineNumbers.off")}
       disabledContent={words("codehighlighter.lineNumbers.on")}
-      key="showlinenumbers"
+      key={`showlinenumbers-${keyId}`}
     >
-      <StyledDropdownItem
-        $isEnabled={showLineNumbers}
-        onClick={() => {
-          setShowLineNumbers(!showLineNumbers);
-        }}
-      >
-        <ListOlIcon />
-      </StyledDropdownItem>
+      <DropdownItem onClick={() => setShowLineNumbers(!showLineNumbers)}>
+        <Icon style={{ opacity: showLineNumbers ? "1" : "0.4" }}>
+          <ListOlIcon />
+        </Icon>
+      </DropdownItem>
     </ToggleTooltip>,
   ];
 
@@ -102,7 +98,6 @@ export const CodeHighlighter: React.FC<Props> = ({
   const actions = (
     <>
       <ToggleTooltip
-        id="copy-tooltip"
         enabled={copied}
         disabledContent="Copy to clipboard"
         enabledContent="Successfully copied to clipboard!"
@@ -117,7 +112,6 @@ export const CodeHighlighter: React.FC<Props> = ({
         </Icon>
       )}
       <ToggleTooltip
-        id="zoomed-tooltip"
         enabled={zoomed}
         enabledContent={words("codehighlighter.zoom.off")}
         disabledContent={words("codehighlighter.zoom.on")}
@@ -292,8 +286,8 @@ const BorderedArea = styled.div`
 const IconSettings: React.FC<{ actions: JSX.Element[] }> = ({ actions }) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
-    <CenteredDropdown
-      toggle={<CenteredToggle onToggle={() => setIsOpen(!isOpen)} />}
+    <Dropdown
+      toggle={<KebabToggle onToggle={() => setIsOpen(!isOpen)} />}
       isOpen={isOpen}
       isPlain
       dropdownItems={actions}
@@ -301,39 +295,18 @@ const IconSettings: React.FC<{ actions: JSX.Element[] }> = ({ actions }) => {
   );
 };
 
-const StyledDropdownItem = styled(DropdownItem)<{ $isEnabled: boolean }>`
-  ${({ $isEnabled }) => ($isEnabled ? "opacity: 1;" : "opacity: 0.4;")}
-`;
-
-const centeredSidebarStyles = css`
-  padding-left: 0;
-  padding-right: 0;
-  margin: auto;
-  width: 100%;
-`;
-
-const CenteredDropdown = styled(Dropdown)`
-  ${centeredSidebarStyles}
-`;
-const CenteredToggle = styled(KebabToggle)`
-  ${centeredSidebarStyles}
-`;
-
 const ToggleTooltip: React.FC<{
-  id: string;
   enabled: boolean;
   enabledContent: string;
   disabledContent: string;
   children?: React.ReactNode;
-}> = ({ id, enabled, enabledContent, disabledContent, children }) => {
+}> = ({ enabled, enabledContent, disabledContent, children }) => {
   return (
     <Tooltip
-      id={id}
       entryDelay={200}
       animationDuration={0}
       position="left"
       content={<div>{enabled ? enabledContent : disabledContent}</div>}
-      style={{ width: "150px" }}
     >
       <>{children}</>
     </Tooltip>

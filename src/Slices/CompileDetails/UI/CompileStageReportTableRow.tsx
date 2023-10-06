@@ -64,7 +64,11 @@ export const CompileStageReportTableRow: React.FC<Props> = ({
                 {words("compileDetails.stages.columns.command")}
               </DescriptionListTerm>
               <DescriptionListDescription>
-                <CodeHighlighter code={row.command} language="bash" />
+                <CodeHighlighter
+                  keyId="command"
+                  code={row.command}
+                  language="bash"
+                />
               </DescriptionListDescription>
             </DescriptionListGroup>
             <DescriptionListGroup>
@@ -81,6 +85,7 @@ export const CompileStageReportTableRow: React.FC<Props> = ({
               </DescriptionListTerm>
               <DescriptionListDescription>
                 <CodeHighlighter
+                  keyId="outstream"
                   scrollBottom
                   code={row.outstream}
                   language="python"
@@ -93,6 +98,7 @@ export const CompileStageReportTableRow: React.FC<Props> = ({
               </DescriptionListTerm>
               <DescriptionListDescription>
                 <CodeHighlighter
+                  keyId="error-stream"
                   scrollBottom
                   code={row.errstream}
                   language="python"

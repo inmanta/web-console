@@ -76,12 +76,22 @@ const AttributeValue: React.FC<{
       return <FileBlock hash={attribute.value} />;
 
     case "Json":
-      return <CodeHighlighter code={attribute.value} language="json" />;
+      return (
+        <CodeHighlighter keyId="json" code={attribute.value} language="json" />
+      );
 
     case "Xml":
-      return <CodeHighlighter code={attribute.value} language="xml" />;
+      return (
+        <CodeHighlighter keyId="xml" code={attribute.value} language="xml" />
+      );
     case "Python":
-      return <CodeHighlighter code={attribute.value} language="python" />;
+      return (
+        <CodeHighlighter
+          keyId="python"
+          code={attribute.value}
+          language="python"
+        />
+      );
   }
 };
 
