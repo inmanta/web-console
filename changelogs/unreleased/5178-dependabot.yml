@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps): Bump keycloak-js from 22.0.1 to 22.0.4'
+destination-branches:
+- master
+- iso6
+sections: {}
