@@ -1381,7 +1381,7 @@ __metadata:
     jest-junit: ^16.0.0
     json-bigint: "https://github.com/sidorares/json-bigint.git#3391780b2a3f613bb51536c47e6cddbca31013eb"
     jszip: ^3.10.1
-    keycloak-js: ^22.0.1
+    keycloak-js: ^22.0.4
     lint-staged: ^14.0.1
     lodash: ^4.17.21
     lodash-es: ^4.17.21
@@ -10753,13 +10753,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"keycloak-js@npm:^22.0.1":
-  version: 22.0.1
-  resolution: "keycloak-js@npm:22.0.1"
+"keycloak-js@npm:^22.0.4":
+  version: 22.0.4
+  resolution: "keycloak-js@npm:22.0.4"
   dependencies:
     base64-js: ^1.5.1
     js-sha256: ^0.9.0
-  checksum: 09375a1790c428262143252a73de8ea25f390470daf282cc4c7f02832a6e6d3db87282d1c1d24a7e1f38ea7cc2f63c0fbabba14282af06f6e65ec7c9c459fcc8
+  checksum: 60703ccbc06ffd485392fa5384b5fbe1ea716f97519a4b5e5b0057ce48a3310d691292d2faf452be1755be5253695c2024701a8125aeb39d154ab8610879be35
   languageName: node
   linkType: hard
 
