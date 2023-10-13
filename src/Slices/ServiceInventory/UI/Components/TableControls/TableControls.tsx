@@ -10,9 +10,9 @@ import {
 import { PlusIcon } from "@patternfly/react-icons";
 import { ServiceModel, ServiceInstanceParams } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
+import useFeatures from "@/UI/Utils/useFeatures";
 import { words } from "@/UI/words";
 import { FilterWidget } from "@S/ServiceInventory/UI/Components/FilterWidget";
-import * as configFile from "../../../../../config";
 
 interface Props {
   serviceName: string;
@@ -30,12 +30,15 @@ export const TableControls: React.FC<Props> = ({
   paginationWidget,
 }) => {
   const { routeManager } = useContext(DependencyContext);
+  const features = useFeatures();
+
   const { service_identity, service_identity_display_name } = service;
   const identityAttribute =
     service_identity && service_identity_display_name
       ? { key: service_identity, pretty: service_identity_display_name }
       : undefined;
   const states = service.lifecycle.states.map((state) => state.name).sort();
+
   return (
     <Toolbar clearAllFilters={() => setFilter({})}>
       <ToolbarContent>
@@ -45,24 +48,23 @@ export const TableControls: React.FC<Props> = ({
           states={states}
           identityAttribute={identityAttribute}
         />
-        <ToolbarGroup alignment={{ default: "alignRight" }}>
-          {Object(configFile).hasOwnProperty("features") &&
-            configFile.features.includes("instanceComposer") && (
-              <ToolbarItem>
-                <Link
-                  to={{
-                    pathname: routeManager.getUrl("InstanceComposer", {
-                      service: serviceName,
-                    }),
-                    search: location.search,
-                  }}
-                >
-                  <Button id="add-instance-composer-button">
-                    {words("inventory.addInstance.composerButton")}
-                  </Button>
-                </Link>
-              </ToolbarItem>
-            )}
+        <ToolbarGroup align={{ default: "alignRight" }}>
+          {features && features.includes("instanceComposer") && (
+            <ToolbarItem>
+              <Link
+                to={{
+                  pathname: routeManager.getUrl("InstanceComposer", {
+                    service: serviceName,
+                  }),
+                  search: location.search,
+                }}
+              >
+                <Button id="add-instance-composer-button">
+                  {words("inventory.addInstance.composerButton")}
+                </Button>
+              </Link>
+            </ToolbarItem>
+          )}
           <ToolbarItem>
             <Link
               to={{

@@ -15,7 +15,7 @@ export const Config: React.FC<Props> = ({ serviceName }) => {
     name: serviceName,
   });
   return (
-    <Card aria-label="ServiceConfig">
+    <Card aria-label="ServiceConfig" data-testid="ServiceConfig">
       <CardBody>
         <RemoteDataView
           data={data}

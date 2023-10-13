@@ -19,7 +19,7 @@ export function getUrl({
               timestamp: serializeTimestampFilter(filter.timestamp),
             },
           },
-          { allowDots: true, arrayFormat: "repeat" }
+          { allowDots: true, arrayFormat: "repeat" },
         )}`
       : "";
   const sortParam = sort ? `&sort=${sort.name}.${sort.order}` : "";
@@ -27,16 +27,16 @@ export function getUrl({
 }
 
 const serializeTimestampFilter = (
-  filter?: DateRange.Type[]
+  filter?: DateRange.Type[],
 ): string[] | undefined => {
   if (typeof filter === "undefined") return undefined;
   return filter.map(
     (timestampWithOperator) =>
       `${RangeOperator.serializeOperator(
-        timestampWithOperator.operator
+        timestampWithOperator.operator,
       )}:${moment
         .tz(timestampWithOperator.date, moment.tz.guess())
         .utc()
-        .format("YYYY-MM-DD+HH:mm:ss")}`
+        .format("YYYY-MM-DD+HH:mm:ss")}`,
   );
 };

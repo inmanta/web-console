@@ -5,7 +5,7 @@ import { QueryManager } from "@/Data/Managers/Helpers";
 export function GetInstanceLogsQueryManager(
   apiHelper: ApiHelper,
   stateHelper: StateHelper<"GetInstanceLogs">,
-  scheduler: Scheduler
+  scheduler: Scheduler,
 ) {
   return QueryManager.ContinuousWithEnv<"GetInstanceLogs">(
     apiHelper,
@@ -16,6 +16,6 @@ export function GetInstanceLogsQueryManager(
     "GetInstanceLogs",
     ({ service_entity, id }) =>
       `/lsm/v1/service_inventory/${service_entity}/${id}/log`,
-    identity
+    identity,
   );
 }

@@ -49,7 +49,7 @@ const RegularItem: React.FC<Label & Url> = ({ label, url }) => (
         search: new SearchHelper().keepEnvOnly(location.search),
       }}
       className={({ isActive }) =>
-        "pf-c-nav__link" + (isActive ? " pf-m-current" : "")
+        "pf-v5-c-nav__link" + (isActive ? " pf-v5-m-current" : "")
       }
       end
     >
@@ -72,7 +72,12 @@ const LockedItem: React.FC<Label> = ({ label }) => (
 
 const ExternalItem: React.FC<Label & Url> = ({ label, url }) => (
   <NavItem styleChildren={false}>
-    <a className="pf-c-nav__link" href={url} target="_blank" rel="noreferrer">
+    <a
+      className="pf-v5-c-nav__link"
+      href={url}
+      target="_blank"
+      rel="noreferrer"
+    >
       {label}
     </a>
   </NavItem>
@@ -98,7 +103,7 @@ const CompileReportItem: React.FC<Label & Url> = ({ label, url }) => {
           search: new SearchHelper().keepEnvOnly(location.search),
         }}
         className={({ isActive }) =>
-          "pf-c-nav__link" + (isActive ? " pf-m-current" : "")
+          "pf-v5-c-nav__link" + (isActive ? " pf-v5-m-current" : "")
         }
         end
       >
@@ -107,7 +112,7 @@ const CompileReportItem: React.FC<Label & Url> = ({ label, url }) => {
           <Tooltip key={"ongoing-compilation-tooltip"} content={"Compiling"}>
             <StyledIndication
               aria-label="CompileReportsIndication"
-              className="--pf-c-label--m-blue__content--before--BorderColor"
+              className="--pf-v5-c-label--m-blue__content--before--BorderColor"
             />
           </Tooltip>
         )}
@@ -117,8 +122,8 @@ const CompileReportItem: React.FC<Label & Url> = ({ label, url }) => {
 };
 
 const StyledNavItem = styled(NavItem)`
-  --pf-c-nav__link--hover--BackgroundColor: none;
-  --pf-c-nav__link--active--BackgroundColor: none;
+  --pf-v5-c-nav__link--hover--BackgroundColor: none;
+  --pf-v5-c-nav__link--active--BackgroundColor: none;
 `;
 
 const StyledLockIcon = styled(LockIcon)`
@@ -127,8 +132,8 @@ const StyledLockIcon = styled(LockIcon)`
 `;
 
 const StyledTooltip = styled(Tooltip)`
-  --pf-c-tooltip__content--Color: black;
-  --pf-c-tooltip__content--BackgroundColor: white;
+  --pf-v5-c-tooltip__content--Color: black;
+  --pf-v5-c-tooltip__content--BackgroundColor: white;
 `;
 
 //Indication colors based on <Label color="blue" /> component

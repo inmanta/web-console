@@ -17,7 +17,7 @@ export function getUrl({
               resource_type: filter.type,
             },
           },
-          { allowDots: true, arrayFormat: "repeat" }
+          { allowDots: true, arrayFormat: "repeat" },
         )}`
       : "";
   const sortParam = sort ? `&sort=${sort.name}.${sort.order}` : "";

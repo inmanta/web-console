@@ -1,0 +1,8 @@
+change-type: patch
+description: 'Updated the default filtering on Compliance check page and Compare page to exclude the unmodified files.'
+issue-nr: 4681
+destination-branches:
+- master
+- iso6
+sections: 
+  minor-improvement: "{{description}}"

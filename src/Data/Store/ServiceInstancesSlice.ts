@@ -34,7 +34,7 @@ export interface ServiceInstancesSlice {
     ServiceInstancesSlice,
     (
       query: Query.SubQuery<"GetServiceInstances">,
-      environment: string
+      environment: string,
     ) => RemoteData.Type<
       string,
       {
@@ -71,16 +71,16 @@ export const serviceInstancesSlice: ServiceInstancesSlice = {
             }
             const setStateTransfers = service.value.lifecycle.transfers.filter(
               (transfer) =>
-                transfer.source === instanceState && transfer.api_set_state
+                transfer.source === instanceState && transfer.api_set_state,
             );
             const setStateTargets = setStateTransfers.map(
-              (transfer) => transfer.target
+              (transfer) => transfer.target,
             );
             return { ...instance, instanceSetStateTargets: setStateTargets };
           }),
           ...rest,
         };
       }, data);
-    }
+    },
   ),
 };

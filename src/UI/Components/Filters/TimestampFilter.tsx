@@ -33,12 +33,12 @@ export const TimestampFilter: React.FC<Props> = ({
     const withNewFrom = insertNewTimestamp(
       timestampFilters,
       from,
-      RangeOperator.Operator.From
+      RangeOperator.Operator.From,
     );
     const withNewTo = insertNewTimestamp(
       withNewFrom,
       to,
-      RangeOperator.Operator.To
+      RangeOperator.Operator.To,
     );
     update(withNewTo);
     setFrom(undefined);
@@ -52,8 +52,8 @@ export const TimestampFilter: React.FC<Props> = ({
         timestampFilters,
         (element) =>
           element.date.getTime() === raw.date.getTime() &&
-          element.operator == raw.operator
-      )
+          element.operator == raw.operator,
+      ),
     );
   };
   const onFromDateChange = (timestamp: Date) => {
@@ -81,7 +81,7 @@ export const TimestampFilter: React.FC<Props> = ({
 
   return (
     <Flex
-      style={{ gap: "var(--pf-global--spacer--md)" }}
+      style={{ gap: "var(--pf-v5-global--spacer--md)" }}
       flexWrap={{ lg: "nowrap" }}
     >
       {isVisible && (
@@ -137,7 +137,7 @@ export const TimestampFilter: React.FC<Props> = ({
 function insertNewTimestamp(
   timestampFilters: DateRange.Type[],
   date: Date | undefined,
-  operator: RangeOperator.Operator
+  operator: RangeOperator.Operator,
 ): DateRange.Type[] {
   if (date) {
     return [

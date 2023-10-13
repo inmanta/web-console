@@ -1,7 +1,7 @@
 import React from "react";
 import { MemoryRouter } from "react-router-dom";
 import { act, render, screen, within } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { userEvent } from "@testing-library/user-event";
 import { DependencyProvider } from "@/UI/Dependency";
 import { PrimaryRouteManager } from "@/UI/Routing";
 import { PageBreadcrumbs } from "./PageBreadcrumbs";
@@ -48,7 +48,7 @@ test("GIVEN Breadcrumbs WHEN url is '/lsm/catalog/service/inventory' THEN linked
   expect(within(catalogCrumb).getByRole("link")).toBeInTheDocument();
   expect(within(inventoryCrumb).queryByRole("link")).not.toBeInTheDocument();
   expect(
-    within(inventoryCrumb).getByText("Service Inventory: service")
+    within(inventoryCrumb).getByText("Service Inventory: service"),
   ).toBeInTheDocument();
 });
 
@@ -104,9 +104,9 @@ test("GIVEN Breadcrumbs on Add Instance WHEN user clicks inventory breadcrumb li
 
   expect(crumbsAfter.length).toEqual(3);
   expect(
-    within(crumbsAfter[1]).getByText("Service Catalog")
+    within(crumbsAfter[1]).getByText("Service Catalog"),
   ).toBeInTheDocument();
   expect(
-    within(crumbsAfter[2]).getByText("Service Inventory: service")
+    within(crumbsAfter[2]).getByText("Service Inventory: service"),
   ).toBeInTheDocument();
 });

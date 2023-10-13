@@ -1,8 +1,8 @@
 import React from "react";
 import { MemoryRouter } from "react-router-dom";
-import { TableComposable, Tbody, Tr } from "@patternfly/react-table";
+import { Table /* data-codemods */, Tbody, Tr } from "@patternfly/react-table";
 import { act, render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { Either } from "@/Core";
 import {
@@ -29,14 +29,14 @@ function setup(props) {
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
   const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolver(store, apiHelper, scheduler, scheduler)
+    new QueryManagerResolver(store, apiHelper, scheduler, scheduler),
   );
   const updateAttribute = UpdateInstanceAttributeCommandManager(
     new KeycloakAuthHelper(),
-    apiHelper
+    apiHelper,
   );
   const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolver([updateAttribute])
+    new DynamicCommandManagerResolver([updateAttribute]),
   );
   const onClickFn = jest.fn();
 
@@ -51,13 +51,13 @@ function setup(props) {
       >
         <StoreProvider store={store}>
           <TreeTableCellContext.Provider value={{ onClick: onClickFn }}>
-            <TableComposable>
+            <Table>
               <Tbody>
                 <Tr>
                   <CellWithCopy {...props} />
                 </Tr>
               </Tbody>
-            </TableComposable>
+            </Table>
           </TreeTableCellContext.Provider>
         </StoreProvider>
       </DependencyProvider>
@@ -107,7 +107,7 @@ test("Given CellWithCopy When a cell has entity and on click Then it is rendered
         ...ServiceInstance.a,
         service_identity_attribute_value: undefined,
       },
-    })
+    }),
   );
 
   const cell = await screen.findByText(props.value);
@@ -138,7 +138,7 @@ test("Given CellWithCopy When a cell has entity, multiple values and on click Th
         ...ServiceInstance.a,
         service_identity_attribute_value: undefined,
       },
-    })
+    }),
   );
   apiHelper.resolve(
     Either.right({
@@ -146,7 +146,7 @@ test("Given CellWithCopy When a cell has entity, multiple values and on click Th
         ...ServiceInstance.b,
         service_identity_attribute_value: undefined,
       },
-    })
+    }),
   );
 
   const firstCell = await screen.findByText(someValue);

@@ -19,11 +19,11 @@ export const AgentProcessDetails: React.FC<Props> = ({
 }) => {
   const classifier = new AttributeClassifier(
     new JsonFormatter(),
-    new XmlFormatter()
+    new XmlFormatter(),
   );
 
   const classifiedReport = classifier.classify(
-    agentProcess.state ? agentProcess.state : {}
+    agentProcess.state ? agentProcess.state : {},
   );
   // Add the dates to the top
   classifiedReport.unshift(
@@ -41,7 +41,7 @@ export const AgentProcessDetails: React.FC<Props> = ({
       kind: "SingleLine",
       key: words("agentProcess.expired"),
       value: getFormattedDate(agentProcess.expired),
-    }
+    },
   );
 
   return (

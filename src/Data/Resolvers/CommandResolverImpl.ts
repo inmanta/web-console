@@ -7,7 +7,7 @@ import {
 
 export class CommandResolverImpl implements CommandResolver {
   constructor(
-    private readonly managerResolver: ManagerResolver<CommandManager>
+    private readonly managerResolver: ManagerResolver<CommandManager>,
   ) {}
 
   useGetTrigger(command: Command.Type): Command.Trigger<typeof command.kind> {

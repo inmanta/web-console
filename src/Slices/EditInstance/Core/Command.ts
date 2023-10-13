@@ -18,6 +18,6 @@ export interface Manifest {
   trigger: (
     fields: Field[],
     currentAttributes: InstanceAttributeModel | null,
-    formState: InstanceAttributeModel
+    formState: InstanceAttributeModel,
   ) => Promise<Maybe.Type<string>>;
 }

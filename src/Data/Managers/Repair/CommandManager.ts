@@ -8,6 +8,6 @@ export function RepairCommandManager(apiHelper: ApiHelper) {
       apiHelper.postWithoutResponse(`/api/v1/deploy`, environment, {
         agent_trigger_method: "push_full_deploy",
         agents: agents,
-      })
+      }),
   );
 }

@@ -22,7 +22,7 @@ export const FilterWidget: React.FC<Props> = ({ filter, setFilter }) => {
   const [filterKind, setFilterKind] = useState<FilterKind>(FilterKind.Status);
 
   const desiredStateStatuses = Object.keys(DesiredStateVersionStatus).map(
-    (k) => DesiredStateVersionStatus[k]
+    (k) => DesiredStateVersionStatus[k],
   );
 
   const updateStatus = (selectedStatuses: string[]) =>

@@ -3,7 +3,7 @@ import { CommandManagerWithEnv } from "@/Data/Common";
 
 export function ServiceConfigCommandManager(
   apiHelper: ApiHelper,
-  stateHelper: StateHelper<"GetServiceConfig">
+  stateHelper: StateHelper<"GetServiceConfig">,
 ) {
   return CommandManagerWithEnv<"UpdateServiceConfig">(
     "UpdateServiceConfig",
@@ -24,11 +24,11 @@ export function ServiceConfigCommandManager(
                 ...configData.value,
                 [option]: value,
               },
-            }
-          )
+            },
+          ),
         ),
-        { ...command, kind: "GetServiceConfig" }
+        { ...command, kind: "GetServiceConfig" },
       );
-    }
+    },
   );
 }

@@ -1,7 +1,7 @@
 import React from "react";
 import { MemoryRouter } from "react-router-dom";
 import { act, render, screen, within } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { cloneDeep } from "lodash";
 import { Either } from "@/Core";
@@ -36,14 +36,14 @@ function setup(entity = "a") {
       ServiceInstanceQueryManager(
         apiHelper,
         ServiceInstanceStateHelper(store),
-        scheduler
+        scheduler,
       ),
-    ])
+    ]),
   );
 
   const commandManager = TriggerInstanceUpdateCommandManager(apiHelper);
   const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolver([commandManager])
+    new DynamicCommandManagerResolver([commandManager]),
   );
 
   const component = (
@@ -74,13 +74,13 @@ test("Edit Instance View shows failed state", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "EditInstance-Loading" })
+    await screen.findByRole("generic", { name: "EditInstance-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.left("error"));
 
   expect(
-    await screen.findByRole("generic", { name: "EditInstance-Failed" })
+    await screen.findByRole("generic", { name: "EditInstance-Failed" }),
   ).toBeInTheDocument();
 });
 
@@ -90,13 +90,13 @@ test("EditInstance View shows success form", async () => {
   const { service_entity, id, version } = ServiceInstance.a;
 
   expect(
-    await screen.findByRole("generic", { name: "EditInstance-Loading" })
+    await screen.findByRole("generic", { name: "EditInstance-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.right({ data: ServiceInstance.a }));
 
   expect(
-    await screen.findByRole("generic", { name: "EditInstance-Success" })
+    await screen.findByRole("generic", { name: "EditInstance-Success" }),
   ).toBeInTheDocument();
 
   const bandwidthField = screen.getByText("bandwidth");
@@ -128,13 +128,13 @@ test("Given the EditInstance View When changing a v1 embedded entity Then the co
   const { service_entity, id, version } = ServiceInstance.a;
 
   expect(
-    await screen.findByRole("generic", { name: "EditInstance-Loading" })
+    await screen.findByRole("generic", { name: "EditInstance-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.right({ data: ServiceInstance.a }));
 
   expect(
-    await screen.findByRole("generic", { name: "EditInstance-Success" })
+    await screen.findByRole("generic", { name: "EditInstance-Success" }),
   ).toBeInTheDocument();
 
   await act(async () => {
@@ -176,13 +176,13 @@ test("Given the EditInstance View When changing a v2 embedded entity Then the co
   const { service_entity, id, version } = ServiceInstance.d;
 
   expect(
-    await screen.findByRole("generic", { name: "EditInstance-Loading" })
+    await screen.findByRole("generic", { name: "EditInstance-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.right({ data: ServiceInstance.d }));
 
   expect(
-    await screen.findByRole("generic", { name: "EditInstance-Success" })
+    await screen.findByRole("generic", { name: "EditInstance-Success" }),
   ).toBeInTheDocument();
 
   await act(async () => {
@@ -211,7 +211,7 @@ test("Given the EditInstance View When changing a v2 embedded entity Then the co
   }
 
   const expectedInstance = cloneDeep(
-    ServiceInstance.d.active_attributes
+    ServiceInstance.d.active_attributes,
   ) as Record<string, unknown>;
 
   expectedInstance.bandwidth = "24";
@@ -248,13 +248,13 @@ test("Given the EditInstance View When changing an embedded entity Then the inpu
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "EditInstance-Loading" })
+    await screen.findByRole("generic", { name: "EditInstance-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.right({ data: ServiceInstance.allAttrs }));
 
   expect(
-    await screen.findByRole("generic", { name: "EditInstance-Success" })
+    await screen.findByRole("generic", { name: "EditInstance-Success" }),
   ).toBeInTheDocument();
 
   //check if direct attributes are correctly displayed
@@ -290,36 +290,36 @@ test("Given the EditInstance View When changing an embedded entity Then the inpu
 
   //check if embedded entities buttons are correctly displayed
   const embedded_base = screen.getByLabelText(
-    "DictListFieldInput-embedded_base"
+    "DictListFieldInput-embedded_base",
   );
   const editableEmbedded_base = screen.getByLabelText(
-    "DictListFieldInput-editableEmbedded_base"
+    "DictListFieldInput-editableEmbedded_base",
   );
   const optionalEmbedded_base = screen.getByLabelText(
-    "DictListFieldInput-optionalEmbedded_base"
+    "DictListFieldInput-optionalEmbedded_base",
   );
   const editableOptionalEmbedded_base = screen.getByLabelText(
-    "DictListFieldInput-editableOptionalEmbedded_base"
+    "DictListFieldInput-editableOptionalEmbedded_base",
   );
 
   await act(async () => {
     await userEvent.click(
-      screen.getByRole("button", { name: "embedded_base" })
+      screen.getByRole("button", { name: "embedded_base" }),
     );
   });
   await act(async () => {
     await userEvent.click(
-      screen.getByRole("button", { name: "editableEmbedded_base" })
+      screen.getByRole("button", { name: "editableEmbedded_base" }),
     );
   });
   await act(async () => {
     await userEvent.click(
-      screen.getByRole("button", { name: "optionalEmbedded_base" })
+      screen.getByRole("button", { name: "optionalEmbedded_base" }),
     );
   });
   await act(async () => {
     await userEvent.click(
-      screen.getByRole("button", { name: "editableOptionalEmbedded_base" })
+      screen.getByRole("button", { name: "editableOptionalEmbedded_base" }),
     );
   });
 
@@ -333,32 +333,32 @@ test("Given the EditInstance View When changing an embedded entity Then the inpu
   expect(within(optionalEmbedded_base).queryByText("Delete")).toBeDisabled();
 
   expect(
-    within(editableOptionalEmbedded_base).queryByText("Add")
+    within(editableOptionalEmbedded_base).queryByText("Add"),
   ).toBeEnabled();
   expect(
-    within(editableOptionalEmbedded_base).queryByText("Delete")
+    within(editableOptionalEmbedded_base).queryByText("Delete"),
   ).toBeEnabled();
 
   //check if direct attributes for embedded entities are correctly displayed
 
   await act(async () => {
     await userEvent.click(
-      within(embedded_base).getByRole("button", { name: "1" })
+      within(embedded_base).getByRole("button", { name: "1" }),
     );
   });
   expect(within(embedded_base).queryByDisplayValue("string")).toBeDisabled();
   expect(
-    within(embedded_base).queryByDisplayValue("editableString")
+    within(embedded_base).queryByDisplayValue("editableString"),
   ).toBeEnabled();
 
   expect(within(embedded_base).queryByDisplayValue("string?")).toBeDisabled();
   expect(
-    within(embedded_base).queryByDisplayValue("editableString?")
+    within(embedded_base).queryByDisplayValue("editableString?"),
   ).toBeEnabled();
 
   expect(within(embedded_base).queryByLabelText("Toggle-bool")).toBeDisabled();
   expect(
-    within(embedded_base).queryByLabelText("Toggle-editableBool")
+    within(embedded_base).queryByLabelText("Toggle-editableBool"),
   ).toBeEnabled();
 
   expect(within(embedded_base).queryByTestId("bool?-true")).toBeDisabled();
@@ -366,75 +366,75 @@ test("Given the EditInstance View When changing an embedded entity Then the inpu
   expect(within(embedded_base).queryByTestId("bool?-none")).toBeDisabled();
 
   expect(
-    within(embedded_base).queryByTestId("editableBool?-true")
+    within(embedded_base).queryByTestId("editableBool?-true"),
   ).toBeEnabled();
   expect(
-    within(embedded_base).queryByTestId("editableBool?-false")
+    within(embedded_base).queryByTestId("editableBool?-false"),
   ).toBeEnabled();
   expect(
-    within(embedded_base).queryByTestId("editableBool?-none")
+    within(embedded_base).queryByTestId("editableBool?-none"),
   ).toBeEnabled();
 
   expect(
-    within(embedded_base).queryByLabelText("TextFieldInput-string[]")
+    within(embedded_base).queryByLabelText("TextFieldInput-string[]"),
   ).toHaveClass("is-disabled");
   expect(
-    within(embedded_base).queryByLabelText("TextFieldInput-editableString[]")
+    within(embedded_base).queryByLabelText("TextFieldInput-editableString[]"),
   ).not.toHaveClass("is-disabled");
 
   expect(
-    within(embedded_base).queryByLabelText("TextFieldInput-string[]?")
+    within(embedded_base).queryByLabelText("TextFieldInput-string[]?"),
   ).toHaveClass("is-disabled");
   expect(
-    within(embedded_base).queryByLabelText("TextFieldInput-editableString[]?")
+    within(embedded_base).queryByLabelText("TextFieldInput-editableString[]?"),
   ).not.toHaveClass("is-disabled");
 
   expect(
-    within(embedded_base).queryByLabelText("enum-select-toggle")
+    within(embedded_base).queryByLabelText("enum-select-toggle"),
   ).toBeDisabled();
   expect(
-    within(embedded_base).queryByLabelText("editableEnum-select-toggle")
+    within(embedded_base).queryByLabelText("editableEnum-select-toggle"),
   ).toBeEnabled();
 
   expect(
-    within(embedded_base).queryByLabelText("enum?-select-toggle")
+    within(embedded_base).queryByLabelText("enum?-select-toggle"),
   ).toBeDisabled();
   expect(
-    within(embedded_base).queryByLabelText("editableEnum?-select-toggle")
+    within(embedded_base).queryByLabelText("editableEnum?-select-toggle"),
   ).toBeEnabled();
 
   expect(
-    within(embedded_base).queryByLabelText("TextInput-dict")
+    within(embedded_base).queryByLabelText("TextInput-dict"),
   ).toBeDisabled();
   expect(
-    within(embedded_base).queryByLabelText("TextInput-editableDict")
+    within(embedded_base).queryByLabelText("TextInput-editableDict"),
   ).toBeEnabled();
 
   expect(
-    within(embedded_base).queryByLabelText("TextInput-dict?")
+    within(embedded_base).queryByLabelText("TextInput-dict?"),
   ).toBeDisabled();
   expect(
-    within(embedded_base).queryByLabelText("TextInput-editableDict?")
+    within(embedded_base).queryByLabelText("TextInput-editableDict?"),
   ).toBeEnabled();
 
   //check controls of nested entities
 
   const nested_embedded_base = within(embedded_base).getByLabelText(
-    "DictListFieldInput-embedded_base.0.embedded"
+    "DictListFieldInput-embedded_base.0.embedded",
   );
   const nested_editableEmbedded_base = within(embedded_base).getByLabelText(
-    "DictListFieldInput-embedded_base.0.editableEmbedded"
+    "DictListFieldInput-embedded_base.0.editableEmbedded",
   );
   const nested_optionalEmbedded_base = within(embedded_base).getByLabelText(
-    "DictListFieldInput-embedded_base.0.embedded?"
+    "DictListFieldInput-embedded_base.0.embedded?",
   );
   const nested_editableOptionalEmbedded_base = screen.getByLabelText(
-    "DictListFieldInput-embedded_base.0.editableEmbedded?"
+    "DictListFieldInput-embedded_base.0.editableEmbedded?",
   );
 
   await act(async () => {
     await userEvent.click(
-      within(embedded_base).getByRole("button", { name: "embedded" })
+      within(embedded_base).getByRole("button", { name: "embedded" }),
     );
   });
 
@@ -442,7 +442,7 @@ test("Given the EditInstance View When changing an embedded entity Then the inpu
     await userEvent.click(
       within(embedded_base).getByRole("button", {
         name: "editableEmbedded",
-      })
+      }),
     );
   });
 
@@ -450,7 +450,7 @@ test("Given the EditInstance View When changing an embedded entity Then the inpu
     await userEvent.click(
       within(embedded_base).getByRole("button", {
         name: "embedded?",
-      })
+      }),
     );
   });
 
@@ -458,7 +458,7 @@ test("Given the EditInstance View When changing an embedded entity Then the inpu
     await userEvent.click(
       within(embedded_base).getByRole("button", {
         name: "editableEmbedded?",
-      })
+      }),
     );
   });
 
@@ -467,21 +467,21 @@ test("Given the EditInstance View When changing an embedded entity Then the inpu
 
   expect(within(nested_editableEmbedded_base).queryByText("Add")).toBeEnabled();
   expect(
-    within(nested_editableEmbedded_base).queryByText("Delete")
+    within(nested_editableEmbedded_base).queryByText("Delete"),
   ).toBeDisabled();
 
   expect(
-    within(nested_optionalEmbedded_base).queryByText("Add")
+    within(nested_optionalEmbedded_base).queryByText("Add"),
   ).toBeDisabled();
   expect(
-    within(nested_optionalEmbedded_base).queryByText("Delete")
+    within(nested_optionalEmbedded_base).queryByText("Delete"),
   ).toBeDisabled();
 
   expect(
-    within(nested_editableOptionalEmbedded_base).queryByText("Add")
+    within(nested_editableOptionalEmbedded_base).queryByText("Add"),
   ).toBeEnabled();
   expect(
-    within(nested_editableOptionalEmbedded_base).queryByText("Delete")
+    within(nested_editableOptionalEmbedded_base).queryByText("Delete"),
   ).toBeEnabled();
 });
 
@@ -490,109 +490,109 @@ test("Given the EditInstance View When adding new nested embedded entity Then th
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "EditInstance-Loading" })
+    await screen.findByRole("generic", { name: "EditInstance-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.right({ data: ServiceInstance.allAttrs }));
 
   expect(
-    await screen.findByRole("generic", { name: "EditInstance-Success" })
+    await screen.findByRole("generic", { name: "EditInstance-Success" }),
   ).toBeInTheDocument();
   //add new entity an verify if all are enabled
   const editableOptionalEmbedded_base = screen.getByLabelText(
-    "DictListFieldInput-editableOptionalEmbedded_base"
+    "DictListFieldInput-editableOptionalEmbedded_base",
   );
   await act(async () => {
     await userEvent.click(
-      screen.getByRole("button", { name: "editableOptionalEmbedded_base" })
+      screen.getByRole("button", { name: "editableOptionalEmbedded_base" }),
     );
   });
 
   await act(async () => {
     await userEvent.click(
-      within(editableOptionalEmbedded_base).getByText("Add")
+      within(editableOptionalEmbedded_base).getByText("Add"),
     );
   });
 
   await act(async () => {
     await userEvent.click(
-      within(editableOptionalEmbedded_base).getByRole("button", { name: "2" })
+      within(editableOptionalEmbedded_base).getByRole("button", { name: "2" }),
     );
   });
   const addedOptionalEmbedded = screen.getByLabelText(
-    "DictListFieldInputItem-editableOptionalEmbedded_base.2"
+    "DictListFieldInputItem-editableOptionalEmbedded_base.2",
   );
   //check if direct attributes are correctly displayed
   expect(within(addedOptionalEmbedded).queryByText("string")).toBeEnabled();
   expect(
-    within(addedOptionalEmbedded).queryByText("editableString")
+    within(addedOptionalEmbedded).queryByText("editableString"),
   ).toBeEnabled();
 
   expect(within(addedOptionalEmbedded).queryByText("string?")).toBeEnabled();
   expect(
-    within(addedOptionalEmbedded).queryByText("editableString?")
+    within(addedOptionalEmbedded).queryByText("editableString?"),
   ).toBeEnabled();
 
   expect(within(addedOptionalEmbedded).queryByText("bool")).toBeEnabled();
   expect(
-    within(addedOptionalEmbedded).queryByText("editableBool")
+    within(addedOptionalEmbedded).queryByText("editableBool"),
   ).toBeEnabled();
 
   expect(within(addedOptionalEmbedded).queryByText("bool?")).toBeEnabled();
   expect(
-    within(addedOptionalEmbedded).queryByText("editableBool?")
+    within(addedOptionalEmbedded).queryByText("editableBool?"),
   ).toBeEnabled();
 
   expect(within(addedOptionalEmbedded).queryByText("string[]")).toBeEnabled();
   expect(
-    within(addedOptionalEmbedded).queryByText("editableString[]")
+    within(addedOptionalEmbedded).queryByText("editableString[]"),
   ).toBeEnabled();
 
   expect(within(addedOptionalEmbedded).queryByText("string[]?")).toBeEnabled();
   expect(
-    within(addedOptionalEmbedded).queryByText("editableString[]?")
+    within(addedOptionalEmbedded).queryByText("editableString[]?"),
   ).toBeEnabled();
 
   expect(within(addedOptionalEmbedded).queryByText("enum")).toBeEnabled();
   expect(
-    within(addedOptionalEmbedded).queryByText("editableEnum")
+    within(addedOptionalEmbedded).queryByText("editableEnum"),
   ).toBeEnabled();
 
   expect(within(addedOptionalEmbedded).queryByText("enum?")).toBeEnabled();
   expect(
-    within(addedOptionalEmbedded).queryByText("editableEnum?")
+    within(addedOptionalEmbedded).queryByText("editableEnum?"),
   ).toBeEnabled();
 
   expect(within(addedOptionalEmbedded).queryByText("dict")).toBeEnabled();
   expect(
-    within(addedOptionalEmbedded).queryByText("editableDict")
+    within(addedOptionalEmbedded).queryByText("editableDict"),
   ).toBeEnabled();
 
   expect(within(addedOptionalEmbedded).queryByText("dict?")).toBeEnabled();
   expect(
-    within(addedOptionalEmbedded).queryByText("editableDict?")
+    within(addedOptionalEmbedded).queryByText("editableDict?"),
   ).toBeEnabled();
 
   const nested_embedded_base = within(addedOptionalEmbedded).getByLabelText(
-    "DictListFieldInput-editableOptionalEmbedded_base.1.embedded"
+    "DictListFieldInput-editableOptionalEmbedded_base.1.embedded",
   );
   const nested_editableEmbedded_base = within(
-    addedOptionalEmbedded
+    addedOptionalEmbedded,
   ).getByLabelText(
-    "DictListFieldInput-editableOptionalEmbedded_base.1.editableEmbedded"
+    "DictListFieldInput-editableOptionalEmbedded_base.1.editableEmbedded",
   );
   const nested_optionalEmbedded_base = within(
-    addedOptionalEmbedded
+    addedOptionalEmbedded,
   ).getByLabelText(
-    "DictListFieldInput-editableOptionalEmbedded_base.1.embedded?"
+    "DictListFieldInput-editableOptionalEmbedded_base.1.embedded?",
   );
   const nested_editableOptionalEmbedded_base = screen.getByLabelText(
-    "DictListFieldInput-editableOptionalEmbedded_base.1.editableEmbedded?"
+    "DictListFieldInput-editableOptionalEmbedded_base.1.editableEmbedded?",
   );
 
   await act(async () => {
     await userEvent.click(
-      within(addedOptionalEmbedded).getByRole("button", { name: "embedded" })
+      within(addedOptionalEmbedded).getByRole("button", { name: "embedded" }),
     );
   });
 
@@ -600,7 +600,7 @@ test("Given the EditInstance View When adding new nested embedded entity Then th
     await userEvent.click(
       within(addedOptionalEmbedded).getByRole("button", {
         name: "editableEmbedded",
-      })
+      }),
     );
   });
 
@@ -608,7 +608,7 @@ test("Given the EditInstance View When adding new nested embedded entity Then th
     await userEvent.click(
       within(addedOptionalEmbedded).getByRole("button", {
         name: "embedded?",
-      })
+      }),
     );
   });
 
@@ -616,7 +616,7 @@ test("Given the EditInstance View When adding new nested embedded entity Then th
     await userEvent.click(
       within(addedOptionalEmbedded).getByRole("button", {
         name: "editableEmbedded?",
-      })
+      }),
     );
   });
 
@@ -625,28 +625,28 @@ test("Given the EditInstance View When adding new nested embedded entity Then th
 
   expect(within(nested_editableEmbedded_base).queryByText("Add")).toBeEnabled();
   expect(
-    within(nested_editableEmbedded_base).queryByText("Delete")
+    within(nested_editableEmbedded_base).queryByText("Delete"),
   ).toBeDisabled();
 
   expect(within(nested_optionalEmbedded_base).queryByText("Add")).toBeEnabled();
   await act(async () => {
     await userEvent.click(
-      within(nested_optionalEmbedded_base).getByText("Add")
+      within(nested_optionalEmbedded_base).getByText("Add"),
     );
   });
   expect(
-    within(nested_optionalEmbedded_base).queryByText("Delete")
+    within(nested_optionalEmbedded_base).queryByText("Delete"),
   ).toBeEnabled();
 
   expect(
-    within(nested_editableOptionalEmbedded_base).queryByText("Add")
+    within(nested_editableOptionalEmbedded_base).queryByText("Add"),
   ).toBeEnabled();
   await act(async () => {
     await userEvent.click(
-      within(nested_editableOptionalEmbedded_base).getByText("Add")
+      within(nested_editableOptionalEmbedded_base).getByText("Add"),
     );
   });
   expect(
-    within(nested_editableOptionalEmbedded_base).queryByText("Delete")
+    within(nested_editableOptionalEmbedded_base).queryByText("Delete"),
   ).toBeEnabled();
 });

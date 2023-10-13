@@ -8,8 +8,8 @@ export function UpdateCatalogCommandManager(apiHelper: ApiHelper) {
       return await apiHelper.post(
         `/lsm/v1/exporter/export_service_definition`,
         environment,
-        null
+        null,
       );
-    }
+    },
   );
 }

@@ -1,7 +1,7 @@
 import React from "react";
 import { MemoryRouter } from "react-router-dom";
 import { render, screen, act } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import {
   Either,
@@ -38,7 +38,7 @@ import { EnvironmentModifierImpl } from "@/UI/Dependency/EnvironmentModifier";
 import { ConfigTab } from "./ConfigTab";
 
 function setup(
-  environmentModifier: EnvironmentModifier = new MockEnvironmentModifier()
+  environmentModifier: EnvironmentModifier = new MockEnvironmentModifier(),
 ) {
   const storeInstance = getStoreInstance();
   const apiHelper = new DeferredApiHelper();
@@ -64,18 +64,18 @@ function setup(
     })),
     instanceConfigStateHelper,
     new InstanceConfigFinalizer(
-      ServiceStateHelper(storeInstance, serviceKeyMaker)
-    )
+      ServiceStateHelper(storeInstance, serviceKeyMaker),
+    ),
   );
 
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolver([instanceConfigHelper])
+    new DynamicQueryManagerResolver([instanceConfigHelper]),
   );
 
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([
       InstanceConfigCommandManager(apiHelper, instanceConfigStateHelper),
-    ])
+    ]),
   );
 
   const component = (
@@ -114,7 +114,7 @@ test("ConfigTab can reset all settings", async () => {
   expect(resetButton).toBeVisible();
 
   expect(
-    screen.getByRole("checkbox", { name: "auto_creating-False" })
+    screen.getByRole("checkbox", { name: "auto_creating-False" }),
   ).toBeVisible();
 
   await act(async () => {
@@ -126,7 +126,7 @@ test("ConfigTab can reset all settings", async () => {
   });
 
   expect(
-    await screen.findByRole("checkbox", { name: "auto_creating-True" })
+    await screen.findByRole("checkbox", { name: "auto_creating-True" }),
   ).toBeVisible();
 });
 
@@ -146,16 +146,16 @@ test("ConfigTab can change 1 toggle", async () => {
 
   await act(async () => {
     await apiHelper.resolve(
-      Either.right({ data: { auto_creating: false, auto_designed: false } })
+      Either.right({ data: { auto_creating: false, auto_designed: false } }),
     );
   });
 
   expect(
-    screen.getByRole("checkbox", { name: "auto_creating-False" })
+    screen.getByRole("checkbox", { name: "auto_creating-False" }),
   ).toBeVisible();
 
   expect(
-    await screen.findByRole("checkbox", { name: "auto_designed-False" })
+    await screen.findByRole("checkbox", { name: "auto_designed-False" }),
   ).toBeVisible();
 });
 

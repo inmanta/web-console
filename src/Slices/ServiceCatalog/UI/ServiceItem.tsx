@@ -10,12 +10,11 @@ import {
   Text,
   Title,
   TextVariants,
-  KebabToggle,
-  Dropdown,
   Flex,
   Modal,
   ModalVariant,
 } from "@patternfly/react-core";
+import { KebabToggle, Dropdown } from "@patternfly/react-core/deprecated";
 import styled from "styled-components";
 import { Maybe, ServiceModel } from "@/Core";
 import { Spacer, ConfirmUserActionForm, ToastAlert } from "@/UI/Components";
@@ -54,6 +53,7 @@ export const ServiceItem: React.FunctionComponent<Props> = ({ service }) => {
   return (
     <DataListItem id={service.name} aria-labelledby={serviceKey}>
       <ToastAlert
+        data-testid="ToastAlert"
         title={words("catalog.delete.failed")}
         message={errorMessage}
         setMessage={setErrorMessage}
@@ -134,6 +134,7 @@ export const ServiceItem: React.FunctionComponent<Props> = ({ service }) => {
         </DataListAction>
       </DataListItemRow>
       <Modal
+        disableFocusTrap
         variant={ModalVariant.small}
         isOpen={isDeleteModalOpen}
         title={words("catalog.delete.modal.title")}

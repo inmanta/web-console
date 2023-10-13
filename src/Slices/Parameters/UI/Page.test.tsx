@@ -1,7 +1,7 @@
 import React from "react";
 import { MemoryRouter } from "react-router-dom";
 import { act, render, screen, within } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { Either } from "@/Core";
 import {
@@ -36,16 +36,16 @@ function setup() {
       GetParametersQueryManager(
         apiHelper,
         GetParametersStateHelper(store),
-        scheduler
+        scheduler,
       ),
-    ])
+    ]),
   );
   const updateAttribute = UpdateInstanceAttributeCommandManager(
     new KeycloakAuthHelper(),
-    apiHelper
+    apiHelper,
   );
   const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolver([updateAttribute])
+    new DynamicCommandManagerResolver([updateAttribute]),
   );
 
   const component = (
@@ -81,7 +81,7 @@ test("When using the name filter then only the matching parameters should be fet
   expect(initialRows).toHaveLength(10);
 
   const input = screen.getByPlaceholderText(
-    words("parameters.filters.name.placeholder")
+    words("parameters.filters.name.placeholder"),
   );
 
   await act(async () => {
@@ -92,7 +92,7 @@ test("When using the name filter then only the matching parameters should be fet
   });
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
-    `/api/v2/parameters?limit=20&sort=name.asc&filter.name=param`
+    `/api/v2/parameters?limit=20&sort=name.asc&filter.name=param`,
   );
 
   await act(async () => {
@@ -100,7 +100,7 @@ test("When using the name filter then only the matching parameters should be fet
       Either.right({
         ...Parameters.response,
         data: Parameters.response.data.slice(0, 3),
-      })
+      }),
     );
   });
 
@@ -127,18 +127,18 @@ test("When using the source filter then only the matching parameters should be f
     await userEvent.click(
       within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
         "button",
-        { name: "FilterPicker" }
-      )
+        { name: "FilterPicker" },
+      ),
     );
   });
   await act(async () => {
     await userEvent.click(
-      screen.getByRole("option", { name: words("parameters.columns.source") })
+      screen.getByRole("option", { name: words("parameters.columns.source") }),
     );
   });
 
   const input = screen.getByPlaceholderText(
-    words("parameters.filters.source.placeholder")
+    words("parameters.filters.source.placeholder"),
   );
 
   await act(async () => {
@@ -149,7 +149,7 @@ test("When using the source filter then only the matching parameters should be f
   });
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
-    `/api/v2/parameters?limit=20&sort=name.asc&filter.source=plugin`
+    `/api/v2/parameters?limit=20&sort=name.asc&filter.source=plugin`,
   );
 
   await act(async () => {
@@ -157,7 +157,7 @@ test("When using the source filter then only the matching parameters should be f
       Either.right({
         ...Parameters.response,
         data: Parameters.response.data.slice(0, 3),
-      })
+      }),
     );
   });
 
@@ -185,15 +185,15 @@ test("When using the Updated filter then the parameters within the range selecte
     await userEvent.click(
       within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
         "button",
-        { name: "FilterPicker" }
-      )
+        { name: "FilterPicker" },
+      ),
     );
   });
   await act(async () => {
     await userEvent.click(
       screen.getByRole("option", {
         name: words("parameters.columns.updated.tests"),
-      })
+      }),
     );
   });
 
@@ -217,7 +217,7 @@ test("When using the Updated filter then the parameters within the range selecte
   });
 
   expect(apiHelper.pendingRequests[0].url).toMatch(
-    `/api/v2/parameters?limit=20&sort=name.asc&filter.updated=ge%3A2022-01-30%2B23%3A00%3A00&filter.updated=le%3A2022-01-31%2B23%3A00%3A00`
+    `/api/v2/parameters?limit=20&sort=name.asc&filter.updated=ge%3A2022-01-30%2B23%3A00%3A00&filter.updated=le%3A2022-01-31%2B23%3A00%3A00`,
   );
 
   await act(async () => {
@@ -225,7 +225,7 @@ test("When using the Updated filter then the parameters within the range selecte
       Either.right({
         ...Parameters.response,
         data: Parameters.response.data.slice(0, 3),
-      })
+      }),
     );
   });
 
@@ -241,9 +241,9 @@ test("When using the Updated filter then the parameters within the range selecte
   });
 
   expect(
-    await screen.findByText("from | 2022/01/31 00:00:00", { exact: false })
+    await screen.findByText("from | 2022/01/31 00:00:00", { exact: false }),
   ).toBeVisible();
   expect(
-    await screen.findByText("to | 2022/02/01 00:00:00", { exact: false })
+    await screen.findByText("to | 2022/02/01 00:00:00", { exact: false }),
   ).toBeVisible();
 });

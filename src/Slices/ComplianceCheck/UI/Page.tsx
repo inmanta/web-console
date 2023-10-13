@@ -27,9 +27,9 @@ export const View: React.FC<Props> = ({ version }) => {
   });
   const [errorMessage, setErrorMessage] = useState("");
   const [updatedList, setUpdatedList] = useState(false);
-  const [statuses, setStatuses] = useState(Diff.statuses);
+  const [statuses, setStatuses] = useState(Diff.defaultStatuses);
   const [selectedReport, setSelectedReport] = useState<MaybeReport>(
-    Maybe.none()
+    Maybe.none(),
   );
   const firstReport = useRef<MaybeReport>(Maybe.none());
 
@@ -78,6 +78,7 @@ export const View: React.FC<Props> = ({ version }) => {
   return (
     <>
       <ToastAlert
+        data-testid="ToastAlert"
         title={words("desiredState.complianceCheck.failed")}
         message={errorMessage}
         setMessage={setErrorMessage}
@@ -115,5 +116,5 @@ const StyledPageSection = styled(PageSection)`
 `;
 
 const ToolBarContainer = styled(Toolbar)`
-  z-index: var(--pf-global--ZIndex--xl);
+  z-index: var(--pf-v5-global--ZIndex--xl);
 `;

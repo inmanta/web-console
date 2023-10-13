@@ -35,7 +35,6 @@ import { ServiceInstanceHistoryPage } from "@S/ServiceInstanceHistory/UI";
 import { ServiceInventoryPage } from "@S/ServiceInventory/UI";
 import { SettingsPage } from "@S/Settings/UI";
 import { StatusPage } from "@S/Status/UI";
-import * as configFile from "../../config";
 
 export class PrimaryPageManager implements PageManager {
   private pageDictionary: PageDictionary;
@@ -161,11 +160,8 @@ export class PrimaryPageManager implements PageManager {
     };
   }
 
-  getPages(): Page[] {
-    if (
-      Object(configFile).hasOwnProperty("features") &&
-      configFile.features.includes("instanceComposer")
-    ) {
+  getPages(features: string[]): Page[] {
+    if (features && features.includes("instanceComposer")) {
       return [
         ...Object.values(this.pageDictionary),
         ...Object.values(this.restrictedPageDictionary),

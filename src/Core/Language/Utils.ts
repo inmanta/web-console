@@ -46,7 +46,7 @@ export const isNotNull = <T>(value: T | null): value is NonNullable<T> =>
   value !== null;
 
 export const isNotUndefined = <T>(
-  value: T | undefined
+  value: T | undefined,
 ): value is NonNullable<T> => typeof value !== "undefined";
 
 export type ValueObject<T> = Readonly<{
@@ -56,10 +56,10 @@ export type ValueObject<T> = Readonly<{
 
 export const objectHasKey = <
   X extends Record<string, unknown>,
-  Y extends PropertyKey
+  Y extends PropertyKey,
 >(
   obj: X,
-  prop: Y
+  prop: Y,
 ): obj is X & Record<Y, unknown> => prop in obj;
 
 export const isObject = (value: unknown): value is Record<string, unknown> => {
@@ -74,7 +74,7 @@ export const stringifyList = (items: string[]): string =>
   items.length <= 0 ? "" : items.reduce((acc, curr) => `${acc}, ${curr}`);
 
 export const isObjectEmpty = (
-  obj: Record<string, unknown>
+  obj: Record<string, unknown>,
 ): obj is Record<string, never> => Object.entries(obj).length <= 0;
 
 /**
@@ -82,7 +82,7 @@ export const isObjectEmpty = (
  */
 export const getKeysExcluding = (
   excludedKeys: string[],
-  object: Record<string, unknown>
+  object: Record<string, unknown>,
 ): string[] => Object.keys(object).filter((key) => !excludedKeys.includes(key));
 
 /**
@@ -91,7 +91,7 @@ export const getKeysExcluding = (
  */
 export const keepKeys = (
   keys: string[],
-  object: Record<string, unknown>
+  object: Record<string, unknown>,
 ): Record<string, unknown> =>
   Object.keys(object).reduce((acc, cur) => {
     if (keys.includes(cur)) {
@@ -101,7 +101,7 @@ export const keepKeys = (
   }, {});
 
 export const resolvePromiseRecord = async (
-  record: Record<string, Promise<unknown>>
+  record: Record<string, Promise<unknown>>,
 ): Promise<Record<string, unknown>> => {
   const list = Object.entries(record);
   const promises = list.map(([, promise]) => promise);

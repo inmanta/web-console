@@ -8,11 +8,11 @@ export function DestroyInstanceCommandManager(apiHelper: ApiHelper) {
       return async (refetch) => {
         const result = await apiHelper.delete(
           `/lsm/v2/service_inventory/${service_entity}/${id}/expert?current_version=${version}`,
-          environment
+          environment,
         );
         await refetch();
         return result;
       };
-    }
+    },
   );
 }

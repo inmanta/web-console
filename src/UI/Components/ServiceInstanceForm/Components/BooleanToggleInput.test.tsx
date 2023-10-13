@@ -1,6 +1,6 @@
 import React from "react";
 import { act, render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { userEvent } from "@testing-library/user-event";
 import { BooleanToggleInput } from "./BooleanToggleInput";
 
 describe("BooleanFormInput", () => {
@@ -12,7 +12,7 @@ describe("BooleanFormInput", () => {
         isChecked={true}
         description={"This is a bool parameter"}
         handleInputChange={handleClick}
-      />
+      />,
     );
     const toggle = await screen.findByLabelText("Toggle-bool_param");
     await act(async () => {

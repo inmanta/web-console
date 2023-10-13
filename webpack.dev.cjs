@@ -1,4 +1,5 @@
 const path = require("path");
+const CopyPlugin = require("copy-webpack-plugin");
 const Dotenv = require("dotenv-webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const webpack = require("webpack");
@@ -38,6 +39,9 @@ module.exports = merge(common, {
       PUBLIC_PATH: publicPath,
       favicon: path.resolve(__dirname, "public", "images", "favicon.ico"),
     }),
+    new CopyPlugin({
+      patterns: [{ from: "src/config.js", to: "" }],
+    }),
   ],
   module: {
     rules: [
@@ -50,23 +54,23 @@ module.exports = merge(common, {
           path.resolve(__dirname, "node_modules/@patternfly/react-styles/css"),
           path.resolve(
             __dirname,
-            "node_modules/@patternfly/react-core/dist/styles/base.css"
+            "node_modules/@patternfly/react-core/dist/styles/base.css",
           ),
           path.resolve(
             __dirname,
-            "node_modules/@patternfly/react-core/dist/esm/@patternfly/patternfly"
+            "node_modules/@patternfly/react-core/dist/esm/@patternfly/patternfly",
           ),
           path.resolve(
             __dirname,
-            "node_modules/@patternfly/react-core/node_modules/@patternfly/react-styles/css"
+            "node_modules/@patternfly/react-core/node_modules/@patternfly/react-styles/css",
           ),
           path.resolve(
             __dirname,
-            "node_modules/@patternfly/react-table/node_modules/@patternfly/react-styles/css"
+            "node_modules/@patternfly/react-table/node_modules/@patternfly/react-styles/css",
           ),
           path.resolve(
             __dirname,
-            "node_modules/@patternfly/react-inline-edit-extension/node_modules/@patternfly/react-styles/css"
+            "node_modules/@patternfly/react-inline-edit-extension/node_modules/@patternfly/react-styles/css",
           ),
           path.resolve(__dirname, "node_modules/@inmanta/rappid/rappid.css"),
         ],

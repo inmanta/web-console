@@ -1,7 +1,7 @@
 import React from "react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { act, render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { Either, getShortUuidFromRaw } from "@/Core";
 import {
@@ -45,18 +45,18 @@ function setup() {
     apiHelper,
     ServiceStateHelper(store, serviceKeyMaker),
     scheduler,
-    serviceKeyMaker
+    serviceKeyMaker,
   );
 
   const servicesQueryManager = ServicesQueryManager(
     apiHelper,
     ServicesStateHelper(store),
-    scheduler
+    scheduler,
   );
   const callbacksStateHelper = CallbacksStateHelper(store);
   const callbacksQueryManager = CallbacksQueryManager(
     apiHelper,
-    callbacksStateHelper
+    callbacksStateHelper,
   );
 
   const queryResolver = new QueryResolverImpl(
@@ -64,21 +64,21 @@ function setup() {
       serviceQueryManager,
       servicesQueryManager,
       callbacksQueryManager,
-    ])
+    ]),
   );
 
   const deleteServiceCommandManager = DeleteServiceCommandManager(
-    new BaseApiHelper()
+    new BaseApiHelper(),
   );
 
   const deleteCallbackCommandManager = DeleteCallbackCommandManager(
     apiHelper,
-    new CallbacksUpdater(CallbacksStateHelper(store), apiHelper)
+    new CallbacksUpdater(CallbacksStateHelper(store), apiHelper),
   );
 
   const createCallbackCommandManager = CreateCallbackCommandManager(
     apiHelper,
-    new CallbacksUpdater(CallbacksStateHelper(store), apiHelper)
+    new CallbacksUpdater(CallbacksStateHelper(store), apiHelper),
   );
 
   const commandResolver = new CommandResolverImpl(
@@ -86,7 +86,7 @@ function setup() {
       deleteServiceCommandManager,
       deleteCallbackCommandManager,
       createCallbackCommandManager,
-    ])
+    ]),
   );
 
   const component = (
@@ -125,7 +125,7 @@ test("GIVEN ServiceDetails WHEN click on callbacks tab THEN shows callbacks tab"
   });
 
   expect(
-    screen.getByRole("generic", { name: "Callbacks-Loading" })
+    screen.getByRole("generic", { name: "Callbacks-Loading" }),
   ).toBeVisible();
 
   await act(async () => {
@@ -133,9 +133,9 @@ test("GIVEN ServiceDetails WHEN click on callbacks tab THEN shows callbacks tab"
   });
 
   expect(
-    await screen.findByRole("grid", { name: "CallbacksTable" })
+    await screen.findByRole("grid", { name: "CallbacksTable" }),
   ).toBeVisible();
   expect(
-    screen.getByRole("row", { name: "CallbackRow-" + shortenUUID })
+    screen.getByRole("row", { name: "CallbackRow-" + shortenUUID }),
   ).toBeVisible();
 });

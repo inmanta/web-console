@@ -1,7 +1,11 @@
 import React from "react";
 import { Card, CardBody } from "@patternfly/react-core";
 import { ListIcon, ModuleIcon } from "@patternfly/react-icons";
-import { Table, TableBody, TableHeader } from "@patternfly/react-table";
+import {
+  Table,
+  TableBody,
+  TableHeader,
+} from "@patternfly/react-table/deprecated";
 import { JsonFormatter, XmlFormatter } from "@/Data";
 import {
   AttributeClassifier,
@@ -39,7 +43,7 @@ export const Tabs: React.FC<Props> = ({
 };
 
 const attributesTab = (
-  attributes: Record<string, unknown>
+  attributes: Record<string, unknown>,
 ): TabDescriptor<TabKey> => ({
   id: TabKey.Attributes,
   title: words("resources.history.tabs.attributes"),
@@ -59,7 +63,7 @@ const AttributesTab: React.FC<{ attributes: Record<string, unknown> }> = ({
 }) => {
   const classifier = new AttributeClassifier(
     new JsonFormatter(),
-    new XmlFormatter()
+    new XmlFormatter(),
   );
   const classifiedAttributes = classifier.classify(attributes);
   return (

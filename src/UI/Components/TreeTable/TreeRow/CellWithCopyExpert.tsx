@@ -9,6 +9,7 @@ import {
 } from "@patternfly/react-core";
 import { TimesIcon, PencilAltIcon } from "@patternfly/react-icons";
 import { Td } from "@patternfly/react-table";
+import { set } from "lodash";
 import styled from "styled-components";
 import { Maybe, ParsedNumber } from "@/Core";
 import { AttributeSet } from "@/Core/Domain/ServiceInstanceParams";
@@ -37,6 +38,7 @@ interface Props {
   version: ParsedNumber;
   serviceEntity: string;
   attributeType: string;
+  parentObject: object | null;
 }
 
 export const CellWithCopyExpert: React.FC<Props> = ({
@@ -50,6 +52,7 @@ export const CellWithCopyExpert: React.FC<Props> = ({
   version,
   serviceEntity,
   attributeType,
+  parentObject,
 }) => {
   const { commandResolver, environmentModifier } =
     useContext(DependencyContext);
@@ -79,7 +82,7 @@ export const CellWithCopyExpert: React.FC<Props> = ({
     }
   };
   const onSubmit = async () => {
-    const newValue = newAttribute;
+    let newValue = newAttribute;
     //if string[] then we need to convert initial value to the same format to be able to compare
     if (
       newValue === value ||
@@ -92,10 +95,16 @@ export const CellWithCopyExpert: React.FC<Props> = ({
     }
 
     setIsSpinnerVisible(true);
+
+    if (parentObject) {
+      newValue = parentObject[path.split("$")[0]];
+      set(newValue as object, path.split("$").slice(1).join("."), newAttribute);
+    }
+
     const result = await trigger(
       (label + "_attributes") as AttributeSet,
       newValue,
-      path.split("$").join(".")
+      parentObject !== null ? path.split("$")[0] : path.split("$").join("."),
     );
 
     if (Maybe.isSome(result)) {
@@ -137,7 +146,7 @@ export const CellWithCopyExpert: React.FC<Props> = ({
           label={label}
           value={newAttribute}
           type={attributeType}
-          onChange={(value) => setNewAttribute(value)}
+          onChange={(_event, value) => setNewAttribute(value)}
           toggleModal={() => {
             setIsModalOpen(!isModalOpen);
           }}
@@ -151,8 +160,13 @@ export const CellWithCopyExpert: React.FC<Props> = ({
       ) : (
         value
       )}
-      {isSpinnerVisible && <StyledSpinner isSVG size="sm" />}
+      {isSpinnerVisible && (
+        <Icon size="sm">
+          <StyledSpinner />
+        </Icon>
+      )}
       <Modal
+        disableFocusTrap
         variant={"small"}
         isOpen={isModalOpen}
         title={words("inventory.editAttribute.header")}
@@ -162,7 +176,7 @@ export const CellWithCopyExpert: React.FC<Props> = ({
         <Text>
           {words("inventory.editAttribute.text")(
             value,
-            newAttribute.toString()
+            newAttribute.toString(),
           )}
         </Text>
         <ConfirmUserActionForm
@@ -194,6 +208,6 @@ export const CellWithCopyExpert: React.FC<Props> = ({
 };
 
 const StyledSpinner = styled(Spinner)`
-  --pf-c-spinner--Color: var(--pf-global--Color--100);
+  --pf-v5-c-spinner--Color: var(--pf-v5-global--Color--100);
   margin-left: 8px;
 `;

@@ -19,7 +19,7 @@ import { ModifierHandler } from "./ModifierHandler";
 export class FieldCreator {
   constructor(
     private readonly fieldModifierHandler: ModifierHandler,
-    private fieldsForEditForm: boolean = false
+    private fieldsForEditForm: boolean = false,
   ) {}
 
   /**
@@ -33,10 +33,10 @@ export class FieldCreator {
     service: Pick<
       ServiceModel,
       "attributes" | "embedded_entities" | "inter_service_relations"
-    >
+    >,
   ): Field[] {
     const fieldsFromAttributes: Field[] = this.attributesToFields(
-      service.attributes
+      service.attributes,
     );
 
     if (
@@ -59,7 +59,7 @@ export class FieldCreator {
 
     const fieldsFromRelations = service.inter_service_relations
       .map((interServiceRelation) =>
-        this.interServiceRelationToFields(interServiceRelation)
+        this.interServiceRelationToFields(interServiceRelation),
       )
       .filter(isNotNull);
 
@@ -91,7 +91,7 @@ export class FieldCreator {
 
     const fieldsFromAttributes: Field[] = this.attributesToFields(
       entity.attributes,
-      true
+      true,
     );
 
     const fieldsFromEmbeddedEntities = entity.embedded_entities
@@ -101,7 +101,7 @@ export class FieldCreator {
     const fieldsFromRelations = entity.inter_service_relations
       ? entity.inter_service_relations
           .map((interServiceRelation) =>
-            this.interServiceRelationToFields(interServiceRelation, true)
+            this.interServiceRelationToFields(interServiceRelation, true),
           )
           .filter(isNotNull)
       : [];
@@ -138,12 +138,12 @@ export class FieldCreator {
 
   private interServiceRelationToFields(
     interServiceRelation: InterServiceRelation,
-    embedded?: boolean
+    embedded?: boolean,
   ): Field | null {
     if (
       !this.fieldModifierHandler.validateModifier(
         interServiceRelation.modifier,
-        embedded
+        embedded,
       )
     ) {
       return null;
@@ -171,21 +171,24 @@ export class FieldCreator {
     };
   }
 
-  private attributesToFields(
+  attributesToFields(
     attributes: AttributeModel[],
-    embedded?: boolean
+    embedded?: boolean,
   ): Field[] {
     const converter = new AttributeInputConverterImpl();
     return attributes
       .filter((attribute) =>
-        this.fieldModifierHandler.validateModifier(attribute.modifier, embedded)
+        this.fieldModifierHandler.validateModifier(
+          attribute.modifier,
+          embedded,
+        ),
       )
       .map((attribute) => {
         const type = converter.getInputType(attribute);
         const defaultValue = converter.getFormDefaultValue(
           type,
           attribute.default_value_set,
-          attribute.default_value
+          attribute.default_value,
         );
 
         if (type === "bool") {
@@ -269,7 +272,7 @@ export class FieldCreator {
     );
   }
   private shouldFieldBeDisabled(
-    object: AttributeModel | InterServiceRelation | EmbeddedEntity
+    object: AttributeModel | InterServiceRelation | EmbeddedEntity,
   ): boolean {
     return this.fieldsForEditForm && object.modifier !== "rw+";
   }

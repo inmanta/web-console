@@ -6,7 +6,7 @@ import { getUrl } from "./getUrl";
 export function EventsQueryManager(
   apiHelper: ApiHelper,
   stateHelper: StateHelper<"GetInstanceEvents">,
-  scheduler: Scheduler
+  scheduler: Scheduler,
 ) {
   return QueryManager.ContinuousWithEnv<"GetInstanceEvents">(
     apiHelper,
@@ -31,7 +31,7 @@ export function EventsQueryManager(
         handlers: getPaginationHandlers(links, metadata, setUrl),
         metadata,
       };
-    }
+    },
   );
 }
 

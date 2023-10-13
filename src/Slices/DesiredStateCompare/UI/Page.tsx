@@ -21,7 +21,7 @@ export const Page: React.FC = () => {
 export const View: React.FC<Diff.Identifiers> = ({ from, to }) => {
   const { queryResolver } = useContext(DependencyContext);
   const refs: DiffWizard.Refs = useRef({});
-  const [statuses, setStatuses] = useState(Diff.statuses);
+  const [statuses, setStatuses] = useState(Diff.defaultStatuses);
 
   const [data] = queryResolver.useOneTime<"GetDesiredStateDiff">({
     kind: "GetDesiredStateDiff",
@@ -32,7 +32,7 @@ export const View: React.FC<Diff.Identifiers> = ({ from, to }) => {
   const filteredData = RemoteData.mapSuccess(
     (resources) =>
       resources.filter((resource) => statuses.includes(resource.status)),
-    data
+    data,
   );
 
   return (
@@ -50,7 +50,7 @@ export const View: React.FC<Diff.Identifiers> = ({ from, to }) => {
           </ToolbarContent>
         </ToolBarContainer>
       </PageSection>
-      <PageSection variant="light" hasShadowBottom sticky="top">
+      <PageSection variant="light" hasShadowBottom>
         <DiffWizard.Controls
           data={filteredData}
           refs={refs}
@@ -85,5 +85,5 @@ const StyledPageSection = styled(PageSection)`
 `;
 
 const ToolBarContainer = styled(Toolbar)`
-  z-index: var(--pf-global--ZIndex--xl);
+  z-index: var(--pf-v5-global--ZIndex--xl);
 `;

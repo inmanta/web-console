@@ -28,13 +28,13 @@ export class CompileReportsTablePresenter
         compileReport.started && compileReport.completed
           ? this.datePresenter.diff(
               compileReport.completed,
-              compileReport.started
+              compileReport.started,
             )
           : "",
       waitTime: compileReport.started
         ? this.datePresenter.diff(
             compileReport.started,
-            compileReport.requested
+            compileReport.requested,
           )
         : "",
       completed: compileReport.completed,

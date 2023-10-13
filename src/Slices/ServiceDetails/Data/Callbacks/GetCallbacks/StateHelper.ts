@@ -17,7 +17,7 @@ export function CallbacksStateHelper(store: Store) {
     if (!RemoteData.isSuccess(data)) return data;
     const allCallbacks = data.value.data;
     const serviceCallbacks = allCallbacks.filter(
-      (cb) => cb.service_entity === service_entity
+      (cb) => cb.service_entity === service_entity,
     );
     const sortedCallbacks = sortBy(serviceCallbacks, ["url"]);
     return RemoteData.success(sortedCallbacks);
@@ -33,6 +33,6 @@ export function CallbacksStateHelper(store: Store) {
       });
     },
     (state, { service_entity }, environment) =>
-      state.callbacks.byEnv[environment]?.[service_entity]
+      state.callbacks.byEnv[environment]?.[service_entity],
   );
 }

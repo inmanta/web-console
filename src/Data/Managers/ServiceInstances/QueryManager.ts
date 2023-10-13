@@ -10,7 +10,7 @@ import { getUrl } from "./getUrl";
 export function ServiceInstancesQueryManager(
   apiHelper: ApiHelper,
   stateHelper: StateHelperWithEnv<"GetServiceInstances">,
-  scheduler: Scheduler
+  scheduler: Scheduler,
 ) {
   return QueryManager.ContinuousWithEnv<"GetServiceInstances">(
     apiHelper,
@@ -35,19 +35,19 @@ export function ServiceInstancesQueryManager(
         handlers: getPaginationHandlers(links, metadata, setUrl),
         metadata,
       };
-    }
+    },
   );
 }
 
 function stringifyFilter(
-  filter: ServiceInstanceParams.Filter | undefined
+  filter: ServiceInstanceParams.Filter | undefined,
 ): string {
   return typeof filter === "undefined" ? "undefined" : JSON.stringify(filter);
 }
 
 export function GetServiceInstancesOneTimeQueryManager(
   apiHelper: ApiHelper,
-  stateHelper: StateHelperWithEnv<"GetServiceInstances">
+  stateHelper: StateHelperWithEnv<"GetServiceInstances">,
 ) {
   return QueryManager.OneTimeWithEnv<"GetServiceInstances">(
     apiHelper,
@@ -71,6 +71,6 @@ export function GetServiceInstancesOneTimeQueryManager(
         metadata,
       };
     },
-    "MERGE"
+    "MERGE",
   );
 }

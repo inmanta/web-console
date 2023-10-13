@@ -1,0 +1,115 @@
+{
+  "instance": {
+    "data": {
+      "id": "b18e622e-efac-4c87-af9b-6858a6c3f3d1",
+      "environment": "72c8aa68-c1d4-44bd-8914-e509fdadc24e",
+      "service_entity": "FtthBitStream",
+      "version": 5,
+      "config": {},
+      "state": "up",
+      "candidate_attributes": null,
+      "active_attributes": {
+        "olt": {
+          "id": "NE-1032",
+          "elid": "R6L7RP81YT2W7R",
+          "name": "7360-OLT-BER-01",
+          "type": null,
+          "remark": null,
+          "masterZoneElid": "QNS2Y6Z8NP52P1",
+          "masterDeviceElid": "6SJRTWZMTDGAHT"
+        },
+        "ont": {
+          "elid": "AEF1U8HAWXRRH2",
+          "type": "I-010G-P",
+          "function": "ONT",
+          "serialNo": null,
+          "floorElid": "1RTDN00KGAP7FN",
+          "explanation": "Alcatel-Lucent, I-010G-P - I-010G-P ONT"
+        },
+        "qos": "Gold",
+        "name": "test",
+        "olt_pe": {
+          "elid": "IR2L2IY6EV5Z83",
+          "ipAddress": "10.255.255.2",
+          "visibleId": "7750SR7-BER_S-01"
+        },
+        "nni_uni": {
+          "id": "inmanta:west-3",
+          "es_id": null,
+          "ports": [
+            {
+              "id": "west-3",
+              "name": "1/1/c3/1",
+              "network_element": {
+                "id": "w",
+                "name": "router-west",
+                "device": {
+                  "os": "TiMos",
+                  "model": "A77501",
+                  "vendor": "Nokia",
+                  "mgmt_ip": "192.168.10.17",
+                  "version": "20.10",
+                  "mgmt_port": 24830,
+                  "password_env": "NETCONF_DEVICE_PASSWORD",
+                  "username_env": "NETCONF_DEVICE_USER"
+                },
+                "router_ip": "10.255.255.4"
+              }
+            }
+          ],
+          "lag_id": null,
+          "es_name": null
+        },
+        "olt_uni": {
+          "id": "inmanta:east-3",
+          "es_id": null,
+          "ports": [
+            {
+              "id": "east-3",
+              "name": "1/1/c3/1",
+              "network_element": {
+                "id": "e",
+                "name": "router-east",
+                "device": {
+                  "os": "TiMos",
+                  "model": "A77501",
+                  "vendor": "Nokia",
+                  "mgmt_ip": "192.168.10.17",
+                  "version": "20.10",
+                  "mgmt_port": 22830,
+                  "password_env": "NETCONF_DEVICE_PASSWORD",
+                  "username_env": "NETCONF_DEVICE_USER"
+                },
+                "router_ip": "10.255.255.2"
+              }
+            }
+          ],
+          "lag_id": null,
+          "es_name": null
+        },
+        "orderId": "test-1",
+        "bandwidth": 50000,
+        "nniVlanId": 1730,
+        "oltVlanId": 1730,
+        "serviceId": 10500,
+        "customerElid": "1",
+        "servcoReference": "",
+        "planning_protocol": {
+          "elid": "I9ESLYN1G7CNZA",
+          "planId": 1282,
+          "timestamp": "2023-08-02T15:52:45Z"
+        },
+        "customerLocationElid": "1RTDN00KGAP7FN"
+      },
+      "rollback_attributes": null,
+      "created_at": "2023-08-02T15:52:39.693577",
+      "last_updated": "2023-08-02T15:56:01.813514",
+      "callback": [],
+      "deleted": false,
+      "deployment_progress": null,
+      "service_identity_attribute_value": "test-1",
+      "referenced_by": null
+    }
+  },
+  "relatedInstances": []
+}

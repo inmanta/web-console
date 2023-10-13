@@ -22,7 +22,7 @@ export const AttributesTable: React.FC<Props> = ({ attributes, id }) => (
         new PathHelper("$"),
         new TreeExpansionManager("$"),
         new InventoryAttributeHelper("$"),
-        attributes
+        attributes,
       )
     }
     version={+id}

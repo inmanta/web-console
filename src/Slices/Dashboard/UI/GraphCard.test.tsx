@@ -16,15 +16,15 @@ describe("Test GraphCard with LineChart component", () => {
           name: availableKeys[1],
           data: mockedMetrics.metrics[availableKeys[1]],
         }}
-      />
+      />,
     );
 
     expect(
       await screen.findByRole("heading", {
         name: words(`dashboard.${availableKeys[1] as MetricName}.title`),
-      })
+      }),
     ).toBeVisible();
-    expect(await container.querySelector(".pf-c-chart")).toBeVisible();
+    expect(await container.querySelector(".pf-v5-c-chart")).toBeVisible();
   });
 
   it("Area Chart version", async () => {
@@ -37,13 +37,13 @@ describe("Test GraphCard with LineChart component", () => {
           name: availableKeys[6],
           data: mockedMetrics.metrics[availableKeys[6]],
         }}
-      />
+      />,
     );
     expect(
       await screen.findByRole("heading", {
         name: words(`dashboard.${availableKeys[6] as MetricName}.title`),
-      })
+      }),
     ).toBeVisible();
-    expect(await container.querySelector(".pf-c-chart")).toBeVisible();
+    expect(await container.querySelector(".pf-v5-c-chart")).toBeVisible();
   });
 });

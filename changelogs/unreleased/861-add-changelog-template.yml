@@ -1,0 +1,5 @@
+description: add a changelog template
+issue-nr: 861
+issue-repo: irt
+change-type: patch
+destination-branches: [master, iso6, iso5]

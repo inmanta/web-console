@@ -12,6 +12,6 @@ export interface PromoteVersionManifest {
   body: null;
   command: PromoteVersion;
   trigger: (
-    query: Query.SubQuery<"GetDesiredStates">
+    query: Query.SubQuery<"GetDesiredStates">,
   ) => Promise<Maybe.Type<string>>;
 }

@@ -36,7 +36,7 @@ export const Page: React.FC = () => {
             </PageContainer>
           ),
         },
-        envData
+        envData,
       )}
     </>
   );

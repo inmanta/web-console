@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, MemoryRouter, useLocation } from "react-router-dom";
 import { act, render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { Either, RemoteData } from "@/Core";
 import {
@@ -35,24 +35,24 @@ function setup() {
   const servicesHelper = ServicesQueryManager(
     apiHelper,
     ServicesStateHelper(store),
-    scheduler
+    scheduler,
   );
 
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolver([servicesHelper])
+    new DynamicQueryManagerResolver([servicesHelper]),
   );
   const authHelper = new KeycloakAuthHelper();
   const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolver(store, apiHelper, authHelper)
+    new CommandManagerResolver(store, apiHelper, authHelper),
   );
 
   const environmentHandler = EnvironmentHandlerImpl(
     useLocation,
-    dependencies.routeManager
+    dependencies.routeManager,
   );
 
   store.dispatch.environment.setEnvironments(
-    RemoteData.success(Environment.filterable)
+    RemoteData.success(Environment.filterable),
   );
 
   const linkToEnv2 = (
@@ -93,13 +93,13 @@ test("ServiceCatalog shows updated services", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "ServiceCatalog-Loading" })
+    await screen.findByRole("generic", { name: "ServiceCatalog-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.right({ data: [] }));
 
   expect(
-    await screen.findByRole("generic", { name: "ServiceCatalog-Empty" })
+    await screen.findByRole("generic", { name: "ServiceCatalog-Empty" }),
   ).toBeInTheDocument();
   expect(await screen.findByText("Update Service Catalog")).toBeInTheDocument();
 
@@ -108,7 +108,7 @@ test("ServiceCatalog shows updated services", async () => {
   apiHelper.resolve(Either.right({ data: [Service.a] }));
 
   expect(
-    await screen.findByRole("generic", { name: "ServiceCatalog-Success" })
+    await screen.findByRole("generic", { name: "ServiceCatalog-Success" }),
   ).toBeInTheDocument();
 });
 
@@ -117,13 +117,13 @@ test("ServiceCatalog shows updated empty", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "ServiceCatalog-Loading" })
+    await screen.findByRole("generic", { name: "ServiceCatalog-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.right({ data: [Service.a] }));
 
   expect(
-    await screen.findByRole("generic", { name: "ServiceCatalog-Success" })
+    await screen.findByRole("generic", { name: "ServiceCatalog-Success" }),
   ).toBeInTheDocument();
 
   scheduler.executeAll();
@@ -131,7 +131,7 @@ test("ServiceCatalog shows updated empty", async () => {
   apiHelper.resolve(Either.right({ data: [] }));
 
   expect(
-    await screen.findByRole("generic", { name: "ServiceCatalog-Empty" })
+    await screen.findByRole("generic", { name: "ServiceCatalog-Empty" }),
   ).toBeInTheDocument();
 });
 
@@ -177,7 +177,7 @@ test("GIVEN ServiceCatalog WHEN service is deleted THEN command is triggered", a
   });
   await act(async () => {
     await userEvent.click(
-      screen.getByLabelText(Service.a.name + "-deleteButton")
+      screen.getByLabelText(Service.a.name + "-deleteButton"),
     );
   });
   await act(async () => {

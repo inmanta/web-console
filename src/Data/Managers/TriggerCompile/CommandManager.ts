@@ -13,7 +13,7 @@ export function TriggerCompileCommandManager(apiHelper: ApiHelper) {
             type: "console",
             message: "Compile triggered from the console",
           },
-        }
-      )
+        },
+      ),
   );
 }

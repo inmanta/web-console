@@ -1,5 +1,5 @@
 import { render, screen, act } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { userEvent } from "@testing-library/user-event";
 import { Either } from "@/Core";
 import { ServiceInstance } from "@/Test";
 import { ServiceInventoryPrepper } from "./ServiceInventoryPrepper";
@@ -26,7 +26,7 @@ test("GIVEN ServiceInventory WHEN on 2nd page with outdated 1st page and user cl
           after: 25,
           page_size: 20,
         },
-      })
+      }),
     );
   });
 

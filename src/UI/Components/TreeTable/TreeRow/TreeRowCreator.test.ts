@@ -26,7 +26,7 @@ const setupTreeRowCreator = () => {
     () => false,
     () => onToggle,
     extractInventoryValues,
-    attributes
+    attributes,
   );
 };
 

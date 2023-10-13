@@ -12,7 +12,7 @@ describe("AttributeResultConverter ", () => {
       const afterChanges = { name: "inmanta", bool_param: true };
       const diff = attributeResultConverter.calculateDiff(
         afterChanges,
-        originalAttributes
+        originalAttributes,
       );
       expect(diff).toEqual({ bool_param: true });
     });
@@ -21,7 +21,7 @@ describe("AttributeResultConverter ", () => {
       const afterChanges = { name: "inmanta", bool_param: true };
       const diff = attributeResultConverter.calculateDiff(
         afterChanges,
-        originalAttributes
+        originalAttributes,
       );
       expect(diff).toEqual({});
     });
@@ -38,7 +38,7 @@ describe("AttributeResultConverter ", () => {
       };
       const diff = attributeResultConverter.calculateDiff(
         afterChanges,
-        originalAttributes
+        originalAttributes,
       );
       expect(diff).toEqual({ name: "inmanta2", bool_param: false });
     });
@@ -51,7 +51,7 @@ describe("AttributeResultConverter ", () => {
       };
       const diff = attributeResultConverter.calculateDiff(
         afterChanges,
-        originalAttributes
+        originalAttributes,
       );
       expect(diff).toEqual(afterChanges);
     });
@@ -64,7 +64,7 @@ describe("AttributeResultConverter ", () => {
       };
       const diff = attributeResultConverter.calculateDiff(
         afterChanges,
-        originalAttributes
+        originalAttributes,
       );
       expect(diff).toEqual(afterChanges);
     });
@@ -77,7 +77,7 @@ describe("AttributeResultConverter ", () => {
       };
       const diff = attributeResultConverter.calculateDiff(
         afterChanges,
-        originalAttributes
+        originalAttributes,
       );
       expect(diff).toEqual({ bool_param: false });
     });
@@ -94,7 +94,7 @@ describe("AttributeResultConverter ", () => {
       };
       const diff = attributeResultConverter.calculateDiff(
         afterChanges,
-        originalAttributes
+        originalAttributes,
       );
       expect(diff).toEqual({ name: "inmanta2", another_attribute: null });
     });
@@ -109,7 +109,7 @@ describe("AttributeResultConverter ", () => {
       };
       const diff = attributeResultConverter.calculateDiff(
         afterChanges,
-        originalAttributes
+        originalAttributes,
       );
       expect(diff).toEqual({
         name: "inmanta2",
@@ -127,7 +127,7 @@ describe("AttributeResultConverter ", () => {
       };
       const diff = attributeResultConverter.calculateDiff(
         afterChanges,
-        originalAttributes
+        originalAttributes,
       );
       expect(diff).toEqual({ name: "inmanta2" });
     });
@@ -161,10 +161,10 @@ describe("AttributeResultConverter ", () => {
       ({ value, type, parsedValue }) => {
         const result = attributeResultConverter.ensureAttributeType(
           value,
-          type
+          type,
         );
         expect(result).toEqual(parsedValue);
-      }
+      },
     );
     it("Converts an empty array of attributes to correct types", () => {
       const attributes = [];
@@ -243,10 +243,10 @@ describe("AttributeInputConverter", () => {
           attributeInputConverter.getFormDefaultValue(
             inputType,
             defaultValueSet,
-            defaultValue
-          )
+            defaultValue,
+          ),
         ).toEqual(expectedDefaultValue);
-      }
+      },
     );
   });
   describe("Determines correct input type ", () => {
@@ -273,9 +273,9 @@ describe("AttributeInputConverter", () => {
             modifier: "rw+",
             default_value_set: false,
             default_value: null,
-          })
+          }),
         ).toEqual(inputType);
-      }
+      },
     );
     it("For a url attribute chooses url input", () => {
       expect(
@@ -286,7 +286,7 @@ describe("AttributeInputConverter", () => {
           modifier: "rw+",
           default_value_set: false,
           default_value: null,
-        })
+        }),
       ).toEqual(TextInputTypes.url);
     });
   });

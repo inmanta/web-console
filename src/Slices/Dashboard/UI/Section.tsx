@@ -12,7 +12,7 @@ interface Props {
 
 export const Section: React.FC<Props> = ({ title, metricType, metrics }) => {
   const availableKeys = Object.keys(metrics.metrics).filter((key) =>
-    key.includes(metricType)
+    key.includes(metricType),
   );
   return (
     <Wrapper>
@@ -55,7 +55,7 @@ export const Section: React.FC<Props> = ({ title, metricType, metrics }) => {
                 }}
               />
             </FlexItem>
-          )
+          ),
         )}
       </Flex>
     </Wrapper>

@@ -16,6 +16,6 @@ test("GIVEN a very long query string with more than 20 elements in an array WHEN
   }
   expect(
     (helper.parse(query).state as Record<string, Record<string, string>>)
-      .ResourceDetails["logs-expansion"]
+      .ResourceDetails["logs-expansion"],
   ).toEqual(expectedKeys);
 });

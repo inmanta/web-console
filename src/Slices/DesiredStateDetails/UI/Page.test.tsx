@@ -28,9 +28,9 @@ function setup() {
       GetVersionResourcesQueryManager(
         apiHelper,
         GetVersionResourcesStateHelper(store),
-        scheduler
+        scheduler,
       ),
-    ])
+    ]),
   );
 
   const component = (
@@ -59,7 +59,7 @@ test("GIVEN DesiredStateDetails page THEN shows loading resource table", async (
   ]);
 
   expect(
-    screen.getByRole("generic", { name: "VersionResourcesTable-Loading" })
+    screen.getByRole("generic", { name: "VersionResourcesTable-Loading" }),
   ).toBeVisible();
 });
 
@@ -69,12 +69,12 @@ test("GIVEN DesiredStateDetails page WHEN api returns no items THEN shows empty 
 
   await act(async () => {
     await apiHelper.resolve(
-      Either.right({ ...Resource.responseFromVersion, data: [] })
+      Either.right({ ...Resource.responseFromVersion, data: [] }),
     );
   });
 
   expect(
-    screen.getByRole("generic", { name: "VersionResourcesTable-Empty" })
+    screen.getByRole("generic", { name: "VersionResourcesTable-Empty" }),
   ).toBeVisible();
 });
 
@@ -87,7 +87,7 @@ test("GIVEN DesiredStateDetails page WHEN api returns error THEN shows error", a
   });
 
   expect(
-    screen.getByRole("generic", { name: "VersionResourcesTable-Failed" })
+    screen.getByRole("generic", { name: "VersionResourcesTable-Failed" }),
   ).toBeVisible();
 });
 
@@ -100,6 +100,6 @@ test("GIVEN DesiredStateDetails page WHEN api returns items THEN shows success r
   });
 
   expect(
-    screen.getByRole("grid", { name: "VersionResourcesTable-Success" })
+    screen.getByRole("grid", { name: "VersionResourcesTable-Success" }),
   ).toBeVisible();
 });

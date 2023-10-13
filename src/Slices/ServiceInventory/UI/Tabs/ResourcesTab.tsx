@@ -57,6 +57,6 @@ export const ResourcesTab: React.FC<Props> = ({
           />
         ),
     },
-    data
+    data,
   );
 };

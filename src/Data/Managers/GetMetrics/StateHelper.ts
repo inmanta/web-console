@@ -12,6 +12,6 @@ export function GetMetricsStateHelper(store: Store) {
       });
     },
     (state, query, environment) =>
-      state.environment.environmentMetricsById[environment]
+      state.environment.environmentMetricsById[environment],
   );
 }

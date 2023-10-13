@@ -20,6 +20,6 @@ describe("getUrl for latest released resources ", () => {
       };
 
       expect(getUrl(query)).toEqual(url);
-    }
+    },
   );
 });

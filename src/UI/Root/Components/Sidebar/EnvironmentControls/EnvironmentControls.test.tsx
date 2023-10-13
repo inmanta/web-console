@@ -1,7 +1,7 @@
 import React from "react";
 import { MemoryRouter } from "react-router-dom";
 import { act, render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { Either } from "@/Core";
 import {
@@ -38,26 +38,26 @@ function setup() {
     EnvironmentDetailsContinuousQueryManager(store, apiHelper, scheduler);
 
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolver([environmentDetailsQueryManager])
+    new DynamicQueryManagerResolver([environmentDetailsQueryManager]),
   );
 
   const haltEnvironmentManager = HaltEnvironmentCommandManager(
     new BaseApiHelper(),
     environmentDetailsStateHelper,
-    new EnvironmentDetailsUpdater(store, apiHelper)
+    new EnvironmentDetailsUpdater(store, apiHelper),
   );
 
   const resumeEnvironmentManager = ResumeEnvironmentCommandManager(
     new BaseApiHelper(),
     environmentDetailsStateHelper,
-    new EnvironmentDetailsUpdater(store, apiHelper)
+    new EnvironmentDetailsUpdater(store, apiHelper),
   );
 
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([
       haltEnvironmentManager,
       resumeEnvironmentManager,
-    ])
+    ]),
   );
 
   const component = (
@@ -104,7 +104,7 @@ test("EnvironmentControls halt the environment when clicked and the environment 
 
   expect(receivedUrl).toEqual(`/api/v2/actions/environment/halt`);
   expect(requestInit?.headers?.["X-Inmanta-Tid"]).toEqual(
-    EnvironmentDetails.a.id
+    EnvironmentDetails.a.id,
   );
 });
 
@@ -136,7 +136,7 @@ test("EnvironmentControls resume the environment when clicked and the environmen
 
   await act(async () => {
     await apiHelper.resolve(
-      Either.right({ data: { ...EnvironmentDetails.a, halted: true } })
+      Either.right({ data: { ...EnvironmentDetails.a, halted: true } }),
     );
   });
 
@@ -157,6 +157,6 @@ test("EnvironmentControls resume the environment when clicked and the environmen
 
   expect(receivedUrl).toEqual(`/api/v2/actions/environment/resume`);
   expect(requestInit?.headers?.["X-Inmanta-Tid"]).toEqual(
-    EnvironmentDetails.a.id
+    EnvironmentDetails.a.id,
   );
 });

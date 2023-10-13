@@ -10,10 +10,10 @@ import { DependencyContext } from "@/UI/Dependency";
 
 export function GetCompilerStatusQueryManager(
   apiHelper: ApiHelper,
-  scheduler: Scheduler
+  scheduler: Scheduler,
 ) {
   function useContinuous(
-    query: Query.SubQuery<"GetCompilerStatus">
+    query: Query.SubQuery<"GetCompilerStatus">,
   ): [RemoteData.RemoteData<undefined, boolean>, () => void] {
     const { environmentHandler } = useContext(DependencyContext);
     const environment = environmentHandler.useId();
@@ -51,7 +51,7 @@ export function GetCompilerStatusQueryManager(
 
   function matches(
     query: Query.SubQuery<"GetCompilerStatus">,
-    kind: QueryManagerKind
+    kind: QueryManagerKind,
   ): boolean {
     return query.kind === "GetCompilerStatus" && kind === "Continuous";
   }

@@ -15,18 +15,18 @@ describe("InstanceActionPresenter ", () => {
     } as ServiceModel;
     const actionPresenter = new InstanceActionPresenter(
       instances,
-      partialEntity
+      partialEntity,
     );
     const editDisabled = actionPresenter.isTransferDisabled(
       instances[0].id,
-      "on_update"
+      "on_update",
     );
 
     expect(editDisabled).toBeTruthy();
 
     const deleteDisabled = actionPresenter.isTransferDisabled(
       instances[0].id,
-      "on_delete"
+      "on_delete",
     );
 
     expect(deleteDisabled).toBeTruthy();
@@ -42,18 +42,18 @@ describe("InstanceActionPresenter ", () => {
     } as ServiceModel;
     const actionPresenter = new InstanceActionPresenter(
       instances,
-      partialEntity
+      partialEntity,
     );
     const editDisabled = actionPresenter.isTransferDisabled(
       instances[0].id,
-      "on_update"
+      "on_update",
     );
 
     expect(editDisabled).toBeFalsy();
 
     const deleteDisabled = actionPresenter.isTransferDisabled(
       instances[0].id,
-      "on_delete"
+      "on_delete",
     );
     expect(deleteDisabled).toBeTruthy();
   });
@@ -68,18 +68,18 @@ describe("InstanceActionPresenter ", () => {
     } as ServiceModel;
     const actionPresenter = new InstanceActionPresenter(
       instances,
-      partialEntity
+      partialEntity,
     );
     const editDisabled = actionPresenter.isTransferDisabled(
       instances[0].id,
-      "on_update"
+      "on_update",
     );
 
     expect(editDisabled).toBeTruthy();
 
     const deleteDisabled = actionPresenter.isTransferDisabled(
       instances[0].id,
-      "on_delete"
+      "on_delete",
     );
 
     expect(deleteDisabled).toBeFalsy();

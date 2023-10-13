@@ -43,6 +43,7 @@ export const Provider: React.FC<Props> = ({
     <>
       {isToastVisible && (
         <ToastAlert
+          data-testid="ToastAlert"
           type={AlertVariant.info}
           message={toastMessage}
           setMessage={setToastMessage}

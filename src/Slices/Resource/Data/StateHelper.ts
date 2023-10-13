@@ -14,13 +14,13 @@ export function StateHelper(store: Store) {
             status: resource.status as Resource.Status,
           })),
         }),
-        data
+        data,
       );
       store.dispatch.resources.setList({
         environment,
         data: unwrapped,
       });
     },
-    (state, query, environment) => state.resources.listByEnv[environment]
+    (state, query, environment) => state.resources.listByEnv[environment],
   );
 }

@@ -6,4 +6,9 @@ export class BigIntJsonParser implements JsonParser {
   parse(text: string): any {
     return JsonBigInt({ strict: true, useNativeBigInt: true }).parse(text);
   }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  stringify(text: any): string {
+    return JsonBigInt({ strict: true, useNativeBigInt: true }).stringify(text);
+  }
 }

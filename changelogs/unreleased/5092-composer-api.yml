@@ -1,0 +1,6 @@
+change-type: minor
+description: "Add logic that will merge entities into proper data for api request"
+issue-nr: 5092
+destination-branches:
+  - master
+  - iso6

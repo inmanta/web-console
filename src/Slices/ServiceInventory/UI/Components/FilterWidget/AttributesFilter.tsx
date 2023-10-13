@@ -46,7 +46,7 @@ export const AttributesFilter: React.FC<Props> = ({
       createNewSets(sets, {
         id: attributeSetFilter,
         rule,
-      })
+      }),
     );
   };
 
@@ -61,7 +61,7 @@ export const AttributesFilter: React.FC<Props> = ({
   };
 
   const onAttributeSetChange = (
-    attributeSet: ServiceInstanceParams.AttributeSet
+    attributeSet: ServiceInstanceParams.AttributeSet,
   ) => {
     setAttributeSetFilter((current) => {
       if (current === attributeSet) return undefined;
@@ -97,7 +97,7 @@ export const AttributesFilter: React.FC<Props> = ({
 
 function createNewSets(
   { empty, notEmpty }: AttributeSets,
-  { id, rule }: Raw
+  { id, rule }: Raw,
 ): AttributeSets {
   switch (rule) {
     case AttributeRule.Empty: {
@@ -194,7 +194,7 @@ function prettyToRaw(pretty: Pretty): Raw {
 
 function getRuleForAttributeSet(
   { empty, notEmpty }: AttributeSets,
-  attributeSet: ServiceInstanceParams.AttributeSet | undefined
+  attributeSet: ServiceInstanceParams.AttributeSet | undefined,
 ): AttributeRule | undefined {
   if (typeof attributeSet === "undefined") return undefined;
   if (empty.includes(attributeSet)) return AttributeRule.Empty;

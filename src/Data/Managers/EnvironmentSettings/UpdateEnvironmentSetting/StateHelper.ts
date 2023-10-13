@@ -13,6 +13,6 @@ export function GetEnvironmentSettingStateHelper(store: Store) {
         merge: true,
       });
     },
-    () => RemoteData.notAsked()
+    () => RemoteData.notAsked(),
   );
 }

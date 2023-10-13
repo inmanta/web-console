@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { DropdownItem } from "@patternfly/react-core";
+import { DropdownItem } from "@patternfly/react-core/deprecated";
 import { Maybe, ParsedNumber } from "@/Core";
 import { ActionDisabledTooltip } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
@@ -15,13 +15,13 @@ export const PromoteAction: React.FC<Props> = ({ version, isDisabled }) => {
   const { commandResolver, environmentModifier } =
     useContext(DependencyContext);
   const { filter, pageSize, setErrorMessage } = useContext(
-    GetDesiredStatesContext
+    GetDesiredStatesContext,
   );
   const promoteVersionTrigger = commandResolver.useGetTrigger<"PromoteVersion">(
     {
       kind: "PromoteVersion",
       version,
-    }
+    },
   );
   const onSubmit = async () => {
     const result = await promoteVersionTrigger({

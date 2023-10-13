@@ -23,7 +23,7 @@ interface Props {
   initialValues: Record<string, string>;
   initiallyEditable?: boolean;
   onSubmit: (
-    fieldDescriptors: Record<string, string>
+    fieldDescriptors: Record<string, string>,
   ) => Promise<Maybe.Type<string>>;
 }
 
@@ -115,7 +115,7 @@ export const EditableMultiTextField: React.FC<Props> = ({
                       <TextInput
                         aria-label={`${label}-input`}
                         value={value}
-                        onChange={onChange(label)}
+                        onChange={(_event, value) => onChange(label)(value)}
                         onKeyDown={onKeyDown}
                       />
                     </FlexItem>

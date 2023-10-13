@@ -1,7 +1,7 @@
 import React from "react";
 import { MemoryRouter } from "react-router-dom";
 import { act, render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { Either, Maybe } from "@/Core";
 import {
@@ -26,7 +26,7 @@ function setup() {
   const authHelper = new KeycloakAuthHelper();
   const store = getStoreInstance();
   const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolver(store, apiHelper, authHelper)
+    new CommandManagerResolver(store, apiHelper, authHelper),
   );
 
   const component = (
@@ -55,20 +55,20 @@ test("Given environment settings When clicking on the edit name button Then the 
   const { component } = setup();
   render(component);
   expect(
-    await screen.findByRole("generic", { name: "Name-value" })
+    await screen.findByRole("generic", { name: "Name-value" }),
   ).toBeVisible();
 
   await act(async () => {
     await userEvent.click(
-      screen.getByRole("button", { name: "Name-toggle-edit" })
+      screen.getByRole("button", { name: "Name-toggle-edit" }),
     );
   });
 
   expect(
-    await screen.findByRole("textbox", { name: "Name-input" })
+    await screen.findByRole("textbox", { name: "Name-input" }),
   ).toBeVisible();
   expect(
-    screen.queryByRole("generic", { name: "Name-value" })
+    screen.queryByRole("generic", { name: "Name-value" }),
   ).not.toBeInTheDocument();
 });
 
@@ -78,7 +78,7 @@ test("Given environment settings When submitting the edited name Then the backen
 
   await act(async () => {
     await userEvent.click(
-      screen.getByRole("button", { name: "Name-toggle-edit" })
+      screen.getByRole("button", { name: "Name-toggle-edit" }),
     );
   });
 
@@ -114,10 +114,10 @@ test("Given environment settings When submitting the edited name Then the backen
   expect(apiHelper.resolvedRequests).toHaveLength(3);
   expect(apiHelper.pendingRequests).toHaveLength(0);
   expect(
-    await screen.findByRole("generic", { name: "Name-value" })
+    await screen.findByRole("generic", { name: "Name-value" }),
   ).toHaveTextContent("dev");
   expect(
-    screen.queryByRole("textbox", { name: "Name-input" })
+    screen.queryByRole("textbox", { name: "Name-input" }),
   ).not.toBeInTheDocument();
 });
 
@@ -127,7 +127,7 @@ test("Given environment settings When canceling a name edit Then the backend req
 
   await act(async () => {
     await userEvent.click(
-      screen.getByRole("button", { name: "Name-toggle-edit" })
+      screen.getByRole("button", { name: "Name-toggle-edit" }),
     );
   });
 
@@ -140,17 +140,17 @@ test("Given environment settings When canceling a name edit Then the backend req
   });
   await act(async () => {
     await userEvent.click(
-      screen.getByRole("button", { name: "Name-cancel-edit" })
+      screen.getByRole("button", { name: "Name-cancel-edit" }),
     );
   });
 
   expect(apiHelper.pendingRequests).toHaveLength(0);
   // The field is shown with the original value
   expect(
-    await screen.findByRole("generic", { name: "Name-value" })
+    await screen.findByRole("generic", { name: "Name-value" }),
   ).toHaveTextContent(selectedEnvironment.name);
   expect(
-    screen.queryByRole("textbox", { name: "Name-input" })
+    screen.queryByRole("textbox", { name: "Name-input" }),
   ).not.toBeInTheDocument();
 });
 
@@ -166,7 +166,7 @@ test.each`
 
     await act(async () => {
       await userEvent.click(
-        screen.getByRole("button", { name: "Name-toggle-edit" })
+        screen.getByRole("button", { name: "Name-toggle-edit" }),
       );
     });
 
@@ -185,7 +185,7 @@ test.each`
     });
     await act(async () => {
       await apiHelper.resolve(
-        Either.right({ data: Environment.filterable[0] })
+        Either.right({ data: Environment.filterable[0] }),
       );
     });
     await act(async () => {
@@ -193,11 +193,11 @@ test.each`
     });
 
     expect(
-      await screen.findByRole("generic", { name: "Name-error-message" })
+      await screen.findByRole("generic", { name: "Name-error-message" }),
     ).toBeVisible();
 
     expect(
-      screen.queryByRole("textbox", { name: "Name-input" })
+      screen.queryByRole("textbox", { name: "Name-input" }),
     ).not.toBeInTheDocument();
 
     // Closing the alert
@@ -206,9 +206,9 @@ test.each`
     });
 
     expect(
-      screen.queryByRole("generic", { name: "Name-error-message" })
+      screen.queryByRole("generic", { name: "Name-error-message" }),
     ).not.toBeInTheDocument();
-  }
+  },
 );
 
 test("Given environment settings When clicking on the edit repository settings button Then the input fields are shown", async () => {
@@ -216,29 +216,29 @@ test("Given environment settings When clicking on the edit repository settings b
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "repo_branch-value" })
+    await screen.findByRole("generic", { name: "repo_branch-value" }),
   ).toBeVisible();
   expect(
-    await screen.findByRole("generic", { name: "repo_url-value" })
+    await screen.findByRole("generic", { name: "repo_url-value" }),
   ).toBeVisible();
 
   await act(async () => {
     await userEvent.click(
-      screen.getByRole("button", { name: "Repository Settings-toggle-edit" })
+      screen.getByRole("button", { name: "Repository Settings-toggle-edit" }),
     );
   });
 
   expect(
-    await screen.findByRole("textbox", { name: "repo_branch-input" })
+    await screen.findByRole("textbox", { name: "repo_branch-input" }),
   ).toBeVisible();
   expect(
-    await screen.findByRole("textbox", { name: "repo_url-input" })
+    await screen.findByRole("textbox", { name: "repo_url-input" }),
   ).toBeVisible();
   expect(
-    screen.queryByRole("generic", { name: "repo_branch-value" })
+    screen.queryByRole("generic", { name: "repo_branch-value" }),
   ).not.toBeInTheDocument();
   expect(
-    screen.queryByRole("generic", { name: "repo_url-value" })
+    screen.queryByRole("generic", { name: "repo_url-value" }),
   ).not.toBeInTheDocument();
 });
 
@@ -250,7 +250,7 @@ test("Given environment settings When submitting the edited repository settings 
 
   await act(async () => {
     await userEvent.click(
-      screen.getByRole("button", { name: "Repository Settings-toggle-edit" })
+      screen.getByRole("button", { name: "Repository Settings-toggle-edit" }),
     );
   });
 
@@ -277,7 +277,7 @@ test("Given environment settings When submitting the edited repository settings 
   });
   await act(async () => {
     await userEvent.click(
-      screen.getByRole("button", { name: "Repository Settings-submit-edit" })
+      screen.getByRole("button", { name: "Repository Settings-submit-edit" }),
     );
   });
 
@@ -310,16 +310,16 @@ test("Given environment settings When submitting the edited repository settings 
   expect(apiHelper.resolvedRequests).toHaveLength(3);
   expect(apiHelper.pendingRequests).toHaveLength(0);
   expect(
-    await screen.findByRole("generic", { name: "repo_branch-value" })
+    await screen.findByRole("generic", { name: "repo_branch-value" }),
   ).toHaveTextContent(newBranch);
   expect(
-    await screen.findByRole("generic", { name: "repo_url-value" })
+    await screen.findByRole("generic", { name: "repo_url-value" }),
   ).toHaveTextContent(newRepository);
   expect(
-    screen.queryByRole("textbox", { name: "repo_branch-value" })
+    screen.queryByRole("textbox", { name: "repo_branch-value" }),
   ).not.toBeInTheDocument();
   expect(
-    screen.queryByRole("textbox", { name: "repo_url-value" })
+    screen.queryByRole("textbox", { name: "repo_url-value" }),
   ).not.toBeInTheDocument();
 });
 
@@ -329,7 +329,7 @@ test("Given environment settings When canceling a repository edit Then the backe
 
   await act(async () => {
     await userEvent.click(
-      screen.getByRole("button", { name: "Repository Settings-toggle-edit" })
+      screen.getByRole("button", { name: "Repository Settings-toggle-edit" }),
     );
   });
 
@@ -344,7 +344,7 @@ test("Given environment settings When canceling a repository edit Then the backe
   });
   await act(async () => {
     await userEvent.click(
-      screen.getByRole("button", { name: "Repository Settings-cancel-edit" })
+      screen.getByRole("button", { name: "Repository Settings-cancel-edit" }),
     );
   });
 
@@ -352,16 +352,16 @@ test("Given environment settings When canceling a repository edit Then the backe
 
   // The field is shown with the original value
   expect(
-    await screen.findByRole("generic", { name: "repo_branch-value" })
+    await screen.findByRole("generic", { name: "repo_branch-value" }),
   ).toHaveTextContent(selectedEnvironment.repo_branch);
   expect(
-    await screen.findByRole("generic", { name: "repo_url-value" })
+    await screen.findByRole("generic", { name: "repo_url-value" }),
   ).toHaveTextContent(selectedEnvironment.repo_url);
   expect(
-    screen.queryByRole("textbox", { name: "repo_branch-input" })
+    screen.queryByRole("textbox", { name: "repo_branch-input" }),
   ).not.toBeInTheDocument();
   expect(
-    screen.queryByRole("textbox", { name: "repo_url-input" })
+    screen.queryByRole("textbox", { name: "repo_url-input" }),
   ).not.toBeInTheDocument();
 });
 
@@ -377,7 +377,7 @@ test.each`
 
     await act(async () => {
       await userEvent.click(
-        screen.getByRole("button", { name: "Repository Settings-toggle-edit" })
+        screen.getByRole("button", { name: "Repository Settings-toggle-edit" }),
       );
     });
 
@@ -398,7 +398,7 @@ test.each`
     });
     await act(async () => {
       await apiHelper.resolve(
-        Either.right({ data: Environment.filterable[0] })
+        Either.right({ data: Environment.filterable[0] }),
       );
     });
     await act(async () => {
@@ -408,11 +408,11 @@ test.each`
     expect(
       await screen.findByRole("generic", {
         name: "Repository Settings-error-message",
-      })
+      }),
     ).toBeVisible();
 
     expect(
-      screen.queryByRole("textbox", { name: "repo_branch-input" })
+      screen.queryByRole("textbox", { name: "repo_branch-input" }),
     ).not.toBeInTheDocument();
 
     // Closing the alert
@@ -423,9 +423,9 @@ test.each`
     expect(
       screen.queryByRole("generic", {
         name: "Repository Settings-error-message",
-      })
+      }),
     ).not.toBeInTheDocument();
-  }
+  },
 );
 
 test("Given environment settings When clicking on the edit project button Then the select field is shown", async () => {
@@ -433,21 +433,21 @@ test("Given environment settings When clicking on the edit project button Then t
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "Project Name-value" })
+    await screen.findByRole("generic", { name: "Project Name-value" }),
   ).toBeVisible();
 
   await act(async () => {
     await userEvent.click(
-      screen.getByRole("button", { name: "Project Name-toggle-edit" })
+      screen.getByRole("button", { name: "Project Name-toggle-edit" }),
     );
   });
 
   expect(
-    await screen.findByRole("textbox", { name: "Project Name-typeahead" })
+    await screen.findByRole("textbox", { name: "Project Name-typeahead" }),
   ).toBeVisible();
 
   expect(
-    screen.queryByRole("generic", { name: "Project Name-value" })
+    screen.queryByRole("generic", { name: "Project Name-value" }),
   ).not.toBeInTheDocument();
 });
 
@@ -457,7 +457,7 @@ test("Given environment settings When submitting the edited project name Then th
 
   await act(async () => {
     await userEvent.click(
-      screen.getByRole("button", { name: "Project Name-toggle-edit" })
+      screen.getByRole("button", { name: "Project Name-toggle-edit" }),
     );
   });
 
@@ -469,12 +469,12 @@ test("Given environment settings When submitting the edited project name Then th
   });
   await act(async () => {
     await userEvent.click(
-      screen.getByRole("option", { name: "project_name_b" })
+      screen.getByRole("option", { name: "project_name_b" }),
     );
   });
   await act(async () => {
     await userEvent.click(
-      screen.getByRole("button", { name: "Project Name-submit-edit" })
+      screen.getByRole("button", { name: "Project Name-submit-edit" }),
     );
   });
 
@@ -507,10 +507,10 @@ test("Given environment settings When submitting the edited project name Then th
   expect(apiHelper.resolvedRequests).toHaveLength(3);
   expect(apiHelper.pendingRequests).toHaveLength(0);
   expect(
-    await screen.findByRole("generic", { name: "Project Name-value" })
+    await screen.findByRole("generic", { name: "Project Name-value" }),
   ).toHaveTextContent("project_name_b");
   expect(
-    screen.queryByRole("textbox", { name: "Project Name-typeahead" })
+    screen.queryByRole("textbox", { name: "Project Name-typeahead" }),
   ).not.toBeInTheDocument();
 });
 
@@ -520,7 +520,7 @@ test("Given environment settings When canceling a project name edit Then the bac
 
   await act(async () => {
     await userEvent.click(
-      screen.getByRole("button", { name: "Project Name-toggle-edit" })
+      screen.getByRole("button", { name: "Project Name-toggle-edit" }),
     );
   });
 
@@ -532,21 +532,21 @@ test("Given environment settings When canceling a project name edit Then the bac
   });
   await act(async () => {
     await userEvent.click(
-      screen.getByRole("option", { name: "project_name_b" })
+      screen.getByRole("option", { name: "project_name_b" }),
     );
   });
   await act(async () => {
     await userEvent.click(
-      screen.getByRole("button", { name: "Project Name-cancel-edit" })
+      screen.getByRole("button", { name: "Project Name-cancel-edit" }),
     );
   });
 
   expect(apiHelper.pendingRequests).toHaveLength(0);
   expect(
-    await screen.findByRole("generic", { name: "Project Name-value" })
+    await screen.findByRole("generic", { name: "Project Name-value" }),
   ).toHaveTextContent(selectedEnvironment.projectName);
   expect(
-    screen.queryByRole("textbox", { name: "Project Name-typeahead" })
+    screen.queryByRole("textbox", { name: "Project Name-typeahead" }),
   ).not.toBeInTheDocument();
 });
 
@@ -562,7 +562,7 @@ test.each`
 
     await act(async () => {
       await userEvent.click(
-        screen.getByRole("button", { name: "Project Name-toggle-edit" })
+        screen.getByRole("button", { name: "Project Name-toggle-edit" }),
       );
     });
 
@@ -574,12 +574,12 @@ test.each`
     });
     await act(async () => {
       await userEvent.click(
-        screen.getByRole("option", { name: "project_name_b" })
+        screen.getByRole("option", { name: "project_name_b" }),
       );
     });
     await act(async () => {
       await userEvent.click(
-        screen.getByRole("button", { name: "Project Name-submit-edit" })
+        screen.getByRole("button", { name: "Project Name-submit-edit" }),
       );
     });
 
@@ -590,7 +590,7 @@ test.each`
     });
     await act(async () => {
       await apiHelper.resolve(
-        Either.right({ data: Environment.filterable[0] })
+        Either.right({ data: Environment.filterable[0] }),
       );
     });
     await act(async () => {
@@ -598,11 +598,13 @@ test.each`
     });
 
     expect(
-      await screen.findByRole("generic", { name: "Project Name-error-message" })
+      await screen.findByRole("generic", {
+        name: "Project Name-error-message",
+      }),
     ).toBeVisible();
 
     expect(
-      screen.queryByRole("textbox", { name: "Project Name-typeahead" })
+      screen.queryByRole("textbox", { name: "Project Name-typeahead" }),
     ).not.toBeInTheDocument();
 
     // Closing the alert
@@ -611,30 +613,30 @@ test.each`
     });
 
     expect(
-      screen.queryByRole("generic", { name: "Project Name-error-message" })
+      screen.queryByRole("generic", { name: "Project Name-error-message" }),
     ).not.toBeInTheDocument();
-  }
+  },
 );
 
 test("Given environment settings When clicking on the edit description button Then the textarea field is shown", async () => {
   const { component } = setup();
   render(component);
   expect(
-    await screen.findByRole("generic", { name: "Description-value" })
+    await screen.findByRole("generic", { name: "Description-value" }),
   ).toBeVisible();
 
   await act(async () => {
     await userEvent.click(
-      screen.getByRole("button", { name: "Description-toggle-edit" })
+      screen.getByRole("button", { name: "Description-toggle-edit" }),
     );
   });
 
   expect(
-    await screen.findByRole("textbox", { name: "Description-input" })
+    await screen.findByRole("textbox", { name: "Description-input" }),
   ).toBeVisible();
 
   expect(
-    screen.queryByRole("generic", { name: "Description-value" })
+    screen.queryByRole("generic", { name: "Description-value" }),
   ).not.toBeInTheDocument();
 });
 
@@ -645,15 +647,15 @@ test("Given environment settings When clicking on the edit icon button Then the 
 
   await act(async () => {
     await userEvent.click(
-      screen.getByRole("button", { name: "Icon-toggle-edit" })
+      screen.getByRole("button", { name: "Icon-toggle-edit" }),
     );
   });
 
   expect(
-    await screen.findByRole("textbox", { name: "Icon-input" })
+    await screen.findByRole("textbox", { name: "Icon-input" }),
   ).toBeVisible();
 
   expect(
-    screen.queryByRole("img", { name: "Icon-value" })
+    screen.queryByRole("img", { name: "Icon-value" }),
   ).not.toBeInTheDocument();
 });

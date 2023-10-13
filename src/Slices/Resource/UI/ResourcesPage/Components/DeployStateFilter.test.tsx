@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
 import { act, render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { userEvent } from "@testing-library/user-event";
 import { Resource } from "@/Core";
 import { DeployStateFilter } from "./DeployStateFilter";
 
@@ -29,16 +29,16 @@ test("Given the deploy state filter When changing the include/exclude options Th
   // Both options are inactive at the start
 
   expect(
-    await screen.findByRole("generic", { name: "skipped-include-inactive" })
+    await screen.findByRole("generic", { name: "skipped-include-inactive" }),
   ).toBeVisible();
   expect(
-    await screen.findByRole("generic", { name: "skipped-exclude-inactive" })
+    await screen.findByRole("generic", { name: "skipped-exclude-inactive" }),
   ).toBeVisible();
 
   // Select include for skipped state
   await act(async () => {
     await userEvent.click(
-      await screen.findByRole("generic", { name: "skipped-include-toggle" })
+      await screen.findByRole("generic", { name: "skipped-include-toggle" }),
     );
   });
 
@@ -48,20 +48,20 @@ test("Given the deploy state filter When changing the include/exclude options Th
   });
 
   expect(
-    screen.queryByRole("generic", { name: "skipped-include-inactive" })
+    screen.queryByRole("generic", { name: "skipped-include-inactive" }),
   ).not.toBeInTheDocument();
   expect(
-    await screen.findByRole("generic", { name: "skipped-include-active" })
+    await screen.findByRole("generic", { name: "skipped-include-active" }),
   ).toBeVisible();
 
   // Select exclude for skipped state
   expect(
-    screen.queryByRole("generic", { name: "skipped-exclude-active" })
+    screen.queryByRole("generic", { name: "skipped-exclude-active" }),
   ).not.toBeInTheDocument();
 
   await act(async () => {
     await userEvent.click(
-      await screen.findByRole("generic", { name: "skipped-exclude-toggle" })
+      await screen.findByRole("generic", { name: "skipped-exclude-toggle" }),
     );
   });
 
@@ -71,16 +71,16 @@ test("Given the deploy state filter When changing the include/exclude options Th
   });
 
   expect(
-    await screen.findByRole("generic", { name: "skipped-include-inactive" })
+    await screen.findByRole("generic", { name: "skipped-include-inactive" }),
   ).toBeVisible();
   expect(
-    await screen.findByRole("generic", { name: "skipped-exclude-active" })
+    await screen.findByRole("generic", { name: "skipped-exclude-active" }),
   ).toBeVisible();
 
   // Include and exclude filters for different options can be combined
   await act(async () => {
     await userEvent.click(
-      await screen.findByRole("generic", { name: "deployed-include-toggle" })
+      await screen.findByRole("generic", { name: "deployed-include-toggle" }),
     );
   });
   await act(async () => {
@@ -88,16 +88,16 @@ test("Given the deploy state filter When changing the include/exclude options Th
   });
 
   expect(
-    await screen.findByRole("generic", { name: "deployed-include-active" })
+    await screen.findByRole("generic", { name: "deployed-include-active" }),
   ).toBeVisible();
   expect(
-    await screen.findByRole("generic", { name: "skipped-exclude-active" })
+    await screen.findByRole("generic", { name: "skipped-exclude-active" }),
   ).toBeVisible();
 
   // Clicking a toggle again removes that filter
   await act(async () => {
     await userEvent.click(
-      await screen.findByRole("generic", { name: "deployed-include-toggle" })
+      await screen.findByRole("generic", { name: "deployed-include-toggle" }),
     );
   });
   await act(async () => {
@@ -105,9 +105,9 @@ test("Given the deploy state filter When changing the include/exclude options Th
   });
 
   expect(
-    screen.queryByRole("generic", { name: "deployed-include-active" })
+    screen.queryByRole("generic", { name: "deployed-include-active" }),
   ).not.toBeInTheDocument();
   expect(
-    screen.getByRole("generic", { name: "deployed-include-inactive" })
+    screen.getByRole("generic", { name: "deployed-include-inactive" }),
   ).toBeVisible();
 });

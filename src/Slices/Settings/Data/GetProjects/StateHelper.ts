@@ -9,6 +9,6 @@ export function StateHelper(store: Store) {
       const unwrapped = RemoteData.mapSuccess((wrapped) => wrapped.data, data);
       store.dispatch.projects.setProjects(unwrapped);
     },
-    (state) => state.projects.projects
+    (state) => state.projects.projects,
   );
 }

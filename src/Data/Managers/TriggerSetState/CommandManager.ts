@@ -3,7 +3,7 @@ import { CommandManagerWithEnv } from "@/Data/Common";
 
 export function TriggerSetStateCommandManager(
   authHelper: AuthHelper,
-  apiHelper: ApiHelper
+  apiHelper: ApiHelper,
 ) {
   return CommandManagerWithEnv<"TriggerSetState">(
     "TriggerSetState",
@@ -12,15 +12,15 @@ export function TriggerSetStateCommandManager(
         apiHelper.postWithoutResponse(
           `/lsm/v1/service_inventory/${service_entity}/${id}/state`,
           environment,
-          getBody(authHelper.getUsername(), targetState, version)
-        )
+          getBody(authHelper.getUsername(), targetState, version),
+        ),
   );
 }
 
 export const getBody = (
   username: string | null,
   targetState: string,
-  version: ParsedNumber
+  version: ParsedNumber,
 ): SetStateBody => {
   const message = username
     ? `Triggered from the console by ${username}`

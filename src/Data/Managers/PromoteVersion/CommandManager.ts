@@ -3,7 +3,7 @@ import { CommandManagerWithEnv } from "@/Data/Common";
 
 export function PromoteVersionCommandManager(
   apiHelper: ApiHelper,
-  updater: UpdaterWithEnv<"GetDesiredStates">
+  updater: UpdaterWithEnv<"GetDesiredStates">,
 ) {
   return CommandManagerWithEnv<"PromoteVersion">(
     "PromoteVersion",
@@ -12,10 +12,10 @@ export function PromoteVersionCommandManager(
         const result = await apiHelper.postWithoutResponse(
           `/api/v2/desiredstate/${version}/promote`,
           environment,
-          null
+          null,
         );
         await updater.update(query, environment);
         return result;
-      }
+      },
   );
 }

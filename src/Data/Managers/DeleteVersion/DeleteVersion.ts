@@ -6,6 +6,6 @@ export function DeleteVersionCommandManager(apiHelper: ApiHelper) {
     "DeleteVersion",
     ({ version }, environment) => {
       return () => apiHelper.delete(`/api/v1/version/${version}`, environment);
-    }
+    },
   );
 }

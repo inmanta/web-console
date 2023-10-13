@@ -1,6 +1,6 @@
 import React from "react";
 import { act, render, screen, within } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { userEvent } from "@testing-library/user-event";
 import { Either } from "@/Core";
 import { CommandResolverImpl, GenerateTokenCommandManager } from "@/Data";
 import {
@@ -15,7 +15,7 @@ function setup() {
   const apiHelper = new DeferredApiHelper();
   const commandManager = GenerateTokenCommandManager(apiHelper);
   const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolver([commandManager])
+    new DynamicCommandManagerResolver([commandManager]),
   );
 
   const component = (
@@ -62,7 +62,7 @@ test("GIVEN TokenTab WHEN api clientType is selected and generate button is clic
     await userEvent.click(
       screen.getByRole("button", {
         name: words("settings.tabs.token.generate"),
-      })
+      }),
     );
   });
 
@@ -82,7 +82,7 @@ test("GIVEN TokenTab WHEN generate fails THEN the error is shown", async () => {
     await userEvent.click(
       screen.getByRole("button", {
         name: words("settings.tabs.token.generate"),
-      })
+      }),
     );
   });
 
@@ -90,9 +90,7 @@ test("GIVEN TokenTab WHEN generate fails THEN the error is shown", async () => {
     await apiHelper.resolve(Either.left("error message"));
   });
 
-  const errorContainer = screen.getByRole("generic", {
-    name: "GenerateTokenError",
-  });
+  const errorContainer = screen.getByTestId("ToastError");
 
   expect(errorContainer).toBeVisible();
   expect(within(errorContainer).getByText("error message")).toBeVisible();
@@ -112,7 +110,7 @@ test("GIVEN TokenTab WHEN generate succeeds THEN the token is shown", async () =
     await userEvent.click(
       screen.getByRole("button", {
         name: words("settings.tabs.token.generate"),
-      })
+      }),
     );
   });
   await act(async () => {

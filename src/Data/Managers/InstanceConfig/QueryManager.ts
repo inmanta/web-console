@@ -17,7 +17,7 @@ type Data = RemoteData.Type<
 export function InstanceConfigQueryManager(
   apiHelper: ApiHelper,
   stateHelper: StateHelper<"GetInstanceConfig">,
-  configFinalizer: ConfigFinalizer<"GetInstanceConfig">
+  configFinalizer: ConfigFinalizer<"GetInstanceConfig">,
 ): OneTimeQueryManager<"GetInstanceConfig"> {
   function getConfigUrl({
     service_entity,
@@ -36,16 +36,16 @@ export function InstanceConfigQueryManager(
   async function update(
     query: Query.SubQuery<"GetInstanceConfig">,
     url: string,
-    environment: string
+    environment: string,
   ): Promise<void> {
     stateHelper.set(
       RemoteData.fromEither(await apiHelper.get(url, environment)),
-      query
+      query,
     );
   }
 
   function useOneTime(
-    query: Query.SubQuery<"GetInstanceConfig">
+    query: Query.SubQuery<"GetInstanceConfig">,
   ): [Data, () => void] {
     const { environmentHandler } = useContext(DependencyContext);
     const environment = environmentHandler.useId();
@@ -60,7 +60,7 @@ export function InstanceConfigQueryManager(
       configFinalizer.finalize(
         stateHelper.useGetHooked(query),
         service_entity,
-        environment
+        environment,
       ),
       () => update(query, getConfigUrl(query), environment),
     ];

@@ -26,7 +26,7 @@ test("Given createEditFormState v1 WHEN passed editable nested fields and curren
   const formState = createEditFormState(
     Field.nestedEditable,
     "v1",
-    ServiceInstance.nestedEditable.candidate_attributes
+    ServiceInstance.nestedEditable.candidate_attributes,
   );
   expect(formState).toMatchObject({
     id_attr: "val",
@@ -88,10 +88,10 @@ test("Given createEditFormState v2 WHEN passed editable nested fields and curren
   const formState = createEditFormState(
     Field.nestedEditable,
     "v2",
-    ServiceInstance.nestedEditable.candidate_attributes
+    ServiceInstance.nestedEditable.candidate_attributes,
   );
   expect(formState).toMatchObject(
     ServiceInstance.nestedEditable
-      .candidate_attributes as InstanceAttributeModel
+      .candidate_attributes as InstanceAttributeModel,
   );
 });

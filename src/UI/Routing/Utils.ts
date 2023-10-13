@@ -7,7 +7,7 @@ import { DependencyContext } from "@/UI/Dependency";
 type NavigateTo = (
   kind: RouteKind,
   params: RouteParams<typeof kind>,
-  search?: string
+  search?: string,
 ) => void;
 
 /**
@@ -57,12 +57,12 @@ export const useDocumentTitle = (title: string): void => {
 
 export const decodeParams = (params: Params): Params => {
   return mapValues(params, (value) =>
-    value === undefined ? value : decodeURIComponent(value)
+    value === undefined ? value : decodeURIComponent(value),
   );
 };
 
 export const encodeParams = (params: Params): Params => {
   return mapValues(params, (value) =>
-    value === undefined ? value : encodeURIComponent(value)
+    value === undefined ? value : encodeURIComponent(value),
   );
 };

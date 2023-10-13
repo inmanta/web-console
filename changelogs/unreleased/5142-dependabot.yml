@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps-dev): Bump @testing-library/user-event from 14.4.3 to 14.5.1'
+destination-branches:
+- master
+- iso6
+sections: {}

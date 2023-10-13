@@ -21,7 +21,7 @@ test("TreeTableHelper getExpansionState returns correct expansionState", () => {
     new PathHelper("."),
     new TreeExpansionManager("."),
     new CatalogAttributeHelper("."),
-    service
+    service,
   );
   const expansionState = treeTableHelper.getExpansionState();
   expect(expansionState).toEqual({
@@ -61,7 +61,7 @@ test("TreeTableHelper createRows returns correctly ordered list", () => {
     new PathHelper("$"),
     new TreeExpansionManager("$"),
     new CatalogAttributeHelper("$"),
-    service
+    service,
   );
 
   const cb = jest.fn;
@@ -71,7 +71,7 @@ test("TreeTableHelper createRows returns correctly ordered list", () => {
       "a.b": false,
       e: false,
     },
-    cb
+    cb,
   );
   const expectedRows = [
     {

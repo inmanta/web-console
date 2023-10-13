@@ -6,7 +6,7 @@ export interface Page extends Route {
 }
 
 export interface PageManager {
-  getPages(): Page[];
+  getPages(features?: string[]): Page[];
 }
 
 export type PageDictionary = Record<

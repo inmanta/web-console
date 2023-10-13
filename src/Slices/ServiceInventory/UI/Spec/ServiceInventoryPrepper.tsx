@@ -47,35 +47,38 @@ export class ServiceInventoryPrepper {
     const serviceInstancesHelper = ServiceInstancesQueryManager(
       apiHelper,
       ServiceInstancesStateHelper(store),
-      scheduler
+      scheduler,
     );
 
     const resourcesHelper = InstanceResourcesQueryManager(
       apiHelper,
       InstanceResourcesStateHelper(store),
       ServiceInstancesStateHelper(store),
-      scheduler
+      scheduler,
     );
 
     const queryResolver = new QueryResolverImpl(
-      new DynamicQueryManagerResolver([serviceInstancesHelper, resourcesHelper])
+      new DynamicQueryManagerResolver([
+        serviceInstancesHelper,
+        resourcesHelper,
+      ]),
     );
 
     const triggerUpdateCommandManager = TriggerInstanceUpdateCommandManager(
-      new BaseApiHelper()
+      new BaseApiHelper(),
     );
     const triggerDestroyInstanceCommandManager =
       DestroyInstanceCommandManager(apiHelper);
     const triggerforceStateCommandManager = TriggerForceStateCommandManager(
       new KeycloakAuthHelper(),
-      apiHelper
+      apiHelper,
     );
 
     const deleteCommandManager = DeleteInstanceCommandManager(apiHelper);
 
     const setStateCommandManager = TriggerSetStateCommandManager(
       new KeycloakAuthHelper(),
-      new BaseApiHelper()
+      new BaseApiHelper(),
     );
 
     const commandResolver = new CommandResolverImpl(
@@ -85,14 +88,14 @@ export class ServiceInventoryPrepper {
         setStateCommandManager,
         triggerforceStateCommandManager,
         triggerDestroyInstanceCommandManager,
-      ])
+      ]),
     );
     const environmentHandler = EnvironmentHandlerImpl(
       useLocation,
-      dependencies.routeManager
+      dependencies.routeManager,
     );
     store.dispatch.environment.setEnvironments(
-      RemoteData.success(Environment.filterable)
+      RemoteData.success(Environment.filterable),
     );
     const component = (
       <MemoryRouter initialEntries={[{ search: "?env=123" }]}>

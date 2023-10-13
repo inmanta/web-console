@@ -1,5 +1,5 @@
 import { render, screen, act } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { userEvent } from "@testing-library/user-event";
 import { Either, Maybe } from "@/Core";
 import { ServiceInstance, Pagination, InstanceResource } from "@/Test";
 import { ServiceInventoryPrepper } from "./ServiceInventoryPrepper";
@@ -21,7 +21,7 @@ test("GIVEN The Service Inventory WHEN the user clicks on the resourcesTab THEN 
         data: [ServiceInstance.a, ServiceInstance.b],
         links: Pagination.links,
         metadata: Pagination.metadata,
-      })
+      }),
     );
   });
 
@@ -34,7 +34,7 @@ test("GIVEN The Service Inventory WHEN the user clicks on the resourcesTab THEN 
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0].url).toEqual(
-    "/lsm/v1/service_inventory/service_name_a/service_instance_id_a/resources?current_version=3"
+    "/lsm/v1/service_inventory/service_name_a/service_instance_id_a/resources?current_version=3",
   );
 
   await act(async () => {
@@ -43,11 +43,11 @@ test("GIVEN The Service Inventory WHEN the user clicks on the resourcesTab THEN 
 
   const serviceInstancesTask = Maybe.orNull(
     scheduler.tasks.get(
-      `GetServiceInstances_${ServiceInstance.a.service_entity}`
-    )
+      `GetServiceInstances_${ServiceInstance.a.service_entity}`,
+    ),
   );
   const resourcesTask = Maybe.orNull(
-    scheduler.tasks.get(`GetInstanceResources_${ServiceInstance.a.id}`)
+    scheduler.tasks.get(`GetInstanceResources_${ServiceInstance.a.id}`),
   );
 
   expect(serviceInstancesTask?.effect).not.toBeCalled();
@@ -67,7 +67,7 @@ test("GIVEN The Service Inventory WHEN the user clicks on the resourcesTab THEN 
         data: [ServiceInstance.a, ServiceInstance.b],
         links: Pagination.links,
         metadata: Pagination.metadata,
-      })
+      }),
     );
   });
 
@@ -84,11 +84,11 @@ test("GIVEN The Service Inventory WHEN the user clicks on the resourcesTab THEN 
 
   const serviceInstancesTask = Maybe.orNull(
     scheduler.tasks.get(
-      `GetServiceInstances_${ServiceInstance.a.service_entity}`
-    )
+      `GetServiceInstances_${ServiceInstance.a.service_entity}`,
+    ),
   );
   const resourcesTask = Maybe.orNull(
-    scheduler.tasks.get(`GetInstanceResources_${ServiceInstance.a.id}`)
+    scheduler.tasks.get(`GetInstanceResources_${ServiceInstance.a.id}`),
   );
 
   await act(async () => {
@@ -101,7 +101,7 @@ test("GIVEN The Service Inventory WHEN the user clicks on the resourcesTab THEN 
         data: [ServiceInstance.a, ServiceInstance.b],
         links: Pagination.links,
         metadata: Pagination.metadata,
-      })
+      }),
     );
   });
   await act(async () => {

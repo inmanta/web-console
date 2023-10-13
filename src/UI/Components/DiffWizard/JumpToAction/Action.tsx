@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Dropdown, DropdownToggle, Spinner } from "@patternfly/react-core";
+import { Spinner } from "@patternfly/react-core";
+import { Dropdown, DropdownToggle } from "@patternfly/react-core/deprecated";
 import { Item, Refs } from "@/UI/Components/DiffWizard/types";
 import { words } from "@/UI/words";
 import { SummaryList } from "./SummaryList";
@@ -31,7 +32,7 @@ export const LoadingJumpToAction: React.FC = () => (
   <Dropdown
     toggle={
       <DropdownToggle isDisabled>
-        <Spinner isSVG size="sm" />
+        <Spinner size="sm" />
       </DropdownToggle>
     }
   ></Dropdown>

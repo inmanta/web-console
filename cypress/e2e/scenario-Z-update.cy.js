@@ -73,21 +73,21 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="Environment card"]')
         .contains("lsm-frontend")
         .click();
-      cy.get(".pf-c-nav__item").contains("Service Catalog").click();
+      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
       cy.get('[aria-label="ServiceCatalog-Success"]').should("to.be.visible");
       //click update button then cancel popup
       cy.get("button").contains("Update Service Catalog").click();
-      cy.get(".pf-c-modal-box").should("to.be.visible");
+      cy.get(".pf-v5-c-modal-box").should("to.be.visible");
       cy.get("#cancel").click();
-      cy.get(".pf-c-alert").should("to.not.exist");
+      cy.get(".pf-v5-c-alert").should("to.not.exist");
       //click update button and confirm the popup
       cy.get("button").contains("Update Service Catalog").click();
       cy.get("#submit").click();
-      cy.get(".pf-c-alert")
+      cy.get(".pf-v5-c-alert")
         .contains("The update has been requested")
         .should("to.be.visible");
       //find newest compile report
-      cy.get(".pf-c-nav__link").contains("Compile Reports").click();
+      cy.get(".pf-v5-c-nav__link").contains("Compile Reports").click();
       cy.get('[aria-label="Compile Reports Table Row"]')
         .eq(0)
         .find('[data-label="Message"]')

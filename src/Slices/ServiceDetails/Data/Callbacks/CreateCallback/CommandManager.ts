@@ -4,7 +4,7 @@ import { CommandManagerWithEnv } from "@/Data/Common";
 
 export function CreateCallbackCommandManager(
   apiHelper: ApiHelper,
-  updater: UpdaterWithEnv<"GetCallbacks">
+  updater: UpdaterWithEnv<"GetCallbacks">,
 ) {
   return CommandManagerWithEnv<"CreateCallback">(
     "CreateCallback",
@@ -13,7 +13,7 @@ export function CreateCallbackCommandManager(
         const result = await apiHelper.post(
           "/lsm/v1/callbacks",
           environment,
-          omit(command, "kind")
+          omit(command, "kind"),
         );
         if (Either.isLeft(result)) {
           return Maybe.some(result.value);
@@ -23,11 +23,11 @@ export function CreateCallbackCommandManager(
               kind: "GetCallbacks",
               service_entity: command.service_entity,
             },
-            environment
+            environment,
           );
           return Maybe.none();
         }
       };
-    }
+    },
   );
 }

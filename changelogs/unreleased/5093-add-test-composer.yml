@@ -1,0 +1,5 @@
+change-type: patch
+description: "Add unit tests for instance Composer"
+destination-branches:
+  - master
+  - iso6

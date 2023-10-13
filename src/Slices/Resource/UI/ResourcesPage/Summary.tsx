@@ -19,12 +19,10 @@ export const Summary: React.FC<Props> = ({ data, updateFilter }) =>
       failed: () => null,
       success: (result) => (
         <>
-          <StretchedToolbarItem>
-            <ResourceStatusBar
-              summary={result.metadata.deploy_summary}
-              updateFilter={updateFilter}
-            />
-          </StretchedToolbarItem>
+          <StretchedToolbarItem
+            summary={result.metadata.deploy_summary}
+            updateFilter={updateFilter}
+          />
           <ToolbarItem>
             <DeployButton />
           </ToolbarItem>
@@ -34,9 +32,9 @@ export const Summary: React.FC<Props> = ({ data, updateFilter }) =>
         </>
       ),
     },
-    data
+    data,
   );
 
-const StretchedToolbarItem = styled(ToolbarItem)`
+const StretchedToolbarItem = styled(ResourceStatusBar)`
   flex-grow: 1;
 `;

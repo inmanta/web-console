@@ -4,6 +4,9 @@ import {
   Chip,
   ChipGroup,
   FormGroup,
+  FormHelperText,
+  HelperText,
+  HelperTextItem,
   Popover,
   TextInputGroup,
   TextInputGroupMain,
@@ -41,16 +44,15 @@ export const TextListFormInput: React.FC<Props> = ({
   /** callback for removing a chip from the chip selections */
   const deleteChip = (chipToDelete: string) => {
     const newChips = currentChips.filter(
-      (chip) => !Object.is(chip, chipToDelete)
+      (chip) => !Object.is(chip, chipToDelete),
     );
     setCurrentChips(newChips);
     handleInputChange(newChips, null);
   };
 
   const handleChangeInput = (
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    event: React.FormEvent<HTMLInputElement>,
-    value: string
+    _event: React.FormEvent<HTMLInputElement>,
+    value: string,
   ) => {
     setInputValue(value);
   };
@@ -91,17 +93,21 @@ export const TextListFormInput: React.FC<Props> = ({
               type="button"
               aria-label={`More info for ${attributeName} field`}
               onClick={(e) => e.preventDefault()}
-              className="pf-c-form__group-label-help"
+              className="pf-v5-c-form__group-label-help"
             >
-              <HelpIcon noVerticalAlign />
+              <HelpIcon />
             </button>
           </Popover>
         ) : (
           <></>
         )
       }
-      helperText={description}
     >
+      <FormHelperText>
+        <HelperText>
+          <HelperTextItem>{description}</HelperTextItem>
+        </HelperText>
+      </FormHelperText>
       <TextInputGroup isDisabled={shouldBeDisabled}>
         <TextInputGroupMain
           value={inputValue}

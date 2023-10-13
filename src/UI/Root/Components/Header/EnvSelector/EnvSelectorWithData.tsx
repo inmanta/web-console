@@ -1,5 +1,6 @@
 import React from "react";
-import { Alert, ContextSelector } from "@patternfly/react-core";
+import { Alert } from "@patternfly/react-core";
+import { ContextSelector } from "@patternfly/react-core/deprecated";
 import { FlatEnvironment, RemoteData } from "@/Core";
 import { words } from "@/UI/words";
 import {
@@ -27,7 +28,11 @@ export const EnvSelectorWithData: React.FC<Props> = ({
             aria-label="EnvSelector-Failed"
             toggleText={words("error")}
           />
-          <Alert variant="danger" title={words("error")}>
+          <Alert
+            variant="danger"
+            title={words("error")}
+            data-testid="AlertError"
+          >
             <p>{error}</p>
           </Alert>
         </>
@@ -45,7 +50,7 @@ export const EnvSelectorWithData: React.FC<Props> = ({
         />
       ),
     },
-    environments
+    environments,
   );
 
 const environmentToSelector = ({

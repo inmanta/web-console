@@ -1,0 +1,8 @@
+change-type: patch
+description: 'Refresh automatically the environment overview page.'
+issue-nr: 4840
+destination-branches:
+- master
+- iso6
+sections: 
+  minor-improvement: "{{description}}"

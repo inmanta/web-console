@@ -1,7 +1,7 @@
 import React from "react";
 import { MemoryRouter } from "react-router-dom";
 import { act, render, screen, within } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { Either, Maybe, RemoteData } from "@/Core";
 import {
@@ -29,10 +29,10 @@ function setup() {
   const scheduler = new StaticScheduler();
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolver(store, apiHelper, scheduler, scheduler)
+    new QueryManagerResolver(store, apiHelper, scheduler, scheduler),
   );
   const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolver(store, apiHelper, authHelper)
+    new CommandManagerResolver(store, apiHelper, authHelper),
   );
   dependencies.environmentModifier.setEnvironment("env");
 
@@ -60,7 +60,7 @@ test("AgentsView shows empty table", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "AgentsView-Loading" })
+    await screen.findByRole("generic", { name: "AgentsView-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(
@@ -68,11 +68,11 @@ test("AgentsView shows empty table", async () => {
       data: [],
       links: { self: "" },
       metadata: { total: 0, before: 0, after: 0, page_size: 1000 },
-    })
+    }),
   );
 
   expect(
-    await screen.findByRole("generic", { name: "AgentsView-Empty" })
+    await screen.findByRole("generic", { name: "AgentsView-Empty" }),
   ).toBeInTheDocument();
 });
 
@@ -81,13 +81,13 @@ test("AgentsView shows failed table", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "AgentsView-Loading" })
+    await screen.findByRole("generic", { name: "AgentsView-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.left("error"));
 
   expect(
-    await screen.findByRole("generic", { name: "AgentsView-Failed" })
+    await screen.findByRole("generic", { name: "AgentsView-Failed" }),
   ).toBeInTheDocument();
 });
 
@@ -96,13 +96,13 @@ test("AgentsView shows success table", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "AgentsView-Loading" })
+    await screen.findByRole("generic", { name: "AgentsView-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.right(AgentsMock.response));
 
   expect(
-    await screen.findByRole("grid", { name: "AgentsView-Success" })
+    await screen.findByRole("grid", { name: "AgentsView-Success" }),
   ).toBeInTheDocument();
 });
 
@@ -123,19 +123,19 @@ test("When using the name filter then only the matching agents should be fetched
     await userEvent.click(
       within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
         "button",
-        { name: "FilterPicker" }
-      )
+        { name: "FilterPicker" },
+      ),
     );
   });
 
   await act(async () => {
     await userEvent.click(
-      screen.getByRole("option", { name: words("attribute.name") })
+      screen.getByRole("option", { name: words("attribute.name") }),
     );
   });
 
   const input = screen.getByPlaceholderText(
-    words("home.filters.env.placeholder")
+    words("home.filters.env.placeholder"),
   );
   await act(async () => {
     await userEvent.click(input);
@@ -146,7 +146,7 @@ test("When using the name filter then only the matching agents should be fetched
   });
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
-    `/api/v2/agents?limit=20&filter.name=internal&sort=name.asc`
+    `/api/v2/agents?limit=20&filter.name=internal&sort=name.asc`,
   );
 
   await act(async () => {
@@ -154,7 +154,7 @@ test("When using the name filter then only the matching agents should be fetched
       Either.right({
         ...AgentsMock.response,
         data: AgentsMock.response.data.slice(0, 3),
-      })
+      }),
     );
   });
 
@@ -181,18 +181,18 @@ test("When using the process name filter then only the matching agents should be
     await userEvent.click(
       within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
         "button",
-        { name: "FilterPicker" }
-      )
+        { name: "FilterPicker" },
+      ),
     );
   });
   await act(async () => {
     await userEvent.click(
-      screen.getByRole("option", { name: words("agent.tests.processName") })
+      screen.getByRole("option", { name: words("agent.tests.processName") }),
     );
   });
 
   const input = screen.getByPlaceholderText(
-    words("agents.filters.processName.placeholder")
+    words("agents.filters.processName.placeholder"),
   );
   await act(async () => {
     await userEvent.click(input);
@@ -203,7 +203,7 @@ test("When using the process name filter then only the matching agents should be
   });
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
-    `/api/v2/agents?limit=20&filter.process_name=internal&sort=name.asc`
+    `/api/v2/agents?limit=20&filter.process_name=internal&sort=name.asc`,
   );
 
   await act(async () => {
@@ -211,7 +211,7 @@ test("When using the process name filter then only the matching agents should be
       Either.right({
         ...AgentsMock.response,
         data: AgentsMock.response.data.slice(0, 3),
-      })
+      }),
     );
   });
 
@@ -238,18 +238,18 @@ test("When using the status filter with the 'up' option then the agents in the '
     await userEvent.click(
       within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
         "button",
-        { name: "FilterPicker" }
-      )
+        { name: "FilterPicker" },
+      ),
     );
   });
   await act(async () => {
     await userEvent.click(
-      screen.getByRole("option", { name: words("agent.tests.status") })
+      screen.getByRole("option", { name: words("agent.tests.status") }),
     );
   });
 
   const input = screen.getByPlaceholderText(
-    words("agents.filters.status.placeholder")
+    words("agents.filters.status.placeholder"),
   );
   await act(async () => {
     await userEvent.click(input);
@@ -263,7 +263,7 @@ test("When using the status filter with the 'up' option then the agents in the '
   });
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
-    `/api/v2/agents?limit=20&filter.status=up&sort=name.asc`
+    `/api/v2/agents?limit=20&filter.status=up&sort=name.asc`,
   );
 
   await act(async () => {
@@ -271,7 +271,7 @@ test("When using the status filter with the 'up' option then the agents in the '
       Either.right({
         ...AgentsMock.response,
         data: AgentsMock.response.data.slice(0, 3),
-      })
+      }),
     );
   });
 
@@ -290,7 +290,7 @@ test("Given the Agents view with filters, When pausing an agent, then the correc
   });
 
   const input = screen.getByPlaceholderText(
-    words("agents.filters.name.placeholder")
+    words("agents.filters.name.placeholder"),
   );
   await act(async () => {
     await userEvent.click(input);
@@ -347,7 +347,7 @@ test("Given the Agents view with filters, When unpausing an agent, then the corr
   });
 
   const input = screen.getByPlaceholderText(
-    words("agents.filters.name.placeholder")
+    words("agents.filters.name.placeholder"),
   );
   await act(async () => {
     await userEvent.click(input);

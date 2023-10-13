@@ -1,0 +1,8 @@
+change-type: patch
+description: 'Improve the error messaging when the server is down and not reachable.'
+issue-nr: 4686
+destination-branches:
+- master
+- iso6
+sections: 
+  minor-improvement: "{{description}}"

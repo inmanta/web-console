@@ -14,7 +14,7 @@ interface Props {
 export const Link: React.FC<Props> = forwardRef<HTMLAnchorElement, Props>(
   (
     { children, isDisabled, pathname, envOnly, search: newSearch, className },
-    ref
+    ref,
   ) => {
     const { search: currentSearch } = useLocation();
     const search = newSearch
@@ -30,5 +30,5 @@ export const Link: React.FC<Props> = forwardRef<HTMLAnchorElement, Props>(
         {children}
       </RRLink>
     );
-  }
+  },
 );

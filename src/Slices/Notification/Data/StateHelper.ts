@@ -14,6 +14,6 @@ export function StateHelper(store: Store) {
     (state, { origin }, environment) =>
       origin === "center"
         ? state.notification.listByEnvForCenter[environment]
-        : state.notification.listByEnvForDrawer[environment]
+        : state.notification.listByEnvForDrawer[environment],
   );
 }

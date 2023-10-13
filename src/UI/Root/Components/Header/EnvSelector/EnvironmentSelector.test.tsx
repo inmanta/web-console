@@ -2,7 +2,7 @@ import React from "react";
 import { MemoryRouter } from "react-router";
 import { Router } from "react-router-dom";
 import { act, render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { userEvent } from "@testing-library/user-event";
 import { createMemoryHistory } from "history";
 import { RemoteData } from "@/Core";
 import { Environment, dependencies } from "@/Test";
@@ -22,7 +22,7 @@ test("GIVEN EnvironmentSelector WHEN there are no environments THEN redirects", 
           selectedEnvironment={undefined}
         />
       </DependencyProvider>
-    </Router>
+    </Router>,
   );
   expect(screen.getByText(`Select an environment`)).toBeVisible();
   expect(history.location.pathname).toEqual("/");
@@ -42,7 +42,7 @@ test("GIVEN EnvironmentSelector and a project WHEN user clicks on toggle THEN li
           selectedEnvironment={envA}
         />
       </DependencyProvider>
-    </MemoryRouter>
+    </MemoryRouter>,
   );
 
   const toggle = screen.getByText(`${envA.name} (${envA.projectName})`);
@@ -69,7 +69,7 @@ test("GIVEN EnvironmentSelector and populated store WHEN user clicks on an item 
           selectedEnvironment={envA}
         />
       </DependencyProvider>
-    </MemoryRouter>
+    </MemoryRouter>,
   );
 
   const toggle = screen.getByText(`${envA.name} (${envA.projectName})`);
@@ -104,7 +104,7 @@ test("GIVEN EnvironmentSelector and environments with identical names WHEN user 
           selectedEnvironment={envA}
         />
       </DependencyProvider>
-    </MemoryRouter>
+    </MemoryRouter>,
   );
   const toggle = screen.getByRole("button", {
     name: `${envA.name} (${envA.projectName})`,
@@ -122,7 +122,7 @@ test("GIVEN EnvironmentSelector and environments with identical names WHEN user 
   expect(
     screen.getByRole("button", {
       name: `${envB.name} (${envB.projectName})`,
-    })
+    }),
   );
 
   expect(selectedEnv).toEqual(envB.id);

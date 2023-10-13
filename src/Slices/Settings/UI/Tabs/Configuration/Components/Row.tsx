@@ -29,7 +29,7 @@ export const Row: React.FC<React.PropsWithChildren<Props>> = ({
 );
 
 const getDescription = (
-  info: Pick<EnvironmentSettings.InputInfo, "default" | "doc">
+  info: Pick<EnvironmentSettings.InputInfo, "default" | "doc">,
 ): string => {
   if (typeof info.default === "object") {
     return `${info.doc}\ndefault: ${JSON.stringify(info.default)}`;

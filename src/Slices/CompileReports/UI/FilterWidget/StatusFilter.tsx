@@ -17,7 +17,7 @@ export const StatusFilter: React.FC<Props> = ({
   setSelected,
 }) => {
   const compileStatuses = Object.keys(CompileStatus).map(
-    (k) => CompileStatus[k]
+    (k) => CompileStatus[k],
   );
   const deleteChip = () => setSelected(null);
   return (

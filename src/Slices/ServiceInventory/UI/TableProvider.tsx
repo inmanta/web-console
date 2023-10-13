@@ -34,7 +34,7 @@ export const TableProvider: React.FC<Props> = ({
   const actionPresenter = new InstanceActionPresenter(instances, serviceEntity);
   const expertActionPresenter = new InstanceExpertActionPresenter(
     instances,
-    serviceEntity
+    serviceEntity,
   );
   const statePresenter = new InstanceStatePresenter(instances, serviceEntity);
   const tablePresenter = new InventoryTablePresenter(
@@ -45,7 +45,7 @@ export const TableProvider: React.FC<Props> = ({
     statePresenter,
     serviceEntity.service_identity,
     serviceEntity.service_identity_display_name,
-    getOptionsFromService(serviceEntity).length === 0
+    getOptionsFromService(serviceEntity).length === 0,
   );
   const rows = tablePresenter.createRows(instances);
   return (

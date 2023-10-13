@@ -12,6 +12,6 @@ export function ServiceConfigStateHelper(store: Store) {
         value,
       });
     },
-    (state, query) => state.serviceConfig.byName[query.name]
+    (state, query) => state.serviceConfig.byName[query.name],
   );
 }

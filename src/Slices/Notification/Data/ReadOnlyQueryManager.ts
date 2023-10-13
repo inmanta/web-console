@@ -7,6 +7,6 @@ export function NotificationReadOnlyQueryManager(store: Store) {
   return QueryManager.ReadOnlyWithEnv<"GetNotifications">(
     StateHelper(store),
     "GetNotifications",
-    identity
+    identity,
   );
 }

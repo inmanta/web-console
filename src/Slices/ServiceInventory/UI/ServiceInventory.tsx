@@ -115,7 +115,7 @@ export const ServiceInventory: React.FunctionComponent<{
                 />
               ),
           },
-          data
+          data,
         )}
       </GetInstancesContext.Provider>
     </Wrapper>

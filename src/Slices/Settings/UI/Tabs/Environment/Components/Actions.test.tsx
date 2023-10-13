@@ -1,7 +1,7 @@
 import React from "react";
 import { MemoryRouter } from "react-router-dom";
 import { act, render, screen, within } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { Either, Maybe, RemoteData } from "@/Core";
 import {
@@ -29,10 +29,10 @@ function setup() {
   const scheduler = new StaticScheduler();
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolver(store, apiHelper, scheduler, scheduler)
+    new QueryManagerResolver(store, apiHelper, scheduler, scheduler),
   );
   const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolver(store, apiHelper, authHelper)
+    new CommandManagerResolver(store, apiHelper, authHelper),
   );
 
   const onClose = jest.fn();
@@ -59,7 +59,7 @@ test("GIVEN Environment Actions and delete modal WHEN empty or wrong env THEN de
 
   await act(async () => {
     await userEvent.click(
-      await screen.findByRole("button", { name: "Delete environment" })
+      await screen.findByRole("button", { name: "Delete environment" }),
     );
   });
 
@@ -84,7 +84,7 @@ test("GIVEN Environment Actions and delete modal WHEN correct env THEN delete en
 
   await act(async () => {
     await userEvent.click(
-      await screen.findByRole("button", { name: "Delete environment" })
+      await screen.findByRole("button", { name: "Delete environment" }),
     );
   });
 
@@ -108,7 +108,7 @@ test("GIVEN Environment Actions and delete modal WHEN correct env & delete butto
 
   await act(async () => {
     await userEvent.click(
-      await screen.findByRole("button", { name: "Delete environment" })
+      await screen.findByRole("button", { name: "Delete environment" }),
     );
   });
 
@@ -153,7 +153,7 @@ test("GIVEN Environment Actions and delete modal WHEN delete executed and error 
 
   await act(async () => {
     await userEvent.click(
-      await screen.findByRole("button", { name: "Delete environment" })
+      await screen.findByRole("button", { name: "Delete environment" }),
     );
   });
 
@@ -171,9 +171,7 @@ test("GIVEN Environment Actions and delete modal WHEN delete executed and error 
     await apiHelper.resolve(Maybe.some("error message"));
   });
 
-  const errorAlert = screen.getByRole("generic", {
-    name: "Environment Error Alert",
-  });
+  const errorAlert = screen.getByTestId("ErrorAlert");
   expect(within(errorAlert).getByText("error message")).toBeVisible();
 });
 
@@ -183,7 +181,7 @@ test("GIVEN Environment Actions and delete modal WHEN form is valid and enter is
 
   await act(async () => {
     await userEvent.click(
-      await screen.findByRole("button", { name: "Delete environment" })
+      await screen.findByRole("button", { name: "Delete environment" }),
     );
   });
   await act(async () => {
@@ -204,7 +202,7 @@ test("GIVEN Environment Actions and clear modal WHEN form is valid and enter is 
 
   await act(async () => {
     await userEvent.click(
-      await screen.findByRole("button", { name: "Clear environment" })
+      await screen.findByRole("button", { name: "Clear environment" }),
     );
   });
   await act(async () => {
@@ -225,7 +223,7 @@ test("GIVEN Environment Actions and clear modal WHEN correct env & clear button 
 
   await act(async () => {
     await userEvent.click(
-      await screen.findByRole("button", { name: "Clear environment" })
+      await screen.findByRole("button", { name: "Clear environment" }),
     );
   });
 
@@ -275,9 +273,9 @@ test("GIVEN Environment Actions WHEN the environment is protected THEN clear and
   });
   render(component);
   expect(
-    await screen.findByRole("button", { name: "Clear environment" })
+    await screen.findByRole("button", { name: "Clear environment" }),
   ).toBeDisabled();
   expect(
-    await screen.findByRole("button", { name: "Delete environment" })
+    await screen.findByRole("button", { name: "Delete environment" }),
   ).toBeDisabled();
 });

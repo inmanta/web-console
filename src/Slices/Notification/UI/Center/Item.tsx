@@ -83,17 +83,17 @@ interface CustomItemProps {
 }
 
 const CustomItem = styled(DataListItem)<CustomItemProps>`
-  --pf-c-data-list__item-row--PaddingRight: 24px;
-  --pf-c-data-list__item-row--PaddingLeft: 24px;
-  --pf-c-data-list__item-content--md--PaddingBottom: 16px;
-  --pf-c-data-list__cell--PaddingTop: 16px;
-  --pf-c-data-list__item-action--PaddingBottom: 16px;
-  --pf-c-data-list__item-action--PaddingTop: 16px;
-  --pf-c-data-list__item--before--BackgroundColor: ${(p) =>
+  --pf-v5-c-data-list__item-row--PaddingRight: 24px;
+  --pf-v5-c-data-list__item-row--PaddingLeft: 24px;
+  --pf-v5-c-data-list__item-content--md--PaddingBottom: 16px;
+  --pf-v5-c-data-list__cell--PaddingTop: 16px;
+  --pf-v5-c-data-list__item-action--PaddingBottom: 16px;
+  --pf-v5-c-data-list__item-action--PaddingTop: 16px;
+  --pf-v5-c-data-list__item--before--BackgroundColor: ${(p) =>
     p.$read ? "transparent" : getColorForVisualSeverity(p.$severity)};
 `;
 
 const CustomDateWithTooltip = styled(DateWithTooltip)`
-  color: var(--pf-global--Color--200);
-  font-size: var(--pf-global--FontSize--sm);
+  color: var(--pf-v5-global--Color--200);
+  font-size: var(--pf-v5-global--FontSize--sm);
 `;

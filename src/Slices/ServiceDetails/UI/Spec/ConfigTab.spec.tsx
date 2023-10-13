@@ -1,7 +1,7 @@
 import React from "react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { act, render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { Either } from "@/Core";
 import {
@@ -43,28 +43,28 @@ function setup() {
     apiHelper,
     ServiceStateHelper(store, serviceKeyMaker),
     scheduler,
-    serviceKeyMaker
+    serviceKeyMaker,
   );
 
   const servicesHelper = ServicesQueryManager(
     apiHelper,
     ServicesStateHelper(store),
-    scheduler
+    scheduler,
   );
   const serviceConfigQueryManager = ServiceConfigQueryManager(
     apiHelper,
     ServiceConfigStateHelper(store),
-    new ServiceConfigFinalizer(ServiceStateHelper(store, serviceKeyMaker))
+    new ServiceConfigFinalizer(ServiceStateHelper(store, serviceKeyMaker)),
   );
 
   // { data: Service.a.config }
   const serviceConfigCommandManager = ServiceConfigCommandManager(
     apiHelper,
-    ServiceConfigStateHelper(store)
+    ServiceConfigStateHelper(store),
   );
 
   const deleteServiceCommandManager = DeleteServiceCommandManager(
-    new BaseApiHelper()
+    new BaseApiHelper(),
   );
 
   const queryResolver = new QueryResolverImpl(
@@ -72,13 +72,13 @@ function setup() {
       serviceQueryManager,
       servicesHelper,
       serviceConfigQueryManager,
-    ])
+    ]),
   );
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([
       serviceConfigCommandManager,
       deleteServiceCommandManager,
-    ])
+    ]),
   );
   const component = (
     <MemoryRouter initialEntries={[`/lsm/catalog/${Service.a.name}/details`]}>
@@ -121,7 +121,7 @@ test("GIVEN ServiceCatalog WHEN click on config tab THEN shows config tab", asyn
     await userEvent.click(configButton);
   });
 
-  expect(screen.getByRole("article", { name: "ServiceConfig" })).toBeVisible();
+  expect(screen.getByTestId("ServiceConfig")).toBeVisible();
 });
 
 test("GIVEN ServiceCatalog WHEN config tab is active THEN shows SettingsList", async () => {
@@ -141,6 +141,6 @@ test("GIVEN ServiceCatalog WHEN config tab is active THEN shows SettingsList", a
   });
 
   expect(
-    await screen.findByRole("generic", { name: "SettingsList" })
+    await screen.findByRole("generic", { name: "SettingsList" }),
   ).toBeVisible();
 });

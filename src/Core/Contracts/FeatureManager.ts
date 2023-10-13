@@ -9,4 +9,10 @@ export interface FeatureManager {
   getJsonParser(): JsonParserId;
   getCommitHash(): string;
   getAppVersion(): string;
+  getLicenseInformation(): StatusLicense | undefined;
+}
+
+export interface StatusLicense {
+  cert_valid_until?: string;
+  entitlement_valid_until?: string;
 }

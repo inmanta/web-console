@@ -12,7 +12,7 @@ export function EnvironmentModifierImpl(): EnvironmentModifier {
 
   function useCurrentEnvironment(): EnvironmentDetails | null {
     const storeState = useStoreState(
-      (state) => state.environment.environmentDetailsById
+      (state) => state.environment.environmentDetailsById,
     );
     if (Maybe.isSome(environment)) {
       const state = storeState[environment.value];
@@ -26,7 +26,7 @@ export function EnvironmentModifierImpl(): EnvironmentModifier {
 
   function useEnvironmentSettings(): EnvironmentSettings.EnvironmentSettings | null {
     const storeState = useStoreState(
-      (state) => state.environment.settingsByEnv
+      (state) => state.environment.settingsByEnv,
     );
     if (Maybe.isSome(environment)) {
       const state = storeState[environment.value];
@@ -48,7 +48,7 @@ export function EnvironmentModifierImpl(): EnvironmentModifier {
   }
 
   function useSetting(
-    settingName: keyof EnvironmentSettings.DefinitionMap
+    settingName: keyof EnvironmentSettings.DefinitionMap,
   ): boolean {
     const environmentDetails = useCurrentEnvironment();
     const environmentSettings = useEnvironmentSettings();

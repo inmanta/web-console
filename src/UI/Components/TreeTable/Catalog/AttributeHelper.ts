@@ -9,19 +9,19 @@ export class CatalogAttributeHelper
 
   public getPaths(container: CatalogAttributeTree["source"]): string[] {
     return Object.keys(this.getNodesFromEntities("", container)).sort(
-      (pathA, pathB) => pathA.localeCompare(pathB)
+      (pathA, pathB) => pathA.localeCompare(pathB),
     );
   }
 
   public getMultiAttributeNodes(
-    container: CatalogAttributeTree["source"]
+    container: CatalogAttributeTree["source"],
   ): MultiAttributeNodeDict<CatalogAttributeTree["target"]> {
     return this.getNodesFromEntities("", container);
   }
 
   private getNodesFromEntities(
     prefix: string,
-    container: CatalogAttributeTree["source"]
+    container: CatalogAttributeTree["source"],
   ): MultiAttributeNodeDict<CatalogAttributeTree["target"]> {
     let entries = container.attributes.reduce((acc, cur) => {
       acc[`${prefix}${cur.name}`] = {
@@ -49,7 +49,7 @@ export class CatalogAttributeHelper
           };
           return acc;
         },
-        {}
+        {},
       );
       entries = { ...entries, ...entriesFromRelations };
     }
@@ -60,11 +60,18 @@ export class CatalogAttributeHelper
           ...entries,
           ...this.getNodesFromEntities(
             `${prefix}${entity.name}${this.separator}`,
-            entity
+            entity,
           ),
         };
       });
     }
-    return entries;
+
+    //sorting of the attributes moved to helpers to avoid sorting issues - check issue #5030 for example
+    return Object.keys(entries)
+      .sort()
+      .reduce((acc, key) => {
+        acc[key] = entries[key];
+        return acc;
+      }, {}) as MultiAttributeNodeDict<CatalogAttributeTree["target"]>;
   }
 }

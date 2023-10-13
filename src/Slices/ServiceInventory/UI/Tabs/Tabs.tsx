@@ -58,14 +58,14 @@ export const Tabs: React.FC<Props> = ({
           configTab(
             configTabDisabled,
             serviceInstanceIdentifier,
-            configTooltipRef
+            configTooltipRef,
           ),
         ]}
       />
       {configTabDisabled && (
         <Tooltip
           content={words("config.disabled")}
-          reference={configTooltipRef}
+          triggerRef={configTooltipRef}
         />
       )}
     </>
@@ -78,7 +78,7 @@ const statusTab = (
   row: Row,
   state: React.ReactElement | null,
   actions: React.ReactElement | null,
-  expertActions: React.ReactElement | null
+  expertActions: React.ReactElement | null,
 ): TabDescriptor<TabKey> => ({
   id: TabKey.Status,
   title: words("inventory.tabs.status"),
@@ -100,7 +100,7 @@ const statusTab = (
 
 const attributesTab = (
   row: Row,
-  service?: ServiceModel
+  service?: ServiceModel,
 ): TabDescriptor<TabKey> => ({
   id: TabKey.Attributes,
   title: words("inventory.tabs.attributes"),
@@ -116,7 +116,7 @@ const attributesTab = (
 });
 
 const resourcesTab = (
-  serviceInstanceIdentifier: VersionedServiceInstanceIdentifier
+  serviceInstanceIdentifier: VersionedServiceInstanceIdentifier,
 ): TabDescriptor<TabKey> => ({
   id: TabKey.Resources,
   title: words("inventory.tabs.resources"),
@@ -127,7 +127,7 @@ const resourcesTab = (
 const configTab = (
   isDisabled: boolean,
   serviceInstanceIdentifier: VersionedServiceInstanceIdentifier,
-  ref: React.MutableRefObject<HTMLElement | undefined>
+  ref: React.MutableRefObject<HTMLElement | undefined>,
 ): TabDescriptor<TabKey> => ({
   id: TabKey.Config,
   title: words("config.title"),

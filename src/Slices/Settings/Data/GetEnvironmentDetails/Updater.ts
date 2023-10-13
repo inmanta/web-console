@@ -14,7 +14,10 @@ export class EnvironmentDetailsUpdater
 {
   stateHelper: StateHelperInterface<"GetEnvironmentDetails">;
 
-  constructor(store: Store, private readonly apiHelper: ApiHelper) {
+  constructor(
+    store: Store,
+    private readonly apiHelper: ApiHelper,
+  ) {
     this.stateHelper = StateHelper(store);
   }
 
@@ -23,10 +26,10 @@ export class EnvironmentDetailsUpdater
     this.stateHelper.set(
       RemoteData.fromEither(
         await this.apiHelper.getWithoutEnvironment(
-          getUrl(query.details, query.id)
-        )
+          getUrl(query.details, query.id),
+        ),
       ),
-      query
+      query,
     );
   }
 }

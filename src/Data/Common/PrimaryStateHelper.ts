@@ -17,8 +17,8 @@ export function PrimaryStateHelper<Kind extends Query.Kind>(
   customSet: (data: ApiData<Kind>, query: Query.SubQuery<Kind>) => void,
   customGet: (
     state: State<StoreModel>,
-    query: Query.SubQuery<Kind>
-  ) => Data<Kind>
+    query: Query.SubQuery<Kind>,
+  ) => Data<Kind>,
 ): StateHelper<Kind> {
   function set(data: ApiData<Kind>, query: Query.SubQuery<Kind>): void {
     customSet(data, query);
@@ -48,29 +48,29 @@ export function PrimaryStateHelperWithEnv<Kind extends Query.Kind>(
   customSet: (
     data: ApiData<Kind>,
     query: Query.SubQuery<Kind>,
-    environment: string
+    environment: string,
   ) => void,
   customGet: (
     state: State<StoreModel>,
     query: Query.SubQuery<Kind>,
-    environment: string
-  ) => Data<Kind> | undefined
+    environment: string,
+  ) => Data<Kind> | undefined,
 ): StateHelperWithEnv<Kind> {
   function set(
     data: ApiData<Kind>,
     query: Query.SubQuery<Kind>,
-    environment: string
+    environment: string,
   ): void {
     customSet(data, query, environment);
   }
 
   function useGetHooked(
     query: Query.SubQuery<Kind>,
-    environment: string
+    environment: string,
   ): Data<Kind> {
     return useStoreState(
       (state) => enforce(customGet(state, query, environment)),
-      isEqual
+      isEqual,
     );
   }
 
@@ -81,7 +81,7 @@ export function PrimaryStateHelperWithEnv<Kind extends Query.Kind>(
 
   function getOnce(
     query: Query.SubQuery<Kind>,
-    environment: string
+    environment: string,
   ): Data<Kind> {
     return enforce(customGet(store.getState(), query, environment));
   }
