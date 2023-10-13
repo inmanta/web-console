@@ -1,7 +1,7 @@
 import React from "react";
 import { MemoryRouter } from "react-router-dom";
 import { act, render, screen, within } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { Either, RemoteData } from "@/Core";
 import {
@@ -31,10 +31,10 @@ function setup() {
   const scheduler = new StaticScheduler();
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolver(store, apiHelper, scheduler, scheduler)
+    new QueryManagerResolver(store, apiHelper, scheduler, scheduler),
   );
   const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolver(store, apiHelper, authHelper)
+    new CommandManagerResolver(store, apiHelper, authHelper),
   );
 
   const routeManager = PrimaryRouteManager("");
@@ -81,7 +81,7 @@ test("CompileReportsView shows empty table", async () => {
   });
 
   expect(
-    await screen.findByRole("generic", { name: "CompileReportsView-Loading" })
+    await screen.findByRole("generic", { name: "CompileReportsView-Loading" }),
   ).toBeInTheDocument();
 
   await act(async () => {
@@ -90,12 +90,12 @@ test("CompileReportsView shows empty table", async () => {
         data: [],
         links: { self: "" },
         metadata: { total: 0, before: 0, after: 0, page_size: 1000 },
-      })
+      }),
     );
   });
 
   expect(
-    await screen.findByRole("generic", { name: "CompileReportsView-Empty" })
+    await screen.findByRole("generic", { name: "CompileReportsView-Empty" }),
   ).toBeInTheDocument();
 });
 
@@ -108,7 +108,7 @@ test("CompileReportsView shows failed table", async () => {
   });
 
   expect(
-    await screen.findByRole("generic", { name: "CompileReportsView-Loading" })
+    await screen.findByRole("generic", { name: "CompileReportsView-Loading" }),
   ).toBeInTheDocument();
 
   await act(async () => {
@@ -116,7 +116,7 @@ test("CompileReportsView shows failed table", async () => {
   });
 
   expect(
-    await screen.findByRole("generic", { name: "CompileReportsView-Failed" })
+    await screen.findByRole("generic", { name: "CompileReportsView-Failed" }),
   ).toBeInTheDocument();
 });
 
@@ -129,7 +129,7 @@ test("CompileReportsView shows success table", async () => {
   });
 
   expect(
-    await screen.findByRole("generic", { name: "CompileReportsView-Loading" })
+    await screen.findByRole("generic", { name: "CompileReportsView-Loading" }),
   ).toBeInTheDocument();
 
   await act(async () => {
@@ -137,7 +137,7 @@ test("CompileReportsView shows success table", async () => {
   });
 
   expect(
-    await screen.findByRole("grid", { name: "CompileReportsView-Success" })
+    await screen.findByRole("grid", { name: "CompileReportsView-Success" }),
   ).toBeInTheDocument();
 });
 
@@ -150,7 +150,7 @@ test("CompileReportsView shows updated table", async () => {
   });
 
   expect(
-    await screen.findByRole("generic", { name: "CompileReportsView-Loading" })
+    await screen.findByRole("generic", { name: "CompileReportsView-Loading" }),
   ).toBeInTheDocument();
 
   await act(async () => {
@@ -159,12 +159,12 @@ test("CompileReportsView shows updated table", async () => {
         data: [],
         links: { self: "" },
         metadata: { total: 0, before: 0, after: 0, page_size: 1000 },
-      })
+      }),
     );
   });
 
   expect(
-    await screen.findByRole("generic", { name: "CompileReportsView-Empty" })
+    await screen.findByRole("generic", { name: "CompileReportsView-Empty" }),
   ).toBeInTheDocument();
 
   scheduler.executeAll();
@@ -177,7 +177,7 @@ test("CompileReportsView shows updated table", async () => {
   });
 
   expect(
-    await screen.findByRole("grid", { name: "CompileReportsView-Success" })
+    await screen.findByRole("grid", { name: "CompileReportsView-Success" }),
   ).toBeInTheDocument();
 });
 
@@ -203,13 +203,13 @@ test("When using the status filter with the Success option then the successful c
     await userEvent.click(
       within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
         "button",
-        { name: "FilterPicker" }
-      )
+        { name: "FilterPicker" },
+      ),
     );
   });
 
   const input = screen.getByPlaceholderText(
-    words("compileReports.filters.status.placeholder")
+    words("compileReports.filters.status.placeholder"),
   );
 
   await act(async () => {
@@ -224,7 +224,7 @@ test("When using the status filter with the Success option then the successful c
   });
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
-    `/api/v2/compilereport?limit=20&sort=requested.desc&filter.success=true`
+    `/api/v2/compilereport?limit=20&sort=requested.desc&filter.success=true`,
   );
 
   await act(async () => {
@@ -232,7 +232,7 @@ test("When using the status filter with the Success option then the successful c
       Either.right({
         ...Mock.response,
         data: Mock.response.data.slice(0, 3),
-      })
+      }),
     );
   });
 
@@ -264,20 +264,20 @@ test("When using the status filter with the In Progress opiton then the compile 
     await userEvent.click(
       within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
         "button",
-        { name: "FilterPicker" }
-      )
+        { name: "FilterPicker" },
+      ),
     );
   });
   await act(async () => {
     await userEvent.click(
       screen.getByRole("option", {
         name: words("compileReports.columns.status"),
-      })
+      }),
     );
   });
 
   const input = screen.getByPlaceholderText(
-    words("compileReports.filters.status.placeholder")
+    words("compileReports.filters.status.placeholder"),
   );
   await act(async () => {
     await userEvent.click(input);
@@ -292,7 +292,7 @@ test("When using the status filter with the In Progress opiton then the compile 
   });
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
-    `/api/v2/compilereport?limit=20&sort=requested.desc&filter.started=true&filter.completed=false`
+    `/api/v2/compilereport?limit=20&sort=requested.desc&filter.started=true&filter.completed=false`,
   );
 
   await act(async () => {
@@ -300,7 +300,7 @@ test("When using the status filter with the In Progress opiton then the compile 
       Either.right({
         ...Mock.response,
         data: Mock.response.data.slice(0, 3),
-      })
+      }),
     );
   });
 
@@ -332,15 +332,15 @@ it("When using the Date filter then the compile reports within the range selecte
     await userEvent.click(
       within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
         "button",
-        { name: "FilterPicker" }
-      )
+        { name: "FilterPicker" },
+      ),
     );
   });
   await act(async () => {
     await userEvent.click(
       screen.getByRole("option", {
         name: words("compileReports.columns.requested"),
-      })
+      }),
     );
   });
 
@@ -363,7 +363,7 @@ it("When using the Date filter then the compile reports within the range selecte
   });
 
   expect(apiHelper.pendingRequests[0].url).toMatch(
-    `/api/v2/compilereport?limit=20&sort=requested.desc&filter.requested=ge%3A2021-09-`
+    `/api/v2/compilereport?limit=20&sort=requested.desc&filter.requested=ge%3A2021-09-`,
   );
 
   await act(async () => {
@@ -371,7 +371,7 @@ it("When using the Date filter then the compile reports within the range selecte
       Either.right({
         ...Mock.response,
         data: Mock.response.data.slice(0, 3),
-      })
+      }),
     );
   });
 
@@ -388,10 +388,10 @@ it("When using the Date filter then the compile reports within the range selecte
   });
 
   expect(
-    await screen.findByText("from | 2021/09/28 00:00:00", { exact: false })
+    await screen.findByText("from | 2021/09/28 00:00:00", { exact: false }),
   ).toBeVisible();
   expect(
-    await screen.findByText("to | 2021/09/30 00:00:00", { exact: false })
+    await screen.findByText("to | 2021/09/30 00:00:00", { exact: false }),
   ).toBeVisible();
 });
 

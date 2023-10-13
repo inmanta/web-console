@@ -24,6 +24,6 @@ export const Tab: React.FC<Props> = ({ environmentId }) => {
       ),
       success: (settings) => <Provider settings={settings} />,
     },
-    settings
+    settings,
   );
 };

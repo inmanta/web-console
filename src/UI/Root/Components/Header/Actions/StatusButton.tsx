@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Button, PageHeaderToolsItem } from "@patternfly/react-core";
+import { Button } from "@patternfly/react-core";
+import { PageHeaderToolsItem } from "@patternfly/react-core/deprecated";
 import { RunningIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { Link } from "@/UI/Components";

@@ -1,0 +1,7 @@
+change-type: patch
+description: 'Implement the useFeatures hook to fetch the config.js file from the server and extract the features.'
+destination-branches:
+- master
+- iso6
+sections: 
+  minor-improvement: "{{description}}"

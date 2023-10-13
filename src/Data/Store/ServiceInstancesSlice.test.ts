@@ -31,14 +31,14 @@ describe("ServiceInstancesSlice ", () => {
         .getState()
         .serviceInstances.instancesWithTargetStates(
           firstQuery,
-          serviceInstancesFirstEnv[0].environment
-        )
+          serviceInstancesFirstEnv[0].environment,
+        ),
     ).toEqual(
       RemoteData.success({
         data: [{ ...serviceInstancesFirstEnv[0], instanceSetStateTargets: [] }],
         links: { self: "" },
         metadata: { page_size: 1, total: 1, before: 0, after: 0 },
-      })
+      }),
     );
 
     // Check if instances for a service with the same name but different environment return loading state if they are not loaded yet
@@ -52,8 +52,8 @@ describe("ServiceInstancesSlice ", () => {
         .getState()
         .serviceInstances.instancesWithTargetStates(
           secondQuery,
-          serviceInstancesSecondEnv[0].environment
-        )
+          serviceInstancesSecondEnv[0].environment,
+        ),
     ).toEqual(RemoteData.loading());
     // Load the instances in the second environment
     store.getActions().serviceInstances.setData({
@@ -71,8 +71,8 @@ describe("ServiceInstancesSlice ", () => {
         .getState()
         .serviceInstances.instancesWithTargetStates(
           secondQuery,
-          serviceInstancesSecondEnv[0].environment
-        )
+          serviceInstancesSecondEnv[0].environment,
+        ),
     ).toEqual(
       RemoteData.success({
         data: [
@@ -80,7 +80,7 @@ describe("ServiceInstancesSlice ", () => {
         ],
         links: { self: "" },
         metadata: { page_size: 1, total: 1, before: 0, after: 0 },
-      })
+      }),
     );
   });
 });

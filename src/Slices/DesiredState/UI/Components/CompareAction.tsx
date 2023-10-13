@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { DropdownItem } from "@patternfly/react-core";
+import { DropdownItem } from "@patternfly/react-core/deprecated";
 import { Maybe } from "@/Core";
 import { Link } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
@@ -14,7 +14,7 @@ interface Props {
 
 export const CompareAction: React.FC<Props> = ({ version, isDisabled }) => {
   const { compareSelection, setCompareSelection } = useContext(
-    GetDesiredStatesContext
+    GetDesiredStatesContext,
   );
 
   return (
@@ -70,7 +70,7 @@ const CompareWithSelected: React.FC<CompareWithSelectedProps> = ({
         <Link
           pathname={routeManager.getUrl(
             "DesiredStateCompare",
-            sanitizeFromTo(selection.value, version)
+            sanitizeFromTo(selection.value, version),
           )}
         >
           {words("desiredState.compare.action.compareWithSelected")}

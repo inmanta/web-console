@@ -42,7 +42,7 @@ async function getOldDevVersions() {
         },
         method: "GET",
       },
-      (error) => console.log(error)
+      (error) => console.log(error),
     );
     const packages = await queryResults.json();
     const response_headers = queryResults.headers;
@@ -65,8 +65,8 @@ async function getOldDevVersions() {
       (devPackageVersion) =>
         Math.floor(
           (new Date() - new Date(devPackageVersion.updatedAt)) /
-            (1000 * 60 * 60 * 24)
-        ) > 30
+            (1000 * 60 * 60 * 24),
+        ) > 30,
     );
 
     if (result.length > 0 && oldDevVersions.length === 0) {
@@ -107,7 +107,7 @@ getOldDevVersions().then(
     oldDevVersions.map((oldDevVersion) => {
       const idToDelete = oldDevVersion.id;
       console.log(
-        `Attempting to delete version ${oldDevVersion.version} with id ${idToDelete} from ${oldDevVersion.updatedAt}`
+        `Attempting to delete version ${oldDevVersion.version} with id ${idToDelete} from ${oldDevVersion.updatedAt}`,
       );
       fetch(
         `https://api.github.com/orgs/inmanta/packages/npm/web-console/versions/${idToDelete}`,
@@ -118,7 +118,7 @@ getOldDevVersions().then(
             "X-GitHub-Api-Version": "2022-11-28",
           },
           method: "DELETE",
-        }
+        },
       ).then(
         (response) => {
           if (response.ok) {
@@ -131,11 +131,11 @@ getOldDevVersions().then(
         },
         (reason) => {
           console.log(reason);
-        }
+        },
       );
     });
   },
   (reason) => {
     console.log(`Failed to retrieve dev packages: ${reason}`);
-  }
+  },
 );

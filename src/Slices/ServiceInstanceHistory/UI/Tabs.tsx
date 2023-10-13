@@ -38,7 +38,7 @@ export const Tabs: React.FC<Props> = ({ log, activeTab, setActiveTab, id }) => {
 
 const attributesTab = (
   log: InstanceLog,
-  id: string
+  id: string,
 ): TabDescriptor<TabKey> => ({
   id: TabKey.Attributes,
   title: words("history.tabs.attributes"),

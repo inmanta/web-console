@@ -8,11 +8,11 @@ export function DeleteInstanceCommandManager(apiHelper: ApiHelper) {
       return async (refetch) => {
         const result = await apiHelper.delete(
           `/lsm/v1/service_inventory/${service_entity}/${id}?current_version=${version}`,
-          environment
+          environment,
         );
         await refetch();
         return result;
       };
-    }
+    },
   );
 }

@@ -8,7 +8,7 @@ import { getUrl } from "./getUrl";
 export function CompileReportsQueryManager(
   store: Store,
   apiHelper: ApiHelper,
-  scheduler: Scheduler
+  scheduler: Scheduler,
 ) {
   return QueryManager.ContinuousWithEnv<"GetCompileReports">(
     apiHelper,
@@ -33,7 +33,7 @@ export function CompileReportsQueryManager(
         handlers: getPaginationHandlers(links, metadata, setUrl),
         metadata,
       };
-    }
+    },
   );
 }
 

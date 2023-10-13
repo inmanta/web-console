@@ -22,7 +22,7 @@ function setup() {
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
       EventsQueryManager(apiHelper, EventsStateHelper(store), scheduler),
-    ])
+    ]),
   );
 
   const component = (
@@ -46,7 +46,7 @@ test("EventsView shows empty table", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "EventTable-Loading" })
+    await screen.findByRole("generic", { name: "EventTable-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(
@@ -54,11 +54,11 @@ test("EventsView shows empty table", async () => {
       data: [],
       links: { self: "" },
       metadata: {} as Pagination.Metadata,
-    })
+    }),
   );
 
   expect(
-    await screen.findByRole("generic", { name: "EventTable-Empty" })
+    await screen.findByRole("generic", { name: "EventTable-Empty" }),
   ).toBeInTheDocument();
 });
 
@@ -67,13 +67,13 @@ test("EventsView shows failed table", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "EventTable-Loading" })
+    await screen.findByRole("generic", { name: "EventTable-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.left("error"));
 
   expect(
-    await screen.findByRole("generic", { name: "EventTable-Failed" })
+    await screen.findByRole("generic", { name: "EventTable-Failed" }),
   ).toBeInTheDocument();
 });
 
@@ -82,7 +82,7 @@ test("EventsView shows success table", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "EventTable-Loading" })
+    await screen.findByRole("generic", { name: "EventTable-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(
@@ -107,11 +107,11 @@ test("EventsView shows success table", async () => {
       ],
       links: { self: "" },
       metadata: {} as Pagination.Metadata,
-    })
+    }),
   );
 
   expect(
-    await screen.findByRole("grid", { name: "EventTable-Success" })
+    await screen.findByRole("grid", { name: "EventTable-Success" }),
   ).toBeInTheDocument();
 });
 
@@ -120,7 +120,7 @@ test("EventsView shows updated table", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "EventTable-Loading" })
+    await screen.findByRole("generic", { name: "EventTable-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(
@@ -128,11 +128,11 @@ test("EventsView shows updated table", async () => {
       data: [],
       links: { self: "" },
       metadata: {} as Pagination.Metadata,
-    })
+    }),
   );
 
   expect(
-    await screen.findByRole("generic", { name: "EventTable-Empty" })
+    await screen.findByRole("generic", { name: "EventTable-Empty" }),
   ).toBeInTheDocument();
 
   scheduler.executeAll();
@@ -159,10 +159,10 @@ test("EventsView shows updated table", async () => {
       ],
       links: { self: "" },
       metadata: {} as Pagination.Metadata,
-    })
+    }),
   );
 
   expect(
-    await screen.findByRole("grid", { name: "EventTable-Success" })
+    await screen.findByRole("grid", { name: "EventTable-Success" }),
   ).toBeInTheDocument();
 });

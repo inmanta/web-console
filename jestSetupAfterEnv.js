@@ -6,3 +6,6 @@ import "@testing-library/jest-dom";
  * we increase the default timeout here.
  */
 jest.setTimeout(10000);
+
+//JointJS mock to make library work
+window.SVGAngle = jest.fn();

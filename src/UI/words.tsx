@@ -21,6 +21,7 @@ const dict = {
   submit: "Submit",
   confirm: "Confirm",
   cancel: "Cancel",
+  deploy: "Deploy",
   yes: "Yes",
   no: "No",
   null: "null",
@@ -61,6 +62,7 @@ const dict = {
   "codehighlighter.lineNumbers.off": "Hide line numbers",
   "codehighlighter.zoom.on": "Enlarge",
   "codehighlighter.zoom.off": "Back to original size",
+  "codehighlighter.scrollToBottom": "Scroll down and resume auto-scroll",
 
   /**
    * Inventory related text
@@ -149,13 +151,15 @@ const dict = {
   "inventory.form.placeholder.floatList": "1.1, 3.14, 4.3",
   "inventory.form.placeholder.stringList": "Add a list of values",
   "inventory.form.placeholder.dict": '{"key": "value"}',
-  "inventory.instanceComposer.editButton": "Show in Editor",
+  "inventory.instanceComposer.editButton": "Edit in Composer",
+  "inventory.instanceComposer.dictModal": (valueName: string) =>
+    `Values of ${valueName}`,
   "inventory.deleteInstance.button": "Delete",
   "inventory.deleteInstance.failed": "Deleting instance failed",
   "inventory.deleteInstance.title": "Delete instance",
   "inventory.deleteInstance.header": (
     instanceName: string,
-    serviceName: string
+    serviceName: string,
   ) =>
     `Are you sure you want to delete instance ${instanceName} of service entity ${serviceName}?`,
   "inventory.destroyInstance.button": "Destroy",
@@ -163,7 +167,7 @@ const dict = {
   "inventory.destroyInstance.title": "Destroy instance",
   "inventory.destroyInstance.header": (
     instanceName: string,
-    serviceName: string
+    serviceName: string,
   ) =>
     `Are you absolutely sure you want to permanently destroy instance ${instanceName} of service entity ${serviceName}?`,
   "inventory.destroyInstance.text": `This action cannot be undone.`,
@@ -378,6 +382,10 @@ const dict = {
   "resources.facts.columns.name": "Name",
   "resources.facts.columns.updated": "Last Updated",
   "resources.facts.columns.value": "Value",
+  "resources.deploy.tooltip":
+    "Request the agents to check the current state of each resource in a state different from the deployed state and make the current state of those resources in line with the desired state.",
+  "resources.repair.tooltip":
+    "Request the agents to check the current state of each resource and make the current state in-line with the desired state.",
 
   /** Compile report related text */
   "compileReports.title": "Compile Reports",
@@ -619,6 +627,16 @@ const dict = {
   "notification.drawer.clear": "Clear",
   "notification.instanceForm.prompt":
     "Are you sure you want to leave this page? You have unsaved changes",
+
+  /**
+   * Banners
+   */
+  "banner.entitlement.expired": (days: number) =>
+    `Your license has expired ${days} days ago!`,
+  "banner.certificate.expired": (days: number) =>
+    `Your license has expired ${days} days ago!`,
+  "banner.certificate.will.expire": (days: number) =>
+    `Your license will expire in ${days} days.`,
 
   /**
    * Common

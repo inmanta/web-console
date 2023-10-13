@@ -1,8 +1,8 @@
 import React from "react";
 import { MemoryRouter, useLocation } from "react-router-dom";
-import { TableComposable, Tbody, Tr } from "@patternfly/react-table";
+import { Table /* data-codemods */, Tbody, Tr } from "@patternfly/react-table";
 import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { act } from "react-dom/test-utils";
 import { Either, RemoteData } from "@/Core";
@@ -34,19 +34,19 @@ function setup(props, expertMode = false) {
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
   const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolver(store, apiHelper, scheduler, scheduler)
+    new QueryManagerResolver(store, apiHelper, scheduler, scheduler),
   );
   const updateAttribute = UpdateInstanceAttributeCommandManager(
     new KeycloakAuthHelper(),
-    apiHelper
+    apiHelper,
   );
   const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolver([updateAttribute])
+    new DynamicCommandManagerResolver([updateAttribute]),
   );
   const onClickFn = jest.fn();
   const environmentHandler = EnvironmentHandlerImpl(
     useLocation,
-    dependencies.routeManager
+    dependencies.routeManager,
   );
   const environmentModifier = EnvironmentModifierImpl();
 
@@ -63,7 +63,7 @@ function setup(props, expertMode = false) {
           enable_lsm_expert_mode: expertMode,
         },
       },
-    ])
+    ]),
   );
 
   store.dispatch.environment.setSettingsData({
@@ -105,13 +105,13 @@ function setup(props, expertMode = false) {
       >
         <StoreProvider store={store}>
           <TreeTableCellContext.Provider value={{ onClick: onClickFn }}>
-            <TableComposable>
+            <Table>
               <Tbody>
                 <Tr>
                   <CellWithCopyExpert {...props} />
                 </Tr>
               </Tbody>
-            </TableComposable>
+            </Table>
           </TreeTableCellContext.Provider>
         </StoreProvider>
       </DependencyProvider>
@@ -159,7 +159,7 @@ test("Given CellWithCopyExpert When a cell has entity and on click Then it is re
         ...ServiceInstance.a,
         service_identity_attribute_value: undefined,
       },
-    })
+    }),
   );
 
   const cell = await screen.findByText(props.value);
@@ -187,7 +187,7 @@ test("Given CellWithCopyExpert When a cell has entity, multiple values and on cl
         ...ServiceInstance.a,
         service_identity_attribute_value: undefined,
       },
-    })
+    }),
   );
   apiHelper.resolve(
     Either.right({
@@ -195,7 +195,7 @@ test("Given CellWithCopyExpert When a cell has entity, multiple values and on cl
         ...ServiceInstance.b,
         service_identity_attribute_value: undefined,
       },
-    })
+    }),
   );
 
   const firstCell = await screen.findByText(someValue);
@@ -232,7 +232,7 @@ test("Given CellWithCopyExpert When a cell has access to expertMode Then button 
         ...ServiceInstance.a,
         service_identity_attribute_value: undefined,
       },
-    })
+    }),
   );
   const button = await screen.findByRole("button");
   await act(async () => {
@@ -255,7 +255,7 @@ test("Given CellWithCopyExpert When a cell has access to expertMode Then button 
 test("Given CellWithCopyExpert When a cell has access to expertMode and input will be populated with new values and submit button will be pressed and confirmed Then request will be sent", async () => {
   const newValue = "newValue";
   const props = {
-    label: "attribute",
+    label: "candidates",
     value: "someValue",
     hasRelation: true,
     serviceName: "test_service",
@@ -273,7 +273,7 @@ test("Given CellWithCopyExpert When a cell has access to expertMode and input wi
         ...ServiceInstance.a,
         service_identity_attribute_value: undefined,
       },
-    })
+    }),
   );
 
   const button = await screen.findByRole("button");
@@ -345,14 +345,14 @@ test("Given CellWithCopyExpert When a cell has access to expertMode and input wi
   });
 
   expect(
-    apiHelper.pendingRequests.find((request) => request.method === "PATCH")
+    apiHelper.pendingRequests.find((request) => request.method === "PATCH"),
   ).toMatchObject({
     method: "PATCH",
     url: "/lsm/v2/service_inventory/mpn/09042edf-3032-490d-bcaf-cc45615ba782/expert",
     environment: "aaa",
     body: {
       patch_id: "mpn-update-09042edf-3032-490d-bcaf-cc45615ba782-2",
-      attribute_set_name: "attribute_attributes",
+      attribute_set_name: "candidates_attributes",
       edit: [
         {
           edit_id:
@@ -360,6 +360,97 @@ test("Given CellWithCopyExpert When a cell has access to expertMode and input wi
           operation: "replace",
           target: "mgmt_prefix",
           value: "newValue",
+        },
+      ],
+      current_version: 2,
+      comment: "Triggered from the console",
+    },
+  });
+});
+
+test("Given CellWithCopyExpert When a cell has access to expertMode and input will be populated with new values and submit button will be pressed and confirmed Then request will be sent", async () => {
+  const newValue = "test-123";
+  const props = {
+    label: "candidates",
+    value: "someValue",
+    hasRelation: true,
+    serviceName: "test_service",
+    path: "parent$editedValue",
+    instanceId: "09042edf-3032-490d-bcaf-cc45615ba782",
+    version: 2,
+    serviceEntity: "mpn",
+    attributeType: "string",
+    parentObject: {
+      value: "1234",
+      value1: "test",
+      parent: {
+        id: "09042sev-1235-f234-ktgd-cc45615ba782",
+        editedValue: "someValue",
+        unedited: "value",
+      },
+    },
+  };
+  const { component, apiHelper } = setup(props, true);
+  render(component);
+  apiHelper.resolve(
+    Either.right({
+      data: {
+        ...ServiceInstance.a,
+        service_identity_attribute_value: undefined,
+      },
+    }),
+  );
+
+  const editButton = await screen.findByRole("button");
+
+  await act(async () => {
+    await userEvent.click(editButton);
+  });
+
+  const input = await screen.findByPlaceholderText("New Attribute");
+  expect(input).toBeVisible();
+
+  // set value and click check/submit button
+  await act(async () => {
+    await userEvent.clear(input);
+    await userEvent.type(input, newValue);
+  });
+  expect(input).toHaveValue(newValue);
+
+  const submitButton = await screen.findByTestId("inline-submit");
+  expect(submitButton).toBeVisible();
+  await act(async () => {
+    await userEvent.click(submitButton);
+  });
+
+  const dialog = await screen.findByRole("dialog");
+  expect(dialog).toBeVisible();
+
+  const dialogSubmit = await screen.findByTestId("dialog-submit");
+
+  await act(async () => {
+    await userEvent.click(dialogSubmit);
+  });
+
+  expect(
+    apiHelper.pendingRequests.find((request) => request.method === "PATCH"),
+  ).toMatchObject({
+    method: "PATCH",
+    url: "/lsm/v2/service_inventory/mpn/09042edf-3032-490d-bcaf-cc45615ba782/expert",
+    environment: "aaa",
+    body: {
+      patch_id: "mpn-update-09042edf-3032-490d-bcaf-cc45615ba782-2",
+      attribute_set_name: "candidates_attributes",
+      edit: [
+        {
+          edit_id: "mpn-parent-update-09042edf-3032-490d-bcaf-cc45615ba782-2",
+          operation: "replace",
+          target: "parent",
+          value: {
+            id: "09042sev-1235-f234-ktgd-cc45615ba782",
+            editedValue: newValue,
+            unedited: "value",
+          },
         },
       ],
       current_version: 2,

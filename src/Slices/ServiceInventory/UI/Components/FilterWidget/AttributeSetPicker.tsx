@@ -1,5 +1,9 @@
 import React, { useState } from "react";
-import { Select, SelectOption, SelectVariant } from "@patternfly/react-core";
+import {
+  Select,
+  SelectOption,
+  SelectVariant,
+} from "@patternfly/react-core/deprecated";
 import { ServiceInstanceParams } from "@/Core";
 
 interface Props {
@@ -22,7 +26,7 @@ export const AttributeSetPicker: React.FC<Props> = ({
     <Select
       variant={SelectVariant.single}
       toggleAriaLabel="Select AttributeSet"
-      onToggle={setFilterOpen}
+      onToggle={(_event, val) => setFilterOpen(val)}
       onSelect={onSelect}
       selections={attributeSet}
       isOpen={isFilterOpen}

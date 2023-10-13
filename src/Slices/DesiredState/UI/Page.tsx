@@ -66,6 +66,7 @@ export const Page: React.FC = () => {
           }
         />
         <ToastAlert
+          data-testid="ToastAlert"
           title={words("desiredState.actions.promote.failed")}
           message={errorMessage}
           setMessage={setErrorMessage}

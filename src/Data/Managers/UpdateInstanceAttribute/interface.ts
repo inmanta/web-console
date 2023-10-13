@@ -20,6 +20,6 @@ export interface UpdateInstanceAttributeManifest {
       | "active_attributes"
       | "rollback_attributes",
     value: string | number | boolean | string[],
-    target: string
+    target: string,
   ) => Promise<Maybe.Type<string>>;
 }

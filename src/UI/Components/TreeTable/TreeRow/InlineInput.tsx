@@ -21,7 +21,10 @@ const InlineInput = ({
   label: string;
   value: string | number | boolean | string[];
   type: string;
-  onChange: (value: string | number | boolean | string[]) => void;
+  onChange: (
+    event: React.FormEvent<HTMLInputElement>,
+    value: string | number | boolean | string[],
+  ) => void;
   toggleModal: () => void;
 }) => {
   let input;
@@ -29,7 +32,7 @@ const InlineInput = ({
     input = (
       <StyledSwitch
         isChecked={value.toString().toLowerCase() === "true"}
-        onChange={(checked) => onChange(checked)}
+        onChange={(event, checked) => onChange(event, checked)}
         aria-label={`new-attribute-toggle-${label}`}
       />
     );
@@ -46,7 +49,7 @@ const InlineInput = ({
         attributeValue={formattedValue as string[]}
         isOptional={true}
         type={TextInputTypes.text}
-        handleInputChange={(value) => onChange(value)}
+        handleInputChange={(event, value) => onChange(event, value)}
         placeholder={words("inventory.editAttribute.placeholder")}
         attributeName={""}
       />
@@ -56,7 +59,7 @@ const InlineInput = ({
       <StyledInput
         value={value.toString()}
         type={type.toLowerCase().includes("int") ? "number" : "text"}
-        onChange={(value) => onChange(value)}
+        onChange={(event, value) => onChange(event, value)}
         aria-label="new-attribute-input"
         placeholder={words("inventory.editAttribute.placeholder")}
       />
@@ -88,9 +91,9 @@ const StyledInput = styled(TextInput)`
 `;
 
 const StyledSwitch = styled(Switch)`
-  --pf-c-switch__input--focus__toggle--OutlineWidth: 0;
-  --pf-c-switch__input--checked__toggle--BackgroundColor: var(
-    --pf-global--danger-color--100
+  --pf-v5-c-switch__input--focus__toggle--OutlineWidth: 0;
+  --pf-v5-c-switch__input--checked__toggle--BackgroundColor: var(
+    --pf-v5-global--danger-color--100
   );
 `;
 const StyledTextForm = styled(TextListFormInput)`

@@ -18,7 +18,7 @@ function setup() {
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
   const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolver(store, apiHelper, scheduler, scheduler)
+    new QueryManagerResolver(store, apiHelper, scheduler, scheduler),
   );
 
   const component = (
@@ -39,13 +39,13 @@ test("Agent Process Page shows failed view", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "AgentProcessView-Loading" })
+    await screen.findByRole("generic", { name: "AgentProcessView-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.left("error"));
 
   expect(
-    await screen.findByRole("generic", { name: "AgentProcessView-Failed" })
+    await screen.findByRole("generic", { name: "AgentProcessView-Failed" }),
   ).toBeInTheDocument();
 });
 
@@ -54,12 +54,12 @@ test("Agent Process Page shows success view", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "AgentProcessView-Loading" })
+    await screen.findByRole("generic", { name: "AgentProcessView-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.right({ data: AgentProcessMock.data }));
 
   expect(
-    await screen.findByRole("generic", { name: "AgentProcessView-Success" })
+    await screen.findByRole("generic", { name: "AgentProcessView-Success" }),
   ).toBeInTheDocument();
 });

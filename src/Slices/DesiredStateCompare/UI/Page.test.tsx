@@ -1,6 +1,6 @@
 import React from "react";
 import { act, render, screen, within } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { Either } from "@/Core";
 import { FileFetcherImpl, getStoreInstance, QueryResolverImpl } from "@/Data";
@@ -22,10 +22,10 @@ function setup() {
   const apiHelper = new DeferredApiHelper();
   const queryManager = GetDesiredStateDiffQueryManager(
     apiHelper,
-    GetDesiredStateDiffStateHelper(store)
+    GetDesiredStateDiffStateHelper(store),
   );
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolver([queryManager])
+    new DynamicQueryManagerResolver([queryManager]),
   );
   const fileFetcher = new FileFetcherImpl(apiHelper);
   fileFetcher.setEnvironment("env");
@@ -56,8 +56,8 @@ test("GIVEN DesiredStateCompare THEN shows list of diff blocks", async () => {
     await apiHelper.resolve(Either.right(DesiredStateDiff.response));
   });
 
-  const blocks = await screen.findAllByRole("article", { name: "DiffBlock" });
-  expect(blocks).toHaveLength(12);
+  const blocks = await screen.findAllByTestId("DiffBlock");
+  expect(blocks).toHaveLength(11);
 });
 
 test("GIVEN DesiredStateCompare THEN shows 'Jump To' action with dropdown", async () => {
@@ -71,7 +71,7 @@ test("GIVEN DesiredStateCompare THEN shows 'Jump To' action with dropdown", asyn
   const button = screen.getByRole("button", { name: words("jumpTo") });
   expect(button).toBeVisible();
   expect(
-    screen.queryByRole("list", { name: "DiffSummaryList" })
+    screen.queryByRole("list", { name: "DiffSummaryList" }),
   ).not.toBeInTheDocument();
 
   await act(async () => {
@@ -80,12 +80,12 @@ test("GIVEN DesiredStateCompare THEN shows 'Jump To' action with dropdown", asyn
   expect(
     screen.getByRole("list", {
       name: "DiffSummaryList",
-    })
+    }),
   ).toBeVisible();
   const items = screen.getAllByRole("listitem", {
     name: "DiffSummaryListItem",
   });
-  expect(items).toHaveLength(12);
+  expect(items).toHaveLength(11);
 });
 
 test("GIVEN DesiredStateCompare WHEN StatusFilter = 'Added' THEN only 'Added' resources are shown", async () => {
@@ -98,20 +98,18 @@ test("GIVEN DesiredStateCompare WHEN StatusFilter = 'Added' THEN only 'Added' re
 
   await act(async () => {
     await userEvent.click(
-      screen.getByRole("button", { name: words("jumpTo") })
+      screen.getByRole("button", { name: words("jumpTo") }),
     );
   });
 
   expect(
-    screen.getAllByRole("listitem", { name: "DiffSummaryListItem" })
-  ).toHaveLength(12);
+    screen.getAllByRole("listitem", { name: "DiffSummaryListItem" }),
+  ).toHaveLength(11);
+
+  expect(await screen.findAllByTestId("DiffBlock")).toHaveLength(11);
 
   expect(
-    await screen.findAllByRole("article", { name: "DiffBlock" })
-  ).toHaveLength(12);
-
-  expect(
-    screen.queryByRole("listbox", { name: "StatusFilterOptions" })
+    screen.queryByRole("listbox", { name: "StatusFilterOptions" }),
   ).not.toBeInTheDocument();
 
   await act(async () => {
@@ -119,7 +117,7 @@ test("GIVEN DesiredStateCompare WHEN StatusFilter = 'Added' THEN only 'Added' re
   });
 
   expect(
-    screen.getByRole("listbox", { name: "StatusFilterOptions" })
+    screen.getByRole("listbox", { name: "StatusFilterOptions" }),
   ).toBeVisible();
 
   const statusOptions = screen.getAllByRole("checkbox", {
@@ -129,7 +127,12 @@ test("GIVEN DesiredStateCompare WHEN StatusFilter = 'Added' THEN only 'Added' re
 
   await act(async () => {
     await userEvent.click(
-      screen.getByRole("button", { name: words("hideAll") })
+      screen.getByRole("button", { name: words("showAll") }),
+    );
+  });
+  await act(async () => {
+    await userEvent.click(
+      screen.getByRole("button", { name: words("hideAll") }),
     );
   });
   await act(async () => {
@@ -137,17 +140,15 @@ test("GIVEN DesiredStateCompare WHEN StatusFilter = 'Added' THEN only 'Added' re
   });
   await act(async () => {
     await userEvent.click(
-      screen.getByRole("button", { name: words("jumpTo") })
+      screen.getByRole("button", { name: words("jumpTo") }),
     );
   });
 
   expect(
-    await screen.findAllByRole("listitem", { name: "DiffSummaryListItem" })
+    await screen.findAllByRole("listitem", { name: "DiffSummaryListItem" }),
   ).toHaveLength(2);
 
-  expect(
-    await screen.findAllByRole("article", { name: "DiffBlock" })
-  ).toHaveLength(2);
+  expect(await screen.findAllByTestId("DiffBlock")).toHaveLength(2);
 });
 
 test("GIVEN DesiredStateCompare WHEN File Resource THEN it shows prompt that can fetch file content", async () => {
@@ -158,12 +159,13 @@ test("GIVEN DesiredStateCompare WHEN File Resource THEN it shows prompt that can
     await apiHelper.resolve(Either.right(DesiredStateDiff.response));
   });
 
-  const blocks = screen.getAllByRole("article", { name: "DiffBlock" });
+  const blocks = await screen.findAllByTestId("DiffBlock");
+
   await act(async () => {
     await userEvent.click(
       within(blocks[1]).getByRole("button", {
         name: words("desiredState.compare.file.show"),
-      })
+      }),
     );
   });
 
@@ -183,7 +185,7 @@ test("GIVEN DesiredStateCompare WHEN File Resource THEN it shows prompt that can
   expect(
     within(blocks[1]).getByRole("button", {
       name: words("desiredState.compare.file.show"),
-    })
+    }),
   ).toBeDisabled();
 
   await act(async () => {
@@ -195,21 +197,21 @@ test("GIVEN DesiredStateCompare WHEN File Resource THEN it shows prompt that can
     await userEvent.click(
       within(blocks[1]).getByRole("button", {
         name: words("desiredState.compare.file.hide"),
-      })
+      }),
     );
   });
 
   expect(
     within(blocks[1]).getByRole("button", {
       name: words("desiredState.compare.file.show"),
-    })
+    }),
   ).toBeVisible();
 
   await act(async () => {
     await userEvent.click(
       within(blocks[1]).getByRole("button", {
         name: words("desiredState.compare.file.show"),
-      })
+      }),
     );
   });
 
@@ -219,6 +221,6 @@ test("GIVEN DesiredStateCompare WHEN File Resource THEN it shows prompt that can
   });
 
   expect(
-    within(blocks[1]).getByRole("generic", { name: "ErrorDiffView" })
+    within(blocks[1]).getByRole("generic", { name: "ErrorDiffView" }),
   ).toBeVisible();
 });

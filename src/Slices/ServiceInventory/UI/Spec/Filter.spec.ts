@@ -1,5 +1,5 @@
 import { render, screen, act } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { userEvent } from "@testing-library/user-event";
 import { Either } from "@/Core";
 import { ServiceInstance, Pagination } from "@/Test";
 import { words } from "@/UI";
@@ -16,7 +16,7 @@ test("GIVEN The Service Inventory WHEN the user filters on something THEN a data
         data: [ServiceInstance.a, ServiceInstance.b],
         links: Pagination.links,
         metadata: Pagination.metadata,
-      })
+      }),
     );
   });
 
@@ -26,7 +26,7 @@ test("GIVEN The Service Inventory WHEN the user filters on something THEN a data
   expect(beforeRows.length).toEqual(2);
 
   const input = await screen.findByPlaceholderText(
-    words("inventory.filters.state.placeholder")
+    words("inventory.filters.state.placeholder"),
   );
   await act(async () => {
     await userEvent.click(input);
@@ -40,7 +40,7 @@ test("GIVEN The Service Inventory WHEN the user filters on something THEN a data
   });
 
   expect(
-    await screen.findByRole("generic", { name: "ServiceInventory-Loading" })
+    await screen.findByRole("generic", { name: "ServiceInventory-Loading" }),
   ).toBeInTheDocument();
 
   await act(async () => {
@@ -49,7 +49,7 @@ test("GIVEN The Service Inventory WHEN the user filters on something THEN a data
         data: [ServiceInstance.a],
         links: Pagination.links,
         metadata: Pagination.metadata,
-      })
+      }),
     );
   });
 

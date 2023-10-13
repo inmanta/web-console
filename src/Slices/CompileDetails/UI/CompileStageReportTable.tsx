@@ -1,6 +1,6 @@
 import React from "react";
 import {
-  TableComposable,
+  Table /* data-codemods */,
   TableVariant,
   Th,
   Thead,
@@ -24,7 +24,7 @@ export const CompileStageReportTable: React.FC<Props> = ({
 }) => {
   const tablePresenter = new CompileStageReportTablePresenter(
     new MomentDatePresenter(),
-    compileStarted
+    compileStarted,
   );
   const rows = tablePresenter.createRows(reports);
   const heads = tablePresenter
@@ -34,7 +34,7 @@ export const CompileStageReportTable: React.FC<Props> = ({
   const [isExpanded, onExpansion] = useExpansion();
 
   return (
-    <TableComposable {...props} variant={TableVariant.compact}>
+    <Table {...props} variant={TableVariant.compact}>
       <Thead>
         <Tr>
           <Th key="toggle" />
@@ -51,6 +51,6 @@ export const CompileStageReportTable: React.FC<Props> = ({
           numberOfColumns={tablePresenter.getNumberOfColumns()}
         />
       ))}
-    </TableComposable>
+    </Table>
   );
 };

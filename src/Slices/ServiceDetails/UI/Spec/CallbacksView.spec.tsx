@@ -1,7 +1,7 @@
 import React from "react";
 import { MemoryRouter } from "react-router";
 import { act, render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { Either, getShortUuidFromRaw, Maybe } from "@/Core";
 import {
@@ -35,32 +35,32 @@ function setup() {
   const callbacksStateHelper = CallbacksStateHelper(store);
   const callbacksQueryManager = CallbacksQueryManager(
     apiHelper,
-    callbacksStateHelper
+    callbacksStateHelper,
   );
 
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolver([callbacksQueryManager])
+    new DynamicQueryManagerResolver([callbacksQueryManager]),
   );
 
   const callbacksUpdater = new CallbacksUpdater(
     CallbacksStateHelper(store),
-    apiHelper
+    apiHelper,
   );
   const deleteCallbackCommandManager = DeleteCallbackCommandManager(
     apiHelper,
-    callbacksUpdater
+    callbacksUpdater,
   );
 
   const createCallbackCommandManager = CreateCallbackCommandManager(
     apiHelper,
-    callbacksUpdater
+    callbacksUpdater,
   );
 
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([
       deleteCallbackCommandManager,
       createCallbackCommandManager,
-    ])
+    ]),
   );
 
   const component = (
@@ -95,11 +95,11 @@ test("GIVEN CallbacksTab WHEN user click on delete and confirms THEN callback is
   });
 
   expect(
-    await screen.findByRole("grid", { name: "CallbacksTable" })
+    await screen.findByRole("grid", { name: "CallbacksTable" }),
   ).toBeVisible();
 
   expect(
-    screen.getByRole("row", { name: "CallbackRow-" + shortenUUID })
+    screen.getByRole("row", { name: "CallbackRow-" + shortenUUID }),
   ).toBeVisible();
 
   const deleteButton = await screen.findByRole("button", {
@@ -127,7 +127,7 @@ test("GIVEN CallbacksTab WHEN user click on delete and confirms THEN callback is
   });
 
   expect(
-    screen.queryByRole("row", { name: "CallbackRow-" + shortenUUID })
+    screen.queryByRole("row", { name: "CallbackRow-" + shortenUUID }),
   ).not.toBeInTheDocument();
 });
 
@@ -140,11 +140,11 @@ test("GIVEN CallbacksTab WHEN user fills in form and clicks on Add THEN callback
   });
 
   expect(
-    await screen.findByRole("grid", { name: "CallbacksTable" })
+    await screen.findByRole("grid", { name: "CallbacksTable" }),
   ).toBeVisible();
 
   expect(
-    screen.getByRole("row", { name: "CallbackRow-" + shortenUUID })
+    screen.getByRole("row", { name: "CallbackRow-" + shortenUUID }),
   ).toBeVisible();
 
   const callbackUrlInput = screen.getByRole("textbox", {
@@ -197,11 +197,11 @@ test("GIVEN CallbacksTab WHEN user fills in form and clicks on Add THEN callback
     await apiHelper.resolve(
       Either.right({
         data: [...Callback.list, { ...Callback.a, callback_id: "1234" }],
-      })
+      }),
     );
   });
 
   expect(
-    await screen.findByRole("row", { name: "CallbackRow-1234" })
+    await screen.findByRole("row", { name: "CallbackRow-1234" }),
   ).toBeVisible();
 });

@@ -38,5 +38,5 @@ export const orUndefined = <Value>(maybe: Maybe<Value>): Value | undefined =>
 
 export const withFallback = <Value>(
   maybe: Maybe<Value>,
-  fallback: Value
+  fallback: Value,
 ): Value => (isNone(maybe) ? fallback : maybe.value);

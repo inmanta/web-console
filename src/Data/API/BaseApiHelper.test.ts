@@ -1,6 +1,5 @@
 import { Either, Maybe } from "@/Core";
 import { BaseApiHelper } from "./BaseApiHelper";
-import { NativeJsonParser } from ".";
 
 test("BaseApiHelper.get executes a GET request with correct url & env", async () => {
   const apiHelper = new BaseApiHelper();
@@ -26,8 +25,8 @@ test("BaseApiHelper.get handles a failed a GET request", async () => {
   const response = await apiHelper.get(url, env);
   expect(response).toEqual(
     Either.left(
-      `The following error occured while communicating with the server: 400 Bad Request \nSomething happened`
-    )
+      `The following error occured while communicating with the server: 400 Bad Request \nSomething happened`,
+    ),
   );
 });
 
@@ -38,7 +37,7 @@ test("BaseApiHelper.post executes a POST request with correct url & env", async 
 
   fetchMock.mockResponse(JSON.stringify({ data: [] }));
   expect(await apiHelper.post(url, env, {})).toEqual(
-    Either.right({ data: [] })
+    Either.right({ data: [] }),
   );
 
   const [receivedUrl, requestInit] = fetchMock.mock.calls[0];
@@ -65,7 +64,7 @@ test("BaseApiHelper.delete executes a DELETE request with correct url & env", as
   });
 });
 
-test("GIVEN BaseApiHelper with BigIntJsonParser WHEN response json contains large integers THEN integers are converted to bigints", async () => {
+test("GIVEN BaseApiHelper WHEN response json contains large integers THEN integers are converted to bigints", async () => {
   const apiHelper = new BaseApiHelper();
   fetchMock.mockResponse(`{"foo": 9223372036854775807}`);
   const response = await apiHelper.get<{ foo: number }>("", "");
@@ -73,16 +72,8 @@ test("GIVEN BaseApiHelper with BigIntJsonParser WHEN response json contains larg
   expect(response.value.foo).toEqual(9223372036854775807n);
 });
 
-test("GIVEN BaseApiHelper with NativeJsonParser WHEN response json contains large integers THEN parsing loses precision", async () => {
-  const apiHelper = new BaseApiHelper(new NativeJsonParser());
-  fetchMock.mockResponse(`{"foo": 9223372036854775807}`);
-  const response = await apiHelper.get<{ foo: number }>("", "");
-  if (response.kind === "Left") return;
-  expect(response.value.foo).not.toEqual(9223372036854775807n);
-});
-
 test("GIVEN BaseApiHelper with getWithHTTPCode WHEN request fails with 409 THEN response has code 409", async () => {
-  const apiHelper = new BaseApiHelper(new NativeJsonParser());
+  const apiHelper = new BaseApiHelper();
   fetchMock.mockResponse(`{"foo": 9223372036854775807}`, { status: 409 });
   const response = await apiHelper.getWithHTTPCode<{ foo: number }>("", "");
   if (response.kind === "Right") return;

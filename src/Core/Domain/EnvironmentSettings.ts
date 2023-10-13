@@ -93,5 +93,5 @@ export type InputInfo =
   | PositiveFloatInputInfo;
 
 export type IsUpdateable = (
-  info: Pick<InputInfo, "initial" | "value" | "default">
+  info: Pick<InputInfo, "initial" | "value" | "default">,
 ) => boolean;

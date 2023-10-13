@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { DropdownItem } from "@patternfly/react-core";
+import { DropdownItem } from "@patternfly/react-core/deprecated";
 import { ParsedNumber } from "@/Core";
 import { words } from "@/UI/words";
 import { GetDesiredStatesContext } from "../GetDesiredStatesContext";

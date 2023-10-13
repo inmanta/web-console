@@ -1,7 +1,7 @@
 import React from "react";
 import { MemoryRouter } from "react-router";
 import { act, render, screen, within } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { userEvent } from "@testing-library/user-event";
 import { ServiceModel } from "@/Core";
 import {
   BaseApiHelper,
@@ -17,7 +17,7 @@ const Component = (services: ServiceModel[]) => {
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([
       DeleteServiceCommandManager(new BaseApiHelper()),
-    ])
+    ]),
   );
   return (
     <MemoryRouter>
@@ -40,7 +40,7 @@ test("GIVEN CatalogDataList WHEN 1 service THEN 1 service is shown", () => {
 
   const list = screen.getByRole("list", { name: "List of service entities" });
   expect(
-    within(list).getByRole("listitem", { name: Service.a.name })
+    within(list).getByRole("listitem", { name: Service.a.name }),
   ).toBeInTheDocument();
 });
 
@@ -49,10 +49,10 @@ test("GIVEN CatalogDataList WHEN 2 services THEN 2 services are shown", () => {
 
   const list = screen.getByRole("list", { name: "List of service entities" });
   expect(
-    within(list).getByRole("listitem", { name: Service.a.name })
+    within(list).getByRole("listitem", { name: Service.a.name }),
   ).toBeInTheDocument();
   expect(
-    within(list).getByRole("listitem", { name: Service.b.name })
+    within(list).getByRole("listitem", { name: Service.b.name }),
   ).toBeInTheDocument();
 });
 
@@ -68,7 +68,7 @@ test("GIVEN CatalogDataList WHEN service THEN service inventory has correct link
   expect(link).toBeInTheDocument();
   expect(link).toHaveAttribute(
     "href",
-    `/lsm/catalog/${Service.a.name}/inventory`
+    `/lsm/catalog/${Service.a.name}/inventory`,
   );
 });
 
@@ -91,7 +91,7 @@ test("GIVEN CatalogDataList WHEN service THEN service details has correct link",
   expect(link).toBeInTheDocument();
   expect(link).toHaveAttribute(
     "href",
-    `/lsm/catalog/${Service.a.name}/details`
+    `/lsm/catalog/${Service.a.name}/details`,
   );
 });
 
@@ -101,7 +101,7 @@ test("GIVEN CatalogDataList WHEN description available THEN should show descript
   const list = screen.getByRole("list", { name: "List of service entities" });
   const listItem = within(list).getByRole("listitem", { name: Service.a.name });
   const description = within(listItem).queryByText(
-    Service.a.description as string
+    Service.a.description as string,
   );
   expect(description).toBeVisible();
 });

@@ -1,6 +1,6 @@
 import React from "react";
 import { act, render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { userEvent } from "@testing-library/user-event";
 
 import { ClipboardCopyButton } from "./ClipboardCopyButton";
 
@@ -9,7 +9,7 @@ test("Given a ClipboardCopyButton, when the button is hovered, then a tooltip sh
     <ClipboardCopyButton
       tooltipContent={"Tooltip content"}
       value="Full text to be copied"
-    />
+    />,
   );
   const button = await screen.findByLabelText("Copy to clipboard");
   await act(async () => {

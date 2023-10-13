@@ -1,7 +1,7 @@
 import React from "react";
 import {
   OnSort,
-  TableComposable,
+  Table /* data-codemods */,
   TableVariant,
   Th,
   Thead,
@@ -31,7 +31,7 @@ export const VersionResourceTable: React.FC<Props> = ({
   const onSort: OnSort = (event, index, order) => {
     setSort({
       name: tablePresenter.getColumnNameForIndex(
-        index
+        index,
       ) as Resource.SortKeyFromVersion,
       order,
     });
@@ -66,14 +66,14 @@ export const VersionResourceTable: React.FC<Props> = ({
     });
 
   return (
-    <TableComposable {...props} variant={TableVariant.compact}>
+    <Table {...props} variant={TableVariant.compact}>
       <Thead>
         <Tr>{heads}</Tr>
       </Thead>
       {rows.map((row) => (
         <Row row={row} key={row.id} version={version} />
       ))}
-    </TableComposable>
+    </Table>
   );
 };
 

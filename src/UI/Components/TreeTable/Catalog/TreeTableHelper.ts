@@ -17,14 +17,14 @@ export class CatalogTreeTableHelper extends BaseTreeTableHelper<CatalogAttribute
     pathHelper: PathHelper,
     expansionManager: TreeExpansionManager,
     attributeHelper: AttributeHelper<CatalogAttributeTree>,
-    attributes: CatalogAttributeTree["source"]
+    attributes: CatalogAttributeTree["source"],
   ) {
     super(
       pathHelper,
       expansionManager,
       attributeHelper,
       attributes,
-      extractCatalogValues
+      extractCatalogValues,
     );
   }
 

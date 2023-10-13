@@ -19,7 +19,7 @@ const archiveHelper = new PrimaryArchiveHelper(fileManager);
 const keycloakController = new PrimaryKeycloakController(
   undefined,
   undefined,
-  undefined
+  undefined,
 );
 
 export const dependencies = {

@@ -25,7 +25,7 @@ export interface AttributeInputConverter {
       | null
       | boolean
       | string[]
-      | { [x: string]: string | null | boolean | string[] }
+      | { [x: string]: string | null | boolean | string[] },
   ):
     | string
     | null
@@ -42,7 +42,7 @@ export interface AttributeInputConverter {
     instance: Pick<
       ServiceInstanceModel,
       "candidate_attributes" | "active_attributes"
-    >
+    >,
   ): InstanceAttributeModel | null;
 }
 
@@ -55,7 +55,7 @@ export interface AttributeResultConverter {
   ensureAttributeType(
     /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any */
     value: any,
-    type: string
+    type: string,
   ): unknown;
 
   /**
@@ -63,7 +63,7 @@ export interface AttributeResultConverter {
    * @param attributes The results from a form
    */
   parseAttributesToCorrectTypes(
-    attributes: FormAttributeResult[]
+    attributes: FormAttributeResult[],
   ): InstanceAttributeModel;
 
   /**
@@ -74,6 +74,6 @@ export interface AttributeResultConverter {
    */
   calculateDiff(
     attributesAfterChanges: InstanceAttributeModel,
-    originalAttributes: InstanceAttributeModel | null
+    originalAttributes: InstanceAttributeModel | null,
   ): InstanceAttributeModel;
 }

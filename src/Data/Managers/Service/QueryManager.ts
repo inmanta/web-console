@@ -6,7 +6,7 @@ export function ServiceQueryManager(
   apiHelper: ApiHelper,
   stateHelper: StateHelperWithEnv<"GetService">,
   scheduler: Scheduler,
-  keyMaker: KeyMaker<[string, string]>
+  keyMaker: KeyMaker<[string, string]>,
 ) {
   return QueryManager.ContinuousWithEnv<"GetService">(
     apiHelper,
@@ -16,13 +16,13 @@ export function ServiceQueryManager(
     ({ name }, environment) => [name, environment],
     "GetService",
     ({ name }) => `/lsm/v1/service_catalog/${name}?instance_summary=True`,
-    identity
+    identity,
   );
 }
 
 export function GetServiceOneTimeQueryManager(
   apiHelper: ApiHelper,
-  stateHelper: StateHelperWithEnv<"GetService">
+  stateHelper: StateHelperWithEnv<"GetService">,
 ) {
   return QueryManager.OneTimeWithEnv<"GetService">(
     apiHelper,
@@ -31,6 +31,6 @@ export function GetServiceOneTimeQueryManager(
     "GetService",
     ({ name }) => `/lsm/v1/service_catalog/${name}?instance_summary=True`,
     identity,
-    "MERGE"
+    "MERGE",
   );
 }

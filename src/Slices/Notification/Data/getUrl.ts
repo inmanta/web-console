@@ -17,7 +17,7 @@ export function getUrl({
               severity: filter.severity,
             },
           },
-          { allowDots: true, arrayFormat: "repeat" }
+          { allowDots: true, arrayFormat: "repeat" },
         )}`
       : "";
   return `/api/v2/notification?limit=${pageSize.value}${filterParam}`;

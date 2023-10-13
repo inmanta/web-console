@@ -16,7 +16,7 @@ export const equals = (a: Sort, b: Sort): boolean =>
 export const serialize = (sort: Sort): string => `${sort.name}.${sort.order}`;
 
 export const parse = <Key extends string = string>(
-  value: unknown
+  value: unknown,
 ): Sort<Key> | undefined => {
   if (typeof value !== "string") return undefined;
   const [name, order] = value.split(".");

@@ -5,6 +5,7 @@ import {
   InputGroup,
   TextInput,
   ButtonVariant,
+  InputGroupItem,
 } from "@patternfly/react-core";
 import { SearchIcon } from "@patternfly/react-icons";
 
@@ -42,23 +43,27 @@ export const IdentityFilter: React.FC<Props> = ({
       showToolbarItem={isVisible}
     >
       <InputGroup>
-        <TextInput
-          name="identityInput"
-          id="identityInput"
-          type="search"
-          aria-label="IdentityFilter"
-          onChange={setInput}
-          value={input}
-          placeholder={`Filter by ${identity.pretty}...`}
-          onKeyDown={onInput}
-        />
-        <Button
-          variant={ButtonVariant.control}
-          aria-label="search button for search input"
-          onClick={onInput}
-        >
-          <SearchIcon />
-        </Button>
+        <InputGroupItem isFill>
+          <TextInput
+            name="identityInput"
+            id="identityInput"
+            type="search"
+            aria-label="IdentityFilter"
+            onChange={(_event, val) => setInput(val)}
+            value={input}
+            placeholder={`Filter by ${identity.pretty}...`}
+            onKeyDown={onInput}
+          />
+        </InputGroupItem>
+        <InputGroupItem>
+          <Button
+            variant={ButtonVariant.control}
+            aria-label="search button for search input"
+            onClick={onInput}
+          >
+            <SearchIcon />
+          </Button>
+        </InputGroupItem>
       </InputGroup>
     </ToolbarFilter>
   );

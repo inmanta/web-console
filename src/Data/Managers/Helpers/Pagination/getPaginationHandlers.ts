@@ -3,7 +3,7 @@ import { Pagination } from "@/Core";
 export const getPaginationHandlers = (
   links: Pagination.Links,
   metadata: Pagination.Metadata,
-  setUrl: (url: string) => void
+  setUrl: (url: string) => void,
 ): Pagination.Handlers => {
   const { prev, next } = getPaginationHandlerUrls(links, metadata);
 
@@ -20,7 +20,7 @@ interface Urls {
 
 const getPaginationHandlerUrls = (
   { prev, next, first }: Pagination.Links,
-  metadata: Pagination.Metadata
+  metadata: Pagination.Metadata,
 ): Urls => ({
   prev: shouldUseFirst(metadata) ? first : prev,
   next,

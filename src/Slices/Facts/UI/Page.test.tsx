@@ -1,7 +1,7 @@
 import React from "react";
 import { MemoryRouter } from "react-router-dom";
 import { act, render, screen, within } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { Either } from "@/Core";
 import {
@@ -20,7 +20,7 @@ function setup() {
   const scheduler = new StaticScheduler();
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolver(store, apiHelper, scheduler, scheduler)
+    new QueryManagerResolver(store, apiHelper, scheduler, scheduler),
   );
 
   const component = (
@@ -62,13 +62,13 @@ test("GIVEN Facts page THEN shows table", async () => {
         page_size: 8,
       },
       links: { self: "" },
-    })
+    }),
   );
 
   const rows = await screen.findAllByRole("row", { name: "FactsRow" });
   expect(rows).toHaveLength(8);
   expect(
-    within(rows[0]).getByRole("cell", { name: "2021/03/18 18:10:43" })
+    within(rows[0]).getByRole("cell", { name: "2021/03/18 18:10:43" }),
   ).toBeVisible();
 });
 
@@ -85,7 +85,7 @@ test("GIVEN Facts page THEN sets sorting parameters correctly on click", async (
         page_size: 8,
       },
       links: { self: "" },
-    })
+    }),
   );
   const resourceIdButton = await screen.findByRole("button", {
     name: words("facts.column.resourceId"),
@@ -117,11 +117,11 @@ test.each`
           page_size: 8,
         },
         links: { self: "" },
-      })
+      }),
     );
 
     expect(
-      await screen.findAllByRole("row", { name: "FactsRow" })
+      await screen.findAllByRole("row", { name: "FactsRow" }),
     ).toHaveLength(8);
 
     const input = await screen.findByPlaceholderText(placeholderText);
@@ -134,7 +134,7 @@ test.each`
     });
 
     expect(apiHelper.pendingRequests[0].url).toEqual(
-      `/api/v2/facts?limit=20&filter.${filterUrlName}=${filterValue}&sort=name.asc`
+      `/api/v2/facts?limit=20&filter.${filterUrlName}=${filterValue}&sort=name.asc`,
     );
 
     apiHelper.resolve(
@@ -147,11 +147,11 @@ test.each`
           page_size: 20,
         },
         links: { self: "" },
-      })
+      }),
     );
 
     expect(
-      await screen.findAllByRole("row", { name: "FactsRow" })
+      await screen.findAllByRole("row", { name: "FactsRow" }),
     ).toHaveLength(4);
-  }
+  },
 );

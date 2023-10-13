@@ -40,7 +40,7 @@ function setup(definition: DefinitionMap) {
 
 test("Given the environmentModifier When the server compile setting is requested Then returns the correct value", async () => {
   const { component, store, environmentId } = setup(
-    EnvironmentSettings.definition
+    EnvironmentSettings.definition,
   );
   // No setting is specified, and the default is true
   store.dispatch.environment.setEnvironmentDetailsById({
@@ -51,7 +51,7 @@ test("Given the environmentModifier When the server compile setting is requested
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "server-compile-enabled" })
+    await screen.findByRole("generic", { name: "server-compile-enabled" }),
   ).toBeVisible();
 
   // Set the option explicitly to false
@@ -65,7 +65,7 @@ test("Given the environmentModifier When the server compile setting is requested
     });
   });
   expect(
-    await screen.findByRole("generic", { name: "server-compile-disabled" })
+    await screen.findByRole("generic", { name: "server-compile-disabled" }),
   ).toBeVisible();
 
   // Set the option explicitly to true
@@ -79,7 +79,7 @@ test("Given the environmentModifier When the server compile setting is requested
     });
   });
   expect(
-    await screen.findByRole("generic", { name: "server-compile-enabled" })
+    await screen.findByRole("generic", { name: "server-compile-enabled" }),
   ).toBeVisible();
 });
 
@@ -88,7 +88,7 @@ test("Given the environmentModifier When the missing setting is requested Then r
 
   delete EnvironmentSettings.definition.server_compile;
   const { component, store, environmentId } = setup(
-    EnvironmentSettings.definition
+    EnvironmentSettings.definition,
   );
   // No setting is specified, and the dafault is missing
   store.dispatch.environment.setEnvironmentDetailsById({
@@ -99,10 +99,10 @@ test("Given the environmentModifier When the missing setting is requested Then r
   render(component);
   //expect to see div element that indicates false value of the setting by its aria-label instead of error boundary pa
   expect(
-    await screen.findByRole("generic", { name: "server-compile-disabled" })
+    await screen.findByRole("generic", { name: "server-compile-disabled" }),
   ).toBeVisible();
   expect(
-    screen.queryByLabelText("server-compile-enabled")
+    screen.queryByLabelText("server-compile-enabled"),
   ).not.toBeInTheDocument();
   expect(consoleError).not.toHaveBeenCalled();
 });

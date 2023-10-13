@@ -15,8 +15,6 @@ import {
   PrimaryArchiveHelper,
   PrimaryFileManager,
   PrimaryKeycloakController,
-  BigIntJsonParser,
-  NativeJsonParser,
   PrimaryLogger,
 } from "@/Data";
 import {
@@ -42,27 +40,24 @@ export const Injector: React.FC<React.PropsWithChildren<Props>> = ({
     new PrimaryLogger(),
     getJsonParserId(globalThis),
     COMMITHASH,
-    APP_VERSION
+    APP_VERSION,
   );
 
   const keycloakController = new PrimaryKeycloakController(
     process.env.SHOULD_USE_AUTH,
     globalThis && globalThis.auth,
-    process.env.KEYCLOAK_URL
+    process.env.KEYCLOAK_URL,
   );
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
-    globalThis.location.pathname
+    globalThis.location.pathname,
   );
   const basePathname = baseUrlManager.getBasePathname();
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
   const routeManager = PrimaryRouteManager(basePathname);
   const apiHelper = new BaseApiHelper(
-    featureManager.getJsonParser() === "BigInt"
-      ? new BigIntJsonParser()
-      : new NativeJsonParser(),
     baseUrl,
-    keycloakController.getInstance()
+    keycloakController.getInstance(),
   );
   const authHelper = new KeycloakAuthHelper(keycloakController.getInstance());
   const queryResolver = new QueryResolverImpl(
@@ -70,11 +65,11 @@ export const Injector: React.FC<React.PropsWithChildren<Props>> = ({
       store,
       apiHelper,
       new SchedulerImpl(5000),
-      new SchedulerImpl(10000)
-    )
+      new SchedulerImpl(10000),
+    ),
   );
   const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolver(store, apiHelper, authHelper)
+    new CommandManagerResolver(store, apiHelper, authHelper),
   );
   const urlManager = new UrlManagerImpl(featureManager, baseUrl);
   const fileFetcher = new FileFetcherImpl(apiHelper);

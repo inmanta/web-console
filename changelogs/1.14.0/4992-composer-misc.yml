@@ -1,0 +1,6 @@
+change-type: minor
+description: "Fix bug with displaying undefined/null values, add buttons for zoom in/out, add halo, clean router behavior"
+issue-nr: 4992
+destination-branches:
+  - master
+  - iso6

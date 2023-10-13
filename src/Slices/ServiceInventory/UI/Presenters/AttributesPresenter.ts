@@ -8,7 +8,7 @@ export class AttributesPresenter {
   getSummary(
     candidate: Attribute,
     active: Attribute,
-    rollback: Attribute
+    rollback: Attribute,
   ): AttributesSummary {
     return {
       candidate: candidate !== null,

@@ -9,15 +9,20 @@ import {
   getStoreInstance,
   GetServerStatusOneTimeQueryManager,
   GetServerStatusStateHelper,
-  GetEnvironmentsQueryManager,
   GetEnvironmentsStateHelper,
+  GetEnvironmentsQueryManager,
 } from "@/Data";
+import {
+  GetEnvironmentsContinuousQueryManager,
+  GetEnvironmentsContinuousStateHelper,
+} from "@/Data/Managers/GetEnvironmentsContinuous";
 import {
   DeferredApiHelper,
   dependencies,
   DynamicQueryManagerResolver,
   Project,
   ServerStatus,
+  StaticScheduler,
 } from "@/Test";
 import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
 import { Root } from "./Root";
@@ -25,26 +30,35 @@ import { Root } from "./Root";
 function setup() {
   const store = getStoreInstance();
   const apiHelper = new DeferredApiHelper();
-  const environmentsManager = GetEnvironmentsQueryManager(
+  const scheduler = new StaticScheduler();
+  const environmentsStateHelper = GetEnvironmentsStateHelper(store);
+  const environmentManagerOneTime = GetEnvironmentsQueryManager(
     apiHelper,
-    GetEnvironmentsStateHelper(store)
+    environmentsStateHelper,
+  );
+
+  const environmentsManager = GetEnvironmentsContinuousQueryManager(
+    apiHelper,
+    scheduler,
+    GetEnvironmentsContinuousStateHelper(store),
   );
 
   const getServerStatusManager = GetServerStatusOneTimeQueryManager(
     apiHelper,
-    GetServerStatusStateHelper(store)
+    GetServerStatusStateHelper(store),
   );
 
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
       environmentsManager,
+      environmentManagerOneTime,
       getServerStatusManager,
-    ])
+    ]),
   );
 
   const environmentHandler = EnvironmentHandlerImpl(
     useLocation,
-    dependencies.routeManager
+    dependencies.routeManager,
   );
 
   const component = (
@@ -64,6 +78,8 @@ function setup() {
   };
 }
 
+jest.mock("@/UI/Utils/useFeatures");
+
 test("GIVEN the app THEN the navigation toggle button should be visible", async () => {
   fetchMock.mockResponse(JSON.stringify({}));
   const { component, apiHelper } = setup();
@@ -74,7 +90,7 @@ test("GIVEN the app THEN the navigation toggle button should be visible", async 
   });
 
   expect(
-    screen.getByRole("button", { name: "Global navigation" })
+    screen.getByRole("button", { name: "Global navigation" }),
   ).toBeVisible();
 });
 
@@ -89,6 +105,6 @@ test("GIVEN the app THEN the documentation link should be visible", async () => 
   });
 
   expect(
-    screen.getByRole("link", { name: "documentation link" })
+    screen.getByRole("link", { name: "documentation link" }),
   ).toBeVisible();
 });

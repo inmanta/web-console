@@ -1,6 +1,6 @@
 import React from "react";
 import { render, screen, act, cleanup } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { Either } from "@/Core";
 import {
@@ -27,17 +27,17 @@ function setup(
     server_compile: true,
     protected_environment: false,
     enable_lsm_expert_mode: false,
-  }
+  },
 ) {
   const apiHelper = new DeferredApiHelper();
   const authHelper = new KeycloakAuthHelper();
   const scheduler = new StaticScheduler();
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolver(store, apiHelper, scheduler, scheduler)
+    new QueryManagerResolver(store, apiHelper, scheduler, scheduler),
   );
   const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolver(store, apiHelper, authHelper)
+    new CommandManagerResolver(store, apiHelper, authHelper),
   );
 
   const environmentModifier = new MockEnvironmentModifier(details);
@@ -76,7 +76,7 @@ test("Given CatalogUpdateButton, when user clicks on button, it should display a
   });
 
   expect(
-    await screen.findByText(words("catalog.update.modal.title"))
+    await screen.findByText(words("catalog.update.modal.title")),
   ).toBeVisible();
 });
 
@@ -135,7 +135,7 @@ test("Given CatalogUpdateButton, when user confirms update, it should fire the A
   });
 
   expect(
-    await screen.findByText(words("catalog.update.success"))
+    await screen.findByText(words("catalog.update.success")),
   ).toBeVisible();
 });
 

@@ -55,12 +55,12 @@ const DiffView: React.FC<{
   const diffData = RemoteData.mapSuccess(
     (report) =>
       report.diff.filter((resource) => statuses.includes(resource.status)),
-    reportData
+    reportData,
   );
 
   return (
     <>
-      <PageSection variant="light" hasShadowBottom sticky="top">
+      <PageSection variant="light" hasShadowBottom>
         <DiffWizard.Controls
           data={diffData}
           refs={refs}

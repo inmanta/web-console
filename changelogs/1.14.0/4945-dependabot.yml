@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps): Bump qs from 6.11.1 to 6.11.2'
+destination-branches:
+- master
+- iso6
+sections: {}

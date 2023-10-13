@@ -5,7 +5,7 @@ import { CompareSelectionLabel } from "./CompareSelectionLabel";
 
 export const CompareSelectionWidget: React.FC = () => {
   const { compareSelection: selection, setCompareSelection } = useContext(
-    GetDesiredStatesContext
+    GetDesiredStatesContext,
   );
 
   const onDelete = () => {

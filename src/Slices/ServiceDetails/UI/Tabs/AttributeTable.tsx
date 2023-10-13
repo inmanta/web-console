@@ -30,7 +30,7 @@ export const AttributeTable: React.FunctionComponent<Props> = ({ service }) => {
             navigate(
               "ServiceDetails",
               { service: value },
-              `?env=${service?.environment}`
+              `?env=${service?.environment}`,
             ),
         }}
       >
@@ -40,7 +40,7 @@ export const AttributeTable: React.FunctionComponent<Props> = ({ service }) => {
               new PathHelper("$"),
               new TreeExpansionManager("$"),
               new CatalogAttributeHelper("$"),
-              service
+              service,
             )
           }
         />

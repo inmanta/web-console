@@ -12,6 +12,6 @@ export function GetDesiredStateResourceDetailsStateHelper(store: Store) {
         data: unwrapped,
       });
     },
-    (state, query) => state.versionedResourceDetails.listByResource[query.id]
+    (state, query) => state.versionedResourceDetails.listByResource[query.id],
   );
 }

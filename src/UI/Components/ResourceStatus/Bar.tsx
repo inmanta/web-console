@@ -1,4 +1,5 @@
 import React from "react";
+import styled from "styled-components";
 import { ParsedNumber, Resource } from "@/Core";
 import { words } from "@/UI";
 import { LegendBar, LegendItemDetails } from "@/UI/Components/LegendBar";
@@ -27,7 +28,7 @@ export const ResourceStatusBar: React.FC<Props> = ({
     .map((info) => infoToLegendItem(info, onClick));
 
   return (
-    <LegendBar
+    <StretchedLegendBar
       items={items}
       total={{
         format: (total) => `${done} / ${total}`,
@@ -38,7 +39,7 @@ export const ResourceStatusBar: React.FC<Props> = ({
 };
 
 function getResourcesInDoneState(
-  by_state: Record<string, ParsedNumber>
+  by_state: Record<string, ParsedNumber>,
 ): number {
   return Object.entries(by_state)
     .filter(([key]) => !Resource.TRANSIENT_STATES.includes(key))
@@ -48,7 +49,7 @@ function getResourcesInDoneState(
 
 export function infoToLegendItem(
   info: InfoWithTotal,
-  onClick: (ids: Resource.Status[]) => void
+  onClick: (ids: Resource.Status[]) => void,
 ): LegendItemDetails {
   return {
     id: info.keys[0],
@@ -61,7 +62,7 @@ export function infoToLegendItem(
 
 function addTotal(
   info: Info,
-  byState: Record<string, ParsedNumber>
+  byState: Record<string, ParsedNumber>,
 ): InfoWithTotal {
   return {
     ...info,
@@ -97,3 +98,8 @@ const infos: Info[] = groups.map((group) => ({
   keys: group,
   color: colorConfig[group[0]],
 }));
+
+const StretchedLegendBar = styled(LegendBar)`
+  flex-grow: 1;
+  margin-right: var(--pf-v5-global--spacer--lg);
+`;

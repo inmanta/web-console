@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { ToolbarFilter, Select } from "@patternfly/react-core";
+import { ToolbarFilter } from "@patternfly/react-core";
+import { Select } from "@patternfly/react-core/deprecated";
 import {
   CheckCircleIcon,
   CheckIcon,
@@ -7,7 +8,12 @@ import {
   TimesCircleIcon,
   TimesIcon,
 } from "@patternfly/react-icons";
-import { TableComposable, Tbody, Td, Tr } from "@patternfly/react-table";
+import {
+  Table /* data-codemods */,
+  Tbody,
+  Td,
+  Tr,
+} from "@patternfly/react-table";
 import { uniq } from "lodash-es";
 import styled from "styled-components";
 import { toggleValueInList } from "@/Core";
@@ -35,10 +41,10 @@ export const SelectIncludeExcludeFilter: React.FC<Props> = ({
   const onClick = (selection) => {
     const safeSelectedStates = ensureInvertedFilterIsNotPresent(
       selection,
-      selectedStates
+      selectedStates,
     );
     const updatedSelection = uniq(
-      toggleValueInList(selection, safeSelectedStates)
+      toggleValueInList(selection, safeSelectedStates),
     );
     update(updatedSelection);
     setIsFilterOpen(false);
@@ -57,7 +63,7 @@ export const SelectIncludeExcludeFilter: React.FC<Props> = ({
     >
       <Select
         aria-label={filterPropertyName}
-        onToggle={setIsFilterOpen}
+        onToggle={(_event, val) => setIsFilterOpen(val)}
         selections={selectedStates}
         isOpen={isFilterOpen}
         placeholderText={<Placeholder> {placeholder}</Placeholder>}
@@ -65,7 +71,7 @@ export const SelectIncludeExcludeFilter: React.FC<Props> = ({
         toggleAriaLabel={`${filterPropertyName}-toggle`}
         chipGroupProps={{ numChips: 0 }}
         customContent={
-          <TableComposable variant="compact">
+          <Table variant="compact">
             <Tbody>
               {possibleStates.map((state) => (
                 <IncludeExcludeOption
@@ -78,7 +84,7 @@ export const SelectIncludeExcludeFilter: React.FC<Props> = ({
                 />
               ))}
             </Tbody>
-          </TableComposable>
+          </Table>
         }
       />
     </ToolbarFilter>
@@ -105,9 +111,9 @@ const IncludeExcludeOption: React.FC<RowProps> = ({
       <MenuNameItem>{state}</MenuNameItem>
     </UnpaddedCell>
     <UnpaddedCell>
-      <span className="pf-c-select__menu-wrapper">
+      <span className="pf-v5-c-select__menu-wrapper">
         <ClickableMenuItem
-          className="pf-c-select__menu-item"
+          className="pf-v5-c-select__menu-item"
           onClick={onInclude}
           aria-label={`${state}-include-toggle`}
         >
@@ -124,9 +130,9 @@ const IncludeExcludeOption: React.FC<RowProps> = ({
       </span>
     </UnpaddedCell>
     <UnpaddedCell>
-      <div className="pf-c-select__menu-wrapper">
+      <div className="pf-v5-c-select__menu-wrapper">
         <ClickableMenuItem
-          className="pf-c-select__menu-item"
+          className="pf-v5-c-select__menu-item"
           onClick={onExclude}
           aria-label={`${state}-exclude-toggle`}
         >
@@ -147,7 +153,7 @@ const IncludeExcludeOption: React.FC<RowProps> = ({
 
 const ensureInvertedFilterIsNotPresent = (
   selection: string,
-  selectedStates: string[]
+  selectedStates: string[],
 ): string[] => {
   const invertedFilter = invertFilter(selection);
   if (selectedStates.includes(invertedFilter)) {
@@ -172,18 +178,18 @@ const UnpaddedCell = styled(Td)`
 `;
 
 const ActiveIncludeIcon = styled(CheckIcon)`
-  color: var(--pf-global--active-color--100);
+  color: var(--pf-v5-global--active-color--100);
 `;
 const InactiveIncludeIcon = styled(CheckCircleIcon)`
-  color: var(--pf-global--disabled-color--200);
+  color: var(--pf-v5-global--disabled-color--200);
 `;
 
 const ActiveExcludeIcon = styled(TimesIcon)`
-  color: var(--pf-global--danger-color--100);
+  color: var(--pf-v5-global--danger-color--100);
 `;
 
 const InactiveExcludeIcon = styled(TimesCircleIcon)`
-  color: var(--pf-global--disabled-color--200);
+  color: var(--pf-v5-global--disabled-color--200);
 `;
 
 const ClickableMenuItem = styled.span`
@@ -191,20 +197,20 @@ const ClickableMenuItem = styled.span`
 `;
 
 const Placeholder = styled.span`
-  color: var(--pf-global--Color--dark-200);
+  color: var(--pf-v5-global--Color--dark-200);
 `;
 
 const MenuNameItem = styled.span`
   position: relative;
-  width: var(--pf-c-select__menu-item--Width);
-  padding: var(--pf-c-select__menu-item--PaddingTop)
-    var(--pf-c-select__menu-item--PaddingRight)
-    var(--pf-c-select__menu-item--PaddingBottom)
-    var(--pf-c-select__menu-item--PaddingLeft);
-  font-size: var(--pf-c-select__menu-item--FontSize);
-  font-weight: var(--pf-c-select__menu-item--FontWeight);
-  line-height: var(--pf-c-select__menu-item--LineHeight);
-  color: var(--pf-c-select__menu-item--Color);
+  width: var(--pf-v5-c-select__menu-item--Width);
+  padding: var(--pf-v5-c-select__menu-item--PaddingTop)
+    var(--pf-v5-c-select__menu-item--PaddingRight)
+    var(--pf-v5-c-select__menu-item--PaddingBottom)
+    var(--pf-v5-c-select__menu-item--PaddingLeft);
+  font-size: var(--pf-v5-c-select__menu-item--FontSize);
+  font-weight: var(--pf-v5-c-select__menu-item--FontWeight);
+  line-height: var(--pf-v5-c-select__menu-item--LineHeight);
+  color: var(--pf-v5-c-select__menu-item--Color);
   text-align: left;
   white-space: nowrap;
   background-color: transparent;

@@ -27,11 +27,11 @@ export class EventsPageComposer {
     const eventsHelper = EventsQueryManager(
       apiHelper,
       EventsStateHelper(store),
-      scheduler
+      scheduler,
     );
 
     const queryResolver = new QueryResolverImpl(
-      new DynamicQueryManagerResolver([eventsHelper])
+      new DynamicQueryManagerResolver([eventsHelper]),
     );
 
     const component = (

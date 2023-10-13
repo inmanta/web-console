@@ -1,0 +1,7 @@
+change-type: patch
+description: 'Repair timepicker.'
+destination-branches:
+- master
+- iso6
+sections: 
+  bugfix: "{{description}}"

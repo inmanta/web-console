@@ -6,7 +6,7 @@ import { getUrl } from "./getUrl";
 export function ResourceDetailsQueryManager(
   apiHelper: ApiHelper,
   stateHelper: StateHelper<"GetResourceDetails">,
-  scheduler: Scheduler
+  scheduler: Scheduler,
 ) {
   return QueryManager.ContinuousWithEnv<"GetResourceDetails">(
     apiHelper,
@@ -16,6 +16,6 @@ export function ResourceDetailsQueryManager(
     ({ id }) => [id],
     "GetResourceDetails",
     getUrl,
-    identity
+    identity,
   );
 }

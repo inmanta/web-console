@@ -12,7 +12,7 @@ export const BooleanInput: React.FC<Props> = ({ info }) => (
   <Container>
     <Switch
       isChecked={info.value}
-      onChange={info.set}
+      onChange={(_event, value) => info.set(value)}
       aria-label={`Toggle-${info.name}`}
     />
     {info.isUpdateable(info) && <StyledWarning />}

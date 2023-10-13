@@ -73,13 +73,13 @@ if (Cypress.env("edition") === "iso") {
 
       cy.intercept(
         "GET",
-        "/lsm/v1/service_inventory/basic-service?include_deployment_progress=True&limit=20&&sort=created_at.desc"
+        "/lsm/v1/service_inventory/basic-service?include_deployment_progress=True&limit=20&&sort=created_at.desc",
       ).as("GetServiceInventory");
 
       cy.get('[aria-label="Environment card"]')
         .contains("lsm-frontend")
         .click();
-      cy.get(".pf-c-nav__item").contains("Service Catalog").click();
+      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
       cy.get("#basic-service").contains("Show inventory").click();
 
       // make sure the call to get inventory has been executed
@@ -113,7 +113,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="Environment card"]')
         .contains("lsm-frontend")
         .click();
-      cy.get(".pf-c-nav__item").contains("Service Catalog").click();
+      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
       cy.get("#basic-service").contains("Show inventory").click();
       cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
 
@@ -141,7 +141,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get("button").contains("Confirm").click();
 
       // Should show the chart
-      cy.get(".pf-c-chart").should("be.visible");
+      cy.get(".pf-v5-c-chart").should("be.visible");
 
       // Should show the ServiceInventory-Success Component.
       cy.get('[aria-label="ServiceInventory-Success"]').should("to.be.visible");
@@ -154,7 +154,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="Environment card"]')
         .contains("lsm-frontend")
         .click();
-      cy.get(".pf-c-nav__item").contains("Service Catalog").click();
+      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
       // Expect to find one badge on the basic-service row.
       cy.get("#basic-service")
         .get('[aria-label="Number of instances by label"]')
@@ -164,16 +164,12 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#expand-toggle0").click();
 
       // expect row to be expanded
-      cy.get(".pf-c-table__expandable-row-content").should("to.be.visible");
+      cy.get(".pf-v5-c-table__expandable-row-content").should("to.be.visible");
 
       // Expect to find status tab
-      cy.get(".pf-c-tabs__list li:first").should("have.class", "pf-m-current");
-
-      // Expect edit button to be disabled
-      cy.get(".pf-c-description-list").contains("Edit").should("be.disabled");
-      cy.get('[aria-label="LegendItem-lone"]').should(
-        "contain",
-        "No resources available yet"
+      cy.get(".pf-v5-c-tabs__list li:first").should(
+        "have.class",
+        "pf-m-current",
       );
 
       // check state is up now
@@ -181,8 +177,14 @@ if (Cypress.env("edition") === "iso") {
         .find('[data-label="State"]', { timeout: 60000 })
         .should("contain", "up");
 
+      cy.get('[aria-label="LegendItem-deployed"]').should("contain", "1");
+
       // click on edit button
-      cy.get(".pf-c-description-list").contains("Edit").click();
+      cy.get(".pf-v5-c-description-list__group")
+        .find("button")
+        .eq(2)
+        .last()
+        .click();
 
       // check if amount of fields is lesser than create amount.
       cy.get("form").find("input").should("have.length.of.at.most", 11);
@@ -197,7 +199,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get("button").contains("Confirm").click();
 
       // expect to land on Service Inventory page and to find attributes tab button
-      cy.get(".pf-c-tabs__list")
+      cy.get(".pf-v5-c-tabs__list")
         .contains("Attributes", { timeout: 20000 })
         .click();
 
@@ -218,11 +220,11 @@ if (Cypress.env("edition") === "iso") {
 
       // Add interceptions for the delete and get call to be able to catch responses later on.
       cy.intercept("DELETE", "/lsm/v1/service_inventory/basic-service/**").as(
-        "DeleteInstance"
+        "DeleteInstance",
       );
       cy.intercept(
         "GET",
-        "/lsm/v1/service_inventory/basic-service?include_deployment_progress=True&limit=20&&sort=created_at.desc"
+        "/lsm/v1/service_inventory/basic-service?include_deployment_progress=True&limit=20&&sort=created_at.desc",
       ).as("GetServiceInventory");
 
       cy.get('[aria-label="Environment card"]')
@@ -234,42 +236,42 @@ if (Cypress.env("edition") === "iso") {
       // TODO: Remove workaround for race condition.
       // Must be done after https://github.com/inmanta/inmanta-lsm/issues/1249
       // Linked to: https://github.com/orgs/inmanta/projects/1?pane=issue&itemId=25836961
-      cy.get(".pf-c-nav__link").contains("Compile Reports").click();
+      cy.get(".pf-v5-c-nav__link").contains("Compile Reports").click();
       cy.get("button", { timeout: 60000 }).contains("Recompile").click();
 
       // END WORKAROUND.
 
-      cy.get(".pf-c-nav__item").contains("Service Catalog").click();
+      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
       cy.get("#basic-service").contains("Show inventory").click();
 
       //check for instance state to change to up
       cy.get('[data-label="State"]')
-        .find(".pf-c-label.pf-m-green", { timeout: 60000 })
+        .find(".pf-v5-c-label.pf-m-green", { timeout: 60000 })
         .should("contain", "up");
 
       // expand first row
       cy.get("#expand-toggle0", { timeout: 20000 }).click();
 
       // delete but cancel deletion in modal
-      cy.get(".pf-c-description-list", { timeout: 60000 })
+      cy.get(".pf-v5-c-description-list", { timeout: 60000 })
         .find("button")
         .contains("Delete")
         .click();
-      cy.get(".pf-c-modal-box__title-text").should(
+      cy.get(".pf-v5-c-modal-box__title-text").should(
         "contain",
-        "Delete instance"
+        "Delete instance",
       );
-      cy.get(".pf-c-form__actions").contains("No").click();
+      cy.get(".pf-v5-c-form__actions").contains("No").click();
 
-      cy.get(".pf-c-description-list", { timeout: 60000 })
+      cy.get(".pf-v5-c-description-list", { timeout: 60000 })
         .find("button")
         .contains("Delete")
         .click();
-      cy.get(".pf-c-modal-box__title-text").should(
+      cy.get(".pf-v5-c-modal-box__title-text").should(
         "contain",
-        "Delete instance"
+        "Delete instance",
       );
-      cy.get(".pf-c-form__actions").contains("Yes").click();
+      cy.get(".pf-v5-c-form__actions").contains("Yes").click();
 
       // check response if instance has been deleted successfully.
       cy.wait("@DeleteInstance").its("response.statusCode").should("eq", 200);

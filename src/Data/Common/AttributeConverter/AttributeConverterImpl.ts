@@ -35,7 +35,7 @@ export class AttributeInputConverterImpl implements AttributeInputConverter {
     if (attributeModel.type.includes("bool")) return "bool";
     return this.matchTextInputWithPatternflyInput(
       attributeModel.name,
-      attributeModel.type
+      attributeModel.type,
     );
   }
 
@@ -50,7 +50,7 @@ export class AttributeInputConverterImpl implements AttributeInputConverter {
       | null
       | boolean
       | string[]
-      | { [x: string]: string | null | boolean | string[] }
+      | { [x: string]: string | null | boolean | string[] },
   ):
     | string
     | null
@@ -70,7 +70,7 @@ export class AttributeInputConverterImpl implements AttributeInputConverter {
 
   private matchTextInputWithPatternflyInput(
     attributeName: string,
-    type: string
+    type: string,
   ): TextInputTypes {
     if (isNumberType(type)) {
       return TextInputTypes.number;
@@ -91,7 +91,7 @@ export class AttributeInputConverterImpl implements AttributeInputConverter {
     instance: Pick<
       ServiceInstanceModel,
       "candidate_attributes" | "active_attributes"
-    >
+    >,
   ): InstanceAttributeModel | null {
     return instance.candidate_attributes &&
       !isEmpty(instance.candidate_attributes)
@@ -109,7 +109,7 @@ export class AttributeResultConverterImpl implements AttributeResultConverter {
   ensureAttributeType(
     /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any */
     value: any,
-    type: string
+    type: string,
   ): unknown {
     let parsedValue = value;
     try {
@@ -149,7 +149,7 @@ export class AttributeResultConverterImpl implements AttributeResultConverter {
    * @param attributes The results from a form
    */
   parseAttributesToCorrectTypes(
-    attributes: FormAttributeResult[]
+    attributes: FormAttributeResult[],
   ): InstanceAttributeModel {
     const attributesTypeCorrect = Object.assign(
       {},
@@ -157,10 +157,10 @@ export class AttributeResultConverterImpl implements AttributeResultConverter {
         return {
           [attribute.name]: this.ensureAttributeType(
             attribute.value,
-            attribute.type
+            attribute.type,
           ),
         };
-      })
+      }),
     );
     return attributesTypeCorrect;
   }
@@ -173,7 +173,7 @@ export class AttributeResultConverterImpl implements AttributeResultConverter {
    */
   calculateDiff(
     attributesAfterChanges: InstanceAttributeModel,
-    originalAttributes: InstanceAttributeModel | null
+    originalAttributes: InstanceAttributeModel | null,
   ): InstanceAttributeModel {
     if (!originalAttributes) {
       return attributesAfterChanges;
@@ -189,7 +189,7 @@ export class AttributeResultConverterImpl implements AttributeResultConverter {
           originalAttributes[attributeName] === undefined &&
           richDiff[attributeName] === null
         ) &&
-        !isEqual(richDiff[attributeName], originalAttributes[attributeName])
+        !isEqual(richDiff[attributeName], originalAttributes[attributeName]),
     );
     const updatedAttributes = {};
     for (const attribute of changedAttributeNames) {
@@ -200,7 +200,7 @@ export class AttributeResultConverterImpl implements AttributeResultConverter {
 }
 
 export function toOptionalBoolean(
-  value?: string | null | boolean
+  value?: string | null | boolean,
 ): boolean | null {
   if (typeof value === "boolean") {
     return value;

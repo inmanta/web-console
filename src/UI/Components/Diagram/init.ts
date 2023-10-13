@@ -1,11 +1,26 @@
 import { dia, shapes, ui } from "@inmanta/rappid";
-import { ServiceInstanceModel, ServiceModel } from "@/Core";
-import { appendInstance, showLinkTools } from "./actions";
+import { InstanceAttributeModel, ServiceModel } from "@/Core";
+import { InstanceWithReferences } from "@/Data/Managers/GetInstanceWithRelations/interface";
+import {
+  appendColumns,
+  appendEntity,
+  appendInstance,
+  showLinkTools,
+} from "./actions";
 import { anchorNamespace } from "./anchors";
+import createHalo from "./halo";
+import { checkIfConnectionIsAllowed } from "./helpers";
+import collapseButton from "./icons/collapse-icon.svg";
+import expandButton from "./icons/expand-icon.svg";
+import { ActionEnum, ConnectionRules, serializedCell } from "./interfaces";
 import { routerNamespace } from "./routers";
-import { EntityConnection } from "./shapes";
+import { EntityConnection, ServiceEntityBlock } from "./shapes";
 
-export default function diagramInit(canvas) {
+export default function diagramInit(
+  canvas,
+  connectionRules: ConnectionRules,
+  updateInstancesToSend: (cell: ServiceEntityBlock, action: ActionEnum) => void,
+): DiagramHandlers {
   /**
    * https://resources.jointjs.com/docs/jointjs/v3.6/joint.html#dia.Graph
    */
@@ -18,7 +33,7 @@ export default function diagramInit(canvas) {
     model: graph,
     width: 1000,
     height: 1000,
-    gridSize: 20,
+    gridSize: 1,
     interactive: true,
     defaultConnector: { name: "rounded" },
     async: true,
@@ -31,7 +46,7 @@ export default function diagramInit(canvas) {
     defaultAnchor: { name: "customAnchor" },
     snapLinks: true,
     linkPinning: false,
-    magnetThreshold: "onleave",
+    magnetThreshold: 0,
     highlighting: {
       connecting: {
         name: "addClass",
@@ -41,8 +56,31 @@ export default function diagramInit(canvas) {
       },
     },
     defaultLink: () => new EntityConnection(),
-    validateConnection: (_srcView, srcMagnet, _tgtView, tgtMagnet) =>
-      srcMagnet !== tgtMagnet,
+    validateConnection: (srcView, srcMagnet, tgtView, tgtMagnet) => {
+      const baseValidators =
+        srcMagnet !== tgtMagnet && srcView.cid !== tgtView.cid;
+
+      const srcViewAsElement = graph
+        .getElements()
+        .find((element) => element.cid === srcView.model.cid);
+
+      //find srcView as Element to get Neighbors and check if it's already connected to the target
+      if (srcViewAsElement) {
+        const connectedElements = graph.getNeighbors(srcViewAsElement);
+        const isConnected = connectedElements.find(
+          (connectedElement) => connectedElement.cid === tgtView.model.cid,
+        );
+        const isAllowed = checkIfConnectionIsAllowed(
+          graph,
+          tgtView,
+          srcView,
+          connectionRules,
+        );
+
+        return isConnected === undefined && isAllowed && baseValidators;
+      }
+      return baseValidators;
+    },
   });
 
   /**
@@ -51,8 +89,8 @@ export default function diagramInit(canvas) {
   const scroller = new ui.PaperScroller({
     paper,
     cursor: "grab",
-    baseWidth: 100,
-    baseHeight: 100,
+    baseWidth: 1000,
+    baseHeight: 1000,
     inertia: { friction: 0.8 },
     autoResizePaper: true,
     contentOptions: function () {
@@ -64,16 +102,139 @@ export default function diagramInit(canvas) {
       };
     },
   });
+
   canvas.current.appendChild(scroller.el);
   scroller.render().center();
   scroller.centerContent();
 
+  new ui.Tooltip({
+    rootTarget: ".canvas",
+    target: "[data-tooltip]",
+    padding: 20,
+  });
+
+  paper.on(
+    "element:showDict",
+    (_elementView: dia.ElementView, event: dia.Event) => {
+      document.dispatchEvent(
+        new CustomEvent("openDictsModal", {
+          detail: event.target.parentElement.attributes.dict.value,
+        }),
+      );
+    },
+  );
+
+  paper.on(
+    "element:toggleButton:pointerdown",
+    (elementView: dia.ElementView, event: dia.Event) => {
+      event.preventDefault();
+      const elementAsShape = elementView.model as ServiceEntityBlock;
+
+      const isCollapsed = elementAsShape.get("isCollapsed");
+      const originalAttrs = elementAsShape.get("dataToDisplay");
+
+      elementAsShape.appendColumns(
+        isCollapsed ? originalAttrs : originalAttrs.slice(0, 4),
+        false,
+      );
+      elementAsShape.attr(
+        "toggleButton/xlink:href",
+        isCollapsed ? collapseButton : expandButton,
+      );
+
+      const bbox = elementAsShape.getBBox();
+      elementAsShape.attr("toggleButton/y", bbox.height - 24);
+      elementAsShape.attr("spacer/y", bbox.height - 33);
+
+      elementAsShape.set("isCollapsed", !isCollapsed);
+    },
+  );
+
+  paper.on("cell:pointerup", function (cellView) {
+    // We don't want a Halo for links.
+    if (cellView.model instanceof dia.Link) return;
+
+    const halo = createHalo(
+      graph,
+      paper,
+      cellView,
+      connectionRules,
+      updateInstancesToSend,
+    );
+
+    halo.render();
+  });
+
   paper.on("link:mouseenter", (linkView: dia.LinkView) => {
-    showLinkTools(linkView);
+    showLinkTools(graph, linkView, updateInstancesToSend);
   });
 
   paper.on("link:mouseleave", (linkView: dia.LinkView) => {
     linkView.removeTools();
+  });
+
+  paper.on("link:connect", (linkView: dia.LinkView) => {
+    //only id values are stored in the linkView
+    const source = linkView.model.source();
+    const target = linkView.model.target();
+    let didSourceChanged = false;
+    let didTargetChanged = false;
+
+    const sourceCell = graph.getCell(
+      source.id as dia.Cell.ID,
+    ) as ServiceEntityBlock;
+    const targetCell = graph.getCell(
+      target.id as dia.Cell.ID,
+    ) as ServiceEntityBlock;
+
+    if (
+      sourceCell.get("isEmbedded") &&
+      sourceCell.get("isEmbeddedTo") !== null
+    ) {
+      sourceCell.set("isEmbeddedTo", targetCell.id);
+      didSourceChanged = true;
+    }
+    if (
+      targetCell.get("isEmbedded") &&
+      targetCell.get("isEmbeddedTo") !== null
+    ) {
+      targetCell.set("isEmbeddedTo", sourceCell.id);
+      didTargetChanged = true;
+    }
+
+    const sourceRelations = sourceCell.getRelations();
+    const targetRelations = targetCell.getRelations();
+    const targetName = targetCell.getName();
+    const sourceName = sourceCell.getName();
+
+    if (sourceRelations) {
+      const doesSourceHaveRule = connectionRules[sourceName].find(
+        (rule) => rule.name === targetName,
+      );
+
+      if (doesSourceHaveRule) {
+        sourceCell.addRelation(targetCell.id as string, targetName);
+        didSourceChanged = true;
+      }
+    }
+
+    if (targetRelations) {
+      const doesTargetHaveRule = connectionRules[targetName].find(
+        (rule) => rule.name === sourceName,
+      );
+
+      if (doesTargetHaveRule) {
+        targetCell.addRelation(sourceCell.id as string, sourceName);
+        didTargetChanged = true;
+      }
+    }
+
+    if (didSourceChanged) {
+      updateInstancesToSend(sourceCell, ActionEnum.UPDATE);
+    }
+    if (didTargetChanged) {
+      updateInstancesToSend(targetCell, ActionEnum.UPDATE);
+    }
   });
 
   paper.on("blank:pointerdown", (evt: dia.Event) => scroller.startPanning(evt));
@@ -83,7 +244,7 @@ export default function diagramInit(canvas) {
     (evt: dia.Event, ox: number, oy: number, delta: number) => {
       evt.preventDefault();
       zoom(ox, oy, delta);
-    }
+    },
   );
 
   paper.on(
@@ -91,7 +252,7 @@ export default function diagramInit(canvas) {
     (_, evt: dia.Event, ox: number, oy: number, delta: number) => {
       evt.preventDefault();
       zoom(ox, oy, delta);
-    }
+    },
   );
 
   /**
@@ -101,7 +262,13 @@ export default function diagramInit(canvas) {
    * @param {number} delta - the value that dictates how big the zoom has to be.
    */
   function zoom(x: number, y: number, delta: number) {
-    scroller.zoom(delta * 0.2, { min: 0.4, max: 1.2, grid: 0.2, ox: x, oy: y });
+    scroller.zoom(delta * 0.05, {
+      min: 0.4,
+      max: 1.2,
+      grid: 0.05,
+      ox: x,
+      oy: y,
+    });
   }
 
   paper.unfreeze();
@@ -110,15 +277,72 @@ export default function diagramInit(canvas) {
       scroller.remove();
       paper.remove();
     },
-    addInstance: (instance: ServiceInstanceModel, service: ServiceModel) => {
-      const instanceCoordinates = appendInstance(
+
+    addInstance: (
+      instance: InstanceWithReferences,
+      services: ServiceModel[],
+      isMainInstance: boolean,
+    ) => {
+      const appendedInstance = appendInstance(
         paper,
         graph,
         instance,
-        service
+        services,
+        isMainInstance,
       );
+      const { x, y } = appendedInstance.getBBox();
+      scroller.center(x, y + 200);
 
-      scroller.center(instanceCoordinates.x, instanceCoordinates.y + 200);
+      const jsonGraph = graph.toJSON();
+      return jsonGraph.cells as serializedCell[];
+    },
+
+    addEntity: (instance, service, addingCoreInstance, isEmbedded) => {
+      const shape = appendEntity(
+        graph,
+        service,
+        instance,
+        addingCoreInstance,
+        isEmbedded,
+      );
+      const shapeCoordinates = shape.getBBox();
+      scroller.center(shapeCoordinates.x, shapeCoordinates.y + 200);
+      return shape;
+    },
+    editEntity: (cellView, serviceModel, attributeValues) => {
+      //line below resolves issue that appendColumns did update values in the model, but visual representation wasn't updated
+      cellView.model.set("items", []);
+      appendColumns(
+        cellView.model as ServiceEntityBlock,
+        serviceModel.attributes.map((attr) => attr.name),
+        attributeValues,
+        false,
+      );
+      return cellView.model as ServiceEntityBlock;
+    },
+    zoom: (delta) => {
+      scroller.zoom(0.05 * delta, { min: 0.4, max: 1.2, grid: 0.05 });
     },
   };
+}
+
+export interface DiagramHandlers {
+  removeCanvas: () => void;
+  addInstance: (
+    instance: InstanceWithReferences,
+    services: ServiceModel[],
+    isMainInstance: boolean,
+  ) => serializedCell[];
+  addEntity: (
+    entity: InstanceAttributeModel,
+    service: ServiceModel,
+    addingCoreInstance: boolean,
+    isEmbedded: boolean,
+  ) => ServiceEntityBlock;
+  editEntity: (
+    cellView: dia.CellView,
+    serviceModel: ServiceModel,
+    attributeValues: InstanceAttributeModel,
+  ) => ServiceEntityBlock;
+  zoom: (delta: 1 | -1) => void;
 }

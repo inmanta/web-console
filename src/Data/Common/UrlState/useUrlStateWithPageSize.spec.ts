@@ -11,8 +11,8 @@ test.each`
     const [value] = handleUrlStateWithPageSize(
       { route: "Inventory" },
       { pathname: "", search, hash: "" },
-      () => undefined
+      () => undefined,
     );
     expect(value).toEqual(expectedValue);
-  }
+  },
 );

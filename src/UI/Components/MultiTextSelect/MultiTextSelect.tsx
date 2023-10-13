@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { Select, SelectOption } from "@patternfly/react-core";
+import { Select, SelectOption } from "@patternfly/react-core/deprecated";
 
 interface Props {
   selected: string[];
   setSelected: (
-    selected: string[] | ((prevState: string[]) => string[])
+    selected: string[] | ((prevState: string[]) => string[]),
   ) => void;
   options: string[];
   isDisabled?: boolean;
@@ -36,7 +36,7 @@ export const MultiTextSelect: React.FC<Props> = ({
   return (
     <Select
       variant="checkbox"
-      onToggle={onToggle}
+      onToggle={(_event, isExpanded) => onToggle(isExpanded)}
       onSelect={onSelect}
       selections={selected}
       isOpen={isOpen}

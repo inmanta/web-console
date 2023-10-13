@@ -1,0 +1,6 @@
+change-type: minor
+description: "Add support for Dict values in expert mode "
+issue-nr: 4857
+destination-branches:
+  - master
+  - iso6

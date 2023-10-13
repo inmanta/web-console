@@ -36,13 +36,13 @@ export const InstanceCellButton: React.FC<Props> = ({
                     service_identity_attribute_value
                       ? service_identity_attribute_value
                       : id,
-                    serviceName
+                    serviceName,
                   )
               : () =>
                   onClick(
                     service_identity_attribute_value
                       ? service_identity_attribute_value
-                      : id
+                      : id,
                   )
           }
         >
@@ -52,6 +52,6 @@ export const InstanceCellButton: React.FC<Props> = ({
         </Button>
       ),
     },
-    data
+    data,
   );
 };

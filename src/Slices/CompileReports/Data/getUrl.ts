@@ -4,13 +4,13 @@ import { CompileStatus, Query, RangeOperator } from "@/Core";
 
 export function getUrl(
   { pageSize, sort, filter }: Query.SubQuery<"GetCompileReports">,
-  timezone = moment.tz.guess()
+  timezone = moment.tz.guess(),
 ): string {
   const serializedFilters =
     filter && Object.keys(filter).length > 0
       ? `&${qs.stringify(
           { filter: filterToParam(filter, timezone) },
-          { allowDots: true, arrayFormat: "repeat" }
+          { allowDots: true, arrayFormat: "repeat" },
         )}`
       : "";
   const filterParam = serializedFilters.length > 1 ? serializedFilters : "";
@@ -25,11 +25,11 @@ const filterToParam = (filter: Filter, timezone: string) => {
   const serializedTimestampOperatorFilters = requested?.map(
     (timestampWithOperator) =>
       `${RangeOperator.serializeOperator(
-        timestampWithOperator.operator
+        timestampWithOperator.operator,
       )}:${moment
         .tz(timestampWithOperator.date, timezone)
         .utc()
-        .format("YYYY-MM-DD+HH:mm:ss")}`
+        .format("YYYY-MM-DD+HH:mm:ss")}`,
   );
 
   const statusFilter = translateStatusFilter(status);

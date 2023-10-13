@@ -39,7 +39,7 @@ export const EnvironmentControls: React.FC = () => {
           return null;
         },
       },
-      data
+      data,
     );
   }, [data]);
   return RemoteData.fold(
@@ -72,7 +72,7 @@ export const EnvironmentControls: React.FC = () => {
         );
       },
     },
-    data
+    data,
   );
 };
 

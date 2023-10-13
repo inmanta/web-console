@@ -22,7 +22,7 @@ export const formatLegendData = (metrics, isStacked) => {
       {
         childName: metrics.name,
         name: words(`dashboard.${metrics.name as MetricName}.label.x`).split(
-          "["
+          "[",
         )[0],
         symbol: {
           fill:
@@ -36,7 +36,7 @@ export const formatLegendData = (metrics, isStacked) => {
 };
 export const formatMetricsToStacked = (
   metrics: StackedMetric | Metric,
-  isStacked: boolean
+  isStacked: boolean,
 ) => {
   let tempCharState: Metric[] = [];
   let max = 0;
@@ -56,7 +56,7 @@ export const formatMetricsToStacked = (
         keys.forEach((key, index) => {
           tempMax += object === null ? 0 : Math.round(object[key]);
           tempCharState[index].data.push(
-            object === null ? null : Math.round(object[key])
+            object === null ? null : Math.round(object[key]),
           );
         });
         if (max < tempMax) {
@@ -124,8 +124,8 @@ export const interpolateMetrics = (metrics: (number | null)[]) => {
           linearInterpolation(
             newMetric[index - 1], //previous non-nullish value
             metrics[index + nextNumber], // next non-nullish number,
-            1 / (nextNumber + 1) //fraction of a distance from value before to nextNumber value
-          )
+            1 / (nextNumber + 1), //fraction of a distance from value before to nextNumber value
+          ),
         );
       }
     } else {

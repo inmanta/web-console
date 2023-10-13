@@ -48,7 +48,7 @@ export const Tabs: React.FC<Props> = ({ activeTab, setActiveTab }) => {
       {tokenTabDisabled && (
         <Tooltip
           content={words("settings.tabs.token.disabledInfo")}
-          reference={tokenTooltipRef}
+          triggerRef={tokenTooltipRef}
         />
       )}
     </>
@@ -71,7 +71,7 @@ const configurationTab = (environmentId: string): TabDescriptor<TabKey> => ({
 
 const tokensTab = (
   isDisabled: boolean,
-  ref: React.MutableRefObject<HTMLElement | undefined>
+  ref: React.MutableRefObject<HTMLElement | undefined>,
 ): TabDescriptor<TabKey> => ({
   id: TabKey.Tokens,
   title: words("settings.tabs.tokens"),

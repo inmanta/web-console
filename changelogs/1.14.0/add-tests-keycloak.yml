@@ -1,0 +1,8 @@
+change-type: patch
+description: 'Add e2e test for keycloak authentication'
+issue-nr: 4868
+destination-branches:
+- master
+- iso6
+sections: 
+  minor-improvement: "{{description}}"

@@ -14,7 +14,7 @@ describe("BooleanFormInput", () => {
         isOptional={false}
         description={"This is a bool parameter"}
         handleInputChange={handleInputChange}
-      />
+      />,
     );
     const radioButtons = await screen.findAllByRole("radio");
     expect(radioButtons.length).toEqual(2);
@@ -27,7 +27,7 @@ describe("BooleanFormInput", () => {
         isOptional={true}
         description={"This is a bool parameter"}
         handleInputChange={handleInputChange}
-      />
+      />,
     );
     const radioButtons = await screen.findAllByRole("radio");
     expect(radioButtons.length).toEqual(3);

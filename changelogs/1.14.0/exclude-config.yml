@@ -1,0 +1,5 @@
+change-type: patch
+description: 'Exclude the config file from the production output.'
+destination-branches:
+- master
+- iso6

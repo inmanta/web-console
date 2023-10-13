@@ -139,12 +139,12 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
 
   function getUrl<K extends RouteKind>(
     kind: K,
-    params: RouteParams<K>
+    params: RouteParams<K>,
   ): string {
     const route = getRoute(kind);
     return generatePath(
       route.path,
-      params === undefined ? params : encodeParams(params)
+      params === undefined ? params : encodeParams(params),
     );
   }
 
@@ -158,7 +158,7 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
   }
 
   function getParamsFromUrl(
-    uri: string
+    uri: string,
   ): RouteKindWithId<"CompileDetails"> | undefined {
     if (uri.length <= 0) return undefined;
     const pattern = "/api/v2/compilereport/:id";
@@ -178,7 +178,7 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
       matchPath(route.path, url),
     ]);
     const routeWithMatch = routeMatchPairs.find(
-      (pair): pair is [Route, PathMatch] => pair[1] !== null
+      (pair): pair is [Route, PathMatch] => pair[1] !== null,
     );
     if (typeof routeWithMatch === "undefined") return undefined;
     const [route, match] = routeWithMatch;
@@ -196,7 +196,7 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
     const route = getRoute(kind);
     const path = generatePath(
       route.path,
-      params === undefined ? params : encodeParams(params)
+      params === undefined ? params : encodeParams(params),
     );
     return `${path}${search}`;
   }

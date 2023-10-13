@@ -48,7 +48,7 @@ export const FieldInput: React.FC<Props> = ({
     (value) => {
       getUpdate(makePath(path, field.name), value);
     },
-    [getUpdate, path, field.name]
+    [getUpdate, path, field.name],
   );
   switch (field.kind) {
     case "Boolean":
@@ -58,7 +58,7 @@ export const FieldInput: React.FC<Props> = ({
           attributeName={field.name}
           isOptional={field.isOptional}
           isChecked={get(formState, makePath(path, field.name)) as boolean}
-          handleInputChange={(value) =>
+          handleInputChange={(value, _event) =>
             getUpdate(makePath(path, field.name), toOptionalBoolean(value))
           }
           description={field.description}
@@ -73,7 +73,7 @@ export const FieldInput: React.FC<Props> = ({
           aria-label={`BooleanToggleInput-${field.name}`}
           attributeName={field.name}
           isChecked={get(formState, makePath(path, field.name)) as boolean}
-          handleInputChange={(value) =>
+          handleInputChange={(value, _event) =>
             getUpdate(makePath(path, field.name), toOptionalBoolean(value))
           }
           description={field.description}
@@ -100,7 +100,7 @@ export const FieldInput: React.FC<Props> = ({
               undefined
           }
           type={field.inputType}
-          handleInputChange={(value) =>
+          handleInputChange={(value, _event) =>
             getUpdate(makePath(path, field.name), value)
           }
           placeholder={getPlaceholderForType(field.type)}
@@ -121,7 +121,7 @@ export const FieldInput: React.FC<Props> = ({
             get(originalState, makePath(path, field.name)) !== undefined
           }
           type={field.inputType}
-          handleInputChange={(value) =>
+          handleInputChange={(value, _event) =>
             getUpdate(makePath(path, field.name), value)
           }
           placeholder={getPlaceholderForType(field.type)}
@@ -143,7 +143,7 @@ export const FieldInput: React.FC<Props> = ({
             get(originalState, makePath(path, field.name)) !== undefined
           }
           type={field.inputType}
-          handleInputChange={(value) =>
+          handleInputChange={(value, _event) =>
             getUpdate(makePath(path, field.name), value)
           }
           placeholder={getPlaceholderForType(field.type)}
@@ -247,7 +247,7 @@ const getPlaceholderForType = (typeName: string): string | undefined => {
 const getTypeHintForType = (typeName: string): string | undefined => {
   if (typeName.endsWith("[]")) {
     return words("inventory.form.typeHint.list")(
-      typeName.substring(0, typeName.indexOf("["))
+      typeName.substring(0, typeName.indexOf("[")),
     );
   } else if (typeName.includes("dict")) {
     return words("inventory.form.typeHint.dict");
@@ -271,7 +271,7 @@ const NestedFieldInput: React.FC<NestedProps> = ({
   path,
 }) => {
   const [showList, setShowList] = useState(
-    !field.isOptional || formState[field.name] !== null
+    !field.isOptional || formState[field.name] !== null,
   );
   const onAdd = () => {
     setShowList(true);
@@ -404,7 +404,7 @@ const DictListFieldInput: React.FC<DictListProps> = ({
         <StyledFormFieldGroupExpandable
           aria-label={`DictListFieldInputItem-${makePath(
             path,
-            `${field.name}.${index + 1}`
+            `${field.name}.${index + 1}`,
           )}`}
           key={makePath(path, `${field.name}.${index}`)}
           header={
@@ -413,7 +413,7 @@ const DictListFieldInput: React.FC<DictListProps> = ({
                 text: index + 1,
                 id: `DictListFieldInputItem-${makePath(
                   path,
-                  `${field.name}.${index + 1}`
+                  `${field.name}.${index + 1}`,
                 )}`,
               }}
               actions={

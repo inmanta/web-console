@@ -1,6 +1,6 @@
 import React from "react";
 import { act, render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import {
   DictionaryImpl,
@@ -32,12 +32,12 @@ const setup = () => {
       effect: jest.fn(() => task.effect()),
       update: jest.fn((result) => task.update(result)),
     }),
-    tasks
+    tasks,
   );
   const queryManager = ServiceInstancesQueryManager(
     apiHelper,
     stateHelper,
-    scheduler
+    scheduler,
   );
 
   const Component: React.FC = () => {

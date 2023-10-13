@@ -28,6 +28,7 @@ export * from "./MultiTextSelect";
 export * from "./ResourceTable";
 export * from "./ServiceInstanceForm";
 export * from "./ServiceProvider";
+export * from "./ServicesProvider";
 export * from "./SettingsList";
 export * from "./Toggle";
 export * from "./TreeTable";

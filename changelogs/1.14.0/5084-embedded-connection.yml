@@ -1,0 +1,6 @@
+change-type: minor
+description: "Add logic that will handle highlighting available connection for embedded entities"
+issue-nr: 5084
+destination-branches:
+  - master
+  - iso6

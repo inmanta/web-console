@@ -14,10 +14,10 @@ export const ColumnHeaders: React.FC<Props> = ({ columns, emptyColumns }) => {
   const columnExpansionHelper = new ColumnExpansionHelper(
     60,
     columns.length,
-    10
+    10,
   );
   const [columnWidths, setColumnWidths] = useState<Record<string, number>>(
-    columnExpansionHelper.getDefaultState(columns, emptyColumns)
+    columnExpansionHelper.getDefaultState(columns, emptyColumns),
   );
   return (
     <>
@@ -31,16 +31,16 @@ export const ColumnHeaders: React.FC<Props> = ({ columns, emptyColumns }) => {
             columnExpansionHelper.isExpanded(columnWidths[column]) &&
             !isEqual(
               columnWidths,
-              columnExpansionHelper.getDefaultState(columns, emptyColumns)
+              columnExpansionHelper.getDefaultState(columns, emptyColumns),
             )
           }
           onClick={() =>
             columnExpansionHelper.isExpanded(columnWidths[column])
               ? setColumnWidths(
-                  columnExpansionHelper.getDefaultState(columns, emptyColumns)
+                  columnExpansionHelper.getDefaultState(columns, emptyColumns),
                 )
               : setColumnWidths(
-                  columnExpansionHelper.expandColumn(columnWidths, column)
+                  columnExpansionHelper.expandColumn(columnWidths, column),
                 )
           }
         />
@@ -64,11 +64,11 @@ const ColumnHeader: React.FC<SingleHeaderProps> = ({
   isCollapsible,
   onClick,
 }) => (
-  <StyledHeader key={column} $width={width} className="pf-c-table__sort">
-    <button onClick={onClick} className="pf-c-table__button">
-      <div className="pf-c-table__button-content">
-        <span className="pf-c-table__text">{column}</span>
-        <span className="pf-c-table__sort-indicator">
+  <StyledHeader key={column} $width={width} className="pf-v5-c-table__sort">
+    <button onClick={onClick} className="pf-v5-c-table__button">
+      <div className="pf-v5-c-table__button-content">
+        <span className="pf-v5-c-table__text">{column}</span>
+        <span className="pf-v5-c-table__sort-indicator">
           {isExpandable && <ArrowsAltHIcon />}
           {isCollapsible && <HorizontalCompressIcon />}
         </span>

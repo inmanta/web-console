@@ -12,7 +12,7 @@ export const tablePresenter = new InventoryTablePresenter(
   new AttributesPresenter(),
   new DummyActionPresenter(),
   new DummyExpertActionPresenter(),
-  new DummyStatePresenter()
+  new DummyStatePresenter(),
 );
 
 export const tablePresenterWithIdentity = new InventoryTablePresenter(
@@ -22,5 +22,5 @@ export const tablePresenterWithIdentity = new InventoryTablePresenter(
   new DummyExpertActionPresenter(),
   new DummyStatePresenter(),
   "order_id",
-  "Order ID"
+  "Order ID",
 );

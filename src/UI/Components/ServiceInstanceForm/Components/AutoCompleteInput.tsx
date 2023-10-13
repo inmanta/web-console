@@ -1,10 +1,15 @@
 import React, { useState } from "react";
 import {
   FormGroup,
+  FormHelperText,
+  HelperText,
+  HelperTextItem,
+} from "@patternfly/react-core";
+import {
   Select,
   SelectOption,
   SelectVariant,
-} from "@patternfly/react-core";
+} from "@patternfly/react-core/deprecated";
 import { words } from "@/UI/words";
 
 interface Option {
@@ -58,7 +63,6 @@ export const AutoCompleteInput: React.FC<Props> = ({
       isRequired={!isOptional}
       fieldId={attributeName}
       label={`An instance of ${serviceEntity}`}
-      helperText={description}
     >
       <Select
         aria-label={`${attributeName}-select-input`}
@@ -77,6 +81,11 @@ export const AutoCompleteInput: React.FC<Props> = ({
       >
         {selectOptions}
       </Select>
+      <FormHelperText>
+        <HelperText>
+          <HelperTextItem>{description}</HelperTextItem>
+        </HelperText>
+      </FormHelperText>
     </FormGroup>
   );
 };

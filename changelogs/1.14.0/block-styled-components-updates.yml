@@ -1,0 +1,5 @@
+change-type: minor
+description: "Block major upgrades to styled-components v5"
+destination-branches:
+  - master
+  - iso6

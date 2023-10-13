@@ -5,6 +5,6 @@ export interface AttributeHelper<Kind extends AttributeTree> {
   getPaths(attributes: Kind["source"]): string[];
 
   getMultiAttributeNodes(
-    attributes: Kind["source"]
+    attributes: Kind["source"],
   ): MultiAttributeNodeDict<Kind["target"]>;
 }

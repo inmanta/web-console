@@ -17,6 +17,6 @@ export function GetServerStatusStateHelper(store: Store) {
       }
       store.dispatch.serverStatus.setData(newStatus);
     },
-    (state) => state.serverStatus.status
+    (state) => state.serverStatus.status,
   );
 }

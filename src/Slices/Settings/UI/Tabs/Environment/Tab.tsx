@@ -40,7 +40,7 @@ export const Tab: React.FC = () => {
 
 const addProjectName = (
   env: EnvironmentDetails,
-  projects: ProjectModel[]
+  projects: ProjectModel[],
 ): FlatEnvironment => {
   const match = projects.find((p) => p.id === env.project_id);
   if (!match) return { ...env, projectName: "" };

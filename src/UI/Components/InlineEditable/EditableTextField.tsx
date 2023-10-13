@@ -30,7 +30,7 @@ const EditView: EditViewComponent = ({ value, onChange, onSubmit, label }) => (
   <TextInput
     aria-label={`${label}-input`}
     value={value}
-    onChange={onChange}
+    onChange={(_event, value) => onChange(value)}
     onKeyDown={(event) => {
       if (event.key && event.key !== "Enter") return;
       onSubmit();

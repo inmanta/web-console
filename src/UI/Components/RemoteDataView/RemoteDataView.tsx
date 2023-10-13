@@ -25,6 +25,7 @@ export const RemoteDataView = <T,>({
       ),
       failed: (error) => (
         <ErrorView
+          data-testid="ErrorView"
           title={words("error")}
           message={words("error.general")(error)}
           aria-label={label ? `${label}-Failed` : undefined}
@@ -33,6 +34,6 @@ export const RemoteDataView = <T,>({
       ),
       success: SuccessView,
     },
-    data
+    data,
   );
 };

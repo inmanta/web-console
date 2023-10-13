@@ -30,8 +30,8 @@ const StyledImage = styled.img`
 
 const FillerImage = styled.div`
   ${dimensions};
-  background-color: var(--pf-global--BackgroundColor--200);
-  color: var(--pf-global--Color--100);
+  background-color: var(--pf-v5-global--BackgroundColor--200);
+  color: var(--pf-v5-global--Color--100);
   text-align: center;
   line-height: 96px;
   font-size: 12px;

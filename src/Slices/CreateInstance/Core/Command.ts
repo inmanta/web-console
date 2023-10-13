@@ -17,6 +17,6 @@ export interface Manifest {
   command: Command;
   trigger: (
     fields: Field[],
-    formState: InstanceAttributeModel
+    formState: InstanceAttributeModel,
   ) => Promise<Either.Type<string, { data: ServiceInstanceModel }>>;
 }

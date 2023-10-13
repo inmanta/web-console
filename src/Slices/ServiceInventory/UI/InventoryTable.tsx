@@ -1,6 +1,6 @@
 import React from "react";
 import {
-  TableComposable,
+  Table /* data-codemods */,
   Thead,
   Tr,
   Th,
@@ -60,7 +60,7 @@ export const InventoryTable: React.FC<Props> = ({
   });
 
   return (
-    <TableComposable {...props}>
+    <Table {...props}>
       <Thead>
         <Tr>
           <Th />
@@ -88,7 +88,7 @@ export const InventoryTable: React.FC<Props> = ({
           service={service}
         />
       ))}
-    </TableComposable>
+    </Table>
   );
 };
 

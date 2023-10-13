@@ -23,5 +23,5 @@ root.render(
         </Injector>
       </CustomRouter>
     </StoreProvider>
-  </ErrorBoundary>
+  </ErrorBoundary>,
 );

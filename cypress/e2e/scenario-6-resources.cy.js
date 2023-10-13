@@ -78,12 +78,12 @@ describe("Scenario 6 : Resources", () => {
     cy.get('[aria-label="Environment card"]').contains(PROJECT).click();
 
     // Go to Resources page by clicking on navbar
-    cy.get(".pf-c-nav__link").contains("Resources").click();
+    cy.get(".pf-v5-c-nav__link").contains("Resources").click();
 
     // Expect 0/0 resources to be visible
     cy.get('[aria-label="Deployment state summary"]').should(
       "contain",
-      isIso ? "0 / 0" : "5 / 5"
+      isIso ? "0 / 0" : "5 / 5",
     );
     // Expect table to be empty in case of ISO project
     isIso &&
@@ -98,7 +98,7 @@ describe("Scenario 6 : Resources", () => {
       cy.get('[aria-label="Environment card"]').contains(PROJECT).click();
 
       // Go to Service Catalog
-      cy.get(".pf-c-nav__link").contains("Service Catalog").click();
+      cy.get(".pf-v5-c-nav__link").contains("Service Catalog").click();
 
       // Select Show Inventory on basic-service
       cy.get("#basic-service").contains("Show inventory").click();
@@ -117,17 +117,17 @@ describe("Scenario 6 : Resources", () => {
       cy.get("#name").type("basic-service");
       cy.get("button").contains("Confirm").click();
 
-      cy.get(".pf-c-chart").should("be.visible");
+      cy.get(".pf-v5-c-chart").should("be.visible");
 
       // Go back to Resources page
-      cy.get(".pf-c-nav__link").contains("Resources").click();
+      cy.get(".pf-v5-c-nav__link").contains("Resources").click();
 
       // Expect two rows to be added to the table
       // lsm::LifecycleTransfer
       // frontend_model::TestResource
       cy.get('[aria-label="Resource Table Row"]', { timeout: 30000 }).should(
         "have.length",
-        2
+        2,
       );
       cy.get('[aria-label="Resource Table Row"]')
         .eq(0)
@@ -144,23 +144,23 @@ describe("Scenario 6 : Resources", () => {
         .click();
 
       // Expect to find this information in table :
-      cy.get(".pf-c-description-list__group")
+      cy.get(".pf-v5-c-description-list__group")
         .eq(0)
         .should("contain", "name")
         .and("contain", "default-0001");
-      cy.get(".pf-c-description-list__group")
+      cy.get(".pf-v5-c-description-list__group")
         .eq(1)
         .should("contain", "purge_on_delete")
         .and("contain", "false");
-      cy.get(".pf-c-description-list__group")
+      cy.get(".pf-v5-c-description-list__group")
         .eq(2)
         .should("contain", "purged")
         .and("contain", "false");
-      cy.get(".pf-c-description-list__group")
+      cy.get(".pf-v5-c-description-list__group")
         .eq(3)
         .should("contain", "send_event")
         .and("contain", "true");
-      cy.get(".pf-c-description-list__group")
+      cy.get(".pf-v5-c-description-list__group")
         .eq(4)
         .should("contain", "should_deploy_fail")
         .and("contain", "false");
@@ -171,7 +171,7 @@ describe("Scenario 6 : Resources", () => {
       // Expect it to be empty
       cy.get('[aria-label="ResourceRequires-Empty"]').should(
         "contain",
-        "No requirements found"
+        "No requirements found",
       );
 
       // Click on history tab
@@ -180,7 +180,7 @@ describe("Scenario 6 : Resources", () => {
       // Expect One row to be visible
       cy.get('[aria-label="Resource History Table Row"]').should(
         "have.length",
-        1
+        1,
       );
 
       // Expect row to have 0 Requires
@@ -190,29 +190,29 @@ describe("Scenario 6 : Resources", () => {
       cy.get('[aria-label="Details"]').click();
 
       // Expect content to be the same as on main Desired State tab
-      cy.get(".pf-c-description-list__group")
+      cy.get(".pf-v5-c-description-list__group")
         .eq(2)
         .should("contain", "name")
         .and("contain", "default-0001");
-      cy.get(".pf-c-description-list__group")
+      cy.get(".pf-v5-c-description-list__group")
         .eq(3)
         .should("contain", "purge_on_delete")
         .and("contain", "false");
-      cy.get(".pf-c-description-list__group")
+      cy.get(".pf-v5-c-description-list__group")
         .eq(4)
         .should("contain", "purged")
         .and("contain", "false");
-      cy.get(".pf-c-description-list__group")
+      cy.get(".pf-v5-c-description-list__group")
         .eq(5)
         .should("contain", "send_event")
         .and("contain", "true");
-      cy.get(".pf-c-description-list__group")
+      cy.get(".pf-v5-c-description-list__group")
         .eq(6)
         .should("contain", "should_deploy_fail")
         .and("contain", "false");
 
       // Expect requires tab to have no requirements
-      cy.get(".pf-c-tabs__list")
+      cy.get(".pf-v5-c-tabs__list")
         .eq(1)
         .find("button")
         .contains("Requires")
@@ -225,7 +225,7 @@ describe("Scenario 6 : Resources", () => {
       // Expect it to have : 9 log messages
       cy.get('[aria-label="ResourceLogRow"]', { timeout: 40000 }).should(
         "to.have.length.of.at.least",
-        8
+        8,
       );
 
       // Expect last log message to be "Setting deployed due to known good status"
@@ -237,9 +237,9 @@ describe("Scenario 6 : Resources", () => {
       cy.get('[aria-label="Details"]').eq(0).click();
 
       // Expect to find "Setting deployed due to known good status" displayed in expansion.
-      cy.get(".pf-c-description-list__text").should(
+      cy.get(".pf-v5-c-description-list__text").should(
         "contain",
-        "Setting deployed due to known good status"
+        "Setting deployed due to known good status",
       );
     });
 
@@ -249,7 +249,7 @@ describe("Scenario 6 : Resources", () => {
       cy.get('[aria-label="Environment card"]').contains(PROJECT).click();
 
       // Go to Resources page
-      cy.get(".pf-c-nav__link").contains("Resources").click();
+      cy.get(".pf-v5-c-nav__link").contains("Resources").click();
 
       // click on frontend_model::TestResource Show Details
       cy.get('[aria-label="Resource Table Row"]')
@@ -262,22 +262,22 @@ describe("Scenario 6 : Resources", () => {
       cy.get("button").contains("Logs").click();
 
       // Filter on "INFO" for Minimal Log Level
-      cy.get(".pf-c-select").eq(1).click();
+      cy.get(".pf-v5-c-select").eq(1).click();
       cy.get("button").contains("INFO").click();
 
       // Expect the amount of rows to be max  6
       cy.get('[aria-label="ResourceLogRow"]').should(
         "to.have.length.of.at.most",
-        6
+        6,
       );
 
       // Click on clear filters
-      cy.get(".pf-c-chip").find("button").click();
+      cy.get(".pf-v5-c-chip").find("button").click();
 
       // Expect amount of rows to be bigger than before filtering.
       cy.get('[aria-label="ResourceLogRow"]').should(
         "to.have.length.of.at.least",
-        8
+        8,
       );
     });
 
@@ -287,7 +287,7 @@ describe("Scenario 6 : Resources", () => {
       cy.get('[aria-label="Environment card"]').contains(PROJECT).click();
 
       // Go to Service Catalog page
-      cy.get(".pf-c-nav__link").contains("Service Catalog").click();
+      cy.get(".pf-v5-c-nav__link").contains("Service Catalog").click();
 
       // Click on Show Inventory on dependency-service
       cy.get("#dependency-service").contains("Show inventory").click();
@@ -308,15 +308,15 @@ describe("Scenario 6 : Resources", () => {
 
       cy.get("button").contains("Confirm").click();
 
-      cy.get(".pf-c-chart").should("be.visible");
+      cy.get(".pf-v5-c-chart").should("be.visible");
 
       // Go to Resource page
-      cy.get(".pf-c-nav__link").contains("Resources").click();
+      cy.get(".pf-v5-c-nav__link").contains("Resources").click();
 
       // Expect to find 7 rows now in the resource table.
       cy.get('[aria-label="Resource Table Row"]', { timeout: 60000 }).should(
         "have.length",
-        7
+        7,
       );
       // Expect to find a resource with value: a, b, c
       cy.get('[aria-label="Resource Table Row"]').eq(0).should("contain", "a");
@@ -338,7 +338,7 @@ describe("Scenario 6 : Resources", () => {
       // Click open collapsible row for resource waiting-entity
       cy.get(
         '[aria-label="Toggle-frontend_model::TestResource[internal,name=waiting-entity]"]',
-        { timeout: 20000 }
+        { timeout: 20000 },
       ).click();
       // Expect to find three rows with
       cy.get('[aria-label="ResourceRequires-Success"]', {
@@ -350,13 +350,13 @@ describe("Scenario 6 : Resources", () => {
         expect($rows).to.have.length(4);
 
         expect($rows.eq(1).find("button"), "a-row").to.have.text(
-          "frontend_model::TestResource[internal,name=a]"
+          "frontend_model::TestResource[internal,name=a]",
         );
         expect($rows.eq(2).find("button"), "b-row").to.have.text(
-          "frontend_model::TestResource[internal,name=b]"
+          "frontend_model::TestResource[internal,name=b]",
         );
         expect($rows.eq(3).find("button"), "c-row").to.have.text(
-          "frontend_model::TestResource[internal,name=c]"
+          "frontend_model::TestResource[internal,name=c]",
         );
       });
 
@@ -383,13 +383,13 @@ describe("Scenario 6 : Resources", () => {
         expect($rows).to.have.length(4);
 
         expect($rows.eq(1).find("button"), "a-row").to.have.text(
-          "frontend_model::TestResource[internal,name=a]"
+          "frontend_model::TestResource[internal,name=a]",
         );
         expect($rows.eq(2).find("button"), "b-row").to.have.text(
-          "frontend_model::TestResource[internal,name=b]"
+          "frontend_model::TestResource[internal,name=b]",
         );
         expect($rows.eq(3).find("button"), "c-row").to.have.text(
-          "frontend_model::TestResource[internal,name=c]"
+          "frontend_model::TestResource[internal,name=c]",
         );
       });
 
@@ -398,7 +398,7 @@ describe("Scenario 6 : Resources", () => {
 
       cy.get('[aria-label="Resource History Table Row"]').should(
         "have.length",
-        1
+        1,
       );
 
       // expect to find one collapsible with 3 Requires
@@ -413,12 +413,12 @@ describe("Scenario 6 : Resources", () => {
         .click();
 
       // check title from this page, should have the name of the resource
-      cy.get(".pf-c-content")
+      cy.get(".pf-v5-c-content")
         .contains("frontend_model::TestResource[internal,name=a]")
         .should("to.be.visible");
 
       // go back to Resource page
-      cy.get(".pf-c-nav__link").contains("Resources").click();
+      cy.get(".pf-v5-c-nav__link").contains("Resources").click();
 
       // click show details on resource with value waiting-entity
       cy.get('[aria-label="Resource Table Row"]')
@@ -435,7 +435,7 @@ describe("Scenario 6 : Resources", () => {
         .click();
 
       // Expect to be on the same page with same title as before.
-      cy.get(".pf-c-content")
+      cy.get(".pf-v5-c-content")
         .contains("frontend_model::TestResource[internal,name=a]")
         .should("to.be.visible");
     });
@@ -445,11 +445,11 @@ describe("Scenario 6 : Resources", () => {
 
       cy.get('[aria-label="Environment card"]').contains(PROJECT).click();
 
-      cy.get(".pf-c-nav__link").contains("Resources").click();
+      cy.get(".pf-v5-c-nav__link").contains("Resources").click();
 
       cy.get('[aria-label="Resource Table Row"]', { timeout: 30000 }).should(
         "have.length",
-        5
+        5,
       );
       cy.get('[aria-label="Resource Table Row"]')
         .eq(0)
@@ -474,23 +474,23 @@ describe("Scenario 6 : Resources", () => {
         .click();
 
       // Expect to find the right information on the details page.
-      cy.get(".pf-c-description-list__group")
+      cy.get(".pf-v5-c-description-list__group")
         .eq(0)
         .should("contain", "name")
         .and("contain", "a");
-      cy.get(".pf-c-description-list__group")
+      cy.get(".pf-v5-c-description-list__group")
         .eq(1)
         .should("contain", "purge_on_delete")
         .and("contain", "false");
-      cy.get(".pf-c-description-list__group")
+      cy.get(".pf-v5-c-description-list__group")
         .eq(2)
         .should("contain", "purged")
         .and("contain", "false");
-      cy.get(".pf-c-description-list__group")
+      cy.get(".pf-v5-c-description-list__group")
         .eq(3)
         .should("contain", "send_event")
         .and("contain", "true");
-      cy.get(".pf-c-description-list__group")
+      cy.get(".pf-v5-c-description-list__group")
         .eq(4)
         .should("contain", "should_deploy_fail")
         .and("contain", "false");
@@ -501,7 +501,7 @@ describe("Scenario 6 : Resources", () => {
       // Expect it to be empty
       cy.get('[aria-label="ResourceRequires-Empty"]').should(
         "contain",
-        "No requirements found"
+        "No requirements found",
       );
 
       // Click on history tab
@@ -510,7 +510,7 @@ describe("Scenario 6 : Resources", () => {
       // Expect One row to be visible
       cy.get('[aria-label="Resource History Table Row"]').should(
         "have.length",
-        1
+        1,
       );
 
       // Expect row to have 0 Requires
@@ -519,29 +519,29 @@ describe("Scenario 6 : Resources", () => {
       // click row open
       cy.get('[aria-label="Details"]').click();
       // Expect content to be the same as on main Desired State tab
-      cy.get(".pf-c-description-list__group")
+      cy.get(".pf-v5-c-description-list__group")
         .eq(2)
         .should("contain", "name")
         .and("contain", "a");
-      cy.get(".pf-c-description-list__group")
+      cy.get(".pf-v5-c-description-list__group")
         .eq(3)
         .should("contain", "purge_on_delete")
         .and("contain", "false");
-      cy.get(".pf-c-description-list__group")
+      cy.get(".pf-v5-c-description-list__group")
         .eq(4)
         .should("contain", "purged")
         .and("contain", "false");
-      cy.get(".pf-c-description-list__group")
+      cy.get(".pf-v5-c-description-list__group")
         .eq(5)
         .should("contain", "send_event")
         .and("contain", "true");
-      cy.get(".pf-c-description-list__group")
+      cy.get(".pf-v5-c-description-list__group")
         .eq(6)
         .should("contain", "should_deploy_fail")
         .and("contain", "false");
 
       // Expect requires tab to have no requirements
-      cy.get(".pf-c-tabs__list")
+      cy.get(".pf-v5-c-tabs__list")
         .eq(1)
         .find("button")
         .contains("Requires")
@@ -553,7 +553,7 @@ describe("Scenario 6 : Resources", () => {
       // Expect it to have : 15 log messages
       cy.get('[aria-label="ResourceLogRow"]', { timeout: 40000 }).should(
         "to.have.length.of.at.least",
-        15
+        15,
       );
 
       // Expect last log message to be "Setting deployed due to known good status"
@@ -565,9 +565,9 @@ describe("Scenario 6 : Resources", () => {
       cy.get('[aria-label="Details"]').eq(0).click();
 
       // Expect to find "Setting deployed due to known good status" displayed in expansion.
-      cy.get(".pf-c-description-list__text").should(
+      cy.get(".pf-v5-c-description-list__text").should(
         "contain",
-        "Setting deployed due to known good status"
+        "Setting deployed due to known good status",
       );
     });
   }

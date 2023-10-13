@@ -6,13 +6,13 @@ export class UpdaterWithEnv<Kind extends Query.Kind>
   constructor(
     private readonly customUpdate: (
       query: Query.SubQuery<Kind>,
-      environment: string
-    ) => Promise<void>
+      environment: string,
+    ) => Promise<void>,
   ) {}
 
   async update(
     query: Query.SubQuery<Kind>,
-    environment: string
+    environment: string,
   ): Promise<void> {
     return this.customUpdate(query, environment);
   }

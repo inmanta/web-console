@@ -1,6 +1,10 @@
 import React from "react";
 import { Badge, Tooltip } from "@patternfly/react-core";
-import { Table, TableHeader, TableBody } from "@patternfly/react-table";
+import {
+  Table,
+  TableHeader,
+  TableBody,
+} from "@patternfly/react-table/deprecated";
 import { LifecycleModel } from "@/Core";
 
 export const LifecycleTable: React.FunctionComponent<{
@@ -62,7 +66,7 @@ export const LifecycleTable: React.FunctionComponent<{
             trigger
               .split("_")
               .map((word) => word.charAt(0).toUpperCase() + word.substring(1))
-              .join(" ")
+              .join(" "),
           )}
       </Badge>
     );

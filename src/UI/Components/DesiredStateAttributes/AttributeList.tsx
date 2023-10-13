@@ -76,18 +76,28 @@ const AttributeValue: React.FC<{
       return <FileBlock hash={attribute.value} />;
 
     case "Json":
-      return <CodeHighlighter code={attribute.value} language="json" />;
+      return (
+        <CodeHighlighter keyId="json" code={attribute.value} language="json" />
+      );
 
     case "Xml":
-      return <CodeHighlighter code={attribute.value} language="xml" />;
+      return (
+        <CodeHighlighter keyId="xml" code={attribute.value} language="xml" />
+      );
     case "Python":
-      return <CodeHighlighter code={attribute.value} language="python" />;
+      return (
+        <CodeHighlighter
+          keyId="python"
+          code={attribute.value}
+          language="python"
+        />
+      );
   }
 };
 
 const StyledDescriptionList = styled(DescriptionList)`
-  --pf-c-description-list--m-horizontal__term--width: 24ch;
-  --pf-c-description-list--RowGap: 0.5rem;
+  --pf-v5-c-description-list--m-horizontal__term--width: 24ch;
+  --pf-v5-c-description-list--RowGap: 0.5rem;
 `;
 
 const StyledDescriptionListTerm = styled(DescriptionListTerm)`

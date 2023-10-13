@@ -63,7 +63,7 @@ export const Page: React.FC = () => {
   }, [JSON.stringify(data)]);
 
   const updateFilter = (
-    updater: (filter: Resource.Filter) => Resource.Filter
+    updater: (filter: Resource.Filter) => Resource.Filter,
   ): void => setFilter(updater(filterWithDefaults));
 
   return (

@@ -1,4 +1,5 @@
 import React from "react";
+import { Icon } from "@patternfly/react-core";
 import { ArrowsAltHIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { Diff } from "@/Core";
@@ -6,7 +7,9 @@ import { Diff } from "@/Core";
 export const Versus: React.FC<Diff.Identifiers> = ({ from, to }) => (
   <VersusContainer>
     <IntroHeader>{from}</IntroHeader>
-    <StyledIcon size="md" />
+    <Icon size="md">
+      <StyledIcon />
+    </Icon>
     <IntroHeader isTarget>{to}</IntroHeader>
   </VersusContainer>
 );

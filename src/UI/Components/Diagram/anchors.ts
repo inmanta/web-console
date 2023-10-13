@@ -11,7 +11,7 @@ const customAnchor = function (
   this: any,
   view: dia.ElementView,
   magnet: SVGElement,
-  ref: g.Point
+  ref: g.Point,
 ) {
   const { model } = view;
   const bbox = view.getNodeUnrotatedBBox(magnet);

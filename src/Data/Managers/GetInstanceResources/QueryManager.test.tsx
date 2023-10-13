@@ -19,7 +19,7 @@ function setup() {
   const scheduler = new StaticScheduler();
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolver(store, apiHelper, scheduler, scheduler, 2)
+    new QueryManagerResolver(store, apiHelper, scheduler, scheduler, 2),
   );
   const component = (
     <StoreProvider store={store}>
@@ -104,7 +104,7 @@ test("Given the InstanceResourcesQueryManager When initial request fails with 40
   expect(apiHelper.pendingRequests).toEqual([resourcesRequest(1)]);
   await act(resolveAs.resourcesConflict);
   expect(
-    await screen.findByRole("generic", { name: "Dummy-Loading" })
+    await screen.findByRole("generic", { name: "Dummy-Loading" }),
   ).toBeVisible();
 
   expect(apiHelper.pendingRequests).toEqual([instanceRequest()]);
@@ -112,7 +112,7 @@ test("Given the InstanceResourcesQueryManager When initial request fails with 40
   expect(apiHelper.pendingRequests).toEqual([resourcesRequest(2)]);
   await act(resolveAs.resourcesSuccess);
   expect(
-    await screen.findByRole("generic", { name: "Dummy-Success" })
+    await screen.findByRole("generic", { name: "Dummy-Success" }),
   ).toBeVisible();
 });
 
@@ -124,13 +124,13 @@ test("Given the InstanceResourcesQueryManager When instance fails Then error is 
   expect(apiHelper.pendingRequests).toEqual([resourcesRequest(1)]);
   await act(resolveAs.resourcesConflict);
   expect(
-    await screen.findByRole("generic", { name: "Dummy-Loading" })
+    await screen.findByRole("generic", { name: "Dummy-Loading" }),
   ).toBeVisible();
 
   expect(apiHelper.pendingRequests).toEqual([instanceRequest()]);
   await act(resolveAs.error);
   expect(
-    await screen.findByRole("generic", { name: "Dummy-Failed" })
+    await screen.findByRole("generic", { name: "Dummy-Failed" }),
   ).toBeVisible();
 });
 
@@ -143,7 +143,7 @@ test("Given the InstanceResourcesQueryManager When it keeps failing Then it stop
   expect(apiHelper.pendingRequests).toEqual([resourcesRequest(1)]);
   await act(resolveAs.resourcesConflict);
   expect(
-    await screen.findByRole("generic", { name: "Dummy-Loading" })
+    await screen.findByRole("generic", { name: "Dummy-Loading" }),
   ).toBeVisible();
 
   // 1st instance
@@ -155,7 +155,7 @@ test("Given the InstanceResourcesQueryManager When it keeps failing Then it stop
   await act(resolveAs.resourcesConflict);
 
   expect(
-    await screen.findByRole("generic", { name: "Dummy-Loading" })
+    await screen.findByRole("generic", { name: "Dummy-Loading" }),
   ).toBeVisible();
 
   // 2nd instance
@@ -166,7 +166,7 @@ test("Given the InstanceResourcesQueryManager When it keeps failing Then it stop
   expect(apiHelper.pendingRequests).toEqual([resourcesRequest(3)]);
   await act(resolveAs.resourcesConflict);
   expect(
-    await screen.findByRole("generic", { name: "Dummy-Failed" })
+    await screen.findByRole("generic", { name: "Dummy-Failed" }),
   ).toBeVisible();
   expect(apiHelper.pendingRequests).toHaveLength(0);
 });
@@ -226,7 +226,7 @@ test("Given the InstanceResourcesQueryManager When instance call is successful T
   if (!RemoteData.isSuccess(services)) fail();
 
   const instance = services.value.data.find(
-    (instance) => instance.id === instanceA.id
+    (instance) => instance.id === instanceA.id,
   );
   expect(instance).not.toBeUndefined();
   expect(instance).toEqual({ ...instanceA, version: 4 });
@@ -262,13 +262,13 @@ test("Given the InstanceResourcesQueryManager When scheduled instance call is su
   }
 
   const a = services.value.data.find(
-    (instance) => instance.id === instanceA.id
+    (instance) => instance.id === instanceA.id,
   );
   expect(a).not.toBeUndefined();
   expect(a).toEqual({ ...instanceA, version: 4 });
 
   const b = services.value.data.find(
-    (instance) => instance.id === instanceB.id
+    (instance) => instance.id === instanceB.id,
   );
   expect(b).not.toBeUndefined();
   expect(b).toEqual(instanceB);

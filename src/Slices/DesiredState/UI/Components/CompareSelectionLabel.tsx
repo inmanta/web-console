@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "@patternfly/react-core";
+import { Button, Icon } from "@patternfly/react-core";
 import { TimesIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { Maybe } from "@/Core";
@@ -14,34 +14,31 @@ interface Props {
 export const CompareSelectionLabel: React.FC<Props> = ({
   selection,
   onDelete,
-}) => (
-  <Container>
-    <Title>{words("desiredState.compare.selectionLabel")}</Title>
-    <Selection>
-      <SelectionText>
-        {Maybe.isSome(selection) && (
-          <>
-            <b>{selection.value}</b> &amp;
-          </>
-        )}{" "}
-        ...
-      </SelectionText>
-      {Maybe.isSome(selection) && (
+}) => {
+  return Maybe.isSome(selection) ? (
+    <Container>
+      <Title>{words("desiredState.compare.selectionLabel")}</Title>
+      <Selection>
+        <SelectionText>
+          <b>{selection.value}</b>;
+        </SelectionText>
         <SelectionAction onClick={onDelete} variant="plain">
-          <TimesIcon size="sm" />
+          <Icon size="md">
+            <TimesIcon />
+          </Icon>
         </SelectionAction>
-      )}
-    </Selection>
-  </Container>
-);
+      </Selection>
+    </Container>
+  ) : null;
+};
 
 const Container = styled.div`
   display: inline-flex;
-  font-size: var(--pf-global--FontSize--md);
+  font-size: var(--pf-v5-global--FontSize--md);
   line-height: 24px;
   height: 36px;
   padding: 6px 6px 6px 8px;
-  background-color: var(--pf-global--BackgroundColor--200);
+  background-color: var(--pf-v5-global--BackgroundColor--200);
 `;
 
 const Title = styled.span`
@@ -50,9 +47,9 @@ const Title = styled.span`
 `;
 
 const Selection = styled.div`
-  background-color: var(--pf-global--BackgroundColor--100);
+  background-color: var(--pf-v5-global--BackgroundColor--100);
   border-radius: 3px;
-  font-size: var(--pf-global--FontSize--sm);
+  font-size: var(--pf-v5-global--FontSize--sm);
 `;
 
 const SelectionText = styled.span`

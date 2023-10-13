@@ -1,7 +1,7 @@
 import React from "react";
 import {
   Tbody,
-  TableComposable,
+  Table /* data-codemods */,
   TableVariant,
   Th,
   Thead,
@@ -13,10 +13,7 @@ import { words } from "@/UI/words";
 export const RequiresTableWrapper: React.FC<
   React.PropsWithChildren<unknown>
 > = ({ children, ...props }) => (
-  <TableComposable
-    aria-label={props["aria-label"]}
-    variant={TableVariant.compact}
-  >
+  <Table aria-label={props["aria-label"]} variant={TableVariant.compact}>
     <Thead>
       <Tr>
         <Th>{words("resources.requires.resource")}</Th>
@@ -26,9 +23,9 @@ export const RequiresTableWrapper: React.FC<
       </Tr>
     </Thead>
     <Tbody>{children}</Tbody>
-  </TableComposable>
+  </Table>
 );
 
 const StyledTh = styled(Th)`
-  --pf-c-table--cell--MinWidth: 16ch;
+  --pf-v5-c-table--cell--MinWidth: 16ch;
 `;

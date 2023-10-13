@@ -1,7 +1,7 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 import { act, render, screen, within } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { userEvent } from "@testing-library/user-event";
 import {
   BooleanField,
   DictListField,
@@ -23,7 +23,7 @@ const setup = (
     | DictListField
     | EnumField
   )[],
-  func: undefined | jest.Mock = undefined
+  func: undefined | jest.Mock = undefined,
 ) => {
   return (
     <CustomRouter history={history}>
@@ -48,7 +48,7 @@ test("GIVEN ServiceInstanceForm WHEN passed a TextField THEN shows that field", 
   expect(
     screen.getByRole("generic", {
       name: `TextFieldInput-${Test.Field.text.name}`,
-    })
+    }),
   ).toBeVisible();
 
   const textBox = screen.getByRole("textbox", {
@@ -67,7 +67,7 @@ test("GIVEN ServiceInstanceForm WHEN passed a BooleanField THEN shows that field
   expect(
     screen.getByRole("generic", {
       name: `BooleanFieldInput-${Test.Field.bool.name}`,
-    })
+    }),
   ).toBeVisible();
 
   expect(screen.getAllByRole("radio")).toHaveLength(3);
@@ -86,7 +86,7 @@ test("GIVEN ServiceInstanceForm WHEN passed an EnumField THEN shows that field",
   expect(
     screen.getByRole("generic", {
       name: `EnumFieldInput-${Test.Field.enumField.name}`,
-    })
+    }),
   ).toBeVisible();
 
   const select = screen.getByRole("button", {
@@ -121,7 +121,7 @@ test("GIVEN ServiceInstanceForm WHEN passed an EnumField with more than one valu
   expect(component).toBeVisible();
 
   const preselectedOption = screen.getByText(
-    `Select value for ${Test.Field.enumFieldTwoOptions.name}`
+    `Select value for ${Test.Field.enumFieldTwoOptions.name}`,
   );
   expect(preselectedOption).toBeVisible();
 
@@ -149,7 +149,7 @@ test("GIVEN ServiceInstanceForm WHEN passed an EnumField with only one value THE
   expect(component).toBeVisible();
 
   const preselectedOption = screen.getByText(
-    Test.Field.enumFieldSingleOption.options.local as string
+    Test.Field.enumFieldSingleOption.options.local as string,
   );
   expect(preselectedOption).toBeVisible();
   const select = screen.getByRole("button", {
@@ -181,22 +181,22 @@ test("GIVEN ServiceInstanceForm and a NestedField WHEN clicking the toggle THEN 
     await userEvent.click(
       within(group).getByRole("button", {
         name: words("catalog.callbacks.add"),
-      })
+      }),
     );
   });
 
   expect(
-    screen.queryByRole("textbox", { name: Test.Field.text.name })
+    screen.queryByRole("textbox", { name: Test.Field.text.name }),
   ).not.toBeInTheDocument();
 
   await act(async () => {
     await userEvent.click(
-      within(group).getByRole("button", { name: "nested_field" })
+      within(group).getByRole("button", { name: "nested_field" }),
     );
   });
 
   expect(
-    screen.getByRole("textbox", { name: `TextInput-${Test.Field.text.name}` })
+    screen.getByRole("textbox", { name: `TextInput-${Test.Field.text.name}` }),
   ).toBeVisible();
 });
 
@@ -210,14 +210,14 @@ test("GIVEN ServiceInstanceForm and a DictListField WHEN clicking all toggles op
   expect(group).toBeVisible();
 
   expect(
-    screen.queryByRole("textbox", { name: Test.Field.text.name })
+    screen.queryByRole("textbox", { name: Test.Field.text.name }),
   ).not.toBeInTheDocument();
 
   await act(async () => {
     await userEvent.click(
       within(group).getByRole("button", {
         name: "dict_list_field",
-      })
+      }),
     );
   });
   await act(async () => {
@@ -225,7 +225,7 @@ test("GIVEN ServiceInstanceForm and a DictListField WHEN clicking all toggles op
   });
 
   expect(
-    screen.getByRole("textbox", { name: `TextInput-${Test.Field.text.name}` })
+    screen.getByRole("textbox", { name: `TextInput-${Test.Field.text.name}` }),
   ).toBeVisible();
 });
 
@@ -243,7 +243,7 @@ test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is
   await act(async () => {
     await userEvent.type(
       screen.getByRole("textbox", { name: `TextInput-${fields[0].name}` }),
-      "test text"
+      "test text",
     );
   });
   await act(async () => {
@@ -257,12 +257,12 @@ test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is
     await userEvent.click(
       within(group).getByRole("button", {
         name: words("catalog.callbacks.add"),
-      })
+      }),
     );
   });
   await act(async () => {
     await userEvent.click(
-      screen.getByRole("button", { name: nestedField.name })
+      screen.getByRole("button", { name: nestedField.name }),
     );
   });
   await act(async () => {
@@ -270,13 +270,13 @@ test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is
       screen.getByRole("textbox", {
         name: `TextInput-${nestedField.fields[0].name}`,
       }),
-      "test text 2"
+      "test text 2",
     );
   });
 
   await act(async () => {
     await userEvent.click(
-      screen.getByRole("button", { name: dictListField.name })
+      screen.getByRole("button", { name: dictListField.name }),
     );
   });
   await act(async () => {
@@ -287,12 +287,12 @@ test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is
       screen.getByRole("textbox", {
         name: `TextInput-${dictListField.fields[0].name}`,
       }),
-      "test text 3"
+      "test text 3",
     );
   });
   await act(async () => {
     await userEvent.click(
-      screen.getByRole("button", { name: words("confirm") })
+      screen.getByRole("button", { name: words("confirm") }),
     );
   });
 
@@ -304,6 +304,6 @@ test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is
       [nestedField.name]: { [nestedField.fields[0].name]: "test text 2" },
       [dictListField.name]: [{ [dictListField.fields[0].name]: "test text 3" }],
     },
-    expect.any(Function)
+    expect.any(Function),
   );
 });

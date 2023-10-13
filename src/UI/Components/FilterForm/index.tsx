@@ -24,7 +24,7 @@ export const FilterForm: React.FC<Props> = ({ filter, setFilter }) => {
     const chosenProperty = filter[prop];
     updateType(
       chosenProperty ? chosenProperty.filter((value) => value !== id) : [],
-      prop
+      prop,
     );
   };
   const onTextInput = (event) => {

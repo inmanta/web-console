@@ -1,13 +1,4 @@
 import { LabelProps } from "@patternfly/react-core";
-import {
-  global_danger_color_100,
-  global_default_color_100,
-  global_disabled_color_200,
-  global_info_color_100,
-  global_palette_purple_300,
-  global_success_color_100,
-  global_warning_color_100,
-} from "@patternfly/react-tokens";
 import { Resource } from "@/Core";
 
 export const labelColorConfig: Record<
@@ -28,15 +19,16 @@ export const labelColorConfig: Record<
 };
 
 export const colorConfig: Record<Resource.Status, string> = {
-  [Resource.Status.deployed]: global_success_color_100.var,
-  [Resource.Status.skipped]: global_default_color_100.var,
-  [Resource.Status.skipped_for_undefined]: global_default_color_100.var,
-  [Resource.Status.cancelled]: global_default_color_100.var,
-  [Resource.Status.failed]: global_danger_color_100.var,
-  [Resource.Status.unavailable]: global_warning_color_100.var,
-  [Resource.Status.undefined]: global_warning_color_100.var,
-  [Resource.Status.deploying]: global_info_color_100.var,
-  [Resource.Status.available]: global_disabled_color_200.var,
-  [Resource.Status.dry]: global_palette_purple_300.var,
-  [Resource.Status.orphaned]: global_palette_purple_300.var,
+  [Resource.Status.deployed]: "var(--pf-v5-global--success-color--100)",
+  [Resource.Status.skipped]: "var(--pf-v5-global--palette--cyan-100)",
+  [Resource.Status.skipped_for_undefined]:
+    "var(--pf-v5-global--palette--cyan-100)",
+  [Resource.Status.cancelled]: "var(--pf-v5-global--palette--cyan-100)",
+  [Resource.Status.failed]: "var(--pf-v5-global--danger-color--100)",
+  [Resource.Status.unavailable]: "var(--pf-v5-global--warning-color--100)",
+  [Resource.Status.undefined]: "var(--pf-v5-global--warning-color--100)",
+  [Resource.Status.deploying]: "var(--pf-v5-global--info-color--100)",
+  [Resource.Status.available]: "var(--pf-v5-global--disabled-color--200)",
+  [Resource.Status.dry]: "var(--pf-v5-global--palette--purple-300)",
+  [Resource.Status.orphaned]: "var(--pf-v5-global--palette--purple-300)",
 };

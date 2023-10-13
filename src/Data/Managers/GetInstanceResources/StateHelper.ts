@@ -9,6 +9,6 @@ export function InstanceResourcesStateHelper(store: Store) {
       const value = RemoteData.mapSuccess((wrapped) => wrapped.data, data);
       store.dispatch.instanceResources.setData({ id: query.id, value });
     },
-    (state, query) => state.instanceResources.byId[query.id]
+    (state, query) => state.instanceResources.byId[query.id],
   );
 }

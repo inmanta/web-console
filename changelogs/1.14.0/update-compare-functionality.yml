@@ -1,0 +1,8 @@
+change-type: patch
+description: 'The select for compare functionality on the Desired State page has been updated.'
+issue-nr: 4391
+destination-branches:
+- master
+- iso6
+sections: 
+  minor-improvement: "{{description}}"

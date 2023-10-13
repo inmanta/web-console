@@ -1,13 +1,12 @@
 import React, { useContext } from "react";
+import { Icon, Tooltip } from "@patternfly/react-core";
 import {
   Dropdown,
   DropdownGroup,
   DropdownItem,
   DropdownSeparator,
   DropdownToggle,
-  Icon,
-  Tooltip,
-} from "@patternfly/react-core";
+} from "@patternfly/react-core/deprecated";
 import { UserCircleIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { DependencyContext } from "@/UI/Dependency";
@@ -58,7 +57,7 @@ export const EnvSelector: React.FC<Props> = ({
           {words("dashboard.logout")}
         </StyledItem>
       )}
-    </div>
+    </div>,
   );
 
   return (
@@ -96,11 +95,11 @@ export const EnvSelector: React.FC<Props> = ({
 
 const StyledDropdown = styled(Dropdown)`
   height: 100%;
-  --pf-c-dropdown--m-expanded__toggle--before--BorderBottomWidth: 4px;
-  --pf-c-dropdown__toggle--before--BorderRightColor: #666768;
-  --pf-c-dropdown__toggle--before--BorderLeftColor: #666768;
-  --pf-c-dropdown__toggle--PaddingRight: 1rem;
-  --pf-c-dropdown__toggle--PaddingLeft: 1rem;
+  --pf-v5-c-dropdown--m-expanded__toggle--before--BorderBottomWidth: 4px;
+  --pf-v5-c-dropdown__toggle--before--BorderRightColor: #666768;
+  --pf-v5-c-dropdown__toggle--before--BorderLeftColor: #666768;
+  --pf-v5-c-dropdown__toggle--PaddingRight: 1rem;
+  --pf-v5-c-dropdown__toggle--PaddingLeft: 1rem;
 `;
 const StyledToggle = styled(DropdownToggle)`
   height: 100%;
@@ -127,5 +126,5 @@ const StyledDiv = styled.div`
 `;
 
 const StyledIcon = styled(Icon)`
-  --pf-c-icon__content--Color: white;
+  --pf-v5-c-icon__content--Color: white;
 `;

@@ -12,6 +12,6 @@ export interface UpdateEnvironmentSettingManifest {
   command: UpdateEnvironmentSetting;
   trigger: (
     id: string,
-    value: EnvironmentSettings.Value
+    value: EnvironmentSettings.Value,
   ) => Promise<Maybe.Maybe<string>>;
 }

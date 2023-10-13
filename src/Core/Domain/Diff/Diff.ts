@@ -17,6 +17,15 @@ export const statuses: Status[] = [
   "skipped_for_undefined",
 ];
 
+export const defaultStatuses: Status[] = [
+  "added",
+  "modified",
+  "deleted",
+  "agent_down",
+  "undefined",
+  "skipped_for_undefined",
+];
+
 export interface ValueSet {
   from_value: unknown;
   to_value: unknown;

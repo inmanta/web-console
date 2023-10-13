@@ -1,7 +1,7 @@
 import React from "react";
 import { MemoryRouter, useLocation } from "react-router-dom";
 import { fireEvent, render, screen, act } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { Either, RemoteData } from "@/Core";
 import {
@@ -45,18 +45,18 @@ function setup(service = Service.a) {
   const serviceInstancesHelper = ServiceInstancesQueryManager(
     apiHelper,
     ServiceInstancesStateHelper(store),
-    scheduler
+    scheduler,
   );
 
   const resourcesHelper = InstanceResourcesQueryManager(
     apiHelper,
     InstanceResourcesStateHelper(store),
     ServiceInstancesStateHelper(store),
-    scheduler
+    scheduler,
   );
 
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolver([serviceInstancesHelper, resourcesHelper])
+    new DynamicQueryManagerResolver([serviceInstancesHelper, resourcesHelper]),
   );
 
   const triggerUpdateCommandManager =
@@ -65,14 +65,14 @@ function setup(service = Service.a) {
     DestroyInstanceCommandManager(apiHelper);
   const triggerforceStateCommandManager = TriggerForceStateCommandManager(
     authHelper,
-    apiHelper
+    apiHelper,
   );
 
   const deleteCommandManager = DeleteInstanceCommandManager(apiHelper);
 
   const setStateCommandManager = TriggerSetStateCommandManager(
     authHelper,
-    new BaseApiHelper()
+    new BaseApiHelper(),
   );
 
   const commandResolver = new CommandResolverImpl(
@@ -82,11 +82,11 @@ function setup(service = Service.a) {
       triggerDestroyInstanceCommandManager,
       deleteCommandManager,
       setStateCommandManager,
-    ])
+    ]),
   );
   const environmentHandler = EnvironmentHandlerImpl(
     useLocation,
-    dependencies.routeManager
+    dependencies.routeManager,
   );
   store.dispatch.environment.setEnvironments(
     RemoteData.success([
@@ -101,7 +101,7 @@ function setup(service = Service.a) {
           enable_lsm_expert_mode: false,
         },
       },
-    ])
+    ]),
   );
   const component = (
     <MemoryRouter initialEntries={[{ search: "?env=aaa" }]}>
@@ -132,12 +132,15 @@ function setup(service = Service.a) {
   };
 }
 
+jest.mock("@/UI/Utils/useFeatures");
+
 test("ServiceInventory shows updated instances", async () => {
   const { component, apiHelper, scheduler } = setup();
+
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "ServiceInventory-Loading" })
+    await screen.findByRole("generic", { name: "ServiceInventory-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(
@@ -145,11 +148,11 @@ test("ServiceInventory shows updated instances", async () => {
       data: [],
       links: Pagination.links,
       metadata: Pagination.metadata,
-    })
+    }),
   );
 
   expect(
-    await screen.findByRole("generic", { name: "ServiceInventory-Empty" })
+    await screen.findByRole("generic", { name: "ServiceInventory-Empty" }),
   ).toBeInTheDocument();
 
   scheduler.executeAll();
@@ -159,11 +162,11 @@ test("ServiceInventory shows updated instances", async () => {
       data: [ServiceInstance.a],
       links: Pagination.links,
       metadata: Pagination.metadata,
-    })
+    }),
   );
 
   expect(
-    await screen.findByRole("grid", { name: "ServiceInventory-Success" })
+    await screen.findByRole("grid", { name: "ServiceInventory-Success" }),
   ).toBeInTheDocument();
 });
 
@@ -174,7 +177,7 @@ test("ServiceInventory shows error with retry", async () => {
   apiHelper.resolve(Either.left("fake error"));
 
   expect(
-    await screen.findByRole("generic", { name: "ServiceInventory-Failed" })
+    await screen.findByRole("generic", { name: "ServiceInventory-Failed" }),
   ).toBeInTheDocument();
 
   fireEvent.click(screen.getByRole("button", { name: "Retry" }));
@@ -184,11 +187,11 @@ test("ServiceInventory shows error with retry", async () => {
       data: [ServiceInstance.a],
       links: Pagination.links,
       metadata: Pagination.metadata,
-    })
+    }),
   );
 
   expect(
-    await screen.findByRole("grid", { name: "ServiceInventory-Success" })
+    await screen.findByRole("grid", { name: "ServiceInventory-Success" }),
   ).toBeInTheDocument();
 });
 
@@ -201,11 +204,11 @@ test("ServiceInventory shows next page of instances", async () => {
       data: [{ ...ServiceInstance.a, id: "a" }],
       links: { ...Pagination.links, next: "fake-url" },
       metadata: Pagination.metadata,
-    })
+    }),
   );
 
   expect(
-    await screen.findByRole("cell", { name: "IdCell-a" })
+    await screen.findByRole("cell", { name: "IdCell-a" }),
   ).toBeInTheDocument();
 
   fireEvent.click(screen.getByRole("button", { name: "Next" }));
@@ -215,11 +218,11 @@ test("ServiceInventory shows next page of instances", async () => {
       data: [{ ...ServiceInstance.a, id: "b" }],
       links: Pagination.links,
       metadata: Pagination.metadata,
-    })
+    }),
   );
 
   expect(
-    await screen.findByRole("cell", { name: "IdCell-b" })
+    await screen.findByRole("cell", { name: "IdCell-b" }),
   ).toBeInTheDocument();
 });
 
@@ -234,12 +237,12 @@ test("GIVEN ResourcesView fetches resources for new instance after instance upda
         data: [ServiceInstance.a],
         links: Pagination.links,
         metadata: Pagination.metadata,
-      })
+      }),
     );
   });
 
   expect(
-    await screen.findByRole("grid", { name: "ServiceInventory-Success" })
+    await screen.findByRole("grid", { name: "ServiceInventory-Success" }),
   ).toBeInTheDocument();
 
   await act(async () => {
@@ -249,7 +252,7 @@ test("GIVEN ResourcesView fetches resources for new instance after instance upda
     await userEvent.click(
       await screen.findByRole("tab", {
         name: words("inventory.tabs.resources"),
-      })
+      }),
     );
   });
 
@@ -258,7 +261,7 @@ test("GIVEN ResourcesView fetches resources for new instance after instance upda
   });
 
   expect(
-    screen.getByRole("cell", { name: "resource_id_a" })
+    screen.getByRole("cell", { name: "[resource_id_a]" }),
   ).toBeInTheDocument();
 
   scheduler.executeAll();
@@ -269,30 +272,30 @@ test("GIVEN ResourcesView fetches resources for new instance after instance upda
         data: [{ ...ServiceInstance.a, version: 4 }],
         links: Pagination.links,
         metadata: Pagination.metadata,
-      })
+      }),
     );
   });
 
   expect(apiHelper.pendingRequests[0].url).toMatch(
-    `/lsm/v1/service_inventory/${ServiceInstance.a.service_entity}/${ServiceInstance.a.id}/resources?current_version=3`
+    `/lsm/v1/service_inventory/${ServiceInstance.a.service_entity}/${ServiceInstance.a.id}/resources?current_version=3`,
   );
   await act(async () => {
     await apiHelper.resolve(Either.left({ message: "Conflict", status: 409 }));
   });
 
   expect(apiHelper.pendingRequests[0].url).toMatch(
-    "/lsm/v1/service_inventory/service_name_a/service_instance_id_a"
+    "/lsm/v1/service_inventory/service_name_a/service_instance_id_a",
   );
   await act(async () => {
     await apiHelper.resolve(
       Either.right({
         data: { ...ServiceInstance.a, version: 4 },
-      })
+      }),
     );
   });
 
   expect(apiHelper.pendingRequests[0].url).toMatch(
-    `/lsm/v1/service_inventory/${ServiceInstance.a.service_entity}/${ServiceInstance.a.id}/resources?current_version=4`
+    `/lsm/v1/service_inventory/${ServiceInstance.a.service_entity}/${ServiceInstance.a.id}/resources?current_version=4`,
   );
 });
 
@@ -301,6 +304,6 @@ test("ServiceInventory shows instance summary chart", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("img", { name: words("catalog.summary.title") })
+    await screen.findByRole("img", { name: words("catalog.summary.title") }),
   ).toBeInTheDocument();
 });

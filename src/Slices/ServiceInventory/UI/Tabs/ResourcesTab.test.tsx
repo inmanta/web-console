@@ -17,7 +17,7 @@ function setup() {
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
   const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolver(store, apiHelper, scheduler, scheduler)
+    new QueryManagerResolver(store, apiHelper, scheduler, scheduler),
   );
 
   const component = (
@@ -44,7 +44,7 @@ test("ResourcesView shows empty table", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("grid", { name: "ResourceTable-Loading" })
+    await screen.findByRole("grid", { name: "ResourceTable-Loading" }),
   ).toBeInTheDocument();
 
   await act(async () => {
@@ -52,7 +52,7 @@ test("ResourcesView shows empty table", async () => {
   });
 
   expect(
-    await screen.findByRole("grid", { name: "ResourceTable-Empty" })
+    await screen.findByRole("grid", { name: "ResourceTable-Empty" }),
   ).toBeInTheDocument();
 });
 
@@ -61,7 +61,7 @@ test("ResourcesView shows failed table", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("grid", { name: "ResourceTable-Loading" })
+    await screen.findByRole("grid", { name: "ResourceTable-Loading" }),
   ).toBeInTheDocument();
 
   await act(async () => {
@@ -69,7 +69,7 @@ test("ResourcesView shows failed table", async () => {
   });
 
   expect(
-    await screen.findByRole("grid", { name: "ResourceTable-Failed" })
+    await screen.findByRole("grid", { name: "ResourceTable-Failed" }),
   ).toBeInTheDocument();
 });
 
@@ -78,19 +78,19 @@ test("ResourcesView shows success table", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("grid", { name: "ResourceTable-Loading" })
+    await screen.findByRole("grid", { name: "ResourceTable-Loading" }),
   ).toBeInTheDocument();
 
   await act(async () => {
     await apiHelper.resolve(
       Either.right({
         data: [{ resource_id: "abc123,v=3", resource_state: "deployed" }],
-      })
+      }),
     );
   });
 
   expect(
-    await screen.findByRole("grid", { name: "ResourceTable-Success" })
+    await screen.findByRole("grid", { name: "ResourceTable-Success" }),
   ).toBeInTheDocument();
 });
 
@@ -99,7 +99,7 @@ test("ResourcesView shows updated table", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("grid", { name: "ResourceTable-Loading" })
+    await screen.findByRole("grid", { name: "ResourceTable-Loading" }),
   ).toBeInTheDocument();
 
   await act(async () => {
@@ -107,7 +107,7 @@ test("ResourcesView shows updated table", async () => {
   });
 
   expect(
-    await screen.findByRole("grid", { name: "ResourceTable-Empty" })
+    await screen.findByRole("grid", { name: "ResourceTable-Empty" }),
   ).toBeInTheDocument();
 
   scheduler.executeAll();
@@ -116,11 +116,11 @@ test("ResourcesView shows updated table", async () => {
     await apiHelper.resolve(
       Either.right({
         data: [{ resource_id: "abc123,v=4", resource_state: "deployed" }],
-      })
+      }),
     );
   });
 
   expect(
-    await screen.findByRole("grid", { name: "ResourceTable-Success" })
+    await screen.findByRole("grid", { name: "ResourceTable-Success" }),
   ).toBeInTheDocument();
 });

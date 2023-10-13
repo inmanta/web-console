@@ -1,6 +1,6 @@
 import React from "react";
 import { render, screen, within, act } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import {
   CommandManagerResolver,
@@ -34,10 +34,10 @@ function setup({
   const scheduler = new StaticScheduler();
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolver(store, apiHelper, scheduler, scheduler)
+    new QueryManagerResolver(store, apiHelper, scheduler, scheduler),
   );
   const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolver(store, apiHelper, authHelper)
+    new CommandManagerResolver(store, apiHelper, authHelper),
   );
 
   const environmentModifier = new MockEnvironmentModifier(details);
@@ -114,7 +114,7 @@ test("GIVEN CompileButton WHEN clicked THEN triggers recompile", async () => {
     await userEvent.click(button);
   });
 
-  const toast = screen.getByRole("generic", { name: "ToastAlert" });
+  const toast = screen.getByTestId("ToastAlert");
   expect(toast).toBeVisible();
   expect(toast).toHaveTextContent(words("common.compileWidget.toast")(false));
 
@@ -178,7 +178,7 @@ test("GIVEN CompileButton WHEN clicked on toggle and clicked on Update & Recompi
     await userEvent.click(button);
   });
 
-  const toast = screen.getByRole("generic", { name: "ToastAlert" });
+  const toast = screen.getByTestId("ToastAlert");
   expect(toast).toBeVisible();
   expect(toast).toHaveTextContent(words("common.compileWidget.toast")(true));
 
@@ -244,9 +244,7 @@ test("GIVEN CompileButton WHEN 'isToastVisible' parameter is false and recompile
     await userEvent.click(button);
   });
 
-  expect(
-    screen.queryByRole("generic", { name: "ToastAlert" })
-  ).not.toBeInTheDocument();
+  expect(screen.queryByTestId("ToastAlert")).not.toBeInTheDocument();
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({

@@ -19,7 +19,7 @@ function setup() {
   const store = getStoreInstance();
 
   const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolver(store, apiHelper, scheduler, scheduler)
+    new QueryManagerResolver(store, apiHelper, scheduler, scheduler),
   );
 
   const component = (
@@ -46,7 +46,7 @@ test("Given Badge WHEN request fails THEN error is shown", async () => {
   await act(async () => {
     await apiHelper.resolve(Either.left("error"));
   });
-  expect(screen.getByRole("generic", { name: "ToastAlert" })).toBeVisible();
+  expect(screen.getByTestId("ToastAlert")).toBeVisible();
 });
 
 test.each`
@@ -74,5 +74,5 @@ test.each`
     const button = screen.getByRole("button", { name: "Badge" });
     expect(button).toBeVisible();
     expect(button).toHaveAttribute("data-variant", variant);
-  }
+  },
 );

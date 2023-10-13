@@ -10,6 +10,6 @@ export function StateHelper(store: Store) {
         data,
       });
     },
-    (state, query, environment) => state.facts.listByEnv[environment]
+    (state, query, environment) => state.facts.listByEnv[environment],
   );
 }

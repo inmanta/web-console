@@ -4,7 +4,7 @@ import { QueryManager } from "@/Data/Managers/Helpers";
 
 export function GetDesiredStateDiffQueryManager(
   apiHelper: ApiHelper,
-  stateHelper: StateHelperWithEnv<"GetDesiredStateDiff">
+  stateHelper: StateHelperWithEnv<"GetDesiredStateDiff">,
 ) {
   return QueryManager.OneTimeWithEnv<"GetDesiredStateDiff">(
     apiHelper,
@@ -12,6 +12,6 @@ export function GetDesiredStateDiffQueryManager(
     ({ from, to }, env) => [to, from, env],
     "GetDesiredStateDiff",
     ({ from, to }) => `/api/v2/desiredstate/diff/${from}/${to}`,
-    identity
+    identity,
   );
 }

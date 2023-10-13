@@ -57,8 +57,8 @@ test.each`
         },
       },
       { pathname: "", search, hash: "" },
-      () => undefined
+      () => undefined,
     );
     expect(value).toEqual(expectedValue);
-  }
+  },
 );
