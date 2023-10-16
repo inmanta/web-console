@@ -2,10 +2,11 @@ import React, { useContext } from "react";
 import {
   Divider,
   Dropdown,
+  DropdownGroup,
   DropdownItem,
   DropdownList,
-  Icon,
   MenuToggle,
+  MenuToggleElement,
   Tooltip,
 } from "@patternfly/react-core";
 import { UserCircleIcon } from "@patternfly/react-icons";
@@ -15,8 +16,6 @@ import { words } from "@/UI/words";
 import { Profile } from "../Actions/Profile";
 
 interface Props {
-  searchValue: string;
-  onSearchInputChange: (value: string) => void;
   items: string[];
   onSelect: (value: string) => void;
   isOpen: boolean;
@@ -34,44 +33,22 @@ export const EnvSelector: React.FC<Props> = ({
   const { routeManager } = useContext(DependencyContext);
   const { keycloakController } = useContext(DependencyContext);
 
-  const envs = [
-    <DropdownList label={words("home.environment.selector")} key="envs-group">
-      {items.map((item, index) => (
-        <StyledItem onClick={() => onSelect(item)} key={`env-${index}-${item}`}>
-          {item.length > 28 ? item.slice(0, 20) + "..." : item}
-        </StyledItem>
-      ))}
-    </DropdownList>,
-  ];
-
-  //add footer at the end
-  envs.push(
-    <div key="overview-link">
-      <StyledSeparator />
-      <Tooltip content={words("home.navigation.tooltip")}>
-        <StyledItem href={routeManager.getUrl("Home", undefined)}>
-          {words("home.navigation.button")}
-        </StyledItem>
-      </Tooltip>
-      {keycloakController.isEnabled() && (
-        <StyledItem onClick={() => keycloakController.getInstance().logout()}>
-          {words("dashboard.logout")}
-        </StyledItem>
-      )}
-    </div>,
-  );
-
   return (
-    <StyledDropdown
+    <Dropdown
       isOpen={isOpen}
-      onOpenChange={(open) => setIsOpen(!open)}
-      toggle={() => (
-        <MenuToggle id="toggle-button">
+      onOpenChange={(open: boolean) => setIsOpen(open)}
+      toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
+        <MenuToggle
+          id="toggle-button"
+          ref={toggleRef}
+          isExpanded={isOpen}
+          aria-label="menu-toggle"
+          isFullHeight
+          onClick={() => setIsOpen(!isOpen)}
+          icon={keycloakController.isEnabled() ? <UserCircleIcon /> : null}
+        >
           {keycloakController.isEnabled() ? (
             <StyledDiv>
-              <StyledIcon size="lg">
-                <UserCircleIcon />
-              </StyledIcon>
               <div>
                 <Profile />
                 <div>
@@ -91,35 +68,43 @@ export const EnvSelector: React.FC<Props> = ({
         </MenuToggle>
       )}
     >
-      {envs}
-    </StyledDropdown>
+      <DropdownList>
+        <DropdownGroup
+          label={words("home.environment.selector")}
+          key="envs-group"
+        >
+          {items.map((item, index) => (
+            <DropdownItem
+              onClick={() => onSelect(item)}
+              key={`env-${index}-${item}`}
+            >
+              {item.length > 28 ? item.slice(0, 20) + "..." : item}
+            </DropdownItem>
+          ))}
+        </DropdownGroup>
+        <div key="overview-link">
+          <Divider />
+          <Tooltip content={words("home.navigation.tooltip")} entryDelay={500}>
+            <DropdownItem to={routeManager.getUrl("Home", undefined)}>
+              {words("home.navigation.button")}
+            </DropdownItem>
+          </Tooltip>
+          {keycloakController.isEnabled() && (
+            <DropdownItem
+              onClick={() => keycloakController.getInstance().logout()}
+            >
+              {words("dashboard.logout")}
+            </DropdownItem>
+          )}
+        </div>
+      </DropdownList>
+    </Dropdown>
   );
 };
-
-const StyledDropdown = styled(Dropdown)`
-  height: 100%;
-  --pf-v5-c-dropdown--m-expanded__toggle--before--BorderBottomWidth: 4px;
-  --pf-v5-c-dropdown__toggle--before--BorderRightColor: #666768;
-  --pf-v5-c-dropdown__toggle--before--BorderLeftColor: #666768;
-  --pf-v5-c-dropdown__toggle--PaddingRight: 1rem;
-  --pf-v5-c-dropdown__toggle--PaddingLeft: 1rem;
-`;
-const StyledItem = styled(DropdownItem)`
-  max-width: 260px;
-  min-width: 260px;
-`;
-const StyledSeparator = styled(Divider)`
-  padding: 0 15px;
-  margin: 10px 0 5px !important;
-`;
 
 const StyledDiv = styled.div`
   display: flex;
   flex-direction: row;
   gap: 20px;
   align-items: center;
-`;
-
-const StyledIcon = styled(Icon)`
-  --pf-v5-c-icon__content--Color: white;
 `;

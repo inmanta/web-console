@@ -50,9 +50,6 @@ export const GlobalStyles = createGlobalStyle`
   .pf-v5-c-select {
     min-width: 180px;
   }
-  .pf-v5-c-toolbar__item .pf-c-input-group {
-    height: auto !important;
-  }
   @media (max-width: 1000px) {
     *[aria-label="FilterBar"] {
       gap: var(--pf-v5-global--spacer--md);

@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
 import {
-  BackgroundImage,
   Toolbar,
   Masthead,
   MastheadBrand,
@@ -12,7 +11,6 @@ import {
   ToolbarGroup,
   ToolbarItem,
 } from "@patternfly/react-core";
-import lg from "@patternfly/react-core/dist/styles/assets/images/pfbg_2000.jpg";
 import { BarsIcon } from "@patternfly/react-icons";
 import { Badge } from "@/Slices/Notification/UI/Badge";
 import { DependencyContext } from "@/UI/Dependency";
@@ -30,7 +28,6 @@ export const Header: React.FC<Props> = ({ noEnv, onNotificationsToggle }) => {
   const { routeManager, environmentHandler } = useContext(DependencyContext);
   return (
     <>
-      <BackgroundImage src={lg} alt="Background image" />
       <Masthead>
         <MastheadToggle>
           <PageToggleButton
@@ -54,7 +51,7 @@ export const Header: React.FC<Props> = ({ noEnv, onNotificationsToggle }) => {
           </MastheadBrand>
         </MastheadMain>
         <MastheadContent>
-          <Toolbar id="uncontrolled-toolbar">
+          <Toolbar id="uncontrolled-toolbar" isFullHeight isStatic>
             <ToolbarContent>
               <ToolbarGroup
                 variant="icon-button-group"
@@ -68,10 +65,10 @@ export const Header: React.FC<Props> = ({ noEnv, onNotificationsToggle }) => {
                 )}
                 <StatusButton />
                 <DocumentationLink />
-                <ToolbarItem>
-                  <EnvSelectorWithProvider />
-                </ToolbarItem>
               </ToolbarGroup>
+              <ToolbarItem>
+                <EnvSelectorWithProvider />
+              </ToolbarItem>
             </ToolbarContent>
           </Toolbar>
         </MastheadContent>
