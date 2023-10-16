@@ -42,7 +42,7 @@ export const EnvSelector: React.FC<Props> = ({
           id="toggle-button"
           ref={toggleRef}
           isExpanded={isOpen}
-          aria-label="menu-toggle"
+          aria-label={toggleText}
           isFullHeight
           onClick={() => setIsOpen(!isOpen)}
           icon={keycloakController.isEnabled() ? <UserCircleIcon /> : null}
