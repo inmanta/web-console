@@ -58,7 +58,7 @@
     "@types/fetch-mock": "^7.3.5",
     "@types/file-saver": "^2.0.5",
     "@types/jest": "^29.5.4",
-    "@types/json-bigint": "^1.0.1",
+    "@types/json-bigint": "^1.0.3",
     "@types/lodash": "^4.14.197",
     "@types/lodash-es": "^4.17.8",
     "@types/node": "^20.8.4",

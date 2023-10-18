@@ -1332,7 +1332,7 @@ __metadata:
     "@types/fetch-mock": ^7.3.5
     "@types/file-saver": ^2.0.5
     "@types/jest": ^29.5.4
-    "@types/json-bigint": ^1.0.1
+    "@types/json-bigint": ^1.0.3
     "@types/lodash": ^4.14.197
     "@types/lodash-es": ^4.17.8
     "@types/node": ^20.8.4
@@ -2651,10 +2651,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/json-bigint@npm:^1.0.1":
-  version: 1.0.1
-  resolution: "@types/json-bigint@npm:1.0.1"
-  checksum: b39e55a811f554bd25f1d991bc4fc70655216dff466f21f97160097573a4bc7b478c1907aa5194c79022c115f509f8e4712083c51f57665e7a2de7412ff7801f
+"@types/json-bigint@npm:^1.0.3":
+  version: 1.0.3
+  resolution: "@types/json-bigint@npm:1.0.3"
+  checksum: 085ab4961a3dd610d63f9e0e11d7e179899ad2557a7dc603fc840c96f6dd652dbb52c08ad05c8e6bff0253b02180d3a4fab02ddb3d5e4afdec7db065bc459a9d
   languageName: node
   linkType: hard
 
