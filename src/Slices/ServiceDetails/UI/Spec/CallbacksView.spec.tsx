@@ -172,11 +172,11 @@ test("GIVEN CallbacksTab WHEN user fills in form and clicks on Add THEN callback
     await userEvent.click(eventTypesInput);
   });
 
-  const allowationUpdateOption = screen.getByRole("option", {
+  const allocationUpdateOption = screen.getByRole("option", {
     name: "ALLOCATION_UPDATE",
   });
   await act(async () => {
-    await userEvent.click(allowationUpdateOption);
+    await userEvent.click(allocationUpdateOption);
   });
 
   const addButton = screen.getByRole("button", {
