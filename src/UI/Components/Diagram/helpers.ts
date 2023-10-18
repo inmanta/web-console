@@ -1,6 +1,12 @@
 import { dia } from "@inmanta/rappid";
-import { EmbeddedEntity, ServiceInstanceModel, ServiceModel } from "@/Core";
-import { ConnectionRules, Rule } from "./interfaces";
+import {
+  EmbeddedEntity,
+  InstanceAttributeModel,
+  ServiceInstanceModel,
+  ServiceModel,
+} from "@/Core";
+import { create_UUID } from "@/Slices/EditInstance/Data";
+import { ConnectionRules, InstanceForApi, Rule } from "./interfaces";
 import { ServiceEntityBlock } from "./shapes";
 
 export const extractRelationsIds = (
@@ -10,9 +16,11 @@ export const extractRelationsIds = (
   const relationKeys = service.inter_service_relations?.map(
     (relation) => relation.name,
   );
+
   if (!relationKeys) {
     return [];
   }
+
   if (instance.candidate_attributes !== null) {
     return relationKeys
       .map((key) =>
@@ -219,4 +227,107 @@ const doesElementsIsEmbeddedWithExhaustedConnections = (
     return connectedHolder.length > 0 && doesSourceMatchHolderType;
   }
   return false;
+};
+
+/**
+ * Function that will merge state from Instance Composer to proper object for order_api endpoint.
+ * Instance composer state is being split into multiple objects that could be embedded into other available, so we need to recursively
+ * go through all of them to group, and sort them
+ * @param {InstanceForApi[]} instances all of the instances that were created/edited in the instance, not including the one passed in second parameter
+ * @param {InstanceForApi} instance instance which is used taken into consideration as the parent of the possible embedded
+ * @param {boolean=} isEmbedded boolean informing whether instance passed is embedded or not
+ * @returns
+ */
+export const shapesDataTransform = (
+  instances: InstanceForApi[],
+  instance: InstanceForApi,
+  isEmbedded = false,
+) => {
+  let areEmbeddedEdited = false;
+  const matchingInstances = instances.filter(
+    (checkedInstance) => checkedInstance.embeddedTo === instance.instance_id,
+  );
+
+  const notMatchingInstances = instances.filter(
+    (checkedInstance) => checkedInstance.embeddedTo !== instance.instance_id,
+  );
+
+  //iterate through matching (embedded)instances and group them according to property type to be able to put them in the Array if needed at once
+  const groupedEmbedded: { [instanceId: string]: InstanceForApi[] } =
+    matchingInstances.reduce((reducer, instance) => {
+      reducer[instance.service_entity] = reducer[instance.service_entity] || [];
+      reducer[instance.service_entity].push(instance);
+      return reducer;
+    }, Object.create({}));
+
+  for (const [key, instancesToEmbed] of Object.entries(groupedEmbedded)) {
+    if (instance.value) {
+      if (instancesToEmbed.length > 1) {
+        const updated: InstanceAttributeModel[] = [];
+        instancesToEmbed.forEach((instance) => {
+          const updatedInstance = shapesDataTransform(
+            notMatchingInstances,
+            instance,
+            true,
+          );
+
+          areEmbeddedEdited =
+            !areEmbeddedEdited &&
+            !instance.action &&
+            updatedInstance.action !== null;
+
+          if (updatedInstance.action !== "delete") {
+            updated.push(updatedInstance.value as InstanceAttributeModel);
+          }
+        });
+
+        instance.value[key] = updated;
+      } else {
+        const data = shapesDataTransform(
+          notMatchingInstances,
+          instancesToEmbed[0],
+          true,
+        );
+
+        areEmbeddedEdited = instance.action === null && data.action !== null;
+
+        if (data.action !== "delete") {
+          instance.value[key] = data.value;
+        }
+      }
+    }
+  }
+
+  //convert relatedTo property into valid attribute
+  if (instance.relatedTo) {
+    instance.relatedTo.forEach((attrName, id) => {
+      if (instance.value) {
+        instance.value[attrName] = id;
+      }
+    });
+  }
+
+  //if any of its embedded instances were edited, and its action is indicating no changes to main attributes, change it to "update"
+  if (areEmbeddedEdited) {
+    instance.action = "update";
+  }
+
+  //if its action is "update" and instance isn't embedded change value property to edit as that's what api expect in the body
+  if (instance.action === "update" && !isEmbedded) {
+    if (!!instance.value && !instance.edit) {
+      instance.edit = [
+        {
+          edit_id: `${instance.instance_id}_order_update-${create_UUID()}`,
+          operation: "replace",
+          target: ".",
+          value: instance.value,
+        },
+      ];
+    }
+    delete instance.value;
+  }
+
+  delete instance.embeddedTo;
+  delete instance.relatedTo;
+  return instance;
 };

@@ -63,6 +63,9 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
             fill: "#000000",
             //pointerEvents: "none",
             cursor: "default",
+            itemText: {
+              textWrap: false,
+            },
           },
           itemLabels_1: {
             fill: "#7F7F7F",
@@ -124,7 +127,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
         this.attr(`itemLabel_${item.name}/data-tooltip`, item.name);
         this.attr(`itemLabel_${item.name}/data-tooltip-position`, "right");
 
-        names.push({ ...nameObject, label: truncatedName });
+        names.push({ ...nameObject, label: item.name.slice(0, 11) + `\u2026` });
       } else {
         names.push(nameObject);
       }
@@ -157,7 +160,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
         if (item.value !== undefined && item.value !== null) {
           //reproduce internal formatting of the text base on actual dimensions, if text includes elipsis add Tooltip
           const reproducedDisplayText = util.breakText(
-            item.value.toString(),
+            item.value.toString().replace(/\s+/g, " "),
             { width: 80, height: 22 },
             {
               "font-size": this.attr("itemLabels_1/fontSize"),
@@ -169,6 +172,9 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
           );
 
           if (reproducedDisplayText.includes(`\u2026`)) {
+            value.label =
+              item.value.toString().replace(/\s+/g, " ").slice(0, 10) +
+              `\u2026`;
             this.attr(`itemLabel_${item.name}_value/data-tooltip`, item.value);
           }
         }
@@ -205,7 +211,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
       },
       {
         tagName: "image",
-        selector: "button",
+        selector: "toggleButton",
       },
     ];
   }
@@ -244,24 +250,25 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
     return relations ? relations : null;
   }
 
-  addRelation(id: string, instanceName: string): void {
+  addRelation(id: string, relationName: string): void {
     const currentRelation = this.getRelations();
 
     if (currentRelation) {
-      this.set("relatedTo", currentRelation.set(id, instanceName));
+      this.set("relatedTo", currentRelation.set(id, relationName));
     } else {
       const relationMap = new Map();
-      relationMap.set(id, instanceName);
-      this.set("relatedTo", relationMap.set(id, instanceName));
+      this.set("relatedTo", relationMap.set(id, relationName));
     }
   }
 
-  removeRelation(id: string): void {
+  removeRelation(id: string): boolean {
     const currentRelation = this.getRelations();
+    let wasThereRelationToRemove = false;
     if (currentRelation) {
-      currentRelation.delete(id);
+      wasThereRelationToRemove = currentRelation.delete(id);
       this.set("relatedTo", currentRelation);
     }
+    return wasThereRelationToRemove;
   }
 
   getName(): string {
@@ -307,8 +314,8 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
       cursor: "default",
     });
 
-    this.attr("button", {
-      event: "element:button:pointerdown",
+    this.attr("toggleButton", {
+      event: "element:toggleButton:pointerdown",
       "xlink:href": expandButton,
       preserveAspectRatio: "none",
       cursor: "pointer",

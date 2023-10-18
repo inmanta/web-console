@@ -15,8 +15,6 @@ import {
   PrimaryArchiveHelper,
   PrimaryFileManager,
   PrimaryKeycloakController,
-  BigIntJsonParser,
-  NativeJsonParser,
   PrimaryLogger,
 } from "@/Data";
 import {
@@ -58,9 +56,6 @@ export const Injector: React.FC<React.PropsWithChildren<Props>> = ({
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
   const routeManager = PrimaryRouteManager(basePathname);
   const apiHelper = new BaseApiHelper(
-    featureManager.getJsonParser() === "BigInt"
-      ? new BigIntJsonParser()
-      : new NativeJsonParser(),
     baseUrl,
     keycloakController.getInstance(),
   );

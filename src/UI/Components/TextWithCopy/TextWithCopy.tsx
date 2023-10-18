@@ -22,7 +22,7 @@ export const TextWithCopy: React.FC<React.PropsWithChildren<Props>> = ({
 };
 
 const StyledCopyIcon = styled(ClipboardCopyButton)`
-  opacity: 0;
+  opacity: 0.6;
   padding-left: 5px;
 `;
 

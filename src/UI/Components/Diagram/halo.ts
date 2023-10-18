@@ -1,6 +1,6 @@
 import { dia, highlighters, ui } from "@inmanta/rappid";
 import { checkIfConnectionIsAllowed } from "./helpers";
-import { ConnectionRules } from "./interfaces";
+import { ActionEnum, ConnectionRules } from "./interfaces";
 import { ServiceEntityBlock } from "./shapes";
 
 const createHalo = (
@@ -8,6 +8,7 @@ const createHalo = (
   paper: dia.Paper,
   cellView: dia.CellView,
   connectionRules: ConnectionRules,
+  updateInstancesToSend: (cell: ServiceEntityBlock, action: ActionEnum) => void,
 ) => {
   const halo = new ui.Halo({
     cellView: cellView,
@@ -43,16 +44,30 @@ const createHalo = (
       const isEmbeddedToTHisCell =
         element.get("embeddedTo") === cellView.model.id;
 
+      let didElementChange = false;
+
       if (isEmbedded && isEmbeddedToTHisCell) {
         element.set("embeddedTo", null);
+        didElementChange = true;
       }
       const relations = elementAsService.getRelations();
 
       if (relations) {
-        elementAsService.removeRelation(cellView.model.id as string);
+        const wasThereRelationToRemove = elementAsService.removeRelation(
+          cellView.model.id as string,
+        );
+        didElementChange = didElementChange || wasThereRelationToRemove;
+      }
+
+      if (didElementChange) {
+        updateInstancesToSend(elementAsService, ActionEnum.UPDATE);
       }
     });
 
+    updateInstancesToSend(
+      cellView.model as ServiceEntityBlock,
+      ActionEnum.DELETE,
+    );
     graph.removeLinks(cellView.model);
     cellView.remove();
     halo.remove();
