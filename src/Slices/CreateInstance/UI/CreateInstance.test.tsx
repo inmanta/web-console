@@ -281,18 +281,19 @@ test("Given the CreateInstance View When creating entity with default values The
     screen.queryByLabelText("TextFieldInput-editableString[]?"),
   ).toHaveTextContent("8.8.8.8");
 
-  expect(screen.queryByLabelText("EnumFieldInput-enum")).toHaveTextContent(
-    "OPTION_ONE",
-  );
   expect(
-    screen.queryByLabelText("EnumFieldInput-editableEnum"),
-  ).toHaveTextContent("OPTION_ONE");
-  expect(screen.queryByLabelText("EnumFieldInput-enum?")).toHaveTextContent(
-    "OPTION_ONE",
-  );
+    screen.getByRole("combobox", { name: "enum-selectFilterInput" }),
+  ).toHaveValue("OPTION_ONE");
   expect(
-    screen.queryByLabelText("EnumFieldInput-editableEnum?"),
-  ).toHaveTextContent("OPTION_ONE");
+    screen.getByRole("combobox", { name: "editableEnum?-selectFilterInput" }),
+  ).toHaveValue("OPTION_ONE");
+
+  expect(
+    screen.getByRole("combobox", { name: "editableEnum-selectFilterInput" }),
+  ).toHaveValue("OPTION_ONE");
+  expect(
+    screen.getByRole("combobox", { name: "enum?-selectFilterInput" }),
+  ).toHaveValue("OPTION_ONE");
 
   expect(screen.queryByLabelText("TextInput-dict")).toHaveValue(
     '{"default":"value"}',
@@ -373,17 +374,25 @@ test("Given the CreateInstance View When creating entity with default values The
   ).toHaveTextContent("8.8.8.8");
 
   expect(
-    within(embedded_base).queryByLabelText("EnumFieldInput-enum"),
-  ).toHaveTextContent("OPTION_ONE");
+    within(embedded_base).getByRole("combobox", {
+      name: "enum-selectFilterInput",
+    }),
+  ).toHaveValue("OPTION_ONE");
   expect(
-    within(embedded_base).queryByLabelText("EnumFieldInput-editableEnum"),
-  ).toHaveTextContent("OPTION_ONE");
+    within(embedded_base).getByRole("combobox", {
+      name: "editableEnum-selectFilterInput",
+    }),
+  ).toHaveValue("OPTION_ONE");
   expect(
-    within(embedded_base).queryByLabelText("EnumFieldInput-enum?"),
-  ).toHaveTextContent("OPTION_ONE");
+    within(embedded_base).getByRole("combobox", {
+      name: "enum?-selectFilterInput",
+    }),
+  ).toHaveValue("OPTION_ONE");
   expect(
-    within(embedded_base).queryByLabelText("EnumFieldInput-editableEnum?"),
-  ).toHaveTextContent("OPTION_ONE");
+    within(embedded_base).getByRole("combobox", {
+      name: "editableEnum?-selectFilterInput",
+    }),
+  ).toHaveValue("OPTION_ONE");
 
   expect(within(embedded_base).queryByLabelText("TextInput-dict")).toHaveValue(
     '{"default":"value"}',

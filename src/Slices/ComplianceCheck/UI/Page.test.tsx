@@ -268,9 +268,7 @@ test("GIVEN ComplianceCheck page WHEN StatusFilter = 'Added' THEN only 'Added' r
     screen.getByRole("listbox", { name: "StatusFilterOptions" }),
   ).toBeVisible();
 
-  const statusOptions = screen.getAllByRole("checkbox", {
-    name: "StatusFilterOption",
-  });
+  const statusOptions = screen.getAllByRole("option");
   expect(statusOptions).toHaveLength(7);
   await act(async () => {
     await userEvent.click(

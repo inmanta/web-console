@@ -1,16 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   FormGroup,
   FormHelperText,
   HelperText,
   HelperTextItem,
-  MenuToggle,
-  MenuToggleElement,
-  Select,
-  SelectOption,
 } from "@patternfly/react-core";
 import { ParsedNumber } from "@/Core";
 import { words } from "@/UI/words";
+import { SingleTextSelect } from "../../SingleTextSelect";
 
 interface Props {
   options: Record<string, string | ParsedNumber>;
@@ -19,7 +16,7 @@ interface Props {
   description?: string;
   isOptional: boolean;
   shouldBeDisabled?: boolean;
-  handleInputChange: (value, event) => void;
+  handleInputChange: (value) => void;
 }
 export const SelectFormInput: React.FC<Props> = ({
   options,
@@ -31,34 +28,15 @@ export const SelectFormInput: React.FC<Props> = ({
   handleInputChange,
   ...props
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const onSelect = (event, value) => {
-    setIsOpen(false);
-    handleInputChange(options[value], event);
-  };
+  const selectOptions = Object.keys(options).sort();
+  const formattedOptions = selectOptions.map((option) => {
+    return {
+      value: option,
+      children: option,
+      isSelected: selectOptions.length === 1 || option === attributeValue,
+    };
+  });
 
-  const selectOptions = Object.keys(options)
-    .sort()
-    .map((key) => <SelectOption key={key} value={key} />);
-
-  const toggle = (toggleRef: React.Ref<MenuToggleElement>) => (
-    <MenuToggle
-      ref={toggleRef}
-      onClick={() => setIsOpen((value) => !value)}
-      isExpanded={isOpen}
-      isDisabled={shouldBeDisabled}
-      aria-label={`${attributeName}-select-toggle`}
-    >
-      {attributeValue === "" ? undefined : attributeValue}
-    </MenuToggle>
-  );
-
-  useEffect(() => {
-    const optionsArray = Object.keys(options);
-    if (optionsArray.length === 1) {
-      handleInputChange(options[optionsArray[0]], null);
-    }
-  }, [handleInputChange, options]);
   return (
     <FormGroup
       {...props}
@@ -71,16 +49,16 @@ export const SelectFormInput: React.FC<Props> = ({
           <HelperTextItem>{description}</HelperTextItem>
         </HelperText>
       </FormHelperText>
-      <Select
-        aria-label={`${attributeName}-select-input`}
-        toggle={toggle}
-        isOpen={isOpen}
-        onSelect={onSelect}
-        selected={attributeValue === "" ? undefined : attributeValue}
-        placeholder={words("common.serviceInstance.select")(attributeName)}
-      >
-        {selectOptions}
-      </Select>
+      <SingleTextSelect
+        options={formattedOptions}
+        toggleAriaLabel={`${attributeName}-select`}
+        setSelected={handleInputChange}
+        selected={
+          selectOptions.length === 1 ? selectOptions[0] : attributeValue
+        }
+        isDisabled={shouldBeDisabled}
+        placeholderText={words("common.serviceInstance.select")(attributeName)}
+      />
     </FormGroup>
   );
 };

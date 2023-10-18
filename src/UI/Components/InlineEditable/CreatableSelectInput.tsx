@@ -11,7 +11,7 @@ interface Props {
   isRequired?: boolean;
   withLabel?: boolean;
   onCreate: (name: string) => Promise<Either.Type<string, unknown>>;
-  onSelect: (value: string | null) => void;
+  onSelect: (value: string) => void;
 }
 
 export const CreatableSelectInput: React.FC<Props> = ({
@@ -52,27 +52,13 @@ export const CreatableSelectInput: React.FC<Props> = ({
       hasCreation
       onCreate={onCreateOption}
       options={options.map((option) => {
-        return { value: option, children: option };
+        return {
+          value: option,
+          children: option,
+          isSelected: option === value,
+        };
       })}
     />
-    // <Select
-    //   aria-label={`${label}-select-input`}
-    //   toggleAriaLabel={`${label}-select-toggle`}
-    //   typeAheadAriaLabel={`${label}-typeahead`}
-    //   variant="typeahead"
-    //   onToggle={() => {
-    //     setIsOpen(!isOpen);
-    //   }}
-    //   isOpen={isOpen}
-    //   onSelect={onSelectOption}
-    //   selections={value}
-    //   isCreatable
-    //   onCreateOption={onCreateOption}
-    // >
-    //   {options.map((option) => (
-    //     <SelectOption key={option} value={option} />
-    //   ))}
-    // </Select>
   );
 
   const fieldView = withLabel ? (

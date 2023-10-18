@@ -26,7 +26,7 @@ interface Props {
   onSearchTextChanged?: (value: string) => void;
   hasChips?: boolean;
   toggleIcon?: React.ReactNode;
-  hasCheckboxes?: boolean;
+  noInputField?: boolean;
   footer?: React.ReactNode;
 }
 
@@ -38,7 +38,7 @@ export const MultiTextSelect: React.FC<Props> = ({
   placeholderText,
   onSearchTextChanged = () => {},
   hasChips = false,
-  hasCheckboxes = false,
+  noInputField = false,
   ...props
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -50,13 +50,8 @@ export const MultiTextSelect: React.FC<Props> = ({
   const textInputRef = useRef<HTMLInputElement>();
 
   useEffect(() => {
-    // Filter menu items based on the text input value when one exists
-    if (inputValue && checkIfOptionMatchInput(options, inputValue)) {
-      setSelected(inputValue as string);
-
-      if (!isOpen) {
-        setIsOpen(true);
-      }
+    if (inputValue && !isOpen) {
+      setIsOpen(true);
     }
 
     setFocusedItemIndex(null);
@@ -137,6 +132,9 @@ export const MultiTextSelect: React.FC<Props> = ({
         } else if (isOpen && focusedItem.value !== "no results") {
           onSelect(focusedItem.value as string);
         }
+        if (inputValue && checkIfOptionMatchInput(options, inputValue)) {
+          onSelect(inputValue);
+        }
         break;
       case "Tab":
       case "Escape":
@@ -172,84 +170,96 @@ export const MultiTextSelect: React.FC<Props> = ({
 
   const toggle = (toggleRef: React.Ref<MenuToggleElement>) => (
     <MenuToggle
-      variant="typeahead"
+      variant={noInputField ? "default" : "typeahead"}
       onClick={onToggleClick}
-      innerRef={toggleRef}
+      ref={toggleRef}
       isExpanded={isOpen}
       isFullWidth
       aria-label={toggleAriaLabel}
     >
-      <TextInputGroup isPlain>
-        <TextInputGroupMain
-          value={inputValue}
-          onClick={onToggleClick}
-          onChange={onTextInputChange}
-          onKeyDown={onInputKeyDown}
-          id="multi-typeahead-select-input"
-          autoComplete="off"
-          innerRef={textInputRef}
-          placeholder={placeholderText || "Select..."}
-          {...(activeItem && { "aria-activedescendant": activeItem })}
-          role="combobox"
-          isExpanded={isOpen}
-          aria-controls="select-multi-typeahead-listbox"
-          disabled={props.isDisabled}
-        >
-          {hasChips && (
-            <ChipGroup aria-label="Current selections" numChips={0}>
-              {selected.map((selection) => (
-                <Chip
-                  disabled={props.isDisabled}
-                  key={selection}
-                  onClick={(ev) => {
-                    ev.stopPropagation();
-                    onSelect(selection);
-                  }}
-                >
-                  {getDisplayValue(selection)}
-                </Chip>
-              ))}
-            </ChipGroup>
-          )}
-        </TextInputGroupMain>
-        <TextInputGroupUtilities>
-          {selected.length > 0 && (
-            <Button
-              disabled={props.isDisabled}
-              variant="plain"
-              onClick={() => {
-                setInputValue("");
-                setSelected("");
-                textInputRef?.current?.focus();
-              }}
-              aria-label="Clear input value"
-            >
-              {props.toggleIcon ? props.toggleIcon : <TimesIcon aria-hidden />}
-            </Button>
-          )}
-        </TextInputGroupUtilities>
-      </TextInputGroup>
+      {noInputField ? (
+        placeholderText
+      ) : (
+        <TextInputGroup isPlain>
+          <TextInputGroupMain
+            value={inputValue}
+            onClick={onToggleClick}
+            onChange={onTextInputChange}
+            onKeyDown={onInputKeyDown}
+            id="multi-typeahead-select-input"
+            autoComplete="off"
+            innerRef={textInputRef}
+            placeholder={placeholderText || "Select..."}
+            {...(activeItem && { "aria-activedescendant": activeItem })}
+            role="combobox"
+            isExpanded={isOpen}
+            aria-controls="select-multi-typeahead-listbox"
+            aria-label={`${toggleAriaLabel}FilterInput`}
+            disabled={props.isDisabled}
+          >
+            {hasChips && (
+              <ChipGroup aria-label="Current selections" numChips={0}>
+                {selected.map((selection) => (
+                  <Chip
+                    disabled={props.isDisabled}
+                    key={selection}
+                    onClick={(ev) => {
+                      ev.stopPropagation();
+                      onSelect(selection);
+                    }}
+                  >
+                    {getDisplayValue(selection)}
+                  </Chip>
+                ))}
+              </ChipGroup>
+            )}
+          </TextInputGroupMain>
+          <TextInputGroupUtilities>
+            {selected.length > 0 && (
+              <Button
+                disabled={props.isDisabled}
+                variant="plain"
+                onClick={() => {
+                  setInputValue("");
+                  textInputRef?.current?.focus();
+                }}
+                aria-label="Clear input value"
+              >
+                {props.toggleIcon ? (
+                  props.toggleIcon
+                ) : (
+                  <TimesIcon aria-hidden />
+                )}
+              </Button>
+            )}
+          </TextInputGroupUtilities>
+        </TextInputGroup>
+      )}
     </MenuToggle>
   );
 
   return (
     <Select
-      id="multi-typeahead-select"
+      id={`multi-select-${toggleAriaLabel}`}
       isOpen={isOpen}
       onSelect={(_ev, selection) => onSelect(selection as string)}
       onOpenChange={() => setIsOpen(false)}
       toggle={toggle}
     >
-      <SelectList isAriaMultiselectable id="select-multi-typeahead-listbox">
+      <SelectList
+        isAriaMultiselectable
+        id={`select-listbox-${toggleAriaLabel}`}
+        aria-label={`${toggleAriaLabel}Options`}
+      >
         {selectOptions.map((option, index) => (
           <SelectOption
-            {...(!option.isDisabled && { hasCheckbox: hasCheckboxes })}
             disabled={props.isDisabled}
             key={option.value || option.children}
             isFocused={focusedItemIndex === index}
             isSelected={option.isSelected}
             className={option.className}
             id={`select-multi-typeahead-${option.value.replace(" ", "-")}`}
+            aria-label={`${option.value || option.children}`}
             {...option}
             ref={null}
           />

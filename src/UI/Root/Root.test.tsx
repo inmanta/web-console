@@ -89,9 +89,7 @@ test("GIVEN the app THEN the navigation toggle button should be visible", async 
     await apiHelper.resolve(Either.right({ data: Project.list }));
   });
 
-  expect(
-    screen.getByRole("button", { name: "Global navigation" }),
-  ).toBeVisible();
+  expect(screen.getByRole("button", { name: "Main Navigation" })).toBeVisible();
 });
 
 test("GIVEN the app THEN the documentation link should be visible", async () => {

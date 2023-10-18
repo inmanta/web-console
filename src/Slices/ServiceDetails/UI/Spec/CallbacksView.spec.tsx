@@ -153,8 +153,8 @@ test("GIVEN CallbacksTab WHEN user fills in form and clicks on Add THEN callback
   await act(async () => {
     await userEvent.type(callbackUrlInput, "http://www.example.com/");
   });
-  const minimalLogLevelInput = screen.getByRole("button", {
-    name: "MinimalLogLevel",
+  const minimalLogLevelInput = screen.getByRole("combobox", {
+    name: "MinimalLogLevelFilterInput",
   });
   await act(async () => {
     await userEvent.click(minimalLogLevelInput);
@@ -165,18 +165,18 @@ test("GIVEN CallbacksTab WHEN user fills in form and clicks on Add THEN callback
     await userEvent.click(criticalOption);
   });
 
-  const eventTypesInput = screen.getByRole("button", {
-    name: "EventTypes",
+  const eventTypesInput = screen.getByRole("combobox", {
+    name: "EventTypesFilterInput",
   });
   await act(async () => {
     await userEvent.click(eventTypesInput);
   });
 
-  const checkbox = screen.getByRole("checkbox", {
+  const allowationUpdateOption = screen.getByRole("option", {
     name: "ALLOCATION_UPDATE",
   });
   await act(async () => {
-    await userEvent.click(checkbox);
+    await userEvent.click(allowationUpdateOption);
   });
 
   const addButton = screen.getByRole("button", {

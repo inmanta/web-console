@@ -35,7 +35,7 @@ export const CreateCallbackForm: React.FC<Props> = ({
   const [eventTypes, setEventTypes] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
   const { commandResolver } = useContext(DependencyContext);
-  const options: SelectOptionProps[] = LogLevelsList.map((option) => {
+  const logOptions: SelectOptionProps[] = LogLevelsList.map((option) => {
     return { value: option, children: option };
   });
 
@@ -64,7 +64,11 @@ export const CreateCallbackForm: React.FC<Props> = ({
   };
 
   const onSelect = (selected) => {
-    setEventTypes(selected);
+    if (eventTypes.includes(selected)) {
+      setEventTypes(eventTypes.filter((value) => value !== selected));
+    } else {
+      setEventTypes([...eventTypes, selected]);
+    }
   };
 
   return (
@@ -88,7 +92,7 @@ export const CreateCallbackForm: React.FC<Props> = ({
         </Td>
         <Td className={inlineStyles.inlineEditInput}>
           <SingleTextSelect
-            options={options}
+            options={logOptions}
             selected={logLevel}
             setSelected={setLogLevel}
             toggleAriaLabel="MinimalLogLevel"
@@ -96,12 +100,18 @@ export const CreateCallbackForm: React.FC<Props> = ({
         </Td>
         <StyledTd className={inlineStyles.inlineEditInput}>
           <MultiTextSelect
-            options={EventTypesList.map((option) => {
-              return { value: option, children: option };
-            })}
             selected={eventTypes}
             setSelected={onSelect}
+            placeholderText="Select Event Types"
             toggleAriaLabel="EventTypes"
+            hasChips
+            options={EventTypesList.map((option) => {
+              return {
+                value: option,
+                children: option,
+                isSelected: eventTypes.includes(option),
+              };
+            })}
           />
         </StyledTd>
         <Td>

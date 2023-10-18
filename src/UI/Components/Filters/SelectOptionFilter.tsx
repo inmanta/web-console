@@ -41,7 +41,11 @@ export const SelectOptionFilter: React.FC<Props> = ({
       <MultiTextSelect
         toggleAriaLabel={filterPropertyName}
         options={possibleStates.map((option) => {
-          return { value: option, children: option };
+          return {
+            value: option,
+            children: option,
+            isSelected: selectedStates.includes(option),
+          };
         })}
         setSelected={onSelect}
         placeholderText={placeholder}

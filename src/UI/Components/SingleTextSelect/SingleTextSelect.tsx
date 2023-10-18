@@ -15,7 +15,7 @@ import { TimesIcon } from "@patternfly/react-icons";
 
 interface Props {
   selected: string | null;
-  setSelected: (selected: string | null) => void;
+  setSelected: (selected: string) => void;
   onSearchTextChanged?: (value: string) => void;
   onCreate?: (value: string) => void;
   options: SelectOptionProps[];
@@ -38,7 +38,7 @@ export const SingleTextSelect: React.FC<Props> = ({
   ...props
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [inputValue, setInputValue] = useState<string>("");
+  const [inputValue, setInputValue] = useState<string>(selected || "");
   const [filterValue, setFilterValue] = useState("");
   const [selectOptions, setSelectOptions] =
     useState<SelectOptionProps[]>(options);
@@ -47,12 +47,29 @@ export const SingleTextSelect: React.FC<Props> = ({
   const textInputRef = useRef<HTMLInputElement>();
 
   useEffect(() => {
-    if (filterValue && checkIfOptionMatchInput(options, filterValue)) {
-      setSelected(filterValue as string);
+    if (filterValue && !isOpen) {
+      setIsOpen(true);
+    }
 
-      if (!isOpen) {
-        setIsOpen(true);
+    if (filterValue && hasCreation) {
+      let newSelectOptions: SelectOptionProps[] = options;
+      newSelectOptions = options.filter((menuItem) =>
+        String(menuItem.children)
+          .toLowerCase()
+          .includes(filterValue.toLowerCase()),
+      );
+
+      if (
+        !checkIfOptionMatchInput(options, filterValue) ||
+        !newSelectOptions.length
+      ) {
+        newSelectOptions = [
+          { children: `Create "${filterValue}"`, value: "create" },
+          ...newSelectOptions,
+        ];
       }
+
+      setSelectOptions(newSelectOptions);
     }
 
     setActiveItem(null);
@@ -71,13 +88,17 @@ export const SingleTextSelect: React.FC<Props> = ({
       ]);
     } else if (options.length === 0 && hasCreation) {
       setSelectOptions([
-        { children: `Create new option "${inputValue}"`, value: "create" },
+        { children: `Create "${inputValue}"`, value: "create" },
       ]);
     } else {
       setSelectOptions(options);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [options]);
+
+  useEffect(() => {
+    setInputValue(selected || "");
+  }, [selected]);
 
   const onToggleClick = () => {
     setIsOpen(!isOpen);
@@ -93,15 +114,19 @@ export const SingleTextSelect: React.FC<Props> = ({
     _event: React.MouseEvent<Element, MouseEvent> | undefined,
     value: string | number | undefined,
   ) => {
-    if (value && value !== "no results") {
-      setFilterValue("");
-      if (value === "create") {
-        setSelected(inputValue);
+    switch (value) {
+      case "create":
         onCreate(inputValue);
-      } else {
-        setInputValue(getDisplayValue(value) as string);
-        setSelected(value as string);
-      }
+        setFilterValue(inputValue);
+        setSelected(inputValue);
+        break;
+      default:
+        if (value && value !== "no results") {
+          setFilterValue("");
+          setInputValue(getDisplayValue(value) as string);
+          setSelected(value as string);
+        }
+        break;
     }
 
     setIsOpen(false);
@@ -163,9 +188,13 @@ export const SingleTextSelect: React.FC<Props> = ({
       // Select the first available option
       case "Enter":
         if (isOpen && focusedItem.value !== "no results") {
-          setInputValue(String(focusedItem.children));
+          //   setInputValue(String(focusedItem.children));
           setFilterValue("");
           setSelected(String(focusedItem.children));
+        }
+
+        if (checkIfOptionMatchInput(options, filterValue)) {
+          setSelected(filterValue as string);
         }
 
         setIsOpen((prevIsOpen) => !prevIsOpen);
@@ -193,7 +222,8 @@ export const SingleTextSelect: React.FC<Props> = ({
       onClick={onToggleClick}
       isExpanded={isOpen}
       isFullWidth
-      aria-label={toggleAriaLabel}
+      data-testid={`${toggleAriaLabel}-toggle`}
+      isDisabled={props.isDisabled}
     >
       <TextInputGroup isPlain>
         <TextInputGroupMain
@@ -209,7 +239,7 @@ export const SingleTextSelect: React.FC<Props> = ({
           role="combobox"
           isExpanded={isOpen}
           aria-controls="select-typeahead-listbox"
-          disabled={props.isDisabled}
+          aria-label={`${toggleAriaLabel}FilterInput`}
         />
 
         <TextInputGroupUtilities>

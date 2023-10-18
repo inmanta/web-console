@@ -32,6 +32,7 @@ export const StatusFilter: React.FC<Props> = ({ statuses, setStatuses }) => {
         placeholderText="Filter by Status"
         selected={statuses}
         setSelected={onSelect}
+        noInputField
         footer={
           <MenuFooter>
             <Button variant="link" isInline onClick={allCallback}>
@@ -44,6 +45,7 @@ export const StatusFilter: React.FC<Props> = ({ statuses, setStatuses }) => {
             value: option,
             children: option,
             icon: <StatusDescriptor status={option} />,
+            isSelected: statuses.includes(option),
           };
         })}
       />

@@ -14,12 +14,12 @@ interface Props {
 
 export const ReadFilter: React.FC<Props> = ({ filter, setFilter }) => {
   const options: SelectOptionProps[] = list.map((option) => {
-    return { value: options, children: option };
+    return { value: option, children: option };
   });
   const onSelect = (selection) => {
     setFilter({
       ...filter,
-      read: selection === null ? undefined : selection === "read",
+      read: selection === "" ? undefined : selection === "read",
     });
   };
 

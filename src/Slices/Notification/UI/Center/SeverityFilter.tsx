@@ -12,12 +12,12 @@ interface Props {
 
 export const SeverityFilter: React.FC<Props> = ({ filter, setFilter }) => {
   const options: SelectOptionProps[] = severityList.map((option) => {
-    return { value: options, children: option };
+    return { value: option, children: option };
   });
   const onSelect = (selection) => {
     setFilter({
       ...filter,
-      severity: selection === null ? undefined : selection,
+      severity: selection === "" ? undefined : selection,
     });
   };
 

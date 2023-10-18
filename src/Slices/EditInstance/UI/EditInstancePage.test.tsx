@@ -389,19 +389,19 @@ test("Given the EditInstance View When changing an embedded entity Then the inpu
     within(embedded_base).queryByLabelText("TextFieldInput-editableString[]?"),
   ).not.toHaveClass("is-disabled");
 
+  expect(within(embedded_base).queryByTestId("enum-select-toggle")).toHaveClass(
+    "pf-m-disabled",
+  );
   expect(
-    within(embedded_base).queryByLabelText("enum-select-toggle"),
-  ).toBeDisabled();
-  expect(
-    within(embedded_base).queryByLabelText("editableEnum-select-toggle"),
-  ).toBeEnabled();
+    within(embedded_base).queryByTestId("editableEnum-select-toggle"),
+  ).not.toHaveClass("pf-m-disabled");
 
   expect(
-    within(embedded_base).queryByLabelText("enum?-select-toggle"),
-  ).toBeDisabled();
+    within(embedded_base).queryByTestId("enum?-select-toggle"),
+  ).toHaveClass("pf-m-disabled");
   expect(
-    within(embedded_base).queryByLabelText("editableEnum?-select-toggle"),
-  ).toBeEnabled();
+    within(embedded_base).queryByTestId("editableEnum?-select-toggle"),
+  ).not.toHaveClass("pf-m-disabled");
 
   expect(
     within(embedded_base).queryByLabelText("TextInput-dict"),

@@ -60,7 +60,7 @@ export const TreeTable: React.FC<Props> = ({
               onSelect={() => setIsOpen((value) => !value)}
               toggle={() => (
                 <MenuToggle
-                  aria-label="kebab dropdown toggle"
+                  aria-label="expand-collapse-dropdown-toggle"
                   isExpanded={isOpen}
                   onClick={() => setIsOpen((value) => !value)}
                 >
