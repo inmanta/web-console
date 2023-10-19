@@ -66,6 +66,7 @@ export const MultiTextSelect: React.FC<Props> = ({
         {
           children: `No results found for "${inputValue}"`,
           value: "no results",
+          isDisabled: true,
         },
       ]);
     } else {

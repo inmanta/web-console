@@ -121,8 +121,8 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#add-instance-button").click();
       cy.get("#service_id").type("0002");
       cy.get("#name").type("child");
-      cy.get(".pf-v5-c-select").click();
-      cy.get('[aria-label="parent_entity-select-input"]').first().click();
+      cy.get('[aria-label="parent_entity-select-toggleFilterInput"]').click();
+      cy.get('[role="option"]').first().click();
       cy.get("button").contains("Confirm").click();
       // Expect to be redirected to service inventory
       cy.get('[aria-label="ServiceInventory-Success"]').should("to.be.visible");

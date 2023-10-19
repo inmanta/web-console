@@ -84,6 +84,7 @@ export const SingleTextSelect: React.FC<Props> = ({
         {
           children: `No results found for "${filterValue}"`,
           value: "no results",
+          isDisabled: true,
         },
       ]);
     } else if (options.length === 0 && hasCreation) {

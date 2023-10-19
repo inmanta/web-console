@@ -262,8 +262,8 @@ describe("Scenario 6 : Resources", () => {
       cy.get("button").contains("Logs").click();
 
       // Filter on "INFO" for Minimal Log Level
-      cy.get(".pf-v5-c-select").eq(1).click();
-      cy.get("button").contains("INFO").click();
+      cy.get('[aria-label="MinimalLogLevelFilterInput"]').click();
+      cy.get('[role="option"]').contains("INFO").click();
 
       // Expect the amount of rows to be max  6
       cy.get('[aria-label="ResourceLogRow"]').should(
