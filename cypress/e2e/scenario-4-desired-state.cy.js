@@ -291,13 +291,18 @@ describe("Scenario 4 Desired State", () => {
     cy.get(".pf-v5-c-dropdown__menu-item").contains("Delete").click();
     cy.get("#submit").click();
 
-    // Only the active version should remain in the table.
+    // The active version should remain in the table.
     cy.get("@TABLE_LENGTH").then((length) => {
       cy.get("tbody", { timeout: 30000 }).should(
         "have.length",
         isIso ? length - 1 : length + 1,
       );
     });
+
+    cy.get("tbody")
+      .eq(0)
+      .find('[data-label="Status"]')
+      .should("have.text", "active");
 
     // Recompile to get at least one older version ready to promote.
     cy.get("button", { timeout: 60000 }).contains("Recompile").click();
