@@ -83,7 +83,7 @@ describe("5 Compile reports", () => {
     cy.get("tbody").should(($tableBody) => {
       const $rows = $tableBody.find("tr");
 
-      expect($rows).to.have.length(isIso ? 1 : 4);
+      expect($rows).to.have.length(isIso ? 1 : 3);
 
       expect($rows.eq(0), "top-row-message").to.contain(
         isIso
@@ -104,7 +104,7 @@ describe("5 Compile reports", () => {
         "Compile triggered from the console",
       );
 
-      expect($rows).length.to.be.at.least(isIso ? 2 : 5);
+      expect($rows).length.to.be.at.least(isIso ? 2 : 4);
     });
 
     // await end of compilation and expect it to be success

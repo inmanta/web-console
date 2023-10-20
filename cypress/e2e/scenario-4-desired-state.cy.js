@@ -287,7 +287,7 @@ describe("Scenario 4 Desired State", () => {
       );
     });
 
-    cy.get("tbody").eq(0).find('[aria-label="Actions"]').click();
+    cy.get("tbody").eq(1).find('[aria-label="Actions"]').click();
     cy.get(".pf-v5-c-dropdown__menu-item").contains("Delete").click();
     cy.get("#submit").click();
 
