@@ -404,12 +404,19 @@ describe("Scenario 4 Desired State", () => {
     cy.get(".pf-v5-c-card__expandable-content", { timeout: 20000 }).should(
       ($expandableRow) => {
         expect($expandableRow).to.have.length(isIso ? 2 : 5);
+
         expect($expandableRow.eq(0), "first-row").to.have.text(
           "This resource has not been modified.",
         );
-        expect($expandableRow.eq(1), "second-row").to.have.text(
-          "This resource has not been modified.",
-        );
+        if (isIso) {
+          expect($expandableRow.eq(1), "second-row").to.have.text(
+            "next_version-3+4",
+          );
+        } else {
+          expect($expandableRow.eq(1), "second-row").to.have.text(
+            "This resource has not been modified.",
+          );
+        }
       },
     );
 
