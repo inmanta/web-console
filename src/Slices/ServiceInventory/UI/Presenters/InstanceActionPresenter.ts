@@ -1,7 +1,7 @@
 import React, { ReactElement } from "react";
 import { ServiceModel } from "@/Core";
 import { ActionPresenter, ServiceInstanceForAction } from "@/UI/Presenters";
-import { InstanceActions } from "@S/ServiceInventory/UI/Components";
+import { RowActions } from "../Components/RowActions";
 
 export class InstanceActionPresenter implements ActionPresenter {
   constructor(
@@ -16,12 +16,17 @@ export class InstanceActionPresenter implements ActionPresenter {
   getForId(id: string): ReactElement | null {
     const instance = this.getInstanceForId(id);
     if (typeof instance === "undefined") return null;
-    return React.createElement(InstanceActions, {
+    return React.createElement(RowActions, {
       instance,
       editDisabled: this.isTransferDisabled(id, "on_update"),
       deleteDisabled: this.isTransferDisabled(id, "on_delete"),
       diagnoseDisabled: instance.deleted,
+      availableStates: this.getAvailableStates(),
     });
+  }
+
+  getAvailableStates(): string[] {
+    return this.serviceEntity.lifecycle.states.map((state) => state.name);
   }
 
   isTransferDisabled(

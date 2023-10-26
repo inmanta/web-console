@@ -21,4 +21,5 @@ export type ServiceInstanceForAction = Pick<
  */
 export interface ActionPresenter {
   getForId(id: string): ReactElement | null;
+  getAvailableStates(): string[];
 }

@@ -49,7 +49,7 @@ function setupComponent() {
           }
           service_entity={ServiceInstance.a.service_entity}
           version={ServiceInstance.a.version}
-          possibleInstanceStates={["up", "deleting"]}
+          availableStates={["up", "deleting"]}
         />
       </DependencyProvider>
     ),
@@ -83,7 +83,7 @@ describe("ForceStateAction", () => {
             }
             service_entity={ServiceInstance.b.service_entity}
             version={ServiceInstance.b.version}
-            possibleInstanceStates={targets}
+            availableStates={targets}
           />
         </StoreProvider>
       </DependencyProvider>

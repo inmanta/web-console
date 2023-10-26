@@ -30,7 +30,7 @@ export const InventoryTable: React.FC<Props> = ({
   const [isExpanded, onExpansion] = useUrlStateWithExpansion({
     route: "Inventory",
   });
-  const onSort: OnSort = (event, index, order) => {
+  const onSort: OnSort = (_event, index, order) => {
     setSort({
       name: tablePresenter.getColumnNameForIndex(index) as string,
       order,
@@ -75,8 +75,7 @@ export const InventoryTable: React.FC<Props> = ({
           isExpanded={isExpanded(getIdentityForRow(row))}
           onToggle={onExpansion(getIdentityForRow(row))}
           numberOfColumns={tablePresenter.getNumberOfColumns()}
-          actions={tablePresenter.getActionsFor(row.id.full)}
-          expertActions={tablePresenter.getExpertActionsFor(row.id.full)}
+          rowActions={tablePresenter.getActionsFor(row.id.full)}
           state={tablePresenter.getStateFor(row.id.full)}
           serviceInstanceIdentifier={{
             id: row.id.full,
