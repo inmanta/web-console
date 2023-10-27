@@ -135,7 +135,7 @@
     "@patternfly/react-core": "^5.0.0",
     "@patternfly/react-icons": "^5.0.0",
     "@patternfly/react-styles": "^5.1.1",
-    "@patternfly/react-table": "^5.0.0",
+    "@patternfly/react-table": "^5.1.1",
     "@patternfly/react-tokens": "^5.0.0",
     "@react-keycloak/web": "^3.4.0",
     "copy-to-clipboard": "^3.3.3",
