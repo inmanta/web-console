@@ -89,6 +89,7 @@ export const nestedEditable: ServiceInstanceModelWithTargetStates = {
   instanceSetStateTargets: [],
   referenced_by: [],
 };
+
 export const with_relations: ServiceInstanceModelWithTargetStates = {
   ...a,
   active_attributes: {

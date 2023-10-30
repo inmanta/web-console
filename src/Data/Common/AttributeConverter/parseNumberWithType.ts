@@ -2,6 +2,10 @@ export function parseNumberWithType(
   type: string,
   value: string,
 ): bigint | number | string | null {
+  if (value === null) {
+    return value;
+  }
+
   try {
     const number = Number(value);
     if (Number.isInteger(number)) {
