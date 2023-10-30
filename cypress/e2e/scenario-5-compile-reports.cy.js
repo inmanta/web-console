@@ -375,7 +375,7 @@ describe("5 Compile reports", () => {
       cy.get(".pf-v5-c-nav__link").contains("Compile Reports").click();
 
       // Click on filter dropdown
-      cy.get(".pf-v5-c-select").eq(1).click();
+      cy.get('[aria-label="StatusFilterInput"]').click();
 
       // select failed
       cy.get("button").contains("failed").click();
@@ -394,7 +394,7 @@ describe("5 Compile reports", () => {
       });
 
       // click on clear all filters
-      cy.get(".pf-v5-c-toolbar__item").find("button").eq(6).click();
+      cy.get('[aria-label="Clear input value"]').click();
 
       // expect to have the original length of the table
       cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {

@@ -70,7 +70,9 @@ test("Given Notification Center page When user filters on severity Then executes
   });
 
   await act(async () => {
-    await userEvent.click(screen.getByRole("button", { name: "Severity" }));
+    await userEvent.click(
+      screen.getByRole("combobox", { name: "SeverityFilterInput" }),
+    );
   });
   await act(async () => {
     await userEvent.click(screen.getByRole("option", { name: "message" }));
@@ -91,10 +93,14 @@ test("Given Notification Center page When user filters on severity Then executes
   ).toHaveLength(2);
 
   await act(async () => {
-    await userEvent.click(screen.getByRole("button", { name: "Severity" }));
+    await userEvent.click(
+      screen.getByRole("combobox", { name: "SeverityFilterInput" }),
+    );
   });
   await act(async () => {
-    await userEvent.click(screen.getByRole("option", { name: "message" }));
+    await userEvent.click(
+      screen.getByRole("button", { name: "Clear input value" }),
+    );
   });
 
   expect(apiHelper.pendingRequests).toEqual([request("?limit=20")]);
@@ -108,7 +114,9 @@ test("Given Notification Center page When user filters on read Then executes cor
   });
 
   await act(async () => {
-    await userEvent.click(screen.getByRole("button", { name: "Read" }));
+    await userEvent.click(
+      screen.getByRole("combobox", { name: "ReadFilterInput" }),
+    );
   });
   await act(async () => {
     await userEvent.click(screen.getByRole("option", { name: "read" }));
@@ -131,10 +139,14 @@ test("Given Notification Center page When user filters on read Then executes cor
   ).toHaveLength(2);
 
   await act(async () => {
-    await userEvent.click(screen.getByRole("button", { name: "Read" }));
+    await userEvent.click(
+      screen.getByRole("combobox", { name: "ReadFilterInput" }),
+    );
   });
   await act(async () => {
-    await userEvent.click(screen.getByRole("option", { name: "read" }));
+    await userEvent.click(
+      screen.getByRole("button", { name: "Clear input value" }),
+    );
   });
   expect(apiHelper.pendingRequests).toEqual([request("?limit=20")]);
 });

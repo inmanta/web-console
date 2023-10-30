@@ -131,48 +131,35 @@ test("Given the CreateInstance View When creating an instance with Inter-service
       Either.right({ data: [ServiceInstance.a, ServiceInstance.b] }),
     );
   });
-
-  const relationInputField = screen.getByPlaceholderText(
-    words("common.serviceInstance.relation"),
-  );
-  await act(async () => {
-    await userEvent.type(relationInputField, "a");
-  });
-  expect(apiHelper.pendingRequests[0]).toEqual({
-    method: "GET",
-    url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=100&filter.order_id=a`,
-    environment: "env",
-  });
-  await act(async () => {
-    await apiHelper.resolve(
-      Either.right({ data: [ServiceInstance.a, ServiceInstance.b] }),
-    );
-  });
-  await act(async () => {
-    await userEvent.type(relationInputField, "{selectall}{backspace}ab");
-  });
-  expect(apiHelper.pendingRequests[0]).toEqual({
-    method: "GET",
-    url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=100&filter.order_id=ab`,
-    environment: "env",
-  });
   await act(async () => {
     apiHelper.resolve(
       Either.right({ data: [ServiceInstance.a, ServiceInstance.b] }),
     );
   });
 
+  const relationInputField = screen.getByPlaceholderText(
+    words("common.serviceInstance.relation"),
+  );
+
+  await act(async () => {
+    await userEvent.type(relationInputField, "a");
+  });
+
+  await act(async () => {
+    apiHelper.resolve(Either.right({ data: [ServiceInstance.a] }));
+  });
+
   const options = await screen.findAllByRole("option");
+
+  expect(options.length).toBe(1);
+
   await act(async () => {
     await userEvent.click(options[0]);
   });
+
+  expect(options[0]).toHaveClass("pf-m-selected");
+
   await act(async () => {
-    await userEvent.click(relationInputField);
-  });
-  const options2 = await screen.findAllByRole("option");
-  expect(options2[0]).toHaveClass("pf-m-disabled");
-  await act(async () => {
-    await userEvent.click(options2[1]);
     await userEvent.click(
       screen.getByRole("button", { name: words("confirm") }),
     );
@@ -183,9 +170,65 @@ test("Given the CreateInstance View When creating an instance with Inter-service
     url: `/lsm/v1/service_inventory/${Service.withRelationsOnly.name}`,
     body: {
       attributes: {
-        test_entity: ["service_instance_id_a", "service_instance_id_b"],
+        test_entity: ["service_instance_id_a"],
       },
     },
+    environment: "env",
+  });
+});
+
+test("Given the CreateInstance View When creating an instance with Inter-service-relations only Then the correct request is fired", async () => {
+  const { component, apiHelper } = setup(Service.withRelationsOnly);
+  render(component);
+
+  await act(async () => {
+    apiHelper.resolve(Either.right({ data: Service.withIdentity }));
+  });
+  await act(async () => {
+    apiHelper.resolve(
+      Either.right({ data: [ServiceInstance.a, ServiceInstance.b] }),
+    );
+  });
+  await act(async () => {
+    apiHelper.resolve(
+      Either.right({ data: [ServiceInstance.a, ServiceInstance.b] }),
+    );
+  });
+
+  const relationInputField = screen.getByPlaceholderText(
+    words("common.serviceInstance.relation"),
+  );
+
+  await act(async () => {
+    await userEvent.type(relationInputField, "a");
+  });
+  expect(apiHelper.pendingRequests[0]).toEqual({
+    method: "GET",
+    url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=100&filter.order_id=a`,
+    environment: "env",
+  });
+
+  await act(async () => {
+    await apiHelper.resolve(Either.right({ data: [ServiceInstance.a] }));
+  });
+  await act(async () => {
+    await userEvent.type(relationInputField, "{selectall}{backspace}ab");
+  });
+  expect(apiHelper.pendingRequests[0]).toEqual({
+    method: "GET",
+    url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=100&filter.order_id=ab`,
+    environment: "env",
+  });
+  await act(async () => {
+    apiHelper.resolve(Either.right({ data: [] }));
+  });
+
+  await act(async () => {
+    await userEvent.type(relationInputField, "{backspace}{backspace}");
+  });
+  expect(apiHelper.pendingRequests[0]).toEqual({
+    method: "GET",
+    url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=100&filter.order_id=`,
     environment: "env",
   });
 });
@@ -238,18 +281,19 @@ test("Given the CreateInstance View When creating entity with default values The
     screen.queryByLabelText("TextFieldInput-editableString[]?"),
   ).toHaveTextContent("8.8.8.8");
 
-  expect(screen.queryByLabelText("EnumFieldInput-enum")).toHaveTextContent(
-    "OPTION_ONE",
-  );
   expect(
-    screen.queryByLabelText("EnumFieldInput-editableEnum"),
-  ).toHaveTextContent("OPTION_ONE");
-  expect(screen.queryByLabelText("EnumFieldInput-enum?")).toHaveTextContent(
-    "OPTION_ONE",
-  );
+    screen.getByRole("combobox", { name: "enum-selectFilterInput" }),
+  ).toHaveValue("OPTION_ONE");
   expect(
-    screen.queryByLabelText("EnumFieldInput-editableEnum?"),
-  ).toHaveTextContent("OPTION_ONE");
+    screen.getByRole("combobox", { name: "editableEnum?-selectFilterInput" }),
+  ).toHaveValue("OPTION_ONE");
+
+  expect(
+    screen.getByRole("combobox", { name: "editableEnum-selectFilterInput" }),
+  ).toHaveValue("OPTION_ONE");
+  expect(
+    screen.getByRole("combobox", { name: "enum?-selectFilterInput" }),
+  ).toHaveValue("OPTION_ONE");
 
   expect(screen.queryByLabelText("TextInput-dict")).toHaveValue(
     '{"default":"value"}',
@@ -330,17 +374,25 @@ test("Given the CreateInstance View When creating entity with default values The
   ).toHaveTextContent("8.8.8.8");
 
   expect(
-    within(embedded_base).queryByLabelText("EnumFieldInput-enum"),
-  ).toHaveTextContent("OPTION_ONE");
+    within(embedded_base).getByRole("combobox", {
+      name: "enum-selectFilterInput",
+    }),
+  ).toHaveValue("OPTION_ONE");
   expect(
-    within(embedded_base).queryByLabelText("EnumFieldInput-editableEnum"),
-  ).toHaveTextContent("OPTION_ONE");
+    within(embedded_base).getByRole("combobox", {
+      name: "editableEnum-selectFilterInput",
+    }),
+  ).toHaveValue("OPTION_ONE");
   expect(
-    within(embedded_base).queryByLabelText("EnumFieldInput-enum?"),
-  ).toHaveTextContent("OPTION_ONE");
+    within(embedded_base).getByRole("combobox", {
+      name: "enum?-selectFilterInput",
+    }),
+  ).toHaveValue("OPTION_ONE");
   expect(
-    within(embedded_base).queryByLabelText("EnumFieldInput-editableEnum?"),
-  ).toHaveTextContent("OPTION_ONE");
+    within(embedded_base).getByRole("combobox", {
+      name: "editableEnum?-selectFilterInput",
+    }),
+  ).toHaveValue("OPTION_ONE");
 
   expect(within(embedded_base).queryByLabelText("TextInput-dict")).toHaveValue(
     '{"default":"value"}',

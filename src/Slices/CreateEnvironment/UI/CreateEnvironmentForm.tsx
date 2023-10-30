@@ -32,7 +32,7 @@ export const CreateEnvironmentForm: React.FC<Props> = ({
   const [createEnvironmentBody, setCreateEnvironmentBody] =
     useState<CreateEnvironmentParams>({ project_id: "", name: "" });
   const [errorMessage, setErrorMessage] = useState("");
-  const [projectName, setProjectName] = useState("");
+  const [projectName, setProjectName] = useState<string | null>("");
   const setName = (name: string) => {
     setCreateEnvironmentBody({ ...createEnvironmentBody, name });
   };

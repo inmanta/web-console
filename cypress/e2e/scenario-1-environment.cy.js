@@ -34,10 +34,10 @@ const fillCreateEnvForm = ({
   shouldPassEnvName = true,
   fillOptionalInputs = false,
 }) => {
-  cy.get('[aria-label="Project Name-typeahead"]').type(projectName);
-  cy.get('[aria-label="Project Name-select-input')
-    .find(".pf-v5-c-select__menu-item")
-    .click();
+  cy.get('[aria-label="Project Name-select-toggleFilterInput"]').type(
+    projectName,
+  );
+  cy.get('[role="option"]').contains(projectName).click();
   if (shouldPassEnvName) {
     cy.get('[aria-label="Name-input"]').type(envName);
   }
@@ -221,8 +221,8 @@ describe("Environment", () => {
     //change Project Name value
     cy.wait(1000);
     cy.get('[aria-label="Project Name-toggle-edit"]:enabled').click();
-    cy.get('[aria-label="Project Name-typeahead"]').clear();
-    cy.get('[aria-label="Project Name-typeahead"]').type(
+    cy.get('[aria-label="Project Name-select-toggleFilterInput"]').clear();
+    cy.get('[aria-label="Project Name-select-toggleFilterInput"]').type(
       "New Value Project Name",
     );
 
@@ -304,18 +304,18 @@ describe("Environment", () => {
     cy.get("button").contains("Configuration").click();
 
     //Change agent_trigger_method_on_auto_deploy
-    cy.get('[aria-label="Row-agent_trigger_method_on_auto_deploy"]')
-      .find(".pf-v5-c-form-control")
-      .click();
-    cy.get(".pf-v5-c-select__menu-item").contains("push_full_deploy").click();
+    cy.get(
+      '[aria-label="EnumInput-agent_trigger_method_on_auto_deployFilterInput"]',
+    ).click();
+    cy.get('[role="option"]').contains("push_full_deploy").click();
     cy.get('[aria-label="Warning"]').should("exist");
     cy.get('[aria-label="Row-agent_trigger_method_on_auto_deploy"]')
       .find('[aria-label="SaveAction"]')
       .click();
     cy.get('[aria-label="Warning"]').should("not.exist");
-    cy.get('[aria-label="Row-agent_trigger_method_on_auto_deploy"]')
-      .find(".pf-v5-c-form-control input")
-      .should("have.value", "push_full_deploy");
+    cy.get(
+      '[aria-label="EnumInput-agent_trigger_method_on_auto_deployFilterInput"]',
+    ).should("have.value", "push_full_deploy");
 
     //Change auto_deploy
     cy.get('[aria-label="Row-auto_deploy"]').find(".pf-v5-c-switch").click();
@@ -455,18 +455,18 @@ describe("Environment", () => {
       .should("have.value", "110");
 
     //Change environment_agent_trigger_method
-    cy.get('[aria-label="Row-environment_agent_trigger_method"]')
-      .find(".pf-v5-c-form-control")
-      .click();
-    cy.get(".pf-v5-c-select__menu-item").contains("push_full_deploy").click();
+    cy.get(
+      '[aria-label="EnumInput-environment_agent_trigger_methodFilterInput"]',
+    ).click();
+    cy.get('[role="option"]').contains("push_full_deploy").click();
     cy.get('[aria-label="Warning"]').should("exist");
     cy.get('[aria-label="Row-environment_agent_trigger_method"]')
       .find('[aria-label="SaveAction"]')
       .click();
     cy.get('[aria-label="Warning"]').should("not.exist");
-    cy.get('[aria-label="Row-environment_agent_trigger_method"]')
-      .find(".pf-v5-c-form-control input")
-      .should("have.value", "push_full_deploy");
+    cy.get(
+      '[aria-label="EnumInput-environment_agent_trigger_methodFilterInput"]',
+    ).should("have.value", "push_full_deploy");
 
     // specific to ISO
     if (Cypress.env("edition") === "iso") {

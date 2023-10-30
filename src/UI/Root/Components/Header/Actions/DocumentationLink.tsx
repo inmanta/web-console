@@ -1,13 +1,12 @@
 import React, { useContext } from "react";
-import { Button } from "@patternfly/react-core";
-import { PageHeaderToolsItem } from "@patternfly/react-core/deprecated";
+import { Button, ToolbarItem } from "@patternfly/react-core";
 import { OutlinedQuestionCircleIcon } from "@patternfly/react-icons";
 import { DependencyContext } from "@/UI/Dependency";
 
 export const DocumentationLink: React.FC = () => {
   const { urlManager } = useContext(DependencyContext);
   return (
-    <PageHeaderToolsItem>
+    <ToolbarItem>
       <Button
         component="a"
         href={urlManager.getDocumentationLink()}
@@ -17,6 +16,6 @@ export const DocumentationLink: React.FC = () => {
       >
         <OutlinedQuestionCircleIcon />
       </Button>
-    </PageHeaderToolsItem>
+    </ToolbarItem>
   );
 };

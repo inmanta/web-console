@@ -443,7 +443,9 @@ test("Given environment settings When clicking on the edit project button Then t
   });
 
   expect(
-    await screen.findByRole("textbox", { name: "Project Name-typeahead" }),
+    await screen.findByRole("combobox", {
+      name: "Project Name-select-toggleFilterInput",
+    }),
   ).toBeVisible();
 
   expect(
@@ -461,8 +463,8 @@ test("Given environment settings When submitting the edited project name Then th
     );
   });
 
-  const toggle = await screen.findByRole("button", {
-    name: "Project Name-select-toggle",
+  const toggle = await screen.findByRole("combobox", {
+    name: "Project Name-select-toggleFilterInput",
   });
   await act(async () => {
     await userEvent.click(toggle);
@@ -524,8 +526,8 @@ test("Given environment settings When canceling a project name edit Then the bac
     );
   });
 
-  const toggle = await screen.findByRole("button", {
-    name: "Project Name-select-toggle",
+  const toggle = await screen.findByRole("combobox", {
+    name: "Project Name-select-toggleFilterInput",
   });
   await act(async () => {
     await userEvent.click(toggle);
@@ -566,8 +568,8 @@ test.each`
       );
     });
 
-    const toggle = await screen.findByRole("button", {
-      name: "Project Name-select-toggle",
+    const toggle = await screen.findByRole("combobox", {
+      name: "Project Name-select-toggleFilterInput",
     });
     await act(async () => {
       await userEvent.click(toggle);

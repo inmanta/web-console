@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { ToolbarItem } from "@patternfly/react-core";
 import {
+  MenuToggle,
+  MenuToggleElement,
   Select,
-  SelectVariant,
   SelectOption,
-} from "@patternfly/react-core/deprecated";
+  ToolbarItem,
+} from "@patternfly/react-core";
 import { FilterIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 
@@ -20,23 +21,38 @@ export const FilterPicker: React.FC<Props> = ({
   setFilterKind,
   items,
 }) => {
-  const [isFilterOpen, setFilterOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
-  const onSelect = (event, selection) => {
-    setFilterOpen(false);
+  const onSelect = (_event, selection) => {
+    setIsOpen(false);
     setFilterKind(selection);
   };
+
+  const toggle = (toggleRef: React.Ref<MenuToggleElement>) => (
+    <MenuToggle
+      ref={toggleRef}
+      onClick={() => setIsOpen((value) => !value)}
+      isExpanded={isOpen}
+      aria-label={"FilterPicker"}
+      style={
+        {
+          minWidth: "150px",
+        } as React.CSSProperties
+      }
+    >
+      <StyledIcon />
+      {filterKind}
+    </MenuToggle>
+  );
 
   return (
     <StyledToolbarItem>
       <Select
-        variant={SelectVariant.single}
-        toggleAriaLabel="FilterPicker"
-        onToggle={(_event, val) => setFilterOpen(val)}
         onSelect={onSelect}
-        toggleIcon={<FilterIcon />}
-        selections={filterKind}
-        isOpen={isFilterOpen}
+        toggle={toggle}
+        selected={filterKind}
+        isOpen={isOpen}
+        onOpenChange={(isOpen) => setIsOpen(isOpen)}
       >
         {items.map((item) => (
           <SelectOption key={item} value={item}>
@@ -50,4 +66,8 @@ export const FilterPicker: React.FC<Props> = ({
 
 const StyledToolbarItem = styled(ToolbarItem)`
   align-self: start;
+`;
+
+const StyledIcon = styled(FilterIcon)`
+  margin-right: 5px;
 `;

@@ -75,8 +75,8 @@ test("GIVEN ConfigurationTab THEN shows all settings", async () => {
   ).toBeVisible();
 
   expect(
-    within(row).getByRole("button", {
-      name: "EnumInput-agent_trigger_method_on_auto_deploy",
+    within(row).getByRole("combobox", {
+      name: "EnumInput-agent_trigger_method_on_auto_deployFilterInput",
     }),
   ).toBeVisible();
 
@@ -129,8 +129,8 @@ test("GIVEN ConfigurationTab WHEN editing an enum field THEN shows warning icon"
 
   await act(async () => {
     await userEvent.click(
-      within(row).getByRole("button", {
-        name: "EnumInput-agent_trigger_method_on_auto_deploy",
+      within(row).getByRole("combobox", {
+        name: "EnumInput-agent_trigger_method_on_auto_deployFilterInput",
       }),
     );
   });

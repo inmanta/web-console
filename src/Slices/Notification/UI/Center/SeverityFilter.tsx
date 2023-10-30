@@ -1,5 +1,5 @@
 import React from "react";
-import { ToolbarFilter } from "@patternfly/react-core";
+import { SelectOptionProps, ToolbarFilter } from "@patternfly/react-core";
 import { SingleTextSelect } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { severityList } from "@S/Notification/Core/Domain";
@@ -11,10 +11,13 @@ interface Props {
 }
 
 export const SeverityFilter: React.FC<Props> = ({ filter, setFilter }) => {
+  const options: SelectOptionProps[] = severityList.map((option) => {
+    return { value: option, children: option };
+  });
   const onSelect = (selection) => {
     setFilter({
       ...filter,
-      severity: selection === null ? undefined : selection,
+      severity: selection === "" ? undefined : selection,
     });
   };
 
@@ -32,7 +35,7 @@ export const SeverityFilter: React.FC<Props> = ({ filter, setFilter }) => {
     >
       <SingleTextSelect
         aria-label="SeverityOptions"
-        options={severityList}
+        options={options}
         selected={filter.severity || null}
         setSelected={onSelect}
         toggleAriaLabel="Severity"
