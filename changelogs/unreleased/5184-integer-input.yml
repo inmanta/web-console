@@ -1,0 +1,6 @@
+change-type: patch
+description: "Set default value of integer to null"
+issue-nr: 5814
+destination-branches:
+  - master
+  - iso6
