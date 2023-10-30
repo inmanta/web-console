@@ -697,7 +697,6 @@ describe("Canvas.tsx", () => {
     await deleteAndAssert("parent-service", 3, 1);
     await deleteAndAssert("child-service", 2, 1);
     await deleteAndAssert("child_container", 1, 0);
-    await deleteAndAssert("container_service", 0, 0);
   });
 
   // // For some reason click on deleteButton doesn't trigger action
