@@ -5,7 +5,6 @@ import { SearchSanitizer } from "@/UI/Routing";
 import { GlobalStyles } from "@/UI/Styles";
 import useFeatures from "@/UI/Utils/useFeatures";
 import { NotFoundPage } from "@S/NotFound/UI";
-import { ExpertBanner } from "../Components/ExpertBanner";
 import { AuthProvider, PageFrame, Initializer } from "./Components";
 import { PrimaryPageManager } from "./PrimaryPageManager";
 
@@ -31,7 +30,6 @@ export const Root: React.FC = () => {
 
   return (
     <>
-      <ExpertBanner />
       <GlobalStyleProxy />
       <AuthProvider>
         <Initializer>
