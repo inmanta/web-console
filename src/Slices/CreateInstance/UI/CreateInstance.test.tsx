@@ -119,7 +119,7 @@ test("Given the CreateInstance View When creating an instance with attributes Th
   });
 });
 
-test("", async () => {
+test("Given the CreateInstance View When creating an instance with Inter-service-relations only Then the correct request is fired", async () => {
   const { component, apiHelper } = setup(Service.withRelationsOnly);
   render(component);
 
