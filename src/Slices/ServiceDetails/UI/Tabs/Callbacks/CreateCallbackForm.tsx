@@ -4,6 +4,7 @@ import {
   Button,
   Alert,
   AlertActionCloseButton,
+  SelectOptionProps,
 } from "@patternfly/react-core";
 import inlineStyles from "@patternfly/react-styles/css/components/InlineEdit/inline-edit";
 import { ExpandableRowContent, Tbody, Td, Tr } from "@patternfly/react-table";
@@ -34,6 +35,9 @@ export const CreateCallbackForm: React.FC<Props> = ({
   const [eventTypes, setEventTypes] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
   const { commandResolver } = useContext(DependencyContext);
+  const logOptions: SelectOptionProps[] = LogLevelsList.map((option) => {
+    return { value: option, children: option };
+  });
 
   const create = commandResolver.useGetTrigger<"CreateCallback">({
     kind: "CreateCallback",
@@ -59,6 +63,14 @@ export const CreateCallbackForm: React.FC<Props> = ({
     }
   };
 
+  const onSelect = (selected) => {
+    if (eventTypes.includes(selected)) {
+      setEventTypes(eventTypes.filter((value) => value !== selected));
+    } else {
+      setEventTypes([...eventTypes, selected]);
+    }
+  };
+
   return (
     <Tbody>
       <Tr>
@@ -80,7 +92,7 @@ export const CreateCallbackForm: React.FC<Props> = ({
         </Td>
         <Td className={inlineStyles.inlineEditInput}>
           <SingleTextSelect
-            options={LogLevelsList}
+            options={logOptions}
             selected={logLevel}
             setSelected={setLogLevel}
             toggleAriaLabel="MinimalLogLevel"
@@ -88,10 +100,18 @@ export const CreateCallbackForm: React.FC<Props> = ({
         </Td>
         <StyledTd className={inlineStyles.inlineEditInput}>
           <MultiTextSelect
-            options={EventTypesList}
             selected={eventTypes}
-            setSelected={setEventTypes}
+            setSelected={onSelect}
+            placeholderText="Select Event Types"
             toggleAriaLabel="EventTypes"
+            hasChips
+            options={EventTypesList.map((option) => {
+              return {
+                value: option,
+                children: option,
+                isSelected: eventTypes.includes(option),
+              };
+            })}
           />
         </StyledTd>
         <Td>

@@ -179,18 +179,19 @@ test("When using the status filter then only the matching desired states should 
     );
   });
 
-  const input = screen.getByPlaceholderText(
-    words("agents.filters.status.placeholder"),
-  );
+  const input = screen.getByRole("combobox", { name: "StatusFilterInput" });
   await act(async () => {
     await userEvent.click(input);
   });
 
-  const option = await screen.findByRole("option", {
+  const statusOptions = screen.getAllByRole("option");
+  expect(statusOptions).toHaveLength(4);
+
+  const candidateSkippedOption = await screen.findByRole("option", {
     name: words("desiredState.test.skippedCandidate"),
   });
   await act(async () => {
-    await userEvent.click(option);
+    await userEvent.click(candidateSkippedOption);
   });
 
   expect(apiHelper.pendingRequests[0].url).toEqual(

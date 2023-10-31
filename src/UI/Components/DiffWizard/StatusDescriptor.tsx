@@ -56,7 +56,7 @@ const Modified = styled.div`
 
 const Unmodified = styled.div`
   ${descriptorStyles};
-  background-color: var(--pf-v5-global--default-color--100);
+  background-color: var(--pf-v5-global--Color--100);
 `;
 
 const Missing = styled.div`

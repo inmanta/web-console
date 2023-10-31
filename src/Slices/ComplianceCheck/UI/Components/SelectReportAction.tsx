@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Icon, Label, Spinner, ToolbarGroup } from "@patternfly/react-core";
+import { Label, Spinner, ToolbarGroup } from "@patternfly/react-core";
 import {
   Select,
   SelectOption,
@@ -117,10 +117,7 @@ const Progress: React.FC<{ report: DomainProgress }> = ({
     </StyledLabel>
   ) : (
     <StyledLabel variant="filled" color="orange" isCompact>
-      <Icon size="sm">
-        <StyledSpinner />
-      </Icon>{" "}
-      {current} / {tot}
+      <StyledSpinner size="sm" /> {current} / {tot}
     </StyledLabel>
   );
 };

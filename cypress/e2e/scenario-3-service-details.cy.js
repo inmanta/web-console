@@ -356,12 +356,10 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="callbackId"]').type(
         "60b18097-1525-47f2-95ae-1d941d9c0c85",
       );
-      cy.get(".pf-v5-c-select").first().click();
-      cy.get(".pf-v5-c-select__menu-item").contains("INFO").click();
-      cy.get(".pf-v5-c-select").eq(1).click();
-      cy.get(".pf-v5-c-select__menu-item")
-        .contains("ALLOCATION_UPDATE")
-        .click();
+      cy.get('[aria-label="MinimalLogLevelFilterInput"]').click();
+      cy.get('[role="option"]').contains("INFO").click();
+      cy.get('[aria-label="EventTypesFilterInput"]').click();
+      cy.get('[role="option"]').contains("ALLOCATION_UPDATE").click();
       cy.get("button").contains("Add").click();
 
       // Expect an error to show up : Something went wrong

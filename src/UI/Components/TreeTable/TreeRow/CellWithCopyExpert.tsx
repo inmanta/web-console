@@ -160,11 +160,7 @@ export const CellWithCopyExpert: React.FC<Props> = ({
       ) : (
         value
       )}
-      {isSpinnerVisible && (
-        <Icon size="sm">
-          <StyledSpinner />
-        </Icon>
-      )}
+      {isSpinnerVisible && <StyledSpinner size="sm" />}
       <Modal
         disableFocusTrap
         variant={"small"}

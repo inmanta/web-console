@@ -120,9 +120,7 @@ test("GIVEN DesiredStateCompare WHEN StatusFilter = 'Added' THEN only 'Added' re
     screen.getByRole("listbox", { name: "StatusFilterOptions" }),
   ).toBeVisible();
 
-  const statusOptions = screen.getAllByRole("checkbox", {
-    name: "StatusFilterOption",
-  });
+  const statusOptions = screen.getAllByRole("option");
   expect(statusOptions).toHaveLength(7);
 
   await act(async () => {

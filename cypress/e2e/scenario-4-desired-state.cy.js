@@ -386,7 +386,7 @@ describe("Scenario 4 Desired State", () => {
     cy.get(".pf-v5-c-button").contains("Perform dry run").click();
 
     cy.get('[aria-label="StatusFilter"]').click();
-    cy.get('[aria-label="StatusFilterOption"]').contains("unmodified").click();
+    cy.get('[role="option"]').contains("unmodified").click();
     cy.get('[aria-label="StatusFilter"]').click();
 
     cy.get('[aria-label="DiffItemList"]', { timeout: 20000 }).should(
@@ -434,7 +434,7 @@ describe("Scenario 4 Desired State", () => {
     cy.get(".pf-v5-c-button").contains("Perform dry run").click();
 
     cy.get('[aria-label="StatusFilter"]').click();
-    cy.get('[aria-label="StatusFilterOption"]').contains("unmodified").click();
+    cy.get('[role="option"]').contains("unmodified").click();
     cy.get('[aria-label="StatusFilter"]').click();
 
     // perform dry-run
@@ -457,11 +457,11 @@ describe("Scenario 4 Desired State", () => {
     );
 
     // click on filter by status dropdown
-    cy.get(".pf-v5-c-select__toggle").eq(1).click();
+    cy.get('[aria-label="StatusFilter"]').click();
 
     // uncheck unmodified option
-    cy.get('[aria-label="StatusFilterOption"]').contains("unmodified").click();
-    cy.get(".pf-v5-c-select__toggle").eq(1).click();
+    cy.get('[role="option"]').contains("unmodified").click();
+    cy.get('[aria-label="StatusFilter"]').click();
 
     // expect diff-module to only show the modified file.Only for ISO, the table would be empty on OSS.
     if (isIso) {
@@ -492,7 +492,7 @@ describe("Scenario 4 Desired State", () => {
       .click();
 
     cy.get('[aria-label="StatusFilter"]').click();
-    cy.get('[aria-label="StatusFilterOption"]').contains("unmodified").click();
+    cy.get('[role="option"]').contains("unmodified").click();
     cy.get('[aria-label="StatusFilter"]').click();
 
     // expect the view to still contain the diff of the last dry-run comparison
