@@ -1,6 +1,7 @@
 import "@patternfly/react-core/dist/styles/base.css";
 import "@/Core/Language/Extensions";
 import React from "react";
+import { Flex } from "@patternfly/react-core";
 import { StoreProvider } from "easy-peasy";
 import { createRoot } from "react-dom/client";
 import { getStoreInstance } from "@/Data";
@@ -18,9 +19,16 @@ root.render(
   <ErrorBoundary>
     <StoreProvider store={store}>
       <CustomRouter history={history}>
-        <Injector store={store}>
-          <Root />
-        </Injector>
+        <Flex
+          flexWrap={{ default: "nowrap" }}
+          spaceItems={{ default: "spaceItemsNone" }}
+          direction={{ default: "column" }}
+          style={{ height: "100%" }}
+        >
+          <Injector store={store}>
+            <Root />
+          </Injector>
+        </Flex>
       </CustomRouter>
     </StoreProvider>
   </ErrorBoundary>,
