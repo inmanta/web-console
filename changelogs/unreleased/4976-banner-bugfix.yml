@@ -1,0 +1,6 @@
+change-type: patch
+description: "Fix the issue that Banners were overlapping each other, remove header background"
+issue-nr: 4976
+destination-branches:
+  - master
+  - iso6
