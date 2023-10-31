@@ -1353,7 +1353,7 @@ __metadata:
     css-minimizer-webpack-plugin: ^5.0.1
     cypress: ^13.1.0
     cypress-file-upload: ^5.0.8
-    cypress-multi-reporters: ^1.6.3
+    cypress-multi-reporters: ^1.6.4
     dagre: ^0.8.5
     dotenv-webpack: ^8.0.1
     easy-peasy: ^6.0.2
@@ -5670,15 +5670,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cypress-multi-reporters@npm:^1.6.3":
-  version: 1.6.3
-  resolution: "cypress-multi-reporters@npm:1.6.3"
+"cypress-multi-reporters@npm:^1.6.4":
+  version: 1.6.4
+  resolution: "cypress-multi-reporters@npm:1.6.4"
   dependencies:
     debug: ^4.3.4
     lodash: ^4.17.21
   peerDependencies:
     mocha: ">=3.1.2"
-  checksum: fe8038ea86ade399eb67c8695951052e81298922cea53e47c87fb558456b1aca30c4624b20fed0156445d011bdaf2eb83b665ebfe029c773f031504f463e34ee
+  checksum: d13b1eef8ab6295cebdb311313b4eb84dec986e51d92a61e76167c84c750d5200d2c711b1d3c022e4686cf512a2936112a9436de37dbe881547ab5fb83822c4e
   languageName: node
   linkType: hard
 
