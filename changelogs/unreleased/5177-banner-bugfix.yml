@@ -1,6 +1,6 @@
 change-type: patch
 description: "Fix the issue that Banners were overlapping each other"
-issue-nr: 4976
+issue-nr: 5177
 destination-branches:
   - master
   - iso6
