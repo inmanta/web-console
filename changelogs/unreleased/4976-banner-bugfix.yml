@@ -1,5 +1,5 @@
 change-type: patch
-description: "Fix the issue that Banners were overlapping each other, remove header background"
+description: "Fix the issue that Banners were overlapping each other"
 issue-nr: 4976
 destination-branches:
   - master
