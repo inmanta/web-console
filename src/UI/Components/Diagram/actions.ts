@@ -282,7 +282,11 @@ export function appendEmbeddedEntity(
 
       createdInstances.push(instanceAsTable);
       //iterate through embedded entities to create and connect them
-      embeddedEntity.embedded_entities.map((entity) => {
+      embeddedEntity.embedded_entities.forEach((entity) => {
+        //we are basing iteration on service Model, if there is no value in the instance, skip that part
+        if (!entityInstance[entity.name]) {
+          return;
+        }
         const appendedEntities = appendEmbeddedEntity(
           paper,
           graph,
@@ -497,7 +501,11 @@ function handleAttributes(
   instanceAsTable.addTo(graph);
 
   //iterate through embedded entities to create and connect them
-  embedded_entities.map((entity) => {
+  embedded_entities.forEach((entity) => {
+    //we are basing iteration on service Model, if there is no value in the instance, skip that entity
+    if (!attributesValues[entity.name]) {
+      return;
+    }
     const appendedEntities = appendEmbeddedEntity(
       paper,
       graph,

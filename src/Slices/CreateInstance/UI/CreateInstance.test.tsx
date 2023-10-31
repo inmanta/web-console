@@ -190,6 +190,62 @@ test("Given the CreateInstance View When creating an instance with Inter-service
     );
   });
   await act(async () => {
+    apiHelper.resolve(Either.right({ data: [] }));
+  });
+
+  const relationInputField = screen.getByPlaceholderText(
+    words("common.serviceInstance.relation"),
+  );
+
+  await act(async () => {
+    await userEvent.type(relationInputField, "a");
+  });
+
+  await act(async () => {
+    apiHelper.resolve(Either.right({ data: [ServiceInstance.a] }));
+  });
+
+  const options = await screen.findAllByRole("option");
+
+  expect(options.length).toBe(1);
+
+  await act(async () => {
+    await userEvent.type(relationInputField, "{backspace}{backspace}");
+  });
+
+  expect(options[0]).toHaveClass("pf-m-selected");
+
+  await act(async () => {
+    await userEvent.click(
+      screen.getByRole("button", { name: words("confirm") }),
+    );
+  });
+
+  expect(apiHelper.pendingRequests[0]).toEqual({
+    method: "POST",
+    url: `/lsm/v1/service_inventory/${Service.withRelationsOnly.name}`,
+    body: {
+      attributes: {
+        test_entity: ["service_instance_id_a"],
+      },
+    },
+    environment: "env",
+  });
+});
+
+test("Given the CreateInstance View When creating an instance with Inter-service-relations only Then the correct request is fired", async () => {
+  const { component, apiHelper } = setup(Service.withRelationsOnly);
+  render(component);
+
+  await act(async () => {
+    apiHelper.resolve(Either.right({ data: Service.withIdentity }));
+  });
+  await act(async () => {
+    apiHelper.resolve(
+      Either.right({ data: [ServiceInstance.a, ServiceInstance.b] }),
+    );
+  });
+  await act(async () => {
     apiHelper.resolve(
       Either.right({ data: [ServiceInstance.a, ServiceInstance.b] }),
     );

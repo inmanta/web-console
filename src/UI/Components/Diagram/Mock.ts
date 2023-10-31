@@ -1832,3 +1832,54 @@ export const mockedInstanceTwoServiceModel: ServiceModel = {
     total: 1,
   },
 };
+
+export const mockedInstanceThree: InstanceWithReferences = {
+  instance: {
+    data: {
+      id: "085cxf92-0894-4ex2-8d46-1gd9552e7ba3",
+      environment: "efa7c243-81aa-4986-b0b1-c89583cbf846",
+      service_entity: "test-service",
+      version: 4,
+      config: {},
+      state: "up",
+      candidate_attributes: null,
+      active_attributes: {
+        name: "test12345",
+        attrOne: "test12345",
+        dictOne: {},
+        attrTwo: "123",
+        attrThree: "456",
+        attrFour: "789",
+        service_id: "012",
+        should_deploy_fail: false,
+        dictTwo: {},
+      },
+      rollback_attributes: null,
+      created_at: "2023-09-19T14:39:30.770002",
+      last_updated: "2023-09-19T14:39:53.389878",
+      callback: [],
+      deleted: false,
+      deployment_progress: null,
+      service_identity_attribute_value: "test12345",
+      referenced_by: [],
+    },
+  },
+  relatedInstances: [],
+};
+
+export const mockedInstanceThreeServiceModel: ServiceModel = {
+  ...mockedInstanceTwoServiceModel,
+  embedded_entities: [
+    {
+      name: "optionalEmbedded",
+      description: "desc",
+      modifier: "rw",
+      lower_limit: 0,
+      upper_limit: 1,
+      attributes: [],
+      embedded_entities: [],
+      inter_service_relations: [],
+      key_attributes: [],
+    },
+  ],
+};

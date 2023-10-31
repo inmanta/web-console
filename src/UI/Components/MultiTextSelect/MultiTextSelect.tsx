@@ -30,6 +30,24 @@ interface Props {
   footer?: React.ReactNode;
 }
 
+/**
+ * The implementation mostly follows the suggested implementation from PF5.
+ * Except that the selected state is handled at a higher level in our case.
+ *
+ * @param selected string[] of selected elements
+ * @param setSelected state callback method
+ * @param options SelectOptionProps[]
+ * @param isDisabled disabled state of the component
+ * @param toggleAriaLabel aria-label that is propagated on toggle and input field
+ * @param placeholderText text displayed as a placeholder in the input field
+ * @param onSearchTextChanged callback function to handle input change events.
+ * @param hasChips Wheter chips should be displayed or not.
+ * @param toggleIcon Custom Icon component if you want a different toggleIcon
+ * @param noInputField To have a default select without filter-input field.
+ * @param footer Component containing a footer element for the list
+ *
+ * @returns MultiTextSelect Component
+ */
 export const MultiTextSelect: React.FC<Props> = ({
   selected,
   setSelected,

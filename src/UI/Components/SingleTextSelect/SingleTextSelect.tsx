@@ -26,6 +26,23 @@ interface Props {
   toggleIcon?: React.ReactNode;
 }
 
+/**
+ * The implementation mostly follows the suggested implementation from PF5.
+ * Except that the selected state is handled at a higher level in our case.
+ *
+ * @param selected string value of the selected value
+ * @param setSelected state callback method
+ * @param options SelectOptionProps[]
+ * @param isDisabled disabled state of the component
+ * @param toggleAriaLabel aria-label that is propagated on toggle and input field
+ * @param placeholderText text displayed as a placeholder in the input field
+ * @param onSearchTextChanged callback function to handle input change events
+ * @param hasCreation Wheter the component supports creating a new option when it's not yet available in the list
+ * @param onCreate callback state function when the user selects to create a new option
+ * @param toggleIcon Custom Icon component if you want a different toggleIcon
+ *
+ * @returns SingleTextSelect Component
+ */
 export const SingleTextSelect: React.FC<Props> = ({
   selected,
   setSelected,
