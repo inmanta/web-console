@@ -124,7 +124,7 @@ describe("DeleteModal ", () => {
     });
     rerender(component(false));
     expect(
-      await screen.findByRole("button", { name: words("delete") }),
+      await screen.findByRole("menuitem", { name: words("delete") }),
     ).toBeDisabled();
   });
 });

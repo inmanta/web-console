@@ -1,7 +1,7 @@
 import React, { ReactElement } from "react";
 import { ServiceModel } from "@/Core";
 import { ActionPresenter, ServiceInstanceForAction } from "@/UI/Presenters";
-import { RowActions } from "../Components/RowActions";
+import { RowActions } from "../Components/RowActionsMenu/RowActions";
 
 export class InstanceActionPresenter implements ActionPresenter {
   constructor(
@@ -15,6 +15,7 @@ export class InstanceActionPresenter implements ActionPresenter {
 
   getForId(id: string): ReactElement | null {
     const instance = this.getInstanceForId(id);
+
     if (typeof instance === "undefined") return null;
     return React.createElement(RowActions, {
       instance,

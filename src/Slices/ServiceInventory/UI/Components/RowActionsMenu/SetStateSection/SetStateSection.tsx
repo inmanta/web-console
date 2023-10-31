@@ -83,6 +83,16 @@ export const SetStateSection: React.FunctionComponent<Props> = ({
             {target}
           </MenuItem>
         ))}
+        {(!targets || targets.length < 1) && (
+          <MenuItem
+            key={"no value"}
+            value={"no value"}
+            itemId={"no value"}
+            isDisabled
+          >
+            None available
+          </MenuItem>
+        )}
       </ActionDisabledTooltip>
       <ConfirmationModal
         title={words("inventory.statustab.confirmTitle")}

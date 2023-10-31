@@ -125,9 +125,7 @@ describe("DeleteModal ", () => {
     });
     rerender(component());
     expect(
-      await screen.findByRole("button", {
-        name: words("inventory.destroyInstance.button"),
-      }),
+      await screen.findByText(words("inventory.destroyInstance.button")),
     ).toBeEnabled();
   });
 });

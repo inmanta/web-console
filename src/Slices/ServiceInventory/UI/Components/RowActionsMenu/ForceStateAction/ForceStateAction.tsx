@@ -24,9 +24,7 @@ export const ForceStateAction: React.FC<Props> = ({
   const [confirmationText, setConfirmationText] = useState<string>("");
   const [targetState, setTargetState] = useState<string>("");
   const [stateErrorMessage, setStateErrorMessage] = useState<string>("");
-  // const states = service_entity.lifecycle.states.map(
-  //   (state) => state.name,
-  // );
+
   const handleModalToggle = () => {
     setIsModalOpen(!isModalOpen);
   };
@@ -85,6 +83,7 @@ export const ForceStateAction: React.FC<Props> = ({
         <MenuItem
           isDanger
           itemId="group:expertstate"
+          data-testid="forceState"
           icon={<WarningTriangleIcon />}
           direction="down"
           style={{
@@ -93,7 +92,8 @@ export const ForceStateAction: React.FC<Props> = ({
           drilldownMenu={
             <DrilldownMenu
               id="drilldownMenuExpertState"
-              style={{ insetBlockStart: "-100%" }}
+              aria-label="drilldownMenuExpertState"
+              style={{ insetBlockStart: "-200%" }}
             >
               <MenuItem
                 style={{

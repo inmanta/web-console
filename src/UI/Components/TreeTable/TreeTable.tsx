@@ -4,6 +4,7 @@ import {
   DropdownItem,
   DropdownList,
   MenuToggle,
+  MenuToggleElement,
 } from "@patternfly/react-core";
 import { EllipsisVIcon } from "@patternfly/react-icons";
 import { Tbody, Thead, Tr, Th, Table } from "@patternfly/react-table";
@@ -58,17 +59,19 @@ export const TreeTable: React.FC<Props> = ({
               role="listbox"
               aria-label="expand-collapse-dropdown"
               onSelect={() => setIsOpen((value) => !value)}
-              toggle={() => (
+              onOpenChange={(isOpen: boolean) => setIsOpen(isOpen)}
+              toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
                 <MenuToggle
+                  ref={toggleRef}
                   aria-label="expand-collapse-dropdown-toggle"
                   isExpanded={isOpen}
+                  variant="plain"
                   onClick={() => setIsOpen((value) => !value)}
                 >
                   <EllipsisVIcon />
                 </MenuToggle>
               )}
               isOpen={isOpen}
-              isPlain
             >
               <DropdownList>
                 <DropdownItem

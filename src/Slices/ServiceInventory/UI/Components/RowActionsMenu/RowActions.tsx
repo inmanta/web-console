@@ -8,17 +8,24 @@ import {
   MenuContainer,
   MenuContent,
   MenuGroup,
+  DrilldownMenu,
 } from "@patternfly/react-core";
-import { CopyIcon, EllipsisVIcon, ToolsIcon } from "@patternfly/react-icons";
+import {
+  CopyIcon,
+  EllipsisVIcon,
+  FileMedicalAltIcon,
+  HistoryIcon,
+  PortIcon,
+  ToolsIcon,
+} from "@patternfly/react-icons";
 import { DependencyContext, words } from "@/UI";
 import { Link } from "@/UI/Components";
 import { ServiceInstanceForAction } from "@/UI/Presenters";
 import useFeatures from "@/UI/Utils/useFeatures";
-import { DeleteAction } from "./MenuSections/DeleteAction";
-import { DestroyAction } from "./MenuSections/DestroyAction";
-import { ForceStateAction } from "./MenuSections/ForceStateAction/ForceStateAction";
-import { NavigationDrillDown } from "./MenuSections/NavigationDrillDown/NavigationDrillDown";
-import { SetStateSection } from "./MenuSections/SetStateSection/SetStateSection";
+import { DeleteAction } from "./DeleteAction";
+import { DestroyAction } from "./DestroyAction";
+import { ForceStateAction } from "./ForceStateAction/ForceStateAction";
+import { SetStateSection } from "./SetStateSection/SetStateSection";
 
 interface MenuHeightsType {
   [id: string]: number;
@@ -58,15 +65,18 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
     setActiveMenu("rootMenu");
   };
 
-  const setHeight = (menuId: string, height: number) => {
+  const updateHeights = (menuId: string, height: number) => {
     if (
-      !menuHeights[menuId] ||
-      (menuId !== "rootMenu" && menuHeights[menuId] !== height)
+      !menuHeights[menuId] &&
+      menuId !== "rootMenu" &&
+      menuHeights[menuId] !== height
     ) {
-      setMenuHeights({
-        ...menuHeights,
-        [menuId]: height,
-      });
+      if (isOpen && menuId === activeMenu) {
+        setMenuHeights({
+          ...menuHeights,
+          [menuId]: height,
+        });
+      }
     }
   };
 
@@ -118,10 +128,21 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
       onDrillOut={drillOut}
       ref={menuRef}
       style={{ width: "250px" }}
-      onGetMenuHeight={setHeight}
+      onGetMenuHeight={updateHeights}
     >
       <MenuContent menuHeight={`${menuHeights[activeMenu]}px`}>
         <MenuList>
+          <Link
+            pathname={routeManager.getUrl("Diagnose", {
+              service: instance.service_entity,
+              instance: instance.id,
+            })}
+            isDisabled={diagnoseDisabled}
+          >
+            <MenuItem itemId="diagnose" icon={<FileMedicalAltIcon />}>
+              {words("inventory.statustab.diagnose")}
+            </MenuItem>
+          </Link>
           {features && features.includes("instanceComposer") && (
             <Link
               pathname={routeManager.getUrl("InstanceComposerEditor", {
@@ -157,31 +178,68 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
           <MenuItem itemId="duplicate" icon={<CopyIcon />}>
             Duplicate
           </MenuItem>
-          <DeleteAction
-            isDisabled={deleteDisabled}
-            service_entity={instance.service_entity}
-            instance_identity={
-              instance.service_identity_attribute_value ?? instance.id
-            }
-            id={instance.id}
-            version={instance.version}
-          />
-          {environmentModifier.useIsExpertModeEnabled() && (
-            <DestroyAction
-              service_entity={instance.service_entity}
-              instance_identity={
-                instance.service_identity_attribute_value ?? instance.id
-              }
-              id={instance.id}
-              version={instance.version}
-            />
-          )}
           <Divider component="li" />
-          <NavigationDrillDown
-            instance={instance}
-            diagnoseDisabled={diagnoseDisabled}
-            routeManager={routeManager}
-          />
+          <MenuItem
+            itemId="group:navigate"
+            direction="down"
+            drilldownMenu={
+              <DrilldownMenu
+                id="navigateDrillDown"
+                aria-label="navigationDrilldown"
+                style={{ insetBlockStart: "-200%" }}
+              >
+                <MenuItem
+                  itemId="group:navigate_breadcrumb"
+                  direction="up"
+                  aria-hidden
+                >
+                  Back
+                </MenuItem>
+                <Divider component="li" />
+                <Link
+                  pathname={routeManager.getUrl("History", {
+                    service: instance.service_entity,
+                    instance: instance.id,
+                  })}
+                >
+                  <MenuItem itemId="history" icon={<HistoryIcon />}>
+                    {words("inventory.statusTab.history")}
+                  </MenuItem>
+                </Link>
+                <Link
+                  pathname={routeManager.getUrl("Events", {
+                    service: instance.service_entity,
+                    instance: instance.id,
+                  })}
+                >
+                  <MenuItem itemId="events" icon={<PortIcon />}>
+                    {words("inventory.statusTab.events")}
+                  </MenuItem>
+                </Link>
+                <DeleteAction
+                  isDisabled={deleteDisabled}
+                  service_entity={instance.service_entity}
+                  instance_identity={
+                    instance.service_identity_attribute_value ?? instance.id
+                  }
+                  id={instance.id}
+                  version={instance.version}
+                />
+                {environmentModifier.useIsExpertModeEnabled() && (
+                  <DestroyAction
+                    service_entity={instance.service_entity}
+                    instance_identity={
+                      instance.service_identity_attribute_value ?? instance.id
+                    }
+                    id={instance.id}
+                    version={instance.version}
+                  />
+                )}
+              </DrilldownMenu>
+            }
+          >
+            More options
+          </MenuItem>
           {environmentModifier.useIsExpertModeEnabled() && (
             <ForceStateAction
               service_entity={instance.service_entity}
@@ -214,6 +272,8 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
   return (
     <MenuContainer
       isOpen={isOpen}
+      aria-label={`menu-${instance.id}`}
+      data-testid={`menu-${instance.id}`}
       onOpenChange={(isOpen) => setIsOpen(isOpen)}
       menu={menu}
       menuRef={menuRef}
