@@ -177,7 +177,7 @@ test("GIVEN StatusPage with support extension WHEN user click download THEN an a
   );
 
   expect(apiHelper.pendingRequests).toEqual([
-    { method: "GET", url: "/api/v1/support/full" },
+    { method: "GET", url: "/api/v2/support/full" },
   ]);
 
   await act(async () => {
@@ -215,7 +215,7 @@ test("GIVEN StatusPage with support extension WHEN user click download THEN butt
   );
 
   expect(apiHelper.pendingRequests).toEqual([
-    { method: "GET", url: "/api/v1/support/full" },
+    { method: "GET", url: "/api/v2/support/full" },
   ]);
 
   await act(async () => {
