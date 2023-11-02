@@ -323,7 +323,7 @@ test("Given the CreateInstance View When creating entity with default values The
 
   await act(async () => {
     await userEvent.click(
-      within(embedded_base).getByRole("button", { name: "1" }),
+      within(embedded_base).getByRole("button", { name: "0" }),
     );
   });
   expect(

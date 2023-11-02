@@ -207,7 +207,7 @@ test("GIVEN ServiceInstanceForm and a DictListField WHEN clicking all toggles op
     );
   });
   await act(async () => {
-    await userEvent.click(within(group).getByRole("button", { name: "1" }));
+    await userEvent.click(within(group).getByRole("button", { name: "0" }));
   });
 
   expect(
@@ -266,7 +266,7 @@ test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is
     );
   });
   await act(async () => {
-    await userEvent.click(screen.getByRole("button", { name: "1" }));
+    await userEvent.click(screen.getByRole("button", { name: "0" }));
   });
   await act(async () => {
     await userEvent.type(
