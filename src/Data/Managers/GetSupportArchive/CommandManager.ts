@@ -9,7 +9,7 @@ export class GetSupportArchiveCommandManager extends CommandManagerWithoutEnv<"G
           (data) => data.data,
           await this.apiHelper.getWithoutEnvironment<
             Command.ApiData<"GetSupportArchive">
-          >("/api/v2/support/full"),
+          >("/api/v2/support"),
         );
     });
   }
