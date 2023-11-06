@@ -1,4 +1,4 @@
-change-type: patch
+change-type: minor-improvement
 description: "Update support archive link for v2"
 issue-nr: 5218
 destination-branches:
