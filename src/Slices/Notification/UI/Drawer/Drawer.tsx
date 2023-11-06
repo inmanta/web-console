@@ -1,4 +1,9 @@
-import React, { MutableRefObject, useContext, useState } from "react";
+import React, {
+  MutableRefObject,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import {
   NotificationDrawer,
   NotificationDrawerBody,
@@ -20,11 +25,16 @@ import { drawerQuery, ViewData } from "@S/Notification/Core/Query";
 import { Item, OnUpdate } from "./Item";
 
 interface Props {
-  onClose(): void;
+  onClose(event?: MouseEvent): void;
+  isDrawerOpen: boolean;
   drawerRef: MutableRefObject<HTMLDivElement | undefined>;
 }
 
-export const Drawer: React.FC<Props> = ({ onClose, drawerRef }) => {
+export const Drawer: React.FC<Props> = ({
+  onClose,
+  isDrawerOpen,
+  drawerRef,
+}) => {
   const { commandResolver, queryResolver } = useContext(DependencyContext);
   const data = queryResolver.useReadOnly<"GetNotifications">(drawerQuery);
 
@@ -33,7 +43,21 @@ export const Drawer: React.FC<Props> = ({ onClose, drawerRef }) => {
     origin: "drawer",
   });
 
-  return <View {...{ data, onClose, trigger, drawerRef }} />;
+  useEffect(() => {
+    const close = (event) => {
+      const target = event.target as Node;
+      const wasTargetOutsideSidebar = !drawerRef.current?.contains(target);
+
+      if (isDrawerOpen && wasTargetOutsideSidebar) {
+        onClose();
+      }
+    };
+    document.addEventListener("click", close);
+    return () => {
+      document.removeEventListener("click", close);
+    };
+  }, [drawerRef, isDrawerOpen, onClose]);
+  return <View {...{ data, onClose, isDrawerOpen, trigger, drawerRef }} />;
 };
 
 interface ViewProps extends Props {
@@ -79,8 +103,12 @@ export const View: React.FC<ViewProps> = ({
   };
 
   return (
-    <NotificationDrawer ref={drawerRef} aria-label="NotificationDrawer">
-      <NotificationDrawerHeader count={count} onClose={onClose}>
+    <NotificationDrawer
+      ref={drawerRef}
+      aria-label="NotificationDrawer"
+      id="notificationDrawer"
+    >
+      <NotificationDrawerHeader count={count} onClose={() => onClose()}>
         <ActionList {...{ onClearAll, onReadAll, onClose }} />
       </NotificationDrawerHeader>
       <CustomNotificationDrawerBody>

@@ -61,6 +61,7 @@ function setup() {
             notificationDrawer={
               <Drawer
                 onClose={closeCallback}
+                isDrawerOpen
                 drawerRef={{ current: undefined }}
               />
             }
