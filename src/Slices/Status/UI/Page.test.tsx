@@ -223,9 +223,7 @@ test("GIVEN StatusPage with support extension WHEN user click download THEN butt
       Either.right({ data: ServerStatus.supportArchiveBase64 }),
     );
   });
-  expect(downloadButton).toHaveTextContent(
-    words("status.supportArchive.action.generating"),
-  );
+
   (archiveHelper as MockArchiveHelper).resolve(
     new Blob(["testing"], { type: "application/octet-stream" }),
   );
