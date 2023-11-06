@@ -8,21 +8,16 @@ import { DependencyContext } from "@/UI/Dependency";
 export const StatusButton: React.FC = () => {
   const [statusColor, setStatusColor] = useState("currentColor");
   const { routeManager } = useContext(DependencyContext);
-
   useEffect(() => {
-    document.addEventListener("status-down", () => {
-      setStatusColor("red");
-    });
-    document.addEventListener("status-up", () => {
-      setStatusColor("currentColor");
-    });
+    const changeStatusToRed = () => setStatusColor("red");
+    const changeStatusToCurrent = () => setStatusColor("currentColor");
+
+    document.addEventListener("status-down", changeStatusToRed);
+    document.addEventListener("status-up", changeStatusToCurrent);
+
     return () => {
-      document.removeEventListener("status-down", () => {
-        setStatusColor("red");
-      });
-      document.removeEventListener("status-up", () => {
-        setStatusColor("currentColor");
-      });
+      document.removeEventListener("status-down", changeStatusToRed);
+      document.removeEventListener("status-up", changeStatusToCurrent);
     };
   }, []);
 

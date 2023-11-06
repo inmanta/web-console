@@ -1,0 +1,6 @@
+change-type: patch
+description: "Enhancement bringing back functionality to close Sidebar when clicked outside of it on mobile"
+issue-nr: 4751
+destination-branches:
+  - master
+  - iso6
