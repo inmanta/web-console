@@ -1,0 +1,6 @@
+change-type: patch
+description: "Unify index of embedded entities between Forms and attributes View"
+issue-nr: 5204
+destination-branches:
+  - master
+  - iso6
