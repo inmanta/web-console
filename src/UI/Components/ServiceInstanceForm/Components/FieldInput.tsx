@@ -405,16 +405,16 @@ const DictListFieldInput: React.FC<DictListProps> = ({
         <StyledFormFieldGroupExpandable
           aria-label={`DictListFieldInputItem-${makePath(
             path,
-            `${field.name}.${index + 1}`,
+            `${field.name}.${index}`,
           )}`}
           key={makePath(path, `${field.name}.${index}`)}
           header={
             <FormFieldGroupHeader
               titleText={{
-                text: index + 1,
+                text: index,
                 id: `DictListFieldInputItem-${makePath(
                   path,
-                  `${field.name}.${index + 1}`,
+                  `${field.name}.${index}`,
                 )}`,
               }}
               actions={
