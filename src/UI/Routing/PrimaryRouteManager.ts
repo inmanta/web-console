@@ -15,6 +15,7 @@ import {
   RouteKindWithId,
 } from "@/Core";
 import { Dashboard } from "@/Slices/Dashboard";
+import { DuplicateInstance } from "@/Slices/DuplicateInstance";
 import { InstanceComposer } from "@/Slices/InstanceComposer";
 import { InstanceComposerEditor } from "@/Slices/InstanceComposerEditor";
 import { ServiceDetails } from "@/Slices/ServiceDetails";
@@ -50,47 +51,48 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
     /**
      * Main
      */
-    Home: Home.route(baseUrl),
     CreateEnvironment: CreateEnvironment.route(baseUrl),
+    Home: Home.route(baseUrl),
+    NotificationCenter: Notification.route(baseUrl),
     Settings: Settings.route(baseUrl),
     Status: Status.route(baseUrl),
-    NotificationCenter: Notification.route(baseUrl),
 
     /**
      * LSM
      */
     Catalog: ServiceCatalog.route(baseUrl),
+    CreateInstance: CreateInstance.route(baseUrl),
     Dashboard: Dashboard.route(baseUrl),
-    Inventory: ServiceInventory.route(baseUrl),
+    Diagnose: Diagnose.route(baseUrl),
+    DuplicateInstance: DuplicateInstance.route(baseUrl),
+    EditInstance: EditInstance.route(baseUrl),
+    Events: Events.route(baseUrl),
+    History: ServiceInstanceHistory.route(baseUrl),
     InstanceComposer: InstanceComposer.route(baseUrl),
     InstanceComposerEditor: InstanceComposerEditor.route(baseUrl),
+    Inventory: ServiceInventory.route(baseUrl),
     ServiceDetails: ServiceDetails.route(baseUrl),
-    CreateInstance: CreateInstance.route(baseUrl),
-    EditInstance: EditInstance.route(baseUrl),
-    History: ServiceInstanceHistory.route(baseUrl),
-    Diagnose: Diagnose.route(baseUrl),
-    Events: Events.route(baseUrl),
 
     /**
      * Resource Manager
      */
-    Resources: Resource.route(baseUrl),
+    AgentProcess: AgentProcess.route(baseUrl),
     Agents: Agents.route(baseUrl),
     Facts: Facts.route(baseUrl),
-    AgentProcess: AgentProcess.route(baseUrl),
     ResourceDetails: ResourceDetails.route(baseUrl),
+    Resources: Resource.route(baseUrl),
 
     /**
      * Orchestration Engine
      */
-    CompileReports: CompileReports.route(baseUrl),
     CompileDetails: CompileDetails.route(baseUrl),
+    CompileReports: CompileReports.route(baseUrl),
+    ComplianceCheck: ComplianceCheck.route(baseUrl),
     DesiredState: DesiredState.route(baseUrl),
+    DesiredStateCompare: DesiredStateCompare.route(baseUrl),
     DesiredStateDetails: DesiredStateDetails.route(baseUrl),
     DesiredStateResourceDetails: DesiredStateResourceDetails.route(baseUrl),
-    DesiredStateCompare: DesiredStateCompare.route(baseUrl),
     Parameters: Parameters.route(baseUrl),
-    ComplianceCheck: ComplianceCheck.route(baseUrl),
   };
 
   function isBaseUrlDefined(): boolean {

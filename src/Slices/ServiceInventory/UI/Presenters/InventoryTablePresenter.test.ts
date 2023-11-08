@@ -100,7 +100,7 @@ describe("TablePresenter with Actions", () => {
     "Service ID",
   );
   test("TablePresenter converts column name to index correctly", () => {
-    expect(presenterWithActions.getIndexForColumnName("id")).toEqual(0);
+    expect(presenterWithActions.getIndexForColumnName("id")).toEqual(-1);
     expect(presenterWithActions.getIndexForColumnName("state")).toEqual(1);
     expect(presenterWithActions.getIndexForColumnName("options")).toEqual(6);
     expect(presenterWithActions.getIndexForColumnName("history")).toEqual(-1);

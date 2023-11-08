@@ -2,35 +2,36 @@ const kinds = [
   /**
    * Main
    */
-  "Home",
   "CreateEnvironment",
+  "Home",
+  "NotificationCenter",
   "Settings",
   "Status",
-  "NotificationCenter",
 
   /**
    * LSM
    */
-  "Dashboard",
   "Catalog",
-  "Inventory",
-  "ServiceDetails",
   "CreateInstance",
-  "EditInstance",
-  "History",
+  "Dashboard",
   "Diagnose",
+  "DuplicateInstance",
+  "EditInstance",
   "Events",
+  "History",
   "InstanceComposer",
   "InstanceComposerEditor",
+  "Inventory",
+  "ServiceDetails",
 
   /**
    * Resource Manager
    */
-  "Resources",
+  "AgentProcess",
   "Agents",
   "Facts",
-  "AgentProcess",
   "ResourceDetails",
+  "Resources",
 
   /**
    * Orchestration Engine
@@ -71,24 +72,25 @@ export interface RouteKindWithId<K extends RouteKind = RouteKind> {
  * Only contains routes that have parameters (environment not included)
  */
 interface RouteParamKeysManifest {
+  AgentProcess: "id";
+  CompileDetails: "id";
+  ComplianceCheck: "version";
+  CreateInstance: "service";
+  DesiredStateCompare: "from" | "to";
+  DesiredStateDetails: "version";
+  DesiredStateResourceDetails: "version" | "resourceId";
+  Diagnose: "service" | "instance";
+  DuplicateInstance: "service" | "instance";
+  EditInstance: "service" | "instance";
+  Events: "service" | "instance";
+  History: "service" | "instance";
   InstanceComposer: "service";
   InstanceComposerEditor: "service" | "instance";
   Inventory: "service";
-  ServiceDetails: "service";
-  CreateInstance: "service";
-  EditInstance: "service" | "instance";
-  History: "service" | "instance";
-  Events: "service" | "instance";
-  Diagnose: "service" | "instance";
+  ResourceDetails: "resourceId";
   ResourceHistory: "resourceId";
   ResourceLogs: "resourceId";
-  CompileDetails: "id";
-  ResourceDetails: "resourceId";
-  AgentProcess: "id";
-  DesiredStateDetails: "version";
-  DesiredStateResourceDetails: "version" | "resourceId";
-  DesiredStateCompare: "from" | "to";
-  ComplianceCheck: "version";
+  ServiceDetails: "service";
 }
 
 export type RouteParams<K extends RouteKind> =
@@ -97,8 +99,8 @@ export type RouteParams<K extends RouteKind> =
     : undefined;
 
 export interface RouteMatch {
-  route: Route;
   params: RouteParams<RouteKind>;
+  route: Route;
 }
 
 export interface Crumb {

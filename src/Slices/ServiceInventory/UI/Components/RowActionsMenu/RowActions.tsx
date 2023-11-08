@@ -175,9 +175,16 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
               {words("inventory.editInstance.button")}
             </MenuItem>
           </Link>
-          <MenuItem itemId="duplicate" icon={<CopyIcon />}>
-            Duplicate
-          </MenuItem>
+          <Link
+            pathname={routeManager.getUrl("DuplicateInstance", {
+              service: instance.service_entity,
+              instance: instance.id,
+            })}
+          >
+            <MenuItem itemId="duplicate" icon={<CopyIcon />}>
+              Duplicate
+            </MenuItem>
+          </Link>
           <Divider component="li" />
           <MenuItem
             itemId="group:navigate"

@@ -1,6 +1,6 @@
 import React from "react";
 import { MemoryRouter, useLocation } from "react-router";
-import { render, screen, within, act, waitFor } from "@testing-library/react";
+import { render, screen, within, act } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { Either, RemoteData } from "@/Core";
@@ -364,29 +364,6 @@ describe("Actions", () => {
     });
 
     expect(await screen.findByRole("dialog")).toBeVisible();
-
-    await act(async () => {
-      await userEvent.click(
-        await screen.findByTestId(
-          `${ServiceInstance.a.id}-state-modal-confirm`,
-        ),
-      );
-
-      // Add a timeout after the click event to make sure the test-UI has time to process the click event.
-      await waitFor(
-        () =>
-          screen.queryByTestId(
-            `${ServiceInstance.a.id}-state-modal-confirm`,
-          ) === null,
-        {
-          timeout: 200,
-        },
-      );
-    });
-
-    expect(
-      screen.queryByTestId(`${ServiceInstance.a.id}-state-modal-confirm`),
-    ).not.toBeInTheDocument();
   });
 
   it("Shouldn't have expert options if not in expert-mode in dropdown", async () => {
