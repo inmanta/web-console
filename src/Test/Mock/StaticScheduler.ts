@@ -2,9 +2,20 @@ import { Scheduler, Task } from "@/Core";
 
 export class StaticScheduler implements Scheduler {
   private state: Record<string, Task> = {};
+  private pausedTasks: Record<string, Task> = {};
 
   getIds(): string[] {
     return Object.keys(this.state);
+  }
+
+  pauseTasks(): void {
+    this.pausedTasks = JSON.parse(JSON.stringify(this.state));
+    this.state = {};
+  }
+
+  resumeTasks(): void {
+    this.state = JSON.parse(JSON.stringify(this.state));
+    this.pausedTasks = {};
   }
 
   register(id: string, task: Task<unknown>): void {

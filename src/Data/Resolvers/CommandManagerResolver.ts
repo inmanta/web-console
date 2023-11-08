@@ -1,4 +1,9 @@
-import { ApiHelper, AuthHelper, CommandManager, ManagerResolver } from "@/Core";
+import {
+  ApiHelper,
+  AuthHelper,
+  CommandManager,
+  ICommandManagerResolver,
+} from "@/Core";
 import {
   DeleteInstanceCommandManager,
   DestroyInstanceCommandManager,
@@ -55,7 +60,7 @@ import { DeleteVersionCommandManager } from "../Managers/DeleteVersion";
 import { UpdateCatalogCommandManager } from "../Managers/UpdateCatalog/CommandManager";
 import { UpdateInstanceAttributeCommandManager } from "../Managers/UpdateInstanceAttribute";
 
-export class CommandManagerResolver implements ManagerResolver<CommandManager> {
+export class CommandManagerResolver implements ICommandManagerResolver {
   private managers: CommandManager[] = [];
 
   constructor(

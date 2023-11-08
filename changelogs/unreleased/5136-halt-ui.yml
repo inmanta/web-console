@@ -1,0 +1,8 @@
+change-type: patch
+description: "Introduce functionality that blocks UI for the process of halting environment"
+issue-nr: 5136
+destination-branches:
+  - master
+  - iso6
+sections:
+  minor-improvement: "{{description}}"

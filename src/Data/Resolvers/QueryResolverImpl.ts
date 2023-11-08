@@ -4,9 +4,8 @@ import {
   RemoteData,
   OneTimeQueryManager,
   ContinuousQueryManager,
-  QueryManager,
-  ManagerResolver,
   ReadOnlyQueryManager,
+  IQueryManagerResolver,
 } from "@/Core";
 
 type Data<K extends Query.Kind> = RemoteData.Type<
@@ -15,7 +14,7 @@ type Data<K extends Query.Kind> = RemoteData.Type<
 >;
 
 export class QueryResolverImpl implements QueryResolver {
-  constructor(public readonly managerResolver: ManagerResolver<QueryManager>) {}
+  constructor(public readonly managerResolver: IQueryManagerResolver) {}
 
   private getOneTimeQueryManager(
     query: Query.Type,
@@ -27,6 +26,14 @@ export class QueryResolverImpl implements QueryResolver {
       return manager as OneTimeQueryManager<typeof query.kind>;
     }
     throw new Error(`Can't find OneTimeQueryManager for query ${query.kind}`);
+  }
+
+  pauseAllContinuousManagers(): void {
+    this.managerResolver.pauseContinuous();
+  }
+
+  resumeAllContinuousManagers(): void {
+    this.managerResolver.resumeContinuous();
   }
 
   useOneTime(query: Query.Type): [Data<typeof query.kind>, () => void] {

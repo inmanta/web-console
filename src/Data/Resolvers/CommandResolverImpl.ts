@@ -2,13 +2,11 @@ import {
   Command,
   CommandResolver,
   CommandManager,
-  ManagerResolver,
+  ICommandManagerResolver,
 } from "@/Core";
 
 export class CommandResolverImpl implements CommandResolver {
-  constructor(
-    private readonly managerResolver: ManagerResolver<CommandManager>,
-  ) {}
+  constructor(private readonly managerResolver: ICommandManagerResolver) {}
 
   useGetTrigger(command: Command.Type): Command.Trigger<typeof command.kind> {
     const manager = this.getManager(command);

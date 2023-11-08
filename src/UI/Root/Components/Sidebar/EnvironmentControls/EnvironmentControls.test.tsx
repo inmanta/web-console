@@ -38,7 +38,10 @@ function setup() {
     EnvironmentDetailsContinuousQueryManager(store, apiHelper, scheduler);
 
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolver([environmentDetailsQueryManager]),
+    new DynamicQueryManagerResolver(
+      [environmentDetailsQueryManager],
+      scheduler,
+    ),
   );
 
   const haltEnvironmentManager = HaltEnvironmentCommandManager(
@@ -84,6 +87,8 @@ function setup() {
 }
 
 test("EnvironmentControls halt the environment when clicked and the environment is running", async () => {
+  const dispatchEventSpy = jest.spyOn(document, "dispatchEvent");
+
   const { component, apiHelper } = setup();
   render(component);
   await act(async () => {
@@ -101,7 +106,7 @@ test("EnvironmentControls halt the environment when clicked and the environment 
   });
 
   const [receivedUrl, requestInit] = fetchMock.mock.calls[0];
-
+  expect(dispatchEventSpy).toBeCalledTimes(2);
   expect(receivedUrl).toEqual(`/api/v2/actions/environment/halt`);
   expect(requestInit?.headers?.["X-Inmanta-Tid"]).toEqual(
     EnvironmentDetails.a.id,

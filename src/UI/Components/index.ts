@@ -2,6 +2,7 @@ export * from "./ActionDisabledTooltip";
 export * from "./AttributesTable";
 export * from "./AttributesSummaryView";
 export * from "./BooleanSwitch";
+export * from "./BlockingModal";
 export * from "./ButtonWithCursorHandling";
 export * from "./ClipboardCopyButton";
 export * from "./CodeHighlighter";
