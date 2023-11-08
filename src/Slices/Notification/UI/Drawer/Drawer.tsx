@@ -57,6 +57,7 @@ export const Drawer: React.FC<Props> = ({
       document.removeEventListener("click", close);
     };
   }, [drawerRef, isDrawerOpen, onClose]);
+
   return <View {...{ data, onClose, isDrawerOpen, trigger, drawerRef }} />;
 };
 
