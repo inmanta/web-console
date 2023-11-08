@@ -6,8 +6,8 @@ export interface GetSupportArchive {
 
 export interface GetSupportArchiveManifest {
   error: string;
-  apiData: { data: string };
+  apiData: Blob;
   body: undefined;
   command: GetSupportArchive;
-  trigger: () => Promise<Either.Type<string, string>>;
+  trigger: () => Promise<Either.Type<string, Blob>>;
 }

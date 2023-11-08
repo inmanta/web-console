@@ -6,10 +6,12 @@ export class GetSupportArchiveCommandManager extends CommandManagerWithoutEnv<"G
     super("GetSupportArchive", () => {
       return async () =>
         Either.mapRight(
-          (data) => data.data,
-          await this.apiHelper.getWithoutEnvironment<
+          (data) => {
+            return data;
+          },
+          await this.apiHelper.getZipWithoutEnvironment<
             Command.ApiData<"GetSupportArchive">
-          >("/api/v1/support/full"),
+          >("/api/v2/support"),
         );
     });
   }
