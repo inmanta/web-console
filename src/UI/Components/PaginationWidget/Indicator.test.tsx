@@ -1,3 +1,5 @@
+/*eslint-disable testing-library/no-node-access*/
+
 import React from "react";
 import { screen, render } from "@testing-library/react";
 import { Indicator } from "./Indicator";
