@@ -1,0 +1,6 @@
+description: Hotfix to repair E2E tests, and remove deprecated settings from testing suite. 
+change-type: patch
+destination-branches:
+- master
+- iso6
+sections: {}
