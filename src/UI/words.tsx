@@ -330,6 +330,7 @@ const dict = {
   "environment.halt.label": "Operations halted",
   "environment.halt.tooltip": "Operations in this environment are halted",
   "environment.resume.title": "Resume environment",
+  "environment.resume.process": "Resuming environment",
   "environment.resume.details":
     "Are you sure you want to resume all operations in the current environment?",
   "environment.protected.tooltip":

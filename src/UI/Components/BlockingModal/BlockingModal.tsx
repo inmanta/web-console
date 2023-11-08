@@ -5,12 +5,23 @@ import { words } from "@/UI/words";
 
 export const BlockingModal = () => {
   const [isBlockerOpen, setIsBlockerOpen] = useState(false);
+  const [message, setMessage] = useState("");
   useEffect(() => {
-    const toggleModal = () => {
+    const toggleModalHalt = () => {
       setIsBlockerOpen((state) => !state);
+      setMessage(words("environment.halt.process"));
     };
-    document.addEventListener("halt-event", toggleModal);
-    return () => document.removeEventListener("halt-event", toggleModal);
+    const toggleModalResume = () => {
+      setIsBlockerOpen((state) => !state);
+      setMessage(words("environment.resume.process"));
+    };
+
+    document.addEventListener("halt-event", toggleModalHalt);
+    document.addEventListener("resume-event", toggleModalResume);
+    return () => {
+      document.removeEventListener("halt-event", toggleModalHalt);
+      document.removeEventListener("resume-event", toggleModalResume);
+    };
   }, []);
   return (
     <StyledModal
@@ -26,7 +37,7 @@ export const BlockingModal = () => {
         alignItems={{ default: "alignItemsCenter" }}
       >
         <FlexItem>
-          <StyledText>{words("environment.halt.process")}</StyledText>
+          <StyledText>{message}</StyledText>
         </FlexItem>
         <FlexItem>
           <StyledSpinner size="lg" />
