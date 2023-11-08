@@ -24,6 +24,8 @@ describe("Test GraphCard with LineChart component", () => {
         name: words(`dashboard.${availableKeys[1] as MetricName}.title`),
       }),
     ).toBeVisible();
+
+    // eslint-disable-next-line testing-library/no-node-access
     expect(await container.querySelector(".pf-v5-c-chart")).toBeVisible();
   });
 
@@ -44,6 +46,8 @@ describe("Test GraphCard with LineChart component", () => {
         name: words(`dashboard.${availableKeys[6] as MetricName}.title`),
       }),
     ).toBeVisible();
+
+    // eslint-disable-next-line testing-library/no-node-access
     expect(await container.querySelector(".pf-v5-c-chart")).toBeVisible();
   });
 });

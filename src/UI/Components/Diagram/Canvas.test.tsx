@@ -1,3 +1,4 @@
+/*eslint-disable testing-library/no-node-access*/
 import React from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import {
