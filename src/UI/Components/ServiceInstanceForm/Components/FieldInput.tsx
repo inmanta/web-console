@@ -122,7 +122,6 @@ export const FieldInput: React.FC<Props> = ({
           }
           type={field.inputType}
           handleInputChange={(value, _event) => {
-            console.log(value);
             getUpdate(makePath(path, field.name), value);
           }}
           placeholder={getPlaceholderForType(field.type)}

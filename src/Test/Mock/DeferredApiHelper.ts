@@ -138,6 +138,18 @@ export class DeferredApiHelper implements ApiHelper {
     return promise as Promise<Either.Type<string, Data>>;
   }
 
+  getZipWithoutEnvironment<Blob>(
+    url: string,
+  ): Promise<Either.Type<string, Blob>> {
+    const { promise, resolve } = new Deferred();
+    this._pendingRequests.push({
+      request: { method: "GET", url },
+      resolve,
+      promise,
+    });
+    return promise as Promise<Either.Type<string, Blob>>;
+  }
+
   post<Data, Body = unknown>(
     url: string,
     environment: string,

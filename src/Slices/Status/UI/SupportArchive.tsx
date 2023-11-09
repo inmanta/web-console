@@ -20,13 +20,12 @@ export const SupportArchive: React.FC = () => {
     setPhase("Downloading");
     setError(null);
     const result = await trigger();
+
     if (Either.isLeft(result)) {
       setPhase("Default");
       setError(result.value);
     } else {
-      setPhase("Generating");
-      const blob = await archiveHelper.generateBlob(result.value);
-      archiveHelper.triggerDownload(blob);
+      archiveHelper.triggerDownload(result.value);
       setPhase("Default");
     }
   };
