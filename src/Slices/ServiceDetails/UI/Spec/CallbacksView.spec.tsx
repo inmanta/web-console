@@ -10,8 +10,8 @@ import {
   getStoreInstance,
 } from "@/Data";
 import {
-  DynamicCommandManagerResolver,
-  DynamicQueryManagerResolver,
+  DynamicCommandManagerResolverImpl,
+  DynamicQueryManagerResolverImpl,
   Service,
   Callback,
   DeferredApiHelper,
@@ -39,7 +39,7 @@ function setup() {
   );
 
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolver([callbacksQueryManager]),
+    new DynamicQueryManagerResolverImpl([callbacksQueryManager]),
   );
 
   const callbacksUpdater = new CallbacksUpdater(
@@ -57,7 +57,7 @@ function setup() {
   );
 
   const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolver([
+    new DynamicCommandManagerResolverImpl([
       deleteCallbackCommandManager,
       createCallbackCommandManager,
     ]),

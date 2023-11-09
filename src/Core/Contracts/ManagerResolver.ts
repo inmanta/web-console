@@ -1,13 +1,13 @@
 import { CommandManager } from "./CommandManager";
 import { QueryManager } from "./QueryManager";
 
-interface ICommandManagerResolver {
+interface CommandManagerResolver {
   get(): CommandManager[];
 }
-interface IQueryManagerResolver {
+interface QueryManagerResolver {
   get(): QueryManager[];
   pauseContinuous(): void;
   resumeContinuous(): void;
 }
 
-export { IQueryManagerResolver, ICommandManagerResolver };
+export { QueryManagerResolver, CommandManagerResolver };

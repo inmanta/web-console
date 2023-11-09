@@ -20,8 +20,8 @@ import {
 import {
   DeferredApiHelper,
   dependencies,
-  DynamicCommandManagerResolver,
-  DynamicQueryManagerResolver,
+  DynamicCommandManagerResolverImpl,
+  DynamicQueryManagerResolverImpl,
   Environment,
   MockEnvironmentModifier,
   Service,
@@ -58,7 +58,7 @@ export class ServiceInventoryPrepper {
     );
 
     const queryResolver = new QueryResolverImpl(
-      new DynamicQueryManagerResolver([
+      new DynamicQueryManagerResolverImpl([
         serviceInstancesHelper,
         resourcesHelper,
       ]),
@@ -82,7 +82,7 @@ export class ServiceInventoryPrepper {
     );
 
     const commandResolver = new CommandResolverImpl(
-      new DynamicCommandManagerResolver([
+      new DynamicCommandManagerResolverImpl([
         triggerUpdateCommandManager,
         deleteCommandManager,
         setStateCommandManager,

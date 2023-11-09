@@ -6,7 +6,7 @@ import { CommandResolverImpl, GenerateTokenCommandManager } from "@/Data";
 import {
   DeferredApiHelper,
   dependencies,
-  DynamicCommandManagerResolver,
+  DynamicCommandManagerResolverImpl,
 } from "@/Test";
 import { DependencyProvider, words } from "@/UI";
 import { Tab } from "./Tab";
@@ -15,7 +15,7 @@ function setup() {
   const apiHelper = new DeferredApiHelper();
   const commandManager = GenerateTokenCommandManager(apiHelper);
   const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolver([commandManager]),
+    new DynamicCommandManagerResolverImpl([commandManager]),
   );
 
   const component = (

@@ -2,7 +2,7 @@ import {
   QueryManager,
   ApiHelper,
   Scheduler,
-  IQueryManagerResolver,
+  QueryManagerResolver,
 } from "@/Core";
 import {
   ServiceQueryManager,
@@ -104,7 +104,7 @@ import {
 import { GetMetricsQueryManager } from "../Managers/GetMetrics";
 import { GetMetricsStateHelper } from "../Managers/GetMetrics/StateHelper";
 
-export class QueryManagerResolver implements IQueryManagerResolver {
+export class QueryManagerResolverImpl implements QueryManagerResolver {
   private managers: QueryManager[] = [];
 
   constructor(

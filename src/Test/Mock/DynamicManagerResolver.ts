@@ -1,13 +1,13 @@
 import {
   QueryManager,
   CommandManager,
-  ICommandManagerResolver,
-  IQueryManagerResolver,
+  CommandManagerResolver,
+  QueryManagerResolver,
   Scheduler,
 } from "@/Core";
 import { StaticScheduler } from "./StaticScheduler";
 
-export class DynamicQueryManagerResolver implements IQueryManagerResolver {
+export class DynamicQueryManagerResolverImpl implements QueryManagerResolver {
   private scheduler: Scheduler = new StaticScheduler();
   constructor(
     private readonly managers: QueryManager[],
@@ -33,7 +33,9 @@ export class DynamicQueryManagerResolver implements IQueryManagerResolver {
   }
 }
 
-export class DynamicCommandManagerResolver implements ICommandManagerResolver {
+export class DynamicCommandManagerResolverImpl
+  implements CommandManagerResolver
+{
   constructor(private readonly managers: CommandManager[]) {}
 
   get(): CommandManager[] {

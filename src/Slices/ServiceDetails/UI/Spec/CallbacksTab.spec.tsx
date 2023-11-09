@@ -17,8 +17,8 @@ import {
   ServiceStateHelper,
 } from "@/Data";
 import {
-  DynamicCommandManagerResolver,
-  DynamicQueryManagerResolver,
+  DynamicCommandManagerResolverImpl,
+  DynamicQueryManagerResolverImpl,
   Service,
   StaticScheduler,
   Callback,
@@ -60,7 +60,7 @@ function setup() {
   );
 
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolver([
+    new DynamicQueryManagerResolverImpl([
       serviceQueryManager,
       servicesQueryManager,
       callbacksQueryManager,
@@ -82,7 +82,7 @@ function setup() {
   );
 
   const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolver([
+    new DynamicCommandManagerResolverImpl([
       deleteServiceCommandManager,
       deleteCallbackCommandManager,
       createCallbackCommandManager,

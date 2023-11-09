@@ -20,8 +20,8 @@ import {
 import {
   DeferredApiHelper,
   dependencies,
-  DynamicCommandManagerResolver,
-  DynamicQueryManagerResolver,
+  DynamicCommandManagerResolverImpl,
+  DynamicQueryManagerResolverImpl,
   EnvironmentDetails,
   MockEnvironmentHandler,
   StaticScheduler,
@@ -38,7 +38,7 @@ function setup() {
     EnvironmentDetailsContinuousQueryManager(store, apiHelper, scheduler);
 
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolver(
+    new DynamicQueryManagerResolverImpl(
       [environmentDetailsQueryManager],
       scheduler,
     ),
@@ -57,7 +57,7 @@ function setup() {
   );
 
   const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolver([
+    new DynamicCommandManagerResolverImpl([
       haltEnvironmentManager,
       resumeEnvironmentManager,
     ]),

@@ -6,6 +6,7 @@ import { words } from "@/UI/words";
 export const BlockingModal = () => {
   const [isBlockerOpen, setIsBlockerOpen] = useState(false);
   const [message, setMessage] = useState("");
+
   useEffect(() => {
     const toggleModalHalt = () => {
       setIsBlockerOpen((state) => !state);
@@ -23,6 +24,7 @@ export const BlockingModal = () => {
       document.removeEventListener("resume-event", toggleModalResume);
     };
   }, []);
+
   return (
     <StyledModal
       aria-label="halting-blocker"

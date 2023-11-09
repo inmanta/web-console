@@ -8,11 +8,11 @@ import { StoreProvider } from "easy-peasy";
 import { createMemoryHistory } from "history";
 import { Either, Maybe } from "@/Core";
 import {
-  CommandManagerResolver,
+  CommandManagerResolverImpl,
   CommandResolverImpl,
   getStoreInstance,
   KeycloakAuthHelper,
-  QueryManagerResolver,
+  QueryManagerResolverImpl,
   QueryResolverImpl,
 } from "@/Data";
 import { Body } from "@/Slices/Notification/Core/Domain";
@@ -28,11 +28,11 @@ function setup() {
   const store = getStoreInstance();
 
   const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolver(store, apiHelper, scheduler, scheduler),
+    new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler),
   );
 
   const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolver(store, apiHelper, new KeycloakAuthHelper()),
+    new CommandManagerResolverImpl(store, apiHelper, new KeycloakAuthHelper()),
   );
 
   const closeCallback = jest.fn();

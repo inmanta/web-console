@@ -19,7 +19,7 @@ import {
 import {
   DeferredApiHelper,
   dependencies,
-  DynamicQueryManagerResolver,
+  DynamicQueryManagerResolverImpl,
   Project,
   ServerStatus,
   StaticScheduler,
@@ -49,7 +49,7 @@ function setup() {
   );
 
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolver([
+    new DynamicQueryManagerResolverImpl([
       environmentsManager,
       environmentManagerOneTime,
       getServerStatusManager,

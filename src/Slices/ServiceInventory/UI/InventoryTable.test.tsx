@@ -7,7 +7,7 @@ import { Either, RemoteData } from "@/Core";
 import {
   QueryResolverImpl,
   getStoreInstance,
-  QueryManagerResolver,
+  QueryManagerResolverImpl,
 } from "@/Data";
 import {
   Row,
@@ -28,7 +28,7 @@ const dummySetter = () => {
 test("InventoryTable can be expanded", async () => {
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolver(
+    new QueryManagerResolverImpl(
       store,
       new DeferredApiHelper(),
       new StaticScheduler(),
@@ -86,7 +86,7 @@ test("ServiceInventory can show resources for instance", async () => {
   const store = getStoreInstance();
   const apiHelper = new DeferredApiHelper();
   const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolver(
+    new QueryManagerResolverImpl(
       store,
       apiHelper,
       new StaticScheduler(),

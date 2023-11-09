@@ -24,8 +24,8 @@ import {
 import {
   DeferredApiHelper,
   dependencies,
-  DynamicCommandManagerResolver,
-  DynamicQueryManagerResolver,
+  DynamicCommandManagerResolverImpl,
+  DynamicQueryManagerResolverImpl,
   InstantApiHelper,
   MockEnvironmentHandler,
   MockEnvironmentModifier,
@@ -69,11 +69,11 @@ function setup(
   );
 
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolver([instanceConfigHelper]),
+    new DynamicQueryManagerResolverImpl([instanceConfigHelper]),
   );
 
   const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolver([
+    new DynamicCommandManagerResolverImpl([
       InstanceConfigCommandManager(apiHelper, instanceConfigStateHelper),
     ]),
   );

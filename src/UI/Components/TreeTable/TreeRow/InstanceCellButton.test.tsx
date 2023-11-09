@@ -6,7 +6,7 @@ import { act } from "react-dom/test-utils";
 import { Either } from "@/Core";
 import {
   getStoreInstance,
-  QueryManagerResolver,
+  QueryManagerResolverImpl,
   QueryResolverImpl,
 } from "@/Data";
 import {
@@ -23,7 +23,7 @@ function setup() {
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
   const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolver(store, apiHelper, scheduler, scheduler),
+    new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler),
   );
   const handleClick = jest.fn();
   const component = (

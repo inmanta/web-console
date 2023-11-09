@@ -12,7 +12,7 @@ import {
 } from "@/Data";
 import {
   dependencies,
-  DynamicCommandManagerResolver,
+  DynamicCommandManagerResolverImpl,
   MockEnvironmentModifier,
   ServiceInstance,
 } from "@/Test";
@@ -26,7 +26,7 @@ function setup() {
   );
   return {
     commandResolver: new CommandResolverImpl(
-      new DynamicCommandManagerResolver([commandManager]),
+      new DynamicCommandManagerResolverImpl([commandManager]),
     ),
   };
 }

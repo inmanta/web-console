@@ -5,7 +5,7 @@ import {
   OneTimeQueryManager,
   ContinuousQueryManager,
   ReadOnlyQueryManager,
-  IQueryManagerResolver,
+  QueryManagerResolver,
 } from "@/Core";
 
 type Data<K extends Query.Kind> = RemoteData.Type<
@@ -14,7 +14,7 @@ type Data<K extends Query.Kind> = RemoteData.Type<
 >;
 
 export class QueryResolverImpl implements QueryResolver {
-  constructor(public readonly managerResolver: IQueryManagerResolver) {}
+  constructor(public readonly managerResolver: QueryManagerResolver) {}
 
   private getOneTimeQueryManager(
     query: Query.Type,

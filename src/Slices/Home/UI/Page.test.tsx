@@ -11,7 +11,7 @@ import {
 import {
   DeferredApiHelper,
   dependencies,
-  DynamicQueryManagerResolver,
+  DynamicQueryManagerResolverImpl,
   Project,
   StaticScheduler,
 } from "@/Test";
@@ -28,7 +28,7 @@ function setup() {
     GetEnvironmentsContinuousStateHelper(store),
   );
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolver([environmentsManager]),
+    new DynamicQueryManagerResolverImpl([environmentsManager]),
   );
   const component = (
     <MemoryRouter>
