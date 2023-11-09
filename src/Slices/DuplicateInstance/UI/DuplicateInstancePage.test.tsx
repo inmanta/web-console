@@ -220,7 +220,7 @@ test("Given the DuplicateInstance View When changing a embedded entity Then the 
               attributes: {
                 owner_account_id: "666023226898",
               },
-              cloud_service_provider: "AWS2",
+              cloud_service_provider: "AWS",
               ipx_access: [1000010782, 1000013639],
               region: "us-east-1",
             },
@@ -237,7 +237,7 @@ test("Given the DuplicateInstance View When changing a embedded entity Then the 
               attributes: {
                 owner_account_id: "666023226898",
               },
-              cloud_service_provider: "AWS",
+              cloud_service_provider: "AWS2",
               ipx_access: [1000010782, 1000013639],
               region: "us-east-1",
             },
@@ -338,10 +338,9 @@ test("Given the DuplicateInstance View When changing an embedded entity Then the
   ).toBeEnabled();
 
   //check if direct attributes for embedded entities are correctly displayed
-
   await act(async () => {
     await userEvent.click(
-      within(embedded_base).getByRole("button", { name: "1" }),
+      within(embedded_base).getByRole("button", { name: "0" }),
     );
   });
   expect(within(embedded_base).queryByDisplayValue("string")).toBeEnabled();
