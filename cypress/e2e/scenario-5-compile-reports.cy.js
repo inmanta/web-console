@@ -243,18 +243,16 @@ describe("5 Compile reports", () => {
       // Click on Show Inventory on basic-service
       cy.get("#basic-service").contains("Show inventory").click();
 
+      // click on duplicate instance
+      cy.get('[aria-label="row actions toggle"]', { timeout: 60000 })
+        .eq(0)
+        .click();
+      cy.get(".pf-v5-c-menu__item").contains("Duplicate").click();
+
       // Add Instance
-      cy.get("#add-instance-button").click();
-      cy.get("#ip_r1").type("1.2.3.4");
-      cy.get("#interface_r1_name").type("eth0");
-      cy.get("#address_r1").type("1.2.3.5");
-      cy.get("#vlan_id_r1").type("1");
-      cy.get("#ip_r2").type("1.2.2.1");
-      cy.get("#interface_r2_name").type("interface-vlan");
-      cy.get("#address_r2").type("1.2.2.3");
-      cy.get("#vlan_id_r2").type("2");
+      cy.get("#service_id").clear();
       cy.get("#service_id").type("0001");
-      cy.get("#name").type("basic-service2");
+      cy.get("#name").type("2");
       cy.get("button").contains("Confirm").click();
 
       // Expect to see a rejected service instance in the table
@@ -312,13 +310,12 @@ describe("5 Compile reports", () => {
       // Click on Show Inventory on basic-service
       cy.get("#basic-service").contains("Show inventory").click();
 
-      // Open rejected instance row
-      cy.get("#expand-toggle0").click();
-
-      // delete instance
-      cy.get(".pf-v5-c-description-list", { timeout: 60000 })
-        .contains("Delete")
+      // Delete rejected instance row
+      cy.get('[aria-label="row actions toggle"]', { timeout: 60000 })
+        .eq(0)
         .click();
+      cy.get(".pf-v5-c-menu__item").contains("More options").click();
+      cy.get(".pf-v5-c-menu__item").contains("Delete").click();
 
       // confirm modal
       cy.get(".pf-v5-c-form__actions").contains("Yes").click();

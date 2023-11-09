@@ -235,7 +235,7 @@ if (Cypress.env("edition") === "iso") {
       });
     });
 
-    it("3.3 Create a failed Instance and check details", () => {
+    it("3.3 Create a failed Instance by Duplicating and check details", () => {
       // Select 'test' environment
       cy.visit("/console/");
       cy.get('[aria-label="Environment card"]')
@@ -248,19 +248,15 @@ if (Cypress.env("edition") === "iso") {
         .contains("Show inventory")
         .click();
 
-      // click on add instance
-      cy.get("#add-instance-button").click();
+      // click on duplicate instance
+      cy.get('[aria-label="row actions toggle"]', { timeout: 60000 })
+        .eq(0)
+        .click();
+      cy.get(".pf-v5-c-menu__item").contains("Duplicate").click();
 
       // Create a failed instance on basic-service
-      cy.get("#ip_r1").type("1.2.3.4");
-      cy.get("#interface_r1_name").type("eth1");
-      cy.get("#address_r1").type("1.2.3.8/32");
-      cy.get("#vlan_id_r1").type("4");
-      cy.get("#ip_r2").type("1.2.2.1");
-      cy.get("#interface_r2_name").type("interface-vlan2");
-      cy.get("#address_r2").type("1.2.2.8/32");
-      cy.get("#vlan_id_r2").type("8");
       cy.get("#service_id").type("0008");
+      cy.get("#name").clear();
       cy.get("#name").type("failed");
       cy.get(".pf-v5-c-switch").first().click();
       cy.get("button").contains("Confirm").click();
@@ -479,31 +475,22 @@ if (Cypress.env("edition") === "iso") {
         .contains("Show inventory")
         .click();
 
-      // Click open first row
-      cy.get("#expand-toggle0").click();
-
-      // Click on delete instance
-      cy.get(".pf-v5-c-table__expandable-row-content", { timeout: 20000 })
+      // Click on delete instance first row
+      cy.get('[aria-label="row actions toggle"]', { timeout: 60000 })
         .eq(0)
-        .find("button")
-        .contains("Delete")
         .click();
+      cy.get(".pf-v5-c-menu__item").contains("More options").click();
+      cy.get(".pf-v5-c-menu__item").contains("Delete").click();
 
       // Confirm deletion
       cy.get("#submit").click();
 
-      // Close first row
-      cy.get("#expand-toggle0").click();
-
-      // Open second row
-      cy.get("#expand-toggle1").click();
-
-      // Click on delete instance
-      cy.get(".pf-v5-c-table__expandable-row-content", { timeout: 20000 })
+      // Click on delete instance second row
+      cy.get('[aria-label="row actions toggle"]', { timeout: 60000 })
         .eq(1)
-        .find("button")
-        .contains("Delete")
         .click();
+      cy.get(".pf-v5-c-menu__item").contains("More options").click();
+      cy.get(".pf-v5-c-menu__item").contains("Delete").click();
 
       // Confirm deletion
       cy.get("#submit", { timeout: 20000 }).click();

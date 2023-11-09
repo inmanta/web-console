@@ -144,8 +144,12 @@ if (Cypress.env("edition") === "iso") {
 
       // open row from element
       cy.get("#expand-toggle0", { timeout: 20000 }).click();
+
       // try delete item (Should not be possible)
-      cy.get(".pf-v5-c-description-list").contains("Delete").click();
+      cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
+      cy.get(".pf-v5-c-menu__item").contains("More options").click();
+      cy.get(".pf-v5-c-menu__item").contains("Delete").click();
+
       cy.get(".pf-v5-c-modal-box__title-text").should(
         "contain",
         "Delete instance",
@@ -172,9 +176,10 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#expand-toggle0").click();
 
       // try delete item (Should be possible)
-      cy.get(".pf-v5-c-description-list", { timeout: 20000 })
-        .contains("Delete")
-        .click();
+      cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
+      cy.get(".pf-v5-c-menu__item").contains("More options").click();
+      cy.get(".pf-v5-c-menu__item").contains("Delete").click();
+
       cy.get(".pf-v5-c-modal-box__title-text").should(
         "contain",
         "Delete instance",

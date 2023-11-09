@@ -58,6 +58,18 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
   const menuRef = React.useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = React.useState(false);
 
+  // the height of the drilled down menus differ based on how many options preceeds the drilldown. This is a bug on PF side.
+  // and setting the insetHeight manually is a workaround for that issue.
+  const getInsetHeight = () => {
+    // -100 for each default option present above the first drilldown.
+    let insetHeight = -300;
+    if (features && features.includes("instanceComposer")) {
+      insetHeight = insetHeight - 100;
+    }
+
+    return `${insetHeight}%`;
+  };
+
   const onToggleClick = () => {
     setIsOpen(!isOpen);
     setMenuDrilledIn([]);
@@ -193,7 +205,7 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
               <DrilldownMenu
                 id="navigateDrillDown"
                 aria-label="navigationDrilldown"
-                style={{ insetBlockStart: "-200%" }}
+                style={{ insetBlockStart: getInsetHeight() }}
               >
                 <MenuItem
                   itemId="group:navigate_breadcrumb"
@@ -251,6 +263,7 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
             <ForceStateAction
               service_entity={instance.service_entity}
               id={instance.id}
+              insetHeight={getInsetHeight()}
               instance_identity={
                 instance.service_identity_attribute_value ?? instance.id
               }

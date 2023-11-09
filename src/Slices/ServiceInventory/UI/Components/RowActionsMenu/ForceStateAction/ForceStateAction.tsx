@@ -11,6 +11,7 @@ import { ToastAlertMessage } from "../../ToastAlertMessage";
 interface Props extends VersionedServiceInstanceIdentifier {
   instance_identity: string;
   availableStates: string[];
+  insetHeight: string;
 }
 
 export const ForceStateAction: React.FC<Props> = ({
@@ -19,6 +20,7 @@ export const ForceStateAction: React.FC<Props> = ({
   instance_identity,
   version,
   availableStates,
+  insetHeight,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [confirmationText, setConfirmationText] = useState<string>("");
@@ -93,7 +95,7 @@ export const ForceStateAction: React.FC<Props> = ({
             <DrilldownMenu
               id="drilldownMenuExpertState"
               aria-label="drilldownMenuExpertState"
-              style={{ insetBlockStart: "-200%" }}
+              style={{ insetBlockStart: insetHeight }}
             >
               <MenuItem
                 style={{
