@@ -233,6 +233,62 @@ test("Given the CreateInstance View When creating an instance with Inter-service
   });
 });
 
+test("Given the CreateInstance View When creating an instance with Inter-service-relations only Then the correct request is fired", async () => {
+  const { component, apiHelper } = setup(Service.withRelationsOnly);
+  render(component);
+
+  await act(async () => {
+    apiHelper.resolve(Either.right({ data: Service.withIdentity }));
+  });
+  await act(async () => {
+    apiHelper.resolve(
+      Either.right({ data: [ServiceInstance.a, ServiceInstance.b] }),
+    );
+  });
+  await act(async () => {
+    apiHelper.resolve(
+      Either.right({ data: [ServiceInstance.a, ServiceInstance.b] }),
+    );
+  });
+
+  const relationInputField = screen.getByPlaceholderText(
+    words("common.serviceInstance.relation"),
+  );
+
+  await act(async () => {
+    await userEvent.type(relationInputField, "a");
+  });
+  expect(apiHelper.pendingRequests[0]).toEqual({
+    method: "GET",
+    url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=100&filter.order_id=a`,
+    environment: "env",
+  });
+
+  await act(async () => {
+    await apiHelper.resolve(Either.right({ data: [ServiceInstance.a] }));
+  });
+  await act(async () => {
+    await userEvent.type(relationInputField, "{selectall}{backspace}ab");
+  });
+  expect(apiHelper.pendingRequests[0]).toEqual({
+    method: "GET",
+    url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=100&filter.order_id=ab`,
+    environment: "env",
+  });
+  await act(async () => {
+    apiHelper.resolve(Either.right({ data: [] }));
+  });
+
+  await act(async () => {
+    await userEvent.type(relationInputField, "{backspace}{backspace}");
+  });
+  expect(apiHelper.pendingRequests[0]).toEqual({
+    method: "GET",
+    url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=100&filter.order_id=`,
+    environment: "env",
+  });
+});
+
 test("Given the CreateInstance View When creating entity with default values Then the inputs have correct values set", async () => {
   const { component } = setup(Service.ServiceWithAllAttrs);
   render(component);
@@ -323,7 +379,7 @@ test("Given the CreateInstance View When creating entity with default values The
 
   await act(async () => {
     await userEvent.click(
-      within(embedded_base).getByRole("button", { name: "1" }),
+      within(embedded_base).getByRole("button", { name: "0" }),
     );
   });
   expect(

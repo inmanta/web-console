@@ -1,3 +1,4 @@
+/*eslint-disable testing-library/no-node-access*/
 import React from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import {
@@ -23,6 +24,8 @@ import Canvas from "@/UI/Components/Diagram/Canvas";
 import CustomRouter from "@/UI/Routing/CustomRouter";
 import history from "@/UI/Routing/history";
 import {
+  mockedInstanceThree,
+  mockedInstanceThreeServiceModel,
   mockedInstanceTwo,
   mockedInstanceTwoServiceModel,
   mockedInstanceWithReferences,
@@ -678,6 +681,20 @@ describe("Canvas.tsx", () => {
     expect(entities).toHaveLength(4);
     expect(attrIndicators).toHaveLength(4);
     expect(connectors).toHaveLength(3);
+  });
+
+  it("renders correctly fetched instances with missing optional entities", async () => {
+    const component = setup(mockedInstanceThree, [
+      mockedInstanceThreeServiceModel,
+    ]);
+    render(component);
+
+    const attrIndicators = await screen.findAllByJointSelector("info");
+    const entities = document.querySelectorAll(
+      '[data-type="app.ServiceEntityBlock"]',
+    );
+    expect(entities).toHaveLength(1);
+    expect(attrIndicators).toHaveLength(1);
   });
 
   it("deletes shape correctly ", async () => {

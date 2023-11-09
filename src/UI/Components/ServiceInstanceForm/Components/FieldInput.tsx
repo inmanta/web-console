@@ -122,7 +122,6 @@ export const FieldInput: React.FC<Props> = ({
           }
           type={field.inputType}
           handleInputChange={(value, _event) => {
-            console.log(value);
             getUpdate(makePath(path, field.name), value);
           }}
           placeholder={getPlaceholderForType(field.type)}
@@ -405,16 +404,16 @@ const DictListFieldInput: React.FC<DictListProps> = ({
         <StyledFormFieldGroupExpandable
           aria-label={`DictListFieldInputItem-${makePath(
             path,
-            `${field.name}.${index + 1}`,
+            `${field.name}.${index}`,
           )}`}
           key={makePath(path, `${field.name}.${index}`)}
           header={
             <FormFieldGroupHeader
               titleText={{
-                text: index + 1,
+                text: index,
                 id: `DictListFieldInputItem-${makePath(
                   path,
-                  `${field.name}.${index + 1}`,
+                  `${field.name}.${index}`,
                 )}`,
               }}
               actions={

@@ -141,7 +141,7 @@ test("Given the EditInstance View When changing a v1 embedded entity Then the co
     await userEvent.click(screen.getByRole("button", { name: "circuits" }));
   });
   await act(async () => {
-    await userEvent.click(screen.getByRole("button", { name: "1" }));
+    await userEvent.click(screen.getByRole("button", { name: "0" }));
   });
 
   expect(screen.getByLabelText("TextInput-service_id")).toBeDisabled();
@@ -189,7 +189,7 @@ test("Given the EditInstance View When changing a v2 embedded entity Then the co
     await userEvent.click(screen.getByRole("button", { name: "circuits" }));
   });
   await act(async () => {
-    await userEvent.click(screen.getByRole("button", { name: "1" }));
+    await userEvent.click(screen.getByRole("button", { name: "0" }));
   });
 
   expect(screen.getByLabelText("TextInput-service_id")).toBeDisabled();
@@ -343,7 +343,7 @@ test("Given the EditInstance View When changing an embedded entity Then the inpu
 
   await act(async () => {
     await userEvent.click(
-      within(embedded_base).getByRole("button", { name: "1" }),
+      within(embedded_base).getByRole("button", { name: "0" }),
     );
   });
   expect(within(embedded_base).queryByDisplayValue("string")).toBeDisabled();
@@ -516,11 +516,11 @@ test("Given the EditInstance View When adding new nested embedded entity Then th
 
   await act(async () => {
     await userEvent.click(
-      within(editableOptionalEmbedded_base).getByRole("button", { name: "2" }),
+      within(editableOptionalEmbedded_base).getByRole("button", { name: "1" }),
     );
   });
   const addedOptionalEmbedded = screen.getByLabelText(
-    "DictListFieldInputItem-editableOptionalEmbedded_base.2",
+    "DictListFieldInputItem-editableOptionalEmbedded_base.1",
   );
   //check if direct attributes are correctly displayed
   expect(within(addedOptionalEmbedded).queryByText("string")).toBeEnabled();
