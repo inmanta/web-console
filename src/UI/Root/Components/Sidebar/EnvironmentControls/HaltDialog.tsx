@@ -41,10 +41,10 @@ export const HaltDialog: React.FC = () => {
               queryResolver.pauseAllContinuousManagers();
               haltEnvironmentTrigger().then((_result) => {
                 queryResolver.resumeAllContinuousManagers();
-                // document.dispatchEvent(new CustomEvent("halt-event"));
+                document.dispatchEvent(new CustomEvent("halt-event"));
               });
-              // handleModalToggle();
-              // document.dispatchEvent(new CustomEvent("halt-event"));
+              handleModalToggle();
+              document.dispatchEvent(new CustomEvent("halt-event"));
             }}
           >
             {words("yes")}

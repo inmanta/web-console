@@ -106,11 +106,11 @@ test("EnvironmentControls halt the environment when clicked and the environment 
   });
 
   const [receivedUrl, requestInit] = fetchMock.mock.calls[0];
-  expect(dispatchEventSpy).toBeCalledTimes(2);
   expect(receivedUrl).toEqual(`/api/v2/actions/environment/halt`);
   expect(requestInit?.headers?.["X-Inmanta-Tid"]).toEqual(
     EnvironmentDetails.a.id,
   );
+  expect(dispatchEventSpy).toBeCalledTimes(2);
 });
 
 test("EnvironmentControls don\\t trigger backend call when dialog is not confirmed", async () => {
@@ -136,6 +136,8 @@ test("EnvironmentControls don\\t trigger backend call when dialog is not confirm
 });
 
 test("EnvironmentControls resume the environment when clicked and the environment is halted", async () => {
+  const dispatchEventSpy = jest.spyOn(document, "dispatchEvent");
+
   const { component, apiHelper } = setup();
   render(component);
 
@@ -164,4 +166,5 @@ test("EnvironmentControls resume the environment when clicked and the environmen
   expect(requestInit?.headers?.["X-Inmanta-Tid"]).toEqual(
     EnvironmentDetails.a.id,
   );
+  expect(dispatchEventSpy).toBeCalledTimes(2);
 });
