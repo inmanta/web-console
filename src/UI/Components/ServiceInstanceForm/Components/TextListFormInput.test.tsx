@@ -1,3 +1,5 @@
+/*eslint-disable testing-library/no-node-access*/
+
 import React from "react";
 import { TextInputTypes } from "@patternfly/react-core";
 import { act, render, screen } from "@testing-library/react";
