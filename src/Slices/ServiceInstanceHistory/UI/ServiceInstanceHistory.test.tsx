@@ -13,8 +13,8 @@ import { UpdateInstanceAttributeCommandManager } from "@/Data/Managers/UpdateIns
 import {
   DeferredApiHelper,
   dependencies,
-  DynamicCommandManagerResolver,
-  DynamicQueryManagerResolver,
+  DynamicCommandManagerResolverImpl,
+  DynamicQueryManagerResolverImpl,
   Service,
   ServiceInstance,
   StaticScheduler,
@@ -31,7 +31,7 @@ function setup() {
   const store = getStoreInstance();
   const apiHelper = new DeferredApiHelper();
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolver([
+    new DynamicQueryManagerResolverImpl([
       GetInstanceLogsQueryManager(
         apiHelper,
         GetInstanceLogsStateHelper(store),
@@ -44,7 +44,7 @@ function setup() {
     apiHelper,
   );
   const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolver([updateAttribute]),
+    new DynamicCommandManagerResolverImpl([updateAttribute]),
   );
   const environmentHandler = EnvironmentHandlerImpl(
     useLocation,

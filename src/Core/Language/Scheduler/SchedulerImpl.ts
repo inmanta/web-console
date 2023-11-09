@@ -5,6 +5,7 @@ import { Scheduler, Task } from "./Scheduler";
 
 export class SchedulerImpl implements Scheduler {
   tasks: Dictionary<Task>;
+  private pausedTasks: Dictionary<Task> = new DictionaryImpl<Task>();
   private nextEffects: Record<string, ReturnType<Task["effect"]>> = {};
   private nextUpdates: Record<string, Task["update"]> = {};
   private ongoing = false;
@@ -16,6 +17,25 @@ export class SchedulerImpl implements Scheduler {
   ) {
     this.tasks =
       typeof tasks !== "undefined" ? tasks : new DictionaryImpl<Task>();
+  }
+
+  pauseTasks(): void {
+    const tasksToPause = this.tasks.toObject();
+    Object.keys(tasksToPause).forEach((key) => {
+      this.tasks.drop(key);
+      this.pausedTasks.set(key, this.wrapTask(tasksToPause[key]));
+    });
+    this.nextEffects = {};
+    this.nextUpdates = {};
+    this.revalidateTicker();
+  }
+
+  resumeTasks(): void {
+    const tasksToResume = this.tasks.toObject();
+    Object.keys(tasksToResume).forEach((key) => {
+      this.tasks.drop(key);
+      this.pausedTasks.set(key, this.wrapTask(tasksToResume[key]));
+    });
   }
 
   unregister(id: string): void {

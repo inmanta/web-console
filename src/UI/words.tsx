@@ -324,11 +324,13 @@ const dict = {
   "environment.halt.button.tooltip":
     "Emergency stop to halt all operations in the current environment",
   "environment.halt.title": "Halt environment",
+  "environment.halt.process": "Halting environment",
   "environment.halt.details":
     "Are you sure you want to initiate an emergency stop and halt all operations in the current environment?",
   "environment.halt.label": "Operations halted",
   "environment.halt.tooltip": "Operations in this environment are halted",
   "environment.resume.title": "Resume environment",
+  "environment.resume.process": "Resuming environment",
   "environment.resume.details":
     "Are you sure you want to resume all operations in the current environment?",
   "environment.protected.tooltip":

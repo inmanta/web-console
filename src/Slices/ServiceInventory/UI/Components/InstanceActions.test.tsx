@@ -10,7 +10,7 @@ import {
 import {
   DeferredApiHelper,
   dependencies,
-  DynamicCommandManagerResolver,
+  DynamicCommandManagerResolverImpl,
   MockEnvironmentModifier,
   ServiceInstance,
 } from "@/Test";
@@ -30,7 +30,7 @@ test("Given InstanceActions component When the instance is terminated Then the a
   );
 
   const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolver([
+    new DynamicCommandManagerResolverImpl([
       deleteCommandManager,
       setStateCommandManager,
     ]),

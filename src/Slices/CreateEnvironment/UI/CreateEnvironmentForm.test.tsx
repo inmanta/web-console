@@ -8,9 +8,9 @@ import {
   CommandResolverImpl,
   getStoreInstance,
   QueryResolverImpl,
-  CommandManagerResolver,
+  CommandManagerResolverImpl,
   KeycloakAuthHelper,
-  QueryManagerResolver,
+  QueryManagerResolverImpl,
 } from "@/Data";
 import {
   DeferredApiHelper,
@@ -28,10 +28,10 @@ function setup() {
   const scheduler = new StaticScheduler();
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolver(store, apiHelper, scheduler, scheduler),
+    new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler),
   );
   const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolver(store, apiHelper, authHelper),
+    new CommandManagerResolverImpl(store, apiHelper, authHelper),
   );
 
   const component = (

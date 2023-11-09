@@ -13,12 +13,12 @@ import {
   CommandResolverImpl,
 } from "@/Data";
 import {
-  DynamicQueryManagerResolver,
+  DynamicQueryManagerResolverImpl,
   Service,
   StaticScheduler,
   ServiceInstance,
   MockEnvironmentModifier,
-  DynamicCommandManagerResolver,
+  DynamicCommandManagerResolverImpl,
   DeferredApiHelper,
   dependencies,
 } from "@/Test";
@@ -32,7 +32,7 @@ function setup(entity = "a") {
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolver([
+    new DynamicQueryManagerResolverImpl([
       ServiceInstanceQueryManager(
         apiHelper,
         ServiceInstanceStateHelper(store),
@@ -43,7 +43,7 @@ function setup(entity = "a") {
 
   const commandManager = TriggerInstanceUpdateCommandManager(apiHelper);
   const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolver([commandManager]),
+    new DynamicCommandManagerResolverImpl([commandManager]),
   );
 
   const component = (

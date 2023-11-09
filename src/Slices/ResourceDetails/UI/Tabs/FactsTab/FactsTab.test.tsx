@@ -7,7 +7,7 @@ import { getStoreInstance, QueryResolverImpl } from "@/Data";
 import {
   DeferredApiHelper,
   dependencies,
-  DynamicQueryManagerResolver,
+  DynamicQueryManagerResolverImpl,
   Resource,
   StaticScheduler,
 } from "@/Test";
@@ -25,7 +25,7 @@ function setup() {
   const apiHelper = new DeferredApiHelper();
   const scheduler = new StaticScheduler();
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolver([
+    new DynamicQueryManagerResolverImpl([
       GetResourceFactsQueryManager(
         apiHelper,
         GetResourceFactsStateHelper(store),

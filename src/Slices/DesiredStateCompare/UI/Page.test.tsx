@@ -8,7 +8,7 @@ import {
   DeferredApiHelper,
   dependencies,
   DesiredStateDiff,
-  DynamicQueryManagerResolver,
+  DynamicQueryManagerResolverImpl,
 } from "@/Test";
 import { DependencyProvider, words } from "@/UI";
 import {
@@ -25,7 +25,7 @@ function setup() {
     GetDesiredStateDiffStateHelper(store),
   );
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolver([queryManager]),
+    new DynamicQueryManagerResolverImpl([queryManager]),
   );
   const fileFetcher = new FileFetcherImpl(apiHelper);
   fileFetcher.setEnvironment("env");

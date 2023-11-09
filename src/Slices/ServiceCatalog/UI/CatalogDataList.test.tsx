@@ -8,14 +8,18 @@ import {
   CommandResolverImpl,
   DeleteServiceCommandManager,
 } from "@/Data";
-import { dependencies, DynamicCommandManagerResolver, Service } from "@/Test";
+import {
+  dependencies,
+  DynamicCommandManagerResolverImpl,
+  Service,
+} from "@/Test";
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import { CatalogDataList } from "./CatalogDataList";
 
 const Component = (services: ServiceModel[]) => {
   const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolver([
+    new DynamicCommandManagerResolverImpl([
       DeleteServiceCommandManager(new BaseApiHelper()),
     ]),
   );

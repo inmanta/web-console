@@ -7,7 +7,7 @@ import { Either } from "@/Core";
 import { QueryResolverImpl, getStoreInstance } from "@/Data";
 import {
   Resource,
-  DynamicQueryManagerResolver,
+  DynamicQueryManagerResolverImpl,
   StaticScheduler,
   DeferredApiHelper,
   dependencies,
@@ -31,7 +31,7 @@ function setup() {
   );
 
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolver([resourceLogsQueryManager]),
+    new DynamicQueryManagerResolverImpl([resourceLogsQueryManager]),
   );
 
   const component = (

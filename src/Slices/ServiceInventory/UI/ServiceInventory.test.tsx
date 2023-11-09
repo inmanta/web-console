@@ -25,8 +25,8 @@ import {
   InstanceResource,
   Pagination,
   StaticScheduler,
-  DynamicQueryManagerResolver,
-  DynamicCommandManagerResolver,
+  DynamicQueryManagerResolverImpl,
+  DynamicCommandManagerResolverImpl,
   MockEnvironmentModifier,
   DeferredApiHelper,
   dependencies,
@@ -56,7 +56,10 @@ function setup(service = Service.a) {
   );
 
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolver([serviceInstancesHelper, resourcesHelper]),
+    new DynamicQueryManagerResolverImpl([
+      serviceInstancesHelper,
+      resourcesHelper,
+    ]),
   );
 
   const triggerUpdateCommandManager =
@@ -76,7 +79,7 @@ function setup(service = Service.a) {
   );
 
   const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolver([
+    new DynamicCommandManagerResolverImpl([
       triggerUpdateCommandManager,
       triggerforceStateCommandManager,
       triggerDestroyInstanceCommandManager,

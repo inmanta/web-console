@@ -9,8 +9,8 @@ import {
   FileFetcherImpl,
   CommandResolverImpl,
   QueryResolverImpl,
-  CommandManagerResolver,
-  QueryManagerResolver,
+  CommandManagerResolverImpl,
+  QueryManagerResolverImpl,
   Store,
   PrimaryArchiveHelper,
   PrimaryFileManager,
@@ -61,7 +61,7 @@ export const Injector: React.FC<React.PropsWithChildren<Props>> = ({
   );
   const authHelper = new KeycloakAuthHelper(keycloakController.getInstance());
   const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolver(
+    new QueryManagerResolverImpl(
       store,
       apiHelper,
       new SchedulerImpl(5000),
@@ -69,7 +69,7 @@ export const Injector: React.FC<React.PropsWithChildren<Props>> = ({
     ),
   );
   const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolver(store, apiHelper, authHelper),
+    new CommandManagerResolverImpl(store, apiHelper, authHelper),
   );
   const urlManager = new UrlManagerImpl(featureManager, baseUrl);
   const fileFetcher = new FileFetcherImpl(apiHelper);

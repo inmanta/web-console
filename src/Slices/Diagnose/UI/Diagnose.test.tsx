@@ -5,7 +5,7 @@ import { StoreProvider } from "easy-peasy";
 import { Either } from "@/Core";
 import { QueryResolverImpl, getStoreInstance } from "@/Data";
 import {
-  DynamicQueryManagerResolver,
+  DynamicQueryManagerResolverImpl,
   Service,
   StaticScheduler,
   DeferredApiHelper,
@@ -24,7 +24,7 @@ function setup() {
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolver([
+    new DynamicQueryManagerResolverImpl([
       DiagnosticsQueryManager(
         apiHelper,
         DiagnosticsStateHelper(store),
