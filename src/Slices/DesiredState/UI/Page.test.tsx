@@ -15,11 +15,11 @@ import {
 } from "@/Data";
 import { DeleteVersionCommandManager } from "@/Data/Managers/DeleteVersion";
 import {
-  DynamicQueryManagerResolver,
+  DynamicQueryManagerResolverImpl,
   StaticScheduler,
   DeferredApiHelper,
   dependencies,
-  DynamicCommandManagerResolver,
+  DynamicCommandManagerResolverImpl,
 } from "@/Test";
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
@@ -40,7 +40,7 @@ function setup() {
     apiHelper,
   );
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolver([
+    new DynamicQueryManagerResolverImpl([
       GetDesiredStatesQueryManager(
         apiHelper,
         getDesiredStatesStateHelper,
@@ -50,7 +50,7 @@ function setup() {
     ]),
   );
   const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolver([
+    new DynamicCommandManagerResolverImpl([
       PromoteVersionCommandManager(apiHelper, desiredStatesUpdater),
       DeleteVersionCommandManager(apiHelper),
       TriggerCompileCommandManager(apiHelper),

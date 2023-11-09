@@ -1,4 +1,9 @@
-import { QueryManager, ManagerResolver, ApiHelper, Scheduler } from "@/Core";
+import {
+  QueryManager,
+  ApiHelper,
+  Scheduler,
+  QueryManagerResolver,
+} from "@/Core";
 import {
   ServiceQueryManager,
   ServiceKeyMaker,
@@ -99,7 +104,7 @@ import {
 import { GetMetricsQueryManager } from "../Managers/GetMetrics";
 import { GetMetricsStateHelper } from "../Managers/GetMetrics/StateHelper";
 
-export class QueryManagerResolver implements ManagerResolver<QueryManager> {
+export class QueryManagerResolverImpl implements QueryManagerResolver {
   private managers: QueryManager[] = [];
 
   constructor(
@@ -114,6 +119,16 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
 
   get(): QueryManager[] {
     return this.managers;
+  }
+
+  pauseContinuous(): void {
+    this.scheduler.pauseTasks();
+    this.slowScheduler.pauseTasks();
+  }
+
+  resumeContinuous(): void {
+    this.scheduler.resumeTasks();
+    this.slowScheduler.resumeTasks();
   }
 
   private getManagers(): QueryManager[] {

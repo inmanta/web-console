@@ -7,7 +7,7 @@ import { UpdateInstanceAttributeCommandManager } from "@/Data/Managers/UpdateIns
 import {
   DeferredApiHelper,
   dependencies,
-  DynamicCommandManagerResolver,
+  DynamicCommandManagerResolverImpl,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { words } from "@/UI/words";
@@ -27,7 +27,7 @@ function inventorySetup(attributes: Attributes) {
     apiHelper,
   );
   const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolver([updateAttribute]),
+    new DynamicCommandManagerResolverImpl([updateAttribute]),
   );
 
   const component = (
@@ -103,7 +103,7 @@ function catalogSetup(service: EntityLike) {
     apiHelper,
   );
   const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolver([updateAttribute]),
+    new DynamicCommandManagerResolverImpl([updateAttribute]),
   );
 
   const component = (

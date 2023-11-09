@@ -20,8 +20,8 @@ import {
 import {
   DeferredApiHelper,
   dependencies,
-  DynamicCommandManagerResolver,
-  DynamicQueryManagerResolver,
+  DynamicCommandManagerResolverImpl,
+  DynamicQueryManagerResolverImpl,
   EnvironmentDetails,
   MockEnvironmentHandler,
   StaticScheduler,
@@ -38,7 +38,10 @@ function setup() {
     EnvironmentDetailsContinuousQueryManager(store, apiHelper, scheduler);
 
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolver([environmentDetailsQueryManager]),
+    new DynamicQueryManagerResolverImpl(
+      [environmentDetailsQueryManager],
+      scheduler,
+    ),
   );
 
   const haltEnvironmentManager = HaltEnvironmentCommandManager(
@@ -54,7 +57,7 @@ function setup() {
   );
 
   const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolver([
+    new DynamicCommandManagerResolverImpl([
       haltEnvironmentManager,
       resumeEnvironmentManager,
     ]),
@@ -84,6 +87,8 @@ function setup() {
 }
 
 test("EnvironmentControls halt the environment when clicked and the environment is running", async () => {
+  const dispatchEventSpy = jest.spyOn(document, "dispatchEvent");
+
   const { component, apiHelper } = setup();
   render(component);
   await act(async () => {
@@ -101,11 +106,11 @@ test("EnvironmentControls halt the environment when clicked and the environment 
   });
 
   const [receivedUrl, requestInit] = fetchMock.mock.calls[0];
-
   expect(receivedUrl).toEqual(`/api/v2/actions/environment/halt`);
   expect(requestInit?.headers?.["X-Inmanta-Tid"]).toEqual(
     EnvironmentDetails.a.id,
   );
+  expect(dispatchEventSpy).toBeCalledTimes(2);
 });
 
 test("EnvironmentControls don\\t trigger backend call when dialog is not confirmed", async () => {
@@ -131,6 +136,8 @@ test("EnvironmentControls don\\t trigger backend call when dialog is not confirm
 });
 
 test("EnvironmentControls resume the environment when clicked and the environment is halted", async () => {
+  const dispatchEventSpy = jest.spyOn(document, "dispatchEvent");
+
   const { component, apiHelper } = setup();
   render(component);
 
@@ -159,4 +166,5 @@ test("EnvironmentControls resume the environment when clicked and the environmen
   expect(requestInit?.headers?.["X-Inmanta-Tid"]).toEqual(
     EnvironmentDetails.a.id,
   );
+  expect(dispatchEventSpy).toBeCalledTimes(2);
 });

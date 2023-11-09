@@ -5,7 +5,7 @@ import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 
 export const HaltDialog: React.FC = () => {
-  const { commandResolver } = useContext(DependencyContext);
+  const { queryResolver, commandResolver } = useContext(DependencyContext);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleModalToggle = () => setIsModalOpen(!isModalOpen);
 
@@ -38,8 +38,13 @@ export const HaltDialog: React.FC = () => {
             key="confirm"
             variant="primary"
             onClick={() => {
-              haltEnvironmentTrigger();
+              queryResolver.pauseAllContinuousManagers();
+              haltEnvironmentTrigger().then((_result) => {
+                queryResolver.resumeAllContinuousManagers();
+                document.dispatchEvent(new CustomEvent("halt-event"));
+              });
               handleModalToggle();
+              document.dispatchEvent(new CustomEvent("halt-event"));
             }}
           >
             {words("yes")}

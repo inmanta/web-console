@@ -13,7 +13,7 @@ import { UpdateInstanceAttributeCommandManager } from "@/Data/Managers/UpdateIns
 import {
   DeferredApiHelper,
   dependencies,
-  DynamicCommandManagerResolver,
+  DynamicCommandManagerResolverImpl,
   Service,
 } from "@/Test";
 import { multiNestedEditable } from "@/Test/Data/Service/EmbeddedEntity";
@@ -47,7 +47,7 @@ function setup(service: ServiceModel) {
     apiHelper,
   );
   const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolver([updateAttribute]),
+    new DynamicCommandManagerResolverImpl([updateAttribute]),
   );
   const environmentHandler = EnvironmentHandlerImpl(
     useLocation,

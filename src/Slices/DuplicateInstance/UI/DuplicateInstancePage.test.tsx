@@ -5,22 +5,22 @@ import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { Either } from "@/Core";
 import {
-  QueryResolverImpl,
-  getStoreInstance,
-  ServiceInstanceStateHelper,
-  ServiceInstanceQueryManager,
+  CommandManagerResolverImpl,
   CommandResolverImpl,
-  CommandManagerResolver,
+  getStoreInstance,
   KeycloakAuthHelper,
+  QueryResolverImpl,
+  ServiceInstanceQueryManager,
+  ServiceInstanceStateHelper,
 } from "@/Data";
 import {
-  DynamicQueryManagerResolver,
-  Service,
-  StaticScheduler,
-  ServiceInstance,
-  MockEnvironmentModifier,
   DeferredApiHelper,
   dependencies,
+  DynamicQueryManagerResolverImpl,
+  MockEnvironmentModifier,
+  Service,
+  ServiceInstance,
+  StaticScheduler,
 } from "@/Test";
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
@@ -32,7 +32,7 @@ function setup(entity = "a") {
   const apiHelper = new DeferredApiHelper();
   const authHelper = new KeycloakAuthHelper();
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolver([
+    new DynamicQueryManagerResolverImpl([
       ServiceInstanceQueryManager(
         apiHelper,
         ServiceInstanceStateHelper(store),
@@ -42,7 +42,7 @@ function setup(entity = "a") {
   );
 
   const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolver(store, apiHelper, authHelper),
+    new CommandManagerResolverImpl(store, apiHelper, authHelper),
   );
 
   const component = (

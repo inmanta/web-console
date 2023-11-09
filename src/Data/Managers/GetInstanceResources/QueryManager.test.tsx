@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { act, render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { Either, PageSize, RemoteData } from "@/Core";
-import { QueryManagerResolver, QueryResolverImpl } from "@/Data/Resolvers";
+import { QueryManagerResolverImpl, QueryResolverImpl } from "@/Data/Resolvers";
 import { getStoreInstance } from "@/Data/Store";
 import {
   DeferredApiHelper,
@@ -19,7 +19,7 @@ function setup() {
   const scheduler = new StaticScheduler();
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolver(store, apiHelper, scheduler, scheduler, 2),
+    new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler, 2),
   );
   const component = (
     <StoreProvider store={store}>

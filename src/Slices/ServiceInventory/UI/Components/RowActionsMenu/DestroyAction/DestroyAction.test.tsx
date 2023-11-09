@@ -4,7 +4,7 @@ import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { Either, EnvironmentDetails, RemoteData } from "@/Core";
 import {
-  CommandManagerResolver,
+  CommandManagerResolverImpl,
   CommandResolverImpl,
   getStoreInstance,
   KeycloakAuthHelper,
@@ -29,7 +29,7 @@ function setup() {
   );
 
   const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolver(storeInstance, apiHelper, authHelper),
+    new CommandManagerResolverImpl(storeInstance, apiHelper, authHelper),
   );
   const refetch = jest.fn();
   return {

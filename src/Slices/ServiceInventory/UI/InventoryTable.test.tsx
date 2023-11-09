@@ -7,7 +7,7 @@ import { Either, RemoteData } from "@/Core";
 import {
   QueryResolverImpl,
   getStoreInstance,
-  QueryManagerResolver,
+  QueryManagerResolverImpl,
   CommandResolverImpl,
   BaseApiHelper,
   DeleteInstanceCommandManager,
@@ -29,8 +29,8 @@ import {
   dependencies,
   DeferredApiHelper,
   ServiceInstance,
-  DynamicCommandManagerResolver,
-  DynamicQueryManagerResolver,
+  DynamicCommandManagerResolverImpl,
+  DynamicQueryManagerResolverImpl,
 } from "@/Test";
 import { withIdentity } from "@/Test/Data/Service";
 import { words } from "@/UI";
@@ -49,7 +49,7 @@ const dummySetter = () => {
 test("InventoryTable can be expanded", async () => {
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolver(
+    new QueryManagerResolverImpl(
       store,
       new DeferredApiHelper(),
       new StaticScheduler(),
@@ -108,7 +108,7 @@ test("ServiceInventory can show resources for instance", async () => {
   const store = getStoreInstance();
   const apiHelper = new DeferredApiHelper();
   const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolver(
+    new QueryManagerResolverImpl(
       store,
       apiHelper,
       new StaticScheduler(),
@@ -245,7 +245,10 @@ function setup(expertMode = false, setSortFn: (props) => void = dummySetter) {
   );
 
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolver([serviceInstancesHelper, resourcesHelper]),
+    new DynamicQueryManagerResolverImpl([
+      serviceInstancesHelper,
+      resourcesHelper,
+    ]),
   );
 
   const triggerUpdateCommandManager =
@@ -265,7 +268,7 @@ function setup(expertMode = false, setSortFn: (props) => void = dummySetter) {
   );
 
   const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolver([
+    new DynamicCommandManagerResolverImpl([
       triggerUpdateCommandManager,
       triggerforceStateCommandManager,
       triggerDestroyInstanceCommandManager,

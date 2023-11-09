@@ -3,11 +3,11 @@ import { render, screen, within, act } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import {
-  CommandManagerResolver,
+  CommandManagerResolverImpl,
   CommandResolverImpl,
   getStoreInstance,
   KeycloakAuthHelper,
-  QueryManagerResolver,
+  QueryManagerResolverImpl,
   QueryResolverImpl,
 } from "@/Data";
 import {
@@ -34,10 +34,10 @@ function setup({
   const scheduler = new StaticScheduler();
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolver(store, apiHelper, scheduler, scheduler),
+    new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler),
   );
   const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolver(store, apiHelper, authHelper),
+    new CommandManagerResolverImpl(store, apiHelper, authHelper),
   );
 
   const environmentModifier = new MockEnvironmentModifier(details);

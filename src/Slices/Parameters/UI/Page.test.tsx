@@ -12,11 +12,11 @@ import {
 } from "@/Data";
 import { UpdateInstanceAttributeCommandManager } from "@/Data/Managers/UpdateInstanceAttribute";
 import {
-  DynamicQueryManagerResolver,
+  DynamicQueryManagerResolverImpl,
   StaticScheduler,
   DeferredApiHelper,
   dependencies,
-  DynamicCommandManagerResolver,
+  DynamicCommandManagerResolverImpl,
 } from "@/Test";
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
@@ -32,7 +32,7 @@ function setup() {
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolver([
+    new DynamicQueryManagerResolverImpl([
       GetParametersQueryManager(
         apiHelper,
         GetParametersStateHelper(store),
@@ -45,7 +45,7 @@ function setup() {
     apiHelper,
   );
   const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolver([updateAttribute]),
+    new DynamicCommandManagerResolverImpl([updateAttribute]),
   );
 
   const component = (

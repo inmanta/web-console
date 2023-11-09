@@ -6,4 +6,6 @@ export interface Task<Data = unknown> {
 export interface Scheduler {
   register(id: string, task: Task): void;
   unregister(id: string): void;
+  pauseTasks(): void;
+  resumeTasks(): void;
 }

@@ -8,8 +8,8 @@ import {
   CommandResolverImpl,
   getStoreInstance,
   QueryResolverImpl,
-  CommandManagerResolver,
-  QueryManagerResolver,
+  CommandManagerResolverImpl,
+  QueryManagerResolverImpl,
   KeycloakAuthHelper,
 } from "@/Data";
 import {
@@ -29,10 +29,10 @@ function setup() {
   const scheduler = new StaticScheduler();
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolver(store, apiHelper, scheduler, scheduler),
+    new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler),
   );
   const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolver(store, apiHelper, authHelper),
+    new CommandManagerResolverImpl(store, apiHelper, authHelper),
   );
 
   const onClose = jest.fn();

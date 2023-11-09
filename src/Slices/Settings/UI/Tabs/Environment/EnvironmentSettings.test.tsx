@@ -8,7 +8,7 @@ import {
   CommandResolverImpl,
   getStoreInstance,
   KeycloakAuthHelper,
-  CommandManagerResolver,
+  CommandManagerResolverImpl,
 } from "@/Data";
 import {
   DeferredApiHelper,
@@ -26,7 +26,7 @@ function setup() {
   const authHelper = new KeycloakAuthHelper();
   const store = getStoreInstance();
   const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolver(store, apiHelper, authHelper),
+    new CommandManagerResolverImpl(store, apiHelper, authHelper),
   );
 
   const component = (

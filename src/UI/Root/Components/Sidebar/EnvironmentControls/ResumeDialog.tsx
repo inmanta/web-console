@@ -6,7 +6,7 @@ import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 
 export const ResumeDialog: React.FC = () => {
-  const { commandResolver } = useContext(DependencyContext);
+  const { queryResolver, commandResolver } = useContext(DependencyContext);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleModalToggle = () => setIsModalOpen(!isModalOpen);
 
@@ -35,8 +35,12 @@ export const ResumeDialog: React.FC = () => {
             key="confirm"
             variant="primary"
             onClick={() => {
-              resumeEnvironmentTrigger();
+              resumeEnvironmentTrigger().then((_result) => {
+                queryResolver.resumeAllContinuousManagers();
+                document.dispatchEvent(new CustomEvent("resume-event"));
+              });
               handleModalToggle();
+              document.dispatchEvent(new CustomEvent("resume-event"));
             }}
           >
             {words("yes")}

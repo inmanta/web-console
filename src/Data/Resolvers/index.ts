@@ -1,4 +1,4 @@
-export * from "./CommandManagerResolver";
+export * from "./CommandManagerResolverImpl";
 export * from "./CommandResolverImpl";
-export * from "./QueryManagerResolver";
+export * from "./QueryManagerResolverImpl";
 export * from "./QueryResolverImpl";

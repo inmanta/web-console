@@ -10,14 +10,14 @@ import {
   CommandResolverImpl,
   getStoreInstance,
   KeycloakAuthHelper,
-  QueryManagerResolver,
+  QueryManagerResolverImpl,
   QueryResolverImpl,
 } from "@/Data";
 import { UpdateInstanceAttributeCommandManager } from "@/Data/Managers/UpdateInstanceAttribute";
 import {
   DeferredApiHelper,
   dependencies,
-  DynamicCommandManagerResolver,
+  DynamicCommandManagerResolverImpl,
   ServiceInstance,
   StaticScheduler,
 } from "@/Test";
@@ -34,14 +34,14 @@ function setup(props, expertMode = false) {
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
   const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolver(store, apiHelper, scheduler, scheduler),
+    new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler),
   );
   const updateAttribute = UpdateInstanceAttributeCommandManager(
     new KeycloakAuthHelper(),
     apiHelper,
   );
   const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolver([updateAttribute]),
+    new DynamicCommandManagerResolverImpl([updateAttribute]),
   );
   const onClickFn = jest.fn();
   const environmentHandler = EnvironmentHandlerImpl(

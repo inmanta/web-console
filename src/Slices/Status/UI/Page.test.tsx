@@ -16,8 +16,8 @@ import {
 import {
   DeferredApiHelper,
   dependencies,
-  DynamicCommandManagerResolver,
-  DynamicQueryManagerResolver,
+  DynamicCommandManagerResolverImpl,
+  DynamicQueryManagerResolverImpl,
   ServerStatus,
   StaticScheduler,
 } from "@/Test";
@@ -54,13 +54,13 @@ function setup(useMockArchiveHelper = false) {
     new StaticScheduler(),
   );
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolver([getServerStatusQueryManager]),
+    new DynamicQueryManagerResolverImpl([getServerStatusQueryManager]),
   );
   const getSupportArchiveCommandManager = new GetSupportArchiveCommandManager(
     apiHelper,
   );
   const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolver([getSupportArchiveCommandManager]),
+    new DynamicCommandManagerResolverImpl([getSupportArchiveCommandManager]),
   );
 
   const featureManager = new PrimaryFeatureManager(
