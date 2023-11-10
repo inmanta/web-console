@@ -1,0 +1,7 @@
+description: Duplicate Instance feature
+issue-nr: 5166
+change-type: minor
+destination-branches: [master, iso6]
+sections:
+  feature: "The Service inventory now supports the functionality to duplicate an instance."
+  minor-improvement: "The user actions present in the expanded rows in the Service Inventory, displaying the Service Details have been moved to a toggle-menu at the end of each row."
