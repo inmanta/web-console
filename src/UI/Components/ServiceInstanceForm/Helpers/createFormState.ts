@@ -133,6 +133,74 @@ export const createEditFormState = (
     }
   }, {});
 };
+/**
+ * Creates Form State based on available fields and optional originalAttributes.
+ *
+ * @param {FieldLikeWithFormState[]} fields - active fields that
+ * @param {InstanceAttributeModel | null | undefined} originalAttributes - current state of Attributes
+ * @returns
+ */
+export const createDuplicateFormState = (
+  fields: FieldLikeWithFormState[],
+  originalAttributes?: InstanceAttributeModel | null,
+): InstanceAttributeModel => {
+  return fields.reduce((acc, curr) => {
+    if (originalAttributes?.[curr.name] !== undefined) {
+      switch (curr.kind) {
+        case "Boolean":
+        case "Enum":
+        case "Textarea":
+        case "TextList":
+        case "Text": {
+          acc[curr.name] = curr.type.includes("dict")
+            ? stringifyDict(originalAttributes?.[curr.name])
+            : cloneDeep(originalAttributes?.[curr.name]);
+          return acc;
+        }
+
+        case "InterServiceRelation": {
+          acc[curr.name] = originalAttributes?.[curr.name]
+            ? originalAttributes?.[curr.name]
+            : "";
+          return acc;
+        }
+
+        case "Nested": {
+          if (curr.isOptional && originalAttributes?.[curr.name] === null) {
+            acc[curr.name] = null;
+          } else {
+            acc[curr.name] = createDuplicateFormState(
+              curr.fields,
+              originalAttributes?.[curr.name] as InstanceAttributeModel,
+            );
+          }
+          return acc;
+        }
+
+        case "RelationList": {
+          acc[curr.name] = (originalAttributes?.[curr.name] as string[]) || [];
+          return acc;
+        }
+
+        case "DictList": {
+          acc[curr.name] = (
+            originalAttributes?.[curr.name] as InstanceAttributeModel[]
+          ).map((nestedOriginalAttributes) =>
+            createDuplicateFormState(
+              curr.fields,
+              nestedOriginalAttributes as InstanceAttributeModel,
+            ),
+          );
+          return acc;
+        }
+      }
+    } else {
+      const defaultFormStateForField = createFormState([curr]);
+      acc[curr.name] = defaultFormStateForField[curr.name];
+      return acc;
+    }
+  }, {});
+};
 
 function stringifyDict(value: unknown) {
   return value === "" ? "" : JSON.stringify(value);

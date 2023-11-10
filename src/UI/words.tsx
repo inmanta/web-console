@@ -91,6 +91,7 @@ const dict = {
   "inventory.collumn.deploymentProgress": "Deployment Progress",
   "inventory.column.createdAt": "Created",
   "inventory.column.updatedAt": "Updated",
+  "inventory.column.options": "Options",
   "inventory.column.resources": "Resources",
   "inventory.tabs.attributes": "Attributes",
   "inventory.tabs.collapse": "Collapse all",

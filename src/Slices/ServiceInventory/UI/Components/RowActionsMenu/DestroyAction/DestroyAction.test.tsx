@@ -12,7 +12,7 @@ import {
 import { DeferredApiHelper, dependencies, ServiceInstance } from "@/Test";
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
-import { GetInstancesContext } from "../../GetInstancesContext";
+import { GetInstancesContext } from "../../../GetInstancesContext";
 import { DestroyAction } from "./DestroyAction";
 
 function setup() {
@@ -125,9 +125,7 @@ describe("DeleteModal ", () => {
     });
     rerender(component());
     expect(
-      await screen.findByRole("button", {
-        name: words("inventory.destroyInstance.button"),
-      }),
+      await screen.findByText(words("inventory.destroyInstance.button")),
     ).toBeEnabled();
   });
 });

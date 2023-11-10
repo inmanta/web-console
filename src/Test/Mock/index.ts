@@ -1,6 +1,5 @@
 export * from "./DeferredApiHelper";
 export * from "./DummyActionPresenter";
-export * from "./DummyExpertActionPresenter";
 export * from "./DummyDatePresenter";
 export * from "./DummyStatePresenter";
 export * from "./DynamicManagerResolver";

@@ -134,7 +134,8 @@ if (Cypress.env("edition") === "iso") {
         "pf-m-current",
       );
 
-      cy.get(".pf-v5-c-description-list").contains("Diagnose").click();
+      cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
+      cy.get(".pf-v5-c-menu__item").contains("Diagnose").click();
 
       // Diagonse sub-page should open and be empty
       cy.get("h1").contains("Diagnose Service Instance").should("be.visible");
@@ -169,7 +170,9 @@ if (Cypress.env("edition") === "iso") {
         .find(".pf-v5-c-label.pf-m-green", { timeout: 60000 })
         .should("contain", "up");
 
-      cy.get(".pf-v5-c-description-list").contains("History").click();
+      cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
+      cy.get(".pf-v5-c-menu__item").contains("More options").click();
+      cy.get(".pf-v5-c-menu__item").contains("History").click();
 
       // History sub-page should open and be empty then go to Home page
       cy.get("h1").contains("Service Instance History").should("be.visible");
@@ -193,16 +196,20 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#expand-toggle0", { timeout: 20000 }).click();
 
       // delete but cancel deletion in modal
-      cy.get(".pf-v5-c-description-list", { timeout: 60000 })
-        .contains("Delete")
-        .click();
+      cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
+      cy.get(".pf-v5-c-menu__item").contains("More options").click();
+      cy.get(".pf-v5-c-menu__item").contains("Delete").click();
+
       cy.get(".pf-v5-c-modal-box__title-text").should(
         "contain",
         "Delete instance",
       );
       cy.get(".pf-v5-c-form__actions").contains("No").click();
 
-      cy.get(".pf-v5-c-description-list").contains("Delete").click();
+      cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
+      cy.get(".pf-v5-c-menu__item").contains("More options").click();
+      cy.get(".pf-v5-c-menu__item").contains("Delete").click();
+
       cy.get(".pf-v5-c-modal-box__title-text").should(
         "contain",
         "Delete instance",

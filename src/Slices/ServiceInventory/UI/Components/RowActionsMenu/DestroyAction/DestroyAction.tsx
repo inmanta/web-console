@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
-import { Button, Modal, Text } from "@patternfly/react-core";
-import { TrashAltIcon } from "@patternfly/react-icons";
+import { MenuItem, Modal, Text } from "@patternfly/react-core";
+import { WarningTriangleIcon } from "@patternfly/react-icons";
 import { Maybe, VersionedServiceInstanceIdentifier } from "@/Core";
 import { ToastAlert, ConfirmUserActionForm } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
@@ -46,9 +46,17 @@ export const DestroyAction: React.FC<Props> = ({
         message={errorMessage}
         setMessage={setErrorMessage}
       />
-      <Button variant="secondary" onClick={handleModalToggle} isBlock isDanger>
-        <TrashAltIcon /> {words("inventory.destroyInstance.button")}
-      </Button>
+      <MenuItem
+        itemId="expert-destroy"
+        style={{
+          backgroundColor: "var(--pf-v5-global--palette--red-50)",
+        }}
+        isDanger
+        onClick={handleModalToggle}
+        icon={<WarningTriangleIcon />}
+      >
+        {words("inventory.destroyInstance.button")}
+      </MenuItem>
       <Modal
         disableFocusTrap
         variant={"small"}

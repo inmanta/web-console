@@ -85,7 +85,11 @@ test("GIVEN EnvironmentSelector and populated store WHEN user clicks on an item 
     await userEvent.click(listItem);
   });
 
-  expect(screen.getByText(`${envB.name} (${envB.projectName})`)).toBeVisible();
+  expect(
+    screen.queryByRole("button", {
+      name: `${envB.name} (${envB.projectName})`,
+    }),
+  ).toBeVisible();
   expect(selectedEnv).toEqual(envB.id);
 });
 

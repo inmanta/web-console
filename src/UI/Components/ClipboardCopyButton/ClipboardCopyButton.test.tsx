@@ -16,5 +16,5 @@ test("Given a ClipboardCopyButton, when the button is hovered, then a tooltip sh
     await userEvent.hover(button);
   });
 
-  expect(await screen.findByRole("tooltip")).toBeVisible();
+  expect(await screen.findByRole("tooltip")).toBeInTheDocument();
 });

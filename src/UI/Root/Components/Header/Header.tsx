@@ -30,7 +30,11 @@ export const Header: React.FC<Props> = ({ noEnv, onNotificationsToggle }) => {
     <>
       <Masthead>
         <MastheadToggle>
-          <PageToggleButton variant="plain" aria-label="Main Navigation">
+          <PageToggleButton
+            variant="plain"
+            aria-label="Main Navigation"
+            id="uncontrolled-nav-toggle"
+          >
             <BarsIcon />
           </PageToggleButton>
         </MastheadToggle>

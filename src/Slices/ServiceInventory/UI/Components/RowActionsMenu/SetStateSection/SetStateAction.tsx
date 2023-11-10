@@ -6,25 +6,24 @@ import {
   DropdownToggle,
 } from "@patternfly/react-core/deprecated";
 import { CaretDownIcon } from "@patternfly/react-icons";
-import styled from "styled-components";
 import { Maybe, VersionedServiceInstanceIdentifier } from "@/Core";
 import { ActionDisabledTooltip } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
-import ConfirmationModal from "./ConfirmationModal";
-import { ToastAlertMessage } from "./ToastAlertMessage";
+import ConfirmationModal from "../../ConfirmationModal";
+import { ToastAlertMessage } from "../../ToastAlertMessage";
 
 interface Props extends VersionedServiceInstanceIdentifier {
+  targets: string[] | null;
   instance_identity: string;
-  possibleInstanceStates: string[];
 }
 
-export const ForceStateAction: React.FC<Props> = ({
+export const SetStateAction: React.FC<Props> = ({
   service_entity,
   id,
   instance_identity,
   version,
-  possibleInstanceStates,
+  targets,
 }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -34,19 +33,16 @@ export const ForceStateAction: React.FC<Props> = ({
   const handleModalToggle = () => {
     setIsModalOpen(!isModalOpen);
   };
-  const dropdownItems = possibleInstanceStates.map((target) => (
-    <DropdownItem
-      key={target}
-      value={target}
-      data-testid={`${id}-${target}-expert`}
-    >
+  const dropdownItems = targets?.map((target) => (
+    <DropdownItem key={target} value={target} data-testid={`${id}-${target}`}>
       {target}
     </DropdownItem>
   ));
+  const isDisabled = !dropdownItems || dropdownItems.length === 0;
   const { commandResolver, environmentModifier } =
     useContext(DependencyContext);
-  const trigger = commandResolver.useGetTrigger<"TriggerForceState">({
-    kind: "TriggerForceState",
+  const trigger = commandResolver.useGetTrigger<"TriggerSetState">({
+    kind: "TriggerSetState",
     service_entity,
     id,
     version,
@@ -64,7 +60,7 @@ export const ForceStateAction: React.FC<Props> = ({
     setIsDropdownOpen(false);
     setTargetState(event.target.text);
     setConfirmationText(
-      words("inventory.statustab.forceState.message")(
+      words("inventory.statustab.confirmMessage")(
         instance_identity,
         event.target.text,
       ),
@@ -82,21 +78,23 @@ export const ForceStateAction: React.FC<Props> = ({
         />
       )}
       <ActionDisabledTooltip
-        ariaLabel={words("inventory.statustab.forceState")}
+        isDisabled={isDisabled || isHalted}
+        ariaLabel={words("inventory.statustab.setInstanceState")}
         tooltipContent={
           isHalted
             ? words("environment.halt.tooltip")
             : words("inventory.statustab.actionDisabled")
         }
       >
-        <StyledDropdown
+        <Dropdown
           toggle={
             <DropdownToggle
-              data-testid={`${id}-force-state-toggle`}
+              data-testid={`${id}-set-state-toggle`}
               onToggle={() => setIsDropdownOpen(!isDropdownOpen)}
               toggleIndicator={CaretDownIcon}
+              isDisabled={isDisabled || isHalted}
             >
-              {words("inventory.statustab.forceState")}
+              {words("inventory.statustab.setInstanceState")}
             </DropdownToggle>
           }
           dropdownItems={dropdownItems}
@@ -105,7 +103,7 @@ export const ForceStateAction: React.FC<Props> = ({
         />
       </ActionDisabledTooltip>
       <ConfirmationModal
-        title={words("inventory.statustab.forceState.confirmTitle")}
+        title={words("inventory.statustab.confirmTitle")}
         onSetInstanceState={onSubmit}
         id={id}
         targetState={targetState}
@@ -113,40 +111,8 @@ export const ForceStateAction: React.FC<Props> = ({
         setIsModalOpen={handleModalToggle}
         setErrorMessage={setStateErrorMessage}
       >
-        <Text>{confirmationText}</Text>
-        <br />
-        <Text>{words("inventory.statustab.forceState.confirmMessage")}</Text>
-        <Text>{words("inventory.statustab.forceState.confirmQuestion")}</Text>
+        <Text> {confirmationText}</Text>
       </ConfirmationModal>
     </>
   );
 };
-
-const StyledDropdown = styled(Dropdown)`
-  --pf-v5-c-dropdown__toggle--before--BorderTopColor: var(
-    --pf-v5-global--danger-color--100
-  );
-  --pf-v5-c-dropdown__toggle--before--BorderRightColor: var(
-    --pf-v5-global--danger-color--100
-  );
-  --pf-v5-c-dropdown__toggle--before--BorderLeftColor: var(
-    --pf-v5-global--danger-color--100
-  );
-  --pf-v5-c-dropdown__toggle--before--BorderBottomColor: var(
-    --pf-v5-global--danger-color--100
-  );
-  --pf-v5-c-dropdown--m-expanded__toggle--before--BorderBottomColor: var(
-    --pf-v5-global--danger-color--100
-  );
-  --pf-v5-c-dropdown__toggle--hover--before--BorderBottomColor: var(
-    --pf-v5-global--danger-color--100
-  );
-  --pf-v5-c-dropdown__toggle--focus--before--BorderBottomColor: var(
-    --pf-v5-global--danger-color--100
-  );
-  --pf-v5-c-dropdown__toggle--active--before--BorderBottomColor: var(
-    --pf-v5-global--danger-color--100
-  );
-  --pf-v5-c-dropdown__toggle--Color: var(--pf-v5-global--danger-color--100);
-  --pf-v5-c-dropdown__toggle--Color: var(--pf-v5-global--danger-color--100);
-`;

@@ -1,31 +1,25 @@
 import React, { useContext, useState } from "react";
-import { Text } from "@patternfly/react-core";
-import {
-  Dropdown,
-  DropdownItem,
-  DropdownToggle,
-} from "@patternfly/react-core/deprecated";
-import { CaretDownIcon } from "@patternfly/react-icons";
+import { MenuItem, Text } from "@patternfly/react-core";
 import { Maybe, VersionedServiceInstanceIdentifier } from "@/Core";
 import { ActionDisabledTooltip } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
-import ConfirmationModal from "./ConfirmationModal";
-import { ToastAlertMessage } from "./ToastAlertMessage";
+import ConfirmationModal from "../../ConfirmationModal";
+import { ToastAlertMessage } from "../../ToastAlertMessage";
 
 interface Props extends VersionedServiceInstanceIdentifier {
   targets: string[] | null;
   instance_identity: string;
+  onClose: () => void;
 }
 
-export const SetStateAction: React.FC<Props> = ({
+export const SetStateSection: React.FunctionComponent<Props> = ({
   service_entity,
   id,
   instance_identity,
   version,
   targets,
 }) => {
-  const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [confirmationText, setConfirmationText] = useState<string>("");
   const [targetState, setTargetState] = useState<string>("");
@@ -33,12 +27,16 @@ export const SetStateAction: React.FC<Props> = ({
   const handleModalToggle = () => {
     setIsModalOpen(!isModalOpen);
   };
-  const dropdownItems = targets?.map((target) => (
-    <DropdownItem key={target} value={target} data-testid={`${id}-${target}`}>
-      {target}
-    </DropdownItem>
-  ));
-  const isDisabled = !dropdownItems || dropdownItems.length === 0;
+
+  const onSelect = (value: string) => {
+    setTargetState(value);
+    setConfirmationText(
+      words("inventory.statustab.confirmMessage")(instance_identity, value),
+    );
+    handleModalToggle();
+  };
+
+  const isDisabled = !targets || targets.length === 0;
   const { commandResolver, environmentModifier } =
     useContext(DependencyContext);
   const trigger = commandResolver.useGetTrigger<"TriggerSetState">({
@@ -54,18 +52,6 @@ export const SetStateAction: React.FC<Props> = ({
     if (Maybe.isSome(result)) {
       setStateErrorMessage(result.value);
     }
-  };
-
-  const onSelect = (event) => {
-    setIsDropdownOpen(false);
-    setTargetState(event.target.text);
-    setConfirmationText(
-      words("inventory.statustab.confirmMessage")(
-        instance_identity,
-        event.target.text,
-      ),
-    );
-    handleModalToggle();
   };
 
   return (
@@ -86,21 +72,27 @@ export const SetStateAction: React.FC<Props> = ({
             : words("inventory.statustab.actionDisabled")
         }
       >
-        <Dropdown
-          toggle={
-            <DropdownToggle
-              data-testid={`${id}-set-state-toggle`}
-              onToggle={() => setIsDropdownOpen(!isDropdownOpen)}
-              toggleIndicator={CaretDownIcon}
-              isDisabled={isDisabled || isHalted}
-            >
-              {words("inventory.statustab.setInstanceState")}
-            </DropdownToggle>
-          }
-          dropdownItems={dropdownItems}
-          isOpen={isDropdownOpen}
-          onSelect={onSelect}
-        />
+        {targets?.map((target) => (
+          <MenuItem
+            key={target}
+            value={target}
+            itemId={target}
+            onClick={() => onSelect(target)}
+            data-testid={`${id}-${target}`}
+          >
+            {target}
+          </MenuItem>
+        ))}
+        {(!targets || targets.length < 1) && (
+          <MenuItem
+            key={"no value"}
+            value={"no value"}
+            itemId={"no value"}
+            isDisabled
+          >
+            None available
+          </MenuItem>
+        )}
       </ActionDisabledTooltip>
       <ConfirmationModal
         title={words("inventory.statustab.confirmTitle")}

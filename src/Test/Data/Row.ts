@@ -1,7 +1,7 @@
 import { Row } from "@/Core";
 
 export const a: Row = {
-  id: { full: "instance_id_a", short: "id_a" },
+  id: { full: "service_instance_id_a", short: "id_a" },
   attributesSummary: {
     candidate: true,
     active: false,
@@ -27,12 +27,12 @@ export const a: Row = {
 
 export const b: Row = {
   ...a,
-  id: { full: "instance_id_b", short: "id_b" },
+  id: { full: "service_instance_id_b", short: "id_b" },
   serviceIdentityValue: "instance2",
 };
 
 export const c: Row = {
   ...a,
-  id: { full: "instance_id_c", short: "id_c" },
+  id: { full: "service_instance_id_c", short: "id_c" },
   serviceIdentityValue: "instance3",
 };

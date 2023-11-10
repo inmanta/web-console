@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Button, Modal } from "@patternfly/react-core";
+import { MenuItem, Modal } from "@patternfly/react-core";
 import { TrashAltIcon } from "@patternfly/react-icons";
 import { Maybe, VersionedServiceInstanceIdentifier } from "@/Core";
 import {
@@ -16,7 +16,7 @@ interface Props extends VersionedServiceInstanceIdentifier {
   isDisabled?: boolean;
 }
 
-export const DeleteModal: React.FC<Props> = ({
+export const DeleteAction: React.FC<Props> = ({
   isDisabled,
   id,
   instance_identity,
@@ -63,14 +63,15 @@ export const DeleteModal: React.FC<Props> = ({
             : words("inventory.statustab.actionDisabled")
         }
       >
-        <Button
-          variant="danger"
+        <MenuItem
+          itemId="delete"
           onClick={handleModalToggle}
           isDisabled={isDisabled || isHalted}
-          isBlock
+          icon={<TrashAltIcon />}
+          isDanger
         >
-          <TrashAltIcon /> {words("inventory.deleteInstance.button")}
-        </Button>
+          {words("inventory.deleteInstance.button")}
+        </MenuItem>
       </ActionDisabledTooltip>
       <Modal
         disableFocusTrap
