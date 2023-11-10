@@ -105,7 +105,7 @@ export const InstanceRow: React.FC<Props> = ({
         <Td dataLabel={words("inventory.column.updatedAt")}>
           <DateWithTooltip timestamp={row.updatedAt} />
         </Td>
-        <Td dataLabel="options">{rowActions}</Td>
+        <Td dataLabel="actions">{rowActions}</Td>
       </StyledRow>
       <Tr
         isExpanded={isExpanded}
