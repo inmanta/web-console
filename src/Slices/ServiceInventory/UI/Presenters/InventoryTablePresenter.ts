@@ -56,7 +56,7 @@ export class InventoryTablePresenter
         displayName: words("inventory.column.updatedAt"),
         apiName: "last_updated",
       },
-      { displayName: words("inventory.column.options"), apiName: "options" },
+      { displayName: words("inventory.column.actions"), apiName: "actions" },
     ];
     this.numberOfColumns = this.columnHeads.length + 1;
   }

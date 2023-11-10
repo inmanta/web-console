@@ -8,7 +8,6 @@ import {
 import { AttributeInputConverterImpl } from "@/Data";
 import {
   CreateModifierHandler,
-  Description,
   ToastAlert,
   FieldCreator,
   ServiceInstanceForm,
@@ -71,9 +70,6 @@ export const DuplicateForm: React.FC<Props> = ({ serviceEntity, instance }) => {
           setMessage={setErrorMessage}
         />
       )}
-      <Description withSpace>
-        {words("inventory.addInstance.title")(serviceEntity.name)}
-      </Description>
       <ServiceInstanceForm
         fields={fields}
         onSubmit={onSubmit}

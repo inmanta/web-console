@@ -22,7 +22,7 @@ export const DuplicateInstancePage: React.FC<{
       <ServiceInstanceDescription
         instanceId={instanceId}
         serviceName={serviceEntity.name}
-        getDescription={words("inventory.editInstance.header")}
+        getDescription={words("inventory.duplicateInstance.header")}
         data={data}
         withSpace
       />

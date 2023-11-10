@@ -92,6 +92,7 @@ const dict = {
   "inventory.column.createdAt": "Created",
   "inventory.column.updatedAt": "Updated",
   "inventory.column.options": "Options",
+  "inventory.column.actions": "Actions",
   "inventory.column.resources": "Resources",
   "inventory.tabs.attributes": "Attributes",
   "inventory.tabs.collapse": "Collapse all",
@@ -139,11 +140,14 @@ const dict = {
     amount === 1 ? "1 item" : `${amount} items`,
   "inventory.editInstance.button": "Edit",
   "inventory.editInstance.title": "Edit instance",
+  "inventory.duplicateInstance.title": "Duplicate instance",
   "inventory.editInstance.failed": "Editing instance failed",
   "inventory.editInstance.noAttributes":
     "There are no attributes to edit. Click confirm to move into the update state",
   "inventory.editInstance.header": (instanceId: string) =>
     `Change attributes of instance ${instanceId}`,
+  "inventory.duplicateInstance.header": (instanceId: string) =>
+    `Create an instance based of instance ${instanceId}`,
   "inventory.form.typeHint.list": (listBaseType: string) =>
     `A list of ${listBaseType}s`,
   "inventory.form.typeHint.dict":
