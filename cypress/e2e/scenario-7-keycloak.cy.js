@@ -12,7 +12,7 @@ if (Cypress.env("keycloak")) {
     cy.get("[id=toggle-button]", { timeout: 20000 }).should("contain", "admin");
     cy.get("[id=toggle-button]").click();
 
-    cy.get("a").contains("Logout").click();
+    cy.get(".pf-v5-c-menu__item").contains("Logout").click();
 
     cy.origin("http://127.0.0.1:8080", () => {
       cy.get("[id=username]").should("be.visible");
