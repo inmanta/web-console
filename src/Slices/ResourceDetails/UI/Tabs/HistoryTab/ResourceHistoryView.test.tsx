@@ -109,7 +109,7 @@ test("ResourceHistory shows success table", async () => {
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
     environment: "env",
-    url: `/api/v2/resource/${Resource.encodedId}/history?limit=20&sort=date.desc`,
+    url: `/api/v2/resource/${Resource.encodedId}/history?limit=100&sort=date.desc`,
     method: "GET",
   });
 
