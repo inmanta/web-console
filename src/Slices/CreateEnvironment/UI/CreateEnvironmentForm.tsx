@@ -115,14 +115,14 @@ export const CreateEnvironmentForm: React.FC<Props> = ({
         onChange={(_event, value) => setDescription(value)}
       />
       <TextField
-        value={createEnvironmentBody.repository || ""}
-        label={words("createEnv.repository")}
-        onChange={setRepository}
-      />
-      <TextField
         value={createEnvironmentBody.branch || ""}
         label={words("createEnv.branch")}
         onChange={setBranch}
+      />
+      <TextField
+        value={createEnvironmentBody.repository || ""}
+        label={words("createEnv.repository")}
+        onChange={setRepository}
       />
       <ImageField
         value={createEnvironmentBody.icon || ""}
