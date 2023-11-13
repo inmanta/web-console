@@ -7,7 +7,7 @@ export interface PageSize {
 
 export type Type = PageSize;
 
-const listOfValues: string[] = ["5", "10", "20", "50", "100"];
+const listOfValues: string[] = ["5", "10", "20", "50", "100", "250"];
 
 const valueIsValid = (value: unknown): value is Value =>
   typeof value === "string" && listOfValues.includes(value);
@@ -19,7 +19,7 @@ export const from = (value: string): PageSize => {
 
 export const list = listOfValues.map(from);
 
-export const initial = from("100");
+export const initial = from("20");
 
 export const equals = (a: PageSize, b: PageSize): boolean =>
   a.value === b.value;

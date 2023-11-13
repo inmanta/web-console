@@ -556,6 +556,9 @@ describe("Scenario 6 : Resources", () => {
         15,
       );
 
+      // make sure the default is 100 instead of 20 like on other pages with pagination.
+      cy.get('[aria-label="PaginationWidget"]').should("contain", "1 - 100");
+
       // Expect last log message to be "Setting deployed due to known good status"
       cy.get('[aria-label="ResourceLogRow"]')
         .eq(0)
