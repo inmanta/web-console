@@ -11,7 +11,7 @@ const extractFeatures = (fileContent) => {
 };
 
 const useFeatures = (): string[] => {
-  const [features, setFeatures] = useState(["instanceComposer"]);
+  const [features, setFeatures] = useState([""]);
 
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
