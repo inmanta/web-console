@@ -19,7 +19,7 @@ export const from = (value: string): PageSize => {
 
 export const list = listOfValues.map(from);
 
-export const initial = from("20");
+export const initial = from("100");
 
 export const equals = (a: PageSize, b: PageSize): boolean =>
   a.value === b.value;
