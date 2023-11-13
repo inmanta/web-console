@@ -1,0 +1,6 @@
+change-type: patch
+description: "Change pagination widget to new native patternfly component"
+issue-nr: 5815
+destination-branches:
+  - master
+  - iso6

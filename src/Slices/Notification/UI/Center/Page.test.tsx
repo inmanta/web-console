@@ -17,7 +17,7 @@ import { DependencyProvider } from "@/UI/Dependency";
 import * as Mock from "@S/Notification/Core/Mock";
 import { Page } from "./Page";
 
-const setup = () => {
+const setup = (entries?: string[]) => {
   const apiHelper = new DeferredApiHelper();
   const scheduler = new StaticScheduler();
   const store = getStoreInstance();
@@ -36,7 +36,7 @@ const setup = () => {
   });
 
   const component = (
-    <MemoryRouter>
+    <MemoryRouter initialEntries={entries}>
       <StoreProvider store={store}>
         <DependencyProvider
           dependencies={{ ...dependencies, queryResolver, commandResolver }}
@@ -223,14 +223,18 @@ test("Given Notification Center page When user filters on title Then executes co
 });
 
 test("Given Notification Center page When user clicks next page Then fetches next page", async () => {
-  const { component, apiHelper } = setup();
+  const { component, apiHelper } = setup([
+    "/?state.NotificationCenter.pageSize=10",
+  ]);
   render(component);
   await act(async () => {
     await apiHelper.resolve(Either.right(Mock.response));
   });
+  const button = screen.getByRole("button", { name: "Go to next page" });
+  expect(button).toBeEnabled();
 
   await act(async () => {
-    await userEvent.click(screen.getByRole("button", { name: "Next" }));
+    await userEvent.click(button);
   });
 
   expect(apiHelper.pendingRequests).toEqual([
