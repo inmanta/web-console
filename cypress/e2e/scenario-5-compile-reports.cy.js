@@ -425,7 +425,7 @@ describe("5 Compile reports", () => {
       });
 
       // next page
-      cy.get('[aria-label="Next"]').click();
+      cy.get('[aria-label="Go to next page"]').click();
 
       // expect only 2 rows to be visible now
       cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
