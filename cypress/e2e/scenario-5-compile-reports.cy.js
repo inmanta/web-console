@@ -413,7 +413,7 @@ describe("5 Compile reports", () => {
       cy.get(".pf-v5-c-nav__link").contains("Compile Reports").click();
 
       // click on pagination
-      cy.get('[aria-label="Page Size Selector dropdown"]').click();
+      cy.get("#options-menu-top-toggle").click();
       // select 5
       cy.get(".pf-v5-c-dropdown__menu-item").contains("5").first().click();
 
@@ -435,7 +435,7 @@ describe("5 Compile reports", () => {
       });
 
       // click on pagination
-      cy.get('[aria-label="Page Size Selector dropdown"]').click();
+      cy.get("#options-menu-top-toggle").click();
 
       // select 10
       cy.get(".pf-v5-c-dropdown__menu-item").contains("10").first().click();
