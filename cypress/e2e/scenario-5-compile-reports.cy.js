@@ -415,7 +415,7 @@ describe("5 Compile reports", () => {
       // click on pagination
       cy.get("#options-menu-top-toggle").click();
       // select 5
-      cy.get(".pf-v5-c-dropdown__menu-item").contains("5").first().click();
+      cy.get(".pf-v5-c-menu__item-main").contains("5").first().click();
 
       // expect only 5 rows to be visible now
       cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
@@ -438,7 +438,7 @@ describe("5 Compile reports", () => {
       cy.get("#options-menu-top-toggle").click();
 
       // select 10
-      cy.get(".pf-v5-c-dropdown__menu-item").contains("10").first().click();
+      cy.get(".pf-v5-c-menu__item-main").contains("10").first().click();
 
       // expect 7 rows to be visible now again
       cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
