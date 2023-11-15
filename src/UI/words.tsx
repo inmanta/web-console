@@ -284,6 +284,7 @@ const dict = {
   "catalog.callbacks.add": "Add",
   "catalog.table.type": "Type",
   "catalog.table.description": "Description",
+  "catalog.table.modifier": "Modifier",
 
   /**
    * Dashboard

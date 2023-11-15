@@ -29,6 +29,7 @@ export class CatalogAttributeHelper
         value: {
           type: cur.type,
           description: cur.description,
+          ...(cur.modifier && { modifier: cur.modifier }),
         },
       };
       return acc;
