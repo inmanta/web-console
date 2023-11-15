@@ -30,7 +30,7 @@ test("GIVEN ServiceInventory WHEN on 2nd page with outdated 1st page and user cl
     );
   });
 
-  const button = screen.getByRole("button", { name: "Prev" });
+  const button = screen.getByRole("button", { name: "Go to previous page" });
   await act(async () => {
     await userEvent.click(button);
   });

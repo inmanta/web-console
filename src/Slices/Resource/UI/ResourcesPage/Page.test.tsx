@@ -25,7 +25,7 @@ import { DependencyProvider } from "@/UI/Dependency";
 import { ResourceDetails } from "@S/ResourceDetails/Data/Mock";
 import { Page } from "./Page";
 
-function setup() {
+function setup(entries?: string[]) {
   const apiHelper = new DeferredApiHelper();
   const authHelper = new KeycloakAuthHelper();
   const scheduler = new StaticScheduler();
@@ -39,7 +39,7 @@ function setup() {
   const environment = "34a961ba-db3c-486e-8d85-1438d8e88909";
 
   const component = (
-    <MemoryRouter>
+    <MemoryRouter initialEntries={entries}>
       <DependencyProvider
         dependencies={{
           ...dependencies,
@@ -157,7 +157,7 @@ test("GIVEN ResourcesView WHEN user clicks on requires toggle THEN list of requi
 });
 
 test("ResourcesView shows next page of resources", async () => {
-  const { component, apiHelper } = setup();
+  const { component, apiHelper } = setup(["/?state.Resources.pageSize=10"]);
   render(component);
 
   await act(async () => {
@@ -176,8 +176,13 @@ test("ResourcesView shows next page of resources", async () => {
     }),
   ).toBeInTheDocument();
 
+  const button = screen.getAllByRole("button", { name: "Go to next page" })[0];
+  expect(button).toBeEnabled();
+
   await act(async () => {
-    await userEvent.click(screen.getAllByRole("button", { name: "Next" })[0]);
+    await userEvent.click(
+      screen.getAllByRole("button", { name: "Go to next page" })[0],
+    );
   });
 
   await act(async () => {
@@ -536,7 +541,7 @@ test("ResourcesView shows deploy state bar", async () => {
 });
 
 test("GIVEN ResourcesView WHEN data is loading for next page THEN shows toolbar", async () => {
-  const { component, apiHelper } = setup();
+  const { component, apiHelper } = setup(["/?state.Resources.pageSize=10"]);
   render(component);
 
   expect(
@@ -568,7 +573,9 @@ test("GIVEN ResourcesView WHEN data is loading for next page THEN shows toolbar"
     }),
   ).toHaveAttribute("data-value", "1");
 
-  const nextButton = screen.getAllByRole("button", { name: "Next" })[0];
+  const nextButton = screen.getAllByRole("button", {
+    name: "Go to next page",
+  })[0];
 
   expect(nextButton).toBeEnabled();
 

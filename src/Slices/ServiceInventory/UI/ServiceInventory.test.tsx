@@ -37,7 +37,7 @@ import { TriggerInstanceUpdateCommandManager } from "@S/EditInstance/Data";
 import { Chart } from "./Components";
 import { ServiceInventory } from "./ServiceInventory";
 
-function setup(service = Service.a) {
+function setup(service = Service.a, pageSize = "") {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
@@ -107,7 +107,7 @@ function setup(service = Service.a) {
     ]),
   );
   const component = (
-    <MemoryRouter initialEntries={[{ search: "?env=aaa" }]}>
+    <MemoryRouter initialEntries={[`/?env=aaa${pageSize}`]}>
       <DependencyProvider
         dependencies={{
           ...dependencies,
@@ -199,7 +199,10 @@ test("ServiceInventory shows error with retry", async () => {
 });
 
 test("ServiceInventory shows next page of instances", async () => {
-  const { component, apiHelper } = setup();
+  const { component, apiHelper } = setup(
+    Service.a,
+    "&state.Inventory.pageSize=10",
+  );
   render(component);
 
   apiHelper.resolve(
@@ -214,7 +217,7 @@ test("ServiceInventory shows next page of instances", async () => {
     await screen.findByRole("cell", { name: "IdCell-a" }),
   ).toBeInTheDocument();
 
-  fireEvent.click(screen.getByRole("button", { name: "Next" }));
+  fireEvent.click(screen.getByRole("button", { name: "Go to next page" }));
 
   apiHelper.resolve(
     Either.right({

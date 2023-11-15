@@ -413,9 +413,9 @@ describe("5 Compile reports", () => {
       cy.get(".pf-v5-c-nav__link").contains("Compile Reports").click();
 
       // click on pagination
-      cy.get('[aria-label="Page Size Selector dropdown"]').click();
+      cy.get("#options-menu-top-toggle").click();
       // select 5
-      cy.get(".pf-v5-c-dropdown__menu-item").contains("5").first().click();
+      cy.get(".pf-v5-c-menu__item-main").contains("5").first().click();
 
       // expect only 5 rows to be visible now
       cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
@@ -425,7 +425,7 @@ describe("5 Compile reports", () => {
       });
 
       // next page
-      cy.get('[aria-label="Next"]').click();
+      cy.get('[aria-label="Go to next page"]').click();
 
       // expect only 2 rows to be visible now
       cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
@@ -435,10 +435,10 @@ describe("5 Compile reports", () => {
       });
 
       // click on pagination
-      cy.get('[aria-label="Page Size Selector dropdown"]').click();
+      cy.get("#options-menu-top-toggle").click();
 
       // select 10
-      cy.get(".pf-v5-c-dropdown__menu-item").contains("10").first().click();
+      cy.get(".pf-v5-c-menu__item-main").contains("10").first().click();
 
       // expect 7 rows to be visible now again
       cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
