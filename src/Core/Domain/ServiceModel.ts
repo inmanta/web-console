@@ -6,7 +6,7 @@ export type AttributeModel = AttributeValidation & {
   name: string;
   type: string;
   description?: string;
-  modifier?: string;
+  modifier: string;
   default_value:
     | string
     | null
@@ -86,7 +86,7 @@ export interface ServiceModel extends ServiceIdentifier {
 export interface RelationAttribute {
   lower_limit: ParsedNumber;
   upper_limit?: ParsedNumber;
-  modifier?: string;
+  modifier: string;
 }
 
 export interface InterServiceRelation extends RelationAttribute {
@@ -116,13 +116,12 @@ interface MinimalEmbeddedEntity {
 }
 
 export type EntityLike = {
-  attributes: Pick<
-    AttributeModel,
-    "name" | "type" | "description" | "modifier"
-  >[];
+  attributes: (Pick<AttributeModel, "name" | "type" | "description"> & {
+    modifier?: AttributeModel["modifier"];
+  })[];
   embedded_entities: MinimalEmbeddedEntity[];
   inter_service_relations?: Pick<
     InterServiceRelation,
-    "name" | "entity_type" | "description" | "modifier"
+    "name" | "entity_type" | "description"
   >[];
 };
