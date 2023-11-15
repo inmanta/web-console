@@ -10,6 +10,7 @@ export class CatalogTreeTableHelper extends BaseTreeTableHelper<CatalogAttribute
   private readonly columns = [
     words("attribute.name"),
     words("catalog.table.type"),
+    words("catalog.table.modifier"),
     words("catalog.table.description"),
   ];
 

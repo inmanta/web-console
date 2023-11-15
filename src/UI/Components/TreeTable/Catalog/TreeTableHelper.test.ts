@@ -38,18 +38,24 @@ test("TreeTableHelper createRows returns correctly ordered list", () => {
       {
         name: "f",
         description: "description",
-        attributes: [{ name: "g", type: "dict?", description: "sample" }],
+        attributes: [
+          { name: "g", type: "dict?", description: "sample", modifier: "rw" },
+        ],
         embedded_entities: [],
       },
       {
         name: "a",
         description: "",
-        attributes: [{ name: "b", type: "int?", description: "desc" }],
+        attributes: [
+          { name: "b", type: "int?", description: "desc", modifier: "rw+" },
+        ],
         embedded_entities: [
           {
             name: "c",
             description: "desc",
-            attributes: [{ name: "d", type: "int", description: "desc" }],
+            attributes: [
+              { name: "d", type: "int", description: "desc", modifier: "r" },
+            ],
             embedded_entities: [],
           },
         ],
@@ -92,8 +98,13 @@ test("TreeTableHelper createRows returns correctly ordered list", () => {
       },
       valueCells: [
         {
+          hasRelation: undefined,
           label: "type",
           value: "int?",
+        },
+        {
+          label: "modifier",
+          value: "rw+",
         },
         {
           label: "description",
@@ -120,8 +131,13 @@ test("TreeTableHelper createRows returns correctly ordered list", () => {
       },
       valueCells: [
         {
+          hasRelation: undefined,
           label: "type",
           value: "int",
+        },
+        {
+          label: "modifier",
+          value: "r",
         },
         {
           label: "description",
@@ -138,8 +154,13 @@ test("TreeTableHelper createRows returns correctly ordered list", () => {
       },
       valueCells: [
         {
+          hasRelation: undefined,
           label: "type",
           value: "string",
+        },
+        {
+          label: "modifier",
+          value: "",
         },
         {
           label: "description",
@@ -165,8 +186,13 @@ test("TreeTableHelper createRows returns correctly ordered list", () => {
       },
       valueCells: [
         {
+          hasRelation: undefined,
           label: "type",
           value: "dict?",
+        },
+        {
+          label: "modifier",
+          value: "rw",
         },
         {
           label: "description",

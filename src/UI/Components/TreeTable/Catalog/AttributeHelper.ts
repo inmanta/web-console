@@ -29,6 +29,7 @@ export class CatalogAttributeHelper
         value: {
           type: cur.type,
           description: cur.description,
+          ...(cur.modifier && { modifier: cur.modifier }),
         },
       };
       return acc;
@@ -44,6 +45,7 @@ export class CatalogAttributeHelper
             value: {
               type: cur.entity_type,
               description: cur.description ? cur.description : "",
+              ...(cur.modifier && { modifier: cur.modifier }),
             },
             hasRelation: true,
           };

@@ -10,6 +10,7 @@ export type InventoryAttributes = {
 
 export type CatalogAttributes = {
   description: unknown;
+  modifier: unknown;
   type: unknown;
 };
 
