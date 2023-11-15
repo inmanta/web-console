@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps-dev): Bump @types/react-dom from 18.2.8 to 18.2.15'
+destination-branches:
+- master
+- iso6
+sections: {}
