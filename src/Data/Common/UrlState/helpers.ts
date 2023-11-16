@@ -15,7 +15,7 @@ export interface StateConfig<Data> {
   default: Data;
   key: string;
   route: RouteKind;
-  serialize: (data: Data) => string | Data;
+  serialize: (data: Data) => string | string[] | Data;
   parse: (value: unknown) => Data | undefined;
   equals: (a: Data, b: Data) => boolean;
 }

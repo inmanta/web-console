@@ -3,28 +3,34 @@ import { Pagination } from "@/Core";
 export const getPaginationHandlers = (
   links: Pagination.Links,
   metadata: Pagination.Metadata,
-  setUrl: (url: string) => void,
 ): Pagination.Handlers => {
   const { prev, next } = getPaginationHandlerUrls(links, metadata);
 
   return {
-    prev: prev ? () => setUrl(prev) : undefined,
-    next: next ? () => setUrl(next) : undefined,
+    prev,
+    next,
   };
 };
 
 interface Urls {
-  prev?: string;
-  next?: string;
+  prev?: string[];
+  next?: string[];
 }
 
 const getPaginationHandlerUrls = (
-  { prev, next, first }: Pagination.Links,
+  { prev, next }: Pagination.Links,
   metadata: Pagination.Metadata,
-): Urls => ({
-  prev: shouldUseFirst(metadata) ? first : prev,
-  next,
-});
+): Urls => {
+  const trimmedNext = next?.split(/(?=start=)/g)[1];
+  const trimmedPrev = prev?.split(/(?=end=)/g)[1];
+
+  const separatedNextParametes = trimmedNext?.split("&");
+  const separatedPrevParametes = trimmedPrev?.split("&");
+  return {
+    prev: shouldUseFirst(metadata) ? [] : separatedPrevParametes,
+    next: separatedNextParametes,
+  };
+};
 
 const shouldUseFirst = (metadata: Pagination.Metadata): boolean =>
   Number(metadata.before) < Number(metadata.page_size) * 2;

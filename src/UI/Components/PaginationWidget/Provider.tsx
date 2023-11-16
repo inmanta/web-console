@@ -3,19 +3,29 @@ import { Pagination as PaginationComponent } from "@patternfly/react-core";
 import styled from "styled-components";
 import { PageSize, Pagination, RemoteData } from "@/Core";
 import { PaginationPageSizes } from "@/Core/Domain/PageSize";
+import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 
 type Data = RemoteData.Type<
   string,
-  { handlers: Pagination.Handlers; metadata: Pagination.Metadata }
+  {
+    handlers: Pagination.Handlers;
+    metadata: Pagination.Metadata;
+  }
 >;
 
 interface Props {
   data: Data;
   pageSize: PageSize.Type;
   setPageSize: (size: PageSize.Type) => void;
+  setCurrentPage: (currentPage: CurrentPage) => void;
 }
 
-export const Provider: React.FC<Props> = ({ data, pageSize, setPageSize }) =>
+export const Provider: React.FC<Props> = ({
+  data,
+  pageSize,
+  setPageSize,
+  setCurrentPage,
+}) =>
   RemoteData.fold(
     {
       notAsked: () => <Filler />,
@@ -28,8 +38,17 @@ export const Provider: React.FC<Props> = ({ data, pageSize, setPageSize }) =>
           page={
             Math.floor(Number(metadata.before) / Number(metadata.page_size)) + 1
           }
-          onNextClick={handlers.next}
-          onPreviousClick={handlers.prev}
+          onNextClick={() =>
+            handlers.next
+              ? setCurrentPage({ kind: "CurrentPage", value: handlers.next })
+              : undefined
+          }
+          onPreviousClick={() =>
+            //prev could be also empty string
+            handlers.prev !== undefined
+              ? setCurrentPage({ kind: "CurrentPage", value: handlers.prev })
+              : undefined
+          }
           aria-label="PaginationWidget"
           onPerPageSelect={(
             _event: React.MouseEvent | React.KeyboardEvent | MouseEvent,
