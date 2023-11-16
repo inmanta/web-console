@@ -75,7 +75,7 @@ export const CreateEnvironmentForm: React.FC<Props> = ({
         if (Either.isLeft(result)) {
           setErrorMessage(result.value);
         } else {
-          const target = isLsmEnabled ? "Catalog" : "CompileReports";
+          const target = isLsmEnabled ? "Catalog" : "DesiredState";
           navigateTo(target, undefined, `?env=${result.value.data.id}`);
         }
       }

@@ -121,7 +121,16 @@ describe("Environment", () => {
 
     cy.get("button").contains("Submit").click();
     cy.wait(1000);
-    // TODO : Add test to check redirection to right page.
+    // test to check redirection to right page. OSS it should be the Desired state page instead of the service catalog.
+    if (Cypress.env("edition") === "iso") {
+      cy.get(".pf-v5-c-title")
+        .contains("Service Catalog")
+        .should("to.be.visible");
+    } else {
+      cy.get(".pf-v5-c-title")
+        .contains("Desired State")
+        .should("to.be.visible");
+    }
 
     //go back to home and check if env is visible
     cy.get(".pf-v5-c-breadcrumb__item").eq(0).click();
