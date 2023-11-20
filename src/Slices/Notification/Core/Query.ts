@@ -1,5 +1,6 @@
 import { PageSize, Pagination } from "@/Core/Domain";
 import { RemoteData } from "@/Core/Language";
+import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { Notification, Severity } from "./Domain";
 import { Origin } from "./Utils";
 
@@ -8,6 +9,7 @@ export interface Query {
   filter?: Filter;
   pageSize: PageSize.PageSize;
   origin: Origin;
+  currentPage: CurrentPage;
 }
 
 export interface Manifest {
@@ -43,6 +45,7 @@ export const drawerQuery: Query = {
   origin: "drawer",
   pageSize: PageSize.from("100"),
   filter: { cleared: false },
+  currentPage: { kind: "CurrentPage", value: [] },
 };
 
 export type ViewData = RemoteData.RemoteData<

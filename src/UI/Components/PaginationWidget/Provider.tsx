@@ -35,19 +35,21 @@ export const Provider: React.FC<Props> = ({
         <StyledPagination
           itemCount={Number(metadata.total)}
           perPage={Number(pageSize.value)}
+          titles={{ perPageSuffix: "" }}
           page={
             Math.floor(Number(metadata.before) / Number(metadata.page_size)) + 1
           }
           onNextClick={() =>
-            handlers.next
-              ? setCurrentPage({ kind: "CurrentPage", value: handlers.next })
-              : undefined
+            setCurrentPage({
+              kind: "CurrentPage",
+              value: handlers.next ? handlers.next : [],
+            })
           }
           onPreviousClick={() =>
-            //prev could be also empty string
-            handlers.prev !== undefined
-              ? setCurrentPage({ kind: "CurrentPage", value: handlers.prev })
-              : undefined
+            setCurrentPage({
+              kind: "CurrentPage",
+              value: handlers.prev ? handlers.prev : [],
+            })
           }
           aria-label="PaginationWidget"
           onPerPageSelect={(

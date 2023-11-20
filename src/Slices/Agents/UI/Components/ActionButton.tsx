@@ -13,7 +13,7 @@ interface Props {
 export const ActionButton: React.FC<Props> = ({ name, paused }) => {
   const { commandResolver, environmentModifier } =
     useContext(DependencyContext);
-  const { filter, sort, pageSize, setErrorMessage } =
+  const { filter, sort, pageSize, currentPage, setErrorMessage } =
     useContext(GetAgentsContext);
   const agentActionTrigger = commandResolver.useGetTrigger<"ControlAgent">({
     kind: "ControlAgent",
@@ -26,6 +26,7 @@ export const ActionButton: React.FC<Props> = ({ name, paused }) => {
       filter,
       sort,
       pageSize,
+      currentPage,
     });
     if (Maybe.isSome(result)) {
       setErrorMessage(result.value);

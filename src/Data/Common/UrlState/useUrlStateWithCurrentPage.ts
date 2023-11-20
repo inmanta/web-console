@@ -32,10 +32,7 @@ export function handleUrlStateWithCurrentPage(
 ): [CurrentPage, Update<CurrentPage>] {
   return handleUrlState<CurrentPage>(
     {
-      default: {
-        kind: "CurrentPage",
-        value: [],
-      },
+      default: initialCurrentPage,
       key: "currentPage",
       route: config.route,
       serialize: serialize,
@@ -46,3 +43,8 @@ export function handleUrlStateWithCurrentPage(
     replace,
   );
 }
+
+export const initialCurrentPage: CurrentPage = {
+  kind: "CurrentPage",
+  value: [],
+};

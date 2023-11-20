@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { act, render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { Either, PageSize, RemoteData } from "@/Core";
+import { initialCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { QueryManagerResolverImpl, QueryResolverImpl } from "@/Data/Resolvers";
 import { getStoreInstance } from "@/Data/Store";
 import {
@@ -210,6 +211,7 @@ test("Given the InstanceResourcesQueryManager When instance call is successful T
       kind: "GetServiceInstances",
       name: "service",
       pageSize: PageSize.initial,
+      currentPage: initialCurrentPage,
     },
     value: RemoteData.success({
       data: [instanceA, instanceB],
@@ -241,6 +243,7 @@ test("Given the InstanceResourcesQueryManager When scheduled instance call is su
       kind: "GetServiceInstances",
       name: "service",
       pageSize: PageSize.initial,
+      currentPage: initialCurrentPage,
     },
     value: RemoteData.success({
       data: [instanceA, instanceB],

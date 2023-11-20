@@ -1,4 +1,5 @@
 import { PageSize, Pagination, Sort } from "@/Core/Domain";
+import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { Fact } from "./Domain";
 
 export interface Query {
@@ -6,6 +7,7 @@ export interface Query {
   sort?: Sort.Sort<SortKey>;
   filter?: Filter;
   pageSize: PageSize.PageSize;
+  currentPage: CurrentPage;
 }
 
 export interface Manifest {

@@ -1,4 +1,9 @@
-import { StateHelper, Scheduler, ApiHelper } from "@/Core";
+import {
+  StateHelper,
+  Scheduler,
+  ApiHelper,
+  stringifyObjectOrUndefined,
+} from "@/Core";
 import { getPaginationHandlers, QueryManager } from "@/Data/Managers/Helpers";
 import { Filter } from "@S/Events/Core/Query";
 import { getUrl } from "./getUrl";
@@ -13,22 +18,23 @@ export function EventsQueryManager(
     stateHelper,
     scheduler,
     ({ kind, id }) => `${kind}_${id}`,
-    ({ id, service_entity, sort, filter, pageSize }) => [
+    ({ id, service_entity, sort, filter, pageSize, currentPage }) => [
       id,
       service_entity,
       sort?.order,
       stringifyFilter(filter),
       pageSize.value,
+      stringifyObjectOrUndefined(currentPage.value),
     ],
     "GetInstanceEvents",
     (query) => getUrl(query),
-    ({ data, links, metadata }, setUrl) => {
+    ({ data, links, metadata }) => {
       if (typeof links === "undefined") {
         return { data: data, handlers: {}, metadata };
       }
       return {
         data: data,
-        handlers: getPaginationHandlers(links, metadata, setUrl),
+        handlers: getPaginationHandlers(links, metadata),
         metadata,
       };
     },

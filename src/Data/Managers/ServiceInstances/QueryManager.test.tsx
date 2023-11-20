@@ -1,4 +1,5 @@
 import React from "react";
+import { MemoryRouter } from "react-router-dom";
 import { act, render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
@@ -11,6 +12,7 @@ import {
   SchedulerImpl,
   Task,
 } from "@/Core";
+import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { getStoreInstance } from "@/Data/Store";
 import { DeferredApiHelper, dependencies, ServiceInventory } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
@@ -41,27 +43,37 @@ const setup = () => {
   );
 
   const Component: React.FC = () => {
+    const [currentPageMock, setCurrentPageMock] = useUrlStateWithCurrentPage({
+      route: "Inventory",
+    });
     const [data] = queryManager.useContinuous({
       kind: "GetServiceInstances",
       name: "name",
       pageSize: PageSize.initial,
+      currentPage: currentPageMock,
     });
 
     if (!RemoteData.isSuccess(data)) return null;
 
     const onNext = () => {
-      data.value.handlers.next && data.value.handlers.next();
+      console.log(data.value.handlers.next);
+      setCurrentPageMock({
+        kind: "CurrentPage",
+        value: data.value.handlers.next || [],
+      });
     };
 
     return <button onClick={onNext}>next</button>;
   };
 
   const component = (
-    <DependencyProvider dependencies={dependencies}>
-      <StoreProvider store={store}>
-        <Component />
-      </StoreProvider>
-    </DependencyProvider>
+    <MemoryRouter>
+      <DependencyProvider dependencies={dependencies}>
+        <StoreProvider store={store}>
+          <Component />
+        </StoreProvider>
+      </DependencyProvider>
+    </MemoryRouter>
   );
 
   return { component, apiHelper, tasks };

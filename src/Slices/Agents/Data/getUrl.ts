@@ -5,6 +5,7 @@ export function getUrl({
   pageSize,
   sort,
   filter,
+  currentPage,
 }: Query.SubQuery<"GetAgents">): string {
   const filterParam =
     filter && Object.keys(filter).length > 0
@@ -20,5 +21,10 @@ export function getUrl({
         )}`
       : "";
   const sortParam = sort ? `&sort=${Sort.serialize(sort)}` : "";
-  return `/api/v2/agents?limit=${pageSize.value}${filterParam}${sortParam}`;
+  const currentPageParams =
+    currentPage.value && currentPage.value.length > 0
+      ? `&${decodeURIComponent(currentPage.value.join("&"))}`
+      : "";
+
+  return `/api/v2/agents?limit=${pageSize.value}${filterParam}${sortParam}${currentPageParams}`;
 }

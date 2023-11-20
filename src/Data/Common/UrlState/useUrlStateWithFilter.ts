@@ -56,7 +56,6 @@ export function handleUrlStateWithFilter<Data>(
         return { [key]: serializeValue(kind, data[key]) };
       })
       .reduce((acc, cur) => ({ ...acc, ...cur }), {});
-    console.log({ ...data, ...serialized });
     return { ...data, ...serialized };
   };
 

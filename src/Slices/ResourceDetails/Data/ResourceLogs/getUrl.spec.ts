@@ -4,7 +4,7 @@ import { getUrl } from "./getUrl";
 it.each`
   resourceId       | filter                                                                     | filterTxt                  | pageSize | url
   ${"resourceId1"} | ${undefined}                                                               | ${"undefined"}             | ${"20"}  | ${`/api/v2/resource/resourceId1/logs?limit=20`}
-  ${"resourceId1"} | ${undefined}                                                               | ${"undefined"}             | ${"10"}  | ${`/api/v2/resource/resourceId1/logs?limit=10`}
+  ${"resourceId1"} | ${undefined}                                                               | ${"undefined"}             | ${"50"}  | ${`/api/v2/resource/resourceId1/logs?limit=50`}
   ${"resourceId1"} | ${{ message: "failure" }}                                                  | ${"message=failure"}       | ${"20"}  | ${`/api/v2/resource/resourceId1/logs?limit=20&filter.message=failure`}
   ${"resourceId1"} | ${{ minimal_log_level: "CRITICAL" }}                                       | ${"logLevel=CRITICAL"}     | ${"20"}  | ${`/api/v2/resource/resourceId1/logs?limit=20&filter.minimal_log_level=CRITICAL`}
   ${"resourceId1"} | ${{ action: ["getfact", "deploy"] }}                                       | ${"action=getfact+deploy"} | ${"20"}  | ${`/api/v2/resource/resourceId1/logs?limit=20&filter.action=getfact&filter.action=deploy`}
@@ -17,6 +17,7 @@ it.each`
       id: resourceId,
       pageSize: PageSize.from(pageSize),
       filter,
+      currentPage: { kind: "CurrentPage", value: [] },
     };
     expect(getUrl(query)).toEqual(url);
   },

@@ -3,6 +3,7 @@ import {
   ServiceInstanceParams,
   ApiHelper,
   StateHelperWithEnv,
+  stringifyObjectOrUndefined,
 } from "@/Core";
 import { getPaginationHandlers, QueryManager } from "@/Data/Managers/Helpers";
 import { getUrl } from "./getUrl";
@@ -17,22 +18,23 @@ export function ServiceInstancesQueryManager(
     stateHelper,
     scheduler,
     ({ kind, name }) => `${kind}_${name}`,
-    ({ name, filter, sort, pageSize }) => [
+    ({ name, filter, sort, pageSize, currentPage }) => [
       name,
       stringifyFilter(filter),
       sort?.name,
       sort?.order,
       pageSize.value,
+      stringifyObjectOrUndefined(currentPage.value),
     ],
     "GetServiceInstances",
     (query) => getUrl(query),
-    ({ data, links, metadata }, setUrl) => {
+    ({ data, links, metadata }) => {
       if (typeof links === "undefined") {
         return { data: data, handlers: {}, metadata };
       }
       return {
         data: data,
-        handlers: getPaginationHandlers(links, metadata, setUrl),
+        handlers: getPaginationHandlers(links, metadata),
         metadata,
       };
     },
@@ -52,22 +54,23 @@ export function GetServiceInstancesOneTimeQueryManager(
   return QueryManager.OneTimeWithEnv<"GetServiceInstances">(
     apiHelper,
     stateHelper,
-    ({ name, filter, sort, pageSize }) => [
+    ({ name, filter, sort, pageSize, currentPage }) => [
       name,
       stringifyFilter(filter),
       sort?.name,
       sort?.order,
       pageSize.value,
+      stringifyObjectOrUndefined(currentPage.value),
     ],
     "GetServiceInstances",
     (query) => getUrl(query, false),
-    ({ data, links, metadata }, setUrl) => {
+    ({ data, links, metadata }) => {
       if (typeof links === "undefined") {
         return { data: data, handlers: {}, metadata };
       }
       return {
         data: data,
-        handlers: getPaginationHandlers(links, metadata, setUrl),
+        handlers: getPaginationHandlers(links, metadata),
         metadata,
       };
     },

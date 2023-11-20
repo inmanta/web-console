@@ -157,14 +157,17 @@ test("GIVEN ResourcesView WHEN user clicks on requires toggle THEN list of requi
 });
 
 test("ResourcesView shows next page of resources", async () => {
-  const { component, apiHelper } = setup(["/?state.Resources.pageSize=10"]);
+  const { component, apiHelper } = setup();
   render(component);
 
   await act(async () => {
     await apiHelper.resolve(
       Either.right({
         data: Resource.response.data.slice(0, 3),
-        links: { ...Resource.response.links, next: "/fake-link" },
+        links: {
+          ...Resource.response.links,
+          next: "/fake-link?start=fake-first-param",
+        },
         metadata: Resource.response.metadata,
       }),
     );
@@ -180,16 +183,17 @@ test("ResourcesView shows next page of resources", async () => {
   expect(button).toBeEnabled();
 
   await act(async () => {
-    await userEvent.click(
-      screen.getAllByRole("button", { name: "Go to next page" })[0],
-    );
+    await userEvent.click(button);
   });
 
   await act(async () => {
     await apiHelper.resolve(
       Either.right({
         data: Resource.response.data.slice(3),
-        links: { ...Resource.response.links, next: "/fake-link" },
+        links: {
+          ...Resource.response.links,
+          next: "/fake-link?start=fake-first-param",
+        },
         metadata: Resource.response.metadata,
       }),
     );
@@ -541,7 +545,7 @@ test("ResourcesView shows deploy state bar", async () => {
 });
 
 test("GIVEN ResourcesView WHEN data is loading for next page THEN shows toolbar", async () => {
-  const { component, apiHelper } = setup(["/?state.Resources.pageSize=10"]);
+  const { component, apiHelper } = setup();
   render(component);
 
   expect(
@@ -552,7 +556,10 @@ test("GIVEN ResourcesView WHEN data is loading for next page THEN shows toolbar"
     await apiHelper.resolve(
       Either.right({
         ...Resource.response,
-        links: { ...Resource.response.links, next: "/fake-link" },
+        links: {
+          ...Resource.response.links,
+          next: "/fake-link?start=fake-param",
+        },
       }),
     );
   });

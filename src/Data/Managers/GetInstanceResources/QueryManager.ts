@@ -159,6 +159,7 @@ export function InstanceResourcesQueryManager(
         kind: "GetServiceInstances",
         name: serviceEntity,
         pageSize: PageSize.initial,
+        currentPage: { kind: "CurrentPage", value: [] },
       },
       environment,
     );
@@ -175,6 +176,7 @@ export function InstanceResourcesQueryManager(
           kind: "GetServiceInstances",
           name: serviceEntity,
           pageSize: PageSize.initial,
+          currentPage: { kind: "CurrentPage", value: [] },
         },
         environment,
       );

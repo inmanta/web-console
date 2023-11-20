@@ -15,9 +15,9 @@ test("GIVEN ServiceInventory WHEN on 2nd page with outdated 1st page and user cl
         data: [ServiceInstance.a, ServiceInstance.b],
         links: {
           first: "first",
-          prev: "prev",
+          prev: "/fake-link?end=fake-param",
           self: "self",
-          next: "next",
+          next: "fake-link?start=fake-param",
           last: "last",
         },
         metadata: {
@@ -31,9 +31,12 @@ test("GIVEN ServiceInventory WHEN on 2nd page with outdated 1st page and user cl
   });
 
   const button = screen.getByRole("button", { name: "Go to previous page" });
+
+  expect(button).toBeEnabled();
+
   await act(async () => {
     await userEvent.click(button);
   });
 
-  expect(apiHelper.pendingRequests[0].url).toEqual("first");
+  expect(apiHelper.pendingRequests).toEqual([]);
 });

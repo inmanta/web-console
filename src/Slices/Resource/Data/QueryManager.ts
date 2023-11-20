@@ -1,4 +1,9 @@
-import { Scheduler, Resource, ApiHelper } from "@/Core";
+import {
+  Scheduler,
+  Resource,
+  ApiHelper,
+  stringifyObjectOrUndefined,
+} from "@/Core";
 import { getPaginationHandlers, QueryManager } from "@/Data/Managers/Helpers";
 import { Store } from "@/Data/Store";
 import { StateHelper } from "./StateHelper";
@@ -20,7 +25,7 @@ export function GetResourcesQueryManager(
       sort?.name,
       sort?.order,
       stringifyFilter(filter),
-      stringifyCurrentPage(currentPage.value),
+      stringifyObjectOrUndefined(currentPage.value),
     ],
     "GetResources",
     getUrl,
@@ -39,9 +44,4 @@ export function GetResourcesQueryManager(
 
 function stringifyFilter(filter: Resource.Filter | undefined): string {
   return typeof filter === "undefined" ? "undefined" : JSON.stringify(filter);
-}
-function stringifyCurrentPage(currentPage: string[] | undefined): string {
-  return typeof currentPage === "undefined"
-    ? "undefined"
-    : JSON.stringify(currentPage);
 }

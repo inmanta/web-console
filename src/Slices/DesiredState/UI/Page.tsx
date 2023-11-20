@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import { ParsedNumber } from "@/Core";
 import { useUrlStateWithFilter, useUrlStateWithPageSize } from "@/Data";
+import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import {
   EmptyView,
   ToastAlert,
@@ -22,6 +23,10 @@ export const Page: React.FC = () => {
   const [versionToDelete, setVersionToDelete] = useState<ParsedNumber>(0);
   const [errorMessage, setErrorMessage] = useState("");
   const { queryResolver } = useContext(DependencyContext);
+
+  const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({
+    route: "CompileReports",
+  });
   const [pageSize, setPageSize] = useUrlStateWithPageSize({
     route: "DesiredState",
   });
@@ -33,6 +38,7 @@ export const Page: React.FC = () => {
     kind: "GetDesiredStates",
     filter,
     pageSize,
+    currentPage,
   });
   const [compareSelection, setCompareSelection] = useState<CompareSelection>({
     kind: "None",
@@ -41,13 +47,13 @@ export const Page: React.FC = () => {
     setIsModalOpened(modalState);
     setVersionToDelete(modalState ? version : 0);
   }
-
   return (
     <PageContainer title={words("desiredState.title")}>
       <GetDesiredStatesContext.Provider
         value={{
           filter,
           pageSize,
+          currentPage,
           setErrorMessage,
           compareSelection,
           setCompareSelection,
@@ -62,6 +68,7 @@ export const Page: React.FC = () => {
               data={data}
               pageSize={pageSize}
               setPageSize={setPageSize}
+              setCurrentPage={setCurrentPage}
             />
           }
         />

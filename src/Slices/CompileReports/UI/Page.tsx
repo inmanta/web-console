@@ -5,6 +5,7 @@ import {
   useUrlStateWithPageSize,
   useUrlStateWithSort,
 } from "@/Data";
+import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import {
   EmptyView,
   PageContainer,
@@ -19,6 +20,10 @@ import { TableProvider } from "./TableProvider";
 
 export const Page: React.FC = () => {
   const { queryResolver } = useContext(DependencyContext);
+
+  const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({
+    route: "CompileReports",
+  });
   const [pageSize, setPageSize] = useUrlStateWithPageSize({
     route: "CompileReports",
   });
@@ -35,6 +40,7 @@ export const Page: React.FC = () => {
     filter,
     sort,
     pageSize,
+    currentPage,
   });
 
   return (
@@ -47,6 +53,7 @@ export const Page: React.FC = () => {
             data={data}
             pageSize={pageSize}
             setPageSize={setPageSize}
+            setCurrentPage={setCurrentPage}
           />
         }
         afterRecompile={retry}

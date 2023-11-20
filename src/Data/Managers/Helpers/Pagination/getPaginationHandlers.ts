@@ -23,14 +23,15 @@ const getPaginationHandlerUrls = (
 ): Urls => {
   const trimmedNext = next?.split(/(?=start=)/g)[1];
   const trimmedPrev = prev?.split(/(?=end=)/g)[1];
+  const separatedNextParameters = trimmedNext?.split("&");
+  const separatedPrevParameters = trimmedPrev?.split("&");
 
-  const separatedNextParametes = trimmedNext?.split("&");
-  const separatedPrevParametes = trimmedPrev?.split("&");
   return {
-    prev: shouldUseFirst(metadata) ? [] : separatedPrevParametes,
-    next: separatedNextParametes,
+    prev: shouldUseFirst(metadata) ? [] : separatedPrevParameters,
+    next: separatedNextParameters,
   };
 };
 
 const shouldUseFirst = (metadata: Pagination.Metadata): boolean =>
-  Number(metadata.before) < Number(metadata.page_size) * 2;
+  Number(metadata.before) < Number(metadata.page_size) * 2 &&
+  Number(metadata.before) !== 0;

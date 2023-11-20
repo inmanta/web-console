@@ -4,8 +4,8 @@ import { getUrl } from "./getUrl";
 test.each`
   filter                                  | sort                                    | sortTxt             | pageSize | url
   ${undefined}                            | ${undefined}                            | ${"undefined"}      | ${"20"}  | ${`/api/v2/compilereport?limit=20`}
-  ${{}}                                   | ${undefined}                            | ${"undefined"}      | ${"10"}  | ${`/api/v2/compilereport?limit=10`}
-  ${{}}                                   | ${{ name: "requested", order: "asc" }}  | ${"requested.asc"}  | ${"10"}  | ${`/api/v2/compilereport?limit=10&sort=requested.asc`}
+  ${{}}                                   | ${undefined}                            | ${"undefined"}      | ${"50"}  | ${`/api/v2/compilereport?limit=50`}
+  ${{}}                                   | ${{ name: "requested", order: "asc" }}  | ${"requested.asc"}  | ${"50"}  | ${`/api/v2/compilereport?limit=50&sort=requested.asc`}
   ${{}}                                   | ${{ name: "requested", order: "desc" }} | ${"requested.desc"} | ${"20"}  | ${`/api/v2/compilereport?limit=20&sort=requested.desc`}
   ${{ status: CompileStatus.success }}    | ${{ name: "requested", order: "desc" }} | ${"requested.desc"} | ${"20"}  | ${`/api/v2/compilereport?limit=20&sort=requested.desc&filter.success=true`}
   ${{ status: CompileStatus.failed }}     | ${{ name: "requested", order: "desc" }} | ${"requested.desc"} | ${"20"}  | ${`/api/v2/compilereport?limit=20&sort=requested.desc&filter.success=false`}
@@ -19,6 +19,7 @@ test.each`
       pageSize: PageSize.from(pageSize),
       filter,
       sort,
+      currentPage: { kind: "CurrentPage", value: [] },
     };
     expect(getUrl(query, "Europe/Brussels")).toEqual(url);
   },

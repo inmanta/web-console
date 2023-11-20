@@ -1,3 +1,4 @@
+import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { PageSize } from "./PageSize";
 import { Sort } from "./Sort";
 
@@ -5,6 +6,7 @@ export interface ServiceInstanceParams {
   filter?: Filter;
   sort?: Sort;
   pageSize: PageSize;
+  currentPage: CurrentPage;
 }
 
 export enum AttributeSet {

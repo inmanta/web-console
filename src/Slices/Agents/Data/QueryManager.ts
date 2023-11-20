@@ -14,22 +14,23 @@ export function GetAgentsQueryManager(
     StateHelper(store),
     scheduler,
     ({ kind }, environment) => `${kind}_${environment}`,
-    ({ pageSize, sort, filter }, environment) => [
+    ({ pageSize, sort, filter, currentPage }, environment) => [
       environment,
       pageSize.value,
       sort?.name,
       sort?.order,
       stringifyObjectOrUndefined(filter),
+      stringifyObjectOrUndefined(currentPage.value),
     ],
     "GetAgents",
     (query) => getUrl(query),
-    ({ data, links, metadata }, setUrl) => {
+    ({ data, links, metadata }) => {
       if (typeof links === "undefined") {
         return { data: data, handlers: {}, metadata };
       }
       return {
         data: data,
-        handlers: getPaginationHandlers(links, metadata, setUrl),
+        handlers: getPaginationHandlers(links, metadata),
         metadata,
       };
     },

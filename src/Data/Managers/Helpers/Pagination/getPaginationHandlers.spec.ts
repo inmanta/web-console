@@ -3,9 +3,9 @@ import { getPaginationHandlers } from "./getPaginationHandlers";
 
 test("GIVEN getPaginationHandlers WHEN on 1st page THEN no prev", () => {
   const links: Pagination.Links = {
-    self: "self",
-    next: "next",
-    last: "last",
+    self: "firstpartOfLink?self",
+    next: "firstpartOfLink?start=next",
+    last: "firstpartOfLink?last",
   };
   const metadata: Pagination.Metadata = {
     total: 55,
@@ -14,21 +14,19 @@ test("GIVEN getPaginationHandlers WHEN on 1st page THEN no prev", () => {
     page_size: 20,
   };
 
-  const setUrl = jest.fn();
-  const { prev, next } = getPaginationHandlers(links, metadata, setUrl);
+  const { prev, next } = getPaginationHandlers(links, metadata);
 
-  next && next();
   expect(prev).toBeUndefined();
-  expect(setUrl.mock.calls[0][0]).toEqual("next");
+  expect(next).toEqual(["start=next"]);
 });
 
 test("GIVEN getPaginationHandler WHEN on 2nd page THEN prev is first", () => {
   const links: Pagination.Links = {
-    first: "first",
-    prev: "prev",
-    self: "self",
-    next: "next",
-    last: "last",
+    first: "firstpartOfLink?first",
+    prev: "firstpartOfLink?end=prev",
+    self: "firstpartOfLink?self",
+    next: "firstpartOfLink?start=next",
+    last: "firstpartOfLink?last",
   };
   const metadata: Pagination.Metadata = {
     total: 55,
@@ -37,22 +35,19 @@ test("GIVEN getPaginationHandler WHEN on 2nd page THEN prev is first", () => {
     page_size: 20,
   };
 
-  const setUrl = jest.fn();
-  const { prev, next } = getPaginationHandlers(links, metadata, setUrl);
+  const { prev, next } = getPaginationHandlers(links, metadata);
 
-  prev && prev();
-  next && next();
-  expect(setUrl.mock.calls[0][0]).toEqual("first");
-  expect(setUrl.mock.calls[1][0]).toEqual("next");
+  expect(prev).toEqual([]);
+  expect(next).toEqual(["start=next"]);
 });
 
 test("GIVEN getPaginationHandlerUrls WHEN on 2nd page (with outdated 1st page) THEN prev is first", () => {
   const links: Pagination.Links = {
-    first: "first",
-    prev: "prev",
-    self: "self",
-    next: "next",
-    last: "last",
+    first: "firstpartOfLink?first",
+    prev: "firstpartOfLink?end=prev",
+    self: "firstpartOfLink?self",
+    next: "firstpartOfLink?start=next",
+    last: "firstpartOfLink?last",
   };
   const metadata: Pagination.Metadata = {
     total: 57,
@@ -61,20 +56,17 @@ test("GIVEN getPaginationHandlerUrls WHEN on 2nd page (with outdated 1st page) T
     page_size: 20,
   };
 
-  const setUrl = jest.fn();
-  const { prev, next } = getPaginationHandlers(links, metadata, setUrl);
+  const { prev, next } = getPaginationHandlers(links, metadata);
 
-  prev && prev();
-  next && next();
-  expect(setUrl.mock.calls[0][0]).toEqual("first");
-  expect(setUrl.mock.calls[1][0]).toEqual("next");
+  expect(prev).toEqual([]);
+  expect(next).toEqual(["start=next"]);
 });
 
 test("GIVEN getPaginationHandlerUrls WHEN on 3rd page THEN prev is prev", () => {
   const links: Pagination.Links = {
-    self: "self",
-    first: "first",
-    prev: "prev",
+    self: "firstpartOfLink?self",
+    first: "firstpartOfLink?first",
+    prev: "firstpartOfLink?end=prev",
   };
   const metadata: Pagination.Metadata = {
     total: 55,
@@ -83,10 +75,8 @@ test("GIVEN getPaginationHandlerUrls WHEN on 3rd page THEN prev is prev", () => 
     page_size: 20,
   };
 
-  const setUrl = jest.fn();
-  const { prev, next } = getPaginationHandlers(links, metadata, setUrl);
+  const { prev, next } = getPaginationHandlers(links, metadata);
 
-  prev && prev();
   expect(next).toBeUndefined();
-  expect(setUrl.mock.calls[0][0]).toEqual("prev");
+  expect(prev).toEqual(["end=prev"]);
 });

@@ -9,6 +9,7 @@ test("getUrl returns correct url for no filter & no sort", () => {
     filter: undefined,
     sort: undefined,
     pageSize: PageSize.initial,
+    currentPage: { kind: "CurrentPage", value: [] },
   };
 
   expect(getUrl(query)).toMatch(
@@ -25,11 +26,12 @@ test("getUrl returns correct url for filter & no sort", () => {
       state: ["up", "creating"],
     },
     sort: undefined,
-    pageSize: PageSize.from("10"),
+    pageSize: PageSize.from("100"),
+    currentPage: { kind: "CurrentPage", value: [] },
   };
 
   expect(getUrl(query)).toMatch(
-    `/lsm/v1/service_inventory/${name}?include_deployment_progress=True&limit=10&filter.state=up&filter.state=creating`,
+    `/lsm/v1/service_inventory/${name}?include_deployment_progress=True&limit=100&filter.state=up&filter.state=creating`,
   );
 });
 
@@ -44,6 +46,7 @@ test("getUrl returns correct url for sort & no filter", () => {
       order: "asc",
     },
     pageSize: PageSize.initial,
+    currentPage: { kind: "CurrentPage", value: [] },
   };
 
   expect(getUrl(query)).toMatch(
@@ -64,6 +67,7 @@ test("getUrl returns correct url for sort & filter", () => {
       order: "asc",
     },
     pageSize: PageSize.initial,
+    currentPage: { kind: "CurrentPage", value: [] },
   };
 
   expect(getUrl(query)).toMatch(
@@ -83,6 +87,7 @@ test("getUrl returns correct url for empty filter", () => {
       attributeSetNotEmpty: [],
     },
     pageSize: PageSize.from("50"),
+    currentPage: { kind: "CurrentPage", value: [] },
   };
 
   expect(getUrl(query)).toMatch(

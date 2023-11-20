@@ -9,6 +9,7 @@ export function getUrl(
     filter,
     sort,
     pageSize,
+    currentPage,
   }: Query.SubQuery<"GetInstanceEvents">,
   timezone = moment.tz.guess(),
 ): string {
@@ -20,7 +21,12 @@ export function getUrl(
         )}`
       : "";
   const sortParam = sort ? `&sort=${sort.name}.${sort.order}` : "";
-  return `/lsm/v1/service_inventory/${service_entity}/${id}/events?limit=${pageSize.value}${sortParam}${filterParam}`;
+  const currentPageParams =
+    currentPage.value && currentPage.value.length > 0
+      ? `&${decodeURIComponent(currentPage.value.join("&"))}`
+      : "";
+
+  return `/lsm/v1/service_inventory/${service_entity}/${id}/events?limit=${pageSize.value}${sortParam}${filterParam}${currentPageParams}`;
 }
 
 type Filter = NonNullable<Query.SubQuery<"GetInstanceEvents">["filter"]>;
