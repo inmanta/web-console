@@ -335,7 +335,7 @@ if (Cypress.env("edition") === "iso") {
 
       // Click on destroy button
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
-      cy.get(".pf-v5-c-menu__item").contains("More options").click();
+      cy.get(".pf-v5-c-menu__item").contains("More actions").click();
       cy.get(".pf-v5-c-menu__item").contains("Destroy").click();
 
       // Modal title for confirmation of Destroying instance should be visible

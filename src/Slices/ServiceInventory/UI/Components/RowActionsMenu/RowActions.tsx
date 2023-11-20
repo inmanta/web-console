@@ -61,9 +61,13 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
   // the height of the drilled down menus differ based on how many options preceeds the drilldown. This is a bug on PF side.
   // and setting the insetHeight manually is a workaround for that issue.
   const getInsetHeight = () => {
-    // -100 for each default option present above the first drilldown.
-    let insetHeight = -300;
-    if (features && features.includes("instanceComposer")) {
+    // -100 for each default option present above the first drilldown that is enabled.
+    // diagnose and duplicate are always enabled, so this means it starts at -200
+    let insetHeight = -200;
+    if (features && features.includes("instanceComposer") && !editDisabled) {
+      insetHeight = insetHeight - 100;
+    }
+    if (!editDisabled) {
       insetHeight = insetHeight - 100;
     }
 
@@ -257,7 +261,7 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
               </DrilldownMenu>
             }
           >
-            More options
+            More actions
           </MenuItem>
           {environmentModifier.useIsExpertModeEnabled() && (
             <ForceStateAction

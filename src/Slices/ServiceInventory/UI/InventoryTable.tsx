@@ -36,6 +36,17 @@ export const InventoryTable: React.FC<Props> = ({
       order,
     });
   };
+  // Define the column width in percentage for specific columns.
+  const getColumnWidth = (apiName: string) => {
+    switch (apiName) {
+      case tablePresenter.getIdColumnApiName():
+        return 20;
+      case "deployment_progress":
+        return 30;
+      default:
+        return undefined;
+    }
+  };
   const activeSortIndex = tablePresenter.getIndexForColumnName(sort.name);
   const heads = tablePresenter.getColumnHeads().map((column, columnIndex) => {
     const sortParams = tablePresenter
@@ -53,7 +64,11 @@ export const InventoryTable: React.FC<Props> = ({
         }
       : {};
     return (
-      <Th key={column.displayName} {...sortParams}>
+      <Th
+        width={getColumnWidth(column.apiName)}
+        key={column.displayName}
+        {...sortParams}
+      >
         {column.displayName}
       </Th>
     );
