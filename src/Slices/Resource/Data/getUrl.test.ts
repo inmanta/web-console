@@ -1,4 +1,5 @@
 import { PageSize, Query } from "@/Core";
+import { initialCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { getUrl } from "./getUrl";
 
 describe("getUrl for latest released resources ", () => {
@@ -17,7 +18,7 @@ describe("getUrl for latest released resources ", () => {
         pageSize: PageSize.from(size),
         filter,
         sort,
-        currentPage: { kind: "CurrentPage", value: [] },
+        currentPage: initialCurrentPage,
       };
 
       expect(getUrl(query)).toEqual(url);

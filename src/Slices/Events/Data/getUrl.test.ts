@@ -1,5 +1,6 @@
 import moment from "moment";
 import { Query, PageSize } from "@/Core";
+import { initialCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { getUrl } from "./getUrl";
 
 describe("getUrl for events ", () => {
@@ -26,7 +27,7 @@ describe("getUrl for events ", () => {
         filter,
         sort,
         pageSize: PageSize.from(size),
-        currentPage: { kind: "CurrentPage", value: [] },
+        currentPage: initialCurrentPage,
       };
 
       expect(getUrl(query, "Europe/Brussels")).toEqual(url);

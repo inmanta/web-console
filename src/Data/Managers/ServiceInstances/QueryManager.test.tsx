@@ -56,7 +56,6 @@ const setup = () => {
     if (!RemoteData.isSuccess(data)) return null;
 
     const onNext = () => {
-      console.log(data.value.handlers.next);
       setCurrentPageMock({
         kind: "CurrentPage",
         value: data.value.handlers.next || [],

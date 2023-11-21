@@ -1,6 +1,7 @@
 import { capitalize } from "@patternfly/react-core";
 import qs from "qs";
 import { Query, Sort } from "@/Core";
+import { composeCurrentPageParams } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 
 export function getUrl(
   {
@@ -21,10 +22,7 @@ export function getUrl(
   const sortParam = sort ? `&sort=${Sort.serialize(sort)}` : "";
   const includeDeletedParam =
     filter?.deleted === "Include" ? "&include_deleted=true" : "";
-  const currentPageParams =
-    currentPage.value && currentPage.value.length > 0
-      ? `&${decodeURIComponent(currentPage.value.join("&"))}`
-      : "";
+  const currentPageParams = composeCurrentPageParams(currentPage);
 
   return `/lsm/v1/service_inventory/${name}?include_deployment_progress=${capitalize(
     includeDeploymentProgress.toString(),

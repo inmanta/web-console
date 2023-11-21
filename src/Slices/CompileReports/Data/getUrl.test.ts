@@ -1,4 +1,5 @@
 import { CompileStatus, PageSize, Query } from "@/Core";
+import { initialCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { getUrl } from "./getUrl";
 
 test.each`
@@ -19,7 +20,7 @@ test.each`
       pageSize: PageSize.from(pageSize),
       filter,
       sort,
-      currentPage: { kind: "CurrentPage", value: [] },
+      currentPage: initialCurrentPage,
     };
     expect(getUrl(query, "Europe/Brussels")).toEqual(url);
   },

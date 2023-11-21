@@ -1,5 +1,6 @@
 import qs from "qs";
 import { Query } from "@/Core";
+import { composeCurrentPageParams } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 
 export function getUrl({
   filter,
@@ -21,9 +22,6 @@ export function getUrl({
           { allowDots: true, arrayFormat: "repeat" },
         )}`
       : "";
-  const currentPageParams =
-    currentPage.value && currentPage.value.length > 0
-      ? `&${decodeURIComponent(currentPage.value.join("&"))}`
-      : "";
+  const currentPageParams = composeCurrentPageParams(currentPage);
   return `/api/v2/notification?limit=${pageSize.value}${filterParam}${currentPageParams}`;
 }

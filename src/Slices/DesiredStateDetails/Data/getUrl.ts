@@ -1,5 +1,6 @@
 import qs from "qs";
 import { Query } from "@/Core";
+import { composeCurrentPageParams } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 
 export function getUrl({
   version,
@@ -22,10 +23,7 @@ export function getUrl({
         )}`
       : "";
   const sortParam = sort ? `&sort=${sort.name}.${sort.order}` : "";
-  const currentPageParams =
-    currentPage.value && currentPage.value.length > 0
-      ? `&${decodeURIComponent(currentPage.value.join("&"))}`
-      : "";
+  const currentPageParams = composeCurrentPageParams(currentPage);
 
   return `/api/v2/desiredstate/${version}?limit=${pageSize.value}${filterParam}${sortParam}${currentPageParams}`;
 }

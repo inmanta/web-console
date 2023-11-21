@@ -5,6 +5,7 @@ import { handleUrlState } from "./useUrlState";
 export const useUrlStateWithCurrentPage = provide(
   handleUrlStateWithCurrentPage,
 );
+
 const valueIsValid = (value: unknown): value is string[] => {
   return isArray(value) && value.every((param) => typeof param === "string");
 };
@@ -25,6 +26,15 @@ export interface CurrentPage {
   value: string[];
 }
 
+/**
+ * Function that keep track of current Page in paginated views by storing parameters dictating range of showed entries
+ * It's used across all Views that serve paginated data
+ *
+ * @param config object responsible of dictating path for the state in the web url
+ * @param location reactRouter location object
+ * @param replace function based on reactRouter navigate() to change/update url
+ * @returns main handleUrlState instance set up for given configuration
+ */
 export function handleUrlStateWithCurrentPage(
   config: Pick<StateConfig<CurrentPage>, "route">,
   location: Location,
@@ -48,3 +58,8 @@ export const initialCurrentPage: CurrentPage = {
   kind: "CurrentPage",
   value: [],
 };
+
+export const composeCurrentPageParams = (currentPage: CurrentPage) =>
+  currentPage.value && currentPage.value.length > 0
+    ? `&${decodeURIComponent(currentPage.value.join("&"))}`
+    : "";

@@ -25,7 +25,7 @@ export const Page: React.FC = () => {
   const { queryResolver } = useContext(DependencyContext);
 
   const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({
-    route: "CompileReports",
+    route: "DesiredState",
   });
   const [pageSize, setPageSize] = useUrlStateWithPageSize({
     route: "DesiredState",

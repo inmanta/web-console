@@ -1,4 +1,5 @@
 import { PageSize, Query } from "@/Core";
+import { initialCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { getUrl } from "./getUrl";
 
 test("getUrl returns correct url for no filter & no sort", () => {
@@ -9,7 +10,7 @@ test("getUrl returns correct url for no filter & no sort", () => {
     filter: undefined,
     sort: undefined,
     pageSize: PageSize.initial,
-    currentPage: { kind: "CurrentPage", value: [] },
+    currentPage: initialCurrentPage,
   };
 
   expect(getUrl(query)).toMatch(
@@ -27,7 +28,7 @@ test("getUrl returns correct url for filter & no sort", () => {
     },
     sort: undefined,
     pageSize: PageSize.from("100"),
-    currentPage: { kind: "CurrentPage", value: [] },
+    currentPage: initialCurrentPage,
   };
 
   expect(getUrl(query)).toMatch(
@@ -46,7 +47,7 @@ test("getUrl returns correct url for sort & no filter", () => {
       order: "asc",
     },
     pageSize: PageSize.initial,
-    currentPage: { kind: "CurrentPage", value: [] },
+    currentPage: initialCurrentPage,
   };
 
   expect(getUrl(query)).toMatch(
@@ -67,7 +68,7 @@ test("getUrl returns correct url for sort & filter", () => {
       order: "asc",
     },
     pageSize: PageSize.initial,
-    currentPage: { kind: "CurrentPage", value: [] },
+    currentPage: initialCurrentPage,
   };
 
   expect(getUrl(query)).toMatch(
@@ -87,7 +88,7 @@ test("getUrl returns correct url for empty filter", () => {
       attributeSetNotEmpty: [],
     },
     pageSize: PageSize.from("50"),
-    currentPage: { kind: "CurrentPage", value: [] },
+    currentPage: initialCurrentPage,
   };
 
   expect(getUrl(query)).toMatch(
