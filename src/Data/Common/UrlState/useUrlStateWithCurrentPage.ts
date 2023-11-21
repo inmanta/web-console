@@ -6,6 +6,10 @@ export const useUrlStateWithCurrentPage = provide(
   handleUrlStateWithCurrentPage,
 );
 
+/**
+ * Checks whether the value passed is an Array of strings.
+ * @returns boolean
+ */
 const valueIsValid = (value: unknown): value is string[] => {
   return isArray(value) && value.every((param) => typeof param === "string");
 };
