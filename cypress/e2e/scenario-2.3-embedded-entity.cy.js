@@ -171,7 +171,7 @@ if (Cypress.env("edition") === "iso") {
         .should("contain", "up");
 
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
-      cy.get(".pf-v5-c-menu__item").contains("More options").click();
+      cy.get(".pf-v5-c-menu__item").contains("More actions").click();
       cy.get(".pf-v5-c-menu__item").contains("History").click();
 
       // History sub-page should open and be empty then go to Home page
@@ -197,7 +197,7 @@ if (Cypress.env("edition") === "iso") {
 
       // delete but cancel deletion in modal
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
-      cy.get(".pf-v5-c-menu__item").contains("More options").click();
+      cy.get(".pf-v5-c-menu__item").contains("More actions").click();
       cy.get(".pf-v5-c-menu__item").contains("Delete").click();
 
       cy.get(".pf-v5-c-modal-box__title-text").should(
@@ -207,7 +207,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get(".pf-v5-c-form__actions").contains("No").click();
 
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
-      cy.get(".pf-v5-c-menu__item").contains("More options").click();
+      cy.get(".pf-v5-c-menu__item").contains("More actions").click();
       cy.get(".pf-v5-c-menu__item").contains("Delete").click();
 
       cy.get(".pf-v5-c-modal-box__title-text").should(

@@ -94,6 +94,7 @@ const dict = {
   "inventory.column.options": "Options",
   "inventory.column.actions": "Actions",
   "inventory.column.resources": "Resources",
+  "inventory.actions.drilldown": "More actions",
   "inventory.tabs.attributes": "Attributes",
   "inventory.tabs.collapse": "Collapse all",
   "inventory.tabs.expand": "Expand all",

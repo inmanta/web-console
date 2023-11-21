@@ -147,7 +147,7 @@ if (Cypress.env("edition") === "iso") {
 
       // try delete item (Should not be possible)
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
-      cy.get(".pf-v5-c-menu__item").contains("More options").click();
+      cy.get(".pf-v5-c-menu__item").contains("More actions").click();
       cy.get(".pf-v5-c-menu__item").contains("Delete").click();
 
       cy.get(".pf-v5-c-modal-box__title-text").should(
@@ -177,7 +177,7 @@ if (Cypress.env("edition") === "iso") {
 
       // try delete item (Should be possible)
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
-      cy.get(".pf-v5-c-menu__item").contains("More options").click();
+      cy.get(".pf-v5-c-menu__item").contains("More actions").click();
       cy.get(".pf-v5-c-menu__item").contains("Delete").click();
 
       cy.get(".pf-v5-c-modal-box__title-text").should(
