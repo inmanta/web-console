@@ -13,22 +13,23 @@ export const getPaginationHandlers = (
 };
 
 interface Urls {
-  prev?: string[];
-  next?: string[];
+  prev?: string;
+  next?: string;
 }
 
 const getPaginationHandlerUrls = (
   { prev, next }: Pagination.Links,
   metadata: Pagination.Metadata,
 ): Urls => {
-  const trimmedNext = next?.split(/(?=start=)/g)[1];
-  const trimmedPrev = prev?.split(/(?=end=)/g)[1];
-  const separatedNextParameters = trimmedNext?.split("&");
-  const separatedPrevParameters = trimmedPrev?.split("&");
-
+  const trimmedNext = next?.split(/(?=&end=)/g)[1];
+  const trimmedPrev = prev?.split(/(?=&start=)/g)[1];
+  console.log({
+    prev: shouldUseFirst(metadata) ? "" : trimmedNext,
+    next: trimmedPrev,
+  });
   return {
-    prev: shouldUseFirst(metadata) ? [] : separatedPrevParameters,
-    next: separatedNextParameters,
+    prev: shouldUseFirst(metadata) ? "" : trimmedPrev,
+    next: trimmedNext,
   };
 };
 

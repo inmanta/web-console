@@ -9,10 +9,10 @@ export const metadata: Pagination.Metadata = {
 
 export const links: Pagination.Links = {
   self: "fake-url",
-  next: "next-url?start=fake-param",
+  next: "next-url?end=fake-param",
 };
 
 export const handlers: Pagination.Handlers = {
-  prev: [],
-  next: [],
+  prev: "",
+  next: "",
 };

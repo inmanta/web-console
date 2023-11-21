@@ -166,7 +166,7 @@ test("ResourcesView shows next page of resources", async () => {
         data: Resource.response.data.slice(0, 3),
         links: {
           ...Resource.response.links,
-          next: "/fake-link?start=fake-first-param",
+          next: "/fake-link?end=fake-first-param",
         },
         metadata: Resource.response.metadata,
       }),
@@ -192,7 +192,7 @@ test("ResourcesView shows next page of resources", async () => {
         data: Resource.response.data.slice(3),
         links: {
           ...Resource.response.links,
-          next: "/fake-link?start=fake-first-param",
+          next: "/fake-link?end=fake-first-param",
         },
         metadata: Resource.response.metadata,
       }),
@@ -558,7 +558,7 @@ test("GIVEN ResourcesView WHEN data is loading for next page THEN shows toolbar"
         ...Resource.response,
         links: {
           ...Resource.response.links,
-          next: "/fake-link?start=fake-param",
+          next: "/fake-link?end=fake-param",
         },
       }),
     );

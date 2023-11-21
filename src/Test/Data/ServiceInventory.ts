@@ -4,8 +4,8 @@ export const pageData = {
   first: {
     data: [serviceInstance],
     links: {
-      self: "firstpartOfLink?firs-page",
-      next: "firstpartOfLink?start=next",
+      self: "firstpartOfLink?first-page",
+      next: "firstpartOfLink?end=next",
     },
     metadata: {
       total: 100,
@@ -17,9 +17,9 @@ export const pageData = {
   second: {
     data: [serviceInstance],
     links: {
-      prev: "firstpartOfLink?end=prev",
+      prev: "firstpartOfLink?start=prev",
       self: "firstpartOfLink?second-page",
-      next: "firstpartOfLink?start=next",
+      next: "firstpartOfLink?end=next",
     },
     metadata: {
       total: 100,

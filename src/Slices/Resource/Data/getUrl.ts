@@ -1,6 +1,5 @@
 import qs from "qs";
 import { Query } from "@/Core";
-import { composeCurrentPageParams } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 
 export function getUrl({
   filter,
@@ -23,6 +22,6 @@ export function getUrl({
         )}`
       : "";
   const sortParam = sort ? `&sort=${sort.name}.${sort.order}` : "";
-  const currentPageParams = composeCurrentPageParams(currentPage);
-  return `/api/v2/resource?deploy_summary=True&limit=${pageSize.value}${filterParam}${sortParam}${currentPageParams}`;
+
+  return `/api/v2/resource?deploy_summary=True&limit=${pageSize.value}${filterParam}${sortParam}${currentPage.value}`;
 }

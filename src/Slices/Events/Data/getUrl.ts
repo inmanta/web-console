@@ -1,7 +1,6 @@
 import moment from "moment-timezone";
 import qs from "qs";
 import { Query, RangeOperator } from "@/Core";
-import { composeCurrentPageParams } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 
 export function getUrl(
   {
@@ -22,9 +21,8 @@ export function getUrl(
         )}`
       : "";
   const sortParam = sort ? `&sort=${sort.name}.${sort.order}` : "";
-  const currentPageParams = composeCurrentPageParams(currentPage);
 
-  return `/lsm/v1/service_inventory/${service_entity}/${id}/events?limit=${pageSize.value}${sortParam}${filterParam}${currentPageParams}`;
+  return `/lsm/v1/service_inventory/${service_entity}/${id}/events?limit=${pageSize.value}${sortParam}${filterParam}${currentPage.value}`;
 }
 
 type Filter = NonNullable<Query.SubQuery<"GetInstanceEvents">["filter"]>;

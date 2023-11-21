@@ -19,10 +19,13 @@ const valueIsValid = (value: unknown): value is string[] => {
 };
 
 const from = (value: string[]): CurrentPage => {
-  return { kind: "CurrentPage", value: valueIsValid(value) ? value : [] };
+  return {
+    kind: "CurrentPage",
+    value: valueIsValid(value) ? value.join("&") : "",
+  };
 };
 const serialize = (currentPage: CurrentPage): string[] => {
-  return currentPage.value;
+  return currentPage.value.split("&");
 };
 
 const parse = (candidate: unknown): CurrentPage | undefined => {
@@ -31,7 +34,7 @@ const parse = (candidate: unknown): CurrentPage | undefined => {
 
 export interface CurrentPage {
   kind: "CurrentPage";
-  value: string[];
+  value: string;
 }
 
 /**
@@ -64,10 +67,5 @@ export function handleUrlStateWithCurrentPage(
 
 export const initialCurrentPage: CurrentPage = {
   kind: "CurrentPage",
-  value: [],
+  value: "",
 };
-
-export const composeCurrentPageParams = (currentPage: CurrentPage) =>
-  currentPage.value && currentPage.value.length > 0
-    ? `&${decodeURIComponent(currentPage.value.join("&"))}`
-    : "";

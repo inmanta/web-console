@@ -1,7 +1,6 @@
 import moment from "moment";
 import qs from "qs";
 import { Query, RangeOperator } from "@/Core";
-import { composeCurrentPageParams } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 
 export function getUrl(
   { pageSize, filter, currentPage }: Query.SubQuery<"GetDesiredStates">,
@@ -37,7 +36,6 @@ export function getUrl(
         )}`
       : "";
   const sortParam = `&sort=version.desc`;
-  const currentPageParams = composeCurrentPageParams(currentPage);
 
-  return `/api/v2/desiredstate?limit=${pageSize.value}${sortParam}${filterParam}${currentPageParams}`;
+  return `/api/v2/desiredstate?limit=${pageSize.value}${sortParam}${filterParam}${currentPage.value}`;
 }

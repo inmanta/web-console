@@ -241,7 +241,7 @@ test("Given Notification Center page When user clicks next page Then fetches nex
     {
       method: "GET",
       environment: "env",
-      url: "/api/v2/notification?limit=20&start=fake-param",
+      url: "/api/v2/notification?limit=20&end=fake-param",
     },
   ]);
 

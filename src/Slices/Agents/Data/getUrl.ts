@@ -1,6 +1,5 @@
 import qs from "qs";
 import { Query, Sort } from "@/Core";
-import { composeCurrentPageParams } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 
 export function getUrl({
   pageSize,
@@ -22,7 +21,6 @@ export function getUrl({
         )}`
       : "";
   const sortParam = sort ? `&sort=${Sort.serialize(sort)}` : "";
-  const currentPageParams = composeCurrentPageParams(currentPage);
 
-  return `/api/v2/agents?limit=${pageSize.value}${filterParam}${sortParam}${currentPageParams}`;
+  return `/api/v2/agents?limit=${pageSize.value}${filterParam}${sortParam}${currentPage.value}`;
 }

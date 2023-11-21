@@ -1,7 +1,6 @@
 import moment from "moment";
 import qs from "qs";
 import { Query, DateRange, RangeOperator } from "@/Core";
-import { composeCurrentPageParams } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 
 export function getUrl({
   id,
@@ -25,8 +24,8 @@ export function getUrl({
         )}`
       : "";
   const sortParam = sort ? `&sort=${sort.name}.${sort.order}` : "";
-  const currentPageParams = composeCurrentPageParams(currentPage);
-  return `/api/v2/resource/${id}/logs?limit=${pageSize.value}${filterParam}${sortParam}${currentPageParams}`;
+
+  return `/api/v2/resource/${id}/logs?limit=${pageSize.value}${filterParam}${sortParam}${currentPage.value}`;
 }
 
 const serializeTimestampFilter = (

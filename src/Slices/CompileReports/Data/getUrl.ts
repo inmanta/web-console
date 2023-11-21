@@ -1,7 +1,6 @@
 import moment from "moment";
 import qs from "qs";
 import { CompileStatus, Query, RangeOperator } from "@/Core";
-import { composeCurrentPageParams } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 
 export function getUrl(
   { pageSize, sort, filter, currentPage }: Query.SubQuery<"GetCompileReports">,
@@ -16,9 +15,8 @@ export function getUrl(
       : "";
   const filterParam = serializedFilters.length > 1 ? serializedFilters : "";
   const sortParam = sort ? `&sort=${sort.name}.${sort.order}` : "";
-  const currentPageParams = composeCurrentPageParams(currentPage);
 
-  return `/api/v2/compilereport?limit=${pageSize.value}${sortParam}${filterParam}${currentPageParams}`;
+  return `/api/v2/compilereport?limit=${pageSize.value}${sortParam}${filterParam}${currentPage.value}`;
 }
 type Filter = NonNullable<Query.SubQuery<"GetCompileReports">["filter"]>;
 

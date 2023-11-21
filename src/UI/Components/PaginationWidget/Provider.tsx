@@ -42,13 +42,13 @@ export const Provider: React.FC<Props> = ({
           onNextClick={() =>
             setCurrentPage({
               kind: "CurrentPage",
-              value: handlers.next ? handlers.next : [],
+              value: handlers.next ? handlers.next : "",
             })
           }
           onPreviousClick={() =>
             setCurrentPage({
               kind: "CurrentPage",
-              value: handlers.prev ? handlers.prev : [],
+              value: handlers.prev ? handlers.prev : "",
             })
           }
           aria-label="PaginationWidget"
