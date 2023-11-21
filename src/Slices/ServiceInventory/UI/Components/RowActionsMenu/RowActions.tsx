@@ -261,7 +261,7 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
               </DrilldownMenu>
             }
           >
-            More actions
+            {words("inventory.actions.drilldown")}
           </MenuItem>
           {environmentModifier.useIsExpertModeEnabled() && (
             <ForceStateAction
