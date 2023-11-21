@@ -27,6 +27,10 @@ export const GlobalStyles = createGlobalStyle`
     background-color: transparent;
   }
 
+  tbody > tr:where(.pf-v5-c-table__tr):not(.pf-v5-c-table__expandable-row):hover {
+    background-color: var(--pf-v5-global--palette--blue-50);
+  }
+
   .pf-v5-c-page {
     --pf-v5-c-page__main-breadcrumb--PaddingBottom: var(--pf-v5-global--spacer--md);
   }
