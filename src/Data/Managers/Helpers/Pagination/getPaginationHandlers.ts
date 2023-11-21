@@ -23,10 +23,7 @@ const getPaginationHandlerUrls = (
 ): Urls => {
   const trimmedNext = next?.split(/(?=&end=)/g)[1];
   const trimmedPrev = prev?.split(/(?=&start=)/g)[1];
-  console.log({
-    prev: shouldUseFirst(metadata) ? "" : trimmedNext,
-    next: trimmedPrev,
-  });
+
   return {
     prev: shouldUseFirst(metadata) ? "" : trimmedPrev,
     next: trimmedNext,
