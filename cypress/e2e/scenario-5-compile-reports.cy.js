@@ -314,7 +314,7 @@ describe("5 Compile reports", () => {
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 })
         .eq(0)
         .click();
-      cy.get(".pf-v5-c-menu__item").contains("More options").click();
+      cy.get(".pf-v5-c-menu__item").contains("More actions").click();
       cy.get(".pf-v5-c-menu__item").contains("Delete").click();
 
       // confirm modal

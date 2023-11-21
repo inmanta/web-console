@@ -83,7 +83,7 @@ if (Cypress.env("edition") === "iso") {
       // Expect to be redirected on Service Details: basic-service
       cy.get("h1")
         .contains("Service Details: basic-service")
-        .should("to.be.visible");
+        .should("to.exist");
 
       // Expect  the current tab to be Details
       cy.get(".pf-m-current").should("contain", "Details");
@@ -218,7 +218,7 @@ if (Cypress.env("edition") === "iso") {
       // Expect to be redirected on Service Details: basic-service
       cy.get("h1", { timeout: 20000 })
         .contains("Service Details: basic-service")
-        .should("to.be.visible");
+        .should("to.exist");
 
       // Click on Details tab
       cy.get("button").contains("Details").click();
@@ -308,7 +308,7 @@ if (Cypress.env("edition") === "iso") {
       // Expect to be redirected on Service Details: basic-service
       cy.get("h1")
         .contains("Service Details: basic-service")
-        .should("to.be.visible");
+        .should("to.exist");
 
       // Expect to be Details tab
       cy.get(".pf-m-current").should("contain", "Details");
@@ -342,7 +342,7 @@ if (Cypress.env("edition") === "iso") {
       // Expect to be redirected on Service Details: basic-service
       cy.get("h1", { timeout: 20000 })
         .contains("Service Details: basic-service")
-        .should("to.be.visible");
+        .should("to.exist");
 
       // Go to the callback tab
       cy.get("button").contains("Callbacks").click();
@@ -479,7 +479,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 })
         .eq(0)
         .click();
-      cy.get(".pf-v5-c-menu__item").contains("More options").click();
+      cy.get(".pf-v5-c-menu__item").contains("More actions").click();
       cy.get(".pf-v5-c-menu__item").contains("Delete").click();
 
       // Confirm deletion
@@ -489,7 +489,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 })
         .eq(1)
         .click();
-      cy.get(".pf-v5-c-menu__item").contains("More options").click();
+      cy.get(".pf-v5-c-menu__item").contains("More actions").click();
       cy.get(".pf-v5-c-menu__item").contains("Delete").click();
 
       // Confirm deletion

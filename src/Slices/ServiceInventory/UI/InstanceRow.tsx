@@ -3,11 +3,7 @@ import React, { useRef, useState } from "react";
 import { Tbody, Tr, Td, ExpandableRowContent } from "@patternfly/react-table";
 import styled from "styled-components";
 import { Row, ServiceModel, VersionedServiceInstanceIdentifier } from "@/Core";
-import {
-  DateWithTooltip,
-  TextWithCopy,
-  AttributesSummaryView,
-} from "@/UI/Components";
+import { DateWithTooltip, TextWithCopy } from "@/UI/Components";
 import { scrollRowIntoView } from "@/UI/Utils";
 import { words } from "@/UI/words";
 import { DeploymentProgressBar, IdWithCopy } from "./Components";
@@ -81,16 +77,6 @@ export const InstanceRow: React.FC<Props> = ({
           </Td>
         )}
         <Td dataLabel={words("inventory.column.state")}>{state}</Td>
-        <Td
-          dataLabel={words("inventory.column.attributesSummary")}
-          id={`instance-row-summary-${row.id.short}`}
-        >
-          <span ref={rowRef} />
-          <AttributesSummaryView
-            summary={row.attributesSummary}
-            onClick={openTabAndScrollTo(TabKey.Attributes)}
-          />
-        </Td>
         <Td dataLabel={words("inventory.collumn.deploymentProgress")}>
           <ActionWrapper
             id={`instance-row-resources-${row.id.short}`}
