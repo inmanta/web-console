@@ -58,7 +58,7 @@ const setup = () => {
     const onNext = () => {
       setCurrentPageMock({
         kind: "CurrentPage",
-        value: data.value.handlers.next || [],
+        value: data.value.handlers.next || "",
       });
     };
 
