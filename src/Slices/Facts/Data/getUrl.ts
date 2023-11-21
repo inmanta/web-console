@@ -21,5 +21,7 @@ export function getUrl({
       : "";
   const sortParam = sort ? `&sort=${sort.name}.${sort.order}` : "";
 
-  return `/api/v2/facts?limit=${pageSize.value}${filterParam}${sortParam}${currentPage.value}`;
+  return `/api/v2/facts?limit=${pageSize.value}${filterParam}${sortParam}${
+    currentPage.value ? `&${currentPage.value}` : ""
+  }`;
 }

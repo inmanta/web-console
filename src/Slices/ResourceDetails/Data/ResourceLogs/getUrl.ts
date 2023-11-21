@@ -25,7 +25,11 @@ export function getUrl({
       : "";
   const sortParam = sort ? `&sort=${sort.name}.${sort.order}` : "";
 
-  return `/api/v2/resource/${id}/logs?limit=${pageSize.value}${filterParam}${sortParam}${currentPage.value}`;
+  return `/api/v2/resource/${id}/logs?limit=${
+    pageSize.value
+  }${filterParam}${sortParam}${
+    currentPage.value ? `&${currentPage.value}` : ""
+  }`;
 }
 
 const serializeTimestampFilter = (

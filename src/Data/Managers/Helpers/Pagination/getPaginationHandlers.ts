@@ -21,8 +21,8 @@ const getPaginationHandlerUrls = (
   { prev, next }: Pagination.Links,
   metadata: Pagination.Metadata,
 ): Urls => {
-  const trimmedNext = next?.split(/(?=&end=)/g)[1];
-  const trimmedPrev = prev?.split(/(?=&start=)/g)[1];
+  const trimmedNext = next?.split(/(?=end=)/g)[1];
+  const trimmedPrev = prev?.split(/(?=start=)/g)[1];
 
   return {
     prev: shouldUseFirst(metadata) ? "" : trimmedPrev,

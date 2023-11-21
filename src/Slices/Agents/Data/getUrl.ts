@@ -21,6 +21,7 @@ export function getUrl({
         )}`
       : "";
   const sortParam = sort ? `&sort=${Sort.serialize(sort)}` : "";
-
-  return `/api/v2/agents?limit=${pageSize.value}${filterParam}${sortParam}${currentPage.value}`;
+  return `/api/v2/agents?limit=${pageSize.value}${filterParam}${sortParam}${
+    currentPage.value ? `&${currentPage.value}` : ""
+  }`;
 }

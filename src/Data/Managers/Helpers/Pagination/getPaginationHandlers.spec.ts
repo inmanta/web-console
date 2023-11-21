@@ -17,13 +17,13 @@ test("GIVEN getPaginationHandlers WHEN on 1st page THEN no prev", () => {
   const { prev, next } = getPaginationHandlers(links, metadata);
 
   expect(prev).toBeUndefined();
-  expect(next).toEqual(["end=next"]);
+  expect(next).toEqual("end=next");
 });
 
 test("GIVEN getPaginationHandler WHEN on 2nd page THEN prev is first", () => {
   const links: Pagination.Links = {
     first: "firstpartOfLink?first",
-    prev: "firstpartOfLink?start=prev",
+    prev: "firstpartOfLink?end=prev",
     self: "firstpartOfLink?self",
     next: "firstpartOfLink?end=next",
     last: "firstpartOfLink?last",
@@ -37,14 +37,14 @@ test("GIVEN getPaginationHandler WHEN on 2nd page THEN prev is first", () => {
 
   const { prev, next } = getPaginationHandlers(links, metadata);
 
-  expect(prev).toEqual([]);
-  expect(next).toEqual(["end=next"]);
+  expect(prev).toEqual("");
+  expect(next).toEqual("end=next");
 });
 
 test("GIVEN getPaginationHandlerUrls WHEN on 2nd page (with outdated 1st page) THEN prev is first", () => {
   const links: Pagination.Links = {
     first: "firstpartOfLink?first",
-    prev: "firstpartOfLink?start=prev",
+    prev: "firstpartOfLink?end=prev",
     self: "firstpartOfLink?self",
     next: "firstpartOfLink?end=next",
     last: "firstpartOfLink?last",
@@ -58,8 +58,8 @@ test("GIVEN getPaginationHandlerUrls WHEN on 2nd page (with outdated 1st page) T
 
   const { prev, next } = getPaginationHandlers(links, metadata);
 
-  expect(prev).toEqual([]);
-  expect(next).toEqual(["end=next"]);
+  expect(prev).toEqual("");
+  expect(next).toEqual("end=next");
 });
 
 test("GIVEN getPaginationHandlerUrls WHEN on 3rd page THEN prev is prev", () => {
@@ -78,5 +78,5 @@ test("GIVEN getPaginationHandlerUrls WHEN on 3rd page THEN prev is prev", () => 
   const { prev, next } = getPaginationHandlers(links, metadata);
 
   expect(next).toBeUndefined();
-  expect(prev).toEqual(["start=prev"]);
+  expect(prev).toEqual("start=prev");
 });

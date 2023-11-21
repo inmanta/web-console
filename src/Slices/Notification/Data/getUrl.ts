@@ -22,5 +22,7 @@ export function getUrl({
         )}`
       : "";
 
-  return `/api/v2/notification?limit=${pageSize.value}${filterParam}${currentPage.value}`;
+  return `/api/v2/notification?limit=${pageSize.value}${filterParam}${
+    currentPage.value ? `&${currentPage.value}` : ""
+  }`;
 }

@@ -37,5 +37,9 @@ export function getUrl(
       : "";
   const sortParam = `&sort=version.desc`;
 
-  return `/api/v2/desiredstate?limit=${pageSize.value}${sortParam}${filterParam}${currentPage.value}`;
+  return `/api/v2/desiredstate?limit=${
+    pageSize.value
+  }${sortParam}${filterParam}${
+    currentPage.value ? `&${currentPage.value}` : ""
+  }`;
 }

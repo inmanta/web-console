@@ -29,5 +29,7 @@ export function getUrl(
       : "";
   const sortParam = sort ? `&sort=${sort.name}.${sort.order}` : "";
 
-  return `/api/v2/parameters?limit=${pageSize.value}${sortParam}${filterParam}${currentPage.value}`;
+  return `/api/v2/parameters?limit=${pageSize.value}${sortParam}${filterParam}${
+    currentPage.value ? `&${currentPage.value}` : ""
+  }`;
 }

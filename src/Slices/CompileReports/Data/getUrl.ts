@@ -16,7 +16,11 @@ export function getUrl(
   const filterParam = serializedFilters.length > 1 ? serializedFilters : "";
   const sortParam = sort ? `&sort=${sort.name}.${sort.order}` : "";
 
-  return `/api/v2/compilereport?limit=${pageSize.value}${sortParam}${filterParam}${currentPage.value}`;
+  return `/api/v2/compilereport?limit=${
+    pageSize.value
+  }${sortParam}${filterParam}${
+    currentPage.value ? `&${currentPage.value}` : ""
+  }`;
 }
 type Filter = NonNullable<Query.SubQuery<"GetCompileReports">["filter"]>;
 

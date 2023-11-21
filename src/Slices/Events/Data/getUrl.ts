@@ -22,7 +22,11 @@ export function getUrl(
       : "";
   const sortParam = sort ? `&sort=${sort.name}.${sort.order}` : "";
 
-  return `/lsm/v1/service_inventory/${service_entity}/${id}/events?limit=${pageSize.value}${sortParam}${filterParam}${currentPage.value}`;
+  return `/lsm/v1/service_inventory/${service_entity}/${id}/events?limit=${
+    pageSize.value
+  }${sortParam}${filterParam}${
+    currentPage.value ? `&${currentPage.value}` : ""
+  }`;
 }
 
 type Filter = NonNullable<Query.SubQuery<"GetInstanceEvents">["filter"]>;

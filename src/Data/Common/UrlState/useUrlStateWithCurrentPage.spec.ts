@@ -12,10 +12,10 @@ const lastIdParameter = decodeURIComponent(
 );
 
 test.each`
-  search                                                                                                         | searchText                         | expectedValue                         | valueText
-  ${""}                                                                                                          | ${"empty"}                         | ${[]}                                 | ${"[]"}
-  ${"?state.Resources.currentPage[0]=" + startParameter + "&state.Resources.currentPage[1]=" + firstIdParameter} | ${[endParameter, lastIdParameter]} | ${[startParameter, firstIdParameter]} | ${[endParameter, lastIdParameter]}
-  ${"?state.Resources.currentPage[0]=" + endParameter + "&state.Resources.currentPage[1]=" + lastIdParameter}    | ${[endParameter, lastIdParameter]} | ${[endParameter, lastIdParameter]}    | ${[endParameter, lastIdParameter]}
+  search                                                                                                         | searchText                                 | expectedValue                              | valueText
+  ${""}                                                                                                          | ${"empty"}                                 | ${""}                                      | ${"empty string"}
+  ${"?state.Resources.currentPage[0]=" + startParameter + "&state.Resources.currentPage[1]=" + firstIdParameter} | ${startParameter + "&" + firstIdParameter} | ${startParameter + "&" + firstIdParameter} | ${startParameter + "&" + firstIdParameter}
+  ${"?state.Resources.currentPage[0]=" + endParameter + "&state.Resources.currentPage[1]=" + lastIdParameter}    | ${endParameter + "&" + lastIdParameter}    | ${endParameter + "&" + lastIdParameter}    | ${endParameter + "&" + lastIdParameter}
 `(
   "GIVEN handleUrlState with PageSize WHEN search is $searchText THEN returns $valueText",
   async ({ search, expectedValue }) => {

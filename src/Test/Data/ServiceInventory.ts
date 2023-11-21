@@ -17,7 +17,7 @@ export const pageData = {
   second: {
     data: [serviceInstance],
     links: {
-      prev: "firstpartOfLink?start=prev",
+      prev: "firstpartOfLink?end=prev",
       self: "firstpartOfLink?second-page",
       next: "firstpartOfLink?end=next",
     },
