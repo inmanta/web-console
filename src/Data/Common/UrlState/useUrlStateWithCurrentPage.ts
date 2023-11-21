@@ -2,6 +2,10 @@ import { isEqual, isArray } from "lodash";
 import { provide, Location, Replace, StateConfig, Update } from "./helpers";
 import { handleUrlState } from "./useUrlState";
 
+/**
+ * Hook that wrap handleUrlStateWithCurrentPage function in provider that feeds function with the useLocation() useNavigation() functions,
+ * to simplify reusage of said function
+ */
 export const useUrlStateWithCurrentPage = provide(
   handleUrlStateWithCurrentPage,
 );
