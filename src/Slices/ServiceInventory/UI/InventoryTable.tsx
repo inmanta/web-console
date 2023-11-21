@@ -69,7 +69,7 @@ export const InventoryTable: React.FC<Props> = ({
         key={column.displayName}
         {...sortParams}
       >
-        {column.displayName}
+        {column.apiName === "actions" ? "" : column.displayName}
       </Th>
     );
   });
