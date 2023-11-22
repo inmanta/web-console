@@ -21,7 +21,9 @@ import { ToastAlert } from "../ToastAlert";
  * When the action is being executed,
  * the user will see a toast appear to inform the update has been requested.
  *
- * @returns CatalogUpdateButton
+ * This component also contains the link to the LSM REST API for that active environment.
+ *
+ * @returns CatalogActions
  */
 export const CatalogActions: React.FC = () => {
   const { commandResolver, urlManager, environmentHandler } =
