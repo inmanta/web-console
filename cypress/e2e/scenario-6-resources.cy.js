@@ -551,34 +551,39 @@ describe("Scenario 6 : Resources", () => {
       cy.get(".pf-v5-c-nav__link").contains("Resources").click();
       cy.get('[aria-label="LegendItem-deployed"]').should("have.text", "49");
 
-      cy.get(
-        '.pf-m-pagination > [aria-label="PaginationWidget"] > span',
-      ).should("have.text", "1 - 20 of 49");
+      cy.get("#options-menu-top-toggle > span").should(
+        "have.text",
+        "1 - 20 of 49",
+      );
 
       //Go to next page
       cy.get('[aria-label="Go to next page"]').click();
-      cy.get(
-        '.pf-m-pagination > [aria-label="PaginationWidget"] > span',
-      ).should("have.text", "21 - 40 of 49");
+      cy.get("#options-menu-top-toggle > span").should(
+        "have.text",
+        "21 - 40 of 49",
+      );
 
       //Go to last page
       cy.get('[aria-label="Go to next page"]').click();
-      cy.get(
-        '.pf-m-pagination > [aria-label="PaginationWidget"] > span',
-      ).should("have.text", "41 - 49 of 49");
+      cy.get("#options-menu-top-toggle > span").should(
+        "have.text",
+        "41 - 49 of 49",
+      );
 
       //Go to previous page
       cy.get('[aria-label="Go to next page"]').click();
-      cy.get(
-        '.pf-m-pagination > [aria-label="PaginationWidget"] > span',
-      ).should("have.text", "21 - 40 of 49");
+      cy.get("#options-menu-top-toggle > span").should(
+        "have.text",
+        "21 - 40 of 49",
+      );
 
       //Change page and come back to check if we are at the same page as we was
       cy.visit("/console/");
       cy.go("back");
-      cy.get(
-        '.pf-m-pagination > [aria-label="PaginationWidget"] > span',
-      ).should("have.text", "21 - 40 of 49");
+      cy.get("#options-menu-top-toggle > span").should(
+        "have.text",
+        "21 - 40 of 49",
+      );
     });
   } else {
     it("6.6 Resources for OSS", () => {
