@@ -1,0 +1,6 @@
+description: "Add links to API documentation, both for LSM API and the General API. The update Service Catalog message is now also clearer"
+issue-nr: 4419
+change-type: patch
+destination-branches: [master, iso6]
+sections:
+  minor-improvement: "{{description}}"

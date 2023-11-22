@@ -6,15 +6,19 @@ export class UrlManagerImpl implements UrlManager {
     private readonly baseUrl: string,
   ) {}
 
-  getDashboardUrl(environment: string): string {
-    return `${this.baseUrl}/dashboard/#!/environment/${environment}`;
-  }
-
   getDocumentationLink(): string {
     if (this.featureManager.getEdition().includes("Open Source")) {
       return `https://docs.inmanta.com/community/${this.featureManager.getServerVersion()}`;
     }
     return `https://docs.inmanta.com/inmanta-service-orchestrator/${this.featureManager.getServerMajorVersion()}/`;
+  }
+
+  getGeneralAPILink(): string {
+    return `${this.baseUrl}/api/v2/docs`;
+  }
+
+  getLSMAPILink(environment: string): string {
+    return `${this.baseUrl}/lsm/v1/service_catalog_docs?environment=${environment}`;
   }
 
   getApiUrl(): string {

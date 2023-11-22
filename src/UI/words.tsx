@@ -266,8 +266,14 @@ const dict = {
     "We are processing the update of your Service Catalog. The process will be finished after compilation.",
   "catalog.update.modal.title": "Update Request",
   "catalog.delete.modal.title": "Delete Service",
-  "catalog.update.confirmation":
+  "catalog.update.confirmation.p1":
     "Are you sure you want to update your Service Catalog? This is an irreversible change and you might want to do a back-up before confirming the update.",
+  "catalog.update.confirmation.p2": "This action will:",
+  "catalog.update.confirmation.p3": "Update the project",
+  "catalog.update.confirmation.p4": "Export the service definition",
+  "catalog.update.confirmation.p5":
+    "Note: It will not do a regular exporting compile.",
+  "catalog.update.tooltip": "Update project and export service definition",
   "catalog.button.details": "Show Details",
   "catalog.delete.title": (serviceName: string) =>
     `Are you sure you want to delete service entity ${serviceName}?`,
@@ -320,6 +326,11 @@ const dict = {
     "The number of resources grouped (by resource state)",
   "dashboard.resource.resource_count.label.x": "Number of Resources [#]",
   "dashboard.logout": "Logout",
+  "dashboard.documentation.tooltip": "Documentation",
+  "dashboard.API.tooltip": "General API",
+  "dashboard.setting.tooltip": "Settings",
+  "dashboard.status_page.tooltip": "Status page",
+  "dashboard.notifications.tooltip": "Show notifications",
 
   /**
    * Environment controls

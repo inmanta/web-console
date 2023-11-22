@@ -4,7 +4,9 @@ import {
   Button,
   Modal,
   ModalVariant,
+  Tooltip,
 } from "@patternfly/react-core";
+import { FileCodeIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { Either } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
@@ -21,8 +23,10 @@ import { ToastAlert } from "../ToastAlert";
  *
  * @returns CatalogUpdateButton
  */
-export const CatalogUpdateButton: React.FC = () => {
-  const { commandResolver } = useContext(DependencyContext);
+export const CatalogActions: React.FC = () => {
+  const { commandResolver, urlManager, environmentHandler } =
+    useContext(DependencyContext);
+
   const trigger = commandResolver.useGetTrigger<"UpdateCatalog">({
     kind: "UpdateCatalog",
   });
@@ -61,9 +65,21 @@ export const CatalogUpdateButton: React.FC = () => {
         type={toastType}
       />
       <StyledWrapper>
-        <Button onClick={handleModalToggle}>
-          {words("catalog.button.update")}
-        </Button>
+        <Tooltip content="Catalog API" entryDelay={500}>
+          <Button
+            variant="plain"
+            aria-label="API-Documentation"
+            icon={<FileCodeIcon />}
+            component="a"
+            href={urlManager.getLSMAPILink(environmentHandler.useId())}
+            target="_blank"
+          ></Button>
+        </Tooltip>
+        <Tooltip content={words("catalog.update.tooltip")}>
+          <Button onClick={handleModalToggle}>
+            {words("catalog.button.update")}
+          </Button>
+        </Tooltip>
       </StyledWrapper>
       <Modal
         disableFocusTrap
@@ -72,7 +88,21 @@ export const CatalogUpdateButton: React.FC = () => {
         title={words("catalog.update.modal.title")}
         onClose={handleModalToggle}
       >
-        {words("catalog.update.confirmation")}
+        <StyledParagraph>
+          {words("catalog.update.confirmation.p1")}
+        </StyledParagraph>
+        <ul>
+          {words("catalog.update.confirmation.p2")}
+          <li>
+            - <b>{words("catalog.update.confirmation.p3")}</b>
+          </li>
+          <li>
+            - <b>{words("catalog.update.confirmation.p4")}</b>
+          </li>
+        </ul>
+        <StyledParagraph>
+          {words("catalog.update.confirmation.p5")}
+        </StyledParagraph>
         <ConfirmUserActionForm
           onSubmit={onSubmit}
           onCancel={handleModalToggle}
@@ -88,4 +118,8 @@ const StyledWrapper = styled.div`
     justify-content: flex-end;
     padding: var(--pf-v5-global--spacer--md);
 }
+`;
+const StyledParagraph = styled.p`
+  padding-bottom: 10px;
+  padding-top: 10px;
 `;
