@@ -439,8 +439,149 @@ describe("Scenario 6 : Resources", () => {
         .contains("frontend_model::TestResource[internal,name=a]")
         .should("to.be.visible");
     });
+
+    it("6.5 Pagination", () => {
+      // Select Test environment
+      cy.visit("/console/");
+
+      cy.get('[aria-label="Environment card"]').contains(PROJECT).click();
+
+      // Go to Service Catalog
+      cy.get(".pf-v5-c-nav__link").contains("Service Catalog").click();
+
+      // Select Show Inventory on dependency-service and add one with 41 dependencies
+      cy.get("#dependency-service").contains("Show inventory").click();
+      cy.get("#add-instance-button").click();
+
+      cy.get("#waiting_entity").type("waiting-0002");
+      cy.get("#service_id").type("ds-0002");
+      cy.get("#name").type("dependency-service-0002");
+      //dependencies
+      cy.get('[aria-label="Type to filter"]').type("1");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("2");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("3");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("4");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("5");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("6");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("7");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("8");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("9");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("10");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("11");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("12");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("13");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("14");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("15");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("16");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("17");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("18");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("19");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("20");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("21");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("22");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("23");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("24");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("25");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("26");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("27");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("28");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("29");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("30");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("31");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("32");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("33");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("34");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("35");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("36");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("37");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("38");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("39");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("40");
+      cy.get("button").contains("Add").click();
+
+      cy.get("button").contains("Confirm").click();
+
+      // Expect the number in the chart to the success label to be 8
+      cy.get(".pf-v5-c-chart").within(() => {
+        cy.get("#legend-labels-2", { timeout: 90000 }).should(
+          "contain",
+          "success: 2",
+        );
+      });
+      //Go to resources page
+      cy.get(".pf-v5-c-nav__link").contains("Resources").click();
+      cy.get('[aria-label="LegendItem-deployed"]').should("have.text", "49");
+
+      cy.get(
+        '.pf-m-pagination > [aria-label="PaginationWidget"] > span',
+      ).should("have.text", "1 - 20 of 49");
+
+      //Go to next page
+      cy.get('[aria-label="Go to next page"]').click();
+      cy.get(
+        '.pf-m-pagination > [aria-label="PaginationWidget"] > span',
+      ).should("have.text", "21 - 40 of 49");
+
+      //Go to last page
+      cy.get('[aria-label="Go to next page"]').click();
+      cy.get(
+        '.pf-m-pagination > [aria-label="PaginationWidget"] > span',
+      ).should("have.text", "41 - 49 of 49");
+
+      //Go to previous page
+      cy.get('[aria-label="Go to next page"]').click();
+      cy.get(
+        '.pf-m-pagination > [aria-label="PaginationWidget"] > span',
+      ).should("have.text", "21 - 40 of 49");
+
+      //Change page and come back to check if we are at the same page as we was
+      cy.visit("/console/");
+      cy.go("back");
+      cy.get(
+        '.pf-m-pagination > [aria-label="PaginationWidget"] > span',
+      ).should("have.text", "21 - 40 of 49");
+    });
   } else {
-    it("6.5 Resources for OSS", () => {
+    it("6.6 Resources for OSS", () => {
       cy.visit("/console/");
 
       cy.get('[aria-label="Environment card"]').contains(PROJECT).click();
