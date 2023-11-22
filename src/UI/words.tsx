@@ -274,6 +274,7 @@ const dict = {
   "catalog.update.confirmation.p5":
     "Note: It will not do a regular exporting compile.",
   "catalog.update.tooltip": "Update project and export service definition",
+  "catalog.API.tooltip": "Catalog API",
   "catalog.button.details": "Show Details",
   "catalog.delete.title": (serviceName: string) =>
     `Are you sure you want to delete service entity ${serviceName}?`,

@@ -67,7 +67,7 @@ export const CatalogActions: React.FC = () => {
         type={toastType}
       />
       <StyledWrapper>
-        <Tooltip content="Catalog API" entryDelay={500}>
+        <Tooltip content={words("catalog.API.tooltip")} entryDelay={500}>
           <Button
             variant="plain"
             aria-label="API-Documentation"
