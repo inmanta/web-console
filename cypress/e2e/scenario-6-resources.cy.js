@@ -547,6 +547,10 @@ describe("Scenario 6 : Resources", () => {
           "success: 2",
         );
       });
+      //Wait for compilation to end
+      cy.get('[aria-label="CompileReportsIndication"]', {
+        timeout: 90000,
+      }).should("not.to.exist");
       //Go to resources page
       cy.get(".pf-v5-c-nav__link").contains("Resources").click();
       cy.get('[aria-label="LegendItem-deployed"]').should("have.text", "49");
@@ -556,19 +560,23 @@ describe("Scenario 6 : Resources", () => {
         .should("have.text", "1 - 20");
 
       //Go to next page
-      cy.get('[aria-label="Go to next page"]').click({ multiple: true });
+      cy.get('[aria-label="Go to next page"]').first().click();
+      cy.get('[aria-label="ResourcesView-Success"]').should("be.visible");
       cy.get("#options-menu-top-toggle > span > b")
         .eq(0)
         .should("have.text", "21 - 40");
 
       //Go to last page
-      cy.get('[aria-label="Go to next page"]').click({ multiple: true });
+      cy.get('[aria-label="Go to next page"]').first().click();
+      cy.get('[aria-label="ResourcesView-Success"]').should("be.visible");
       cy.get("#options-menu-top-toggle > span > b")
         .eq(0)
         .should("have.text", "41 - 49");
 
       //Go to previous page
-      cy.get('[aria-label="Go to previous page"]').click({ multiple: true });
+      cy.get('[aria-label="Go to previous page"]').first().click();
+      cy.get('[aria-label="ResourcesView-Success"]').should("be.visible");
+
       cy.get("#options-menu-top-toggle > span > b")
         .eq(0)
         .should("have.text", "21 - 40");
