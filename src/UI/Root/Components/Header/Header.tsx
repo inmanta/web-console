@@ -10,12 +10,14 @@ import {
   ToolbarContent,
   ToolbarGroup,
   ToolbarItem,
+  Tooltip,
 } from "@patternfly/react-core";
 import { BarsIcon } from "@patternfly/react-icons";
 import { Badge } from "@/Slices/Notification/UI/Badge";
 import { DependencyContext } from "@/UI/Dependency";
+import { words } from "@/UI/words";
 import logo from "@images/logo.svg";
-import { DocumentationLink } from "./Actions/DocumentationLink";
+import { DocumentationLinks } from "./Actions/DocumentationLinks";
 import { StatusButton } from "./Actions/StatusButton";
 import { EnvSelectorWithProvider } from "./EnvSelector";
 
@@ -60,11 +62,17 @@ export const Header: React.FC<Props> = ({ noEnv, onNotificationsToggle }) => {
               >
                 {!noEnv && (
                   <ToolbarItem>
-                    <Badge onClick={onNotificationsToggle} />
+                    <Tooltip
+                      content={words("dashboard.notifications.tooltip")}
+                      position="bottom"
+                      entryDelay={500}
+                    >
+                      <Badge onClick={onNotificationsToggle} />
+                    </Tooltip>
                   </ToolbarItem>
                 )}
                 <StatusButton />
-                <DocumentationLink />
+                <DocumentationLinks />
               </ToolbarGroup>
               <ToolbarItem>
                 <EnvSelectorWithProvider />

@@ -7,7 +7,10 @@ export class DummyUrlManager implements UrlManager {
   getDocumentationLink(): string {
     throw new Error("Method not implemented.");
   }
-  getDashboardUrl(): string {
+  getLSMAPILink(): string {
+    throw new Error("Method not implemented.");
+  }
+  getGeneralAPILink(): string {
     throw new Error("Method not implemented.");
   }
   setEnvironment(): void {

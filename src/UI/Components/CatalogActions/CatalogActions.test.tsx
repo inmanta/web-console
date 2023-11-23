@@ -19,7 +19,7 @@ import {
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { words } from "@/UI/words";
-import { CatalogUpdateButton } from "./CatalogUpdateButton";
+import { CatalogActions } from "./CatalogActions";
 
 function setup(
   details = {
@@ -52,7 +52,7 @@ function setup(
           queryResolver,
         }}
       >
-        <CatalogUpdateButton />
+        <CatalogActions />
       </DependencyProvider>
     </StoreProvider>
   );
@@ -172,4 +172,18 @@ test("Given CatalogUpdateButton, when user confirms the update, it should fire t
   });
 
   expect(await screen.findByText("Something went wrong")).toBeVisible();
+});
+
+test("Given API documentation button, it has the right href link.", async () => {
+  const { component } = setup();
+  render(component);
+
+  const button = screen.getByRole("link", {
+    name: "API-Documentation",
+  });
+
+  expect(button).toHaveAttribute(
+    "href",
+    "/lsm/v1/service_catalog_docs?environment=env",
+  );
 });

@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import { EmptyView, PageContainer, RemoteDataView } from "@/UI/Components";
-import { CatalogUpdateButton } from "@/UI/Components/CatalogUpdateButton";
+import { CatalogActions } from "@/UI/Components/CatalogActions";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { CatalogDataList } from "./CatalogDataList";
@@ -24,7 +24,7 @@ export const Page: React.FC = () => {
         SuccessView={(services) =>
           services.length <= 0 ? (
             <>
-              <CatalogUpdateButton />
+              <CatalogActions />
               <EmptyView
                 aria-label="ServiceCatalog-Empty"
                 message={words("catalog.empty.message")}
@@ -32,7 +32,7 @@ export const Page: React.FC = () => {
             </>
           ) : (
             <div aria-label="ServiceCatalog-Success">
-              <CatalogUpdateButton />
+              <CatalogActions />
               <CatalogDataList services={services} />
             </div>
           )
