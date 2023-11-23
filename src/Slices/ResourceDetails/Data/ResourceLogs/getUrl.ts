@@ -7,6 +7,7 @@ export function getUrl({
   sort,
   filter,
   pageSize,
+  currentPage,
 }: Query.SubQuery<"GetResourceLogs">): string {
   const filterParam =
     filter && Object.keys(filter).length > 0
@@ -23,7 +24,12 @@ export function getUrl({
         )}`
       : "";
   const sortParam = sort ? `&sort=${sort.name}.${sort.order}` : "";
-  return `/api/v2/resource/${id}/logs?limit=${pageSize.value}${filterParam}${sortParam}`;
+
+  return `/api/v2/resource/${id}/logs?limit=${
+    pageSize.value
+  }${filterParam}${sortParam}${
+    currentPage.value ? `&${currentPage.value}` : ""
+  }`;
 }
 
 const serializeTimestampFilter = (

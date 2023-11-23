@@ -7,6 +7,7 @@ import {
   useUrlStateWithPageSize,
   useUrlStateWithSort,
 } from "@/Data";
+import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import {
   EmptyView,
   PageContainer,
@@ -29,6 +30,9 @@ export const Wrapper: React.FC<React.PropsWithChildren<unknown>> = ({
 
 export const Page: React.FC = () => {
   const { queryResolver } = useContext(DependencyContext);
+  const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({
+    route: "Resources",
+  });
   const [pageSize, setPageSize] = useUrlStateWithPageSize({
     route: "Resources",
   });
@@ -52,6 +56,7 @@ export const Page: React.FC = () => {
     sort,
     filter: filterWithDefaults,
     pageSize,
+    currentPage,
   });
 
   const [staleData, setStaleData] = useState(data);
@@ -75,6 +80,7 @@ export const Page: React.FC = () => {
             data={staleData}
             pageSize={pageSize}
             setPageSize={setPageSize}
+            setCurrentPage={setCurrentPage}
           />
         }
         filter={filterWithDefaults}
@@ -104,6 +110,7 @@ export const Page: React.FC = () => {
                     data={staleData}
                     pageSize={pageSize}
                     setPageSize={setPageSize}
+                    setCurrentPage={setCurrentPage}
                   />
                 </FlexItem>
               </StyledFlex>

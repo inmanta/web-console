@@ -3,7 +3,10 @@ import { a as serviceInstance } from "./ServiceInstance";
 export const pageData = {
   first: {
     data: [serviceInstance],
-    links: { next: "next", self: "first-page" },
+    links: {
+      self: "firstpartOfLink?first-page",
+      next: "firstpartOfLink?end=next",
+    },
     metadata: {
       total: 100,
       before: 0,
@@ -13,7 +16,11 @@ export const pageData = {
   },
   second: {
     data: [serviceInstance],
-    links: { next: "next", self: "second-page" },
+    links: {
+      prev: "firstpartOfLink?end=prev",
+      self: "firstpartOfLink?second-page",
+      next: "firstpartOfLink?end=next",
+    },
     metadata: {
       total: 100,
       before: 20,

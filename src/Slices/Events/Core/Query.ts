@@ -7,6 +7,7 @@ import {
   EventType,
   DateRange,
 } from "@/Core/Domain";
+import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 /**
  * The events query describes events belonging to one specific service instance
  */
@@ -38,6 +39,7 @@ export interface EventParams {
   filter?: Filter;
   sort?: Sort.Sort;
   pageSize: PageSize.PageSize;
+  currentPage: CurrentPage;
 }
 
 export enum AttributeSet {

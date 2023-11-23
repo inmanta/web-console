@@ -3,7 +3,13 @@ import qs from "qs";
 import { Query, Sort } from "@/Core";
 
 export function getUrl(
-  { name, filter, sort, pageSize }: Query.SubQuery<"GetServiceInstances">,
+  {
+    name,
+    filter,
+    sort,
+    pageSize,
+    currentPage,
+  }: Query.SubQuery<"GetServiceInstances">,
   includeDeploymentProgress = true,
 ): string {
   const filterParam = filter
@@ -15,9 +21,12 @@ export function getUrl(
   const sortParam = sort ? `&sort=${Sort.serialize(sort)}` : "";
   const includeDeletedParam =
     filter?.deleted === "Include" ? "&include_deleted=true" : "";
+
   return `/lsm/v1/service_inventory/${name}?include_deployment_progress=${capitalize(
     includeDeploymentProgress.toString(),
-  )}&limit=${pageSize.value}${filterParam}${sortParam}${includeDeletedParam}`;
+  )}&limit=${pageSize.value}${filterParam}${sortParam}${includeDeletedParam}${
+    currentPage.value
+  }`;
 }
 
 type Filter = NonNullable<Query.SubQuery<"GetServiceInstances">["filter"]>;

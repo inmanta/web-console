@@ -1,4 +1,4 @@
-import { Scheduler, ApiHelper } from "@/Core";
+import { Scheduler, ApiHelper, stringifyObjectOrUndefined } from "@/Core";
 import { getPaginationHandlers, QueryManager } from "@/Data/Managers/Helpers";
 import { Store } from "@/Data/Store";
 import { Filter } from "@S/CompileReports/Core/Query";
@@ -15,22 +15,23 @@ export function CompileReportsQueryManager(
     StateHelper(store),
     scheduler,
     ({ kind }, environment) => `${kind}_${environment}`,
-    ({ pageSize, sort, filter }, environment) => [
+    ({ pageSize, sort, filter, currentPage }, environment) => [
       environment,
       pageSize.value,
       sort?.name,
       sort?.order,
       stringifyFilter(filter),
+      stringifyObjectOrUndefined(currentPage.value),
     ],
     "GetCompileReports",
     (query) => getUrl(query),
-    ({ data, links, metadata }, setUrl) => {
+    ({ data, links, metadata }) => {
       if (typeof links === "undefined") {
         return { data: data, handlers: {}, metadata };
       }
       return {
         data: data,
-        handlers: getPaginationHandlers(links, metadata, setUrl),
+        handlers: getPaginationHandlers(links, metadata),
         metadata,
       };
     },

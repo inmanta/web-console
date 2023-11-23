@@ -1,5 +1,6 @@
 import { Pagination } from "@/Core/Domain/Pagination";
 import { Maybe, ParsedNumber } from "@/Core/Language";
+import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { PageSize } from "../PageSize";
 import { Sort } from "../Sort";
 
@@ -91,6 +92,7 @@ export interface ResourceParams {
   sort?: Sort<SortKey>;
   filter?: Filter;
   pageSize: PageSize;
+  currentPage: CurrentPage;
 }
 
 export interface Filter {

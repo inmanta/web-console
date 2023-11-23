@@ -5,6 +5,7 @@ import {
   useUrlStateWithPageSize,
   useUrlStateWithSort,
 } from "@/Data";
+import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import {
   EmptyView,
   ErrorView,
@@ -49,6 +50,10 @@ export const ServiceInventory: React.FunctionComponent<{
 }> = ({ serviceName, service, intro }) => {
   const { queryResolver } = useContext(DependencyContext);
 
+  const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({
+    route: "Inventory",
+  });
+
   const [sort, setSort] = useUrlStateWithSort<string>({
     default: { name: "created_at", order: "desc" },
     route: "Inventory",
@@ -67,6 +72,7 @@ export const ServiceInventory: React.FunctionComponent<{
     sort,
     filter,
     pageSize,
+    currentPage,
   });
 
   return (
@@ -82,6 +88,7 @@ export const ServiceInventory: React.FunctionComponent<{
             data={data}
             pageSize={pageSize}
             setPageSize={setPageSize}
+            setCurrentPage={setCurrentPage}
           />
         }
       />

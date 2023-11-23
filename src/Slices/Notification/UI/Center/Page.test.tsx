@@ -224,7 +224,7 @@ test("Given Notification Center page When user filters on title Then executes co
 
 test("Given Notification Center page When user clicks next page Then fetches next page", async () => {
   const { component, apiHelper } = setup([
-    "/?state.NotificationCenter.pageSize=10",
+    "/?state.NotificationCenter.pageSize=20",
   ]);
   render(component);
   await act(async () => {
@@ -241,7 +241,7 @@ test("Given Notification Center page When user clicks next page Then fetches nex
     {
       method: "GET",
       environment: "env",
-      url: "next-url",
+      url: "/api/v2/notification?limit=20&end=fake-param",
     },
   ]);
 

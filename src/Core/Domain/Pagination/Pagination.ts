@@ -1,8 +1,8 @@
 import { ParsedNumber } from "@/Core/Language";
 
 export interface Handlers {
-  prev?: () => void;
-  next?: () => void;
+  prev?: string;
+  next?: string;
 }
 
 export interface Links {

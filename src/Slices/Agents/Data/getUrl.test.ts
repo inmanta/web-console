@@ -1,12 +1,13 @@
 import { PageSize, Query } from "@/Core";
+import { initialCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { AgentStatus } from "@S/Agents/Core/Domain";
 import { getUrl } from "./getUrl";
 
 it.each`
   filter                                                    | sort                               | sortTxt        | pageSize | url
   ${undefined}                                              | ${undefined}                       | ${"undefined"} | ${"20"}  | ${`/api/v2/agents?limit=20`}
-  ${{}}                                                     | ${undefined}                       | ${"undefined"} | ${"10"}  | ${`/api/v2/agents?limit=10`}
-  ${{}}                                                     | ${{ name: "name", order: "asc" }}  | ${"name.asc"}  | ${"10"}  | ${`/api/v2/agents?limit=10&sort=name.asc`}
+  ${{}}                                                     | ${undefined}                       | ${"undefined"} | ${"50"}  | ${`/api/v2/agents?limit=50`}
+  ${{}}                                                     | ${{ name: "name", order: "asc" }}  | ${"name.asc"}  | ${"50"}  | ${`/api/v2/agents?limit=50&sort=name.asc`}
   ${{}}                                                     | ${{ name: "name", order: "desc" }} | ${"name.desc"} | ${"20"}  | ${`/api/v2/agents?limit=20&sort=name.desc`}
   ${{ name: ["agent1"] }}                                   | ${{ name: "name", order: "desc" }} | ${"name.desc"} | ${"20"}  | ${`/api/v2/agents?limit=20&filter.name=agent1&sort=name.desc`}
   ${{ name: ["agent1"], process_name: ["proc1", "proc2"] }} | ${{ name: "name", order: "desc" }} | ${"name.desc"} | ${"20"}  | ${`/api/v2/agents?limit=20&filter.name=agent1&filter.process_name=proc1&filter.process_name=proc2&sort=name.desc`}
@@ -19,6 +20,7 @@ it.each`
       pageSize: PageSize.from(pageSize),
       filter,
       sort,
+      currentPage: initialCurrentPage,
     };
     expect(getUrl(query)).toEqual(url);
   },

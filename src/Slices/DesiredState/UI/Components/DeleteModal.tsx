@@ -14,7 +14,7 @@ interface Props extends DeleteVersion {
 export const DeleteModal: React.FC<Props> = ({ version, isOpened }) => {
   const { setDeleteModal } = useContext(GetDesiredStatesContext);
   const { commandResolver } = useContext(DependencyContext);
-  const { filter, pageSize } = useContext(GetDesiredStatesContext);
+  const { filter, pageSize, currentPage } = useContext(GetDesiredStatesContext);
   const deleteVersionTrigger = commandResolver.useGetTrigger<"DeleteVersion">({
     kind: "DeleteVersion",
     version,
@@ -25,6 +25,7 @@ export const DeleteModal: React.FC<Props> = ({ version, isOpened }) => {
       kind: "GetDesiredStates",
       filter,
       pageSize,
+      currentPage,
     });
     setDeleteModal(0, false);
   };
