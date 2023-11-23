@@ -556,19 +556,19 @@ describe("Scenario 6 : Resources", () => {
         .should("have.text", "1 - 20");
 
       //Go to next page
-      cy.get('[aria-label="Go to next page"]').click();
+      cy.get('[aria-label="Go to next page"]').click({ multiple: true });
       cy.get("#options-menu-top-toggle > span > b")
         .eq(0)
         .should("have.text", "21 - 40");
 
       //Go to last page
-      cy.get('[aria-label="Go to next page"]').click();
+      cy.get('[aria-label="Go to next page"]').click({ multiple: true });
       cy.get("#options-menu-top-toggle > span > b")
         .eq(0)
         .should("have.text", "41 - 49");
 
       //Go to previous page
-      cy.get('[aria-label="Go to next page"]').click();
+      cy.get('[aria-label="Go to next page"]').click({ multiple: true });
       cy.get("#options-menu-top-toggle > span > b")
         .eq(0)
         .should("have.text", "21 - 40");
