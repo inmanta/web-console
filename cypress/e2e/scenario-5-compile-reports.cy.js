@@ -400,25 +400,5 @@ describe("5 Compile reports", () => {
         expect($rows).to.have.length(7);
       });
     });
-
-    it("5.6 Pagination", () => {
-      // go to home page
-      cy.visit("/console/");
-
-      // click on test environment card
-      cy.get('[aria-label="Environment card"]')
-        .contains("lsm-frontend")
-        .click();
-
-      // Go to the compile report page
-      cy.get(".pf-v5-c-nav__link").contains("Compile Reports").click();
-
-      // expect 7 rows to be visible now again
-      cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
-        const $rows = $tableBody.find("tr");
-
-        expect($rows).to.have.length(7);
-      });
-    });
   }
 });

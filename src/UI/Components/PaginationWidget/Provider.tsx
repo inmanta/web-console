@@ -20,6 +20,11 @@ interface Props {
   setCurrentPage: (currentPage: CurrentPage) => void;
 }
 
+/**
+ * Wrapper for Pagination as we are basing ourselfs on links served by backend
+ *
+ * Note: Parameters responsible for pagination on endpoint doesn't allow to pass numerical range for displayed results, or any other way to navigate through pages other than previous/next page
+ */
 export const Provider: React.FC<Props> = ({
   data,
   pageSize,
