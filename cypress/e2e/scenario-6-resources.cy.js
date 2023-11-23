@@ -568,13 +568,13 @@ describe("Scenario 6 : Resources", () => {
         .should("have.text", "41 - 49");
 
       //Go to previous page
-      cy.get('[aria-label="Go to next page"]').click({ multiple: true });
+      cy.get('[aria-label="Go to previous page"]').click({ multiple: true });
       cy.get("#options-menu-top-toggle > span > b")
         .eq(0)
         .should("have.text", "21 - 40");
 
       //Change page and come back to check if we are at the same page as we was
-      cy.visit("/console/");
+      cy.get(".pf-v5-c-nav__link").contains("Dashboard").click();
       cy.go("back");
       cy.get("#options-menu-top-toggle > span > b")
         .eq(0)
