@@ -553,13 +553,18 @@ describe("Scenario 6 : Resources", () => {
           "success: 2",
         );
       });
+
       //Wait for compilation to end
       cy.get('[aria-label="CompileReportsIndication"]', {
         timeout: 90000,
       }).should("not.to.exist");
+
       //Go to resources page
       cy.get(".pf-v5-c-nav__link").contains("Resources").click();
-      cy.get('[aria-label="LegendItem-deployed"]').should("have.text", "49");
+      cy.get('[aria-label="LegendItem-deployed"]', { timeout: 30000 }).should(
+        "have.text",
+        "49",
+      );
 
       cy.get("#options-menu-top-toggle > span > b")
         .eq(0)
