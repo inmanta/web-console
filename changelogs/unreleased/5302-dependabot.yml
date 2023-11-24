@@ -1,0 +1,6 @@
+change-type: patch
+description: "Build(deps-dev): Bump webpack from 5.88.2 to 5.89.0 and @types/webpack from 5.28.2 to 5.28.5"
+destination-branches:
+  - master
+  - iso6
+sections: {}
