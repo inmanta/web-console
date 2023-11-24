@@ -230,7 +230,9 @@ describe("Scenario 6 : Resources", () => {
 
       // make sure the default is 100 instead of 20 like on other pages with pagination.
       cy.get('[aria-label="PaginationWidget"] .pf-v5-c-menu-toggle').click();
-      cy.get(".pf-v5-c-menu__list-item:last-child svg").should("exist");
+      cy.contains(".pf-v5-c-menu__list-item", "100")
+        .find("svg")
+        .should("exist");
 
       // Expect last log message to be "Setting deployed due to known good status"
       cy.get('[aria-label="ResourceLogRow"]')
@@ -716,7 +718,9 @@ describe("Scenario 6 : Resources", () => {
 
       // make sure the default is 100 instead of 20 like on other pages with pagination.
       cy.get('[aria-label="PaginationWidget"] .pf-v5-c-menu-toggle').click();
-      cy.get(".pf-v5-c-menu__list-item:last-child svg").should("exist");
+      cy.contains(".pf-v5-c-menu__list-item", "100")
+        .find("svg")
+        .should("exist");
 
       // Expect last log message to be "Setting deployed due to known good status"
       cy.get('[aria-label="ResourceLogRow"]')
