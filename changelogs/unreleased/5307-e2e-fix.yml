@@ -1,0 +1,4 @@
+description: Fix E2E flaky/failing tests in 6 scenario
+issue-nr: 5307
+change-type: patch
+destination-branches: [master, iso6]

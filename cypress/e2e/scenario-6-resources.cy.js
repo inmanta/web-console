@@ -230,7 +230,11 @@ describe("Scenario 6 : Resources", () => {
 
       // make sure the default is 100 instead of 20 like on other pages with pagination.
       cy.get('[aria-label="PaginationWidget"] .pf-v5-c-menu-toggle').click();
-      cy.get(".pf-v5-c-menu__list-item:last-child svg").should("exist");
+      cy.get(".pf-v5-c-menu__list-item")
+        .eq(2)
+        .within(() => {
+          cy.get("svg").should("exist");
+        });
 
       // Expect last log message to be "Setting deployed due to known good status"
       cy.get('[aria-label="ResourceLogRow"]')
@@ -551,13 +555,18 @@ describe("Scenario 6 : Resources", () => {
           "success: 2",
         );
       });
+
       //Wait for compilation to end
       cy.get('[aria-label="CompileReportsIndication"]', {
         timeout: 90000,
       }).should("not.to.exist");
+
       //Go to resources page
       cy.get(".pf-v5-c-nav__link").contains("Resources").click();
-      cy.get('[aria-label="LegendItem-deployed"]').should("have.text", "49");
+      cy.get('[aria-label="LegendItem-deployed"]', { timeout: 30000 }).should(
+        "have.text",
+        "49",
+      );
 
       cy.get("#options-menu-top-toggle > span > b")
         .eq(0)
