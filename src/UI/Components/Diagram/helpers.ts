@@ -331,3 +331,29 @@ export const shapesDataTransform = (
   delete instance.relatedTo;
   return instance;
 };
+
+/**
+ * Function that takes Map of standalone instances that include core, embedded and related entities and
+ * bundle in proper Instance Objects that could be accepted by the order_api request
+ *
+ * @param {Map<string, InstanceForApi>}instances Map of Instances
+ * @param {ServiceModel[]} services
+ * @returns InstanceForApi[]
+ */
+export const bundleInstances = (
+  instances: Map<string, InstanceForApi>,
+  services: ServiceModel[],
+) => {
+  const mapToArray = Array.from(instances, (instance) => instance[1]); //only value, the id is stored in the object anyway
+  const topServicesNames = services.map((service) => service.name);
+  const topInstances = mapToArray.filter((instance) =>
+    topServicesNames.includes(instance.service_entity),
+  );
+  const embeddedInstances = mapToArray.filter(
+    (instance) => !topServicesNames.includes(instance.service_entity),
+  );
+
+  return topInstances.map((instance) =>
+    shapesDataTransform(embeddedInstances, instance),
+  );
+};

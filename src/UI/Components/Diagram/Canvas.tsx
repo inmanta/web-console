@@ -1,16 +1,21 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import "@inmanta/rappid/rappid.css";
+import { useNavigate } from "react-router-dom";
 import { dia } from "@inmanta/rappid";
+import { AlertVariant } from "@patternfly/react-core";
+import { isObject } from "lodash";
 import styled from "styled-components";
-import { ServiceModel } from "@/Core";
+import { objectHasKey, ServiceModel } from "@/Core";
 import { InstanceWithReferences } from "@/Data/Managers/GetInstanceWithRelations/interface";
 import diagramInit, { DiagramHandlers } from "@/UI/Components/Diagram/init";
 import { CanvasWrapper } from "@/UI/Components/Diagram/styles";
 import { DependencyContext } from "@/UI/Dependency";
+import { words } from "@/UI/words";
+import { ToastAlert } from "../ToastAlert";
 import DictModal from "./components/DictModal";
 import FormModal from "./components/FormModal";
 import Toolbar from "./components/Toolbar";
-import { createConnectionRules, shapesDataTransform } from "./helpers";
+import { bundleInstances, createConnectionRules } from "./helpers";
 import { ActionEnum, DictDialogData, InstanceForApi } from "./interfaces";
 import { ServiceEntityBlock } from "./shapes";
 
@@ -23,10 +28,13 @@ const Canvas = ({
   mainServiceName: string;
   instance?: InstanceWithReferences;
 }) => {
-  const { environmentHandler, urlManager } = useContext(DependencyContext);
+  const { environmentHandler, urlManager, routeManager } =
+    useContext(DependencyContext);
   const environment = environmentHandler.useId();
   const baseUrl = urlManager.getApiUrl();
   const canvas = useRef<HTMLDivElement>(null);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertType, setAlertType] = useState(AlertVariant.danger);
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [cellToEdit, setCellToEdit] = useState<dia.CellView | null>(null);
   const [dictToDisplay, setDictToDisplay] = useState<DictDialogData | null>(
@@ -37,6 +45,12 @@ const Canvas = ({
   const [instancesToSend, setInstancesToSend] = useState<
     Map<string, InstanceForApi>
   >(new Map());
+  const [isDirty, setIsDirty] = useState(false);
+
+  const navigate = useNavigate();
+  const url = routeManager.useUrl("Inventory", {
+    service: mainServiceName,
+  });
 
   const handleDictEvent = (event) => {
     const customEvent = event as CustomEvent;
@@ -49,27 +63,42 @@ const Canvas = ({
   };
 
   const handleDeploy = async () => {
-    const mapToArray = Array.from(instancesToSend, (instance) => instance[1]); //only value, the id is stored in the object anyway
-    const topServicesNames = services.map((service) => service.name);
-    const topInstances = mapToArray.filter((instance) =>
-      topServicesNames.includes(instance.service_entity),
-    );
-    const embeddedInstances = mapToArray.filter(
-      (instance) => !topServicesNames.includes(instance.service_entity),
-    );
+    try {
+      const response = await fetch(`${baseUrl}/lsm/v2/order`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Inmanta-tid": environment,
+        },
+        body: JSON.stringify({
+          service_order_items: bundleInstances(
+            instancesToSend,
+            services,
+          ).filter((item) => item.action !== null),
+        }),
+      });
 
-    await fetch(`${baseUrl}/lsm/v2/order`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Inmanta-tid": environment,
-      },
-      body: JSON.stringify({
-        service_order_items: topInstances
-          .map((instance) => shapesDataTransform(embeddedInstances, instance))
-          .filter((item) => item.action !== null),
-      }),
-    });
+      if (response.ok) {
+        setAlertType(AlertVariant.success);
+        setAlertMessage(words("inventory.instanceComposer.success"));
+        setTimeout(() => {
+          navigate(url);
+        }, 1000);
+      } else {
+        setAlertType(AlertVariant.danger);
+        setAlertMessage(JSON.parse(await response.text()).message);
+      }
+    } catch (error) {
+      setAlertType(AlertVariant.danger);
+      if (
+        isObject(error) &&
+        objectHasKey(error as Record<string, unknown>, "message")
+      ) {
+        setAlertMessage((error as { message: string }).message);
+      } else {
+        setAlertMessage(`Error: ${error}`);
+      }
+    }
   };
 
   const handleUpdate = (cell: ServiceEntityBlock, action: ActionEnum) => {
@@ -153,6 +182,16 @@ const Canvas = ({
   }, [instance, services, mainServiceName]);
 
   useEffect(() => {
+    if (!isDirty) {
+      setIsDirty(
+        bundleInstances(instancesToSend, services).filter(
+          (item) => item.action !== null,
+        ).length > 0,
+      );
+    }
+  }, [instancesToSend, services, isDirty]);
+
+  useEffect(() => {
     document.addEventListener("openDictsModal", handleDictEvent);
     document.addEventListener("openEditModal", handleEditEvent);
 
@@ -164,6 +203,19 @@ const Canvas = ({
 
   return (
     <Container>
+      {alertMessage && (
+        <ToastAlert
+          data-testid="ToastAlert"
+          title={
+            alertType === AlertVariant.success
+              ? words("inventory.instanceComposer.success.title")
+              : words("inventory.instanceComposer.failed.title")
+          }
+          message={alertMessage}
+          setMessage={setAlertMessage}
+          type={alertType}
+        />
+      )}
       <DictModal
         dictToDisplay={dictToDisplay}
         setDictToDisplay={setDictToDisplay}
@@ -181,6 +233,7 @@ const Canvas = ({
         onConfirm={(entity, selected) => {
           if (diagramHandlers) {
             if (cellToEdit) {
+              console.log(cellToEdit);
               //deep copy
               const shape = diagramHandlers.editEntity(
                 cellToEdit,
@@ -207,6 +260,7 @@ const Canvas = ({
         }}
         serviceName={mainServiceName}
         handleDeploy={handleDeploy}
+        isDeployDisabled={instancesToSend.size < 1 || !isDirty}
       />
       <CanvasWrapper id="canvas-wrapper">
         <div className="canvas" ref={canvas} />
