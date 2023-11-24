@@ -233,7 +233,6 @@ const Canvas = ({
         onConfirm={(entity, selected) => {
           if (diagramHandlers) {
             if (cellToEdit) {
-              console.log(cellToEdit);
               //deep copy
               const shape = diagramHandlers.editEntity(
                 cellToEdit,
