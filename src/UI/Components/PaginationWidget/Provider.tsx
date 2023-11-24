@@ -3,19 +3,34 @@ import { Pagination as PaginationComponent } from "@patternfly/react-core";
 import styled from "styled-components";
 import { PageSize, Pagination, RemoteData } from "@/Core";
 import { PaginationPageSizes } from "@/Core/Domain/PageSize";
+import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 
 type Data = RemoteData.Type<
   string,
-  { handlers: Pagination.Handlers; metadata: Pagination.Metadata }
+  {
+    handlers: Pagination.Handlers;
+    metadata: Pagination.Metadata;
+  }
 >;
 
 interface Props {
   data: Data;
   pageSize: PageSize.Type;
   setPageSize: (size: PageSize.Type) => void;
+  setCurrentPage: (currentPage: CurrentPage) => void;
 }
 
-export const Provider: React.FC<Props> = ({ data, pageSize, setPageSize }) =>
+/**
+ * Wrapper for Pagination as we are basing ourselfs on links served by backend
+ *
+ * Note: Parameters responsible for pagination on endpoint doesn't allow to pass numerical range for displayed results, or any other way to navigate through pages other than previous/next page
+ */
+export const Provider: React.FC<Props> = ({
+  data,
+  pageSize,
+  setPageSize,
+  setCurrentPage,
+}) =>
   RemoteData.fold(
     {
       notAsked: () => <Filler />,
@@ -25,11 +40,22 @@ export const Provider: React.FC<Props> = ({ data, pageSize, setPageSize }) =>
         <StyledPagination
           itemCount={Number(metadata.total)}
           perPage={Number(pageSize.value)}
+          titles={{ perPageSuffix: "" }}
           page={
             Math.floor(Number(metadata.before) / Number(metadata.page_size)) + 1
           }
-          onNextClick={handlers.next}
-          onPreviousClick={handlers.prev}
+          onNextClick={() =>
+            setCurrentPage({
+              kind: "CurrentPage",
+              value: handlers.next ? handlers.next : "",
+            })
+          }
+          onPreviousClick={() =>
+            setCurrentPage({
+              kind: "CurrentPage",
+              value: handlers.prev ? handlers.prev : "",
+            })
+          }
           aria-label="PaginationWidget"
           onPerPageSelect={(
             _event: React.MouseEvent | React.KeyboardEvent | MouseEvent,

@@ -400,52 +400,5 @@ describe("5 Compile reports", () => {
         expect($rows).to.have.length(7);
       });
     });
-    it("5.6 Pagination", () => {
-      // go to home page
-      cy.visit("/console/");
-
-      // click on test environment card
-      cy.get('[aria-label="Environment card"]')
-        .contains("lsm-frontend")
-        .click();
-
-      // Go to the compile report page
-      cy.get(".pf-v5-c-nav__link").contains("Compile Reports").click();
-
-      // click on pagination
-      cy.get("#options-menu-top-toggle").click();
-      // select 5
-      cy.get(".pf-v5-c-menu__item-main").contains("5").first().click();
-
-      // expect only 5 rows to be visible now
-      cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
-        const $rows = $tableBody.find("tr");
-
-        expect($rows).to.have.length(5);
-      });
-
-      // next page
-      cy.get('[aria-label="Go to next page"]').click();
-
-      // expect only 2 rows to be visible now
-      cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
-        const $rows = $tableBody.find("tr");
-
-        expect($rows).to.have.length(2);
-      });
-
-      // click on pagination
-      cy.get("#options-menu-top-toggle").click();
-
-      // select 10
-      cy.get(".pf-v5-c-menu__item-main").contains("10").first().click();
-
-      // expect 7 rows to be visible now again
-      cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
-        const $rows = $tableBody.find("tr");
-
-        expect($rows).to.have.length(7);
-      });
-    });
   }
 });

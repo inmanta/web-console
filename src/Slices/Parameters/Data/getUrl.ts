@@ -3,7 +3,7 @@ import qs from "qs";
 import { Query, RangeOperator } from "@/Core";
 
 export function getUrl(
-  { pageSize, filter, sort }: Query.SubQuery<"GetParameters">,
+  { pageSize, filter, sort, currentPage }: Query.SubQuery<"GetParameters">,
   timezone = moment.tz.guess(),
 ): string {
   const filterParam =
@@ -28,5 +28,8 @@ export function getUrl(
         )}`
       : "";
   const sortParam = sort ? `&sort=${sort.name}.${sort.order}` : "";
-  return `/api/v2/parameters?limit=${pageSize.value}${sortParam}${filterParam}`;
+
+  return `/api/v2/parameters?limit=${pageSize.value}${sortParam}${filterParam}${
+    currentPage.value ? `&${currentPage.value}` : ""
+  }`;
 }

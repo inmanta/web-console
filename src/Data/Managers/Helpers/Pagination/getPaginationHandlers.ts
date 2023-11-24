@@ -3,13 +3,12 @@ import { Pagination } from "@/Core";
 export const getPaginationHandlers = (
   links: Pagination.Links,
   metadata: Pagination.Metadata,
-  setUrl: (url: string) => void,
 ): Pagination.Handlers => {
   const { prev, next } = getPaginationHandlerUrls(links, metadata);
 
   return {
-    prev: prev ? () => setUrl(prev) : undefined,
-    next: next ? () => setUrl(next) : undefined,
+    prev,
+    next,
   };
 };
 
@@ -19,12 +18,18 @@ interface Urls {
 }
 
 const getPaginationHandlerUrls = (
-  { prev, next, first }: Pagination.Links,
+  { prev, next }: Pagination.Links,
   metadata: Pagination.Metadata,
-): Urls => ({
-  prev: shouldUseFirst(metadata) ? first : prev,
-  next,
-});
+): Urls => {
+  const trimmedNext = next?.split(/(?=end=|start=)/g)[1];
+  const trimmedPrev = prev?.split(/(?=end=|start=)/g)[1];
+
+  return {
+    prev: shouldUseFirst(metadata) ? "" : trimmedPrev,
+    next: trimmedNext,
+  };
+};
 
 const shouldUseFirst = (metadata: Pagination.Metadata): boolean =>
-  Number(metadata.before) < Number(metadata.page_size) * 2;
+  Number(metadata.before) < Number(metadata.page_size) * 2 &&
+  Number(metadata.before) !== 0;

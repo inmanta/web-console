@@ -5,12 +5,14 @@ import {
   DateRange,
   Parameter,
 } from "@/Core/Domain";
+import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 
 export interface Query {
   kind: "GetParameters";
   sort?: Sort.Sort<SortKey>;
   filter?: Filter;
   pageSize: PageSize.PageSize;
+  currentPage: CurrentPage;
 }
 
 export interface Manifest {

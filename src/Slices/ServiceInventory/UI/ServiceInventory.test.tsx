@@ -208,7 +208,7 @@ test("ServiceInventory shows next page of instances", async () => {
   apiHelper.resolve(
     Either.right({
       data: [{ ...ServiceInstance.a, id: "a" }],
-      links: { ...Pagination.links, next: "fake-url" },
+      links: { ...Pagination.links },
       metadata: Pagination.metadata,
     }),
   );
@@ -217,7 +217,11 @@ test("ServiceInventory shows next page of instances", async () => {
     await screen.findByRole("cell", { name: "IdCell-a" }),
   ).toBeInTheDocument();
 
-  fireEvent.click(screen.getByRole("button", { name: "Go to next page" }));
+  await act(async () => {
+    await userEvent.click(
+      screen.getByRole("button", { name: "Go to next page" }),
+    );
+  });
 
   apiHelper.resolve(
     Either.right({

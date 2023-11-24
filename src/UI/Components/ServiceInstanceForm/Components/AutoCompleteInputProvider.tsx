@@ -1,5 +1,6 @@
 import React, { useContext, useState } from "react";
 import { PageSize, RemoteData, ServiceInstanceParams } from "@/Core";
+import { initialCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { DependencyContext } from "@/UI/Dependency";
 import { AutoCompleteInput } from "./AutoCompleteInput";
 
@@ -35,7 +36,8 @@ export const AutoCompleteInputProvider: React.FC<Props> = ({
     kind: "GetServiceInstances",
     name: serviceName,
     filter,
-    pageSize: PageSize.from("100"),
+    pageSize: PageSize.from("250"),
+    currentPage: initialCurrentPage,
   });
 
   const onSearchTextChanged = (searchText: string) => {

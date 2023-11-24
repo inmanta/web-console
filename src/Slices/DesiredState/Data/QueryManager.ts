@@ -1,4 +1,9 @@
-import { Scheduler, ApiHelper, StateHelperWithEnv } from "@/Core";
+import {
+  Scheduler,
+  ApiHelper,
+  StateHelperWithEnv,
+  stringifyObjectOrUndefined,
+} from "@/Core";
 import { getPaginationHandlers, QueryManager } from "@/Data/Managers/Helpers";
 import { Filter } from "@S/DesiredState/Core/Query";
 import { getUrl } from "./getUrl";
@@ -13,20 +18,21 @@ export function GetDesiredStatesQueryManager(
     stateHelper,
     scheduler,
     ({ kind }, environment) => `${kind}_${environment}`,
-    ({ pageSize, filter }, environment) => [
+    ({ pageSize, filter, currentPage }, environment) => [
       environment,
       pageSize.value,
       stringifyFilter(filter),
+      stringifyObjectOrUndefined(currentPage.value),
     ],
     "GetDesiredStates",
     (query) => getUrl(query),
-    ({ data, links, metadata }, setUrl) => {
+    ({ data, links, metadata }) => {
       if (typeof links === "undefined") {
         return { data: data, handlers: {}, metadata };
       }
       return {
         data: data,
-        handlers: getPaginationHandlers(links, metadata, setUrl),
+        handlers: getPaginationHandlers(links, metadata),
         metadata,
       };
     },

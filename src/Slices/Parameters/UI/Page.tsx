@@ -4,6 +4,7 @@ import {
   useUrlStateWithPageSize,
   useUrlStateWithSort,
 } from "@/Data";
+import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import {
   EmptyView,
   PageContainer,
@@ -19,6 +20,10 @@ import { TableControls } from "./TableControls";
 
 export const Page: React.FC = () => {
   const { queryResolver } = useContext(DependencyContext);
+
+  const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({
+    route: "Parameters",
+  });
   const [pageSize, setPageSize] = useUrlStateWithPageSize({
     route: "Parameters",
   });
@@ -35,6 +40,7 @@ export const Page: React.FC = () => {
     filter,
     pageSize,
     sort,
+    currentPage,
   });
 
   return (
@@ -47,6 +53,7 @@ export const Page: React.FC = () => {
             data={data}
             pageSize={pageSize}
             setPageSize={setPageSize}
+            setCurrentPage={setCurrentPage}
           />
         }
       />

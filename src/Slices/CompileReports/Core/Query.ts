@@ -5,6 +5,7 @@ import {
   DateRange,
   CompileStatus,
 } from "@/Core/Domain";
+import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { CompileReport } from "./Domain";
 
 export interface Query extends CompileReportParams {
@@ -35,6 +36,7 @@ export interface CompileReportParams {
   filter?: Filter;
   sort?: Sort.Sort;
   pageSize: PageSize.PageSize;
+  currentPage: CurrentPage;
 }
 
 export interface Filter {
