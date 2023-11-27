@@ -1317,7 +1317,7 @@ __metadata:
     "@babel/core": ^7.22.15
     "@babel/plugin-transform-typescript": ^7.22.15
     "@inmanta/rappid": ^3.7.0
-    "@patternfly/react-charts": ^7.0.0
+    "@patternfly/react-charts": ^7.1.1
     "@patternfly/react-core": ^5.1.1
     "@patternfly/react-icons": ^5.1.1
     "@patternfly/react-styles": ^5.1.1
@@ -1878,19 +1878,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@patternfly/patternfly@npm:5.0.2":
-  version: 5.0.2
-  resolution: "@patternfly/patternfly@npm:5.0.2"
-  checksum: 5b386efb172b553cf90622c613170c63ead66d388c4cb62bdf264ee9ba7f03df2fcaab497fd2d1390482e7e93dca36eab428a370e21578205a30b857c100bc10
-  languageName: node
-  linkType: hard
-
-"@patternfly/react-charts@npm:^7.0.0":
-  version: 7.1.0
-  resolution: "@patternfly/react-charts@npm:7.1.0"
+"@patternfly/react-charts@npm:^7.1.1":
+  version: 7.1.1
+  resolution: "@patternfly/react-charts@npm:7.1.1"
   dependencies:
-    "@patternfly/react-styles": ^5.1.0
-    "@patternfly/react-tokens": ^5.1.0
+    "@patternfly/react-styles": ^5.1.1
+    "@patternfly/react-tokens": ^5.1.1
     hoist-non-react-statics: ^3.3.0
     lodash: ^4.17.19
     tslib: ^2.5.0
@@ -1914,7 +1907,7 @@ __metadata:
   peerDependencies:
     react: ^17 || ^18
     react-dom: ^17 || ^18
-  checksum: 499c80a296f1c9f615f5576426b2b52534da2492d1436ef6b778b93716221ef0725348a8276de549f3af6e242bfe936f24a8a136afd3f8e43b378049485e57b0
+  checksum: e227cb89c6bdb5e07c52b5129bbb6c2e0ed29fd331ae35bd9905fef973d9e8fe598f89212b468fc30fbebe239699bca08dd369f9024cc7c68b55ab4ae762376b
   languageName: node
   linkType: hard
 
@@ -1945,15 +1938,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@patternfly/react-styles@npm:^5.1.0":
-  version: 5.1.0
-  resolution: "@patternfly/react-styles@npm:5.1.0"
-  dependencies:
-    "@patternfly/patternfly": 5.0.2
-  checksum: 0dd938f8f537f7a39e23b00a7d038c98f902bd705d5771e77969fb1281140dcd783190aa5f0d70be0bca28276da3533714e09518a6cf0fcef9a5d2f91a2b0859
-  languageName: node
-  linkType: hard
-
 "@patternfly/react-styles@npm:^5.1.1":
   version: 5.1.1
   resolution: "@patternfly/react-styles@npm:5.1.1"
@@ -1975,15 +1959,6 @@ __metadata:
     react: ^17 || ^18
     react-dom: ^17 || ^18
   checksum: 76aff8220a237744c27a7996d0910360b0045a120df72e878feaf6fc59a9455254a73df2a716e34a4c7d0bf7de14a317c9853060c43368b937f1b8cdd3082178
-  languageName: node
-  linkType: hard
-
-"@patternfly/react-tokens@npm:^5.1.0":
-  version: 5.1.0
-  resolution: "@patternfly/react-tokens@npm:5.1.0"
-  dependencies:
-    "@patternfly/patternfly": 5.0.2
-  checksum: fb240efd00f211667feb92984af439a2aae65172225c16fcca4fe0cf7a286a5095ca91430b747f88e3affa342dda8f42c21fd1543c034de025b1b7f1d3a5c0a2
   languageName: node
   linkType: hard
 
