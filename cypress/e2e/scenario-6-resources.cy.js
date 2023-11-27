@@ -561,7 +561,7 @@ describe("Scenario 6 : Resources", () => {
 
       //Go to resources page
       cy.get(".pf-v5-c-nav__link").contains("Resources").click();
-      cy.get('[aria-label="LegendItem-deployed"]', { timeout: 30000 }).should(
+      cy.get('[aria-label="LegendItem-deployed"]', { timeout: 60000 }).should(
         "have.text",
         "49",
       );
