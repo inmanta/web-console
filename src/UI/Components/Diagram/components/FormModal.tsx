@@ -164,6 +164,7 @@ const FormModal = ({
       },
     ]);
     setPossibleForms(tempPossibleForms);
+
     if (cellView) {
       const entity = cellView.model as ServiceEntityBlock;
       const entityName = entity.getName();
@@ -178,6 +179,7 @@ const FormModal = ({
       );
     }
   }, [services, cellView, onEntityChosen]);
+
   return (
     <StyledModal
       disableFocusTrap
