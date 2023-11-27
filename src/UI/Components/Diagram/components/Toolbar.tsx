@@ -5,8 +5,8 @@ import { Button, Flex, FlexItem } from "@patternfly/react-core";
 import styled from "styled-components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
-import labelIcon from "../icons/label-icon.png";
-import entityIcon from "../icons/new-entity-icon.png";
+import labelIcon from "../icons/label-icon.svg";
+import entityIcon from "../icons/new-entity-icon.svg";
 
 const Toolbar = ({
   openEntityModal,
