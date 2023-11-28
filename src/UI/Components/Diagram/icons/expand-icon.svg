@@ -1,15 +1,1 @@
-<svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<g clip-path="url(#clip0_112_9355)">
-<rect width="17" height="17" fill="white"/>
-<rect width="17" height="17" fill="url(#pattern0)"/>
-</g>
-<defs>
-<pattern id="pattern0" patternContentUnits="objectBoundingBox" width="1" height="1">
-<use xlink:href="#image0_112_9355" transform="scale(0.015625)"/>
-</pattern>
-<clipPath id="clip0_112_9355">
-<rect width="17" height="17" rx="8.5" fill="white"/>
-</clipPath>
-<image id="image0_112_9355" width="64" height="64" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAABuwAAAbsBOuzj4gAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAATUSURBVHic7ZvBa1RHHMc/82JE8BC0FJoQgyixICl46EGFHiLGi7Tk6kLc9tBDwINQ2rNnSf+Cgq0Ueg4tKUhiKJWqB8mlJRXEpbQlKRQvgpBL8uvhzSYvk9+8nbf7Zt9utj8YWGZnfr/v9/vemzdv5jdGRIhpxpjjwBXgLDCmFIANpbwEVkXkTVR8MQQwxrwNfAjMAjPAsTZdbQHLwCLwg4j8Ww7CjIlIKQU4CswDj4BtQEou28DPNsbR0nCXQNwANaARgbSvNGxMU6kAwDVgrQMiO7a0238NuNYJh7bGAGPMOPA1cDWwyzqwZK/cZqb8Y/9/BxjNlDPAdeB8oP8V4BMR+Tuw/Z61cdUvWfCtruwT4AvgXAd32Dnr4wmt75RN4FLURwCok47MecS/BU53+mwqsU9b33lCbAH10gUAhoCFFlfgAXChbOIKlgs2Vh6WBWCoFAEs+cWcYC+AmdjEFVwzNrYP12KICCGB8q78A+BEt8lnsJ1ocTcsdCSAfeZ9zr8Mvc0iizBksfhw1tsSgHS01wa8LeBm1cQVvDdz8HrfDj5n4/hfdXNVk80RYc6DeRMYLyLAssfR3apJBohw14N9OUgA0umt5uBHIKmaYIAAicWqcTgwbXY7G/S5/XNgJBLY0kUFRixml8cazgeU27HmUW46AshbwB+23Irgf9rDpaYKQPo9r33SLkUAN8H+NYNtYCJCnCWFT4PMekK28bzSeBuYigDsthLrdoQ4U+iLM/PNNgl7VuOg3ReR35T6Tk1bImt32cxrFvt95a9drgnsruFddhrtAHfKBlWB3SHlkrXLlvPuHfBR5nfTnorIn3GxxTfL4alTnZBy3iU9q/RdjIir26ZxmQVI7Lq9trR12AW4aow5npBuWrgD0LqIvIiPqztmuaw71ceAKwnpjo1rS9FRdd80TmcT9ranstaIDKYK0ziN+QTYjAymCtM4jR2hJAGMMR8AHwNvBTSfVOrmjDEXA/q+Ar4RkUcF4IFHANC/mk4VnHLeUHzELjcKYjyl+HgO8Nqp3AGGCzp/WIEADwtiHObgnsJrd/bXrv1ekp9KYpbxCEwCzxQ/scozYLKMR+AIaTbGu44oo8BfoQraicb7xpj3CBsEa8CnTt1XwHcBfV+JyK+h2DI2qtRtNAUIadzSQoF5RvuGiPzUTtxAUwVIKFGAHrdCApyJDKYK0zhtJKTZWK5djwymCtM4vUyAVdLto6ydN8Zos7W+NMvFzTbZAlYTSfPwVpR+2iJJv5rGZUVE3jQnQt4Vk0Ni3hWvpgDfc3Dh8KIxZiImqm6Y5eC+dndIOacCSJqB+dhplHB4VoXdKf9jy3nfH9osrG6MmYoASltuK30JzmKvK3/tcc3Mlbu5NTZMOv9oxtig4BdoYJzwrTHboZuboyeBz2w5GcF/sc1R26mr2+OxCu1uj9vOg5sgkXEyuCky1slgJ0lZZ/2WJjeXg7dYmlzGad2jqNA7iZJJzm0vtJsomQnQy6myIzkDntBpqqwN0qvJ0tPor7pmKSdZOiNCr6TLT6HP8PZd+dDHs2jwumegaZaYByYmgHvkn0iLc2DCAdLNIzOTwOfALy2IN191hY/M/H9oqsPbsu+PzZXxbA7uwUlHiL48Ojvwh6ejCLAvQI8fn/8PML/E7KnbtQMAAAAASUVORK5CYII="/>
-</defs>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M256 464a208 208 0 1 1 0-416 208 208 0 1 1 0 416zM256 0a256 256 0 1 0 0 512A256 256 0 1 0 256 0zM376.9 294.6c4.5-4.2 7.1-10.1 7.1-16.3c0-12.3-10-22.3-22.3-22.3H304V160c0-17.7-14.3-32-32-32l-32 0c-17.7 0-32 14.3-32 32v96H150.3C138 256 128 266 128 278.3c0 6.2 2.6 12.1 7.1 16.3l107.1 99.9c3.8 3.5 8.7 5.5 13.8 5.5s10.1-2 13.8-5.5l107.1-99.9z"/></svg>
