@@ -197,7 +197,12 @@ export function appendInstance(
 
         if (connectedInstance) {
           isConnected = true;
-          connectEntities(graph, instanceAsTable, [cellAsBlock]);
+          connectEntities(
+            graph,
+            instanceAsTable,
+            [cellAsBlock],
+            serviceInstanceModel.strict_modifier_enforcement,
+          );
         }
       }
 
@@ -214,14 +219,22 @@ export function appendInstance(
             ).find(({ id }) => id === instanceAsTable.id);
             if (connectedInstance) {
               isConnected = true;
-              connectEntities(graph, instanceAsTable, [
-                cell as ServiceEntityBlock,
-              ]);
+              connectEntities(
+                graph,
+                instanceAsTable,
+                [cell as ServiceEntityBlock],
+                serviceInstanceModel.strict_modifier_enforcement,
+              );
             }
           }
         });
       }
-      connectEntities(graph, instanceAsTable, [cellAsBlock]);
+      connectEntities(
+        graph,
+        instanceAsTable,
+        [cellAsBlock],
+        serviceInstanceModel.strict_modifier_enforcement,
+      );
     }
   });
   //auto-layout provided by JointJS
@@ -258,6 +271,7 @@ export function appendEmbeddedEntity(
   holderType: string,
   instanceToConnectRelation?: ServiceEntityBlock,
   presentedAttr?: "candidate" | "active",
+  isBlockedFromEditing?: boolean,
 ): ServiceEntityBlock[] {
   //Create shape for Entity
   const flatAttributes = embeddedEntity.attributes.map(
@@ -276,7 +290,7 @@ export function appendEmbeddedEntity(
       instanceAsTable.set("isEmbedded", true);
       instanceAsTable.set("holderType", holderType);
       instanceAsTable.set("embeddedTo", embeddedTo);
-
+      instanceAsTable.set("isBlockedFromEditing", isBlockedFromEditing);
       //add to graph
       instanceAsTable.addTo(graph);
 
@@ -296,11 +310,17 @@ export function appendEmbeddedEntity(
           embeddedEntity.name,
           instanceToConnectRelation,
           presentedAttr,
+          isBlockedFromEditing,
         );
         appendedEntities.map((appendedEntities) => {
           handleInfoIcon(appendedEntities, presentedAttr);
         });
-        connectEntities(graph, instanceAsTable, appendedEntities);
+        connectEntities(
+          graph,
+          instanceAsTable,
+          appendedEntities,
+          isBlockedFromEditing,
+        );
       });
 
       embeddedEntity.inter_service_relations?.map((relation) => {
@@ -311,9 +331,12 @@ export function appendEmbeddedEntity(
             instanceToConnectRelation &&
             relationId === instanceToConnectRelation.id
           ) {
-            connectEntities(graph, instanceAsTable, [
-              instanceToConnectRelation,
-            ]);
+            connectEntities(
+              graph,
+              instanceAsTable,
+              [instanceToConnectRelation],
+              isBlockedFromEditing,
+            );
           }
         }
       });
@@ -329,6 +352,7 @@ export function appendEmbeddedEntity(
     instanceAsTable.set("isEmbedded", true);
     instanceAsTable.set("holderType", holderType);
     instanceAsTable.set("embeddedTo", embeddedTo);
+    instanceAsTable.set("isBlockedFromEditing", isBlockedFromEditing);
 
     //add to graph
     instanceAsTable.addTo(graph);
@@ -346,7 +370,12 @@ export function appendEmbeddedEntity(
       appendedEntity.forEach((entity) => {
         handleInfoIcon(entity, presentedAttr);
       });
-      connectEntities(graph, instanceAsTable, appendedEntity);
+      connectEntities(
+        graph,
+        instanceAsTable,
+        appendedEntity,
+        isBlockedFromEditing,
+      );
     });
 
     embeddedEntity.inter_service_relations?.map((relation) => {
@@ -357,7 +386,12 @@ export function appendEmbeddedEntity(
           instanceToConnectRelation &&
           relationId === instanceToConnectRelation.id
         ) {
-          connectEntities(graph, instanceAsTable, [instanceToConnectRelation]);
+          connectEntities(
+            graph,
+            instanceAsTable,
+            [instanceToConnectRelation],
+            isBlockedFromEditing,
+          );
         }
       }
     });
@@ -455,15 +489,20 @@ export function appendColumns(
  * @param {dia.Graph} graph JointJS graph object
  * @param {ServiceEntityBlock} source JointJS shape object
  * @param {ServiceEntityBlock} target JointJS shape object
+ * @param {bolean} isBlocked parameter determining whether we are showing tools for linkView
  * @returns {void}
  */
 function connectEntities(
   graph: dia.Graph,
   source: ServiceEntityBlock,
   targets: ServiceEntityBlock[],
+  isBlocked?: boolean,
 ) {
   targets.map((target) => {
     const link = new EntityConnection();
+    if (isBlocked) {
+      link.set("isBlockedFromEditing", isBlocked);
+    }
     link.source(source);
     link.target(target);
     link.addTo(graph);
@@ -495,8 +534,11 @@ function handleAttributes(
   const { attributes, embedded_entities } = serviceModel;
   const attributesNames = attributes.map((attribute) => attribute.name);
   handleInfoIcon(instanceAsTable, presentedAttr);
-
   appendColumns(instanceAsTable, attributesNames, attributesValues);
+  instanceAsTable.set(
+    "isBlockedFromEditing",
+    !serviceModel.strict_modifier_enforcement,
+  );
   //add to graph
   instanceAsTable.addTo(graph);
 
@@ -515,11 +557,17 @@ function handleAttributes(
       serviceModel.name,
       instanceToConnectRelation,
       presentedAttr,
+      !serviceModel.strict_modifier_enforcement,
     );
     appendedEntities.map((entity) => {
       handleInfoIcon(entity, presentedAttr);
     });
-    connectEntities(graph, instanceAsTable, appendedEntities);
+    connectEntities(
+      graph,
+      instanceAsTable,
+      appendedEntities,
+      !serviceModel.strict_modifier_enforcement,
+    );
   });
 
   serviceModel.inter_service_relations?.forEach((relation) => {
@@ -532,7 +580,12 @@ function handleAttributes(
         instanceToConnectRelation.id &&
         relationId
       ) {
-        connectEntities(graph, instanceAsTable, [instanceToConnectRelation]);
+        connectEntities(
+          graph,
+          instanceAsTable,
+          [instanceToConnectRelation],
+          !serviceModel.strict_modifier_enforcement,
+        );
       }
     }
   });
