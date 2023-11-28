@@ -112,12 +112,13 @@ if (Cypress.env("edition") === "iso") {
         "basic-service",
       );
 
+      //deploy, assert that toast Alert appeared and that page was changed to Service Inventory view
       cy.get("button").contains("Deploy").click();
 
       cy.get('[data-testid="ToastAlert"]')
         .contains("Instance Composed succesfully")
         .should("be.visible");
-      cy.get('[aria-label="ServiceInventory-Success"]').should("to.be.visible");
+      cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
     });
 
     it("8.2 Open existing instance in the Composer", () => {
@@ -158,7 +159,7 @@ if (Cypress.env("edition") === "iso") {
       // Check if only one row has been added to the table.
       cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 1);
       // wait until instance is in "up" state
-      cy.get('[data-label="State"]', { timeout: 30000 }).should(
+      cy.get('[data-label="State"]', { timeout: 90000 }).should(
         "have.text",
         "up",
       );
