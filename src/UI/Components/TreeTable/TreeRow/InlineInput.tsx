@@ -57,7 +57,7 @@ const InlineInput = ({
   } else {
     input = (
       <StyledInput
-        value={value.toString()}
+        value={value as string | number | undefined}
         type={type.toLowerCase().includes("int") ? "number" : "text"}
         onChange={(event, value) => onChange(event, value)}
         aria-label="new-attribute-input"

@@ -1,0 +1,6 @@
+change-type: patch
+description: "Resolve issue that Resuming Environment wouldn't populate back Continuous Tasks"
+issue-nr: 5328
+destination-branches:
+  - master
+  - iso6
