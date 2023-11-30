@@ -117,7 +117,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[data-testid="ToastAlert"]')
         .contains("Instance Composed succesfully")
         .should("be.visible");
-      cy.get('[aria-label="ServiceInventory-Success"]').should("to.be.visible");
+      cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
     });
 
     it("8.2 Open existing instance in the Composer", () => {
