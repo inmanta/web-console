@@ -368,7 +368,7 @@ test("Given CellWithCopyExpert When a cell has access to expertMode and input wi
   });
 });
 
-test("Given CellWithCopyExpert When a cell has access to expertMode and input will be populated with new values and submit button will be pressed and confirmed Then request will be sent", async () => {
+test("Given CellWithCopyExpert When a embedded cell has access to expertMode and input will be populated with new values and submit button will be pressed and confirmed Then request will be sent", async () => {
   const newValue = "test-123";
   const props = {
     label: "candidates",
