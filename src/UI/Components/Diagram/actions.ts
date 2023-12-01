@@ -64,13 +64,15 @@ export function showLinkTools(
             target.id as dia.Cell.ID,
           ) as ServiceEntityBlock;
 
-          // resolve any possible embedded connections between cells
+          // resolve any possible embedded connections between cells, also we want to trigger update for both cells as
+          // that's the last point where we can tell that one was the part of the other.
           if (
             sourceCell.get("isEmbedded") &&
             sourceCell.get("embeddedTo") === target.id
           ) {
             sourceCell.set("embeddedTo", null);
             didSourceCellChanged = true;
+            didTargetCellChanged = true;
           }
 
           if (
@@ -79,6 +81,7 @@ export function showLinkTools(
           ) {
             targetCell.set("embeddedTo", null);
             didTargetCellChanged = true;
+            didSourceCellChanged = true;
           }
 
           // resolve any possible relation connections between cells
