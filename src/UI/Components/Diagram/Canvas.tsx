@@ -137,8 +137,8 @@ const Canvas = ({
                 action: "delete",
                 value: null,
                 edit: null,
-                embeddedTo: null,
-                relatedTo: null,
+                embeddedTo: cell.attributes.embeddedTo,
+                relatedTo: cell.attributes.relatedTo,
               }),
             );
           } else {
@@ -159,7 +159,6 @@ const Canvas = ({
       const isMainInstance = true;
       const cells = actions.addInstance(instance, services, isMainInstance);
       const newInstances = new Map();
-
       cells.forEach((cell) => {
         if (cell.type === "app.ServiceEntityBlock") {
           newInstances.set(cell.id, {
@@ -182,10 +181,11 @@ const Canvas = ({
   }, [instance, services, mainServiceName]);
 
   useEffect(() => {
+    console.log(instancesToSend, bundleInstances(instancesToSend, services));
     if (!isDirty) {
       setIsDirty(
-        bundleInstances(instancesToSend, services).filter(
-          (item) => item.action !== null,
+        Array.from(instancesToSend).filter(
+          ([_key, item]) => item.action !== null,
         ).length > 0,
       );
     }
