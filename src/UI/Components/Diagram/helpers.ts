@@ -146,14 +146,14 @@ export const checkIfConnectionIsAllowed = (
     );
 
     doesTargetIsEmbeddedWithExhaustedConnections =
-      doesElementsIsEmbeddedWithExhaustedConnections(
+      doesElementIsEmbeddedWithExhaustedConnections(
         targetAsElement,
         connectedElementsToTarget,
         sourceAsElement,
       );
 
     doesSourceIsEmbeddedWithExhaustedConnections =
-      doesElementsIsEmbeddedWithExhaustedConnections(
+      doesElementIsEmbeddedWithExhaustedConnections(
         sourceAsElement,
         connectedElementsToSource,
         targetAsElement,
@@ -204,7 +204,7 @@ const checkWhetherConnectionRulesAreExhausted = (
  * @param {dia.Element} target element that is destination for the connection
  * @returns {boolean}
  */
-const doesElementsIsEmbeddedWithExhaustedConnections = (
+const doesElementIsEmbeddedWithExhaustedConnections = (
   source: dia.Element,
   connectedElementsToSource: ServiceEntityBlock[],
   target: dia.Element,
@@ -212,6 +212,12 @@ const doesElementsIsEmbeddedWithExhaustedConnections = (
   const isSourceEmbedded = source.get("isEmbedded");
   const sourceHolderType = source.get("holderType");
 
+  const isTargetBlocked = target.get("isBlockedFromEditing");
+
+  //if source Embbedded and target is blocked then return true as we can't add anything to it in composer
+  if (isSourceEmbedded && isTargetBlocked) {
+    return true;
+  }
   const targetName = target.get("entityName");
 
   if (isSourceEmbedded && sourceHolderType !== undefined) {
