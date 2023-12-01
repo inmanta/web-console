@@ -366,6 +366,9 @@ export function appendEmbeddedEntity(
         entityAttributes[entity.name] as InstanceAttributeModel,
         instanceAsTable.id as string,
         entity.name,
+        instanceToConnectRelation,
+        presentedAttr,
+        isBlockedFromEditing,
       );
       appendedEntity.forEach((entity) => {
         handleInfoIcon(entity, presentedAttr);
@@ -489,7 +492,7 @@ export function appendColumns(
  * @param {dia.Graph} graph JointJS graph object
  * @param {ServiceEntityBlock} source JointJS shape object
  * @param {ServiceEntityBlock} target JointJS shape object
- * @param {bolean} isBlocked parameter determining whether we are showing tools for linkView
+ * @param {boolean} isBlocked parameter determining whether we are showing tools for linkView
  * @returns {void}
  */
 function connectEntities(
