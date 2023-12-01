@@ -600,7 +600,7 @@ test("DesiredStatesView shows CompileWidget", async () => {
   const { component } = setup();
   render(component);
 
-  expect(screen.getByRole("generic", { name: "CompileWidget" })).toBeVisible();
+  expect(screen.getByRole("button", { name: "RecompileButton" })).toBeVisible();
 });
 
 describe("DeleteModal ", () => {

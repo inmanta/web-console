@@ -1,15 +1,21 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Light as SyntaxHighlighter } from "react-syntax-highlighter";
-import { Flex, FlexItem, Icon, Label, Tooltip } from "@patternfly/react-core";
 import {
   Dropdown,
   DropdownItem,
-  KebabToggle,
-} from "@patternfly/react-core/deprecated";
+  Flex,
+  FlexItem,
+  Icon,
+  Label,
+  MenuToggle,
+  MenuToggleElement,
+  Tooltip,
+} from "@patternfly/react-core";
 import {
   CloseIcon,
   CompressArrowsAltIcon,
   CopyIcon,
+  EllipsisVIcon,
   ExpandArrowsAltIcon,
   InfoCircleIcon,
   ListOlIcon,
@@ -287,11 +293,22 @@ const IconSettings: React.FC<{ actions: JSX.Element[] }> = ({ actions }) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <Dropdown
-      toggle={<KebabToggle onToggle={() => setIsOpen(!isOpen)} />}
+      toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
+        <MenuToggle
+          ref={toggleRef}
+          aria-label="kebab dropdown toggle"
+          variant="plain"
+          onClick={() => setIsOpen(!isOpen)}
+          isExpanded={isOpen}
+        >
+          <EllipsisVIcon />
+        </MenuToggle>
+      )}
       isOpen={isOpen}
       isPlain
-      dropdownItems={actions}
-    />
+    >
+      {actions}
+    </Dropdown>
   );
 };
 

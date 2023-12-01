@@ -1,12 +1,13 @@
 import React, { useState } from "react";
-import { Tooltip } from "@patternfly/react-core";
 import {
   Dropdown,
-  DropdownToggle,
-  DropdownToggleAction,
+  DropdownList,
+  MenuToggle,
+  Tooltip,
+  MenuToggleAction,
+  MenuToggleElement,
   DropdownItem,
-} from "@patternfly/react-core/deprecated";
-import styled from "styled-components";
+} from "@patternfly/react-core";
 import { words } from "@/UI/words";
 
 interface Props {
@@ -57,26 +58,31 @@ const Widget: React.FC<WidgetProps> = ({
   <Dropdown
     aria-label="CompileWidget"
     onSelect={onSelect}
-    toggle={
-      <DropdownToggle
+    toggle={(toggleref: React.Ref<MenuToggleElement>) => (
+      <MenuToggle
         aria-label="Toggle"
-        splitButtonItems={[
-          <StyledDropdownToggleAction
-            key="action"
-            onClick={onRecompile}
-            aria-label="RecompileButton"
-            isDisabled={isDisabled}
-          >
-            {words("common.compileWidget.recompile")}
-          </StyledDropdownToggleAction>,
-        ]}
-        splitButtonVariant="action"
-        onToggle={(_event, value) => onToggle(value)}
-        toggleVariant="primary"
+        variant="primary"
+        ref={toggleref}
+        isExpanded={isOpen}
+        splitButtonOptions={{
+          variant: "action",
+          items: [
+            <MenuToggleAction
+              key="action"
+              onClick={onRecompile}
+              aria-label="RecompileButton"
+              isDisabled={isDisabled}
+            >
+              {words("common.compileWidget.recompile")}
+            </MenuToggleAction>,
+          ],
+        }}
+        onClick={(value) => onToggle(value)}
       />
-    }
+    )}
     isOpen={isOpen}
-    dropdownItems={[
+  >
+    <DropdownList>
       <DropdownItem
         aria-label="UpdateAndRecompileButton"
         key="action"
@@ -85,11 +91,7 @@ const Widget: React.FC<WidgetProps> = ({
         isDisabled={isDisabled}
       >
         {words("common.compileWidget.updateAndRecompile")}
-      </DropdownItem>,
-    ]}
-  />
+      </DropdownItem>
+    </DropdownList>
+  </Dropdown>
 );
-
-const StyledDropdownToggleAction = styled(DropdownToggleAction)`
-  width: 120px;
-`;

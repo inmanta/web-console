@@ -1,10 +1,6 @@
 import React from "react";
 import { Badge, Tooltip } from "@patternfly/react-core";
-import {
-  Table,
-  TableHeader,
-  TableBody,
-} from "@patternfly/react-table/deprecated";
+import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
 import { LifecycleModel } from "@/Core";
 
 export const LifecycleTable: React.FunctionComponent<{
@@ -86,12 +82,27 @@ export const LifecycleTable: React.FunctionComponent<{
         transferRow.description,
         eventTriggerColumn,
       ],
+      key: transferRow.config_name,
     };
   });
   return (
-    <Table aria-label="Lifecycle" cells={columns} rows={rows}>
-      <TableHeader />
-      <TableBody />
+    <Table aria-label="Lifecycle">
+      <Thead>
+        <Tr>
+          {columns.map((column: string) => (
+            <Th key={column}>{column}</Th>
+          ))}
+        </Tr>
+      </Thead>
+      <Tbody>
+        {rows.map((row) => (
+          <Tr key={row.key}>
+            {row.cells.map((cell, index) => (
+              <Td key={`${row.key}${index}`}>{cell}</Td>
+            ))}
+          </Tr>
+        ))}
+      </Tbody>
     </Table>
   );
 };
