@@ -181,7 +181,6 @@ const Canvas = ({
   }, [instance, services, mainServiceName]);
 
   useEffect(() => {
-    console.log(instancesToSend, bundleInstances(instancesToSend, services));
     if (!isDirty) {
       setIsDirty(
         Array.from(instancesToSend).filter(
