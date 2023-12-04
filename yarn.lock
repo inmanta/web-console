@@ -1396,7 +1396,7 @@ __metadata:
     "@types/json-bigint": ^1.0.3
     "@types/lodash": ^4.14.202
     "@types/lodash-es": ^4.17.8
-    "@types/node": ^20.10.1
+    "@types/node": ^20.10.3
     "@types/qs": ^6.9.8
     "@types/react-dom": ^18.2.15
     "@types/react-router-dom": ^5.3.3
@@ -2684,12 +2684,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^20.10.1":
-  version: 20.10.1
-  resolution: "@types/node@npm:20.10.1"
+"@types/node@npm:^20.10.3":
+  version: 20.10.3
+  resolution: "@types/node@npm:20.10.3"
   dependencies:
     undici-types: ~5.26.4
-  checksum: 9dfdcd2496ce535dba0ae496985d6e991a8a5d70a180db3a94c947a2123d99318a95dce4aa2a192f7e57c3afa3fdb44d6fd63e18efd49568950d6c239dadcc39
+  checksum: 34a329494f0ea239af05eeb6f00f396963725b3eb9a2f79c5e6a6d37e823f2ab85e1079c2ee56723a37d8b89e7bbe2bd050c97144e5bb06dab93fd1cace65c97
   languageName: node
   linkType: hard
 
