@@ -46,10 +46,15 @@ const createHalo = (
 
       let didElementChange = false;
 
+      //if one of those were embedded into other then update connectedElement as it's got indirectly edited
       if (isEmbedded && isEmbeddedToTHisCell) {
         element.set("embeddedTo", null);
         didElementChange = true;
       }
+      if (element.id === cellView.model.get("embeddedTo")) {
+        didElementChange = true;
+      }
+
       const relations = elementAsService.getRelations();
 
       if (relations) {

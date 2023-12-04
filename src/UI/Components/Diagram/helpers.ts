@@ -351,11 +351,25 @@ export const bundleInstances = (
   services: ServiceModel[],
 ) => {
   const mapToArray = Array.from(instances, (instance) => instance[1]); //only value, the id is stored in the object anyway
+  const deepCopiedMapToArray: InstanceForApi[] = JSON.parse(
+    JSON.stringify(mapToArray),
+  ); //only value, the id is stored in the object anyway
+
+  //we need also deep copy relatedTo Map separately
+  deepCopiedMapToArray.forEach((instance, index) => {
+    instance.relatedTo = mapToArray[index].relatedTo
+      ? JSON.parse(
+          JSON.stringify(
+            Array.from(mapToArray[index].relatedTo as Map<string, string>),
+          ),
+        )
+      : mapToArray[index].relatedTo;
+  });
   const topServicesNames = services.map((service) => service.name);
-  const topInstances = mapToArray.filter((instance) =>
+  const topInstances = deepCopiedMapToArray.filter((instance) =>
     topServicesNames.includes(instance.service_entity),
   );
-  const embeddedInstances = mapToArray.filter(
+  const embeddedInstances = deepCopiedMapToArray.filter(
     (instance) => !topServicesNames.includes(instance.service_entity),
   );
 
