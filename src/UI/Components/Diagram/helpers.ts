@@ -63,8 +63,10 @@ export const createConnectionRules = (
     service.embedded_entities.map((entity) => {
       tempRules.push({
         name: entity.name,
+        type: "embedded",
         lowerLimit: entity.lower_limit || null,
         upperLimit: entity.upper_limit || null,
+        modifier: entity.modifier,
       });
 
       createConnectionRules([entity], rules);
@@ -74,8 +76,10 @@ export const createConnectionRules = (
       service.inter_service_relations.map((relation) => {
         tempRules.push({
           name: relation.entity_type,
+          type: "inter-service",
           lowerLimit: relation.lower_limit || null,
           upperLimit: relation.upper_limit || null,
+          modifier: relation.modifier,
         });
       });
     }
@@ -136,13 +140,20 @@ export const checkIfConnectionIsAllowed = (
       targetAsElement,
     ) as ServiceEntityBlock[];
 
+    const isTargetInEditMode: boolean | undefined =
+      targetAsElement.get("isInEditMode");
+    const isSourceInEditMode: boolean | undefined =
+      sourceAsElement.get("isInEditMode");
+
     areTargetConnectionExhausted = checkWhetherConnectionRulesAreExhausted(
       connectedElementsToTarget,
       targetRule,
+      !!isTargetInEditMode,
     );
     areSourceConnectionsExhausted = checkWhetherConnectionRulesAreExhausted(
       connectedElementsToSource,
       sourceRule,
+      !!isSourceInEditMode,
     );
 
     doesTargetIsEmbeddedWithExhaustedConnections =
@@ -173,18 +184,23 @@ export const checkIfConnectionIsAllowed = (
 /**
  * Iterate through connectedElements of some shape to check if there are possible connections left for given shape
  *
- * @param {ServiceEntityBlock[]} connectedElements
- * @param {Rule | undefined} rule
+ * @param {ServiceEntityBlock[]} connectedElements llist of connected elements to given shape
+ * @param {Rule | undefined} rule rules telling which shapes can connect to eachother and about their limitations
  * @returns {boolean}
  */
 const checkWhetherConnectionRulesAreExhausted = (
   connectedElements: ServiceEntityBlock[],
   rule: Rule | undefined,
+  editMode: boolean,
 ): boolean => {
   const targetConnectionsForGivenRule = connectedElements.filter(
     (element) => element.getName() === rule?.name,
   );
 
+  //if is in edit mode and it's modifier is r/rw then the connections are basically exhausted
+  if (editMode && rule && rule.modifier !== "rw+") {
+    return true;
+  }
   //undefined and null are equal to no limit
   if (rule?.upperLimit !== undefined && rule?.upperLimit !== null) {
     return targetConnectionsForGivenRule.length >= rule?.upperLimit;

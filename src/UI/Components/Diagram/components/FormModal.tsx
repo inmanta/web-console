@@ -25,6 +25,7 @@ import { words } from "@/UI/words";
 import {
   createFormState,
   CreateModifierHandler,
+  EditModifierHandler,
   FieldCreator,
 } from "../../ServiceInstanceForm";
 import { FieldInput } from "../../ServiceInstanceForm/Components";
@@ -35,11 +36,13 @@ interface PossibleForm {
   value: string;
   model: ServiceModel | EmbeddedEntity | undefined;
   isEmbedded: boolean;
+  embeddedTo: string;
 }
 interface Selected {
   name: string;
   model: ServiceModel | EmbeddedEntity;
   isEmbedded: boolean;
+  embeddedTo: string;
 }
 
 const FormModal = ({
@@ -87,9 +90,14 @@ const FormModal = ({
             name: value as string,
             model: chosenModel.model,
             isEmbedded: chosenModel.isEmbedded,
+            embeddedTo: chosenModel.embeddedTo,
           });
 
-          const fieldCreator = new FieldCreator(new CreateModifierHandler());
+          const fieldCreator = new FieldCreator(
+            cellView?.model.get("isInEditMode")
+              ? new EditModifierHandler()
+              : new CreateModifierHandler(),
+          );
           const selectedFields = fieldCreator.attributesToFields(
             chosenModel.model.attributes,
           );
@@ -147,6 +155,7 @@ const FormModal = ({
           value: service.name + displayedPrefix,
           model: service,
           isEmbedded: prefix !== "",
+          embeddedTo: prefix,
         });
 
         getOptions(service.embedded_entities, values, joinedPrefix);
@@ -161,6 +170,7 @@ const FormModal = ({
         value: "Choose a Service",
         model: undefined,
         isEmbedded: false,
+        embeddedTo: "",
       },
     ]);
     setPossibleForms(tempPossibleForms);
@@ -168,7 +178,6 @@ const FormModal = ({
     if (cellView) {
       const entity = cellView.model as ServiceEntityBlock;
       const entityName = entity.getName();
-
       onEntityChosen(
         null,
         entity.get("isEmbedded")

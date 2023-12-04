@@ -5,7 +5,7 @@ import { InstanceWithReferences } from "@/Data/Managers/GetInstanceWithRelations
 import { words } from "@/UI/words";
 import activeImage from "./icons/active-icon.svg";
 import candidateImage from "./icons/candidate-icon.svg";
-import { ActionEnum, relationId } from "./interfaces";
+import { ActionEnum, ConnectionRules, relationId } from "./interfaces";
 import { Colors, EntityConnection, ServiceEntityBlock } from "./shapes";
 
 /**
@@ -22,7 +22,47 @@ export function showLinkTools(
   graph: dia.Graph,
   linkView: dia.LinkView,
   updateInstancesToSend: (cell: ServiceEntityBlock, action: ActionEnum) => void,
+  connectionRules: ConnectionRules,
 ) {
+  const source = linkView.model.source();
+  const target = linkView.model.target();
+
+  const sourceCell = graph.getCell(
+    source.id as dia.Cell.ID,
+  ) as ServiceEntityBlock;
+  const targetCell = graph.getCell(
+    target.id as dia.Cell.ID,
+  ) as ServiceEntityBlock;
+
+  const targetName = targetCell.getName();
+  const sourceName = sourceCell.getName();
+  const doesTargetHaveRule = connectionRules[targetName].find(
+    (rule) => rule.name === sourceName,
+  );
+  const doesSourceHaveRule = connectionRules[sourceName].find(
+    (rule) => rule.name === targetName,
+  );
+
+  const isTargetInEditMode: boolean | undefined =
+    targetCell.get("isInEditMode");
+  const isSourceInEditMode: boolean | undefined =
+    sourceCell.get("isInEditMode");
+
+  if (
+    isSourceInEditMode &&
+    doesSourceHaveRule &&
+    doesSourceHaveRule.modifier !== "rw+"
+  ) {
+    return;
+  }
+  if (
+    isTargetInEditMode &&
+    doesTargetHaveRule &&
+    doesTargetHaveRule.modifier !== "rw+"
+  ) {
+    return;
+  }
+
   const tools = new dia.ToolsView({
     tools: [
       new linkTools.Remove({
@@ -113,6 +153,7 @@ export function showLinkTools(
       }),
     ],
   });
+
   linkView.addTools(tools);
 }
 
@@ -146,6 +187,7 @@ export function appendInstance(
 
   instanceAsTable.set("id", serviceWithReferences.instance.data.id);
   instanceAsTable.set("isEmbedded", false);
+  instanceAsTable.set("isInEditMode", true);
 
   if (!isMainInstance) {
     instanceAsTable.setTabColor(Colors.base);
@@ -293,6 +335,7 @@ export function appendEmbeddedEntity(
       instanceAsTable.set("isEmbedded", true);
       instanceAsTable.set("holderType", holderType);
       instanceAsTable.set("embeddedTo", embeddedTo);
+      instanceAsTable.set("isInEditMode", true);
       instanceAsTable.set("isBlockedFromEditing", isBlockedFromEditing);
       //add to graph
       instanceAsTable.addTo(graph);
@@ -356,6 +399,7 @@ export function appendEmbeddedEntity(
     instanceAsTable.set("holderType", holderType);
     instanceAsTable.set("embeddedTo", embeddedTo);
     instanceAsTable.set("isBlockedFromEditing", isBlockedFromEditing);
+    instanceAsTable.set("isInEditMode", true);
 
     //add to graph
     instanceAsTable.addTo(graph);
@@ -421,6 +465,7 @@ export function appendEntity(
   entity: InstanceAttributeModel,
   isCore: boolean,
   isEmbedded = false,
+  holderType = "",
 ): ServiceEntityBlock {
   //Create shape for Entity
   const instanceAsTable = new ServiceEntityBlock().setName(serviceModel.name);
@@ -432,6 +477,7 @@ export function appendEntity(
   }
 
   instanceAsTable.set("isEmbedded", isEmbedded);
+  instanceAsTable.set("holderType", holderType);
 
   if (
     serviceModel.inter_service_relations &&

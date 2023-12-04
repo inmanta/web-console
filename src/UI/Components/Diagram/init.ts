@@ -171,7 +171,7 @@ export default function diagramInit(
 
   paper.on("link:mouseenter", (linkView) => {
     if (linkView.model.get("isBlockedFromEditing")) return;
-    showLinkTools(graph, linkView, updateInstancesToSend);
+    showLinkTools(graph, linkView, updateInstancesToSend, connectionRules);
   });
 
   paper.on("link:mouseleave", (linkView: dia.LinkView) => {
@@ -302,13 +302,20 @@ export default function diagramInit(
       return jsonGraph.cells as serializedCell[];
     },
 
-    addEntity: (instance, service, addingCoreInstance, isEmbedded) => {
+    addEntity: (
+      instance,
+      service,
+      addingCoreInstance,
+      isEmbedded,
+      holderType,
+    ) => {
       const shape = appendEntity(
         graph,
         service,
         instance,
         addingCoreInstance,
         isEmbedded,
+        holderType,
       );
       const shapeCoordinates = shape.getBBox();
       scroller.center(shapeCoordinates.x, shapeCoordinates.y + 200);
@@ -343,6 +350,7 @@ export interface DiagramHandlers {
     service: ServiceModel,
     addingCoreInstance: boolean,
     isEmbedded: boolean,
+    embeddedTo: string,
   ) => ServiceEntityBlock;
   editEntity: (
     cellView: dia.CellView,

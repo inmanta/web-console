@@ -20,8 +20,10 @@ interface DictDialogData {
 }
 interface Rule {
   name: string;
+  type: "embedded" | "inter-service";
   lowerLimit: ParsedNumber | null;
   upperLimit: ParsedNumber | null;
+  modifier: string;
 }
 interface ConnectionRules {
   [serviceName: string]: Rule[];
