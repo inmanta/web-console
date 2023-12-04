@@ -747,6 +747,7 @@ describe("Canvas.tsx", () => {
   it("creates valid object for order_api when creating entity from scratch", () => {});
   it("creates valid object for order_api when editing entity", () => {});
 
+  it("WHEN strict_modifier_enforcement is set to false for some services THEN for only these instances and their connections editing/deleting is blocked", () => {});
   // it("zoom-in/zoom-out", async () => {
   //   // TODO: Resolve "TypeError: viewport.getCTM is not a function"
   //   const component = setup();
