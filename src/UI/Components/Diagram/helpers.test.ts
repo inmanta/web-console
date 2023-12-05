@@ -68,6 +68,7 @@ describe("createConnectionRules", () => {
     const rules = createConnectionRules([], {});
     expect(rules).toStrictEqual({});
   });
+
   it("array with service without embedded services and relations gives back empty object", () => {
     const rules = createConnectionRules(
       [{ ...Service.a, embedded_entities: [], inter_service_relations: [] }],
@@ -77,6 +78,7 @@ describe("createConnectionRules", () => {
       service_name_a: [],
     });
   });
+
   it("array with service with embedded services and relations gives proper object", () => {
     const rules = createConnectionRules(
       [Service.a, Service.withRelationsOnly],
@@ -131,6 +133,7 @@ describe("createConnectionRules", () => {
       ],
     });
   });
+
   it("array with service with nested embedded services gives proper object", () => {
     const rules = createConnectionRules([Service.nestedEditable], {});
     expect(rules).toStrictEqual({
@@ -206,7 +209,7 @@ describe("shapesDataTransform", () => {
       service_entity: "embedded-entity-service",
       config: {},
       action: "create",
-      value: {
+      attributes: {
         name: "test-emb",
         service_id: "ebd-123",
         vlan_assigment_r1: {
@@ -238,7 +241,7 @@ describe("shapesDataTransform", () => {
       service_entity: "embedded-entity-service",
       config: {},
       action: "update",
-      edit: [
+      edits: [
         {
           edit_id: `ae6c9dd7-5392-4374-9f13-df3bb42bf0db_order_update-1`,
           operation: "replace",
@@ -295,7 +298,7 @@ describe("shapesDataTransform", () => {
       service_entity: "embedded-entity-service",
       config: {},
       action: "update",
-      edit: [
+      edits: [
         {
           edit_id: `ae6c9dd7-5392-4374-9f13-df3bb42bf0db_order_update-1`,
           operation: "replace",
@@ -328,7 +331,7 @@ describe("shapesDataTransform", () => {
       service_entity: "embedded-entity-service",
       config: {},
       action: "update",
-      edit: [
+      edits: [
         {
           edit_id: `ae6c9dd7-5392-4374-9f13-df3bb42bf0db_order_update-1`,
           operation: "replace",
@@ -377,7 +380,7 @@ describe("shapesDataTransform", () => {
       service_entity: "child-service",
       config: {},
       action: "create",
-      value: {
+      attributes: {
         name: "test123456789",
         service_id: "123test",
         should_deploy_fail: false,
@@ -394,7 +397,7 @@ describe("shapesDataTransform", () => {
       service_entity: "container-service",
       config: {},
       action: "create",
-      value: {
+      attributes: {
         name: "test12345",
         service_id: "test12345",
         should_deploy_fail: false,
