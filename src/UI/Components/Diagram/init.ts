@@ -151,9 +151,13 @@ export default function diagramInit(
   );
 
   paper.on("cell:pointerup", function (cellView) {
-    // We don't want a Halo for links.
-    if (cellView.model instanceof dia.Link) return;
-
+    // We don't want a Halo if cellView is a Link or is a representation of an already existing instance that has strict_modifier set to false
+    if (
+      cellView.model instanceof dia.Link ||
+      cellView.model.get("isBlockedFromEditing")
+    )
+      return;
+    if (cellView.model.get("isBlockedFromEditing")) return;
     const halo = createHalo(
       graph,
       paper,
@@ -165,7 +169,8 @@ export default function diagramInit(
     halo.render();
   });
 
-  paper.on("link:mouseenter", (linkView: dia.LinkView) => {
+  paper.on("link:mouseenter", (linkView) => {
+    if (linkView.model.get("isBlockedFromEditing")) return;
     showLinkTools(graph, linkView, updateInstancesToSend);
   });
 

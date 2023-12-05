@@ -1,0 +1,6 @@
+change-type: patch
+description: "Resolve issue that Deleting embedded entity isn't registered as a change in service instance"
+issue-nr: 5315
+destination-branches:
+  - master
+  - iso6

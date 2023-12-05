@@ -107,8 +107,8 @@ const Canvas = ({
       service_entity: cell.getName(),
       config: {},
       action: null,
-      value: cell.get("instanceAttributes"),
-      edit: null,
+      attributes: cell.get("instanceAttributes"),
+      edits: null,
       embeddedTo: cell.get("embeddedTo"),
       relatedTo: cell.getRelations(),
     };
@@ -135,10 +135,10 @@ const Canvas = ({
                 service_entity: cell.getName(),
                 config: {},
                 action: "delete",
-                value: null,
-                edit: null,
-                embeddedTo: null,
-                relatedTo: null,
+                attributes: null,
+                edits: null,
+                embeddedTo: cell.attributes.embeddedTo,
+                relatedTo: cell.attributes.relatedTo,
               }),
             );
           } else {
@@ -159,7 +159,6 @@ const Canvas = ({
       const isMainInstance = true;
       const cells = actions.addInstance(instance, services, isMainInstance);
       const newInstances = new Map();
-
       cells.forEach((cell) => {
         if (cell.type === "app.ServiceEntityBlock") {
           newInstances.set(cell.id, {
@@ -184,8 +183,8 @@ const Canvas = ({
   useEffect(() => {
     if (!isDirty) {
       setIsDirty(
-        bundleInstances(instancesToSend, services).filter(
-          (item) => item.action !== null,
+        Array.from(instancesToSend).filter(
+          ([_key, item]) => item.action !== null,
         ).length > 0,
       );
     }

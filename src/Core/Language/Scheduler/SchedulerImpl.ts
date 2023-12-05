@@ -31,11 +31,12 @@ export class SchedulerImpl implements Scheduler {
   }
 
   resumeTasks(): void {
-    const tasksToResume = this.tasks.toObject();
+    const tasksToResume = this.pausedTasks.toObject();
     Object.keys(tasksToResume).forEach((key) => {
-      this.tasks.drop(key);
-      this.pausedTasks.set(key, this.wrapTask(tasksToResume[key]));
+      this.pausedTasks.drop(key);
+      this.tasks.set(key, this.wrapTask(tasksToResume[key]));
     });
+    this.revalidateTicker();
   }
 
   unregister(id: string): void {
