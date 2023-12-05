@@ -875,7 +875,7 @@ export const testApiInstance: InstanceForApi = {
   service_entity: "embedded-entity-service",
   config: {},
   action: null,
-  value: {
+  attributes: {
     name: "test-emb",
     service_id: "ebd-123",
     should_deploy_fail: false,
@@ -888,7 +888,7 @@ export const testEmbeddedApiInstances: InstanceForApi[] = [
     service_entity: "vlan_assigment_r1",
     config: {},
     action: null,
-    value: {
+    attributes: {
       address: "1.2.3.5/32",
       vlan_id: 1,
       router_ip: "1.2.3.4",
@@ -901,7 +901,7 @@ export const testEmbeddedApiInstances: InstanceForApi[] = [
     service_entity: "vlan_assigment_r2",
     config: {},
     action: null,
-    value: {
+    attributes: {
       address: "1.2.3.3/32",
       vlan_id: 123,
       router_ip: "1.2.3.1",
@@ -916,7 +916,7 @@ export const testParentService: InstanceForApi = {
   service_entity: "parent-service",
   config: {},
   action: null,
-  value: {
+  attributes: {
     name: "test",
     service_id: "test123",
     should_deploy_fail: false,
@@ -929,7 +929,7 @@ export const relatedServices: InstanceForApi[] = [
     service_entity: "child-service",
     config: {},
     action: "create",
-    value: {
+    attributes: {
       name: "test123456789",
       service_id: "123test",
       should_deploy_fail: false,
@@ -944,7 +944,7 @@ export const relatedServices: InstanceForApi[] = [
     service_entity: "container-service",
     config: {},
     action: "create",
-    value: {
+    attributes: {
       name: "test12345",
       service_id: "test12345",
       should_deploy_fail: false,
@@ -955,7 +955,7 @@ export const relatedServices: InstanceForApi[] = [
     service_entity: "child_container",
     config: {},
     action: "create",
-    value: {
+    attributes: {
       name: "child123",
     },
     embeddedTo: "a4218978-c9ad-4fd8-95e4-b9e9a8c3c653",
