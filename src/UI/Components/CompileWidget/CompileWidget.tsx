@@ -58,6 +58,7 @@ const Widget: React.FC<WidgetProps> = ({
   <Dropdown
     aria-label="CompileWidget"
     onSelect={onSelect}
+    onOpenChange={(value) => onToggle(value)}
     toggle={(toggleref: React.Ref<MenuToggleElement>) => (
       <MenuToggle
         aria-label="Toggle"

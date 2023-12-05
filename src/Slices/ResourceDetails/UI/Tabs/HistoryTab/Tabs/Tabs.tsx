@@ -1,11 +1,8 @@
 import React from "react";
 import { Card, CardBody } from "@patternfly/react-core";
 import { ListIcon, ModuleIcon } from "@patternfly/react-icons";
-import {
-  Table,
-  TableBody,
-  TableHeader,
-} from "@patternfly/react-table/deprecated";
+
+import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
 import { JsonFormatter, XmlFormatter } from "@/Data";
 import {
   AttributeClassifier,
@@ -76,12 +73,26 @@ const AttributesTab: React.FC<{ attributes: Record<string, unknown> }> = ({
 };
 
 const RequiresTab: React.FC<{ requires: string[] }> = ({ requires }) => (
-  <Table
-    cells={[words("resources.history.tabs.requires")]}
-    aria-label={words("resources.history.tabs.requires")}
-    rows={requires.map((req) => [req])}
-  >
-    <TableHeader />
-    <TableBody />
+  <Table aria-label={words("resources.history.tabs.requires")}>
+    <Thead>
+      <Tr>
+        <Th>{words("resources.history.tabs.requires")}</Th>
+      </Tr>
+    </Thead>
+    <Tbody>
+      {requires.length ? (
+        requires.map((row, index) => (
+          <Tr key={row}>
+            <Td key={`${row}${index}`}>{row}</Td>
+          </Tr>
+        ))
+      ) : (
+        <Tr key="empty-row">
+          <Td key="empty-row-data">
+            {words("resources.requires.empty.message")}
+          </Td>
+        </Tr>
+      )}
+    </Tbody>
   </Table>
 );

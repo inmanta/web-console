@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { DropdownItem } from "@patternfly/react-core/deprecated";
+import { DropdownItem } from "@patternfly/react-core";
 import { Maybe } from "@/Core";
 import { Link } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
@@ -65,18 +65,16 @@ const CompareWithSelected: React.FC<CompareWithSelectedProps> = ({
   }
 
   return (
-    <DropdownItem
-      component={
-        <Link
-          pathname={routeManager.getUrl(
-            "DesiredStateCompare",
-            sanitizeFromTo(selection.value, version),
-          )}
-        >
-          {words("desiredState.compare.action.compareWithSelected")}
-        </Link>
-      }
-    />
+    <DropdownItem>
+      <Link
+        pathname={routeManager.getUrl(
+          "DesiredStateCompare",
+          sanitizeFromTo(selection.value, version),
+        )}
+      >
+        {words("desiredState.compare.action.compareWithSelected")}
+      </Link>
+    </DropdownItem>
   );
 };
 
@@ -85,16 +83,14 @@ const CompareWithCurrentState: React.FC<{ version: string }> = ({
 }) => {
   const { routeManager } = useContext(DependencyContext);
   return (
-    <DropdownItem
-      component={
-        <Link
-          pathname={routeManager.getUrl("ComplianceCheck", {
-            version,
-          })}
-        >
-          {words("desiredState.compare.action.compareWithCurrentState")}
-        </Link>
-      }
-    />
+    <DropdownItem>
+      <Link
+        pathname={routeManager.getUrl("ComplianceCheck", {
+          version,
+        })}
+      >
+        {words("desiredState.compare.action.compareWithCurrentState")}
+      </Link>
+    </DropdownItem>
   );
 };

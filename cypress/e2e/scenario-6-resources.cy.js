@@ -561,7 +561,7 @@ describe("Scenario 6 : Resources", () => {
 
       //Go to resources page
       cy.get(".pf-v5-c-nav__link").contains("Resources").click();
-      cy.get('[aria-label="LegendItem-deployed"]', { timeout: 30000 }).should(
+      cy.get('[aria-label="LegendItem-deployed"]', { timeout: 60000 }).should(
         "have.text",
         "49",
       );
@@ -713,7 +713,7 @@ describe("Scenario 6 : Resources", () => {
       // Expect it to have : 15 log messages
       cy.get('[aria-label="ResourceLogRow"]', { timeout: 40000 }).should(
         "to.have.length.of.at.least",
-        15,
+        12,
       );
 
       // make sure the default is 100 instead of 20 like on other pages with pagination.

@@ -1,16 +1,21 @@
-import React, { useState } from "react";
-import { Label, Spinner, ToolbarGroup } from "@patternfly/react-core";
+import React, { useEffect, useState } from "react";
 import {
+  Label,
+  MenuToggle,
+  MenuToggleElement,
   Select,
   SelectOption,
-  SelectOptionObject,
-} from "@patternfly/react-core/deprecated";
+  Spinner,
+  ToolbarGroup,
+} from "@patternfly/react-core";
 import { global_Color_100 } from "@patternfly/react-tokens";
 import styled from "styled-components";
 import { Maybe, RemoteData } from "@/Core";
 import { MomentDatePresenter } from "@/UI/Utils";
 import { Progress as DomainProgress } from "@S/ComplianceCheck/Core/Domain";
 import { MaybeReport, RemoteReportList } from "../types";
+
+// TODO; the spinner doesn't get updated in the dropdown after triggering a dry run.
 
 interface Props {
   setSelectedReport(report: MaybeReport): void;
@@ -28,7 +33,7 @@ export const SelectReportAction: React.FC<Props> = ({
   const [isOpen, setIsOpen] = useState(false);
   // This should be the trigger from the command
 
-  const onSelect = (event, value) => {
+  const onSelect = (value) => {
     if (!RemoteData.isSuccess(reportsData)) return;
     const report = reportsData.value.find((report) => report.id === value);
     if (report === undefined) return;
@@ -42,7 +47,7 @@ export const SelectReportAction: React.FC<Props> = ({
         reportsData={reportsData}
         selectedReport={selectedReport}
         isOpen={isOpen}
-        setIsOpen={(_event, value) => setIsOpen(value)}
+        setIsOpen={(value) => setIsOpen(value)}
         onSelect={onSelect}
       />
     </ToolbarGroup>
@@ -53,18 +58,8 @@ interface PickerProps {
   reportsData: RemoteReportList;
   selectedReport: MaybeReport;
   isOpen: boolean;
-  setIsOpen: (
-    event:
-      | Event
-      | React.MouseEvent<Element, MouseEvent>
-      | React.ChangeEvent<Element>
-      | React.KeyboardEvent<Element>,
-    open: boolean,
-  ) => void;
-  onSelect: (
-    event: React.MouseEvent<Element, MouseEvent> | React.ChangeEvent<Element>,
-    value: string | SelectOptionObject,
-  ) => void;
+  setIsOpen: (open: boolean) => void;
+  onSelect: (value: string | number | undefined) => void;
 }
 
 const Picker: React.FC<PickerProps> = ({
@@ -77,14 +72,32 @@ const Picker: React.FC<PickerProps> = ({
   if (!RemoteData.isSuccess(reportsData)) return null;
   if (reportsData.value.length <= 0) return <EmptyPicker />;
   if (Maybe.isNone(selectedReport)) return null;
+
+  const toggle = (toggleRef: React.Ref<MenuToggleElement>) => (
+    <MenuToggle
+      ref={toggleRef}
+      onClick={() => setIsOpen(!isOpen)}
+      aria-label="ReportListSelect"
+      isExpanded={isOpen}
+      icon={<Progress report={selectedReport.value} />}
+      style={
+        {
+          width: "300px",
+        } as React.CSSProperties
+      }
+    >
+      {datePresenter.getFull(selectedReport.value.date)}
+    </MenuToggle>
+  );
+
   return (
     <Select
-      onToggle={setIsOpen}
-      onSelect={onSelect}
-      selections={selectedReport.value.id}
+      toggle={toggle}
+      onSelect={(_event, value) => onSelect(value)}
+      selected={selectedReport.value.id}
       isOpen={isOpen}
+      onOpenChange={(isOpen) => setIsOpen(isOpen)}
       aria-label="ReportList"
-      toggleAriaLabel="ReportListSelect"
     >
       {reportsData.value.map((report) => (
         <SelectOption key={report.id} value={report.id}>
@@ -95,22 +108,25 @@ const Picker: React.FC<PickerProps> = ({
   );
 };
 
-const EmptyPicker: React.FC = () => (
-  <Select
-    isDisabled
-    onToggle={() => undefined}
-    aria-label="ReportList"
-    toggleAriaLabel="ReportListSelect"
-    placeholderText="No dry runs exist"
-  />
+const DisabledToggle = () => (
+  <MenuToggle aria-label="ReportListSelect" isDisabled>
+    No Dry runs exists
+  </MenuToggle>
 );
 
-const Progress: React.FC<{ report: DomainProgress }> = ({
-  report: { todo, total },
-}) => {
-  const tot = Number(total);
-  const current = tot - Number(todo);
-  const done = current === tot;
+const EmptyPicker: React.FC = () => (
+  <Select toggle={DisabledToggle} aria-label="ReportList" />
+);
+
+const Progress: React.FC<{ report: DomainProgress }> = ({ report }) => {
+  const tot = Number(report.total);
+  const current = tot - Number(report.todo);
+  const [done, setDone] = useState(false);
+
+  useEffect(() => {
+    setDone(tot === current);
+  }, [tot, current, report.total, report.todo, done]);
+
   return done ? (
     <StyledLabel variant="outline" isCompact>
       {current} / {tot}

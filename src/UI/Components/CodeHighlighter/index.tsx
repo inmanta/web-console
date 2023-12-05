@@ -304,8 +304,9 @@ const IconSettings: React.FC<{ actions: JSX.Element[] }> = ({ actions }) => {
           <EllipsisVIcon />
         </MenuToggle>
       )}
+      onOpenChange={(isOpen: boolean) => setIsOpen(isOpen)}
       isOpen={isOpen}
-      isPlain
+      onSelect={() => setIsOpen(false)}
     >
       {actions}
     </Dropdown>

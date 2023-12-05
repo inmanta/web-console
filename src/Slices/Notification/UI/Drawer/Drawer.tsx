@@ -5,16 +5,17 @@ import React, {
   useState,
 } from "react";
 import {
+  Dropdown,
+  DropdownItem,
+  DropdownList,
+  MenuToggle,
+  MenuToggleElement,
   NotificationDrawer,
   NotificationDrawerBody,
   NotificationDrawerHeader,
   NotificationDrawerList,
 } from "@patternfly/react-core";
-import {
-  Dropdown,
-  DropdownItem,
-  KebabToggle,
-} from "@patternfly/react-core/deprecated";
+import { EllipsisVIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { RemoteData } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
@@ -165,30 +166,40 @@ const ActionList: React.FC<ActionListProps> = ({
     onClose();
   };
 
+  const onToggleClick = () => {
+    setIsOpen(!isOpen);
+  };
+
   return (
     <Dropdown
       onSelect={() => setIsOpen(false)}
-      toggle={
-        <KebabToggle
-          onToggle={(_event, val) => setIsOpen(val)}
+      toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
+        <MenuToggle
+          ref={toggleRef}
           aria-label="NotificationListActions"
-        />
-      }
+          variant="plain"
+          onClick={onToggleClick}
+          isExpanded={isOpen}
+        >
+          <EllipsisVIcon />
+        </MenuToggle>
+      )}
       isOpen={isOpen}
-      isPlain
-      dropdownItems={[
+      onOpenChange={(isOpen: boolean) => setIsOpen(isOpen)}
+      popperProps={{ position: "center" }}
+      id="notification-0"
+    >
+      <DropdownList>
         <DropdownItem key="readAll" component="button" onClick={onReadAll}>
           {words("notification.drawer.readAll")}
-        </DropdownItem>,
+        </DropdownItem>
         <DropdownItem key="clearAll" component="button" onClick={onClearAll}>
           {words("notification.drawer.clearAll")}
-        </DropdownItem>,
+        </DropdownItem>
         <DropdownItem key="seeAll" component="button" onClick={onShowAll}>
           {words("notification.drawer.showAll")}
-        </DropdownItem>,
-      ]}
-      id="notification-0"
-      position="right"
-    />
+        </DropdownItem>
+      </DropdownList>
+    </Dropdown>
   );
 };

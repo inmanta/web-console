@@ -72,6 +72,7 @@ export const TreeTable: React.FC<Props> = ({
                 </MenuToggle>
               )}
               isOpen={isOpen}
+              popperProps={{ position: "right" }}
             >
               <DropdownList>
                 <DropdownItem
