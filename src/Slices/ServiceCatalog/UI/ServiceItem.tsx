@@ -44,7 +44,7 @@ export const ServiceItem: React.FunctionComponent<Props> = ({ service }) => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const handleModalToggle = () => {
-    setIsDeleteModalOpen(!isOpen);
+    setIsDeleteModalOpen(!isDeleteModalOpen);
   };
   const onSubmit = async () => {
     handleModalToggle();
@@ -119,7 +119,7 @@ export const ServiceItem: React.FunctionComponent<Props> = ({ service }) => {
             toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
               <MenuToggle
                 ref={toggleRef}
-                aria-label="repair-deploy-dropdown"
+                aria-label="Actions-dropdown"
                 variant="plain"
                 onClick={onToggleClick}
                 isExpanded={isOpen}

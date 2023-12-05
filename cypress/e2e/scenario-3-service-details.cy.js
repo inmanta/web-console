@@ -76,7 +76,7 @@ if (Cypress.env("edition") === "iso") {
 
       // Click on kebab menu and select Show Details on basic-service
       cy.get("#basic-service", { timeout: 60000 })
-        .find('[aria-label="Actions"]')
+        .find('[aria-label="Actions-dropdown"]')
         .click();
       cy.get("button").contains("Show Details").click();
 
@@ -211,7 +211,7 @@ if (Cypress.env("edition") === "iso") {
 
       // click on kebab menu on basic-service
       cy.get("#basic-service", { timeout: 60000 })
-        .find('[aria-label="Actions"]')
+        .find('[aria-label="Actions-dropdown"]')
         .click();
       cy.get("button").contains("Show Details").click();
 
@@ -301,7 +301,7 @@ if (Cypress.env("edition") === "iso") {
 
       // click on kebab menu on basic-service
       cy.get("#basic-service", { timeout: 60000 })
-        .find('[aria-label="Actions"]')
+        .find('[aria-label="Actions-dropdown"]')
         .click();
       cy.get("button").contains("Show Details").click();
 
@@ -335,7 +335,7 @@ if (Cypress.env("edition") === "iso") {
 
       // Click on kebab menu and select Show Details on basic-service
       cy.get("#basic-service", { timeout: 60000 })
-        .find('[aria-label="Actions"]')
+        .find('[aria-label="Actions-dropdown"]')
         .click();
       cy.get("button").contains("Show Details").click();
 
@@ -451,7 +451,7 @@ if (Cypress.env("edition") === "iso") {
 
       // Click on Delete button
       cy.get("#basic-service", { timeout: 60000 })
-        .find('[aria-label="Actions"]')
+        .find('[aria-label="Actions-dropdown"]')
         .click();
       cy.get("button", { timeout: 30000 }).contains("Delete").click();
 
@@ -460,7 +460,7 @@ if (Cypress.env("edition") === "iso") {
 
       // Click again on Delete button
       cy.get("#basic-service", { timeout: 60000 })
-        .find('[aria-label="Actions"]')
+        .find('[aria-label="Actions-dropdown"]')
         .click();
       cy.get("button", { timeout: 20000 }).contains("Delete").click();
 
