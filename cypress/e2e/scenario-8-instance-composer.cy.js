@@ -131,7 +131,7 @@ if (Cypress.env("edition") === "iso") {
         .click();
       cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
 
-      // click on Show Inventory on basic-service, expect one instance alreadt
+      // click on Show Inventory on basic-service, expect one instance already
       cy.get("#basic-service", { timeout: 60000 })
         .contains("Show inventory")
         .click();
