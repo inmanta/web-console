@@ -118,7 +118,9 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[data-testid="ToastAlert"]')
         .contains("Instance Composed succesfully")
         .should("be.visible");
-      cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
+      cy.get('[aria-label="ServiceInventory-Success"]').should("to.be.visible");
+      // Check if only one row has been added to the table.
+      cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 1);
     });
 
     it("8.2 Open existing instance in the Composer", () => {
@@ -129,11 +131,12 @@ if (Cypress.env("edition") === "iso") {
         .click();
       cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
 
-      // click on Show Inventory on basic-service
+      // click on Show Inventory on basic-service, expect one instance alreadt
       cy.get("#basic-service", { timeout: 60000 })
         .contains("Show inventory")
         .click();
-      cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
+      cy.get('[aria-label="ServiceInventory-Success"]').should("to.be.visible");
+      cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 1);
 
       // click on add instance
       cy.get("#add-instance-button").click();
@@ -157,15 +160,17 @@ if (Cypress.env("edition") === "iso") {
       }).should("to.be.visible");
 
       // Check if only one row has been added to the table.
-      cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 1);
-      // wait until instance is in "up" state
-      cy.get('[data-label="State"]', { timeout: 90000 }).should(
-        "have.text",
-        "up",
-      );
+      cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 2);
+      // awiat until all instances are being deployed and up
+      cy.get(".pf-v5-c-chart").within(() => {
+        cy.get("#legend-labels-2", { timeout: 90000 }).should(
+          "contain",
+          "success: 2",
+        );
+      });
 
       // click on kebab menu on basic-service
-      cy.get('[aria-label="row actions toggle"]').click();
+      cy.get('[aria-label="row actions toggle"]').eq(0).click();
       cy.get("button").contains("Edit in Composer").click();
 
       // Expect to be redirected to Instance Composer view with basic-service shape visible
