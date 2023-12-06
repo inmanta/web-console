@@ -15,8 +15,6 @@ import { MomentDatePresenter } from "@/UI/Utils";
 import { Progress as DomainProgress } from "@S/ComplianceCheck/Core/Domain";
 import { MaybeReport, RemoteReportList } from "../types";
 
-// TODO; the spinner doesn't get updated in the dropdown after triggering a dry run.
-
 interface Props {
   setSelectedReport(report: MaybeReport): void;
   selectedReport: MaybeReport;
