@@ -331,7 +331,7 @@ const dict = {
   "dashboard.resource.resource_count.label.x": "Number of Resources [#]",
   "dashboard.logout": "Logout",
   "dashboard.documentation.tooltip": "Documentation",
-  "dashboard.API.tooltip": "General API",
+  "dashboard.API.tooltip": "REST API",
   "dashboard.setting.tooltip": "Settings",
   "dashboard.status_page.tooltip": "Status page",
   "dashboard.notifications.tooltip": "Show notifications",

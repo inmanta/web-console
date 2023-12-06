@@ -2,8 +2,10 @@ import React, { useContext, useState } from "react";
 import {
   Dropdown,
   DropdownItem,
-  KebabToggle,
-} from "@patternfly/react-core/deprecated";
+  MenuToggle,
+  MenuToggleElement,
+} from "@patternfly/react-core";
+import { EllipsisVIcon } from "@patternfly/react-icons";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 
@@ -24,31 +26,44 @@ export const ActionList: React.FC<Props> = ({ read, id, onUpdate }) => {
   const onRead = () => trigger({ read: true }, [id], onUpdate);
   const onUnread = () => trigger({ read: false }, [id], onUpdate);
 
+  const onToggleClick = () => {
+    setIsOpen(!isOpen);
+  };
+
   return (
     <Dropdown
-      isPlain
-      position="right"
       isOpen={isOpen}
       onSelect={() => setIsOpen(false)}
-      toggle={<KebabToggle onToggle={(_event, val) => setIsOpen(val)} />}
-      dropdownItems={[
-        <DropdownItem
-          key="read"
-          component="button"
-          isDisabled={read}
-          onClick={onRead}
+      onOpenChange={(isOpen: boolean) => setIsOpen(isOpen)}
+      popperProps={{ position: "center" }}
+      toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
+        <MenuToggle
+          ref={toggleRef}
+          aria-label="notifications-dropdown"
+          variant="plain"
+          onClick={onToggleClick}
+          isExpanded={isOpen}
         >
-          {words("notification.read")}
-        </DropdownItem>,
-        <DropdownItem
-          key="unread"
-          component="button"
-          isDisabled={!read}
-          onClick={onUnread}
-        >
-          {words("notification.unread")}
-        </DropdownItem>,
-      ]}
-    />
+          <EllipsisVIcon />
+        </MenuToggle>
+      )}
+    >
+      <DropdownItem
+        key="read"
+        component="button"
+        isDisabled={read}
+        onClick={onRead}
+      >
+        {words("notification.read")}
+      </DropdownItem>
+      <DropdownItem
+        key="unread"
+        component="button"
+        isDisabled={!read}
+        onClick={onUnread}
+      >
+        {words("notification.unread")}
+      </DropdownItem>
+    </Dropdown>
   );
 };

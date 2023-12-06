@@ -112,5 +112,5 @@ const Spacer = styled.div`
   display: flex;
   height: 30px;
   width: 1px;
-  background: #e7e7e7;
+  background: var(--pf-v5-global--BackgroundColor--200);
 `;

@@ -1,10 +1,16 @@
 import React, { useContext, useState } from "react";
-import { Card, CardBody, CardHeader, CardTitle } from "@patternfly/react-core";
 import {
+  Card,
+  CardBody,
+  CardHeader,
+  CardTitle,
   Dropdown,
   DropdownItem,
-  KebabToggle,
-} from "@patternfly/react-core/deprecated";
+  DropdownList,
+  MenuToggle,
+  MenuToggleElement,
+} from "@patternfly/react-core";
+import { EllipsisVIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { Link } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
@@ -23,10 +29,9 @@ export const RejectionCard: React.FC<Props> = ({
 }) => {
   const { routeManager } = useContext(DependencyContext);
   const [isOpen, setIsOpen] = useState(false);
-  const dropdownItems: React.ReactNode[] = [
-    <DropdownItem
-      key="compileReportLink"
-      component={
+  const dropdownItems: React.ReactNode = (
+    <DropdownList>
+      <DropdownItem key="compileReportLink">
         <Link
           pathname={routeManager.getUrl("CompileDetails", {
             id: compile_id,
@@ -34,25 +39,24 @@ export const RejectionCard: React.FC<Props> = ({
         >
           {words("diagnose.links.compileReport")}
         </Link>
-      }
-    />,
-    ...(model_version
-      ? [
-          <DropdownItem
-            key="modelVersionLink"
-            component={
-              <Link
-                pathname={routeManager.getUrl("DesiredStateDetails", {
-                  version: model_version.toString(),
-                })}
-              >
-                {words("diagnose.links.modelVersionDetails")}
-              </Link>
-            }
-          />,
-        ]
-      : []),
-  ];
+      </DropdownItem>
+      {model_version ? (
+        <DropdownItem key="modelVersionLink">
+          <Link
+            pathname={routeManager.getUrl("DesiredStateDetails", {
+              version: model_version.toString(),
+            })}
+          >
+            {words("diagnose.links.modelVersionDetails")}
+          </Link>
+        </DropdownItem>
+      ) : null}
+    </DropdownList>
+  );
+
+  const onToggleClick = () => {
+    setIsOpen(!isOpen);
+  };
 
   return (
     <Card>
@@ -62,14 +66,24 @@ export const RejectionCard: React.FC<Props> = ({
             <>
               <Dropdown
                 onSelect={() => setIsOpen((value) => !value)}
-                toggle={
-                  <KebabToggle onToggle={() => setIsOpen((value) => !value)} />
-                }
+                toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
+                  <MenuToggle
+                    ref={toggleRef}
+                    aria-label="repair-deploy-dropdown"
+                    variant="plain"
+                    onClick={onToggleClick}
+                    isExpanded={isOpen}
+                  >
+                    <EllipsisVIcon />
+                  </MenuToggle>
+                )}
                 isOpen={isOpen}
                 isPlain
-                dropdownItems={dropdownItems}
-                position={"right"}
-              />
+                onOpenChange={(isOpen: boolean) => setIsOpen(isOpen)}
+                popperProps={{ position: "center" }}
+              >
+                {dropdownItems}
+              </Dropdown>
             </>
           ),
           hasNoOffset: false,

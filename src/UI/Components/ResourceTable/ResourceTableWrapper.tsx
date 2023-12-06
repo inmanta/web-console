@@ -1,9 +1,5 @@
 import React from "react";
-import {
-  Table,
-  TableHeader,
-  TableBody,
-} from "@patternfly/react-table/deprecated";
+import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
 
 interface Props {
   "aria-label"?: string;
@@ -15,16 +11,21 @@ export const ResourceTableWrapper: React.FC<React.PropsWithChildren<Props>> = ({
   ...props
 }) => {
   const columns = ["Resource Id", "State"];
-  const rows = [
-    { heightAuto: true, cells: [{ props: { colSpan: 8 }, title: children }] },
-  ];
 
   return (
-    <Table cells={columns} rows={rows} aria-label={props["aria-label"]}>
-      <TableHeader
-        id={props.id ? `resource-table-header-${props.id}` : undefined}
-      />
-      <TableBody />
+    <Table aria-label={props["aria-label"]}>
+      <Thead id={props.id ? `resource-table-header-${props.id}` : undefined}>
+        <Tr>
+          {columns.map((col) => (
+            <Th key={col}>{col}</Th>
+          ))}
+        </Tr>
+      </Thead>
+      <Tbody>
+        <Tr>
+          <Td colSpan={8}>{children}</Td>
+        </Tr>
+      </Tbody>
     </Table>
   );
 };

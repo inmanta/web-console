@@ -81,8 +81,8 @@ const ActionList: React.FC<Props> = ({ notification, onUpdate }) => {
         </MenuToggle>
       )}
       onSelect={() => setIsOpen(false)}
+      popperProps={{ position: "right" }}
       isOpen={isOpen}
-      isPlain
     >
       <DropdownList>
         <DropdownItem

@@ -2,12 +2,6 @@ import { dia, shapes, util } from "@inmanta/rappid";
 import expandButton from "./icons/expand-icon.svg";
 import { ColumnData } from "./interfaces";
 
-export const Colors = {
-  base: "#0066CC",
-  core: "#F0AB00",
-  embedded: "#009596",
-};
-
 /**
  * https://resources.jointjs.com/tutorial/custom-elements
  * https://resources.jointjs.com/tutorial/ts-shape
@@ -27,19 +21,17 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
         isCollapsed: false,
         attrs: {
           body: {
-            stroke: "#FFFFFF",
-            fill: "#FFFFFF",
+            class: "joint-entityBlock-body",
             strokeWidth: 1,
             cursor: "default",
           },
           header: {
-            fill: Colors.core,
-            stroke: Colors.core,
+            class: "joint-entityBlock-header",
             strokeWidth: 1,
             cursor: "grab",
           },
           headerLabel: {
-            fill: "#FFFFFF",
+            class: "joint-entityBlock-header-label",
             fontFamily:
               "RedHatText, Overpass, overpass, helvetica, arial, sans-serif",
             textTransform: "uppercase",
@@ -57,10 +49,10 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
             cursor: "default",
           },
           itemLabels: {
+            class: "joint-entityBlock-itemLabels",
             fontFamily:
               "RedHatText, Overpass, overpass, helvetica, arial, sans-serif",
             fontSize: 10,
-            fill: "#000000",
             //pointerEvents: "none",
             cursor: "default",
             itemText: {
@@ -68,7 +60,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
             },
           },
           itemLabels_1: {
-            fill: "#7F7F7F",
+            class: "joint-entityBlock-itemLabels-one",
             fontSize: 10,
             fontFamily:
               "RedHatText, Overpass, overpass, helvetica, arial, sans-serif",
@@ -276,8 +268,8 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
   }
 
   setTabColor(color: string) {
-    this.attr(["header", "fill"], color);
-    return this.attr(["header", "stroke"], color);
+    const currentClassName = this.attr(["header", "class"]);
+    return this.attr(["header", "class"], `${currentClassName} -${color}`);
   }
 
   appendColumns(data: Array<ColumnData>, initializeButton = true) {
@@ -304,8 +296,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
 
     const bbox = this.getBBox();
     this.attr("spacer", {
-      fill: "#000",
-      stroke: "#000",
+      class: "joint-entityBlock-spacer",
       opacity: 0.1,
       strokeWidth: 1,
       y: bbox.height - 33,
@@ -346,16 +337,18 @@ export class EntityConnection extends dia.Link {
           strokeWidth: 10,
         },
         line: {
+          class: "joint-link-line",
           targetMarker: {
+            class: "joint-link-marker",
             type: "path",
             d: "M 0 -5 10 0 0 5 z",
           },
           sourceMarker: {
+            class: "joint-link-marker",
             type: "path",
             d: "M 0 -5 10 0 0 5 z",
           },
           connection: true,
-          stroke: "#A0A0A0",
           strokeWidth: 2,
         },
       },
