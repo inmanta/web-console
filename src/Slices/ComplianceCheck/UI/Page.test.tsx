@@ -1,5 +1,5 @@
 import React from "react";
-import { act, render, screen, within } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { Either } from "@/Core";
@@ -67,8 +67,8 @@ test("GIVEN ComplianceCheck page THEN user sees latest dry run report", async ()
   await act(async () => {
     await userEvent.click(select);
   });
-  const dropdown = screen.getByRole("listbox", { name: "ReportList" });
-  const options = within(dropdown).getAllByRole<HTMLButtonElement>("option");
+
+  const options = screen.getAllByRole<HTMLButtonElement>("option");
   expect(options).toHaveLength(3);
   expect(options[0]).toHaveAttribute("aria-selected", "true");
 
@@ -111,8 +111,7 @@ test("GIVEN ComplianceCheck page When a report is selected from the list THEN th
     await userEvent.click(select);
   });
 
-  const dropdown = screen.getByRole("listbox", { name: "ReportList" });
-  const options = within(dropdown).getAllByRole<HTMLButtonElement>("option");
+  const options = screen.getAllByRole<HTMLButtonElement>("option");
   expect(options).toHaveLength(3);
   expect(options[0]).toHaveAttribute("aria-selected", "true");
 
@@ -135,18 +134,13 @@ test("GIVEN ComplianceCheck page When a report is selected from the list THEN th
     await userEvent.click(select);
   });
 
-  expect(
-    within(
-      screen.getByRole("listbox", { name: "ReportList" }),
-    ).getAllByRole<HTMLButtonElement>("option")[1],
-  ).toHaveAttribute("aria-selected", "true");
+  expect(screen.getAllByRole<HTMLButtonElement>("option")[1]).toHaveAttribute(
+    "aria-selected",
+    "true",
+  );
   // Go back to the first one
   await act(async () => {
-    await userEvent.click(
-      within(
-        screen.getByRole("listbox", { name: "ReportList" }),
-      ).getAllByRole<HTMLButtonElement>("option")[0],
-    );
+    await userEvent.click(screen.getAllByRole<HTMLButtonElement>("option")[0]);
   });
   // Verify the request
   expect(apiHelper.pendingRequests).toHaveLength(1);
@@ -163,11 +157,10 @@ test("GIVEN ComplianceCheck page When a report is selected from the list THEN th
     await userEvent.click(select);
   });
 
-  expect(
-    within(
-      screen.getByRole("listbox", { name: "ReportList" }),
-    ).getAllByRole<HTMLButtonElement>("option")[0],
-  ).toHaveAttribute("aria-selected", "true");
+  expect(screen.getAllByRole<HTMLButtonElement>("option")[0]).toHaveAttribute(
+    "aria-selected",
+    "true",
+  );
 });
 
 test("GIVEN ComplianceCheck page WHEN user clicks on 'Perform dry run' THEN new dry run is selected", async () => {
@@ -219,8 +212,8 @@ test("GIVEN ComplianceCheck page WHEN user clicks on 'Perform dry run' THEN new 
   await act(async () => {
     await userEvent.click(select);
   });
-  const dropdown = screen.getByRole("listbox", { name: "ReportList" });
-  const options = within(dropdown).getAllByRole<HTMLButtonElement>("option");
+
+  const options = screen.getAllByRole<HTMLButtonElement>("option");
   expect(options).toHaveLength(4);
   expect(options[0]).toHaveAttribute("aria-selected", "true");
 

@@ -26,8 +26,8 @@ test("Given the deploy state filter When changing the include/exclude options Th
   await act(async () => {
     await userEvent.click(menuToggle);
   });
-  // Both options are inactive at the start
 
+  // Skipped state, check if no filter is applied by default on that option.
   expect(
     await screen.findByRole("generic", { name: "skipped-include-inactive" }),
   ).toBeVisible();
@@ -42,11 +42,7 @@ test("Given the deploy state filter When changing the include/exclude options Th
     );
   });
 
-  // The include active icon is shown
-  await act(async () => {
-    await userEvent.click(menuToggle);
-  });
-
+  // Check if the include active icon is shown
   expect(
     screen.queryByRole("generic", { name: "skipped-include-inactive" }),
   ).not.toBeInTheDocument();
@@ -82,9 +78,6 @@ test("Given the deploy state filter When changing the include/exclude options Th
     await userEvent.click(
       await screen.findByRole("generic", { name: "deployed-include-toggle" }),
     );
-  });
-  await act(async () => {
-    await userEvent.click(menuToggle);
   });
 
   expect(

@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen, within, act } from "@testing-library/react";
+import { render, screen, act } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import {
@@ -73,10 +73,7 @@ test("GIVEN CompileButton THEN is live updated", async () => {
     await apiHelper.resolve(204);
   });
 
-  const widget = screen.getByRole("generic", { name: "CompileWidget" });
-  expect(widget).toBeVisible();
-
-  const button = within(widget).getByRole("button", {
+  const button = screen.getByRole("button", {
     name: "RecompileButton",
   });
 
@@ -105,8 +102,7 @@ test("GIVEN CompileButton WHEN clicked THEN triggers recompile", async () => {
     await apiHelper.resolve(204);
   });
 
-  const widget = screen.getByRole("generic", { name: "CompileWidget" });
-  const button = within(widget).getByRole("button", {
+  const button = screen.getByRole("button", {
     name: "RecompileButton",
   });
 
@@ -157,10 +153,10 @@ test("GIVEN CompileButton WHEN clicked on toggle and clicked on Update & Recompi
     await apiHelper.resolve(204);
   });
 
-  const widget = screen.getByRole("generic", { name: "CompileWidget" });
+  const widget = screen.getByRole("button", { name: "RecompileButton" });
   expect(widget).toBeVisible();
 
-  const toggle = within(widget).getByRole("button", {
+  const toggle = screen.getByRole("button", {
     name: "Toggle",
   });
 
@@ -170,7 +166,7 @@ test("GIVEN CompileButton WHEN clicked on toggle and clicked on Update & Recompi
     await userEvent.click(toggle);
   });
 
-  const button = within(widget).getByRole("menuitem", {
+  const button = screen.getByRole("menuitem", {
     name: "UpdateAndRecompileButton",
   });
 
@@ -211,10 +207,7 @@ test("GIVEN CompileButton WHEN environmentSetting server_compile is disabled THE
     await apiHelper.resolve(204);
   });
 
-  const widget = screen.getByRole("generic", { name: "CompileWidget" });
-  const button = within(widget).getByRole("button", {
-    name: "RecompileButton",
-  });
+  const button = screen.getByRole("button", { name: "RecompileButton" });
 
   expect(button).toBeDisabled();
 });
@@ -235,10 +228,7 @@ test("GIVEN CompileButton WHEN 'isToastVisible' parameter is false and recompile
     await apiHelper.resolve(204);
   });
 
-  const widget = screen.getByRole("generic", { name: "CompileWidget" });
-  const button = within(widget).getByRole("button", {
-    name: "RecompileButton",
-  });
+  const button = screen.getByRole("button", { name: "RecompileButton" });
 
   await act(async () => {
     await userEvent.click(button);

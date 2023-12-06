@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import {
+  MenuToggle,
+  MenuToggleElement,
   Select,
   SelectOption,
-  SelectVariant,
-} from "@patternfly/react-core/deprecated";
+} from "@patternfly/react-core";
 
 export enum AttributeRule {
   Empty = "empty",
@@ -23,6 +24,23 @@ export const AttributeRulePicker: React.FC<Props> = ({
 }) => {
   const [isFilterOpen, setFilterOpen] = useState(false);
 
+  const toggle = (toggleRef: React.Ref<MenuToggleElement>) => (
+    <MenuToggle
+      ref={toggleRef}
+      onClick={(val) => setFilterOpen(val)}
+      isExpanded={isFilterOpen}
+      aria-label="Select Quality"
+      disabled={isDisabled}
+      style={
+        {
+          width: "200px",
+        } as React.CSSProperties
+      }
+    >
+      {rule || "Select a quality..."}
+    </MenuToggle>
+  );
+
   const onSelect = (event, selection) => {
     onChange(selection);
     setFilterOpen(false);
@@ -30,14 +48,11 @@ export const AttributeRulePicker: React.FC<Props> = ({
 
   return (
     <Select
-      variant={SelectVariant.single}
-      toggleAriaLabel="Select Quality"
-      onToggle={(_event, val) => setFilterOpen(val)}
+      onOpenChange={(isOpen) => setFilterOpen(isOpen)}
       onSelect={onSelect}
-      selections={rule}
+      selected={rule}
       isOpen={isFilterOpen}
-      placeholderText={"Select a quality..."}
-      isDisabled={isDisabled}
+      toggle={toggle}
     >
       <SelectOption key={0} value="empty">
         Empty

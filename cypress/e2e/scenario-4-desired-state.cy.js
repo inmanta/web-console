@@ -274,8 +274,8 @@ describe("Scenario 4 Desired State", () => {
     }
 
     // Delete the retired version.
-    cy.get("tbody").eq(1).find('[aria-label="Actions"]').click();
-    cy.get(".pf-v5-c-dropdown__menu-item", { timeout: 20000 })
+    cy.get("tbody").eq(1).find('[aria-label="actions-toggle"]').click();
+    cy.get(".pf-v5-c-menu__item", { timeout: 20000 })
       .contains("Delete")
       .click();
     cy.get("#cancel").click();
@@ -287,8 +287,8 @@ describe("Scenario 4 Desired State", () => {
       );
     });
 
-    cy.get("tbody").eq(1).find('[aria-label="Actions"]').click();
-    cy.get(".pf-v5-c-dropdown__menu-item").contains("Delete").click();
+    cy.get("tbody").eq(1).find('[aria-label="actions-toggle"]').click();
+    cy.get(".pf-v5-c-menu__item").contains("Delete").click();
     cy.get("#submit").click();
 
     // The active version should remain in the table.
@@ -314,10 +314,8 @@ describe("Scenario 4 Desired State", () => {
       );
 
       // the first element in the table shouldn't be available to promote, since it is already active.
-      cy.get("tbody").eq(0).find('[aria-label="Actions"]').click();
-      cy.get(".pf-v5-c-dropdown__menu-item")
-        .contains("Promote")
-        .should("have.attr", "aria-disabled", "true");
+      cy.get("tbody").eq(0).find('[aria-label="actions-toggle"]').click();
+      cy.get('[aria-label="promote"]').find("button").should("be.disabled");
     });
 
     // Update the settings to disable the auto-deploy setting.
@@ -342,8 +340,8 @@ describe("Scenario 4 Desired State", () => {
         .find('[data-label="Status"]')
         .should("have.text", "candidate");
 
-      cy.get("tbody").eq(0).find('[aria-label="Actions"]').click();
-      cy.get(".pf-v5-c-dropdown__menu-item").contains("Promote").click();
+      cy.get("tbody").eq(0).find('[aria-label="actions-toggle"]').click();
+      cy.get(".pf-v5-c-menu__item").contains("Promote").click();
       cy.get("tbody")
         .eq(0)
         .find('[data-label="Status"]')
@@ -366,27 +364,23 @@ describe("Scenario 4 Desired State", () => {
     // Get back to the Desired State page.
     cy.get(".pf-v5-c-nav__link").contains("Desired State").click();
 
-    cy.get("tbody").eq(0).find('[aria-label="Actions"]').click();
-    cy.get(".pf-v5-c-dropdown__menu-item")
-      .contains("Select for compare")
-      .click();
-    cy.get("tbody").eq(1).find('[aria-label="Actions"]').click();
-    cy.get(".pf-v5-c-dropdown__menu-item")
-      .contains("Compare with selected")
-      .click();
+    cy.get("tbody").eq(0).find('[aria-label="actions-toggle"]').click();
+    cy.get(".pf-v5-c-menu__item").contains("Select for compare").click();
+    cy.get("tbody").eq(1).find('[aria-label="actions-toggle"]').click();
+    cy.get(".pf-v5-c-menu__item").contains("Compare with selected").click();
     cy.get(".pf-v5-c-title").eq(0).should("have.text", "Compare");
     //go back
     cy.get(".pf-v5-c-nav__link").contains("Desired State").click();
 
-    cy.get("tbody").eq(-1).find('[aria-label="Actions"]').click();
+    cy.get("tbody").eq(-1).find('[aria-label="actions-toggle"]').click();
 
-    cy.get(".pf-v5-c-dropdown__menu-item")
+    cy.get(".pf-v5-c-menu__item")
       .contains("Compare with current state")
       .click();
 
     cy.get(".pf-v5-c-title").should("have.text", "Compliance Check");
-    cy.get(".pf-v5-c-select")
-      .contains("No dry runs exist")
+    cy.get('[aria-label="ReportListSelect"]')
+      .contains("No Dry runs exist")
       .should("be.visible");
     cy.get(".pf-v5-c-button").contains("Perform dry run").click();
 
@@ -397,8 +391,6 @@ describe("Scenario 4 Desired State", () => {
     cy.get('[aria-label="DiffItemList"]', { timeout: 20000 }).should(
       "be.visible",
     );
-
-    cy.get(".pf-v5-c-label.pf-m-outline.pf-m-compact");
 
     // expect diff module to say No changes have been found
     cy.get(".pf-v5-c-card__expandable-content", { timeout: 20000 }).should(
@@ -424,10 +416,10 @@ describe("Scenario 4 Desired State", () => {
     cy.get(".pf-v5-c-nav__link").contains("Desired State").click();
 
     // click on version latest kebab menu
-    cy.get("tbody").eq(0).find('[aria-label="Actions"]').click();
+    cy.get("tbody").eq(0).find('[aria-label="actions-toggle"]').click();
 
     // select Compare with current state
-    cy.get(".pf-v5-c-dropdown__menu-item")
+    cy.get(".pf-v5-c-menu__item")
       .contains("Compare with current state")
       .click();
 
@@ -440,8 +432,8 @@ describe("Scenario 4 Desired State", () => {
       .children()
       .should("have.length", 1);
 
-    cy.get(".pf-v5-c-select")
-      .contains("No dry runs exist")
+    cy.get('[aria-label="ReportListSelect"]')
+      .contains("No Dry runs exist")
       .should("be.visible");
     cy.get(".pf-v5-c-button").contains("Perform dry run").click();
 
@@ -496,10 +488,10 @@ describe("Scenario 4 Desired State", () => {
     cy.get(".pf-v5-c-nav__link").contains("Desired State").click();
 
     // click again on kebab menu of version 5
-    cy.get("tbody").eq(0).find('[aria-label="Actions"]').click();
+    cy.get("tbody").eq(0).find('[aria-label="actions-toggle"]').click();
 
     // select again compare with current state
-    cy.get(".pf-v5-c-dropdown__menu-item")
+    cy.get(".pf-v5-c-menu__item")
       .contains("Compare with current state")
       .click();
 
@@ -529,7 +521,7 @@ describe("Scenario 4 Desired State", () => {
     cy.get(".pf-v5-c-button").contains("Perform dry run").click();
 
     // click on the dropdown containing the different dry-runs
-    cy.get(".pf-v5-c-select__toggle").eq(0).click();
+    cy.get('[aria-label="ReportListSelect"]').click();
 
     // expect it to have 2 options.
     cy.get('[aria-label="ReportList"]').find("li").should("have.length", 2);

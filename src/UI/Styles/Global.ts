@@ -28,7 +28,7 @@ export const GlobalStyles = createGlobalStyle`
   }
 
   tbody > tr:where(.pf-v5-c-table__tr):not(.pf-v5-c-table__expandable-row):hover {
-    background-color: var(--pf-v5-global--palette--blue-50);
+    background-color: var(--pf-v5-global--BackgroundColor--150);
   }
 
   .pf-v5-c-page {

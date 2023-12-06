@@ -1,6 +1,10 @@
 import React, { useState } from "react";
-import { ToolbarFilter } from "@patternfly/react-core";
-import { Select } from "@patternfly/react-core/deprecated";
+import {
+  MenuToggle,
+  MenuToggleElement,
+  Select,
+  ToolbarFilter,
+} from "@patternfly/react-core";
 import {
   CheckCircleIcon,
   CheckIcon,
@@ -8,12 +12,7 @@ import {
   TimesCircleIcon,
   TimesIcon,
 } from "@patternfly/react-icons";
-import {
-  Table /* data-codemods */,
-  Tbody,
-  Td,
-  Tr,
-} from "@patternfly/react-table";
+import { Table, Tbody, Td, Tr } from "@patternfly/react-table";
 import { uniq } from "lodash-es";
 import styled from "styled-components";
 import { toggleValueInList } from "@/Core";
@@ -54,6 +53,22 @@ export const SelectIncludeExcludeFilter: React.FC<Props> = ({
     update(selectedStates.filter((value) => value !== id));
   };
 
+  const onToggleClick = () => {
+    setIsFilterOpen(!isFilterOpen);
+  };
+
+  const toggle = (toggleRef: React.Ref<MenuToggleElement>) => (
+    <MenuToggle
+      ref={toggleRef}
+      aria-label={`${filterPropertyName}-toggle`}
+      onClick={onToggleClick}
+      isExpanded={isFilterOpen}
+      icon={<SearchIcon />}
+    >
+      {placeholder}
+    </MenuToggle>
+  );
+
   return (
     <ToolbarFilter
       chips={selectedStates}
@@ -62,31 +77,27 @@ export const SelectIncludeExcludeFilter: React.FC<Props> = ({
       showToolbarItem={isVisible}
     >
       <Select
+        toggle={toggle}
         aria-label={filterPropertyName}
-        onToggle={(_event, val) => setIsFilterOpen(val)}
-        selections={selectedStates}
+        selected={selectedStates}
         isOpen={isFilterOpen}
-        placeholderText={<Placeholder> {placeholder}</Placeholder>}
-        toggleIcon={<SearchIcon />}
-        toggleAriaLabel={`${filterPropertyName}-toggle`}
-        chipGroupProps={{ numChips: 0 }}
-        customContent={
-          <Table variant="compact">
-            <Tbody>
-              {possibleStates.map((state) => (
-                <IncludeExcludeOption
-                  key={state}
-                  state={state}
-                  includeActive={selectedStates.includes(state)}
-                  excludeActive={selectedStates.includes(invertFilter(state))}
-                  onInclude={() => onClick(state)}
-                  onExclude={() => onClick(invertFilter(state))}
-                />
-              ))}
-            </Tbody>
-          </Table>
-        }
-      />
+        onOpenChange={(isOpen: boolean) => setIsFilterOpen(isOpen)}
+      >
+        <Table variant="compact">
+          <Tbody>
+            {possibleStates.map((state) => (
+              <IncludeExcludeOption
+                key={state}
+                state={state}
+                includeActive={selectedStates.includes(state)}
+                excludeActive={selectedStates.includes(invertFilter(state))}
+                onInclude={() => onClick(state)}
+                onExclude={() => onClick(invertFilter(state))}
+              />
+            ))}
+          </Tbody>
+        </Table>
+      </Select>
     </ToolbarFilter>
   );
 };
@@ -107,10 +118,10 @@ const IncludeExcludeOption: React.FC<RowProps> = ({
   onExclude,
 }) => (
   <UnborderedRow key={state}>
-    <UnpaddedCell>
+    <Td>
       <MenuNameItem>{state}</MenuNameItem>
-    </UnpaddedCell>
-    <UnpaddedCell>
+    </Td>
+    <Td>
       <span className="pf-v5-c-select__menu-wrapper">
         <ClickableMenuItem
           className="pf-v5-c-select__menu-item"
@@ -128,8 +139,8 @@ const IncludeExcludeOption: React.FC<RowProps> = ({
           </span>
         </ClickableMenuItem>
       </span>
-    </UnpaddedCell>
-    <UnpaddedCell>
+    </Td>
+    <Td>
       <div className="pf-v5-c-select__menu-wrapper">
         <ClickableMenuItem
           className="pf-v5-c-select__menu-item"
@@ -147,7 +158,7 @@ const IncludeExcludeOption: React.FC<RowProps> = ({
           </span>
         </ClickableMenuItem>
       </div>
-    </UnpaddedCell>
+    </Td>
   </UnborderedRow>
 );
 
@@ -171,12 +182,6 @@ const UnborderedRow = styled(Tr)`
   }
 `;
 
-const UnpaddedCell = styled(Td)`
-  && {
-    padding: 0;
-  }
-`;
-
 const ActiveIncludeIcon = styled(CheckIcon)`
   color: var(--pf-v5-global--active-color--100);
 `;
@@ -194,10 +199,6 @@ const InactiveExcludeIcon = styled(TimesCircleIcon)`
 
 const ClickableMenuItem = styled.span`
   cursor: pointer;
-`;
-
-const Placeholder = styled.span`
-  color: var(--pf-v5-global--Color--dark-200);
 `;
 
 const MenuNameItem = styled.span`
