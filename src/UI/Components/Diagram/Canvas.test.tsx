@@ -32,7 +32,12 @@ import {
 } from "./Mock";
 import services from "./Mocks/services.json";
 import "@testing-library/jest-dom";
-import { Colors } from "./shapes";
+
+const Colors = {
+  base: "#0066CC",
+  core: "#F0AB00",
+  embedded: "#009596",
+};
 
 const allQueries = {
   ...queries,

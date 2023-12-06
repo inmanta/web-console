@@ -106,9 +106,9 @@ const createHalo = (
       if (unconnectedShape === undefined) {
         highlighters.mask.add(element, "body", "available-to-connect", {
           padding: 0,
+          className: "halo-highlight",
           attrs: {
-            stroke: "#00FF19",
-            "stroke-opacity": 0.3,
+            "stroke-opacity": 0.5,
             "stroke-width": 5,
             filter: "drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4))",
           },

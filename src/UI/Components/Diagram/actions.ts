@@ -6,7 +6,7 @@ import { words } from "@/UI/words";
 import activeImage from "./icons/active-icon.svg";
 import candidateImage from "./icons/candidate-icon.svg";
 import { ActionEnum, relationId } from "./interfaces";
-import { Colors, EntityConnection, ServiceEntityBlock } from "./shapes";
+import { EntityConnection, ServiceEntityBlock } from "./shapes";
 
 /**
  * Function to display the methods to alter the connection objects - currently, the only function visible is the one removing connections.
@@ -33,8 +33,7 @@ export function showLinkTools(
             selector: "button",
             attributes: {
               r: 7,
-              fill: "#f6f6f6",
-              stroke: "#ff5148",
+              class: "joint-link_remove-circle",
               "stroke-width": 2,
               cursor: "pointer",
             },
@@ -44,8 +43,7 @@ export function showLinkTools(
             selector: "icon",
             attributes: {
               d: "M -3 -3 3 3 M -3 3 3 -3",
-              fill: "none",
-              stroke: "#ff5148",
+              class: "joint-link_remove-path",
               "stroke-width": 2,
               "pointer-events": "none",
             },
@@ -147,8 +145,8 @@ export function appendInstance(
   instanceAsTable.set("id", serviceWithReferences.instance.data.id);
   instanceAsTable.set("isEmbedded", false);
 
-  if (!isMainInstance) {
-    instanceAsTable.setTabColor(Colors.base);
+  if (isMainInstance) {
+    instanceAsTable.setTabColor("core");
   }
 
   //check for any presentable attributes, where candidate attrs have priority, if there is a set, then append them to  JointJS shape and try to display and connect embedded entities
@@ -286,7 +284,7 @@ export function appendEmbeddedEntity(
 
     (entityAttributes as InstanceAttributeModel[]).map((entityInstance) => {
       const instanceAsTable = new ServiceEntityBlock()
-        .setTabColor(Colors.embedded)
+        .setTabColor("embedded")
         .setName(embeddedEntity.name);
 
       appendColumns(instanceAsTable, flatAttributes, entityInstance);
@@ -348,7 +346,7 @@ export function appendEmbeddedEntity(
     return createdInstances;
   } else {
     const instanceAsTable = new ServiceEntityBlock()
-      .setTabColor(Colors.embedded)
+      .setTabColor("embedded")
       .setName(embeddedEntity.name);
 
     appendColumns(instanceAsTable, flatAttributes, entityAttributes);
@@ -426,9 +424,9 @@ export function appendEntity(
   const instanceAsTable = new ServiceEntityBlock().setName(serviceModel.name);
 
   if (isEmbedded) {
-    instanceAsTable.setTabColor(Colors.embedded);
-  } else if (!isCore) {
-    instanceAsTable.setTabColor(Colors.base);
+    instanceAsTable.setTabColor("embedded");
+  } else if (isCore) {
+    instanceAsTable.setTabColor("core");
   }
 
   instanceAsTable.set("isEmbedded", isEmbedded);
