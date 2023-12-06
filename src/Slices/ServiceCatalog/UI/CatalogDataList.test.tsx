@@ -84,7 +84,7 @@ test("GIVEN CatalogDataList WHEN service THEN service details has correct link",
 
   expect(listItem).toBeInTheDocument();
 
-  const dropdown = screen.getByLabelText("repair-deploy-dropdown");
+  const dropdown = screen.getByLabelText("Actions-dropdown");
   await act(async () => {
     await userEvent.click(dropdown);
   });
