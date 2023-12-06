@@ -33,12 +33,6 @@ import {
 import services from "./Mocks/services.json";
 import "@testing-library/jest-dom";
 
-const Colors = {
-  base: "#0066CC",
-  core: "#F0AB00",
-  embedded: "#009596",
-};
-
 const allQueries = {
   ...queries,
   ...customQueries,
@@ -305,7 +299,7 @@ describe("Canvas.tsx", () => {
     expect(headerLabel).toHaveTextContent(shapeName);
 
     const header = screen.getByJointSelector("header");
-    expect(header).toHaveAttribute("fill", Colors.core);
+    expect(header).toHaveClass("-core");
 
     const nameValue = screen.getByJointSelector("itemLabel_name_value");
     expect(nameValue).toHaveTextContent(name);
@@ -334,7 +328,8 @@ describe("Canvas.tsx", () => {
     expect(headerLabel).toHaveTextContent(shapeName);
 
     const header = screen.getByJointSelector("header");
-    expect(header).toHaveAttribute("fill", Colors.base);
+    expect(header).not.toHaveClass("-core");
+    expect(header).not.toHaveClass("-embedded");
 
     const nameValue = screen.getByJointSelector("itemLabel_name_value");
     expect(nameValue).toHaveTextContent(name);
@@ -456,7 +451,7 @@ describe("Canvas.tsx", () => {
     expect(headerLabel).toHaveTextContent("child_container");
 
     const header = screen.getByJointSelector("header");
-    expect(header).toHaveAttribute("fill", Colors.embedded);
+    expect(header).toHaveClass("-embedded");
 
     const nameValue = screen.getByJointSelector("itemLabel_name_value");
     expect(nameValue).toHaveTextContent(name);
