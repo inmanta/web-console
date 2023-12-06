@@ -275,9 +275,7 @@ describe("Scenario 4 Desired State", () => {
 
     // Delete the retired version.
     cy.get("tbody").eq(1).find('[aria-label="actions-toggle"]').click();
-    cy.get(".pf-v5-c-menu__item", { timeout: 20000 })
-      .contains("Delete")
-      .click();
+    cy.get(".pf-v5-c-menu__item").contains("Delete").click();
     cy.get("#cancel").click();
 
     cy.get("@TABLE_LENGTH").then((length) => {
