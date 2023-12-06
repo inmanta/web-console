@@ -304,9 +304,10 @@ const ZoomWrapper = styled.div`
   position: absolute;
   bottom: 16px;
   right: 16px;
-  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  box-shadow: 0px 4px 4px 0px
+    var(--pf-v5-global--BackgroundColor--dark-transparent-200);
   border-radius: 5px;
-  background: rgba(0, 0, 0, 0.35);
+  background: var(--pf-v5-global--BackgroundColor--dark-transparent-200);
 
   button {
     display: flex;
@@ -316,7 +317,7 @@ const ZoomWrapper = styled.div`
     justify-content: center;
     align-items: center;
     flex-shrink: 0;
-    background: #fff;
+    background: var(--pf-v5-global--BackgroundColor--100);
     padding: 0;
     border: 0;
 
@@ -329,10 +330,10 @@ const ZoomWrapper = styled.div`
       border-bottom-right-radius: 4px;
     }
     &:hover {
-      background: #ececec;
+      background: var(--pf-v5-global--BackgroundColor--light-300);
     }
     &:active {
-      background: #e6e5e5;
+      background: var(--pf-v5-global--Color--light-300);
     }
   }
 `;
