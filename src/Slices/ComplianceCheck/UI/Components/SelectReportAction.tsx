@@ -79,13 +79,13 @@ const Picker: React.FC<PickerProps> = ({
       onClick={() => setIsOpen(!isOpen)}
       aria-label="ReportListSelect"
       isExpanded={isOpen}
-      icon={<Progress report={selectedReport.value} />}
       style={
         {
           width: "300px",
         } as React.CSSProperties
       }
     >
+      <Progress report={reportsData.value[0]} />{" "}
       {datePresenter.getFull(selectedReport.value.date)}
     </MenuToggle>
   );

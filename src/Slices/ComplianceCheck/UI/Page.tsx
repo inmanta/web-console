@@ -54,11 +54,12 @@ export const View: React.FC<Props> = ({ version }) => {
   }, [data]);
 
   /**
-   * Settings the selected report when data changed and there is no selected report
+   * Setting the selected report when data changed and there is no selected report
    */
   useEffect(() => {
     if (Maybe.isSome(selectedReport)) return;
     if (!RemoteData.isSuccess(data) || data.value.length <= 0) return;
+
     setSelectedReport(Maybe.some(data.value[0]));
   }, [selectedReport, data]);
 
