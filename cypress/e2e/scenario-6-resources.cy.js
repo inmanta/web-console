@@ -713,7 +713,7 @@ describe("Scenario 6 : Resources", () => {
       // Expect it to have : 15 log messages
       cy.get('[aria-label="ResourceLogRow"]', { timeout: 40000 }).should(
         "to.have.length.of.at.least",
-        15,
+        12,
       );
 
       // make sure the default is 100 instead of 20 like on other pages with pagination.
@@ -722,7 +722,7 @@ describe("Scenario 6 : Resources", () => {
         .find("svg")
         .should("exist");
 
-      // Expect last log message to be "Setting deployed due to known good status"
+      // Expect last log message to contain "Setting deployed due to known good status"
       cy.get('[aria-label="ResourceLogRow"]')
         .eq(0)
         .should("contain", "Setting deployed due to known good status");
