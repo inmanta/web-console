@@ -712,7 +712,7 @@ describe("Scenario 6 : Resources", () => {
 
       // Go to logs tab
       cy.get("button").contains("Logs").click();
-      // Expect it to have : 15 log messages
+      // Expect it to have : 12 log messages
       cy.get('[aria-label="ResourceLogRow"]', { timeout: 40000 }).should(
         "to.have.length.of.at.least",
         12,
