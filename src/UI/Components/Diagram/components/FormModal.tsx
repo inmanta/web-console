@@ -6,13 +6,12 @@ import {
   Flex,
   FlexItem,
   Form,
+  MenuToggle,
+  MenuToggleElement,
   Modal,
-} from "@patternfly/react-core";
-import {
   Select,
   SelectOption,
-  SelectOptionObject,
-} from "@patternfly/react-core/deprecated";
+} from "@patternfly/react-core";
 import { set } from "lodash";
 import styled from "styled-components";
 import {
@@ -32,7 +31,7 @@ import { ServiceEntityBlock } from "../shapes";
 
 interface PossibleForm {
   key: string;
-  value: string;
+  value: string | undefined;
   model: ServiceModel | EmbeddedEntity | undefined;
   isEmbedded: boolean;
 }
@@ -53,7 +52,11 @@ const FormModal = ({
   toggleIsOpen: (value: boolean) => void;
   services: ServiceModel[];
   cellView: dia.CellView | null;
-  onConfirm: (entity: InstanceAttributeModel, selected: Selected) => void;
+  onConfirm: (
+    fields: Field[],
+    entity: InstanceAttributeModel,
+    selected: Selected,
+  ) => void;
 }) => {
   const [possibleForms, setPossibleForms] = useState<PossibleForm[]>([]);
   const [fields, setFields] = useState<Field[]>([]);
@@ -68,14 +71,23 @@ const FormModal = ({
     setSelected(undefined);
   };
 
+  const toggle = (toggleRef: React.Ref<MenuToggleElement>) => (
+    <MenuToggle
+      ref={toggleRef}
+      onClick={(val) => setIsSelectOpen(val)}
+      isExpanded={isSelectOpen}
+      aria-label="service-picker"
+      disabled={cellView !== null}
+      isFullWidth
+      isFullHeight={false}
+    >
+      {selected?.name || "Choose a Service"}
+    </MenuToggle>
+  );
+
   const onEntityChosen = useCallback(
-    (
-      _event,
-      value: string | SelectOptionObject,
-      isPlaceholder: boolean | undefined,
-      possibleForms: PossibleForm[],
-    ) => {
-      if (isPlaceholder) {
+    (value: string | number | undefined, possibleForms: PossibleForm[]) => {
+      if (typeof value !== "string") {
         clearStates();
       } else {
         const chosenModel = possibleForms.find(
@@ -84,7 +96,7 @@ const FormModal = ({
 
         if (chosenModel && chosenModel.model) {
           setSelected({
-            name: value as string,
+            name: value,
             model: chosenModel.model,
             isEmbedded: chosenModel.isEmbedded,
           });
@@ -158,7 +170,7 @@ const FormModal = ({
     const tempPossibleForms = getOptions(services, [
       {
         key: "default_option",
-        value: "Choose a Service",
+        value: undefined,
         model: undefined,
         isEmbedded: false,
       },
@@ -170,11 +182,9 @@ const FormModal = ({
       const entityName = entity.getName();
 
       onEntityChosen(
-        null,
         entity.get("isEmbedded")
           ? `${entityName} (${entity.get("holderType")})`
           : entityName,
-        false,
         tempPossibleForms,
       );
     }
@@ -210,7 +220,7 @@ const FormModal = ({
           width={200}
           isDisabled={selected === undefined}
           onClick={() => {
-            if (selected) onConfirm(formState, selected);
+            if (selected) onConfirm(fields, formState, selected);
             clearStates();
             toggleIsOpen(false);
           }}
@@ -225,21 +235,19 @@ const FormModal = ({
       >
         <FlexItem>
           <Select
-            selections={selected?.name}
-            onToggle={() => setIsSelectOpen(!isSelectOpen)}
+            isScrollable
+            selected={selected?.name}
+            toggle={toggle}
+            onOpenChange={(isOpen) => setIsSelectOpen(isOpen)}
             isOpen={isSelectOpen}
-            onSelect={(evt, value, isPlaceholder) => {
-              onEntityChosen(evt, value, isPlaceholder, possibleForms);
+            onSelect={(_evt, value) => {
+              onEntityChosen(value, possibleForms);
             }}
-            maxHeight={300}
-            isDisabled={cellView !== null}
           >
             {possibleForms.map(({ key, value }) => (
-              <SelectOption
-                key={key}
-                value={value}
-                isPlaceholder={value === "Choose a Service"}
-              />
+              <SelectOption key={key} value={value}>
+                {value || "Choose a Service"}
+              </SelectOption>
             ))}
           </Select>
         </FlexItem>

@@ -135,7 +135,7 @@ const createShapeWithNameAndId = async (shapeName: string, name, id) => {
     await user.click(button);
   });
 
-  const select = screen.getByLabelText("Options menu");
+  const select = screen.getByLabelText("service-picker");
   await act(async () => {
     await user.click(select);
   });
@@ -424,7 +424,7 @@ describe("Canvas.tsx", () => {
     });
 
     //create shape
-    const select = screen.getByLabelText("Options menu");
+    const select = screen.getByLabelText("service-picker");
     await act(async () => {
       await user.click(select);
     });
@@ -474,7 +474,7 @@ describe("Canvas.tsx", () => {
   //   });
 
   //   //create embedded shape
-  //   const containerSelect = screen.getByLabelText("Options menu");
+  //   const containerSelect = screen.getByLabelText("service-picker");
   //   await act(async () => {
   //     await user.click(containerSelect);
   //   });
@@ -537,7 +537,7 @@ describe("Canvas.tsx", () => {
   //   });
 
   //   //create embedded shape
-  //   const containerSelect = screen.getByLabelText("Options menu");
+  //   const containerSelect = screen.getByLabelText("service-picker");
   //   await act(async () => {
   //     await user.click(containerSelect);
   //   });
@@ -613,7 +613,7 @@ describe("Canvas.tsx", () => {
 
     expect(dialog).toBeVisible();
 
-    const selectMenu = screen.getByLabelText("Options menu");
+    const selectMenu = screen.getByLabelText("service-picker");
     expect(selectMenu).toBeDisabled();
     expect(selectMenu).toHaveTextContent("container-service");
 
