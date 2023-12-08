@@ -162,7 +162,7 @@ const FormModal = ({
           value: service.name + displayedPrefix,
           model: service,
           isEmbedded: prefix !== "",
-          holderName: prefix,
+          holderName: prefix, //holderName is used in process of creating entity on canvas
         });
 
         getPossibleForms(service.embedded_entities, values, joinedPrefix);
