@@ -2,8 +2,11 @@ import React, { useContext, useState } from "react";
 import {
   Dropdown,
   DropdownItem,
-  KebabToggle,
-} from "@patternfly/react-core/deprecated";
+  DropdownList,
+  MenuToggle,
+  MenuToggleElement,
+} from "@patternfly/react-core";
+import { EllipsisVIcon } from "@patternfly/react-icons";
 import { DependencyContext, words } from "@/UI";
 
 interface Props {
@@ -16,14 +19,30 @@ export const KebabDropdown: React.FC<Props> = ({ name, paused }) => {
   const deploy = commandResolver.useGetTrigger<"Deploy">({ kind: "Deploy" });
   const repair = commandResolver.useGetTrigger<"Repair">({ kind: "Repair" });
   const [isOpen, setIsOpen] = useState(false);
+
+  const onToggleClick = () => {
+    setIsOpen(!isOpen);
+  };
+
   return (
     <Dropdown
-      toggle={<KebabToggle onToggle={() => setIsOpen(!isOpen)} />}
+      toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
+        <MenuToggle
+          ref={toggleRef}
+          aria-label="repair-deploy-dropdown"
+          variant="plain"
+          onClick={onToggleClick}
+          isExpanded={isOpen}
+        >
+          <EllipsisVIcon />
+        </MenuToggle>
+      )}
       isOpen={isOpen}
-      isPlain
+      onOpenChange={(isOpen: boolean) => setIsOpen(isOpen)}
+      popperProps={{ position: "center" }}
       onSelect={() => setIsOpen(false)}
-      position="right"
-      dropdownItems={[
+    >
+      <DropdownList>
         <DropdownItem
           key="deploy"
           isDisabled={paused}
@@ -31,7 +50,7 @@ export const KebabDropdown: React.FC<Props> = ({ name, paused }) => {
           component="button"
         >
           {words("agents.actions.deploy")}
-        </DropdownItem>,
+        </DropdownItem>
         <DropdownItem
           key="repair"
           isDisabled={paused}
@@ -39,8 +58,8 @@ export const KebabDropdown: React.FC<Props> = ({ name, paused }) => {
           component="button"
         >
           {words("agents.actions.repair")}
-        </DropdownItem>,
-      ]}
-    />
+        </DropdownItem>
+      </DropdownList>
+    </Dropdown>
   );
 };

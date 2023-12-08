@@ -19,6 +19,7 @@ interface Props {
 export const AgentsTableRow: React.FC<Props> = ({ row }) => {
   const { routeManager, environmentModifier } = useContext(DependencyContext);
   const isHalted = environmentModifier.useIsHalted();
+
   return (
     <Tbody isExpanded={false}>
       <Tr aria-label="Agents Table Row">
@@ -41,11 +42,6 @@ export const AgentsTableRow: React.FC<Props> = ({ row }) => {
           {row.last_failover && (
             <DateWithTooltip timestamp={row.last_failover} />
           )}
-        </Td>
-        <Td width={10} dataLabel={words("agents.columns.unpause")}>
-          {row.unpause_on_resume !== null && row.unpause_on_resume !== undefined
-            ? JSON.stringify(row.unpause_on_resume)
-            : null}
         </Td>
         {isHalted && (
           <Td width={10} dataLabel={words("agents.columns.unpause")}>

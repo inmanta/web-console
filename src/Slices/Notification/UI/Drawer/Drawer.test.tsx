@@ -1,7 +1,6 @@
 import React from "react";
 import { Router } from "react-router-dom";
-import { Page } from "@patternfly/react-core";
-import { PageHeader } from "@patternfly/react-core/deprecated";
+import { Masthead, Page } from "@patternfly/react-core";
 import { act, render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
@@ -21,6 +20,7 @@ import { DependencyProvider } from "@/UI/Dependency";
 import * as Mock from "@S/Notification/Core/Mock";
 import { Badge } from "@S/Notification/UI/Badge";
 import { Drawer } from "./Drawer";
+
 function setup() {
   const apiHelper = new DeferredApiHelper();
   const history = createMemoryHistory();
@@ -67,7 +67,9 @@ function setup() {
             }
             isNotificationDrawerExpanded={true}
             header={
-              <PageHeader headerTools={<Badge onClick={toggleCallback} />} />
+              <Masthead>
+                <Badge onClick={toggleCallback} />
+              </Masthead>
             }
           />
         </DependencyProvider>

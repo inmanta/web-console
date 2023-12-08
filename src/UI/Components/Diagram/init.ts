@@ -47,6 +47,7 @@ export default function diagramInit(
     snapLinks: true,
     linkPinning: false,
     magnetThreshold: 0,
+    background: { color: "transparent" },
     highlighting: {
       connecting: {
         name: "addClass",

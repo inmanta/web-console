@@ -283,7 +283,7 @@ export const shapesDataTransform = (
     }, Object.create({}));
 
   for (const [key, instancesToEmbed] of Object.entries(groupedEmbedded)) {
-    if (instance.value) {
+    if (instance.attributes) {
       if (instancesToEmbed.length > 1) {
         const updated: InstanceAttributeModel[] = [];
         instancesToEmbed.forEach((instance) => {
@@ -299,11 +299,11 @@ export const shapesDataTransform = (
             updatedInstance.action !== null;
 
           if (updatedInstance.action !== "delete") {
-            updated.push(updatedInstance.value as InstanceAttributeModel);
+            updated.push(updatedInstance.attributes as InstanceAttributeModel);
           }
         });
 
-        instance.value[key] = updated;
+        instance.attributes[key] = updated;
       } else {
         const data = shapesDataTransform(
           notMatchingInstances,
@@ -314,7 +314,7 @@ export const shapesDataTransform = (
         areEmbeddedEdited = instance.action === null && data.action !== null;
 
         if (data.action !== "delete") {
-          instance.value[key] = data.value;
+          instance.attributes[key] = data.attributes;
         }
       }
     }
@@ -323,8 +323,8 @@ export const shapesDataTransform = (
   //convert relatedTo property into valid attribute
   if (instance.relatedTo) {
     instance.relatedTo.forEach((attrName, id) => {
-      if (instance.value) {
-        instance.value[attrName] = id;
+      if (instance.attributes) {
+        instance.attributes[attrName] = id;
       }
     });
   }
@@ -336,17 +336,17 @@ export const shapesDataTransform = (
 
   //if its action is "update" and instance isn't embedded change value property to edit as that's what api expect in the body
   if (instance.action === "update" && !isEmbedded) {
-    if (!!instance.value && !instance.edit) {
-      instance.edit = [
+    if (!!instance.attributes && !instance.edits) {
+      instance.edits = [
         {
           edit_id: `${instance.instance_id}_order_update-${create_UUID()}`,
           operation: "replace",
           target: ".",
-          value: instance.value,
+          value: instance.attributes,
         },
       ];
     }
-    delete instance.value;
+    delete instance.attributes;
   }
 
   delete instance.embeddedTo;

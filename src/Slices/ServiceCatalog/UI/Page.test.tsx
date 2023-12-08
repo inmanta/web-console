@@ -173,7 +173,7 @@ test("GIVEN ServiceCatalog WHEN service is deleted THEN command is triggered", a
   });
 
   await act(async () => {
-    await userEvent.click(screen.getByLabelText("Actions"));
+    await userEvent.click(screen.getByLabelText("Actions-dropdown"));
   });
   await act(async () => {
     await userEvent.click(

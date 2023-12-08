@@ -34,8 +34,8 @@ interface InstanceForApi {
   service_entity: string;
   config: unknown;
   action: null | "update" | "create" | "delete";
-  value?: { [key: string]: unknown } | null;
-  edit?: { [key: string]: unknown }[] | null;
+  attributes?: { [key: string]: unknown } | null;
+  edits?: { [key: string]: unknown }[] | null;
   embeddedTo?: string | null;
   relatedTo?: Map<string, string> | null;
 }

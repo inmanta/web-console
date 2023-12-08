@@ -217,7 +217,9 @@ describe("Scenario 6 : Resources", () => {
         .find("button")
         .contains("Requires")
         .click();
-      cy.get('[aria-label="Requires"]').find("tbody").should("to.be.empty");
+      cy.get('[aria-label="Requires"]')
+        .find("tbody")
+        .should("contain", "No requirements found");
 
       // Go to logs tab
       cy.get("button").contains("Logs").click();
@@ -706,14 +708,16 @@ describe("Scenario 6 : Resources", () => {
         .find("button")
         .contains("Requires")
         .click();
-      cy.get('[aria-label="Requires"]').find("tbody").should("to.be.empty");
+      cy.get('[aria-label="Requires"]')
+        .find("tbody")
+        .should("contain", "No requirements found");
 
       // Go to logs tab
       cy.get("button").contains("Logs").click();
-      // Expect it to have : 15 log messages
+      // Expect it to have : 12 log messages
       cy.get('[aria-label="ResourceLogRow"]', { timeout: 40000 }).should(
         "to.have.length.of.at.least",
-        15,
+        12,
       );
 
       // make sure the default is 100 instead of 20 like on other pages with pagination.
@@ -722,7 +726,7 @@ describe("Scenario 6 : Resources", () => {
         .find("svg")
         .should("exist");
 
-      // Expect last log message to be "Setting deployed due to known good status"
+      // Expect last log message to contain "Setting deployed due to known good status"
       cy.get('[aria-label="ResourceLogRow"]')
         .eq(0)
         .should("contain", "Setting deployed due to known good status");

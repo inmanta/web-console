@@ -1,0 +1,6 @@
+change-type: patch
+description: "Change hexcode colors for patterfly variables in instance composer"
+issue-nr: 5337
+destination-branches:
+  - master
+  - iso6

@@ -398,30 +398,36 @@ test("Given the Desired states view When promoting a version, then the correct r
   await act(async () => {
     await userEvent.click(
       within(rows[8]).getByRole("button", {
-        name: "Actions",
+        name: "actions-toggle",
       }),
     );
   });
 
   expect(
-    within(screen.getByRole("menu", { name: "Actions" })).getByText(
-      words("desiredState.actions.promote"),
-    ),
-  ).toHaveAttribute("aria-disabled", "true");
+    within(rows[8]).getByRole("button", {
+      name: "actions-toggle",
+    }),
+  ).toHaveAttribute("aria-expanded", "true");
+
+  expect(
+    screen.getByRole("menuitem", {
+      name: words("desiredState.actions.promote"),
+    }),
+  ).toBeDisabled();
 
   await act(async () => {
     await userEvent.click(
       within(rows[0]).getByRole("button", {
-        name: "Actions",
+        name: "actions-toggle",
       }),
     );
   });
 
   await act(async () => {
     await userEvent.click(
-      within(screen.getByRole("menu", { name: "Actions" })).getByText(
-        words("desiredState.actions.promote"),
-      ),
+      screen.getByRole("menuitem", {
+        name: words("desiredState.actions.promote"),
+      }),
     );
   });
 
@@ -503,16 +509,16 @@ test("Given the Desired states view with filters When promoting a version, then 
   await act(async () => {
     await userEvent.click(
       within(rows[0]).getByRole("button", {
-        name: "Actions",
+        name: "actions-toggle",
       }),
     );
   });
 
   await act(async () => {
     await userEvent.click(
-      within(screen.getByRole("menu", { name: "Actions" })).getByText(
-        words("desiredState.actions.promote"),
-      ),
+      screen.getByRole("menuitem", {
+        name: words("desiredState.actions.promote"),
+      }),
     );
   });
   expect(apiHelper.pendingRequests).toHaveLength(1);
@@ -564,16 +570,16 @@ test("Given the Desired states view When promoting a version results in an error
   await act(async () => {
     await userEvent.click(
       within(rows[0]).getByRole("button", {
-        name: "Actions",
+        name: "actions-toggle",
       }),
     );
   });
 
   await act(async () => {
     await userEvent.click(
-      within(screen.getByRole("menu", { name: "Actions" })).getByText(
-        words("desiredState.actions.promote"),
-      ),
+      screen.getByRole("menuitem", {
+        name: words("desiredState.actions.promote"),
+      }),
     );
   });
 
@@ -600,7 +606,7 @@ test("DesiredStatesView shows CompileWidget", async () => {
   const { component } = setup();
   render(component);
 
-  expect(screen.getByRole("generic", { name: "CompileWidget" })).toBeVisible();
+  expect(screen.getByRole("button", { name: "RecompileButton" })).toBeVisible();
 });
 
 describe("DeleteModal ", () => {
@@ -622,17 +628,13 @@ describe("DeleteModal ", () => {
     await act(async () => {
       await userEvent.click(
         within(rows[0]).getByRole("button", {
-          name: "Actions",
+          name: "actions-toggle",
         }),
       );
     });
 
     await act(async () => {
-      await userEvent.click(
-        within(screen.getByRole("menu", { name: "Actions" })).getByText(
-          "Delete",
-        ),
-      );
+      await userEvent.click(screen.getByRole("menuitem", { name: "Delete" }));
     });
 
     expect(
@@ -660,17 +662,13 @@ describe("DeleteModal ", () => {
     await act(async () => {
       await userEvent.click(
         within(rows[0]).getByRole("button", {
-          name: "Actions",
+          name: "actions-toggle",
         }),
       );
     });
 
     await act(async () => {
-      await userEvent.click(
-        within(screen.getByRole("menu", { name: "Actions" })).getByText(
-          "Delete",
-        ),
-      );
+      await userEvent.click(screen.getByRole("menuitem", { name: "Delete" }));
     });
     const noButton = await screen.findByText("No");
     await act(async () => {
@@ -683,16 +681,12 @@ describe("DeleteModal ", () => {
     await act(async () => {
       await userEvent.click(
         within(rows[0]).getByRole("button", {
-          name: "Actions",
+          name: "actions-toggle",
         }),
       );
     });
     await act(async () => {
-      await userEvent.click(
-        within(screen.getByRole("menu", { name: "Actions" })).getByText(
-          "Delete",
-        ),
-      );
+      await userEvent.click(screen.getByRole("menuitem", { name: "Delete" }));
     });
 
     const closeButton = await screen.findByLabelText("Close");
@@ -722,17 +716,13 @@ describe("DeleteModal ", () => {
     await act(async () => {
       await userEvent.click(
         within(rows[0]).getByRole("button", {
-          name: "Actions",
+          name: "actions-toggle",
         }),
       );
     });
 
     await act(async () => {
-      await userEvent.click(
-        within(screen.getByRole("menu", { name: "Actions" })).getByText(
-          "Delete",
-        ),
-      );
+      await userEvent.click(screen.getByRole("menuitem", { name: "Delete" }));
     });
     const yesButton = await screen.findByText("Yes");
     await act(async () => {
