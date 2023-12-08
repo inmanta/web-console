@@ -197,7 +197,7 @@ const checkWhetherConnectionRulesAreExhausted = (
     (element) => element.getName() === rule?.name,
   );
 
-  //if is in edit mode and it's modifier is r/rw then the connections are basically exhausted
+  //if is in edit mode and its modifier is r/rw then the connections are basically exhausted
   if (editMode && rule && rule.modifier !== "rw+") {
     return true;
   }
