@@ -185,7 +185,7 @@ export const checkIfConnectionIsAllowed = (
  * Iterate through connectedElements of some shape to check if there are possible connections left for given shape
  *
  * @param {ServiceEntityBlock[]} connectedElements list of connected elements to given shape
- * @param {Rule | undefined} rule rules telling which shapes can connect to eachother and about their limitations
+ * @param {Rule | undefined} rule telling which shapes can connect to each other and about their limitations
  * @returns {boolean}
  */
 const checkWhetherConnectionRulesAreExhausted = (
