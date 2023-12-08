@@ -31,7 +31,7 @@ import { ServiceEntityBlock } from "../shapes";
 
 interface PossibleForm {
   key: string;
-  value: string | undefined;
+  value: string;
   model: ServiceModel | EmbeddedEntity | undefined;
   isEmbedded: boolean;
 }
@@ -87,7 +87,7 @@ const FormModal = ({
   );
 
   const onEntityChosen = useCallback(
-    (value: string | number | undefined, possibleForms: PossibleForm[]) => {
+    (value: string, possibleForms: PossibleForm[]) => {
       if (typeof value !== "string") {
         clearStates();
       } else {
@@ -239,7 +239,7 @@ const FormModal = ({
             onOpenChange={(isOpen) => setIsSelectOpen(isOpen)}
             isOpen={isSelectOpen}
             onSelect={(_evt, value) => {
-              onEntityChosen(value, possibleForms);
+              onEntityChosen(value as string, possibleForms);
             }}
           >
             {possibleForms.map(({ key, value }) => (
