@@ -246,7 +246,7 @@ const Canvas = ({
                 selected.model as ServiceModel,
                 selected.name === mainServiceName,
                 selected.isEmbedded,
-                selected.embeddedTo,
+                selected.holderName,
               );
               handleUpdate(shape, ActionEnum.CREATE);
             }

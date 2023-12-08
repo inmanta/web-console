@@ -308,7 +308,7 @@ export default function diagramInit(
       service,
       addingCoreInstance,
       isEmbedded,
-      holderType,
+      holderName,
     ) => {
       const shape = appendEntity(
         graph,
@@ -316,7 +316,7 @@ export default function diagramInit(
         instance,
         addingCoreInstance,
         isEmbedded,
-        holderType,
+        holderName,
       );
       const shapeCoordinates = shape.getBBox();
       scroller.center(shapeCoordinates.x, shapeCoordinates.y + 200);

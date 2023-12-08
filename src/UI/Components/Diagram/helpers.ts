@@ -6,7 +6,7 @@ import {
   ServiceModel,
 } from "@/Core";
 import { create_UUID } from "@/Slices/EditInstance/Data";
-import { ConnectionRules, InstanceForApi, Rule } from "./interfaces";
+import { ConnectionRules, InstanceForApi, Rule, TypeEnum } from "./interfaces";
 import { ServiceEntityBlock } from "./shapes";
 
 export const extractRelationsIds = (
@@ -63,7 +63,7 @@ export const createConnectionRules = (
     service.embedded_entities.map((entity) => {
       tempRules.push({
         name: entity.name,
-        type: "embedded",
+        type: TypeEnum.EMBEDDED,
         lowerLimit: entity.lower_limit || null,
         upperLimit: entity.upper_limit || null,
         modifier: entity.modifier,
@@ -76,7 +76,7 @@ export const createConnectionRules = (
       service.inter_service_relations.map((relation) => {
         tempRules.push({
           name: relation.entity_type,
-          type: "inter-service",
+          type: TypeEnum.INTERSERVICE,
           lowerLimit: relation.lower_limit || null,
           upperLimit: relation.upper_limit || null,
           modifier: relation.modifier,
@@ -226,7 +226,7 @@ const doesElementIsEmbeddedWithExhaustedConnections = (
   target: dia.Element,
 ): boolean => {
   const isSourceEmbedded = source.get("isEmbedded");
-  const sourceHolderType = source.get("holderType");
+  const sourceholderName = source.get("holderName");
 
   const isTargetBlocked = target.get("isBlockedFromEditing");
 
@@ -236,17 +236,17 @@ const doesElementIsEmbeddedWithExhaustedConnections = (
   }
   const targetName = target.get("entityName");
 
-  if (isSourceEmbedded && sourceHolderType !== undefined) {
+  if (isSourceEmbedded && sourceholderName !== undefined) {
     //if source is embedded entity then check if it is already connected according to it's parent rules
 
     const connectedHolder = connectedElementsToSource.filter((element) => {
       //if connected shape Name to the target has the same name is the same as the sou
-      return element.getName() === sourceHolderType;
+      return element.getName() === sourceholderName;
     });
 
-    const doesSourceMatchHolderType = targetName === sourceHolderType;
+    const doesSourceMatchholderName = targetName === sourceholderName;
 
-    return connectedHolder.length > 0 && doesSourceMatchHolderType;
+    return connectedHolder.length > 0 && doesSourceMatchholderName;
   }
   return false;
 };

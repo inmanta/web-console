@@ -301,7 +301,7 @@ export function appendInstance(
  * @param {EmbeddedEntity} embeddedEntity that we want to display
  * @param {InstanceAttributeModel} entityAttributes - attributes of given entity
  * @param {string | null} embeddedTo - id of the entity/shape in which this shape is embedded
- * @param {string} holderType - name of the entity type in which is embedded
+ * @param {string} holderName - name of the entity type in which is embedded
  * @param {ServiceEntityBlock} instanceToConnectRelation - eventual shape to which inter-service relations should be connected
  * @returns {ServiceEntityBlock[]} created JointJS shapes
  */
@@ -311,7 +311,7 @@ export function appendEmbeddedEntity(
   embeddedEntity: EmbeddedEntity,
   entityAttributes: InstanceAttributeModel,
   embeddedTo: string | null,
-  holderType: string,
+  holderName: string,
   instanceToConnectRelation?: ServiceEntityBlock,
   presentedAttr?: "candidate" | "active",
   isBlockedFromEditing?: boolean,
@@ -331,7 +331,7 @@ export function appendEmbeddedEntity(
 
       appendColumns(instanceAsTable, flatAttributes, entityInstance);
       instanceAsTable.set("isEmbedded", true);
-      instanceAsTable.set("holderType", holderType);
+      instanceAsTable.set("holderName", holderName);
       instanceAsTable.set("embeddedTo", embeddedTo);
       instanceAsTable.set("isInEditMode", true);
       instanceAsTable.set("isBlockedFromEditing", isBlockedFromEditing);
@@ -394,7 +394,7 @@ export function appendEmbeddedEntity(
 
     appendColumns(instanceAsTable, flatAttributes, entityAttributes);
     instanceAsTable.set("isEmbedded", true);
-    instanceAsTable.set("holderType", holderType);
+    instanceAsTable.set("holderName", holderName);
     instanceAsTable.set("embeddedTo", embeddedTo);
     instanceAsTable.set("isBlockedFromEditing", isBlockedFromEditing);
     instanceAsTable.set("isInEditMode", true);
@@ -463,7 +463,7 @@ export function appendEntity(
   entity: InstanceAttributeModel,
   isCore: boolean,
   isEmbedded = false,
-  holderType = "",
+  holderName = "",
 ): ServiceEntityBlock {
   //Create shape for Entity
   const instanceAsTable = new ServiceEntityBlock().setName(serviceModel.name);
@@ -475,7 +475,7 @@ export function appendEntity(
   }
 
   instanceAsTable.set("isEmbedded", isEmbedded);
-  instanceAsTable.set("holderType", holderType);
+  instanceAsTable.set("holderName", holderName);
 
   if (
     serviceModel.inter_service_relations &&

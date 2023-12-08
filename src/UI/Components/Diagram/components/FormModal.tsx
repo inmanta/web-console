@@ -36,13 +36,13 @@ interface PossibleForm {
   value: string;
   model: ServiceModel | EmbeddedEntity | undefined;
   isEmbedded: boolean;
-  embeddedTo: string;
+  holderName: string;
 }
 interface Selected {
   name: string;
   model: ServiceModel | EmbeddedEntity;
   isEmbedded: boolean;
-  embeddedTo: string;
+  holderName: string;
 }
 
 const FormModal = ({
@@ -90,7 +90,7 @@ const FormModal = ({
             name: value as string,
             model: chosenModel.model,
             isEmbedded: chosenModel.isEmbedded,
-            embeddedTo: chosenModel.embeddedTo,
+            holderName: chosenModel.holderName,
           });
 
           const fieldCreator = new FieldCreator(
@@ -140,7 +140,14 @@ const FormModal = ({
   };
 
   useEffect(() => {
-    const getOptions = (
+    /** Iterate through all of services and its embedded entities to extract possible forms for shapes
+     *
+     * @param {(ServiceModel | EmbeddedEntity)[]}services array of services available to iterate through
+     * @param {PossibleForm[]} values array of previously created forms, as we support concurrency
+     * @param {string} prefix is a name of the entity/instance that holds given nested embedded entity
+     * @returns
+     */
+    const getPossibleForms = (
       services: (ServiceModel | EmbeddedEntity)[],
       values: PossibleForm[],
       prefix = "",
@@ -155,22 +162,22 @@ const FormModal = ({
           value: service.name + displayedPrefix,
           model: service,
           isEmbedded: prefix !== "",
-          embeddedTo: prefix,
+          holderName: prefix,
         });
 
-        getOptions(service.embedded_entities, values, joinedPrefix);
+        getPossibleForms(service.embedded_entities, values, joinedPrefix);
       });
 
       return values;
     };
 
-    const tempPossibleForms = getOptions(services, [
+    const tempPossibleForms = getPossibleForms(services, [
       {
         key: "default_option",
         value: "Choose a Service",
         model: undefined,
         isEmbedded: false,
-        embeddedTo: "",
+        holderName: "",
       },
     ]);
     setPossibleForms(tempPossibleForms);
@@ -181,7 +188,7 @@ const FormModal = ({
       onEntityChosen(
         null,
         entity.get("isEmbedded")
-          ? `${entityName} (${entity.get("holderType")})`
+          ? `${entityName} (${entity.get("holderName")})`
           : entityName,
         false,
         tempPossibleForms,
