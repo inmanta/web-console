@@ -88,33 +88,29 @@ const FormModal = ({
 
   const onEntityChosen = useCallback(
     (value: string, possibleForms: PossibleForm[]) => {
-      if (typeof value !== "string") {
-        clearStates();
-      } else {
-        const chosenModel = possibleForms.find(
-          (service) => service.value === value,
+      const chosenModel = possibleForms.find(
+        (service) => service.value === value,
+      );
+
+      if (chosenModel && chosenModel.model) {
+        setSelected({
+          name: value,
+          model: chosenModel.model,
+          isEmbedded: chosenModel.isEmbedded,
+        });
+
+        const fieldCreator = new FieldCreator(new CreateModifierHandler());
+        const selectedFields = fieldCreator.attributesToFields(
+          chosenModel.model.attributes,
         );
 
-        if (chosenModel && chosenModel.model) {
-          setSelected({
-            name: value,
-            model: chosenModel.model,
-            isEmbedded: chosenModel.isEmbedded,
-          });
-
-          const fieldCreator = new FieldCreator(new CreateModifierHandler());
-          const selectedFields = fieldCreator.attributesToFields(
-            chosenModel.model.attributes,
+        setFields(selectedFields);
+        if (cellView) {
+          setFormState(
+            (cellView.model as ServiceEntityBlock).get("instanceAttributes"),
           );
-
-          setFields(selectedFields);
-          if (cellView) {
-            setFormState(
-              (cellView.model as ServiceEntityBlock).get("instanceAttributes"),
-            );
-          } else {
-            setFormState(createFormState(selectedFields));
-          }
+        } else {
+          setFormState(createFormState(selectedFields));
         }
       }
       setIsSelectOpen(false);
