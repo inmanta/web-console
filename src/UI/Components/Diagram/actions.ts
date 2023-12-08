@@ -455,6 +455,7 @@ export function appendEmbeddedEntity(
  * @param {ServiceModel} serviceModel that we want to base created entity on
  * @param {InstanceAttributeModel} entity created in the from
  * @param {boolean} isCore defines whether created entity is main one in given View
+ * @param {string} holderName - name of the entity to which it is embedded/connected
  * @returns {ServiceEntityBlock} created JointJS shape
  */
 export function appendEntity(
