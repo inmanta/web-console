@@ -1492,7 +1492,7 @@ __metadata:
     webpack-bundle-analyzer: ^4.10.1
     webpack-cli: ^5.1.4
     webpack-dev-server: ^4.15.1
-    webpack-merge: ^5.9.0
+    webpack-merge: ^5.10.0
     webpack-version-file: ^0.1.7
     xml-formatter: ^3.6.0
   languageName: unknown
@@ -2616,10 +2616,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/json-bigint@npm:^1.0.1":
-  version: 1.0.1
-  resolution: "@types/json-bigint@npm:1.0.1"
-  checksum: b39e55a811f554bd25f1d991bc4fc70655216dff466f21f97160097573a4bc7b478c1907aa5194c79022c115f509f8e4712083c51f57665e7a2de7412ff7801f
+"@types/json-bigint@npm:^1.0.3":
+  version: 1.0.3
+  resolution: "@types/json-bigint@npm:1.0.3"
+  checksum: 085ab4961a3dd610d63f9e0e11d7e179899ad2557a7dc603fc840c96f6dd652dbb52c08ad05c8e6bff0253b02180d3a4fab02ddb3d5e4afdec7db065bc459a9d
   languageName: node
   linkType: hard
 
@@ -16171,6 +16171,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"webpack-merge@npm:^5.10.0":
+  version: 5.10.0
+  resolution: "webpack-merge@npm:5.10.0"
+  dependencies:
+    clone-deep: ^4.0.1
+    flat: ^5.0.2
+    wildcard: ^2.0.0
+  checksum: 1fe8bf5309add7298e1ac72fb3f2090e1dfa80c48c7e79fa48aa60b5961332c7d0d61efa8851acb805e6b91a4584537a347bc106e05e9aec87fa4f7088c62f2f
+  languageName: node
+  linkType: hard
+
 "webpack-merge@npm:^5.7.3":
   version: 5.8.0
   resolution: "webpack-merge@npm:5.8.0"
@@ -16178,16 +16189,6 @@ __metadata:
     clone-deep: ^4.0.1
     wildcard: ^2.0.0
   checksum: 88786ab91013f1bd2a683834ff381be81c245a4b0f63304a5103e90f6653f44dab496a0768287f8531761f8ad957d1f9f3ccb2cb55df0de1bd9ee343e079da26
-  languageName: node
-  linkType: hard
-
-"webpack-merge@npm:^5.9.0":
-  version: 5.9.0
-  resolution: "webpack-merge@npm:5.9.0"
-  dependencies:
-    clone-deep: ^4.0.1
-    wildcard: ^2.0.0
-  checksum: 64fe2c23aacc5f19684452a0e84ec02c46b990423aee6fcc5c18d7d471155bd14e9a6adb02bd3656eb3e0ac2532c8e97d69412ad14c97eeafe32fa6d10050872
   languageName: node
   linkType: hard
 
