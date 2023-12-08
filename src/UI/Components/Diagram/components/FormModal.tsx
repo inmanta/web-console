@@ -81,7 +81,8 @@ const FormModal = ({
       isFullWidth
       isFullHeight={false}
     >
-      {selected?.name || "Choose a Service"}
+      {selected?.name ||
+        words("inventory.instanceComposer.formModal.placeholder")}
     </MenuToggle>
   );
 
@@ -167,14 +168,7 @@ const FormModal = ({
       return values;
     };
 
-    const tempPossibleForms = getOptions(services, [
-      {
-        key: "default_option",
-        value: undefined,
-        model: undefined,
-        isEmbedded: false,
-      },
-    ]);
+    const tempPossibleForms = getOptions(services, []);
     setPossibleForms(tempPossibleForms);
 
     if (cellView) {
@@ -194,7 +188,11 @@ const FormModal = ({
     <StyledModal
       disableFocusTrap
       isOpen={isOpen}
-      title={cellView ? "Edit Entity" : "Add Entity"}
+      title={words(
+        cellView
+          ? "inventory.instanceComposer.formModal.edit.title"
+          : "inventory.instanceComposer.formModal.create.title",
+      )}
       variant={"small"}
       onClose={() => {
         clearStates();
@@ -246,7 +244,7 @@ const FormModal = ({
           >
             {possibleForms.map(({ key, value }) => (
               <SelectOption key={key} value={value}>
-                {value || "Choose a Service"}
+                {value}
               </SelectOption>
             ))}
           </Select>
