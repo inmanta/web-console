@@ -90,7 +90,7 @@ if (Cypress.env("edition") === "iso") {
       // Open basic-service isntance form
       cy.get('[aria-label="new-entity-button"]').click();
       cy.get('[aria-label="service-picker"]').click();
-      cy.get(".pf-v5-c-select__menu-item").contains("basic-service").click();
+      cy.get(".pf-v5-c-menu__item-text").contains("basic-service").click();
 
       //fill form
       cy.get("#ip_r1").type("1.2.3.4");
