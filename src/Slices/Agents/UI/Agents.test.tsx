@@ -512,3 +512,43 @@ test("Given the Agents view with the environment halted, When setting unpause_on
   });
   expect(apiHelper.pendingRequests).toHaveLength(0);
 });
+
+test("Given the Agents view with the environment NOT halted, THEN the on resume column shouldn't be shown", async () => {
+  const { component, apiHelper } = setup();
+  render(component);
+
+  await act(async () => {
+    await apiHelper.resolve(Either.right(AgentsMock.response));
+  });
+
+  const tableHeaders = await screen.findAllByRole("columnheader");
+
+  expect(tableHeaders).toHaveLength(4);
+
+  const onResumeColumnHeader = tableHeaders.find(
+    (header) => header.textContent === "On resume",
+  );
+  expect(onResumeColumnHeader).toBeUndefined();
+});
+
+test("Given the Agents view with the environment halted, THEN the on resume column should be shown", async () => {
+  const { component, apiHelper, store } = setup();
+  store.dispatch.environment.setEnvironmentDetailsById({
+    id: "env",
+    value: RemoteData.success({ ...EnvironmentDetails.halted, id: "env" }),
+  });
+  render(component);
+
+  await act(async () => {
+    await apiHelper.resolve(Either.right(AgentsMock.response));
+  });
+
+  const tableHeaders = await screen.findAllByRole("columnheader");
+
+  expect(tableHeaders).toHaveLength(5);
+
+  const onResumeColumnHeader = tableHeaders.find(
+    (header) => header.textContent === "On resume",
+  );
+  expect(onResumeColumnHeader).toBeDefined();
+});
