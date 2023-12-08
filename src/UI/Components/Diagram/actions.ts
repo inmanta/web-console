@@ -301,7 +301,7 @@ export function appendInstance(
  * @param {EmbeddedEntity} embeddedEntity that we want to display
  * @param {InstanceAttributeModel} entityAttributes - attributes of given entity
  * @param {string | null} embeddedTo - id of the entity/shape in which this shape is embedded
- * @param {string} holderName - name of the entity type in which is embedded
+ * @param {string} holderName - name of the entity to which it is embedded/connected
  * @param {ServiceEntityBlock} instanceToConnectRelation - eventual shape to which inter-service relations should be connected
  * @returns {ServiceEntityBlock[]} created JointJS shapes
  */
