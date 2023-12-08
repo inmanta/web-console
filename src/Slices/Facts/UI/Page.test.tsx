@@ -7,7 +7,7 @@ import { Either } from "@/Core";
 import {
   QueryResolverImpl,
   getStoreInstance,
-  QueryManagerResolver,
+  QueryManagerResolverImpl,
 } from "@/Data";
 import { DeferredApiHelper, dependencies, StaticScheduler } from "@/Test";
 import { words } from "@/UI";
@@ -20,7 +20,7 @@ function setup() {
   const scheduler = new StaticScheduler();
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolver(store, apiHelper, scheduler, scheduler),
+    new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler),
   );
 
   const component = (

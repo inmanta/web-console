@@ -1,0 +1,3 @@
+description: "Hotfix to repair the E2E tests about pagination."
+change-type: patch
+destination-branches: [master, iso6]

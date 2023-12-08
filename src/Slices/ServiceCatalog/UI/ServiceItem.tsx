@@ -13,8 +13,13 @@ import {
   Flex,
   Modal,
   ModalVariant,
+  Dropdown,
+  MenuToggleElement,
+  MenuToggle,
+  DropdownList,
+  DropdownItem,
 } from "@patternfly/react-core";
-import { KebabToggle, Dropdown } from "@patternfly/react-core/deprecated";
+import { EllipsisVIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { Maybe, ServiceModel } from "@/Core";
 import { Spacer, ConfirmUserActionForm, ToastAlert } from "@/UI/Components";
@@ -39,7 +44,7 @@ export const ServiceItem: React.FunctionComponent<Props> = ({ service }) => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const handleModalToggle = () => {
-    setIsDeleteModalOpen(!isOpen);
+    setIsDeleteModalOpen(!isDeleteModalOpen);
   };
   const onSubmit = async () => {
     handleModalToggle();
@@ -48,6 +53,10 @@ export const ServiceItem: React.FunctionComponent<Props> = ({ service }) => {
       setErrorMessage(result.value);
     }
     document.dispatchEvent(new CustomEvent("service-deleted"));
+  };
+
+  const onToggleClick = () => {
+    setIsOpen(!isOpen);
   };
 
   return (
@@ -84,9 +93,10 @@ export const ServiceItem: React.FunctionComponent<Props> = ({ service }) => {
           ]}
         />
         <DataListAction
-          aria-labelledby={service.name + "-action"}
-          id={service.name + "-action"}
-          aria-label="Actions"
+          aria-labelledby={service.name + "-inventory"}
+          id={service.name + "-inventory"}
+          aria-label="Inventory Link"
+          isPlainButtonAction
         >
           <Link
             to={{
@@ -98,39 +108,56 @@ export const ServiceItem: React.FunctionComponent<Props> = ({ service }) => {
           >
             <Button variant="link">{words("catalog.button.inventory")}</Button>
           </Link>
+        </DataListAction>
+        <DataListAction
+          aria-labelledby={service.name + "-action"}
+          id={service.name + "-action"}
+          aria-label="Actions"
+          isPlainButtonAction
+        >
           <Dropdown
-            toggle={<KebabToggle onToggle={() => setIsOpen(!isOpen)} />}
+            toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
+              <MenuToggle
+                ref={toggleRef}
+                aria-label="Actions-dropdown"
+                variant="plain"
+                onClick={onToggleClick}
+                isExpanded={isOpen}
+              >
+                <EllipsisVIcon />
+              </MenuToggle>
+            )}
+            onOpenChange={(isOpen: boolean) => setIsOpen(isOpen)}
+            popperProps={{ position: "right" }}
             isOpen={isOpen}
-            isPlain
-            position="right"
             onSelect={() => setIsOpen(false)}
             aria-label="Actions-details"
-            dropdownItems={[
-              <Link
-                key={service.name + "-detailsLink"}
-                to={{
-                  pathname: routeManager.getUrl("ServiceDetails", {
-                    service: service.name,
-                  }),
-                  search: location.search,
-                }}
-              >
-                <Button variant="link">
+          >
+            <DropdownList>
+              <DropdownItem>
+                <Link
+                  key={service.name + "-detailsLink"}
+                  to={{
+                    pathname: routeManager.getUrl("ServiceDetails", {
+                      service: service.name,
+                    }),
+                    search: location.search,
+                  }}
+                >
                   {words("catalog.button.details")}
-                </Button>
-              </Link>,
-              <Button
-                key={service.name + "-deleteButton"}
-                aria-label={service.name + "-deleteButton"}
-                variant="link"
+                </Link>
+              </DropdownItem>
+              <DropdownItem
                 onClick={() => {
                   setIsDeleteModalOpen(true);
                 }}
+                key={service.name + "-deleteButton"}
+                aria-label={service.name + "-deleteButton"}
               >
                 {words("delete")}
-              </Button>,
-            ]}
-          />
+              </DropdownItem>
+            </DropdownList>
+          </Dropdown>
         </DataListAction>
       </DataListItemRow>
       <Modal

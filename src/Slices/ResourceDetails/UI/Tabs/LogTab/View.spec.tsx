@@ -7,7 +7,7 @@ import { Either } from "@/Core";
 import { QueryResolverImpl, getStoreInstance } from "@/Data";
 import {
   Resource,
-  DynamicQueryManagerResolver,
+  DynamicQueryManagerResolverImpl,
   StaticScheduler,
   DeferredApiHelper,
   dependencies,
@@ -31,7 +31,7 @@ function setup() {
   );
 
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolver([resourceLogsQueryManager]),
+    new DynamicQueryManagerResolverImpl([resourceLogsQueryManager]),
   );
 
   const component = (
@@ -61,7 +61,7 @@ test("GIVEN ResourceLogsView THEN shows resource logs", async () => {
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
     environment: "env",
-    url: `/api/v2/resource/${Resource.encodedId}/logs?limit=20&sort=timestamp.desc`,
+    url: `/api/v2/resource/${Resource.encodedId}/logs?limit=100&sort=timestamp.desc`,
     method: "GET",
   });
 

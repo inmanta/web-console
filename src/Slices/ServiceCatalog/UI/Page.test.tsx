@@ -10,13 +10,13 @@ import {
   ServicesStateHelper,
   getStoreInstance,
   CommandResolverImpl,
-  CommandManagerResolver,
+  CommandManagerResolverImpl,
   KeycloakAuthHelper,
 } from "@/Data";
 import {
   DeferredApiHelper,
   dependencies,
-  DynamicQueryManagerResolver,
+  DynamicQueryManagerResolverImpl,
   Environment,
   Service,
   StaticScheduler,
@@ -39,11 +39,11 @@ function setup() {
   );
 
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolver([servicesHelper]),
+    new DynamicQueryManagerResolverImpl([servicesHelper]),
   );
   const authHelper = new KeycloakAuthHelper();
   const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolver(store, apiHelper, authHelper),
+    new CommandManagerResolverImpl(store, apiHelper, authHelper),
   );
 
   const environmentHandler = EnvironmentHandlerImpl(
@@ -173,7 +173,7 @@ test("GIVEN ServiceCatalog WHEN service is deleted THEN command is triggered", a
   });
 
   await act(async () => {
-    await userEvent.click(screen.getByLabelText("Actions"));
+    await userEvent.click(screen.getByLabelText("Actions-dropdown"));
   });
   await act(async () => {
     await userEvent.click(

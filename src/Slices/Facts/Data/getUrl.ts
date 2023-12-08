@@ -5,6 +5,7 @@ export function getUrl({
   filter,
   pageSize,
   sort,
+  currentPage,
 }: Query.SubQuery<"GetFacts">): string {
   const filterParam =
     filter && Object.keys(filter).length > 0
@@ -19,5 +20,8 @@ export function getUrl({
         )}`
       : "";
   const sortParam = sort ? `&sort=${sort.name}.${sort.order}` : "";
-  return `/api/v2/facts?limit=${pageSize.value}${filterParam}${sortParam}`;
+
+  return `/api/v2/facts?limit=${pageSize.value}${filterParam}${sortParam}${
+    currentPage.value ? `&${currentPage.value}` : ""
+  }`;
 }

@@ -1,6 +1,11 @@
 import React, { useState } from "react";
-import { Spinner } from "@patternfly/react-core";
-import { Dropdown, DropdownToggle } from "@patternfly/react-core/deprecated";
+import {
+  Dropdown,
+  MenuToggle,
+  MenuToggleElement,
+  Spinner,
+} from "@patternfly/react-core";
+
 import { Item, Refs } from "@/UI/Components/DiffWizard/types";
 import { words } from "@/UI/words";
 import { SummaryList } from "./SummaryList";
@@ -16,11 +21,15 @@ export const JumpToAction: React.FC<Props> = ({ items, refs }) => {
   return (
     <Dropdown
       onSelect={() => setIsOpen(false)}
-      toggle={
-        <DropdownToggle onToggle={() => setIsOpen(!isOpen)}>
+      toggle={(toggleref: React.Ref<MenuToggleElement>) => (
+        <MenuToggle
+          ref={toggleref}
+          onClick={() => setIsOpen(!isOpen)}
+          isExpanded={isOpen}
+        >
           {words("jumpTo")}
-        </DropdownToggle>
-      }
+        </MenuToggle>
+      )}
       isOpen={isOpen}
     >
       <SummaryList items={items} refs={refs} />
@@ -30,14 +39,18 @@ export const JumpToAction: React.FC<Props> = ({ items, refs }) => {
 
 export const LoadingJumpToAction: React.FC = () => (
   <Dropdown
-    toggle={
-      <DropdownToggle isDisabled>
+    toggle={(toggleref: React.Ref<MenuToggleElement>) => (
+      <MenuToggle ref={toggleref} isDisabled>
         <Spinner size="sm" />
-      </DropdownToggle>
-    }
+      </MenuToggle>
+    )}
   ></Dropdown>
 );
 
 export const EmptyJumpToAction: React.FC = () => (
-  <Dropdown toggle={<DropdownToggle isDisabled />}></Dropdown>
+  <Dropdown
+    toggle={(toggleref: React.Ref<MenuToggleElement>) => (
+      <MenuToggle ref={toggleref} isDisabled></MenuToggle>
+    )}
+  ></Dropdown>
 );

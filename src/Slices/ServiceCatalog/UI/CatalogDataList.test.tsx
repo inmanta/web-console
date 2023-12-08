@@ -8,14 +8,18 @@ import {
   CommandResolverImpl,
   DeleteServiceCommandManager,
 } from "@/Data";
-import { dependencies, DynamicCommandManagerResolver, Service } from "@/Test";
+import {
+  dependencies,
+  DynamicCommandManagerResolverImpl,
+  Service,
+} from "@/Test";
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import { CatalogDataList } from "./CatalogDataList";
 
 const Component = (services: ServiceModel[]) => {
   const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolver([
+    new DynamicCommandManagerResolverImpl([
       DeleteServiceCommandManager(new BaseApiHelper()),
     ]),
   );
@@ -80,9 +84,9 @@ test("GIVEN CatalogDataList WHEN service THEN service details has correct link",
 
   expect(listItem).toBeInTheDocument();
 
-  const dropdown = within(listItem).getByLabelText("Actions-details");
+  const dropdown = screen.getByLabelText("Actions-dropdown");
   await act(async () => {
-    await userEvent.click(within(dropdown).getByRole("button"));
+    await userEvent.click(dropdown);
   });
 
   const link = screen.getByRole("link", {

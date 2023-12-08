@@ -1,5 +1,6 @@
 export interface UrlManager {
-  getDashboardUrl(environment: string): string;
   getDocumentationLink(): string;
+  getLSMAPILink(environment: string): string;
+  getGeneralAPILink(): string;
   getApiUrl(): string;
 }

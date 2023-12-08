@@ -1,18 +1,17 @@
 import React from "react";
 import { Router } from "react-router-dom";
-import { Page } from "@patternfly/react-core";
-import { PageHeader } from "@patternfly/react-core/deprecated";
+import { Masthead, Page } from "@patternfly/react-core";
 import { act, render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { createMemoryHistory } from "history";
 import { Either, Maybe } from "@/Core";
 import {
-  CommandManagerResolver,
+  CommandManagerResolverImpl,
   CommandResolverImpl,
   getStoreInstance,
   KeycloakAuthHelper,
-  QueryManagerResolver,
+  QueryManagerResolverImpl,
   QueryResolverImpl,
 } from "@/Data";
 import { Body } from "@/Slices/Notification/Core/Domain";
@@ -21,6 +20,7 @@ import { DependencyProvider } from "@/UI/Dependency";
 import * as Mock from "@S/Notification/Core/Mock";
 import { Badge } from "@S/Notification/UI/Badge";
 import { Drawer } from "./Drawer";
+
 function setup() {
   const apiHelper = new DeferredApiHelper();
   const history = createMemoryHistory();
@@ -28,11 +28,11 @@ function setup() {
   const store = getStoreInstance();
 
   const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolver(store, apiHelper, scheduler, scheduler),
+    new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler),
   );
 
   const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolver(store, apiHelper, new KeycloakAuthHelper()),
+    new CommandManagerResolverImpl(store, apiHelper, new KeycloakAuthHelper()),
   );
 
   const closeCallback = jest.fn();
@@ -61,12 +61,15 @@ function setup() {
             notificationDrawer={
               <Drawer
                 onClose={closeCallback}
+                isDrawerOpen
                 drawerRef={{ current: undefined }}
               />
             }
             isNotificationDrawerExpanded={true}
             header={
-              <PageHeader headerTools={<Badge onClick={toggleCallback} />} />
+              <Masthead>
+                <Badge onClick={toggleCallback} />
+              </Masthead>
             }
           />
         </DependencyProvider>

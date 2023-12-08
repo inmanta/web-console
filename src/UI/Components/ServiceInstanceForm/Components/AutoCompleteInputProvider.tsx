@@ -1,5 +1,6 @@
 import React, { useContext, useState } from "react";
 import { PageSize, RemoteData, ServiceInstanceParams } from "@/Core";
+import { initialCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { DependencyContext } from "@/UI/Dependency";
 import { AutoCompleteInput } from "./AutoCompleteInput";
 
@@ -11,7 +12,7 @@ interface Props {
   description?: string;
   isOptional: boolean;
   isDisabled?: boolean;
-  handleInputChange: (value, event) => void;
+  handleInputChange: (value) => void;
   alreadySelected: string[];
   multi?: boolean;
 }
@@ -35,8 +36,10 @@ export const AutoCompleteInputProvider: React.FC<Props> = ({
     kind: "GetServiceInstances",
     name: serviceName,
     filter,
-    pageSize: PageSize.from("100"),
+    pageSize: PageSize.from("250"),
+    currentPage: initialCurrentPage,
   });
+
   const onSearchTextChanged = (searchText: string) => {
     if (serviceIdentity) {
       setFilter({ identity: { key: serviceIdentity, value: searchText } });
@@ -55,9 +58,9 @@ export const AutoCompleteInputProvider: React.FC<Props> = ({
       loading: () => (
         <AutoCompleteInput
           options={[]}
+          selected={selectedValue}
           serviceEntity={serviceName}
           attributeName={attributeName}
-          attributeValue={selectedValue}
           isOptional={isOptional}
           shouldBeDisabled={isDisabled}
           description={description}
@@ -76,7 +79,7 @@ export const AutoCompleteInputProvider: React.FC<Props> = ({
             return {
               displayName,
               value: id,
-              alreadySelected: alreadySelected.includes(id),
+              isSelected: alreadySelected.includes(id),
             };
           },
         );
@@ -85,7 +88,7 @@ export const AutoCompleteInputProvider: React.FC<Props> = ({
             options={options}
             attributeName={attributeName}
             serviceEntity={serviceName}
-            attributeValue={selectedValue}
+            selected={selectedValue}
             isOptional={isOptional}
             shouldBeDisabled={isDisabled}
             description={description}

@@ -22,6 +22,7 @@ import { DesiredStateComparePage } from "@S/DesiredStateCompare/UI";
 import { DesiredStateDetailsPage } from "@S/DesiredStateDetails/UI";
 import { DesiredStateResourceDetailsPage } from "@S/DesiredStateResourceDetails/UI";
 import { DiagnosePage } from "@S/Diagnose/UI";
+import { DuplicateInstancePage } from "@S/DuplicateInstance/UI";
 import { EditInstancePage } from "@S/EditInstance/UI";
 import { EventsPage } from "@S/Events/UI";
 import { FactsPage } from "@S/Facts/UI";
@@ -84,6 +85,10 @@ export class PrimaryPageManager implements PageManager {
       EditInstance: {
         ...this.routeDictionary.EditInstance,
         element: <EditInstancePage />,
+      },
+      DuplicateInstance: {
+        ...this.routeDictionary.DuplicateInstance,
+        element: <DuplicateInstancePage />,
       },
       History: {
         ...this.routeDictionary.History,

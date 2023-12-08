@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { DropdownItem } from "@patternfly/react-core/deprecated";
+import { DropdownItem } from "@patternfly/react-core";
 import { Maybe, ParsedNumber } from "@/Core";
 import { ActionDisabledTooltip } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
@@ -14,7 +14,7 @@ interface Props {
 export const PromoteAction: React.FC<Props> = ({ version, isDisabled }) => {
   const { commandResolver, environmentModifier } =
     useContext(DependencyContext);
-  const { filter, pageSize, setErrorMessage } = useContext(
+  const { filter, pageSize, currentPage, setErrorMessage } = useContext(
     GetDesiredStatesContext,
   );
   const promoteVersionTrigger = commandResolver.useGetTrigger<"PromoteVersion">(
@@ -28,6 +28,7 @@ export const PromoteAction: React.FC<Props> = ({ version, isDisabled }) => {
       kind: "GetDesiredStates",
       filter,
       pageSize,
+      currentPage,
     });
     if (Maybe.isSome(result)) {
       setErrorMessage(result.value);

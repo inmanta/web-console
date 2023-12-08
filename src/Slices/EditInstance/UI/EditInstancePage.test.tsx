@@ -13,12 +13,12 @@ import {
   CommandResolverImpl,
 } from "@/Data";
 import {
-  DynamicQueryManagerResolver,
+  DynamicQueryManagerResolverImpl,
   Service,
   StaticScheduler,
   ServiceInstance,
   MockEnvironmentModifier,
-  DynamicCommandManagerResolver,
+  DynamicCommandManagerResolverImpl,
   DeferredApiHelper,
   dependencies,
 } from "@/Test";
@@ -32,7 +32,7 @@ function setup(entity = "a") {
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolver([
+    new DynamicQueryManagerResolverImpl([
       ServiceInstanceQueryManager(
         apiHelper,
         ServiceInstanceStateHelper(store),
@@ -43,7 +43,7 @@ function setup(entity = "a") {
 
   const commandManager = TriggerInstanceUpdateCommandManager(apiHelper);
   const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolver([commandManager]),
+    new DynamicCommandManagerResolverImpl([commandManager]),
   );
 
   const component = (
@@ -141,7 +141,7 @@ test("Given the EditInstance View When changing a v1 embedded entity Then the co
     await userEvent.click(screen.getByRole("button", { name: "circuits" }));
   });
   await act(async () => {
-    await userEvent.click(screen.getByRole("button", { name: "1" }));
+    await userEvent.click(screen.getByRole("button", { name: "0" }));
   });
 
   expect(screen.getByLabelText("TextInput-service_id")).toBeDisabled();
@@ -189,7 +189,7 @@ test("Given the EditInstance View When changing a v2 embedded entity Then the co
     await userEvent.click(screen.getByRole("button", { name: "circuits" }));
   });
   await act(async () => {
-    await userEvent.click(screen.getByRole("button", { name: "1" }));
+    await userEvent.click(screen.getByRole("button", { name: "0" }));
   });
 
   expect(screen.getByLabelText("TextInput-service_id")).toBeDisabled();
@@ -343,7 +343,7 @@ test("Given the EditInstance View When changing an embedded entity Then the inpu
 
   await act(async () => {
     await userEvent.click(
-      within(embedded_base).getByRole("button", { name: "1" }),
+      within(embedded_base).getByRole("button", { name: "0" }),
     );
   });
   expect(within(embedded_base).queryByDisplayValue("string")).toBeDisabled();
@@ -389,19 +389,19 @@ test("Given the EditInstance View When changing an embedded entity Then the inpu
     within(embedded_base).queryByLabelText("TextFieldInput-editableString[]?"),
   ).not.toHaveClass("is-disabled");
 
+  expect(within(embedded_base).queryByTestId("enum-select-toggle")).toHaveClass(
+    "pf-m-disabled",
+  );
   expect(
-    within(embedded_base).queryByLabelText("enum-select-toggle"),
-  ).toBeDisabled();
-  expect(
-    within(embedded_base).queryByLabelText("editableEnum-select-toggle"),
-  ).toBeEnabled();
+    within(embedded_base).queryByTestId("editableEnum-select-toggle"),
+  ).not.toHaveClass("pf-m-disabled");
 
   expect(
-    within(embedded_base).queryByLabelText("enum?-select-toggle"),
-  ).toBeDisabled();
+    within(embedded_base).queryByTestId("enum?-select-toggle"),
+  ).toHaveClass("pf-m-disabled");
   expect(
-    within(embedded_base).queryByLabelText("editableEnum?-select-toggle"),
-  ).toBeEnabled();
+    within(embedded_base).queryByTestId("editableEnum?-select-toggle"),
+  ).not.toHaveClass("pf-m-disabled");
 
   expect(
     within(embedded_base).queryByLabelText("TextInput-dict"),
@@ -516,11 +516,11 @@ test("Given the EditInstance View When adding new nested embedded entity Then th
 
   await act(async () => {
     await userEvent.click(
-      within(editableOptionalEmbedded_base).getByRole("button", { name: "2" }),
+      within(editableOptionalEmbedded_base).getByRole("button", { name: "1" }),
     );
   });
   const addedOptionalEmbedded = screen.getByLabelText(
-    "DictListFieldInputItem-editableOptionalEmbedded_base.2",
+    "DictListFieldInputItem-editableOptionalEmbedded_base.1",
   );
   //check if direct attributes are correctly displayed
   expect(within(addedOptionalEmbedded).queryByText("string")).toBeEnabled();

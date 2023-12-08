@@ -667,7 +667,7 @@
     "config": {},
     "service_identity": "name",
     "service_identity_display_name": null,
-    "strict_modifier_enforcement": false,
+    "strict_modifier_enforcement": true,
     "owner": null,
     "relation_to_owner": null,
     "instance_summary": {
@@ -2842,7 +2842,7 @@
     "config": {},
     "service_identity": "name",
     "service_identity_display_name": null,
-    "strict_modifier_enforcement": false,
+    "strict_modifier_enforcement": true,
     "owner": null,
     "relation_to_owner": null,
     "instance_summary": {

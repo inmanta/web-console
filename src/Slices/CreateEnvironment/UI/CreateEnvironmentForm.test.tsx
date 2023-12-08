@@ -8,9 +8,9 @@ import {
   CommandResolverImpl,
   getStoreInstance,
   QueryResolverImpl,
-  CommandManagerResolver,
+  CommandManagerResolverImpl,
   KeycloakAuthHelper,
-  QueryManagerResolver,
+  QueryManagerResolverImpl,
 } from "@/Data";
 import {
   DeferredApiHelper,
@@ -28,10 +28,10 @@ function setup() {
   const scheduler = new StaticScheduler();
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolver(store, apiHelper, scheduler, scheduler),
+    new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler),
   );
   const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolver(store, apiHelper, authHelper),
+    new CommandManagerResolverImpl(store, apiHelper, authHelper),
   );
 
   const component = (
@@ -77,7 +77,9 @@ test(`Given CreateEnvironmentForm When an existing project and valid environment
 
   await act(async () => {
     await userEvent.click(
-      await screen.findByRole("button", { name: "Project Name-select-toggle" }),
+      await screen.findByRole("combobox", {
+        name: "Project Name-select-toggleFilterInput",
+      }),
     );
   });
   await act(async () => {
@@ -124,7 +126,9 @@ test(`Given CreateEnvironmentForm When an existing project, a valid environment 
 
   await act(async () => {
     await userEvent.click(
-      await screen.findByRole("button", { name: "Project Name-select-toggle" }),
+      await screen.findByRole("combobox", {
+        name: "Project Name-select-toggleFilterInput",
+      }),
     );
   });
   await act(async () => {
@@ -198,12 +202,16 @@ test(`Given CreateEnvironmentForm When a new project and valid environment are s
 
   await act(async () => {
     await userEvent.click(
-      await screen.findByRole("button", { name: "Project Name-select-toggle" }),
+      await screen.findByRole("combobox", {
+        name: "Project Name-select-toggleFilterInput",
+      }),
     );
   });
   await act(async () => {
     await userEvent.type(
-      await screen.findByRole("textbox", { name: "Project Name-typeahead" }),
+      await screen.findByRole("combobox", {
+        name: "Project Name-select-toggleFilterInput",
+      }),
       "new-project",
     );
   });
@@ -282,12 +290,16 @@ test("Given CreateEnvironmentForm When creating a new project is not successful 
   });
   await act(async () => {
     await userEvent.click(
-      await screen.findByRole("button", { name: "Project Name-select-toggle" }),
+      await screen.findByRole("combobox", {
+        name: "Project Name-select-toggleFilterInput",
+      }),
     );
   });
   await act(async () => {
     await userEvent.type(
-      await screen.findByRole("textbox", { name: "Project Name-typeahead" }),
+      await screen.findByRole("combobox", {
+        name: "Project Name-select-toggleFilterInput",
+      }),
       "new-project",
     );
   });
@@ -344,7 +356,9 @@ test(`Given CreateEnvironmentForm When an existing project and invalid environme
   // Input data
   await act(async () => {
     await userEvent.click(
-      await screen.findByRole("button", { name: "Project Name-select-toggle" }),
+      await screen.findByRole("combobox", {
+        name: "Project Name-select-toggleFilterInput",
+      }),
     );
   });
   await act(async () => {
@@ -416,7 +430,9 @@ test(`Given CreateEnvironmentForm When an existing project, a valid environment 
 
   await act(async () => {
     await userEvent.click(
-      await screen.findByRole("button", { name: "Project Name-select-toggle" }),
+      await screen.findByRole("combobox", {
+        name: "Project Name-select-toggleFilterInput",
+      }),
     );
   });
   await act(async () => {
@@ -478,7 +494,9 @@ test(`Given CreateEnvironmentForm When an existing project, a valid environment 
   });
   await act(async () => {
     await userEvent.click(
-      await screen.findByRole("button", { name: "Project Name-select-toggle" }),
+      await screen.findByRole("combobox", {
+        name: "Project Name-select-toggleFilterInput",
+      }),
     );
   });
   await act(async () => {

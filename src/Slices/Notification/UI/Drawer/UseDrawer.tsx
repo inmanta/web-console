@@ -28,7 +28,12 @@ export const useDrawer: UseDrawer = (env) => {
     onNotificationsToggle,
   ] = env
     ? [
-        <Drawer onClose={onDrawerClose} drawerRef={drawerRef} key="drawer" />,
+        <Drawer
+          onClose={onDrawerClose}
+          isDrawerOpen={isDrawerOpen}
+          drawerRef={drawerRef}
+          key="drawer"
+        />,
         onDrawerOpen,
         isDrawerOpen,
         () => setIsDrawerOpen(!isDrawerOpen),

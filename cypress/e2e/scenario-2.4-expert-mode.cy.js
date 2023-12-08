@@ -137,14 +137,13 @@ if (Cypress.env("edition") === "iso") {
         .find('[data-label="State"]', { timeout: 60000 })
         .should("contain", "up");
 
-      cy.get(".pf-v5-c-description-list")
-        .contains("Edit")
-        .should("not.be.disabled");
+      cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
+      cy.get(".pf-v5-c-menu__item")
+        .eq(3)
+        .should("not.have.class", "pf-disabled");
 
-      cy.get(".pf-v5-c-dropdown__toggle")
-        .contains("Force state to")
-        .click({ force: true });
-      cy.get(".pf-v5-c-dropdown__menu-item").contains("setting_start").click();
+      cy.get(".pf-v5-c-menu__item").contains("Force State").click();
+      cy.get(".pf-v5-c-menu__item").contains("setting_start").click();
 
       // Modal title for confirmation of Destroying instance should be visible
       cy.get(".pf-v5-c-modal-box__title-text")
@@ -159,11 +158,10 @@ if (Cypress.env("edition") === "iso") {
         .should("contain", "up");
 
       // Push new state, confirm modal and expect new value in the State data cell
-      cy.get(".pf-v5-c-dropdown__toggle")
-        .contains("Force state to")
-        .click({ force: true });
+      cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
+      cy.get(".pf-v5-c-menu__item").contains("Force State").click();
+      cy.get(".pf-v5-c-menu__item").contains("setting_start").click();
 
-      cy.get(".pf-v5-c-dropdown__menu-item").contains("setting_start").click();
       cy.get("button").contains("Yes").click();
 
       cy.get('[aria-label="InstanceRow-Intro"]:first')
@@ -196,9 +194,10 @@ if (Cypress.env("edition") === "iso") {
       );
 
       // Expect edit button to be disabled after previous state change
-      cy.get(".pf-v5-c-description-list")
-        .contains("Edit", { timeout: 60000 })
-        .should("be.disabled");
+      cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
+
+      // The third button in the dropdown should be the edit button.
+      cy.get(".pf-v5-c-menu__item").eq(2).should("be.disabled");
 
       // Expect to land on Service Inventory page and to find attributes tab button
       cy.get(".pf-v5-c-tabs__list")
@@ -335,7 +334,9 @@ if (Cypress.env("edition") === "iso") {
       );
 
       // Click on destroy button
-      cy.get(".pf-v5-c-description-list").contains("Destroy").click();
+      cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
+      cy.get(".pf-v5-c-menu__item").contains("More actions").click();
+      cy.get(".pf-v5-c-menu__item").contains("Destroy").click();
 
       // Modal title for confirmation of Destroying instance should be visible
       cy.get(".pf-v5-c-modal-box__title-text")

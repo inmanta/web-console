@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen, fireEvent, within, act } from "@testing-library/react";
+import { render, screen, fireEvent, act } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { Attributes, EntityLike } from "@/Core";
 import { CommandResolverImpl, KeycloakAuthHelper } from "@/Data";
@@ -7,7 +7,7 @@ import { UpdateInstanceAttributeCommandManager } from "@/Data/Managers/UpdateIns
 import {
   DeferredApiHelper,
   dependencies,
-  DynamicCommandManagerResolver,
+  DynamicCommandManagerResolverImpl,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { words } from "@/UI/words";
@@ -27,7 +27,7 @@ function inventorySetup(attributes: Attributes) {
     apiHelper,
   );
   const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolver([updateAttribute]),
+    new DynamicCommandManagerResolverImpl([updateAttribute]),
   );
 
   const component = (
@@ -103,7 +103,7 @@ function catalogSetup(service: EntityLike) {
     apiHelper,
   );
   const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolver([updateAttribute]),
+    new DynamicCommandManagerResolverImpl([updateAttribute]),
   );
 
   const component = (
@@ -214,16 +214,15 @@ test("TreeTable with catalog entries all can be expanded at once", async () => {
   render(catalogSetup(service));
 
   //get buttons from dropdown
-  const dropdown = screen.getByRole("listbox", {
-    name: "expand-collapse-dropdown",
+  const dropdown = screen.getByRole("button", {
+    name: "expand-collapse-dropdown-toggle",
   });
-  const dropdownOpenButton = within(dropdown).getByLabelText("Actions");
 
   await act(async () => {
-    await userEvent.click(dropdownOpenButton);
+    await userEvent.click(dropdown);
   });
   await act(async () => {
-    await userEvent.click(within(dropdown).getByText("Expand all"));
+    await userEvent.click(screen.getByRole("option", { name: "Expand all" }));
   });
 
   const row1 = screen.getByRole("row", { name: "Row-a$c$d" });
@@ -234,11 +233,11 @@ test("TreeTable with catalog entries all can be expanded at once", async () => {
   expect(row2).toBeVisible();
   expect(row3).toBeVisible();
 
-  fireEvent.click(dropdownOpenButton);
+  fireEvent.click(dropdown);
 
   await act(async () => {
     await userEvent.click(
-      within(dropdown).getByText(words("inventory.tabs.collapse")),
+      screen.getByRole("option", { name: words("inventory.tabs.collapse") }),
     );
   });
 

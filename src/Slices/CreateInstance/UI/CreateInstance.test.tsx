@@ -5,11 +5,11 @@ import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { Either } from "@/Core";
 import {
-  CommandManagerResolver,
+  CommandManagerResolverImpl,
   CommandResolverImpl,
   getStoreInstance,
   KeycloakAuthHelper,
-  QueryManagerResolver,
+  QueryManagerResolverImpl,
   QueryResolverImpl,
 } from "@/Data";
 import {
@@ -30,11 +30,11 @@ function setup(service) {
   const apiHelper = new DeferredApiHelper();
   const authHelper = new KeycloakAuthHelper();
   const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolver(store, apiHelper, scheduler, scheduler),
+    new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler),
   );
 
   const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolver(store, apiHelper, authHelper),
+    new CommandManagerResolverImpl(store, apiHelper, authHelper),
   );
 
   const component = (
@@ -131,48 +131,35 @@ test("Given the CreateInstance View When creating an instance with Inter-service
       Either.right({ data: [ServiceInstance.a, ServiceInstance.b] }),
     );
   });
-
-  const relationInputField = screen.getByPlaceholderText(
-    words("common.serviceInstance.relation"),
-  );
-  await act(async () => {
-    await userEvent.type(relationInputField, "a");
-  });
-  expect(apiHelper.pendingRequests[0]).toEqual({
-    method: "GET",
-    url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=100&filter.order_id=a`,
-    environment: "env",
-  });
-  await act(async () => {
-    await apiHelper.resolve(
-      Either.right({ data: [ServiceInstance.a, ServiceInstance.b] }),
-    );
-  });
-  await act(async () => {
-    await userEvent.type(relationInputField, "{selectall}{backspace}ab");
-  });
-  expect(apiHelper.pendingRequests[0]).toEqual({
-    method: "GET",
-    url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=100&filter.order_id=ab`,
-    environment: "env",
-  });
   await act(async () => {
     apiHelper.resolve(
       Either.right({ data: [ServiceInstance.a, ServiceInstance.b] }),
     );
   });
 
+  const relationInputField = screen.getByPlaceholderText(
+    words("common.serviceInstance.relation"),
+  );
+
+  await act(async () => {
+    await userEvent.type(relationInputField, "a");
+  });
+
+  await act(async () => {
+    apiHelper.resolve(Either.right({ data: [ServiceInstance.a] }));
+  });
+
   const options = await screen.findAllByRole("option");
+
+  expect(options.length).toBe(1);
+
   await act(async () => {
     await userEvent.click(options[0]);
   });
+
+  expect(options[0]).toHaveClass("pf-m-selected");
+
   await act(async () => {
-    await userEvent.click(relationInputField);
-  });
-  const options2 = await screen.findAllByRole("option");
-  expect(options2[0]).toHaveClass("pf-m-disabled");
-  await act(async () => {
-    await userEvent.click(options2[1]);
     await userEvent.click(
       screen.getByRole("button", { name: words("confirm") }),
     );
@@ -183,9 +170,121 @@ test("Given the CreateInstance View When creating an instance with Inter-service
     url: `/lsm/v1/service_inventory/${Service.withRelationsOnly.name}`,
     body: {
       attributes: {
-        test_entity: ["service_instance_id_a", "service_instance_id_b"],
+        test_entity: ["service_instance_id_a"],
       },
     },
+    environment: "env",
+  });
+});
+
+test("Given the CreateInstance View When creating an instance with Inter-service-relations only Then the correct request is fired", async () => {
+  const { component, apiHelper } = setup(Service.withRelationsOnly);
+  render(component);
+
+  await act(async () => {
+    apiHelper.resolve(Either.right({ data: Service.withIdentity }));
+  });
+  await act(async () => {
+    apiHelper.resolve(
+      Either.right({ data: [ServiceInstance.a, ServiceInstance.b] }),
+    );
+  });
+  await act(async () => {
+    apiHelper.resolve(
+      Either.right({ data: [ServiceInstance.a, ServiceInstance.b] }),
+    );
+  });
+
+  const relationInputField = screen.getByPlaceholderText(
+    words("common.serviceInstance.relation"),
+  );
+
+  await act(async () => {
+    await userEvent.type(relationInputField, "a");
+  });
+  expect(apiHelper.pendingRequests[0]).toEqual({
+    method: "GET",
+    url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=250&filter.order_id=a`,
+    environment: "env",
+  });
+
+  await act(async () => {
+    await apiHelper.resolve(Either.right({ data: [ServiceInstance.a] }));
+  });
+  await act(async () => {
+    await userEvent.type(relationInputField, "{selectall}{backspace}ab");
+  });
+  expect(apiHelper.pendingRequests[0]).toEqual({
+    method: "GET",
+    url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=250&filter.order_id=ab`,
+    environment: "env",
+  });
+  await act(async () => {
+    apiHelper.resolve(Either.right({ data: [] }));
+  });
+
+  await act(async () => {
+    await userEvent.type(relationInputField, "{backspace}{backspace}");
+  });
+  expect(apiHelper.pendingRequests[0]).toEqual({
+    method: "GET",
+    url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=250&filter.order_id=`,
+    environment: "env",
+  });
+});
+
+test("Given the CreateInstance View When creating an instance with Inter-service-relations only Then the correct request is fired", async () => {
+  const { component, apiHelper } = setup(Service.withRelationsOnly);
+  render(component);
+
+  await act(async () => {
+    apiHelper.resolve(Either.right({ data: Service.withIdentity }));
+  });
+  await act(async () => {
+    apiHelper.resolve(
+      Either.right({ data: [ServiceInstance.a, ServiceInstance.b] }),
+    );
+  });
+  await act(async () => {
+    apiHelper.resolve(
+      Either.right({ data: [ServiceInstance.a, ServiceInstance.b] }),
+    );
+  });
+
+  const relationInputField = screen.getByPlaceholderText(
+    words("common.serviceInstance.relation"),
+  );
+
+  await act(async () => {
+    await userEvent.type(relationInputField, "a");
+  });
+  expect(apiHelper.pendingRequests[0]).toEqual({
+    method: "GET",
+    url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=250&filter.order_id=a`,
+    environment: "env",
+  });
+
+  await act(async () => {
+    await apiHelper.resolve(Either.right({ data: [ServiceInstance.a] }));
+  });
+  await act(async () => {
+    await userEvent.type(relationInputField, "{selectall}{backspace}ab");
+  });
+  expect(apiHelper.pendingRequests[0]).toEqual({
+    method: "GET",
+    url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=250&filter.order_id=ab`,
+    environment: "env",
+  });
+  await act(async () => {
+    apiHelper.resolve(Either.right({ data: [] }));
+  });
+
+  await act(async () => {
+    await userEvent.type(relationInputField, "{backspace}{backspace}");
+  });
+  expect(apiHelper.pendingRequests[0]).toEqual({
+    method: "GET",
+    url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=250&filter.order_id=`,
     environment: "env",
   });
 });
@@ -238,18 +337,19 @@ test("Given the CreateInstance View When creating entity with default values The
     screen.queryByLabelText("TextFieldInput-editableString[]?"),
   ).toHaveTextContent("8.8.8.8");
 
-  expect(screen.queryByLabelText("EnumFieldInput-enum")).toHaveTextContent(
-    "OPTION_ONE",
-  );
   expect(
-    screen.queryByLabelText("EnumFieldInput-editableEnum"),
-  ).toHaveTextContent("OPTION_ONE");
-  expect(screen.queryByLabelText("EnumFieldInput-enum?")).toHaveTextContent(
-    "OPTION_ONE",
-  );
+    screen.getByRole("combobox", { name: "enum-selectFilterInput" }),
+  ).toHaveValue("OPTION_ONE");
   expect(
-    screen.queryByLabelText("EnumFieldInput-editableEnum?"),
-  ).toHaveTextContent("OPTION_ONE");
+    screen.getByRole("combobox", { name: "editableEnum?-selectFilterInput" }),
+  ).toHaveValue("OPTION_ONE");
+
+  expect(
+    screen.getByRole("combobox", { name: "editableEnum-selectFilterInput" }),
+  ).toHaveValue("OPTION_ONE");
+  expect(
+    screen.getByRole("combobox", { name: "enum?-selectFilterInput" }),
+  ).toHaveValue("OPTION_ONE");
 
   expect(screen.queryByLabelText("TextInput-dict")).toHaveValue(
     '{"default":"value"}',
@@ -279,7 +379,7 @@ test("Given the CreateInstance View When creating entity with default values The
 
   await act(async () => {
     await userEvent.click(
-      within(embedded_base).getByRole("button", { name: "1" }),
+      within(embedded_base).getByRole("button", { name: "0" }),
     );
   });
   expect(
@@ -330,17 +430,25 @@ test("Given the CreateInstance View When creating entity with default values The
   ).toHaveTextContent("8.8.8.8");
 
   expect(
-    within(embedded_base).queryByLabelText("EnumFieldInput-enum"),
-  ).toHaveTextContent("OPTION_ONE");
+    within(embedded_base).getByRole("combobox", {
+      name: "enum-selectFilterInput",
+    }),
+  ).toHaveValue("OPTION_ONE");
   expect(
-    within(embedded_base).queryByLabelText("EnumFieldInput-editableEnum"),
-  ).toHaveTextContent("OPTION_ONE");
+    within(embedded_base).getByRole("combobox", {
+      name: "editableEnum-selectFilterInput",
+    }),
+  ).toHaveValue("OPTION_ONE");
   expect(
-    within(embedded_base).queryByLabelText("EnumFieldInput-enum?"),
-  ).toHaveTextContent("OPTION_ONE");
+    within(embedded_base).getByRole("combobox", {
+      name: "enum?-selectFilterInput",
+    }),
+  ).toHaveValue("OPTION_ONE");
   expect(
-    within(embedded_base).queryByLabelText("EnumFieldInput-editableEnum?"),
-  ).toHaveTextContent("OPTION_ONE");
+    within(embedded_base).getByRole("combobox", {
+      name: "editableEnum?-selectFilterInput",
+    }),
+  ).toHaveValue("OPTION_ONE");
 
   expect(within(embedded_base).queryByLabelText("TextInput-dict")).toHaveValue(
     '{"default":"value"}',

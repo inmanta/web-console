@@ -1,0 +1,8 @@
+change-type: patch
+description: Increase default page size to 100 for Resource logs in the Resource details page.
+issue-nr: 5159
+destination-branches:
+  - master
+  - iso6
+sections:
+  minor-improvement: "{{description}}"

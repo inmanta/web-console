@@ -4,7 +4,7 @@ import { act, render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { Either, RemoteData } from "@/Core";
-import { QueryManagerResolver, QueryResolverImpl } from "@/Data";
+import { QueryManagerResolverImpl, QueryResolverImpl } from "@/Data";
 import { getStoreInstance } from "@/Data/Store";
 import { DeferredApiHelper, dependencies, StaticScheduler } from "@/Test";
 import {
@@ -19,7 +19,7 @@ test("GIVEN QueryManager.ContinuousWithEnv WHEN environment changes THEN the api
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
   const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolver(store, apiHelper, scheduler, scheduler),
+    new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler),
   );
   store.dispatch.environment.setEnvironments(
     RemoteData.success([

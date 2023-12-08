@@ -875,7 +875,7 @@ export const testApiInstance: InstanceForApi = {
   service_entity: "embedded-entity-service",
   config: {},
   action: null,
-  value: {
+  attributes: {
     name: "test-emb",
     service_id: "ebd-123",
     should_deploy_fail: false,
@@ -888,7 +888,7 @@ export const testEmbeddedApiInstances: InstanceForApi[] = [
     service_entity: "vlan_assigment_r1",
     config: {},
     action: null,
-    value: {
+    attributes: {
       address: "1.2.3.5/32",
       vlan_id: 1,
       router_ip: "1.2.3.4",
@@ -901,7 +901,7 @@ export const testEmbeddedApiInstances: InstanceForApi[] = [
     service_entity: "vlan_assigment_r2",
     config: {},
     action: null,
-    value: {
+    attributes: {
       address: "1.2.3.3/32",
       vlan_id: 123,
       router_ip: "1.2.3.1",
@@ -916,7 +916,7 @@ export const testParentService: InstanceForApi = {
   service_entity: "parent-service",
   config: {},
   action: null,
-  value: {
+  attributes: {
     name: "test",
     service_id: "test123",
     should_deploy_fail: false,
@@ -929,7 +929,7 @@ export const relatedServices: InstanceForApi[] = [
     service_entity: "child-service",
     config: {},
     action: "create",
-    value: {
+    attributes: {
       name: "test123456789",
       service_id: "123test",
       should_deploy_fail: false,
@@ -944,7 +944,7 @@ export const relatedServices: InstanceForApi[] = [
     service_entity: "container-service",
     config: {},
     action: "create",
-    value: {
+    attributes: {
       name: "test12345",
       service_id: "test12345",
       should_deploy_fail: false,
@@ -955,7 +955,7 @@ export const relatedServices: InstanceForApi[] = [
     service_entity: "child_container",
     config: {},
     action: "create",
-    value: {
+    attributes: {
       name: "child123",
     },
     embeddedTo: "a4218978-c9ad-4fd8-95e4-b9e9a8c3c653",
@@ -1831,4 +1831,55 @@ export const mockedInstanceTwoServiceModel: ServiceModel = {
     },
     total: 1,
   },
+};
+
+export const mockedInstanceThree: InstanceWithReferences = {
+  instance: {
+    data: {
+      id: "085cxf92-0894-4ex2-8d46-1gd9552e7ba3",
+      environment: "efa7c243-81aa-4986-b0b1-c89583cbf846",
+      service_entity: "test-service",
+      version: 4,
+      config: {},
+      state: "up",
+      candidate_attributes: null,
+      active_attributes: {
+        name: "test12345",
+        attrOne: "test12345",
+        dictOne: {},
+        attrTwo: "123",
+        attrThree: "456",
+        attrFour: "789",
+        service_id: "012",
+        should_deploy_fail: false,
+        dictTwo: {},
+      },
+      rollback_attributes: null,
+      created_at: "2023-09-19T14:39:30.770002",
+      last_updated: "2023-09-19T14:39:53.389878",
+      callback: [],
+      deleted: false,
+      deployment_progress: null,
+      service_identity_attribute_value: "test12345",
+      referenced_by: [],
+    },
+  },
+  relatedInstances: [],
+};
+
+export const mockedInstanceThreeServiceModel: ServiceModel = {
+  ...mockedInstanceTwoServiceModel,
+  embedded_entities: [
+    {
+      name: "optionalEmbedded",
+      description: "desc",
+      modifier: "rw",
+      lower_limit: 0,
+      upper_limit: 1,
+      attributes: [],
+      embedded_entities: [],
+      inter_service_relations: [],
+      key_attributes: [],
+    },
+  ],
 };

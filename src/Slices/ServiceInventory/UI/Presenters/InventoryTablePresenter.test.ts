@@ -1,19 +1,19 @@
+import { ServiceModel } from "@/Core";
 import {
   ServiceInstance,
   DummyActionPresenter,
   DummyDatePresenter,
   tablePresenter,
-  DummyExpertActionPresenter,
 } from "@/Test";
 import { DummyStatePresenter } from "@/Test/Mock/DummyStatePresenter";
 import { AttributesPresenter } from "./AttributesPresenter";
+import { InstanceActionPresenter } from "./InstanceActionPresenter";
 import { InventoryTablePresenter } from "./InventoryTablePresenter";
 
 const presenter = new InventoryTablePresenter(
   new DummyDatePresenter(),
   new AttributesPresenter(),
   new DummyActionPresenter(),
-  new DummyExpertActionPresenter(),
   new DummyStatePresenter(),
 );
 const rows = presenter.createRows([ServiceInstance.a]);
@@ -23,21 +23,21 @@ test("TablePresenter short id", () => {
 });
 
 test("TablePresenter converts column index to name correctly", () => {
-  expect(tablePresenter.getColumnNameForIndex(0)).toEqual("id");
-  expect(tablePresenter.getColumnNameForIndex(1)).toEqual("state");
-  expect(tablePresenter.getColumnNameForIndex(-1)).toBeUndefined();
-  expect(tablePresenter.getColumnNameForIndex(10)).toBeUndefined();
+  expect(tablePresenter().getColumnNameForIndex(0)).toEqual("id");
+  expect(tablePresenter().getColumnNameForIndex(1)).toEqual("state");
+  expect(tablePresenter().getColumnNameForIndex(-1)).toBeUndefined();
+  expect(tablePresenter().getColumnNameForIndex(10)).toBeUndefined();
 });
 
 test("TablePresenter converts column name to index correctly", () => {
-  expect(tablePresenter.getIndexForColumnName("id")).toEqual(0);
-  expect(tablePresenter.getIndexForColumnName("state")).toEqual(1);
-  expect(tablePresenter.getIndexForColumnName("history")).toEqual(-1);
-  expect(tablePresenter.getIndexForColumnName(undefined)).toEqual(-1);
+  expect(tablePresenter().getIndexForColumnName("id")).toEqual(0);
+  expect(tablePresenter().getIndexForColumnName("state")).toEqual(1);
+  expect(tablePresenter().getIndexForColumnName("history")).toEqual(-1);
+  expect(tablePresenter().getIndexForColumnName(undefined)).toEqual(-1);
 });
 
 test("TablePresenter returns sortable columns correctly", () => {
-  expect(tablePresenter.getSortableColumnNames()).toEqual([
+  expect(tablePresenter().getSortableColumnNames()).toEqual([
     "state",
     "created_at",
     "last_updated",
@@ -49,7 +49,6 @@ describe("TablePresenter with identity ", () => {
     new DummyDatePresenter(),
     new AttributesPresenter(),
     new DummyActionPresenter(),
-    new DummyExpertActionPresenter(),
     new DummyStatePresenter(),
     "service_id",
     "Service ID",
@@ -79,5 +78,32 @@ describe("TablePresenter with identity ", () => {
     expect(presenterWithIdentity.getIndexForColumnName("state")).toEqual(1);
     expect(presenterWithIdentity.getIndexForColumnName("history")).toEqual(-1);
     expect(presenterWithIdentity.getIndexForColumnName(undefined)).toEqual(-1);
+  });
+});
+
+describe("TablePresenter with Actions", () => {
+  const instances = [ServiceInstance.a];
+  const partialEntity = {
+    name: "cloudconnectv2",
+    lifecycle: {
+      states: [{ name: "creating", label: "info" }],
+      transfers: [{}],
+    },
+  } as ServiceModel;
+  const actionPresenter = new InstanceActionPresenter(instances, partialEntity);
+  const presenterWithActions = new InventoryTablePresenter(
+    new DummyDatePresenter(),
+    new AttributesPresenter(),
+    actionPresenter,
+    new DummyStatePresenter(),
+    "service_id",
+    "Service ID",
+  );
+  test("TablePresenter converts column name to index correctly", () => {
+    expect(presenterWithActions.getIndexForColumnName("id")).toEqual(-1);
+    expect(presenterWithActions.getIndexForColumnName("state")).toEqual(1);
+    expect(presenterWithActions.getIndexForColumnName("actions")).toEqual(5);
+    expect(presenterWithActions.getIndexForColumnName("history")).toEqual(-1);
+    expect(presenterWithActions.getIndexForColumnName(undefined)).toEqual(-1);
   });
 });

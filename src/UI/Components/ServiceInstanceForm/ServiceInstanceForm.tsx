@@ -7,7 +7,11 @@ import { ActionDisabledTooltip } from "@/UI/Components/ActionDisabledTooltip";
 import { usePrompt } from "@/UI/Utils/usePrompt";
 import { words } from "@/UI/words";
 import { FieldInput } from "./Components";
-import { createEditFormState, createFormState } from "./Helpers";
+import {
+  createDuplicateFormState,
+  createEditFormState,
+  createFormState,
+} from "./Helpers";
 
 interface Props {
   fields: Field[];
@@ -19,7 +23,23 @@ interface Props {
   originalAttributes?: InstanceAttributeModel;
   isSubmitDisabled?: boolean;
   apiVersion?: "v1" | "v2";
+  isEdit?: boolean;
 }
+
+const getFormState = (
+  fields,
+  apiVersion,
+  originalAttributes,
+  isEdit = false,
+) => {
+  if (isEdit) {
+    return createEditFormState(fields, apiVersion, originalAttributes);
+  } else if (originalAttributes) {
+    return createDuplicateFormState(fields, originalAttributes);
+  } else {
+    return createFormState(fields);
+  }
+};
 
 export const ServiceInstanceForm: React.FC<Props> = ({
   fields,
@@ -28,18 +48,16 @@ export const ServiceInstanceForm: React.FC<Props> = ({
   originalAttributes,
   isSubmitDisabled,
   apiVersion = "v1",
+  isEdit = false,
 }) => {
   const [formState, setFormState] = useState(
-    originalAttributes
-      ? createEditFormState(fields, apiVersion, originalAttributes)
-      : createFormState(fields),
+    getFormState(fields, apiVersion, originalAttributes, isEdit),
   );
   //originalState is created to make possible to differentiate newly created attributes to keep track on which inputs should be disabled
   const [originalState] = useState(
-    originalAttributes
-      ? createEditFormState(fields, apiVersion, originalAttributes)
-      : createFormState(fields),
+    getFormState(fields, apiVersion, originalAttributes, isEdit),
   );
+
   const [dirtyInputs, setDirtyInputs] = useState(false);
   const [shouldPerformCancel, setShouldCancel] = useState(false);
 

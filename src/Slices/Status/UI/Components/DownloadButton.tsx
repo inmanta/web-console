@@ -3,7 +3,7 @@ import { Button } from "@patternfly/react-core";
 import styled from "styled-components";
 import { words } from "@/UI/words";
 
-export type Phase = "Default" | "Downloading" | "Generating";
+export type Phase = "Default" | "Downloading";
 
 interface Props {
   phase: Phase;
@@ -28,7 +28,6 @@ export const DownloadButton: React.FC<Props> = ({ phase, onClick }) => {
 const phaseLabelRecord: Record<Phase, string> = {
   Default: words("status.supportArchive.action.download"),
   Downloading: words("status.supportArchive.action.downloading"),
-  Generating: words("status.supportArchive.action.generating"),
 };
 
 const StyledButton = styled(Button)`

@@ -1,0 +1,3 @@
+description: "hotfix for e2e OSS tests"
+change-type: patch
+destination-branches: [master, iso6]

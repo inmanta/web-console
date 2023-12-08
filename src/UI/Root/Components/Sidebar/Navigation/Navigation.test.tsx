@@ -8,7 +8,7 @@ import {
   getStoreInstance,
   GetServerStatusStateHelper,
   QueryResolverImpl,
-  QueryManagerResolver,
+  QueryManagerResolverImpl,
 } from "@/Data";
 import {
   DeferredApiHelper,
@@ -32,7 +32,7 @@ function setup(
     GetServerStatusStateHelper(store),
   );
   const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolver(store, apiHelper, scheduler, scheduler),
+    new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler),
   );
   const component = (
     <MemoryRouter initialEntries={initialEntries}>

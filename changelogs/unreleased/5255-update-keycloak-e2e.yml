@@ -1,0 +1,4 @@
+description: Update E2E tests for Keycloak
+issue-nr: 5255
+change-type: patch
+destination-branches: [master, iso6]

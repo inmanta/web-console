@@ -1,4 +1,5 @@
 import { Pagination, PageSize, Sort } from "@/Core/Domain";
+import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { ResourceLog, ResourceLogFilter } from "./ResourceLog";
 
 export interface Query {
@@ -7,6 +8,7 @@ export interface Query {
   filter?: ResourceLogFilter;
   sort?: Sort.Type;
   pageSize: PageSize.Type;
+  currentPage: CurrentPage;
 }
 
 export interface Manifest {

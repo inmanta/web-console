@@ -217,7 +217,9 @@ describe("Scenario 6 : Resources", () => {
         .find("button")
         .contains("Requires")
         .click();
-      cy.get('[aria-label="Requires"]').find("tbody").should("to.be.empty");
+      cy.get('[aria-label="Requires"]')
+        .find("tbody")
+        .should("contain", "No requirements found");
 
       // Go to logs tab
       cy.get("button").contains("Logs").click();
@@ -227,6 +229,12 @@ describe("Scenario 6 : Resources", () => {
         "to.have.length.of.at.least",
         8,
       );
+
+      // make sure the default is 100 instead of 20 like on other pages with pagination.
+      cy.get('[aria-label="PaginationWidget"] .pf-v5-c-menu-toggle').click();
+      cy.contains(".pf-v5-c-menu__list-item", "100")
+        .find("svg")
+        .should("exist");
 
       // Expect last log message to be "Setting deployed due to known good status"
       cy.get('[aria-label="ResourceLogRow"]')
@@ -262,8 +270,8 @@ describe("Scenario 6 : Resources", () => {
       cy.get("button").contains("Logs").click();
 
       // Filter on "INFO" for Minimal Log Level
-      cy.get(".pf-v5-c-select").eq(1).click();
-      cy.get("button").contains("INFO").click();
+      cy.get('[aria-label="MinimalLogLevelFilterInput"]').click();
+      cy.get('[role="option"]').contains("INFO").click();
 
       // Expect the amount of rows to be max  6
       cy.get('[aria-label="ResourceLogRow"]').should(
@@ -439,8 +447,162 @@ describe("Scenario 6 : Resources", () => {
         .contains("frontend_model::TestResource[internal,name=a]")
         .should("to.be.visible");
     });
+
+    it("6.5 Pagination", () => {
+      // Select Test environment
+      cy.visit("/console/");
+
+      cy.get('[aria-label="Environment card"]').contains(PROJECT).click();
+
+      // Go to Service Catalog
+      cy.get(".pf-v5-c-nav__link").contains("Service Catalog").click();
+
+      // Select Show Inventory on dependency-service and add one with 41 dependencies
+      cy.get("#dependency-service").contains("Show inventory").click();
+      cy.get("#add-instance-button").click();
+
+      cy.get("#waiting_entity").type("waiting-0002");
+      cy.get("#service_id").type("ds-0002");
+      cy.get("#name").type("dependency-service-0002");
+      //dependencies
+      cy.get('[aria-label="Type to filter"]').type("1");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("2");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("3");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("4");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("5");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("6");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("7");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("8");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("9");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("10");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("11");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("12");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("13");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("14");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("15");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("16");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("17");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("18");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("19");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("20");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("21");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("22");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("23");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("24");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("25");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("26");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("27");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("28");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("29");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("30");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("31");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("32");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("33");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("34");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("35");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("36");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("37");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("38");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("39");
+      cy.get("button").contains("Add").click();
+      cy.get('[aria-label="Type to filter"]').type("40");
+      cy.get("button").contains("Add").click();
+
+      cy.get("button").contains("Confirm").click();
+
+      // Expect the number in the chart to the success label to be 8
+      cy.get(".pf-v5-c-chart").within(() => {
+        cy.get("#legend-labels-2", { timeout: 90000 }).should(
+          "contain",
+          "success: 2",
+        );
+      });
+
+      //Wait for compilation to end
+      cy.get('[aria-label="CompileReportsIndication"]', {
+        timeout: 90000,
+      }).should("not.to.exist");
+
+      //Go to resources page
+      cy.get(".pf-v5-c-nav__link").contains("Resources").click();
+      cy.get('[aria-label="LegendItem-deployed"]', { timeout: 60000 }).should(
+        "have.text",
+        "49",
+      );
+
+      cy.get("#options-menu-top-toggle > span > b")
+        .eq(0)
+        .should("have.text", "1 - 20");
+
+      //Go to next page
+      cy.get('[aria-label="Go to next page"]').first().click();
+      cy.get('[aria-label="ResourcesView-Success"]').should("be.visible");
+      cy.get("#options-menu-top-toggle > span > b")
+        .eq(0)
+        .should("have.text", "21 - 40");
+
+      //Go to last page
+      cy.get('[aria-label="Go to next page"]').first().click();
+      cy.get('[aria-label="ResourcesView-Success"]').should("be.visible");
+      cy.get("#options-menu-top-toggle > span > b")
+        .eq(0)
+        .should("have.text", "41 - 49");
+
+      //Go to previous page
+      cy.get('[aria-label="Go to previous page"]').first().click();
+      cy.get('[aria-label="ResourcesView-Success"]').should("be.visible");
+
+      cy.get("#options-menu-top-toggle > span > b")
+        .eq(0)
+        .should("have.text", "21 - 40");
+
+      //Change page and come back to check if we are at the same page as we was
+      cy.get(".pf-v5-c-nav__link").contains("Dashboard").click();
+      cy.go("back");
+      cy.get("#options-menu-top-toggle > span > b")
+        .eq(0)
+        .should("have.text", "21 - 40");
+    });
   } else {
-    it("6.5 Resources for OSS", () => {
+    it("6.6 Resources for OSS", () => {
       cy.visit("/console/");
 
       cy.get('[aria-label="Environment card"]').contains(PROJECT).click();
@@ -546,17 +708,25 @@ describe("Scenario 6 : Resources", () => {
         .find("button")
         .contains("Requires")
         .click();
-      cy.get('[aria-label="Requires"]').find("tbody").should("to.be.empty");
+      cy.get('[aria-label="Requires"]')
+        .find("tbody")
+        .should("contain", "No requirements found");
 
       // Go to logs tab
       cy.get("button").contains("Logs").click();
-      // Expect it to have : 15 log messages
+      // Expect it to have : 12 log messages
       cy.get('[aria-label="ResourceLogRow"]', { timeout: 40000 }).should(
         "to.have.length.of.at.least",
-        15,
+        12,
       );
 
-      // Expect last log message to be "Setting deployed due to known good status"
+      // make sure the default is 100 instead of 20 like on other pages with pagination.
+      cy.get('[aria-label="PaginationWidget"] .pf-v5-c-menu-toggle').click();
+      cy.contains(".pf-v5-c-menu__list-item", "100")
+        .find("svg")
+        .should("exist");
+
+      // Expect last log message to contain "Setting deployed due to known good status"
       cy.get('[aria-label="ResourceLogRow"]')
         .eq(0)
         .should("contain", "Setting deployed due to known good status");

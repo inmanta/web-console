@@ -17,20 +17,21 @@ export function GetVersionResourcesQueryManager(
     stateHelper,
     scheduler,
     ({ kind, version }) => `${kind}_${version}`,
-    ({ pageSize, filter, sort }, environment) => [
+    ({ pageSize, filter, sort, currentPage }, environment) => [
       environment,
       pageSize.value,
       stringifyObjectOrUndefined(filter),
       sort?.name,
       sort?.order,
+      stringifyObjectOrUndefined(currentPage.value),
     ],
     "GetVersionResources",
     getUrl,
-    ({ data, links, metadata }, setUrl) => {
+    ({ data, links, metadata }) => {
       if (typeof links === "undefined") return { data, handlers: {}, metadata };
       return {
         data,
-        handlers: getPaginationHandlers(links, metadata, setUrl),
+        handlers: getPaginationHandlers(links, metadata),
         metadata,
       };
     },

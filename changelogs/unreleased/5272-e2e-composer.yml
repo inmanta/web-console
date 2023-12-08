@@ -1,0 +1,6 @@
+change-type: patch
+description: "Add first E2E tests for Instance Composer"
+issue-nr: 5272
+destination-branches:
+  - master
+  - iso6

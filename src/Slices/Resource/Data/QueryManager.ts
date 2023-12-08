@@ -1,4 +1,9 @@
-import { Scheduler, Resource, ApiHelper } from "@/Core";
+import {
+  Scheduler,
+  Resource,
+  ApiHelper,
+  stringifyObjectOrUndefined,
+} from "@/Core";
 import { getPaginationHandlers, QueryManager } from "@/Data/Managers/Helpers";
 import { Store } from "@/Data/Store";
 import { StateHelper } from "./StateHelper";
@@ -14,22 +19,23 @@ export function GetResourcesQueryManager(
     StateHelper(store),
     scheduler,
     ({ kind }, environment) => `${kind}_${environment}`,
-    ({ filter, sort, pageSize }, environment) => [
+    ({ filter, sort, pageSize, currentPage }, environment) => [
       environment,
       pageSize.value,
       sort?.name,
       sort?.order,
       stringifyFilter(filter),
+      stringifyObjectOrUndefined(currentPage.value),
     ],
     "GetResources",
     getUrl,
-    ({ data, links, metadata }, setUrl) => {
+    ({ data, links, metadata }) => {
       if (typeof links === "undefined") {
         return { data: data, handlers: {}, metadata };
       }
       return {
         data: data,
-        handlers: getPaginationHandlers(links, metadata, setUrl),
+        handlers: getPaginationHandlers(links, metadata),
         metadata,
       };
     },

@@ -121,9 +121,9 @@ export const FieldInput: React.FC<Props> = ({
             get(originalState, makePath(path, field.name)) !== undefined
           }
           type={field.inputType}
-          handleInputChange={(value, _event) =>
-            getUpdate(makePath(path, field.name), value)
-          }
+          handleInputChange={(value, _event) => {
+            getUpdate(makePath(path, field.name), value);
+          }}
           placeholder={getPlaceholderForType(field.type)}
           typeHint={getTypeHintForType(field.type)}
           key={field.name}
@@ -221,9 +221,9 @@ export const FieldInput: React.FC<Props> = ({
             get(formState, makePath(path, field.name), []) as string[]
           }
           isOptional={field.isOptional}
-          handleInputChange={(value) =>
-            getUpdate(makePath(path, field.name), value, true)
-          }
+          handleInputChange={(value) => {
+            getUpdate(makePath(path, field.name), value, true);
+          }}
           multi={true}
         />
       );
@@ -404,16 +404,16 @@ const DictListFieldInput: React.FC<DictListProps> = ({
         <StyledFormFieldGroupExpandable
           aria-label={`DictListFieldInputItem-${makePath(
             path,
-            `${field.name}.${index + 1}`,
+            `${field.name}.${index}`,
           )}`}
           key={makePath(path, `${field.name}.${index}`)}
           header={
             <FormFieldGroupHeader
               titleText={{
-                text: index + 1,
+                text: index,
                 id: `DictListFieldInputItem-${makePath(
                   path,
-                  `${field.name}.${index + 1}`,
+                  `${field.name}.${index}`,
                 )}`,
               }}
               actions={

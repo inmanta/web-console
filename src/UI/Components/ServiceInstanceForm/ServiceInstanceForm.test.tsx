@@ -89,27 +89,23 @@ test("GIVEN ServiceInstanceForm WHEN passed an EnumField THEN shows that field",
     }),
   ).toBeVisible();
 
-  const select = screen.getByRole("button", {
-    name: "enum_field-select-toggle",
+  const select = screen.getByRole("combobox", {
+    name: "enum_field-selectFilterInput",
   });
-  expect(select).toHaveTextContent("local");
+  expect(select).toHaveValue("local");
 
   await act(async () => {
     await userEvent.click(select);
   });
 
-  const dropdown = screen.getByRole("listbox", {
-    name: "enum_field-select-input",
-  });
-
-  const options = within(dropdown).getAllByRole("option");
+  const options = screen.getAllByRole("option");
   expect(options).toHaveLength(2);
 
   await act(async () => {
     await userEvent.click(options[0]);
   });
 
-  expect(select).toHaveTextContent("ci");
+  expect(select).toHaveValue("ci");
 });
 
 test("GIVEN ServiceInstanceForm WHEN passed an EnumField with more than one value THEN shows that field with default prompt", async () => {
@@ -120,24 +116,20 @@ test("GIVEN ServiceInstanceForm WHEN passed an EnumField with more than one valu
   });
   expect(component).toBeVisible();
 
-  const preselectedOption = screen.getByText(
+  const placeholder = screen.getByPlaceholderText(
     `Select value for ${Test.Field.enumFieldTwoOptions.name}`,
   );
-  expect(preselectedOption).toBeVisible();
+  expect(placeholder).toBeVisible();
 
-  const select = screen.getByRole("button", {
-    name: `${Test.Field.enumFieldTwoOptions.name}-select-toggle`,
+  const select = screen.getByRole("combobox", {
+    name: `${Test.Field.enumFieldTwoOptions.name}-selectFilterInput`,
   });
 
   await act(async () => {
     await userEvent.click(select);
   });
 
-  const dropdown = screen.getByRole("listbox", {
-    name: `${Test.Field.enumFieldTwoOptions.name}-select-input`,
-  });
-
-  const options = within(dropdown).getAllByRole("option");
+  const options = screen.getAllByRole("option");
   expect(options).toHaveLength(2);
 });
 
@@ -148,23 +140,17 @@ test("GIVEN ServiceInstanceForm WHEN passed an EnumField with only one value THE
   });
   expect(component).toBeVisible();
 
-  const preselectedOption = screen.getByText(
-    Test.Field.enumFieldSingleOption.options.local as string,
-  );
-  expect(preselectedOption).toBeVisible();
-  const select = screen.getByRole("button", {
-    name: `${Test.Field.enumFieldSingleOption.name}-select-toggle`,
+  const select = screen.getByRole("combobox", {
+    name: `${Test.Field.enumFieldSingleOption.name}-selectFilterInput`,
   });
+
+  expect(select).toHaveValue("local");
 
   await act(async () => {
     await userEvent.click(select);
   });
 
-  const dropdown = screen.getByRole("listbox", {
-    name: `${Test.Field.enumFieldSingleOption.name}-select-input`,
-  });
-
-  const option = within(dropdown).getByRole("option");
+  const option = screen.getByRole("option");
   expect(option).toBeInTheDocument();
 });
 
@@ -221,7 +207,7 @@ test("GIVEN ServiceInstanceForm and a DictListField WHEN clicking all toggles op
     );
   });
   await act(async () => {
-    await userEvent.click(within(group).getByRole("button", { name: "1" }));
+    await userEvent.click(within(group).getByRole("button", { name: "0" }));
   });
 
   expect(
@@ -280,7 +266,7 @@ test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is
     );
   });
   await act(async () => {
-    await userEvent.click(screen.getByRole("button", { name: "1" }));
+    await userEvent.click(screen.getByRole("button", { name: "0" }));
   });
   await act(async () => {
     await userEvent.type(

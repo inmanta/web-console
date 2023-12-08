@@ -16,6 +16,7 @@ describe("AttributeResultConverter ", () => {
       );
       expect(diff).toEqual({ bool_param: true });
     });
+
     it("With no difference", () => {
       const originalAttributes = { name: "inmanta", bool_param: true };
       const afterChanges = { name: "inmanta", bool_param: true };
@@ -25,6 +26,7 @@ describe("AttributeResultConverter ", () => {
       );
       expect(diff).toEqual({});
     });
+
     it("With multiple differences", () => {
       const originalAttributes = {
         name: "inmanta",
@@ -42,6 +44,7 @@ describe("AttributeResultConverter ", () => {
       );
       expect(diff).toEqual({ name: "inmanta2", bool_param: false });
     });
+
     it("With no original values to compare to", () => {
       const originalAttributes = {};
       const afterChanges = {
@@ -55,6 +58,7 @@ describe("AttributeResultConverter ", () => {
       );
       expect(diff).toEqual(afterChanges);
     });
+
     it("With no original value set to compare to", () => {
       const originalAttributes = null;
       const afterChanges = {
@@ -68,6 +72,7 @@ describe("AttributeResultConverter ", () => {
       );
       expect(diff).toEqual(afterChanges);
     });
+
     it("Changing from undefined to null", () => {
       const originalAttributes = { name: "inmanta", bool_param: true };
       const afterChanges = {
@@ -81,6 +86,7 @@ describe("AttributeResultConverter ", () => {
       );
       expect(diff).toEqual({ bool_param: false });
     });
+
     it("Changing from another value to null", () => {
       const originalAttributes = {
         name: "inmanta",
@@ -98,6 +104,7 @@ describe("AttributeResultConverter ", () => {
       );
       expect(diff).toEqual({ name: "inmanta2", another_attribute: null });
     });
+
     it("Changing values of embedded entities", () => {
       const originalAttributes = {
         name: "inmanta",
@@ -116,6 +123,7 @@ describe("AttributeResultConverter ", () => {
         embedded: [{ a: 2, unchanged: "same" }, { a: { c: "d" } }],
       });
     });
+
     it("Having embedded entities but only changing the values of the first level attributes", () => {
       const originalAttributes = {
         name: "inmanta",

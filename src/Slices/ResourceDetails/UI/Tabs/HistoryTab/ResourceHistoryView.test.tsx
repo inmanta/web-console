@@ -8,7 +8,7 @@ import { QueryResolverImpl, getStoreInstance } from "@/Data";
 import {
   DeferredApiHelper,
   dependencies,
-  DynamicQueryManagerResolver,
+  DynamicQueryManagerResolverImpl,
   StaticScheduler,
 } from "@/Test";
 import { Resource } from "@/Test/Data";
@@ -27,7 +27,7 @@ function setup() {
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolver([
+    new DynamicQueryManagerResolverImpl([
       ResourceHistoryQueryManager(
         apiHelper,
         ResourceHistoryStateHelper(store),
@@ -109,7 +109,7 @@ test("ResourceHistory shows success table", async () => {
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
     environment: "env",
-    url: `/api/v2/resource/${Resource.encodedId}/history?limit=20&sort=date.desc`,
+    url: `/api/v2/resource/${Resource.encodedId}/history?limit=100&sort=date.desc`,
     method: "GET",
   });
 

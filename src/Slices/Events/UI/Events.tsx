@@ -5,6 +5,7 @@ import {
   useUrlStateWithPageSize,
   useUrlStateWithSort,
 } from "@/Data";
+import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import {
   EventsTablePresenter,
   EventsTableWrapper,
@@ -25,6 +26,10 @@ interface Props {
 
 export const Events: React.FC<Props> = ({ service, instanceId }) => {
   const { queryResolver } = useContext(DependencyContext);
+
+  const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({
+    route: "Events",
+  });
   const [sort, setSort] = useUrlStateWithSort<string>({
     default: { name: "timestamp", order: "desc" },
     route: "Events",
@@ -41,6 +46,7 @@ export const Events: React.FC<Props> = ({ service, instanceId }) => {
     filter,
     sort,
     pageSize,
+    currentPage,
   });
   const tablePresenter = new EventsTablePresenter();
   const states = service.lifecycle.states.map((state) => state.name).sort();
@@ -56,6 +62,7 @@ export const Events: React.FC<Props> = ({ service, instanceId }) => {
             data={data}
             pageSize={pageSize}
             setPageSize={setPageSize}
+            setCurrentPage={setCurrentPage}
           />
         }
       />

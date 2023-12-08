@@ -1,5 +1,7 @@
 import React from "react";
 import { Page } from "@patternfly/react-core";
+import { BlockingModal } from "@/UI/Components/BlockingModal";
+import { ExpertBanner } from "@/UI/Components/ExpertBanner";
 import { LicenseBanner } from "@/UI/Components/LicenseBanner";
 import { Header } from "@/UI/Root/Components/Header";
 import { PageBreadcrumbs } from "@/UI/Root/Components/PageBreadcrumbs";
@@ -23,25 +25,29 @@ export const PageFrame: React.FC<React.PropsWithChildren<Props>> = ({
 
   return (
     <>
+      <ExpertBanner />
       <LicenseBanner />
-      <Page
-        {...{
-          notificationDrawer,
-          onNotificationDrawerExpand,
-          isNotificationDrawerExpanded,
-        }}
-        isManagedSidebar
-        breadcrumb={<PageBreadcrumbs />}
-        header={
-          <Header
-            {...{ onNotificationsToggle }}
-            noEnv={!Boolean(environmentId)}
-          />
-        }
-        sidebar={<Sidebar environment={environmentId} />}
-      >
-        {children}
-      </Page>
+      <div className="pf-m-grow" style={{ minHeight: "0%" }}>
+        <BlockingModal />
+        <Page
+          {...{
+            notificationDrawer,
+            onNotificationDrawerExpand,
+            isNotificationDrawerExpanded,
+          }}
+          isManagedSidebar
+          breadcrumb={<PageBreadcrumbs />}
+          header={
+            <Header
+              {...{ onNotificationsToggle }}
+              noEnv={!Boolean(environmentId)}
+            />
+          }
+          sidebar={<Sidebar environment={environmentId} />}
+        >
+          {children}
+        </Page>
+      </div>
     </>
   );
 };

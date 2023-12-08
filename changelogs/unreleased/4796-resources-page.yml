@@ -1,0 +1,6 @@
+change-type: patch
+description: "Keep track of current page on views that has pagination available"
+issue-nr: 4976
+destination-branches:
+  - master
+  - iso6

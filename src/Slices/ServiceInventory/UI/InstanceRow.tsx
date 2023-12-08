@@ -1,15 +1,13 @@
 import React, { useRef, useState } from "react";
+
 import { Tbody, Tr, Td, ExpandableRowContent } from "@patternfly/react-table";
 import styled from "styled-components";
 import { Row, ServiceModel, VersionedServiceInstanceIdentifier } from "@/Core";
-import {
-  DateWithTooltip,
-  TextWithCopy,
-  AttributesSummaryView,
-} from "@/UI/Components";
+import { DateWithTooltip, TextWithCopy } from "@/UI/Components";
 import { scrollRowIntoView } from "@/UI/Utils";
 import { words } from "@/UI/words";
 import { DeploymentProgressBar, IdWithCopy } from "./Components";
+
 import { Tabs, TabKey } from "./Tabs";
 
 interface Props {
@@ -18,8 +16,7 @@ interface Props {
   isExpanded: boolean;
   onToggle: () => void;
   numberOfColumns: number;
-  actions: React.ReactElement | null;
-  expertActions: React.ReactElement | null;
+  rowActions: React.ReactElement | null;
   state: React.ReactElement | null;
   service?: ServiceModel;
   serviceInstanceIdentifier: VersionedServiceInstanceIdentifier;
@@ -33,8 +30,7 @@ export const InstanceRow: React.FC<Props> = ({
   isExpanded,
   onToggle,
   numberOfColumns,
-  actions,
-  expertActions,
+  rowActions,
   state,
   serviceInstanceIdentifier,
   shouldUseServiceIdentity,
@@ -81,16 +77,6 @@ export const InstanceRow: React.FC<Props> = ({
           </Td>
         )}
         <Td dataLabel={words("inventory.column.state")}>{state}</Td>
-        <Td
-          dataLabel={words("inventory.column.attributesSummary")}
-          id={`instance-row-summary-${row.id.short}`}
-        >
-          <span ref={rowRef} />
-          <AttributesSummaryView
-            summary={row.attributesSummary}
-            onClick={openTabAndScrollTo(TabKey.Attributes)}
-          />
-        </Td>
         <Td dataLabel={words("inventory.collumn.deploymentProgress")}>
           <ActionWrapper
             id={`instance-row-resources-${row.id.short}`}
@@ -105,6 +91,7 @@ export const InstanceRow: React.FC<Props> = ({
         <Td dataLabel={words("inventory.column.updatedAt")}>
           <DateWithTooltip timestamp={row.updatedAt} />
         </Td>
+        <Td dataLabel="actions">{rowActions}</Td>
       </StyledRow>
       <Tr
         isExpanded={isExpanded}
@@ -118,8 +105,6 @@ export const InstanceRow: React.FC<Props> = ({
               setActiveTab={setActiveTab}
               row={row}
               state={state}
-              actions={actions}
-              expertActions={expertActions}
               serviceInstanceIdentifier={serviceInstanceIdentifier}
               service={service}
             />

@@ -121,8 +121,8 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#add-instance-button").click();
       cy.get("#service_id").type("0002");
       cy.get("#name").type("child");
-      cy.get(".pf-v5-c-select").click();
-      cy.get('[aria-label="parent_entity-select-input"]').first().click();
+      cy.get('[aria-label="parent_entity-select-toggleFilterInput"]').click();
+      cy.get('[role="option"]').first().click();
       cy.get("button").contains("Confirm").click();
       // Expect to be redirected to service inventory
       cy.get('[aria-label="ServiceInventory-Success"]').should("to.be.visible");
@@ -144,8 +144,12 @@ if (Cypress.env("edition") === "iso") {
 
       // open row from element
       cy.get("#expand-toggle0", { timeout: 20000 }).click();
+
       // try delete item (Should not be possible)
-      cy.get(".pf-v5-c-description-list").contains("Delete").click();
+      cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
+      cy.get(".pf-v5-c-menu__item").contains("More actions").click();
+      cy.get(".pf-v5-c-menu__item").contains("Delete").click();
+
       cy.get(".pf-v5-c-modal-box__title-text").should(
         "contain",
         "Delete instance",
@@ -172,9 +176,10 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#expand-toggle0").click();
 
       // try delete item (Should be possible)
-      cy.get(".pf-v5-c-description-list", { timeout: 20000 })
-        .contains("Delete")
-        .click();
+      cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
+      cy.get(".pf-v5-c-menu__item").contains("More actions").click();
+      cy.get(".pf-v5-c-menu__item").contains("Delete").click();
+
       cy.get(".pf-v5-c-modal-box__title-text").should(
         "contain",
         "Delete instance",

@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { ToolbarFilter } from "@patternfly/react-core";
 import {
+  MenuToggle,
+  MenuToggleElement,
   Select,
   SelectOption,
-  SelectVariant,
-} from "@patternfly/react-core/deprecated";
+  ToolbarFilter,
+} from "@patternfly/react-core";
 import { ServiceInstanceParams } from "@/Core";
 
 interface Props {
@@ -31,6 +32,22 @@ export const DeletedFilter: React.FC<Props> = ({
 
   const removeChip = () => update(undefined);
 
+  const toggle = (toggleRef: React.Ref<MenuToggleElement>) => (
+    <MenuToggle
+      ref={toggleRef}
+      onClick={(val) => setFilterOpen(val)}
+      isExpanded={isFilterOpen}
+      aria-label="Select Deleted"
+      style={
+        {
+          width: "200px",
+        } as React.CSSProperties
+      }
+    >
+      {deleted || "Select a rule..."}
+    </MenuToggle>
+  );
+
   return (
     <ToolbarFilter
       chips={deleted ? [deleted] : []}
@@ -39,13 +56,11 @@ export const DeletedFilter: React.FC<Props> = ({
       showToolbarItem={isVisible}
     >
       <Select
-        variant={SelectVariant.single}
-        toggleAriaLabel="Select Deleted"
-        onToggle={(_event, val) => setFilterOpen(val)}
+        toggle={toggle}
         onSelect={onSelect}
-        selections={deleted}
+        selected={deleted}
         isOpen={isFilterOpen}
-        placeholderText="Select a rule..."
+        onOpenChange={(isOpen) => setFilterOpen(isOpen)}
       >
         <SelectOption
           value="Include"

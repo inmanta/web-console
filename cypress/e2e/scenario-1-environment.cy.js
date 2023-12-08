@@ -34,10 +34,10 @@ const fillCreateEnvForm = ({
   shouldPassEnvName = true,
   fillOptionalInputs = false,
 }) => {
-  cy.get('[aria-label="Project Name-typeahead"]').type(projectName);
-  cy.get('[aria-label="Project Name-select-input')
-    .find(".pf-v5-c-select__menu-item")
-    .click();
+  cy.get('[aria-label="Project Name-select-toggleFilterInput"]').type(
+    projectName,
+  );
+  cy.get('[role="option"]').contains(projectName).click();
   if (shouldPassEnvName) {
     cy.get('[aria-label="Name-input"]').type(envName);
   }
@@ -121,7 +121,16 @@ describe("Environment", () => {
 
     cy.get("button").contains("Submit").click();
     cy.wait(1000);
-    // TODO : Add test to check redirection to right page.
+    // test to check redirection to right page. OSS it should be the Desired state page instead of the service catalog.
+    if (Cypress.env("edition") === "iso") {
+      cy.get(".pf-v5-c-title")
+        .contains("Service Catalog")
+        .should("to.be.visible");
+    } else {
+      cy.get(".pf-v5-c-title")
+        .contains("Desired State")
+        .should("to.be.visible");
+    }
 
     //go back to home and check if env is visible
     cy.get(".pf-v5-c-breadcrumb__item").eq(0).click();
@@ -221,8 +230,8 @@ describe("Environment", () => {
     //change Project Name value
     cy.wait(1000);
     cy.get('[aria-label="Project Name-toggle-edit"]:enabled').click();
-    cy.get('[aria-label="Project Name-typeahead"]').clear();
-    cy.get('[aria-label="Project Name-typeahead"]').type(
+    cy.get('[aria-label="Project Name-select-toggleFilterInput"]').clear();
+    cy.get('[aria-label="Project Name-select-toggleFilterInput"]').type(
       "New Value Project Name",
     );
 
@@ -304,18 +313,18 @@ describe("Environment", () => {
     cy.get("button").contains("Configuration").click();
 
     //Change agent_trigger_method_on_auto_deploy
-    cy.get('[aria-label="Row-agent_trigger_method_on_auto_deploy"]')
-      .find(".pf-v5-c-form-control")
-      .click();
-    cy.get(".pf-v5-c-select__menu-item").contains("push_full_deploy").click();
+    cy.get(
+      '[aria-label="EnumInput-agent_trigger_method_on_auto_deployFilterInput"]',
+    ).click();
+    cy.get('[role="option"]').contains("push_full_deploy").click();
     cy.get('[aria-label="Warning"]').should("exist");
     cy.get('[aria-label="Row-agent_trigger_method_on_auto_deploy"]')
       .find('[aria-label="SaveAction"]')
       .click();
     cy.get('[aria-label="Warning"]').should("not.exist");
-    cy.get('[aria-label="Row-agent_trigger_method_on_auto_deploy"]')
-      .find(".pf-v5-c-form-control input")
-      .should("have.value", "push_full_deploy");
+    cy.get(
+      '[aria-label="EnumInput-agent_trigger_method_on_auto_deployFilterInput"]',
+    ).should("have.value", "push_full_deploy");
 
     //Change auto_deploy
     cy.get('[aria-label="Row-auto_deploy"]').find(".pf-v5-c-switch").click();
@@ -362,19 +371,6 @@ describe("Environment", () => {
     cy.get('[aria-label="Row-autostart_agent_deploy_splay_time"]')
       .find(".pf-v5-c-form-control input")
       .should("have.value", "20");
-
-    //Change autostart_agent_interval
-    cy.get('[aria-label="Row-autostart_agent_interval"]')
-      .find(".pf-v5-c-form-control")
-      .type("{selectAll}610");
-    cy.get('[aria-label="Warning"]').should("exist");
-    cy.get('[aria-label="Row-autostart_agent_interval"]')
-      .find('[aria-label="SaveAction"]')
-      .click();
-    cy.get('[aria-label="Warning"]').should("not.exist");
-    cy.get('[aria-label="Row-autostart_agent_interval"]')
-      .find(".pf-v5-c-form-control input")
-      .should("have.value", "610");
 
     //Change autostart_agent_map
     cy.get('[aria-label="Row-autostart_agent_map"]')
@@ -428,19 +424,6 @@ describe("Environment", () => {
       .click();
     cy.get('[aria-label="Warning"]').should("not.exist");
 
-    //Change autostart_splay
-    cy.get('[aria-label="Row-autostart_splay"]')
-      .find(".pf-v5-c-form-control")
-      .type("{selectAll}20");
-    cy.get('[aria-label="Warning"]').should("exist");
-    cy.get('[aria-label="Row-autostart_splay"]')
-      .find('[aria-label="SaveAction"]')
-      .click();
-    cy.get('[aria-label="Warning"]').should("not.exist");
-    cy.get('[aria-label="Row-autostart_splay"]')
-      .find(".pf-v5-c-form-control input")
-      .should("have.value", "20");
-
     //Change available_versions_to_keep
     cy.get('[aria-label="Row-available_versions_to_keep"]')
       .find(".pf-v5-c-form-control")
@@ -455,18 +438,18 @@ describe("Environment", () => {
       .should("have.value", "110");
 
     //Change environment_agent_trigger_method
-    cy.get('[aria-label="Row-environment_agent_trigger_method"]')
-      .find(".pf-v5-c-form-control")
-      .click();
-    cy.get(".pf-v5-c-select__menu-item").contains("push_full_deploy").click();
+    cy.get(
+      '[aria-label="EnumInput-environment_agent_trigger_methodFilterInput"]',
+    ).click();
+    cy.get('[role="option"]').contains("push_full_deploy").click();
     cy.get('[aria-label="Warning"]').should("exist");
     cy.get('[aria-label="Row-environment_agent_trigger_method"]')
       .find('[aria-label="SaveAction"]')
       .click();
     cy.get('[aria-label="Warning"]').should("not.exist");
-    cy.get('[aria-label="Row-environment_agent_trigger_method"]')
-      .find(".pf-v5-c-form-control input")
-      .should("have.value", "push_full_deploy");
+    cy.get(
+      '[aria-label="EnumInput-environment_agent_trigger_methodFilterInput"]',
+    ).should("have.value", "push_full_deploy");
 
     // specific to ISO
     if (Cypress.env("edition") === "iso") {

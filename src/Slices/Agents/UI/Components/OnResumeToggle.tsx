@@ -17,7 +17,7 @@ export const OnResumeToggle: React.FC<Props> = ({ name, unpauseOnResume }) => {
     name,
     action: unpauseOnResume ? "keep_paused_on_resume" : "unpause_on_resume",
   });
-  const { filter, sort, pageSize, setErrorMessage } =
+  const { filter, sort, pageSize, currentPage, setErrorMessage } =
     useContext(GetAgentsContext);
   const onChange = async () => {
     const result = await agentActionTrigger({
@@ -25,6 +25,7 @@ export const OnResumeToggle: React.FC<Props> = ({ name, unpauseOnResume }) => {
       filter,
       sort,
       pageSize,
+      currentPage,
     });
     if (Maybe.isSome(result)) {
       setErrorMessage(result.value);

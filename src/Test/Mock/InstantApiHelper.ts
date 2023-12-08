@@ -21,6 +21,9 @@ export class InstantApiHelper<Data> implements ApiHelper {
       this.getOutcome(url) as Outcome.Type<string, Data>,
     );
   }
+  getZipWithoutEnvironment<Blob>(): Promise<Either.Type<string, Blob>> {
+    throw new Error("Method not implemented.");
+  }
   post<Data>(): Promise<Either.Type<string, Data>> {
     throw new Error("Method not implemented.");
   }

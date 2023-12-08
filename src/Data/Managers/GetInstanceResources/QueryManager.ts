@@ -12,6 +12,7 @@ import {
   Task,
   PageSize,
 } from "@/Core";
+import { initialCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { GetInstanceResources } from "@/Data/Managers/GetInstanceResources/interface";
 import { Data } from "@/Data/Managers/Helpers/QueryManager/types";
 import { DependencyContext } from "@/UI/Dependency";
@@ -159,6 +160,7 @@ export function InstanceResourcesQueryManager(
         kind: "GetServiceInstances",
         name: serviceEntity,
         pageSize: PageSize.initial,
+        currentPage: initialCurrentPage,
       },
       environment,
     );
@@ -175,6 +177,7 @@ export function InstanceResourcesQueryManager(
           kind: "GetServiceInstances",
           name: serviceEntity,
           pageSize: PageSize.initial,
+          currentPage: initialCurrentPage,
         },
         environment,
       );

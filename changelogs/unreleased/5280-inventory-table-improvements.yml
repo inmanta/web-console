@@ -1,0 +1,7 @@
+description: "Improve overal UI of the inventory table, and remove the Attribute Summary Column"
+issue-nr: 5280
+change-type: patch
+destination-branches: [master, iso6]
+sections:
+  minor-improvement: "{{description}}"
+  bugfix: "Repair the drilldown height issue for the Actions dropdown."

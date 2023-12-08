@@ -1,5 +1,6 @@
 import { PageSize, Query, RemoteData, ServiceInstanceModel } from "@/Core";
 import { ServiceInstance } from "@/Test";
+import { initialCurrentPage } from "../Common/UrlState/useUrlStateWithCurrentPage";
 import { getStoreInstance } from "./Setup";
 
 describe("ServiceInstancesSlice ", () => {
@@ -14,6 +15,7 @@ describe("ServiceInstancesSlice ", () => {
       kind: "GetServiceInstances",
       name: serviceInstancesFirstEnv[0].service_entity,
       pageSize: PageSize.initial,
+      currentPage: initialCurrentPage,
     };
     // Add instances for a service
     store.getActions().serviceInstances.setData({
@@ -46,6 +48,7 @@ describe("ServiceInstancesSlice ", () => {
       kind: "GetServiceInstances",
       name: serviceInstancesSecondEnv[0].service_entity,
       pageSize: PageSize.initial,
+      currentPage: initialCurrentPage,
     };
     expect(
       store

@@ -4,6 +4,7 @@ import {
   useUrlStateWithPageSize,
   useUrlStateWithSort,
 } from "@/Data";
+import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import {
   EmptyView,
   ToastAlert,
@@ -21,6 +22,10 @@ import { TableProvider } from "./TableProvider";
 export const Page: React.FC = () => {
   const { queryResolver } = useContext(DependencyContext);
   const [errorMessage, setErrorMessage] = useState("");
+
+  const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({
+    route: "Agents",
+  });
   const [pageSize, setPageSize] = useUrlStateWithPageSize({
     route: "Agents",
   });
@@ -36,6 +41,7 @@ export const Page: React.FC = () => {
     filter,
     sort,
     pageSize,
+    currentPage,
   });
 
   return (
@@ -48,11 +54,12 @@ export const Page: React.FC = () => {
             data={data}
             pageSize={pageSize}
             setPageSize={setPageSize}
+            setCurrentPage={setCurrentPage}
           />
         }
       />
       <GetAgentsContext.Provider
-        value={{ filter, sort, pageSize, setErrorMessage }}
+        value={{ filter, sort, pageSize, currentPage, setErrorMessage }}
       >
         <ToastAlert
           data-testid="ToastAlert"

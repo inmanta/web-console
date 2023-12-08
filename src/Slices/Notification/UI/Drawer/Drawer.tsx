@@ -1,15 +1,21 @@
-import React, { MutableRefObject, useContext, useState } from "react";
+import React, {
+  MutableRefObject,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import {
+  Dropdown,
+  DropdownItem,
+  DropdownList,
+  MenuToggle,
+  MenuToggleElement,
   NotificationDrawer,
   NotificationDrawerBody,
   NotificationDrawerHeader,
   NotificationDrawerList,
 } from "@patternfly/react-core";
-import {
-  Dropdown,
-  DropdownItem,
-  KebabToggle,
-} from "@patternfly/react-core/deprecated";
+import { EllipsisVIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { RemoteData } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
@@ -20,11 +26,16 @@ import { drawerQuery, ViewData } from "@S/Notification/Core/Query";
 import { Item, OnUpdate } from "./Item";
 
 interface Props {
-  onClose(): void;
+  onClose(event?: MouseEvent): void;
+  isDrawerOpen: boolean;
   drawerRef: MutableRefObject<HTMLDivElement | undefined>;
 }
 
-export const Drawer: React.FC<Props> = ({ onClose, drawerRef }) => {
+export const Drawer: React.FC<Props> = ({
+  onClose,
+  isDrawerOpen,
+  drawerRef,
+}) => {
   const { commandResolver, queryResolver } = useContext(DependencyContext);
   const data = queryResolver.useReadOnly<"GetNotifications">(drawerQuery);
 
@@ -33,7 +44,22 @@ export const Drawer: React.FC<Props> = ({ onClose, drawerRef }) => {
     origin: "drawer",
   });
 
-  return <View {...{ data, onClose, trigger, drawerRef }} />;
+  useEffect(() => {
+    const close = (event) => {
+      const target = event.target as Node;
+      const wasTargetOutsideSidebar = !drawerRef.current?.contains(target);
+
+      if (isDrawerOpen && wasTargetOutsideSidebar) {
+        onClose();
+      }
+    };
+    document.addEventListener("click", close);
+    return () => {
+      document.removeEventListener("click", close);
+    };
+  }, [drawerRef, isDrawerOpen, onClose]);
+
+  return <View {...{ data, onClose, isDrawerOpen, trigger, drawerRef }} />;
 };
 
 interface ViewProps extends Props {
@@ -79,8 +105,12 @@ export const View: React.FC<ViewProps> = ({
   };
 
   return (
-    <NotificationDrawer ref={drawerRef} aria-label="NotificationDrawer">
-      <NotificationDrawerHeader count={count} onClose={onClose}>
+    <NotificationDrawer
+      ref={drawerRef}
+      aria-label="NotificationDrawer"
+      id="notificationDrawer"
+    >
+      <NotificationDrawerHeader count={count} onClose={() => onClose()}>
         <ActionList {...{ onClearAll, onReadAll, onClose }} />
       </NotificationDrawerHeader>
       <CustomNotificationDrawerBody>
@@ -136,30 +166,40 @@ const ActionList: React.FC<ActionListProps> = ({
     onClose();
   };
 
+  const onToggleClick = () => {
+    setIsOpen(!isOpen);
+  };
+
   return (
     <Dropdown
       onSelect={() => setIsOpen(false)}
-      toggle={
-        <KebabToggle
-          onToggle={(_event, val) => setIsOpen(val)}
+      toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
+        <MenuToggle
+          ref={toggleRef}
           aria-label="NotificationListActions"
-        />
-      }
+          variant="plain"
+          onClick={onToggleClick}
+          isExpanded={isOpen}
+        >
+          <EllipsisVIcon />
+        </MenuToggle>
+      )}
       isOpen={isOpen}
-      isPlain
-      dropdownItems={[
+      onOpenChange={(isOpen: boolean) => setIsOpen(isOpen)}
+      popperProps={{ position: "center" }}
+      id="notification-0"
+    >
+      <DropdownList>
         <DropdownItem key="readAll" component="button" onClick={onReadAll}>
           {words("notification.drawer.readAll")}
-        </DropdownItem>,
+        </DropdownItem>
         <DropdownItem key="clearAll" component="button" onClick={onClearAll}>
           {words("notification.drawer.clearAll")}
-        </DropdownItem>,
+        </DropdownItem>
         <DropdownItem key="seeAll" component="button" onClick={onShowAll}>
           {words("notification.drawer.showAll")}
-        </DropdownItem>,
-      ]}
-      id="notification-0"
-      position="right"
-    />
+        </DropdownItem>
+      </DropdownList>
+    </Dropdown>
   );
 };

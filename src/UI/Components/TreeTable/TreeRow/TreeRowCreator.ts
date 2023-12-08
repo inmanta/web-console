@@ -167,6 +167,10 @@ export function extractCatalogValues(
       hasRelation: node.hasRelation,
     },
     {
+      label: "modifier",
+      value: format(node.value.modifier),
+    },
+    {
       label: "description",
       value: format(node.value.description),
     },

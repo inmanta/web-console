@@ -10,7 +10,7 @@ import { EnvironmentDetailsOneTimeQueryManager } from "@/Slices/Settings/Data/Ge
 import {
   DeferredApiHelper,
   dependencies,
-  DynamicQueryManagerResolver,
+  DynamicQueryManagerResolverImpl,
   EnvironmentDetails,
 } from "@/Test";
 import { words } from "@/UI";
@@ -30,7 +30,7 @@ function setup() {
   );
 
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolver([
+    new DynamicQueryManagerResolverImpl([
       environmentDetailsQueryManager,
       metricsQueryManager,
     ]),

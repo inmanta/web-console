@@ -16,8 +16,8 @@ import {
 import {
   DeferredApiHelper,
   dependencies,
-  DynamicCommandManagerResolver,
-  DynamicQueryManagerResolver,
+  DynamicCommandManagerResolverImpl,
+  DynamicQueryManagerResolverImpl,
   ServerStatus,
   StaticScheduler,
 } from "@/Test";
@@ -54,13 +54,13 @@ function setup(useMockArchiveHelper = false) {
     new StaticScheduler(),
   );
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolver([getServerStatusQueryManager]),
+    new DynamicQueryManagerResolverImpl([getServerStatusQueryManager]),
   );
   const getSupportArchiveCommandManager = new GetSupportArchiveCommandManager(
     apiHelper,
   );
   const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolver([getSupportArchiveCommandManager]),
+    new DynamicCommandManagerResolverImpl([getSupportArchiveCommandManager]),
   );
 
   const featureManager = new PrimaryFeatureManager(
@@ -177,7 +177,7 @@ test("GIVEN StatusPage with support extension WHEN user click download THEN an a
   );
 
   expect(apiHelper.pendingRequests).toEqual([
-    { method: "GET", url: "/api/v1/support/full" },
+    { method: "GET", url: "/api/v2/support" },
   ]);
 
   await act(async () => {
@@ -215,7 +215,7 @@ test("GIVEN StatusPage with support extension WHEN user click download THEN butt
   );
 
   expect(apiHelper.pendingRequests).toEqual([
-    { method: "GET", url: "/api/v1/support/full" },
+    { method: "GET", url: "/api/v2/support" },
   ]);
 
   await act(async () => {
@@ -223,9 +223,7 @@ test("GIVEN StatusPage with support extension WHEN user click download THEN butt
       Either.right({ data: ServerStatus.supportArchiveBase64 }),
     );
   });
-  expect(downloadButton).toHaveTextContent(
-    words("status.supportArchive.action.generating"),
-  );
+
   (archiveHelper as MockArchiveHelper).resolve(
     new Blob(["testing"], { type: "application/octet-stream" }),
   );

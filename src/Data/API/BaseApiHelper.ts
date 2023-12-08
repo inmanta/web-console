@@ -109,6 +109,14 @@ export class BaseApiHelper implements ApiHelper {
     });
   }
 
+  async getZipWithoutEnvironment<Blob>(
+    url: string,
+  ): Promise<Either.Type<string, Blob>> {
+    return this.executeBlob<Blob, string>(identity, this.getFullUrl(url), {
+      headers: this.getHeaders(),
+    });
+  }
+
   async post<Data, Body>(
     url: string,
     environment: string,
@@ -202,6 +210,44 @@ export class BaseApiHelper implements ApiHelper {
       this.getFullUrl(url),
       { headers: this.getHeaders(environment) },
     );
+  }
+  private async executeBlob<Blob, Error>(
+    transformError: (message: string, status: number) => Promise<Error>,
+    ...params: Parameters<typeof fetch>
+  ): Promise<Either.Type<Error, Blob>> {
+    try {
+      let response;
+      await fetch(...params)
+        .then(async (res) => {
+          response = res;
+        })
+        .catch(() => {
+          throw new Error(
+            "\nConnection to the server was either denied or blocked. \nPlease check server status.",
+          );
+        });
+
+      if (response.ok) {
+        const data = await response.blob();
+        return Either.right(data);
+      }
+      return Either.left(
+        await transformError(
+          this.formatError(
+            this.jsonParser.parse(await response.text()).message,
+            response,
+          ),
+          response.status,
+        ),
+      );
+    } catch (error) {
+      return Either.left(
+        await transformError(
+          this.errorHasMessage(error) ? error.message : `Error: ${error}`,
+          0,
+        ),
+      );
+    }
   }
 
   private async execute<Data, Error>(

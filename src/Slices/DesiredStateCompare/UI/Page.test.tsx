@@ -8,7 +8,7 @@ import {
   DeferredApiHelper,
   dependencies,
   DesiredStateDiff,
-  DynamicQueryManagerResolver,
+  DynamicQueryManagerResolverImpl,
 } from "@/Test";
 import { DependencyProvider, words } from "@/UI";
 import {
@@ -25,7 +25,7 @@ function setup() {
     GetDesiredStateDiffStateHelper(store),
   );
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolver([queryManager]),
+    new DynamicQueryManagerResolverImpl([queryManager]),
   );
   const fileFetcher = new FileFetcherImpl(apiHelper);
   fileFetcher.setEnvironment("env");
@@ -120,9 +120,7 @@ test("GIVEN DesiredStateCompare WHEN StatusFilter = 'Added' THEN only 'Added' re
     screen.getByRole("listbox", { name: "StatusFilterOptions" }),
   ).toBeVisible();
 
-  const statusOptions = screen.getAllByRole("checkbox", {
-    name: "StatusFilterOption",
-  });
+  const statusOptions = screen.getAllByRole("option");
   expect(statusOptions).toHaveLength(7);
 
   await act(async () => {

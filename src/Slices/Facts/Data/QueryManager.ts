@@ -14,22 +14,23 @@ export function GetFactsQueryManager(
     StateHelper(store),
     scheduler,
     ({ kind }, environment) => `${kind}_${environment}`,
-    ({ filter, sort, pageSize }, environment) => [
+    ({ filter, sort, pageSize, currentPage }, environment) => [
       environment,
       pageSize.value,
       sort?.name,
       sort?.order,
       stringifyObjectOrUndefined(filter),
+      stringifyObjectOrUndefined(currentPage.value),
     ],
     "GetFacts",
     getUrl,
-    ({ data, links, metadata }, setUrl) => {
+    ({ data, links, metadata }) => {
       if (typeof links === "undefined") {
         return { data: data, handlers: {}, metadata };
       }
       return {
         data: data,
-        handlers: getPaginationHandlers(links, metadata, setUrl),
+        handlers: getPaginationHandlers(links, metadata),
         metadata,
       };
     },

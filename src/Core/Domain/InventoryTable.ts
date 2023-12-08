@@ -23,7 +23,7 @@ export interface Attributes {
 
 export interface Row {
   id: Uuid;
-  attributesSummary: AttributesSummary;
+  attributesSummary?: AttributesSummary;
   attributes: Attributes;
   createdAt: string;
   updatedAt: string;

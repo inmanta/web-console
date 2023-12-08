@@ -116,7 +116,9 @@ interface MinimalEmbeddedEntity {
 }
 
 export type EntityLike = {
-  attributes: Pick<AttributeModel, "name" | "type" | "description">[];
+  attributes: (Pick<AttributeModel, "name" | "type" | "description"> & {
+    modifier?: AttributeModel["modifier"];
+  })[];
   embedded_entities: MinimalEmbeddedEntity[];
   inter_service_relations?: Pick<
     InterServiceRelation,
