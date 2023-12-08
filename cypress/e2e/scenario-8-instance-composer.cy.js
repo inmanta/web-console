@@ -161,7 +161,7 @@ if (Cypress.env("edition") === "iso") {
 
       // Check if only one row has been added to the table.
       cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 2);
-      // awiat until all instances are being deployed and up
+      // await until all instances are being deployed and up
       cy.get(".pf-v5-c-chart").within(() => {
         cy.get("#legend-labels-2", { timeout: 90000 }).should(
           "contain",
