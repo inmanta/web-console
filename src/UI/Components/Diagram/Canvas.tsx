@@ -84,7 +84,7 @@ const Canvas = ({
         setAlertMessage(words("inventory.instanceComposer.success"));
         setTimeout(() => {
           navigate(url);
-        }, 1000);
+        }, 2000);
       } else {
         setAlertType(AlertVariant.danger);
         setAlertMessage(JSON.parse(await response.text()).message);
