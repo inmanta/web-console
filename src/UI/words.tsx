@@ -91,7 +91,10 @@ const dict = {
   "inventory.collumn.deploymentProgress": "Deployment Progress",
   "inventory.column.createdAt": "Created",
   "inventory.column.updatedAt": "Updated",
+  "inventory.column.options": "Options",
+  "inventory.column.actions": "Actions",
   "inventory.column.resources": "Resources",
+  "inventory.actions.drilldown": "More actions",
   "inventory.tabs.attributes": "Attributes",
   "inventory.tabs.collapse": "Collapse all",
   "inventory.tabs.expand": "Expand all",
@@ -138,11 +141,14 @@ const dict = {
     amount === 1 ? "1 item" : `${amount} items`,
   "inventory.editInstance.button": "Edit",
   "inventory.editInstance.title": "Edit instance",
+  "inventory.duplicateInstance.title": "Duplicate instance",
   "inventory.editInstance.failed": "Editing instance failed",
   "inventory.editInstance.noAttributes":
     "There are no attributes to edit. Click confirm to move into the update state",
   "inventory.editInstance.header": (instanceId: string) =>
     `Change attributes of instance ${instanceId}`,
+  "inventory.duplicateInstance.header": (instanceId: string) =>
+    `Create an instance based of instance ${instanceId}`,
   "inventory.form.typeHint.list": (listBaseType: string) =>
     `A list of ${listBaseType}s`,
   "inventory.form.typeHint.dict":
@@ -152,6 +158,9 @@ const dict = {
   "inventory.form.placeholder.stringList": "Add a list of values",
   "inventory.form.placeholder.dict": '{"key": "value"}',
   "inventory.instanceComposer.editButton": "Edit in Composer",
+  "inventory.instanceComposer.success": "The request got sent succesfully",
+  "inventory.instanceComposer.success.title": "Instance Composed succesfully",
+  "inventory.instanceComposer.failed.title": "Instance Composing failed",
   "inventory.instanceComposer.dictModal": (valueName: string) =>
     `Values of ${valueName}`,
   "inventory.deleteInstance.button": "Delete",
@@ -260,8 +269,15 @@ const dict = {
     "We are processing the update of your Service Catalog. The process will be finished after compilation.",
   "catalog.update.modal.title": "Update Request",
   "catalog.delete.modal.title": "Delete Service",
-  "catalog.update.confirmation":
+  "catalog.update.confirmation.p1":
     "Are you sure you want to update your Service Catalog? This is an irreversible change and you might want to do a back-up before confirming the update.",
+  "catalog.update.confirmation.p2": "This action will:",
+  "catalog.update.confirmation.p3": "Update the project",
+  "catalog.update.confirmation.p4": "Export the service definition",
+  "catalog.update.confirmation.p5":
+    "Note: It will not do a regular exporting compile.",
+  "catalog.update.tooltip": "Update project and export service definition",
+  "catalog.API.tooltip": "Catalog API",
   "catalog.button.details": "Show Details",
   "catalog.delete.title": (serviceName: string) =>
     `Are you sure you want to delete service entity ${serviceName}?`,
@@ -279,6 +295,7 @@ const dict = {
   "catalog.callbacks.add": "Add",
   "catalog.table.type": "Type",
   "catalog.table.description": "Description",
+  "catalog.table.modifier": "Modifier",
 
   /**
    * Dashboard
@@ -313,6 +330,11 @@ const dict = {
     "The number of resources grouped (by resource state)",
   "dashboard.resource.resource_count.label.x": "Number of Resources [#]",
   "dashboard.logout": "Logout",
+  "dashboard.documentation.tooltip": "Documentation",
+  "dashboard.API.tooltip": "REST API",
+  "dashboard.setting.tooltip": "Settings",
+  "dashboard.status_page.tooltip": "Status page",
+  "dashboard.notifications.tooltip": "Show notifications",
 
   /**
    * Environment controls
@@ -324,11 +346,13 @@ const dict = {
   "environment.halt.button.tooltip":
     "Emergency stop to halt all operations in the current environment",
   "environment.halt.title": "Halt environment",
+  "environment.halt.process": "Halting environment",
   "environment.halt.details":
     "Are you sure you want to initiate an emergency stop and halt all operations in the current environment?",
   "environment.halt.label": "Operations halted",
   "environment.halt.tooltip": "Operations in this environment are halted",
   "environment.resume.title": "Resume environment",
+  "environment.resume.process": "Resuming environment",
   "environment.resume.details":
     "Are you sure you want to resume all operations in the current environment?",
   "environment.protected.tooltip":
@@ -508,7 +532,6 @@ const dict = {
     "The status of the orchestration server, loaded extensions and active components.",
   "status.supportArchive.action.download": "Download support archive",
   "status.supportArchive.action.downloading": "Fetching support data",
-  "status.supportArchive.action.generating": "Generating support archive",
 
   /** Agents */
   "agents.title": "Agents",

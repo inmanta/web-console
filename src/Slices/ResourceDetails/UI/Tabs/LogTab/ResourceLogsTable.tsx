@@ -32,7 +32,7 @@ export const ResourceLogsTable: React.FC<Props> = ({
     route: "ResourceDetails",
   });
 
-  const onSort: OnSort = (event, index, order) => {
+  const onSort: OnSort = (_event, _index, order) => {
     setSort({ ...sort, order });
   };
 

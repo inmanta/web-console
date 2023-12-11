@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps-dev): Bump @types/file-saver from 2.0.5 to 2.0.7'
+destination-branches:
+- master
+- iso6
+sections: {}

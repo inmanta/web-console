@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import { useUrlStateWithFilter, useUrlStateWithPageSize } from "@/Data";
+import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import {
   EmptyView,
   PageContainer,
@@ -14,6 +15,10 @@ import { List } from "./List";
 
 export const Page: React.FC = () => {
   const { queryResolver } = useContext(DependencyContext);
+
+  const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({
+    route: "NotificationCenter",
+  });
   const [pageSize, setPageSize] = useUrlStateWithPageSize({
     route: "NotificationCenter",
   });
@@ -26,6 +31,7 @@ export const Page: React.FC = () => {
     origin: "center",
     pageSize,
     filter,
+    currentPage,
   });
 
   return (
@@ -36,6 +42,7 @@ export const Page: React.FC = () => {
             data={data}
             pageSize={pageSize}
             setPageSize={setPageSize}
+            setCurrentPage={setCurrentPage}
           />
         }
         filter={filter}

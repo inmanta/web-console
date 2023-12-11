@@ -15,11 +15,11 @@ import {
 } from "@/Data";
 import { DeleteVersionCommandManager } from "@/Data/Managers/DeleteVersion";
 import {
-  DynamicQueryManagerResolver,
+  DynamicQueryManagerResolverImpl,
   StaticScheduler,
   DeferredApiHelper,
   dependencies,
-  DynamicCommandManagerResolver,
+  DynamicCommandManagerResolverImpl,
 } from "@/Test";
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
@@ -40,7 +40,7 @@ function setup() {
     apiHelper,
   );
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolver([
+    new DynamicQueryManagerResolverImpl([
       GetDesiredStatesQueryManager(
         apiHelper,
         getDesiredStatesStateHelper,
@@ -50,7 +50,7 @@ function setup() {
     ]),
   );
   const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolver([
+    new DynamicCommandManagerResolverImpl([
       PromoteVersionCommandManager(apiHelper, desiredStatesUpdater),
       DeleteVersionCommandManager(apiHelper),
       TriggerCompileCommandManager(apiHelper),
@@ -179,18 +179,19 @@ test("When using the status filter then only the matching desired states should 
     );
   });
 
-  const input = screen.getByPlaceholderText(
-    words("agents.filters.status.placeholder"),
-  );
+  const input = screen.getByRole("combobox", { name: "StatusFilterInput" });
   await act(async () => {
     await userEvent.click(input);
   });
 
-  const option = await screen.findByRole("option", {
+  const statusOptions = screen.getAllByRole("option");
+  expect(statusOptions).toHaveLength(4);
+
+  const candidateSkippedOption = await screen.findByRole("option", {
     name: words("desiredState.test.skippedCandidate"),
   });
   await act(async () => {
-    await userEvent.click(option);
+    await userEvent.click(candidateSkippedOption);
   });
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
@@ -397,30 +398,36 @@ test("Given the Desired states view When promoting a version, then the correct r
   await act(async () => {
     await userEvent.click(
       within(rows[8]).getByRole("button", {
-        name: "Actions",
+        name: "actions-toggle",
       }),
     );
   });
 
   expect(
-    within(screen.getByRole("menu", { name: "Actions" })).getByText(
-      words("desiredState.actions.promote"),
-    ),
-  ).toHaveAttribute("aria-disabled", "true");
+    within(rows[8]).getByRole("button", {
+      name: "actions-toggle",
+    }),
+  ).toHaveAttribute("aria-expanded", "true");
+
+  expect(
+    screen.getByRole("menuitem", {
+      name: words("desiredState.actions.promote"),
+    }),
+  ).toBeDisabled();
 
   await act(async () => {
     await userEvent.click(
       within(rows[0]).getByRole("button", {
-        name: "Actions",
+        name: "actions-toggle",
       }),
     );
   });
 
   await act(async () => {
     await userEvent.click(
-      within(screen.getByRole("menu", { name: "Actions" })).getByText(
-        words("desiredState.actions.promote"),
-      ),
+      screen.getByRole("menuitem", {
+        name: words("desiredState.actions.promote"),
+      }),
     );
   });
 
@@ -502,16 +509,16 @@ test("Given the Desired states view with filters When promoting a version, then 
   await act(async () => {
     await userEvent.click(
       within(rows[0]).getByRole("button", {
-        name: "Actions",
+        name: "actions-toggle",
       }),
     );
   });
 
   await act(async () => {
     await userEvent.click(
-      within(screen.getByRole("menu", { name: "Actions" })).getByText(
-        words("desiredState.actions.promote"),
-      ),
+      screen.getByRole("menuitem", {
+        name: words("desiredState.actions.promote"),
+      }),
     );
   });
   expect(apiHelper.pendingRequests).toHaveLength(1);
@@ -563,16 +570,16 @@ test("Given the Desired states view When promoting a version results in an error
   await act(async () => {
     await userEvent.click(
       within(rows[0]).getByRole("button", {
-        name: "Actions",
+        name: "actions-toggle",
       }),
     );
   });
 
   await act(async () => {
     await userEvent.click(
-      within(screen.getByRole("menu", { name: "Actions" })).getByText(
-        words("desiredState.actions.promote"),
-      ),
+      screen.getByRole("menuitem", {
+        name: words("desiredState.actions.promote"),
+      }),
     );
   });
 
@@ -599,7 +606,7 @@ test("DesiredStatesView shows CompileWidget", async () => {
   const { component } = setup();
   render(component);
 
-  expect(screen.getByRole("generic", { name: "CompileWidget" })).toBeVisible();
+  expect(screen.getByRole("button", { name: "RecompileButton" })).toBeVisible();
 });
 
 describe("DeleteModal ", () => {
@@ -621,17 +628,13 @@ describe("DeleteModal ", () => {
     await act(async () => {
       await userEvent.click(
         within(rows[0]).getByRole("button", {
-          name: "Actions",
+          name: "actions-toggle",
         }),
       );
     });
 
     await act(async () => {
-      await userEvent.click(
-        within(screen.getByRole("menu", { name: "Actions" })).getByText(
-          "Delete",
-        ),
-      );
+      await userEvent.click(screen.getByRole("menuitem", { name: "Delete" }));
     });
 
     expect(
@@ -659,17 +662,13 @@ describe("DeleteModal ", () => {
     await act(async () => {
       await userEvent.click(
         within(rows[0]).getByRole("button", {
-          name: "Actions",
+          name: "actions-toggle",
         }),
       );
     });
 
     await act(async () => {
-      await userEvent.click(
-        within(screen.getByRole("menu", { name: "Actions" })).getByText(
-          "Delete",
-        ),
-      );
+      await userEvent.click(screen.getByRole("menuitem", { name: "Delete" }));
     });
     const noButton = await screen.findByText("No");
     await act(async () => {
@@ -682,16 +681,12 @@ describe("DeleteModal ", () => {
     await act(async () => {
       await userEvent.click(
         within(rows[0]).getByRole("button", {
-          name: "Actions",
+          name: "actions-toggle",
         }),
       );
     });
     await act(async () => {
-      await userEvent.click(
-        within(screen.getByRole("menu", { name: "Actions" })).getByText(
-          "Delete",
-        ),
-      );
+      await userEvent.click(screen.getByRole("menuitem", { name: "Delete" }));
     });
 
     const closeButton = await screen.findByLabelText("Close");
@@ -721,17 +716,13 @@ describe("DeleteModal ", () => {
     await act(async () => {
       await userEvent.click(
         within(rows[0]).getByRole("button", {
-          name: "Actions",
+          name: "actions-toggle",
         }),
       );
     });
 
     await act(async () => {
-      await userEvent.click(
-        within(screen.getByRole("menu", { name: "Actions" })).getByText(
-          "Delete",
-        ),
-      );
+      await userEvent.click(screen.getByRole("menuitem", { name: "Delete" }));
     });
     const yesButton = await screen.findByText("Yes");
     await act(async () => {

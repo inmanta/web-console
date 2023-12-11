@@ -11,7 +11,7 @@ import {
 } from "@/Data";
 import {
   dependencies,
-  DynamicCommandManagerResolver,
+  DynamicCommandManagerResolverImpl,
   Service,
   ServiceInstance,
 } from "@/Test";
@@ -32,7 +32,7 @@ function setup() {
   const environmentModifier = EnvironmentModifierImpl();
   environmentModifier.setEnvironment(Service.a.environment);
   const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolver([commandManager]),
+    new DynamicCommandManagerResolverImpl([commandManager]),
   );
   return {
     component: (config: Config) => (

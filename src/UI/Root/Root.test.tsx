@@ -19,7 +19,7 @@ import {
 import {
   DeferredApiHelper,
   dependencies,
-  DynamicQueryManagerResolver,
+  DynamicQueryManagerResolverImpl,
   Project,
   ServerStatus,
   StaticScheduler,
@@ -49,7 +49,7 @@ function setup() {
   );
 
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolver([
+    new DynamicQueryManagerResolverImpl([
       environmentsManager,
       environmentManagerOneTime,
       getServerStatusManager,
@@ -89,9 +89,7 @@ test("GIVEN the app THEN the navigation toggle button should be visible", async 
     await apiHelper.resolve(Either.right({ data: Project.list }));
   });
 
-  expect(
-    screen.getByRole("button", { name: "Global navigation" }),
-  ).toBeVisible();
+  expect(screen.getByRole("button", { name: "Main Navigation" })).toBeVisible();
 });
 
 test("GIVEN the app THEN the documentation link should be visible", async () => {

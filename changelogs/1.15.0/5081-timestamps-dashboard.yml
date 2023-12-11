@@ -1,0 +1,8 @@
+change-type: patch
+description: "Timestamps in the dashboard are now rounded to full hours"
+issue-nr: 5081
+destination-branches:
+  - master
+  - iso6
+sections:
+  minor-improvement: "{{description}}"

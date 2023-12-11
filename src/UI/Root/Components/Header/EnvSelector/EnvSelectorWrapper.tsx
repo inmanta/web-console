@@ -23,31 +23,13 @@ export const EnvSelectorWrapper: React.FC<Props> = ({
   environmentNames,
 }) => {
   const [filteredItems, setFilteredItems] = useState(environmentNames);
-  const [searchValue, setSearchValue] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [toggleText, setToggleText] = useState(defaultToggleText);
 
   useEffect(() => {
     setFilteredItems(environmentNames);
     setToggleText(defaultToggleText);
-    setSearchValue("");
   }, [environmentNames, defaultToggleText]);
-
-  const filterItems = (value: string) => {
-    const filtered =
-      value === ""
-        ? environmentNames
-        : environmentNames.filter(
-            (envName) =>
-              envName.toLowerCase().indexOf(value.toLowerCase()) !== -1,
-          );
-    return filtered;
-  };
-
-  const onSearchInputChange = (value: string) => {
-    setSearchValue(value);
-    setFilteredItems(filterItems(value));
-  };
 
   const onSelect = (value: string) => {
     setIsOpen(!isOpen);
@@ -60,11 +42,10 @@ export const EnvSelectorWrapper: React.FC<Props> = ({
       onSelectEnvironment(matchingEnvItem);
     }
   };
+
   return (
     <EnvSelector
       items={filteredItems}
-      searchValue={searchValue}
-      onSearchInputChange={onSearchInputChange}
       onSelect={onSelect}
       isOpen={isOpen}
       setIsOpen={setIsOpen}

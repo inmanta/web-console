@@ -5,6 +5,7 @@ import {
   useUrlStateWithPageSize,
   useUrlStateWithSort,
 } from "@/Data";
+import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { EmptyView, PaginationWidget, RemoteDataView } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
@@ -18,6 +19,10 @@ interface Props {
 
 export const View: React.FC<Props> = ({ resourceId }) => {
   const { queryResolver } = useContext(DependencyContext);
+
+  const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({
+    route: "ResourceDetails",
+  });
   const [pageSize, setPageSize] = useUrlStateWithPageSize({
     route: "ResourceDetails",
   });
@@ -35,6 +40,7 @@ export const View: React.FC<Props> = ({ resourceId }) => {
     pageSize,
     filter,
     sort,
+    currentPage,
   });
 
   const toggleActionType = (action: string) => {
@@ -54,6 +60,7 @@ export const View: React.FC<Props> = ({ resourceId }) => {
             data={data}
             pageSize={pageSize}
             setPageSize={setPageSize}
+            setCurrentPage={setCurrentPage}
           />
         }
         filter={filter}

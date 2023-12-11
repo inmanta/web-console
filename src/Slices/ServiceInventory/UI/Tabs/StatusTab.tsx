@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import {
   Card,
   CardBody,
@@ -11,7 +11,6 @@ import {
   FlexItem,
 } from "@patternfly/react-core";
 import { ParsedNumber } from "@/Core";
-import { DependencyContext } from "@/UI";
 import { TextWithCopy } from "@/UI/Components";
 import { words } from "@/UI/words";
 
@@ -21,8 +20,6 @@ interface StatusInfo {
   version: ParsedNumber;
   createdAt: string;
   updatedAt: string;
-  actions: React.ReactElement | null;
-  expertActions: React.ReactElement | null;
 }
 
 interface Props {
@@ -30,7 +27,6 @@ interface Props {
 }
 
 export const StatusTab: React.FC<Props> = ({ statusInfo }) => {
-  const { environmentModifier } = useContext(DependencyContext);
   return (
     <Card>
       <CardBody>
@@ -89,24 +85,6 @@ export const StatusTab: React.FC<Props> = ({ statusInfo }) => {
               </DescriptionList>
             </FlexItem>
           </Flex>
-          <Flex direction={{ default: "column" }}>
-            <FlexItem>
-              <Title headingLevel="h3">
-                {words("inventory.statustab.actions")}
-              </Title>
-            </FlexItem>
-            <FlexItem>{statusInfo.actions}</FlexItem>
-          </Flex>
-          {environmentModifier.useIsExpertModeEnabled() && (
-            <Flex direction={{ default: "column" }}>
-              <FlexItem>
-                <Title headingLevel="h3">
-                  {words("inventory.statustab.expertActions")}
-                </Title>
-              </FlexItem>
-              <FlexItem>{statusInfo.expertActions}</FlexItem>
-            </Flex>
-          )}
         </Flex>
       </CardBody>
     </Card>

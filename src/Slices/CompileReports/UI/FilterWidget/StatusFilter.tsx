@@ -1,5 +1,5 @@
 import React from "react";
-import { ToolbarFilter } from "@patternfly/react-core";
+import { SelectOptionProps, ToolbarFilter } from "@patternfly/react-core";
 import { CompileStatus } from "@/Core";
 import { SingleTextSelect } from "@/UI/Components";
 import { words } from "@/UI/words";
@@ -16,8 +16,10 @@ export const StatusFilter: React.FC<Props> = ({
   selected,
   setSelected,
 }) => {
-  const compileStatuses = Object.keys(CompileStatus).map(
-    (k) => CompileStatus[k],
+  const compileStatuses: SelectOptionProps[] = Object.keys(CompileStatus).map(
+    (key) => {
+      return { value: CompileStatus[key], children: CompileStatus[key] };
+    },
   );
   const deleteChip = () => setSelected(null);
   return (

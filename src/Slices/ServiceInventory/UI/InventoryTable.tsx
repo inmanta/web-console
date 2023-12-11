@@ -30,11 +30,22 @@ export const InventoryTable: React.FC<Props> = ({
   const [isExpanded, onExpansion] = useUrlStateWithExpansion({
     route: "Inventory",
   });
-  const onSort: OnSort = (event, index, order) => {
+  const onSort: OnSort = (_event, index, order) => {
     setSort({
       name: tablePresenter.getColumnNameForIndex(index) as string,
       order,
     });
+  };
+  // Define the column width in percentage for specific columns.
+  const getColumnWidth = (apiName: string) => {
+    switch (apiName) {
+      case tablePresenter.getIdColumnApiName():
+        return 20;
+      case "deployment_progress":
+        return 30;
+      default:
+        return undefined;
+    }
   };
   const activeSortIndex = tablePresenter.getIndexForColumnName(sort.name);
   const heads = tablePresenter.getColumnHeads().map((column, columnIndex) => {
@@ -53,8 +64,12 @@ export const InventoryTable: React.FC<Props> = ({
         }
       : {};
     return (
-      <Th key={column.displayName} {...sortParams}>
-        {column.displayName}
+      <Th
+        width={getColumnWidth(column.apiName)}
+        key={column.displayName}
+        {...sortParams}
+      >
+        {column.apiName === "actions" ? "" : column.displayName}
       </Th>
     );
   });
@@ -75,8 +90,7 @@ export const InventoryTable: React.FC<Props> = ({
           isExpanded={isExpanded(getIdentityForRow(row))}
           onToggle={onExpansion(getIdentityForRow(row))}
           numberOfColumns={tablePresenter.getNumberOfColumns()}
-          actions={tablePresenter.getActionsFor(row.id.full)}
-          expertActions={tablePresenter.getExpertActionsFor(row.id.full)}
+          rowActions={tablePresenter.getActionsFor(row.id.full)}
           state={tablePresenter.getStateFor(row.id.full)}
           serviceInstanceIdentifier={{
             id: row.id.full,

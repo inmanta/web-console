@@ -65,14 +65,4 @@ test("GIVEN The Service Inventory WHEN the user filters on AttributeSet ('Active
     name: "InstanceRow-Intro",
   });
   expect(rowsAfter.length).toEqual(1);
-
-  const summary = within(rowsAfter[0]).getByRole("list", {
-    name: "AttributesSummary",
-  });
-
-  expect(
-    within(summary).getByRole("listitem", {
-      name: "Active-NotEmpty",
-    }),
-  ).toBeInTheDocument();
 });

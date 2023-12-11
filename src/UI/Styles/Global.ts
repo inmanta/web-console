@@ -27,6 +27,10 @@ export const GlobalStyles = createGlobalStyle`
     background-color: transparent;
   }
 
+  tbody > tr:where(.pf-v5-c-table__tr):not(.pf-v5-c-table__expandable-row):hover {
+    background-color: var(--pf-v5-global--BackgroundColor--150);
+  }
+
   .pf-v5-c-page {
     --pf-v5-c-page__main-breadcrumb--PaddingBottom: var(--pf-v5-global--spacer--md);
   }
@@ -49,9 +53,6 @@ export const GlobalStyles = createGlobalStyle`
   }
   .pf-v5-c-select {
     min-width: 180px;
-  }
-  .pf-v5-c-toolbar__item .pf-c-input-group {
-    height: auto !important;
   }
   @media (max-width: 1000px) {
     *[aria-label="FilterBar"] {

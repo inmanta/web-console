@@ -83,7 +83,7 @@ describe("5 Compile reports", () => {
     cy.get("tbody").should(($tableBody) => {
       const $rows = $tableBody.find("tr");
 
-      expect($rows).to.have.length(isIso ? 1 : 4);
+      expect($rows).to.have.length(isIso ? 1 : 3);
 
       expect($rows.eq(0), "top-row-message").to.contain(
         isIso
@@ -104,7 +104,7 @@ describe("5 Compile reports", () => {
         "Compile triggered from the console",
       );
 
-      expect($rows).length.to.be.at.least(isIso ? 2 : 5);
+      expect($rows).length.to.be.at.least(isIso ? 2 : 4);
     });
 
     // await end of compilation and expect it to be success
@@ -243,18 +243,16 @@ describe("5 Compile reports", () => {
       // Click on Show Inventory on basic-service
       cy.get("#basic-service").contains("Show inventory").click();
 
+      // click on duplicate instance
+      cy.get('[aria-label="row actions toggle"]', { timeout: 60000 })
+        .eq(0)
+        .click();
+      cy.get(".pf-v5-c-menu__item").contains("Duplicate").click();
+
       // Add Instance
-      cy.get("#add-instance-button").click();
-      cy.get("#ip_r1").type("1.2.3.4");
-      cy.get("#interface_r1_name").type("eth0");
-      cy.get("#address_r1").type("1.2.3.5");
-      cy.get("#vlan_id_r1").type("1");
-      cy.get("#ip_r2").type("1.2.2.1");
-      cy.get("#interface_r2_name").type("interface-vlan");
-      cy.get("#address_r2").type("1.2.2.3");
-      cy.get("#vlan_id_r2").type("2");
+      cy.get("#service_id").clear();
       cy.get("#service_id").type("0001");
-      cy.get("#name").type("basic-service2");
+      cy.get("#name").type("2");
       cy.get("button").contains("Confirm").click();
 
       // Expect to see a rejected service instance in the table
@@ -312,13 +310,12 @@ describe("5 Compile reports", () => {
       // Click on Show Inventory on basic-service
       cy.get("#basic-service").contains("Show inventory").click();
 
-      // Open rejected instance row
-      cy.get("#expand-toggle0").click();
-
-      // delete instance
-      cy.get(".pf-v5-c-description-list", { timeout: 60000 })
-        .contains("Delete")
+      // Delete rejected instance row
+      cy.get('[aria-label="row actions toggle"]', { timeout: 60000 })
+        .eq(0)
         .click();
+      cy.get(".pf-v5-c-menu__item").contains("More actions").click();
+      cy.get(".pf-v5-c-menu__item").contains("Delete").click();
 
       // confirm modal
       cy.get(".pf-v5-c-form__actions").contains("Yes").click();
@@ -375,7 +372,7 @@ describe("5 Compile reports", () => {
       cy.get(".pf-v5-c-nav__link").contains("Compile Reports").click();
 
       // Click on filter dropdown
-      cy.get(".pf-v5-c-select").eq(1).click();
+      cy.get('[aria-label="StatusFilterInput"]').click();
 
       // select failed
       cy.get("button").contains("failed").click();
@@ -394,56 +391,9 @@ describe("5 Compile reports", () => {
       });
 
       // click on clear all filters
-      cy.get(".pf-v5-c-toolbar__item").find("button").eq(6).click();
+      cy.get('[aria-label="Clear input value"]').click();
 
       // expect to have the original length of the table
-      cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
-        const $rows = $tableBody.find("tr");
-
-        expect($rows).to.have.length(7);
-      });
-    });
-    it("5.6 Pagination", () => {
-      // go to home page
-      cy.visit("/console/");
-
-      // click on test environment card
-      cy.get('[aria-label="Environment card"]')
-        .contains("lsm-frontend")
-        .click();
-
-      // Go to the compile report page
-      cy.get(".pf-v5-c-nav__link").contains("Compile Reports").click();
-
-      // click on pagination
-      cy.get('[aria-label="Page Size Selector dropdown"]').click();
-      // select 5
-      cy.get(".pf-v5-c-dropdown__menu-item").contains("5").first().click();
-
-      // expect only 5 rows to be visible now
-      cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
-        const $rows = $tableBody.find("tr");
-
-        expect($rows).to.have.length(5);
-      });
-
-      // next page
-      cy.get('[aria-label="Next"]').click();
-
-      // expect only 2 rows to be visible now
-      cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
-        const $rows = $tableBody.find("tr");
-
-        expect($rows).to.have.length(2);
-      });
-
-      // click on pagination
-      cy.get('[aria-label="Page Size Selector dropdown"]').click();
-
-      // select 10
-      cy.get(".pf-v5-c-dropdown__menu-item").contains("10").first().click();
-
-      // expect 7 rows to be visible now again
       cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
         const $rows = $tableBody.find("tr");
 

@@ -1,3 +1,4 @@
+/*eslint-disable testing-library/no-node-access*/
 import React from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import {
@@ -23,13 +24,14 @@ import Canvas from "@/UI/Components/Diagram/Canvas";
 import CustomRouter from "@/UI/Routing/CustomRouter";
 import history from "@/UI/Routing/history";
 import {
+  mockedInstanceThree,
+  mockedInstanceThreeServiceModel,
   mockedInstanceTwo,
   mockedInstanceTwoServiceModel,
   mockedInstanceWithReferences,
 } from "./Mock";
 import services from "./Mocks/services.json";
 import "@testing-library/jest-dom";
-import { Colors } from "./shapes";
 
 const allQueries = {
   ...queries,
@@ -297,7 +299,7 @@ describe("Canvas.tsx", () => {
     expect(headerLabel).toHaveTextContent(shapeName);
 
     const header = screen.getByJointSelector("header");
-    expect(header).toHaveAttribute("fill", Colors.core);
+    expect(header).toHaveClass("-core");
 
     const nameValue = screen.getByJointSelector("itemLabel_name_value");
     expect(nameValue).toHaveTextContent(name);
@@ -326,7 +328,8 @@ describe("Canvas.tsx", () => {
     expect(headerLabel).toHaveTextContent(shapeName);
 
     const header = screen.getByJointSelector("header");
-    expect(header).toHaveAttribute("fill", Colors.base);
+    expect(header).not.toHaveClass("-core");
+    expect(header).not.toHaveClass("-embedded");
 
     const nameValue = screen.getByJointSelector("itemLabel_name_value");
     expect(nameValue).toHaveTextContent(name);
@@ -448,7 +451,7 @@ describe("Canvas.tsx", () => {
     expect(headerLabel).toHaveTextContent("child_container");
 
     const header = screen.getByJointSelector("header");
-    expect(header).toHaveAttribute("fill", Colors.embedded);
+    expect(header).toHaveClass("-embedded");
 
     const nameValue = screen.getByJointSelector("itemLabel_name_value");
     expect(nameValue).toHaveTextContent(name);
@@ -680,6 +683,20 @@ describe("Canvas.tsx", () => {
     expect(connectors).toHaveLength(3);
   });
 
+  it("renders correctly fetched instances with missing optional entities", async () => {
+    const component = setup(mockedInstanceThree, [
+      mockedInstanceThreeServiceModel,
+    ]);
+    render(component);
+
+    const attrIndicators = await screen.findAllByJointSelector("info");
+    const entities = document.querySelectorAll(
+      '[data-type="app.ServiceEntityBlock"]',
+    );
+    expect(entities).toHaveLength(1);
+    expect(attrIndicators).toHaveLength(1);
+  });
+
   it("deletes shape correctly ", async () => {
     const component = setup(mockedInstanceWithReferences);
     render(component);
@@ -730,6 +747,7 @@ describe("Canvas.tsx", () => {
   it("creates valid object for order_api when creating entity from scratch", () => {});
   it("creates valid object for order_api when editing entity", () => {});
 
+  it("WHEN strict_modifier_enforcement is set to false for some services THEN for only these instances and their connections editing/deleting is blocked", () => {});
   // it("zoom-in/zoom-out", async () => {
   //   // TODO: Resolve "TypeError: viewport.getCTM is not a function"
   //   const component = setup();

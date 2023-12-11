@@ -1,6 +1,5 @@
 import React from "react";
-import { Alert } from "@patternfly/react-core";
-import { ContextSelector } from "@patternfly/react-core/deprecated";
+import { Alert, Dropdown, MenuToggle } from "@patternfly/react-core";
 import { FlatEnvironment, RemoteData } from "@/Core";
 import { words } from "@/UI/words";
 import {
@@ -20,14 +19,24 @@ export const EnvSelectorWithData: React.FC<Props> = ({
 }) =>
   RemoteData.fold(
     {
-      notAsked: () => <ContextSelector aria-label="EnvSelector-NotAsked" />,
-      loading: () => <ContextSelector aria-label="EnvSelector-Loading" />,
+      notAsked: () => (
+        <Dropdown
+          toggle={() => <></>}
+          aria-label="EnvSelector-NotAsked"
+        ></Dropdown>
+      ),
+      loading: () => (
+        <Dropdown
+          toggle={() => <></>}
+          aria-label="EnvSelector-Loading"
+        ></Dropdown>
+      ),
       failed: (error) => (
         <>
-          <ContextSelector
+          <Dropdown
             aria-label="EnvSelector-Failed"
-            toggleText={words("error")}
-          />
+            toggle={() => <MenuToggle>{words("error")}</MenuToggle>}
+          ></Dropdown>
           <Alert
             variant="danger"
             title={words("error")}

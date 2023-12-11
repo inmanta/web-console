@@ -14,6 +14,7 @@ import { DesiredStateCompare } from "@S/DesiredStateCompare";
 import { DesiredStateDetails } from "@S/DesiredStateDetails";
 import { DesiredStateResourceDetails } from "@S/DesiredStateResourceDetails";
 import { Diagnose } from "@S/Diagnose";
+import { DuplicateInstance } from "@S/DuplicateInstance";
 import { EditInstance } from "@S/EditInstance";
 import { Events } from "@S/Events";
 import { Facts } from "@S/Facts";
@@ -35,45 +36,46 @@ export const paths: Paths = {
   /**
    * Main
    */
-  Home: Home.path,
   CreateEnvironment: CreateEnvironment.path,
+  Home: Home.path,
+  NotificationCenter: Notification.path,
   Settings: Settings.path,
   Status: Status.path,
-  NotificationCenter: Notification.path,
 
   /**
    * LSM
    */
-  Dashboard: Dashboard.path,
   Catalog: ServiceCatalog.path,
+  CreateInstance: CreateInstance.path,
+  Dashboard: Dashboard.path,
+  Diagnose: Diagnose.path,
+  DuplicateInstance: DuplicateInstance.path,
+  EditInstance: EditInstance.path,
+  Events: Events.path,
+  History: ServiceInstanceHistory.path,
   InstanceComposer: InstanceComposer.path,
   InstanceComposerEditor: InstanceComposerEditor.path,
   Inventory: ServiceInventory.path,
   ServiceDetails: ServiceDetails.path,
-  CreateInstance: CreateInstance.path,
-  EditInstance: EditInstance.path,
-  History: ServiceInstanceHistory.path,
-  Diagnose: Diagnose.path,
-  Events: Events.path,
 
   /**
    * Resource Manager
    */
-  Resources: Resource.path,
+  AgentProcess: AgentProcess.path,
   Agents: Agents.path,
   Facts: Facts.path,
-  AgentProcess: AgentProcess.path,
   ResourceDetails: ResourceDetails.path,
+  Resources: Resource.path,
 
   /**
    * Orchestration Engine
    */
-  CompileReports: CompileReports.path,
   CompileDetails: CompileDetails.path,
+  CompileReports: CompileReports.path,
+  ComplianceCheck: ComplianceCheck.path,
   DesiredState: DesiredState.path,
+  DesiredStateCompare: DesiredStateCompare.path,
   DesiredStateDetails: DesiredStateDetails.path,
   DesiredStateResourceDetails: DesiredStateResourceDetails.path,
-  DesiredStateCompare: DesiredStateCompare.path,
   Parameters: Parameters.path,
-  ComplianceCheck: ComplianceCheck.path,
 };

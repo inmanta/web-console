@@ -33,7 +33,7 @@ test("GIVEN The Service Inventory WHEN the user filters on something THEN a data
   });
 
   const option = await screen.findByRole("option", {
-    name: words("inventory.test.creating"),
+    name: `${words("inventory.test.creating")}`,
   });
   await act(async () => {
     await userEvent.click(option);

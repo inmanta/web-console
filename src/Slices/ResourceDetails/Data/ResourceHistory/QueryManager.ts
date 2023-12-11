@@ -1,4 +1,9 @@
-import { Scheduler, StateHelper, ApiHelper } from "@/Core";
+import {
+  Scheduler,
+  StateHelper,
+  ApiHelper,
+  stringifyObjectOrUndefined,
+} from "@/Core";
 import { getPaginationHandlers, QueryManager } from "@/Data/Managers/Helpers";
 import { getUrl } from "./getUrl";
 
@@ -12,20 +17,21 @@ export function ResourceHistoryQueryManager(
     stateHelper,
     scheduler,
     ({ kind, id }) => `${kind}_${id}`,
-    ({ sort, pageSize }, environment) => [
+    ({ sort, pageSize, currentPage }, environment) => [
       environment,
       pageSize.value,
       sort?.name,
       sort?.order,
+      stringifyObjectOrUndefined(currentPage.value),
     ],
     "GetResourceHistory",
     getUrl,
-    ({ data, links, metadata }, setUrl) => {
+    ({ data, links, metadata }) => {
       if (typeof links === "undefined")
         return { data: data, handlers: {}, metadata };
       return {
         data: data,
-        handlers: getPaginationHandlers(links, metadata, setUrl),
+        handlers: getPaginationHandlers(links, metadata),
         metadata,
       };
     },

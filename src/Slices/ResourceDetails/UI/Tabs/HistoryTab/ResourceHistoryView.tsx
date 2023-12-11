@@ -7,6 +7,7 @@ import {
 } from "@patternfly/react-core";
 import { Query } from "@/Core";
 import { useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
+import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { EmptyView, PaginationWidget, RemoteDataView } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { MomentDatePresenter } from "@/UI/Utils";
@@ -25,6 +26,10 @@ export const ResourceHistoryView: React.FC<Props> = ({
   details,
 }) => {
   const { queryResolver } = useContext(DependencyContext);
+
+  const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({
+    route: "ResourceDetails",
+  });
   const [pageSize, setPageSize] = useUrlStateWithPageSize({
     route: "ResourceDetails",
   });
@@ -37,6 +42,7 @@ export const ResourceHistoryView: React.FC<Props> = ({
     id: resourceId,
     sort,
     pageSize,
+    currentPage,
   });
 
   return (
@@ -50,6 +56,7 @@ export const ResourceHistoryView: React.FC<Props> = ({
               data={data}
               pageSize={pageSize}
               setPageSize={setPageSize}
+              setCurrentPage={setCurrentPage}
             />
           </ToolbarItem>
         </ToolbarContent>

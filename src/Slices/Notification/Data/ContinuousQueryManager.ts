@@ -14,20 +14,21 @@ export function NotificationContinuousQueryManager(
     StateHelper(store),
     scheduler,
     ({ kind, origin }, environment) => `${kind}_${environment}_${origin}`,
-    ({ filter, pageSize }, environment) => [
+    ({ filter, pageSize, currentPage }, environment) => [
       environment,
       pageSize.value,
       stringifyObjectOrUndefined(filter),
+      stringifyObjectOrUndefined(currentPage.value),
     ],
     "GetNotifications",
     getUrl,
-    ({ data, links, metadata }, setUrl) => {
+    ({ data, links, metadata }) => {
       if (typeof links === "undefined") {
         return { data: data, handlers: {}, metadata };
       }
       return {
         data: data,
-        handlers: getPaginationHandlers(links, metadata, setUrl),
+        handlers: getPaginationHandlers(links, metadata),
         metadata,
       };
     },

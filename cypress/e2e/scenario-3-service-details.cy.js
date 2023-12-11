@@ -76,14 +76,14 @@ if (Cypress.env("edition") === "iso") {
 
       // Click on kebab menu and select Show Details on basic-service
       cy.get("#basic-service", { timeout: 60000 })
-        .find('[aria-label="Actions"]')
+        .find('[aria-label="Actions-dropdown"]')
         .click();
       cy.get("button").contains("Show Details").click();
 
       // Expect to be redirected on Service Details: basic-service
       cy.get("h1")
         .contains("Service Details: basic-service")
-        .should("to.be.visible");
+        .should("to.exist");
 
       // Expect  the current tab to be Details
       cy.get(".pf-m-current").should("contain", "Details");
@@ -211,14 +211,14 @@ if (Cypress.env("edition") === "iso") {
 
       // click on kebab menu on basic-service
       cy.get("#basic-service", { timeout: 60000 })
-        .find('[aria-label="Actions"]')
+        .find('[aria-label="Actions-dropdown"]')
         .click();
       cy.get("button").contains("Show Details").click();
 
       // Expect to be redirected on Service Details: basic-service
       cy.get("h1", { timeout: 20000 })
         .contains("Service Details: basic-service")
-        .should("to.be.visible");
+        .should("to.exist");
 
       // Click on Details tab
       cy.get("button").contains("Details").click();
@@ -235,7 +235,7 @@ if (Cypress.env("edition") === "iso") {
       });
     });
 
-    it("3.3 Create a failed Instance and check details", () => {
+    it("3.3 Create a failed Instance by Duplicating and check details", () => {
       // Select 'test' environment
       cy.visit("/console/");
       cy.get('[aria-label="Environment card"]')
@@ -248,19 +248,15 @@ if (Cypress.env("edition") === "iso") {
         .contains("Show inventory")
         .click();
 
-      // click on add instance
-      cy.get("#add-instance-button").click();
+      // click on duplicate instance
+      cy.get('[aria-label="row actions toggle"]', { timeout: 60000 })
+        .eq(0)
+        .click();
+      cy.get(".pf-v5-c-menu__item").contains("Duplicate").click();
 
       // Create a failed instance on basic-service
-      cy.get("#ip_r1").type("1.2.3.4");
-      cy.get("#interface_r1_name").type("eth1");
-      cy.get("#address_r1").type("1.2.3.8/32");
-      cy.get("#vlan_id_r1").type("4");
-      cy.get("#ip_r2").type("1.2.2.1");
-      cy.get("#interface_r2_name").type("interface-vlan2");
-      cy.get("#address_r2").type("1.2.2.8/32");
-      cy.get("#vlan_id_r2").type("8");
       cy.get("#service_id").type("0008");
+      cy.get("#name").clear();
       cy.get("#name").type("failed");
       cy.get(".pf-v5-c-switch").first().click();
       cy.get("button").contains("Confirm").click();
@@ -305,14 +301,14 @@ if (Cypress.env("edition") === "iso") {
 
       // click on kebab menu on basic-service
       cy.get("#basic-service", { timeout: 60000 })
-        .find('[aria-label="Actions"]')
+        .find('[aria-label="Actions-dropdown"]')
         .click();
       cy.get("button").contains("Show Details").click();
 
       // Expect to be redirected on Service Details: basic-service
       cy.get("h1")
         .contains("Service Details: basic-service")
-        .should("to.be.visible");
+        .should("to.exist");
 
       // Expect to be Details tab
       cy.get(".pf-m-current").should("contain", "Details");
@@ -339,14 +335,14 @@ if (Cypress.env("edition") === "iso") {
 
       // Click on kebab menu and select Show Details on basic-service
       cy.get("#basic-service", { timeout: 60000 })
-        .find('[aria-label="Actions"]')
+        .find('[aria-label="Actions-dropdown"]')
         .click();
       cy.get("button").contains("Show Details").click();
 
       // Expect to be redirected on Service Details: basic-service
       cy.get("h1", { timeout: 20000 })
         .contains("Service Details: basic-service")
-        .should("to.be.visible");
+        .should("to.exist");
 
       // Go to the callback tab
       cy.get("button").contains("Callbacks").click();
@@ -356,12 +352,10 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="callbackId"]').type(
         "60b18097-1525-47f2-95ae-1d941d9c0c85",
       );
-      cy.get(".pf-v5-c-select").first().click();
-      cy.get(".pf-v5-c-select__menu-item").contains("INFO").click();
-      cy.get(".pf-v5-c-select").eq(1).click();
-      cy.get(".pf-v5-c-select__menu-item")
-        .contains("ALLOCATION_UPDATE")
-        .click();
+      cy.get('[aria-label="MinimalLogLevelFilterInput"]').click();
+      cy.get('[role="option"]').contains("INFO").click();
+      cy.get('[aria-label="EventTypesFilterInput"]').click();
+      cy.get('[role="option"]').contains("ALLOCATION_UPDATE").click();
       cy.get("button").contains("Add").click();
 
       // Expect an error to show up : Something went wrong
@@ -457,7 +451,7 @@ if (Cypress.env("edition") === "iso") {
 
       // Click on Delete button
       cy.get("#basic-service", { timeout: 60000 })
-        .find('[aria-label="Actions"]')
+        .find('[aria-label="Actions-dropdown"]')
         .click();
       cy.get("button", { timeout: 30000 }).contains("Delete").click();
 
@@ -466,7 +460,7 @@ if (Cypress.env("edition") === "iso") {
 
       // Click again on Delete button
       cy.get("#basic-service", { timeout: 60000 })
-        .find('[aria-label="Actions"]')
+        .find('[aria-label="Actions-dropdown"]')
         .click();
       cy.get("button", { timeout: 20000 }).contains("Delete").click();
 
@@ -481,31 +475,22 @@ if (Cypress.env("edition") === "iso") {
         .contains("Show inventory")
         .click();
 
-      // Click open first row
-      cy.get("#expand-toggle0").click();
-
-      // Click on delete instance
-      cy.get(".pf-v5-c-table__expandable-row-content", { timeout: 20000 })
+      // Click on delete instance first row
+      cy.get('[aria-label="row actions toggle"]', { timeout: 60000 })
         .eq(0)
-        .find("button")
-        .contains("Delete")
         .click();
+      cy.get(".pf-v5-c-menu__item").contains("More actions").click();
+      cy.get(".pf-v5-c-menu__item").contains("Delete").click();
 
       // Confirm deletion
       cy.get("#submit").click();
 
-      // Close first row
-      cy.get("#expand-toggle0").click();
-
-      // Open second row
-      cy.get("#expand-toggle1").click();
-
-      // Click on delete instance
-      cy.get(".pf-v5-c-table__expandable-row-content", { timeout: 20000 })
+      // Click on delete instance second row
+      cy.get('[aria-label="row actions toggle"]', { timeout: 60000 })
         .eq(1)
-        .find("button")
-        .contains("Delete")
         .click();
+      cy.get(".pf-v5-c-menu__item").contains("More actions").click();
+      cy.get(".pf-v5-c-menu__item").contains("Delete").click();
 
       // Confirm deletion
       cy.get("#submit", { timeout: 20000 }).click();

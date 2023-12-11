@@ -11,7 +11,7 @@ interface Props {
   attributeValue: string | string[];
   description?: string;
   isOptional: boolean;
-  handleInputChange: (value, event) => void;
+  handleInputChange: (value) => void;
   alreadySelected: string[];
   multi?: boolean;
 }

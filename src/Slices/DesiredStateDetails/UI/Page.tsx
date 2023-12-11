@@ -5,6 +5,7 @@ import {
   useUrlStateWithPageSize,
   useUrlStateWithSort,
 } from "@/Data";
+import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { DependencyContext } from "@/UI";
 import {
   EmptyView,
@@ -25,6 +26,10 @@ export const Provider: React.FC = () => {
 
 export const Page: React.FC<{ version: string }> = ({ version }) => {
   const { queryResolver } = useContext(DependencyContext);
+
+  const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({
+    route: "DesiredStateDetails",
+  });
   const [pageSize, setPageSize] = useUrlStateWithPageSize({
     route: "DesiredStateDetails",
   });
@@ -44,6 +49,7 @@ export const Page: React.FC<{ version: string }> = ({ version }) => {
     pageSize,
     filter,
     sort,
+    currentPage,
   });
 
   const presenter = new VersionResourceTablePresenter();
@@ -56,6 +62,7 @@ export const Page: React.FC<{ version: string }> = ({ version }) => {
             data={data}
             pageSize={pageSize}
             setPageSize={setPageSize}
+            setCurrentPage={setCurrentPage}
           />
         }
         filter={filter}

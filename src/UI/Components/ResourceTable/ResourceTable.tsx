@@ -1,9 +1,5 @@
 import React from "react";
-import {
-  Table,
-  TableHeader,
-  TableBody,
-} from "@patternfly/react-table/deprecated";
+import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
 import { InstanceResourceModel } from "@/Core";
 import { ResourceLink } from "@/UI/Components/ResourceLink";
 import { ResourceStatusLabel } from "@/UI/Components/ResourceStatus";
@@ -26,18 +22,28 @@ export const ResourceTable: React.FC<Props> = ({ resources, id, ...props }) => {
         },
         { title: <ResourceStatusLabel status={resource.resource_state} /> },
       ],
+      key: resourceId,
     };
   });
 
   return (
-    <Table
-      cells={columns}
-      rows={rows}
-      aria-label={props["aria-label"]}
-      variant="compact"
-    >
-      <TableHeader id={id ? `resource-table-header-${id}` : undefined} />
-      <TableBody />
+    <Table aria-label={props["aria-label"]} variant="compact">
+      <Thead id={id ? `resource-table-header-${id}` : undefined}>
+        <Tr>
+          {columns.map((col) => (
+            <Th key={col}>{col}</Th>
+          ))}
+        </Tr>
+      </Thead>
+      <Tbody>
+        {rows.map((row) => (
+          <Tr key={row.key}>
+            {row.cells.map((cell, index) => (
+              <Td key={`${row.key}${index}`}>{cell.title}</Td>
+            ))}
+          </Tr>
+        ))}
+      </Tbody>
     </Table>
   );
 };

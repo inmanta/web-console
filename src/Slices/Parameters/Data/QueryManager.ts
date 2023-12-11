@@ -17,22 +17,23 @@ export function GetParametersQueryManager(
     stateHelper,
     scheduler,
     ({ kind }, environment) => `${kind}_${environment}`,
-    ({ pageSize, filter, sort }, environment) => [
+    ({ pageSize, filter, sort, currentPage }, environment) => [
       environment,
       pageSize.value,
       sort?.name,
       sort?.order,
       stringifyObjectOrUndefined(filter),
+      stringifyObjectOrUndefined(currentPage.value),
     ],
     "GetParameters",
     (query) => getUrl(query),
-    ({ data, links, metadata }, setUrl) => {
+    ({ data, links, metadata }) => {
       if (typeof links === "undefined") {
         return { data: data, handlers: {}, metadata };
       }
       return {
         data: data,
-        handlers: getPaginationHandlers(links, metadata, setUrl),
+        handlers: getPaginationHandlers(links, metadata),
         metadata,
       };
     },

@@ -5,17 +5,19 @@ import { Button, Flex, FlexItem } from "@patternfly/react-core";
 import styled from "styled-components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
-import labelIcon from "../icons/label-icon.png";
-import entityIcon from "../icons/new-entity-icon.png";
+import labelIcon from "../icons/label-icon.svg";
+import entityIcon from "../icons/new-entity-icon.svg";
 
 const Toolbar = ({
   openEntityModal,
   handleDeploy,
   serviceName,
+  isDeployDisabled,
 }: {
   openEntityModal: () => void;
   handleDeploy: () => void;
   serviceName: string;
+  isDeployDisabled: boolean;
 }) => {
   const { routeManager } = useContext(DependencyContext);
   const navigate = useNavigate();
@@ -37,7 +39,7 @@ const Toolbar = ({
           alignItems={{ default: "alignItemsCenter" }}
         >
           <FlexItem>
-            <StyledButton
+            <IconButton
               variant="secondary"
               onClick={openEntityModal}
               aria-label="new-entity-button"
@@ -47,19 +49,19 @@ const Toolbar = ({
                 alt="Create new entity icon"
                 aria-label="new-entity-icon"
               />
-            </StyledButton>
+            </IconButton>
           </FlexItem>
           <FlexItem>
             <Spacer />
           </FlexItem>
           <FlexItem>
-            <StyledButton variant="secondary" aria-label="label-toggle-button">
+            <IconButton variant="secondary" aria-label="label-toggle-button">
               <img
                 src={labelIcon}
                 alt="Label Toggle Icon"
                 aria-label="label-toggle-icon"
               />
-            </StyledButton>
+            </IconButton>
           </FlexItem>
         </Flex>
       </FlexItem>
@@ -68,16 +70,17 @@ const Toolbar = ({
           spacer={{ default: "spacerMd" }}
           alignItems={{ default: "alignItemsCenter" }}
         >
-          <StyledButtonTwo
-            variant="tertiary"
-            width={200}
-            onClick={handleRedirect}
-          >
+          <StyledButton variant="tertiary" width={200} onClick={handleRedirect}>
             {words("cancel")}
-          </StyledButtonTwo>
-          <StyledButtonTwo variant="primary" width={200} onClick={handleDeploy}>
+          </StyledButton>
+          <StyledButton
+            variant="primary"
+            width={200}
+            onClick={handleDeploy}
+            isDisabled={isDeployDisabled}
+          >
             {words("deploy")}
-          </StyledButtonTwo>
+          </StyledButton>
         </Flex>
       </FlexItem>
     </Container>
@@ -89,7 +92,7 @@ const Container = styled(Flex)`
   padding: 0 0 20px;
 `;
 
-const StyledButton = styled(Button)`
+const IconButton = styled(Button)`
   --pf-v5-c-button--PaddingTop: 5px;
   --pf-v5-c-button--PaddingRight: 3px;
   --pf-v5-c-button--PaddingBottom: 3px;
@@ -98,7 +101,7 @@ const StyledButton = styled(Button)`
   width: 30px;
 `;
 
-const StyledButtonTwo = styled(Button)`
+const StyledButton = styled(Button)`
   --pf-v5-c-button--PaddingTop: px;
   --pf-v5-c-button--PaddingBottom: 0px;
   width: 101px;
@@ -109,5 +112,5 @@ const Spacer = styled.div`
   display: flex;
   height: 30px;
   width: 1px;
-  background: #e7e7e7;
+  background: var(--pf-v5-global--BackgroundColor--200);
 `;

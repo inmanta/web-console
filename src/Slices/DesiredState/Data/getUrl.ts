@@ -3,7 +3,7 @@ import qs from "qs";
 import { Query, RangeOperator } from "@/Core";
 
 export function getUrl(
-  { pageSize, filter }: Query.SubQuery<"GetDesiredStates">,
+  { pageSize, filter, currentPage }: Query.SubQuery<"GetDesiredStates">,
   timezone = moment.tz.guess(),
 ): string {
   const defaultFilter = { status: ["active", "candidate", "retired"] };
@@ -36,5 +36,10 @@ export function getUrl(
         )}`
       : "";
   const sortParam = `&sort=version.desc`;
-  return `/api/v2/desiredstate?limit=${pageSize.value}${sortParam}${filterParam}`;
+
+  return `/api/v2/desiredstate?limit=${
+    pageSize.value
+  }${sortParam}${filterParam}${
+    currentPage.value ? `&${currentPage.value}` : ""
+  }`;
 }

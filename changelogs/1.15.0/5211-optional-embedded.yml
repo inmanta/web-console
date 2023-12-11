@@ -1,0 +1,6 @@
+change-type: patch
+description: "Resolve issue in iterating through optional embedded entities in the Instance Composer"
+issue-nr: 5211
+destination-branches:
+  - master
+  - iso6

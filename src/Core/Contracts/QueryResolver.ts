@@ -18,4 +18,6 @@ export interface QueryResolver {
   useReadOnly<Kind extends Query.Kind>(query: Query.Type): Data<Kind>;
   useOneTime<Kind extends Query.Kind>(query: Query.Type): Pair<Kind>;
   useContinuous<Kind extends Query.Kind>(query: Query.Type): Pair<Kind>;
+  pauseAllContinuousManagers(): void;
+  resumeAllContinuousManagers(): void;
 }

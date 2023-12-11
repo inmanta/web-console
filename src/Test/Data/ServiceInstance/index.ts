@@ -5,7 +5,7 @@ import * as Attributes from "./Attributes";
 
 export const a: ServiceInstanceModelWithTargetStates = {
   id: "service_instance_id_a",
-  service_identity_attribute_value: "8764848531585023001",
+  service_identity_attribute_value: Service.a.name,
   environment: Environment.a.id,
   service_entity: Service.a.name,
   version: 3,
@@ -25,7 +25,7 @@ export const a: ServiceInstanceModelWithTargetStates = {
 export const b: ServiceInstanceModelWithTargetStates = {
   ...a,
   id: "service_instance_id_b",
-  service_identity_attribute_value: "8764848531585023002",
+  service_identity_attribute_value: Service.b.name,
   state: "rejected",
   candidate_attributes: a.active_attributes,
   active_attributes: null,
@@ -34,7 +34,7 @@ export const b: ServiceInstanceModelWithTargetStates = {
 export const c: ServiceInstanceModelWithTargetStates = {
   ...a,
   id: "service_instance_id_c",
-  service_identity_attribute_value: "8764848531585023003",
+  service_identity_attribute_value: Service.c.name,
   state: "acknowledged",
   active_attributes: null,
   rollback_attributes: a.active_attributes,
@@ -43,12 +43,13 @@ export const c: ServiceInstanceModelWithTargetStates = {
 export const d: ServiceInstanceModelWithTargetStates = {
   ...a,
   service_entity: Service.d.name,
+  service_identity_attribute_value: Service.d.name,
 };
 
 export const deleted: ServiceInstanceModelWithTargetStates = {
   ...a,
   id: "service_instance_id_d",
-  service_identity_attribute_value: "8764848531585023123",
+  service_identity_attribute_value: Service.d.name,
   state: "terminated",
   deleted: true,
 };
@@ -89,6 +90,7 @@ export const nestedEditable: ServiceInstanceModelWithTargetStates = {
   instanceSetStateTargets: [],
   referenced_by: [],
 };
+
 export const with_relations: ServiceInstanceModelWithTargetStates = {
   ...a,
   active_attributes: {

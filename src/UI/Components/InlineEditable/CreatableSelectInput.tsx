@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FormGroup } from "@patternfly/react-core";
-import { Select, SelectOption } from "@patternfly/react-core/deprecated";
 import { Either } from "@/Core";
+import { SingleTextSelect } from "../SingleTextSelect";
 import { InlinePlainAlert } from "./InlinePlainAlert";
 
 interface Props {
@@ -23,12 +23,7 @@ export const CreatableSelectInput: React.FC<Props> = ({
   onCreate,
   onSelect,
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
   const [submitError, setSubmitError] = useState("");
-  const onSelectOption = (_event, selection) => {
-    setIsOpen(false);
-    onSelect(selection);
-  };
   const onCreateOption = async (newValue: string) => {
     const result = await onCreate(newValue);
     if (Either.isLeft(result)) {
@@ -50,24 +45,20 @@ export const CreatableSelectInput: React.FC<Props> = ({
   );
 
   const inputView = (
-    <Select
-      aria-label={`${label}-select-input`}
+    <SingleTextSelect
       toggleAriaLabel={`${label}-select-toggle`}
-      typeAheadAriaLabel={`${label}-typeahead`}
-      variant="typeahead"
-      onToggle={() => {
-        setIsOpen(!isOpen);
-      }}
-      isOpen={isOpen}
-      onSelect={onSelectOption}
-      selections={value}
-      isCreatable
-      onCreateOption={onCreateOption}
-    >
-      {options.map((option) => (
-        <SelectOption key={option} value={option} />
-      ))}
-    </Select>
+      selected={value}
+      setSelected={onSelect}
+      hasCreation
+      onCreate={onCreateOption}
+      options={options.map((option) => {
+        return {
+          value: option,
+          children: option,
+          isSelected: option === value,
+        };
+      })}
+    />
   );
 
   const fieldView = withLabel ? (

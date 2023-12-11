@@ -190,3 +190,34 @@ test("GIVEN a Scheduler WHEN unregistering + reregistering a task during its ong
   expect(taskA2.update).not.toBeCalled();
   expect(taskB.update).toHaveBeenCalledTimes(1);
 });
+
+test("GIVEN a Scheduler WHEN pausing and resuming THEN tasks are being cleared and populated back as they were and then they continue to work as intended", async () => {
+  const scheduler = new SchedulerImpl(5000);
+
+  const taskB = { effect: jest.fn(async () => undefined), update: jest.fn() };
+
+  scheduler.register("taskB", taskB);
+
+  jest.advanceTimersByTime(5000);
+  await flushPromises();
+
+  expect(taskB.update).toHaveBeenCalledTimes(1);
+
+  scheduler.pauseTasks();
+  jest.advanceTimersByTime(5000);
+  await flushPromises();
+  expect(taskB.update).toHaveBeenCalledTimes(1);
+
+  jest.advanceTimersByTime(5000);
+  await flushPromises();
+  expect(taskB.update).toHaveBeenCalledTimes(1);
+
+  scheduler.resumeTasks();
+  jest.advanceTimersByTime(5000);
+  await flushPromises();
+  expect(taskB.update).toHaveBeenCalledTimes(2);
+
+  jest.advanceTimersByTime(5000);
+  await flushPromises();
+  expect(taskB.update).toHaveBeenCalledTimes(3);
+});

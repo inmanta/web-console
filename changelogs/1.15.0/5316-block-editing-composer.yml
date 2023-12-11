@@ -1,0 +1,6 @@
+change-type: patch
+description: "Block modifying pre-existing Instances in Composer unless the have strict_modifier set to true"
+issue-nr: 5316
+destination-branches:
+  - master
+  - iso6

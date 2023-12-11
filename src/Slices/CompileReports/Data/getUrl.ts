@@ -3,7 +3,7 @@ import qs from "qs";
 import { CompileStatus, Query, RangeOperator } from "@/Core";
 
 export function getUrl(
-  { pageSize, sort, filter }: Query.SubQuery<"GetCompileReports">,
+  { pageSize, sort, filter, currentPage }: Query.SubQuery<"GetCompileReports">,
   timezone = moment.tz.guess(),
 ): string {
   const serializedFilters =
@@ -15,7 +15,12 @@ export function getUrl(
       : "";
   const filterParam = serializedFilters.length > 1 ? serializedFilters : "";
   const sortParam = sort ? `&sort=${sort.name}.${sort.order}` : "";
-  return `/api/v2/compilereport?limit=${pageSize.value}${sortParam}${filterParam}`;
+
+  return `/api/v2/compilereport?limit=${
+    pageSize.value
+  }${sortParam}${filterParam}${
+    currentPage.value ? `&${currentPage.value}` : ""
+  }`;
 }
 type Filter = NonNullable<Query.SubQuery<"GetCompileReports">["filter"]>;
 

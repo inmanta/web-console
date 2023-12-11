@@ -16,4 +16,12 @@ export class DummyQueryResolver implements QueryResolver {
   useContinuous(): [Data, () => void] {
     throw new Error("Method not implemented.");
   }
+
+  pauseAllContinuousManagers(): void {
+    throw new Error("Method not implemented.");
+  }
+
+  resumeAllContinuousManagers(): void {
+    throw new Error("Method not implemented.");
+  }
 }

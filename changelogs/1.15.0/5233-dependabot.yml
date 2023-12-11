@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps-dev): Bump eslint-plugin-testing-library from 5.11.1 to 6.1.0'
+destination-branches:
+- master
+- iso6
+sections: {}

@@ -26,10 +26,9 @@ export class InventoryTablePresenter
   readonly numberOfColumns: number;
 
   constructor(
-    private datePresenter: DatePresenter,
-    private attributesPresenter: AttributesPresenter,
+    private _datePresenter: DatePresenter,
+    private _attributesPresenter: AttributesPresenter,
     private actionPresenter: ActionPresenter,
-    private expertActionPresenter: ActionPresenter,
     private statePresenter: StatePresenter,
     private serviceIdentity?: string,
     private serviceIdentityDisplayName?: string,
@@ -42,10 +41,6 @@ export class InventoryTablePresenter
       },
       { displayName: words("inventory.column.state"), apiName: "state" },
       {
-        displayName: words("inventory.column.attributesSummary"),
-        apiName: "attributes",
-      },
-      {
         displayName: words("inventory.collumn.deploymentProgress"),
         apiName: "deployment_progress",
       },
@@ -57,15 +52,13 @@ export class InventoryTablePresenter
         displayName: words("inventory.column.updatedAt"),
         apiName: "last_updated",
       },
+      { displayName: words("inventory.column.actions"), apiName: "actions" },
     ];
     this.numberOfColumns = this.columnHeads.length + 1;
   }
 
   public getActionsFor(id: string): ReactElement | null {
     return this.actionPresenter.getForId(id);
-  }
-  public getExpertActionsFor(id: string): ReactElement | null {
-    return this.expertActionPresenter.getForId(id);
   }
 
   public createRows(instances: ServiceInstanceModelWithTargetStates[]): Row[] {
@@ -150,11 +143,6 @@ export class InventoryTablePresenter
 
     return {
       id: getUuidFromRaw(id),
-      attributesSummary: this.attributesPresenter.getSummary(
-        candidate_attributes,
-        active_attributes,
-        rollback_attributes,
-      ),
       attributes: {
         candidate: candidate_attributes,
         active: active_attributes,

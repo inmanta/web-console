@@ -2,8 +2,11 @@ import React, { useState } from "react";
 import {
   Dropdown,
   DropdownItem,
-  KebabToggle,
-} from "@patternfly/react-core/deprecated";
+  DropdownList,
+  MenuToggle,
+  MenuToggleElement,
+} from "@patternfly/react-core";
+import { EllipsisVIcon } from "@patternfly/react-icons";
 import { Tbody, Thead, Tr, Th, Table } from "@patternfly/react-table";
 import styled from "styled-components";
 import { ParsedNumber } from "@/Core";
@@ -56,29 +59,38 @@ export const TreeTable: React.FC<Props> = ({
               role="listbox"
               aria-label="expand-collapse-dropdown"
               onSelect={() => setIsOpen((value) => !value)}
-              toggle={
-                <StyledToggle onToggle={() => setIsOpen((value) => !value)} />
-              }
+              onOpenChange={(isOpen: boolean) => setIsOpen(isOpen)}
+              toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
+                <MenuToggle
+                  ref={toggleRef}
+                  aria-label="expand-collapse-dropdown-toggle"
+                  isExpanded={isOpen}
+                  variant="plain"
+                  onClick={() => setIsOpen((value) => !value)}
+                >
+                  <EllipsisVIcon />
+                </MenuToggle>
+              )}
               isOpen={isOpen}
-              isPlain
-              dropdownItems={[
+              popperProps={{ position: "right" }}
+            >
+              <DropdownList>
                 <DropdownItem
                   key="openAll"
                   component="button"
                   onClick={openAll}
                 >
                   {words("inventory.tabs.expand")}
-                </DropdownItem>,
+                </DropdownItem>
                 <DropdownItem
                   key="closeAll"
                   component="button"
                   onClick={closeAll}
                 >
                   {words("inventory.tabs.collapse")}
-                </DropdownItem>,
-              ]}
-              position="right"
-            />
+                </DropdownItem>
+              </DropdownList>
+            </Dropdown>
           </Th>
         </StyledTr>
       </Thead>
@@ -104,7 +116,4 @@ const StyledTableComposable = styled(Table)`
 `;
 const StyledTr = styled(Tr)`
   --pf-v5-c-table--cell--Overflow: visible;
-`;
-const StyledToggle = styled(KebabToggle)`
-  --pf-v5-c-dropdown__toggle--PaddingBottom: 0;
 `;

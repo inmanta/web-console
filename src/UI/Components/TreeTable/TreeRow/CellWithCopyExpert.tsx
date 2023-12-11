@@ -95,10 +95,22 @@ export const CellWithCopyExpert: React.FC<Props> = ({
     }
 
     setIsSpinnerVisible(true);
+    let formattedAttr = newAttribute;
 
+    if (attributeType.includes("int")) {
+      const tempFormat = parseInt(newAttribute as unknown as string);
+      formattedAttr = isNaN(tempFormat) ? tempFormat : newAttribute;
+    } else if (attributeType.includes("float")) {
+      const tempFormat = parseFloat(newAttribute as unknown as string);
+      formattedAttr = isNaN(tempFormat) ? tempFormat : newAttribute;
+    }
     if (parentObject) {
       newValue = parentObject[path.split("$")[0]];
-      set(newValue as object, path.split("$").slice(1).join("."), newAttribute);
+      set(
+        newValue as object,
+        path.split("$").slice(1).join("."),
+        formattedAttr,
+      );
     }
 
     const result = await trigger(
@@ -160,11 +172,7 @@ export const CellWithCopyExpert: React.FC<Props> = ({
       ) : (
         value
       )}
-      {isSpinnerVisible && (
-        <Icon size="sm">
-          <StyledSpinner />
-        </Icon>
-      )}
+      {isSpinnerVisible && <StyledSpinner size="sm" />}
       <Modal
         disableFocusTrap
         variant={"small"}

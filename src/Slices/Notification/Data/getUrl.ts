@@ -4,6 +4,7 @@ import { Query } from "@/Core";
 export function getUrl({
   filter,
   pageSize,
+  currentPage,
 }: Query.SubQuery<"GetNotifications">): string {
   const filterParam =
     filter && Object.keys(filter).length > 0
@@ -20,5 +21,8 @@ export function getUrl({
           { allowDots: true, arrayFormat: "repeat" },
         )}`
       : "";
-  return `/api/v2/notification?limit=${pageSize.value}${filterParam}`;
+
+  return `/api/v2/notification?limit=${pageSize.value}${filterParam}${
+    currentPage.value ? `&${currentPage.value}` : ""
+  }`;
 }

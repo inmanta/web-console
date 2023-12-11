@@ -1,0 +1,6 @@
+description: "Add the attribute modifiers to the Service Details table."
+issue-nr: 5053
+change-type: patch
+destination-branches: [master, iso6]
+sections:
+  minor-improvement: "{{description}}"

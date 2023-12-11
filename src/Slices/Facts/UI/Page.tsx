@@ -4,6 +4,7 @@ import {
   useUrlStateWithPageSize,
   useUrlStateWithSort,
 } from "@/Data";
+import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import {
   PageContainer,
   PaginationWidget,
@@ -19,6 +20,9 @@ import { TableControls } from "./TableControls";
 export const Page: React.FC = () => {
   const { queryResolver } = useContext(DependencyContext);
 
+  const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({
+    route: "Facts",
+  });
   const [pageSize, setPageSize] = useUrlStateWithPageSize({
     route: "Facts",
   });
@@ -35,6 +39,7 @@ export const Page: React.FC = () => {
     sort,
     filter,
     pageSize,
+    currentPage,
   });
 
   const tablePresenter = new FactsTablePresenter();
@@ -49,6 +54,7 @@ export const Page: React.FC = () => {
             data={data}
             pageSize={pageSize}
             setPageSize={setPageSize}
+            setCurrentPage={setCurrentPage}
           />
         }
       />

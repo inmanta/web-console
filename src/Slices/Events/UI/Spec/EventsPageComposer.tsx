@@ -6,7 +6,7 @@ import { QueryResolverImpl, getStoreInstance } from "@/Data";
 import {
   DeferredApiHelper,
   dependencies,
-  DynamicQueryManagerResolver,
+  DynamicQueryManagerResolverImpl,
   Service,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
@@ -31,7 +31,7 @@ export class EventsPageComposer {
     );
 
     const queryResolver = new QueryResolverImpl(
-      new DynamicQueryManagerResolver([eventsHelper]),
+      new DynamicQueryManagerResolverImpl([eventsHelper]),
     );
 
     const component = (

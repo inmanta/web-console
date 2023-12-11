@@ -5,6 +5,7 @@ export interface Cell {
   value: string;
   hasRelation?: boolean;
   serviceName?: string;
+  modifier?: string;
   warning?: string;
 }
 

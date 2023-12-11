@@ -32,7 +32,7 @@ export const CreateEnvironmentForm: React.FC<Props> = ({
   const [createEnvironmentBody, setCreateEnvironmentBody] =
     useState<CreateEnvironmentParams>({ project_id: "", name: "" });
   const [errorMessage, setErrorMessage] = useState("");
-  const [projectName, setProjectName] = useState("");
+  const [projectName, setProjectName] = useState<string | null>("");
   const setName = (name: string) => {
     setCreateEnvironmentBody({ ...createEnvironmentBody, name });
   };
@@ -75,7 +75,7 @@ export const CreateEnvironmentForm: React.FC<Props> = ({
         if (Either.isLeft(result)) {
           setErrorMessage(result.value);
         } else {
-          const target = isLsmEnabled ? "Catalog" : "CompileReports";
+          const target = isLsmEnabled ? "Catalog" : "DesiredState";
           navigateTo(target, undefined, `?env=${result.value.data.id}`);
         }
       }
@@ -115,14 +115,14 @@ export const CreateEnvironmentForm: React.FC<Props> = ({
         onChange={(_event, value) => setDescription(value)}
       />
       <TextField
-        value={createEnvironmentBody.repository || ""}
-        label={words("createEnv.repository")}
-        onChange={setRepository}
-      />
-      <TextField
         value={createEnvironmentBody.branch || ""}
         label={words("createEnv.branch")}
         onChange={setBranch}
+      />
+      <TextField
+        value={createEnvironmentBody.repository || ""}
+        label={words("createEnv.repository")}
+        onChange={setRepository}
       />
       <ImageField
         value={createEnvironmentBody.icon || ""}
