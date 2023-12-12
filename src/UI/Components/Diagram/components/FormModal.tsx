@@ -24,6 +24,7 @@ import { words } from "@/UI/words";
 import {
   createFormState,
   CreateModifierHandler,
+  EditModifierHandler,
   FieldCreator,
 } from "../../ServiceInstanceForm";
 import { FieldInput } from "../../ServiceInstanceForm/Components";
@@ -34,11 +35,13 @@ interface PossibleForm {
   value: string;
   model: ServiceModel | EmbeddedEntity | undefined;
   isEmbedded: boolean;
+  holderName: string;
 }
 interface Selected {
   name: string;
   model: ServiceModel | EmbeddedEntity;
   isEmbedded: boolean;
+  holderName: string;
 }
 
 const FormModal = ({
@@ -91,19 +94,22 @@ const FormModal = ({
       const chosenModel = possibleForms.find(
         (service) => service.value === value,
       );
-
       if (chosenModel && chosenModel.model) {
         setSelected({
-          name: value,
+          name: value as string,
           model: chosenModel.model,
           isEmbedded: chosenModel.isEmbedded,
+          holderName: chosenModel.holderName,
         });
 
-        const fieldCreator = new FieldCreator(new CreateModifierHandler());
+        const fieldCreator = new FieldCreator(
+          cellView?.model.get("isInEditMode")
+            ? new EditModifierHandler()
+            : new CreateModifierHandler(),
+        );
         const selectedFields = fieldCreator.attributesToFields(
           chosenModel.model.attributes,
         );
-
         setFields(selectedFields);
         if (cellView) {
           setFormState(
@@ -141,7 +147,14 @@ const FormModal = ({
   };
 
   useEffect(() => {
-    const getOptions = (
+    /** Iterate through all of services and its embedded entities to extract possible forms for shapes
+     *
+     * @param {(ServiceModel | EmbeddedEntity)[]}services array of services available to iterate through
+     * @param {PossibleForm[]} values array of previously created forms, as we support concurrency
+     * @param {string} prefix is a name of the entity/instance that holds given nested embedded entity
+     * @returns
+     */
+    const getPossibleForms = (
       services: (ServiceModel | EmbeddedEntity)[],
       values: PossibleForm[],
       prefix = "",
@@ -156,24 +169,32 @@ const FormModal = ({
           value: service.name + displayedPrefix,
           model: service,
           isEmbedded: prefix !== "",
+          holderName: prefix, //holderName is used in process of creating entity on canvas
         });
 
-        getOptions(service.embedded_entities, values, joinedPrefix);
+        getPossibleForms(service.embedded_entities, values, joinedPrefix);
       });
 
       return values;
     };
 
-    const tempPossibleForms = getOptions(services, []);
+    const tempPossibleForms = getPossibleForms(services, [
+      {
+        key: "default_option",
+        value: "Choose a Service",
+        model: undefined,
+        isEmbedded: false,
+        holderName: "",
+      },
+    ]);
     setPossibleForms(tempPossibleForms);
 
     if (cellView) {
       const entity = cellView.model as ServiceEntityBlock;
       const entityName = entity.getName();
-
       onEntityChosen(
         entity.get("isEmbedded")
-          ? `${entityName} (${entity.get("holderType")})`
+          ? `${entityName} (${entity.get("holderName")})`
           : entityName,
         tempPossibleForms,
       );

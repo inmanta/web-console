@@ -248,6 +248,7 @@ const Canvas = ({
                 selected.model as ServiceModel,
                 selected.name === mainServiceName,
                 selected.isEmbedded,
+                selected.holderName,
               );
               shape.set("sanitizedAttrs", sanitizedAttrs);
               handleUpdate(shape, ActionEnum.CREATE);

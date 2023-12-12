@@ -116,7 +116,7 @@ const deleteAndAssert = async (
     await user.click(handle3);
   });
   //Delay has to be done as library base itself on listeners that are async
-  await new Promise(process.nextTick);
+  await new Promise((resolve) => setTimeout(resolve, 100));
 
   const updatedEntities3 = document.querySelectorAll(
     '[data-type="app.ServiceEntityBlock"]',

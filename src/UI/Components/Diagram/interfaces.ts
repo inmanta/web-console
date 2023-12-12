@@ -20,9 +20,16 @@ interface DictDialogData {
 }
 interface Rule {
   name: string;
+  type: TypeEnum;
   lowerLimit: ParsedNumber | null;
   upperLimit: ParsedNumber | null;
+  modifier: string;
 }
+export enum TypeEnum {
+  EMBEDDED = "embedded",
+  INTERSERVICE = "inter-service",
+}
+
 interface ConnectionRules {
   [serviceName: string]: Rule[];
 }
@@ -100,7 +107,7 @@ interface serializedCell {
   relatedTo?: Map<string, string>;
   isEmbedded?: boolean;
   instanceAttributes?: Record<string, unknown>;
-  holderType?: string;
+  holderName?: string;
   embeddedTo?: string;
 }
 type relationId = string | null | undefined;
