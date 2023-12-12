@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps-dev): Bump html-webpack-plugin from 5.5.3 to 5.5.4'
+destination-branches:
+- master
+- iso7
+sections: {}
