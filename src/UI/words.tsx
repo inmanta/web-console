@@ -158,8 +158,11 @@ const dict = {
   "inventory.form.placeholder.stringList": "Add a list of values",
   "inventory.form.placeholder.dict": '{"key": "value"}',
   "inventory.instanceComposer.editButton": "Edit in Composer",
-  "inventory.instanceComposer.success": "The request got sent succesfully",
-  "inventory.instanceComposer.success.title": "Instance Composed succesfully",
+  "inventory.instanceComposer.formModal.placeholder": "Choose a Service",
+  "inventory.instanceComposer.formModal.create.title": "Add Entity",
+  "inventory.instanceComposer.formModal.edit.title": "Edit Entity",
+  "inventory.instanceComposer.success": "The request got sent successfully",
+  "inventory.instanceComposer.success.title": "Instance Composed successfully",
   "inventory.instanceComposer.failed.title": "Instance Composing failed",
   "inventory.instanceComposer.dictModal": (valueName: string) =>
     `Values of ${valueName}`,

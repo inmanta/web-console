@@ -6,6 +6,7 @@ import { AlertVariant } from "@patternfly/react-core";
 import { isObject } from "lodash";
 import styled from "styled-components";
 import { objectHasKey, ServiceModel } from "@/Core";
+import { sanitizeAttributes } from "@/Data";
 import { InstanceWithReferences } from "@/Data/Managers/GetInstanceWithRelations/interface";
 import diagramInit, { DiagramHandlers } from "@/UI/Components/Diagram/init";
 import { CanvasWrapper } from "@/UI/Components/Diagram/styles";
@@ -83,7 +84,7 @@ const Canvas = ({
         setAlertMessage(words("inventory.instanceComposer.success"));
         setTimeout(() => {
           navigate(url);
-        }, 1000);
+        }, 2000);
       } else {
         setAlertType(AlertVariant.danger);
         setAlertMessage(JSON.parse(await response.text()).message);
@@ -107,7 +108,7 @@ const Canvas = ({
       service_entity: cell.getName(),
       config: {},
       action: null,
-      attributes: cell.get("instanceAttributes"),
+      attributes: cell.get("sanitizedAttrs"),
       edits: null,
       embeddedTo: cell.get("embeddedTo"),
       relatedTo: cell.getRelations(),
@@ -229,8 +230,9 @@ const Canvas = ({
         }}
         services={services}
         cellView={cellToEdit}
-        onConfirm={(entity, selected) => {
+        onConfirm={(fields, entity, selected) => {
           if (diagramHandlers) {
+            const sanitizedAttrs = sanitizeAttributes(fields, entity);
             if (cellToEdit) {
               //deep copy
               const shape = diagramHandlers.editEntity(
@@ -238,7 +240,7 @@ const Canvas = ({
                 selected.model as ServiceModel,
                 entity,
               );
-
+              shape.set("sanitizedAttrs", sanitizedAttrs);
               handleUpdate(shape, ActionEnum.UPDATE);
             } else {
               const shape = diagramHandlers.addEntity(
@@ -248,6 +250,7 @@ const Canvas = ({
                 selected.isEmbedded,
                 selected.holderName,
               );
+              shape.set("sanitizedAttrs", sanitizedAttrs);
               handleUpdate(shape, ActionEnum.CREATE);
             }
           }

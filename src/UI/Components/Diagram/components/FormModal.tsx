@@ -6,13 +6,12 @@ import {
   Flex,
   FlexItem,
   Form,
+  MenuToggle,
+  MenuToggleElement,
   Modal,
-} from "@patternfly/react-core";
-import {
   Select,
   SelectOption,
-  SelectOptionObject,
-} from "@patternfly/react-core/deprecated";
+} from "@patternfly/react-core";
 import { set } from "lodash";
 import styled from "styled-components";
 import {
@@ -56,7 +55,11 @@ const FormModal = ({
   toggleIsOpen: (value: boolean) => void;
   services: ServiceModel[];
   cellView: dia.CellView | null;
-  onConfirm: (entity: InstanceAttributeModel, selected: Selected) => void;
+  onConfirm: (
+    fields: Field[],
+    entity: InstanceAttributeModel,
+    selected: Selected,
+  ) => void;
 }) => {
   const [possibleForms, setPossibleForms] = useState<PossibleForm[]>([]);
   const [fields, setFields] = useState<Field[]>([]);
@@ -71,45 +74,49 @@ const FormModal = ({
     setSelected(undefined);
   };
 
+  const toggle = (toggleRef: React.Ref<MenuToggleElement>) => (
+    <MenuToggle
+      ref={toggleRef}
+      onClick={(val) => setIsSelectOpen(val)}
+      isExpanded={isSelectOpen}
+      aria-label="service-picker"
+      disabled={cellView !== null}
+      isFullWidth
+      isFullHeight={false}
+    >
+      {selected?.name ||
+        words("inventory.instanceComposer.formModal.placeholder")}
+    </MenuToggle>
+  );
+
   const onEntityChosen = useCallback(
-    (
-      _event,
-      value: string | SelectOptionObject,
-      isPlaceholder: boolean | undefined,
-      possibleForms: PossibleForm[],
-    ) => {
-      if (isPlaceholder) {
-        clearStates();
-      } else {
-        const chosenModel = possibleForms.find(
-          (service) => service.value === value,
+    (value: string, possibleForms: PossibleForm[]) => {
+      const chosenModel = possibleForms.find(
+        (service) => service.value === value,
+      );
+      if (chosenModel && chosenModel.model) {
+        setSelected({
+          name: value as string,
+          model: chosenModel.model,
+          isEmbedded: chosenModel.isEmbedded,
+          holderName: chosenModel.holderName,
+        });
+
+        const fieldCreator = new FieldCreator(
+          cellView?.model.get("isInEditMode")
+            ? new EditModifierHandler()
+            : new CreateModifierHandler(),
         );
-
-        if (chosenModel && chosenModel.model) {
-          setSelected({
-            name: value as string,
-            model: chosenModel.model,
-            isEmbedded: chosenModel.isEmbedded,
-            holderName: chosenModel.holderName,
-          });
-
-          const fieldCreator = new FieldCreator(
-            cellView?.model.get("isInEditMode")
-              ? new EditModifierHandler()
-              : new CreateModifierHandler(),
+        const selectedFields = fieldCreator.attributesToFields(
+          chosenModel.model.attributes,
+        );
+        setFields(selectedFields);
+        if (cellView) {
+          setFormState(
+            (cellView.model as ServiceEntityBlock).get("instanceAttributes"),
           );
-          const selectedFields = fieldCreator.attributesToFields(
-            chosenModel.model.attributes,
-          );
-
-          setFields(selectedFields);
-          if (cellView) {
-            setFormState(
-              (cellView.model as ServiceEntityBlock).get("instanceAttributes"),
-            );
-          } else {
-            setFormState(createFormState(selectedFields));
-          }
+        } else {
+          setFormState(createFormState(selectedFields));
         }
       }
       setIsSelectOpen(false);
@@ -186,11 +193,9 @@ const FormModal = ({
       const entity = cellView.model as ServiceEntityBlock;
       const entityName = entity.getName();
       onEntityChosen(
-        null,
         entity.get("isEmbedded")
           ? `${entityName} (${entity.get("holderName")})`
           : entityName,
-        false,
         tempPossibleForms,
       );
     }
@@ -200,7 +205,11 @@ const FormModal = ({
     <StyledModal
       disableFocusTrap
       isOpen={isOpen}
-      title={cellView ? "Edit Entity" : "Add Entity"}
+      title={words(
+        cellView
+          ? "inventory.instanceComposer.formModal.edit.title"
+          : "inventory.instanceComposer.formModal.create.title",
+      )}
       variant={"small"}
       onClose={() => {
         clearStates();
@@ -226,7 +235,7 @@ const FormModal = ({
           width={200}
           isDisabled={selected === undefined}
           onClick={() => {
-            if (selected) onConfirm(formState, selected);
+            if (selected) onConfirm(fields, formState, selected);
             clearStates();
             toggleIsOpen(false);
           }}
@@ -241,21 +250,19 @@ const FormModal = ({
       >
         <FlexItem>
           <Select
-            selections={selected?.name}
-            onToggle={() => setIsSelectOpen(!isSelectOpen)}
+            isScrollable
+            selected={selected?.name}
+            toggle={toggle}
+            onOpenChange={(isOpen) => setIsSelectOpen(isOpen)}
             isOpen={isSelectOpen}
-            onSelect={(evt, value, isPlaceholder) => {
-              onEntityChosen(evt, value, isPlaceholder, possibleForms);
+            onSelect={(_evt, value) => {
+              onEntityChosen(value as string, possibleForms);
             }}
-            maxHeight={300}
-            isDisabled={cellView !== null}
           >
             {possibleForms.map(({ key, value }) => (
-              <SelectOption
-                key={key}
-                value={value}
-                isPlaceholder={value === "Choose a Service"}
-              />
+              <SelectOption key={key} value={value}>
+                {value}
+              </SelectOption>
             ))}
           </Select>
         </FlexItem>

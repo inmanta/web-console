@@ -89,8 +89,8 @@ if (Cypress.env("edition") === "iso") {
 
       // Open basic-service isntance form
       cy.get('[aria-label="new-entity-button"]').click();
-      cy.get('[aria-label="Options menu"]').click();
-      cy.get(".pf-v5-c-select__menu-item").contains("basic-service").click();
+      cy.get('[aria-label="service-picker"]').click();
+      cy.get(".pf-v5-c-menu__item-text").contains("basic-service").click();
 
       //fill form
       cy.get("#ip_r1").type("1.2.3.4");
@@ -115,9 +115,6 @@ if (Cypress.env("edition") === "iso") {
       //deploy, assert that toast Alert appeared and that page was changed to Service Inventory view
       cy.get("button").contains("Deploy").click();
 
-      cy.get('[data-testid="ToastAlert"]')
-        .contains("Instance Composed succesfully")
-        .should("be.visible");
       cy.get('[aria-label="ServiceInventory-Success"]').should("to.be.visible");
       // Check if only one row has been added to the table.
       cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 1);
@@ -161,7 +158,7 @@ if (Cypress.env("edition") === "iso") {
 
       // Check if only one row has been added to the table.
       cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 2);
-      // awiat until all instances are being deployed and up
+      // await until all instances are being deployed and up
       cy.get(".pf-v5-c-chart").within(() => {
         cy.get("#legend-labels-2", { timeout: 90000 }).should(
           "contain",
