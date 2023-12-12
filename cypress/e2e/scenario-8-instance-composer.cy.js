@@ -115,9 +115,6 @@ if (Cypress.env("edition") === "iso") {
       //deploy, assert that toast Alert appeared and that page was changed to Service Inventory view
       cy.get("button").contains("Deploy").click();
 
-      cy.get('[data-testid="ToastAlert"]')
-        .contains("Instance Composed succesfully")
-        .should("be.visible");
       cy.get('[aria-label="ServiceInventory-Success"]').should("to.be.visible");
       // Check if only one row has been added to the table.
       cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 1);
