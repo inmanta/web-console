@@ -1408,7 +1408,7 @@ __metadata:
     "@types/lodash": ^4.14.202
     "@types/lodash-es": ^4.17.12
     "@types/node": ^20.10.3
-    "@types/qs": ^6.9.8
+    "@types/qs": ^6.9.10
     "@types/react-dom": ^18.2.15
     "@types/react-router-dom": ^5.3.3
     "@types/react-syntax-highlighter": ^15.5.10
@@ -2732,10 +2732,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/qs@npm:^6.9.8":
-  version: 6.9.8
-  resolution: "@types/qs@npm:6.9.8"
-  checksum: c28e07d00d07970e5134c6eed184a0189b8a4649e28fdf36d9117fe671c067a44820890de6bdecef18217647a95e9c6aebdaaae69f5fe4b0bec9345db885f77e
+"@types/qs@npm:^6.9.10":
+  version: 6.9.10
+  resolution: "@types/qs@npm:6.9.10"
+  checksum: 3e479ee056bd2b60894baa119d12ecd33f20a25231b836af04654e784c886f28a356477630430152a86fba253da65d7ecd18acffbc2a8877a336e75aa0272c67
   languageName: node
   linkType: hard
 
