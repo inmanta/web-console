@@ -167,7 +167,7 @@ const Canvas = ({
             service_entity: cell.entityName,
             config: {},
             action: null,
-            value: cell.instanceAttributes,
+            attributes: cell.instanceAttributes,
             embeddedTo: cell.embeddedTo,
             relatedTo: cell.relatedTo,
           });

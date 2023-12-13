@@ -263,6 +263,7 @@ const doesElementIsEmbeddedWithExhaustedConnections = (
 export const shapesDataTransform = (
   instances: InstanceForApi[],
   instance: InstanceForApi,
+  serviceModel: ServiceModel | EmbeddedEntity,
   isEmbedded = false,
 ) => {
   let areEmbeddedEdited = false;
@@ -287,34 +288,52 @@ export const shapesDataTransform = (
       if (instancesToEmbed.length > 1) {
         const updated: InstanceAttributeModel[] = [];
         instancesToEmbed.forEach((instance) => {
-          const updatedInstance = shapesDataTransform(
-            notMatchingInstances,
-            instance,
-            true,
+          const embeddedModel = serviceModel.embedded_entities.find(
+            (entity) => entity.name === instancesToEmbed[0].service_entity,
           );
+          if (embeddedModel) {
+            const updatedInstance = shapesDataTransform(
+              notMatchingInstances,
+              instance,
+              embeddedModel,
+              true,
+            );
 
-          areEmbeddedEdited =
-            !areEmbeddedEdited &&
-            !instance.action &&
-            updatedInstance.action !== null;
+            if (!areEmbeddedEdited) {
+              areEmbeddedEdited =
+                !instance.action && updatedInstance.action !== null;
+            }
 
-          if (updatedInstance.action !== "delete") {
-            updated.push(updatedInstance.attributes as InstanceAttributeModel);
+            if (updatedInstance.action !== "delete") {
+              updated.push(
+                updatedInstance.attributes as InstanceAttributeModel,
+              );
+            }
           }
         });
 
         instance.attributes[key] = updated;
       } else {
-        const data = shapesDataTransform(
-          notMatchingInstances,
-          instancesToEmbed[0],
-          true,
+        const embeddedModel = serviceModel.embedded_entities.find(
+          (entity) => entity.name === instancesToEmbed[0].service_entity,
         );
-
-        areEmbeddedEdited = instance.action === null && data.action !== null;
-
-        if (data.action !== "delete") {
-          instance.attributes[key] = data.attributes;
+        if (embeddedModel) {
+          const data = shapesDataTransform(
+            notMatchingInstances,
+            instancesToEmbed[0],
+            embeddedModel,
+            true,
+          );
+          if (!areEmbeddedEdited) {
+            areEmbeddedEdited =
+              instance.action === null && data.action !== null;
+          }
+          if (data.action !== "delete") {
+            instance.attributes[key] =
+              embeddedModel.upper_limit && embeddedModel.upper_limit === 1
+                ? data.attributes
+                : [data.attributes];
+          }
         }
       }
     }
@@ -388,8 +407,15 @@ export const bundleInstances = (
   const embeddedInstances = deepCopiedMapToArray.filter(
     (instance) => !topServicesNames.includes(instance.service_entity),
   );
+  return topInstances.map((instance) => {
+    const serviceModel = services.find(
+      (service) => service.name === instance.service_entity,
+    );
 
-  return topInstances.map((instance) =>
-    shapesDataTransform(embeddedInstances, instance),
-  );
+    return shapesDataTransform(
+      embeddedInstances,
+      instance,
+      serviceModel as ServiceModel,
+    );
+  });
 };

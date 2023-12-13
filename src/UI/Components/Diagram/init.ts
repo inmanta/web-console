@@ -193,18 +193,12 @@ export default function diagramInit(
       target.id as dia.Cell.ID,
     ) as ServiceEntityBlock;
 
-    if (
-      sourceCell.get("isEmbedded") &&
-      sourceCell.get("isEmbeddedTo") !== null
-    ) {
-      sourceCell.set("isEmbeddedTo", targetCell.id);
+    if (sourceCell.get("isEmbedded") && sourceCell.get("embeddedTo") !== null) {
+      sourceCell.set("embeddedTo", targetCell.id);
       didSourceChanged = true;
     }
-    if (
-      targetCell.get("isEmbedded") &&
-      targetCell.get("isEmbeddedTo") !== null
-    ) {
-      targetCell.set("isEmbeddedTo", sourceCell.id);
+    if (targetCell.get("isEmbedded") && targetCell.get("embeddedTo") !== null) {
+      targetCell.set("embeddedTo", sourceCell.id);
       didTargetChanged = true;
     }
 
