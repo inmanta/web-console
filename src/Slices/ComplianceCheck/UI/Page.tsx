@@ -31,6 +31,7 @@ export const View: React.FC<Props> = ({ version }) => {
   const [selectedReport, setSelectedReport] = useState<MaybeReport>(
     Maybe.none(),
   );
+  const [searchFilter, setSearchFilter] = useState("");
   const firstReport = useRef<MaybeReport>(Maybe.none());
 
   /**
@@ -95,9 +96,11 @@ export const View: React.FC<Props> = ({ version }) => {
               selectedReport={selectedReport}
               reportsData={data}
             />
-            <DiffWizard.StatusFilter
+            <DiffWizard.DiffPageFilter
               statuses={statuses}
               setStatuses={setStatuses}
+              searchFilter={searchFilter}
+              setSearchFilter={setSearchFilter}
             />
             <TriggerDryRunAction version={version} updateList={updateList} />
           </ToolbarContent>
@@ -107,6 +110,7 @@ export const View: React.FC<Props> = ({ version }) => {
         report={selectedReport}
         version={version}
         statuses={statuses}
+        searchFilter={searchFilter}
       />
     </>
   );
