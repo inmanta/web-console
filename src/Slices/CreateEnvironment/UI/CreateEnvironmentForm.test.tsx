@@ -64,7 +64,7 @@ test("Given CreateEnvironmentForm When project and environment are not set Then 
   expect(await screen.findByRole("button", { name: "submit" })).toBeDisabled();
 });
 
-test("Given CreateEnvironmentForm When project and no projects are known, THEN cannot add empty project name", async () => {
+test("Given CreateEnvironmentForm When no projects are known, THEN cannot add empty project name", async () => {
   const { component, apiHelper } = setup();
   render(component);
 
