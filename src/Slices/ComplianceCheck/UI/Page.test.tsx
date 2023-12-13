@@ -288,3 +288,54 @@ test("GIVEN ComplianceCheck page WHEN StatusFilter = 'Added' THEN only 'Added' r
 
   expect(await screen.findAllByTestId("DiffBlock")).toHaveLength(2);
 });
+
+test("GIVEN ComplianceCheck page WHEN SearchFilter is used, ONLY show the resources matching the search value", async () => {
+  const { apiHelper, component } = setup();
+  render(component);
+
+  await act(async () => {
+    await apiHelper.resolve(Either.right(Mock.listResponse));
+  });
+
+  await act(async () => {
+    await apiHelper.resolve(Either.right(Mock.reportResponse));
+  });
+
+  await act(async () => {
+    await userEvent.click(
+      screen.getByRole("button", { name: words("jumpTo") }),
+    );
+  });
+
+  expect(
+    screen.getAllByRole("listitem", { name: "DiffSummaryListItem" }),
+  ).toHaveLength(11);
+
+  expect(await screen.findAllByTestId("DiffBlock")).toHaveLength(11);
+
+  await act(async () => {
+    await userEvent.type(
+      screen.getByRole("searchbox", { name: "SearchFilter" }),
+      "lsm",
+    );
+  });
+
+  expect(await screen.findAllByTestId("DiffBlock")).toHaveLength(10);
+
+  await act(async () => {
+    await userEvent.type(
+      screen.getByRole("searchbox", { name: "SearchFilter" }),
+      "44554",
+    );
+  });
+
+  expect(screen.queryAllByTestId("DiffBlock")).toHaveLength(0);
+
+  await act(async () => {
+    await userEvent.clear(
+      screen.getByRole("searchbox", { name: "SearchFilter" }),
+    );
+  });
+
+  expect(await screen.findAllByTestId("DiffBlock")).toHaveLength(11);
+});
