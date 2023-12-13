@@ -1,0 +1,6 @@
+description: "Prevent the user from creating a project name that could be an empty value."
+issue-nr: 5276
+change-type: patch
+destination-branches: [master, iso7]
+sections:
+  minor-improvement: "{{description}}"
