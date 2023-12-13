@@ -2,8 +2,11 @@ import { InstanceAttributeModel } from "@/Core";
 import { Service, ServiceInstance } from "@/Test";
 import * as uuidApi from "../../../Slices/EditInstance/Data/CommandManager";
 import {
+  childModel,
+  containerModel,
   relatedServices,
   testApiInstance,
+  testApiInstanceModel,
   testEmbeddedApiInstances,
 } from "./Mock";
 import {
@@ -233,7 +236,11 @@ describe("shapesDataTransform", () => {
         return { ...instance, action: "create" };
       },
     );
-    const result = shapesDataTransform(createdEmbedded, createdObject);
+    const result = shapesDataTransform(
+      createdEmbedded,
+      createdObject,
+      testApiInstanceModel,
+    );
     expect(result).toMatchObject({
       instance_id: "ae6c9dd7-5392-4374-9f13-df3bb42bf0db",
       service_entity: "embedded-entity-service",
@@ -296,7 +303,11 @@ describe("shapesDataTransform", () => {
         },
       ],
     };
-    const result = shapesDataTransform(createdEmbedded, createdObject);
+    const result = shapesDataTransform(
+      createdEmbedded,
+      createdObject,
+      testApiInstanceModel,
+    );
     expect(result).toMatchObject(expectedResult);
 
     //simulate that One isn't changed, second is added
@@ -305,7 +316,11 @@ describe("shapesDataTransform", () => {
       { ...testEmbeddedApiInstances[1], action: "create" },
     ];
 
-    const result2 = shapesDataTransform(createdEmbedded2, createdObject);
+    const result2 = shapesDataTransform(
+      createdEmbedded2,
+      createdObject,
+      testApiInstanceModel,
+    );
     expect(result2).toMatchObject(expectedResult);
 
     //simulate that One is changed, second is added
@@ -313,7 +328,11 @@ describe("shapesDataTransform", () => {
       { ...testEmbeddedApiInstances[0], action: "update" },
       { ...testEmbeddedApiInstances[1], action: "create" },
     ];
-    const result3 = shapesDataTransform(createdEmbedded3, createdObject);
+    const result3 = shapesDataTransform(
+      createdEmbedded3,
+      createdObject,
+      testApiInstanceModel,
+    );
     expect(result3).toMatchObject(expectedResult);
   });
 
@@ -347,7 +366,11 @@ describe("shapesDataTransform", () => {
         },
       ],
     };
-    const result = shapesDataTransform(createdEmbedded, createdObject);
+    const result = shapesDataTransform(
+      createdEmbedded,
+      createdObject,
+      testApiInstanceModel,
+    );
     expect(result).toMatchObject(expectedResult);
   });
   it("correctly creates object if it is core values are edited", () => {
@@ -386,7 +409,11 @@ describe("shapesDataTransform", () => {
         },
       ],
     };
-    const result = shapesDataTransform(createdEmbedded, createdObject);
+    const result = shapesDataTransform(
+      createdEmbedded,
+      createdObject,
+      testApiInstanceModel,
+    );
     expect(result).toMatchObject(expectedResult);
 
     const createdEmbedded2: InstanceForApi[] = testEmbeddedApiInstances.map(
@@ -394,16 +421,25 @@ describe("shapesDataTransform", () => {
         return { ...instance, action: "update" };
       },
     );
-    const result2 = shapesDataTransform(createdEmbedded2, createdObject);
+    const result2 = shapesDataTransform(
+      createdEmbedded2,
+      createdObject,
+      testApiInstanceModel,
+    );
     expect(result2).toMatchObject(expectedResult);
 
     const createdEmbedded3: InstanceForApi[] = [
       { ...testEmbeddedApiInstances[0], action: null },
       { ...testEmbeddedApiInstances[1], action: "create" },
     ];
-    const result3 = shapesDataTransform(createdEmbedded3, createdObject);
+    const result3 = shapesDataTransform(
+      createdEmbedded3,
+      createdObject,
+      testApiInstanceModel,
+    );
     expect(result3).toMatchObject(expectedResult);
   });
+
   it("correctly creates object if it has inter-service relations", () => {
     const expectedResult = {
       instance_id: "13920268-cce0-4491-93b5-11316aa2fc37",
@@ -417,7 +453,11 @@ describe("shapesDataTransform", () => {
         parent_entity: "6af44f75-ba4b-4fba-9186-cc61c3c9463c",
       },
     };
-    const result = shapesDataTransform(relatedServices, relatedServices[0]);
+    const result = shapesDataTransform(
+      relatedServices,
+      relatedServices[0],
+      childModel,
+    );
     expect(result).toMatchObject(expectedResult);
   });
 
@@ -437,7 +477,11 @@ describe("shapesDataTransform", () => {
         },
       },
     };
-    const result = shapesDataTransform(relatedServices, relatedServices[1]);
+    const result = shapesDataTransform(
+      relatedServices,
+      relatedServices[1],
+      containerModel,
+    );
     expect(result).toMatchObject(expectedResult);
   });
 });
