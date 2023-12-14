@@ -68,7 +68,7 @@ export const SingleTextSelect: React.FC<Props> = ({
       setIsOpen(true);
     }
 
-    if (filterValue && hasCreation) {
+    if (filterValue && hasCreation && filterValue.trim()) {
       let newSelectOptions: SelectOptionProps[] = options;
       newSelectOptions = options.filter((menuItem) =>
         String(menuItem.children)
@@ -104,7 +104,11 @@ export const SingleTextSelect: React.FC<Props> = ({
           isDisabled: true,
         },
       ]);
-    } else if (options.length === 0 && hasCreation) {
+    } else if (
+      options.length === 0 &&
+      hasCreation &&
+      filterValue.trim() != ""
+    ) {
       setSelectOptions([
         { children: `Create "${inputValue}"`, value: "create" },
       ]);
