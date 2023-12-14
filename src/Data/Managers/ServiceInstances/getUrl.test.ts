@@ -95,3 +95,37 @@ test("getUrl returns correct url for empty filter", () => {
     `/lsm/v1/service_inventory/${name}?include_deployment_progress=True&limit=50`,
   );
 });
+
+test("getUrl returns correct url for no filter & no sort", () => {
+  const name = "service_a";
+  const startQuery = "start=2023-12-13T08%3A33%3A15.180818%2B00%3A00";
+  const query: Query.SubQuery<"GetServiceInstances"> = {
+    kind: "GetServiceInstances",
+    name,
+    filter: undefined,
+    sort: undefined,
+    pageSize: PageSize.initial,
+    currentPage: {
+      kind: "CurrentPage",
+      value: startQuery,
+    },
+  };
+
+  expect(getUrl(query)).toMatch(
+    `/lsm/v1/service_inventory/${name}?include_deployment_progress=True&limit=20&${startQuery}`,
+  );
+
+  const endQuery = "end%3D2023-12-13T08%253A33%253A15.192674%252B00%253A00";
+
+  expect(
+    getUrl({
+      ...query,
+      currentPage: {
+        kind: "CurrentPage",
+        value: endQuery,
+      },
+    }),
+  ).toMatch(
+    `/lsm/v1/service_inventory/${name}?include_deployment_progress=True&limit=20&${endQuery}`,
+  );
+});
