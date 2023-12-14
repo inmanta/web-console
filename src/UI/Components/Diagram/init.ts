@@ -213,7 +213,10 @@ export default function diagramInit(
       );
 
       if (doesSourceHaveRule) {
-        sourceCell.addRelation(targetCell.id as string, targetName);
+        sourceCell.addRelation(
+          targetCell.id as string,
+          doesSourceHaveRule.attrName as string,
+        );
         didSourceChanged = true;
       }
     }
@@ -224,7 +227,10 @@ export default function diagramInit(
       );
 
       if (doesTargetHaveRule) {
-        targetCell.addRelation(sourceCell.id as string, sourceName);
+        targetCell.addRelation(
+          sourceCell.id as string,
+          doesTargetHaveRule.attrName as string,
+        );
         didTargetChanged = true;
       }
     }

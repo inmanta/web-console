@@ -76,6 +76,7 @@ export const createConnectionRules = (
       service.inter_service_relations.map((relation) => {
         tempRules.push({
           name: relation.entity_type,
+          attrName: relation.name,
           type: TypeEnum.INTERSERVICE,
           lowerLimit: relation.lower_limit || null,
           upperLimit: relation.upper_limit || null,
@@ -341,7 +342,10 @@ export const shapesDataTransform = (
 
   //convert relatedTo property into valid attribute
   if (instance.relatedTo) {
-    instance.relatedTo.forEach((attrName, id) => {
+    instance.relatedTo.forEach((test, testOne) => {
+      console.log(test, testOne);
+    });
+    instance.relatedTo.forEach(([id, attrName]) => {
       if (instance.attributes) {
         instance.attributes[attrName] = id;
       }
