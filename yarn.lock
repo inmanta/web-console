@@ -1428,7 +1428,7 @@ __metadata:
     cypress-multi-reporters: ^1.6.4
     dagre: ^0.8.5
     dotenv-webpack: ^8.0.1
-    easy-peasy: ^6.0.2
+    easy-peasy: ^6.0.4
     eslint: ^8.52.0
     eslint-config-prettier: ^9.0.0
     eslint-import-resolver-typescript: ^3.6.1
@@ -6485,9 +6485,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"easy-peasy@npm:^6.0.2":
-  version: 6.0.2
-  resolution: "easy-peasy@npm:6.0.2"
+"easy-peasy@npm:^6.0.4":
+  version: 6.0.4
+  resolution: "easy-peasy@npm:6.0.4"
   dependencies:
     "@babel/runtime": ^7.22.6
     fast-deep-equal: ^3.1.3
@@ -6511,7 +6511,7 @@ __metadata:
       optional: true
     react-native:
       optional: true
-  checksum: 07f5bb3a89467af68a6a6988514fba04f9da6caf3d13669368f03febad93b72a813333017bda87f8062e6c6220734e5d59f504e8df78df51875e52c50477a397
+  checksum: 763b5538946775583d4fc4a45981bad56bada9cf0a3b379c0ff4e53313f060eb815281019c0c640bcc65906b181e1746d289444ec915bcc7d970f0fd438f0a50
   languageName: node
   linkType: hard
 
