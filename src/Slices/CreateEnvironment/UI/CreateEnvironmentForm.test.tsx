@@ -64,6 +64,47 @@ test("Given CreateEnvironmentForm When project and environment are not set Then 
   expect(await screen.findByRole("button", { name: "submit" })).toBeDisabled();
 });
 
+test("Given CreateEnvironmentForm When no projects are known, THEN cannot add empty project name", async () => {
+  const { component, apiHelper } = setup();
+  render(component);
+
+  await act(async () => {
+    apiHelper.resolve(
+      Either.right({
+        data: [],
+      }),
+    );
+  });
+
+  const inputProject = await screen.findByRole("combobox", {
+    name: "Project Name-select-toggleFilterInput",
+  });
+
+  await act(async () => {
+    await userEvent.click(inputProject);
+  });
+
+  expect(screen.queryByRole("option")).not.toBeInTheDocument();
+
+  await act(async () => {
+    await userEvent.type(inputProject, "    ");
+  });
+
+  expect(screen.queryByRole("option")).not.toBeInTheDocument();
+
+  await act(async () => {
+    await userEvent.clear(inputProject);
+  });
+
+  expect(screen.queryByRole("option")).not.toBeInTheDocument();
+
+  await act(async () => {
+    await userEvent.type(inputProject, "test");
+  });
+
+  expect(screen.getByRole("option")).toBeInTheDocument();
+});
+
 test(`Given CreateEnvironmentForm When an existing project and valid environment are set and submit is clicked Then sends the correct request`, async () => {
   const { component, apiHelper } = setup();
   render(component);
