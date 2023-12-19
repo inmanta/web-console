@@ -115,7 +115,7 @@ test("getUrl returns correct url for no filter & no sort", () => {
     `/lsm/v1/service_inventory/${name}?include_deployment_progress=True&limit=20&${startQuery}`,
   );
 
-  const endQuery = "end%3D2023-12-13T08%253A33%253A15.192674%252B00%253A00";
+  const endQuery = "end=%3D2023-12-13T08%253A33%253A15.192674%252B00%253A00";
 
   expect(
     getUrl({
