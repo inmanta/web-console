@@ -530,6 +530,11 @@ export function appendColumns(
 
   if (isInitial) {
     serviceEntity.appendColumns(attributes);
+
+    //for initial appending instanceAttributes are equal sanitized ones
+    if (!serviceEntity.get("sanitizedAttrs")) {
+      serviceEntity.set("sanitizedAttrs", instanceAttributes);
+    }
   } else {
     serviceEntity.editColumns(attributes, serviceEntity.attributes.isCollapsed);
   }

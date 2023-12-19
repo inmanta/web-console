@@ -288,16 +288,15 @@ export const shapesDataTransform = (
     if (instance.attributes) {
       const updated: InstanceAttributeModel[] = [];
       let shouldEmbeddedBeSingular = false;
-
       //iterate through instancesToEmbed to recursively joint potential nested embedded entities into correct objects in correct state
-      instancesToEmbed.forEach((instance) => {
+      instancesToEmbed.forEach((instanceToEmbed) => {
         const embeddedModel = serviceModel.embedded_entities.find(
           (entity) => entity.name === instancesToEmbed[0].service_entity,
         );
         if (embeddedModel) {
           const updatedInstance = shapesDataTransform(
             notMatchingInstances,
-            instance,
+            instanceToEmbed,
             embeddedModel,
             !!embeddedModel,
           );
@@ -326,10 +325,7 @@ export const shapesDataTransform = (
 
   //convert relatedTo property into valid attribute
   if (instance.relatedTo) {
-    instance.relatedTo.forEach((test, testOne) => {
-      console.log(test, testOne);
-    });
-    instance.relatedTo.forEach(([id, attrName]) => {
+    Array.from(instance.relatedTo).forEach(([id, attrName]) => {
       if (instance.attributes) {
         instance.attributes[attrName] = id;
       }
