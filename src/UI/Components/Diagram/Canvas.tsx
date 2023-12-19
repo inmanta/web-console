@@ -82,6 +82,7 @@ const Canvas = ({
       if (response.ok) {
         setAlertType(AlertVariant.success);
         setAlertMessage(words("inventory.instanceComposer.success"));
+        //If response is successful then show feedback notification and redirect user to the service inventory view
         setTimeout(() => {
           navigate(url);
         }, 1000);

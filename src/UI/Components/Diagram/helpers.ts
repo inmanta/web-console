@@ -286,57 +286,41 @@ export const shapesDataTransform = (
 
   for (const [key, instancesToEmbed] of Object.entries(groupedEmbedded)) {
     if (instance.attributes) {
-      if (instancesToEmbed.length > 1) {
-        const updated: InstanceAttributeModel[] = [];
-        instancesToEmbed.forEach((instance) => {
-          const embeddedModel = serviceModel.embedded_entities.find(
-            (entity) => entity.name === instancesToEmbed[0].service_entity,
-          );
-          if (embeddedModel) {
-            const updatedInstance = shapesDataTransform(
-              notMatchingInstances,
-              instance,
-              embeddedModel,
-              true,
-            );
+      const updated: InstanceAttributeModel[] = [];
+      let shouldEmbeddedBeSingular = false;
 
-            if (!areEmbeddedEdited) {
-              areEmbeddedEdited =
-                !instance.action && updatedInstance.action !== null;
-            }
-
-            if (updatedInstance.action !== "delete") {
-              updated.push(
-                updatedInstance.attributes as InstanceAttributeModel,
-              );
-            }
-          }
-        });
-
-        instance.attributes[key] = updated;
-      } else {
+      //iterate through instancesToEmbed to recursively joint potential nested embedded entities into correct objects in correct state
+      instancesToEmbed.forEach((instance) => {
         const embeddedModel = serviceModel.embedded_entities.find(
           (entity) => entity.name === instancesToEmbed[0].service_entity,
         );
         if (embeddedModel) {
-          const data = shapesDataTransform(
+          const updatedInstance = shapesDataTransform(
             notMatchingInstances,
-            instancesToEmbed[0],
+            instance,
             embeddedModel,
-            true,
+            !!embeddedModel,
           );
+
           if (!areEmbeddedEdited) {
             areEmbeddedEdited =
-              instance.action === null && data.action !== null;
+              !instance.action && updatedInstance.action !== null;
           }
-          if (data.action !== "delete") {
-            instance.attributes[key] =
-              embeddedModel.upper_limit && embeddedModel.upper_limit === 1
-                ? data.attributes
-                : [data.attributes];
+
+          shouldEmbeddedBeSingular =
+            !!embeddedModel.upper_limit && embeddedModel.upper_limit === 1;
+
+          if (
+            updatedInstance.action !== "delete" &&
+            updatedInstance.attributes
+          ) {
+            updated.push(updatedInstance.attributes);
           }
         }
-      }
+      });
+
+      instance.attributes[key] =
+        updated.length === 1 && shouldEmbeddedBeSingular ? updated[0] : updated;
     }
   }
 
