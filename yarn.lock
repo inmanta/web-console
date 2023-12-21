@@ -1409,7 +1409,7 @@ __metadata:
     "@types/lodash-es": ^4.17.12
     "@types/node": ^20.10.3
     "@types/qs": ^6.9.10
-    "@types/react-dom": ^18.2.15
+    "@types/react-dom": ^18.2.18
     "@types/react-router-dom": ^5.3.3
     "@types/react-syntax-highlighter": ^15.5.10
     "@types/styled-components": ^5.1.26
@@ -2755,12 +2755,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:^18.2.15":
-  version: 18.2.15
-  resolution: "@types/react-dom@npm:18.2.15"
+"@types/react-dom@npm:^18.2.18":
+  version: 18.2.18
+  resolution: "@types/react-dom@npm:18.2.18"
   dependencies:
     "@types/react": "*"
-  checksum: 8e9631600c21ff561328e38a951d1991b3b3b20f538af4c0efbd1327c883a5573a63f50e1b945c34fa51b114b30e1ca5e62317bd54f21e063d6697b4be843a03
+  checksum: 8e3da404c980e2b2a76da3852f812ea6d8b9d0e7f5923fbaf3bfbbbfa1d59116ff91c129de8f68e9b7668a67ae34484fe9df74d5a7518cf8591ec07a0c4dad57
   languageName: node
   linkType: hard
 
