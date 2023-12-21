@@ -28,9 +28,9 @@
     "check-circular-deps": "madge --circular ./src/index.tsx",
     "install:orchestrator:keycloak": "sh ./shell-scripts/setup-keycloak.sh version='oss' release='dev' branch='oss_case_1'",
     "install:orchestrator": "sh ./shell-scripts/setup-orchestrator.sh flag='-ti'",
-    "install:orchestrator:iso": "sh ./shell-scripts/setup-orchestrator.sh flag='-ti'",
+    "install:orchestrator:iso": "sh ./shell-scripts/setup-orchestrator.sh flag='-ti' release='6-dev'",
     "install:orchestrator:oss": "sh ./shell-scripts/setup-orchestrator.sh flag='-ti' version='oss' release='dev' branch='oss_case_1'",
-    "install:orchestrator:ci": "sh ./shell-scripts/setup-orchestrator.sh",
+    "install:orchestrator:ci": "sh ./shell-scripts/setup-orchestrator.sh release='6-dev'",
     "kill-server": "sh ./shell-scripts/clear-server.sh",
     "update:dist": "docker exec inmanta_orchestrator rm -rf /usr/share/inmanta/web-console && docker cp dist inmanta_orchestrator:/usr/share/inmanta/web-console"
   },
