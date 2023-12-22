@@ -1391,7 +1391,7 @@ __metadata:
     "@inmanta/rappid": ^3.7.0
     "@patternfly/react-charts": ^7.1.1
     "@patternfly/react-core": ^5.1.1
-    "@patternfly/react-icons": ^5.1.1
+    "@patternfly/react-icons": ^5.1.2
     "@patternfly/react-styles": ^5.1.1
     "@patternfly/react-table": ^5.1.1
     "@patternfly/react-tokens": ^5.1.1
@@ -2007,6 +2007,16 @@ __metadata:
     react: ^17 || ^18
     react-dom: ^17 || ^18
   checksum: e557055ed9a4f4e6e53b1fcded3f8c95b060b122d25cb83d5467f2ea3e852d6eb32743d07750eb6cde983b766f96cb968e11afa410149a8e404c1855434e3856
+  languageName: node
+  linkType: hard
+
+"@patternfly/react-icons@npm:^5.1.2":
+  version: 5.1.2
+  resolution: "@patternfly/react-icons@npm:5.1.2"
+  peerDependencies:
+    react: ^17 || ^18
+    react-dom: ^17 || ^18
+  checksum: 67bc3c291f5b01f949e29b03f65079c4fe996710cee766e2c696ab7b31cd4370b6960ba40f782a6e401efc635a0389b9402368fefe7d5cebe85a560af9450801
   languageName: node
   linkType: hard
 
