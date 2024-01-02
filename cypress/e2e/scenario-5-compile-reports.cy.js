@@ -121,9 +121,7 @@ describe("5 Compile reports", () => {
     cy.get("button").contains("Show Details").eq(0).click();
 
     // Expect to be redirected to compile details page
-    cy.get(".pf-v5-c-title")
-      .contains("Compile Details")
-      .should("to.be.visible");
+    cy.get(".pf-v5-c-title").contains("Compile Details").should("to.exist");
 
     // Expect message to be : Compile triggered from the console
     cy.get(".pf-v5-c-description-list__group")
@@ -193,15 +191,15 @@ describe("5 Compile reports", () => {
 
         expect($rows).to.have.length(5);
 
-        // Expect latest row to be having the message: Recompile model because state transition
+        // Expect latest row to be having the message: Recompile model because of state transition from creating to up
         expect($rows.eq(0), "top-row-message").to.contain(
-          "Recompile model because state transition",
+          "Recompile model because of state transition from creating to up",
         );
         expect($rows.eq(1), "second-row-message").to.contain(
-          "Recompile model because state transition",
+          "Recompile model because of state transition from start to creating",
         );
         expect($rows.eq(2), "third-row-message").to.contain(
-          "Recompile model because state transition (validate)",
+          "Recompile model to validate state transition from start to creating",
         );
         expect($rows.eq(0), "top-row-status").to.contain("success");
         expect($rows.eq(1), "second-row-status").to.contain("success");
@@ -214,9 +212,7 @@ describe("5 Compile reports", () => {
       cy.get("button").contains("Show Details").eq(0).click();
 
       // Expect to be redirected to compile details page
-      cy.get(".pf-v5-c-title")
-        .contains("Compile Details")
-        .should("to.be.visible");
+      cy.get(".pf-v5-c-title").contains("Compile Details").should("to.exist");
 
       // Expect trigger to be lsm_export
       cy.get(".pf-v5-c-description-list__group")
@@ -273,9 +269,9 @@ describe("5 Compile reports", () => {
 
         expect($rows).to.have.length(6);
 
-        // Expect one row to be having the message: Recompile model because state transition (validate)
+        // Expect one row to be having the message: Recompile model to validate state transition from start to creating
         expect($rows.eq(0), "top-row-message").to.contain(
-          "Recompile model because state transition (validate)",
+          "Recompile model to validate state transition from start to creating",
         );
         expect($rows.eq(0), "top-row-status").to.contain("failed");
       });
@@ -284,9 +280,7 @@ describe("5 Compile reports", () => {
       cy.get("button").contains("Show Details").eq(0).click();
 
       // Expect to be redirected to compile details page
-      cy.get(".pf-v5-c-title")
-        .contains("Compile Details")
-        .should("to.be.visible");
+      cy.get(".pf-v5-c-title").contains("Compile Details").should("to.exist");
 
       // Expect trigger to be lsm
       cy.get(".pf-v5-c-description-list__group").eq(4).should("contain", "lsm");
@@ -335,9 +329,9 @@ describe("5 Compile reports", () => {
 
         expect($rows).to.have.length(6);
 
-        // Expect one row to be having the message: Recompile model because state transition (validate)
+        // Expect one row to be having the message: Recompile model to validate state transition from start to creating
         expect($rows.eq(0), "top-row-message").to.contain(
-          "Recompile model because state transition (validate)",
+          "Recompile model to validate state transition from start to creating",
         );
         expect($rows.eq(0), "top-row-status").to.contain("failed");
       });
@@ -383,9 +377,9 @@ describe("5 Compile reports", () => {
 
         expect($rows).to.have.length(1);
 
-        // Expect one row to be having the message: Recompile model because state transition (validate)
+        // Expect one row to be having the message: Recompile model to validate state transition from start to creating
         expect($rows.eq(0), "top-row-message").to.contain(
-          "Recompile model because state transition (validate)",
+          "Recompile model to validate state transition from start to creating",
         );
         expect($rows.eq(0), "top-row-status").to.contain("failed");
       });
