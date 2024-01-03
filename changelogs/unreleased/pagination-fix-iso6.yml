@@ -1,5 +1,0 @@
-description: "Fix for pagination in Service Inventory + tests"
-change-type: patch
-destination-branches: [iso6]
-sections:
-  bugfix: "{{description}}"
