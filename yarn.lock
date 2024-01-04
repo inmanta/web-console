@@ -1428,7 +1428,7 @@ __metadata:
     "@testing-library/react": ^13.4.0
     "@testing-library/user-event": ^14.5.1
     "@types/backbone": ^1.4.16
-    "@types/fetch-mock": ^7.3.5
+    "@types/fetch-mock": ^7.3.8
     "@types/file-saver": ^2.0.7
     "@types/jest": ^29.5.8
     "@types/json-bigint": ^1.0.3
@@ -2526,10 +2526,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/fetch-mock@npm:^7.3.5":
-  version: 7.3.5
-  resolution: "@types/fetch-mock@npm:7.3.5"
-  checksum: b45cd6ba39d678c9f7557eaed804845408a6c7538293c33b48b7f7adda0feae877bf67968325e419a8df3a06ef572a6dd64a1ff3337b954c07d5527e88915689
+"@types/fetch-mock@npm:^7.3.8":
+  version: 7.3.8
+  resolution: "@types/fetch-mock@npm:7.3.8"
+  checksum: 6a4b46ce0675a7cced4cc64d3effbdaa7e6ca50df5188c9f0dcee8e6e0ef1cf624691206dce06e8d3b706e93fb0ce1e7aa33f229743aebd8e58ffefa890f00f7
   languageName: node
   linkType: hard
 

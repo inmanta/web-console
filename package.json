@@ -55,7 +55,7 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^14.5.1",
     "@types/backbone": "^1.4.16",
-    "@types/fetch-mock": "^7.3.5",
+    "@types/fetch-mock": "^7.3.8",
     "@types/file-saver": "^2.0.7",
     "@types/jest": "^29.5.8",
     "@types/json-bigint": "^1.0.3",
