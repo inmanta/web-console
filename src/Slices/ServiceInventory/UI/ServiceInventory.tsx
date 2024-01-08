@@ -93,7 +93,7 @@ export const ServiceInventory: React.FunctionComponent<{
             setCurrentPage={setCurrentPage}
           />
         }
-        showInstanceComposer={features.includes("instanceComposer")}
+        showInstanceComposer={features && features.includes("instanceComposer")}
       />
       <GetInstancesContext.Provider value={{ refetch: retry }}>
         {RemoteData.fold(
