@@ -327,7 +327,23 @@ export const shapesDataTransform = (
   if (instance.relatedTo) {
     Array.from(instance.relatedTo).forEach(([id, attrName]) => {
       if (instance.attributes) {
-        instance.attributes[attrName] = id;
+        const model = serviceModel.inter_service_relations?.find(
+          (relation) => relation.name === attrName,
+        );
+        if (model) {
+          if (model.upper_limit !== 1) {
+            instance.attributes[attrName];
+            if (Array.isArray(instance.attributes[attrName])) {
+              (instance.attributes[attrName] as string[]).push(id);
+            } else {
+              instance.attributes[attrName] = [id];
+            }
+          } else {
+            instance.attributes[attrName] = id;
+          }
+        } else {
+          instance.attributes[attrName] = id;
+        }
       }
     });
   }

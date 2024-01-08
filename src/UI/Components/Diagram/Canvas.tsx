@@ -156,7 +156,6 @@ const Canvas = ({
     const connectionRules = createConnectionRules(services, {});
     const actions = diagramInit(canvas, connectionRules, handleUpdate);
     setDiagramHandlers(actions);
-
     if (instance) {
       const isMainInstance = true;
       const cells = actions.addInstance(instance, services, isMainInstance);

@@ -627,22 +627,28 @@ function handleAttributes(
   });
 
   serviceModel.inter_service_relations?.forEach((relation) => {
-    const relationId = attributesValues[relation.name] as string;
+    const relationId = attributesValues[relation.name];
 
     if (relationId) {
-      instanceAsTable.addRelation(relationId, relation.name);
-      if (
-        instanceToConnectRelation &&
-        instanceToConnectRelation.id &&
-        relationId
-      ) {
-        connectEntities(
-          graph,
-          instanceAsTable,
-          [instanceToConnectRelation],
-          !serviceModel.strict_modifier_enforcement,
-        );
+      if (Array.isArray(relationId)) {
+        relationId.forEach((id) => {
+          instanceAsTable.addRelation(id, relation.name);
+        });
+      } else {
+        instanceAsTable.addRelation(relationId as string, relation.name);
       }
+    }
+    if (
+      instanceToConnectRelation &&
+      instanceToConnectRelation.id &&
+      relationId
+    ) {
+      connectEntities(
+        graph,
+        instanceAsTable,
+        [instanceToConnectRelation],
+        !serviceModel.strict_modifier_enforcement,
+      );
     }
   });
 }

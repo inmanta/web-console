@@ -185,6 +185,7 @@ export default function diagramInit(
     const target = linkView.model.target();
     let didSourceChanged = false;
     let didTargetChanged = false;
+    let didConnectionWasSet = false;
 
     const sourceCell = graph.getCell(
       source.id as dia.Cell.ID,
@@ -192,15 +193,6 @@ export default function diagramInit(
     const targetCell = graph.getCell(
       target.id as dia.Cell.ID,
     ) as ServiceEntityBlock;
-
-    if (sourceCell.get("isEmbedded") && sourceCell.get("embeddedTo") !== null) {
-      sourceCell.set("embeddedTo", targetCell.id);
-      didSourceChanged = true;
-    }
-    if (targetCell.get("isEmbedded") && targetCell.get("embeddedTo") !== null) {
-      targetCell.set("embeddedTo", sourceCell.id);
-      didTargetChanged = true;
-    }
 
     const sourceRelations = sourceCell.getRelations();
     const targetRelations = targetCell.getRelations();
@@ -218,6 +210,7 @@ export default function diagramInit(
           doesSourceHaveRule.attrName as string,
         );
         didSourceChanged = true;
+        didConnectionWasSet = true;
       }
     }
 
@@ -225,16 +218,32 @@ export default function diagramInit(
       const doesTargetHaveRule = connectionRules[targetName].find(
         (rule) => rule.name === sourceName,
       );
-
       if (doesTargetHaveRule) {
         targetCell.addRelation(
           sourceCell.id as string,
           doesTargetHaveRule.attrName as string,
         );
         didTargetChanged = true;
+        didConnectionWasSet = true;
       }
     }
 
+    if (!didConnectionWasSet) {
+      if (
+        sourceCell.get("isEmbedded") &&
+        sourceCell.get("embeddedTo") !== null
+      ) {
+        sourceCell.set("embeddedTo", targetCell.id);
+        didSourceChanged = true;
+      }
+      if (
+        targetCell.get("isEmbedded") &&
+        targetCell.get("embeddedTo") !== null
+      ) {
+        targetCell.set("embeddedTo", sourceCell.id);
+        didTargetChanged = true;
+      }
+    }
     if (didSourceChanged) {
       updateInstancesToSend(sourceCell, ActionEnum.UPDATE);
     }
