@@ -15,6 +15,7 @@ import {
 } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { useRouteParams } from "@/UI/Routing";
+import useFeatures from "@/UI/Utils/useFeatures";
 import { words } from "@/UI/words";
 import { Chart, TableControls } from "./Components";
 import { GetInstancesContext } from "./GetInstancesContext";
@@ -49,6 +50,7 @@ export const ServiceInventory: React.FunctionComponent<{
   intro?: ReactElement | null;
 }> = ({ serviceName, service, intro }) => {
   const { queryResolver } = useContext(DependencyContext);
+  const features = useFeatures();
 
   const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({
     route: "Inventory",
@@ -91,6 +93,7 @@ export const ServiceInventory: React.FunctionComponent<{
             setCurrentPage={setCurrentPage}
           />
         }
+        showInstanceComposer={features.includes("instanceComposer")}
       />
       <GetInstancesContext.Provider value={{ refetch: retry }}>
         {RemoteData.fold(
