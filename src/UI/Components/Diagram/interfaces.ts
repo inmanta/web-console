@@ -21,7 +21,7 @@ interface DictDialogData {
 interface Rule {
   name: string;
   type: TypeEnum;
-  attrName?: string; //only used for inter-service relations
+  attributeName?: string; //only used for inter-service relations
   lowerLimit: ParsedNumber | null;
   upperLimit: ParsedNumber | null;
   modifier: string;

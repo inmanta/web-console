@@ -76,7 +76,7 @@ export const createConnectionRules = (
       service.inter_service_relations.map((relation) => {
         tempRules.push({
           name: relation.entity_type,
-          attrName: relation.name,
+          attributeName: relation.name,
           type: TypeEnum.INTERSERVICE,
           lowerLimit: relation.lower_limit || null,
           upperLimit: relation.upper_limit || null,
@@ -287,12 +287,11 @@ export const shapesDataTransform = (
   for (const [key, instancesToEmbed] of Object.entries(groupedEmbedded)) {
     if (instance.attributes) {
       const updated: InstanceAttributeModel[] = [];
-      let shouldEmbeddedBeSingular = false;
-      //iterate through instancesToEmbed to recursively joint potential nested embedded entities into correct objects in correct state
+      const embeddedModel = serviceModel.embedded_entities.find(
+        (entity) => entity.name === instancesToEmbed[0].service_entity,
+      );
+      //iterate through instancesToEmbed to recursively join potential nested embedded entities into correct objects in correct state
       instancesToEmbed.forEach((instanceToEmbed) => {
-        const embeddedModel = serviceModel.embedded_entities.find(
-          (entity) => entity.name === instancesToEmbed[0].service_entity,
-        );
         if (embeddedModel) {
           const updatedInstance = shapesDataTransform(
             notMatchingInstances,
@@ -305,10 +304,6 @@ export const shapesDataTransform = (
             areEmbeddedEdited =
               !instance.action && updatedInstance.action !== null;
           }
-
-          shouldEmbeddedBeSingular =
-            !!embeddedModel.upper_limit && embeddedModel.upper_limit === 1;
-
           if (
             updatedInstance.action !== "delete" &&
             updatedInstance.attributes
@@ -319,30 +314,33 @@ export const shapesDataTransform = (
       });
 
       instance.attributes[key] =
-        updated.length === 1 && shouldEmbeddedBeSingular ? updated[0] : updated;
+        updated.length === 1 &&
+        isSingularRelation(embeddedModel as EmbeddedEntity)
+          ? updated[0]
+          : updated;
     }
   }
 
   //convert relatedTo property into valid attribute
   if (instance.relatedTo) {
-    Array.from(instance.relatedTo).forEach(([id, attrName]) => {
+    Array.from(instance.relatedTo).forEach(([id, attributeName]) => {
       if (instance.attributes) {
         const model = serviceModel.inter_service_relations?.find(
-          (relation) => relation.name === attrName,
+          (relation) => relation.name === attributeName,
         );
         if (model) {
           if (model.upper_limit !== 1) {
-            instance.attributes[attrName];
-            if (Array.isArray(instance.attributes[attrName])) {
-              (instance.attributes[attrName] as string[]).push(id);
+            instance.attributes[attributeName];
+            if (Array.isArray(instance.attributes[attributeName])) {
+              (instance.attributes[attributeName] as string[]).push(id);
             } else {
-              instance.attributes[attrName] = [id];
+              instance.attributes[attributeName] = [id];
             }
           } else {
-            instance.attributes[attrName] = id;
+            instance.attributes[attributeName] = id;
           }
         } else {
-          instance.attributes[attrName] = id;
+          instance.attributes[attributeName] = id;
         }
       }
     });
@@ -418,4 +416,8 @@ export const bundleInstances = (
       serviceModel as ServiceModel,
     );
   });
+};
+
+const isSingularRelation = (model: EmbeddedEntity) => {
+  return !!model.upper_limit && model.upper_limit === 1;
 };

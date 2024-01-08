@@ -36,10 +36,10 @@ export function showLinkTools(
 
   const targetName = targetCell.getName();
   const sourceName = sourceCell.getName();
-  const doesTargetHaveRule = connectionRules[targetName].find(
+  const targetConnectionRule = connectionRules[targetName].find(
     (rule) => rule.name === sourceName,
   );
-  const doesSourceHaveRule = connectionRules[sourceName].find(
+  const sourceConnectionRule = connectionRules[sourceName].find(
     (rule) => rule.name === targetName,
   );
 
@@ -50,15 +50,15 @@ export function showLinkTools(
 
   if (
     isSourceInEditMode &&
-    doesSourceHaveRule &&
-    doesSourceHaveRule.modifier !== "rw+"
+    sourceConnectionRule &&
+    sourceConnectionRule.modifier !== "rw+"
   ) {
     return;
   }
   if (
     isTargetInEditMode &&
-    doesTargetHaveRule &&
-    doesTargetHaveRule.modifier !== "rw+"
+    targetConnectionRule &&
+    targetConnectionRule.modifier !== "rw+"
   ) {
     return;
   }
@@ -233,10 +233,13 @@ export function appendInstance(
       const relations = cellAsBlock.getRelations();
 
       if (relations) {
-        const connectedInstance = Array.from(relations, ([id, attrName]) => ({
-          id,
-          attrName,
-        })).find(({ id }) => id === instanceAsTable.id);
+        const connectedInstance = Array.from(
+          relations,
+          ([id, attributeName]) => ({
+            id,
+            attributeName,
+          }),
+        ).find(({ id }) => id === instanceAsTable.id);
 
         if (connectedInstance) {
           isConnected = true;
@@ -258,7 +261,7 @@ export function appendInstance(
           if (neighborRelations) {
             const connectedInstance = Array.from(
               neighborRelations,
-              ([id, attrName]) => ({ id, attrName }),
+              ([id, attributeName]) => ({ id, attributeName }),
             ).find(({ id }) => id === instanceAsTable.id);
             if (connectedInstance) {
               isConnected = true;

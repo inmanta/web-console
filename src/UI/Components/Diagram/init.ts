@@ -200,14 +200,14 @@ export default function diagramInit(
     const sourceName = sourceCell.getName();
 
     if (sourceRelations) {
-      const doesSourceHaveRule = connectionRules[sourceName].find(
+      const sourceConnectionRule = connectionRules[sourceName].find(
         (rule) => rule.name === targetName,
       );
 
-      if (doesSourceHaveRule) {
+      if (sourceConnectionRule) {
         sourceCell.addRelation(
           targetCell.id as string,
-          doesSourceHaveRule.attrName as string,
+          sourceConnectionRule.attributeName as string,
         );
         didSourceChanged = true;
         didConnectionWasSet = true;
@@ -215,13 +215,13 @@ export default function diagramInit(
     }
 
     if (targetRelations) {
-      const doesTargetHaveRule = connectionRules[targetName].find(
+      const targetConnectionRule = connectionRules[targetName].find(
         (rule) => rule.name === sourceName,
       );
-      if (doesTargetHaveRule) {
+      if (targetConnectionRule) {
         targetCell.addRelation(
           sourceCell.id as string,
-          doesTargetHaveRule.attrName as string,
+          targetConnectionRule.attributeName as string,
         );
         didTargetChanged = true;
         didConnectionWasSet = true;

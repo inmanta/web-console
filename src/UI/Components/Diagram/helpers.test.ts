@@ -142,7 +142,7 @@ describe("createConnectionRules", () => {
       with_relations: [
         {
           name: "test_entity",
-          attrName: "test_entity",
+          attributeName: "test_entity",
           lowerLimit: 1,
           upperLimit: 5,
           modifier: "rw+",
@@ -166,7 +166,7 @@ describe("createConnectionRules", () => {
       ],
       another_embedded_single: [
         {
-          attrName: "related_service",
+          attributeName: "related_service",
           name: "test_entity",
           lowerLimit: null,
           upperLimit: null,
@@ -216,7 +216,7 @@ describe("createConnectionRules", () => {
           type: "embedded",
         },
         {
-          attrName: "related",
+          attributeName: "related",
           name: "subnet",
           lowerLimit: null,
           upperLimit: null,
