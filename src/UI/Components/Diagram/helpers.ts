@@ -227,7 +227,7 @@ const doesElementIsEmbeddedWithExhaustedConnections = (
   target: dia.Element,
 ): boolean => {
   const isSourceEmbedded = source.get("isEmbedded");
-  const sourceholderName = source.get("holderName");
+  const sourceHolderName = source.get("holderName");
 
   const isTargetBlocked = target.get("isBlockedFromEditing");
 
@@ -237,15 +237,15 @@ const doesElementIsEmbeddedWithExhaustedConnections = (
   }
   const targetName = target.get("entityName");
 
-  if (isSourceEmbedded && sourceholderName !== undefined) {
+  if (isSourceEmbedded && sourceHolderName !== undefined) {
     //if source is embedded entity then check if it is already connected according to it's parent rules
 
     const connectedHolder = connectedElementsToSource.filter((element) => {
       //if connected shape Name to the target has the same name is the same as the sou
-      return element.getName() === sourceholderName;
+      return element.getName() === sourceHolderName;
     });
 
-    const doesSourceMatchholderName = targetName === sourceholderName;
+    const doesSourceMatchholderName = targetName === sourceHolderName;
 
     return connectedHolder.length > 0 && doesSourceMatchholderName;
   }
@@ -314,8 +314,7 @@ export const shapesDataTransform = (
       });
 
       instance.attributes[key] =
-        updated.length === 1 &&
-        isSingularRelation(embeddedModel as EmbeddedEntity)
+        updated.length === 1 && isSingularRelation(embeddedModel)
           ? updated[0]
           : updated;
     }
@@ -382,7 +381,7 @@ export const shapesDataTransform = (
 export const bundleInstances = (
   instances: Map<string, InstanceForApi>,
   services: ServiceModel[],
-) => {
+): InstanceForApi[] => {
   const mapToArray = Array.from(instances, (instance) => instance[1]); //only value, the id is stored in the object anyway
   const deepCopiedMapToArray: InstanceForApi[] = JSON.parse(
     JSON.stringify(mapToArray),
@@ -399,25 +398,30 @@ export const bundleInstances = (
       : mapToArray[index].relatedTo;
   });
   const topServicesNames = services.map((service) => service.name);
+  // topInstances are instances that have top-level attributes from given serviceModel, and theoretically are the ones accepting embedded-entities
   const topInstances = deepCopiedMapToArray.filter((instance) =>
     topServicesNames.includes(instance.service_entity),
   );
   const embeddedInstances = deepCopiedMapToArray.filter(
     (instance) => !topServicesNames.includes(instance.service_entity),
   );
-  return topInstances.map((instance) => {
+
+  const mergedInstances: InstanceForApi[] = [];
+
+  topInstances.forEach((instance) => {
     const serviceModel = services.find(
       (service) => service.name === instance.service_entity,
     );
-
-    return shapesDataTransform(
-      embeddedInstances,
-      instance,
-      serviceModel as ServiceModel,
-    );
+    if (serviceModel) {
+      mergedInstances.push(
+        shapesDataTransform(embeddedInstances, instance, serviceModel),
+      );
+    }
   });
+
+  return mergedInstances;
 };
 
-const isSingularRelation = (model: EmbeddedEntity) => {
-  return !!model.upper_limit && model.upper_limit === 1;
+const isSingularRelation = (model?: EmbeddedEntity) => {
+  return !!model && !!model.upper_limit && model.upper_limit === 1;
 };

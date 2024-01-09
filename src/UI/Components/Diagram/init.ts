@@ -181,75 +181,54 @@ export default function diagramInit(
 
   paper.on("link:connect", (linkView: dia.LinkView) => {
     //only id values are stored in the linkView
+
     const source = linkView.model.source();
     const target = linkView.model.target();
-    let didSourceChanged = false;
-    let didTargetChanged = false;
-    let didConnectionWasSet = false;
 
-    const sourceCell = graph.getCell(
-      source.id as dia.Cell.ID,
-    ) as ServiceEntityBlock;
-    const targetCell = graph.getCell(
-      target.id as dia.Cell.ID,
-    ) as ServiceEntityBlock;
+    const checkUpdated = (sourceElement, targetElement) => {
+      const sourceCell = graph.getCell(
+        sourceElement.id as dia.Cell.ID,
+      ) as ServiceEntityBlock;
+      const targetCell = graph.getCell(
+        targetElement.id as dia.Cell.ID,
+      ) as ServiceEntityBlock;
 
-    const sourceRelations = sourceCell.getRelations();
-    const targetRelations = targetCell.getRelations();
-    const targetName = targetCell.getName();
-    const sourceName = sourceCell.getName();
+      const relations = sourceCell.getRelations();
+      const targetName = targetCell.getName();
+      const sourceName = sourceCell.getName();
 
-    if (sourceRelations) {
-      const sourceConnectionRule = connectionRules[sourceName].find(
-        (rule) => rule.name === targetName,
-      );
-
-      if (sourceConnectionRule) {
-        sourceCell.addRelation(
-          targetCell.id as string,
-          sourceConnectionRule.attributeName as string,
+      if (relations) {
+        const sourceConnectionRule = connectionRules[sourceName].find(
+          (rule) => rule.name === targetName,
         );
-        didSourceChanged = true;
-        didConnectionWasSet = true;
+        if (sourceConnectionRule) {
+          sourceCell.addRelation(
+            sourceCell.id as string,
+            sourceConnectionRule.attributeName as string,
+          );
+          updateInstancesToSend(sourceCell, ActionEnum.UPDATE);
+        }
       }
-    }
 
-    if (targetRelations) {
-      const targetConnectionRule = connectionRules[targetName].find(
-        (rule) => rule.name === sourceName,
-      );
-      if (targetConnectionRule) {
-        targetCell.addRelation(
-          sourceCell.id as string,
-          targetConnectionRule.attributeName as string,
-        );
-        didTargetChanged = true;
-        didConnectionWasSet = true;
-      }
-    }
-
-    if (!didConnectionWasSet) {
       if (
         sourceCell.get("isEmbedded") &&
         sourceCell.get("embeddedTo") !== null
       ) {
         sourceCell.set("embeddedTo", targetCell.id);
-        didSourceChanged = true;
+        updateInstancesToSend(sourceCell, ActionEnum.UPDATE);
+        return;
       }
       if (
         targetCell.get("isEmbedded") &&
         targetCell.get("embeddedTo") !== null
       ) {
         targetCell.set("embeddedTo", sourceCell.id);
-        didTargetChanged = true;
+        updateInstancesToSend(targetCell, ActionEnum.UPDATE);
       }
-    }
-    if (didSourceChanged) {
-      updateInstancesToSend(sourceCell, ActionEnum.UPDATE);
-    }
-    if (didTargetChanged) {
-      updateInstancesToSend(targetCell, ActionEnum.UPDATE);
-    }
+    };
+
+    checkUpdated(source, target);
+    checkUpdated(target, source);
   });
 
   paper.on("blank:pointerdown", (evt: dia.Event) => scroller.startPanning(evt));

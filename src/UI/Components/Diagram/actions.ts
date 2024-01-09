@@ -108,7 +108,7 @@ export function showLinkTools(
             sourceCell.get("isEmbedded") &&
             sourceCell.get("embeddedTo") === target.id
           ) {
-            sourceCell.set("embeddedTo", null);
+            sourceCell.set("embeddedTo", undefined);
             didSourceCellChanged = true;
             didTargetCellChanged = true;
           }
@@ -117,7 +117,7 @@ export function showLinkTools(
             targetCell.get("isEmbedded") &&
             targetCell.get("embeddedTo") === source.id
           ) {
-            targetCell.set("embeddedTo", null);
+            targetCell.set("embeddedTo", undefined);
             didTargetCellChanged = true;
             didSourceCellChanged = true;
           }
