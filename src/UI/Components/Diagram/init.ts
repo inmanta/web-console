@@ -203,7 +203,7 @@ export default function diagramInit(
         );
         if (sourceConnectionRule) {
           sourceCell.addRelation(
-            sourceCell.id as string,
+            targetCell.id as string,
             sourceConnectionRule.attributeName as string,
           );
           updateInstancesToSend(sourceCell, ActionEnum.UPDATE);
