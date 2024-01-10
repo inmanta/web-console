@@ -55,7 +55,7 @@ describe("BooleanFormInput", () => {
     await act(async () => {
       await userEvent.click(await screen.findByTestId("opt_bool_param-none"));
     });
-    expect(mockedFn).toHaveBeenCalledWith("null");
+    expect(mockedFn).toHaveBeenCalledWith(null);
   });
 
   it("Should render radio button input for optional boolean parameters", async () => {
@@ -78,6 +78,6 @@ describe("BooleanFormInput", () => {
     await act(async () => {
       await userEvent.click(await screen.findByTestId("opt_bool_param-none"));
     });
-    expect(mockedFn).toHaveBeenCalledWith("null");
+    expect(mockedFn).toHaveBeenCalledWith(null);
   });
 });
