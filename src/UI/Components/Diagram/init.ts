@@ -181,54 +181,67 @@ export default function diagramInit(
 
   paper.on("link:connect", (linkView: dia.LinkView) => {
     //only id values are stored in the linkView
-
     const source = linkView.model.source();
     const target = linkView.model.target();
 
-    const checkUpdated = (sourceElement, targetElement) => {
-      const sourceCell = graph.getCell(
-        sourceElement.id as dia.Cell.ID,
-      ) as ServiceEntityBlock;
-      const targetCell = graph.getCell(
-        targetElement.id as dia.Cell.ID,
-      ) as ServiceEntityBlock;
+    const sourceCell = graph.getCell(
+      source.id as dia.Cell.ID,
+    ) as ServiceEntityBlock;
+    const targetCell = graph.getCell(
+      target.id as dia.Cell.ID,
+    ) as ServiceEntityBlock;
 
-      const relations = sourceCell.getRelations();
-      const targetName = targetCell.getName();
-      const sourceName = sourceCell.getName();
+    /**
+     * Function that checks if cell that we are connecting  to is being the one storing information about said connection.
+     * @param elementCell cell that we checking
+     * @param connectingCell cell that is being connected to elementCell
+     * @returns boolean whether connections was set
+     */
+    const wasConnectionDataAssigned = (
+      elementCell: ServiceEntityBlock,
+      connectingCell: ServiceEntityBlock,
+    ): boolean => {
+      const cellRelations = elementCell.getRelations();
+      const cellName = elementCell.getName();
+      const connectingCellName = connectingCell.getName();
 
-      if (relations) {
-        const sourceConnectionRule = connectionRules[sourceName].find(
-          (rule) => rule.name === targetName,
+      //if cell has Map that mean it can accept inter-service relations
+      if (cellRelations) {
+        const cellConnectionRule = connectionRules[cellName].find(
+          (rule) => rule.name === connectingCellName,
         );
-        if (sourceConnectionRule) {
-          sourceCell.addRelation(
-            targetCell.id as string,
-            sourceConnectionRule.attributeName as string,
+
+        //if there is corresponding rule we can apply connection and update given service
+        if (cellConnectionRule) {
+          elementCell.addRelation(
+            connectingCell.id as string,
+            cellConnectionRule.attributeName as string,
           );
+
           updateInstancesToSend(sourceCell, ActionEnum.UPDATE);
+          return true;
         }
       }
 
       if (
-        sourceCell.get("isEmbedded") &&
-        sourceCell.get("embeddedTo") !== null
+        elementCell.get("isEmbedded") &&
+        elementCell.get("embeddedTo") !== null
       ) {
-        sourceCell.set("embeddedTo", targetCell.id);
-        updateInstancesToSend(sourceCell, ActionEnum.UPDATE);
-        return;
-      }
-      if (
-        targetCell.get("isEmbedded") &&
-        targetCell.get("embeddedTo") !== null
-      ) {
-        targetCell.set("embeddedTo", sourceCell.id);
-        updateInstancesToSend(targetCell, ActionEnum.UPDATE);
+        elementCell.set("embeddedTo", connectingCell.id);
+        updateInstancesToSend(elementCell, ActionEnum.UPDATE);
+        return true;
+      } else {
+        return false;
       }
     };
 
-    checkUpdated(source, target);
-    checkUpdated(target, source);
+    const wasConnectionFromSourceSet = wasConnectionDataAssigned(
+      sourceCell,
+      targetCell,
+    );
+    if (!wasConnectionFromSourceSet) {
+      wasConnectionDataAssigned(targetCell, sourceCell);
+    }
   });
 
   paper.on("blank:pointerdown", (evt: dia.Event) => scroller.startPanning(evt));

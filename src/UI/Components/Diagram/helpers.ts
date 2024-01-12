@@ -425,3 +425,20 @@ export const bundleInstances = (
 const isSingularRelation = (model?: EmbeddedEntity) => {
   return !!model && !!model.upper_limit && model.upper_limit === 1;
 };
+
+/**
+ *
+ * Find if the relations of some instance includes Id of the instance passed through prop
+ * @param neighborRelations map of ids that could include id of intanceAsTable
+ * @param instanceAsTable Instance to which should instances connect to
+ * @returns
+ */
+export const findCorrespondingId = (
+  neighborRelations: Map<string, string>,
+  instanceAsTable: ServiceEntityBlock,
+) => {
+  return Array.from(neighborRelations, ([id, attributeName]) => ({
+    id,
+    attributeName,
+  })).find(({ id }) => id === instanceAsTable.id);
+};
