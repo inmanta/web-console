@@ -82,9 +82,10 @@ const Canvas = ({
       if (response.ok) {
         setAlertType(AlertVariant.success);
         setAlertMessage(words("inventory.instanceComposer.success"));
+        //If response is successful then show feedback notification and redirect user to the service inventory view
         setTimeout(() => {
           navigate(url);
-        }, 2000);
+        }, 1000);
       } else {
         setAlertType(AlertVariant.danger);
         setAlertMessage(JSON.parse(await response.text()).message);
@@ -155,7 +156,6 @@ const Canvas = ({
     const connectionRules = createConnectionRules(services, {});
     const actions = diagramInit(canvas, connectionRules, handleUpdate);
     setDiagramHandlers(actions);
-
     if (instance) {
       const isMainInstance = true;
       const cells = actions.addInstance(instance, services, isMainInstance);
@@ -167,7 +167,7 @@ const Canvas = ({
             service_entity: cell.entityName,
             config: {},
             action: null,
-            value: cell.instanceAttributes,
+            attributes: cell.instanceAttributes,
             embeddedTo: cell.embeddedTo,
             relatedTo: cell.relatedTo,
           });

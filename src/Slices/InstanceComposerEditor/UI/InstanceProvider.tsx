@@ -15,7 +15,6 @@ export const InstanceProvider: React.FC<{
     kind: "GetInstanceWithRelations",
     id: instanceId,
   });
-
   return (
     <RemoteDataView
       data={data}

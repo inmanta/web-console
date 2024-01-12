@@ -81,7 +81,7 @@ test("Given the deploy state filter When changing the include/exclude options Th
   });
 
   expect(
-    await screen.findByRole("generic", { name: "deployed-include-active" }),
+    screen.getByRole("generic", { name: "deployed-include-active" }),
   ).toBeVisible();
   expect(
     await screen.findByRole("generic", { name: "skipped-exclude-active" }),
