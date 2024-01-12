@@ -10,7 +10,6 @@ import {
 import { PlusIcon } from "@patternfly/react-icons";
 import { ServiceModel, ServiceInstanceParams } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
-import useFeatures from "@/UI/Utils/useFeatures";
 import { words } from "@/UI/words";
 import { FilterWidget } from "@S/ServiceInventory/UI/Components/FilterWidget";
 
@@ -20,6 +19,7 @@ interface Props {
   setFilter: (filter: ServiceInstanceParams.Filter) => void;
   service: ServiceModel;
   paginationWidget: React.ReactNode;
+  showInstanceComposer: boolean;
 }
 
 export const TableControls: React.FC<Props> = ({
@@ -28,9 +28,9 @@ export const TableControls: React.FC<Props> = ({
   setFilter,
   service,
   paginationWidget,
+  showInstanceComposer,
 }) => {
   const { routeManager } = useContext(DependencyContext);
-  const features = useFeatures();
 
   const { service_identity, service_identity_display_name } = service;
   const identityAttribute =
@@ -49,7 +49,7 @@ export const TableControls: React.FC<Props> = ({
           identityAttribute={identityAttribute}
         />
         <ToolbarGroup align={{ default: "alignRight" }}>
-          {features && features.includes("instanceComposer") && (
+          {showInstanceComposer && (
             <ToolbarItem>
               <Link
                 to={{

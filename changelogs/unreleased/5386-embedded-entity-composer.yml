@@ -1,0 +1,4 @@
+description: Fix connecting embedded entities, and sending instances with optional array of embedded entities
+issue-nr: 5386
+change-type: patch
+destination-branches: [master, iso7]

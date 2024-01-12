@@ -76,6 +76,7 @@ export const createConnectionRules = (
       service.inter_service_relations.map((relation) => {
         tempRules.push({
           name: relation.entity_type,
+          attributeName: relation.name,
           type: TypeEnum.INTERSERVICE,
           lowerLimit: relation.lower_limit || null,
           upperLimit: relation.upper_limit || null,
@@ -226,7 +227,7 @@ const doesElementIsEmbeddedWithExhaustedConnections = (
   target: dia.Element,
 ): boolean => {
   const isSourceEmbedded = source.get("isEmbedded");
-  const sourceholderName = source.get("holderName");
+  const sourceHolderName = source.get("holderName");
 
   const isTargetBlocked = target.get("isBlockedFromEditing");
 
@@ -236,15 +237,15 @@ const doesElementIsEmbeddedWithExhaustedConnections = (
   }
   const targetName = target.get("entityName");
 
-  if (isSourceEmbedded && sourceholderName !== undefined) {
+  if (isSourceEmbedded && sourceHolderName !== undefined) {
     //if source is embedded entity then check if it is already connected according to it's parent rules
 
     const connectedHolder = connectedElementsToSource.filter((element) => {
       //if connected shape Name to the target has the same name is the same as the sou
-      return element.getName() === sourceholderName;
+      return element.getName() === sourceHolderName;
     });
 
-    const doesSourceMatchholderName = targetName === sourceholderName;
+    const doesSourceMatchholderName = targetName === sourceHolderName;
 
     return connectedHolder.length > 0 && doesSourceMatchholderName;
   }
@@ -263,6 +264,7 @@ const doesElementIsEmbeddedWithExhaustedConnections = (
 export const shapesDataTransform = (
   instances: InstanceForApi[],
   instance: InstanceForApi,
+  serviceModel: ServiceModel | EmbeddedEntity,
   isEmbedded = false,
 ) => {
   let areEmbeddedEdited = false;
@@ -284,47 +286,61 @@ export const shapesDataTransform = (
 
   for (const [key, instancesToEmbed] of Object.entries(groupedEmbedded)) {
     if (instance.attributes) {
-      if (instancesToEmbed.length > 1) {
-        const updated: InstanceAttributeModel[] = [];
-        instancesToEmbed.forEach((instance) => {
+      const updated: InstanceAttributeModel[] = [];
+      const embeddedModel = serviceModel.embedded_entities.find(
+        (entity) => entity.name === instancesToEmbed[0].service_entity,
+      );
+      //iterate through instancesToEmbed to recursively join potential nested embedded entities into correct objects in correct state
+      instancesToEmbed.forEach((instanceToEmbed) => {
+        if (embeddedModel) {
           const updatedInstance = shapesDataTransform(
             notMatchingInstances,
-            instance,
-            true,
+            instanceToEmbed,
+            embeddedModel,
+            !!embeddedModel,
           );
 
-          areEmbeddedEdited =
-            !areEmbeddedEdited &&
-            !instance.action &&
-            updatedInstance.action !== null;
-
-          if (updatedInstance.action !== "delete") {
-            updated.push(updatedInstance.attributes as InstanceAttributeModel);
+          if (!areEmbeddedEdited) {
+            areEmbeddedEdited =
+              !instance.action && updatedInstance.action !== null;
           }
-        });
-
-        instance.attributes[key] = updated;
-      } else {
-        const data = shapesDataTransform(
-          notMatchingInstances,
-          instancesToEmbed[0],
-          true,
-        );
-
-        areEmbeddedEdited = instance.action === null && data.action !== null;
-
-        if (data.action !== "delete") {
-          instance.attributes[key] = data.attributes;
+          if (
+            updatedInstance.action !== "delete" &&
+            updatedInstance.attributes
+          ) {
+            updated.push(updatedInstance.attributes);
+          }
         }
-      }
+      });
+
+      instance.attributes[key] =
+        updated.length === 1 && isSingularRelation(embeddedModel)
+          ? updated[0]
+          : updated;
     }
   }
 
   //convert relatedTo property into valid attribute
   if (instance.relatedTo) {
-    instance.relatedTo.forEach((attrName, id) => {
+    Array.from(instance.relatedTo).forEach(([id, attributeName]) => {
       if (instance.attributes) {
-        instance.attributes[attrName] = id;
+        const model = serviceModel.inter_service_relations?.find(
+          (relation) => relation.name === attributeName,
+        );
+        if (model) {
+          if (model.upper_limit !== 1) {
+            instance.attributes[attributeName];
+            if (Array.isArray(instance.attributes[attributeName])) {
+              (instance.attributes[attributeName] as string[]).push(id);
+            } else {
+              instance.attributes[attributeName] = [id];
+            }
+          } else {
+            instance.attributes[attributeName] = id;
+          }
+        } else {
+          instance.attributes[attributeName] = id;
+        }
       }
     });
   }
@@ -365,7 +381,7 @@ export const shapesDataTransform = (
 export const bundleInstances = (
   instances: Map<string, InstanceForApi>,
   services: ServiceModel[],
-) => {
+): InstanceForApi[] => {
   const mapToArray = Array.from(instances, (instance) => instance[1]); //only value, the id is stored in the object anyway
   const deepCopiedMapToArray: InstanceForApi[] = JSON.parse(
     JSON.stringify(mapToArray),
@@ -382,6 +398,7 @@ export const bundleInstances = (
       : mapToArray[index].relatedTo;
   });
   const topServicesNames = services.map((service) => service.name);
+  // topInstances are instances that have top-level attributes from given serviceModel, and theoretically are the ones accepting embedded-entities
   const topInstances = deepCopiedMapToArray.filter((instance) =>
     topServicesNames.includes(instance.service_entity),
   );
@@ -389,7 +406,39 @@ export const bundleInstances = (
     (instance) => !topServicesNames.includes(instance.service_entity),
   );
 
-  return topInstances.map((instance) =>
-    shapesDataTransform(embeddedInstances, instance),
-  );
+  const mergedInstances: InstanceForApi[] = [];
+
+  topInstances.forEach((instance) => {
+    const serviceModel = services.find(
+      (service) => service.name === instance.service_entity,
+    );
+    if (serviceModel) {
+      mergedInstances.push(
+        shapesDataTransform(embeddedInstances, instance, serviceModel),
+      );
+    }
+  });
+
+  return mergedInstances;
+};
+
+const isSingularRelation = (model?: EmbeddedEntity) => {
+  return !!model && !!model.upper_limit && model.upper_limit === 1;
+};
+
+/**
+ *
+ * Find if the relations of some instance includes Id of the instance passed through prop
+ * @param neighborRelations map of ids that could include id of intanceAsTable
+ * @param instanceAsTable Instance to which should instances connect to
+ * @returns
+ */
+export const findCorrespondingId = (
+  neighborRelations: Map<string, string>,
+  instanceAsTable: ServiceEntityBlock,
+) => {
+  return Array.from(neighborRelations, ([id, attributeName]) => ({
+    id,
+    attributeName,
+  })).find(({ id }) => id === instanceAsTable.id);
 };
