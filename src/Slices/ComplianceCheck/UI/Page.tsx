@@ -55,12 +55,25 @@ export const View: React.FC<Props> = ({ version }) => {
 
   /**
    * Setting the selected report when data changed and there is no selected report
+   * Update the selected report when chosen one has new data available
    */
   useEffect(() => {
-    if (Maybe.isSome(selectedReport)) return;
     if (!RemoteData.isSuccess(data) || data.value.length <= 0) return;
-
-    setSelectedReport(Maybe.some(data.value[0]));
+    if (Maybe.isSome(selectedReport)) {
+      const fetchedSelectedReport = data.value.find(
+        (report) => report.id === selectedReport.value.id,
+      );
+      if (
+        !!fetchedSelectedReport &&
+        fetchedSelectedReport.todo !== selectedReport.value.todo
+      ) {
+        setSelectedReport(Maybe.some(fetchedSelectedReport));
+      } else {
+        return;
+      }
+    } else {
+      setSelectedReport(Maybe.some(data.value[0]));
+    }
   }, [selectedReport, data]);
 
   useEffect(() => {
