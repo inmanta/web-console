@@ -5,10 +5,10 @@ import {
   MatcherOptions,
 } from "@testing-library/react";
 
-const getMultipleError = (attrName: string) => (_c, selectorValue) =>
-  `Found multiple elements with the ${attrName} attribute of: ${selectorValue}`;
-const getMissingError = (attrName: string) => (_c, selectorValue) =>
-  `Unable to find an element with the ${attrName} attribute of: ${selectorValue}`;
+const getMultipleError = (attributeName: string) => (_c, selectorValue) =>
+  `Found multiple elements with the ${attributeName} attribute of: ${selectorValue}`;
+const getMissingError = (attributeName: string) => (_c, selectorValue) =>
+  `Unable to find an element with the ${attributeName} attribute of: ${selectorValue}`;
 
 const queryAllByJointSelector = (
   container: HTMLElement,

@@ -183,8 +183,6 @@ export default function diagramInit(
     //only id values are stored in the linkView
     const source = linkView.model.source();
     const target = linkView.model.target();
-    let didSourceChanged = false;
-    let didTargetChanged = false;
 
     const sourceCell = graph.getCell(
       source.id as dia.Cell.ID,
@@ -193,53 +191,56 @@ export default function diagramInit(
       target.id as dia.Cell.ID,
     ) as ServiceEntityBlock;
 
-    if (
-      sourceCell.get("isEmbedded") &&
-      sourceCell.get("isEmbeddedTo") !== null
-    ) {
-      sourceCell.set("isEmbeddedTo", targetCell.id);
-      didSourceChanged = true;
-    }
-    if (
-      targetCell.get("isEmbedded") &&
-      targetCell.get("isEmbeddedTo") !== null
-    ) {
-      targetCell.set("isEmbeddedTo", sourceCell.id);
-      didTargetChanged = true;
-    }
+    /**
+     * Function that checks if cell that we are connecting  to is being the one storing information about said connection.
+     * @param elementCell cell that we checking
+     * @param connectingCell cell that is being connected to elementCell
+     * @returns boolean whether connections was set
+     */
+    const wasConnectionDataAssigned = (
+      elementCell: ServiceEntityBlock,
+      connectingCell: ServiceEntityBlock,
+    ): boolean => {
+      const cellRelations = elementCell.getRelations();
+      const cellName = elementCell.getName();
+      const connectingCellName = connectingCell.getName();
 
-    const sourceRelations = sourceCell.getRelations();
-    const targetRelations = targetCell.getRelations();
-    const targetName = targetCell.getName();
-    const sourceName = sourceCell.getName();
+      //if cell has Map that mean it can accept inter-service relations
+      if (cellRelations) {
+        const cellConnectionRule = connectionRules[cellName].find(
+          (rule) => rule.name === connectingCellName,
+        );
 
-    if (sourceRelations) {
-      const doesSourceHaveRule = connectionRules[sourceName].find(
-        (rule) => rule.name === targetName,
-      );
+        //if there is corresponding rule we can apply connection and update given service
+        if (cellConnectionRule) {
+          elementCell.addRelation(
+            connectingCell.id as string,
+            cellConnectionRule.attributeName as string,
+          );
 
-      if (doesSourceHaveRule) {
-        sourceCell.addRelation(targetCell.id as string, targetName);
-        didSourceChanged = true;
+          updateInstancesToSend(sourceCell, ActionEnum.UPDATE);
+          return true;
+        }
       }
-    }
 
-    if (targetRelations) {
-      const doesTargetHaveRule = connectionRules[targetName].find(
-        (rule) => rule.name === sourceName,
-      );
-
-      if (doesTargetHaveRule) {
-        targetCell.addRelation(sourceCell.id as string, sourceName);
-        didTargetChanged = true;
+      if (
+        elementCell.get("isEmbedded") &&
+        elementCell.get("embeddedTo") !== null
+      ) {
+        elementCell.set("embeddedTo", connectingCell.id);
+        updateInstancesToSend(elementCell, ActionEnum.UPDATE);
+        return true;
+      } else {
+        return false;
       }
-    }
+    };
 
-    if (didSourceChanged) {
-      updateInstancesToSend(sourceCell, ActionEnum.UPDATE);
-    }
-    if (didTargetChanged) {
-      updateInstancesToSend(targetCell, ActionEnum.UPDATE);
+    const wasConnectionFromSourceSet = wasConnectionDataAssigned(
+      sourceCell,
+      targetCell,
+    );
+    if (!wasConnectionFromSourceSet) {
+      wasConnectionDataAssigned(targetCell, sourceCell);
     }
   });
 

@@ -3,6 +3,7 @@ import dagre, { graphlib } from "dagre";
 import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from "@/Core";
 import { InstanceWithReferences } from "@/Data/Managers/GetInstanceWithRelations/interface";
 import { words } from "@/UI/words";
+import { findCorrespondingId } from "./helpers";
 import activeImage from "./icons/active-icon.svg";
 import candidateImage from "./icons/candidate-icon.svg";
 import { ActionEnum, ConnectionRules, relationId } from "./interfaces";
@@ -34,32 +35,28 @@ export function showLinkTools(
     target.id as dia.Cell.ID,
   ) as ServiceEntityBlock;
 
-  const targetName = targetCell.getName();
-  const sourceName = sourceCell.getName();
-  const doesTargetHaveRule = connectionRules[targetName].find(
-    (rule) => rule.name === sourceName,
-  );
-  const doesSourceHaveRule = connectionRules[sourceName].find(
-    (rule) => rule.name === targetName,
-  );
+  const check = (cellOne: ServiceEntityBlock, cellTwo: ServiceEntityBlock) => {
+    const nameOne = cellOne.getName();
+    const nameTwo = cellTwo.getName();
 
-  const isTargetInEditMode: boolean | undefined =
-    targetCell.get("isInEditMode");
-  const isSourceInEditMode: boolean | undefined =
-    sourceCell.get("isInEditMode");
+    const elementConnectionRule = connectionRules[nameOne].find(
+      (rule) => rule.name === nameTwo,
+    );
 
-  if (
-    isSourceInEditMode &&
-    doesSourceHaveRule &&
-    doesSourceHaveRule.modifier !== "rw+"
-  ) {
-    return;
-  }
-  if (
-    isTargetInEditMode &&
-    doesTargetHaveRule &&
-    doesTargetHaveRule.modifier !== "rw+"
-  ) {
+    const isElementInEditMode: boolean | undefined =
+      cellOne.get("isInEditMode");
+
+    if (
+      isElementInEditMode &&
+      elementConnectionRule &&
+      elementConnectionRule.modifier !== "rw+"
+    ) {
+      return true;
+    }
+    return false;
+  };
+
+  if (check(sourceCell, targetCell) || check(targetCell, sourceCell)) {
     return;
   }
 
@@ -92,8 +89,6 @@ export function showLinkTools(
         action: (_evt, linkView: dia.LinkView, toolView: dia.ToolView) => {
           const source = linkView.model.source();
           const target = linkView.model.target();
-          let didSourceCellChanged = false;
-          let didTargetCellChanged = false;
 
           const sourceCell = graph.getCell(
             source.id as dia.Cell.ID,
@@ -102,48 +97,47 @@ export function showLinkTools(
             target.id as dia.Cell.ID,
           ) as ServiceEntityBlock;
 
-          // resolve any possible embedded connections between cells, also we want to trigger update for both cells as
-          // that's the last point where we can tell that one was the part of the other.
-          if (
-            sourceCell.get("isEmbedded") &&
-            sourceCell.get("embeddedTo") === target.id
-          ) {
-            sourceCell.set("embeddedTo", null);
-            didSourceCellChanged = true;
-            didTargetCellChanged = true;
-          }
+          /**
+           * Function that remove any data in this connection between cells
+           * @param elementCell cell that we checking
+           * @param disconnectingCell cell that is being connected to elementCell
+           * @returns boolean whether connections was set
+           */
+          const wasConnectionDataRemoved = (
+            elementCell: ServiceEntityBlock,
+            disconnectingCell: ServiceEntityBlock,
+          ): boolean => {
+            const elementRelations = elementCell.getRelations();
+            // resolve any possible embedded connections between cells,
+            if (
+              elementCell.get("isEmbedded") &&
+              elementCell.get("embeddedTo") === target.id
+            ) {
+              elementCell.set("embeddedTo", undefined);
+              updateInstancesToSend(elementCell, ActionEnum.UPDATE);
+              return true;
+            }
 
-          if (
-            targetCell.get("isEmbedded") &&
-            targetCell.get("embeddedTo") === source.id
-          ) {
-            targetCell.set("embeddedTo", null);
-            didTargetCellChanged = true;
-            didSourceCellChanged = true;
-          }
+            // resolve any possible relation connections between cells
+            if (
+              elementRelations &&
+              elementRelations.has(disconnectingCell.id as string)
+            ) {
+              elementCell.removeRelation(disconnectingCell.id as string);
 
-          // resolve any possible relation connections between cells
-          const sourceRelations = sourceCell.getRelations();
-          const targetRelations = targetCell.getRelations();
+              updateInstancesToSend(sourceCell, ActionEnum.UPDATE);
+              return true;
+            } else {
+              return false;
+            }
+          };
 
-          if (sourceRelations && sourceRelations.has(target.id as string)) {
-            didSourceCellChanged = sourceCell.removeRelation(
-              target.id as string,
-            );
-          }
-
-          if (targetRelations && targetRelations.has(source.id as string)) {
-            didTargetCellChanged = targetCell.removeRelation(
-              source.id as string,
-            );
-          }
-
-          if (didSourceCellChanged) {
-            updateInstancesToSend(sourceCell, ActionEnum.UPDATE);
-          }
-
-          if (didTargetCellChanged) {
-            updateInstancesToSend(targetCell, ActionEnum.UPDATE);
+          const wasConnectionFromSourceSet = wasConnectionDataRemoved(
+            sourceCell,
+            targetCell,
+          );
+          if (!wasConnectionFromSourceSet) {
+            wasConnectionDataRemoved(targetCell, sourceCell);
           }
 
           linkView.model.remove({ ui: true, tool: toolView.cid });
@@ -233,12 +227,9 @@ export function appendInstance(
       const relations = cellAsBlock.getRelations();
 
       if (relations) {
-        const connectedInstance = Array.from(relations, ([id, attrName]) => ({
-          id,
-          attrName,
-        })).find(({ id }) => id === instanceAsTable.id);
+        const correspondingId = findCorrespondingId(relations, instanceAsTable);
 
-        if (connectedInstance) {
+        if (correspondingId) {
           isConnected = true;
           connectEntities(
             graph,
@@ -256,11 +247,11 @@ export function appendInstance(
         neighbors.map((cell) => {
           const neighborRelations = (cell as ServiceEntityBlock).getRelations();
           if (neighborRelations) {
-            const connectedInstance = Array.from(
+            const correspondingId = findCorrespondingId(
               neighborRelations,
-              ([id, attrName]) => ({ id, attrName }),
-            ).find(({ id }) => id === instanceAsTable.id);
-            if (connectedInstance) {
+              instanceAsTable,
+            );
+            if (correspondingId) {
               isConnected = true;
               connectEntities(
                 graph,
@@ -530,6 +521,11 @@ export function appendColumns(
 
   if (isInitial) {
     serviceEntity.appendColumns(attributes);
+
+    //for initial appending instanceAttributes are equal sanitized ones
+    if (!serviceEntity.get("sanitizedAttrs")) {
+      serviceEntity.set("sanitizedAttrs", instanceAttributes);
+    }
   } else {
     serviceEntity.editColumns(attributes, serviceEntity.attributes.isCollapsed);
   }
@@ -622,22 +618,28 @@ function handleAttributes(
   });
 
   serviceModel.inter_service_relations?.forEach((relation) => {
-    const relationId = attributesValues[relation.name] as string;
+    const relationId = attributesValues[relation.name];
 
     if (relationId) {
-      instanceAsTable.addRelation(relationId, relation.name);
-      if (
-        instanceToConnectRelation &&
-        instanceToConnectRelation.id &&
-        relationId
-      ) {
-        connectEntities(
-          graph,
-          instanceAsTable,
-          [instanceToConnectRelation],
-          !serviceModel.strict_modifier_enforcement,
-        );
+      if (Array.isArray(relationId)) {
+        relationId.forEach((id) => {
+          instanceAsTable.addRelation(id, relation.name);
+        });
+      } else {
+        instanceAsTable.addRelation(relationId as string, relation.name);
       }
+    }
+    if (
+      instanceToConnectRelation &&
+      instanceToConnectRelation.id &&
+      relationId
+    ) {
+      connectEntities(
+        graph,
+        instanceAsTable,
+        [instanceToConnectRelation],
+        !serviceModel.strict_modifier_enforcement,
+      );
     }
   });
 }
