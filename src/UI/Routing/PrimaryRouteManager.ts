@@ -39,6 +39,7 @@ import { Notification } from "@S/Notification";
 import { Parameters } from "@S/Parameters";
 import { Resource } from "@S/Resource";
 import { ResourceDetails } from "@S/ResourceDetails";
+import { DiscoveredResources } from "@S/ResourceDiscovery";
 import { ServiceCatalog } from "@S/ServiceCatalog";
 import { ServiceInstanceHistory } from "@S/ServiceInstanceHistory";
 import { ServiceInventory } from "@S/ServiceInventory";
@@ -78,6 +79,7 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
      */
     AgentProcess: AgentProcess.route(baseUrl),
     Agents: Agents.route(baseUrl),
+    DiscoveredResources: DiscoveredResources.route(baseUrl),
     Facts: Facts.route(baseUrl),
     ResourceDetails: ResourceDetails.route(baseUrl),
     Resources: Resource.route(baseUrl),

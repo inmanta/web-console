@@ -414,6 +414,11 @@ const dict = {
   "resources.repair.tooltip":
     "Request the agents to check the current state of each resource and make the current state in-line with the desired state.",
 
+  /** Discovered Resources related text */
+  "discovered.column.resource_id": "resource_id",
+  "discovered_resources.title": "Discovered Resources",
+  "discovered_resources.values": "values",
+
   /** Compile report related text */
   "compileReports.title": "Compile Reports",
   "compileReports.empty.message": "No compile reports found",

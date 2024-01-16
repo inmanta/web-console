@@ -8,6 +8,7 @@ import {
 } from "@/Core";
 import { InstanceComposerPage } from "@/Slices/InstanceComposer/UI";
 import { InstanceComposerEditorPage } from "@/Slices/InstanceComposerEditor/UI";
+import { DiscoveredResourcesPage } from "@/Slices/ResourceDiscovery/UI";
 import { ServiceDetailsPage } from "@/Slices/ServiceDetails/UI";
 import { AgentProcessPage } from "@S/AgentProcess/UI";
 import { AgentsPage } from "@S/Agents/UI";
@@ -105,6 +106,10 @@ export class PrimaryPageManager implements PageManager {
         element: <ResourcesPage />,
       },
       Agents: { ...this.routeDictionary.Agents, element: <AgentsPage /> },
+      DiscoveredResources: {
+        ...this.routeDictionary.DiscoveredResources,
+        element: <DiscoveredResourcesPage />,
+      },
       Facts: { ...this.routeDictionary.Facts, element: <FactsPage /> },
       AgentProcess: {
         ...this.routeDictionary.AgentProcess,

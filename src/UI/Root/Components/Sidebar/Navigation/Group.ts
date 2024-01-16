@@ -110,6 +110,16 @@ export const resourceManager = (
       statusIndication: false,
     },
     {
+      id: "Discovered Resources",
+      label: routeManager
+        .getRoute("DiscoveredResources")
+        .generateLabel(undefined),
+      url: routeManager.getRoute("DiscoveredResources").path,
+      external: false,
+      locked: !isEnvPresent,
+      statusIndication: false,
+    },
+    {
       id: "Agents",
       label: routeManager.getRoute("Agents").generateLabel(undefined),
       url: routeManager.getRoute("Agents").path,

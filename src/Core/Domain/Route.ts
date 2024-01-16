@@ -29,6 +29,7 @@ const kinds = [
    */
   "AgentProcess",
   "Agents",
+  "DiscoveredResources",
   "Facts",
   "ResourceDetails",
   "Resources",
