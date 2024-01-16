@@ -23,6 +23,7 @@ import { Notification } from "@S/Notification";
 import { Parameters } from "@S/Parameters";
 import { Resource } from "@S/Resource";
 import { ResourceDetails } from "@S/ResourceDetails";
+import { DiscoveredResources } from "@S/ResourceDiscovery";
 import { ServiceCatalog } from "@S/ServiceCatalog";
 import { ServiceDetails } from "@S/ServiceDetails";
 import { ServiceInstanceHistory } from "@S/ServiceInstanceHistory";
@@ -63,6 +64,7 @@ export const paths: Paths = {
    */
   AgentProcess: AgentProcess.path,
   Agents: Agents.path,
+  DiscoveredResources: DiscoveredResources.path,
   Facts: Facts.path,
   ResourceDetails: ResourceDetails.path,
   Resources: Resource.path,
