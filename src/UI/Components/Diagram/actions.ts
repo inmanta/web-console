@@ -397,11 +397,7 @@ export function appendEmbeddedEntity(
   }
 
   if (Array.isArray(entityAttributes)) {
-    const createdInstances: ServiceEntityBlock[] = [];
-
-    entityAttributes.map((entity) => handleSingleEntity(entity));
-
-    return createdInstances;
+    return entityAttributes.map((entity) => handleSingleEntity(entity));
   } else {
     return [handleSingleEntity(entityAttributes)];
   }
@@ -575,9 +571,11 @@ function handleAttributes(
       presentedAttr,
       !serviceModel.strict_modifier_enforcement,
     );
+
     appendedEntities.map((entity) => {
       handleInfoIcon(entity, presentedAttr);
     });
+
     connectEntities(
       graph,
       instanceAsTable,
