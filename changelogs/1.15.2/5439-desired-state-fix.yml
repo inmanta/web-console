@@ -1,0 +1,5 @@
+description: "Fix resolving freezing of compliance check page"
+change-type: patch
+destination-branches: [master, iso7]
+sections:
+  bugfix: "{{description}}"

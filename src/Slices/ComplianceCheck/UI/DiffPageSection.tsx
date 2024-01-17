@@ -38,6 +38,7 @@ const DiffView: React.FC<{
   version: string;
   statuses: Diff.Status[];
 }> = ({ id, todo, version, statuses }) => {
+  const prevId = useRef(id);
   const refs: DiffWizard.Refs = useRef({});
   const { queryResolver } = useContext(DependencyContext);
   const [reportData, refetch] = queryResolver.useOneTime<"GetDryRunReport">({
@@ -45,12 +46,16 @@ const DiffView: React.FC<{
     reportId: id,
     version,
   });
-
   useEffect(() => {
-    if (!RemoteData.isSuccess(reportData)) return;
-    if (todo <= 0) return;
+    // avoid  double refetching when id is changed
+    if (prevId.current !== id) {
+      prevId.current = id;
+      return;
+    }
+    if (todo <= 0 && !RemoteData.isSuccess(reportData)) return;
     refetch();
-  }, [todo, id, reportData, refetch]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [todo, id]); //keeping refetch in the dependency creates issue with call on every update of the data, but we want to align it with the continuous call
 
   const diffData = RemoteData.mapSuccess(
     (report) =>
