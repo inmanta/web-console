@@ -22,7 +22,9 @@ export const extractRelationsIds = (
   }
 
   const extractRelation = (attributes: InstanceAttributeModel): string[] =>
-    relationKeys.map((key) => JSON.stringify(attributes[key]));
+    relationKeys
+      .map((key) => String(attributes[key]))
+      .filter((attribute) => attribute !== "undefined");
 
   if (instance.candidate_attributes !== null) {
     return extractRelation(instance.candidate_attributes);

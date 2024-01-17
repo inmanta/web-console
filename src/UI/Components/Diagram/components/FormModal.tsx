@@ -96,7 +96,7 @@ const FormModal = ({
       );
       if (chosenModel && chosenModel.model) {
         setSelected({
-          name: value,
+          name: value as string,
           model: chosenModel.model,
           isEmbedded: chosenModel.isEmbedded,
           holderName: chosenModel.holderName,
@@ -124,16 +124,16 @@ const FormModal = ({
     [cellView],
   );
 
-  const getUpdate = (path: string, value: string, multi = false): void => {
+  const getUpdate = (path: string, value: unknown, multi = false): void => {
     if (multi) {
       setFormState((prev) => {
         const clone = { ...prev };
         let selection = (clone[path] as string[]) || [];
 
-        if (selection.includes(value)) {
-          selection = selection.filter((item) => item !== value);
+        if (selection.includes(value as string)) {
+          selection = selection.filter((item) => item !== (value as string));
         } else {
-          selection.push(value);
+          selection.push(value as string);
         }
 
         return set(clone, path, selection);
@@ -256,7 +256,7 @@ const FormModal = ({
             onOpenChange={(isOpen) => setIsSelectOpen(isOpen)}
             isOpen={isSelectOpen}
             onSelect={(_evt, value) => {
-              onEntityChosen(JSON.stringify(value), possibleForms);
+              onEntityChosen(String(value), possibleForms);
             }}
           >
             {possibleForms.map(({ key, value }) => (
@@ -274,9 +274,7 @@ const FormModal = ({
                 key={field.name}
                 field={field}
                 formState={formState}
-                getUpdate={(path, value, multi) => {
-                  getUpdate(path, JSON.stringify(value), multi);
-                }}
+                getUpdate={getUpdate}
                 path={null}
               />
             ))}
