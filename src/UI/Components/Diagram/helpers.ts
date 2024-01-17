@@ -21,22 +21,13 @@ export const extractRelationsIds = (
     return [];
   }
 
+  const extractRelation = (attributes: InstanceAttributeModel): string[] =>
+    relationKeys.map((key) => JSON.stringify(attributes[key]));
+
   if (instance.candidate_attributes !== null) {
-    return relationKeys
-      .map((key) =>
-        instance.candidate_attributes !== null
-          ? instance.candidate_attributes[key]
-          : undefined,
-      )
-      .filter((value) => value !== undefined) as string[];
+    return extractRelation(instance.candidate_attributes);
   } else if (instance.active_attributes !== null) {
-    return relationKeys
-      .map((key) =>
-        instance.active_attributes !== null
-          ? instance.active_attributes[key]
-          : undefined,
-      )
-      .filter((value) => value !== undefined) as string[];
+    return extractRelation(instance.active_attributes);
   } else {
     return [];
   }
@@ -69,6 +60,7 @@ export const createConnectionRules = (
         modifier: entity.modifier,
       });
 
+      //embedded entities in contrary to inter-service relations has possible nested connection thus why we calling function recurrently
       createConnectionRules([entity], rules);
     });
 
@@ -266,7 +258,7 @@ export const shapesDataTransform = (
   instance: InstanceForApi,
   serviceModel: ServiceModel | EmbeddedEntity,
   isEmbedded = false,
-) => {
+): InstanceForApi => {
   let areEmbeddedEdited = false;
   const matchingInstances = instances.filter(
     (checkedInstance) => checkedInstance.embeddedTo === instance.instance_id,

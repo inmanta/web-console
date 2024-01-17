@@ -212,10 +212,10 @@ export default function diagramInit(
         );
 
         //if there is corresponding rule we can apply connection and update given service
-        if (cellConnectionRule) {
+        if (cellConnectionRule && cellConnectionRule.attributeName) {
           elementCell.addRelation(
             connectingCell.id as string,
-            cellConnectionRule.attributeName as string,
+            cellConnectionRule.attributeName,
           );
 
           updateInstancesToSend(sourceCell, ActionEnum.UPDATE);
