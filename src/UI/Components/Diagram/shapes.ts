@@ -162,7 +162,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
               ellipsis: true,
             },
           );
-          console.log(reproducedDisplayText);
+
           if (reproducedDisplayText.includes(`\u2026`)) {
             value.label =
               item.value.toString().replace(/\s+/g, " ").slice(0, 16) +

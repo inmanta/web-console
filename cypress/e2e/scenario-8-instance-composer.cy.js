@@ -551,8 +551,8 @@ if (Cypress.env("edition") === "iso") {
       );
     });
 
-    it.only("8.4 edit instances inter-service relation", () => {
-      // // Select 'test' environment
+    it("8.4 edit instances inter-service relation", () => {
+      // Select 'test' environment
       cy.visit("/console/");
       cy.get('[aria-label="Environment card"]')
         .contains("lsm-frontend")
