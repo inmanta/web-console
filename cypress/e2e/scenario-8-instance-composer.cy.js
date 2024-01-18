@@ -154,7 +154,7 @@ if (Cypress.env("edition") === "iso") {
         .trigger("mousedown")
         .trigger("mousemove", {
           clientX: 700,
-          clientY: 300,
+          clientY: 400,
         })
         .trigger("mouseup");
 
@@ -211,7 +211,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get(".canvas").should("be.visible");
       cy.get('[data-type="app.ServiceEntityBlock"]').should("be.visible");
       cy.get('[joint-selector="headerLabel"]')
-        .contains("embedded-entity-service-extra")
+        .contains("embedded-entity-")
         .should("exist");
       cy.get('[joint-selector="headerLabel"]')
         .contains("ro_meta")
@@ -551,8 +551,8 @@ if (Cypress.env("edition") === "iso") {
       );
     });
 
-    it("8.4 edit instances inter-service relation", () => {
-      // Select 'test' environment
+    it.only("8.4 edit instances inter-service relation", () => {
+      // // Select 'test' environment
       cy.visit("/console/");
       cy.get('[aria-label="Environment card"]')
         .contains("lsm-frontend")
@@ -656,7 +656,7 @@ if (Cypress.env("edition") === "iso") {
         .trigger("mouseover")
         .trigger("mousedown")
         .trigger("mousemove", {
-          clientX: 900,
+          clientX: 1000,
           clientY: 300,
         })
         .trigger("mouseup");

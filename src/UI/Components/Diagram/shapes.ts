@@ -13,9 +13,9 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
         type: "app.ServiceEntityBlock",
         columns: [],
         padding: { top: 40, bottom: 10, left: 10, right: 10 },
-        size: { width: 176 },
-        itemMinLabelWidth: 80,
-        itemHeight: 22,
+        size: { width: 264 },
+        itemMinLabelWidth: 120,
+        itemHeight: 25,
         itemOffset: 0,
         itemOverflow: true,
         isCollapsed: false,
@@ -33,9 +33,9 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
           headerLabel: {
             class: "joint-entityBlock-header-label",
             fontFamily:
-              "RedHatText, Overpass, overpass, helvetica, arial, sans-serif",
+              "monospace, RedHatText, Overpass, overpass, helvetica, arial, sans-serif",
             textTransform: "uppercase",
-            fontSize: 12,
+            fontSize: 14,
             textWrap: {
               ellipsis: true,
               height: 30,
@@ -51,8 +51,8 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
           itemLabels: {
             class: "joint-entityBlock-itemLabels",
             fontFamily:
-              "RedHatText, Overpass, overpass, helvetica, arial, sans-serif",
-            fontSize: 10,
+              "monospace, RedHatText, Overpass, overpass, helvetica, arial, sans-serif",
+            fontSize: 12,
             //pointerEvents: "none",
             cursor: "default",
             itemText: {
@@ -61,9 +61,9 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
           },
           itemLabels_1: {
             class: "joint-entityBlock-itemLabels-one",
-            fontSize: 10,
+            fontSize: 12,
             fontFamily:
-              "RedHatText, Overpass, overpass, helvetica, arial, sans-serif",
+              "monospace, RedHatText, Overpass, overpass, helvetica, arial, sans-serif",
             textAnchor: "end",
             x: `calc(0.5 * w - 10)`,
             cursor: "default",
@@ -153,7 +153,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
           //reproduce internal formatting of the text base on actual dimensions, if text includes elipsis add Tooltip
           const reproducedDisplayText = util.breakText(
             item.value.toString().replace(/\s+/g, " "),
-            { width: 80, height: 22 },
+            { width: 130, height: 22 },
             {
               "font-size": this.attr("itemLabels_1/fontSize"),
               "font-family": this.attr("itemLabels_1/fontFamily"),
@@ -162,10 +162,10 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
               ellipsis: true,
             },
           );
-
+          console.log(reproducedDisplayText);
           if (reproducedDisplayText.includes(`\u2026`)) {
             value.label =
-              item.value.toString().replace(/\s+/g, " ").slice(0, 10) +
+              item.value.toString().replace(/\s+/g, " ").slice(0, 16) +
               `\u2026`;
             this.attr(`itemLabel_${item.name}_value/data-tooltip`, item.value);
           }
@@ -223,7 +223,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
   setName(name: string, options?: object) {
     const shortenName = util.breakText(
       name,
-      { width: 140, height: 30 },
+      { width: 220, height: 30 },
       {
         "font-size": this.attr("headerLabel/fontSize"),
         "font-family": this.attr("headerLabel/fontFamily"),
@@ -234,7 +234,16 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
     );
 
     this.set("entityName", name);
-    return this.attr(["headerLabel", "text"], shortenName, options);
+
+    if (shortenName.includes(`\u2026`)) {
+      return this.attr(
+        ["headerLabel", "text"],
+        name.replace(/\s+/g, " ").slice(0, 16) + `\u2026`,
+        options,
+      );
+    } else {
+      return this.attr(["headerLabel", "text"], shortenName, options);
+    }
   }
 
   getRelations(): Map<string, string> | null {
@@ -300,7 +309,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
       opacity: 0.1,
       strokeWidth: 1,
       y: bbox.height - 33,
-      width: 180,
+      width: 264,
       height: 1,
       cursor: "default",
     });

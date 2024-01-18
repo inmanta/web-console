@@ -6,7 +6,13 @@ import {
   ServiceModel,
 } from "@/Core";
 import { create_UUID } from "@/Slices/EditInstance/Data";
-import { ConnectionRules, InstanceForApi, Rule, TypeEnum } from "./interfaces";
+import {
+  ConnectionRules,
+  InstanceForApi,
+  EmbeddedRule,
+  InterServiceRule,
+  TypeEnum,
+} from "./interfaces";
 import { ServiceEntityBlock } from "./shapes";
 
 export const extractRelationsIds = (
@@ -44,19 +50,19 @@ export const extractRelationsIds = (
 export const createConnectionRules = (
   services: (ServiceModel | EmbeddedEntity)[],
   rules: {
-    [serviceName: string]: Rule[];
+    [serviceName: string]: (EmbeddedRule | InterServiceRule)[];
   },
 ): ConnectionRules => {
   services.map((service) => {
     if (rules[service.name] === undefined) {
       rules[service.name] = [];
     }
-    const tempRules: Rule[] = [];
+    const tempRules: (EmbeddedRule | InterServiceRule)[] = [];
 
     service.embedded_entities.map((entity) => {
       tempRules.push({
+        kind: TypeEnum.EMBEDDED,
         name: entity.name,
-        type: TypeEnum.EMBEDDED,
         lowerLimit: entity.lower_limit || null,
         upperLimit: entity.upper_limit || null,
         modifier: entity.modifier,
@@ -69,9 +75,9 @@ export const createConnectionRules = (
     if (service.inter_service_relations) {
       service.inter_service_relations.map((relation) => {
         tempRules.push({
+          kind: TypeEnum.INTERSERVICE,
           name: relation.entity_type,
           attributeName: relation.name,
-          type: TypeEnum.INTERSERVICE,
           lowerLimit: relation.lower_limit || null,
           upperLimit: relation.upper_limit || null,
           modifier: relation.modifier,
@@ -180,12 +186,12 @@ export const checkIfConnectionIsAllowed = (
  * Iterate through connectedElements of some shape to check if there are possible connections left for given shape
  *
  * @param {ServiceEntityBlock[]} connectedElements list of connected elements to given shape
- * @param {Rule | undefined} rule telling which shapes can connect to each other and about their limitations
+ * @param {EmbeddedRule | InterServiceRule | undefined} rule telling which shapes can connect to each other and about their limitations
  * @returns {boolean}
  */
 const checkWhetherConnectionRulesAreExhausted = (
   connectedElements: ServiceEntityBlock[],
-  rule: Rule | undefined,
+  rule: EmbeddedRule | InterServiceRule | undefined,
   editMode: boolean,
 ): boolean => {
   const targetConnectionsForGivenRule = connectedElements.filter(

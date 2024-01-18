@@ -36,12 +36,12 @@ export function showLinkTools(
   ) as ServiceEntityBlock;
 
   /**
-   * checks if the connection between cells can be deleted
+   * checks if the connection between cells can be deleted thus if we should hide linkTool
    * @param cellOne ServiceEntityBlock
    * @param cellTwo ServiceEntityBlock
    * @returns boolean
    */
-  const shouldHideLinkTools = (
+  const shouldHideLinkTool = (
     cellOne: ServiceEntityBlock,
     cellTwo: ServiceEntityBlock,
   ) => {
@@ -66,8 +66,8 @@ export function showLinkTools(
   };
 
   if (
-    shouldHideLinkTools(sourceCell, targetCell) ||
-    shouldHideLinkTools(targetCell, sourceCell)
+    shouldHideLinkTool(sourceCell, targetCell) ||
+    shouldHideLinkTool(targetCell, sourceCell)
   ) {
     return;
   }
@@ -186,7 +186,7 @@ export function appendInstance(
     (model) => model.name === serviceInstance.service_entity,
   );
   if (!serviceInstanceModel) {
-    throw Error("missing Instance Model");
+    throw Error(words("inventory.instanceComposer.errorMessage"));
   }
   const instanceAsTable = new ServiceEntityBlock().setName(
     serviceInstance.service_entity,
@@ -330,7 +330,7 @@ export function appendEmbeddedEntity(
    * @param entityInstance instance of entity Attributes
    * @returns ServiceEntityBlock
    */
-  function handleSingleEntity(
+  function appendSingleEntity(
     entityInstance: InstanceAttributeModel,
   ): ServiceEntityBlock {
     const flatAttributes = embeddedEntity.attributes.map(
@@ -397,9 +397,9 @@ export function appendEmbeddedEntity(
   }
 
   if (Array.isArray(entityAttributes)) {
-    return entityAttributes.map((entity) => handleSingleEntity(entity));
+    return entityAttributes.map((entity) => appendSingleEntity(entity));
   } else {
-    return [handleSingleEntity(entityAttributes)];
+    return [appendSingleEntity(entityAttributes)];
   }
 }
 

@@ -20,11 +20,16 @@ interface DictDialogData {
 }
 interface Rule {
   name: string;
-  type: TypeEnum;
-  attributeName?: string; //only used for inter-service relations
   lowerLimit: ParsedNumber | null;
   upperLimit: ParsedNumber | null;
   modifier: string;
+}
+interface EmbeddedRule extends Rule {
+  kind: TypeEnum.EMBEDDED;
+}
+interface InterServiceRule extends Rule {
+  kind: TypeEnum.INTERSERVICE;
+  attributeName: string;
 }
 export enum TypeEnum {
   EMBEDDED = "embedded",
@@ -32,7 +37,7 @@ export enum TypeEnum {
 }
 
 interface ConnectionRules {
-  [serviceName: string]: Rule[];
+  [serviceName: string]: (InterServiceRule | EmbeddedRule)[];
 }
 
 interface InstanceForApi {
@@ -118,7 +123,8 @@ export {
   ColumnData,
   RouterOptions,
   DictDialogData,
-  Rule,
+  InterServiceRule,
+  EmbeddedRule,
   ConnectionRules,
   serializedCell,
   InstanceForApi,
