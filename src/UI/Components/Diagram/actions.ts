@@ -326,7 +326,9 @@ export function appendEmbeddedEntity(
   //Create shape for Entity
 
   /**
-   *  Extracted logic append Embedded entity to reduce repeats of code
+   *  Create single Embedded Entity, and handle setting all of the essential data and append it and it's eventual children to the graph.
+   * Then connect it with it's eventual children and other entities that have inter-service relation to this Entity
+   *
    * @param entityInstance instance of entity Attributes
    * @returns ServiceEntityBlock
    */

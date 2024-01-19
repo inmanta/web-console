@@ -32,8 +32,8 @@ interface InterServiceRule extends Rule {
   attributeName: string;
 }
 export enum TypeEnum {
-  EMBEDDED = "embedded",
-  INTERSERVICE = "inter-service",
+  EMBEDDED = "Embedded",
+  INTERSERVICE = "Inter-Service",
 }
 
 interface ConnectionRules {
