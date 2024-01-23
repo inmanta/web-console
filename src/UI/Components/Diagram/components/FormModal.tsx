@@ -256,7 +256,7 @@ const FormModal = ({
             onOpenChange={(isOpen) => setIsSelectOpen(isOpen)}
             isOpen={isSelectOpen}
             onSelect={(_evt, value) => {
-              onEntityChosen(value as string, possibleForms);
+              onEntityChosen(String(value), possibleForms);
             }}
           >
             {possibleForms.map(({ key, value }) => (
