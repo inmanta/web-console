@@ -91,6 +91,6 @@ const StyledBody = styled(Tbody)<{ $transition: Transition }>`
     $transition.isErrorTransition
       ? "background-color: var(--pf-v5-global--palette--gold-50)"
       : $transition.ignoredTransition
-      ? "background-color: var(--pf-v5-global--palette--black-200)"
-      : ""};
+        ? "background-color: var(--pf-v5-global--palette--black-200)"
+        : ""};
 `;
