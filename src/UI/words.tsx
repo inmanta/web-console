@@ -283,10 +283,10 @@ const dict = {
   "orderDetails.table.empty": "No orders details could be retrieved.",
   "orders.links.details": "Show Details",
   "orders.row.empty": "Empty",
-  "orders.status.failed": "Failed",
-  "orders.status.acknowledged": "Acknowledged",
-  "orders.status.completed": "Completed",
-  "orders.status.in_progress": "In Progress",
+  "orders.status.failed": "failed",
+  "orders.status.acknowledged": "acknowledged",
+  "orders.status.completed": "completed",
+  "orders.status.in_progress": "in progress",
 
   /**
    * Catalog related text

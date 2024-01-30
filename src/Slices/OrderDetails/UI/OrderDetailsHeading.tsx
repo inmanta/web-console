@@ -26,8 +26,9 @@ export const OrderDetailsHeading: React.FC<Props> = ({ serviceOrder }) => {
       horizontalTermWidthModifier={{
         default: "20ch",
       }}
+      aria-label="OrderDetails-Heading"
     >
-      <DescriptionListGroup>
+      <DescriptionListGroup aria-label="OrderState">
         <DescriptionListTerm>
           {words("orders.column.status")}
         </DescriptionListTerm>
@@ -35,7 +36,7 @@ export const OrderDetailsHeading: React.FC<Props> = ({ serviceOrder }) => {
           <OrderStatusLabel status={serviceOrder.status.state} />
         </DescriptionListDescription>
       </DescriptionListGroup>
-      <DescriptionListGroup>
+      <DescriptionListGroup aria-label="OrderCreatedAt">
         <DescriptionListTerm>
           {words("orders.column.created_at")}
         </DescriptionListTerm>
@@ -43,7 +44,7 @@ export const OrderDetailsHeading: React.FC<Props> = ({ serviceOrder }) => {
           <DateWithTooltip timestamp={serviceOrder.created_at} />
         </DescriptionListDescription>
       </DescriptionListGroup>
-      <DescriptionListGroup>
+      <DescriptionListGroup aria-label="OrderDescription">
         <DescriptionListTerm>
           {words("orders.column.description")}
         </DescriptionListTerm>
@@ -51,7 +52,7 @@ export const OrderDetailsHeading: React.FC<Props> = ({ serviceOrder }) => {
           {serviceOrder.description || serviceOrder.id}
         </DescriptionListDescription>
       </DescriptionListGroup>
-      <DescriptionListGroup>
+      <DescriptionListGroup aria-label="OrderCompletedAt">
         <DescriptionListTerm>
           {words("orders.column.completed_at")}
         </DescriptionListTerm>
@@ -59,7 +60,7 @@ export const OrderDetailsHeading: React.FC<Props> = ({ serviceOrder }) => {
           <DateWithTooltip timestamp={serviceOrder.completed_at} />
         </DescriptionListDescription>
       </DescriptionListGroup>
-      <DescriptionListGroup>
+      <DescriptionListGroup aria-label="OrderProgress">
         <DescriptionListTerm>
           {words("orders.column.progress")}
         </DescriptionListTerm>

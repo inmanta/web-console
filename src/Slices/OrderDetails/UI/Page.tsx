@@ -29,14 +29,13 @@ export const Page: React.FC = () => {
               aria-label="OrderDetailsView-Empty"
             />
           ) : (
-            <>
+            <div aria-label="OrderDetailsView-Success">
               <OrderDetailsHeading serviceOrder={orderDetails.data} />
               <OrderDetailsTable
                 rows={orderDetails.data}
-                aria-label="OrderDetailsView-Success"
                 tablePresenter={new OrderDetailsTablePresenter()}
               />
-            </>
+            </div>
           )
         }
       />
