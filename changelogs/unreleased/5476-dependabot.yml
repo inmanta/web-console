@@ -1,0 +1,6 @@
+change-type: patch
+description: "Build(deps-dev): Bumps prettier from 3.0.3 to 3.2.4."
+destination-branches:
+  - master
+  - iso7
+sections: {}

@@ -20,8 +20,8 @@ export const Link: React.FC<Props> = forwardRef<HTMLAnchorElement, Props>(
     const search = newSearch
       ? newSearch
       : envOnly
-      ? new SearchHelper().keepEnvOnly(currentSearch)
-      : currentSearch;
+        ? new SearchHelper().keepEnvOnly(currentSearch)
+        : currentSearch;
 
     return isDisabled ? (
       <>{children}</>
