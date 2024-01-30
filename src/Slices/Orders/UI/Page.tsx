@@ -59,13 +59,14 @@ export const Page: React.FC = () => {
               aria-label="OrdersView-Empty"
             />
           ) : (
-            <OrdersTable
-              rows={orders.data}
-              aria-label="OrdersView-Success"
-              tablePresenter={new OrdersTablePresenter()}
-              sort={sort}
-              setSort={setSort}
-            />
+            <div aria-label="OrdersView-Success">
+              <OrdersTable
+                rows={orders.data}
+                tablePresenter={new OrdersTablePresenter()}
+                sort={sort}
+                setSort={setSort}
+              />
+            </div>
           )
         }
       />
