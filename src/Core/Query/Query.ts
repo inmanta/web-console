@@ -78,6 +78,8 @@ import * as GetDiagnostics from "@S/Diagnose/Core/Query";
 import * as GetInstanceEvents from "@S/Events/Core/Query";
 import * as GetFacts from "@S/Facts/Core/Query";
 import * as GetNotifications from "@S/Notification/Core/Query";
+import * as GetOrderDetails from "@S/OrderDetails/Core/Query";
+import * as GetOrders from "@S/Orders/Core/Query";
 import * as GetParameters from "@S/Parameters/Core/Query";
 import * as GetResources from "@S/Resource/Core/Query";
 import * as GetResourceDetails from "@S/ResourceDetails/Core/GetResourceDetailsQuery";
@@ -109,6 +111,8 @@ export type Query =
   | GetResourceDetails.Query
   | GetResourceHistory.Query
   | GetResourceLogs.Query
+  | GetOrders.Query
+  | GetOrderDetails.Query
   | GetEnvironmentDetails.Query
   | GetCompileReports.Query
   | GetCompileDetails.Query
@@ -160,6 +164,8 @@ interface Manifest {
   GetResourceDetails: GetResourceDetails.Manifest;
   GetResourceHistory: GetResourceHistory.Manifest;
   GetResourceLogs: GetResourceLogs.Manifest;
+  GetOrders: GetOrders.Manifest;
+  GetOrderDetails: GetOrderDetails.Manifest;
   GetEnvironmentDetails: GetEnvironmentDetails.Manifest;
   GetCompileReports: GetCompileReports.Manifest;
   GetCompileDetails: GetCompileDetails.Manifest;

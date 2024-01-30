@@ -27,7 +27,7 @@ export const DiscoveredResourceRow: React.FC<Props> = ({
   return (
     <Tbody>
       <Tr aria-label="DiscoveredResourceRow">
-        <Td width={10}>
+        <Td style={{ width: "15px" }}>
           <Toggle
             expanded={isExpanded}
             onToggle={onToggle}

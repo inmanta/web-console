@@ -1,5 +1,10 @@
 import { EventsSlice, eventsSlice } from "@/Slices/Events/Data/Store";
 import {
+  OrderDetailsSlice,
+  orderDetailsSlice,
+} from "@/Slices/OrderDetails/Data/Store";
+import { ordersSlice, OrdersSlice } from "@/Slices/Orders/Data/Store";
+import {
   DiscoveredResourcesSlice,
   discoveredResourcesSlice,
 } from "@/Slices/ResourceDiscovery/Data/Store";
@@ -130,6 +135,8 @@ export interface StoreModel {
   serviceInstances: ServiceInstancesSlice;
   serviceInstanceWithRelations: ServiceInstanceWithRelationsSlice;
   services: ServicesSlice;
+  orders: OrdersSlice;
+  orderDetails: OrderDetailsSlice;
   versionedResourceDetails: VersionedResourceDetailsSlice;
   versionResources: VersionResourcesSlice;
 }
@@ -166,6 +173,8 @@ export const storeModel: StoreModel = {
   serviceInstances: serviceInstancesSlice,
   serviceInstanceWithRelations: serviceInstanceWithRelationsSlice,
   services: servicesSlice,
+  orders: ordersSlice,
+  orderDetails: orderDetailsSlice,
   versionedResourceDetails: versionedResourceDetailsSlice,
   versionResources: versionResourcesSlice,
 };

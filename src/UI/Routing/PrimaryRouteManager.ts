@@ -36,6 +36,8 @@ import { Events } from "@S/Events";
 import { Facts } from "@S/Facts";
 import { Home } from "@S/Home";
 import { Notification } from "@S/Notification";
+import { OrderDetails } from "@S/OrderDetails";
+import { Orders } from "@S/Orders";
 import { Parameters } from "@S/Parameters";
 import { Resource } from "@S/Resource";
 import { ResourceDetails } from "@S/ResourceDetails";
@@ -73,6 +75,8 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
     InstanceComposerEditor: InstanceComposerEditor.route(baseUrl),
     Inventory: ServiceInventory.route(baseUrl),
     ServiceDetails: ServiceDetails.route(baseUrl),
+    Orders: Orders.route(baseUrl),
+    OrderDetails: OrderDetails.route(baseUrl),
 
     /**
      * Resource Manager

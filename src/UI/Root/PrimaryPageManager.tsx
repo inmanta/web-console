@@ -8,6 +8,8 @@ import {
 } from "@/Core";
 import { InstanceComposerPage } from "@/Slices/InstanceComposer/UI";
 import { InstanceComposerEditorPage } from "@/Slices/InstanceComposerEditor/UI";
+import { OrderDetailsPage } from "@/Slices/OrderDetails/UI";
+import { OrdersPage } from "@/Slices/Orders/UI";
 import { DiscoveredResourcesPage } from "@/Slices/ResourceDiscovery/UI";
 import { ServiceDetailsPage } from "@/Slices/ServiceDetails/UI";
 import { AgentProcessPage } from "@S/AgentProcess/UI";
@@ -69,6 +71,14 @@ export class PrimaryPageManager implements PageManager {
       Catalog: {
         ...this.routeDictionary.Catalog,
         element: <ServiceCatalogPage />,
+      },
+      Orders: {
+        ...this.routeDictionary.Orders,
+        element: <OrdersPage />,
+      },
+      OrderDetails: {
+        ...this.routeDictionary.OrderDetails,
+        element: <OrderDetailsPage />,
       },
       Inventory: {
         ...this.routeDictionary.Inventory,

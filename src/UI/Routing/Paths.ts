@@ -2,6 +2,7 @@ import { RouteKind } from "@/Core";
 import { Dashboard } from "@/Slices/Dashboard";
 import { InstanceComposer } from "@/Slices/InstanceComposer";
 import { InstanceComposerEditor } from "@/Slices/InstanceComposerEditor";
+import { OrderDetails } from "@/Slices/OrderDetails";
 import { AgentProcess } from "@S/AgentProcess";
 import { Agents } from "@S/Agents";
 import { CompileDetails } from "@S/CompileDetails";
@@ -20,6 +21,7 @@ import { Events } from "@S/Events";
 import { Facts } from "@S/Facts";
 import { Home } from "@S/Home";
 import { Notification } from "@S/Notification";
+import { Orders } from "@S/Orders";
 import { Parameters } from "@S/Parameters";
 import { Resource } from "@S/Resource";
 import { ResourceDetails } from "@S/ResourceDetails";
@@ -58,6 +60,8 @@ export const paths: Paths = {
   InstanceComposerEditor: InstanceComposerEditor.path,
   Inventory: ServiceInventory.path,
   ServiceDetails: ServiceDetails.path,
+  Orders: Orders.path,
+  OrderDetails: OrderDetails.path,
 
   /**
    * Resource Manager
