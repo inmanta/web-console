@@ -16,6 +16,12 @@ interface Props {
   serviceOrder: ServiceOrder;
 }
 
+/**
+ * Heading component displaying the high level information if the order.
+ *
+ * @param serviceOrder ServiceOrder
+ * @returns ReactNode
+ */
 export const OrderDetailsHeading: React.FC<Props> = ({ serviceOrder }) => {
   return (
     <>

@@ -19,6 +19,18 @@ interface Props {
   setSort: (sort: Sort.Type<SortKey>) => void;
 }
 
+/**
+ * OrdersTable Component
+ *
+ * The table displays the result from the order-endpoint
+ * It provides Sorting on the columns returned in the TablePresenter.
+ *
+ * @param tablePresenter OrdersTablePresenter
+ * @param rows ServiceOrder[]
+ * @param sort Sort.Type<SortKey>
+ * @param setSort function
+ * @returns ReactNode
+ */
 export const OrdersTable: React.FC<Props> = ({
   tablePresenter,
   rows,

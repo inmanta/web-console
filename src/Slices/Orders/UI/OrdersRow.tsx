@@ -13,6 +13,15 @@ interface Props {
   row: ServiceOrder;
 }
 
+/**
+ * OrderRow Component
+ *
+ * Displays the high-level information of the order.
+ * A link forwards to the OrderDetailsPage
+ *
+ * @param row ServiceOrder
+ * @returns ReactNode
+ */
 export const OrdersRow: React.FC<Props> = ({ row }) => {
   const { routeManager } = useContext(DependencyContext);
   return (

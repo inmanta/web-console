@@ -7,7 +7,7 @@ import {
   Label,
 } from "@patternfly/react-core";
 import { ExclamationCircleIcon } from "@patternfly/react-icons";
-import { Tbody, Tr, Td } from "@patternfly/react-table";
+import { Tr, Td } from "@patternfly/react-table";
 import styled from "styled-components";
 import { ServiceOrderItem } from "@/Slices/Orders/Core/Query";
 import { OrderStatusLabel } from "@/Slices/Orders/UI/OrderStatusLabel";
@@ -23,6 +23,17 @@ interface Props {
   numberOfColumns: number;
 }
 
+/**
+ * OrderDetailsRow Component
+ *
+ * Displays all the details in expandable rows about the service_order_item
+ *
+ * @param row  ServiceOrderItem
+ * @param isExpanded boolean
+ * @param onToggle callback method
+ * @param numberOfColumns number
+ * @returns ReactNode
+ */
 export const OrderDetailsRow: React.FC<Props> = ({
   row,
   isExpanded,
@@ -30,7 +41,7 @@ export const OrderDetailsRow: React.FC<Props> = ({
   numberOfColumns,
 }) => {
   return (
-    <Tbody>
+    <>
       <Tr aria-label="ServiceOrderDetailsRow">
         <Td>
           <Toggle
@@ -123,7 +134,7 @@ export const OrderDetailsRow: React.FC<Props> = ({
           </Td>
         </Tr>
       )}
-    </Tbody>
+    </>
   );
 };
 

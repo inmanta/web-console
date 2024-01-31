@@ -12,6 +12,16 @@ interface Props {
   dependencies: ServiceOrderItemDependencies;
 }
 
+/**
+ * Displays the direct_dependencies from the service_order_item.
+ * If the service_order_item doesn't have dependencies, it will display an Empty badge.
+ *
+ * Dependencies contain the ID of the instance and their matching status.
+ * The instance_id only refers to an instance being part of the Order.
+ *
+ * @param dependencies ServiceOrderItemDependencies
+ * @returns ReactNode
+ */
 export const OrderDependencies: React.FC<Props> = ({ dependencies }) => {
   if (!Object.keys(dependencies).length) {
     return (

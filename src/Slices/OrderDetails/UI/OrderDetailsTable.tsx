@@ -1,15 +1,29 @@
 import React from "react";
-import { Table, TableVariant, Th, Thead, Tr } from "@patternfly/react-table";
+import {
+  Table,
+  TableVariant,
+  Tbody,
+  Th,
+  Thead,
+  Tr,
+} from "@patternfly/react-table";
 import { useExpansion } from "@/Data";
-import { ServiceOrder } from "@/Slices/Orders/Core/Query";
+import { ServiceOrderItem } from "@/Slices/Orders/Core/Query";
 import { OrderDetailsRow } from "./OrderDetailsRow";
 import { OrderDetailsTablePresenter } from "./OrderDetailsTablePresenter";
 
 interface Props {
   tablePresenter: OrderDetailsTablePresenter;
-  rows: ServiceOrder;
+  rows: ServiceOrderItem[];
 }
 
+/**
+ * OrderDetailsTable Component
+ *
+ * @param tablePresenter  OrderDetailsTablePresenter
+ * @param rows ServiceOrderItem[]
+ * @returns ReactNode
+ */
 export const OrderDetailsTable: React.FC<Props> = ({
   tablePresenter,
   rows,
@@ -30,15 +44,17 @@ export const OrderDetailsTable: React.FC<Props> = ({
           {heads}
         </Tr>
       </Thead>
-      {rows.service_order_items.map((row) => (
-        <OrderDetailsRow
-          row={row}
-          key={row.instance_id}
-          isExpanded={isExpanded(row.instance_id)}
-          onToggle={onExpansion(row.instance_id)}
-          numberOfColumns={tablePresenter.getNumberOfColumns()}
-        />
-      ))}
+      <Tbody>
+        {rows.map((row) => (
+          <OrderDetailsRow
+            row={row}
+            key={row.instance_id}
+            isExpanded={isExpanded(row.instance_id)}
+            onToggle={onExpansion(row.instance_id)}
+            numberOfColumns={tablePresenter.getNumberOfColumns()}
+          />
+        ))}
+      </Tbody>
     </Table>
   );
 };

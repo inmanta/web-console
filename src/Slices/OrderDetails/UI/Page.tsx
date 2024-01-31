@@ -32,7 +32,7 @@ export const Page: React.FC = () => {
             <div aria-label="OrderDetailsView-Success">
               <OrderDetailsHeading serviceOrder={orderDetails.data} />
               <OrderDetailsTable
-                rows={orderDetails.data}
+                rows={orderDetails.data.service_order_items}
                 tablePresenter={new OrderDetailsTablePresenter()}
               />
             </div>

@@ -1,4 +1,6 @@
-export const responseOrderFailed = {
+import { ServiceOrder } from "@/Slices/Orders/Core/Query";
+
+export const responseOrderFailed: ServiceOrder = {
   description: "Failed CREATE order",
   id: "3fa85f64-5717-4562-b3fc-2c963f66afa",
   environment: "a",
@@ -28,7 +30,7 @@ export const responseOrderFailed = {
   },
 };
 
-export const responseCompletedOrder = {
+export const responseCompletedOrder: ServiceOrder = {
   description: "Success CREATE order",
   id: "3fa85f64-5717-4562-b3fc-2c963f66afb",
   environment: "a",
@@ -36,7 +38,7 @@ export const responseCompletedOrder = {
     {
       status: {
         state: "completed",
-        failure_type: "",
+        failure_type: null,
         reason: "",
         direct_dependencies: {},
         validation_compile_id: "compile45322",
@@ -58,7 +60,7 @@ export const responseCompletedOrder = {
   },
 };
 
-export const responseInProgressOrder = {
+export const responseInProgressOrder: ServiceOrder = {
   description: "In progress DELETE order",
   id: "3fa85f64-5717-4562-b3fc-2c963f66afc",
   environment: "a",
@@ -66,7 +68,7 @@ export const responseInProgressOrder = {
     {
       status: {
         state: "in_progress",
-        failure_type: "",
+        failure_type: null,
         reason: "",
         direct_dependencies: {},
         validation_compile_id: "",
@@ -84,7 +86,7 @@ export const responseInProgressOrder = {
     state: "in_progress",
   },
 };
-export const responsePartialOrder = {
+export const responsePartialOrder: ServiceOrder = {
   description: "Partial UPDATE order, with dependency",
   id: "3fa85f64-5717-4562-b3fc-2c963f66afd",
   environment: "a",
@@ -111,7 +113,7 @@ export const responsePartialOrder = {
     {
       status: {
         state: "completed",
-        failure_type: "",
+        failure_type: null,
         reason: "",
         direct_dependencies: {},
         validation_compile_id: "compile45329",

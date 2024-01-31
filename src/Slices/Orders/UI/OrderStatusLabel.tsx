@@ -5,6 +5,12 @@ import { words } from "@/UI";
 import { Spinner } from "@/UI/Components";
 import { ServiceOrderItemState, ServiceOrderState } from "../Core/Query";
 
+/**
+ * Custom label tag for orders and serviceOrderItems
+ *
+ * @param status  ServiceOrderItemState | ServiceOrderState
+ * @returns ReactNode
+ */
 export const OrderStatusLabel: React.FC<{
   status: ServiceOrderItemState | ServiceOrderState;
 }> = ({ status }) => {

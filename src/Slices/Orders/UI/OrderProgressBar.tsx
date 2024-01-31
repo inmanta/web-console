@@ -13,6 +13,15 @@ interface Props {
   showTotal?: boolean;
 }
 
+/**
+ * OrderProgress Component
+ *
+ * Displays the states for the ServiceOrderItems in the form of a progress-bar.
+ *
+ * @param serviceOrderItems ServiceOrderItem[]
+ * @param showTotal boolean
+ * @returns ReactNode
+ */
 export const OrderProgressBar: React.FC<Props> = ({
   serviceOrderItems,
   showTotal = false,
