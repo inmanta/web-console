@@ -21,6 +21,7 @@ test("TablePresenter converts column name to index correctly", () => {
   expect(presenter.getIndexForColumnName("service_entity")).toEqual(1);
   expect(presenter.getIndexForColumnName(undefined)).toEqual(-1);
 });
+
 test("TablePresenter returns sortable columns correctly", () => {
   expect(presenter.getSortableColumnNames()).toEqual([]);
 });

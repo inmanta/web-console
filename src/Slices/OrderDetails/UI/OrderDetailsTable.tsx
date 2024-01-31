@@ -36,6 +36,7 @@ export const OrderDetailsTable: React.FC<Props> = ({
     .map(({ apiName, displayName }) => {
       return <Th key={apiName}>{displayName}</Th>;
     });
+
   return (
     <Table {...props} variant={TableVariant.compact}>
       <Thead>
