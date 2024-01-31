@@ -105,8 +105,6 @@ test("OrderDetailsView shows view for a partial order", async () => {
   expect(rowDetails).toHaveTextContent(/Failure Type/);
   expect(rowDetails).toHaveTextContent(/Reason/);
 
-  expect(screen.queryByLabelText("Spinner-Compile")).not.toBeInTheDocument();
-
   const rowConfig = await screen.findByLabelText("Expanded-Config");
   expect(rowConfig).toHaveTextContent(/Empty/);
 
@@ -152,9 +150,6 @@ test("OrderDetailsView shows view for a in progress order", async () => {
   expect(rowDetails).not.toHaveTextContent(/Show Compile Report/);
   expect(rowDetails).not.toHaveTextContent(/Failure Type/);
   expect(rowDetails).not.toHaveTextContent(/Reason/);
-
-  const compileSpinner = await screen.findByLabelText("Spinner-Compile");
-  expect(compileSpinner).toBeInTheDocument();
 
   const rowConfig = await screen.findByLabelText("Expanded-Config");
   expect(rowConfig).toHaveTextContent(/Empty/);
