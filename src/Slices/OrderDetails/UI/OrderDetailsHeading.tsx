@@ -67,7 +67,7 @@ export const OrderDetailsHeading: React.FC<Props> = ({ serviceOrder }) => {
         horizontalTermWidthModifier={{
           default: "20ch",
         }}
-        aria-label="OrderDetails-Heading"
+        aria-label="OrderDetails-Heading-Progress"
       >
         <DescriptionListGroup aria-label="OrderProgress">
           <DescriptionListTerm>

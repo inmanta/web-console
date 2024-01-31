@@ -1,5 +1,6 @@
 import React from "react";
 import { act, render, screen } from "@testing-library/react";
+import { userEvent } from "@testing-library/user-event";
 import { Either } from "@/Core";
 import { baseSetup } from "@/Test/Utils/base-setup";
 import {
@@ -95,6 +96,24 @@ test("OrderDetailsView shows view for a partial order", async () => {
     name: "ServiceOrderDetailsRow",
   });
   expect(serviceOrderItemRows).toHaveLength(2);
+
+  await act(async () => {
+    await userEvent.click(screen.getAllByLabelText("Toggle-DetailsRow")[0]);
+  });
+  const rowDetails = await screen.findByLabelText("Expanded-Details");
+  expect(rowDetails).toHaveTextContent(/Show Compile Report/);
+  expect(rowDetails).toHaveTextContent(/Failure Type/);
+  expect(rowDetails).toHaveTextContent(/Reason/);
+
+  expect(screen.queryByLabelText("Spinner-Compile")).not.toBeInTheDocument();
+
+  const rowConfig = await screen.findByLabelText("Expanded-Config");
+  expect(rowConfig).toHaveTextContent(/Empty/);
+
+  expect(screen.getByLabelText("Expanded-Body")).toBeInTheDocument();
+
+  const rowDependencies = await screen.findByLabelText("Expanded-Dependencies");
+  expect(rowDependencies).not.toHaveTextContent(/Empty/);
 });
 
 test("OrderDetailsView shows view for a in progress order", async () => {
@@ -125,6 +144,25 @@ test("OrderDetailsView shows view for a in progress order", async () => {
     name: "ServiceOrderDetailsRow",
   });
   expect(serviceOrderItemRows).toHaveLength(1);
+
+  await act(async () => {
+    await userEvent.click(screen.getByLabelText("Toggle-DetailsRow"));
+  });
+  const rowDetails = await screen.findByLabelText("Expanded-Details");
+  expect(rowDetails).not.toHaveTextContent(/Show Compile Report/);
+  expect(rowDetails).not.toHaveTextContent(/Failure Type/);
+  expect(rowDetails).not.toHaveTextContent(/Reason/);
+
+  const compileSpinner = await screen.findByLabelText("Spinner-Compile");
+  expect(compileSpinner).toBeInTheDocument();
+
+  const rowConfig = await screen.findByLabelText("Expanded-Config");
+  expect(rowConfig).toHaveTextContent(/Empty/);
+
+  expect(screen.queryByLabelText("Expanded-Body")).not.toBeInTheDocument();
+
+  const rowDependencies = await screen.findByLabelText("Expanded-Dependencies");
+  expect(rowDependencies).toHaveTextContent(/Empty/);
 });
 
 test("OrderDetailsView shows view for completed order", async () => {
@@ -155,4 +193,21 @@ test("OrderDetailsView shows view for completed order", async () => {
     name: "ServiceOrderDetailsRow",
   });
   expect(serviceOrderItemRows).toHaveLength(1);
+
+  await act(async () => {
+    await userEvent.click(screen.getByLabelText("Toggle-DetailsRow"));
+  });
+  const rowDetails = await screen.findByLabelText("Expanded-Details");
+  expect(rowDetails).toHaveTextContent(/Show Compile Report/);
+  expect(rowDetails).not.toHaveTextContent(/Failure Type/);
+  expect(rowDetails).not.toHaveTextContent(/Reason/);
+
+  const rowConfig = await screen.findByLabelText("Expanded-Config");
+  expect(rowConfig).toHaveTextContent(/Empty/);
+
+  const rowBody = await screen.findByLabelText("Expanded-Body");
+  expect(rowBody).toHaveTextContent(/completed service/);
+
+  const rowDependencies = await screen.findByLabelText("Expanded-Dependencies");
+  expect(rowDependencies).toHaveTextContent(/Empty/);
 });

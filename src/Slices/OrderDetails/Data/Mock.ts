@@ -47,7 +47,7 @@ export const responseCompletedOrder = {
       config: {},
       action: "create",
       attributes: {
-        value: "value",
+        value: "completed service",
       },
     },
   ],
@@ -97,7 +97,7 @@ export const responsePartialOrder = {
         direct_dependencies: {
           partial_instance_02: "completed",
         },
-        validation_compile_id: "",
+        validation_compile_id: "compile45324",
         instance_state_label: "",
       },
       instance_id: "partial_instance_01",
@@ -114,7 +114,7 @@ export const responsePartialOrder = {
         failure_type: "",
         reason: "",
         direct_dependencies: {},
-        validation_compile_id: "",
+        validation_compile_id: "compile45329",
         instance_state_label: "",
       },
       instance_id: "partial_instance_02",

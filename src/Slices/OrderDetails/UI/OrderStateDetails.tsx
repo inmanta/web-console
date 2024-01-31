@@ -11,6 +11,7 @@ import {
 import styled from "styled-components";
 import { ServiceOrderItemStatus } from "@/Slices/Orders/Core/Query";
 import { DependencyContext, words } from "@/UI";
+import { Spinner } from "@/UI/Components";
 
 interface Props {
   state: ServiceOrderItemStatus;
@@ -18,6 +19,7 @@ interface Props {
 
 export const OrderStateDetails: React.FC<Props> = ({ state }) => {
   const { routeManager } = useContext(DependencyContext);
+
   return (
     <Card>
       <CardBody>
@@ -42,7 +44,7 @@ export const OrderStateDetails: React.FC<Props> = ({ state }) => {
               </DescriptionListDescription>
             </DescriptionListGroup>
           )}
-          {state.validation_compile_id && (
+          {state.validation_compile_id ? (
             <Link
               target="_blank"
               to={{
@@ -54,6 +56,10 @@ export const OrderStateDetails: React.FC<Props> = ({ state }) => {
             >
               {words("orders.row.compilerReport")}
             </Link>
+          ) : (
+            <DescriptionListDescription aria-label="Spinner-Compile">
+              <Spinner variant="small" />
+            </DescriptionListDescription>
           )}
         </PaddedDescriptionList>
       </CardBody>

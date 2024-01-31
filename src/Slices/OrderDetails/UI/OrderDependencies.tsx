@@ -1,7 +1,7 @@
 import React from "react";
 import { Card, Label } from "@patternfly/react-core";
 import { ExclamationCircleIcon } from "@patternfly/react-icons";
-import { Table, Td, Tr } from "@patternfly/react-table";
+import { Table, Tbody, Td, Tr } from "@patternfly/react-table";
 import styled from "styled-components";
 import { ServiceOrderItemDependencies } from "@/Slices/Orders/Core/Query";
 import { OrderStatusLabel } from "@/Slices/Orders/UI/OrderStatusLabel";
@@ -24,19 +24,21 @@ export const OrderDependencies: React.FC<Props> = ({ dependencies }) => {
   return (
     <Card>
       <Table>
-        {Object.entries(dependencies).map(([instance_id, status], index) => (
-          <Tr key={instance_id} aria-label={`Dependency-Row-${index}`}>
-            <Td>
-              <TextWithCopy
-                value={instance_id}
-                tooltipContent={words("serviceIdentity.copy")}
-              />
-            </Td>
-            <StyledStatusCell>
-              <OrderStatusLabel status={status} />
-            </StyledStatusCell>
-          </Tr>
-        ))}
+        <Tbody>
+          {Object.entries(dependencies).map(([instance_id, status], index) => (
+            <Tr key={instance_id} aria-label={`Dependency-Row-${index}`}>
+              <Td>
+                <TextWithCopy
+                  value={instance_id}
+                  tooltipContent={words("serviceIdentity.copy")}
+                />
+              </Td>
+              <StyledStatusCell>
+                <OrderStatusLabel status={status} />
+              </StyledStatusCell>
+            </Tr>
+          ))}
+        </Tbody>
       </Table>
     </Card>
   );
