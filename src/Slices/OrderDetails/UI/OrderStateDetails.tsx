@@ -7,7 +7,9 @@ import {
   DescriptionListDescription,
   DescriptionListGroup,
   DescriptionListTerm,
+  Label,
 } from "@patternfly/react-core";
+import { ExclamationCircleIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { ServiceOrderItemStatus } from "@/Slices/Orders/Core/Query";
 import { DependencyContext, words } from "@/UI";
@@ -31,6 +33,14 @@ interface Props {
  */
 export const OrderStateDetails: React.FC<Props> = ({ state }) => {
   const { routeManager } = useContext(DependencyContext);
+
+  if (!state.failure_type && !state.reason && !state.validation_compile_id) {
+    return (
+      <Label icon={<ExclamationCircleIcon />} variant="outline">
+        {words("orders.row.empty")}
+      </Label>
+    );
+  }
 
   return (
     <Card>
