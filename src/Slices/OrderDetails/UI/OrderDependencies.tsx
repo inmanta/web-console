@@ -24,8 +24,8 @@ export const OrderDependencies: React.FC<Props> = ({ dependencies }) => {
   return (
     <Card>
       <Table>
-        {Object.entries(dependencies).map(([instance_id, status]) => (
-          <Tr key={instance_id}>
+        {Object.entries(dependencies).map(([instance_id, status], index) => (
+          <Tr key={instance_id} aria-label={`Dependency-Row-${index}`}>
             <Td>
               <TextWithCopy
                 value={instance_id}

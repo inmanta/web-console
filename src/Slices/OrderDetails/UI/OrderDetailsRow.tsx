@@ -36,7 +36,7 @@ export const OrderDetailsRow: React.FC<Props> = ({
           <Toggle
             expanded={isExpanded}
             onToggle={onToggle}
-            aria-label={`Toggle-${row.instance_id}`}
+            aria-label={"Toggle-DetailsRow"}
           />
         </Td>
         <Td width={35} dataLabel={words("orders.column.instanceId")}>
@@ -65,7 +65,7 @@ export const OrderDetailsRow: React.FC<Props> = ({
                 default: "25ch",
               }}
             >
-              <TopAlignedLayout>
+              <TopAlignedLayout aria-label="Expanded-Details">
                 <DescriptionListTerm>
                   {words("orders.row.details")}
                 </DescriptionListTerm>
@@ -73,7 +73,7 @@ export const OrderDetailsRow: React.FC<Props> = ({
                   <OrderStateDetails state={row.status} />
                 </DescriptionListDescription>
               </TopAlignedLayout>
-              <TopAlignedLayout>
+              <TopAlignedLayout aria-label="Expanded-Dependencies">
                 <DescriptionListTerm>
                   {words("orders.row.dependencies")}
                 </DescriptionListTerm>
@@ -83,7 +83,7 @@ export const OrderDetailsRow: React.FC<Props> = ({
                   />
                 </DescriptionListDescription>
               </TopAlignedLayout>
-              <TopAlignedLayout>
+              <TopAlignedLayout aria-label="Expanded-Config">
                 <DescriptionListTerm>
                   {words("orders.row.config")}
                 </DescriptionListTerm>
@@ -102,7 +102,7 @@ export const OrderDetailsRow: React.FC<Props> = ({
                 </DescriptionListDescription>
               </TopAlignedLayout>
               {(row.attributes || row.edits) && (
-                <TopAlignedLayout>
+                <TopAlignedLayout aria-label="Expanded-Body">
                   <DescriptionListTerm>
                     {words("orders.row.body")}
                   </DescriptionListTerm>
