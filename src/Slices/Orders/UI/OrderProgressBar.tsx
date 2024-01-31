@@ -54,6 +54,13 @@ const getTotalDoneState = (items: ServiceOrderItem[]) => {
   return done;
 };
 
+/**
+ * Processes the different states of the service_order_items into an array or LegendItemDetails.
+ * the value in each object is the total amount of items that have that specific state.
+ *
+ * @param items ServiceOrderItem[]
+ * @returns LegendItemDetails[]
+ */
 const fromProgressToItems = (
   items: ServiceOrderItem[],
 ): LegendItemDetails[] => {
