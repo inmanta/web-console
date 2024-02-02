@@ -1445,7 +1445,7 @@ __metadata:
     "@patternfly/react-table": ^5.1.2
     "@patternfly/react-tokens": ^5.1.2
     "@react-keycloak/web": ^3.4.0
-    "@testing-library/dom": ^9.3.1
+    "@testing-library/dom": ^9.3.4
     "@testing-library/jest-dom": ^6.2.0
     "@testing-library/react": ^13.4.0
     "@testing-library/user-event": ^14.5.2
@@ -2210,9 +2210,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/dom@npm:^9.3.1":
-  version: 9.3.1
-  resolution: "@testing-library/dom@npm:9.3.1"
+"@testing-library/dom@npm:^9.3.4":
+  version: 9.3.4
+  resolution: "@testing-library/dom@npm:9.3.4"
   dependencies:
     "@babel/code-frame": ^7.10.4
     "@babel/runtime": ^7.12.5
@@ -2222,7 +2222,7 @@ __metadata:
     dom-accessibility-api: ^0.5.9
     lz-string: ^1.5.0
     pretty-format: ^27.0.2
-  checksum: 8ee3136451644e39990edea93709c38cf1e8ce5306f3c66273ca00935963faa51ca74e8d92b02eb442ccb842cfa28ca62833e393e075eb269cf9bef6f5600663
+  checksum: dfd6fb0d6c7b4dd716ba3c47309bc9541b4a55772cb61758b4f396b3785efe2dbc75dc63423545c039078c7ffcc5e4b8c67c2db1b6af4799580466036f70026f
   languageName: node
   linkType: hard
 
