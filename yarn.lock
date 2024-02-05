@@ -1441,7 +1441,7 @@ __metadata:
     "@patternfly/react-charts": ^7.1.2
     "@patternfly/react-core": ^5.1.2
     "@patternfly/react-icons": ^5.1.2
-    "@patternfly/react-styles": ^5.1.1
+    "@patternfly/react-styles": ^5.2.0
     "@patternfly/react-table": ^5.1.2
     "@patternfly/react-tokens": ^5.1.2
     "@react-keycloak/web": ^3.4.0
@@ -2059,17 +2059,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@patternfly/react-styles@npm:^5.1.1":
-  version: 5.1.1
-  resolution: "@patternfly/react-styles@npm:5.1.1"
-  checksum: c01d65b5a5e707d49f1eec7f5c89cc68af57c1d37f4dfe635e843359af62e170fd067f4bb11dc875b086c9ef444ea3d22d118b2fac579683a8a5384d0f6cbb32
-  languageName: node
-  linkType: hard
-
 "@patternfly/react-styles@npm:^5.1.2":
   version: 5.1.2
   resolution: "@patternfly/react-styles@npm:5.1.2"
   checksum: 49f0f05744a94cb4ba9aa071807efb9beb804a532a97a78ca60b567c3f65262456e997c18a480ad8823684a248a2af4cc873ccae703ab77b081184296dcef2c3
+  languageName: node
+  linkType: hard
+
+"@patternfly/react-styles@npm:^5.2.0":
+  version: 5.2.0
+  resolution: "@patternfly/react-styles@npm:5.2.0"
+  checksum: ab38211d265c5fdcebf1c6d10503cca3fa87e7f5021021a61e0b1cf320f6f906eb7ae4279b5d7767cd657ddea4659d74b072b100416f8c6dfb485d4d31a3dc76
   languageName: node
   linkType: hard
 
