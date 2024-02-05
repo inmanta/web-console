@@ -65,6 +65,10 @@ const Canvas = ({
 
   const handleDeploy = async () => {
     try {
+      const bundledInstances = bundleInstances(
+        instancesToSend,
+        services,
+      ).filter((item) => item.action !== null);
       const response = await fetch(`${baseUrl}/lsm/v2/order`, {
         method: "POST",
         headers: {
@@ -72,16 +76,20 @@ const Canvas = ({
           "X-Inmanta-tid": environment,
         },
         body: JSON.stringify({
-          service_order_items: bundleInstances(
-            instancesToSend,
-            services,
-          ).filter((item) => item.action !== null),
+          service_order_items: bundledInstances,
         }),
       });
 
       if (response.ok) {
         setAlertType(AlertVariant.success);
         setAlertMessage(words("inventory.instanceComposer.success"));
+
+        const mainInstance = bundleInstances(instancesToSend, services).find(
+          (instance) => instance.service_entity === mainServiceName,
+        );
+        if (mainInstance) {
+          diagramHandlers?.saveCoordinates(mainInstance.instance_id);
+        }
         //If response is successful then show feedback notification and redirect user to the service inventory view
         setTimeout(() => {
           navigate(url);

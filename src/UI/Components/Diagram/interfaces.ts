@@ -1,3 +1,4 @@
+import { dia } from "@inmanta/rappid";
 import { InstanceAttributeModel, ParsedNumber } from "@/Core";
 
 enum ActionEnum {
@@ -130,3 +131,10 @@ export {
   InstanceForApi,
   relationId,
 };
+
+export interface SavedCoordinates {
+  id: string | dia.Cell.ID;
+  name: string;
+  attributes: { [key: string]: unknown };
+  coordinates: { x: number; y: number };
+}

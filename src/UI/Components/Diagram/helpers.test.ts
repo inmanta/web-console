@@ -1,3 +1,4 @@
+import { dia, shapes } from "@inmanta/rappid";
 import { InstanceAttributeModel } from "@/Core";
 import { Service, ServiceInstance } from "@/Test";
 import * as uuidApi from "../../../Slices/EditInstance/Data/CommandManager";
@@ -13,8 +14,12 @@ import {
   createConnectionRules,
   shapesDataTransform,
   extractRelationsIds,
+  getCellsCoordinates,
+  applyCoordinatesToCells,
+  moveCellFromColliding,
 } from "./helpers";
 import { InstanceForApi } from "./interfaces";
+import { ServiceEntityBlock } from "./shapes";
 jest.spyOn(uuidApi, "create_UUID").mockReturnValue("1");
 
 describe("extractRelationsIds", () => {
@@ -486,5 +491,102 @@ describe("shapesDataTransform", () => {
       containerModel,
     );
     expect(result).toMatchObject(expectedResult);
+  });
+});
+
+describe("persisitingPosition", () => {
+  beforeAll(() => {
+    Object.defineProperty(
+      global.SVGElement.prototype,
+      "getComputedTextLength",
+      {
+        writable: true,
+        value: jest.fn().mockReturnValue(0),
+      },
+    );
+    Object.defineProperty(global.SVGElement.prototype, "getBBox", {
+      writable: true,
+      value: jest.fn().mockReturnValue({
+        x: 0,
+        y: 0,
+      }),
+    });
+  });
+
+  describe("getCellsCoordinates", () => {
+    it("extract correct shape data", () => {
+      const graph = new dia.Graph({}, { cellNamespace: shapes });
+      const shape = new ServiceEntityBlock()
+        .setName("test")
+        .set("position", { x: 50, y: 50 });
+
+      graph.addCell(shape);
+      const coordinates = getCellsCoordinates(graph);
+
+      expect(coordinates).toEqual([
+        {
+          id: shape.id,
+          name: shape.attributes.entityName,
+          attributes: shape.attributes.instanceAttributes,
+          coordinates: shape.attributes.position,
+        },
+      ]);
+    });
+  });
+
+  describe("applyCoordinatesToCells", () => {
+    it("updates correctly shape position", () => {
+      const graph = new dia.Graph({}, { cellNamespace: shapes });
+      const shape = new ServiceEntityBlock()
+        .setName("test")
+        .set("position", { x: 50, y: 50 });
+
+      graph.addCell(shape);
+      applyCoordinatesToCells(graph, [
+        {
+          id: shape.id,
+          name: shape.attributes.entityName,
+          attributes: shape.attributes.instanceAttributes,
+          coordinates: { x: 150, y: 150 },
+        },
+      ]);
+      const updatedShape = graph.getCell(shape.id);
+
+      expect(updatedShape.attributes.position).toEqual({ x: 150, y: 150 });
+    });
+  });
+  describe("moveCellFromColliding", () => {
+    it("if two shapes colliding it changes position of given shape to move it out of area of collision", () => {
+      const graph = new dia.Graph({}, { cellNamespace: shapes });
+      const shape = new ServiceEntityBlock()
+        .setName("test")
+        .set("position", { x: 50, y: 50 });
+      const shapeTwo = new ServiceEntityBlock()
+        .setName("test")
+        .set("position", { x: 50, y: 50 });
+
+      graph.addCell(shape);
+      graph.addCell(shapeTwo);
+      moveCellFromColliding(graph, shapeTwo);
+      const updatedShape = graph.getCell(shapeTwo.id);
+
+      expect(updatedShape.attributes.position).toEqual({ x: 350, y: 50 });
+    });
+    it("if two shapes doesn't collide it doesn't changes position of given shape", () => {
+      const graph = new dia.Graph({}, { cellNamespace: shapes });
+      const shape = new ServiceEntityBlock()
+        .setName("test")
+        .set("position", { x: 50, y: 50 });
+      const shapeTwo = new ServiceEntityBlock()
+        .setName("test")
+        .set("position", { x: 320, y: 50 });
+
+      graph.addCell(shape);
+      graph.addCell(shapeTwo);
+      moveCellFromColliding(graph, shapeTwo);
+      const updatedShape = graph.getCell(shapeTwo.id);
+
+      expect(updatedShape.attributes.position).toEqual({ x: 320, y: 50 });
+    });
   });
 });

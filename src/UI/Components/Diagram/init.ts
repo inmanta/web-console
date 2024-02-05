@@ -9,7 +9,11 @@ import {
 } from "./actions";
 import { anchorNamespace } from "./anchors";
 import createHalo from "./halo";
-import { checkIfConnectionIsAllowed } from "./helpers";
+import {
+  applyCoordinatesToCells,
+  checkIfConnectionIsAllowed,
+  getCellsCoordinates,
+} from "./helpers";
 import collapseButton from "./icons/collapse-icon.svg";
 import expandButton from "./icons/expand-icon.svg";
 import {
@@ -270,6 +274,17 @@ export default function diagramInit(
     },
   );
 
+  // // if user move any of the service related shapes we set persistedCoordinates to true to prevent auto-layout to change order of the shapes
+  // paper.on("cell:pointermove", function (cellView) {
+  //   if (
+  //     cellView.model.attributes.type !== "app.ServiceEntityBlock" ||
+  //     persistedCoordinates
+  //   ) {
+  //     return;
+  //   }
+  //   persistedCoordinates = true;
+  // });
+
   /**
    * Function that zooms in/out the view of canvas
    * @param {number} x - x coordinate
@@ -305,6 +320,14 @@ export default function diagramInit(
         services,
         isMainInstance,
       );
+      const savedInstancesCoordinates = localStorage.getItem(
+        instance.instance.data.id,
+      );
+      if (savedInstancesCoordinates) {
+        const parsedCoordinates = JSON.parse(savedInstancesCoordinates);
+        applyCoordinatesToCells(graph, parsedCoordinates);
+      }
+
       const { x, y } = appendedInstance.getBBox();
       scroller.center(x, y + 200);
 
@@ -345,6 +368,10 @@ export default function diagramInit(
     zoom: (delta) => {
       scroller.zoom(0.05 * delta, { min: 0.4, max: 1.2, grid: 0.05 });
     },
+    saveCoordinates: (id) => {
+      const coordinates = getCellsCoordinates(graph);
+      localStorage.setItem(id, JSON.stringify(coordinates));
+    },
   };
 }
 
@@ -368,4 +395,5 @@ export interface DiagramHandlers {
     attributeValues: InstanceAttributeModel,
   ) => ServiceEntityBlock;
   zoom: (delta: 1 | -1) => void;
+  saveCoordinates: (id: string) => void;
 }

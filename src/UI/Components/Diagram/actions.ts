@@ -3,7 +3,7 @@ import dagre, { graphlib } from "dagre";
 import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from "@/Core";
 import { InstanceWithReferences } from "@/Data/Managers/GetInstanceWithRelations/interface";
 import { words } from "@/UI/words";
-import { findCorrespondingId } from "./helpers";
+import { findCorrespondingId, moveCellFromColliding } from "./helpers";
 import activeImage from "./icons/active-icon.svg";
 import candidateImage from "./icons/candidate-icon.svg";
 import { ActionEnum, ConnectionRules, relationId } from "./interfaces";
@@ -449,14 +449,8 @@ export function appendEntity(
   appendColumns(instanceAsTable, attributesNames, entity);
   //add to graph
   instanceAsTable.addTo(graph);
-  //auto-layout provided by JointJS
-  layout.DirectedGraph.layout(graph, {
-    dagre: dagre,
-    graphlib: graphlib,
-    nodeSep: 80,
-    edgeSep: 80,
-    rankDir: "TB",
-  });
+
+  moveCellFromColliding(graph, instanceAsTable);
 
   return instanceAsTable;
 }
