@@ -259,6 +259,37 @@ const dict = {
   "diagnose.title": "Diagnose Service Instance",
 
   /**
+   * Orders related text
+   */
+  "orders.title": "Orders Overview",
+  "ordersDetails.title": "Order Details",
+  "orders.column.created_at": "Created at",
+  "orders.column.completed_at": "Completed at",
+  "orders.column.progress": "Deployment Progress",
+  "orders.column.status": "Status",
+  "orders.column.description": "Description / Order Id",
+  "orders.column.option": "Options",
+  "orders.column.action": "Action",
+  "orders.column.serviceEntity": "Service Entity",
+  "orders.column.instanceId": "Instance Id",
+  "orders.row.dependencies": "Dependencies",
+  "orders.row.config": "Config",
+  "orders.row.state": "State",
+  "orders.row.details": "Details",
+  "orders.row.failureType": "Failure Type",
+  "orders.row.reason": "Reason",
+  "orders.row.compilerReport": "Show Compile Report",
+  "orders.row.body": "Body",
+  "orders.table.empty": "No orders could be retrieved.",
+  "orderDetails.table.empty": "No orders details could be retrieved.",
+  "orders.links.details": "Show Details",
+  "orders.row.empty": "Empty",
+  "orders.status.failed": "failed",
+  "orders.status.acknowledged": "acknowledged",
+  "orders.status.completed": "completed",
+  "orders.status.in_progress": "in progress",
+
+  /**
    * Catalog related text
    */
   "catalog.title": "Service Catalog",

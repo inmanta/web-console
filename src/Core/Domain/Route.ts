@@ -22,6 +22,8 @@ const kinds = [
   "InstanceComposer",
   "InstanceComposerEditor",
   "Inventory",
+  "Orders",
+  "OrderDetails",
   "ServiceDetails",
 
   /**
@@ -92,6 +94,7 @@ interface RouteParamKeysManifest {
   ResourceHistory: "resourceId";
   ResourceLogs: "resourceId";
   ServiceDetails: "service";
+  OrderDetails: "id";
 }
 
 export type RouteParams<K extends RouteKind> =

@@ -57,6 +57,14 @@ export const lifecycleServiceManager = (
       locked: !isEnvPresent,
       statusIndication: false,
     },
+    {
+      id: "Orders",
+      label: routeManager.getRoute("Orders").generateLabel(undefined),
+      url: routeManager.getRoute("Orders").path,
+      external: false,
+      locked: !isEnvPresent,
+      statusIndication: false,
+    },
   ],
 });
 

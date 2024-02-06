@@ -38,6 +38,7 @@ import {
   GetInstanceWithRelationsStateHelper,
 } from "@/Data/Managers";
 import { Store } from "@/Data/Store";
+import { GetOrdersQueryManager } from "@/Slices/Orders/Data/QueryManager";
 import { GetDiscoveredResourcesQueryManager } from "@/Slices/ResourceDiscovery/Data/QueryManager";
 import { GetDiscoveredResourcesStateHelper } from "@/Slices/ResourceDiscovery/Data/StateHelper";
 import {
@@ -76,6 +77,8 @@ import {
   NotificationContinuousQueryManager,
   NotificationReadOnlyQueryManager,
 } from "@S/Notification/Data";
+import { GetOrderDetailsQueryManager } from "@S/OrderDetails/Data/QueryManager";
+import { GetOrdersStateHelper } from "@S/Orders/Data/StateHelper";
 import {
   GetParametersQueryManager,
   GetParametersStateHelper,
@@ -254,12 +257,7 @@ export class QueryManagerResolverImpl implements QueryManagerResolver {
       ),
       CallbacksQueryManager(this.apiHelper, CallbacksStateHelper(this.store)),
       CompileReportsQueryManager(this.store, this.apiHelper, this.scheduler),
-      CompileDetailsQueryManager(
-        this.store,
-        this.apiHelper,
-
-        this.scheduler,
-      ),
+      CompileDetailsQueryManager(this.store, this.apiHelper, this.scheduler),
       ResourceLogsQueryManager(
         this.apiHelper,
         ResourceLogsStateHelper(this.store),
@@ -294,6 +292,12 @@ export class QueryManagerResolverImpl implements QueryManagerResolver {
         this.apiHelper,
         GetDesiredStateDiffStateHelper(this.store),
       ),
+      GetOrdersQueryManager(
+        this.apiHelper,
+        GetOrdersStateHelper(this.store),
+        this.scheduler,
+      ),
+      GetOrderDetailsQueryManager(this.apiHelper, this.store, this.scheduler),
       GetDryRunsQueryManager(this.apiHelper, this.store, this.scheduler),
       GetDryRunReportQueryManager(this.apiHelper, this.store),
       GetDesiredStateResourceDetailsQueryManager(
