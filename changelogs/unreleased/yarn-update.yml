@@ -1,0 +1,6 @@
+description: "Upgrade Yarn to V4."
+change-type: patch
+destination-branches: [master, iso7]
+sections:
+  minor-improvement: "{{description}}"
+  other-note: "The repo requires node 18+ to be installed"
