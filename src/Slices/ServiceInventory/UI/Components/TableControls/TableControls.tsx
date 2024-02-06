@@ -1,11 +1,17 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   Toolbar,
   ToolbarGroup,
   ToolbarItem,
   ToolbarContent,
-  Button,
+  MenuToggle,
+  MenuToggleAction,
+  Dropdown,
+  MenuToggleElement,
+  MenuItem,
+  DropdownList,
+  DropdownItem,
 } from "@patternfly/react-core";
 import { PlusIcon } from "@patternfly/react-icons";
 import { ServiceModel, ServiceInstanceParams } from "@/Core";
@@ -39,6 +45,8 @@ export const TableControls: React.FC<Props> = ({
       : undefined;
   const states = service.lifecycle.states.map((state) => state.name).sort();
 
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
     <Toolbar clearAllFilters={() => setFilter({})}>
       <ToolbarContent>
@@ -49,7 +57,73 @@ export const TableControls: React.FC<Props> = ({
           identityAttribute={identityAttribute}
         />
         <ToolbarGroup align={{ default: "alignRight" }}>
-          {showInstanceComposer && (
+          <Dropdown
+            onSelect={() => setIsOpen(false)}
+            onOpenChange={(open: boolean) => setIsOpen(open)}
+            isOpen={isOpen}
+            toggle={(toggleref: React.Ref<MenuToggleElement>) => (
+              <MenuToggle
+                aria-label="CreateDropdown"
+                ref={toggleref}
+                onClick={(open) => setIsOpen(open)}
+                isExpanded={isOpen}
+                variant="secondary"
+                splitButtonOptions={{
+                  variant: "action",
+                  items: [
+                    <MenuToggleAction
+                      id="split-button-action-primary-example-with-toggle-button"
+                      key="split-action-primary"
+                      aria-label="Action"
+                    >
+                      <MenuItem>
+                        <Link
+                          to={{
+                            pathname: routeManager.getUrl("CreateInstance", {
+                              service: serviceName,
+                            }),
+                            search: location.search,
+                          }}
+                        >
+                          <PlusIcon /> {words("inventory.addInstance.button")}
+                        </Link>
+                      </MenuItem>
+                    </MenuToggleAction>,
+                  ],
+                }}
+              />
+            )}
+          >
+            <DropdownList>
+              {showInstanceComposer && (
+                <DropdownItem>
+                  <Link
+                    to={{
+                      pathname: routeManager.getUrl("InstanceComposer", {
+                        service: serviceName,
+                      }),
+                      search: location.search,
+                    }}
+                  >
+                    {words("inventory.addInstance.composerButton")}
+                  </Link>
+                </DropdownItem>
+              )}
+              <DropdownItem>
+                <Link
+                  to={{
+                    pathname: routeManager.getUrl("CreateInstanceEditor", {
+                      service: serviceName,
+                    }),
+                    search: location.search,
+                  }}
+                >
+                  {words("inventory.create.editor.button")}
+                </Link>
+              </DropdownItem>
+            </DropdownList>
+          </Dropdown>
+          {/* {showInstanceComposer && (
             <ToolbarItem>
               <Link
                 to={{
@@ -78,7 +152,7 @@ export const TableControls: React.FC<Props> = ({
                 <PlusIcon /> {words("inventory.addInstance.button")}
               </Button>
             </Link>
-          </ToolbarItem>
+          </ToolbarItem> */}
         </ToolbarGroup>
         <ToolbarItem variant="pagination">{paginationWidget}</ToolbarItem>
       </ToolbarContent>

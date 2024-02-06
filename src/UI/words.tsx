@@ -196,7 +196,7 @@ const dict = {
   "inventory.editAttribute.header": "Update Attribute",
   "inventory.editAttribute.text": (oldValue: string, newValue: string) =>
     `Are you absolutely sure you want to change attribute from ${oldValue} to ${newValue}? This operation can corrupt the instance.`,
-
+  "inventory.create.editor.button": "Add in Editor",
   /**
    * Config related text
    */

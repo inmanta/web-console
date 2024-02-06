@@ -18,6 +18,7 @@ import { Dashboard } from "@/Slices/Dashboard";
 import { DuplicateInstance } from "@/Slices/DuplicateInstance";
 import { InstanceComposer } from "@/Slices/InstanceComposer";
 import { InstanceComposerEditor } from "@/Slices/InstanceComposerEditor";
+import { InstanceCreateEditor } from "@/Slices/InstanceJsonEditor";
 import { ServiceDetails } from "@/Slices/ServiceDetails";
 import { AgentProcess } from "@S/AgentProcess";
 import { Agents } from "@S/Agents";
@@ -63,6 +64,7 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
      */
     Catalog: ServiceCatalog.route(baseUrl),
     CreateInstance: CreateInstance.route(baseUrl),
+    CreateInstanceEditor: InstanceCreateEditor.route(baseUrl),
     Dashboard: Dashboard.route(baseUrl),
     Diagnose: Diagnose.route(baseUrl),
     DuplicateInstance: DuplicateInstance.route(baseUrl),

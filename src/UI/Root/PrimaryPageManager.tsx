@@ -8,6 +8,7 @@ import {
 } from "@/Core";
 import { InstanceComposerPage } from "@/Slices/InstanceComposer/UI";
 import { InstanceComposerEditorPage } from "@/Slices/InstanceComposerEditor/UI";
+import { CreateInstanceEditorPage } from "@/Slices/InstanceJsonEditor/UI/Index";
 import { DiscoveredResourcesPage } from "@/Slices/ResourceDiscovery/UI";
 import { ServiceDetailsPage } from "@/Slices/ServiceDetails/UI";
 import { AgentProcessPage } from "@S/AgentProcess/UI";
@@ -82,6 +83,10 @@ export class PrimaryPageManager implements PageManager {
       CreateInstance: {
         ...this.routeDictionary.CreateInstance,
         element: <CreateInstancePage />,
+      },
+      CreateInstanceEditor: {
+        ...this.routeDictionary.CreateInstanceEditor,
+        element: <CreateInstanceEditorPage />,
       },
       EditInstance: {
         ...this.routeDictionary.EditInstance,

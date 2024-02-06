@@ -13,6 +13,7 @@ const kinds = [
    */
   "Catalog",
   "CreateInstance",
+  "CreateInstanceEditor",
   "Dashboard",
   "Diagnose",
   "DuplicateInstance",
@@ -77,6 +78,7 @@ interface RouteParamKeysManifest {
   CompileDetails: "id";
   ComplianceCheck: "version";
   CreateInstance: "service";
+  CreateInstanceEditor: "service";
   DesiredStateCompare: "from" | "to";
   DesiredStateDetails: "version";
   DesiredStateResourceDetails: "version" | "resourceId";

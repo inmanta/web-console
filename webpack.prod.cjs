@@ -67,8 +67,20 @@ module.exports = merge(common, {
             "node_modules/@patternfly/react-inline-edit-extension/node_modules/@patternfly/react-styles/css",
           ),
           path.resolve(__dirname, "node_modules/@inmanta/rappid/rappid.css"),
+          path.resolve(
+            __dirname,
+            "node_modules/jsoneditor-react/es/editor.min.css",
+          ),
+          path.resolve(__dirname, "node_modules/jsoneditor/dist/"),
         ],
         use: [MiniCssExtractPlugin.loader, "css-loader"],
+      },
+      {
+        test: /\.svg$/,
+        include: [
+          path.resolve(__dirname, "node_modules/jsoneditor-react/es/img/"),
+        ],
+        use: ["url-loader"],
       },
     ],
   },
