@@ -158,22 +158,27 @@ const Canvas = ({
     setDiagramHandlers(actions);
     if (instance) {
       const isMainInstance = true;
-      const cells = actions.addInstance(instance, services, isMainInstance);
-      const newInstances = new Map();
-      cells.forEach((cell) => {
-        if (cell.type === "app.ServiceEntityBlock") {
-          newInstances.set(cell.id, {
-            instance_id: cell.id,
-            service_entity: cell.entityName,
-            config: {},
-            action: null,
-            attributes: cell.instanceAttributes,
-            embeddedTo: cell.embeddedTo,
-            relatedTo: cell.relatedTo,
-          });
-        }
-      });
-      setInstancesToSend(newInstances);
+      try {
+        const cells = actions.addInstance(instance, services, isMainInstance);
+        const newInstances = new Map();
+        cells.forEach((cell) => {
+          if (cell.type === "app.ServiceEntityBlock") {
+            newInstances.set(cell.id, {
+              instance_id: cell.id,
+              service_entity: cell.entityName,
+              config: {},
+              action: null,
+              attributes: cell.instanceAttributes,
+              embeddedTo: cell.embeddedTo,
+              relatedTo: cell.relatedTo,
+            });
+          }
+        });
+        setInstancesToSend(newInstances);
+      } catch (error) {
+        setAlertType(AlertVariant.danger);
+        setAlertMessage(String(error));
+      }
     }
 
     return () => {

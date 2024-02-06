@@ -12,7 +12,12 @@ import createHalo from "./halo";
 import { checkIfConnectionIsAllowed } from "./helpers";
 import collapseButton from "./icons/collapse-icon.svg";
 import expandButton from "./icons/expand-icon.svg";
-import { ActionEnum, ConnectionRules, serializedCell } from "./interfaces";
+import {
+  ActionEnum,
+  ConnectionRules,
+  TypeEnum,
+  serializedCell,
+} from "./interfaces";
 import { routerNamespace } from "./routers";
 import { EntityConnection, ServiceEntityBlock } from "./shapes";
 
@@ -212,10 +217,13 @@ export default function diagramInit(
         );
 
         //if there is corresponding rule we can apply connection and update given service
-        if (cellConnectionRule) {
+        if (
+          cellConnectionRule &&
+          cellConnectionRule.kind === TypeEnum.INTERSERVICE
+        ) {
           elementCell.addRelation(
             connectingCell.id as string,
-            cellConnectionRule.attributeName as string,
+            cellConnectionRule.attributeName,
           );
 
           updateInstancesToSend(sourceCell, ActionEnum.UPDATE);
