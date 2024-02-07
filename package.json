@@ -175,7 +175,9 @@
     "simple-git": "^3.5.0",
     "async": "^3.2.2",
     "terser": "^5.14.2",
-    "loader-utils": "2.0.4 || 1.4.2"
+    "loader-utils": "2.0.4 || 1.4.2",
+    "word-wrap": "^1.2.4",
+    "follow-redirects": "^1.15.4"
   },
   "madge": {
     "fileExtensions": [
