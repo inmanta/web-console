@@ -1,5 +1,5 @@
 import React from "react";
-import ReactDiffViewer, { DiffMethod } from "react-diff-viewer";
+import ReactDiffViewer, { DiffMethod } from "react-diff-viewer-continued";
 import { Diff } from "@/Core";
 
 export const DiffView: React.FC<Diff.Values> = ({ from, to }) => (
