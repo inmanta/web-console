@@ -1,5 +1,7 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { isJsonParserId, JsonParserId, SchedulerImpl } from "@/Core";
 import {
   KeycloakAuthHelper,
@@ -77,7 +79,7 @@ export const Injector: React.FC<React.PropsWithChildren<Props>> = ({
   const environmentHandler = EnvironmentHandlerImpl(useLocation, routeManager);
   const fileManager = new PrimaryFileManager();
   const archiveHelper = new PrimaryArchiveHelper(fileManager);
-
+  const queryClient = new QueryClient();
   return (
     <DependencyProvider
       dependencies={{
@@ -94,8 +96,11 @@ export const Injector: React.FC<React.PropsWithChildren<Props>> = ({
         keycloakController,
       }}
     >
-      <UpdateBanner apiHelper={apiHelper} />
-      {children}
+      <QueryClientProvider client={queryClient}>
+        <UpdateBanner apiHelper={apiHelper} />
+        {children}
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
     </DependencyProvider>
   );
 };

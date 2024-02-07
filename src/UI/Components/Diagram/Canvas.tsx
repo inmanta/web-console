@@ -3,11 +3,11 @@ import "@inmanta/rappid/rappid.css";
 import { useNavigate } from "react-router-dom";
 import { dia } from "@inmanta/rappid";
 import { AlertVariant } from "@patternfly/react-core";
-import { isObject } from "lodash";
 import styled from "styled-components";
-import { objectHasKey, ServiceModel } from "@/Core";
+import { ServiceModel } from "@/Core";
 import { sanitizeAttributes } from "@/Data";
 import { InstanceWithReferences } from "@/Data/Managers/GetInstanceWithRelations/interface";
+import { usePostServices } from "@/DataV2/Mutations/PostOrder";
 import diagramInit, { DiagramHandlers } from "@/UI/Components/Diagram/init";
 import { CanvasWrapper } from "@/UI/Components/Diagram/styles";
 import { DependencyContext } from "@/UI/Dependency";
@@ -29,10 +29,7 @@ const Canvas = ({
   mainServiceName: string;
   instance?: InstanceWithReferences;
 }) => {
-  const { environmentHandler, urlManager, routeManager } =
-    useContext(DependencyContext);
-  const environment = environmentHandler.useId();
-  const baseUrl = urlManager.getApiUrl();
+  const { routeManager } = useContext(DependencyContext);
   const canvas = useRef<HTMLDivElement>(null);
   const [alertMessage, setAlertMessage] = useState("");
   const [alertType, setAlertType] = useState(AlertVariant.danger);
@@ -62,45 +59,13 @@ const Canvas = ({
     setCellToEdit(customEvent.detail);
     setIsFormModalOpen(true);
   };
-
+  const { mutate, isError, error, isSuccess } = usePostServices();
   const handleDeploy = async () => {
-    try {
-      const response = await fetch(`${baseUrl}/lsm/v2/order`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Inmanta-tid": environment,
-        },
-        body: JSON.stringify({
-          service_order_items: bundleInstances(
-            instancesToSend,
-            services,
-          ).filter((item) => item.action !== null),
-        }),
-      });
-
-      if (response.ok) {
-        setAlertType(AlertVariant.success);
-        setAlertMessage(words("inventory.instanceComposer.success"));
-        //If response is successful then show feedback notification and redirect user to the service inventory view
-        setTimeout(() => {
-          navigate(url);
-        }, 1000);
-      } else {
-        setAlertType(AlertVariant.danger);
-        setAlertMessage(JSON.parse(await response.text()).message);
-      }
-    } catch (error) {
-      setAlertType(AlertVariant.danger);
-      if (
-        isObject(error) &&
-        objectHasKey(error as Record<string, unknown>, "message")
-      ) {
-        setAlertMessage((error as { message: string }).message);
-      } else {
-        setAlertMessage(`Error: ${error}`);
-      }
-    }
+    mutate(
+      bundleInstances(instancesToSend, services).filter(
+        (item) => item.action !== null,
+      ),
+    );
   };
 
   const handleUpdate = (cell: ServiceEntityBlock, action: ActionEnum) => {
@@ -196,6 +161,20 @@ const Canvas = ({
     }
   }, [instancesToSend, services, isDirty]);
 
+  useEffect(() => {
+    if (isError) {
+      setAlertType(AlertVariant.danger);
+      setAlertMessage(error.message);
+    }
+    if (isSuccess) {
+      setAlertType(AlertVariant.success);
+      setAlertMessage(words("inventory.instanceComposer.success"));
+      //If response is successful then show feedback notification and redirect user to the service inventory view
+      setTimeout(() => {
+        navigate(url);
+      }, 1000);
+    }
+  }, [isError, isSuccess, navigate, error?.message, url]);
   useEffect(() => {
     document.addEventListener("openDictsModal", handleDictEvent);
     document.addEventListener("openEditModal", handleEditEvent);

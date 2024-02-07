@@ -1,6 +1,6 @@
 import React from "react";
+import { ServicesProvider } from "@/DataV2/ServicesProvider";
 import { useRouteParams } from "@/UI";
-import { ServicesProvider } from "@/UI/Components";
 import Canvas from "@/UI/Components/Diagram/Canvas";
 
 export const Page = () => {
