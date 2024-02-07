@@ -802,23 +802,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@inmanta/rappid@npm:^3.7.0":
-  version: 3.7.0
-  resolution: "@inmanta/rappid@npm:3.7.0::__archiveUrl=https%3A%2F%2Fnpm.cloudsmith.io%2Finmanta%2Ffrontend-composer%2F%40inmanta%2Frappid%2F-%2F3.7.0%2Frappid.tgz"
+"@inmanta/rappid@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "@inmanta/rappid@npm:4.0.0::__archiveUrl=https%3A%2F%2Fnpm.cloudsmith.io%2Finmanta%2Ffrontend-composer%2F%40inmanta%2Frappid%2F-%2F4.0.0%2Frappid-4.0.0.tgz"
   dependencies:
-    "@types/backbone": "npm:~1.4.13"
-    "@types/dagre": "npm:~0.7.44"
-    "@types/graphlib": "npm:~2.1.8"
-    "@types/jquery": "npm:~3.5.5"
-    "@types/lodash": "npm:~4.14.170"
-    backbone: "npm:~1.4.1"
-    canvg-rappid: "npm:~1.0.3"
-    dagre: "npm:~0.8.5"
-    graphlib: "npm:~2.1.8"
-    jointjs: "npm:~3.6.4"
-    jquery: "npm:~3.6.0"
-    lodash: "npm:~4.17.21"
-  checksum: 10/861558c2f2e3f01bb77347d81520c124cb95a04d211376ca4ad054c73e387db233761a7e3749f70e948d658c146407c4fe8b45160659b375d83f0d2e40f4435a
+    "@joint/core": "npm:~4.0.1"
+  checksum: 10/2e3f4a28bf9c559a351710cbb81426acd8c6edaca2d3e588c71e52d4394d21a827fd2a9cacdde6eedcfc86be03bc582df18bae1ef4185c89ad67a77d37e20079
   languageName: node
   linkType: hard
 
@@ -828,7 +817,7 @@ __metadata:
   dependencies:
     "@babel/core": "npm:^7.23.9"
     "@babel/plugin-transform-typescript": "npm:^7.23.6"
-    "@inmanta/rappid": "npm:^3.7.0"
+    "@inmanta/rappid": "npm:^4.0.0"
     "@patternfly/react-charts": "npm:^7.1.2"
     "@patternfly/react-core": "npm:^5.1.2"
     "@patternfly/react-icons": "npm:^5.1.2"
@@ -1198,6 +1187,13 @@ __metadata:
     "@types/yargs": "npm:^17.0.8"
     chalk: "npm:^4.0.0"
   checksum: 10/f74bf512fd09bbe2433a2ad460b04668b7075235eea9a0c77d6a42222c10a79b9747dc2b2a623f140ed40d6865a2ed8f538f3cbb75169120ea863f29a7ed76cd
+  languageName: node
+  linkType: hard
+
+"@joint/core@npm:~4.0.1":
+  version: 4.0.1
+  resolution: "@joint/core@npm:4.0.1"
+  checksum: 10/9bd3a593cde8c484994e4d069b4f5e3da05d6183590febf2307f15d9d94369ecc5174f496ad118f56a53b2faaa7e1b026ee5079362f13f66d749ebeaa19ec042
   languageName: node
   linkType: hard
 
@@ -1654,7 +1650,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/backbone@npm:^1.4.16, @types/backbone@npm:~1.4.13":
+"@types/backbone@npm:^1.4.16":
   version: 1.4.16
   resolution: "@types/backbone@npm:1.4.16"
   dependencies:
@@ -1771,13 +1767,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/dagre@npm:~0.7.44":
-  version: 0.7.48
-  resolution: "@types/dagre@npm:0.7.48"
-  checksum: 10/9d06fc08219056db7c55041bf2099cea24fe824d8c8741ae11c365c7464502d8c65273153446a5546b4a92bc0833802ac1c6bddb708bfcaa75af3963e7fc84aa
-  languageName: node
-  linkType: hard
-
 "@types/eslint-scope@npm:^3.7.3":
   version: 3.7.4
   resolution: "@types/eslint-scope@npm:3.7.4"
@@ -1849,13 +1838,6 @@ __metadata:
   dependencies:
     "@types/node": "npm:*"
   checksum: 10/c3070ccdc9ca0f40df747bced1c96c71a61992d6f7c767e8fd24bb6a3c2de26e8b84135ede000b7e79db530a23e7e88dcd9db60eee6395d0f4ce1dae91369dd4
-  languageName: node
-  linkType: hard
-
-"@types/graphlib@npm:~2.1.8":
-  version: 2.1.8
-  resolution: "@types/graphlib@npm:2.1.8"
-  checksum: 10/5379f8c6fd644874338139e06d91f4c426553c9c96c514cb5204d5b2068988400dd09f94816efafc210ee7d66b94a9e123cba52f32654793a18c1ccf2a6dc602
   languageName: node
   linkType: hard
 
@@ -1936,7 +1918,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/jquery@npm:*, @types/jquery@npm:~3.5.5":
+"@types/jquery@npm:*":
   version: 3.5.16
   resolution: "@types/jquery@npm:3.5.16"
   dependencies:
@@ -1986,7 +1968,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/lodash@npm:*, @types/lodash@npm:^4.14.202, @types/lodash@npm:~4.14.170":
+"@types/lodash@npm:*, @types/lodash@npm:^4.14.202":
   version: 4.14.202
   resolution: "@types/lodash@npm:4.14.202"
   checksum: 10/1bb9760a5b1dda120132c4b987330d67979c95dbc22612678682cd61b00302e190f4207228f3728580059cdab5582362262e3819aea59960c1017bd2b9fb26f6
@@ -3487,15 +3469,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"backbone@npm:~1.4.1":
-  version: 1.4.1
-  resolution: "backbone@npm:1.4.1"
-  dependencies:
-    underscore: "npm:>=1.8.3"
-  checksum: 10/966cf692fef32f01cb06387b946cc23166953d4a712337aedf14d2e984c463735f42f403db458cd4a37c86af2121fa1133f1d3875b06f6ef28a50b9538102538
-  languageName: node
-  linkType: hard
-
 "balanced-match@npm:^1.0.0":
   version: 1.0.2
   resolution: "balanced-match@npm:1.0.2"
@@ -3836,16 +3809,6 @@ __metadata:
   version: 1.0.30001482
   resolution: "caniuse-lite@npm:1.0.30001482"
   checksum: 10/a0562c1f83e00a3c0aef2db58e76dbe6fcaee2086ed91ad45e57bb8f3af13a853c171e0609feeeb44554d03713a11c0cb31697a8cb047a9926b5eea3fb46e92f
-  languageName: node
-  linkType: hard
-
-"canvg-rappid@npm:~1.0.3":
-  version: 1.0.3
-  resolution: "canvg-rappid@npm:1.0.3"
-  dependencies:
-    rgbcolor: "npm:0.0.4"
-    stackblur: "npm:^1.0.0"
-  checksum: 10/a9cf1bd8fb17d9487bafb0f5c7597bc4b17615d60d89f49ece035e0db6e9582f19e98fe63686ae4879a9024a2219cc6beff56d6170db114637cf281a78d447b2
   languageName: node
   linkType: hard
 
@@ -5004,7 +4967,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dagre@npm:^0.8.5, dagre@npm:~0.8.5":
+"dagre@npm:^0.8.5":
   version: 0.8.5
   resolution: "dagre@npm:0.8.5"
   dependencies:
@@ -7541,7 +7504,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"graphlib@npm:^2.1.8, graphlib@npm:~2.1.8":
+"graphlib@npm:^2.1.8":
   version: 2.1.8
   resolution: "graphlib@npm:2.1.8"
   dependencies:
@@ -9241,26 +9204,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jointjs@npm:~3.6.4":
-  version: 3.6.5
-  resolution: "jointjs@npm:3.6.5"
-  dependencies:
-    backbone: "npm:~1.4.1"
-    dagre: "npm:~0.8.5"
-    graphlib: "npm:~2.1.8"
-    jquery: "npm:~3.6.1"
-    lodash: "npm:~4.17.21"
-  checksum: 10/e905599d6785d2e13e017632fad7a7db855b51f6a2cb10640023b8ab56cbacefe2ab548cd92698dfee6a21cda559093bfdd619b25ac49787a4d32e8a5a1fcce7
-  languageName: node
-  linkType: hard
-
-"jquery@npm:~3.6.0, jquery@npm:~3.6.1":
-  version: 3.6.4
-  resolution: "jquery@npm:3.6.4"
-  checksum: 10/6526ec120bb64cb710804d4f1046c099e8e0c329369888e76d17cdbaae57caa9bde445e7088067638c923fff57bf22170693052cdc93db1db390317fbcf45602
-  languageName: node
-  linkType: hard
-
 "js-sha256@npm:^0.10.1":
   version: 0.10.1
   resolution: "js-sha256@npm:0.10.1"
@@ -9760,7 +9703,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash@npm:^4.17.15, lodash@npm:^4.17.19, lodash@npm:^4.17.20, lodash@npm:^4.17.21, lodash@npm:~4.17.21":
+"lodash@npm:^4.17.15, lodash@npm:^4.17.19, lodash@npm:^4.17.20, lodash@npm:^4.17.21":
   version: 4.17.21
   resolution: "lodash@npm:4.17.21"
   checksum: 10/c08619c038846ea6ac754abd6dd29d2568aa705feb69339e836dfa8d8b09abbb2f859371e86863eda41848221f9af43714491467b5b0299122431e202bb0c532
@@ -12621,13 +12564,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rgbcolor@npm:0.0.4":
-  version: 0.0.4
-  resolution: "rgbcolor@npm:0.0.4"
-  checksum: 10/8ae32649cef3d7d600170df496ab7fed4eedab615b24bb2b192df7737880a65a7f0a558b1d346894841a3dc035a7ca2bb8c8ad542491219f0de86314a9fef101
-  languageName: node
-  linkType: hard
-
 "rimraf@npm:^2.5.4, rimraf@npm:^2.6.3":
   version: 2.7.1
   resolution: "rimraf@npm:2.7.1"
@@ -13275,13 +13211,6 @@ __metadata:
   dependencies:
     escape-string-regexp: "npm:^2.0.0"
   checksum: 10/cdc988acbc99075b4b036ac6014e5f1e9afa7e564482b687da6384eee6a1909d7eaffde85b0a17ffbe186c5247faf6c2b7544e802109f63b72c7be69b13151bb
-  languageName: node
-  linkType: hard
-
-"stackblur@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "stackblur@npm:1.0.0"
-  checksum: 10/7a8ba1a8787a06576abae96d9a4dca1dd106e0462cfcf7159ebd94835eaa89e6e5cd1d2612a448c607c4a04ed350b3500b7a01cf6dbeb5c3fc4f8cdb6c79e67a
   languageName: node
   linkType: hard
 
@@ -14289,13 +14218,6 @@ __metadata:
     has-symbols: "npm:^1.0.3"
     which-boxed-primitive: "npm:^1.0.2"
   checksum: 10/06e1ee41c1095e37281cb71a975cb3350f7cb470a0665d2576f02cc9564f623bd90cfc0183693b8a7fdf2d242963dcc3010b509fa3ac683f540c765c0f3e7e43
-  languageName: node
-  linkType: hard
-
-"underscore@npm:>=1.8.3":
-  version: 1.13.6
-  resolution: "underscore@npm:1.13.6"
-  checksum: 10/58cf5dc42cb0ac99c146ae4064792c0a2cc84f3a3c4ad88f5082e79057dfdff3371d896d1ec20379e9ece2450d94fa78f2ef5bfefc199ba320653e32c009bd66
   languageName: node
   linkType: hard
 
