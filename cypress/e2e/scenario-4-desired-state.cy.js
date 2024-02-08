@@ -390,6 +390,17 @@ describe("Scenario 4 Desired State", () => {
       "be.visible",
     );
 
+    // make sure all the rows are in the view before toggling them open.
+    cy.get('[aria-label="Details"]', { timeout: 20000 }).should(
+      "have.length",
+      2,
+    );
+
+    cy.get('[aria-label="DiffItemList"]').within(() => {
+      cy.get("#toggle-button").eq(0).click();
+      cy.get("#toggle-button").eq(1).click();
+    });
+
     // expect diff module to say No changes have been found
     cy.get(".pf-v5-c-card__expandable-content", { timeout: 20000 }).should(
       ($expandableRow) => {
@@ -433,13 +444,25 @@ describe("Scenario 4 Desired State", () => {
     cy.get('[aria-label="ReportListSelect"]')
       .contains("No Dry runs exist")
       .should("be.visible");
+
+    // perform dry-run
     cy.get(".pf-v5-c-button").contains("Perform dry run").click();
 
     cy.get('[aria-label="StatusFilter"]').click();
     cy.get('[role="option"]').contains("unmodified").click();
     cy.get('[aria-label="StatusFilter"]').click();
 
-    // perform dry-run
+    // make sure all the rows are in the view before toggling them open.
+    cy.get('[aria-label="Details"]', { timeout: 20000 }).should(
+      "have.length",
+      2,
+    );
+
+    cy.get('[aria-label="DiffItemList"]').within(() => {
+      cy.get("#toggle-button").eq(0).click();
+      cy.get("#toggle-button").eq(1).click();
+    });
+
     // await the end of the dry-run and expect to find two rows with expandable content.
     cy.get(".pf-v5-c-card__expandable-content", { timeout: 20000 }).should(
       ($expandableRow) => {
@@ -497,6 +520,10 @@ describe("Scenario 4 Desired State", () => {
     cy.get('[role="option"]').contains("unmodified").click();
     cy.get('[aria-label="StatusFilter"]').click();
 
+    cy.get('[aria-label="DiffItemList"]').within(() => {
+      cy.get("#toggle-button").eq(0).click();
+      cy.get("#toggle-button").eq(1).click();
+    });
     // expect the view to still contain the diff of the last dry-run comparison
     cy.get(".pf-v5-c-card__expandable-content", { timeout: 20000 }).should(
       ($expandableRow) => {
