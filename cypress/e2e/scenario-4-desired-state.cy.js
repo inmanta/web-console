@@ -394,9 +394,10 @@ describe("Scenario 4 Desired State", () => {
     cy.get('[aria-label="Details"]').eq(1).click();
 
     // expect diff module to say No changes have been found
-    cy.get('[aria-label="DiffBlock"]', { timeout: 20000 }).should(
+    cy.get(".pf-v5-c-card__expandable-content", { timeout: 20000 }).should(
       ($expandableRow) => {
         expect($expandableRow).to.have.length(isIso ? 2 : 5);
+
         expect($expandableRow.eq(0), "first-row").to.have.text(
           "This resource has not been modified.",
         );
