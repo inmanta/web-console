@@ -390,6 +390,9 @@ describe("Scenario 4 Desired State", () => {
       "be.visible",
     );
 
+    cy.get('[aria-label="Details"]').eq(0).click();
+    cy.get('[aria-label="Details"]').eq(1).click();
+
     // expect diff module to say No changes have been found
     cy.get(".pf-v5-c-card__expandable-content", { timeout: 20000 }).should(
       ($expandableRow) => {
