@@ -621,6 +621,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@dagrejs/dagre@npm:~1.0.4":
+  version: 1.0.4
+  resolution: "@dagrejs/dagre@npm:1.0.4"
+  dependencies:
+    "@dagrejs/graphlib": "npm:2.1.13"
+  checksum: 10/12be892151efa2d47f2cd72a49bea0566c2d6d2446f9798f743aa5aac5dec1f62c408f594f64aa3dec436045d7dcbef64a9ef164c97a1a437a8fcc84dc79ded4
+  languageName: node
+  linkType: hard
+
+"@dagrejs/graphlib@npm:2.1.13, @dagrejs/graphlib@npm:~2.1.13":
+  version: 2.1.13
+  resolution: "@dagrejs/graphlib@npm:2.1.13"
+  checksum: 10/92b49b6f57007593174d53f8f90228d7f3e9f2e7869348424057fd2bcca2b0ca393c74181ec9e1c7f02b30a925de2a59ec4cdfcd0fe75f873c2f85fa3cfd4da0
+  languageName: node
+  linkType: hard
+
 "@dependents/detective-less@npm:^3.0.1":
   version: 3.0.2
   resolution: "@dependents/detective-less@npm:3.0.2"
@@ -818,6 +834,7 @@ __metadata:
     "@babel/core": "npm:^7.23.9"
     "@babel/plugin-transform-typescript": "npm:^7.23.6"
     "@inmanta/rappid": "npm:^4.0.0"
+    "@joint/layout-directed-graph": "npm:^4.0.1"
     "@patternfly/react-charts": "npm:^7.1.2"
     "@patternfly/react-core": "npm:^5.1.2"
     "@patternfly/react-icons": "npm:^5.1.2"
@@ -854,7 +871,6 @@ __metadata:
     cypress: "npm:^13.6.3"
     cypress-file-upload: "npm:^5.0.8"
     cypress-multi-reporters: "npm:^1.6.4"
-    dagre: "npm:^0.8.5"
     dotenv-webpack: "npm:^8.0.1"
     easy-peasy: "npm:^6.0.4"
     eslint: "npm:^8.52.0"
@@ -1194,6 +1210,17 @@ __metadata:
   version: 4.0.1
   resolution: "@joint/core@npm:4.0.1"
   checksum: 10/9bd3a593cde8c484994e4d069b4f5e3da05d6183590febf2307f15d9d94369ecc5174f496ad118f56a53b2faaa7e1b026ee5079362f13f66d749ebeaa19ec042
+  languageName: node
+  linkType: hard
+
+"@joint/layout-directed-graph@npm:^4.0.1":
+  version: 4.0.1
+  resolution: "@joint/layout-directed-graph@npm:4.0.1"
+  dependencies:
+    "@dagrejs/dagre": "npm:~1.0.4"
+    "@dagrejs/graphlib": "npm:~2.1.13"
+    "@joint/core": "npm:~4.0.1"
+  checksum: 10/92d05643d0f0b271ad6e1134e51e403125db22a715e8e356cc50e1ecbc6640bb5f3ebdae6646c1faf3376b5d075b461f08dd8bb1e811f41d7dc1a34d9f809ced
   languageName: node
   linkType: hard
 
@@ -4967,16 +4994,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dagre@npm:^0.8.5":
-  version: 0.8.5
-  resolution: "dagre@npm:0.8.5"
-  dependencies:
-    graphlib: "npm:^2.1.8"
-    lodash: "npm:^4.17.15"
-  checksum: 10/f39899e29e9090581d67177ef6e2dd3ca5d7f764fbf3de81758d879bba66fee6fd8802d41d0c5d3d9a0563b334e99e1454a8d6ab4ce17e8e4f50836a3a403fdd
-  languageName: node
-  linkType: hard
-
 "dashdash@npm:^1.12.0":
   version: 1.14.1
   resolution: "dashdash@npm:1.14.1"
@@ -7501,15 +7518,6 @@ __metadata:
   version: 1.4.0
   resolution: "graphemer@npm:1.4.0"
   checksum: 10/6dd60dba97007b21e3a829fab3f771803cc1292977fe610e240ea72afd67e5690ac9eeaafc4a99710e78962e5936ab5a460787c2a1180f1cb0ccfac37d29f897
-  languageName: node
-  linkType: hard
-
-"graphlib@npm:^2.1.8":
-  version: 2.1.8
-  resolution: "graphlib@npm:2.1.8"
-  dependencies:
-    lodash: "npm:^4.17.15"
-  checksum: 10/37cbd851d3c1fb99f3174750ccaa22305d23d11746e5df81a38ba3bf25c0ba29cd9658ba69a0159ea81d56c28e8e875033eeaaa7167d838419fae08d9cd2c62c
   languageName: node
   linkType: hard
 
