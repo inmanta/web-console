@@ -157,6 +157,9 @@ const dict = {
   "inventory.form.placeholder.floatList": "1.1, 3.14, 4.3",
   "inventory.form.placeholder.stringList": "Add a list of values",
   "inventory.form.placeholder.dict": '{"key": "value"}',
+  "inventory.instanceComposer.labelButtonTooltip": "Toggle connection labels",
+  "inventory.instanceComposer.addInstanceButtonTooltip":
+    "Add entity into canvas",
   "inventory.instanceComposer.errorMessage": "missing Instance Model",
   "inventory.instanceComposer.editButton": "Edit in Composer",
   "inventory.instanceComposer.formModal.placeholder": "Choose a Service",
