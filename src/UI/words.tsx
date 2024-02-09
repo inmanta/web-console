@@ -159,7 +159,7 @@ const dict = {
   "inventory.form.placeholder.dict": '{"key": "value"}',
   "inventory.instanceComposer.labelButtonTooltip": "Toggle connection labels",
   "inventory.instanceComposer.addInstanceButtonTooltip":
-    "Add Instance into canvas",
+    "Add new instance to the canvas.",
   "inventory.instanceComposer.errorMessage": "missing Instance Model",
   "inventory.instanceComposer.editButton": "Edit in Composer",
   "inventory.instanceComposer.formModal.placeholder": "Choose a Service",
