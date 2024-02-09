@@ -64,7 +64,11 @@ export const OrderDetailsHeading: React.FC<Props> = ({ serviceOrder }) => {
             {words("orders.column.completed_at")}
           </DescriptionListTerm>
           <DescriptionListDescription>
-            <DateWithTooltip timestamp={serviceOrder.completed_at} />
+            {serviceOrder.completed_at ? (
+              <DateWithTooltip timestamp={serviceOrder.completed_at} />
+            ) : (
+              ""
+            )}
           </DescriptionListDescription>
         </DescriptionListGroup>
       </DescriptionList>
