@@ -30,7 +30,7 @@ interface Props {
 }
 
 export const Block: React.FC<Props> = ({ item, refs, classify }) => {
-  const [isExpanded, setIsExpanded] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(false);
   const onExpand = () => setIsExpanded(!isExpanded);
 
   return (
