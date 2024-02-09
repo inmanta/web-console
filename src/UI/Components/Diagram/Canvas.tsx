@@ -13,6 +13,7 @@ import { CanvasWrapper } from "@/UI/Components/Diagram/styles";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { ToastAlert } from "../ToastAlert";
+import { sendOrder } from "./api/orderRequest";
 import DictModal from "./components/DictModal";
 import FormModal from "./components/FormModal";
 import Toolbar from "./components/Toolbar";
@@ -65,19 +66,13 @@ const Canvas = ({
 
   const handleDeploy = async () => {
     try {
-      const response = await fetch(`${baseUrl}/lsm/v2/order`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Inmanta-tid": environment,
-        },
-        body: JSON.stringify({
-          service_order_items: bundleInstances(
-            instancesToSend,
-            services,
-          ).filter((item) => item.action !== null),
-        }),
-      });
+      const response = await sendOrder(
+        baseUrl,
+        environment,
+        bundleInstances(instancesToSend, services).filter(
+          (item) => item.action !== null,
+        ),
+      );
 
       if (response.ok) {
         setAlertType(AlertVariant.success);
