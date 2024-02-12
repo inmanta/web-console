@@ -1,0 +1,94 @@
+# Use Plain JUnit5 for advanced test assertions
+
+## Context and Problem Statement
+
+How to simplify management of the communication with the backend?
+
+## Considered Options
+
+- React Query
+- RTK Quert
+- SWR
+
+## Decision Outcome
+
+Chosen option: TBA
+
+### Consequences
+
+TBA
+
+## Pros and Cons of the Options
+
+### React Query
+
+- [Homepage](https://tanstack.com/query/latest/)
+- [Example](https://tanstack.com/query/latest/docs/framework/react/examples/basic)
+
+#### Pros
+
+1. Has the most features available
+2. Robust error handling
+3. Auto Garbage Collection
+4. Stale Time Configuration
+5. Handy DevTools
+6. More advanced mutation manipulation/configuration
+
+#### Cons
+
+1. some featuers have steeper learning curve
+2. some scenarios could require separate state-management
+3. more opinionated
+
+### useSWR
+
+- [Homepage](https://swr.vercel.app/)
+- [Example](https://swr.vercel.app/examples/basic)
+
+#### Pros
+
+1. The most lightweight
+2. Simplest library to use
+3. Fine-grained control (less opinionated)
+
+#### Cons
+
+1. Manual caching
+2. some scenarios could require separate state-management
+3. less features/configuration out-of-the-box
+
+### RTK Query
+
+- [Homepage](https://redux-toolkit.js.org/rtk-query/overview)
+- [Example](https://redux-toolkit.js.org/rtk-query/usage/examples#kitchen-sink)
+
+#### Pros
+
+1. Good, because integrates seamlessly with other Redux Toolkit features
+
+#### Cons
+
+1. Requires a more boilerplate than competitors
+2. Bad, because increases bundle Size - [source](https://redux-toolkit.js.org/rtk-query/comparison#bundle-size)
+3. Bad, because has steep learning curve for developers new to Redux
+
+### Overview
+
+Out of most popular libraries that handles communication we have 3 possible contenders:
+
+- React Query
+- RTK Quert
+- SWR
+
+RTK Query can be filtered-out early, it heavily base itself on the Redux, which we don't use in the application, and we wouldn't like to, as it's unnecessary from the use-case of our application.
+
+The remaining two, are both lightweight, and simple, RQ more opinionated, more feature-rich(out-of-the-box), SWR gives more control in what we can do and in what way, but with price, of less features, and requires more time and effort into creating own implementation(manual caching, simpler error handling compared to react-query, no stale time configuration)
+
+**Personaly I advocate for React query, as more opinionated would mean easier, simpler and faster adoption into our codebase, with less code that has to be managed and maintaned by us, which theroetically is the goal of moving from our own Query Managment, the same goes for features, but that require conversation, whether SWR doesn't have all what we need.**
+
+## More Information
+
+[Feature-comparison between all mentioned libraries](https://tanstack.com/query/v4/docs/framework/react/comparison)
+[Comparison between SWR and React Query](https://dev.to/sakethkowtha/react-query-vs-useswr-122b)
+[Another comparison between SWR and React Query](https://www.dhiwise.com/post/data-on-demand-a-smackdown-of-swr-vs-react-query)
+[Comparison between RTK Query and React Query](https://www.frontendmag.com/insights/react-query-vs-rtk-query/#Pros_of_RTK_Query)
