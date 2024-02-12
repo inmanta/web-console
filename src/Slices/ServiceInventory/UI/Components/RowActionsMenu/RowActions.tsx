@@ -21,7 +21,6 @@ import {
 import { DependencyContext, words } from "@/UI";
 import { Link } from "@/UI/Components";
 import { ServiceInstanceForAction } from "@/UI/Presenters";
-import useFeatures from "@/UI/Utils/useFeatures";
 import { DeleteAction } from "./DeleteAction";
 import { DestroyAction } from "./DestroyAction";
 import { ForceStateAction } from "./ForceStateAction/ForceStateAction";
@@ -47,7 +46,6 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
   availableStates,
 }) => {
   const { routeManager, environmentModifier } = useContext(DependencyContext);
-  const features = useFeatures();
 
   const [activeMenu, setActiveMenu] = React.useState<string>("rootMenu");
   const [menuDrilledIn, setMenuDrilledIn] = React.useState<string[]>([]);
@@ -64,9 +62,6 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
     // -100 for each default option present above the first drilldown that is enabled.
     // diagnose and duplicate are always enabled, so this means it starts at -200
     let insetHeight = -200;
-    if (features && features.includes("instanceComposer") && !editDisabled) {
-      insetHeight = insetHeight - 100;
-    }
     if (!editDisabled) {
       insetHeight = insetHeight - 100;
     }
@@ -159,23 +154,21 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
               {words("inventory.statustab.diagnose")}
             </MenuItem>
           </Link>
-          {features && features.includes("instanceComposer") && (
-            <Link
-              pathname={routeManager.getUrl("InstanceComposerEditor", {
-                service: instance.service_entity,
-                instance: instance.id,
-              })}
+          <Link
+            pathname={routeManager.getUrl("InstanceComposerEditor", {
+              service: instance.service_entity,
+              instance: instance.id,
+            })}
+            isDisabled={editDisabled}
+          >
+            <MenuItem
+              itemId="edit-composer"
               isDisabled={editDisabled}
+              icon={<ToolsIcon />}
             >
-              <MenuItem
-                itemId="edit-composer"
-                isDisabled={editDisabled}
-                icon={<ToolsIcon />}
-              >
-                {words("inventory.instanceComposer.editButton")}
-              </MenuItem>
-            </Link>
-          )}
+              {words("inventory.instanceComposer.editButton")}
+            </MenuItem>
+          </Link>
           <Link
             pathname={routeManager.getUrl("EditInstance", {
               service: instance.service_entity,

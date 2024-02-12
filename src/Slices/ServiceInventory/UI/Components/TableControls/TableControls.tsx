@@ -19,7 +19,6 @@ interface Props {
   setFilter: (filter: ServiceInstanceParams.Filter) => void;
   service: ServiceModel;
   paginationWidget: React.ReactNode;
-  showInstanceComposer: boolean;
 }
 
 export const TableControls: React.FC<Props> = ({
@@ -28,7 +27,6 @@ export const TableControls: React.FC<Props> = ({
   setFilter,
   service,
   paginationWidget,
-  showInstanceComposer,
 }) => {
   const { routeManager } = useContext(DependencyContext);
 
@@ -49,22 +47,20 @@ export const TableControls: React.FC<Props> = ({
           identityAttribute={identityAttribute}
         />
         <ToolbarGroup align={{ default: "alignRight" }}>
-          {showInstanceComposer && (
-            <ToolbarItem>
-              <Link
-                to={{
-                  pathname: routeManager.getUrl("InstanceComposer", {
-                    service: serviceName,
-                  }),
-                  search: location.search,
-                }}
-              >
-                <Button id="add-instance-composer-button">
-                  {words("inventory.addInstance.composerButton")}
-                </Button>
-              </Link>
-            </ToolbarItem>
-          )}
+          <ToolbarItem>
+            <Link
+              to={{
+                pathname: routeManager.getUrl("InstanceComposer", {
+                  service: serviceName,
+                }),
+                search: location.search,
+              }}
+            >
+              <Button id="add-instance-composer-button">
+                {words("inventory.addInstance.composerButton")}
+              </Button>
+            </Link>
+          </ToolbarItem>
           <ToolbarItem>
             <Link
               to={{
