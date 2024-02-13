@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps-dev): Bump eslint-plugin-import from 2.29.0 to 2.29.1'
+destination-branches:
+- master
+- iso7
+sections: {}
