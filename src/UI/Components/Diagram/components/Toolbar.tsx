@@ -1,7 +1,7 @@
 import React, { useCallback, useContext } from "react";
 import "@inmanta/rappid/rappid.css";
 import { useNavigate } from "react-router-dom";
-import { Button, Flex, FlexItem } from "@patternfly/react-core";
+import { Button, Flex, FlexItem, Tooltip } from "@patternfly/react-core";
 import styled from "styled-components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
@@ -39,29 +39,39 @@ const Toolbar = ({
           alignItems={{ default: "alignItemsCenter" }}
         >
           <FlexItem>
-            <IconButton
-              variant="secondary"
-              onClick={openEntityModal}
-              aria-label="new-entity-button"
+            <Tooltip
+              content={words(
+                "inventory.instanceComposer.addInstanceButtonTooltip",
+              )}
             >
-              <img
-                src={entityIcon}
-                alt="Create new entity icon"
-                aria-label="new-entity-icon"
-              />
-            </IconButton>
+              <IconButton
+                variant="secondary"
+                onClick={openEntityModal}
+                aria-label="new-entity-button"
+              >
+                <img
+                  src={entityIcon}
+                  alt="Create new entity icon"
+                  aria-label="new-entity-icon"
+                />
+              </IconButton>
+            </Tooltip>
           </FlexItem>
           <FlexItem>
             <Spacer />
           </FlexItem>
           <FlexItem>
-            <IconButton variant="secondary" aria-label="label-toggle-button">
-              <img
-                src={labelIcon}
-                alt="Label Toggle Icon"
-                aria-label="label-toggle-icon"
-              />
-            </IconButton>
+            <Tooltip
+              content={words("inventory.instanceComposer.labelButtonTooltip")}
+            >
+              <IconButton variant="secondary" aria-label="label-toggle-button">
+                <img
+                  src={labelIcon}
+                  alt="Label Toggle Icon"
+                  aria-label="label-toggle-icon"
+                />
+              </IconButton>
+            </Tooltip>
           </FlexItem>
         </Flex>
       </FlexItem>
