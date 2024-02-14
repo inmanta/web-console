@@ -393,12 +393,19 @@ describe("Scenario 4 Desired State", () => {
     // make sure all the rows are in the view before toggling them open.
     cy.get('[aria-label="Details"]', { timeout: 20000 }).should(
       "have.length",
-      2,
+      isIso ? 2 : 5,
     );
-
     cy.get('[aria-label="DiffItemList"]').within(() => {
-      cy.get("#toggle-button").eq(0).click();
-      cy.get("#toggle-button").eq(1).click();
+      if (isIso) {
+        cy.get("#toggle-button").eq(0).click();
+        cy.get("#toggle-button").eq(1).click();
+      } else {
+        cy.get("#toggle-button").eq(0).click();
+        cy.get("#toggle-button").eq(1).click();
+        cy.get("#toggle-button").eq(2).click();
+        cy.get("#toggle-button").eq(3).click();
+        cy.get("#toggle-button").eq(4).click();
+      }
     });
 
     // expect diff module to say No changes have been found
@@ -455,12 +462,19 @@ describe("Scenario 4 Desired State", () => {
     // make sure all the rows are in the view before toggling them open.
     cy.get('[aria-label="Details"]', { timeout: 20000 }).should(
       "have.length",
-      2,
+      isIso ? 2 : 5,
     );
-
     cy.get('[aria-label="DiffItemList"]').within(() => {
-      cy.get("#toggle-button").eq(0).click();
-      cy.get("#toggle-button").eq(1).click();
+      if (isIso) {
+        cy.get("#toggle-button").eq(0).click();
+        cy.get("#toggle-button").eq(1).click();
+      } else {
+        cy.get("#toggle-button").eq(0).click();
+        cy.get("#toggle-button").eq(1).click();
+        cy.get("#toggle-button").eq(2).click();
+        cy.get("#toggle-button").eq(3).click();
+        cy.get("#toggle-button").eq(4).click();
+      }
     });
 
     // await the end of the dry-run and expect to find two rows with expandable content.
@@ -523,6 +537,12 @@ describe("Scenario 4 Desired State", () => {
     cy.get('[aria-label="DiffItemList"]').within(() => {
       cy.get("#toggle-button").eq(0).click();
       cy.get("#toggle-button").eq(1).click();
+
+      if (!isIso) {
+        cy.get("#toggle-button").eq(2).click();
+        cy.get("#toggle-button").eq(3).click();
+        cy.get("#toggle-button").eq(4).click();
+      }
     });
     // expect the view to still contain the diff of the last dry-run comparison
     cy.get(".pf-v5-c-card__expandable-content", { timeout: 20000 }).should(
