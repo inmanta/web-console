@@ -40,7 +40,7 @@ TBA
 
 #### Cons
 
-1. some featuers have steeper learning curve
+1. some features have a steeper learning curve
 2. some scenarios could require separate state-management
 3. more opinionated
 
