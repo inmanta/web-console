@@ -63,7 +63,7 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
     // diagnose and duplicate are always enabled, so this means it starts at -200
     let insetHeight = -200;
     if (!editDisabled) {
-      insetHeight = insetHeight - 100;
+      insetHeight = insetHeight - 200;
     }
 
     return `${insetHeight}%`;
