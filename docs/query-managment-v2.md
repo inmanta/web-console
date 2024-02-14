@@ -88,7 +88,7 @@ RTK Query can be filtered-out early, it heavily base itself on the Redux, which 
 
 The remaining two, are both lightweight, and simple, RQ more opinionated, more feature-rich(out-of-the-box), SWR gives more control in what we can do and in what way, but with price, of less features, and requires more time and effort into creating own implementation(manual caching, simpler error handling compared to react-query, no stale time configuration)
 
-**Personally I advocate for React query, as more opinionated would mean easier, simpler and faster adoption into our codebase, with less code that has to be managed and maintained by us, which theoretically is the goal of moving from our own Query Management, the same goes for features, but that require conversation, whether SWR doesn't have all what we need.**
+**Personally I advocate for React query, as more opinionated would mean easier, simpler and faster adoption into our codebase, with less code that has to be managed and maintained by us, which theoretically is the goal of moving from our own Query Management, the same goes for features, but that requires conversation, whether SWR doesn't have all that we need.**
 
 ## More Information
 
