@@ -94,7 +94,7 @@ or run `npx cypress open` if you need to run the tests in the cypress UI.
 
 #### OSS
 
-Adjust the `cypress.json` file to have 
+(If you want to run the cypress UI) Adjust the `cypress.json` file to have 
 
 ```json
   env: {
