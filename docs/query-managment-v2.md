@@ -78,7 +78,7 @@ TBA
 
 ### Overview
 
-Out of most popular libraries that handles communication we have 3 possible contenders:
+Out of most popular libraries that handle communication we have 3 possible contenders:
 
 - React Query
 - RTK Quert
