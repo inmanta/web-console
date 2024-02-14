@@ -882,7 +882,7 @@ __metadata:
     "@testing-library/jest-dom": "npm:^6.4.2"
     "@testing-library/react": "npm:^13.4.0"
     "@testing-library/user-event": "npm:^14.5.2"
-    "@types/backbone": "npm:^1.4.16"
+    "@types/backbone": "npm:^1.4.19"
     "@types/fetch-mock": "npm:^7.3.8"
     "@types/file-saver": "npm:^2.0.7"
     "@types/jest": "npm:^29.5.8"
@@ -1699,7 +1699,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/backbone@npm:^1.4.16, @types/backbone@npm:~1.4.13":
+"@types/backbone@npm:^1.4.19":
+  version: 1.4.19
+  resolution: "@types/backbone@npm:1.4.19"
+  dependencies:
+    "@types/jquery": "npm:*"
+    "@types/underscore": "npm:*"
+  checksum: 10/f9692dd90bda32634ec86b1f86f4587e906e9524fd8fdd16369fb5cef179932b5a497fd9a3134c22221ff387d0fdeab936a34b6b2ea04de5cc02d117976b3532
+  languageName: node
+  linkType: hard
+
+"@types/backbone@npm:~1.4.13":
   version: 1.4.16
   resolution: "@types/backbone@npm:1.4.16"
   dependencies:
