@@ -26,6 +26,14 @@ interface Props {
   isEdit?: boolean;
 }
 
+/**
+ *
+ * @param {fields} Fields[]
+ * @param {apiVersion} "v1" | "v2"
+ * @param {originalAttributes} InstanceAttributeModel - the original state of the attributes
+ * @param {isEdit} boolean
+ * @returns
+ */
 const getFormState = (
   fields,
   apiVersion,
@@ -58,16 +66,16 @@ export const ServiceInstanceForm: React.FC<Props> = ({
     getFormState(fields, apiVersion, originalAttributes, isEdit),
   );
 
-  const [dirtyInputs, setDirtyInputs] = useState(false);
+  const [isDirty, setIsDirty] = useState(false);
   const [shouldPerformCancel, setShouldCancel] = useState(false);
 
-  usePrompt(words("notification.instanceForm.prompt"), dirtyInputs);
+  usePrompt(words("notification.instanceForm.prompt"), isDirty);
 
   //callback was used to avoid re-render in useEffect used in SelectFormInput inside FieldInput
   const getUpdate = useCallback(
     (path: string, value: unknown, multi = false): void => {
-      if (!dirtyInputs) {
-        setDirtyInputs(true);
+      if (!isDirty) {
+        setIsDirty(true);
       }
       if (multi) {
         setFormState((prev) => {
@@ -88,7 +96,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
         });
       }
     },
-    [dirtyInputs],
+    [isDirty],
   );
 
   const preventDefault = (event: React.FormEvent) => {
@@ -96,7 +104,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
   };
 
   const onConfirm = () =>
-    onSubmit(formState, (value: boolean) => setDirtyInputs(value));
+    onSubmit(formState, (value: boolean) => setIsDirty(value));
 
   useEffect(() => {
     if (shouldPerformCancel) {
@@ -143,8 +151,8 @@ export const ServiceInstanceForm: React.FC<Props> = ({
         <Button
           variant="link"
           onClick={() => {
-            if (dirtyInputs) {
-              setDirtyInputs(false);
+            if (isDirty) {
+              setIsDirty(false);
             }
             setShouldCancel(true);
           }}

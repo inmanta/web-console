@@ -61,10 +61,10 @@ export const createFormState = (
  * If apiVersion "v2" then returns originalAttributes as second version endpoint replaces the whole edited instance
  * and fields not necessarily cover that 1:1
  *
- * @param {FieldLikeWithFormState[]} fields - active fields that
+ * @param {FieldLikeWithFormState[]} fields - active fields
  * @param {"v1" | "v2"} apiVersion - version of endpoint which handles the edit
  * @param {InstanceAttributeModel | null | undefined} originalAttributes - current state of Attributes
- * @returns
+ * @returns InstanceAttributeModel
  */
 export const createEditFormState = (
   fields: FieldLikeWithFormState[],
