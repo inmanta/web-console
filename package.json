@@ -54,7 +54,7 @@
     "@testing-library/jest-dom": "^6.4.2",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^14.5.2",
-    "@types/backbone": "^1.4.16",
+    "@types/backbone": "^1.4.19",
     "@types/fetch-mock": "^7.3.8",
     "@types/file-saver": "^2.0.7",
     "@types/jest": "^29.5.8",
