@@ -2,7 +2,7 @@
 
 ## Context and Problem Statement
 
-Currently we manage all of the queries to the backend ourself, which is burdened with a lot of code scattered all around the place.
+Currently, we manage all of the queries to the backend ourselves, which is burdened with a lot of code scattered all around the place.
 This code is hard to read, require high effort to learn the flow, possible bugs or unwanted behavior is hard to track, finally adding new queries require a lot of boilerplate code.
 
 How to simplify management and further development of the communication with the backend?
