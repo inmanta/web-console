@@ -1,65 +1,79 @@
-# Title of the ADR
+# [short title of solved problem and solution]
+
+- Status: proposed
+- Date: 14.02.2024
+
+Technical Story:
+
+Currently, we manage all of the queries to the backend ourselves, which is burdened with a lot of code scattered all around the place.
+The code is hard to read, requires high effort to learn the flow, possible bugs or unwanted behavior is hard to track, finally adding new queries requires a lot of boilerplate code.
 
 ## Context and Problem Statement
 
-Context and introduction to the problem issued in ADR with clear problem statement that is being answered below.
+[Describe the context and problem statement, e.g., in free form using two to three sentences. You may want to articulate the problem in form of a question.]
+
+## Decision Drivers <!-- optional -->
+
+- [driver 1, e.g., a force, facing concern, ...]
+- [driver 2, e.g., a force, facing concern, ...]
+- ... <!-- numbers of drivers can vary -->
 
 ## Considered Options
 
-- Option A
-- Option B
+1. React Query
+2. RTK Query
+3. SWR
+
+- ... <!-- numbers of options can vary -->
 
 ## Decision Outcome
 
-Outcome of the team regarding given issue
+Chosen option: "[option 1]", because [justification. e.g., only option, which meets k.o. criterion decision driver | which resolves force force | ... | comes out best (see below)].
 
-### Consequences
+### Positive Consequences <!-- optional -->
 
-Consequences of the decision outcome, both positive and negative
+- [e.g., improvement of quality attribute satisfaction, follow-up decisions required, ...]
+- ...
 
-## Pros and Cons of the Options
+### Negative Consequences <!-- optional -->
 
-### Option A
+- [e.g., compromising quality attribute, follow-up decisions required, ...]
+- ...
 
-- [Homepage]()
-- [Example]()
-- [Other useful link]()
+## Pros and Cons of the Options <!-- optional -->
 
-#### Pros
+### [option 1]
 
-1. A
-2. B
-3. C
+[example | description | pointer to more information | ...] <!-- optional -->
 
-#### Cons
+- Good, because [argument a]
+- Good, because [argument b]
+- Bad, because [argument c]
+- ... <!-- numbers of pros and cons can vary -->
 
-1. A
-2. B
-3. C
+### [option 2]
 
-### Option V
+[example | description | pointer to more information | ...] <!-- optional -->
 
-- [Homepage]()
-- [Example]()
-- [Other useful link]()
+- Good, because [argument a]
+- Good, because [argument b]
+- Bad, because [argument c]
+- ... <!-- numbers of pros and cons can vary -->
 
-#### Pros
+### [option 3]
 
-1. A
-2. B
-3. C
+[example | description | pointer to more information | ...] <!-- optional -->
 
-#### Cons
+- Good, because [argument a]
+- Good, because [argument b]
+- Bad, because [argument c]
+- ... <!-- numbers of pros and cons can vary -->
 
-1. A
-2. B
-3. C
+## Overview <!-- optional -->
 
-### Overview
+[general overview of the process of decision making.]
 
-General overview of the problem, and the thought process in creating given ADR
+## Links <!-- optional -->
 
-## More Information
-
-[Link One]()
-[Link Two]()
+- [Link type] [Link to ADR] <!-- example: Refined by [ADR-0000](0000-logging-warnings-using-the-python-warnings-or-logging-module.md) -->
+- ... <!-- numbers of links can vary -->
