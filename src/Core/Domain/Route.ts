@@ -51,6 +51,9 @@ const kinds = [
 
 export type RouteKind = (typeof kinds)[number];
 
+/**
+ * Type for Routes that should be restricted from navigating to due to the e.g., being hidden behind feature flags
+ */
 export type RestrictedRouteKind = "";
 
 export const isValidKind = (value: string): value is RouteKind =>
