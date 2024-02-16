@@ -27,19 +27,20 @@ interface Props {
 }
 
 /**
+ * Creates the formstate.
  *
  * @param {fields} Fields[]
  * @param {apiVersion} "v1" | "v2"
  * @param {originalAttributes} InstanceAttributeModel - the original state of the attributes
  * @param {isEdit} boolean
- * @returns
+ * @returns InstanceAttributeModel
  */
 const getFormState = (
   fields,
   apiVersion,
   originalAttributes,
   isEdit = false,
-) => {
+): InstanceAttributeModel => {
   if (isEdit) {
     return createEditFormState(fields, apiVersion, originalAttributes);
   } else if (originalAttributes) {

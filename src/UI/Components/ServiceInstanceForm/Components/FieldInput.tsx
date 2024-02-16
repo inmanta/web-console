@@ -29,6 +29,7 @@ interface Props {
   originalState: InstanceAttributeModel;
   getUpdate: GetUpdate;
   path: string | null;
+  isNew?: boolean;
 }
 
 type GetUpdate = (path: string, value: unknown, multi?: boolean) => void;
@@ -42,6 +43,7 @@ export const FieldInput: React.FC<Props> = ({
   originalState,
   getUpdate,
   path,
+  isNew = false,
 }) => {
   //callback was used to avoid re-render in useEffect used in SelectFormInput
   const getEnumUpdate = useCallback(
@@ -50,6 +52,7 @@ export const FieldInput: React.FC<Props> = ({
     },
     [getUpdate, path, field.name],
   );
+
   switch (field.kind) {
     case "Boolean":
       return field.isOptional ? (
@@ -65,7 +68,8 @@ export const FieldInput: React.FC<Props> = ({
           key={field.name}
           shouldBeDisabled={
             field.isDisabled &&
-            get(originalState, makePath(path, field.name)) !== undefined
+            get(originalState, makePath(path, field.name)) !== undefined &&
+            !isNew
           }
         />
       ) : (
@@ -80,7 +84,8 @@ export const FieldInput: React.FC<Props> = ({
           key={field.name}
           shouldBeDisabled={
             field.isDisabled &&
-            get(originalState, makePath(path, field.name)) !== undefined
+            get(originalState, makePath(path, field.name)) !== undefined &&
+            !isNew
           }
         />
       );
@@ -97,7 +102,8 @@ export const FieldInput: React.FC<Props> = ({
           shouldBeDisabled={
             field.isDisabled &&
             get(originalState, makePath(path, field.name).split(".")) !==
-              undefined
+              undefined &&
+            !isNew
           }
           type={field.inputType}
           handleInputChange={(value, _event) =>
@@ -118,7 +124,8 @@ export const FieldInput: React.FC<Props> = ({
           isOptional={field.isOptional}
           shouldBeDisabled={
             field.isDisabled &&
-            get(originalState, makePath(path, field.name)) !== undefined
+            get(originalState, makePath(path, field.name)) !== undefined &&
+            !isNew
           }
           type={field.inputType}
           handleInputChange={(value, _event) => {
@@ -140,7 +147,8 @@ export const FieldInput: React.FC<Props> = ({
           isOptional={field.isOptional}
           shouldBeDisabled={
             field.isDisabled &&
-            get(originalState, makePath(path, field.name)) !== undefined
+            get(originalState, makePath(path, field.name)) !== undefined &&
+            !isNew
           }
           type={field.inputType}
           handleInputChange={(value, _event) =>
@@ -183,7 +191,8 @@ export const FieldInput: React.FC<Props> = ({
           key={field.name}
           shouldBeDisabled={
             field.isDisabled &&
-            get(originalState, makePath(path, field.name)) !== undefined
+            get(originalState, makePath(path, field.name)) !== undefined &&
+            !isNew
           }
         />
       );
@@ -283,6 +292,7 @@ const NestedFieldInput: React.FC<NestedProps> = ({
     setShowList(false);
     return getUpdate(makePath(path, field.name), null);
   };
+
   return (
     <StyledFormFieldGroupExpandable
       aria-label={`NestedFieldInput-${makePath(path, field.name)}`}
@@ -345,6 +355,12 @@ interface DictListProps {
   path: string | null;
 }
 
+/**
+ * DictListFieldInput with inner-state to keep track of newly added items.
+ *
+ * @param {props} DictListProps
+ * @returns JSX.Element
+ */
 const DictListFieldInput: React.FC<DictListProps> = ({
   field,
   formState,
@@ -353,22 +369,65 @@ const DictListFieldInput: React.FC<DictListProps> = ({
   path,
 }) => {
   const list = get(formState, makePath(path, field.name)) as Array<unknown>;
+  const [addedItemsPaths, setAddedItemPaths] = useState<string[]>([]);
 
+  /**
+   * Add a new formField group of the same type to the list.
+   * Stores the paths of the newly added elements.
+   *
+   * @returns void
+   */
   const onAdd = () => {
     if (field.max && list.length >= field.max) {
       return;
     }
+
+    get(originalState, makePath(path, field.name));
+    setAddedItemPaths([
+      ...addedItemsPaths,
+      `${makePath(path, field.name)}.${list.length}`,
+    ]);
+
     getUpdate(makePath(path, field.name), [
       ...list,
       createFormState(field.fields),
     ]);
   };
 
-  const getOnDelete = (index: number) => () =>
+  /**
+   * Delete method that also handles the update of the stored paths
+   *
+   * @param {index} number
+   * @returns void
+   */
+  const getOnDelete = (index: number) => () => {
+    const newPaths: string[] = [];
+
+    /**
+     * We need to update the stored paths after the deleted item,
+     * because paths are dynamically defined and not fixed.
+     * If the user deletes an item preceding the new items,
+     * we want to make sure the path refers to the same entity.
+     */
+    addedItemsPaths.forEach((addedPath, indexPath) => {
+      const lastDigit: number = Number(addedPath.slice(-1));
+
+      if (indexPath < index) {
+        newPaths.push(addedPath); // add addedPath to newPath
+      } else if (lastDigit > index) {
+        const truncatedPath = addedPath.slice(0, -1); // truncate the last digit
+        const modifiedPath = `${truncatedPath}${lastDigit - 1}`; // deduce 1 from the index
+        newPaths.push(modifiedPath);
+      }
+    });
+
+    setAddedItemPaths([...newPaths]);
+
     getUpdate(makePath(path, field.name), [
       ...list.slice(0, index),
       ...list.slice(index + 1, list.length),
     ]);
+  };
 
   return (
     <StyledFormFieldGroupExpandable
@@ -400,7 +459,7 @@ const DictListFieldInput: React.FC<DictListProps> = ({
         />
       }
     >
-      {list.map((item, index) => (
+      {list.map((_item, index) => (
         <StyledFormFieldGroupExpandable
           aria-label={`DictListFieldInputItem-${makePath(
             path,
@@ -441,6 +500,9 @@ const DictListFieldInput: React.FC<DictListProps> = ({
               originalState={originalState}
               getUpdate={getUpdate}
               path={makePath(path, `${field.name}.${index}`)}
+              isNew={addedItemsPaths.includes(
+                `${makePath(path, field.name)}.${index}`,
+              )}
             />
           ))}
         </StyledFormFieldGroupExpandable>

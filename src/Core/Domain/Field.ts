@@ -24,7 +24,6 @@ interface BaseField {
   description?: string;
   isOptional: boolean;
   isDisabled: boolean;
-  isNew?: boolean;
 }
 
 export interface BooleanField extends BaseField {

@@ -74,6 +74,7 @@ export const createEditFormState = (
   if (apiVersion === "v2" && originalAttributes) {
     return originalAttributes;
   }
+
   return fields.reduce((acc, curr) => {
     if (originalAttributes?.[curr.name] !== undefined) {
       switch (curr.kind) {
@@ -133,6 +134,7 @@ export const createEditFormState = (
     }
   }, {});
 };
+
 /**
  * Creates Form State based on available fields and optional originalAttributes.
  *
