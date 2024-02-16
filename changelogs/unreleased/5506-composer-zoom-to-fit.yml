@@ -1,0 +1,6 @@
+change-type: minor
+description: "Add default behavior to zoom to fit on initial load of the instance in the Smart Composer"
+issue-nr: 5506
+destination-branches:
+  - master
+  - iso7
