@@ -1,0 +1,5 @@
+description: "Fix issue with misleading visual state of Diagnose button and misplaced 'back' button for terminated instances an"
+change-type: patch
+destination-branches: [master, iso7]
+sections:
+  bugfix: "{{description}}"
