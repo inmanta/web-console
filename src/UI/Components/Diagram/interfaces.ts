@@ -20,8 +20,8 @@ interface DictDialogData {
 }
 interface Rule {
   name: string;
-  lowerLimit: ParsedNumber | null;
-  upperLimit: ParsedNumber | null;
+  lowerLimit: ParsedNumber | null | undefined;
+  upperLimit: ParsedNumber | null | undefined;
   modifier: string;
 }
 interface EmbeddedRule extends Rule {

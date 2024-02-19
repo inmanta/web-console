@@ -189,7 +189,7 @@ export const checkIfConnectionIsAllowed = (
  * @param {EmbeddedRule | InterServiceRule | undefined} rule telling which shapes can connect to each other and about their limitations
  * @returns {boolean}
  */
-const checkWhetherConnectionRulesAreExhausted = (
+export const checkWhetherConnectionRulesAreExhausted = (
   connectedElements: ServiceEntityBlock[],
   rule: EmbeddedRule | InterServiceRule | undefined,
   editMode: boolean,
@@ -230,7 +230,7 @@ const doesElementIsEmbeddedWithExhaustedConnections = (
   const sourceHolderName = source.get("holderName");
 
   const isTargetBlocked = target.get("isBlockedFromEditing");
-
+  console.log(isSourceEmbedded, sourceHolderName);
   //if source Embbedded and target is blocked then return true as we can't add anything to it in composer
   if (isSourceEmbedded && isTargetBlocked) {
     return true;
@@ -338,8 +338,6 @@ export const shapesDataTransform = (
           } else {
             instance.attributes[attributeName] = id;
           }
-        } else {
-          instance.attributes[attributeName] = id;
         }
       }
     });

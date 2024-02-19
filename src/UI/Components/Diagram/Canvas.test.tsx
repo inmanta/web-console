@@ -45,7 +45,6 @@ const setup = (
   serviceModels: ServiceModel[] = services as unknown as ServiceModel[],
 ) => {
   const store = getStoreInstance();
-
   const environmentHandler = EnvironmentHandlerImpl(
     useLocation,
     PrimaryRouteManager(""),
@@ -129,7 +128,11 @@ const deleteAndAssert = async (
   expect(updatedConnectors3).toHaveLength(assertionThree);
 };
 
-const createShapeWithNameAndId = async (shapeName: string, name, id) => {
+const createShapeWithNameAndId = async (
+  shapeName: string,
+  name: string,
+  id: string,
+) => {
   const button = screen.getByLabelText("new-entity-button");
   await act(async () => {
     await user.click(button);
@@ -457,132 +460,6 @@ describe("Canvas.tsx", () => {
     expect(nameValue).toHaveTextContent(name);
   });
 
-  // // this test case fail to highlight after click on link button
-  // it("highlights available entities to connect", async () => {
-  //   const component = setup();
-  //   render(component);
-  //   const name = "name-001";
-  //   const id = "id-001";
-  //   await createShapeWithNameAndId("container-service", name, id);
-
-  //   //create shape
-  //   const button = screen.getByLabelText("new-entity-button");
-  //   const containerName = "name-002";
-
-  //   await act(async () => {
-  //     await user.click(button);
-  //   });
-
-  //   //create embedded shape
-  //   const containerSelect = screen.getByLabelText("service-picker");
-  //   await act(async () => {
-  //     await user.click(containerSelect);
-  //   });
-  //   await act(async () => {
-  //     await user.click(
-  //       screen.getByRole("option", {
-  //         name: "child_container (container-service)",
-  //       }),
-  //     );
-  //   });
-
-  //   const containerInput = screen.getByLabelText("TextInput-name");
-  //   await act(async () => {
-  //     await user.type(containerInput, containerName);
-  //   });
-
-  //   await act(async () => {
-  //     await user.click(screen.getByLabelText("confirm-button"));
-  //   });
-  //   await new Promise(process.nextTick);
-
-  //   const shapes = document.querySelectorAll(
-  //     '[data-type="app.ServiceEntityBlock"]',
-  //   );
-
-  //   await act(async () => {
-  //     await user.click(shapes[0]);
-  //   });
-
-  //   const handle = document.querySelector('[data-action="link"]') as Element;
-  //   await act(async () => {
-  //     await user.pointer(
-  //       // click at link element
-  //       { keys: "[MouseLeft>]", target: handle },
-  //     );
-  //   });
-
-  //   await new Promise(process.nextTick);
-
-  //   const highlight = document.querySelector(".joint-highlight-mask");
-  //   await new Promise(process.nextTick);
-
-  //   expect(highlight).toBeVisible();
-  // });
-
-  // // this test case fail to connect shapes after pressing on link button in one shape and releasing it on another
-  // it("connects core entity with embedded/related one together", async () => {
-  //   const component = setup();
-  //   render(component);
-  //   const name = "name-001";
-  //   const id = "id-001";
-  //   await createShapeWithNameAndId("container-service", name, id);
-
-  //   //create shape
-  //   const button = screen.getByLabelText("new-entity-button");
-  //   const containerName = "name-002";
-
-  //   await act(async () => {
-  //     await user.click(button);
-  //   });
-
-  //   //create embedded shape
-  //   const containerSelect = screen.getByLabelText("service-picker");
-  //   await act(async () => {
-  //     await user.click(containerSelect);
-  //   });
-  //   await act(async () => {
-  //     await user.click(
-  //       screen.getByRole("option", {
-  //         name: "child_container (container-service)",
-  //       }),
-  //     );
-  //   });
-
-  //   const containerInput = screen.getByLabelText("TextInput-name");
-  //   await act(async () => {
-  //     await user.type(containerInput, containerName);
-  //   });
-
-  //   await act(async () => {
-  //     await user.click(screen.getByLabelText("confirm-button"));
-  //   });
-  //   await new Promise(process.nextTick);
-
-  //   const shapes = document.querySelectorAll(
-  //     '[data-type="app.ServiceEntityBlock"]',
-  //   );
-
-  //   await act(async () => {
-  //     await user.click(shapes[0]);
-  //   });
-
-  //   const handle = document.querySelector('[data-action="link"]') as Element;
-  //   await act(async () => {
-  //     await user.pointer(
-  //       // click at link element
-  //       { keys: "[MouseLeft>]", target: handle },
-  //       { keys: "[/MouseLeft]", target: shapes[1] },
-  //     );
-  //   });
-
-  //   await new Promise(process.nextTick);
-
-  //   const links = document.querySelectorAll('[data-type="app.Link"]');
-
-  //   expect(links).toHaveLength(1);
-  // });
-
   it("edits correctly services", async () => {
     const component = setup();
     render(component);
@@ -697,7 +574,7 @@ describe("Canvas.tsx", () => {
     expect(attrIndicators).toHaveLength(1);
   });
 
-  it("deletes shape correctly ", async () => {
+  it("deletes shape correctly", async () => {
     const component = setup(mockedInstanceWithReferences);
     render(component);
 
@@ -715,59 +592,4 @@ describe("Canvas.tsx", () => {
     await deleteAndAssert("child-service", 2, 1);
     await deleteAndAssert("child_container", 1, 0);
   });
-
-  // // For some reason click on deleteButton doesn't trigger action
-  // it("deletes links correctly ", async () => {
-  //   //links in this test case cover all of the possible
-  //   const component = setup(mockedInstanceWithReferences);
-  //   render(component);
-
-  //   await screen.findAllByJointSelector("info");
-  //   const connectors = document.querySelectorAll('[data-type="app.Link"]');
-
-  //   expect(connectors).toHaveLength(3);
-
-  //   fireEvent.mouseEnter(connectors[0]);
-  //   //Delay has to be done as library base itself on listeners that are async
-  //   await new Promise(process.nextTick);
-
-  //   const deleteButton = document.querySelector(
-  //     '[data-tool-name="button"]',
-  //   ) as Element;
-
-  //   await act(async () => {
-  //     await user.click(deleteButton);
-  //   });
-
-  //   const connectors2 = document.querySelectorAll('[data-type="app.Link"]');
-
-  //   expect(connectors2).toHaveLength(2);
-  // });
-
-  it("creates valid object for order_api when creating entity from scratch", () => {});
-  it("creates valid object for order_api when editing entity", () => {});
-
-  it("WHEN strict_modifier_enforcement is set to false for some services THEN for only these instances and their connections editing/deleting is blocked", () => {});
-  // it("zoom-in/zoom-out", async () => {
-  //   // TODO: Resolve "TypeError: viewport.getCTM is not a function"
-  //   const component = setup();
-  //   render(component);
-
-  //   const paper = document.querySelector(".joint-layers") as Element;
-  //   //default value, that is set by the library but for some reason it doesn't apply it here(probably due to the mocked functions)
-  //   paper.setAttribute("transform", "matrix(1,0,0,1,40,40)");
-
-  //   const zoomIn = document.querySelector(".zoom-in") as Element;
-  //   const zoomOut = document.querySelector(".zoom-out") as Element;
-
-  //   await act(async () => {
-  //     await user.click(zoomOut);
-  //   });
-  //   expect(paper.getAttribute("transform")).toEqual("matrix(1,05,05,1,42,42)");
-
-  //   await act(async () => {
-  //     await user.click(zoomIn);
-  //   });
-  //   expect(paper.getAttribute("transform")).toEqual("matrix(1,0,0,1,40,40)");
-  // });
 });
