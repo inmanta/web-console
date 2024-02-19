@@ -299,7 +299,7 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
       </MenuContent>
     </Menu>
   );
-  
+
   return (
     <MenuContainer
       isOpen={isOpen}
