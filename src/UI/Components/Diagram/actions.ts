@@ -418,7 +418,7 @@ export function appendEmbeddedEntity(
  */
 export function appendEntity(
   graph: dia.Graph,
-  serviceModel: ServiceModel,
+  serviceModel: ServiceModel | EmbeddedEntity,
   entity: InstanceAttributeModel,
   isCore: boolean,
   isEmbedded = false,
