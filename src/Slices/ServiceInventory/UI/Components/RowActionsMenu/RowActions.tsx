@@ -292,13 +292,7 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
       </MenuContent>
     </Menu>
   );
-  console.log(
-    routeManager.getUrl("Diagnose", {
-      service: instance.service_entity,
-      instance: instance.id,
-    }),
-    diagnoseDisabled,
-  );
+
   return (
     <MenuContainer
       isOpen={isOpen}
