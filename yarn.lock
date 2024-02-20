@@ -885,7 +885,7 @@ __metadata:
     "@types/backbone": "npm:^1.4.19"
     "@types/fetch-mock": "npm:^7.3.8"
     "@types/file-saver": "npm:^2.0.7"
-    "@types/jest": "npm:^29.5.8"
+    "@types/jest": "npm:^29.5.12"
     "@types/json-bigint": "npm:^1.0.3"
     "@types/lodash": "npm:^4.14.202"
     "@types/lodash-es": "npm:^4.17.12"
@@ -926,7 +926,7 @@ __metadata:
     git-revision-webpack-plugin: "npm:^5.0.0"
     history: "npm:^5.3.0"
     html-webpack-plugin: "npm:^5.6.0"
-    husky: "npm:^9.0.10"
+    husky: "npm:^9.0.11"
     imagemin: "npm:^8.0.1"
     jest: "npm:^29.7.0"
     jest-environment-jsdom: "npm:^29.6.4"
@@ -1981,13 +1981,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/jest@npm:^29.5.8":
-  version: 29.5.8
-  resolution: "@types/jest@npm:29.5.8"
+"@types/jest@npm:^29.5.12":
+  version: 29.5.12
+  resolution: "@types/jest@npm:29.5.12"
   dependencies:
     expect: "npm:^29.0.0"
     pretty-format: "npm:^29.0.0"
-  checksum: 10/a8194e26c642780d5b2e22170ac538f7975e04aeaa76d87f8e5ac921f7a8fffc5252029a9e6efacdb0ec4b45320322c8e1f27a5338083f49efbd3c6021314f7e
+  checksum: 10/312e8dcf92cdd5a5847d6426f0940829bca6fe6b5a917248f3d7f7ef5d85c9ce78ef05e47d2bbabc40d41a930e0e36db2d443d2610a9e3db9062da2d5c904211
   languageName: node
   linkType: hard
 
@@ -7910,12 +7910,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"husky@npm:^9.0.10":
-  version: 9.0.10
-  resolution: "husky@npm:9.0.10"
+"husky@npm:^9.0.11":
+  version: 9.0.11
+  resolution: "husky@npm:9.0.11"
   bin:
     husky: bin.mjs
-  checksum: 10/c303f1862e2b63873605df55a2b08303155e35c799585d7dd677628f62d716e7304bd984fc7d00ec44e740caac07d51720d1a0abb0a23a70a38859d89eb8e72d
+  checksum: 10/8a9b7cb9dc8494b470b3b47b386e65d579608c6206da80d3cc8b71d10e37947264af3dfe00092368dad9673b51d2a5ee87afb4b2291e77ba9e7ec1ac36e56cd1
   languageName: node
   linkType: hard
 

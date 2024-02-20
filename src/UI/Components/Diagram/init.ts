@@ -298,15 +298,17 @@ export default function diagramInit(
       services: ServiceModel[],
       isMainInstance: boolean,
     ) => {
-      const appendedInstance = appendInstance(
-        paper,
-        graph,
-        instance,
-        services,
-        isMainInstance,
-      );
-      const { x, y } = appendedInstance.getBBox();
-      scroller.center(x, y + 200);
+      appendInstance(paper, graph, instance, services, isMainInstance);
+
+      scroller.zoomToFit({
+        useModelGeometry: true,
+        padding: 20,
+        scaleGrid: 0.05,
+        minScaleX: 0.4,
+        minScaleY: 0.4,
+        maxScaleX: 1.2,
+        maxScaleY: 1.2,
+      });
 
       const jsonGraph = graph.toJSON();
       return jsonGraph.cells as serializedCell[];
