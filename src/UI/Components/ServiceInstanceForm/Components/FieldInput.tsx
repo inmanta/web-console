@@ -32,11 +32,37 @@ interface Props {
   isNew?: boolean;
 }
 
+/**
+ * Type representing a function to update the state within the form.
+ *
+ * @param {string} path - The path within the form state to update.
+ * @param {unknown} value - The new value to set at the specified path.
+ * @param {boolean} [multi] - Optional flag indicating if the update is for multiple values. Default is false.
+ * @returns {void}
+ */
 type GetUpdate = (path: string, value: unknown, multi?: boolean) => void;
 
+/**
+ * Combines the current path with the next path segment to create a new path.
+ *
+ * @param {string | null} path - The current path (can be null).
+ * @param {string} next - The next path segment to append.
+ * @returns {string} The new combined path.
+ */
 const makePath = (path: string | null, next: string): string =>
   path === null ? next : `${path}.${next}`;
 
+/**
+ * FieldInput component for managing form input related to a specific field.
+ *
+ * @param {Props} props - Props for the FieldInput component.
+ *   @prop {Field} field - The field associated with the input.
+ *   @prop {FormState} formState - The current form state.
+ *   @prop {OriginalState} originalState - The original state of the field.
+ *   @prop {Function} getUpdate - Function to get updates for the field.
+ *   @prop {string} path - The path of the field within the form.
+ *   @prop {boolean} isNew - Flag indicating whether the field is newly added. Default is false.
+ */
 export const FieldInput: React.FC<Props> = ({
   field,
   formState,
@@ -239,6 +265,12 @@ export const FieldInput: React.FC<Props> = ({
   }
 };
 
+/**
+ * Get a placeholder for the given data type.
+ *
+ * @param {string} typeName - The data type name.
+ * @returns {string | undefined} The placeholder string for the given data type, or undefined if not found.
+ */
 const getPlaceholderForType = (typeName: string): string | undefined => {
   if (typeName === "int[]") {
     return words("inventory.form.placeholder.intList");
@@ -253,6 +285,12 @@ const getPlaceholderForType = (typeName: string): string | undefined => {
   return undefined;
 };
 
+/**
+ * Get a type hint for the given data type.
+ *
+ * @param {string} typeName - The data type name.
+ * @returns {string | undefined} The type hint string for the given data type, or undefined if not found.
+ */
 const getTypeHintForType = (typeName: string): string | undefined => {
   if (typeName.endsWith("[]")) {
     return words("inventory.form.typeHint.list")(
@@ -272,6 +310,17 @@ interface NestedProps {
   path: string | null;
 }
 
+/**
+ * NestedFieldInput component with inner state for managing nested field input.
+ *
+ * @param {NestedProps} props - Props for the NestedFieldInput component.
+ *   @prop {Field} field - The nested field.
+ *   @prop {FormState} formState - The form state.
+ *   @prop {OriginalState} originalState - The original state of the nested field.
+ *   @prop {Function} getUpdate - Function to update and get updates for the nested field.
+ *   @prop {string} path - The path of the nested field.
+ * @returns {JSX.Element} The rendered NestedFieldInput component.
+ */
 const NestedFieldInput: React.FC<NestedProps> = ({
   field,
   formState,
@@ -356,10 +405,15 @@ interface DictListProps {
 }
 
 /**
- * DictListFieldInput with inner-state to keep track of newly added items.
+ * DictListFieldInput component with inner state to manage dictionary list field input.
  *
- * @param {props} DictListProps
- * @returns JSX.Element
+ * @param {DictListProps} props - Props for the DictListFieldInput component.
+ *   @prop {Field} field - The dictionary list field.
+ *   @prop {FormState} formState - The form state.
+ *   @prop {OriginalState} originalState - The original state of the dictionary list field.
+ *   @prop {Function} getUpdate - Function to update and get updates for the dictionary list field.
+ *   @prop {string} path - The path of the dictionary list field.
+ * @returns {JSX.Element} The rendered DictListFieldInput component.
  */
 const DictListFieldInput: React.FC<DictListProps> = ({
   field,

@@ -30,11 +30,11 @@ interface Props {
  * Creates the form state.
  * If the form is not in edit mode but has original attributes, it returns a state for a duplicated instance.
  *
- * @param {Fields[]} fields - Array of Fields.
+ * @param {Fields} fields - Array of Fields.
  * @param {string} apiVersion - API version ("v1" or "v2").
  * @param {InstanceAttributeModel} originalAttributes - The original state of the attributes.
- * @param {boolean} isEdit - Whether the form is in edit mode or not.
- * @returns {InstanceAttributeModel} The created form state.
+ * @param {boolean} [isEdit=false] - Whether the form is in edit mode. Default is false.
+ * @returns {InstanceAttributeModel} The calculated form state.
  */
 const getFormState = (
   fields,
@@ -55,13 +55,14 @@ const getFormState = (
  * ServiceInstanceForm Component.
  * Supports editing, creating, and duplicating instances.
  *
- * @param {Fields[]} fields - Array of Fields.
- * @param {function} onSubmit - Callback method to handle form submission.
- * @param {InstanceAttributeModel} originalAttributes - InstanceAttributeModel type for original attributes.
- * @param {boolean} isSubmitDisabled - Indicates whether the submit button is disabled.
- * @param {string} apiVersion - API version ("v1" or "v2").
- * @param {boolean} isEdit - Whether the form is in edit mode or not.
- *
+ * @param {Props} props - Props for the ServiceInstanceForm component.
+ *   @prop {Fields[]} fields - Array of Fields.
+ *   @prop {function} onSubmit - Callback method to handle form submission.
+ *   @prop {function} onCancel - Callback method to handle form cancellation.
+ *   @prop {InstanceAttributeModel} originalAttributes - Original state of the attributes.
+ *   @prop {boolean} isSubmitDisabled - Indicates whether the submit button is disabled.
+ *   @prop {string} [apiVersion="v1"] - API version ("v1" or "v2"). Default is "v1".
+ *   @prop {boolean} [isEdit=false] - Whether the form is in edit mode. Default is false.
  * @returns {JSX.Element} The rendered ServiceInstanceForm component.
  */
 export const ServiceInstanceForm: React.FC<Props> = ({
@@ -86,7 +87,16 @@ export const ServiceInstanceForm: React.FC<Props> = ({
 
   usePrompt(words("notification.instanceForm.prompt"), isDirty);
 
-  //callback was used to avoid re-render in useEffect used in SelectFormInput inside FieldInput
+  /**
+   * Get an update for the form state based on the provided path and value.
+   *
+   * callback was used to avoid re-render in useEffect used in SelectFormInput inside FieldInput
+   *
+   * @param {string} path - The path within the form state to update.
+   * @param {unknown} value - The new value to set at the specified path.
+   * @param {boolean} [multi=false] - Optional flag indicating if the update is for multiple values. Default is false.
+   * @returns {void}
+   */
   const getUpdate = useCallback(
     (path: string, value: unknown, multi = false): void => {
       if (!isDirty) {
@@ -114,10 +124,21 @@ export const ServiceInstanceForm: React.FC<Props> = ({
     [isDirty],
   );
 
+  /**
+   * Prevent the default behavior of a React form event.
+   *
+   * @param {React.FormEvent} event - The React form event.
+   * @returns {void}
+   */
   const preventDefault = (event: React.FormEvent) => {
     event.preventDefault();
   };
 
+  /**
+   * Handle confirmation action by triggering form submission and updating dirty state.
+   *
+   * @returns {void}
+   */
   const onConfirm = () =>
     onSubmit(formState, (value: boolean) => setIsDirty(value));
 
