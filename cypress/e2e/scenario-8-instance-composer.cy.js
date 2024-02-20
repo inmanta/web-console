@@ -174,7 +174,7 @@ if (Cypress.env("edition") === "iso") {
         .trigger("mousedown")
         .trigger("mousemove", {
           clientX: 700,
-          clientY: 300,
+          clientY: 350,
         })
         .trigger("mouseup");
 
@@ -255,13 +255,15 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#data").type("data2");
       cy.get("button").contains("Confirm").click();
 
+      cy.get(".zoom-out").click();
+
       cy.get('[joint-selector="headerLabel"]').contains("ro_files").click();
       cy.get('[data-action="link"]')
         .trigger("mouseover")
         .trigger("mousedown")
         .trigger("mousemove", {
-          clientX: 500,
-          clientY: 300,
+          clientX: 450,
+          clientY: 250,
         })
         .trigger("mouseup");
 
