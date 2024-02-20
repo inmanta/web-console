@@ -24,6 +24,9 @@ const setup = (
     | EnumField
   )[],
   func: undefined | jest.Mock = undefined,
+  isEdit = false,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  originalAttributes: any = undefined,
 ) => {
   return (
     <CustomRouter history={history}>
@@ -35,6 +38,8 @@ const setup = (
               fields={fields}
               onCancel={jest.fn()}
               onSubmit={func ? func : jest.fn()}
+              isEdit={isEdit}
+              originalAttributes={originalAttributes}
             />
           }
         />
@@ -42,6 +47,7 @@ const setup = (
     </CustomRouter>
   );
 };
+
 test("GIVEN ServiceInstanceForm WHEN passed a TextField THEN shows that field", async () => {
   render(setup([Test.Field.text]));
 
@@ -213,6 +219,94 @@ test("GIVEN ServiceInstanceForm and a DictListField WHEN clicking all toggles op
   expect(
     screen.getByRole("textbox", { name: `TextInput-${Test.Field.text.name}` }),
   ).toBeVisible();
+});
+
+test("GIVEN ServiceInstanceForm and a nested DictListField WHEN in EDIT mode, new items should be enabled.", async () => {
+  const originalAttributes = {
+    nested_dict_list_field: [
+      { dict_list_field: [{ text_field_disabled: "a" }] },
+    ],
+  };
+
+  render(
+    setup(
+      [Test.Field.nestedDictList([Test.Field.textDisabled])],
+      undefined,
+      true,
+      originalAttributes,
+    ),
+  );
+
+  const group = screen.getByRole("group", {
+    name: "nested_dict_list_field",
+  });
+
+  expect(group).toBeVisible();
+
+  expect(
+    screen.queryByRole("textbox", { name: Test.Field.textDisabled.name }),
+  ).not.toBeInTheDocument();
+
+  await act(async () => {
+    await userEvent.click(
+      within(group).getByRole("button", {
+        name: "nested_dict_list_field",
+      }),
+    );
+  });
+  await act(async () => {
+    await userEvent.click(within(group).getByRole("button", { name: "0" }));
+  });
+
+  expect(
+    screen.queryByRole("textbox", {
+      name: `TextInput-${Test.Field.textDisabled.name}`,
+    }),
+  ).not.toBeInTheDocument();
+
+  const nestedGroup = screen.getByRole("group", {
+    name: "dict_list_field",
+  });
+
+  expect(nestedGroup).toBeVisible();
+
+  await act(async () => {
+    await userEvent.click(
+      within(nestedGroup).getByRole("button", {
+        name: "dict_list_field",
+      }),
+    );
+  });
+  await act(async () => {
+    await userEvent.click(
+      within(nestedGroup).getByRole("button", { name: "0" }),
+    );
+  });
+
+  const disabledNestedTextField = within(nestedGroup).getByRole("textbox", {
+    name: `TextInput-${Test.Field.textDisabled.name}`,
+  });
+
+  expect(disabledNestedTextField).toBeDisabled();
+
+  await act(async () => {
+    await userEvent.click(
+      within(nestedGroup).getByRole("button", { name: "Add" }),
+    );
+  });
+
+  await act(async () => {
+    await userEvent.click(
+      within(nestedGroup).getByRole("button", { name: "1" }),
+    );
+  });
+
+  const nestedTextFields = screen.getAllByRole("textbox", {
+    name: `TextInput-${Test.Field.textDisabled.name}`,
+  });
+
+  expect(nestedTextFields[0]).toBeDisabled();
+  expect(nestedTextFields[1]).toBeEnabled();
 });
 
 test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is executed with formState", async () => {

@@ -27,13 +27,14 @@ interface Props {
 }
 
 /**
- * Creates the formstate.
+ * Creates the form state.
+ * If the form is not in edit mode but has original attributes, it returns a state for a duplicated instance.
  *
- * @param {fields} Fields[]
- * @param {apiVersion} "v1" | "v2"
- * @param {originalAttributes} InstanceAttributeModel - the original state of the attributes
- * @param {isEdit} boolean
- * @returns InstanceAttributeModel
+ * @param {Fields[]} fields - Array of Fields.
+ * @param {string} apiVersion - API version ("v1" or "v2").
+ * @param {InstanceAttributeModel} originalAttributes - The original state of the attributes.
+ * @param {boolean} isEdit - Whether the form is in edit mode or not.
+ * @returns {InstanceAttributeModel} The created form state.
  */
 const getFormState = (
   fields,
@@ -50,6 +51,19 @@ const getFormState = (
   }
 };
 
+/**
+ * ServiceInstanceForm Component.
+ * Supports editing, creating, and duplicating instances.
+ *
+ * @param {Fields[]} fields - Array of Fields.
+ * @param {function} onSubmit - Callback method to handle form submission.
+ * @param {InstanceAttributeModel} originalAttributes - InstanceAttributeModel type for original attributes.
+ * @param {boolean} isSubmitDisabled - Indicates whether the submit button is disabled.
+ * @param {string} apiVersion - API version ("v1" or "v2").
+ * @param {boolean} isEdit - Whether the form is in edit mode or not.
+ *
+ * @returns {JSX.Element} The rendered ServiceInstanceForm component.
+ */
 export const ServiceInstanceForm: React.FC<Props> = ({
   fields,
   onSubmit,
