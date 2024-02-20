@@ -187,6 +187,7 @@ export const checkIfConnectionIsAllowed = (
  *
  * @param {ServiceEntityBlock[]} connectedElements list of connected elements to given shape
  * @param {EmbeddedRule | InterServiceRule | undefined} rule telling which shapes can connect to each other and about their limitations
+ * @param {boolean} editMode which defines whether connectionts rule is assesed for instance edited or newly created
  * @returns {boolean}
  */
 export const checkWhetherConnectionRulesAreExhausted = (
@@ -228,9 +229,8 @@ const doesElementIsEmbeddedWithExhaustedConnections = (
 ): boolean => {
   const isSourceEmbedded = source.get("isEmbedded");
   const sourceHolderName = source.get("holderName");
-
   const isTargetBlocked = target.get("isBlockedFromEditing");
-  console.log(isSourceEmbedded, sourceHolderName);
+  
   //if source Embbedded and target is blocked then return true as we can't add anything to it in composer
   if (isSourceEmbedded && isTargetBlocked) {
     return true;

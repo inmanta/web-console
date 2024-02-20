@@ -128,6 +128,14 @@ const deleteAndAssert = async (
   expect(updatedConnectors3).toHaveLength(assertionThree);
 };
 
+/**
+ * Creates a shape with the specified name and ID.
+ * 
+ * @param {string} shapeName - The name of the shape to be selected.
+ * @param {string} name - The name to be entered in the TextInput field.
+ * @param {string} id - The ID to be entered in the TextInput field.
+ * @returns {Promise<void>}
+ */
 const createShapeWithNameAndId = async (
   shapeName: string,
   name: string,
