@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps-dev): Bump husky from 9.0.10 to 9.0.11'
+destination-branches:
+- master
+- iso7
+sections: {}
