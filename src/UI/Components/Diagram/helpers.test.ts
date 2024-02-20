@@ -195,7 +195,7 @@ describe("createConnectionRules", () => {
         name: "embedded_single",
         lowerLimit: null,
         upperLimit: 1,
-        modifier: "rw+",
+        modifier: "rw",
         kind: "Embedded",
       },
     ],
