@@ -6,6 +6,7 @@ import {
   BooleanField,
   DictListField,
   EnumField,
+  InstanceAttributeModel,
   NestedField,
   TextField,
 } from "@/Core";
@@ -25,8 +26,7 @@ const setup = (
   )[],
   func: undefined | jest.Mock = undefined,
   isEdit = false,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  originalAttributes: any = undefined,
+  originalAttributes: InstanceAttributeModel | undefined = undefined,
 ) => {
   return (
     <CustomRouter history={history}>
