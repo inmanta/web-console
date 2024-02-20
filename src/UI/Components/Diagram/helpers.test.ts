@@ -1,5 +1,9 @@
 import { dia } from "@inmanta/rappid";
-import { InstanceAttributeModel, ServiceModel } from "@/Core";
+import {
+  InstanceAttributeModel,
+  ServiceInstanceModelWithTargetStates,
+  ServiceModel,
+} from "@/Core";
 import { Service, ServiceInstance } from "@/Test";
 import {
   a as InstanceAttributesA,
@@ -26,6 +30,7 @@ import {
   checkIfConnectionIsAllowed,
 } from "./helpers";
 import {
+  ConnectionRules,
   EmbeddedRule,
   InstanceForApi,
   InterServiceRule,
@@ -35,21 +40,34 @@ import { EntityConnection, ServiceEntityBlock } from "./shapes";
 jest.spyOn(uuidApi, "create_UUID").mockReturnValue("1");
 
 describe("extractRelationsIds", () => {
-  it("Service With no relations in the model gives empty array", () => {
-    const ids = extractRelationsIds(
-      Service.ServiceWithAllAttrs,
-      ServiceInstance.allAttrs,
-    );
-    expect(ids).toHaveLength(0);
-  });
+  const serviceInstanceForThirdTest = {
+    ...ServiceInstance.with_relations,
+    candidate_attributes: null,
+    active_attributes: null,
+    rollback_attributes: ServiceInstance.with_relations.active_attributes,
+  };
 
-  it("Service With relations property set to undefined in the model gives empty array", () => {
-    const ids = extractRelationsIds(
-      { ...Service.ServiceWithAllAttrs, inter_service_relations: undefined },
-      ServiceInstance.allAttrs,
-    );
-    expect(ids).toHaveLength(0);
-  });
+  it.each`
+    serviceModel                                                              | serviceInstance                | expectedLength
+    ${Service.ServiceWithAllAttrs}                                            | ${ServiceInstance.allAttrs}    | ${0}
+    ${{ ...Service.ServiceWithAllAttrs, inter_service_relations: undefined }} | ${ServiceInstance.allAttrs}    | ${0}
+    ${Service.withRelationsOnly}                                              | ${serviceInstanceForThirdTest} | ${0}
+    ${Service.withRelationsOnly}                                              | ${ServiceInstance.allAttrs}    | ${0}
+  `(
+    "should return empty array for given service model examples",
+    ({
+      serviceModel,
+      serviceInstance,
+      expectedLength,
+    }: {
+      serviceModel: ServiceModel;
+      serviceInstance: ServiceInstanceModelWithTargetStates;
+      expectedLength: number;
+    }) => {
+      const ids = extractRelationsIds(serviceModel, serviceInstance);
+      expect(ids).toHaveLength(expectedLength);
+    },
+  );
 
   it("Service With relations in active and candidate sets gives an array with candidate attributes first", () => {
     const ids = extractRelationsIds(
@@ -80,188 +98,168 @@ describe("extractRelationsIds", () => {
     expect(ids).toHaveLength(1);
     expect(ids[0]).toBe(expectedId);
   });
-
-  it("Service With relations in only rollback set gives empty array", () => {
-    const activeAttrsOnly = {
-      ...ServiceInstance.with_relations,
-      candidate_attributes: null,
-      active_attributes: null,
-      rollback_attributes: ServiceInstance.with_relations.active_attributes,
-    };
-    const ids = extractRelationsIds(Service.withRelationsOnly, activeAttrsOnly);
-    expect(ids).toHaveLength(0);
-  });
-
-  it("Service with relations in the model but not in the instance gives empty array", () => {
-    const ids = extractRelationsIds(
-      Service.withRelationsOnly,
-      ServiceInstance.allAttrs,
-    );
-
-    expect(ids).toHaveLength(0);
-  });
 });
 
 describe("createConnectionRules", () => {
-  it("empty array and rules object gives back empty object", () => {
-    const rules = createConnectionRules([], {});
-    expect(rules).toStrictEqual({});
-  });
+  const rulesForSecondTest = {
+    service_name_a: [],
+  };
 
-  it("array with service without embedded services and relations gives back empty object", () => {
-    const rules = createConnectionRules(
-      [{ ...Service.a, embedded_entities: [], inter_service_relations: [] }],
-      {},
-    );
-    expect(rules).toStrictEqual({
-      service_name_a: [],
-    });
-  });
+  const rulesForThirdTest = {
+    allocated: [],
+    circuits: [
+      {
+        name: "allocated",
+        lowerLimit: 1,
+        upperLimit: 1,
+        modifier: "r",
+        kind: "Embedded",
+      },
+      {
+        name: "customer_endpoint",
+        lowerLimit: 1,
+        upperLimit: 1,
+        modifier: "rw",
+        kind: "Embedded",
+      },
+      {
+        name: "csp_endpoint",
+        lowerLimit: 1,
+        upperLimit: 1,
+        modifier: "rw",
+        kind: "Embedded",
+      },
+    ],
+    csp_endpoint: [
+      {
+        name: "allocated",
+        lowerLimit: 1,
+        upperLimit: 1,
+        modifier: "r",
+        kind: "Embedded",
+      },
+    ],
+    customer_endpoint: [
+      {
+        name: "allocated",
+        lowerLimit: 1,
+        upperLimit: 1,
+        modifier: "r",
+        kind: "Embedded",
+      },
+    ],
+    service_name_a: [
+      {
+        name: "circuits",
+        lowerLimit: 1,
+        upperLimit: 4,
+        modifier: "rw+",
+        kind: "Embedded",
+      },
+    ],
+    with_relations: [
+      {
+        name: "test_entity",
+        attributeName: "test_entity",
+        lowerLimit: 1,
+        upperLimit: 5,
+        modifier: "rw+",
+        kind: "Inter-Service",
+      },
+    ],
+  };
 
-  it("array with service with embedded services and relations gives proper object", () => {
-    const rules = createConnectionRules(
-      [Service.a, Service.withRelationsOnly],
-      {},
-    );
-    expect(rules).toStrictEqual({
-      allocated: [],
-      circuits: [
-        {
-          name: "allocated",
-          lowerLimit: 1,
-          upperLimit: 1,
-          modifier: "r",
-          kind: "Embedded",
-        },
-        {
-          name: "customer_endpoint",
-          lowerLimit: 1,
-          upperLimit: 1,
-          modifier: "rw",
-          kind: "Embedded",
-        },
-        {
-          name: "csp_endpoint",
-          lowerLimit: 1,
-          upperLimit: 1,
-          modifier: "rw",
-          kind: "Embedded",
-        },
-      ],
-      csp_endpoint: [
-        {
-          name: "allocated",
-          lowerLimit: 1,
-          upperLimit: 1,
-          modifier: "r",
-          kind: "Embedded",
-        },
-      ],
-      customer_endpoint: [
-        {
-          name: "allocated",
-          lowerLimit: 1,
-          upperLimit: 1,
-          modifier: "r",
-          kind: "Embedded",
-        },
-      ],
-      service_name_a: [
-        {
-          name: "circuits",
-          lowerLimit: 1,
-          upperLimit: 4,
-          modifier: "rw+",
-          kind: "Embedded",
-        },
-      ],
-      with_relations: [
-        {
-          name: "test_entity",
-          attributeName: "test_entity",
-          lowerLimit: 1,
-          upperLimit: 5,
-          modifier: "rw+",
-          kind: "Inter-Service",
-        },
-      ],
-    });
-  });
+  const rulesForFourthTests = {
+    another_embedded: [
+      {
+        name: "another_embedded_single",
+        lowerLimit: null,
+        upperLimit: 1,
+        modifier: "rw+",
+        kind: "Embedded",
+      },
+    ],
+    another_embedded_single: [
+      {
+        attributeName: "related_service",
+        name: "test_entity",
+        lowerLimit: null,
+        upperLimit: null,
+        modifier: "rw",
+        kind: "Inter-Service",
+      },
+    ],
+    editable_embedded_entity_relation_with_rw_attributes: [],
+    embedded: [
+      {
+        name: "embedded_single",
+        lowerLimit: null,
+        upperLimit: 1,
+        modifier: "rw+",
+        kind: "Embedded",
+      },
+    ],
+    embedded_single: [],
+    not_editable: [],
+    test_service: [
+      {
+        name: "embedded",
+        lowerLimit: null,
+        upperLimit: 2,
+        modifier: "rw+",
+        kind: "Embedded",
+      },
+      {
+        name: "another_embedded",
+        lowerLimit: null,
+        upperLimit: null,
+        modifier: "rw+",
+        kind: "Embedded",
+      },
+      {
+        name: "not_editable",
+        lowerLimit: 1,
+        upperLimit: 1,
+        modifier: "rw",
+        kind: "Embedded",
+      },
+      {
+        name: "editable_embedded_entity_relation_with_rw_attributes",
+        lowerLimit: 1,
+        upperLimit: 4,
+        modifier: "rw+",
+        kind: "Embedded",
+      },
+      {
+        attributeName: "related",
+        name: "subnet",
+        lowerLimit: null,
+        upperLimit: null,
+        modifier: "rw",
+        kind: "Inter-Service",
+      },
+    ],
+  };
 
-  it("array with service with nested embedded services gives proper object", () => {
-    const rules = createConnectionRules([Service.nestedEditable], {});
-    expect(rules).toStrictEqual({
-      another_embedded: [
-        {
-          name: "another_embedded_single",
-          lowerLimit: null,
-          upperLimit: 1,
-          modifier: "rw+",
-          kind: "Embedded",
-        },
-      ],
-      another_embedded_single: [
-        {
-          attributeName: "related_service",
-          name: "test_entity",
-          lowerLimit: null,
-          upperLimit: null,
-          modifier: "rw",
-          kind: "Inter-Service",
-        },
-      ],
-      editable_embedded_entity_relation_with_rw_attributes: [],
-      embedded: [
-        {
-          name: "embedded_single",
-          lowerLimit: null,
-          upperLimit: 1,
-          modifier: "rw+",
-          kind: "Embedded",
-        },
-      ],
-      embedded_single: [],
-      not_editable: [],
-      test_service: [
-        {
-          name: "embedded",
-          lowerLimit: null,
-          upperLimit: 2,
-          modifier: "rw+",
-          kind: "Embedded",
-        },
-        {
-          name: "another_embedded",
-          lowerLimit: null,
-          upperLimit: null,
-          modifier: "rw+",
-          kind: "Embedded",
-        },
-        {
-          name: "not_editable",
-          lowerLimit: 1,
-          upperLimit: 1,
-          modifier: "rw",
-          kind: "Embedded",
-        },
-        {
-          name: "editable_embedded_entity_relation_with_rw_attributes",
-          lowerLimit: 1,
-          upperLimit: 4,
-          modifier: "rw+",
-          kind: "Embedded",
-        },
-        {
-          attributeName: "related",
-          name: "subnet",
-          lowerLimit: null,
-          upperLimit: null,
-          modifier: "rw",
-          kind: "Inter-Service",
-        },
-      ],
-    });
-  });
+  it.each`
+    services                                                                  | expectedRules
+    ${[]}                                                                     | ${{}}
+    ${[{ ...Service.a, embedded_entities: [], inter_service_relations: [] }]} | ${rulesForSecondTest}
+    ${[Service.a, Service.withRelationsOnly]}                                 | ${rulesForThirdTest}
+    ${[Service.nestedEditable]}                                               | ${rulesForFourthTests}
+  `(
+    "returns correct rules for given services",
+    ({
+      services,
+      expectedRules,
+    }: {
+      services: ServiceModel[];
+      expectedRules: ConnectionRules;
+    }) => {
+      const rules = createConnectionRules(services, {});
+      expect(rules).toStrictEqual(expectedRules);
+    },
+  );
 });
 
 describe("shapesDataTransform", () => {
@@ -556,6 +554,7 @@ describe("checkWhetherConnectionRulesAreExhausted", () => {
     modifier: "rw",
     attributeName: "attr",
   };
+
   it("assert connections exhaustion when rule has modifier set to 'rw'", () => {
     //editMode set to true
     expect(
@@ -902,10 +901,12 @@ describe("checkWhetherConnectionRulesAreExhausted", () => {
   });
 });
 
+//Mocks necessary to have jointJS library working for following tests
 Object.defineProperty(global.SVGElement.prototype, "getComputedTextLength", {
   writable: true,
   value: jest.fn().mockReturnValue(0),
 });
+
 Object.defineProperty(global.SVGElement.prototype, "getBBox", {
   writable: true,
   value: jest.fn().mockReturnValue({
@@ -913,6 +914,7 @@ Object.defineProperty(global.SVGElement.prototype, "getBBox", {
     y: 0,
   }),
 });
+
 Object.defineProperty(global.SVGSVGElement.prototype, "createSVGMatrix", {
   writable: true,
   value: jest.fn().mockImplementation(() => ({
@@ -947,6 +949,7 @@ Object.defineProperty(global.SVGSVGElement.prototype, "createSVGMatrix", {
     })),
   })),
 });
+
 Object.defineProperty(global.SVGSVGElement.prototype, "createSVGPoint", {
   writable: true,
   value: jest.fn().mockImplementation(() => ({
@@ -958,6 +961,7 @@ Object.defineProperty(global.SVGSVGElement.prototype, "createSVGPoint", {
     })),
   })),
 });
+
 describe("checkIfConnectionIsAllowed", () => {
   it("WHEN one element has rule describing other THEN return true", () => {
     const rules = createConnectionRules([Service.a], {});
@@ -981,6 +985,7 @@ describe("checkIfConnectionIsAllowed", () => {
     );
     expect(result).toBeTruthy();
   });
+
   it("WHEN one element has not rule describing other THEN returns false", () => {
     const rules = createConnectionRules([Service.a, Service.b], {});
     const graph = new dia.Graph();
@@ -1066,14 +1071,17 @@ describe("findCorrespondingId", () => {
   const mockedInstance = {
     id: "1245",
   } as ServiceEntityBlock;
+
   it("return undefined on empty Map", () => {
     expect(findCorrespondingId(new Map(), mockedInstance)).toBeUndefined();
   });
+
   it("return undefined on Map withouth corresponding instance id", () => {
     const map = new Map();
     map.set("123", "different-instance");
     expect(findCorrespondingId(map, mockedInstance)).toBeUndefined();
   });
+
   it("return object on Map with corresponding instance id", () => {
     const map = new Map();
     map.set("1245", "matching-instance");
