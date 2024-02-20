@@ -1,4 +1,4 @@
-import moment from "moment";
+import moment from "moment-timezone";
 import { PageSize, Query } from "@/Core";
 import { getUrl } from "./getUrl";
 

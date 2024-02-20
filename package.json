@@ -147,7 +147,7 @@
     "lodash": "^4.17.21",
     "lodash-es": "^4.17.21",
     "moment": "^2.30.1",
-    "moment-timezone": "^0.5.44",
+    "moment-timezone": "^0.5.45",
     "process": "^0.11.10",
     "qs": "^6.11.2",
     "react": "^18.2.0",
