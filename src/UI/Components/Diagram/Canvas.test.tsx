@@ -130,7 +130,7 @@ const deleteAndAssert = async (
 
 /**
  * Creates a shape with the specified name and ID.
- * 
+ *
  * @param {string} shapeName - The name of the shape to be selected.
  * @param {string} name - The name to be entered in the TextInput field.
  * @param {string} id - The ID to be entered in the TextInput field.

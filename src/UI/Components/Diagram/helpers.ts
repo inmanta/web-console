@@ -230,7 +230,7 @@ const doesElementIsEmbeddedWithExhaustedConnections = (
   const isSourceEmbedded = source.get("isEmbedded");
   const sourceHolderName = source.get("holderName");
   const isTargetBlocked = target.get("isBlockedFromEditing");
-  
+
   //if source Embbedded and target is blocked then return true as we can't add anything to it in composer
   if (isSourceEmbedded && isTargetBlocked) {
     return true;
