@@ -35,6 +35,7 @@ export interface InstanceActionsProps {
   editDisabled: boolean;
   deleteDisabled: boolean;
   diagnoseDisabled: boolean;
+  composerDisabled: boolean;
   availableStates: string[];
 }
 
@@ -43,6 +44,7 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
   editDisabled,
   deleteDisabled,
   diagnoseDisabled,
+  composerDisabled,
   availableStates,
 }) => {
   const { routeManager, environmentModifier } = useContext(DependencyContext);
@@ -166,11 +168,11 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
               service: instance.service_entity,
               instance: instance.id,
             })}
-            isDisabled={editDisabled}
+            isDisabled={editDisabled || composerDisabled}
           >
             <MenuItem
               itemId="edit-composer"
-              isDisabled={editDisabled}
+              isDisabled={editDisabled || composerDisabled}
               icon={<ToolsIcon />}
             >
               {words("inventory.instanceComposer.editButton")}

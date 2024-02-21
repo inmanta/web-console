@@ -1,5 +1,4 @@
 import React, { useContext } from "react";
-import { Link } from "react-router-dom";
 import {
   Toolbar,
   ToolbarGroup,
@@ -9,6 +8,7 @@ import {
 } from "@patternfly/react-core";
 import { PlusIcon } from "@patternfly/react-icons";
 import { ServiceModel, ServiceInstanceParams } from "@/Core";
+import { Link } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { FilterWidget } from "@S/ServiceInventory/UI/Components/FilterWidget";
@@ -49,26 +49,26 @@ export const TableControls: React.FC<Props> = ({
         <ToolbarGroup align={{ default: "alignRight" }}>
           <ToolbarItem>
             <Link
-              to={{
-                pathname: routeManager.getUrl("InstanceComposer", {
-                  service: serviceName,
-                }),
-                search: location.search,
-              }}
+              pathname={routeManager.getUrl("InstanceComposer", {
+                service: serviceName,
+              })}
+              search={location.search}
+              isDisabled={service.owner !== null}
             >
-              <Button id="add-instance-composer-button">
+              <Button
+                id="add-instance-composer-button"
+                isDisabled={service.owner !== null}
+              >
                 {words("inventory.addInstance.composerButton")}
               </Button>
             </Link>
           </ToolbarItem>
           <ToolbarItem>
             <Link
-              to={{
-                pathname: routeManager.getUrl("CreateInstance", {
-                  service: serviceName,
-                }),
-                search: location.search,
-              }}
+              pathname={routeManager.getUrl("CreateInstance", {
+                service: serviceName,
+              })}
+              search={location.search}
             >
               <Button id="add-instance-button">
                 <PlusIcon /> {words("inventory.addInstance.button")}

@@ -17,11 +17,13 @@ export class InstanceActionPresenter implements ActionPresenter {
     const instance = this.getInstanceForId(id);
 
     if (typeof instance === "undefined") return null;
+
     return React.createElement(RowActions, {
       instance,
       editDisabled: this.isTransferDisabled(id, "on_update"),
       deleteDisabled: this.isTransferDisabled(id, "on_delete"),
       diagnoseDisabled: instance.deleted,
+      composerDisabled: this.serviceEntity.owner !== null,
       availableStates: this.getAvailableStates(),
     });
   }
