@@ -3,7 +3,6 @@ import { ServiceModel } from "@/Core";
 import { DependencyContext } from "@/UI";
 import { RemoteDataView } from "@/UI/Components";
 import Canvas from "@/UI/Components/Diagram/Canvas";
-import { filterServices } from "../Core/helper";
 
 export const InstanceProvider: React.FC<{
   services: ServiceModel[];
@@ -15,9 +14,6 @@ export const InstanceProvider: React.FC<{
     kind: "GetInstanceWithRelations",
     id: instanceId,
   });
-  const mainService = services.find(
-    (service) => service.name === mainServiceName,
-  );
 
   return (
     <RemoteDataView
@@ -25,11 +21,7 @@ export const InstanceProvider: React.FC<{
       label="Instance Composer Editor"
       SuccessView={(instance) => (
         <Canvas
-          services={
-            mainService
-              ? filterServices(services, mainService).concat(mainService)
-              : []
-          }
+          services={services}
           mainServiceName={mainServiceName}
           instance={instance}
         />
