@@ -47,22 +47,20 @@ export const TableControls: React.FC<Props> = ({
           identityAttribute={identityAttribute}
         />
         <ToolbarGroup align={{ default: "alignRight" }}>
-          <ToolbarItem>
-            <Link
-              pathname={routeManager.getUrl("InstanceComposer", {
-                service: serviceName,
-              })}
-              search={location.search}
-              isDisabled={service.owner !== null}
-            >
-              <Button
-                id="add-instance-composer-button"
-                isDisabled={service.owner !== null}
+          {service.owner === null && (
+            <ToolbarItem>
+              <Link
+                pathname={routeManager.getUrl("InstanceComposer", {
+                  service: serviceName,
+                })}
+                search={location.search}
               >
-                {words("inventory.addInstance.composerButton")}
-              </Button>
-            </Link>
-          </ToolbarItem>
+                <Button id="add-instance-composer-button">
+                  {words("inventory.addInstance.composerButton")}
+                </Button>
+              </Link>
+            </ToolbarItem>
+          )}
           <ToolbarItem>
             <Link
               pathname={routeManager.getUrl("CreateInstance", {

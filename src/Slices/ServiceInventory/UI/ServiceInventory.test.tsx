@@ -332,7 +332,7 @@ test("ServiceInventory shows disabled composer buttons for non-root instances ",
     );
   });
 
-  expect(await screen.findByText("Add in Composer")).toBeDisabled();
+  expect(screen.queryByRole("Add in Composer")).not.toBeInTheDocument();
 
   const menuToggle = await screen.findByRole("button", {
     name: "row actions toggle",
@@ -341,10 +341,10 @@ test("ServiceInventory shows disabled composer buttons for non-root instances ",
     await userEvent.click(menuToggle);
   });
 
-  const button = await screen.findByRole("menuitem", {
+  const button = screen.queryByRole("menuitem", {
     name: "Edit in Composer",
   });
-  expect(button).toBeDisabled();
+  expect(button).not.toBeInTheDocument();
 });
 
 test("ServiceInventory shows enabled composer buttons for root instances ", async () => {

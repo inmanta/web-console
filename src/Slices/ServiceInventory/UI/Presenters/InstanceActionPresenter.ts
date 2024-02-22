@@ -23,7 +23,7 @@ export class InstanceActionPresenter implements ActionPresenter {
       editDisabled: this.isTransferDisabled(id, "on_update"),
       deleteDisabled: this.isTransferDisabled(id, "on_delete"),
       diagnoseDisabled: instance.deleted,
-      composerDisabled: this.serviceEntity.owner !== null,
+      composerAvailable: this.serviceEntity.owner === null,
       availableStates: this.getAvailableStates(),
     });
   }

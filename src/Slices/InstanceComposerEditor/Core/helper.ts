@@ -11,11 +11,14 @@ export const filterServices = (
   services: ServiceModel[],
   mainService: ServiceModel,
 ): ServiceModel[] => {
+  if (!mainService || !mainService.owned_entities || !Array.isArray(services)) {
+    return [];
+  }
   const relatedServices = services.filter((service) =>
-    mainService?.owned_entities.includes(service.name),
+    mainService.owned_entities.includes(service.name),
   );
   const unrelatedServices = services.filter(
-    (service) => !mainService?.owned_entities.includes(service.name),
+    (service) => !mainService.owned_entities.includes(service.name),
   );
 
   const nestedRelatedServices = relatedServices

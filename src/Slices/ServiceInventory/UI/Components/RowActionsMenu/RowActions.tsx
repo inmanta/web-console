@@ -35,7 +35,7 @@ export interface InstanceActionsProps {
   editDisabled: boolean;
   deleteDisabled: boolean;
   diagnoseDisabled: boolean;
-  composerDisabled: boolean;
+  composerAvailable: boolean;
   availableStates: string[];
 }
 
@@ -44,7 +44,7 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
   editDisabled,
   deleteDisabled,
   diagnoseDisabled,
-  composerDisabled,
+  composerAvailable,
   availableStates,
 }) => {
   const { routeManager, environmentModifier } = useContext(DependencyContext);
@@ -163,21 +163,23 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
               {words("inventory.statustab.diagnose")}
             </MenuItem>
           </Link>
-          <Link
-            pathname={routeManager.getUrl("InstanceComposerEditor", {
-              service: instance.service_entity,
-              instance: instance.id,
-            })}
-            isDisabled={editDisabled || composerDisabled}
-          >
-            <MenuItem
-              itemId="edit-composer"
-              isDisabled={editDisabled || composerDisabled}
-              icon={<ToolsIcon />}
+          {composerAvailable && (
+            <Link
+              pathname={routeManager.getUrl("InstanceComposerEditor", {
+                service: instance.service_entity,
+                instance: instance.id,
+              })}
+              isDisabled={editDisabled}
             >
-              {words("inventory.instanceComposer.editButton")}
-            </MenuItem>
-          </Link>
+              <MenuItem
+                itemId="edit-composer"
+                isDisabled={editDisabled}
+                icon={<ToolsIcon />}
+              >
+                {words("inventory.instanceComposer.editButton")}
+              </MenuItem>
+            </Link>
+          )}
           <Link
             pathname={routeManager.getUrl("EditInstance", {
               service: instance.service_entity,
