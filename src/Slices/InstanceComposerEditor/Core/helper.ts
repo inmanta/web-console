@@ -21,9 +21,9 @@ export const filterServices = (
     (service) => !mainService.owned_entities.includes(service.name),
   );
 
-  const nestedRelatedServices = relatedServices
-    .map((service) => filterServices(unrelatedServices, service))
-    .flat();
+  const nestedRelatedServices = relatedServices.flatMap((service) =>
+    filterServices(unrelatedServices, service),
+  );
 
   return relatedServices.concat(nestedRelatedServices);
 };
