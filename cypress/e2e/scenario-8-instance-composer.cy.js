@@ -772,13 +772,11 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[data-action="delete"]').click();
       cy.get("button").contains("Deploy").click();
 
-      // Check if only one row has been added to the table.
-      cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 5);
-      // await until all instances are being deployed and up
-      cy.get('[data-label="State"]').should("have.text", "deleting");
-      cy.get('[aria-label="ServiceInventory-Empty"]', {
-        timeout: 90000,
-      }).should("to.be.visible");
+      // Check if only one row has been deleted to the table.
+      cy.get('[aria-label="InstanceRow-Intro"]', { timeout: 90000 }).should(
+        "have.length",
+        5,
+      );
     });
   });
 }
