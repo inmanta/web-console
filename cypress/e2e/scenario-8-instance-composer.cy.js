@@ -658,8 +658,8 @@ if (Cypress.env("edition") === "iso") {
         .trigger("mouseover")
         .trigger("mousedown")
         .trigger("mousemove", {
-          clientX: 1000,
-          clientY: 300,
+          clientX: 1100,
+          clientY: 500,
         })
         .trigger("mouseup");
       cy.get("button").contains("Deploy").click();
@@ -757,27 +757,26 @@ if (Cypress.env("edition") === "iso") {
       cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
 
       // click on Show Inventory on embedded-entity-service-extra, expect one instance already
-      cy.get("#child-service", { timeout: 60000 })
+      cy.get("#parent-service", { timeout: 60000 })
         .contains("Show inventory")
         .click();
       cy.get('[aria-label="ServiceInventory-Success"]').should("to.be.visible");
+      cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 6);
 
       // click on kebab menu on embedded-entity-service-extra
-      cy.get('[aria-label="row actions toggle"]').eq(0).click();
+      cy.get('[aria-label="row actions toggle"]').eq(5).click();
       cy.get("button").contains("Edit in Composer").click();
       cy.get('[joint-selector="headerLabel"]')
-        .contains("child-service")
+        .contains("parent-service")
         .click();
       cy.get('[data-action="delete"]').click();
       cy.get("button").contains("Deploy").click();
 
-      // Check if only one row has been added to the table.
-      cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 1);
-      // await until all instances are being deployed and up
-      cy.get('[data-label="State"]').should("have.text", "deleting");
-      cy.get('[aria-label="ServiceInventory-Empty"]', {
-        timeout: 90000,
-      }).should("to.be.visible");
+      // Check if only one row has been deleted to the table.
+      cy.get('[aria-label="InstanceRow-Intro"]', { timeout: 90000 }).should(
+        "have.length",
+        5,
+      );
     });
   });
 }

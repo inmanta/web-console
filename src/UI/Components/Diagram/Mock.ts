@@ -868,6 +868,8 @@ export const testService: ServiceModel = {
     total: 1,
   },
   strict_modifier_enforcement: true,
+  owner: null,
+  owned_entities: [],
 };
 
 export const testApiInstanceModel: ServiceModel = {
@@ -1412,6 +1414,8 @@ export const testApiInstanceModel: ServiceModel = {
     },
     total: 0,
   },
+  owner: null,
+  owned_entities: [],
 };
 
 export const testApiInstance: InstanceForApi = {
@@ -2375,6 +2379,8 @@ export const mockedInstanceTwoServiceModel: ServiceModel = {
     },
     total: 1,
   },
+  owner: null,
+  owned_entities: [],
 };
 
 export const mockedInstanceThree: InstanceWithReferences = {
@@ -3121,7 +3127,8 @@ export const containerModel: ServiceModel = {
   },
   config: {},
   service_identity: "name",
-
+  owner: "parent-service",
+  owned_entities: [],
   strict_modifier_enforcement: true,
 
   instance_summary: {
@@ -3820,7 +3827,8 @@ export const childModel: ServiceModel = {
   },
   config: {},
   service_identity: "name",
-
+  owner: "parent-service",
+  owned_entities: [],
   strict_modifier_enforcement: false,
 
   instance_summary: {

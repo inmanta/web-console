@@ -1,0 +1,6 @@
+description: "Composer is now available only from root components"
+issue-nr: 5471
+change-type: patch
+destination-branches: [master, iso7]
+sections:
+  minor-improvement: "{{description}}"
