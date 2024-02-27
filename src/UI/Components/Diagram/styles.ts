@@ -105,6 +105,9 @@ export const CanvasWrapper = styled.div`
   .joint-loose_element-highlight {
     stroke: var(--pf-v5-global--palette--red-100);
     fill: var(--pf-v5-global--palette--red-100);
+    &.-hidden {
+      display: none;
+    }
   }
   .joint-entityBlock-body {
     stroke: var(--pf-v5-global--BackgroundColor--100);

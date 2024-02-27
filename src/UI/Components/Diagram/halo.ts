@@ -1,4 +1,4 @@
-import { dia, highlighters, ui } from "@inmanta/rappid";
+import { V, dia, highlighters, ui } from "@inmanta/rappid";
 import { checkIfConnectionIsAllowed, toggleLooseElement } from "./helpers";
 import { ActionEnum, ConnectionRules } from "./interfaces";
 import { ServiceEntityBlock } from "./shapes";
@@ -120,6 +120,14 @@ const createHalo = (
             filter: "drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4))",
           },
         });
+        const looseElementHighlight = dia.HighlighterView.get(
+          element,
+          "loose_element",
+        );
+
+        if (looseElementHighlight) {
+          V(looseElementHighlight.el).addClass("-hidden");
+        }
       }
     });
   });
@@ -130,7 +138,21 @@ const createHalo = (
     const shapes = paper.findViewsInArea(area);
 
     shapes.map((shape) => {
-      dia.HighlighterView.get(shape, "available-to-connect")?.remove();
+      const highlighter = dia.HighlighterView.get(
+        shape,
+        "available-to-connect",
+      );
+      if (highlighter) {
+        highlighter.remove();
+      }
+      const looseElementHighlight = dia.HighlighterView.get(
+        shape,
+        "loose_element",
+      );
+
+      if (looseElementHighlight) {
+        V(looseElementHighlight.el).removeClass("-hidden");
+      }
     });
   });
 

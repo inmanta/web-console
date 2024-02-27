@@ -457,14 +457,16 @@ export const toggleLooseElement = (
         padding: 0,
         className: "loose_element-highlight",
         attrs: {
-          "stroke-opacity": 0.5,
-          "stroke-width": 5,
+          "stroke-width": 3,
           filter: "drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4))",
         },
       });
       break;
     case "remove":
-      dia.HighlighterView.get(cellView, "loose_element")?.remove();
+      const highlighter = dia.HighlighterView.get(cellView, "loose_element");
+      if (highlighter) {
+        highlighter.remove();
+      }
       break;
   }
   document.dispatchEvent(
