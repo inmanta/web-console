@@ -28,6 +28,7 @@ import {
   findCorrespondingId,
   bundleInstances,
   checkIfConnectionIsAllowed,
+  toggleLooseElement,
 } from "./helpers";
 import {
   ConnectionRules,
@@ -1347,5 +1348,53 @@ describe("bundleInstances", () => {
       embeddedFour.attributes,
     ];
     expect(bundledInstances).toEqual([coreCopy]);
+  });
+});
+
+describe("toggleLooseElement", () => {
+  it("dispatch an proper event with id when called", () => {
+    const dispatchEventSpy = jest.spyOn(document, "dispatchEvent");
+
+    const graph = new dia.Graph();
+    const paper = new dia.Paper({
+      model: graph,
+    });
+
+    //add highlighter
+    const entity = appendEntity(graph, Service.a, InstanceAttributesA, false);
+    toggleLooseElement(paper.findViewByModel(entity), "add");
+    expect((dispatchEventSpy.mock.calls[0][0] as CustomEvent).detail).toEqual(
+      JSON.stringify({ kind: "add", id: entity.id }),
+    );
+    expect(
+      dia.HighlighterView.get(paper.findViewByModel(entity), "loose_element"),
+    ).not.toBeNull();
+
+    //remove
+    toggleLooseElement(paper.findViewByModel(entity), "remove");
+    expect(
+      dia.HighlighterView.get(paper.findViewByModel(entity), "loose_element"),
+    ).toBeNull();
+    expect((dispatchEventSpy.mock.calls[1][0] as CustomEvent).detail).toEqual(
+      JSON.stringify({ kind: "remove", id: entity.id }),
+    );
+  });
+
+  it("appends and removes a highlighter object onto entity", () => {
+    const graph = new dia.Graph();
+    const paper = new dia.Paper({
+      model: graph,
+    });
+    const entity = appendEntity(graph, Service.a, InstanceAttributesA, false);
+
+    toggleLooseElement(paper.findViewByModel(entity), "add");
+    expect(
+      dia.HighlighterView.get(paper.findViewByModel(entity), "loose_element"),
+    ).not.toBeNull();
+
+    toggleLooseElement(paper.findViewByModel(entity), "remove");
+    expect(
+      dia.HighlighterView.get(paper.findViewByModel(entity), "loose_element"),
+    ).toBeNull();
   });
 });

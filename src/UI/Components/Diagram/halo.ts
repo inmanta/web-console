@@ -1,5 +1,5 @@
 import { dia, highlighters, ui } from "@inmanta/rappid";
-import { checkIfConnectionIsAllowed } from "./helpers";
+import { checkIfConnectionIsAllowed, toggleLooseElement } from "./helpers";
 import { ActionEnum, ConnectionRules } from "./interfaces";
 import { ServiceEntityBlock } from "./shapes";
 
@@ -38,17 +38,24 @@ const createHalo = (
     //cellView.model has the same structure as dia.Element needed as parameter to .getNeighbors() yet typescript complains
     const connectedElements = graph.getNeighbors(cellView.model as dia.Element);
 
+    if (
+      cellView.model.get("isEmbedded") &&
+      cellView.model.get("embeddedTo") === undefined
+    ) {
+      toggleLooseElement(cellView, "remove");
+    }
     connectedElements.forEach((element) => {
       const elementAsService = element as ServiceEntityBlock;
       const isEmbedded = element.get("isEmbedded");
-      const isEmbeddedToTHisCell =
+      const isEmbeddedToThisCell =
         element.get("embeddedTo") === cellView.model.id;
 
       let didElementChange = false;
 
       //if one of those were embedded into other then update connectedElement as it's got indirectly edited
-      if (isEmbedded && isEmbeddedToTHisCell) {
-        element.set("embeddedTo", null);
+      if (isEmbedded && isEmbeddedToThisCell) {
+        element.set("embeddedTo", undefined);
+        toggleLooseElement(paper.findViewByModel(element), "add");
         didElementChange = true;
       }
       if (element.id === cellView.model.get("embeddedTo")) {
@@ -123,7 +130,7 @@ const createHalo = (
     const shapes = paper.findViewsInArea(area);
 
     shapes.map((shape) => {
-      highlighters.mask.remove(shape), "available-to-connect";
+      dia.HighlighterView.get(shape, "available-to-connect")?.remove();
     });
   });
 

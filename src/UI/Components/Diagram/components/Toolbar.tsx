@@ -46,7 +46,10 @@ const Toolbar = ({
             >
               <IconButton
                 variant="secondary"
-                onClick={openEntityModal}
+                onClick={(event) => {
+                  event.currentTarget.blur();
+                  openEntityModal();
+                }}
                 aria-label="new-entity-button"
               >
                 <img

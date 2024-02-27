@@ -1,4 +1,4 @@
-import { dia } from "@inmanta/rappid";
+import { dia, highlighters } from "@inmanta/rappid";
 import {
   EmbeddedEntity,
   InstanceAttributeModel,
@@ -439,4 +439,40 @@ export const findCorrespondingId = (
     id,
     attributeName,
   })).find(({ id }) => id === instanceAsTable.id);
+};
+
+/**
+ * Toggle the highlighting of a loose element in a diagram cell view.
+ * @param {dia.CellView} cellView - The cell view containing the element.
+ * @param {"add" | "remove"} kind - The action to perform, either "add" to add highlighting or "remove" to remove highlighting.
+ * @returns {void}
+ */
+export const toggleLooseElement = (
+  cellView: dia.CellView,
+  kind: "add" | "remove",
+): void => {
+  switch (kind) {
+    case "add":
+      highlighters.mask.add(cellView, "root", "loose_element", {
+        padding: 0,
+        className: "loose_element-highlight",
+        attrs: {
+          "stroke-opacity": 0.5,
+          "stroke-width": 5,
+          filter: "drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4))",
+        },
+      });
+      break;
+    case "remove":
+      dia.HighlighterView.get(cellView, "loose_element")?.remove();
+      break;
+  }
+  document.dispatchEvent(
+    new CustomEvent("looseEmbedded", {
+      detail: JSON.stringify({
+        kind,
+        id: cellView.model.id,
+      }),
+    }),
+  );
 };
