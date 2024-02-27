@@ -14,8 +14,8 @@ import { EntityConnection, ServiceEntityBlock } from "./shapes";
  * https://resources.jointjs.com/docs/jointjs/v3.6/joint.html#dia.LinkView
  * https://resources.jointjs.com/docs/jointjs/v3.6/joint.html#linkTools
  *
- *  * @param {dia.Paper} paper JointJS paper object
- *  * @param {dia.Graph} graph JointJS graph object
+ * @param {dia.Paper} paper JointJS paper object
+ * @param {dia.Graph} graph JointJS graph object
  * @param {dia.LinkView} linkView  - The view for the joint.dia.Link model.
  * @function {(cell: ServiceEntityBlock, action: ActionEnum): void} linkView  - The view for the joint.dia.Link model.
  * @returns {void}
