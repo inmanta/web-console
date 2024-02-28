@@ -62,11 +62,16 @@ const Canvas = ({
     );
     if (eventData.kind === "remove") {
       setLooseEmbedded((prevSet) => {
-        prevSet.delete(eventData.id);
-        return new Set(prevSet);
+        const newSet = new Set(prevSet);
+        newSet.delete(eventData.id);
+        return newSet;
       });
     } else {
-      setLooseEmbedded((prevSet) => new Set(prevSet.add(eventData.id)));
+      setLooseEmbedded((prevSet) => {
+        const newSet = new Set(prevSet);
+        newSet.add(eventData.id);
+        return newSet;
+      });
     }
   };
 

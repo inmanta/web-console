@@ -468,6 +468,8 @@ export const toggleLooseElement = (
         highlighter.remove();
       }
       break;
+    default:
+      break;
   }
   document.dispatchEvent(
     new CustomEvent("looseEmbedded", {
