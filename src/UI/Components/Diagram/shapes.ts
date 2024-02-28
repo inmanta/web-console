@@ -234,6 +234,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
     );
 
     this.set("entityName", name);
+    this.attr(["headerLabel", "data-testid"], "header-" + name);
 
     if (shortenName.includes(`\u2026`)) {
       return this.attr(
@@ -334,60 +335,98 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
   }
 }
 
-export class EntityConnection extends dia.Link {
-  defaults() {
-    return {
-      ...super.defaults,
-      type: "app.Link",
-      z: -1,
-      attrs: {
-        wrapper: {
-          connection: true,
-          strokeWidth: 10,
-        },
-        line: {
-          class: "joint-link-line",
-          targetMarker: {
-            class: "joint-link-marker",
-            type: "path",
-            d: "M 0 -5 10 0 0 5 z",
-          },
-          sourceMarker: {
-            class: "joint-link-marker",
-            type: "path",
-            d: "M 0 -5 10 0 0 5 z",
-          },
-          connection: true,
-          strokeWidth: 2,
-        },
+export const Link = shapes.standard.Link.define(
+  "Link",
+  {
+    // attributes
+    z: -1,
+    attrs: {
+      wrapper: {
+        connection: true,
+        strokeWidth: 10,
       },
-    };
-  }
-  markup = [
-    {
-      tagName: "path",
-      selector: "wrapper",
-      attributes: {
-        fill: "none",
-        stroke: "transparent",
+      line: {
+        class: "joint-link-line",
+        targetMarker: {
+          class: "joint-link-marker",
+          type: "path",
+          d: "M 0 -5 10 0 0 5 z",
+        },
+        sourceMarker: {
+          class: "joint-link-marker",
+          type: "path",
+          d: "M 0 -5 10 0 0 5 z",
+        },
+        connection: true,
+        strokeWidth: 2,
       },
     },
-    {
-      tagName: "path",
-      selector: "line",
-      attributes: {
-        fill: "none",
-      },
-    },
-  ];
-}
+  },
+  {
+    // prototype
+  },
+  {
+    // static
+    attributes: {
+      autoOrient: {
+        qualify: function () {
+          return (this as any).model.isLink();
+        },
+        set: function (
+          side: "target" | "source",
+          _refBBox,
+          node: SVGSVGElement,
+          _attrs,
+          linkView, //dia.LinkView & dia.Link doesn't have sourceView or targetView properties in the model
+        ) {
+          let textAnchor, tx, ty, viewCoordinates, anchorCoordinates;
+          if (side === "target") {
+            viewCoordinates = linkView.targetView.model.attributes.position;
+            anchorCoordinates = linkView.targetPoint;
+          } else {
+            viewCoordinates = linkView.sourceView.model.attributes.position;
+            anchorCoordinates = linkView.sourcePoint;
+          }
+          if (viewCoordinates && anchorCoordinates) {
+            if (viewCoordinates.x !== anchorCoordinates.x) {
+              textAnchor = "start";
+              tx = node.getBBox().width / 2 + 6;
+            } else {
+              textAnchor = "end";
+              tx = node.getBBox().width / -2 - 6;
+            }
+          }
+          const isTargetBelow =
+            linkView.getEndAnchor("target").y <
+            linkView.getEndAnchor("source").y;
 
-const TableView = shapes.standard.RecordView;
+          switch (side) {
+            case "target":
+              ty = isTargetBelow ? -15 : 15;
+              break;
+            case "source":
+              ty = isTargetBelow ? 15 : -15;
+              break;
+          }
+
+          return { textAnchor: textAnchor, x: tx || 0, y: ty || 0 };
+        },
+      },
+    },
+  },
+);
+
+export const LinkView = dia.LinkView.extend({
+  update(...theArgs) {
+    dia.LinkView.prototype.update.apply(this, theArgs as []);
+    this.updateLabels();
+  },
+});
 
 Object.assign(shapes, {
+  LinkView,
+  Link,
   app: {
     ServiceEntityBlock,
-    TableView,
-    EntityConnection,
   },
 });

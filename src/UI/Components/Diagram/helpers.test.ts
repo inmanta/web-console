@@ -36,7 +36,7 @@ import {
   InterServiceRule,
   TypeEnum,
 } from "./interfaces";
-import { EntityConnection, ServiceEntityBlock } from "./shapes";
+import { Link, ServiceEntityBlock } from "./shapes";
 jest.spyOn(uuidApi, "create_UUID").mockReturnValue("1");
 
 describe("extractRelationsIds", () => {
@@ -1051,7 +1051,7 @@ describe("checkIfConnectionIsAllowed", () => {
       true,
     );
 
-    const link = new EntityConnection();
+    const link = new Link();
     link.source(serviceA2);
     link.target(serviceB);
     link.addTo(graph);

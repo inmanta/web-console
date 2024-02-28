@@ -33,6 +33,12 @@ export const CanvasWrapper = styled.div`
       fill: var(-pf-v5-global--palette--black-500);
       stroke-width: 1;
     }
+    .labels {
+      display: none;
+      &.-show {
+        display: inline; //default
+      }
+    }
   }
 
   //  ***  ui.Halo ***
@@ -137,5 +143,12 @@ export const CanvasWrapper = styled.div`
   }
   .joint-link-line {
     stroke: var(--pf-v5-global--palette--black-400);
+  }
+
+  .joint-paper svg {
+    overflow: visible;
+  }
+  .joint-label-text {
+    transform: none;
   }
 `;
