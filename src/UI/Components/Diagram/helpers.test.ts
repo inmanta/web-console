@@ -28,12 +28,14 @@ import {
   findCorrespondingId,
   bundleInstances,
   checkIfConnectionIsAllowed,
+  updateLabelPosition,
 } from "./helpers";
 import {
   ConnectionRules,
   EmbeddedRule,
   InstanceForApi,
   InterServiceRule,
+  LabelLinkView,
   TypeEnum,
 } from "./interfaces";
 import { Link, ServiceEntityBlock } from "./shapes";
@@ -1348,4 +1350,158 @@ describe("bundleInstances", () => {
     ];
     expect(bundledInstances).toEqual([coreCopy]);
   });
+});
+
+describe("updateLabelPosition", () => {
+  Object.defineProperty(global.SVGElement.prototype, "getBBox", {
+    writable: true,
+    value: jest.fn().mockReturnValue({
+      x: 0,
+      y: 0,
+      width: 50,
+      height: 50,
+    }),
+  });
+
+  /**
+   * Function that creates graph, paper, two entities which are then manually placed into passed coordinates and connected by link to align with real life scenarios
+   * @param {number} sourceX X coordinate for source cell
+   * @param {number} sourceY Y coordinate for source cell
+   * @param {number} sourceAnchorX X coordinate for source cell anchor for the link
+   * @param {number} targetX X coordinate for target cell
+   * @param {number} targetY Y coordinate for target cell
+   * @param {number} targetAnchorX X coordinate for target cell anchor for the link
+   * @returns {LabelLinkView} LinkView
+   */
+  const setup = (
+    sourceX: number,
+    sourceY: number,
+    sourceAnchorX: number,
+    targetX: number,
+    targetY: number,
+    targetAnchorX: number,
+  ) => {
+    const graph = new dia.Graph();
+    const paper = new dia.Paper({
+      model: graph,
+    });
+    const sourceService = appendEntity(
+      graph,
+      Service.a,
+      InstanceAttributesA,
+      false,
+    );
+    const targetService = appendEntity(
+      graph,
+      Service.b,
+      InstanceAttributesB,
+      false,
+    );
+    graph.addCell(sourceService);
+    graph.addCell(targetService);
+
+    sourceService.set("position", { x: sourceX, y: sourceY });
+    targetService.set("position", { x: targetX, y: targetY });
+
+    const connection = new Link();
+    connection.source(sourceService, {
+      anchor: {
+        name: "center",
+        args: { dx: sourceAnchorX, dy: sourceY + 25 },
+      },
+    });
+    connection.target(targetService, {
+      anchor: {
+        name: "center",
+        args: { dx: targetAnchorX, dy: targetY + 25 },
+      },
+    });
+
+    graph.addCell(connection);
+
+    const linkView = paper.findViewByModel(connection) as LabelLinkView;
+
+    linkView.model.appendLabel({
+      attrs: {
+        rect: {
+          fill: "none",
+        },
+        text: {
+          text: sourceService.getName(),
+          autoOrient: "target",
+          class: "joint-label-text",
+        },
+      },
+      position: {
+        distance: 1,
+      },
+    });
+    linkView.model.appendLabel({
+      attrs: {
+        rect: {
+          fill: "none",
+        },
+        text: {
+          text: targetService.getName(),
+          autoOrient: "source",
+          class: "joint-label-text",
+        },
+      },
+      position: {
+        distance: 0,
+      },
+    });
+    return linkView;
+  };
+
+  it.each`
+    sourceX | sourceY | sourceAnchorX | targetX | targetY | targetAnchorX | sourceResult                              | targetResult
+    ${500}  | ${500}  | ${500}        | ${0}    | ${0}    | ${264}        | ${{ textAnchor: "end", x: -31, y: 15 }}   | ${{ textAnchor: "start", x: 31, y: -15 }}
+    ${0}    | ${0}    | ${264}        | ${500}  | ${500}  | ${500}        | ${{ textAnchor: "start", x: 31, y: -15 }} | ${{ textAnchor: "end", x: -31, y: 15 }}
+    ${500}  | ${0}    | ${500}        | ${0}    | ${500}  | ${264}        | ${{ textAnchor: "end", x: -31, y: -15 }}  | ${{ textAnchor: "start", x: 31, y: 15 }}
+    ${0}    | ${500}  | ${264}        | ${500}  | ${0}    | ${500}        | ${{ textAnchor: "start", x: 31, y: 15 }}  | ${{ textAnchor: "end", x: -31, y: -15 }}
+    ${0}    | ${0}    | ${0}          | ${0}    | ${500}  | ${0}          | ${{ textAnchor: "end", x: -31, y: -15 }}  | ${{ textAnchor: "end", x: -31, y: 15 }}
+    ${0}    | ${500}  | ${0}          | ${0}    | ${0}    | ${0}          | ${{ textAnchor: "end", x: -31, y: 15 }}   | ${{ textAnchor: "end", x: -31, y: -15 }}
+  `(
+    "return adequate position of the link label depending on coordinates of the source and target",
+    ({
+      sourceX,
+      sourceY,
+      sourceAnchorX,
+      targetX,
+      targetY,
+      targetAnchorX,
+      sourceResult,
+      targetResult,
+    }) => {
+      const linkView = setup(
+        sourceX,
+        sourceY,
+        sourceAnchorX,
+        targetX,
+        targetY,
+        targetAnchorX,
+      );
+      const labelCloseToTarget = linkView.findLabelNode(0) as SVGSVGElement;
+      const labelCloseToSource = linkView.findLabelNode(1) as SVGSVGElement;
+
+      const result2 = updateLabelPosition(
+        "source",
+        linkView.getBBox(),
+        labelCloseToSource,
+        {},
+        linkView,
+      );
+      expect(result2).toEqual(sourceResult);
+
+      const result = updateLabelPosition(
+        "target",
+        linkView.getBBox(),
+        labelCloseToTarget,
+        {},
+        linkView,
+      );
+      expect(result).toEqual(targetResult);
+    },
+  );
 });

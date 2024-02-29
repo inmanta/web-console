@@ -1,4 +1,5 @@
 import { dia, shapes, util } from "@inmanta/rappid";
+import { updateLabelPosition } from "./helpers";
 import expandButton from "./icons/expand-icon.svg";
 import { ColumnData } from "./interfaces";
 
@@ -372,45 +373,7 @@ export const Link = shapes.standard.Link.define(
         qualify: function () {
           return (this as any).model.isLink();
         },
-        set: function (
-          side: "target" | "source",
-          _refBBox,
-          node: SVGSVGElement,
-          _attrs,
-          linkView, //dia.LinkView & dia.Link doesn't have sourceView or targetView properties in the model
-        ) {
-          let textAnchor, tx, ty, viewCoordinates, anchorCoordinates;
-          if (side === "target") {
-            viewCoordinates = linkView.targetView.model.attributes.position;
-            anchorCoordinates = linkView.targetPoint;
-          } else {
-            viewCoordinates = linkView.sourceView.model.attributes.position;
-            anchorCoordinates = linkView.sourcePoint;
-          }
-          if (viewCoordinates && anchorCoordinates) {
-            if (viewCoordinates.x !== anchorCoordinates.x) {
-              textAnchor = "start";
-              tx = node.getBBox().width / 2 + 6;
-            } else {
-              textAnchor = "end";
-              tx = node.getBBox().width / -2 - 6;
-            }
-          }
-          const isTargetBelow =
-            linkView.getEndAnchor("target").y <
-            linkView.getEndAnchor("source").y;
-
-          switch (side) {
-            case "target":
-              ty = isTargetBelow ? -15 : 15;
-              break;
-            case "source":
-              ty = isTargetBelow ? 15 : -15;
-              break;
-          }
-
-          return { textAnchor: textAnchor, x: tx || 0, y: ty || 0 };
-        },
+        set: updateLabelPosition,
       },
     },
   },

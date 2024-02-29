@@ -1,3 +1,4 @@
+import { dia, g } from "@inmanta/rappid";
 import { InstanceAttributeModel, ParsedNumber } from "@/Core";
 
 enum ActionEnum {
@@ -118,6 +119,13 @@ interface serializedCell {
 }
 type relationId = string | null | undefined;
 
+//dia.LinkView & dia.Link doesn't have properties below in the model yet they are available to access and required to update labels
+interface LabelLinkView extends dia.LinkView {
+  sourceView: dia.CellView;
+  targetView: dia.CellView;
+  sourcePoint: g.Rect;
+  targetPoint: g.Rect;
+}
 export {
   ActionEnum,
   ColumnData,
@@ -129,4 +137,5 @@ export {
   serializedCell,
   InstanceForApi,
   relationId,
+  LabelLinkView,
 };
