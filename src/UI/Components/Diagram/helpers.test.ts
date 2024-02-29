@@ -1352,7 +1352,7 @@ describe("bundleInstances", () => {
 });
 
 describe("toggleLooseElement", () => {
-  it("dispatch an proper event with id when called", () => {
+  it("dispatch a proper event with id when called", () => {
     const dispatchEventSpy = jest.spyOn(document, "dispatchEvent");
 
     const graph = new dia.Graph();
