@@ -9,7 +9,7 @@ import {
 } from "./actions";
 import { anchorNamespace } from "./anchors";
 import createHalo from "./halo";
-import { checkIfConnectionIsAllowed } from "./helpers";
+import { checkIfConnectionIsAllowed, toggleLooseElement } from "./helpers";
 import collapseButton from "./icons/collapse-icon.svg";
 import expandButton from "./icons/expand-icon.svg";
 import {
@@ -184,7 +184,13 @@ export default function diagramInit(
 
   paper.on("link:mouseenter", (linkView) => {
     if (linkView.model.get("isBlockedFromEditing")) return;
-    showLinkTools(graph, linkView, updateInstancesToSend, connectionRules);
+    showLinkTools(
+      paper,
+      graph,
+      linkView,
+      updateInstancesToSend,
+      connectionRules,
+    );
   });
 
   paper.on("link:mouseleave", (linkView: dia.LinkView) => {
@@ -273,6 +279,7 @@ export default function diagramInit(
         elementCell.get("embeddedTo") !== null
       ) {
         elementCell.set("embeddedTo", connectingCell.id);
+        toggleLooseElement(paper.findViewByModel(elementCell), "remove");
         updateInstancesToSend(elementCell, ActionEnum.UPDATE);
         return true;
       } else {
@@ -366,6 +373,9 @@ export default function diagramInit(
         isEmbedded,
         holderName,
       );
+      if (shape.get("isEmbedded")) {
+        toggleLooseElement(paper.findViewByModel(shape), "add");
+      }
       const shapeCoordinates = shape.getBBox();
       scroller.center(shapeCoordinates.x, shapeCoordinates.y + 200);
       return shape;
