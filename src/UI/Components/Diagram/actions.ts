@@ -3,7 +3,7 @@ import dagre, { graphlib } from "dagre";
 import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from "@/Core";
 import { InstanceWithReferences } from "@/Data/Managers/GetInstanceWithRelations/interface";
 import { words } from "@/UI/words";
-import { findCorrespondingId } from "./helpers";
+import { findCorrespondingId, toggleLooseElement } from "./helpers";
 import activeImage from "./icons/active-icon.svg";
 import candidateImage from "./icons/candidate-icon.svg";
 import { ActionEnum, ConnectionRules, relationId } from "./interfaces";
@@ -14,12 +14,14 @@ import { EntityConnection, ServiceEntityBlock } from "./shapes";
  * https://resources.jointjs.com/docs/jointjs/v3.6/joint.html#dia.LinkView
  * https://resources.jointjs.com/docs/jointjs/v3.6/joint.html#linkTools
  *
- *  * @param {dia.Graph} graph JointJS graph object
+ * @param {dia.Paper} paper JointJS paper object
+ * @param {dia.Graph} graph JointJS graph object
  * @param {dia.LinkView} linkView  - The view for the joint.dia.Link model.
  * @function {(cell: ServiceEntityBlock, action: ActionEnum): void} linkView  - The view for the joint.dia.Link model.
  * @returns {void}
  */
 export function showLinkTools(
+  paper: dia.Paper,
   graph: dia.Graph,
   linkView: dia.LinkView,
   updateInstancesToSend: (cell: ServiceEntityBlock, action: ActionEnum) => void,
@@ -108,7 +110,6 @@ export function showLinkTools(
           const targetCell = graph.getCell(
             target.id as dia.Cell.ID,
           ) as ServiceEntityBlock;
-
           /**
            * Function that remove any data in this connection between cells
            * @param elementCell cell that we checking
@@ -123,9 +124,10 @@ export function showLinkTools(
             // resolve any possible embedded connections between cells,
             if (
               elementCell.get("isEmbedded") &&
-              elementCell.get("embeddedTo") === target.id
+              elementCell.get("embeddedTo") === disconnectingCell.id
             ) {
               elementCell.set("embeddedTo", undefined);
+              toggleLooseElement(paper.findViewByModel(elementCell), "add");
               updateInstancesToSend(elementCell, ActionEnum.UPDATE);
               return true;
             }
