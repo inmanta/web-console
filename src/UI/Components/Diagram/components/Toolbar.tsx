@@ -67,7 +67,20 @@ const Toolbar = ({
             <Tooltip
               content={words("inventory.instanceComposer.labelButtonTooltip")}
             >
-              <IconButton variant="secondary" aria-label="label-toggle-button">
+              <IconButton
+                variant="secondary"
+                aria-label="label-toggle-button"
+                onClick={(event) => {
+                  document.querySelectorAll(".labels").forEach((label) => {
+                    if (label.classList.contains("-show")) {
+                      label.classList.remove("-show");
+                    } else {
+                      label.classList.add("-show");
+                    }
+                  });
+                  event.currentTarget.blur();
+                }}
+              >
                 <img
                   src={labelIcon}
                   alt="Label Toggle Icon"

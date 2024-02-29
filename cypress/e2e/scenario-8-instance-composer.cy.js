@@ -243,7 +243,7 @@ if (Cypress.env("edition") === "iso") {
           clientY: 270,
         })
         .trigger("mouseup");
-      cy.get('[data-type="app.Link"]').should("have.length", "3");
+      cy.get('[data-type="Link"]').should("have.length", "3");
       cy.get('[data-action="delete"]').click();
 
       cy.get('[aria-label="new-entity-button"]').click();
@@ -580,7 +580,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#service_id").type("00010");
       cy.get("#name").type("new-parent-service");
       cy.get("button").contains("Confirm").click();
-      cy.get('[data-type="app.Link"]').trigger("mouseover", { force: true });
+      cy.get('[data-type="Link"]').trigger("mouseover", { force: true });
       cy.get(".joint-link_remove-circle").click();
       cy.get(".joint-link_remove-circle").click();
 
@@ -630,9 +630,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get("button").contains("Edit in Composer").click();
 
       //remove connection
-      cy.get('[data-type="app.Link"]')
-        .eq(0)
-        .trigger("mouseover", { force: true });
+      cy.get('[data-type="Link"]').eq(0).trigger("mouseover", { force: true });
       cy.get(".joint-link_remove-circle").click();
       cy.get(".joint-link_remove-circle").click();
 

@@ -7,7 +7,7 @@ import { findCorrespondingId, toggleLooseElement } from "./helpers";
 import activeImage from "./icons/active-icon.svg";
 import candidateImage from "./icons/candidate-icon.svg";
 import { ActionEnum, ConnectionRules, relationId } from "./interfaces";
-import { EntityConnection, ServiceEntityBlock } from "./shapes";
+import { Link, ServiceEntityBlock } from "./shapes";
 
 /**
  * Function to display the methods to alter the connection objects - currently, the only function visible is the one removing connections.
@@ -515,13 +515,38 @@ function connectEntities(
   isBlocked?: boolean,
 ) {
   targets.map((target) => {
-    const link = new EntityConnection();
+    const link = new Link({
+      labels: [
+        {
+          position: { distance: 0 },
+          attrs: {
+            text: {
+              autoOrient: "source",
+              text: target.getName(),
+              class: "joint-label-text",
+            },
+            rect: { fill: "none" },
+          },
+        },
+        {
+          position: { distance: 1 },
+          attrs: {
+            text: {
+              autoOrient: "target",
+              text: source.getName(),
+              class: "joint-label-text",
+            },
+            rect: { fill: "none" },
+          },
+        },
+      ],
+    });
     if (isBlocked) {
       link.set("isBlockedFromEditing", isBlocked);
     }
     link.source(source);
     link.target(target);
-    link.addTo(graph);
+    graph.addCell(link);
   });
 }
 
