@@ -1380,7 +1380,7 @@ describe("toggleLooseElement", () => {
     );
   });
 
-  it("appends and removes a highlighter object onto entity", () => {
+  it("appends and removes a highlighted object from an entity", () => {
     const graph = new dia.Graph();
     const paper = new dia.Paper({
       model: graph,
