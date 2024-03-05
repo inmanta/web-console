@@ -87,6 +87,8 @@ export interface ServiceModel extends ServiceIdentifier {
   inter_service_relations?: InterServiceRelation[];
   strict_modifier_enforcement?: boolean;
   key_attributes?: string[] | null;
+  owner: null | string;
+  owned_entities: string[];
 }
 
 export interface RelationAttribute {

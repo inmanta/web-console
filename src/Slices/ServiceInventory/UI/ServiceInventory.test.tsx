@@ -317,3 +317,57 @@ test("ServiceInventory shows instance summary chart", async () => {
     await screen.findByRole("img", { name: words("catalog.summary.title") }),
   ).toBeInTheDocument();
 });
+
+test("ServiceInventory shows disabled composer buttons for non-root instances ", async () => {
+  const { component, apiHelper } = setup({ ...Service.a, owner: "owner" });
+  render(component);
+
+  await act(async () => {
+    apiHelper.resolve(
+      Either.right({
+        data: [{ ...ServiceInstance.a, id: "a" }],
+        links: { ...Pagination.links },
+        metadata: Pagination.metadata,
+      }),
+    );
+  });
+
+  expect(screen.queryByRole("Add in Composer")).not.toBeInTheDocument();
+
+  const menuToggle = await screen.findByRole("button", {
+    name: "row actions toggle",
+  });
+  await act(async () => {
+    await userEvent.click(menuToggle);
+  });
+
+  const button = screen.queryByRole("menuitem", {
+    name: "Edit in Composer",
+  });
+  expect(button).not.toBeInTheDocument();
+});
+
+test("ServiceInventory shows enabled composer buttons for root instances ", async () => {
+  const { component, apiHelper } = setup(Service.a);
+  render(component);
+
+  await act(async () => {
+    apiHelper.resolve(
+      Either.right({
+        data: [{ ...ServiceInstance.a, id: "a" }],
+        links: { ...Pagination.links },
+        metadata: Pagination.metadata,
+      }),
+    );
+  });
+
+  expect(await screen.findByText("Add in Composer")).toBeEnabled();
+
+  const menuToggle = await screen.findByRole("button", {
+    name: "row actions toggle",
+  });
+  await act(async () => {
+    await userEvent.click(menuToggle);
+  });
+  expect(await screen.findByText("Edit in Composer")).toBeEnabled();
+});

@@ -33,6 +33,12 @@ export const CanvasWrapper = styled.div`
       fill: var(-pf-v5-global--palette--black-500);
       stroke-width: 1;
     }
+    .labels {
+      display: none;
+      &.-show {
+        display: inline; //default
+      }
+    }
   }
 
   //  ***  ui.Halo ***
@@ -102,6 +108,13 @@ export const CanvasWrapper = styled.div`
     stroke: var(--pf-v5-global--palette--light-green-300);
     fill: var(--pf-v5-global--palette--light-green-300);
   }
+  .joint-loose_element-highlight {
+    stroke: var(--pf-v5-global--palette--red-100);
+    fill: var(--pf-v5-global--palette--red-100);
+    &.-hidden {
+      display: none;
+    }
+  }
   .joint-entityBlock-body {
     stroke: var(--pf-v5-global--BackgroundColor--100);
   }
@@ -137,5 +150,12 @@ export const CanvasWrapper = styled.div`
   }
   .joint-link-line {
     stroke: var(--pf-v5-global--palette--black-400);
+  }
+
+  .joint-paper svg {
+    overflow: visible;
+  }
+  .joint-label-text {
+    transform: none;
   }
 `;
