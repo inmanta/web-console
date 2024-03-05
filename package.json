@@ -112,7 +112,7 @@
     "prettier": "^3.2.4",
     "raw-loader": "^4.0.2",
     "react-svg-loader": "^3.0.3",
-    "regenerator-runtime": "^0.14.0",
+    "regenerator-runtime": "^0.14.1",
     "rimraf": "^5.0.5",
     "style-loader": "^3.3.3",
     "svg-url-loader": "^8.0.0",
