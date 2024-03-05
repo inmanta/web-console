@@ -1,7 +1,12 @@
 import React from "react";
+import "@testing-library/jest-dom";
 import { Route, Routes } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { act, render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
+import { StoreProvider } from "easy-peasy";
+import { http, HttpResponse } from "msw";
+import { setupServer } from "msw/node";
 import {
   BooleanField,
   DictListField,
@@ -10,7 +15,14 @@ import {
   NestedField,
   TextField,
 } from "@/Core";
+import {
+  getStoreInstance,
+  QueryResolverImpl,
+  QueryManagerResolverImpl,
+} from "@/Data";
 import * as Test from "@/Test";
+import { DeferredApiHelper, StaticScheduler, dependencies } from "@/Test";
+import { DependencyProvider } from "@/UI";
 import CustomRouter from "@/UI/Routing/CustomRouter";
 import history from "@/UI/Routing/history";
 import { words } from "@/UI/words";
@@ -28,28 +40,49 @@ const setup = (
   isEdit = false,
   originalAttributes: InstanceAttributeModel | undefined = undefined,
 ) => {
-  return (
+  const store = getStoreInstance();
+  const scheduler = new StaticScheduler();
+  const apiHelper = new DeferredApiHelper();
+  const queryResolver = new QueryResolverImpl(
+    new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler),
+  );
+
+  const component = (
     <CustomRouter history={history}>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <ServiceInstanceForm
-              fields={fields}
-              onCancel={jest.fn()}
-              onSubmit={func ? func : jest.fn()}
-              isEdit={isEdit}
-              originalAttributes={originalAttributes}
+      <DependencyProvider dependencies={{ ...dependencies, queryResolver }}>
+        <StoreProvider store={store}>
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <ServiceInstanceForm
+                  fields={fields}
+                  onCancel={jest.fn()}
+                  onSubmit={func ? func : jest.fn()}
+                  isEdit={isEdit}
+                  originalAttributes={originalAttributes}
+                />
+              }
             />
-          }
-        />
-      </Routes>
+          </Routes>
+        </StoreProvider>
+      </DependencyProvider>
     </CustomRouter>
   );
+
+  return { component, apiHelper, scheduler };
 };
 
+function createQuerryWrapper(children: React.ReactNode) {
+  const queryClient = new QueryClient();
+  return (
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+  );
+}
+
 test("GIVEN ServiceInstanceForm WHEN passed a TextField THEN shows that field", async () => {
-  render(setup([Test.Field.text]));
+  const { component } = setup([Test.Field.text]);
+  render(component);
 
   expect(
     screen.getByRole("generic", {
@@ -68,8 +101,117 @@ test("GIVEN ServiceInstanceForm WHEN passed a TextField THEN shows that field", 
   expect(textBox).toHaveValue(value);
 });
 
+test("GIVEN ServiceInstanceForm WHEN passed a TextField with suggestions THEN shows that field", async () => {
+  const { component } = setup([Test.Field.textSuggestions]);
+  render(component);
+
+  expect(
+    screen.getByRole("generic", {
+      name: `TextFieldInput-${Test.Field.text.name}`,
+    }),
+  ).toBeVisible();
+
+  const textBox = screen.getByRole("textbox", {
+    name: `TextInput-${Test.Field.text.name}`,
+  });
+  const value = "test text";
+  expect(textBox).toBeVisible();
+  await act(async () => {
+    await userEvent.type(textBox, value);
+  });
+  expect(textBox).toHaveValue(value);
+});
+
+test("GIVEN ServiceInstanceForm WHEN passed a TextField with parameter suggestions THEN shows that field", async () => {
+  // Provide the server-side API with the request handlers.
+  const server = setupServer(
+    http.get("/api/v1/parameter/:id", ({ params }) => {
+      expect(params.id).toEqual("param_name");
+
+      return HttpResponse.json({
+        parameter: {
+          value: "metadata",
+          resource_id: "",
+          updated: "2024-03-01T09:43:50.447460+00:00",
+          metadata: {
+            values: ["value1", "value2", "value3"],
+          },
+          id: "65633cac-5be1-4e7b-8a17-7552290649d5",
+          name: "param_name",
+          environment: "68518e2f-3e78-42a0-9009-50a35d89dee2",
+          source: "user",
+          expires: false,
+        },
+      });
+    }),
+  );
+  // Start the interception.
+  server.listen();
+
+  const { component } = setup([Test.Field.textSuggestions2]);
+  render(createQuerryWrapper(component));
+
+  expect(
+    screen.getByRole("generic", {
+      name: `TextFieldInput-${Test.Field.text.name}`,
+    }),
+  ).toBeVisible();
+
+  const textBox = screen.getByRole("textbox", {
+    name: `TextInput-${Test.Field.text.name}`,
+  });
+
+  // simulate click on the input to show the suggestions
+  await act(async () => {
+    await userEvent.click(textBox);
+  });
+
+  const suggestions = screen.getAllByRole("menuitem");
+  expect(suggestions).toHaveLength(3);
+
+  server.close();
+});
+
+test("GIVEN ServiceInstanceForm WHEN passed a TextField with parameter suggestions AND no parameters could be retrieved THEN shows that field without suggestions", async () => {
+  // Provide the server-side API with the request handlers.
+  const server = setupServer(
+    http.get("/api/v1/parameter/:id", ({ params }) => {
+      expect(params.id).toEqual("param_name");
+
+      return HttpResponse.error();
+    }),
+  );
+  // Start the interception.
+  server.listen();
+
+  const { component } = setup([Test.Field.textSuggestions2]);
+  render(createQuerryWrapper(component));
+
+  expect(
+    screen.getByRole("generic", {
+      name: `TextFieldInput-${Test.Field.text.name}`,
+    }),
+  ).toBeVisible();
+
+  const textBox = screen.getByRole("textbox", {
+    name: `TextInput-${Test.Field.text.name}`,
+  });
+
+  // simulate click on the input to show the suggestions
+  await act(async () => {
+    await userEvent.click(textBox);
+  });
+
+  const suggestions = screen.queryAllByRole("menuitem");
+  expect(suggestions).toHaveLength(0);
+
+  server.close();
+});
+
 test("GIVEN ServiceInstanceForm WHEN passed a BooleanField THEN shows that field", async () => {
-  render(setup([Test.Field.bool]));
+  const { component } = setup([Test.Field.bool]);
+  render(component);
+
   expect(
     screen.getByRole("generic", {
       name: `BooleanFieldInput-${Test.Field.bool.name}`,
@@ -87,7 +229,8 @@ test("GIVEN ServiceInstanceForm WHEN passed a BooleanField THEN shows that field
 });
 
 test("GIVEN ServiceInstanceForm WHEN passed an EnumField THEN shows that field", async () => {
-  render(setup([Test.Field.enumField]));
+  const { component } = setup([Test.Field.enumField]);
+  render(component);
 
   expect(
     screen.getByRole("generic", {
@@ -115,12 +258,13 @@ test("GIVEN ServiceInstanceForm WHEN passed an EnumField THEN shows that field",
 });
 
 test("GIVEN ServiceInstanceForm WHEN passed an EnumField with more than one value THEN shows that field with default prompt", async () => {
-  render(setup([Test.Field.enumFieldTwoOptions]));
+  const { component } = setup([Test.Field.enumFieldTwoOptions]);
+  render(component);
 
-  const component = screen.getByRole("generic", {
+  const field = screen.getByRole("generic", {
     name: `EnumFieldInput-${Test.Field.enumFieldTwoOptions.name}`,
   });
-  expect(component).toBeVisible();
+  expect(field).toBeVisible();
 
   const placeholder = screen.getByPlaceholderText(
     `Select value for ${Test.Field.enumFieldTwoOptions.name}`,
@@ -140,11 +284,13 @@ test("GIVEN ServiceInstanceForm WHEN passed an EnumField with more than one valu
 });
 
 test("GIVEN ServiceInstanceForm WHEN passed an EnumField with only one value THEN shows that field with preselected option", async () => {
-  render(setup([Test.Field.enumFieldSingleOption]));
-  const component = screen.getByRole("generic", {
+  const { component } = setup([Test.Field.enumFieldSingleOption]);
+  render(component);
+
+  const field = screen.getByRole("generic", {
     name: `EnumFieldInput-${Test.Field.enumFieldSingleOption.name}`,
   });
-  expect(component).toBeVisible();
+  expect(field).toBeVisible();
 
   const select = screen.getByRole("combobox", {
     name: `${Test.Field.enumFieldSingleOption.name}-selectFilterInput`,
@@ -161,7 +307,8 @@ test("GIVEN ServiceInstanceForm WHEN passed an EnumField with only one value THE
 });
 
 test("GIVEN ServiceInstanceForm and a NestedField WHEN clicking the toggle THEN the nested FlatField is shown", async () => {
-  render(setup([Test.Field.nested([Test.Field.text])]));
+  const { component } = setup([Test.Field.nested([Test.Field.text])]);
+  render(component);
 
   const group = screen.getByRole("group", {
     name: "nested_field",
@@ -193,7 +340,8 @@ test("GIVEN ServiceInstanceForm and a NestedField WHEN clicking the toggle THEN 
 });
 
 test("GIVEN ServiceInstanceForm and a DictListField WHEN clicking all toggles open THEN the nested FlatField is shown", async () => {
-  render(setup([Test.Field.dictList([Test.Field.text])]));
+  const { component } = setup([Test.Field.dictList([Test.Field.text])]);
+  render(component);
 
   const group = screen.getByRole("group", {
     name: "dict_list_field",
@@ -228,14 +376,13 @@ test("GIVEN ServiceInstanceForm and a nested DictListField WHEN in EDIT mode, ne
     ],
   };
 
-  render(
-    setup(
-      [Test.Field.nestedDictList([Test.Field.textDisabled])],
-      undefined,
-      true,
-      originalAttributes,
-    ),
+  const { component } = setup(
+    [Test.Field.nestedDictList([Test.Field.textDisabled])],
+    undefined,
+    true,
+    originalAttributes,
   );
+  render(component);
 
   const group = screen.getByRole("group", {
     name: "nested_dict_list_field",
@@ -318,7 +465,9 @@ test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is
   ]);
   const fields = [Test.Field.text, Test.Field.bool, nestedField, dictListField];
   const submitCb = jest.fn();
-  render(setup(fields, submitCb));
+
+  const { component } = setup(fields, submitCb);
+  render(component);
 
   await act(async () => {
     await userEvent.type(

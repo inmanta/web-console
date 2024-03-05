@@ -15,6 +15,7 @@ import {
 } from "@patternfly/react-core";
 import { HelpIcon, TimesIcon } from "@patternfly/react-icons";
 import { words } from "@/UI/words";
+import { SuggestionsPopover } from "./SuggestionsPopover";
 
 interface Props {
   attributeName: string;
@@ -26,7 +27,9 @@ interface Props {
   typeHint?: string;
   placeholder?: string;
   handleInputChange: (value, event) => void;
+  suggestions?: string[] | null;
 }
+
 export const TextListFormInput: React.FC<Props> = ({
   attributeName,
   attributeValue,
@@ -36,10 +39,13 @@ export const TextListFormInput: React.FC<Props> = ({
   typeHint,
   placeholder,
   handleInputChange,
+  suggestions = [],
   ...props
 }) => {
   const [inputValue, setInputValue] = React.useState("");
   const [currentChips, setCurrentChips] = React.useState<string[]>([]);
+  const [isOpen, setIsOpen] = React.useState(false);
+  const inputRef = React.useRef<HTMLInputElement>(null);
 
   /** callback for removing a chip from the chip selections */
   const deleteChip = (chipToDelete: string) => {
@@ -109,10 +115,24 @@ export const TextListFormInput: React.FC<Props> = ({
         </HelperText>
       </FormHelperText>
       <TextInputGroup isDisabled={shouldBeDisabled}>
+        {suggestions && suggestions.length > 0 && (
+          <SuggestionsPopover
+            suggestions={suggestions}
+            filter={inputValue}
+            handleSuggestionClick={(suggestion) => {
+              setInputValue(suggestion);
+            }}
+            ref={inputRef}
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+          />
+        )}
         <TextInputGroupMain
+          ref={inputRef}
           value={inputValue}
           placeholder={placeholder}
           onChange={handleChangeInput}
+          onFocus={() => setIsOpen(true)}
         >
           <ChipGroup>
             {currentChips.map((currentChip) => (

@@ -2,7 +2,7 @@
 
 import React from "react";
 import { TextInputTypes } from "@patternfly/react-core";
-import { act, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { TextListFormInput } from "./TextListFormInput";
 
@@ -113,5 +113,27 @@ describe("TextListInputField", () => {
       "pf-v5-c-text-input-group__text",
     );
     expect(handleClick).toHaveBeenCalledWith([], null);
+  });
+
+  it("Should render an inputField with suggestions when suggestions are provided.", () => {
+    render(
+      <TextListFormInput
+        attributeName="text_list"
+        type={TextInputTypes.text}
+        attributeValue={["value1", "value2", "value3"]}
+        description="a text list input field"
+        handleInputChange={handleClick}
+        isOptional={false}
+        suggestions={["apple", "banana", "cherry"]}
+      />,
+    );
+
+    // Open the suggestions popover
+    const input = screen.getByRole("textbox");
+    fireEvent.focus(input);
+
+    // Check if the values are present
+    const firstSuggestion = screen.getByText("apple");
+    expect(firstSuggestion).toBeInTheDocument();
   });
 });

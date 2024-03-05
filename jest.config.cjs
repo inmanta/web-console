@@ -28,7 +28,7 @@ module.exports = {
   // A preset that is used as a base for Jest's configuration
   preset: "ts-jest/presets/js-with-ts",
 
-  setupFiles: ["<rootDir>/jestSetup.ts"],
+  setupFiles: ["<rootDir>/jest.polyfills.js", "<rootDir>/jestSetup.ts"],
 
   // The path to a module that runs some code to configure or set up the testing framework before each test
   setupFilesAfterEnv: ["<rootDir>/jestSetupAfterEnv.js"],
@@ -42,6 +42,10 @@ module.exports = {
   // A map from regular expressions to paths to transformers
   transform: {
     "^.+\\.(ts|tsx)$": "ts-jest",
+  },
+
+  testEnvironmentOptions: {
+    customExportConditions: [""],
   },
 
   reporters: ["default", "jest-junit"],
