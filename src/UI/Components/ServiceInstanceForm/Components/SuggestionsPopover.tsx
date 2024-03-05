@@ -178,8 +178,7 @@ export const SuggestionsPopover = forwardRef<
       window.removeEventListener("keydown", handleMenuKeys);
       window.removeEventListener("click", handleClickOutside);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen]);
+  });
 
   return (
     <Popper
