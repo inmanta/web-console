@@ -3,6 +3,9 @@ import { AttributeValidation } from "./AttributeValidation";
 import { Config } from "./Config";
 import { FormSuggestion } from "./ServiceInstanceModel";
 
+/**
+ * Represents an attribute in the service model.
+ */
 export type AttributeModel = AttributeValidation & {
   name: string;
   type: string;
@@ -18,10 +21,16 @@ export type AttributeModel = AttributeValidation & {
   attribute_annotations?: AttributeAnnotations;
 };
 
+/**
+ * Annotations for an attribute.
+ */
 export interface AttributeAnnotations {
   web_suggested_values?: FormSuggestion;
 }
 
+/**
+ * Represents the state of a service model.
+ */
 export interface StateModel {
   deleted: boolean;
   label?: "info" | "success" | "warning" | "danger" | null;
@@ -33,6 +42,9 @@ export interface StateModel {
   values?: Record<string, unknown>;
 }
 
+/**
+ * Represents a transfer in the service model.
+ */
 export interface TransferModel {
   api_set_state: boolean;
   auto: boolean;
@@ -49,6 +61,9 @@ export interface TransferModel {
   validate: boolean;
 }
 
+/**
+ * Represents the lifecycle of a service model.
+ */
 export interface LifecycleModel {
   initial_state: string;
   name?: string;
@@ -56,10 +71,16 @@ export interface LifecycleModel {
   transfers: TransferModel[];
 }
 
+/**
+ * Represents a service identifier.
+ */
 export interface ServiceIdentifier {
   name: string;
 }
 
+/**
+ * Represents the number of instances by label.
+ */
 export interface InstancesByLabel {
   danger: ParsedNumber;
   warning: ParsedNumber;
@@ -68,12 +89,18 @@ export interface InstancesByLabel {
   no_label: ParsedNumber;
 }
 
+/**
+ * Represents a summary of instances.
+ */
 export interface InstanceSummary {
   by_state: Record<string, ParsedNumber>;
   by_label: InstancesByLabel;
   total: ParsedNumber;
 }
 
+/**
+ * Represents a service model.
+ */
 export interface ServiceModel extends ServiceIdentifier {
   environment: string;
   description?: string;
@@ -89,18 +116,27 @@ export interface ServiceModel extends ServiceIdentifier {
   key_attributes?: string[] | null;
 }
 
+/**
+ * Represents an attribute in a relation.
+ */
 export interface RelationAttribute {
   lower_limit: ParsedNumber;
   upper_limit?: ParsedNumber;
   modifier: string;
 }
 
+/**
+ * Represents an inter-service relation.
+ */
 export interface InterServiceRelation extends RelationAttribute {
   name: string;
   description?: string;
   entity_type: string;
 }
 
+/**
+ * Represents an embedded entity.
+ */
 export interface EmbeddedEntity extends RelationAttribute {
   name: string;
   description?: string;
@@ -110,6 +146,9 @@ export interface EmbeddedEntity extends RelationAttribute {
   key_attributes?: string[] | null;
 }
 
+/**
+ * Represents a minimal embedded entity.
+ */
 interface MinimalEmbeddedEntity {
   name: string;
   description?: string;
@@ -121,6 +160,9 @@ interface MinimalEmbeddedEntity {
   embedded_entities: MinimalEmbeddedEntity[];
 }
 
+/**
+ * Represents an entity-like object.
+ */
 export type EntityLike = {
   attributes: (Pick<AttributeModel, "name" | "type" | "description"> & {
     modifier?: AttributeModel["modifier"];
