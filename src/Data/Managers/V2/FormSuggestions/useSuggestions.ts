@@ -4,9 +4,14 @@ import { PrimaryBaseUrlManager } from "@/UI";
 
 /**
  * Custom hook to handle suggested values for a parameter.
+ * If the suggestions are literal, it will return the values directly.
+ * If the suggestions are parameters, it will fetch the parameter from the API.
+ * if the suggestions are null or undefined, it will return null as data, and a success status.
+ *
  * @param suggestions - The suggestions for the parameter.
  * @param environment - The environment for the parameter.
- * @returns An object containing custom hooks to fetch the parameter data.
+ *
+ * @returns The result of the query, {data, status, error, isLoading}.
  */
 export const useSuggestedValues = (
   suggestions: FormSuggestion | null | undefined,

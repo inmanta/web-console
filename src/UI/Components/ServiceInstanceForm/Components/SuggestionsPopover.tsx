@@ -45,10 +45,11 @@ export const SuggestionsPopover = forwardRef<
   NonNullable<HTMLInputElement>,
   Props
 >(({ suggestions, handleSuggestionClick, filter, setIsOpen, isOpen }, ref) => {
-  if (!ref)
+  if (!ref) {
     throw new Error(
       "You need to define a ref for the SuggestionsPopover component.",
     );
+  }
 
   const reference = ref as React.RefObject<NonNullable<HTMLInputElement>>;
   const parentCurrent = reference?.current;
@@ -89,6 +90,11 @@ export const SuggestionsPopover = forwardRef<
     }
   };
 
+  /**
+   * Handles the keyboard events for the autocomplete menu.
+   *
+   * @param {React.KeyboardEvent} event - The keyboard event.
+   */
   const handleMenuKeys = (event) => {
     // If the focus is on the input and the autocomplete menu is open.
     if (

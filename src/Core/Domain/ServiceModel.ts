@@ -4,7 +4,8 @@ import { Config } from "./Config";
 import { FormSuggestion } from "./ServiceInstanceModel";
 
 /**
- * Represents an attribute in the service model.
+ * Type that represents an attribute in the service model.
+ * Extends the AttributeValidation interface.
  */
 export type AttributeModel = AttributeValidation & {
   name: string;
@@ -22,14 +23,14 @@ export type AttributeModel = AttributeValidation & {
 };
 
 /**
- * Annotations for an attribute.
+ * Interface that represents annotations for an attribute.
  */
 export interface AttributeAnnotations {
   web_suggested_values?: FormSuggestion;
 }
 
 /**
- * Represents the state of a service model.
+ * Interface that represents the state of a service model.
  */
 export interface StateModel {
   deleted: boolean;
@@ -43,7 +44,7 @@ export interface StateModel {
 }
 
 /**
- * Represents a transfer in the service model.
+ * Interface that represents a transfer in the service model.
  */
 export interface TransferModel {
   api_set_state: boolean;
@@ -62,7 +63,7 @@ export interface TransferModel {
 }
 
 /**
- * Represents the lifecycle of a service model.
+ * Interface that represents the lifecycle of a service model.
  */
 export interface LifecycleModel {
   initial_state: string;
@@ -72,14 +73,14 @@ export interface LifecycleModel {
 }
 
 /**
- * Represents a service identifier.
+ * Interface that represents a service identifier.
  */
 export interface ServiceIdentifier {
   name: string;
 }
 
 /**
- * Represents the number of instances by label.
+ * Interface that represents the number of instances by label.
  */
 export interface InstancesByLabel {
   danger: ParsedNumber;
@@ -90,7 +91,7 @@ export interface InstancesByLabel {
 }
 
 /**
- * Represents a summary of instances.
+ * Interface that represents a summary of instances.
  */
 export interface InstanceSummary {
   by_state: Record<string, ParsedNumber>;
@@ -99,7 +100,7 @@ export interface InstanceSummary {
 }
 
 /**
- * Represents a service model.
+ * Interface that represents a service model.
  */
 export interface ServiceModel extends ServiceIdentifier {
   environment: string;
@@ -117,7 +118,7 @@ export interface ServiceModel extends ServiceIdentifier {
 }
 
 /**
- * Represents an attribute in a relation.
+ * Interface that represents an attribute in a relation.
  */
 export interface RelationAttribute {
   lower_limit: ParsedNumber;
@@ -126,7 +127,7 @@ export interface RelationAttribute {
 }
 
 /**
- * Represents an inter-service relation.
+ * Interface that represents an inter-service relation.
  */
 export interface InterServiceRelation extends RelationAttribute {
   name: string;
@@ -135,7 +136,7 @@ export interface InterServiceRelation extends RelationAttribute {
 }
 
 /**
- * Represents an embedded entity.
+ * Interface that represents an embedded entity.
  */
 export interface EmbeddedEntity extends RelationAttribute {
   name: string;
@@ -147,7 +148,7 @@ export interface EmbeddedEntity extends RelationAttribute {
 }
 
 /**
- * Represents a minimal embedded entity.
+ * Interface that represents a minimal embedded entity.
  */
 interface MinimalEmbeddedEntity {
   name: string;
@@ -161,7 +162,7 @@ interface MinimalEmbeddedEntity {
 }
 
 /**
- * Represents an entity-like object.
+ * Interface that represents an entity-like object.
  */
 export type EntityLike = {
   attributes: (Pick<AttributeModel, "name" | "type" | "description"> & {
