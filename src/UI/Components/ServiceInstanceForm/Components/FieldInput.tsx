@@ -67,6 +67,8 @@ const makePath = (path: string | null, next: string): string =>
  *   @prop {string} path - The path of the field within the form.
  *   @prop {boolean} isNew - Flag indicating whether the field is newly added. Default is false.
  *   @prop {FormSuggestion | null} suggestions - The suggestions for the field. Default is null.
+ *
+ * @returns {JSX.Element} The rendered FieldInput component.
  */
 export const FieldInput: React.FC<Props> = ({
   field,

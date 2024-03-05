@@ -25,6 +25,23 @@ interface Props {
   handleInputChange: (value, event) => void;
   suggestions?: string[] | null;
 }
+
+/**
+ * A form input component for text-based input fields.
+ *
+ * @component
+ * @param {Props} props - The props for the TextListFormInput component.
+ *  @prop {string} attributeName - The name of the attribute.
+ *  @prop {string[]} attributeValue - The value of the attribute.
+ *  @prop {string} description - The description of the attribute.
+ *  @prop {boolean} isOptional - Whether the attribute is optional.
+ *  @prop {boolean} shouldBeDisabled - Whether the attribute should be disabled. Default is false.
+ *  @prop {string} typeHint - The type hint for the attribute.
+ *  @prop {string} typeHint - The type hint for the attribute.
+ *  @prop {string} placeholder - The placeholder for the input field.
+ *  @prop {function} handleInputChange - The callback for handling input changes.
+ *  @prop {string[]} suggestions - The suggestions for the input field.
+ */
 export const TextFormInput: React.FC<Props> = ({
   attributeName,
   attributeValue,
@@ -43,6 +60,13 @@ export const TextFormInput: React.FC<Props> = ({
   const [isOpen, setIsOpen] = React.useState(false);
   const [inputValue, setInputValue] = React.useState(attributeValue || "");
 
+  /**
+   * Handles the input change.
+   *
+   * @param {string} value - The new value of the input field.
+   *
+   * @returns {void}
+   */
   const handleChange = (value) => {
     setInputValue(value);
   };

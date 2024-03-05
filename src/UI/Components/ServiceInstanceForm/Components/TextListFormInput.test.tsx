@@ -135,5 +135,11 @@ describe("TextListInputField", () => {
     // Check if the values are present
     const firstSuggestion = screen.getByText("apple");
     expect(firstSuggestion).toBeInTheDocument();
+
+    const secondSuggestion = screen.getByText("banana");
+    expect(secondSuggestion).toBeInTheDocument();
+
+    const thirdSuggestion = screen.getByText("cherry");
+    expect(thirdSuggestion).toBeInTheDocument();
   });
 });
