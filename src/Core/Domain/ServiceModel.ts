@@ -1,7 +1,6 @@
 import { ParsedNumber } from "@/Core/Language";
 import { AttributeValidation } from "./AttributeValidation";
 import { Config } from "./Config";
-import { FormSuggestion } from "./ServiceInstanceModel";
 
 export type AttributeModel = AttributeValidation & {
   name: string;
@@ -15,12 +14,7 @@ export type AttributeModel = AttributeValidation & {
     | string[]
     | { [x: string]: string | null | boolean | string[] };
   default_value_set: boolean;
-  attribute_annotations?: AttributeAnnotations;
 };
-
-export interface AttributeAnnotations {
-  web_suggested_values?: FormSuggestion;
-}
 
 export interface StateModel {
   deleted: boolean;

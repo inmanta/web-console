@@ -276,7 +276,6 @@ const FormModal = ({
                 formState={formState}
                 getUpdate={getUpdate}
                 path={null}
-                suggestions={field.suggestion}
               />
             ))}
           </Form>

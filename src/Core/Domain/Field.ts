@@ -1,6 +1,5 @@
 import { TextInputTypes } from "@patternfly/react-core";
 import { ParsedNumber } from "@/Core/Language";
-import { FormSuggestion } from "./ServiceInstanceModel";
 
 /**
  * A field contains all the information required to setup a form field for an AttributeModel.
@@ -25,7 +24,6 @@ interface BaseField {
   description?: string;
   isOptional: boolean;
   isDisabled: boolean;
-  suggestion?: FormSuggestion | null;
 }
 
 export interface BooleanField extends BaseField {

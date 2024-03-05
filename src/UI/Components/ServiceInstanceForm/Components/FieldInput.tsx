@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
   Button,
   FormFieldGroupExpandable,
@@ -12,12 +12,9 @@ import {
   DictListField,
   Field,
   NestedField,
-  FormSuggestion,
 } from "@/Core";
 import { toOptionalBoolean } from "@/Data";
-import { useSuggestedValues } from "@/Data/Managers/V2/FormSuggestions";
 import { createFormState } from "@/UI/Components/ServiceInstanceForm/Helpers";
-import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { BooleanFormInput } from "./BooleanFormInput";
 import { BooleanToggleInput } from "./BooleanToggleInput";
@@ -33,7 +30,6 @@ interface Props {
   getUpdate: GetUpdate;
   path: string | null;
   isNew?: boolean;
-  suggestions?: FormSuggestion | null;
 }
 
 /**
@@ -66,7 +62,6 @@ const makePath = (path: string | null, next: string): string =>
  *   @prop {Function} getUpdate - Function to get updates for the field.
  *   @prop {string} path - The path of the field within the form.
  *   @prop {boolean} isNew - Flag indicating whether the field is newly added. Default is false.
- *   @prop {FormSuggestion | null} suggestions - The suggestions for the field. Default is null.
  */
 export const FieldInput: React.FC<Props> = ({
   field,
@@ -75,16 +70,7 @@ export const FieldInput: React.FC<Props> = ({
   getUpdate,
   path,
   isNew = false,
-  suggestions,
 }) => {
-  const { environmentHandler } = useContext(DependencyContext);
-  const environment = environmentHandler.useId();
-  const { data, isLoading, error } = useSuggestedValues(
-    suggestions,
-    environment,
-  ).useOneTime();
-  const [suggestionsList, setSuggestionsList] = useState<string[] | null>(null);
-
   //callback was used to avoid re-render in useEffect used in SelectFormInput
   const getEnumUpdate = useCallback(
     (value) => {
@@ -92,26 +78,6 @@ export const FieldInput: React.FC<Props> = ({
     },
     [getUpdate, path, field.name],
   );
-
-  useEffect(() => {
-    if (!isLoading && !error) {
-      // if the data is of type array, we can use it directly
-      if (Array.isArray(data)) {
-        setSuggestionsList(data);
-      } else if (
-        data &&
-        data.metadata &&
-        data.metadata.values &&
-        Array.isArray(data.metadata.values) &&
-        // TODO: remove this when the API returns a fixed format.
-        data.metadata.values.every((value) => typeof value === "string")
-      ) {
-        setSuggestionsList(data.metadata.values);
-      }
-    } else {
-      setSuggestionsList(null);
-    }
-  }, [suggestions, data, isLoading, error]);
 
   switch (field.kind) {
     case "Boolean":
@@ -172,7 +138,6 @@ export const FieldInput: React.FC<Props> = ({
           placeholder={getPlaceholderForType(field.type)}
           typeHint={getTypeHintForType(field.type)}
           key={field.name}
-          suggestions={suggestionsList}
         />
       );
     case "Textarea":
@@ -218,7 +183,6 @@ export const FieldInput: React.FC<Props> = ({
           placeholder={getPlaceholderForType(field.type)}
           typeHint={getTypeHintForType(field.type)}
           key={field.name}
-          suggestions={suggestionsList}
         />
       );
     case "InterServiceRelation":

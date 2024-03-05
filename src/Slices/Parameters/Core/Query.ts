@@ -7,9 +7,6 @@ import {
 } from "@/Core/Domain";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 
-/**
- * Represents a query to retrieve parameters.
- */
 export interface Query {
   kind: "GetParameters";
   sort?: Sort.Sort<SortKey>;
@@ -18,9 +15,6 @@ export interface Query {
   currentPage: CurrentPage;
 }
 
-/**
- * Represents a manifest containing parameter data.
- */
 export interface Manifest {
   error: string;
   apiResponse: {
@@ -41,34 +35,22 @@ export interface Manifest {
   query: Query;
 }
 
-/**
- * Represents a filter for parameters.
- */
 export interface Filter {
   name?: string[];
   source?: string[];
   updated?: DateRange.Type[];
 }
 
-/**
- * Represents the different kinds of filters.
- */
 export enum FilterKind {
   Name = "Name",
   Source = "Source",
   Updated = "Updated",
 }
 
-/**
- * Represents the available filter kinds.
- */
 export const FilterList: FilterKind[] = [
   FilterKind.Name,
   FilterKind.Source,
   FilterKind.Updated,
 ];
 
-/**
- * Represents the possible sort keys for parameters.
- */
 export type SortKey = "name" | "source" | "updated";

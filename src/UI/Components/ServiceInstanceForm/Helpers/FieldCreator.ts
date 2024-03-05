@@ -216,8 +216,6 @@ export class FieldCreator {
             isOptional: attribute.type.includes("?"),
             options: attribute.validation_parameters.names,
             isDisabled: this.shouldFieldBeDisabled(attribute),
-            suggestion:
-              attribute.attribute_annotations?.web_suggested_values || null,
           };
         }
 
@@ -231,8 +229,6 @@ export class FieldCreator {
             type: attribute.type,
             isOptional: this.isTextFieldOptional(attribute),
             isDisabled: this.shouldFieldBeDisabled(attribute),
-            suggestion:
-              attribute.attribute_annotations?.web_suggested_values || null,
           };
         }
 
@@ -253,8 +249,6 @@ export class FieldCreator {
             type: attribute.type,
             isOptional: this.isTextFieldOptional(attribute),
             isDisabled: this.shouldFieldBeDisabled(attribute),
-            suggestion:
-              attribute.attribute_annotations?.web_suggested_values || null,
           };
         }
 
@@ -267,8 +261,6 @@ export class FieldCreator {
           type: attribute.type,
           isOptional: this.isTextFieldOptional(attribute),
           isDisabled: this.shouldFieldBeDisabled(attribute),
-          suggestion:
-            attribute.attribute_annotations?.web_suggested_values || null,
         };
       });
   }
