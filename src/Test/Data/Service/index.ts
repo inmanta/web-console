@@ -24,8 +24,6 @@ export const a: ServiceModel = {
     auto_update_inprogress: true,
   },
   embedded_entities: EmbeddedEntity.list,
-  owner: null,
-  owned_entities: [],
 };
 
 export const b: ServiceModel = {
@@ -78,8 +76,6 @@ export const nestedEditable: ServiceModel = {
     by_label: { no_label: 0, info: 0, success: 0, danger: 0, warning: 0 },
     total: 1,
   },
-  owner: null,
-  owned_entities: [],
 };
 
 export const withRelationsOnly: ServiceModel = {
@@ -119,8 +115,6 @@ export const allTypesOfAttributes: ServiceModel = {
   },
   embedded_entities: EmbeddedEntity.list,
   inter_service_relations: [],
-  owner: null,
-  owned_entities: [],
 };
 
 export const ServiceWithAllAttrs: ServiceModel = {

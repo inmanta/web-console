@@ -1,6 +1,0 @@
-change-type: patch
-description: 'Build(deps-dev): Bump mini-css-extract-plugin from 2.7.6 to 2.8.1'
-destination-branches:
-- master
-- iso7
-sections: {}

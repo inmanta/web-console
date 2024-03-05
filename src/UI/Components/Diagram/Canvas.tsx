@@ -35,7 +35,6 @@ const Canvas = ({
   const environment = environmentHandler.useId();
   const baseUrl = urlManager.getApiUrl();
   const canvas = useRef<HTMLDivElement>(null);
-  const [looseEmbedded, setLooseEmbedded] = useState<Set<string>>(new Set());
   const [alertMessage, setAlertMessage] = useState("");
   const [alertType, setAlertType] = useState(AlertVariant.danger);
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
@@ -54,26 +53,6 @@ const Canvas = ({
   const url = routeManager.useUrl("Inventory", {
     service: mainServiceName,
   });
-
-  const handleLooseEmbeddedEvent = (event) => {
-    const customEvent = event as CustomEvent;
-    const eventData: { kind: "remove" | "add"; id: string } = JSON.parse(
-      customEvent.detail,
-    );
-    if (eventData.kind === "remove") {
-      setLooseEmbedded((prevSet) => {
-        const newSet = new Set(prevSet);
-        newSet.delete(eventData.id);
-        return newSet;
-      });
-    } else {
-      setLooseEmbedded((prevSet) => {
-        const newSet = new Set(prevSet);
-        newSet.add(eventData.id);
-        return newSet;
-      });
-    }
-  };
 
   const handleDictEvent = (event) => {
     const customEvent = event as CustomEvent;
@@ -215,12 +194,10 @@ const Canvas = ({
   useEffect(() => {
     document.addEventListener("openDictsModal", handleDictEvent);
     document.addEventListener("openEditModal", handleEditEvent);
-    document.addEventListener("looseEmbedded", handleLooseEmbeddedEvent);
 
     return () => {
       document.removeEventListener("openDictsModal", handleDictEvent);
       document.removeEventListener("openEditModal", handleEditEvent);
-      document.addEventListener("looseEmbedded", handleLooseEmbeddedEvent);
     };
   }, []);
 
@@ -285,9 +262,7 @@ const Canvas = ({
         }}
         serviceName={mainServiceName}
         handleDeploy={handleDeploy}
-        isDeployDisabled={
-          instancesToSend.size < 1 || !isDirty || looseEmbedded.size > 0
-        }
+        isDeployDisabled={instancesToSend.size < 1 || !isDirty}
       />
       <CanvasWrapper id="canvas-wrapper">
         <div className="canvas" ref={canvas} />

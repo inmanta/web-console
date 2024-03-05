@@ -1,5 +1,4 @@
 import { dia, shapes, util } from "@inmanta/rappid";
-import { updateLabelPosition } from "./helpers";
 import expandButton from "./icons/expand-icon.svg";
 import { ColumnData } from "./interfaces";
 
@@ -235,7 +234,6 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
     );
 
     this.set("entityName", name);
-    this.attr(["headerLabel", "data-testid"], "header-" + name);
 
     if (shortenName.includes(`\u2026`)) {
       return this.attr(
@@ -336,60 +334,60 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
   }
 }
 
-export const Link = shapes.standard.Link.define(
-  "Link",
-  {
-    // attributes
-    z: -1,
-    attrs: {
-      wrapper: {
-        connection: true,
-        strokeWidth: 10,
+export class EntityConnection extends dia.Link {
+  defaults() {
+    return {
+      ...super.defaults,
+      type: "app.Link",
+      z: -1,
+      attrs: {
+        wrapper: {
+          connection: true,
+          strokeWidth: 10,
+        },
+        line: {
+          class: "joint-link-line",
+          targetMarker: {
+            class: "joint-link-marker",
+            type: "path",
+            d: "M 0 -5 10 0 0 5 z",
+          },
+          sourceMarker: {
+            class: "joint-link-marker",
+            type: "path",
+            d: "M 0 -5 10 0 0 5 z",
+          },
+          connection: true,
+          strokeWidth: 2,
+        },
       },
-      line: {
-        class: "joint-link-line",
-        targetMarker: {
-          class: "joint-link-marker",
-          type: "path",
-          d: "M 0 -5 10 0 0 5 z",
-        },
-        sourceMarker: {
-          class: "joint-link-marker",
-          type: "path",
-          d: "M 0 -5 10 0 0 5 z",
-        },
-        connection: true,
-        strokeWidth: 2,
-      },
-    },
-  },
-  {
-    // prototype
-  },
-  {
-    // static
-    attributes: {
-      autoOrient: {
-        qualify: function () {
-          return (this as any).model.isLink();
-        },
-        set: updateLabelPosition,
+    };
+  }
+  markup = [
+    {
+      tagName: "path",
+      selector: "wrapper",
+      attributes: {
+        fill: "none",
+        stroke: "transparent",
       },
     },
-  },
-);
+    {
+      tagName: "path",
+      selector: "line",
+      attributes: {
+        fill: "none",
+      },
+    },
+  ];
+}
 
-export const LinkView = dia.LinkView.extend({
-  update(...theArgs) {
-    dia.LinkView.prototype.update.apply(this, theArgs as []);
-    this.updateLabels();
-  },
-});
+const TableView = shapes.standard.RecordView;
 
 Object.assign(shapes, {
-  LinkView,
-  Link,
   app: {
     ServiceEntityBlock,
+    TableView,
+    EntityConnection,
   },
 });
