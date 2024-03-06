@@ -12,6 +12,7 @@ import { MomentDatePresenter } from "@/UI/Utils";
 import { words } from "@/UI/words";
 import { AttributesTab } from "./AttributesTab";
 import { ConfigTab } from "./ConfigTab";
+import { DocumentationTab } from "./DocumentationTab";
 import { ResourcesTab } from "./ResourcesTab";
 import { StatusTab } from "./StatusTab";
 
@@ -48,6 +49,7 @@ export const Tabs: React.FC<Props> = ({
         activeTab={activeTab}
         onChange={setActiveTab}
         tabs={[
+          documentationTab(row, service),
           statusTab(row, state),
           attributesTab(row, service),
           resourcesTab(serviceInstanceIdentifier),
@@ -127,4 +129,14 @@ const configTab = (
   view: <ConfigTab serviceInstanceIdentifier={serviceInstanceIdentifier} />,
   isDisabled,
   ref,
+});
+
+const documentationTab = (
+  row: Row,
+  service?: ServiceModel,
+): TabDescriptor<TabKey> => ({
+  id: TabKey.Events,
+  title: "Documentation",
+  icon: <ListIcon />,
+  view: <DocumentationTab attributes={row.attributes} service={service} />,
 });
