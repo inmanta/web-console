@@ -158,6 +158,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
           originalState={originalState}
           getUpdate={getUpdate}
           path={null}
+          suggestions={field.suggestion}
         />
       ))}
 

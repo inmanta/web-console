@@ -1,7 +1,12 @@
 import { ParsedNumber } from "@/Core/Language";
 import { AttributeValidation } from "./AttributeValidation";
 import { Config } from "./Config";
+import { FormSuggestion } from "./ServiceInstanceModel";
 
+/**
+ * Type that represents an attribute in the service model.
+ * Extends the AttributeValidation interface.
+ */
 export type AttributeModel = AttributeValidation & {
   name: string;
   type: string;
@@ -14,8 +19,19 @@ export type AttributeModel = AttributeValidation & {
     | string[]
     | { [x: string]: string | null | boolean | string[] };
   default_value_set: boolean;
+  attribute_annotations?: AttributeAnnotations;
 };
 
+/**
+ * Interface that represents annotations for an attribute.
+ */
+export interface AttributeAnnotations {
+  web_suggested_values?: FormSuggestion;
+}
+
+/**
+ * Interface that represents the state of a service model.
+ */
 export interface StateModel {
   deleted: boolean;
   label?: "info" | "success" | "warning" | "danger" | null;
@@ -27,6 +43,9 @@ export interface StateModel {
   values?: Record<string, unknown>;
 }
 
+/**
+ * Interface that represents a transfer in the service model.
+ */
 export interface TransferModel {
   api_set_state: boolean;
   auto: boolean;
@@ -43,6 +62,9 @@ export interface TransferModel {
   validate: boolean;
 }
 
+/**
+ * Interface that represents the lifecycle of a service model.
+ */
 export interface LifecycleModel {
   initial_state: string;
   name?: string;
@@ -50,10 +72,16 @@ export interface LifecycleModel {
   transfers: TransferModel[];
 }
 
+/**
+ * Interface that represents a service identifier.
+ */
 export interface ServiceIdentifier {
   name: string;
 }
 
+/**
+ * Interface that represents the number of instances by label.
+ */
 export interface InstancesByLabel {
   danger: ParsedNumber;
   warning: ParsedNumber;
@@ -62,12 +90,18 @@ export interface InstancesByLabel {
   no_label: ParsedNumber;
 }
 
+/**
+ * Interface that represents a summary of instances.
+ */
 export interface InstanceSummary {
   by_state: Record<string, ParsedNumber>;
   by_label: InstancesByLabel;
   total: ParsedNumber;
 }
 
+/**
+ * Interface that represents a service model.
+ */
 export interface ServiceModel extends ServiceIdentifier {
   environment: string;
   description?: string;
@@ -83,18 +117,27 @@ export interface ServiceModel extends ServiceIdentifier {
   key_attributes?: string[] | null;
 }
 
+/**
+ * Interface that represents an attribute in a relation.
+ */
 export interface RelationAttribute {
   lower_limit: ParsedNumber;
   upper_limit?: ParsedNumber;
   modifier: string;
 }
 
+/**
+ * Interface that represents an inter-service relation.
+ */
 export interface InterServiceRelation extends RelationAttribute {
   name: string;
   description?: string;
   entity_type: string;
 }
 
+/**
+ * Interface that represents an embedded entity.
+ */
 export interface EmbeddedEntity extends RelationAttribute {
   name: string;
   description?: string;
@@ -104,6 +147,9 @@ export interface EmbeddedEntity extends RelationAttribute {
   key_attributes?: string[] | null;
 }
 
+/**
+ * Interface that represents a minimal embedded entity.
+ */
 interface MinimalEmbeddedEntity {
   name: string;
   description?: string;
@@ -115,6 +161,9 @@ interface MinimalEmbeddedEntity {
   embedded_entities: MinimalEmbeddedEntity[];
 }
 
+/**
+ * Interface that represents an entity-like object.
+ */
 export type EntityLike = {
   attributes: (Pick<AttributeModel, "name" | "type" | "description"> & {
     modifier?: AttributeModel["modifier"];

@@ -22,7 +22,7 @@ const InlineInput = ({
   value: string | number | boolean | string[];
   type: string;
   onChange: (
-    event: React.FormEvent<HTMLInputElement>,
+    event: React.FormEvent<HTMLInputElement> | null,
     value: string | number | boolean | string[],
   ) => void;
   toggleModal: () => void;
@@ -49,7 +49,7 @@ const InlineInput = ({
         attributeValue={formattedValue as string[]}
         isOptional={true}
         type={TextInputTypes.text}
-        handleInputChange={(event, value) => onChange(event, value)}
+        handleInputChange={(value, event) => onChange(event, value)}
         placeholder={words("inventory.editAttribute.placeholder")}
         attributeName={""}
       />
