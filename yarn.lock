@@ -890,7 +890,7 @@ __metadata:
     "@babel/plugin-transform-typescript": "npm:^7.23.6"
     "@inmanta/rappid": "npm:^3.7.0"
     "@patternfly/react-charts": "npm:^7.1.2"
-    "@patternfly/react-core": "npm:^5.1.2"
+    "@patternfly/react-core": "npm:^5.2.1"
     "@patternfly/react-icons": "npm:^5.1.2"
     "@patternfly/react-styles": "npm:^5.2.0"
     "@patternfly/react-table": "npm:^5.2.1"
@@ -1486,23 +1486,6 @@ __metadata:
     react: ^17 || ^18
     react-dom: ^17 || ^18
   checksum: 10/55cf84e8a86219f96151e24111b4f1955c009c12a547bbbbc65e76a3b6b52a49480b7276467a8274fba6c66ecfaddd5114806ed1f7a91bebf70e89f88115f29a
-  languageName: node
-  linkType: hard
-
-"@patternfly/react-core@npm:^5.1.2":
-  version: 5.1.2
-  resolution: "@patternfly/react-core@npm:5.1.2"
-  dependencies:
-    "@patternfly/react-icons": "npm:^5.1.2"
-    "@patternfly/react-styles": "npm:^5.1.2"
-    "@patternfly/react-tokens": "npm:^5.1.2"
-    focus-trap: "npm:7.5.2"
-    react-dropzone: "npm:^14.2.3"
-    tslib: "npm:^2.5.0"
-  peerDependencies:
-    react: ^17 || ^18
-    react-dom: ^17 || ^18
-  checksum: 10/9d07919486282036e4dec4ceeb94cdbcac3e20df42660ee15013281b97938f608bec32d06268e2bfa18e3941ddb98cc83b6be5148e9341a8babd525b84f39e79
   languageName: node
   linkType: hard
 
