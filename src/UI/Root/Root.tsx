@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useMemo, useState } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { LoginPage } from "@/Slices/Login";
 import { DependencyContext } from "@/UI/Dependency";
 import { SearchSanitizer } from "@/UI/Routing";
 import { GlobalStyles } from "@/UI/Styles";
@@ -34,39 +35,49 @@ export const Root: React.FC = () => {
       <ReactQueryDevtools initialIsOpen={false} />
       <GlobalStyleProxy />
       <AuthProvider>
-        <Initializer>
-          <SearchSanitizer.Provider>
-            <Routes>
-              {routeManager.isBaseUrlDefined() && (
-                <Route
-                  path="/"
-                  element={
-                    <Navigate to={routeManager.getUrl("Home", undefined)} />
-                  }
-                />
-              )}
-              <Route
-                path="*"
-                element={
-                  <PageFrame environmentRole="Optional">
-                    <NotFoundPage />
-                  </PageFrame>
-                }
-              />
-              {pages.map(({ path, kind, element, environmentRole }) => (
-                <Route
-                  path={path}
-                  element={
-                    <PageFrame environmentRole={environmentRole}>
-                      {element}
-                    </PageFrame>
-                  }
-                  key={kind}
-                />
-              ))}
-            </Routes>
-          </SearchSanitizer.Provider>
-        </Initializer>
+        <SearchSanitizer.Provider>
+          <Routes>
+            <Route path="console/login" element={<LoginPage />} />
+            <Route
+              path="*"
+              element={
+                <Initializer>
+                  <Routes>
+                    {routeManager.isBaseUrlDefined() && (
+                      <Route
+                        path="/"
+                        element={
+                          <Navigate
+                            to={routeManager.getUrl("Home", undefined)}
+                          />
+                        }
+                      />
+                    )}
+                    <Route
+                      path="*"
+                      element={
+                        <PageFrame environmentRole="Optional">
+                          <NotFoundPage />
+                        </PageFrame>
+                      }
+                    />
+                    {pages.map(({ path, kind, element, environmentRole }) => (
+                      <Route
+                        path={path}
+                        element={
+                          <PageFrame environmentRole={environmentRole}>
+                            {element}
+                          </PageFrame>
+                        }
+                        key={kind}
+                      />
+                    ))}
+                  </Routes>
+                </Initializer>
+              }
+            />
+          </Routes>
+        </SearchSanitizer.Provider>
       </AuthProvider>
     </QueryClientProvider>
   );

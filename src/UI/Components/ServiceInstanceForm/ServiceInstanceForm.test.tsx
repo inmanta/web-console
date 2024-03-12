@@ -139,7 +139,7 @@ test("GIVEN ServiceInstanceForm WHEN passed a TextField with parameter suggestio
           id: "65633cac-5be1-4e7b-8a17-7552290649d5",
           name: "param_name",
           environment: "68518e2f-3e78-42a0-9009-50a35d89dee2",
-          source: "user",
+          source: "inmanta_user",
           expires: false,
         },
       });

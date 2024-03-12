@@ -7,10 +7,12 @@ import {
   DropdownList,
   MenuToggle,
   MenuToggleElement,
+  TextContent,
   Tooltip,
 } from "@patternfly/react-core";
 import { UserCircleIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
+import { removeCookie } from "@/Data/Common/CookieHelper";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { Profile } from "../Actions/Profile";
@@ -31,8 +33,7 @@ export const EnvSelector: React.FC<Props> = ({
   toggleText,
 }) => {
   const { routeManager } = useContext(DependencyContext);
-  const { keycloakController } = useContext(DependencyContext);
-
+  const { authController } = useContext(DependencyContext);
   return (
     <Dropdown
       isOpen={isOpen}
@@ -45,12 +46,16 @@ export const EnvSelector: React.FC<Props> = ({
           aria-label={toggleText}
           isFullHeight
           onClick={() => setIsOpen(!isOpen)}
-          icon={keycloakController.isEnabled() ? <UserCircleIcon /> : null}
+          icon={authController.isEnabled() ? <UserCircleIcon /> : null}
         >
-          {keycloakController.isEnabled() ? (
+          {authController.isEnabled() ? (
             <StyledDiv>
               <div>
-                <Profile />
+                {authController.shouldAuthLocally() ? (
+                  <StyledText>{authController.getLocalUserName()}</StyledText>
+                ) : (
+                  <Profile />
+                )}
                 <div>
                   {toggleText.length > 28
                     ? toggleText.slice(0, 20) + "..."
@@ -89,9 +94,18 @@ export const EnvSelector: React.FC<Props> = ({
               {words("home.navigation.button")}
             </DropdownItem>
           </Tooltip>
-          {keycloakController.isEnabled() && (
+          {authController.isEnabled() && (
             <DropdownItem
-              onClick={() => keycloakController.getInstance().logout()}
+              onClick={() => {
+                if (authController.shouldAuthLocally()) {
+                  removeCookie("inmanta_user");
+                  window.location.replace(
+                    window.location.origin + "/console/login",
+                  );
+                } else {
+                  authController.getInstance().logout();
+                }
+              }}
             >
               {words("dashboard.logout")}
             </DropdownItem>
@@ -102,6 +116,10 @@ export const EnvSelector: React.FC<Props> = ({
   );
 };
 
+const StyledText = styled(TextContent)`
+  font-weight: bold;
+  text-align: start;
+`;
 const StyledDiv = styled.div`
   display: flex;
   flex-direction: row;

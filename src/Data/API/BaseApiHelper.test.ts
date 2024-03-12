@@ -1,8 +1,9 @@
 import { Either, Maybe } from "@/Core";
 import { BaseApiHelper } from "./BaseApiHelper";
 
+const baseUrl = "http://localhost:8888";
 test("BaseApiHelper.get executes a GET request with correct url & env", async () => {
-  const apiHelper = new BaseApiHelper();
+  const apiHelper = new BaseApiHelper(baseUrl);
   const url = "/test-url";
   const env = "environment_a";
 
@@ -10,12 +11,12 @@ test("BaseApiHelper.get executes a GET request with correct url & env", async ()
   expect(await apiHelper.get(url, env)).toEqual(Either.right({ data: [] }));
 
   const [receivedUrl, requestInit] = fetchMock.mock.calls[0];
-  expect(receivedUrl).toEqual(url);
+  expect(receivedUrl).toEqual(baseUrl + url);
   expect(requestInit?.headers).toEqual({ "X-Inmanta-Tid": env });
 });
 
 test("BaseApiHelper.get handles a failed a GET request", async () => {
-  const apiHelper = new BaseApiHelper();
+  const apiHelper = new BaseApiHelper(baseUrl);
   const url = "/test-url";
   const env = "environment_a";
 
@@ -23,15 +24,17 @@ test("BaseApiHelper.get handles a failed a GET request", async () => {
     status: 400,
   });
   const response = await apiHelper.get(url, env);
+
+  //Polyfill required for msw changed 400 response text from 'Bad Request' to empty string
   expect(response).toEqual(
     Either.left(
-      `The following error occured while communicating with the server: 400 Bad Request \nSomething happened`,
+      `The following error occured while communicating with the server: 400  \nSomething happened`,
     ),
   );
 });
 
 test("BaseApiHelper.post executes a POST request with correct url & env", async () => {
-  const apiHelper = new BaseApiHelper();
+  const apiHelper = new BaseApiHelper(baseUrl);
   const url = "/test-url";
   const env = "environment_a";
 
@@ -41,7 +44,7 @@ test("BaseApiHelper.post executes a POST request with correct url & env", async 
   );
 
   const [receivedUrl, requestInit] = fetchMock.mock.calls[0];
-  expect(receivedUrl).toEqual(url);
+  expect(receivedUrl).toEqual(baseUrl + url);
   expect(requestInit?.headers).toEqual({
     "Content-Type": "application/json",
     "X-Inmanta-Tid": env,
@@ -49,7 +52,7 @@ test("BaseApiHelper.post executes a POST request with correct url & env", async 
 });
 
 test("BaseApiHelper.delete executes a DELETE request with correct url & env", async () => {
-  const apiHelper = new BaseApiHelper();
+  const apiHelper = new BaseApiHelper(baseUrl);
   const url = "/test-url";
   const env = "environment_a";
 
@@ -57,7 +60,7 @@ test("BaseApiHelper.delete executes a DELETE request with correct url & env", as
   expect(await apiHelper.delete(url, env)).toEqual(Maybe.none());
 
   const [receivedUrl, requestInit] = fetchMock.mock.calls[0];
-  expect(receivedUrl).toEqual(url);
+  expect(receivedUrl).toEqual(baseUrl + url);
   expect(requestInit?.headers).toEqual({
     "Content-Type": "application/json",
     "X-Inmanta-Tid": env,
@@ -65,7 +68,7 @@ test("BaseApiHelper.delete executes a DELETE request with correct url & env", as
 });
 
 test("GIVEN BaseApiHelper WHEN response json contains large integers THEN integers are converted to bigints", async () => {
-  const apiHelper = new BaseApiHelper();
+  const apiHelper = new BaseApiHelper(baseUrl);
   fetchMock.mockResponse(`{"foo": 9223372036854775807}`);
   const response = await apiHelper.get<{ foo: number }>("", "");
   if (response.kind === "Left") return;
@@ -73,7 +76,7 @@ test("GIVEN BaseApiHelper WHEN response json contains large integers THEN intege
 });
 
 test("GIVEN BaseApiHelper with getWithHTTPCode WHEN request fails with 409 THEN response has code 409", async () => {
-  const apiHelper = new BaseApiHelper();
+  const apiHelper = new BaseApiHelper(baseUrl);
   fetchMock.mockResponse(`{"foo": 9223372036854775807}`, { status: 409 });
   const response = await apiHelper.getWithHTTPCode<{ foo: number }>("", "");
   if (response.kind === "Right") return;

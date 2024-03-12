@@ -1,4 +1,5 @@
 import React from "react";
+import { MemoryRouter } from "react-router-dom";
 import { render, screen } from "@testing-library/react";
 import ErrorBoundary from "./ErrorBoundary";
 
@@ -12,9 +13,11 @@ test("GIVEN ErrorBoundary WHEN no error is thrown THEN error page should NOT be 
   const explode = false;
 
   const component = (
-    <ErrorBoundary>
-      <span data-testid="bomb">{explode ? <Bomb /> : "normal text"}</span>
-    </ErrorBoundary>
+    <MemoryRouter>
+      <ErrorBoundary>
+        <span data-testid="bomb">{explode ? <Bomb /> : "normal text"}</span>
+      </ErrorBoundary>
+    </MemoryRouter>
   );
 
   render(component);
@@ -31,9 +34,11 @@ test("GIVEN ErrorBoundary WHEN an error is thrown THEN error page should be show
   const explode = true;
 
   const component = (
-    <ErrorBoundary>
-      <span data-testid="bomb">{explode ? <Bomb /> : "normal text"}</span>
-    </ErrorBoundary>
+    <MemoryRouter>
+      <ErrorBoundary>
+        <span data-testid="bomb">{explode ? <Bomb /> : "normal text"}</span>
+      </ErrorBoundary>
+    </MemoryRouter>
   );
 
   render(component);

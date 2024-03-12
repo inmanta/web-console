@@ -9,12 +9,14 @@ import {
   ErrorWithHTTPCode,
 } from "@/Core";
 import { words } from "@/UI/words";
+import { getCookie } from "../Common/CookieHelper";
 import { BigIntJsonParser } from "./BigIntJsonParser";
 
 export class BaseApiHelper implements ApiHelper {
   jsonParser = new BigIntJsonParser();
   constructor(
     private readonly baseUrl: string = "",
+    private readonly shouldAuthLocally: boolean = false,
     private readonly keycloak?: Keycloak,
   ) {}
 
@@ -33,26 +35,32 @@ export class BaseApiHelper implements ApiHelper {
 
   private getHeaders(environment?: string): Record<string, string> {
     const { keycloak } = this;
+    const jwt = getCookie("inmanta_user");
+    let Authorization;
+    if (keycloak && keycloak.token) {
+      Authorization = `Bearer ${keycloak.token}`;
+    } else if (jwt) {
+      Authorization = `Bearer ${jwt}`;
+    }
     return {
       ...(environment ? { "X-Inmanta-Tid": environment } : {}),
-      ...(keycloak && keycloak.token
-        ? { Authorization: `Bearer ${keycloak.token}` }
-        : {}),
+      ...(Authorization ? { Authorization } : {}),
     };
   }
 
   private formatError(message: string, response: Response): string {
     let errorMessage = message;
-
-    if (this.keycloak && (response.status === 401 || response.status === 403)) {
+    if (response.status === 401 || response.status === 403) {
       errorMessage += ` ${words("error.authorizationFailed")}`;
 
-      if (response.status === 401) {
-        this.keycloak.clearToken();
-      }
+      if (this.keycloak) {
+        if (response.status === 401) {
+          this.keycloak.clearToken();
+        }
 
-      if (this.keycloak.isTokenExpired()) {
-        this.keycloak.login();
+        if (this.keycloak.isTokenExpired()) {
+          this.keycloak.login();
+        }
       }
     }
 
@@ -266,7 +274,6 @@ export class BaseApiHelper implements ApiHelper {
             "\nConnection to the server was either denied or blocked. \nPlease check server status.",
           );
         });
-
       if (response.ok) {
         const data = await transform(response);
         return Either.right(data);

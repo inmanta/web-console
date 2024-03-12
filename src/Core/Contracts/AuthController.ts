@@ -1,7 +1,10 @@
 import Keycloak, { KeycloakInitOptions } from "keycloak-js";
 
-export interface KeycloakController {
+export interface AuthController {
   getInstance(): Keycloak;
   isEnabled(): boolean;
   getInitConfig(): KeycloakInitOptions;
+  shouldAuthLocally(): boolean;
+  getLocalUserName(): string;
+  setLocalUserName(username: string): void;
 }

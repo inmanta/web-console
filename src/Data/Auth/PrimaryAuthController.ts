@@ -1,13 +1,19 @@
 import Keycloak, { KeycloakConfig, KeycloakInitOptions } from "keycloak-js";
-import { KeycloakController } from "@/Core";
+import { AuthController } from "@/Core";
 import keycloakConf from "./keycloak.json";
 
-export class PrimaryKeycloakController implements KeycloakController {
+interface AuthConfig extends KeycloakConfig {
+  method: "oidc";
+}
+interface LocalConfig {
+  method: "database";
+}
+export class PrimaryAuthController implements AuthController {
   private instance: Keycloak;
 
   constructor(
     private readonly shouldUseAuth: string | undefined,
-    private readonly externalConfig: undefined | KeycloakConfig,
+    private readonly externalConfig: undefined | AuthConfig | LocalConfig,
     private readonly keycloakUrl: string | undefined,
   ) {
     this.instance = new Keycloak(this.getConfig());
@@ -26,11 +32,25 @@ export class PrimaryKeycloakController implements KeycloakController {
   }
 
   private getConfig(): KeycloakConfig {
-    return (
-      this.externalConfig || {
+    if (this.externalConfig && this.externalConfig?.method === "oidc") {
+      return this.externalConfig;
+    } else {
+      return {
         ...keycloakConf,
         url: this.keycloakUrl,
-      }
+      };
+    }
+  }
+  getLocalUserName(): string {
+    return localStorage.getItem("inmanta_user") || "Unknown user";
+  }
+  setLocalUserName(username: string): void {
+    localStorage.setItem("inmanta_user", username);
+  }
+  shouldAuthLocally(): boolean {
+    return (
+      typeof this.externalConfig !== "undefined" &&
+      this.externalConfig.method === "database"
     );
   }
 

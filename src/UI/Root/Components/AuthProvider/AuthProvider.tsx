@@ -7,21 +7,20 @@ import { DependencyContext } from "@/UI/Dependency";
 export const AuthProvider: React.FC<PropsWithChildren<unknown>> = ({
   children,
 }) => {
-  const { keycloakController } = useContext(DependencyContext);
-
-  if (!keycloakController.isEnabled()) return <>{children}</>;
-
-  return (
-    <ReactKeycloakProvider
-      authClient={keycloakController.getInstance()}
-      initOptions={keycloakController.getInitConfig()}
-      LoadingComponent={
-        <Bullseye>
-          <Spinner />
-        </Bullseye>
-      }
-    >
-      {children}
-    </ReactKeycloakProvider>
-  );
+  const { authController } = useContext(DependencyContext);
+  if (!authController.shouldAuthLocally() && authController.isEnabled())
+    return (
+      <ReactKeycloakProvider
+        authClient={authController.getInstance()}
+        initOptions={authController.getInitConfig()}
+        LoadingComponent={
+          <Bullseye>
+            <Spinner />
+          </Bullseye>
+        }
+      >
+        {children}
+      </ReactKeycloakProvider>
+    );
+  return <>{children}</>;
 };
