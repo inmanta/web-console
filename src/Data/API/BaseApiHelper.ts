@@ -16,7 +16,6 @@ export class BaseApiHelper implements ApiHelper {
   jsonParser = new BigIntJsonParser();
   constructor(
     private readonly baseUrl: string = "",
-    private readonly shouldAuthLocally: boolean = false,
     private readonly keycloak?: Keycloak,
   ) {}
 
