@@ -32,18 +32,26 @@ export class BaseApiHelper implements ApiHelper {
     }
   }
 
-  private getHeaders(environment?: string): Record<string, string> {
+  private getBearerToken(): { Authorization: string } | Record<string, never> {
     const { keycloak } = this;
-    const jwt = getCookie("inmanta_user");
-    let Authorization;
+
     if (keycloak && keycloak.token) {
-      Authorization = `Bearer ${keycloak.token}`;
-    } else if (jwt) {
-      Authorization = `Bearer ${jwt}`;
+      return { Authorization: `Bearer ${keycloak.token}` };
     }
+
+    const jwt = getCookie("inmanta_user");
+
+    if (jwt) {
+      return { Authorization: `Bearer ${jwt}` };
+    }
+
+    return {};
+  }
+
+  private getHeaders(environment?: string): Record<string, string> {
     return {
       ...(environment ? { "X-Inmanta-Tid": environment } : {}),
-      ...(Authorization ? { Authorization } : {}),
+      ...this.getBearerToken(),
     };
   }
 
