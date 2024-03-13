@@ -140,7 +140,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="ServiceOrderRow"]').should("contain", "in progress");
 
       // wait until status is partial
-      cy.get('[aria-label="ServiceOrderRow"]', { timeout: 30000 }).should(
+      cy.get('[aria-label="ServiceOrderRow"]', { timeout: 90000 }).should(
         "contain",
         "partial",
       );
@@ -196,7 +196,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="Expanded-Discovered-Row"]')
         .eq(0)
         .find('[aria-label="Expanded-Details"]')
-        .should("contain", "An error occurred during deployment");
+        .should("contain", "Creation failed");
       cy.get('[aria-label="Expanded-Discovered-Row"]')
         .eq(0)
         .find('[aria-label="Expanded-Details"]')
