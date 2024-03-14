@@ -890,7 +890,7 @@ __metadata:
     "@babel/plugin-transform-typescript": "npm:^7.23.6"
     "@inmanta/rappid": "npm:^3.7.0"
     "@patternfly/react-charts": "npm:^7.1.2"
-    "@patternfly/react-core": "npm:^5.1.2"
+    "@patternfly/react-core": "npm:^5.2.2"
     "@patternfly/react-icons": "npm:^5.1.2"
     "@patternfly/react-styles": "npm:^5.2.0"
     "@patternfly/react-table": "npm:^5.2.1"
@@ -1489,23 +1489,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@patternfly/react-core@npm:^5.1.2":
-  version: 5.1.2
-  resolution: "@patternfly/react-core@npm:5.1.2"
-  dependencies:
-    "@patternfly/react-icons": "npm:^5.1.2"
-    "@patternfly/react-styles": "npm:^5.1.2"
-    "@patternfly/react-tokens": "npm:^5.1.2"
-    focus-trap: "npm:7.5.2"
-    react-dropzone: "npm:^14.2.3"
-    tslib: "npm:^2.5.0"
-  peerDependencies:
-    react: ^17 || ^18
-    react-dom: ^17 || ^18
-  checksum: 10/9d07919486282036e4dec4ceeb94cdbcac3e20df42660ee15013281b97938f608bec32d06268e2bfa18e3941ddb98cc83b6be5148e9341a8babd525b84f39e79
-  languageName: node
-  linkType: hard
-
 "@patternfly/react-core@npm:^5.2.1":
   version: 5.2.1
   resolution: "@patternfly/react-core@npm:5.2.1"
@@ -1520,6 +1503,23 @@ __metadata:
     react: ^17 || ^18
     react-dom: ^17 || ^18
   checksum: 10/fb10b6f3704989c8b8eb68a101599df433d510b8d53b6307b8b61cccc231f51831324848f7c10eb68df60f369ef92c851929a27212f43ab4fc8a52d22f922607
+  languageName: node
+  linkType: hard
+
+"@patternfly/react-core@npm:^5.2.2":
+  version: 5.2.2
+  resolution: "@patternfly/react-core@npm:5.2.2"
+  dependencies:
+    "@patternfly/react-icons": "npm:^5.2.1"
+    "@patternfly/react-styles": "npm:^5.2.1"
+    "@patternfly/react-tokens": "npm:^5.2.1"
+    focus-trap: "npm:7.5.2"
+    react-dropzone: "npm:^14.2.3"
+    tslib: "npm:^2.5.0"
+  peerDependencies:
+    react: ^17 || ^18
+    react-dom: ^17 || ^18
+  checksum: 10/7517e51277011850cb61bd98a6677b66bf53c084837521f8a7bac3ce9e7cfed3d83b6a0f8431599d53f6684c54fe2ecb68ff8fe477b9e1bede4cb4270e9e8e47
   languageName: node
   linkType: hard
 
