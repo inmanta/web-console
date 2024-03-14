@@ -196,7 +196,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="Expanded-Discovered-Row"]')
         .eq(0)
         .find('[aria-label="Expanded-Details"]')
-        .should("contain", "An error occurred during deployment");
+        .should("contain", "Creation failed");
       cy.get('[aria-label="Expanded-Discovered-Row"]')
         .eq(0)
         .find('[aria-label="Expanded-Details"]')
