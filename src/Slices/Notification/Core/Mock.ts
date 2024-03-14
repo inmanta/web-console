@@ -26,17 +26,22 @@ export const read: Notification = {
   severity: "info",
   read: true,
 };
+export const withoutUri: Notification = {
+  ...unread,
+  id: "abcdefgh04",
+  uri: null,
+};
 
 export const response: Manifest["apiResponse"] = {
-  data: [unread, error, read],
+  data: [unread, error, read, withoutUri],
   metadata: Pagination.metadata,
   links: Pagination.links,
 };
 
 export const data: Manifest["usedData"] = {
-  data: [unread, error, read],
+  data: [unread, error, read, withoutUri],
   metadata: Pagination.metadata,
   handlers: Pagination.handlers,
 };
 
-export const list: Notification[] = [unread, read, error];
+export const list: Notification[] = [unread, read, error, withoutUri];

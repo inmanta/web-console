@@ -101,7 +101,7 @@ test("Given Drawer Then a list of notifications are shown", async () => {
 
   expect(
     screen.getAllByRole("listitem", { name: "NotificationItem" }),
-  ).toHaveLength(3);
+  ).toHaveLength(4);
 });
 
 test("Given Drawer When clicking on 'Clear all' Then all notifications are cleared", async () => {
@@ -126,9 +126,11 @@ test("Given Drawer When clicking on 'Clear all' Then all notifications are clear
     updateRequest("abcdefgh01", { read: true, cleared: true }),
     updateRequest("abcdefgh02", { read: true, cleared: true }),
     updateRequest("abcdefgh03", { read: true, cleared: true }),
+    updateRequest("abcdefgh04", { read: true, cleared: true }),
   ]);
 
   await act(async () => {
+    await apiHelper.resolve(Maybe.none());
     await apiHelper.resolve(Maybe.none());
     await apiHelper.resolve(Maybe.none());
     await apiHelper.resolve(Maybe.none());
@@ -166,8 +168,10 @@ test("Given Drawer When user clicks on 'Read all' Then all notifications are rea
   expect(apiHelper.pendingRequests).toEqual([
     updateRequest("abcdefgh01", { read: true }),
     updateRequest("abcdefgh02", { read: true }),
+    updateRequest("abcdefgh04", { read: true }),
   ]);
   await act(async () => {
+    await apiHelper.resolve(Maybe.none());
     await apiHelper.resolve(Maybe.none());
     await apiHelper.resolve(Maybe.none());
   });
@@ -182,6 +186,7 @@ test("Given Drawer When user clicks on 'Read all' Then all notifications are rea
           { ...Mock.unread, read: true },
           { ...Mock.error, read: true },
           Mock.read,
+          { ...Mock.withoutUri, read: true },
         ],
       }),
     );
@@ -189,7 +194,7 @@ test("Given Drawer When user clicks on 'Read all' Then all notifications are rea
 
   expect(
     screen.getAllByRole("listitem", { name: "NotificationItem" }),
-  ).toHaveLength(3);
+  ).toHaveLength(4);
 });
 
 test("Given Drawer When user clicks a notification Then it becomes read", async () => {
@@ -241,6 +246,21 @@ test("Given Drawer When user clicks a notification with an uri then go to the ur
   expect(history.location.pathname).toBe(
     "/compilereports/f2c68117-24bd-43cf-a9dc-ce42b934a614",
   );
+});
+
+test("Given Drawer When user clicks a notification without an uri then nothing happens", async () => {
+  const { component, apiHelper, history } = setup();
+  render(component);
+  await act(async () => {
+    await apiHelper.resolve(Either.right(Mock.response));
+  });
+
+  const items = screen.getAllByRole("listitem", { name: "NotificationItem" });
+  await act(async () => {
+    await userEvent.click(items[3]);
+  });
+
+  expect(history.location.pathname).toBe("/");
 });
 
 test("Given Drawer When user clicks a notification toggle with an uri then do not go to uri", async () => {
