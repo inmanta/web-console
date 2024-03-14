@@ -1,3 +1,0 @@
-description: "fix to repair the E2E tests for scenario 9"
-change-type: patch
-destination-branches: [master, iso7]
