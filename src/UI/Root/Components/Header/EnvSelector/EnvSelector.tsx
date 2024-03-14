@@ -99,9 +99,7 @@ export const EnvSelector: React.FC<Props> = ({
               onClick={() => {
                 if (authController.shouldAuthLocally()) {
                   removeCookie("inmanta_user");
-                  window.location.replace(
-                    window.location.origin + "/console/login",
-                  );
+                  document.dispatchEvent(new CustomEvent("open-login"));
                 } else {
                   authController.getInstance().logout();
                 }

@@ -12,6 +12,7 @@ import { PrimaryPageManager } from "./PrimaryPageManager";
 
 export const Root: React.FC = () => {
   const { routeManager } = useContext(DependencyContext);
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
   const queryClient = new QueryClient();
 
   const pageManager = useMemo(
@@ -25,6 +26,17 @@ export const Root: React.FC = () => {
     setPages(pageManager.getPages());
   }, [pageManager]);
 
+  useEffect(() => {
+    const openLogin = () => {
+      setIsLoginOpen(true);
+    };
+
+    document.addEventListener("open-login", openLogin);
+    return () => {
+      document.removeEventListener("open-login", openLogin);
+    };
+  }, []);
+
   // This is done because the StyledComponents package is not fully compatible with React 18 typing definitions.
   // https://github.com/styled-components/styled-components/issues/3738
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -36,47 +48,38 @@ export const Root: React.FC = () => {
       <GlobalStyleProxy />
       <AuthProvider>
         <SearchSanitizer.Provider>
-          <Routes>
-            <Route path="console/login" element={<LoginPage />} />
-            <Route
-              path="*"
-              element={
-                <Initializer>
-                  <Routes>
-                    {routeManager.isBaseUrlDefined() && (
-                      <Route
-                        path="/"
-                        element={
-                          <Navigate
-                            to={routeManager.getUrl("Home", undefined)}
-                          />
-                        }
-                      />
-                    )}
-                    <Route
-                      path="*"
-                      element={
-                        <PageFrame environmentRole="Optional">
-                          <NotFoundPage />
-                        </PageFrame>
-                      }
-                    />
-                    {pages.map(({ path, kind, element, environmentRole }) => (
-                      <Route
-                        path={path}
-                        element={
-                          <PageFrame environmentRole={environmentRole}>
-                            {element}
-                          </PageFrame>
-                        }
-                        key={kind}
-                      />
-                    ))}
-                  </Routes>
-                </Initializer>
-              }
-            />
-          </Routes>
+          {isLoginOpen && <LoginPage />}
+          <Initializer>
+            <Routes>
+              {routeManager.isBaseUrlDefined() && (
+                <Route
+                  path="/"
+                  element={
+                    <Navigate to={routeManager.getUrl("Home", undefined)} />
+                  }
+                />
+              )}
+              <Route
+                path="*"
+                element={
+                  <PageFrame environmentRole="Optional">
+                    <NotFoundPage />
+                  </PageFrame>
+                }
+              />
+              {pages.map(({ path, kind, element, environmentRole }) => (
+                <Route
+                  path={path}
+                  element={
+                    <PageFrame environmentRole={environmentRole}>
+                      {element}
+                    </PageFrame>
+                  }
+                  key={kind}
+                />
+              ))}
+            </Routes>
+          </Initializer>
         </SearchSanitizer.Provider>
       </AuthProvider>
     </QueryClientProvider>

@@ -59,6 +59,7 @@ export class BaseApiHelper implements ApiHelper {
     let errorMessage = message;
     if (response.status === 401 || response.status === 403) {
       errorMessage += ` ${words("error.authorizationFailed")}`;
+      document.dispatchEvent(new CustomEvent("open-login"));
 
       if (this.keycloak) {
         if (response.status === 401) {
