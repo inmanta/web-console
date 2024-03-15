@@ -60,7 +60,6 @@ export const Login: React.FunctionComponent = () => {
   useEffect(() => {
     if (isSuccess) {
       createCookie("inmanta_user", data.data.token, 1);
-      // window.location.replace(window.location.origin + "/console");
       navigate(0);
       authController.setLocalUserName(data.data.user.username);
     }
