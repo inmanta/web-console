@@ -162,7 +162,7 @@
     "react-syntax-highlighter": "^15.5.0",
     "react-test-renderer": "^18.2.0",
     "styled-components": "^5.3.11",
-    "xml-formatter": "^3.6.0"
+    "xml-formatter": "^3.6.2"
   },
   "resolutions": {
     "json5": "^2.2.2",
