@@ -1,5 +1,4 @@
 import React from "react";
-import { MemoryRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { screen } from "@testing-library/dom";
 import { act, render, waitFor } from "@testing-library/react";
@@ -10,6 +9,13 @@ import { PrimaryAuthController } from "@/Data";
 import { dependencies } from "@/Test";
 import { DependencyProvider } from "@/UI";
 import { LoginPage } from ".";
+const mockedUsedNavigate = jest.fn();
+
+jest.mock("react-router-dom", () => ({
+  ...jest.requireActual("react-router-dom"),
+  useNavigate: () => mockedUsedNavigate,
+}));
+
 const setup = () => {
   const queryClient = new QueryClient();
   const authController = new PrimaryAuthController(
@@ -18,39 +24,16 @@ const setup = () => {
     undefined,
   );
   return (
-    <MemoryRouter initialEntries={["/console/login"]}>
-      <QueryClientProvider client={queryClient}>
-        <DependencyProvider dependencies={{ ...dependencies, authController }}>
-          <LoginPage />
-        </DependencyProvider>
-      </QueryClientProvider>
-    </MemoryRouter>
+    <QueryClientProvider client={queryClient}>
+      <DependencyProvider dependencies={{ ...dependencies, authController }}>
+        <LoginPage />
+      </DependencyProvider>
+    </QueryClientProvider>
   );
 };
 
-const originalWindowLocation = window.location;
-
-beforeEach(() => {
-  Object.defineProperty(window, "location", {
-    configurable: true,
-    enumerable: true,
-    value: Object.assign(new URL("http://localhost"), {
-      replace: jest.fn(),
-    }),
-  });
-});
-
-afterEach(() => {
-  Object.defineProperty(window, "location", {
-    configurable: true,
-    enumerable: true,
-    value: originalWindowLocation,
-  });
-});
-
 describe("loginPage", () => {
   it("", async () => {
-    const replaceSpy = jest.spyOn(window.location, "replace");
     const server = setupServer(
       http.post("/api/v2/login", async ({ request }) => {
         const reqBody = await request.json();
@@ -105,9 +88,7 @@ describe("loginPage", () => {
       await userEvent.click(logInButton);
     });
 
-    await waitFor(() =>
-      expect(replaceSpy).toHaveBeenCalledWith("http://localhost/console"),
-    );
+    await waitFor(() => expect(mockedUsedNavigate).toHaveBeenCalledWith(0));
     server.close();
   });
 
