@@ -32,6 +32,7 @@ fi
 VERSION=${version:-iso}
 RELEASE=${release:-7-dev}
 BRANCH=${branch:-master}
+AUTH=${auth:-keycloak}
 
 echo "Creating temp folder..."
 mkdir temp
@@ -45,6 +46,6 @@ yarn run pull $VERSION $RELEASE
 
 sleep 2
 echo "Starting container..."
-yarn start:localauth
+yarn start:$AUTH
 
 sleep 3
