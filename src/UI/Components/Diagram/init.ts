@@ -9,7 +9,7 @@ import {
 } from "./actions";
 import { anchorNamespace } from "./anchors";
 import createHalo from "./halo";
-import { checkIfConnectionIsAllowed } from "./helpers";
+import { checkIfConnectionIsAllowed, toggleLooseElement } from "./helpers";
 import collapseButton from "./icons/collapse-icon.svg";
 import expandButton from "./icons/expand-icon.svg";
 import {
@@ -19,7 +19,7 @@ import {
   serializedCell,
 } from "./interfaces";
 import { routerNamespace } from "./routers";
-import { EntityConnection, ServiceEntityBlock } from "./shapes";
+import { Link, ServiceEntityBlock } from "./shapes";
 
 export default function diagramInit(
   canvas,
@@ -39,7 +39,14 @@ export default function diagramInit(
     width: 1000,
     height: 1000,
     gridSize: 1,
-    interactive: true,
+    interactive: { linkMove: false },
+    defaultConnectionPoint: {
+      name: "boundary",
+      args: {
+        extrapolate: true,
+        sticky: true,
+      },
+    },
     defaultConnector: { name: "rounded" },
     async: true,
     frozen: true,
@@ -61,7 +68,7 @@ export default function diagramInit(
         },
       },
     },
-    defaultLink: () => new EntityConnection(),
+    defaultLink: () => new Link(),
     validateConnection: (srcView, srcMagnet, tgtView, tgtMagnet) => {
       const baseValidators =
         srcMagnet !== tgtMagnet && srcView.cid !== tgtView.cid;
@@ -177,7 +184,13 @@ export default function diagramInit(
 
   paper.on("link:mouseenter", (linkView) => {
     if (linkView.model.get("isBlockedFromEditing")) return;
-    showLinkTools(graph, linkView, updateInstancesToSend, connectionRules);
+    showLinkTools(
+      paper,
+      graph,
+      linkView,
+      updateInstancesToSend,
+      connectionRules,
+    );
   });
 
   paper.on("link:mouseleave", (linkView: dia.LinkView) => {
@@ -196,6 +209,36 @@ export default function diagramInit(
       target.id as dia.Cell.ID,
     ) as ServiceEntityBlock;
 
+    linkView.model.appendLabel({
+      attrs: {
+        rect: {
+          fill: "none",
+        },
+        text: {
+          text: sourceCell.getName(),
+          autoOrient: "target",
+          class: "joint-label-text",
+        },
+      },
+      position: {
+        distance: 1,
+      },
+    });
+    linkView.model.appendLabel({
+      attrs: {
+        rect: {
+          fill: "none",
+        },
+        text: {
+          text: targetCell.getName(),
+          autoOrient: "source",
+          class: "joint-label-text",
+        },
+      },
+      position: {
+        distance: 0,
+      },
+    });
     /**
      * Function that checks if cell that we are connecting  to is being the one storing information about said connection.
      * @param elementCell cell that we checking
@@ -236,6 +279,7 @@ export default function diagramInit(
         elementCell.get("embeddedTo") !== null
       ) {
         elementCell.set("embeddedTo", connectingCell.id);
+        toggleLooseElement(paper.findViewByModel(elementCell), "remove");
         updateInstancesToSend(elementCell, ActionEnum.UPDATE);
         return true;
       } else {
@@ -329,6 +373,9 @@ export default function diagramInit(
         isEmbedded,
         holderName,
       );
+      if (shape.get("isEmbedded")) {
+        toggleLooseElement(paper.findViewByModel(shape), "add");
+      }
       const shapeCoordinates = shape.getBBox();
       scroller.center(shapeCoordinates.x, shapeCoordinates.y + 200);
       return shape;
