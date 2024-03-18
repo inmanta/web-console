@@ -15,7 +15,8 @@ import { BigIntJsonParser } from "./BigIntJsonParser";
 export class BaseApiHelper implements ApiHelper {
   jsonParser = new BigIntJsonParser();
   constructor(
-    private readonly baseUrl: string = "",
+    private readonly baseUrl: string = "http://localhost:8888",
+    private readonly shouldAuthLocally: boolean = false,
     private readonly keycloak?: Keycloak,
   ) {}
 
@@ -59,9 +60,10 @@ export class BaseApiHelper implements ApiHelper {
     let errorMessage = message;
     if (response.status === 401 || response.status === 403) {
       errorMessage += ` ${words("error.authorizationFailed")}`;
-      document.dispatchEvent(new CustomEvent("open-login"));
 
-      if (this.keycloak) {
+      if (this.shouldAuthLocally && response.status === 401) {
+        document.dispatchEvent(new CustomEvent("open-login"));
+      } else if (this.keycloak) {
         if (response.status === 401) {
           this.keycloak.clearToken();
         }

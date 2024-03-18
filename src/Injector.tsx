@@ -54,7 +54,11 @@ export const Injector: React.FC<React.PropsWithChildren<Props>> = ({
   const basePathname = baseUrlManager.getBasePathname();
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
   const routeManager = PrimaryRouteManager(basePathname);
-  const apiHelper = new BaseApiHelper(baseUrl, authController.getInstance());
+  const apiHelper = new BaseApiHelper(
+    baseUrl,
+    authController.shouldAuthLocally(),
+    authController.getInstance(),
+  );
   const authHelper = new KeycloakAuthHelper(authController.getInstance());
   const queryResolver = new QueryResolverImpl(
     new QueryManagerResolverImpl(

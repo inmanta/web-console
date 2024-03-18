@@ -32,6 +32,7 @@ export const Login: React.FunctionComponent = () => {
   const { authController } = useContext(DependencyContext);
   const navigate = useNavigate();
 
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isPasswordHidden, setIsPasswordHidden] = useState(true);
@@ -64,14 +65,24 @@ export const Login: React.FunctionComponent = () => {
       authController.setLocalUserName(data.data.user.username);
     }
   }, [data, isSuccess, authController, navigate]);
+  useEffect(() => {
+    const openLogin = () => {
+      setIsLoginOpen(true);
+    };
 
+    document.addEventListener("open-login", openLogin);
+    return () => {
+      document.removeEventListener("open-login", openLogin);
+    };
+  }, []);
+
+  if (!isLoginOpen) return null;
   return (
     <Wrapper>
       <StyledLogin
         brandImgSrc={logo}
         footerListVariants={ListVariant.inline}
         brandImgAlt="Inmanta logo"
-        backgroundImgSrc="/assets/images/pfbg-icon.svg"
         loginTitle={words("login.title")}
         loginSubtitle={words("login.subtitle")}
       >
@@ -166,6 +177,7 @@ const Wrapper = styled.div`
   left: 0;
 `;
 const StyledLogin = styled(LoginPage)`
+  background-color: var(--pf-v5-global--BackgroundColor--dark-300);
   .pf-v5-c-login__container {
     @media (min-width: 1200px) {
       width: 100%;

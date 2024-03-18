@@ -1,5 +1,4 @@
 import React, { useContext } from "react";
-import { MemoryRouter } from "react-router-dom";
 import { act, render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { Either, PageSize, RemoteData } from "@/Core";
@@ -26,9 +25,7 @@ function setup() {
   const component = (
     <StoreProvider store={store}>
       <DependencyProvider dependencies={{ ...dependencies, queryResolver }}>
-        <MemoryRouter>
-          <Component />
-        </MemoryRouter>
+        <Component />
       </DependencyProvider>
     </StoreProvider>
   );
