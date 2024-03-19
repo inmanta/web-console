@@ -12,7 +12,6 @@ import {
 } from "@patternfly/react-core";
 import { UserCircleIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
-import { removeCookie } from "@/Data/Common/CookieHelper";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { Profile } from "../Actions/Profile";
@@ -56,6 +55,7 @@ export const EnvSelector: React.FC<Props> = ({
                 ) : (
                   <Profile />
                 )}
+                <Profile />
                 <div>
                   {toggleText.length > 28
                     ? toggleText.slice(0, 20) + "..."
@@ -95,16 +95,7 @@ export const EnvSelector: React.FC<Props> = ({
             </DropdownItem>
           </Tooltip>
           {authController.isEnabled() && (
-            <DropdownItem
-              onClick={() => {
-                if (authController.shouldAuthLocally()) {
-                  removeCookie("inmanta_user");
-                  document.dispatchEvent(new CustomEvent("open-login"));
-                } else {
-                  authController.getInstance().logout();
-                }
-              }}
-            >
+            <DropdownItem onClick={() => authController.logout()}>
               {words("dashboard.logout")}
             </DropdownItem>
           )}

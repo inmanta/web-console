@@ -28,7 +28,7 @@ test("BaseApiHelper.post executes a POST request with correct url & env", async 
   );
 
   const [receivedUrl, requestInit] = fetchMock.mock.calls[0];
-  expect(receivedUrl).toEqual(url);
+  expect(receivedUrl).toEqual(baseUrl + url);
   expect(requestInit?.headers).toEqual({
     "Content-Type": "application/json",
     "X-Inmanta-Tid": env,

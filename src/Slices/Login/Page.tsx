@@ -24,10 +24,15 @@ import {
 } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { createCookie } from "@/Data/Common/CookieHelper";
+import { useLogin } from "@/Data/Managers/V2/Login";
 import { DependencyContext, words } from "@/UI";
 import logo from "@images/logo.svg";
-import { useLogin } from "../../Data/Managers/V2/Login/useLogin";
 
+/**
+ * Login component.
+ * This component is responsible for rendering the login pop-up form and handling the login process.
+ * @returns {React.FunctionComponent} The rendered component.
+ */
 export const Login: React.FunctionComponent = () => {
   const { authController } = useContext(DependencyContext);
   const navigate = useNavigate();
@@ -37,6 +42,12 @@ export const Login: React.FunctionComponent = () => {
   const [password, setPassword] = useState("");
   const [isPasswordHidden, setIsPasswordHidden] = useState(true);
   const { mutate, isError, error, isSuccess, isPending, data } = useLogin();
+
+  /**
+   * Handle the change of the username input field.
+   * @param {React.FormEvent<HTMLInputElement>} _event The event object.
+   * @param {string} value The current value of the input field.
+   */
   const handleUsernameChange = (
     _event: React.FormEvent<HTMLInputElement>,
     value: string,
@@ -44,6 +55,11 @@ export const Login: React.FunctionComponent = () => {
     setUsername(value);
   };
 
+  /**
+   * Handle the change of the password input field.
+   * @param {React.FormEvent<HTMLInputElement>} _event The event object.
+   * @param {string} value The current value of the input field.
+   */
   const handlePasswordChange = (
     _event: React.FormEvent<HTMLInputElement>,
     value: string,
@@ -51,6 +67,10 @@ export const Login: React.FunctionComponent = () => {
     setPassword(value);
   };
 
+  /**
+   * Handle the click event of the login button.
+   * @param {React.MouseEvent<HTMLButtonElement, MouseEvent>} event The event object.
+   */
   const onLoginButtonClick = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   ) => {
@@ -65,6 +85,7 @@ export const Login: React.FunctionComponent = () => {
       authController.setLocalUserName(data.data.user.username);
     }
   }, [data, isSuccess, authController, navigate]);
+
   useEffect(() => {
     const openLogin = () => {
       setIsLoginOpen(true);
@@ -102,7 +123,6 @@ export const Login: React.FunctionComponent = () => {
           )}
           <FormGroup label="Username" isRequired fieldId="pf-login-username-id">
             <TextInput
-              // autoFocus={!noAutoFocus}
               id="pf-login-username-id"
               isRequired
               validated={ValidatedOptions.default}

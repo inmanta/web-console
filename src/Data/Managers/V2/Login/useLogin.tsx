@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { PrimaryBaseUrlManager } from "@/UI";
 
 /**
- * Custom hook for performing user login mutation.
+ * Custom hook for performing user login mutation for database authentication - for keycloak head to keycloak.js library.
  * This hook utilizes React Query's useMutation to handle asynchronous mutations.
  * @returns A tuple containing the mutation function and mutation state.
  */

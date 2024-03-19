@@ -9,7 +9,7 @@ import { PrimaryAuthController } from "@/Data";
 import * as CookieHelper from "@/Data/Common/CookieHelper";
 import { dependencies } from "@/Test";
 import { DependencyProvider } from "@/UI";
-import { LoginPage } from ".";
+import { Login } from "./Page";
 
 const mockedUsedNavigate = jest.fn();
 
@@ -28,13 +28,13 @@ const setup = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <DependencyProvider dependencies={{ ...dependencies, authController }}>
-        <LoginPage />
+        <Login />
       </DependencyProvider>
     </QueryClientProvider>
   );
 };
 
-describe("loginPage", () => {
+describe("Login", () => {
   it("if open-login event isn't triggered return null", () => {
     render(setup());
     expect(screen.queryByLabelText("input-username")).not.toBeInTheDocument();

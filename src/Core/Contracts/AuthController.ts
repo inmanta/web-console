@@ -7,4 +7,5 @@ export interface AuthController {
   shouldAuthLocally(): boolean;
   getLocalUserName(): string;
   setLocalUserName(username: string): void;
+  logout(): void;
 }

@@ -7,7 +7,7 @@ import { DependencyContext } from "@/UI/Dependency";
 import { SearchSanitizer } from "@/UI/Routing";
 import { GlobalStyles } from "@/UI/Styles";
 import { NotFoundPage } from "@S/NotFound/UI";
-import { AuthProvider, PageFrame, Initializer } from "./Components";
+import { KeycloakProvider, PageFrame, Initializer } from "./Components";
 import { PrimaryPageManager } from "./PrimaryPageManager";
 
 export const Root: React.FC = () => {
@@ -34,7 +34,7 @@ export const Root: React.FC = () => {
     <QueryClientProvider client={queryClient}>
       <ReactQueryDevtools initialIsOpen={false} />
       <GlobalStyleProxy />
-      <AuthProvider>
+      <KeycloakProvider>
         <SearchSanitizer.Provider>
           <LoginPage />
           <Initializer>
@@ -69,7 +69,7 @@ export const Root: React.FC = () => {
             </Routes>
           </Initializer>
         </SearchSanitizer.Provider>
-      </AuthProvider>
+      </KeycloakProvider>
     </QueryClientProvider>
   );
 };
