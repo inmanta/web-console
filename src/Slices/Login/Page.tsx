@@ -81,6 +81,7 @@ export const Login: React.FunctionComponent = () => {
   useEffect(() => {
     if (isSuccess) {
       createCookie("inmanta_user", data.data.token, 1);
+      //reload the page to avoid possible error view due to the 401 calls done in the background
       navigate(0);
       authController.setLocalUserName(data.data.user.username);
     }
