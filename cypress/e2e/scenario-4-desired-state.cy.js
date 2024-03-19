@@ -198,7 +198,7 @@ describe("Scenario 4 Desired State", () => {
       cy.get(".pf-v5-c-description-list__group")
         .eq(1)
         .find(".pf-v5-c-description-list__description")
-        .should("have.text", "4");
+        .should("have.text", "3");
 
       cy.get(".pf-v5-c-description-list__group")
         .eq(2)

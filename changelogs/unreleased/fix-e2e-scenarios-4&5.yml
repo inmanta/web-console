@@ -1,0 +1,3 @@
+description: "Adjust e2e scenarios 4.1 and 5.1 to align with current behavior"
+change-type: patch
+destination-branches: [master, iso7]
