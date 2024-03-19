@@ -16,6 +16,7 @@ interface Props {
   service?: ServiceModel;
   id?: string;
   version: ParsedNumber;
+  setTab?: (tab: string) => void;
 }
 
 export const AttributesTab: React.FC<Props> = ({
@@ -23,6 +24,7 @@ export const AttributesTab: React.FC<Props> = ({
   id,
   service,
   version,
+  setTab = () => {},
 }) => {
   const navigate = useNavigateTo();
   return (
@@ -45,6 +47,7 @@ export const AttributesTab: React.FC<Props> = ({
             attributes,
           )
         }
+        setTab={setTab}
         id={id}
         serviceName={service?.name}
         version={version}

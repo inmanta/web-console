@@ -1,3 +1,4 @@
+import { AttributeAnnotations } from "@/Core";
 import { Attributes } from "@/Core/Domain/InventoryTable";
 import {
   CatalogAttributes,
@@ -93,7 +94,11 @@ export class TreeRowCreator<T extends AttributeTree["target"]> {
    * @param {MultiAttributeNode<T>} node
    * @returns {TreeRow} a TreeRow object
    */
-  create(path: string, node: MultiAttributeNode<T>): TreeRow {
+  create(
+    path: string,
+    node: MultiAttributeNode<T>,
+    annotations?: AttributeAnnotations,
+  ): TreeRow {
     if (node.kind === "Leaf") {
       if (this.pathHelper.isNested(path)) {
         return {
@@ -101,7 +106,11 @@ export class TreeRowCreator<T extends AttributeTree["target"]> {
           id: path,
           isExpandedByParent: this.isExpandedByParent(path),
           level: this.pathHelper.getLevel(path),
-          primaryCell: { label: "name", value: this.pathHelper.getSelf(path) },
+          primaryCell: {
+            label: "name",
+            value: this.pathHelper.getSelf(path),
+            ...(annotations && { annotations: annotations }),
+          },
           valueCells: this.extractValues(node),
           type: node.type,
         };
@@ -109,7 +118,11 @@ export class TreeRowCreator<T extends AttributeTree["target"]> {
         return {
           kind: "Flat",
           id: path,
-          primaryCell: { label: "name", value: path },
+          primaryCell: {
+            label: "name",
+            value: path,
+            ...(annotations && { annotations: annotations }),
+          },
           valueCells: this.extractValues(node),
           type: node.type,
         };
@@ -128,6 +141,7 @@ export class TreeRowCreator<T extends AttributeTree["target"]> {
           primaryCell: {
             label: "name",
             value: this.pathHelper.getSelf(path),
+            ...(annotations && { annotations: annotations }),
             warning: warning,
           },
         };
@@ -137,7 +151,12 @@ export class TreeRowCreator<T extends AttributeTree["target"]> {
           id: path,
           isChildExpanded: this.isChildExpanded(path),
           onToggle: this.createOnToggle(path),
-          primaryCell: { label: "name", value: path, warning: warning },
+          primaryCell: {
+            label: "name",
+            value: path,
+            warning: warning,
+            ...(annotations && { annotations: annotations }),
+          },
         };
       }
     }

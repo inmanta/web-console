@@ -27,6 +27,10 @@ export type AttributeModel = AttributeValidation & {
  */
 export interface AttributeAnnotations {
   web_suggested_values?: FormSuggestion;
+  web_presentation?: string;
+  web_icon?: string;
+  web_title?: string;
+  web_content_type?: string;
 }
 
 /**

@@ -32,7 +32,7 @@
       "@S/*": ["src/Slices/*"]
     }
   },
-  "include": ["**/*.ts", "**/*.tsx", "**/*.jsx", "jestSetupAfterEnv.cjs"],
+  "include": ["**/*.ts", "**/*.tsx", "**/*.jsx", "jestSetupAfterEnv.cjs", "src/UI/Components/MarkdownContainer/MermaidPlugin.ts"],
   "exclude": ["node_modules"],
   "ts-node": {
     "compilerOptions": {
