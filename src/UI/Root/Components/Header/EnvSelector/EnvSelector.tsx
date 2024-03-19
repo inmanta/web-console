@@ -14,7 +14,7 @@ import { UserCircleIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
-import { Profile } from "../Actions/Profile";
+import { KeycloakName } from "../Actions/KeycloakName";
 
 interface Props {
   items: string[];
@@ -53,9 +53,8 @@ export const EnvSelector: React.FC<Props> = ({
                 {authController.shouldAuthLocally() ? (
                   <StyledText>{authController.getLocalUserName()}</StyledText>
                 ) : (
-                  <Profile />
+                  <KeycloakName />
                 )}
-                <Profile />
                 <div>
                   {toggleText.length > 28
                     ? toggleText.slice(0, 20) + "..."
