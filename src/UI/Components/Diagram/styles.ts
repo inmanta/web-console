@@ -7,7 +7,6 @@ export const CanvasWrapper = styled.div`
   width: 100%;
   height: calc(100% - 86px);
   position: relative;
-  background: var(-pf-v5-global--palette--black-200);
   margin: 0;
   overflow: hidden;
   .canvas {
@@ -17,7 +16,9 @@ export const CanvasWrapper = styled.div`
     right: 0;
     position: absolute;
     background: var(--pf-v5-global--BackgroundColor--light-300);
-
+    * {
+      font-family: var(--pf-v5-global--FontFamily--monospace);
+    }
     .joint-element {
       filter: drop-shadow(
         0.1rem 0.1rem 0.15rem
@@ -138,7 +139,7 @@ export const CanvasWrapper = styled.div`
     fill: var(--pf-v5-global--Color--100);
   }
   .joint-entityBlock-itemLabels-one {
-    fill: var(--pf-v5-global--palette--black-400);
+    fill: var(--pf-v5-global--palette--black-500);
   }
   .joint-entityBlock-spacer {
     fill: var(--pf-v5-global--Color--100);
@@ -156,6 +157,8 @@ export const CanvasWrapper = styled.div`
     overflow: visible;
   }
   .joint-label-text {
+    font-family: var(--pf-v5-global--FontFamily--monospace);
+    fill: var(--pf-v5-global--palette--black-500);
     transform: none;
   }
 `;

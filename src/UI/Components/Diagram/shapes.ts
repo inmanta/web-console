@@ -33,8 +33,6 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
           },
           headerLabel: {
             class: "joint-entityBlock-header-label",
-            fontFamily:
-              "monospace, RedHatText, Overpass, overpass, helvetica, arial, sans-serif",
             textTransform: "uppercase",
             fontSize: 14,
             textWrap: {
@@ -51,8 +49,6 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
           },
           itemLabels: {
             class: "joint-entityBlock-itemLabels",
-            fontFamily:
-              "monospace, RedHatText, Overpass, overpass, helvetica, arial, sans-serif",
             fontSize: 12,
             //pointerEvents: "none",
             cursor: "default",
@@ -63,8 +59,6 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
           itemLabels_1: {
             class: "joint-entityBlock-itemLabels-one",
             fontSize: 12,
-            fontFamily:
-              "monospace, RedHatText, Overpass, overpass, helvetica, arial, sans-serif",
             textAnchor: "end",
             x: `calc(0.5 * w - 10)`,
             cursor: "default",
@@ -106,7 +100,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
       //out-of-the-box headeredRecord doesn't truncate attribute name, only their values
       const truncatedName = util.breakText(
         item.name.toString(),
-        { width: 80, height: 22 },
+        { width: 130, height: 22 },
         {
           "font-size": this.attr("itemLabels_1/fontSize"),
           "font-family": this.attr("itemLabels_1/fontFamily"),
@@ -120,7 +114,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
         this.attr(`itemLabel_${item.name}/data-tooltip`, item.name);
         this.attr(`itemLabel_${item.name}/data-tooltip-position`, "right");
 
-        names.push({ ...nameObject, label: item.name.slice(0, 11) + `\u2026` });
+        names.push({ ...nameObject, label: item.name.slice(0, 15) + `\u2026` });
       } else {
         names.push(nameObject);
       }
