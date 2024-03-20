@@ -608,6 +608,7 @@ const dict = {
   "facts.column.updated": "Updated",
   "facts.column.value": "Value",
   "facts.column.resourceId": "Resource Id",
+  "facts.empty.message": "No facts found",
 
   /** Agent Process */
   "agentProcess.title": "Agent Process",
