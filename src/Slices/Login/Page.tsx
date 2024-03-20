@@ -30,7 +30,8 @@ import logo from "@images/logo.svg";
 
 /**
  * Login component.
- * This component is responsible for rendering the login pop-up form and handling the login process.
+ * This component is responsible for rendering the login pop-up form and handling the login process
+ * @note This is being used only when local authentication is enabled.
  * @returns {React.FunctionComponent} The rendered component.
  */
 export const Login: React.FunctionComponent = () => {

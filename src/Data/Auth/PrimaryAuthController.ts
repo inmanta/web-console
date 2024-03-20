@@ -13,7 +13,8 @@ interface LocalConfig {
 
 /**
  * PrimaryAuthController class.
- * This class is responsible for handling authentication.
+ * This class is responsible for handling local/database and Keycloak authentication.
+ *
  */
 export class PrimaryAuthController implements AuthController {
   private instance: Keycloak;
@@ -69,6 +70,7 @@ export class PrimaryAuthController implements AuthController {
 
   /**
    * Get the local username.
+   * @note This is being used only when local authentication is enabled.
    * @returns {string} The local username.
    */
   getLocalUserName(): string {
@@ -76,7 +78,8 @@ export class PrimaryAuthController implements AuthController {
   }
 
   /**
-   * Set the local username.
+   * Set the local username
+   * @note This is being used only when local authentication is enabled.
    * @param {string} username - The username to set.
    */
   setLocalUserName(username: string): void {
@@ -84,7 +87,7 @@ export class PrimaryAuthController implements AuthController {
   }
 
   /**
-   * Check if authentication should be done locally.
+   * Check if authentication should be done locally instead by Keycloak.
    * @returns {boolean} True if authentication should be done locally, false otherwise.
    */
   shouldAuthLocally(): boolean {
