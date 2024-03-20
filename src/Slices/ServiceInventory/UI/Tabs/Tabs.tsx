@@ -13,7 +13,7 @@ import { MomentDatePresenter } from "@/UI/Utils";
 import { words } from "@/UI/words";
 import { AttributesTab } from "./AttributesTab";
 import { ConfigTab } from "./ConfigTab";
-import { DocumentationTab } from "./DocumentationTab";
+import { DocumentationTabs } from "./DocumentationTab";
 import { ResourcesTab } from "./ResourcesTab";
 import { StatusTab } from "./StatusTab";
 
@@ -42,6 +42,8 @@ interface Props {
  *
  * @props Props - The component props.
  *  @prop {TabKey | string} activeTab - The active tab.
+ *    @note TabKey is for known tabs, while the string is for custom tabs such as documentation.
+ *          The documentation tabs are generated based on the service model. Thus making them unpredictable.
  *  @prop {function} setActiveTab - The callback for setting the active tab.
  *  @prop {Row} row - The row object.
  *  @prop {React.ReactElement | null} state - The state element.
@@ -209,7 +211,7 @@ const documentationTab = (
             />
           ),
           view: (
-            <DocumentationTab
+            <DocumentationTabs
               attributeValue={attributeValue}
               web_title={attribute.attribute_annotations.web_title}
             />
