@@ -8,4 +8,5 @@ export interface AuthController {
   getLocalUserName(): string;
   setLocalUserName(username: string): void;
   logout(): void;
+  getToken(): string | undefined;
 }

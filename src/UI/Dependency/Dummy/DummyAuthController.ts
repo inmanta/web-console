@@ -23,4 +23,7 @@ export class DummyAuthController implements AuthController {
   logout(): void {
     throw new Error("Method not implemented.");
   }
+  getToken(): string {
+    throw new Error("Method not implemented.");
+  }
 }

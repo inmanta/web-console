@@ -1,13 +1,13 @@
 import Keycloak, { KeycloakConfig, KeycloakInitOptions } from "keycloak-js";
 import { AuthController } from "@/Core";
-import { removeCookie } from "../Common/CookieHelper";
+import { getCookie, removeCookie } from "../Common/CookieHelper";
 import keycloakConf from "./keycloak.json";
 
-interface AuthConfig extends KeycloakConfig {
+export interface AuthConfig extends KeycloakConfig {
   method: "oidc";
 }
 
-interface LocalConfig {
+export interface LocalConfig {
   method: "database";
 }
 
@@ -108,6 +108,26 @@ export class PrimaryAuthController implements AuthController {
     } else {
       this.instance.logout();
     }
+  }
+
+  /**
+   * Get the authentication token.
+   * If the Keycloak instance has a token, it will be returned.
+   * Otherwise, it will check for a token in the "inmanta_user" cookie.
+   * @returns {string | undefined} The authentication token, or undefined if not found.
+   */
+  getToken(): string | undefined {
+    if (this.instance && this.instance.token) {
+      return this.instance.token;
+    }
+
+    const jwt = getCookie("inmanta_user");
+
+    if (jwt) {
+      return jwt;
+    }
+
+    return undefined;
   }
 
   /**
