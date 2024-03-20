@@ -29,3 +29,5 @@ updates:
       - dependency-name: "@types/styled-components"
         update-types: ["version-update:semver-major"]
       - dependency-name: "json-bigint"
+      - dependency-name: "mermaid"
+        update-types: ["version-update:semver-major"]

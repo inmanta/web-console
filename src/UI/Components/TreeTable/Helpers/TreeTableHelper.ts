@@ -78,7 +78,11 @@ export abstract class BaseTreeTableHelper<A extends AttributeTree>
 
     return {
       rows: Object.entries(nodes).map(([key, node]) =>
-        treeRowCreator.create(key, node),
+        treeRowCreator.create(
+          key,
+          node,
+          this.attributeHelper.getAttributeAnnotations(key),
+        ),
       ),
       openAll: createOpenAll,
       closeAll: createCloseAll,

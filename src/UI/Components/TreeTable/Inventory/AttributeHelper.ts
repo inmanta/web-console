@@ -49,6 +49,16 @@ export class InventoryAttributeHelper
     );
   }
 
+  public getAttributeAnnotations(key: string) {
+    if (this.service && this.service.attributes) {
+      const attr = this.service.attributes.find(
+        (attribute) => attribute.name === key,
+      );
+      return attr?.attribute_annotations || {};
+    }
+    return {};
+  }
+
   private findKeyInService(
     prefix: string,
     key: string,
