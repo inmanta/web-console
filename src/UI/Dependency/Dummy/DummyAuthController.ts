@@ -20,4 +20,7 @@ export class DummyAuthController implements AuthController {
   setLocalUserName(_username: string): void {
     throw new Error("Method not implemented.");
   }
+  logout(): void {
+    throw new Error("Method not implemented.");
+  }
 }
