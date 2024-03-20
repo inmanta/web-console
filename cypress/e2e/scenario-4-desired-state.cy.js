@@ -134,7 +134,7 @@ describe("Scenario 4 Desired State", () => {
         .should("contain", "lsm_export")
         .and("contain", "active");
 
-      cy.wrap(2).as("TABLE_LENGTH");
+      cy.wrap(3).as("TABLE_LENGTH");
     }
 
     cy.get('[data-label="Status"]').contains("active").should("have.length", 1);

@@ -83,7 +83,7 @@ describe("5 Compile reports", () => {
     cy.get("tbody").should(($tableBody) => {
       const $rows = $tableBody.find("tr");
 
-      expect($rows).to.have.length(isIso ? 1 : 2);
+      expect($rows).to.have.length(2);
 
       expect($rows.eq(0), "top-row-message").to.contain(
         isIso
