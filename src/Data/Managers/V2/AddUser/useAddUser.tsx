@@ -37,7 +37,7 @@ export const useAddUser = () => {
     mutationKey: ["add_user"],
     onSuccess: () => {
       //refetch the users query to update the list
-      client.invalidateQueries({ queryKey: ["get_users"] });
+      client.invalidateQueries({ queryKey: ["get_users-one_time"] });
     },
   });
 };

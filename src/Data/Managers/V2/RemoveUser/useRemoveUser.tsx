@@ -26,7 +26,7 @@ export const useRemoveUser = () => {
     mutationKey: ["removeUser"],
     onSuccess: () => {
       //refetch the users query to update the list
-      client.invalidateQueries({ queryKey: ["get_users"] });
+      client.invalidateQueries({ queryKey: ["get_users-one_time"] });
     },
   });
 };
