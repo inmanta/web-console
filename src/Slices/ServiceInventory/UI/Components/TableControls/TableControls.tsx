@@ -1,5 +1,4 @@
 import React, { useContext } from "react";
-import { Link } from "react-router-dom";
 import {
   Toolbar,
   ToolbarGroup,
@@ -9,6 +8,7 @@ import {
 } from "@patternfly/react-core";
 import { PlusIcon } from "@patternfly/react-icons";
 import { ServiceModel, ServiceInstanceParams } from "@/Core";
+import { Link } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { FilterWidget } from "@S/ServiceInventory/UI/Components/FilterWidget";
@@ -47,28 +47,26 @@ export const TableControls: React.FC<Props> = ({
           identityAttribute={identityAttribute}
         />
         <ToolbarGroup align={{ default: "alignRight" }}>
+          {service.owner === null && (
+            <ToolbarItem>
+              <Link
+                pathname={routeManager.getUrl("InstanceComposer", {
+                  service: serviceName,
+                })}
+                search={location.search}
+              >
+                <Button id="add-instance-composer-button">
+                  {words("inventory.addInstance.composerButton")}
+                </Button>
+              </Link>
+            </ToolbarItem>
+          )}
           <ToolbarItem>
             <Link
-              to={{
-                pathname: routeManager.getUrl("InstanceComposer", {
-                  service: serviceName,
-                }),
-                search: location.search,
-              }}
-            >
-              <Button id="add-instance-composer-button">
-                {words("inventory.addInstance.composerButton")}
-              </Button>
-            </Link>
-          </ToolbarItem>
-          <ToolbarItem>
-            <Link
-              to={{
-                pathname: routeManager.getUrl("CreateInstance", {
-                  service: serviceName,
-                }),
-                search: location.search,
-              }}
+              pathname={routeManager.getUrl("CreateInstance", {
+                service: serviceName,
+              })}
+              search={location.search}
             >
               <Button id="add-instance-button">
                 <PlusIcon /> {words("inventory.addInstance.button")}

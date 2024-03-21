@@ -106,6 +106,8 @@ test("TreeTable with 1st level of attributes containing annotations should not r
       states: [],
       transfers: [],
     },
+    owner: null,
+    owned_entities: [],
   };
 
   // mock the setTab function

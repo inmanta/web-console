@@ -104,9 +104,9 @@ const deleteAndAssert = async (
   assertionTwo: number,
   assertionThree: number,
 ) => {
-  const childContainer = await screen.findByText(name);
+  const container = await screen.findByTestId("header-" + name);
   await act(async () => {
-    await user.click(childContainer);
+    await user.click(container);
   });
 
   const handle3 = document.querySelector('[data-action="delete"]') as Element;
@@ -120,9 +120,7 @@ const deleteAndAssert = async (
   const updatedEntities3 = document.querySelectorAll(
     '[data-type="app.ServiceEntityBlock"]',
   );
-  const updatedConnectors3 = document.querySelectorAll(
-    '[data-type="app.Link"]',
-  );
+  const updatedConnectors3 = document.querySelectorAll('[data-type="Link"]');
 
   expect(updatedEntities3).toHaveLength(assertionTwo);
   expect(updatedConnectors3).toHaveLength(assertionThree);
@@ -207,7 +205,9 @@ beforeEach(() => {
       skewY: jest.fn().mockImplementation(() => global.SVGSVGElement),
       translate: jest.fn().mockImplementation(() => ({
         multiply: jest.fn().mockImplementation(() => ({
-          multiply: jest.fn().mockImplementation(() => global.SVGSVGElement),
+          multiply: jest.fn().mockImplementation(() => ({
+            inverse: jest.fn().mockImplementation(() => global.SVGSVGElement),
+          })),
         })),
         rotate: jest.fn().mockImplementation(() => ({
           translate: jest.fn().mockImplementation(() => ({
@@ -564,7 +564,7 @@ describe("Canvas.tsx", () => {
     const entities = document.querySelectorAll(
       '[data-type="app.ServiceEntityBlock"]',
     );
-    const connectors = document.querySelectorAll('[data-type="app.Link"]');
+    const connectors = document.querySelectorAll('[data-type="Link"]');
 
     expect(entities).toHaveLength(4);
     expect(attrIndicators).toHaveLength(4);
@@ -593,7 +593,7 @@ describe("Canvas.tsx", () => {
     const entities = document.querySelectorAll(
       '[data-type="app.ServiceEntityBlock"]',
     );
-    const connectors = document.querySelectorAll('[data-type="app.Link"]');
+    const connectors = document.querySelectorAll('[data-type="Link"]');
 
     expect(entities).toHaveLength(4);
     expect(attrIndicators).toHaveLength(4);
