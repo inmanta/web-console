@@ -729,6 +729,13 @@ const dict = {
   "login.title": "Log in to your account",
   "login.subtitle": "Enter your credentials",
   "login.login": "Log in",
+
+  /**
+   * User Management
+   */
+  "userManagement.title": "User Management",
+  "userManagement.filter.placeholder": "Username...",
+  "userManagement.addUser": "Add User",
 };
 
 type Key = keyof typeof dict;

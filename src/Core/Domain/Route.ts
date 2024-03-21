@@ -7,6 +7,7 @@ const kinds = [
   "NotificationCenter",
   "Settings",
   "Status",
+  "UserManagement",
 
   /**
    * LSM
