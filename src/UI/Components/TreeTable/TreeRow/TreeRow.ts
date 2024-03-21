@@ -1,8 +1,11 @@
+import { AttributeAnnotations } from "@/Core";
+
 export type TreeRow = Flat | Root | Branch | Leaf;
 
 export interface Cell {
   label: string;
   value: string;
+  annotations?: AttributeAnnotations;
   hasRelation?: boolean;
   serviceName?: string;
   modifier?: string;

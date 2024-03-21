@@ -50,9 +50,9 @@ module.exports = {
 
   reporters: ["default", "jest-junit"],
 
-  // The react-syntax-highlighter and @inmanta/rappid esm modules have to be handled by jest
+  // The react-syntax-highlighter, mermaid and @inmanta/rappid esm modules have to be handled by jest
   transformIgnorePatterns: [
-    "node_modules/(?!react-syntax-highlighter|@inmanta/rappid)",
+    "node_modules/(?!react-syntax-highlighter|@inmanta/rappid|mermaid/dist/mermaid.js)",
   ],
   globals: {
     "ts-jest": {

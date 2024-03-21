@@ -201,7 +201,7 @@ const dict = {
   "inventory.editAttribute.header": "Update Attribute",
   "inventory.editAttribute.text": (oldValue: string, newValue: string) =>
     `Are you absolutely sure you want to change attribute from ${oldValue} to ${newValue}? This operation can corrupt the instance.`,
-
+  "inventory.error.mermaid": "Error rendering Mermaid diagram",
   /**
    * Config related text
    */
@@ -285,8 +285,8 @@ const dict = {
   "orders.row.reason": "Reason",
   "orders.row.compilerReport": "Show Compile Report",
   "orders.row.body": "Body",
-  "orders.table.empty": "No orders could be retrieved.",
-  "orderDetails.table.empty": "No orders details could be retrieved.",
+  "orders.table.empty": "No orders could be found.",
+  "orderDetails.table.empty": "No orders details could be found.",
   "orders.links.details": "Show Details",
   "orders.row.empty": "Empty",
   "orders.status.failed": "failed",
@@ -608,6 +608,7 @@ const dict = {
   "facts.column.updated": "Updated",
   "facts.column.value": "Value",
   "facts.column.resourceId": "Resource Id",
+  "facts.empty.message": "No facts found",
 
   /** Agent Process */
   "agentProcess.title": "Agent Process",

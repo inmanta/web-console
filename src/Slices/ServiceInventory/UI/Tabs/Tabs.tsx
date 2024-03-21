@@ -8,13 +8,18 @@ import {
 } from "@patternfly/react-icons";
 import { Row, ServiceModel, VersionedServiceInstanceIdentifier } from "@/Core";
 import { IconTabs, TabDescriptor } from "@/UI/Components";
+import { DynamicFAIcon } from "@/UI/Components/FaIcon";
 import { MomentDatePresenter } from "@/UI/Utils";
 import { words } from "@/UI/words";
 import { AttributesTab } from "./AttributesTab";
 import { ConfigTab } from "./ConfigTab";
+import { DocumentationTabs } from "./DocumentationTab";
 import { ResourcesTab } from "./ResourcesTab";
 import { StatusTab } from "./StatusTab";
 
+/**
+ * Enum representing the available tab keys.
+ */
 export enum TabKey {
   Status = "Status",
   Attributes = "Attributes",
@@ -24,14 +29,29 @@ export enum TabKey {
 }
 
 interface Props {
-  activeTab: TabKey;
-  setActiveTab: (tabKey: TabKey) => void;
+  activeTab: TabKey | string;
+  setActiveTab: (tabKey: TabKey | string) => void;
   row: Row;
   state: React.ReactElement | null;
   service?: ServiceModel;
   serviceInstanceIdentifier: VersionedServiceInstanceIdentifier;
 }
 
+/**
+ * Component that renders the tabs for the service inventory.
+ *
+ * @props Props - The component props.
+ *  @prop {TabKey | string} activeTab - The active tab.
+ *    @note TabKey is for known tabs, while the string is for custom tabs such as documentation.
+ *          The documentation tabs are generated based on the service model. Thus making them unpredictable.
+ *  @prop {function} setActiveTab - The callback for setting the active tab.
+ *  @prop {Row} row - The row object.
+ *  @prop {React.ReactElement | null} state - The state element.
+ *  @prop {ServiceModel} service - The service model.
+ *  @prop {VersionedServiceInstanceIdentifier} serviceInstanceIdentifier - The service instance identifier.
+ *
+ * @returns The tabs component.
+ */
 export const Tabs: React.FC<Props> = ({
   activeTab,
   setActiveTab,
@@ -42,6 +62,7 @@ export const Tabs: React.FC<Props> = ({
 }) => {
   const configTooltipRef = useRef<HTMLElement>();
   const configTabDisabled = row.deleted || !!row.configDisabled;
+
   return (
     <>
       <IconTabs
@@ -49,7 +70,8 @@ export const Tabs: React.FC<Props> = ({
         onChange={setActiveTab}
         tabs={[
           statusTab(row, state),
-          attributesTab(row, service),
+          ...documentationTab(row, service),
+          attributesTab(row, setActiveTab, service),
           resourcesTab(serviceInstanceIdentifier),
           configTab(
             configTabDisabled,
@@ -70,6 +92,13 @@ export const Tabs: React.FC<Props> = ({
 
 const datePresenter = new MomentDatePresenter();
 
+/**
+ * Creates the status tab descriptor.
+ *
+ * @param row - The row object.
+ * @param state - The state element.
+ * @returns The status tab descriptor.
+ */
 const statusTab = (
   row: Row,
   state: React.ReactElement | null,
@@ -90,8 +119,16 @@ const statusTab = (
   ),
 });
 
+/**
+ * Creates the attributes tab descriptor.
+ *
+ * @param row - The row object.
+ * @param service - The service model.
+ * @returns The attributes tab descriptor.
+ */
 const attributesTab = (
   row: Row,
+  setActiveTab: (tabKey: TabKey | string) => void,
   service?: ServiceModel,
 ): TabDescriptor<TabKey> => ({
   id: TabKey.Attributes,
@@ -103,10 +140,17 @@ const attributesTab = (
       id={row.id.full}
       service={service}
       version={row.version}
+      setTab={setActiveTab}
     />
   ),
 });
 
+/**
+ * Creates the resources tab descriptor.
+ *
+ * @param serviceInstanceIdentifier - The service instance identifier.
+ * @returns The resources tab descriptor.
+ */
 const resourcesTab = (
   serviceInstanceIdentifier: VersionedServiceInstanceIdentifier,
 ): TabDescriptor<TabKey> => ({
@@ -116,6 +160,14 @@ const resourcesTab = (
   view: <ResourcesTab serviceInstanceIdentifier={serviceInstanceIdentifier} />,
 });
 
+/**
+ * Creates the config tab descriptor.
+ *
+ * @param isDisabled - Indicates if the config tab is disabled.
+ * @param serviceInstanceIdentifier - The service instance identifier.
+ * @param ref - The ref object.
+ * @returns The config tab descriptor.
+ */
 const configTab = (
   isDisabled: boolean,
   serviceInstanceIdentifier: VersionedServiceInstanceIdentifier,
@@ -128,3 +180,80 @@ const configTab = (
   isDisabled,
   ref,
 });
+
+/**
+ * Creates an array of documentation tab descriptors.
+ *
+ * @param row - The row object.
+ * @param service - The service model.
+ * @returns An array of documentation tab descriptors.
+ */
+const documentationTab = (
+  row: Row,
+  service?: ServiceModel,
+): TabDescriptor<string>[] => {
+  // check in the row if there are web_presentation attributes and if they are set to documentation.
+  const webPresentationAttributes: TabDescriptor<string>[] = [];
+
+  if (service && service.attributes) {
+    for (const attribute of service.attributes) {
+      if (
+        attribute.attribute_annotations &&
+        attribute.attribute_annotations.web_title &&
+        attribute.attribute_annotations.web_presentation === "documentation"
+      ) {
+        const attributeValue = getAttributeValue(attribute.name, row);
+        webPresentationAttributes.push({
+          id: attribute.attribute_annotations.web_title,
+          icon: (
+            <DynamicFAIcon
+              icon={attribute.attribute_annotations.web_icon || "FaBook"}
+            />
+          ),
+          view: (
+            <DocumentationTabs
+              attributeValue={attributeValue}
+              web_title={attribute.attribute_annotations.web_title}
+            />
+          ),
+          title: attribute.attribute_annotations.web_title,
+        });
+      }
+    }
+  }
+
+  return webPresentationAttributes;
+};
+
+/**
+ * Gets the attribute value from the row object.
+ *
+ * @param attributeName - The name of the attribute.
+ * @param row - The row object.
+ * @returns The attribute value.
+ */
+const getAttributeValue = (attributeName: string, row: Row) => {
+  if (
+    row.attributes &&
+    row.attributes.active &&
+    row.attributes.active[attributeName]
+  ) {
+    return row.attributes.active[attributeName];
+  }
+  if (
+    row.attributes &&
+    row.attributes.candidate &&
+    row.attributes.candidate[attributeName]
+  ) {
+    return row.attributes.candidate[attributeName];
+  }
+  if (
+    row.attributes &&
+    row.attributes.rollback &&
+    row.attributes.rollback[attributeName]
+  ) {
+    return row.attributes.rollback[attributeName];
+  }
+
+  return "No data available for this attribute.";
+};
