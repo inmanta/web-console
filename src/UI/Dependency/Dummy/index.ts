@@ -8,4 +8,4 @@ export * from "./DummyFileFetcher";
 export * from "./DummyQueryResolver";
 export * from "./DummyRouteManager";
 export * from "./DummyUrlManager";
-export * from "./DummyKeycloakController";
+export * from "./DummyAuthController";

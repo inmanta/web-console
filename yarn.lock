@@ -846,6 +846,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@fastify/busboy@npm:^2.0.0":
+  version: 2.1.1
+  resolution: "@fastify/busboy@npm:2.1.1"
+  checksum: 10/2bb8a7eca8289ed14c9eb15239bc1019797454624e769b39a0b90ed204d032403adc0f8ed0d2aef8a18c772205fa7808cf5a1b91f21c7bfc7b6032150b1062c5
+  languageName: node
+  linkType: hard
+
 "@gar/promisify@npm:^1.1.3":
   version: 1.1.3
   resolution: "@gar/promisify@npm:1.1.3"
@@ -1012,6 +1019,7 @@ __metadata:
     ts-prune: "npm:^0.10.3"
     tsconfig-paths-webpack-plugin: "npm:^4.1.0"
     typescript: "npm:^5.3.3"
+    undici: "npm:^5"
     url-loader: "npm:^4.1.1"
     webpack: "npm:^5.89.0"
     webpack-bundle-analyzer: "npm:^4.10.1"
@@ -1702,10 +1710,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/query-core@npm:5.22.2":
-  version: 5.22.2
-  resolution: "@tanstack/query-core@npm:5.22.2"
-  checksum: 10/4f82bb424b4d543ceadeec46926c81008727c21c17a8f9096e25edb40b62c70444ce4a138d9731e82e8ecad6504d39aa160164f2e4224d3d59e6c44d457983bd
+"@tanstack/query-core@npm:5.24.7":
+  version: 5.24.7
+  resolution: "@tanstack/query-core@npm:5.24.7"
+  checksum: 10/7fa647dfdb7fb17184652ef81af4a29eab542a1070c9054f28a67054e251da479c1dd52037336e6277d2608f3246343a530cda2eefe84b74c7058e9940f8d37d
   languageName: node
   linkType: hard
 
@@ -1717,25 +1725,25 @@ __metadata:
   linkType: hard
 
 "@tanstack/react-query-devtools@npm:^5.24.0":
-  version: 5.24.0
-  resolution: "@tanstack/react-query-devtools@npm:5.24.0"
+  version: 5.25.0
+  resolution: "@tanstack/react-query-devtools@npm:5.25.0"
   dependencies:
     "@tanstack/query-devtools": "npm:5.24.0"
   peerDependencies:
-    "@tanstack/react-query": ^5.22.2
+    "@tanstack/react-query": ^5.25.0
     react: ^18.0.0
-  checksum: 10/9a078a62e93026b3cd80fa9b5543f3762acf52d4cf94475d1ac667003ea9589b769a62ddc74fcb6b5ab48fa7d6802ecbd2ad8ebd036cbf1129892c70c11b3e2a
+  checksum: 10/797ab89ff1a83a899a591529f53788f76741e74167f9360f2e21af987be5de0bf285c9caa5bbcd9bc8840c4edef3c1c112a1241b8eb5e11da21339c5003b8f26
   languageName: node
   linkType: hard
 
 "@tanstack/react-query@npm:^5.18.1":
-  version: 5.22.2
-  resolution: "@tanstack/react-query@npm:5.22.2"
+  version: 5.24.7
+  resolution: "@tanstack/react-query@npm:5.24.7"
   dependencies:
-    "@tanstack/query-core": "npm:5.22.2"
+    "@tanstack/query-core": "npm:5.24.7"
   peerDependencies:
     react: ^18.0.0
-  checksum: 10/f9983bc8153999c675be63e9be6522a4cb0b8e900a71b0a3cd5682c022d717720ad9d6383623eec2c09b5b0bfdc5c7e3d7ce2577bfa3525af3501314fae89724
+  checksum: 10/a401b4fd81fd032c266e44a5f1dcf667ee6aaaa494cf4814fb5c0a126a45c364ac508fab10e025135c01ff543b3cf332632c4e15abcadbfa2349b74b629c617d
   languageName: node
   linkType: hard
 
@@ -15191,6 +15199,15 @@ __metadata:
   version: 5.26.5
   resolution: "undici-types@npm:5.26.5"
   checksum: 10/0097779d94bc0fd26f0418b3a05472410408877279141ded2bd449167be1aed7ea5b76f756562cb3586a07f251b90799bab22d9019ceba49c037c76445f7cddd
+  languageName: node
+  linkType: hard
+
+"undici@npm:^5":
+  version: 5.28.3
+  resolution: "undici@npm:5.28.3"
+  dependencies:
+    "@fastify/busboy": "npm:^2.0.0"
+  checksum: 10/779856ce14ba6907c0759df8e4babd61608b1f502569d44de7dd1d014afb7c67a0a2997b4f706e0daff8a55d87ee2f25b830b195fc0202cb6fbd25abe2d941eb
   languageName: node
   linkType: hard
 

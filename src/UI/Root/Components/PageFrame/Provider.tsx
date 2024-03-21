@@ -14,16 +14,17 @@ export const Provider: React.FC<React.PropsWithChildren<Props>> = ({
   children,
   environmentRole,
 }) => {
-  const { environmentHandler, routeManager, keycloakController } =
+  const { environmentHandler, routeManager, authController } =
     useContext(DependencyContext);
   const environment = environmentHandler.useSelected();
 
   const eitherEnvironmentId = getEnvironmentId(environmentRole, environment);
   const environmentId = Either.withFallback(undefined, eitherEnvironmentId);
 
-  const keycloak = keycloakController.isEnabled()
-    ? keycloakController.getInstance()
-    : undefined;
+  const keycloak =
+    authController.isEnabled() && !authController.shouldAuthLocally()
+      ? authController.getInstance()
+      : undefined;
 
   useEffect(() => {
     if (keycloak && !keycloak.profile) {

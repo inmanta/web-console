@@ -722,6 +722,13 @@ const dict = {
   "common.compileWidget.compiling": "Compiling",
   "common.compileWidget.compilationDisabled.hint":
     "The server_compile setting is disabled. You can enable it on the settings page under the configuration tab.",
+
+  /**
+   * Login
+   */
+  "login.title": "Log in to your account",
+  "login.subtitle": "Enter your credentials",
+  "login.login": "Log in",
 };
 
 type Key = keyof typeof dict;
