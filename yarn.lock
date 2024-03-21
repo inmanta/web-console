@@ -908,7 +908,7 @@ __metadata:
     "@loadable/component": "npm:^5.16.3"
     "@patternfly/react-charts": "npm:^7.1.2"
     "@patternfly/react-core": "npm:^5.2.2"
-    "@patternfly/react-icons": "npm:^5.1.2"
+    "@patternfly/react-icons": "npm:^5.2.1"
     "@patternfly/react-styles": "npm:^5.2.0"
     "@patternfly/react-table": "npm:^5.2.1"
     "@patternfly/react-tokens": "npm:^5.1.2"
@@ -1554,16 +1554,6 @@ __metadata:
     react: ^17 || ^18
     react-dom: ^17 || ^18
   checksum: 10/7517e51277011850cb61bd98a6677b66bf53c084837521f8a7bac3ce9e7cfed3d83b6a0f8431599d53f6684c54fe2ecb68ff8fe477b9e1bede4cb4270e9e8e47
-  languageName: node
-  linkType: hard
-
-"@patternfly/react-icons@npm:^5.1.2":
-  version: 5.1.2
-  resolution: "@patternfly/react-icons@npm:5.1.2"
-  peerDependencies:
-    react: ^17 || ^18
-    react-dom: ^17 || ^18
-  checksum: 10/fd7bc843bc3d673569a993e25991167dd2839027670148a086b4e0db6b1765a0a510cffd8c17ba40f0b0b06affb405d4d761c15e7844854417f8e4fb0cb1b3c8
   languageName: node
   linkType: hard
 
