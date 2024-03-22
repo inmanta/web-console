@@ -45,7 +45,8 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
   diagnoseDisabled,
   availableStates,
 }) => {
-  const { routeManager, environmentModifier } = useContext(DependencyContext);
+  const { routeManager, environmentModifier, featureManager } =
+    useContext(DependencyContext);
 
   const [activeMenu, setActiveMenu] = React.useState<string>("rootMenu");
   const [menuDrilledIn, setMenuDrilledIn] = React.useState<string[]>([]);
@@ -55,6 +56,8 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
   const toggleRef = React.useRef<HTMLButtonElement>(null);
   const menuRef = React.useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = React.useState(false);
+
+  const composerEnabled = featureManager.isComposerEnabled();
 
   // the height of the drilled down menus differ based on how many options preceeds the drilldown. This is a bug on PF side.
   // and setting the insetHeight manually is a workaround for that issue.
@@ -161,21 +164,23 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
               {words("inventory.statustab.diagnose")}
             </MenuItem>
           </Link>
-          <Link
-            pathname={routeManager.getUrl("InstanceComposerEditor", {
-              service: instance.service_entity,
-              instance: instance.id,
-            })}
-            isDisabled={editDisabled}
-          >
-            <MenuItem
-              itemId="edit-composer"
+          {composerEnabled && (
+            <Link
+              pathname={routeManager.getUrl("InstanceComposerEditor", {
+                service: instance.service_entity,
+                instance: instance.id,
+              })}
               isDisabled={editDisabled}
-              icon={<ToolsIcon />}
             >
-              {words("inventory.instanceComposer.editButton")}
-            </MenuItem>
-          </Link>
+              <MenuItem
+                itemId="edit-composer"
+                isDisabled={editDisabled}
+                icon={<ToolsIcon />}
+              >
+                {words("inventory.instanceComposer.editButton")}
+              </MenuItem>
+            </Link>
+          )}
           <Link
             pathname={routeManager.getUrl("EditInstance", {
               service: instance.service_entity,

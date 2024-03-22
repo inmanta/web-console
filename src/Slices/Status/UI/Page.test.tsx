@@ -45,7 +45,7 @@ export class MockArchiveHelper implements ArchiveHelper {
 function setup(useMockArchiveHelper = false) {
   const store = getStoreInstance();
   store.dispatch.serverStatus.setData(
-    RemoteData.success(ServerStatus.withoutLsm),
+    RemoteData.success(ServerStatus.withoutFeatures),
   );
   const apiHelper = new DeferredApiHelper();
   const getServerStatusQueryManager = GetServerStatusContinuousQueryManager(

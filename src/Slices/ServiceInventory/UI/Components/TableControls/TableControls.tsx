@@ -28,7 +28,9 @@ export const TableControls: React.FC<Props> = ({
   service,
   paginationWidget,
 }) => {
-  const { routeManager } = useContext(DependencyContext);
+  const { routeManager, featureManager } = useContext(DependencyContext);
+
+  const composerEnabled = featureManager.isComposerEnabled();
 
   const { service_identity, service_identity_display_name } = service;
   const identityAttribute =
@@ -47,20 +49,22 @@ export const TableControls: React.FC<Props> = ({
           identityAttribute={identityAttribute}
         />
         <ToolbarGroup align={{ default: "alignRight" }}>
-          <ToolbarItem>
-            <Link
-              to={{
-                pathname: routeManager.getUrl("InstanceComposer", {
-                  service: serviceName,
-                }),
-                search: location.search,
-              }}
-            >
-              <Button id="add-instance-composer-button">
-                {words("inventory.addInstance.composerButton")}
-              </Button>
-            </Link>
-          </ToolbarItem>
+          {composerEnabled && (
+            <ToolbarItem>
+              <Link
+                to={{
+                  pathname: routeManager.getUrl("InstanceComposer", {
+                    service: serviceName,
+                  }),
+                  search: location.search,
+                }}
+              >
+                <Button id="add-instance-composer-button">
+                  {words("inventory.addInstance.composerButton")}
+                </Button>
+              </Link>
+            </ToolbarItem>
+          )}
           <ToolbarItem>
             <Link
               to={{

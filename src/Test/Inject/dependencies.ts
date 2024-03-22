@@ -3,6 +3,7 @@ import {
   MockEnvironmentHandler,
   MockFeatureManager,
   MockFileManager,
+  MockLimitedFeatureManager,
 } from "@/Test/Mock";
 import { PrimaryRouteManager, EnvironmentModifierImpl } from "@/UI";
 import { UrlManagerImpl } from "@/UI/Utils";
@@ -27,6 +28,24 @@ export const dependencies = {
   featureManager,
   environmentModifier,
   urlManager,
+  environmentHandler,
+  archiveHelper,
+  keycloakController,
+};
+
+const limitedFeatureManager = new MockLimitedFeatureManager();
+const limitedUrlManager = new UrlManagerImpl(limitedFeatureManager, baseUrl);
+
+/**
+ * Dependencies with limited feature manager and url manager
+ * It is used to mock the dependencies in the case where some features are disabled
+ * @type {Dependencies}
+ */
+export const limitedDependencies = {
+  routeManager,
+  featureManager: limitedFeatureManager,
+  environmentModifier,
+  urlManager: limitedUrlManager,
   environmentHandler,
   archiveHelper,
   keycloakController,
