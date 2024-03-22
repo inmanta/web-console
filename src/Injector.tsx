@@ -14,7 +14,7 @@ import {
   Store,
   PrimaryArchiveHelper,
   PrimaryFileManager,
-  PrimaryKeycloakController,
+  PrimaryAuthController,
   PrimaryLogger,
 } from "@/Data";
 import {
@@ -26,7 +26,6 @@ import {
   UrlManagerImpl,
 } from "@/UI";
 import { UpdateBanner } from "./UI/Components/UpdateBanner";
-
 interface Props {
   store: Store;
 }
@@ -43,7 +42,7 @@ export const Injector: React.FC<React.PropsWithChildren<Props>> = ({
     APP_VERSION,
   );
 
-  const keycloakController = new PrimaryKeycloakController(
+  const authController = new PrimaryAuthController(
     process.env.SHOULD_USE_AUTH,
     globalThis && globalThis.auth,
     process.env.KEYCLOAK_URL,
@@ -57,9 +56,10 @@ export const Injector: React.FC<React.PropsWithChildren<Props>> = ({
   const routeManager = PrimaryRouteManager(basePathname);
   const apiHelper = new BaseApiHelper(
     baseUrl,
-    keycloakController.getInstance(),
+    authController.shouldAuthLocally(),
+    authController.getInstance(),
   );
-  const authHelper = new KeycloakAuthHelper(keycloakController.getInstance());
+  const authHelper = new KeycloakAuthHelper(authController.getInstance());
   const queryResolver = new QueryResolverImpl(
     new QueryManagerResolverImpl(
       store,
@@ -77,7 +77,6 @@ export const Injector: React.FC<React.PropsWithChildren<Props>> = ({
   const environmentHandler = EnvironmentHandlerImpl(useLocation, routeManager);
   const fileManager = new PrimaryFileManager();
   const archiveHelper = new PrimaryArchiveHelper(fileManager);
-
   return (
     <DependencyProvider
       dependencies={{
@@ -91,7 +90,7 @@ export const Injector: React.FC<React.PropsWithChildren<Props>> = ({
         environmentHandler,
         authHelper,
         archiveHelper,
-        keycloakController,
+        authController,
       }}
     >
       <UpdateBanner apiHelper={apiHelper} />

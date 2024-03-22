@@ -11,6 +11,8 @@ describe("ServicesSlice", () => {
       name: "test_service",
       config: {},
       embedded_entities: [],
+      owner: null,
+      owned_entities: [],
     },
     {
       attributes: [],
@@ -19,6 +21,8 @@ describe("ServicesSlice", () => {
       name: "another_test_service",
       config: {},
       embedded_entities: [],
+      owner: null,
+      owned_entities: [],
     },
   ];
 

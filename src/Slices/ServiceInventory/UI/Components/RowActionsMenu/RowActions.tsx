@@ -35,6 +35,7 @@ export interface InstanceActionsProps {
   editDisabled: boolean;
   deleteDisabled: boolean;
   diagnoseDisabled: boolean;
+  composerAvailable: boolean;
   availableStates: string[];
 }
 
@@ -43,6 +44,7 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
   editDisabled,
   deleteDisabled,
   diagnoseDisabled,
+  composerAvailable,
   availableStates,
 }) => {
   const { routeManager, environmentModifier, featureManager } =
@@ -57,7 +59,8 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
   const menuRef = React.useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = React.useState(false);
 
-  const composerEnabled = featureManager.isComposerEnabled();
+  const composerEnabled =
+    featureManager.isComposerEnabled() && composerAvailable;
 
   // the height of the drilled down menus differ based on how many options preceeds the drilldown. This is a bug on PF side.
   // and setting the insetHeight manually is a workaround for that issue.
