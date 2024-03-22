@@ -48,5 +48,5 @@ export const limitedDependencies = {
   urlManager: limitedUrlManager,
   environmentHandler,
   archiveHelper,
-  keycloakController,
+  authController,
 };
