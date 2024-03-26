@@ -6,7 +6,7 @@ import { OrderDetailsPage } from "@/Slices/OrderDetails/UI";
 import { OrdersPage } from "@/Slices/Orders/UI";
 import { DiscoveredResourcesPage } from "@/Slices/ResourceDiscovery/UI";
 import { ServiceDetailsPage } from "@/Slices/ServiceDetails/UI";
-import UserManagementPage from "@/Slices/UserManagment/UI/Page";
+import { UserManagementPage } from "@/Slices/UserManagment/UI/Page";
 import { AgentProcessPage } from "@S/AgentProcess/UI";
 import { AgentsPage } from "@S/Agents/UI";
 import { CompileDetailsPage } from "@S/CompileDetails/UI";

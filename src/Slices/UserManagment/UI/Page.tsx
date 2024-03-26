@@ -9,11 +9,12 @@ import {
   LoadingView,
   PageContainer,
 } from "@/UI/Components";
-import AddUserModal from "./AddUserModal";
-import UserInfoRow from "./UserInfoRow";
+import { AddUserModal } from "./Components/AddUserModal";
+import { UserInfoRow } from "./Components/UserInfoRow";
 
-function UserManagementPage() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+export const UserManagementPage: React.FC = () => {
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+
   const { data, isLoading, isError, error, refetch } =
     useGetUsers().useOneTime();
 
@@ -32,35 +33,33 @@ function UserManagementPage() {
   return (
     <PageContainer title={words("userManagement.title")}>
       <AddUserModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
       />
       <Flex justifyContent={{ default: "justifyContentFlexEnd" }}>
         <FlexItem>
-          <Button variant="primary" onClick={() => setIsModalOpen(true)}>
+          <Button variant="primary" onClick={() => setIsAddModalOpen(true)}>
             {words("userManagement.addUser")}
           </Button>
         </FlexItem>
       </Flex>
-      <Table aria-label="users-table">
-        <Thead>
-          <Tr>
-            <Th width={80}>Name</Th>
-            <Th width={20}>Actions</Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {!data || data.length === 0 ? (
-            <EmptyView message="no users found" />
-          ) : (
-            data.map((user) => (
+      {!data || data.length === 0 ? (
+        <EmptyView message={words("userManagement.empty.message")} />
+      ) : (
+        <Table aria-label="users-table">
+          <Thead>
+            <Tr>
+              <Th width={80}>Name</Th>
+              <Th width={20}>Actions</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {data.map((user) => (
               <UserInfoRow key={`Row-${user.username}`} user={user} />
-            ))
-          )}
-        </Tbody>
-      </Table>
+            ))}
+          </Tbody>
+        </Table>
+      )}
     </PageContainer>
   );
-}
-
-export default UserManagementPage;
+};
