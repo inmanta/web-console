@@ -1,0 +1,8 @@
+description: "Update the add instance button to be displayed as a toggle when the Composer feature is enabled."
+issue-nr: 5554
+change-type: patch
+destination-branches:
+  - master
+  - iso7
+sections:
+  minor-improvement: "{{description}}"

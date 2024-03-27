@@ -1,10 +1,16 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import {
   Toolbar,
   ToolbarGroup,
   ToolbarItem,
   ToolbarContent,
   Button,
+  MenuToggle,
+  MenuToggleAction,
+  Dropdown,
+  MenuToggleElement,
+  DropdownList,
+  DropdownItem,
 } from "@patternfly/react-core";
 import { PlusIcon } from "@patternfly/react-icons";
 import { ServiceModel, ServiceInstanceParams } from "@/Core";
@@ -28,9 +34,11 @@ export const TableControls: React.FC<Props> = ({
   service,
   paginationWidget,
 }) => {
+  const [isOpen, setIsOpen] = useState(false);
   const { routeManager, featureManager } = useContext(DependencyContext);
 
-  const composerEnabled = featureManager.isComposerEnabled();
+  const composerEnabled =
+    service.owner === null && featureManager.isComposerEnabled();
 
   const { service_identity, service_identity_display_name } = service;
   const identityAttribute =
@@ -38,6 +46,40 @@ export const TableControls: React.FC<Props> = ({
       ? { key: service_identity, pretty: service_identity_display_name }
       : undefined;
   const states = service.lifecycle.states.map((state) => state.name).sort();
+
+  const onToggleClick = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const toggleMenu = (ref: React.Ref<MenuToggleElement>) => (
+    <MenuToggle
+      ref={ref}
+      variant="secondary"
+      isExpanded={isOpen}
+      onClick={onToggleClick}
+      splitButtonOptions={{
+        variant: "action",
+        items: [
+          <Link
+            key="main-action"
+            pathname={routeManager.getUrl("CreateInstance", {
+              service: serviceName,
+            })}
+            search={location.search}
+            variant="plain"
+          >
+            <MenuToggleAction
+              aria-label="add-instance-button"
+              id="add-instance-button"
+            >
+              <PlusIcon /> {words("inventory.addInstance.button")}
+            </MenuToggleAction>
+          </Link>,
+        ],
+      }}
+      aria-label="AddInstanceToggle"
+    />
+  );
 
   return (
     <Toolbar clearAllFilters={() => setFilter({})}>
@@ -49,32 +91,44 @@ export const TableControls: React.FC<Props> = ({
           identityAttribute={identityAttribute}
         />
         <ToolbarGroup align={{ default: "alignRight" }}>
-          {service.owner === null && composerEnabled && (
+          {composerEnabled ? (
+            <ToolbarItem>
+              <Dropdown
+                isOpen={isOpen}
+                toggle={toggleMenu}
+                onOpenChange={(isOpen: boolean) => setIsOpen(isOpen)}
+              >
+                <DropdownList>
+                  <Link
+                    variant="plain"
+                    key="add-instance-composer-button"
+                    pathname={routeManager.getUrl("InstanceComposer", {
+                      service: serviceName,
+                    })}
+                    search={location.search}
+                  >
+                    <DropdownItem id="add-instance-composer-button">
+                      <PlusIcon />{" "}
+                      {words("inventory.addInstance.composerButton")}
+                    </DropdownItem>
+                  </Link>
+                </DropdownList>
+              </Dropdown>
+            </ToolbarItem>
+          ) : (
             <ToolbarItem>
               <Link
-                pathname={routeManager.getUrl("InstanceComposer", {
+                pathname={routeManager.getUrl("CreateInstance", {
                   service: serviceName,
                 })}
                 search={location.search}
               >
-                <Button id="add-instance-composer-button">
-                  {words("inventory.addInstance.composerButton")}
+                <Button id="add-instance-button">
+                  <PlusIcon /> {words("inventory.addInstance.button")}
                 </Button>
               </Link>
             </ToolbarItem>
           )}
-          <ToolbarItem>
-            <Link
-              pathname={routeManager.getUrl("CreateInstance", {
-                service: serviceName,
-              })}
-              search={location.search}
-            >
-              <Button id="add-instance-button">
-                <PlusIcon /> {words("inventory.addInstance.button")}
-              </Button>
-            </Link>
-          </ToolbarItem>
         </ToolbarGroup>
         <ToolbarItem variant="pagination">{paginationWidget}</ToolbarItem>
       </ToolbarContent>

@@ -153,6 +153,7 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
       <MenuContent menuHeight={`${menuHeights[activeMenu]}px`}>
         <MenuList>
           <Link
+            variant="plain"
             pathname={routeManager.getUrl("Diagnose", {
               service: instance.service_entity,
               instance: instance.id,
@@ -169,6 +170,7 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
           </Link>
           {composerEnabled && (
             <Link
+              variant="plain"
               pathname={routeManager.getUrl("InstanceComposerEditor", {
                 service: instance.service_entity,
                 instance: instance.id,
@@ -185,6 +187,7 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
             </Link>
           )}
           <Link
+            variant="plain"
             pathname={routeManager.getUrl("EditInstance", {
               service: instance.service_entity,
               instance: instance.id,
@@ -200,6 +203,7 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
             </MenuItem>
           </Link>
           <Link
+            variant="plain"
             pathname={routeManager.getUrl("DuplicateInstance", {
               service: instance.service_entity,
               instance: instance.id,
@@ -228,6 +232,7 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
                 </MenuItem>
                 <Divider component="li" />
                 <Link
+                  variant="plain"
                   pathname={routeManager.getUrl("History", {
                     service: instance.service_entity,
                     instance: instance.id,
@@ -238,6 +243,7 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
                   </MenuItem>
                 </Link>
                 <Link
+                  variant="plain"
                   pathname={routeManager.getUrl("Events", {
                     service: instance.service_entity,
                     instance: instance.id,
