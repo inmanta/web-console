@@ -119,17 +119,22 @@ export const SingleTextSelect: React.FC<Props> = ({
   }, [options]);
 
   useEffect(() => {
-    setInputValue(selected || "");
+    setInputValue(getDisplayValue(selected));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selected]);
 
   const onToggleClick = () => {
     setIsOpen(!isOpen);
   };
 
-  const getDisplayValue = (value: string | number | undefined) => {
+  const getDisplayValue = (value: string | null) => {
     const selectedItem = options.find((option) => option.value === value);
 
-    return selectedItem?.children || value;
+    if (selectedItem && selectedItem.children) {
+      return selectedItem.children as string;
+    }
+
+    return value || "";
   };
 
   const onSelect = (
@@ -145,7 +150,7 @@ export const SingleTextSelect: React.FC<Props> = ({
       default:
         if (value && value !== "no results") {
           setFilterValue("");
-          setInputValue(getDisplayValue(value) as string);
+          setInputValue(getDisplayValue(value as string));
           setSelected(value as string);
         }
         break;
