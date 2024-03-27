@@ -3,6 +3,9 @@ import { JsonParserId } from "./JsonParser";
 export interface FeatureManager {
   isLsmEnabled(): boolean;
   isSupportEnabled(): boolean;
+  isOrderViewEnabled(): boolean;
+  isResourceDiscoveryEnabled(): boolean;
+  isComposerEnabled(): boolean;
   getServerMajorVersion(): string;
   getServerVersion(): string;
   getEdition(): string;

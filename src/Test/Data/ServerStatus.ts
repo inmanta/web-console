@@ -81,10 +81,31 @@ const base: ServerStatus = {
       status: {},
     },
   ],
-  features: [],
+  features: [
+    {
+      slice: "lsm.service_catalog",
+      name: "supported_lifecycles",
+      value: ["*"],
+    },
+    {
+      slice: "lsm.order",
+      name: "order_api",
+      value: false,
+    },
+    {
+      slice: "ui.ui",
+      name: "smart_composer",
+      value: false,
+    },
+    {
+      slice: "core.resource",
+      name: "resource_discovery",
+      value: false,
+    },
+  ],
 };
 
-export const withoutLsm = base;
+export const withoutFeatures = base;
 
 export const withLsm: ServerStatus = {
   ...base,
@@ -108,6 +129,40 @@ export const withSupport: ServerStatus = {
       name: "support",
       version: "1.3.3.dev20210927032639",
       package: "support",
+    },
+  ],
+};
+
+export const withAllFeatures: ServerStatus = {
+  ...base,
+  extensions: [
+    ...base.extensions,
+    {
+      name: "lsm",
+      version: "1.6.0.dev20210219121525",
+      package: "lsm",
+    },
+  ],
+  features: [
+    {
+      slice: "lsm.service_catalog",
+      name: "supported_lifecycles",
+      value: ["*"],
+    },
+    {
+      slice: "lsm.order",
+      name: "order_api",
+      value: true,
+    },
+    {
+      slice: "ui.ui",
+      name: "smart_composer",
+      value: true,
+    },
+    {
+      slice: "core.resource",
+      name: "resource_discovery",
+      value: true,
     },
   ],
 };

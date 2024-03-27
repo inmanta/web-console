@@ -28,7 +28,9 @@ export const TableControls: React.FC<Props> = ({
   service,
   paginationWidget,
 }) => {
-  const { routeManager } = useContext(DependencyContext);
+  const { routeManager, featureManager } = useContext(DependencyContext);
+
+  const composerEnabled = featureManager.isComposerEnabled();
 
   const { service_identity, service_identity_display_name } = service;
   const identityAttribute =
@@ -47,7 +49,7 @@ export const TableControls: React.FC<Props> = ({
           identityAttribute={identityAttribute}
         />
         <ToolbarGroup align={{ default: "alignRight" }}>
-          {service.owner === null && (
+          {service.owner === null && composerEnabled && (
             <ToolbarItem>
               <Link
                 pathname={routeManager.getUrl("InstanceComposer", {
