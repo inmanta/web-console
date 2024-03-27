@@ -17,7 +17,7 @@ export const UserInfoRow: React.FC<UserInfoRowProps> = ({ user }) => {
   };
 
   return (
-    <Tr aria-label={`row-${user.username}`}>
+    <Tr aria-label={`row-${user.username}`} role="user-row">
       <Td dataLabel={user.username}>{user.username}</Td>
       <Td dataLabel={`${user.username}-actions`}>
         <Button variant="danger" onClick={() => onDelete()}>

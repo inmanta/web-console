@@ -3,6 +3,7 @@ import { Dashboard } from "@/Slices/Dashboard";
 import { InstanceComposer } from "@/Slices/InstanceComposer";
 import { InstanceComposerEditor } from "@/Slices/InstanceComposerEditor";
 import { OrderDetails } from "@/Slices/OrderDetails";
+import { UserManagement } from "@/Slices/UserManagement";
 import { AgentProcess } from "@S/AgentProcess";
 import { Agents } from "@S/Agents";
 import { CompileDetails } from "@S/CompileDetails";
@@ -44,6 +45,7 @@ export const paths: Paths = {
   NotificationCenter: Notification.path,
   Settings: Settings.path,
   Status: Status.path,
+  UserManagement: UserManagement.path,
 
   /**
    * LSM

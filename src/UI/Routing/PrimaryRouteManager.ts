@@ -47,7 +47,7 @@ import { ServiceInstanceHistory } from "@S/ServiceInstanceHistory";
 import { ServiceInventory } from "@S/ServiceInventory";
 import { Settings } from "@S/Settings";
 import { Status } from "@S/Status";
-import { UserManagement } from "@S/UserManagment";
+import { UserManagement } from "@S/UserManagement";
 import { encodeParams } from "./Utils";
 
 export function PrimaryRouteManager(baseUrl: string): RouteManager {
@@ -61,6 +61,7 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
     Settings: Settings.route(baseUrl),
     Status: Status.route(baseUrl),
     UserManagement: UserManagement.route(baseUrl),
+
     /**
      * LSM
      */

@@ -26,6 +26,7 @@ interface UserCredentialsFormProps {
   isError: boolean;
   error: Error | null;
   submitButtonText: string;
+  submitButtonLabel?: string;
 }
 
 const UserCredentialsForm: React.FC<UserCredentialsFormProps> = ({
@@ -34,6 +35,7 @@ const UserCredentialsForm: React.FC<UserCredentialsFormProps> = ({
   isError,
   error,
   submitButtonText,
+  submitButtonLabel = "login-button",
 }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -121,7 +123,7 @@ const UserCredentialsForm: React.FC<UserCredentialsFormProps> = ({
       </FormGroup>
       <ActionGroup>
         <Button
-          aria-label="login-button"
+          aria-label={submitButtonLabel}
           variant="primary"
           type="submit"
           onClick={(event) => {

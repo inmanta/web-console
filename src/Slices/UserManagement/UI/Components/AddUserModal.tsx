@@ -36,6 +36,7 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
         error={error}
         onSubmit={(username, password) => mutate({ username, password })}
         submitButtonText={words("userManagement.addUser")}
+        submitButtonLabel={"add_user-button"}
       />
     </Modal>
   );

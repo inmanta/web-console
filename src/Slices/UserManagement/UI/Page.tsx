@@ -44,7 +44,10 @@ export const UserManagementPage: React.FC = () => {
         </FlexItem>
       </Flex>
       {!data || data.length === 0 ? (
-        <EmptyView message={words("userManagement.empty.message")} />
+        <EmptyView
+          message={words("userManagement.empty.message")}
+          aria-label="UserManagement-Empty"
+        />
       ) : (
         <Table aria-label="users-table">
           <Thead>
