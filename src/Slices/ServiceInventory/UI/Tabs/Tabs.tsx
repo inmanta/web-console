@@ -235,17 +235,17 @@ const documentationTab = (
 const getAttributeValue = (attributeName: string, row: Row) => {
   if (
     row.attributes &&
-    row.attributes.active &&
-    row.attributes.active[attributeName]
-  ) {
-    return row.attributes.active[attributeName];
-  }
-  if (
-    row.attributes &&
     row.attributes.candidate &&
     row.attributes.candidate[attributeName]
   ) {
     return row.attributes.candidate[attributeName];
+  }
+  if (
+    row.attributes &&
+    row.attributes.active &&
+    row.attributes.active[attributeName]
+  ) {
+    return row.attributes.active[attributeName];
   }
   if (
     row.attributes &&

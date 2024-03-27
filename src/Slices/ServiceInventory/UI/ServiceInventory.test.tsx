@@ -361,6 +361,12 @@ test("ServiceInventory shows enabled composer buttons for root instances ", asyn
     );
   });
 
+  await act(async () => {
+    await userEvent.click(
+      screen.getByRole("button", { name: "AddInstanceToggle" }),
+    );
+  });
+
   expect(await screen.findByText("Add in Composer")).toBeEnabled();
 
   const menuToggle = await screen.findByRole("button", {
