@@ -47,7 +47,8 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
   composerAvailable,
   availableStates,
 }) => {
-  const { routeManager, environmentModifier } = useContext(DependencyContext);
+  const { routeManager, environmentModifier, featureManager } =
+    useContext(DependencyContext);
 
   const [activeMenu, setActiveMenu] = React.useState<string>("rootMenu");
   const [menuDrilledIn, setMenuDrilledIn] = React.useState<string[]>([]);
@@ -57,6 +58,9 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
   const toggleRef = React.useRef<HTMLButtonElement>(null);
   const menuRef = React.useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = React.useState(false);
+
+  const composerEnabled =
+    featureManager.isComposerEnabled() && composerAvailable;
 
   // the height of the drilled down menus differ based on how many options preceeds the drilldown. This is a bug on PF side.
   // and setting the insetHeight manually is a workaround for that issue.
@@ -163,7 +167,7 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
               {words("inventory.statustab.diagnose")}
             </MenuItem>
           </Link>
-          {composerAvailable && (
+          {composerEnabled && (
             <Link
               pathname={routeManager.getUrl("InstanceComposerEditor", {
                 service: instance.service_entity,

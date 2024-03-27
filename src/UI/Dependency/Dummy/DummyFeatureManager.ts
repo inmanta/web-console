@@ -13,6 +13,15 @@ export class DummyFeatureManager implements FeatureManager {
   getServerVersion(): string {
     throw new Error("Method not implemented.");
   }
+  isComposerEnabled(): boolean {
+    throw new Error("Method not implemented.");
+  }
+  isOrderViewEnabled(): boolean {
+    throw new Error("Method not implemented.");
+  }
+  isResourceDiscoveryEnabled(): boolean {
+    throw new Error("Method not implemented.");
+  }
   getEdition(): string {
     throw new Error("Method not implemented.");
   }
