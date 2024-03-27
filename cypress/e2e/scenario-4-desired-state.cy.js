@@ -370,7 +370,10 @@ describe("Scenario 4 Desired State", () => {
     //go back
     cy.get(".pf-v5-c-nav__link").contains("Desired State").click();
 
-    cy.get("tbody").eq(-2).find('[aria-label="actions-toggle"]').click();
+    cy.get("tbody")
+      .eq(isIso ? -2 : -1)
+      .find('[aria-label="actions-toggle"]')
+      .click();
 
     cy.get(".pf-v5-c-menu__item")
       .contains("Compare with current state")

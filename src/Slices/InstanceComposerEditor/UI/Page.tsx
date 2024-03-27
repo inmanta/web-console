@@ -1,12 +1,14 @@
-import React from "react";
-import { useRouteParams } from "@/UI";
-import { ServicesProvider } from "@/UI/Components";
+import React, { useContext } from "react";
+import { DependencyContext, useRouteParams, words } from "@/UI";
+import { EmptyView, ServicesProvider } from "@/UI/Components";
 import { InstanceProvider } from "./InstanceProvider";
 
 export const Page = () => {
   const { service: serviceName, instance: instance } =
     useRouteParams<"InstanceComposerEditor">();
-  return (
+  const { featureManager } = useContext(DependencyContext);
+
+  return featureManager.isComposerEnabled() ? (
     <ServicesProvider
       serviceName={serviceName}
       Wrapper={PageWrapper}
@@ -17,6 +19,11 @@ export const Page = () => {
           instanceId={instance}
         />
       )}
+    />
+  ) : (
+    <EmptyView
+      message={words("inventory.instanceComposer.disabled")}
+      aria-label="OrdersView-Empty"
     />
   );
 };

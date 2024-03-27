@@ -81,7 +81,8 @@ if (Cypress.env("edition") === "iso") {
         .click();
       cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
 
-      // click on add instance
+      // click on add instance with composer
+      cy.get('[aria-label="AddInstanceToggle"]').click();
       cy.get("#add-instance-composer-button").click();
 
       // Create instance on embedded-entity-service-extra
@@ -356,6 +357,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
 
       // click on add instance in composer
+      cy.get('[aria-label="AddInstanceToggle"]').click();
       cy.get("#add-instance-composer-button").click();
       cy.get(".canvas").should("be.visible");
 
@@ -425,6 +427,7 @@ if (Cypress.env("edition") === "iso") {
         .contains("Show inventory")
         .click();
       // click on add instance in composer
+      cy.get('[aria-label="AddInstanceToggle"]').click();
       cy.get("#add-instance-composer-button").click();
       cy.get(".canvas").should("be.visible");
 
@@ -503,6 +506,7 @@ if (Cypress.env("edition") === "iso") {
         .contains("Show inventory")
         .click();
       // click on add instance in composer
+      cy.get('[aria-label="AddInstanceToggle"]').click();
       cy.get("#add-instance-composer-button").click();
       cy.get(".canvas").should("be.visible");
 

@@ -172,6 +172,8 @@ const dict = {
   "inventory.instanceComposer.failed.title": "Instance Composing failed",
   "inventory.instanceComposer.dictModal": (valueName: string) =>
     `Values of ${valueName}`,
+  "inventory.instanceComposer.disabled":
+    "Your licence doesn't give you access to the Instance Composer, please contact support for more details.",
   "inventory.deleteInstance.button": "Delete",
   "inventory.deleteInstance.failed": "Deleting instance failed",
   "inventory.deleteInstance.title": "Delete instance",
@@ -293,6 +295,8 @@ const dict = {
   "orders.status.acknowledged": "acknowledged",
   "orders.status.completed": "completed",
   "orders.status.in_progress": "in progress",
+  "orders.disabled":
+    "Your licence doesn't give you access to the Orders Feature, please contact support for more details.",
 
   /**
    * Catalog related text
@@ -402,6 +406,8 @@ const dict = {
    * Latest released resource view
    */
   "resources.empty.message": "No resources found",
+  "resources.discovery.disabled":
+    "Your licence doesn't give you access to the Resource Discovery Feature, please contact support for more details.",
   "resources.column.type": "Type",
   "resources.column.agent": "Agent",
   "resources.column.value": "Value",

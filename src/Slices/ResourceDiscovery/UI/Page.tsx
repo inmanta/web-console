@@ -19,7 +19,7 @@ import { DiscoveredResourcesTablePresenter } from "./DiscoveredResourcesTablePre
 import { TableControls } from "./TableControls";
 
 export const Page: React.FC = () => {
-  const { queryResolver } = useContext(DependencyContext);
+  const { queryResolver, featureManager } = useContext(DependencyContext);
 
   const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({
     route: "DiscoveredResources",
@@ -44,6 +44,9 @@ export const Page: React.FC = () => {
     currentPage,
   });
 
+  const disabledDiscoveredResourcesView =
+    !featureManager.isResourceDiscoveryEnabled();
+
   return (
     <PageContainer title={words("discovered_resources.title")}>
       <TableControls
@@ -61,9 +64,13 @@ export const Page: React.FC = () => {
         label="DiscoveredResourcesView"
         retry={retry}
         SuccessView={(resources) =>
-          resources.data.length <= 0 ? (
+          disabledDiscoveredResourcesView || resources.data.length <= 0 ? (
             <EmptyView
-              message={words("resources.empty.message")}
+              message={
+                disabledDiscoveredResourcesView
+                  ? words("resources.discovery.disabled")
+                  : words("resources.empty.message")
+              }
               aria-label="ResourcesView-Empty"
             />
           ) : (
