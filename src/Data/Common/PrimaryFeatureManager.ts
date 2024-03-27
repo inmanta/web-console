@@ -58,14 +58,34 @@ export class PrimaryFeatureManager implements FeatureManager {
     return serverStatus.value;
   }
 
+  /**
+   * Gets the extensions of the ServerStatus object.
+   * @private
+   *
+   * @returns The extensions of the ServerStatus object.
+   */
   private getExtensions(): string[] {
     return this.get().extensions.map((extension) => extension.name);
   }
 
+  /**
+   * Checks if an extension is enabled in the ServerStatus object.
+   * @private
+   *
+   * @param extension - The name of the extension.
+   * @returns True if the extension is enabled, false otherwise.
+   */
   private isExtensionEnabled(extension: string): boolean {
     return this.getExtensions().includes(extension);
   }
 
+  /**
+   * Checks if a feature is enabled in the ServerStatus object.
+   * @private
+   *
+   * @param featureSlice - The slice of the feature.
+   * @returns True if the feature is enabled, false otherwise.
+   */
   private isFeaterEnabled(featureSlice: string): boolean {
     return this.get().features.some(
       (feature) => feature.slice === featureSlice && feature.value === true,
