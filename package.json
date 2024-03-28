@@ -24,7 +24,7 @@
     "cypress-test:oss": "yarn cypress run  --env edition=oss,project=oss-frontend",
     "cypress-test:iso": "yarn cypress run",
     "cypress-test:keycloak": "yarn cypress run  --env edition=oss,project=oss-frontend,keycloak=true --config baseUrl='https://127.0.0.1:8888' --spec 'cypress/e2e/scenario-7.1-keycloak.cy.js'",
-    "cypress-test:local-auth": "yarn cypress run  --env edition=oss,project=oss-frontend,local-auth=true --config baseUrl='https://127.0.0.1:8888' --spec 'cypress/e2e/scenario-7.2-local-auth.cy.js'",
+    "cypress-test:local-auth": "yarn cypress run  --env edition=oss,project=oss-frontend,local-auth=true --config baseUrl='https://127.0.0.1:8888' --spec 'cypress/e2e/scenario-7.2-local-auth.cy.js,cypress/e2e/scenario-7.3-user-management.cy.js'",
     "package-cleanup": "node clean_up_packages",
     "check-circular-deps": "madge --circular ./src/index.tsx",
     "install:orchestrator:keycloak": "sh ./shell-scripts/setup-auth.sh version='oss' release='dev' branch='oss_case_1'",

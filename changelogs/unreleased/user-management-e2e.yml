@@ -1,0 +1,3 @@
+description: "Add E2E tests scenario for user management"
+change-type: patch
+destination-branches: [master, iso7]
