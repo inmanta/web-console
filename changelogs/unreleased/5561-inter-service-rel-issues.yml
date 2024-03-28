@@ -5,4 +5,4 @@ destination-branches:
   - master
   - iso7
 sections:
-  bug: "{{description}}"
+  bugfix: "{{description}}"
