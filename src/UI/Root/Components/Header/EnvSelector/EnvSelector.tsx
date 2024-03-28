@@ -94,9 +94,16 @@ export const EnvSelector: React.FC<Props> = ({
             </DropdownItem>
           </Tooltip>
           {authController.isEnabled() && (
-            <DropdownItem onClick={() => authController.logout()}>
-              {words("dashboard.logout")}
-            </DropdownItem>
+            <>
+              <DropdownItem
+                to={routeManager.getUrl("UserManagement", undefined)}
+              >
+                {words("userManagement.title")}
+              </DropdownItem>
+              <DropdownItem onClick={() => authController.logout()}>
+                {words("dashboard.logout")}
+              </DropdownItem>
+            </>
           )}
         </div>
       </DropdownList>

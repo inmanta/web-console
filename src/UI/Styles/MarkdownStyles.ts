@@ -534,6 +534,10 @@ export const MarkdownStyles = `
   list-style-type: decimal;
 }
 
+.markdown-body ul {
+  list-style-type: disc;
+}
+
 .markdown-body ul ul,
 .markdown-body ul ol,
 .markdown-body ol ol,

@@ -735,6 +735,19 @@ const dict = {
   "login.title": "Log in to your account",
   "login.subtitle": "Enter your credentials",
   "login.login": "Log in",
+
+  /**
+   * User Management
+   */
+  "userManagement.title": "User Management",
+  "userManagement.name": "Name",
+  "userManagement.actions": "Actions",
+  "userManagement.filter.placeholder": "Username...",
+  "userManagement.addUser": "Add User",
+  "userManagement.deleteUser.title": "Delete User",
+  "userManagement.deleteUserMessage": (username: string) =>
+    `Are you sure you want to delete user ${username}?`,
+  "userManagement.empty.message": "No users found",
 };
 
 type Key = keyof typeof dict;

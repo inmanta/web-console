@@ -1,8 +1,4 @@
 import { RouteKind } from "@/Core";
-import { Dashboard } from "@/Slices/Dashboard";
-import { InstanceComposer } from "@/Slices/InstanceComposer";
-import { InstanceComposerEditor } from "@/Slices/InstanceComposerEditor";
-import { OrderDetails } from "@/Slices/OrderDetails";
 import { AgentProcess } from "@S/AgentProcess";
 import { Agents } from "@S/Agents";
 import { CompileDetails } from "@S/CompileDetails";
@@ -10,6 +6,7 @@ import { CompileReports } from "@S/CompileReports";
 import { ComplianceCheck } from "@S/ComplianceCheck";
 import { CreateEnvironment } from "@S/CreateEnvironment";
 import { CreateInstance } from "@S/CreateInstance";
+import { Dashboard } from "@S/Dashboard";
 import { DesiredState } from "@S/DesiredState";
 import { DesiredStateCompare } from "@S/DesiredStateCompare";
 import { DesiredStateDetails } from "@S/DesiredStateDetails";
@@ -20,7 +17,10 @@ import { EditInstance } from "@S/EditInstance";
 import { Events } from "@S/Events";
 import { Facts } from "@S/Facts";
 import { Home } from "@S/Home";
+import { InstanceComposer } from "@S/InstanceComposer";
+import { InstanceComposerEditor } from "@S/InstanceComposerEditor";
 import { Notification } from "@S/Notification";
+import { OrderDetails } from "@S/OrderDetails";
 import { Orders } from "@S/Orders";
 import { Parameters } from "@S/Parameters";
 import { Resource } from "@S/Resource";
@@ -32,6 +32,7 @@ import { ServiceInstanceHistory } from "@S/ServiceInstanceHistory";
 import { ServiceInventory } from "@S/ServiceInventory";
 import { Settings } from "@S/Settings";
 import { Status } from "@S/Status";
+import { UserManagement } from "@S/UserManagement";
 
 type Paths = Record<RouteKind, string>;
 
@@ -44,6 +45,7 @@ export const paths: Paths = {
   NotificationCenter: Notification.path,
   Settings: Settings.path,
   Status: Status.path,
+  UserManagement: UserManagement.path,
 
   /**
    * LSM
