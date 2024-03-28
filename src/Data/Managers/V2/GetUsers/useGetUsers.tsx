@@ -24,9 +24,6 @@ export const useGetUsers = () => {
       headers,
     });
     handleAuthorization(response);
-    if (response.status === 401) {
-      throw new Error("Unauthorized");
-    }
     if (!response.ok) {
       throw new Error("Failed to fetch users");
     }

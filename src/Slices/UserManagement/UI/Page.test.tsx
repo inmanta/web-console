@@ -11,6 +11,7 @@ import { UserInfo } from "@/Data/Managers/V2/GetUsers";
 import { dependencies } from "@/Test";
 import { DependencyProvider, words } from "@/UI";
 import { UserManagementPage } from "./Page";
+const spyDispatch = jest.spyOn(document, "dispatchEvent");
 
 const setup = () => {
   const queryClient = new QueryClient();
@@ -58,6 +59,7 @@ describe("UserManagementPage", () => {
 
     server.close();
   });
+
   it("should display user list when users are returned by API", async () => {
     const server = setupServer(
       http.get("/api/v2/user", async () => {
@@ -112,6 +114,14 @@ describe("UserManagementPage", () => {
 
     const errorView = await screen.findByLabelText("UserManagement-Failed");
     expect(errorView).toBeInTheDocument();
+
+    const errorMessage = await screen.findByText(
+      "The following error occured: Access to this resource is unauthorized",
+    );
+    expect(errorMessage).toBeVisible();
+
+    expect(spyDispatch).toHaveBeenCalledWith(new CustomEvent("open-login"));
+
     server.close();
   });
 
@@ -173,6 +183,7 @@ describe("UserManagementPage", () => {
       await userEvent.click(screen.getByText("Add User"));
     });
 
+    //mock error scenario
     await act(async () => {
       await userEvent.type(screen.getByLabelText("input-username"), "new_user");
     });
@@ -190,6 +201,7 @@ describe("UserManagementPage", () => {
       "Invalid request: the password should be at least 8 characters long",
     );
 
+    //mock success scenario
     await act(async () => {
       await userEvent.type(screen.getByLabelText("input-password"), "12345678");
     });
@@ -217,27 +229,15 @@ describe("UserManagementPage", () => {
         });
       }),
       http.delete(
-        "/api/v2/user",
-        async ({ request }): Promise<HttpResponse> => {
-          const reqBody = await request.json();
-          if (
-            typeof reqBody !== "object" ||
-            typeof reqBody?.username !== "string"
-          ) {
-            return HttpResponse.json(
-              {
-                message: "Invalid request: wrong request body format",
-              },
-              {
-                status: 400,
-              },
-            );
-          }
-
+        "/api/v2/user/*",
+        async ({ params }): Promise<HttpResponse> => {
           const userIndex = data.findIndex(
-            (user) => user.username === reqBody?.username,
+            (user) => user.username === params[0],
           );
-          data.splice(userIndex, 1);
+
+          if (userIndex !== -1) {
+            data.splice(userIndex, 1);
+          }
 
           return HttpResponse.json();
         },
@@ -254,5 +254,16 @@ describe("UserManagementPage", () => {
     expect(successView).toBeInTheDocument();
     const userRows = screen.getAllByRole("user-row");
     expect(userRows).toHaveLength(2);
+
+    await act(async () => {
+      await userEvent.click(screen.getAllByText("Delete")[0]);
+    });
+
+    await act(async () => {
+      await userEvent.click(screen.getByText("Yes"));
+    });
+
+    const updatedRows = await screen.findAllByRole("user-row");
+    expect(updatedRows).toHaveLength(1);
   });
 });
