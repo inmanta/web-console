@@ -30,20 +30,7 @@ export const InstanceCellButton: React.FC<Props> = ({
           variant="link"
           isInline
           onClick={
-            serviceName
-              ? () =>
-                  onClick(
-                    service_identity_attribute_value
-                      ? service_identity_attribute_value
-                      : id,
-                    serviceName,
-                  )
-              : () =>
-                  onClick(
-                    service_identity_attribute_value
-                      ? service_identity_attribute_value
-                      : id,
-                  )
+            serviceName ? () => onClick(id, serviceName) : () => onClick(id)
           }
         >
           {service_identity_attribute_value

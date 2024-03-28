@@ -1,0 +1,8 @@
+description: "Fix display name in the form for inter-service relationship, and adjust filtering when clicking on a relation link in the attribute table."
+issue-nr: 5561
+change-type: patch
+destination-branches:
+  - master
+  - iso7
+sections:
+  bugfix: "{{description}}"
