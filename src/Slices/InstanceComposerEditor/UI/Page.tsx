@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { DependencyContext, useRouteParams, words } from "@/UI";
-import { EmptyView, ServicesProvider } from "@/UI/Components";
+import { EmptyView, PageContainer, ServicesProvider } from "@/UI/Components";
 import { InstanceProvider } from "./InstanceProvider";
 
 export const Page = () => {
@@ -13,11 +13,13 @@ export const Page = () => {
       serviceName={serviceName}
       Wrapper={PageWrapper}
       Dependant={({ services, mainServiceName }) => (
-        <InstanceProvider
-          services={services}
-          mainServiceName={mainServiceName}
-          instanceId={instance}
-        />
+        <PageWrapper>
+          <InstanceProvider
+            services={services}
+            mainServiceName={mainServiceName}
+            instanceId={instance}
+          />
+        </PageWrapper>
       )}
     />
   ) : (
@@ -31,6 +33,11 @@ export const Page = () => {
 const PageWrapper: React.FC<React.PropsWithChildren<unknown>> = ({
   children,
   ...props
-}) => {
-  return <div {...props}>{children}</div>;
-};
+}) => (
+  <PageContainer
+    {...props}
+    title={words("inventory.instanceComposer.title.edit")}
+  >
+    {children}
+  </PageContainer>
+);
