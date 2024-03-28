@@ -15,7 +15,7 @@ import { OrdersTablePresenter } from "./OrdersTablePresenter";
 import { TableControls } from "./TableControls";
 
 export const Page: React.FC = () => {
-  const { queryResolver } = useContext(DependencyContext);
+  const { queryResolver, featureManager } = useContext(DependencyContext);
 
   const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({
     route: "Orders",
@@ -36,6 +36,8 @@ export const Page: React.FC = () => {
     currentPage,
   });
 
+  const disabledOrderView = !featureManager.isOrderViewEnabled();
+
   return (
     <PageContainer title={words("orders.title")}>
       <TableControls
@@ -53,9 +55,13 @@ export const Page: React.FC = () => {
         label="OrdersView"
         retry={retry}
         SuccessView={(orders) =>
-          orders.data.length <= 0 ? (
+          orders.data.length <= 0 || disabledOrderView ? (
             <EmptyView
-              message={words("orders.table.empty")}
+              message={
+                disabledOrderView
+                  ? words("orders.disabled")
+                  : words("orders.table.empty")
+              }
               aria-label="OrdersView-Empty"
             />
           ) : (

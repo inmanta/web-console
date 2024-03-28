@@ -1,12 +1,17 @@
-import { RouteManager } from "@/Core";
+import { FeatureManager, RouteManager } from "@/Core";
 import { words } from "@/UI/words";
-
+/**
+ * Interface that represents a Group of links in the sidebar navigation
+ */
 interface Group {
   id: string;
   title: string;
   links: Link[];
 }
 
+/**
+ * Interface that represents a link in the sidebar navigation
+ */
 interface Link {
   id: string;
   label: string;
@@ -16,6 +21,12 @@ interface Link {
   statusIndication: boolean;
 }
 
+/**
+ * Returns the environment group of links
+ * @param routeManager - RouteManager
+ * @param isEnvPresent - boolean
+ * @returns Group
+ */
 export const envrionment = (
   routeManager: RouteManager,
   isEnvPresent: boolean,
@@ -42,9 +53,18 @@ export const envrionment = (
   ],
 });
 
+/**
+ * Returns the lifecycle service manager group of links
+ *
+ * @param routeManager - RouteManager
+ * @param isEnvPresent - boolean
+ * @param featureManager - FeatureManager
+ * @returns Group
+ */
 export const lifecycleServiceManager = (
   routeManager: RouteManager,
   isEnvPresent: boolean,
+  featureManager: FeatureManager,
 ): Group => ({
   id: "LifecycleServiceManager",
   title: words("navigation.lifecycleServiceManager"),
@@ -57,17 +77,28 @@ export const lifecycleServiceManager = (
       locked: !isEnvPresent,
       statusIndication: false,
     },
-    {
-      id: "Orders",
-      label: routeManager.getRoute("Orders").generateLabel(undefined),
-      url: routeManager.getRoute("Orders").path,
-      external: false,
-      locked: !isEnvPresent,
-      statusIndication: false,
-    },
+    ...(featureManager.isOrderViewEnabled()
+      ? [
+          {
+            id: "Orders",
+            label: routeManager.getRoute("Orders").generateLabel(undefined),
+            url: routeManager.getRoute("Orders").path,
+            external: false,
+            locked: !isEnvPresent,
+            statusIndication: false,
+          },
+        ]
+      : []),
   ],
 });
 
+/**
+ * Returns the orchestration engine group of links
+ *
+ * @param routeManager - RouteManager
+ * @param isEnvPresent - boolean
+ * @returns Group
+ */
 export const orchestrationEngine = (
   routeManager: RouteManager,
   isEnvPresent: boolean,
@@ -102,9 +133,18 @@ export const orchestrationEngine = (
   ],
 });
 
+/**
+ * Returns the resource manager group of links
+ *
+ * @param routeManager - RouteManager
+ * @param isEnvPresent - boolean
+ * @param featureManager - FeatureManager
+ * @returns Group
+ */
 export const resourceManager = (
   routeManager: RouteManager,
   isEnvPresent: boolean,
+  featureManager: FeatureManager,
 ): Group => ({
   id: "ResourceManager",
   title: words("navigation.resourceManager"),
@@ -117,16 +157,20 @@ export const resourceManager = (
       locked: !isEnvPresent,
       statusIndication: false,
     },
-    {
-      id: "Discovered Resources",
-      label: routeManager
-        .getRoute("DiscoveredResources")
-        .generateLabel(undefined),
-      url: routeManager.getRoute("DiscoveredResources").path,
-      external: false,
-      locked: !isEnvPresent,
-      statusIndication: false,
-    },
+    ...(featureManager.isResourceDiscoveryEnabled()
+      ? [
+          {
+            id: "Discovered Resources",
+            label: routeManager
+              .getRoute("DiscoveredResources")
+              .generateLabel(undefined),
+            url: routeManager.getRoute("DiscoveredResources").path,
+            external: false,
+            locked: !isEnvPresent,
+            statusIndication: false,
+          },
+        ]
+      : []),
     {
       id: "Agents",
       label: routeManager.getRoute("Agents").generateLabel(undefined),
