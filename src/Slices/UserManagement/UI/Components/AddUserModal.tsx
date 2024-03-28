@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Modal } from "@patternfly/react-core";
 import { useAddUser } from "@/Data/Managers/V2/AddUser";
 import { words } from "@/UI";
-import UserCredentialsForm from "@/UI/Components/UserCredentialsForm";
+import { UserCredentialsForm } from "@/UI/Components/UserCredentialsForm";
 
 interface AddUserModalProps {
   isOpen: boolean;

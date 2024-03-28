@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { createCookie } from "@/Data/Common/CookieHelper";
 import { useLogin } from "@/Data/Managers/V2/Login";
 import { DependencyContext, words } from "@/UI";
-import UserCredentialsForm from "@/UI/Components/UserCredentialsForm";
+import { UserCredentialsForm } from "@/UI/Components/UserCredentialsForm";
 import logo from "@images/logo.svg";
 
 /**
