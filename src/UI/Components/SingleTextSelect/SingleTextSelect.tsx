@@ -131,7 +131,7 @@ export const SingleTextSelect: React.FC<Props> = ({
     const selectedItem = options.find((option) => option.value === value);
 
     if (selectedItem && selectedItem.children) {
-      return selectedItem.children as string;
+      return String(selectedItem.children);
     }
 
     return value || "";
@@ -150,8 +150,8 @@ export const SingleTextSelect: React.FC<Props> = ({
       default:
         if (value && value !== "no results") {
           setFilterValue("");
-          setInputValue(getDisplayValue(value as string));
-          setSelected(value as string);
+          setInputValue(getDisplayValue(String(value)));
+          setSelected(String(value));
         }
         break;
     }
@@ -215,13 +215,13 @@ export const SingleTextSelect: React.FC<Props> = ({
       // Select the first available option
       case "Enter":
         if (isOpen && focusedItem.value !== "no results") {
-          //   setInputValue(String(focusedItem.children));
+          setInputValue(String(focusedItem.children));
           setFilterValue("");
           setSelected(String(focusedItem.children));
         }
 
         if (checkIfOptionMatchInput(options, filterValue)) {
-          setSelected(filterValue as string);
+          setSelected(String(filterValue));
         }
 
         setIsOpen((prevIsOpen) => !prevIsOpen);
