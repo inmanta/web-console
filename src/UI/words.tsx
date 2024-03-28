@@ -174,6 +174,8 @@ const dict = {
     `Values of ${valueName}`,
   "inventory.instanceComposer.disabled":
     "Your licence doesn't give you access to the Instance Composer, please contact support for more details.",
+  "inventory.instanceComposer.title": "Instance Composer",
+  "inventory.instanceComposer.title.edit": "Instance Composer Editor",
   "inventory.deleteInstance.button": "Delete",
   "inventory.deleteInstance.failed": "Deleting instance failed",
   "inventory.deleteInstance.title": "Delete instance",

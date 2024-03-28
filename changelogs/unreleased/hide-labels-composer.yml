@@ -1,0 +1,3 @@
+description: "Hide labels and make some UI improvements to the Composer"
+change-type: patch
+destination-branches: [master, iso7]
