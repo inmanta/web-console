@@ -1,13 +1,24 @@
+/**
+ * Custom hook to fetch user information from the API.
+ * @returns An object containing a custom hook to fetch user information.
+ */
 import { useQuery } from "@tanstack/react-query";
 import { PrimaryBaseUrlManager } from "@/UI";
 import { useCreateHeaders } from "../helpers/useCreateHeaders";
 import { useHandleErrors } from "../helpers/useHandleErrors";
 
+/**
+ * Represents the user information.
+ */
 export interface UserInfo {
   username: string;
   auth_method: "oidc" | "database";
 }
 
+/**
+ * Custom hook to fetch user information from the API.
+ * @returns An object containing a custom hook to fetch user information.
+ */
 export const useGetUsers = () => {
   const { handleAuthorization } = useHandleErrors();
   const headers = useCreateHeaders();
@@ -17,6 +28,11 @@ export const useGetUsers = () => {
   );
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
 
+  /**
+   * Fetches the user information from the API.
+   * @returns A promise that resolves to an object containing the user information.
+   * @throws An error if the API request fails.
+   */
   const fetchUsers = async (): Promise<{
     data: UserInfo[];
   }> => {
@@ -33,8 +49,8 @@ export const useGetUsers = () => {
 
   return {
     /**
-     * Custom hook to fetch the parameter from the API once.
-     * @returns The result of the query, including the parameter data.
+     * Custom hook to fetch the user information from the API once.
+     * @returns The result of the query, including the user information.
      */
     useOneTime: () =>
       useQuery({

@@ -740,6 +740,8 @@ const dict = {
    * User Management
    */
   "userManagement.title": "User Management",
+  "userManagement.name": "Name",
+  "userManagement.actions": "Actions",
   "userManagement.filter.placeholder": "Username...",
   "userManagement.addUser": "Add User",
   "userManagement.deleteUser.title": "Delete User",

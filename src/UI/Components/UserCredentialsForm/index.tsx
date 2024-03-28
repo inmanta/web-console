@@ -21,7 +21,7 @@ import {
 } from "@patternfly/react-icons";
 
 interface UserCredentialsFormProps {
-  onSubmit: (username: string, password) => void;
+  onSubmit: (username: string, password: string) => void;
   isPending: boolean;
   isError: boolean;
   error: Error | null;
@@ -29,6 +29,11 @@ interface UserCredentialsFormProps {
   submitButtonLabel?: string;
 }
 
+/**
+ * UserCredentialsForm component.
+ * @param {UserCredentialsFormProps} props - The component props.
+ * @returns {JSX.Element} The rendered component.
+ */
 const UserCredentialsForm: React.FC<UserCredentialsFormProps> = ({
   onSubmit,
   isPending,
@@ -43,8 +48,8 @@ const UserCredentialsForm: React.FC<UserCredentialsFormProps> = ({
 
   /**
    * Handle the change of the username input field.
-   * @param {React.FormEvent<HTMLInputElement>} _event The event object.
-   * @param {string} value The current value of the input field.
+   * @param {React.FormEvent<HTMLInputElement>} _event - The event object.
+   * @param {string} value - The current value of the input field.
    */
   const handleUsernameChange = (
     _event: React.FormEvent<HTMLInputElement>,

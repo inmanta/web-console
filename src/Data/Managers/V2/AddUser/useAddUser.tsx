@@ -3,6 +3,10 @@ import { PrimaryBaseUrlManager } from "@/UI";
 import { useCreateHeaders } from "../helpers/useCreateHeaders";
 import { useHandleErrors } from "../helpers/useHandleErrors";
 
+/**
+ * Custom hook for adding a user.
+ * @returns {Mutation} The mutation object for adding a user.
+ */
 export const useAddUser = () => {
   const { handleAuthorization } = useHandleErrors();
   const client = useQueryClient();
@@ -13,6 +17,14 @@ export const useAddUser = () => {
   );
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
 
+  /**
+   * Function for making a POST request to add a user.
+   * @param {Object} orderBody - The body of the POST request.
+   * @param {string} orderBody.username - The username of the user.
+   * @param {string} orderBody.password - The password of the user.
+   * @returns {Promise<Object>} The response object containing the added user's information.
+   * @throws {Error} If the response is not successful, an error is thrown with the error message.
+   */
   const postOrder = async (orderBody: {
     username: string;
     password: string;

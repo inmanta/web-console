@@ -52,8 +52,8 @@ export const UserManagementPage: React.FC = () => {
         <Table aria-label="users-table">
           <Thead>
             <Tr>
-              <Th width={80}>Name</Th>
-              <Th width={20}>Actions</Th>
+              <Th width={80}>{words("userManagement.name")}</Th>
+              <Th width={20}>{words("userManagement.actions")}</Th>
             </Tr>
           </Thead>
           <Tbody>
