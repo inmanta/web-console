@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps): Bump webpack-dev-middleware from 5.3.3 to 5.3.4'
+destination-branches:
+- master
+- iso7
+sections: {}
