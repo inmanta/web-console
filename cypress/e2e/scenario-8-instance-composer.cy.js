@@ -126,7 +126,7 @@ if (Cypress.env("edition") === "iso") {
         .trigger("mousedown")
         .trigger("mousemove", {
           clientX: 700,
-          clientY: 300,
+          clientY: 100,
         })
         .trigger("mouseup");
 
@@ -174,7 +174,7 @@ if (Cypress.env("edition") === "iso") {
         .trigger("mouseover")
         .trigger("mousedown")
         .trigger("mousemove", {
-          clientX: 700,
+          clientX: 600,
           clientY: 350,
         })
         .trigger("mouseup");
@@ -395,7 +395,7 @@ if (Cypress.env("edition") === "iso") {
         .trigger("mousedown")
         .trigger("mousemove", {
           clientX: 700,
-          clientY: 300,
+          clientY: 100,
         })
         .trigger("mouseup");
 
@@ -465,7 +465,7 @@ if (Cypress.env("edition") === "iso") {
         .trigger("mousedown")
         .trigger("mousemove", {
           clientX: 700,
-          clientY: 300,
+          clientY: 100,
         })
         .trigger("mouseup");
       cy.get('[joint-selector="headerLabel"]')
@@ -476,7 +476,7 @@ if (Cypress.env("edition") === "iso") {
         .trigger("mousedown")
         .trigger("mousemove", {
           clientX: 400,
-          clientY: 300,
+          clientY: 100,
         })
         .trigger("mouseup");
       cy.get("button").contains("Deploy").click();
@@ -534,7 +534,7 @@ if (Cypress.env("edition") === "iso") {
         .trigger("mousedown")
         .trigger("mousemove", {
           clientX: 700,
-          clientY: 300,
+          clientY: 100,
         })
         .trigger("mouseup");
 
@@ -597,7 +597,7 @@ if (Cypress.env("edition") === "iso") {
         .trigger("mousedown")
         .trigger("mousemove", {
           clientX: 900,
-          clientY: 300,
+          clientY: 100,
         })
         .trigger("mouseup");
       cy.get("button").contains("Deploy").click();
@@ -646,22 +646,16 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#name").type("new-parent-service2");
       cy.get("button").contains("Confirm").click();
 
-      //move child_container closer to new parent-service and connect them
+      //connect child_container to new parent-service
       cy.get('[joint-selector="headerLabel"]')
         .contains("child_container")
-        .trigger("mouseover")
-        .trigger("mousedown")
-        .trigger("mousemove", {
-          clientX: 700,
-          clientY: -100,
-        })
-        .trigger("mouseup");
+        .click();
       cy.get('[data-action="link"]')
         .trigger("mouseover")
         .trigger("mousedown")
         .trigger("mousemove", {
           clientX: 1100,
-          clientY: 500,
+          clientY: -100,
         })
         .trigger("mouseup");
       cy.get("button").contains("Deploy").click();
