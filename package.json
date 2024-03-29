@@ -1,6 +1,6 @@
 {
   "name": "@inmanta/web-console",
-  "version": "1.15.3",
+  "version": "1.15.4",
   "description": "Web Console for Inmanta Orchestrator",
   "exports": "./dist/index.js",
   "repository": "https://github.com/inmanta/web-console.git",
@@ -28,9 +28,9 @@
     "check-circular-deps": "madge --circular ./src/index.tsx",
     "install:orchestrator:keycloak": "sh ./shell-scripts/setup-keycloak.sh version='oss' release='dev' branch='oss_case_1'",
     "install:orchestrator": "sh ./shell-scripts/setup-orchestrator.sh flag='-ti'",
-    "install:orchestrator:iso": "sh ./shell-scripts/setup-orchestrator.sh flag='-ti'",
+    "install:orchestrator:iso": "sh ./shell-scripts/setup-orchestrator.sh flag='-ti' release='6-dev'",
     "install:orchestrator:oss": "sh ./shell-scripts/setup-orchestrator.sh flag='-ti' version='oss' release='dev' branch='oss_case_1'",
-    "install:orchestrator:ci": "sh ./shell-scripts/setup-orchestrator.sh",
+    "install:orchestrator:ci": "sh ./shell-scripts/setup-orchestrator.sh release='6-dev'",
     "kill-server": "sh ./shell-scripts/clear-server.sh",
     "update:dist": "docker exec inmanta_orchestrator rm -rf /usr/share/inmanta/web-console && docker cp dist inmanta_orchestrator:/usr/share/inmanta/web-console"
   },
@@ -60,7 +60,7 @@
     "@types/jest": "^29.5.8",
     "@types/json-bigint": "^1.0.3",
     "@types/lodash": "^4.14.202",
-    "@types/lodash-es": "^4.17.8",
+    "@types/lodash-es": "^4.17.12",
     "@types/node": "^20.10.3",
     "@types/qs": "^6.9.8",
     "@types/react-dom": "^18.2.15",

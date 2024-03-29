@@ -70,6 +70,9 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
     if (!editDisabled) {
       insetHeight = insetHeight - 100;
     }
+    if (diagnoseDisabled) {
+      insetHeight = insetHeight + 100;
+    }
 
     return `${insetHeight}%`;
   };
@@ -155,7 +158,11 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
             })}
             isDisabled={diagnoseDisabled}
           >
-            <MenuItem itemId="diagnose" icon={<FileMedicalAltIcon />}>
+            <MenuItem
+              itemId="diagnose"
+              isDisabled={diagnoseDisabled}
+              icon={<FileMedicalAltIcon />}
+            >
               {words("inventory.statustab.diagnose")}
             </MenuItem>
           </Link>
