@@ -6,7 +6,7 @@ export const response = {
       value:
         "very very very very very very very very very very very very very very very very very very very very very very very very  very very  very very  very very  very very  very very  very very  very very  very very  very very long value",
       environment: "fac84dcb-536f-4f65-8a37-3388608844ee",
-      source: "user",
+      source: "inmanta_user",
       updated: "2022-01-20T10:09:00.000000",
       metadata: { meta: "success" },
     },

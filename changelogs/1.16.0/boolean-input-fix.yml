@@ -1,0 +1,3 @@
+description: "Fix for optional boolean input"
+change-type: patch
+destination-branches: [master, iso7]

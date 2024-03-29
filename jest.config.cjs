@@ -28,7 +28,7 @@ module.exports = {
   // A preset that is used as a base for Jest's configuration
   preset: "ts-jest/presets/js-with-ts",
 
-  setupFiles: ["<rootDir>/jestSetup.ts"],
+  setupFiles: ["<rootDir>/jest.polyfills.js", "<rootDir>/jestSetup.ts"],
 
   // The path to a module that runs some code to configure or set up the testing framework before each test
   setupFilesAfterEnv: ["<rootDir>/jestSetupAfterEnv.js"],
@@ -44,11 +44,15 @@ module.exports = {
     "^.+\\.(ts|tsx)$": "ts-jest",
   },
 
+  testEnvironmentOptions: {
+    customExportConditions: [""],
+  },
+
   reporters: ["default", "jest-junit"],
 
-  // The react-syntax-highlighter and @inmanta/rappid esm modules have to be handled by jest
+  // The react-syntax-highlighter, mermaid and @inmanta/rappid esm modules have to be handled by jest
   transformIgnorePatterns: [
-    "node_modules/(?!react-syntax-highlighter|@inmanta/rappid)",
+    "node_modules/(?!react-syntax-highlighter|@inmanta/rappid|mermaid/dist/mermaid.js)",
   ],
   globals: {
     "ts-jest": {

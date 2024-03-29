@@ -1,5 +1,14 @@
 import { EventsSlice, eventsSlice } from "@/Slices/Events/Data/Store";
 import {
+  OrderDetailsSlice,
+  orderDetailsSlice,
+} from "@/Slices/OrderDetails/Data/Store";
+import { ordersSlice, OrdersSlice } from "@/Slices/Orders/Data/Store";
+import {
+  DiscoveredResourcesSlice,
+  discoveredResourcesSlice,
+} from "@/Slices/ResourceDiscovery/Data/Store";
+import {
   agentProcessSlice,
   AgentProcessSlice,
 } from "@S/AgentProcess/Data/Store";
@@ -95,71 +104,77 @@ import {
 import { servicesSlice, ServicesSlice } from "./ServicesSlice";
 
 export interface StoreModel {
-  environment: EnvironmentSlice;
-  projects: ProjectsSlice;
-  serverStatus: ServerStatusSlice;
-  services: ServicesSlice;
-  serviceInstances: ServiceInstancesSlice;
-  serviceInstance: ServiceInstanceSlice;
-  serviceInstanceWithRelations: ServiceInstanceWithRelationsSlice;
-  serviceConfig: ServiceConfigSlice;
-  instanceResources: InstanceResourcesSlice;
-  events: EventsSlice;
-  instanceLogs: InstanceLogsSlice;
-  instanceConfig: InstanceConfigSlice;
+  agentProcess: AgentProcessSlice;
+  agents: AgentsSlice;
+  callbacks: CallbacksSlice;
+  compileDetails: CompileDetailsSlice;
+  compileReports: CompileReportsSlice;
+  desiredStateDiff: DesiredStateDiffSlice;
+  desiredStates: DesiredStatesSlice;
   diagnostics: DiagnosticsSlice;
-  resources: ResourcesSlice;
+  discoveredResources: DiscoveredResourcesSlice;
+  dryRunReport: DryRunReportSlice;
+  dryRuns: DryRunsSlice;
+  environment: EnvironmentSlice;
+  events: EventsSlice;
+  facts: FactsSlice;
+  instanceConfig: InstanceConfigSlice;
+  instanceLogs: InstanceLogsSlice;
+  instanceResources: InstanceResourcesSlice;
+  notification: NotificationSlice;
+  parameters: ParametersSlice;
+  projects: ProjectsSlice;
   resourceDetails: ResourceDetailsSlice;
+  resourceFacts: ResourceFactsSlice;
   resourceHistory: ResourceHistorySlice;
   resourceLogs: ResourceLogsSlice;
-  callbacks: CallbacksSlice;
-  compileReports: CompileReportsSlice;
-  compileDetails: CompileDetailsSlice;
-  resourceFacts: ResourceFactsSlice;
-  agents: AgentsSlice;
-  agentProcess: AgentProcessSlice;
-  desiredStates: DesiredStatesSlice;
-  versionResources: VersionResourcesSlice;
-  parameters: ParametersSlice;
-  facts: FactsSlice;
-  desiredStateDiff: DesiredStateDiffSlice;
-  dryRuns: DryRunsSlice;
-  dryRunReport: DryRunReportSlice;
+  resources: ResourcesSlice;
+  serverStatus: ServerStatusSlice;
+  serviceConfig: ServiceConfigSlice;
+  serviceInstance: ServiceInstanceSlice;
+  serviceInstances: ServiceInstancesSlice;
+  serviceInstanceWithRelations: ServiceInstanceWithRelationsSlice;
+  services: ServicesSlice;
+  orders: OrdersSlice;
+  orderDetails: OrderDetailsSlice;
   versionedResourceDetails: VersionedResourceDetailsSlice;
-  notification: NotificationSlice;
+  versionResources: VersionResourcesSlice;
 }
 
 export const storeModel: StoreModel = {
-  environment: environmentSlice,
-  projects: projectsSlice,
-  serverStatus: serverStatusSlice,
-  services: servicesSlice,
-  serviceInstances: serviceInstancesSlice,
-  serviceInstance: serviceInstanceSlice,
-  serviceInstanceWithRelations: serviceInstanceWithRelationsSlice,
-  serviceConfig: serviceConfigSlice,
-  instanceLogs: instanceLogsSlice,
-  instanceConfig: instanceConfigSlice,
-  instanceResources: instanceResourcesSlice,
-  events: eventsSlice,
+  agentProcess: agentProcessSlice,
+  agents: agentsSlice,
+  callbacks: callbacksSlice,
+  compileDetails: compileDetailsSlice,
+  compileReports: compileReportsSlice,
+  desiredStateDiff: desiredStateDiffSlice,
+  desiredStates: desiredStatesSlice,
   diagnostics: diagnosticsSlice,
-  resources: resourcesSlice,
+  discoveredResources: discoveredResourcesSlice,
+  dryRunReport: dryRunReportSlice,
+  dryRuns: dryRunsSlice,
+  environment: environmentSlice,
+  events: eventsSlice,
+  facts: factsSlice,
+  instanceConfig: instanceConfigSlice,
+  instanceLogs: instanceLogsSlice,
+  instanceResources: instanceResourcesSlice,
+  notification: notificationSlice,
+  parameters: parametersSlice,
+  projects: projectsSlice,
   resourceDetails: resourceDetailsSlice,
+  resourceFacts: resourceFactsSlice,
   resourceHistory: resourceHistorySlice,
   resourceLogs: resourceLogsSlice,
-  callbacks: callbacksSlice,
-  compileReports: compileReportsSlice,
-  compileDetails: compileDetailsSlice,
-  resourceFacts: resourceFactsSlice,
-  agents: agentsSlice,
-  agentProcess: agentProcessSlice,
-  desiredStates: desiredStatesSlice,
-  versionResources: versionResourcesSlice,
-  parameters: parametersSlice,
-  facts: factsSlice,
-  desiredStateDiff: desiredStateDiffSlice,
-  dryRuns: dryRunsSlice,
-  dryRunReport: dryRunReportSlice,
+  resources: resourcesSlice,
+  serverStatus: serverStatusSlice,
+  serviceConfig: serviceConfigSlice,
+  serviceInstance: serviceInstanceSlice,
+  serviceInstances: serviceInstancesSlice,
+  serviceInstanceWithRelations: serviceInstanceWithRelationsSlice,
+  services: servicesSlice,
+  orders: ordersSlice,
+  orderDetails: orderDetailsSlice,
   versionedResourceDetails: versionedResourceDetailsSlice,
-  notification: notificationSlice,
+  versionResources: versionResourcesSlice,
 };

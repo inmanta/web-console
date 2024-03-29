@@ -16,7 +16,7 @@ export interface Notification extends Flags {
   title: string;
   message: string;
   severity: Severity;
-  uri: string;
+  uri: string | null;
 }
 
 export interface Flags {

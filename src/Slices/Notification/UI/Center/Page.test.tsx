@@ -59,7 +59,7 @@ test("Given Notification Center page Then fetches notifications", async () => {
   });
   expect(
     screen.getAllByRole("listitem", { name: "NotificationItem" }),
-  ).toHaveLength(3);
+  ).toHaveLength(4);
 });
 
 test("Given Notification Center page When user filters on severity Then executes correct request", async () => {

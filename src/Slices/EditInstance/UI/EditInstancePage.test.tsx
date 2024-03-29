@@ -522,6 +522,7 @@ test("Given the EditInstance View When adding new nested embedded entity Then th
   const addedOptionalEmbedded = screen.getByLabelText(
     "DictListFieldInputItem-editableOptionalEmbedded_base.1",
   );
+
   //check if direct attributes are correctly displayed
   expect(within(addedOptionalEmbedded).queryByText("string")).toBeEnabled();
   expect(
@@ -646,6 +647,7 @@ test("Given the EditInstance View When adding new nested embedded entity Then th
       within(nested_editableOptionalEmbedded_base).getByText("Add"),
     );
   });
+
   expect(
     within(nested_editableOptionalEmbedded_base).queryByText("Delete"),
   ).toBeEnabled();

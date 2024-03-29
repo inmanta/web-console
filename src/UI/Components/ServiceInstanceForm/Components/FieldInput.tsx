@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import {
   Button,
   FormFieldGroupExpandable,
@@ -12,9 +12,12 @@ import {
   DictListField,
   Field,
   NestedField,
+  FormSuggestion,
 } from "@/Core";
 import { toOptionalBoolean } from "@/Data";
+import { useSuggestedValues } from "@/Data/Managers/V2/FormSuggestions";
 import { createFormState } from "@/UI/Components/ServiceInstanceForm/Helpers";
+import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { BooleanFormInput } from "./BooleanFormInput";
 import { BooleanToggleInput } from "./BooleanToggleInput";
@@ -29,20 +32,61 @@ interface Props {
   originalState: InstanceAttributeModel;
   getUpdate: GetUpdate;
   path: string | null;
+  isNew?: boolean;
+  suggestions?: FormSuggestion | null;
 }
 
+/**
+ * Type representing a function to update the state within the form.
+ *
+ * @param {string} path - The path within the form state to update.
+ * @param {unknown} value - The new value to set at the specified path.
+ * @param {boolean} [multi] - Optional flag indicating if the update is for multiple values. Default is false.
+ * @returns {void}
+ */
 type GetUpdate = (path: string, value: unknown, multi?: boolean) => void;
 
+/**
+ * Combines the current path with the next path segment to create a new path.
+ *
+ * @param {string | null} path - The current path (can be null).
+ * @param {string} next - The next path segment to append.
+ * @returns {string} The new combined path.
+ */
 const makePath = (path: string | null, next: string): string =>
   path === null ? next : `${path}.${next}`;
 
+/**
+ * FieldInput component for managing form input related to a specific field.
+ *
+ * @param {Props} props - Props for the FieldInput component.
+ *   @prop {Field} field - The field associated with the input.
+ *   @prop {FormState} formState - The current form state.
+ *   @prop {OriginalState} originalState - The original state of the field.
+ *   @prop {Function} getUpdate - Function to get updates for the field.
+ *   @prop {string} path - The path of the field within the form.
+ *   @prop {boolean} isNew - Flag indicating whether the field is newly added. Default is false.
+ *   @prop {FormSuggestion | null} suggestions - The suggestions for the field. Default is null.
+ *
+ * @returns {JSX.Element} The rendered FieldInput component.
+ */
 export const FieldInput: React.FC<Props> = ({
   field,
   formState,
   originalState,
   getUpdate,
   path,
+  isNew = false,
+  suggestions,
 }) => {
+  const { environmentHandler } = useContext(DependencyContext);
+  const environment = environmentHandler.useId();
+  const { data, isLoading, error } = useSuggestedValues(
+    suggestions,
+    environment,
+  ).useOneTime();
+  const [suggestionsList, setSuggestionsList] = useState<string[] | null>(null);
+
   //callback was used to avoid re-render in useEffect used in SelectFormInput
   const getEnumUpdate = useCallback(
     (value) => {
@@ -50,6 +94,27 @@ export const FieldInput: React.FC<Props> = ({
     },
     [getUpdate, path, field.name],
   );
+
+  useEffect(() => {
+    if (!isLoading && !error) {
+      // if the data is of type array, we can use it directly
+      if (Array.isArray(data)) {
+        setSuggestionsList(data);
+      } else if (
+        data &&
+        data.metadata &&
+        data.metadata.values &&
+        Array.isArray(data.metadata.values) &&
+        // TODO: remove this when the API returns a fixed format.
+        data.metadata.values.every((value) => typeof value === "string")
+      ) {
+        setSuggestionsList(data.metadata.values);
+      }
+    } else {
+      setSuggestionsList(null);
+    }
+  }, [suggestions, data, isLoading, error]);
+
   switch (field.kind) {
     case "Boolean":
       return field.isOptional ? (
@@ -65,7 +130,8 @@ export const FieldInput: React.FC<Props> = ({
           key={field.name}
           shouldBeDisabled={
             field.isDisabled &&
-            get(originalState, makePath(path, field.name)) !== undefined
+            get(originalState, makePath(path, field.name)) !== undefined &&
+            !isNew
           }
         />
       ) : (
@@ -80,7 +146,8 @@ export const FieldInput: React.FC<Props> = ({
           key={field.name}
           shouldBeDisabled={
             field.isDisabled &&
-            get(originalState, makePath(path, field.name)) !== undefined
+            get(originalState, makePath(path, field.name)) !== undefined &&
+            !isNew
           }
         />
       );
@@ -97,7 +164,8 @@ export const FieldInput: React.FC<Props> = ({
           shouldBeDisabled={
             field.isDisabled &&
             get(originalState, makePath(path, field.name).split(".")) !==
-              undefined
+              undefined &&
+            !isNew
           }
           type={field.inputType}
           handleInputChange={(value, _event) =>
@@ -106,6 +174,7 @@ export const FieldInput: React.FC<Props> = ({
           placeholder={getPlaceholderForType(field.type)}
           typeHint={getTypeHintForType(field.type)}
           key={field.name}
+          suggestions={suggestionsList}
         />
       );
     case "Textarea":
@@ -118,7 +187,8 @@ export const FieldInput: React.FC<Props> = ({
           isOptional={field.isOptional}
           shouldBeDisabled={
             field.isDisabled &&
-            get(originalState, makePath(path, field.name)) !== undefined
+            get(originalState, makePath(path, field.name)) !== undefined &&
+            !isNew
           }
           type={field.inputType}
           handleInputChange={(value, _event) => {
@@ -140,7 +210,8 @@ export const FieldInput: React.FC<Props> = ({
           isOptional={field.isOptional}
           shouldBeDisabled={
             field.isDisabled &&
-            get(originalState, makePath(path, field.name)) !== undefined
+            get(originalState, makePath(path, field.name)) !== undefined &&
+            !isNew
           }
           type={field.inputType}
           handleInputChange={(value, _event) =>
@@ -149,6 +220,7 @@ export const FieldInput: React.FC<Props> = ({
           placeholder={getPlaceholderForType(field.type)}
           typeHint={getTypeHintForType(field.type)}
           key={field.name}
+          suggestions={suggestionsList}
         />
       );
     case "InterServiceRelation":
@@ -183,7 +255,8 @@ export const FieldInput: React.FC<Props> = ({
           key={field.name}
           shouldBeDisabled={
             field.isDisabled &&
-            get(originalState, makePath(path, field.name)) !== undefined
+            get(originalState, makePath(path, field.name)) !== undefined &&
+            !isNew
           }
         />
       );
@@ -230,6 +303,12 @@ export const FieldInput: React.FC<Props> = ({
   }
 };
 
+/**
+ * Get a placeholder for the given data type.
+ *
+ * @param {string} typeName - The data type name.
+ * @returns {string | undefined} The placeholder string for the given data type, or undefined if not found.
+ */
 const getPlaceholderForType = (typeName: string): string | undefined => {
   if (typeName === "int[]") {
     return words("inventory.form.placeholder.intList");
@@ -244,6 +323,12 @@ const getPlaceholderForType = (typeName: string): string | undefined => {
   return undefined;
 };
 
+/**
+ * Get a type hint for the given data type.
+ *
+ * @param {string} typeName - The data type name.
+ * @returns {string | undefined} The type hint string for the given data type, or undefined if not found.
+ */
 const getTypeHintForType = (typeName: string): string | undefined => {
   if (typeName.endsWith("[]")) {
     return words("inventory.form.typeHint.list")(
@@ -263,6 +348,17 @@ interface NestedProps {
   path: string | null;
 }
 
+/**
+ * NestedFieldInput component with inner state for managing nested field input.
+ *
+ * @param {NestedProps} props - Props for the NestedFieldInput component.
+ *   @prop {Field} field - The nested field.
+ *   @prop {FormState} formState - The form state.
+ *   @prop {OriginalState} originalState - The original state of the nested field.
+ *   @prop {Function} getUpdate - Function to update and get updates for the nested field.
+ *   @prop {string} path - The path of the nested field.
+ * @returns {JSX.Element} The rendered NestedFieldInput component.
+ */
 const NestedFieldInput: React.FC<NestedProps> = ({
   field,
   formState,
@@ -283,6 +379,7 @@ const NestedFieldInput: React.FC<NestedProps> = ({
     setShowList(false);
     return getUpdate(makePath(path, field.name), null);
   };
+
   return (
     <StyledFormFieldGroupExpandable
       aria-label={`NestedFieldInput-${makePath(path, field.name)}`}
@@ -345,6 +442,17 @@ interface DictListProps {
   path: string | null;
 }
 
+/**
+ * DictListFieldInput component with inner state to manage dictionary list field input.
+ *
+ * @param {DictListProps} props - Props for the DictListFieldInput component.
+ *   @prop {Field} field - The dictionary list field.
+ *   @prop {FormState} formState - The form state.
+ *   @prop {OriginalState} originalState - The original state of the dictionary list field.
+ *   @prop {Function} getUpdate - Function to update and get updates for the dictionary list field.
+ *   @prop {string} path - The path of the dictionary list field.
+ * @returns {JSX.Element} The rendered DictListFieldInput component.
+ */
 const DictListFieldInput: React.FC<DictListProps> = ({
   field,
   formState,
@@ -353,22 +461,65 @@ const DictListFieldInput: React.FC<DictListProps> = ({
   path,
 }) => {
   const list = get(formState, makePath(path, field.name)) as Array<unknown>;
+  const [addedItemsPaths, setAddedItemPaths] = useState<string[]>([]);
 
+  /**
+   * Add a new formField group of the same type to the list.
+   * Stores the paths of the newly added elements.
+   *
+   * @returns void
+   */
   const onAdd = () => {
     if (field.max && list.length >= field.max) {
       return;
     }
+
+    get(originalState, makePath(path, field.name));
+    setAddedItemPaths([
+      ...addedItemsPaths,
+      `${makePath(path, field.name)}.${list.length}`,
+    ]);
+
     getUpdate(makePath(path, field.name), [
       ...list,
       createFormState(field.fields),
     ]);
   };
 
-  const getOnDelete = (index: number) => () =>
+  /**
+   * Delete method that also handles the update of the stored paths
+   *
+   * @param {index} number
+   * @returns void
+   */
+  const getOnDelete = (index: number) => () => {
+    const newPaths: string[] = [];
+
+    /**
+     * We need to update the stored paths after the deleted item,
+     * because paths are dynamically defined and not fixed.
+     * If the user deletes an item preceding the new items,
+     * we want to make sure the path refers to the same entity.
+     */
+    addedItemsPaths.forEach((addedPath, indexPath) => {
+      const lastDigit: number = Number(addedPath.slice(-1));
+
+      if (indexPath < index) {
+        newPaths.push(addedPath); // add addedPath to newPath
+      } else if (lastDigit > index) {
+        const truncatedPath = addedPath.slice(0, -1); // truncate the last digit
+        const modifiedPath = `${truncatedPath}${lastDigit - 1}`; // deduce 1 from the index
+        newPaths.push(modifiedPath);
+      }
+    });
+
+    setAddedItemPaths([...newPaths]);
+
     getUpdate(makePath(path, field.name), [
       ...list.slice(0, index),
       ...list.slice(index + 1, list.length),
     ]);
+  };
 
   return (
     <StyledFormFieldGroupExpandable
@@ -400,7 +551,7 @@ const DictListFieldInput: React.FC<DictListProps> = ({
         />
       }
     >
-      {list.map((item, index) => (
+      {list.map((_item, index) => (
         <StyledFormFieldGroupExpandable
           aria-label={`DictListFieldInputItem-${makePath(
             path,
@@ -441,6 +592,9 @@ const DictListFieldInput: React.FC<DictListProps> = ({
               originalState={originalState}
               getUpdate={getUpdate}
               path={makePath(path, `${field.name}.${index}`)}
+              isNew={addedItemsPaths.includes(
+                `${makePath(path, field.name)}.${index}`,
+              )}
             />
           ))}
         </StyledFormFieldGroupExpandable>

@@ -83,33 +83,42 @@ export function GetInstanceWithRelationsQueryManager(
 
       if (Either.isRight(instanceWithReferences)) {
         if (instanceWithReferences.value.data.referenced_by !== null) {
-          await Promise.all(
+          const resolvedNestedInstances = await Promise.all(
             instanceWithReferences.value.data.referenced_by.map(
               async (relatedId) => {
                 const nestedInstance = await getInstanceWithRelations(
                   { kind: "GetInstanceWithRelations", id: relatedId },
                   environment,
                 );
-
-                relatedInstances.push(
-                  nestedInstance.value as unknown as ServiceInstanceModel,
-                );
+                if (Either.isRight(nestedInstance)) {
+                  relatedInstances.push(
+                    nestedInstance.value as unknown as ServiceInstanceModel,
+                  );
+                }
+                return nestedInstance;
               },
             ),
           );
+          const possibleFailedInstance = resolvedNestedInstances.find(
+            (nestedInstance) => nestedInstance.kind === "Left",
+          );
+          if (possibleFailedInstance) {
+            return possibleFailedInstance;
+          }
         }
+        return {
+          ...instance,
+          value: {
+            instance: instance.value,
+            relatedInstances,
+          },
+        };
+      } else {
+        return instanceWithReferences;
       }
-
-      return RemoteData.success({
-        instance: instance.value,
-        relatedInstances,
-      });
+    } else {
+      return instance;
     }
-
-    return RemoteData.failed({
-      instance: instance,
-      relatedInstances,
-    });
   }
 
   function useOneTime(

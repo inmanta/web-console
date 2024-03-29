@@ -1,6 +1,12 @@
 import { times, cloneDeep } from "lodash-es";
 import { FieldLikeWithFormState, InstanceAttributeModel } from "@/Core";
 
+/**
+ * Create an form state based on the provided fields.
+ *
+ * @param {FieldLikeWithFormState[]} fields - Array of fields with form state information.
+ * @returns {InstanceAttributeModel} The instance attribute Model.
+ */
 export const createFormState = (
   fields: FieldLikeWithFormState[],
 ): InstanceAttributeModel => {
@@ -57,14 +63,14 @@ export const createFormState = (
 };
 
 /**
- * Creates Form State based on available fields and optional originalAttributes.
- * If apiVersion "v2" then returns originalAttributes as second version endpoint replaces the whole edited instance
- * and fields not necessarily cover that 1:1
+ * Create an edit form state based on the provided fields, API version, and original attributes.
+ * If API version is "v2" and original attributes are provided, returns the original attributes as the edit form state.
+ * Otherwise, generates an edit form state by comparing the provided fields with the original attributes.
  *
- * @param {FieldLikeWithFormState[]} fields - active fields that
- * @param {"v1" | "v2"} apiVersion - version of endpoint which handles the edit
- * @param {InstanceAttributeModel | null | undefined} originalAttributes - current state of Attributes
- * @returns
+ * @param {FieldLikeWithFormState[]} fields - Array of fields with form state information.
+ * @param {"v1" | "v2"} apiVersion - API version ("v1" or "v2").
+ * @param {InstanceAttributeModel | null | undefined} originalAttributes - Original attributes of the instance.
+ * @returns {InstanceAttributeModel} The edit form state.
  */
 export const createEditFormState = (
   fields: FieldLikeWithFormState[],
@@ -74,6 +80,7 @@ export const createEditFormState = (
   if (apiVersion === "v2" && originalAttributes) {
     return originalAttributes;
   }
+
   return fields.reduce((acc, curr) => {
     if (originalAttributes?.[curr.name] !== undefined) {
       switch (curr.kind) {
@@ -133,12 +140,15 @@ export const createEditFormState = (
     }
   }, {});
 };
+
 /**
- * Creates Form State based on available fields and optional originalAttributes.
+ * Create a form state for duplicating an instance based on the provided fields and original attributes.
+ * If an original attribute is present, generates a duplicate form state by copying the values from the original instance.
+ * Otherwise, generates a default form state based on the provided fields.
  *
- * @param {FieldLikeWithFormState[]} fields - active fields that
- * @param {InstanceAttributeModel | null | undefined} originalAttributes - current state of Attributes
- * @returns
+ * @param {FieldLikeWithFormState[]} fields - Array of fields with form state information.
+ * @param {InstanceAttributeModel | null | undefined} originalAttributes - Original attributes of the instance.
+ * @returns {InstanceAttributeModel} The duplicate form state.
  */
 export const createDuplicateFormState = (
   fields: FieldLikeWithFormState[],
@@ -202,6 +212,12 @@ export const createDuplicateFormState = (
   }, {});
 };
 
+/**
+ * Convert a value to a JSON string, or return an empty string if the value is an empty string.
+ *
+ * @param {unknown} value - The value to stringify.
+ * @returns {string} The JSON string representation of the value, or an empty string if the value is an empty string.
+ */
 function stringifyDict(value: unknown) {
   return value === "" ? "" : JSON.stringify(value);
 }

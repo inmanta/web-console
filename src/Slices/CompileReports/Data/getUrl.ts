@@ -1,4 +1,4 @@
-import moment from "moment";
+import moment from "moment-timezone";
 import qs from "qs";
 import { CompileStatus, Query, RangeOperator } from "@/Core";
 

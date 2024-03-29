@@ -162,7 +162,6 @@ test("GIVEN DesiredStateCompare WHEN File Resource THEN it shows prompt that can
   await act(async () => {
     await userEvent.click(within(blocks[1]).getByLabelText("Details"));
   });
-
   await act(async () => {
     await userEvent.click(
       within(blocks[1]).getByRole("button", {
@@ -225,4 +224,51 @@ test("GIVEN DesiredStateCompare WHEN File Resource THEN it shows prompt that can
   expect(
     within(blocks[1]).getByRole("generic", { name: "ErrorDiffView" }),
   ).toBeVisible();
+});
+
+test("GIVEN DesiredStateCompare page WHEN SearchFilter is used, ONLY show the resources matching the search value", async () => {
+  const { apiHelper, component } = setup();
+  render(component);
+
+  await act(async () => {
+    await apiHelper.resolve(Either.right(DesiredStateDiff.response));
+  });
+
+  await act(async () => {
+    await userEvent.click(
+      screen.getByRole("button", { name: words("jumpTo") }),
+    );
+  });
+
+  expect(
+    screen.getAllByRole("listitem", { name: "DiffSummaryListItem" }),
+  ).toHaveLength(11);
+
+  expect(await screen.findAllByTestId("DiffBlock")).toHaveLength(11);
+
+  await act(async () => {
+    await userEvent.type(
+      screen.getByRole("searchbox", { name: "SearchFilter" }),
+      "std",
+    );
+  });
+
+  expect(await screen.findAllByTestId("DiffBlock")).toHaveLength(1);
+
+  await act(async () => {
+    await userEvent.type(
+      screen.getByRole("searchbox", { name: "SearchFilter" }),
+      "44554",
+    );
+  });
+
+  expect(screen.queryAllByTestId("DiffBlock")).toHaveLength(0);
+
+  await act(async () => {
+    await userEvent.clear(
+      screen.getByRole("searchbox", { name: "SearchFilter" }),
+    );
+  });
+
+  expect(await screen.findAllByTestId("DiffBlock")).toHaveLength(11);
 });

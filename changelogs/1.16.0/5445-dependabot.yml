@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps-dev): Bump @types/node from 20.10.3 to 20.11.0'
+destination-branches:
+- master
+- iso7
+sections: {}

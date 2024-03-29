@@ -1,16 +1,21 @@
-import React, { useContext } from "react";
-import { Link } from "react-router-dom";
+import React, { useContext, useState } from "react";
 import {
   Toolbar,
   ToolbarGroup,
   ToolbarItem,
   ToolbarContent,
   Button,
+  MenuToggle,
+  MenuToggleAction,
+  Dropdown,
+  MenuToggleElement,
+  DropdownList,
+  DropdownItem,
 } from "@patternfly/react-core";
 import { PlusIcon } from "@patternfly/react-icons";
 import { ServiceModel, ServiceInstanceParams } from "@/Core";
+import { Link } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
-import useFeatures from "@/UI/Utils/useFeatures";
 import { words } from "@/UI/words";
 import { FilterWidget } from "@S/ServiceInventory/UI/Components/FilterWidget";
 
@@ -29,8 +34,11 @@ export const TableControls: React.FC<Props> = ({
   service,
   paginationWidget,
 }) => {
-  const { routeManager } = useContext(DependencyContext);
-  const features = useFeatures();
+  const [isOpen, setIsOpen] = useState(false);
+  const { routeManager, featureManager } = useContext(DependencyContext);
+
+  const composerEnabled =
+    service.owner === null && featureManager.isComposerEnabled();
 
   const { service_identity, service_identity_display_name } = service;
   const identityAttribute =
@@ -38,6 +46,40 @@ export const TableControls: React.FC<Props> = ({
       ? { key: service_identity, pretty: service_identity_display_name }
       : undefined;
   const states = service.lifecycle.states.map((state) => state.name).sort();
+
+  const onToggleClick = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const toggleMenu = (ref: React.Ref<MenuToggleElement>) => (
+    <MenuToggle
+      ref={ref}
+      variant="secondary"
+      isExpanded={isOpen}
+      onClick={onToggleClick}
+      splitButtonOptions={{
+        variant: "action",
+        items: [
+          <Link
+            key="main-action"
+            pathname={routeManager.getUrl("CreateInstance", {
+              service: serviceName,
+            })}
+            search={location.search}
+            variant="plain"
+          >
+            <MenuToggleAction
+              aria-label="add-instance-button"
+              id="add-instance-button"
+            >
+              <PlusIcon /> {words("inventory.addInstance.button")}
+            </MenuToggleAction>
+          </Link>,
+        ],
+      }}
+      aria-label="AddInstanceToggle"
+    />
+  );
 
   return (
     <Toolbar clearAllFilters={() => setFilter({})}>
@@ -49,36 +91,44 @@ export const TableControls: React.FC<Props> = ({
           identityAttribute={identityAttribute}
         />
         <ToolbarGroup align={{ default: "alignRight" }}>
-          {features && features.includes("instanceComposer") && (
+          {composerEnabled ? (
+            <ToolbarItem>
+              <Dropdown
+                isOpen={isOpen}
+                toggle={toggleMenu}
+                onOpenChange={(isOpen: boolean) => setIsOpen(isOpen)}
+              >
+                <DropdownList>
+                  <Link
+                    variant="plain"
+                    key="add-instance-composer-button"
+                    pathname={routeManager.getUrl("InstanceComposer", {
+                      service: serviceName,
+                    })}
+                    search={location.search}
+                  >
+                    <DropdownItem id="add-instance-composer-button">
+                      <PlusIcon />{" "}
+                      {words("inventory.addInstance.composerButton")}
+                    </DropdownItem>
+                  </Link>
+                </DropdownList>
+              </Dropdown>
+            </ToolbarItem>
+          ) : (
             <ToolbarItem>
               <Link
-                to={{
-                  pathname: routeManager.getUrl("InstanceComposer", {
-                    service: serviceName,
-                  }),
-                  search: location.search,
-                }}
+                pathname={routeManager.getUrl("CreateInstance", {
+                  service: serviceName,
+                })}
+                search={location.search}
               >
-                <Button id="add-instance-composer-button">
-                  {words("inventory.addInstance.composerButton")}
+                <Button id="add-instance-button">
+                  <PlusIcon /> {words("inventory.addInstance.button")}
                 </Button>
               </Link>
             </ToolbarItem>
           )}
-          <ToolbarItem>
-            <Link
-              to={{
-                pathname: routeManager.getUrl("CreateInstance", {
-                  service: serviceName,
-                }),
-                search: location.search,
-              }}
-            >
-              <Button id="add-instance-button">
-                <PlusIcon /> {words("inventory.addInstance.button")}
-              </Button>
-            </Link>
-          </ToolbarItem>
         </ToolbarGroup>
         <ToolbarItem variant="pagination">{paginationWidget}</ToolbarItem>
       </ToolbarContent>

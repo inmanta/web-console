@@ -19,6 +19,41 @@ export const text: TextField = {
   type: "string?",
 };
 
+export const textSuggestions: TextField = {
+  kind: "Text",
+  name: "text_field",
+  description: "description",
+  isOptional: true,
+  isDisabled: false,
+  defaultValue: "",
+  inputType: TextInputTypes.text,
+  suggestion: { type: "literal", values: ["test", "test2"] },
+  type: "string?",
+};
+
+export const textSuggestions2: TextField = {
+  kind: "Text",
+  name: "text_field",
+  description: "description",
+  isOptional: true,
+  isDisabled: false,
+  defaultValue: "",
+  inputType: TextInputTypes.text,
+  suggestion: { type: "parameters", parameter_name: "param_name" },
+  type: "string?",
+};
+
+export const textDisabled: TextField = {
+  kind: "Text",
+  name: "text_field_disabled",
+  description: "description",
+  isOptional: true,
+  isDisabled: true,
+  defaultValue: "",
+  inputType: TextInputTypes.text,
+  type: "string?",
+};
+
 export const bool: BooleanField = {
   kind: "Boolean",
   name: "boolean_field",
@@ -112,6 +147,17 @@ export const dictList = (fields?: Field[]): DictListField => ({
   min: 1,
   max: 4,
   fields: fields || [],
+});
+
+export const nestedDictList = (fields?: Field[]): DictListField => ({
+  kind: "DictList",
+  name: "nested_dict_list_field",
+  description: "description",
+  isOptional: true,
+  isDisabled: false,
+  min: 1,
+  max: 4,
+  fields: [dictList(fields)] || [],
 });
 
 export const nestedEditable: Field[] = [

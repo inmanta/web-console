@@ -37,7 +37,7 @@ export const InstanceRow: React.FC<Props> = ({
   idDataLabel,
   service,
 }) => {
-  const [activeTab, setActiveTab] = useState<TabKey>(TabKey.Status);
+  const [activeTab, setActiveTab] = useState<TabKey | string>(TabKey.Status);
   const rowRef = useRef<HTMLSpanElement>(null);
   const openTabAndScrollTo = (tab: TabKey) => () => {
     setActiveTab(tab);

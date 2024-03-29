@@ -2,7 +2,7 @@ import React from "react";
 import { MemoryRouter } from "react-router";
 import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
-import { Either, InstanceEvent, Pagination } from "@/Core";
+import { Either, InstanceEvent } from "@/Core";
 import { QueryResolverImpl, getStoreInstance } from "@/Data";
 import {
   DeferredApiHelper,
@@ -53,7 +53,7 @@ test("EventsView shows empty table", async () => {
     Either.right({
       data: [],
       links: { self: "" },
-      metadata: {} as Pagination.Metadata,
+      metadata: { before: 0, after: 0, page_size: 20, total: 0 },
     }),
   );
 
@@ -106,7 +106,7 @@ test("EventsView shows success table", async () => {
         } as InstanceEvent,
       ],
       links: { self: "" },
-      metadata: {} as Pagination.Metadata,
+      metadata: { before: 0, after: 0, page_size: 20, total: 2 },
     }),
   );
 
@@ -127,7 +127,7 @@ test("EventsView shows updated table", async () => {
     Either.right({
       data: [],
       links: { self: "" },
-      metadata: {} as Pagination.Metadata,
+      metadata: { before: 0, after: 0, page_size: 20, total: 0 },
     }),
   );
 
@@ -158,7 +158,7 @@ test("EventsView shows updated table", async () => {
         } as InstanceEvent,
       ],
       links: { self: "" },
-      metadata: {} as Pagination.Metadata,
+      metadata: { before: 0, after: 0, page_size: 20, total: 1 },
     }),
   );
 

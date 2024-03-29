@@ -6,6 +6,7 @@ import {
 } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import {
+  EmptyView,
   PageContainer,
   PaginationWidget,
   RemoteDataView,
@@ -61,15 +62,22 @@ export const Page: React.FC = () => {
       <RemoteDataView
         data={data}
         label="Facts"
-        SuccessView={(data) => (
-          <FactsTable
-            aria-label="Facts-Success"
-            rows={tablePresenter.createRows(data.data)}
-            tablePresenter={tablePresenter}
-            sort={sort}
-            setSort={setSort}
-          />
-        )}
+        SuccessView={(facts) =>
+          facts.data.length <= 0 ? (
+            <EmptyView
+              message={words("facts.empty.message")}
+              aria-label="FactsView-Empty"
+            />
+          ) : (
+            <FactsTable
+              aria-label="Facts-Success"
+              rows={tablePresenter.createRows(facts.data)}
+              tablePresenter={tablePresenter}
+              sort={sort}
+              setSort={setSort}
+            />
+          )
+        }
       />
     </PageContainer>
   );

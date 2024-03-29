@@ -10,7 +10,6 @@ export const InstanceProvider: React.FC<{
   instanceId: string;
 }> = ({ services, mainServiceName, instanceId }) => {
   const { queryResolver } = useContext(DependencyContext);
-
   const [data] = queryResolver.useOneTime<"GetInstanceWithRelations">({
     kind: "GetInstanceWithRelations",
     id: instanceId,

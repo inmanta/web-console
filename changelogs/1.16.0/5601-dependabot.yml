@@ -1,0 +1,5 @@
+change-type: patch
+description: 'Build(deps): Bump @patternfly/react-core from 5.1.2 to 5.2.2'
+destination-branches:
+- master
+sections: {}

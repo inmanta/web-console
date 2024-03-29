@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps): Bump easy-peasy from 6.0.2 to 6.0.4'
+destination-branches:
+- master
+- iso7
+sections: {}

@@ -7,13 +7,14 @@ import {
   DropdownList,
   MenuToggle,
   MenuToggleElement,
+  TextContent,
   Tooltip,
 } from "@patternfly/react-core";
 import { UserCircleIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
-import { Profile } from "../Actions/Profile";
+import { KeycloakName } from "../Actions/KeycloakName";
 
 interface Props {
   items: string[];
@@ -31,8 +32,7 @@ export const EnvSelector: React.FC<Props> = ({
   toggleText,
 }) => {
   const { routeManager } = useContext(DependencyContext);
-  const { keycloakController } = useContext(DependencyContext);
-
+  const { authController } = useContext(DependencyContext);
   return (
     <Dropdown
       isOpen={isOpen}
@@ -45,12 +45,16 @@ export const EnvSelector: React.FC<Props> = ({
           aria-label={toggleText}
           isFullHeight
           onClick={() => setIsOpen(!isOpen)}
-          icon={keycloakController.isEnabled() ? <UserCircleIcon /> : null}
+          icon={authController.isEnabled() ? <UserCircleIcon /> : null}
         >
-          {keycloakController.isEnabled() ? (
+          {authController.isEnabled() ? (
             <StyledDiv>
               <div>
-                <Profile />
+                {authController.shouldAuthLocally() ? (
+                  <StyledText>{authController.getLocalUserName()}</StyledText>
+                ) : (
+                  <KeycloakName />
+                )}
                 <div>
                   {toggleText.length > 28
                     ? toggleText.slice(0, 20) + "..."
@@ -89,12 +93,17 @@ export const EnvSelector: React.FC<Props> = ({
               {words("home.navigation.button")}
             </DropdownItem>
           </Tooltip>
-          {keycloakController.isEnabled() && (
-            <DropdownItem
-              onClick={() => keycloakController.getInstance().logout()}
-            >
-              {words("dashboard.logout")}
-            </DropdownItem>
+          {authController.isEnabled() && (
+            <>
+              <DropdownItem
+                to={routeManager.getUrl("UserManagement", undefined)}
+              >
+                {words("userManagement.title")}
+              </DropdownItem>
+              <DropdownItem onClick={() => authController.logout()}>
+                {words("dashboard.logout")}
+              </DropdownItem>
+            </>
           )}
         </div>
       </DropdownList>
@@ -102,6 +111,10 @@ export const EnvSelector: React.FC<Props> = ({
   );
 };
 
+const StyledText = styled(TextContent)`
+  font-weight: bold;
+  text-align: start;
+`;
 const StyledDiv = styled.div`
   display: flex;
   flex-direction: row;

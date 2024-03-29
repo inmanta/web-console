@@ -1,0 +1,6 @@
+description: Adjusted the color of the compile details to match patternfly scheme. Added default empty page for facts.
+issue-nr: 5511
+change-type: patch
+destination-branches: [master, iso7]
+sections:
+  minor-improvement: "{{description}}"
