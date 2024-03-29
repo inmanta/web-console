@@ -1,0 +1,3 @@
+description: "Small visual improvements to Instance Composer"
+change-type: patch
+destination-branches: [master, iso7]
