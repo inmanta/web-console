@@ -1,4 +1,4 @@
-import { dia } from "@inmanta/rappid";
+import { dia, g, highlighters } from "@inmanta/rappid";
 import {
   EmbeddedEntity,
   InstanceAttributeModel,
@@ -6,7 +6,14 @@ import {
   ServiceModel,
 } from "@/Core";
 import { create_UUID } from "@/Slices/EditInstance/Data";
-import { ConnectionRules, InstanceForApi, Rule } from "./interfaces";
+import {
+  ConnectionRules,
+  InstanceForApi,
+  EmbeddedRule,
+  InterServiceRule,
+  TypeEnum,
+  LabelLinkView,
+} from "./interfaces";
 import { ServiceEntityBlock } from "./shapes";
 
 export const extractRelationsIds = (
@@ -21,22 +28,15 @@ export const extractRelationsIds = (
     return [];
   }
 
+  const extractRelation = (attributes: InstanceAttributeModel): string[] =>
+    relationKeys
+      .map((key) => String(attributes[key]))
+      .filter((attribute) => attribute !== "undefined");
+
   if (instance.candidate_attributes !== null) {
-    return relationKeys
-      .map((key) =>
-        instance.candidate_attributes !== null
-          ? instance.candidate_attributes[key]
-          : undefined,
-      )
-      .filter((value) => value !== undefined) as string[];
+    return extractRelation(instance.candidate_attributes);
   } else if (instance.active_attributes !== null) {
-    return relationKeys
-      .map((key) =>
-        instance.active_attributes !== null
-          ? instance.active_attributes[key]
-          : undefined,
-      )
-      .filter((value) => value !== undefined) as string[];
+    return extractRelation(instance.active_attributes);
   } else {
     return [];
   }
@@ -51,31 +51,37 @@ export const extractRelationsIds = (
 export const createConnectionRules = (
   services: (ServiceModel | EmbeddedEntity)[],
   rules: {
-    [serviceName: string]: Rule[];
+    [serviceName: string]: (EmbeddedRule | InterServiceRule)[];
   },
 ): ConnectionRules => {
   services.map((service) => {
     if (rules[service.name] === undefined) {
       rules[service.name] = [];
     }
-    const tempRules: Rule[] = [];
+    const tempRules: (EmbeddedRule | InterServiceRule)[] = [];
 
     service.embedded_entities.map((entity) => {
       tempRules.push({
+        kind: TypeEnum.EMBEDDED,
         name: entity.name,
         lowerLimit: entity.lower_limit || null,
         upperLimit: entity.upper_limit || null,
+        modifier: entity.modifier,
       });
 
+      //embedded entities in contrary to inter-service relations has possible nested connection thus why we calling function recurrently
       createConnectionRules([entity], rules);
     });
 
     if (service.inter_service_relations) {
       service.inter_service_relations.map((relation) => {
         tempRules.push({
+          kind: TypeEnum.INTERSERVICE,
           name: relation.entity_type,
+          attributeName: relation.name,
           lowerLimit: relation.lower_limit || null,
           upperLimit: relation.upper_limit || null,
+          modifier: relation.modifier,
         });
       });
     }
@@ -136,13 +142,20 @@ export const checkIfConnectionIsAllowed = (
       targetAsElement,
     ) as ServiceEntityBlock[];
 
+    const isTargetInEditMode: boolean | undefined =
+      targetAsElement.get("isInEditMode");
+    const isSourceInEditMode: boolean | undefined =
+      sourceAsElement.get("isInEditMode");
+
     areTargetConnectionExhausted = checkWhetherConnectionRulesAreExhausted(
       connectedElementsToTarget,
       targetRule,
+      !!isTargetInEditMode,
     );
     areSourceConnectionsExhausted = checkWhetherConnectionRulesAreExhausted(
       connectedElementsToSource,
       sourceRule,
+      !!isSourceInEditMode,
     );
 
     doesTargetIsEmbeddedWithExhaustedConnections =
@@ -173,18 +186,24 @@ export const checkIfConnectionIsAllowed = (
 /**
  * Iterate through connectedElements of some shape to check if there are possible connections left for given shape
  *
- * @param {ServiceEntityBlock[]} connectedElements
- * @param {Rule | undefined} rule
+ * @param {ServiceEntityBlock[]} connectedElements list of connected elements to given shape
+ * @param {EmbeddedRule | InterServiceRule | undefined} rule telling which shapes can connect to each other and about their limitations
+ * @param {boolean} editMode which defines whether connectionts rule is assesed for instance edited or newly created
  * @returns {boolean}
  */
-const checkWhetherConnectionRulesAreExhausted = (
+export const checkWhetherConnectionRulesAreExhausted = (
   connectedElements: ServiceEntityBlock[],
-  rule: Rule | undefined,
+  rule: EmbeddedRule | InterServiceRule | undefined,
+  editMode: boolean,
 ): boolean => {
   const targetConnectionsForGivenRule = connectedElements.filter(
     (element) => element.getName() === rule?.name,
   );
 
+  //if is in edit mode and its modifier is r/rw then the connections are basically exhausted
+  if (editMode && rule && rule.modifier !== "rw+") {
+    return true;
+  }
   //undefined and null are equal to no limit
   if (rule?.upperLimit !== undefined && rule?.upperLimit !== null) {
     return targetConnectionsForGivenRule.length >= rule?.upperLimit;
@@ -210,8 +229,7 @@ const doesElementIsEmbeddedWithExhaustedConnections = (
   target: dia.Element,
 ): boolean => {
   const isSourceEmbedded = source.get("isEmbedded");
-  const sourceHolderType = source.get("holderType");
-
+  const sourceHolderName = source.get("holderName");
   const isTargetBlocked = target.get("isBlockedFromEditing");
 
   //if source Embbedded and target is blocked then return true as we can't add anything to it in composer
@@ -220,17 +238,17 @@ const doesElementIsEmbeddedWithExhaustedConnections = (
   }
   const targetName = target.get("entityName");
 
-  if (isSourceEmbedded && sourceHolderType !== undefined) {
+  if (isSourceEmbedded && sourceHolderName !== undefined) {
     //if source is embedded entity then check if it is already connected according to it's parent rules
 
     const connectedHolder = connectedElementsToSource.filter((element) => {
       //if connected shape Name to the target has the same name is the same as the sou
-      return element.getName() === sourceHolderType;
+      return element.getName() === sourceHolderName;
     });
 
-    const doesSourceMatchHolderType = targetName === sourceHolderType;
+    const doesSourceMatchholderName = targetName === sourceHolderName;
 
-    return connectedHolder.length > 0 && doesSourceMatchHolderType;
+    return connectedHolder.length > 0 && doesSourceMatchholderName;
   }
   return false;
 };
@@ -247,8 +265,9 @@ const doesElementIsEmbeddedWithExhaustedConnections = (
 export const shapesDataTransform = (
   instances: InstanceForApi[],
   instance: InstanceForApi,
+  serviceModel: ServiceModel | EmbeddedEntity,
   isEmbedded = false,
-) => {
+): InstanceForApi => {
   let areEmbeddedEdited = false;
   const matchingInstances = instances.filter(
     (checkedInstance) => checkedInstance.embeddedTo === instance.instance_id,
@@ -268,47 +287,59 @@ export const shapesDataTransform = (
 
   for (const [key, instancesToEmbed] of Object.entries(groupedEmbedded)) {
     if (instance.attributes) {
-      if (instancesToEmbed.length > 1) {
-        const updated: InstanceAttributeModel[] = [];
-        instancesToEmbed.forEach((instance) => {
+      const updated: InstanceAttributeModel[] = [];
+      const embeddedModel = serviceModel.embedded_entities.find(
+        (entity) => entity.name === instancesToEmbed[0].service_entity,
+      );
+      //iterate through instancesToEmbed to recursively join potential nested embedded entities into correct objects in correct state
+      instancesToEmbed.forEach((instanceToEmbed) => {
+        if (embeddedModel) {
           const updatedInstance = shapesDataTransform(
             notMatchingInstances,
-            instance,
-            true,
+            instanceToEmbed,
+            embeddedModel,
+            !!embeddedModel,
           );
 
-          areEmbeddedEdited =
-            !areEmbeddedEdited &&
-            !instance.action &&
-            updatedInstance.action !== null;
-
-          if (updatedInstance.action !== "delete") {
-            updated.push(updatedInstance.attributes as InstanceAttributeModel);
+          if (!areEmbeddedEdited) {
+            areEmbeddedEdited =
+              !instance.action && updatedInstance.action !== null;
           }
-        });
-
-        instance.attributes[key] = updated;
-      } else {
-        const data = shapesDataTransform(
-          notMatchingInstances,
-          instancesToEmbed[0],
-          true,
-        );
-
-        areEmbeddedEdited = instance.action === null && data.action !== null;
-
-        if (data.action !== "delete") {
-          instance.attributes[key] = data.attributes;
+          if (
+            updatedInstance.action !== "delete" &&
+            updatedInstance.attributes
+          ) {
+            updated.push(updatedInstance.attributes);
+          }
         }
-      }
+      });
+
+      instance.attributes[key] =
+        updated.length === 1 && isSingularRelation(embeddedModel)
+          ? updated[0]
+          : updated;
     }
   }
 
   //convert relatedTo property into valid attribute
   if (instance.relatedTo) {
-    instance.relatedTo.forEach((attrName, id) => {
+    Array.from(instance.relatedTo).forEach(([id, attributeName]) => {
       if (instance.attributes) {
-        instance.attributes[attrName] = id;
+        const model = serviceModel.inter_service_relations?.find(
+          (relation) => relation.name === attributeName,
+        );
+        if (model) {
+          if (model.upper_limit !== 1) {
+            instance.attributes[attributeName];
+            if (Array.isArray(instance.attributes[attributeName])) {
+              (instance.attributes[attributeName] as string[]).push(id);
+            } else {
+              instance.attributes[attributeName] = [id];
+            }
+          } else {
+            instance.attributes[attributeName] = id;
+          }
+        }
       }
     });
   }
@@ -349,7 +380,7 @@ export const shapesDataTransform = (
 export const bundleInstances = (
   instances: Map<string, InstanceForApi>,
   services: ServiceModel[],
-) => {
+): InstanceForApi[] => {
   const mapToArray = Array.from(instances, (instance) => instance[1]); //only value, the id is stored in the object anyway
   const deepCopiedMapToArray: InstanceForApi[] = JSON.parse(
     JSON.stringify(mapToArray),
@@ -366,6 +397,7 @@ export const bundleInstances = (
       : mapToArray[index].relatedTo;
   });
   const topServicesNames = services.map((service) => service.name);
+  // topInstances are instances that have top-level attributes from given serviceModel, and theoretically are the ones accepting embedded-entities
   const topInstances = deepCopiedMapToArray.filter((instance) =>
     topServicesNames.includes(instance.service_entity),
   );
@@ -373,7 +405,127 @@ export const bundleInstances = (
     (instance) => !topServicesNames.includes(instance.service_entity),
   );
 
-  return topInstances.map((instance) =>
-    shapesDataTransform(embeddedInstances, instance),
+  const mergedInstances: InstanceForApi[] = [];
+
+  topInstances.forEach((instance) => {
+    const serviceModel = services.find(
+      (service) => service.name === instance.service_entity,
+    );
+    if (serviceModel) {
+      mergedInstances.push(
+        shapesDataTransform(embeddedInstances, instance, serviceModel),
+      );
+    }
+  });
+
+  return mergedInstances;
+};
+
+const isSingularRelation = (model?: EmbeddedEntity) => {
+  return !!model && !!model.upper_limit && model.upper_limit === 1;
+};
+
+/**
+ *
+ * Find if the relations of some instance includes Id of the instance passed through prop
+ * @param neighborRelations map of ids that could include id of intanceAsTable
+ * @param instanceAsTable Instance to which should instances connect to
+ * @returns
+ */
+export const findCorrespondingId = (
+  neighborRelations: Map<string, string>,
+  instanceAsTable: ServiceEntityBlock,
+) => {
+  return Array.from(neighborRelations, ([id, attributeName]) => ({
+    id,
+    attributeName,
+  })).find(({ id }) => id === instanceAsTable.id);
+};
+
+/**
+ * Updates the position of a label relative to a link's target or source side.
+ * @param {"target" | "source"} side - The side of the link where the label is positioned. Can be "target" or "source".
+ * @param {g.Rect} _refBBox - The bounding box of a reference element (unused).
+ * @param {SVGSVGElement} node - The SVG element representing the label.
+ * @param {{ [key: string]: unknown }} _attrs - Additional attributes for the label (unused).
+ * @param {LabelLinkView} linkView - The view representing the link associated with the label.
+ * @returns {{ textAnchor: "start" | "end", x: number, y: number }} - An object containing the updated attributes for the label.
+ */
+export const updateLabelPosition = (
+  side: "target" | "source",
+  _refBBox: g.Rect,
+  node: SVGSVGElement,
+  _attrs: { [key: string]: unknown },
+  linkView: LabelLinkView, //dia.LinkView & dia.Link doesn't have sourceView or targetView properties in the model
+): { textAnchor: "start" | "end"; x: number; y: number } => {
+  let textAnchor, tx, ty, viewCoordinates, anchorCoordinates;
+  if (side === "target") {
+    viewCoordinates = linkView.targetView.model.position();
+    anchorCoordinates = linkView.targetPoint;
+  } else {
+    viewCoordinates = linkView.sourceView.model.position();
+    anchorCoordinates = linkView.sourcePoint;
+  }
+  if (viewCoordinates && anchorCoordinates) {
+    if (viewCoordinates.x !== anchorCoordinates.x) {
+      textAnchor = "start";
+      tx = node.getBBox().width / 2 + 6;
+    } else {
+      textAnchor = "end";
+      tx = node.getBBox().width / -2 - 6;
+    }
+  }
+  const isTargetBelow =
+    linkView.getEndAnchor("target").y < linkView.getEndAnchor("source").y;
+
+  switch (side) {
+    case "target":
+      ty = isTargetBelow ? -15 : 15;
+      break;
+    case "source":
+      ty = isTargetBelow ? 15 : -15;
+      break;
+  }
+
+  return { textAnchor: textAnchor, x: tx || 0, y: ty || 0 };
+};
+
+/**
+ * Toggle the highlighting of a loose element in a diagram cell view.
+ * @param {dia.CellView} cellView - The cell view containing the element.
+ * @param {"add" | "remove"} kind - The action to perform, either "add" to add highlighting or "remove" to remove highlighting.
+ * @returns {void}
+ */
+export const toggleLooseElement = (
+  cellView: dia.CellView,
+  kind: "add" | "remove",
+): void => {
+  switch (kind) {
+    case "add":
+      highlighters.mask.add(cellView, "root", "loose_element", {
+        padding: 0,
+        className: "loose_element-highlight",
+        attrs: {
+          "stroke-width": 3,
+          filter: "drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4))",
+        },
+      });
+      break;
+    case "remove":
+      const highlighter = dia.HighlighterView.get(cellView, "loose_element");
+      if (highlighter) {
+        highlighter.remove();
+      }
+      break;
+    default:
+      break;
+  }
+  document.dispatchEvent(
+    new CustomEvent("looseEmbedded", {
+      detail: JSON.stringify({
+        kind,
+        id: cellView.model.id,
+      }),
+    }),
   );
 };

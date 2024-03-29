@@ -1,7 +1,4 @@
 import { RouteKind } from "@/Core";
-import { Dashboard } from "@/Slices/Dashboard";
-import { InstanceComposer } from "@/Slices/InstanceComposer";
-import { InstanceComposerEditor } from "@/Slices/InstanceComposerEditor";
 import { AgentProcess } from "@S/AgentProcess";
 import { Agents } from "@S/Agents";
 import { CompileDetails } from "@S/CompileDetails";
@@ -9,6 +6,7 @@ import { CompileReports } from "@S/CompileReports";
 import { ComplianceCheck } from "@S/ComplianceCheck";
 import { CreateEnvironment } from "@S/CreateEnvironment";
 import { CreateInstance } from "@S/CreateInstance";
+import { Dashboard } from "@S/Dashboard";
 import { DesiredState } from "@S/DesiredState";
 import { DesiredStateCompare } from "@S/DesiredStateCompare";
 import { DesiredStateDetails } from "@S/DesiredStateDetails";
@@ -19,16 +17,22 @@ import { EditInstance } from "@S/EditInstance";
 import { Events } from "@S/Events";
 import { Facts } from "@S/Facts";
 import { Home } from "@S/Home";
+import { InstanceComposer } from "@S/InstanceComposer";
+import { InstanceComposerEditor } from "@S/InstanceComposerEditor";
 import { Notification } from "@S/Notification";
+import { OrderDetails } from "@S/OrderDetails";
+import { Orders } from "@S/Orders";
 import { Parameters } from "@S/Parameters";
 import { Resource } from "@S/Resource";
 import { ResourceDetails } from "@S/ResourceDetails";
+import { DiscoveredResources } from "@S/ResourceDiscovery";
 import { ServiceCatalog } from "@S/ServiceCatalog";
 import { ServiceDetails } from "@S/ServiceDetails";
 import { ServiceInstanceHistory } from "@S/ServiceInstanceHistory";
 import { ServiceInventory } from "@S/ServiceInventory";
 import { Settings } from "@S/Settings";
 import { Status } from "@S/Status";
+import { UserManagement } from "@S/UserManagement";
 
 type Paths = Record<RouteKind, string>;
 
@@ -41,6 +45,7 @@ export const paths: Paths = {
   NotificationCenter: Notification.path,
   Settings: Settings.path,
   Status: Status.path,
+  UserManagement: UserManagement.path,
 
   /**
    * LSM
@@ -57,12 +62,15 @@ export const paths: Paths = {
   InstanceComposerEditor: InstanceComposerEditor.path,
   Inventory: ServiceInventory.path,
   ServiceDetails: ServiceDetails.path,
+  Orders: Orders.path,
+  OrderDetails: OrderDetails.path,
 
   /**
    * Resource Manager
    */
   AgentProcess: AgentProcess.path,
   Agents: Agents.path,
+  DiscoveredResources: DiscoveredResources.path,
   Facts: Facts.path,
   ResourceDetails: ResourceDetails.path,
   Resources: Resource.path,

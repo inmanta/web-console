@@ -437,7 +437,7 @@ export const nestedEditable: EmbeddedEntity[] = [
         attributes: [
           {
             name: "attr4",
-            modifier: "rw+",
+            modifier: "rw",
             type: "int[]",
             default_value: null,
             default_value_set: false,
@@ -448,7 +448,7 @@ export const nestedEditable: EmbeddedEntity[] = [
         embedded_entities: [],
         name: "embedded_single",
         description: "description",
-        modifier: "rw+",
+        modifier: "rw",
         lower_limit: 0,
         upper_limit: 1,
       },

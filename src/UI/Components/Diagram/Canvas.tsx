@@ -6,12 +6,14 @@ import { AlertVariant } from "@patternfly/react-core";
 import { isObject } from "lodash";
 import styled from "styled-components";
 import { objectHasKey, ServiceModel } from "@/Core";
+import { sanitizeAttributes } from "@/Data";
 import { InstanceWithReferences } from "@/Data/Managers/GetInstanceWithRelations/interface";
 import diagramInit, { DiagramHandlers } from "@/UI/Components/Diagram/init";
 import { CanvasWrapper } from "@/UI/Components/Diagram/styles";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { ToastAlert } from "../ToastAlert";
+import { sendOrder } from "./api/orderRequest";
 import DictModal from "./components/DictModal";
 import FormModal from "./components/FormModal";
 import Toolbar from "./components/Toolbar";
@@ -33,6 +35,7 @@ const Canvas = ({
   const environment = environmentHandler.useId();
   const baseUrl = urlManager.getApiUrl();
   const canvas = useRef<HTMLDivElement>(null);
+  const [looseEmbedded, setLooseEmbedded] = useState<Set<string>>(new Set());
   const [alertMessage, setAlertMessage] = useState("");
   const [alertType, setAlertType] = useState(AlertVariant.danger);
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
@@ -52,6 +55,26 @@ const Canvas = ({
     service: mainServiceName,
   });
 
+  const handleLooseEmbeddedEvent = (event) => {
+    const customEvent = event as CustomEvent;
+    const eventData: { kind: "remove" | "add"; id: string } = JSON.parse(
+      customEvent.detail,
+    );
+    if (eventData.kind === "remove") {
+      setLooseEmbedded((prevSet) => {
+        const newSet = new Set(prevSet);
+        newSet.delete(eventData.id);
+        return newSet;
+      });
+    } else {
+      setLooseEmbedded((prevSet) => {
+        const newSet = new Set(prevSet);
+        newSet.add(eventData.id);
+        return newSet;
+      });
+    }
+  };
+
   const handleDictEvent = (event) => {
     const customEvent = event as CustomEvent;
     setDictToDisplay(JSON.parse(customEvent.detail));
@@ -64,23 +87,18 @@ const Canvas = ({
 
   const handleDeploy = async () => {
     try {
-      const response = await fetch(`${baseUrl}/lsm/v2/order`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Inmanta-tid": environment,
-        },
-        body: JSON.stringify({
-          service_order_items: bundleInstances(
-            instancesToSend,
-            services,
-          ).filter((item) => item.action !== null),
-        }),
-      });
+      const response = await sendOrder(
+        baseUrl,
+        environment,
+        bundleInstances(instancesToSend, services).filter(
+          (item) => item.action !== null,
+        ),
+      );
 
       if (response.ok) {
         setAlertType(AlertVariant.success);
         setAlertMessage(words("inventory.instanceComposer.success"));
+        //If response is successful then show feedback notification and redirect user to the service inventory view
         setTimeout(() => {
           navigate(url);
         }, 1000);
@@ -107,7 +125,7 @@ const Canvas = ({
       service_entity: cell.getName(),
       config: {},
       action: null,
-      attributes: cell.get("instanceAttributes"),
+      attributes: cell.get("sanitizedAttrs"),
       edits: null,
       embeddedTo: cell.get("embeddedTo"),
       relatedTo: cell.getRelations(),
@@ -154,25 +172,29 @@ const Canvas = ({
     const connectionRules = createConnectionRules(services, {});
     const actions = diagramInit(canvas, connectionRules, handleUpdate);
     setDiagramHandlers(actions);
-
     if (instance) {
       const isMainInstance = true;
-      const cells = actions.addInstance(instance, services, isMainInstance);
-      const newInstances = new Map();
-      cells.forEach((cell) => {
-        if (cell.type === "app.ServiceEntityBlock") {
-          newInstances.set(cell.id, {
-            instance_id: cell.id,
-            service_entity: cell.entityName,
-            config: {},
-            action: null,
-            value: cell.instanceAttributes,
-            embeddedTo: cell.embeddedTo,
-            relatedTo: cell.relatedTo,
-          });
-        }
-      });
-      setInstancesToSend(newInstances);
+      try {
+        const cells = actions.addInstance(instance, services, isMainInstance);
+        const newInstances = new Map();
+        cells.forEach((cell) => {
+          if (cell.type === "app.ServiceEntityBlock") {
+            newInstances.set(cell.id, {
+              instance_id: cell.id,
+              service_entity: cell.entityName,
+              config: {},
+              action: null,
+              attributes: cell.instanceAttributes,
+              embeddedTo: cell.embeddedTo,
+              relatedTo: cell.relatedTo,
+            });
+          }
+        });
+        setInstancesToSend(newInstances);
+      } catch (error) {
+        setAlertType(AlertVariant.danger);
+        setAlertMessage(String(error));
+      }
     }
 
     return () => {
@@ -193,15 +215,17 @@ const Canvas = ({
   useEffect(() => {
     document.addEventListener("openDictsModal", handleDictEvent);
     document.addEventListener("openEditModal", handleEditEvent);
+    document.addEventListener("looseEmbedded", handleLooseEmbeddedEvent);
 
     return () => {
       document.removeEventListener("openDictsModal", handleDictEvent);
       document.removeEventListener("openEditModal", handleEditEvent);
+      document.addEventListener("looseEmbedded", handleLooseEmbeddedEvent);
     };
   }, []);
 
   return (
-    <Container>
+    <Container aria-label="Composer-Container">
       {alertMessage && (
         <ToastAlert
           data-testid="ToastAlert"
@@ -229,8 +253,9 @@ const Canvas = ({
         }}
         services={services}
         cellView={cellToEdit}
-        onConfirm={(entity, selected) => {
+        onConfirm={(fields, entity, selected) => {
           if (diagramHandlers) {
+            const sanitizedAttrs = sanitizeAttributes(fields, entity);
             if (cellToEdit) {
               //deep copy
               const shape = diagramHandlers.editEntity(
@@ -238,7 +263,7 @@ const Canvas = ({
                 selected.model as ServiceModel,
                 entity,
               );
-
+              shape.set("sanitizedAttrs", sanitizedAttrs);
               handleUpdate(shape, ActionEnum.UPDATE);
             } else {
               const shape = diagramHandlers.addEntity(
@@ -246,7 +271,9 @@ const Canvas = ({
                 selected.model as ServiceModel,
                 selected.name === mainServiceName,
                 selected.isEmbedded,
+                selected.holderName,
               );
+              shape.set("sanitizedAttrs", sanitizedAttrs);
               handleUpdate(shape, ActionEnum.CREATE);
             }
           }
@@ -258,7 +285,9 @@ const Canvas = ({
         }}
         serviceName={mainServiceName}
         handleDeploy={handleDeploy}
-        isDeployDisabled={instancesToSend.size < 1 || !isDirty}
+        isDeployDisabled={
+          instancesToSend.size < 1 || !isDirty || looseEmbedded.size > 0
+        }
       />
       <CanvasWrapper id="canvas-wrapper">
         <div className="canvas" ref={canvas} />
@@ -294,8 +323,8 @@ const Canvas = ({
 export default Canvas;
 
 const Container = styled.div`
-  margin: 0 40px;
   height: 100%;
+  padding-top: 20px;
 `;
 
 const ZoomWrapper = styled.div`

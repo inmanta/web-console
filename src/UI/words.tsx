@@ -157,12 +157,25 @@ const dict = {
   "inventory.form.placeholder.floatList": "1.1, 3.14, 4.3",
   "inventory.form.placeholder.stringList": "Add a list of values",
   "inventory.form.placeholder.dict": '{"key": "value"}',
+  "inventory.instanceComposer.labelButtonTooltip": "Toggle connection labels",
+  "inventory.instanceComposer.addInstanceButtonTooltip":
+    "Add new instance to the canvas.",
+  "inventory.instanceComposer.orderDescription":
+    "Requested with Instance Composer",
+  "inventory.instanceComposer.errorMessage": "missing Instance Model",
   "inventory.instanceComposer.editButton": "Edit in Composer",
-  "inventory.instanceComposer.success": "The request got sent succesfully",
-  "inventory.instanceComposer.success.title": "Instance Composed succesfully",
+  "inventory.instanceComposer.formModal.placeholder": "Choose a Service",
+  "inventory.instanceComposer.formModal.create.title": "Add Entity",
+  "inventory.instanceComposer.formModal.edit.title": "Edit Entity",
+  "inventory.instanceComposer.success": "The request got sent successfully",
+  "inventory.instanceComposer.success.title": "Instance Composed successfully",
   "inventory.instanceComposer.failed.title": "Instance Composing failed",
   "inventory.instanceComposer.dictModal": (valueName: string) =>
     `Values of ${valueName}`,
+  "inventory.instanceComposer.disabled":
+    "Your licence doesn't give you access to the Instance Composer, please contact support for more details.",
+  "inventory.instanceComposer.title": "Instance Composer",
+  "inventory.instanceComposer.title.edit": "Instance Composer Editor",
   "inventory.deleteInstance.button": "Delete",
   "inventory.deleteInstance.failed": "Deleting instance failed",
   "inventory.deleteInstance.title": "Delete instance",
@@ -192,7 +205,7 @@ const dict = {
   "inventory.editAttribute.header": "Update Attribute",
   "inventory.editAttribute.text": (oldValue: string, newValue: string) =>
     `Are you absolutely sure you want to change attribute from ${oldValue} to ${newValue}? This operation can corrupt the instance.`,
-
+  "inventory.error.mermaid": "Error rendering Mermaid diagram",
   /**
    * Config related text
    */
@@ -253,6 +266,39 @@ const dict = {
   "diagnose.main.subtitle": (instanceId: string) =>
     `The following errors were found related to instance ${instanceId}`,
   "diagnose.title": "Diagnose Service Instance",
+
+  /**
+   * Orders related text
+   */
+  "orders.title": "Orders Overview",
+  "ordersDetails.title": "Order Details",
+  "orders.column.created_at": "Created at",
+  "orders.column.completed_at": "Completed at",
+  "orders.column.progress": "Deployment Progress",
+  "orders.column.status": "Status",
+  "orders.column.description": "Description / Order Id",
+  "orders.column.option": "Options",
+  "orders.column.action": "Action",
+  "orders.column.serviceEntity": "Service Entity",
+  "orders.column.instanceId": "Instance Id",
+  "orders.row.dependencies": "Dependencies",
+  "orders.row.config": "Config",
+  "orders.row.state": "State",
+  "orders.row.details": "Details",
+  "orders.row.failureType": "Failure Type",
+  "orders.row.reason": "Reason",
+  "orders.row.compilerReport": "Show Compile Report",
+  "orders.row.body": "Body",
+  "orders.table.empty": "No orders could be found.",
+  "orderDetails.table.empty": "No orders details could be found.",
+  "orders.links.details": "Show Details",
+  "orders.row.empty": "Empty",
+  "orders.status.failed": "failed",
+  "orders.status.acknowledged": "acknowledged",
+  "orders.status.completed": "completed",
+  "orders.status.in_progress": "in progress",
+  "orders.disabled":
+    "Your licence doesn't give you access to the Orders Feature, please contact support for more details.",
 
   /**
    * Catalog related text
@@ -362,6 +408,8 @@ const dict = {
    * Latest released resource view
    */
   "resources.empty.message": "No resources found",
+  "resources.discovery.disabled":
+    "Your licence doesn't give you access to the Resource Discovery Feature, please contact support for more details.",
   "resources.column.type": "Type",
   "resources.column.agent": "Agent",
   "resources.column.value": "Value",
@@ -410,6 +458,11 @@ const dict = {
     "Request the agents to check the current state of each resource in a state different from the deployed state and make the current state of those resources in line with the desired state.",
   "resources.repair.tooltip":
     "Request the agents to check the current state of each resource and make the current state in-line with the desired state.",
+
+  /** Discovered Resources related text */
+  "discovered.column.resource_id": "resource_id",
+  "discovered_resources.title": "Discovered Resources",
+  "discovered_resources.values": "values",
 
   /** Compile report related text */
   "compileReports.title": "Compile Reports",
@@ -563,6 +616,7 @@ const dict = {
   "facts.column.updated": "Updated",
   "facts.column.value": "Value",
   "facts.column.resourceId": "Resource Id",
+  "facts.empty.message": "No facts found",
 
   /** Agent Process */
   "agentProcess.title": "Agent Process",
@@ -676,6 +730,26 @@ const dict = {
   "common.compileWidget.compiling": "Compiling",
   "common.compileWidget.compilationDisabled.hint":
     "The server_compile setting is disabled. You can enable it on the settings page under the configuration tab.",
+
+  /**
+   * Login
+   */
+  "login.title": "Log in to your account",
+  "login.subtitle": "Enter your credentials",
+  "login.login": "Log in",
+
+  /**
+   * User Management
+   */
+  "userManagement.title": "User Management",
+  "userManagement.name": "Name",
+  "userManagement.actions": "Actions",
+  "userManagement.filter.placeholder": "Username...",
+  "userManagement.addUser": "Add User",
+  "userManagement.deleteUser.title": "Delete User",
+  "userManagement.deleteUserMessage": (username: string) =>
+    `Are you sure you want to delete user ${username}?`,
+  "userManagement.empty.message": "No users found",
 };
 
 type Key = keyof typeof dict;

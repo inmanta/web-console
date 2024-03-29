@@ -140,7 +140,7 @@ test("Given CellWithCopyExpert When a cell has on click Then it is rendered as a
   await act(async () => {
     await userEvent.click(cell);
   });
-  expect(onClickFn).toBeCalledWith(props.value);
+  expect(onClickFn).toHaveBeenCalledWith(props.value);
 });
 
 test("Given CellWithCopyExpert When a cell has entity and on click Then it is rendered as a link", async () => {
@@ -167,7 +167,7 @@ test("Given CellWithCopyExpert When a cell has entity and on click Then it is re
   await act(async () => {
     await userEvent.click(cell);
   });
-  expect(onClickFn).toBeCalledWith(props.value, props.serviceName);
+  expect(onClickFn).toHaveBeenCalledWith(props.value, props.serviceName);
 });
 
 test("Given CellWithCopyExpert When a cell has entity, multiple values and on click Then multiple links are rendered", async () => {
@@ -203,13 +203,13 @@ test("Given CellWithCopyExpert When a cell has entity, multiple values and on cl
   await act(async () => {
     await userEvent.click(firstCell);
   });
-  expect(onClickFn).toBeCalledWith(someValue, props.serviceName);
+  expect(onClickFn).toHaveBeenCalledWith(someValue, props.serviceName);
   const otherCell = await screen.findByText(someOtherValue);
   expect(otherCell).toBeVisible();
   await act(async () => {
     await userEvent.click(otherCell);
   });
-  expect(onClickFn).toBeCalledWith(someOtherValue, props.serviceName);
+  expect(onClickFn).toHaveBeenCalledWith(someOtherValue, props.serviceName);
 });
 
 test("Given CellWithCopyExpert When a cell has access to expertMode Then button in cell appears that hold functionality to show and hide input", async () => {

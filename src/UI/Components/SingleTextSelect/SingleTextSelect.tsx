@@ -68,7 +68,7 @@ export const SingleTextSelect: React.FC<Props> = ({
       setIsOpen(true);
     }
 
-    if (filterValue && hasCreation) {
+    if (filterValue && hasCreation && filterValue.trim()) {
       let newSelectOptions: SelectOptionProps[] = options;
       newSelectOptions = options.filter((menuItem) =>
         String(menuItem.children)
@@ -104,7 +104,11 @@ export const SingleTextSelect: React.FC<Props> = ({
           isDisabled: true,
         },
       ]);
-    } else if (options.length === 0 && hasCreation) {
+    } else if (
+      options.length === 0 &&
+      hasCreation &&
+      filterValue.trim() != ""
+    ) {
       setSelectOptions([
         { children: `Create "${inputValue}"`, value: "create" },
       ]);
@@ -115,17 +119,22 @@ export const SingleTextSelect: React.FC<Props> = ({
   }, [options]);
 
   useEffect(() => {
-    setInputValue(selected || "");
+    setInputValue(getDisplayValue(selected));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selected]);
 
   const onToggleClick = () => {
     setIsOpen(!isOpen);
   };
 
-  const getDisplayValue = (value: string | number | undefined) => {
+  const getDisplayValue = (value: string | null) => {
     const selectedItem = options.find((option) => option.value === value);
 
-    return selectedItem?.children || value;
+    if (selectedItem && selectedItem.children) {
+      return String(selectedItem.children);
+    }
+
+    return value || "";
   };
 
   const onSelect = (
@@ -141,8 +150,8 @@ export const SingleTextSelect: React.FC<Props> = ({
       default:
         if (value && value !== "no results") {
           setFilterValue("");
-          setInputValue(getDisplayValue(value) as string);
-          setSelected(value as string);
+          setInputValue(getDisplayValue(String(value)));
+          setSelected(String(value));
         }
         break;
     }
@@ -206,13 +215,13 @@ export const SingleTextSelect: React.FC<Props> = ({
       // Select the first available option
       case "Enter":
         if (isOpen && focusedItem.value !== "no results") {
-          //   setInputValue(String(focusedItem.children));
+          setInputValue(String(focusedItem.children));
           setFilterValue("");
           setSelected(String(focusedItem.children));
         }
 
         if (checkIfOptionMatchInput(options, filterValue)) {
-          setSelected(filterValue as string);
+          setSelected(String(filterValue));
         }
 
         setIsOpen((prevIsOpen) => !prevIsOpen);

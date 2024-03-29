@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps-dev): Bump @babel/core from 7.23.5 to 7.23.6'
+destination-branches:
+- master
+- iso7
+sections: {}

@@ -9,6 +9,12 @@ import {
 } from "./Group";
 import { NavigationItem } from "./NavigationItem";
 
+/**
+ * Navigation component
+ * @param {environment} - string | undefined
+ *
+ * @returns {React.FC} - Navigation component
+ */
 export const Navigation: React.FC<{ environment: string | undefined }> = ({
   environment,
 }) => {
@@ -17,10 +23,10 @@ export const Navigation: React.FC<{ environment: string | undefined }> = ({
   const groups = [
     envrionment(routeManager, isEnvPresent),
     ...(featureManager.isLsmEnabled()
-      ? [lifecycleServiceManager(routeManager, isEnvPresent)]
+      ? [lifecycleServiceManager(routeManager, isEnvPresent, featureManager)]
       : []),
     orchestrationEngine(routeManager, isEnvPresent),
-    resourceManager(routeManager, isEnvPresent),
+    resourceManager(routeManager, isEnvPresent, featureManager),
   ];
 
   return (

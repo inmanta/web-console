@@ -79,15 +79,15 @@ describe("5 Compile reports", () => {
     // go to compile reports page
     cy.get(".pf-v5-c-nav__link").contains("Compile Reports").click();
 
-    // expect it to have 1 item shown in the table
-    cy.get("tbody").should(($tableBody) => {
+    // expect it to have 2 item shown in the table, or 3 if it is the OSS edition
+    cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
       const $rows = $tableBody.find("tr");
 
-      expect($rows).to.have.length(isIso ? 1 : 3);
+      expect($rows).to.have.length(isIso ? 2 : 3);
 
       expect($rows.eq(0), "top-row-message").to.contain(
         isIso
-          ? "Recompile model to export service definition"
+          ? "Recompile model to generate resources using the updated service definition and modules"
           : "Compile triggered from the console",
       );
       expect($rows.eq(0), "top-row-status").to.contain("success");
@@ -121,9 +121,7 @@ describe("5 Compile reports", () => {
     cy.get("button").contains("Show Details").eq(0).click();
 
     // Expect to be redirected to compile details page
-    cy.get(".pf-v5-c-title")
-      .contains("Compile Details")
-      .should("to.be.visible");
+    cy.get(".pf-v5-c-title").contains("Compile Details").should("to.exist");
 
     // Expect message to be : Compile triggered from the console
     cy.get(".pf-v5-c-description-list__group")
@@ -191,17 +189,17 @@ describe("5 Compile reports", () => {
       cy.get("tbody", { timeout: 60000 }).should(($tableBody) => {
         const $rows = $tableBody.find("tr");
 
-        expect($rows).to.have.length(5);
+        expect($rows).to.have.length(6);
 
-        // Expect latest row to be having the message: Recompile model because state transition
+        // Expect latest row to be having the message: Recompile model because of state transition from creating to up
         expect($rows.eq(0), "top-row-message").to.contain(
-          "Recompile model because state transition",
+          "Recompile model because of state transition from creating to up",
         );
         expect($rows.eq(1), "second-row-message").to.contain(
-          "Recompile model because state transition",
+          "Recompile model because of state transition from start to creating",
         );
         expect($rows.eq(2), "third-row-message").to.contain(
-          "Recompile model because state transition (validate)",
+          "Recompile model to validate state transition from start to creating",
         );
         expect($rows.eq(0), "top-row-status").to.contain("success");
         expect($rows.eq(1), "second-row-status").to.contain("success");
@@ -214,9 +212,7 @@ describe("5 Compile reports", () => {
       cy.get("button").contains("Show Details").eq(0).click();
 
       // Expect to be redirected to compile details page
-      cy.get(".pf-v5-c-title")
-        .contains("Compile Details")
-        .should("to.be.visible");
+      cy.get(".pf-v5-c-title").contains("Compile Details").should("to.exist");
 
       // Expect trigger to be lsm_export
       cy.get(".pf-v5-c-description-list__group")
@@ -271,11 +267,11 @@ describe("5 Compile reports", () => {
       cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
         const $rows = $tableBody.find("tr");
 
-        expect($rows).to.have.length(6);
+        expect($rows).to.have.length(7);
 
-        // Expect one row to be having the message: Recompile model because state transition (validate)
+        // Expect one row to be having the message: Recompile model to validate state transition from start to creating
         expect($rows.eq(0), "top-row-message").to.contain(
-          "Recompile model because state transition (validate)",
+          "Recompile model to validate state transition from start to creating",
         );
         expect($rows.eq(0), "top-row-status").to.contain("failed");
       });
@@ -284,9 +280,7 @@ describe("5 Compile reports", () => {
       cy.get("button").contains("Show Details").eq(0).click();
 
       // Expect to be redirected to compile details page
-      cy.get(".pf-v5-c-title")
-        .contains("Compile Details")
-        .should("to.be.visible");
+      cy.get(".pf-v5-c-title").contains("Compile Details").should("to.exist");
 
       // Expect trigger to be lsm
       cy.get(".pf-v5-c-description-list__group").eq(4).should("contain", "lsm");
@@ -333,11 +327,11 @@ describe("5 Compile reports", () => {
       cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
         const $rows = $tableBody.find("tr");
 
-        expect($rows).to.have.length(6);
+        expect($rows).to.have.length(7);
 
-        // Expect one row to be having the message: Recompile model because state transition (validate)
+        // Expect one row to be having the message: Recompile model to validate state transition from start to creating
         expect($rows.eq(0), "top-row-message").to.contain(
-          "Recompile model because state transition (validate)",
+          "Recompile model to validate state transition from start to creating",
         );
         expect($rows.eq(0), "top-row-status").to.contain("failed");
       });
@@ -349,7 +343,7 @@ describe("5 Compile reports", () => {
       cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
         const $rows = $tableBody.find("tr");
 
-        expect($rows).to.have.length(7);
+        expect($rows).to.have.length(8);
 
         // Expect one row to be having the message: Recompile model because state transition (validate)
         expect($rows.eq(0), "top-row-message").to.contain(
@@ -383,9 +377,9 @@ describe("5 Compile reports", () => {
 
         expect($rows).to.have.length(1);
 
-        // Expect one row to be having the message: Recompile model because state transition (validate)
+        // Expect one row to be having the message: Recompile model to validate state transition from start to creating
         expect($rows.eq(0), "top-row-message").to.contain(
-          "Recompile model because state transition (validate)",
+          "Recompile model to validate state transition from start to creating",
         );
         expect($rows.eq(0), "top-row-status").to.contain("failed");
       });
@@ -397,7 +391,7 @@ describe("5 Compile reports", () => {
       cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
         const $rows = $tableBody.find("tr");
 
-        expect($rows).to.have.length(7);
+        expect($rows).to.have.length(8);
       });
     });
   }

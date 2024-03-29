@@ -22,6 +22,7 @@ export const View: React.FC<Diff.Identifiers> = ({ from, to }) => {
   const { queryResolver } = useContext(DependencyContext);
   const refs: DiffWizard.Refs = useRef({});
   const [statuses, setStatuses] = useState(Diff.defaultStatuses);
+  const [searchFilter, setSearchFilter] = useState("");
 
   const [data] = queryResolver.useOneTime<"GetDesiredStateDiff">({
     kind: "GetDesiredStateDiff",
@@ -31,7 +32,13 @@ export const View: React.FC<Diff.Identifiers> = ({ from, to }) => {
 
   const filteredData = RemoteData.mapSuccess(
     (resources) =>
-      resources.filter((resource) => statuses.includes(resource.status)),
+      resources
+        .filter((resource) => statuses.includes(resource.status))
+        .filter((resource) =>
+          resource.resource_id
+            .toLocaleLowerCase()
+            .includes(searchFilter.toLocaleLowerCase()),
+        ),
     data,
   );
 
@@ -43,9 +50,11 @@ export const View: React.FC<Diff.Identifiers> = ({ from, to }) => {
       <PageSection variant="light">
         <ToolBarContainer>
           <ToolbarContent style={{ padding: 0 }}>
-            <DiffWizard.StatusFilter
+            <DiffWizard.DiffPageFilter
               statuses={statuses}
               setStatuses={setStatuses}
+              searchFilter={searchFilter}
+              setSearchFilter={setSearchFilter}
             />
           </ToolbarContent>
         </ToolBarContainer>

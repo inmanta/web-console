@@ -16,12 +16,14 @@ interface Props {
   report: MaybeReport;
   version: string;
   statuses: Diff.Status[];
+  searchFilter: string;
 }
 
 export const DiffPageSection: React.FC<Props> = ({
   report,
   version,
   statuses,
+  searchFilter,
 }) =>
   Maybe.isNone(report) ? null : (
     <DiffView
@@ -29,6 +31,7 @@ export const DiffPageSection: React.FC<Props> = ({
       todo={report.value.todo as number}
       version={version}
       statuses={statuses}
+      searchFilter={searchFilter}
     />
   );
 
@@ -37,7 +40,8 @@ const DiffView: React.FC<{
   todo: number;
   version: string;
   statuses: Diff.Status[];
-}> = ({ id, todo, version, statuses }) => {
+  searchFilter: string;
+}> = ({ id, todo, version, statuses, searchFilter }) => {
   const prevId = useRef(id);
   const refs: DiffWizard.Refs = useRef({});
   const { queryResolver } = useContext(DependencyContext);
@@ -87,7 +91,13 @@ const DiffView: React.FC<{
                 ) : (
                   <DiffWizard.ItemList
                     items={data.diff
-                      .filter((resource) => statuses.includes(resource.status))
+                      .filter(
+                        (resource) =>
+                          statuses.includes(resource.status) &&
+                          resource.resource_id
+                            .toLocaleLowerCase()
+                            .includes(searchFilter.toLocaleLowerCase()),
+                      )
                       .map(DiffWizard.fromResourceToItem)}
                     refs={refs}
                   />

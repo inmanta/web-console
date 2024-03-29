@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   FormGroup,
   FormHelperText,
@@ -10,6 +10,7 @@ import {
   TextInputTypes,
 } from "@patternfly/react-core";
 import { HelpIcon } from "@patternfly/react-icons";
+import { SuggestionsPopover } from "./SuggestionsPopover";
 
 interface Props {
   attributeName: string;
@@ -22,7 +23,25 @@ interface Props {
   shouldBeDisabled?: boolean;
   isTextarea?: boolean;
   handleInputChange: (value, event) => void;
+  suggestions?: string[] | null;
 }
+
+/**
+ * A form input component for text-based input fields.
+ *
+ * @component
+ * @param {Props} props - The props for the TextListFormInput component.
+ *  @prop {string} attributeName - The name of the attribute.
+ *  @prop {string[]} attributeValue - The value of the attribute.
+ *  @prop {string} description - The description of the attribute.
+ *  @prop {boolean} isOptional - Whether the attribute is optional.
+ *  @prop {boolean} shouldBeDisabled - Whether the attribute should be disabled. Default is false.
+ *  @prop {string} typeHint - The type hint for the attribute.
+ *  @prop {string} typeHint - The type hint for the attribute.
+ *  @prop {string} placeholder - The placeholder for the input field.
+ *  @prop {function} handleInputChange - The callback for handling input changes.
+ *  @prop {string[]} suggestions - The suggestions for the input field.
+ */
 export const TextFormInput: React.FC<Props> = ({
   attributeName,
   attributeValue,
@@ -34,8 +53,31 @@ export const TextFormInput: React.FC<Props> = ({
   handleInputChange,
   isTextarea = false,
   shouldBeDisabled = false,
+  suggestions = [],
   ...props
 }) => {
+  const inputRef = React.useRef<HTMLInputElement>(null);
+  const [isOpen, setIsOpen] = React.useState(false);
+  const [inputValue, setInputValue] = React.useState(attributeValue || "");
+
+  /**
+   * Handles the input change.
+   *
+   * @param {string} value - The new value of the input field.
+   *
+   * @returns {void}
+   */
+  const handleChange = (value) => {
+    setInputValue(value);
+  };
+
+  useEffect(() => {
+    if (attributeValue !== inputValue) {
+      handleInputChange(inputValue, null);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [attributeValue, inputValue]);
+
   return (
     <FormGroup
       {...props}
@@ -72,18 +114,36 @@ export const TextFormInput: React.FC<Props> = ({
           aria-label={`TextareaInput-${attributeName}`}
         />
       ) : (
-        <TextInput
-          isRequired={!isOptional}
-          type={type}
-          id={attributeName}
-          name={attributeName}
-          placeholder={placeholder}
-          aria-describedby={`${attributeName}-helper`}
-          aria-label={`TextInput-${attributeName}`}
-          value={attributeValue || ""}
-          onChange={(event, value) => handleInputChange(value, event)}
-          isDisabled={shouldBeDisabled}
-        />
+        <>
+          <TextInput
+            ref={inputRef}
+            isRequired={!isOptional}
+            type={type}
+            id={attributeName}
+            name={attributeName}
+            placeholder={placeholder}
+            aria-describedby={`${attributeName}-helper`}
+            aria-label={`TextInput-${attributeName}`}
+            value={inputValue || ""}
+            onChange={(_event, value) => handleChange(value)}
+            isDisabled={shouldBeDisabled}
+            onFocus={() => setIsOpen(true)}
+          />
+          {suggestions && suggestions.length > 0 && (
+            <SuggestionsPopover
+              suggestions={suggestions}
+              filter={inputRef.current?.value || ""}
+              handleSuggestionClick={(suggestion) => {
+                if (inputRef.current) {
+                  handleChange(suggestion);
+                }
+              }}
+              ref={inputRef}
+              isOpen={isOpen}
+              setIsOpen={setIsOpen}
+            />
+          )}
+        </>
       )}
       <FormHelperText>
         <HelperText>

@@ -1,14 +1,12 @@
 import React from "react";
-import {
-  PageManager,
-  Page,
-  RouteDictionary,
-  PageDictionary,
-  RestrictedPageDictionary,
-} from "@/Core";
+import { PageManager, Page, RouteDictionary, PageDictionary } from "@/Core";
 import { InstanceComposerPage } from "@/Slices/InstanceComposer/UI";
 import { InstanceComposerEditorPage } from "@/Slices/InstanceComposerEditor/UI";
+import { OrderDetailsPage } from "@/Slices/OrderDetails/UI";
+import { OrdersPage } from "@/Slices/Orders/UI";
+import { DiscoveredResourcesPage } from "@/Slices/ResourceDiscovery/UI";
 import { ServiceDetailsPage } from "@/Slices/ServiceDetails/UI";
+import { UserManagementPage } from "@/Slices/UserManagement/UI/Page";
 import { AgentProcessPage } from "@S/AgentProcess/UI";
 import { AgentsPage } from "@S/Agents/UI";
 import { CompileDetailsPage } from "@S/CompileDetails/UI";
@@ -39,7 +37,6 @@ import { StatusPage } from "@S/Status/UI";
 
 export class PrimaryPageManager implements PageManager {
   private pageDictionary: PageDictionary;
-  private restrictedPageDictionary: RestrictedPageDictionary;
 
   constructor(private readonly routeDictionary: RouteDictionary) {
     this.pageDictionary = {
@@ -57,6 +54,10 @@ export class PrimaryPageManager implements PageManager {
         ...this.routeDictionary.NotificationCenter,
         element: <NotificationCenterPage />,
       },
+      UserManagement: {
+        ...this.routeDictionary.UserManagement,
+        element: <UserManagementPage />,
+      },
 
       /**
        * LSM
@@ -69,6 +70,14 @@ export class PrimaryPageManager implements PageManager {
         ...this.routeDictionary.Catalog,
         element: <ServiceCatalogPage />,
       },
+      Orders: {
+        ...this.routeDictionary.Orders,
+        element: <OrdersPage />,
+      },
+      OrderDetails: {
+        ...this.routeDictionary.OrderDetails,
+        element: <OrderDetailsPage />,
+      },
       Inventory: {
         ...this.routeDictionary.Inventory,
         element: <ServiceInventoryPage />,
@@ -77,6 +86,14 @@ export class PrimaryPageManager implements PageManager {
       ServiceDetails: {
         ...this.routeDictionary.ServiceDetails,
         element: <ServiceDetailsPage />,
+      },
+      InstanceComposer: {
+        ...this.routeDictionary.InstanceComposer,
+        element: <InstanceComposerPage />,
+      },
+      InstanceComposerEditor: {
+        ...this.routeDictionary.InstanceComposerEditor,
+        element: <InstanceComposerEditorPage />,
       },
       CreateInstance: {
         ...this.routeDictionary.CreateInstance,
@@ -105,6 +122,10 @@ export class PrimaryPageManager implements PageManager {
         element: <ResourcesPage />,
       },
       Agents: { ...this.routeDictionary.Agents, element: <AgentsPage /> },
+      DiscoveredResources: {
+        ...this.routeDictionary.DiscoveredResources,
+        element: <DiscoveredResourcesPage />,
+      },
       Facts: { ...this.routeDictionary.Facts, element: <FactsPage /> },
       AgentProcess: {
         ...this.routeDictionary.AgentProcess,
@@ -152,27 +173,9 @@ export class PrimaryPageManager implements PageManager {
         element: <ComplianceCheckPage />,
       },
     };
-
-    this.restrictedPageDictionary = {
-      InstanceComposer: {
-        ...this.routeDictionary.InstanceComposer,
-        element: <InstanceComposerPage />,
-      },
-      InstanceComposerEditor: {
-        ...this.routeDictionary.InstanceComposerEditor,
-        element: <InstanceComposerEditorPage />,
-      },
-    };
   }
 
-  getPages(features: string[]): Page[] {
-    if (features && features.includes("instanceComposer")) {
-      return [
-        ...Object.values(this.pageDictionary),
-        ...Object.values(this.restrictedPageDictionary),
-      ];
-    } else {
-      return Object.values(this.pageDictionary);
-    }
+  getPages(): Page[] {
+    return Object.values(this.pageDictionary);
   }
 }

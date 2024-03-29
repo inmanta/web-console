@@ -9,12 +9,17 @@ import {
 } from "./actions";
 import { anchorNamespace } from "./anchors";
 import createHalo from "./halo";
-import { checkIfConnectionIsAllowed } from "./helpers";
+import { checkIfConnectionIsAllowed, toggleLooseElement } from "./helpers";
 import collapseButton from "./icons/collapse-icon.svg";
 import expandButton from "./icons/expand-icon.svg";
-import { ActionEnum, ConnectionRules, serializedCell } from "./interfaces";
+import {
+  ActionEnum,
+  ConnectionRules,
+  TypeEnum,
+  serializedCell,
+} from "./interfaces";
 import { routerNamespace } from "./routers";
-import { EntityConnection, ServiceEntityBlock } from "./shapes";
+import { Link, ServiceEntityBlock } from "./shapes";
 
 export default function diagramInit(
   canvas,
@@ -34,7 +39,14 @@ export default function diagramInit(
     width: 1000,
     height: 1000,
     gridSize: 1,
-    interactive: true,
+    interactive: { linkMove: false },
+    defaultConnectionPoint: {
+      name: "boundary",
+      args: {
+        extrapolate: true,
+        sticky: true,
+      },
+    },
     defaultConnector: { name: "rounded" },
     async: true,
     frozen: true,
@@ -56,7 +68,7 @@ export default function diagramInit(
         },
       },
     },
-    defaultLink: () => new EntityConnection(),
+    defaultLink: () => new Link(),
     validateConnection: (srcView, srcMagnet, tgtView, tgtMagnet) => {
       const baseValidators =
         srcMagnet !== tgtMagnet && srcView.cid !== tgtView.cid;
@@ -172,7 +184,13 @@ export default function diagramInit(
 
   paper.on("link:mouseenter", (linkView) => {
     if (linkView.model.get("isBlockedFromEditing")) return;
-    showLinkTools(graph, linkView, updateInstancesToSend);
+    showLinkTools(
+      paper,
+      graph,
+      linkView,
+      updateInstancesToSend,
+      connectionRules,
+    );
   });
 
   paper.on("link:mouseleave", (linkView: dia.LinkView) => {
@@ -183,8 +201,6 @@ export default function diagramInit(
     //only id values are stored in the linkView
     const source = linkView.model.source();
     const target = linkView.model.target();
-    let didSourceChanged = false;
-    let didTargetChanged = false;
 
     const sourceCell = graph.getCell(
       source.id as dia.Cell.ID,
@@ -193,53 +209,90 @@ export default function diagramInit(
       target.id as dia.Cell.ID,
     ) as ServiceEntityBlock;
 
-    if (
-      sourceCell.get("isEmbedded") &&
-      sourceCell.get("isEmbeddedTo") !== null
-    ) {
-      sourceCell.set("isEmbeddedTo", targetCell.id);
-      didSourceChanged = true;
-    }
-    if (
-      targetCell.get("isEmbedded") &&
-      targetCell.get("isEmbeddedTo") !== null
-    ) {
-      targetCell.set("isEmbeddedTo", sourceCell.id);
-      didTargetChanged = true;
-    }
+    linkView.model.appendLabel({
+      attrs: {
+        rect: {
+          fill: "none",
+        },
+        text: {
+          text: sourceCell.getName(),
+          autoOrient: "target",
+          class: "joint-label-text",
+        },
+      },
+      position: {
+        distance: 1,
+      },
+    });
+    linkView.model.appendLabel({
+      attrs: {
+        rect: {
+          fill: "none",
+        },
+        text: {
+          text: targetCell.getName(),
+          autoOrient: "source",
+          class: "joint-label-text",
+        },
+      },
+      position: {
+        distance: 0,
+      },
+    });
+    /**
+     * Function that checks if cell that we are connecting  to is being the one storing information about said connection.
+     * @param elementCell cell that we checking
+     * @param connectingCell cell that is being connected to elementCell
+     * @returns boolean whether connections was set
+     */
+    const wasConnectionDataAssigned = (
+      elementCell: ServiceEntityBlock,
+      connectingCell: ServiceEntityBlock,
+    ): boolean => {
+      const cellRelations = elementCell.getRelations();
+      const cellName = elementCell.getName();
+      const connectingCellName = connectingCell.getName();
 
-    const sourceRelations = sourceCell.getRelations();
-    const targetRelations = targetCell.getRelations();
-    const targetName = targetCell.getName();
-    const sourceName = sourceCell.getName();
+      //if cell has Map that mean it can accept inter-service relations
+      if (cellRelations) {
+        const cellConnectionRule = connectionRules[cellName].find(
+          (rule) => rule.name === connectingCellName,
+        );
 
-    if (sourceRelations) {
-      const doesSourceHaveRule = connectionRules[sourceName].find(
-        (rule) => rule.name === targetName,
-      );
+        //if there is corresponding rule we can apply connection and update given service
+        if (
+          cellConnectionRule &&
+          cellConnectionRule.kind === TypeEnum.INTERSERVICE
+        ) {
+          elementCell.addRelation(
+            connectingCell.id as string,
+            cellConnectionRule.attributeName,
+          );
 
-      if (doesSourceHaveRule) {
-        sourceCell.addRelation(targetCell.id as string, targetName);
-        didSourceChanged = true;
+          updateInstancesToSend(sourceCell, ActionEnum.UPDATE);
+          return true;
+        }
       }
-    }
 
-    if (targetRelations) {
-      const doesTargetHaveRule = connectionRules[targetName].find(
-        (rule) => rule.name === sourceName,
-      );
-
-      if (doesTargetHaveRule) {
-        targetCell.addRelation(sourceCell.id as string, sourceName);
-        didTargetChanged = true;
+      if (
+        elementCell.get("isEmbedded") &&
+        elementCell.get("embeddedTo") !== null
+      ) {
+        elementCell.set("embeddedTo", connectingCell.id);
+        toggleLooseElement(paper.findViewByModel(elementCell), "remove");
+        updateInstancesToSend(elementCell, ActionEnum.UPDATE);
+        return true;
+      } else {
+        return false;
       }
-    }
+    };
 
-    if (didSourceChanged) {
-      updateInstancesToSend(sourceCell, ActionEnum.UPDATE);
-    }
-    if (didTargetChanged) {
-      updateInstancesToSend(targetCell, ActionEnum.UPDATE);
+    const wasConnectionFromSourceSet = wasConnectionDataAssigned(
+      sourceCell,
+      targetCell,
+    );
+    if (!wasConnectionFromSourceSet) {
+      wasConnectionDataAssigned(targetCell, sourceCell);
     }
   });
 
@@ -289,28 +342,40 @@ export default function diagramInit(
       services: ServiceModel[],
       isMainInstance: boolean,
     ) => {
-      const appendedInstance = appendInstance(
-        paper,
-        graph,
-        instance,
-        services,
-        isMainInstance,
-      );
-      const { x, y } = appendedInstance.getBBox();
-      scroller.center(x, y + 200);
+      appendInstance(paper, graph, instance, services, isMainInstance);
+
+      scroller.zoomToFit({
+        useModelGeometry: true,
+        padding: 20,
+        scaleGrid: 0.05,
+        minScaleX: 0.4,
+        minScaleY: 0.4,
+        maxScaleX: 1.2,
+        maxScaleY: 1.2,
+      });
 
       const jsonGraph = graph.toJSON();
       return jsonGraph.cells as serializedCell[];
     },
 
-    addEntity: (instance, service, addingCoreInstance, isEmbedded) => {
+    addEntity: (
+      instance,
+      service,
+      addingCoreInstance,
+      isEmbedded,
+      holderName,
+    ) => {
       const shape = appendEntity(
         graph,
         service,
         instance,
         addingCoreInstance,
         isEmbedded,
+        holderName,
       );
+      if (shape.get("isEmbedded")) {
+        toggleLooseElement(paper.findViewByModel(shape), "add");
+      }
       const shapeCoordinates = shape.getBBox();
       scroller.center(shapeCoordinates.x, shapeCoordinates.y + 200);
       return shape;
@@ -344,6 +409,7 @@ export interface DiagramHandlers {
     service: ServiceModel,
     addingCoreInstance: boolean,
     isEmbedded: boolean,
+    embeddedTo: string,
   ) => ServiceEntityBlock;
   editEntity: (
     cellView: dia.CellView,

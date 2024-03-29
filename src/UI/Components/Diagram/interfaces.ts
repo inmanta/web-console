@@ -1,4 +1,5 @@
-import { ParsedNumber } from "@/Core";
+import { dia, g } from "@inmanta/rappid";
+import { InstanceAttributeModel, ParsedNumber } from "@/Core";
 
 enum ActionEnum {
   UPDATE = "update",
@@ -20,11 +21,24 @@ interface DictDialogData {
 }
 interface Rule {
   name: string;
-  lowerLimit: ParsedNumber | null;
-  upperLimit: ParsedNumber | null;
+  lowerLimit: ParsedNumber | null | undefined;
+  upperLimit: ParsedNumber | null | undefined;
+  modifier: string;
 }
+interface EmbeddedRule extends Rule {
+  kind: TypeEnum.EMBEDDED;
+}
+interface InterServiceRule extends Rule {
+  kind: TypeEnum.INTERSERVICE;
+  attributeName: string;
+}
+export enum TypeEnum {
+  EMBEDDED = "Embedded",
+  INTERSERVICE = "Inter-Service",
+}
+
 interface ConnectionRules {
-  [serviceName: string]: Rule[];
+  [serviceName: string]: (InterServiceRule | EmbeddedRule)[];
 }
 
 interface InstanceForApi {
@@ -32,8 +46,8 @@ interface InstanceForApi {
   service_entity: string;
   config: unknown;
   action: null | "update" | "create" | "delete";
-  attributes?: { [key: string]: unknown } | null;
-  edits?: { [key: string]: unknown }[] | null;
+  attributes?: InstanceAttributeModel | null;
+  edits?: InstanceAttributeModel[] | null;
   embeddedTo?: string | null;
   relatedTo?: Map<string, string> | null;
 }
@@ -100,19 +114,28 @@ interface serializedCell {
   relatedTo?: Map<string, string>;
   isEmbedded?: boolean;
   instanceAttributes?: Record<string, unknown>;
-  holderType?: string;
+  holderName?: string;
   embeddedTo?: string;
 }
 type relationId = string | null | undefined;
 
+//dia.LinkView & dia.Link doesn't have properties below in the model yet they are available to access and required to update labels
+interface LabelLinkView extends dia.LinkView {
+  sourceView: dia.CellView;
+  targetView: dia.CellView;
+  sourcePoint: g.Rect;
+  targetPoint: g.Rect;
+}
 export {
   ActionEnum,
   ColumnData,
   RouterOptions,
   DictDialogData,
-  Rule,
+  InterServiceRule,
+  EmbeddedRule,
   ConnectionRules,
   serializedCell,
   InstanceForApi,
   relationId,
+  LabelLinkView,
 };

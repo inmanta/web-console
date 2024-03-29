@@ -25,7 +25,7 @@ export const Timeline: React.FC<Props> = ({
   completed,
   success,
 }) => (
-  <Container>
+  <Container aria-label="Timeline">
     <RequestedLabel>Requested</RequestedLabel>
     <RequestedDiff>{requestedDiff}</RequestedDiff>
     <StartedLabel>Started</StartedLabel>

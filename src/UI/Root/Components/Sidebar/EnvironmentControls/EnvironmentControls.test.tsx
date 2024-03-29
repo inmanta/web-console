@@ -106,7 +106,9 @@ test("EnvironmentControls halt the environment when clicked and the environment 
   });
 
   const [receivedUrl, requestInit] = fetchMock.mock.calls[0];
-  expect(receivedUrl).toEqual(`/api/v2/actions/environment/halt`);
+  expect(receivedUrl).toEqual(
+    `http://localhost:8888/api/v2/actions/environment/halt`,
+  );
   expect(requestInit?.headers?.["X-Inmanta-Tid"]).toEqual(
     EnvironmentDetails.a.id,
   );
@@ -162,7 +164,9 @@ test("EnvironmentControls resume the environment when clicked and the environmen
 
   const [receivedUrl, requestInit] = fetchMock.mock.calls[0];
 
-  expect(receivedUrl).toEqual(`/api/v2/actions/environment/resume`);
+  expect(receivedUrl).toEqual(
+    `http://localhost:8888/api/v2/actions/environment/resume`,
+  );
   expect(requestInit?.headers?.["X-Inmanta-Tid"]).toEqual(
     EnvironmentDetails.a.id,
   );
