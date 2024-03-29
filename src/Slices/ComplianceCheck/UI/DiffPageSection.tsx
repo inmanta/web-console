@@ -46,6 +46,7 @@ const DiffView: React.FC<{
     reportId: id,
     version,
   });
+
   useEffect(() => {
     // avoid  double refetching when id is changed
     if (prevId.current !== id) {
