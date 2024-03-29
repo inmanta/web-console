@@ -91,7 +91,7 @@ export const TableControls: React.FC<Props> = ({
           identityAttribute={identityAttribute}
         />
         <ToolbarGroup align={{ default: "alignRight" }}>
-          {composerEnabled && service.owner === null ? (
+          {composerEnabled ? (
             <ToolbarItem>
               <Dropdown
                 isOpen={isOpen}
