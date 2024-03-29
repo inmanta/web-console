@@ -1,6 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { FormSuggestion } from "@/Core";
 import { PrimaryBaseUrlManager } from "@/UI";
+import { useCreateHeaders } from "../helpers/useCreateHeaders";
+import { useHandleErrors } from "../helpers/useHandleErrors";
 
 /**
  * Custom hook to handle suggested values for a parameter.
@@ -17,6 +19,9 @@ export const useSuggestedValues = (
   suggestions: FormSuggestion | null | undefined,
   environment: string,
 ) => {
+  //extracted headers to avoid breaking rules of Hooks
+  const headers = useCreateHeaders(environment);
+  const { handleAuthorization } = useHandleErrors();
   if (!suggestions) {
     return {
       useOneTime: () => {
@@ -37,7 +42,6 @@ export const useSuggestedValues = (
       },
     };
   }
-
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
     globalThis.location.pathname,
@@ -48,11 +52,10 @@ export const useSuggestedValues = (
     const response = await fetch(
       `${baseUrl}/api/v1/parameter/${suggestions.parameter_name}`,
       {
-        headers: new Headers({
-          "X-Inmanta-Tid": environment,
-        }),
+        headers,
       },
     );
+    handleAuthorization(response);
 
     if (!response.ok) {
       throw new Error("Failed to fetch parameter");

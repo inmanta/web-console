@@ -21,6 +21,7 @@ interface Props {
   serviceName?: string;
   version?: ParsedNumber;
   isExpertAvailable?: boolean;
+  setTab?: (tab: string) => void;
 }
 
 export const TreeTable: React.FC<Props> = ({
@@ -29,6 +30,7 @@ export const TreeTable: React.FC<Props> = ({
   serviceName,
   version,
   isExpertAvailable = false,
+  setTab = () => {},
 }) => {
   const [expansionState, setExpansionState] = useState(
     treeTableHelper.getExpansionState(),
@@ -104,6 +106,8 @@ export const TreeTable: React.FC<Props> = ({
             serviceEntity={serviceName as string}
             showExpertMode={isExpertAvailable}
             attributes={treeTableHelper.getAttributes()}
+            annotations={row.primaryCell.annotations}
+            setTab={setTab}
           />
         ))}
       </Tbody>

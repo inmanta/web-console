@@ -8,13 +8,15 @@ import { OrderDetailsTable } from "./OrderDetailsTable";
 import { OrderDetailsTablePresenter } from "./OrderDetailsTablePresenter";
 
 export const Page: React.FC = () => {
-  const { queryResolver } = useContext(DependencyContext);
+  const { queryResolver, featureManager } = useContext(DependencyContext);
   const { id } = useRouteParams<"OrderDetails">();
 
   const [data, retry] = queryResolver.useContinuous<"GetOrderDetails">({
     kind: "GetOrderDetails",
     id: id,
   });
+
+  const disabledOrderDetailsView = !featureManager.isOrderViewEnabled();
 
   return (
     <PageContainer title={words("ordersDetails.title")}>
@@ -23,9 +25,13 @@ export const Page: React.FC = () => {
         label="OrderDetailsView"
         retry={retry}
         SuccessView={(orderDetails) =>
-          !orderDetails.data ? (
+          !orderDetails.data || disabledOrderDetailsView ? (
             <EmptyView
-              message={words("orderDetails.table.empty")}
+              message={
+                disabledOrderDetailsView
+                  ? words("orders.disabled")
+                  : words("orderDetails.table.empty")
+              }
               aria-label="OrderDetailsView-Empty"
             />
           ) : (

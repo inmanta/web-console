@@ -1,2 +1,2 @@
 export * from "./KeycloakAuthHelper";
-export * from "./PrimaryKeycloakController";
+export * from "./PrimaryAuthController";

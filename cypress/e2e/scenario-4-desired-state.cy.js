@@ -134,7 +134,7 @@ describe("Scenario 4 Desired State", () => {
         .should("contain", "lsm_export")
         .and("contain", "active");
 
-      cy.wrap(2).as("TABLE_LENGTH");
+      cy.wrap(3).as("TABLE_LENGTH");
     }
 
     cy.get('[data-label="Status"]').contains("active").should("have.length", 1);
@@ -198,7 +198,7 @@ describe("Scenario 4 Desired State", () => {
       cy.get(".pf-v5-c-description-list__group")
         .eq(1)
         .find(".pf-v5-c-description-list__description")
-        .should("have.text", "4");
+        .should("have.text", "3");
 
       cy.get(".pf-v5-c-description-list__group")
         .eq(2)
@@ -370,7 +370,10 @@ describe("Scenario 4 Desired State", () => {
     //go back
     cy.get(".pf-v5-c-nav__link").contains("Desired State").click();
 
-    cy.get("tbody").eq(-1).find('[aria-label="actions-toggle"]').click();
+    cy.get("tbody")
+      .eq(isIso ? -2 : -1)
+      .find('[aria-label="actions-toggle"]')
+      .click();
 
     cy.get(".pf-v5-c-menu__item")
       .contains("Compare with current state")

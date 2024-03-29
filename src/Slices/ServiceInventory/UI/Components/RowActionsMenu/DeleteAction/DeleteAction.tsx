@@ -68,7 +68,7 @@ export const DeleteAction: React.FC<Props> = ({
           onClick={handleModalToggle}
           isDisabled={isDisabled || isHalted}
           icon={<TrashAltIcon />}
-          isDanger
+          {...(!isDisabled && !isHalted && { isDanger: true })}
         >
           {words("inventory.deleteInstance.button")}
         </MenuItem>

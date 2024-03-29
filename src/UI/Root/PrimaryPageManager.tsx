@@ -6,6 +6,7 @@ import { OrderDetailsPage } from "@/Slices/OrderDetails/UI";
 import { OrdersPage } from "@/Slices/Orders/UI";
 import { DiscoveredResourcesPage } from "@/Slices/ResourceDiscovery/UI";
 import { ServiceDetailsPage } from "@/Slices/ServiceDetails/UI";
+import { UserManagementPage } from "@/Slices/UserManagement/UI/Page";
 import { AgentProcessPage } from "@S/AgentProcess/UI";
 import { AgentsPage } from "@S/Agents/UI";
 import { CompileDetailsPage } from "@S/CompileDetails/UI";
@@ -52,6 +53,10 @@ export class PrimaryPageManager implements PageManager {
       NotificationCenter: {
         ...this.routeDictionary.NotificationCenter,
         element: <NotificationCenterPage />,
+      },
+      UserManagement: {
+        ...this.routeDictionary.UserManagement,
+        element: <UserManagementPage />,
       },
 
       /**

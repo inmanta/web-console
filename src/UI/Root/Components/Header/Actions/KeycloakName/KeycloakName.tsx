@@ -3,7 +3,7 @@ import { TextContent } from "@patternfly/react-core";
 import { useKeycloak } from "@react-keycloak/web";
 import styled from "styled-components";
 
-export const Profile: React.FC = () => {
+export const KeycloakName: React.FC = () => {
   const [name, setName] = useState("Unknown user");
   const { keycloak } = useKeycloak();
 

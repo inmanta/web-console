@@ -2,11 +2,12 @@ import React, { useContext, useEffect, useMemo, useState } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { LoginPage } from "@/Slices/Login";
 import { DependencyContext } from "@/UI/Dependency";
 import { SearchSanitizer } from "@/UI/Routing";
 import { GlobalStyles } from "@/UI/Styles";
 import { NotFoundPage } from "@S/NotFound/UI";
-import { AuthProvider, PageFrame, Initializer } from "./Components";
+import { KeycloakProvider, PageFrame, Initializer } from "./Components";
 import { PrimaryPageManager } from "./PrimaryPageManager";
 
 export const Root: React.FC = () => {
@@ -33,9 +34,10 @@ export const Root: React.FC = () => {
     <QueryClientProvider client={queryClient}>
       <ReactQueryDevtools initialIsOpen={false} />
       <GlobalStyleProxy />
-      <AuthProvider>
-        <Initializer>
-          <SearchSanitizer.Provider>
+      <KeycloakProvider>
+        <SearchSanitizer.Provider>
+          <LoginPage />
+          <Initializer>
             <Routes>
               {routeManager.isBaseUrlDefined() && (
                 <Route
@@ -65,9 +67,9 @@ export const Root: React.FC = () => {
                 />
               ))}
             </Routes>
-          </SearchSanitizer.Provider>
-        </Initializer>
-      </AuthProvider>
+          </Initializer>
+        </SearchSanitizer.Provider>
+      </KeycloakProvider>
     </QueryClientProvider>
   );
 };

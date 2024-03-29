@@ -5,7 +5,6 @@ import { Button, Flex, FlexItem, Tooltip } from "@patternfly/react-core";
 import styled from "styled-components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
-import labelIcon from "../icons/label-icon.svg";
 import entityIcon from "../icons/new-entity-icon.svg";
 
 const Toolbar = ({
@@ -56,14 +55,12 @@ const Toolbar = ({
                   src={entityIcon}
                   alt="Create new entity icon"
                   aria-label="new-entity-icon"
-                />
+                />{" "}
+                {words("inventory.addInstance.button")}
               </IconButton>
             </Tooltip>
           </FlexItem>
-          <FlexItem>
-            <Spacer />
-          </FlexItem>
-          <FlexItem>
+          {/* <FlexItem>
             <Tooltip
               content={words("inventory.instanceComposer.labelButtonTooltip")}
             >
@@ -88,7 +85,7 @@ const Toolbar = ({
                 />
               </IconButton>
             </Tooltip>
-          </FlexItem>
+          </FlexItem> */}
         </Flex>
       </FlexItem>
       <FlexItem>
@@ -119,24 +116,16 @@ const Container = styled(Flex)`
 `;
 
 const IconButton = styled(Button)`
-  --pf-v5-c-button--PaddingTop: 5px;
-  --pf-v5-c-button--PaddingRight: 3px;
+  --pf-v5-c-button--PaddingTop: 3px;
+  --pf-v5-c-button--PaddingRight: 10px;
   --pf-v5-c-button--PaddingBottom: 3px;
-  --pf-v5-c-button--PaddingLeft: 3px;
-  height: 30px;
-  width: 30px;
+  --pf-v5-c-button--PaddingLeft: 10px;
+  height: 36px;
 `;
 
 const StyledButton = styled(Button)`
-  --pf-v5-c-button--PaddingTop: px;
-  --pf-v5-c-button--PaddingBottom: 0px;
+  --pf-v5-c-button--PaddingTop: 3px;
+  --pf-v5-c-button--PaddingBottom: 3px;
   width: 101px;
-  height: 30px;
-`;
-
-const Spacer = styled.div`
-  display: flex;
-  height: 30px;
-  width: 1px;
-  background: var(--pf-v5-global--BackgroundColor--200);
+  height: 36px;
 `;

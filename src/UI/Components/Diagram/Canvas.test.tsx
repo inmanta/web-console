@@ -413,7 +413,10 @@ describe("Canvas.tsx", () => {
       await user.click(copyButton);
     });
 
-    const clipboardText = await navigator.clipboard.readText();
+    const clipboardItems = await navigator.clipboard.read();
+    const blob = await clipboardItems[0].getType(clipboardItems[0].types[0]);
+    const clipboardText = await blob.text();
+
     expect(clipboardText).toEqual("{}");
 
     const closeButton = await screen.findByLabelText("Close");

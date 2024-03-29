@@ -1,7 +1,7 @@
 import React from "react";
 import { render, screen, fireEvent, act } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { Attributes, EntityLike } from "@/Core";
+import { Attributes, EntityLike, ServiceModel } from "@/Core";
 import { CommandResolverImpl, KeycloakAuthHelper } from "@/Data";
 import { UpdateInstanceAttributeCommandManager } from "@/Data/Managers/UpdateInstanceAttribute";
 import {
@@ -19,7 +19,12 @@ import {
 } from "./Inventory";
 import { TreeTable } from "./TreeTable";
 
-function inventorySetup(attributes: Attributes) {
+function inventorySetup(
+  attributes: Attributes,
+  service?: ServiceModel,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  setTab?: jest.Mock<any, any, any>,
+) {
   const apiHelper = new DeferredApiHelper();
 
   const updateAttribute = UpdateInstanceAttributeCommandManager(
@@ -42,10 +47,11 @@ function inventorySetup(attributes: Attributes) {
           new InventoryTreeTableHelper(
             new PathHelper("$"),
             new TreeExpansionManager("$"),
-            new InventoryAttributeHelper("$"),
+            new InventoryAttributeHelper("$", service),
             attributes,
           )
         }
+        setTab={setTab}
         version={1}
       />
     </DependencyProvider>
@@ -71,6 +77,67 @@ test("TreeTable 1st level of nested property can be expanded", async () => {
 
   // Assert
   expect(screen.getByRole("row", { name: "Row-a$b" })).toBeVisible();
+});
+
+test("TreeTable with 1st level of attributes containing annotations should not render a value but be a link to the right tab.", async () => {
+  const serviceModel: ServiceModel = {
+    name: "service",
+    environment: "env",
+    attributes: [
+      {
+        name: "documentation",
+        type: "string",
+        description: "description",
+        modifier: "rw",
+        default_value: "",
+        default_value_set: false,
+        attribute_annotations: {
+          web_presentation: "documentation",
+          web_content_type: "text/markdown",
+          web_icon: "FaBook",
+          web_title: "Documentation",
+        },
+      },
+    ],
+    embedded_entities: [],
+    config: {},
+    lifecycle: {
+      initial_state: "initial",
+      states: [],
+      transfers: [],
+    },
+    owner: null,
+    owned_entities: [],
+  };
+
+  // mock the setTab function
+  const setTab = jest.fn();
+
+  render(
+    inventorySetup(
+      {
+        candidate: null,
+        active: {
+          documentation: "```mermaid\ngraph LR\n    A --> B\n    B --> C\n```",
+        },
+        rollback: null,
+      },
+      serviceModel,
+    ),
+    setTab(),
+  );
+
+  // expect to find a row with a link to the documentation tab
+  const documentationButton = screen.getByRole("button", {
+    name: "documentation",
+  });
+  expect(documentationButton).toBeInTheDocument();
+
+  act(() => {
+    fireEvent.click(documentationButton);
+  });
+  // expect the setTab from the TreeTable component method to have been called
+  expect(setTab).toHaveBeenCalled();
 });
 
 test("TreeTable 2nd level of nested property can be expanded", async () => {

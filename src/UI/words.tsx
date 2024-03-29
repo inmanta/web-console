@@ -172,6 +172,10 @@ const dict = {
   "inventory.instanceComposer.failed.title": "Instance Composing failed",
   "inventory.instanceComposer.dictModal": (valueName: string) =>
     `Values of ${valueName}`,
+  "inventory.instanceComposer.disabled":
+    "Your licence doesn't give you access to the Instance Composer, please contact support for more details.",
+  "inventory.instanceComposer.title": "Instance Composer",
+  "inventory.instanceComposer.title.edit": "Instance Composer Editor",
   "inventory.deleteInstance.button": "Delete",
   "inventory.deleteInstance.failed": "Deleting instance failed",
   "inventory.deleteInstance.title": "Delete instance",
@@ -201,7 +205,7 @@ const dict = {
   "inventory.editAttribute.header": "Update Attribute",
   "inventory.editAttribute.text": (oldValue: string, newValue: string) =>
     `Are you absolutely sure you want to change attribute from ${oldValue} to ${newValue}? This operation can corrupt the instance.`,
-
+  "inventory.error.mermaid": "Error rendering Mermaid diagram",
   /**
    * Config related text
    */
@@ -285,14 +289,16 @@ const dict = {
   "orders.row.reason": "Reason",
   "orders.row.compilerReport": "Show Compile Report",
   "orders.row.body": "Body",
-  "orders.table.empty": "No orders could be retrieved.",
-  "orderDetails.table.empty": "No orders details could be retrieved.",
+  "orders.table.empty": "No orders could be found.",
+  "orderDetails.table.empty": "No orders details could be found.",
   "orders.links.details": "Show Details",
   "orders.row.empty": "Empty",
   "orders.status.failed": "failed",
   "orders.status.acknowledged": "acknowledged",
   "orders.status.completed": "completed",
   "orders.status.in_progress": "in progress",
+  "orders.disabled":
+    "Your licence doesn't give you access to the Orders Feature, please contact support for more details.",
 
   /**
    * Catalog related text
@@ -402,6 +408,8 @@ const dict = {
    * Latest released resource view
    */
   "resources.empty.message": "No resources found",
+  "resources.discovery.disabled":
+    "Your licence doesn't give you access to the Resource Discovery Feature, please contact support for more details.",
   "resources.column.type": "Type",
   "resources.column.agent": "Agent",
   "resources.column.value": "Value",
@@ -608,6 +616,7 @@ const dict = {
   "facts.column.updated": "Updated",
   "facts.column.value": "Value",
   "facts.column.resourceId": "Resource Id",
+  "facts.empty.message": "No facts found",
 
   /** Agent Process */
   "agentProcess.title": "Agent Process",
@@ -721,6 +730,26 @@ const dict = {
   "common.compileWidget.compiling": "Compiling",
   "common.compileWidget.compilationDisabled.hint":
     "The server_compile setting is disabled. You can enable it on the settings page under the configuration tab.",
+
+  /**
+   * Login
+   */
+  "login.title": "Log in to your account",
+  "login.subtitle": "Enter your credentials",
+  "login.login": "Log in",
+
+  /**
+   * User Management
+   */
+  "userManagement.title": "User Management",
+  "userManagement.name": "Name",
+  "userManagement.actions": "Actions",
+  "userManagement.filter.placeholder": "Username...",
+  "userManagement.addUser": "Add User",
+  "userManagement.deleteUser.title": "Delete User",
+  "userManagement.deleteUserMessage": (username: string) =>
+    `Are you sure you want to delete user ${username}?`,
+  "userManagement.empty.message": "No users found",
 };
 
 type Key = keyof typeof dict;
