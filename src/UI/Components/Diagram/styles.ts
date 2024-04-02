@@ -35,12 +35,6 @@ export const CanvasWrapper = styled.div`
       fill: var(--pf-v5-global--palette--black-500);
       stroke-width: 1;
     }
-    .labels {
-      display: none;
-      &.-show {
-        display: inline; //default
-      }
-    }
   }
 
   //  ***  ui.Halo ***

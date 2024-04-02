@@ -159,7 +159,40 @@ export function showLinkTools(
       }),
     ],
   });
-
+  if (!(sourceCell.getName()[0] === "_")) {
+    linkView.model.appendLabel({
+      attrs: {
+        rect: {
+          fill: "none",
+        },
+        text: {
+          text: sourceCell.getName(),
+          autoOrient: "target",
+          class: "joint-label-text",
+        },
+      },
+      position: {
+        distance: 1,
+      },
+    });
+  }
+  if (!(targetCell.getName()[0] === "_")) {
+    linkView.model.appendLabel({
+      attrs: {
+        rect: {
+          fill: "none",
+        },
+        text: {
+          text: targetCell.getName(),
+          autoOrient: "source",
+          class: "joint-label-text",
+        },
+      },
+      position: {
+        distance: 0,
+      },
+    });
+  }
   linkView.addTools(tools);
 }
 
@@ -515,32 +548,7 @@ function connectEntities(
   isBlocked?: boolean,
 ) {
   targets.map((target) => {
-    const link = new Link({
-      labels: [
-        {
-          position: { distance: 0 },
-          attrs: {
-            text: {
-              autoOrient: "source",
-              text: target.getName(),
-              class: "joint-label-text",
-            },
-            rect: { fill: "none" },
-          },
-        },
-        {
-          position: { distance: 1 },
-          attrs: {
-            text: {
-              autoOrient: "target",
-              text: source.getName(),
-              class: "joint-label-text",
-            },
-            rect: { fill: "none" },
-          },
-        },
-      ],
-    });
+    const link = new Link();
     if (isBlocked) {
       link.set("isBlockedFromEditing", isBlocked);
     }
