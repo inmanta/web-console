@@ -195,6 +195,7 @@ export default function diagramInit(
 
   paper.on("link:mouseleave", (linkView: dia.LinkView) => {
     linkView.removeTools();
+    linkView.model.labels([]);
   });
 
   paper.on("link:connect", (linkView: dia.LinkView) => {
@@ -209,36 +210,6 @@ export default function diagramInit(
       target.id as dia.Cell.ID,
     ) as ServiceEntityBlock;
 
-    linkView.model.appendLabel({
-      attrs: {
-        rect: {
-          fill: "none",
-        },
-        text: {
-          text: sourceCell.getName(),
-          autoOrient: "target",
-          class: "joint-label-text",
-        },
-      },
-      position: {
-        distance: 1,
-      },
-    });
-    linkView.model.appendLabel({
-      attrs: {
-        rect: {
-          fill: "none",
-        },
-        text: {
-          text: targetCell.getName(),
-          autoOrient: "source",
-          class: "joint-label-text",
-        },
-      },
-      position: {
-        distance: 0,
-      },
-    });
     /**
      * Function that checks if cell that we are connecting  to is being the one storing information about said connection.
      * @param elementCell cell that we checking
