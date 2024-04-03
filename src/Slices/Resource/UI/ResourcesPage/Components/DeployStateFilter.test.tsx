@@ -41,6 +41,9 @@ test("Given the deploy state filter When changing the include/exclude options Th
       await screen.findByRole("generic", { name: "skipped-include-toggle" }),
     );
   });
+  await act(async () => {
+    await userEvent.click(menuToggle);
+  });
 
   // Check if the include active icon is shown
   expect(
@@ -78,6 +81,9 @@ test("Given the deploy state filter When changing the include/exclude options Th
     await userEvent.click(
       await screen.findByRole("generic", { name: "deployed-include-toggle" }),
     );
+  });
+  await act(async () => {
+    await userEvent.click(menuToggle);
   });
 
   expect(
