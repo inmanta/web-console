@@ -1,4 +1,4 @@
-import { dia } from "@inmanta/rappid";
+import { dia, g, highlighters } from "@inmanta/rappid";
 import {
   EmbeddedEntity,
   InstanceAttributeModel,
@@ -12,6 +12,7 @@ import {
   EmbeddedRule,
   InterServiceRule,
   TypeEnum,
+  LabelLinkView,
 } from "./interfaces";
 import { ServiceEntityBlock } from "./shapes";
 
@@ -187,9 +188,10 @@ export const checkIfConnectionIsAllowed = (
  *
  * @param {ServiceEntityBlock[]} connectedElements list of connected elements to given shape
  * @param {EmbeddedRule | InterServiceRule | undefined} rule telling which shapes can connect to each other and about their limitations
+ * @param {boolean} editMode which defines whether connectionts rule is assesed for instance edited or newly created
  * @returns {boolean}
  */
-const checkWhetherConnectionRulesAreExhausted = (
+export const checkWhetherConnectionRulesAreExhausted = (
   connectedElements: ServiceEntityBlock[],
   rule: EmbeddedRule | InterServiceRule | undefined,
   editMode: boolean,
@@ -228,7 +230,6 @@ const doesElementIsEmbeddedWithExhaustedConnections = (
 ): boolean => {
   const isSourceEmbedded = source.get("isEmbedded");
   const sourceHolderName = source.get("holderName");
-
   const isTargetBlocked = target.get("isBlockedFromEditing");
 
   //if source Embbedded and target is blocked then return true as we can't add anything to it in composer
@@ -338,8 +339,6 @@ export const shapesDataTransform = (
           } else {
             instance.attributes[attributeName] = id;
           }
-        } else {
-          instance.attributes[attributeName] = id;
         }
       }
     });
@@ -441,4 +440,92 @@ export const findCorrespondingId = (
     id,
     attributeName,
   })).find(({ id }) => id === instanceAsTable.id);
+};
+
+/**
+ * Updates the position of a label relative to a link's target or source side.
+ * @param {"target" | "source"} side - The side of the link where the label is positioned. Can be "target" or "source".
+ * @param {g.Rect} _refBBox - The bounding box of a reference element (unused).
+ * @param {SVGSVGElement} node - The SVG element representing the label.
+ * @param {{ [key: string]: unknown }} _attrs - Additional attributes for the label (unused).
+ * @param {LabelLinkView} linkView - The view representing the link associated with the label.
+ * @returns {{ textAnchor: "start" | "end", x: number, y: number }} - An object containing the updated attributes for the label.
+ */
+export const updateLabelPosition = (
+  side: "target" | "source",
+  _refBBox: g.Rect,
+  node: SVGSVGElement,
+  _attrs: { [key: string]: unknown },
+  linkView: LabelLinkView, //dia.LinkView & dia.Link doesn't have sourceView or targetView properties in the model
+): { textAnchor: "start" | "end"; x: number; y: number } => {
+  let textAnchor, tx, ty, viewCoordinates, anchorCoordinates;
+  if (side === "target") {
+    viewCoordinates = linkView.targetView.model.position();
+    anchorCoordinates = linkView.targetPoint;
+  } else {
+    viewCoordinates = linkView.sourceView.model.position();
+    anchorCoordinates = linkView.sourcePoint;
+  }
+  if (viewCoordinates && anchorCoordinates) {
+    if (viewCoordinates.x !== anchorCoordinates.x) {
+      textAnchor = "start";
+      tx = node.getBBox().width / 2 + 6;
+    } else {
+      textAnchor = "end";
+      tx = node.getBBox().width / -2 - 6;
+    }
+  }
+  const isTargetBelow =
+    linkView.getEndAnchor("target").y < linkView.getEndAnchor("source").y;
+
+  switch (side) {
+    case "target":
+      ty = isTargetBelow ? -15 : 15;
+      break;
+    case "source":
+      ty = isTargetBelow ? 15 : -15;
+      break;
+  }
+
+  return { textAnchor: textAnchor, x: tx || 0, y: ty || 0 };
+};
+
+/**
+ * Toggle the highlighting of a loose element in a diagram cell view.
+ * @param {dia.CellView} cellView - The cell view containing the element.
+ * @param {"add" | "remove"} kind - The action to perform, either "add" to add highlighting or "remove" to remove highlighting.
+ * @returns {void}
+ */
+export const toggleLooseElement = (
+  cellView: dia.CellView,
+  kind: "add" | "remove",
+): void => {
+  switch (kind) {
+    case "add":
+      highlighters.mask.add(cellView, "root", "loose_element", {
+        padding: 0,
+        className: "loose_element-highlight",
+        attrs: {
+          "stroke-width": 3,
+          filter: "drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4))",
+        },
+      });
+      break;
+    case "remove":
+      const highlighter = dia.HighlighterView.get(cellView, "loose_element");
+      if (highlighter) {
+        highlighter.remove();
+      }
+      break;
+    default:
+      break;
+  }
+  document.dispatchEvent(
+    new CustomEvent("looseEmbedded", {
+      detail: JSON.stringify({
+        kind,
+        id: cellView.model.id,
+      }),
+    }),
+  );
 };

@@ -1,8 +1,9 @@
-import { PrimaryArchiveHelper, PrimaryKeycloakController } from "@/Data";
+import { PrimaryArchiveHelper, PrimaryAuthController } from "@/Data";
 import {
   MockEnvironmentHandler,
   MockFeatureManager,
   MockFileManager,
+  MockLimitedFeatureManager,
 } from "@/Test/Mock";
 import { PrimaryRouteManager, EnvironmentModifierImpl } from "@/UI";
 import { UrlManagerImpl } from "@/UI/Utils";
@@ -16,7 +17,7 @@ const urlManager = new UrlManagerImpl(featureManager, baseUrl);
 const environmentHandler = MockEnvironmentHandler(env);
 const fileManager = new MockFileManager();
 const archiveHelper = new PrimaryArchiveHelper(fileManager);
-const keycloakController = new PrimaryKeycloakController(
+const authController = new PrimaryAuthController(
   undefined,
   undefined,
   undefined,
@@ -29,5 +30,23 @@ export const dependencies = {
   urlManager,
   environmentHandler,
   archiveHelper,
-  keycloakController,
+  authController,
+};
+
+const limitedFeatureManager = new MockLimitedFeatureManager();
+const limitedUrlManager = new UrlManagerImpl(limitedFeatureManager, baseUrl);
+
+/**
+ * Dependencies with limited feature manager and url manager
+ * It is used to mock the dependencies in the case where some features are disabled
+ * @type {Dependencies}
+ */
+export const limitedDependencies = {
+  routeManager,
+  featureManager: limitedFeatureManager,
+  environmentModifier,
+  urlManager: limitedUrlManager,
+  environmentHandler,
+  archiveHelper,
+  authController,
 };

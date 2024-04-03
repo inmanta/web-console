@@ -1,4 +1,5 @@
 import { dia, shapes, util } from "@inmanta/rappid";
+import { updateLabelPosition } from "./helpers";
 import expandButton from "./icons/expand-icon.svg";
 import { ColumnData } from "./interfaces";
 
@@ -32,8 +33,6 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
           },
           headerLabel: {
             class: "joint-entityBlock-header-label",
-            fontFamily:
-              "monospace, RedHatText, Overpass, overpass, helvetica, arial, sans-serif",
             textTransform: "uppercase",
             fontSize: 14,
             textWrap: {
@@ -50,8 +49,6 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
           },
           itemLabels: {
             class: "joint-entityBlock-itemLabels",
-            fontFamily:
-              "monospace, RedHatText, Overpass, overpass, helvetica, arial, sans-serif",
             fontSize: 12,
             //pointerEvents: "none",
             cursor: "default",
@@ -62,8 +59,6 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
           itemLabels_1: {
             class: "joint-entityBlock-itemLabels-one",
             fontSize: 12,
-            fontFamily:
-              "monospace, RedHatText, Overpass, overpass, helvetica, arial, sans-serif",
             textAnchor: "end",
             x: `calc(0.5 * w - 10)`,
             cursor: "default",
@@ -105,7 +100,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
       //out-of-the-box headeredRecord doesn't truncate attribute name, only their values
       const truncatedName = util.breakText(
         item.name.toString(),
-        { width: 80, height: 22 },
+        { width: 130, height: 22 },
         {
           "font-size": this.attr("itemLabels_1/fontSize"),
           "font-family": this.attr("itemLabels_1/fontFamily"),
@@ -119,7 +114,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
         this.attr(`itemLabel_${item.name}/data-tooltip`, item.name);
         this.attr(`itemLabel_${item.name}/data-tooltip-position`, "right");
 
-        names.push({ ...nameObject, label: item.name.slice(0, 11) + `\u2026` });
+        names.push({ ...nameObject, label: item.name.slice(0, 15) + `\u2026` });
       } else {
         names.push(nameObject);
       }
@@ -234,6 +229,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
     );
 
     this.set("entityName", name);
+    this.attr(["headerLabel", "data-testid"], "header-" + name);
 
     if (shortenName.includes(`\u2026`)) {
       return this.attr(
@@ -334,60 +330,60 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
   }
 }
 
-export class EntityConnection extends dia.Link {
-  defaults() {
-    return {
-      ...super.defaults,
-      type: "app.Link",
-      z: -1,
-      attrs: {
-        wrapper: {
-          connection: true,
-          strokeWidth: 10,
-        },
-        line: {
-          class: "joint-link-line",
-          targetMarker: {
-            class: "joint-link-marker",
-            type: "path",
-            d: "M 0 -5 10 0 0 5 z",
-          },
-          sourceMarker: {
-            class: "joint-link-marker",
-            type: "path",
-            d: "M 0 -5 10 0 0 5 z",
-          },
-          connection: true,
-          strokeWidth: 2,
-        },
+export const Link = shapes.standard.Link.define(
+  "Link",
+  {
+    // attributes
+    z: -1,
+    attrs: {
+      wrapper: {
+        connection: true,
+        strokeWidth: 10,
       },
-    };
-  }
-  markup = [
-    {
-      tagName: "path",
-      selector: "wrapper",
-      attributes: {
-        fill: "none",
-        stroke: "transparent",
+      line: {
+        class: "joint-link-line",
+        targetMarker: {
+          class: "joint-link-marker",
+          type: "path",
+          d: "M 0 -5 10 0 0 5 z",
+        },
+        sourceMarker: {
+          class: "joint-link-marker",
+          type: "path",
+          d: "M 0 -5 10 0 0 5 z",
+        },
+        connection: true,
+        strokeWidth: 2,
       },
     },
-    {
-      tagName: "path",
-      selector: "line",
-      attributes: {
-        fill: "none",
+  },
+  {
+    // prototype
+  },
+  {
+    // static
+    attributes: {
+      autoOrient: {
+        qualify: function () {
+          return (this as any).model.isLink();
+        },
+        set: updateLabelPosition,
       },
     },
-  ];
-}
+  },
+);
 
-const TableView = shapes.standard.RecordView;
+export const LinkView = dia.LinkView.extend({
+  update(...theArgs) {
+    dia.LinkView.prototype.update.apply(this, theArgs as []);
+    this.updateLabels();
+  },
+});
 
 Object.assign(shapes, {
+  LinkView,
+  Link,
   app: {
     ServiceEntityBlock,
-    TableView,
-    EntityConnection,
   },
 });

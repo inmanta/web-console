@@ -5,9 +5,9 @@ import removeBttn from "./icons/remove-button.svg";
 
 export const CanvasWrapper = styled.div`
   width: 100%;
-  height: calc(100% - 86px);
+  height: calc(80vh - 140px);
   position: relative;
-  background: var(-pf-v5-global--palette--black-200);
+  background: var(--pf-v5-global--palette--black-200);
   margin: 0;
   overflow: hidden;
   .canvas {
@@ -17,7 +17,9 @@ export const CanvasWrapper = styled.div`
     right: 0;
     position: absolute;
     background: var(--pf-v5-global--BackgroundColor--light-300);
-
+    * {
+      font-family: var(--pf-v5-global--FontFamily--monospace);
+    }
     .joint-element {
       filter: drop-shadow(
         0.1rem 0.1rem 0.15rem
@@ -30,7 +32,7 @@ export const CanvasWrapper = styled.div`
 
     .source-arrowhead,
     .target-arrowhead {
-      fill: var(-pf-v5-global--palette--black-500);
+      fill: var(--pf-v5-global--palette--black-500);
       stroke-width: 1;
     }
   }
@@ -51,8 +53,9 @@ export const CanvasWrapper = styled.div`
     border: 0;
     border-radius: 0;
     background-color: transparent;
-    margin-top: -25px;
-    top: 0;
+    padding-bottom: 20px;
+    top: 20px;
+    gap: 4px;
 
     &:after {
       display: none;
@@ -61,18 +64,21 @@ export const CanvasWrapper = styled.div`
 
   .joint-halo.joint-theme-default.toolbar.type-element .handle {
     cursor: pointer;
+    min-width: 25px;
+    min-height: 25px;
+    background-size: 25px 25px;
     &.delete {
-      position: static;
       background-image: url(${removeBttn});
-      margin: 0;
     }
     &.link {
       background-image: url(${linkBttn});
-      margin: 0 4px;
     }
     &.edit {
       background-image: url(${editBttn});
-      margin: 0;
+    }
+    &:hover {
+      box-shadow: var(--pf-v5-global--BoxShadow--lg);
+      border-radius: 3px;
     }
   }
 
@@ -102,6 +108,13 @@ export const CanvasWrapper = styled.div`
     stroke: var(--pf-v5-global--palette--light-green-300);
     fill: var(--pf-v5-global--palette--light-green-300);
   }
+  .joint-loose_element-highlight {
+    stroke: var(--pf-v5-global--palette--red-100);
+    fill: var(--pf-v5-global--palette--red-100);
+    &.-hidden {
+      display: none;
+    }
+  }
   .joint-entityBlock-body {
     stroke: var(--pf-v5-global--BackgroundColor--100);
   }
@@ -125,7 +138,7 @@ export const CanvasWrapper = styled.div`
     fill: var(--pf-v5-global--Color--100);
   }
   .joint-entityBlock-itemLabels-one {
-    fill: var(--pf-v5-global--palette--black-400);
+    fill: var(--pf-v5-global--palette--black-500);
   }
   .joint-entityBlock-spacer {
     fill: var(--pf-v5-global--Color--100);
@@ -137,5 +150,14 @@ export const CanvasWrapper = styled.div`
   }
   .joint-link-line {
     stroke: var(--pf-v5-global--palette--black-400);
+  }
+
+  .joint-paper svg {
+    overflow: visible;
+  }
+  .joint-label-text {
+    font-family: var(--pf-v5-global--FontFamily--monospace);
+    fill: var(--pf-v5-global--palette--black-500);
+    transform: none;
   }
 `;

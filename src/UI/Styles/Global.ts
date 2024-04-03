@@ -1,4 +1,5 @@
 import { createGlobalStyle } from "styled-components";
+import { MarkdownStyles } from "./MarkdownStyles";
 
 /**
  * @NOTE on .pf-v5-c-page__header-nav
@@ -15,7 +16,6 @@ import { createGlobalStyle } from "styled-components";
 export const GlobalStyles = createGlobalStyle`
   html, body, #root {
     height: 100%;
-    
   }
 
   .pf-v5-c-icon__content.pf-m-custom {
@@ -54,6 +54,7 @@ export const GlobalStyles = createGlobalStyle`
   .pf-v5-c-select {
     min-width: 180px;
   }
+
   @media (max-width: 1000px) {
     *[aria-label="FilterBar"] {
       gap: var(--pf-v5-global--spacer--md);
@@ -61,4 +62,5 @@ export const GlobalStyles = createGlobalStyle`
     }
   }
 
+  ${MarkdownStyles}
 `;

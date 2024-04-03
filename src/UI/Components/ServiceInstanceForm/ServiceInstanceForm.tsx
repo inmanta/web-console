@@ -26,12 +26,22 @@ interface Props {
   isEdit?: boolean;
 }
 
+/**
+ * Creates the form state.
+ * If the form is not in edit mode but has original attributes, it returns a state for a duplicated instance.
+ *
+ * @param {Fields} fields - Array of Fields.
+ * @param {string} apiVersion - API version ("v1" or "v2").
+ * @param {InstanceAttributeModel} originalAttributes - The original state of the attributes.
+ * @param {boolean} [isEdit=false] - Whether the form is in edit mode. Default is false.
+ * @returns {InstanceAttributeModel} The calculated form state.
+ */
 const getFormState = (
   fields,
   apiVersion,
   originalAttributes,
   isEdit = false,
-) => {
+): InstanceAttributeModel => {
   if (isEdit) {
     return createEditFormState(fields, apiVersion, originalAttributes);
   } else if (originalAttributes) {
@@ -41,6 +51,20 @@ const getFormState = (
   }
 };
 
+/**
+ * ServiceInstanceForm Component.
+ * Supports editing, creating, and duplicating instances.
+ *
+ * @param {Props} props - Props for the ServiceInstanceForm component.
+ *   @prop {Fields[]} fields - Array of Fields.
+ *   @prop {function} onSubmit - Callback method to handle form submission.
+ *   @prop {function} onCancel - Callback method to handle form cancellation.
+ *   @prop {InstanceAttributeModel} originalAttributes - Original state of the attributes.
+ *   @prop {boolean} isSubmitDisabled - Indicates whether the submit button is disabled.
+ *   @prop {string} [apiVersion="v1"] - API version ("v1" or "v2"). Default is "v1".
+ *   @prop {boolean} [isEdit=false] - Whether the form is in edit mode. Default is false.
+ * @returns {JSX.Element} The rendered ServiceInstanceForm component.
+ */
 export const ServiceInstanceForm: React.FC<Props> = ({
   fields,
   onSubmit,
@@ -58,16 +82,25 @@ export const ServiceInstanceForm: React.FC<Props> = ({
     getFormState(fields, apiVersion, originalAttributes, isEdit),
   );
 
-  const [dirtyInputs, setDirtyInputs] = useState(false);
+  const [isDirty, setIsDirty] = useState(false);
   const [shouldPerformCancel, setShouldCancel] = useState(false);
 
-  usePrompt(words("notification.instanceForm.prompt"), dirtyInputs);
+  usePrompt(words("notification.instanceForm.prompt"), isDirty);
 
-  //callback was used to avoid re-render in useEffect used in SelectFormInput inside FieldInput
+  /**
+   * Get an update for the form state based on the provided path and value.
+   *
+   * callback was used to avoid re-render in useEffect used in SelectFormInput inside FieldInput
+   *
+   * @param {string} path - The path within the form state to update.
+   * @param {unknown} value - The new value to set at the specified path.
+   * @param {boolean} [multi=false] - Optional flag indicating if the update is for multiple values. Default is false.
+   * @returns {void}
+   */
   const getUpdate = useCallback(
     (path: string, value: unknown, multi = false): void => {
-      if (!dirtyInputs) {
-        setDirtyInputs(true);
+      if (!isDirty) {
+        setIsDirty(true);
       }
       if (multi) {
         setFormState((prev) => {
@@ -88,15 +121,26 @@ export const ServiceInstanceForm: React.FC<Props> = ({
         });
       }
     },
-    [dirtyInputs],
+    [isDirty],
   );
 
+  /**
+   * Prevent the default behavior of a React form event.
+   *
+   * @param {React.FormEvent} event - The React form event.
+   * @returns {void}
+   */
   const preventDefault = (event: React.FormEvent) => {
     event.preventDefault();
   };
 
+  /**
+   * Handle confirmation action by triggering form submission and updating dirty state.
+   *
+   * @returns {void}
+   */
   const onConfirm = () =>
-    onSubmit(formState, (value: boolean) => setDirtyInputs(value));
+    onSubmit(formState, (value: boolean) => setIsDirty(value));
 
   useEffect(() => {
     if (shouldPerformCancel) {
@@ -114,6 +158,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
           originalState={originalState}
           getUpdate={getUpdate}
           path={null}
+          suggestions={field.suggestion}
         />
       ))}
 
@@ -143,8 +188,8 @@ export const ServiceInstanceForm: React.FC<Props> = ({
         <Button
           variant="link"
           onClick={() => {
-            if (dirtyInputs) {
-              setDirtyInputs(false);
+            if (isDirty) {
+              setIsDirty(false);
             }
             setShouldCancel(true);
           }}

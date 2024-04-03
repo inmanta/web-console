@@ -81,19 +81,56 @@ test("GIVEN Navigation WHEN lsm enabled THEN shows all navigation items", () => 
   ).toBeVisible();
 });
 
-test("GIVEN Navigation WHEN no lsm THEN lsm is not shown", () => {
-  const { component } = setup(undefined, TestServerStatus.withoutLsm);
+test("GIVEN Navigation WHEN no features enabled THEN no extra features are not shown", () => {
+  const { component } = setup(undefined, TestServerStatus.withoutFeatures);
   render(component);
 
   const navigation = screen.getByRole("navigation", { name: "Global" });
   expect(navigation).toBeVisible();
   expect(within(navigation).getAllByRole("region").length).toEqual(3);
 
+  // no lsm
   expect(
     within(navigation).queryByRole("region", {
       name: words("navigation.lifecycleServiceManager"),
     }),
   ).not.toBeInTheDocument();
+
+  // no orderView
+  expect(
+    within(navigation).queryByRole("link", { name: "Orders" }),
+  ).not.toBeInTheDocument();
+
+  // no resourceDiscovery
+  expect(
+    within(navigation).queryByRole("link", { name: "Discovered Resources" }),
+  ).not.toBeInTheDocument();
+});
+
+test("GIVEN Navigation WHEN all features are enabled THEN all extra features are shown", () => {
+  const { component } = setup(undefined, TestServerStatus.withAllFeatures);
+  render(component);
+
+  const navigation = screen.getByRole("navigation", { name: "Global" });
+  expect(navigation).toBeVisible();
+  expect(within(navigation).getAllByRole("region").length).toEqual(4);
+
+  // lsm
+  expect(
+    within(navigation).getByRole("region", {
+      name: words("navigation.lifecycleServiceManager"),
+    }),
+  ).toBeInTheDocument();
+
+  // has orderView
+  expect(
+    within(navigation).getByRole("link", { name: "Orders" }),
+  ).toBeInTheDocument();
+
+  // has resourceDiscovery
+  expect(
+    within(navigation).getByRole("link", { name: "Discovered Resources" }),
+  ).toBeInTheDocument();
 });
 
 test("GIVEN Navigation WHEN on 'Service Catalog' THEN 'Service Catalog' is highlighted", () => {

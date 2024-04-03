@@ -7,6 +7,7 @@ const kinds = [
   "NotificationCenter",
   "Settings",
   "Status",
+  "UserManagement",
 
   /**
    * LSM
@@ -51,7 +52,10 @@ const kinds = [
 
 export type RouteKind = (typeof kinds)[number];
 
-export type RestrictedRouteKind = "InstanceComposer" | "InstanceComposerEditor";
+/**
+ * Type for Routes that should be restricted from navigating to due to the e.g., being hidden behind feature flags
+ */
+export type RestrictedRouteKind = "";
 
 export const isValidKind = (value: string): value is RouteKind =>
   kinds.includes(value as RouteKind);

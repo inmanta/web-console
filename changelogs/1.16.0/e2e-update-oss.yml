@@ -1,0 +1,3 @@
+description: "Update the E2E tests for scenario 4, OSS"
+change-type: patch
+destination-branches: [master, iso7]

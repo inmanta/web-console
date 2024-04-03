@@ -1,0 +1,3 @@
+description: "Create ADR for Query Management V2 proposition"
+change-type: patch
+destination-branches: [master, iso7]

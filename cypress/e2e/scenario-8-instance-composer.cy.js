@@ -81,7 +81,8 @@ if (Cypress.env("edition") === "iso") {
         .click();
       cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
 
-      // click on add instance
+      // click on add instance with composer
+      cy.get('[aria-label="AddInstanceToggle"]').click();
       cy.get("#add-instance-composer-button").click();
 
       // Create instance on embedded-entity-service-extra
@@ -125,7 +126,7 @@ if (Cypress.env("edition") === "iso") {
         .trigger("mousedown")
         .trigger("mousemove", {
           clientX: 700,
-          clientY: 300,
+          clientY: 100,
         })
         .trigger("mouseup");
 
@@ -173,8 +174,8 @@ if (Cypress.env("edition") === "iso") {
         .trigger("mouseover")
         .trigger("mousedown")
         .trigger("mousemove", {
-          clientX: 700,
-          clientY: 300,
+          clientX: 600,
+          clientY: 350,
         })
         .trigger("mouseup");
 
@@ -243,7 +244,7 @@ if (Cypress.env("edition") === "iso") {
           clientY: 270,
         })
         .trigger("mouseup");
-      cy.get('[data-type="app.Link"]').should("have.length", "3");
+      cy.get('[data-type="Link"]').should("have.length", "3");
       cy.get('[data-action="delete"]').click();
 
       cy.get('[aria-label="new-entity-button"]').click();
@@ -255,13 +256,15 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#data").type("data2");
       cy.get("button").contains("Confirm").click();
 
+      cy.get(".zoom-out").click();
+
       cy.get('[joint-selector="headerLabel"]').contains("ro_files").click();
       cy.get('[data-action="link"]')
         .trigger("mouseover")
         .trigger("mousedown")
         .trigger("mousemove", {
-          clientX: 500,
-          clientY: 300,
+          clientX: 450,
+          clientY: 250,
         })
         .trigger("mouseup");
 
@@ -354,6 +357,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
 
       // click on add instance in composer
+      cy.get('[aria-label="AddInstanceToggle"]').click();
       cy.get("#add-instance-composer-button").click();
       cy.get(".canvas").should("be.visible");
 
@@ -391,7 +395,7 @@ if (Cypress.env("edition") === "iso") {
         .trigger("mousedown")
         .trigger("mousemove", {
           clientX: 700,
-          clientY: 300,
+          clientY: 100,
         })
         .trigger("mouseup");
 
@@ -423,6 +427,7 @@ if (Cypress.env("edition") === "iso") {
         .contains("Show inventory")
         .click();
       // click on add instance in composer
+      cy.get('[aria-label="AddInstanceToggle"]').click();
       cy.get("#add-instance-composer-button").click();
       cy.get(".canvas").should("be.visible");
 
@@ -460,7 +465,7 @@ if (Cypress.env("edition") === "iso") {
         .trigger("mousedown")
         .trigger("mousemove", {
           clientX: 700,
-          clientY: 300,
+          clientY: 100,
         })
         .trigger("mouseup");
       cy.get('[joint-selector="headerLabel"]')
@@ -471,7 +476,7 @@ if (Cypress.env("edition") === "iso") {
         .trigger("mousedown")
         .trigger("mousemove", {
           clientX: 400,
-          clientY: 300,
+          clientY: 100,
         })
         .trigger("mouseup");
       cy.get("button").contains("Deploy").click();
@@ -501,6 +506,7 @@ if (Cypress.env("edition") === "iso") {
         .contains("Show inventory")
         .click();
       // click on add instance in composer
+      cy.get('[aria-label="AddInstanceToggle"]').click();
       cy.get("#add-instance-composer-button").click();
       cy.get(".canvas").should("be.visible");
 
@@ -528,7 +534,7 @@ if (Cypress.env("edition") === "iso") {
         .trigger("mousedown")
         .trigger("mousemove", {
           clientX: 700,
-          clientY: 300,
+          clientY: 100,
         })
         .trigger("mouseup");
 
@@ -578,7 +584,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#service_id").type("00010");
       cy.get("#name").type("new-parent-service");
       cy.get("button").contains("Confirm").click();
-      cy.get('[data-type="app.Link"]').trigger("mouseover", { force: true });
+      cy.get('[data-type="Link"]').trigger("mouseover", { force: true });
       cy.get(".joint-link_remove-circle").click();
       cy.get(".joint-link_remove-circle").click();
 
@@ -591,7 +597,7 @@ if (Cypress.env("edition") === "iso") {
         .trigger("mousedown")
         .trigger("mousemove", {
           clientX: 900,
-          clientY: 300,
+          clientY: 100,
         })
         .trigger("mouseup");
       cy.get("button").contains("Deploy").click();
@@ -628,9 +634,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get("button").contains("Edit in Composer").click();
 
       //remove connection
-      cy.get('[data-type="app.Link"]')
-        .eq(0)
-        .trigger("mouseover", { force: true });
+      cy.get('[data-type="Link"]').eq(0).trigger("mouseover", { force: true });
       cy.get(".joint-link_remove-circle").click();
       cy.get(".joint-link_remove-circle").click();
 
@@ -642,22 +646,16 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#name").type("new-parent-service2");
       cy.get("button").contains("Confirm").click();
 
-      //move child_container closer to new parent-service and connect them
+      //connect child_container to new parent-service
       cy.get('[joint-selector="headerLabel"]')
         .contains("child_container")
-        .trigger("mouseover")
-        .trigger("mousedown")
-        .trigger("mousemove", {
-          clientX: 700,
-          clientY: -100,
-        })
-        .trigger("mouseup");
+        .click();
       cy.get('[data-action="link"]')
         .trigger("mouseover")
         .trigger("mousedown")
         .trigger("mousemove", {
-          clientX: 1000,
-          clientY: 300,
+          clientX: 1100,
+          clientY: -100,
         })
         .trigger("mouseup");
       cy.get("button").contains("Deploy").click();
@@ -755,27 +753,26 @@ if (Cypress.env("edition") === "iso") {
       cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
 
       // click on Show Inventory on embedded-entity-service-extra, expect one instance already
-      cy.get("#child-service", { timeout: 60000 })
+      cy.get("#parent-service", { timeout: 60000 })
         .contains("Show inventory")
         .click();
       cy.get('[aria-label="ServiceInventory-Success"]').should("to.be.visible");
+      cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 6);
 
       // click on kebab menu on embedded-entity-service-extra
-      cy.get('[aria-label="row actions toggle"]').eq(0).click();
+      cy.get('[aria-label="row actions toggle"]').eq(5).click();
       cy.get("button").contains("Edit in Composer").click();
       cy.get('[joint-selector="headerLabel"]')
-        .contains("child-service")
+        .contains("parent-service")
         .click();
       cy.get('[data-action="delete"]').click();
       cy.get("button").contains("Deploy").click();
 
-      // Check if only one row has been added to the table.
-      cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 1);
-      // await until all instances are being deployed and up
-      cy.get('[data-label="State"]').should("have.text", "deleting");
-      cy.get('[aria-label="ServiceInventory-Empty"]', {
-        timeout: 90000,
-      }).should("to.be.visible");
+      // Check if only one row has been deleted to the table.
+      cy.get('[aria-label="InstanceRow-Intro"]', { timeout: 90000 }).should(
+        "have.length",
+        5,
+      );
     });
   });
 }

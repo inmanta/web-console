@@ -9,7 +9,7 @@ import {
 } from "./actions";
 import { anchorNamespace } from "./anchors";
 import createHalo from "./halo";
-import { checkIfConnectionIsAllowed } from "./helpers";
+import { checkIfConnectionIsAllowed, toggleLooseElement } from "./helpers";
 import collapseButton from "./icons/collapse-icon.svg";
 import expandButton from "./icons/expand-icon.svg";
 import {
@@ -19,7 +19,7 @@ import {
   serializedCell,
 } from "./interfaces";
 import { routerNamespace } from "./routers";
-import { EntityConnection, ServiceEntityBlock } from "./shapes";
+import { Link, ServiceEntityBlock } from "./shapes";
 
 export default function diagramInit(
   canvas,
@@ -39,7 +39,14 @@ export default function diagramInit(
     width: 1000,
     height: 1000,
     gridSize: 1,
-    interactive: true,
+    interactive: { linkMove: false },
+    defaultConnectionPoint: {
+      name: "boundary",
+      args: {
+        extrapolate: true,
+        sticky: true,
+      },
+    },
     defaultConnector: { name: "rounded" },
     async: true,
     frozen: true,
@@ -61,7 +68,7 @@ export default function diagramInit(
         },
       },
     },
-    defaultLink: () => new EntityConnection(),
+    defaultLink: () => new Link(),
     validateConnection: (srcView, srcMagnet, tgtView, tgtMagnet) => {
       const baseValidators =
         srcMagnet !== tgtMagnet && srcView.cid !== tgtView.cid;
@@ -177,11 +184,18 @@ export default function diagramInit(
 
   paper.on("link:mouseenter", (linkView) => {
     if (linkView.model.get("isBlockedFromEditing")) return;
-    showLinkTools(graph, linkView, updateInstancesToSend, connectionRules);
+    showLinkTools(
+      paper,
+      graph,
+      linkView,
+      updateInstancesToSend,
+      connectionRules,
+    );
   });
 
   paper.on("link:mouseleave", (linkView: dia.LinkView) => {
     linkView.removeTools();
+    linkView.model.labels([]);
   });
 
   paper.on("link:connect", (linkView: dia.LinkView) => {
@@ -236,6 +250,7 @@ export default function diagramInit(
         elementCell.get("embeddedTo") !== null
       ) {
         elementCell.set("embeddedTo", connectingCell.id);
+        toggleLooseElement(paper.findViewByModel(elementCell), "remove");
         updateInstancesToSend(elementCell, ActionEnum.UPDATE);
         return true;
       } else {
@@ -298,15 +313,17 @@ export default function diagramInit(
       services: ServiceModel[],
       isMainInstance: boolean,
     ) => {
-      const appendedInstance = appendInstance(
-        paper,
-        graph,
-        instance,
-        services,
-        isMainInstance,
-      );
-      const { x, y } = appendedInstance.getBBox();
-      scroller.center(x, y + 200);
+      appendInstance(paper, graph, instance, services, isMainInstance);
+
+      scroller.zoomToFit({
+        useModelGeometry: true,
+        padding: 20,
+        scaleGrid: 0.05,
+        minScaleX: 0.4,
+        minScaleY: 0.4,
+        maxScaleX: 1.2,
+        maxScaleY: 1.2,
+      });
 
       const jsonGraph = graph.toJSON();
       return jsonGraph.cells as serializedCell[];
@@ -327,6 +344,9 @@ export default function diagramInit(
         isEmbedded,
         holderName,
       );
+      if (shape.get("isEmbedded")) {
+        toggleLooseElement(paper.findViewByModel(shape), "add");
+      }
       const shapeCoordinates = shape.getBBox();
       scroller.center(shapeCoordinates.x, shapeCoordinates.y + 200);
       return shape;

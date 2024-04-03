@@ -19,6 +19,10 @@ export class CatalogAttributeHelper
     return this.getNodesFromEntities("", container);
   }
 
+  public getAttributeAnnotations(_key: string) {
+    return {};
+  }
+
   private getNodesFromEntities(
     prefix: string,
     container: CatalogAttributeTree["source"],

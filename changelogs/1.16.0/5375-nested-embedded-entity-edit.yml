@@ -1,0 +1,6 @@
+description: Enable adding new nested entity that are already part of a nested entity when the form is in edit-mode
+issue-nr: 5375
+change-type: patch
+destination-branches: [master, iso7]
+sections:
+  bugfix: "{{description}}"

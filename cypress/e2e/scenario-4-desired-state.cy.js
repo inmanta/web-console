@@ -134,7 +134,7 @@ describe("Scenario 4 Desired State", () => {
         .should("contain", "lsm_export")
         .and("contain", "active");
 
-      cy.wrap(2).as("TABLE_LENGTH");
+      cy.wrap(3).as("TABLE_LENGTH");
     }
 
     cy.get('[data-label="Status"]').contains("active").should("have.length", 1);
@@ -198,7 +198,7 @@ describe("Scenario 4 Desired State", () => {
       cy.get(".pf-v5-c-description-list__group")
         .eq(1)
         .find(".pf-v5-c-description-list__description")
-        .should("have.text", "4");
+        .should("have.text", "3");
 
       cy.get(".pf-v5-c-description-list__group")
         .eq(2)
@@ -370,7 +370,10 @@ describe("Scenario 4 Desired State", () => {
     //go back
     cy.get(".pf-v5-c-nav__link").contains("Desired State").click();
 
-    cy.get("tbody").eq(-1).find('[aria-label="actions-toggle"]').click();
+    cy.get("tbody")
+      .eq(isIso ? -2 : -1)
+      .find('[aria-label="actions-toggle"]')
+      .click();
 
     cy.get(".pf-v5-c-menu__item")
       .contains("Compare with current state")
@@ -389,6 +392,24 @@ describe("Scenario 4 Desired State", () => {
     cy.get('[aria-label="DiffItemList"]', { timeout: 20000 }).should(
       "be.visible",
     );
+
+    // make sure all the rows are in the view before toggling them open.
+    cy.get('[aria-label="Details"]', { timeout: 20000 }).should(
+      "have.length",
+      isIso ? 2 : 5,
+    );
+    cy.get('[aria-label="DiffItemList"]').within(() => {
+      if (isIso) {
+        cy.get("#toggle-button").eq(0).click();
+        cy.get("#toggle-button").eq(1).click();
+      } else {
+        cy.get("#toggle-button").eq(0).click();
+        cy.get("#toggle-button").eq(1).click();
+        cy.get("#toggle-button").eq(2).click();
+        cy.get("#toggle-button").eq(3).click();
+        cy.get("#toggle-button").eq(4).click();
+      }
+    });
 
     // expect diff module to say No changes have been found
     cy.get(".pf-v5-c-card__expandable-content", { timeout: 20000 }).should(
@@ -433,13 +454,32 @@ describe("Scenario 4 Desired State", () => {
     cy.get('[aria-label="ReportListSelect"]')
       .contains("No Dry runs exist")
       .should("be.visible");
+
+    // perform dry-run
     cy.get(".pf-v5-c-button").contains("Perform dry run").click();
 
     cy.get('[aria-label="StatusFilter"]').click();
     cy.get('[role="option"]').contains("unmodified").click();
     cy.get('[aria-label="StatusFilter"]').click();
 
-    // perform dry-run
+    // make sure all the rows are in the view before toggling them open.
+    cy.get('[aria-label="Details"]', { timeout: 20000 }).should(
+      "have.length",
+      isIso ? 2 : 5,
+    );
+    cy.get('[aria-label="DiffItemList"]').within(() => {
+      if (isIso) {
+        cy.get("#toggle-button").eq(0).click();
+        cy.get("#toggle-button").eq(1).click();
+      } else {
+        cy.get("#toggle-button").eq(0).click();
+        cy.get("#toggle-button").eq(1).click();
+        cy.get("#toggle-button").eq(2).click();
+        cy.get("#toggle-button").eq(3).click();
+        cy.get("#toggle-button").eq(4).click();
+      }
+    });
+
     // await the end of the dry-run and expect to find two rows with expandable content.
     cy.get(".pf-v5-c-card__expandable-content", { timeout: 20000 }).should(
       ($expandableRow) => {
@@ -497,6 +537,16 @@ describe("Scenario 4 Desired State", () => {
     cy.get('[role="option"]').contains("unmodified").click();
     cy.get('[aria-label="StatusFilter"]').click();
 
+    cy.get('[aria-label="DiffItemList"]').within(() => {
+      cy.get("#toggle-button").eq(0).click();
+      cy.get("#toggle-button").eq(1).click();
+
+      if (!isIso) {
+        cy.get("#toggle-button").eq(2).click();
+        cy.get("#toggle-button").eq(3).click();
+        cy.get("#toggle-button").eq(4).click();
+      }
+    });
     // expect the view to still contain the diff of the last dry-run comparison
     cy.get(".pf-v5-c-card__expandable-content", { timeout: 20000 }).should(
       ($expandableRow) => {

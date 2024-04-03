@@ -160,6 +160,9 @@ test("GIVEN DesiredStateCompare WHEN File Resource THEN it shows prompt that can
   const blocks = await screen.findAllByTestId("DiffBlock");
 
   await act(async () => {
+    await userEvent.click(within(blocks[1]).getByLabelText("Details"));
+  });
+  await act(async () => {
     await userEvent.click(
       within(blocks[1]).getByRole("button", {
         name: words("desiredState.compare.file.show"),
