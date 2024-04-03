@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
-import { act, render, screen } from "@testing-library/react";
-import { userEvent } from "@testing-library/user-event";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import { Resource } from "@/Core";
 import { DeployStateFilter } from "./DeployStateFilter";
 
@@ -24,7 +23,7 @@ test("Given the deploy state filter When changing the include/exclude options Th
     name: "Deploy State-toggle",
   });
   await act(async () => {
-    await userEvent.click(menuToggle);
+    fireEvent.click(menuToggle);
   });
 
   // Skipped state, check if no filter is applied by default on that option.
@@ -37,12 +36,12 @@ test("Given the deploy state filter When changing the include/exclude options Th
 
   // Select include for skipped state
   await act(async () => {
-    await userEvent.click(
+    fireEvent.click(
       await screen.findByRole("generic", { name: "skipped-include-toggle" }),
     );
   });
   await act(async () => {
-    await userEvent.click(menuToggle);
+    fireEvent.click(menuToggle);
   });
 
   // Check if the include active icon is shown
@@ -59,14 +58,14 @@ test("Given the deploy state filter When changing the include/exclude options Th
   ).not.toBeInTheDocument();
 
   await act(async () => {
-    await userEvent.click(
+    fireEvent.click(
       await screen.findByRole("generic", { name: "skipped-exclude-toggle" }),
     );
   });
 
   // The include icon inactive one again and the exclude is active
   await act(async () => {
-    await userEvent.click(menuToggle);
+    fireEvent.click(menuToggle);
   });
 
   expect(
@@ -78,12 +77,12 @@ test("Given the deploy state filter When changing the include/exclude options Th
 
   // Include and exclude filters for different options can be combined
   await act(async () => {
-    await userEvent.click(
+    fireEvent.click(
       await screen.findByRole("generic", { name: "deployed-include-toggle" }),
     );
   });
   await act(async () => {
-    await userEvent.click(menuToggle);
+    fireEvent.click(menuToggle);
   });
 
   expect(
@@ -95,12 +94,12 @@ test("Given the deploy state filter When changing the include/exclude options Th
 
   // Clicking a toggle again removes that filter
   await act(async () => {
-    await userEvent.click(
+    fireEvent.click(
       await screen.findByRole("generic", { name: "deployed-include-toggle" }),
     );
   });
   await act(async () => {
-    await userEvent.click(menuToggle);
+    fireEvent.click(menuToggle);
   });
 
   expect(
