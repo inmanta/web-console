@@ -60,6 +60,8 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
   const menuRef = React.useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = React.useState(false);
 
+  const composerEnabled =
+    featureManager.isComposerEnabled() && composerAvailable;
   // the height of the drilled down menus differ based on how many options preceeds the drilldown. This is a bug on PF side.
   // and setting the insetHeight manually is a workaround for that issue.
   const getInsetHeight = () => {
@@ -169,7 +171,7 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
               {words("inventory.statustab.diagnose")}
             </MenuItem>
           </Link>
-          {featureManager.isComposerEnabled() && composerAvailable && (
+          {composerEnabled && (
             <Link
               variant="plain"
               pathname={routeManager.getUrl("InstanceComposerEditor", {
