@@ -375,5 +375,36 @@ test("ServiceInventory shows enabled composer buttons for root instances ", asyn
   await act(async () => {
     await userEvent.click(menuToggle);
   });
+
   expect(await screen.findByText("Edit in Composer")).toBeEnabled();
+
+  expect(screen.queryByText("Show in Composer")).not.toBeInTheDocument();
+});
+
+test("ServiceInventory shows only button to display instance in the composer for non-root", async () => {
+  const { component, apiHelper } = setup({ ...Service.a, owner: "owner" });
+  render(component);
+
+  await act(async () => {
+    apiHelper.resolve(
+      Either.right({
+        data: [{ ...ServiceInstance.a, id: "a" }],
+        links: { ...Pagination.links },
+        metadata: Pagination.metadata,
+      }),
+    );
+  });
+
+  expect(screen.queryByText("Add in Composer")).not.toBeInTheDocument();
+
+  const menuToggle = await screen.findByRole("button", {
+    name: "row actions toggle",
+  });
+  await act(async () => {
+    await userEvent.click(menuToggle);
+  });
+
+  expect(await screen.findByText("Show in Composer")).toBeEnabled();
+
+  expect(screen.queryByText("Edit in Composer")).not.toBeInTheDocument();
 });

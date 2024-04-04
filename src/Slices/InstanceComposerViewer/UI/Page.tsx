@@ -14,11 +14,11 @@ export const Page = () => {
       Dependant={({ services, mainServiceName }) => (
         <PageWrapper>
           <InstanceProvider
-            label={words("inventory.instanceComposer.title.edit")}
+            label={words("inventory.instanceComposer.title.view")}
             services={services}
             mainServiceName={mainServiceName}
             instanceId={instance}
-            editable={true}
+            editable={false}
           />
         </PageWrapper>
       )}
@@ -37,7 +37,7 @@ const PageWrapper: React.FC<React.PropsWithChildren<unknown>> = ({
 }) => (
   <PageContainer
     {...props}
-    title={words("inventory.instanceComposer.title.edit")}
+    title={words("inventory.instanceComposer.title.view")}
   >
     {children}
   </PageContainer>

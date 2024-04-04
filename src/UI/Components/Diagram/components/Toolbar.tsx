@@ -12,11 +12,13 @@ const Toolbar = ({
   handleDeploy,
   serviceName,
   isDeployDisabled,
+  editable,
 }: {
   openEntityModal: () => void;
   handleDeploy: () => void;
   serviceName: string;
   isDeployDisabled: boolean;
+  editable: boolean;
 }) => {
   const { routeManager } = useContext(DependencyContext);
   const navigate = useNavigate();
@@ -50,6 +52,7 @@ const Toolbar = ({
                   openEntityModal();
                 }}
                 aria-label="new-entity-button"
+                isDisabled={!editable}
               >
                 <img
                   src={entityIcon}
@@ -74,7 +77,7 @@ const Toolbar = ({
             variant="primary"
             width={200}
             onClick={handleDeploy}
-            isDisabled={isDeployDisabled}
+            isDisabled={isDeployDisabled || !editable}
           >
             {words("deploy")}
           </StyledButton>
