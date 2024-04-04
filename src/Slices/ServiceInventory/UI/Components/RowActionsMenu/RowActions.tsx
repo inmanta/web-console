@@ -69,6 +69,9 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
     if (!editDisabled) {
       insetHeight = insetHeight - 200;
     }
+    if (composerAvailable) {
+      insetHeight = insetHeight - 100;
+    }
     if (diagnoseDisabled) {
       insetHeight = insetHeight + 100;
     }
@@ -184,7 +187,7 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
               </MenuItem>
             </Link>
           )}
-          {featureManager.isComposerEnabled() && !composerAvailable && (
+          {featureManager.isComposerEnabled() && (
             <Link
               variant="plain"
               pathname={routeManager.getUrl("InstanceComposerViewer", {
