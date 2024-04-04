@@ -12,7 +12,11 @@ export const Page = () => {
       Wrapper={PageWrapper}
       Dependant={({ services, mainServiceName }) => (
         <PageWrapper>
-          <Canvas services={services} mainServiceName={mainServiceName} />
+          <Canvas
+            services={services}
+            mainServiceName={mainServiceName}
+            editable
+          />
         </PageWrapper>
       )}
     />
