@@ -3,10 +3,16 @@ import { DependencyContext, useRouteParams, words } from "@/UI";
 import { EmptyView, PageContainer, ServicesProvider } from "@/UI/Components";
 import { InstanceProvider } from "@/UI/Components/InstanceProvider";
 
+/**
+ * Renders the Page component for the Instance Composer Editor Page.
+ * If the composer feature is enabled, it renders the Canvas component wrapped in a ServicesProvider.
+ * If the composer feature is disabled, it renders an EmptyView component with a message indicating that the composer is disabled.
+ */
 export const Page = () => {
   const { service: serviceName, instance } =
     useRouteParams<"InstanceComposerEditor">();
   const { featureManager } = useContext(DependencyContext);
+
   return featureManager.isComposerEnabled() ? (
     <ServicesProvider
       serviceName={serviceName}
@@ -31,6 +37,10 @@ export const Page = () => {
   );
 };
 
+/**
+ * PageWrapper component.
+ * Wraps the content of the Page component with a PageContainer.
+ */
 const PageWrapper: React.FC<React.PropsWithChildren<unknown>> = ({
   children,
   ...props
