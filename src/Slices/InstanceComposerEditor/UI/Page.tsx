@@ -5,7 +5,7 @@ import { InstanceProvider } from "@/UI/Components/InstanceProvider";
 
 export const Page = () => {
   const { service: serviceName, instance } =
-    useRouteParams<"InstanceComposerViewer">();
+    useRouteParams<"InstanceComposerEditor">();
   const { featureManager } = useContext(DependencyContext);
   return featureManager.isComposerEnabled() ? (
     <ServicesProvider
