@@ -140,6 +140,9 @@ module.exports = {
     publicPath: "/",
   },
   resolve: {
+    alias: {
+      "@joint/core": "@inmanta/rappid",
+    },
     extensions: [".ts", ".tsx", ".js", ".jsx"],
     plugins: [
       new TsconfigPathsPlugin({
