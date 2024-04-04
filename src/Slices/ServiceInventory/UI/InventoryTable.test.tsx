@@ -359,7 +359,7 @@ describe("Actions", () => {
     });
 
     const options = await screen.findAllByRole("menuitem");
-    expect(options).toHaveLength(17);
+    expect(options).toHaveLength(18);
 
     await act(async () => {
       await userEvent.click(await screen.findByTestId("forceState"));
@@ -381,6 +381,6 @@ describe("Actions", () => {
     });
 
     const options = await screen.findAllByRole("menuitem");
-    expect(options).toHaveLength(10);
+    expect(options).toHaveLength(11);
   });
 });

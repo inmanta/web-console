@@ -378,7 +378,7 @@ test("ServiceInventory shows enabled composer buttons for root instances ", asyn
 
   expect(await screen.findByText("Edit in Composer")).toBeEnabled();
 
-  expect(screen.queryByText("Show in Composer")).not.toBeInTheDocument();
+  expect(screen.queryByText("Show in Composer")).toBeEnabled();
 });
 
 test("ServiceInventory shows only button to display instance in the composer for non-root", async () => {
