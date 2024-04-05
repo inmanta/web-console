@@ -10,7 +10,7 @@ export const InstanceProvider: React.FC<{
   mainServiceName: string;
   instanceId: string;
   editable: boolean;
-}> = ({ label, services, mainServiceName, instanceId, editable }) => {
+}> = ({ label, services, mainServiceName, instanceId, editable = false }) => {
   const { queryResolver } = useContext(DependencyContext);
   const [data] = queryResolver.useOneTime<"GetInstanceWithRelations">({
     kind: "GetInstanceWithRelations",
