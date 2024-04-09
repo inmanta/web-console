@@ -70,7 +70,7 @@ test("CompileDetailsView shows completed table with success: true", async () => 
   expect(
     await screen.findByRole("generic", { name: "CompileDetailsView-Success" }),
   ).toBeInTheDocument();
-  expect(await screen.findByLabelText("checkBullet")).toBeInTheDocument();
+  expect(await screen.findByLabelText("done-state")).toBeInTheDocument();
 });
 
 test("CompileDetailsView shows completed table with success: false, error indication should appear", async () => {
@@ -89,5 +89,5 @@ test("CompileDetailsView shows completed table with success: false, error indica
     await screen.findByRole("generic", { name: "CompileDetailsView-Success" }),
   ).toBeInTheDocument();
 
-  expect(await screen.findByLabelText("failedBullet")).toBeInTheDocument();
+  expect(await screen.findByLabelText("error-state")).toBeInTheDocument();
 });
