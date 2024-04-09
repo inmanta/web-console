@@ -25,10 +25,12 @@ const Canvas = ({
   services,
   mainServiceName,
   instance,
+  editable = true,
 }: {
   services: ServiceModel[];
   mainServiceName: string;
   instance?: InstanceWithReferences;
+  editable: boolean;
 }) => {
   const { environmentHandler, urlManager, routeManager } =
     useContext(DependencyContext);
@@ -170,7 +172,12 @@ const Canvas = ({
 
   useEffect(() => {
     const connectionRules = createConnectionRules(services, {});
-    const actions = diagramInit(canvas, connectionRules, handleUpdate);
+    const actions = diagramInit(
+      canvas,
+      connectionRules,
+      handleUpdate,
+      editable,
+    );
     setDiagramHandlers(actions);
     if (instance) {
       const isMainInstance = true;
@@ -200,7 +207,7 @@ const Canvas = ({
     return () => {
       actions.removeCanvas();
     };
-  }, [instance, services, mainServiceName]);
+  }, [instance, services, mainServiceName, editable]);
 
   useEffect(() => {
     if (!isDirty) {
@@ -288,6 +295,7 @@ const Canvas = ({
         isDeployDisabled={
           instancesToSend.size < 1 || !isDirty || looseEmbedded.size > 0
         }
+        editable={editable}
       />
       <CanvasWrapper id="canvas-wrapper">
         <div className="canvas" ref={canvas} />
