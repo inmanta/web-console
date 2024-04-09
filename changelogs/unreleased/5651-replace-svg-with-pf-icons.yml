@@ -1,4 +1,4 @@
-description: "Replace lose SVG icons with PatternFly icons."
+description: "Replace SVG icons with PatternFly icons."
 issue-nr: 5651
 change-type: patch
 destination-branches: [master, iso7]
