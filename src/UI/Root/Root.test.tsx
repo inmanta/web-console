@@ -103,6 +103,6 @@ test("GIVEN the app THEN the documentation link should be visible", async () => 
   });
 
   expect(
-    screen.getByRole("link", { name: "documentation link" }),
+    screen.getByRole("button", { name: "documentation link" }),
   ).toBeVisible();
 });
