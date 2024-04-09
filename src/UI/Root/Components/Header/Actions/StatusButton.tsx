@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Button, ToolbarItem, Tooltip } from "@patternfly/react-core";
-import { RunningIcon } from "@patternfly/react-icons";
+import { PortIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { Link } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
@@ -24,22 +24,33 @@ export const StatusButton: React.FC = () => {
   }, []);
 
   return (
-    <ToolbarItem>
+    <StyledToolbarItem>
       <Tooltip
         content={words("dashboard.status_page.tooltip")}
         position="bottom"
         entryDelay={500}
       >
-        <Link pathname={routeManager.getUrl("Status", undefined)} envOnly>
+        <StyledLink pathname={routeManager.getUrl("Status", undefined)} envOnly>
           <Button aria-label="ServerStatus action" variant="plain">
             <StyledIcon color={statusColor} />
           </Button>
-        </Link>
+        </StyledLink>
       </Tooltip>
-    </ToolbarItem>
+    </StyledToolbarItem>
   );
 };
 
-const StyledIcon = styled(RunningIcon)`
+const StyledIcon = styled(PortIcon)`
   color: ${(props) => props.color};
+`;
+
+const StyledToolbarItem = styled(ToolbarItem)`
+  &:hover {
+    background-color: var(--pf-v5-global--primary-color--200);
+  }
+`;
+
+const StyledLink = styled(Link)`
+  padding-left: 8px;
+  padding-right: 8px;
 `;
