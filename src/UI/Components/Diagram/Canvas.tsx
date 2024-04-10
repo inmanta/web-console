@@ -91,7 +91,7 @@ const Canvas = ({
   /**
    * Handles the event triggered when user want to see the dictionary properties of an entity.
    *
-   * @param {Event} event - The event object.
+   * @param {CustomEvent} event - The event object.
    */
   const handleDictEvent = (event) => {
     const customEvent = event as CustomEvent;
