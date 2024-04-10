@@ -101,7 +101,7 @@ const Canvas = ({
   /**
    * Handles the event triggered when user want to edit an entity.
    *
-   * @param {Event} event - The event object.
+   * @param {CustomEvent} event - The event object.
    */
   const handleEditEvent = (event) => {
     const customEvent = event as CustomEvent;
