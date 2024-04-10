@@ -3,7 +3,11 @@ import dagre, { graphlib } from "dagre";
 import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from "@/Core";
 import { InstanceWithReferences } from "@/Data/Managers/GetInstanceWithRelations/interface";
 import { words } from "@/UI/words";
-import { findCorrespondingId, toggleLooseElement } from "./helpers";
+import {
+  findCorrespondingId,
+  moveCellFromColliding,
+  toggleLooseElement,
+} from "./helpers";
 import activeImage from "./icons/active-icon.svg";
 import candidateImage from "./icons/candidate-icon.svg";
 import { ActionEnum, ConnectionRules, relationId } from "./interfaces";
@@ -216,7 +220,7 @@ export function appendInstance(
   isMainInstance = false,
   instanceToConnectRelation?: ServiceEntityBlock,
 ): ServiceEntityBlock {
-  const serviceInstance = serviceWithReferences.instance.data;
+  const serviceInstance = serviceWithReferences.instance;
   const serviceInstanceModel = services.find(
     (model) => model.name === serviceInstance.service_entity,
   );
@@ -227,7 +231,7 @@ export function appendInstance(
     serviceInstance.service_entity,
   );
 
-  instanceAsTable.set("id", serviceWithReferences.instance.data.id);
+  instanceAsTable.set("id", serviceWithReferences.instance.id);
   instanceAsTable.set("isEmbedded", false);
   instanceAsTable.set("isInEditMode", true);
 
@@ -261,7 +265,7 @@ export function appendInstance(
   //map through relatedInstances and either append them or connect to them
   serviceWithReferences.relatedInstances.forEach((relatedInstance) => {
     const isInstanceMain = false;
-    const cellAdded = graph.getCell(relatedInstance.instance.data.id);
+    const cellAdded = graph.getCell(relatedInstance.instance.id);
     if (!cellAdded) {
       appendInstance(
         paper,
@@ -484,14 +488,8 @@ export function appendEntity(
   appendColumns(instanceAsTable, attributesNames, entity);
   //add to graph
   instanceAsTable.addTo(graph);
-  //auto-layout provided by JointJS
-  layout.DirectedGraph.layout(graph, {
-    dagre: dagre,
-    graphlib: graphlib,
-    nodeSep: 80,
-    edgeSep: 80,
-    rankDir: "TB",
-  });
+
+  moveCellFromColliding(graph, instanceAsTable);
 
   return instanceAsTable;
 }

@@ -1,0 +1,6 @@
+description: "Deploying Instance in the Composer saves the coordinates of the instance in the canvas locally"
+issue-nr: 5273
+change-type: patch
+destination-branches: [master, iso7]
+sections:
+  minor-improvement: "{{description}}"

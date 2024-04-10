@@ -14,8 +14,6 @@ export interface GetInstanceWithRelationsManifest {
 }
 
 export interface InstanceWithReferences {
-  instance: {
-    data: ServiceInstanceModel;
-  };
+  instance: ServiceInstanceModel;
   relatedInstances: InstanceWithReferences[];
 }

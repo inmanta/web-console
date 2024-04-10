@@ -126,6 +126,13 @@ interface LabelLinkView extends dia.LinkView {
   sourcePoint: g.Rect;
   targetPoint: g.Rect;
 }
+interface SavedCoordinates {
+  id: string | dia.Cell.ID;
+  name: string;
+  attributes: { [key: string]: unknown };
+  coordinates: { x: number; y: number };
+}
+
 export {
   ActionEnum,
   ColumnData,
@@ -138,4 +145,5 @@ export {
   InstanceForApi,
   relationId,
   LabelLinkView,
+  SavedCoordinates,
 };

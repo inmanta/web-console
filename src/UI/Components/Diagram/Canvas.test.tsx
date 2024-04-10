@@ -1,6 +1,7 @@
 /*eslint-disable testing-library/no-node-access*/
 import React from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   render,
   act,
@@ -9,6 +10,8 @@ import {
 } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
+import { HttpResponse, http } from "msw";
+import { setupServer } from "msw/node";
 import { RemoteData, ServiceModel } from "@/Core";
 import { getStoreInstance } from "@/Data";
 import { InstanceWithReferences } from "@/Data/Managers/GetInstanceWithRelations/interface";
@@ -44,6 +47,7 @@ const setup = (
   instance?: InstanceWithReferences,
   serviceModels: ServiceModel[] = services as unknown as ServiceModel[],
 ) => {
+  const queryClient = new QueryClient();
   const store = getStoreInstance();
   const environmentHandler = EnvironmentHandlerImpl(
     useLocation,
@@ -72,30 +76,32 @@ const setup = (
   );
   history.push("/?env=aaa");
   return (
-    <CustomRouter history={history}>
-      <StoreProvider store={store}>
-        <DependencyProvider
-          dependencies={{ ...dependencies, environmentHandler }}
-        >
-          <Routes>
-            <Route
-              path="/"
-              element={
-                <Canvas
-                  services={serviceModels}
-                  mainServiceName={"parent-service"}
-                  instance={instance}
-                />
-              }
-            />
-            <Route
-              path="/lsm/catalog/parent-service/inventory"
-              element={<></>}
-            />
-          </Routes>
-        </DependencyProvider>
-      </StoreProvider>
-    </CustomRouter>
+    <QueryClientProvider client={queryClient}>
+      <CustomRouter history={history}>
+        <StoreProvider store={store}>
+          <DependencyProvider
+            dependencies={{ ...dependencies, environmentHandler }}
+          >
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <Canvas
+                    services={serviceModels}
+                    mainServiceName={"parent-service"}
+                    instance={instance}
+                  />
+                }
+              />
+              <Route
+                path="/lsm/catalog/parent-service/inventory"
+                element={<></>}
+              />
+            </Routes>
+          </DependencyProvider>
+        </StoreProvider>
+      </CustomRouter>
+    </QueryClientProvider>
   );
 };
 
@@ -277,7 +283,7 @@ beforeEach(() => {
   });
 });
 
-describe("Canvas.tsx", () => {
+describe.only("Canvas.tsx", () => {
   it("renders canvas correctly", async () => {
     const component = setup();
     render(component);
@@ -602,5 +608,49 @@ describe("Canvas.tsx", () => {
     await deleteAndAssert("parent-service", 3, 1);
     await deleteAndAssert("child-service", 2, 1);
     await deleteAndAssert("child_container", 1, 0);
+  });
+
+  it.only("sends request with correct data to the backend when instance is being deployed", async () => {
+    const server = setupServer(
+      http.post("/lsm/v2/order", async ({ request }) => {
+        const reqBody = await request.json();
+        expect(reqBody).toStrictEqual({
+          service_order_items: [
+            {
+              instance_id: expect.any(String),
+              service_entity: "parent-service",
+              config: {},
+              action: "create",
+              attributes: {
+                name: "name-001",
+                should_deploy_fail: false,
+                service_id: "id-001",
+              },
+              edits: null,
+            },
+          ],
+          description: "Requested with Instance Composer",
+        });
+
+        return HttpResponse.json();
+      }),
+    );
+    const component = setup();
+    server.listen();
+    render(component);
+    const shapeName = "parent-service";
+    const name = "name-001";
+    const id = "id-001";
+
+    await createShapeWithNameAndId(shapeName, name, id);
+
+    await act(async () => {
+      await user.click(screen.getByRole("button", { name: "Deploy" }));
+    });
+
+    expect(
+      await screen.findByText("Instance Composed successfully"),
+    ).toBeVisible();
+    server.close();
   });
 });

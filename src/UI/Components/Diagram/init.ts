@@ -9,7 +9,12 @@ import {
 } from "./actions";
 import { anchorNamespace } from "./anchors";
 import createHalo from "./halo";
-import { checkIfConnectionIsAllowed, toggleLooseElement } from "./helpers";
+import {
+  applyCoordinatesToCells,
+  checkIfConnectionIsAllowed,
+  getCellsCoordinates,
+  toggleLooseElement,
+} from "./helpers";
 import collapseButton from "./icons/collapse-icon.svg";
 import expandButton from "./icons/expand-icon.svg";
 import {
@@ -314,7 +319,13 @@ export default function diagramInit(
       isMainInstance: boolean,
     ) => {
       appendInstance(paper, graph, instance, services, isMainInstance);
-
+      const savedInstancesCoordinates = localStorage.getItem(
+        instance.instance.id,
+      );
+      if (savedInstancesCoordinates) {
+        const parsedCoordinates = JSON.parse(savedInstancesCoordinates);
+        applyCoordinatesToCells(graph, parsedCoordinates);
+      }
       scroller.zoomToFit({
         useModelGeometry: true,
         padding: 20,
@@ -365,6 +376,10 @@ export default function diagramInit(
     zoom: (delta) => {
       scroller.zoom(0.05 * delta, { min: 0.4, max: 1.2, grid: 0.05 });
     },
+    saveCoordinates: (id) => {
+      const coordinates = getCellsCoordinates(graph);
+      localStorage.setItem(id, JSON.stringify(coordinates));
+    },
   };
 }
 
@@ -388,4 +403,5 @@ export interface DiagramHandlers {
     attributeValues: InstanceAttributeModel,
   ) => ServiceEntityBlock;
   zoom: (delta: 1 | -1) => void;
+  saveCoordinates: (id: string) => void;
 }

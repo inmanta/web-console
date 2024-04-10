@@ -3,17 +3,16 @@ import "@inmanta/rappid/rappid.css";
 import { useNavigate } from "react-router-dom";
 import { dia } from "@inmanta/rappid";
 import { AlertVariant } from "@patternfly/react-core";
-import { isObject } from "lodash";
 import styled from "styled-components";
-import { objectHasKey, ServiceModel } from "@/Core";
+import { ServiceModel } from "@/Core";
 import { sanitizeAttributes } from "@/Data";
 import { InstanceWithReferences } from "@/Data/Managers/GetInstanceWithRelations/interface";
+import { useSendOrder } from "@/Data/Managers/V2/sendOrder";
 import diagramInit, { DiagramHandlers } from "@/UI/Components/Diagram/init";
 import { CanvasWrapper } from "@/UI/Components/Diagram/styles";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { ToastAlert } from "../ToastAlert";
-import { sendOrder } from "./api/orderRequest";
 import DictModal from "./components/DictModal";
 import FormModal from "./components/FormModal";
 import Toolbar from "./components/Toolbar";
@@ -30,10 +29,9 @@ const Canvas = ({
   mainServiceName: string;
   instance?: InstanceWithReferences;
 }) => {
-  const { environmentHandler, urlManager, routeManager } =
-    useContext(DependencyContext);
+  const { environmentHandler, routeManager } = useContext(DependencyContext);
   const environment = environmentHandler.useId();
-  const baseUrl = urlManager.getApiUrl();
+  const { mutate, isError, isSuccess, error } = useSendOrder(environment);
   const canvas = useRef<HTMLDivElement>(null);
   const [looseEmbedded, setLooseEmbedded] = useState<Set<string>>(new Set());
   const [alertMessage, setAlertMessage] = useState("");
@@ -79,6 +77,7 @@ const Canvas = ({
     const customEvent = event as CustomEvent;
     setDictToDisplay(JSON.parse(customEvent.detail));
   };
+
   const handleEditEvent = (event) => {
     const customEvent = event as CustomEvent;
     setCellToEdit(customEvent.detail);
@@ -86,37 +85,10 @@ const Canvas = ({
   };
 
   const handleDeploy = async () => {
-    try {
-      const response = await sendOrder(
-        baseUrl,
-        environment,
-        bundleInstances(instancesToSend, services).filter(
-          (item) => item.action !== null,
-        ),
-      );
-
-      if (response.ok) {
-        setAlertType(AlertVariant.success);
-        setAlertMessage(words("inventory.instanceComposer.success"));
-        //If response is successful then show feedback notification and redirect user to the service inventory view
-        setTimeout(() => {
-          navigate(url);
-        }, 1000);
-      } else {
-        setAlertType(AlertVariant.danger);
-        setAlertMessage(JSON.parse(await response.text()).message);
-      }
-    } catch (error) {
-      setAlertType(AlertVariant.danger);
-      if (
-        isObject(error) &&
-        objectHasKey(error as Record<string, unknown>, "message")
-      ) {
-        setAlertMessage((error as { message: string }).message);
-      } else {
-        setAlertMessage(`Error: ${error}`);
-      }
-    }
+    const bundledInstances = bundleInstances(instancesToSend, services).filter(
+      (item) => item.action !== null,
+    );
+    await mutate(bundledInstances);
   };
 
   const handleUpdate = (cell: ServiceEntityBlock, action: ActionEnum) => {
@@ -211,6 +183,28 @@ const Canvas = ({
       );
     }
   }, [instancesToSend, services, isDirty]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      setAlertType(AlertVariant.success);
+      setAlertMessage(words("inventory.instanceComposer.success"));
+
+      const mainInstance = bundleInstances(instancesToSend, services).find(
+        (instance) => instance.service_entity === mainServiceName,
+      );
+      if (mainInstance) {
+        diagramHandlers?.saveCoordinates(mainInstance.instance_id);
+      }
+      //If response is successful then show feedback notification and redirect user to the service inventory view
+      setTimeout(() => {
+        navigate(url);
+      }, 1000);
+    } else if (isError) {
+      setAlertType(AlertVariant.danger);
+      setAlertMessage(error.message);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuccess, isError]);
 
   useEffect(() => {
     document.addEventListener("openDictsModal", handleDictEvent);
