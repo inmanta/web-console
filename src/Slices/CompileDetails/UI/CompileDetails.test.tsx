@@ -70,7 +70,7 @@ test("CompileDetailsView shows completed table with success: true", async () => 
   expect(
     await screen.findByRole("generic", { name: "CompileDetailsView-Success" }),
   ).toBeInTheDocument();
-  expect(await screen.findByLabelText("done-state")).toBeInTheDocument();
+  expect(await screen.findAllByLabelText("done-state")).toHaveLength(3);
 });
 
 test("CompileDetailsView shows completed table with success: false, error indication should appear", async () => {
