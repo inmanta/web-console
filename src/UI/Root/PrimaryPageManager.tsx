@@ -2,6 +2,7 @@ import React from "react";
 import { PageManager, Page, RouteDictionary, PageDictionary } from "@/Core";
 import { InstanceComposerPage } from "@/Slices/InstanceComposer/UI";
 import { InstanceComposerEditorPage } from "@/Slices/InstanceComposerEditor/UI";
+import { InstanceComposerViewerPage } from "@/Slices/InstanceComposerViewer/UI";
 import { OrderDetailsPage } from "@/Slices/OrderDetails/UI";
 import { OrdersPage } from "@/Slices/Orders/UI";
 import { DiscoveredResourcesPage } from "@/Slices/ResourceDiscovery/UI";
@@ -94,6 +95,10 @@ export class PrimaryPageManager implements PageManager {
       InstanceComposerEditor: {
         ...this.routeDictionary.InstanceComposerEditor,
         element: <InstanceComposerEditorPage />,
+      },
+      InstanceComposerViewer: {
+        ...this.routeDictionary.InstanceComposerViewer,
+        element: <InstanceComposerViewerPage />,
       },
       CreateInstance: {
         ...this.routeDictionary.CreateInstance,

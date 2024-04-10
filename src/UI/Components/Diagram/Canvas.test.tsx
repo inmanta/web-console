@@ -46,6 +46,7 @@ const screen = baseWithin(document.body, allQueries);
 const setup = (
   instance?: InstanceWithReferences,
   serviceModels: ServiceModel[] = services as unknown as ServiceModel[],
+  editable: boolean = true,
 ) => {
   const queryClient = new QueryClient();
   const store = getStoreInstance();
@@ -90,6 +91,7 @@ const setup = (
                     services={serviceModels}
                     mainServiceName={"parent-service"}
                     instance={instance}
+                    editable={editable}
                   />
                 }
               />
@@ -575,6 +577,21 @@ describe.only("Canvas.tsx", () => {
     expect(entities).toHaveLength(4);
     expect(attrIndicators).toHaveLength(4);
     expect(connectors).toHaveLength(3);
+
+    await act(async () => {
+      await user.hover(connectors[0]);
+    });
+
+    const removeLinkHandle = document.querySelector(
+      ".joint-link_remove-circle",
+    ) as Element;
+    expect(removeLinkHandle).toBeInTheDocument();
+
+    const labels = document.querySelectorAll(".joint-label-text");
+    expect(labels[0]).toBeVisible();
+    expect(labels[1]).toBeVisible();
+    expect(labels[0]).toHaveTextContent("child-service");
+    expect(labels[1]).toHaveTextContent("parent-service");
   });
 
   it("renders correctly fetched instances with missing optional entities", async () => {
@@ -610,7 +627,7 @@ describe.only("Canvas.tsx", () => {
     await deleteAndAssert("child_container", 1, 0);
   });
 
-  it.only("sends request with correct data to the backend when instance is being deployed", async () => {
+  it("sends request with correct data to the backend when instance is being deployed", async () => {
     const server = setupServer(
       http.post("/lsm/v2/order", async ({ request }) => {
         const reqBody = await request.json();
@@ -652,5 +669,61 @@ describe.only("Canvas.tsx", () => {
       await screen.findByText("Instance Composed successfully"),
     ).toBeVisible();
     server.close();
+  });
+
+  it("when editable prop is set to false, disable interactions", async () => {
+    const component = setup(
+      mockedInstanceWithReferences,
+      services as unknown as ServiceModel[],
+      false,
+    );
+    render(component);
+
+    const attrIndicators = await screen.findAllByJointSelector("info");
+    const entities = document.querySelectorAll(
+      '[data-type="app.ServiceEntityBlock"]',
+    );
+    const connectors = document.querySelectorAll('[data-type="Link"]');
+
+    expect(entities).toHaveLength(4);
+    expect(attrIndicators).toHaveLength(4);
+    expect(connectors).toHaveLength(3);
+
+    expect(screen.getByLabelText("new-entity-button")).toBeDisabled();
+    expect(screen.getByText("Deploy")).toBeDisabled();
+
+    await act(async () => {
+      await user.click(entities[0]);
+    });
+
+    const editHandle = document.querySelector(
+      '[data-action="edit"]',
+    ) as Element;
+    expect(editHandle).toBeNull();
+
+    const deleteHandle = document.querySelector(
+      '[data-action="delete"]',
+    ) as Element;
+    expect(deleteHandle).toBeNull();
+
+    const linkHandle = document.querySelector(
+      '[data-action="link"]',
+    ) as Element;
+    expect(linkHandle).toBeNull();
+
+    await act(async () => {
+      await user.hover(connectors[0]);
+    });
+
+    const removeLinkHandle = document.querySelector(
+      ".joint-link_remove-circle",
+    ) as Element;
+    expect(removeLinkHandle).toBeNull();
+
+    const labels = document.querySelectorAll(".joint-label-text");
+    expect(labels[0]).toBeVisible();
+    expect(labels[1]).toBeVisible();
+    expect(labels[0]).toHaveTextContent("child-service");
+    expect(labels[1]).toHaveTextContent("parent-service");
   });
 });

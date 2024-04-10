@@ -4,15 +4,14 @@ import { EmptyView, PageContainer, ServicesProvider } from "@/UI/Components";
 import { InstanceProvider } from "@/UI/Components/InstanceProvider";
 
 /**
- * Renders the Page component for the Instance Composer Editor Page.
+ * Renders the Page component for the Instance Composer Viewer Page.
  * If the composer feature is enabled, it renders the Canvas component wrapped in a ServicesProvider.
  * If the composer feature is disabled, it renders an EmptyView component with a message indicating that the composer is disabled.
  */
 export const Page = () => {
   const { service: serviceName, instance } =
-    useRouteParams<"InstanceComposerEditor">();
+    useRouteParams<"InstanceComposerViewer">();
   const { featureManager } = useContext(DependencyContext);
-
   return featureManager.isComposerEnabled() ? (
     <ServicesProvider
       serviceName={serviceName}
@@ -20,11 +19,10 @@ export const Page = () => {
       Dependant={({ services, mainServiceName }) => (
         <PageWrapper>
           <InstanceProvider
-            label={words("inventory.instanceComposer.title.edit")}
+            label={words("inventory.instanceComposer.title.view")}
             services={services}
             mainServiceName={mainServiceName}
             instanceId={instance}
-            editable
           />
         </PageWrapper>
       )}
@@ -47,7 +45,7 @@ const PageWrapper: React.FC<React.PropsWithChildren<unknown>> = ({
 }) => (
   <PageContainer
     {...props}
-    title={words("inventory.instanceComposer.title.edit")}
+    title={words("inventory.instanceComposer.title.view")}
   >
     {children}
   </PageContainer>

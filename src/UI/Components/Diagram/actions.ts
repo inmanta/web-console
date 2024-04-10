@@ -163,40 +163,6 @@ export function showLinkTools(
       }),
     ],
   });
-  if (!(sourceCell.getName()[0] === "_")) {
-    linkView.model.appendLabel({
-      attrs: {
-        rect: {
-          fill: "none",
-        },
-        text: {
-          text: sourceCell.getName(),
-          autoOrient: "target",
-          class: "joint-label-text",
-        },
-      },
-      position: {
-        distance: 1,
-      },
-    });
-  }
-  if (!(targetCell.getName()[0] === "_")) {
-    linkView.model.appendLabel({
-      attrs: {
-        rect: {
-          fill: "none",
-        },
-        text: {
-          text: targetCell.getName(),
-          autoOrient: "source",
-          class: "joint-label-text",
-        },
-      },
-      position: {
-        distance: 0,
-      },
-    });
-  }
   linkView.addTools(tools);
 }
 

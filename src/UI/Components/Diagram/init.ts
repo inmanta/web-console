@@ -30,6 +30,7 @@ export default function diagramInit(
   canvas,
   connectionRules: ConnectionRules,
   updateInstancesToSend: (cell: ServiceEntityBlock, action: ActionEnum) => void,
+  editable: boolean,
 ): DiagramHandlers {
   /**
    * https://resources.jointjs.com/docs/jointjs/v3.6/joint.html#dia.Graph
@@ -175,7 +176,7 @@ export default function diagramInit(
       cellView.model.get("isBlockedFromEditing")
     )
       return;
-    if (cellView.model.get("isBlockedFromEditing")) return;
+    if (cellView.model.get("isBlockedFromEditing") || !editable) return;
     const halo = createHalo(
       graph,
       paper,
@@ -188,7 +189,50 @@ export default function diagramInit(
   });
 
   paper.on("link:mouseenter", (linkView) => {
-    if (linkView.model.get("isBlockedFromEditing")) return;
+    const source = linkView.model.source();
+    const target = linkView.model.target();
+
+    const sourceCell = graph.getCell(
+      source.id as dia.Cell.ID,
+    ) as ServiceEntityBlock;
+    const targetCell = graph.getCell(
+      target.id as dia.Cell.ID,
+    ) as ServiceEntityBlock;
+    if (!(sourceCell.getName()[0] === "_")) {
+      linkView.model.appendLabel({
+        attrs: {
+          rect: {
+            fill: "none",
+          },
+          text: {
+            text: sourceCell.getName(),
+            autoOrient: "target",
+            class: "joint-label-text",
+          },
+        },
+        position: {
+          distance: 1,
+        },
+      });
+    }
+    if (!(targetCell.getName()[0] === "_")) {
+      linkView.model.appendLabel({
+        attrs: {
+          rect: {
+            fill: "none",
+          },
+          text: {
+            text: targetCell.getName(),
+            autoOrient: "source",
+            class: "joint-label-text",
+          },
+        },
+        position: {
+          distance: 0,
+        },
+      });
+    }
+    if (linkView.model.get("isBlockedFromEditing") || !editable) return;
     showLinkTools(
       paper,
       graph,

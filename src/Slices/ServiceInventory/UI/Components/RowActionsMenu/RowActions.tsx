@@ -13,6 +13,7 @@ import {
 import {
   CopyIcon,
   EllipsisVIcon,
+  EyeIcon,
   FileMedicalAltIcon,
   HistoryIcon,
   PortIcon,
@@ -61,7 +62,6 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
 
   const composerEnabled =
     featureManager.isComposerEnabled() && composerAvailable;
-
   // the height of the drilled down menus differ based on how many options preceeds the drilldown. This is a bug on PF side.
   // and setting the insetHeight manually is a workaround for that issue.
   const getInsetHeight = () => {
@@ -70,6 +70,9 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
     let insetHeight = -200;
     if (!editDisabled) {
       insetHeight = insetHeight - 200;
+    }
+    if (composerAvailable) {
+      insetHeight = insetHeight - 100;
     }
     if (diagnoseDisabled) {
       insetHeight = insetHeight + 100;
@@ -183,6 +186,19 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
                 icon={<ToolsIcon />}
               >
                 {words("inventory.instanceComposer.editButton")}
+              </MenuItem>
+            </Link>
+          )}
+          {featureManager.isComposerEnabled() && (
+            <Link
+              variant="plain"
+              pathname={routeManager.getUrl("InstanceComposerViewer", {
+                service: instance.service_entity,
+                instance: instance.id,
+              })}
+            >
+              <MenuItem itemId="show-composer" icon={<EyeIcon />}>
+                {words("inventory.instanceComposer.showButton")}
               </MenuItem>
             </Link>
           )}

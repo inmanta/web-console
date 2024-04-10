@@ -1,0 +1,6 @@
+description: "Added functionality to view instances that are blocked from editing in the Instance Composer."
+issue-nr: 5373
+change-type: patch
+destination-branches: [master, iso7]
+sections:
+  minor-improvement: "{{description}}"

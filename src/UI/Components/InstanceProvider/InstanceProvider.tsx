@@ -14,10 +14,12 @@ import { ErrorView, LoadingView } from "@/UI/Components";
 import Canvas from "@/UI/Components/Diagram/Canvas";
 
 export const InstanceProvider: React.FC<{
+  label: string;
   services: ServiceModel[];
   mainServiceName: string;
   instanceId: string;
-}> = ({ services, mainServiceName, instanceId }) => {
+  editable?: boolean;
+}> = ({ services, mainServiceName, instanceId, editable = false }) => {
   const { environmentHandler } = useContext(DependencyContext);
   const environment = environmentHandler.useId();
 
@@ -43,6 +45,7 @@ export const InstanceProvider: React.FC<{
       services={services}
       mainServiceName={mainServiceName}
       instance={data}
+      editable={editable}
     />
   );
 };
