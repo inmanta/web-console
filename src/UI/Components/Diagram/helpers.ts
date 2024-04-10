@@ -532,6 +532,12 @@ export const toggleLooseElement = (
   );
 };
 
+/**
+ * Gets the coordinates of all cells in the graph.
+ *
+ * @param {dia.Graph} graph - The graph from which to get the cells.
+ * @returns {SavedCoordinates[]} An array of objects, each containing the id, name, attributes, and coordinates of a cell.
+ */
 export const getCellsCoordinates = (graph: dia.Graph): SavedCoordinates[] => {
   const cells = graph.getCells();
   return cells
@@ -544,6 +550,12 @@ export const getCellsCoordinates = (graph: dia.Graph): SavedCoordinates[] => {
     }));
 };
 
+/**
+ * Applies coordinates to cells in the graph.
+ *
+ * @param {dia.Graph} graph - The graph to which to apply the coordinates.
+ * @param {SavedCoordinates[]} coordinates - The coordinates to apply to the cells.
+ */
 export const applyCoordinatesToCells = (
   graph: dia.Graph,
   coordinates: SavedCoordinates[],
@@ -565,6 +577,12 @@ export const applyCoordinatesToCells = (
   });
 };
 
+/**
+ * Moves a cell away from any cells it is colliding with.
+ *
+ * @param {dia.Graph} graph - The graph containing the cell.
+ * @param {dia.Cell} cell - The cell to move.
+ */
 export const moveCellFromColliding = (graph: dia.Graph, cell: dia.Cell) => {
   let isColliding = false;
   do {
