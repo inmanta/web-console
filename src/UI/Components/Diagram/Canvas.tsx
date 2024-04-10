@@ -20,6 +20,14 @@ import { bundleInstances, createConnectionRules } from "./helpers";
 import { ActionEnum, DictDialogData, InstanceForApi } from "./interfaces";
 import { ServiceEntityBlock } from "./shapes";
 
+/**
+ * Canvas component for creating, displaying and editing a Instances.
+ *
+ * @param {ServiceModel[]} services - The list of service models.
+ * @param {string} mainServiceName - The name of the main service.
+ * @param {InstanceWithReferences} instance - The instance with references.
+ * @returns {JSX.Element} The rendered Canvas component.
+ */
 const Canvas = ({
   services,
   mainServiceName,
@@ -53,6 +61,11 @@ const Canvas = ({
     service: mainServiceName,
   });
 
+  /**
+   * Handles the event triggered when there is loose embedded entity on the canvas.
+   *
+   * @param {Event} event - The event object.
+   */
   const handleLooseEmbeddedEvent = (event) => {
     const customEvent = event as CustomEvent;
     const eventData: { kind: "remove" | "add"; id: string } = JSON.parse(
@@ -73,17 +86,32 @@ const Canvas = ({
     }
   };
 
+  /**
+   * Handles the event triggered when user want to see the dictionary properties of an entity.
+   *
+   * @param {Event} event - The event object.
+   */
   const handleDictEvent = (event) => {
     const customEvent = event as CustomEvent;
     setDictToDisplay(JSON.parse(customEvent.detail));
   };
 
+  /**
+   * Handles the event triggered when user want to edit an entity.
+   *
+   * @param {Event} event - The event object.
+   */
   const handleEditEvent = (event) => {
     const customEvent = event as CustomEvent;
     setCellToEdit(customEvent.detail);
     setIsFormModalOpen(true);
   };
 
+  /**
+   * Handles the filtering of the unchanged entities and sending bundled instances to the backend.
+   *
+   * @param {Event} event - The event object.
+   */
   const handleDeploy = async () => {
     const bundledInstances = bundleInstances(instancesToSend, services).filter(
       (item) => item.action !== null,
@@ -91,6 +119,12 @@ const Canvas = ({
     await mutate(bundledInstances);
   };
 
+  /**
+   * Handles the update of a service entity block.
+   *
+   * @param {ServiceEntityBlock} cell - The service entity block to be updated.
+   * @param {ActionEnum} action - The action to be performed on the service entity block.
+   */
   const handleUpdate = (cell: ServiceEntityBlock, action: ActionEnum) => {
     const newInstance: InstanceForApi = {
       instance_id: cell.id as string,
@@ -186,6 +220,7 @@ const Canvas = ({
 
   useEffect(() => {
     if (isSuccess) {
+      //If response is successful then show feedback notification and redirect user to the service inventory view
       setAlertType(AlertVariant.success);
       setAlertMessage(words("inventory.instanceComposer.success"));
 
@@ -195,7 +230,6 @@ const Canvas = ({
       if (mainInstance) {
         diagramHandlers?.saveCoordinates(mainInstance.instance_id);
       }
-      //If response is successful then show feedback notification and redirect user to the service inventory view
       setTimeout(() => {
         navigate(url);
       }, 1000);
