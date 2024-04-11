@@ -17,16 +17,7 @@ export function sanitizeAttributes(
 
   fields.forEach((field) => {
     switch (field.kind) {
-      case "Enum": {
-        const key = formState[field.name];
-        const value =
-          typeof key === "string" && key.length > 0 ? field.options[key] : "";
-        sanitized[field.name] = converter.ensureAttributeType(
-          value,
-          field.type,
-        );
-        return;
-      }
+      case "Enum":
       case "Boolean":
       case "Text": {
         sanitized[field.name] = converter.ensureAttributeType(

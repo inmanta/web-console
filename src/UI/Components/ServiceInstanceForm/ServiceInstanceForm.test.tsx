@@ -238,10 +238,11 @@ test("GIVEN ServiceInstanceForm WHEN passed an EnumField THEN shows that field",
     }),
   ).toBeVisible();
 
-  const select = screen.getByRole("combobox", {
-    name: "enum_field-selectFilterInput",
-  });
-  expect(select).toHaveValue("local");
+  const select = screen.getByTestId(
+    `${Test.Field.enumField.name}-select-toggle`,
+  );
+
+  expect(select).toHaveTextContent("local");
 
   await act(async () => {
     await userEvent.click(select);
@@ -254,7 +255,7 @@ test("GIVEN ServiceInstanceForm WHEN passed an EnumField THEN shows that field",
     await userEvent.click(options[0]);
   });
 
-  expect(select).toHaveValue("ci");
+  expect(select).toHaveTextContent("ci");
 });
 
 test("GIVEN ServiceInstanceForm WHEN passed an EnumField with more than one value THEN shows that field with default prompt", async () => {
@@ -266,14 +267,14 @@ test("GIVEN ServiceInstanceForm WHEN passed an EnumField with more than one valu
   });
   expect(field).toBeVisible();
 
-  const placeholder = screen.getByPlaceholderText(
+  const placeholder = screen.getByText(
     `Select value for ${Test.Field.enumFieldTwoOptions.name}`,
   );
   expect(placeholder).toBeVisible();
 
-  const select = screen.getByRole("combobox", {
-    name: `${Test.Field.enumFieldTwoOptions.name}-selectFilterInput`,
-  });
+  const select = screen.getByTestId(
+    `${Test.Field.enumFieldTwoOptions.name}-select-toggle`,
+  );
 
   await act(async () => {
     await userEvent.click(select);
@@ -292,11 +293,11 @@ test("GIVEN ServiceInstanceForm WHEN passed an EnumField with only one value THE
   });
   expect(field).toBeVisible();
 
-  const select = screen.getByRole("combobox", {
-    name: `${Test.Field.enumFieldSingleOption.name}-selectFilterInput`,
-  });
+  const select = screen.getByTestId(
+    `${Test.Field.enumFieldSingleOption.name}-select-toggle`,
+  );
 
-  expect(select).toHaveValue("local");
+  expect(select).toHaveTextContent("local");
 
   await act(async () => {
     await userEvent.click(select);
