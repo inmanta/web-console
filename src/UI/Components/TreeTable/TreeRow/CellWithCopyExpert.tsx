@@ -139,7 +139,7 @@ export const CellWithCopyExpert: React.FC<Props> = ({
           setMessage={setStateErrorMessage}
         />
       )}
-      {environmentModifier.useIsExpertModeEnabled() && value !== "" && (
+      {environmentModifier.useIsExpertModeEnabled() && (
         <Button
           variant="link"
           isDanger

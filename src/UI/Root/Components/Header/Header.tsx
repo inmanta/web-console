@@ -13,6 +13,7 @@ import {
   Tooltip,
 } from "@patternfly/react-core";
 import { BarsIcon } from "@patternfly/react-icons";
+import styled from "styled-components";
 import { Badge } from "@/Slices/Notification/UI/Badge";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
@@ -61,7 +62,7 @@ export const Header: React.FC<Props> = ({ noEnv, onNotificationsToggle }) => {
                 spacer={{ default: "spacerNone", md: "spacerMd" }}
               >
                 {!noEnv && (
-                  <ToolbarItem>
+                  <StyledToolbarItem>
                     <Tooltip
                       content={words("dashboard.notifications.tooltip")}
                       position="bottom"
@@ -69,7 +70,7 @@ export const Header: React.FC<Props> = ({ noEnv, onNotificationsToggle }) => {
                     >
                       <Badge onClick={onNotificationsToggle} />
                     </Tooltip>
-                  </ToolbarItem>
+                  </StyledToolbarItem>
                 )}
                 <StatusButton />
                 <DocumentationLinks />
@@ -84,3 +85,11 @@ export const Header: React.FC<Props> = ({ noEnv, onNotificationsToggle }) => {
     </>
   );
 };
+
+const StyledToolbarItem = styled(ToolbarItem)`
+  padding-left: 8px;
+  padding-right: 8px;
+  &:hover {
+    background-color: var(--pf-v5-global--primary-color--200);
+  }
+`;
