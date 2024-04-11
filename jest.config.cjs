@@ -23,6 +23,8 @@ module.exports = {
     "@/(.*)": "<rootDir>/src/$1",
     "@S/(.*)": "<rootDir>/src/Slices/$1",
     "^lodash-es$": "<rootDir>/node_modules/lodash/index.js", // Use CommonJS version of lodash in the test cases instead of ESM
+    // mapper for the aliassing '@joint/core': '@intmant/rappid'
+    "^@joint/core$": "<rootDir>/node_modules/@inmanta/rappid",
   },
 
   // A preset that is used as a base for Jest's configuration
