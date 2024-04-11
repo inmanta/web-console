@@ -112,16 +112,6 @@ export const SelectFormInput: React.FC<Props> = ({
           ))}
         </SelectList>
       </Select>
-      {/* <SingleTextSelect
-        options={formattedOptions}
-        toggleAriaLabel={`${attributeName}-select`}
-        setSelected={handleInputChange}
-        selected={
-          selectOptions.length === 1 ? selectOptions[0] : attributeValue
-        }
-        isDisabled={shouldBeDisabled}
-        placeholderText={words("common.serviceInstance.select")(attributeName)}
-      /> */}
     </FormGroup>
   );
 };
