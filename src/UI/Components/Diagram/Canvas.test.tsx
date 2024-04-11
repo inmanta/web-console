@@ -182,7 +182,14 @@ beforeEach(() => {
       SVG_ANGLETYPE_GRAD: 4,
     })),
   });
-
+  Object.defineProperty(window, "ResizeObserver", {
+    writable: true,
+    value: jest.fn().mockImplementation(() => ({
+      disconnect: jest.fn(),
+      observe: jest.fn(),
+      unobserve: jest.fn(),
+    })),
+  });
   Object.defineProperty(global.SVGSVGElement.prototype, "createSVGMatrix", {
     writable: true,
     value: jest.fn().mockImplementation(() => ({
