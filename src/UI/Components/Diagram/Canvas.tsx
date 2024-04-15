@@ -114,7 +114,6 @@ const Canvas = ({
   /**
    * Handles the filtering of the unchanged entities and sending bundled instances to the backend.
    *
-   * @param {Event} event - The event object.
    */
   const handleDeploy = async () => {
     const bundledInstances = bundleInstances(instancesToSend, services).filter(
