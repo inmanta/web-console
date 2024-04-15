@@ -68,7 +68,7 @@ const Canvas = ({
   /**
    * Handles the event triggered when there is loose embedded entity on the canvas.
    *
-   * @param {Event} event - The event object.
+   * @param {CustomEvent} event - The event object.
    */
   const handleLooseEmbeddedEvent = (event) => {
     const customEvent = event as CustomEvent;
@@ -93,7 +93,7 @@ const Canvas = ({
   /**
    * Handles the event triggered when user want to see the dictionary properties of an entity.
    *
-   * @param {Event} event - The event object.
+   * @param {CustomEvent} event - The event object.
    */
   const handleDictEvent = (event) => {
     const customEvent = event as CustomEvent;
@@ -103,7 +103,7 @@ const Canvas = ({
   /**
    * Handles the event triggered when user want to edit an entity.
    *
-   * @param {Event} event - The event object.
+   * @param {CustomEvent} event - The event object.
    */
   const handleEditEvent = (event) => {
     const customEvent = event as CustomEvent;
