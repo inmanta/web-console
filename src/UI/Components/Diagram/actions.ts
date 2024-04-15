@@ -1,5 +1,5 @@
-import { dia, layout, linkTools } from "@inmanta/rappid";
-import dagre, { graphlib } from "dagre";
+import { dia, linkTools } from "@inmanta/rappid";
+import { DirectedGraph } from "@joint/layout-directed-graph";
 import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from "@/Core";
 import { InstanceWithReferences } from "@/Data/Managers/GetInstanceWithRelations/interface";
 import { words } from "@/UI/words";
@@ -293,9 +293,7 @@ export function appendInstance(
     }
   });
   //auto-layout provided by JointJS
-  layout.DirectedGraph.layout(graph, {
-    dagre: dagre,
-    graphlib: graphlib,
+  DirectedGraph.layout(graph, {
     nodeSep: 80,
     edgeSep: 80,
     rankDir: "TB",

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import "@inmanta/rappid/rappid.css";
+import "@inmanta/rappid/joint-plus.css";
 import { useNavigate } from "react-router-dom";
 import { dia } from "@inmanta/rappid";
 import { AlertVariant } from "@patternfly/react-core";
