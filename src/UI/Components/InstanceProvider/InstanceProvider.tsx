@@ -9,6 +9,7 @@
 import React, { useContext } from "react";
 import { ServiceModel } from "@/Core";
 import { useGetInstanceWithRelations } from "@/Data/Managers/V2/GetInstanceWithRelations";
+import { useGetMetadata } from "@/Data/Managers/V2/GetMetadata";
 import { DependencyContext, words } from "@/UI";
 import { ErrorView, LoadingView } from "@/UI/Components";
 import Canvas from "@/UI/Components/Diagram/Canvas";
@@ -25,26 +26,51 @@ export const InstanceProvider: React.FC<{
 
   const { data, isError, isLoading, error, refetch } =
     useGetInstanceWithRelations(instanceId, environment).useOneTime();
+  const instanceVersion = data?.instance.version;
+  const {
+    data: metadata,
+    isError: isMetadataError,
+    isLoading: isMetadataLoading,
+    error: metadataError,
+    refetch: refetchMetadata,
+  } = useGetMetadata(
+    environment,
+    mainServiceName,
+    instanceId,
+    instanceVersion,
+    "coordinates",
+  ).useOneTime();
 
-  if (isLoading) {
+  if (isLoading || isMetadataLoading) {
     return <LoadingView aria-label="instance_composer_editor-loading" />;
   }
 
-  if (isError) {
-    <ErrorView
-      data-testid="ErrorView"
-      title={words("error")}
-      message={words("error.general")(error.message)}
-      aria-label="instance_composer_editor-failed"
-      retry={refetch}
-    />;
+  if (isError || isMetadataError) {
+    const errorMessage = error
+      ? error.message
+      : metadataError
+        ? metadataError.message
+        : "";
+    const retryFn = isError ? refetch : refetchMetadata;
+
+    return (
+      <ErrorView
+        data-testid="ErrorView"
+        title={words("error")}
+        message={words("error.general")(errorMessage)}
+        aria-label="instance_composer_editor-failed"
+        retry={retryFn}
+      />
+    );
   }
 
   return (
     <Canvas
       services={services}
       mainServiceName={mainServiceName}
-      instance={data}
+      instance={
+        data ? { ...data, coordinates: metadata?.data || "" } : undefined
+      }
       editable={editable}
     />
   );

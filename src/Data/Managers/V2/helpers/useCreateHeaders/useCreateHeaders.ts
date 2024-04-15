@@ -10,7 +10,7 @@ import { DependencyContext } from "@/UI";
 export const useCreateHeaders = (env?: string) => {
   const { authController } = useContext(DependencyContext);
 
-  const headers = new Headers();
+  const headers = new Headers({ "Content-Type": "application/json" });
 
   if (env) {
     headers.append("X-Inmanta-Tid", env);

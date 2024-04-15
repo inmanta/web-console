@@ -16,4 +16,5 @@ export interface GetInstanceWithRelationsManifest {
 export interface InstanceWithReferences {
   instance: ServiceInstanceModel;
   relatedInstances: InstanceWithReferences[];
+  coordinates?: string;
 }

@@ -8,6 +8,7 @@ import { SearchSanitizer } from "@/UI/Routing";
 import { GlobalStyles } from "@/UI/Styles";
 import { NotFoundPage } from "@S/NotFound/UI";
 import { KeycloakProvider, PageFrame, Initializer } from "./Components";
+import { GlobalAlert } from "./Components/GlobalAlert";
 import { PrimaryPageManager } from "./PrimaryPageManager";
 
 export const Root: React.FC = () => {
@@ -36,6 +37,7 @@ export const Root: React.FC = () => {
       <GlobalStyleProxy />
       <KeycloakProvider>
         <SearchSanitizer.Provider>
+          <GlobalAlert />
           <LoginPage />
           <Initializer>
             <Routes>

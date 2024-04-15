@@ -42,8 +42,9 @@ export const useGetInstanceWithRelations = (
     handleAuthorization(response);
 
     if (!response.ok) {
-      throw new Error("Failed to fetch instance");
+      throw new Error("Failed to fetch instance with id: " + instanceId);
     }
+
     const instance: { data: ServiceInstanceModel } = await response.json();
     if (instance.data.referenced_by !== null) {
       await Promise.all(

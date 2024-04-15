@@ -20,6 +20,7 @@ import expandButton from "./icons/expand-icon.svg";
 import {
   ActionEnum,
   ConnectionRules,
+  SavedCoordinates,
   TypeEnum,
   serializedCell,
 } from "./interfaces";
@@ -363,11 +364,9 @@ export default function diagramInit(
       isMainInstance: boolean,
     ) => {
       appendInstance(paper, graph, instance, services, isMainInstance);
-      const savedInstancesCoordinates = localStorage.getItem(
-        instance.instance.id,
-      );
-      if (savedInstancesCoordinates) {
-        const parsedCoordinates = JSON.parse(savedInstancesCoordinates);
+
+      if (instance.coordinates) {
+        const parsedCoordinates = JSON.parse(instance.coordinates);
         applyCoordinatesToCells(graph, parsedCoordinates);
       }
       scroller.zoomToFit({
@@ -420,10 +419,7 @@ export default function diagramInit(
     zoom: (delta) => {
       scroller.zoom(0.05 * delta, { min: 0.4, max: 1.2, grid: 0.05 });
     },
-    saveCoordinates: (id) => {
-      const coordinates = getCellsCoordinates(graph);
-      localStorage.setItem(id, JSON.stringify(coordinates));
-    },
+    getCoordinates: () => getCellsCoordinates(graph),
   };
 }
 
@@ -447,5 +443,5 @@ export interface DiagramHandlers {
     attributeValues: InstanceAttributeModel,
   ) => ServiceEntityBlock;
   zoom: (delta: 1 | -1) => void;
-  saveCoordinates: (id: string) => void;
+  getCoordinates: () => SavedCoordinates[];
 }
