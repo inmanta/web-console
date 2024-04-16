@@ -23,6 +23,7 @@ export const Page = () => {
             services={services}
             mainServiceName={mainServiceName}
             instanceId={instance}
+            warning={false}
           />
         </PageWrapper>
       )}

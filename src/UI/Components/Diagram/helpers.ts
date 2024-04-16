@@ -6,6 +6,7 @@ import {
   ServiceInstanceModel,
   ServiceModel,
 } from "@/Core";
+import { InstanceWithReferences } from "@/Data/Managers/GetInstanceWithRelations/interface";
 import { create_UUID } from "@/Slices/EditInstance/Data";
 import {
   ConnectionRules,
@@ -598,4 +599,33 @@ export const moveCellFromColliding = (graph: dia.Graph, cell: dia.Cell) => {
       isColliding = false;
     }
   } while (isColliding);
+};
+
+export const checkForUneditableInstances = (
+  services: ServiceModel[],
+  instance: InstanceWithReferences | undefined,
+): string[] => {
+  if (!instance) {
+    return [];
+  }
+  const uneditableServices = services
+    .filter((service) => service.strict_modifier_enforcement)
+    .map((service) => service.name);
+
+  const findUneditableInstances = (
+    instance: InstanceWithReferences,
+  ): string[] => {
+    const uneditableInstances: string[] = [];
+    if (uneditableServices.includes(instance.instance.service_entity)) {
+      uneditableInstances.push(instance.instance.service_entity);
+    }
+    uneditableInstances.concat(
+      instance.relatedInstances.flatMap((relatedInstance) =>
+        findUneditableInstances(relatedInstance),
+      ),
+    );
+    return uneditableInstances;
+  };
+
+  return findUneditableInstances(instance);
 };

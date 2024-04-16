@@ -17,6 +17,7 @@ import { ToastAlert } from "../ToastAlert";
 import DictModal from "./components/DictModal";
 import FormModal from "./components/FormModal";
 import Toolbar from "./components/Toolbar";
+import { WarningBanner } from "./components/WarningBanner";
 import { bundleInstances, createConnectionRules } from "./helpers";
 import { ActionEnum, DictDialogData, InstanceForApi } from "./interfaces";
 import { ServiceEntityBlock } from "./shapes";
@@ -34,11 +35,13 @@ const Canvas = ({
   mainServiceName,
   instance,
   editable = true,
+  uneditableInstances,
 }: {
   services: ServiceModel[];
   mainServiceName: string;
   instance?: InstanceWithReferences;
   editable: boolean;
+  uneditableInstances?: string[];
 }) => {
   const { environmentHandler, routeManager } = useContext(DependencyContext);
   const environment = environmentHandler.useId();
@@ -340,6 +343,7 @@ const Canvas = ({
         editable={editable}
       />
       <CanvasWrapper id="canvas-wrapper">
+        <WarningBanner instances={uneditableInstances} />
         <div className="canvas" ref={canvas} />
         <ZoomWrapper>
           <button

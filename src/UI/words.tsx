@@ -178,6 +178,8 @@ const dict = {
   "inventory.instanceComposer.title": "Instance Composer",
   "inventory.instanceComposer.title.edit": "Instance Composer Editor",
   "inventory.instanceComposer.title.view": "Instance Composer Viewer",
+  "inventory.instanceComposer.strict.warning":
+    "This instance or some parts of it does not have strict mode enabled, the composer only allows you to visualize the instance",
   "inventory.deleteInstance.button": "Delete",
   "inventory.deleteInstance.failed": "Deleting instance failed",
   "inventory.deleteInstance.title": "Delete instance",

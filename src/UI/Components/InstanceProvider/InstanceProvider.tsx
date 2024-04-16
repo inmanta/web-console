@@ -1,3 +1,11 @@
+import React, { useContext } from "react";
+import { ServiceModel } from "@/Core";
+import { useGetInstanceWithRelations } from "@/Data/Managers/V2/GetInstanceWithRelations";
+import { useGetMetadata } from "@/Data/Managers/V2/GetMetadata";
+import { DependencyContext, words } from "@/UI";
+import { ErrorView, LoadingView } from "@/UI/Components";
+import Canvas from "@/UI/Components/Diagram/Canvas";
+import { checkForUneditableInstances } from "@/UI/Components/Diagram/helpers";
 /**
  * Renders the InstanceProvider component.
  *
@@ -6,21 +14,20 @@
  * @param {string} instanceId - The ID of the instance.
  * @returns {JSX.Element} The rendered InstanceProvider component.
  */
-import React, { useContext } from "react";
-import { ServiceModel } from "@/Core";
-import { useGetInstanceWithRelations } from "@/Data/Managers/V2/GetInstanceWithRelations";
-import { useGetMetadata } from "@/Data/Managers/V2/GetMetadata";
-import { DependencyContext, words } from "@/UI";
-import { ErrorView, LoadingView } from "@/UI/Components";
-import Canvas from "@/UI/Components/Diagram/Canvas";
-
 export const InstanceProvider: React.FC<{
   label: string;
   services: ServiceModel[];
   mainServiceName: string;
   instanceId: string;
   editable?: boolean;
-}> = ({ services, mainServiceName, instanceId, editable = false }) => {
+  warning?: boolean;
+}> = ({
+  services,
+  mainServiceName,
+  instanceId,
+  editable = false,
+  warning = true,
+}) => {
   const { environmentHandler } = useContext(DependencyContext);
   const environment = environmentHandler.useId();
 
@@ -63,6 +70,7 @@ export const InstanceProvider: React.FC<{
       />
     );
   }
+  const uneditableInstances = checkForUneditableInstances(services, data);
 
   return (
     <Canvas
@@ -71,7 +79,8 @@ export const InstanceProvider: React.FC<{
       instance={
         data ? { ...data, coordinates: metadata?.data || "" } : undefined
       }
-      editable={editable}
+      editable={editable && uneditableInstances.length === 0}
+      uneditableInstances={warning ? uneditableInstances : []}
     />
   );
 };
