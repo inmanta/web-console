@@ -917,7 +917,7 @@ __metadata:
     "@babel/core": "npm:^7.23.9"
     "@babel/plugin-transform-typescript": "npm:^7.23.6"
     "@inmanta/rappid": "npm:^4.0.0"
-    "@joint/layout-directed-graph": "npm:^4.0.1"
+    "@joint/layout-directed-graph": "npm:^4.0.3"
     "@loadable/component": "npm:^5.16.3"
     "@patternfly/react-charts": "npm:^7.1.2"
     "@patternfly/react-core": "npm:^5.2.2"
@@ -1346,14 +1346,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@joint/layout-directed-graph@npm:^4.0.1":
-  version: 4.0.1
-  resolution: "@joint/layout-directed-graph@npm:4.0.1"
+"@joint/core@npm:~4.0.2":
+  version: 4.0.2
+  resolution: "@joint/core@npm:4.0.2"
+  checksum: 10/428bf645c4bf43cd74aa53ddf7b7e084e64569a83e6961b5ef15fdfea2741fe6607f0c5ad86028f8174a1ee484808de0189767e39bef82a04bdf81654d9a8207
+  languageName: node
+  linkType: hard
+
+"@joint/layout-directed-graph@npm:^4.0.3":
+  version: 4.0.3
+  resolution: "@joint/layout-directed-graph@npm:4.0.3"
   dependencies:
     "@dagrejs/dagre": "npm:~1.0.4"
     "@dagrejs/graphlib": "npm:~2.1.13"
-    "@joint/core": "npm:~4.0.1"
-  checksum: 10/92d05643d0f0b271ad6e1134e51e403125db22a715e8e356cc50e1ecbc6640bb5f3ebdae6646c1faf3376b5d075b461f08dd8bb1e811f41d7dc1a34d9f809ced
+    "@joint/core": "npm:~4.0.2"
+  checksum: 10/dd878173a0214bab70a43ad4d91182b978e14247ec4b20e56c7d5ef09450283d03bcc8f33c47116128ffe80ca17a23d14317fe4fdd4d461f271eb986ea7993e8
   languageName: node
   linkType: hard
 
