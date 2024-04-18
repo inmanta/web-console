@@ -4,6 +4,13 @@ import { InfoCircleIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { words } from "@/UI/words";
 
+/**
+ * Renders a warning banner component.
+ *
+ * @component
+ * @param {string[]} instances - The list of instances to display in the banner.
+ * @returns {JSX.Element|null} The rendered warning banner component.
+ */
 export const WarningBanner = ({
   instances,
 }: {

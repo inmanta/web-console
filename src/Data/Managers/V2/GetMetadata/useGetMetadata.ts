@@ -4,6 +4,15 @@ import { PrimaryBaseUrlManager } from "@/UI";
 import { useCreateHeaders } from "../helpers/useCreateHeaders";
 import { useHandleErrors } from "../helpers/useHandleErrors";
 
+/**
+ * Custom hook for fetching metadata for a specific service entity and key.
+ * @param environment - The environment in which the service is existing.
+ * @param service_entity - The service entity name.
+ * @param service_id - The ID of the service instance.
+ * @param instanceVersion - The version of the service instance.
+ * @param key - The key of the metadata to fetch.
+ * @returns An object containing the useOneTime function for fetching the metadata.
+ */
 export const useGetMetadata = (
   environment: string,
   service_entity: string,
@@ -19,6 +28,10 @@ export const useGetMetadata = (
   const headers = useCreateHeaders(environment);
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
 
+  /**
+   * Fetches the metadata for the specified service entity and key.
+   * @returns A promise that resolves to an object containing the metadata data.
+   */
   const getMetadata = async (): Promise<{
     data: string | undefined;
   }> => {

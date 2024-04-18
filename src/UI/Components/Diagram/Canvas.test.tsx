@@ -733,4 +733,6 @@ describe.only("Canvas.tsx", () => {
     expect(labels[0]).toHaveTextContent("child-service");
     expect(labels[1]).toHaveTextContent("parent-service");
   });
+
+  it("when uneditable instances are fetched, disable interactions", async () => {});
 });
