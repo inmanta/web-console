@@ -13,13 +13,18 @@ import diagramInit, { DiagramHandlers } from "@/UI/Components/Diagram/init";
 import { CanvasWrapper } from "@/UI/Components/Diagram/styles";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
-import { ToastAlert } from "../ToastAlert";
+import { AlertPopup } from "./components/AlertPopup";
 import DictModal from "./components/DictModal";
 import FormModal from "./components/FormModal";
 import Toolbar from "./components/Toolbar";
 import { WarningBanner } from "./components/WarningBanner";
 import { bundleInstances, createConnectionRules } from "./helpers";
-import { ActionEnum, DictDialogData, InstanceForApi } from "./interfaces";
+import {
+  ActionEnum,
+  AlertPopups,
+  DictDialogData,
+  InstanceForApi,
+} from "./interfaces";
 import { ServiceEntityBlock } from "./shapes";
 
 /**
@@ -49,7 +54,10 @@ const Canvas = ({
   const { mutate: metadataMutate } = usePostMetadata(environment);
   const canvas = useRef<HTMLDivElement>(null);
   const [looseEmbedded, setLooseEmbedded] = useState<Set<string>>(new Set());
-  const [alertMessage, setAlertMessage] = useState("");
+  const [alertMessage, setAlertMessage] = useState<AlertPopups>({
+    message: "",
+    type: "composer",
+  });
   const [alertType, setAlertType] = useState(AlertVariant.danger);
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [cellToEdit, setCellToEdit] = useState<dia.CellView | null>(null);
@@ -210,7 +218,7 @@ const Canvas = ({
         setInstancesToSend(newInstances);
       } catch (error) {
         setAlertType(AlertVariant.danger);
-        setAlertMessage(String(error));
+        setAlertMessage({ message: String(error), type: "general" });
       }
     }
 
@@ -233,7 +241,10 @@ const Canvas = ({
     if (isSuccess) {
       //If response is successful then show feedback notification and redirect user to the service inventory view
       setAlertType(AlertVariant.success);
-      setAlertMessage(words("inventory.instanceComposer.success"));
+      setAlertMessage({
+        message: words("inventory.instanceComposer.success"),
+        type: "composer",
+      });
 
       const mainInstance = bundleInstances(instancesToSend, services).find(
         (instance) => instance.service_entity === mainServiceName,
@@ -259,8 +270,12 @@ const Canvas = ({
       }, 1000);
     } else if (isError) {
       setAlertType(AlertVariant.danger);
-      setAlertMessage(error.message);
+      setAlertMessage({
+        message: error.message,
+        type: "composer",
+      });
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccess, isError]);
 
@@ -278,19 +293,14 @@ const Canvas = ({
 
   return (
     <Container aria-label="Composer-Container">
-      {alertMessage && (
-        <ToastAlert
-          data-testid="ToastAlert"
-          title={
-            alertType === AlertVariant.success
-              ? words("inventory.instanceComposer.success.title")
-              : words("inventory.instanceComposer.failed.title")
-          }
-          message={alertMessage}
-          setMessage={setAlertMessage}
-          type={alertType}
-        />
-      )}
+      <AlertPopup
+        alertType={alertType}
+        message={alertMessage}
+        setAlertMessage={() =>
+          setAlertMessage({ message: "", type: "composer" })
+        }
+      />
+
       <DictModal
         dictToDisplay={dictToDisplay}
         setDictToDisplay={setDictToDisplay}

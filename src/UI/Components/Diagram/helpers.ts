@@ -609,7 +609,7 @@ export const checkForUneditableInstances = (
     return [];
   }
   const uneditableServices = services
-    .filter((service) => service.strict_modifier_enforcement)
+    .filter((service) => !service.strict_modifier_enforcement)
     .map((service) => service.name);
 
   const findUneditableInstances = (
@@ -619,12 +619,16 @@ export const checkForUneditableInstances = (
     if (uneditableServices.includes(instance.instance.service_entity)) {
       uneditableInstances.push(instance.instance.service_entity);
     }
-    uneditableInstances.concat(
-      instance.relatedInstances.flatMap((relatedInstance) =>
-        findUneditableInstances(relatedInstance),
+
+    return [
+      ...new Set(
+        uneditableInstances.concat(
+          instance.relatedInstances.flatMap((relatedInstance) =>
+            findUneditableInstances(relatedInstance),
+          ),
+        ),
       ),
-    );
-    return uneditableInstances;
+    ];
   };
 
   return findUneditableInstances(instance);

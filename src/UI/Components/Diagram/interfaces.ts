@@ -132,7 +132,10 @@ interface SavedCoordinates {
   attributes: { [key: string]: unknown };
   coordinates: { x: number; y: number };
 }
-
+interface AlertPopups {
+  message: string;
+  type: "composer" | "general";
+}
 export {
   ActionEnum,
   ColumnData,
@@ -146,4 +149,5 @@ export {
   relationId,
   LabelLinkView,
   SavedCoordinates,
+  AlertPopups,
 };

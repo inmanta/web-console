@@ -1,6 +1,7 @@
 import React from "react";
 import { Banner, Flex, FlexItem } from "@patternfly/react-core";
 import { InfoCircleIcon } from "@patternfly/react-icons";
+import styled from "styled-components";
 import { words } from "@/UI/words";
 
 export const WarningBanner = ({
@@ -13,7 +14,7 @@ export const WarningBanner = ({
   }
 
   return (
-    <Banner screenReaderText="Info banner" variant="blue">
+    <StyledBanner screenReaderText="Info banner" variant="blue">
       <Flex spaceItems={{ default: "spaceItemsSm" }}>
         <FlexItem>
           <InfoCircleIcon />
@@ -22,10 +23,16 @@ export const WarningBanner = ({
           {words("inventory.instanceComposer.strict.warning")}
         </FlexItem>
         <br />
-        {instances.map((instance) => (
-          <FlexItem key={`strict-warning${instance}`}>{instance}</FlexItem>
-        ))}
       </Flex>
-    </Banner>
+      <Flex>
+        <FlexItem>{instances.map((instance) => instance + ", ")}</FlexItem>
+      </Flex>
+    </StyledBanner>
   );
 };
+
+const StyledBanner = styled(Banner)`
+  position: absolute;
+  z-index: 9999;
+  width: 100%;
+`;

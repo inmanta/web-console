@@ -171,6 +171,8 @@ const dict = {
   "inventory.instanceComposer.success": "The request got sent successfully",
   "inventory.instanceComposer.success.title": "Instance Composed successfully",
   "inventory.instanceComposer.failed.title": "Instance Composing failed",
+  "inventory.instanceComposer.generalFail.title":
+    "Failed to to display or position the instance(s).",
   "inventory.instanceComposer.dictModal": (valueName: string) =>
     `Values of ${valueName}`,
   "inventory.instanceComposer.disabled":
@@ -179,7 +181,7 @@ const dict = {
   "inventory.instanceComposer.title.edit": "Instance Composer Editor",
   "inventory.instanceComposer.title.view": "Instance Composer Viewer",
   "inventory.instanceComposer.strict.warning":
-    "This instance or some parts of it does not have strict mode enabled, the composer only allows you to visualize the instance",
+    "This instance or some parts of it does not have strict mode enabled, the composer only allows you to visualize the instance.",
   "inventory.deleteInstance.button": "Delete",
   "inventory.deleteInstance.failed": "Deleting instance failed",
   "inventory.deleteInstance.title": "Delete instance",
