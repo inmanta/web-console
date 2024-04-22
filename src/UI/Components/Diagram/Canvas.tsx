@@ -235,18 +235,14 @@ const Canvas = ({
       const mainInstance = bundleInstances(instancesToSend, services).find(
         (instance) => instance.service_entity === mainServiceName,
       );
-      let current_version = Number(instance?.instance.version) || 0;
       if (mainInstance && mainInstance.action !== "delete") {
-        if (mainInstance.action) {
-          current_version += 1;
-        }
         const coordinates = diagramHandlers?.getCoordinates();
         metadataMutate({
           service_entity: mainInstance.service_entity,
           service_id: mainInstance.instance_id,
           key: "coordinates",
           body: {
-            current_version, //after successful deployment, increment the version to match current version on the backend
+            current_version: Number(instance?.instance.version) || 1,
             value: JSON.stringify(coordinates),
           },
         });
