@@ -24,7 +24,12 @@ export const UpdateBanner: React.FunctionComponent<Props> = (props) => {
 
   const banner = (
     <React.Fragment>
-      <Banner isSticky variant="gold">
+      <Banner
+        isSticky
+        variant="gold"
+        role="banner"
+        aria-label="newVersionAvailable"
+      >
         You are running {currentVersion}, a new version is available! Please
         hard-reload (Ctrl+F5 | Cmd + Shift + R) your page to load the new
         version.
