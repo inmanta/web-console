@@ -197,6 +197,10 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
         selector: "spacer",
       },
       {
+        tagName: "rect",
+        selector: "buttonBody",
+      },
+      {
         tagName: "image",
         selector: "toggleButton",
       },
@@ -309,7 +313,15 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
       height: 1,
       cursor: "default",
     });
-
+    this.attr("buttonBody", {
+      event: "element:toggleButton:pointerdown",
+      preserveAspectRatio: "none",
+      cursor: "pointer",
+      opacity: 0,
+      y: bbox.height - 32,
+      width: 264,
+      height: 32,
+    });
     this.attr("toggleButton", {
       event: "element:toggleButton:pointerdown",
       "xlink:href": expandButton,

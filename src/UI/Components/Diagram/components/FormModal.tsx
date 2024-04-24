@@ -287,7 +287,11 @@ const FormModal = ({
             <Alert
               variant="info"
               isInline
-              title={words("inventory.editInstance.noAttributes")}
+              title={
+                cellView
+                  ? words("inventory.editInstance.noAttributes")
+                  : words("inventory.addInstance.noAttributes")
+              }
             />
           </FlexItem>
         )}

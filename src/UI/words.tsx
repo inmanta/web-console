@@ -145,6 +145,8 @@ const dict = {
   "inventory.editInstance.failed": "Editing instance failed",
   "inventory.editInstance.noAttributes":
     "There are no attributes to edit. Click confirm to move into the update state",
+  "inventory.addInstance.noAttributes":
+    "Please select an entity to fill attributes values",
   "inventory.editInstance.header": (instanceId: string) =>
     `Change attributes of instance ${instanceId}`,
   "inventory.duplicateInstance.header": (instanceId: string) =>
