@@ -205,7 +205,6 @@ export const MultiTextSelect: React.FC<Props> = ({
             onClick={onToggleClick}
             onChange={onTextInputChange}
             onKeyDown={onInputKeyDown}
-            id="multi-typeahead-select-input"
             autoComplete="off"
             innerRef={textInputRef}
             placeholder={placeholderText || "Select..."}

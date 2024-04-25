@@ -6,7 +6,7 @@ import styled from "styled-components";
 
 export const Warning: React.FC<{ className?: string }> = ({ className }) => (
   <Tooltip content="Changed value has not been saved">
-    <IconWrapper className={className} aria-label="Warning">
+    <IconWrapper className={className} data-testid="Warning">
       <Icon style={{ color: global_warning_color_100.var }}>
         <ExclamationTriangleIcon />
       </Icon>

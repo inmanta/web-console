@@ -58,13 +58,13 @@ test("Home view shows failed table", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "Dashboard-Loading" }),
+    await screen.findByRole("region", { name: "Dashboard-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.left("error"));
 
   expect(
-    await screen.findByRole("generic", { name: "Dashboard-Failed" }),
+    await screen.findByRole("region", { name: "Dashboard-Failed" }),
   ).toBeInTheDocument();
 });
 
@@ -73,7 +73,7 @@ test("Home View shows success table", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "Dashboard-Loading" }),
+    await screen.findByRole("region", { name: "Dashboard-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(

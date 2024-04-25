@@ -81,7 +81,7 @@ test("CompileReportsView shows empty table", async () => {
   });
 
   expect(
-    await screen.findByRole("generic", { name: "CompileReportsView-Loading" }),
+    await screen.findByRole("region", { name: "CompileReportsView-Loading" }),
   ).toBeInTheDocument();
 
   await act(async () => {
@@ -108,7 +108,7 @@ test("CompileReportsView shows failed table", async () => {
   });
 
   expect(
-    await screen.findByRole("generic", { name: "CompileReportsView-Loading" }),
+    await screen.findByRole("region", { name: "CompileReportsView-Loading" }),
   ).toBeInTheDocument();
 
   await act(async () => {
@@ -116,7 +116,7 @@ test("CompileReportsView shows failed table", async () => {
   });
 
   expect(
-    await screen.findByRole("generic", { name: "CompileReportsView-Failed" }),
+    await screen.findByRole("region", { name: "CompileReportsView-Failed" }),
   ).toBeInTheDocument();
 });
 
@@ -129,7 +129,7 @@ test("CompileReportsView shows success table", async () => {
   });
 
   expect(
-    await screen.findByRole("generic", { name: "CompileReportsView-Loading" }),
+    await screen.findByRole("region", { name: "CompileReportsView-Loading" }),
   ).toBeInTheDocument();
 
   await act(async () => {
@@ -150,7 +150,7 @@ test("CompileReportsView shows updated table", async () => {
   });
 
   expect(
-    await screen.findByRole("generic", { name: "CompileReportsView-Loading" }),
+    await screen.findByRole("region", { name: "CompileReportsView-Loading" }),
   ).toBeInTheDocument();
 
   await act(async () => {
@@ -201,7 +201,7 @@ test("When using the status filter with the Success option then the successful c
 
   await act(async () => {
     await userEvent.click(
-      within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
+      within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
         "button",
         { name: "FilterPicker" },
       ),
@@ -262,7 +262,7 @@ test("When using the status filter with the In Progress opiton then the compile 
 
   await act(async () => {
     await userEvent.click(
-      within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
+      within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
         "button",
         { name: "FilterPicker" },
       ),
@@ -330,7 +330,7 @@ it("When using the Date filter then the compile reports within the range selecte
 
   await act(async () => {
     await userEvent.click(
-      within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
+      within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
         "button",
         { name: "FilterPicker" },
       ),

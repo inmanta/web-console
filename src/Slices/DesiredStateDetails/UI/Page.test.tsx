@@ -59,7 +59,7 @@ test("GIVEN DesiredStateDetails page THEN shows loading resource table", async (
   ]);
 
   expect(
-    screen.getByRole("generic", { name: "VersionResourcesTable-Loading" }),
+    screen.getByRole("region", { name: "VersionResourcesTable-Loading" }),
   ).toBeVisible();
 });
 
@@ -87,7 +87,7 @@ test("GIVEN DesiredStateDetails page WHEN api returns error THEN shows error", a
   });
 
   expect(
-    screen.getByRole("generic", { name: "VersionResourcesTable-Failed" }),
+    screen.getByRole("region", { name: "VersionResourcesTable-Failed" }),
   ).toBeVisible();
 });
 

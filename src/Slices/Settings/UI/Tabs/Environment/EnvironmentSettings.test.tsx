@@ -3,6 +3,7 @@ import { MemoryRouter } from "react-router-dom";
 import { act, render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
+import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { Either, Maybe } from "@/Core";
 import {
   CommandResolverImpl,
@@ -19,6 +20,15 @@ import {
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { EnvironmentSettings } from "./EnvironmentSettings";
+
+expect.extend(toHaveNoViolations);
+
+const axe = configureAxe({
+  rules: {
+    // disable landmark rules when testing isolated components.
+    region: { enabled: false },
+  },
+});
 
 function setup() {
   const selectedEnvironment = Environment.filterable[0];
@@ -70,6 +80,9 @@ test("Given environment settings When clicking on the edit name button Then the 
   expect(
     screen.queryByRole("generic", { name: "Name-value" }),
   ).not.toBeInTheDocument();
+
+  const results = await axe(document.body);
+  expect(results).toHaveNoViolations();
 });
 
 test("Given environment settings When submitting the edited name Then the backend request is fired", async () => {
@@ -119,6 +132,9 @@ test("Given environment settings When submitting the edited name Then the backen
   expect(
     screen.queryByRole("textbox", { name: "Name-input" }),
   ).not.toBeInTheDocument();
+
+  const results = await axe(document.body);
+  expect(results).toHaveNoViolations();
 });
 
 test("Given environment settings When canceling a name edit Then the backend request is not fired", async () => {
@@ -152,6 +168,9 @@ test("Given environment settings When canceling a name edit Then the backend req
   expect(
     screen.queryByRole("textbox", { name: "Name-input" }),
   ).not.toBeInTheDocument();
+
+  const results = await axe(document.body);
+  expect(results).toHaveNoViolations();
 });
 
 test.each`
@@ -208,6 +227,9 @@ test.each`
     expect(
       screen.queryByRole("generic", { name: "Name-error-message" }),
     ).not.toBeInTheDocument();
+
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
   },
 );
 
@@ -240,6 +262,9 @@ test("Given environment settings When clicking on the edit repository settings b
   expect(
     screen.queryByRole("generic", { name: "repo_url-value" }),
   ).not.toBeInTheDocument();
+
+  const results = await axe(document.body);
+  expect(results).toHaveNoViolations();
 });
 
 test("Given environment settings When submitting the edited repository settings Then the backend request is fired", async () => {
@@ -321,6 +346,9 @@ test("Given environment settings When submitting the edited repository settings 
   expect(
     screen.queryByRole("textbox", { name: "repo_url-value" }),
   ).not.toBeInTheDocument();
+
+  const results = await axe(document.body);
+  expect(results).toHaveNoViolations();
 });
 
 test("Given environment settings When canceling a repository edit Then the backend request is not fired", async () => {
@@ -363,6 +391,9 @@ test("Given environment settings When canceling a repository edit Then the backe
   expect(
     screen.queryByRole("textbox", { name: "repo_url-input" }),
   ).not.toBeInTheDocument();
+
+  const results = await axe(document.body);
+  expect(results).toHaveNoViolations();
 });
 
 test.each`
@@ -425,6 +456,9 @@ test.each`
         name: "Repository Settings-error-message",
       }),
     ).not.toBeInTheDocument();
+
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
   },
 );
 
@@ -451,6 +485,9 @@ test("Given environment settings When clicking on the edit project button Then t
   expect(
     screen.queryByRole("generic", { name: "Project Name-value" }),
   ).not.toBeInTheDocument();
+
+  const results = await axe(document.body);
+  expect(results).toHaveNoViolations();
 });
 
 test("Given environment settings When submitting the edited project name Then the backend request is fired", async () => {
@@ -514,6 +551,9 @@ test("Given environment settings When submitting the edited project name Then th
   expect(
     screen.queryByRole("textbox", { name: "Project Name-typeahead" }),
   ).not.toBeInTheDocument();
+
+  const results = await axe(document.body);
+  expect(results).toHaveNoViolations();
 });
 
 test("Given environment settings When canceling a project name edit Then the backend request is not fired", async () => {
@@ -550,6 +590,9 @@ test("Given environment settings When canceling a project name edit Then the bac
   expect(
     screen.queryByRole("textbox", { name: "Project Name-typeahead" }),
   ).not.toBeInTheDocument();
+
+  const results = await axe(document.body);
+  expect(results).toHaveNoViolations();
 });
 
 test.each`
@@ -617,6 +660,9 @@ test.each`
     expect(
       screen.queryByRole("generic", { name: "Project Name-error-message" }),
     ).not.toBeInTheDocument();
+
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
   },
 );
 
@@ -640,6 +686,9 @@ test("Given environment settings When clicking on the edit description button Th
   expect(
     screen.queryByRole("generic", { name: "Description-value" }),
   ).not.toBeInTheDocument();
+
+  const results = await axe(document.body);
+  expect(results).toHaveNoViolations();
 });
 
 test("Given environment settings When clicking on the edit icon button Then the image field is shown", async () => {
@@ -660,4 +709,7 @@ test("Given environment settings When clicking on the edit icon button Then the 
   expect(
     screen.queryByRole("img", { name: "Icon-value" }),
   ).not.toBeInTheDocument();
+
+  const results = await axe(document.body);
+  expect(results).toHaveNoViolations();
 });

@@ -93,7 +93,7 @@ test("ServiceCatalog shows updated services", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "ServiceCatalog-Loading" }),
+    await screen.findByRole("region", { name: "ServiceCatalog-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.right({ data: [] }));
@@ -117,7 +117,7 @@ test("ServiceCatalog shows updated empty", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "ServiceCatalog-Loading" }),
+    await screen.findByRole("region", { name: "ServiceCatalog-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.right({ data: [Service.a] }));

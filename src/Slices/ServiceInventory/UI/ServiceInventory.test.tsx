@@ -3,6 +3,7 @@ import { MemoryRouter, useLocation } from "react-router-dom";
 import { fireEvent, render, screen, act } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
+import { axe, toHaveNoViolations } from "jest-axe";
 import { Either, RemoteData } from "@/Core";
 import {
   QueryResolverImpl,
@@ -36,6 +37,8 @@ import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
 import { TriggerInstanceUpdateCommandManager } from "@S/EditInstance/Data";
 import { Chart } from "./Components";
 import { ServiceInventory } from "./ServiceInventory";
+
+expect.extend(toHaveNoViolations);
 
 function setup(service = Service.a, pageSize = "") {
   const store = getStoreInstance();
@@ -141,7 +144,7 @@ test("ServiceInventory shows updated instances", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "ServiceInventory-Loading" }),
+    await screen.findByRole("region", { name: "ServiceInventory-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(
@@ -169,6 +172,9 @@ test("ServiceInventory shows updated instances", async () => {
   expect(
     await screen.findByRole("grid", { name: "ServiceInventory-Success" }),
   ).toBeInTheDocument();
+
+  const results = await axe(document.body);
+  expect(results).toHaveNoViolations();
 });
 
 test("ServiceInventory shows error with retry", async () => {
@@ -178,7 +184,7 @@ test("ServiceInventory shows error with retry", async () => {
   apiHelper.resolve(Either.left("fake error"));
 
   expect(
-    await screen.findByRole("generic", { name: "ServiceInventory-Failed" }),
+    await screen.findByRole("region", { name: "ServiceInventory-Failed" }),
   ).toBeInTheDocument();
 
   fireEvent.click(screen.getByRole("button", { name: "Retry" }));
@@ -194,6 +200,9 @@ test("ServiceInventory shows error with retry", async () => {
   expect(
     await screen.findByRole("grid", { name: "ServiceInventory-Success" }),
   ).toBeInTheDocument();
+
+  const results = await axe(document.body);
+  expect(results).toHaveNoViolations();
 });
 
 test("ServiceInventory shows next page of instances", async () => {
@@ -232,6 +241,9 @@ test("ServiceInventory shows next page of instances", async () => {
   expect(
     await screen.findByRole("cell", { name: "IdCell-b" }),
   ).toBeInTheDocument();
+
+  const results = await axe(document.body);
+  expect(results).toHaveNoViolations();
 });
 
 test("GIVEN ResourcesView fetches resources for new instance after instance update", async () => {
@@ -305,6 +317,9 @@ test("GIVEN ResourcesView fetches resources for new instance after instance upda
   expect(apiHelper.pendingRequests[0].url).toMatch(
     `/lsm/v1/service_inventory/${ServiceInstance.a.service_entity}/${ServiceInstance.a.id}/resources?current_version=4`,
   );
+
+  const results = await axe(document.body);
+  expect(results).toHaveNoViolations();
 });
 
 test("ServiceInventory shows instance summary chart", async () => {

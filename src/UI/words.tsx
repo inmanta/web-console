@@ -32,6 +32,7 @@ const dict = {
   jumpTo: "Jump to",
   hideAll: "Hide All",
   showAll: "Show All",
+  back: "Back",
 
   /**
    * Error related text
@@ -141,6 +142,7 @@ const dict = {
     amount === 1 ? "1 item" : `${amount} items`,
   "inventory.editInstance.button": "Edit",
   "inventory.editInstance.title": "Edit instance",
+  "inventory.duplicateInstance.button": "Duplicate",
   "inventory.duplicateInstance.title": "Duplicate instance",
   "inventory.editInstance.failed": "Editing instance failed",
   "inventory.editInstance.noAttributes":

@@ -21,14 +21,14 @@ export const RemoteDataView = <T,>({
     {
       notAsked: () => null,
       loading: () => (
-        <LoadingView aria-label={label ? `${label}-Loading` : undefined} />
+        <LoadingView ariaLabel={label ? `${label}-Loading` : undefined} />
       ),
       failed: (error) => (
         <ErrorView
           data-testid="ErrorView"
           title={words("error")}
           message={words("error.general")(error)}
-          aria-label={label ? `${label}-Failed` : undefined}
+          ariaLabel={label ? `${label}-Failed` : undefined}
           retry={retry}
         />
       ),

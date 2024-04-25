@@ -73,13 +73,13 @@ test("Duplicate Instance View shows failed state", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "DuplicateInstance-Loading" }),
+    await screen.findByRole("region", { name: "DuplicateInstance-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.left("error"));
 
   expect(
-    await screen.findByRole("generic", { name: "DuplicateInstance-Failed" }),
+    await screen.findByRole("region", { name: "DuplicateInstance-Failed" }),
   ).toBeInTheDocument();
 });
 
@@ -89,7 +89,7 @@ test("DuplicateInstance View shows success form", async () => {
   const { service_entity } = ServiceInstance.a;
 
   expect(
-    await screen.findByRole("generic", { name: "DuplicateInstance-Loading" }),
+    await screen.findByRole("region", { name: "DuplicateInstance-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.right({ data: ServiceInstance.a }));
@@ -168,7 +168,7 @@ test("Given the DuplicateInstance View When changing a embedded entity Then the 
   const { service_entity } = ServiceInstance.a;
 
   expect(
-    await screen.findByRole("generic", { name: "DuplicateInstance-Loading" }),
+    await screen.findByRole("region", { name: "DuplicateInstance-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.right({ data: ServiceInstance.a }));
@@ -265,7 +265,7 @@ test("Given the DuplicateInstance View When changing an embedded entity Then the
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "DuplicateInstance-Loading" }),
+    await screen.findByRole("region", { name: "DuplicateInstance-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.right({ data: ServiceInstance.allAttrs }));

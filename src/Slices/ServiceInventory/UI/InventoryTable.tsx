@@ -68,6 +68,7 @@ export const InventoryTable: React.FC<Props> = ({
         width={getColumnWidth(column.apiName)}
         key={column.displayName}
         {...sortParams}
+        {...(column.apiName === "actions" && { "aria-hidden": true })}
       >
         {column.apiName === "actions" ? "" : column.displayName}
       </Th>
@@ -78,7 +79,7 @@ export const InventoryTable: React.FC<Props> = ({
     <Table {...props}>
       <Thead>
         <Tr>
-          <Th />
+          <Th aria-hidden></Th>
           {heads}
         </Tr>
       </Thead>

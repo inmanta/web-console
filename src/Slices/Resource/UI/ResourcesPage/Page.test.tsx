@@ -70,7 +70,7 @@ test("ResourcesView shows empty table", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "ResourcesView-Loading" }),
+    await screen.findByRole("region", { name: "ResourcesView-Loading" }),
   ).toBeInTheDocument();
 
   await act(async () => {
@@ -99,7 +99,7 @@ test("ResourcesView shows failed table", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "ResourcesView-Loading" }),
+    await screen.findByRole("region", { name: "ResourcesView-Loading" }),
   ).toBeInTheDocument();
 
   await act(async () => {
@@ -107,7 +107,7 @@ test("ResourcesView shows failed table", async () => {
   });
 
   expect(
-    await screen.findByRole("generic", { name: "ResourcesView-Failed" }),
+    await screen.findByRole("region", { name: "ResourcesView-Failed" }),
   ).toBeInTheDocument();
 });
 
@@ -116,7 +116,7 @@ test("ResourcesView shows success table", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "ResourcesView-Loading" }),
+    await screen.findByRole("region", { name: "ResourcesView-Loading" }),
   ).toBeInTheDocument();
 
   await act(async () => {
@@ -549,7 +549,7 @@ test("GIVEN ResourcesView WHEN data is loading for next page THEN shows toolbar"
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "ResourcesView-Loading" }),
+    await screen.findByRole("region", { name: "ResourcesView-Loading" }),
   ).toBeInTheDocument();
 
   await act(async () => {
@@ -591,7 +591,7 @@ test("GIVEN ResourcesView WHEN data is loading for next page THEN shows toolbar"
   });
 
   expect(
-    await screen.findByRole("generic", { name: "ResourcesView-Loading" }),
+    await screen.findByRole("region", { name: "ResourcesView-Loading" }),
   ).toBeInTheDocument();
 
   expect(
@@ -643,7 +643,7 @@ test("GIVEN ResourcesView WHEN data is auto-updated THEN shows updated toolbar",
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "ResourcesView-Loading" }),
+    await screen.findByRole("region", { name: "ResourcesView-Loading" }),
   ).toBeInTheDocument();
 
   await act(async () => {

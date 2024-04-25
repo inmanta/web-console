@@ -2,6 +2,7 @@ import React from "react";
 import { act, render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
+import { axe, toHaveNoViolations } from "jest-axe";
 import { ArchiveHelper, Deferred, Either, RemoteData } from "@/Core";
 import {
   CommandResolverImpl,
@@ -24,6 +25,8 @@ import {
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import { Page } from "./Page";
+
+expect.extend(toHaveNoViolations);
 
 export class MockArchiveHelper implements ArchiveHelper {
   private promise;
@@ -123,6 +126,9 @@ test("GIVEN StatusPage THEN shows server status", async () => {
       name: "StatusItem-lsm.database",
     }),
   ).toBeVisible();
+
+  const results = await axe(document.body);
+  expect(results).toHaveNoViolations();
 });
 
 test("GIVEN StatusPage without support extension THEN download button is not present", async () => {
@@ -138,6 +144,9 @@ test("GIVEN StatusPage without support extension THEN download button is not pre
   expect(
     screen.queryByRole("button", { name: "DownloadArchiveButton" }),
   ).not.toBeInTheDocument();
+
+  const results = await axe(document.body);
+  expect(results).toHaveNoViolations();
 });
 
 test("GIVEN StatusPage with support extension THEN download button is present", async () => {
@@ -151,6 +160,9 @@ test("GIVEN StatusPage with support extension THEN download button is present", 
   expect(
     screen.getByRole("button", { name: "DownloadArchiveButton" }),
   ).toBeVisible();
+
+  const results = await axe(document.body);
+  expect(results).toHaveNoViolations();
 });
 
 test("GIVEN StatusPage with support extension WHEN user click download THEN an archive is created", async () => {
@@ -190,6 +202,9 @@ test("GIVEN StatusPage with support extension WHEN user click download THEN an a
       words("status.supportArchive.action.download"),
     ),
   );
+
+  const results = await axe(document.body);
+  expect(results).toHaveNoViolations();
 });
 
 test("GIVEN StatusPage with support extension WHEN user click download THEN button goes through correct phases", async () => {
@@ -232,6 +247,9 @@ test("GIVEN StatusPage with support extension WHEN user click download THEN butt
       words("status.supportArchive.action.download"),
     ),
   );
+
+  const results = await axe(document.body);
+  expect(results).toHaveNoViolations();
 });
 
 test("GIVEN StatusPage with support extension WHEN user click download and response is error THEN error is shown", async () => {
@@ -259,4 +277,7 @@ test("GIVEN StatusPage with support extension WHEN user click download and respo
   const errorContainer = screen.getByTestId("ToastAlert");
   expect(errorContainer).toBeVisible();
   expect(within(errorContainer).getByText("error")).toBeVisible();
+
+  const results = await axe(document.body);
+  expect(results).toHaveNoViolations();
 });

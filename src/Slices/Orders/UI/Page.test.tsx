@@ -12,7 +12,7 @@ test("OrdersView shows empty table", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "OrdersView-Loading" }),
+    await screen.findByRole("region", { name: "OrdersView-Loading" }),
   ).toBeInTheDocument();
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
@@ -36,7 +36,7 @@ test("OrdersView shows failed table", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "OrdersView-Loading" }),
+    await screen.findByRole("region", { name: "OrdersView-Loading" }),
   ).toBeInTheDocument();
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
@@ -51,7 +51,7 @@ test("OrdersView shows failed table", async () => {
   });
 
   expect(
-    await screen.findByRole("generic", { name: "OrdersView-Failed" }),
+    await screen.findByRole("region", { name: "OrdersView-Failed" }),
   ).toBeInTheDocument();
 });
 
@@ -60,7 +60,7 @@ test("OrdersView shows success table", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "OrdersView-Loading" }),
+    await screen.findByRole("region", { name: "OrdersView-Loading" }),
   ).toBeInTheDocument();
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
@@ -90,7 +90,7 @@ test("OrdersView shows updated table", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "OrdersView-Loading" }),
+    await screen.findByRole("region", { name: "OrdersView-Loading" }),
   ).toBeInTheDocument();
 
   expect(apiHelper.pendingRequests).toHaveLength(1);

@@ -173,7 +173,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
       <ActionGroup>
         <ActionDisabledTooltip
           isDisabled={isSubmitDisabled}
-          ariaLabel={words("confirm")}
+          testingId={words("confirm")}
           tooltipContent={words("environment.halt.tooltip")}
         >
           <Button

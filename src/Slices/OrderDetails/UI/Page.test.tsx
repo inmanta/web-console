@@ -18,7 +18,7 @@ test("OrderDetailsView shows failed view", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "OrderDetailsView-Loading" }),
+    await screen.findByRole("region", { name: "OrderDetailsView-Loading" }),
   ).toBeInTheDocument();
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
@@ -28,7 +28,7 @@ test("OrderDetailsView shows failed view", async () => {
   });
 
   expect(
-    await screen.findByRole("generic", { name: "OrderDetailsView-Failed" }),
+    await screen.findByRole("region", { name: "OrderDetailsView-Failed" }),
   ).toBeInTheDocument();
 });
 
@@ -37,7 +37,7 @@ test("OrderDetailsView shows view for a failed order", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "OrderDetailsView-Loading" }),
+    await screen.findByRole("region", { name: "OrderDetailsView-Loading" }),
   ).toBeInTheDocument();
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
@@ -71,7 +71,7 @@ test("OrderDetailsView shows view for a partial order", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "OrderDetailsView-Loading" }),
+    await screen.findByRole("region", { name: "OrderDetailsView-Loading" }),
   ).toBeInTheDocument();
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
@@ -119,7 +119,7 @@ test("OrderDetailsView shows view for a in progress order", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "OrderDetailsView-Loading" }),
+    await screen.findByRole("region", { name: "OrderDetailsView-Loading" }),
   ).toBeInTheDocument();
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
@@ -165,7 +165,7 @@ test("OrderDetailsView shows view for completed order", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "OrderDetailsView-Loading" }),
+    await screen.findByRole("region", { name: "OrderDetailsView-Loading" }),
   ).toBeInTheDocument();
 
   expect(apiHelper.pendingRequests).toHaveLength(1);

@@ -39,13 +39,13 @@ test("Agent Process Page shows failed view", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "AgentProcessView-Loading" }),
+    await screen.findByRole("region", { name: "AgentProcessView-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.left("error"));
 
   expect(
-    await screen.findByRole("generic", { name: "AgentProcessView-Failed" }),
+    await screen.findByRole("region", { name: "AgentProcessView-Failed" }),
   ).toBeInTheDocument();
 });
 
@@ -54,7 +54,7 @@ test("Agent Process Page shows success view", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "AgentProcessView-Loading" }),
+    await screen.findByRole("region", { name: "AgentProcessView-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.right({ data: AgentProcessMock.data }));

@@ -43,7 +43,7 @@ test("CompileDetailsView shows failed view", async () => {
   await render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "CompileDetailsView-Loading" }),
+    await screen.findByRole("region", { name: "CompileDetailsView-Loading" }),
   ).toBeInTheDocument();
 
   await act(async () => {
@@ -51,7 +51,7 @@ test("CompileDetailsView shows failed view", async () => {
   });
 
   expect(
-    await screen.findByRole("generic", { name: "CompileDetailsView-Failed" }),
+    await screen.findByRole("region", { name: "CompileDetailsView-Failed" }),
   ).toBeInTheDocument();
 });
 
@@ -60,7 +60,7 @@ test("CompileDetailsView shows completed table with success: true", async () => 
   await render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "CompileDetailsView-Loading" }),
+    await screen.findByRole("region", { name: "CompileDetailsView-Loading" }),
   ).toBeInTheDocument();
 
   await act(async () => {
@@ -78,7 +78,7 @@ test("CompileDetailsView shows completed table with success: false, error indica
   await render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "CompileDetailsView-Loading" }),
+    await screen.findByRole("region", { name: "CompileDetailsView-Loading" }),
   ).toBeInTheDocument();
 
   await act(async () => {

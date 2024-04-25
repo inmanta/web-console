@@ -125,7 +125,7 @@ test("When using the source filter then only the matching parameters should be f
 
   await act(async () => {
     await userEvent.click(
-      within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
+      within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
         "button",
         { name: "FilterPicker" },
       ),
@@ -183,7 +183,7 @@ test("When using the Updated filter then the parameters within the range selecte
 
   await act(async () => {
     await userEvent.click(
-      within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
+      within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
         "button",
         { name: "FilterPicker" },
       ),

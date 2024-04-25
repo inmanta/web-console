@@ -60,7 +60,7 @@ test("AgentsView shows empty table", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "AgentsView-Loading" }),
+    await screen.findByRole("region", { name: "AgentsView-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(
@@ -81,13 +81,13 @@ test("AgentsView shows failed table", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "AgentsView-Loading" }),
+    await screen.findByRole("region", { name: "AgentsView-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.left("error"));
 
   expect(
-    await screen.findByRole("generic", { name: "AgentsView-Failed" }),
+    await screen.findByRole("region", { name: "AgentsView-Failed" }),
   ).toBeInTheDocument();
 });
 
@@ -96,7 +96,7 @@ test("AgentsView shows success table", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "AgentsView-Loading" }),
+    await screen.findByRole("region", { name: "AgentsView-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.right(AgentsMock.response));
@@ -121,7 +121,7 @@ test("When using the name filter then only the matching agents should be fetched
 
   await act(async () => {
     await userEvent.click(
-      within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
+      within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
         "button",
         { name: "FilterPicker" },
       ),
@@ -179,7 +179,7 @@ test("When using the process name filter then only the matching agents should be
 
   await act(async () => {
     await userEvent.click(
-      within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
+      within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
         "button",
         { name: "FilterPicker" },
       ),
@@ -236,7 +236,7 @@ test("When using the status filter with the 'up' option then the agents in the '
 
   await act(async () => {
     await userEvent.click(
-      within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
+      within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
         "button",
         { name: "FilterPicker" },
       ),

@@ -11,7 +11,6 @@ import { ToastAlertMessage } from "../../ToastAlertMessage";
 interface Props extends VersionedServiceInstanceIdentifier {
   instance_identity: string;
   availableStates: string[];
-  insetHeight: string;
 }
 /**
  * ForceStateAction is a component that allows the user to force a state on a service instance.
@@ -31,7 +30,6 @@ export const ForceStateAction: React.FC<Props> = ({
   instance_identity,
   version,
   availableStates,
-  insetHeight,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [confirmationText, setConfirmationText] = useState<string>("");
@@ -90,7 +88,7 @@ export const ForceStateAction: React.FC<Props> = ({
         />
       )}
       <ActionDisabledTooltip
-        ariaLabel={words("inventory.statustab.forceState")}
+        testingId={words("inventory.statustab.forceState")}
         tooltipContent={
           isHalted
             ? words("environment.halt.tooltip")
@@ -110,7 +108,6 @@ export const ForceStateAction: React.FC<Props> = ({
             <DrilldownMenu
               id="drilldownMenuExpertState"
               aria-label="drilldownMenuExpertState"
-              style={{ insetBlockStart: insetHeight }}
             >
               <MenuItem
                 style={{

@@ -49,5 +49,9 @@ export const Link: React.FC<Props> = forwardRef<HTMLAnchorElement, Props>(
 );
 
 const StyledRRLink = styled(RRLink)<{ $variant?: string }>`
+  display: inline-block;
+  width: 100%;
+  color: ${({ $variant }) =>
+    $variant === "plain" ? "inherit" : "var(--pf-global--primary-color--100)"};
   ${({ $variant }) => ($variant === "plain" ? "text-decoration:none" : "")};
 `;

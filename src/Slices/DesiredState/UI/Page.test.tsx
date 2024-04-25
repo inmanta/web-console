@@ -85,7 +85,7 @@ test("DesiredStatesView shows empty table", async () => {
   });
 
   expect(
-    await screen.findByRole("generic", { name: "DesiredStatesView-Loading" }),
+    await screen.findByRole("region", { name: "DesiredStatesView-Loading" }),
   ).toBeInTheDocument();
 
   await act(async () => {
@@ -112,7 +112,7 @@ test("DesiredStatesView shows failed table", async () => {
   });
 
   expect(
-    await screen.findByRole("generic", { name: "DesiredStatesView-Loading" }),
+    await screen.findByRole("region", { name: "DesiredStatesView-Loading" }),
   ).toBeInTheDocument();
 
   await act(async () => {
@@ -120,7 +120,7 @@ test("DesiredStatesView shows failed table", async () => {
   });
 
   expect(
-    await screen.findByRole("generic", { name: "DesiredStatesView-Failed" }),
+    await screen.findByRole("region", { name: "DesiredStatesView-Failed" }),
   ).toBeInTheDocument();
 });
 
@@ -133,7 +133,7 @@ test("AgentsView shows success table", async () => {
   });
 
   expect(
-    await screen.findByRole("generic", { name: "DesiredStatesView-Loading" }),
+    await screen.findByRole("region", { name: "DesiredStatesView-Loading" }),
   ).toBeInTheDocument();
 
   await act(async () => {
@@ -165,7 +165,7 @@ test("When using the status filter then only the matching desired states should 
 
   await act(async () => {
     await userEvent.click(
-      within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
+      within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
         "button",
         { name: "FilterPicker" },
       ),
@@ -234,7 +234,7 @@ test("When using the Date filter then the desired state versions within the rang
 
   await act(async () => {
     await userEvent.click(
-      within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
+      within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
         "button",
         { name: "FilterPicker" },
       ),
@@ -318,7 +318,7 @@ test("When using the Version filter then the desired state versions within the r
 
   await act(async () => {
     await userEvent.click(
-      within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
+      within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
         "button",
         { name: "FilterPicker" },
       ),
@@ -471,7 +471,7 @@ test("Given the Desired states view with filters When promoting a version, then 
 
   await act(async () => {
     await userEvent.click(
-      within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
+      within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
         "button",
         { name: "FilterPicker" },
       ),

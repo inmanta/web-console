@@ -46,7 +46,7 @@ test("EventsView shows empty table", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "EventTable-Loading" }),
+    await screen.findByRole("region", { name: "EventTable-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(
@@ -67,13 +67,13 @@ test("EventsView shows failed table", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "EventTable-Loading" }),
+    await screen.findByRole("region", { name: "EventTable-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.left("error"));
 
   expect(
-    await screen.findByRole("generic", { name: "EventTable-Failed" }),
+    await screen.findByRole("region", { name: "EventTable-Failed" }),
   ).toBeInTheDocument();
 });
 
@@ -82,7 +82,7 @@ test("EventsView shows success table", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "EventTable-Loading" }),
+    await screen.findByRole("region", { name: "EventTable-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(
@@ -120,7 +120,7 @@ test("EventsView shows updated table", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "EventTable-Loading" }),
+    await screen.findByRole("region", { name: "EventTable-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(

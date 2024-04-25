@@ -21,7 +21,7 @@ test("GIVEN The Service Inventory WHEN the user filters on AttributeSet ('Active
 
   await act(async () => {
     await userEvent.click(
-      within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
+      within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
         "button",
         { name: "FilterPicker" },
       ),

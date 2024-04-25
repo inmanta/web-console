@@ -74,13 +74,13 @@ test("Edit Instance View shows failed state", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "EditInstance-Loading" }),
+    await screen.findByRole("region", { name: "EditInstance-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.left("error"));
 
   expect(
-    await screen.findByRole("generic", { name: "EditInstance-Failed" }),
+    await screen.findByRole("region", { name: "EditInstance-Failed" }),
   ).toBeInTheDocument();
 });
 
@@ -90,7 +90,7 @@ test("EditInstance View shows success form", async () => {
   const { service_entity, id, version } = ServiceInstance.a;
 
   expect(
-    await screen.findByRole("generic", { name: "EditInstance-Loading" }),
+    await screen.findByRole("region", { name: "EditInstance-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.right({ data: ServiceInstance.a }));
@@ -128,7 +128,7 @@ test("Given the EditInstance View When changing a v1 embedded entity Then the co
   const { service_entity, id, version } = ServiceInstance.a;
 
   expect(
-    await screen.findByRole("generic", { name: "EditInstance-Loading" }),
+    await screen.findByRole("region", { name: "EditInstance-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.right({ data: ServiceInstance.a }));
@@ -176,7 +176,7 @@ test("Given the EditInstance View When changing a v2 embedded entity Then the co
   const { service_entity, id, version } = ServiceInstance.d;
 
   expect(
-    await screen.findByRole("generic", { name: "EditInstance-Loading" }),
+    await screen.findByRole("region", { name: "EditInstance-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.right({ data: ServiceInstance.d }));
@@ -248,7 +248,7 @@ test("Given the EditInstance View When changing an embedded entity Then the inpu
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "EditInstance-Loading" }),
+    await screen.findByRole("region", { name: "EditInstance-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.right({ data: ServiceInstance.allAttrs }));
@@ -490,7 +490,7 @@ test("Given the EditInstance View When adding new nested embedded entity Then th
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "EditInstance-Loading" }),
+    await screen.findByRole("region", { name: "EditInstance-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.right({ data: ServiceInstance.allAttrs }));
