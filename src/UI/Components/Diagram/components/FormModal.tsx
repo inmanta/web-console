@@ -290,7 +290,7 @@ const FormModal = ({
               title={
                 cellView
                   ? words("inventory.editInstance.noAttributes")
-                  : words("inventory.addInstance.noAttributes")
+                  : words("inventory.addInstance.unselectedEntity")
               }
             />
           </FlexItem>
