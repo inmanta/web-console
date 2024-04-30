@@ -148,5 +148,9 @@ module.exports = {
     ],
     symlinks: false,
     cacheWithContext: false,
+    fallback: {
+      crypto: require.resolve("crypto-browserify"),
+      stream: false,
+    },
   },
 };
