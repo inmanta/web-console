@@ -428,6 +428,7 @@ const NestedFieldInput: React.FC<NestedProps> = ({
             originalState={originalState}
             getUpdate={getUpdate}
             path={makePath(path, field.name)}
+            suggestions={childField.suggestion}
           />
         ))}
     </StyledFormFieldGroupExpandable>
@@ -595,6 +596,7 @@ const DictListFieldInput: React.FC<DictListProps> = ({
               isNew={addedItemsPaths.includes(
                 `${makePath(path, field.name)}.${index}`,
               )}
+              suggestions={childField.suggestion}
             />
           ))}
         </StyledFormFieldGroupExpandable>
