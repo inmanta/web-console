@@ -87,6 +87,11 @@ export const FieldInput: React.FC<Props> = ({
   ).useOneTime();
   const [suggestionsList, setSuggestionsList] = useState<string[] | null>(null);
 
+  // Get the controlled value for the field
+  function getControlledValue(value) {
+    return value !== null && value !== undefined ? value : "";
+  }
+
   //callback was used to avoid re-render in useEffect used in SelectFormInput
   const getEnumUpdate = useCallback(
     (value) => {
@@ -205,7 +210,9 @@ export const FieldInput: React.FC<Props> = ({
         <TextFormInput
           aria-label={`TextFieldInput-${field.name}`}
           attributeName={field.name}
-          attributeValue={get(formState, makePath(path, field.name)) as string}
+          attributeValue={getControlledValue(
+            get(formState, makePath(path, field.name)),
+          )}
           description={field.description}
           isOptional={field.isOptional}
           shouldBeDisabled={
