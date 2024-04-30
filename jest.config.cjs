@@ -25,6 +25,8 @@ module.exports = {
     "^lodash-es$": "<rootDir>/node_modules/lodash/index.js", // Use CommonJS version of lodash in the test cases instead of ESM
     // mapper for the aliassing '@joint/core': '@intmant/rappid'
     "^@joint/core$": "<rootDir>/node_modules/@inmanta/rappid",
+    // Force module uuid to resolve with the CJS entry point, because Jest does not support package.json.exports. See https://github.com/uuidjs/uuid/issues/451
+    uuid: require.resolve("uuid"),
   },
 
   // A preset that is used as a base for Jest's configuration

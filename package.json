@@ -71,6 +71,7 @@
     "@types/react-syntax-highlighter": "^15.5.10",
     "@types/react-test-renderer": "^18",
     "@types/styled-components": "^5.1.26",
+    "@types/uuid": "^9",
     "@types/webpack": "^5.28.5",
     "@typescript-eslint/eslint-plugin": "^6.4.1",
     "@typescript-eslint/parser": "^7.6.0",
@@ -173,6 +174,7 @@
     "react-test-renderer": "^18.2.0",
     "styled-components": "^5.3.11",
     "undici": "^5",
+    "uuid": "^9.0.1",
     "xml-formatter": "^3.6.2"
   },
   "resolutions": {
