@@ -47,7 +47,7 @@ test("Given createEditFormState v1 WHEN passed editable nested fields and curren
         },
         my_attr: 0,
         bool_attr: null,
-        dict_attr: '{"a":"b"}',
+        dict_attr: "{}",
       },
     ],
   });

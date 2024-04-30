@@ -88,8 +88,17 @@ export const FieldInput: React.FC<Props> = ({
   const [suggestionsList, setSuggestionsList] = useState<string[] | null>(null);
 
   // Get the controlled value for the field
+  // If the value is an object or an array, it needs to be converted.
   function getControlledValue(value) {
-    return value !== null && value !== undefined ? value : "";
+    if (value === null || value === undefined) {
+      return "";
+    } else if (Array.isArray(value)) {
+      return value.join(", ");
+    } else if (typeof value === "object") {
+      return JSON.stringify(value);
+    } else {
+      return value;
+    }
   }
 
   //callback was used to avoid re-render in useEffect used in SelectFormInput
