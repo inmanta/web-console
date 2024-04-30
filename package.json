@@ -132,6 +132,9 @@
     "webpack-merge": "^5.10.0",
     "webpack-version-file": "^0.1.7"
   },
+  "browser": {
+    "crypto": false
+  },
   "dependencies": {
     "@inmanta/rappid": "^4.0.0",
     "@joint/layout-directed-graph": "^4.0.1",

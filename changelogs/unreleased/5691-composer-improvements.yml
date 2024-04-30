@@ -1,0 +1,6 @@
+description: "Change information in the Composer's Form Modal to be more adequate when no instance is chosen, Make expand/collapse button action area bigger in the Instances on the Instance Composer Canvas."
+issue-nr: 5691
+change-type: patch
+destination-branches: [master, iso7]
+sections:
+  minor-improvement: "{{description}}"
