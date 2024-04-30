@@ -41,7 +41,7 @@ export const OrderDetailsTable: React.FC<Props> = ({
     <Table {...props} variant={TableVariant.compact}>
       <Thead>
         <Tr>
-          <Th style={{ width: "15px" }}></Th>
+          <Th style={{ width: "15px" }} aria-hidden></Th>
           {heads}
         </Tr>
       </Thead>

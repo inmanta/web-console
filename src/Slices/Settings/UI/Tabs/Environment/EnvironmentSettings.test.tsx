@@ -81,8 +81,10 @@ test("Given environment settings When clicking on the edit name button Then the 
     screen.queryByRole("generic", { name: "Name-value" }),
   ).not.toBeInTheDocument();
 
-  const results = await axe(document.body);
-  expect(results).toHaveNoViolations();
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("Given environment settings When submitting the edited name Then the backend request is fired", async () => {
@@ -133,8 +135,10 @@ test("Given environment settings When submitting the edited name Then the backen
     screen.queryByRole("textbox", { name: "Name-input" }),
   ).not.toBeInTheDocument();
 
-  const results = await axe(document.body);
-  expect(results).toHaveNoViolations();
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("Given environment settings When canceling a name edit Then the backend request is not fired", async () => {
@@ -169,8 +173,10 @@ test("Given environment settings When canceling a name edit Then the backend req
     screen.queryByRole("textbox", { name: "Name-input" }),
   ).not.toBeInTheDocument();
 
-  const results = await axe(document.body);
-  expect(results).toHaveNoViolations();
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test.each`
@@ -228,8 +234,10 @@ test.each`
       screen.queryByRole("generic", { name: "Name-error-message" }),
     ).not.toBeInTheDocument();
 
-    const results = await axe(document.body);
-    expect(results).toHaveNoViolations();
+    await act(async () => {
+      const results = await axe(document.body);
+      expect(results).toHaveNoViolations();
+    });
   },
 );
 
@@ -263,8 +271,10 @@ test("Given environment settings When clicking on the edit repository settings b
     screen.queryByRole("generic", { name: "repo_url-value" }),
   ).not.toBeInTheDocument();
 
-  const results = await axe(document.body);
-  expect(results).toHaveNoViolations();
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("Given environment settings When submitting the edited repository settings Then the backend request is fired", async () => {
@@ -347,8 +357,10 @@ test("Given environment settings When submitting the edited repository settings 
     screen.queryByRole("textbox", { name: "repo_url-value" }),
   ).not.toBeInTheDocument();
 
-  const results = await axe(document.body);
-  expect(results).toHaveNoViolations();
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("Given environment settings When canceling a repository edit Then the backend request is not fired", async () => {
@@ -392,8 +404,10 @@ test("Given environment settings When canceling a repository edit Then the backe
     screen.queryByRole("textbox", { name: "repo_url-input" }),
   ).not.toBeInTheDocument();
 
-  const results = await axe(document.body);
-  expect(results).toHaveNoViolations();
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test.each`
@@ -457,8 +471,10 @@ test.each`
       }),
     ).not.toBeInTheDocument();
 
-    const results = await axe(document.body);
-    expect(results).toHaveNoViolations();
+    await act(async () => {
+      const results = await axe(document.body);
+      expect(results).toHaveNoViolations();
+    });
   },
 );
 
@@ -486,8 +502,10 @@ test("Given environment settings When clicking on the edit project button Then t
     screen.queryByRole("generic", { name: "Project Name-value" }),
   ).not.toBeInTheDocument();
 
-  const results = await axe(document.body);
-  expect(results).toHaveNoViolations();
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("Given environment settings When submitting the edited project name Then the backend request is fired", async () => {
@@ -552,8 +570,10 @@ test("Given environment settings When submitting the edited project name Then th
     screen.queryByRole("textbox", { name: "Project Name-typeahead" }),
   ).not.toBeInTheDocument();
 
-  const results = await axe(document.body);
-  expect(results).toHaveNoViolations();
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("Given environment settings When canceling a project name edit Then the backend request is not fired", async () => {
@@ -591,8 +611,10 @@ test("Given environment settings When canceling a project name edit Then the bac
     screen.queryByRole("textbox", { name: "Project Name-typeahead" }),
   ).not.toBeInTheDocument();
 
-  const results = await axe(document.body);
-  expect(results).toHaveNoViolations();
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test.each`
@@ -661,8 +683,10 @@ test.each`
       screen.queryByRole("generic", { name: "Project Name-error-message" }),
     ).not.toBeInTheDocument();
 
-    const results = await axe(document.body);
-    expect(results).toHaveNoViolations();
+    await act(async () => {
+      const results = await axe(document.body);
+      expect(results).toHaveNoViolations();
+    });
   },
 );
 
@@ -687,8 +711,10 @@ test("Given environment settings When clicking on the edit description button Th
     screen.queryByRole("generic", { name: "Description-value" }),
   ).not.toBeInTheDocument();
 
-  const results = await axe(document.body);
-  expect(results).toHaveNoViolations();
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("Given environment settings When clicking on the edit icon button Then the image field is shown", async () => {
@@ -710,6 +736,8 @@ test("Given environment settings When clicking on the edit icon button Then the 
     screen.queryByRole("img", { name: "Icon-value" }),
   ).not.toBeInTheDocument();
 
-  const results = await axe(document.body);
-  expect(results).toHaveNoViolations();
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });

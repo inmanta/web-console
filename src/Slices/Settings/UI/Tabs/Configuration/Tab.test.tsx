@@ -96,8 +96,10 @@ test("GIVEN ConfigurationTab THEN shows all settings", async () => {
     within(row).getByRole("button", { name: "ResetAction" }),
   ).toBeVisible();
 
-  const results = await axe(document.body);
-  expect(results).toHaveNoViolations();
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("GIVEN ConfigurationTab WHEN editing a dict field THEN shows warning icon", async () => {
@@ -125,8 +127,10 @@ test("GIVEN ConfigurationTab WHEN editing a dict field THEN shows warning icon",
   });
   expect(within(row).getByTestId("Warning")).toBeInTheDocument();
 
-  const results = await axe(document.body);
-  expect(results).toHaveNoViolations();
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("GIVEN ConfigurationTab WHEN editing an enum field THEN shows warning icon", async () => {
@@ -160,8 +164,10 @@ test("GIVEN ConfigurationTab WHEN editing an enum field THEN shows warning icon"
   });
   expect(within(row).getByTestId("Warning")).toBeInTheDocument();
 
-  const results = await axe(document.body);
-  expect(results).toHaveNoViolations();
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("GIVEN ConfigurationTab WHEN editing a boolean field THEN shows warning icon", async () => {
@@ -190,8 +196,10 @@ test("GIVEN ConfigurationTab WHEN editing a boolean field THEN shows warning ico
 
   expect(within(row).getByTestId("Warning")).toBeInTheDocument();
 
-  const results = await axe(document.body);
-  expect(results).toHaveNoViolations();
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("GIVEN ConfigurationTab WHEN editing a number field THEN shows warning icon", async () => {
@@ -216,8 +224,10 @@ test("GIVEN ConfigurationTab WHEN editing a number field THEN shows warning icon
 
   expect(within(row).getByTestId("Warning")).toBeInTheDocument();
 
-  const results = await axe(document.body);
-  expect(results).toHaveNoViolations();
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("GIVEN ConfigurationTab WHEN editing a positiveFloat field THEN shows warning icon", async () => {
@@ -242,8 +252,10 @@ test("GIVEN ConfigurationTab WHEN editing a positiveFloat field THEN shows warni
 
   expect(within(row).getByTestId("Warning")).toBeInTheDocument();
 
-  const results = await axe(document.body);
-  expect(results).toHaveNoViolations();
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("GIVEN ConfigurationTab WHEN editing a string field THEN shows warning icon", async () => {
@@ -271,8 +283,10 @@ test("GIVEN ConfigurationTab WHEN editing a string field THEN shows warning icon
 
   expect(within(row).getByTestId("Warning")).toBeInTheDocument();
 
-  const results = await axe(document.body);
-  expect(results).toHaveNoViolations();
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("ConfigurationTab can display unknown setting types as strings", async () => {
@@ -291,8 +305,10 @@ test("ConfigurationTab can display unknown setting types as strings", async () =
   expect(field).toBeInTheDocument();
   expect(field).toHaveValue("false");
 
-  const results = await axe(document.body);
-  expect(results).toHaveNoViolations();
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("GIVEN ConfigurationTab and boolean input WHEN changing boolean value and saving THEN update is performed", async () => {
@@ -361,8 +377,10 @@ test("GIVEN ConfigurationTab and boolean input WHEN changing boolean value and s
   expect(apiHelper.resolvedRequests).toHaveLength(3);
   expect(toggle).toBeChecked();
 
-  const results = await axe(document.body);
-  expect(results).toHaveNoViolations();
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("GIVEN ConfigurationTab and boolean input WHEN clicking reset THEN delete is performed", async () => {
@@ -418,8 +436,10 @@ test("GIVEN ConfigurationTab and boolean input WHEN clicking reset THEN delete i
 
   expect(toggle).toBeChecked();
 
-  const results = await axe(document.body);
-  expect(results).toHaveNoViolations();
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("GIVEN ConfigurationTab and dict input WHEN adding an entry and saving THEN entry is locked in", async () => {
@@ -500,6 +520,8 @@ test("GIVEN ConfigurationTab and dict input WHEN adding an entry and saving THEN
   expect(newKeyInput).toHaveValue("");
   expect(newValueInput).toHaveValue("");
 
-  const results = await axe(document.body);
-  expect(results).toHaveNoViolations();
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });

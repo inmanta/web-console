@@ -1,6 +1,7 @@
 import React from "react";
 import { act, render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
+import { axe, toHaveNoViolations } from "jest-axe";
 import { Either } from "@/Core";
 import { baseSetup } from "@/Test/Utils/base-setup";
 import {
@@ -10,6 +11,8 @@ import {
   responsePartialOrder,
 } from "../Data/Mock";
 import { OrderDetailsPage } from ".";
+
+expect.extend(toHaveNoViolations);
 
 const DetailsPage = <OrderDetailsPage />;
 
@@ -30,6 +33,11 @@ test("OrderDetailsView shows failed view", async () => {
   expect(
     await screen.findByRole("region", { name: "OrderDetailsView-Failed" }),
   ).toBeInTheDocument();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("OrderDetailsView shows view for a failed order", async () => {
@@ -64,6 +72,11 @@ test("OrderDetailsView shows view for a failed order", async () => {
     name: "ServiceOrderDetailsRow",
   });
   expect(serviceOrderItemRows).toHaveLength(1);
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("OrderDetailsView shows view for a partial order", async () => {
@@ -112,6 +125,11 @@ test("OrderDetailsView shows view for a partial order", async () => {
 
   const rowDependencies = await screen.findByLabelText("Expanded-Dependencies");
   expect(rowDependencies).not.toHaveTextContent(/Empty/);
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("OrderDetailsView shows view for a in progress order", async () => {
@@ -158,6 +176,11 @@ test("OrderDetailsView shows view for a in progress order", async () => {
 
   const rowDependencies = await screen.findByLabelText("Expanded-Dependencies");
   expect(rowDependencies).toHaveTextContent(/Empty/);
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("OrderDetailsView shows view for completed order", async () => {
@@ -205,4 +228,9 @@ test("OrderDetailsView shows view for completed order", async () => {
 
   const rowDependencies = await screen.findByLabelText("Expanded-Dependencies");
   expect(rowDependencies).toHaveTextContent(/Empty/);
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });

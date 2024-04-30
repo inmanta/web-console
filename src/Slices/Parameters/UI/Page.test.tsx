@@ -3,6 +3,7 @@ import { MemoryRouter } from "react-router-dom";
 import { act, render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
+import { axe, toHaveNoViolations } from "jest-axe";
 import { Either } from "@/Core";
 import {
   QueryResolverImpl,
@@ -26,6 +27,8 @@ import {
 } from "@S/Parameters/Data";
 import * as Parameters from "@S/Parameters/Data/Mock";
 import { Page } from "./Page";
+
+expect.extend(toHaveNoViolations);
 
 function setup() {
   const store = getStoreInstance();
@@ -108,6 +111,11 @@ test("When using the name filter then only the matching parameters should be fet
     name: "Parameters Table Row",
   });
   expect(rowsAfter).toHaveLength(3);
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("When using the source filter then only the matching parameters should be fetched and shown", async () => {
@@ -165,6 +173,11 @@ test("When using the source filter then only the matching parameters should be f
     name: "Parameters Table Row",
   });
   expect(rowsAfter).toHaveLength(3);
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("When using the Updated filter then the parameters within the range selected range should be fetched and shown", async () => {
@@ -246,4 +259,9 @@ test("When using the Updated filter then the parameters within the range selecte
   expect(
     await screen.findByText("to | 2022/02/01 00:00:00", { exact: false }),
   ).toBeVisible();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });

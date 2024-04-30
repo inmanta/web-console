@@ -66,7 +66,7 @@ export const ResourcesTable: React.FC<Props> = ({
     <Table {...props} variant={TableVariant.compact}>
       <Thead>
         <Tr>
-          <Th></Th>
+          <Th aria-hidden></Th>
           {heads}
         </Tr>
       </Thead>

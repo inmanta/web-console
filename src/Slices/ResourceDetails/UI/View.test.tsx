@@ -3,6 +3,7 @@ import { MemoryRouter } from "react-router-dom";
 import { act, render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
+import { axe, toHaveNoViolations } from "jest-axe";
 import { Either } from "@/Core";
 import { getStoreInstance, QueryResolverImpl } from "@/Data";
 import {
@@ -20,6 +21,8 @@ import {
 } from "@S/ResourceDetails/Data";
 import { ResourceDetails } from "@S/ResourceDetails/Data/Mock";
 import { View } from "./View";
+
+expect.extend(toHaveNoViolations);
 
 function setup() {
   const store = getStoreInstance();
@@ -70,6 +73,11 @@ test("GIVEN The Resource details view THEN details data is fetched immediately",
   expect(
     await screen.findByText(ResourceDetails.a.attributes.path),
   ).toBeVisible();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("GIVEN The Resource details view WHEN the user clicks on the requires tab THEN the requires table is shown", async () => {
@@ -95,6 +103,11 @@ test("GIVEN The Resource details view WHEN the user clicks on the requires tab T
   expect(
     await screen.findByRole("grid", { name: "ResourceRequires-Success" }),
   ).toBeVisible();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("GIVEN The Resource details view THEN shows status label", async () => {
@@ -107,4 +120,9 @@ test("GIVEN The Resource details view THEN shows status label", async () => {
   expect(
     screen.getByRole("generic", { name: "Status-deployed" }),
   ).toBeVisible();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });

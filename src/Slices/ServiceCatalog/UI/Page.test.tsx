@@ -3,6 +3,7 @@ import { Link, MemoryRouter, useLocation } from "react-router-dom";
 import { act, render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
+import { axe, toHaveNoViolations } from "jest-axe";
 import { Either, RemoteData } from "@/Core";
 import {
   QueryResolverImpl,
@@ -24,6 +25,8 @@ import {
 import { words } from "@/UI";
 import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
 import { Page } from "./Page";
+
+expect.extend(toHaveNoViolations);
 
 const [env1, env2] = Environment.filterable.map((env) => env.id);
 
@@ -110,6 +113,11 @@ test("ServiceCatalog shows updated services", async () => {
   expect(
     await screen.findByRole("generic", { name: "ServiceCatalog-Success" }),
   ).toBeInTheDocument();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("ServiceCatalog shows updated empty", async () => {
@@ -133,6 +141,11 @@ test("ServiceCatalog shows updated empty", async () => {
   expect(
     await screen.findByRole("generic", { name: "ServiceCatalog-Empty" }),
   ).toBeInTheDocument();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("GIVEN ServiceCatalog WHEN new environment selected THEN new query is triggered", async () => {
@@ -162,6 +175,11 @@ test("GIVEN ServiceCatalog WHEN new environment selected THEN new query is trigg
     url: "/lsm/v1/service_catalog?instance_summary=True",
     environment: env2,
   });
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("GIVEN ServiceCatalog WHEN service is deleted THEN command is triggered", async () => {
@@ -190,5 +208,10 @@ test("GIVEN ServiceCatalog WHEN service is deleted THEN command is triggered", a
     environment: env1,
     method: "DELETE",
     url: "/lsm/v1/service_catalog/" + Service.a.name,
+  });
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
   });
 });

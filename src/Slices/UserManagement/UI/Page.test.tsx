@@ -1,7 +1,7 @@
 import React from "react";
 import { MemoryRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { act, cleanup, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { axe, toHaveNoViolations } from "jest-axe";
 import { HttpResponse, http } from "msw";
@@ -59,8 +59,10 @@ describe("UserManagementPage", () => {
     );
     expect(addUserButton).toBeInTheDocument();
 
-    const results = await axe(document.body);
-    expect(results).toHaveNoViolations();
+    await act(async () => {
+      const results = await axe(document.body);
+      expect(results).toHaveNoViolations();
+    });
 
     server.close();
   });
@@ -86,13 +88,18 @@ describe("UserManagementPage", () => {
     const successView = await screen.findByLabelText("users-table");
     expect(successView).toBeInTheDocument();
 
-    const userRows = screen.getAllByRole("user-row");
+    const userRows = screen.getAllByTestId("user-row");
     expect(userRows).toHaveLength(2);
 
     expect(screen.getByText("test_user")).toBeInTheDocument();
     expect(screen.getByText("test_user2")).toBeInTheDocument();
 
     expect(screen.getAllByText("Delete")).toHaveLength(2);
+
+    await act(async () => {
+      const results = await axe(document.body);
+      expect(results).toHaveNoViolations();
+    });
 
     server.close();
   });
@@ -126,6 +133,11 @@ describe("UserManagementPage", () => {
     expect(errorMessage).toBeVisible();
 
     expect(spyDispatch).toHaveBeenCalledWith(new CustomEvent("open-login"));
+
+    await act(async () => {
+      const results = await axe(document.body);
+      expect(results).toHaveNoViolations();
+    });
 
     server.close();
   });
@@ -181,7 +193,7 @@ describe("UserManagementPage", () => {
 
     const successView = await screen.findByLabelText("users-table");
     expect(successView).toBeInTheDocument();
-    const userRows = screen.getAllByRole("user-row");
+    const userRows = screen.getAllByTestId("user-row");
     expect(userRows).toHaveLength(2);
 
     await act(async () => {
@@ -212,13 +224,19 @@ describe("UserManagementPage", () => {
     });
 
     await act(async () => {
-      await userEvent.click(screen.getByLabelText("add_user-button"));
+      fireEvent.click(screen.getByLabelText("add_user-button"));
     });
 
-    const updatedRows = await screen.findAllByRole("user-row");
+    const updatedRows = await screen.findAllByTestId("user-row");
     expect(updatedRows).toHaveLength(3);
 
     expect(screen.getByText("new_user")).toBeInTheDocument();
+
+    await act(async () => {
+      const results = await axe(document.body);
+      expect(results).toHaveNoViolations();
+    });
+
     server.close();
   });
 
@@ -257,19 +275,26 @@ describe("UserManagementPage", () => {
 
     const successView = await screen.findByLabelText("users-table");
     expect(successView).toBeInTheDocument();
-    const userRows = screen.getAllByRole("user-row");
+
+    const userRows = screen.getAllByTestId("user-row");
     expect(userRows).toHaveLength(2);
 
     await act(async () => {
-      await userEvent.click(screen.getAllByText("Delete")[0]);
+      fireEvent.click(screen.getAllByText("Delete")[0]);
     });
 
     await act(async () => {
-      await userEvent.click(screen.getByText("Yes"));
+      fireEvent.click(screen.getByText("Yes"));
     });
 
-    const updatedRows = await screen.findAllByRole("user-row");
+    const updatedRows = await screen.findAllByTestId("user-row");
     expect(updatedRows).toHaveLength(1);
+
+    await act(async () => {
+      const results = await axe(document.body);
+      expect(results).toHaveNoViolations();
+    });
+
+    server.close();
   });
-  cleanup();
 });

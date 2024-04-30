@@ -173,8 +173,10 @@ test("ServiceInventory shows updated instances", async () => {
     await screen.findByRole("grid", { name: "ServiceInventory-Success" }),
   ).toBeInTheDocument();
 
-  const results = await axe(document.body);
-  expect(results).toHaveNoViolations();
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("ServiceInventory shows error with retry", async () => {
@@ -201,8 +203,10 @@ test("ServiceInventory shows error with retry", async () => {
     await screen.findByRole("grid", { name: "ServiceInventory-Success" }),
   ).toBeInTheDocument();
 
-  const results = await axe(document.body);
-  expect(results).toHaveNoViolations();
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("ServiceInventory shows next page of instances", async () => {
@@ -242,8 +246,10 @@ test("ServiceInventory shows next page of instances", async () => {
     await screen.findByRole("cell", { name: "IdCell-b" }),
   ).toBeInTheDocument();
 
-  const results = await axe(document.body);
-  expect(results).toHaveNoViolations();
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("GIVEN ResourcesView fetches resources for new instance after instance update", async () => {
@@ -318,8 +324,10 @@ test("GIVEN ResourcesView fetches resources for new instance after instance upda
     `/lsm/v1/service_inventory/${ServiceInstance.a.service_entity}/${ServiceInstance.a.id}/resources?current_version=4`,
   );
 
-  const results = await axe(document.body);
-  expect(results).toHaveNoViolations();
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("ServiceInventory shows instance summary chart", async () => {

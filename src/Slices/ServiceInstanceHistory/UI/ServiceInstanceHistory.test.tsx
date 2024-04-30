@@ -1,7 +1,8 @@
 import React from "react";
 import { MemoryRouter, useLocation } from "react-router-dom";
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
+import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { Either, RemoteData } from "@/Core";
 import {
   QueryResolverImpl,
@@ -26,6 +27,15 @@ import {
 } from "@S/ServiceInstanceHistory/Data";
 import * as InstanceLog from "@S/ServiceInstanceHistory/Data/Mock";
 import { ServiceInstanceHistory } from "./ServiceInstanceHistory";
+
+expect.extend(toHaveNoViolations);
+
+const axe = configureAxe({
+  rules: {
+    // disable landmark rules when testing isolated components.
+    region: { enabled: false },
+  },
+});
 
 function setup() {
   const store = getStoreInstance();
@@ -104,6 +114,11 @@ it("ServiceInstanceHistory renders", async () => {
       name: "ServiceInstanceHistory-Empty",
     }),
   ).toBeVisible();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 it("ServiceInstanceHistory shows dates correctly", async () => {
@@ -127,4 +142,9 @@ it("ServiceInstanceHistory shows dates correctly", async () => {
   expect(
     screen.queryByRole("cell", { name: "Invalid date" }),
   ).not.toBeInTheDocument();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });

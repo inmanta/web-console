@@ -3,6 +3,7 @@ import { MemoryRouter } from "react-router-dom";
 import { act, render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
+import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { Either, RemoteData } from "@/Core";
 import {
   QueryResolverImpl,
@@ -24,6 +25,16 @@ import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import { ResourceDetails } from "@S/ResourceDetails/Data/Mock";
 import { Page } from "./Page";
+
+expect.extend(toHaveNoViolations);
+
+const axe = configureAxe({
+  rules: {
+    // disable landmark rules when testing isolated components.
+    // In this case, the tooltips are part of the higher hiararchy
+    region: { enabled: false },
+  },
+});
 
 function setup(entries?: string[]) {
   const apiHelper = new DeferredApiHelper();
@@ -92,6 +103,11 @@ test("ResourcesView shows empty table", async () => {
   expect(
     await screen.findByRole("generic", { name: "ResourcesView-Empty" }),
   ).toBeInTheDocument();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("ResourcesView shows failed table", async () => {
@@ -109,6 +125,11 @@ test("ResourcesView shows failed table", async () => {
   expect(
     await screen.findByRole("region", { name: "ResourcesView-Failed" }),
   ).toBeInTheDocument();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("ResourcesView shows success table", async () => {
@@ -126,6 +147,11 @@ test("ResourcesView shows success table", async () => {
   expect(
     await screen.findByRole("grid", { name: "ResourcesView-Success" }),
   ).toBeInTheDocument();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("GIVEN ResourcesView WHEN user clicks on requires toggle THEN list of requires is shown", async () => {
@@ -154,6 +180,11 @@ test("GIVEN ResourcesView WHEN user clicks on requires toggle THEN list of requi
   expect(
     await screen.findByRole("grid", { name: "ResourceRequires-Success" }),
   ).toBeVisible();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("ResourcesView shows next page of resources", async () => {
@@ -204,6 +235,11 @@ test("ResourcesView shows next page of resources", async () => {
       name: Resource.response.data[3].id_details.resource_id_value,
     }),
   ).toBeInTheDocument();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("ResourcesView shows sorting buttons for sortable columns", async () => {
@@ -227,6 +263,11 @@ test("ResourcesView shows sorting buttons for sortable columns", async () => {
       name: words("resources.column.deployState"),
     }),
   ).toBeVisible();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("ResourcesView sets sorting parameters correctly on click", async () => {
@@ -245,7 +286,13 @@ test("ResourcesView sets sorting parameters correctly on click", async () => {
   });
 
   expect(apiHelper.pendingRequests[0].url).toContain("&sort=agent.asc");
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
+
 it.each`
   filterType  | filterValue | placeholderText                                 | filterUrlName
   ${"search"} | ${"agent2"} | ${words("resources.filters.agent.placeholder")} | ${"agent"}
@@ -288,8 +335,14 @@ it.each`
     expect(apiHelper.pendingRequests[0].url).toContain(
       `filter.${filterUrlName}=${filterValue}`,
     );
+
+    await act(async () => {
+      const results = await axe(document.body);
+      expect(results).toHaveNoViolations();
+    });
   },
 );
+
 it.each`
   filterValueOne | placeholderTextOne                              | filterUrlNameOne       | filterValueTwo | placeholderTextTwo                              | filterUrlNameTwo
   ${"agent2"}    | ${words("resources.filters.agent.placeholder")} | ${"agent"}             | ${"file3"}     | ${words("resources.filters.value.placeholder")} | ${"resource_id_value"}
@@ -346,8 +399,14 @@ it.each`
     expect(apiHelper.pendingRequests[0].url).toContain(
       `filter.${filterUrlNameTwo}=${filterValueTwo}`,
     );
+
+    await act(async () => {
+      const results = await axe(document.body);
+      expect(results).toHaveNoViolations();
+    });
   },
 );
+
 test("when using the all filters then the resources with that filter values should be fetched and shown", async () => {
   const filterValueOne = "agent";
   const filterUrlNameOne = "agent";
@@ -411,6 +470,11 @@ test("when using the all filters then the resources with that filter values shou
   expect(apiHelper.pendingRequests[0].url).toContain(
     `filter.${filterUrlNameThree}=${filterValueThree}`,
   );
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test.each`
@@ -472,6 +536,11 @@ test.each`
     });
 
     expect(rowsAfter).toHaveLength(2);
+
+    await act(async () => {
+      const results = await axe(document.body);
+      expect(results).toHaveNoViolations();
+    });
   },
 );
 
@@ -523,6 +592,11 @@ test("When clicking the clear and reset filters then the state filter is updated
   expect(apiHelper.pendingRequests[0].url).toEqual(
     `/api/v2/resource?deploy_summary=True&limit=20&filter.status=%21orphaned&sort=resource_type.asc`,
   );
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("ResourcesView shows deploy state bar", async () => {
@@ -542,6 +616,11 @@ test("ResourcesView shows deploy state bar", async () => {
       name: words("resources.deploySummary.title"),
     }),
   ).toBeInTheDocument();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("GIVEN ResourcesView WHEN data is loading for next page THEN shows toolbar", async () => {
@@ -610,8 +689,11 @@ test("GIVEN ResourcesView WHEN data is loading for next page THEN shows toolbar"
     }),
   ).toBeVisible();
   expect(
-    screen.getByRole("generic", { name: "PaginationWidget" }),
+    screen.getByRole("navigation", { name: "top-Pagination" }),
   ).toBeVisible();
+  expect(
+    screen.queryByRole("navigation", { name: "bottom-Pagination" }),
+  ).not.toBeInTheDocument();
 
   await act(async () => {
     await apiHelper.resolve(
@@ -636,6 +718,11 @@ test("GIVEN ResourcesView WHEN data is loading for next page THEN shows toolbar"
       name: "LegendItem-available",
     }),
   ).toHaveAttribute("data-value", "2");
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("GIVEN ResourcesView WHEN data is auto-updated THEN shows updated toolbar", async () => {
@@ -689,8 +776,11 @@ test("GIVEN ResourcesView WHEN data is auto-updated THEN shows updated toolbar",
     }),
   ).toBeVisible();
   expect(
-    screen.getAllByRole("generic", { name: "PaginationWidget" }),
-  ).toHaveLength(2);
+    screen.getByRole("navigation", { name: "top-Pagination" }),
+  ).toBeVisible();
+  expect(
+    screen.getByRole("navigation", { name: "bottom-Pagination" }),
+  ).toBeInTheDocument();
 
   await act(async () => {
     await apiHelper.resolve(
@@ -715,6 +805,11 @@ test("GIVEN ResourcesView WHEN data is auto-updated THEN shows updated toolbar",
       name: "LegendItem-available",
     }),
   ).toHaveAttribute("data-value", "2");
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("ResourcesView shows deploy state bar with available status without processing_events status", async () => {
@@ -741,6 +836,11 @@ test("ResourcesView shows deploy state bar with available status without process
   expect(
     screen.getByRole("cell", { name: "Status-processing_events" }),
   ).toBeVisible();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("Given the ResourcesView When clicking on deploy, then the approriate backend request is fired", async () => {
@@ -781,6 +881,11 @@ test("Given the ResourcesView When clicking on deploy, then the approriate backe
       },
     },
   ]);
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("Given the ResourcesView When clicking on repair, then the approriate backend request is fired", async () => {
@@ -819,6 +924,11 @@ test("Given the ResourcesView When clicking on repair, then the approriate backe
       },
     },
   ]);
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("Given the ResourcesView When environment is halted, then deploy and repair buttons are disabled", async () => {
@@ -850,4 +960,9 @@ test("Given the ResourcesView When environment is halted, then deploy and repair
       name: words("resources.deploySummary.deploy"),
     }),
   ).toBeDisabled();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });

@@ -127,8 +127,10 @@ test("GIVEN StatusPage THEN shows server status", async () => {
     }),
   ).toBeVisible();
 
-  const results = await axe(document.body);
-  expect(results).toHaveNoViolations();
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("GIVEN StatusPage without support extension THEN download button is not present", async () => {
@@ -145,8 +147,10 @@ test("GIVEN StatusPage without support extension THEN download button is not pre
     screen.queryByRole("button", { name: "DownloadArchiveButton" }),
   ).not.toBeInTheDocument();
 
-  const results = await axe(document.body);
-  expect(results).toHaveNoViolations();
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("GIVEN StatusPage with support extension THEN download button is present", async () => {
@@ -161,8 +165,10 @@ test("GIVEN StatusPage with support extension THEN download button is present", 
     screen.getByRole("button", { name: "DownloadArchiveButton" }),
   ).toBeVisible();
 
-  const results = await axe(document.body);
-  expect(results).toHaveNoViolations();
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("GIVEN StatusPage with support extension WHEN user click download THEN an archive is created", async () => {
@@ -203,8 +209,10 @@ test("GIVEN StatusPage with support extension WHEN user click download THEN an a
     ),
   );
 
-  const results = await axe(document.body);
-  expect(results).toHaveNoViolations();
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("GIVEN StatusPage with support extension WHEN user click download THEN button goes through correct phases", async () => {
@@ -248,8 +256,10 @@ test("GIVEN StatusPage with support extension WHEN user click download THEN butt
     ),
   );
 
-  const results = await axe(document.body);
-  expect(results).toHaveNoViolations();
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("GIVEN StatusPage with support extension WHEN user click download and response is error THEN error is shown", async () => {
@@ -278,6 +288,8 @@ test("GIVEN StatusPage with support extension WHEN user click download and respo
   expect(errorContainer).toBeVisible();
   expect(within(errorContainer).getByText("error")).toBeVisible();
 
-  const results = await axe(document.body);
-  expect(results).toHaveNoViolations();
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });

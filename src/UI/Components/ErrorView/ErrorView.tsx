@@ -34,7 +34,7 @@ export const ErrorView: React.FC<Props> = ({
         <EmptyStateHeader
           titleText={<>{title || words("error")}</>}
           icon={<EmptyStateIcon icon={ExclamationTriangleIcon} />}
-          headingLevel="h4"
+          headingLevel="h2"
         />
         <EmptyStateBody>
           <StyledErrorMessage>{message}</StyledErrorMessage>
