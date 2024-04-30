@@ -1,5 +1,5 @@
-import crypto from "crypto";
 import { dia, g, highlighters } from "@inmanta/rappid";
+import { v4 as uuidv4 } from "uuid";
 import {
   EmbeddedEntity,
   InstanceAttributeModel,
@@ -354,7 +354,7 @@ export const shapesDataTransform = (
     if (!!instance.attributes && !instance.edits) {
       instance.edits = [
         {
-          edit_id: `${instance.instance_id}_order_update-${crypto.randomUUID()}`,
+          edit_id: `${instance.instance_id}_order_update-${uuidv4()}`,
           operation: "replace",
           target: ".",
           value: instance.attributes,

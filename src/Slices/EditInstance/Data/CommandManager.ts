@@ -1,4 +1,4 @@
-import crypto from "crypto";
+import { v4 as uuidv4 } from "uuid";
 import {
   Command,
   Field,
@@ -83,5 +83,5 @@ export const getBodyV2 = (
     },
   ];
 
-  return { edit: patchData, patch_id: crypto.randomUUID() };
+  return { edit: patchData, patch_id: uuidv4() };
 };

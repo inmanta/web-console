@@ -40,8 +40,8 @@ import {
 } from "./interfaces";
 import { Link, ServiceEntityBlock } from "./shapes";
 
-jest.mock("crypto", () => ({
-  randomUUID: jest.fn(() => "1"),
+jest.mock("uuid", () => ({
+  v4: jest.fn(() => "1"),
 }));
 
 describe("extractRelationsIds", () => {
