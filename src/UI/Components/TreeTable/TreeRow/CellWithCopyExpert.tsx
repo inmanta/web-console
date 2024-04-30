@@ -99,11 +99,12 @@ export const CellWithCopyExpert: React.FC<Props> = ({
 
     if (attributeType.includes("int")) {
       const tempFormat = parseInt(newAttribute as unknown as string);
-      formattedAttr = isNaN(tempFormat) ? tempFormat : newAttribute;
+      formattedAttr = isNaN(tempFormat) ? newAttribute : tempFormat;
     } else if (attributeType.includes("float")) {
       const tempFormat = parseFloat(newAttribute as unknown as string);
-      formattedAttr = isNaN(tempFormat) ? tempFormat : newAttribute;
+      formattedAttr = isNaN(tempFormat) ? newAttribute : tempFormat;
     }
+
     if (parentObject) {
       newValue = parentObject[path.split("$")[0]];
       set(
@@ -111,6 +112,8 @@ export const CellWithCopyExpert: React.FC<Props> = ({
         path.split("$").slice(1).join("."),
         formattedAttr,
       );
+    } else {
+      newValue = formattedAttr;
     }
 
     const result = await trigger(
