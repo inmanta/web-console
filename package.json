@@ -171,7 +171,7 @@
     "react-icons": "^5.1.0",
     "react-router-dom": "^6.22.3",
     "react-syntax-highlighter": "^15.5.0",
-    "react-test-renderer": "^18.2.0",
+    "react-test-renderer": "^18.3.1",
     "styled-components": "^5.3.11",
     "undici": "^5",
     "uuid": "^9.0.1",
