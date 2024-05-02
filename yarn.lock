@@ -1127,7 +1127,7 @@ __metadata:
     react-diff-viewer-continued: "npm:^3.4.0"
     react-dom: "npm:^18.2.0"
     react-dropzone: "npm:^14.2.3"
-    react-icons: "npm:^5.1.0"
+    react-icons: "npm:^5.2.0"
     react-router-dom: "npm:^6.22.3"
     react-svg-loader: "npm:^3.0.3"
     react-syntax-highlighter: "npm:^15.5.0"
@@ -13137,12 +13137,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-icons@npm:^5.1.0":
-  version: 5.1.0
-  resolution: "react-icons@npm:5.1.0"
+"react-icons@npm:^5.2.0":
+  version: 5.2.0
+  resolution: "react-icons@npm:5.2.0"
   peerDependencies:
     react: "*"
-  checksum: 10/00f75809b1846a6cfb48e3d64ddc5e931a1fa74aa429cd594dc4a70223a5702deff62638b02c727c0aeb83120a8875d8034b380601c61a4d803a9227387bac22
+  checksum: 10/708c827dba6b10a27340792b4a1b51a6c9cd2aca2cf201207922fd64182bc93ccbf4cfebeb1e5e490da27a1d365772dcc4d51b1beab53db5a5385ce5ed1a278f
   languageName: node
   linkType: hard
 
