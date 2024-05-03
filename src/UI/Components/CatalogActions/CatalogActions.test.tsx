@@ -2,6 +2,7 @@ import React from "react";
 import { render, screen, act, cleanup } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
+import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { Either } from "@/Core";
 import {
   CommandManagerResolverImpl,
@@ -20,6 +21,14 @@ import {
 import { DependencyProvider } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { CatalogActions } from "./CatalogActions";
+expect.extend(toHaveNoViolations);
+
+const axe = configureAxe({
+  rules: {
+    // disable landmark rules when testing isolated components.
+    region: { enabled: false },
+  },
+});
 
 function setup(
   details = {
@@ -78,6 +87,11 @@ test("Given CatalogUpdateButton, when user clicks on button, it should display a
   expect(
     await screen.findByText(words("catalog.update.modal.title")),
   ).toBeVisible();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("Given CatalogUpdateButton, when user cancels the modal, it should not fire the API call and close the modal.", async () => {
@@ -95,6 +109,11 @@ test("Given CatalogUpdateButton, when user cancels the modal, it should not fire
   expect(cancelButton).toBeVisible();
 
   await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
+
+  await act(async () => {
     await userEvent.click(cancelButton);
   });
 
@@ -106,6 +125,11 @@ test("Given CatalogUpdateButton, when user cancels the modal, it should not fire
 test("Given CatalogUpdateButton, when user confirms update, it should fire the API call, if success, show a toaster on succes and close the modal.", async () => {
   const { component, apiHelper } = setup();
   render(component);
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 
   const button = screen.getByRole("button", {
     name: words("catalog.button.update"),

@@ -211,7 +211,7 @@ export const MultiTextSelect: React.FC<Props> = ({
             {...(activeItem && { "aria-activedescendant": activeItem })}
             role="combobox"
             isExpanded={isOpen}
-            aria-controls="select-multi-typeahead-listbox"
+            aria-controls={`select-listbox-${toggleAriaLabel}`}
             aria-label={`${toggleAriaLabel}FilterInput`}
             disabled={props.isDisabled}
           >

@@ -2,6 +2,7 @@ import React from "react";
 import { MemoryRouter } from "react-router-dom";
 import { act, render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
+import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { Either } from "@/Core";
 import {
   getStoreInstance,
@@ -13,6 +14,14 @@ import { DependencyProvider } from "@/UI/Dependency";
 import { UrlManagerImpl } from "@/UI/Utils";
 import * as Mock from "@S/CompileDetails/Core/Mock";
 import { CompileDetails } from "./CompileDetails";
+expect.extend(toHaveNoViolations);
+
+const axe = configureAxe({
+  rules: {
+    // disable landmark rules when testing isolated components.
+    region: { enabled: false },
+  },
+});
 
 function setup() {
   const apiHelper = new DeferredApiHelper();
@@ -71,6 +80,11 @@ test("CompileDetailsView shows completed table with success: true", async () => 
     await screen.findByRole("generic", { name: "CompileDetailsView-Success" }),
   ).toBeInTheDocument();
   expect(await screen.findAllByLabelText("done-state")).toHaveLength(3);
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("CompileDetailsView shows completed table with success: false, error indication should appear", async () => {
@@ -90,4 +104,9 @@ test("CompileDetailsView shows completed table with success: false, error indica
   ).toBeInTheDocument();
 
   expect(await screen.findByLabelText("error-state")).toBeInTheDocument();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });

@@ -1,9 +1,19 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
+import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { words } from "@/UI";
 import { MetricName } from "../Core/Domain";
 import { mockedMetrics } from "../Core/Mock";
 import { GraphCard } from "./GraphCard";
+
+expect.extend(toHaveNoViolations);
+
+const axe = configureAxe({
+  rules: {
+    // disable landmark rules when testing isolated components.
+    region: { enabled: false },
+  },
+});
 
 describe("Test GraphCard with LineChart component", () => {
   it("Line Chart version", async () => {
@@ -27,6 +37,11 @@ describe("Test GraphCard with LineChart component", () => {
 
     // eslint-disable-next-line testing-library/no-node-access
     expect(await container.querySelector(".pf-v5-c-chart")).toBeVisible();
+
+    await act(async () => {
+      const results = await axe(document.body);
+      expect(results).toHaveNoViolations();
+    });
   });
 
   it("Area Chart version", async () => {
@@ -49,5 +64,10 @@ describe("Test GraphCard with LineChart component", () => {
 
     // eslint-disable-next-line testing-library/no-node-access
     expect(await container.querySelector(".pf-v5-c-chart")).toBeVisible();
+
+    await act(async () => {
+      const results = await axe(document.body);
+      expect(results).toHaveNoViolations();
+    });
   });
 });

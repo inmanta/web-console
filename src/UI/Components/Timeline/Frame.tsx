@@ -28,15 +28,17 @@ export const Frame: React.FC<FrameProps> = ({
   success,
 }) => {
   const DoneState = () => (
-    <Icon aria-label="done-state" size="lg">
+    <Icon aria-label="done-state" role="img" size="lg">
       <CheckCircleIcon color="var(--pf-v5-global--success-color--100)" />
     </Icon>
   );
 
-  const LoadingState = () => <Spinner aria-label="loading-state" size="lg" />;
+  const LoadingState = () => (
+    <Spinner aria-label="loading-state" role="img" size="lg" />
+  );
 
   const ErrorState = () => (
-    <Icon aria-label="error-state" size="lg">
+    <Icon aria-label="error-state" role="img" size="lg">
       <ExclamationCircleIcon color="var(--pf-v5-global--danger-color--100)" />
     </Icon>
   );

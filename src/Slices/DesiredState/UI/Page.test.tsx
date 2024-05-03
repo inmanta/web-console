@@ -3,6 +3,7 @@ import { MemoryRouter } from "react-router-dom";
 import { act, render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
+import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { Either, Maybe } from "@/Core";
 import {
   QueryResolverImpl,
@@ -29,6 +30,15 @@ import {
 } from "@S/DesiredState/Data";
 import * as DesiredStateVersions from "@S/DesiredState/Data/Mock";
 import { Page } from "./Page";
+
+expect.extend(toHaveNoViolations);
+
+const axe = configureAxe({
+  rules: {
+    // disable landmark rules when testing isolated components.
+    region: { enabled: false },
+  },
+});
 
 function setup() {
   const store = getStoreInstance();
@@ -101,6 +111,11 @@ test("DesiredStatesView shows empty table", async () => {
   expect(
     await screen.findByRole("generic", { name: "DesiredStatesView-Empty" }),
   ).toBeInTheDocument();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("DesiredStatesView shows failed table", async () => {
@@ -122,6 +137,11 @@ test("DesiredStatesView shows failed table", async () => {
   expect(
     await screen.findByRole("region", { name: "DesiredStatesView-Failed" }),
   ).toBeInTheDocument();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("AgentsView shows success table", async () => {
@@ -143,6 +163,11 @@ test("AgentsView shows success table", async () => {
   expect(
     await screen.findByRole("grid", { name: "DesiredStatesView-Success" }),
   ).toBeInTheDocument();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("When using the status filter then only the matching desired states should be fetched and shown", async () => {
@@ -212,6 +237,11 @@ test("When using the status filter then only the matching desired states should 
   });
 
   expect(rowsAfter).toHaveLength(3);
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("When using the Date filter then the desired state versions within the range selected range should be fetched and shown", async () => {
@@ -296,6 +326,11 @@ test("When using the Date filter then the desired state versions within the rang
   expect(
     await screen.findByText("to | 2021/12/07 00:00:00", { exact: false }),
   ).toBeVisible();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("When using the Version filter then the desired state versions within the range selected range should be fetched and shown", async () => {
@@ -378,6 +413,11 @@ test("When using the Version filter then the desired state versions within the r
 
   expect(await screen.findByText("from | 3", { exact: false })).toBeVisible();
   expect(await screen.findByText("to | 5", { exact: false })).toBeVisible();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("Given the Desired states view When promoting a version, then the correct request is be fired", async () => {
@@ -455,6 +495,11 @@ test("Given the Desired states view When promoting a version, then the correct r
 
   expect(apiHelper.resolvedRequests).toHaveLength(4);
   expect(apiHelper.pendingRequests).toHaveLength(0);
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("Given the Desired states view with filters When promoting a version, then the correct request is be fired", async () => {
@@ -550,6 +595,11 @@ test("Given the Desired states view with filters When promoting a version, then 
 
   expect(apiHelper.resolvedRequests).toHaveLength(5);
   expect(apiHelper.pendingRequests).toHaveLength(0);
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("Given the Desired states view When promoting a version results in an error, then the error is shown", async () => {
@@ -642,7 +692,13 @@ describe("DeleteModal ", () => {
     ).toBeVisible();
     expect(await screen.findByText("Yes")).toBeVisible();
     expect(await screen.findByText("No")).toBeVisible();
+
+    await act(async () => {
+      const results = await axe(document.body);
+      expect(results).toHaveNoViolations();
+    });
   });
+
   it("Closes modal when cancelled(both cancel buttons scenario)", async () => {
     const { component, apiHelper } = setup();
     render(component);
@@ -695,7 +751,13 @@ describe("DeleteModal ", () => {
     });
 
     expect(screen.queryByText("Yes")).not.toBeInTheDocument();
+
+    await act(async () => {
+      const results = await axe(document.body);
+      expect(results).toHaveNoViolations();
+    });
   });
+
   it("Sends request when submitted then request is executed and modal closed", async () => {
     const { component, apiHelper } = setup();
     render(component);
@@ -740,5 +802,10 @@ describe("DeleteModal ", () => {
     });
 
     expect(screen.queryByText("No")).not.toBeInTheDocument();
+
+    await act(async () => {
+      const results = await axe(document.body);
+      expect(results).toHaveNoViolations();
+    });
   });
 });

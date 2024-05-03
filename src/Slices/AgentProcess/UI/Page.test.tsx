@@ -1,7 +1,8 @@
 import React from "react";
 import { MemoryRouter } from "react-router-dom";
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
+import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { Either } from "@/Core";
 import {
   getStoreInstance,
@@ -12,6 +13,14 @@ import { DeferredApiHelper, dependencies, StaticScheduler } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import * as AgentProcessMock from "@S/AgentProcess/Core/Mock";
 import { Page } from "./Page";
+expect.extend(toHaveNoViolations);
+
+const axe = configureAxe({
+  rules: {
+    // disable landmark rules when testing isolated components.
+    region: { enabled: false },
+  },
+});
 
 function setup() {
   const store = getStoreInstance();
@@ -47,6 +56,11 @@ test("Agent Process Page shows failed view", async () => {
   expect(
     await screen.findByRole("region", { name: "AgentProcessView-Failed" }),
   ).toBeInTheDocument();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("Agent Process Page shows success view", async () => {
@@ -62,4 +76,9 @@ test("Agent Process Page shows success view", async () => {
   expect(
     await screen.findByRole("generic", { name: "AgentProcessView-Success" }),
   ).toBeInTheDocument();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });

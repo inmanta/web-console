@@ -2,6 +2,7 @@ import React from "react";
 import { MemoryRouter } from "react-router-dom";
 import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
+import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { act } from "react-dom/test-utils";
 import { Either } from "@/Core";
 import { getStoreInstance, QueryResolverImpl } from "@/Data";
@@ -18,6 +19,15 @@ import {
   GetVersionResourcesStateHelper,
 } from "@S/DesiredStateDetails/Data";
 import { Page } from "./Page";
+
+expect.extend(toHaveNoViolations);
+
+const axe = configureAxe({
+  rules: {
+    // disable landmark rules when testing isolated components.
+    region: { enabled: false },
+  },
+});
 
 function setup() {
   const store = getStoreInstance();
@@ -61,6 +71,11 @@ test("GIVEN DesiredStateDetails page THEN shows loading resource table", async (
   expect(
     screen.getByRole("region", { name: "VersionResourcesTable-Loading" }),
   ).toBeVisible();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("GIVEN DesiredStateDetails page WHEN api returns no items THEN shows empty resource table", async () => {
@@ -76,6 +91,11 @@ test("GIVEN DesiredStateDetails page WHEN api returns no items THEN shows empty 
   expect(
     screen.getByRole("generic", { name: "VersionResourcesTable-Empty" }),
   ).toBeVisible();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("GIVEN DesiredStateDetails page WHEN api returns error THEN shows error", async () => {
@@ -89,6 +109,11 @@ test("GIVEN DesiredStateDetails page WHEN api returns error THEN shows error", a
   expect(
     screen.getByRole("region", { name: "VersionResourcesTable-Failed" }),
   ).toBeVisible();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("GIVEN DesiredStateDetails page WHEN api returns items THEN shows success resource table", async () => {
@@ -102,4 +127,9 @@ test("GIVEN DesiredStateDetails page WHEN api returns items THEN shows success r
   expect(
     screen.getByRole("grid", { name: "VersionResourcesTable-Success" }),
   ).toBeVisible();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });

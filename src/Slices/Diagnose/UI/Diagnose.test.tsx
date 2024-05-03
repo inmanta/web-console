@@ -1,7 +1,8 @@
 import React from "react";
 import { MemoryRouter } from "react-router-dom";
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
+import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { Either } from "@/Core";
 import { QueryResolverImpl, getStoreInstance } from "@/Data";
 import {
@@ -18,6 +19,15 @@ import {
 } from "@S/Diagnose/Data";
 import * as Diagnose from "@S/Diagnose/Data/Mock";
 import { Diagnose as DiagnoseComponent } from "./Diagnose";
+
+expect.extend(toHaveNoViolations);
+
+const axe = configureAxe({
+  rules: {
+    // disable landmark rules when testing isolated components.
+    region: { enabled: false },
+  },
+});
 
 function setup() {
   const store = getStoreInstance();
@@ -63,6 +73,11 @@ test("Diagnose View shows empty table", async () => {
   expect(
     await screen.findByRole("generic", { name: "Diagnostics-Empty" }),
   ).toBeInTheDocument();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("Diagnose View shows failed table", async () => {
@@ -78,6 +93,11 @@ test("Diagnose View shows failed table", async () => {
   expect(
     await screen.findByRole("region", { name: "Diagnostics-Failed" }),
   ).toBeInTheDocument();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("Diagnose View shows success table", async () => {
@@ -93,6 +113,11 @@ test("Diagnose View shows success table", async () => {
   expect(
     await screen.findByRole("generic", { name: "Diagnostics-Success" }),
   ).toBeInTheDocument();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("Diagnose View shows updated table", async () => {
@@ -116,4 +141,9 @@ test("Diagnose View shows updated table", async () => {
   expect(
     await screen.findByRole("generic", { name: "Diagnostics-Success" }),
   ).toBeInTheDocument();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });

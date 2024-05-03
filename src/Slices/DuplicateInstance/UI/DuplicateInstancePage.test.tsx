@@ -3,6 +3,7 @@ import { MemoryRouter } from "react-router-dom";
 import { act, render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
+import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { Either } from "@/Core";
 import {
   CommandManagerResolverImpl,
@@ -25,6 +26,15 @@ import {
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import { DuplicateInstancePage } from "./DuplicateInstancePage";
+
+expect.extend(toHaveNoViolations);
+
+const axe = configureAxe({
+  rules: {
+    // disable landmark rules when testing isolated components.
+    region: { enabled: false },
+  },
+});
 
 function setup(entity = "a") {
   const store = getStoreInstance();
@@ -81,6 +91,11 @@ test("Duplicate Instance View shows failed state", async () => {
   expect(
     await screen.findByRole("region", { name: "DuplicateInstance-Failed" }),
   ).toBeInTheDocument();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("DuplicateInstance View shows success form", async () => {
@@ -106,6 +121,11 @@ test("DuplicateInstance View shows success form", async () => {
   });
   await act(async () => {
     await userEvent.click(screen.getByText(words("confirm")));
+  });
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
   });
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
@@ -176,6 +196,11 @@ test("Given the DuplicateInstance View When changing a embedded entity Then the 
   expect(
     await screen.findByRole("generic", { name: "DuplicateInstance-Success" }),
   ).toBeInTheDocument();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 
   await act(async () => {
     await userEvent.click(screen.getByRole("button", { name: "circuits" }));
