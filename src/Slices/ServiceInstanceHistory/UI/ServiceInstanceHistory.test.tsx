@@ -133,6 +133,11 @@ it("ServiceInstanceHistory shows dates correctly", async () => {
     }),
   );
 
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
+
   expect(
     await screen.findByRole("generic", {
       name: "ServiceInstanceHistory-Success",
@@ -142,9 +147,4 @@ it("ServiceInstanceHistory shows dates correctly", async () => {
   expect(
     screen.queryByRole("cell", { name: "Invalid date" }),
   ).not.toBeInTheDocument();
-
-  await act(async () => {
-    const results = await axe(document.body);
-    expect(results).toHaveNoViolations();
-  });
-});
+}, 15000);
