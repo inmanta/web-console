@@ -114,11 +114,11 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="Row-enable_lsm_expert_mode"]')
         .find(".pf-v5-c-switch")
         .click();
-      cy.get('[aria-label="Warning"]').should("exist");
+      cy.get('[data-testid="Warning"]').should("exist");
       cy.get('[aria-label="Row-enable_lsm_expert_mode"]')
         .find('[aria-label="SaveAction"]')
         .click();
-      cy.get('[aria-label="Warning"]').should("not.exist");
+      cy.get('[data-testid="Warning"]').should("not.exist");
       cy.get("[id='expert-mode-banner']")
         .should("exist")
         .and("contain", "LSM expert mode is enabled, proceed with caution.");
@@ -353,11 +353,11 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="Row-enable_lsm_expert_mode"]')
         .find(".pf-v5-c-switch")
         .click();
-      cy.get('[aria-label="Warning"]').should("exist");
+      cy.get('[data-testid="Warning"]').should("exist");
       cy.get('[aria-label="Row-enable_lsm_expert_mode"]')
         .find('[aria-label="SaveAction"]')
         .click();
-      cy.get('[aria-label="Warning"]').should("not.exist");
+      cy.get('[data-testid="Warning"]').should("not.exist");
       cy.get("[id='expert-mode-banner']").should("not.exist");
     });
   });
