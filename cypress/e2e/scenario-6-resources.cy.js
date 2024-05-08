@@ -571,21 +571,21 @@ describe("Scenario 6 : Resources", () => {
       );
 
       cy.get(
-        "#PaginationWidget-top-top-toggle > .pf-v5-c-pagination__total-items > b:first-of-type",
+        "#PaginationWidget-top-top-toggle > .pf-v5-c-menu-toggle__text > b:first-of-type",
       ).should("have.text", "1 - 20");
 
       //Go to next page
       cy.get('[aria-label="Go to next page"]').first().click();
       cy.get('[aria-label="ResourcesView-Success"]').should("be.visible");
       cy.get(
-        "#PaginationWidget-top-top-toggle > .pf-v5-c-pagination__total-items > b:first-of-type",
+        "#PaginationWidget-top-top-toggle > .pf-v5-c-menu-toggle__text > b:first-of-type",
       ).should("have.text", "21 - 40");
 
       //Go to last page
       cy.get('[aria-label="Go to next page"]').first().click();
       cy.get('[aria-label="ResourcesView-Success"]').should("be.visible");
       cy.get(
-        "#PaginationWidget-top-top-toggle > .pf-v5-c-pagination__total-items > b:first-of-type",
+        "#PaginationWidget-top-top-toggle > .pf-v5-c-menu-toggle__text > b:first-of-type",
       ).should("have.text", "41 - 49");
 
       //Go to previous page
@@ -593,14 +593,14 @@ describe("Scenario 6 : Resources", () => {
       cy.get('[aria-label="ResourcesView-Success"]').should("be.visible");
 
       cy.get(
-        "#PaginationWidget-top-top-toggle > .pf-v5-c-pagination__total-items > b:first-of-type",
+        "#PaginationWidget-top-top-toggle > .pf-v5-c-menu-toggle__text > b:first-of-type",
       ).should("have.text", "21 - 40");
 
       //Change page and come back to check if we are at the same page as we was
       cy.get(".pf-v5-c-nav__link").contains("Dashboard").click();
       cy.go("back");
       cy.get(
-        "#PaginationWidget-top-top-toggle > .pf-v5-c-pagination__total-items > b:first-of-type",
+        "#PaginationWidget-top-top-toggle > .pf-v5-c-menu-toggle__text > b:first-of-type",
       ).should("have.text", "21 - 40");
     });
   } else {
