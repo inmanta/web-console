@@ -103,8 +103,8 @@ export const TextFormInput: React.FC<Props> = ({
     >
       {isTextarea ? (
         <TextArea
-          value={attributeValue || ""}
-          onChange={(event, value) => handleInputChange(value, event)}
+          value={inputValue || ""}
+          onChange={(_event, value) => handleChange(value)}
           id={attributeName}
           name={attributeName}
           placeholder={placeholder}
