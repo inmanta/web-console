@@ -79,7 +79,7 @@ export const InventoryTable: React.FC<Props> = ({
     <Table {...props}>
       <Thead>
         <Tr>
-          <Th aria-hidden></Th>
+          <Th aria-hidden />
           {heads}
         </Tr>
       </Thead>

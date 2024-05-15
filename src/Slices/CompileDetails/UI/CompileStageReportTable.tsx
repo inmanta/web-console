@@ -37,7 +37,7 @@ export const CompileStageReportTable: React.FC<Props> = ({
     <Table {...props} variant={TableVariant.compact}>
       <Thead>
         <Tr>
-          <Th aria-hidden key="toggle"></Th>
+          <Th aria-hidden key="toggle" />
           {heads}
         </Tr>
       </Thead>

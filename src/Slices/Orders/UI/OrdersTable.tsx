@@ -75,7 +75,7 @@ export const OrdersTable: React.FC<Props> = ({
       <Thead>
         <Tr aria-hidden>
           {heads}
-          <Th></Th>
+          <Th />
         </Tr>
       </Thead>
       {rows.map((row) => (
