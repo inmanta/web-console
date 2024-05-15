@@ -1,7 +1,8 @@
 import React from "react";
 import { MemoryRouter } from "react-router";
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
+import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { Either } from "@/Core";
 import { getStoreInstance, QueryResolverImpl } from "@/Data";
 import { GetMetricsQueryManager } from "@/Data/Managers/GetMetrics";
@@ -16,6 +17,14 @@ import {
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import { Page } from "./Page";
+expect.extend(toHaveNoViolations);
+
+const axe = configureAxe({
+  rules: {
+    // disable landmark rules when testing isolated components.
+    region: { enabled: false },
+  },
+});
 
 function setup() {
   const store = getStoreInstance();
@@ -58,14 +67,19 @@ test("Home view shows failed table", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "Dashboard-Loading" }),
+    await screen.findByRole("region", { name: "Dashboard-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.left("error"));
 
   expect(
-    await screen.findByRole("generic", { name: "Dashboard-Failed" }),
+    await screen.findByRole("region", { name: "Dashboard-Failed" }),
   ).toBeInTheDocument();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("Home View shows success table", async () => {
@@ -73,7 +87,7 @@ test("Home View shows success table", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "Dashboard-Loading" }),
+    await screen.findByRole("region", { name: "Dashboard-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(
@@ -86,4 +100,9 @@ test("Home View shows success table", async () => {
       words("dashboard.title")(EnvironmentDetails.a.name),
     ),
   ).toBeInTheDocument();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });

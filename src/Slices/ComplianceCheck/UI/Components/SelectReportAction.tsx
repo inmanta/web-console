@@ -4,6 +4,7 @@ import {
   MenuToggle,
   MenuToggleElement,
   Select,
+  SelectList,
   SelectOption,
   Spinner,
   ToolbarGroup,
@@ -97,11 +98,13 @@ const Picker: React.FC<PickerProps> = ({
       onOpenChange={(isOpen) => setIsOpen(isOpen)}
       aria-label="ReportList"
     >
-      {reportsData.value.map((report) => (
-        <SelectOption key={report.id} value={report.id}>
-          <Progress report={report} /> {datePresenter.getFull(report.date)}
-        </SelectOption>
-      ))}
+      <SelectList aria-label="ReportSelectOptions">
+        {reportsData.value.map((report) => (
+          <SelectOption key={report.id} value={report.id}>
+            <Progress report={report} /> {datePresenter.getFull(report.date)}
+          </SelectOption>
+        ))}
+      </SelectList>
     </Select>
   );
 };

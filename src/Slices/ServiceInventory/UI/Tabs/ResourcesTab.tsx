@@ -30,7 +30,7 @@ export const ResourcesTab: React.FC<Props> = ({
       notAsked: () => null,
       loading: () => (
         <ResourceTableWrapper aria-label="ResourceTable-Loading" id={id}>
-          <LoadingView />
+          <LoadingView ariaLabel="ResourceTable-Loading" />
         </ResourceTableWrapper>
       ),
       failed: (error) => (
@@ -38,6 +38,7 @@ export const ResourcesTab: React.FC<Props> = ({
           <ErrorView
             title={words("inventory.resourcesTab.failed.title")}
             message={words("inventory.resourcesTab.failed.body")(error)}
+            ariaLabel="ResourceTable-Failed"
           />
         </ResourceTableWrapper>
       ),

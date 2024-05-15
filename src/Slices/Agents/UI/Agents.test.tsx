@@ -3,6 +3,7 @@ import { MemoryRouter } from "react-router-dom";
 import { act, render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
+import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { Either, Maybe, RemoteData } from "@/Core";
 import {
   QueryResolverImpl,
@@ -22,6 +23,14 @@ import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import * as AgentsMock from "@S/Agents/Core/Mock";
 import { Page } from "./Page";
+expect.extend(toHaveNoViolations);
+
+const axe = configureAxe({
+  rules: {
+    // disable landmark rules when testing isolated components.
+    region: { enabled: false },
+  },
+});
 
 function setup() {
   const apiHelper = new DeferredApiHelper();
@@ -60,7 +69,7 @@ test("AgentsView shows empty table", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "AgentsView-Loading" }),
+    await screen.findByRole("region", { name: "AgentsView-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(
@@ -74,6 +83,11 @@ test("AgentsView shows empty table", async () => {
   expect(
     await screen.findByRole("generic", { name: "AgentsView-Empty" }),
   ).toBeInTheDocument();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("AgentsView shows failed table", async () => {
@@ -81,14 +95,19 @@ test("AgentsView shows failed table", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "AgentsView-Loading" }),
+    await screen.findByRole("region", { name: "AgentsView-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.left("error"));
 
   expect(
-    await screen.findByRole("generic", { name: "AgentsView-Failed" }),
+    await screen.findByRole("region", { name: "AgentsView-Failed" }),
   ).toBeInTheDocument();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("AgentsView shows success table", async () => {
@@ -96,7 +115,7 @@ test("AgentsView shows success table", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "AgentsView-Loading" }),
+    await screen.findByRole("region", { name: "AgentsView-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.right(AgentsMock.response));
@@ -104,6 +123,11 @@ test("AgentsView shows success table", async () => {
   expect(
     await screen.findByRole("grid", { name: "AgentsView-Success" }),
   ).toBeInTheDocument();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("When using the name filter then only the matching agents should be fetched and shown", async () => {
@@ -121,7 +145,7 @@ test("When using the name filter then only the matching agents should be fetched
 
   await act(async () => {
     await userEvent.click(
-      within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
+      within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
         "button",
         { name: "FilterPicker" },
       ),
@@ -162,6 +186,11 @@ test("When using the name filter then only the matching agents should be fetched
     name: "Agents Table Row",
   });
   expect(rowsAfter).toHaveLength(3);
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("When using the process name filter then only the matching agents should be fetched and shown", async () => {
@@ -179,7 +208,7 @@ test("When using the process name filter then only the matching agents should be
 
   await act(async () => {
     await userEvent.click(
-      within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
+      within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
         "button",
         { name: "FilterPicker" },
       ),
@@ -219,6 +248,11 @@ test("When using the process name filter then only the matching agents should be
     name: "Agents Table Row",
   });
   expect(rowsAfter).toHaveLength(3);
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("When using the status filter with the 'up' option then the agents in the 'up' state should be fetched and shown", async () => {
@@ -236,7 +270,7 @@ test("When using the status filter with the 'up' option then the agents in the '
 
   await act(async () => {
     await userEvent.click(
-      within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
+      within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
         "button",
         { name: "FilterPicker" },
       ),
@@ -253,6 +287,11 @@ test("When using the status filter with the 'up' option then the agents in the '
   );
   await act(async () => {
     await userEvent.click(input);
+  });
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
   });
 
   const option = await screen.findByRole("option", {
@@ -336,6 +375,11 @@ test("Given the Agents view with filters, When pausing an agent, then the correc
   });
   expect(apiHelper.resolvedRequests).toHaveLength(4);
   expect(apiHelper.pendingRequests).toHaveLength(0);
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("Given the Agents view with filters, When unpausing an agent, then the correct request is fired", async () => {
@@ -368,6 +412,11 @@ test("Given the Agents view with filters, When unpausing an agent, then the corr
 
   await act(async () => {
     await userEvent.click(unpauseAgentButton);
+  });
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
   });
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
@@ -407,6 +456,11 @@ test("Given the Agents view When pausing an agent results in an error, then the 
   });
   const pauseAgentButton = await within(rows[0]).findByRole("button", {
     name: words("agents.actions.pause"),
+  });
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
   });
 
   await act(async () => {
@@ -469,6 +523,11 @@ test("Given the Agents view with the environment halted, When setting keep_pause
   });
 
   expect(apiHelper.pendingRequests).toHaveLength(0);
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("Given the Agents view with the environment halted, When setting unpause_on_resume on an agent, Then the correct request is fired", async () => {
@@ -478,6 +537,11 @@ test("Given the Agents view with the environment halted, When setting unpause_on
     value: RemoteData.success({ ...EnvironmentDetails.halted, id: "env" }),
   });
   render(component);
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 
   await act(async () => {
     await apiHelper.resolve(Either.right(AgentsMock.response));
@@ -529,6 +593,11 @@ test("Given the Agents view with the environment NOT halted, THEN the on resume 
     (header) => header.textContent === "On resume",
   );
   expect(onResumeColumnHeader).toBeUndefined();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("Given the Agents view with the environment halted, THEN the on resume column should be shown", async () => {
@@ -551,4 +620,9 @@ test("Given the Agents view with the environment halted, THEN the on resume colu
     (header) => header.textContent === "On resume",
   );
   expect(onResumeColumnHeader).toBeDefined();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });

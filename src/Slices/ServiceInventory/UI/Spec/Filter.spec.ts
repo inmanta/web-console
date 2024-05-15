@@ -40,7 +40,7 @@ test("GIVEN The Service Inventory WHEN the user filters on something THEN a data
   });
 
   expect(
-    await screen.findByRole("generic", { name: "ServiceInventory-Loading" }),
+    await screen.findByRole("region", { name: "ServiceInventory-Loading" }),
   ).toBeInTheDocument();
 
   await act(async () => {

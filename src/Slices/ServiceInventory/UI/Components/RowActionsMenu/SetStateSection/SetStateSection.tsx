@@ -63,37 +63,38 @@ export const SetStateSection: React.FunctionComponent<Props> = ({
           setStateErrorMessage={setStateErrorMessage}
         />
       )}
-      <ActionDisabledTooltip
-        isDisabled={isDisabled || isHalted}
-        ariaLabel={words("inventory.statustab.setInstanceState")}
-        tooltipContent={
-          isHalted
-            ? words("environment.halt.tooltip")
-            : words("inventory.statustab.actionDisabled")
-        }
-      >
-        {targets?.map((target) => (
-          <MenuItem
-            key={target}
-            value={target}
-            itemId={target}
-            onClick={() => onSelect(target)}
-            data-testid={`${id}-${target}`}
+      {targets?.map((target) => (
+        <MenuItem
+          key={target}
+          isDisabled={isDisabled || isHalted}
+          value={target}
+          itemId={target}
+          onClick={() => onSelect(target)}
+          data-testid={`${id}-${target}`}
+        >
+          <ActionDisabledTooltip
+            isDisabled={isDisabled || isHalted}
+            testingId={words("inventory.statustab.setInstanceState")}
+            tooltipContent={
+              isHalted
+                ? words("environment.halt.tooltip")
+                : words("inventory.statustab.actionDisabled")
+            }
           >
             {target}
-          </MenuItem>
-        ))}
-        {(!targets || targets.length < 1) && (
-          <MenuItem
-            key={"no value"}
-            value={"no value"}
-            itemId={"no value"}
-            isDisabled
-          >
-            None available
-          </MenuItem>
-        )}
-      </ActionDisabledTooltip>
+          </ActionDisabledTooltip>
+        </MenuItem>
+      ))}
+      {(!targets || targets.length < 1) && (
+        <MenuItem
+          key={"no value"}
+          value={"no value"}
+          itemId={"no value"}
+          isDisabled
+        >
+          None available
+        </MenuItem>
+      )}
       <ConfirmationModal
         title={words("inventory.statustab.confirmTitle")}
         onSetInstanceState={onSubmit}

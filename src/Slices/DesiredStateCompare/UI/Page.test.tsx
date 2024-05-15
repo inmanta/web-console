@@ -2,6 +2,7 @@ import React from "react";
 import { act, render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
+import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { Either } from "@/Core";
 import { FileFetcherImpl, getStoreInstance, QueryResolverImpl } from "@/Data";
 import {
@@ -16,6 +17,14 @@ import {
   GetDesiredStateDiffStateHelper,
 } from "@S/DesiredStateCompare/Data";
 import { View } from "./Page";
+expect.extend(toHaveNoViolations);
+
+const axe = configureAxe({
+  rules: {
+    // disable landmark rules when testing isolated components.
+    region: { enabled: false },
+  },
+});
 
 function setup() {
   const store = getStoreInstance();
@@ -58,6 +67,11 @@ test("GIVEN DesiredStateCompare THEN shows list of diff blocks", async () => {
 
   const blocks = await screen.findAllByTestId("DiffBlock");
   expect(blocks).toHaveLength(11);
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("GIVEN DesiredStateCompare THEN shows 'Jump To' action with dropdown", async () => {
@@ -86,6 +100,11 @@ test("GIVEN DesiredStateCompare THEN shows 'Jump To' action with dropdown", asyn
     name: "DiffSummaryListItem",
   });
   expect(items).toHaveLength(11);
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("GIVEN DesiredStateCompare WHEN StatusFilter = 'Added' THEN only 'Added' resources are shown", async () => {
@@ -147,6 +166,11 @@ test("GIVEN DesiredStateCompare WHEN StatusFilter = 'Added' THEN only 'Added' re
   ).toHaveLength(2);
 
   expect(await screen.findAllByTestId("DiffBlock")).toHaveLength(2);
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("GIVEN DesiredStateCompare WHEN File Resource THEN it shows prompt that can fetch file content", async () => {
@@ -224,6 +248,11 @@ test("GIVEN DesiredStateCompare WHEN File Resource THEN it shows prompt that can
   expect(
     within(blocks[1]).getByRole("generic", { name: "ErrorDiffView" }),
   ).toBeVisible();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("GIVEN DesiredStateCompare page WHEN SearchFilter is used, ONLY show the resources matching the search value", async () => {
@@ -271,4 +300,9 @@ test("GIVEN DesiredStateCompare page WHEN SearchFilter is used, ONLY show the re
   });
 
   expect(await screen.findAllByTestId("DiffBlock")).toHaveLength(11);
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });

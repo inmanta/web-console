@@ -2,6 +2,7 @@ import React from "react";
 import { act, render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
+import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { Either } from "@/Core";
 import {
   CommandManagerResolverImpl,
@@ -13,11 +14,18 @@ import {
 } from "@/Data";
 import { DeferredApiHelper, dependencies, StaticScheduler } from "@/Test";
 import { words } from "@/UI";
-
 import { DependencyProvider } from "@/UI/Dependency";
 import { MomentDatePresenter } from "@/UI/Utils";
 import * as Mock from "@S/ComplianceCheck/Data/Mock";
 import { View } from "./Page";
+expect.extend(toHaveNoViolations);
+
+const axe = configureAxe({
+  rules: {
+    // disable landmark rules when testing isolated components.
+    region: { enabled: false },
+  },
+});
 
 function setup() {
   const apiHelper = new DeferredApiHelper();
@@ -84,11 +92,21 @@ test("GIVEN ComplianceCheck page THEN user sees latest dry run report", async ()
 
   const blocks = await screen.findAllByTestId("DiffBlock");
   expect(blocks).toHaveLength(11);
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("GIVEN ComplianceCheck page When a report is selected from the list THEN the user sees the selected dry run report", async () => {
   const { component, apiHelper } = setup();
   render(component);
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 
   await act(async () => {
     await apiHelper.resolve(Either.right(Mock.listResponse));
@@ -161,6 +179,11 @@ test("GIVEN ComplianceCheck page When a report is selected from the list THEN th
     "aria-selected",
     "true",
   );
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("GIVEN ComplianceCheck page WHEN user clicks on 'Perform dry run' THEN new dry run is selected", async () => {
@@ -247,6 +270,11 @@ test("GIVEN ComplianceCheck page WHEN StatusFilter = 'Added' THEN only 'Added' r
     screen.getAllByRole("listitem", { name: "DiffSummaryListItem" }),
   ).toHaveLength(11);
 
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
+
   expect(await screen.findAllByTestId("DiffBlock")).toHaveLength(11);
 
   expect(
@@ -287,6 +315,11 @@ test("GIVEN ComplianceCheck page WHEN StatusFilter = 'Added' THEN only 'Added' r
   ).toHaveLength(2);
 
   expect(await screen.findAllByTestId("DiffBlock")).toHaveLength(2);
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("GIVEN ComplianceCheck page WHEN SearchFilter is used, ONLY show the resources matching the search value", async () => {
@@ -305,6 +338,11 @@ test("GIVEN ComplianceCheck page WHEN SearchFilter is used, ONLY show the resour
     await userEvent.click(
       screen.getByRole("button", { name: words("jumpTo") }),
     );
+  });
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
   });
 
   expect(
@@ -338,4 +376,9 @@ test("GIVEN ComplianceCheck page WHEN SearchFilter is used, ONLY show the resour
   });
 
   expect(await screen.findAllByTestId("DiffBlock")).toHaveLength(11);
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });

@@ -27,7 +27,7 @@ export const StatusItem: React.FC<Props> = ({
   <ListItem icon={icon} aria-label={`StatusItem-${name}`}>
     <Flex direction={{ default: "column" }}>
       <FlexItem>
-        <InlineTitle headingLevel="h3">{name}</InlineTitle>
+        <InlineTitle headingLevel="h2">{name}</InlineTitle>
         <Category>{category}</Category>
       </FlexItem>
       {details.length > 0 && (

@@ -40,7 +40,7 @@ export const ResourcePageActionButton: React.FC<Props> = ({
 
   return isHalted ? (
     <ActionDisabledTooltip
-      ariaLabel={textContent}
+      testingId={textContent}
       tooltipContent={words("environment.halt.tooltip")}
       isDisabled
     >

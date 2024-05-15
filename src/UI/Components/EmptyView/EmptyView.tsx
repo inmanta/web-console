@@ -18,7 +18,7 @@ export const EmptyView: React.FC<Props> = ({ title, message, ...props }) => (
     <EmptyStateHeader
       titleText={<>{title || words("empty.title")}</>}
       icon={<EmptyStateIcon icon={ExclamationCircleIcon} />}
-      headingLevel="h4"
+      headingLevel="h2"
     />
     <EmptyStateBody>{message}</EmptyStateBody>
   </EmptyState>

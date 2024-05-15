@@ -258,7 +258,6 @@ export const SingleTextSelect: React.FC<Props> = ({
           onClick={onToggleClick}
           onChange={onTextInputChange}
           onKeyDown={onInputKeyDown}
-          id="typeahead-select-input"
           autoComplete="off"
           innerRef={textInputRef}
           placeholder={placeholderText}

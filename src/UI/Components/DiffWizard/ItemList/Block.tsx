@@ -51,13 +51,13 @@ export const Block: React.FC<Props> = ({ item, refs, classify }) => {
         <StyledHeader
           onExpand={onExpand}
           toggleButtonProps={{
-            id: "toggle-button",
+            id: `${item.id}-toggle-button`,
             "aria-label": "Details",
-            "aria-labelledby": "titleId toggle-button",
+            "aria-labelledby": "toggle-button",
             "aria-expanded": isExpanded,
           }}
         >
-          <StyledTitle id="titleId">
+          <StyledTitle id={item.id}>
             <StyledStatusDescriptor status={item.status} />
             {item.id}
           </StyledTitle>

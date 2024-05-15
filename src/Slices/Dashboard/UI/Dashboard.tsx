@@ -31,12 +31,12 @@ export const Dashboard: React.FC = () => {
       {RemoteData.fold(
         {
           notAsked: () => null,
-          loading: () => <LoadingView aria-label="Metrics-Loading" />,
+          loading: () => <LoadingView ariaLabel="Metrics-Loading" />,
           failed: (error) => (
             <ErrorView
               message={error}
               retry={retry}
-              aria-label="Metrics-Failed"
+              ariaLabel="Metrics-Failed"
             />
           ),
           success: (metrics) => (

@@ -14,7 +14,6 @@ export const LoneItem: React.FC<Props> = ({ label }) => (
     value={1}
     backgroundColor={global_palette_blue_50.var}
     color={global_Color_100.var}
-    aria-label={`LegendItem-lone`}
   >
     {label}
   </Container>

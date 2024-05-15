@@ -3,6 +3,7 @@ import { MemoryRouter } from "react-router-dom";
 import { act, render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
+import { axe, toHaveNoViolations } from "jest-axe";
 import { Either } from "@/Core";
 import {
   BaseApiHelper,
@@ -28,6 +29,8 @@ import {
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { EnvironmentControls } from "./EnvironmentControls";
+
+expect.extend(toHaveNoViolations);
 
 function setup() {
   const store = getStoreInstance();
@@ -85,6 +88,17 @@ function setup() {
     scheduler,
   };
 }
+
+test("GIVEN EnvironmentControls WHEN rendered THEN it should be accessible", async () => {
+  const { component, apiHelper } = setup();
+  const { container } = render(component);
+
+  await act(async () => {
+    await apiHelper.resolve(Either.right({ data: EnvironmentDetails.a }));
+  });
+
+  expect(await axe(container)).toHaveNoViolations();
+});
 
 test("EnvironmentControls halt the environment when clicked and the environment is running", async () => {
   const dispatchEventSpy = jest.spyOn(document, "dispatchEvent");

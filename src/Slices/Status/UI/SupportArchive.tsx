@@ -39,6 +39,7 @@ export const SupportArchive: React.FC = () => {
             data-testid="ToastAlert"
             variant="danger"
             title="Something went wrong with downloading the support archive"
+            component="h3"
             actionClose={
               <AlertActionCloseButton onClose={() => setError(null)} />
             }

@@ -38,7 +38,7 @@ export const PromoteAction: React.FC<Props> = ({ version, isDisabled }) => {
   return (
     <ActionDisabledTooltip
       isDisabled={isDisabled || isHalted}
-      ariaLabel={"promote"}
+      testingId={"promote"}
       tooltipContent={
         isHalted
           ? words("environment.halt.tooltip")

@@ -25,8 +25,10 @@ export const PageFrame: React.FC<React.PropsWithChildren<Props>> = ({
 
   return (
     <>
-      <ExpertBanner />
-      <LicenseBanner />
+      <div role="alert" aria-label="bannerNotifications">
+        <ExpertBanner />
+        <LicenseBanner />
+      </div>
       <div className="pf-m-grow" style={{ minHeight: "0%" }}>
         <BlockingModal />
         <Page

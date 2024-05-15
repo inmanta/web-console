@@ -28,7 +28,11 @@ export const FilterToolbar: React.FC<Props> = ({
   return (
     <Toolbar clearAllFilters={clearFilters}>
       <ToolbarContent>
-        <ToolbarGroup variant="filter-group" aria-label="FilterBar">
+        <ToolbarGroup
+          variant="filter-group"
+          aria-label="FilterBar"
+          role="toolbar"
+        >
           <ToolbarItem variant="search-filter">
             <SimpleFreeTextFilter
               isVisible={true}
@@ -57,7 +61,11 @@ export const FilterToolbar: React.FC<Props> = ({
 export const EmptyFilterToolbar: React.FC = () => (
   <Toolbar>
     <ToolbarContent>
-      <ToolbarGroup variant="filter-group" aria-label="FilterBar">
+      <ToolbarGroup
+        variant="filter-group"
+        aria-label="FilterBar"
+        role="toolbar"
+      >
         <ToolbarItem style={{ height: "36px" }} />
       </ToolbarGroup>
     </ToolbarContent>
