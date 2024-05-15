@@ -143,7 +143,7 @@
     "@joint/layout-directed-graph": "^4.0.1",
     "@loadable/component": "^5.16.3",
     "@patternfly/react-charts": "^7.1.2",
-    "@patternfly/react-core": "^5.2.2",
+    "@patternfly/react-core": "^5.3.3",
     "@patternfly/react-icons": "^5.3.1",
     "@patternfly/react-styles": "^5.2.0",
     "@patternfly/react-table": "^5.2.1",
