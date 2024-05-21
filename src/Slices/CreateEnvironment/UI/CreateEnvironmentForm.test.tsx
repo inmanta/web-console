@@ -286,6 +286,7 @@ test(`Given CreateEnvironmentForm When a new project and valid environment are s
       "new-project",
     );
   });
+
   await act(async () => {
     await userEvent.click(
       screen.getByRole("option", { name: 'Create "new-project"' }),

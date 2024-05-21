@@ -2,6 +2,7 @@ import React from "react";
 import {
   Table /* data-codemods */,
   TableVariant,
+  Td,
   Th,
   Thead,
   Tr,
@@ -39,7 +40,7 @@ export const CompileStageReportTable: React.FC<Props> = ({
     <Table {...props} variant={TableVariant.compact}>
       <Thead>
         <Tr>
-          <Th aria-hidden key="toggle" />
+          <Td aria-hidden key="toggle" />
           {heads}
         </Tr>
       </Thead>

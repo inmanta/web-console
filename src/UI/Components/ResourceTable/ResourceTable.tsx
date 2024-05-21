@@ -31,7 +31,9 @@ export const ResourceTable: React.FC<Props> = ({ resources, id, ...props }) => {
       <Thead id={id ? `resource-table-header-${id}` : undefined}>
         <Tr>
           {columns.map((col) => (
-            <Th key={col}>{col}</Th>
+            <Th key={col} aria-label={col}>
+              {col}
+            </Th>
           ))}
         </Tr>
       </Thead>

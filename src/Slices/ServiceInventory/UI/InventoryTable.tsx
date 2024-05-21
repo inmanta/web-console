@@ -5,6 +5,7 @@ import {
   Tr,
   Th,
   OnSort,
+  Td,
 } from "@patternfly/react-table";
 import { Row, ServiceModel, Sort } from "@/Core";
 import { useUrlStateWithExpansion } from "@/Data";
@@ -79,7 +80,7 @@ export const InventoryTable: React.FC<Props> = ({
     <Table {...props}>
       <Thead>
         <Tr>
-          <Th aria-hidden />
+          <Td aria-hidden />
           {heads}
         </Tr>
       </Thead>

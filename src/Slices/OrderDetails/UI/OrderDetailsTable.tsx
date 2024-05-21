@@ -3,6 +3,7 @@ import {
   Table,
   TableVariant,
   Tbody,
+  Td,
   Th,
   Thead,
   Tr,
@@ -45,7 +46,7 @@ export const OrderDetailsTable: React.FC<Props> = ({
     <Table {...props} variant={TableVariant.compact}>
       <Thead>
         <Tr>
-          <Th style={{ width: "15px" }} aria-hidden />
+          <Td style={{ width: "15px" }} aria-hidden />
           {heads}
         </Tr>
       </Thead>

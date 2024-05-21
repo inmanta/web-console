@@ -17,7 +17,9 @@ export const ResourceTableWrapper: React.FC<React.PropsWithChildren<Props>> = ({
       <Thead id={props.id ? `resource-table-header-${props.id}` : undefined}>
         <Tr>
           {columns.map((col) => (
-            <Th key={col}>{col}</Th>
+            <Th key={col} aria-label={col}>
+              {col}
+            </Th>
           ))}
         </Tr>
       </Thead>

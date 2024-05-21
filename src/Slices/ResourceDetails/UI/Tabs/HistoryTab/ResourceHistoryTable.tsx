@@ -3,6 +3,7 @@ import {
   OnSort,
   Table /* data-codemods */,
   TableVariant,
+  Td,
   Th,
   Thead,
   Tr,
@@ -63,7 +64,7 @@ export const ResourceHistoryTable: React.FC<Props> = ({
     <Table {...props} variant={TableVariant.compact}>
       <Thead>
         <Tr>
-          <Th aria-hidden />
+          <Td aria-hidden />
           {heads}
         </Tr>
       </Thead>

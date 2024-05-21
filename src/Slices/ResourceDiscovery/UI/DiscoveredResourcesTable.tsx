@@ -3,6 +3,7 @@ import {
   OnSort,
   Table,
   TableVariant,
+  Td,
   Th,
   Thead,
   Tr,
@@ -62,7 +63,7 @@ export const DiscoveredResourcesTable: React.FC<Props> = ({
     <Table {...props} variant={TableVariant.compact}>
       <Thead>
         <Tr>
-          <Th aria-hidden />
+          <Td aria-hidden />
           {heads}
         </Tr>
       </Thead>

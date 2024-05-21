@@ -1,6 +1,7 @@
 import React from "react";
 import {
   Table /* data-codemods */,
+  Td,
   Th,
   Thead,
   Tr,
@@ -40,7 +41,7 @@ export const HistoryTable: React.FC<Props> = ({ service, logs }) => {
       <Table>
         <Thead>
           <Tr>
-            <Th aria-hidden />
+            <Td aria-hidden />
             {columnHeads.map((head) => (
               <Th key={head}>{head}</Th>
             ))}

@@ -3,6 +3,7 @@ import {
   OnSort,
   Table,
   TableVariant,
+  Td,
   Th,
   Thead,
   Tr,
@@ -75,7 +76,7 @@ export const OrdersTable: React.FC<Props> = ({
       <Thead>
         <Tr>
           {heads}
-          <Th aria-hidden />
+          <Td aria-hidden />
         </Tr>
       </Thead>
       {rows.map((row) => (
