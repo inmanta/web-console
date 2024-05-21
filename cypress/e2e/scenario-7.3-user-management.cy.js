@@ -14,7 +14,7 @@ if (Cypress.env("local-auth")) {
 
     cy.get("h1").contains("User Management").should("be.visible");
 
-    cy.get('[role="user-row"]').should("have.length", 1);
+    cy.get('[data-testid="user-row"]').should("have.length", 1);
 
     cy.get("button").contains("Add User").click();
 
@@ -34,7 +34,7 @@ if (Cypress.env("local-auth")) {
 
     cy.get("button").contains("Add").click();
 
-    cy.get('[role="user-row"]').should("have.length", 2);
+    cy.get('[data-testid="user-row"]').should("have.length", 2);
   });
 
   it("should be able to remove user", () => {
@@ -52,12 +52,19 @@ if (Cypress.env("local-auth")) {
 
     cy.get("h1").contains("User Management").should("be.visible");
 
-    cy.get('[role="user-row"]').should("have.length", 2);
+    cy.get('[data-testid="user-row"]').should("have.length", 2);
 
-    cy.get('[role="user-row"]').eq(1).find("button").contains("Delete").click();
+    cy.get('[data-testid="user-row"]')
+      .eq(1)
+      .find("button")
+      .contains("Delete")
+      .click();
 
     cy.get("button").contains("Yes").click();
 
-    cy.get('[role="user-row"]', { timeout: 20000 }).should("have.length", 1);
+    cy.get('[data-testid="user-row"]', { timeout: 20000 }).should(
+      "have.length",
+      1,
+    );
   });
 }
