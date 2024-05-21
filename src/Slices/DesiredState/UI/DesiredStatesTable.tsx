@@ -24,7 +24,9 @@ export const DesiredStatesTable: React.FC<Props> = ({ rows, ...props }) => {
     words("desiredState.columns.labels"),
   ];
   const heads = columnNames.map((displayName) => (
-    <Th key={displayName}>{displayName}</Th>
+    <Th key={displayName} aria-label={displayName}>
+      {displayName}
+    </Th>
   ));
 
   return (

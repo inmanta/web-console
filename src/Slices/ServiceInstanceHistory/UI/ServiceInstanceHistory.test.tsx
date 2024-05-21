@@ -1,6 +1,6 @@
-import React from "react";
+import React, { act } from "react";
 import { MemoryRouter, useLocation } from "react-router-dom";
-import { act, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { Either, RemoteData } from "@/Core";

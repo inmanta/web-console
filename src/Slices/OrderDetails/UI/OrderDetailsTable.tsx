@@ -34,7 +34,11 @@ export const OrderDetailsTable: React.FC<Props> = ({
   const heads = tablePresenter
     .getColumnHeads()
     .map(({ apiName, displayName }) => {
-      return <Th key={apiName}>{displayName}</Th>;
+      return (
+        <Th key={apiName} aria-label={apiName}>
+          {displayName}
+        </Th>
+      );
     });
 
   return (

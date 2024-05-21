@@ -1,5 +1,5 @@
-import React from "react";
-import { act, render, screen, waitFor, within } from "@testing-library/react";
+import React, { act } from "react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { axe, toHaveNoViolations } from "jest-axe";

@@ -53,6 +53,7 @@ export const ResourcesTable: React.FC<Props> = ({
       return (
         <StyledTh
           key={displayName}
+          aria-label={displayName}
           {...sortParams}
           $characters={displayName.length}
           $hasSort={hasSort}

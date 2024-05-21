@@ -64,7 +64,7 @@ export const OrdersTable: React.FC<Props> = ({
         : {};
 
       return (
-        <Th key={displayName} {...sortParams}>
+        <Th key={displayName} {...sortParams} aria-label={displayName}>
           {displayName}
         </Th>
       );
@@ -73,9 +73,9 @@ export const OrdersTable: React.FC<Props> = ({
   return (
     <Table {...props} variant={TableVariant.compact}>
       <Thead>
-        <Tr aria-hidden>
+        <Tr>
           {heads}
-          <Th />
+          <Th aria-hidden />
         </Tr>
       </Thead>
       {rows.map((row) => (

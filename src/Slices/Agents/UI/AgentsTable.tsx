@@ -50,7 +50,7 @@ export const AgentsTable: React.FC<Props> = ({
           }
         : {};
       return (
-        <Th key={displayName} {...sortParams}>
+        <Th key={displayName} {...sortParams} aria-label={displayName}>
           {displayName}
         </Th>
       );

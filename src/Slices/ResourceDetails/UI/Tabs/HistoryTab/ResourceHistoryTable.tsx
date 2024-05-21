@@ -53,7 +53,7 @@ export const ResourceHistoryTable: React.FC<Props> = ({
             }
           : {};
       return (
-        <Th key={column} {...sortParams}>
+        <Th key={column} {...sortParams} aria-label={column}>
           {column}
         </Th>
       );
@@ -63,7 +63,7 @@ export const ResourceHistoryTable: React.FC<Props> = ({
     <Table {...props} variant={TableVariant.compact}>
       <Thead>
         <Tr>
-          <Th />
+          <Th aria-hidden />
           {heads}
         </Tr>
       </Thead>

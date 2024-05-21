@@ -27,9 +27,11 @@ export const CompileStageReportTable: React.FC<Props> = ({
     compileStarted,
   );
   const rows = tablePresenter.createRows(reports);
-  const heads = tablePresenter
-    .getColumnHeadDisplayNames()
-    .map((columnName) => <Th key={columnName}>{columnName}</Th>);
+  const heads = tablePresenter.getColumnHeadDisplayNames().map((columnName) => (
+    <Th key={columnName} aria-label={columnName}>
+      {columnName}
+    </Th>
+  ));
 
   const [isExpanded, onExpansion] = useExpansion();
 

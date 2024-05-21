@@ -54,6 +54,7 @@ export const FactsTable: React.FC<Props> = ({
         <StyledTh
           key={displayName}
           {...sortParams}
+          aria-label={displayName}
           $characters={displayName.length}
           $hasSort={hasSort}
         >

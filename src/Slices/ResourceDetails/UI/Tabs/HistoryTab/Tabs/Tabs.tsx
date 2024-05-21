@@ -76,7 +76,9 @@ const RequiresTab: React.FC<{ requires: string[] }> = ({ requires }) => (
   <Table aria-label={words("resources.history.tabs.requires")}>
     <Thead>
       <Tr>
-        <Th>{words("resources.history.tabs.requires")}</Th>
+        <Th aria-label={words("resources.history.tabs.requires")}>
+          {words("resources.history.tabs.requires")}
+        </Th>
       </Tr>
     </Thead>
     <Tbody>

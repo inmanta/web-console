@@ -1,7 +1,6 @@
-import React from "react";
+import React, { act } from "react";
 import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
-import { act } from "react-dom/test-utils";
 import { EnvironmentModifier, RemoteData } from "@/Core";
 import { DefinitionMap } from "@/Core/Domain/EnvironmentSettings";
 import { getStoreInstance } from "@/Data";

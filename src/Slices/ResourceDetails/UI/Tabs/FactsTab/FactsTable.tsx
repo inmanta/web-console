@@ -49,6 +49,7 @@ export const FactsTable: React.FC<Props> = ({ facts }) => {
           {factsColumnHeads.map(({ displayName }, idx) => (
             <Th
               key={displayName}
+              aria-label={displayName}
               sort={{
                 sortBy: {
                   index: columnNameToIndex(sort.name),

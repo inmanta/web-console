@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, act } from "react";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { act } from "react-dom/test-utils";
 import { BooleanFormInput } from "./BooleanFormInput";
 
 const InputSetup = ({ attributeName = "bool_param", isOptional = false }) => {

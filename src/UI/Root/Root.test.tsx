@@ -1,7 +1,7 @@
-import React from "react";
+import React, { act } from "react";
 import { MemoryRouter } from "react-router";
 import { useLocation } from "react-router-dom";
-import { act, cleanup, render, screen } from "@testing-library/react";
+import { cleanup, render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { axe, toHaveNoViolations } from "jest-axe";
 import { Either } from "@/Core";

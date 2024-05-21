@@ -47,7 +47,7 @@ export const CompileReportsTable: React.FC<Props> = ({
             }
           : {};
       return (
-        <Th key={column} {...sortParams}>
+        <Th key={column} {...sortParams} aria-label={column}>
           {column}
         </Th>
       );

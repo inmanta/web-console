@@ -1,6 +1,6 @@
-import React from "react";
+import React, { act } from "react";
 import { MemoryRouter } from "react-router-dom";
-import { act, render, screen, within } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { DependencyProvider } from "@/UI/Dependency";
 import { PrimaryRouteManager } from "@/UI/Routing";
