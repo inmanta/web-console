@@ -63,6 +63,19 @@ export const ServiceInventory: React.FunctionComponent<{
     route: "Inventory",
   });
 
+  // event listener for filtering which will iterate through service model state to find all states that corresponds with given label string
+  document.addEventListener("group-filtering", (event) => {
+    const label =
+      (event as CustomEvent).detail !== "no label"
+        ? (event as CustomEvent).detail
+        : null;
+
+    const states = service.lifecycle.states
+      .filter((state) => state.label === label)
+      .map((state) => state.name);
+    setFilter({ ...filter, state: states });
+  });
+
   const [filter, setFilter] =
     useUrlStateWithFilter<ServiceInstanceParams.Filter>({ route: "Inventory" });
 
