@@ -1,7 +1,6 @@
-import React from "react";
+import React, { act } from "react";
 import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
-import { act } from "react-dom/test-utils";
 import { EnvironmentModifier, RemoteData } from "@/Core";
 import { DefinitionMap } from "@/Core/Domain/EnvironmentSettings";
 import { getStoreInstance } from "@/Data";
@@ -12,9 +11,9 @@ const DummyComponent: React.FC<{
   environmentModifier: EnvironmentModifier;
 }> = ({ environmentModifier }) => {
   return environmentModifier.useIsServerCompileEnabled() ? (
-    <div aria-label="server-compile-enabled" />
+    <div data-testid="server-compile-enabled" />
   ) : (
-    <div aria-label="server-compile-disabled" />
+    <div data-testid="server-compile-disabled" />
   );
 };
 
@@ -50,9 +49,7 @@ test("Given the environmentModifier When the server compile setting is requested
 
   render(component);
 
-  expect(
-    await screen.findByRole("generic", { name: "server-compile-enabled" }),
-  ).toBeVisible();
+  expect(await screen.findByTestId("server-compile-enabled")).toBeVisible();
 
   // Set the option explicitly to false
   await act(async () => {
@@ -64,9 +61,7 @@ test("Given the environmentModifier When the server compile setting is requested
       }),
     });
   });
-  expect(
-    await screen.findByRole("generic", { name: "server-compile-disabled" }),
-  ).toBeVisible();
+  expect(await screen.findByTestId("server-compile-disabled")).toBeVisible();
 
   // Set the option explicitly to true
   await act(async () => {
@@ -78,9 +73,7 @@ test("Given the environmentModifier When the server compile setting is requested
       }),
     });
   });
-  expect(
-    await screen.findByRole("generic", { name: "server-compile-enabled" }),
-  ).toBeVisible();
+  expect(await screen.findByTestId("server-compile-enabled")).toBeVisible();
 });
 
 test("Given the environmentModifier When the missing setting is requested Then render component as the value would be false without throwing an error", async () => {
@@ -98,9 +91,7 @@ test("Given the environmentModifier When the missing setting is requested Then r
 
   render(component);
   //expect to see div element that indicates false value of the setting by its aria-label instead of error boundary pa
-  expect(
-    await screen.findByRole("generic", { name: "server-compile-disabled" }),
-  ).toBeVisible();
+  expect(await screen.findByTestId("server-compile-disabled")).toBeVisible();
   expect(
     screen.queryByLabelText("server-compile-enabled"),
   ).not.toBeInTheDocument();

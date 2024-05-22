@@ -1,5 +1,5 @@
-import React from "react";
-import { act, render, screen } from "@testing-library/react";
+import React, { act } from "react";
+import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { Config, EnvironmentDetails, RemoteData } from "@/Core";

@@ -1,4 +1,5 @@
-import { render, screen, act, within } from "@testing-library/react";
+import { act } from "react";
+import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { Either } from "@/Core";
 import { Service, Pagination } from "@/Test";

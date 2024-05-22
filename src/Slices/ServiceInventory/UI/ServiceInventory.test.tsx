@@ -1,6 +1,6 @@
-import React from "react";
+import React, { act } from "react";
 import { MemoryRouter, useLocation } from "react-router-dom";
-import { fireEvent, render, screen, act } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { axe, toHaveNoViolations } from "jest-axe";
