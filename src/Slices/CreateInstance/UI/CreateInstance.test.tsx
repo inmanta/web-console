@@ -3,6 +3,7 @@ import { MemoryRouter } from "react-router-dom";
 import { render, screen, act, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
+import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { Either } from "@/Core";
 import {
   CommandManagerResolverImpl,
@@ -23,6 +24,14 @@ import { InterServiceRelations } from "@/Test/Data/Service";
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import { CreateInstance } from "./CreateInstance";
+expect.extend(toHaveNoViolations);
+
+const axe = configureAxe({
+  rules: {
+    // disable landmark rules when testing isolated components.
+    region: { enabled: false },
+  },
+});
 
 function setup(service) {
   const store = getStoreInstance();
@@ -79,6 +88,11 @@ test("Given the CreateInstance View When creating an instance with attributes Th
 
   const networkField = screen.getByText("network");
   expect(networkField).toBeValid();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 
   await act(async () => {
     await userEvent.click(
@@ -158,6 +172,11 @@ test("Given the CreateInstance View When creating an instance with Inter-service
   });
 
   expect(options[0]).toHaveClass("pf-m-selected");
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 
   await act(async () => {
     await userEvent.click(
@@ -293,6 +312,11 @@ test("Given the CreateInstance View When creating entity with default values The
   const { component } = setup(Service.ServiceWithAllAttrs);
   render(component);
 
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
+
   //check if direct attributes have correct default value
   expect(screen.queryByLabelText("TextInput-string")).toHaveValue(
     "default_string",
@@ -337,19 +361,19 @@ test("Given the CreateInstance View When creating entity with default values The
     screen.queryByLabelText("TextFieldInput-editableString[]?"),
   ).toHaveTextContent("8.8.8.8");
 
-  expect(
-    screen.getByRole("combobox", { name: "enum-selectFilterInput" }),
-  ).toHaveValue("OPTION_ONE");
-  expect(
-    screen.getByRole("combobox", { name: "editableEnum?-selectFilterInput" }),
-  ).toHaveValue("OPTION_ONE");
+  expect(screen.getByTestId("enum-select-toggle")).toHaveTextContent(
+    "OPTION_ONE",
+  );
+  expect(screen.getByTestId("editableEnum?-select-toggle")).toHaveTextContent(
+    "OPTION_ONE",
+  );
 
-  expect(
-    screen.getByRole("combobox", { name: "editableEnum-selectFilterInput" }),
-  ).toHaveValue("OPTION_ONE");
-  expect(
-    screen.getByRole("combobox", { name: "enum?-selectFilterInput" }),
-  ).toHaveValue("OPTION_ONE");
+  expect(screen.getByTestId("editableEnum-select-toggle")).toHaveTextContent(
+    "OPTION_ONE",
+  );
+  expect(screen.getByTestId("enum?-select-toggle")).toHaveTextContent(
+    "OPTION_ONE",
+  );
 
   expect(screen.queryByLabelText("TextInput-dict")).toHaveValue(
     '{"default":"value"}',
@@ -430,25 +454,17 @@ test("Given the CreateInstance View When creating entity with default values The
   ).toHaveTextContent("8.8.8.8");
 
   expect(
-    within(embedded_base).getByRole("combobox", {
-      name: "enum-selectFilterInput",
-    }),
-  ).toHaveValue("OPTION_ONE");
+    within(embedded_base).getByTestId("enum-select-toggle"),
+  ).toHaveTextContent("OPTION_ONE");
   expect(
-    within(embedded_base).getByRole("combobox", {
-      name: "editableEnum-selectFilterInput",
-    }),
-  ).toHaveValue("OPTION_ONE");
+    within(embedded_base).getByTestId("editableEnum-select-toggle"),
+  ).toHaveTextContent("OPTION_ONE");
   expect(
-    within(embedded_base).getByRole("combobox", {
-      name: "enum?-selectFilterInput",
-    }),
-  ).toHaveValue("OPTION_ONE");
+    within(embedded_base).getByTestId("enum?-select-toggle"),
+  ).toHaveTextContent("OPTION_ONE");
   expect(
-    within(embedded_base).getByRole("combobox", {
-      name: "editableEnum?-selectFilterInput",
-    }),
-  ).toHaveValue("OPTION_ONE");
+    within(embedded_base).getByTestId("editableEnum?-select-toggle"),
+  ).toHaveTextContent("OPTION_ONE");
 
   expect(within(embedded_base).queryByLabelText("TextInput-dict")).toHaveValue(
     '{"default":"value"}',

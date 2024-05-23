@@ -66,17 +66,21 @@ export const OrderStateDetails: React.FC<Props> = ({ state }) => {
             </DescriptionListGroup>
           )}
           {state.validation_compile_id && (
-            <Link
-              target="_blank"
-              to={{
-                pathname: routeManager.getUrl("CompileDetails", {
-                  id: state.validation_compile_id,
-                }),
-                search: location.search,
-              }}
-            >
-              {words("orders.row.compilerReport")}
-            </Link>
+            <DescriptionListGroup>
+              <DescriptionListDescription>
+                <Link
+                  target="_blank"
+                  to={{
+                    pathname: routeManager.getUrl("CompileDetails", {
+                      id: state.validation_compile_id,
+                    }),
+                    search: location.search,
+                  }}
+                >
+                  {words("orders.row.compilerReport")}
+                </Link>
+              </DescriptionListDescription>
+            </DescriptionListGroup>
           )}
         </PaddedDescriptionList>
       </CardBody>

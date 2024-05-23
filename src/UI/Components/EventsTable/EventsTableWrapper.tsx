@@ -44,7 +44,7 @@ export const EventsTableWrapper: React.FC<React.PropsWithChildren<Props>> = ({
     <Table aria-label={props["aria-label"]}>
       <Thead>
         <Tr>
-          <Th />
+          <Th aria-hidden />
           {heads}
         </Tr>
       </Thead>

@@ -543,7 +543,7 @@ test.each`
             target: "parent",
             value: {
               id: "09042sev-1235-f234-ktgd-cc45615ba782",
-              editedValue: newValue,
+              editedValue: expectedValue,
               unedited: "value",
             },
           },

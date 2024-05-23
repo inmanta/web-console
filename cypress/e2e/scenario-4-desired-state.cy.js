@@ -128,7 +128,7 @@ describe("Scenario 4 Desired State", () => {
     } else {
       cy.get('[aria-label="DesiredStatesView-Success"]', { timeout: 60000 })
         .find("tbody", { timeout: 60000 })
-        .should("have.length", 2);
+        .should("have.length", 3);
       cy.get("tbody")
         .eq(0)
         .should("contain", "lsm_export")
@@ -198,7 +198,7 @@ describe("Scenario 4 Desired State", () => {
       cy.get(".pf-v5-c-description-list__group")
         .eq(1)
         .find(".pf-v5-c-description-list__description")
-        .should("have.text", "3");
+        .should("have.text", "4");
 
       cy.get(".pf-v5-c-description-list__group")
         .eq(2)
@@ -313,7 +313,7 @@ describe("Scenario 4 Desired State", () => {
 
       // the first element in the table shouldn't be available to promote, since it is already active.
       cy.get("tbody").eq(0).find('[aria-label="actions-toggle"]').click();
-      cy.get('[aria-label="promote"]').find("button").should("be.disabled");
+      cy.get('[data-testid="promote"]').find("button").should("be.disabled");
     });
 
     // Update the settings to disable the auto-deploy setting.
@@ -400,14 +400,14 @@ describe("Scenario 4 Desired State", () => {
     );
     cy.get('[aria-label="DiffItemList"]').within(() => {
       if (isIso) {
-        cy.get("#toggle-button").eq(0).click();
-        cy.get("#toggle-button").eq(1).click();
+        cy.get('[aria-label="Details"]').eq(0).click();
+        cy.get('[aria-label="Details"]').eq(1).click();
       } else {
-        cy.get("#toggle-button").eq(0).click();
-        cy.get("#toggle-button").eq(1).click();
-        cy.get("#toggle-button").eq(2).click();
-        cy.get("#toggle-button").eq(3).click();
-        cy.get("#toggle-button").eq(4).click();
+        cy.get('[aria-label="Details"]').eq(0).click();
+        cy.get('[aria-label="Details"]').eq(1).click();
+        cy.get('[aria-label="Details"]').eq(2).click();
+        cy.get('[aria-label="Details"]').eq(3).click();
+        cy.get('[aria-label="Details"]').eq(4).click();
       }
     });
 
@@ -469,14 +469,14 @@ describe("Scenario 4 Desired State", () => {
     );
     cy.get('[aria-label="DiffItemList"]').within(() => {
       if (isIso) {
-        cy.get("#toggle-button").eq(0).click();
-        cy.get("#toggle-button").eq(1).click();
+        cy.get('[aria-label="Details"]').eq(0).click();
+        cy.get('[aria-label="Details"]').eq(1).click();
       } else {
-        cy.get("#toggle-button").eq(0).click();
-        cy.get("#toggle-button").eq(1).click();
-        cy.get("#toggle-button").eq(2).click();
-        cy.get("#toggle-button").eq(3).click();
-        cy.get("#toggle-button").eq(4).click();
+        cy.get('[aria-label="Details"]').eq(0).click();
+        cy.get('[aria-label="Details"]').eq(1).click();
+        cy.get('[aria-label="Details"]').eq(2).click();
+        cy.get('[aria-label="Details"]').eq(3).click();
+        cy.get('[aria-label="Details"]').eq(4).click();
       }
     });
 
@@ -538,13 +538,13 @@ describe("Scenario 4 Desired State", () => {
     cy.get('[aria-label="StatusFilter"]').click();
 
     cy.get('[aria-label="DiffItemList"]').within(() => {
-      cy.get("#toggle-button").eq(0).click();
-      cy.get("#toggle-button").eq(1).click();
+      cy.get('[aria-label="Details"]').eq(0).click();
+      cy.get('[aria-label="Details"]').eq(1).click();
 
       if (!isIso) {
-        cy.get("#toggle-button").eq(2).click();
-        cy.get("#toggle-button").eq(3).click();
-        cy.get("#toggle-button").eq(4).click();
+        cy.get('[aria-label="Details"]').eq(2).click();
+        cy.get('[aria-label="Details"]').eq(3).click();
+        cy.get('[aria-label="Details"]').eq(4).click();
       }
     });
     // expect the view to still contain the diff of the last dry-run comparison

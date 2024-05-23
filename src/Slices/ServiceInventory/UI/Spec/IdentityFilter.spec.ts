@@ -24,7 +24,7 @@ test("GIVEN The Service Inventory WHEN the user filters on identity ('Order ID',
     );
   });
 
-  const filterBar = screen.getByRole("generic", { name: "FilterBar" });
+  const filterBar = screen.getByRole("toolbar", { name: "FilterBar" });
   await act(async () => {
     await userEvent.click(
       within(filterBar).getByRole("button", { name: "FilterPicker" }),

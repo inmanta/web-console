@@ -62,7 +62,7 @@ export const DiscoveredResourcesTable: React.FC<Props> = ({
     <Table {...props} variant={TableVariant.compact}>
       <Thead>
         <Tr>
-          <Th></Th>
+          <Th aria-hidden />
           {heads}
         </Tr>
       </Thead>

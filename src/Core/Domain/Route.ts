@@ -22,6 +22,7 @@ const kinds = [
   "History",
   "InstanceComposer",
   "InstanceComposerEditor",
+  "InstanceComposerViewer",
   "Inventory",
   "Orders",
   "OrderDetails",
@@ -93,6 +94,7 @@ interface RouteParamKeysManifest {
   History: "service" | "instance";
   InstanceComposer: "service";
   InstanceComposerEditor: "service" | "instance";
+  InstanceComposerViewer: "service" | "instance";
   Inventory: "service";
   ResourceDetails: "resourceId";
   ResourceHistory: "resourceId";

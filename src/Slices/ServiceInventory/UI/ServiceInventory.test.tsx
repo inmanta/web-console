@@ -3,6 +3,7 @@ import { MemoryRouter, useLocation } from "react-router-dom";
 import { fireEvent, render, screen, act } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
+import { axe, toHaveNoViolations } from "jest-axe";
 import { Either, RemoteData } from "@/Core";
 import {
   QueryResolverImpl,
@@ -36,6 +37,8 @@ import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
 import { TriggerInstanceUpdateCommandManager } from "@S/EditInstance/Data";
 import { Chart } from "./Components";
 import { ServiceInventory } from "./ServiceInventory";
+
+expect.extend(toHaveNoViolations);
 
 function setup(service = Service.a, pageSize = "") {
   const store = getStoreInstance();
@@ -135,15 +138,13 @@ function setup(service = Service.a, pageSize = "") {
   };
 }
 
-jest.mock("@/UI/Utils/useFeatures");
-
 test("ServiceInventory shows updated instances", async () => {
   const { component, apiHelper, scheduler } = setup();
 
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "ServiceInventory-Loading" }),
+    await screen.findByRole("region", { name: "ServiceInventory-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(
@@ -171,6 +172,11 @@ test("ServiceInventory shows updated instances", async () => {
   expect(
     await screen.findByRole("grid", { name: "ServiceInventory-Success" }),
   ).toBeInTheDocument();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("ServiceInventory shows error with retry", async () => {
@@ -180,7 +186,7 @@ test("ServiceInventory shows error with retry", async () => {
   apiHelper.resolve(Either.left("fake error"));
 
   expect(
-    await screen.findByRole("generic", { name: "ServiceInventory-Failed" }),
+    await screen.findByRole("region", { name: "ServiceInventory-Failed" }),
   ).toBeInTheDocument();
 
   fireEvent.click(screen.getByRole("button", { name: "Retry" }));
@@ -196,6 +202,11 @@ test("ServiceInventory shows error with retry", async () => {
   expect(
     await screen.findByRole("grid", { name: "ServiceInventory-Success" }),
   ).toBeInTheDocument();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("ServiceInventory shows next page of instances", async () => {
@@ -234,6 +245,11 @@ test("ServiceInventory shows next page of instances", async () => {
   expect(
     await screen.findByRole("cell", { name: "IdCell-b" }),
   ).toBeInTheDocument();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("GIVEN ResourcesView fetches resources for new instance after instance update", async () => {
@@ -307,6 +323,11 @@ test("GIVEN ResourcesView fetches resources for new instance after instance upda
   expect(apiHelper.pendingRequests[0].url).toMatch(
     `/lsm/v1/service_inventory/${ServiceInstance.a.service_entity}/${ServiceInstance.a.id}/resources?current_version=4`,
   );
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("ServiceInventory shows instance summary chart", async () => {
@@ -375,5 +396,36 @@ test("ServiceInventory shows enabled composer buttons for root instances ", asyn
   await act(async () => {
     await userEvent.click(menuToggle);
   });
+
   expect(await screen.findByText("Edit in Composer")).toBeEnabled();
+
+  expect(screen.queryByText("Show in Composer")).toBeEnabled();
+});
+
+test("ServiceInventory shows only button to display instance in the composer for non-root", async () => {
+  const { component, apiHelper } = setup({ ...Service.a, owner: "owner" });
+  render(component);
+
+  await act(async () => {
+    apiHelper.resolve(
+      Either.right({
+        data: [{ ...ServiceInstance.a, id: "a" }],
+        links: { ...Pagination.links },
+        metadata: Pagination.metadata,
+      }),
+    );
+  });
+
+  expect(screen.queryByText("Add in Composer")).not.toBeInTheDocument();
+
+  const menuToggle = await screen.findByRole("button", {
+    name: "row actions toggle",
+  });
+  await act(async () => {
+    await userEvent.click(menuToggle);
+  });
+
+  expect(await screen.findByText("Show in Composer")).toBeEnabled();
+
+  expect(screen.queryByText("Edit in Composer")).not.toBeInTheDocument();
 });

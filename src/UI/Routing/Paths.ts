@@ -1,4 +1,5 @@
 import { RouteKind } from "@/Core";
+import { InstanceComposerViewer } from "@/Slices/InstanceComposerViewer";
 import { AgentProcess } from "@S/AgentProcess";
 import { Agents } from "@S/Agents";
 import { CompileDetails } from "@S/CompileDetails";
@@ -60,6 +61,7 @@ export const paths: Paths = {
   History: ServiceInstanceHistory.path,
   InstanceComposer: InstanceComposer.path,
   InstanceComposerEditor: InstanceComposerEditor.path,
+  InstanceComposerViewer: InstanceComposerViewer.path,
   Inventory: ServiceInventory.path,
   ServiceDetails: ServiceDetails.path,
   Orders: Orders.path,

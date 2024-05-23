@@ -32,6 +32,7 @@ const dict = {
   jumpTo: "Jump to",
   hideAll: "Hide All",
   showAll: "Show All",
+  back: "Back",
 
   /**
    * Error related text
@@ -141,10 +142,13 @@ const dict = {
     amount === 1 ? "1 item" : `${amount} items`,
   "inventory.editInstance.button": "Edit",
   "inventory.editInstance.title": "Edit instance",
+  "inventory.duplicateInstance.button": "Duplicate",
   "inventory.duplicateInstance.title": "Duplicate instance",
   "inventory.editInstance.failed": "Editing instance failed",
   "inventory.editInstance.noAttributes":
     "There are no attributes to edit. Click confirm to move into the update state",
+  "inventory.addInstance.unselectedEntity":
+    "Please select an entity to fill attributes values",
   "inventory.editInstance.header": (instanceId: string) =>
     `Change attributes of instance ${instanceId}`,
   "inventory.duplicateInstance.header": (instanceId: string) =>
@@ -164,6 +168,7 @@ const dict = {
     "Requested with Instance Composer",
   "inventory.instanceComposer.errorMessage": "missing Instance Model",
   "inventory.instanceComposer.editButton": "Edit in Composer",
+  "inventory.instanceComposer.showButton": "Show in Composer",
   "inventory.instanceComposer.formModal.placeholder": "Choose a Service",
   "inventory.instanceComposer.formModal.create.title": "Add Entity",
   "inventory.instanceComposer.formModal.edit.title": "Edit Entity",
@@ -176,6 +181,7 @@ const dict = {
     "Your licence doesn't give you access to the Instance Composer, please contact support for more details.",
   "inventory.instanceComposer.title": "Instance Composer",
   "inventory.instanceComposer.title.edit": "Instance Composer Editor",
+  "inventory.instanceComposer.title.view": "Instance Composer Viewer",
   "inventory.deleteInstance.button": "Delete",
   "inventory.deleteInstance.failed": "Deleting instance failed",
   "inventory.deleteInstance.title": "Delete instance",

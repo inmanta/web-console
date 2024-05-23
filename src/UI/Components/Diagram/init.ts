@@ -25,6 +25,7 @@ export default function diagramInit(
   canvas,
   connectionRules: ConnectionRules,
   updateInstancesToSend: (cell: ServiceEntityBlock, action: ActionEnum) => void,
+  editable: boolean,
 ): DiagramHandlers {
   /**
    * https://resources.jointjs.com/docs/jointjs/v3.6/joint.html#dia.Graph
@@ -158,6 +159,7 @@ export default function diagramInit(
       const bbox = elementAsShape.getBBox();
       elementAsShape.attr("toggleButton/y", bbox.height - 24);
       elementAsShape.attr("spacer/y", bbox.height - 33);
+      elementAsShape.attr("buttonBody/y", bbox.height - 32);
 
       elementAsShape.set("isCollapsed", !isCollapsed);
     },
@@ -170,7 +172,7 @@ export default function diagramInit(
       cellView.model.get("isBlockedFromEditing")
     )
       return;
-    if (cellView.model.get("isBlockedFromEditing")) return;
+    if (cellView.model.get("isBlockedFromEditing") || !editable) return;
     const halo = createHalo(
       graph,
       paper,
@@ -183,7 +185,50 @@ export default function diagramInit(
   });
 
   paper.on("link:mouseenter", (linkView) => {
-    if (linkView.model.get("isBlockedFromEditing")) return;
+    const source = linkView.model.source();
+    const target = linkView.model.target();
+
+    const sourceCell = graph.getCell(
+      source.id as dia.Cell.ID,
+    ) as ServiceEntityBlock;
+    const targetCell = graph.getCell(
+      target.id as dia.Cell.ID,
+    ) as ServiceEntityBlock;
+    if (!(sourceCell.getName()[0] === "_")) {
+      linkView.model.appendLabel({
+        attrs: {
+          rect: {
+            fill: "none",
+          },
+          text: {
+            text: sourceCell.getName(),
+            autoOrient: "target",
+            class: "joint-label-text",
+          },
+        },
+        position: {
+          distance: 1,
+        },
+      });
+    }
+    if (!(targetCell.getName()[0] === "_")) {
+      linkView.model.appendLabel({
+        attrs: {
+          rect: {
+            fill: "none",
+          },
+          text: {
+            text: targetCell.getName(),
+            autoOrient: "source",
+            class: "joint-label-text",
+          },
+        },
+        position: {
+          distance: 0,
+        },
+      });
+    }
+    if (linkView.model.get("isBlockedFromEditing") || !editable) return;
     showLinkTools(
       paper,
       graph,
@@ -195,6 +240,7 @@ export default function diagramInit(
 
   paper.on("link:mouseleave", (linkView: dia.LinkView) => {
     linkView.removeTools();
+    linkView.model.labels([]);
   });
 
   paper.on("link:connect", (linkView: dia.LinkView) => {
@@ -209,36 +255,6 @@ export default function diagramInit(
       target.id as dia.Cell.ID,
     ) as ServiceEntityBlock;
 
-    linkView.model.appendLabel({
-      attrs: {
-        rect: {
-          fill: "none",
-        },
-        text: {
-          text: sourceCell.getName(),
-          autoOrient: "target",
-          class: "joint-label-text",
-        },
-      },
-      position: {
-        distance: 1,
-      },
-    });
-    linkView.model.appendLabel({
-      attrs: {
-        rect: {
-          fill: "none",
-        },
-        text: {
-          text: targetCell.getName(),
-          autoOrient: "source",
-          class: "joint-label-text",
-        },
-      },
-      position: {
-        distance: 0,
-      },
-    });
     /**
      * Function that checks if cell that we are connecting  to is being the one storing information about said connection.
      * @param elementCell cell that we checking

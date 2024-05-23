@@ -1,5 +1,5 @@
-import { dia, layout, linkTools } from "@inmanta/rappid";
-import dagre, { graphlib } from "dagre";
+import { dia, linkTools } from "@inmanta/rappid";
+import { DirectedGraph } from "@joint/layout-directed-graph";
 import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from "@/Core";
 import { InstanceWithReferences } from "@/Data/Managers/GetInstanceWithRelations/interface";
 import { words } from "@/UI/words";
@@ -159,7 +159,6 @@ export function showLinkTools(
       }),
     ],
   });
-
   linkView.addTools(tools);
 }
 
@@ -290,9 +289,7 @@ export function appendInstance(
     }
   });
   //auto-layout provided by JointJS
-  layout.DirectedGraph.layout(graph, {
-    dagre: dagre,
-    graphlib: graphlib,
+  DirectedGraph.layout(graph, {
     nodeSep: 80,
     edgeSep: 80,
     rankDir: "TB",
@@ -452,9 +449,7 @@ export function appendEntity(
   //add to graph
   instanceAsTable.addTo(graph);
   //auto-layout provided by JointJS
-  layout.DirectedGraph.layout(graph, {
-    dagre: dagre,
-    graphlib: graphlib,
+  DirectedGraph.layout(graph, {
     nodeSep: 80,
     edgeSep: 80,
     rankDir: "TB",
@@ -515,32 +510,7 @@ function connectEntities(
   isBlocked?: boolean,
 ) {
   targets.map((target) => {
-    const link = new Link({
-      labels: [
-        {
-          position: { distance: 0 },
-          attrs: {
-            text: {
-              autoOrient: "source",
-              text: target.getName(),
-              class: "joint-label-text",
-            },
-            rect: { fill: "none" },
-          },
-        },
-        {
-          position: { distance: 1 },
-          attrs: {
-            text: {
-              autoOrient: "target",
-              text: source.getName(),
-              class: "joint-label-text",
-            },
-            rect: { fill: "none" },
-          },
-        },
-      ],
-    });
+    const link = new Link();
     if (isBlocked) {
       link.set("isBlockedFromEditing", isBlocked);
     }

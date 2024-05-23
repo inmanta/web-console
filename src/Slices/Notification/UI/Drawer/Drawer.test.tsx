@@ -5,6 +5,7 @@ import { act, render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { createMemoryHistory } from "history";
+import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { Either, Maybe } from "@/Core";
 import {
   CommandManagerResolverImpl,
@@ -20,6 +21,15 @@ import { DependencyProvider } from "@/UI/Dependency";
 import * as Mock from "@S/Notification/Core/Mock";
 import { Badge } from "@S/Notification/UI/Badge";
 import { Drawer } from "./Drawer";
+
+expect.extend(toHaveNoViolations);
+
+const axe = configureAxe({
+  rules: {
+    // disable landmark rules when testing isolated components.
+    region: { enabled: false },
+  },
+});
 
 function setup() {
   const apiHelper = new DeferredApiHelper();
@@ -102,6 +112,11 @@ test("Given Drawer Then a list of notifications are shown", async () => {
   expect(
     screen.getAllByRole("listitem", { name: "NotificationItem" }),
   ).toHaveLength(4);
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("Given Drawer When clicking on 'Clear all' Then all notifications are cleared", async () => {
@@ -145,6 +160,11 @@ test("Given Drawer When clicking on 'Clear all' Then all notifications are clear
   expect(
     screen.queryByRole("listitem", { name: "NotificationItem" }),
   ).not.toBeInTheDocument();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("Given Drawer When user clicks on 'Read all' Then all notifications are read", async () => {
@@ -195,6 +215,11 @@ test("Given Drawer When user clicks on 'Read all' Then all notifications are rea
   expect(
     screen.getAllByRole("listitem", { name: "NotificationItem" }),
   ).toHaveLength(4);
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("Given Drawer When user clicks a notification Then it becomes read", async () => {
@@ -229,6 +254,11 @@ test("Given Drawer When user clicks a notification Then it becomes read", async 
   expect(
     screen.getAllByRole("listitem", { name: "NotificationItem" }),
   ).toHaveLength(3);
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("Given Drawer When user clicks a notification with an uri then go to the uri", async () => {
@@ -236,6 +266,11 @@ test("Given Drawer When user clicks a notification with an uri then go to the ur
   render(component);
   await act(async () => {
     await apiHelper.resolve(Either.right(Mock.response));
+  });
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
   });
 
   const items = screen.getAllByRole("listitem", { name: "NotificationItem" });
@@ -256,6 +291,12 @@ test("Given Drawer When user clicks a notification without an uri then nothing h
   });
 
   const items = screen.getAllByRole("listitem", { name: "NotificationItem" });
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
+
   await act(async () => {
     await userEvent.click(items[3]);
   });
@@ -273,6 +314,12 @@ test("Given Drawer When user clicks a notification toggle with an uri then do no
   const items = screen.getAllByRole("button", {
     name: "NotificationListActions",
   });
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
+
   await act(async () => {
     await userEvent.click(items[0]);
   });
@@ -322,6 +369,11 @@ test("Given Drawer When user clicks on 'unread' for 1 notification Then it becom
   expect(
     screen.getAllByRole("listitem", { name: "NotificationItem" }),
   ).toHaveLength(3);
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("Given Drawer When user clicks on 'Clear' for 1 notification Then it is cleared", async () => {
@@ -365,4 +417,9 @@ test("Given Drawer When user clicks on 'Clear' for 1 notification Then it is cle
   expect(
     screen.getAllByRole("listitem", { name: "NotificationItem" }),
   ).toHaveLength(2);
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });

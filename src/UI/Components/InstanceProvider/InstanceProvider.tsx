@@ -5,10 +5,12 @@ import { RemoteDataView } from "@/UI/Components";
 import Canvas from "@/UI/Components/Diagram/Canvas";
 
 export const InstanceProvider: React.FC<{
+  label: string;
   services: ServiceModel[];
   mainServiceName: string;
   instanceId: string;
-}> = ({ services, mainServiceName, instanceId }) => {
+  editable?: boolean;
+}> = ({ label, services, mainServiceName, instanceId, editable = false }) => {
   const { queryResolver } = useContext(DependencyContext);
   const [data] = queryResolver.useOneTime<"GetInstanceWithRelations">({
     kind: "GetInstanceWithRelations",
@@ -18,12 +20,13 @@ export const InstanceProvider: React.FC<{
   return (
     <RemoteDataView
       data={data}
-      label="Instance Composer Editor"
+      label={label}
       SuccessView={(instance) => (
         <Canvas
           services={services}
           mainServiceName={mainServiceName}
           instance={instance}
+          editable={editable}
         />
       )}
     />

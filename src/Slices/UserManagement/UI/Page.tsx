@@ -18,14 +18,14 @@ export const UserManagementPage: React.FC = () => {
   const { data, isLoading, isError, error, refetch } =
     useGetUsers().useOneTime();
 
-  if (isLoading) return <LoadingView aria-label="UserManagement-Loading" />;
+  if (isLoading) return <LoadingView ariaLabel="UserManagement-Loading" />;
   if (isError)
     return (
       <ErrorView
         data-testid="ErrorView"
         title={words("error")}
         message={words("error.general")(error.message)}
-        aria-label="UserManagement-Failed"
+        ariaLabel="UserManagement-Failed"
         retry={refetch}
       />
     );

@@ -5,7 +5,7 @@ import { words } from "@/UI/words";
 
 interface Props {
   isDisabled?: boolean;
-  ariaLabel: string;
+  testingId: string;
   tooltipContent?: string;
 }
 
@@ -14,13 +14,13 @@ export const ActionDisabledTooltip: React.FC<
 > = ({
   children,
   isDisabled,
-  ariaLabel,
+  testingId,
   tooltipContent = words("inventory.statustab.actionDisabled"),
 }) => {
   if (isDisabled) {
     return (
       <Tooltip entryDelay={200} content={tooltipContent}>
-        <CursorNotAllowedContainer aria-label={ariaLabel}>
+        <CursorNotAllowedContainer data-testid={testingId}>
           {children}
         </CursorNotAllowedContainer>
       </Tooltip>

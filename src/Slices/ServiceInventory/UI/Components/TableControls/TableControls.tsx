@@ -108,7 +108,7 @@ export const TableControls: React.FC<Props> = ({
                     search={location.search}
                   >
                     <DropdownItem id="add-instance-composer-button">
-                      <PlusIcon />{" "}
+                      <PlusIcon />
                       {words("inventory.addInstance.composerButton")}
                     </DropdownItem>
                   </Link>

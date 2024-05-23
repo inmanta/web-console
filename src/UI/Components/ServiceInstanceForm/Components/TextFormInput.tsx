@@ -32,7 +32,7 @@ interface Props {
  * @component
  * @param {Props} props - The props for the TextListFormInput component.
  *  @prop {string} attributeName - The name of the attribute.
- *  @prop {string[]} attributeValue - The value of the attribute.
+ *  @prop {string} attributeValue - The value of the attribute.
  *  @prop {string} description - The description of the attribute.
  *  @prop {boolean} isOptional - Whether the attribute is optional.
  *  @prop {boolean} shouldBeDisabled - Whether the attribute should be disabled. Default is false.
@@ -58,7 +58,7 @@ export const TextFormInput: React.FC<Props> = ({
 }) => {
   const inputRef = React.useRef<HTMLInputElement>(null);
   const [isOpen, setIsOpen] = React.useState(false);
-  const [inputValue, setInputValue] = React.useState(attributeValue || "");
+  const [inputValue, setInputValue] = React.useState(attributeValue);
 
   /**
    * Handles the input change.
@@ -103,8 +103,8 @@ export const TextFormInput: React.FC<Props> = ({
     >
       {isTextarea ? (
         <TextArea
-          value={attributeValue || ""}
-          onChange={(event, value) => handleInputChange(value, event)}
+          value={inputValue || ""}
+          onChange={(_event, value) => handleChange(value)}
           id={attributeName}
           name={attributeName}
           placeholder={placeholder}
@@ -124,7 +124,7 @@ export const TextFormInput: React.FC<Props> = ({
             placeholder={placeholder}
             aria-describedby={`${attributeName}-helper`}
             aria-label={`TextInput-${attributeName}`}
-            value={inputValue || ""}
+            value={inputValue}
             onChange={(_event, value) => handleChange(value)}
             isDisabled={shouldBeDisabled}
             onFocus={() => setIsOpen(true)}

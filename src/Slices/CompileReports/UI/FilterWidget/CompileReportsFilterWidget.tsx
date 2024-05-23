@@ -33,7 +33,7 @@ export const CompileReportsFilterWidget: React.FC<Props> = ({
     });
 
   return (
-    <ToolbarGroup variant="filter-group" aria-label="FilterBar">
+    <ToolbarGroup variant="filter-group" aria-label="FilterBar" role="toolbar">
       <FilterPicker
         setFilterKind={setFilterKind}
         filterKind={filterKind}

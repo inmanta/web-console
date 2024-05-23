@@ -28,7 +28,7 @@ export const Tabs: React.FC<Props> = ({ activeTab, setActiveTab }) => {
   if (!selected) {
     return (
       <ErrorView
-        aria-label="Environment-Failed"
+        ariaLabel="Environment-Failed"
         message={words("error.environment.missing")}
       />
     );

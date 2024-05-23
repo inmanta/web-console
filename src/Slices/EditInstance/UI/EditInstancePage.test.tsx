@@ -3,6 +3,7 @@ import { MemoryRouter } from "react-router-dom";
 import { act, render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
+import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { cloneDeep } from "lodash";
 import { Either } from "@/Core";
 import {
@@ -26,6 +27,31 @@ import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import { TriggerInstanceUpdateCommandManager } from "@S/EditInstance/Data";
 import { EditInstancePage } from "./EditInstancePage";
+
+expect.extend(toHaveNoViolations);
+
+const axe = configureAxe({
+  rules: {
+    // disable landmark rules when testing isolated components.
+    region: { enabled: false },
+  },
+});
+
+/**
+ * @note This configuration for the two last tests cases.
+ * Because of redundant data with same id, we need to disable the duplicate-id-aria rule.
+ * The fields are already tested in the previous tests.
+ * The id's and aria-labels are set by the API and assumedly, are unique.
+ *
+ * Todo: Remove this configuration when the test data is updated.
+ */
+const axeLimited = configureAxe({
+  rules: {
+    // disable landmark rules when testing isolated components.
+    region: { enabled: false },
+    "duplicate-id-aria": { enabled: false },
+  },
+});
 
 function setup(entity = "a") {
   const store = getStoreInstance();
@@ -74,14 +100,19 @@ test("Edit Instance View shows failed state", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "EditInstance-Loading" }),
+    await screen.findByRole("region", { name: "EditInstance-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.left("error"));
 
   expect(
-    await screen.findByRole("generic", { name: "EditInstance-Failed" }),
+    await screen.findByRole("region", { name: "EditInstance-Failed" }),
   ).toBeInTheDocument();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("EditInstance View shows success form", async () => {
@@ -90,7 +121,7 @@ test("EditInstance View shows success form", async () => {
   const { service_entity, id, version } = ServiceInstance.a;
 
   expect(
-    await screen.findByRole("generic", { name: "EditInstance-Loading" }),
+    await screen.findByRole("region", { name: "EditInstance-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.right({ data: ServiceInstance.a }));
@@ -120,6 +151,11 @@ test("EditInstance View shows success form", async () => {
     },
     environment: "env",
   });
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("Given the EditInstance View When changing a v1 embedded entity Then the correct request is fired", async () => {
@@ -128,7 +164,7 @@ test("Given the EditInstance View When changing a v1 embedded entity Then the co
   const { service_entity, id, version } = ServiceInstance.a;
 
   expect(
-    await screen.findByRole("generic", { name: "EditInstance-Loading" }),
+    await screen.findByRole("region", { name: "EditInstance-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.right({ data: ServiceInstance.a }));
@@ -168,6 +204,11 @@ test("Given the EditInstance View When changing a v1 embedded entity Then the co
     },
     environment: "env",
   });
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("Given the EditInstance View When changing a v2 embedded entity Then the correct request  with correct body is fired", async () => {
@@ -176,7 +217,7 @@ test("Given the EditInstance View When changing a v2 embedded entity Then the co
   const { service_entity, id, version } = ServiceInstance.d;
 
   expect(
-    await screen.findByRole("generic", { name: "EditInstance-Loading" }),
+    await screen.findByRole("region", { name: "EditInstance-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.right({ data: ServiceInstance.d }));
@@ -241,6 +282,11 @@ test("Given the EditInstance View When changing a v2 embedded entity Then the co
     },
     environment: "env",
   });
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("Given the EditInstance View When changing an embedded entity Then the inputs are displayed correctly", async () => {
@@ -248,7 +294,7 @@ test("Given the EditInstance View When changing an embedded entity Then the inpu
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "EditInstance-Loading" }),
+    await screen.findByRole("region", { name: "EditInstance-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.right({ data: ServiceInstance.allAttrs }));
@@ -483,6 +529,11 @@ test("Given the EditInstance View When changing an embedded entity Then the inpu
   expect(
     within(nested_editableOptionalEmbedded_base).queryByText("Delete"),
   ).toBeEnabled();
+
+  await act(async () => {
+    const results = await axeLimited(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("Given the EditInstance View When adding new nested embedded entity Then the inputs for it are displayed correctly", async () => {
@@ -490,7 +541,7 @@ test("Given the EditInstance View When adding new nested embedded entity Then th
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "EditInstance-Loading" }),
+    await screen.findByRole("region", { name: "EditInstance-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.right({ data: ServiceInstance.allAttrs }));
@@ -651,4 +702,9 @@ test("Given the EditInstance View When adding new nested embedded entity Then th
   expect(
     within(nested_editableOptionalEmbedded_base).queryByText("Delete"),
   ).toBeEnabled();
+
+  await act(async () => {
+    const results = await axeLimited(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });

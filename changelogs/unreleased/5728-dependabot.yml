@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps): Bump react-test-renderer and @types/react-test-renderer'
+destination-branches:
+- master
+- iso7
+sections: {}
