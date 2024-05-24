@@ -44,7 +44,7 @@ describe("Given the Events Page", () => {
 
       await act(async () => {
         await userEvent.click(
-          within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
+          within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
             "button",
             { name: "FilterPicker" },
           ),
@@ -112,7 +112,7 @@ describe("Given the Events Page", () => {
 
     await act(async () => {
       await userEvent.click(
-        within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
+        within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
           "button",
           { name: "FilterPicker" },
         ),
@@ -201,7 +201,7 @@ describe("Given the Events Page", () => {
 
       await act(async () => {
         await userEvent.click(
-          within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
+          within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
             "button",
             { name: "FilterPicker" },
           ),

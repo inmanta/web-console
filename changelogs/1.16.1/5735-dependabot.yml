@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps): Bump ejs from 3.1.9 to 3.1.10'
+destination-branches:
+- master
+- iso7
+sections: {}

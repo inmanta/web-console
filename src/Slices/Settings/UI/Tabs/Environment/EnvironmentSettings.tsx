@@ -21,7 +21,6 @@ interface Props {
 export const EnvironmentSettings: React.FC<Props> = ({
   environment,
   projects,
-  ...props
 }) => {
   const { commandResolver } = useContext(DependencyContext);
   const modifyEnvironmentTrigger =
@@ -66,7 +65,7 @@ export const EnvironmentSettings: React.FC<Props> = ({
     });
 
   return (
-    <PaddedList aria-label={props["aria-label"]}>
+    <PaddedList>
       <EditableTextField
         initialValue={environment.name}
         label={words("settings.tabs.environment.name")}

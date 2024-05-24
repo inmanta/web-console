@@ -317,31 +317,31 @@ describe("Environment", () => {
       '[aria-label="EnumInput-agent_trigger_method_on_auto_deployFilterInput"]',
     ).click();
     cy.get('[role="option"]').contains("push_full_deploy").click();
-    cy.get('[aria-label="Warning"]').should("exist");
+    cy.get('[data-testid="Warning"]').should("exist");
     cy.get('[aria-label="Row-agent_trigger_method_on_auto_deploy"]')
       .find('[aria-label="SaveAction"]')
       .click();
-    cy.get('[aria-label="Warning"]').should("not.exist");
+    cy.get('[data-testid="Warning"]').should("not.exist");
     cy.get(
       '[aria-label="EnumInput-agent_trigger_method_on_auto_deployFilterInput"]',
     ).should("have.value", "push_full_deploy");
 
     //Change auto_deploy
     cy.get('[aria-label="Row-auto_deploy"]').find(".pf-v5-c-switch").click();
-    cy.get('[aria-label="Warning"]').should("exist");
+    cy.get('[data-testid="Warning"]').should("exist");
     cy.get('[aria-label="Row-auto_deploy"]')
       .find('[aria-label="SaveAction"]')
       .click();
-    cy.get('[aria-label="Warning"]').should("not.exist");
+    cy.get('[data-testid="Warning"]').should("not.exist");
 
     //Change auto_full_compile
     cy.get('[aria-label="Row-auto_full_compile"]').clear();
     cy.get('[aria-label="Row-auto_full_compile"]').type("1 2 3 4 5");
-    cy.get('[aria-label="Warning"]').should("exist");
+    cy.get('[data-testid="Warning"]').should("exist");
     cy.get('[aria-label="Row-auto_full_compile"]')
       .find('[aria-label="SaveAction"]')
       .click();
-    cy.get('[aria-label="Warning"]').should("not.exist");
+    cy.get('[data-testid="Warning"]').should("not.exist");
     cy.get('[aria-label="Row-auto_full_compile"]')
       .find(".pf-v5-c-form-control input")
       .should("have.value", "1 2 3 4 5");
@@ -350,11 +350,11 @@ describe("Environment", () => {
     cy.get('[aria-label="Row-autostart_agent_deploy_interval"]')
       .find(".pf-v5-c-form-control")
       .type("{selectAll}610");
-    cy.get('[aria-label="Warning"]').should("exist");
+    cy.get('[data-testid="Warning"]').should("exist");
     cy.get('[aria-label="Row-autostart_agent_deploy_interval"]')
       .find('[aria-label="SaveAction"]')
       .click();
-    cy.get('[aria-label="Warning"]').should("not.exist");
+    cy.get('[data-testid="Warning"]').should("not.exist");
     cy.get('[aria-label="Row-autostart_agent_deploy_interval"]')
       .find(".pf-v5-c-form-control input")
       .should("have.value", "610");
@@ -363,11 +363,11 @@ describe("Environment", () => {
     cy.get('[aria-label="Row-autostart_agent_deploy_splay_time"]')
       .find(".pf-v5-c-form-control")
       .type("{selectAll}20");
-    cy.get('[aria-label="Warning"]').should("exist");
+    cy.get('[data-testid="Warning"]').should("exist");
     cy.get('[aria-label="Row-autostart_agent_deploy_splay_time"]')
       .find('[aria-label="SaveAction"]')
       .click();
-    cy.get('[aria-label="Warning"]').should("not.exist");
+    cy.get('[data-testid="Warning"]').should("not.exist");
     cy.get('[aria-label="Row-autostart_agent_deploy_splay_time"]')
       .find(".pf-v5-c-form-control input")
       .should("have.value", "20");
@@ -379,11 +379,11 @@ describe("Environment", () => {
         return $el.value === "local:";
       })
       .type("{selectAll}{backspace}new value");
-    cy.get('[aria-label="Warning"]').should("exist");
+    cy.get('[data-testid="Warning"]').should("exist");
     cy.get('[aria-label="Row-autostart_agent_map"]')
       .find('[aria-label="SaveAction"]')
       .click();
-    cy.get('[aria-label="Warning"]').should("not.exist");
+    cy.get('[data-testid="Warning"]').should("not.exist");
     cy.get('[aria-label="Row-autostart_agent_map"]')
       .find('[aria-label="editEntryValue"]')
       .should("have.value", "new value");
@@ -392,11 +392,11 @@ describe("Environment", () => {
     cy.get('[aria-label="Row-autostart_agent_repair_interval"]')
       .find(".pf-v5-c-form-control")
       .type("{selectAll}86410");
-    cy.get('[aria-label="Warning"]').should("exist");
+    cy.get('[data-testid="Warning"]').should("exist");
     cy.get('[aria-label="Row-autostart_agent_repair_interval"]')
       .find('[aria-label="SaveAction"]')
       .click();
-    cy.get('[aria-label="Warning"]').should("not.exist");
+    cy.get('[data-testid="Warning"]').should("not.exist");
     cy.get('[aria-label="Row-autostart_agent_repair_interval"]')
       .find(".pf-v5-c-form-control input")
       .should("have.value", "86410");
@@ -405,11 +405,11 @@ describe("Environment", () => {
     cy.get('[aria-label="Row-autostart_agent_repair_splay_time"]')
       .find(".pf-v5-c-form-control")
       .type("{selectAll}610");
-    cy.get('[aria-label="Warning"]').should("exist");
+    cy.get('[data-testid="Warning"]').should("exist");
     cy.get('[aria-label="Row-autostart_agent_repair_splay_time"]')
       .find('[aria-label="SaveAction"]')
       .click();
-    cy.get('[aria-label="Warning"]').should("not.exist");
+    cy.get('[data-testid="Warning"]').should("not.exist");
     cy.get('[aria-label="Row-autostart_agent_repair_splay_time"]')
       .find(".pf-v5-c-form-control input")
       .should("have.value", "610");
@@ -418,21 +418,21 @@ describe("Environment", () => {
     cy.get('[aria-label="Row-autostart_on_start"]')
       .find(".pf-v5-c-switch")
       .click();
-    cy.get('[aria-label="Warning"]').should("exist");
+    cy.get('[data-testid="Warning"]').should("exist");
     cy.get('[aria-label="Row-autostart_on_start"]')
       .find('[aria-label="SaveAction"]')
       .click();
-    cy.get('[aria-label="Warning"]').should("not.exist");
+    cy.get('[data-testid="Warning"]').should("not.exist");
 
     //Change available_versions_to_keep
     cy.get('[aria-label="Row-available_versions_to_keep"]')
       .find(".pf-v5-c-form-control")
       .type("{selectAll}110");
-    cy.get('[aria-label="Warning"]').should("exist");
+    cy.get('[data-testid="Warning"]').should("exist");
     cy.get('[aria-label="Row-available_versions_to_keep"]')
       .find('[aria-label="SaveAction"]')
       .click();
-    cy.get('[aria-label="Warning"]').should("not.exist");
+    cy.get('[data-testid="Warning"]').should("not.exist");
     cy.get('[aria-label="Row-available_versions_to_keep"]')
       .find(".pf-v5-c-form-control input")
       .should("have.value", "110");
@@ -442,11 +442,11 @@ describe("Environment", () => {
       '[aria-label="EnumInput-environment_agent_trigger_methodFilterInput"]',
     ).click();
     cy.get('[role="option"]').contains("push_full_deploy").click();
-    cy.get('[aria-label="Warning"]').should("exist");
+    cy.get('[data-testid="Warning"]').should("exist");
     cy.get('[aria-label="Row-environment_agent_trigger_method"]')
       .find('[aria-label="SaveAction"]')
       .click();
-    cy.get('[aria-label="Warning"]').should("not.exist");
+    cy.get('[data-testid="Warning"]').should("not.exist");
     cy.get(
       '[aria-label="EnumInput-environment_agent_trigger_methodFilterInput"]',
     ).should("have.value", "push_full_deploy");
@@ -458,22 +458,22 @@ describe("Environment", () => {
         .find(".pf-v5-c-switch")
         .click();
 
-      cy.get('[aria-label="Warning"]').should("exist");
+      cy.get('[data-testid="Warning"]').should("exist");
       cy.get('[aria-label="Row-lsm_partial_compile"]')
         .find('[aria-label="SaveAction"]')
         .click();
-      cy.get('[aria-label="Warning"]').should("not.exist");
+      cy.get('[data-testid="Warning"]').should("not.exist");
     }
 
     //change notification_retention
     cy.get('[aria-label="Row-notification_retention"]')
       .find(".pf-v5-c-form-control")
       .type("{selectAll}375");
-    cy.get('[aria-label="Warning"]').should("exist");
+    cy.get('[data-testid="Warning"]').should("exist");
     cy.get('[aria-label="Row-notification_retention"]')
       .find('[aria-label="SaveAction"]')
       .click();
-    cy.get('[aria-label="Warning"]').should("not.exist");
+    cy.get('[data-testid="Warning"]').should("not.exist");
     cy.get('[aria-label="Row-notification_retention"]')
       .find(".pf-v5-c-form-control input")
       .should("have.value", "375");
@@ -482,52 +482,52 @@ describe("Environment", () => {
     cy.get('[aria-label="Row-protected_environment"]')
       .find(".pf-v5-c-switch")
       .click();
-    cy.get('[aria-label="Warning"]').should("exist");
+    cy.get('[data-testid="Warning"]').should("exist");
     cy.get('[aria-label="Row-protected_environment"]')
       .find('[aria-label="SaveAction"]')
       .click();
-    cy.get('[aria-label="Warning"]').should("not.exist");
+    cy.get('[data-testid="Warning"]').should("not.exist");
 
     //Change push_on_auto_deploy
     cy.get('[aria-label="Row-push_on_auto_deploy"]')
       .find(".pf-v5-c-switch")
       .click();
-    cy.get('[aria-label="Warning"]').should("exist");
+    cy.get('[data-testid="Warning"]').should("exist");
     cy.get('[aria-label="Row-push_on_auto_deploy"]')
       .find('[aria-label="SaveAction"]')
       .click();
-    cy.get('[aria-label="Warning"]').should("not.exist");
+    cy.get('[data-testid="Warning"]').should("not.exist");
 
     //Change resource_action_logs_retention
     cy.get('[aria-label="Row-resource_action_logs_retention"]')
       .find(".pf-v5-c-form-control")
       .type("{selectAll}8");
-    cy.get('[aria-label="Warning"]').should("exist");
+    cy.get('[data-testid="Warning"]').should("exist");
     cy.get('[aria-label="Row-resource_action_logs_retention"]')
       .find('[aria-label="SaveAction"]')
       .click();
-    cy.get('[aria-label="Warning"]').should("not.exist");
+    cy.get('[data-testid="Warning"]').should("not.exist");
     cy.get('[aria-label="Row-resource_action_logs_retention"]')
       .find(".pf-v5-c-form-control input")
       .should("have.value", "8");
 
     //change server_compile
     cy.get('[aria-label="Row-server_compile"]').find(".pf-v5-c-switch").click();
-    cy.get('[aria-label="Warning"]').should("exist");
+    cy.get('[data-testid="Warning"]').should("exist");
     cy.get('[aria-label="Row-server_compile"]')
       .find('[aria-label="SaveAction"]')
       .click();
-    cy.get('[aria-label="Warning"]').should("not.exist");
+    cy.get('[data-testid="Warning"]').should("not.exist");
 
     //re-enable to delete env
     cy.get('[aria-label="Row-protected_environment"]')
       .find(".pf-v5-c-switch")
       .click();
-    cy.get('[aria-label="Warning"]').should("exist");
+    cy.get('[data-testid="Warning"]').should("exist");
     cy.get('[aria-label="Row-protected_environment"]')
       .find('[aria-label="SaveAction"]')
       .click();
-    cy.get('[aria-label="Warning"]').should("not.exist");
+    cy.get('[data-testid="Warning"]').should("not.exist");
 
     cy.get(".pf-v5-c-tabs__list")
       .find("button")

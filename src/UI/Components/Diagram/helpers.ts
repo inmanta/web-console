@@ -1,11 +1,11 @@
 import { dia, g, highlighters } from "@inmanta/rappid";
+import { v4 as uuidv4 } from "uuid";
 import {
   EmbeddedEntity,
   InstanceAttributeModel,
   ServiceInstanceModel,
   ServiceModel,
 } from "@/Core";
-import { create_UUID } from "@/Slices/EditInstance/Data";
 import {
   ConnectionRules,
   InstanceForApi,
@@ -354,7 +354,7 @@ export const shapesDataTransform = (
     if (!!instance.attributes && !instance.edits) {
       instance.edits = [
         {
-          edit_id: `${instance.instance_id}_order_update-${create_UUID()}`,
+          edit_id: `${instance.instance_id}_order_update-${uuidv4()}`,
           operation: "replace",
           target: ".",
           value: instance.attributes,

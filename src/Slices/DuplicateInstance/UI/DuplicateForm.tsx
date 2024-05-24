@@ -51,6 +51,7 @@ export const DuplicateForm: React.FC<Props> = ({ serviceEntity, instance }) => {
   ) => {
     //as setState used in setIsDirty doesn't change immediately we cannot use it only before handleRedirect() as it would trigger prompt from ServiceInstanceForm
     setIsDirty(false);
+
     const result = await trigger(fields, attributes);
     if (result.kind === "Left") {
       setIsDirty(true);

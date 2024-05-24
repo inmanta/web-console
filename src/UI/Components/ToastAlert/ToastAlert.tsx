@@ -26,6 +26,7 @@ export const ToastAlert: React.FC<Props> = ({
         data-testid="ToastAlert"
         variant={type}
         title={title}
+        component="h3"
         actionClose={<AlertActionCloseButton onClose={() => setMessage("")} />}
       >
         <StyledMessage>{message}</StyledMessage>

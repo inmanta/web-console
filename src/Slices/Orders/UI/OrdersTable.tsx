@@ -73,9 +73,9 @@ export const OrdersTable: React.FC<Props> = ({
   return (
     <Table {...props} variant={TableVariant.compact}>
       <Thead>
-        <Tr>
+        <Tr aria-hidden>
           {heads}
-          <Th></Th>
+          <Th />
         </Tr>
       </Thead>
       {rows.map((row) => (

@@ -5,6 +5,10 @@ if (Cypress.env("keycloak")) {
     cy.origin("http://127.0.0.1:8080", () => {
       cy.get("[id=username]").type("admin");
       cy.get("[id=password]").type("admin{enter}");
+
+      cy.get("[id=email]").type("admin@admin.com");
+      cy.get("[id=firstName]").type("Admin");
+      cy.get("[id=lastName]").type("Administrator{enter}");
     });
 
     cy.get("h1").contains("Home").should("be.visible");

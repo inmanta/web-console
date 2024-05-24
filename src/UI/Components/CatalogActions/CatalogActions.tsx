@@ -93,8 +93,10 @@ export const CatalogActions: React.FC = () => {
         <StyledParagraph>
           {words("catalog.update.confirmation.p1")}
         </StyledParagraph>
+        <p>
+          <b>{words("catalog.update.confirmation.p2")}</b>
+        </p>
         <ul>
-          {words("catalog.update.confirmation.p2")}
           <li>
             - <b>{words("catalog.update.confirmation.p3")}</b>
           </li>

@@ -3,6 +3,7 @@ import { MemoryRouter } from "react-router-dom";
 import { act, render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
+import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { Either, RemoteData } from "@/Core";
 import {
   QueryResolverImpl,
@@ -24,6 +25,14 @@ import { DependencyProvider } from "@/UI/Dependency";
 import { PrimaryRouteManager } from "@/UI/Routing";
 import * as Mock from "@S/CompileReports/Core/Mock";
 import { Page } from "./Page";
+expect.extend(toHaveNoViolations);
+
+const axe = configureAxe({
+  rules: {
+    // disable landmark rules when testing isolated components.
+    region: { enabled: false },
+  },
+});
 
 function setup() {
   const apiHelper = new DeferredApiHelper();
@@ -81,7 +90,7 @@ test("CompileReportsView shows empty table", async () => {
   });
 
   expect(
-    await screen.findByRole("generic", { name: "CompileReportsView-Loading" }),
+    await screen.findByRole("region", { name: "CompileReportsView-Loading" }),
   ).toBeInTheDocument();
 
   await act(async () => {
@@ -97,6 +106,11 @@ test("CompileReportsView shows empty table", async () => {
   expect(
     await screen.findByRole("generic", { name: "CompileReportsView-Empty" }),
   ).toBeInTheDocument();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("CompileReportsView shows failed table", async () => {
@@ -108,7 +122,7 @@ test("CompileReportsView shows failed table", async () => {
   });
 
   expect(
-    await screen.findByRole("generic", { name: "CompileReportsView-Loading" }),
+    await screen.findByRole("region", { name: "CompileReportsView-Loading" }),
   ).toBeInTheDocument();
 
   await act(async () => {
@@ -116,8 +130,13 @@ test("CompileReportsView shows failed table", async () => {
   });
 
   expect(
-    await screen.findByRole("generic", { name: "CompileReportsView-Failed" }),
+    await screen.findByRole("region", { name: "CompileReportsView-Failed" }),
   ).toBeInTheDocument();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("CompileReportsView shows success table", async () => {
@@ -129,7 +148,7 @@ test("CompileReportsView shows success table", async () => {
   });
 
   expect(
-    await screen.findByRole("generic", { name: "CompileReportsView-Loading" }),
+    await screen.findByRole("region", { name: "CompileReportsView-Loading" }),
   ).toBeInTheDocument();
 
   await act(async () => {
@@ -139,6 +158,11 @@ test("CompileReportsView shows success table", async () => {
   expect(
     await screen.findByRole("grid", { name: "CompileReportsView-Success" }),
   ).toBeInTheDocument();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("CompileReportsView shows updated table", async () => {
@@ -150,7 +174,7 @@ test("CompileReportsView shows updated table", async () => {
   });
 
   expect(
-    await screen.findByRole("generic", { name: "CompileReportsView-Loading" }),
+    await screen.findByRole("region", { name: "CompileReportsView-Loading" }),
   ).toBeInTheDocument();
 
   await act(async () => {
@@ -179,6 +203,11 @@ test("CompileReportsView shows updated table", async () => {
   expect(
     await screen.findByRole("grid", { name: "CompileReportsView-Success" }),
   ).toBeInTheDocument();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("When using the status filter with the Success option then the successful compile reports should be fetched and shown", async () => {
@@ -201,7 +230,7 @@ test("When using the status filter with the Success option then the successful c
 
   await act(async () => {
     await userEvent.click(
-      within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
+      within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
         "button",
         { name: "FilterPicker" },
       ),
@@ -240,6 +269,11 @@ test("When using the status filter with the Success option then the successful c
     name: "Compile Reports Table Row",
   });
   expect(rowsAfter).toHaveLength(3);
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("When using the status filter with the In Progress opiton then the compile reports of in progress compiles should be fetched and shown", async () => {
@@ -262,7 +296,7 @@ test("When using the status filter with the In Progress opiton then the compile 
 
   await act(async () => {
     await userEvent.click(
-      within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
+      within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
         "button",
         { name: "FilterPicker" },
       ),
@@ -308,6 +342,11 @@ test("When using the status filter with the In Progress opiton then the compile 
     name: "Compile Reports Table Row",
   });
   expect(rowsAfter).toHaveLength(3);
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 it("When using the Date filter then the compile reports within the range selected range should be fetched and shown", async () => {
@@ -330,7 +369,7 @@ it("When using the Date filter then the compile reports within the range selecte
 
   await act(async () => {
     await userEvent.click(
-      within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
+      within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
         "button",
         { name: "FilterPicker" },
       ),
@@ -393,6 +432,11 @@ it("When using the Date filter then the compile reports within the range selecte
   expect(
     await screen.findByText("to | 2021/09/30 00:00:00", { exact: false }),
   ).toBeVisible();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("Given CompileReportsView When recompile is triggered Then table is updated", async () => {
@@ -410,6 +454,11 @@ test("Given CompileReportsView When recompile is triggered Then table is updated
   const button = screen.getByRole("button", { name: "RecompileButton" });
 
   expect(button).toBeEnabled();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 
   await act(async () => {
     await userEvent.click(button);

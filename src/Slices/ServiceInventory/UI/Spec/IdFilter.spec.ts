@@ -19,7 +19,7 @@ test("GIVEN The Service Inventory WHEN the user filters on id ('a') THEN only 1 
     );
   });
 
-  const filterBar = screen.getByRole("generic", { name: "FilterBar" });
+  const filterBar = screen.getByRole("toolbar", { name: "FilterBar" });
 
   const picker = within(filterBar).getByRole("button", {
     name: "FilterPicker",

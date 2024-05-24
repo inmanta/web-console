@@ -57,13 +57,13 @@ test("Given the FactsTab When the backend response is an error Then shows failed
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "Facts-Loading" }),
+    await screen.findByRole("region", { name: "Facts-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.left("error"));
 
   expect(
-    await screen.findByRole("generic", { name: "Facts-Failed" }),
+    await screen.findByRole("region", { name: "Facts-Failed" }),
   ).toBeInTheDocument();
 });
 
@@ -72,7 +72,7 @@ test("Given the FactsTab When the backend response is successful Then shows succ
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "Facts-Loading" }),
+    await screen.findByRole("region", { name: "Facts-Loading" }),
   ).toBeInTheDocument();
 
   expect(apiHelper.pendingRequests).toHaveLength(1);

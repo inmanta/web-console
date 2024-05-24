@@ -27,12 +27,16 @@ export const ServiceProvider: React.FunctionComponent<Props> = ({
       notAsked: () => null,
       loading: () => (
         <Wrapper aria-label="ServiceProvider-Loading" name={serviceName}>
-          <LoadingView />
+          <LoadingView ariaLabel="ServiceProvider-Loading" />
         </Wrapper>
       ),
       failed: (error) => (
         <Wrapper aria-label="ServiceProvider-Failed" name={serviceName}>
-          <ErrorView message={error} retry={retry} />
+          <ErrorView
+            message={error}
+            retry={retry}
+            ariaLabel="ServiceProvider-Failed"
+          />
         </Wrapper>
       ),
       success: (service) => <Dependant service={service} />,

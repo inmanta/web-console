@@ -182,8 +182,6 @@ test("ServiceInventory can show resources for instance", async () => {
   expect(screen.getByText("[resource_id_1]")).toBeInTheDocument();
 });
 
-jest.mock("@/UI/Utils/useFeatures");
-
 function setup(expertMode = false, setSortFn: (props) => void = dummySetter) {
   const store = getStoreInstance();
 
@@ -359,7 +357,7 @@ describe("Actions", () => {
     });
 
     const options = await screen.findAllByRole("menuitem");
-    expect(options).toHaveLength(17);
+    expect(options).toHaveLength(18);
 
     await act(async () => {
       await userEvent.click(await screen.findByTestId("forceState"));
@@ -381,6 +379,6 @@ describe("Actions", () => {
     });
 
     const options = await screen.findAllByRole("menuitem");
-    expect(options).toHaveLength(10);
+    expect(options).toHaveLength(11);
   });
 });

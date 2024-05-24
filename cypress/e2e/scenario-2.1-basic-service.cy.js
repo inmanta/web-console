@@ -183,7 +183,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
 
       // The third button in the dropdown should be the edit button.
-      cy.get(".pf-v5-c-menu__item").eq(2).contains("Edit").click();
+      cy.get(".pf-v5-c-menu__item").eq(3).contains("Edit").click();
 
       // check if amount of fields is lesser than create amount.
       cy.get("form").find("input").should("have.length.of.at.most", 11);

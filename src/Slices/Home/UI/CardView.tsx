@@ -88,7 +88,7 @@ const EnvironmentCard: React.FC<EnvironmentCardProps> = ({
         aria-label={"Environment card"}
         data-testid="Environment card"
       >
-        <StyledTitle component="h4">
+        <StyledTitle component="h3">
           {environment.icon ? (
             <StyledIcon
               src={`data:${environment.icon}`}

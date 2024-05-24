@@ -18,6 +18,7 @@ interface Props {
   pageSize: PageSize.Type;
   setPageSize: (size: PageSize.Type) => void;
   setCurrentPage: (currentPage: CurrentPage) => void;
+  variant?: "top" | "bottom";
 }
 
 /**
@@ -30,6 +31,7 @@ export const Provider: React.FC<Props> = ({
   pageSize,
   setPageSize,
   setCurrentPage,
+  variant = "top",
 }) =>
   RemoteData.fold(
     {
@@ -40,7 +42,10 @@ export const Provider: React.FC<Props> = ({
         <StyledPagination
           itemCount={Number(metadata.total)}
           perPage={Number(pageSize.value)}
-          titles={{ perPageSuffix: "" }}
+          titles={{
+            perPageSuffix: "",
+            paginationAriaLabel: `${variant}-Pagination`,
+          }}
           page={
             Math.floor(Number(metadata.before) / Number(metadata.page_size)) + 1
           }
@@ -56,7 +61,8 @@ export const Provider: React.FC<Props> = ({
               value: handlers.prev ? handlers.prev : "",
             })
           }
-          aria-label="PaginationWidget"
+          aria-label={`PaginationWidget-${variant}`}
+          widgetId={`PaginationWidget-${variant}`}
           onPerPageSelect={(
             _event: React.MouseEvent | React.KeyboardEvent | MouseEvent,
             newPerPage: number,
@@ -70,6 +76,7 @@ export const Provider: React.FC<Props> = ({
           }}
           perPageOptions={PaginationPageSizes}
           isCompact
+          variant={variant}
         />
       ),
     },

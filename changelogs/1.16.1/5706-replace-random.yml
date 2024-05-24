@@ -1,0 +1,6 @@
+description: "replace randomUUID function with adequate cryptographic substitute"
+issue-nr: 5706
+change-type: patch
+destination-branches: [master, iso7]
+sections:
+  minor-improvement: "{{description}}"

@@ -1,5 +1,5 @@
 import React, { useCallback, useContext } from "react";
-import "@inmanta/rappid/rappid.css";
+import "@inmanta/rappid/joint-plus.css";
 import { useNavigate } from "react-router-dom";
 import { Button, Flex, FlexItem, Tooltip } from "@patternfly/react-core";
 import styled from "styled-components";
@@ -12,11 +12,13 @@ const Toolbar = ({
   handleDeploy,
   serviceName,
   isDeployDisabled,
+  editable,
 }: {
   openEntityModal: () => void;
   handleDeploy: () => void;
   serviceName: string;
   isDeployDisabled: boolean;
+  editable: boolean;
 }) => {
   const { routeManager } = useContext(DependencyContext);
   const navigate = useNavigate();
@@ -50,42 +52,24 @@ const Toolbar = ({
                   openEntityModal();
                 }}
                 aria-label="new-entity-button"
+                isDisabled={!editable}
               >
-                <img
-                  src={entityIcon}
-                  alt="Create new entity icon"
-                  aria-label="new-entity-icon"
-                />{" "}
-                {words("inventory.addInstance.button")}
+                <Flex alignItems={{ default: "alignItemsCenter" }}>
+                  <FlexItem
+                    spacer={{ default: "spacerXs" }}
+                    style={{ width: "16px", height: "20px" }}
+                  >
+                    <img
+                      src={entityIcon}
+                      alt="Create new entity icon"
+                      aria-label="new-entity-icon"
+                    />
+                  </FlexItem>
+                  <FlexItem>{words("inventory.addInstance.button")}</FlexItem>
+                </Flex>
               </IconButton>
             </Tooltip>
           </FlexItem>
-          {/* <FlexItem>
-            <Tooltip
-              content={words("inventory.instanceComposer.labelButtonTooltip")}
-            >
-              <IconButton
-                variant="secondary"
-                aria-label="label-toggle-button"
-                onClick={(event) => {
-                  document.querySelectorAll(".labels").forEach((label) => {
-                    if (label.classList.contains("-show")) {
-                      label.classList.remove("-show");
-                    } else {
-                      label.classList.add("-show");
-                    }
-                  });
-                  event.currentTarget.blur();
-                }}
-              >
-                <img
-                  src={labelIcon}
-                  alt="Label Toggle Icon"
-                  aria-label="label-toggle-icon"
-                />
-              </IconButton>
-            </Tooltip>
-          </FlexItem> */}
         </Flex>
       </FlexItem>
       <FlexItem>
@@ -100,7 +84,7 @@ const Toolbar = ({
             variant="primary"
             width={200}
             onClick={handleDeploy}
-            isDisabled={isDeployDisabled}
+            isDisabled={isDeployDisabled || !editable}
           >
             {words("deploy")}
           </StyledButton>

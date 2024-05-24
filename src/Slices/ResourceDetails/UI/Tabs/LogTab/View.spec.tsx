@@ -55,7 +55,7 @@ test("GIVEN ResourceLogsView THEN shows resource logs", async () => {
   render(component);
 
   expect(
-    screen.getByRole("generic", { name: "ResourceLogs-Loading" }),
+    screen.getByRole("region", { name: "ResourceLogs-Loading" }),
   ).toBeVisible();
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
