@@ -222,7 +222,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
   setName(name: string, options?: object) {
     const shortenName = util.breakText(
       name,
-      { width: 220, height: 30 },
+      { width: 150, height: 30 },
       {
         "font-size": this.attr("headerLabel/fontSize"),
         "font-family": this.attr("headerLabel/fontFamily"),
