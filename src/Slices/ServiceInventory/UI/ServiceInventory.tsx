@@ -1,4 +1,4 @@
-import React, { useContext, ReactElement } from "react";
+import React, { useContext, ReactElement, createContext } from "react";
 import { RemoteData, ServiceModel, ServiceInstanceParams } from "@/Core";
 import {
   useUrlStateWithFilter,
@@ -43,6 +43,25 @@ const PreppedServiceInventory: React.FC<{ service: ServiceModel }> = ({
   />
 );
 
+interface LabelContextProps {
+  danger: string[];
+  warning: string[];
+  success: string[];
+  info: string[];
+  no_label: string[];
+  onClick: (labels: string[]) => void;
+}
+export const LabelContext = createContext<LabelContextProps>({
+  danger: [],
+  warning: [],
+  success: [],
+  info: [],
+  no_label: [],
+  onClick: (_label) => {
+    // Default to no-op
+    return;
+  },
+});
 export const ServiceInventory: React.FunctionComponent<{
   serviceName: string;
   service: ServiceModel;
@@ -63,19 +82,6 @@ export const ServiceInventory: React.FunctionComponent<{
     route: "Inventory",
   });
 
-  // event listener for filtering which will iterate through service model state to find all states that corresponds with given label string
-  document.addEventListener("group-filtering", (event) => {
-    const label =
-      (event as CustomEvent).detail !== "no label"
-        ? (event as CustomEvent).detail
-        : null;
-
-    const states = service.lifecycle.states
-      .filter((state) => state.label === label)
-      .map((state) => state.name);
-    setFilter({ ...filter, state: states });
-  });
-
   const [filter, setFilter] =
     useUrlStateWithFilter<ServiceInstanceParams.Filter>({ route: "Inventory" });
 
@@ -88,54 +94,72 @@ export const ServiceInventory: React.FunctionComponent<{
     currentPage,
   });
 
+  const filterLabels = (label: string | null) => {
+    return service.lifecycle.states
+      .filter((state) => state.label === label)
+      .map((state) => state.name);
+  };
   return (
-    <Wrapper name={serviceName}>
-      {intro}
-      <TableControls
-        serviceName={serviceName}
-        filter={filter}
-        setFilter={setFilter}
-        service={service}
-        paginationWidget={
-          <PaginationWidget
-            data={data}
-            pageSize={pageSize}
-            setPageSize={setPageSize}
-            setCurrentPage={setCurrentPage}
-          />
-        }
-      />
-      <GetInstancesContext.Provider value={{ refetch: retry }}>
-        {RemoteData.fold(
-          {
-            notAsked: () => null,
-            loading: () => <LoadingView ariaLabel="ServiceInventory-Loading" />,
-            failed: (error) => (
-              <ErrorView
-                message={error}
-                retry={retry}
-                ariaLabel="ServiceInventory-Failed"
-              />
-            ),
-            success: ({ data: instances }) =>
-              instances.length > 0 ? (
-                <TableProvider
-                  aria-label="ServiceInventory-Success"
-                  instances={instances}
-                  serviceEntity={service}
-                  sort={sort}
-                  setSort={setSort}
-                />
-              ) : (
-                <EmptyView
-                  message={words("inventory.empty.message")(serviceName)}
-                  aria-label="ServiceInventory-Empty"
+    <LabelContext.Provider
+      value={{
+        danger: filterLabels("danger"),
+        warning: filterLabels("warning"),
+        success: filterLabels("success"),
+        info: filterLabels("info"),
+        no_label: filterLabels(null),
+        onClick: (labels) => setFilter({ ...filter, state: labels }),
+      }}
+    >
+      <Wrapper name={serviceName}>
+        {intro}
+        <TableControls
+          serviceName={serviceName}
+          filter={filter}
+          setFilter={setFilter}
+          service={service}
+          paginationWidget={
+            <PaginationWidget
+              data={data}
+              pageSize={pageSize}
+              setPageSize={setPageSize}
+              setCurrentPage={setCurrentPage}
+            />
+          }
+        />
+        <GetInstancesContext.Provider value={{ refetch: retry }}>
+          {RemoteData.fold(
+            {
+              notAsked: () => null,
+              loading: () => (
+                <LoadingView ariaLabel="ServiceInventory-Loading" />
+              ),
+              failed: (error) => (
+                <ErrorView
+                  message={error}
+                  retry={retry}
+                  ariaLabel="ServiceInventory-Failed"
                 />
               ),
-          },
-          data,
-        )}
-      </GetInstancesContext.Provider>
-    </Wrapper>
+              success: ({ data: instances }) =>
+                instances.length > 0 ? (
+                  <TableProvider
+                    aria-label="ServiceInventory-Success"
+                    instances={instances}
+                    serviceEntity={service}
+                    sort={sort}
+                    setSort={setSort}
+                  />
+                ) : (
+                  <EmptyView
+                    message={words("inventory.empty.message")(serviceName)}
+                    aria-label="ServiceInventory-Empty"
+                  />
+                ),
+            },
+            data,
+          )}
+        </GetInstancesContext.Provider>
+      </Wrapper>
+    </LabelContext.Provider>
   );
 };

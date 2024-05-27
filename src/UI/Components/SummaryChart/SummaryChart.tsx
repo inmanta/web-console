@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { ChartDonut, ChartLegend } from "@patternfly/react-charts";
 import {
   global_danger_color_100,
@@ -8,6 +8,7 @@ import {
   global_warning_color_100,
 } from "@patternfly/react-tokens";
 import { InstancesByLabel } from "@/Core";
+import { LabelContext } from "@/Slices/ServiceInventory/UI/ServiceInventory";
 import { words } from "@/UI/words";
 
 /**
@@ -28,6 +29,7 @@ interface Props {
  * @returns {JSX.Element} - The rendered SummaryChart component.
  */
 export const SummaryChart: React.FC<Props> = ({ by_label, total }) => {
+  const labelContext = useContext(LabelContext);
   const chartData = getChartData(by_label);
 
   const legendData = chartData.map(({ x, y, color }) => ({
@@ -55,11 +57,14 @@ export const SummaryChart: React.FC<Props> = ({ by_label, total }) => {
                     {
                       target: "labels",
                       mutation: (props) => {
-                        document.dispatchEvent(
-                          new CustomEvent("group-filtering", {
-                            detail: props.datum.name.split(":")[0],
-                          }),
-                        );
+                        let label = props.datum.name.split(":")[0];
+                        label = label === "no label" ? "no_label" : label;
+                        if (
+                          labelContext[label] &&
+                          labelContext[label].length > 0
+                        ) {
+                          labelContext.onClick(labelContext[label]);
+                        }
                       },
                     },
                   ];
@@ -68,8 +73,13 @@ export const SummaryChart: React.FC<Props> = ({ by_label, total }) => {
                   return [
                     {
                       target: "labels",
-                      mutation: () => {
-                        return { style: { cursor: "pointer" } };
+                      mutation: (props) => {
+                        let label = props.datum.name.split(":")[0];
+                        label = label === "no label" ? "no_label" : label;
+                        return labelContext[label] &&
+                          labelContext[label].length > 0
+                          ? { style: { cursor: "pointer" } }
+                          : { style: { cursor: "default" } };
                       },
                     },
                   ];
@@ -92,6 +102,47 @@ export const SummaryChart: React.FC<Props> = ({ by_label, total }) => {
       subTitle={words("catalog.instances")}
       title={total}
       width={350}
+      events={[
+        {
+          target: "data",
+          eventHandlers: {
+            onClick: () => {
+              return [
+                {
+                  target: "data",
+                  mutation: (props) => {
+                    let label = props.datum.x;
+                    label = label === "no label" ? "no_label" : label;
+                    if (labelContext[label] && labelContext[label].length > 0) {
+                      labelContext.onClick(labelContext[label]);
+                    }
+                  },
+                },
+              ];
+            },
+            onMouseEnter: () => {
+              return [
+                {
+                  target: "data",
+                  mutation: (props) => {
+                    let label = props.datum.x;
+                    label = label === "no label" ? "no_label" : label;
+                    return {
+                      style: {
+                        ...props.style,
+                        cursor:
+                          labelContext[label] && labelContext[label].length > 0
+                            ? "pointer"
+                            : "default",
+                      },
+                    };
+                  },
+                },
+              ];
+            },
+          },
+        },
+      ]}
     />
   );
 };
