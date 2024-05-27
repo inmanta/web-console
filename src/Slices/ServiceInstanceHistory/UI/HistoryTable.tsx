@@ -40,7 +40,7 @@ export const HistoryTable: React.FC<Props> = ({ service, logs }) => {
       <Table>
         <Thead>
           <Tr>
-            <Th />
+            <Th aria-hidden />
             {columnHeads.map((head) => (
               <Th key={head}>{head}</Th>
             ))}

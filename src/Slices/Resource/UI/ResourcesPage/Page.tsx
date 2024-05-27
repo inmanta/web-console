@@ -111,6 +111,7 @@ export const Page: React.FC = () => {
                     pageSize={pageSize}
                     setPageSize={setPageSize}
                     setCurrentPage={setCurrentPage}
+                    variant="bottom"
                   />
                 </FlexItem>
               </StyledFlex>

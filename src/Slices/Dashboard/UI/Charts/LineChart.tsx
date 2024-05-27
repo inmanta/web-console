@@ -78,6 +78,7 @@ export const LineChart: React.FC<LineChartProps> = ({
     <div ref={ref}>
       <Chart
         ariaDesc={title}
+        title={title}
         containerComponent={
           <CursorVoronoiContainer
             labels={({ datum }) => chooseWhichLabelToUse(datum)}

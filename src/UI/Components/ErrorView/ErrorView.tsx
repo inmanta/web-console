@@ -14,6 +14,7 @@ import { words } from "@/UI/words";
 
 interface Props {
   message: string;
+  ariaLabel?: string;
   title?: string;
   retry?: () => void;
   delay?: number;
@@ -24,15 +25,16 @@ export const ErrorView: React.FC<Props> = ({
   title,
   retry,
   delay,
+  ariaLabel,
   ...props
 }) => {
   return (
     <Delayed delay={delay}>
-      <EmptyState {...props}>
+      <EmptyState {...props} aria-label={ariaLabel} role="region">
         <EmptyStateHeader
           titleText={<>{title || words("error")}</>}
           icon={<EmptyStateIcon icon={ExclamationTriangleIcon} />}
-          headingLevel="h4"
+          headingLevel="h2"
         />
         <EmptyStateBody>
           <StyledErrorMessage>{message}</StyledErrorMessage>

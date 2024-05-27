@@ -87,6 +87,20 @@ export const FieldInput: React.FC<Props> = ({
   ).useOneTime();
   const [suggestionsList, setSuggestionsList] = useState<string[] | null>(null);
 
+  // Get the controlled value for the field
+  // If the value is an object or an array, it needs to be converted.
+  function getControlledValue(value) {
+    if (value === null || value === undefined) {
+      return "";
+    } else if (Array.isArray(value)) {
+      return value.join(", ");
+    } else if (typeof value === "object") {
+      return JSON.stringify(value);
+    } else {
+      return value;
+    }
+  }
+
   //callback was used to avoid re-render in useEffect used in SelectFormInput
   const getEnumUpdate = useCallback(
     (value) => {
@@ -205,7 +219,9 @@ export const FieldInput: React.FC<Props> = ({
         <TextFormInput
           aria-label={`TextFieldInput-${field.name}`}
           attributeName={field.name}
-          attributeValue={get(formState, makePath(path, field.name)) as string}
+          attributeValue={getControlledValue(
+            get(formState, makePath(path, field.name)),
+          )}
           description={field.description}
           isOptional={field.isOptional}
           shouldBeDisabled={
@@ -428,6 +444,7 @@ const NestedFieldInput: React.FC<NestedProps> = ({
             originalState={originalState}
             getUpdate={getUpdate}
             path={makePath(path, field.name)}
+            suggestions={childField.suggestion}
           />
         ))}
     </StyledFormFieldGroupExpandable>
@@ -595,6 +612,7 @@ const DictListFieldInput: React.FC<DictListProps> = ({
               isNew={addedItemsPaths.includes(
                 `${makePath(path, field.name)}.${index}`,
               )}
+              suggestions={childField.suggestion}
             />
           ))}
         </StyledFormFieldGroupExpandable>

@@ -6,7 +6,19 @@ import {
   TextField,
   BooleanField,
   EnumField,
+  Textarea,
 } from "@/Core";
+
+export const textArea: Textarea = {
+  kind: "Textarea",
+  name: "textarea_field",
+  description: "description",
+  isOptional: true,
+  isDisabled: false,
+  defaultValue: "",
+  inputType: TextInputTypes.text,
+  type: "string",
+};
 
 export const text: TextField = {
   kind: "Text",

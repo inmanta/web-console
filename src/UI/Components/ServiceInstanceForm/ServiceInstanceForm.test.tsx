@@ -14,6 +14,7 @@ import {
   InstanceAttributeModel,
   NestedField,
   TextField,
+  Textarea,
 } from "@/Core";
 import {
   getStoreInstance,
@@ -35,6 +36,7 @@ const setup = (
     | NestedField
     | DictListField
     | EnumField
+    | Textarea
   )[],
   func: undefined | jest.Mock = undefined,
   isEdit = false,
@@ -537,3 +539,50 @@ test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is
     expect.any(Function),
   );
 });
+
+test.only.each`
+  input                  | label                             | newValue
+  ${Test.Field.textArea} | ${"TextareaInput-textarea_field"} | ${"new text"}
+  ${Test.Field.text}     | ${"TextInput-text_field"}         | ${"new text"}
+`(
+  "Given ServiceInstanceForm and InputField WHEN updating the input THEN current value is correctly displayed",
+  async ({ input, label, newValue }) => {
+    const { component } = setup([input], undefined, false, undefined);
+    render(component);
+
+    expect(screen.getByLabelText(label)).toHaveValue("");
+
+    await act(async () => {
+      await userEvent.type(screen.getByLabelText(label), newValue);
+    });
+
+    expect(screen.getByLabelText(label)).toHaveValue(newValue);
+  },
+);
+
+test.each`
+  input                  | label                             | value          | newValue
+  ${Test.Field.textArea} | ${"TextareaInput-textarea_field"} | ${"test text"} | ${"new text"}
+  ${Test.Field.text}     | ${"TextInput-text_field"}         | ${"test text"} | ${"new text"}
+`(
+  "Given ServiceInstanceForm and InputField WHEN updating the input THEN current value is correctly displayed",
+  async ({ input, label, value, newValue }) => {
+    const originalAttributes = {
+      [input.name]: value,
+    };
+    const { component } = setup([input], undefined, false, originalAttributes);
+    render(component);
+
+    expect(screen.getByLabelText(label)).toHaveValue(value);
+
+    await act(async () => {
+      await userEvent.clear(screen.getByLabelText(label));
+      await userEvent.type(
+        screen.getByLabelText(label),
+        "{selectAll}{backspace}" + newValue,
+      );
+    });
+
+    expect(screen.getByLabelText(label)).toHaveValue(newValue);
+  },
+);

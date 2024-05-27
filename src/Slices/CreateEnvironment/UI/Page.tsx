@@ -15,12 +15,9 @@ export const Page: React.FC = () => {
       {RemoteData.fold(
         {
           notAsked: () => null,
-          loading: () => <LoadingView aria-label="CreateEnvironment-Loading" />,
+          loading: () => <LoadingView ariaLabel="CreateEnvironment-Loading" />,
           failed: (message) => (
-            <ErrorView
-              message={message}
-              aria-label="CreateEnvironment-Failed"
-            />
+            <ErrorView message={message} ariaLabel="CreateEnvironment-Failed" />
           ),
           success: (projects) => (
             <CreateEnvironmentForm

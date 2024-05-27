@@ -9,7 +9,6 @@ import {
   a as InstanceAttributesA,
   b as InstanceAttributesB,
 } from "@/Test/Data/ServiceInstance/Attributes";
-import * as uuidApi from "../../../Slices/EditInstance/Data/CommandManager";
 import {
   childModel,
   containerModel,
@@ -40,7 +39,10 @@ import {
   TypeEnum,
 } from "./interfaces";
 import { Link, ServiceEntityBlock } from "./shapes";
-jest.spyOn(uuidApi, "create_UUID").mockReturnValue("1");
+
+jest.mock("uuid", () => ({
+  v4: jest.fn(() => "1"),
+}));
 
 describe("extractRelationsIds", () => {
   const serviceInstanceForThirdTest = {

@@ -56,7 +56,7 @@ export const DeleteAction: React.FC<Props> = ({
       />
       <ActionDisabledTooltip
         isDisabled={isDisabled || isHalted}
-        ariaLabel={words("inventory.deleteInstance.button")}
+        testingId={words("inventory.deleteInstance.button")}
         tooltipContent={
           isHalted
             ? words("environment.halt.tooltip")

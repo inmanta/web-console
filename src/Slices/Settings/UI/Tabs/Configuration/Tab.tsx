@@ -18,9 +18,9 @@ export const Tab: React.FC<Props> = ({ environmentId }) => {
   return RemoteData.fold(
     {
       notAsked: () => null,
-      loading: () => <LoadingView aria-label="EnvironmentSettings-Loading" />,
+      loading: () => <LoadingView ariaLabel="EnvironmentSettings-Loading" />,
       failed: (error) => (
-        <ErrorView aria-label="EnvironmentSettings-Failed" message={error} />
+        <ErrorView ariaLabel="EnvironmentSettings-Failed" message={error} />
       ),
       success: (settings) => <Provider settings={settings} />,
     },

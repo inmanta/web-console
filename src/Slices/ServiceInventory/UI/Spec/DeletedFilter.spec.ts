@@ -19,7 +19,7 @@ test("GIVEN The Service Inventory WHEN the user filters on deleted ('Only') THEN
     );
   });
 
-  const filterBar = screen.getByRole("generic", { name: "FilterBar" });
+  const filterBar = screen.getByRole("toolbar", { name: "FilterBar" });
 
   const picker = within(filterBar).getByRole("button", {
     name: "FilterPicker",

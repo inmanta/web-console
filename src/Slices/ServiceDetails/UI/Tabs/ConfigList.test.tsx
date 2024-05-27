@@ -1,6 +1,7 @@
 import React from "react";
 import { act, render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
+import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { Config, EnvironmentDetails, RemoteData } from "@/Core";
 import {
   BaseApiHelper,
@@ -17,6 +18,15 @@ import {
 } from "@/Test";
 import { DependencyProvider, EnvironmentModifierImpl } from "@/UI/Dependency";
 import { ConfigList } from "./ConfigList";
+
+expect.extend(toHaveNoViolations);
+
+const axe = configureAxe({
+  rules: {
+    // disable landmark rules when testing isolated components.
+    region: { enabled: false },
+  },
+});
 
 function setup() {
   const store = getStoreInstance();
@@ -65,4 +75,9 @@ it("Config Details takes environment halted status in account", async () => {
   expect(
     await screen.findByRole("checkbox", { name: "enabled-True" }),
   ).toBeDisabled();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });

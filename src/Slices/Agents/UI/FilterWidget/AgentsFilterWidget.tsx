@@ -42,7 +42,7 @@ export const AgentsFilterWidget: React.FC<Props> = ({ filter, setFilter }) => {
     });
 
   return (
-    <ToolbarGroup variant="filter-group" aria-label="FilterBar">
+    <ToolbarGroup variant="filter-group" aria-label="FilterBar" role="toolbar">
       <FilterPicker
         setFilterKind={setFilterKind}
         filterKind={filterKind}

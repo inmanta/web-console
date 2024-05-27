@@ -125,7 +125,7 @@ test("GIVEN ServiceDetails WHEN click on callbacks tab THEN shows callbacks tab"
   });
 
   expect(
-    screen.getByRole("generic", { name: "Callbacks-Loading" }),
+    screen.getByRole("region", { name: "Callbacks-Loading" }),
   ).toBeVisible();
 
   await act(async () => {
