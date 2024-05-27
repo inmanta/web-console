@@ -375,7 +375,7 @@ export const Link = shapes.standard.Link.define(
   {
     // static
     attributes: {
-      autoOrient: {
+      "auto-orient": {
         qualify: function () {
           return (this as any).model.isLink();
         },
