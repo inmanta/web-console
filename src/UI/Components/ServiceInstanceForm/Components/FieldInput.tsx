@@ -170,9 +170,7 @@ export const FieldInput: React.FC<Props> = ({
         <TextListFormInput
           aria-label={`TextFieldInput-${field.name}`}
           attributeName={field.name}
-          attributeValue={
-            get(formState, makePath(path, field.name).split(".")) as string[]
-          }
+          attributeValue={get(formState, makePath(path, field.name).split("."))}
           description={field.description}
           isOptional={field.isOptional}
           shouldBeDisabled={

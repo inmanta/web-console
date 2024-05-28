@@ -1,5 +1,13 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { ActionGroup, Alert, Button, Form } from "@patternfly/react-core";
+import { Editor } from "@monaco-editor/react";
+import {
+  ActionGroup,
+  Alert,
+  Button,
+  Form,
+  ToggleGroup,
+  ToggleGroupItem,
+} from "@patternfly/react-core";
 import { set } from "lodash-es";
 import styled from "styled-components";
 import { InstanceAttributeModel, Field } from "@/Core";
@@ -84,6 +92,8 @@ export const ServiceInstanceForm: React.FC<Props> = ({
 
   const [isDirty, setIsDirty] = useState(false);
   const [shouldPerformCancel, setShouldCancel] = useState(false);
+  const [isForm, setIsForm] = useState(true);
+  const [editorState, setEditorState] = useState("");
 
   usePrompt(words("notification.instanceForm.prompt"), isDirty);
 
@@ -134,13 +144,20 @@ export const ServiceInstanceForm: React.FC<Props> = ({
     event.preventDefault();
   };
 
+  const handleEditorChange = (value, _event) => {
+    setIsDirty(true);
+    setEditorState(value);
+  };
+
   /**
    * Handle confirmation action by triggering form submission and updating dirty state.
    *
    * @returns {void}
    */
   const onConfirm = () =>
-    onSubmit(formState, (value: boolean) => setIsDirty(value));
+    onSubmit(isForm ? formState : JSON.parse(editorState), (value: boolean) =>
+      setIsDirty(value),
+    );
 
   useEffect(() => {
     if (shouldPerformCancel) {
@@ -150,18 +167,43 @@ export const ServiceInstanceForm: React.FC<Props> = ({
 
   return (
     <StyledForm onSubmit={preventDefault}>
-      {fields.map((field) => (
-        <FieldInput
-          key={field.name}
-          field={field}
-          formState={formState}
-          originalState={originalState}
-          getUpdate={getUpdate}
-          path={null}
-          suggestions={field.suggestion}
+      <ToggleGroup aria-label="form-editor-toggle-group">
+        <ToggleGroupItem
+          text="Form"
+          key={0}
+          buttonId="formButton"
+          isSelected={isForm}
+          isDisabled={!isForm && isDirty}
+          onChange={() => setIsForm(true)}
         />
-      ))}
-
+        <ToggleGroupItem
+          text="Editor"
+          key={1}
+          buttonId="editorButton"
+          isSelected={!isForm}
+          onChange={() => setIsForm(false)}
+        />
+      </ToggleGroup>
+      {!isForm ? (
+        <Editor
+          height="50vh"
+          defaultLanguage="json"
+          defaultValue={JSON.stringify(formState, null, 2)}
+          onChange={handleEditorChange}
+        />
+      ) : (
+        fields.map((field) => (
+          <FieldInput
+            key={field.name}
+            field={field}
+            formState={formState}
+            originalState={originalState}
+            getUpdate={getUpdate}
+            path={null}
+            suggestions={field.suggestion}
+          />
+        ))
+      )}
       {fields.length <= 0 && (
         <Alert
           variant="info"
