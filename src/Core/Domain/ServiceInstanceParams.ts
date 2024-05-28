@@ -22,6 +22,7 @@ export interface Filter {
   id?: string[];
   identity?: { key: string; value: string };
   state?: string[];
+  id_or_service_identity?: string;
 }
 
 export type DeletedRule = "Include" | "Only" | undefined;

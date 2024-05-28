@@ -39,10 +39,8 @@ const filterToRaw = (filter: Filter) => {
     deleted,
     attributeSetEmpty: attribute_set_empty,
     attributeSetNotEmpty: attribute_set_not_empty,
-    identity,
+    id_or_service_identity,
   } = filter;
-
-  const identityAttribute = identity ? { [identity.key]: identity.value } : {};
 
   return {
     id,
@@ -50,6 +48,6 @@ const filterToRaw = (filter: Filter) => {
     deleted: deleted === "Only" ? true : undefined,
     attribute_set_empty,
     attribute_set_not_empty,
-    ...identityAttribute,
+    id_or_service_identity,
   };
 };

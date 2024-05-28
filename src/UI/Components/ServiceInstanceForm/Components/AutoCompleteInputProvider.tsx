@@ -41,12 +41,9 @@ export const AutoCompleteInputProvider: React.FC<Props> = ({
   });
 
   const onSearchTextChanged = (searchText: string) => {
-    if (serviceIdentity) {
-      setFilter({ identity: { key: serviceIdentity, value: searchText } });
-    } else {
-      setFilter({ id: [searchText] });
-    }
+    setFilter({ id_or_service_identity: searchText });
   };
+
   const selectedValue = getCurrentValue(
     attributeValue,
     filter,
