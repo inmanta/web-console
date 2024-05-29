@@ -9,10 +9,10 @@ import {
   getStoreInstance,
   KeycloakAuthHelper,
 } from "@/Data";
+import { ServiceInventoryContext } from "@/Slices/ServiceInventory/UI/ServiceInventory";
 import { DeferredApiHelper, dependencies, ServiceInstance } from "@/Test";
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
-import { GetInstancesContext } from "../../../GetInstancesContext";
 import { DestroyAction } from "./DestroyAction";
 
 function setup() {
@@ -41,7 +41,17 @@ function setup() {
             commandResolver,
           }}
         >
-          <GetInstancesContext.Provider value={{ refetch }}>
+          <ServiceInventoryContext.Provider
+            value={{
+              danger: [],
+              warning: [],
+              success: [],
+              info: [],
+              no_label: [],
+              onClick: jest.fn(),
+              refetch,
+            }}
+          >
             <DestroyAction
               id={ServiceInstance.a.id}
               instance_identity={
@@ -51,7 +61,7 @@ function setup() {
               version={ServiceInstance.a.version}
               service_entity={ServiceInstance.a.service_entity}
             />
-          </GetInstancesContext.Provider>
+          </ServiceInventoryContext.Provider>
         </DependencyProvider>
       </StoreProvider>
     ),

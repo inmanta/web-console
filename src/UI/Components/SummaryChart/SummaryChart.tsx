@@ -8,7 +8,7 @@ import {
   global_warning_color_100,
 } from "@patternfly/react-tokens";
 import { InstancesByLabel } from "@/Core";
-import { LabelContext } from "@/Slices/ServiceInventory/UI/ServiceInventory";
+import { ServiceInventoryContext } from "@/Slices/ServiceInventory/UI/ServiceInventory";
 import { words } from "@/UI/words";
 
 /**
@@ -29,7 +29,7 @@ interface Props {
  * @returns {JSX.Element} - The rendered SummaryChart component.
  */
 export const SummaryChart: React.FC<Props> = ({ by_label, total }) => {
-  const labelContext = useContext(LabelContext);
+  const inventoryContext = useContext(ServiceInventoryContext);
   const chartData = getChartData(by_label);
 
   const legendData = chartData
@@ -40,7 +40,7 @@ export const SummaryChart: React.FC<Props> = ({ by_label, total }) => {
     .filter(({ name }) => {
       let label = name.split(":")[0];
       label = label === "no label" ? "no_label" : label;
-      return labelContext[label] && labelContext[label].length > 0;
+      return inventoryContext[label] && inventoryContext[label].length > 0;
     });
   const colorScale = chartData.map((dataPoint) => dataPoint.color);
 
@@ -64,7 +64,7 @@ export const SummaryChart: React.FC<Props> = ({ by_label, total }) => {
                       mutation: (props) => {
                         let label = props.datum.name.split(":")[0];
                         label = label === "no label" ? "no_label" : label;
-                        labelContext.onClick(labelContext[label]);
+                        inventoryContext.onClick(inventoryContext[label]);
                       },
                     },
                   ];
@@ -118,7 +118,7 @@ export const SummaryChart: React.FC<Props> = ({ by_label, total }) => {
                   mutation: (props) => {
                     let label = props.datum.x;
                     label = label === "no label" ? "no_label" : label;
-                    labelContext.onClick(labelContext[label]);
+                    inventoryContext.onClick(inventoryContext[label]);
                   },
                 },
               ];
@@ -134,7 +134,8 @@ export const SummaryChart: React.FC<Props> = ({ by_label, total }) => {
                       style: {
                         ...props.style,
                         cursor:
-                          labelContext[label] && labelContext[label].length > 0
+                          inventoryContext[label] &&
+                          inventoryContext[label].length > 0
                             ? "pointer"
                             : "default",
                       },

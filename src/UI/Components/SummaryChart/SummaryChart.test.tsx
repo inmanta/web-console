@@ -2,7 +2,7 @@ import assert from "assert";
 import React from "react";
 import { act, render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { LabelContext } from "@/Slices/ServiceInventory/UI/ServiceInventory";
+import { ServiceInventoryContext } from "@/Slices/ServiceInventory/UI/ServiceInventory";
 import { Service } from "@/Test";
 import { words } from "@/UI/words";
 import { SummaryChart } from "./SummaryChart";
@@ -35,7 +35,7 @@ test("SummaryChart renders with no instances", () => {
 test("SummaryChart displays only labels summary of the categories that can exist", async () => {
   const testFn = jest.fn();
   render(
-    <LabelContext.Provider
+    <ServiceInventoryContext.Provider
       value={{
         danger: ["test1"],
         warning: ["test2"],
@@ -43,6 +43,7 @@ test("SummaryChart displays only labels summary of the categories that can exist
         info: [],
         no_label: [],
         onClick: testFn,
+        refetch: jest.fn(),
       }}
     >
       <SummaryChart
@@ -50,7 +51,7 @@ test("SummaryChart displays only labels summary of the categories that can exist
         total="0"
       />
       ,
-    </LabelContext.Provider>,
+    </ServiceInventoryContext.Provider>,
   );
 
   expect(screen.queryByText("success: 0")).not.toBeInTheDocument();
@@ -60,7 +61,7 @@ test("SummaryChart displays only labels summary of the categories that can exist
 test("SummaryChart labels displayed are being clickable with callback passing labels array for the filtering", async () => {
   const testFn = jest.fn();
   render(
-    <LabelContext.Provider
+    <ServiceInventoryContext.Provider
       value={{
         danger: ["test1"],
         warning: ["test2"],
@@ -68,6 +69,7 @@ test("SummaryChart labels displayed are being clickable with callback passing la
         info: [],
         no_label: [],
         onClick: testFn,
+        refetch: jest.fn(),
       }}
     >
       <SummaryChart
@@ -75,7 +77,7 @@ test("SummaryChart labels displayed are being clickable with callback passing la
         total="0"
       />
       ,
-    </LabelContext.Provider>,
+    </ServiceInventoryContext.Provider>,
   );
   await act(async () => {
     await userEvent.click(screen.getByText("danger: 0"));

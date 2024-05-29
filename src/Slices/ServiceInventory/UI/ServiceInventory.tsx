@@ -17,7 +17,6 @@ import { DependencyContext } from "@/UI/Dependency";
 import { useRouteParams } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { Chart, TableControls } from "./Components";
-import { GetInstancesContext } from "./GetInstancesContext";
 import { TableProvider } from "./TableProvider";
 import { Wrapper } from "./Wrapper";
 
@@ -43,25 +42,31 @@ const PreppedServiceInventory: React.FC<{ service: ServiceModel }> = ({
   />
 );
 
-interface LabelContextProps {
+interface ServiceInventoryContextProps {
   danger: string[];
   warning: string[];
   success: string[];
   info: string[];
   no_label: string[];
   onClick: (labels: string[]) => void;
+  refetch: () => void;
 }
-export const LabelContext = createContext<LabelContextProps>({
-  danger: [],
-  warning: [],
-  success: [],
-  info: [],
-  no_label: [],
-  onClick: (_label) => {
-    // Default to no-op
-    return;
-  },
-});
+export const ServiceInventoryContext =
+  createContext<ServiceInventoryContextProps>({
+    danger: [],
+    warning: [],
+    success: [],
+    info: [],
+    no_label: [],
+    onClick: (_label) => {
+      // Default to no-op
+      return;
+    },
+    refetch: () => {
+      // Default to no-op
+      return;
+    },
+  });
 export const ServiceInventory: React.FunctionComponent<{
   serviceName: string;
   service: ServiceModel;
@@ -100,7 +105,7 @@ export const ServiceInventory: React.FunctionComponent<{
       .map((state) => state.name);
   };
   return (
-    <LabelContext.Provider
+    <ServiceInventoryContext.Provider
       value={{
         danger: filterLabels("danger"),
         warning: filterLabels("warning"),
@@ -108,6 +113,7 @@ export const ServiceInventory: React.FunctionComponent<{
         info: filterLabels("info"),
         no_label: filterLabels(null),
         onClick: (labels) => setFilter({ ...filter, state: labels }),
+        refetch: retry,
       }}
     >
       <Wrapper name={serviceName}>
@@ -126,40 +132,36 @@ export const ServiceInventory: React.FunctionComponent<{
             />
           }
         />
-        <GetInstancesContext.Provider value={{ refetch: retry }}>
-          {RemoteData.fold(
-            {
-              notAsked: () => null,
-              loading: () => (
-                <LoadingView ariaLabel="ServiceInventory-Loading" />
-              ),
-              failed: (error) => (
-                <ErrorView
-                  message={error}
-                  retry={retry}
-                  ariaLabel="ServiceInventory-Failed"
+        {RemoteData.fold(
+          {
+            notAsked: () => null,
+            loading: () => <LoadingView ariaLabel="ServiceInventory-Loading" />,
+            failed: (error) => (
+              <ErrorView
+                message={error}
+                retry={retry}
+                ariaLabel="ServiceInventory-Failed"
+              />
+            ),
+            success: ({ data: instances }) =>
+              instances.length > 0 ? (
+                <TableProvider
+                  aria-label="ServiceInventory-Success"
+                  instances={instances}
+                  serviceEntity={service}
+                  sort={sort}
+                  setSort={setSort}
+                />
+              ) : (
+                <EmptyView
+                  message={words("inventory.empty.message")(serviceName)}
+                  aria-label="ServiceInventory-Empty"
                 />
               ),
-              success: ({ data: instances }) =>
-                instances.length > 0 ? (
-                  <TableProvider
-                    aria-label="ServiceInventory-Success"
-                    instances={instances}
-                    serviceEntity={service}
-                    sort={sort}
-                    setSort={setSort}
-                  />
-                ) : (
-                  <EmptyView
-                    message={words("inventory.empty.message")(serviceName)}
-                    aria-label="ServiceInventory-Empty"
-                  />
-                ),
-            },
-            data,
-          )}
-        </GetInstancesContext.Provider>
+          },
+          data,
+        )}
       </Wrapper>
-    </LabelContext.Provider>
+    </ServiceInventoryContext.Provider>
   );
 };

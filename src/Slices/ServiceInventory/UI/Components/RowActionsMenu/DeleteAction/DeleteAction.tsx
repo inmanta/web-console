@@ -2,6 +2,7 @@ import React, { useContext, useState } from "react";
 import { MenuItem, Modal } from "@patternfly/react-core";
 import { TrashAltIcon } from "@patternfly/react-icons";
 import { Maybe, VersionedServiceInstanceIdentifier } from "@/Core";
+import { ServiceInventoryContext } from "@/Slices/ServiceInventory/UI/ServiceInventory";
 import {
   ToastAlert,
   ActionDisabledTooltip,
@@ -9,7 +10,6 @@ import {
 } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
-import { GetInstancesContext } from "@S/ServiceInventory/UI/GetInstancesContext";
 
 interface Props extends VersionedServiceInstanceIdentifier {
   instance_identity: string;
@@ -30,7 +30,7 @@ export const DeleteAction: React.FC<Props> = ({
   const [errorMessage, setErrorMessage] = useState("");
   const { commandResolver, environmentModifier } =
     useContext(DependencyContext);
-  const { refetch } = useContext(GetInstancesContext);
+  const { refetch } = useContext(ServiceInventoryContext);
 
   const trigger = commandResolver.useGetTrigger<"DeleteInstance">({
     kind: "DeleteInstance",
