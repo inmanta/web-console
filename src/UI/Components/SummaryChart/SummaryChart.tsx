@@ -32,11 +32,16 @@ export const SummaryChart: React.FC<Props> = ({ by_label, total }) => {
   const labelContext = useContext(LabelContext);
   const chartData = getChartData(by_label);
 
-  const legendData = chartData.map(({ x, y, color }) => ({
-    name: `${x}: ${y}`,
-    symbol: { fill: color },
-  }));
-
+  const legendData = chartData
+    .map(({ x, y, color }) => ({
+      name: `${x}: ${y}`,
+      symbol: { fill: color },
+    }))
+    .filter(({ name }) => {
+      let label = name.split(":")[0];
+      label = label === "no label" ? "no_label" : label;
+      return labelContext[label] && labelContext[label].length > 0;
+    });
   const colorScale = chartData.map((dataPoint) => dataPoint.color);
 
   return (
@@ -59,12 +64,7 @@ export const SummaryChart: React.FC<Props> = ({ by_label, total }) => {
                       mutation: (props) => {
                         let label = props.datum.name.split(":")[0];
                         label = label === "no label" ? "no_label" : label;
-                        if (
-                          labelContext[label] &&
-                          labelContext[label].length > 0
-                        ) {
-                          labelContext.onClick(labelContext[label]);
-                        }
+                        labelContext.onClick(labelContext[label]);
                       },
                     },
                   ];
@@ -73,14 +73,19 @@ export const SummaryChart: React.FC<Props> = ({ by_label, total }) => {
                   return [
                     {
                       target: "labels",
-                      mutation: (props) => {
-                        let label = props.datum.name.split(":")[0];
-                        label = label === "no label" ? "no_label" : label;
-                        return labelContext[label] &&
-                          labelContext[label].length > 0
-                          ? { style: { cursor: "pointer" } }
-                          : { style: { cursor: "default" } };
-                      },
+                      mutation: () => ({
+                        style: { cursor: "pointer", fontWeight: 700 },
+                      }),
+                    },
+                  ];
+                },
+                onMouseLeave: () => {
+                  return [
+                    {
+                      target: "labels",
+                      mutation: () => ({
+                        style: { fontWeight: 500 },
+                      }),
                     },
                   ];
                 },
@@ -113,9 +118,7 @@ export const SummaryChart: React.FC<Props> = ({ by_label, total }) => {
                   mutation: (props) => {
                     let label = props.datum.x;
                     label = label === "no label" ? "no_label" : label;
-                    if (labelContext[label] && labelContext[label].length > 0) {
-                      labelContext.onClick(labelContext[label]);
-                    }
+                    labelContext.onClick(labelContext[label]);
                   },
                 },
               ];

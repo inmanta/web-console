@@ -32,7 +32,32 @@ test("SummaryChart renders with no instances", () => {
   ).toBeVisible();
 });
 
-test("SummaryChart renders with no instances", async () => {
+test("SummaryChart displays only labels summary of the categories that can exist", async () => {
+  const testFn = jest.fn();
+  render(
+    <LabelContext.Provider
+      value={{
+        danger: ["test1"],
+        warning: ["test2"],
+        success: [],
+        info: [],
+        no_label: [],
+        onClick: testFn,
+      }}
+    >
+      <SummaryChart
+        by_label={{ danger: 0, no_label: 0, warning: 0, info: 0, success: 0 }}
+        total="0"
+      />
+      ,
+    </LabelContext.Provider>,
+  );
+
+  expect(screen.queryByText("success: 0")).not.toBeInTheDocument();
+  expect(screen.queryByText("warning: 0")).toBeVisible();
+});
+
+test("SummaryChart labels displayed are being clickable with callback passing labels array for the filtering", async () => {
   const testFn = jest.fn();
   render(
     <LabelContext.Provider
@@ -58,12 +83,6 @@ test("SummaryChart renders with no instances", async () => {
 
   expect(testFn).toHaveBeenCalledTimes(1);
   expect(testFn).toHaveBeenCalledWith(["test1"]);
-
-  await act(async () => {
-    await userEvent.click(screen.getByText("success: 0"));
-  });
-
-  expect(testFn).toHaveBeenCalledTimes(1);
 
   await act(async () => {
     await userEvent.click(screen.getByText("warning: 0"));
