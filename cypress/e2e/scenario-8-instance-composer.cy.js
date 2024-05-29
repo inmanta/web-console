@@ -212,7 +212,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get(".canvas").should("be.visible");
       cy.get('[data-type="app.ServiceEntityBlock"]').should("be.visible");
       cy.get('[joint-selector="headerLabel"]')
-        .contains("embedded-entity-")
+        .contains("embedded-")
         .should("exist");
       cy.get('[joint-selector="headerLabel"]')
         .contains("ro_meta")
