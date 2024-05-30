@@ -120,7 +120,7 @@ export const SingleTextSelect: React.FC<Props> = ({
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [options]);
+  }, [options, selected]);
 
   const onToggleClick = () => {
     setIsOpen(!isOpen);
