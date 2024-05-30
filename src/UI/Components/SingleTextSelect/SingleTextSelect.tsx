@@ -96,11 +96,6 @@ export const SingleTextSelect: React.FC<Props> = ({
   }, [filterValue]);
 
   useEffect(() => {
-    setInputValue(getDisplayValue(selected));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selected]);
-
-  useEffect(() => {
     if (options.length === 0 && !hasCreation) {
       setSelectOptions([
         {
@@ -119,6 +114,10 @@ export const SingleTextSelect: React.FC<Props> = ({
       ]);
     } else {
       setSelectOptions(options);
+
+      if (inputValue && inputValue === selected) {
+        setInputValue(getDisplayValue(selected));
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [options]);
