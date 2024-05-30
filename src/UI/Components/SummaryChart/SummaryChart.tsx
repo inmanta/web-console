@@ -29,7 +29,7 @@ interface Props {
  * @returns {JSX.Element} - The rendered SummaryChart component.
  */
 export const SummaryChart: React.FC<Props> = ({ by_label, total }) => {
-  const inventoryContext = useContext(ServiceInventoryContext);
+  const { labels, onClick } = useContext(ServiceInventoryContext);
   const chartData = getChartData(by_label);
 
   const legendData = chartData
@@ -40,7 +40,7 @@ export const SummaryChart: React.FC<Props> = ({ by_label, total }) => {
     .filter(({ name }) => {
       let label = name.split(":")[0];
       label = label === "no label" ? "no_label" : label;
-      return inventoryContext[label] && inventoryContext[label].length > 0;
+      return labels[label] && labels[label].length > 0;
     });
   const colorScale = chartData.map((dataPoint) => dataPoint.color);
 
@@ -64,7 +64,7 @@ export const SummaryChart: React.FC<Props> = ({ by_label, total }) => {
                       mutation: (props) => {
                         let label = props.datum.name.split(":")[0];
                         label = label === "no label" ? "no_label" : label;
-                        inventoryContext.onClick(inventoryContext[label]);
+                        onClick(labels[label]);
                       },
                     },
                   ];
@@ -118,7 +118,7 @@ export const SummaryChart: React.FC<Props> = ({ by_label, total }) => {
                   mutation: (props) => {
                     let label = props.datum.x;
                     label = label === "no label" ? "no_label" : label;
-                    inventoryContext.onClick(inventoryContext[label]);
+                    onClick(labels[label]);
                   },
                 },
               ];
@@ -134,8 +134,7 @@ export const SummaryChart: React.FC<Props> = ({ by_label, total }) => {
                       style: {
                         ...props.style,
                         cursor:
-                          inventoryContext[label] &&
-                          inventoryContext[label].length > 0
+                          labels[label] && labels[label].length > 0
                             ? "pointer"
                             : "default",
                       },

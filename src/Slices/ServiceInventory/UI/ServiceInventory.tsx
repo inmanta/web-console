@@ -43,21 +43,25 @@ const PreppedServiceInventory: React.FC<{ service: ServiceModel }> = ({
 );
 
 interface ServiceInventoryContextProps {
-  danger: string[];
-  warning: string[];
-  success: string[];
-  info: string[];
-  no_label: string[];
+  labels: {
+    danger: string[];
+    warning: string[];
+    success: string[];
+    info: string[];
+    no_label: string[];
+  };
   onClick: (labels: string[]) => void;
   refetch: () => void;
 }
 export const ServiceInventoryContext =
   createContext<ServiceInventoryContextProps>({
-    danger: [],
-    warning: [],
-    success: [],
-    info: [],
-    no_label: [],
+    labels: {
+      danger: [],
+      warning: [],
+      success: [],
+      info: [],
+      no_label: [],
+    },
     onClick: (_label) => {
       // Default to no-op
       return;
@@ -107,11 +111,13 @@ export const ServiceInventory: React.FunctionComponent<{
   return (
     <ServiceInventoryContext.Provider
       value={{
-        danger: filterLabels("danger"),
-        warning: filterLabels("warning"),
-        success: filterLabels("success"),
-        info: filterLabels("info"),
-        no_label: filterLabels(null),
+        labels: {
+          danger: filterLabels("danger"),
+          warning: filterLabels("warning"),
+          success: filterLabels("success"),
+          info: filterLabels("info"),
+          no_label: filterLabels(null),
+        },
         onClick: (labels) => setFilter({ ...filter, state: labels }),
         refetch: retry,
       }}

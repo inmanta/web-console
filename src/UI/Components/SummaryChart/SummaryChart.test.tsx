@@ -37,11 +37,13 @@ test("SummaryChart displays only labels summary of the categories that can exist
   render(
     <ServiceInventoryContext.Provider
       value={{
-        danger: ["test1"],
-        warning: ["test2"],
-        success: [],
-        info: [],
-        no_label: [],
+        labels: {
+          danger: ["test1"],
+          warning: ["test2"],
+          success: [],
+          info: [],
+          no_label: [],
+        },
         onClick: testFn,
         refetch: jest.fn(),
       }}
@@ -63,11 +65,13 @@ test("SummaryChart labels displayed are being clickable with callback passing la
   render(
     <ServiceInventoryContext.Provider
       value={{
-        danger: ["test1"],
-        warning: ["test2"],
-        success: [],
-        info: [],
-        no_label: [],
+        labels: {
+          danger: ["test1"],
+          warning: ["test2"],
+          success: [],
+          info: [],
+          no_label: [],
+        },
         onClick: testFn,
         refetch: jest.fn(),
       }}

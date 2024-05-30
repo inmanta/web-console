@@ -43,11 +43,13 @@ function setup() {
         >
           <ServiceInventoryContext.Provider
             value={{
-              danger: [],
-              warning: [],
-              success: [],
-              info: [],
-              no_label: [],
+              labels: {
+                danger: [],
+                warning: [],
+                success: [],
+                info: [],
+                no_label: [],
+              },
               onClick: jest.fn(),
               refetch,
             }}
