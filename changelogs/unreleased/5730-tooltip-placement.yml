@@ -1,0 +1,6 @@
+description: Improve the placement of the tooltip in the Resource Discovery page.
+issue-nr: 5730
+change-type: patch
+destination-branches: [master, iso7]
+sections:
+  minor-improvement: "{{description}}"
