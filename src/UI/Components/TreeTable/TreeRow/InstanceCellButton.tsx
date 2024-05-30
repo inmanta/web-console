@@ -25,19 +25,25 @@ export const InstanceCellButton: React.FC<Props> = ({
       notAsked: () => null,
       failed: () => <>{id}</>,
       loading: () => <Spinner size="sm" />,
-      success: ({ service_identity_attribute_value }) => (
-        <Button
-          variant="link"
-          isInline
-          onClick={
-            serviceName ? () => onClick(id, serviceName) : () => onClick(id)
-          }
-        >
-          {service_identity_attribute_value
-            ? service_identity_attribute_value
-            : id}
-        </Button>
-      ),
+      success: ({ service_identity_attribute_value }) => {
+        const identifier = service_identity_attribute_value
+          ? service_identity_attribute_value
+          : id;
+
+        return (
+          <Button
+            variant="link"
+            isInline
+            onClick={
+              serviceName
+                ? () => onClick(identifier, serviceName)
+                : () => onClick(identifier)
+            }
+          >
+            {identifier}
+          </Button>
+        );
+      },
     },
     data,
   );

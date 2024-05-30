@@ -6,7 +6,6 @@ import { AutoCompleteInput } from "./AutoCompleteInput";
 
 interface Props {
   serviceName: string;
-  serviceIdentity?: string;
   attributeName: string;
   attributeValue: string | string[];
   description?: string;
@@ -19,7 +18,6 @@ interface Props {
 
 export const AutoCompleteInputProvider: React.FC<Props> = ({
   serviceName,
-  serviceIdentity,
   attributeName,
   attributeValue,
   description,
@@ -41,21 +39,16 @@ export const AutoCompleteInputProvider: React.FC<Props> = ({
   });
 
   const onSearchTextChanged = (searchText: string) => {
-    setFilter({ id_or_service_identity: searchText });
+    setFilter({ id_or_service_identity: [searchText] });
   };
 
-  const selectedValue = getCurrentValue(
-    attributeValue,
-    filter,
-    !!serviceIdentity,
-  );
   return RemoteData.fold(
     {
       notAsked: () => null,
       loading: () => (
         <AutoCompleteInput
           options={[]}
-          selected={selectedValue}
+          selected={attributeValue}
           serviceEntity={serviceName}
           attributeName={attributeName}
           isOptional={isOptional}
@@ -85,7 +78,7 @@ export const AutoCompleteInputProvider: React.FC<Props> = ({
             options={options}
             attributeName={attributeName}
             serviceEntity={serviceName}
-            selected={selectedValue}
+            selected={attributeValue}
             isOptional={isOptional}
             shouldBeDisabled={isDisabled}
             description={description}
@@ -99,18 +92,4 @@ export const AutoCompleteInputProvider: React.FC<Props> = ({
     },
     data,
   );
-};
-
-const getCurrentValue = (
-  attributeValue: string | string[],
-  filter: ServiceInstanceParams.Filter,
-  serviceIdentity?: boolean,
-): string | string[] => {
-  if (attributeValue) {
-    return attributeValue;
-  }
-  if (serviceIdentity) {
-    return filter?.identity ? filter?.identity.value : "";
-  }
-  return filter?.id ? filter?.id[0] : "";
 };
