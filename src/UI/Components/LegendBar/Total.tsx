@@ -17,7 +17,7 @@ export const Total: React.FC<{ total: Total; value: number }> = ({
   value,
 }) =>
   total.label ? (
-    <Tooltip content={total.label} position="auto" distance={4} enableFlip>
+    <Tooltip content={total.label} position="top" distance={4} enableFlip>
       <TotalContainer>{total.format(value)}</TotalContainer>
     </Tooltip>
   ) : (

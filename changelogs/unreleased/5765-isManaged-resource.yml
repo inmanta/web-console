@@ -1,0 +1,6 @@
+description: Add column for managed resources in the Resource Discovery page.
+issue-nr: 5765
+change-type: patch
+destination-branches: [master, iso7]
+sections:
+  minor-improvement: "{{description}}"

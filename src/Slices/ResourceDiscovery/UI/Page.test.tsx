@@ -66,6 +66,29 @@ test("GIVEN Discovered Resources page THEN shows table", async () => {
       name: "vcenter::VirtualMachine[lab,name=acisim]",
     }),
   ).toBeVisible();
+  expect(
+    within(rows[0]).getByRole("cell", {
+      name: "resource-1",
+    }),
+  ).toBeVisible();
+  // uri is null
+  expect(
+    within(rows[1]).getByRole("cell", {
+      name: "-",
+    }),
+  ).toBeVisible();
+  // uri doesn't have a rid
+  expect(
+    within(rows[2]).getByRole("cell", {
+      name: "-",
+    }),
+  ).toBeVisible();
+  // uri is an empty string
+  expect(
+    within(rows[3]).getByRole("cell", {
+      name: "-",
+    }),
+  ).toBeVisible();
 
   await act(async () => {
     const results = await axe(document.body);

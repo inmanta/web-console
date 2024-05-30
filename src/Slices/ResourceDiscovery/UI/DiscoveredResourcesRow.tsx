@@ -10,9 +10,13 @@ import styled from "styled-components";
 import { CodeHighlighter, Toggle } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { DiscoveredResource } from "../Core/Query";
+import { ManagedResourceLink } from "./Components/ManagedResourceLink";
 
 interface Props {
-  row: Pick<DiscoveredResource, "discovered_resource_id" | "values">;
+  row: Pick<
+    DiscoveredResource,
+    "discovered_resource_id" | "values" | "managed_resource_uri"
+  >;
   isExpanded: boolean;
   onToggle: () => void;
   numberOfColumns: number;
@@ -36,6 +40,9 @@ export const DiscoveredResourceRow: React.FC<Props> = ({
         </Td>
         <Td dataLabel={words("discovered.column.resource_id")}>
           {row.discovered_resource_id}
+        </Td>
+        <Td dataLabel={words("discovered.column.managed_resource")} width={30}>
+          <ManagedResourceLink resourceUri={row.managed_resource_uri} />
         </Td>
       </Tr>
       {isExpanded && (
