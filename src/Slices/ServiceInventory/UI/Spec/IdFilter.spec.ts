@@ -39,7 +39,7 @@ test("GIVEN The Service Inventory WHEN the user filters on id ('a') THEN only 1 
   });
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
-    `/lsm/v1/service_inventory/${Service.a.name}?include_deployment_progress=True&limit=20&filter.id=${ServiceInstance.a.id}&sort=created_at.desc`,
+    `/lsm/v1/service_inventory/${Service.a.name}?include_deployment_progress=True&limit=20&filter.id_or_service_identity=${ServiceInstance.a.id}&sort=created_at.desc`,
   );
 
   await act(async () => {

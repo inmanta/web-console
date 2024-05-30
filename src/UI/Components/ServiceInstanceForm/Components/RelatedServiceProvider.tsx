@@ -50,7 +50,7 @@ export const RelatedServiceProvider: React.FC<Props> = ({
           </div>
         </Alert>
       ),
-      success: (service) => {
+      success: () => {
         return (
           <AutoCompleteInputProvider
             alreadySelected={alreadySelected}
@@ -60,7 +60,6 @@ export const RelatedServiceProvider: React.FC<Props> = ({
             description={description}
             handleInputChange={handleInputChange}
             serviceName={serviceName}
-            serviceIdentity={service.service_identity}
             multi={multi}
           />
         );
