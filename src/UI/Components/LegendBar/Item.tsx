@@ -22,7 +22,7 @@ export const Item: React.FC<Props> = ({
   onClick,
   id,
 }) => (
-  <Tooltip content={label} position="auto" distance={4} enableFlip>
+  <Tooltip content={label} position="top" distance={4} enableFlip>
     <Container
       value={value}
       data-value={value}
