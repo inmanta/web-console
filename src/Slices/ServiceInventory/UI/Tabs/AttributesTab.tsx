@@ -30,12 +30,13 @@ export const AttributesTab: React.FC<Props> = ({
   return (
     <TreeTableCellContext.Provider
       value={{
-        onClick: (value, serviceName) =>
+        onClick: (value, serviceName) => {
           navigate(
             "Inventory",
             { service: serviceName as string },
-            `?env=${service?.environment}&state.Inventory.filter.id[0]=${value}`,
-          ),
+            `?env=${service?.environment}&state.Inventory.filter.id_or_service_identity[0]=${value}`,
+          );
+        },
       }}
     >
       <TreeTable

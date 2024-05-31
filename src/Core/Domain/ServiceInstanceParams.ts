@@ -19,9 +19,9 @@ export interface Filter {
   attributeSetEmpty?: AttributeSet[];
   attributeSetNotEmpty?: AttributeSet[];
   deleted?: DeletedRule;
-  id?: string[];
   identity?: { key: string; value: string };
   state?: string[];
+  id_or_service_identity?: string[];
 }
 
 export type DeletedRule = "Include" | "Only" | undefined;
@@ -31,7 +31,6 @@ export enum Kind {
   Id = "Id",
   AttributeSet = "AttributeSet",
   Deleted = "Deleted",
-  IdentityAttribute = "IdentityAttribute",
 }
 
 export const List: Kind[] = [
