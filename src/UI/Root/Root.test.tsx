@@ -1,7 +1,7 @@
-import React from "react";
+import React, { act } from "react";
 import { MemoryRouter } from "react-router";
 import { useLocation } from "react-router-dom";
-import { act, cleanup, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { axe, toHaveNoViolations } from "jest-axe";
 import { Either } from "@/Core";
@@ -92,10 +92,10 @@ test("GIVEN the app THEN the app should be accessible", async () => {
     await apiHelper.resolve(Either.right({ data: Project.list }));
   });
 
-  const results = await axe(document.body);
-  expect(results).toHaveNoViolations();
-
-  cleanup();
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("GIVEN the app THEN the navigation toggle button should be visible", async () => {
