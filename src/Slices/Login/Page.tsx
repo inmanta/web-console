@@ -1,8 +1,7 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { LoginPage, ListVariant } from "@patternfly/react-core";
 import styled from "styled-components";
-import { createCookie } from "@/Data/Common/CookieHelper";
 import { useLogin } from "@/Data/Managers/V2/Login";
 import { DependencyContext, words } from "@/UI";
 import { UserCredentialsForm } from "@/UI/Components/UserCredentialsForm";
@@ -15,33 +14,18 @@ import logo from "@images/logo.svg";
  * @returns {React.FunctionComponent} The rendered component.
  */
 export const Login: React.FunctionComponent = () => {
-  const { authController } = useContext(DependencyContext);
+  const { useAuth } = useContext(DependencyContext);
   const navigate = useNavigate();
 
-  const [isLoginOpen, setIsLoginOpen] = useState(false);
   const { mutate, isError, error, isSuccess, isPending, data } = useLogin();
 
   useEffect(() => {
     if (isSuccess) {
-      createCookie("inmanta_user", data.data.token, 1);
-      //reload the page to avoid possible error view due to the 401 calls done in the background
-      navigate(0);
-      authController.setLocalUserName(data.data.user.username);
+      useAuth.updateUser(data.data.user.username, data.data.token);
+      navigate("/");
     }
-  }, [data, isSuccess, authController, navigate]);
+  }, [data, isSuccess, useAuth, navigate]);
 
-  useEffect(() => {
-    const openLogin = () => {
-      setIsLoginOpen(true);
-    };
-
-    document.addEventListener("open-login", openLogin);
-    return () => {
-      document.removeEventListener("open-login", openLogin);
-    };
-  }, []);
-
-  if (!isLoginOpen) return null;
   return (
     <Wrapper>
       <StyledLogin

@@ -1,18 +1,17 @@
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { LoginPage } from "@/Slices/Login";
 import { DependencyContext } from "@/UI/Dependency";
 import { SearchSanitizer } from "@/UI/Routing";
 import { GlobalStyles } from "@/UI/Styles";
 import { NotFoundPage } from "@S/NotFound/UI";
-import { KeycloakProvider, PageFrame, Initializer } from "./Components";
+import { KeycloakProvider, PageFrame } from "./Components";
+import PrivateRoute from "./Components/PrivateRoute/PrivateRoute";
 import { PrimaryPageManager } from "./PrimaryPageManager";
 
 export const Root: React.FC = () => {
   const { routeManager } = useContext(DependencyContext);
-  const queryClient = new QueryClient();
 
   const pageManager = useMemo(
     () => new PrimaryPageManager(routeManager.getRouteDictionary()),
@@ -31,14 +30,14 @@ export const Root: React.FC = () => {
   const GlobalStyleProxy: any = GlobalStyles;
 
   return (
-    <QueryClientProvider client={queryClient}>
+    <>
       <ReactQueryDevtools initialIsOpen={false} />
       <GlobalStyleProxy />
       <KeycloakProvider>
         <SearchSanitizer.Provider>
-          <LoginPage />
-          <Initializer>
-            <Routes>
+          <Routes>
+            <Route path="/login" element={<LoginPage />} />
+            <Route element={<PrivateRoute />}>
               {routeManager.isBaseUrlDefined() && (
                 <Route
                   path="/"
@@ -66,10 +65,10 @@ export const Root: React.FC = () => {
                   key={kind}
                 />
               ))}
-            </Routes>
-          </Initializer>
+            </Route>
+          </Routes>
         </SearchSanitizer.Provider>
       </KeycloakProvider>
-    </QueryClientProvider>
+    </>
   );
 };

@@ -13,6 +13,10 @@ import {
   AuthController,
 } from "@/Core";
 import {
+  AuthContextProps,
+  defaultAuthContext,
+} from "@/Data/Auth/Providers/AuthContext";
+import {
   DummyCommandResolver,
   DummyEnvironmentModifier,
   DummyFeatureManager,
@@ -38,6 +42,7 @@ export interface Dependencies {
   authHelper: AuthHelper;
   archiveHelper: ArchiveHelper;
   authController: AuthController;
+  useAuth: AuthContextProps;
 }
 
 export const DependencyContext = createContext<Dependencies>({
@@ -52,6 +57,7 @@ export const DependencyContext = createContext<Dependencies>({
   authHelper: new DummyAuthHelper(),
   archiveHelper: new DummyArchiveHelper(),
   authController: new DummyAuthController(),
+  useAuth: defaultAuthContext,
 });
 
 export const DependencyProvider: React.FC<{
@@ -70,6 +76,7 @@ export const DependencyProvider: React.FC<{
     authHelper,
     archiveHelper,
     authController,
+    useAuth,
   },
   children,
 }) => (
@@ -87,6 +94,7 @@ export const DependencyProvider: React.FC<{
       authHelper: authHelper || new DummyAuthHelper(),
       archiveHelper: archiveHelper || new DummyArchiveHelper(),
       authController: authController || new DummyAuthController(),
+      useAuth: useAuth || defaultAuthContext,
     }}
   >
     {children}

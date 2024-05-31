@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useLocation } from "react-router-dom";
 import { isJsonParserId, JsonParserId, SchedulerImpl } from "@/Core";
 import {
@@ -25,6 +25,7 @@ import {
   EnvironmentModifierImpl,
   UrlManagerImpl,
 } from "@/UI";
+import { AuthContext } from "./Data/Auth/Providers/AuthContext";
 import { UpdateBanner } from "./UI/Components/UpdateBanner";
 interface Props {
   store: Store;
@@ -34,6 +35,7 @@ export const Injector: React.FC<React.PropsWithChildren<Props>> = ({
   store,
   children,
 }) => {
+  const useAuth = useContext(AuthContext);
   const featureManager = new PrimaryFeatureManager(
     GetServerStatusStateHelper(store),
     new PrimaryLogger(),
@@ -91,6 +93,7 @@ export const Injector: React.FC<React.PropsWithChildren<Props>> = ({
         authHelper,
         archiveHelper,
         authController,
+        useAuth,
       }}
     >
       <UpdateBanner apiHelper={apiHelper} />
