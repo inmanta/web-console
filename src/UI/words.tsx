@@ -467,6 +467,7 @@ const dict = {
 
   /** Discovered Resources related text */
   "discovered.column.resource_id": "resource_id",
+  "discovered.column.managed_resource": "managed resource",
   "discovered_resources.title": "Discovered Resources",
   "discovered_resources.values": "values",
 

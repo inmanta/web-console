@@ -28,7 +28,7 @@ export const DiscoveredResourcesTable: React.FC<Props> = ({
   ...props
 }) => {
   const [isExpanded, onExpansion] = useExpansion();
-  const onSort: OnSort = (event, index, order) => {
+  const onSort: OnSort = (_event, index, order) => {
     setSort({
       name: tablePresenter.getColumnNameForIndex(index) as SortKey,
       order,

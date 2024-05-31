@@ -34,22 +34,18 @@ type Filter = NonNullable<Query.SubQuery<"GetServiceInstances">["filter"]>;
 const filterToRaw = (filter: Filter) => {
   if (typeof filter === "undefined") return {};
   const {
-    id,
     state,
     deleted,
     attributeSetEmpty: attribute_set_empty,
     attributeSetNotEmpty: attribute_set_not_empty,
-    identity,
+    id_or_service_identity,
   } = filter;
 
-  const identityAttribute = identity ? { [identity.key]: identity.value } : {};
-
   return {
-    id,
     state,
     deleted: deleted === "Only" ? true : undefined,
     attribute_set_empty,
     attribute_set_not_empty,
-    ...identityAttribute,
+    id_or_service_identity,
   };
 };
