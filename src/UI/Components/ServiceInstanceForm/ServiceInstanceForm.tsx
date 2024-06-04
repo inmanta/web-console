@@ -11,6 +11,7 @@ import {
 import { set } from "lodash-es";
 import styled from "styled-components";
 import { InstanceAttributeModel, Field } from "@/Core";
+import { useLocalFeatures } from "@/Data/Managers/V2/GetLocalFeatures/useLocalFeatures";
 import { ActionDisabledTooltip } from "@/UI/Components/ActionDisabledTooltip";
 import { usePrompt } from "@/UI/Utils/usePrompt";
 import { words } from "@/UI/words";
@@ -82,6 +83,9 @@ export const ServiceInstanceForm: React.FC<Props> = ({
   apiVersion = "v1",
   isEdit = false,
 }) => {
+  const featureEditor = useLocalFeatures().useOneTime();
+  console.log("featureEditor", featureEditor);
+
   const [formState, setFormState] = useState(
     getFormState(fields, apiVersion, originalAttributes, isEdit),
   );
@@ -167,23 +171,35 @@ export const ServiceInstanceForm: React.FC<Props> = ({
 
   return (
     <StyledForm onSubmit={preventDefault}>
-      <ToggleGroup aria-label="form-editor-toggle-group">
-        <ToggleGroupItem
-          text="Form"
-          key={0}
-          buttonId="formButton"
-          isSelected={isForm}
-          isDisabled={!isForm && isDirty}
-          onChange={() => setIsForm(true)}
-        />
-        <ToggleGroupItem
-          text="Editor"
-          key={1}
-          buttonId="editorButton"
-          isSelected={!isForm}
-          onChange={() => setIsForm(false)}
-        />
-      </ToggleGroup>
+      {featureEditor && (
+        <>
+          <ToggleGroup aria-label="form-editor-toggle-group">
+            <ToggleGroupItem
+              text="Form"
+              key={0}
+              buttonId="formButton"
+              isSelected={isForm}
+              isDisabled={!isForm && isDirty}
+              onChange={() => setIsForm(true)}
+            />
+            <ToggleGroupItem
+              text="Editor"
+              key={1}
+              buttonId="editorButton"
+              isSelected={!isForm}
+              isDisabled={!isForm && isDirty}
+              onChange={() => setIsForm(false)}
+            />
+          </ToggleGroup>
+          <Alert
+            variant="info"
+            isInline
+            isPlain
+            title={words("inventory.editorInstance.hint")}
+          />
+        </>
+      )}
+
       {!isForm ? (
         <Editor
           height="50vh"
