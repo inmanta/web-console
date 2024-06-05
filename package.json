@@ -84,7 +84,7 @@
     "cypress": "^13.6.3",
     "cypress-file-upload": "^5.0.8",
     "cypress-multi-reporters": "^1.6.4",
-    "dotenv-webpack": "^8.0.1",
+    "dotenv-webpack": "^8.1.0",
     "eslint": "^8.52.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-import-resolver-typescript": "^3.6.1",
