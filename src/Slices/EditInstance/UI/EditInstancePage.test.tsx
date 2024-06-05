@@ -23,6 +23,7 @@ import {
   DeferredApiHelper,
   dependencies,
 } from "@/Test";
+import { multiNestedEditable } from "@/Test/Data/Service/EmbeddedEntity";
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import { TriggerInstanceUpdateCommandManager } from "@S/EditInstance/Data";
@@ -41,7 +42,7 @@ const axe = configureAxe({
  * @note This configuration for the two last tests cases.
  * Because of redundant data with same id, we need to disable the duplicate-id-aria rule.
  * The fields are already tested in the previous tests.
- * The id's and aria-labels are set by the API and assumedly, are unique.
+ * The id's and aria-labels are set using the field name.
  *
  * Todo: Remove this configuration when the test data is updated.
  */
@@ -53,7 +54,7 @@ const axeLimited = configureAxe({
   },
 });
 
-function setup(entity = "a") {
+function setup(entity = "a", multiNested = false) {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
@@ -66,6 +67,10 @@ function setup(entity = "a") {
       ),
     ]),
   );
+
+  const service = multiNested
+    ? { ...Service[entity], embedded_entities: multiNestedEditable }
+    : Service[entity];
 
   const commandManager = TriggerInstanceUpdateCommandManager(apiHelper);
   const commandResolver = new CommandResolverImpl(
@@ -84,7 +89,7 @@ function setup(entity = "a") {
       >
         <StoreProvider store={store}>
           <EditInstancePage
-            serviceEntity={Service[entity]}
+            serviceEntity={service}
             instanceId={"4a4a6d14-8cd0-4a16-bc38-4b768eb004e3"}
           />
         </StoreProvider>
@@ -706,5 +711,88 @@ test("Given the EditInstance View When adding new nested embedded entity Then th
   await act(async () => {
     const results = await axeLimited(document.body);
     expect(results).toHaveNoViolations();
+  });
+});
+
+test("GIVEN the EditInstance View WHEN changing an embedded entity with nested embedded entities THEN the new fields are enabled", async () => {
+  const { component, apiHelper } = setup("a", true);
+  render(component);
+
+  expect(
+    await screen.findByRole("region", { name: "EditInstance-Loading" }),
+  ).toBeInTheDocument();
+
+  await act(async () => {
+    await apiHelper.resolve(Either.right({ data: ServiceInstance.a }));
+  });
+
+  await act(async () => {
+    await userEvent.click(screen.getByRole("button", { name: "embedded" }));
+  });
+
+  await act(async () => {
+    await userEvent.click(screen.getByText("Add"));
+  });
+
+  await act(async () => {
+    await userEvent.click(screen.getByRole("button", { name: "0" }));
+  });
+
+  await act(async () => {
+    await userEvent.click(screen.getAllByText("Add")[1]);
+  });
+
+  await act(async () => {
+    await userEvent.click(
+      screen.getByRole("button", { name: "embedded_single" }),
+    );
+  });
+
+  await act(async () => {
+    await userEvent.click(screen.getAllByText("Add")[2]);
+  });
+
+  const another_embedded_group = screen.getByLabelText(
+    "DictListFieldInput-embedded.0.embedded_single.another_embedded",
+  );
+
+  await act(async () => {
+    await userEvent.click(
+      screen.getByRole("button", { name: "another_embedded" }),
+    );
+  });
+
+  await act(async () => {
+    await userEvent.click(
+      within(another_embedded_group).getByRole("button", { name: "0" }),
+    );
+  });
+
+  const deep_nested_group = screen.getByLabelText(
+    "DictListFieldInput-embedded.0.embedded_single.another_embedded.0.another_deeper_embedded",
+  );
+
+  await act(async () => {
+    await userEvent.click(within(deep_nested_group).getByText("Add"));
+  });
+
+  await act(async () => {
+    await userEvent.click(
+      screen.getByRole("button", { name: "another_deeper_embedded" }),
+    );
+  });
+
+  await act(async () => {
+    await userEvent.click(
+      within(deep_nested_group).getByRole("button", { name: "0" }),
+    );
+  });
+
+  // expect all fields in deep_nested_group to be enabled
+  const deep_nested_group_fields =
+    within(deep_nested_group).getAllByRole("textbox");
+
+  deep_nested_group_fields.forEach((field) => {
+    expect(field).toBeEnabled();
   });
 });
