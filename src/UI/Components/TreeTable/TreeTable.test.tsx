@@ -1,5 +1,5 @@
-import React from "react";
-import { render, screen, fireEvent, act } from "@testing-library/react";
+import React, { act } from "react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { Attributes, EntityLike, ServiceModel } from "@/Core";
 import { CommandResolverImpl, KeycloakAuthHelper } from "@/Data";

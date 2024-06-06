@@ -1,4 +1,5 @@
-import { render, screen, act, within } from "@testing-library/react";
+import { act } from "react";
+import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { Either } from "@/Core";
 import { Service, Pagination } from "@/Test";
@@ -89,6 +90,7 @@ describe("Given the Events Page", () => {
       expect(rowsAfter).toHaveLength(3);
     },
   );
+
   it("When using the Date filter then the events with from and to the events in the range should be fetched and shown", async () => {
     const { component, apiHelper } = new EventsPageComposer().compose(
       Service.a,
@@ -247,7 +249,9 @@ describe("Given the Events Page", () => {
 
       // The chips are hidden in small windows, so resize it
       window = Object.assign(window, { innerWidth: 1200 });
-      window.dispatchEvent(new Event("resize"));
+      await act(async () => {
+        window.dispatchEvent(new Event("resize"));
+      });
 
       expect(await screen.findByText(chip, { exact: false })).toBeVisible();
       await act(async () => {

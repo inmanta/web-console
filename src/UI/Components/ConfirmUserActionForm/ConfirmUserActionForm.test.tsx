@@ -1,5 +1,5 @@
-import React from "react";
-import { act, render, screen } from "@testing-library/react";
+import React, { act } from "react";
+import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { ConfirmUserActionForm } from "./ConfirmUserActionForm";
 
@@ -12,7 +12,7 @@ test("GIVEN DeleteForm WHEN user clicks 'No' THEN closeModal is executed", async
     await userEvent.click(screen.getByRole("button", { name: "No" }));
   });
 
-  expect(closeModal).toBeCalledTimes(1);
+  expect(closeModal).toHaveBeenCalledTimes(1);
   expect(fetchMock.mock.calls).toHaveLength(0);
 });
 
@@ -25,5 +25,5 @@ test("GIVEN DeleteForm WHEN user clicks 'Yes' THEN submit is executed", async ()
     await userEvent.click(screen.getByRole("button", { name: "Yes" }));
   });
 
-  expect(submit).toBeCalledTimes(1);
+  expect(submit).toHaveBeenCalledTimes(1);
 });
