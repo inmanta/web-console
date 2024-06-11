@@ -1,7 +1,6 @@
-import React from "react";
+import React, { act } from "react";
 import { render, screen } from "@testing-library/react";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
-import { act } from "react-dom/test-utils";
 import { words } from "@/UI/words";
 import { BlockingModal } from "./BlockingModal";
 

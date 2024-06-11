@@ -45,7 +45,7 @@ export const IdFilter: React.FC<Props> = ({ id, isVisible, update }) => {
             aria-label="IdFilter"
             onChange={(_event, val) => setIdInput(val)}
             value={idInput}
-            placeholder="Filter by id..."
+            placeholder="Filter by id or identifier..."
             onKeyDown={onIdInput}
           />
         </InputGroupItem>

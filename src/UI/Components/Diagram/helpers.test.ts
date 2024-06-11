@@ -1458,12 +1458,12 @@ describe("updateLabelPosition", () => {
 
   it.each`
     sourceX | sourceY | sourceAnchorX | targetX | targetY | targetAnchorX | sourceResult                              | targetResult
-    ${500}  | ${500}  | ${500}        | ${0}    | ${0}    | ${264}        | ${{ textAnchor: "end", x: -31, y: 15 }}   | ${{ textAnchor: "start", x: 31, y: -15 }}
-    ${0}    | ${0}    | ${264}        | ${500}  | ${500}  | ${500}        | ${{ textAnchor: "start", x: 31, y: -15 }} | ${{ textAnchor: "end", x: -31, y: 15 }}
-    ${500}  | ${0}    | ${500}        | ${0}    | ${500}  | ${264}        | ${{ textAnchor: "end", x: -31, y: -15 }}  | ${{ textAnchor: "start", x: 31, y: 15 }}
-    ${0}    | ${500}  | ${264}        | ${500}  | ${0}    | ${500}        | ${{ textAnchor: "start", x: 31, y: 15 }}  | ${{ textAnchor: "end", x: -31, y: -15 }}
-    ${0}    | ${0}    | ${0}          | ${0}    | ${500}  | ${0}          | ${{ textAnchor: "end", x: -31, y: -15 }}  | ${{ textAnchor: "end", x: -31, y: 15 }}
-    ${0}    | ${500}  | ${0}          | ${0}    | ${0}    | ${0}          | ${{ textAnchor: "end", x: -31, y: 15 }}   | ${{ textAnchor: "end", x: -31, y: -15 }}
+    ${500}  | ${500}  | ${500}        | ${0}    | ${0}    | ${264}        | ${{ textAnchor: "end", x: -15, y: 15 }}   | ${{ textAnchor: "start", x: 15, y: -15 }}
+    ${0}    | ${0}    | ${264}        | ${500}  | ${500}  | ${500}        | ${{ textAnchor: "start", x: 15, y: -15 }} | ${{ textAnchor: "end", x: -15, y: 15 }}
+    ${500}  | ${0}    | ${500}        | ${0}    | ${500}  | ${264}        | ${{ textAnchor: "end", x: -15, y: -15 }}  | ${{ textAnchor: "start", x: 15, y: 15 }}
+    ${0}    | ${500}  | ${264}        | ${500}  | ${0}    | ${500}        | ${{ textAnchor: "start", x: 15, y: 15 }}  | ${{ textAnchor: "end", x: -15, y: -15 }}
+    ${0}    | ${0}    | ${0}          | ${0}    | ${500}  | ${0}          | ${{ textAnchor: "end", x: -15, y: -15 }}  | ${{ textAnchor: "end", x: -15, y: 15 }}
+    ${0}    | ${500}  | ${0}          | ${0}    | ${0}    | ${0}          | ${{ textAnchor: "end", x: -15, y: 15 }}   | ${{ textAnchor: "end", x: -15, y: -15 }}
   `(
     "return adequate position of the link label depending on coordinates of the source and target",
     ({

@@ -1,4 +1,4 @@
-import React, { useContext, ReactElement } from "react";
+import React, { useContext, ReactElement, createContext } from "react";
 import { RemoteData, ServiceModel, ServiceInstanceParams } from "@/Core";
 import {
   useUrlStateWithFilter,
@@ -17,10 +17,12 @@ import { DependencyContext } from "@/UI/Dependency";
 import { useRouteParams } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { Chart, TableControls } from "./Components";
-import { GetInstancesContext } from "./GetInstancesContext";
 import { TableProvider } from "./TableProvider";
 import { Wrapper } from "./Wrapper";
 
+/**
+ * The main page component for the Service Inventory.
+ */
 export const Page: React.FC = () => {
   const { service: serviceName } = useRouteParams<"Inventory">();
 
@@ -33,6 +35,11 @@ export const Page: React.FC = () => {
   );
 };
 
+/**
+ * A prepped version of the ServiceInventory component.
+ * @param {ServiceModel} service - Service Model.
+ * @returns {JSX.Element} - The rendered ServiceInventory component.
+ */
 const PreppedServiceInventory: React.FC<{ service: ServiceModel }> = ({
   service,
 }) => (
@@ -43,6 +50,40 @@ const PreppedServiceInventory: React.FC<{ service: ServiceModel }> = ({
   />
 );
 
+interface Props {
+  labelFiltering: {
+    danger: string[];
+    warning: string[];
+    success: string[];
+    info: string[];
+    no_label: string[];
+    onClick: (labels: string[]) => void;
+  };
+  refetch: () => void;
+}
+
+/**
+ * The context for the Service Inventory component that provides label filtering and refetching functionality.
+ */
+export const ServiceInventoryContext = createContext<Props>({
+  labelFiltering: {
+    danger: [],
+    warning: [],
+    success: [],
+    info: [],
+    no_label: [],
+    onClick: (_label) => null,
+  },
+  refetch: () => null,
+});
+
+/**
+ * The Service Inventory component which continuously check for the service instances based on the service name.
+ * @param {string} serviceName - The name of the service.
+ * @param {ServiceModel} service - The service model.
+ * @param {ReactElement | null} intro - The summary chart component as introduction for the inventory view.
+ * @returns {JSX.Element} - The rendered Service Inventory component.
+ */
 export const ServiceInventory: React.FunctionComponent<{
   serviceName: string;
   service: ServiceModel;
@@ -75,24 +116,47 @@ export const ServiceInventory: React.FunctionComponent<{
     currentPage,
   });
 
+  /**
+   * Filters the service lifecycle states based on the provided label.
+   * @param {string | null} label - The label to filter by.
+   * @returns {string[]} - An array of state names that have the specified label.
+   */
+  const filterLabels = (label: string | null): string[] => {
+    return service.lifecycle.states
+      .filter((state) => state.label === label)
+      .map((state) => state.name);
+  };
+
   return (
-    <Wrapper name={serviceName}>
-      {intro}
-      <TableControls
-        serviceName={serviceName}
-        filter={filter}
-        setFilter={setFilter}
-        service={service}
-        paginationWidget={
-          <PaginationWidget
-            data={data}
-            pageSize={pageSize}
-            setPageSize={setPageSize}
-            setCurrentPage={setCurrentPage}
-          />
-        }
-      />
-      <GetInstancesContext.Provider value={{ refetch: retry }}>
+    <ServiceInventoryContext.Provider
+      value={{
+        labelFiltering: {
+          danger: filterLabels("danger"),
+          warning: filterLabels("warning"),
+          success: filterLabels("success"),
+          info: filterLabels("info"),
+          no_label: filterLabels(null),
+          onClick: (labels) => setFilter({ ...filter, state: labels }),
+        },
+        refetch: retry,
+      }}
+    >
+      <Wrapper name={serviceName}>
+        {intro}
+        <TableControls
+          serviceName={serviceName}
+          filter={filter}
+          setFilter={setFilter}
+          service={service}
+          paginationWidget={
+            <PaginationWidget
+              data={data}
+              pageSize={pageSize}
+              setPageSize={setPageSize}
+              setCurrentPage={setCurrentPage}
+            />
+          }
+        />
         {RemoteData.fold(
           {
             notAsked: () => null,
@@ -122,7 +186,7 @@ export const ServiceInventory: React.FunctionComponent<{
           },
           data,
         )}
-      </GetInstancesContext.Provider>
-    </Wrapper>
+      </Wrapper>
+    </ServiceInventoryContext.Provider>
   );
 };

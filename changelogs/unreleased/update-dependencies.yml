@@ -1,0 +1,4 @@
+description: "Update dependencies and replace deprecated act method in tests"
+change-type: patch
+destination-branches: [master, iso7]
+

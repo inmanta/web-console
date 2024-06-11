@@ -114,14 +114,13 @@ export const SingleTextSelect: React.FC<Props> = ({
       ]);
     } else {
       setSelectOptions(options);
+
+      if (inputValue && inputValue === selected) {
+        setInputValue(getDisplayValue(selected));
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [options]);
-
-  useEffect(() => {
-    setInputValue(getDisplayValue(selected));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selected]);
+  }, [options, selected]);
 
   const onToggleClick = () => {
     setIsOpen(!isOpen);

@@ -1,8 +1,8 @@
-import React from "react";
+import React, { act } from "react";
 import "@testing-library/jest-dom";
 import { Route, Routes } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { act, render, screen, within } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { http, HttpResponse } from "msw";
@@ -540,7 +540,7 @@ test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is
   );
 });
 
-test.only.each`
+test.each`
   input                  | label                             | newValue
   ${Test.Field.textArea} | ${"TextareaInput-textarea_field"} | ${"new text"}
   ${Test.Field.text}     | ${"TextInput-text_field"}         | ${"new text"}

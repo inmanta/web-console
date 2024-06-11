@@ -1,6 +1,6 @@
-import React, { useContext } from "react";
+import React, { useContext, act } from "react";
 import { MemoryRouter, useLocation, useNavigate } from "react-router-dom";
-import { act, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { Either, RemoteData } from "@/Core";

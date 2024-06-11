@@ -1,12 +1,7 @@
 /*eslint-disable testing-library/no-node-access*/
-import React from "react";
+import React, { act } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
-import {
-  render,
-  act,
-  queries,
-  within as baseWithin,
-} from "@testing-library/react";
+import { render, queries, within as baseWithin } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { RemoteData, ServiceModel } from "@/Core";

@@ -1,9 +1,8 @@
-import React from "react";
+import React, { act } from "react";
 import { MemoryRouter } from "react-router-dom";
 import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
-import { act } from "react-dom/test-utils";
 import { Either } from "@/Core";
 import {
   getStoreInstance,
