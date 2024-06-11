@@ -9,10 +9,10 @@ import {
   getStoreInstance,
   KeycloakAuthHelper,
 } from "@/Data";
+import { ServiceInventoryContext } from "@/Slices/ServiceInventory/UI/ServiceInventory";
 import { DeferredApiHelper, dependencies, ServiceInstance } from "@/Test";
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
-import { GetInstancesContext } from "../../../GetInstancesContext";
 import { DeleteAction } from "./DeleteAction";
 
 function setup() {
@@ -41,7 +41,20 @@ function setup() {
             commandResolver,
           }}
         >
-          <GetInstancesContext.Provider value={{ refetch }}>
+          <ServiceInventoryContext.Provider
+            value={{
+              labelFiltering: {
+                danger: [],
+                warning: [],
+                success: [],
+                info: [],
+                no_label: [],
+                onClick: jest.fn(),
+              },
+
+              refetch,
+            }}
+          >
             <DeleteAction
               id={ServiceInstance.a.id}
               instance_identity={
@@ -52,7 +65,7 @@ function setup() {
               isDisabled={isDisabled}
               service_entity={ServiceInstance.a.service_entity}
             />
-          </GetInstancesContext.Provider>
+          </ServiceInventoryContext.Provider>
         </DependencyProvider>
       </StoreProvider>
     ),

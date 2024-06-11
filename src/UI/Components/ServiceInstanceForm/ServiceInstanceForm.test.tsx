@@ -540,7 +540,7 @@ test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is
   );
 });
 
-test.only.each`
+test.each`
   input                  | label                             | newValue
   ${Test.Field.textArea} | ${"TextareaInput-textarea_field"} | ${"new text"}
   ${Test.Field.text}     | ${"TextInput-text_field"}         | ${"new text"}
