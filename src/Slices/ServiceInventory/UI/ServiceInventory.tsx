@@ -42,7 +42,7 @@ const PreppedServiceInventory: React.FC<{ service: ServiceModel }> = ({
   />
 );
 
-interface ServiceInventoryContextProps {
+interface Props {
   labelFiltering: {
     danger: string[];
     warning: string[];
@@ -53,25 +53,26 @@ interface ServiceInventoryContextProps {
   };
   refetch: () => void;
 }
-export const ServiceInventoryContext =
-  createContext<ServiceInventoryContextProps>({
-    labelFiltering: {
-      danger: [],
-      warning: [],
-      success: [],
-      info: [],
-      no_label: [],
-      onClick: (_label) => {
-        // Default to no-op
-        return;
-      },
-    },
 
-    refetch: () => {
+export const ServiceInventoryContext = createContext<Props>({
+  labelFiltering: {
+    danger: [],
+    warning: [],
+    success: [],
+    info: [],
+    no_label: [],
+    onClick: (_label) => {
       // Default to no-op
       return;
     },
-  });
+  },
+
+  refetch: () => {
+    // Default to no-op
+    return;
+  },
+});
+
 export const ServiceInventory: React.FunctionComponent<{
   serviceName: string;
   service: ServiceModel;
@@ -109,6 +110,7 @@ export const ServiceInventory: React.FunctionComponent<{
       .filter((state) => state.label === label)
       .map((state) => state.name);
   };
+
   return (
     <ServiceInventoryContext.Provider
       value={{

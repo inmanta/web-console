@@ -29,7 +29,7 @@ interface Props {
  * @returns {JSX.Element} - The rendered SummaryChart component.
  */
 export const SummaryChart: React.FC<Props> = ({ by_label, total }) => {
-  const { labels, onClick } = useContext(ServiceInventoryContext);
+  const { labelFiltering } = useContext(ServiceInventoryContext);
   const chartData = getChartData(by_label);
 
   const legendData = chartData
@@ -40,7 +40,7 @@ export const SummaryChart: React.FC<Props> = ({ by_label, total }) => {
     .filter(({ name }) => {
       let label = name.split(":")[0];
       label = label === "no label" ? "no_label" : label;
-      return labels[label] && labels[label].length > 0;
+      return labelFiltering[label] && labelFiltering[label].length > 0;
     });
   const colorScale = chartData.map((dataPoint) => dataPoint.color);
 
@@ -64,7 +64,7 @@ export const SummaryChart: React.FC<Props> = ({ by_label, total }) => {
                       mutation: (props) => {
                         let label = props.datum.name.split(":")[0];
                         label = label === "no label" ? "no_label" : label;
-                        onClick(labels[label]);
+                        labelFiltering.onClick(labelFiltering[label]);
                       },
                     },
                   ];
@@ -118,7 +118,7 @@ export const SummaryChart: React.FC<Props> = ({ by_label, total }) => {
                   mutation: (props) => {
                     let label = props.datum.x;
                     label = label === "no label" ? "no_label" : label;
-                    onClick(labels[label]);
+                    labelFiltering.onClick(labelFiltering[label]);
                   },
                 },
               ];
@@ -134,7 +134,8 @@ export const SummaryChart: React.FC<Props> = ({ by_label, total }) => {
                       style: {
                         ...props.style,
                         cursor:
-                          labels[label] && labels[label].length > 0
+                          labelFiltering[label] &&
+                          labelFiltering[label].length > 0
                             ? "pointer"
                             : "default",
                       },
