@@ -43,14 +43,15 @@ function setup() {
         >
           <ServiceInventoryContext.Provider
             value={{
-              labels: {
+              labelFiltering: {
                 danger: [],
                 warning: [],
                 success: [],
                 info: [],
                 no_label: [],
+                onClick: jest.fn(),
               },
-              onClick: jest.fn(),
+
               refetch,
             }}
           >
