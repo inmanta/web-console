@@ -20,6 +20,9 @@ import { Chart, TableControls } from "./Components";
 import { TableProvider } from "./TableProvider";
 import { Wrapper } from "./Wrapper";
 
+/**
+ * The main page component for the Service Inventory.
+ */
 export const Page: React.FC = () => {
   const { service: serviceName } = useRouteParams<"Inventory">();
 
@@ -32,6 +35,11 @@ export const Page: React.FC = () => {
   );
 };
 
+/**
+ * A prepped version of the ServiceInventory component.
+ * @param {ServiceModel} service - Service Model.
+ * @returns {JSX.Element} - The rendered ServiceInventory component.
+ */
 const PreppedServiceInventory: React.FC<{ service: ServiceModel }> = ({
   service,
 }) => (
@@ -54,6 +62,9 @@ interface Props {
   refetch: () => void;
 }
 
+/**
+ * The context for the Service Inventory component that provides label filtering and refetching functionality.
+ */
 export const ServiceInventoryContext = createContext<Props>({
   labelFiltering: {
     danger: [],
@@ -61,18 +72,18 @@ export const ServiceInventoryContext = createContext<Props>({
     success: [],
     info: [],
     no_label: [],
-    onClick: (_label) => {
-      // Default to no-op
-      return;
-    },
+    onClick: (_label) => null,
   },
-
-  refetch: () => {
-    // Default to no-op
-    return;
-  },
+  refetch: () => null,
 });
 
+/**
+ * The Service Inventory component which continuously check for the service instances based on the service name.
+ * @param {string} serviceName - The name of the service.
+ * @param {ServiceModel} service - The service model.
+ * @param {ReactElement | null} intro - The summary chart component as introduction for the inventory view.
+ * @returns {JSX.Element} - The rendered Service Inventory component.
+ */
 export const ServiceInventory: React.FunctionComponent<{
   serviceName: string;
   service: ServiceModel;
@@ -105,7 +116,12 @@ export const ServiceInventory: React.FunctionComponent<{
     currentPage,
   });
 
-  const filterLabels = (label: string | null) => {
+  /**
+   * Filters the service lifecycle states based on the provided label.
+   * @param {string | null} label - The label to filter by.
+   * @returns {string[]} - An array of state names that have the specified label.
+   */
+  const filterLabels = (label: string | null): string[] => {
     return service.lifecycle.states
       .filter((state) => state.label === label)
       .map((state) => state.name);
