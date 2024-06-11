@@ -1133,7 +1133,7 @@ __metadata:
     "@loadable/component": "npm:^5.16.3"
     "@patternfly/react-charts": "npm:^7.1.2"
     "@patternfly/react-core": "npm:^5.2.2"
-    "@patternfly/react-icons": "npm:^5.3.1"
+    "@patternfly/react-icons": "npm:^5.3.2"
     "@patternfly/react-styles": "npm:^5.2.0"
     "@patternfly/react-table": "npm:^5.2.1"
     "@patternfly/react-tokens": "npm:^5.1.2"
@@ -1787,13 +1787,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@patternfly/react-icons@npm:^5.2.1, @patternfly/react-icons@npm:^5.3.1":
+"@patternfly/react-icons@npm:^5.2.1":
   version: 5.3.1
   resolution: "@patternfly/react-icons@npm:5.3.1"
   peerDependencies:
     react: ^17 || ^18
     react-dom: ^17 || ^18
   checksum: 10/7884518ea4562e08f04d3f35bbaa93ba2483df78c3f6a5a1322a30732b24424ca5c7c87262d8093813b35953fe9f29d6f1fb20fbb9be1d2abe318af66be7add6
+  languageName: node
+  linkType: hard
+
+"@patternfly/react-icons@npm:^5.3.2":
+  version: 5.3.2
+  resolution: "@patternfly/react-icons@npm:5.3.2"
+  peerDependencies:
+    react: ^17 || ^18
+    react-dom: ^17 || ^18
+  checksum: 10/a6ec116593e462a1fdf4f26e3f1dc10317119a35a45d8b739d1d87950895f1d0edf6db9e5d9a4667920bbbace3e8f3c89f952d039cb2619ca41b2ae535834385
   languageName: node
   linkType: hard
 
