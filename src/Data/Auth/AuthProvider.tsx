@@ -9,6 +9,13 @@ interface Props {
   keycloakUrl: string | undefined;
 }
 
+/**
+ * AuthProvider component renders the appropriate authentication provider based on the provided config
+ *
+ * @param config - The authentication configuration.
+ * @param keycloakUrl - The URL for the Keycloak authentication provider.
+ * @returns The rendered authentication provider component.
+ */
 export const AuthProvider: React.FC<React.PropsWithChildren<Props>> = ({
   children,
   config,
