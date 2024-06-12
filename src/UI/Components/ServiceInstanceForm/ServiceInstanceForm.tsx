@@ -13,7 +13,7 @@ import { InstanceAttributeModel, Field } from "@/Core";
 import { ActionDisabledTooltip } from "@/UI/Components/ActionDisabledTooltip";
 import { usePrompt } from "@/UI/Utils/usePrompt";
 import { words } from "@/UI/words";
-import { JSONEditor } from "../JSONEditor/JSONEditor";
+import { JSONEditor } from "../JSONEditor";
 import { FieldInput } from "./Components";
 import {
   createDuplicateFormState,
@@ -146,6 +146,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
     event.preventDefault();
   };
 
+  // The try catch is there to make certain the provided string is parsable to JSON before setting the formstate.
   const onEditorChange = (value: string) => {
     try {
       const parsed = JSON.parse(value);

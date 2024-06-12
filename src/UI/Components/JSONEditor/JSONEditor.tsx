@@ -12,6 +12,20 @@ interface Props {
   onChange: (value: string) => void;
 }
 
+/**
+ * JSON Editor component.
+ *
+ * @props {Props} props - The props of the component.
+ *  @prop {string} service_entity - The service entity.
+ *  @prop {string} data - The data to be displayed in the editor.
+ *  @prop {function} onChange - Callback method when the data is changed in the editor.
+ *
+ * @notes The JSON Editor component uses the Monaco Editor, React version.
+ * for more information, see https://www.npmjs.com/package/@monaco-editor/react?activeTab=readme
+ * for the monaco editor API, see https://microsoft.github.io/monaco-editor/typedoc/index.html
+ *
+ * @returns {React.ReactElement} The JSON Editor component.
+ */
 export const JSONEditor: React.FC<Props> = ({
   service_entity,
   data,
@@ -28,11 +42,20 @@ export const JSONEditor: React.FC<Props> = ({
 
   const monaco = useMonaco();
 
+  // local method to update state when the editor content changes
   const handleEditorChange = (value: string | undefined, _event) => {
     value && setEditorState(value);
   };
 
-  const HandleOnValidate: OnValidate = (markers) => {
+  /**
+   *
+   * @param markers - The markers from the monaco editor.
+   * It will set the errors state with the error messages.
+   * see : https://microsoft.github.io/monaco-editor/typedoc/interfaces/editor.IMarker.html
+   *
+   * @return {void}
+   */
+  const handleOnValidate: OnValidate = (markers) => {
     if (markers.length === 0) {
       setErrors([]);
     }
@@ -44,21 +67,22 @@ export const JSONEditor: React.FC<Props> = ({
     setErrors(error);
   };
 
+  // Whenever the editorState has changed and no errors are found, call the onChange callback.
+  // This prevents the string to be invalid based on the provided schema.
   useEffect(() => {
     if (errors?.length === 0) {
       onChange(editorState);
     }
   }, [editorState, errors, onChange]);
 
+  // see https://microsoft.github.io/monaco-editor/typedoc/interfaces/languages.json.ModeConfiguration.html
+  // and see https://microsoft.github.io/monaco-editor/typedoc/interfaces/languages.json.DiagnosticsOptions.html
   useEffect(() => {
     if (monaco) {
       monaco.languages.json.jsonDefaults.setModeConfiguration({
         colors: true,
         completionItems: true,
         diagnostics: true,
-        documentFormattingEdits: true,
-        documentRangeFormattingEdits: true,
-        documentSymbols: true,
         foldingRanges: true,
         hovers: true,
         selectionRanges: true,
@@ -92,9 +116,9 @@ export const JSONEditor: React.FC<Props> = ({
         defaultLanguage="json"
         defaultValue={data}
         onChange={handleEditorChange}
-        onValidate={HandleOnValidate}
+        onValidate={handleOnValidate}
       />
-      <PanelWrapper variant="bordered">
+      <PanelWrapper variant="bordered" data-testid="Error-container">
         {errors.length > 0 && (
           <Alert
             isInline
