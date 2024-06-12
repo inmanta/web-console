@@ -3,6 +3,14 @@ import { PrimaryBaseUrlManager } from "@/UI";
 import { useCreateHeaders } from "../helpers/useCreateHeaders";
 import { useHandleErrors } from "../helpers/useHandleErrors";
 
+/**
+ *  React Query hook to fetch JSON Schema for a service_entity.
+ *
+ * @param {string} service_id - The service entity.
+ * @param {string} environment - The environment.
+ *
+ * @returns {Object} The result of the query, {data, status, error, isLoading}.
+ */
 export const useGetJSONSchema = (service_id: string, environment: string) => {
   const { handleAuthorization } = useHandleErrors();
   const headers = useCreateHeaders(environment);
