@@ -77,7 +77,7 @@ function setup() {
               environmentHandler,
               useAuth: {
                 ...defaultAuthContext,
-                user: "mocked_user",
+                getUser: () => "mocked_user",
                 getToken: () => "mocked_token",
               },
             }}

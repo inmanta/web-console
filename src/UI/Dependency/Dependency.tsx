@@ -13,7 +13,7 @@ import {
   AuthController,
 } from "@/Core";
 import {
-  AuthContextProps,
+  GetAuthProvider,
   defaultAuthContext,
 } from "@/Data/Auth/Providers/AuthContext";
 import {
@@ -42,7 +42,7 @@ export interface Dependencies {
   authHelper: AuthHelper;
   archiveHelper: ArchiveHelper;
   authController: AuthController;
-  useAuth: AuthContextProps;
+  useAuth: GetAuthProvider;
 }
 
 export const DependencyContext = createContext<Dependencies>({

@@ -1,13 +1,11 @@
 import React from "react";
-import { AuthContext, defaultAuthContext } from "./AuthContext";
+import { GetAuthContext, defaultAuthContext } from "./AuthContext";
 
-interface AuthProviderProps {
-  children: React.ReactNode;
-}
-
-const NoAuthProvider = ({ children }: AuthProviderProps) => {
+export const NoAuthProvider: React.FC<React.PropsWithChildren> = ({
+  children,
+}) => {
   return (
-    <AuthContext.Provider
+    <GetAuthContext.Provider
       value={{
         ...defaultAuthContext,
         getToken: () => {
@@ -16,8 +14,6 @@ const NoAuthProvider = ({ children }: AuthProviderProps) => {
       }}
     >
       {children}
-    </AuthContext.Provider>
+    </GetAuthContext.Provider>
   );
 };
-
-export default NoAuthProvider;

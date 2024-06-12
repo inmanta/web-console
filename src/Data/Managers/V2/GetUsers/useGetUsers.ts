@@ -2,10 +2,10 @@
  * Custom hook to fetch user information from the API.
  * @returns An object containing a custom hook to fetch user information.
  */
+import { useContext } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { PrimaryBaseUrlManager } from "@/UI";
+import { DependencyContext, PrimaryBaseUrlManager } from "@/UI";
 import { useCreateHeaders } from "../helpers/useCreateHeaders";
-import { useHandleErrors } from "../helpers/useHandleErrors";
 
 /**
  * Represents the user information.
@@ -20,7 +20,7 @@ export interface UserInfo {
  * @returns An object containing a custom hook to fetch user information.
  */
 export const useGetUsers = () => {
-  const { handleAuthorization } = useHandleErrors();
+  const { useAuth } = useContext(DependencyContext);
   const headers = useCreateHeaders();
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
@@ -39,7 +39,9 @@ export const useGetUsers = () => {
     const response = await fetch(`${baseUrl}/api/v2/user`, {
       headers,
     });
-    handleAuthorization(response);
+    if (response.status === 401) {
+      useAuth.login();
+    }
     if (!response.ok) {
       throw new Error("Failed to fetch users");
     }

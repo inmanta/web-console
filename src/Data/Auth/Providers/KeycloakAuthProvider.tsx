@@ -1,24 +1,24 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
 import Keycloak, { KeycloakConfig } from "keycloak-js";
-import { AuthContext } from "./AuthContext";
+import { GetAuthContext } from "./AuthContext";
 
-interface AuthProviderProps {
-  children: React.ReactNode;
+interface Props {
   config: KeycloakConfig;
 }
 
-const KeycloakAuthProvider = ({ children, config }: AuthProviderProps) => {
+export const KeycloakAuthProvider: React.FC<React.PropsWithChildren<Props>> = ({
+  children,
+  config,
+}) => {
   const keycloakInstance = useMemo(() => new Keycloak(config), [config]);
 
-  const getName = useCallback((): string | undefined => {
+  const getUser = useCallback((): string | undefined => {
     return keycloakInstance &&
       keycloakInstance.profile &&
       keycloakInstance.profile.username
       ? keycloakInstance.profile.username
       : undefined;
   }, [keycloakInstance]);
-
-  const [user, setUser] = useState<string | undefined>(undefined);
 
   const logout = () => {
     keycloakInstance.logout();
@@ -32,14 +32,10 @@ const KeycloakAuthProvider = ({ children, config }: AuthProviderProps) => {
     return keycloakInstance.token || null;
   };
 
-  useEffect(() => {
-    setUser(getName());
-  }, [getName]);
-
   return (
-    <AuthContext.Provider
+    <GetAuthContext.Provider
       value={{
-        user,
+        getUser,
         getToken,
         login,
         logout,
@@ -47,8 +43,6 @@ const KeycloakAuthProvider = ({ children, config }: AuthProviderProps) => {
       }}
     >
       {children}
-    </AuthContext.Provider>
+    </GetAuthContext.Provider>
   );
 };
-
-export default KeycloakAuthProvider;

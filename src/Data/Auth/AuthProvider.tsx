@@ -1,27 +1,29 @@
 import React from "react";
 import { AuthConfig, LocalConfig } from "./PrimaryAuthController";
-import DatabaseAuthProvider from "./Providers/DatabaseAuthProvider";
-import KeycloakAuthContext from "./Providers/KeycloakAuthContext";
-import NoAuthProvider from "./Providers/NoAuthProvider";
+import { DatabaseAuthProvider } from "./Providers/DatabaseAuthProvider";
+import { KeycloakAuthProvider } from "./Providers/KeycloakAuthProvider";
+import { NoAuthProvider } from "./Providers/NoAuthProvider";
 
-interface AuthProviderProps {
-  children: React.ReactNode;
+interface Props {
   config: undefined | AuthConfig | LocalConfig;
   keycloakUrl: string | undefined;
 }
 
-const AuthProvider = ({ children, config, keycloakUrl }: AuthProviderProps) => {
-  if (config?.method === "database") {
-    return <DatabaseAuthProvider>{children}</DatabaseAuthProvider>;
+export const AuthProvider: React.FC<React.PropsWithChildren<Props>> = ({
+  children,
+  config,
+  keycloakUrl,
+}) => {
+  switch (config?.method) {
+    case "database":
+      return <DatabaseAuthProvider>{children}</DatabaseAuthProvider>;
+    case "oidc":
+      return (
+        <KeycloakAuthProvider config={{ ...config, url: keycloakUrl }}>
+          {children}
+        </KeycloakAuthProvider>
+      );
+    default:
+      return <NoAuthProvider>{children}</NoAuthProvider>;
   }
-  if (config?.method === "oidc") {
-    return (
-      <KeycloakAuthContext config={{ ...config, url: keycloakUrl }}>
-        {children}
-      </KeycloakAuthContext>
-    );
-  }
-  return <NoAuthProvider>{children}</NoAuthProvider>;
 };
-
-export default AuthProvider;

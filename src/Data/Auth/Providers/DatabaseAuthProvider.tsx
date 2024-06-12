@@ -5,15 +5,19 @@ import {
   getCookie,
   removeCookie,
 } from "../../Common/CookieHelper";
-import { AuthContext } from "./AuthContext";
+import { GetAuthContext } from "./AuthContext";
 
-interface AuthProviderProps {
-  children: React.ReactNode;
-}
-
-const DatabaseAuthProvider = ({ children }: AuthProviderProps) => {
+/**
+ * DatabaseAuthProvider component provides authentication functionality using a database.
+ * It manages user authentication state, token management, and navigation.
+ */
+export const DatabaseAuthProvider: React.FC<React.PropsWithChildren> = ({
+  children,
+}) => {
   const [user, setUser] = useState<string | undefined>(undefined);
   const navigate = useNavigate();
+
+  const getUser = () => user;
 
   const logout = () => {
     removeCookie("inmanta_user");
@@ -31,10 +35,10 @@ const DatabaseAuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, updateUser, getToken }}>
+    <GetAuthContext.Provider
+      value={{ getUser, login, logout, updateUser, getToken }}
+    >
       {children}
-    </AuthContext.Provider>
+    </GetAuthContext.Provider>
   );
 };
-
-export default DatabaseAuthProvider;

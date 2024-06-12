@@ -25,7 +25,7 @@ import {
   EnvironmentModifierImpl,
   UrlManagerImpl,
 } from "@/UI";
-import { AuthContext } from "./Data/Auth/Providers/AuthContext";
+import { GetAuthContext } from "./Data/Auth/Providers/AuthContext";
 import { UpdateBanner } from "./UI/Components/UpdateBanner";
 interface Props {
   store: Store;
@@ -35,7 +35,7 @@ export const Injector: React.FC<React.PropsWithChildren<Props>> = ({
   store,
   children,
 }) => {
-  const useAuth = useContext(AuthContext);
+  const useAuth = useContext(GetAuthContext);
   const featureManager = new PrimaryFeatureManager(
     GetServerStatusStateHelper(store),
     new PrimaryLogger(),

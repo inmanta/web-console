@@ -1,16 +1,17 @@
+import { useContext } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { PrimaryBaseUrlManager } from "@/UI";
+import { DependencyContext, PrimaryBaseUrlManager } from "@/UI";
 import { useCreateHeaders } from "../helpers/useCreateHeaders";
-import { useHandleErrors } from "../helpers/useHandleErrors";
 
 /**
  * Custom hook for adding a user.
  * @returns {Mutation} The mutation object for adding a user.
  */
 export const useAddUser = () => {
-  const { handleAuthorization } = useHandleErrors();
   const client = useQueryClient();
   const headers = useCreateHeaders();
+  const { useAuth } = useContext(DependencyContext);
+
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
     globalThis.location.pathname,
@@ -39,7 +40,9 @@ export const useAddUser = () => {
       body: JSON.stringify(orderBody),
       headers,
     });
-    handleAuthorization(response);
+    if (response.status === 401) {
+      useAuth.login();
+    }
     if (!response.ok) {
       throw new Error(JSON.parse(await response.text()).message);
     }

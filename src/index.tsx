@@ -7,7 +7,7 @@ import { StoreProvider } from "easy-peasy";
 import { createRoot } from "react-dom/client";
 import { getStoreInstance } from "@/Data";
 import { Root } from "@/UI/Root";
-import AuthProvider from "./Data/Auth/AuthProvider";
+import { AuthProvider } from "./Data/Auth/AuthProvider";
 import { Injector } from "./Injector";
 import CustomRouter from "./UI/Routing/CustomRouter";
 import history from "./UI/Routing/history";
