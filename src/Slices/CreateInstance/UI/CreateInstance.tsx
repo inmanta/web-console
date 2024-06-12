@@ -65,6 +65,7 @@ export const CreateInstance: React.FC<Props> = ({ serviceEntity }) => {
         {words("inventory.addInstance.title")(serviceEntity.name)}
       </Description>
       <ServiceInstanceForm
+        service_entity={serviceEntity.name}
         fields={fields}
         onSubmit={onSubmit}
         onCancel={handleRedirect}

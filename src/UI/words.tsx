@@ -161,8 +161,6 @@ const dict = {
   "inventory.form.placeholder.floatList": "1.1, 3.14, 4.3",
   "inventory.form.placeholder.stringList": "Add a list of values",
   "inventory.form.placeholder.dict": '{"key": "value"}',
-  "inventory.editorInstance.hint":
-    "The JSON-Editor is a beta feature. For now, you can edit in either the form or the JSON-editor, not switch between them back and forth.",
   "inventory.instanceComposer.labelButtonTooltip": "Toggle connection labels",
   "inventory.instanceComposer.addInstanceButtonTooltip":
     "Add new instance to the canvas.",

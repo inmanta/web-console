@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Editor } from "@monaco-editor/react";
 import {
   ActionGroup,
   Alert,
@@ -11,10 +10,10 @@ import {
 import { set } from "lodash-es";
 import styled from "styled-components";
 import { InstanceAttributeModel, Field } from "@/Core";
-import { useLocalFeatures } from "@/Data/Managers/V2/GetLocalFeatures/useLocalFeatures";
 import { ActionDisabledTooltip } from "@/UI/Components/ActionDisabledTooltip";
 import { usePrompt } from "@/UI/Utils/usePrompt";
 import { words } from "@/UI/words";
+import { JSONEditor } from "../JSONEditor/JSONEditor";
 import { FieldInput } from "./Components";
 import {
   createDuplicateFormState,
@@ -23,6 +22,7 @@ import {
 } from "./Helpers";
 
 interface Props {
+  service_entity: string;
   fields: Field[];
   onSubmit(
     formState: InstanceAttributeModel,
@@ -75,6 +75,7 @@ const getFormState = (
  * @returns {JSX.Element} The rendered ServiceInstanceForm component.
  */
 export const ServiceInstanceForm: React.FC<Props> = ({
+  service_entity,
   fields,
   onSubmit,
   onCancel,
@@ -83,9 +84,6 @@ export const ServiceInstanceForm: React.FC<Props> = ({
   apiVersion = "v1",
   isEdit = false,
 }) => {
-  const featureEditor = useLocalFeatures().useOneTime();
-  console.log("featureEditor", featureEditor);
-
   const [formState, setFormState] = useState(
     getFormState(fields, apiVersion, originalAttributes, isEdit),
   );
@@ -97,7 +95,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
   const [isDirty, setIsDirty] = useState(false);
   const [shouldPerformCancel, setShouldCancel] = useState(false);
   const [isForm, setIsForm] = useState(true);
-  const [editorState, setEditorState] = useState("");
+  const [isEditorValid, setIsEditorValid] = useState(true);
 
   usePrompt(words("notification.instanceForm.prompt"), isDirty);
 
@@ -148,9 +146,14 @@ export const ServiceInstanceForm: React.FC<Props> = ({
     event.preventDefault();
   };
 
-  const handleEditorChange = (value, _event) => {
-    setIsDirty(true);
-    setEditorState(value);
+  const onEditorChange = (value: string) => {
+    try {
+      const parsed = JSON.parse(value);
+      setFormState(parsed);
+      setIsEditorValid(true);
+    } catch (error) {
+      setIsEditorValid(false);
+    }
   };
 
   /**
@@ -159,9 +162,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
    * @returns {void}
    */
   const onConfirm = () =>
-    onSubmit(isForm ? formState : JSON.parse(editorState), (value: boolean) =>
-      setIsDirty(value),
-    );
+    onSubmit(formState, (value: boolean) => setIsDirty(value));
 
   useEffect(() => {
     if (shouldPerformCancel) {
@@ -171,41 +172,29 @@ export const ServiceInstanceForm: React.FC<Props> = ({
 
   return (
     <StyledForm onSubmit={preventDefault}>
-      {featureEditor && (
-        <>
-          <ToggleGroup aria-label="form-editor-toggle-group">
-            <ToggleGroupItem
-              text="Form"
-              key={0}
-              buttonId="formButton"
-              isSelected={isForm}
-              isDisabled={!isForm && isDirty}
-              onChange={() => setIsForm(true)}
-            />
-            <ToggleGroupItem
-              text="Editor"
-              key={1}
-              buttonId="editorButton"
-              isSelected={!isForm}
-              isDisabled={!isForm && isDirty}
-              onChange={() => setIsForm(false)}
-            />
-          </ToggleGroup>
-          <Alert
-            variant="info"
-            isInline
-            isPlain
-            title={words("inventory.editorInstance.hint")}
-          />
-        </>
-      )}
+      <ToggleGroup aria-label="form-editor-toggle-group">
+        <ToggleGroupItem
+          text="Form"
+          key={0}
+          buttonId="formButton"
+          isSelected={isForm}
+          isDisabled={!isEditorValid}
+          onChange={() => setIsForm(true)}
+        />
+        <ToggleGroupItem
+          text="JSON-Editor"
+          key={1}
+          buttonId="editorButton"
+          isSelected={!isForm}
+          onChange={() => setIsForm(false)}
+        />
+      </ToggleGroup>
 
       {!isForm ? (
-        <Editor
-          height="50vh"
-          defaultLanguage="json"
-          defaultValue={JSON.stringify(formState, null, 2)}
-          onChange={handleEditorChange}
+        <JSONEditor
+          service_entity={service_entity}
+          data={JSON.stringify(formState, null, 2)}
+          onChange={onEditorChange}
         />
       ) : (
         fields.map((field) => (
@@ -237,7 +226,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
           <Button
             variant="primary"
             onClick={onConfirm}
-            isDisabled={isSubmitDisabled}
+            isDisabled={isSubmitDisabled || !isEditorValid}
           >
             {words("confirm")}
           </Button>

@@ -1,7 +1,7 @@
 import { JsonParserId } from "./JsonParser";
 
 export interface FeatureManager {
-  isLicencedFeatureEnabled(featureName: Feature): boolean;
+  isLicencedFeatureEnabled(feature: Feature): boolean;
   isLsmEnabled(): boolean;
   isSupportEnabled(): boolean;
   isOrderViewEnabled(): boolean;
