@@ -1,5 +1,8 @@
 import { JsonParserId } from "./JsonParser";
 
+/**
+ * Interface that represents the feature manager.
+ */
 export interface FeatureManager {
   isLicencedFeatureEnabled(feature: Feature): boolean;
   isLsmEnabled(): boolean;
@@ -21,7 +24,9 @@ export interface StatusLicense {
   entitlement_valid_until?: string;
 }
 
-export type Feature = "core.resource" | "lsm.order" | "ui.ui" | "json.editor";
+// Licenced features are provided by the API. It is extracted from the licence.
+// These are not local feature flags.
+export type Feature = "core.resource" | "lsm.order" | "ui.ui";
 
 export type Extention = "support" | "lsm";
 
@@ -29,7 +34,6 @@ export const FEATURE_LIST: Record<string, Feature> = {
   resource: "core.resource",
   order: "lsm.order",
   composer: "ui.ui",
-  editor: "json.editor",
 };
 
 export const EXTENSION_LIST: Record<string, Extention> = {
