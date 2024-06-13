@@ -68,14 +68,9 @@ export const InstanceRow: React.FC<Props> = ({
             dataLabel={idDataLabel}
             aria-label={`IdentityCell-${row.serviceIdentityValue}`}
           >
-            {/* <TextWithCopy
-              value={row.serviceIdentityValue}
-              tooltipContent={words("serviceIdentity.copy")}
-            /> */}
             <CopyMultiOptions
               options={[row.serviceIdentityValue, row.id.full]}
               text={row.serviceIdentityValue}
-              tooltipContent={words("serviceIdentity.copy")}
             />
           </Td>
         ) : (
