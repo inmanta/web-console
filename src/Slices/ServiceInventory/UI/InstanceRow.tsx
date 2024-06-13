@@ -4,7 +4,7 @@ import { Tbody, Tr, Td, ExpandableRowContent } from "@patternfly/react-table";
 import styled from "styled-components";
 import { Row, ServiceModel, VersionedServiceInstanceIdentifier } from "@/Core";
 import { DateWithTooltip } from "@/UI/Components";
-import { CopyMultiOptions } from "@/UI/Components/CopyMultiOptions/CopyMultiOpsions";
+import { CopyMultiOptions } from "@/UI/Components/CopyMultiOptions";
 import { scrollRowIntoView } from "@/UI/Utils";
 import { words } from "@/UI/words";
 import { DeploymentProgressBar, IdWithCopy } from "./Components";
