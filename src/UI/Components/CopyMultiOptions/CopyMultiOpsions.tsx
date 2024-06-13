@@ -78,7 +78,8 @@ export const CopyMultiOptions: React.FC<Props> = ({
       isExpanded={isOpen}
       aria-label="Copy to clipboard"
     >
-      {text} <CopyIcon />
+      {text}
+      <SpacedCopyIcon />
     </MenuToggle>
   );
 
@@ -107,4 +108,8 @@ export const CopyMultiOptions: React.FC<Props> = ({
 
 const WidthLimitedTooltip = styled(Tooltip)`
   width: 150px;
+`;
+
+const SpacedCopyIcon = styled(CopyIcon)`
+  margin-left: 5px;
 `;
