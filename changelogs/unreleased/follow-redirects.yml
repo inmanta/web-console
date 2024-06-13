@@ -1,0 +1,4 @@
+description: "Security dependency update on follow redirect package"
+change-type: patch
+destination-branches: [master, iso7]
+
