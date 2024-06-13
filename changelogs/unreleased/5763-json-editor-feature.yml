@@ -1,4 +1,4 @@
-description: New feature: Editing, Creating instances can now be done using a JSON editor.
+description: Editing, Creating instances can now be done using a JSON editor.
 issue-nr: 5763
 change-type: patch
 destination-branches: [master, iso7]
