@@ -332,7 +332,7 @@ if (Cypress.env("edition") === "iso") {
 
       // delete but cancel deletion in modal
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 })
-        .first()
+        .last()
         .click();
       cy.get(".pf-v5-c-menu__item").contains("More actions").click();
       cy.get(".pf-v5-c-menu__item").contains("Delete").click();
