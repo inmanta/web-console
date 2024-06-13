@@ -178,7 +178,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
     <StyledForm onSubmit={preventDefault}>
       <ToggleGroup aria-label="form-editor-toggle-group">
         <ToggleGroupItem
-          text="Form"
+          text={words("inventory.form.button")}
           key={0}
           buttonId="formButton"
           isSelected={isForm}
@@ -186,7 +186,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
           onChange={() => setIsForm(true)}
         />
         <ToggleGroupItem
-          text="JSON-Editor"
+          text={words("inventory.editor.button")}
           key={1}
           buttonId="editorButton"
           isSelected={!isForm}

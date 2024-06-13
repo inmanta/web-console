@@ -58,13 +58,13 @@ export const JSONEditor: React.FC<Props> = ({
   const handleOnValidate: OnValidate = (markers) => {
     if (markers.length === 0) {
       setErrors([]);
+    } else {
+      const error: string[] = markers.map((marker) => {
+        return `${marker.message} at line ${marker.startLineNumber} and column ${marker.startColumn}`;
+      });
+
+      setErrors(error);
     }
-
-    const error: string[] = markers.map((marker) => {
-      return `${marker.message} at line ${marker.startLineNumber} and column ${marker.startColumn}`;
-    });
-
-    setErrors(error);
   };
 
   // Whenever the editorState has changed and no errors are found, call the onChange callback.
