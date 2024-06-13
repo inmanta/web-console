@@ -19,12 +19,13 @@ export interface FeatureManager {
   getLicenseInformation(): StatusLicense | undefined;
 }
 
+// Status license tells whether the license is still valid.
 export interface StatusLicense {
   cert_valid_until?: string;
   entitlement_valid_until?: string;
 }
 
-// Licenced features are provided by the API. It is extracted from the licence.
+// Licensed features are provided by the API. It is extracted from the license.
 // These are not local feature flags.
 export type Feature = "core.resource" | "lsm.order" | "ui.ui";
 
