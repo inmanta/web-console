@@ -1,9 +1,12 @@
-import React, { useCallback, useMemo } from "react";
-import Keycloak, { KeycloakConfig } from "keycloak-js";
-import { GetAuthContext } from "./AuthContext";
+import React, { useState } from "react";
+import { Bullseye, Spinner } from "@patternfly/react-core";
+import { ReactKeycloakProvider } from "@react-keycloak/web";
+import Keycloak from "keycloak-js";
+import { GetAuthContext } from "../AuthContext";
+import { AuthConfig } from "../PrimaryAuthController";
 
 interface Props {
-  config: KeycloakConfig;
+  config: AuthConfig;
 }
 
 /**
@@ -13,19 +16,20 @@ export const KeycloakAuthProvider: React.FC<React.PropsWithChildren<Props>> = ({
   children,
   config,
 }) => {
-  const keycloakInstance = useMemo(() => new Keycloak(config), [config]);
-
+  const [keycloakInstance, _setKeycloakInstance] = useState<Keycloak>(
+    new Keycloak(config),
+  );
   /**
    * Get the username of the currently logged-in user.
    * @returns The username of the currently logged-in user, or undefined if no user is logged in.
    */
-  const getUser = useCallback((): string | undefined => {
+  const getUser = (): string | undefined => {
     return keycloakInstance &&
       keycloakInstance.profile &&
       keycloakInstance.profile.username
       ? keycloakInstance.profile.username
       : undefined;
-  }, [keycloakInstance]);
+  };
 
   /**
    * Log out the currently logged-in user.
@@ -60,7 +64,22 @@ export const KeycloakAuthProvider: React.FC<React.PropsWithChildren<Props>> = ({
         updateUser: (_user, _token) => ({}),
       }}
     >
-      {children}
+      <ReactKeycloakProvider
+        authClient={keycloakInstance}
+        initOptions={{
+          onLoad: "login-required",
+          checkLoginIframe: false,
+          flow: "implicit",
+        }}
+        LoadingComponent={
+          <Bullseye>
+            <Spinner />
+          </Bullseye>
+        }
+      >
+        {children}
+      </ReactKeycloakProvider>
+      )
     </GetAuthContext.Provider>
   );
 };

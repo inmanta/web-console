@@ -5,7 +5,7 @@ import {
   getCookie,
   removeCookie,
 } from "../../Common/CookieHelper";
-import { GetAuthContext } from "./AuthContext";
+import { GetAuthContext } from "../AuthContext";
 
 /**
  * DatabaseAuthProvider component provides authentication functionality using a database.

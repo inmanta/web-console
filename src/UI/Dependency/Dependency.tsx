@@ -12,10 +12,7 @@ import {
   ArchiveHelper,
   AuthController,
 } from "@/Core";
-import {
-  GetAuthProvider,
-  defaultAuthContext,
-} from "@/Data/Auth/Providers/AuthContext";
+import { GetAuthProvider, defaultAuthContext } from "@/Data/Auth/AuthContext";
 import {
   DummyCommandResolver,
   DummyEnvironmentModifier,

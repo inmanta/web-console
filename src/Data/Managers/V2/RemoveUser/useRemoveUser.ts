@@ -1,7 +1,6 @@
-import { useContext } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { DependencyContext, PrimaryBaseUrlManager } from "@/UI";
-import { useCreateHeaders } from "../helpers/useCreateHeaders";
+import { PrimaryBaseUrlManager } from "@/UI";
+import { useHelpers } from "../helpers";
 
 /**
  * Custom hook for removing a user from the server.
@@ -10,9 +9,7 @@ import { useCreateHeaders } from "../helpers/useCreateHeaders";
  */
 export const useRemoveUser = () => {
   const client = useQueryClient();
-  const headers = useCreateHeaders();
-  const { useAuth } = useContext(DependencyContext);
-
+  const { createHeaders, handleErrors } = useHelpers();
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
     globalThis.location.pathname,
@@ -29,14 +26,10 @@ export const useRemoveUser = () => {
   const deleteOrder = async (username: string): Promise<void> => {
     const response = await fetch(baseUrl + `/api/v2/user/${username}`, {
       method: "DELETE",
-      headers,
+      headers: createHeaders(),
     });
-    if (response.status === 401) {
-      useAuth.login();
-    }
-    if (!response.ok) {
-      throw new Error(JSON.parse(await response.text()).message);
-    }
+
+    await handleErrors(response);
   };
 
   return useMutation({

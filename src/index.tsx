@@ -23,10 +23,7 @@ root.render(
     <QueryClientProvider client={queryClient}>
       <StoreProvider store={store}>
         <CustomRouter history={history}>
-          <AuthProvider
-            config={globalThis && globalThis.auth}
-            keycloakUrl={process.env.KEYCLOAK_URL}
-          >
+          <AuthProvider config={globalThis && globalThis.auth}>
             <Flex
               flexWrap={{ default: "nowrap" }}
               spaceItems={{ default: "spaceItemsNone" }}

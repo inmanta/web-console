@@ -1,8 +1,7 @@
-import { useContext } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { FormSuggestion } from "@/Core";
-import { DependencyContext, PrimaryBaseUrlManager } from "@/UI";
-import { useCreateHeaders } from "../helpers/useCreateHeaders";
+import { PrimaryBaseUrlManager } from "@/UI";
+import { useHelpers } from "../helpers";
 
 /**
  * Custom hook to handle suggested values for a parameter.
@@ -20,8 +19,8 @@ export const useSuggestedValues = (
   environment: string,
 ) => {
   //extracted headers to avoid breaking rules of Hooks
-  const headers = useCreateHeaders(environment);
-  const { useAuth } = useContext(DependencyContext);
+  const { createHeaders, handleErrors } = useHelpers();
+
   if (!suggestions) {
     return {
       useOneTime: () => {
@@ -52,15 +51,12 @@ export const useSuggestedValues = (
     const response = await fetch(
       `${baseUrl}/api/v1/parameter/${suggestions.parameter_name}`,
       {
-        headers,
+        headers: createHeaders(environment),
       },
     );
-    if (response.status === 401) {
-      useAuth.login();
-    }
-    if (!response.ok) {
-      throw new Error("Failed to fetch parameter");
-    }
+
+    await handleErrors(response);
+
     return response.json();
   };
 

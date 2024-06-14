@@ -5,7 +5,7 @@ import { AuthConfig, LocalConfig, PrimaryAuthController } from "@/Data/Auth";
 import { createCookie, removeCookie } from "@/Data/Common/CookieHelper";
 import { dependencies } from "@/Test";
 import { DependencyProvider } from "@/UI";
-import { useCreateHeaders } from ".";
+import { useHelpers } from ".";
 jest.mock("keycloak-js", () => {
   return jest.fn().mockImplementation(mockedKeycloak);
 });
@@ -28,40 +28,50 @@ const setup = (
   return wrapper;
 };
 
-describe("useCreateHeaders", () => {
+describe("createHeaders", () => {
   it("should return headers with environment when env is defined", () => {
     const env = "1234abcd";
     const wrapper = setup(undefined, undefined, undefined);
 
-    const { result } = renderHook(() => useCreateHeaders(env), { wrapper });
+    const { result } = renderHook(() => useHelpers().createHeaders(env), {
+      wrapper,
+    });
     expect(result.current.get("X-Inmanta-Tid")).toEqual(env);
   });
 
   it("should return headers without environment when env is undefined", () => {
     const wrapper = setup(undefined, undefined, undefined);
 
-    const { result } = renderHook(() => useCreateHeaders(), { wrapper });
+    const { result } = renderHook(() => useHelpers().createHeaders(), {
+      wrapper,
+    });
     expect(result.current.get("X-Inmanta-Tid")).toEqual(null);
   });
 
   it("should return headers without Authorization Token when authController is disabled", () => {
     const wrapper = setup(undefined, undefined, undefined);
 
-    const { result } = renderHook(() => useCreateHeaders(), { wrapper });
+    const { result } = renderHook(() => useHelpers().createHeaders(), {
+      wrapper,
+    });
     expect(result.current.get("Authorization")).toEqual(null);
   });
 
   it("should return headers without Authorization Token when local authController is enabled but there is no localAuth token set", () => {
     const wrapper = setup("true", { method: "database" }, undefined);
 
-    const { result } = renderHook(() => useCreateHeaders(), { wrapper });
+    const { result } = renderHook(() => useHelpers().createHeaders(), {
+      wrapper,
+    });
     expect(result.current.get("Authorization")).toEqual(null);
   });
 
   it("should return headers with Authorization Token when localAuth is enabled and localAuth token is set", () => {
     const wrapper = setup("true", { method: "database" }, undefined);
     createCookie("inmanta_user", "token", 1);
-    const { result } = renderHook(() => useCreateHeaders(), { wrapper });
+    const { result } = renderHook(() => useHelpers().createHeaders(), {
+      wrapper,
+    });
 
     expect(result.current.get("Authorization")).toEqual("Bearer token");
     removeCookie("inmanta_user");
@@ -73,7 +83,9 @@ describe("useCreateHeaders", () => {
       { method: "oidc", realm: "realm", clientId: "id" },
       undefined,
     );
-    const { result } = renderHook(() => useCreateHeaders(), { wrapper });
+    const { result } = renderHook(() => useHelpers().createHeaders(), {
+      wrapper,
+    });
 
     expect(result.current.get("Authorization")).toEqual(null);
   });
@@ -86,7 +98,9 @@ describe("useCreateHeaders", () => {
       { method: "oidc", realm: "realm", clientId: "id" },
       undefined,
     );
-    const { result } = renderHook(() => useCreateHeaders(), { wrapper });
+    const { result } = renderHook(() => useHelpers().createHeaders(), {
+      wrapper,
+    });
     expect(result.current.get("Authorization")).toEqual(
       "Bearer keycloak-token",
     );

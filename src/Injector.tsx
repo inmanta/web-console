@@ -25,7 +25,7 @@ import {
   EnvironmentModifierImpl,
   UrlManagerImpl,
 } from "@/UI";
-import { GetAuthContext } from "./Data/Auth/Providers/AuthContext";
+import { GetAuthContext } from "./Data/Auth/AuthContext";
 import { UpdateBanner } from "./UI/Components/UpdateBanner";
 interface Props {
   store: Store;

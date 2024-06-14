@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { Navigate } from "react-router-dom";
 import { Either, EnvironmentRole, FlatEnvironment } from "@/Core";
 import { DependencyContext, DependencyResolver } from "@/UI/Dependency";
@@ -14,24 +14,23 @@ export const Provider: React.FC<React.PropsWithChildren<Props>> = ({
   children,
   environmentRole,
 }) => {
-  const { environmentHandler, routeManager, authController } =
-    useContext(DependencyContext);
+  const { environmentHandler, routeManager } = useContext(DependencyContext);
   const environment = environmentHandler.useSelected();
 
   const eitherEnvironmentId = getEnvironmentId(environmentRole, environment);
   const environmentId = Either.withFallback(undefined, eitherEnvironmentId);
 
-  const keycloak =
-    authController.isEnabled() && !authController.shouldAuthLocally()
-      ? authController.getInstance()
-      : undefined;
+  // const keycloak =
+  //   authController.isEnabled() && !authController.shouldAuthLocally()
+  //     ? authController.getInstance()
+  //     : undefined;
 
-  useEffect(() => {
-    if (keycloak && !keycloak.profile) {
-      keycloak.loadUserProfile();
-    }
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [keycloak?.authenticated]);
+  // useEffect(() => {
+  //   if (keycloak && !keycloak.profile) {
+  //     keycloak.loadUserProfile();
+  //   }
+  //   /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  // }, [keycloak?.authenticated]);
 
   return (
     <>

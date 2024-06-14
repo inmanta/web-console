@@ -14,7 +14,7 @@ import {
   GetEnvironmentsStateHelper,
   GetEnvironmentsQueryManager,
 } from "@/Data";
-import { defaultAuthContext } from "@/Data/Auth/Providers/AuthContext";
+import { defaultAuthContext } from "@/Data/Auth/AuthContext";
 import {
   GetEnvironmentsContinuousQueryManager,
   GetEnvironmentsContinuousStateHelper,

@@ -3,7 +3,7 @@ import { createContext } from "react";
 /**
  * Interface for the authentication context properties.
  */
-export interface GetAuthProvider {
+export interface AuthContext {
   /**
    * Function to get the current user.
    * @returns The current user, or undefined if no user is logged in.
@@ -37,7 +37,7 @@ export interface GetAuthProvider {
 /**
  * The default values for the authentication context.
  */
-export const defaultAuthContext: GetAuthProvider = {
+export const defaultAuthContext: AuthContext = {
   getUser: () => undefined,
   login: () => {},
   logout: () => {},

@@ -1,18 +1,11 @@
 import React from "react";
-import { GetAuthContext, defaultAuthContext } from "./AuthContext";
+import { GetAuthContext, defaultAuthContext } from "../AuthContext";
 
 export const NoAuthProvider: React.FC<React.PropsWithChildren> = ({
   children,
 }) => {
   return (
-    <GetAuthContext.Provider
-      value={{
-        ...defaultAuthContext,
-        getToken: () => {
-          return "No token";
-        },
-      }}
-    >
+    <GetAuthContext.Provider value={defaultAuthContext}>
       {children}
     </GetAuthContext.Provider>
   );
