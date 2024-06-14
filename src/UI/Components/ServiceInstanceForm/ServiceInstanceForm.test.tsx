@@ -63,6 +63,7 @@ const setup = (
                   onSubmit={func ? func : jest.fn()}
                   isEdit={isEdit}
                   originalAttributes={originalAttributes}
+                  service_entity="service_entity"
                 />
               }
             />
