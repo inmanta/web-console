@@ -42,7 +42,7 @@ export const defaultAuthContext: AuthContextInterface = {
   login: () => {},
   logout: () => {},
   updateUser: (_user: string, _token: string) => {},
-  getToken: () => "undefined",
+  getToken: () => undefined,
 };
 
 /**
