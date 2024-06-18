@@ -63,9 +63,8 @@ function setup() {
     ServiceConfigStateHelper(store),
   );
 
-  const deleteServiceCommandManager = DeleteServiceCommandManager(
-    new BaseApiHelper(),
-  );
+  const deleteServiceCommandManager =
+    DeleteServiceCommandManager(BaseApiHelper());
 
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolverImpl([

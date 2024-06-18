@@ -1,4 +1,4 @@
-import Keycloak from "keycloak-js";
+import { useContext } from "react";
 import { identity } from "lodash-es";
 import {
   ApiHelper,
@@ -9,37 +9,28 @@ import {
   ErrorWithHTTPCode,
 } from "@/Core";
 import { words } from "@/UI/words";
-import { getCookie } from "../Common/CookieHelper";
+import { AuthContext } from "../Auth/AuthContext";
 import { BigIntJsonParser } from "./BigIntJsonParser";
 
 /**
  * Helper class for making API calls.
  */
-export class BaseApiHelper implements ApiHelper {
-  jsonParser = new BigIntJsonParser();
-
-  /**
-   * Constructor for BaseApiHelper.
-   * @param baseUrl Base URL for API requests. Defaults to "http://localhost:8888".
-   * @param shouldAuthLocally Boolean indicating whether local authentication is required. Defaults to false.
-   * @param keycloak Optional Keycloak instance for authentication.
-   */
-  constructor(
-    private readonly baseUrl: string = "http://localhost:8888",
-    private readonly shouldAuthLocally: boolean = false,
-    private readonly keycloak?: Keycloak,
-  ) {}
+export const BaseApiHelper = (
+  baseUrl: string = "http://localhost:8888",
+): ApiHelper => {
+  const useAuth = useContext(AuthContext);
+  const jsonParser = new BigIntJsonParser();
 
   /**
    * Makes a HEAD request to the specified URL.
    * @param url The URL to make the HEAD request to.
    * @returns A promise resolving to the HTTP status code of the response.
    */
-  async head(url: string): Promise<number> {
+  async function head(url: string): Promise<number> {
     try {
-      const response = await fetch(this.getFullUrl(url), {
+      const response = await fetch(getFullUrl(url), {
         method: "HEAD",
-        headers: this.getHeaders(),
+        headers: getHeaders(),
       });
 
       return response.status;
@@ -51,17 +42,9 @@ export class BaseApiHelper implements ApiHelper {
    * Gets the bearer token for authentication based on the available authentication method.
    * @returns An object containing the authorization header with the bearer token if available.
    */
-  private getBearerToken(): { Authorization: string } | Record<string, never> {
-    const { keycloak } = this;
-
-    if (keycloak && keycloak.token) {
-      return { Authorization: `Bearer ${keycloak.token}` };
-    }
-
-    const jwt = getCookie("inmanta_user");
-
-    if (jwt) {
-      return { Authorization: `Bearer ${jwt}` };
+  function getBearerToken(): { Authorization: string } | Record<string, never> {
+    if (useAuth.getToken()) {
+      return { Authorization: `Bearer ${useAuth.getToken()}` };
     }
 
     return {};
@@ -73,10 +56,10 @@ export class BaseApiHelper implements ApiHelper {
    * @returns Headers object including bearer token and environment information if provided.
    */
 
-  private getHeaders(environment?: string): Record<string, string> {
+  function getHeaders(environment?: string): Record<string, string> {
     return {
       ...(environment ? { "X-Inmanta-Tid": environment } : {}),
-      ...this.getBearerToken(),
+      ...getBearerToken(),
     };
   }
 
@@ -86,22 +69,12 @@ export class BaseApiHelper implements ApiHelper {
    * @param response The response object.
    * @returns Formatted error message including status code and status text.
    */
-  private formatError(message: string, response: Response): string {
+  function formatError(message: string, response: Response): string {
     let errorMessage = message;
     if (response.status === 401 || response.status === 403) {
       errorMessage += ` ${words("error.authorizationFailed")}`;
 
-      if (this.shouldAuthLocally && response.status === 401) {
-        document.dispatchEvent(new CustomEvent("open-login"));
-      } else if (this.keycloak) {
-        if (response.status === 401) {
-          this.keycloak.clearToken();
-        }
-
-        if (this.keycloak.isTokenExpired()) {
-          this.keycloak.login();
-        }
-      }
+      useAuth.login();
     }
 
     return words("error.server.intro")(
@@ -114,7 +87,7 @@ export class BaseApiHelper implements ApiHelper {
    * @param error The error object to check.
    * @returns True if the error object has a message property, false otherwise.
    */
-  private errorHasMessage(error: unknown): error is { message: string } {
+  function errorHasMessage(error: unknown): error is { message: string } {
     if (!isObject(error)) return false;
     if (!objectHasKey(error, "message")) return false;
     return typeof error.message === "string";
@@ -125,11 +98,11 @@ export class BaseApiHelper implements ApiHelper {
    * @param params Parameters for the fetch function.
    * @returns A promise resolving to an either type containing either the response data or an error message.
    */
-  private async executeJson<Data>(
+  async function executeJson<Data>(
     ...params: Parameters<typeof fetch>
   ): Promise<Either.Type<string, Data>> {
-    return this.execute<Data, string>(
-      async (response) => this.jsonParser.parse(await response.text()),
+    return execute<Data, string>(
+      async (response) => jsonParser.parse(await response.text()),
       identity,
       ...params,
     );
@@ -140,10 +113,10 @@ export class BaseApiHelper implements ApiHelper {
    * @param params Parameters for the fetch function.
    * @returns A promise resolving to maybe a string if an error occurred, or none if request was successful.
    */
-  private async executeWithoutResponse(
+  async function executeWithoutResponse(
     ...params: Parameters<typeof fetch>
   ): Promise<Maybe.Type<string>> {
-    const result = await this.execute<string, string>(
+    const result = await execute<string, string>(
       (response) => response.text(),
       identity,
       ...params,
@@ -156,8 +129,8 @@ export class BaseApiHelper implements ApiHelper {
    * @param url The URL to append to the base URL.
    * @returns The full URL.
    */
-  private getFullUrl(url: string): string {
-    return `${this.baseUrl}${url}`;
+  function getFullUrl(url: string): string {
+    return `${baseUrl}${url}`;
   }
 
   /**
@@ -166,12 +139,12 @@ export class BaseApiHelper implements ApiHelper {
    * @param environment The environment for which the request is made.
    * @returns A promise resolving to either the response data or an error message.
    */
-  async get<Data>(
+  async function get<Data>(
     url: string,
     environment: string,
   ): Promise<Either.Type<string, Data>> {
-    return this.executeJson<Data>(this.getFullUrl(url), {
-      headers: this.getHeaders(environment),
+    return executeJson<Data>(getFullUrl(url), {
+      headers: getHeaders(environment),
     });
   }
 
@@ -180,11 +153,11 @@ export class BaseApiHelper implements ApiHelper {
    * @param url The URL to make the GET request to.
    * @returns A promise resolving to either the response data or an error message.
    */
-  async getWithoutEnvironment<Data>(
+  async function getWithoutEnvironment<Data>(
     url: string,
   ): Promise<Either.Type<string, Data>> {
-    return this.executeJson<Data>(this.getFullUrl(url), {
-      headers: this.getHeaders(),
+    return executeJson<Data>(getFullUrl(url), {
+      headers: getHeaders(),
     });
   }
 
@@ -193,11 +166,11 @@ export class BaseApiHelper implements ApiHelper {
    * @param url The URL to make the GET request to.
    * @returns A promise resolving to either the response data or an error message.
    */
-  async getZipWithoutEnvironment<Blob>(
+  async function getZipWithoutEnvironment<Blob>(
     url: string,
   ): Promise<Either.Type<string, Blob>> {
-    return this.executeBlob<Blob, string>(identity, this.getFullUrl(url), {
-      headers: this.getHeaders(),
+    return executeBlob<Blob, string>(identity, getFullUrl(url), {
+      headers: getHeaders(),
     });
   }
 
@@ -208,18 +181,18 @@ export class BaseApiHelper implements ApiHelper {
    * @param body The request body.
    * @returns A promise resolving to either the response data or an error message.
    */
-  async post<Data, Body>(
+  async function post<Data, Body>(
     url: string,
     environment: string,
     body: Body,
   ): Promise<Either.Type<string, Data>> {
-    return this.executeJson<Data>(this.getFullUrl(url), {
+    return executeJson<Data>(getFullUrl(url), {
       headers: {
         "Content-Type": "application/json",
-        ...this.getHeaders(environment),
+        ...getHeaders(environment),
       },
       method: "POST",
-      body: this.jsonParser.stringify(body),
+      body: jsonParser.stringify(body),
     });
   }
 
@@ -230,18 +203,18 @@ export class BaseApiHelper implements ApiHelper {
    * @param body The request body.
    * @returns A promise resolving to maybe a string if an error occurred, or none if request was successful.
    */
-  async postWithoutResponse<Body>(
+  async function postWithoutResponse<Body>(
     url: string,
     environment: string,
     body: Body,
   ): Promise<Maybe.Type<string>> {
-    return this.executeWithoutResponse(this.getFullUrl(url), {
+    return executeWithoutResponse(getFullUrl(url), {
       headers: {
         "Content-Type": "application/json",
-        ...this.getHeaders(environment),
+        ...getHeaders(environment),
       },
       method: "POST",
-      body: this.jsonParser.stringify(body),
+      body: jsonParser.stringify(body),
     });
   }
 
@@ -251,17 +224,17 @@ export class BaseApiHelper implements ApiHelper {
    * @param body The request body.
    * @returns A promise resolving to maybe a string if an error occurred, or none if request was successful.
    */
-  async postWithoutResponseAndEnvironment<Body>(
+  async function postWithoutResponseAndEnvironment<Body>(
     url: string,
     body: Body,
   ): Promise<Maybe.Type<string>> {
-    return this.executeWithoutResponse(this.getFullUrl(url), {
+    return executeWithoutResponse(getFullUrl(url), {
       headers: {
         "Content-Type": "application/json",
-        ...this.getHeaders(),
+        ...getHeaders(),
       },
       method: "POST",
-      body: this.jsonParser.stringify(body),
+      body: jsonParser.stringify(body),
     });
   }
 
@@ -271,17 +244,17 @@ export class BaseApiHelper implements ApiHelper {
    * @param body The request body.
    * @returns A promise resolving to either the response data or an error message.
    */
-  putWithoutEnvironment<Data, Body>(
+  function putWithoutEnvironment<Data, Body>(
     url: string,
     body: Body,
   ): Promise<Either.Type<string, Data>> {
-    return this.executeJson(this.getFullUrl(url), {
+    return executeJson(getFullUrl(url), {
       headers: {
         "Content-Type": "application/json",
-        ...this.getHeaders(),
+        ...getHeaders(),
       },
       method: "PUT",
-      body: this.jsonParser.stringify(body),
+      body: jsonParser.stringify(body),
     });
   }
 
@@ -292,18 +265,18 @@ export class BaseApiHelper implements ApiHelper {
    * @param body The request body.
    * @returns A promise resolving to maybe a string if an error occurred, or none if request was successful.
    */
-  async patch<Body>(
+  async function patch<Body>(
     url: string,
     environment: string,
     body: Body,
   ): Promise<Maybe.Type<string>> {
-    return this.executeWithoutResponse(this.getFullUrl(url), {
+    return executeWithoutResponse(getFullUrl(url), {
       headers: {
         "Content-Type": "application/json",
-        ...this.getHeaders(environment),
+        ...getHeaders(environment),
       },
       method: "PATCH",
-      body: this.jsonParser.stringify(body),
+      body: jsonParser.stringify(body),
     });
   }
 
@@ -313,11 +286,14 @@ export class BaseApiHelper implements ApiHelper {
    * @param environment The environment for which the request is made.
    * @returns A promise resolving to maybe a string if an error occurred, or none if request was successful.
    */
-  async delete(url: string, environment: string): Promise<Maybe.Type<string>> {
-    return this.executeWithoutResponse(this.getFullUrl(url), {
+  async function toDelete(
+    url: string,
+    environment: string,
+  ): Promise<Maybe.Type<string>> {
+    return executeWithoutResponse(getFullUrl(url), {
       headers: {
         "Content-Type": "application/json",
-        ...this.getHeaders(environment),
+        ...getHeaders(environment),
       },
       method: "DELETE",
     });
@@ -329,15 +305,15 @@ export class BaseApiHelper implements ApiHelper {
    * @param environment The environment for which the request is made.
    * @returns A promise resolving to either the response data or an error message with HTTP code.
    */
-  getWithHTTPCode<Data>(
+  function getWithHTTPCode<Data>(
     url: string,
     environment: string,
   ): Promise<Either.Type<ErrorWithHTTPCode, Data>> {
-    return this.execute<Data, ErrorWithHTTPCode>(
-      async (response) => this.jsonParser.parse(await response.text()),
+    return execute<Data, ErrorWithHTTPCode>(
+      async (response) => jsonParser.parse(await response.text()),
       async (message, status) => ({ message, status }),
-      this.getFullUrl(url),
-      { headers: this.getHeaders(environment) },
+      getFullUrl(url),
+      { headers: getHeaders(environment) },
     );
   }
 
@@ -349,7 +325,7 @@ export class BaseApiHelper implements ApiHelper {
    * @param params Parameters for the fetch function.
    * @returns A promise resolving to either the response Blob data or an error message.
    */
-  private async executeBlob<Blob, Error>(
+  async function executeBlob<Blob, Error>(
     transformError: (message: string, status: number) => Promise<Error>,
     ...params: Parameters<typeof fetch>
   ): Promise<Either.Type<Error, Blob>> {
@@ -371,8 +347,8 @@ export class BaseApiHelper implements ApiHelper {
       }
       return Either.left(
         await transformError(
-          this.formatError(
-            this.jsonParser.parse(await response.text()).message,
+          formatError(
+            jsonParser.parse(await response.text()).message,
             response,
           ),
           response.status,
@@ -381,7 +357,7 @@ export class BaseApiHelper implements ApiHelper {
     } catch (error) {
       return Either.left(
         await transformError(
-          this.errorHasMessage(error) ? error.message : `Error: ${error}`,
+          errorHasMessage(error) ? error.message : `Error: ${error}`,
           0,
         ),
       );
@@ -397,7 +373,7 @@ export class BaseApiHelper implements ApiHelper {
    * @param params Parameters for the fetch function.
    * @returns A promise resolving to an either type containing either the response data or an error message.
    */
-  private async execute<Data, Error>(
+  async function execute<Data, Error>(
     transform: (response: Response) => Promise<Data>,
     transformError: (message: string, status: number) => Promise<Error>,
     ...params: Parameters<typeof fetch>
@@ -419,8 +395,8 @@ export class BaseApiHelper implements ApiHelper {
       }
       return Either.left(
         await transformError(
-          this.formatError(
-            this.jsonParser.parse(await response.text()).message,
+          formatError(
+            jsonParser.parse(await response.text()).message,
             response,
           ),
           response.status,
@@ -429,10 +405,24 @@ export class BaseApiHelper implements ApiHelper {
     } catch (error) {
       return Either.left(
         await transformError(
-          this.errorHasMessage(error) ? error.message : `Error: ${error}`,
+          errorHasMessage(error) ? error.message : `Error: ${error}`,
           0,
         ),
       );
     }
   }
-}
+
+  return {
+    head,
+    get,
+    getWithoutEnvironment,
+    getZipWithoutEnvironment,
+    getWithHTTPCode,
+    post,
+    postWithoutResponse,
+    postWithoutResponseAndEnvironment,
+    patch,
+    putWithoutEnvironment,
+    delete: toDelete,
+  };
+};

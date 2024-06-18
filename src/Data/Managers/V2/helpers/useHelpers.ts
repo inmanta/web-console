@@ -5,7 +5,7 @@ export const useHelpers = () => {
   const { useAuth } = useContext(DependencyContext);
 
   async function handleErrors(response: Response) {
-    if (response.status === 401) {
+    if (response.status === 401 || response.status === 403) {
       useAuth.login();
     }
 

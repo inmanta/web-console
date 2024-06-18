@@ -78,7 +78,7 @@ function setup(service = Service.a, pageSize = "") {
 
   const setStateCommandManager = TriggerSetStateCommandManager(
     authHelper,
-    new BaseApiHelper(),
+    BaseApiHelper(),
   );
 
   const commandResolver = new CommandResolverImpl(

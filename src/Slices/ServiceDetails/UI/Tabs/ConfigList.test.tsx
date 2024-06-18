@@ -30,7 +30,7 @@ const axe = configureAxe({
 
 function setup() {
   const store = getStoreInstance();
-  const baseApiHelper = new BaseApiHelper();
+  const baseApiHelper = BaseApiHelper();
   const commandManager = ServiceConfigCommandManager(
     baseApiHelper,
     ServiceConfigStateHelper(store),

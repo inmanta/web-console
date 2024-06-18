@@ -67,9 +67,8 @@ function setup() {
     ]),
   );
 
-  const deleteServiceCommandManager = DeleteServiceCommandManager(
-    new BaseApiHelper(),
-  );
+  const deleteServiceCommandManager =
+    DeleteServiceCommandManager(BaseApiHelper());
 
   const deleteCallbackCommandManager = DeleteCallbackCommandManager(
     apiHelper,

@@ -24,7 +24,7 @@ export const createCookie = (
  * @param {string} cookieName - The name of the cookie to retrieve.
  * @returns {string | null} The value of the cookie if found, otherwise null.
  */
-export const getCookie = (cookieName: string): string | null => {
+export const getCookie = (cookieName: string): string | undefined => {
   const cookieArray = document.cookie.split(";");
   const searchedCookie = cookieArray.find((cookie: string) =>
     cookie.includes(cookieName),
@@ -34,7 +34,7 @@ export const getCookie = (cookieName: string): string | null => {
     //slice of the amount that equals to cookieName + '=' sign
     return searchedCookie.slice(cookieName.length + 1);
   } else {
-    return null;
+    return searchedCookie;
   }
 };
 

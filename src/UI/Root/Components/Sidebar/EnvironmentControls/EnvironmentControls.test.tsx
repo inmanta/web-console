@@ -48,13 +48,13 @@ function setup() {
   );
 
   const haltEnvironmentManager = HaltEnvironmentCommandManager(
-    new BaseApiHelper(),
+    BaseApiHelper(),
     environmentDetailsStateHelper,
     new EnvironmentDetailsUpdater(store, apiHelper),
   );
 
   const resumeEnvironmentManager = ResumeEnvironmentCommandManager(
-    new BaseApiHelper(),
+    BaseApiHelper(),
     environmentDetailsStateHelper,
     new EnvironmentDetailsUpdater(store, apiHelper),
   );

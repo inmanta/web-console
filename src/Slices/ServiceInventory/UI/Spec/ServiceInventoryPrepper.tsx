@@ -64,9 +64,8 @@ export class ServiceInventoryPrepper {
       ]),
     );
 
-    const triggerUpdateCommandManager = TriggerInstanceUpdateCommandManager(
-      new BaseApiHelper(),
-    );
+    const triggerUpdateCommandManager =
+      TriggerInstanceUpdateCommandManager(BaseApiHelper());
     const triggerDestroyInstanceCommandManager =
       DestroyInstanceCommandManager(apiHelper);
     const triggerforceStateCommandManager = TriggerForceStateCommandManager(
@@ -78,7 +77,7 @@ export class ServiceInventoryPrepper {
 
     const setStateCommandManager = TriggerSetStateCommandManager(
       new KeycloakAuthHelper(),
-      new BaseApiHelper(),
+      BaseApiHelper(),
     );
 
     const commandResolver = new CommandResolverImpl(

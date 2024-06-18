@@ -12,7 +12,10 @@ import {
   ArchiveHelper,
   AuthController,
 } from "@/Core";
-import { GetAuthProvider, defaultAuthContext } from "@/Data/Auth/AuthContext";
+import {
+  AuthContextInterface,
+  defaultAuthContext,
+} from "@/Data/Auth/AuthContext";
 import {
   DummyCommandResolver,
   DummyEnvironmentModifier,
@@ -39,7 +42,7 @@ export interface Dependencies {
   authHelper: AuthHelper;
   archiveHelper: ArchiveHelper;
   authController: AuthController;
-  useAuth: GetAuthProvider;
+  useAuth: AuthContextInterface;
 }
 
 export const DependencyContext = createContext<Dependencies>({

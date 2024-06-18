@@ -25,7 +25,7 @@ import {
   EnvironmentModifierImpl,
   UrlManagerImpl,
 } from "@/UI";
-import { GetAuthContext } from "./Data/Auth/AuthContext";
+import { AuthContext } from "./Data/Auth/AuthContext";
 import { UpdateBanner } from "./UI/Components/UpdateBanner";
 interface Props {
   store: Store;
@@ -35,7 +35,7 @@ export const Injector: React.FC<React.PropsWithChildren<Props>> = ({
   store,
   children,
 }) => {
-  const useAuth = useContext(GetAuthContext);
+  const useAuth = useContext(AuthContext);
   const featureManager = new PrimaryFeatureManager(
     GetServerStatusStateHelper(store),
     new PrimaryLogger(),
@@ -56,11 +56,7 @@ export const Injector: React.FC<React.PropsWithChildren<Props>> = ({
   const basePathname = baseUrlManager.getBasePathname();
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
   const routeManager = PrimaryRouteManager(basePathname);
-  const apiHelper = new BaseApiHelper(
-    baseUrl,
-    authController.shouldAuthLocally(),
-    authController.getInstance(),
-  );
+  const apiHelper = BaseApiHelper(baseUrl);
   const authHelper = new KeycloakAuthHelper(authController.getInstance());
   const queryResolver = new QueryResolverImpl(
     new QueryManagerResolverImpl(

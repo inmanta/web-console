@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { Bullseye, Spinner } from "@patternfly/react-core";
 import { ReactKeycloakProvider } from "@react-keycloak/web";
 import Keycloak from "keycloak-js";
-import { GetAuthContext } from "../AuthContext";
+import { AuthContext } from "../AuthContext";
 import { AuthConfig } from "../PrimaryAuthController";
 
 interface Props {
@@ -16,9 +16,7 @@ export const KeycloakAuthProvider: React.FC<React.PropsWithChildren<Props>> = ({
   children,
   config,
 }) => {
-  const [keycloakInstance, _setKeycloakInstance] = useState<Keycloak>(
-    new Keycloak(config),
-  );
+  const keycloakInstance = new Keycloak(config);
   /**
    * Get the username of the currently logged-in user.
    * @returns The username of the currently logged-in user, or undefined if no user is logged in.
@@ -48,38 +46,47 @@ export const KeycloakAuthProvider: React.FC<React.PropsWithChildren<Props>> = ({
 
   /**
    * Get the access token of the currently logged-in user.
-   * @returns The access token of the currently logged-in user, or null if no user is logged in.
+   * @returns The access token of the currently logged-in user, or undefined if no user is logged in.
    */
   const getToken = () => {
-    return keycloakInstance.token || null;
+    return keycloakInstance.token;
   };
 
+  useEffect(() => {
+    if (keycloakInstance && !keycloakInstance.profile) {
+      keycloakInstance.loadUserProfile().then((profile) => {
+        console.log(profile);
+        console.log(keycloakInstance.profile);
+      });
+    }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [keycloakInstance?.authenticated]);
+
   return (
-    <GetAuthContext.Provider
-      value={{
-        getUser,
-        getToken,
-        login,
-        logout,
-        updateUser: (_user, _token) => ({}),
+    <ReactKeycloakProvider
+      authClient={keycloakInstance}
+      initOptions={{
+        onLoad: "login-required",
+        checkLoginIframe: false,
+        flow: "implicit",
       }}
+      LoadingComponent={
+        <Bullseye>
+          <Spinner />
+        </Bullseye>
+      }
     >
-      <ReactKeycloakProvider
-        authClient={keycloakInstance}
-        initOptions={{
-          onLoad: "login-required",
-          checkLoginIframe: false,
-          flow: "implicit",
+      <AuthContext.Provider
+        value={{
+          getUser,
+          getToken,
+          login,
+          logout,
+          updateUser: (_user: string, _token: string) => {},
         }}
-        LoadingComponent={
-          <Bullseye>
-            <Spinner />
-          </Bullseye>
-        }
       >
         {children}
-      </ReactKeycloakProvider>
-      )
-    </GetAuthContext.Provider>
+      </AuthContext.Provider>
+    </ReactKeycloakProvider>
   );
 };

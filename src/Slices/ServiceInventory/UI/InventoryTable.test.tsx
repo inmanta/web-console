@@ -262,7 +262,7 @@ function setup(expertMode = false, setSortFn: (props) => void = dummySetter) {
 
   const setStateCommandManager = TriggerSetStateCommandManager(
     authHelper,
-    new BaseApiHelper(),
+    BaseApiHelper(),
   );
 
   const commandResolver = new CommandResolverImpl(

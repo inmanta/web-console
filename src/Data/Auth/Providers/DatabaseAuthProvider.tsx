@@ -5,7 +5,7 @@ import {
   getCookie,
   removeCookie,
 } from "../../Common/CookieHelper";
-import { GetAuthContext } from "../AuthContext";
+import { AuthContext } from "../AuthContext";
 
 /**
  * DatabaseAuthProvider component provides authentication functionality using a database.
@@ -35,10 +35,10 @@ export const DatabaseAuthProvider: React.FC<React.PropsWithChildren> = ({
   };
 
   return (
-    <GetAuthContext.Provider
+    <AuthContext.Provider
       value={{ getUser, login, logout, updateUser, getToken }}
     >
       {children}
-    </GetAuthContext.Provider>
+    </AuthContext.Provider>
   );
 };

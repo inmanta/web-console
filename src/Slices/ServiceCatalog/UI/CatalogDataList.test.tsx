@@ -30,7 +30,7 @@ const axe = configureAxe({
 const Component = (services: ServiceModel[]) => {
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolverImpl([
-      DeleteServiceCommandManager(new BaseApiHelper()),
+      DeleteServiceCommandManager(BaseApiHelper()),
     ]),
   );
   return (

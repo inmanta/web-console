@@ -19,7 +19,7 @@ import { ConfigDetails } from "./ConfigDetails";
 
 function setup() {
   const store = getStoreInstance();
-  const baseApiHelper = new BaseApiHelper();
+  const baseApiHelper = BaseApiHelper();
   const commandManager = InstanceConfigCommandManager(
     baseApiHelper,
     InstanceConfigStateHelper(store),
