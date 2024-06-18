@@ -35,7 +35,7 @@ describe("getCookie", () => {
     const cookieValue = getCookie("nonExistingCookie");
 
     // Expectations
-    expect(cookieValue).toBeNull();
+    expect(cookieValue).toBeUndefined();
   });
 });
 
@@ -52,6 +52,6 @@ describe("removeCookie", () => {
     const cookieValue = getCookie("testCookie");
 
     // Expectations
-    expect(cookieValue).toBeNull();
+    expect(cookieValue).toBeUndefined();
   });
 });

@@ -1,4 +1,5 @@
 import React from "react";
+import { KeycloakProvider } from "./KeycloakProvider";
 import { AuthConfig, LocalConfig } from "./PrimaryAuthController";
 import { DatabaseAuthProvider } from "./Providers/DatabaseAuthProvider";
 import { KeycloakAuthProvider } from "./Providers/KeycloakAuthProvider";
@@ -23,7 +24,9 @@ export const AuthProvider: React.FC<React.PropsWithChildren<Props>> = ({
       return <DatabaseAuthProvider>{children}</DatabaseAuthProvider>;
     case "oidc":
       return (
-        <KeycloakAuthProvider config={config}>{children}</KeycloakAuthProvider>
+        <KeycloakProvider config={config}>
+          <KeycloakAuthProvider>{children}</KeycloakAuthProvider>
+        </KeycloakProvider>
       );
     default:
       return <NoAuthProvider>{children}</NoAuthProvider>;

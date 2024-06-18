@@ -20,6 +20,7 @@ import {
   TriggerForceStateCommandManager,
   DestroyInstanceCommandManager,
 } from "@/Data";
+import { defaultAuthContext } from "@/Data/Auth/AuthContext";
 import {
   Service,
   ServiceInstance,
@@ -78,7 +79,7 @@ function setup(service = Service.a, pageSize = "") {
 
   const setStateCommandManager = TriggerSetStateCommandManager(
     authHelper,
-    BaseApiHelper(),
+    BaseApiHelper(undefined, defaultAuthContext),
   );
 
   const commandResolver = new CommandResolverImpl(
@@ -111,6 +112,7 @@ function setup(service = Service.a, pageSize = "") {
   );
   const component = (
     <MemoryRouter initialEntries={[`/?env=aaa${pageSize}`]}>
+      {/* <AuthProvider config={undefined}> */}
       <DependencyProvider
         dependencies={{
           ...dependencies,
@@ -128,6 +130,7 @@ function setup(service = Service.a, pageSize = "") {
           />
         </StoreProvider>
       </DependencyProvider>
+      {/* </AuthProvider> */}
     </MemoryRouter>
   );
 

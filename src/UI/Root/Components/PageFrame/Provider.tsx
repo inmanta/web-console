@@ -20,18 +20,6 @@ export const Provider: React.FC<React.PropsWithChildren<Props>> = ({
   const eitherEnvironmentId = getEnvironmentId(environmentRole, environment);
   const environmentId = Either.withFallback(undefined, eitherEnvironmentId);
 
-  // const keycloak =
-  //   authController.isEnabled() && !authController.shouldAuthLocally()
-  //     ? authController.getInstance()
-  //     : undefined;
-
-  // useEffect(() => {
-  //   if (keycloak && !keycloak.profile) {
-  //     keycloak.loadUserProfile();
-  //   }
-  //   /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  // }, [keycloak?.authenticated]);
-
   return (
     <>
       {environmentId && (

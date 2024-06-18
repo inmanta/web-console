@@ -27,6 +27,7 @@ import {
 } from "@/UI";
 import { AuthContext } from "./Data/Auth/AuthContext";
 import { UpdateBanner } from "./UI/Components/UpdateBanner";
+
 interface Props {
   store: Store;
 }
@@ -56,7 +57,7 @@ export const Injector: React.FC<React.PropsWithChildren<Props>> = ({
   const basePathname = baseUrlManager.getBasePathname();
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
   const routeManager = PrimaryRouteManager(basePathname);
-  const apiHelper = BaseApiHelper(baseUrl);
+  const apiHelper = BaseApiHelper(baseUrl, useAuth);
   const authHelper = new KeycloakAuthHelper(authController.getInstance());
   const queryResolver = new QueryResolverImpl(
     new QueryManagerResolverImpl(

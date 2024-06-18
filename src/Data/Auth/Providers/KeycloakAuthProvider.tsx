@@ -1,31 +1,21 @@
 import React, { useEffect } from "react";
-import { Bullseye, Spinner } from "@patternfly/react-core";
-import { ReactKeycloakProvider } from "@react-keycloak/web";
-import Keycloak from "keycloak-js";
+import { useKeycloak } from "@react-keycloak/web";
 import { AuthContext } from "../AuthContext";
-import { AuthConfig } from "../PrimaryAuthController";
-
-interface Props {
-  config: AuthConfig;
-}
 
 /**
  * KeycloakAuthProvider component provides authentication functionality using Keycloak.
  */
-export const KeycloakAuthProvider: React.FC<React.PropsWithChildren<Props>> = ({
+export const KeycloakAuthProvider: React.FC<React.PropsWithChildren> = ({
   children,
-  config,
 }) => {
-  const keycloakInstance = new Keycloak(config);
+  const { keycloak } = useKeycloak();
   /**
    * Get the username of the currently logged-in user.
    * @returns The username of the currently logged-in user, or undefined if no user is logged in.
    */
   const getUser = (): string | undefined => {
-    return keycloakInstance &&
-      keycloakInstance.profile &&
-      keycloakInstance.profile.username
-      ? keycloakInstance.profile.username
+    return keycloak && keycloak.profile && keycloak.profile.username
+      ? keycloak.profile.username
       : undefined;
   };
 
@@ -33,15 +23,15 @@ export const KeycloakAuthProvider: React.FC<React.PropsWithChildren<Props>> = ({
    * Log out the currently logged-in user.
    */
   const logout = () => {
-    keycloakInstance.logout();
+    keycloak.logout();
   };
 
   /**
    * Clear the token and initiate the Keycloak login flow.
    */
   const login = () => {
-    keycloakInstance.clearToken();
-    keycloakInstance.login();
+    keycloak.clearToken();
+    keycloak.login();
   };
 
   /**
@@ -49,44 +39,27 @@ export const KeycloakAuthProvider: React.FC<React.PropsWithChildren<Props>> = ({
    * @returns The access token of the currently logged-in user, or undefined if no user is logged in.
    */
   const getToken = () => {
-    return keycloakInstance.token;
+    return keycloak.token;
   };
 
   useEffect(() => {
-    if (keycloakInstance && !keycloakInstance.profile) {
-      keycloakInstance.loadUserProfile().then((profile) => {
-        console.log(profile);
-        console.log(keycloakInstance.profile);
-      });
+    if (keycloak && !keycloak.profile) {
+      keycloak.loadUserProfile();
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [keycloakInstance?.authenticated]);
+  }, [keycloak.authenticated]);
 
   return (
-    <ReactKeycloakProvider
-      authClient={keycloakInstance}
-      initOptions={{
-        onLoad: "login-required",
-        checkLoginIframe: false,
-        flow: "implicit",
+    <AuthContext.Provider
+      value={{
+        getUser,
+        getToken,
+        login,
+        logout,
+        updateUser: (_user: string, _token: string) => {},
       }}
-      LoadingComponent={
-        <Bullseye>
-          <Spinner />
-        </Bullseye>
-      }
     >
-      <AuthContext.Provider
-        value={{
-          getUser,
-          getToken,
-          login,
-          logout,
-          updateUser: (_user: string, _token: string) => {},
-        }}
-      >
-        {children}
-      </AuthContext.Provider>
-    </ReactKeycloakProvider>
+      {children}
+    </AuthContext.Provider>
   );
 };

@@ -20,6 +20,7 @@ import {
   BaseApiHelper,
   ServiceQueryManager,
 } from "@/Data";
+import { defaultAuthContext } from "@/Data/Auth/AuthContext";
 import {
   DeferredApiHelper,
   dependencies,
@@ -63,8 +64,9 @@ function setup() {
     ServiceConfigStateHelper(store),
   );
 
-  const deleteServiceCommandManager =
-    DeleteServiceCommandManager(BaseApiHelper());
+  const deleteServiceCommandManager = DeleteServiceCommandManager(
+    BaseApiHelper(undefined, defaultAuthContext),
+  );
 
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolverImpl([

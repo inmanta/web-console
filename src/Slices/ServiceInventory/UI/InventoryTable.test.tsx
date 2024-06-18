@@ -20,6 +20,7 @@ import {
   TriggerForceStateCommandManager,
   TriggerSetStateCommandManager,
 } from "@/Data";
+import { defaultAuthContext } from "@/Data/Auth/AuthContext";
 import { TriggerInstanceUpdateCommandManager } from "@/Slices/EditInstance/Data";
 import {
   Row,
@@ -262,7 +263,7 @@ function setup(expertMode = false, setSortFn: (props) => void = dummySetter) {
 
   const setStateCommandManager = TriggerSetStateCommandManager(
     authHelper,
-    BaseApiHelper(),
+    BaseApiHelper(undefined, defaultAuthContext),
   );
 
   const commandResolver = new CommandResolverImpl(

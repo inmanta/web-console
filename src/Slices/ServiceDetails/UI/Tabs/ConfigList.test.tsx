@@ -10,6 +10,7 @@ import {
   ServiceConfigCommandManager,
   ServiceConfigStateHelper,
 } from "@/Data";
+import { defaultAuthContext } from "@/Data/Auth/AuthContext";
 import {
   dependencies,
   DynamicCommandManagerResolverImpl,
@@ -30,7 +31,7 @@ const axe = configureAxe({
 
 function setup() {
   const store = getStoreInstance();
-  const baseApiHelper = BaseApiHelper();
+  const baseApiHelper = BaseApiHelper(undefined, defaultAuthContext);
   const commandManager = ServiceConfigCommandManager(
     baseApiHelper,
     ServiceConfigStateHelper(store),

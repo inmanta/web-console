@@ -1,4 +1,3 @@
-import { useContext } from "react";
 import { identity } from "lodash-es";
 import {
   ApiHelper,
@@ -9,7 +8,7 @@ import {
   ErrorWithHTTPCode,
 } from "@/Core";
 import { words } from "@/UI/words";
-import { AuthContext } from "../Auth/AuthContext";
+import { AuthContextInterface } from "../Auth/AuthContext";
 import { BigIntJsonParser } from "./BigIntJsonParser";
 
 /**
@@ -17,8 +16,8 @@ import { BigIntJsonParser } from "./BigIntJsonParser";
  */
 export const BaseApiHelper = (
   baseUrl: string = "http://localhost:8888",
+  useAuth: AuthContextInterface,
 ): ApiHelper => {
-  const useAuth = useContext(AuthContext);
   const jsonParser = new BigIntJsonParser();
 
   /**

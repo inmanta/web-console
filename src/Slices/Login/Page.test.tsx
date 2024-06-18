@@ -6,7 +6,7 @@ import { userEvent } from "@testing-library/user-event";
 import { axe, toHaveNoViolations } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { PrimaryAuthController } from "@/Data";
+import { AuthProvider } from "@/Data/Auth/AuthProvider";
 import * as CookieHelper from "@/Data/Common/CookieHelper";
 import { dependencies } from "@/Test";
 import { DependencyProvider } from "@/UI";
@@ -23,16 +23,13 @@ jest.mock("react-router-dom", () => ({
 
 const setup = () => {
   const queryClient = new QueryClient();
-  const authController = new PrimaryAuthController(
-    "true",
-    { method: "database" },
-    undefined,
-  );
   return (
     <QueryClientProvider client={queryClient}>
-      <DependencyProvider dependencies={{ ...dependencies, authController }}>
-        <Login />
-      </DependencyProvider>
+      <AuthProvider config={{ method: "database" }}>
+        <DependencyProvider dependencies={{ ...dependencies }}>
+          <Login />
+        </DependencyProvider>
+      </AuthProvider>
     </QueryClientProvider>
   );
 };

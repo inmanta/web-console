@@ -12,7 +12,6 @@ import { dependencies } from "@/Test";
 import { DependencyProvider, words } from "@/UI";
 import { UserManagementPage } from "./Page";
 
-const spyDispatch = jest.spyOn(document, "dispatchEvent");
 expect.extend(toHaveNoViolations);
 
 const setup = () => {
@@ -131,8 +130,6 @@ describe("UserManagementPage", () => {
       "The following error occured: Access to this resource is unauthorized",
     );
     expect(errorMessage).toBeVisible();
-
-    expect(spyDispatch).toHaveBeenCalledWith(new CustomEvent("open-login"));
 
     await act(async () => {
       const results = await axe(document.body);
