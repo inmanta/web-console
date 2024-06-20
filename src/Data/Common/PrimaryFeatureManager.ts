@@ -1,11 +1,15 @@
 import {
   FeatureManager,
+  Feature,
+  Extention,
   JsonParserId,
   Logger,
   RemoteData,
   ServerStatus,
   StateHelper,
   StatusLicense,
+  EXTENSION_LIST,
+  FEATURE_LIST,
 } from "@/Core";
 import { VoidLogger } from "./VoidLogger";
 
@@ -75,18 +79,17 @@ export class PrimaryFeatureManager implements FeatureManager {
    * @param extension - The name of the extension.
    * @returns True if the extension is enabled, false otherwise.
    */
-  private isExtensionEnabled(extension: string): boolean {
+  private isExtensionEnabled(extension: Extention): boolean {
     return this.getExtensions().includes(extension);
   }
 
   /**
    * Checks if a feature is enabled in the ServerStatus object.
-   * @private
    *
    * @param featureSlice - The slice of the feature.
    * @returns True if the feature is enabled, false otherwise.
    */
-  private isFeaterEnabled(featureSlice: string): boolean {
+  public isLicencedFeatureEnabled(featureSlice: Feature): boolean {
     return this.get().features.some(
       (feature) => feature.slice === featureSlice && feature.value === true,
     );
@@ -105,7 +108,7 @@ export class PrimaryFeatureManager implements FeatureManager {
    * @returns True if the "support" extension is enabled, false otherwise.
    */
   isSupportEnabled(): boolean {
-    return this.isExtensionEnabled("support");
+    return this.isExtensionEnabled(EXTENSION_LIST.support);
   }
 
   /**
@@ -113,7 +116,7 @@ export class PrimaryFeatureManager implements FeatureManager {
    * @returns True if the "lsm" extension is enabled, false otherwise.
    */
   isLsmEnabled(): boolean {
-    return this.isExtensionEnabled("lsm");
+    return this.isExtensionEnabled(EXTENSION_LIST.lsm);
   }
 
   /**
@@ -121,7 +124,7 @@ export class PrimaryFeatureManager implements FeatureManager {
    * @returns True if the "resource-discovery" feature is enabled, false otherwise.
    */
   isResourceDiscoveryEnabled(): boolean {
-    return this.isFeaterEnabled("core.resource");
+    return this.isLicencedFeatureEnabled(FEATURE_LIST.resource);
   }
 
   /**
@@ -129,7 +132,7 @@ export class PrimaryFeatureManager implements FeatureManager {
    * @returns True if the "orderview" is enabled, false otherwise.
    */
   isOrderViewEnabled(): boolean {
-    return this.isFeaterEnabled("lsm.order");
+    return this.isLicencedFeatureEnabled(FEATURE_LIST.order);
   }
 
   /**
@@ -137,7 +140,7 @@ export class PrimaryFeatureManager implements FeatureManager {
    * @returns True if the composer feature is enabled, false otherwise.
    */
   isComposerEnabled(): boolean {
-    return this.isFeaterEnabled("ui.ui");
+    return this.isLicencedFeatureEnabled(FEATURE_LIST.composer);
   }
 
   /**

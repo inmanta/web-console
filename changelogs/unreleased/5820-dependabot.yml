@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps): Bump uuid from 9.0.1 to 10.0.0'
+destination-branches:
+- master
+- iso7
+sections: {}

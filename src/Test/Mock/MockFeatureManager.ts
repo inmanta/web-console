@@ -1,4 +1,4 @@
-import { FeatureManager, JsonParserId, StatusLicense } from "@/Core";
+import { Feature, FeatureManager, JsonParserId, StatusLicense } from "@/Core";
 
 export class MockFeatureManager implements FeatureManager {
   getCommitHash(): string {
@@ -15,6 +15,10 @@ export class MockFeatureManager implements FeatureManager {
 
   getServerVersion(): string {
     return "4.1";
+  }
+
+  isLicencedFeatureEnabled(_feature: Feature): boolean {
+    return true;
   }
 
   isSupportEnabled(): boolean {
@@ -70,6 +74,10 @@ export class MockEditableFeatureManager implements FeatureManager {
     return "4.1";
   }
 
+  isLicencedFeatureEnabled(_feature: Feature): boolean {
+    return true;
+  }
+
   isSupportEnabled(): boolean {
     return true;
   }
@@ -121,6 +129,10 @@ export class MockLimitedFeatureManager implements FeatureManager {
 
   getServerVersion(): string {
     return "4.1";
+  }
+
+  isLicencedFeatureEnabled(_feature: Feature): boolean {
+    return false;
   }
 
   isSupportEnabled(): boolean {

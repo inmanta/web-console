@@ -1,0 +1,4 @@
+description: "Security dependency update on ip package"
+change-type: patch
+destination-branches: [master, iso7]
+
