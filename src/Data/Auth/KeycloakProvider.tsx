@@ -1,9 +1,15 @@
 import React from "react";
 import { Bullseye, Spinner } from "@patternfly/react-core";
 import { ReactKeycloakProvider } from "@react-keycloak/web";
-import Keycloak from "keycloak-js";
-import { AuthConfig } from "./AuthProvider";
+import Keycloak, { KeycloakConfig } from "keycloak-js";
 
+export interface AuthConfig extends KeycloakConfig {
+  method: "oidc";
+}
+
+export interface LocalConfig {
+  method: "database";
+}
 interface Props {
   config: AuthConfig;
 }
