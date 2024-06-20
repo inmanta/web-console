@@ -14,7 +14,7 @@ import { AuthContext } from "../AuthContext";
 export const DatabaseAuthProvider: React.FC<React.PropsWithChildren> = ({
   children,
 }) => {
-  const [user, setUser] = useState<string | undefined>(undefined);
+  const [user, setUser] = useState<string | null>(null);
   const navigate = useNavigate();
 
   const getUser = () => user;

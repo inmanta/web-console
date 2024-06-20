@@ -13,10 +13,10 @@ export const KeycloakAuthProvider: React.FC<React.PropsWithChildren> = ({
    * Get the username of the currently logged-in user.
    * @returns The username of the currently logged-in user, or undefined if no user is logged in.
    */
-  const getUser = (): string | undefined => {
+  const getUser = (): string | null => {
     return keycloak && keycloak.profile && keycloak.profile.username
       ? keycloak.profile.username
-      : undefined;
+      : null;
   };
 
   /**
