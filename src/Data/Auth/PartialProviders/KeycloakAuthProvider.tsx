@@ -22,14 +22,14 @@ export const KeycloakAuthProvider: React.FC<React.PropsWithChildren> = ({
   /**
    * Log out the currently logged-in user.
    */
-  const logout = () => {
+  const logout = (): void => {
     keycloak.logout();
   };
 
   /**
    * Clear the token and initiate the Keycloak login flow.
    */
-  const login = () => {
+  const login = (): void => {
     keycloak.clearToken();
     keycloak.login();
   };
@@ -38,7 +38,7 @@ export const KeycloakAuthProvider: React.FC<React.PropsWithChildren> = ({
    * Get the access token of the currently logged-in user.
    * @returns The access token of the currently logged-in user, or undefined if no user is logged in.
    */
-  const getToken = () => {
+  const getToken = (): string | undefined => {
     return keycloak.token;
   };
 

@@ -17,17 +17,17 @@ export const DatabaseAuthProvider: React.FC<React.PropsWithChildren> = ({
   const [user, setUser] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  const getUser = () => user;
+  const getUser = (): string | null => user;
 
-  const logout = () => {
+  const logout = (): void => {
     removeCookie("inmanta_user");
     localStorage.removeItem("inmanta_user");
     navigate("/login");
   };
 
-  const login = () => navigate("/login");
+  const login = (): void => navigate("/login");
 
-  const getToken = () => getCookie("inmanta_user");
+  const getToken = (): string | undefined => getCookie("inmanta_user");
 
   const updateUser = (username: string, token: string) => {
     setUser(username);
