@@ -1,8 +1,8 @@
 import React from "react";
 import { AuthConfig, KeycloakProvider, LocalConfig } from "./KeycloakProvider";
-import { DatabaseAuthProvider } from "./Providers/DatabaseAuthProvider";
-import { KeycloakAuthProvider } from "./Providers/KeycloakAuthProvider";
-import { NoAuthProvider } from "./Providers/NoAuthProvider";
+import { DatabaseAuthProvider } from "./PartialProviders/DatabaseAuthProvider";
+import { KeycloakAuthProvider } from "./PartialProviders/KeycloakAuthProvider";
+import { NoAuthProvider } from "./PartialProviders/NoAuthProvider";
 
 interface Props {
   config: undefined | AuthConfig | LocalConfig;
