@@ -1,6 +1,6 @@
-import React from "react";
+import React, { act } from "react";
 import { MemoryRouter } from "react-router";
-import { act, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { Either, RemoteData } from "@/Core";
@@ -67,7 +67,7 @@ test("ResourceHistoryView shows empty table", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "ResourceHistory-Loading" }),
+    await screen.findByRole("region", { name: "ResourceHistory-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(
@@ -88,13 +88,13 @@ test("ResourceHistoryView shows failed table", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "ResourceHistory-Loading" }),
+    await screen.findByRole("region", { name: "ResourceHistory-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.left("error"));
 
   expect(
-    await screen.findByRole("generic", { name: "ResourceHistory-Failed" }),
+    await screen.findByRole("region", { name: "ResourceHistory-Failed" }),
   ).toBeInTheDocument();
 });
 
@@ -103,7 +103,7 @@ test("ResourceHistory shows success table", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "ResourceHistory-Loading" }),
+    await screen.findByRole("region", { name: "ResourceHistory-Loading" }),
   ).toBeInTheDocument();
 
   expect(apiHelper.pendingRequests).toHaveLength(1);

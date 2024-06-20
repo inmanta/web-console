@@ -14,6 +14,10 @@ export class DiscoveredResourcesTablePresenter
         displayName: words("discovered.column.resource_id"),
         apiName: "discovered_resource_id",
       },
+      {
+        displayName: words("discovered.column.managed_resource"),
+        apiName: "managed_resource_id",
+      },
     ];
     this.numberOfColumns = this.columnHeads.length + 1;
   }

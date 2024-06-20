@@ -12,9 +12,9 @@ export const PageContainer: React.FC<React.PropsWithChildren<Props>> = ({
   title,
   ...props
 }) => (
-  <PageSection variant="light" {...props}>
+  <PageSection variant="light" {...props} role="main">
     <PagePadder>
-      <PageTitle>{title}</PageTitle>
+      <PageTitle role="heading">{title}</PageTitle>
       {children}
     </PagePadder>
   </PageSection>

@@ -1,8 +1,9 @@
-import React from "react";
+import React, { act } from "react";
 import { MemoryRouter } from "react-router";
-import { act, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
+import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { Either } from "@/Core";
 import {
   CommandResolverImpl,
@@ -21,6 +22,14 @@ import {
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { Page } from "./Page";
+expect.extend(toHaveNoViolations);
+
+const axe = configureAxe({
+  rules: {
+    // disable landmark rules when testing isolated components.
+    region: { enabled: false },
+  },
+});
 
 function setup() {
   const apiHelper = new DeferredApiHelper();
@@ -62,6 +71,11 @@ test("Given CreateEnvironmentForm When project and environment are not set Then 
   });
 
   expect(await screen.findByRole("button", { name: "submit" })).toBeDisabled();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("Given CreateEnvironmentForm When no projects are known, THEN cannot add empty project name", async () => {
@@ -103,6 +117,11 @@ test("Given CreateEnvironmentForm When no projects are known, THEN cannot add em
   });
 
   expect(screen.getByRole("option")).toBeInTheDocument();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test(`Given CreateEnvironmentForm When an existing project and valid environment are set and submit is clicked Then sends the correct request`, async () => {
@@ -136,6 +155,12 @@ test(`Given CreateEnvironmentForm When an existing project and valid environment
   await act(async () => {
     await userEvent.type(textBox, `dev{enter}`);
   });
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
+
   await act(async () => {
     await userEvent.click(
       await screen.findByRole("button", { name: "submit" }),
@@ -208,6 +233,11 @@ test(`Given CreateEnvironmentForm When an existing project, a valid environment 
   });
 
   await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
+
+  await act(async () => {
     await userEvent.click(
       await screen.findByRole("button", { name: "submit" }),
     );
@@ -261,6 +291,12 @@ test(`Given CreateEnvironmentForm When a new project and valid environment are s
       screen.getByRole("option", { name: 'Create "new-project"' }),
     );
   });
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
+
   const request = apiHelper.pendingRequests[0];
   expect(request).toEqual({
     method: "PUT",

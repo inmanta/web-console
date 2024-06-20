@@ -87,6 +87,20 @@ export const FieldInput: React.FC<Props> = ({
   ).useOneTime();
   const [suggestionsList, setSuggestionsList] = useState<string[] | null>(null);
 
+  // Get the controlled value for the field
+  // If the value is an object or an array, it needs to be converted.
+  function getControlledValue(value) {
+    if (value === null || value === undefined) {
+      return "";
+    } else if (Array.isArray(value)) {
+      return value.join(", ");
+    } else if (typeof value === "object") {
+      return JSON.stringify(value);
+    } else {
+      return value;
+    }
+  }
+
   //callback was used to avoid re-render in useEffect used in SelectFormInput
   const getEnumUpdate = useCallback(
     (value) => {
@@ -156,9 +170,7 @@ export const FieldInput: React.FC<Props> = ({
         <TextListFormInput
           aria-label={`TextFieldInput-${field.name}`}
           attributeName={field.name}
-          attributeValue={
-            get(formState, makePath(path, field.name).split(".")) as string[]
-          }
+          attributeValue={get(formState, makePath(path, field.name).split("."))}
           description={field.description}
           isOptional={field.isOptional}
           shouldBeDisabled={
@@ -205,7 +217,9 @@ export const FieldInput: React.FC<Props> = ({
         <TextFormInput
           aria-label={`TextFieldInput-${field.name}`}
           attributeName={field.name}
-          attributeValue={get(formState, makePath(path, field.name)) as string}
+          attributeValue={getControlledValue(
+            get(formState, makePath(path, field.name)),
+          )}
           description={field.description}
           isOptional={field.isOptional}
           shouldBeDisabled={
@@ -268,6 +282,7 @@ export const FieldInput: React.FC<Props> = ({
           originalState={originalState}
           getUpdate={getUpdate}
           path={path}
+          isNew={isNew}
         />
       );
     case "DictList":
@@ -278,6 +293,7 @@ export const FieldInput: React.FC<Props> = ({
           originalState={originalState}
           getUpdate={getUpdate}
           path={path}
+          isNew={isNew}
         />
       );
     case "RelationList":
@@ -346,6 +362,7 @@ interface NestedProps {
   originalState: InstanceAttributeModel;
   getUpdate: GetUpdate;
   path: string | null;
+  isNew?: boolean;
 }
 
 /**
@@ -365,16 +382,19 @@ const NestedFieldInput: React.FC<NestedProps> = ({
   originalState,
   getUpdate,
   path,
+  isNew = false,
 }) => {
   const [showList, setShowList] = useState(
     !field.isOptional || formState[field.name] !== null,
   );
+
   const onAdd = () => {
     setShowList(true);
     if (formState !== null) {
       getUpdate(makePath(path, field.name), createFormState(field.fields));
     }
   };
+
   const getOnDelete = () => () => {
     setShowList(false);
     return getUpdate(makePath(path, field.name), null);
@@ -398,7 +418,8 @@ const NestedFieldInput: React.FC<NestedProps> = ({
                   icon={<PlusIcon />}
                   onClick={onAdd}
                   isDisabled={
-                    (field.isDisabled &&
+                    (!isNew &&
+                      field.isDisabled &&
                       get(originalState, makePath(path, field.name)) !==
                         undefined) ||
                     showList
@@ -409,7 +430,7 @@ const NestedFieldInput: React.FC<NestedProps> = ({
                 <Button
                   variant="link"
                   onClick={getOnDelete()}
-                  isDisabled={field.isDisabled || !showList}
+                  isDisabled={!isNew && (field.isDisabled || !showList)}
                 >
                   {words("delete")}
                 </Button>
@@ -428,6 +449,8 @@ const NestedFieldInput: React.FC<NestedProps> = ({
             originalState={originalState}
             getUpdate={getUpdate}
             path={makePath(path, field.name)}
+            suggestions={childField.suggestion}
+            isNew={isNew}
           />
         ))}
     </StyledFormFieldGroupExpandable>
@@ -440,6 +463,7 @@ interface DictListProps {
   originalState: InstanceAttributeModel;
   getUpdate: GetUpdate;
   path: string | null;
+  isNew?: boolean;
 }
 
 /**
@@ -459,8 +483,10 @@ const DictListFieldInput: React.FC<DictListProps> = ({
   originalState,
   getUpdate,
   path,
+  isNew = false,
 }) => {
-  const list = get(formState, makePath(path, field.name)) as Array<unknown>;
+  const list =
+    (get(formState, makePath(path, field.name)) as Array<unknown>) || [];
   const [addedItemsPaths, setAddedItemPaths] = useState<string[]>([]);
 
   /**
@@ -572,7 +598,8 @@ const DictListFieldInput: React.FC<DictListProps> = ({
                   variant="link"
                   onClick={getOnDelete(index)}
                   isDisabled={
-                    (field.isDisabled &&
+                    (!isNew &&
+                      field.isDisabled &&
                       get(originalState, makePath(path, field.name)) !==
                         undefined) ||
                     field.min > index
@@ -592,9 +619,13 @@ const DictListFieldInput: React.FC<DictListProps> = ({
               originalState={originalState}
               getUpdate={getUpdate}
               path={makePath(path, `${field.name}.${index}`)}
-              isNew={addedItemsPaths.includes(
-                `${makePath(path, field.name)}.${index}`,
-              )}
+              isNew={
+                isNew ||
+                addedItemsPaths.includes(
+                  `${makePath(path, field.name)}.${index}`,
+                )
+              }
+              suggestions={childField.suggestion}
             />
           ))}
         </StyledFormFieldGroupExpandable>

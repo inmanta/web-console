@@ -1,0 +1,6 @@
+description: Update the filtering in the form to get Inter-service-relations.
+issue-nr: 5766
+change-type: patch
+destination-branches: [master, iso7]
+sections:
+  bugfix: "{{description}}"

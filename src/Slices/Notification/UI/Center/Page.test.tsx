@@ -1,8 +1,9 @@
-import React from "react";
+import React, { act } from "react";
 import { MemoryRouter } from "react-router-dom";
-import { act, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
+import { axe, toHaveNoViolations } from "jest-axe";
 import { Either } from "@/Core";
 import {
   CommandManagerResolverImpl,
@@ -16,6 +17,8 @@ import { DeferredApiHelper, dependencies, StaticScheduler } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import * as Mock from "@S/Notification/Core/Mock";
 import { Page } from "./Page";
+
+expect.extend(toHaveNoViolations);
 
 const setup = (entries?: string[]) => {
   const apiHelper = new DeferredApiHelper();
@@ -60,6 +63,11 @@ test("Given Notification Center page Then fetches notifications", async () => {
   expect(
     screen.getAllByRole("listitem", { name: "NotificationItem" }),
   ).toHaveLength(4);
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("Given Notification Center page When user filters on severity Then executes correct request", async () => {
@@ -104,6 +112,11 @@ test("Given Notification Center page When user filters on severity Then executes
   });
 
   expect(apiHelper.pendingRequests).toEqual([request("?limit=20")]);
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("Given Notification Center page When user filters on read Then executes correct request", async () => {
@@ -149,6 +162,11 @@ test("Given Notification Center page When user filters on read Then executes cor
     );
   });
   expect(apiHelper.pendingRequests).toEqual([request("?limit=20")]);
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("Given Notification Center page When user filters on message Then executes correct request", async () => {
@@ -185,6 +203,11 @@ test("Given Notification Center page When user filters on message Then executes 
     await userEvent.click(screen.getByRole("button", { name: "close abc" }));
   });
   expect(apiHelper.pendingRequests).toEqual([request("?limit=20")]);
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("Given Notification Center page When user filters on title Then executes correct request", async () => {
@@ -220,6 +243,11 @@ test("Given Notification Center page When user filters on title Then executes co
     await userEvent.click(screen.getByRole("button", { name: "close abc" }));
   });
   expect(apiHelper.pendingRequests).toEqual([request("?limit=20")]);
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("Given Notification Center page When user clicks next page Then fetches next page", async () => {
@@ -256,4 +284,9 @@ test("Given Notification Center page When user clicks next page Then fetches nex
       name: "NotificationItem",
     }),
   ).toHaveLength(2);
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });

@@ -1,7 +1,8 @@
-import React from "react";
+import React, { act } from "react";
 import { MemoryRouter } from "react-router";
 import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
+import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { Either, InstanceEvent } from "@/Core";
 import { QueryResolverImpl, getStoreInstance } from "@/Data";
 import {
@@ -14,6 +15,15 @@ import {
 import { DependencyProvider } from "@/UI/Dependency";
 import { EventsQueryManager, EventsStateHelper } from "@S/Events/Data";
 import { Events } from "./Events";
+
+expect.extend(toHaveNoViolations);
+
+const axe = configureAxe({
+  rules: {
+    // disable landmark rules when testing isolated components.
+    region: { enabled: false },
+  },
+});
 
 function setup() {
   const store = getStoreInstance();
@@ -46,7 +56,7 @@ test("EventsView shows empty table", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "EventTable-Loading" }),
+    await screen.findByRole("region", { name: "EventTable-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(
@@ -60,6 +70,11 @@ test("EventsView shows empty table", async () => {
   expect(
     await screen.findByRole("generic", { name: "EventTable-Empty" }),
   ).toBeInTheDocument();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("EventsView shows failed table", async () => {
@@ -67,14 +82,19 @@ test("EventsView shows failed table", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "EventTable-Loading" }),
+    await screen.findByRole("region", { name: "EventTable-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.left("error"));
 
   expect(
-    await screen.findByRole("generic", { name: "EventTable-Failed" }),
+    await screen.findByRole("region", { name: "EventTable-Failed" }),
   ).toBeInTheDocument();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("EventsView shows success table", async () => {
@@ -82,7 +102,7 @@ test("EventsView shows success table", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "EventTable-Loading" }),
+    await screen.findByRole("region", { name: "EventTable-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(
@@ -113,6 +133,11 @@ test("EventsView shows success table", async () => {
   expect(
     await screen.findByRole("grid", { name: "EventTable-Success" }),
   ).toBeInTheDocument();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("EventsView shows updated table", async () => {
@@ -120,7 +145,7 @@ test("EventsView shows updated table", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "EventTable-Loading" }),
+    await screen.findByRole("region", { name: "EventTable-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(
@@ -165,4 +190,9 @@ test("EventsView shows updated table", async () => {
   expect(
     await screen.findByRole("grid", { name: "EventTable-Success" }),
   ).toBeInTheDocument();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });

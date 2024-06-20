@@ -147,6 +147,10 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="ServiceInventory-Success"]').should("to.be.visible");
       // Check if only one row has been added to the table.
       cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 1);
+
+      // check whether there are two options available in the dropdown to copy the id/identifier.
+      cy.get('[aria-label="IdentityCell-basic-service"]').click();
+      cy.get('[role="menuitem"]').should("have.length", 2);
     });
 
     it("2.1.3 Edit previously created instance", () => {
@@ -214,7 +218,86 @@ if (Cypress.env("edition") === "iso") {
         .should("contain", "");
     });
 
-    it("2.1.4 Delete previously created instance", () => {
+    it("2.1.4 Duplicate instance with Editor", () => {
+      cy.visit("/console/");
+      cy.get('[aria-label="Environment card"]')
+        .contains("lsm-frontend")
+        .click();
+      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
+      cy.get("#basic-service").contains("Show inventory").click();
+
+      cy.get('[aria-label="row actions toggle"]', { timeout: 60000 })
+        .eq(0)
+        .click();
+      cy.get(".pf-v5-c-menu__item").contains("Duplicate").click();
+
+      // toggle to JSON editor
+      cy.get("#editorButton").click();
+
+      // expect the JSON to be valid
+      cy.get('[data-testid="Error-container"]').should(
+        "not.contain",
+        "Errors found",
+      );
+
+      // delete the JSON entirely
+      cy.get(".view-line").last().type("{selectall}{backspace}");
+
+      // expect the JSON to be invalid
+      cy.get('[data-testid="Error-container"]').should(
+        "contain",
+        "Errors found",
+      );
+
+      // expect submit button to be disabled
+      cy.get("button").contains("Confirm").should("be.disabled");
+
+      // expect Form button to be disabled
+      cy.get("#formButton").should("be.disabled");
+
+      // ctrl+z to undo the deletion
+      cy.get(".view-line").first().type("{ctrl}z");
+
+      // expect the JSON to be valid
+      cy.get('[data-testid="Error-container"]').should(
+        "not.contain",
+        "Errors found",
+      );
+
+      // expect submit button to be enabled
+      cy.get("button").contains("Confirm").should("be.enabled");
+
+      // expect Form button to be enabled
+      cy.get("#formButton").should("be.enabled");
+
+      // expect to be able to toggle back to the form and still have all correct values
+      cy.get("#formButton").click();
+      cy.get("#address_r1").should("have.value", "1.2.3.8/32");
+      cy.get("#ip_r1").should("have.value", "1.2.3.4");
+      cy.get("#name").type("-copy");
+
+      // clear value and go back to editor
+      cy.get("#address_r1").clear();
+      cy.get("#editorButton").click();
+
+      // expect the value for address_r1 to be empty
+      cy.get(".view-line").contains("address_r1").should("contain", '""');
+      cy.get(".view-line > :nth-child(1) > .mtk5").first().type("1.2.3.2/32");
+
+      // change the service id to make instance unique
+      cy.get(".mtk5").contains("0001").type("{backspace}9");
+
+      // submit
+      cy.get("button").contains("Confirm").click();
+
+      // expect to land on Service Inventory page
+      cy.get('[aria-label="ServiceInventory-Success"]').should("to.be.visible");
+
+      // expect two rows in inventory now
+      cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 2);
+    });
+
+    it("2.1.5 Delete previously created instance", () => {
       cy.visit("/console/");
 
       // Add interceptions for the delete and get call to be able to catch responses later on.
@@ -252,7 +335,9 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#expand-toggle0", { timeout: 20000 }).click();
 
       // delete but cancel deletion in modal
-      cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
+      cy.get('[aria-label="row actions toggle"]', { timeout: 60000 })
+        .last()
+        .click();
       cy.get(".pf-v5-c-menu__item").contains("More actions").click();
       cy.get(".pf-v5-c-menu__item").contains("Delete").click();
       cy.get(".pf-v5-c-modal-box__title-text").should(
@@ -262,7 +347,9 @@ if (Cypress.env("edition") === "iso") {
       cy.get(".pf-v5-c-form__actions").contains("No").click();
 
       // delete the instance.
-      cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
+      cy.get('[aria-label="row actions toggle"]', { timeout: 60000 })
+        .last()
+        .click();
       cy.get(".pf-v5-c-menu__item").contains("More actions").click();
       cy.get(".pf-v5-c-menu__item").contains("Delete").click();
       cy.get(".pf-v5-c-modal-box__title-text").should(

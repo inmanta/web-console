@@ -1,9 +1,12 @@
-import React from "react";
-import { act, render, screen } from "@testing-library/react";
+import React, { act } from "react";
+import { render, screen } from "@testing-library/react";
+import { axe, toHaveNoViolations } from "jest-axe";
 import { Either } from "@/Core";
 import { baseSetup } from "@/Test/Utils/base-setup";
 import { emptyResponse, orderResponse } from "../Data/Mock";
 import { OrdersPage } from ".";
+
+expect.extend(toHaveNoViolations);
 
 const OrderPage = <OrdersPage />;
 
@@ -12,7 +15,7 @@ test("OrdersView shows empty table", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "OrdersView-Loading" }),
+    await screen.findByRole("region", { name: "OrdersView-Loading" }),
   ).toBeInTheDocument();
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
@@ -29,6 +32,11 @@ test("OrdersView shows empty table", async () => {
   expect(
     await screen.findByRole("generic", { name: "OrdersView-Empty" }),
   ).toBeInTheDocument();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("OrdersView shows failed table", async () => {
@@ -36,7 +44,7 @@ test("OrdersView shows failed table", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "OrdersView-Loading" }),
+    await screen.findByRole("region", { name: "OrdersView-Loading" }),
   ).toBeInTheDocument();
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
@@ -51,8 +59,13 @@ test("OrdersView shows failed table", async () => {
   });
 
   expect(
-    await screen.findByRole("generic", { name: "OrdersView-Failed" }),
+    await screen.findByRole("region", { name: "OrdersView-Failed" }),
   ).toBeInTheDocument();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("OrdersView shows success table", async () => {
@@ -60,7 +73,7 @@ test("OrdersView shows success table", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "OrdersView-Loading" }),
+    await screen.findByRole("region", { name: "OrdersView-Loading" }),
   ).toBeInTheDocument();
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
@@ -83,6 +96,11 @@ test("OrdersView shows success table", async () => {
   });
 
   expect(rows).toHaveLength(4);
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("OrdersView shows updated table", async () => {
@@ -90,7 +108,7 @@ test("OrdersView shows updated table", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "OrdersView-Loading" }),
+    await screen.findByRole("region", { name: "OrdersView-Loading" }),
   ).toBeInTheDocument();
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
@@ -117,4 +135,9 @@ test("OrdersView shows updated table", async () => {
   expect(
     await screen.findByRole("generic", { name: "OrdersView-Success" }),
   ).toBeInTheDocument();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });

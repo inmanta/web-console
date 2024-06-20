@@ -1,8 +1,9 @@
-import React from "react";
+import React, { act } from "react";
 import { MemoryRouter } from "react-router-dom";
-import { act, render, screen, within } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
+import { axe, toHaveNoViolations } from "jest-axe";
 import { Either } from "@/Core";
 import {
   QueryResolverImpl,
@@ -14,6 +15,8 @@ import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import { Mock } from "@S/Facts/Test";
 import { Page } from "./Page";
+
+expect.extend(toHaveNoViolations);
 
 function setup() {
   const apiHelper = new DeferredApiHelper();
@@ -70,6 +73,11 @@ test("GIVEN Facts page THEN shows table", async () => {
   expect(
     within(rows[0]).getByRole("cell", { name: "2021/03/18 18:10:43" }),
   ).toBeVisible();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("GIVEN Facts page THEN sets sorting parameters correctly on click", async () => {
@@ -95,6 +103,11 @@ test("GIVEN Facts page THEN sets sorting parameters correctly on click", async (
     await userEvent.click(resourceIdButton);
   });
   expect(apiHelper.pendingRequests[0].url).toContain("&sort=resource_id.asc");
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test.each`
@@ -153,5 +166,10 @@ test.each`
     expect(
       await screen.findAllByRole("row", { name: "FactsRow" }),
     ).toHaveLength(4);
+
+    await act(async () => {
+      const results = await axe(document.body);
+      expect(results).toHaveNoViolations();
+    });
   },
 );

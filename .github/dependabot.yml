@@ -12,6 +12,8 @@ updates:
     ignore:
       - dependency-name: "@types/react"
         update-types: ["version-update:semver-major"]
+      - dependency-name: "madge"
+        update-types: ["version-update:semver-major"]
       - dependency-name: "@testing-library/react"
         update-types: ["version-update:semver-major"]
       - dependency-name: "@patternfly/react-core"

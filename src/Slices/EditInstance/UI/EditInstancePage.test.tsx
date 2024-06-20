@@ -1,8 +1,9 @@
-import React from "react";
+import React, { act } from "react";
 import { MemoryRouter } from "react-router-dom";
-import { act, render, screen, within } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
+import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { cloneDeep } from "lodash";
 import { Either } from "@/Core";
 import {
@@ -22,12 +23,38 @@ import {
   DeferredApiHelper,
   dependencies,
 } from "@/Test";
+import { multiNestedEditable } from "@/Test/Data/Service/EmbeddedEntity";
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import { TriggerInstanceUpdateCommandManager } from "@S/EditInstance/Data";
 import { EditInstancePage } from "./EditInstancePage";
 
-function setup(entity = "a") {
+expect.extend(toHaveNoViolations);
+
+const axe = configureAxe({
+  rules: {
+    // disable landmark rules when testing isolated components.
+    region: { enabled: false },
+  },
+});
+
+/**
+ * @note This configuration for the two last tests cases.
+ * Because of redundant data with same id, we need to disable the duplicate-id-aria rule.
+ * The fields are already tested in the previous tests.
+ * The id's and aria-labels are set using the field name.
+ *
+ * Todo: Remove this configuration when the test data is updated.
+ */
+const axeLimited = configureAxe({
+  rules: {
+    // disable landmark rules when testing isolated components.
+    region: { enabled: false },
+    "duplicate-id-aria": { enabled: false },
+  },
+});
+
+function setup(entity = "a", multiNested = false) {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
@@ -40,6 +67,10 @@ function setup(entity = "a") {
       ),
     ]),
   );
+
+  const service = multiNested
+    ? { ...Service[entity], embedded_entities: multiNestedEditable }
+    : Service[entity];
 
   const commandManager = TriggerInstanceUpdateCommandManager(apiHelper);
   const commandResolver = new CommandResolverImpl(
@@ -58,7 +89,7 @@ function setup(entity = "a") {
       >
         <StoreProvider store={store}>
           <EditInstancePage
-            serviceEntity={Service[entity]}
+            serviceEntity={service}
             instanceId={"4a4a6d14-8cd0-4a16-bc38-4b768eb004e3"}
           />
         </StoreProvider>
@@ -74,14 +105,19 @@ test("Edit Instance View shows failed state", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "EditInstance-Loading" }),
+    await screen.findByRole("region", { name: "EditInstance-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.left("error"));
 
   expect(
-    await screen.findByRole("generic", { name: "EditInstance-Failed" }),
+    await screen.findByRole("region", { name: "EditInstance-Failed" }),
   ).toBeInTheDocument();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("EditInstance View shows success form", async () => {
@@ -90,7 +126,7 @@ test("EditInstance View shows success form", async () => {
   const { service_entity, id, version } = ServiceInstance.a;
 
   expect(
-    await screen.findByRole("generic", { name: "EditInstance-Loading" }),
+    await screen.findByRole("region", { name: "EditInstance-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.right({ data: ServiceInstance.a }));
@@ -120,6 +156,11 @@ test("EditInstance View shows success form", async () => {
     },
     environment: "env",
   });
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("Given the EditInstance View When changing a v1 embedded entity Then the correct request is fired", async () => {
@@ -128,7 +169,7 @@ test("Given the EditInstance View When changing a v1 embedded entity Then the co
   const { service_entity, id, version } = ServiceInstance.a;
 
   expect(
-    await screen.findByRole("generic", { name: "EditInstance-Loading" }),
+    await screen.findByRole("region", { name: "EditInstance-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.right({ data: ServiceInstance.a }));
@@ -168,6 +209,11 @@ test("Given the EditInstance View When changing a v1 embedded entity Then the co
     },
     environment: "env",
   });
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("Given the EditInstance View When changing a v2 embedded entity Then the correct request  with correct body is fired", async () => {
@@ -176,7 +222,7 @@ test("Given the EditInstance View When changing a v2 embedded entity Then the co
   const { service_entity, id, version } = ServiceInstance.d;
 
   expect(
-    await screen.findByRole("generic", { name: "EditInstance-Loading" }),
+    await screen.findByRole("region", { name: "EditInstance-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.right({ data: ServiceInstance.d }));
@@ -241,6 +287,11 @@ test("Given the EditInstance View When changing a v2 embedded entity Then the co
     },
     environment: "env",
   });
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("Given the EditInstance View When changing an embedded entity Then the inputs are displayed correctly", async () => {
@@ -248,7 +299,7 @@ test("Given the EditInstance View When changing an embedded entity Then the inpu
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "EditInstance-Loading" }),
+    await screen.findByRole("region", { name: "EditInstance-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.right({ data: ServiceInstance.allAttrs }));
@@ -483,6 +534,11 @@ test("Given the EditInstance View When changing an embedded entity Then the inpu
   expect(
     within(nested_editableOptionalEmbedded_base).queryByText("Delete"),
   ).toBeEnabled();
+
+  await act(async () => {
+    const results = await axeLimited(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("Given the EditInstance View When adding new nested embedded entity Then the inputs for it are displayed correctly", async () => {
@@ -490,7 +546,7 @@ test("Given the EditInstance View When adding new nested embedded entity Then th
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "EditInstance-Loading" }),
+    await screen.findByRole("region", { name: "EditInstance-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.right({ data: ServiceInstance.allAttrs }));
@@ -651,4 +707,92 @@ test("Given the EditInstance View When adding new nested embedded entity Then th
   expect(
     within(nested_editableOptionalEmbedded_base).queryByText("Delete"),
   ).toBeEnabled();
+
+  await act(async () => {
+    const results = await axeLimited(document.body);
+    expect(results).toHaveNoViolations();
+  });
+});
+
+test("GIVEN the EditInstance View WHEN changing an embedded entity with nested embedded entities THEN the new fields are enabled", async () => {
+  const { component, apiHelper } = setup("a", true);
+  render(component);
+
+  expect(
+    await screen.findByRole("region", { name: "EditInstance-Loading" }),
+  ).toBeInTheDocument();
+
+  await act(async () => {
+    await apiHelper.resolve(Either.right({ data: ServiceInstance.a }));
+  });
+
+  await act(async () => {
+    await userEvent.click(screen.getByRole("button", { name: "embedded" }));
+  });
+
+  await act(async () => {
+    await userEvent.click(screen.getByText("Add"));
+  });
+
+  await act(async () => {
+    await userEvent.click(screen.getByRole("button", { name: "0" }));
+  });
+
+  await act(async () => {
+    await userEvent.click(screen.getAllByText("Add")[1]);
+  });
+
+  await act(async () => {
+    await userEvent.click(
+      screen.getByRole("button", { name: "embedded_single" }),
+    );
+  });
+
+  await act(async () => {
+    await userEvent.click(screen.getAllByText("Add")[2]);
+  });
+
+  const another_embedded_group = screen.getByLabelText(
+    "DictListFieldInput-embedded.0.embedded_single.another_embedded",
+  );
+
+  await act(async () => {
+    await userEvent.click(
+      screen.getByRole("button", { name: "another_embedded" }),
+    );
+  });
+
+  await act(async () => {
+    await userEvent.click(
+      within(another_embedded_group).getByRole("button", { name: "0" }),
+    );
+  });
+
+  const deep_nested_group = screen.getByLabelText(
+    "DictListFieldInput-embedded.0.embedded_single.another_embedded.0.another_deeper_embedded",
+  );
+
+  await act(async () => {
+    await userEvent.click(within(deep_nested_group).getByText("Add"));
+  });
+
+  await act(async () => {
+    await userEvent.click(
+      screen.getByRole("button", { name: "another_deeper_embedded" }),
+    );
+  });
+
+  await act(async () => {
+    await userEvent.click(
+      within(deep_nested_group).getByRole("button", { name: "0" }),
+    );
+  });
+
+  // expect all fields in deep_nested_group to be enabled
+  const deep_nested_group_fields =
+    within(deep_nested_group).getAllByRole("textbox");
+
+  deep_nested_group_fields.forEach((field) => {
+    expect(field).toBeEnabled();
+  });
 });

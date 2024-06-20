@@ -1,8 +1,9 @@
-import React from "react";
+import React, { act } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { screen } from "@testing-library/dom";
-import { act, render, waitFor } from "@testing-library/react";
+import { render, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
+import { axe, toHaveNoViolations } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { PrimaryAuthController } from "@/Data";
@@ -10,6 +11,8 @@ import * as CookieHelper from "@/Data/Common/CookieHelper";
 import { dependencies } from "@/Test";
 import { DependencyProvider } from "@/UI";
 import { Login } from "./Page";
+
+expect.extend(toHaveNoViolations);
 
 const mockedUsedNavigate = jest.fn();
 
@@ -35,17 +38,27 @@ const setup = () => {
 };
 
 describe("Login", () => {
-  it("if open-login event isn't triggered return null", () => {
+  it("if open-login event isn't triggered return null", async () => {
     render(setup());
     expect(screen.queryByLabelText("input-username")).not.toBeInTheDocument();
+
+    await act(async () => {
+      const results = await axe(document.body);
+      expect(results).toHaveNoViolations();
+    });
   });
-  it("if open-login event is triggered return login form", () => {
+  it("if open-login event is triggered return login form", async () => {
     render(setup());
     act(() => {
       document.dispatchEvent(new Event("open-login"));
     });
 
     expect(screen.getByLabelText("input-username")).toBeInTheDocument();
+
+    await act(async () => {
+      const results = await axe(document.body);
+      expect(results).toHaveNoViolations();
+    });
   });
   it("if user login with valid credentials we should set the cookie and reload the page", async () => {
     const spiedCreateCookie = jest.spyOn(CookieHelper, "createCookie");
@@ -115,6 +128,12 @@ describe("Login", () => {
       ),
     );
     await waitFor(() => expect(mockedUsedNavigate).toHaveBeenCalledWith(0));
+
+    await act(async () => {
+      const results = await axe(document.body);
+      expect(results).toHaveNoViolations();
+    });
+
     server.close();
   });
 
@@ -165,6 +184,11 @@ describe("Login", () => {
       );
     });
 
+    await act(async () => {
+      const results = await axe(document.body);
+      expect(results).toHaveNoViolations();
+    });
+
     server.close();
   });
 
@@ -204,6 +228,12 @@ describe("Login", () => {
         "Access to this resource is unauthorized",
       );
     });
+
+    await act(async () => {
+      const results = await axe(document.body);
+      expect(results).toHaveNoViolations();
+    });
+
     server.close();
   });
 });

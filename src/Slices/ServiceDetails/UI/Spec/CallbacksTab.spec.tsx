@@ -1,6 +1,6 @@
-import React from "react";
+import React, { act } from "react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
-import { act, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { Either, getShortUuidFromRaw } from "@/Core";
@@ -125,7 +125,7 @@ test("GIVEN ServiceDetails WHEN click on callbacks tab THEN shows callbacks tab"
   });
 
   expect(
-    screen.getByRole("generic", { name: "Callbacks-Loading" }),
+    screen.getByRole("region", { name: "Callbacks-Loading" }),
   ).toBeVisible();
 
   await act(async () => {

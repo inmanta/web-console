@@ -1,4 +1,5 @@
-import { render, screen, act, within } from "@testing-library/react";
+import { act } from "react";
+import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { Either } from "@/Core";
 import { Service, ServiceInstance, Pagination } from "@/Test";
@@ -21,7 +22,7 @@ test("GIVEN The Service Inventory WHEN the user filters on AttributeSet ('Active
 
   await act(async () => {
     await userEvent.click(
-      within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
+      within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
         "button",
         { name: "FilterPicker" },
       ),

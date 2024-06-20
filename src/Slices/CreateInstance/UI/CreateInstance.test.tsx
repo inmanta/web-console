@@ -1,8 +1,9 @@
-import React from "react";
+import React, { act } from "react";
 import { MemoryRouter } from "react-router-dom";
-import { render, screen, act, within } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
+import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { Either } from "@/Core";
 import {
   CommandManagerResolverImpl,
@@ -23,6 +24,14 @@ import { InterServiceRelations } from "@/Test/Data/Service";
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import { CreateInstance } from "./CreateInstance";
+expect.extend(toHaveNoViolations);
+
+const axe = configureAxe({
+  rules: {
+    // disable landmark rules when testing isolated components.
+    region: { enabled: false },
+  },
+});
 
 function setup(service) {
   const store = getStoreInstance();
@@ -79,6 +88,11 @@ test("Given the CreateInstance View When creating an instance with attributes Th
 
   const networkField = screen.getByText("network");
   expect(networkField).toBeValid();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 
   await act(async () => {
     await userEvent.click(
@@ -160,6 +174,11 @@ test("Given the CreateInstance View When creating an instance with Inter-service
   expect(options[0]).toHaveClass("pf-m-selected");
 
   await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
+
+  await act(async () => {
     await userEvent.click(
       screen.getByRole("button", { name: words("confirm") }),
     );
@@ -204,7 +223,7 @@ test("Given the CreateInstance View When creating an instance with Inter-service
   });
   expect(apiHelper.pendingRequests[0]).toEqual({
     method: "GET",
-    url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=250&filter.order_id=a`,
+    url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=250&filter.id_or_service_identity=a`,
     environment: "env",
   });
 
@@ -216,7 +235,7 @@ test("Given the CreateInstance View When creating an instance with Inter-service
   });
   expect(apiHelper.pendingRequests[0]).toEqual({
     method: "GET",
-    url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=250&filter.order_id=ab`,
+    url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=250&filter.id_or_service_identity=ab`,
     environment: "env",
   });
   await act(async () => {
@@ -228,7 +247,7 @@ test("Given the CreateInstance View When creating an instance with Inter-service
   });
   expect(apiHelper.pendingRequests[0]).toEqual({
     method: "GET",
-    url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=250&filter.order_id=`,
+    url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=250&filter.id_or_service_identity=`,
     environment: "env",
   });
 });
@@ -260,7 +279,7 @@ test("Given the CreateInstance View When creating an instance with Inter-service
   });
   expect(apiHelper.pendingRequests[0]).toEqual({
     method: "GET",
-    url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=250&filter.order_id=a`,
+    url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=250&filter.id_or_service_identity=a`,
     environment: "env",
   });
 
@@ -272,7 +291,7 @@ test("Given the CreateInstance View When creating an instance with Inter-service
   });
   expect(apiHelper.pendingRequests[0]).toEqual({
     method: "GET",
-    url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=250&filter.order_id=ab`,
+    url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=250&filter.id_or_service_identity=ab`,
     environment: "env",
   });
   await act(async () => {
@@ -284,7 +303,7 @@ test("Given the CreateInstance View When creating an instance with Inter-service
   });
   expect(apiHelper.pendingRequests[0]).toEqual({
     method: "GET",
-    url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=250&filter.order_id=`,
+    url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=250&filter.id_or_service_identity=`,
     environment: "env",
   });
 });
@@ -292,6 +311,11 @@ test("Given the CreateInstance View When creating an instance with Inter-service
 test("Given the CreateInstance View When creating entity with default values Then the inputs have correct values set", async () => {
   const { component } = setup(Service.ServiceWithAllAttrs);
   render(component);
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 
   //check if direct attributes have correct default value
   expect(screen.queryByLabelText("TextInput-string")).toHaveValue(

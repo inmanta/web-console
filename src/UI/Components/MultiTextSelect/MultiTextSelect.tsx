@@ -205,14 +205,13 @@ export const MultiTextSelect: React.FC<Props> = ({
             onClick={onToggleClick}
             onChange={onTextInputChange}
             onKeyDown={onInputKeyDown}
-            id="multi-typeahead-select-input"
             autoComplete="off"
             innerRef={textInputRef}
             placeholder={placeholderText || "Select..."}
             {...(activeItem && { "aria-activedescendant": activeItem })}
             role="combobox"
             isExpanded={isOpen}
-            aria-controls="select-multi-typeahead-listbox"
+            aria-controls={`select-listbox-${toggleAriaLabel}`}
             aria-label={`${toggleAriaLabel}FilterInput`}
             disabled={props.isDisabled}
           >

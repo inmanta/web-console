@@ -1,4 +1,5 @@
-import { render, screen, act } from "@testing-library/react";
+import { act } from "react";
+import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { Either } from "@/Core";
 import { ServiceInstance, Pagination } from "@/Test";
@@ -40,7 +41,7 @@ test("GIVEN The Service Inventory WHEN the user filters on something THEN a data
   });
 
   expect(
-    await screen.findByRole("generic", { name: "ServiceInventory-Loading" }),
+    await screen.findByRole("region", { name: "ServiceInventory-Loading" }),
   ).toBeInTheDocument();
 
   await act(async () => {

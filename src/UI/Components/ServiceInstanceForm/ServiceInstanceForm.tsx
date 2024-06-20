@@ -1,11 +1,19 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { ActionGroup, Alert, Button, Form } from "@patternfly/react-core";
+import {
+  ActionGroup,
+  Alert,
+  Button,
+  Form,
+  ToggleGroup,
+  ToggleGroupItem,
+} from "@patternfly/react-core";
 import { set } from "lodash-es";
 import styled from "styled-components";
 import { InstanceAttributeModel, Field } from "@/Core";
 import { ActionDisabledTooltip } from "@/UI/Components/ActionDisabledTooltip";
 import { usePrompt } from "@/UI/Utils/usePrompt";
 import { words } from "@/UI/words";
+import { JSONEditor } from "../JSONEditor";
 import { FieldInput } from "./Components";
 import {
   createDuplicateFormState,
@@ -14,6 +22,7 @@ import {
 } from "./Helpers";
 
 interface Props {
+  service_entity: string;
   fields: Field[];
   onSubmit(
     formState: InstanceAttributeModel,
@@ -66,6 +75,7 @@ const getFormState = (
  * @returns {JSX.Element} The rendered ServiceInstanceForm component.
  */
 export const ServiceInstanceForm: React.FC<Props> = ({
+  service_entity,
   fields,
   onSubmit,
   onCancel,
@@ -84,6 +94,8 @@ export const ServiceInstanceForm: React.FC<Props> = ({
 
   const [isDirty, setIsDirty] = useState(false);
   const [shouldPerformCancel, setShouldCancel] = useState(false);
+  const [isForm, setIsForm] = useState(true);
+  const [isEditorValid, setIsEditorValid] = useState(true);
 
   usePrompt(words("notification.instanceForm.prompt"), isDirty);
 
@@ -134,6 +146,20 @@ export const ServiceInstanceForm: React.FC<Props> = ({
     event.preventDefault();
   };
 
+  // The try catch is there to make certain the provided string is parsable to JSON before setting the formstate.
+  const onEditorChange = useCallback(
+    (value: string) => {
+      try {
+        const parsed = JSON.parse(value);
+        setFormState(parsed);
+        setIsEditorValid(true);
+      } catch (error) {
+        setIsEditorValid(false);
+      }
+    },
+    [setFormState, setIsEditorValid],
+  );
+
   /**
    * Handle confirmation action by triggering form submission and updating dirty state.
    *
@@ -150,18 +176,43 @@ export const ServiceInstanceForm: React.FC<Props> = ({
 
   return (
     <StyledForm onSubmit={preventDefault}>
-      {fields.map((field) => (
-        <FieldInput
-          key={field.name}
-          field={field}
-          formState={formState}
-          originalState={originalState}
-          getUpdate={getUpdate}
-          path={null}
-          suggestions={field.suggestion}
+      <ToggleGroup aria-label="form-editor-toggle-group">
+        <ToggleGroupItem
+          text={words("inventory.form.button")}
+          key={0}
+          buttonId="formButton"
+          isSelected={isForm}
+          isDisabled={!isEditorValid}
+          onChange={() => setIsForm(true)}
         />
-      ))}
+        <ToggleGroupItem
+          text={words("inventory.editor.button")}
+          key={1}
+          buttonId="editorButton"
+          isSelected={!isForm}
+          onChange={() => setIsForm(false)}
+        />
+      </ToggleGroup>
 
+      {!isForm ? (
+        <JSONEditor
+          service_entity={service_entity}
+          data={JSON.stringify(formState, null, 2)}
+          onChange={onEditorChange}
+        />
+      ) : (
+        fields.map((field) => (
+          <FieldInput
+            key={field.name}
+            field={field}
+            formState={formState}
+            originalState={originalState}
+            getUpdate={getUpdate}
+            path={null}
+            suggestions={field.suggestion}
+          />
+        ))
+      )}
       {fields.length <= 0 && (
         <Alert
           variant="info"
@@ -173,13 +224,13 @@ export const ServiceInstanceForm: React.FC<Props> = ({
       <ActionGroup>
         <ActionDisabledTooltip
           isDisabled={isSubmitDisabled}
-          ariaLabel={words("confirm")}
+          testingId={words("confirm")}
           tooltipContent={words("environment.halt.tooltip")}
         >
           <Button
             variant="primary"
             onClick={onConfirm}
-            isDisabled={isSubmitDisabled}
+            isDisabled={isSubmitDisabled || !isEditorValid}
           >
             {words("confirm")}
           </Button>

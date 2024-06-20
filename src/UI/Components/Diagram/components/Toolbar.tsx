@@ -54,12 +54,19 @@ const Toolbar = ({
                 aria-label="new-entity-button"
                 isDisabled={!editable}
               >
-                <img
-                  src={entityIcon}
-                  alt="Create new entity icon"
-                  aria-label="new-entity-icon"
-                />{" "}
-                {words("inventory.addInstance.button")}
+                <Flex alignItems={{ default: "alignItemsCenter" }}>
+                  <FlexItem
+                    spacer={{ default: "spacerXs" }}
+                    style={{ width: "16px", height: "20px" }}
+                  >
+                    <img
+                      src={entityIcon}
+                      alt="Create new entity icon"
+                      aria-label="new-entity-icon"
+                    />
+                  </FlexItem>
+                  <FlexItem>{words("inventory.addInstance.button")}</FlexItem>
+                </Flex>
               </IconButton>
             </Tooltip>
           </FlexItem>

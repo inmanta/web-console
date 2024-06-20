@@ -1,6 +1,6 @@
-import React from "react";
+import React, { act } from "react";
 import { MemoryRouter, useLocation } from "react-router";
-import { render, screen, within, act } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { Either, RemoteData } from "@/Core";
@@ -181,8 +181,6 @@ test("ServiceInventory can show resources for instance", async () => {
 
   expect(screen.getByText("[resource_id_1]")).toBeInTheDocument();
 });
-
-jest.mock("@/UI/Utils/useFeatures");
 
 function setup(expertMode = false, setSortFn: (props) => void = dummySetter) {
   const store = getStoreInstance();

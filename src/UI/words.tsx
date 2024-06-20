@@ -32,6 +32,7 @@ const dict = {
   jumpTo: "Jump to",
   hideAll: "Hide All",
   showAll: "Show All",
+  back: "Back",
 
   /**
    * Error related text
@@ -141,10 +142,13 @@ const dict = {
     amount === 1 ? "1 item" : `${amount} items`,
   "inventory.editInstance.button": "Edit",
   "inventory.editInstance.title": "Edit instance",
+  "inventory.duplicateInstance.button": "Duplicate",
   "inventory.duplicateInstance.title": "Duplicate instance",
   "inventory.editInstance.failed": "Editing instance failed",
   "inventory.editInstance.noAttributes":
     "There are no attributes to edit. Click confirm to move into the update state",
+  "inventory.addInstance.unselectedEntity":
+    "Please select an entity to fill attributes values",
   "inventory.editInstance.header": (instanceId: string) =>
     `Change attributes of instance ${instanceId}`,
   "inventory.duplicateInstance.header": (instanceId: string) =>
@@ -157,6 +161,8 @@ const dict = {
   "inventory.form.placeholder.floatList": "1.1, 3.14, 4.3",
   "inventory.form.placeholder.stringList": "Add a list of values",
   "inventory.form.placeholder.dict": '{"key": "value"}',
+  "inventory.form.button": "Form",
+  "inventory.editor.button": "JSON-Editor",
   "inventory.instanceComposer.labelButtonTooltip": "Toggle connection labels",
   "inventory.instanceComposer.addInstanceButtonTooltip":
     "Add new instance to the canvas.",
@@ -463,6 +469,7 @@ const dict = {
 
   /** Discovered Resources related text */
   "discovered.column.resource_id": "resource_id",
+  "discovered.column.managed_resource": "managed resource",
   "discovered_resources.title": "Discovered Resources",
   "discovered_resources.values": "values",
 

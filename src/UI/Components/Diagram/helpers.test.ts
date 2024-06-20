@@ -9,7 +9,6 @@ import {
   a as InstanceAttributesA,
   b as InstanceAttributesB,
 } from "@/Test/Data/ServiceInstance/Attributes";
-import * as uuidApi from "../../../Slices/EditInstance/Data/CommandManager";
 import {
   childModel,
   containerModel,
@@ -40,7 +39,10 @@ import {
   TypeEnum,
 } from "./interfaces";
 import { Link, ServiceEntityBlock } from "./shapes";
-jest.spyOn(uuidApi, "create_UUID").mockReturnValue("1");
+
+jest.mock("uuid", () => ({
+  v4: jest.fn(() => "1"),
+}));
 
 describe("extractRelationsIds", () => {
   const serviceInstanceForThirdTest = {
@@ -1456,12 +1458,12 @@ describe("updateLabelPosition", () => {
 
   it.each`
     sourceX | sourceY | sourceAnchorX | targetX | targetY | targetAnchorX | sourceResult                              | targetResult
-    ${500}  | ${500}  | ${500}        | ${0}    | ${0}    | ${264}        | ${{ textAnchor: "end", x: -31, y: 15 }}   | ${{ textAnchor: "start", x: 31, y: -15 }}
-    ${0}    | ${0}    | ${264}        | ${500}  | ${500}  | ${500}        | ${{ textAnchor: "start", x: 31, y: -15 }} | ${{ textAnchor: "end", x: -31, y: 15 }}
-    ${500}  | ${0}    | ${500}        | ${0}    | ${500}  | ${264}        | ${{ textAnchor: "end", x: -31, y: -15 }}  | ${{ textAnchor: "start", x: 31, y: 15 }}
-    ${0}    | ${500}  | ${264}        | ${500}  | ${0}    | ${500}        | ${{ textAnchor: "start", x: 31, y: 15 }}  | ${{ textAnchor: "end", x: -31, y: -15 }}
-    ${0}    | ${0}    | ${0}          | ${0}    | ${500}  | ${0}          | ${{ textAnchor: "end", x: -31, y: -15 }}  | ${{ textAnchor: "end", x: -31, y: 15 }}
-    ${0}    | ${500}  | ${0}          | ${0}    | ${0}    | ${0}          | ${{ textAnchor: "end", x: -31, y: 15 }}   | ${{ textAnchor: "end", x: -31, y: -15 }}
+    ${500}  | ${500}  | ${500}        | ${0}    | ${0}    | ${264}        | ${{ textAnchor: "end", x: -15, y: 15 }}   | ${{ textAnchor: "start", x: 15, y: -15 }}
+    ${0}    | ${0}    | ${264}        | ${500}  | ${500}  | ${500}        | ${{ textAnchor: "start", x: 15, y: -15 }} | ${{ textAnchor: "end", x: -15, y: 15 }}
+    ${500}  | ${0}    | ${500}        | ${0}    | ${500}  | ${264}        | ${{ textAnchor: "end", x: -15, y: -15 }}  | ${{ textAnchor: "start", x: 15, y: 15 }}
+    ${0}    | ${500}  | ${264}        | ${500}  | ${0}    | ${500}        | ${{ textAnchor: "start", x: 15, y: 15 }}  | ${{ textAnchor: "end", x: -15, y: -15 }}
+    ${0}    | ${0}    | ${0}          | ${0}    | ${500}  | ${0}          | ${{ textAnchor: "end", x: -15, y: -15 }}  | ${{ textAnchor: "end", x: -15, y: 15 }}
+    ${0}    | ${500}  | ${0}          | ${0}    | ${0}    | ${0}          | ${{ textAnchor: "end", x: -15, y: 15 }}   | ${{ textAnchor: "end", x: -15, y: -15 }}
   `(
     "return adequate position of the link label depending on coordinates of the source and target",
     ({

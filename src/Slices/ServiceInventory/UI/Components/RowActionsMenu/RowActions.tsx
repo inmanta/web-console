@@ -62,24 +62,6 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
 
   const composerEnabled =
     featureManager.isComposerEnabled() && composerAvailable;
-  // the height of the drilled down menus differ based on how many options preceeds the drilldown. This is a bug on PF side.
-  // and setting the insetHeight manually is a workaround for that issue.
-  const getInsetHeight = () => {
-    // -100 for each default option present above the first drilldown that is enabled.
-    // diagnose and duplicate are always enabled, so this means it starts at -200
-    let insetHeight = -200;
-    if (!editDisabled) {
-      insetHeight = insetHeight - 200;
-    }
-    if (composerAvailable) {
-      insetHeight = insetHeight - 100;
-    }
-    if (diagnoseDisabled) {
-      insetHeight = insetHeight + 100;
-    }
-
-    return `${insetHeight}%`;
-  };
 
   const onToggleClick = () => {
     setIsOpen(!isOpen);
@@ -155,80 +137,82 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
     >
       <MenuContent menuHeight={`${menuHeights[activeMenu]}px`}>
         <MenuList>
-          <Link
-            variant="plain"
-            pathname={routeManager.getUrl("Diagnose", {
-              service: instance.service_entity,
-              instance: instance.id,
-            })}
+          <MenuItem
+            itemId="diagnose"
             isDisabled={diagnoseDisabled}
+            icon={<FileMedicalAltIcon />}
           >
-            <MenuItem
-              itemId="diagnose"
+            <Link
+              variant="plain"
+              pathname={routeManager.getUrl("Diagnose", {
+                service: instance.service_entity,
+                instance: instance.id,
+              })}
               isDisabled={diagnoseDisabled}
-              icon={<FileMedicalAltIcon />}
             >
               {words("inventory.statustab.diagnose")}
-            </MenuItem>
-          </Link>
+            </Link>
+          </MenuItem>
           {composerEnabled && (
-            <Link
-              variant="plain"
-              pathname={routeManager.getUrl("InstanceComposerEditor", {
-                service: instance.service_entity,
-                instance: instance.id,
-              })}
-              isDisabled={editDisabled}
-            >
-              <MenuItem
-                itemId="edit-composer"
-                isDisabled={editDisabled}
-                icon={<ToolsIcon />}
-              >
-                {words("inventory.instanceComposer.editButton")}
-              </MenuItem>
-            </Link>
-          )}
-          {featureManager.isComposerEnabled() && (
-            <Link
-              variant="plain"
-              pathname={routeManager.getUrl("InstanceComposerViewer", {
-                service: instance.service_entity,
-                instance: instance.id,
-              })}
-            >
-              <MenuItem itemId="show-composer" icon={<EyeIcon />}>
-                {words("inventory.instanceComposer.showButton")}
-              </MenuItem>
-            </Link>
-          )}
-          <Link
-            variant="plain"
-            pathname={routeManager.getUrl("EditInstance", {
-              service: instance.service_entity,
-              instance: instance.id,
-            })}
-            isDisabled={editDisabled}
-          >
             <MenuItem
-              itemId="edit"
+              itemId="edit-composer"
               isDisabled={editDisabled}
               icon={<ToolsIcon />}
             >
-              {words("inventory.editInstance.button")}
+              <Link
+                variant="plain"
+                pathname={routeManager.getUrl("InstanceComposerEditor", {
+                  service: instance.service_entity,
+                  instance: instance.id,
+                })}
+                isDisabled={editDisabled}
+              >
+                {words("inventory.instanceComposer.editButton")}
+              </Link>
             </MenuItem>
-          </Link>
-          <Link
-            variant="plain"
-            pathname={routeManager.getUrl("DuplicateInstance", {
-              service: instance.service_entity,
-              instance: instance.id,
-            })}
+          )}
+          {featureManager.isComposerEnabled() && (
+            <MenuItem itemId="show-composer" icon={<EyeIcon />}>
+              <Link
+                variant="plain"
+                pathname={routeManager.getUrl("InstanceComposerViewer", {
+                  service: instance.service_entity,
+                  instance: instance.id,
+                })}
+              >
+                {words("inventory.instanceComposer.showButton")}
+              </Link>
+            </MenuItem>
+          )}
+
+          <MenuItem
+            itemId="edit"
+            isDisabled={editDisabled}
+            icon={<ToolsIcon />}
           >
-            <MenuItem itemId="duplicate" icon={<CopyIcon />}>
-              Duplicate
-            </MenuItem>
-          </Link>
+            <Link
+              variant="plain"
+              pathname={routeManager.getUrl("EditInstance", {
+                service: instance.service_entity,
+                instance: instance.id,
+              })}
+              isDisabled={editDisabled}
+            >
+              {words("inventory.editInstance.button")}
+            </Link>
+          </MenuItem>
+
+          <MenuItem itemId="duplicate" icon={<CopyIcon />}>
+            <Link
+              variant="plain"
+              pathname={routeManager.getUrl("DuplicateInstance", {
+                service: instance.service_entity,
+                instance: instance.id,
+              })}
+            >
+              {words("inventory.duplicateInstance.button")}
+            </Link>
+          </MenuItem>
           <Divider component="li" />
           <MenuItem
             itemId="group:navigate"
@@ -237,38 +221,37 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
               <DrilldownMenu
                 id="navigateDrillDown"
                 aria-label="navigationDrilldown"
-                style={{ insetBlockStart: getInsetHeight() }}
               >
                 <MenuItem
                   itemId="group:navigate_breadcrumb"
                   direction="up"
                   aria-hidden
                 >
-                  Back
+                  {words("back")}
                 </MenuItem>
                 <Divider component="li" />
-                <Link
-                  variant="plain"
-                  pathname={routeManager.getUrl("History", {
-                    service: instance.service_entity,
-                    instance: instance.id,
-                  })}
-                >
-                  <MenuItem itemId="history" icon={<HistoryIcon />}>
+                <MenuItem itemId="history" icon={<HistoryIcon />}>
+                  <Link
+                    variant="plain"
+                    pathname={routeManager.getUrl("History", {
+                      service: instance.service_entity,
+                      instance: instance.id,
+                    })}
+                  >
                     {words("inventory.statusTab.history")}
-                  </MenuItem>
-                </Link>
-                <Link
-                  variant="plain"
-                  pathname={routeManager.getUrl("Events", {
-                    service: instance.service_entity,
-                    instance: instance.id,
-                  })}
-                >
-                  <MenuItem itemId="events" icon={<PortIcon />}>
+                  </Link>
+                </MenuItem>
+                <MenuItem itemId="events" icon={<PortIcon />}>
+                  <Link
+                    variant="plain"
+                    pathname={routeManager.getUrl("Events", {
+                      service: instance.service_entity,
+                      instance: instance.id,
+                    })}
+                  >
                     {words("inventory.statusTab.events")}
-                  </MenuItem>
-                </Link>
+                  </Link>
+                </MenuItem>
                 <DeleteAction
                   isDisabled={deleteDisabled}
                   service_entity={instance.service_entity}
@@ -297,7 +280,6 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
             <ForceStateAction
               service_entity={instance.service_entity}
               id={instance.id}
-              insetHeight={getInsetHeight()}
               instance_identity={
                 instance.service_identity_attribute_value ?? instance.id
               }
@@ -306,7 +288,7 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
             />
           )}
           <Divider component="li" />
-          <MenuGroup label="Set state">
+          <MenuGroup label="Set state" role="group">
             <SetStateSection
               service_entity={instance.service_entity}
               id={instance.id}

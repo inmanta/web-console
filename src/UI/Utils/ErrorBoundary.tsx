@@ -35,6 +35,7 @@ class ErrorBoundary extends Component<Props, State> {
       return (
         <React.Fragment>
           <ErrorView
+            ariaLabel="ErrorBoundary"
             message={
               this.state.error?.message || "Something unexpected happened."
             }

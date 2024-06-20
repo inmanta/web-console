@@ -36,7 +36,7 @@ export const ActionButton: React.FC<Props> = ({ name, paused }) => {
   return (
     <ActionDisabledTooltip
       isDisabled={isHalted}
-      ariaLabel={"agentAction"}
+      testingId={"agentAction"}
       tooltipContent={words("environment.halt.tooltip")}
     >
       <Button

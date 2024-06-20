@@ -19,12 +19,12 @@ export const Page: React.FC = () => {
       {RemoteData.fold(
         {
           notAsked: () => null,
-          loading: () => <LoadingView aria-label="Dashboard-Loading" />,
+          loading: () => <LoadingView ariaLabel="Dashboard-Loading" />,
           failed: (error) => (
             <ErrorView
               message={error}
               retry={retry}
-              aria-label="Dashboard-Failed"
+              ariaLabel="Dashboard-Failed"
             />
           ),
           success: (value) => (

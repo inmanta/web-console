@@ -50,7 +50,7 @@ export const Actions: React.FC<ActionsProps> = ({ environment }) => {
         <DescriptionListDescription>
           <ActionDisabledTooltip
             isDisabled={isProtected}
-            ariaLabel={"clear"}
+            testingId={"clear"}
             tooltipContent={words("environment.protected.tooltip")}
           >
             <Button
@@ -68,7 +68,7 @@ export const Actions: React.FC<ActionsProps> = ({ environment }) => {
         <DescriptionListDescription>
           <ActionDisabledTooltip
             isDisabled={isProtected}
-            ariaLabel={"delete"}
+            testingId={"delete"}
             tooltipContent={words("environment.protected.tooltip")}
           >
             <Button

@@ -1,10 +1,19 @@
-import React from "react";
+import React, { act } from "react";
 import { render, screen } from "@testing-library/react";
-import { act } from "react-dom/test-utils";
+import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { words } from "@/UI/words";
 import { BlockingModal } from "./BlockingModal";
 
-test("Given BlockingModal When firing event twice Then Modal will appear and disappear", () => {
+expect.extend(toHaveNoViolations);
+
+const axe = configureAxe({
+  rules: {
+    // disable landmark rules when testing isolated components.
+    region: { enabled: false },
+  },
+});
+
+test("Given BlockingModal When firing event twice Then Modal will appear and disappear", async () => {
   render(<BlockingModal />);
 
   act(() => {
@@ -14,6 +23,11 @@ test("Given BlockingModal When firing event twice Then Modal will appear and dis
   const textHalt = screen.getByText(words("environment.halt.process"));
   expect(modalHalt).toBeVisible();
   expect(textHalt).toBeVisible();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 
   act(() => {
     document.dispatchEvent(new CustomEvent("halt-event"));

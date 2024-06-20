@@ -7,7 +7,6 @@ import { words } from "@/UI/words";
 import { AttributeSets, AttributesFilter } from "./AttributesFilter";
 import { DeletedFilter } from "./DeletedFilter";
 import { IdFilter } from "./IdFilter";
-import { IdentityFilter } from "./IdentityFilter";
 
 interface Props {
   filter: ServiceInstanceParams.Filter;
@@ -20,7 +19,6 @@ export const FilterWidget: React.FC<Props> = ({
   filter,
   setFilter,
   states,
-  identityAttribute,
 }) => {
   const [filterKind, setFilterKind] = useState<ServiceInstanceParams.Kind>(
     ServiceInstanceParams.Kind.State,
@@ -31,8 +29,8 @@ export const FilterWidget: React.FC<Props> = ({
 
   const updateId = (id?: string) =>
     id
-      ? setFilter({ ...filter, id: [id] })
-      : setFilter({ ...filter, id: undefined });
+      ? setFilter({ ...filter, id_or_service_identity: [id] })
+      : setFilter({ ...filter, id_or_service_identity: undefined });
 
   const updateAttributes = ({ empty, notEmpty }: AttributeSets) =>
     setFilter({
@@ -44,26 +42,12 @@ export const FilterWidget: React.FC<Props> = ({
   const updateDeleted = (deleted: ServiceInstanceParams.DeletedRule) =>
     setFilter({ ...filter, deleted });
 
-  const updateIdentity = (value?: string) => {
-    setFilter({
-      ...filter,
-      identity:
-        value && identityAttribute
-          ? { value, key: identityAttribute.key }
-          : undefined,
-    });
-  };
-
   return (
-    <ToolbarGroup variant="filter-group" aria-label="FilterBar">
+    <ToolbarGroup variant="filter-group" aria-label="FilterBar" role="toolbar">
       <FilterPicker
         setFilterKind={setFilterKind}
         filterKind={filterKind}
-        items={
-          identityAttribute?.pretty
-            ? [...ServiceInstanceParams.List, identityAttribute.pretty]
-            : ServiceInstanceParams.List
-        }
+        items={ServiceInstanceParams.List}
       />
       <SelectOptionFilter
         isVisible={filterKind === ServiceInstanceParams.Kind.State}
@@ -75,7 +59,11 @@ export const FilterWidget: React.FC<Props> = ({
       />
       <IdFilter
         isVisible={filterKind === ServiceInstanceParams.Kind.Id}
-        id={filter.id ? filter.id[0] : undefined}
+        id={
+          filter.id_or_service_identity
+            ? filter.id_or_service_identity[0]
+            : undefined
+        }
         update={updateId}
       />
       <AttributesFilter
@@ -91,16 +79,6 @@ export const FilterWidget: React.FC<Props> = ({
         update={updateDeleted}
         deleted={filter.deleted}
       />
-      {identityAttribute ? (
-        <IdentityFilter
-          identity={{
-            pretty: identityAttribute.pretty,
-            value: filter.identity?.value,
-          }}
-          isVisible={filterKind === identityAttribute.pretty}
-          update={updateIdentity}
-        />
-      ) : null}
     </ToolbarGroup>
   );
 };

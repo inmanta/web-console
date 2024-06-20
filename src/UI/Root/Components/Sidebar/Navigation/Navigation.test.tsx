@@ -1,7 +1,8 @@
-import React from "react";
+import React, { act } from "react";
 import { MemoryRouter } from "react-router-dom";
-import { act, render, screen, within } from "@testing-library/react";
+import { cleanup, render, screen, within } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
+import { axe, toHaveNoViolations } from "jest-axe";
 import { RemoteData, ServerStatus } from "@/Core";
 import {
   PrimaryFeatureManager,
@@ -19,6 +20,8 @@ import {
 import { DependencyProvider } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { Navigation } from "./Navigation";
+
+expect.extend(toHaveNoViolations);
 
 function setup(
   initialEntries: string[] | undefined,
@@ -48,6 +51,15 @@ function setup(
 
   return { component, apiHelper };
 }
+
+test("GIVEN Navigation THEN it should be accessible", async () => {
+  const { component } = setup(undefined, TestServerStatus.withLsm);
+  const { container } = render(component);
+
+  expect(await axe(container)).toHaveNoViolations();
+
+  cleanup();
+});
 
 test("GIVEN Navigation WHEN lsm enabled THEN shows all navigation items", () => {
   const { component } = setup(undefined, TestServerStatus.withLsm);

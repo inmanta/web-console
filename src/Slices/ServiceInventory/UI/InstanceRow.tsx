@@ -3,7 +3,8 @@ import React, { useRef, useState } from "react";
 import { Tbody, Tr, Td, ExpandableRowContent } from "@patternfly/react-table";
 import styled from "styled-components";
 import { Row, ServiceModel, VersionedServiceInstanceIdentifier } from "@/Core";
-import { DateWithTooltip, TextWithCopy } from "@/UI/Components";
+import { DateWithTooltip } from "@/UI/Components";
+import { CopyMultiOptions } from "@/UI/Components/CopyMultiOptions";
 import { scrollRowIntoView } from "@/UI/Utils";
 import { words } from "@/UI/words";
 import { DeploymentProgressBar, IdWithCopy } from "./Components";
@@ -46,6 +47,7 @@ export const InstanceRow: React.FC<Props> = ({
     }
     scrollRowIntoView(rowRef);
   };
+
   return (
     <Tbody isExpanded={false}>
       <StyledRow
@@ -66,9 +68,9 @@ export const InstanceRow: React.FC<Props> = ({
             dataLabel={idDataLabel}
             aria-label={`IdentityCell-${row.serviceIdentityValue}`}
           >
-            <TextWithCopy
-              value={row.serviceIdentityValue}
-              tooltipContent={words("serviceIdentity.copy")}
+            <CopyMultiOptions
+              options={[row.serviceIdentityValue, row.id.full]}
+              text={row.serviceIdentityValue}
             />
           </Td>
         ) : (

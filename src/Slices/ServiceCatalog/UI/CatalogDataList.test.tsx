@@ -1,7 +1,8 @@
-import React from "react";
+import React, { act } from "react";
 import { MemoryRouter } from "react-router";
-import { act, render, screen, within } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
+import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { ServiceModel } from "@/Core";
 import {
   BaseApiHelper,
@@ -16,6 +17,15 @@ import {
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import { CatalogDataList } from "./CatalogDataList";
+
+expect.extend(toHaveNoViolations);
+
+const axe = configureAxe({
+  rules: {
+    // disable landmark rules when testing isolated components.
+    region: { enabled: false },
+  },
+});
 
 const Component = (services: ServiceModel[]) => {
   const commandResolver = new CommandResolverImpl(
@@ -32,23 +42,33 @@ const Component = (services: ServiceModel[]) => {
   );
 };
 
-test("GIVEN CatalogDataList WHEN no services ('[]') THEN no services are shown", () => {
+test("GIVEN CatalogDataList WHEN no services ('[]') THEN no services are shown", async () => {
   render(Component([]));
 
   const list = screen.getByRole("list", { name: "List of service entities" });
   expect(within(list).queryByRole("listitem")).not.toBeInTheDocument();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
-test("GIVEN CatalogDataList WHEN 1 service THEN 1 service is shown", () => {
+test("GIVEN CatalogDataList WHEN 1 service THEN 1 service is shown", async () => {
   render(Component([Service.a]));
 
   const list = screen.getByRole("list", { name: "List of service entities" });
   expect(
     within(list).getByRole("listitem", { name: Service.a.name }),
   ).toBeInTheDocument();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
-test("GIVEN CatalogDataList WHEN 2 services THEN 2 services are shown", () => {
+test("GIVEN CatalogDataList WHEN 2 services THEN 2 services are shown", async () => {
   render(Component([Service.a, Service.b]));
 
   const list = screen.getByRole("list", { name: "List of service entities" });
@@ -58,9 +78,14 @@ test("GIVEN CatalogDataList WHEN 2 services THEN 2 services are shown", () => {
   expect(
     within(list).getByRole("listitem", { name: Service.b.name }),
   ).toBeInTheDocument();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
-test("GIVEN CatalogDataList WHEN service THEN service inventory has correct link", () => {
+test("GIVEN CatalogDataList WHEN service THEN service inventory has correct link", async () => {
   render(Component([Service.a]));
 
   const list = screen.getByRole("list", { name: "List of service entities" });
@@ -74,6 +99,11 @@ test("GIVEN CatalogDataList WHEN service THEN service inventory has correct link
     "href",
     `/lsm/catalog/${Service.a.name}/inventory`,
   );
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("GIVEN CatalogDataList WHEN service THEN service details has correct link", async () => {
@@ -97,9 +127,14 @@ test("GIVEN CatalogDataList WHEN service THEN service details has correct link",
     "href",
     `/lsm/catalog/${Service.a.name}/details`,
   );
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
-test("GIVEN CatalogDataList WHEN description available THEN should show description", () => {
+test("GIVEN CatalogDataList WHEN description available THEN should show description", async () => {
   render(Component([Service.a]));
 
   const list = screen.getByRole("list", { name: "List of service entities" });
@@ -108,4 +143,9 @@ test("GIVEN CatalogDataList WHEN description available THEN should show descript
     Service.a.description as string,
   );
   expect(description).toBeVisible();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });

@@ -1,8 +1,9 @@
-import React from "react";
+import React, { act } from "react";
 import { MemoryRouter, useLocation } from "react-router-dom";
-import { act, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
+import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { AttributeModel, RemoteData, ServiceModel } from "@/Core";
 import {
   CommandResolverImpl,
@@ -19,6 +20,15 @@ import {
 import { multiNestedEditable } from "@/Test/Data/Service/EmbeddedEntity";
 import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI";
 import { AttributeTable } from "./AttributeTable";
+
+expect.extend(toHaveNoViolations);
+
+const axe = configureAxe({
+  rules: {
+    // disable landmark rules when testing isolated components.
+    region: { enabled: false },
+  },
+});
 
 const attribute1: AttributeModel = {
   name: "order_id",
@@ -88,7 +98,7 @@ function setup(service: ServiceModel) {
   return component;
 }
 
-test("GIVEN AttributeTable WHEN passed no attributes THEN the empty container is shown", () => {
+test("GIVEN AttributeTable WHEN passed no attributes THEN the empty container is shown", async () => {
   const component = setup({
     ...Service.a,
     attributes: [],
@@ -96,6 +106,11 @@ test("GIVEN AttributeTable WHEN passed no attributes THEN the empty container is
   });
   render(component);
   expect(screen.getByText("No attributes found for the service")).toBeVisible();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("GIVEN AttributeTable WHEN passed 1 attribute THEN 1 row is shown", async () => {
@@ -109,6 +124,11 @@ test("GIVEN AttributeTable WHEN passed 1 attribute THEN 1 row is shown", async (
   expect(
     await screen.findByRole("row", { name: "Row-order_id" }),
   ).toBeVisible();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("GIVEN AttributeTable WHEN passed 2 attributes THEN 2 rows are shown", async () => {
@@ -125,6 +145,11 @@ test("GIVEN AttributeTable WHEN passed 2 attributes THEN 2 rows are shown", asyn
   expect(
     await screen.findByRole("row", { name: "Row-service_mtu" }),
   ).toBeVisible();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("GIVEN AttributeTable WHEN passed no attributes but some embedded entities THEN the rows are shown", async () => {
@@ -137,6 +162,11 @@ test("GIVEN AttributeTable WHEN passed no attributes but some embedded entities 
   expect(
     await screen.findByRole("row", { name: "Row-circuits" }),
   ).toBeVisible();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("GIVEN AttributeTable WHEN passed 2 attributes THEN 2 rows are shown", async () => {
@@ -153,6 +183,11 @@ test("GIVEN AttributeTable WHEN passed 2 attributes THEN 2 rows are shown", asyn
   expect(
     await screen.findByRole("row", { name: "Row-service_mtu" }),
   ).toBeVisible();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("GIVEN AttributeTable WHEN passed embedded attributes THEN expendable rows are shown and availalbe to expand/collapse one", async () => {
@@ -186,4 +221,9 @@ test("GIVEN AttributeTable WHEN passed embedded attributes THEN expendable rows 
     await userEvent.click(toggleButton);
   });
   expect(row).not.toBeVisible();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });

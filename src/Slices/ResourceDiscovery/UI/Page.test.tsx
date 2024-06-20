@@ -1,8 +1,9 @@
-import React from "react";
+import React, { act } from "react";
 import { MemoryRouter } from "react-router-dom";
-import { act, render, screen, within } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
+import { axe, toHaveNoViolations } from "jest-axe";
 import { Either } from "@/Core";
 import {
   QueryResolverImpl,
@@ -14,6 +15,8 @@ import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import * as DiscoveredResources from "../Data/Mock";
 import { Page } from "./Page";
+
+expect.extend(toHaveNoViolations);
 
 function setup() {
   const apiHelper = new DeferredApiHelper();
@@ -63,6 +66,34 @@ test("GIVEN Discovered Resources page THEN shows table", async () => {
       name: "vcenter::VirtualMachine[lab,name=acisim]",
     }),
   ).toBeVisible();
+  expect(
+    within(rows[0]).getByRole("cell", {
+      name: "resource-1",
+    }),
+  ).toBeVisible();
+  // uri is null
+  expect(
+    within(rows[1]).getByRole("cell", {
+      name: "-",
+    }),
+  ).toBeVisible();
+  // uri doesn't have a rid
+  expect(
+    within(rows[2]).getByRole("cell", {
+      name: "-",
+    }),
+  ).toBeVisible();
+  // uri is an empty string
+  expect(
+    within(rows[3]).getByRole("cell", {
+      name: "-",
+    }),
+  ).toBeVisible();
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 test("GIVEN Discovered Resources page THEN sets sorting parameters correctly on click", async () => {
@@ -79,4 +110,9 @@ test("GIVEN Discovered Resources page THEN sets sorting parameters correctly on 
   expect(apiHelper.pendingRequests[0].url).toContain(
     "&sort=discovered_resource_id.desc",
   );
+
+  await act(async () => {
+    const results = await axe(document.body);
+    expect(results).toHaveNoViolations();
+  });
 });

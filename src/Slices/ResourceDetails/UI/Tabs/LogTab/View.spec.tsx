@@ -1,6 +1,6 @@
-import React from "react";
+import React, { act } from "react";
 import { MemoryRouter } from "react-router";
-import { act, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { Either } from "@/Core";
@@ -55,7 +55,7 @@ test("GIVEN ResourceLogsView THEN shows resource logs", async () => {
   render(component);
 
   expect(
-    screen.getByRole("generic", { name: "ResourceLogs-Loading" }),
+    screen.getByRole("region", { name: "ResourceLogs-Loading" }),
   ).toBeVisible();
 
   expect(apiHelper.pendingRequests).toHaveLength(1);

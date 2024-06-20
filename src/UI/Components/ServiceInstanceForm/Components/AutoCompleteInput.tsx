@@ -9,6 +9,9 @@ import { words } from "@/UI/words";
 import { MultiTextSelect } from "../../MultiTextSelect";
 import { SingleTextSelect } from "../../SingleTextSelect";
 
+/**
+ * The option interface, based on the expected format for PF-select elements.
+ */
 interface Option {
   displayName: string;
   value: string;
@@ -27,6 +30,24 @@ interface Props {
   onSearchTextChanged?: (value: string) => void;
   multi?: boolean;
 }
+
+/**
+ * Component that renders an autocomplete input.
+ *
+ * @param props - The props of the component.
+ *  @prop options - The options to be displayed in the autocomplete.
+ *  @prop selected - The selected value.
+ *  @prop serviceEntity - The entity that the autocomplete is related to.
+ *  @prop attributeName - The name of the attribute.
+ *  @prop description - The description of the attribute.
+ *  @prop isOptional - Whether the attribute is optional.
+ *  @prop shouldBeDisabled - Whether the input should be disabled.
+ *  @prop handleInputChange - The function to be called when the input changes.
+ *  @prop onSearchTextChanged - The function to be called when the search text changes.
+ *  @prop multi - Whether the input should allow multiple selections.
+ *
+ * @returns The rendered component.
+ */
 export const AutoCompleteInput: React.FC<Props> = ({
   options,
   selected,
