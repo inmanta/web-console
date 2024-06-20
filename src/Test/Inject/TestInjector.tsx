@@ -7,7 +7,7 @@ type Props = {
   dependencies: Partial<Dependencies>;
 };
 
-const TestInjector: React.FC<React.PropsWithChildren<Props>> = ({
+export const TestInjector: React.FC<React.PropsWithChildren<Props>> = ({
   dependencies,
   children,
 }) => {
@@ -20,5 +20,3 @@ const TestInjector: React.FC<React.PropsWithChildren<Props>> = ({
     </DependencyProvider>
   );
 };
-
-export default TestInjector;

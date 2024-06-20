@@ -10,7 +10,7 @@ import { AuthConfig, LocalConfig } from "@/Data";
 import { AuthProvider } from "@/Data/Auth/AuthProvider";
 import * as CookieHelper from "@/Data/Common/CookieHelper";
 import { dependencies } from "@/Test";
-import TestInjector from "@/Test/Utils/TestInjector";
+import { TestInjector } from "@/Test/Inject";
 import { Login } from "./Page";
 
 expect.extend(toHaveNoViolations);
