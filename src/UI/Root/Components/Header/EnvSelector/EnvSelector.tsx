@@ -31,7 +31,7 @@ export const EnvSelector: React.FC<Props> = ({
   toggleText,
 }) => {
   const { routeManager } = useContext(DependencyContext);
-  const { useAuth } = useContext(DependencyContext);
+  const { authHelper } = useContext(DependencyContext);
   return (
     <Dropdown
       isOpen={isOpen}
@@ -44,12 +44,12 @@ export const EnvSelector: React.FC<Props> = ({
           aria-label={toggleText}
           isFullHeight
           onClick={() => setIsOpen(!isOpen)}
-          icon={useAuth.getUser() ? <UserCircleIcon /> : null}
+          icon={authHelper.getUser() ? <UserCircleIcon /> : null}
         >
           <StyledDiv>
             <div>
-              {useAuth.getUser() ? (
-                <StyledText>{useAuth.getUser()}</StyledText>
+              {authHelper.getUser() ? (
+                <StyledText>{authHelper.getUser()}</StyledText>
               ) : null}
               <div>
                 {toggleText.length > 28
@@ -82,14 +82,14 @@ export const EnvSelector: React.FC<Props> = ({
               {words("home.navigation.button")}
             </DropdownItem>
           </Tooltip>
-          {useAuth.getUser() && (
+          {authHelper.getUser() && (
             <>
               <DropdownItem
                 to={routeManager.getUrl("UserManagement", undefined)}
               >
                 {words("userManagement.title")}
               </DropdownItem>
-              <DropdownItem onClick={() => useAuth.logout()}>
+              <DropdownItem onClick={() => authHelper.logout()}>
                 {words("dashboard.logout")}
               </DropdownItem>
             </>

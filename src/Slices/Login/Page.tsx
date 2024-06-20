@@ -14,17 +14,17 @@ import logo from "@images/logo.svg";
  * @returns {React.FunctionComponent} The rendered component.
  */
 export const Login: React.FunctionComponent = () => {
-  const { useAuth } = useContext(DependencyContext);
+  const { authHelper } = useContext(DependencyContext);
   const navigate = useNavigate();
 
   const { mutate, isError, error, isSuccess, isPending, data } = useLogin();
 
   useEffect(() => {
     if (isSuccess) {
-      useAuth.updateUser(data.data.user.username, data.data.token);
+      authHelper.updateUser(data.data.user.username, data.data.token);
       navigate("/");
     }
-  }, [data, isSuccess, useAuth, navigate]);
+  }, [data, isSuccess, authHelper, navigate]);
 
   return (
     <Wrapper>

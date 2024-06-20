@@ -10,11 +10,11 @@ import { Initializer } from "../Initializer";
  * @returns The rendered private route component.
  */
 const PrivateRoute = () => {
-  const { useAuth } = useContext(DependencyContext);
+  const { authHelper } = useContext(DependencyContext);
 
   //instead of navigating to login page, we trigger login flow which can vary based on the auth provider
-  if (!useAuth.getToken()) {
-    useAuth.login();
+  if (!authHelper.getToken()) {
+    authHelper.login();
   }
 
   return (

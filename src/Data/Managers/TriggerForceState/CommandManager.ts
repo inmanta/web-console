@@ -3,7 +3,7 @@ import { AuthContextInterface } from "@/Data/Auth";
 import { CommandManagerWithEnv } from "@/Data/Common";
 
 export function TriggerForceStateCommandManager(
-  useAuth: AuthContextInterface,
+  authHelper: AuthContextInterface,
   apiHelper: ApiHelper,
 ) {
   return CommandManagerWithEnv<"TriggerForceState">(
@@ -13,7 +13,7 @@ export function TriggerForceStateCommandManager(
         apiHelper.postWithoutResponse(
           `/lsm/v1/service_inventory/${service_entity}/${id}/expert/state`,
           environment,
-          getBody(useAuth.getUser(), targetState, version),
+          getBody(authHelper.getUser(), targetState, version),
         ),
   );
 }

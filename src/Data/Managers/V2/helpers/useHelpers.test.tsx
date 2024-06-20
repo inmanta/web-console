@@ -11,7 +11,7 @@ const setup = (getToken: () => string | undefined = () => undefined) => {
     <DependencyProvider
       dependencies={{
         ...dependencies,
-        useAuth: {
+        authHelper: {
           ...defaultAuthContext,
           getToken,
         },
@@ -52,7 +52,7 @@ describe("createHeaders", () => {
     expect(result.current.get("Authorization")).toEqual(null);
   });
 
-  it("should return headers without Authorization Token when useAuth hook return undefined", () => {
+  it("should return headers without Authorization Token when authHelper hook return undefined", () => {
     const wrapper = setup();
 
     const { result } = renderHook(() => useHelpers().createHeaders(), {
@@ -61,7 +61,7 @@ describe("createHeaders", () => {
     expect(result.current.get("Authorization")).toEqual(null);
   });
 
-  it("should return headers with Authorization Token when useAuth hook returns the token", () => {
+  it("should return headers with Authorization Token when authHelper hook returns the token", () => {
     const wrapper = setup(() => "token");
     createCookie("inmanta_user", "token", 1);
     const { result } = renderHook(() => useHelpers().createHeaders(), {

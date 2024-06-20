@@ -34,7 +34,7 @@ export const Injector: React.FC<React.PropsWithChildren<Props>> = ({
   store,
   children,
 }) => {
-  const useAuth = useContext(AuthContext);
+  const authHelper = useContext(AuthContext);
   const featureManager = new PrimaryFeatureManager(
     GetServerStatusStateHelper(store),
     new PrimaryLogger(),
@@ -50,7 +50,7 @@ export const Injector: React.FC<React.PropsWithChildren<Props>> = ({
   const basePathname = baseUrlManager.getBasePathname();
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
   const routeManager = PrimaryRouteManager(basePathname);
-  const apiHelper = BaseApiHelper(baseUrl, useAuth);
+  const apiHelper = BaseApiHelper(baseUrl, authHelper);
   const queryResolver = new QueryResolverImpl(
     new QueryManagerResolverImpl(
       store,
@@ -60,7 +60,7 @@ export const Injector: React.FC<React.PropsWithChildren<Props>> = ({
     ),
   );
   const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolverImpl(store, apiHelper, useAuth),
+    new CommandManagerResolverImpl(store, apiHelper, authHelper),
   );
   const urlManager = new UrlManagerImpl(featureManager, baseUrl);
   const fileFetcher = new FileFetcherImpl(apiHelper);
@@ -80,7 +80,7 @@ export const Injector: React.FC<React.PropsWithChildren<Props>> = ({
         routeManager,
         environmentHandler,
         archiveHelper,
-        useAuth,
+        authHelper,
       }}
     >
       <UpdateBanner apiHelper={apiHelper} />

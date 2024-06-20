@@ -62,7 +62,7 @@ export class CommandManagerResolverImpl implements CommandManagerResolver {
   constructor(
     private readonly store: Store,
     private readonly apiHelper: ApiHelper,
-    private readonly useAuth: AuthContextInterface,
+    private readonly authHelper: AuthContextInterface,
   ) {
     this.managers = this.getManagers();
   }
@@ -127,9 +127,9 @@ export class CommandManagerResolverImpl implements CommandManagerResolver {
       DestroyInstanceCommandManager(this.apiHelper),
       DeleteInstanceCommandManager(this.apiHelper),
       DeleteServiceCommandManager(this.apiHelper),
-      TriggerSetStateCommandManager(this.useAuth, this.apiHelper),
-      UpdateInstanceAttributeCommandManager(this.useAuth, this.apiHelper),
-      TriggerForceStateCommandManager(this.useAuth, this.apiHelper),
+      TriggerSetStateCommandManager(this.authHelper, this.apiHelper),
+      UpdateInstanceAttributeCommandManager(this.authHelper, this.apiHelper),
+      TriggerForceStateCommandManager(this.authHelper, this.apiHelper),
       HaltEnvironmentCommandManager(
         this.apiHelper,
         environmentDetailsStateHelper,

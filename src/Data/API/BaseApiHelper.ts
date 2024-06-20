@@ -16,7 +16,7 @@ import { BigIntJsonParser } from "./BigIntJsonParser";
  */
 export const BaseApiHelper = (
   baseUrl: string = "http://localhost:8888",
-  useAuth: AuthContextInterface,
+  authHelper: AuthContextInterface,
 ): ApiHelper => {
   const jsonParser = new BigIntJsonParser();
 
@@ -42,8 +42,8 @@ export const BaseApiHelper = (
    * @returns An object containing the authorization header with the bearer token if available.
    */
   function getBearerToken(): { Authorization: string } | Record<string, never> {
-    if (useAuth.getToken()) {
-      return { Authorization: `Bearer ${useAuth.getToken()}` };
+    if (authHelper.getToken()) {
+      return { Authorization: `Bearer ${authHelper.getToken()}` };
     }
 
     return {};
@@ -73,7 +73,7 @@ export const BaseApiHelper = (
     if (response.status === 401 || response.status === 403) {
       errorMessage += ` ${words("error.authorizationFailed")}`;
 
-      useAuth.login();
+      authHelper.login();
     }
 
     return words("error.server.intro")(

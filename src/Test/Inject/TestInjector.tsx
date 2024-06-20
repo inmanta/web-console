@@ -12,10 +12,10 @@ export const TestInjector: React.FC<React.PropsWithChildren<Props>> = ({
   children,
 }) => {
   // Your component logic goes here
-  const useAuth = useContext(AuthContext);
+  const authHelper = useContext(AuthContext);
 
   return (
-    <DependencyProvider dependencies={{ ...dependencies, useAuth }}>
+    <DependencyProvider dependencies={{ ...dependencies, authHelper }}>
       {children}
     </DependencyProvider>
   );

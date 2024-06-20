@@ -75,7 +75,7 @@ function setup() {
               ...dependencies,
               queryResolver,
               environmentHandler,
-              useAuth: {
+              authHelper: {
                 ...defaultAuthContext,
                 getUser: () => "mocked_user",
                 getToken: () => "mocked_token",

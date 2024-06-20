@@ -2,11 +2,11 @@ import { useContext } from "react";
 import { DependencyContext } from "@/UI";
 
 export const useHelpers = () => {
-  const { useAuth } = useContext(DependencyContext);
+  const { authHelper } = useContext(DependencyContext);
 
   async function handleErrors(response: Response, customErrorMessage?: string) {
     if (response.status === 401 || response.status === 403) {
-      useAuth.login();
+      authHelper.login();
     }
 
     if (!response.ok) {
@@ -29,8 +29,8 @@ export const useHelpers = () => {
       headers.append("X-Inmanta-Tid", env);
     }
 
-    if (!!useAuth.getToken()) {
-      headers.append("Authorization", `Bearer ${useAuth.getToken()}`);
+    if (!!authHelper.getToken()) {
+      headers.append("Authorization", `Bearer ${authHelper.getToken()}`);
     }
     return headers;
   }

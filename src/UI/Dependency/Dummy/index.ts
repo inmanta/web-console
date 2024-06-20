@@ -1,5 +1,4 @@
 export * from "./DummyArchiveHelper";
-export * from "./DummyAuthHelper";
 export * from "./DummyCommandResolver";
 export * from "./DummyEnvironmentHandler";
 export * from "./DummyEnvironmentModifier";

@@ -3,7 +3,7 @@ import { AuthContextInterface } from "@/Data/Auth";
 import { CommandManagerWithEnv } from "@/Data/Common";
 
 export function UpdateInstanceAttributeCommandManager(
-  useAuth: AuthContextInterface,
+  authHelper: AuthContextInterface,
   apiHelper: ApiHelper,
 ) {
   return CommandManagerWithEnv<"UpdateInstanceAttribute">(
@@ -14,7 +14,7 @@ export function UpdateInstanceAttributeCommandManager(
           `/lsm/v2/service_inventory/${service_entity}/${id}/expert`,
           environment,
           composeCommandBody(
-            useAuth.getUser(),
+            authHelper.getUser(),
             attribute_set_name,
             value,
             target,
