@@ -8,7 +8,7 @@ export interface AuthContextInterface {
    * Function to get the current user.
    * @returns The current user, or undefined if no user is logged in.
    */
-  getUser: () => string | undefined;
+  getUser: () => string | null;
 
   /**
    * Function to log in a user.
@@ -38,7 +38,7 @@ export interface AuthContextInterface {
  * The default values for the authentication context.
  */
 export const defaultAuthContext: AuthContextInterface = {
-  getUser: () => undefined,
+  getUser: () => null,
   login: () => {},
   logout: () => {},
   updateUser: (_user: string, _token: string) => {},

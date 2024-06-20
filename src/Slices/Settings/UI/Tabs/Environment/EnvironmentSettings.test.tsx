@@ -8,8 +8,8 @@ import { Either, Maybe } from "@/Core";
 import {
   CommandResolverImpl,
   getStoreInstance,
-  KeycloakAuthHelper,
   CommandManagerResolverImpl,
+  defaultAuthContext,
 } from "@/Data";
 import {
   DeferredApiHelper,
@@ -33,10 +33,10 @@ const axe = configureAxe({
 function setup() {
   const selectedEnvironment = Environment.filterable[0];
   const apiHelper = new DeferredApiHelper();
-  const authHelper = new KeycloakAuthHelper();
+
   const store = getStoreInstance();
   const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolverImpl(store, apiHelper, authHelper),
+    new CommandManagerResolverImpl(store, apiHelper, defaultAuthContext),
   );
 
   const component = (

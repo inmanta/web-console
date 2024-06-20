@@ -2,7 +2,7 @@ import React from "react";
 import { Bullseye, Spinner } from "@patternfly/react-core";
 import { ReactKeycloakProvider } from "@react-keycloak/web";
 import Keycloak from "keycloak-js";
-import { AuthConfig } from "./PrimaryAuthController";
+import { AuthConfig } from "./AuthProvider";
 
 interface Props {
   config: AuthConfig;

@@ -14,7 +14,6 @@ import {
   DestroyInstanceCommandManager,
   InstanceResourcesQueryManager,
   InstanceResourcesStateHelper,
-  KeycloakAuthHelper,
   ServiceInstancesQueryManager,
   ServiceInstancesStateHelper,
   TriggerForceStateCommandManager,
@@ -229,7 +228,7 @@ function setup(expertMode = false, setSortFn: (props) => void = dummySetter) {
 
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
-  const authHelper = new KeycloakAuthHelper();
+
   const serviceInstancesHelper = ServiceInstancesQueryManager(
     apiHelper,
     ServiceInstancesStateHelper(store),
@@ -255,14 +254,14 @@ function setup(expertMode = false, setSortFn: (props) => void = dummySetter) {
   const triggerDestroyInstanceCommandManager =
     DestroyInstanceCommandManager(apiHelper);
   const triggerforceStateCommandManager = TriggerForceStateCommandManager(
-    authHelper,
+    defaultAuthContext,
     apiHelper,
   );
 
   const deleteCommandManager = DeleteInstanceCommandManager(apiHelper);
 
   const setStateCommandManager = TriggerSetStateCommandManager(
-    authHelper,
+    defaultAuthContext,
     BaseApiHelper(undefined, defaultAuthContext),
   );
 

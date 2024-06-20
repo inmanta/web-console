@@ -8,8 +8,8 @@ import { Either } from "@/Core";
 import {
   CommandManagerResolverImpl,
   CommandResolverImpl,
+  defaultAuthContext,
   getStoreInstance,
-  KeycloakAuthHelper,
   QueryManagerResolverImpl,
   QueryResolverImpl,
 } from "@/Data";
@@ -29,7 +29,7 @@ const setup = (entries?: string[]) => {
   );
 
   const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolverImpl(store, apiHelper, new KeycloakAuthHelper()),
+    new CommandManagerResolverImpl(store, apiHelper, defaultAuthContext),
   );
 
   const request = (query: string) => ({

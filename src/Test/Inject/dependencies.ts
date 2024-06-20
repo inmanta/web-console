@@ -1,4 +1,4 @@
-import { PrimaryArchiveHelper, PrimaryAuthController } from "@/Data";
+import { PrimaryArchiveHelper } from "@/Data";
 import {
   MockEnvironmentHandler,
   MockFeatureManager,
@@ -17,11 +17,6 @@ const urlManager = new UrlManagerImpl(featureManager, baseUrl);
 const environmentHandler = MockEnvironmentHandler(env);
 const fileManager = new MockFileManager();
 const archiveHelper = new PrimaryArchiveHelper(fileManager);
-const authController = new PrimaryAuthController(
-  undefined,
-  undefined,
-  undefined,
-);
 
 export const dependencies = {
   routeManager,
@@ -30,7 +25,6 @@ export const dependencies = {
   urlManager,
   environmentHandler,
   archiveHelper,
-  authController,
 };
 
 const limitedFeatureManager = new MockLimitedFeatureManager();
@@ -48,5 +42,4 @@ export const limitedDependencies = {
   urlManager: limitedUrlManager,
   environmentHandler,
   archiveHelper,
-  authController,
 };

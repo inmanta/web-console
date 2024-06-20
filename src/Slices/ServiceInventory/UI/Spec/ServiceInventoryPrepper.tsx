@@ -12,7 +12,6 @@ import {
   ServiceInstancesStateHelper,
   BaseApiHelper,
   TriggerSetStateCommandManager,
-  KeycloakAuthHelper,
   getStoreInstance,
   TriggerForceStateCommandManager,
   DestroyInstanceCommandManager,
@@ -72,14 +71,14 @@ export class ServiceInventoryPrepper {
     const triggerDestroyInstanceCommandManager =
       DestroyInstanceCommandManager(apiHelper);
     const triggerforceStateCommandManager = TriggerForceStateCommandManager(
-      new KeycloakAuthHelper(),
+      defaultAuthContext,
       apiHelper,
     );
 
     const deleteCommandManager = DeleteInstanceCommandManager(apiHelper);
 
     const setStateCommandManager = TriggerSetStateCommandManager(
-      new KeycloakAuthHelper(),
+      defaultAuthContext,
       BaseApiHelper(undefined, defaultAuthContext),
     );
 
