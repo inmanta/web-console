@@ -1,27 +1,22 @@
 import React from "react";
-const mockedKeycloak = jest.fn();
 import { renderHook } from "@testing-library/react";
-import { AuthConfig, LocalConfig, PrimaryAuthController } from "@/Data/Auth";
+import { defaultAuthContext } from "@/Data/Auth/AuthContext";
 import { createCookie, removeCookie } from "@/Data/Common/CookieHelper";
 import { dependencies } from "@/Test";
 import { DependencyProvider } from "@/UI";
 import { useHelpers } from ".";
-jest.mock("keycloak-js", () => {
-  return jest.fn().mockImplementation(mockedKeycloak);
-});
 
-const setup = (
-  shouldUseAuth: string | undefined,
-  externalConfig: AuthConfig | LocalConfig | undefined,
-  keycloakUrl: string | undefined,
-) => {
-  const authController = new PrimaryAuthController(
-    shouldUseAuth,
-    externalConfig,
-    keycloakUrl,
-  );
+const setup = (getToken: () => string | undefined = () => undefined) => {
   const wrapper = ({ children }) => (
-    <DependencyProvider dependencies={{ ...dependencies, authController }}>
+    <DependencyProvider
+      dependencies={{
+        ...dependencies,
+        useAuth: {
+          ...defaultAuthContext,
+          getToken,
+        },
+      }}
+    >
       {children}
     </DependencyProvider>
   );
@@ -31,7 +26,7 @@ const setup = (
 describe("createHeaders", () => {
   it("should return headers with environment when env is defined", () => {
     const env = "1234abcd";
-    const wrapper = setup(undefined, undefined, undefined);
+    const wrapper = setup();
 
     const { result } = renderHook(() => useHelpers().createHeaders(env), {
       wrapper,
@@ -40,7 +35,7 @@ describe("createHeaders", () => {
   });
 
   it("should return headers without environment when env is undefined", () => {
-    const wrapper = setup(undefined, undefined, undefined);
+    const wrapper = setup();
 
     const { result } = renderHook(() => useHelpers().createHeaders(), {
       wrapper,
@@ -49,7 +44,7 @@ describe("createHeaders", () => {
   });
 
   it("should return headers without Authorization Token when authController is disabled", () => {
-    const wrapper = setup(undefined, undefined, undefined);
+    const wrapper = setup();
 
     const { result } = renderHook(() => useHelpers().createHeaders(), {
       wrapper,
@@ -57,8 +52,8 @@ describe("createHeaders", () => {
     expect(result.current.get("Authorization")).toEqual(null);
   });
 
-  it("should return headers without Authorization Token when local authController is enabled but there is no localAuth token set", () => {
-    const wrapper = setup("true", { method: "database" }, undefined);
+  it("should return headers without Authorization Token when useAuth hook return undefined", () => {
+    const wrapper = setup();
 
     const { result } = renderHook(() => useHelpers().createHeaders(), {
       wrapper,
@@ -66,8 +61,8 @@ describe("createHeaders", () => {
     expect(result.current.get("Authorization")).toEqual(null);
   });
 
-  it("should return headers with Authorization Token when localAuth is enabled and localAuth token is set", () => {
-    const wrapper = setup("true", { method: "database" }, undefined);
+  it("should return headers with Authorization Token when useAuth hook returns the token", () => {
+    const wrapper = setup(() => "token");
     createCookie("inmanta_user", "token", 1);
     const { result } = renderHook(() => useHelpers().createHeaders(), {
       wrapper,
@@ -75,34 +70,5 @@ describe("createHeaders", () => {
 
     expect(result.current.get("Authorization")).toEqual("Bearer token");
     removeCookie("inmanta_user");
-  });
-
-  it("should return headers without Authorization Token when keycloakAuth is enabled and localAuth token is not set", () => {
-    const wrapper = setup(
-      "true",
-      { method: "oidc", realm: "realm", clientId: "id" },
-      undefined,
-    );
-    const { result } = renderHook(() => useHelpers().createHeaders(), {
-      wrapper,
-    });
-
-    expect(result.current.get("Authorization")).toEqual(null);
-  });
-
-  it("should return headers without Authorization Token when keycloakAuth is enabled and localAuth token is not set", () => {
-    mockedKeycloak.mockReturnValue({ token: "keycloak-token" });
-
-    const wrapper = setup(
-      "true",
-      { method: "oidc", realm: "realm", clientId: "id" },
-      undefined,
-    );
-    const { result } = renderHook(() => useHelpers().createHeaders(), {
-      wrapper,
-    });
-    expect(result.current.get("Authorization")).toEqual(
-      "Bearer keycloak-token",
-    );
   });
 });

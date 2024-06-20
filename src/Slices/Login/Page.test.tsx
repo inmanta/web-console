@@ -6,10 +6,11 @@ import { userEvent } from "@testing-library/user-event";
 import { axe, toHaveNoViolations } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
+import { AuthConfig, LocalConfig } from "@/Data";
 import { AuthProvider } from "@/Data/Auth/AuthProvider";
 import * as CookieHelper from "@/Data/Common/CookieHelper";
 import { dependencies } from "@/Test";
-import { DependencyProvider } from "@/UI";
+import TestInjector from "@/Test/Utils/TestInjector";
 import { Login } from "./Page";
 
 expect.extend(toHaveNoViolations);
@@ -21,42 +22,33 @@ jest.mock("react-router-dom", () => ({
   useNavigate: () => mockedUsedNavigate,
 }));
 
-const setup = () => {
+const setup = (config: AuthConfig | LocalConfig | undefined) => {
   const queryClient = new QueryClient();
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider config={{ method: "database" }}>
-        <DependencyProvider dependencies={{ ...dependencies }}>
+      <AuthProvider config={config}>
+        <TestInjector dependencies={dependencies}>
           <Login />
-        </DependencyProvider>
+        </TestInjector>
       </AuthProvider>
     </QueryClientProvider>
   );
 };
 
 describe("Login", () => {
-  it("if open-login event isn't triggered return null", async () => {
-    render(setup());
-    expect(screen.queryByLabelText("input-username")).not.toBeInTheDocument();
-
-    await act(async () => {
-      const results = await axe(document.body);
-      expect(results).toHaveNoViolations();
-    });
-  });
-  it("if open-login event is triggered return login form", async () => {
-    render(setup());
-    act(() => {
-      document.dispatchEvent(new Event("open-login"));
-    });
+  it("login form is properly rendered", async () => {
+    render(setup({ method: "database" }));
 
     expect(screen.getByLabelText("input-username")).toBeInTheDocument();
+    expect(screen.getByLabelText("input-password")).toBeInTheDocument();
+    expect(screen.getByLabelText("login-button")).toBeInTheDocument();
 
     await act(async () => {
       const results = await axe(document.body);
       expect(results).toHaveNoViolations();
     });
   });
+
   it("if user login with valid credentials we should set the cookie and reload the page", async () => {
     const spiedCreateCookie = jest.spyOn(CookieHelper, "createCookie");
 
@@ -80,13 +72,11 @@ describe("Login", () => {
       }),
     );
 
-    const component = setup();
+    const component = setup({ method: "database" });
 
     server.listen();
     render(component);
-    act(() => {
-      document.dispatchEvent(new Event("open-login"));
-    });
+
     const usernameInput = screen.getByLabelText("input-username");
     await act(async () => {
       await userEvent.type(usernameInput, "test_user");
@@ -124,7 +114,8 @@ describe("Login", () => {
         1,
       ),
     );
-    await waitFor(() => expect(mockedUsedNavigate).toHaveBeenCalledWith(0));
+
+    await waitFor(() => expect(mockedUsedNavigate).toHaveBeenCalledWith("/"));
 
     await act(async () => {
       const results = await axe(document.body);
@@ -154,13 +145,11 @@ describe("Login", () => {
       }),
     );
 
-    const component = setup();
+    const component = setup({ method: "database" });
 
     server.listen();
     render(component);
-    act(() => {
-      document.dispatchEvent(new Event("open-login"));
-    });
+
     const usernameInput = screen.getByLabelText("input-username");
     await act(async () => {
       await userEvent.type(usernameInput, "test_user");
@@ -210,11 +199,9 @@ describe("Login", () => {
     );
     server.listen();
 
-    const component = setup();
+    const component = setup({ method: "database" });
     render(component);
-    act(() => {
-      document.dispatchEvent(new Event("open-login"));
-    });
+
     const logInButton = screen.getByLabelText("login-button");
     await act(async () => {
       await userEvent.click(logInButton);
