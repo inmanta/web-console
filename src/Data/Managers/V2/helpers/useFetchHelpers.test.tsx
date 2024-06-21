@@ -1,10 +1,9 @@
 import React from "react";
 import { renderHook } from "@testing-library/react";
-import { defaultAuthContext } from "@/Data/Auth/AuthContext";
 import { createCookie, removeCookie } from "@/Data/Common/CookieHelper";
 import { dependencies } from "@/Test";
 import { DependencyProvider } from "@/UI";
-import { useHelpers } from ".";
+import { useFetchHelpers } from "./";
 
 const setup = (getToken: () => string | undefined = () => undefined) => {
   const wrapper = ({ children }) => (
@@ -12,7 +11,7 @@ const setup = (getToken: () => string | undefined = () => undefined) => {
       dependencies={{
         ...dependencies,
         authHelper: {
-          ...defaultAuthContext,
+          ...dependencies.authHelper,
           getToken,
         },
       }}
@@ -28,7 +27,7 @@ describe("createHeaders", () => {
     const env = "1234abcd";
     const wrapper = setup();
 
-    const { result } = renderHook(() => useHelpers().createHeaders(env), {
+    const { result } = renderHook(() => useFetchHelpers().createHeaders(env), {
       wrapper,
     });
     expect(result.current.get("X-Inmanta-Tid")).toEqual(env);
@@ -37,7 +36,7 @@ describe("createHeaders", () => {
   it("should return headers without environment when env is undefined", () => {
     const wrapper = setup();
 
-    const { result } = renderHook(() => useHelpers().createHeaders(), {
+    const { result } = renderHook(() => useFetchHelpers().createHeaders(), {
       wrapper,
     });
     expect(result.current.get("X-Inmanta-Tid")).toEqual(null);
@@ -46,7 +45,7 @@ describe("createHeaders", () => {
   it("should return headers without Authorization Token when authController is disabled", () => {
     const wrapper = setup();
 
-    const { result } = renderHook(() => useHelpers().createHeaders(), {
+    const { result } = renderHook(() => useFetchHelpers().createHeaders(), {
       wrapper,
     });
     expect(result.current.get("Authorization")).toEqual(null);
@@ -55,7 +54,7 @@ describe("createHeaders", () => {
   it("should return headers without Authorization Token when authHelper hook return undefined", () => {
     const wrapper = setup();
 
-    const { result } = renderHook(() => useHelpers().createHeaders(), {
+    const { result } = renderHook(() => useFetchHelpers().createHeaders(), {
       wrapper,
     });
     expect(result.current.get("Authorization")).toEqual(null);
@@ -64,7 +63,7 @@ describe("createHeaders", () => {
   it("should return headers with Authorization Token when authHelper hook returns the token", () => {
     const wrapper = setup(() => "token");
     createCookie("inmanta_user", "token", 1);
-    const { result } = renderHook(() => useHelpers().createHeaders(), {
+    const { result } = renderHook(() => useFetchHelpers().createHeaders(), {
       wrapper,
     });
 

@@ -1,9 +1,21 @@
 import { useContext } from "react";
 import { DependencyContext } from "@/UI";
 
-export const useHelpers = () => {
+/**
+ * Custom hook that provides HTTP helper functions.
+ *
+ * @returns An object containing the HTTP helper functions.
+ */
+export const useFetchHelpers = () => {
   const { authHelper } = useContext(DependencyContext);
 
+  /**
+   * Handles errors returned from API responses.
+   *
+   * @param response - The API response object.
+   * @param customErrorMessage - Optional custom error message.
+   * @throws An error with the error message from the API response.
+   */
   async function handleErrors(response: Response, customErrorMessage?: string) {
     if (response.status === 401 || response.status === 403) {
       authHelper.login();

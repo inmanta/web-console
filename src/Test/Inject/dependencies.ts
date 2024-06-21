@@ -1,4 +1,4 @@
-import { PrimaryArchiveHelper } from "@/Data";
+import { PrimaryArchiveHelper, defaultAuthContext } from "@/Data";
 import {
   MockEnvironmentHandler,
   MockFeatureManager,
@@ -25,6 +25,7 @@ export const dependencies = {
   urlManager,
   environmentHandler,
   archiveHelper,
+  authHelper: defaultAuthContext,
 };
 
 const limitedFeatureManager = new MockLimitedFeatureManager();

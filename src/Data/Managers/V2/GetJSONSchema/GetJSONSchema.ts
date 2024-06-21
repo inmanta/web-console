@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { PrimaryBaseUrlManager } from "@/UI";
-import { useHelpers } from "../helpers";
+import { useFetchHelpers } from "../helpers";
 
 /**
  *  React Query hook to fetch JSON Schema for a service_entity.
@@ -11,7 +11,7 @@ import { useHelpers } from "../helpers";
  * @returns {Object} The result of the query, {data, status, error, isLoading}.
  */
 export const useGetJSONSchema = (service_id: string, environment: string) => {
-  const { createHeaders, handleErrors } = useHelpers();
+  const { createHeaders, handleErrors } = useFetchHelpers();
   const headers = createHeaders(environment);
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,

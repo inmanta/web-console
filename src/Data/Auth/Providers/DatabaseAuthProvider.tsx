@@ -34,9 +34,10 @@ export const DatabaseAuthProvider: React.FC<React.PropsWithChildren> = ({
     createCookie("inmanta_user", token, 1);
   };
 
+  const isDisabled = () => !getUser();
   return (
     <AuthContext.Provider
-      value={{ getUser, login, logout, updateUser, getToken }}
+      value={{ getUser, login, logout, updateUser, getToken, isDisabled }}
     >
       {children}
     </AuthContext.Provider>

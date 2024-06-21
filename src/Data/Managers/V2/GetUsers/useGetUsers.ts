@@ -4,7 +4,7 @@
  */
 import { useQuery } from "@tanstack/react-query";
 import { PrimaryBaseUrlManager } from "@/UI";
-import { useHelpers } from "../helpers";
+import { useFetchHelpers } from "../helpers";
 
 /**
  * Represents the user information.
@@ -19,7 +19,7 @@ export interface UserInfo {
  * @returns An object containing a custom hook to fetch user information.
  */
 export const useGetUsers = () => {
-  const { handleErrors, createHeaders } = useHelpers();
+  const { handleErrors, createHeaders } = useFetchHelpers();
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
     globalThis.location.pathname,

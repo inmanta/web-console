@@ -6,7 +6,7 @@ import { userEvent } from "@testing-library/user-event";
 import { axe, toHaveNoViolations } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { AuthConfig, LocalConfig } from "@/Data";
+import { KeycloakAuthConfig, LocalConfig } from "@/Data/Auth";
 import { AuthProvider } from "@/Data/Auth/AuthProvider";
 import * as CookieHelper from "@/Data/Common/CookieHelper";
 import { dependencies } from "@/Test";
@@ -22,7 +22,7 @@ jest.mock("react-router-dom", () => ({
   useNavigate: () => mockedUsedNavigate,
 }));
 
-const setup = (config: AuthConfig | LocalConfig | undefined) => {
+const setup = (config: KeycloakAuthConfig | LocalConfig | undefined) => {
   const queryClient = new QueryClient();
   return (
     <QueryClientProvider client={queryClient}>

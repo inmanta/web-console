@@ -7,7 +7,7 @@ import { SearchSanitizer } from "@/UI/Routing";
 import { GlobalStyles } from "@/UI/Styles";
 import { NotFoundPage } from "@S/NotFound/UI";
 import { PageFrame } from "./Components";
-import PrivateRoute from "./Components/PrivateRoute/PrivateRoute";
+import RouteOutlet from "./Components/RouteOutlet/RouteOutlet";
 import { PrimaryPageManager } from "./PrimaryPageManager";
 
 export const Root: React.FC = () => {
@@ -36,7 +36,7 @@ export const Root: React.FC = () => {
       <SearchSanitizer.Provider>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
-          <Route element={<PrivateRoute />}>
+          <Route element={<RouteOutlet />}>
             {routeManager.isBaseUrlDefined() && (
               <Route
                 path="/"

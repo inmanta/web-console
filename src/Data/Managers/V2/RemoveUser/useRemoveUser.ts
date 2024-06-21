@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { PrimaryBaseUrlManager } from "@/UI";
-import { useHelpers } from "../helpers";
+import { useFetchHelpers } from "../helpers";
 
 /**
  * Custom hook for removing a user from the server.
@@ -9,7 +9,7 @@ import { useHelpers } from "../helpers";
  */
 export const useRemoveUser = () => {
   const client = useQueryClient();
-  const { createHeaders, handleErrors } = useHelpers();
+  const { createHeaders, handleErrors } = useFetchHelpers();
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
     globalThis.location.pathname,

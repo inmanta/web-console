@@ -1,13 +1,14 @@
 import React, { useEffect } from "react";
-import { useKeycloak } from "@react-keycloak/web";
+import { Bullseye, Spinner } from "@patternfly/react-core";
+import { useKeycloak, ReactKeycloakProvider } from "@react-keycloak/web";
+import Keycloak from "keycloak-js";
 import { AuthContext } from "../AuthContext";
+import { KeycloakAuthConfig } from "../types";
 
 /**
  * KeycloakAuthProvider component provides authentication functionality using Keycloak.
  */
-export const KeycloakAuthProvider: React.FC<React.PropsWithChildren> = ({
-  children,
-}) => {
+const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
   const { keycloak } = useKeycloak();
   /**
    * Get the username of the currently logged-in user.
@@ -41,6 +42,7 @@ export const KeycloakAuthProvider: React.FC<React.PropsWithChildren> = ({
   const getToken = (): string | undefined => {
     return keycloak.token;
   };
+  const isDisabled = () => !getUser();
 
   useEffect(() => {
     if (keycloak && !keycloak.profile) {
@@ -56,10 +58,42 @@ export const KeycloakAuthProvider: React.FC<React.PropsWithChildren> = ({
         getToken,
         login,
         logout,
+        isDisabled,
         updateUser: (_user: string, _token: string) => {},
       }}
     >
       {children}
     </AuthContext.Provider>
+  );
+};
+
+interface Props {
+  config: KeycloakAuthConfig;
+}
+/**
+ * KeycloakAuthProvider component provides authentication functionality using Keycloak.
+ */
+export const KeycloakAuthProvider: React.FC<React.PropsWithChildren<Props>> = ({
+  children,
+  config,
+}) => {
+  const keycloakInstance = new Keycloak(config);
+
+  return (
+    <ReactKeycloakProvider
+      authClient={keycloakInstance}
+      initOptions={{
+        onLoad: "login-required",
+        checkLoginIframe: false,
+        flow: "implicit",
+      }}
+      LoadingComponent={
+        <Bullseye>
+          <Spinner />
+        </Bullseye>
+      }
+    >
+      <AuthProvider>{children}</AuthProvider>
+    </ReactKeycloakProvider>
   );
 };

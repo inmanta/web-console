@@ -34,7 +34,7 @@ export const getCookie = (cookieName: string): string | undefined => {
     //slice of the amount that equals to cookieName + '=' sign
     return searchedCookie.slice(cookieName.length + 1);
   } else {
-    return searchedCookie;
+    return undefined;
   }
 };
 

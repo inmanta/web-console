@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { FormSuggestion } from "@/Core";
 import { PrimaryBaseUrlManager } from "@/UI";
-import { useHelpers } from "../helpers";
+import { useFetchHelpers } from "../helpers";
 
 /**
  * Custom hook to handle suggested values for a parameter.
@@ -19,7 +19,7 @@ export const useSuggestedValues = (
   environment: string,
 ) => {
   //extracted headers to avoid breaking rules of Hooks
-  const { createHeaders, handleErrors } = useHelpers();
+  const { createHeaders, handleErrors } = useFetchHelpers();
 
   if (!suggestions) {
     return {
