@@ -44,13 +44,13 @@ export const EnvSelector: React.FC<Props> = ({
           aria-label={toggleText}
           isFullHeight
           onClick={() => setIsOpen(!isOpen)}
-          icon={authHelper.getUser() ? <UserCircleIcon /> : null}
+          icon={authHelper.isDisabled() ? null : <UserCircleIcon />}
         >
           <StyledDiv>
             <div>
-              {authHelper.getUser() ? (
+              {authHelper.isDisabled() ? null : (
                 <StyledText>{authHelper.getUser()}</StyledText>
-              ) : null}
+              )}
               <div>
                 {toggleText.length > 28
                   ? toggleText.slice(0, 20) + "..."
@@ -82,7 +82,7 @@ export const EnvSelector: React.FC<Props> = ({
               {words("home.navigation.button")}
             </DropdownItem>
           </Tooltip>
-          {authHelper.getUser() && (
+          {!authHelper.isDisabled() && (
             <>
               <DropdownItem
                 to={routeManager.getUrl("UserManagement", undefined)}
