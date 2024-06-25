@@ -111,7 +111,6 @@ function setup(service = Service.a, pageSize = "") {
   );
   const component = (
     <MemoryRouter initialEntries={[`/?env=aaa${pageSize}`]}>
-      {/* <AuthProvider config={undefined}> */}
       <DependencyProvider
         dependencies={{
           ...dependencies,
