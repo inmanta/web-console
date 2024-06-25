@@ -9,7 +9,7 @@ import { Initializer } from "../../Root/Components/Initializer";
  *
  * @returns The rendered private route component.
  */
-const RouteOutlet = () => {
+export const RouteOutlet = () => {
   const { authHelper } = useContext(DependencyContext);
 
   //instead of navigating to login page, we trigger login flow which can vary based on the auth provider
@@ -23,5 +23,3 @@ const RouteOutlet = () => {
     </Initializer>
   );
 };
-
-export default RouteOutlet;

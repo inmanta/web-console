@@ -3,10 +3,9 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { LoginPage } from "@/Slices/Login";
 import { DependencyContext } from "@/UI/Dependency";
-import { SearchSanitizer } from "@/UI/Routing";
+import { RouteOutlet, SearchSanitizer } from "@/UI/Routing";
 import { GlobalStyles } from "@/UI/Styles";
 import { NotFoundPage } from "@S/NotFound/UI";
-import RouteOutlet from "../Routing/RouteOutlet/RouteOutlet";
 import { PageFrame } from "./Components";
 import { PrimaryPageManager } from "./PrimaryPageManager";
 

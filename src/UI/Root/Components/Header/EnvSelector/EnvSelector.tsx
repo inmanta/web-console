@@ -44,13 +44,13 @@ export const EnvSelector: React.FC<Props> = ({
           aria-label={toggleText}
           isFullHeight
           onClick={() => setIsOpen(!isOpen)}
-          icon={authHelper.isDisabled() ? null : <UserCircleIcon />}
+          icon={!authHelper.isDisabled() ? <UserCircleIcon /> : null}
         >
           <StyledDiv>
             <div>
-              {authHelper.isDisabled() ? null : (
+              {!authHelper.isDisabled() ? (
                 <StyledText>{authHelper.getUser()}</StyledText>
-              )}
+              ) : null}
               <div>
                 {toggleText.length > 28
                   ? toggleText.slice(0, 20) + "..."

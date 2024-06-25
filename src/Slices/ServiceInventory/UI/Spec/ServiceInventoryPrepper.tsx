@@ -114,7 +114,7 @@ export class ServiceInventoryPrepper {
               <ServiceInventory serviceName={service.name} service={service} />
             </StoreProvider>
           </DependencyProvider>
-        </AuthProvider>{" "}
+        </AuthProvider>
       </MemoryRouter>
     );
 
