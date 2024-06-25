@@ -2,7 +2,7 @@ import React, { act } from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { Attributes, EntityLike, ServiceModel } from "@/Core";
-import { CommandResolverImpl, KeycloakAuthHelper } from "@/Data";
+import { CommandResolverImpl, defaultAuthContext } from "@/Data";
 import { UpdateInstanceAttributeCommandManager } from "@/Data/Managers/UpdateInstanceAttribute";
 import {
   DeferredApiHelper,
@@ -28,7 +28,7 @@ function inventorySetup(
   const apiHelper = new DeferredApiHelper();
 
   const updateAttribute = UpdateInstanceAttributeCommandManager(
-    new KeycloakAuthHelper(),
+    defaultAuthContext,
     apiHelper,
   );
   const commandResolver = new CommandResolverImpl(
@@ -166,7 +166,7 @@ function catalogSetup(service: EntityLike) {
   const apiHelper = new DeferredApiHelper();
 
   const updateAttribute = UpdateInstanceAttributeCommandManager(
-    new KeycloakAuthHelper(),
+    defaultAuthContext,
     apiHelper,
   );
   const commandResolver = new CommandResolverImpl(

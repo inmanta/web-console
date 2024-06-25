@@ -6,7 +6,6 @@ export * from "./DynamicManagerResolver";
 export * from "./InstantApiHelper";
 export * from "./InstantFileFetcher";
 export * from "./StaticScheduler";
-export * from "./DummyAuthHelper";
 export * from "./MockEnvironmentModifier";
 export * from "./MockFeatureManager";
 export * as Outcome from "./Outcome";

@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { PrimaryBaseUrlManager } from "@/UI";
-import { useHandleErrors } from "../helpers/useHandleErrors";
+import { useFetchHelpers } from "../helpers";
 
 /**
  * Custom hook for performing user login mutation for database authentication - for keycloak head to keycloak.js library.
@@ -12,8 +12,8 @@ export const useLogin = () => {
     globalThis.location.origin,
     globalThis.location.pathname,
   );
-  const { handleAuthorization } = useHandleErrors();
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
+  const { handleErrors } = useFetchHelpers();
 
   /**
    * Asynchronously posts login credentials to the server and retrieves the response.
@@ -42,11 +42,8 @@ export const useLogin = () => {
         "Content-Type": "application/json",
       },
     });
-    handleAuthorization(response);
 
-    if (!response.ok) {
-      throw new Error(JSON.parse(await response.text()).message);
-    }
+    await handleErrors(response);
 
     return response.json();
   };

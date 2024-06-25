@@ -16,6 +16,7 @@ import {
   ServiceKeyMaker,
   ServiceStateHelper,
 } from "@/Data";
+import { defaultAuthContext } from "@/Data/Auth/AuthContext";
 import {
   DynamicCommandManagerResolverImpl,
   DynamicQueryManagerResolverImpl,
@@ -68,7 +69,7 @@ function setup() {
   );
 
   const deleteServiceCommandManager = DeleteServiceCommandManager(
-    new BaseApiHelper(),
+    BaseApiHelper(undefined, defaultAuthContext),
   );
 
   const deleteCallbackCommandManager = DeleteCallbackCommandManager(

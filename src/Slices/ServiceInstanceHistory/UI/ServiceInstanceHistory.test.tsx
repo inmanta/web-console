@@ -8,7 +8,7 @@ import {
   QueryResolverImpl,
   getStoreInstance,
   CommandResolverImpl,
-  KeycloakAuthHelper,
+  defaultAuthContext,
 } from "@/Data";
 import { UpdateInstanceAttributeCommandManager } from "@/Data/Managers/UpdateInstanceAttribute";
 import {
@@ -50,7 +50,7 @@ function setup() {
     ]),
   );
   const updateAttribute = UpdateInstanceAttributeCommandManager(
-    new KeycloakAuthHelper(),
+    defaultAuthContext,
     apiHelper,
   );
   const commandResolver = new CommandResolverImpl(

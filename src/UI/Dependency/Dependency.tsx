@@ -7,11 +7,13 @@ import {
   EnvironmentModifier,
   RouteManager,
   EnvironmentHandler,
-  AuthHelper,
   FeatureManager,
   ArchiveHelper,
-  AuthController,
 } from "@/Core";
+import {
+  AuthContextInterface,
+  defaultAuthContext,
+} from "@/Data/Auth/AuthContext";
 import {
   DummyCommandResolver,
   DummyEnvironmentModifier,
@@ -21,9 +23,7 @@ import {
   DummyUrlManager,
   DummyRouteManager,
   DummyEnvironmentHandler,
-  DummyAuthHelper,
   DummyArchiveHelper,
-  DummyAuthController,
 } from "./Dummy";
 
 export interface Dependencies {
@@ -35,9 +35,8 @@ export interface Dependencies {
   featureManager: FeatureManager;
   routeManager: RouteManager;
   environmentHandler: EnvironmentHandler;
-  authHelper: AuthHelper;
   archiveHelper: ArchiveHelper;
-  authController: AuthController;
+  authHelper: AuthContextInterface;
 }
 
 export const DependencyContext = createContext<Dependencies>({
@@ -49,9 +48,8 @@ export const DependencyContext = createContext<Dependencies>({
   featureManager: new DummyFeatureManager(),
   routeManager: new DummyRouteManager(),
   environmentHandler: DummyEnvironmentHandler(),
-  authHelper: new DummyAuthHelper(),
   archiveHelper: new DummyArchiveHelper(),
-  authController: new DummyAuthController(),
+  authHelper: defaultAuthContext,
 });
 
 export const DependencyProvider: React.FC<{
@@ -67,9 +65,8 @@ export const DependencyProvider: React.FC<{
     featureManager,
     routeManager,
     environmentHandler,
-    authHelper,
     archiveHelper,
-    authController,
+    authHelper,
   },
   children,
 }) => (
@@ -84,9 +81,8 @@ export const DependencyProvider: React.FC<{
       featureManager: featureManager || new DummyFeatureManager(),
       routeManager: routeManager || new DummyRouteManager(),
       environmentHandler: environmentHandler || DummyEnvironmentHandler(),
-      authHelper: authHelper || new DummyAuthHelper(),
       archiveHelper: archiveHelper || new DummyArchiveHelper(),
-      authController: authController || new DummyAuthController(),
+      authHelper: authHelper || defaultAuthContext,
     }}
   >
     {children}

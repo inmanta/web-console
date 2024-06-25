@@ -6,8 +6,8 @@ import { Either, EnvironmentDetails, RemoteData } from "@/Core";
 import {
   CommandManagerResolverImpl,
   CommandResolverImpl,
+  defaultAuthContext,
   getStoreInstance,
-  KeycloakAuthHelper,
 } from "@/Data";
 import { ServiceInventoryContext } from "@/Slices/ServiceInventory/UI/ServiceInventory";
 import { DeferredApiHelper, dependencies, ServiceInstance } from "@/Test";
@@ -17,7 +17,7 @@ import { DeleteAction } from "./DeleteAction";
 
 function setup() {
   const apiHelper = new DeferredApiHelper();
-  const authHelper = new KeycloakAuthHelper();
+
   const storeInstance = getStoreInstance();
   storeInstance.dispatch.environment.setEnvironmentDetailsById({
     id: ServiceInstance.a.environment,
@@ -29,7 +29,11 @@ function setup() {
   );
 
   const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolverImpl(storeInstance, apiHelper, authHelper),
+    new CommandManagerResolverImpl(
+      storeInstance,
+      apiHelper,
+      defaultAuthContext,
+    ),
   );
   const refetch = jest.fn();
   return {

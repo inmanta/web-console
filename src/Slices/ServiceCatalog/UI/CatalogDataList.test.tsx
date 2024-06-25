@@ -9,6 +9,7 @@ import {
   CommandResolverImpl,
   DeleteServiceCommandManager,
 } from "@/Data";
+import { defaultAuthContext } from "@/Data/Auth/AuthContext";
 import {
   dependencies,
   DynamicCommandManagerResolverImpl,
@@ -30,7 +31,7 @@ const axe = configureAxe({
 const Component = (services: ServiceModel[]) => {
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolverImpl([
-      DeleteServiceCommandManager(new BaseApiHelper()),
+      DeleteServiceCommandManager(BaseApiHelper(undefined, defaultAuthContext)),
     ]),
   );
   return (
