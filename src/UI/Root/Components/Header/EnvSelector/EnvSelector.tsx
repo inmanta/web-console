@@ -48,9 +48,9 @@ export const EnvSelector: React.FC<Props> = ({
         >
           <StyledDiv>
             <div>
-              {!authHelper.isDisabled() ? (
+              {!authHelper.isDisabled() && (
                 <StyledText>{authHelper.getUser()}</StyledText>
-              ) : null}
+              )}
               <div>
                 {toggleText.length > 28
                   ? toggleText.slice(0, 20) + "..."
