@@ -13,7 +13,7 @@ const KeycloakProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
   const { keycloak } = useKeycloak();
   /**
    * Get the username of the currently logged-in user.
-   * @returns The username of the currently logged-in user, or undefined if no user is logged in.
+   * @returns  {string|null} The username of the currently logged-in user, or null if no user is logged in.
    */
   const getUser = (): string | null => {
     return keycloak && keycloak.profile && keycloak.profile.username
@@ -38,7 +38,7 @@ const KeycloakProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
 
   /**
    * Get the access token of the currently logged-in user.
-   * @returns The access token of the currently logged-in user, or undefined if no user is logged in.
+   * @returns {string|null} The access token of the currently logged-in user, or null if no user is logged in.
    */
   const getToken = (): string | null => {
     return keycloak.token || null;

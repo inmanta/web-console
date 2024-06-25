@@ -10,7 +10,7 @@ import logo from "@images/logo.svg";
 /**
  * Login component.
  * This component is responsible for rendering the login page.
- * @note This is being used only when databse authentication is enabled.
+ * @note This is being used only when database authentication is enabled.
  * @returns {React.FunctionComponent} The rendered component.
  */
 export const Login: React.FunctionComponent = () => {
