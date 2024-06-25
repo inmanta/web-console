@@ -10,7 +10,7 @@ export const Page: React.FC = () => {
     useRouteParams<"DesiredStateResourceDetails">();
 
   return (
-    <PageContainer title={words("desiredState.resourceDetails.title")}>
+    <PageContainer pageTitle={words("desiredState.resourceDetails.title")}>
       <StyledDescription>{resourceId}</StyledDescription>
       <DetailsProvider version={version} resourceId={resourceId} />
     </PageContainer>

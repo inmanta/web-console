@@ -45,7 +45,7 @@ const PageWrapper: React.FC<React.PropsWithChildren<unknown>> = ({
 }) => (
   <PageContainer
     {...props}
-    title={words("inventory.instanceComposer.title.view")}
+    pageTitle={words("inventory.instanceComposer.title.view")}
   >
     {children}
   </PageContainer>

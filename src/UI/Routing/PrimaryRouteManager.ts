@@ -20,6 +20,7 @@ import { InstanceComposer } from "@/Slices/InstanceComposer";
 import { InstanceComposerEditor } from "@/Slices/InstanceComposerEditor";
 import { InstanceComposerViewer } from "@/Slices/InstanceComposerViewer";
 import { ServiceDetails } from "@/Slices/ServiceDetails";
+import { InstanceDetails } from "@/Slices/ServiceInstanceDetails";
 import { AgentProcess } from "@S/AgentProcess";
 import { Agents } from "@S/Agents";
 import { CompileDetails } from "@S/CompileDetails";
@@ -74,6 +75,7 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
     EditInstance: EditInstance.route(baseUrl),
     Events: Events.route(baseUrl),
     History: ServiceInstanceHistory.route(baseUrl),
+    InstanceDetails: InstanceDetails.route(baseUrl),
     InstanceComposer: InstanceComposer.route(baseUrl),
     InstanceComposerEditor: InstanceComposerEditor.route(baseUrl),
     InstanceComposerViewer: InstanceComposerViewer.route(baseUrl),

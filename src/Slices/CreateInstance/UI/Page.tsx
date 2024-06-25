@@ -15,7 +15,7 @@ export const Page: React.FC = () => {
   });
 
   return (
-    <PageContainer title={words("inventory.createInstance.title")}>
+    <PageContainer pageTitle={words("inventory.createInstance.title")}>
       <RemoteDataView
         data={data}
         retry={retry}

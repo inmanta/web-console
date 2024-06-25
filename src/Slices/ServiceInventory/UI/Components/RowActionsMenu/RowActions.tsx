@@ -16,6 +16,7 @@ import {
   EyeIcon,
   FileMedicalAltIcon,
   HistoryIcon,
+  InfoAltIcon,
   PortIcon,
   ToolsIcon,
 } from "@patternfly/react-icons";
@@ -137,6 +138,18 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
     >
       <MenuContent menuHeight={`${menuHeights[activeMenu]}px`}>
         <MenuList>
+          <MenuItem itemId="instance-details" icon={<InfoAltIcon />}>
+            <Link
+              variant="plain"
+              pathname={routeManager.getUrl("InstanceDetails", {
+                service: instance.service_entity,
+                instance: instance.id,
+                version: String(instance.version),
+              })}
+            >
+              Instance Details
+            </Link>
+          </MenuItem>
           <MenuItem
             itemId="diagnose"
             isDisabled={diagnoseDisabled}

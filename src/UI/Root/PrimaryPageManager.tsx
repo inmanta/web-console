@@ -7,6 +7,7 @@ import { OrderDetailsPage } from "@/Slices/OrderDetails/UI";
 import { OrdersPage } from "@/Slices/Orders/UI";
 import { DiscoveredResourcesPage } from "@/Slices/ResourceDiscovery/UI";
 import { ServiceDetailsPage } from "@/Slices/ServiceDetails/UI";
+import { ServiceInstanceDetailsPage } from "@/Slices/ServiceInstanceDetails/UI";
 import { UserManagementPage } from "@/Slices/UserManagement/UI/Page";
 import { AgentProcessPage } from "@S/AgentProcess/UI";
 import { AgentsPage } from "@S/Agents/UI";
@@ -87,6 +88,10 @@ export class PrimaryPageManager implements PageManager {
       ServiceDetails: {
         ...this.routeDictionary.ServiceDetails,
         element: <ServiceDetailsPage />,
+      },
+      InstanceDetails: {
+        ...this.routeDictionary.InstanceDetails,
+        element: <ServiceInstanceDetailsPage />,
       },
       InstanceComposer: {
         ...this.routeDictionary.InstanceComposer,
