@@ -5,7 +5,7 @@ import { dependencies } from "@/Test";
 import { DependencyProvider } from "@/UI";
 import { useFetchHelpers } from "./";
 
-const setup = (getToken: () => string | undefined = () => undefined) => {
+const setup = (getToken: () => string | null = () => null) => {
   const wrapper = ({ children }) => (
     <DependencyProvider
       dependencies={{

@@ -10,7 +10,7 @@ import { KeycloakAuthConfig, LocalConfig } from "@/Data/Auth";
 import { AuthProvider } from "@/Data/Auth/AuthProvider";
 import * as CookieHelper from "@/Data/Common/CookieHelper";
 import { dependencies } from "@/Test";
-import { TestInjector } from "@/Test/Inject";
+import { AuthTestWrapper } from "@/Test/Inject";
 import { Login } from "./Page";
 
 expect.extend(toHaveNoViolations);
@@ -27,9 +27,9 @@ const setup = (config: KeycloakAuthConfig | LocalConfig | undefined) => {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider config={config}>
-        <TestInjector dependencies={dependencies}>
+        <AuthTestWrapper dependencies={dependencies}>
           <Login />
-        </TestInjector>
+        </AuthTestWrapper>
       </AuthProvider>
     </QueryClientProvider>
   );

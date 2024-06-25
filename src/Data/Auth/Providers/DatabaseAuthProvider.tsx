@@ -27,7 +27,7 @@ export const DatabaseAuthProvider: React.FC<React.PropsWithChildren> = ({
 
   const login = (): void => navigate("/login");
 
-  const getToken = (): string | undefined => getCookie("inmanta_user");
+  const getToken = (): string | null => getCookie("inmanta_user");
 
   const updateUser = (username: string, token: string) => {
     setUser(username);

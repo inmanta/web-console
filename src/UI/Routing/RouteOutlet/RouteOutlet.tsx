@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { Outlet } from "react-router-dom";
 import { DependencyContext } from "@/UI/Dependency";
-import { Initializer } from "../Initializer";
+import { Initializer } from "../../Root/Components/Initializer";
 
 /**
  * Renders a component that checks if the user is authenticated before rendering the child components.

@@ -9,7 +9,6 @@ import {
   EnvironmentHandler,
   FeatureManager,
   ArchiveHelper,
-  AuthController,
 } from "@/Core";
 import {
   AuthContextInterface,
@@ -25,7 +24,6 @@ import {
   DummyRouteManager,
   DummyEnvironmentHandler,
   DummyArchiveHelper,
-  DummyAuthController,
 } from "./Dummy";
 
 export interface Dependencies {
@@ -38,7 +36,6 @@ export interface Dependencies {
   routeManager: RouteManager;
   environmentHandler: EnvironmentHandler;
   archiveHelper: ArchiveHelper;
-  authController: AuthController;
   authHelper: AuthContextInterface;
 }
 
@@ -52,7 +49,6 @@ export const DependencyContext = createContext<Dependencies>({
   routeManager: new DummyRouteManager(),
   environmentHandler: DummyEnvironmentHandler(),
   archiveHelper: new DummyArchiveHelper(),
-  authController: new DummyAuthController(),
   authHelper: defaultAuthContext,
 });
 
@@ -70,7 +66,6 @@ export const DependencyProvider: React.FC<{
     routeManager,
     environmentHandler,
     archiveHelper,
-    authController,
     authHelper,
   },
   children,
@@ -87,7 +82,6 @@ export const DependencyProvider: React.FC<{
       routeManager: routeManager || new DummyRouteManager(),
       environmentHandler: environmentHandler || DummyEnvironmentHandler(),
       archiveHelper: archiveHelper || new DummyArchiveHelper(),
-      authController: authController || new DummyAuthController(),
       authHelper: authHelper || defaultAuthContext,
     }}
   >

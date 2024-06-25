@@ -31,7 +31,7 @@ export interface AuthContextInterface {
    * Function to get the current user's token.
    * @returns The current user's token, or undefined if no user is logged in.
    */
-  getToken: () => string | undefined;
+  getToken: () => string | null;
 
   /**
    * Function to check whether Authentication is Disabled.
@@ -48,7 +48,7 @@ export const defaultAuthContext: AuthContextInterface = {
   login: () => {},
   logout: () => {},
   updateUser: (_user: string, _token: string) => {},
-  getToken: () => undefined,
+  getToken: () => null,
   isDisabled: () => true,
 };
 

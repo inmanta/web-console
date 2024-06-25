@@ -14,20 +14,20 @@ type Props = {
  * @example
  * ```tsx
  * import React from "react";
- * import { TestInjector } from "@/Test/Inject/TestInjector";
+ * import { AuthTestWrapper } from "@/Test/Inject/AuthTestWrapper";
  *
  * const MyComponent: React.FC = (config: KeycloakAuthConfig | LocalConfig | undefined) => {
  *   return (
  *     <AuthProvider config={config}>
- *      <TestInjector dependencies={dependencies}>
+ *      <AuthTestWrapper dependencies={dependencies}>
  *       <Login />
- *     </TestInjector>
+ *     </AuthTestWrapper>
  *    </AuthProvider>
  *   );
  * };
  * ```
  */
-export const TestInjector: React.FC<React.PropsWithChildren<Props>> = ({
+export const AuthTestWrapper: React.FC<React.PropsWithChildren<Props>> = ({
   dependencies,
   children,
 }) => {

@@ -1,3 +1,3 @@
 export * from "./InventoryTablePresenter";
 export * from "./dependencies";
-export * from "./TestInjector";
+export * from "./AuthTestWrapper";

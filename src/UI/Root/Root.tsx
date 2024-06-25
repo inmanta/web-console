@@ -6,8 +6,8 @@ import { DependencyContext } from "@/UI/Dependency";
 import { SearchSanitizer } from "@/UI/Routing";
 import { GlobalStyles } from "@/UI/Styles";
 import { NotFoundPage } from "@S/NotFound/UI";
+import RouteOutlet from "../Routing/RouteOutlet/RouteOutlet";
 import { PageFrame } from "./Components";
-import RouteOutlet from "./Components/RouteOutlet/RouteOutlet";
 import { PrimaryPageManager } from "./PrimaryPageManager";
 
 export const Root: React.FC = () => {
