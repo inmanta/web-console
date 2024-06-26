@@ -37,11 +37,10 @@ export const useGetInstanceWithRelations = (
         headers,
       },
     );
-    handleErrors(response);
-
-    if (!response.ok) {
-      throw new Error("Failed to fetch instance with id: " + instanceId);
-    }
+    await handleErrors(
+      response,
+      "Failed to fetch instance with id: " + instanceId,
+    );
 
     const instance: { data: ServiceInstanceModel } = await response.json();
     if (instance.data.referenced_by !== null) {

@@ -35,7 +35,7 @@ export const useGetMetadata = (
         data: undefined,
       };
     }
-    handleErrors(response);
+    await handleErrors(response);
 
     return response.json();
   };

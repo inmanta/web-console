@@ -7,7 +7,6 @@ import styled from "styled-components";
 import { ServiceModel } from "@/Core";
 import { sanitizeAttributes } from "@/Data";
 import { InstanceWithReferences } from "@/Data/Managers/GetInstanceWithRelations/interface";
-import { usePostMetadata } from "@/Data/Managers/V2/PostMetadata";
 import { useSendOrder } from "@/Data/Managers/V2/sendOrder";
 import diagramInit, { DiagramHandlers } from "@/UI/Components/Diagram/init";
 import { CanvasWrapper } from "@/UI/Components/Diagram/styles";
@@ -43,7 +42,6 @@ const Canvas = ({
   const { environmentHandler, routeManager } = useContext(DependencyContext);
   const environment = environmentHandler.useId();
   const { mutate, isError, isSuccess, error } = useSendOrder(environment);
-  const { mutate: metadataMutate } = usePostMetadata(environment);
   const canvas = useRef<HTMLDivElement>(null);
   const [looseEmbedded, setLooseEmbedded] = useState<Set<string>>(new Set());
   const [alertMessage, setAlertMessage] = useState("");
@@ -116,9 +114,16 @@ const Canvas = ({
    *
    */
   const handleDeploy = async () => {
-    const bundledInstances = bundleInstances(instancesToSend, services).filter(
-      (item) => item.action !== null,
-    );
+    const coordinates = diagramHandlers?.getCoordinates();
+
+    const bundledInstances = bundleInstances(instancesToSend, services)
+      .filter((item) => item.action !== null)
+      .map((instance) => ({
+        ...instance,
+        metadata: {
+          coordinates: JSON.stringify(coordinates),
+        },
+      }));
     await mutate(bundledInstances);
   };
 
@@ -191,6 +196,7 @@ const Canvas = ({
       try {
         const cells = actions.addInstance(instance, services, isMainInstance);
         const newInstances = new Map();
+
         cells.forEach((cell) => {
           if (cell.type === "app.ServiceEntityBlock") {
             newInstances.set(cell.id, {
@@ -232,21 +238,6 @@ const Canvas = ({
       setAlertType(AlertVariant.success);
       setAlertMessage(words("inventory.instanceComposer.success"));
 
-      const mainInstance = bundleInstances(instancesToSend, services).find(
-        (instance) => instance.service_entity === mainServiceName,
-      );
-      if (mainInstance && mainInstance.action !== "delete") {
-        const coordinates = diagramHandlers?.getCoordinates();
-        metadataMutate({
-          service_entity: mainInstance.service_entity,
-          service_id: mainInstance.instance_id,
-          key: "coordinates",
-          body: {
-            current_version: Number(instance?.instance.version) || 1,
-            value: JSON.stringify(coordinates),
-          },
-        });
-      }
       setTimeout(() => {
         navigate(url);
       }, 1000);

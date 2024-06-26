@@ -31,7 +31,7 @@ export const usePostMetadata = (environment: string) => {
       },
     );
 
-    handleErrors(response);
+    await handleErrors(response);
   };
 
   return useMutation({

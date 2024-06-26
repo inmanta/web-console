@@ -33,7 +33,7 @@ export const useSendOrder = (environment: string) => {
       headers,
     });
 
-    handleErrors(response);
+    await handleErrors(response);
   };
 
   return useMutation({
