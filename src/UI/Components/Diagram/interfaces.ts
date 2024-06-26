@@ -42,7 +42,7 @@ interface ConnectionRules {
 }
 
 interface InstanceForApi {
-  instance_id: string;
+  instance_id: string | dia.Cell.ID;
   service_entity: string;
   config: unknown;
   action: null | "update" | "create" | "delete";

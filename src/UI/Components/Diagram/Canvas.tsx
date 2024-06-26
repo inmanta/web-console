@@ -135,7 +135,7 @@ const Canvas = ({
    */
   const handleUpdate = (cell: ServiceEntityBlock, action: ActionEnum) => {
     const newInstance: InstanceForApi = {
-      instance_id: cell.id as string,
+      instance_id: cell.id,
       service_entity: cell.getName(),
       config: {},
       action: null,
@@ -163,7 +163,7 @@ const Canvas = ({
           ) {
             return new Map(
               prevInstances.set(cell.id as string, {
-                instance_id: cell.id as string,
+                instance_id: cell.id,
                 service_entity: cell.getName(),
                 config: {},
                 action: "delete",
