@@ -1,19 +1,17 @@
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { LoginPage } from "@/Slices/Login";
 import { DependencyContext } from "@/UI/Dependency";
-import { SearchSanitizer } from "@/UI/Routing";
+import { RouteOutlet, SearchSanitizer } from "@/UI/Routing";
 import { GlobalStyles } from "@/UI/Styles";
 import { NotFoundPage } from "@S/NotFound/UI";
-import { KeycloakProvider, PageFrame, Initializer } from "./Components";
+import { PageFrame } from "./Components";
 import { GlobalAlert } from "./Components/GlobalAlert";
 import { PrimaryPageManager } from "./PrimaryPageManager";
 
 export const Root: React.FC = () => {
   const { routeManager } = useContext(DependencyContext);
-  const queryClient = new QueryClient();
 
   const pageManager = useMemo(
     () => new PrimaryPageManager(routeManager.getRouteDictionary()),
@@ -32,46 +30,44 @@ export const Root: React.FC = () => {
   const GlobalStyleProxy: any = GlobalStyles;
 
   return (
-    <QueryClientProvider client={queryClient}>
+    <>
       <ReactQueryDevtools initialIsOpen={false} />
       <GlobalStyleProxy />
-      <KeycloakProvider>
-        <SearchSanitizer.Provider>
-          <GlobalAlert />
-          <LoginPage />
-          <Initializer>
-            <Routes>
-              {routeManager.isBaseUrlDefined() && (
-                <Route
-                  path="/"
-                  element={
-                    <Navigate to={routeManager.getUrl("Home", undefined)} />
-                  }
-                />
-              )}
+      <SearchSanitizer.Provider>
+        <GlobalAlert />
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route element={<RouteOutlet />}>
+            {routeManager.isBaseUrlDefined() && (
               <Route
-                path="*"
+                path="/"
                 element={
-                  <PageFrame environmentRole="Optional">
-                    <NotFoundPage />
-                  </PageFrame>
+                  <Navigate to={routeManager.getUrl("Home", undefined)} />
                 }
               />
-              {pages.map(({ path, kind, element, environmentRole }) => (
-                <Route
-                  path={path}
-                  element={
-                    <PageFrame environmentRole={environmentRole}>
-                      {element}
-                    </PageFrame>
-                  }
-                  key={kind}
-                />
-              ))}
-            </Routes>
-          </Initializer>
-        </SearchSanitizer.Provider>
-      </KeycloakProvider>
-    </QueryClientProvider>
+            )}
+            <Route
+              path="*"
+              element={
+                <PageFrame environmentRole="Optional">
+                  <NotFoundPage />
+                </PageFrame>
+              }
+            />
+            {pages.map(({ path, kind, element, environmentRole }) => (
+              <Route
+                path={path}
+                element={
+                  <PageFrame environmentRole={environmentRole}>
+                    {element}
+                  </PageFrame>
+                }
+                key={kind}
+              />
+            ))}
+          </Route>
+        </Routes>
+      </SearchSanitizer.Provider>
+    </>
   );
 };

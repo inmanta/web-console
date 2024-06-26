@@ -13,6 +13,7 @@ import {
   QueryResolverImpl,
   ResumeEnvironmentCommandManager,
 } from "@/Data";
+import { defaultAuthContext } from "@/Data/Auth/AuthContext";
 import {
   EnvironmentDetailsContinuousQueryManager,
   EnvironmentDetailsUpdater,
@@ -48,13 +49,13 @@ function setup() {
   );
 
   const haltEnvironmentManager = HaltEnvironmentCommandManager(
-    new BaseApiHelper(),
+    BaseApiHelper(undefined, defaultAuthContext),
     environmentDetailsStateHelper,
     new EnvironmentDetailsUpdater(store, apiHelper),
   );
 
   const resumeEnvironmentManager = ResumeEnvironmentCommandManager(
-    new BaseApiHelper(),
+    BaseApiHelper(undefined, defaultAuthContext),
     environmentDetailsStateHelper,
     new EnvironmentDetailsUpdater(store, apiHelper),
   );

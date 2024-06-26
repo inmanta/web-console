@@ -8,8 +8,8 @@ import { Either } from "@/Core";
 import {
   CommandManagerResolverImpl,
   CommandResolverImpl,
+  defaultAuthContext,
   getStoreInstance,
-  KeycloakAuthHelper,
   QueryManagerResolverImpl,
   QueryResolverImpl,
 } from "@/Data";
@@ -37,13 +37,13 @@ function setup(service) {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
-  const authHelper = new KeycloakAuthHelper();
+
   const queryResolver = new QueryResolverImpl(
     new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler),
   );
 
   const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolverImpl(store, apiHelper, authHelper),
+    new CommandManagerResolverImpl(store, apiHelper, defaultAuthContext),
   );
 
   const component = (

@@ -2,8 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { ServiceInstanceModel } from "@/Core";
 import { PrimaryBaseUrlManager } from "@/UI";
 import { InstanceWithReferences } from "../../GetInstanceWithRelations/interface";
-import { useCreateHeaders } from "../helpers/useCreateHeaders";
-import { useHandleErrors } from "../helpers/useHandleErrors";
+import { useFetchHelpers } from "../helpers";
 
 /**
  * Custom hook to fetch an instance with its related instances from the API.
@@ -16,9 +15,8 @@ export const useGetInstanceWithRelations = (
   environment: string,
 ) => {
   //extracted headers to avoid breaking rules of Hooks
-  const headers = useCreateHeaders(environment);
-  const { handleAuthorization } = useHandleErrors();
-
+  const { createHeaders, handleErrors } = useFetchHelpers();
+  const headers = createHeaders(environment);
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
     globalThis.location.pathname,
@@ -39,7 +37,7 @@ export const useGetInstanceWithRelations = (
         headers,
       },
     );
-    handleAuthorization(response);
+    handleErrors(response);
 
     if (!response.ok) {
       throw new Error("Failed to fetch instance with id: " + instanceId);

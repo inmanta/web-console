@@ -12,7 +12,7 @@ import {
   getStoreInstance,
   CommandResolverImpl,
   CommandManagerResolverImpl,
-  KeycloakAuthHelper,
+  defaultAuthContext,
 } from "@/Data";
 import {
   DeferredApiHelper,
@@ -44,9 +44,9 @@ function setup() {
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolverImpl([servicesHelper]),
   );
-  const authHelper = new KeycloakAuthHelper();
+
   const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolverImpl(store, apiHelper, authHelper),
+    new CommandManagerResolverImpl(store, apiHelper, defaultAuthContext),
   );
 
   const environmentHandler = EnvironmentHandlerImpl(

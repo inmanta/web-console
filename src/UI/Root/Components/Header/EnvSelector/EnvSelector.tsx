@@ -14,7 +14,6 @@ import { UserCircleIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
-import { KeycloakName } from "../Actions/KeycloakName";
 
 interface Props {
   items: string[];
@@ -32,7 +31,7 @@ export const EnvSelector: React.FC<Props> = ({
   toggleText,
 }) => {
   const { routeManager } = useContext(DependencyContext);
-  const { authController } = useContext(DependencyContext);
+  const { authHelper } = useContext(DependencyContext);
   return (
     <Dropdown
       isOpen={isOpen}
@@ -45,30 +44,20 @@ export const EnvSelector: React.FC<Props> = ({
           aria-label={toggleText}
           isFullHeight
           onClick={() => setIsOpen(!isOpen)}
-          icon={authController.isEnabled() ? <UserCircleIcon /> : null}
+          icon={!authHelper.isDisabled() ? <UserCircleIcon /> : null}
         >
-          {authController.isEnabled() ? (
-            <StyledDiv>
+          <StyledDiv>
+            <div>
+              {!authHelper.isDisabled() && (
+                <StyledText>{authHelper.getUser()}</StyledText>
+              )}
               <div>
-                {authController.shouldAuthLocally() ? (
-                  <StyledText>{authController.getLocalUserName()}</StyledText>
-                ) : (
-                  <KeycloakName />
-                )}
-                <div>
-                  {toggleText.length > 28
-                    ? toggleText.slice(0, 20) + "..."
-                    : toggleText}
-                </div>
+                {toggleText.length > 28
+                  ? toggleText.slice(0, 20) + "..."
+                  : toggleText}
               </div>
-            </StyledDiv>
-          ) : (
-            <>
-              {toggleText.length > 28
-                ? toggleText.slice(0, 20) + "..."
-                : toggleText}
-            </>
-          )}
+            </div>
+          </StyledDiv>
         </MenuToggle>
       )}
     >
@@ -93,14 +82,14 @@ export const EnvSelector: React.FC<Props> = ({
               {words("home.navigation.button")}
             </DropdownItem>
           </Tooltip>
-          {authController.isEnabled() && (
+          {!authHelper.isDisabled() && (
             <>
               <DropdownItem
                 to={routeManager.getUrl("UserManagement", undefined)}
               >
                 {words("userManagement.title")}
               </DropdownItem>
-              <DropdownItem onClick={() => authController.logout()}>
+              <DropdownItem onClick={() => authHelper.logout()}>
                 {words("dashboard.logout")}
               </DropdownItem>
             </>

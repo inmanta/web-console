@@ -1,8 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { ParsedNumber } from "@/Core";
 import { PrimaryBaseUrlManager } from "@/UI";
-import { useCreateHeaders } from "../helpers/useCreateHeaders";
-import { useHandleErrors } from "../helpers/useHandleErrors";
+import { useFetchHelpers } from "../helpers";
 
 export const useGetMetadata = (
   environment: string,
@@ -15,8 +14,8 @@ export const useGetMetadata = (
     globalThis.location.origin,
     globalThis.location.pathname,
   );
-  const { handleAuthorization } = useHandleErrors();
-  const headers = useCreateHeaders(environment);
+  const { createHeaders, handleErrors } = useFetchHelpers();
+  const headers = createHeaders(environment);
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
 
   const getMetadata = async (): Promise<{
@@ -29,17 +28,15 @@ export const useGetMetadata = (
         headers,
       },
     );
-    handleAuthorization(response);
 
-    if (!response.ok) {
-      // If the value isn't set for given key we receive 404 which shouldn't break the flow of the application, as given endpoint doesn't serve critical data.
-      if (response.status === 404) {
-        return {
-          data: undefined,
-        };
-      }
-      throw new Error(JSON.parse(await response.text()).message);
+    // If the value isn't set for given key we receive 404 which shouldn't break the flow of the application, as given endpoint doesn't serve critical data.
+    if (response.status === 404) {
+      return {
+        data: undefined,
+      };
     }
+    handleErrors(response);
+
     return response.json();
   };
 

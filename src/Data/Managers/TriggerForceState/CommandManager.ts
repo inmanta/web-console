@@ -1,8 +1,9 @@
-import { ApiHelper, AuthHelper, ParsedNumber, SetStateBody } from "@/Core";
+import { ApiHelper, ParsedNumber, SetStateBody } from "@/Core";
+import { AuthContextInterface } from "@/Data/Auth";
 import { CommandManagerWithEnv } from "@/Data/Common";
 
 export function TriggerForceStateCommandManager(
-  authHelper: AuthHelper,
+  authHelper: AuthContextInterface,
   apiHelper: ApiHelper,
 ) {
   return CommandManagerWithEnv<"TriggerForceState">(
@@ -12,7 +13,7 @@ export function TriggerForceStateCommandManager(
         apiHelper.postWithoutResponse(
           `/lsm/v1/service_inventory/${service_entity}/${id}/expert/state`,
           environment,
-          getBody(authHelper.getUsername(), targetState, version),
+          getBody(authHelper.getUser(), targetState, version),
         ),
   );
 }

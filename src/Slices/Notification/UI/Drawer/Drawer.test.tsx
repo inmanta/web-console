@@ -10,8 +10,8 @@ import { Either, Maybe } from "@/Core";
 import {
   CommandManagerResolverImpl,
   CommandResolverImpl,
+  defaultAuthContext,
   getStoreInstance,
-  KeycloakAuthHelper,
   QueryManagerResolverImpl,
   QueryResolverImpl,
 } from "@/Data";
@@ -42,7 +42,7 @@ function setup() {
   );
 
   const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolverImpl(store, apiHelper, new KeycloakAuthHelper()),
+    new CommandManagerResolverImpl(store, apiHelper, defaultAuthContext),
   );
 
   const closeCallback = jest.fn();

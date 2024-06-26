@@ -1,8 +1,9 @@
-import { ApiHelper, AuthHelper, ParsedNumber, SetStateBody } from "@/Core";
+import { ApiHelper, ParsedNumber, SetStateBody } from "@/Core";
+import { AuthContextInterface } from "@/Data/Auth";
 import { CommandManagerWithEnv } from "@/Data/Common";
 
 export function TriggerSetStateCommandManager(
-  authHelper: AuthHelper,
+  authHelper: AuthContextInterface,
   apiHelper: ApiHelper,
 ) {
   return CommandManagerWithEnv<"TriggerSetState">(
@@ -12,7 +13,7 @@ export function TriggerSetStateCommandManager(
         apiHelper.postWithoutResponse(
           `/lsm/v1/service_inventory/${service_entity}/${id}/state`,
           environment,
-          getBody(authHelper.getUsername(), targetState, version),
+          getBody(authHelper.getUser(), targetState, version),
         ),
   );
 }

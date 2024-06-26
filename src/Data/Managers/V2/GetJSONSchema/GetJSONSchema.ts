@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { PrimaryBaseUrlManager } from "@/UI";
-import { useCreateHeaders } from "../helpers/useCreateHeaders";
-import { useHandleErrors } from "../helpers/useHandleErrors";
+import { useFetchHelpers } from "../helpers";
 
 /**
  *  React Query hook to fetch JSON Schema for a service_entity.
@@ -12,8 +11,8 @@ import { useHandleErrors } from "../helpers/useHandleErrors";
  * @returns {Object} The result of the query, {data, status, error, isLoading}.
  */
 export const useGetJSONSchema = (service_id: string, environment: string) => {
-  const { handleAuthorization } = useHandleErrors();
-  const headers = useCreateHeaders(environment);
+  const { createHeaders, handleErrors } = useFetchHelpers();
+  const headers = createHeaders(environment);
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
     globalThis.location.pathname,
@@ -31,11 +30,7 @@ export const useGetJSONSchema = (service_id: string, environment: string) => {
       },
     );
 
-    handleAuthorization(response);
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch JSON Schema for: ${service_id}`);
-    }
+    handleErrors(response, `Failed to fetch JSON Schema for: ${service_id}`);
 
     return response.json();
   };

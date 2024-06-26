@@ -1,15 +1,14 @@
 import { useMutation } from "@tanstack/react-query";
 import { PrimaryBaseUrlManager } from "@/UI";
-import { useCreateHeaders } from "../helpers/useCreateHeaders";
-import { useHandleErrors } from "../helpers/useHandleErrors";
+import { useFetchHelpers } from "../helpers";
 
 export const usePostMetadata = (environment: string) => {
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
     globalThis.location.pathname,
   );
-  const { handleAuthorization } = useHandleErrors();
-  const headers = useCreateHeaders(environment);
+  const { createHeaders, handleErrors } = useFetchHelpers();
+  const headers = createHeaders(environment);
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
 
   const postMetadata = async (info: {
@@ -31,11 +30,8 @@ export const usePostMetadata = (environment: string) => {
         headers,
       },
     );
-    handleAuthorization(response);
 
-    if (!response.ok) {
-      throw new Error(JSON.parse(await response.text()).message);
-    }
+    handleErrors(response);
   };
 
   return useMutation({
