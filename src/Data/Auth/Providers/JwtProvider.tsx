@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useGetCurrentUser } from "@/Data/Managers/V2/RemoveUser";
+import { useGetCurrentUser } from "@/Data/Managers/V2/GetCurrentUser";
 import { AuthContext } from "../AuthContext";
 /**
  * Component that implements a null authentication provider when no authentication is enabled.

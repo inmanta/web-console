@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { PrimaryBaseUrlManager } from "@/UI";
 import { useFetchHelpers } from "../helpers";
 
@@ -7,7 +7,8 @@ import { useFetchHelpers } from "../helpers";
  *
  * @returns {Mutation} - The mutation object provided by `useMutation` hook.
  */
-export const useGetCurrentUser = () => {
+export const useRemoveUser = () => {
+  const client = useQueryClient();
   const { createHeaders, handleErrors } = useFetchHelpers();
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
@@ -20,33 +21,23 @@ export const useGetCurrentUser = () => {
    * Deletes a user from the server.
    *
    * @param {string} username - The username of the user to be removed.
-   * @returns {Promise<{}>} - A promise that resolves when the user is successfully removed.
+   * @returns {Promise<void>} - A promise that resolves when the user is successfully removed.
    */
-  const currentUserOrder = async (): Promise<{
-    data: {
-      username: string;
-    };
-  }> => {
-    const response = await fetch(baseUrl + `/api/v2/current_user/`, {
+  const deleteOrder = async (username: string): Promise<void> => {
+    const response = await fetch(baseUrl + `/api/v2/user/${username}`, {
       method: "DELETE",
       headers: createHeaders(),
     });
 
     await handleErrors(response);
-
-    return response.json();
   };
 
-  return {
-    /**
-     * Custom hook to fetch the user information from the API once.
-     * @returns The result of the query, including the user information.
-     */
-    useOneTime: () =>
-      useQuery({
-        queryFn: currentUserOrder,
-        queryKey: ["get_current_user"],
-        select: (data) => data.data,
-      }),
-  };
+  return useMutation({
+    mutationFn: deleteOrder,
+    mutationKey: ["removeUser"],
+    onSuccess: () => {
+      // Refetch the users query to update the list
+      client.invalidateQueries({ queryKey: ["get_users-one_time"] });
+    },
+  });
 };
