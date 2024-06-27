@@ -50,6 +50,7 @@ interface InstanceForApi {
   edits?: InstanceAttributeModel[] | null;
   embeddedTo?: string | null;
   relatedTo?: Map<string, string> | null;
+  metadata?: Record<string, string> | null;
 }
 interface serializedCell {
   type: string;
