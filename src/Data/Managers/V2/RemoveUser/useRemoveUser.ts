@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { PrimaryBaseUrlManager } from "@/UI";
 import { useFetchHelpers } from "../helpers";
 
@@ -7,8 +7,7 @@ import { useFetchHelpers } from "../helpers";
  *
  * @returns {Mutation} - The mutation object provided by `useMutation` hook.
  */
-export const useRemoveUser = () => {
-  const client = useQueryClient();
+export const useGetCurrentUser = () => {
   const { createHeaders, handleErrors } = useFetchHelpers();
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
@@ -21,23 +20,33 @@ export const useRemoveUser = () => {
    * Deletes a user from the server.
    *
    * @param {string} username - The username of the user to be removed.
-   * @returns {Promise<void>} - A promise that resolves when the user is successfully removed.
+   * @returns {Promise<{}>} - A promise that resolves when the user is successfully removed.
    */
-  const deleteOrder = async (username: string): Promise<void> => {
-    const response = await fetch(baseUrl + `/api/v2/user/${username}`, {
+  const currentUserOrder = async (): Promise<{
+    data: {
+      username: string;
+    };
+  }> => {
+    const response = await fetch(baseUrl + `/api/v2/current_user/`, {
       method: "DELETE",
       headers: createHeaders(),
     });
 
     await handleErrors(response);
+
+    return response.json();
   };
 
-  return useMutation({
-    mutationFn: deleteOrder,
-    mutationKey: ["removeUser"],
-    onSuccess: () => {
-      // Refetch the users query to update the list
-      client.invalidateQueries({ queryKey: ["get_users-one_time"] });
-    },
-  });
+  return {
+    /**
+     * Custom hook to fetch the user information from the API once.
+     * @returns The result of the query, including the user information.
+     */
+    useOneTime: () =>
+      useQuery({
+        queryFn: currentUserOrder,
+        queryKey: ["get_current_user"],
+        select: (data) => data.data,
+      }),
+  };
 };
