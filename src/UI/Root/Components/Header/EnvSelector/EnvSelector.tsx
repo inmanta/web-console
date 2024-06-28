@@ -30,8 +30,8 @@ export const EnvSelector: React.FC<Props> = ({
   setIsOpen,
   toggleText,
 }) => {
-  const { routeManager } = useContext(DependencyContext);
-  const { authHelper } = useContext(DependencyContext);
+  const { routeManager, authHelper } = useContext(DependencyContext);
+
   return (
     <Dropdown
       isOpen={isOpen}

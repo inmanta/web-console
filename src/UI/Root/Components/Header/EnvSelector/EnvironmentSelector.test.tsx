@@ -1,11 +1,15 @@
 import React, { act } from "react";
 import { MemoryRouter } from "react-router";
 import { Router } from "react-router-dom";
-import { render, screen } from "@testing-library/react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { createMemoryHistory } from "history";
+import { HttpResponse, http } from "msw";
+import { setupServer } from "msw/node";
 import { RemoteData } from "@/Core";
-import { Environment, dependencies } from "@/Test";
+import { AuthProvider, KeycloakAuthConfig, LocalConfig } from "@/Data";
+import { AuthTestWrapper, Environment, dependencies } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { EnvSelectorWithData as EnvironmentSelector } from "./EnvSelectorWithData";
 
@@ -130,4 +134,61 @@ test("GIVEN EnvironmentSelector and environments with identical names WHEN user 
   );
 
   expect(selectedEnv).toEqual(envB.id);
+});
+
+const setup = (config: KeycloakAuthConfig | LocalConfig | undefined) => {
+  const queryClient = new QueryClient();
+  return (
+    <MemoryRouter>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider config={config}>
+          <AuthTestWrapper dependencies={dependencies}>
+            <EnvironmentSelector
+              environments={RemoteData.success([])}
+              onSelectEnvironment={() => {
+                return;
+              }}
+              selectedEnvironment={undefined}
+            />
+          </AuthTestWrapper>
+        </AuthProvider>
+      </QueryClientProvider>
+    </MemoryRouter>
+  );
+};
+
+test("GIVEN EnvironmentSelector and a project WHEN user clicks on toggle THEN list of projects is shown", async () => {
+  const server = setupServer(
+    http.get("/api/v2/current_user", async () => {
+      return HttpResponse.json({
+        data: {
+          username: "test_user",
+        },
+      });
+    }),
+  );
+  server.listen();
+  render(setup({ method: "jwt" }));
+  await waitFor(() => {
+    expect(screen.getByText("test_user")).toBeVisible();
+  });
+  server.close();
+});
+
+test("GIVEN EnvironmentSelector and a project WHEN user clicks on toggle THEN list of projects is shown", async () => {
+  const server = setupServer(
+    http.get("/api/v2/current_user", async () => {
+      return HttpResponse.json({
+        data: {
+          username: "test_user",
+        },
+      });
+    }),
+  );
+  server.listen();
+  render(setup({ method: "database" }));
+  await waitFor(() => {
+    expect(screen.queryByText("test_user")).not.toBeInTheDocument();
+  });
+  server.close();
 });
