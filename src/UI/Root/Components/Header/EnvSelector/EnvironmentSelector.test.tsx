@@ -157,7 +157,7 @@ const setup = (config: KeycloakAuthConfig | LocalConfig | undefined) => {
   );
 };
 
-test("GIVEN EnvironmentSelector and a project WHEN user clicks on toggle THEN list of projects is shown", async () => {
+test("GIVEN EnvironmentSelector WHEN jwt auth is enabled will display fetched username on load", async () => {
   const server = setupServer(
     http.get("/api/v2/current_user", async () => {
       return HttpResponse.json({
@@ -169,13 +169,14 @@ test("GIVEN EnvironmentSelector and a project WHEN user clicks on toggle THEN li
   );
   server.listen();
   render(setup({ method: "jwt" }));
+
   await waitFor(() => {
     expect(screen.getByText("test_user")).toBeVisible();
   });
   server.close();
 });
 
-test("GIVEN EnvironmentSelector and a project WHEN user clicks on toggle THEN list of projects is shown", async () => {
+test("GIVEN EnvironmentSelector WHEN jwt auth is enabled will won't fetched username on load", async () => {
   const server = setupServer(
     http.get("/api/v2/current_user", async () => {
       return HttpResponse.json({
@@ -187,6 +188,7 @@ test("GIVEN EnvironmentSelector and a project WHEN user clicks on toggle THEN li
   );
   server.listen();
   render(setup({ method: "database" }));
+
   await waitFor(() => {
     expect(screen.queryByText("test_user")).not.toBeInTheDocument();
   });
