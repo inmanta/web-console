@@ -2,7 +2,8 @@ export const response = {
   data: [
     {
       discovered_resource_id: "vcenter::VirtualMachine[lab,name=acisim]",
-      managed_resource_uri: "/api/v2/resource/resource-1",
+      managed_resource_uri:
+        "/api/v2/resource/cloudflare::dns_record::CnameRecord[https://api.cloudflare.com/client/v4/,name=artifacts.ssh.inmanta.com]",
       values: {
         name: "acisim",
         path: "/bedc/vm/acisim",

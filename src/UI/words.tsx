@@ -468,10 +468,11 @@ const dict = {
     "Request the agents to check the current state of each resource and make the current state in-line with the desired state.",
 
   /** Discovered Resources related text */
-  "discovered.column.resource_id": "resource_id",
+  "discovered.column.resource_id": "resource id",
   "discovered.column.managed_resource": "managed resource",
   "discovered_resources.title": "Discovered Resources",
   "discovered_resources.values": "values",
+  "discovered_resources.show_resource": "Show managed resource",
 
   /** Compile report related text */
   "compileReports.title": "Compile Reports",
