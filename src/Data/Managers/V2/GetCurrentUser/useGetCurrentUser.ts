@@ -8,7 +8,7 @@ interface LoggedUser {
   };
 }
 /**
- * Custom hook for getting a current user from the server.
+ * Custom hook for getting the current logged in user from the server.
  *
  * @returns {Query} - An object containing a custom hook to fetch user information.
  */
