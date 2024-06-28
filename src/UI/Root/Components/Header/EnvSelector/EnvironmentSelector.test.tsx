@@ -7,12 +7,39 @@ import { userEvent } from "@testing-library/user-event";
 import { createMemoryHistory } from "history";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { RemoteData } from "@/Core";
+import { FlatEnvironment, RemoteData } from "@/Core";
 import { AuthProvider, KeycloakAuthConfig, LocalConfig } from "@/Data";
 import { AuthTestWrapper, Environment, dependencies } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import ErrorBoundary from "@/UI/Utils/ErrorBoundary";
 import { EnvSelectorWithData as EnvironmentSelector } from "./EnvSelectorWithData";
+import { EnvironmentSelectorItem } from "./EnvSelectorWrapper";
+
+const setup = (
+  environments: FlatEnvironment[],
+  selectedEnv: FlatEnvironment | undefined,
+  callback: (item: EnvironmentSelectorItem) => void,
+  config: KeycloakAuthConfig | LocalConfig | undefined,
+) => {
+  const queryClient = new QueryClient();
+  return (
+    <ErrorBoundary>
+      <MemoryRouter>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider config={config}>
+            <AuthTestWrapper dependencies={dependencies}>
+              <EnvironmentSelector
+                environments={RemoteData.success(environments)}
+                onSelectEnvironment={callback}
+                selectedEnvironment={selectedEnv}
+              />
+            </AuthTestWrapper>
+          </AuthProvider>
+        </QueryClientProvider>
+      </MemoryRouter>
+    </ErrorBoundary>
+  );
+};
 
 test("GIVEN EnvironmentSelector WHEN there are no environments THEN redirects", async () => {
   const history = createMemoryHistory();
@@ -37,17 +64,14 @@ test("GIVEN EnvironmentSelector and a project WHEN user clicks on toggle THEN li
   const envA = Environment.filterable[0];
   const envB = Environment.filterable[2];
   render(
-    <MemoryRouter>
-      <DependencyProvider dependencies={dependencies}>
-        <EnvironmentSelector
-          environments={RemoteData.success(Environment.filterable)}
-          onSelectEnvironment={() => {
-            return;
-          }}
-          selectedEnvironment={envA}
-        />
-      </DependencyProvider>
-    </MemoryRouter>,
+    setup(
+      Environment.filterable,
+      envA,
+      () => {
+        return;
+      },
+      undefined,
+    ),
   );
 
   const toggle = screen.getByText(`${envA.name} (${envA.projectName})`);
@@ -64,17 +88,14 @@ test("GIVEN EnvironmentSelector and populated store WHEN user clicks on an item 
   const envA = Environment.filterable[0];
   const envB = Environment.filterable[2];
   render(
-    <MemoryRouter>
-      <DependencyProvider dependencies={dependencies}>
-        <EnvironmentSelector
-          environments={RemoteData.success(Environment.filterable)}
-          onSelectEnvironment={(item) => {
-            selectedEnv = item.environmentId;
-          }}
-          selectedEnvironment={envA}
-        />
-      </DependencyProvider>
-    </MemoryRouter>,
+    setup(
+      Environment.filterable,
+      envA,
+      (item) => {
+        selectedEnv = item.environmentId;
+      },
+      undefined,
+    ),
   );
 
   const toggle = screen.getByText(`${envA.name} (${envA.projectName})`);
@@ -103,17 +124,14 @@ test("GIVEN EnvironmentSelector and environments with identical names WHEN user 
   const envA = Environment.filterable[0];
   const envB = Environment.filterable[2];
   render(
-    <MemoryRouter>
-      <DependencyProvider dependencies={dependencies}>
-        <EnvironmentSelector
-          environments={RemoteData.success(Environment.filterable)}
-          onSelectEnvironment={(item) => {
-            selectedEnv = item.environmentId;
-          }}
-          selectedEnvironment={envA}
-        />
-      </DependencyProvider>
-    </MemoryRouter>,
+    setup(
+      Environment.filterable,
+      envA,
+      (item) => {
+        selectedEnv = item.environmentId;
+      },
+      undefined,
+    ),
   );
   const toggle = screen.getByRole("button", {
     name: `${envA.name} (${envA.projectName})`,
@@ -137,29 +155,6 @@ test("GIVEN EnvironmentSelector and environments with identical names WHEN user 
   expect(selectedEnv).toEqual(envB.id);
 });
 
-const setup = (config: KeycloakAuthConfig | LocalConfig | undefined) => {
-  const queryClient = new QueryClient();
-  return (
-    <ErrorBoundary>
-      <MemoryRouter>
-        <QueryClientProvider client={queryClient}>
-          <AuthProvider config={config}>
-            <AuthTestWrapper dependencies={dependencies}>
-              <EnvironmentSelector
-                environments={RemoteData.success([])}
-                onSelectEnvironment={() => {
-                  return;
-                }}
-                selectedEnvironment={undefined}
-              />
-            </AuthTestWrapper>
-          </AuthProvider>
-        </QueryClientProvider>
-      </MemoryRouter>
-    </ErrorBoundary>
-  );
-};
-
 test("GIVEN EnvironmentSelector WHEN jwt auth is enabled will display fetched username on load", async () => {
   const server = setupServer(
     http.get("/api/v2/current_user", async () => {
@@ -171,7 +166,16 @@ test("GIVEN EnvironmentSelector WHEN jwt auth is enabled will display fetched us
     }),
   );
   server.listen();
-  render(setup({ method: "jwt" }));
+  render(
+    setup(
+      [],
+      undefined,
+      () => {
+        return;
+      },
+      { method: "jwt" },
+    ),
+  );
 
   await waitFor(() => {
     expect(screen.getByText("test_user")).toBeVisible();
@@ -192,7 +196,16 @@ test("GIVEN EnvironmentSelector WHEN jwt auth is enabled and current_user reques
     }),
   );
   server.listen();
-  render(setup({ method: "jwt" }));
+  render(
+    setup(
+      [],
+      undefined,
+      () => {
+        return;
+      },
+      { method: "jwt" },
+    ),
+  );
 
   await waitFor(() => {
     expect(screen.queryByText("test_user")).not.toBeInTheDocument();
