@@ -1,11 +1,9 @@
-import { useQuery } from "@tanstack/react-query";
+import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { PrimaryBaseUrlManager } from "@/UI";
 import { useFetchHelpers } from "../helpers";
 
 interface LoggedUser {
-  data: {
-    username: string;
-  };
+  username: string;
 }
 /**
  * Custom hook for getting the current logged in user from the server.
@@ -21,7 +19,7 @@ export const useGetCurrentUser = () => {
 
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
 
-  const currentUserOrder = async (): Promise<LoggedUser> => {
+  const currentUserOrder = async (): Promise<{ data: LoggedUser }> => {
     const response = await fetch(baseUrl + `/api/v2/current_user/`, {
       headers: createHeaders(),
     });
@@ -36,7 +34,7 @@ export const useGetCurrentUser = () => {
      * Custom hook to fetch the user information from the API once.
      * @returns {UseQueryResult<LoggedUser, Error>} The result of the query, including the current user information.
      */
-    useOneTime: () =>
+    useOneTime: (): UseQueryResult<LoggedUser, Error> =>
       useQuery({
         queryFn: currentUserOrder,
         queryKey: ["get_current_user"],

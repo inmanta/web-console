@@ -16,9 +16,9 @@ import { EnvSelectorWithData as EnvironmentSelector } from "./EnvSelectorWithDat
 import { EnvironmentSelectorItem } from "./EnvSelectorWrapper";
 
 const setup = (
-  callback?: (item: EnvironmentSelectorItem) => void,
-  config?: KeycloakAuthConfig | LocalConfig = undefined,
-  environments?: FlatEnvironment[] = Environment.filterable,
+  onSelectEnvironment: (item: EnvironmentSelectorItem) => void = () => {},
+  config: KeycloakAuthConfig | LocalConfig | undefined = undefined,
+  environments: FlatEnvironment[] = Environment.filterable,
 ) => {
   const queryClient = new QueryClient();
   return (
@@ -29,7 +29,7 @@ const setup = (
             <AuthTestWrapper dependencies={dependencies}>
               <EnvironmentSelector
                 environments={RemoteData.success(environments)}
-                onSelectEnvironment={callback}
+                onSelectEnvironment={onSelectEnvironment}
                 selectedEnvironment={Environment.filterable[0]}
               />
             </AuthTestWrapper>
@@ -136,6 +136,7 @@ test("GIVEN EnvironmentSelector and environments with identical names WHEN user 
 });
 
 test("GIVEN EnvironmentSelector WHEN jwt auth is enabled will display fetched username on load", async () => {
+  const onSelectEnv = () => {};
   const server = setupServer(
     http.get("/api/v2/current_user", async () => {
       return HttpResponse.json({
@@ -146,7 +147,7 @@ test("GIVEN EnvironmentSelector WHEN jwt auth is enabled will display fetched us
     }),
   );
   server.listen();
-  render(setup([], { method: "jwt" }));
+  render(setup(onSelectEnv, { method: "jwt" }));
 
   await waitFor(() => {
     expect(screen.getByText("test_user")).toBeVisible();
@@ -157,6 +158,7 @@ test("GIVEN EnvironmentSelector WHEN jwt auth is enabled will display fetched us
 });
 
 test("GIVEN EnvironmentSelector WHEN jwt auth is enabled and current_user request returns 404 we should display Selector as is by default", async () => {
+  const onSelectEnv = () => {};
   const server = setupServer(
     http.get("/api/v2/current_user", async () => {
       return HttpResponse.json(
@@ -169,7 +171,7 @@ test("GIVEN EnvironmentSelector WHEN jwt auth is enabled and current_user reques
     }),
   );
   server.listen();
-  render(setup([], { method: "jwt" }));
+  render(setup(onSelectEnv, { method: "jwt" }));
 
   await waitFor(() => {
     expect(screen.queryByText("test_user")).not.toBeInTheDocument();
