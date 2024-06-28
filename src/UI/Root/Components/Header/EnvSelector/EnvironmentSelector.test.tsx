@@ -11,6 +11,7 @@ import { RemoteData } from "@/Core";
 import { AuthProvider, KeycloakAuthConfig, LocalConfig } from "@/Data";
 import { AuthTestWrapper, Environment, dependencies } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
+import ErrorBoundary from "@/UI/Utils/ErrorBoundary";
 import { EnvSelectorWithData as EnvironmentSelector } from "./EnvSelectorWithData";
 
 test("GIVEN EnvironmentSelector WHEN there are no environments THEN redirects", async () => {
@@ -139,21 +140,23 @@ test("GIVEN EnvironmentSelector and environments with identical names WHEN user 
 const setup = (config: KeycloakAuthConfig | LocalConfig | undefined) => {
   const queryClient = new QueryClient();
   return (
-    <MemoryRouter>
-      <QueryClientProvider client={queryClient}>
-        <AuthProvider config={config}>
-          <AuthTestWrapper dependencies={dependencies}>
-            <EnvironmentSelector
-              environments={RemoteData.success([])}
-              onSelectEnvironment={() => {
-                return;
-              }}
-              selectedEnvironment={undefined}
-            />
-          </AuthTestWrapper>
-        </AuthProvider>
-      </QueryClientProvider>
-    </MemoryRouter>
+    <ErrorBoundary>
+      <MemoryRouter>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider config={config}>
+            <AuthTestWrapper dependencies={dependencies}>
+              <EnvironmentSelector
+                environments={RemoteData.success([])}
+                onSelectEnvironment={() => {
+                  return;
+                }}
+                selectedEnvironment={undefined}
+              />
+            </AuthTestWrapper>
+          </AuthProvider>
+        </QueryClientProvider>
+      </MemoryRouter>
+    </ErrorBoundary>
   );
 };
 
@@ -176,21 +179,25 @@ test("GIVEN EnvironmentSelector WHEN jwt auth is enabled will display fetched us
   server.close();
 });
 
-test("GIVEN EnvironmentSelector WHEN jwt auth is enabled will won't fetched username on load", async () => {
+test("GIVEN EnvironmentSelector WHEN jwt auth is enabled and current_user request returns 404 we should display Selector as is by default", async () => {
   const server = setupServer(
     http.get("/api/v2/current_user", async () => {
-      return HttpResponse.json({
-        data: {
-          username: "test_user",
+      return HttpResponse.json(
+        {
+          message:
+            "Request or referenced resource does not exist: No current user found, probably an API token is used.",
         },
-      });
+        { status: 404 },
+      );
     }),
   );
   server.listen();
-  render(setup({ method: "database" }));
+  render(setup({ method: "jwt" }));
 
   await waitFor(() => {
     expect(screen.queryByText("test_user")).not.toBeInTheDocument();
   });
+  expect(screen.queryByText("Select an environment")).toBeVisible();
+
   server.close();
 });
