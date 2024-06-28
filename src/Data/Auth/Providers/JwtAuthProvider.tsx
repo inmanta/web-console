@@ -4,6 +4,8 @@ import { AuthContext } from "../AuthContext";
 
 /**
  * Component that implements a authentication provider when jwt authentication is enabled.
+ * In practice it fetches username from the backend because whole authentication flow is managed by 3rd party outside of the scope of our application.
+ * User will open application already authorized and from our perspective the flow is almost identical as in case of no authorization.
  */
 export const JwtAuthProvider: React.FC<React.PropsWithChildren> = ({
   children,
