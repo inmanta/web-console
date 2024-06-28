@@ -75,13 +75,12 @@ test("GIVEN EnvironmentSelector and a project WHEN user clicks on toggle THEN li
 
 test("GIVEN EnvironmentSelector and populated store WHEN user clicks on an item THEN selected environment is changed", async () => {
   let selectedEnv;
+  const onSelectEnv = (item) => {
+    selectedEnv = item.environmentId;
+  };
   const envA = Environment.filterable[0];
   const envB = Environment.filterable[2];
-  render(
-    setup((item) => {
-      selectedEnv = item.environmentId;
-    }),
-  );
+  render(setup(onSelectEnv));
 
   const toggle = screen.getByText(`${envA.name} (${envA.projectName})`);
   await act(async () => {
@@ -106,13 +105,12 @@ test("GIVEN EnvironmentSelector and populated store WHEN user clicks on an item 
 
 test("GIVEN EnvironmentSelector and environments with identical names WHEN user clicks on an environment THEN the correct environment is selected", async () => {
   let selectedEnv;
+  const onSelectEnv = (item) => {
+    selectedEnv = item.environmentId;
+  };
   const envA = Environment.filterable[0];
   const envB = Environment.filterable[2];
-  render(
-    setup((item) => {
-      selectedEnv = item.environmentId;
-    }),
-  );
+  render(setup(onSelectEnv));
   const toggle = screen.getByRole("button", {
     name: `${envA.name} (${envA.projectName})`,
   });
