@@ -15,13 +15,14 @@ export const ServiceInstanceDetailsLayout: React.FunctionComponent = () => {
       xl2={1}
     >
       <GridItem
-        lg={4}
+        xl2={4}
+        lg={5}
         rowSpan={12}
         sm={12}
         id="side-section"
         order={{ default: "-1", lg: "1" }}
       >
-        <Grid hasGutter>
+        <Grid hasGutter rowSpan={12}>
           <GridItem>
             <DetailsSection />
           </GridItem>
@@ -34,7 +35,8 @@ export const ServiceInstanceDetailsLayout: React.FunctionComponent = () => {
         </Grid>
       </GridItem>
       <GridItem
-        lg={8}
+        xl2={8}
+        lg={7}
         rowSpan={12}
         sm={12}
         id="main-section"

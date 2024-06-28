@@ -35,7 +35,7 @@ export const Page: React.FC = () => {
   });
 
   return (
-    <PageContainer title={words("notification.center.title")}>
+    <PageContainer pageTitle={words("notification.center.title")}>
       <Controls
         paginationWidget={
           <PaginationWidget

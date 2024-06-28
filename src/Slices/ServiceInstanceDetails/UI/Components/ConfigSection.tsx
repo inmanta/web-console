@@ -1,5 +1,5 @@
-import React, { useContext, useState } from "react";
-import { ExpandableSection } from "@patternfly/react-core";
+import React, { useContext } from "react";
+import { Panel } from "@patternfly/react-core";
 import { Config, VersionedServiceInstanceIdentifier } from "@/Core";
 import { ConfigTab } from "@/Slices/ServiceInventory/UI/Tabs/ConfigTab";
 import { InstanceContext } from "../../Core/Context";
@@ -7,14 +7,8 @@ import { InstanceContext } from "../../Core/Context";
 export const ConfigSection: React.FunctionComponent = () => {
   const { instance } = useContext(InstanceContext);
 
-  const isConfigEmpty = (config: Config) => {
-    return Object.keys(config).length === 0;
-  };
-
-  const [isExpanded, setIsExpanded] = useState(false);
-
-  const onToggle = (_event: React.MouseEvent, isExpanded: boolean) => {
-    setIsExpanded(isExpanded);
+  const isConfigEmpty = (config?: Config | null) => {
+    return config && Object.keys(config).length === 0;
   };
 
   const serviceInstanceIdentifier: VersionedServiceInstanceIdentifier = {
@@ -24,14 +18,10 @@ export const ConfigSection: React.FunctionComponent = () => {
   };
 
   return (
-    !isConfigEmpty && (
-      <ExpandableSection
-        toggleText={"Config"}
-        onToggle={onToggle}
-        isExpanded={isExpanded}
-      >
+    !isConfigEmpty(instance.config) && (
+      <Panel variant="raised" aria-label="Config-Section">
         <ConfigTab serviceInstanceIdentifier={serviceInstanceIdentifier} />
-      </ExpandableSection>
+      </Panel>
     )
   );
 };

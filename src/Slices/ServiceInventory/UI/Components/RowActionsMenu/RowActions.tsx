@@ -143,8 +143,9 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
               variant="plain"
               pathname={routeManager.getUrl("InstanceDetails", {
                 service: instance.service_entity,
-                instance: instance.id,
-                version: String(instance.version),
+                instance:
+                  instance.service_identity_attribute_value || instance.id,
+                instanceId: instance.id,
               })}
             >
               Instance Details

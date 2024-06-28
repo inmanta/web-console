@@ -1,5 +1,6 @@
 import React, { act } from "react";
 import { Link, MemoryRouter, useLocation } from "react-router-dom";
+import { Page } from "@patternfly/react-core";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
@@ -24,7 +25,7 @@ import {
 } from "@/Test";
 import { words } from "@/UI";
 import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
-import { Page } from "./Page";
+import { ServiceCatalogPage } from ".";
 
 expect.extend(toHaveNoViolations);
 
@@ -77,8 +78,10 @@ function setup() {
         }}
       >
         <StoreProvider store={store}>
-          <Page />
-          {linkToEnv2}
+          <Page>
+            <ServiceCatalogPage />
+            {linkToEnv2}
+          </Page>
         </StoreProvider>
       </DependencyProvider>
     </MemoryRouter>

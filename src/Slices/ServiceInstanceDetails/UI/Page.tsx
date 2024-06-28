@@ -5,23 +5,32 @@ import { useGetServiceModel } from "@/Data/Managers/V2/GetServiceModel";
 import { DependencyContext, useRouteParams } from "@/UI";
 import { ErrorView, LoadingView, PageContainer } from "@/UI/Components";
 import { InstanceContext } from "../Core/Context";
+import { PageTitleWithVersion } from "./Components";
 import { ServiceInstanceDetailsLayout } from "./ServiceInstanceDetailsLayout";
 
-export const Page: React.FunctionComponent = () => {
+interface Props {
+  service: string;
+  instance: string;
+  instanceId: string;
+}
+
+export const ServiceInstanceDetails: React.FC<Props> = ({
+  service,
+  instance,
+  instanceId,
+}) => {
   const { environmentHandler } = useContext(DependencyContext);
   const environment = environmentHandler.useId();
 
-  const { service, instance } = useRouteParams<"InstanceDetails">();
-
   const instanceDetails = useGetInstance(
     service,
-    instance,
+    instanceId,
     environment,
   ).useContinuous();
 
   const logsQuery = useGetInstanceLogs(
     service,
-    instance,
+    instanceId,
     environment,
   ).useContinuous();
 
@@ -30,34 +39,55 @@ export const Page: React.FunctionComponent = () => {
     environment,
   ).useOneTime();
 
-  const pageTitle = `${service}: ${instanceDetails.data?.service_identity_attribute_value || instance}`;
+  const pageTitle = `${service}: ${instance}`;
 
-  return (
-    <PageContainer pageTitle={pageTitle}>
-      {instanceDetails.data && (
-        <InstanceContext.Provider
-          value={{
-            instance: instanceDetails.data,
-            logsQuery,
-            serviceModelQuery,
-          }}
-        >
-          <ServiceInstanceDetailsLayout />
-        </InstanceContext.Provider>
-      )}
-
-      {instanceDetails.isLoading && (
-        <LoadingView ariaLabel="Instance-Details-Loading" />
-      )}
-
-      {instanceDetails.isError && (
+  if (instanceDetails.isError) {
+    return (
+      <PageContainer pageTitle={pageTitle}>
         <ErrorView
           ariaLabel="Instance-Details-Error"
           title="Error"
-          message={instanceDetails.error.message}
+          message={instanceDetails.error?.message || "Something went wrong."}
           retry={instanceDetails.refetch}
         />
-      )}
-    </PageContainer>
+      </PageContainer>
+    );
+  }
+
+  if (instanceDetails.isLoading) {
+    return (
+      <PageContainer pageTitle={pageTitle}>
+        <LoadingView ariaLabel="Instance-Details-Loading" />
+      </PageContainer>
+    );
+  }
+
+  return (
+    <InstanceContext.Provider
+      value={{
+        instance: instanceDetails.data,
+        logsQuery,
+        serviceModelQuery,
+      }}
+    >
+      <PageContainer
+        aria-label="Instance-Details-Success"
+        pageTitle={<PageTitleWithVersion title={pageTitle} />}
+      >
+        <ServiceInstanceDetailsLayout />
+      </PageContainer>
+    </InstanceContext.Provider>
+  );
+};
+
+export const Page: React.FC = () => {
+  const { service, instance, instanceId } = useRouteParams<"InstanceDetails">();
+
+  return (
+    <ServiceInstanceDetails
+      service={service}
+      instance={instance}
+      instanceId={instanceId}
+    />
   );
 };

@@ -18,7 +18,6 @@ export const PageContainer: React.FC<React.PropsWithChildren<Props>> = ({
     <PageSection
       variant="light"
       {...props}
-      role="main"
       isFilled
       padding={{ default: "padding" }}
     >

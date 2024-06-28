@@ -1,12 +1,12 @@
 import { Route } from "@/Core";
 
 export const path =
-  "/lsm/catalog/:service/inventory/:instance/:version/details";
+  "/lsm/catalog/:service/inventory/:instance/:instanceId/details";
 
 export const route = (base: string): Route<"InstanceDetails"> => ({
   kind: "InstanceDetails",
-  parent: "Catalog",
+  parent: "Inventory",
   path: `${base}${path}`,
-  generateLabel: (params) => `Service Instance: ${params.instance}`,
+  generateLabel: (params) => `Instance Details: ${params.instance}`,
   environmentRole: "Required",
 });

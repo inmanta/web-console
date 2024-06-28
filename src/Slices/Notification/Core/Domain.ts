@@ -1,6 +1,8 @@
 type Timestamp = string;
 
 export type Severity = "message" | "info" | "success" | "warning" | "error";
+export type SeverityText = "MESSAGE" | "INFO" | "SUCCESS" | "WARNING" | "ERROR";
+
 export const severityList: Severity[] = [
   "message",
   "info",

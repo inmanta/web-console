@@ -7,6 +7,7 @@ import {
   TabTitleText,
   Tabs,
 } from "@patternfly/react-core";
+import styled from "styled-components";
 import { useUrlStateWithString } from "@/Data";
 
 export enum InstanceTabKey {
@@ -34,6 +35,8 @@ export const TabView: React.FunctionComponent = () => {
     setActiveTab(String(tabIndex));
   };
 
+  const bool = true;
+
   return (
     <Panel variant="raised">
       <PanelMain>
@@ -41,7 +44,6 @@ export const TabView: React.FunctionComponent = () => {
           <Tabs
             activeKey={activeTab}
             onSelect={handleTabClick}
-            isBox
             aria-label="Instance-Details-Tabs"
             role="region"
           >
@@ -50,16 +52,33 @@ export const TabView: React.FunctionComponent = () => {
               title={
                 <TabTitleText>{InstanceTabKey.Documentation}</TabTitleText>
               }
-              aria-label="documentation content"
+              aria-label="documentation-content"
             >
-              Content Documentation
+              <TabContent role="tabpanel">
+                Documentation Content
+                {bool && "hey"}
+              </TabContent>
             </Tab>
             <Tab
               eventKey={InstanceTabKey.Attributes}
               title={<TabTitleText>{InstanceTabKey.Attributes}</TabTitleText>}
-              aria-label="attributes content"
+              aria-label="attributes-content"
             >
-              Content attributes
+              <TabContent role="tabpanel">Attributes Content</TabContent>
+            </Tab>
+            <Tab
+              eventKey={InstanceTabKey.Events}
+              title={<TabTitleText>{InstanceTabKey.Events}</TabTitleText>}
+              aria-label="events-content"
+            >
+              <TabContent role="tabpanel">Events Content</TabContent>
+            </Tab>
+            <Tab
+              eventKey={InstanceTabKey.Resources}
+              title={<TabTitleText>{InstanceTabKey.Resources}</TabTitleText>}
+              aria-label="resources-content"
+            >
+              <TabContent role="tabpanel">Resources Content</TabContent>
             </Tab>
           </Tabs>
         </PanelMainBody>
@@ -67,3 +86,7 @@ export const TabView: React.FunctionComponent = () => {
     </Panel>
   );
 };
+
+const TabContent = styled.div`
+  max-height: calc(100vh - 330px);
+`;

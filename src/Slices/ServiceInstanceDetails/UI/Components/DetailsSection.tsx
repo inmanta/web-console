@@ -4,7 +4,7 @@ import {
   CardBody,
   CardExpandableContent,
   CardHeader,
-  CardTitle,
+  Title,
   DescriptionList,
   DescriptionListDescription,
   DescriptionListGroup,
@@ -26,8 +26,17 @@ export const DetailsSection: React.FunctionComponent = () => {
   return (
     <Panel variant="raised">
       <Card id="details-expandable-card" isExpanded={isExpanded} isPlain>
-        <CardHeader onExpand={onExpand}>
-          <CardTitle id="details-card-title">Details</CardTitle>
+        <CardHeader
+          onExpand={onExpand}
+          isToggleRightAligned
+          toggleButtonProps={{
+            id: "toggle-button-details",
+            "aria-label": "Details",
+            "aria-labelledby": "details-expandable-card toggle-button",
+            "aria-expanded": isExpanded,
+          }}
+        >
+          <Title headingLevel="h2">Details</Title>
         </CardHeader>
         <CardExpandableContent>
           <CardBody>

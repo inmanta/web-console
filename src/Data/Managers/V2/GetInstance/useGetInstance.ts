@@ -5,7 +5,7 @@ import { useHandleErrors } from "../helpers/useHandleErrors";
 
 export const useGetInstance = (
   service: string,
-  instance: string,
+  instanceId: string,
   environment: string,
 ) => {
   const headers = useCreateHeaders(environment);
@@ -20,7 +20,7 @@ export const useGetInstance = (
   // /lsm/v1/service_inventory/{service_entity}/{service_id}
   const fetchInstance = async () => {
     const response = await fetch(
-      `${baseUrl}/lsm/v1/service_inventory/${service}/${instance}`,
+      `${baseUrl}/lsm/v1/service_inventory/${service}/${instanceId}`,
       {
         headers,
       },
@@ -38,14 +38,14 @@ export const useGetInstance = (
   return {
     useOneTime: () =>
       useQuery({
-        queryKey: ["get_instance-one_time", service, instance],
+        queryKey: ["get_instance-one_time", service, instanceId],
         queryFn: fetchInstance,
         retry: false,
         select: (data) => data.data,
       }),
     useContinuous: () =>
       useQuery({
-        queryKey: ["get_instance-continuous", service, instance],
+        queryKey: ["get_instance-continuous", service, instanceId],
         queryFn: fetchInstance,
         refetchInterval: 5000,
         select: (data) => data.data,

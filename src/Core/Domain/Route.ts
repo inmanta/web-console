@@ -93,7 +93,7 @@ interface RouteParamKeysManifest {
   EditInstance: "service" | "instance";
   Events: "service" | "instance";
   History: "service" | "instance";
-  InstanceDetails: "service" | "instance" | "version";
+  InstanceDetails: "service" | "instance" | "instanceId";
   InstanceComposer: "service";
   InstanceComposerEditor: "service" | "instance";
   InstanceComposerViewer: "service" | "instance";
