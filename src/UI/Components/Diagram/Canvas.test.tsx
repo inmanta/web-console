@@ -288,7 +288,7 @@ beforeEach(() => {
   });
 });
 
-describe.only("Canvas.tsx", () => {
+describe("Canvas.tsx", () => {
   it("renders canvas correctly", async () => {
     const component = setup();
     render(component);
@@ -651,23 +651,26 @@ describe.only("Canvas.tsx", () => {
               coordinates: expect.any(String),
             },
           });
+
           expect(
             JSON.parse(
-              reqBody.service_order_items[0].metadata?.coordinate as string,
+              reqBody.service_order_items[0].metadata?.coordinates as string,
             ),
-          ).toEqual({
-            id: expect.any(String),
-            name: "parent-service",
-            attributes: {
-              name: "name-001",
-              should_deploy_fail: false,
-              service_id: "id-001",
+          ).toEqual([
+            {
+              id: expect.any(String),
+              name: "parent-service",
+              attributes: {
+                name: "name-001",
+                should_deploy_fail: false,
+                service_id: "id-001",
+              },
+              coordinates: {
+                x: 0,
+                y: 0,
+              },
             },
-            coordinates: {
-              x: 0,
-              y: 0,
-            },
-          });
+          ]);
           return HttpResponse.json();
         },
       ),
