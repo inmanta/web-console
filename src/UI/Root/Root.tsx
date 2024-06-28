@@ -7,7 +7,6 @@ import { RouteOutlet, SearchSanitizer } from "@/UI/Routing";
 import { GlobalStyles } from "@/UI/Styles";
 import { NotFoundPage } from "@S/NotFound/UI";
 import { PageFrame } from "./Components";
-import { GlobalAlert } from "./Components/GlobalAlert";
 import { PrimaryPageManager } from "./PrimaryPageManager";
 
 export const Root: React.FC = () => {
@@ -34,7 +33,6 @@ export const Root: React.FC = () => {
       <ReactQueryDevtools initialIsOpen={false} />
       <GlobalStyleProxy />
       <SearchSanitizer.Provider>
-        <GlobalAlert />
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route element={<RouteOutlet />}>

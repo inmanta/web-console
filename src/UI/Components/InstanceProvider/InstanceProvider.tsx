@@ -1,11 +1,3 @@
-/**
- * Renders the InstanceProvider component.
- *
- * @param {ServiceModel[]} services - The list of service models.
- * @param {string} mainServiceName - The name of the main service.
- * @param {string} instanceId - The ID of the instance.
- * @returns {JSX.Element} The rendered InstanceProvider component.
- */
 import React, { useContext } from "react";
 import { ServiceModel } from "@/Core";
 import { useGetInstanceWithRelations } from "@/Data/Managers/V2/GetInstanceWithRelations";
@@ -14,6 +6,14 @@ import { DependencyContext, words } from "@/UI";
 import { ErrorView, LoadingView } from "@/UI/Components";
 import Canvas from "@/UI/Components/Diagram/Canvas";
 
+/**
+ * Renders the InstanceProvider component.
+ *
+ * @param {ServiceModel[]} services - The list of service models.
+ * @param {string} mainServiceName - The name of the main service.
+ * @param {string} instanceId - The ID of the instance.
+ * @returns {JSX.Element} The rendered InstanceProvider component.
+ */
 export const InstanceProvider: React.FC<{
   label: string;
   services: ServiceModel[];

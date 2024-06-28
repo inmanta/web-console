@@ -7,7 +7,7 @@ import styled from "styled-components";
 import { ServiceModel } from "@/Core";
 import { sanitizeAttributes } from "@/Data";
 import { InstanceWithReferences } from "@/Data/Managers/GetInstanceWithRelations/interface";
-import { useSendOrder } from "@/Data/Managers/V2/sendOrder";
+import { usePostOrder } from "@/Data/Managers/V2/usePostOrder";
 import diagramInit, { DiagramHandlers } from "@/UI/Components/Diagram/init";
 import { CanvasWrapper } from "@/UI/Components/Diagram/styles";
 import { DependencyContext } from "@/UI/Dependency";
@@ -41,7 +41,7 @@ const Canvas = ({
 }) => {
   const { environmentHandler, routeManager } = useContext(DependencyContext);
   const environment = environmentHandler.useId();
-  const { mutate, isError, isSuccess, error } = useSendOrder(environment);
+  const { mutate, isError, isSuccess, error } = usePostOrder(environment);
   const canvas = useRef<HTMLDivElement>(null);
   const [looseEmbedded, setLooseEmbedded] = useState<Set<string>>(new Set());
   const [alertMessage, setAlertMessage] = useState("");

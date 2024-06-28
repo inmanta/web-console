@@ -7,7 +7,7 @@ import { useFetchHelpers } from "../helpers";
  * Custom hook for sending an order batch from Instance COmposer.
  * @returns {Mutation} The mutation object for sending an order.
  */
-export const useSendOrder = (environment: string) => {
+export const usePostOrder = (environment: string) => {
   const { createHeaders, handleErrors } = useFetchHelpers();
   const headers = createHeaders(environment);
   const baseUrlManager = new PrimaryBaseUrlManager(

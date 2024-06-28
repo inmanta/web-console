@@ -43,6 +43,7 @@ export const useGetInstanceWithRelations = (
     );
 
     const instance: { data: ServiceInstanceModel } = await response.json();
+
     if (instance.data.referenced_by !== null) {
       await Promise.all(
         instance.data.referenced_by.map(async (relatedId) => {
@@ -54,6 +55,7 @@ export const useGetInstanceWithRelations = (
         }),
       );
     }
+
     return {
       instance: instance.data,
       relatedInstances,
