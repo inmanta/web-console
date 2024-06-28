@@ -16,10 +16,9 @@ import { EnvSelectorWithData as EnvironmentSelector } from "./EnvSelectorWithDat
 import { EnvironmentSelectorItem } from "./EnvSelectorWrapper";
 
 const setup = (
-  environments: FlatEnvironment[],
-  selectedEnv: FlatEnvironment | undefined,
-  callback: (item: EnvironmentSelectorItem) => void,
-  config: KeycloakAuthConfig | LocalConfig | undefined,
+  callback?: (item: EnvironmentSelectorItem) => void,
+  config?: KeycloakAuthConfig | LocalConfig = undefined,
+  environments?: FlatEnvironment[] = Environment.filterable,
 ) => {
   const queryClient = new QueryClient();
   return (
@@ -31,7 +30,7 @@ const setup = (
               <EnvironmentSelector
                 environments={RemoteData.success(environments)}
                 onSelectEnvironment={callback}
-                selectedEnvironment={selectedEnv}
+                selectedEnvironment={Environment.filterable[0]}
               />
             </AuthTestWrapper>
           </AuthProvider>
@@ -63,16 +62,7 @@ test("GIVEN EnvironmentSelector WHEN there are no environments THEN redirects", 
 test("GIVEN EnvironmentSelector and a project WHEN user clicks on toggle THEN list of projects is shown", async () => {
   const envA = Environment.filterable[0];
   const envB = Environment.filterable[2];
-  render(
-    setup(
-      Environment.filterable,
-      envA,
-      () => {
-        return;
-      },
-      undefined,
-    ),
-  );
+  render(setup());
 
   const toggle = screen.getByText(`${envA.name} (${envA.projectName})`);
   await act(async () => {
@@ -88,14 +78,9 @@ test("GIVEN EnvironmentSelector and populated store WHEN user clicks on an item 
   const envA = Environment.filterable[0];
   const envB = Environment.filterable[2];
   render(
-    setup(
-      Environment.filterable,
-      envA,
-      (item) => {
-        selectedEnv = item.environmentId;
-      },
-      undefined,
-    ),
+    setup((item) => {
+      selectedEnv = item.environmentId;
+    }),
   );
 
   const toggle = screen.getByText(`${envA.name} (${envA.projectName})`);
@@ -124,14 +109,9 @@ test("GIVEN EnvironmentSelector and environments with identical names WHEN user 
   const envA = Environment.filterable[0];
   const envB = Environment.filterable[2];
   render(
-    setup(
-      Environment.filterable,
-      envA,
-      (item) => {
-        selectedEnv = item.environmentId;
-      },
-      undefined,
-    ),
+    setup((item) => {
+      selectedEnv = item.environmentId;
+    }),
   );
   const toggle = screen.getByRole("button", {
     name: `${envA.name} (${envA.projectName})`,
@@ -166,20 +146,13 @@ test("GIVEN EnvironmentSelector WHEN jwt auth is enabled will display fetched us
     }),
   );
   server.listen();
-  render(
-    setup(
-      [],
-      undefined,
-      () => {
-        return;
-      },
-      { method: "jwt" },
-    ),
-  );
+  render(setup([], { method: "jwt" }));
 
   await waitFor(() => {
     expect(screen.getByText("test_user")).toBeVisible();
   });
+  expect(screen.getByText("test-env1 (default)")).toBeVisible();
+
   server.close();
 });
 
@@ -196,21 +169,12 @@ test("GIVEN EnvironmentSelector WHEN jwt auth is enabled and current_user reques
     }),
   );
   server.listen();
-  render(
-    setup(
-      [],
-      undefined,
-      () => {
-        return;
-      },
-      { method: "jwt" },
-    ),
-  );
+  render(setup([], { method: "jwt" }));
 
   await waitFor(() => {
     expect(screen.queryByText("test_user")).not.toBeInTheDocument();
   });
-  expect(screen.queryByText("Select an environment")).toBeVisible();
+  expect(screen.getByText("test-env1 (default)")).toBeVisible();
 
   server.close();
 });
