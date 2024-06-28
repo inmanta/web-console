@@ -267,7 +267,7 @@ if (Cypress.env("edition") === "iso") {
           clientY: 250,
         })
         .trigger("mouseup");
-
+      cy.get("button").contains("Deploy").scrollIntoView();
       cy.get("button").contains("Deploy").click();
 
       // Check if only one row has been added to the table.
