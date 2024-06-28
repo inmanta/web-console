@@ -3,9 +3,9 @@ import { PrimaryBaseUrlManager } from "@/UI";
 import { useFetchHelpers } from "../helpers";
 
 /**
- * Custom hook for removing a user from the server.
+ * Custom hook for getting a current user from the server.
  *
- * @returns {Mutation} - The mutation object provided by `useMutation` hook.
+ * @returns {Query} - An object containing a custom hook to fetch user information.
  */
 export const useGetCurrentUser = () => {
   const { createHeaders, handleErrors } = useFetchHelpers();
@@ -16,12 +16,6 @@ export const useGetCurrentUser = () => {
 
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
 
-  /**
-   * Deletes a user from the server.
-   *
-   * @param {string} username - The username of the user to be removed.
-   * @returns {Promise<{}>} - A promise that resolves when the user is successfully removed.
-   */
   const currentUserOrder = async (): Promise<{
     data: {
       username: string;
@@ -39,7 +33,7 @@ export const useGetCurrentUser = () => {
   return {
     /**
      * Custom hook to fetch the user information from the API once.
-     * @returns The result of the query, including the user information.
+     * @returns The result of the query, including the current user information.
      */
     useOneTime: () =>
       useQuery({

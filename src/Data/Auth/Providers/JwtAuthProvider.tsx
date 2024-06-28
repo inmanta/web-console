@@ -1,10 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useGetCurrentUser } from "@/Data/Managers/V2/GetCurrentUser";
 import { AuthContext } from "../AuthContext";
+
 /**
- * Component that implements a null authentication provider when no authentication is enabled.
+ * Component that implements a authentication provider when jwt authentication is enabled.
  */
-export const JwtProvider: React.FC<React.PropsWithChildren> = ({
+export const JwtAuthProvider: React.FC<React.PropsWithChildren> = ({
   children,
 }) => {
   const [user, setUser] = useState<string | null>(null);
@@ -19,6 +20,7 @@ export const JwtProvider: React.FC<React.PropsWithChildren> = ({
       setUser(data?.username);
     }
   }, [data, isSuccess]);
+
   return (
     <AuthContext.Provider value={{ ...authContext, getUser, isDisabled }}>
       {children}

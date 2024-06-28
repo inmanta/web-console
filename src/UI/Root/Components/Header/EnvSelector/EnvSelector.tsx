@@ -44,11 +44,11 @@ export const EnvSelector: React.FC<Props> = ({
           aria-label={toggleText}
           isFullHeight
           onClick={() => setIsOpen(!isOpen)}
-          icon={!authHelper.getUser() ? <UserCircleIcon /> : null}
+          icon={authHelper.getUser() ? <UserCircleIcon /> : null}
         >
           <StyledDiv>
             <div>
-              {!authHelper.getUser() && (
+              {authHelper.getUser() && (
                 <StyledText>{authHelper.getUser()}</StyledText>
               )}
               <div>

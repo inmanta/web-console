@@ -1,5 +1,5 @@
-description: Refactor Authentication to simplify the flow and make it more maintainable and adjustable for new authentication providers
-issue-nr: 5759
+description: Add JWT authentication method to the application
+issue-nr: 5818
 change-type: patch
 destination-branches: [master, iso7]
 sections:
