@@ -1147,7 +1147,7 @@ __metadata:
     "@patternfly/react-tokens": "npm:^5.3.1"
     "@react-keycloak/web": "npm:^3.4.0"
     "@tanstack/react-query": "npm:^5.37.1"
-    "@tanstack/react-query-devtools": "npm:^5.31.0"
+    "@tanstack/react-query-devtools": "npm:^5.48.0"
     "@testing-library/dom": "npm:^9.3.4"
     "@testing-library/jest-dom": "npm:^6.4.2"
     "@testing-library/react": "npm:^15.0.7"
@@ -1988,22 +1988,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/query-devtools@npm:5.37.1":
-  version: 5.37.1
-  resolution: "@tanstack/query-devtools@npm:5.37.1"
-  checksum: 10/1c1cca96e0466623bb819be67f23bb10bba8073b8ba255e75ac07956d8f829740b9214edd1dd84e7027509d6dbfe11876da6a1364657541557562f311a238640
+"@tanstack/query-devtools@npm:5.47.0":
+  version: 5.47.0
+  resolution: "@tanstack/query-devtools@npm:5.47.0"
+  checksum: 10/9bb44dc40463b76b792b864ca94aed0267037a31414f93b73e2b535c8e4962e47e1c692eb8b4d367adf2580d396f0cdf29ac0af9adc4ad69ec9416527b6d4cfa
   languageName: node
   linkType: hard
 
-"@tanstack/react-query-devtools@npm:^5.31.0":
-  version: 5.37.1
-  resolution: "@tanstack/react-query-devtools@npm:5.37.1"
+"@tanstack/react-query-devtools@npm:^5.48.0":
+  version: 5.48.0
+  resolution: "@tanstack/react-query-devtools@npm:5.48.0"
   dependencies:
-    "@tanstack/query-devtools": "npm:5.37.1"
+    "@tanstack/query-devtools": "npm:5.47.0"
   peerDependencies:
-    "@tanstack/react-query": ^5.37.1
-    react: ^18.0.0
-  checksum: 10/7fd8ac801671c004c69ff289fbcf923938eeb43dea19abbe3c3cee7531b56bc1bf56a651b76138f9c00444e50a8f3bc535f5fe8504d2379f4d043557c15bdf35
+    "@tanstack/react-query": ^5.48.0
+    react: ^18 || ^19
+  checksum: 10/47cb24bf5709eceba81178795323c1bc3ee11f4d9e29f6a3ae0732e08ac9f9fc51b5f29d2b28d8459080227ca8d84bbd1d0f94ae01ae25b8f20fc58e1280b6ef
   languageName: node
   linkType: hard
 
