@@ -8,6 +8,8 @@ import Canvas from "@/UI/Components/Diagram/Canvas";
 
 /**
  * Renders the InstanceProvider component.
+ * It serves purpose to not provide all the neccesary data for the Canvas at the same time to avoid unnecessary rerenders,
+ *  and extract the data fetching logic, out of the already busy component
  *
  * @param {ServiceModel[]} services - The list of service models.
  * @param {string} mainServiceName - The name of the main service.
