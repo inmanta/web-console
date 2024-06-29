@@ -263,10 +263,11 @@ if (Cypress.env("edition") === "iso") {
         .trigger("mouseover")
         .trigger("mousedown")
         .trigger("mousemove", {
-          clientX: 650,
+          clientX: 350,
           clientY: 250,
         })
         .trigger("mouseup");
+
       cy.get("button").contains("Deploy").scrollIntoView();
       cy.get("button").contains("Deploy").click();
 
