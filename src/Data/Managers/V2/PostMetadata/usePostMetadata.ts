@@ -8,6 +8,16 @@ import { useMutation } from "@tanstack/react-query";
 import { PrimaryBaseUrlManager } from "@/UI";
 import { useFetchHelpers } from "../helpers";
 
+interface PostMetadataInfo {
+  service_entity: string;
+  service_id: string;
+  key: string;
+  body: {
+    current_version: number;
+    value: string;
+  };
+}
+
 export const usePostMetadata = (environment: string) => {
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
@@ -22,15 +32,7 @@ export const usePostMetadata = (environment: string) => {
    *
    * @param info - The metadata information to post.
    */
-  const postMetadata = async (info: {
-    service_entity: string;
-    service_id: string;
-    key: string;
-    body: {
-      current_version: number;
-      value: string;
-    };
-  }): Promise<void> => {
+  const postMetadata = async (info: PostMetadataInfo): Promise<void> => {
     const { service_entity, service_id, key, body } = info;
     const response = await fetch(
       baseUrl +

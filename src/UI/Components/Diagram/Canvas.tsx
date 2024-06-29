@@ -6,7 +6,7 @@ import { AlertVariant } from "@patternfly/react-core";
 import styled from "styled-components";
 import { ServiceModel } from "@/Core";
 import { sanitizeAttributes } from "@/Data";
-import { InstanceWithReferences } from "@/Data/Managers/GetInstanceWithRelations/interface";
+import { InstanceWithReferences } from "@/Data/Managers/V2/GetInstanceWithRelations";
 import { usePostOrder } from "@/Data/Managers/V2/usePostOrder";
 import diagramInit, { DiagramHandlers } from "@/UI/Components/Diagram/init";
 import { CanvasWrapper } from "@/UI/Components/Diagram/styles";

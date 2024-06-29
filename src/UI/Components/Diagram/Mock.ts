@@ -1,5 +1,5 @@
 import { ServiceInstanceModel, ServiceModel } from "@/Core";
-import { InstanceWithReferences } from "@/Data/Managers/GetInstanceWithRelations/interface";
+import { InstanceWithReferences } from "@/Data/Managers/V2/GetInstanceWithRelations";
 import { InstanceForApi } from "./interfaces";
 
 export const testInstance: ServiceInstanceModel = {

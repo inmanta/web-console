@@ -1,7 +1,7 @@
 import { dia, linkTools } from "@inmanta/rappid";
 import { DirectedGraph } from "@joint/layout-directed-graph";
 import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from "@/Core";
-import { InstanceWithReferences } from "@/Data/Managers/GetInstanceWithRelations/interface";
+import { InstanceWithReferences } from "@/Data/Managers/V2/GetInstanceWithRelations";
 import { words } from "@/UI/words";
 import {
   findCorrespondingId,

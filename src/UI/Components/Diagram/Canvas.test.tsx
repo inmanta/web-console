@@ -9,7 +9,7 @@ import { HttpResponse, PathParams, http } from "msw";
 import { setupServer } from "msw/node";
 import { RemoteData, ServiceModel } from "@/Core";
 import { getStoreInstance } from "@/Data";
-import { InstanceWithReferences } from "@/Data/Managers/GetInstanceWithRelations/interface";
+import { InstanceWithReferences } from "@/Data/Managers/V2/GetInstanceWithRelations";
 import { dependencies } from "@/Test";
 import * as customQueries from "@/Test/Utils/custom-queries";
 import {

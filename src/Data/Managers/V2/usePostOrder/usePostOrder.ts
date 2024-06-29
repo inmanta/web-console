@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { UseMutationResult, useMutation } from "@tanstack/react-query";
 import { PrimaryBaseUrlManager, words } from "@/UI";
 import { InstanceForApi } from "@/UI/Components/Diagram/interfaces";
 import { useFetchHelpers } from "../helpers";
@@ -7,7 +7,9 @@ import { useFetchHelpers } from "../helpers";
  * Custom hook for sending an order batch from Instance COmposer.
  * @returns {Mutation} The mutation object for sending an order.
  */
-export const usePostOrder = (environment: string) => {
+export const usePostOrder = (
+  environment: string,
+): UseMutationResult<void, Error, InstanceForApi[], unknown> => {
   const { createHeaders, handleErrors } = useFetchHelpers();
   const headers = createHeaders(environment);
   const baseUrlManager = new PrimaryBaseUrlManager(

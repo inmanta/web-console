@@ -1,8 +1,11 @@
-import { useQuery } from "@tanstack/react-query";
+import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { ParsedNumber } from "@/Core";
 import { PrimaryBaseUrlManager } from "@/UI";
 import { useFetchHelpers } from "../helpers";
 
+interface Metadata {
+  data: string | undefined;
+}
 /**
  * Custom hook to fetch metadata for a specific service entity and key.
  * @param environment - The environment of the service.
@@ -27,9 +30,7 @@ export const useGetMetadata = (
   const headers = createHeaders(environment);
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
 
-  const getMetadata = async (): Promise<{
-    data: string | undefined;
-  }> => {
+  const getMetadata = async (): Promise<Metadata> => {
     const response = await fetch(
       baseUrl +
         `/lsm/v1/service_inventory/${service_entity}/${service_id}/metadata/${key}?current_version=${instanceVersion}`,
@@ -54,7 +55,7 @@ export const useGetMetadata = (
      * Custom hook to fetch the metadata.
      * @returns The result of the query.
      */
-    useOneTime: () =>
+    useOneTime: (): UseQueryResult<Metadata, Error> =>
       useQuery({
         queryFn: getMetadata,
         queryKey: [
