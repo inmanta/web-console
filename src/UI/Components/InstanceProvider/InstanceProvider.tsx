@@ -4,7 +4,10 @@ import { useGetInstanceWithRelations } from "@/Data/Managers/V2/GetInstanceWithR
 import { useGetMetadata } from "@/Data/Managers/V2/GetMetadata";
 import { DependencyContext, words } from "@/UI";
 import { ErrorView, LoadingView } from "@/UI/Components";
-import Canvas from "@/UI/Components/Diagram/Canvas";
+import {
+  findServicesWithoutStrictModifier,
+  Canvas,
+} from "@/UI/Components/Diagram";
 
 /**
  * Renders the InstanceProvider component.
@@ -65,7 +68,7 @@ export const InstanceProvider: React.FC<{
       />
     );
   }
-
+  const blockingInstances = findServicesWithoutStrictModifier(services, data);
   return (
     <Canvas
       services={services}
@@ -73,7 +76,8 @@ export const InstanceProvider: React.FC<{
       instance={
         data ? { ...data, coordinates: metadata?.data || "" } : undefined
       }
-      editable={editable}
+      editable={editable || blockingInstances.length === 0}
+      blockingInstances={blockingInstances}
     />
   );
 };

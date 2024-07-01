@@ -1,0 +1,6 @@
+description: Block ability to modify instances with the strict modifier property set to false
+issue-nr: 5343
+change-type: patch
+destination-branches: [master, iso7]
+sections:
+  minor-improvement: "{{description}}"

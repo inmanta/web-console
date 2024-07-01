@@ -18,7 +18,7 @@ import {
   PrimaryRouteManager,
   words,
 } from "@/UI";
-import Canvas from "@/UI/Components/Diagram/Canvas";
+import { Canvas } from "@/UI/Components/Diagram";
 import CustomRouter from "@/UI/Routing/CustomRouter";
 import history from "@/UI/Routing/history";
 import {
@@ -43,6 +43,7 @@ const setup = (
   instance?: InstanceWithReferences,
   serviceModels: ServiceModel[] = services as unknown as ServiceModel[],
   editable: boolean = true,
+  blockingInstances: string[] | undefined = undefined,
 ) => {
   const queryClient = new QueryClient();
   const store = getStoreInstance();
@@ -88,6 +89,7 @@ const setup = (
                     mainServiceName={"parent-service"}
                     instance={instance}
                     editable={editable}
+                    blockingInstances={blockingInstances}
                   />
                 }
               />
@@ -305,6 +307,23 @@ describe("Canvas.tsx", () => {
     expect(window.location.pathname).toEqual(
       "/lsm/catalog/parent-service/inventory",
     );
+  });
+
+  it("displays info banner about instances that haven't strict_modifier set to true if there are any", async () => {
+    const component = setup(
+      mockedInstanceTwo,
+      [mockedInstanceTwoServiceModel],
+      false,
+      ["test-service"],
+    );
+    render(component);
+
+    expect(
+      screen.getByText(
+        "The following instance(s) does not have strict mode enabled, the composer only allows you to visualize it:",
+      ),
+    ).toBeVisible();
+    expect(screen.getByText("test-service")).toBeVisible();
   });
 
   it("renders created core service successfully", async () => {

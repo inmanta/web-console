@@ -1,6 +1,6 @@
 import { UseMutationResult, useMutation } from "@tanstack/react-query";
 import { PrimaryBaseUrlManager, words } from "@/UI";
-import { InstanceForApi } from "@/UI/Components/Diagram/interfaces";
+import { InstanceForApi } from "@/UI/Components/Diagram";
 import { useFetchHelpers } from "../helpers";
 
 /**

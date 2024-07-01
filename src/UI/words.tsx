@@ -168,6 +168,7 @@ const dict = {
     "Add new instance to the canvas.",
   "inventory.instanceComposer.orderDescription":
     "Requested with Instance Composer",
+  "inventory.instanceComposer.blockingInstances": `The following instance(s) does not have strict mode enabled, the composer only allows you to visualize it:`,
   "inventory.instanceComposer.errorMessage": "missing Instance Model",
   "inventory.instanceComposer.editButton": "Edit in Composer",
   "inventory.instanceComposer.showButton": "Show in Composer",

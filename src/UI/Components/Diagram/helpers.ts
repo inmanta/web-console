@@ -7,6 +7,7 @@ import {
   ServiceInstanceModel,
   ServiceModel,
 } from "@/Core";
+import { InstanceWithReferences } from "@/Data/Managers/V2/GetInstanceWithRelations";
 import {
   ConnectionRules,
   InstanceForApi,
@@ -598,4 +599,39 @@ export const moveCellFromColliding = (graph: dia.Graph, cell: dia.Cell) => {
       isColliding = false;
     }
   } while (isColliding);
+};
+
+export const findServicesWithoutStrictModifier = (
+  services: ServiceModel[],
+  instanceWithRef: InstanceWithReferences | undefined,
+): string[] => {
+  if (!instanceWithRef) {
+    return [];
+  }
+
+  const blockingServices: string[] = services
+    .filter((service) => !service.strict_modifier_enforcement)
+    .map((service) => service.name);
+
+  const flatInstances = flattenInstances(instanceWithRef, []);
+
+  const result = flatInstances.map((instance) =>
+    blockingServices.includes(instance.service_entity)
+      ? instance.service_entity
+      : null,
+  );
+  return [...new Set(result)].filter(
+    (serviceName) => serviceName !== null,
+  ) as string[];
+};
+
+const flattenInstances = (
+  instanceWithRef: InstanceWithReferences,
+  instances: ServiceInstanceModel[],
+): ServiceInstanceModel[] => {
+  instances.push(instanceWithRef.instance);
+  const relatedInstances = instanceWithRef.relatedInstances.flatMap(
+    (embedded) => flattenInstances(embedded, instances),
+  );
+  return instances.concat(relatedInstances);
 };

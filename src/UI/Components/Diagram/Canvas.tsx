@@ -2,7 +2,8 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import "@inmanta/rappid/joint-plus.css";
 import { useNavigate } from "react-router-dom";
 import { dia } from "@inmanta/rappid";
-import { AlertVariant } from "@patternfly/react-core";
+import { AlertVariant, Banner, Flex, FlexItem } from "@patternfly/react-core";
+import { InfoCircleIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { ServiceModel } from "@/Core";
 import { sanitizeAttributes } from "@/Data";
@@ -28,16 +29,18 @@ import { ServiceEntityBlock } from "./shapes";
  * @param {InstanceWithReferences} instance - The instance with references.
  * @returns {JSX.Element} The rendered Canvas component.
  */
-const Canvas = ({
+export const Canvas = ({
   services,
   mainServiceName,
   instance,
   editable = true,
+  blockingInstances = undefined,
 }: {
   services: ServiceModel[];
   mainServiceName: string;
   instance?: InstanceWithReferences;
   editable: boolean;
+  blockingInstances: string[] | undefined;
 }) => {
   const { environmentHandler, routeManager } = useContext(DependencyContext);
   const environment = environmentHandler.useId();
@@ -327,6 +330,22 @@ const Canvas = ({
         editable={editable}
       />
       <CanvasWrapper id="canvas-wrapper">
+        {blockingInstances && blockingInstances.length > 0 && (
+          <StyledBanner screenReaderText="Info banner" variant="blue">
+            <Flex
+              spaceItems={{ default: "spaceItemsSm" }}
+              display={{ default: "inlineFlex" }}
+            >
+              <FlexItem>
+                <InfoCircleIcon />
+              </FlexItem>
+              <FlexItem>
+                {words("inventory.instanceComposer.blockingInstances")}
+              </FlexItem>
+              <FlexItem>{blockingInstances.join(", ")}</FlexItem>
+            </Flex>
+          </StyledBanner>
+        )}
         <div className="canvas" ref={canvas} />
         <ZoomWrapper>
           <button
@@ -357,7 +376,6 @@ const Canvas = ({
     </Container>
   );
 };
-export default Canvas;
 
 const Container = styled.div`
   height: 100%;
@@ -402,4 +420,9 @@ const ZoomWrapper = styled.div`
       background: var(--pf-v5-global--Color--light-300);
     }
   }
+`;
+const StyledBanner = styled(Banner)`
+  width: 100%;
+  position: absolute;
+  z-index: 9999;
 `;
