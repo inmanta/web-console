@@ -1,9 +1,4 @@
-import {
-  ApiHelper,
-  AuthHelper,
-  CommandManager,
-  CommandManagerResolver,
-} from "@/Core";
+import { ApiHelper, CommandManager, CommandManagerResolver } from "@/Core";
 import {
   DeleteInstanceCommandManager,
   DestroyInstanceCommandManager,
@@ -56,6 +51,7 @@ import {
   DeleteCallbackCommandManager,
 } from "@S/ServiceDetails/Data";
 import { ClearEnvironmentCommandManager } from "@S/Settings/Data/ClearEnvironmentCommandManager";
+import { AuthContextInterface } from "../Auth";
 import { DeleteVersionCommandManager } from "../Managers/DeleteVersion";
 import { UpdateCatalogCommandManager } from "../Managers/UpdateCatalog/CommandManager";
 import { UpdateInstanceAttributeCommandManager } from "../Managers/UpdateInstanceAttribute";
@@ -66,7 +62,7 @@ export class CommandManagerResolverImpl implements CommandManagerResolver {
   constructor(
     private readonly store: Store,
     private readonly apiHelper: ApiHelper,
-    private readonly authHelper: AuthHelper,
+    private readonly authHelper: AuthContextInterface,
   ) {
     this.managers = this.getManagers();
   }

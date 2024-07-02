@@ -5,8 +5,8 @@ import { StoreProvider } from "easy-peasy";
 import {
   CommandManagerResolverImpl,
   CommandResolverImpl,
+  defaultAuthContext,
   getStoreInstance,
-  KeycloakAuthHelper,
   QueryManagerResolverImpl,
   QueryResolverImpl,
 } from "@/Data";
@@ -30,14 +30,14 @@ function setup({
   isToastVisible = true,
 } = {}) {
   const apiHelper = new DeferredApiHelper();
-  const authHelper = new KeycloakAuthHelper();
+
   const scheduler = new StaticScheduler();
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
     new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler),
   );
   const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolverImpl(store, apiHelper, authHelper),
+    new CommandManagerResolverImpl(store, apiHelper, defaultAuthContext),
   );
 
   const environmentModifier = new MockEnvironmentModifier(details);

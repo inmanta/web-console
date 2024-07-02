@@ -7,8 +7,8 @@ import { StoreProvider } from "easy-peasy";
 import { Either } from "@/Core";
 import {
   CommandResolverImpl,
+  defaultAuthContext,
   getStoreInstance,
-  KeycloakAuthHelper,
   QueryManagerResolverImpl,
   QueryResolverImpl,
 } from "@/Data";
@@ -32,7 +32,7 @@ function setup(props) {
     new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler),
   );
   const updateAttribute = UpdateInstanceAttributeCommandManager(
-    new KeycloakAuthHelper(),
+    defaultAuthContext,
     apiHelper,
   );
   const commandResolver = new CommandResolverImpl(

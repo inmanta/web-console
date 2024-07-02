@@ -1,11 +1,11 @@
 import { Either, Maybe } from "@/Core";
+import { defaultAuthContext } from "../Auth/AuthContext";
 import { BaseApiHelper } from "./BaseApiHelper";
 
 const baseUrl = "http://localhost:8888";
-const spyDispatch = jest.spyOn(document, "dispatchEvent");
 
 test("BaseApiHelper.get executes a GET request with correct url & env", async () => {
-  const apiHelper = new BaseApiHelper();
+  const apiHelper = BaseApiHelper(undefined, defaultAuthContext);
   const url = "/test-url";
   const env = "environment_a";
 
@@ -18,7 +18,7 @@ test("BaseApiHelper.get executes a GET request with correct url & env", async ()
 });
 
 test("BaseApiHelper.post executes a POST request with correct url & env", async () => {
-  const apiHelper = new BaseApiHelper();
+  const apiHelper = BaseApiHelper(undefined, defaultAuthContext);
   const url = "/test-url";
   const env = "environment_a";
 
@@ -36,7 +36,7 @@ test("BaseApiHelper.post executes a POST request with correct url & env", async 
 });
 
 test("BaseApiHelper.get handles a failed a GET request", async () => {
-  const apiHelper = new BaseApiHelper();
+  const apiHelper = BaseApiHelper(undefined, defaultAuthContext);
   const url = "/test-url";
   const env = "environment_a";
 
@@ -53,7 +53,7 @@ test("BaseApiHelper.get handles a failed a GET request", async () => {
 });
 
 test("BaseApiHelper.delete executes a DELETE request with correct url & env", async () => {
-  const apiHelper = new BaseApiHelper();
+  const apiHelper = BaseApiHelper(undefined, defaultAuthContext);
   const url = "/test-url";
   const env = "environment_a";
 
@@ -69,7 +69,7 @@ test("BaseApiHelper.delete executes a DELETE request with correct url & env", as
 });
 
 test("GIVEN BaseApiHelper WHEN response json contains large integers THEN integers are converted to bigints", async () => {
-  const apiHelper = new BaseApiHelper();
+  const apiHelper = BaseApiHelper(undefined, defaultAuthContext);
   fetchMock.mockResponse(`{"foo": 9223372036854775807}`);
   const response = await apiHelper.get<{ foo: number }>("", "");
   if (response.kind === "Left") return;
@@ -77,70 +77,9 @@ test("GIVEN BaseApiHelper WHEN response json contains large integers THEN intege
 });
 
 test("GIVEN BaseApiHelper with getWithHTTPCode WHEN request fails with 409 THEN response has code 409", async () => {
-  const apiHelper = new BaseApiHelper();
+  const apiHelper = BaseApiHelper(undefined, defaultAuthContext);
   fetchMock.mockResponse(`{"foo": 9223372036854775807}`, { status: 409 });
   const response = await apiHelper.getWithHTTPCode<{ foo: number }>("", "");
   if (response.kind === "Right") return;
   expect(response.value.status).toEqual(409);
-});
-
-describe("BaseHelper event dispatching", () => {
-  test("BaseApiHelper emit event when request return status 401 and localAuth is enabled", async () => {
-    const apiHelper = new BaseApiHelper(baseUrl, true);
-    const url = "/test-url";
-    const env = "environment_a";
-
-    fetchMock.mockResponse(JSON.stringify({ message: "Something happened" }), {
-      status: 401,
-    });
-    await apiHelper.get(url, env);
-    expect(spyDispatch).toHaveBeenCalledWith(new CustomEvent("open-login"));
-  });
-  test("BaseApiHelper emit event when request return status 401 but localAuth is disabled", async () => {
-    const apiHelper = new BaseApiHelper(baseUrl, false);
-    const url = "/test-url";
-    const env = "environment_a";
-
-    fetchMock.mockResponse(JSON.stringify({ message: "Something happened" }), {
-      status: 401,
-    });
-    await apiHelper.get(url, env);
-    expect(spyDispatch).not.toHaveBeenCalled();
-  });
-
-  test("BaseApiHelper doesn't emit events when request return status 400", async () => {
-    const apiHelper = new BaseApiHelper(baseUrl, true);
-    const url = "/test-url";
-    const env = "environment_a";
-
-    fetchMock.mockResponse(JSON.stringify({ message: "Something happened" }), {
-      status: 400,
-    });
-    await apiHelper.get(url, env);
-    expect(spyDispatch).not.toHaveBeenCalled();
-  });
-
-  test("BaseApiHelper doesn't emit events when request return status 403", async () => {
-    const apiHelper = new BaseApiHelper(baseUrl, true);
-    const url = "/test-url";
-    const env = "environment_a";
-
-    fetchMock.mockResponse(JSON.stringify({ message: "Something happened" }), {
-      status: 403,
-    });
-    await apiHelper.get(url, env);
-    expect(spyDispatch).not.toHaveBeenCalled();
-  });
-
-  test("BaseApiHelper doesn't emit events when request return status 404", async () => {
-    const apiHelper = new BaseApiHelper(baseUrl, true);
-    const url = "/test-url";
-    const env = "environment_a";
-
-    fetchMock.mockResponse(JSON.stringify({ message: "Something happened" }), {
-      status: 404,
-    });
-    await apiHelper.get(url, env);
-    expect(spyDispatch).not.toHaveBeenCalled();
-  });
 });

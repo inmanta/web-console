@@ -7,8 +7,8 @@ import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { AttributeModel, RemoteData, ServiceModel } from "@/Core";
 import {
   CommandResolverImpl,
+  defaultAuthContext,
   getStoreInstance,
-  KeycloakAuthHelper,
 } from "@/Data";
 import { UpdateInstanceAttributeCommandManager } from "@/Data/Managers/UpdateInstanceAttribute";
 import {
@@ -53,7 +53,7 @@ function setup(service: ServiceModel) {
   const store = getStoreInstance();
 
   const updateAttribute = UpdateInstanceAttributeCommandManager(
-    new KeycloakAuthHelper(),
+    defaultAuthContext,
     apiHelper,
   );
   const commandResolver = new CommandResolverImpl(

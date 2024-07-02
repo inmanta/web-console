@@ -7,27 +7,20 @@ import { userEvent } from "@testing-library/user-event";
 import { axe, toHaveNoViolations } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { PrimaryAuthController } from "@/Data";
 import { UserInfo } from "@/Data/Managers/V2/GetUsers";
 import { dependencies } from "@/Test";
 import { DependencyProvider, words } from "@/UI";
 import { UserManagementPage } from "./Page";
 
-const spyDispatch = jest.spyOn(document, "dispatchEvent");
 expect.extend(toHaveNoViolations);
 
 const setup = () => {
   const queryClient = new QueryClient();
 
-  const authController = new PrimaryAuthController(
-    "true",
-    { method: "database" },
-    undefined,
-  );
   const component = (
     <MemoryRouter>
       <QueryClientProvider client={queryClient}>
-        <DependencyProvider dependencies={{ ...dependencies, authController }}>
+        <DependencyProvider dependencies={{ ...dependencies }}>
           <Page>
             <UserManagementPage />
           </Page>
@@ -134,8 +127,6 @@ describe("UserManagementPage", () => {
       "The following error occured: Access to this resource is unauthorized",
     );
     expect(errorMessage).toBeVisible();
-
-    expect(spyDispatch).toHaveBeenCalledWith(new CustomEvent("open-login"));
 
     await act(async () => {
       const results = await axe(document.body);

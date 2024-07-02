@@ -1,11 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { FormSuggestion } from "@/Core";
 import { PrimaryBaseUrlManager } from "@/UI";
-import { useCreateHeaders } from "../helpers/useCreateHeaders";
-import { useHandleErrors } from "../helpers/useHandleErrors";
+import { useFetchHelpers } from "../helpers";
 
 /**
- * Custom hook to handle suggested values for a parameter.
+ * React Query hook to handle suggested values for a parameter.
  * If the suggestions are literal, it will return the values directly.
  * If the suggestions are parameters, it will fetch the parameter from the API.
  * if the suggestions are null or undefined, it will return null as data, and a success status.
@@ -20,8 +19,8 @@ export const useSuggestedValues = (
   environment: string,
 ) => {
   //extracted headers to avoid breaking rules of Hooks
-  const headers = useCreateHeaders(environment);
-  const { handleAuthorization } = useHandleErrors();
+  const { createHeaders, handleErrors } = useFetchHelpers();
+
   if (!suggestions) {
     return {
       useOneTime: () => {
@@ -52,14 +51,12 @@ export const useSuggestedValues = (
     const response = await fetch(
       `${baseUrl}/api/v1/parameter/${suggestions.parameter_name}`,
       {
-        headers,
+        headers: createHeaders(environment),
       },
     );
-    handleAuthorization(response);
 
-    if (!response.ok) {
-      throw new Error("Failed to fetch parameter");
-    }
+    await handleErrors(response);
+
     return response.json();
   };
 

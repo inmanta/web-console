@@ -13,7 +13,7 @@ import styled from "styled-components";
 import { words } from "@/UI";
 
 interface Props {
-  text: string;
+  text?: string;
   options: string[];
   tooltipContent?: string;
   isDisabled?: boolean;
@@ -34,7 +34,7 @@ export const CopyMultiOptions: React.FC<Props> = ({
   options,
   tooltipContent,
   isDisabled,
-  text,
+  text = "",
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -79,7 +79,7 @@ export const CopyMultiOptions: React.FC<Props> = ({
       aria-label="Copy to clipboard"
     >
       {text}
-      <SpacedCopyIcon />
+      <CopyIcon />
     </MenuToggle>
   );
 
@@ -108,8 +108,4 @@ export const CopyMultiOptions: React.FC<Props> = ({
 
 const WidthLimitedTooltip = styled(Tooltip)`
   width: 150px;
-`;
-
-const SpacedCopyIcon = styled(CopyIcon)`
-  margin-left: 5px;
 `;
