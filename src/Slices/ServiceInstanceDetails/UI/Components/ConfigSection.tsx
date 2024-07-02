@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { Panel } from "@patternfly/react-core";
 import { Config, VersionedServiceInstanceIdentifier } from "@/Core";
-import { ConfigTab } from "@/Slices/ServiceInventory/UI/Tabs/ConfigTab";
+import { ConfigSectionContent } from "@/Slices/ServiceInventory/UI/Tabs/ConfigSectionContent";
 import { InstanceContext } from "../../Core/Context";
 
 /**
@@ -29,7 +29,9 @@ export const ConfigSection: React.FC = () => {
   return (
     !isConfigEmpty(instance.config) && (
       <Panel variant="raised" aria-label="Config-Section">
-        <ConfigTab serviceInstanceIdentifier={serviceInstanceIdentifier} />
+        <ConfigSectionContent
+          serviceInstanceIdentifier={serviceInstanceIdentifier}
+        />
       </Panel>
     )
   );

@@ -148,7 +148,7 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
                 instanceId: instance.id,
               })}
             >
-              Instance Details
+              {words("instanceDetails.button")}
             </Link>
           </MenuItem>
           <MenuItem

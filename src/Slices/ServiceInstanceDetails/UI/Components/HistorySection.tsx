@@ -106,6 +106,8 @@ interface HistoryRowProps {
 /**
  * The HistoryRowContent Component
  *
+ * @note This component requires the ServiceInstanceDetails context to exist in one of its parents.
+ *
  * @Props {HistoryRowProps} - The props of the component
  *  @prop {InstanceLog} log - The instance log containing the history details.
  * @returns {React.FC<HistoryRowProps>} A React Component that displays the row content for each individual version.

@@ -35,7 +35,7 @@ import {
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import { EnvironmentModifierImpl } from "@/UI/Dependency/EnvironmentModifier";
-import { ConfigTab } from "./ConfigTab";
+import { ConfigSectionContent } from "./ConfigSectionContent";
 
 function setup(
   environmentModifier: EnvironmentModifier = new MockEnvironmentModifier(),
@@ -90,7 +90,9 @@ function setup(
         }}
       >
         <StoreProvider store={storeInstance}>
-          <ConfigTab serviceInstanceIdentifier={instanceIdentifier} />
+          <ConfigSectionContent
+            serviceInstanceIdentifier={instanceIdentifier}
+          />
         </StoreProvider>
       </DependencyProvider>
     </MemoryRouter>

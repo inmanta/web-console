@@ -220,6 +220,7 @@ const dict = {
    */
   "instanceDetails.title.tag": (version) => `Version: ${version}`,
   "instanceDetails.title.latest": "Latest Version",
+  "instanceDetails.button": "Instance Details",
   "instanceDetails.page.errorFallback":
     "Something went wrong retrieving the instance details",
   "instanceDetails.page.errorFallback.title": "Error",
