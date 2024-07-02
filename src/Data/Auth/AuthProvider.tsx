@@ -1,5 +1,6 @@
 import React from "react";
 import { DatabaseAuthProvider } from "./Providers/DatabaseAuthProvider";
+import { JwtAuthProvider } from "./Providers/JwtAuthProvider";
 import { KeycloakAuthProvider } from "./Providers/KeycloakAuthProvider";
 import { NoAuthProvider } from "./Providers/NoAuthProvider";
 import { KeycloakAuthConfig, LocalConfig } from "./types";
@@ -25,6 +26,8 @@ export const AuthProvider: React.FC<React.PropsWithChildren<Props>> = ({
       return (
         <KeycloakAuthProvider config={config}>{children}</KeycloakAuthProvider>
       );
+    case "jwt":
+      return <JwtAuthProvider>{children}</JwtAuthProvider>;
     default:
       return <NoAuthProvider>{children}</NoAuthProvider>;
   }
