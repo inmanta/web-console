@@ -55,7 +55,7 @@ export const ServiceInstanceDetails: React.FC<Props> = ({
       <PageContainer pageTitle={pageTitle}>
         <ErrorView
           ariaLabel="Instance-Details-Error"
-          title="Error"
+          title={words("instanceDetails.page.errorFallback.title")}
           message={
             instanceDetails.error?.message ||
             words("instanceDetails.page.errorFallback")

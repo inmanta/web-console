@@ -222,6 +222,7 @@ const dict = {
   "instanceDetails.title.latest": "Latest Version",
   "instanceDetails.page.errorFallback":
     "Something went wrong retrieving the instance details",
+  "instanceDetails.page.errorFallback.title": "Error",
   "instanceDetails.page.noData": "There is no data available to display.",
   "instanceDetails.page.noData.errorTitle": "No Data",
   "instanceDetails.history.title": "Version History",
