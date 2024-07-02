@@ -214,6 +214,25 @@ const dict = {
   "inventory.editAttribute.text": (oldValue: string, newValue: string) =>
     `Are you absolutely sure you want to change attribute from ${oldValue} to ${newValue}? This operation can corrupt the instance.`,
   "inventory.error.mermaid": "Error rendering Mermaid diagram",
+
+  /**
+   * Service Instance Details text
+   */
+  "instanceDetails.title.tag": (version) => `Version: ${version}`,
+  "instanceDetails.title.latest": "Latest Version",
+  "instanceDetails.page.errorFallback":
+    "Something went wrong retrieving the instance details",
+  "instanceDetails.page.noData": "There is no data available to display.",
+  "instanceDetails.page.noData.errorTitle": "No Data",
+  "instanceDetails.history.title": "Version History",
+  "instanceDetails.history.table.version": "Version",
+  "instanceDetails.history.table.date": "Date",
+  "instanceDetails.history.table.status": "Status",
+  "instanceDetails.history.error": "Error loading Version History",
+  "instanceDetails.details.title": "Details",
+  "instanceDetails.details.created": "Created:",
+  "instanceDetails.details.updated": "Updated:",
+
   /**
    * Config related text
    */

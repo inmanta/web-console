@@ -4,7 +4,14 @@ import styled from "styled-components";
 import { ConfigSection, DetailsSection, HistorySection } from "./Components";
 import { TabView } from "./Tabs";
 
-export const ServiceInstanceDetailsLayout: React.FunctionComponent = () => {
+/**
+ * The ServiceInstanceDetailsLayout component
+ *
+ * @note The layout relies on Patternfly's Grid layout, and is made responsive for the different breakpoints.
+ *
+ * @returns  {React.FC} A React Component  that handles the layout of the ServiceInstanceDetails page.
+ */
+export const ServiceInstanceDetailsLayout: React.FC = () => {
   return (
     <StyledGrid
       id="Service-Instance-Details"

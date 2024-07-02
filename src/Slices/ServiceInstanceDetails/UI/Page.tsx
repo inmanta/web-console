@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { useGetInstance } from "@/Data/Managers/V2/GetInstance";
 import { useGetInstanceLogs } from "@/Data/Managers/V2/GetInstanceLogs";
 import { useGetServiceModel } from "@/Data/Managers/V2/GetServiceModel";
-import { DependencyContext, useRouteParams } from "@/UI";
+import { DependencyContext, useRouteParams, words } from "@/UI";
 import { ErrorView, LoadingView, PageContainer } from "@/UI/Components";
 import { InstanceContext } from "../Core/Context";
 import { PageTitleWithVersion } from "./Components";
@@ -14,6 +14,15 @@ interface Props {
   instanceId: string;
 }
 
+/**
+ * The ServiceInstanceDetails Component
+ *
+ * @props {Props} props - The props of the component.
+ *  @prop {string} service - the name of the service_entity
+ *  @prop {string} instance - the displayName of the instance
+ *  @prop {string} instanceId - the uuid of the instance
+ * @returns {React.FC<Props>}  A React Component that provides the context for the Service Instance Details.
+ */
 export const ServiceInstanceDetails: React.FC<Props> = ({
   service,
   instance,
@@ -47,7 +56,10 @@ export const ServiceInstanceDetails: React.FC<Props> = ({
         <ErrorView
           ariaLabel="Instance-Details-Error"
           title="Error"
-          message={instanceDetails.error?.message || "Something went wrong."}
+          message={
+            instanceDetails.error?.message ||
+            words("instanceDetails.page.errorFallback")
+          }
           retry={instanceDetails.refetch}
         />
       </PageContainer>
@@ -62,7 +74,7 @@ export const ServiceInstanceDetails: React.FC<Props> = ({
     );
   }
 
-  return (
+  return instanceDetails.data ? (
     <InstanceContext.Provider
       value={{
         instance: instanceDetails.data,
@@ -77,9 +89,27 @@ export const ServiceInstanceDetails: React.FC<Props> = ({
         <ServiceInstanceDetailsLayout />
       </PageContainer>
     </InstanceContext.Provider>
+  ) : (
+    // fallback errorView in case we get an empty data set.
+    <PageContainer pageTitle={pageTitle}>
+      <ErrorView
+        ariaLabel="Instance-Details-Error"
+        title={words("instanceDetails.page.noData.errorTitle")}
+        message={words("instanceDetails.page.noData")}
+        retry={instanceDetails.refetch}
+      />
+    </PageContainer>
   );
 };
 
+/**
+ * The Page Component
+ *
+ * @note For testing purposes, the useRouteParams logic has been separated.
+ * The useRouteParam has its own coverage.
+ *
+ * @returns {React.FC} A React Component to wrap the ServiceInstanceDetails.
+ */
 export const Page: React.FC = () => {
   const { service, instance, instanceId } = useRouteParams<"InstanceDetails">();
 

@@ -17,8 +17,18 @@ export enum InstanceTabKey {
   Resources = "Resources",
 }
 
+/**
+ * The TabView Component
+ *
+ * Displays a sequence of tabs for the ServiceInstanceDetails
+ * The active tab is stored in the url.
+ *
+ * TODO: make the documentation tab optional and fallback to attributes tab if no documentation is available.
+ * https://github.com/inmanta/web-console/issues/5779
+ *
+ * @returns {React.FC} A React Component displaying the TabView
+ */
 export const TabView: React.FunctionComponent = () => {
-  // const { instance } = useContext(InstanceContext);
   const [activeTab, setActiveTab] = useUrlStateWithString<string>({
     default: InstanceTabKey.Documentation,
     key: `tab`,
@@ -34,8 +44,6 @@ export const TabView: React.FunctionComponent = () => {
   ) => {
     setActiveTab(String(tabIndex));
   };
-
-  const bool = true;
 
   return (
     <Panel variant="raised">
@@ -55,8 +63,7 @@ export const TabView: React.FunctionComponent = () => {
               aria-label="documentation-content"
             >
               <TabContent role="tabpanel">
-                Documentation Content
-                {bool && "hey"}
+                Temporary Documentation Content
               </TabContent>
             </Tab>
             <Tab
@@ -64,21 +71,25 @@ export const TabView: React.FunctionComponent = () => {
               title={<TabTitleText>{InstanceTabKey.Attributes}</TabTitleText>}
               aria-label="attributes-content"
             >
-              <TabContent role="tabpanel">Attributes Content</TabContent>
+              <TabContent role="tabpanel">
+                Temporary Attributes Content
+              </TabContent>
             </Tab>
             <Tab
               eventKey={InstanceTabKey.Events}
               title={<TabTitleText>{InstanceTabKey.Events}</TabTitleText>}
               aria-label="events-content"
             >
-              <TabContent role="tabpanel">Events Content</TabContent>
+              <TabContent role="tabpanel">Temporary Events Content</TabContent>
             </Tab>
             <Tab
               eventKey={InstanceTabKey.Resources}
               title={<TabTitleText>{InstanceTabKey.Resources}</TabTitleText>}
               aria-label="resources-content"
             >
-              <TabContent role="tabpanel">Resources Content</TabContent>
+              <TabContent role="tabpanel">
+                Temporary Resources Content
+              </TabContent>
             </Tab>
           </Tabs>
         </PanelMainBody>
@@ -87,6 +98,8 @@ export const TabView: React.FunctionComponent = () => {
   );
 };
 
+// The height is calculated to fit the tabs neatly into the page.
+// The 330px equals total height of the elements above the tabs with a short margin.
 const TabContent = styled.div`
   max-height: calc(100vh - 330px);
 `;

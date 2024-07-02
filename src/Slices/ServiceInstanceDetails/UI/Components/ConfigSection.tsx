@@ -4,7 +4,16 @@ import { Config, VersionedServiceInstanceIdentifier } from "@/Core";
 import { ConfigTab } from "@/Slices/ServiceInventory/UI/Tabs/ConfigTab";
 import { InstanceContext } from "../../Core/Context";
 
-export const ConfigSection: React.FunctionComponent = () => {
+/**
+ * The ConfigSection Component
+ *
+ * Displays a collapsible section containing the editable config if there's a config available.
+ *
+ * @note This component requires the ServiceInstanceDetails context to exist in one of its parents.
+ *
+ * @returns {React.FC | null} A React Component displaying the ConfigSection or null
+ */
+export const ConfigSection: React.FC = () => {
   const { instance } = useContext(InstanceContext);
 
   const isConfigEmpty = (config?: Config | null) => {

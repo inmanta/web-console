@@ -11,10 +11,20 @@ import {
   DescriptionListTerm,
   Panel,
 } from "@patternfly/react-core";
+import { words } from "@/UI";
 import { DateWithTooltip, TextWithCopy } from "@/UI/Components";
 import { InstanceContext } from "../../Core/Context";
 
-export const DetailsSection: React.FunctionComponent = () => {
+/**
+ * The DetailsSection Component
+ *
+ * Displays a collapsible section containing the details of the instance.
+ *
+ * @note This component requires the ServiceInstanceDetails context to exist in one of its parents.
+ *
+ * @returns {React.FC} A React Component displaying the DetailsSection
+ */
+export const DetailsSection: React.FC = () => {
   const { instance } = useContext(InstanceContext);
 
   const [isExpanded, setIsExpanded] = useState(true);
@@ -36,7 +46,9 @@ export const DetailsSection: React.FunctionComponent = () => {
             "aria-expanded": isExpanded,
           }}
         >
-          <Title headingLevel="h2">Details</Title>
+          <Title headingLevel="h2">
+            {words("instanceDetails.details.title")}
+          </Title>
         </CardHeader>
         <CardExpandableContent>
           <CardBody>
@@ -44,17 +56,24 @@ export const DetailsSection: React.FunctionComponent = () => {
               <DescriptionListGroup>
                 <DescriptionListTerm>Id: </DescriptionListTerm>
                 <DescriptionListDescription>
-                  <TextWithCopy value={instance.id} tooltipContent="Copy ID" />
+                  <TextWithCopy
+                    value={instance.id}
+                    tooltipContent={words("id.copy")}
+                  />
                 </DescriptionListDescription>
               </DescriptionListGroup>
               <DescriptionListGroup>
-                <DescriptionListTerm>Created: </DescriptionListTerm>
+                <DescriptionListTerm>
+                  {words("instanceDetails.details.created")}
+                </DescriptionListTerm>
                 <DescriptionListDescription>
                   <DateWithTooltip timestamp={instance.created_at} />
                 </DescriptionListDescription>
               </DescriptionListGroup>
               <DescriptionListGroup>
-                <DescriptionListTerm>Updated: </DescriptionListTerm>
+                <DescriptionListTerm>
+                  {words("instanceDetails.details.updated")}
+                </DescriptionListTerm>
                 <DescriptionListDescription>
                   <DateWithTooltip timestamp={instance.last_updated} />
                 </DescriptionListDescription>

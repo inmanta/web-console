@@ -11,6 +11,7 @@ import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
 import { ServiceModel } from "@/Core";
 import { useUrlStateWithString } from "@/Data";
 import { InstanceLog } from "@/Slices/ServiceInstanceHistory/Core/Domain";
+import { words } from "@/UI";
 import {
   DateWithTooltip,
   ErrorView,
@@ -19,7 +20,19 @@ import {
 } from "@/UI/Components";
 import { InstanceContext } from "../../Core/Context";
 
-export const HistorySection: React.FunctionComponent = () => {
+/**
+ * The HistorySection Component
+ *
+ * Displays a table containing all the past, and current version of the instance.
+ * Clicking on a row will set the selected version in the url.
+ *
+ * To be added: A diagnose button that allows the user to perform a diagnose that goes back x-amount of versions.
+ *
+ * @note This component requires the ServiceInstanceDetails context to exist in one of its parents.
+ *
+ * @returns {React.FC} A React Component displaying the HistorySection
+ */
+export const HistorySection: React.FC = () => {
   const { instance, logsQuery } = useContext(InstanceContext);
 
   const [selectedVersion, setSelectedVersion] = useUrlStateWithString<string>({
@@ -31,7 +44,9 @@ export const HistorySection: React.FunctionComponent = () => {
   return (
     <Panel variant="raised" isScrollable>
       <PanelHeader>
-        <Title headingLevel="h2">Version History</Title>
+        <Title headingLevel="h2">
+          {words("instanceDetails.history.title")}
+        </Title>
       </PanelHeader>
       <Divider />
       <PanelMain>
@@ -39,17 +54,28 @@ export const HistorySection: React.FunctionComponent = () => {
           {logsQuery.isLoading && <LoadingView ariaLabel="History-Loading" />}
           {logsQuery.isError && (
             <ErrorView
-              message={"Error loading Version History"}
+              message={words("instanceDetails.history.error")}
               ariaLabel="History-Error"
             />
           )}
+          {/**Because of the caching of React queries,
+           * there's an additional check to make sure the table shows the data only
+           * when the section is not in error state or loading.
+           * Otherwise, it will still display the stale data under the error messages above.
+           */}
           {logsQuery.data && !logsQuery.isLoading && !logsQuery.isError && (
             <Table aria-label="VersionHistoryTable" isStickyHeader>
               <Thead>
                 <Tr>
-                  <Th width={25}>Version</Th>
-                  <Th width={35}>Date</Th>
-                  <Th width={40}>Status</Th>
+                  <Th width={25}>
+                    {words("instanceDetails.history.table.version")}
+                  </Th>
+                  <Th width={35}>
+                    {words("instanceDetails.history.table.date")}
+                  </Th>
+                  <Th width={40}>
+                    {words("instanceDetails.history.table.status")}
+                  </Th>
                 </Tr>
               </Thead>
               <Tbody>
@@ -77,9 +103,14 @@ interface HistoryRowProps {
   log: InstanceLog;
 }
 
-const HistoryRowContent: React.FunctionComponent<HistoryRowProps> = ({
-  log,
-}) => {
+/**
+ * The HistoryRowContent Component
+ *
+ * @Props {HistoryRowProps} - The props of the component
+ *  @prop {InstanceLog} log - The instance log containing the history details.
+ * @returns {React.FC<HistoryRowProps>} A React Component that displays the row content for each individual version.
+ */
+const HistoryRowContent: React.FC<HistoryRowProps> = ({ log }) => {
   const { serviceModelQuery } = useContext(InstanceContext);
 
   return (
@@ -89,16 +120,26 @@ const HistoryRowContent: React.FunctionComponent<HistoryRowProps> = ({
         <DateWithTooltip timestamp={log.created_at} />
       </Td>
       <Td dataLabel="state">
-        <State state={log.state} service={serviceModelQuery.data} />
+        <StateLabel state={log.state} service={serviceModelQuery.data} />
       </Td>
     </>
   );
 };
 
-const State: React.FC<{ service: ServiceModel | undefined; state: string }> = ({
-  service,
-  state,
-}) => {
+interface StateLabelProps {
+  service: ServiceModel | undefined;
+  state: string;
+}
+
+/**
+ * The StateLabel Component
+ *
+ * @Props {Props} - The props of the component.
+ *  @prop {ServiceModel | undefined} service - the service model containing the different available states
+ *  @prop {string} state - the state that needs to be be matched against the available states in the model
+ * @returns {React.FC<StateLabelProps>} A React Component displaying a label tag for the state with the right color
+ */
+const StateLabel: React.FC<StateLabelProps> = ({ service, state }) => {
   if (!service) {
     return state;
   }
