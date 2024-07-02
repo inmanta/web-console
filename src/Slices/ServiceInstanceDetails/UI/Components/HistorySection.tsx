@@ -86,6 +86,7 @@ export const HistorySection: React.FC = () => {
                     isClickable
                     onRowClick={() => setSelectedVersion(String(log.version))}
                     isRowSelected={String(log.version) === selectedVersion}
+                    aria-label="History-Row"
                   >
                     <HistoryRowContent log={log} />
                   </Tr>

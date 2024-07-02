@@ -5,6 +5,7 @@ import styled from "styled-components";
 import { useUrlStateWithString } from "@/Data";
 import { words } from "@/UI";
 import { InstanceContext } from "../../Core/Context";
+import { InstanceActions } from "./InstanceActions";
 
 interface Props {
   title: string;
@@ -15,6 +16,8 @@ interface Props {
  *
  * When the version is the latest active version,
  * an additional tag is displayed to inform the user they are visualizing the latest version.
+ *
+ * The title section also contains InstanceActions
  *
  * @note This component requires the ServiceInstanceDetails context to exist in one of its parents.
  *
@@ -47,6 +50,7 @@ export const PageTitleWithVersion: React.FC<Props> = ({ title }) => {
           </Label>
         )}
       </LabelContainer>
+      <InstanceActions />
     </>
   );
 };
