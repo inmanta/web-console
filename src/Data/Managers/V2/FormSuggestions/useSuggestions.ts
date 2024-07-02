@@ -4,7 +4,7 @@ import { PrimaryBaseUrlManager } from "@/UI";
 import { useFetchHelpers } from "../helpers";
 
 /**
- * Custom hook to handle suggested values for a parameter.
+ * React Query hook to handle suggested values for a parameter.
  * If the suggestions are literal, it will return the values directly.
  * If the suggestions are parameters, it will fetch the parameter from the API.
  * if the suggestions are null or undefined, it will return null as data, and a success status.

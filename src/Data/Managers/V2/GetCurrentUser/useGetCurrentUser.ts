@@ -6,7 +6,7 @@ interface LoggedUser {
   username: string;
 }
 /**
- * Custom hook for getting the current logged in user from the server.
+ * React Query hook for getting the current logged in user from the server.
  *
  * @returns {Query} - An object containing a custom hook to fetch user information.
  */
