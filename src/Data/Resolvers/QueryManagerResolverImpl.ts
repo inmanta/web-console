@@ -34,8 +34,6 @@ import {
   GetServiceInstancesOneTimeQueryManager,
   GetServiceOneTimeQueryManager,
   GetServiceInstanceOneTimeQueryManager,
-  GetInstanceWithRelationsQueryManager,
-  GetInstanceWithRelationsStateHelper,
 } from "@/Data/Managers";
 import { Store } from "@/Data/Store";
 import { GetOrdersQueryManager } from "@/Slices/Orders/Data/QueryManager";
@@ -190,10 +188,6 @@ export class QueryManagerResolverImpl implements QueryManagerResolver {
       GetServiceInstanceOneTimeQueryManager(
         this.apiHelper,
         serviceInstanceStateHelper,
-      ),
-      GetInstanceWithRelationsQueryManager(
-        this.apiHelper,
-        GetInstanceWithRelationsStateHelper(this.store),
       ),
       GetServiceOneTimeQueryManager(this.apiHelper, serviceStateHelper),
       ServiceConfigQueryManager(

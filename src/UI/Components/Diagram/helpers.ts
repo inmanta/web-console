@@ -1,4 +1,5 @@
 import { dia, g, highlighters } from "@inmanta/rappid";
+import { isEqual } from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import {
   EmbeddedEntity,
@@ -13,6 +14,7 @@ import {
   InterServiceRule,
   TypeEnum,
   LabelLinkView,
+  SavedCoordinates,
 } from "./interfaces";
 import { ServiceEntityBlock } from "./shapes";
 
@@ -528,4 +530,72 @@ export const toggleLooseElement = (
       }),
     }),
   );
+};
+
+/**
+ * Gets the coordinates of all cells in the graph.
+ *
+ * @param {dia.Graph} graph - The graph from which to get the cells.
+ * @returns {SavedCoordinates[]} An array of objects, each containing the id, name, attributes, and coordinates of a cell.
+ */
+export const getCellsCoordinates = (graph: dia.Graph): SavedCoordinates[] => {
+  const cells = graph.getCells();
+  return cells
+    .filter((cell) => cell.attributes.type === "app.ServiceEntityBlock")
+    .map((cell) => ({
+      id: cell.id,
+      name: cell.attributes.entityName,
+      attributes: cell.attributes.instanceAttributes,
+      coordinates: cell.attributes.position,
+    }));
+};
+
+/**
+ * Applies coordinates to cells in the graph.
+ *
+ * @param {dia.Graph} graph - The graph to which to apply the coordinates.
+ * @param {SavedCoordinates[]} coordinates - The coordinates to apply to the cells.
+ */
+export const applyCoordinatesToCells = (
+  graph: dia.Graph,
+  coordinates: SavedCoordinates[],
+) => {
+  const cells = graph.getCells();
+  coordinates.forEach((element) => {
+    const correspondingCell = cells.find(
+      (cell) =>
+        element.id === cell.id ||
+        (element.name === cell.attributes.entityName &&
+          isEqual(element.attributes, cell.attributes.instanceAttributes)),
+    );
+    if (correspondingCell) {
+      correspondingCell.set("position", {
+        x: element.coordinates.x,
+        y: element.coordinates.y,
+      });
+    }
+  });
+};
+
+/**
+ * Moves a cell away from any cells it is colliding with.
+ *
+ * @param {dia.Graph} graph - The graph containing the cell.
+ * @param {dia.Cell} cell - The cell to move.
+ */
+export const moveCellFromColliding = (graph: dia.Graph, cell: dia.Cell) => {
+  let isColliding = false;
+  do {
+    const elementsUnder = graph
+      .findModelsInArea(cell.getBBox())
+      .filter((el) => el.id !== cell.id);
+    if (elementsUnder.length > 0) {
+      isColliding = true;
+      // an overlap found, revert the position
+      const coordinates = cell.position();
+      cell.set("position", { x: coordinates.x + 50, y: coordinates.y });
+    } else {
+      isColliding = false;
+    }
+  } while (isColliding);
 };

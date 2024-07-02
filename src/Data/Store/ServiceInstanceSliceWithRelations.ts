@@ -1,6 +1,6 @@
 import { Action, action } from "easy-peasy";
 import { RemoteData } from "@/Core";
-import { InstanceWithReferences } from "../Managers/GetInstanceWithRelations/interface";
+import { InstanceWithReferences } from "../Managers/V2/GetInstanceWithRelations";
 
 /**
  * The serviceInstanceSlice stores service instances by their id with their respective relation-tree.

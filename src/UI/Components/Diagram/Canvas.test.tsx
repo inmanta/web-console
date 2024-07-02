@@ -1,12 +1,15 @@
 /*eslint-disable testing-library/no-node-access*/
 import React, { act } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, queries, within as baseWithin } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
+import { HttpResponse, PathParams, http } from "msw";
+import { setupServer } from "msw/node";
 import { RemoteData, ServiceModel } from "@/Core";
 import { getStoreInstance } from "@/Data";
-import { InstanceWithReferences } from "@/Data/Managers/GetInstanceWithRelations/interface";
+import { InstanceWithReferences } from "@/Data/Managers/V2/GetInstanceWithRelations";
 import { dependencies } from "@/Test";
 import * as customQueries from "@/Test/Utils/custom-queries";
 import {
@@ -27,6 +30,7 @@ import {
 } from "./Mock";
 import services from "./Mocks/services.json";
 import "@testing-library/jest-dom";
+import { InstanceForApi } from "./interfaces";
 
 const allQueries = {
   ...queries,
@@ -40,6 +44,7 @@ const setup = (
   serviceModels: ServiceModel[] = services as unknown as ServiceModel[],
   editable: boolean = true,
 ) => {
+  const queryClient = new QueryClient();
   const store = getStoreInstance();
   const environmentHandler = EnvironmentHandlerImpl(
     useLocation,
@@ -68,31 +73,33 @@ const setup = (
   );
   history.push("/?env=aaa");
   return (
-    <CustomRouter history={history}>
-      <StoreProvider store={store}>
-        <DependencyProvider
-          dependencies={{ ...dependencies, environmentHandler }}
-        >
-          <Routes>
-            <Route
-              path="/"
-              element={
-                <Canvas
-                  services={serviceModels}
-                  mainServiceName={"parent-service"}
-                  instance={instance}
-                  editable={editable}
-                />
-              }
-            />
-            <Route
-              path="/lsm/catalog/parent-service/inventory"
-              element={<></>}
-            />
-          </Routes>
-        </DependencyProvider>
-      </StoreProvider>
-    </CustomRouter>
+    <QueryClientProvider client={queryClient}>
+      <CustomRouter history={history}>
+        <StoreProvider store={store}>
+          <DependencyProvider
+            dependencies={{ ...dependencies, environmentHandler }}
+          >
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <Canvas
+                    services={serviceModels}
+                    mainServiceName={"parent-service"}
+                    instance={instance}
+                    editable={editable}
+                  />
+                }
+              />
+              <Route
+                path="/lsm/catalog/parent-service/inventory"
+                element={<></>}
+              />
+            </Routes>
+          </DependencyProvider>
+        </StoreProvider>
+      </CustomRouter>
+    </QueryClientProvider>
   );
 };
 
@@ -621,6 +628,70 @@ describe("Canvas.tsx", () => {
     await deleteAndAssert("parent-service", 3, 1);
     await deleteAndAssert("child-service", 2, 1);
     await deleteAndAssert("child_container", 1, 0);
+  });
+
+  it("sends request with correct data to the backend when instance is being deployed", async () => {
+    const server = setupServer(
+      http.post<PathParams, { service_order_items: InstanceForApi[] }>(
+        "/lsm/v2/order",
+        async ({ request }) => {
+          const reqBody = await request.json();
+          expect(reqBody.service_order_items[0]).toStrictEqual({
+            instance_id: expect.any(String),
+            service_entity: "parent-service",
+            config: {},
+            action: "create",
+            attributes: {
+              name: "name-001",
+              should_deploy_fail: false,
+              service_id: "id-001",
+            },
+            edits: null,
+            metadata: {
+              coordinates: expect.any(String),
+            },
+          });
+
+          expect(
+            JSON.parse(
+              reqBody.service_order_items[0].metadata?.coordinates as string,
+            ),
+          ).toEqual([
+            {
+              id: expect.any(String),
+              name: "parent-service",
+              attributes: {
+                name: "name-001",
+                should_deploy_fail: false,
+                service_id: "id-001",
+              },
+              coordinates: {
+                x: 0,
+                y: 0,
+              },
+            },
+          ]);
+          return HttpResponse.json();
+        },
+      ),
+    );
+    const component = setup();
+    server.listen();
+    render(component);
+    const shapeName = "parent-service";
+    const name = "name-001";
+    const id = "id-001";
+
+    await createShapeWithNameAndId(shapeName, name, id);
+
+    await act(async () => {
+      await user.click(screen.getByRole("button", { name: "Deploy" }));
+    });
+
+    expect(
+      await screen.findByText("Instance Composed successfully"),
+    ).toBeVisible();
+    server.close();
   });
 
   it("when editable prop is set to false, disable interactions", async () => {
