@@ -12,16 +12,20 @@ export interface InstanceWithReferences {
   coordinates?: string;
 }
 
+interface InstanceWithRelationsHook {
+  useOneTime: () => UseQueryResult<InstanceWithReferences, Error>;
+}
+
 /**
- * Custom hook to fetch an instance with its related instances from the API.
- * @param id - The ID of the instance to fetch.
- * @param environment - The environment in which we are looking for instances.
- * @returns An object containing a custom hook to fetch the instance with its related instances.
+ * React Query hook to fetch an instance with its related instances from the API.
+ * @param {string} id - The ID of the instance to fetch.
+ * @param {string} environment - The environment in which we are looking for instances.
+ * @returns  {InstanceWithRelationsHook} An object containing a custom hook to fetch the instance with its related instances.
  */
 export const useGetInstanceWithRelations = (
   id: string,
   environment: string,
-) => {
+): InstanceWithRelationsHook => {
   //extracted headers to avoid breaking rules of Hooks
   const { createHeaders, handleErrors } = useFetchHelpers();
   const headers = createHeaders(environment);
@@ -33,8 +37,8 @@ export const useGetInstanceWithRelations = (
 
   /**
    * Fetches a service instance with its related instances recursively.
-   * @param instanceId - The ID of the instance to fetch.
-   * @returns An object containing the fetched instance and its related instances.
+   * @param {string} instanceId - The ID of the instance to fetch.
+   * @returns {Promise<InstanceWithReferences>} An object containing the fetched instance and its related instances.
    * @throws Error if the instance fails to fetch.
    */
   const fetchService = async (
@@ -72,10 +76,6 @@ export const useGetInstanceWithRelations = (
     };
   };
 
-  const fetchServiceWithRelations = async () => {
-    return await fetchService(id);
-  };
-
   return {
     /**
      * Custom hook to fetch the parameter from the API once.
@@ -84,7 +84,7 @@ export const useGetInstanceWithRelations = (
     useOneTime: (): UseQueryResult<InstanceWithReferences, Error> =>
       useQuery({
         queryKey: ["get_instance_with_relations-one_time", id, environment],
-        queryFn: fetchServiceWithRelations,
+        queryFn: () => fetchService(id),
         retry: false,
       }),
   };

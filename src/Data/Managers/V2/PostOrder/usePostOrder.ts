@@ -4,7 +4,7 @@ import { InstanceForApi } from "@/UI/Components/Diagram/interfaces";
 import { useFetchHelpers } from "../helpers";
 
 /**
- * Custom hook for sending an order batch from Instance COmposer.
+ * React Query hook for sending an order batch from Instance Composer.
  * @returns {Mutation} The mutation object for sending an order.
  */
 export const usePostOrder = (

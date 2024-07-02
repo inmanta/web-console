@@ -8,7 +8,7 @@ import Canvas from "@/UI/Components/Diagram/Canvas";
 
 /**
  * Renders the InstanceProvider component.
- * It serves purpose to not provide all the neccesary data for the Canvas at the same time to avoid unnecessary rerenders,
+ * It serves purpose to provide all the necessary data for the Canvas at the same time to avoid unnecessary rerenders,
  *  and extract the data fetching logic, out of the already busy component
  *
  * @param {ServiceModel[]} services - The list of service models.
@@ -26,35 +26,33 @@ export const InstanceProvider: React.FC<{
   const { environmentHandler } = useContext(DependencyContext);
   const environment = environmentHandler.useId();
 
-  const { data, isError, isLoading, error, refetch } =
-    useGetInstanceWithRelations(instanceId, environment).useOneTime();
-  const instanceVersion = data?.instance.version;
-  const {
-    data: metadata,
-    isError: isMetadataError,
-    isLoading: isMetadataLoading,
-    error: metadataError,
-    refetch: refetchMetadata,
-  } = useGetMetadata(
+  const instanceWithRelations = useGetInstanceWithRelations(
+    instanceId,
+    environment,
+  ).useOneTime();
+  const instanceVersion = instanceWithRelations.data?.instance.version;
+  const metadata = useGetMetadata(
     environment,
     mainServiceName,
     instanceId,
-    instanceVersion,
     "coordinates",
+    instanceVersion,
   ).useOneTime();
 
-  if (isLoading || isMetadataLoading) {
+  if (instanceWithRelations.isLoading || metadata.isLoading) {
     return <LoadingView aria-label="instance_composer_editor-loading" />;
   }
 
-  if (isError || isMetadataError) {
-    const errorMessage = error
-      ? error.message
-      : metadataError
-        ? metadataError.message
-        : "";
-    const retryFn = isError ? refetch : refetchMetadata;
+  if (instanceWithRelations.isError || metadata.isError) {
+    const retryFn = instanceWithRelations.isError
+      ? instanceWithRelations.refetch
+      : metadata.refetch;
 
+    const error = instanceWithRelations.isError
+      ? instanceWithRelations.error
+      : metadata.error;
+
+    const errorMessage = error ? error.message : "";
     return (
       <ErrorView
         data-testid="ErrorView"
@@ -65,6 +63,7 @@ export const InstanceProvider: React.FC<{
       />
     );
   }
+  const { data } = instanceWithRelations;
 
   return (
     <Canvas

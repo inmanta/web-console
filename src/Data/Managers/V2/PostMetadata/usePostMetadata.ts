@@ -1,10 +1,5 @@
-/**
- * Custom hook for posting metadata.
- *
- * @param environment - The environment to use for creating headers.
- * @returns - The mutation object from `useMutation` hook.
- */
-import { useMutation } from "@tanstack/react-query";
+import { UseMutationResult, useMutation } from "@tanstack/react-query";
+import { ParsedNumber } from "@/Core";
 import { PrimaryBaseUrlManager } from "@/UI";
 import { useFetchHelpers } from "../helpers";
 
@@ -13,12 +8,19 @@ interface PostMetadataInfo {
   service_id: string;
   key: string;
   body: {
-    current_version: number;
+    current_version: ParsedNumber;
     value: string;
   };
 }
-
-export const usePostMetadata = (environment: string) => {
+/**
+ * React Query hook for posting metadata.
+ *
+ * @param {string} environment  - The environment to use for creating headers.
+ * @returns {UseMutationResult<void, Error, PostMetadataInfo, unknown>}- The mutation object from `useMutation` hook.
+ */
+export const usePostMetadata = (
+  environment: string,
+): UseMutationResult<void, Error, PostMetadataInfo, unknown> => {
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
     globalThis.location.pathname,
@@ -30,7 +32,7 @@ export const usePostMetadata = (environment: string) => {
   /**
    * Posts metadata.
    *
-   * @param info - The metadata information to post.
+   * @param info {PostMetadataInfo} - The metadata information to post.
    */
   const postMetadata = async (info: PostMetadataInfo): Promise<void> => {
     const { service_entity, service_id, key, body } = info;

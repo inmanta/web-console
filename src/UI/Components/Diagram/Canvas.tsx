@@ -7,7 +7,7 @@ import styled from "styled-components";
 import { ServiceModel } from "@/Core";
 import { sanitizeAttributes } from "@/Data";
 import { InstanceWithReferences } from "@/Data/Managers/V2/GetInstanceWithRelations";
-import { usePostOrder } from "@/Data/Managers/V2/usePostOrder";
+import { usePostOrder } from "@/Data/Managers/V2/PostOrder";
 import diagramInit, { DiagramHandlers } from "@/UI/Components/Diagram/init";
 import { CanvasWrapper } from "@/UI/Components/Diagram/styles";
 import { DependencyContext } from "@/UI/Dependency";
