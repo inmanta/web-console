@@ -1,8 +1,7 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { ServiceModel } from "@/Core";
 import { PrimaryBaseUrlManager } from "@/UI";
-import { useCreateHeaders } from "../helpers/useCreateHeaders";
-import { useHandleErrors } from "../helpers/useHandleErrors";
+import { useFetchHelpers } from "../helpers";
 
 /**
  * React Query hook to fetch the service model
@@ -16,8 +15,8 @@ import { useHandleErrors } from "../helpers/useHandleErrors";
  * @returns {UseQueryResult<ServiceInstanceModel, Error>} returns.useContinuous - Fetch the service model with a recursive query with an interval of 5s.
  */
 export const useGetServiceModel = (service: string, environment: string) => {
-  const headers = useCreateHeaders(environment);
-  const { handleAuthorization } = useHandleErrors();
+  const { createHeaders, handleErrors } = useFetchHelpers();
+  const headers = createHeaders(environment);
 
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
@@ -34,11 +33,10 @@ export const useGetServiceModel = (service: string, environment: string) => {
       },
     );
 
-    handleAuthorization(response);
-
-    if (!response.ok) {
-      throw new Error(`"Failed to fetch Service Model for: ${service}`);
-    }
+    await handleErrors(
+      response,
+      `Failed to fetch Service Model for: ${service}`,
+    );
 
     return response.json();
   };

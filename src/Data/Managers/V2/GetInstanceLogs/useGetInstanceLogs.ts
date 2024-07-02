@@ -1,8 +1,7 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { InstanceLog } from "@/Slices/ServiceInstanceHistory/Core/Domain";
 import { PrimaryBaseUrlManager } from "@/UI";
-import { useCreateHeaders } from "../helpers/useCreateHeaders";
-import { useHandleErrors } from "../helpers/useHandleErrors";
+import { useFetchHelpers } from "../helpers";
 
 /**
  * React Query hook to fetch a the history logs for an instance
@@ -20,8 +19,8 @@ export const useGetInstanceLogs = (
   instance: string,
   environment: string,
 ) => {
-  const headers = useCreateHeaders(environment);
-  const { handleAuthorization } = useHandleErrors();
+  const { createHeaders, handleErrors } = useFetchHelpers();
+  const headers = createHeaders(environment);
 
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
@@ -38,11 +37,7 @@ export const useGetInstanceLogs = (
       },
     );
 
-    handleAuthorization(response);
-
-    if (!response.ok) {
-      throw new Error("Failed to fetch instance logs");
-    }
+    await handleErrors(response, `Failed to fetch logs for: ${instance}`);
 
     return response.json();
   };

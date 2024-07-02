@@ -1,8 +1,7 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { ServiceInstanceModel } from "@/Core";
 import { PrimaryBaseUrlManager } from "@/UI";
-import { useCreateHeaders } from "../helpers/useCreateHeaders";
-import { useHandleErrors } from "../helpers/useHandleErrors";
+import { useFetchHelpers } from "../helpers";
 
 /**
  * React Query hook to fetch a single instance
@@ -20,8 +19,8 @@ export const useGetInstance = (
   instanceId: string,
   environment: string,
 ) => {
-  const headers = useCreateHeaders(environment);
-  const { handleAuthorization } = useHandleErrors();
+  const { createHeaders, handleErrors } = useFetchHelpers();
+  const headers = createHeaders(environment);
 
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
@@ -38,11 +37,10 @@ export const useGetInstance = (
       },
     );
 
-    handleAuthorization(response);
-
-    if (!response.ok) {
-      throw new Error("Failed to fetch instance");
-    }
+    await handleErrors(
+      response,
+      `Failed to fetch instance for id: ${instanceId}`,
+    );
 
     return response.json();
   };

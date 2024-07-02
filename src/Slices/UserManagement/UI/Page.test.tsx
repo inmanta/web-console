@@ -28,6 +28,7 @@ const setup = () => {
       </QueryClientProvider>
     </MemoryRouter>
   );
+
   return component;
 };
 
