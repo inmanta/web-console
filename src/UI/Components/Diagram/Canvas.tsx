@@ -2,18 +2,18 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import "@inmanta/rappid/joint-plus.css";
 import { useNavigate } from "react-router-dom";
 import { dia } from "@inmanta/rappid";
-import { AlertVariant } from "@patternfly/react-core";
-import { isObject } from "lodash";
+import { AlertVariant, Banner, Flex, FlexItem } from "@patternfly/react-core";
+import { InfoCircleIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
-import { objectHasKey, ServiceModel } from "@/Core";
+import { ServiceModel } from "@/Core";
 import { sanitizeAttributes } from "@/Data";
-import { InstanceWithReferences } from "@/Data/Managers/GetInstanceWithRelations/interface";
+import { InstanceWithReferences } from "@/Data/Managers/V2/GetInstanceWithRelations";
+import { usePostOrder } from "@/Data/Managers/V2/usePostOrder";
 import diagramInit, { DiagramHandlers } from "@/UI/Components/Diagram/init";
 import { CanvasWrapper } from "@/UI/Components/Diagram/styles";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { ToastAlert } from "../ToastAlert";
-import { sendOrder } from "./api/orderRequest";
 import DictModal from "./components/DictModal";
 import FormModal from "./components/FormModal";
 import Toolbar from "./components/Toolbar";
@@ -21,21 +21,30 @@ import { bundleInstances, createConnectionRules } from "./helpers";
 import { ActionEnum, DictDialogData, InstanceForApi } from "./interfaces";
 import { ServiceEntityBlock } from "./shapes";
 
-const Canvas = ({
+/**
+ * Canvas component for creating, displaying and editing a Instances.
+ *
+ * @param {ServiceModel[]} services - The list of service models.
+ * @param {string} mainServiceName - The name of the main service.
+ * @param {InstanceWithReferences} instance - The instance with references.
+ * @returns {JSX.Element} The rendered Canvas component.
+ */
+export const Canvas = ({
   services,
   mainServiceName,
   instance,
   editable = true,
+  blockingInstances = undefined,
 }: {
   services: ServiceModel[];
   mainServiceName: string;
   instance?: InstanceWithReferences;
   editable: boolean;
+  blockingInstances: string[] | undefined;
 }) => {
-  const { environmentHandler, urlManager, routeManager } =
-    useContext(DependencyContext);
+  const { environmentHandler, routeManager } = useContext(DependencyContext);
   const environment = environmentHandler.useId();
-  const baseUrl = urlManager.getApiUrl();
+  const { mutate, isError, isSuccess, error } = usePostOrder(environment);
   const canvas = useRef<HTMLDivElement>(null);
   const [looseEmbedded, setLooseEmbedded] = useState<Set<string>>(new Set());
   const [alertMessage, setAlertMessage] = useState("");
@@ -57,6 +66,11 @@ const Canvas = ({
     service: mainServiceName,
   });
 
+  /**
+   * Handles the event triggered when there is loose embedded entity on the canvas.
+   *
+   * @param {CustomEvent} event - The event object.
+   */
   const handleLooseEmbeddedEvent = (event) => {
     const customEvent = event as CustomEvent;
     const eventData: { kind: "remove" | "add"; id: string } = JSON.parse(
@@ -77,53 +91,54 @@ const Canvas = ({
     }
   };
 
+  /**
+   * Handles the event triggered when user want to see the dictionary properties of an entity.
+   *
+   * @param {CustomEvent} event - The event object.
+   */
   const handleDictEvent = (event) => {
     const customEvent = event as CustomEvent;
     setDictToDisplay(JSON.parse(customEvent.detail));
   };
+
+  /**
+   * Handles the event triggered when user want to edit an entity.
+   *
+   * @param {CustomEvent} event - The event object.
+   */
   const handleEditEvent = (event) => {
     const customEvent = event as CustomEvent;
     setCellToEdit(customEvent.detail);
     setIsFormModalOpen(true);
   };
 
+  /**
+   * Handles the filtering of the unchanged entities and sending bundled instances to the backend.
+   *
+   */
   const handleDeploy = async () => {
-    try {
-      const response = await sendOrder(
-        baseUrl,
-        environment,
-        bundleInstances(instancesToSend, services).filter(
-          (item) => item.action !== null,
-        ),
-      );
+    const coordinates = diagramHandlers?.getCoordinates();
 
-      if (response.ok) {
-        setAlertType(AlertVariant.success);
-        setAlertMessage(words("inventory.instanceComposer.success"));
-        //If response is successful then show feedback notification and redirect user to the service inventory view
-        setTimeout(() => {
-          navigate(url);
-        }, 1000);
-      } else {
-        setAlertType(AlertVariant.danger);
-        setAlertMessage(JSON.parse(await response.text()).message);
-      }
-    } catch (error) {
-      setAlertType(AlertVariant.danger);
-      if (
-        isObject(error) &&
-        objectHasKey(error as Record<string, unknown>, "message")
-      ) {
-        setAlertMessage((error as { message: string }).message);
-      } else {
-        setAlertMessage(`Error: ${error}`);
-      }
-    }
+    const bundledInstances = bundleInstances(instancesToSend, services)
+      .filter((item) => item.action !== null)
+      .map((instance) => ({
+        ...instance,
+        metadata: {
+          coordinates: JSON.stringify(coordinates),
+        },
+      }));
+    await mutate(bundledInstances);
   };
 
+  /**
+   * Handles the update of a service entity block.
+   *
+   * @param {ServiceEntityBlock} cell - The service entity block to be updated.
+   * @param {ActionEnum} action - The action to be performed on the service entity block.
+   */
   const handleUpdate = (cell: ServiceEntityBlock, action: ActionEnum) => {
     const newInstance: InstanceForApi = {
-      instance_id: cell.id as string,
+      instance_id: cell.id,
       service_entity: cell.getName(),
       config: {},
       action: null,
@@ -151,7 +166,7 @@ const Canvas = ({
           ) {
             return new Map(
               prevInstances.set(cell.id as string, {
-                instance_id: cell.id as string,
+                instance_id: cell.id,
                 service_entity: cell.getName(),
                 config: {},
                 action: "delete",
@@ -184,6 +199,7 @@ const Canvas = ({
       try {
         const cells = actions.addInstance(instance, services, isMainInstance);
         const newInstances = new Map();
+
         cells.forEach((cell) => {
           if (cell.type === "app.ServiceEntityBlock") {
             newInstances.set(cell.id, {
@@ -218,6 +234,22 @@ const Canvas = ({
       );
     }
   }, [instancesToSend, services, isDirty]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      //If response is successful then show feedback notification and redirect user to the service inventory view
+      setAlertType(AlertVariant.success);
+      setAlertMessage(words("inventory.instanceComposer.success"));
+
+      setTimeout(() => {
+        navigate(url);
+      }, 1000);
+    } else if (isError) {
+      setAlertType(AlertVariant.danger);
+      setAlertMessage(error.message);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuccess, isError]);
 
   useEffect(() => {
     document.addEventListener("openDictsModal", handleDictEvent);
@@ -298,6 +330,22 @@ const Canvas = ({
         editable={editable}
       />
       <CanvasWrapper id="canvas-wrapper">
+        {blockingInstances && blockingInstances.length > 0 && (
+          <StyledBanner screenReaderText="Info banner" variant="blue">
+            <Flex
+              spaceItems={{ default: "spaceItemsSm" }}
+              display={{ default: "inlineFlex" }}
+            >
+              <FlexItem>
+                <InfoCircleIcon />
+              </FlexItem>
+              <FlexItem>
+                {words("inventory.instanceComposer.blockingInstances")}
+              </FlexItem>
+              <FlexItem>{blockingInstances.join(", ")}</FlexItem>
+            </Flex>
+          </StyledBanner>
+        )}
         <div className="canvas" ref={canvas} />
         <ZoomWrapper>
           <button
@@ -328,7 +376,6 @@ const Canvas = ({
     </Container>
   );
 };
-export default Canvas;
 
 const Container = styled.div`
   height: 100%;
@@ -373,4 +420,9 @@ const ZoomWrapper = styled.div`
       background: var(--pf-v5-global--Color--light-300);
     }
   }
+`;
+const StyledBanner = styled(Banner)`
+  width: 100%;
+  position: absolute;
+  z-index: 9999;
 `;

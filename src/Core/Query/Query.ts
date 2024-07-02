@@ -32,10 +32,6 @@ import {
   GetInstanceResourcesManifest,
 } from "@/Data/Managers/GetInstanceResources/interface";
 import {
-  GetInstanceWithRelations,
-  GetInstanceWithRelationsManifest,
-} from "@/Data/Managers/GetInstanceWithRelations/interface";
-import {
   GetServerStatus,
   GetServerStatusManifest,
 } from "@/Data/Managers/GetServerStatus/interface";
@@ -96,7 +92,6 @@ export type Query =
   | GetServices
   | GetService
   | GetServiceInstance
-  | GetInstanceWithRelations
   | GetServiceInstances
   | GetServiceConfig
   | GetInstanceResources
@@ -150,7 +145,6 @@ interface Manifest {
   GetServiceInstance: GetServiceInstanceManifest;
   GetServiceInstances: GetServiceInstancesManifest;
   GetServiceConfig: GetServiceConfigManifest;
-  GetInstanceWithRelations: GetInstanceWithRelationsManifest;
   GetInstanceResources: GetInstanceResourcesManifest;
   GetInstanceEvents: GetInstanceEvents.Manifest;
   GetInstanceLogs: GetInstanceLogs.Manifest;

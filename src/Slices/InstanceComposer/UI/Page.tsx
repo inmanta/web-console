@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { DependencyContext, useRouteParams, words } from "@/UI";
 import { EmptyView, PageContainer, ServicesProvider } from "@/UI/Components";
-import Canvas from "@/UI/Components/Diagram/Canvas";
+import { Canvas } from "@/UI/Components/Diagram";
 
 /**
  * Renders the Page component for the Instance Composer Page.
@@ -22,6 +22,7 @@ export const Page = () => {
             services={services}
             mainServiceName={mainServiceName}
             editable
+            blockingInstances={undefined}
           />
         </PageWrapper>
       )}

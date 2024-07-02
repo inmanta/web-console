@@ -12,6 +12,9 @@ import {
 import {
   childModel,
   containerModel,
+  mockedInstanceTwo,
+  mockedInstanceTwoServiceModel,
+  mockedInstanceWithReferences,
   relatedServices,
   testApiInstance,
   testApiInstanceModel,
@@ -29,6 +32,7 @@ import {
   checkIfConnectionIsAllowed,
   updateLabelPosition,
   toggleLooseElement,
+  findServicesWithoutStrictModifier,
 } from "./helpers";
 import {
   ConnectionRules,
@@ -906,6 +910,51 @@ describe("checkWhetherConnectionRulesAreExhausted", () => {
   });
 });
 
+describe("findServicesWithoutStrictModifier", () => {
+  it("returns empty array if there are no services passed in", () => {
+    const result = findServicesWithoutStrictModifier([], undefined);
+    expect(result).toHaveLength(0);
+  });
+
+  it("returns empty array if there are no blocking services passed in", () => {
+    const result = findServicesWithoutStrictModifier(
+      [testApiInstanceModel],
+      undefined,
+    );
+    expect(result).toHaveLength(0);
+  });
+
+  it("returns empty array if there are blocking services passed in, but no corresponding instances", () => {
+    const result = findServicesWithoutStrictModifier(
+      [testApiInstanceModel, mockedInstanceTwoServiceModel],
+      undefined,
+    );
+    expect(result).toHaveLength(0);
+  });
+
+  it("returns populated array if there are blocking services passed in, with corresponding instances", () => {
+    const result = findServicesWithoutStrictModifier(
+      [testApiInstanceModel, mockedInstanceTwoServiceModel],
+      mockedInstanceTwo,
+    );
+    expect(result).toHaveLength(1);
+    expect(result[0]).toEqual("test-service");
+  });
+
+  it("returns populated array if there are blocking services passed in, with corresponding related instances", () => {
+    const result = findServicesWithoutStrictModifier(
+      [
+        testApiInstanceModel,
+        mockedInstanceTwoServiceModel,
+        { ...childModel, strict_modifier_enforcement: false },
+      ],
+      mockedInstanceWithReferences,
+    );
+    expect(result).toHaveLength(1);
+    expect(result[0]).toEqual("child-service");
+  });
+});
+
 //Mocks necessary to have jointJS library working for following tests
 Object.defineProperty(global.SVGElement.prototype, "getComputedTextLength", {
   writable: true,
@@ -1354,6 +1403,7 @@ describe("bundleInstances", () => {
     expect(bundledInstances).toEqual([coreCopy]);
   });
 });
+
 describe("updateLabelPosition", () => {
   Object.defineProperty(global.SVGElement.prototype, "getBBox", {
     writable: true,

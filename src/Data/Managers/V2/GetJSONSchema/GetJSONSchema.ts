@@ -30,7 +30,10 @@ export const useGetJSONSchema = (service_id: string, environment: string) => {
       },
     );
 
-    handleErrors(response, `Failed to fetch JSON Schema for: ${service_id}`);
+    await handleErrors(
+      response,
+      `Failed to fetch JSON Schema for: ${service_id}`,
+    );
 
     return response.json();
   };

@@ -1,6 +1,6 @@
 import { dia, shapes, ui } from "@inmanta/rappid";
 import { InstanceAttributeModel, ServiceModel } from "@/Core";
-import { InstanceWithReferences } from "@/Data/Managers/GetInstanceWithRelations/interface";
+import { InstanceWithReferences } from "@/Data/Managers/V2/GetInstanceWithRelations";
 import {
   appendColumns,
   appendEntity,
@@ -9,12 +9,18 @@ import {
 } from "./actions";
 import { anchorNamespace } from "./anchors";
 import createHalo from "./halo";
-import { checkIfConnectionIsAllowed, toggleLooseElement } from "./helpers";
+import {
+  applyCoordinatesToCells,
+  checkIfConnectionIsAllowed,
+  getCellsCoordinates,
+  toggleLooseElement,
+} from "./helpers";
 import collapseButton from "./icons/collapse-icon.svg";
 import expandButton from "./icons/expand-icon.svg";
 import {
   ActionEnum,
   ConnectionRules,
+  SavedCoordinates,
   TypeEnum,
   serializedCell,
 } from "./interfaces";
@@ -360,6 +366,10 @@ export default function diagramInit(
     ) => {
       appendInstance(paper, graph, instance, services, isMainInstance);
 
+      if (instance.coordinates) {
+        const parsedCoordinates = JSON.parse(instance.coordinates);
+        applyCoordinatesToCells(graph, parsedCoordinates);
+      }
       scroller.zoomToFit({
         useModelGeometry: true,
         padding: 20,
@@ -410,6 +420,7 @@ export default function diagramInit(
     zoom: (delta) => {
       scroller.zoom(0.05 * delta, { min: 0.4, max: 1.2, grid: 0.05 });
     },
+    getCoordinates: () => getCellsCoordinates(graph),
   };
 }
 
@@ -433,4 +444,5 @@ export interface DiagramHandlers {
     attributeValues: InstanceAttributeModel,
   ) => ServiceEntityBlock;
   zoom: (delta: 1 | -1) => void;
+  getCoordinates: () => SavedCoordinates[];
 }

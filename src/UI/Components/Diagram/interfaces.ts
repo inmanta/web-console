@@ -42,7 +42,7 @@ interface ConnectionRules {
 }
 
 interface InstanceForApi {
-  instance_id: string;
+  instance_id: string | dia.Cell.ID;
   service_entity: string;
   config: unknown;
   action: null | "update" | "create" | "delete";
@@ -50,6 +50,7 @@ interface InstanceForApi {
   edits?: InstanceAttributeModel[] | null;
   embeddedTo?: string | null;
   relatedTo?: Map<string, string> | null;
+  metadata?: Record<string, string> | null;
 }
 interface serializedCell {
   type: string;
@@ -126,6 +127,13 @@ interface LabelLinkView extends dia.LinkView {
   sourcePoint: g.Rect;
   targetPoint: g.Rect;
 }
+interface SavedCoordinates {
+  id: string | dia.Cell.ID;
+  name: string;
+  attributes: { [key: string]: unknown };
+  coordinates: { x: number; y: number };
+}
+
 export {
   ActionEnum,
   ColumnData,
@@ -138,4 +146,5 @@ export {
   InstanceForApi,
   relationId,
   LabelLinkView,
+  SavedCoordinates,
 };
