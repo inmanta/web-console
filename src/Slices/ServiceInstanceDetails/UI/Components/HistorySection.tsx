@@ -18,7 +18,7 @@ import {
   InstanceState,
   LoadingView,
 } from "@/UI/Components";
-import { InstanceContext } from "../../Core/Context";
+import { InstanceDetailsContext } from "../../Core/Context";
 
 /**
  * The HistorySection Component
@@ -33,7 +33,7 @@ import { InstanceContext } from "../../Core/Context";
  * @returns {React.FC} A React Component displaying the HistorySection
  */
 export const HistorySection: React.FC = () => {
-  const { instance, logsQuery } = useContext(InstanceContext);
+  const { instance, logsQuery } = useContext(InstanceDetailsContext);
 
   const [selectedVersion, setSelectedVersion] = useUrlStateWithString<string>({
     default: String(instance.version),
@@ -114,7 +114,7 @@ interface HistoryRowProps {
  * @returns {React.FC<HistoryRowProps>} A React Component that displays the row content for each individual version.
  */
 const HistoryRowContent: React.FC<HistoryRowProps> = ({ log }) => {
-  const { serviceModelQuery } = useContext(InstanceContext);
+  const { serviceModelQuery } = useContext(InstanceDetailsContext);
 
   return (
     <>

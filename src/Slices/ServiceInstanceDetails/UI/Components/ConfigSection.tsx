@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { Panel } from "@patternfly/react-core";
 import { Config, VersionedServiceInstanceIdentifier } from "@/Core";
 import { ConfigSectionContent } from "@/Slices/ServiceInventory/UI/Tabs/ConfigSectionContent";
-import { InstanceContext } from "../../Core/Context";
+import { InstanceDetailsContext } from "../../Core/Context";
 
 /**
  * The ConfigSection Component
@@ -14,7 +14,7 @@ import { InstanceContext } from "../../Core/Context";
  * @returns {React.FC | null} A React Component displaying the ConfigSection or null
  */
 export const ConfigSection: React.FC = () => {
-  const { instance } = useContext(InstanceContext);
+  const { instance } = useContext(InstanceDetailsContext);
 
   const isConfigEmpty = (config?: Config | null) => {
     return config && Object.keys(config).length === 0;

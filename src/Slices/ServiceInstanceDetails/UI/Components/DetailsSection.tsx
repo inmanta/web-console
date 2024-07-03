@@ -13,7 +13,7 @@ import {
 } from "@patternfly/react-core";
 import { words } from "@/UI";
 import { DateWithTooltip, TextWithCopy } from "@/UI/Components";
-import { InstanceContext } from "../../Core/Context";
+import { InstanceDetailsContext } from "../../Core/Context";
 
 /**
  * The DetailsSection Component
@@ -25,7 +25,7 @@ import { InstanceContext } from "../../Core/Context";
  * @returns {React.FC} A React Component displaying the DetailsSection
  */
 export const DetailsSection: React.FC = () => {
-  const { instance } = useContext(InstanceContext);
+  const { instance } = useContext(InstanceDetailsContext);
 
   const [isExpanded, setIsExpanded] = useState(true);
 

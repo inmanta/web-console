@@ -4,6 +4,14 @@ import { PrimaryBaseUrlManager } from "@/UI";
 import { useFetchHelpers } from "../helpers";
 
 /**
+ * Return Signature of the useGetInstance React Query
+ */
+interface GetInstance {
+  useOneTime: () => UseQueryResult<ServiceInstanceModel, Error>;
+  useContinuous: () => UseQueryResult<ServiceInstanceModel, Error>;
+}
+
+/**
  * React Query hook to fetch a single instance
  *
  * @param service {string} - the service entity
@@ -18,7 +26,7 @@ export const useGetInstance = (
   service: string,
   instanceId: string,
   environment: string,
-) => {
+): GetInstance => {
   const { createHeaders, handleErrors } = useFetchHelpers();
   const headers = createHeaders(environment);
 

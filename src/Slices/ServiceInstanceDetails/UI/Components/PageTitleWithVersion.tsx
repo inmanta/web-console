@@ -4,7 +4,7 @@ import { InfoAltIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { useUrlStateWithString } from "@/Data";
 import { words } from "@/UI";
-import { InstanceContext } from "../../Core/Context";
+import { InstanceDetailsContext } from "../../Core/Context";
 import { InstanceActions } from "./InstanceActions";
 
 interface Props {
@@ -27,7 +27,7 @@ interface Props {
  * @returns {React.FC<Props>} A React Component that displays the page title with the correct version tag
  */
 export const PageTitleWithVersion: React.FC<Props> = ({ title }) => {
-  const { instance } = useContext(InstanceContext);
+  const { instance } = useContext(InstanceDetailsContext);
 
   const [selectedVersion] = useUrlStateWithString<string>({
     default: String(instance.version),

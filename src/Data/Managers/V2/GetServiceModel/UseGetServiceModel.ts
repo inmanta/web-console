@@ -4,6 +4,14 @@ import { PrimaryBaseUrlManager } from "@/UI";
 import { useFetchHelpers } from "../helpers";
 
 /**
+ * Return Signature of the useServiceModel React Query
+ */
+interface GetServiceModel {
+  useOneTime: () => UseQueryResult<ServiceModel, Error>;
+  useContinuous: () => UseQueryResult<ServiceModel, Error>;
+}
+
+/**
  * React Query hook to fetch the service model
  *
  * @param service {string} - the service entity
@@ -11,10 +19,13 @@ import { useFetchHelpers } from "../helpers";
  * @param environment {string} - the environment in which the instance belongs
  *
  * @returns {object} An object containing the different available queries.
- * @returns {UseQueryResult<ServiceInstanceModel, Error>} returns.useOneTime - Fetch the service model with a single query.
- * @returns {UseQueryResult<ServiceInstanceModel, Error>} returns.useContinuous - Fetch the service model with a recursive query with an interval of 5s.
+ * @returns {UseQueryResult<ServiceModel, Error>} returns.useOneTime - Fetch the service model with a single query.
+ * @returns {UseQueryResult<ServiceModel, Error>} returns.useContinuous - Fetch the service model with a recursive query with an interval of 5s.
  */
-export const useGetServiceModel = (service: string, environment: string) => {
+export const useGetServiceModel = (
+  service: string,
+  environment: string,
+): GetServiceModel => {
   const { createHeaders, handleErrors } = useFetchHelpers();
   const headers = createHeaders(environment);
 

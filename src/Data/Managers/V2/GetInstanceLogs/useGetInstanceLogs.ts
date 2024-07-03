@@ -4,6 +4,14 @@ import { PrimaryBaseUrlManager } from "@/UI";
 import { useFetchHelpers } from "../helpers";
 
 /**
+ * Return Signature of the useGetInstanceLogs React Query
+ */
+interface GetInstanceLogs {
+  useOneTime: () => UseQueryResult<InstanceLog[], Error>;
+  useContinuous: () => UseQueryResult<InstanceLog[], Error>;
+}
+
+/**
  * React Query hook to fetch a the history logs for an instance
  *
  * @param service {string} - the service entity
@@ -11,14 +19,14 @@ import { useFetchHelpers } from "../helpers";
  * @param environment {string} - the environment in which the instance belongs
  *
  * @returns {object} An object containing the different available queries.
- * @returns {UseQueryResult<ServiceInstanceModel, Error>} returns.useOneTime - Fetch the logs with a single query.
- * @returns {UseQueryResult<ServiceInstanceModel, Error>} returns.useContinuous - Fetch the logs with a recursive query with an interval of 5s.
+ * @returns {UseQueryResult<InstanceLog[], Error>} returns.useOneTime - Fetch the logs with a single query.
+ * @returns {UseQueryResult<InstanceLog[], Error>} returns.useContinuous - Fetch the logs with a recursive query with an interval of 5s.
  */
 export const useGetInstanceLogs = (
   service: string,
   instance: string,
   environment: string,
-) => {
+): GetInstanceLogs => {
   const { createHeaders, handleErrors } = useFetchHelpers();
   const headers = createHeaders(environment);
 

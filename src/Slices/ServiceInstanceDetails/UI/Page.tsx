@@ -4,7 +4,7 @@ import { useGetInstanceLogs } from "@/Data/Managers/V2/GetInstanceLogs";
 import { useGetServiceModel } from "@/Data/Managers/V2/GetServiceModel";
 import { DependencyContext, useRouteParams, words } from "@/UI";
 import { ErrorView, LoadingView, PageContainer } from "@/UI/Components";
-import { InstanceContext } from "../Core/Context";
+import { InstanceDetailsContext } from "../Core/Context";
 import { PageTitleWithVersion } from "./Components";
 import { ServiceInstanceDetailsLayout } from "./ServiceInstanceDetailsLayout";
 
@@ -75,7 +75,7 @@ export const ServiceInstanceDetails: React.FC<Props> = ({
   }
 
   return instanceDetails.data ? (
-    <InstanceContext.Provider
+    <InstanceDetailsContext.Provider
       value={{
         instance: instanceDetails.data,
         logsQuery,
@@ -88,7 +88,7 @@ export const ServiceInstanceDetails: React.FC<Props> = ({
       >
         <ServiceInstanceDetailsLayout />
       </PageContainer>
-    </InstanceContext.Provider>
+    </InstanceDetailsContext.Provider>
   ) : (
     // fallback errorView in case we get an empty data set.
     <PageContainer pageTitle={pageTitle}>
