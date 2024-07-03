@@ -7,15 +7,14 @@ import {
   TabTitleText,
   Tabs,
 } from "@patternfly/react-core";
-import styled from "styled-components";
 import { useUrlStateWithString } from "@/Data";
-
-export enum InstanceTabKey {
-  Documentation = "0",
-  Attributes = "1",
-  Events = "2",
-  Resources = "3",
-}
+import { words } from "@/UI";
+import {
+  AttributesTabContent,
+  DocumentationTabContent,
+  EventsTabContent,
+  ResourcesTabContent,
+} from ".";
 
 /**
  * The TabView Component
@@ -56,40 +55,48 @@ export const TabView: React.FC = () => {
             role="region"
           >
             <Tab
-              eventKey={InstanceTabKey.Documentation}
+              eventKey={"0"}
               title={
-                <TabTitleText>{InstanceTabKey.Documentation}</TabTitleText>
+                <TabTitleText>
+                  {words("instanceDetails.tabs.documentation")}
+                </TabTitleText>
               }
               aria-label="documentation-content"
             >
-              <TabContent role="tabpanel">
-                Temporary Documentation Content
-              </TabContent>
+              <DocumentationTabContent />
             </Tab>
             <Tab
-              eventKey={InstanceTabKey.Attributes}
-              title={<TabTitleText>{InstanceTabKey.Attributes}</TabTitleText>}
+              eventKey={"1"}
+              title={
+                <TabTitleText>
+                  {words("instanceDetails.tabs.attributes")}
+                </TabTitleText>
+              }
               aria-label="attributes-content"
             >
-              <TabContent role="tabpanel">
-                Temporary Attributes Content
-              </TabContent>
+              <AttributesTabContent />
             </Tab>
             <Tab
-              eventKey={InstanceTabKey.Events}
-              title={<TabTitleText>{InstanceTabKey.Events}</TabTitleText>}
+              eventKey={"2"}
+              title={
+                <TabTitleText>
+                  {words("instanceDetails.tabs.events")}
+                </TabTitleText>
+              }
               aria-label="events-content"
             >
-              <TabContent role="tabpanel">Temporary Events Content</TabContent>
+              <EventsTabContent />
             </Tab>
             <Tab
-              eventKey={InstanceTabKey.Resources}
-              title={<TabTitleText>{InstanceTabKey.Resources}</TabTitleText>}
+              eventKey={"3"}
+              title={
+                <TabTitleText>
+                  {words("instanceDetails.tabs.resources")}
+                </TabTitleText>
+              }
               aria-label="resources-content"
             >
-              <TabContent role="tabpanel">
-                Temporary Resources Content
-              </TabContent>
+              <ResourcesTabContent />
             </Tab>
           </Tabs>
         </PanelMainBody>
@@ -97,9 +104,3 @@ export const TabView: React.FC = () => {
     </Panel>
   );
 };
-
-// The height is calculated to fit the tabs neatly into the page.
-// The 330px equals total height of the elements above the tabs with a short margin.
-const TabContent = styled.div`
-  max-height: calc(100vh - 330px);
-`;
