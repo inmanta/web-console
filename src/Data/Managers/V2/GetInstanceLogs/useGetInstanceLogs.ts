@@ -18,7 +18,7 @@ interface GetInstanceLogs {
  * @param instanceId {string} - the instance ID for which the data needs to be fetched.
  * @param environment {string} - the environment in which the instance belongs
  *
- * @returns {object} An object containing the different available queries.
+ * @returns {GetInstanceLogs} An object containing the different available queries.
  * @returns {UseQueryResult<InstanceLog[], Error>} returns.useOneTime - Fetch the logs with a single query.
  * @returns {UseQueryResult<InstanceLog[], Error>} returns.useContinuous - Fetch the logs with a recursive query with an interval of 5s.
  */

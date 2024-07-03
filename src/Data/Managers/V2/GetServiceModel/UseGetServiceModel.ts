@@ -18,7 +18,7 @@ interface GetServiceModel {
  * @param instanceId {string} - the instance ID for which the data needs to be fetched.
  * @param environment {string} - the environment in which the instance belongs
  *
- * @returns {object} An object containing the different available queries.
+ * @returns {GetServiceModel} An object containing the different available queries.
  * @returns {UseQueryResult<ServiceModel, Error>} returns.useOneTime - Fetch the service model with a single query.
  * @returns {UseQueryResult<ServiceModel, Error>} returns.useContinuous - Fetch the service model with a recursive query with an interval of 5s.
  */
