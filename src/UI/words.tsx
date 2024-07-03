@@ -234,6 +234,7 @@ const dict = {
   "instanceDetails.details.title": "Details",
   "instanceDetails.details.created": "Created:",
   "instanceDetails.details.updated": "Updated:",
+  "instanceDetails.tabs.documentation": "Documentation",
 
   /**
    * Config related text

@@ -11,10 +11,10 @@ import styled from "styled-components";
 import { useUrlStateWithString } from "@/Data";
 
 export enum InstanceTabKey {
-  Documentation = "Documentation",
-  Attributes = "Attributes",
-  Events = "Events",
-  Resources = "Resources",
+  Documentation = "0",
+  Attributes = "1",
+  Events = "2",
+  Resources = "3",
 }
 
 /**
@@ -28,9 +28,9 @@ export enum InstanceTabKey {
  *
  * @returns {React.FC} A React Component displaying the TabView
  */
-export const TabView: React.FunctionComponent = () => {
+export const TabView: React.FC = () => {
   const [activeTab, setActiveTab] = useUrlStateWithString<string>({
-    default: InstanceTabKey.Documentation,
+    default: "0",
     key: `tab`,
     route: "InstanceDetails",
   });
