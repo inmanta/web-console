@@ -83,13 +83,13 @@ test("GIVEN Discovered Resources page THEN shows table", async () => {
   );
 
   // uri is null
-  expect(within(rows[1]).getByTestId("managed resource")).toHaveTextContent("");
+  expect(within(rows[1]).getByTestId("Managed resource")).toHaveTextContent("");
 
   // uri doesn't have a rid
-  expect(within(rows[2]).getByTestId("managed resource")).toHaveTextContent("");
+  expect(within(rows[2]).getByTestId("Managed resource")).toHaveTextContent("");
 
   // uri is an empty string
-  expect(within(rows[3]).getByTestId("managed resource")).toHaveTextContent("");
+  expect(within(rows[3]).getByTestId("Managed resource")).toHaveTextContent("");
 
   await act(async () => {
     const results = await axe(document.body);

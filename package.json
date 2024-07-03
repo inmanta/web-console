@@ -166,7 +166,7 @@
     "moment-timezone": "^0.5.45",
     "msw": "^2.2.2",
     "process": "^0.11.10",
-    "qs": "^6.11.2",
+    "qs": "^6.12.2",
     "react": "^18.3.1",
     "react-diff-viewer-continued": "^3.4.0",
     "react-dom": "^18.3.1",
@@ -198,7 +198,8 @@
     "loader-utils": "2.0.4 || 1.4.2",
     "word-wrap": "^1.2.4",
     "follow-redirects": "^1.15.4",
-    "undici": "^5"
+    "undici": "^5",
+    "ws": "^8.17.1"
   },
   "madge": {
     "fileExtensions": [
