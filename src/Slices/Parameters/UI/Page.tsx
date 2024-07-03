@@ -44,7 +44,7 @@ export const Page: React.FC = () => {
   });
 
   return (
-    <PageContainer title={words("parameters.title")}>
+    <PageContainer pageTitle={words("parameters.title")}>
       <TableControls
         filter={filter}
         setFilter={setFilter}

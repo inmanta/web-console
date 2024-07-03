@@ -232,7 +232,7 @@ const Canvas = ({
   }, []);
 
   return (
-    <Container aria-label="Composer-Container">
+    <>
       {alertMessage && (
         <ToastAlert
           data-testid="ToastAlert"
@@ -325,15 +325,10 @@ const Canvas = ({
           </button>
         </ZoomWrapper>
       </CanvasWrapper>
-    </Container>
+    </>
   );
 };
 export default Canvas;
-
-const Container = styled.div`
-  height: 100%;
-  padding-top: 20px;
-`;
 
 const ZoomWrapper = styled.div`
   display: flex;
