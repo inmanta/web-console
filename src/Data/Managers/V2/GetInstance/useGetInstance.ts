@@ -36,7 +36,6 @@ export const useGetInstance = (
   );
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
 
-  // /lsm/v1/service_inventory/{service_entity}/{service_id}
   const fetchInstance = async (): Promise<{ data: ServiceInstanceModel }> => {
     const response = await fetch(
       `${baseUrl}/lsm/v1/service_inventory/${service}/${instanceId}`,

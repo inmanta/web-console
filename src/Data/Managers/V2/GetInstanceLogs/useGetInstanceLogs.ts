@@ -36,7 +36,6 @@ export const useGetInstanceLogs = (
   );
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
 
-  // /lsm/v1/service_inventory/{service_entity}/{service_id}/log
   const fetchInstance = async (): Promise<{ data: InstanceLog[] }> => {
     const response = await fetch(
       `${baseUrl}/lsm/v1/service_inventory/${service}/${instance}/log`,

@@ -35,7 +35,6 @@ export const useGetServiceModel = (
   );
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
 
-  // /lsm/v1/service_catalog/{service_entity}
   const fetchInstance = async (): Promise<{ data: ServiceModel }> => {
     const response = await fetch(
       `${baseUrl}/lsm/v1/service_catalog/${service}`,
