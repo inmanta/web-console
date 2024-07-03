@@ -2,6 +2,7 @@ import { createContext } from "react";
 import { UseQueryResult } from "@tanstack/react-query";
 import { ServiceInstanceModel, ServiceModel } from "@/Core";
 import { InstanceLog } from "@/Slices/ServiceInstanceHistory/Core/Domain";
+
 /**
  * The InstanceProviderInterface
  * Reflects the InstanceDetailsContext.
