@@ -196,7 +196,7 @@ if (Cypress.env("edition") === "iso") {
       // Expect edit button to be disabled after previous state change
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
 
-      // The third button in the dropdown should be the edit button.
+      // The fourth button in the dropdown should be the edit button.
       cy.get(".pf-v5-c-menu__item").eq(4).should("be.disabled");
 
       // Expect to land on Service Inventory page and to find attributes tab button
