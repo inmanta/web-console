@@ -3,7 +3,7 @@ import { PrimaryBaseUrlManager } from "@/UI";
 import { useFetchHelpers } from "../helpers";
 
 /**
- * Return Signature of the useGetInstance React Query
+ * Return Signature of the useGetJSONSchema React Query
  */
 interface GetJSONShema {
   useOneTime: () => UseQueryResult<unknown, Error>;
