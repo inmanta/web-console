@@ -500,10 +500,13 @@ describe("Scenario 4 Desired State", () => {
 
         if (isIso) {
           const $tdElements = $expandableRow.find("td");
-          expect($tdElements.eq(0)).to.have.text("-");
-          expect($tdElements.eq(1)).to.have.text("3");
+          expect($tdElements.eq(0)).to.have.text("");
           expect($tdElements.eq(2)).to.have.text("+");
           expect($tdElements.eq(3)).to.have.text("4");
+          expect($tdElements.eq(4)).to.have.text("-");
+          expect($tdElements.eq(5)).to.have.text("3");
+          expect($tdElements.eq(6)).to.have.text("+");
+          expect($tdElements.eq(7)).to.have.text("4");
         }
       },
     );
@@ -523,10 +526,13 @@ describe("Scenario 4 Desired State", () => {
 
           if (isIso) {
             const $tdElements = $expandableRow.find("td");
-            expect($tdElements.eq(0)).to.have.text("-");
-            expect($tdElements.eq(1)).to.have.text("3");
+            expect($tdElements.eq(0)).to.have.text("");
             expect($tdElements.eq(2)).to.have.text("+");
             expect($tdElements.eq(3)).to.have.text("4");
+            expect($tdElements.eq(4)).to.have.text("-");
+            expect($tdElements.eq(5)).to.have.text("3");
+            expect($tdElements.eq(6)).to.have.text("+");
+            expect($tdElements.eq(7)).to.have.text("4");
           }
         },
       );
@@ -567,10 +573,13 @@ describe("Scenario 4 Desired State", () => {
 
         if (isIso) {
           const $tdElements = $expandableRow.find("td");
-          expect($tdElements.eq(0)).to.have.text("-");
-          expect($tdElements.eq(1)).to.have.text("3");
+          expect($tdElements.eq(0)).to.have.text("");
           expect($tdElements.eq(2)).to.have.text("+");
           expect($tdElements.eq(3)).to.have.text("4");
+          expect($tdElements.eq(4)).to.have.text("-");
+          expect($tdElements.eq(5)).to.have.text("3");
+          expect($tdElements.eq(6)).to.have.text("+");
+          expect($tdElements.eq(7)).to.have.text("4");
         }
       },
     );
