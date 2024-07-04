@@ -7,8 +7,10 @@ import {
   TabTitleText,
   Tabs,
 } from "@patternfly/react-core";
+
 import { useUrlStateWithString } from "@/Data";
 import { words } from "@/UI";
+
 import {
   AttributesTabContent,
   DocumentationTabContent,
@@ -28,6 +30,7 @@ import {
  * @returns {React.FC} A React Component displaying the TabView
  */
 export const TabView: React.FC = () => {
+  // const { serviceModelQuery } = useContext(InstanceDetailsContext);
   const [activeTab, setActiveTab] = useUrlStateWithString<string>({
     default: "0",
     key: `tab`,
@@ -43,6 +46,8 @@ export const TabView: React.FC = () => {
   ) => {
     setActiveTab(String(tabIndex));
   };
+
+  // const documentationAttributeKeys = getDocumentationAttributeKeys(serviceModelQuery.data);
 
   return (
     <Panel variant="raised">
@@ -104,3 +109,23 @@ export const TabView: React.FC = () => {
     </Panel>
   );
 };
+
+// const getDocumentationAttributeKeys = (serviceModel?: ServiceModel) => {
+//   const documentationAttributeKeys: { title: string; iconName: string }[] = [];
+
+//   if (serviceModel && serviceModel.attributes) {
+//     for (const attribute of serviceModel.attributes) {
+//       if (
+//         attribute.attribute_annotations &&
+//         attribute.attribute_annotations.web_title &&
+//         attribute.attribute_annotations.web_presentation === "documentation"
+//       ) {
+//         documentationAttributeKeys.push({
+//           title: attribute.attribute_annotations.web_title,
+//           iconName: attribute.attribute_annotations.web_icon || "FaBook",
+//         });
+//       }
+//     }
+//   }
+//   return documentationAttributeKeys;
+// };
