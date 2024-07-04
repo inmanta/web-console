@@ -1,6 +1,6 @@
-import React from "react";
+import React, { act } from "react";
 import { MemoryRouter } from "react-router-dom";
-import { render, screen, act, within } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
@@ -8,8 +8,8 @@ import { Either } from "@/Core";
 import {
   CommandManagerResolverImpl,
   CommandResolverImpl,
+  defaultAuthContext,
   getStoreInstance,
-  KeycloakAuthHelper,
   QueryManagerResolverImpl,
   QueryResolverImpl,
 } from "@/Data";
@@ -37,13 +37,13 @@ function setup(service) {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
-  const authHelper = new KeycloakAuthHelper();
+
   const queryResolver = new QueryResolverImpl(
     new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler),
   );
 
   const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolverImpl(store, apiHelper, authHelper),
+    new CommandManagerResolverImpl(store, apiHelper, defaultAuthContext),
   );
 
   const component = (
@@ -223,7 +223,7 @@ test("Given the CreateInstance View When creating an instance with Inter-service
   });
   expect(apiHelper.pendingRequests[0]).toEqual({
     method: "GET",
-    url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=250&filter.order_id=a`,
+    url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=250&filter.id_or_service_identity=a`,
     environment: "env",
   });
 
@@ -235,7 +235,7 @@ test("Given the CreateInstance View When creating an instance with Inter-service
   });
   expect(apiHelper.pendingRequests[0]).toEqual({
     method: "GET",
-    url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=250&filter.order_id=ab`,
+    url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=250&filter.id_or_service_identity=ab`,
     environment: "env",
   });
   await act(async () => {
@@ -247,7 +247,7 @@ test("Given the CreateInstance View When creating an instance with Inter-service
   });
   expect(apiHelper.pendingRequests[0]).toEqual({
     method: "GET",
-    url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=250&filter.order_id=`,
+    url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=250&filter.id_or_service_identity=`,
     environment: "env",
   });
 });
@@ -279,7 +279,7 @@ test("Given the CreateInstance View When creating an instance with Inter-service
   });
   expect(apiHelper.pendingRequests[0]).toEqual({
     method: "GET",
-    url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=250&filter.order_id=a`,
+    url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=250&filter.id_or_service_identity=a`,
     environment: "env",
   });
 
@@ -291,7 +291,7 @@ test("Given the CreateInstance View When creating an instance with Inter-service
   });
   expect(apiHelper.pendingRequests[0]).toEqual({
     method: "GET",
-    url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=250&filter.order_id=ab`,
+    url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=250&filter.id_or_service_identity=ab`,
     environment: "env",
   });
   await act(async () => {
@@ -303,7 +303,7 @@ test("Given the CreateInstance View When creating an instance with Inter-service
   });
   expect(apiHelper.pendingRequests[0]).toEqual({
     method: "GET",
-    url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=250&filter.order_id=`,
+    url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=250&filter.id_or_service_identity=`,
     environment: "env",
   });
 });

@@ -1,6 +1,6 @@
-import React from "react";
+import React, { act } from "react";
 import { MemoryRouter } from "react-router-dom";
-import { act, fireEvent, render, screen, within } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
@@ -8,8 +8,8 @@ import { Either, Maybe } from "@/Core";
 import {
   CommandManagerResolverImpl,
   CommandResolverImpl,
+  defaultAuthContext,
   getStoreInstance,
-  KeycloakAuthHelper,
   QueryManagerResolverImpl,
   QueryResolverImpl,
 } from "@/Data";
@@ -34,14 +34,14 @@ const axe = configureAxe({
 
 function setup() {
   const apiHelper = new DeferredApiHelper();
-  const authHelper = new KeycloakAuthHelper();
+
   const scheduler = new StaticScheduler();
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
     new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler),
   );
   const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolverImpl(store, apiHelper, authHelper),
+    new CommandManagerResolverImpl(store, apiHelper, defaultAuthContext),
   );
 
   const component = (

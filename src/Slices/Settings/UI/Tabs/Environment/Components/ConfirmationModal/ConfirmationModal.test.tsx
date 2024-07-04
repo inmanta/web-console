@@ -1,6 +1,6 @@
-import React from "react";
+import React, { act } from "react";
 import { MemoryRouter } from "react-router-dom";
-import { act, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import {
   CommandResolverImpl,
@@ -8,7 +8,7 @@ import {
   QueryResolverImpl,
   CommandManagerResolverImpl,
   QueryManagerResolverImpl,
-  KeycloakAuthHelper,
+  defaultAuthContext,
 } from "@/Data";
 import { DeferredApiHelper, dependencies, StaticScheduler } from "@/Test";
 import { DependencyProvider } from "@/UI";
@@ -16,14 +16,14 @@ import { ConfirmationModal } from "./ConfirmationModal";
 
 function setup() {
   const apiHelper = new DeferredApiHelper();
-  const authHelper = new KeycloakAuthHelper();
+
   const scheduler = new StaticScheduler();
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
     new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler),
   );
   const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolverImpl(store, apiHelper, authHelper),
+    new CommandManagerResolverImpl(store, apiHelper, defaultAuthContext),
   );
 
   const onClose = jest.fn();

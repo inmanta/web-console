@@ -40,11 +40,6 @@ export const TableControls: React.FC<Props> = ({
   const composerEnabled =
     service.owner === null && featureManager.isComposerEnabled();
 
-  const { service_identity, service_identity_display_name } = service;
-  const identityAttribute =
-    service_identity && service_identity_display_name
-      ? { key: service_identity, pretty: service_identity_display_name }
-      : undefined;
   const states = service.lifecycle.states.map((state) => state.name).sort();
 
   const onToggleClick = () => {
@@ -84,12 +79,7 @@ export const TableControls: React.FC<Props> = ({
   return (
     <Toolbar clearAllFilters={() => setFilter({})}>
       <ToolbarContent>
-        <FilterWidget
-          filter={filter}
-          setFilter={setFilter}
-          states={states}
-          identityAttribute={identityAttribute}
-        />
+        <FilterWidget filter={filter} setFilter={setFilter} states={states} />
         <ToolbarGroup align={{ default: "alignRight" }}>
           {composerEnabled ? (
             <ToolbarItem>

@@ -1,6 +1,6 @@
-import React from "react";
+import React, { act } from "react";
 import { MemoryRouter } from "react-router";
-import { act, render, screen, within } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { ServiceModel } from "@/Core";
@@ -9,6 +9,7 @@ import {
   CommandResolverImpl,
   DeleteServiceCommandManager,
 } from "@/Data";
+import { defaultAuthContext } from "@/Data/Auth/AuthContext";
 import {
   dependencies,
   DynamicCommandManagerResolverImpl,
@@ -30,7 +31,7 @@ const axe = configureAxe({
 const Component = (services: ServiceModel[]) => {
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolverImpl([
-      DeleteServiceCommandManager(new BaseApiHelper()),
+      DeleteServiceCommandManager(BaseApiHelper(undefined, defaultAuthContext)),
     ]),
   );
   return (

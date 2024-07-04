@@ -161,6 +161,8 @@ const dict = {
   "inventory.form.placeholder.floatList": "1.1, 3.14, 4.3",
   "inventory.form.placeholder.stringList": "Add a list of values",
   "inventory.form.placeholder.dict": '{"key": "value"}',
+  "inventory.form.button": "Form",
+  "inventory.editor.button": "JSON-Editor",
   "inventory.instanceComposer.labelButtonTooltip": "Toggle connection labels",
   "inventory.instanceComposer.addInstanceButtonTooltip":
     "Add new instance to the canvas.",
@@ -466,9 +468,11 @@ const dict = {
     "Request the agents to check the current state of each resource and make the current state in-line with the desired state.",
 
   /** Discovered Resources related text */
-  "discovered.column.resource_id": "resource_id",
+  "discovered.column.resource_id": "Resource Id",
+  "discovered.column.managed_resource": "Managed resource",
   "discovered_resources.title": "Discovered Resources",
   "discovered_resources.values": "values",
+  "discovered_resources.show_resource": "Show managed resource",
 
   /** Compile report related text */
   "compileReports.title": "Compile Reports",

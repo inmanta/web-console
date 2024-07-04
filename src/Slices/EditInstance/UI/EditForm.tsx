@@ -80,6 +80,7 @@ export const EditForm: React.FC<Props> = ({ serviceEntity, instance }) => {
         />
       )}
       <ServiceInstanceForm
+        service_entity={serviceEntity.name}
         isEdit={true}
         fields={fields}
         onSubmit={onSubmit}

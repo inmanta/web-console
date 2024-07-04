@@ -100,7 +100,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
       //out-of-the-box headeredRecord doesn't truncate attribute name, only their values
       const truncatedName = util.breakText(
         item.name.toString(),
-        { width: 130, height: 22 },
+        { width: 90, height: 22 },
         {
           "font-size": this.attr("itemLabels_1/fontSize"),
           "font-family": this.attr("itemLabels_1/fontFamily"),
@@ -148,7 +148,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
           //reproduce internal formatting of the text base on actual dimensions, if text includes elipsis add Tooltip
           const reproducedDisplayText = util.breakText(
             item.value.toString().replace(/\s+/g, " "),
-            { width: 130, height: 22 },
+            { width: 90, height: 22 },
             {
               "font-size": this.attr("itemLabels_1/fontSize"),
               "font-family": this.attr("itemLabels_1/fontFamily"),
@@ -222,7 +222,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
   setName(name: string, options?: object) {
     const shortenName = util.breakText(
       name,
-      { width: 220, height: 30 },
+      { width: 140, height: 30 },
       {
         "font-size": this.attr("headerLabel/fontSize"),
         "font-family": this.attr("headerLabel/fontFamily"),
@@ -375,7 +375,7 @@ export const Link = shapes.standard.Link.define(
   {
     // static
     attributes: {
-      autoOrient: {
+      "auto-orient": {
         qualify: function () {
           return (this as any).model.isLink();
         },

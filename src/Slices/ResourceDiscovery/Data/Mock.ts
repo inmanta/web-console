@@ -2,6 +2,8 @@ export const response = {
   data: [
     {
       discovered_resource_id: "vcenter::VirtualMachine[lab,name=acisim]",
+      managed_resource_uri:
+        "/api/v2/resource/cloudflare::dns_record::CnameRecord[https://api.cloudflare.com/client/v4/,name=artifacts.ssh.inmanta.com]",
       values: {
         name: "acisim",
         path: "/bedc/vm/acisim",
@@ -34,6 +36,7 @@ export const response = {
     },
     {
       discovered_resource_id: "vcenter::VirtualMachine[lab,name=acisim-5.2-7f]",
+      managed_resource_uri: null,
       values: {
         name: "acisim-5.2-7f",
         path: "/bedc/vm/acisim-5.2-7f",
@@ -66,6 +69,7 @@ export const response = {
     },
     {
       discovered_resource_id: "vcenter::VirtualMachine[lab,name=acisim-5.7]",
+      managed_resource_uri: "invalid/uri1/",
       values: {
         name: "acisim-5.7",
         path: "/bedc/vm/acisim-5.7",
@@ -99,6 +103,7 @@ export const response = {
     {
       discovered_resource_id:
         "vcenter::VirtualMachine[lab,name=CentOS7Template]",
+      managed_resource_uri: "",
       values: {
         name: "CentOS7Template",
         path: "/bedc/vm/CentOS7Template",
@@ -126,6 +131,7 @@ export const response = {
     {
       discovered_resource_id:
         "vcenter::VirtualMachine[lab,name=CentOS7TestNfvApiTemplate]",
+      managed_resource_uri: null,
       values: {
         name: "CentOS7TestNfvApiTemplate",
         path: "/bedc/vm/CentOS7TestNfvApiTemplate",
@@ -153,6 +159,7 @@ export const response = {
     {
       discovered_resource_id:
         "vcenter::VirtualMachine[lab,name=ma-test-1705069110.4363039_1]",
+      managed_resource_uri: null,
       values: {
         name: "ma-test-1705069110.4363039_1",
         path: "/bedc/vm/test_lab_root_ma/ma-test-1705069110.4363039_1",
@@ -185,6 +192,7 @@ export const response = {
     },
     {
       discovered_resource_id: "vcenter::VirtualMachine[lab,name=rocky-8]",
+      managed_resource_uri: null,
       values: {
         name: "rocky-8",
         path: "/bedc/vm/rocky-8",
@@ -212,6 +220,7 @@ export const response = {
     {
       discovered_resource_id:
         "vcenter::VirtualMachine[lab,name=t160_srv_example]",
+      managed_resource_uri: null,
       values: {
         name: "t160_srv_example",
         path: "/bedc/vm/test_lab_root/t160_srv_example",
@@ -232,6 +241,7 @@ export const response = {
     {
       discovered_resource_id:
         "vcenter::VirtualMachine[lab,name=t160_srv_example_2]",
+      managed_resource_uri: null,
       values: {
         name: "t160_srv_example_2",
         path: "/bedc/vm/test_lab_root/t160_srv_example_2",
@@ -251,6 +261,7 @@ export const response = {
     },
     {
       discovered_resource_id: "vcenter::VirtualMachine[lab,name=test]",
+      managed_resource_uri: null,
       values: {
         name: "test",
         path: "/bedc/vm/test",
@@ -278,6 +289,7 @@ export const response = {
     {
       discovered_resource_id:
         "vcenter::VirtualMachine[lab,name=ubuntu-18.04.6]",
+      managed_resource_uri: null,
       values: {
         name: "ubuntu-18.04.6",
         path: "/bedc/vm/ubuntu-18.04.6",
@@ -310,6 +322,7 @@ export const response = {
     },
     {
       discovered_resource_id: "vcenter::VirtualMachine[lab,name=ubuntu-22.04]",
+      managed_resource_uri: null,
       values: {
         name: "ubuntu-22.04",
         path: "/bedc/vm/ubuntu-22.04",
@@ -337,6 +350,7 @@ export const response = {
     {
       discovered_resource_id:
         "vcenter::VirtualMachine[lab,name=vCLS-8d6212c5-a9be-40a9-a99e-f8b563a6f284]",
+      managed_resource_uri: null,
       values: {
         name: "vCLS-8d6212c5-a9be-40a9-a99e-f8b563a6f284",
         path: "/bedc/vm/vCLS/vCLS-8d6212c5-a9be-40a9-a99e-f8b563a6f284",
@@ -357,6 +371,7 @@ export const response = {
     {
       discovered_resource_id:
         "vcenter::VirtualMachine[lab,name=vCLS-a11c52cf-ce5c-438b-a4dc-40ef661f16c3]",
+      managed_resource_uri: null,
       values: {
         name: "vCLS-a11c52cf-ce5c-438b-a4dc-40ef661f16c3",
         path: "/bedc/vm/vCLS/vCLS-a11c52cf-ce5c-438b-a4dc-40ef661f16c3",
@@ -377,6 +392,7 @@ export const response = {
     {
       discovered_resource_id:
         "vcenter::VirtualMachine[lab,name=VMware_Cloud_Director-10.5.1.10593-22821417_OVF10]",
+      managed_resource_uri: null,
       values: {
         name: "VMware_Cloud_Director-10.5.1.10593-22821417_OVF10",
         path: "/bedc/vm/VMware_Cloud_Director-10.5.1.10593-22821417_OVF10",
@@ -410,6 +426,7 @@ export const response = {
     {
       discovered_resource_id:
         "vcenter::VirtualMachine[lab,name=VMware vCenter Server 8]",
+      managed_resource_uri: null,
       values: {
         name: "VMware vCenter Server 8",
         path: "/bedc/vm/Discovered virtual machine/VMware vCenter Server 8",
@@ -437,6 +454,7 @@ export const response = {
     {
       discovered_resource_id:
         "vcenter::VirtualMachine[lab,name=WindowsServer2016Template]",
+      managed_resource_uri: null,
       values: {
         name: "WindowsServer2016Template",
         path: "/bedc/vm/WindowsServer2016Template",

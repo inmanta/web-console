@@ -1,5 +1,5 @@
-import React from "react";
-import { act, render, screen } from "@testing-library/react";
+import React, { act } from "react";
+import { render, screen } from "@testing-library/react";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { words } from "@/UI";
 import { MetricName } from "../Core/Domain";

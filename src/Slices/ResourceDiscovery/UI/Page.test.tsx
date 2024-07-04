@@ -1,6 +1,6 @@
-import React from "react";
+import React, { act } from "react";
 import { MemoryRouter } from "react-router-dom";
-import { act, render, screen, within } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { axe, toHaveNoViolations } from "jest-axe";
@@ -67,6 +67,27 @@ test("GIVEN Discovered Resources page THEN shows table", async () => {
     }),
   ).toBeVisible();
 
+  // with correct uri to managed resource
+  const rowWithManagedResource = within(rows[0]).getByRole("cell", {
+    name: "Show managed resource",
+  });
+
+  expect(rowWithManagedResource).toBeVisible();
+
+  expect(within(rowWithManagedResource).getByRole("link")).toHaveAttribute(
+    "href",
+    "/resources/cloudflare%3A%3Adns_record%3A%3ACnameRecord%5Bhttps%3A%2F%2Fapi.cloudflare.com%2Fclient%2Fv4%2F%2Cname%3Dartifacts.ssh.inmanta.com%5D",
+  );
+
+  // uri is null
+  expect(within(rows[1]).getByTestId("Managed resource")).toHaveTextContent("");
+
+  // uri doesn't have a rid
+  expect(within(rows[2]).getByTestId("Managed resource")).toHaveTextContent("");
+
+  // uri is an empty string
+  expect(within(rows[3]).getByTestId("Managed resource")).toHaveTextContent("");
+
   await act(async () => {
     const results = await axe(document.body);
     expect(results).toHaveNoViolations();
@@ -77,10 +98,12 @@ test("GIVEN Discovered Resources page THEN sets sorting parameters correctly on 
   const { component, apiHelper } = setup();
   render(component);
   apiHelper.resolve(Either.right(DiscoveredResources.response));
+
   const resourceIdButton = await screen.findByRole("button", {
     name: words("discovered.column.resource_id"),
   });
   expect(resourceIdButton).toBeVisible();
+
   await act(async () => {
     await userEvent.click(resourceIdButton);
   });

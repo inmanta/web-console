@@ -1,14 +1,14 @@
-import React from "react";
+import React, { act } from "react";
 import { MemoryRouter, useLocation } from "react-router-dom";
-import { act, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { AttributeModel, RemoteData, ServiceModel } from "@/Core";
 import {
   CommandResolverImpl,
+  defaultAuthContext,
   getStoreInstance,
-  KeycloakAuthHelper,
 } from "@/Data";
 import { UpdateInstanceAttributeCommandManager } from "@/Data/Managers/UpdateInstanceAttribute";
 import {
@@ -53,7 +53,7 @@ function setup(service: ServiceModel) {
   const store = getStoreInstance();
 
   const updateAttribute = UpdateInstanceAttributeCommandManager(
-    new KeycloakAuthHelper(),
+    defaultAuthContext,
     apiHelper,
   );
   const commandResolver = new CommandResolverImpl(

@@ -1,6 +1,6 @@
-import React from "react";
+import React, { act } from "react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
-import { act, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { Either } from "@/Core";
@@ -20,6 +20,7 @@ import {
   BaseApiHelper,
   ServiceQueryManager,
 } from "@/Data";
+import { defaultAuthContext } from "@/Data/Auth/AuthContext";
 import {
   DeferredApiHelper,
   dependencies,
@@ -64,7 +65,7 @@ function setup() {
   );
 
   const deleteServiceCommandManager = DeleteServiceCommandManager(
-    new BaseApiHelper(),
+    BaseApiHelper(undefined, defaultAuthContext),
   );
 
   const queryResolver = new QueryResolverImpl(

@@ -1,14 +1,14 @@
-import React from "react";
+import React, { act } from "react";
 import { MemoryRouter } from "react-router-dom";
 import { Table /* data-codemods */, Tbody, Tr } from "@patternfly/react-table";
-import { act, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { Either } from "@/Core";
 import {
   CommandResolverImpl,
+  defaultAuthContext,
   getStoreInstance,
-  KeycloakAuthHelper,
   QueryManagerResolverImpl,
   QueryResolverImpl,
 } from "@/Data";
@@ -32,7 +32,7 @@ function setup(props) {
     new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler),
   );
   const updateAttribute = UpdateInstanceAttributeCommandManager(
-    new KeycloakAuthHelper(),
+    defaultAuthContext,
     apiHelper,
   );
   const commandResolver = new CommandResolverImpl(

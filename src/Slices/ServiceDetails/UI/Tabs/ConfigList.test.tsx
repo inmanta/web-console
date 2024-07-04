@@ -1,5 +1,5 @@
-import React from "react";
-import { act, render, screen } from "@testing-library/react";
+import React, { act } from "react";
+import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { Config, EnvironmentDetails, RemoteData } from "@/Core";
@@ -10,6 +10,7 @@ import {
   ServiceConfigCommandManager,
   ServiceConfigStateHelper,
 } from "@/Data";
+import { defaultAuthContext } from "@/Data/Auth/AuthContext";
 import {
   dependencies,
   DynamicCommandManagerResolverImpl,
@@ -30,7 +31,7 @@ const axe = configureAxe({
 
 function setup() {
   const store = getStoreInstance();
-  const baseApiHelper = new BaseApiHelper();
+  const baseApiHelper = BaseApiHelper(undefined, defaultAuthContext);
   const commandManager = ServiceConfigCommandManager(
     baseApiHelper,
     ServiceConfigStateHelper(store),

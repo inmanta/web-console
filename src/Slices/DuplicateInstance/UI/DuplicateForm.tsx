@@ -72,6 +72,7 @@ export const DuplicateForm: React.FC<Props> = ({ serviceEntity, instance }) => {
         />
       )}
       <ServiceInstanceForm
+        service_entity={serviceEntity.name}
         fields={fields}
         onSubmit={onSubmit}
         onCancel={handleRedirect}

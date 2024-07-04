@@ -1,6 +1,6 @@
-import React from "react";
+import React, { act } from "react";
 import { MemoryRouter } from "react-router-dom";
-import { act, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { axe, toHaveNoViolations } from "jest-axe";
@@ -13,6 +13,7 @@ import {
   QueryResolverImpl,
   ResumeEnvironmentCommandManager,
 } from "@/Data";
+import { defaultAuthContext } from "@/Data/Auth/AuthContext";
 import {
   EnvironmentDetailsContinuousQueryManager,
   EnvironmentDetailsUpdater,
@@ -48,13 +49,13 @@ function setup() {
   );
 
   const haltEnvironmentManager = HaltEnvironmentCommandManager(
-    new BaseApiHelper(),
+    BaseApiHelper(undefined, defaultAuthContext),
     environmentDetailsStateHelper,
     new EnvironmentDetailsUpdater(store, apiHelper),
   );
 
   const resumeEnvironmentManager = ResumeEnvironmentCommandManager(
-    new BaseApiHelper(),
+    BaseApiHelper(undefined, defaultAuthContext),
     environmentDetailsStateHelper,
     new EnvironmentDetailsUpdater(store, apiHelper),
   );
@@ -126,7 +127,7 @@ test("EnvironmentControls halt the environment when clicked and the environment 
   expect(requestInit?.headers?.["X-Inmanta-Tid"]).toEqual(
     EnvironmentDetails.a.id,
   );
-  expect(dispatchEventSpy).toBeCalledTimes(2);
+  expect(dispatchEventSpy).toHaveBeenCalledTimes(2);
 });
 
 test("EnvironmentControls don\\t trigger backend call when dialog is not confirmed", async () => {
@@ -184,5 +185,5 @@ test("EnvironmentControls resume the environment when clicked and the environmen
   expect(requestInit?.headers?.["X-Inmanta-Tid"]).toEqual(
     EnvironmentDetails.a.id,
   );
-  expect(dispatchEventSpy).toBeCalledTimes(2);
+  expect(dispatchEventSpy).toHaveBeenCalledTimes(2);
 });

@@ -1,6 +1,6 @@
-import React from "react";
+import React, { act } from "react";
 import { Link, MemoryRouter, useLocation } from "react-router-dom";
-import { act, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { axe, toHaveNoViolations } from "jest-axe";
@@ -12,7 +12,7 @@ import {
   getStoreInstance,
   CommandResolverImpl,
   CommandManagerResolverImpl,
-  KeycloakAuthHelper,
+  defaultAuthContext,
 } from "@/Data";
 import {
   DeferredApiHelper,
@@ -44,9 +44,9 @@ function setup() {
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolverImpl([servicesHelper]),
   );
-  const authHelper = new KeycloakAuthHelper();
+
   const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolverImpl(store, apiHelper, authHelper),
+    new CommandManagerResolverImpl(store, apiHelper, defaultAuthContext),
   );
 
   const environmentHandler = EnvironmentHandlerImpl(

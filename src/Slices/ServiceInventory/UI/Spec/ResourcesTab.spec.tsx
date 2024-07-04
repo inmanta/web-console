@@ -1,4 +1,5 @@
-import { render, screen, act } from "@testing-library/react";
+import { act } from "react";
+import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { Either, Maybe } from "@/Core";
 import { ServiceInstance, Pagination, InstanceResource } from "@/Test";
@@ -108,8 +109,8 @@ test("GIVEN The Service Inventory WHEN the user clicks on the resourcesTab THEN 
     await apiHelper.resolve(Either.right({ data: InstanceResource.listA }));
   });
 
-  expect(serviceInstancesTask?.effect).toBeCalledTimes(1);
-  expect(serviceInstancesTask?.update).toBeCalledTimes(1);
-  expect(resourcesTask?.effect).toBeCalledTimes(1);
-  expect(resourcesTask?.update).toBeCalledTimes(1);
+  expect(serviceInstancesTask?.effect).toHaveBeenCalledTimes(1);
+  expect(serviceInstancesTask?.update).toHaveBeenCalledTimes(1);
+  expect(resourcesTask?.effect).toHaveBeenCalledTimes(1);
+  expect(resourcesTask?.update).toHaveBeenCalledTimes(1);
 });

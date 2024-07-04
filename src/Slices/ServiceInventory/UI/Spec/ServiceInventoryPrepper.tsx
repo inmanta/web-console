@@ -12,11 +12,12 @@ import {
   ServiceInstancesStateHelper,
   BaseApiHelper,
   TriggerSetStateCommandManager,
-  KeycloakAuthHelper,
   getStoreInstance,
   TriggerForceStateCommandManager,
   DestroyInstanceCommandManager,
 } from "@/Data";
+import { defaultAuthContext } from "@/Data/Auth/AuthContext";
+import { AuthProvider } from "@/Data/Auth/AuthProvider";
 import {
   DeferredApiHelper,
   dependencies,
@@ -65,20 +66,20 @@ export class ServiceInventoryPrepper {
     );
 
     const triggerUpdateCommandManager = TriggerInstanceUpdateCommandManager(
-      new BaseApiHelper(),
+      BaseApiHelper(undefined, defaultAuthContext),
     );
     const triggerDestroyInstanceCommandManager =
       DestroyInstanceCommandManager(apiHelper);
     const triggerforceStateCommandManager = TriggerForceStateCommandManager(
-      new KeycloakAuthHelper(),
+      defaultAuthContext,
       apiHelper,
     );
 
     const deleteCommandManager = DeleteInstanceCommandManager(apiHelper);
 
     const setStateCommandManager = TriggerSetStateCommandManager(
-      new KeycloakAuthHelper(),
-      new BaseApiHelper(),
+      defaultAuthContext,
+      BaseApiHelper(undefined, defaultAuthContext),
     );
 
     const commandResolver = new CommandResolverImpl(
@@ -99,19 +100,21 @@ export class ServiceInventoryPrepper {
     );
     const component = (
       <MemoryRouter initialEntries={[{ search: "?env=123" }]}>
-        <DependencyProvider
-          dependencies={{
-            ...dependencies,
-            queryResolver,
-            commandResolver,
-            environmentModifier: new MockEnvironmentModifier(),
-            environmentHandler,
-          }}
-        >
-          <StoreProvider store={store}>
-            <ServiceInventory serviceName={service.name} service={service} />
-          </StoreProvider>
-        </DependencyProvider>
+        <AuthProvider config={undefined}>
+          <DependencyProvider
+            dependencies={{
+              ...dependencies,
+              queryResolver,
+              commandResolver,
+              environmentModifier: new MockEnvironmentModifier(),
+              environmentHandler,
+            }}
+          >
+            <StoreProvider store={store}>
+              <ServiceInventory serviceName={service.name} service={service} />
+            </StoreProvider>
+          </DependencyProvider>
+        </AuthProvider>
       </MemoryRouter>
     );
 

@@ -1,8 +1,7 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useLocation } from "react-router-dom";
 import { isJsonParserId, JsonParserId, SchedulerImpl } from "@/Core";
 import {
-  KeycloakAuthHelper,
   PrimaryFeatureManager,
   GetServerStatusStateHelper,
   BaseApiHelper,
@@ -14,7 +13,6 @@ import {
   Store,
   PrimaryArchiveHelper,
   PrimaryFileManager,
-  PrimaryAuthController,
   PrimaryLogger,
 } from "@/Data";
 import {
@@ -25,7 +23,9 @@ import {
   EnvironmentModifierImpl,
   UrlManagerImpl,
 } from "@/UI";
+import { AuthContext } from "./Data/Auth/";
 import { UpdateBanner } from "./UI/Components/UpdateBanner";
+
 interface Props {
   store: Store;
 }
@@ -34,6 +34,7 @@ export const Injector: React.FC<React.PropsWithChildren<Props>> = ({
   store,
   children,
 }) => {
+  const authHelper = useContext(AuthContext);
   const featureManager = new PrimaryFeatureManager(
     GetServerStatusStateHelper(store),
     new PrimaryLogger(),
@@ -42,11 +43,6 @@ export const Injector: React.FC<React.PropsWithChildren<Props>> = ({
     APP_VERSION,
   );
 
-  const authController = new PrimaryAuthController(
-    process.env.SHOULD_USE_AUTH,
-    globalThis && globalThis.auth,
-    process.env.KEYCLOAK_URL,
-  );
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
     globalThis.location.pathname,
@@ -54,12 +50,7 @@ export const Injector: React.FC<React.PropsWithChildren<Props>> = ({
   const basePathname = baseUrlManager.getBasePathname();
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
   const routeManager = PrimaryRouteManager(basePathname);
-  const apiHelper = new BaseApiHelper(
-    baseUrl,
-    authController.shouldAuthLocally(),
-    authController.getInstance(),
-  );
-  const authHelper = new KeycloakAuthHelper(authController.getInstance());
+  const apiHelper = BaseApiHelper(baseUrl, authHelper);
   const queryResolver = new QueryResolverImpl(
     new QueryManagerResolverImpl(
       store,
@@ -88,9 +79,8 @@ export const Injector: React.FC<React.PropsWithChildren<Props>> = ({
         featureManager,
         routeManager,
         environmentHandler,
-        authHelper,
         archiveHelper,
-        authController,
+        authHelper,
       }}
     >
       <UpdateBanner apiHelper={apiHelper} />
