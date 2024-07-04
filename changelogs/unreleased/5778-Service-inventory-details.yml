@@ -2,3 +2,5 @@ description: First part of the Service inventory rework. Add skeleton structure 
 issue-nr: 5778
 change-type: minor
 destination-branches: [master]
+sections:
+  minor-improvement: "{{description}}"
