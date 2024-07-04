@@ -192,14 +192,14 @@ describe("Scenario 4 Desired State", () => {
 
       // Go through each row and check value
       cy.get(".pf-v5-c-description-list__group")
-      .eq(1)
-      .find(".pf-v5-c-description-list__term")
-      .should("have.text", "next_desired_state_version");
-      
+        .eq(1)
+        .find(".pf-v5-c-description-list__term")
+        .should("have.text", "next_desired_state_version");
+
       cy.get(".pf-v5-c-description-list__group")
-      .eq(1)
-      .find(".pf-v5-c-description-list__description")
-      .should("have.text", "4");
+        .eq(1)
+        .find(".pf-v5-c-description-list__description")
+        .should("have.text", "4");
 
       cy.get(".pf-v5-c-description-list__group")
         .eq(2)
