@@ -21,7 +21,7 @@ export const LogLevelFilter: React.FC<Props> = ({ filter, setFilter }) => {
     });
 
   const onSelect = (selection) => {
-    update(selection === null ? undefined : selection);
+    update(selection === null || selection === "" ? undefined : selection);
   };
 
   const deleteChip = () =>
