@@ -431,7 +431,7 @@ describe("Scenario 4 Desired State", () => {
         );
         if (isIso) {
           expect($expandableRow.eq(1), "second-row").to.have.text(
-            "next_version-3+4",
+            "next_desired_state_version+4next_version-3+4",
           );
         } else {
           expect($expandableRow.eq(1), "second-row").to.have.text(
