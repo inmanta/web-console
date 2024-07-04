@@ -211,29 +211,29 @@ describe("Scenario 4 Desired State", () => {
         .should("have.text", "4");
 
       cy.get(".pf-v5-c-description-list__group")
-        .eq(2)
+        .eq(3)
         .find(".pf-v5-c-description-list__term")
         .should("have.text", "purge_on_delete");
       cy.get(".pf-v5-c-description-list__group")
-        .eq(2)
+        .eq(3)
         .find(".pf-v5-c-description-list__description")
         .should("have.text", "false");
 
       cy.get(".pf-v5-c-description-list__group")
-        .eq(3)
+        .eq(4)
         .find(".pf-v5-c-description-list__term")
         .should("have.text", "purged");
       cy.get(".pf-v5-c-description-list__group")
-        .eq(3)
+        .eq(4)
         .find(".pf-v5-c-description-list__description")
         .should("have.text", "false");
 
       cy.get(".pf-v5-c-description-list__group")
-        .eq(4)
+        .eq(5)
         .find(".pf-v5-c-description-list__term")
         .should("have.text", "requires");
       cy.get(".pf-v5-c-description-list__group")
-        .eq(4)
+        .eq(5)
         .find(".pf-v5-c-description-list__description")
         .should(
           "include.text",
@@ -241,11 +241,11 @@ describe("Scenario 4 Desired State", () => {
         );
 
       cy.get(".pf-v5-c-description-list__group")
-        .eq(5)
+        .eq(6)
         .find(".pf-v5-c-description-list__term")
         .should("have.text", "resources");
       cy.get(".pf-v5-c-description-list__group")
-        .eq(5)
+        .eq(6)
         .find(".pf-v5-c-description-list__description")
         .should(
           "include.text",
@@ -253,20 +253,20 @@ describe("Scenario 4 Desired State", () => {
         );
 
       cy.get(".pf-v5-c-description-list__group")
-        .eq(6)
+        .eq(7)
         .find(".pf-v5-c-description-list__term")
         .should("have.text", "send_event");
       cy.get(".pf-v5-c-description-list__group")
-        .eq(6)
+        .eq(7)
         .find(".pf-v5-c-description-list__description")
         .should("have.text", "false");
 
       cy.get(".pf-v5-c-description-list__group")
-        .eq(7)
+        .eq(8)
         .find(".pf-v5-c-description-list__term")
         .should("have.text", "service_entity");
       cy.get(".pf-v5-c-description-list__group")
-        .eq(7)
+        .eq(8)
         .find(".pf-v5-c-description-list__description")
         .should("have.text", "basic-service");
     }
