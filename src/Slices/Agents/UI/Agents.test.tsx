@@ -656,7 +656,7 @@ test("GIVEN AgentsView WHEN sorting changes AND we are not on the first page THE
     await userEvent.click(screen.getByLabelText("Go to next page"));
   });
 
-  //expect to api url to contain start and end which are used for pagination as we are moving to the next page
+  //expect the api url to contain start and end keywords that are used for pagination when we are moving to the next page
   expect(apiHelper.pendingRequests[0].url).toMatch(/(&start=|&end=)/);
   expect(apiHelper.pendingRequests[0].url).toMatch(/(&sort=name.asc)/);
 
