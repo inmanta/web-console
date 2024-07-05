@@ -481,7 +481,7 @@ test("Given CompileReportsView When recompile is triggered Then table is updated
   ]);
 });
 
-test("GIVEN CompileReportsView WHEN sorting THEN then we  are sent back to the first page", async () => {
+test("GIVEN CompileReportsView WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async () => {
   const { component, apiHelper } = setup();
   render(component);
 
