@@ -1,6 +1,6 @@
 {
   "name": "@inmanta/web-console",
-  "version": "1.16.2",
+  "version": "1.16.3",
   "description": "Web Console for Inmanta Orchestrator",
   "exports": "./dist/index.js",
   "repository": "https://github.com/inmanta/web-console.git",
@@ -61,7 +61,7 @@
     "@types/file-saver": "^2.0.7",
     "@types/jest": "^29.5.12",
     "@types/jest-axe": "^3.5.9",
-    "@types/json-bigint": "^1.0.3",
+    "@types/json-bigint": "^1.0.4",
     "@types/loadable__component": "^5.13.9",
     "@types/lodash": "^4.17.4",
     "@types/lodash-es": "^4.17.12",

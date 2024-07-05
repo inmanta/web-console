@@ -281,11 +281,10 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#editorButton").click();
 
       // expect the value for address_r1 to be empty
-      cy.get(".view-line").contains("address_r1").should("contain", '""');
-      cy.get(".view-line > :nth-child(1) > .mtk5").first().type("1.2.3.2/32");
       cy.get(".view-line > :nth-child(1) > .mtk5")
         .first()
-        .type("{uparrow}{uparrow}"); // force editor to scroll up
+        .should("contain", '""');
+      cy.get(".view-line > :nth-child(1) > .mtk5").first().type("1.2.3.2/32");
 
       // change the service id to make instance unique
       cy.get(".mtk5").contains("0001").type("{backspace}9");
