@@ -45,7 +45,7 @@ const createWrapper = () => {
   );
 };
 
-test("when instance returned has referenced other instance, then query will fetch both of them", async () => {
+test("when the returned instance has referenced instances, then the query will fetch both of them", async () => {
   const { result } = renderHook(
     () => useGetInstanceWithRelations("test_id", "env").useOneTime(),
     {
