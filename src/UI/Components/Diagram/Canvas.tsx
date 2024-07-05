@@ -321,7 +321,7 @@ const Canvas: React.FC<{
         }
         editable={editable}
       />
-      <CanvasWrapper id="canvas-wrapper">
+      <CanvasWrapper id="canvas-wrapper" aria-label="Composer-Container">
         <div className="canvas" ref={canvas} />
         <ZoomWrapper>
           <button
