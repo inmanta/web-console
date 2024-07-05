@@ -379,7 +379,7 @@ export const shapesDataTransform = (
  * @param {ServiceModel[]} services
  * @returns InstanceForApi[]
  */
-export const bundleInstances = (
+export const getServiceOrderItems = (
   instances: Map<string, InstanceForApi>,
   services: ServiceModel[],
 ): InstanceForApi[] => {

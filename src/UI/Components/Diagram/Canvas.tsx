@@ -16,7 +16,7 @@ import { ToastAlert } from "../ToastAlert";
 import DictModal from "./components/DictModal";
 import FormModal from "./components/FormModal";
 import Toolbar from "./components/Toolbar";
-import { bundleInstances, createConnectionRules } from "./helpers";
+import { getServiceOrderItems, createConnectionRules } from "./helpers";
 import { ActionEnum, DictDialogData, InstanceForApi } from "./interfaces";
 import { ServiceEntityBlock } from "./shapes";
 
@@ -116,7 +116,7 @@ const Canvas = ({
   const handleDeploy = async () => {
     const coordinates = diagramHandlers?.getCoordinates();
 
-    const bundledInstances = bundleInstances(instancesToSend, services)
+    const serviceOrderItems = getServiceOrderItems(instancesToSend, services)
       .filter((item) => item.action !== null)
       .map((instance) => ({
         ...instance,
@@ -124,7 +124,7 @@ const Canvas = ({
           coordinates: JSON.stringify(coordinates),
         },
       }));
-    await mutate(bundledInstances);
+    await mutate(serviceOrderItems);
   };
 
   /**

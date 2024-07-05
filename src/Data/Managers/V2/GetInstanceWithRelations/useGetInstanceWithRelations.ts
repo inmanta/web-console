@@ -12,7 +12,7 @@ export interface InstanceWithReferences {
   coordinates?: string;
 }
 
-interface InstanceWithRelationsHook {
+interface GetInstanceWithRelationsHook {
   useOneTime: () => UseQueryResult<InstanceWithReferences, Error>;
 }
 
@@ -20,12 +20,12 @@ interface InstanceWithRelationsHook {
  * React Query hook to fetch an instance with its related instances from the API.
  * @param {string} id - The ID of the instance to fetch.
  * @param {string} environment - The environment in which we are looking for instances.
- * @returns  {InstanceWithRelationsHook} An object containing a custom hook to fetch the instance with its related instances.
+ * @returns  {GetInstanceWithRelationsHook} An object containing a custom hook to fetch the instance with its related instances.
  */
 export const useGetInstanceWithRelations = (
   id: string,
   environment: string,
-): InstanceWithRelationsHook => {
+): GetInstanceWithRelationsHook => {
   //extracted headers to avoid breaking rules of Hooks
   const { createHeaders, handleErrors } = useFetchHelpers();
   const headers = createHeaders(environment);

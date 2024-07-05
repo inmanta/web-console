@@ -17,7 +17,7 @@ interface GetMetadataHook {
  * @param {string} service_entity - The entity name of the service.
  * @param {string} service_id - The ID of the service.
  * @param {string} key - The key for the metadata.
- * @param {ParsedNumber=} instanceVersion - The version of the service instance (optional).
+ * @param {ParsedNumber} instanceVersion - The version of the service instance (optional).
  * @returns {GetMetadataHook} An object containing the custom hook.
  */
 export const useGetMetadata = (

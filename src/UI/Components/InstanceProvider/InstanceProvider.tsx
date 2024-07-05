@@ -48,9 +48,7 @@ export const InstanceProvider: React.FC<{
       ? instanceWithRelations.refetch
       : metadata.refetch;
 
-    const error = instanceWithRelations.isError
-      ? instanceWithRelations.error
-      : metadata.error;
+    const error = instanceWithRelations.error || metadata.error;
 
     const errorMessage = error ? error.message : "";
     return (
@@ -63,14 +61,15 @@ export const InstanceProvider: React.FC<{
       />
     );
   }
-  const { data } = instanceWithRelations;
 
   return (
     <Canvas
       services={services}
       mainServiceName={mainServiceName}
       instance={
-        data ? { ...data, coordinates: metadata?.data || "" } : undefined
+        instanceWithRelations.data
+          ? { ...instanceWithRelations.data, coordinates: metadata?.data || "" }
+          : undefined
       }
       editable={editable}
     />

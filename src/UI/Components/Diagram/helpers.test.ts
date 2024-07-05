@@ -25,7 +25,7 @@ import {
   extractRelationsIds,
   checkWhetherConnectionRulesAreExhausted,
   findCorrespondingId,
-  bundleInstances,
+  getServiceOrderItems,
   checkIfConnectionIsAllowed,
   updateLabelPosition,
   toggleLooseElement,
@@ -1098,7 +1098,7 @@ describe("findCorrespondingId", () => {
   });
 });
 
-describe("bundleInstances", () => {
+describe("getServiceOrderItems", () => {
   it("bundles basic instances correctly", () => {
     const createdInstance = {
       instance_id: "123",
@@ -1160,7 +1160,7 @@ describe("bundleInstances", () => {
     map.set("123", createdInstance);
     map.set("1234", updatedInstance);
     map.set("12345", deletedInstance);
-    const bundledInstances = bundleInstances(
+    const serviceOrderItems = getServiceOrderItems(
       map,
       services as unknown as ServiceModel[],
     );
@@ -1171,7 +1171,7 @@ describe("bundleInstances", () => {
     delete createdCopy.relatedTo;
     delete updatedCopy.relatedTo;
     delete deletedCopy.relatedTo;
-    expect(bundledInstances).toEqual([createdCopy, updatedCopy, deletedCopy]);
+    expect(serviceOrderItems).toEqual([createdCopy, updatedCopy, deletedCopy]);
   });
 
   it("bundles related instances correctly", () => {
@@ -1239,7 +1239,7 @@ describe("bundleInstances", () => {
     map.set("2", parentServiceTwo);
     map.set("11", childInstance);
     map.set("12", childWithManyParentsInstance);
-    const bundledInstances = bundleInstances(
+    const serviceOrderItems = getServiceOrderItems(
       map,
       services as unknown as ServiceModel[],
     );
@@ -1256,7 +1256,7 @@ describe("bundleInstances", () => {
     delete childCopy.relatedTo;
     ChildManyCopy.attributes.parent_entity = ["1", "2"];
     delete ChildManyCopy.relatedTo;
-    expect(bundledInstances).toEqual([
+    expect(serviceOrderItems).toEqual([
       parentOneCopy,
       parentTwoCopy,
       childCopy,
@@ -1338,7 +1338,7 @@ describe("bundleInstances", () => {
     map.set("123", embeddedTwo);
     map.set("1234", embeddedThree);
     map.set("12345", embeddedFour);
-    const bundledInstances = bundleInstances(
+    const serviceOrderItems = getServiceOrderItems(
       map,
       services as unknown as ServiceModel[],
     );
@@ -1351,7 +1351,7 @@ describe("bundleInstances", () => {
       embeddedThree.attributes,
       embeddedFour.attributes,
     ];
-    expect(bundledInstances).toEqual([coreCopy]);
+    expect(serviceOrderItems).toEqual([coreCopy]);
   });
 });
 describe("updateLabelPosition", () => {

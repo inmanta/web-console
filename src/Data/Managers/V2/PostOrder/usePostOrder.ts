@@ -20,16 +20,16 @@ export const usePostOrder = (
 
   /**
    * Sends an order with the provided bundle instances.
-   * @param {InstanceForApi[]} bundledInstances - The bundled instances to include in the order.
+   * @param {InstanceForApi[]} serviceOrderItems - The bundled instances to include in the order.
    * @throws {Error} If the response is not successful, an error with the error message is thrown.
    */
   const postOrder = async (
-    bundledInstances: InstanceForApi[],
+    serviceOrderItems: InstanceForApi[],
   ): Promise<void> => {
     const response = await fetch(baseUrl + `/lsm/v2/order`, {
       method: "POST",
       body: JSON.stringify({
-        service_order_items: bundledInstances,
+        service_order_items: serviceOrderItems,
         description: words("inventory.instanceComposer.orderDescription"),
       }),
       headers,
