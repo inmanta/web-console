@@ -28,17 +28,12 @@ import { ServiceEntityBlock } from "./shapes";
  * @param {InstanceWithReferences} instance - The instance with references.
  * @returns {JSX.Element} The rendered Canvas component.
  */
-const Canvas = ({
-  services,
-  mainServiceName,
-  instance,
-  editable = true,
-}: {
+const Canvas: React.FC<{
   services: ServiceModel[];
   mainServiceName: string;
   instance?: InstanceWithReferences;
   editable: boolean;
-}) => {
+}> = ({ services, mainServiceName, instance, editable = true }) => {
   const { environmentHandler, routeManager } = useContext(DependencyContext);
   const environment = environmentHandler.useId();
   const { mutate, isError, isSuccess, error } = usePostOrder(environment);
