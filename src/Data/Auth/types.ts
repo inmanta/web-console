@@ -5,5 +5,5 @@ export interface KeycloakAuthConfig extends KeycloakConfig {
 }
 
 export interface LocalConfig {
-  method: "database";
+  method: "database" | "jwt";
 }

@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps): Bump @tanstack/react-query-devtools from 5.37.1 to 5.48.0'
+destination-branches:
+- master
+- iso7
+sections: {}
