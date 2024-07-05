@@ -179,6 +179,17 @@ if (Cypress.env("edition") === "iso") {
         })
         .trigger("mouseup");
 
+      //move root entity to the non-default position to assert persisting od the position works as intended by next scenario
+      cy.get('[joint-selector="headerLabel"]')
+        .contains("embedded-entity-")
+        .trigger("mouseover")
+        .trigger("mousedown")
+        .trigger("mousemove", {
+          clientX: 1000,
+          clientY: 250,
+        })
+        .trigger("mouseup");
+
       cy.get("button").contains("Deploy").click();
 
       // Check if only one row has been added to the table.
@@ -236,14 +247,21 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[joint-selector="itemLabel_name_value"]')
         .contains("rw_files2") //easiest way to differentiate same type of entities is by the unique attributes values
         .click();
+      cy.get(".zoom-out").click();
+      cy.get(".zoom-out").click();
+
+      //try to add rw embedded entity which shouldn't be possible
+      cy.get('[data-type="Link"]').should("have.length", "3");
+
       cy.get('[data-action="link"]')
         .trigger("mouseover")
         .trigger("mousedown")
         .trigger("mousemove", {
-          clientX: 750,
-          clientY: 270,
+          clientX: 2200,
+          clientY: 500,
         })
         .trigger("mouseup");
+
       cy.get('[data-type="Link"]').should("have.length", "3");
       cy.get('[data-action="delete"]').click();
 
@@ -263,12 +281,11 @@ if (Cypress.env("edition") === "iso") {
         .trigger("mouseover")
         .trigger("mousedown")
         .trigger("mousemove", {
-          clientX: 350,
-          clientY: 250,
+          clientX: 1200,
+          clientY: 300,
         })
         .trigger("mouseup");
 
-      cy.get("button").contains("Deploy").scrollIntoView();
       cy.get("button").contains("Deploy").click();
 
       // Check if only one row has been added to the table.
