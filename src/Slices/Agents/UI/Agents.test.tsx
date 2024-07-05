@@ -627,7 +627,7 @@ test("Given the Agents view with the environment halted, THEN the on resume colu
   });
 });
 
-test("GIVEN AgentsView WHEN sorting THEN then we  are sent back to the first page", async () => {
+test("GIVEN AgentsView WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async () => {
   const { component, apiHelper } = setup();
   render(component);
 
