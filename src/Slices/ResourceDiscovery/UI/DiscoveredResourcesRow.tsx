@@ -10,7 +10,7 @@ import styled from "styled-components";
 import { CodeHighlighter, Toggle } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { DiscoveredResource } from "../Core/Query";
-import { ManagedResourceLink } from "./Components/ManagedResourceLink";
+import { ManagedResourceLink } from "./Components";
 
 interface Props {
   row: Pick<
@@ -38,10 +38,17 @@ export const DiscoveredResourceRow: React.FC<Props> = ({
             aria-label={`Toggle-${row.discovered_resource_id}`}
           />
         </Td>
-        <Td dataLabel={words("discovered.column.resource_id")}>
+        <Td
+          dataLabel={words("discovered.column.resource_id")}
+          style={{ width: "50vw" }}
+          data-testid={words("discovered.column.resource_id")}
+        >
           {row.discovered_resource_id}
         </Td>
-        <Td dataLabel={words("discovered.column.managed_resource")} width={30}>
+        <Td
+          dataLabel={words("discovered.column.managed_resource")}
+          data-testid={words("discovered.column.managed_resource")}
+        >
           <ManagedResourceLink resourceUri={row.managed_resource_uri} />
         </Td>
       </Tr>

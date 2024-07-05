@@ -30,8 +30,8 @@ export const EnvSelector: React.FC<Props> = ({
   setIsOpen,
   toggleText,
 }) => {
-  const { routeManager } = useContext(DependencyContext);
-  const { authHelper } = useContext(DependencyContext);
+  const { routeManager, authHelper } = useContext(DependencyContext);
+
   return (
     <Dropdown
       isOpen={isOpen}
@@ -44,11 +44,11 @@ export const EnvSelector: React.FC<Props> = ({
           aria-label={toggleText}
           isFullHeight
           onClick={() => setIsOpen(!isOpen)}
-          icon={!authHelper.isDisabled() ? <UserCircleIcon /> : null}
+          icon={authHelper.getUser() ? <UserCircleIcon /> : null}
         >
           <StyledDiv>
             <div>
-              {!authHelper.isDisabled() && (
+              {authHelper.getUser() && (
                 <StyledText>{authHelper.getUser()}</StyledText>
               )}
               <div>

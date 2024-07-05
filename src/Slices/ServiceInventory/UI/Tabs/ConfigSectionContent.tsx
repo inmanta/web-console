@@ -8,7 +8,9 @@ interface Props {
   serviceInstanceIdentifier: VersionedServiceInstanceIdentifier;
 }
 
-export const ConfigTab: React.FC<Props> = ({ serviceInstanceIdentifier }) => {
+export const ConfigSectionContent: React.FC<Props> = ({
+  serviceInstanceIdentifier,
+}) => {
   const { queryResolver } = useContext(DependencyContext);
   const [data, retry] = queryResolver.useOneTime<"GetInstanceConfig">({
     kind: "GetInstanceConfig",

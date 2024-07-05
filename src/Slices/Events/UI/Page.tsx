@@ -13,7 +13,7 @@ const Wrapper: React.FC<React.PropsWithChildren<unknown>> = ({
   children,
   ...props
 }) => (
-  <PageContainer {...props} title={words("events.title")}>
+  <PageContainer {...props} pageTitle={words("events.title")}>
     {children}
   </PageContainer>
 );

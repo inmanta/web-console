@@ -123,16 +123,33 @@ if (Cypress.env("edition") === "iso") {
         .should("have.length", 1);
       cy.get("#embedded-entity-service").contains("Show inventory").click();
       cy.get('[aria-label="ServiceInventory-Success"]').should("to.be.visible");
+
+      // Check Instance Details page
+      cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
+      // The first button should be the one redirecting to the details page.
+      cy.get(".pf-v5-c-menu__item")
+        .first()
+        .contains("Instance Details")
+        .click();
+
+      // Check if there are three versions in the history table
+      cy.get('[aria-label="History-Row"]', { timeout: 60000 }).should(
+        "have.length",
+        3,
+      );
+
+      // Check the state of the instance is up in the history section.
+      cy.get('[aria-label="History-Row"]').eq(0).should("contain", "up");
+
+      // Go back to inventory using the breadcrumbs
+      cy.get('[aria-label="BreadcrumbItem"]')
+        .contains("Service Inventory: embedded-entity-service")
+        .click();
+
       cy.get("#expand-toggle0").click();
 
       // expect row to be expanded
       cy.get(".pf-v5-c-table__expandable-row-content").should("to.be.visible");
-
-      // Expect to find status tab
-      cy.get(".pf-v5-c-tabs__list li:first").should(
-        "have.class",
-        "pf-m-current",
-      );
 
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
       cy.get(".pf-v5-c-menu__item").contains("Diagnose").click();
