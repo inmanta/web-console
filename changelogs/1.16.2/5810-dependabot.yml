@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps): Bump braces from 3.0.2 to 3.0.3'
+destination-branches:
+- master
+- iso7
+sections: {}

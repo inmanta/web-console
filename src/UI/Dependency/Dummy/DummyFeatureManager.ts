@@ -19,6 +19,9 @@ export class DummyFeatureManager implements FeatureManager {
   isOrderViewEnabled(): boolean {
     throw new Error("Method not implemented.");
   }
+  isLicencedFeatureEnabled(): boolean {
+    throw new Error("Method not implemented.");
+  }
   isResourceDiscoveryEnabled(): boolean {
     throw new Error("Method not implemented.");
   }

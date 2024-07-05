@@ -1,6 +1,6 @@
-import React from "react";
+import React, { act } from "react";
 import { MemoryRouter, useLocation } from "react-router";
-import { render, screen, within, act } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { Either, RemoteData } from "@/Core";
@@ -14,12 +14,12 @@ import {
   DestroyInstanceCommandManager,
   InstanceResourcesQueryManager,
   InstanceResourcesStateHelper,
-  KeycloakAuthHelper,
   ServiceInstancesQueryManager,
   ServiceInstancesStateHelper,
   TriggerForceStateCommandManager,
   TriggerSetStateCommandManager,
 } from "@/Data";
+import { defaultAuthContext } from "@/Data/Auth/AuthContext";
 import { TriggerInstanceUpdateCommandManager } from "@/Slices/EditInstance/Data";
 import {
   Row,
@@ -228,7 +228,7 @@ function setup(expertMode = false, setSortFn: (props) => void = dummySetter) {
 
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
-  const authHelper = new KeycloakAuthHelper();
+
   const serviceInstancesHelper = ServiceInstancesQueryManager(
     apiHelper,
     ServiceInstancesStateHelper(store),
@@ -254,15 +254,15 @@ function setup(expertMode = false, setSortFn: (props) => void = dummySetter) {
   const triggerDestroyInstanceCommandManager =
     DestroyInstanceCommandManager(apiHelper);
   const triggerforceStateCommandManager = TriggerForceStateCommandManager(
-    authHelper,
+    defaultAuthContext,
     apiHelper,
   );
 
   const deleteCommandManager = DeleteInstanceCommandManager(apiHelper);
 
   const setStateCommandManager = TriggerSetStateCommandManager(
-    authHelper,
-    new BaseApiHelper(),
+    defaultAuthContext,
+    BaseApiHelper(undefined, defaultAuthContext),
   );
 
   const commandResolver = new CommandResolverImpl(

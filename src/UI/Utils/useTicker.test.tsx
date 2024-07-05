@@ -1,5 +1,5 @@
-import React from "react";
-import { act, render } from "@testing-library/react";
+import React, { act } from "react";
+import { render } from "@testing-library/react";
 import {
   useTickerWithInterval,
   useTickerWithUnixMs,
@@ -25,7 +25,7 @@ test("GIVEN useTickerWithInterval WHEN provided with interval THEN executes at t
     await jest.advanceTimersByTime(ONE_SECOND);
   });
 
-  expect(callback).toBeCalledTimes(2);
+  expect(callback).toHaveBeenCalledTimes(2);
 });
 
 test("GIVEN useTickerWithUnixMs WHEN provided with timestamp longer than 1 hour ago THEN executes every minute", async () => {
@@ -44,7 +44,7 @@ test("GIVEN useTickerWithUnixMs WHEN provided with timestamp longer than 1 hour 
     await jest.advanceTimersByTime(10 * ONE_MINUTE + 100);
   });
 
-  expect(callback).toBeCalledTimes(2);
+  expect(callback).toHaveBeenCalledTimes(2);
 });
 
 test("GIVEN useTickerWithUnixMs WHEN provided with timestamp less than 1 minute ago THEN executes every second until 1 minute is reached", async () => {
@@ -61,19 +61,19 @@ test("GIVEN useTickerWithUnixMs WHEN provided with timestamp less than 1 minute 
     await jest.advanceTimersByTime(9 * ONE_SECOND + 100);
   });
 
-  expect(callback).toBeCalledTimes(2);
+  expect(callback).toHaveBeenCalledTimes(2);
 
   await act(async () => {
     await jest.advanceTimersByTime(ONE_SECOND);
   });
 
-  expect(callback).toBeCalledTimes(3);
+  expect(callback).toHaveBeenCalledTimes(3);
 
   await act(async () => {
     await jest.advanceTimersByTime(10 * ONE_SECOND + 100);
   });
 
-  expect(callback).toBeCalledTimes(4);
+  expect(callback).toHaveBeenCalledTimes(4);
 });
 
 test("GIVEN getDiffFromNow WHEN provided with timestamp THEN returns correct millisecond difference", () => {

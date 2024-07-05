@@ -1,7 +1,7 @@
-import React from "react";
+import React, { act } from "react";
 import { Router } from "react-router-dom";
 import { Masthead, Page } from "@patternfly/react-core";
-import { act, render, screen, within } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { createMemoryHistory } from "history";
@@ -10,8 +10,8 @@ import { Either, Maybe } from "@/Core";
 import {
   CommandManagerResolverImpl,
   CommandResolverImpl,
+  defaultAuthContext,
   getStoreInstance,
-  KeycloakAuthHelper,
   QueryManagerResolverImpl,
   QueryResolverImpl,
 } from "@/Data";
@@ -42,7 +42,7 @@ function setup() {
   );
 
   const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolverImpl(store, apiHelper, new KeycloakAuthHelper()),
+    new CommandManagerResolverImpl(store, apiHelper, defaultAuthContext),
   );
 
   const closeCallback = jest.fn();

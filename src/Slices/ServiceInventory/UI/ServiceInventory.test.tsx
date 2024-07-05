@@ -1,6 +1,6 @@
-import React from "react";
+import React, { act } from "react";
 import { MemoryRouter, useLocation } from "react-router-dom";
-import { fireEvent, render, screen, act } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { axe, toHaveNoViolations } from "jest-axe";
@@ -14,12 +14,12 @@ import {
   CommandResolverImpl,
   DeleteInstanceCommandManager,
   BaseApiHelper,
-  KeycloakAuthHelper,
   TriggerSetStateCommandManager,
   getStoreInstance,
   TriggerForceStateCommandManager,
   DestroyInstanceCommandManager,
 } from "@/Data";
+import { defaultAuthContext } from "@/Data/Auth/AuthContext";
 import {
   Service,
   ServiceInstance,
@@ -44,7 +44,7 @@ function setup(service = Service.a, pageSize = "") {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
-  const authHelper = new KeycloakAuthHelper();
+
   const serviceInstancesHelper = ServiceInstancesQueryManager(
     apiHelper,
     ServiceInstancesStateHelper(store),
@@ -70,15 +70,15 @@ function setup(service = Service.a, pageSize = "") {
   const triggerDestroyInstanceCommandManager =
     DestroyInstanceCommandManager(apiHelper);
   const triggerforceStateCommandManager = TriggerForceStateCommandManager(
-    authHelper,
+    defaultAuthContext,
     apiHelper,
   );
 
   const deleteCommandManager = DeleteInstanceCommandManager(apiHelper);
 
   const setStateCommandManager = TriggerSetStateCommandManager(
-    authHelper,
-    new BaseApiHelper(),
+    defaultAuthContext,
+    BaseApiHelper(undefined, defaultAuthContext),
   );
 
   const commandResolver = new CommandResolverImpl(
@@ -128,6 +128,7 @@ function setup(service = Service.a, pageSize = "") {
           />
         </StoreProvider>
       </DependencyProvider>
+      {/* </AuthProvider> */}
     </MemoryRouter>
   );
 

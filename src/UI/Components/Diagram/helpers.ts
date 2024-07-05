@@ -454,7 +454,7 @@ export const findCorrespondingId = (
 export const updateLabelPosition = (
   side: "target" | "source",
   _refBBox: g.Rect,
-  node: SVGSVGElement,
+  _node: SVGSVGElement,
   _attrs: { [key: string]: unknown },
   linkView: LabelLinkView, //dia.LinkView & dia.Link doesn't have sourceView or targetView properties in the model
 ): { textAnchor: "start" | "end"; x: number; y: number } => {
@@ -469,10 +469,10 @@ export const updateLabelPosition = (
   if (viewCoordinates && anchorCoordinates) {
     if (viewCoordinates.x !== anchorCoordinates.x) {
       textAnchor = "start";
-      tx = node.getBBox().width / 2 + 6;
+      tx = 15;
     } else {
       textAnchor = "end";
-      tx = node.getBBox().width / -2 - 6;
+      tx = -15;
     }
   }
   const isTargetBelow =

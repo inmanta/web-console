@@ -1,23 +1,23 @@
-import React from "react";
-import { act, render, screen } from "@testing-library/react";
+import React, { act } from "react";
+import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { Either, EnvironmentDetails, RemoteData } from "@/Core";
 import {
   CommandManagerResolverImpl,
   CommandResolverImpl,
+  defaultAuthContext,
   getStoreInstance,
-  KeycloakAuthHelper,
 } from "@/Data";
+import { ServiceInventoryContext } from "@/Slices/ServiceInventory/UI/ServiceInventory";
 import { DeferredApiHelper, dependencies, ServiceInstance } from "@/Test";
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
-import { GetInstancesContext } from "../../../GetInstancesContext";
 import { DestroyAction } from "./DestroyAction";
 
 function setup() {
   const apiHelper = new DeferredApiHelper();
-  const authHelper = new KeycloakAuthHelper();
+
   const storeInstance = getStoreInstance();
   storeInstance.dispatch.environment.setEnvironmentDetailsById({
     id: ServiceInstance.a.environment,
@@ -29,7 +29,11 @@ function setup() {
   );
 
   const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolverImpl(storeInstance, apiHelper, authHelper),
+    new CommandManagerResolverImpl(
+      storeInstance,
+      apiHelper,
+      defaultAuthContext,
+    ),
   );
   const refetch = jest.fn();
   return {
@@ -41,7 +45,20 @@ function setup() {
             commandResolver,
           }}
         >
-          <GetInstancesContext.Provider value={{ refetch }}>
+          <ServiceInventoryContext.Provider
+            value={{
+              labelFiltering: {
+                danger: [],
+                warning: [],
+                success: [],
+                info: [],
+                no_label: [],
+                onClick: jest.fn(),
+              },
+
+              refetch,
+            }}
+          >
             <DestroyAction
               id={ServiceInstance.a.id}
               instance_identity={
@@ -51,7 +68,7 @@ function setup() {
               version={ServiceInstance.a.version}
               service_entity={ServiceInstance.a.service_entity}
             />
-          </GetInstancesContext.Provider>
+          </ServiceInventoryContext.Provider>
         </DependencyProvider>
       </StoreProvider>
     ),

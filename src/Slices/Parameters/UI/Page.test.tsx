@@ -1,6 +1,6 @@
-import React from "react";
+import React, { act } from "react";
 import { MemoryRouter } from "react-router-dom";
-import { act, render, screen, within } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { axe, toHaveNoViolations } from "jest-axe";
@@ -8,8 +8,8 @@ import { Either } from "@/Core";
 import {
   QueryResolverImpl,
   getStoreInstance,
-  KeycloakAuthHelper,
   CommandResolverImpl,
+  defaultAuthContext,
 } from "@/Data";
 import { UpdateInstanceAttributeCommandManager } from "@/Data/Managers/UpdateInstanceAttribute";
 import {
@@ -44,7 +44,7 @@ function setup() {
     ]),
   );
   const updateAttribute = UpdateInstanceAttributeCommandManager(
-    new KeycloakAuthHelper(),
+    defaultAuthContext,
     apiHelper,
   );
   const commandResolver = new CommandResolverImpl(

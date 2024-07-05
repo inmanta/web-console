@@ -2,10 +2,10 @@ import React, { useContext, useState } from "react";
 import { MenuItem, Modal, Text } from "@patternfly/react-core";
 import { WarningTriangleIcon } from "@patternfly/react-icons";
 import { Maybe, VersionedServiceInstanceIdentifier } from "@/Core";
+import { ServiceInventoryContext } from "@/Slices/ServiceInventory/UI/ServiceInventory";
 import { ToastAlert, ConfirmUserActionForm } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
-import { GetInstancesContext } from "@S/ServiceInventory/UI/GetInstancesContext";
 
 interface Props extends VersionedServiceInstanceIdentifier {
   instance_identity: string;
@@ -23,7 +23,7 @@ export const DestroyAction: React.FC<Props> = ({
   };
   const [errorMessage, setErrorMessage] = useState("");
   const { commandResolver } = useContext(DependencyContext);
-  const { refetch } = useContext(GetInstancesContext);
+  const { refetch } = useContext(ServiceInventoryContext);
 
   const trigger = commandResolver.useGetTrigger<"DestroyInstance">({
     kind: "DestroyInstance",

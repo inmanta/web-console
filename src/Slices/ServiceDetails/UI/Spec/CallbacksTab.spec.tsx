@@ -1,6 +1,6 @@
-import React from "react";
+import React, { act } from "react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
-import { act, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { Either, getShortUuidFromRaw } from "@/Core";
@@ -16,6 +16,7 @@ import {
   ServiceKeyMaker,
   ServiceStateHelper,
 } from "@/Data";
+import { defaultAuthContext } from "@/Data/Auth/AuthContext";
 import {
   DynamicCommandManagerResolverImpl,
   DynamicQueryManagerResolverImpl,
@@ -68,7 +69,7 @@ function setup() {
   );
 
   const deleteServiceCommandManager = DeleteServiceCommandManager(
-    new BaseApiHelper(),
+    BaseApiHelper(undefined, defaultAuthContext),
   );
 
   const deleteCallbackCommandManager = DeleteCallbackCommandManager(

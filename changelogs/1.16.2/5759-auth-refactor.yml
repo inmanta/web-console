@@ -1,0 +1,6 @@
+description: Refactor Authentication to simplify the flow and make it more maintainable and adjustable for new authentication providers
+issue-nr: 5759
+change-type: patch
+destination-branches: [master, iso7]
+sections:
+  minor-improvement: "{{description}}"

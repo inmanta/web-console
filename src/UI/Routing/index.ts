@@ -4,3 +4,4 @@ export * from "./Utils";
 export * from "./SearchSanitizer";
 export * from "./PageStateSanitizer";
 export * from "./SearchHelper";
+export * from "./RouteOutlet";

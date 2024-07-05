@@ -83,7 +83,7 @@ test("getUrl returns correct url for empty filter", () => {
     name,
     filter: {
       state: [],
-      id: [],
+      id_or_service_identity: [],
       attributeSetEmpty: [],
       attributeSetNotEmpty: [],
     },

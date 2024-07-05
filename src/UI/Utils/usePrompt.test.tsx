@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, act } from "react";
 import { Link, Route, Routes } from "react-router-dom";
 import { cleanup, render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { act } from "react-dom/test-utils";
 import CustomRouter from "../Routing/CustomRouter";
 import history from "../Routing/history";
 import { usePrompt } from "./usePrompt";
@@ -58,7 +57,7 @@ test("GIVEN usePrompt WHEN hook's parameter is equal true and user cancel alert 
     await userEvent.click(link);
   });
 
-  expect(prompt).toBeCalledTimes(1);
+  expect(prompt).toHaveBeenCalledTimes(1);
   expect(window.location.pathname).toMatch("/");
 });
 
@@ -70,7 +69,7 @@ test("GIVEN usePrompt WHEN hook's parameter is equal false THEN page is changed"
   await act(async () => {
     await userEvent.click(link);
   });
-  expect(prompt).toBeCalledTimes(0);
+  expect(prompt).toHaveBeenCalledTimes(0);
   expect(window.location.pathname).toMatch("/page");
 });
 
@@ -93,6 +92,6 @@ test("GIVEN usePrompt WHEN hook's parameter is equal true and user confirm alert
     await userEvent.click(link);
   });
 
-  expect(prompt).toBeCalledTimes(1);
+  expect(prompt).toHaveBeenCalledTimes(1);
   expect(window.location.pathname).toMatch("/page");
 });
