@@ -194,7 +194,8 @@ describe("Scenario 4 Desired State", () => {
       cy.get(".pf-v5-c-description-list__group")
         .eq(1)
         .find(".pf-v5-c-description-list__term")
-        .should("have.text", "next_version");
+        .should("have.text", "next_desired_state_version");
+
       cy.get(".pf-v5-c-description-list__group")
         .eq(1)
         .find(".pf-v5-c-description-list__description")
@@ -203,16 +204,16 @@ describe("Scenario 4 Desired State", () => {
       cy.get(".pf-v5-c-description-list__group")
         .eq(2)
         .find(".pf-v5-c-description-list__term")
-        .should("have.text", "purge_on_delete");
+        .should("have.text", "next_version");
       cy.get(".pf-v5-c-description-list__group")
         .eq(2)
         .find(".pf-v5-c-description-list__description")
-        .should("have.text", "false");
+        .should("have.text", "4");
 
       cy.get(".pf-v5-c-description-list__group")
         .eq(3)
         .find(".pf-v5-c-description-list__term")
-        .should("have.text", "purged");
+        .should("have.text", "purge_on_delete");
       cy.get(".pf-v5-c-description-list__group")
         .eq(3)
         .find(".pf-v5-c-description-list__description")
@@ -221,9 +222,18 @@ describe("Scenario 4 Desired State", () => {
       cy.get(".pf-v5-c-description-list__group")
         .eq(4)
         .find(".pf-v5-c-description-list__term")
-        .should("have.text", "requires");
+        .should("have.text", "purged");
       cy.get(".pf-v5-c-description-list__group")
         .eq(4)
+        .find(".pf-v5-c-description-list__description")
+        .should("have.text", "false");
+
+      cy.get(".pf-v5-c-description-list__group")
+        .eq(5)
+        .find(".pf-v5-c-description-list__term")
+        .should("have.text", "requires");
+      cy.get(".pf-v5-c-description-list__group")
+        .eq(5)
         .find(".pf-v5-c-description-list__description")
         .should(
           "include.text",
@@ -231,11 +241,11 @@ describe("Scenario 4 Desired State", () => {
         );
 
       cy.get(".pf-v5-c-description-list__group")
-        .eq(5)
+        .eq(6)
         .find(".pf-v5-c-description-list__term")
         .should("have.text", "resources");
       cy.get(".pf-v5-c-description-list__group")
-        .eq(5)
+        .eq(6)
         .find(".pf-v5-c-description-list__description")
         .should(
           "include.text",
@@ -243,20 +253,20 @@ describe("Scenario 4 Desired State", () => {
         );
 
       cy.get(".pf-v5-c-description-list__group")
-        .eq(6)
+        .eq(7)
         .find(".pf-v5-c-description-list__term")
         .should("have.text", "send_event");
       cy.get(".pf-v5-c-description-list__group")
-        .eq(6)
+        .eq(7)
         .find(".pf-v5-c-description-list__description")
         .should("have.text", "false");
 
       cy.get(".pf-v5-c-description-list__group")
-        .eq(7)
+        .eq(8)
         .find(".pf-v5-c-description-list__term")
         .should("have.text", "service_entity");
       cy.get(".pf-v5-c-description-list__group")
-        .eq(7)
+        .eq(8)
         .find(".pf-v5-c-description-list__description")
         .should("have.text", "basic-service");
     }
@@ -421,7 +431,7 @@ describe("Scenario 4 Desired State", () => {
         );
         if (isIso) {
           expect($expandableRow.eq(1), "second-row").to.have.text(
-            "next_version-3+4",
+            "next_desired_state_version+4next_version-3+4",
           );
         } else {
           expect($expandableRow.eq(1), "second-row").to.have.text(
@@ -490,10 +500,13 @@ describe("Scenario 4 Desired State", () => {
 
         if (isIso) {
           const $tdElements = $expandableRow.find("td");
-          expect($tdElements.eq(0)).to.have.text("-");
-          expect($tdElements.eq(1)).to.have.text("3");
+          expect($tdElements.eq(0)).to.have.text("");
           expect($tdElements.eq(2)).to.have.text("+");
           expect($tdElements.eq(3)).to.have.text("4");
+          expect($tdElements.eq(4)).to.have.text("-");
+          expect($tdElements.eq(5)).to.have.text("3");
+          expect($tdElements.eq(6)).to.have.text("+");
+          expect($tdElements.eq(7)).to.have.text("4");
         }
       },
     );
@@ -513,10 +526,13 @@ describe("Scenario 4 Desired State", () => {
 
           if (isIso) {
             const $tdElements = $expandableRow.find("td");
-            expect($tdElements.eq(0)).to.have.text("-");
-            expect($tdElements.eq(1)).to.have.text("3");
+            expect($tdElements.eq(0)).to.have.text("");
             expect($tdElements.eq(2)).to.have.text("+");
             expect($tdElements.eq(3)).to.have.text("4");
+            expect($tdElements.eq(4)).to.have.text("-");
+            expect($tdElements.eq(5)).to.have.text("3");
+            expect($tdElements.eq(6)).to.have.text("+");
+            expect($tdElements.eq(7)).to.have.text("4");
           }
         },
       );
@@ -557,10 +573,13 @@ describe("Scenario 4 Desired State", () => {
 
         if (isIso) {
           const $tdElements = $expandableRow.find("td");
-          expect($tdElements.eq(0)).to.have.text("-");
-          expect($tdElements.eq(1)).to.have.text("3");
+          expect($tdElements.eq(0)).to.have.text("");
           expect($tdElements.eq(2)).to.have.text("+");
           expect($tdElements.eq(3)).to.have.text("4");
+          expect($tdElements.eq(4)).to.have.text("-");
+          expect($tdElements.eq(5)).to.have.text("3");
+          expect($tdElements.eq(6)).to.have.text("+");
+          expect($tdElements.eq(7)).to.have.text("4");
         }
       },
     );
