@@ -293,6 +293,63 @@ test("ResourcesView sets sorting parameters correctly on click", async () => {
   });
 });
 
+test("GIVEN ResourcesView WHEN sorting THEN then we  are sent back to the first page", async () => {
+  const { component, apiHelper } = setup();
+  render(component);
+
+  //mock that response has more than one site
+  await act(async () => {
+    await apiHelper.resolve(
+      Either.right({
+        data: Resource.response.data.slice(0, 3),
+        links: {
+          ...Resource.response.links,
+          next: "/fake-link?end=fake-first-param",
+        },
+        metadata: Resource.response.metadata,
+      }),
+    );
+  });
+
+  const nextPageButton = screen.getAllByLabelText("Go to next page")[0];
+  expect(nextPageButton).toBeEnabled();
+
+  await act(async () => {
+    await userEvent.click(nextPageButton);
+  });
+  //expect to api url to contain start and end which are used for pagination as we are moving to the next page
+  expect(apiHelper.pendingRequests[0].url).toMatch(/(&start=|&end=)/);
+  expect(apiHelper.pendingRequests[0].url).toMatch(/(&sort=resource_type.asc)/);
+
+  await act(async () => {
+    await apiHelper.resolve(
+      Either.right({
+        data: Resource.response.data.slice(0, 3),
+        links: {
+          ...Resource.response.links,
+          next: "/fake-link?end=fake-first-param",
+        },
+        metadata: Resource.response.metadata,
+      }),
+    );
+  });
+  //sort on the second page
+  await act(async () => {
+    await userEvent.click(
+      screen.getByRole("button", {
+        name: "Type",
+      }),
+    );
+  });
+
+  //expect to api url to not contain start and end which are used for pagination which would mean we  are sent back to the first page
+  //we are asserting on the second request as the first request is for the updated sorting event, and second is chained to back to the first page with still correct sorting
+  expect(apiHelper.pendingRequests[1].url).not.toMatch(/(&start=|&end=)/);
+  expect(apiHelper.pendingRequests[1].url).toMatch(
+    /(&sort=resource_type.desc)/,
+  );
+});
+
 it.each`
   filterType  | filterValue | placeholderText                                 | filterUrlName
   ${"search"} | ${"agent2"} | ${words("resources.filters.agent.placeholder")} | ${"agent"}

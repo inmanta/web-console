@@ -157,3 +157,61 @@ test("GIVEN The Resources table WHEN the user clicks on the expansion toggle THE
   ).toBeVisible();
   expect(screen.getAllByRole("tab", { name: "Requires" })[0]).toBeVisible();
 });
+
+test("GIVEN The Resources table WHEN updating sorting THEN then we are displaying back the first page", async () => {
+  const { component, apiHelper } = setup();
+  render(component);
+
+  //mock that response has more than one site
+  await act(async () => {
+    apiHelper.resolve(
+      Either.right({
+        ...ResourceHistory.response,
+        metadata: {
+          total: 103,
+          before: 0,
+          after: 3,
+          page_size: 100,
+        },
+        links: {
+          ...ResourceHistory.response.links,
+          next: "/fake-link?end=fake-first-param",
+        },
+      }),
+    );
+  });
+
+  const nextPageButton = screen.getByLabelText("Go to next page");
+  expect(nextPageButton).toBeEnabled();
+
+  await act(async () => {
+    await userEvent.click(nextPageButton);
+  });
+  //expect to api url to contain start and end which are used for pagination as we are moving to the next page
+  expect(apiHelper.pendingRequests[0].url).toMatch(/(&start=|&end=)/);
+  expect(apiHelper.pendingRequests[0].url).toMatch(/(&sort=date.desc)/);
+
+  await act(async () => {
+    apiHelper.resolve(
+      Either.right({
+        ...ResourceHistory.response,
+        metadata: {
+          total: 103,
+          before: 100,
+          after: 0,
+          page_size: 100,
+        },
+      }),
+    );
+  });
+
+  //sort on the second page
+  await act(async () => {
+    await userEvent.click(screen.getByRole("button", { name: "Date" }));
+  });
+
+  //expect to api url to not contain start and end which are used for pagination which would mean we  are sent back to the first page
+  //we are asserting on the second request as the first request is for the updated sorting event, and second is chained to back to the first page with still correct sorting
+  expect(apiHelper.pendingRequests[1].url).not.toMatch(/(&start=|&end=)/);
+  expect(apiHelper.pendingRequests[1].url).toMatch(/(&sort=date.asc)/);
+});

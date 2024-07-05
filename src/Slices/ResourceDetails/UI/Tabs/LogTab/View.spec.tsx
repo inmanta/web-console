@@ -108,3 +108,46 @@ test("GIVEN ResourceLogsView WHEN filtered on message THEN only shows relevant l
   });
   expect(row).toBeInTheDocument();
 });
+
+test("GIVEN ResourceLogsView WHEN sorting THEN then we  are sent back to the first page", async () => {
+  const { component, apiHelper } = setup();
+  render(component);
+
+  //mock that response has more than one site
+  await act(async () => {
+    apiHelper.resolve(
+      Either.right({
+        ...ResourceLogs.response,
+        metadata: {
+          total: 103,
+          before: 0,
+          after: 3,
+          page_size: 100,
+        },
+      }),
+    );
+  });
+
+  expect(screen.getByLabelText("Go to next page")).toBeEnabled();
+  await act(async () => {
+    await userEvent.click(screen.getByLabelText("Go to next page"));
+  });
+
+  //expect to api url to contain start and end which are used for pagination as we are moving to the next page
+  expect(apiHelper.pendingRequests[0].url).toMatch(/(&start=|&end=)/);
+  expect(apiHelper.pendingRequests[0].url).toMatch(/(&sort=timestamp.desc)/);
+
+  await act(async () => {
+    apiHelper.resolve(Either.right(ResourceLogs.response));
+  });
+
+  //sort on the second page
+  await act(async () => {
+    await userEvent.click(screen.getByText("Timestamp"));
+  });
+
+  //expect to api url to not contain start and end which are used for pagination which would mean we  are sent back to the first page
+  //we are asserting on the second request as the first request is for the updated sorting event, and second is chained to back to the first page with still correct sorting
+  expect(apiHelper.pendingRequests[1].url).not.toMatch(/(&start=|&end=)/);
+  expect(apiHelper.pendingRequests[1].url).toMatch(/(&sort=timestamp.asc)/);
+});
