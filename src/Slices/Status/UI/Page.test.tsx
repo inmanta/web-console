@@ -1,4 +1,5 @@
 import React, { act } from "react";
+import { Page } from "@patternfly/react-core";
 import { render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
@@ -24,7 +25,7 @@ import {
 } from "@/Test";
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
-import { Page } from "./Page";
+import { StatusPage } from ".";
 
 expect.extend(toHaveNoViolations);
 
@@ -84,7 +85,9 @@ function setup(useMockArchiveHelper = false) {
       }}
     >
       <StoreProvider store={store}>
-        <Page />
+        <Page>
+          <StatusPage />
+        </Page>
       </StoreProvider>
     </DependencyProvider>
   );

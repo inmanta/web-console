@@ -11,7 +11,7 @@ export const Wrapper: React.FC<React.PropsWithChildren<Props>> = ({
   name,
   ...props
 }) => (
-  <PageContainer {...props} title={words("inventory.title")(name)}>
+  <PageContainer {...props} pageTitle={words("inventory.title")(name)}>
     {children}
   </PageContainer>
 );

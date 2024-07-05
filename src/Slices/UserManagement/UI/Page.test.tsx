@@ -1,5 +1,6 @@
 import React, { act } from "react";
 import { MemoryRouter } from "react-router-dom";
+import { Page } from "@patternfly/react-core";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
@@ -20,11 +21,14 @@ const setup = () => {
     <MemoryRouter>
       <QueryClientProvider client={queryClient}>
         <DependencyProvider dependencies={{ ...dependencies }}>
-          <UserManagementPage />
+          <Page>
+            <UserManagementPage />
+          </Page>
         </DependencyProvider>
       </QueryClientProvider>
     </MemoryRouter>
   );
+
   return component;
 };
 

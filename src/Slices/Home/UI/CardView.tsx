@@ -28,7 +28,7 @@ export const CardView: React.FC<Props> = ({ environments, ...props }) => {
   const pathname = routeManager.getUrl("Dashboard", undefined);
 
   return (
-    <PageSection isFilled>
+    <PageSection>
       <Gallery
         hasGutter
         minWidths={{

@@ -1,5 +1,6 @@
 import React, { act } from "react";
 import { MemoryRouter } from "react-router-dom";
+import { Page } from "@patternfly/react-core";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
@@ -47,7 +48,9 @@ function setup() {
         }}
       >
         <StoreProvider store={store}>
-          <View id={Resource.id} />
+          <Page>
+            <View id={Resource.id} />
+          </Page>
         </StoreProvider>
       </DependencyProvider>
     </MemoryRouter>
