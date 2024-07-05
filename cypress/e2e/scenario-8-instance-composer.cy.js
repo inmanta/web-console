@@ -126,7 +126,7 @@ if (Cypress.env("edition") === "iso") {
         .trigger("mousedown")
         .trigger("mousemove", {
           clientX: 700,
-          clientY: 100,
+          clientY: 300,
         })
         .trigger("mouseup");
 
@@ -155,7 +155,7 @@ if (Cypress.env("edition") === "iso") {
         .trigger("mousedown")
         .trigger("mousemove", {
           clientX: 300,
-          clientY: 100,
+          clientY: 300,
         })
         .trigger("mouseup");
 
@@ -175,7 +175,7 @@ if (Cypress.env("edition") === "iso") {
         .trigger("mousedown")
         .trigger("mousemove", {
           clientX: 100,
-          clientY: 100,
+          clientY: 300,
         })
         .trigger("mouseup");
 
@@ -185,8 +185,8 @@ if (Cypress.env("edition") === "iso") {
         .trigger("mouseover")
         .trigger("mousedown")
         .trigger("mousemove", {
-          clientX: 1000,
-          clientY: 350,
+          clientX: 1100,
+          clientY: 450,
         })
         .trigger("mouseup");
 
@@ -257,7 +257,7 @@ if (Cypress.env("edition") === "iso") {
         .trigger("mouseover")
         .trigger("mousedown")
         .trigger("mousemove", {
-          clientX: 2200,
+          clientX: 1800,
           clientY: 500,
         })
         .trigger("mouseup");
@@ -282,7 +282,7 @@ if (Cypress.env("edition") === "iso") {
         .trigger("mousedown")
         .trigger("mousemove", {
           clientX: 1200,
-          clientY: 300,
+          clientY: 500,
         })
         .trigger("mouseup");
 
@@ -413,7 +413,7 @@ if (Cypress.env("edition") === "iso") {
         .trigger("mousedown")
         .trigger("mousemove", {
           clientX: 700,
-          clientY: 100,
+          clientY: 300,
         })
         .trigger("mouseup");
 
@@ -483,7 +483,7 @@ if (Cypress.env("edition") === "iso") {
         .trigger("mousedown")
         .trigger("mousemove", {
           clientX: 700,
-          clientY: 100,
+          clientY: 300,
         })
         .trigger("mouseup");
       cy.get('[joint-selector="headerLabel"]')
@@ -494,7 +494,7 @@ if (Cypress.env("edition") === "iso") {
         .trigger("mousedown")
         .trigger("mousemove", {
           clientX: 400,
-          clientY: 100,
+          clientY: 300,
         })
         .trigger("mouseup");
       cy.get("button").contains("Deploy").click();
@@ -552,7 +552,7 @@ if (Cypress.env("edition") === "iso") {
         .trigger("mousedown")
         .trigger("mousemove", {
           clientX: 700,
-          clientY: 100,
+          clientY: 300,
         })
         .trigger("mouseup");
 
