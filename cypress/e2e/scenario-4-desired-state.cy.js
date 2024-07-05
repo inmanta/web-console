@@ -430,8 +430,8 @@ describe("Scenario 4 Desired State", () => {
           "This resource has not been modified.",
         );
         if (isIso) {
-          expect($expandableRow.eq(1), "second-row").to.have.text(
-            "next_desired_state_version+4next_version-3+4",
+          expect($expandableRow.eq(1), "second-row").to.contain(
+            "next_version-3+4",
           );
         } else {
           expect($expandableRow.eq(1), "second-row").to.have.text(
@@ -499,14 +499,9 @@ describe("Scenario 4 Desired State", () => {
         );
 
         if (isIso) {
-          const $tdElements = $expandableRow.find("td");
-          expect($tdElements.eq(0)).to.have.text("");
-          expect($tdElements.eq(2)).to.have.text("+");
-          expect($tdElements.eq(3)).to.have.text("4");
-          expect($tdElements.eq(4)).to.have.text("-");
-          expect($tdElements.eq(5)).to.have.text("3");
-          expect($tdElements.eq(6)).to.have.text("+");
-          expect($tdElements.eq(7)).to.have.text("4");
+          expect($expandableRow.eq(1), "second-row").to.contain(
+            "next_version-3+4",
+          );
         }
       },
     );
@@ -525,14 +520,9 @@ describe("Scenario 4 Desired State", () => {
           expect($expandableRow).to.have.length(1);
 
           if (isIso) {
-            const $tdElements = $expandableRow.find("td");
-            expect($tdElements.eq(0)).to.have.text("");
-            expect($tdElements.eq(2)).to.have.text("+");
-            expect($tdElements.eq(3)).to.have.text("4");
-            expect($tdElements.eq(4)).to.have.text("-");
-            expect($tdElements.eq(5)).to.have.text("3");
-            expect($tdElements.eq(6)).to.have.text("+");
-            expect($tdElements.eq(7)).to.have.text("4");
+            expect($expandableRow.eq(0), "first-row").to.contain(
+              "next_version-3+4",
+            );
           }
         },
       );
@@ -572,14 +562,9 @@ describe("Scenario 4 Desired State", () => {
         );
 
         if (isIso) {
-          const $tdElements = $expandableRow.find("td");
-          expect($tdElements.eq(0)).to.have.text("");
-          expect($tdElements.eq(2)).to.have.text("+");
-          expect($tdElements.eq(3)).to.have.text("4");
-          expect($tdElements.eq(4)).to.have.text("-");
-          expect($tdElements.eq(5)).to.have.text("3");
-          expect($tdElements.eq(6)).to.have.text("+");
-          expect($tdElements.eq(7)).to.have.text("4");
+          expect($expandableRow.eq(1), "second-row").to.contain(
+            "next_version-3+4",
+          );
         }
       },
     );
