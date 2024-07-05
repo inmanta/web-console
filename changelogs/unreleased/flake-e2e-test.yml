@@ -1,0 +1,5 @@
+change-type: patch
+description: 'fix flake e2e test for desired state page.'
+destination-branches:
+- master
+- iso7
