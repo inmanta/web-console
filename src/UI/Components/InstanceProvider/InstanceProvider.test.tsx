@@ -69,7 +69,7 @@ describe("UserManagementPage", () => {
     });
   });
 
-  it("should render error view when is there is error returned from the instance endpoint", async () => {
+  it("should render the ErrorView when there is an error returned from the instance endpoint", async () => {
     server.use(
       http.get("/lsm/v1/service_inventory", async () => {
         return HttpResponse.json({ message: "instance_fail" }, { status: 400 });
@@ -95,7 +95,7 @@ describe("UserManagementPage", () => {
     });
   });
 
-  it("should render error view when is there is error returned from the metadata endpoint", async () => {
+  it("should render the ErrorView when there is an error returned from the metadata endpoint", async () => {
     server.use(
       http.get("/lsm/v1/service_inventory", async () => {
         return HttpResponse.json({

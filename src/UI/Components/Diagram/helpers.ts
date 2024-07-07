@@ -533,7 +533,7 @@ export const toggleLooseElement = (
 };
 
 /**
- * Gets the coordinates of all cells in the graph.
+ * Gets the coordinates of all cells in the graph. https://resources.jointjs.com/docs/jointjs/v4.0/joint.html#dia.Graph
  *
  * @param {dia.Graph} graph - The graph from which to get the cells.
  * @returns {SavedCoordinates[]} An array of objects, each containing the id, name, attributes, and coordinates of a cell.
@@ -551,7 +551,7 @@ export const getCellsCoordinates = (graph: dia.Graph): SavedCoordinates[] => {
 };
 
 /**
- * Applies coordinates to cells in the graph.
+ * Applies coordinates to cells in the graph. https://resources.jointjs.com/docs/jointjs/v4.0/joint.html#dia.Graph
  *
  * @param {dia.Graph} graph - The graph to which to apply the coordinates.
  * @param {SavedCoordinates[]} coordinates - The coordinates to apply to the cells.
@@ -586,10 +586,10 @@ export const applyCoordinatesToCells = (
 export const moveCellFromColliding = (graph: dia.Graph, cell: dia.Cell) => {
   let isColliding = false;
   do {
-    const elementsUnder = graph
+    const overlappingCells = graph
       .findModelsInArea(cell.getBBox())
       .filter((el) => el.id !== cell.id);
-    if (elementsUnder.length > 0) {
+    if (overlappingCells.length > 0) {
       isColliding = true;
       // an overlap found, revert the position
       const coordinates = cell.position();

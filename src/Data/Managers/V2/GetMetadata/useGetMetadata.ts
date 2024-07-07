@@ -25,7 +25,7 @@ export const useGetMetadata = (
   service_entity: string,
   service_id: string,
   key: string,
-  instanceVersion?: ParsedNumber,
+  instanceVersion?: ParsedNumber | null,
 ): GetMetadataHook => {
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
@@ -72,7 +72,7 @@ export const useGetMetadata = (
           instanceVersion,
         ],
         retry: false,
-        enabled: instanceVersion !== undefined,
+        enabled: instanceVersion !== null,
         select: (data) => data.data,
       }),
   };

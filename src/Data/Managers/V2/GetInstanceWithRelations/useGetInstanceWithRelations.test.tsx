@@ -7,7 +7,7 @@ import { testInstance } from "@/UI/Components/Diagram/Mock";
 import { useGetInstanceWithRelations } from "./useGetInstanceWithRelations";
 
 export const server = setupServer(
-  http.get("*", async (params) => {
+  http.get("/lsm/v1/service_inventory", async (params) => {
     if (params.request.url.match(/test_id/)) {
       return HttpResponse.json({
         data: {
@@ -45,7 +45,7 @@ const createWrapper = () => {
   );
 };
 
-test("when instance returned has referenced other instance, then query will fetch both of them", async () => {
+test("when instance fetched has referenced other instances, then query will returns given instance with relatedInstances", async () => {
   const { result } = renderHook(
     () => useGetInstanceWithRelations("test_id", "env").useOneTime(),
     {
@@ -63,7 +63,7 @@ test("when instance returned has referenced other instance, then query will fetc
   );
 });
 
-test("when instance returned hasn't referenced other instance, then query will fetch only one instance", async () => {
+test("when instance returned has referenced other instance, then query will returns given instance without relatedInstances", async () => {
   const { result } = renderHook(
     () => useGetInstanceWithRelations("test_mpn_id", "env").useOneTime(),
     {

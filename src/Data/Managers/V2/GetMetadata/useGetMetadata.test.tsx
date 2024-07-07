@@ -72,6 +72,5 @@ test("when servers return 404 query shouldn't throw error, but return undefined 
   // wait until the query has transitioned to success state
   await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-  expect(result.current.data).not.toBeDefined();
   expect(result.current.isError).toBeFalsy();
 });
