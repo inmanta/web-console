@@ -105,7 +105,7 @@ const Canvas: React.FC<{
   };
 
   /**
-   * Handles the filtering of the unchanged entities and sending bundled instances to the backend.
+   * Handles the filtering of the unchanged entities and sending serviceOrderItems to the backend.
    *
    */
   const handleDeploy = async () => {

@@ -45,7 +45,7 @@ const createWrapper = () => {
   );
 };
 
-test("when instance fetched has referenced other instances, then query will returns given instance with relatedInstances", async () => {
+test("if the fetched instance has referenced other instance, then query will returns given instance with that related instance", async () => {
   const { result } = renderHook(
     () => useGetInstanceWithRelations("test_id", "env").useOneTime(),
     {
