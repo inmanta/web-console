@@ -664,8 +664,8 @@ if (Cypress.env("edition") === "iso") {
         .trigger("mouseover")
         .trigger("mousedown")
         .trigger("mousemove", {
-          clientX: 600,
-          clientY: 300,
+          clientX: 1200,
+          clientY: 400,
         })
         .trigger("mouseup");
       cy.get('[data-type="Link"]').eq(0).trigger("mouseover", { force: true });
@@ -689,8 +689,8 @@ if (Cypress.env("edition") === "iso") {
         .trigger("mouseover")
         .trigger("mousedown")
         .trigger("mousemove", {
-          clientX: 900,
-          clientY: 100,
+          clientX: 1100,
+          clientY: 300,
         })
         .trigger("mouseup");
       cy.get("button").contains("Deploy").click();
