@@ -109,7 +109,7 @@ test("GIVEN ResourceLogsView WHEN filtered on message THEN only shows relevant l
   expect(row).toBeInTheDocument();
 });
 
-test("GIVEN ResourceLogsView WHEN sorting THEN then we  are sent back to the first page", async () => {
+test("GIVEN ResourceLogsView WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async () => {
   const { component, apiHelper } = setup();
   render(component);
 
@@ -133,7 +133,7 @@ test("GIVEN ResourceLogsView WHEN sorting THEN then we  are sent back to the fir
     await userEvent.click(screen.getByLabelText("Go to next page"));
   });
 
-  //expect to api url to contain start and end which are used for pagination as we are moving to the next page
+  //expect the api url to contain start and end keywords that are used for pagination when we are moving to the next page
   expect(apiHelper.pendingRequests[0].url).toMatch(/(&start=|&end=)/);
   expect(apiHelper.pendingRequests[0].url).toMatch(/(&sort=timestamp.desc)/);
 

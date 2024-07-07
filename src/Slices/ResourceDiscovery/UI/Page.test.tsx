@@ -117,7 +117,7 @@ test("GIVEN Discovered Resources page THEN sets sorting parameters correctly on 
   });
 });
 
-test("GIVEN Discovered Resources WHEN sorting THEN then we  are sent back to the first page", async () => {
+test("GIVEN Discovered Resources WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async () => {
   const { component, apiHelper } = setup();
   render(component);
 
@@ -146,7 +146,7 @@ test("GIVEN Discovered Resources WHEN sorting THEN then we  are sent back to the
     await userEvent.click(screen.getByLabelText("Go to next page"));
   });
 
-  //expect to api url to contain start and end which are used for pagination as we are moving to the next page
+  //expect the api url to contain start and end keywords that are used for pagination when we are moving to the next page
   expect(apiHelper.pendingRequests[0].url).toMatch(/(&start=|&end=)/);
   expect(apiHelper.pendingRequests[0].url).toMatch(
     /(&sort=discovered_resource_id.asc)/,

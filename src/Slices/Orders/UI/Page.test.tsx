@@ -172,7 +172,7 @@ test("GIVEN OrdersView WHEN updating sorting THEN then we are displaying back th
   await act(async () => {
     await userEvent.click(nextPageButton);
   });
-  //expect to api url to contain start and end which are used for pagination as we are moving to the next page
+  //expect the api url to contain start and end keywords that are used for pagination when we are moving to the next page
   expect(apiHelper.pendingRequests[0].url).toMatch(/(&start=|&end=)/);
   expect(apiHelper.pendingRequests[0].url).toMatch(/(&sort=created_at.desc)/);
 
