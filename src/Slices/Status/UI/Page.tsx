@@ -15,7 +15,7 @@ export const Page: React.FC = () => {
   });
 
   return (
-    <PageContainer title={words("status.title")}>
+    <PageContainer pageTitle={words("status.title")}>
       <Flex justifyContent={{ default: "justifyContentSpaceBetween" }}>
         <FlexItem>
           <Description>{words("status.description")}</Description>

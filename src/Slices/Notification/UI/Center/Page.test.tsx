@@ -1,5 +1,6 @@
 import React, { act } from "react";
 import { MemoryRouter } from "react-router-dom";
+import { Page } from "@patternfly/react-core";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
@@ -16,7 +17,7 @@ import {
 import { DeferredApiHelper, dependencies, StaticScheduler } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import * as Mock from "@S/Notification/Core/Mock";
-import { Page } from "./Page";
+import { NotificationCenterPage } from ".";
 
 expect.extend(toHaveNoViolations);
 
@@ -44,7 +45,9 @@ const setup = (entries?: string[]) => {
         <DependencyProvider
           dependencies={{ ...dependencies, queryResolver, commandResolver }}
         >
-          <Page />
+          <Page>
+            <NotificationCenterPage />
+          </Page>
         </DependencyProvider>
       </StoreProvider>
     </MemoryRouter>

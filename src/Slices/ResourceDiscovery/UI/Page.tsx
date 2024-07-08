@@ -54,7 +54,7 @@ export const Page: React.FC = () => {
   }, [sort.order]);
 
   return (
-    <PageContainer title={words("discovered_resources.title")}>
+    <PageContainer pageTitle={words("discovered_resources.title")}>
       <TableControls
         paginationWidget={
           <PaginationWidget

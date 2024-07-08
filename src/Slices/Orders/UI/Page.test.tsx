@@ -1,4 +1,5 @@
 import React, { act } from "react";
+import { Page } from "@patternfly/react-core";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { axe, toHaveNoViolations } from "jest-axe";
@@ -9,7 +10,11 @@ import { OrdersPage } from ".";
 
 expect.extend(toHaveNoViolations);
 
-const OrderPage = <OrdersPage />;
+const OrderPage = (
+  <Page>
+    <OrdersPage />
+  </Page>
+);
 
 test("OrdersView shows empty table", async () => {
   const { component, apiHelper } = baseSetup(OrderPage);

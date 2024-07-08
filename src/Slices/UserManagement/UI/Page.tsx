@@ -31,7 +31,7 @@ export const UserManagementPage: React.FC = () => {
     );
 
   return (
-    <PageContainer title={words("userManagement.title")}>
+    <PageContainer pageTitle={words("userManagement.title")}>
       <AddUserModal
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}

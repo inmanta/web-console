@@ -61,7 +61,7 @@ export const Page: React.FC<{ version: string }> = ({ version }) => {
   }, [sort.order]);
 
   return (
-    <PageContainer title={words("desiredState.details.title")}>
+    <PageContainer pageTitle={words("desiredState.details.title")}>
       <Controls
         paginationWidget={
           <PaginationWidget

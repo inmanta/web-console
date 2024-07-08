@@ -51,7 +51,7 @@ export const Page: React.FC = () => {
   }, [sort.order]);
 
   return (
-    <PageContainer title={words("agents.title")}>
+    <PageContainer pageTitle={words("agents.title")}>
       <AgentsTableControls
         filter={filter}
         setFilter={setFilter}

@@ -50,7 +50,7 @@ export const Page: React.FC = () => {
   }, [sort.order]);
 
   return (
-    <PageContainer title={words("compileReports.title")}>
+    <PageContainer pageTitle={words("compileReports.title")}>
       <CompileReportsTableControls
         filter={filter}
         setFilter={setFilter}

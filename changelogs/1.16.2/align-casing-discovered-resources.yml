@@ -1,0 +1,5 @@
+description: Align the casing of the table headings in the discovered resource page.
+change-type: patch
+destination-branches: [master, iso7]
+sections:
+  minor-improvement: "{{description}}"
