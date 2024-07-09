@@ -169,13 +169,13 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#data").type("data1");
       cy.get("button").contains("Confirm").click();
 
-      cy.get('[joint-selector="headerLabel"]').contains("rw_files").click();
-      cy.get('[data-action="link"]')
+      cy.get('[joint-selector="headerLabel"]')
+        .contains("rw_files")
         .trigger("mouseover")
         .trigger("mousedown")
         .trigger("mousemove", {
-          clientX: 100,
-          clientY: 300,
+          clientX: 400,
+          clientY: 500,
         })
         .trigger("mouseup");
 
@@ -187,6 +187,16 @@ if (Cypress.env("edition") === "iso") {
         .trigger("mousemove", {
           clientX: 1100,
           clientY: 450,
+        })
+        .trigger("mouseup");
+
+      cy.get('[joint-selector="headerLabel"]').contains("rw_files").click();
+      cy.get('[data-action="link"]')
+        .trigger("mouseover")
+        .trigger("mousedown")
+        .trigger("mousemove", {
+          clientX: 1200,
+          clientY: 300,
         })
         .trigger("mouseup");
 
@@ -249,16 +259,18 @@ if (Cypress.env("edition") === "iso") {
         .click();
       cy.get(".zoom-out").click();
       cy.get(".zoom-out").click();
+      cy.get(".zoom-out").click();
+      cy.get(".zoom-out").click();
+      cy.get(".zoom-out").click();
 
       //try to add rw embedded entity which shouldn't be possible
       cy.get('[data-type="Link"]').should("have.length", "3");
-
       cy.get('[data-action="link"]')
         .trigger("mouseover")
         .trigger("mousedown")
         .trigger("mousemove", {
-          clientX: 1800,
-          clientY: 500,
+          clientX: 800,
+          clientY: 300,
         })
         .trigger("mouseup");
 
@@ -282,7 +294,7 @@ if (Cypress.env("edition") === "iso") {
         .trigger("mousedown")
         .trigger("mousemove", {
           clientX: 1200,
-          clientY: 500,
+          clientY: 400,
         })
         .trigger("mouseup");
 
