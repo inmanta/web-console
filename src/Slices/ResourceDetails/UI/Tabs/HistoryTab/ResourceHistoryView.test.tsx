@@ -98,7 +98,7 @@ test("ResourceHistoryView shows failed table", async () => {
   ).toBeInTheDocument();
 });
 
-test("ResourceHistory shows success table", async () => {
+test("ResourceHistoryView shows success table", async () => {
   const { component, apiHelper } = setup();
   render(component);
 
@@ -127,7 +127,7 @@ test("ResourceHistoryView shows sorting buttons for sortable columns", async () 
   expect(await screen.findByRole("button", { name: /Date/i })).toBeVisible();
 });
 
-test("ResourcesView sets sorting parameters correctly on click", async () => {
+test("ResourceHistoryView sets sorting parameters correctly on click", async () => {
   const { component, apiHelper } = setup();
   render(component);
   apiHelper.resolve(Either.right(ResourceHistory.response));
@@ -139,7 +139,7 @@ test("ResourcesView sets sorting parameters correctly on click", async () => {
   expect(apiHelper.pendingRequests[0].url).toContain("&sort=date.asc");
 });
 
-test("GIVEN The Resources table WHEN the user clicks on the expansion toggle THEN the tabs are shown", async () => {
+test("GIVEN The ResourceHistoryView WHEN the user clicks on the expansion toggle THEN the tabs are shown", async () => {
   const { component, apiHelper } = setup();
   render(component);
 
@@ -158,7 +158,7 @@ test("GIVEN The Resources table WHEN the user clicks on the expansion toggle THE
   expect(screen.getAllByRole("tab", { name: "Requires" })[0]).toBeVisible();
 });
 
-test("GIVEN The Resources table WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async () => {
+test("GIVEN The ResourceHistoryView WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async () => {
   const { component, apiHelper } = setup();
   render(component);
 
