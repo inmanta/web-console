@@ -602,6 +602,12 @@ describe("Scenario 6 : Resources", () => {
       cy.get(
         "#PaginationWidget-top-top-toggle > .pf-v5-c-menu-toggle__text > b:first-of-type",
       ).should("have.text", "21 - 40");
+
+      //Change sorting and expect be redirected  to the first page of the table
+      cy.get("button").contains("Type").click();
+      cy.get(
+        "#PaginationWidget-top-top-toggle > .pf-v5-c-menu-toggle__text > b:first-of-type",
+      ).should("have.text", "1 - 20");
     });
   } else {
     it("6.6 Resources for OSS", () => {
