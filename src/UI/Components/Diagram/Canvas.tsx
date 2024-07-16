@@ -8,6 +8,7 @@ import { ServiceModel } from "@/Core";
 import { sanitizeAttributes } from "@/Data";
 import { InstanceWithReferences } from "@/Data/Managers/V2/GetInstanceWithRelations";
 import { usePostOrder } from "@/Data/Managers/V2/PostOrder";
+import { ComposerServiceOrderItem } from "@/Slices/Orders/Core/Query";
 import diagramInit, { DiagramHandlers } from "@/UI/Components/Diagram/init";
 import { CanvasWrapper } from "@/UI/Components/Diagram/styles";
 import { DependencyContext } from "@/UI/Dependency";
@@ -17,7 +18,7 @@ import DictModal from "./components/DictModal";
 import FormModal from "./components/FormModal";
 import Toolbar from "./components/Toolbar";
 import { getServiceOrderItems, createConnectionRules } from "./helpers";
-import { ActionEnum, DictDialogData, InstanceForApi } from "./interfaces";
+import { ActionEnum, DictDialogData } from "./interfaces";
 import { ServiceEntityBlock } from "./shapes";
 
 /**
@@ -49,7 +50,7 @@ const Canvas: React.FC<{
   const [diagramHandlers, setDiagramHandlers] =
     useState<DiagramHandlers | null>(null);
   const [instancesToSend, setInstancesToSend] = useState<
-    Map<string, InstanceForApi>
+    Map<string, ComposerServiceOrderItem>
   >(new Map());
   const [isDirty, setIsDirty] = useState(false);
 
@@ -129,7 +130,7 @@ const Canvas: React.FC<{
    * @param {ActionEnum} action - The action to be performed on the service entity block.
    */
   const handleUpdate = (cell: ServiceEntityBlock, action: ActionEnum) => {
-    const newInstance: InstanceForApi = {
+    const newInstance: ComposerServiceOrderItem = {
       instance_id: cell.id,
       service_entity: cell.getName(),
       config: {},

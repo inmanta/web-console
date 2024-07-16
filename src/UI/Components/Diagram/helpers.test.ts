@@ -4,6 +4,7 @@ import {
   ServiceInstanceModelWithTargetStates,
   ServiceModel,
 } from "@/Core";
+import { ComposerServiceOrderItem } from "@/Slices/Orders/Core/Query";
 import { Service, ServiceInstance } from "@/Test";
 import {
   a as InstanceAttributesA,
@@ -33,7 +34,6 @@ import {
 import {
   ConnectionRules,
   EmbeddedRule,
-  InstanceForApi,
   InterServiceRule,
   LabelLinkView,
   TypeEnum,
@@ -269,15 +269,14 @@ describe("createConnectionRules", () => {
 
 describe("shapesDataTransform", () => {
   it("correctly creates object if it is created with embedded objects", () => {
-    const createdObject: InstanceForApi = {
+    const createdObject: ComposerServiceOrderItem = {
       ...testApiInstance,
       action: "create",
     };
-    const createdEmbedded: InstanceForApi[] = testEmbeddedApiInstances.map(
-      (instance) => {
+    const createdEmbedded: ComposerServiceOrderItem[] =
+      testEmbeddedApiInstances.map((instance) => {
         return { ...instance, action: "create" };
-      },
-    );
+      });
     const result = shapesDataTransform(
       createdEmbedded,
       createdObject,
@@ -310,8 +309,8 @@ describe("shapesDataTransform", () => {
 
   it("correctly creates object if only embedded values are edited", () => {
     //simulate that One isn't changed, second is edited
-    const createdObject: InstanceForApi = { ...testApiInstance };
-    const createdEmbedded: InstanceForApi[] = [
+    const createdObject: ComposerServiceOrderItem = { ...testApiInstance };
+    const createdEmbedded: ComposerServiceOrderItem[] = [
       { ...testEmbeddedApiInstances[0], action: null },
       { ...testEmbeddedApiInstances[1], action: "update" },
     ];
@@ -353,7 +352,7 @@ describe("shapesDataTransform", () => {
     expect(result).toMatchObject(expectedResult);
 
     //simulate that One isn't changed, second is added
-    const createdEmbedded2: InstanceForApi[] = [
+    const createdEmbedded2: ComposerServiceOrderItem[] = [
       { ...testEmbeddedApiInstances[0], action: null },
       { ...testEmbeddedApiInstances[1], action: "create" },
     ];
@@ -366,7 +365,7 @@ describe("shapesDataTransform", () => {
     expect(result2).toMatchObject(expectedResult);
 
     //simulate that One is changed, second is added
-    const createdEmbedded3: InstanceForApi[] = [
+    const createdEmbedded3: ComposerServiceOrderItem[] = [
       { ...testEmbeddedApiInstances[0], action: "update" },
       { ...testEmbeddedApiInstances[1], action: "create" },
     ];
@@ -379,8 +378,8 @@ describe("shapesDataTransform", () => {
   });
 
   it("correctly creates object if its embedded values are deleted", () => {
-    const createdObject: InstanceForApi = { ...testApiInstance };
-    const createdEmbedded: InstanceForApi[] = [
+    const createdObject: ComposerServiceOrderItem = { ...testApiInstance };
+    const createdEmbedded: ComposerServiceOrderItem[] = [
       { ...testEmbeddedApiInstances[0], action: null },
       { ...testEmbeddedApiInstances[1], action: "delete" },
     ];
@@ -417,11 +416,13 @@ describe("shapesDataTransform", () => {
   });
 
   it("correctly creates object if it is core values are edited", () => {
-    const createdObject: InstanceForApi = {
+    const createdObject: ComposerServiceOrderItem = {
       ...testApiInstance,
       action: "update",
     };
-    const createdEmbedded: InstanceForApi[] = [...testEmbeddedApiInstances];
+    const createdEmbedded: ComposerServiceOrderItem[] = [
+      ...testEmbeddedApiInstances,
+    ];
     const expectedResult = {
       instance_id: "ae6c9dd7-5392-4374-9f13-df3bb42bf0db",
       service_entity: "embedded-entity-service",
@@ -459,11 +460,10 @@ describe("shapesDataTransform", () => {
     );
     expect(result).toMatchObject(expectedResult);
 
-    const createdEmbedded2: InstanceForApi[] = testEmbeddedApiInstances.map(
-      (instance) => {
+    const createdEmbedded2: ComposerServiceOrderItem[] =
+      testEmbeddedApiInstances.map((instance) => {
         return { ...instance, action: "update" };
-      },
-    );
+      });
     const result2 = shapesDataTransform(
       createdEmbedded2,
       createdObject,
@@ -471,7 +471,7 @@ describe("shapesDataTransform", () => {
     );
     expect(result2).toMatchObject(expectedResult);
 
-    const createdEmbedded3: InstanceForApi[] = [
+    const createdEmbedded3: ComposerServiceOrderItem[] = [
       { ...testEmbeddedApiInstances[0], action: null },
       { ...testEmbeddedApiInstances[1], action: "create" },
     ];

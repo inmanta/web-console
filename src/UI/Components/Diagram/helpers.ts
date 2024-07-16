@@ -7,9 +7,9 @@ import {
   ServiceInstanceModel,
   ServiceModel,
 } from "@/Core";
+import { ComposerServiceOrderItem } from "@/Slices/Orders/Core/Query";
 import {
   ConnectionRules,
-  InstanceForApi,
   EmbeddedRule,
   InterServiceRule,
   TypeEnum,
@@ -259,17 +259,17 @@ const doesElementIsEmbeddedWithExhaustedConnections = (
  * Function that will merge state from Instance Composer to proper object for order_api endpoint.
  * Instance composer state is being split into multiple objects that could be embedded into other available, so we need to recursively
  * go through all of them to group, and sort them
- * @param {InstanceForApi[]} instances all of the instances that were created/edited in the instance, not including the one passed in second parameter
- * @param {InstanceForApi} instance instance which is used taken into consideration as the parent of the possible embedded
+ * @param {ComposerServiceOrderItem[]} instances all of the instances that were created/edited in the instance, not including the one passed in second parameter
+ * @param {ComposerServiceOrderItem} instance instance which is used taken into consideration as the parent of the possible embedded
  * @param {boolean=} isEmbedded boolean informing whether instance passed is embedded or not
  * @returns
  */
 export const shapesDataTransform = (
-  instances: InstanceForApi[],
-  instance: InstanceForApi,
+  instances: ComposerServiceOrderItem[],
+  instance: ComposerServiceOrderItem,
   serviceModel: ServiceModel | EmbeddedEntity,
   isEmbedded = false,
-): InstanceForApi => {
+): ComposerServiceOrderItem => {
   let areEmbeddedEdited = false;
   const matchingInstances = instances.filter(
     (checkedInstance) => checkedInstance.embeddedTo === instance.instance_id,
@@ -280,7 +280,7 @@ export const shapesDataTransform = (
   );
 
   //iterate through matching (embedded)instances and group them according to property type to be able to put them in the Array if needed at once
-  const groupedEmbedded: { [instanceId: string]: InstanceForApi[] } =
+  const groupedEmbedded: { [instanceId: string]: ComposerServiceOrderItem[] } =
     matchingInstances.reduce((reducer, instance) => {
       reducer[instance.service_entity] = reducer[instance.service_entity] || [];
       reducer[instance.service_entity].push(instance);
@@ -375,16 +375,16 @@ export const shapesDataTransform = (
  * Function that takes Map of standalone instances that include core, embedded and related entities and
  * bundle in proper Instance Objects that could be accepted by the order_api request
  *
- * @param {Map<string, InstanceForApi>}instances Map of Instances
+ * @param {Map<string, ComposerServiceOrderItem>}instances Map of Instances
  * @param {ServiceModel[]} services
- * @returns InstanceForApi[]
+ * @returns ComposerServiceOrderItem[]
  */
 export const getServiceOrderItems = (
-  instances: Map<string, InstanceForApi>,
+  instances: Map<string, ComposerServiceOrderItem>,
   services: ServiceModel[],
-): InstanceForApi[] => {
+): ComposerServiceOrderItem[] => {
   const mapToArray = Array.from(instances, (instance) => instance[1]); //only value, the id is stored in the object anyway
-  const deepCopiedMapToArray: InstanceForApi[] = JSON.parse(
+  const deepCopiedMapToArray: ComposerServiceOrderItem[] = JSON.parse(
     JSON.stringify(mapToArray),
   ); //only value, the id is stored in the object anyway
 
@@ -407,7 +407,7 @@ export const getServiceOrderItems = (
     (instance) => !topServicesNames.includes(instance.service_entity),
   );
 
-  const mergedInstances: InstanceForApi[] = [];
+  const mergedInstances: ComposerServiceOrderItem[] = [];
 
   topInstances.forEach((instance) => {
     const serviceModel = services.find(

@@ -1,5 +1,5 @@
 import { dia, g } from "@inmanta/rappid";
-import { InstanceAttributeModel, ParsedNumber } from "@/Core";
+import { ParsedNumber } from "@/Core";
 
 enum ActionEnum {
   UPDATE = "update",
@@ -39,18 +39,6 @@ export enum TypeEnum {
 
 interface ConnectionRules {
   [serviceName: string]: (InterServiceRule | EmbeddedRule)[];
-}
-
-interface InstanceForApi {
-  instance_id: string | dia.Cell.ID;
-  service_entity: string;
-  config: unknown;
-  action: null | "update" | "create" | "delete";
-  attributes?: InstanceAttributeModel | null;
-  edits?: InstanceAttributeModel[] | null;
-  embeddedTo?: string | null;
-  relatedTo?: Map<string, string> | null;
-  metadata?: Record<string, string> | null;
 }
 interface serializedCell {
   type: string;
@@ -143,7 +131,6 @@ export {
   EmbeddedRule,
   ConnectionRules,
   serializedCell,
-  InstanceForApi,
   relationId,
   LabelLinkView,
   SavedCoordinates,

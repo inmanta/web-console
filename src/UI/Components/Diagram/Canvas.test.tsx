@@ -10,6 +10,7 @@ import { setupServer } from "msw/node";
 import { RemoteData, ServiceModel } from "@/Core";
 import { getStoreInstance } from "@/Data";
 import { InstanceWithReferences } from "@/Data/Managers/V2/GetInstanceWithRelations";
+import { ComposerServiceOrderItem } from "@/Slices/Orders/Core/Query";
 import { dependencies } from "@/Test";
 import * as customQueries from "@/Test/Utils/custom-queries";
 import {
@@ -30,7 +31,6 @@ import {
 } from "./Mock";
 import services from "./Mocks/services.json";
 import "@testing-library/jest-dom";
-import { InstanceForApi } from "./interfaces";
 import { defineObjectsForJointJS } from "./testSetup";
 
 const allQueries = {
@@ -520,48 +520,48 @@ describe("Canvas.tsx", () => {
 
   it("sends request with correct data to the backend when instance is being deployed", async () => {
     const server = setupServer(
-      http.post<PathParams, { service_order_items: InstanceForApi[] }>(
-        "/lsm/v2/order",
-        async ({ request }) => {
-          const reqBody = await request.json();
-          expect(reqBody.service_order_items[0]).toStrictEqual({
-            instance_id: expect.any(String),
-            service_entity: "parent-service",
-            config: {},
-            action: "create",
+      http.post<
+        PathParams,
+        { service_order_items: ComposerServiceOrderItem[] }
+      >("/lsm/v2/order", async ({ request }) => {
+        const reqBody = await request.json();
+        expect(reqBody.service_order_items[0]).toStrictEqual({
+          instance_id: expect.any(String),
+          service_entity: "parent-service",
+          config: {},
+          action: "create",
+          attributes: {
+            name: "name-001",
+            should_deploy_fail: false,
+            service_id: "id-001",
+          },
+          edits: null,
+          metadata: {
+            coordinates: expect.any(String),
+          },
+        });
+
+        expect(
+          JSON.parse(
+            reqBody.service_order_items[0].metadata?.coordinates as string,
+          ),
+        ).toEqual([
+          {
+            id: expect.any(String),
+            name: "parent-service",
             attributes: {
               name: "name-001",
               should_deploy_fail: false,
               service_id: "id-001",
             },
-            edits: null,
-            metadata: {
-              coordinates: expect.any(String),
+            coordinates: {
+              x: 0,
+              y: 0,
             },
-          });
-
-          expect(
-            JSON.parse(
-              reqBody.service_order_items[0].metadata?.coordinates as string,
-            ),
-          ).toEqual([
-            {
-              id: expect.any(String),
-              name: "parent-service",
-              attributes: {
-                name: "name-001",
-                should_deploy_fail: false,
-                service_id: "id-001",
-              },
-              coordinates: {
-                x: 0,
-                y: 0,
-              },
-            },
-          ]);
-          return HttpResponse.json();
-        },
-      ),
+          },
+        ]);
+        return HttpResponse.json();
+      }),
     );
     const component = setup();
     server.listen();

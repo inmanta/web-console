@@ -1,6 +1,6 @@
 import { ServiceInstanceModel, ServiceModel } from "@/Core";
 import { InstanceWithReferences } from "@/Data/Managers/V2/GetInstanceWithRelations";
-import { InstanceForApi } from "./interfaces";
+import { ComposerServiceOrderItem } from "@/Slices/Orders/Core/Query";
 
 export const testInstance: ServiceInstanceModel = {
   id: "d938d5bb-8bf1-4b41-9e17-ae0b5069cbbf",
@@ -1418,7 +1418,7 @@ export const testApiInstanceModel: ServiceModel = {
   owned_entities: [],
 };
 
-export const testApiInstance: InstanceForApi = {
+export const testApiInstance: ComposerServiceOrderItem = {
   instance_id: "ae6c9dd7-5392-4374-9f13-df3bb42bf0db",
   service_entity: "embedded-entity-service",
   config: {},
@@ -1430,7 +1430,7 @@ export const testApiInstance: InstanceForApi = {
   },
 };
 
-export const testEmbeddedApiInstances: InstanceForApi[] = [
+export const testEmbeddedApiInstances: ComposerServiceOrderItem[] = [
   {
     instance_id: "10591ae5-6840-4816-9851-6bee74afc2a5",
     service_entity: "vlan_assigment_r1",
@@ -1459,7 +1459,7 @@ export const testEmbeddedApiInstances: InstanceForApi[] = [
   },
 ];
 
-export const testParentService: InstanceForApi = {
+export const testParentService: ComposerServiceOrderItem = {
   instance_id: "6af44f75-ba4b-4fba-9186-cc61c3c9463c",
   service_entity: "parent-service",
   config: {},
@@ -1471,7 +1471,7 @@ export const testParentService: InstanceForApi = {
   },
 };
 
-export const relatedServices: InstanceForApi[] = [
+export const relatedServices: ComposerServiceOrderItem[] = [
   {
     instance_id: "13920268-cce0-4491-93b5-11316aa2fc37",
     service_entity: "child-service",

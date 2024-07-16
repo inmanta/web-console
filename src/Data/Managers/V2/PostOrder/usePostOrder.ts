@@ -1,6 +1,6 @@
 import { UseMutationResult, useMutation } from "@tanstack/react-query";
+import { ComposerServiceOrderItem } from "@/Slices/Orders/Core/Query";
 import { PrimaryBaseUrlManager, words } from "@/UI";
-import { InstanceForApi } from "@/UI/Components/Diagram/interfaces";
 import { useFetchHelpers } from "../helpers";
 
 /**
@@ -9,7 +9,7 @@ import { useFetchHelpers } from "../helpers";
  */
 export const usePostOrder = (
   environment: string,
-): UseMutationResult<void, Error, InstanceForApi[], unknown> => {
+): UseMutationResult<void, Error, ComposerServiceOrderItem[], unknown> => {
   const { createHeaders, handleErrors } = useFetchHelpers();
   const headers = createHeaders(environment);
   const baseUrlManager = new PrimaryBaseUrlManager(
@@ -20,11 +20,11 @@ export const usePostOrder = (
 
   /**
    * Sends an order with the provided bundle instances.
-   * @param {InstanceForApi[]} serviceOrderItems - The bundled instances to include in the order.
+   * @param {ComposerServiceOrderItem[]} serviceOrderItems - The bundled instances to include in the order.
    * @throws {Error} If the response is not successful, an error with the error message is thrown.
    */
   const postOrder = async (
-    serviceOrderItems: InstanceForApi[],
+    serviceOrderItems: ComposerServiceOrderItem[],
   ): Promise<void> => {
     const response = await fetch(baseUrl + `/lsm/v2/order`, {
       method: "POST",
