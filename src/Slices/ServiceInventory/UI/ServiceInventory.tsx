@@ -1,4 +1,9 @@
-import React, { useContext, ReactElement, createContext } from "react";
+import React, {
+  useContext,
+  ReactElement,
+  createContext,
+  useEffect,
+} from "react";
 import { RemoteData, ServiceModel, ServiceInstanceParams } from "@/Core";
 import {
   useUrlStateWithFilter,
@@ -126,6 +131,12 @@ export const ServiceInventory: React.FunctionComponent<{
       .filter((state) => state.label === label)
       .map((state) => state.name);
   };
+
+  //when sorting is triggered, reset the current page
+  useEffect(() => {
+    setCurrentPage({ kind: "CurrentPage", value: "" });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sort.order]);
 
   return (
     <ServiceInventoryContext.Provider

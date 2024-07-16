@@ -626,3 +626,65 @@ test("Given the Agents view with the environment halted, THEN the on resume colu
     expect(results).toHaveNoViolations();
   });
 });
+
+test("GIVEN AgentsView WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async () => {
+  const { component, apiHelper } = setup();
+  render(component);
+
+  //mock that response has more than one site
+  await act(async () => {
+    apiHelper.resolve(
+      Either.right({
+        ...AgentsMock.response,
+        metadata: {
+          total: 103,
+          before: 0,
+          after: 3,
+          page_size: 100,
+        },
+        links: {
+          self: "",
+          next: "/fake-link?end=fake-first-param",
+        },
+      }),
+    );
+  });
+
+  expect(screen.getByLabelText("Go to next page")).toBeEnabled();
+
+  await act(async () => {
+    await userEvent.click(screen.getByLabelText("Go to next page"));
+  });
+
+  //expect the api url to contain start and end keywords that are used for pagination when we are moving to the next page
+  expect(apiHelper.pendingRequests[0].url).toMatch(/(&start=|&end=)/);
+  expect(apiHelper.pendingRequests[0].url).toMatch(/(&sort=name.asc)/);
+
+  await act(async () => {
+    apiHelper.resolve(
+      Either.right({
+        ...AgentsMock.response,
+        metadata: {
+          total: 23,
+          before: 0,
+          after: 3,
+          page_size: 20,
+        },
+        links: {
+          self: "",
+          next: "/fake-link?end=fake-first-param",
+        },
+      }),
+    );
+  });
+
+  //sort on the second page
+  await act(async () => {
+    await userEvent.click(screen.getByRole("button", { name: "Name" }));
+  });
+
+  // expect the api url to not contain start and end keywords that are used for pagination to assert we are back on the first page.
+  // we are asserting on the second request as the first request is for the updated sorting event, and second is chained to back to the first page with still correct sorting
+  expect(apiHelper.pendingRequests[1].url).not.toMatch(/(&start=|&end=)/);
+  expect(apiHelper.pendingRequests[1].url).toMatch(/(&sort=name.desc)/);
+});

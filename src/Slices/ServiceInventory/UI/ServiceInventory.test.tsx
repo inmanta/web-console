@@ -430,3 +430,59 @@ test("ServiceInventory shows only button to display instance in the composer for
 
   expect(screen.queryByText("Edit in Composer")).not.toBeInTheDocument();
 });
+
+test("GIVEN ServiceInventory WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async () => {
+  const { component, apiHelper } = setup({ ...Service.a, owner: "owner" });
+  render(component);
+
+  //mock that response has more than one site
+  await act(async () => {
+    apiHelper.resolve(
+      Either.right({
+        data: [{ ...ServiceInstance.a, id: "a" }],
+        links: { ...Pagination.links },
+        metadata: {
+          total: 23,
+          before: 0,
+          after: 3,
+          page_size: 20,
+        },
+      }),
+    );
+  });
+
+  const nextPageButton = screen.getByLabelText("Go to next page");
+  expect(nextPageButton).toBeEnabled();
+
+  await act(async () => {
+    await userEvent.click(nextPageButton);
+  });
+  //expect the api url to contain start and end keywords that are used for pagination when we are moving to the next page
+  expect(apiHelper.pendingRequests[0].url).toMatch(/(&start=|&end=)/);
+  expect(apiHelper.pendingRequests[0].url).toMatch(/(&sort=created_at.desc)/);
+
+  await act(async () => {
+    apiHelper.resolve(
+      Either.right({
+        data: [{ ...ServiceInstance.a, id: "a" }],
+        links: { ...Pagination.links },
+        metadata: {
+          total: 23,
+          before: 20,
+          after: 0,
+          page_size: 20,
+        },
+      }),
+    );
+  });
+
+  //sort on the second page
+  await act(async () => {
+    await userEvent.click(screen.getByRole("button", { name: "State" }));
+  });
+
+  // expect the api url to not contain start and end keywords that are used for pagination to assert we are back on the first page.
+  // we are asserting on the second request as the first request is for the updated sorting event, and second is chained to back to the first page with still correct sorting
+  expect(apiHelper.pendingRequests[1].url).not.toMatch(/(&start=|&end=)/);
+  expect(apiHelper.pendingRequests[1].url).toMatch(/(&sort=state.asc)/);
+});
