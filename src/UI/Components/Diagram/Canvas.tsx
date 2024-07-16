@@ -85,7 +85,7 @@ const Canvas: React.FC<{
   };
 
   /**
-   * Handles the event triggered when user want to see the dictionary properties of an entity.
+   * Handles the event triggered when the user wants to see the dictionary properties of an entity.
    *
    * @param {CustomEvent} event - The event object.
    */
