@@ -60,7 +60,7 @@ const Canvas: React.FC<{
   });
 
   /**
-   * Handles the event triggered when there is loose embedded entity on the canvas.
+   * Handles the event triggered when there are loose embedded entities on the canvas.
    *
    * @param {CustomEvent} event - The event object.
    */
