@@ -684,7 +684,7 @@ test("GIVEN AgentsView WHEN sorting changes AND we are not on the first page THE
   });
 
   // expect the api url to not contain start and end keywords that are used for pagination to assert we are back on the first page.
-  //we are asserting on the second request as the first request is for the updated sorting event, and second is chained to back to the first page with still correct sorting
+  // we are asserting on the second request as the first request is for the updated sorting event, and second is chained to back to the first page with still correct sorting
   expect(apiHelper.pendingRequests[1].url).not.toMatch(/(&start=|&end=)/);
   expect(apiHelper.pendingRequests[1].url).toMatch(/(&sort=name.desc)/);
 });
