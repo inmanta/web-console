@@ -22,7 +22,7 @@ import { ActionEnum, DictDialogData } from "./interfaces";
 import { ServiceEntityBlock } from "./shapes";
 
 /**
- * Canvas component for creating, displaying and editing a Instances.
+ * Canvas component for creating, displaying and editing an Instance.
  *
  * @param {ServiceModel[]} services - The list of service models.
  * @param {string} mainServiceName - The name of the main service.
