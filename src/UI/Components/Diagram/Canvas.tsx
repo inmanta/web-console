@@ -95,7 +95,7 @@ const Canvas: React.FC<{
   };
 
   /**
-   * Handles the event triggered when user want to edit an entity.
+   * Handles the event triggered when the user wants to edit an entity.
    *
    * @param {CustomEvent} event - The event object.
    */
