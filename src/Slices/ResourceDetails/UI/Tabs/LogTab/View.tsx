@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { toggleValueInList } from "@/Core";
 import {
   useUrlStateWithFilter,
@@ -51,6 +51,12 @@ export const View: React.FC<Props> = ({ resourceId }) => {
       action: list.length <= 0 ? undefined : list,
     });
   };
+
+  //when sorting is triggered, reset the current page
+  useEffect(() => {
+    setCurrentPage({ kind: "CurrentPage", value: "" });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sort.order]);
 
   return (
     <>
