@@ -7,15 +7,16 @@ import {
   ServiceInstanceModel,
   ServiceModel,
 } from "@/Core";
-import { ComposerServiceOrderItem } from "@/Slices/Orders/Core/Query";
 import {
+  ComposerServiceOrderItem,
   ConnectionRules,
   EmbeddedRule,
   InterServiceRule,
   TypeEnum,
   LabelLinkView,
   SavedCoordinates,
-} from "./interfaces";
+} from "@/UI/Components/Diagram/interfaces";
+
 import { ServiceEntityBlock } from "./shapes";
 
 export const extractRelationsIds = (
@@ -259,24 +260,26 @@ const doesElementIsEmbeddedWithExhaustedConnections = (
  * Function that will merge state from Instance Composer to proper object for order_api endpoint.
  * Instance composer state is being split into multiple objects that could be embedded into other available, so we need to recursively
  * go through all of them to group, and sort them
- * @param {ComposerServiceOrderItem[]} instances all of the instances that were created/edited in the instance, not including the one passed in second parameter
- * @param {ComposerServiceOrderItem} instance instance which is used taken into consideration as the parent of the possible embedded
+ * @param {ComposerServiceOrderItem} parentInstance Instance that is the main object and to which other instance are eventually connected
+ * @param {ComposerServiceOrderItem[]} instances all of the instances that were created/edited in the instance, not including parentInstance
  * @param {boolean=} isEmbedded boolean informing whether instance passed is embedded or not
  * @returns
  */
 export const shapesDataTransform = (
+  parentInstance: ComposerServiceOrderItem,
   instances: ComposerServiceOrderItem[],
-  instance: ComposerServiceOrderItem,
   serviceModel: ServiceModel | EmbeddedEntity,
   isEmbedded = false,
 ): ComposerServiceOrderItem => {
   let areEmbeddedEdited = false;
   const matchingInstances = instances.filter(
-    (checkedInstance) => checkedInstance.embeddedTo === instance.instance_id,
+    (checkedInstance) =>
+      checkedInstance.embeddedTo === parentInstance.instance_id,
   );
 
   const notMatchingInstances = instances.filter(
-    (checkedInstance) => checkedInstance.embeddedTo !== instance.instance_id,
+    (checkedInstance) =>
+      checkedInstance.embeddedTo !== parentInstance.instance_id,
   );
 
   //iterate through matching (embedded)instances and group them according to property type to be able to put them in the Array if needed at once
@@ -288,7 +291,7 @@ export const shapesDataTransform = (
     }, Object.create({}));
 
   for (const [key, instancesToEmbed] of Object.entries(groupedEmbedded)) {
-    if (instance.attributes) {
+    if (parentInstance.attributes) {
       const updated: InstanceAttributeModel[] = [];
       const embeddedModel = serviceModel.embedded_entities.find(
         (entity) => entity.name === instancesToEmbed[0].service_entity,
@@ -297,15 +300,15 @@ export const shapesDataTransform = (
       instancesToEmbed.forEach((instanceToEmbed) => {
         if (embeddedModel) {
           const updatedInstance = shapesDataTransform(
-            notMatchingInstances,
             instanceToEmbed,
+            notMatchingInstances,
             embeddedModel,
             !!embeddedModel,
           );
 
           if (!areEmbeddedEdited) {
             areEmbeddedEdited =
-              !instance.action && updatedInstance.action !== null;
+              !parentInstance.action && updatedInstance.action !== null;
           }
           if (
             updatedInstance.action !== "delete" &&
@@ -316,7 +319,7 @@ export const shapesDataTransform = (
         }
       });
 
-      instance.attributes[key] =
+      parentInstance.attributes[key] =
         updated.length === 1 && isSingularRelation(embeddedModel)
           ? updated[0]
           : updated;
@@ -324,22 +327,22 @@ export const shapesDataTransform = (
   }
 
   //convert relatedTo property into valid attribute
-  if (instance.relatedTo) {
-    Array.from(instance.relatedTo).forEach(([id, attributeName]) => {
-      if (instance.attributes) {
+  if (parentInstance.relatedTo) {
+    Array.from(parentInstance.relatedTo).forEach(([id, attributeName]) => {
+      if (parentInstance.attributes) {
         const model = serviceModel.inter_service_relations?.find(
           (relation) => relation.name === attributeName,
         );
         if (model) {
           if (model.upper_limit !== 1) {
-            instance.attributes[attributeName];
-            if (Array.isArray(instance.attributes[attributeName])) {
-              (instance.attributes[attributeName] as string[]).push(id);
+            parentInstance.attributes[attributeName];
+            if (Array.isArray(parentInstance.attributes[attributeName])) {
+              (parentInstance.attributes[attributeName] as string[]).push(id);
             } else {
-              instance.attributes[attributeName] = [id];
+              parentInstance.attributes[attributeName] = [id];
             }
           } else {
-            instance.attributes[attributeName] = id;
+            parentInstance.attributes[attributeName] = id;
           }
         }
       }
@@ -348,27 +351,27 @@ export const shapesDataTransform = (
 
   //if any of its embedded instances were edited, and its action is indicating no changes to main attributes, change it to "update"
   if (areEmbeddedEdited) {
-    instance.action = "update";
+    parentInstance.action = "update";
   }
 
   //if its action is "update" and instance isn't embedded change value property to edit as that's what api expect in the body
-  if (instance.action === "update" && !isEmbedded) {
-    if (!!instance.attributes && !instance.edits) {
-      instance.edits = [
+  if (parentInstance.action === "update" && !isEmbedded) {
+    if (!!parentInstance.attributes && !parentInstance.edits) {
+      parentInstance.edits = [
         {
-          edit_id: `${instance.instance_id}_order_update-${uuidv4()}`,
+          edit_id: `${parentInstance.instance_id}_order_update-${uuidv4()}`,
           operation: "replace",
           target: ".",
-          value: instance.attributes,
+          value: parentInstance.attributes,
         },
       ];
     }
-    delete instance.attributes;
+    delete parentInstance.attributes;
   }
 
-  delete instance.embeddedTo;
-  delete instance.relatedTo;
-  return instance;
+  delete parentInstance.embeddedTo;
+  delete parentInstance.relatedTo;
+  return parentInstance;
 };
 
 /**
@@ -415,7 +418,7 @@ export const getServiceOrderItems = (
     );
     if (serviceModel) {
       mergedInstances.push(
-        shapesDataTransform(embeddedInstances, instance, serviceModel),
+        shapesDataTransform(instance, embeddedInstances, serviceModel),
       );
     }
   });

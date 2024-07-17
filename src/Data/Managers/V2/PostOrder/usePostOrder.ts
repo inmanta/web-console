@@ -1,6 +1,7 @@
 import { UseMutationResult, useMutation } from "@tanstack/react-query";
-import { ComposerServiceOrderItem } from "@/Slices/Orders/Core/Query";
 import { PrimaryBaseUrlManager, words } from "@/UI";
+import { ComposerServiceOrderItem } from "@/UI/Components/Diagram/interfaces";
+
 import { useFetchHelpers } from "../helpers";
 
 /**

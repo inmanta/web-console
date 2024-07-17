@@ -1,7 +1,7 @@
 import { dia, linkTools } from "@inmanta/rappid";
 import { DirectedGraph } from "@joint/layout-directed-graph";
 import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from "@/Core";
-import { InstanceWithReferences } from "@/Data/Managers/V2/GetInstanceWithRelations";
+import { InstanceWithRelations } from "@/Data/Managers/V2/GetInstanceWithRelations";
 import { words } from "@/UI/words";
 import {
   findCorrespondingId,
@@ -181,7 +181,7 @@ export function showLinkTools(
 export function appendInstance(
   paper: dia.Paper,
   graph: dia.Graph,
-  serviceWithReferences: InstanceWithReferences,
+  serviceWithReferences: InstanceWithRelations,
   services: ServiceModel[],
   isMainInstance = false,
   instanceToConnectRelation?: ServiceEntityBlock,
@@ -231,12 +231,12 @@ export function appendInstance(
   //map through relatedInstances and either append them or connect to them
   serviceWithReferences.relatedInstances.forEach((relatedInstance) => {
     const isInstanceMain = false;
-    const cellAdded = graph.getCell(relatedInstance.instance.id);
+    const cellAdded = graph.getCell(relatedInstance.id);
     if (!cellAdded) {
       appendInstance(
         paper,
         graph,
-        relatedInstance,
+        { instance: relatedInstance, relatedInstances: [] },
         services,
         isInstanceMain,
         instanceAsTable,

@@ -3,10 +3,16 @@ import { ParsedNumber } from "@/Core";
 import { PrimaryBaseUrlManager } from "@/UI";
 import { useFetchHelpers } from "../helpers";
 
+/**
+ *  Interface containing the metadata.
+ */
 interface Metadata {
-  data: string | undefined;
+  data: string;
 }
 
+/**
+ * Return Signature of the useServiceModel React Query
+ */
 interface GetMetadataHook {
   useOneTime: () => UseQueryResult<string | undefined, Error>;
 }
@@ -44,12 +50,6 @@ export const useGetMetadata = (
       },
     );
 
-    // If the value isn't set for the given key, we receive a 404 which shouldn't break the flow of the application, as the endpoint doesn't serve critical data.
-    if (response.status === 404) {
-      return {
-        data: undefined,
-      };
-    }
     await handleErrors(response);
 
     return response.json();

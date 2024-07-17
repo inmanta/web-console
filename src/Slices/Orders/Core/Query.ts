@@ -1,4 +1,3 @@
-import { dia } from "@inmanta/rappid";
 import { PageSize, Pagination, Sort } from "@/Core/Domain";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 
@@ -47,19 +46,6 @@ export interface ServiceOrderItem {
   config: ServiceOrderItemConfig | null;
   attributes?: Record<string, unknown>;
   edits?: Record<string, unknown>;
-}
-
-//There is some nuances between composer and ServiceOrderItem which causing that we cannot just extend the above interface, I will attempt to make it as close as possible with incoming redesign
-export interface ComposerServiceOrderItem {
-  config: ServiceOrderItemConfig | null;
-  attributes?: Record<string, unknown> | null;
-  edits?: [Record<string, unknown>] | null;
-  instance_id: string | dia.Cell.ID;
-  service_entity: string;
-  action: null | ServiceOrderItemAction;
-  embeddedTo?: string | null;
-  relatedTo?: Map<string, string> | null;
-  metadata?: Record<string, string> | null;
 }
 
 export interface ServiceOrderItemStatus {

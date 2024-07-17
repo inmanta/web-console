@@ -1,15 +1,15 @@
 import { Action, action } from "easy-peasy";
 import { RemoteData } from "@/Core";
-import { InstanceWithReferences } from "../Managers/V2/GetInstanceWithRelations";
+import { InstanceWithRelations } from "../Managers/V2/GetInstanceWithRelations";
 
 /**
  * The serviceInstanceSlice stores service instances by their id with their respective relation-tree.
  */
 export interface ServiceInstanceWithRelationsSlice {
-  byId: Record<string, RemoteData.Type<string, InstanceWithReferences>>;
+  byId: Record<string, RemoteData.Type<string, InstanceWithRelations>>;
   setData: Action<
     ServiceInstanceWithRelationsSlice,
-    { id: string; value: RemoteData.Type<string, InstanceWithReferences> }
+    { id: string; value: RemoteData.Type<string, InstanceWithRelations> }
   >;
 }
 

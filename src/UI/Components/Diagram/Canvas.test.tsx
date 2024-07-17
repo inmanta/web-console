@@ -9,8 +9,8 @@ import { HttpResponse, PathParams, http } from "msw";
 import { setupServer } from "msw/node";
 import { RemoteData, ServiceModel } from "@/Core";
 import { getStoreInstance } from "@/Data";
-import { InstanceWithReferences } from "@/Data/Managers/V2/GetInstanceWithRelations";
-import { ComposerServiceOrderItem } from "@/Slices/Orders/Core/Query";
+import { InstanceWithRelations } from "@/Data/Managers/V2/GetInstanceWithRelations";
+
 import { dependencies } from "@/Test";
 import * as customQueries from "@/Test/Utils/custom-queries";
 import {
@@ -20,6 +20,7 @@ import {
   words,
 } from "@/UI";
 import Canvas from "@/UI/Components/Diagram/Canvas";
+import { ComposerServiceOrderItem } from "@/UI/Components/Diagram/interfaces";
 import CustomRouter from "@/UI/Routing/CustomRouter";
 import history from "@/UI/Routing/history";
 import {
@@ -27,7 +28,7 @@ import {
   mockedInstanceThreeServiceModel,
   mockedInstanceTwo,
   mockedInstanceTwoServiceModel,
-  mockedInstanceWithReferences,
+  mockedInstanceWithRelations,
 } from "./Mock";
 import services from "./Mocks/services.json";
 import "@testing-library/jest-dom";
@@ -41,7 +42,7 @@ const user = userEvent.setup();
 const screen = baseWithin(document.body, allQueries);
 
 const setup = (
-  instance?: InstanceWithReferences,
+  instance?: InstanceWithRelations,
   serviceModels: ServiceModel[] = services as unknown as ServiceModel[],
   editable: boolean = true,
 ) => {
@@ -456,7 +457,7 @@ describe("Canvas.tsx", () => {
   });
 
   it("renders correctly fetched instances", async () => {
-    const component = setup(mockedInstanceWithReferences);
+    const component = setup(mockedInstanceWithRelations);
     render(component);
 
     const attrIndicators = await screen.findAllByJointSelector("info");
@@ -500,7 +501,7 @@ describe("Canvas.tsx", () => {
   });
 
   it("deletes shape correctly", async () => {
-    const component = setup(mockedInstanceWithReferences);
+    const component = setup(mockedInstanceWithRelations);
     render(component);
 
     const attrIndicators = await screen.findAllByJointSelector("info");
@@ -584,7 +585,7 @@ describe("Canvas.tsx", () => {
 
   it("when editable prop is set to false, disable interactions", async () => {
     const component = setup(
-      mockedInstanceWithReferences,
+      mockedInstanceWithRelations,
       services as unknown as ServiceModel[],
       false,
     );

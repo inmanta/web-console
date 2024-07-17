@@ -1,6 +1,6 @@
 import { dia, shapes, ui } from "@inmanta/rappid";
 import { InstanceAttributeModel, ServiceModel } from "@/Core";
-import { InstanceWithReferences } from "@/Data/Managers/V2/GetInstanceWithRelations";
+import { InstanceWithRelations } from "@/Data/Managers/V2/GetInstanceWithRelations";
 import {
   appendColumns,
   appendEntity,
@@ -360,7 +360,7 @@ export default function diagramInit(
     },
 
     addInstance: (
-      instance: InstanceWithReferences,
+      instance: InstanceWithRelations,
       services: ServiceModel[],
       isMainInstance: boolean,
     ) => {
@@ -427,7 +427,7 @@ export default function diagramInit(
 export interface DiagramHandlers {
   removeCanvas: () => void;
   addInstance: (
-    instance: InstanceWithReferences,
+    instance: InstanceWithRelations,
     services: ServiceModel[],
     isMainInstance: boolean,
   ) => serializedCell[];

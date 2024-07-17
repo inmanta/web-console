@@ -65,7 +65,7 @@ describe("UserManagementPage", () => {
     });
 
     await waitFor(() => {
-      expect(screen.getByLabelText("Composer-Container")).toBeInTheDocument();
+      expect(screen.getByTestId("Composer-Container")).toBeInTheDocument();
     });
   });
 

@@ -45,7 +45,7 @@ const createWrapper = () => {
   );
 };
 
-test("if the fetched instance has referenced other instance, then query will returns given instance with that related instance", async () => {
+test("if the fetched instance has referenced instance(s), then query will return the given instance with that related instance(s)", async () => {
   const { result } = renderHook(
     () => useGetInstanceWithRelations("test_id", "env").useOneTime(),
     {
@@ -58,12 +58,10 @@ test("if the fetched instance has referenced other instance, then query will ret
   expect(result.current.data).toBeDefined();
   expect(result.current.data?.instance.id).toEqual("test_id");
   expect(result.current.data?.relatedInstances).toHaveLength(1);
-  expect(result.current.data?.relatedInstances[0].instance.id).toEqual(
-    "test_mpn_id",
-  );
+  expect(result.current.data?.relatedInstances[0].id).toEqual("test_mpn_id");
 });
 
-test("when instance returned has referenced other instance, then query will returns given instance without relatedInstances", async () => {
+test("when instance returned has not referenced instance(s), then the query will return the given instance without relatedInstances", async () => {
   const { result } = renderHook(
     () => useGetInstanceWithRelations("test_mpn_id", "env").useOneTime(),
     {

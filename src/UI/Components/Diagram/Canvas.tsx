@@ -6,10 +6,15 @@ import { AlertVariant } from "@patternfly/react-core";
 import styled from "styled-components";
 import { ServiceModel } from "@/Core";
 import { sanitizeAttributes } from "@/Data";
-import { InstanceWithReferences } from "@/Data/Managers/V2/GetInstanceWithRelations";
+import { InstanceWithRelations } from "@/Data/Managers/V2/GetInstanceWithRelations";
 import { usePostOrder } from "@/Data/Managers/V2/PostOrder";
-import { ComposerServiceOrderItem } from "@/Slices/Orders/Core/Query";
 import diagramInit, { DiagramHandlers } from "@/UI/Components/Diagram/init";
+import {
+  ComposerServiceOrderItem,
+  ActionEnum,
+  DictDialogData,
+} from "@/UI/Components/Diagram/interfaces";
+
 import { CanvasWrapper } from "@/UI/Components/Diagram/styles";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
@@ -18,7 +23,6 @@ import DictModal from "./components/DictModal";
 import FormModal from "./components/FormModal";
 import Toolbar from "./components/Toolbar";
 import { getServiceOrderItems, createConnectionRules } from "./helpers";
-import { ActionEnum, DictDialogData } from "./interfaces";
 import { ServiceEntityBlock } from "./shapes";
 
 /**
@@ -26,13 +30,13 @@ import { ServiceEntityBlock } from "./shapes";
  *
  * @param {ServiceModel[]} services - The list of service models.
  * @param {string} mainServiceName - The name of the main service.
- * @param {InstanceWithReferences} instance - The instance with references.
+ * @param {InstanceWithRelations} instance - The instance with references.
  * @returns {JSX.Element} The rendered Canvas component.
  */
 const Canvas: React.FC<{
   services: ServiceModel[];
   mainServiceName: string;
-  instance?: InstanceWithReferences;
+  instance?: InstanceWithRelations;
   editable: boolean;
 }> = ({ services, mainServiceName, instance, editable = true }) => {
   const { environmentHandler, routeManager } = useContext(DependencyContext);
@@ -322,7 +326,7 @@ const Canvas: React.FC<{
         }
         editable={editable}
       />
-      <CanvasWrapper id="canvas-wrapper" aria-label="Composer-Container">
+      <CanvasWrapper id="canvas-wrapper" data-testid="Composer-Container">
         <div className="canvas" ref={canvas} />
         <ZoomWrapper>
           <button

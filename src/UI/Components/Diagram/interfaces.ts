@@ -1,5 +1,9 @@
 import { dia, g } from "@inmanta/rappid";
 import { ParsedNumber } from "@/Core";
+import {
+  ServiceOrderItemAction,
+  ServiceOrderItemConfig,
+} from "@/Slices/Orders/Core/Query";
 
 enum ActionEnum {
   UPDATE = "update",
@@ -121,6 +125,18 @@ interface SavedCoordinates {
   attributes: { [key: string]: unknown };
   coordinates: { x: number; y: number };
 }
+//There is some nuances between composer and ServiceOrderItem which causing that we cannot just extend the above interface, I will attempt to make it as close as possible with incoming redesign
+interface ComposerServiceOrderItem {
+  config: ServiceOrderItemConfig | null;
+  attributes?: Record<string, unknown> | null;
+  edits?: [Record<string, unknown>] | null;
+  instance_id: string | dia.Cell.ID;
+  service_entity: string;
+  action: null | ServiceOrderItemAction;
+  embeddedTo?: string | null;
+  relatedTo?: Map<string, string> | null;
+  metadata?: Record<string, string> | null;
+}
 
 export {
   ActionEnum,
@@ -134,4 +150,5 @@ export {
   relationId,
   LabelLinkView,
   SavedCoordinates,
+  ComposerServiceOrderItem,
 };

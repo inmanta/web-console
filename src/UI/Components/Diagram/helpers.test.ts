@@ -4,12 +4,20 @@ import {
   ServiceInstanceModelWithTargetStates,
   ServiceModel,
 } from "@/Core";
-import { ComposerServiceOrderItem } from "@/Slices/Orders/Core/Query";
+
 import { Service, ServiceInstance } from "@/Test";
 import {
   a as InstanceAttributesA,
   b as InstanceAttributesB,
 } from "@/Test/Data/ServiceInstance/Attributes";
+import {
+  ComposerServiceOrderItem,
+  ConnectionRules,
+  EmbeddedRule,
+  InterServiceRule,
+  LabelLinkView,
+  TypeEnum,
+} from "@/UI/Components/Diagram/interfaces";
 import {
   childModel,
   containerModel,
@@ -31,13 +39,6 @@ import {
   updateLabelPosition,
   toggleLooseElement,
 } from "./helpers";
-import {
-  ConnectionRules,
-  EmbeddedRule,
-  InterServiceRule,
-  LabelLinkView,
-  TypeEnum,
-} from "./interfaces";
 import { Link, ServiceEntityBlock } from "./shapes";
 
 jest.mock("uuid", () => ({

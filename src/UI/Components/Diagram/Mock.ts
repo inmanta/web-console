@@ -1,6 +1,6 @@
 import { ServiceInstanceModel, ServiceModel } from "@/Core";
-import { InstanceWithReferences } from "@/Data/Managers/V2/GetInstanceWithRelations";
-import { ComposerServiceOrderItem } from "@/Slices/Orders/Core/Query";
+import { InstanceWithRelations } from "@/Data/Managers/V2/GetInstanceWithRelations";
+import { ComposerServiceOrderItem } from "@/UI/Components/Diagram/interfaces";
 
 export const testInstance: ServiceInstanceModel = {
   id: "d938d5bb-8bf1-4b41-9e17-ae0b5069cbbf",
@@ -1514,7 +1514,7 @@ export const relatedServices: ComposerServiceOrderItem[] = [
   },
 ];
 
-export const mockedInstanceWithReferences: InstanceWithReferences = {
+export const mockedInstanceWithRelations: InstanceWithRelations = {
   instance: {
     id: "085cdf92-0894-4b82-8d46-1dd9552e7ba3",
     environment: "efa7c243-81aa-4986-b0b1-c89583cbf846",
@@ -1539,64 +1539,58 @@ export const mockedInstanceWithReferences: InstanceWithReferences = {
   },
   relatedInstances: [
     {
-      instance: {
-        id: "7cd8b669-597a-4341-9b71-07f550b89826",
-        environment: "efa7c243-81aa-4986-b0b1-c89583cbf846",
-        service_entity: "child-service",
-        version: 4,
-        config: {},
-        state: "up",
-        candidate_attributes: null,
-        active_attributes: {
-          name: "child-test",
-          service_id: "123523534623",
-          parent_entity: "085cdf92-0894-4b82-8d46-1dd9552e7ba3",
-          should_deploy_fail: false,
-        },
-        rollback_attributes: null,
-        created_at: "2023-09-19T14:40:08.999123",
-        last_updated: "2023-09-19T14:40:36.178723",
-        callback: [],
-        deleted: false,
-        deployment_progress: null,
-        service_identity_attribute_value: "child-test",
-        referenced_by: [],
+      id: "7cd8b669-597a-4341-9b71-07f550b89826",
+      environment: "efa7c243-81aa-4986-b0b1-c89583cbf846",
+      service_entity: "child-service",
+      version: 4,
+      config: {},
+      state: "up",
+      candidate_attributes: null,
+      active_attributes: {
+        name: "child-test",
+        service_id: "123523534623",
+        parent_entity: "085cdf92-0894-4b82-8d46-1dd9552e7ba3",
+        should_deploy_fail: false,
       },
-      relatedInstances: [],
+      rollback_attributes: null,
+      created_at: "2023-09-19T14:40:08.999123",
+      last_updated: "2023-09-19T14:40:36.178723",
+      callback: [],
+      deleted: false,
+      deployment_progress: null,
+      service_identity_attribute_value: "child-test",
+      referenced_by: [],
     },
     {
-      instance: {
-        id: "1548332f-86ab-42fe-bd32-4f3adb9e650b",
-        environment: "efa7c243-81aa-4986-b0b1-c89583cbf846",
-        service_entity: "container-service",
-        version: 4,
-        config: {},
-        state: "up",
-        candidate_attributes: null,
-        active_attributes: {
-          name: "test-container1123",
-          service_id: "123412312",
-          child_container: {
-            name: "123124124",
-            parent_entity: "085cdf92-0894-4b82-8d46-1dd9552e7ba3",
-          },
-          should_deploy_fail: false,
+      id: "1548332f-86ab-42fe-bd32-4f3adb9e650b",
+      environment: "efa7c243-81aa-4986-b0b1-c89583cbf846",
+      service_entity: "container-service",
+      version: 4,
+      config: {},
+      state: "up",
+      candidate_attributes: null,
+      active_attributes: {
+        name: "test-container1123",
+        service_id: "123412312",
+        child_container: {
+          name: "123124124",
+          parent_entity: "085cdf92-0894-4b82-8d46-1dd9552e7ba3",
         },
-        rollback_attributes: null,
-        created_at: "2023-09-19T14:39:52.566097",
-        last_updated: "2023-09-19T14:40:14.861344",
-        callback: [],
-        deleted: false,
-        deployment_progress: null,
-        service_identity_attribute_value: "test-container1123",
-        referenced_by: [],
+        should_deploy_fail: false,
       },
-      relatedInstances: [],
+      rollback_attributes: null,
+      created_at: "2023-09-19T14:39:52.566097",
+      last_updated: "2023-09-19T14:40:14.861344",
+      callback: [],
+      deleted: false,
+      deployment_progress: null,
+      service_identity_attribute_value: "test-container1123",
+      referenced_by: [],
     },
   ],
 };
 
-export const mockedInstanceTwo: InstanceWithReferences = {
+export const mockedInstanceTwo: InstanceWithRelations = {
   instance: {
     id: "085cxf92-0894-4ex2-8d46-1gd9552e7ba3",
     environment: "efa7c243-81aa-4986-b0b1-c89583cbf846",
@@ -2375,7 +2369,7 @@ export const mockedInstanceTwoServiceModel: ServiceModel = {
   owned_entities: [],
 };
 
-export const mockedInstanceThree: InstanceWithReferences = {
+export const mockedInstanceThree: InstanceWithRelations = {
   instance: {
     id: "085cxf92-0894-4ex2-8d46-1gd9552e7ba3",
     environment: "efa7c243-81aa-4986-b0b1-c89583cbf846",
