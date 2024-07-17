@@ -279,8 +279,8 @@ describe("shapesDataTransform", () => {
         return { ...instance, action: "create" };
       });
     const result = shapesDataTransform(
-      createdEmbedded,
       createdObject,
+      createdEmbedded,
       testApiInstanceModel,
     );
     expect(result).toMatchObject({
@@ -346,8 +346,8 @@ describe("shapesDataTransform", () => {
       ],
     };
     const result = shapesDataTransform(
-      createdEmbedded,
       createdObject,
+      createdEmbedded,
       testApiInstanceModel,
     );
     expect(result).toMatchObject(expectedResult);
@@ -359,8 +359,8 @@ describe("shapesDataTransform", () => {
     ];
 
     const result2 = shapesDataTransform(
-      createdEmbedded2,
       createdObject,
+      createdEmbedded2,
       testApiInstanceModel,
     );
     expect(result2).toMatchObject(expectedResult);
@@ -371,8 +371,8 @@ describe("shapesDataTransform", () => {
       { ...testEmbeddedApiInstances[1], action: "create" },
     ];
     const result3 = shapesDataTransform(
-      createdEmbedded3,
       createdObject,
+      createdEmbedded3,
       testApiInstanceModel,
     );
     expect(result3).toMatchObject(expectedResult);
@@ -409,8 +409,8 @@ describe("shapesDataTransform", () => {
       ],
     };
     const result = shapesDataTransform(
-      createdEmbedded,
       createdObject,
+      createdEmbedded,
       testApiInstanceModel,
     );
     expect(result).toMatchObject(expectedResult);
@@ -455,8 +455,8 @@ describe("shapesDataTransform", () => {
       ],
     };
     const result = shapesDataTransform(
-      createdEmbedded,
       createdObject,
+      createdEmbedded,
       testApiInstanceModel,
     );
     expect(result).toMatchObject(expectedResult);
@@ -466,8 +466,9 @@ describe("shapesDataTransform", () => {
         return { ...instance, action: "update" };
       });
     const result2 = shapesDataTransform(
-      createdEmbedded2,
       createdObject,
+      createdEmbedded2,
+
       testApiInstanceModel,
     );
     expect(result2).toMatchObject(expectedResult);
@@ -477,8 +478,8 @@ describe("shapesDataTransform", () => {
       { ...testEmbeddedApiInstances[1], action: "create" },
     ];
     const result3 = shapesDataTransform(
-      createdEmbedded3,
       createdObject,
+      createdEmbedded3,
       testApiInstanceModel,
     );
     expect(result3).toMatchObject(expectedResult);
@@ -498,8 +499,8 @@ describe("shapesDataTransform", () => {
       },
     };
     const result = shapesDataTransform(
-      relatedServices,
       relatedServices[0],
+      relatedServices,
       childModel,
     );
     expect(result).toMatchObject(expectedResult);
@@ -522,8 +523,8 @@ describe("shapesDataTransform", () => {
       },
     };
     const result = shapesDataTransform(
-      relatedServices,
       relatedServices[1],
+      relatedServices,
       containerModel,
     );
     expect(result).toMatchObject(expectedResult);
