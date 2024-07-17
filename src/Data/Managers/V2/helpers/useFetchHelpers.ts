@@ -35,7 +35,7 @@ export const useFetchHelpers = () => {
    * @returns The headers object.
    */
   function createHeaders(env?: string) {
-    const headers = new Headers();
+    const headers = new Headers({ "Content-Type": "application/json" });
 
     if (env) {
       headers.append("X-Inmanta-Tid", env);
