@@ -43,7 +43,7 @@ afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
 describe("UserManagementPage", () => {
-  it("should render loading view when is there is no response from the endpoints yet,", async () => {
+  it("should render LoadingView when there are no responses from the endpoints yet,", async () => {
     server.use(
       http.get("/lsm/v1/service_inventory", async () => {
         await delay(1000);

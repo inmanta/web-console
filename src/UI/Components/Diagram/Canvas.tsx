@@ -26,7 +26,7 @@ import { getServiceOrderItems, createConnectionRules } from "./helpers";
 import { ServiceEntityBlock } from "./shapes";
 
 /**
- * Canvas component for creating, displaying and editing a Instances.
+ * Canvas component for creating, displaying and editing an Instance.
  *
  * @param {ServiceModel[]} services - The list of service models.
  * @param {string} mainServiceName - The name of the main service.
@@ -64,7 +64,7 @@ const Canvas: React.FC<{
   });
 
   /**
-   * Handles the event triggered when there is loose embedded entity on the canvas.
+   * Handles the event triggered when there are loose embedded entities on the canvas.
    *
    * @param {CustomEvent} event - The event object.
    */
@@ -89,7 +89,7 @@ const Canvas: React.FC<{
   };
 
   /**
-   * Handles the event triggered when user want to see the dictionary properties of an entity.
+   * Handles the event triggered when the user wants to see the dictionary properties of an entity.
    *
    * @param {CustomEvent} event - The event object.
    */
@@ -99,7 +99,7 @@ const Canvas: React.FC<{
   };
 
   /**
-   * Handles the event triggered when user want to edit an entity.
+   * Handles the event triggered when the user wants to edit an entity.
    *
    * @param {CustomEvent} event - The event object.
    */
