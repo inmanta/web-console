@@ -1,6 +1,5 @@
 import { RouteKind } from "@/Core";
 import { InstanceComposerViewer } from "@/Slices/InstanceComposerViewer";
-import { InstanceDetails } from "@/Slices/ServiceInstanceDetails";
 import { AgentProcess } from "@S/AgentProcess";
 import { Agents } from "@S/Agents";
 import { CompileDetails } from "@S/CompileDetails";
@@ -67,7 +66,6 @@ export const paths: Paths = {
   ServiceDetails: ServiceDetails.path,
   Orders: Orders.path,
   OrderDetails: OrderDetails.path,
-  InstanceDetails: InstanceDetails.path,
 
   /**
    * Resource Manager

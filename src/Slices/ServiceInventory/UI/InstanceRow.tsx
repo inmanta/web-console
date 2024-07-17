@@ -68,9 +68,9 @@ export const InstanceRow: React.FC<Props> = ({
             dataLabel={idDataLabel}
             aria-label={`IdentityCell-${row.serviceIdentityValue}`}
           >
-            {row.serviceIdentityValue}
             <CopyMultiOptions
               options={[row.serviceIdentityValue, row.id.full]}
+              text={row.serviceIdentityValue}
             />
           </Td>
         ) : (

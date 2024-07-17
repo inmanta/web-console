@@ -30,7 +30,7 @@ export const View: React.FC<Props> = ({ id }) => {
   });
 
   return (
-    <PageContainer pageTitle={words("resources.details.title")}>
+    <PageContainer title={words("resources.details.title")}>
       <CustomFlex>
         <FlexItem>
           <Description>{id}</Description>

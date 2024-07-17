@@ -1,6 +1,0 @@
-description: Update charts library to v7.3.0 to fix deprecation warnings
-issue-nr: 5756
-change-type: patch
-destination-branches: [master, iso7]
-sections:
-  minor-improvement: "{{description}}"

@@ -16,10 +16,4 @@ export interface InstanceLog {
   last_updated: string;
   deleted: boolean;
   events: InstanceEvent[];
-  service_entity_version?: ParsedNumber;
-  desired_state_version?: ParsedNumber;
-  config?: { [key: string]: boolean } | null;
-  callback?: string[];
-  service_identity_attribute_value?: string;
-  transfer_context?: string;
 }

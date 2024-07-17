@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { DependencyContext } from "@/UI";
 
 /**
- * React Query hook that provides HTTP helper functions.
+ * Custom hook that provides HTTP helper functions.
  *
  * @returns An object containing the HTTP helper functions.
  */

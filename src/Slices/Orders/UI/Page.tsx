@@ -39,7 +39,7 @@ export const Page: React.FC = () => {
   const disabledOrderView = !featureManager.isOrderViewEnabled();
 
   return (
-    <PageContainer pageTitle={words("orders.title")}>
+    <PageContainer title={words("orders.title")}>
       <TableControls
         paginationWidget={
           <PaginationWidget

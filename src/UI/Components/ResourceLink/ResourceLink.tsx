@@ -10,7 +10,6 @@ interface Props {
 
 export const ResourceLink: React.FC<Props> = ({ resourceId, linkText }) => {
   const { routeManager } = useContext(DependencyContext);
-
   return (
     <Link
       pathname={routeManager.getUrl("ResourceDetails", {

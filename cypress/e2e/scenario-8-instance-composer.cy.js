@@ -126,7 +126,7 @@ if (Cypress.env("edition") === "iso") {
         .trigger("mousedown")
         .trigger("mousemove", {
           clientX: 700,
-          clientY: 350,
+          clientY: 100,
         })
         .trigger("mouseup");
 
@@ -413,7 +413,7 @@ if (Cypress.env("edition") === "iso") {
         .trigger("mousedown")
         .trigger("mousemove", {
           clientX: 700,
-          clientY: 350,
+          clientY: 100,
         })
         .trigger("mouseup");
 
@@ -483,7 +483,7 @@ if (Cypress.env("edition") === "iso") {
         .trigger("mousedown")
         .trigger("mousemove", {
           clientX: 700,
-          clientY: 300,
+          clientY: 100,
         })
         .trigger("mouseup");
       cy.get('[joint-selector="headerLabel"]')
@@ -494,7 +494,7 @@ if (Cypress.env("edition") === "iso") {
         .trigger("mousedown")
         .trigger("mousemove", {
           clientX: 400,
-          clientY: 300,
+          clientY: 100,
         })
         .trigger("mouseup");
       cy.get("button").contains("Deploy").click();
@@ -552,7 +552,7 @@ if (Cypress.env("edition") === "iso") {
         .trigger("mousedown")
         .trigger("mousemove", {
           clientX: 700,
-          clientY: 300,
+          clientY: 100,
         })
         .trigger("mouseup");
 
@@ -622,7 +622,7 @@ if (Cypress.env("edition") === "iso") {
         .trigger("mousedown")
         .trigger("mousemove", {
           clientX: 900,
-          clientY: 300,
+          clientY: 100,
         })
         .trigger("mouseup");
       cy.get("button").contains("Deploy").click();

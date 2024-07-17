@@ -8,7 +8,7 @@ interface Props {
 }
 
 export const Wrapper: React.FC<Props> = ({ children, name, ...props }) => (
-  <PageContainer {...props} pageTitle={words("ServiceDetails.title")(name)}>
+  <PageContainer {...props} title={words("ServiceDetails.title")(name)}>
     {children}
   </PageContainer>
 );

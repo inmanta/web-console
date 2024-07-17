@@ -294,19 +294,6 @@ if (Cypress.env("edition") === "iso") {
         "failed",
       );
 
-      // Check Instance Details page
-      cy.get('[aria-label="row actions toggle"]', { timeout: 60000 })
-        .first()
-        .click();
-      // The first button should be the one redirecting to the details page.
-      cy.get(".pf-v5-c-menu__item")
-        .first()
-        .contains("Instance Details")
-        .click();
-
-      // Check the state of the instance is failed in the history section.
-      cy.get('[aria-label="History-Row"]').eq(0).should("contain", "failed");
-
       // go back to Service Catalog
       cy.get('[aria-label="BreadcrumbItem"]')
         .contains("Service Catalog")

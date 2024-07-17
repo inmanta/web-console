@@ -85,9 +85,7 @@ export const LineChart: React.FC<LineChartProps> = ({
             labelComponent={
               <ChartLegendTooltip
                 legendData={legendData}
-                title={(datum) =>
-                  datum.x ? new Date(datum.x).toLocaleString() : "No data"
-                }
+                title={(datum) => new Date(datum.x).toLocaleString()}
                 flyoutWidth={250}
               />
             }

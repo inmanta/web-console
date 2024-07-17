@@ -12,7 +12,7 @@ import { DynamicFAIcon } from "@/UI/Components/FaIcon";
 import { MomentDatePresenter } from "@/UI/Utils";
 import { words } from "@/UI/words";
 import { AttributesTab } from "./AttributesTab";
-import { ConfigSectionContent } from "./ConfigSectionContent";
+import { ConfigTab } from "./ConfigTab";
 import { DocumentationTabs } from "./DocumentationTab";
 import { ResourcesTab } from "./ResourcesTab";
 import { StatusTab } from "./StatusTab";
@@ -176,11 +176,7 @@ const configTab = (
   id: TabKey.Config,
   title: words("config.title"),
   icon: <CogIcon />,
-  view: (
-    <ConfigSectionContent
-      serviceInstanceIdentifier={serviceInstanceIdentifier}
-    />
-  ),
+  view: <ConfigTab serviceInstanceIdentifier={serviceInstanceIdentifier} />,
   isDisabled,
   ref,
 });

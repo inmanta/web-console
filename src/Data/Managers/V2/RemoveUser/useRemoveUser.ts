@@ -7,7 +7,7 @@ import { PrimaryBaseUrlManager } from "@/UI";
 import { useFetchHelpers } from "../helpers";
 
 /**
- * React Query hook for removing a user from the server.
+ * Custom hook for removing a user from the server.
  *
  * @returns {Mutation} - The mutation object provided by `useMutation` hook.
  */

@@ -48,7 +48,7 @@ export const Page: React.FC = () => {
     !featureManager.isResourceDiscoveryEnabled();
 
   return (
-    <PageContainer pageTitle={words("discovered_resources.title")}>
+    <PageContainer title={words("discovered_resources.title")}>
       <TableControls
         paginationWidget={
           <PaginationWidget

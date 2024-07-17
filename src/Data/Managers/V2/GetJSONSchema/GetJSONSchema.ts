@@ -1,13 +1,6 @@
-import { UseQueryResult, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { PrimaryBaseUrlManager } from "@/UI";
 import { useFetchHelpers } from "../helpers";
-
-/**
- * Return Signature of the useGetJSONSchema React Query
- */
-interface GetJSONShema {
-  useOneTime: () => UseQueryResult<unknown, Error>;
-}
 
 /**
  *  React Query hook to fetch JSON Schema for a service_entity.
@@ -15,13 +8,9 @@ interface GetJSONShema {
  * @param {string} service_id - The service entity.
  * @param {string} environment - The environment.
  *
- * @returns {GetJSONShema} The result of the query.
- * @returns {UseQueryResult<unknown, Error>} returns.useOneTime - Fetch the JSON Schema with a single query.
+ * @returns {Object} The result of the query, {data, status, error, isLoading}.
  */
-export const useGetJSONSchema = (
-  service_id: string,
-  environment: string,
-): GetJSONShema => {
+export const useGetJSONSchema = (service_id: string, environment: string) => {
   const { createHeaders, handleErrors } = useFetchHelpers();
   const headers = createHeaders(environment);
   const baseUrlManager = new PrimaryBaseUrlManager(

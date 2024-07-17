@@ -1,27 +1,21 @@
 import React from "react";
 import { PageSection, PageSectionProps } from "@patternfly/react-core";
 import { PageTitle } from "../PageTitle";
+import { PagePadder } from "./PagePadder";
 
 interface Props extends PageSectionProps {
-  pageTitle: string | React.ReactNode;
+  title: string;
 }
 
 export const PageContainer: React.FC<React.PropsWithChildren<Props>> = ({
   children,
-  pageTitle,
+  title,
   ...props
 }) => (
-  <>
-    <PageSection variant="light" padding={{ default: "noPadding" }}>
-      <PageTitle role="heading">{pageTitle}</PageTitle>
-    </PageSection>
-    <PageSection
-      variant="light"
-      {...props}
-      isFilled
-      padding={{ default: "padding" }}
-    >
+  <PageSection variant="light" {...props} role="main">
+    <PagePadder>
+      <PageTitle role="heading">{title}</PageTitle>
       {children}
-    </PageSection>
-  </>
+    </PagePadder>
+  </PageSection>
 );

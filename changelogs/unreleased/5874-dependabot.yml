@@ -1,6 +1,0 @@
-change-type: patch
-description: 'Build(deps-dev): Bump @types/json-bigint from 1.0.3 to 1.0.4'
-destination-branches:
-- master
-- iso7
-sections: {}

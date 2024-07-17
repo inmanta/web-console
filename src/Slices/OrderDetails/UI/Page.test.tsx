@@ -1,5 +1,4 @@
 import React, { act } from "react";
-import { Page } from "@patternfly/react-core";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { axe, toHaveNoViolations } from "jest-axe";
@@ -15,11 +14,7 @@ import { OrderDetailsPage } from ".";
 
 expect.extend(toHaveNoViolations);
 
-const DetailsPage = (
-  <Page>
-    <OrderDetailsPage />
-  </Page>
-);
+const DetailsPage = <OrderDetailsPage />;
 
 test("OrderDetailsView shows failed view", async () => {
   const { component, apiHelper } = baseSetup(DetailsPage);

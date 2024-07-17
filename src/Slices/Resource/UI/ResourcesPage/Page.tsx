@@ -23,7 +23,7 @@ import { Summary } from "./Summary";
 export const Wrapper: React.FC<React.PropsWithChildren<unknown>> = ({
   children,
 }) => (
-  <PageContainer pageTitle={words("inventory.tabs.resources")}>
+  <PageContainer title={words("inventory.tabs.resources")}>
     {children}
   </PageContainer>
 );

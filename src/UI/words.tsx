@@ -214,27 +214,6 @@ const dict = {
   "inventory.editAttribute.text": (oldValue: string, newValue: string) =>
     `Are you absolutely sure you want to change attribute from ${oldValue} to ${newValue}? This operation can corrupt the instance.`,
   "inventory.error.mermaid": "Error rendering Mermaid diagram",
-
-  /**
-   * Service Instance Details text
-   */
-  "instanceDetails.title.tag": (version) => `Version: ${version}`,
-  "instanceDetails.title.latest": "Latest Version",
-  "instanceDetails.button": "Instance Details",
-  "instanceDetails.page.errorFallback":
-    "Something went wrong retrieving the instance details",
-  "instanceDetails.page.errorFallback.title": "Error",
-  "instanceDetails.page.noData": "There is no data available to display.",
-  "instanceDetails.page.noData.errorTitle": "No Data",
-  "instanceDetails.history.title": "Version History",
-  "instanceDetails.history.table.version": "Version",
-  "instanceDetails.history.table.date": "Date",
-  "instanceDetails.history.table.status": "Status",
-  "instanceDetails.history.error": "Error loading Version History",
-  "instanceDetails.details.title": "Details",
-  "instanceDetails.details.created": "Created:",
-  "instanceDetails.details.updated": "Updated:",
-
   /**
    * Config related text
    */
@@ -489,11 +468,10 @@ const dict = {
     "Request the agents to check the current state of each resource and make the current state in-line with the desired state.",
 
   /** Discovered Resources related text */
-  "discovered.column.resource_id": "Resource Id",
-  "discovered.column.managed_resource": "Managed resource",
+  "discovered.column.resource_id": "resource_id",
+  "discovered.column.managed_resource": "managed resource",
   "discovered_resources.title": "Discovered Resources",
   "discovered_resources.values": "values",
-  "discovered_resources.show_resource": "Show managed resource",
 
   /** Compile report related text */
   "compileReports.title": "Compile Reports",

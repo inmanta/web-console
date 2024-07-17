@@ -8,10 +8,7 @@ const PageWrapper: React.FC<React.PropsWithChildren<unknown>> = ({
   children,
   ...props
 }) => (
-  <PageContainer
-    {...props}
-    pageTitle={words("inventory.duplicateInstance.title")}
-  >
+  <PageContainer {...props} title={words("inventory.duplicateInstance.title")}>
     {children}
   </PageContainer>
 );

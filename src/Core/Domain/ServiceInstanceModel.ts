@@ -48,7 +48,7 @@ export interface VersionedServiceInstanceIdentifier
  */
 export interface ServiceInstanceModel
   extends VersionedServiceInstanceIdentifier {
-  config?: { [key: string]: boolean } | null;
+  config?: { [key: string]: string } | null;
   environment: string;
   active_attributes: InstanceAttributeModel | null;
   callback: string[];
@@ -60,10 +60,7 @@ export interface ServiceInstanceModel
   state: string;
   deployment_progress?: DeploymentProgress | null;
   service_identity_attribute_value?: string;
-  referenced_by: string[] | null;
-  service_entity_version?: ParsedNumber;
-  desired_state_version?: ParsedNumber;
-  transfer_context?: string;
+  referenced_by: string[];
 }
 
 /**

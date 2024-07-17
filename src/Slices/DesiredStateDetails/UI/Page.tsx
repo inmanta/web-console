@@ -55,7 +55,7 @@ export const Page: React.FC<{ version: string }> = ({ version }) => {
   const presenter = new VersionResourceTablePresenter();
 
   return (
-    <PageContainer pageTitle={words("desiredState.details.title")}>
+    <PageContainer title={words("desiredState.details.title")}>
       <Controls
         paginationWidget={
           <PaginationWidget

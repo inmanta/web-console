@@ -1,6 +1,0 @@
-description: Update copy id/service_identifier icon to not be grayed out.
-issue-nr: 5827
-change-type: patch
-destination-branches: [master, iso7]
-sections:
-  bugfix: "{{description}}"

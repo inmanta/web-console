@@ -45,7 +45,7 @@ const PageWrapper: React.FC<React.PropsWithChildren<unknown>> = ({
   <PageContainer
     aria-label="Composer"
     {...props}
-    pageTitle={words("inventory.instanceComposer.title")}
+    title={words("inventory.instanceComposer.title")}
   >
     {children}
   </PageContainer>

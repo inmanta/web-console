@@ -1,6 +1,5 @@
 import React, { act } from "react";
 import { MemoryRouter } from "react-router-dom";
-import { Page } from "@patternfly/react-core";
 import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
@@ -15,7 +14,7 @@ import { DeferredApiHelper, dependencies, StaticScheduler } from "@/Test";
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import * as DiscoveredResources from "../Data/Mock";
-import { DiscoveredResourcesPage } from ".";
+import { Page } from "./Page";
 
 expect.extend(toHaveNoViolations);
 
@@ -31,9 +30,7 @@ function setup() {
     <MemoryRouter>
       <DependencyProvider dependencies={{ ...dependencies, queryResolver }}>
         <StoreProvider store={store}>
-          <Page>
-            <DiscoveredResourcesPage />
-          </Page>
+          <Page />
         </StoreProvider>
       </DependencyProvider>
     </MemoryRouter>
@@ -69,27 +66,29 @@ test("GIVEN Discovered Resources page THEN shows table", async () => {
       name: "vcenter::VirtualMachine[lab,name=acisim]",
     }),
   ).toBeVisible();
-
-  // with correct uri to managed resource
-  const rowWithManagedResource = within(rows[0]).getByRole("cell", {
-    name: "Show managed resource",
-  });
-
-  expect(rowWithManagedResource).toBeVisible();
-
-  expect(within(rowWithManagedResource).getByRole("link")).toHaveAttribute(
-    "href",
-    "/resources/cloudflare%3A%3Adns_record%3A%3ACnameRecord%5Bhttps%3A%2F%2Fapi.cloudflare.com%2Fclient%2Fv4%2F%2Cname%3Dartifacts.ssh.inmanta.com%5D",
-  );
-
+  expect(
+    within(rows[0]).getByRole("cell", {
+      name: "resource-1",
+    }),
+  ).toBeVisible();
   // uri is null
-  expect(within(rows[1]).getByTestId("Managed resource")).toHaveTextContent("");
-
+  expect(
+    within(rows[1]).getByRole("cell", {
+      name: "-",
+    }),
+  ).toBeVisible();
   // uri doesn't have a rid
-  expect(within(rows[2]).getByTestId("Managed resource")).toHaveTextContent("");
-
+  expect(
+    within(rows[2]).getByRole("cell", {
+      name: "-",
+    }),
+  ).toBeVisible();
   // uri is an empty string
-  expect(within(rows[3]).getByTestId("Managed resource")).toHaveTextContent("");
+  expect(
+    within(rows[3]).getByRole("cell", {
+      name: "-",
+    }),
+  ).toBeVisible();
 
   await act(async () => {
     const results = await axe(document.body);
@@ -101,12 +100,10 @@ test("GIVEN Discovered Resources page THEN sets sorting parameters correctly on 
   const { component, apiHelper } = setup();
   render(component);
   apiHelper.resolve(Either.right(DiscoveredResources.response));
-
   const resourceIdButton = await screen.findByRole("button", {
     name: words("discovered.column.resource_id"),
   });
   expect(resourceIdButton).toBeVisible();
-
   await act(async () => {
     await userEvent.click(resourceIdButton);
   });

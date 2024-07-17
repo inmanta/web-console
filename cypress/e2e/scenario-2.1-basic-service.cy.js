@@ -165,63 +165,29 @@ if (Cypress.env("edition") === "iso") {
         .children()
         .should("have.length", 1);
       cy.get("#basic-service").contains("Show inventory").click();
+      cy.get("#expand-toggle0").click();
 
-      // Check Instance Details page
-      cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
-      // The first button should be the one redirecting to the details page.
-      cy.get(".pf-v5-c-menu__item")
-        .first()
-        .contains("Instance Details")
-        .click();
+      // expect row to be expanded
+      cy.get(".pf-v5-c-table__expandable-row-content").should("to.be.visible");
 
-      // Check if there are three versions in the history table
-      cy.get('[aria-label="History-Row"]', { timeout: 60000 }).should(
-        "have.length",
-        3,
+      // Expect to find status tab
+      cy.get(".pf-v5-c-tabs__list li:first").should(
+        "have.class",
+        "pf-m-current",
       );
 
-      // Check the state of the instance is up in the history section.
-      cy.get('[aria-label="History-Row"]').eq(0).should("contain", "up");
+      // check state is up now
+      cy.get('[aria-label="InstanceRow-Intro"]:first')
+        .find('[data-label="State"]', { timeout: 60000 })
+        .should("contain", "up");
 
-      // Selecting a version in the table should change the tags in the heading of the page.
-      cy.get('[aria-label="History-Row"]').eq(1).click();
-      cy.get('[data-testid="selected-version"]').should(
-        "have.text",
-        "Version: 2",
-      );
-
-      // Check if it has all correct tabs and that the default selected one is the documentation tab.
-      cy.get('[aria-label="documentation-content"]').should(
-        "have.attr",
-        "aria-selected",
-        "true",
-      );
-      cy.get('[aria-label="attributes-content"]').should(
-        "have.attr",
-        "aria-selected",
-        "false",
-      );
-      cy.get('[aria-label="events-content"]').should(
-        "have.attr",
-        "aria-selected",
-        "false",
-      );
-      cy.get('[aria-label="resources-content"]').should(
-        "have.attr",
-        "aria-selected",
-        "false",
-      );
-
-      // Go back to inventory using the breadcrumbs
-      cy.get('[aria-label="BreadcrumbItem"]')
-        .contains("Service Inventory: basic-service")
-        .click();
+      cy.get('[aria-label="LegendItem-deployed"]').should("contain", "1");
 
       // click on edit button
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
 
-      // The fourth button in the dropdown should be the edit button.
-      cy.get(".pf-v5-c-menu__item").eq(4).contains("Edit").click();
+      // The third button in the dropdown should be the edit button.
+      cy.get(".pf-v5-c-menu__item").eq(3).contains("Edit").click();
 
       // check if amount of fields is lesser than create amount.
       cy.get("form").find("input").should("have.length.of.at.most", 11);
@@ -236,7 +202,6 @@ if (Cypress.env("edition") === "iso") {
       cy.get("button").contains("Confirm").click();
 
       // expect to land on Service Inventory page and to find attributes tab button
-      cy.get("#expand-toggle0").click();
       cy.get(".pf-v5-c-tabs__list")
         .contains("Attributes", { timeout: 20000 })
         .click();
@@ -316,9 +281,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#editorButton").click();
 
       // expect the value for address_r1 to be empty
-      cy.get(".view-line > :nth-child(1) > .mtk5")
-        .first()
-        .should("contain", '""');
+      cy.get(".view-line").contains("address_r1").should("contain", '""');
       cy.get(".view-line > :nth-child(1) > .mtk5").first().type("1.2.3.2/32");
 
       // change the service id to make instance unique
@@ -363,26 +326,13 @@ if (Cypress.env("edition") === "iso") {
       cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
       cy.get("#basic-service").contains("Show inventory").click();
 
-      // Check Instance Details page
-      cy.get('[aria-label="row actions toggle"]', { timeout: 60000 })
-        .first()
-        .click();
-      // The first button should be the one redirecting to the details page.
-      cy.get(".pf-v5-c-menu__item")
-        .first()
-        .contains("Instance Details")
-        .click();
+      //check for instance state to change to up
+      cy.get('[data-label="State"]')
+        .find(".pf-v5-c-label.pf-m-green", { timeout: 60000 })
+        .should("contain", "up");
 
-      // Check the state of the instance is up in the history section.
-      cy.get('[aria-label="History-Row"]', { timeout: 60000 }).should(
-        "contain",
-        "up",
-      );
-
-      // Go back to inventory using the breadcrumbs
-      cy.get('[aria-label="BreadcrumbItem"]')
-        .contains("Service Inventory: basic-service")
-        .click();
+      // expand first row
+      cy.get("#expand-toggle0", { timeout: 20000 }).click();
 
       // delete but cancel deletion in modal
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 })

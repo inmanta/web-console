@@ -11,7 +11,7 @@ export const Page: React.FC = () => {
     environmentDetails: false,
   });
   return (
-    <PageContainer pageTitle={"Create Environment"}>
+    <PageContainer title={"Create Environment"}>
       {RemoteData.fold(
         {
           notAsked: () => null,

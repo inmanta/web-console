@@ -22,7 +22,7 @@ export const Page: React.FC = () => {
           loading: () => (
             <>
               <EmptyFilterToolbar />
-              <PageSection>
+              <PageSection isFilled>
                 <LoadingView ariaLabel="Overview-Loading" />
               </PageSection>
             </>
@@ -30,7 +30,7 @@ export const Page: React.FC = () => {
           failed: (error) => (
             <>
               <EmptyFilterToolbar />
-              <PageSection>
+              <PageSection isFilled>
                 <ErrorView
                   title={words("error")}
                   message={words("error.general")(error)}

@@ -8,7 +8,7 @@ export const Page: React.FC = () => {
   const { id } = useRouteParams<"CompileDetails">();
 
   return (
-    <PageContainer pageTitle={words("compileDetails.title")}>
+    <PageContainer title={words("compileDetails.title")}>
       <CompileDetails id={id} />
     </PageContainer>
   );

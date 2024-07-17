@@ -48,7 +48,7 @@ export const Page: React.FC = () => {
     setVersionToDelete(modalState ? version : 0);
   }
   return (
-    <PageContainer pageTitle={words("desiredState.title")}>
+    <PageContainer title={words("desiredState.title")}>
       <GetDesiredStatesContext.Provider
         value={{
           filter,

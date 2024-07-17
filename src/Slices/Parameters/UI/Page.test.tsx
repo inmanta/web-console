@@ -1,6 +1,5 @@
 import React, { act } from "react";
 import { MemoryRouter } from "react-router-dom";
-import { Page } from "@patternfly/react-core";
 import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
@@ -27,7 +26,7 @@ import {
   GetParametersStateHelper,
 } from "@S/Parameters/Data";
 import * as Parameters from "@S/Parameters/Data/Mock";
-import { ParametersPage } from ".";
+import { Page } from "./Page";
 
 expect.extend(toHaveNoViolations);
 
@@ -62,9 +61,7 @@ function setup() {
         }}
       >
         <StoreProvider store={store}>
-          <Page>
-            <ParametersPage />
-          </Page>
+          <Page />
         </StoreProvider>
       </DependencyProvider>
     </MemoryRouter>

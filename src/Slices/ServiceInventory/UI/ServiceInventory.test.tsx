@@ -1,6 +1,5 @@
 import React, { act } from "react";
 import { MemoryRouter, useLocation } from "react-router-dom";
-import { Page } from "@patternfly/react-core";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
@@ -122,13 +121,11 @@ function setup(service = Service.a, pageSize = "") {
         }}
       >
         <StoreProvider store={store}>
-          <Page>
-            <ServiceInventory
-              serviceName={service.name}
-              service={service}
-              intro={<Chart summary={service.instance_summary} />}
-            />
-          </Page>
+          <ServiceInventory
+            serviceName={service.name}
+            service={service}
+            intro={<Chart summary={service.instance_summary} />}
+          />
         </StoreProvider>
       </DependencyProvider>
       {/* </AuthProvider> */}

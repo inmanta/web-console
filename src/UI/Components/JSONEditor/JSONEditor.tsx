@@ -107,7 +107,7 @@ export const JSONEditor: React.FC<Props> = ({
   ) : (
     <EditorWrapper data-testid="JSON-Editor-Wrapper">
       <Editor
-        height={"calc(100vh - 500px)"}
+        height={"50vh"}
         width={"100%"}
         defaultLanguage="json"
         defaultValue={data}

@@ -1,11 +1,9 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import {
   Button,
   Card,
   CardBody,
-  CardExpandableContent,
   CardHeader,
-  Title,
   Tooltip,
 } from "@patternfly/react-core";
 import { Config, VersionedServiceInstanceIdentifier } from "@/Core";
@@ -32,29 +30,15 @@ export const ConfigDetails: React.FC<Props> = ({
   });
   const isHalted = environmentModifier.useIsHalted();
 
-  const [isExpanded, setIsExpanded] = useState(true);
-
-  const onExpand = (_event: React.MouseEvent, _id: string) => {
-    setIsExpanded(!isExpanded);
-  };
-
   return Object.keys(config).length <= 0 ? (
-    <Card isPlain>
+    <Card>
       <CardBody>
         <EmptyView message={words("config.empty")} />
       </CardBody>
     </Card>
   ) : (
-    <Card isExpanded={isExpanded}>
+    <Card>
       <CardHeader
-        onExpand={onExpand}
-        isToggleRightAligned
-        toggleButtonProps={{
-          id: "toggle-button-config",
-          "aria-label": "Config",
-          "aria-labelledby": "config-expandable-card toggle-button-config",
-          "aria-expanded": isExpanded,
-        }}
         actions={{
           actions: (
             <>
@@ -71,21 +55,17 @@ export const ConfigDetails: React.FC<Props> = ({
           hasNoOffset: false,
           className: undefined,
         }}
-      >
-        <Title headingLevel="h2">Config</Title>
-      </CardHeader>
-      <CardExpandableContent>
-        <CardBody>
-          <SettingsList
-            config={config}
-            onChange={(option, value) =>
-              trigger({ kind: "UPDATE", option, value })
-            }
-            Switch={(props) => <DefaultSwitch {...props} defaults={defaults} />}
-            isDisabled={isHalted}
-          />
-        </CardBody>
-      </CardExpandableContent>
+      ></CardHeader>
+      <CardBody>
+        <SettingsList
+          config={config}
+          onChange={(option, value) =>
+            trigger({ kind: "UPDATE", option, value })
+          }
+          Switch={(props) => <DefaultSwitch {...props} defaults={defaults} />}
+          isDisabled={isHalted}
+        />
+      </CardBody>
     </Card>
   );
 };

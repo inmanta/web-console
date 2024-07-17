@@ -3,7 +3,7 @@ import { PrimaryBaseUrlManager } from "@/UI";
 import { useFetchHelpers } from "../helpers";
 
 /**
- * React Query hook for adding a user.
+ * Custom hook for adding a user.
  * @returns {Mutation} The mutation object for adding a user.
  */
 export const useAddUser = () => {

@@ -29,7 +29,7 @@ export const Page: React.FC = () => {
           ),
           success: (value) => (
             <PageContainer
-              pageTitle={words("dashboard.title")(value.name)}
+              title={words("dashboard.title")(value.name)}
               aria-label="Dashboard-Success"
             >
               <Dashboard />

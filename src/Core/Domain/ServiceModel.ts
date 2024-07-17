@@ -121,8 +121,6 @@ export interface ServiceModel extends ServiceIdentifier {
   key_attributes?: string[] | null;
   owner: null | string;
   owned_entities: string[];
-  version?: ParsedNumber;
-  relation_to_owner?: string | null;
 }
 
 /**
@@ -153,7 +151,6 @@ export interface EmbeddedEntity extends RelationAttribute {
   embedded_entities: EmbeddedEntity[];
   inter_service_relations?: InterServiceRelation[];
   key_attributes?: string[] | null;
-  attribute_annotations?: AttributeAnnotations;
 }
 
 /**

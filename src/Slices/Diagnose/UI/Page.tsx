@@ -17,7 +17,7 @@ export const Page: React.FC = () => {
   });
 
   return (
-    <PageContainer pageTitle={words("diagnose.title")}>
+    <PageContainer title={words("diagnose.title")}>
       <ServiceInstanceDescription
         instanceId={instance}
         serviceName={service}

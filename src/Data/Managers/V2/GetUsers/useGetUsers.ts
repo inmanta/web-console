@@ -1,5 +1,5 @@
 /**
- * React Query hook to fetch user information from the API.
+ * Custom hook to fetch user information from the API.
  * @returns An object containing a custom hook to fetch user information.
  */
 import { useQuery } from "@tanstack/react-query";
