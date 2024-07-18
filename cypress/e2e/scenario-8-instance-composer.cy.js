@@ -98,7 +98,6 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#service_id").type("0002");
       cy.get("#name").type("embedded-service");
       cy.get("button").contains("Confirm").click();
-
       //try to deploy instance with only core attributes and expect 2 errors
       cy.get("button").contains("Deploy").click();
       cy.get('[data-testid="ToastAlert"]')
@@ -108,7 +107,7 @@ if (Cypress.env("edition") === "iso") {
         .should("be.visible");
       cy.get(".pf-v5-c-alert__action > .pf-v5-c-button").click();
 
-      // add ro_meta core entity
+      //   add ro_meta core entity
       cy.get('[aria-label="new-entity-button"]').click();
       cy.get('[aria-label="service-picker"]').click();
       cy.get(".pf-v5-c-menu__item-text")
@@ -149,13 +148,24 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#other_data").type("2");
       cy.get("button").contains("Confirm").click();
 
-      cy.get('[joint-selector="headerLabel"]').contains("rw_meta").click();
-      cy.get('[data-action="link"]')
+      //center canvas
+      cy.get(".canvas")
         .trigger("mouseover")
         .trigger("mousedown")
         .trigger("mousemove", {
-          clientX: 300,
-          clientY: 100,
+          clientX: 950,
+          clientY: 300,
+        })
+        .trigger("mouseup");
+
+      //move root entity to the non-default position to assert persisting of the position works as intended by next scenario
+      cy.get('[joint-selector="headerLabel"]')
+        .contains("embedded-entity")
+        .trigger("mouseover")
+        .trigger("mousedown")
+        .trigger("mousemove", {
+          clientX: 1000,
+          clientY: 250,
         })
         .trigger("mouseup");
 
@@ -169,24 +179,13 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#data").type("data1");
       cy.get("button").contains("Confirm").click();
 
-      cy.get('[joint-selector="headerLabel"]')
-        .contains("rw_files")
+      cy.get('[joint-selector="headerLabel"]').contains("rw_meta").click();
+      cy.get('[data-action="link"]')
         .trigger("mouseover")
         .trigger("mousedown")
         .trigger("mousemove", {
-          clientX: 400,
-          clientY: 400,
-        })
-        .trigger("mouseup");
-
-      //move root entity to the non-default position to assert persisting of the position works as intended by next scenario
-      cy.get('[joint-selector="headerLabel"]')
-        .contains("embedded-entity")
-        .trigger("mouseover")
-        .trigger("mousedown")
-        .trigger("mousemove", {
-          clientX: 1100,
-          clientY: 450,
+          clientX: 1200,
+          clientY: 300,
         })
         .trigger("mouseup");
 
@@ -269,7 +268,7 @@ if (Cypress.env("edition") === "iso") {
         .trigger("mouseover")
         .trigger("mousedown")
         .trigger("mousemove", {
-          clientX: 800,
+          clientX: 900,
           clientY: 300,
         })
         .trigger("mouseup");
@@ -293,7 +292,7 @@ if (Cypress.env("edition") === "iso") {
         .trigger("mouseover")
         .trigger("mousedown")
         .trigger("mousemove", {
-          clientX: 1200,
+          clientX: 700,
           clientY: 400,
         })
         .trigger("mouseup");
