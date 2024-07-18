@@ -52,11 +52,6 @@ describe("UserManagementPage", () => {
           data: testInstance,
         });
       }),
-      http.get("/lsm/v1/service_inventory/*/*/metadata/*", async () => {
-        return HttpResponse.json({
-          data: "metadata_string",
-        });
-      }),
     );
     render(setup());
 
@@ -74,11 +69,6 @@ describe("UserManagementPage", () => {
       http.get("/lsm/v1/service_inventory", async () => {
         return HttpResponse.json({ message: "instance_fail" }, { status: 400 });
       }),
-      http.get("/lsm/v1/service_inventory/*/*/metadata/*", async () => {
-        return HttpResponse.json({
-          data: "metadata_string",
-        });
-      }),
     );
     render(setup());
 
@@ -91,30 +81,6 @@ describe("UserManagementPage", () => {
         screen.getByText(
           "The following error occured: Failed to fetch instance with id: id",
         ),
-      ).toBeInTheDocument();
-    });
-  });
-
-  it("should render the ErrorView when there is an error returned from the metadata endpoint", async () => {
-    server.use(
-      http.get("/lsm/v1/service_inventory", async () => {
-        return HttpResponse.json({
-          data: testInstance,
-        });
-      }),
-      http.get("/lsm/v1/service_inventory/*/*/metadata/*", async () => {
-        return HttpResponse.json({ message: "metadata_fail" }, { status: 400 });
-      }),
-    );
-    render(setup());
-
-    await waitFor(() => {
-      expect(screen.getByTestId("ErrorView")).toBeInTheDocument();
-    });
-
-    await waitFor(() => {
-      expect(
-        screen.getByText("The following error occured: metadata_fail"),
       ).toBeInTheDocument();
     });
   });
