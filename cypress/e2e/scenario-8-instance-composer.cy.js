@@ -424,7 +424,7 @@ if (Cypress.env("edition") === "iso") {
         .trigger("mousedown")
         .trigger("mousemove", {
           clientX: 700,
-          clientY: 100,
+          clientY: 300,
         })
         .trigger("mouseup");
 
