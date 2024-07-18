@@ -160,7 +160,7 @@ if (Cypress.env("edition") === "iso") {
 
       //move root entity to the non-default position to assert persisting of the position works as intended by next scenario
       cy.get('[joint-selector="headerLabel"]')
-        .contains("embedded-entity")
+        .contains("embedded-")
         .trigger("mouseover")
         .trigger("mousedown")
         .trigger("mousemove", {
@@ -268,7 +268,7 @@ if (Cypress.env("edition") === "iso") {
         .trigger("mouseover")
         .trigger("mousedown")
         .trigger("mousemove", {
-          clientX: 900,
+          clientX: 1200,
           clientY: 300,
         })
         .trigger("mouseup");
@@ -292,8 +292,8 @@ if (Cypress.env("edition") === "iso") {
         .trigger("mouseover")
         .trigger("mousedown")
         .trigger("mousemove", {
-          clientX: 700,
-          clientY: 400,
+          clientX: 1200,
+          clientY: 300,
         })
         .trigger("mouseup");
 
