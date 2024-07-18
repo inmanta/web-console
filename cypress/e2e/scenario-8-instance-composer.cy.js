@@ -154,8 +154,8 @@ if (Cypress.env("edition") === "iso") {
         .trigger("mouseover")
         .trigger("mousedown")
         .trigger("mousemove", {
-          clientX: 700,
-          clientY: 400,
+          clientX: 300,
+          clientY: 100,
         })
         .trigger("mouseup");
 
@@ -169,13 +169,34 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#data").type("data1");
       cy.get("button").contains("Confirm").click();
 
+      cy.get('[joint-selector="headerLabel"]')
+        .contains("rw_files")
+        .trigger("mouseover")
+        .trigger("mousedown")
+        .trigger("mousemove", {
+          clientX: 400,
+          clientY: 400,
+        })
+        .trigger("mouseup");
+
+      //move root entity to the non-default position to assert persisting of the position works as intended by next scenario
+      cy.get('[joint-selector="headerLabel"]')
+        .contains("embedded-entity")
+        .trigger("mouseover")
+        .trigger("mousedown")
+        .trigger("mousemove", {
+          clientX: 1100,
+          clientY: 450,
+        })
+        .trigger("mouseup");
+
       cy.get('[joint-selector="headerLabel"]').contains("rw_files").click();
       cy.get('[data-action="link"]')
         .trigger("mouseover")
         .trigger("mousedown")
         .trigger("mousemove", {
-          clientX: 600,
-          clientY: 350,
+          clientX: 1200,
+          clientY: 300,
         })
         .trigger("mouseup");
 
@@ -236,14 +257,23 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[joint-selector="itemLabel_name_value"]')
         .contains("rw_files2") //easiest way to differentiate same type of entities is by the unique attributes values
         .click();
+      cy.get(".zoom-out").click();
+      cy.get(".zoom-out").click();
+      cy.get(".zoom-out").click();
+      cy.get(".zoom-out").click();
+      cy.get(".zoom-out").click();
+
+      //try to add rw embedded entity which shouldn't be possible
+      cy.get('[data-type="Link"]').should("have.length", "3");
       cy.get('[data-action="link"]')
         .trigger("mouseover")
         .trigger("mousedown")
         .trigger("mousemove", {
-          clientX: 750,
-          clientY: 270,
+          clientX: 800,
+          clientY: 300,
         })
         .trigger("mouseup");
+
       cy.get('[data-type="Link"]').should("have.length", "3");
       cy.get('[data-action="delete"]').click();
 
@@ -263,8 +293,8 @@ if (Cypress.env("edition") === "iso") {
         .trigger("mouseover")
         .trigger("mousedown")
         .trigger("mousemove", {
-          clientX: 450,
-          clientY: 250,
+          clientX: 1200,
+          clientY: 400,
         })
         .trigger("mouseup");
 
@@ -587,7 +617,14 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[data-type="Link"]').trigger("mouseover", { force: true });
       cy.get(".joint-link_remove-circle").click();
       cy.get(".joint-link_remove-circle").click();
-
+      cy.get(".joint-paper-scroller.joint-theme-default")
+        .trigger("mouseover")
+        .trigger("mousedown")
+        .trigger("mousemove", {
+          clientX: 900,
+          clientY: -100,
+        })
+        .trigger("mouseup");
       //connect services
       cy.get('[joint-selector="headerLabel"]')
         .contains("child-service")
@@ -624,7 +661,7 @@ if (Cypress.env("edition") === "iso") {
         '[aria-label="Row-parent_entity"] > [data-label="active"] > .pf-v5-l-flex > div > .pf-v5-c-button',
       ).should("have.text", "new-parent-service");
 
-      //go back to parent-service inventory view
+      // go back to parent-service inventory view
       cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
       cy.get("#parent-service", { timeout: 60000 })
         .contains("Show inventory")
@@ -633,7 +670,16 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="row actions toggle"]').eq(2).click();
       cy.get("button").contains("Edit in Composer").click();
 
-      //remove connection
+      // move container out of the way and remove connection
+      cy.get('[joint-selector="headerLabel"]')
+        .contains("container-service")
+        .trigger("mouseover")
+        .trigger("mousedown")
+        .trigger("mousemove", {
+          clientX: 1200,
+          clientY: 200,
+        })
+        .trigger("mouseup");
       cy.get('[data-type="Link"]').eq(0).trigger("mouseover", { force: true });
       cy.get(".joint-link_remove-circle").click();
       cy.get(".joint-link_remove-circle").click();
@@ -650,12 +696,13 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[joint-selector="headerLabel"]')
         .contains("child_container")
         .click();
+
       cy.get('[data-action="link"]')
         .trigger("mouseover")
         .trigger("mousedown")
         .trigger("mousemove", {
           clientX: 1100,
-          clientY: -100,
+          clientY: 100,
         })
         .trigger("mouseup");
       cy.get("button").contains("Deploy").click();
@@ -685,7 +732,7 @@ if (Cypress.env("edition") === "iso") {
       ).should("have.text", "new-parent-service2");
       //go back to parent-service inventory view
       cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
-      // click on Show Inventory on parent-service, expect one instance already
+      // click on Show Inventory on parent-service
       cy.get("#parent-service", { timeout: 60000 })
         .contains("Show inventory")
         .click();
@@ -708,7 +755,7 @@ if (Cypress.env("edition") === "iso") {
         .trigger("mousedown")
         .trigger("mousemove", {
           clientX: 900,
-          clientY: 300,
+          clientY: 100,
         })
         .trigger("mouseup");
       cy.get("button").contains("Deploy").click();
