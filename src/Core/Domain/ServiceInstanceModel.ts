@@ -61,7 +61,7 @@ export interface ServiceInstanceModel
   deployment_progress?: DeploymentProgress | null;
   service_identity_attribute_value?: string;
   referenced_by: string[];
-  metadata: { [key: string]: string };
+  metadata?: { [key: string]: string };
 }
 
 /**

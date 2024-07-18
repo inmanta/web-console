@@ -52,7 +52,7 @@ export const InstanceProvider: React.FC<{
         data
           ? {
               ...data,
-              coordinates: data.instance.metadata["coordinates"] || "",
+              coordinates: data.instance.metadata?.coordinates || "",
             }
           : undefined
       }
