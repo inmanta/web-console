@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
 import { ServiceModel } from "@/Core";
 import { useGetInstanceWithRelations } from "@/Data/Managers/V2/GetInstanceWithRelations";
-import { useGetMetadata } from "@/Data/Managers/V2/GetMetadata";
 import { DependencyContext, words } from "@/UI";
 import { ErrorView, LoadingView } from "@/UI/Components";
 import Canvas from "@/UI/Components/Diagram/Canvas";
@@ -26,38 +25,21 @@ export const InstanceProvider: React.FC<{
   const { environmentHandler } = useContext(DependencyContext);
   const environment = environmentHandler.useId();
 
-  const instanceWithRelations = useGetInstanceWithRelations(
-    instanceId,
-    environment,
-  ).useOneTime();
-  const instanceVersion = instanceWithRelations.data?.instance.version;
-  const metadata = useGetMetadata(
-    environment,
-    mainServiceName,
-    instanceId,
-    "coordinates",
-    instanceVersion,
-  ).useOneTime();
+  const { data, isLoading, isError, error, refetch } =
+    useGetInstanceWithRelations(instanceId, environment).useOneTime();
 
-  if (instanceWithRelations.isLoading || metadata.isLoading) {
+  if (isLoading) {
     return <LoadingView aria-label="instance_composer_editor-loading" />;
   }
 
-  if (instanceWithRelations.isError || metadata.isError) {
-    const retryFn = instanceWithRelations.isError
-      ? instanceWithRelations.refetch
-      : metadata.refetch;
-
-    const error = instanceWithRelations.error || metadata.error;
-
-    const errorMessage = error ? error.message : "";
+  if (isError) {
     return (
       <ErrorView
         data-testid="ErrorView"
         title={words("error")}
-        message={words("error.general")(errorMessage)}
+        message={words("error.general")(error.message)}
         aria-label="instance_composer_editor-failed"
-        retry={retryFn}
+        retry={refetch}
       />
     );
   }
@@ -67,8 +49,11 @@ export const InstanceProvider: React.FC<{
       services={services}
       mainServiceName={mainServiceName}
       instance={
-        instanceWithRelations.data
-          ? { ...instanceWithRelations.data, coordinates: metadata?.data || "" }
+        data
+          ? {
+              ...data,
+              coordinates: data.instance.metadata?.coordinates || "",
+            }
           : undefined
       }
       editable={editable}
