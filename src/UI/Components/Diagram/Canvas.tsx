@@ -7,6 +7,7 @@ import styled from "styled-components";
 import { ServiceModel } from "@/Core";
 import { sanitizeAttributes } from "@/Data";
 import { InstanceWithRelations } from "@/Data/Managers/V2/GetInstanceWithRelations";
+import { usePostMetadata } from "@/Data/Managers/V2/PostMetadata";
 import { usePostOrder } from "@/Data/Managers/V2/PostOrder";
 import diagramInit, { DiagramHandlers } from "@/UI/Components/Diagram/init";
 import {
@@ -41,7 +42,8 @@ const Canvas: React.FC<{
 }> = ({ services, mainServiceName, instance, editable = true }) => {
   const { environmentHandler, routeManager } = useContext(DependencyContext);
   const environment = environmentHandler.useId();
-  const { mutate, isError, isSuccess, error } = usePostOrder(environment);
+  const oderMutation = usePostOrder(environment);
+  const metadataMutation = usePostMetadata(environment);
   const canvas = useRef<HTMLDivElement>(null);
   const [looseEmbedded, setLooseEmbedded] = useState<Set<string>>(new Set());
   const [alertMessage, setAlertMessage] = useState("");
@@ -113,7 +115,7 @@ const Canvas: React.FC<{
    * Handles the filtering of the unchanged entities and sending serviceOrderItems to the backend.
    *
    */
-  const handleDeploy = async () => {
+  const handleDeploy = () => {
     const coordinates = diagramHandlers?.getCoordinates();
 
     const serviceOrderItems = getServiceOrderItems(instancesToSend, services)
@@ -124,7 +126,22 @@ const Canvas: React.FC<{
           coordinates: JSON.stringify(coordinates),
         },
       }));
-    await mutate(serviceOrderItems);
+
+    //Temporary workaround to update coordinates in metadata, as currently order endpoint don't handle metadata in the updates.
+    // can't test in jest as I can't add any test-id to the halo handles though.
+    if (instance) {
+      metadataMutation.mutate({
+        service_entity: mainServiceName,
+        service_id: instance.instance.id,
+        key: "coordinates",
+        body: {
+          current_version: instance.instance.version,
+          value: JSON.stringify(coordinates),
+        },
+      });
+    }
+
+    oderMutation.mutate(serviceOrderItems);
   };
 
   /**
@@ -233,7 +250,7 @@ const Canvas: React.FC<{
   }, [instancesToSend, services, isDirty]);
 
   useEffect(() => {
-    if (isSuccess) {
+    if (oderMutation.isSuccess) {
       //If response is successful then show feedback notification and redirect user to the service inventory view
       setAlertType(AlertVariant.success);
       setAlertMessage(words("inventory.instanceComposer.success"));
@@ -241,12 +258,12 @@ const Canvas: React.FC<{
       setTimeout(() => {
         navigate(url);
       }, 1000);
-    } else if (isError) {
+    } else if (oderMutation.isError) {
       setAlertType(AlertVariant.danger);
-      setAlertMessage(error.message);
+      setAlertMessage(oderMutation.error.message);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSuccess, isError]);
+  }, [oderMutation.isSuccess, oderMutation.isError]);
 
   useEffect(() => {
     document.addEventListener("openDictsModal", handleDictEvent);
