@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { renderHook, waitFor } from "@testing-library/react";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
+import { ServiceInstanceModel } from "@/Core";
 import { testInstance } from "@/UI/Components/Diagram/Mock";
 import { useGetInstanceWithRelations } from "./useGetInstanceWithRelations";
 
@@ -58,7 +59,9 @@ test("if the fetched instance has referenced instance(s), then query will return
   expect(result.current.data).toBeDefined();
   expect(result.current.data?.instance.id).toEqual("test_id");
   expect(result.current.data?.relatedInstances).toHaveLength(1);
-  expect(result.current.data?.relatedInstances[0].id).toEqual("test_mpn_id");
+  expect(
+    (result.current.data?.relatedInstances as ServiceInstanceModel[])[0].id,
+  ).toEqual("test_mpn_id");
 });
 
 test("when instance returned has not referenced instance(s), then the query will return the given instance without relatedInstances", async () => {
