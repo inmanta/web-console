@@ -181,12 +181,12 @@ export function showLinkTools(
 export function appendInstance(
   paper: dia.Paper,
   graph: dia.Graph,
-  serviceWithReferences: InstanceWithRelations,
+  instanceWithRelations: InstanceWithRelations,
   services: ServiceModel[],
   isMainInstance = false,
   instanceToConnectRelation?: ServiceEntityBlock,
 ): ServiceEntityBlock {
-  const serviceInstance = serviceWithReferences.instance;
+  const serviceInstance = instanceWithRelations.instance;
   const serviceInstanceModel = services.find(
     (model) => model.name === serviceInstance.service_entity,
   );
@@ -197,7 +197,7 @@ export function appendInstance(
     serviceInstance.service_entity,
   );
 
-  instanceAsTable.set("id", serviceWithReferences.instance.id);
+  instanceAsTable.set("id", instanceWithRelations.instance.id);
   instanceAsTable.set("isEmbedded", false);
   instanceAsTable.set("isInEditMode", true);
 
@@ -228,70 +228,77 @@ export function appendInstance(
     );
   }
 
-  //map through relatedInstances and either append them or connect to them
-  serviceWithReferences.relatedInstances.forEach((relatedInstance) => {
-    const isInstanceMain = false;
-    const cellAdded = graph.getCell(relatedInstance.id);
-    if (!cellAdded) {
-      appendInstance(
-        paper,
-        graph,
-        { instance: relatedInstance, relatedInstances: [] },
-        services,
-        isInstanceMain,
-        instanceAsTable,
-      );
-    } else {
-      //If cell is already in the graph, we need to check if it got in its inter-service relations the one with id that corresponds with created instanceAsTable
-      let isConnected = false;
-      const cellAsBlock = cellAdded as ServiceEntityBlock;
-      const relations = cellAsBlock.getRelations();
+  if (instanceWithRelations.relatedInstances) {
+    //map through relatedInstances and either append them or connect to them
+    instanceWithRelations.relatedInstances.forEach((relatedInstance) => {
+      const isInstanceMain = false;
+      const cellAdded = graph.getCell(relatedInstance.id);
+      if (!cellAdded) {
+        appendInstance(
+          paper,
+          graph,
+          { instance: relatedInstance },
+          services,
+          isInstanceMain,
+          instanceAsTable,
+        );
+      } else {
+        //If cell is already in the graph, we need to check if it got in its inter-service relations the one with id that corresponds with created instanceAsTable
+        let isConnected = false;
+        const cellAsBlock = cellAdded as ServiceEntityBlock;
+        const relations = cellAsBlock.getRelations();
 
-      if (relations) {
-        const correspondingId = findCorrespondingId(relations, instanceAsTable);
-
-        if (correspondingId) {
-          isConnected = true;
-          connectEntities(
-            graph,
+        if (relations) {
+          const correspondingId = findCorrespondingId(
+            relations,
             instanceAsTable,
-            [cellAsBlock],
-            serviceInstanceModel.strict_modifier_enforcement,
           );
-        }
-      }
 
-      //If doesn't, or the one we are looking for isn't among the ones stored, we need go through every connected shape and do the same assertion,
-      //as the fact that we have that cell as relatedInstance tells us that either that or its embedded entities has connection
-      if (!isConnected) {
-        const neighbors = graph.getNeighbors(cellAdded as dia.Element);
-        neighbors.map((cell) => {
-          const neighborRelations = (cell as ServiceEntityBlock).getRelations();
-          if (neighborRelations) {
-            const correspondingId = findCorrespondingId(
-              neighborRelations,
+          if (correspondingId) {
+            isConnected = true;
+            connectEntities(
+              graph,
               instanceAsTable,
+              [cellAsBlock],
+              serviceInstanceModel.strict_modifier_enforcement,
             );
-            if (correspondingId) {
-              isConnected = true;
-              connectEntities(
-                graph,
-                instanceAsTable,
-                [cell as ServiceEntityBlock],
-                serviceInstanceModel.strict_modifier_enforcement,
-              );
-            }
           }
-        });
+        }
+
+        //If doesn't, or the one we are looking for isn't among the ones stored, we need go through every connected shape and do the same assertion,
+        //as the fact that we have that cell as relatedInstance tells us that either that or its embedded entities has connection
+        if (!isConnected) {
+          const neighbors = graph.getNeighbors(cellAdded as dia.Element);
+          neighbors.map((cell) => {
+            const neighborRelations = (
+              cell as ServiceEntityBlock
+            ).getRelations();
+            if (neighborRelations) {
+              const correspondingId = findCorrespondingId(
+                neighborRelations,
+                instanceAsTable,
+              );
+              if (correspondingId) {
+                isConnected = true;
+                connectEntities(
+                  graph,
+                  instanceAsTable,
+                  [cell as ServiceEntityBlock],
+                  serviceInstanceModel.strict_modifier_enforcement,
+                );
+              }
+            }
+          });
+        }
+        connectEntities(
+          graph,
+          instanceAsTable,
+          [cellAsBlock],
+          serviceInstanceModel.strict_modifier_enforcement,
+        );
       }
-      connectEntities(
-        graph,
-        instanceAsTable,
-        [cellAsBlock],
-        serviceInstanceModel.strict_modifier_enforcement,
-      );
-    }
-  });
+    });
+  }
   //auto-layout provided by JointJS
   DirectedGraph.layout(graph, {
     nodeSep: 80,

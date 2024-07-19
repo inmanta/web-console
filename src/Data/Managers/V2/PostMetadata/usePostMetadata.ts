@@ -3,7 +3,7 @@ import { ParsedNumber } from "@/Core";
 import { PrimaryBaseUrlManager } from "@/UI";
 import { useFetchHelpers } from "../helpers";
 
-interface PostMetadataInfo {
+export interface PostMetadataInfo {
   service_entity: string;
   service_id: string;
   key: string;

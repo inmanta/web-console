@@ -8,7 +8,7 @@ import { useFetchHelpers } from "../helpers";
  */
 export interface InstanceWithRelations {
   instance: ServiceInstanceModel;
-  relatedInstances: ServiceInstanceModel[];
+  relatedInstances?: ServiceInstanceModel[];
   coordinates?: string;
 }
 
