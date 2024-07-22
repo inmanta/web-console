@@ -1,20 +1,17 @@
 import React, { useCallback, useContext } from "react";
 import "@inmanta/rappid/joint-plus.css";
 import { useNavigate } from "react-router-dom";
-import { Button, Flex, FlexItem, Tooltip } from "@patternfly/react-core";
+import { Button, Flex, FlexItem } from "@patternfly/react-core";
 import styled from "styled-components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
-import entityIcon from "../icons/new-entity-icon.svg";
 
 const Toolbar = ({
-  openEntityModal,
   handleDeploy,
   serviceName,
   isDeployDisabled,
   editable,
 }: {
-  openEntityModal: () => void;
   handleDeploy: () => void;
   serviceName: string;
   isDeployDisabled: boolean;
@@ -30,48 +27,10 @@ const Toolbar = ({
   return (
     <Container
       justifyContent={{
-        default: "justifyContentSpaceBetween",
+        default: "justifyContentFlexEnd",
       }}
       alignItems={{ default: "alignItemsFlexEnd" }}
     >
-      <FlexItem>
-        <Flex
-          spacer={{ default: "spacerXs" }}
-          alignItems={{ default: "alignItemsCenter" }}
-        >
-          <FlexItem>
-            <Tooltip
-              content={words(
-                "inventory.instanceComposer.addInstanceButtonTooltip",
-              )}
-            >
-              <IconButton
-                variant="secondary"
-                onClick={(event) => {
-                  event.currentTarget.blur();
-                  openEntityModal();
-                }}
-                aria-label="new-entity-button"
-                isDisabled={!editable}
-              >
-                <Flex alignItems={{ default: "alignItemsCenter" }}>
-                  <FlexItem
-                    spacer={{ default: "spacerXs" }}
-                    style={{ width: "16px", height: "20px" }}
-                  >
-                    <img
-                      src={entityIcon}
-                      alt="Create new entity icon"
-                      aria-label="new-entity-icon"
-                    />
-                  </FlexItem>
-                  <FlexItem>{words("inventory.addInstance.button")}</FlexItem>
-                </Flex>
-              </IconButton>
-            </Tooltip>
-          </FlexItem>
-        </Flex>
-      </FlexItem>
       <FlexItem>
         <Flex
           spacer={{ default: "spacerMd" }}
@@ -97,14 +56,6 @@ export default Toolbar;
 
 const Container = styled(Flex)`
   padding: 0 0 20px;
-`;
-
-const IconButton = styled(Button)`
-  --pf-v5-c-button--PaddingTop: 3px;
-  --pf-v5-c-button--PaddingRight: 10px;
-  --pf-v5-c-button--PaddingBottom: 3px;
-  --pf-v5-c-button--PaddingLeft: 10px;
-  height: 36px;
 `;
 
 const StyledButton = styled(Button)`

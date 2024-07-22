@@ -1,9 +1,11 @@
 import React, { useContext } from "react";
 import { ServiceModel } from "@/Core";
 import { useGetInstanceWithRelations } from "@/Data/Managers/V2/GetInstanceWithRelations";
+import { useGetRelatedInventories } from "@/Data/Managers/V2/GetRelatedInventories";
 import { DependencyContext, words } from "@/UI";
-import { ErrorView, LoadingView } from "@/UI/Components";
+import { EmptyView, ErrorView, LoadingView } from "@/UI/Components";
 import Canvas from "@/UI/Components/Diagram/Canvas";
+import { findInterServiceRelations } from "../Diagram/helpers";
 
 /**
  * Renders the InstanceProvider component.
@@ -22,37 +24,78 @@ export const InstanceProvider: React.FC<{
   instanceId: string;
   editable?: boolean;
 }> = ({ services, mainServiceName, instanceId, editable = false }) => {
-  const { environmentHandler } = useContext(DependencyContext);
+  const { environmentHandler, featureManager } = useContext(DependencyContext);
   const environment = environmentHandler.useId();
 
-  const { data, isLoading, isError, error, refetch } =
-    useGetInstanceWithRelations(instanceId, environment).useOneTime();
+  const instanceWithRelations = useGetInstanceWithRelations(
+    instanceId,
+    environment,
+  ).useOneTime();
 
-  if (isLoading) {
+  if (!featureManager.isComposerEnabled()) {
+    <EmptyView
+      message={words("inventory.instanceComposer.disabled")}
+      aria-label="ComposersView-Empty"
+    />;
+  }
+
+  const mainService = services.find(
+    (service) => service.name === mainServiceName,
+  );
+
+  if (mainService === undefined) {
+    <EmptyView
+      message={words("inventory.instanceComposer.noMainService")(
+        mainServiceName,
+      )}
+      aria-label="ComposersView-Empty"
+    />;
+  }
+
+  const relatedCatalogsNames = findInterServiceRelations(mainService);
+  const relatedServiceModels =
+    services.filter((service) =>
+      relatedCatalogsNames?.includes(service.name),
+    ) || [];
+  const relatedCatalogs = useGetRelatedInventories(
+    relatedCatalogsNames,
+    environment,
+  ).useOneTime();
+
+  if (instanceWithRelations.isLoading || relatedCatalogs.isLoading) {
     return <LoadingView aria-label="instance_composer_editor-loading" />;
   }
 
-  if (isError) {
+  if (instanceWithRelations.isError || relatedCatalogs.isError) {
+    const retryFn = instanceWithRelations.isError
+      ? instanceWithRelations.refetch
+      : relatedCatalogs.refetch;
+
+    const error = instanceWithRelations.error || relatedCatalogs.error;
+
+    const errorMessage = error ? error.message : "";
     return (
       <ErrorView
         data-testid="ErrorView"
         title={words("error")}
-        message={words("error.general")(error.message)}
+        message={words("error.general")(errorMessage)}
         aria-label="instance_composer_editor-failed"
-        retry={refetch}
+        retry={retryFn}
       />
     );
   }
 
   return (
     <Canvas
-      services={services}
-      mainServiceName={mainServiceName}
+      services={[...relatedServiceModels, mainService as ServiceModel]}
+      mainService={mainService as ServiceModel}
+      serviceInventories={relatedCatalogs.data || {}}
       instance={
-        data
+        instanceWithRelations.data
           ? {
-              ...data,
-              coordinates: data.instance.metadata?.coordinates || "",
+              ...instanceWithRelations.data,
+              coordinates:
+                instanceWithRelations.data.instance.metadata?.coordinates || "",
             }
           : undefined
       }

@@ -452,17 +452,81 @@ export function appendEntity(
   ) {
     instanceAsTable.set("relatedTo", new Map());
   }
-  const attributesNames = serviceModel.attributes.map(
-    (attribute) => attribute.name,
-  );
+  if (serviceModel.key_attributes) {
+    appendColumns(
+      instanceAsTable,
+      serviceModel.key_attributes,
+      entity,
+      true,
+      true,
+    ); // TEMPORARY for v2 until right sidebar is finished
+  }
 
-  appendColumns(instanceAsTable, attributesNames, entity);
   //add to graph
   instanceAsTable.addTo(graph);
 
   moveCellFromColliding(graph, instanceAsTable);
 
   return instanceAsTable;
+}
+
+/**
+ * Populates a graph with default required entities derived from a service model.
+ *
+ * @param {dia.Graph} graph - The jointJS graph to populate.
+ * @param {ServiceModel} service - The service model to use for populating the graph.
+ * @returns {ServiceEntityBlock[]} An array containing the core entity and the default entities added to the graph.
+ */
+export function populateGraph(graph: dia.Graph, service: ServiceModel) {
+  const coreEntity = appendEntity(graph, service, {}, true);
+  const defaultEntities = addDefaultEntities(graph, service);
+  connectEntities(graph, coreEntity, defaultEntities);
+
+  DirectedGraph.layout(graph, {
+    nodeSep: 80,
+    edgeSep: 80,
+    rankDir: "TB",
+  });
+  return [coreEntity, ...defaultEntities];
+}
+
+/**
+ * Adds default entities to a graph based on a service model or an embedded entity.
+ *
+ * @param {dia.Graph} graph - The jointJS graph to which entities should be added.
+ * @param {ServiceModel | EmbeddedEntity} service - The service model or embedded entity used to generate the default entities.
+ * @returns {ServiceEntityBlock[]} An array of service entity blocks that have been added to the graph.
+ */
+export function addDefaultEntities(
+  graph: dia.Graph,
+  service: ServiceModel | EmbeddedEntity,
+): ServiceEntityBlock[] {
+  const embedded_entities = service.embedded_entities.map((embedded_entity) => {
+    if (embedded_entity.lower_limit > 0) {
+      const embeddedEntity = appendEntity(
+        graph,
+        embedded_entity,
+        {},
+        false,
+        true,
+        service.name,
+      );
+      connectEntities(
+        graph,
+        embeddedEntity,
+        addDefaultEntities(graph, embedded_entity),
+      );
+      return embeddedEntity;
+    } else {
+      return null;
+    }
+  });
+
+  const filtered = embedded_entities.filter(
+    (entity) => entity !== null,
+  ) as ServiceEntityBlock[]; //TS doesn't recognize that we filtered out nulls
+
+  return filtered;
 }
 
 /**
@@ -479,13 +543,17 @@ export function appendColumns(
   attributesKeywords: string[],
   serviceInstanceAttributes: InstanceAttributeModel,
   isInitial = true,
+  isEmpty = false, // TODO: temporary solution to handle empty values until right sidebar is finished
 ) {
   const instanceAttributes = {};
   const attributes = attributesKeywords.map((key) => {
-    instanceAttributes[key] = serviceInstanceAttributes[key];
+    const attributeValue = isEmpty
+      ? ""
+      : (serviceInstanceAttributes[key] as string);
+    instanceAttributes[key] = attributeValue;
     return {
       name: key,
-      value: serviceInstanceAttributes[key] as string,
+      value: attributeValue,
     };
   });
   serviceEntity.set("instanceAttributes", instanceAttributes);

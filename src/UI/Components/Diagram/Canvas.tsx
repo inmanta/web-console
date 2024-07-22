@@ -7,6 +7,7 @@ import styled from "styled-components";
 import { ServiceModel } from "@/Core";
 import { sanitizeAttributes } from "@/Data";
 import { InstanceWithRelations } from "@/Data/Managers/V2/GetInstanceWithRelations";
+import { InventoriesResponse } from "@/Data/Managers/V2/GetRelatedInventories";
 import { usePostMetadata } from "@/Data/Managers/V2/PostMetadata";
 import { usePostOrder } from "@/Data/Managers/V2/PostOrder";
 import diagramInit, { DiagramHandlers } from "@/UI/Components/Diagram/init";
@@ -29,22 +30,32 @@ import { ServiceEntityBlock } from "./shapes";
 /**
  * Canvas component for creating, displaying and editing an Instance.
  *
- * @param {ServiceModel[]} services - The list of service models.
- * @param {string} mainServiceName - The name of the main service.
+ * @param {ServiceModel[]} services - The list of service models .
+ * @param {ServiceModel} mainServiceName - The name of the main service.
  * @param {InstanceWithRelations} instance - The instance with references.
  * @returns {JSX.Element} The rendered Canvas component.
  */
 const Canvas: React.FC<{
   services: ServiceModel[];
-  mainServiceName: string;
+  mainService: ServiceModel;
+  serviceInventories: InventoriesResponse;
   instance?: InstanceWithRelations;
   editable: boolean;
-}> = ({ services, mainServiceName, instance, editable = true }) => {
+}> = ({
+  services,
+  mainService,
+  serviceInventories,
+  instance,
+  editable = true,
+}) => {
   const { environmentHandler, routeManager } = useContext(DependencyContext);
   const environment = environmentHandler.useId();
   const oderMutation = usePostOrder(environment);
   const metadataMutation = usePostMetadata(environment);
   const canvas = useRef<HTMLDivElement>(null);
+  const LeftSidebar = useRef<HTMLDivElement>(null);
+  const navigator = useRef<HTMLDivElement>(null);
+
   const [looseEmbedded, setLooseEmbedded] = useState<Set<string>>(new Set());
   const [alertMessage, setAlertMessage] = useState("");
   const [alertType, setAlertType] = useState(AlertVariant.danger);
@@ -62,7 +73,7 @@ const Canvas: React.FC<{
 
   const navigate = useNavigate();
   const url = routeManager.useUrl("Inventory", {
-    service: mainServiceName,
+    service: mainService.name,
   });
 
   /**
@@ -131,7 +142,7 @@ const Canvas: React.FC<{
     // can't test in jest as I can't add any test-id to the halo handles though.
     if (instance) {
       metadataMutation.mutate({
-        service_entity: mainServiceName,
+        service_entity: mainService.name,
         service_id: instance.instance.id,
         key: "coordinates",
         body: {
@@ -203,16 +214,21 @@ const Canvas: React.FC<{
     const connectionRules = createConnectionRules(services, {});
     const actions = diagramInit(
       canvas,
+      LeftSidebar,
+      navigator,
       connectionRules,
       handleUpdate,
       editable,
+      mainService,
+      serviceInventories,
     );
     setDiagramHandlers(actions);
+    const isMainInstance = true;
+    const newInstances = new Map();
+
     if (instance) {
-      const isMainInstance = true;
       try {
-        const cells = actions.addInstance(instance, services, isMainInstance);
-        const newInstances = new Map();
+        const cells = actions.addInstance(isMainInstance, services, instance);
 
         cells.forEach((cell) => {
           if (cell.type === "app.ServiceEntityBlock") {
@@ -227,17 +243,32 @@ const Canvas: React.FC<{
             });
           }
         });
-        setInstancesToSend(newInstances);
       } catch (error) {
         setAlertType(AlertVariant.danger);
         setAlertMessage(String(error));
       }
+    } else {
+      const cells = actions.addInstance(isMainInstance, services);
+      cells.forEach((cell) => {
+        if (cell.type === "app.ServiceEntityBlock") {
+          newInstances.set(cell.id, {
+            instance_id: cell.id,
+            service_entity: cell.entityName,
+            config: {},
+            action: "create",
+            attributes: cell.instanceAttributes,
+            embeddedTo: cell.embeddedTo,
+            relatedTo: cell.relatedTo,
+          });
+        }
+      });
     }
+    setInstancesToSend(newInstances);
 
     return () => {
       actions.removeCanvas();
     };
-  }, [instance, services, mainServiceName, editable]);
+  }, [instance, services, editable, mainService, serviceInventories]);
 
   useEffect(() => {
     if (!isDirty) {
@@ -247,7 +278,7 @@ const Canvas: React.FC<{
         ).length > 0,
       );
     }
-  }, [instancesToSend, services, isDirty]);
+  }, [instancesToSend, isDirty]);
 
   useEffect(() => {
     if (oderMutation.isSuccess) {
@@ -318,25 +349,12 @@ const Canvas: React.FC<{
               );
               shape.set("sanitizedAttrs", sanitizedAttrs);
               handleUpdate(shape, ActionEnum.UPDATE);
-            } else {
-              const shape = diagramHandlers.addEntity(
-                entity,
-                selected.model as ServiceModel,
-                selected.name === mainServiceName,
-                selected.isEmbedded,
-                selected.holderName,
-              );
-              shape.set("sanitizedAttrs", sanitizedAttrs);
-              handleUpdate(shape, ActionEnum.CREATE);
             }
           }
         }}
       />
       <Toolbar
-        openEntityModal={() => {
-          setIsFormModalOpen(true);
-        }}
-        serviceName={mainServiceName}
+        serviceName={mainService.name}
         handleDeploy={handleDeploy}
         isDeployDisabled={
           instancesToSend.size < 1 || !isDirty || looseEmbedded.size > 0
@@ -344,74 +362,30 @@ const Canvas: React.FC<{
         editable={editable}
       />
       <CanvasWrapper id="canvas-wrapper" data-testid="Composer-Container">
+        <StencilContainer className="stencil-sidebar" ref={LeftSidebar} />
         <div className="canvas" ref={canvas} />
-        <ZoomWrapper>
-          <button
-            className="zoom-in"
-            onClick={(event) => {
-              event.stopPropagation();
-
-              if (diagramHandlers) {
-                diagramHandlers.zoom(1);
-              }
-            }}
-          >
-            +
-          </button>
-          <button
-            className="zoom-out"
-            onClick={(event) => {
-              event.stopPropagation();
-              if (diagramHandlers) {
-                diagramHandlers.zoom(-1);
-              }
-            }}
-          >
-            -
-          </button>
-        </ZoomWrapper>
+        <NavigatorWrapper className="navigator" ref={navigator} />
       </CanvasWrapper>
     </>
   );
 };
 export default Canvas;
 
-const ZoomWrapper = styled.div`
-  display: flex;
-  gap: 1px;
+const NavigatorWrapper = styled.div`
   position: absolute;
   bottom: 16px;
   right: 16px;
-  box-shadow: 0px 4px 4px 0px
-    var(--pf-v5-global--BackgroundColor--dark-transparent-200);
-  border-radius: 5px;
-  background: var(--pf-v5-global--BackgroundColor--dark-transparent-200);
-
-  button {
-    display: flex;
-    width: 24px;
-    height: 22px;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    flex-shrink: 0;
-    background: var(--pf-v5-global--BackgroundColor--100);
-    padding: 0;
-    border: 0;
-
-    &.zoom-in {
-      border-top-left-radius: 4px;
-      border-bottom-left-radius: 4px;
-    }
-    &.zoom-out {
-      border-top-right-radius: 4px;
-      border-bottom-right-radius: 4px;
-    }
-    &:hover {
-      background: var(--pf-v5-global--BackgroundColor--light-300);
-    }
-    &:active {
-      background: var(--pf-v5-global--Color--light-300);
-    }
-  }
+`;
+const StencilContainer = styled.div`
+  position: absolute;
+  left: 1px;
+  top: 1px;
+  width: 240px;
+  height: calc(100% - 2px);
+  z-index: 9999;
+  background: var(--pf-v5-global--BackgroundColor--100);
+  filter: drop-shadow(
+    0.1rem 0.1rem 0.15rem
+      var(--pf-v5-global--BackgroundColor--dark-transparent-200)
+  );
 `;

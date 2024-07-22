@@ -602,3 +602,31 @@ export const moveCellFromColliding = (graph: dia.Graph, cell: dia.Cell) => {
     }
   } while (isColliding);
 };
+
+/**
+ * Finds inter-service relations for a given service model or embedded entity.
+ *
+ * @param {ServiceModel | EmbeddedEntity | undefined} serviceModel - The service model or embedded entity to find inter-service relations for.
+ * @returns {string[] | undefined} An array of entity types that have inter-service relations with the given service model or embedded entity, or undefined if the service model is undefined.
+ */
+export const findInterServiceRelations = (
+  serviceModel: ServiceModel | EmbeddedEntity | undefined,
+): string[] | undefined => {
+  if (!serviceModel) {
+    return undefined;
+  }
+
+  const result =
+    serviceModel.inter_service_relations?.map(
+      (relation) => relation.entity_type,
+    ) || [];
+
+  const embeddedEntitiesResult = serviceModel.embedded_entities.flatMap(
+    (embedded_entity) => findInterServiceRelations(embedded_entity),
+  );
+
+  const filteredEmbeddedResult = embeddedEntitiesResult.filter(
+    (item) => item !== undefined,
+  ) as string[];
+  return result.concat(filteredEmbeddedResult);
+};
