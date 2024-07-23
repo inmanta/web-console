@@ -21,6 +21,7 @@ import {
 import {
   childModel,
   containerModel,
+  parentModel,
   relatedServices,
   testApiInstance,
   testApiInstanceModel,
@@ -38,6 +39,7 @@ import {
   checkIfConnectionIsAllowed,
   updateLabelPosition,
   toggleLooseElement,
+  findInterServiceRelations,
 } from "./helpers";
 import { Link, ServiceEntityBlock } from "./shapes";
 
@@ -1356,6 +1358,7 @@ describe("getServiceOrderItems", () => {
     expect(serviceOrderItems).toEqual([coreCopy]);
   });
 });
+
 describe("updateLabelPosition", () => {
   Object.defineProperty(global.SVGElement.prototype, "getBBox", {
     writable: true,
@@ -1555,5 +1558,25 @@ describe("toggleLooseElement", () => {
     expect(
       dia.HighlighterView.get(paper.findViewByModel(entity), "loose_element"),
     ).toBeNull();
+  });
+});
+
+describe("findInterServiceRelations", () => {
+  it("returns undefined WHEN no service is passed", () => {
+    const result = findInterServiceRelations(undefined);
+    expect(result).toEqual(undefined);
+  });
+  it("it returns empty array WHEN service doesn't have inter-service relations", () => {
+    const result = findInterServiceRelations(parentModel);
+    expect(result).toEqual([]);
+  });
+
+  it("it returns related service names WHEN service have direct inter-service relations", () => {
+    const result = findInterServiceRelations(childModel);
+    expect(result).toEqual(["parent-service"]);
+  });
+  it("it returns related service names WHEN service have inter-service relations in embedded entities", () => {
+    const result = findInterServiceRelations(containerModel);
+    expect(result).toEqual(["parent-service"]);
   });
 });
