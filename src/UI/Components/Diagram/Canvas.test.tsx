@@ -1,12 +1,16 @@
 /*eslint-disable testing-library/no-node-access*/
 import React, { act } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, queries, within as baseWithin } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
+import { HttpResponse, PathParams, http } from "msw";
+import { setupServer } from "msw/node";
 import { RemoteData, ServiceModel } from "@/Core";
 import { getStoreInstance } from "@/Data";
-import { InstanceWithReferences } from "@/Data/Managers/GetInstanceWithRelations/interface";
+import { InstanceWithRelations } from "@/Data/Managers/V2/GetInstanceWithRelations";
+
 import { dependencies } from "@/Test";
 import * as customQueries from "@/Test/Utils/custom-queries";
 import {
@@ -16,6 +20,7 @@ import {
   words,
 } from "@/UI";
 import Canvas from "@/UI/Components/Diagram/Canvas";
+import { ComposerServiceOrderItem } from "@/UI/Components/Diagram/interfaces";
 import CustomRouter from "@/UI/Routing/CustomRouter";
 import history from "@/UI/Routing/history";
 import {
@@ -23,10 +28,11 @@ import {
   mockedInstanceThreeServiceModel,
   mockedInstanceTwo,
   mockedInstanceTwoServiceModel,
-  mockedInstanceWithReferences,
+  mockedInstanceWithRelations,
 } from "./Mock";
 import services from "./Mocks/services.json";
 import "@testing-library/jest-dom";
+import { defineObjectsForJointJS } from "./testSetup";
 
 const allQueries = {
   ...queries,
@@ -36,10 +42,11 @@ const user = userEvent.setup();
 const screen = baseWithin(document.body, allQueries);
 
 const setup = (
-  instance?: InstanceWithReferences,
+  instance?: InstanceWithRelations,
   serviceModels: ServiceModel[] = services as unknown as ServiceModel[],
   editable: boolean = true,
 ) => {
+  const queryClient = new QueryClient();
   const store = getStoreInstance();
   const environmentHandler = EnvironmentHandlerImpl(
     useLocation,
@@ -68,31 +75,33 @@ const setup = (
   );
   history.push("/?env=aaa");
   return (
-    <CustomRouter history={history}>
-      <StoreProvider store={store}>
-        <DependencyProvider
-          dependencies={{ ...dependencies, environmentHandler }}
-        >
-          <Routes>
-            <Route
-              path="/"
-              element={
-                <Canvas
-                  services={serviceModels}
-                  mainServiceName={"parent-service"}
-                  instance={instance}
-                  editable={editable}
-                />
-              }
-            />
-            <Route
-              path="/lsm/catalog/parent-service/inventory"
-              element={<></>}
-            />
-          </Routes>
-        </DependencyProvider>
-      </StoreProvider>
-    </CustomRouter>
+    <QueryClientProvider client={queryClient}>
+      <CustomRouter history={history}>
+        <StoreProvider store={store}>
+          <DependencyProvider
+            dependencies={{ ...dependencies, environmentHandler }}
+          >
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <Canvas
+                    services={serviceModels}
+                    mainServiceName={"parent-service"}
+                    instance={instance}
+                    editable={editable}
+                  />
+                }
+              />
+              <Route
+                path="/lsm/catalog/parent-service/inventory"
+                element={<></>}
+              />
+            </Routes>
+          </DependencyProvider>
+        </StoreProvider>
+      </CustomRouter>
+    </QueryClientProvider>
   );
 };
 
@@ -164,121 +173,8 @@ const createShapeWithNameAndId = async (
   });
 };
 
-beforeEach(() => {
-  Object.defineProperty(window, "SVGAngle", {
-    writable: true,
-    value: jest.fn().mockImplementation(() => ({
-      new: jest.fn(),
-      prototype: jest.fn(),
-      SVG_ANGLETYPE_UNKNOWN: 0,
-      SVG_ANGLETYPE_UNSPECIFIED: 1,
-      SVG_ANGLETYPE_DEG: 2,
-      SVG_ANGLETYPE_RAD: 3,
-      SVG_ANGLETYPE_GRAD: 4,
-    })),
-  });
-  Object.defineProperty(window, "ResizeObserver", {
-    writable: true,
-    value: jest.fn().mockImplementation(() => ({
-      disconnect: jest.fn(),
-      observe: jest.fn(),
-      unobserve: jest.fn(),
-    })),
-  });
-  Object.defineProperty(global.SVGSVGElement.prototype, "createSVGMatrix", {
-    writable: true,
-    value: jest.fn().mockImplementation(() => ({
-      martix: jest.fn(() => [[]]),
-      a: 0,
-      b: 0,
-      c: 0,
-      d: 0,
-      e: 0,
-      f: 0,
-      flipX: jest.fn().mockImplementation(() => global.SVGSVGElement),
-      flipY: jest.fn().mockImplementation(() => global.SVGSVGElement),
-      inverse: jest.fn().mockImplementation(() => global.SVGSVGElement),
-      multiply: jest.fn().mockImplementation(() => global.SVGSVGElement),
-      rotate: jest.fn().mockImplementation(() => global.SVGSVGElement),
-      rotateFromVector: jest
-        .fn()
-        .mockImplementation(() => global.SVGSVGElement),
-      scale: jest.fn().mockImplementation(() => global.SVGSVGElement),
-      scaleNonUniform: jest.fn().mockImplementation(() => global.SVGSVGElement),
-      skewX: jest.fn().mockImplementation(() => global.SVGSVGElement),
-      skewY: jest.fn().mockImplementation(() => global.SVGSVGElement),
-      translate: jest.fn().mockImplementation(() => ({
-        multiply: jest.fn().mockImplementation(() => ({
-          multiply: jest.fn().mockImplementation(() => ({
-            inverse: jest.fn().mockImplementation(() => global.SVGSVGElement),
-          })),
-        })),
-        rotate: jest.fn().mockImplementation(() => ({
-          translate: jest.fn().mockImplementation(() => ({
-            rotate: jest.fn().mockImplementation(() => ({
-              translate: jest
-                .fn()
-                .mockImplementation(() => global.SVGSVGElement),
-            })),
-          })),
-        })),
-      })),
-    })),
-  });
-
-  Object.defineProperty(global.SVGSVGElement.prototype, "createSVGPoint", {
-    writable: true,
-    value: jest.fn().mockImplementation(() => ({
-      x: 0,
-      y: 0,
-      matrixTransform: jest.fn().mockImplementation(() => ({
-        x: 0,
-        y: 0,
-      })),
-    })),
-  });
-
-  Object.defineProperty(global.SVGSVGElement.prototype, "createSVGTransform", {
-    writable: true,
-    value: jest.fn().mockImplementation(() => ({
-      angle: 0,
-      matrix: {
-        a: 1,
-        b: 0,
-        c: 0,
-        d: 1,
-        e: 0,
-        f: 0,
-        multiply: jest.fn(),
-      },
-      setMatrix: jest.fn(),
-      setTranslate: jest.fn(),
-    })),
-  });
-  window.SVGPathElement = jest.fn();
-
-  Object.defineProperty(global.SVGElement.prototype, "getComputedTextLength", {
-    writable: true,
-    value: jest.fn().mockReturnValue(0),
-  });
-
-  Object.defineProperty(global.SVGElement.prototype, "getBBox", {
-    writable: true,
-    value: jest.fn().mockReturnValue({
-      x: 0,
-      y: 0,
-    }),
-  });
-
-  Object.defineProperty(global.SVGElement.prototype, "getScreenCTM", {
-    writable: true,
-    value: jest.fn().mockReturnValue(0),
-  });
-
-  Object.defineProperty(Document.prototype, "elementFromPoint", {
-    writable: true,
-    value: jest.fn().mockReturnValue(null),
-  });
+beforeAll(() => {
+  defineObjectsForJointJS();
 });
 
 describe("Canvas.tsx", () => {
@@ -561,7 +457,7 @@ describe("Canvas.tsx", () => {
   });
 
   it("renders correctly fetched instances", async () => {
-    const component = setup(mockedInstanceWithReferences);
+    const component = setup(mockedInstanceWithRelations);
     render(component);
 
     const attrIndicators = await screen.findAllByJointSelector("info");
@@ -605,7 +501,7 @@ describe("Canvas.tsx", () => {
   });
 
   it("deletes shape correctly", async () => {
-    const component = setup(mockedInstanceWithReferences);
+    const component = setup(mockedInstanceWithRelations);
     render(component);
 
     const attrIndicators = await screen.findAllByJointSelector("info");
@@ -623,9 +519,73 @@ describe("Canvas.tsx", () => {
     await deleteAndAssert("child_container", 1, 0);
   });
 
+  it("sends request with correct data to the backend when instance is being deployed", async () => {
+    const server = setupServer(
+      http.post<
+        PathParams,
+        { service_order_items: ComposerServiceOrderItem[] }
+      >("/lsm/v2/order", async ({ request }) => {
+        const reqBody = await request.json();
+        expect(reqBody.service_order_items[0]).toStrictEqual({
+          instance_id: expect.any(String),
+          service_entity: "parent-service",
+          config: {},
+          action: "create",
+          attributes: {
+            name: "name-001",
+            should_deploy_fail: false,
+            service_id: "id-001",
+          },
+          edits: null,
+          metadata: {
+            coordinates: expect.any(String),
+          },
+        });
+
+        expect(
+          JSON.parse(
+            reqBody.service_order_items[0].metadata?.coordinates as string,
+          ),
+        ).toEqual([
+          {
+            id: expect.any(String),
+            name: "parent-service",
+            attributes: {
+              name: "name-001",
+              should_deploy_fail: false,
+              service_id: "id-001",
+            },
+            coordinates: {
+              x: 0,
+              y: 0,
+            },
+          },
+        ]);
+        return HttpResponse.json();
+      }),
+    );
+    const component = setup();
+    server.listen();
+    render(component);
+    const shapeName = "parent-service";
+    const name = "name-001";
+    const id = "id-001";
+
+    await createShapeWithNameAndId(shapeName, name, id);
+
+    await act(async () => {
+      await user.click(screen.getByRole("button", { name: "Deploy" }));
+    });
+
+    expect(
+      await screen.findByText("Instance Composed successfully"),
+    ).toBeVisible();
+    server.close();
+  });
+
   it("when editable prop is set to false, disable interactions", async () => {
     const component = setup(
-      mockedInstanceWithReferences,
+      mockedInstanceWithRelations,
       services as unknown as ServiceModel[],
       false,
     );
