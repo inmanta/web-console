@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { ServiceModel } from "@/Core";
 import {
   useUrlStateWithFilter,
@@ -50,6 +50,12 @@ export const Events: React.FC<Props> = ({ service, instanceId }) => {
   });
   const tablePresenter = new EventsTablePresenter();
   const states = service.lifecycle.states.map((state) => state.name).sort();
+
+  //when sorting is triggered, reset the current page
+  useEffect(() => {
+    setCurrentPage({ kind: "CurrentPage", value: "" });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sort.order]);
 
   return (
     <div>
