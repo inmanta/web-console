@@ -604,7 +604,7 @@ export const moveCellFromColliding = (graph: dia.Graph, cell: dia.Cell) => {
 };
 
 /**
- * Finds inter-service relations for a given service model or embedded entity.
+ * Finds the inter-service relations for a the given service model or embedded entity.
  *
  * @param {ServiceModel | EmbeddedEntity | undefined} serviceModel - The service model or embedded entity to find inter-service relations for.
  * @returns {string[] | undefined} An array of entity types that have inter-service relations with the given service model or embedded entity, or undefined if the service model is undefined.

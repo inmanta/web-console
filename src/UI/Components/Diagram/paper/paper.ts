@@ -9,9 +9,21 @@ import { ActionEnum, ConnectionRules, TypeEnum } from "../interfaces";
 import { routerNamespace } from "../routers";
 import { Link, ServiceEntityBlock } from "../shapes";
 
+/**
+ * Represents the ComposerPaper class. which initializes the JointJS paper object and sets up the event listeners.
+ *
+ * more info: https://docs.jointjs.com/api/dia/Paper/
+ */
 export class ComposerPaper {
   paper: dia.Paper;
 
+  /**
+   * Creates an instance of ComposerPaper.
+   * @param {ConnectionRules} connectionRules - The connection rules.
+   * @param {dia.Graph} graph - The JointJS graph.
+   * @param {boolean} editable - Indicates if the paper is editable.
+   * @param {(cell: ServiceEntityBlock, action: ActionEnum) => void} updateInstancesToSend - The callback function to update instances.
+   */
   constructor(
     connectionRules: ConnectionRules,
     graph: dia.Graph,
