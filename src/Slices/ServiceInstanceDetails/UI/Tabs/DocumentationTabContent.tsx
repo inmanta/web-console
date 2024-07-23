@@ -110,6 +110,10 @@ export const DocumentationTabContent: React.FC<Props> = ({
 /**
  * Method mapping the needed properties from the attributeSet and docAttributesDescriptors.
  *
+ * It could happen that for an older version, the attribute doesn't exist yet, but is present in the ServiceModel.
+ * ServiceModels are versioned too, but this is not something we can/are handling at the moment.
+ * We only rely on the InstanceVersion for now.
+ *
  * @param docAttributeDescriptors
  * @param attributeSet
  * @returns MarkdownAttributes[] - An array of MarkdownAttributes required for the MarkdownCards
