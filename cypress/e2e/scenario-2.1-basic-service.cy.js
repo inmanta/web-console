@@ -319,7 +319,9 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#editorButton").click();
 
       // expect the value for address_r1 to be empty
-      cy.get(".view-line").contains("address_r1").should("contain", '""');
+      cy.get(".view-line > :nth-child(1) > .mtk5")
+        .first()
+        .should("contain", '""');
       cy.get(".view-line > :nth-child(1) > .mtk5").first().type("1.2.3.2/32");
       cy.get(".view-line > :nth-child(1) > .mtk5").first().type("{pagedown}"); // force editor to scroll down
 

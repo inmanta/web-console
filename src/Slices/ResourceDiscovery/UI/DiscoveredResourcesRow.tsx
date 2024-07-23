@@ -40,7 +40,7 @@ export const DiscoveredResourceRow: React.FC<Props> = ({
         </Td>
         <Td
           dataLabel={words("discovered.column.resource_id")}
-          style={{ width: "40vw" }}
+          style={{ width: "50vw" }}
           data-testid={words("discovered.column.resource_id")}
         >
           {row.discovered_resource_id}
