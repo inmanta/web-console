@@ -991,7 +991,7 @@ __metadata:
     moment-timezone: "npm:^0.5.45"
     moment-timezone-data-webpack-plugin: "npm:^1.5.1"
     msw: "npm:^2.2.2"
-    prettier: "npm:^3.2.5"
+    prettier: "npm:^3.3.3"
     process: "npm:^0.11.10"
     qs: "npm:^6.12.3"
     raw-loader: "npm:^4.0.2"
@@ -12706,12 +12706,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:^3.2.5":
-  version: 3.2.5
-  resolution: "prettier@npm:3.2.5"
+"prettier@npm:^3.3.3":
+  version: 3.3.3
+  resolution: "prettier@npm:3.3.3"
   bin:
     prettier: bin/prettier.cjs
-  checksum: 10/d509f9da0b70e8cacc561a1911c0d99ec75117faed27b95cc8534cb2349667dee6351b0ca83fa9d5703f14127faa52b798de40f5705f02d843da133fc3aa416a
+  checksum: 10/5beac1f30b5b40162532b8e2f7c3a4eb650910a2695e9c8512a62ffdc09dae93190c29db9107fa7f26d1b6c71aad3628ecb9b5de1ecb0911191099be109434d7
   languageName: node
   linkType: hard
 
