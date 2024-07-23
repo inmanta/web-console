@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   Panel,
   PanelMain,
@@ -6,17 +6,27 @@ import {
   Tab,
   TabTitleText,
   Tabs,
+  Tooltip,
 } from "@patternfly/react-core";
-
+import { ServiceModel } from "@/Core";
 import { useUrlStateWithString } from "@/Data";
 import { words } from "@/UI";
 
+import { InstanceDetailsContext } from "../../Core/Context";
 import {
   AttributesTabContent,
+  DocAttributeDescriptors,
   DocumentationTabContent,
   EventsTabContent,
   ResourcesTabContent,
 } from ".";
+
+enum TabKeys {
+  DOCUMENTATION = "Documentation",
+  ATTRIBUTES = "Attributes",
+  EVENTS = "Events",
+  RESOURCES = "Resources",
+}
 
 /**
  * The TabView Component
@@ -30,10 +40,23 @@ import {
  * @returns {React.FC} A React Component displaying the TabView
  */
 export const TabView: React.FC = () => {
-  // const { serviceModelQuery } = useContext(InstanceDetailsContext);
-  const [activeTab, setActiveTab] = useUrlStateWithString<string>({
-    default: "0",
+  const { serviceModelQuery, instance } = useContext(InstanceDetailsContext);
+
+  const docAttributeDescriptors = getDocumentationAttributeDescriptors(
+    serviceModelQuery.data,
+  );
+
+  const [activeTab, setActiveTab] = useUrlStateWithString<TabKeys>({
+    default: docAttributeDescriptors.length
+      ? TabKeys.DOCUMENTATION
+      : TabKeys.ATTRIBUTES,
     key: `tab`,
+    route: "InstanceDetails",
+  });
+
+  const [selectedVersion] = useUrlStateWithString<string>({
+    default: String(instance.version),
+    key: `version`,
     route: "InstanceDetails",
   });
 
@@ -44,10 +67,15 @@ export const TabView: React.FC = () => {
       | MouseEvent,
     tabIndex: string | number,
   ) => {
-    setActiveTab(String(tabIndex));
+    setActiveTab(tabIndex as TabKeys);
   };
 
-  // const documentationAttributeKeys = getDocumentationAttributeKeys(serviceModelQuery.data);
+  const disabledResourceTabTooltip =
+    String(instance.version) !== selectedVersion ? (
+      <Tooltip
+        content={words("instanceDetails.tabs.disabled.resources-tooltip")}
+      />
+    ) : undefined;
 
   return (
     <Panel variant="raised">
@@ -59,19 +87,24 @@ export const TabView: React.FC = () => {
             aria-label="Instance-Details-Tabs"
             role="region"
           >
+            {docAttributeDescriptors.length > 0 && (
+              <Tab
+                eventKey={TabKeys.DOCUMENTATION}
+                title={
+                  <TabTitleText>
+                    {words("instanceDetails.tabs.documentation")}
+                  </TabTitleText>
+                }
+                aria-label="documentation-content"
+              >
+                <DocumentationTabContent
+                  docAttributeDescriptors={docAttributeDescriptors}
+                  selectedVersion={selectedVersion}
+                />
+              </Tab>
+            )}
             <Tab
-              eventKey={"0"}
-              title={
-                <TabTitleText>
-                  {words("instanceDetails.tabs.documentation")}
-                </TabTitleText>
-              }
-              aria-label="documentation-content"
-            >
-              <DocumentationTabContent />
-            </Tab>
-            <Tab
-              eventKey={"1"}
+              eventKey={TabKeys.ATTRIBUTES}
               title={
                 <TabTitleText>
                   {words("instanceDetails.tabs.attributes")}
@@ -82,7 +115,7 @@ export const TabView: React.FC = () => {
               <AttributesTabContent />
             </Tab>
             <Tab
-              eventKey={"2"}
+              eventKey={TabKeys.EVENTS}
               title={
                 <TabTitleText>
                   {words("instanceDetails.tabs.events")}
@@ -93,13 +126,15 @@ export const TabView: React.FC = () => {
               <EventsTabContent />
             </Tab>
             <Tab
-              eventKey={"3"}
+              eventKey={TabKeys.RESOURCES}
               title={
                 <TabTitleText>
                   {words("instanceDetails.tabs.resources")}
                 </TabTitleText>
               }
               aria-label="resources-content"
+              isAriaDisabled={String(instance.version) !== selectedVersion}
+              tooltip={disabledResourceTabTooltip}
             >
               <ResourcesTabContent />
             </Tab>
@@ -110,22 +145,34 @@ export const TabView: React.FC = () => {
   );
 };
 
-// const getDocumentationAttributeKeys = (serviceModel?: ServiceModel) => {
-//   const documentationAttributeKeys: { title: string; iconName: string }[] = [];
+/**
+ * If there are attributes with the documentation tag in the serviceModel,
+ * returns an array containing the needed information
+ * to construct the sections in the documentation tab.
+ *
+ * @param serviceModel - The serviceModel if available.
+ * @returns DocAttributeDescriptors[]
+ */
+const getDocumentationAttributeDescriptors = (
+  serviceModel?: ServiceModel,
+): DocAttributeDescriptors[] => {
+  const docAttributeDescriptors: DocAttributeDescriptors[] = [];
 
-//   if (serviceModel && serviceModel.attributes) {
-//     for (const attribute of serviceModel.attributes) {
-//       if (
-//         attribute.attribute_annotations &&
-//         attribute.attribute_annotations.web_title &&
-//         attribute.attribute_annotations.web_presentation === "documentation"
-//       ) {
-//         documentationAttributeKeys.push({
-//           title: attribute.attribute_annotations.web_title,
-//           iconName: attribute.attribute_annotations.web_icon || "FaBook",
-//         });
-//       }
-//     }
-//   }
-//   return documentationAttributeKeys;
-// };
+  if (serviceModel && serviceModel.attributes) {
+    for (const attribute of serviceModel.attributes) {
+      if (
+        attribute.attribute_annotations &&
+        attribute.attribute_annotations.web_title &&
+        attribute.attribute_annotations.web_presentation === "documentation"
+      ) {
+        docAttributeDescriptors.push({
+          title: attribute.attribute_annotations.web_title,
+          iconName: attribute.attribute_annotations.web_icon || "FaBook",
+          attributeName: attribute.name,
+        });
+      }
+    }
+  }
+
+  return docAttributeDescriptors;
+};

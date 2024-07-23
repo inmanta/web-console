@@ -212,6 +212,9 @@ if (Cypress.env("edition") === "iso") {
         "false",
       );
 
+      // check if the documentation is displayed
+      cy.get(".markdown-body > h1").should("contain", "Getting started");
+
       // Go back to inventory using the breadcrumbs
       cy.get('[aria-label="BreadcrumbItem"]')
         .contains("Service Inventory: basic-service")

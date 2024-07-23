@@ -238,6 +238,12 @@ const dict = {
   "instanceDetails.tabs.attributes": "Attributes",
   "instanceDetails.tabs.events": "Events",
   "instanceDetails.tabs.resources": "Resources",
+  "instanceDetails.tabs.documentation.noData":
+    "There is no documentation available for this version.",
+  "instanceDetails.tabs.disabled.resources-tooltip":
+    "This tab is only available for the latest version.",
+  "instanceDetails.documentation.noAttributeForVersion": (attributeName) =>
+    `This version doesn't contain documentation for ${attributeName} yet.`,
 
   /**
    * Config related text
