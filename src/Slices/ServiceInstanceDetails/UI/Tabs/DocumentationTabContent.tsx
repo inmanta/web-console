@@ -128,7 +128,9 @@ const getDocumentationSections = (
       iconName: iconName,
       value:
         attributeSet[attributeName] ||
-        words("instanceDetails.documentation.noAttributeForVersion"),
+        words("instanceDetails.documentation.noAttributeForVersion")(
+          attributeName,
+        ),
     };
   });
 };
