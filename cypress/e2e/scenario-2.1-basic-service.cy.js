@@ -212,6 +212,9 @@ if (Cypress.env("edition") === "iso") {
         "false",
       );
 
+      // check if the documentation is displayed
+      cy.get(".markdown-body > h1").should("contain", "Getting started");
+
       // Go back to inventory using the breadcrumbs
       cy.get('[aria-label="BreadcrumbItem"]')
         .contains("Service Inventory: basic-service")
@@ -320,6 +323,7 @@ if (Cypress.env("edition") === "iso") {
         .first()
         .should("contain", '""');
       cy.get(".view-line > :nth-child(1) > .mtk5").first().type("1.2.3.2/32");
+      cy.get(".view-line > :nth-child(1) > .mtk5").first().type("{pagedown}"); // force editor to scroll down
 
       // change the service id to make instance unique
       cy.get(".mtk5").contains("0001").type("{backspace}9");

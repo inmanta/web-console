@@ -138,6 +138,13 @@ if (Cypress.env("edition") === "iso") {
         3,
       );
 
+      // Check if the default selected one is the attributes tab, since this instance has no documentation.
+      cy.get('[aria-label="attributes-content"]').should(
+        "have.attr",
+        "aria-selected",
+        "true",
+      );
+
       // Check the state of the instance is up in the history section.
       cy.get('[aria-label="History-Row"]').eq(0).should("contain", "up");
 
