@@ -37,7 +37,7 @@ interface Props {
  * The DocumentationTabContent Component
  *
  * @props {Props} - The component props
- *  @prop {DocAttributeDescriptors} docAttributeDescriptors -  array of Object containing the needed info for each sections
+ *  @prop {DocAttributeDescriptors} docAttributeDescriptors -  array of Objects containing the needed info for each sections
  *  @prop {string} selectedVersion - The active version of the details page, which is found in the url of the page.
  *
  * @returns {React.FC} A React Component that displays the markdown documentations in collapsibles.
