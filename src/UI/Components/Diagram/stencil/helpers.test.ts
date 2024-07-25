@@ -4,7 +4,7 @@ import {
   transformEmbeddedToStencilElements,
 } from "./helpers";
 
-const stencilBlueprint = {
+const defaultStencil = {
   type: "standard.Path",
   size: { width: 240, height: 40 },
   name: "default",
@@ -22,7 +22,7 @@ const stencilBlueprint = {
     bodyTwo: {
       width: 240,
       height: 40,
-      fill: "#fff",
+      fill: "#FFFFFF",
       stroke: "none",
     },
     label: {
@@ -53,21 +53,21 @@ const stencilBlueprint = {
 describe("createStencilElement", () => {
   it("returns proper Stencil Elements based on properties passed", () => {
     const defaultElement = createStencilElement("default");
-    expect(defaultElement).toStrictEqual(stencilBlueprint);
+    expect(defaultElement).toStrictEqual(defaultStencil);
 
     const embeddedElementWithModel = createStencilElement(
       "default",
-      containerModel.embedded_entities[0],
       true,
+      containerModel.embedded_entities[0],
       "holderName",
     );
     expect(embeddedElementWithModel).toStrictEqual({
-      ...stencilBlueprint,
+      ...defaultStencil,
       entity_model: containerModel.embedded_entities[0],
       holderName: "holderName",
       attrs: {
-        ...stencilBlueprint.attrs,
-        body: { ...stencilBlueprint.attrs.body, fill: "#06c" },
+        ...defaultStencil.attrs,
+        body: { ...defaultStencil.attrs.body, fill: "#0066cc" },
       },
     });
   });
@@ -94,7 +94,7 @@ describe("transformEmbeddedToStencilElements", () => {
 
     expect(result).toStrictEqual([
       {
-        ...stencilBlueprint,
+        ...defaultStencil,
         name: "embedded",
 
         entity_model: {
@@ -109,13 +109,13 @@ describe("transformEmbeddedToStencilElements", () => {
         },
         holderName: "holderName",
         attrs: {
-          ...stencilBlueprint.attrs,
-          body: { ...stencilBlueprint.attrs.body, fill: "#06c" },
-          label: { ...stencilBlueprint.attrs.label, text: "embedded" },
+          ...defaultStencil.attrs,
+          body: { ...defaultStencil.attrs.body, fill: "#0066cc" },
+          label: { ...defaultStencil.attrs.label, text: "embedded" },
         },
       },
       {
-        ...stencilBlueprint,
+        ...defaultStencil,
         name: "embedded-embedded",
         entity_model: {
           ...containerModel.embedded_entities[0],
@@ -123,9 +123,9 @@ describe("transformEmbeddedToStencilElements", () => {
         },
         holderName: "embedded",
         attrs: {
-          ...stencilBlueprint.attrs,
-          body: { ...stencilBlueprint.attrs.body, fill: "#06c" },
-          label: { ...stencilBlueprint.attrs.label, text: "embedded-embedded" },
+          ...defaultStencil.attrs,
+          body: { ...defaultStencil.attrs.body, fill: "#0066cc" },
+          label: { ...defaultStencil.attrs.label, text: "embedded-embedded" },
         },
       },
     ]);

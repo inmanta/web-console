@@ -501,8 +501,9 @@ export function addDefaultEntities(
   graph: dia.Graph,
   service: ServiceModel | EmbeddedEntity,
 ): ServiceEntityBlock[] {
-  const embedded_entities = service.embedded_entities.map((embedded_entity) => {
-    if (embedded_entity.lower_limit > 0) {
+  const embedded_entities = service.embedded_entities
+    .filter((embedded_entity) => embedded_entity.lower_limit > 0)
+    .map((embedded_entity) => {
       const embeddedEntity = appendEntity(
         graph,
         embedded_entity,
@@ -517,16 +518,9 @@ export function addDefaultEntities(
         addDefaultEntities(graph, embedded_entity),
       );
       return embeddedEntity;
-    } else {
-      return null;
-    }
-  });
+    });
 
-  const filtered = embedded_entities.filter(
-    (entity) => entity !== null,
-  ) as ServiceEntityBlock[]; //TS doesn't recognize that we filtered out nulls
-
-  return filtered;
+  return embedded_entities;
 }
 
 /**

@@ -1,6 +1,6 @@
 import { dia, ui } from "@inmanta/rappid";
 import { ServiceModel } from "@/Core";
-import { InventoriesResponse } from "@/Data/Managers/V2/GetRelatedInventories";
+import { Inventories } from "@/Data/Managers/V2/GetRelatedInventories";
 import { ServiceEntityBlock } from "../shapes";
 import {
   createStencilElement,
@@ -11,9 +11,19 @@ import {
 const GRID_SIZE = 8;
 const PADDING_S = GRID_SIZE;
 
-class InstanceStencil {
+/**
+ * Class initializing the Service Instance Stencil Tab.
+ */
+class InstanceStencilTab {
   stencil: ui.Stencil;
 
+  /**
+   * Creates an instance service stencil Tab.
+   *
+   * @param {HTMLElement} stencilElement - The HTML element to which the stencil will be appended.
+   * @param {ui.PaperScroller} scroller - The jointJS scroller associated with the stencil.
+   * @param {ServiceModel} service - The service model used to populate the stencil with adequate Elements.
+   */
   constructor(
     stencilElement: HTMLElement,
     scroller: ui.PaperScroller,
@@ -47,7 +57,7 @@ class InstanceStencil {
         centre: false,
         dx: 0,
         dy: 0,
-        background: "#fff",
+        background: "#FFFFFF",
       },
     });
     stencilElement.appendChild(this.stencil.el);
@@ -56,18 +66,34 @@ class InstanceStencil {
   }
 }
 
-class InventoryStencil {
+/**
+ * Class initializing the Service Inventory Stencil Tab.
+ */
+class InventoryStencilTab {
   stencil: ui.Stencil;
 
+  /**
+   * Creates an inventory stencil tab.
+   *
+   * @param {HTMLElement} stencilElement - The HTML element to which the stencil will be appended.
+   * @param {ui.PaperScroller} scroller - The jointJS scroller associated with the stencil.
+   * @param {Inventories} serviceInventories - The service inventories used to populate the stencil with adequate Elements.
+   */
   constructor(
     stencilElement: HTMLElement,
     scroller: ui.PaperScroller,
-    serviceInventories: InventoriesResponse,
+    serviceInventories: Inventories,
   ) {
     const groups = {};
+
+    //Create object with service names as keys and all of the service instances as StencilElements, to be used in the Stencil Sidebar
     Object.keys(serviceInventories).forEach(
-      (serviceName) => (groups[serviceName] = {}),
+      (serviceName) =>
+        (groups[serviceName] = serviceInventories[serviceName].map((service) =>
+          createStencilElement(service.service_entity),
+        )),
     );
+
     this.stencil = new ui.Stencil({
       id: "inventory-stencil",
       className: "joint-stencil hidden",
@@ -106,41 +132,47 @@ class InventoryStencil {
         centre: false,
         dx: 0,
         dy: 10,
-        background: "#fff",
+        background: "#FFFFFF",
       },
     });
+
     stencilElement.appendChild(this.stencil.el);
     this.stencil.render();
 
-    const groupedElements = {};
-    Object.keys(serviceInventories).forEach(
-      (serviceName) =>
-        (groupedElements[serviceName] = serviceInventories[serviceName].map(
-          (service) => createStencilElement(service.service_entity),
-        )),
-    );
-    this.stencil.load(groupedElements);
+    this.stencil.load(groups);
     this.stencil.freeze(); //freeze by default as this tab is not active on init
   }
 }
 
+/**
+ * Class representing a stencil sidebar.
+ */
 export class StencilSidebar {
+  /**
+   * Creates a stencil sidebar.
+   *
+   * @param {HTMLElement} stencilElement - The HTML element to which the sidebar elements will be appended.
+   * @param {ui.PaperScroller} scroller - The JointJS scroller associated with the stencil.
+   * @param {Inventories} serviceInventories - The service inventories used to create the inventory stencil tab.
+   * @param {ServiceModel} service - The service model used to create the instance stencil tab.
+   */
   constructor(
     stencilElement: HTMLElement,
     scroller: ui.PaperScroller,
-    serviceInventories: InventoriesResponse,
+    serviceInventories: Inventories,
     service: ServiceModel,
   ) {
-    const instanceStencil = new InstanceStencil(
+    const instanceTab = new InstanceStencilTab(
       stencilElement,
       scroller,
       service,
     );
-    const inventoryStencil = new InventoryStencil(
+    const inventoryTab = new InventoryStencilTab(
       stencilElement,
       scroller,
       serviceInventories,
     );
+
     const tabsToolbar = new ui.Toolbar({
       id: "tabs-toolbar",
       tools: [
@@ -158,31 +190,41 @@ export class StencilSidebar {
         },
       ],
     });
+
     stencilElement.appendChild(tabsToolbar.el);
     tabsToolbar.render();
 
-    tabsToolbar.el.firstElementChild?.firstElementChild?.classList?.add(
-      "-active",
-    ); //adding active class to the first tab as a default, as Toolbar doesn't apply it when adding 'class' attribute to the tool object
+    const firstChild = tabsToolbar.el.firstElementChild;
+    const targetElement = firstChild?.firstElementChild;
+
+    //adding active class to the first tab as a default, as Toolbar doesn't apply it when adding 'class' attribute to the tool object
+    if (targetElement?.classList) {
+      targetElement.classList.add("-active");
+    }
 
     tabsToolbar.on("new_tab:pointerclick", (event: dia.Event) => {
-      if (event.target.classList.contains("-active")) return;
-      inventoryStencil.stencil.el.classList.add("joint-hidden");
-      inventoryStencil.stencil.freeze();
+      if (event.target.classList.contains("-active")) {
+        return;
+      }
+      inventoryTab.stencil.el.classList.add("joint-hidden");
+      inventoryTab.stencil.freeze();
 
-      instanceStencil.stencil.el.classList.remove("joint-hidden");
-      instanceStencil.stencil.unfreeze();
+      instanceTab.stencil.el.classList.remove("joint-hidden");
+      instanceTab.stencil.unfreeze();
       event.target.classList.add("-active");
       event.target.nextSibling.classList.remove("-active");
     });
+
     tabsToolbar.on("inventory_tab:pointerclick", (event: dia.Event) => {
-      if (event.target.classList.contains("-active")) return;
+      if (event.target.classList.contains("-active")) {
+        return;
+      }
 
-      instanceStencil.stencil.el.classList.add("joint-hidden");
-      instanceStencil.stencil.freeze();
+      instanceTab.stencil.el.classList.add("joint-hidden");
+      instanceTab.stencil.freeze();
 
-      inventoryStencil.stencil.el.classList.remove("joint-hidden");
-      inventoryStencil.stencil.unfreeze();
+      inventoryTab.stencil.el.classList.remove("joint-hidden");
+      inventoryTab.stencil.unfreeze();
       event.target.classList.add("-active");
       event.target.previousSibling.classList.remove("-active");
     });

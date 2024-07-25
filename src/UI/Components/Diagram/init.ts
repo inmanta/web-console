@@ -1,7 +1,7 @@
 import { dia, shapes, ui } from "@inmanta/rappid";
 import { InstanceAttributeModel, ServiceModel } from "@/Core";
 import { InstanceWithRelations } from "@/Data/Managers/V2/GetInstanceWithRelations";
-import { InventoriesResponse } from "@/Data/Managers/V2/GetRelatedInventories";
+import { Inventories } from "@/Data/Managers/V2/GetRelatedInventories";
 import { appendColumns, appendInstance, populateGraph } from "./actions";
 import { applyCoordinatesToCells, getCellsCoordinates } from "./helpers";
 import {
@@ -17,12 +17,12 @@ import { StencilSidebar } from "./stencil/stencil";
 export default function diagramInit(
   canvas,
   sidebar,
-  navigator,
+  _zoomHandler,
   connectionRules: ConnectionRules,
   updateInstancesToSend: (cell: ServiceEntityBlock, action: ActionEnum) => void,
   editable: boolean,
   mainService: ServiceModel,
-  serviceInventories: InventoriesResponse,
+  serviceInventories: Inventories,
 ): DiagramHandlers {
   /**
    * https://resources.jointjs.com/docs/jointjs/v3.6/joint.html#dia.Graph

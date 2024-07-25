@@ -246,12 +246,12 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
     }
   }
 
-  getRelations(): Map<string, string> | null {
+  getRelations(): Map<dia.Cell.ID, string> | null {
     const relations = this.get("relatedTo");
     return relations ? relations : null;
   }
 
-  addRelation(id: string, relationName: string): void {
+  addRelation(id: dia.Cell.ID, relationName: string): void {
     const currentRelation = this.getRelations();
 
     if (currentRelation) {

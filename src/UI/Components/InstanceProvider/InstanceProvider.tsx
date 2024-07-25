@@ -32,35 +32,29 @@ export const InstanceProvider: React.FC<{
     environment,
   ).useOneTime();
 
-  if (!featureManager.isComposerEnabled()) {
-    <EmptyView
-      message={words("inventory.instanceComposer.disabled")}
-      aria-label="ComposersView-Empty"
-    />;
-  }
-
   const mainService = services.find(
     (service) => service.name === mainServiceName,
   );
 
-  if (mainService === undefined) {
-    <EmptyView
-      message={words("inventory.instanceComposer.noMainService")(
-        mainServiceName,
-      )}
-      aria-label="ComposersView-Empty"
-    />;
-  }
+  const relatedInventoriesNames = findInterServiceRelations(mainService) || [];
 
-  const relatedCatalogsNames = findInterServiceRelations(mainService);
-  const relatedServiceModels =
-    services.filter((service) =>
-      relatedCatalogsNames?.includes(service.name),
-    ) || [];
+  const relatedServiceModels = services.filter((service) =>
+    relatedInventoriesNames?.includes(service.name),
+  );
+
   const relatedCatalogs = useGetRelatedInventories(
-    relatedCatalogsNames,
+    relatedInventoriesNames,
     environment,
   ).useOneTime();
+
+  if (!featureManager.isComposerEnabled()) {
+    return (
+      <EmptyView
+        message={words("inventory.instanceComposer.disabled")}
+        aria-label="ComposersView-Empty"
+      />
+    );
+  }
 
   if (instanceWithRelations.isLoading || relatedCatalogs.isLoading) {
     return <LoadingView aria-label="instance_composer_editor-loading" />;
@@ -85,20 +79,42 @@ export const InstanceProvider: React.FC<{
     );
   }
 
+  if (!instanceWithRelations.data) {
+    return (
+      <ErrorView
+        data-testid="ErrorView"
+        title={words("inventory.instanceComposer.noData.errorTitle")}
+        message={words("inventory.instanceComposer.noData.errorMessage")(
+          instanceId,
+        )}
+        aria-label="instance_composer_editor-no-data"
+        retry={instanceWithRelations.refetch}
+      />
+    );
+  }
+  if (!mainService) {
+    return (
+      <ErrorView
+        data-testid="ErrorView"
+        title={words("inventory.instanceComposer.noServiceModel.errorTitle")}
+        message={words(
+          "inventory.instanceComposer.noServiceModel.errorMessage",
+        )(mainServiceName)}
+        aria-label="instance_composer_editor-no-data"
+        retry={instanceWithRelations.refetch}
+      />
+    );
+  }
   return (
     <Canvas
-      services={[...relatedServiceModels, mainService as ServiceModel]}
-      mainService={mainService as ServiceModel}
+      services={[...relatedServiceModels, mainService]}
+      mainService={mainService}
       serviceInventories={relatedCatalogs.data || {}}
-      instance={
-        instanceWithRelations.data
-          ? {
-              ...instanceWithRelations.data,
-              coordinates:
-                instanceWithRelations.data.instance.metadata?.coordinates || "",
-            }
-          : undefined
-      }
+      instance={{
+        ...instanceWithRelations.data,
+        coordinates:
+          instanceWithRelations.data.instance.metadata?.coordinates || "",
+      }}
       editable={editable}
     />
   );

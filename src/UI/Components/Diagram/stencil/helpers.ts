@@ -15,8 +15,8 @@ export const transformEmbeddedToStencilElements = (
   return service.embedded_entities.flatMap((embedded_entity) => {
     const stencilElement = createStencilElement(
       embedded_entity.name,
-      embedded_entity,
       true,
+      embedded_entity,
       service.name,
     );
     const nestedStencilElements =
@@ -25,11 +25,20 @@ export const transformEmbeddedToStencilElements = (
   });
 };
 
+/**
+ * Creates a stencil element with the given parameters.
+ *
+ * @param {string} name - The name of the stencil element.
+ * @param {boolean} isEmbedded - A boolean indicating whether the entity that the stencil represent is embedded or not. Defaults to false.
+ * @param {EmbeddedEntity} entityModel - The embedded entity model associated with the entity that the stencil element represent. Optional.
+ * @param {string} holderName - The name of the holder of the element that the stencil element represent. Optional.
+ * @returns {Object} An object representing the stencil element.
+ */
 export const createStencilElement = (
   name: string,
-  entityModel: EmbeddedEntity | undefined = undefined,
   isEmbedded: boolean = false,
-  holderName: string | undefined = undefined,
+  entityModel?: EmbeddedEntity,
+  holderName?: string,
 ) => {
   return {
     type: "standard.Path",
@@ -43,13 +52,13 @@ export const createStencilElement = (
         width: 7,
         height: 40,
         x: 233,
-        fill: isEmbedded ? "#06c" : "#6753AC",
+        fill: isEmbedded ? "#0066cc" : "#6753AC",
         stroke: "none",
       },
       bodyTwo: {
         width: 240,
         height: 40,
-        fill: "#fff",
+        fill: "#FFFFFF",
         stroke: "none",
       },
       label: {
@@ -81,7 +90,7 @@ export const createStencilElement = (
 export const createStencilDraggableShape = (
   cell: dia.Cell,
   isEmbedded: boolean,
-) => {
+): ServiceEntityBlock => {
   const entityModel = cell.get("entity_model") as ServiceModel | EmbeddedEntity;
   const instanceAsTable = new ServiceEntityBlock().setName(cell.get("name"));
 

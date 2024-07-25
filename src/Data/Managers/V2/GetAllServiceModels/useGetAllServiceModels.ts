@@ -6,7 +6,7 @@ import { useFetchHelpers } from "../helpers";
 /**
  * Return Signature of the useServiceModels React Query
  */
-interface useGetServiceModels {
+interface useGetAllServiceModels {
   useOneTime: () => UseQueryResult<ServiceModel[], Error>;
   useContinuous: () => UseQueryResult<ServiceModel[], Error>;
 }
@@ -16,13 +16,13 @@ interface useGetServiceModels {
  *
  * @param environment {string} - the environment in which the instance belongs
  *
- * @returns {useGetServiceModels} An object containing the different available queries.
+ * @returns {useGetAllServiceModels} An object containing the different available queries.
  * @returns {UseQueryResult<ServiceModel[], Error>} returns.useOneTime - Fetch the service models with a single query.
  * @returns {UseQueryResult<ServiceModel[], Error>} returns.useContinuous - Fetch the service models with a recursive query with an interval of 5s.
  */
-export const useGetServiceModels = (
+export const useGetAllServiceModels = (
   environment: string,
-): useGetServiceModels => {
+): useGetAllServiceModels => {
   const { createHeaders, handleErrors } = useFetchHelpers();
   const headers = createHeaders(environment);
 

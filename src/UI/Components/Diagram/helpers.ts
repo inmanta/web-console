@@ -337,7 +337,9 @@ export const shapesDataTransform = (
           if (model.upper_limit !== 1) {
             parentInstance.attributes[attributeName];
             if (Array.isArray(parentInstance.attributes[attributeName])) {
-              (parentInstance.attributes[attributeName] as string[]).push(id);
+              (parentInstance.attributes[attributeName] as dia.Cell.ID[]).push(
+                id,
+              );
             } else {
               parentInstance.attributes[attributeName] = [id];
             }
@@ -438,7 +440,7 @@ const isSingularRelation = (model?: EmbeddedEntity) => {
  * @returns
  */
 export const findCorrespondingId = (
-  neighborRelations: Map<string, string>,
+  neighborRelations: Map<dia.Cell.ID, string>,
   instanceAsTable: ServiceEntityBlock,
 ) => {
   return Array.from(neighborRelations, ([id, attributeName]) => ({

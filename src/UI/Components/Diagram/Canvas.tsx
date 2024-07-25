@@ -7,7 +7,7 @@ import styled from "styled-components";
 import { ServiceModel } from "@/Core";
 import { sanitizeAttributes } from "@/Data";
 import { InstanceWithRelations } from "@/Data/Managers/V2/GetInstanceWithRelations";
-import { InventoriesResponse } from "@/Data/Managers/V2/GetRelatedInventories";
+import { Inventories } from "@/Data/Managers/V2/GetRelatedInventories";
 import { usePostMetadata } from "@/Data/Managers/V2/PostMetadata";
 import { usePostOrder } from "@/Data/Managers/V2/PostOrder";
 import diagramInit, { DiagramHandlers } from "@/UI/Components/Diagram/init";
@@ -38,7 +38,7 @@ import { ServiceEntityBlock } from "./shapes";
 const Canvas: React.FC<{
   services: ServiceModel[];
   mainService: ServiceModel;
-  serviceInventories: InventoriesResponse;
+  serviceInventories: Inventories;
   instance?: InstanceWithRelations;
   editable: boolean;
 }> = ({
@@ -54,7 +54,7 @@ const Canvas: React.FC<{
   const metadataMutation = usePostMetadata(environment);
   const canvas = useRef<HTMLDivElement>(null);
   const LeftSidebar = useRef<HTMLDivElement>(null);
-  const navigator = useRef<HTMLDivElement>(null);
+  const zoomHandler = useRef<HTMLDivElement>(null);
 
   const [looseEmbedded, setLooseEmbedded] = useState<Set<string>>(new Set());
   const [alertMessage, setAlertMessage] = useState("");
@@ -215,7 +215,7 @@ const Canvas: React.FC<{
     const actions = diagramInit(
       canvas,
       LeftSidebar,
-      navigator,
+      zoomHandler,
       connectionRules,
       handleUpdate,
       editable,
@@ -364,18 +364,22 @@ const Canvas: React.FC<{
       <CanvasWrapper id="canvas-wrapper" data-testid="Composer-Container">
         <StencilContainer className="stencil-sidebar" ref={LeftSidebar} />
         <div className="canvas" ref={canvas} />
-        <NavigatorWrapper className="navigator" ref={navigator} />
+        <ZoomHandlerWrapper className="zoomHandler" ref={zoomHandler} />
       </CanvasWrapper>
     </>
   );
 };
 export default Canvas;
 
-const NavigatorWrapper = styled.div`
+const ZoomHandlerWrapper = styled.div`
   position: absolute;
   bottom: 16px;
   right: 16px;
 `;
+
+/**
+ * To be able have draggables on the canvas, we need to have a stencil container to which we append the JointJS stencil objects that handle this scenario
+ */
 const StencilContainer = styled.div`
   position: absolute;
   left: 1px;

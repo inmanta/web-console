@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
-import { ServiceModel } from "@/Core";
+import { useGetAllServiceModels } from "@/Data/Managers/V2/GetAllServiceModels";
 import { useGetRelatedInventories } from "@/Data/Managers/V2/GetRelatedInventories";
-import { useGetServiceModels } from "@/Data/Managers/V2/GetServiceModels";
 import { DependencyContext, useRouteParams, words } from "@/UI";
 import {
   EmptyView,
@@ -29,25 +28,17 @@ export const Page = () => {
     />;
   }
 
-  const serviceModels = useGetServiceModels(environment).useOneTime();
+  const serviceModels = useGetAllServiceModels(environment).useOneTime();
   const mainService = serviceModels.data?.find(
     (service) => service.name === serviceName,
   );
-
-  if (mainService === undefined) {
-    <EmptyView
-      message={words("inventory.instanceComposer.noMainService")(serviceName)}
-      aria-label="ComposersView-Empty"
-    />;
-  }
-
   const relatedCatalogsNames = findInterServiceRelations(mainService);
   const relatedServiceModels =
     serviceModels.data?.filter((service) =>
       relatedCatalogsNames?.includes(service.name),
     ) || [];
   const relatedCatalogs = useGetRelatedInventories(
-    relatedCatalogsNames,
+    relatedCatalogsNames || [],
     environment,
   ).useOneTime();
 
@@ -72,11 +63,19 @@ export const Page = () => {
     );
   }
 
+  if (!mainService) {
+    return (
+      <EmptyView
+        message={words("inventory.instanceComposer.noMainService")(serviceName)}
+        aria-label="ComposersView-Empty"
+      />
+    );
+  }
   return (
     <PageWrapper>
       <Canvas
-        services={[...relatedServiceModels, mainService as ServiceModel]}
-        mainService={mainService as ServiceModel}
+        services={[...relatedServiceModels, mainService]}
+        mainService={mainService}
         serviceInventories={relatedCatalogs.data || {}}
         editable
       />

@@ -163,6 +163,12 @@ const dict = {
   "inventory.form.placeholder.dict": '{"key": "value"}',
   "inventory.form.button": "Form",
   "inventory.editor.button": "JSON-Editor",
+  "inventory.instanceComposer.noData.errorTitle": "No Data",
+  "inventory.instanceComposer.noData.errorMessage": (serviceId) =>
+    `There is no data available to display for the given Id:${serviceId}`,
+  "inventory.instanceComposer.noServiceModel.errorTitle": "No Service Model",
+  "inventory.instanceComposer.noServiceModel.errorMessage": (serviceName) =>
+    `There is no service model available for ${serviceName}`,
   "inventory.instanceComposer.labelButtonTooltip": "Toggle connection labels",
   "inventory.instanceComposer.addInstanceButtonTooltip":
     "Add new instance to the canvas.",

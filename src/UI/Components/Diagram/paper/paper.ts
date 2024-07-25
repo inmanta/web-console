@@ -137,10 +137,11 @@ export class ComposerPaper {
       // We don't want a Halo if cellView is a Link or is a representation of an already existing instance that has strict_modifier set to false
       if (
         cellView.model instanceof dia.Link ||
-        cellView.model.get("isBlockedFromEditing")
-      )
+        cellView.model.get("isBlockedFromEditing") ||
+        !editable
+      ) {
         return;
-      if (cellView.model.get("isBlockedFromEditing") || !editable) return;
+      }
 
       const halo = createHalo(
         graph,
@@ -157,12 +158,14 @@ export class ComposerPaper {
       const source = linkView.model.source();
       const target = linkView.model.target();
 
-      const sourceCell = graph.getCell(
-        source.id as dia.Cell.ID,
-      ) as ServiceEntityBlock;
-      const targetCell = graph.getCell(
-        target.id as dia.Cell.ID,
-      ) as ServiceEntityBlock;
+      if (!source.id || !target.id) {
+        return;
+      }
+
+      const sourceCell = graph.getCell(source.id) as ServiceEntityBlock;
+      const targetCell = graph.getCell(target.id) as ServiceEntityBlock;
+
+      // source or target cell have name starting with "_" means that it shouldn't have label when hovering
       if (!(sourceCell.getName()[0] === "_")) {
         linkView.model.appendLabel({
           attrs: {
@@ -180,6 +183,7 @@ export class ComposerPaper {
           },
         });
       }
+
       if (!(targetCell.getName()[0] === "_")) {
         linkView.model.appendLabel({
           attrs: {
@@ -197,7 +201,11 @@ export class ComposerPaper {
           },
         });
       }
-      if (linkView.model.get("isBlockedFromEditing") || !editable) return;
+
+      if (linkView.model.get("isBlockedFromEditing") || !editable) {
+        return;
+      }
+
       showLinkTools(
         this.paper,
         graph,
@@ -238,7 +246,7 @@ export class ComposerPaper {
         const cellName = elementCell.getName();
         const connectingCellName = connectingCell.getName();
 
-        //if cell has Map that mean it can accept inter-service relations
+        //if cell has Map of relations that mean it can accept inter-service relations
         if (cellRelations) {
           const cellConnectionRule = connectionRules[cellName].find(
             (rule) => rule.name === connectingCellName,
@@ -250,7 +258,7 @@ export class ComposerPaper {
             cellConnectionRule.kind === TypeEnum.INTERSERVICE
           ) {
             elementCell.addRelation(
-              connectingCell.id as string,
+              connectingCell.id,
               cellConnectionRule.attributeName,
             );
 
