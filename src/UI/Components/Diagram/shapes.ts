@@ -248,7 +248,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
 
   getRelations(): Map<dia.Cell.ID, string> | null {
     const relations = this.get("relatedTo");
-    return relations ? relations : null;
+    return relations || null;
   }
 
   addRelation(id: dia.Cell.ID, relationName: string): void {

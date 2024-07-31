@@ -8,7 +8,7 @@ import { dependencies } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { testInstance, testService } from "../Diagram/Mock";
 import { defineObjectsForJointJS } from "../Diagram/testSetup";
-import { InstanceProvider } from "./InstanceProvider";
+import { InstanceProvider } from "./InstanceWithRelationsProvider";
 
 const setup = () => {
   const queryClient = new QueryClient();

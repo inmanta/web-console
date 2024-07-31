@@ -1562,10 +1562,6 @@ describe("toggleLooseElement", () => {
 });
 
 describe("findInterServiceRelations", () => {
-  it("returns undefined WHEN no service is passed", () => {
-    const result = findInterServiceRelations(undefined);
-    expect(result).toEqual(undefined);
-  });
   it("it returns empty array WHEN service doesn't have inter-service relations", () => {
     const result = findInterServiceRelations(parentModel);
     expect(result).toEqual([]);

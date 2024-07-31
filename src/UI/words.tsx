@@ -187,8 +187,6 @@ const dict = {
     `Values of ${valueName}`,
   "inventory.instanceComposer.disabled":
     "Your licence doesn't give you access to the Instance Composer, please contact support for more details.",
-  "inventory.instanceComposer.noMainService": (serviceName: string) =>
-    `Couldn't find service model for ${serviceName}`,
   "inventory.instanceComposer.title": "Instance Composer",
   "inventory.instanceComposer.title.edit": "Instance Composer Editor",
   "inventory.instanceComposer.title.view": "Instance Composer Viewer",
@@ -440,6 +438,13 @@ const dict = {
     "Are you sure you want to resume all operations in the current environment?",
   "environment.protected.tooltip":
     "This action is not allowed because the environment is protected",
+
+  /**
+   * Provides views
+   */
+  "provider.noServices": "No services found",
+  "provider.noMainService": (serviceName: string) =>
+    `Couldn't find service model for ${serviceName}`,
 
   /**
    * Latest released resource view

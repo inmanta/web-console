@@ -3,9 +3,16 @@ import { ServiceInstanceModel } from "@/Core";
 import { PrimaryBaseUrlManager } from "@/UI";
 import { useFetchHelpers } from "../helpers";
 
+/**
+ * Inventories interface
+ *
+ * It is used to group service instances by a service name
+ *
+ */
 export interface Inventories {
-  [key: string]: ServiceInstanceModel[];
+  [serviceName: string]: ServiceInstanceModel[];
 }
+
 /**
  * Return Signature of the useGetRelatedInventories React Query
  */
@@ -71,14 +78,12 @@ export const useGetRelatedInventories = (
         queryKey: ["get_related_inventories-one_time", serviceNames],
         queryFn: fetchServices,
         retry: false,
-        enabled: serviceNames !== undefined,
       }),
     useContinuous: (): UseQueryResult<Inventories, Error> =>
       useQuery({
         queryKey: ["get_related_inventories-continuous", serviceNames],
         queryFn: fetchServices,
         refetchInterval: 5000,
-        enabled: serviceNames !== undefined,
       }),
   };
 };

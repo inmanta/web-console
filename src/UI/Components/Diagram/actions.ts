@@ -543,7 +543,7 @@ export function appendColumns(
   const attributes = attributesKeywords.map((key) => {
     const attributeValue = isEmpty
       ? ""
-      : (serviceInstanceAttributes[key] as string);
+      : String(serviceInstanceAttributes[key]);
     instanceAttributes[key] = attributeValue;
     return {
       name: key,

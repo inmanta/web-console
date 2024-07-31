@@ -4,7 +4,7 @@ import { PrimaryBaseUrlManager } from "@/UI";
 import { useFetchHelpers } from "../helpers";
 
 /**
- * Return Signature of the useServiceModels React Query
+ * Return Signature of the useGetAllServiceModels React Query
  */
 interface useGetAllServiceModels {
   useOneTime: () => UseQueryResult<ServiceModel[], Error>;

@@ -1,15 +1,9 @@
 import React, { useContext } from "react";
-import { useGetAllServiceModels } from "@/Data/Managers/V2/GetAllServiceModels";
-import { useGetRelatedInventories } from "@/Data/Managers/V2/GetRelatedInventories";
 import { DependencyContext, useRouteParams, words } from "@/UI";
-import {
-  EmptyView,
-  ErrorView,
-  LoadingView,
-  PageContainer,
-} from "@/UI/Components";
-import Canvas from "@/UI/Components/Diagram/Canvas";
-import { findInterServiceRelations } from "@/UI/Components/Diagram/helpers";
+import { EmptyView, PageContainer } from "@/UI/Components";
+import { Canvas } from "@/UI/Components/Diagram/Canvas";
+import { RelatedInventoriesProvider } from "@/UI/Components/RelatedInventoriesProvider/RelatedInventoriesProvider";
+import { ServicesWithMainProvider } from "@/UI/Components/ServicesWithMainProvider/ServicesWithMainProvider";
 
 /**
  * Renders the Page component for the Instance Composer Page.
@@ -18,8 +12,7 @@ import { findInterServiceRelations } from "@/UI/Components/Diagram/helpers";
  */
 export const Page = () => {
   const { service: serviceName } = useRouteParams<"InstanceComposer">();
-  const { featureManager, environmentHandler } = useContext(DependencyContext);
-  const environment = environmentHandler.useId();
+  const { featureManager } = useContext(DependencyContext);
 
   if (!featureManager.isComposerEnabled()) {
     <EmptyView
@@ -28,58 +21,26 @@ export const Page = () => {
     />;
   }
 
-  const serviceModels = useGetAllServiceModels(environment).useOneTime();
-  const mainService = serviceModels.data?.find(
-    (service) => service.name === serviceName,
-  );
-  const relatedCatalogsNames = findInterServiceRelations(mainService);
-  const relatedServiceModels =
-    serviceModels.data?.filter((service) =>
-      relatedCatalogsNames?.includes(service.name),
-    ) || [];
-  const relatedCatalogs = useGetRelatedInventories(
-    relatedCatalogsNames || [],
-    environment,
-  ).useOneTime();
-
-  if (serviceModels.isLoading || relatedCatalogs.isLoading) {
-    return <LoadingView aria-label="ComposersView-loading" />;
-  }
-
-  if (serviceModels.isError || relatedCatalogs.isError) {
-    const retryFn = serviceModels.isError
-      ? serviceModels.refetch
-      : relatedCatalogs.refetch;
-    const error = serviceModels.error || relatedCatalogs.error;
-    const errorMessage = error ? error.message : "";
-    return (
-      <ErrorView
-        data-testid="ErrorView"
-        title={words("error")}
-        message={words("error.general")(errorMessage)}
-        aria-label="ComposersView-failed"
-        retry={retryFn}
-      />
-    );
-  }
-
-  if (!mainService) {
-    return (
-      <EmptyView
-        message={words("inventory.instanceComposer.noMainService")(serviceName)}
-        aria-label="ComposersView-Empty"
-      />
-    );
-  }
   return (
-    <PageWrapper>
-      <Canvas
-        services={[...relatedServiceModels, mainService]}
-        mainService={mainService}
-        serviceInventories={relatedCatalogs.data || {}}
-        editable
-      />
-    </PageWrapper>
+    <ServicesWithMainProvider
+      serviceName={serviceName}
+      Dependant={({ services, mainService }) => (
+        <RelatedInventoriesProvider
+          serviceModels={services}
+          mainService={mainService}
+          Dependant={({ services, mainService, relatedInventories }) => (
+            <PageWrapper>
+              <Canvas
+                services={services}
+                mainService={mainService}
+                serviceInventories={relatedInventories}
+                editable={true}
+              />
+            </PageWrapper>
+          )}
+        />
+      )}
+    />
   );
 };
 

@@ -31,11 +31,11 @@ import { ServiceEntityBlock } from "./shapes";
  * Canvas component for creating, displaying and editing an Instance.
  *
  * @param {ServiceModel[]} services - The list of service models .
- * @param {ServiceModel} mainServiceName - The name of the main service.
+ * @param {ServiceModel} mainService - The main service model.
  * @param {InstanceWithRelations} instance - The instance with references.
  * @returns {JSX.Element} The rendered Canvas component.
  */
-const Canvas: React.FC<{
+export const Canvas: React.FC<{
   services: ServiceModel[];
   mainService: ServiceModel;
   serviceInventories: Inventories;
@@ -52,9 +52,9 @@ const Canvas: React.FC<{
   const environment = environmentHandler.useId();
   const oderMutation = usePostOrder(environment);
   const metadataMutation = usePostMetadata(environment);
-  const canvas = useRef<HTMLDivElement>(null);
+  const Canvas = useRef<HTMLDivElement>(null);
   const LeftSidebar = useRef<HTMLDivElement>(null);
-  const zoomHandler = useRef<HTMLDivElement>(null);
+  const ZoomHandler = useRef<HTMLDivElement>(null);
 
   const [looseEmbedded, setLooseEmbedded] = useState<Set<string>>(new Set());
   const [alertMessage, setAlertMessage] = useState("");
@@ -213,9 +213,9 @@ const Canvas: React.FC<{
   useEffect(() => {
     const connectionRules = createConnectionRules(services, {});
     const actions = diagramInit(
-      canvas,
+      Canvas,
       LeftSidebar,
-      zoomHandler,
+      ZoomHandler,
       connectionRules,
       handleUpdate,
       editable,
@@ -363,14 +363,16 @@ const Canvas: React.FC<{
       />
       <CanvasWrapper id="canvas-wrapper" data-testid="Composer-Container">
         <StencilContainer className="stencil-sidebar" ref={LeftSidebar} />
-        <div className="canvas" ref={canvas} />
-        <ZoomHandlerWrapper className="zoomHandler" ref={zoomHandler} />
+        <div className="canvas" ref={Canvas} />
+        <ZoomHandlerWrapper className="zoomHandler" ref={ZoomHandler} />
       </CanvasWrapper>
     </>
   );
 };
-export default Canvas;
 
+/**
+ * Wrapper and ref container for the zoom & fullscreen tools from JointJS
+ */
 const ZoomHandlerWrapper = styled.div`
   position: absolute;
   bottom: 16px;
@@ -386,7 +388,7 @@ const StencilContainer = styled.div`
   top: 1px;
   width: 240px;
   height: calc(100% - 2px);
-  z-index: 9999;
+  z-index: 1;
   background: var(--pf-v5-global--BackgroundColor--100);
   filter: drop-shadow(
     0.1rem 0.1rem 0.15rem
