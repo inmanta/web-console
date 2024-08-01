@@ -1014,7 +1014,7 @@ __metadata:
     ts-prune: "npm:^0.10.3"
     tsconfig-paths-webpack-plugin: "npm:^4.1.0"
     typescript: "npm:^5.4.5"
-    undici: "npm:^5"
+    undici: "npm:^6"
     url-loader: "npm:^4.1.1"
     uuid: "npm:^10.0.0"
     webpack: "npm:^5.91.0"
