@@ -9,7 +9,7 @@ import { DependencyContext } from "@/UI";
 interface Props {
   service_entity: string;
   data: string;
-  onChange: (value: string) => void;
+  onChange: (value: string, valid: boolean) => void;
 }
 
 /**
@@ -66,9 +66,9 @@ export const JSONEditor: React.FC<Props> = ({
   // Whenever the editorState has changed and no errors are found, call the onChange callback.
   // This prevents the string to be invalid based on the provided schema.
   useEffect(() => {
-    if (errors?.length === 0) {
-      onChange(editorState);
-    }
+    const isValid = errors.length < 1;
+
+    onChange(editorState, isValid);
   }, [editorState, errors, onChange]);
 
   // see https://microsoft.github.io/monaco-editor/typedoc/interfaces/languages.json.ModeConfiguration.html
@@ -107,7 +107,7 @@ export const JSONEditor: React.FC<Props> = ({
   ) : (
     <EditorWrapper data-testid="JSON-Editor-Wrapper">
       <Editor
-        height={"calc(100vh - 500px)"}
+        height={"calc(100vh - 550px)"}
         width={"100%"}
         defaultLanguage="json"
         defaultValue={data}
