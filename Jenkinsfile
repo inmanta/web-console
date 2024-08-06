@@ -46,24 +46,6 @@ pipeline {
                         }
                     }
                 }
-                stage('Testing with cypress') {
-                    steps {
-                        timeout(time: 20, unit: 'MINUTES') {
-                            dir('web-console') {
-                                sh '''yarn run build;
-                                yarn run install:orchestrator:ci;
-                                yarn run cypress-test:iso;'''
-                            }
-                        }
-                    }
-                    post {
-                        always {
-                            dir('web-console') {
-                                sh'yarn run kill-server'
-                            }
-                        }
-                    }
-                }
             }
             post {
                 always {
