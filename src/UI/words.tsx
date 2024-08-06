@@ -440,13 +440,6 @@ const dict = {
     "This action is not allowed because the environment is protected",
 
   /**
-   * Provides views
-   */
-  "provider.noServices": "No services found",
-  "provider.noMainService": (serviceName: string) =>
-    `Couldn't find service model for ${serviceName}`,
-
-  /**
    * Latest released resource view
    */
   "resources.empty.message": "No resources found",
