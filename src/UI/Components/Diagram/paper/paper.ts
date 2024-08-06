@@ -22,16 +22,11 @@ export class ComposerPaper {
    * @param {ConnectionRules} connectionRules - The connection rules.
    * @param {dia.Graph} graph - The JointJS graph.
    * @param {boolean} editable - Indicates if the paper is editable.
-   * @param {(cell: ServiceEntityBlock, action: ActionEnum) => void} updateInstancesToSend - The callback function to update instances.
    */
   constructor(
     connectionRules: ConnectionRules,
     graph: dia.Graph,
     editable: boolean,
-    updateInstancesToSend: (
-      cell: ServiceEntityBlock,
-      action: ActionEnum,
-    ) => void,
   ) {
     this.paper = new dia.Paper({
       model: graph,
@@ -143,13 +138,7 @@ export class ComposerPaper {
         return;
       }
 
-      const halo = createHalo(
-        graph,
-        this.paper,
-        cellView,
-        connectionRules,
-        updateInstancesToSend,
-      );
+      const halo = createHalo(graph, this.paper, cellView, connectionRules);
 
       halo.render();
     });
@@ -206,13 +195,7 @@ export class ComposerPaper {
         return;
       }
 
-      showLinkTools(
-        this.paper,
-        graph,
-        linkView,
-        updateInstancesToSend,
-        connectionRules,
-      );
+      showLinkTools(this.paper, graph, linkView, connectionRules);
     });
 
     this.paper.on("link:mouseleave", (linkView: dia.LinkView) => {
@@ -261,8 +244,11 @@ export class ComposerPaper {
               connectingCell.id,
               cellConnectionRule.attributeName,
             );
-
-            updateInstancesToSend(sourceCell, ActionEnum.UPDATE);
+            document.dispatchEvent(
+              new CustomEvent("updateInstancesToSend", {
+                detail: { cell: sourceCell, actions: ActionEnum.UPDATE },
+              }),
+            );
             return true;
           }
         }
@@ -273,7 +259,12 @@ export class ComposerPaper {
         ) {
           elementCell.set("embeddedTo", connectingCell.id);
           toggleLooseElement(this.paper.findViewByModel(elementCell), "remove");
-          updateInstancesToSend(elementCell, ActionEnum.UPDATE);
+
+          document.dispatchEvent(
+            new CustomEvent("updateInstancesToSend", {
+              detail: { cell: elementCell, actions: ActionEnum.UPDATE },
+            }),
+          );
           return true;
         } else {
           return false;

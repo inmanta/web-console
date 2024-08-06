@@ -48,7 +48,7 @@ export const useGetRelatedInventories = (
     service: string,
   ): Promise<{ data: ServiceInstanceModel[] }> => {
     const response = await fetch(
-      `${baseUrl}/lsm/v1/service_inventory/${service}`,
+      `${baseUrl}/lsm/v1/service_inventory/${service}?limit=1000`,
       {
         headers,
       },

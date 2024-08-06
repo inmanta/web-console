@@ -17,6 +17,7 @@ export interface InstanceWithRelations {
  */
 interface GetInstanceWithRelationsHook {
   useOneTime: () => UseQueryResult<InstanceWithRelations, Error>;
+  useContinuous: () => UseQueryResult<InstanceWithRelations, Error>;
 }
 
 /**
@@ -101,6 +102,16 @@ export const useGetInstanceWithRelations = (
         ],
         queryFn: () => fetchInstances(instanceId),
         retry: false,
+      }),
+    useContinuous: (): UseQueryResult<InstanceWithRelations, Error> =>
+      useQuery({
+        queryKey: [
+          "get_instance_with_relations-continuous",
+          instanceId,
+          environment,
+        ],
+        queryFn: () => fetchInstances(instanceId),
+        refetchInterval: 5000,
       }),
   };
 };

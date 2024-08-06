@@ -28,7 +28,6 @@ export function showLinkTools(
   paper: dia.Paper,
   graph: dia.Graph,
   linkView: dia.LinkView,
-  updateInstancesToSend: (cell: ServiceEntityBlock, action: ActionEnum) => void,
   connectionRules: ConnectionRules,
 ) {
   const source = linkView.model.source();
@@ -132,7 +131,12 @@ export function showLinkTools(
             ) {
               elementCell.set("embeddedTo", undefined);
               toggleLooseElement(paper.findViewByModel(elementCell), "add");
-              updateInstancesToSend(elementCell, ActionEnum.UPDATE);
+
+              document.dispatchEvent(
+                new CustomEvent("updateInstancesToSend", {
+                  detail: { cell: elementCell, actions: ActionEnum.UPDATE },
+                }),
+              );
               return true;
             }
 
@@ -143,7 +147,11 @@ export function showLinkTools(
             ) {
               elementCell.removeRelation(disconnectingCell.id as string);
 
-              updateInstancesToSend(sourceCell, ActionEnum.UPDATE);
+              document.dispatchEvent(
+                new CustomEvent("updateInstancesToSend", {
+                  detail: { cell: sourceCell, actions: ActionEnum.UPDATE },
+                }),
+              );
               return true;
             } else {
               return false;

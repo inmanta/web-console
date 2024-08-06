@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   ClipboardCopyButton,
   CodeBlock,
@@ -6,13 +6,10 @@ import {
   CodeBlockCode,
   Modal,
 } from "@patternfly/react-core";
-import { DictDialogData } from "../interfaces";
+import { CanvasContext } from "../Context/Context";
 
-interface DictModal {
-  dictToDisplay: DictDialogData | null;
-  setDictToDisplay: (value: DictDialogData | null) => void;
-}
-const DictModal = ({ dictToDisplay, setDictToDisplay }: DictModal) => {
+const DictModal: React.FC = () => {
+  const { dictToDisplay, setDictToDisplay } = useContext(CanvasContext);
   const [copied, setCopied] = useState(false);
 
   return (

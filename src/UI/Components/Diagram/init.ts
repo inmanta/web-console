@@ -1,28 +1,23 @@
+import { RefObject } from "react";
 import { dia, shapes, ui } from "@inmanta/rappid";
 import { InstanceAttributeModel, ServiceModel } from "@/Core";
 import { InstanceWithRelations } from "@/Data/Managers/V2/GetInstanceWithRelations";
-import { Inventories } from "@/Data/Managers/V2/GetRelatedInventories";
 import { appendColumns, appendInstance, populateGraph } from "./actions";
 import { applyCoordinatesToCells, getCellsCoordinates } from "./helpers";
 import {
-  ActionEnum,
   ConnectionRules,
   SavedCoordinates,
   serializedCell,
 } from "./interfaces";
 import { ComposerPaper } from "./paper/paper";
 import { ServiceEntityBlock } from "./shapes";
-import { StencilSidebar } from "./stencil/stencil";
 
-export default function diagramInit(
-  canvas,
-  sidebar,
-  _zoomHandler,
+export function diagramInit(
+  canvasRef: RefObject<HTMLDivElement>,
+  setScroller,
   connectionRules: ConnectionRules,
-  updateInstancesToSend: (cell: ServiceEntityBlock, action: ActionEnum) => void,
   editable: boolean,
   mainService: ServiceModel,
-  serviceInventories: Inventories,
 ): DiagramHandlers {
   /**
    * https://resources.jointjs.com/docs/jointjs/v3.6/joint.html#dia.Graph
@@ -31,12 +26,7 @@ export default function diagramInit(
   /**
    * https://resources.jointjs.com/docs/rappid/v3.6/ui.PaperScroller.html
    */
-  const paper = new ComposerPaper(
-    connectionRules,
-    graph,
-    editable,
-    updateInstancesToSend,
-  ).paper;
+  const paper = new ComposerPaper(connectionRules, graph, editable).paper;
 
   const scroller = new ui.PaperScroller({
     paper,
@@ -54,17 +44,13 @@ export default function diagramInit(
       };
     },
   });
-
-  new StencilSidebar(
-    sidebar.current,
-    scroller,
-    serviceInventories,
-    mainService,
-  );
+  setScroller(scroller);
 
   paper.on("blank:pointerdown", (evt: dia.Event) => scroller.startPanning(evt));
 
-  canvas.current.appendChild(scroller.el);
+  if (canvasRef.current) {
+    canvasRef.current.appendChild(scroller.el);
+  }
   scroller.render().center();
   scroller.centerContent();
 

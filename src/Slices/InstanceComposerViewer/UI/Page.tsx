@@ -1,10 +1,7 @@
 import React, { useContext } from "react";
 import { DependencyContext, useRouteParams, words } from "@/UI";
 import { EmptyView, PageContainer } from "@/UI/Components";
-import { Canvas } from "@/UI/Components/Diagram/Canvas";
-import { InstanceWithRelationsProvider } from "@/UI/Components/InstanceWithRelationsProvider";
-import { RelatedInventoriesProvider } from "@/UI/Components/RelatedInventoriesProvider/RelatedInventoriesProvider";
-import { ServicesWithMainProvider } from "@/UI/Components/ServicesWithMainProvider/ServicesWithMainProvider";
+import { ComposerWithInstanceProvider } from "@/UI/Components/Diagram/Context/ComposerWithInstanceProvider";
 
 /**
  * Renders the Page component for the Instance Composer Viewer Page.
@@ -26,31 +23,13 @@ export const Page = () => {
   }
 
   return (
-    <ServicesWithMainProvider
-      serviceName={serviceName}
-      Dependant={({ services, mainService }) => (
-        <RelatedInventoriesProvider
-          serviceModels={services}
-          mainService={mainService}
-          Dependant={({ services, mainService, relatedInventories }) => (
-            <InstanceWithRelationsProvider
-              instanceId={instance}
-              Dependant={({ instance }) => (
-                <PageWrapper>
-                  <Canvas
-                    instance={instance}
-                    services={services}
-                    mainService={mainService}
-                    serviceInventories={relatedInventories}
-                    editable={false}
-                  />
-                </PageWrapper>
-              )}
-            />
-          )}
-        />
-      )}
-    />
+    <PageWrapper>
+      <ComposerWithInstanceProvider
+        serviceName={serviceName}
+        instance={instance}
+        editable={false}
+      />
+    </PageWrapper>
   );
 };
 

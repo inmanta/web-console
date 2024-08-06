@@ -1,7 +1,11 @@
 /*eslint-disable testing-library/no-node-access*/
 import React, { act } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {
+  QueryClient,
+  QueryClientProvider,
+  UseQueryResult,
+} from "@tanstack/react-query";
 import { render, queries, within as baseWithin } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
@@ -10,7 +14,7 @@ import { StoreProvider } from "easy-peasy";
 import { RemoteData, ServiceModel } from "@/Core";
 import { getStoreInstance } from "@/Data";
 import { InstanceWithRelations } from "@/Data/Managers/V2/GetInstanceWithRelations";
-
+import { Inventories } from "@/Data/Managers/V2/GetRelatedInventories";
 import { dependencies } from "@/Test";
 import * as customQueries from "@/Test/Utils/custom-queries";
 import {
@@ -23,11 +27,9 @@ import { Canvas } from "@/UI/Components/Diagram/Canvas";
 // import { ComposerServiceOrderItem } from "@/UI/Components/Diagram/interfaces";
 import CustomRouter from "@/UI/Routing/CustomRouter";
 import history from "@/UI/Routing/history";
-import {
-  mockedInstanceTwo,
-  mockedInstanceTwoServiceModel,
-  parentModel,
-} from "./Mock";
+import { CanvasProvider } from "./Context/CanvasProvider";
+import { InstanceComposerContext } from "./Context/Context";
+import { mockedInstanceTwo, mockedInstanceTwoServiceModel } from "./Mock";
 import services from "./Mocks/services.json";
 import "@testing-library/jest-dom";
 import { defineObjectsForJointJS } from "./testSetup";
@@ -40,6 +42,7 @@ const user = userEvent.setup();
 const screen = baseWithin(document.body, allQueries);
 
 const setup = (
+  mainService: ServiceModel,
   instance?: InstanceWithRelations,
   serviceModels: ServiceModel[] = services as unknown as ServiceModel[],
   editable: boolean = true,
@@ -79,24 +82,24 @@ const setup = (
           <DependencyProvider
             dependencies={{ ...dependencies, environmentHandler }}
           >
-            <Routes>
-              <Route
-                path="/"
-                element={
-                  <Canvas
-                    services={serviceModels}
-                    mainService={parentModel}
-                    serviceInventories={{}}
-                    instance={instance}
-                    editable={editable}
+            <InstanceComposerContext.Provider
+              value={{
+                instance: instance || null,
+                serviceModels,
+                mainService: mainService,
+                relatedInventories: {} as UseQueryResult<Inventories, Error>,
+              }}
+            >
+              <CanvasProvider>
+                <Routes>
+                  <Route path="/" element={<Canvas editable={editable} />} />
+                  <Route
+                    path="/lsm/catalog/parent-service/inventory"
+                    element={<></>}
                   />
-                }
-              />
-              <Route
-                path="/lsm/catalog/parent-service/inventory"
-                element={<></>}
-              />
-            </Routes>
+                </Routes>
+              </CanvasProvider>
+            </InstanceComposerContext.Provider>
           </DependencyProvider>
         </StoreProvider>
       </CustomRouter>
@@ -281,7 +284,7 @@ beforeAll(() => {
 //   });
 
 it("renders shapes dict Value that can be viewed in dict Modal", async () => {
-  const component = setup(mockedInstanceTwo, [mockedInstanceTwoServiceModel]);
+  const component = setup(mockedInstanceTwoServiceModel, mockedInstanceTwo, []);
   render(component);
 
   const button = await screen.findByJointSelector("toggleButton");

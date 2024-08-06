@@ -8,7 +8,6 @@ const createHalo = (
   paper: dia.Paper,
   cellView: dia.CellView,
   connectionRules: ConnectionRules,
-  updateInstancesToSend: (cell: ServiceEntityBlock, action: ActionEnum) => void,
 ) => {
   const halo = new ui.Halo({
     cellView: cellView,
@@ -72,14 +71,20 @@ const createHalo = (
       }
 
       if (didElementChange) {
-        updateInstancesToSend(elementAsService, ActionEnum.UPDATE);
+        document.dispatchEvent(
+          new CustomEvent("updateInstancesToSend", {
+            detail: { cell: elementAsService, actions: ActionEnum.UPDATE },
+          }),
+        );
       }
     });
 
-    updateInstancesToSend(
-      cellView.model as ServiceEntityBlock,
-      ActionEnum.DELETE,
+    document.dispatchEvent(
+      new CustomEvent("updateInstancesToSend", {
+        detail: { cell: cellView.model, actions: ActionEnum.DELETE },
+      }),
     );
+
     graph.removeLinks(cellView.model);
     cellView.remove();
     halo.remove();

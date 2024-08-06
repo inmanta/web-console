@@ -1571,6 +1571,7 @@ describe("findInterServiceRelations", () => {
     const result = findInterServiceRelations(childModel);
     expect(result).toEqual(["parent-service"]);
   });
+
   it("it returns related service names WHEN service have inter-service relations in embedded entities", () => {
     const result = findInterServiceRelations(containerModel);
     expect(result).toEqual(["parent-service"]);
