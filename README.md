@@ -2,6 +2,8 @@
 
 [Docs](./docs/index.md)
 
+**THIS VERSION IS NOT SUPPORTED ANY LONGER. PLEASE USE A MORE RECENT VERSION.**
+
 ## Intro
 
 This project is the current frontend of for the inmanta service orchestrator.  
@@ -34,7 +36,7 @@ The frontend uses the (patternfly v4 framework)[https://www.patternfly.org/v4/] 
 
     yarn setup-server:lsm # Will setup and install an orchestrator running on port 8888 with lsm modules.
 
-    yarn cypress-test # Run tests with Cypress (Requires the previous command to run succesfully)
+    yarn cypress-test # **THESE ARE NO LONGER IN LINE WITH THE CURRENT MODEL PROVIDED BY THE local-setup.**
 
     yarn kill-server:lsm # This will remove the temporary folder containing the local-setup repo and destroy the docker containers that were setup previously with the setup-server:lsm command.
 
