@@ -23,6 +23,7 @@ const DetailsPage = (
 
 test("OrderDetailsView shows failed view", async () => {
   const { component, apiHelper } = baseSetup(DetailsPage);
+
   render(component);
 
   expect(
@@ -41,12 +42,14 @@ test("OrderDetailsView shows failed view", async () => {
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("OrderDetailsView shows view for a failed order", async () => {
   const { component, apiHelper } = baseSetup(DetailsPage);
+
   render(component);
 
   expect(
@@ -68,24 +71,29 @@ test("OrderDetailsView shows view for a failed order", async () => {
   ).toBeInTheDocument();
 
   const orderStatus = await screen.findByLabelText("OrderState");
+
   expect(orderStatus).toHaveTextContent(/failed/);
 
   const orderDescription = await screen.findByLabelText("OrderDescription");
+
   expect(orderDescription).toHaveTextContent(/Failed CREATE order/);
 
   const serviceOrderItemRows = await screen.findAllByRole("row", {
     name: "ServiceOrderDetailsRow",
   });
+
   expect(serviceOrderItemRows).toHaveLength(1);
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("OrderDetailsView shows view for a partial order", async () => {
   const { component, apiHelper } = baseSetup(DetailsPage);
+
   render(component);
 
   expect(
@@ -103,9 +111,11 @@ test("OrderDetailsView shows view for a partial order", async () => {
   ).toBeInTheDocument();
 
   const statusDescription = await screen.findByLabelText("OrderState");
+
   expect(statusDescription).toHaveTextContent(/partial/);
 
   const orderDescription = await screen.findByLabelText("OrderDescription");
+
   expect(orderDescription).toHaveTextContent(
     /Partial UPDATE order, with dependency/,
   );
@@ -113,32 +123,38 @@ test("OrderDetailsView shows view for a partial order", async () => {
   const serviceOrderItemRows = await screen.findAllByRole("row", {
     name: "ServiceOrderDetailsRow",
   });
+
   expect(serviceOrderItemRows).toHaveLength(2);
 
   await act(async () => {
     await userEvent.click(screen.getAllByLabelText("Toggle-DetailsRow")[0]);
   });
   const rowDetails = await screen.findByLabelText("Expanded-Details");
+
   expect(rowDetails).toHaveTextContent(/Show Compile Report/);
   expect(rowDetails).toHaveTextContent(/Failure Type/);
   expect(rowDetails).toHaveTextContent(/Reason/);
 
   const rowConfig = await screen.findByLabelText("Expanded-Config");
+
   expect(rowConfig).toHaveTextContent(/Empty/);
 
   expect(screen.getByLabelText("Expanded-Body")).toBeInTheDocument();
 
   const rowDependencies = await screen.findByLabelText("Expanded-Dependencies");
+
   expect(rowDependencies).not.toHaveTextContent(/Empty/);
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("OrderDetailsView shows view for a in progress order", async () => {
   const { component, apiHelper } = baseSetup(DetailsPage);
+
   render(component);
 
   expect(
@@ -156,40 +172,48 @@ test("OrderDetailsView shows view for a in progress order", async () => {
   ).toBeInTheDocument();
 
   const statusDescription = await screen.findByLabelText("OrderState");
+
   expect(statusDescription).toHaveTextContent(/in progress/);
 
   const orderDescription = await screen.findByLabelText("OrderDescription");
+
   expect(orderDescription).toHaveTextContent(/In progress DELETE order/);
 
   const serviceOrderItemRows = await screen.findAllByRole("row", {
     name: "ServiceOrderDetailsRow",
   });
+
   expect(serviceOrderItemRows).toHaveLength(1);
 
   await act(async () => {
     await userEvent.click(screen.getByLabelText("Toggle-DetailsRow"));
   });
   const rowDetails = await screen.findByLabelText("Expanded-Details");
+
   expect(rowDetails).not.toHaveTextContent(/Show Compile Report/);
   expect(rowDetails).not.toHaveTextContent(/Failure Type/);
   expect(rowDetails).not.toHaveTextContent(/Reason/);
 
   const rowConfig = await screen.findByLabelText("Expanded-Config");
+
   expect(rowConfig).toHaveTextContent(/Empty/);
 
   expect(screen.queryByLabelText("Expanded-Body")).not.toBeInTheDocument();
 
   const rowDependencies = await screen.findByLabelText("Expanded-Dependencies");
+
   expect(rowDependencies).toHaveTextContent(/Empty/);
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("OrderDetailsView shows view for completed order", async () => {
   const { component, apiHelper } = baseSetup(DetailsPage);
+
   render(component);
 
   expect(
@@ -207,35 +231,43 @@ test("OrderDetailsView shows view for completed order", async () => {
   ).toBeInTheDocument();
 
   const statusDescription = await screen.findByLabelText("OrderState");
+
   expect(statusDescription).toHaveTextContent(/success/);
 
   const orderDescription = await screen.findByLabelText("OrderDescription");
+
   expect(orderDescription).toHaveTextContent(/Success CREATE order/);
 
   const serviceOrderItemRows = await screen.findAllByRole("row", {
     name: "ServiceOrderDetailsRow",
   });
+
   expect(serviceOrderItemRows).toHaveLength(1);
 
   await act(async () => {
     await userEvent.click(screen.getByLabelText("Toggle-DetailsRow"));
   });
   const rowDetails = await screen.findByLabelText("Expanded-Details");
+
   expect(rowDetails).toHaveTextContent(/Show Compile Report/);
   expect(rowDetails).not.toHaveTextContent(/Failure Type/);
   expect(rowDetails).not.toHaveTextContent(/Reason/);
 
   const rowConfig = await screen.findByLabelText("Expanded-Config");
+
   expect(rowConfig).toHaveTextContent(/Empty/);
 
   const rowBody = await screen.findByLabelText("Expanded-Body");
+
   expect(rowBody).toHaveTextContent(/completed service/);
 
   const rowDependencies = await screen.findByLabelText("Expanded-Dependencies");
+
   expect(rowDependencies).toHaveTextContent(/Empty/);
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });

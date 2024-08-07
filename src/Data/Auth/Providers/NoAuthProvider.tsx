@@ -7,6 +7,7 @@ export const NoAuthProvider: React.FC<React.PropsWithChildren> = ({
   children,
 }) => {
   const authContext = useContext(AuthContext);
+
   return (
     <AuthContext.Provider value={authContext}>{children}</AuthContext.Provider>
   );

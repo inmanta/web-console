@@ -56,11 +56,13 @@ function setup({
       </DependencyProvider>
     </StoreProvider>
   );
+
   return { component, apiHelper, scheduler };
 }
 
 test("GIVEN CompileButton THEN is live updated", async () => {
   const { component, apiHelper, scheduler } = setup();
+
   render(component);
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
@@ -96,6 +98,7 @@ test("GIVEN CompileButton THEN is live updated", async () => {
 
 test("GIVEN CompileButton WHEN clicked THEN triggers recompile", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   await act(async () => {
@@ -111,6 +114,7 @@ test("GIVEN CompileButton WHEN clicked THEN triggers recompile", async () => {
   });
 
   const toast = screen.getByTestId("ToastAlert");
+
   expect(toast).toBeVisible();
   expect(toast).toHaveTextContent(words("common.compileWidget.toast")(false));
 
@@ -147,6 +151,7 @@ test("GIVEN CompileButton WHEN clicked THEN triggers recompile", async () => {
 
 test("GIVEN CompileButton WHEN clicked on toggle and clicked on Update & Recompile option THEN triggers recompile with update", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   await act(async () => {
@@ -154,6 +159,7 @@ test("GIVEN CompileButton WHEN clicked on toggle and clicked on Update & Recompi
   });
 
   const widget = screen.getByRole("button", { name: "RecompileButton" });
+
   expect(widget).toBeVisible();
 
   const toggle = screen.getByRole("button", {
@@ -175,6 +181,7 @@ test("GIVEN CompileButton WHEN clicked on toggle and clicked on Update & Recompi
   });
 
   const toast = screen.getByTestId("ToastAlert");
+
   expect(toast).toBeVisible();
   expect(toast).toHaveTextContent(words("common.compileWidget.toast")(true));
 
@@ -201,6 +208,7 @@ test("GIVEN CompileButton WHEN environmentSetting server_compile is disabled THE
       enable_lsm_expert_mode: false,
     },
   });
+
   render(component);
 
   await act(async () => {
@@ -222,6 +230,7 @@ test("GIVEN CompileButton WHEN 'isToastVisible' parameter is false and recompile
     },
     isToastVisible: false,
   });
+
   render(component);
 
   await act(async () => {

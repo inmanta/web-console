@@ -82,6 +82,7 @@ const CompareWithCurrentState: React.FC<{ version: string }> = ({
   version,
 }) => {
   const { routeManager } = useContext(DependencyContext);
+
   return (
     <DropdownItem>
       <Link

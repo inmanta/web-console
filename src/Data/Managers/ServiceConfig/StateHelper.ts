@@ -7,6 +7,7 @@ export function ServiceConfigStateHelper(store: Store) {
     store,
     (data, query) => {
       const value = RemoteData.mapSuccess((data) => data.data, data);
+
       store.dispatch.serviceConfig.setData({
         name: query.name,
         value,

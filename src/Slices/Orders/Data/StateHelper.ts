@@ -7,6 +7,7 @@ export function GetOrdersStateHelper(store: Store) {
     store,
     (data, _query, environment) => {
       const value = RemoteData.mapSuccess((wrapped) => wrapped, data);
+
       store.dispatch.orders.setList({
         environment,
         data: value,

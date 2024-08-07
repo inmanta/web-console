@@ -51,9 +51,11 @@ export const servicesSlice: ServicesSlice = {
     const toDelete = Object.keys(byNameAndEnv).filter((key) =>
       serviceKeyMaker.matches([environment, ""], key),
     );
+
     toDelete.forEach((key) => delete byNameAndEnv[key]);
     services.forEach((service) => {
       const key = serviceKeyMaker.make([environment, service.name]);
+
       byNameAndEnv[key] = RemoteData.success(service);
     });
   }),

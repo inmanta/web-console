@@ -63,6 +63,7 @@ const AttributesTab: React.FC<{ attributes: Record<string, unknown> }> = ({
     new XmlFormatter(),
   );
   const classifiedAttributes = classifier.classify(attributes);
+
   return (
     <Card isCompact>
       <CardBody>

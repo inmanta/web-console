@@ -13,6 +13,7 @@ export const HaltDialog: React.FC = () => {
     commandResolver.useGetTrigger<"HaltEnvironment">({
       kind: "HaltEnvironment",
     });
+
   return (
     <>
       <Tooltip

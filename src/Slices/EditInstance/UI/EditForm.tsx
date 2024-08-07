@@ -69,6 +69,7 @@ export const EditForm: React.FC<Props> = ({ serviceEntity, instance }) => {
       handleRedirect();
     }
   };
+
   return (
     <>
       {errorMessage && (

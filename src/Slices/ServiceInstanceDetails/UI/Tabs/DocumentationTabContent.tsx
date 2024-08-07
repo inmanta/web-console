@@ -151,6 +151,7 @@ const getSelectedAttributeSet = (
   const selectedLog: InstanceLog | undefined = logs.find(
     (log: InstanceLog) => String(log.version) === version,
   );
+
   if (!selectedLog) return; // Return void if no matching log is found
 
   if (selectedLog.active_attributes) {

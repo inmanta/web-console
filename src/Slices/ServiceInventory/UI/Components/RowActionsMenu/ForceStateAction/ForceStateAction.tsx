@@ -65,6 +65,7 @@ export const ForceStateAction: React.FC<Props> = ({
 
   const onSubmit = async (targetState: string) => {
     const result = await trigger(targetState);
+
     if (Maybe.isSome(result)) {
       setStateErrorMessage(result.value);
     }

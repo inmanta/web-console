@@ -18,6 +18,7 @@ const OrderPage = (
 
 test("OrdersView shows empty table", async () => {
   const { component, apiHelper } = baseSetup(OrderPage);
+
   render(component);
 
   expect(
@@ -41,12 +42,14 @@ test("OrdersView shows empty table", async () => {
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("OrdersView shows failed table", async () => {
   const { component, apiHelper } = baseSetup(OrderPage);
+
   render(component);
 
   expect(
@@ -70,12 +73,14 @@ test("OrdersView shows failed table", async () => {
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("OrdersView shows success table", async () => {
   const { component, apiHelper } = baseSetup(OrderPage);
+
   render(component);
 
   expect(
@@ -105,12 +110,14 @@ test("OrdersView shows success table", async () => {
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("OrdersView shows updated table", async () => {
   const { component, apiHelper, scheduler } = baseSetup(OrderPage);
+
   render(component);
 
   expect(
@@ -144,12 +151,14 @@ test("OrdersView shows updated table", async () => {
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("GIVEN OrdersView WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async () => {
   const { component, apiHelper } = baseSetup(OrderPage);
+
   render(component);
 
   //mock that response has more than one site
@@ -172,6 +181,7 @@ test("GIVEN OrdersView WHEN sorting changes AND we are not on the first page THE
   });
 
   const nextPageButton = screen.getByLabelText("Go to next page");
+
   expect(nextPageButton).toBeEnabled();
 
   await act(async () => {

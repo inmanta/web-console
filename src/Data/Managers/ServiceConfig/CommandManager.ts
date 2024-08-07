@@ -12,6 +12,7 @@ export function ServiceConfigCommandManager(
         ...command,
         kind: "GetServiceConfig",
       });
+
       if (!RemoteData.isSuccess(configData)) return;
 
       stateHelper.set(

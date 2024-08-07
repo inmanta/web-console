@@ -25,6 +25,7 @@ export const EnvironmentControls: React.FC = () => {
     details: false,
     id,
   });
+
   useEffect(() => {
     RemoteData.fold(
       {
@@ -32,16 +33,19 @@ export const EnvironmentControls: React.FC = () => {
         loading: () => null,
         failed: () => {
           document.dispatchEvent(new CustomEvent("status-down"));
+
           return null;
         },
         success: () => {
           document.dispatchEvent(new CustomEvent("status-up"));
+
           return null;
         },
       },
       data,
     );
   }, [data]);
+
   return RemoteData.fold(
     {
       notAsked: () => null,

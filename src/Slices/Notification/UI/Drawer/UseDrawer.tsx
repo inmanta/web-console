@@ -17,6 +17,7 @@ export const useDrawer: UseDrawer = (env) => {
     if (!drawerRef.current) return;
     const firstTabbableItem =
       drawerRef.current.querySelector<HTMLDivElement>("a, button");
+
     if (!firstTabbableItem) return;
     firstTabbableItem.focus();
   };

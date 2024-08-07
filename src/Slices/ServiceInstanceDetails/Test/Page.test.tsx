@@ -29,6 +29,7 @@ const setup = () => {
     useLocation,
     dependencies.routeManager,
   );
+
   store.dispatch.environment.setEnvironments(
     RemoteData.success([
       {
@@ -81,8 +82,10 @@ const setup = () => {
 describe("ServiceInstanceDetailsPage", () => {
   it("Should render the view in its loading states", async () => {
     const server = loadingServer;
+
     server.listen();
     const component = setup();
+
     render(component);
 
     expect(
@@ -99,6 +102,7 @@ describe("ServiceInstanceDetailsPage", () => {
 
     await act(async () => {
       const results = await axe(document.body);
+
       expect(results).toHaveNoViolations();
     });
 
@@ -107,8 +111,10 @@ describe("ServiceInstanceDetailsPage", () => {
 
   it("Should render an error view when the query isError", async () => {
     const server = errorServerInstance;
+
     server.listen();
     const component = setup();
+
     render(component);
 
     expect(
@@ -117,6 +123,7 @@ describe("ServiceInstanceDetailsPage", () => {
 
     await act(async () => {
       const results = await axe(document.body);
+
       expect(results).toHaveNoViolations();
     });
 
@@ -125,6 +132,7 @@ describe("ServiceInstanceDetailsPage", () => {
         const errorView = screen.getByRole("region", {
           name: "Instance-Details-Error",
         });
+
         expect(errorView).toBeInTheDocument();
       },
       { timeout: 8000 },
@@ -135,8 +143,10 @@ describe("ServiceInstanceDetailsPage", () => {
 
   it("Should render success view without config when there's instance data, but error view in the history section when there are no logs;", async () => {
     const server = errorServerHistory;
+
     server.listen();
     const component = setup();
+
     render(component);
 
     expect(
@@ -153,6 +163,7 @@ describe("ServiceInstanceDetailsPage", () => {
 
     await act(async () => {
       const results = await axe(document.body);
+
       expect(results).toHaveNoViolations();
     });
 
@@ -161,6 +172,7 @@ describe("ServiceInstanceDetailsPage", () => {
         const historyErrorView = screen.getByRole("region", {
           name: "History-Error",
         });
+
         expect(historyErrorView).toBeInTheDocument();
       },
       { timeout: 8000 },
@@ -181,8 +193,10 @@ describe("ServiceInstanceDetailsPage", () => {
 
   it("Should render a success view without config and update version tags based on selected version in history-section", async () => {
     const server = defaultServer;
+
     server.listen();
     const component = setup();
+
     render(component);
 
     expect(
@@ -214,8 +228,10 @@ describe("ServiceInstanceDetailsPage", () => {
 
   it("Should render a success view with documentation", async () => {
     const server = serverWithDocumentation;
+
     server.listen();
     const component = setup();
+
     render(component);
 
     expect(

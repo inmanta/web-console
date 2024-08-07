@@ -43,6 +43,7 @@ function setup(
   const storeInstance = getStoreInstance();
   const apiHelper = new DeferredApiHelper();
   const serviceKeyMaker = new ServiceKeyMaker();
+
   storeInstance.dispatch.services.setSingle({
     environment: Service.a.environment,
     query: { kind: "GetService", name: Service.a.name },
@@ -108,11 +109,13 @@ function setup(
 
 test("ConfigTab can reset all settings", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   const resetButton = await screen.findByRole("button", {
     name: words("config.reset"),
   });
+
   expect(resetButton).toBeVisible();
 
   expect(
@@ -134,6 +137,7 @@ test("ConfigTab can reset all settings", async () => {
 
 test("ConfigTab can change 1 toggle", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   const toggle = await screen.findByRole("checkbox", {
@@ -163,8 +167,10 @@ test("ConfigTab can change 1 toggle", async () => {
 
 test("ConfigTab handles hooks with environment modifier correctly", async () => {
   const environmentModifier = EnvironmentModifierImpl();
+
   environmentModifier.setEnvironment(Service.a.environment);
   const { component, storeInstance } = setup(environmentModifier);
+
   storeInstance.dispatch.environment.setEnvironmentDetailsById({
     id: Service.a.environment,
     value: RemoteData.success({ halted: true } as EnvironmentDetails),

@@ -1,4 +1,3 @@
-/*eslint-disable testing-library/no-node-access*/
 import React, { act } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -74,6 +73,7 @@ const setup = (
     ]),
   );
   history.push("/?env=aaa");
+
   return (
     <QueryClientProvider client={queryClient}>
       <CustomRouter history={history}>
@@ -111,6 +111,7 @@ const deleteAndAssert = async (
   assertionThree: number,
 ) => {
   const container = await screen.findByTestId("header-" + name);
+
   await act(async () => {
     await user.click(container);
   });
@@ -146,11 +147,13 @@ const createShapeWithNameAndId = async (
   id: string,
 ) => {
   const button = screen.getByLabelText("new-entity-button");
+
   await act(async () => {
     await user.click(button);
   });
 
   const select = screen.getByLabelText("service-picker");
+
   await act(async () => {
     await user.click(select);
   });
@@ -159,11 +162,13 @@ const createShapeWithNameAndId = async (
   });
 
   const input1 = screen.getByLabelText("TextInput-name");
+
   await act(async () => {
     await user.type(input1, name);
   });
 
   const input2 = screen.getByLabelText("TextInput-service_id");
+
   await act(async () => {
     await user.type(input2, id);
   });
@@ -180,11 +185,13 @@ beforeAll(() => {
 describe("Canvas.tsx", () => {
   it("renders canvas correctly", async () => {
     const component = setup();
+
     render(component);
   });
 
   it("navigating out of the View works correctly", async () => {
     const component = setup();
+
     render(component);
     expect(window.location.pathname).toEqual("/");
 
@@ -198,6 +205,7 @@ describe("Canvas.tsx", () => {
 
   it("renders created core service successfully", async () => {
     const component = setup();
+
     render(component);
     const shapeName = "parent-service";
     const name = "name-001";
@@ -207,17 +215,21 @@ describe("Canvas.tsx", () => {
 
     //validate shape
     const headerLabel = await screen.findByJointSelector("headerLabel");
+
     expect(headerLabel).toHaveTextContent(shapeName);
 
     const header = screen.getByJointSelector("header");
+
     expect(header).toHaveClass("-core");
 
     const nameValue = screen.getByJointSelector("itemLabel_name_value");
+
     expect(nameValue).toHaveTextContent(name);
 
     const shouldDeployValue = screen.getByJointSelector(
       "itemLabel_should_deploy_fail_value",
     );
+
     expect(shouldDeployValue).toHaveTextContent("false");
 
     expect(
@@ -227,6 +239,7 @@ describe("Canvas.tsx", () => {
 
   it("renders created non-core service successfully", async () => {
     const component = setup();
+
     render(component);
     const shapeName = "child-service";
     const name = "name-001";
@@ -236,18 +249,22 @@ describe("Canvas.tsx", () => {
 
     //validate shape
     const headerLabel = await screen.findByJointSelector("headerLabel");
+
     expect(headerLabel).toHaveTextContent(shapeName);
 
     const header = screen.getByJointSelector("header");
+
     expect(header).not.toHaveClass("-core");
     expect(header).not.toHaveClass("-embedded");
 
     const nameValue = screen.getByJointSelector("itemLabel_name_value");
+
     expect(nameValue).toHaveTextContent(name);
 
     const shouldDeployValue = screen.getByJointSelector(
       "itemLabel_should_deploy_fail_value",
     );
+
     expect(shouldDeployValue).toHaveTextContent("false");
 
     expect(
@@ -257,6 +274,7 @@ describe("Canvas.tsx", () => {
 
   it("renders shapes with expandable attributes + with Dict value", async () => {
     const component = setup(mockedInstanceTwo, [mockedInstanceTwoServiceModel]);
+
     render(component);
 
     //wrapper that holds attr values
@@ -265,27 +283,33 @@ describe("Canvas.tsx", () => {
     expect(attrs.childNodes).toHaveLength(4);
 
     const button = await screen.findByJointSelector("toggleButton");
+
     await act(async () => {
       await user.click(button);
     });
 
     const attrsTwo = await screen.findByJointSelector("labelsGroup_1");
+
     expect(attrsTwo.childNodes).toHaveLength(9);
 
     const refreshedButton = await screen.findByJointSelector("toggleButton");
+
     await act(async () => {
       await user.click(refreshedButton);
     });
 
     const attrsThree = await screen.findByJointSelector("labelsGroup_1");
+
     expect(attrsThree.childNodes).toHaveLength(4);
   });
 
   it("renders shapes dict Value that can be viewed in dict Modal", async () => {
     const component = setup(mockedInstanceTwo, [mockedInstanceTwoServiceModel]);
+
     render(component);
 
     const button = await screen.findByJointSelector("toggleButton");
+
     await act(async () => {
       await user.click(button);
     });
@@ -293,22 +317,27 @@ describe("Canvas.tsx", () => {
     const dictValue = await screen.findByJointSelector(
       "itemLabel_dictOne_value",
     );
+
     await act(async () => {
       await user.click(dictValue.children[0]);
     });
 
     const modal = await screen.findByRole("dialog");
+
     expect(modal).toBeVisible();
 
     const title = document.querySelector(".pf-v5-c-modal-box__title");
+
     expect(title).toHaveTextContent(
       words("inventory.instanceComposer.dictModal")("dictOne"),
     );
 
     const value = document.querySelector(".pf-v5-c-code-block__code");
+
     expect(value).toHaveTextContent("{}");
 
     const copyButton = await screen.findByLabelText("Copy to clipboard");
+
     await act(async () => {
       await user.click(copyButton);
     });
@@ -320,6 +349,7 @@ describe("Canvas.tsx", () => {
     expect(clipboardText).toEqual("{}");
 
     const closeButton = await screen.findByLabelText("Close");
+
     await act(async () => {
       await user.click(closeButton);
     });
@@ -329,6 +359,7 @@ describe("Canvas.tsx", () => {
 
   it("renders created embedded entity successfully", async () => {
     const component = setup();
+
     render(component);
     const name = "name-001";
     const button = screen.getByLabelText("new-entity-button");
@@ -339,6 +370,7 @@ describe("Canvas.tsx", () => {
 
     //create shape
     const select = screen.getByLabelText("service-picker");
+
     await act(async () => {
       await user.click(select);
     });
@@ -352,6 +384,7 @@ describe("Canvas.tsx", () => {
     });
 
     const input1 = screen.getByLabelText("TextInput-name");
+
     await act(async () => {
       await user.type(input1, name);
     });
@@ -362,25 +395,31 @@ describe("Canvas.tsx", () => {
 
     //validate shape
     const headerLabel = await screen.findByJointSelector("headerLabel");
+
     expect(headerLabel).toHaveTextContent("child_container");
 
     const header = screen.getByJointSelector("header");
+
     expect(header).toHaveClass("-embedded");
 
     const nameValue = screen.getByJointSelector("itemLabel_name_value");
+
     expect(nameValue).toHaveTextContent(name);
   });
 
   it("edits correctly services", async () => {
     const component = setup();
+
     render(component);
 
     const shapeName = "container-service";
     const name = "name-001";
     const id = "id-001";
+
     await createShapeWithNameAndId(shapeName, name, id);
 
     const headerLabel = await screen.findByJointSelector("headerLabel");
+
     expect(headerLabel).toHaveTextContent(shapeName);
 
     const shape = document.querySelector(
@@ -402,28 +441,34 @@ describe("Canvas.tsx", () => {
     expect(dialog).toBeVisible();
 
     const selectMenu = screen.getByLabelText("service-picker");
+
     expect(selectMenu).toBeDisabled();
     expect(selectMenu).toHaveTextContent("container-service");
 
     const nameInput = screen.getByLabelText("TextInput-name");
+
     expect(nameInput).toHaveValue(name);
 
     const newName = "new-name";
+
     await act(async () => {
       await user.type(nameInput, `{selectAll}{backspace}${newName}`);
     });
 
     const confirmButton = screen.getByLabelText("confirm-button");
+
     await act(async () => {
       await user.click(confirmButton);
     });
 
     const nameValue = screen.getByJointSelector("itemLabel_name_value");
+
     expect(nameValue).toHaveTextContent(newName);
   });
 
   it("renders deleting single instance correctly", async () => {
     const component = setup();
+
     render(component);
 
     const shapeName = "container-service";
@@ -433,6 +478,7 @@ describe("Canvas.tsx", () => {
     await createShapeWithNameAndId(shapeName, name, id);
 
     const headerLabel = await screen.findByJointSelector("headerLabel");
+
     expect(headerLabel).toHaveTextContent(shapeName);
 
     const shape = document.querySelector(
@@ -458,6 +504,7 @@ describe("Canvas.tsx", () => {
 
   it("renders correctly fetched instances", async () => {
     const component = setup(mockedInstanceWithRelations);
+
     render(component);
 
     const attrIndicators = await screen.findAllByJointSelector("info");
@@ -477,9 +524,11 @@ describe("Canvas.tsx", () => {
     const removeLinkHandle = document.querySelector(
       ".joint-link_remove-circle",
     ) as Element;
+
     expect(removeLinkHandle).toBeInTheDocument();
 
     const labels = document.querySelectorAll(".joint-label-text");
+
     expect(labels[0]).toBeVisible();
     expect(labels[1]).toBeVisible();
     expect(labels[0]).toHaveTextContent("child-service");
@@ -490,18 +539,21 @@ describe("Canvas.tsx", () => {
     const component = setup(mockedInstanceThree, [
       mockedInstanceThreeServiceModel,
     ]);
+
     render(component);
 
     const attrIndicators = await screen.findAllByJointSelector("info");
     const entities = document.querySelectorAll(
       '[data-type="app.ServiceEntityBlock"]',
     );
+
     expect(entities).toHaveLength(1);
     expect(attrIndicators).toHaveLength(1);
   });
 
   it("deletes shape correctly", async () => {
     const component = setup(mockedInstanceWithRelations);
+
     render(component);
 
     const attrIndicators = await screen.findAllByJointSelector("info");
@@ -526,6 +578,7 @@ describe("Canvas.tsx", () => {
         { service_order_items: ComposerServiceOrderItem[] }
       >("/lsm/v2/order", async ({ request }) => {
         const reqBody = await request.json();
+
         expect(reqBody.service_order_items[0]).toStrictEqual({
           instance_id: expect.any(String),
           service_entity: "parent-service",
@@ -561,10 +614,12 @@ describe("Canvas.tsx", () => {
             },
           },
         ]);
+
         return HttpResponse.json();
       }),
     );
     const component = setup();
+
     server.listen();
     render(component);
     const shapeName = "parent-service";
@@ -589,6 +644,7 @@ describe("Canvas.tsx", () => {
       services as unknown as ServiceModel[],
       false,
     );
+
     render(component);
 
     const attrIndicators = await screen.findAllByJointSelector("info");
@@ -611,16 +667,19 @@ describe("Canvas.tsx", () => {
     const editHandle = document.querySelector(
       '[data-action="edit"]',
     ) as Element;
+
     expect(editHandle).toBeNull();
 
     const deleteHandle = document.querySelector(
       '[data-action="delete"]',
     ) as Element;
+
     expect(deleteHandle).toBeNull();
 
     const linkHandle = document.querySelector(
       '[data-action="link"]',
     ) as Element;
+
     expect(linkHandle).toBeNull();
 
     await act(async () => {
@@ -630,9 +689,11 @@ describe("Canvas.tsx", () => {
     const removeLinkHandle = document.querySelector(
       ".joint-link_remove-circle",
     ) as Element;
+
     expect(removeLinkHandle).toBeNull();
 
     const labels = document.querySelectorAll(".joint-label-text");
+
     expect(labels[0]).toBeVisible();
     expect(labels[1]).toBeVisible();
     expect(labels[0]).toHaveTextContent("child-service");

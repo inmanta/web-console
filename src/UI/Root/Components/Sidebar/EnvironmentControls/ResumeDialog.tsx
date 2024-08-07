@@ -14,6 +14,7 @@ export const ResumeDialog: React.FC = () => {
     commandResolver.useGetTrigger<"ResumeEnvironment">({
       kind: "ResumeEnvironment",
     });
+
   return (
     <>
       <Tooltip

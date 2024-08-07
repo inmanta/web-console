@@ -39,7 +39,9 @@ export const SummaryChart: React.FC<Props> = ({ by_label, total }) => {
     }))
     .filter(({ name }) => {
       let label = name.split(":")[0];
+
       label = label === "no label" ? "no_label" : label;
+
       return labelFiltering[label] && labelFiltering[label].length > 0;
     });
   const colorScale = chartData.map((dataPoint) => dataPoint.color);
@@ -63,6 +65,7 @@ export const SummaryChart: React.FC<Props> = ({ by_label, total }) => {
                       target: "labels",
                       mutation: (props) => {
                         let label = props.datum.name.split(":")[0];
+
                         label = label === "no label" ? "no_label" : label;
                         labelFiltering.onClick(labelFiltering[label]);
                       },
@@ -117,6 +120,7 @@ export const SummaryChart: React.FC<Props> = ({ by_label, total }) => {
                   target: "data",
                   mutation: (props) => {
                     let label = props.datum.x;
+
                     label = label === "no label" ? "no_label" : label;
                     labelFiltering.onClick(labelFiltering[label]);
                   },
@@ -129,7 +133,9 @@ export const SummaryChart: React.FC<Props> = ({ by_label, total }) => {
                   target: "data",
                   mutation: (props) => {
                     let label = props.datum.x;
+
                     label = label === "no label" ? "no_label" : label;
+
                     return {
                       style: {
                         ...props.style,

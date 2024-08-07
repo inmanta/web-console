@@ -70,6 +70,7 @@ function setup(props) {
 test("Given CellWithCopy When a cell has a simple value only Then it is shown", async () => {
   const props = { label: "attribute", value: "someValue" };
   const { component } = setup(props);
+
   render(component);
 
   expect(await screen.findByText(props.value)).toBeVisible();
@@ -99,6 +100,7 @@ test("Given CellWithCopy When a cell has entity and on click Then it is rendered
     serviceName: "test_service",
   };
   const { component, apiHelper, onClickFn } = setup(props);
+
   render(component);
 
   apiHelper.resolve(
@@ -130,6 +132,7 @@ test("Given CellWithCopy When a cell has entity, multiple values and on click Th
     serviceName: "test_service",
   };
   const { component, apiHelper, onClickFn } = setup(props);
+
   render(component);
 
   apiHelper.resolve(

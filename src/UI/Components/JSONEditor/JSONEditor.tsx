@@ -99,7 +99,6 @@ export const JSONEditor: React.FC<Props> = ({
     } else {
       setIsLoading(true);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [monaco, schema.data]);
 
   return isLoading ? (

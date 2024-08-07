@@ -37,6 +37,7 @@ function setup() {
     new DynamicQueryManagerResolverImpl([queryManager]),
   );
   const fileFetcher = new FileFetcherImpl(apiHelper);
+
   fileFetcher.setEnvironment("env");
   const component = (
     <DependencyProvider
@@ -47,11 +48,13 @@ function setup() {
       </StoreProvider>
     </DependencyProvider>
   );
+
   return { apiHelper, component };
 }
 
 test("GIVEN DesiredStateCompare THEN shows list of diff blocks", async () => {
   const { apiHelper, component } = setup();
+
   render(component);
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
@@ -66,16 +69,19 @@ test("GIVEN DesiredStateCompare THEN shows list of diff blocks", async () => {
   });
 
   const blocks = await screen.findAllByTestId("DiffBlock");
+
   expect(blocks).toHaveLength(11);
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("GIVEN DesiredStateCompare THEN shows 'Jump To' action with dropdown", async () => {
   const { apiHelper, component } = setup();
+
   render(component);
 
   await act(async () => {
@@ -83,6 +89,7 @@ test("GIVEN DesiredStateCompare THEN shows 'Jump To' action with dropdown", asyn
   });
 
   const button = screen.getByRole("button", { name: words("jumpTo") });
+
   expect(button).toBeVisible();
   expect(
     screen.queryByRole("list", { name: "DiffSummaryList" }),
@@ -99,16 +106,19 @@ test("GIVEN DesiredStateCompare THEN shows 'Jump To' action with dropdown", asyn
   const items = screen.getAllByRole("listitem", {
     name: "DiffSummaryListItem",
   });
+
   expect(items).toHaveLength(11);
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("GIVEN DesiredStateCompare WHEN StatusFilter = 'Added' THEN only 'Added' resources are shown", async () => {
   const { apiHelper, component } = setup();
+
   render(component);
 
   await act(async () => {
@@ -140,6 +150,7 @@ test("GIVEN DesiredStateCompare WHEN StatusFilter = 'Added' THEN only 'Added' re
   ).toBeVisible();
 
   const statusOptions = screen.getAllByRole("option");
+
   expect(statusOptions).toHaveLength(7);
 
   await act(async () => {
@@ -169,12 +180,14 @@ test("GIVEN DesiredStateCompare WHEN StatusFilter = 'Added' THEN only 'Added' re
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("GIVEN DesiredStateCompare WHEN File Resource THEN it shows prompt that can fetch file content", async () => {
   const { apiHelper, component } = setup();
+
   render(component);
 
   await act(async () => {
@@ -251,12 +264,14 @@ test("GIVEN DesiredStateCompare WHEN File Resource THEN it shows prompt that can
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("GIVEN DesiredStateCompare page WHEN SearchFilter is used, ONLY show the resources matching the search value", async () => {
   const { apiHelper, component } = setup();
+
   render(component);
 
   await act(async () => {
@@ -303,6 +318,7 @@ test("GIVEN DesiredStateCompare page WHEN SearchFilter is used, ONLY show the re
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });

@@ -22,6 +22,7 @@ export const StatusFilter: React.FC<Props> = ({
     },
   );
   const deleteChip = () => setSelected(null);
+
   return (
     <ToolbarFilter
       chips={selected ? [selected] : []}

@@ -95,6 +95,7 @@ export class ServiceInventoryPrepper {
       useLocation,
       dependencies.routeManager,
     );
+
     store.dispatch.environment.setEnvironments(
       RemoteData.success(Environment.filterable),
     );

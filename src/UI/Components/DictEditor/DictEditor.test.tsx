@@ -22,14 +22,17 @@ function setup() {
 
 test("GIVEN DictEditor WHEN given data THEN shows keys and values", () => {
   const { component } = setup();
+
   render(component({ keyA: "valA" }));
 
   const row = screen.getByRole("row", { name: "Row-keyA" });
   const keyInput = within(row).getByRole("textbox", { name: "editEntryKey" });
+
   expect(keyInput).toHaveValue("keyA");
   const valueInput = within(row).getByRole("textbox", {
     name: "editEntryValue",
   });
+
   expect(valueInput).toHaveValue("valA");
 });
 

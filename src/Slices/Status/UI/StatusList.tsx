@@ -25,6 +25,7 @@ export const StatusList: React.FC<Props> = ({
   ...props
 }) => {
   const { featureManager } = useContext(DependencyContext);
+
   return (
     <List
       {...props}

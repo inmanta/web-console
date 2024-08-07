@@ -28,6 +28,7 @@ export function InstanceConfigQueryManager(
 
   function initialize(query: Query.SubQuery<"GetInstanceConfig">): void {
     const value = stateHelper.getOnce(query);
+
     if (RemoteData.isNotAsked(value)) {
       stateHelper.set(RemoteData.loading(), query);
     }
@@ -69,6 +70,7 @@ export function InstanceConfigQueryManager(
   function matches(query: Query.SubQuery<"GetInstanceConfig">): boolean {
     return query.kind === "GetInstanceConfig";
   }
+
   return {
     useOneTime,
     matches,

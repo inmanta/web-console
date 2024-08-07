@@ -7,6 +7,7 @@ export function InstanceConfigStateHelper(store: Store) {
     store,
     (data, query) => {
       const value = RemoteData.mapSuccess((data) => data.data, data);
+
       store.dispatch.instanceConfig.setData({
         id: query.id,
         value,

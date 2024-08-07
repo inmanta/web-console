@@ -23,6 +23,7 @@ export const DeploymentProgressBar: React.FC<Props> = ({ progress }) => (
 
 function fromProgressToItems(progress: Progress): LegendItemDetails[] {
   if (progress === undefined || progress === null) return [];
+
   return [
     {
       id: "deployed",

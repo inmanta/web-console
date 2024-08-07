@@ -34,6 +34,7 @@ test("SummaryChart renders with no instances", () => {
 
 test("SummaryChart displays only labels summary of the categories that can exist", async () => {
   const testFn = jest.fn();
+
   render(
     <ServiceInventoryContext.Provider
       value={{
@@ -62,6 +63,7 @@ test("SummaryChart displays only labels summary of the categories that can exist
 
 test("SummaryChart labels displayed are being clickable with callback passing labels array for the filtering", async () => {
   const testFn = jest.fn();
+
   render(
     <ServiceInventoryContext.Provider
       value={{

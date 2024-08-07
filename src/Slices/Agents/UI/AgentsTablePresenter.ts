@@ -46,6 +46,7 @@ export class AgentsTablePresenter implements TablePresenter<Agent, AgentRow> {
     if (index > -1 && index < this.getNumberOfColumns()) {
       return this.getColumnHeads()[index].apiName;
     }
+
     return undefined;
   }
 
@@ -57,6 +58,7 @@ export class AgentsTablePresenter implements TablePresenter<Agent, AgentRow> {
 
   getSortableColumnNames(): string[] {
     const sortableColumns = ["name", "process_name", "status", "last_failover"];
+
     return sortableColumns;
   }
 }

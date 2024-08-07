@@ -84,11 +84,13 @@ const HeadsWithSort: React.FC<
               },
             }
           : {};
+
       return (
         <Th key={column} {...sortParams}>
           {column}
         </Th>
       );
     });
+
   return <>{heads}</>;
 };

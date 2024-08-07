@@ -28,6 +28,7 @@ export const MarkdownContainer = ({ text, web_title }: Props) => {
     linkify: true,
     typographer: true,
   });
+
   md.use((md) => mermaidPlugin(md, web_title, {}));
 
   const result = md.render(text);

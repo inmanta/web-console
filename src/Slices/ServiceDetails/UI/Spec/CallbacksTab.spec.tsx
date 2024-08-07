@@ -114,6 +114,7 @@ test("GIVEN ServiceDetails WHEN click on callbacks tab THEN shows callbacks tab"
   const shortenUUID = getShortUuidFromRaw(Callback.list[0].callback_id);
 
   const { component, apiHelper } = setup();
+
   render(component);
 
   await act(async () => {
@@ -121,6 +122,7 @@ test("GIVEN ServiceDetails WHEN click on callbacks tab THEN shows callbacks tab"
   });
 
   const callbacksButton = screen.getByRole("tab", { name: "Callbacks" });
+
   await act(async () => {
     await userEvent.click(callbacksButton);
   });

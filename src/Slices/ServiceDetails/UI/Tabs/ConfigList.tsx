@@ -17,6 +17,7 @@ export const ConfigList: React.FC<Props> = ({ config, serviceName }) => {
     name: serviceName,
   });
   const isHalted = environmentModifier.useIsHalted();
+
   return Object.keys(config).length <= 0 ? (
     <EmptyView message={words("config.empty")} />
   ) : (

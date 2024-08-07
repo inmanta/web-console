@@ -29,6 +29,7 @@ function setup() {
 
 test("GIVEN TokenTab WHEN generate button is clicked THEN generate call is executed", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
   const generateButton = screen.getByRole("button", {
     name: words("settings.tabs.token.generate"),
@@ -53,6 +54,7 @@ test("GIVEN TokenTab WHEN generate button is clicked THEN generate call is execu
 
 test("GIVEN TokenTab WHEN api clientType is selected and generate button is clicked THEN generate call is executed with clientType set", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   await act(async () => {
@@ -76,6 +78,7 @@ test("GIVEN TokenTab WHEN api clientType is selected and generate button is clic
 
 test("GIVEN TokenTab WHEN generate fails THEN the error is shown", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   await act(async () => {
@@ -98,6 +101,7 @@ test("GIVEN TokenTab WHEN generate fails THEN the error is shown", async () => {
 
 test("GIVEN TokenTab WHEN generate succeeds THEN the token is shown", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   const copyButton = screen.getByRole("button", { name: "Copy to clipboard" });

@@ -50,6 +50,7 @@ export const ParametersTable: React.FC<Props> = ({
             },
           }
         : {};
+
       return (
         <Th key={displayName} {...sortParams}>
           {displayName}

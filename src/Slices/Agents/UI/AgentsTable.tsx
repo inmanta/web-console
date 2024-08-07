@@ -49,6 +49,7 @@ export const AgentsTable: React.FC<Props> = ({
             },
           }
         : {};
+
       return (
         <Th key={displayName} {...sortParams}>
           {displayName}

@@ -93,6 +93,7 @@ test("GIVEN QueryManager WHEN first page request is started and user clicks next
   expect(apiHelper.pendingRequests).toHaveLength(0);
 
   const task1 = Maybe.orUndefined(tasks.get("GetServiceInstances_name"));
+
   expect(task1?.effect).not.toHaveBeenCalled();
   expect(task1?.update).not.toHaveBeenCalled();
 
@@ -117,6 +118,7 @@ test("GIVEN QueryManager WHEN first page request is started and user clicks next
   });
 
   const task2 = Maybe.orUndefined(tasks.get("GetServiceInstances_name"));
+
   expect(task2?.effect).not.toHaveBeenCalled();
   expect(task2?.update).not.toHaveBeenCalled();
   expect(apiHelper.pendingRequests).toHaveLength(2);

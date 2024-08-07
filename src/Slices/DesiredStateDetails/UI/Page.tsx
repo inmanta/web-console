@@ -21,6 +21,7 @@ import { VersionResourceTablePresenter } from "./VersionResourceTablePresenter";
 
 export const Provider: React.FC = () => {
   const { version } = useRouteParams<"DesiredStateDetails">();
+
   return <Page version={version} />;
 };
 

@@ -96,6 +96,7 @@ export const CodeHighlighter: React.FC<Props> = ({
 
   const resumeAutoScroll = () => {
     const preBlock = codeBlockRef.current?.querySelector("pre");
+
     preBlock && preBlock.scrollTo(0, preBlock.scrollHeight);
 
     setAllowScrollState(true);
@@ -190,6 +191,7 @@ export const CodeHighlighter: React.FC<Props> = ({
   useEffect(() => {
     if (!isEmpty(code)) {
       const preBlock = codeBlockRef.current?.querySelector("pre");
+
       setScrollPositionBottom(preBlock);
     }
 
@@ -291,6 +293,7 @@ const BorderedArea = styled.div`
 
 const IconSettings: React.FC<{ actions: JSX.Element[] }> = ({ actions }) => {
   const [isOpen, setIsOpen] = useState(false);
+
   return (
     <Dropdown
       toggle={(toggleRef: React.Ref<MenuToggleElement>) => (

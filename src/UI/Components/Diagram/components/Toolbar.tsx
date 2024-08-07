@@ -93,6 +93,7 @@ const Toolbar = ({
     </Container>
   );
 };
+
 export default Toolbar;
 
 const Container = styled(Flex)`

@@ -5,6 +5,7 @@ import { DependencyContext } from "@/UI/Dependency";
 export const SelectedEnv: React.FC = () => {
   const { environmentHandler } = useContext(DependencyContext);
   const selected = environmentHandler.useSelected();
+
   return selected !== undefined ? (
     <Text>Current env: {selected?.name}</Text>
   ) : null;

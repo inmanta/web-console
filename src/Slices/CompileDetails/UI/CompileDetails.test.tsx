@@ -49,6 +49,7 @@ function setup() {
 
 test("CompileDetailsView shows failed view", async () => {
   const { component, apiHelper } = setup();
+
   await render(component);
 
   expect(
@@ -66,6 +67,7 @@ test("CompileDetailsView shows failed view", async () => {
 
 test("CompileDetailsView shows completed table with success: true", async () => {
   const { component, apiHelper } = setup();
+
   await render(component);
 
   expect(
@@ -83,12 +85,14 @@ test("CompileDetailsView shows completed table with success: true", async () => 
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("CompileDetailsView shows completed table with success: false, error indication should appear", async () => {
   const { component, apiHelper } = setup();
+
   await render(component);
 
   expect(
@@ -107,6 +111,7 @@ test("CompileDetailsView shows completed table with success: false, error indica
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });

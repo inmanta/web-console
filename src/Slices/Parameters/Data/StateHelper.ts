@@ -7,6 +7,7 @@ export function GetParametersStateHelper(store: Store) {
     store,
     (data, query, environment) => {
       const value = RemoteData.mapSuccess((wrapped) => wrapped, data);
+
       store.dispatch.parameters.setList({
         environment,
         data: value,
