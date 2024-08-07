@@ -105,7 +105,9 @@ export const ComposerWithInstanceProvider: React.FC<Props> = ({
         <ErrorView
           data-testid="ErrorView"
           title={words("error")}
-          message={words("provider.noMainService")(serviceName)}
+          message={words(
+            "inventory.instanceComposer.noServiceModel.errorMessage",
+          )(serviceName)}
           aria-label="ServicesWithMainProvider-NoMAinService"
           retry={serviceModels.refetch}
         />
