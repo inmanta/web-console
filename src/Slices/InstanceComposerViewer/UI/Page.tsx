@@ -12,6 +12,7 @@ export const Page = () => {
   const { service: serviceName, instance } =
     useRouteParams<"InstanceComposerViewer">();
   const { featureManager } = useContext(DependencyContext);
+
   return featureManager.isComposerEnabled() ? (
     <ServicesProvider
       serviceName={serviceName}

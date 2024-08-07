@@ -124,11 +124,13 @@ export const ServiceInstanceForm: React.FC<Props> = ({
           } else {
             selection.push(value as string);
           }
+
           return set(clone, path, selection);
         });
       } else {
         setFormState((prev) => {
           const clone = { ...prev };
+
           return set(clone, path, value);
         });
       }
@@ -151,9 +153,10 @@ export const ServiceInstanceForm: React.FC<Props> = ({
     (value: string, isValid: boolean) => {
       try {
         const parsed = JSON.parse(value);
+
         setFormState(parsed);
         setIsEditorValid(isValid);
-      } catch (error) {
+      } catch (_error) {
         setIsEditorValid(false);
       }
     },

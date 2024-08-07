@@ -24,6 +24,7 @@ export const CallbacksTable: React.FC<Props> = ({
     key: "callbacks-expansion",
     route: "Catalog",
   });
+
   return (
     <Table aria-label="CallbacksTable">
       <Thead>

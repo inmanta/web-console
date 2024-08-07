@@ -20,6 +20,7 @@ export const GraphCard: React.FC<GraphCardProps> = ({
   metrics,
 }) => {
   const [formatedMetrics, max] = formatMetricsToStacked(metrics, isStacked);
+
   return (
     <Card id={`trend-card-${metrics.name}`} component="div" isRounded>
       <CardHeader>

@@ -13,6 +13,7 @@ test("EnvironmentHandler updates environment correctly", () => {
   });
   const store = getStoreInstance();
   const env = Environment.filterable[0];
+
   store
     .getActions()
     .environment.setEnvironments(RemoteData.success(Environment.filterable));
@@ -21,6 +22,7 @@ test("EnvironmentHandler updates environment correctly", () => {
     () => history.location,
     routeManager,
   );
+
   environmentHandler.set(history.push, history.location, env.id);
 
   expect(history.location.search).toEqual(`?env=${env.id}`);

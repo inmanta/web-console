@@ -56,9 +56,11 @@ export class PrimaryFeatureManager implements FeatureManager {
 
   private get(): ServerStatus {
     const serverStatus = this.stateHelper.getOnce({ kind: "GetServerStatus" });
+
     if (!RemoteData.isSuccess(serverStatus)) {
       throw new Error("ServerStatus has not yet been set.");
     }
+
     return serverStatus.value;
   }
 
@@ -149,6 +151,7 @@ export class PrimaryFeatureManager implements FeatureManager {
    */
   getServerMajorVersion(): string {
     const serverStatus = this.get();
+
     return serverStatus.version.split(".")[0];
   }
 
@@ -158,6 +161,7 @@ export class PrimaryFeatureManager implements FeatureManager {
    */
   getServerVersion(): string {
     const fullVersion = this.get().version;
+
     return fullVersion.indexOf(".dev") > -1
       ? fullVersion.substring(0, fullVersion.indexOf(".dev"))
       : fullVersion;
@@ -180,6 +184,7 @@ export class PrimaryFeatureManager implements FeatureManager {
     const licenceInformation = serverStatus.slices.find(
       (slice) => slice.name === "license.license",
     );
+
     return licenceInformation?.status;
   }
 }

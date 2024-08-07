@@ -28,6 +28,7 @@ export const HistoryTable: React.FC<Props> = ({ service, logs }) => {
   const sorted = logs.sort((a, b) => Number(a.version) - Number(b.version));
   const ids = sorted.map((log) => log.version.toString());
   const dict: Record<string, InstanceLog> = {};
+
   sorted.forEach((log) => (dict[log.version.toString()] = log));
   const attributesPresenter = new AttributesPresenter();
 
@@ -77,6 +78,7 @@ const State: React.FC<{ service: ServiceModel; state: string }> = ({
   const lifecycleState = service.lifecycle.states.find(
     (serviceState) => serviceState.name === state,
   );
+
   if (!lifecycleState) {
     return null;
   }

@@ -63,6 +63,7 @@ function setup(service: ServiceModel) {
     useLocation,
     dependencies.routeManager,
   );
+
   store.dispatch.environment.setEnvironments(
     RemoteData.success([
       {
@@ -104,11 +105,13 @@ test("GIVEN AttributeTable WHEN passed no attributes THEN the empty container is
     attributes: [],
     embedded_entities: [],
   });
+
   render(component);
   expect(screen.getByText("No attributes found for the service")).toBeVisible();
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
@@ -119,6 +122,7 @@ test("GIVEN AttributeTable WHEN passed 1 attribute THEN 1 row is shown", async (
     attributes: [attribute1],
     embedded_entities: [],
   });
+
   render(component);
 
   expect(
@@ -127,6 +131,7 @@ test("GIVEN AttributeTable WHEN passed 1 attribute THEN 1 row is shown", async (
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
@@ -137,6 +142,7 @@ test("GIVEN AttributeTable WHEN passed 2 attributes THEN 2 rows are shown", asyn
     attributes: [attribute1, attribute2],
     embedded_entities: [],
   });
+
   render(component);
 
   expect(
@@ -148,6 +154,7 @@ test("GIVEN AttributeTable WHEN passed 2 attributes THEN 2 rows are shown", asyn
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
@@ -157,6 +164,7 @@ test("GIVEN AttributeTable WHEN passed no attributes but some embedded entities 
     ...Service.a,
     attributes: [],
   });
+
   render(component);
 
   expect(
@@ -165,6 +173,7 @@ test("GIVEN AttributeTable WHEN passed no attributes but some embedded entities 
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
@@ -175,6 +184,7 @@ test("GIVEN AttributeTable WHEN passed 2 attributes THEN 2 rows are shown", asyn
     attributes: [attribute1, attribute2],
     embedded_entities: [],
   });
+
   render(component);
 
   expect(
@@ -186,6 +196,7 @@ test("GIVEN AttributeTable WHEN passed 2 attributes THEN 2 rows are shown", asyn
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
@@ -196,6 +207,7 @@ test("GIVEN AttributeTable WHEN passed embedded attributes THEN expendable rows 
     name: "service_name_a",
     embedded_entities: multiNestedEditable,
   });
+
   render(component);
 
   //default embedded entity
@@ -207,6 +219,7 @@ test("GIVEN AttributeTable WHEN passed embedded attributes THEN expendable rows 
   const toggleButton = await screen.findByRole("button", {
     name: "Toggle-embedded",
   });
+
   //show embedded entity
   await act(async () => {
     await userEvent.click(toggleButton);
@@ -224,6 +237,7 @@ test("GIVEN AttributeTable WHEN passed embedded attributes THEN expendable rows 
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });

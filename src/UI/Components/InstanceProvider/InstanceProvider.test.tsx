@@ -27,8 +27,10 @@ const setup = () => {
       </QueryClientProvider>
     </MemoryRouter>
   );
+
   return component;
 };
+
 export const server = setupServer();
 
 // Establish API mocking before all tests.

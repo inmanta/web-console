@@ -32,6 +32,7 @@ export function ServiceInstancesQueryManager(
       if (typeof links === "undefined") {
         return { data: data, handlers: {}, metadata };
       }
+
       return {
         data: data,
         handlers: getPaginationHandlers(links, metadata),
@@ -68,6 +69,7 @@ export function GetServiceInstancesOneTimeQueryManager(
       if (typeof links === "undefined") {
         return { data: data, handlers: {}, metadata };
       }
+
       return {
         data: data,
         handlers: getPaginationHandlers(links, metadata),

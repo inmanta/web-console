@@ -11,11 +11,13 @@ export class DeleteEnvironmentCommandManager extends CommandManagerWithoutEnv<"D
         `/api/v2/environment/${id}`,
         id,
       );
+
       if (Maybe.isSome(error)) return error;
       await this.updater.update({
         kind: "GetEnvironments",
         details: true,
       });
+
       return error;
     });
   }

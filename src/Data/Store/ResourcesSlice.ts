@@ -14,6 +14,7 @@ export interface ResourcesSlice {
    * Stores the full list of resources by their environment.
    */
   listByEnv: Record<string, Data>;
+
   /**
    * Sets the resources in the listByEnv record.
    */

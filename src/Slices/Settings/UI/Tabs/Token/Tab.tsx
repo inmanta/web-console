@@ -28,6 +28,7 @@ export const Tab: React.FC = () => {
     setToken(Maybe.none());
     setIsBusy(true);
     const result = await trigger({ client_types: clientTypes });
+
     setIsBusy(false);
 
     if (Either.isLeft(result)) {

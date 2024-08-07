@@ -5,6 +5,7 @@ import { colorTheme } from "./themes";
 export const formatLegendData = (metrics, isStacked) => {
   if (isStacked) {
     const [formatLegendData] = formatMetricsToStacked(metrics, isStacked);
+
     return (formatLegendData as Metric[]).map(({ name }) => {
       return {
         childName: name,
@@ -40,11 +41,14 @@ export const formatMetricsToStacked = (
 ) => {
   let tempCharState: Metric[] = [];
   let max = 0;
+
   if (isStacked) {
     const { data } = metrics as StackedMetric;
     const base = data.find((object) => object !== null);
+
     if (base !== undefined && base !== null) {
       const keys = Object.keys(base);
+
       keys.map((key) => {
         tempCharState.push({
           name: key,
@@ -53,6 +57,7 @@ export const formatMetricsToStacked = (
       });
       data.map((object) => {
         let tempMax = 0;
+
         keys.forEach((key, index) => {
           tempMax += object === null ? 0 : Math.round(object[key]);
           tempCharState[index].data.push(
@@ -74,6 +79,7 @@ export const formatMetricsToStacked = (
       .flatMap((value) => (value !== null ? value : 0))
       .sort((a, b) => a - b)[(metrics as Metric).data.flat().length - 1];
   }
+
   return [tempCharState, max];
 };
 
@@ -82,8 +88,10 @@ const formatValues = (metrics: Metric) => {
     if (data == null) {
       return null;
     }
+
     return Math.round(data);
   });
+
   return {
     ...metrics,
     data: newMetrics,

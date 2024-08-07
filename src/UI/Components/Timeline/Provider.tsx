@@ -20,6 +20,7 @@ export const Provider: React.FC<Props> = ({
 }) => {
   useTickerWithInterval(!(started && completed) ? "OneSecond" : "Never");
   const now = new Date(Date.now()).toISOString();
+
   return (
     <Timeline
       requested={{
@@ -56,5 +57,6 @@ const getDiff = (timestampA: string, timestampB: string): string => {
     .duration(moment.utc(timestampA).diff(moment.utc(timestampB)))
     .asSeconds();
   const rounded = Math.round(seconds);
+
   return rounded === 1 ? `1 second` : `${rounded} seconds`;
 };

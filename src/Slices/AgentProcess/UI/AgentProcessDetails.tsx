@@ -25,6 +25,7 @@ export const AgentProcessDetails: React.FC<Props> = ({
   const classifiedReport = classifier.classify(
     agentProcess.state ? agentProcess.state : {},
   );
+
   // Add the dates to the top
   classifiedReport.unshift(
     {
@@ -56,5 +57,6 @@ export const AgentProcessDetails: React.FC<Props> = ({
 
 function getFormattedDate(date?: string): string {
   const datePresenter = new MomentDatePresenter();
+
   return date ? datePresenter.getFull(date) : "";
 }

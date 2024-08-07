@@ -8,6 +8,7 @@ import { Wrapper } from "./Wrapper";
 
 export const Page: React.FC = () => {
   const { service: serviceName } = useRouteParams<"Inventory">();
+
   return (
     <ServiceProvider
       serviceName={serviceName}

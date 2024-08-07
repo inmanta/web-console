@@ -8,6 +8,7 @@ import { words } from "@/UI/words";
 
 export const DocumentationLinks: React.FC = () => {
   const { urlManager } = useContext(DependencyContext);
+
   return (
     <>
       <StyledToolbarItem>

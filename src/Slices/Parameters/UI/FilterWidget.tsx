@@ -26,6 +26,7 @@ export const FilterWidget: React.FC<Props> = ({ filter, setFilter }) => {
       ...filter,
       updated: timestampFilters.length > 0 ? timestampFilters : undefined,
     });
+
   return (
     <ToolbarGroup variant="filter-group" aria-label="FilterBar" role="toolbar">
       <FilterPicker

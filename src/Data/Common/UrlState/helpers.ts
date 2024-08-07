@@ -36,6 +36,7 @@ export const provide = <ConfigType, ReturnValue>(
   return (config) => {
     const location = useLocation();
     const navigate = useNavigate();
+
     return handler(config, location, (path) =>
       navigate(path, { replace: true }),
     );

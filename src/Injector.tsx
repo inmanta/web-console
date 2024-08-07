@@ -68,6 +68,7 @@ export const Injector: React.FC<React.PropsWithChildren<Props>> = ({
   const environmentHandler = EnvironmentHandlerImpl(useLocation, routeManager);
   const fileManager = new PrimaryFileManager();
   const archiveHelper = new PrimaryArchiveHelper(fileManager);
+
   return (
     <DependencyProvider
       dependencies={{
@@ -93,7 +94,9 @@ const getJsonParserId = (container: unknown): JsonParserId | undefined => {
   if (typeof container !== "object") return undefined;
   if (container === null) return undefined;
   const id = container["jsonParserId"];
+
   if (typeof id !== "string") return undefined;
   if (!isJsonParserId(id)) return undefined;
+
   return id;
 };

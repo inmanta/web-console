@@ -10,28 +10,34 @@ enum ActionEnum {
   CREATE = "create",
   DELETE = "delete",
 }
+
 interface ColumnData {
   name: string;
   [key: string]: string;
 }
+
 interface RouterOptions {
   padding?: number;
   sourcePadding?: number;
   targetPadding?: number;
 }
+
 interface DictDialogData {
   title: string;
   value: unknown;
 }
+
 interface Rule {
   name: string;
   lowerLimit: ParsedNumber | null | undefined;
   upperLimit: ParsedNumber | null | undefined;
   modifier: string;
 }
+
 interface EmbeddedRule extends Rule {
   kind: TypeEnum.EMBEDDED;
 }
+
 interface InterServiceRule extends Rule {
   kind: TypeEnum.INTERSERVICE;
   attributeName: string;
@@ -44,6 +50,7 @@ export enum TypeEnum {
 interface ConnectionRules {
   [serviceName: string]: (InterServiceRule | EmbeddedRule)[];
 }
+
 interface serializedCell {
   type: string;
   source?: {
@@ -110,6 +117,7 @@ interface serializedCell {
   holderName?: string;
   embeddedTo?: string;
 }
+
 type relationId = string | null | undefined;
 
 //dia.LinkView & dia.Link doesn't have properties below in the model yet they are available to access and required to update labels
@@ -119,12 +127,14 @@ interface LabelLinkView extends dia.LinkView {
   sourcePoint: g.Rect;
   targetPoint: g.Rect;
 }
+
 interface SavedCoordinates {
   id: string | dia.Cell.ID;
   name: string;
   attributes: { [key: string]: unknown };
   coordinates: { x: number; y: number };
 }
+
 //There is some nuances between composer and ServiceOrderItem which causing that we cannot just extend the above interface, I will attempt to make it as close as possible with incoming redesign
 interface ComposerServiceOrderItem {
   config: ServiceOrderItemConfig | null;

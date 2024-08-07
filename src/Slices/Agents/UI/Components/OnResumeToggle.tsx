@@ -27,10 +27,12 @@ export const OnResumeToggle: React.FC<Props> = ({ name, unpauseOnResume }) => {
       pageSize,
       currentPage,
     });
+
     if (Maybe.isSome(result)) {
       setErrorMessage(result.value);
     }
   };
+
   return (
     <Tooltip content={words("agents.actions.onResume")}>
       <Switch

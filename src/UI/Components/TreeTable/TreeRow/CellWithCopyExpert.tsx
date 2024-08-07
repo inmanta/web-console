@@ -83,6 +83,7 @@ export const CellWithCopyExpert: React.FC<Props> = ({
   };
   const onSubmit = async () => {
     let newValue = newAttribute;
+
     //if string[] then we need to convert initial value to the same format to be able to compare
     if (
       newValue === value ||
@@ -91,6 +92,7 @@ export const CellWithCopyExpert: React.FC<Props> = ({
     ) {
       setIsInputOpen(!isInputOpen);
       setIsModalOpen(!isModalOpen);
+
       return;
     }
 
@@ -99,9 +101,11 @@ export const CellWithCopyExpert: React.FC<Props> = ({
 
     if (attributeType.includes("int")) {
       const tempFormat = parseInt(newAttribute as unknown as string);
+
       formattedAttr = isNaN(tempFormat) ? newAttribute : tempFormat;
     } else if (attributeType.includes("float")) {
       const tempFormat = parseFloat(newAttribute as unknown as string);
+
       formattedAttr = isNaN(tempFormat) ? newAttribute : tempFormat;
     }
 

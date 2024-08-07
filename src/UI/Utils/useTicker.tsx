@@ -7,11 +7,13 @@ const TEN_SECONDS = 10000;
 const ONE_SECOND = 1000;
 
 type Interval = "OneSecond" | "TenSeconds" | "OneMinute";
+
 type IntervalWithNever = Interval | "Never";
 
 const getIntervalForDiff = (diff: number): IntervalWithNever => {
   if (diff > ONE_HOUR) return "OneMinute";
   if (diff > ONE_MINUTE) return "TenSeconds";
+
   return "OneSecond";
 };
 
@@ -28,6 +30,7 @@ const intervalValueMap: Record<Interval, number> = {
  */
 export const getDiffFromNow = (value: number, customNow?: number): number => {
   const now = customNow || Date.now();
+
   return Math.abs(now - value);
 };
 
@@ -37,6 +40,7 @@ export const getDiffFromNow = (value: number, customNow?: number): number => {
 export const useTickerWithUnixMs = (value: number): number => {
   const diff = getDiffFromNow(value);
   const interval = getIntervalForDiff(diff);
+
   return useTickerWithInterval(interval);
 };
 
@@ -48,6 +52,7 @@ export const useTickerWithInterval = (interval: IntervalWithNever): number => {
     const timeout = setTimeout(() => {
       setNow(Date.now());
     }, intervalValueMap[interval]);
+
     return () => clearTimeout(timeout);
   }, [now, interval]);
 

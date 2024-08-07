@@ -22,6 +22,7 @@ interface Props {
   shouldBeDisabled?: boolean;
   handleInputChange: (value) => void;
 }
+
 /**
  * A form input component for managing a select input.
  * @component

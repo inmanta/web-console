@@ -23,12 +23,14 @@ export class CreateEnvironmentCommandManager extends CommandManagerWithoutEnv<"C
       { data: EnvironmentModel },
       Command.Body<"CreateEnvironment">
     >(this.getUrl(), body);
+
     if (Either.isRight(result)) {
       await this.environmentsUpdater.update({
         kind: "GetEnvironments",
         details: false,
       });
     }
+
     return result;
   }
 

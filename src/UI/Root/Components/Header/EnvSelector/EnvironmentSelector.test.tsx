@@ -21,6 +21,7 @@ const setup = (
   environments: FlatEnvironment[] = Environment.filterable,
 ) => {
   const queryClient = new QueryClient();
+
   return (
     <ErrorBoundary>
       <MemoryRouter>
@@ -42,6 +43,7 @@ const setup = (
 
 test("GIVEN EnvironmentSelector WHEN there are no environments THEN redirects", async () => {
   const history = createMemoryHistory();
+
   render(
     <Router location={history.location} navigator={history}>
       <DependencyProvider dependencies={dependencies}>
@@ -62,9 +64,11 @@ test("GIVEN EnvironmentSelector WHEN there are no environments THEN redirects", 
 test("GIVEN EnvironmentSelector and a project WHEN user clicks on toggle THEN list of projects is shown", async () => {
   const envA = Environment.filterable[0];
   const envB = Environment.filterable[2];
+
   render(setup());
 
   const toggle = screen.getByText(`${envA.name} (${envA.projectName})`);
+
   await act(async () => {
     await userEvent.click(toggle);
   });
@@ -80,9 +84,11 @@ test("GIVEN EnvironmentSelector and populated store WHEN user clicks on an item 
   };
   const envA = Environment.filterable[0];
   const envB = Environment.filterable[2];
+
   render(setup(onSelectEnv));
 
   const toggle = screen.getByText(`${envA.name} (${envA.projectName})`);
+
   await act(async () => {
     await userEvent.click(toggle);
   });
@@ -110,10 +116,12 @@ test("GIVEN EnvironmentSelector and environments with identical names WHEN user 
   };
   const envA = Environment.filterable[0];
   const envB = Environment.filterable[2];
+
   render(setup(onSelectEnv));
   const toggle = screen.getByRole("button", {
     name: `${envA.name} (${envA.projectName})`,
   });
+
   await act(async () => {
     await userEvent.click(toggle);
   });
@@ -144,6 +152,7 @@ test("GIVEN EnvironmentSelector WHEN jwt auth is enabled will display fetched us
       });
     }),
   );
+
   server.listen();
   render(setup(onSelectEnv, { method: "jwt" }));
 
@@ -168,6 +177,7 @@ test("GIVEN EnvironmentSelector WHEN jwt auth is enabled and current_user reques
       );
     }),
   );
+
   server.listen();
   render(setup(onSelectEnv, { method: "jwt" }));
 

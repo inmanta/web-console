@@ -28,6 +28,7 @@ export const Provider: React.FC<React.PropsWithChildren<unknown>> = ({
   if (routeKind !== null) {
     return sanitizer.isSanitized(routeKind, search) ? <>{children}</> : null;
   }
+
   return <>{children}</>;
 };
 
@@ -38,6 +39,8 @@ const getSearchResult = (
   search: string,
 ): [string | null, RouteKind | null] => {
   const match = routeManager.getRouteMatchFromUrl(pathname);
+
   if (typeof match === "undefined") return [null, null];
+
   return [sanitizer.sanitize(match.route.kind, search), match.route.kind];
 };

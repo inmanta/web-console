@@ -58,6 +58,7 @@ function setup() {
 
 test("GIVEN DesiredStateDetails page THEN shows loading resource table", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   expect(apiHelper.pendingRequests).toEqual([
@@ -74,12 +75,14 @@ test("GIVEN DesiredStateDetails page THEN shows loading resource table", async (
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("GIVEN DesiredStateDetails page WHEN api returns no items THEN shows empty resource table", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   await act(async () => {
@@ -94,12 +97,14 @@ test("GIVEN DesiredStateDetails page WHEN api returns no items THEN shows empty 
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("GIVEN DesiredStateDetails page WHEN api returns error THEN shows error", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   await act(async () => {
@@ -112,12 +117,14 @@ test("GIVEN DesiredStateDetails page WHEN api returns error THEN shows error", a
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("GIVEN DesiredStateDetails page WHEN api returns items THEN shows success resource table", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   await act(async () => {
@@ -130,12 +137,14 @@ test("GIVEN DesiredStateDetails page WHEN api returns items THEN shows success r
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("GIVEN DesiredStateDetails page WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   //mock that response has more than one site

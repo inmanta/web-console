@@ -35,6 +35,7 @@ function setup() {
 
 test("Given Badge WHEN request fails THEN error is shown", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
   expect(apiHelper.pendingRequests).toEqual([
     {
@@ -60,6 +61,7 @@ test.each`
   "Given Badge WHEN notifications contain $condition THEN $variant variant is shown",
   async ({ data, variant }) => {
     const { component, apiHelper } = setup();
+
     render(component);
     expect(apiHelper.pendingRequests).toEqual([
       {
@@ -72,6 +74,7 @@ test.each`
       await apiHelper.resolve(Either.right({ ...Mock.response, data }));
     });
     const button = screen.getByRole("button", { name: "Badge" });
+
     expect(button).toBeVisible();
     expect(button).toHaveAttribute("data-variant", variant);
   },

@@ -207,6 +207,7 @@ const documentationTab = (
         attribute.attribute_annotations.web_presentation === "documentation"
       ) {
         const attributeValue = getAttributeValue(attribute.name, row);
+
         webPresentationAttributes.push({
           id: attribute.attribute_annotations.web_title,
           icon: (

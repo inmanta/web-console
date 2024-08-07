@@ -54,6 +54,7 @@ function setup() {
 
 test("GIVEN ComplianceCheck page THEN user sees latest dry run report", async () => {
   const { component, apiHelper, datePresenter } = setup();
+
   render(component);
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
@@ -67,6 +68,7 @@ test("GIVEN ComplianceCheck page THEN user sees latest dry run report", async ()
   });
 
   const select = screen.getByRole("button", { name: "ReportListSelect" });
+
   expect(select).toBeInTheDocument();
   expect(select).toHaveTextContent(
     datePresenter.getFull(Mock.listResponse.data[0].date),
@@ -77,6 +79,7 @@ test("GIVEN ComplianceCheck page THEN user sees latest dry run report", async ()
   });
 
   const options = screen.getAllByRole<HTMLButtonElement>("option");
+
   expect(options).toHaveLength(3);
   expect(options[0]).toHaveAttribute("aria-selected", "true");
 
@@ -91,20 +94,24 @@ test("GIVEN ComplianceCheck page THEN user sees latest dry run report", async ()
   });
 
   const blocks = await screen.findAllByTestId("DiffBlock");
+
   expect(blocks).toHaveLength(11);
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("GIVEN ComplianceCheck page When a report is selected from the list THEN the user sees the selected dry run report", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 
@@ -125,11 +132,13 @@ test("GIVEN ComplianceCheck page When a report is selected from the list THEN th
 
   // Also verify that the option shows the selected icon
   const select = screen.getByRole("button", { name: "ReportListSelect" });
+
   await act(async () => {
     await userEvent.click(select);
   });
 
   const options = screen.getAllByRole<HTMLButtonElement>("option");
+
   expect(options).toHaveLength(3);
   expect(options[0]).toHaveAttribute("aria-selected", "true");
 
@@ -182,12 +191,14 @@ test("GIVEN ComplianceCheck page When a report is selected from the list THEN th
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("GIVEN ComplianceCheck page WHEN user clicks on 'Perform dry run' THEN new dry run is selected", async () => {
   const { component, apiHelper, datePresenter } = setup();
+
   render(component);
 
   await act(async () => {
@@ -201,6 +212,7 @@ test("GIVEN ComplianceCheck page WHEN user clicks on 'Perform dry run' THEN new 
   const dryRunButton = screen.getByRole("button", {
     name: words("desiredState.complianceCheck.action.dryRun"),
   });
+
   await act(async () => {
     await userEvent.click(dryRunButton);
   });
@@ -229,6 +241,7 @@ test("GIVEN ComplianceCheck page WHEN user clicks on 'Perform dry run' THEN new 
   });
 
   const select = screen.getByRole("button", { name: "ReportListSelect" });
+
   expect(select).toBeInTheDocument();
   expect(select).toHaveTextContent(datePresenter.getFull(Mock.a.date));
 
@@ -237,6 +250,7 @@ test("GIVEN ComplianceCheck page WHEN user clicks on 'Perform dry run' THEN new 
   });
 
   const options = screen.getAllByRole<HTMLButtonElement>("option");
+
   expect(options).toHaveLength(4);
   expect(options[0]).toHaveAttribute("aria-selected", "true");
 
@@ -250,6 +264,7 @@ test("GIVEN ComplianceCheck page WHEN user clicks on 'Perform dry run' THEN new 
 
 test("GIVEN ComplianceCheck page WHEN StatusFilter = 'Added' THEN only 'Added' resources are shown", async () => {
   const { apiHelper, component } = setup();
+
   render(component);
 
   await act(async () => {
@@ -272,6 +287,7 @@ test("GIVEN ComplianceCheck page WHEN StatusFilter = 'Added' THEN only 'Added' r
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 
@@ -290,6 +306,7 @@ test("GIVEN ComplianceCheck page WHEN StatusFilter = 'Added' THEN only 'Added' r
   ).toBeVisible();
 
   const statusOptions = screen.getAllByRole("option");
+
   expect(statusOptions).toHaveLength(7);
   await act(async () => {
     await userEvent.click(
@@ -318,12 +335,14 @@ test("GIVEN ComplianceCheck page WHEN StatusFilter = 'Added' THEN only 'Added' r
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("GIVEN ComplianceCheck page WHEN SearchFilter is used, ONLY show the resources matching the search value", async () => {
   const { apiHelper, component } = setup();
+
   render(component);
 
   await act(async () => {
@@ -342,6 +361,7 @@ test("GIVEN ComplianceCheck page WHEN SearchFilter is used, ONLY show the resour
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 
@@ -379,6 +399,7 @@ test("GIVEN ComplianceCheck page WHEN SearchFilter is used, ONLY show the resour
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });

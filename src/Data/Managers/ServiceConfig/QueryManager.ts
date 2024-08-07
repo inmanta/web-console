@@ -25,6 +25,7 @@ export function ServiceConfigQueryManager(
 
   function initialize(query: Query.SubQuery<"GetServiceConfig">): void {
     const value = stateHelper.getOnce(query);
+
     if (RemoteData.isNotAsked(value)) {
       stateHelper.set(RemoteData.loading(), query);
     }
@@ -52,6 +53,7 @@ export function ServiceConfigQueryManager(
       initialize(query);
       update(query, getConfigUrl(query), environment);
     }, [environment]); /* eslint-disable-line react-hooks/exhaustive-deps */
+
     return [
       configFinalizer.finalize(
         stateHelper.useGetHooked(query),
@@ -65,6 +67,7 @@ export function ServiceConfigQueryManager(
   function matches(query: Query.SubQuery<"GetServiceConfig">): boolean {
     return query.kind === "GetServiceConfig";
   }
+
   return {
     useOneTime,
     matches,

@@ -53,6 +53,7 @@ describe("TablePresenter with identity ", () => {
     "service_id",
     "Service ID",
   );
+
   test("returns sortable columns correctly", () => {
     expect(presenterWithIdentity.getSortableColumnNames()).toEqual([
       "state",
@@ -99,6 +100,7 @@ describe("TablePresenter with Actions", () => {
     "service_id",
     "Service ID",
   );
+
   test("TablePresenter converts column name to index correctly", () => {
     expect(presenterWithActions.getIndexForColumnName("id")).toEqual(-1);
     expect(presenterWithActions.getIndexForColumnName("state")).toEqual(1);

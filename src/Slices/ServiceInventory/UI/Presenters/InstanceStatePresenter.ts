@@ -17,6 +17,7 @@ export class InstanceStatePresenter implements StatePresenter {
 
   getForId(id: string): ReactElement | null {
     const instance = this.getInstanceForId(id);
+
     if (typeof instance === "undefined") {
       return null;
     }
@@ -24,9 +25,11 @@ export class InstanceStatePresenter implements StatePresenter {
     const lifecycleState = this.serviceEntity.lifecycle.states.find(
       (state) => state.name === instance.state,
     );
+
     if (!lifecycleState) {
       return null;
     }
+
     return InstanceState({
       name: lifecycleState.name,
       label: lifecycleState.label,

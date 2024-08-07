@@ -13,6 +13,7 @@ export const Delayed: React.FC<React.PropsWithChildren<Props>> = ({
   useEffect(() => {
     if (!delay) return undefined;
     const timerId = setTimeout(() => setVisible(true), delay);
+
     return () => clearTimeout(timerId);
   }, [delay]);
 

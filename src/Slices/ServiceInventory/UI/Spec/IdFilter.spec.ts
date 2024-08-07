@@ -25,16 +25,19 @@ test("GIVEN The Service Inventory WHEN the user filters on id ('a') THEN only 1 
   const picker = within(filterBar).getByRole("button", {
     name: "FilterPicker",
   });
+
   await act(async () => {
     await userEvent.click(picker);
   });
 
   const id = screen.getByRole("option", { name: "Id" });
+
   await act(async () => {
     await userEvent.click(id);
   });
 
   const input = screen.getByRole("searchbox", { name: "IdFilter" });
+
   await act(async () => {
     await userEvent.type(input, `${ServiceInstance.a.id}{enter}`);
   });
@@ -56,5 +59,6 @@ test("GIVEN The Service Inventory WHEN the user filters on id ('a') THEN only 1 
   const rowsAfter = await screen.findAllByRole("row", {
     name: "InstanceRow-Intro",
   });
+
   expect(rowsAfter.length).toEqual(1);
 });

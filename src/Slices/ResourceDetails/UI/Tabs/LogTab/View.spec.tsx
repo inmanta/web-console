@@ -52,6 +52,7 @@ function setup() {
 
 test("GIVEN ResourceLogsView THEN shows resource logs", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   expect(
@@ -76,11 +77,13 @@ test("GIVEN ResourceLogsView THEN shows resource logs", async () => {
   const rows = await screen.findAllByRole("rowgroup", {
     name: "ResourceLogRow",
   });
+
   expect(rows).toHaveLength(3);
 });
 
 test("GIVEN ResourceLogsView WHEN filtered on message THEN only shows relevant logs", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   await act(async () => {
@@ -90,6 +93,7 @@ test("GIVEN ResourceLogsView WHEN filtered on message THEN only shows relevant l
   const messageFilter = screen.getByRole("searchbox", {
     name: "MessageFilter",
   });
+
   await act(async () => {
     await userEvent.type(messageFilter, "failed{enter}");
   });
@@ -106,11 +110,13 @@ test("GIVEN ResourceLogsView WHEN filtered on message THEN only shows relevant l
   const row = await screen.findByRole("rowgroup", {
     name: "ResourceLogRow",
   });
+
   expect(row).toBeInTheDocument();
 });
 
 test("GIVEN ResourceLogsView WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   //mock that response has more than one site

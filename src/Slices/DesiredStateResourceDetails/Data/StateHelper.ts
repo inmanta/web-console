@@ -7,6 +7,7 @@ export function GetDesiredStateResourceDetailsStateHelper(store: Store) {
     store,
     (data, query) => {
       const unwrapped = RemoteData.mapSuccess((wrapped) => wrapped.data, data);
+
       store.dispatch.versionedResourceDetails.setList({
         resourceId: query.id,
         data: unwrapped,
