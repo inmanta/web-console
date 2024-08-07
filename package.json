@@ -14,7 +14,7 @@
     "test:ci": "jest --coverage=true --runInBand",
     "format": "prettier --check --write \"./**/*.{cjs,js,jsx,ts,tsx}\"",
     "format:check": "prettier --check \"./**/*.{cjs,js,jsx,ts,tsx}\"",
-    "lint": "eslint --max-warnings=0 -c eslint.config.mjs",
+    "lint": "eslint --max-warnings=0 -c eslint.config.js",
     "lint:fix": "eslint --max-warnings=0  --quiet --fix",
     "build:bundle-profile": "webpack --config webpack.prod.cjs --profile --json > stats.json",
     "bundle-profile:analyze": "yarn build:bundle-profile && webpack-bundle-analyzer ./stats.json",

@@ -147,6 +147,20 @@ export default [
           next: ["const", "let", "var"],
         },
       ],
+
+      "@stylistic/lines-around-comment": [
+        "warn",
+        {
+          beforeBlockComment: true,
+          allowEnumStart: true,
+          allowInterfaceStart: true,
+          allowModuleStart: true,
+          allowTypeStart: true,
+          allowObjectStart: true,
+          allowBlockStart: true,
+          allowArrayStart: true,
+        },
+      ],
     },
   },
 

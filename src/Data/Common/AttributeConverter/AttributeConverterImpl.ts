@@ -86,6 +86,7 @@ export class AttributeInputConverterImpl implements AttributeInputConverter {
 
     return TextInputTypes.text;
   }
+
   /**
    * Updates to an instance should be applied (compared) to the candidate attribute set, if it's not empty,
    * and to the active attribute set otherwise

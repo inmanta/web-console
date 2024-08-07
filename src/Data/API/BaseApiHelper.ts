@@ -37,6 +37,7 @@ export const BaseApiHelper = (
       return 500;
     }
   }
+
   /**
    * Gets the bearer token for authentication based on the available authentication method.
    * @returns An object containing the authorization header with the bearer token if available.

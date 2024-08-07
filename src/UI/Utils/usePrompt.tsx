@@ -29,6 +29,7 @@ function useConfirmExit(confirmExit: () => boolean, when = true) {
     };
   }, [confirmExit, when]);
 }
+
 /**
  * Prompts the user with an Alert before they leave the current screen.
  *

@@ -115,6 +115,7 @@ export function showLinkTools(
           const targetCell = graph.getCell(
             target.id as dia.Cell.ID,
           ) as ServiceEntityBlock;
+
           /**
            * Function that remove any data in this connection between cells
            * @param elementCell cell that we checking
