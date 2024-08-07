@@ -132,7 +132,11 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
     return () => {
       document.removeEventListener("openDictsModal", handleDictEvent);
       document.removeEventListener("openEditModal", handleEditEvent);
-      document.addEventListener("updateInstancesToSend", updateInstancesToSend);
+      document.removeEventListener("looseEmbedded", handleLooseEmbeddedEvent);
+      document.removeEventListener(
+        "updateInstancesToSend",
+        updateInstancesToSend,
+      );
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
