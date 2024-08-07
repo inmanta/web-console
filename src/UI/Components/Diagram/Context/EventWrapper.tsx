@@ -1,5 +1,9 @@
 import React, { useContext, useEffect } from "react";
-import { ActionEnum, ComposerServiceOrderItem } from "../interfaces";
+import {
+  ActionEnum,
+  ComposerServiceOrderItem,
+  EmbeddedEventEnum,
+} from "../interfaces";
 import { ServiceEntityBlock } from "../shapes";
 import { CanvasContext } from "./Context";
 
@@ -33,7 +37,7 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
    */
   const handleLooseEmbeddedEvent = (event) => {
     const customEvent = event as CustomEvent;
-    const eventData: { kind: "remove" | "add"; id: string } = JSON.parse(
+    const eventData: { kind: EmbeddedEventEnum; id: string } = JSON.parse(
       customEvent.detail,
     );
     const newSet = new Set(looseEmbedded);
@@ -91,22 +95,23 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
 
     const copiedInstances = new Map(instancesToSend); // copy
 
-    const updatedInstance = instancesToSend.get(cell.id as string);
+    const updatedInstance = instancesToSend.get(String(cell.id));
     switch (action) {
       case "update":
         newInstance.action =
           updatedInstance?.action === "create" ? "create" : "update";
-        copiedInstances.set(cell.id as string, newInstance);
+        copiedInstances.set(String(cell.id), newInstance);
         break;
       case "create":
         newInstance.action = action;
+        break;
       default:
         if (
           updatedInstance &&
           (updatedInstance.action === null ||
             updatedInstance.action === "update")
         ) {
-          copiedInstances.set(cell.id as string, {
+          copiedInstances.set(String(cell.id), {
             instance_id: cell.id,
             service_entity: cell.getName(),
             config: {},
@@ -117,9 +122,9 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
             relatedTo: cell.attributes.relatedTo,
           });
         } else {
-          copiedInstances.delete(cell.id as string);
-          break;
+          copiedInstances.delete(String(cell.id));
         }
+        break;
     }
     setInstancesToSend(copiedInstances);
   };

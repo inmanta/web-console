@@ -12,14 +12,30 @@ import { CanvasContext, InstanceComposerContext } from "../Context/Context";
 import { getServiceOrderItems } from "../helpers";
 import { DiagramHandlers } from "../init";
 
-const Toolbar = ({
-  serviceName,
-  editable,
-  diagramHandlers,
-}: {
+interface Props {
   serviceName: string;
   editable: boolean;
   diagramHandlers: DiagramHandlers | null;
+}
+
+/**
+ * Toolbar component
+ *
+ * This component represents the toolbar of the application.
+ * It contains controls to cancel creating or editing instance or sending serviceOrderItems to the backend.
+ * Also, it shows feedback notification to the user.
+ *
+ * @param {Object} props - The properties passed to the component.
+ * @param {string} props.serviceName - The name of the service.
+ * @param {boolean} props.editable - A flag indicating if the diagram is editable.
+ * @param {DiagramHandlers | null} props.diagramHandlers - The handlers for various diagram actions.
+ *
+ * @returns {React.FC} The Toolbar component.
+ */
+const Toolbar: React.FC<Props> = ({
+  serviceName,
+  editable,
+  diagramHandlers,
 }) => {
   const { serviceModels, mainService, instance } = useContext(
     InstanceComposerContext,
@@ -40,6 +56,7 @@ const Toolbar = ({
     service: serviceName,
   });
   const handleRedirect = useCallback(() => navigate(url), [navigate, url]);
+
   /**
    * Handles the filtering of the unchanged entities and sending serviceOrderItems to the backend.
    *
@@ -91,6 +108,7 @@ const Toolbar = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [oderMutation.isSuccess, oderMutation.isError]);
+
   return (
     <Container
       justifyContent={{

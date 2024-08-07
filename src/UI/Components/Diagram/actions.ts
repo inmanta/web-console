@@ -10,7 +10,12 @@ import {
 } from "./helpers";
 import activeImage from "./icons/active-icon.svg";
 import candidateImage from "./icons/candidate-icon.svg";
-import { ActionEnum, ConnectionRules, relationId } from "./interfaces";
+import {
+  ActionEnum,
+  ConnectionRules,
+  EmbeddedEventEnum,
+  relationId,
+} from "./interfaces";
 import { Link, ServiceEntityBlock } from "./shapes";
 
 /**
@@ -119,10 +124,10 @@ export function showLinkTools(
            * @param disconnectingCell cell that is being connected to elementCell
            * @returns boolean whether connections was set
            */
-          const wasConnectionDataRemoved = (
+          const removeConnectionData = (
             elementCell: ServiceEntityBlock,
             disconnectingCell: ServiceEntityBlock,
-          ): boolean => {
+          ): void => {
             const elementRelations = elementCell.getRelations();
             // resolve any possible embedded connections between cells,
             if (
@@ -130,41 +135,36 @@ export function showLinkTools(
               elementCell.get("embeddedTo") === disconnectingCell.id
             ) {
               elementCell.set("embeddedTo", undefined);
-              toggleLooseElement(paper.findViewByModel(elementCell), "add");
+              toggleLooseElement(
+                paper.findViewByModel(elementCell),
+                EmbeddedEventEnum.ADD,
+              );
 
               document.dispatchEvent(
                 new CustomEvent("updateInstancesToSend", {
                   detail: { cell: elementCell, actions: ActionEnum.UPDATE },
                 }),
               );
-              return true;
             }
 
             // resolve any possible relation connections between cells
             if (
               elementRelations &&
-              elementRelations.has(disconnectingCell.id as string)
+              elementRelations.has(String(disconnectingCell.id))
             ) {
-              elementCell.removeRelation(disconnectingCell.id as string);
+              elementCell.removeRelation(String(disconnectingCell.id));
 
               document.dispatchEvent(
                 new CustomEvent("updateInstancesToSend", {
                   detail: { cell: sourceCell, actions: ActionEnum.UPDATE },
                 }),
               );
-              return true;
-            } else {
-              return false;
             }
           };
 
-          const wasConnectionFromSourceSet = wasConnectionDataRemoved(
-            sourceCell,
-            targetCell,
-          );
-          if (!wasConnectionFromSourceSet) {
-            wasConnectionDataRemoved(targetCell, sourceCell);
-          }
+          //as the connection between two cells is bidirectional we need attempt to remove data from both cells
+          removeConnectionData(sourceCell, targetCell);
+          removeConnectionData(targetCell, sourceCell);
 
           linkView.model.remove({ ui: true, tool: toolView.cid });
         },

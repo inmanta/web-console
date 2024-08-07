@@ -8,7 +8,7 @@ import { ComposerServiceOrderItem, DictDialogData } from "../interfaces";
 
 /**
  * The InstanceComposerProviderInterface
- * Reflects the InstanceDetailsContext.
+ * Reflects the InstanceComposerContext.
  */
 interface InstanceComposerProviderInterface {
   instance: InstanceWithRelations | null;
@@ -19,7 +19,7 @@ interface InstanceComposerProviderInterface {
 
 /**
  * InstanceComposerContext
- * Should be used to provide context to the InstanceDetails page.
+ * Should be used to provide context to the InstanceComposerContext page.
  * The logsQuery contains both the events and history data.
  */
 export const InstanceComposerContext =

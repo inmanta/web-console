@@ -12,7 +12,7 @@ import DictModal from "./components/DictModal";
 import FormModal from "./components/FormModal";
 import Toolbar from "./components/Toolbar";
 import { createConnectionRules } from "./helpers";
-import { StencilSidebar } from "./stencil/stencil";
+import { StencilSidebar } from "./stencil";
 
 /**
  * Canvas component for creating, displaying and editing an Instance.
@@ -52,12 +52,10 @@ export const Canvas: React.FC<{
       mainService,
     );
     setDiagramHandlers(actions);
-    const isMainInstance = true;
     const newInstances = new Map();
 
     if (instance) {
       const cells = actions.addInstance(
-        isMainInstance,
         [...serviceModels, mainService],
         instance,
       );
@@ -76,10 +74,7 @@ export const Canvas: React.FC<{
         }
       });
     } else {
-      const cells = actions.addInstance(isMainInstance, [
-        ...serviceModels,
-        mainService,
-      ]);
+      const cells = actions.addInstance([...serviceModels, mainService]);
       cells.forEach((cell) => {
         if (cell.type === "app.ServiceEntityBlock") {
           newInstances.set(cell.id, {

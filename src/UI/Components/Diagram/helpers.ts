@@ -15,6 +15,7 @@ import {
   TypeEnum,
   LabelLinkView,
   SavedCoordinates,
+  EmbeddedEventEnum,
 } from "@/UI/Components/Diagram/interfaces";
 
 import { ServiceEntityBlock } from "./shapes";
@@ -500,12 +501,12 @@ export const updateLabelPosition = (
 /**
  * Toggle the highlighting of a loose element in a diagram cell view.
  * @param {dia.CellView} cellView - The cell view containing the element.
- * @param {"add" | "remove"} kind - The action to perform, either "add" to add highlighting or "remove" to remove highlighting.
+ * @param {EmbeddedEventEnum} kind - The action to perform, either "add" to add highlighting or "remove" to remove highlighting.
  * @returns {void}
  */
 export const toggleLooseElement = (
   cellView: dia.CellView,
-  kind: "add" | "remove",
+  kind: EmbeddedEventEnum,
 ): void => {
   switch (kind) {
     case "add":

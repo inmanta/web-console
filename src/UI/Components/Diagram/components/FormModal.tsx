@@ -31,6 +31,8 @@ import { FieldInput } from "../../ServiceInstanceForm/Components";
 import { CanvasContext, InstanceComposerContext } from "../Context/Context";
 import { ServiceEntityBlock } from "../shapes";
 
+//docstrings and props to be added in the next PR as the structure of the component will be changed
+
 interface PossibleForm {
   key: string;
   value: string;
@@ -38,6 +40,7 @@ interface PossibleForm {
   isEmbedded: boolean;
   holderName: string;
 }
+
 interface Selected {
   name: string;
   model: ServiceModel | EmbeddedEntity;
@@ -75,7 +78,6 @@ const FormModal = ({
       ref={toggleRef}
       onClick={(val) => setIsSelectOpen(val)}
       isExpanded={isSelectOpen}
-      aria-label="service-picker"
       disabled={cellToEdit !== null}
       isFullWidth
       isFullHeight={false}

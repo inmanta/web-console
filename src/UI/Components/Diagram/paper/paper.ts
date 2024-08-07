@@ -5,7 +5,12 @@ import createHalo from "../halo";
 import { checkIfConnectionIsAllowed, toggleLooseElement } from "../helpers";
 import collapseButton from "../icons/collapse-icon.svg";
 import expandButton from "../icons/expand-icon.svg";
-import { ActionEnum, ConnectionRules, TypeEnum } from "../interfaces";
+import {
+  ActionEnum,
+  ConnectionRules,
+  EmbeddedEventEnum,
+  TypeEnum,
+} from "../interfaces";
 import { routerNamespace } from "../routers";
 import { Link, ServiceEntityBlock } from "../shapes";
 
@@ -258,7 +263,10 @@ export class ComposerPaper {
           elementCell.get("holderName") === connectingCellName
         ) {
           elementCell.set("embeddedTo", connectingCell.id);
-          toggleLooseElement(this.paper.findViewByModel(elementCell), "remove");
+          toggleLooseElement(
+            this.paper.findViewByModel(elementCell),
+            EmbeddedEventEnum.REMOVE,
+          );
 
           document.dispatchEvent(
             new CustomEvent("updateInstancesToSend", {
