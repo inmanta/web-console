@@ -142,7 +142,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
         );
         this.attr(`itemLabel_${item.name}_value/cursor`, "pointer");
       } else {
-        value.label = item.value;
+        value.label = String(item.value);
 
         if (item.value !== undefined && item.value !== null) {
           //reproduce internal formatting of the text base on actual dimensions, if text includes elipsis add Tooltip

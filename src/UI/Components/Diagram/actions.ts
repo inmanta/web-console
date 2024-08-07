@@ -549,9 +549,7 @@ export function appendColumns(
 ) {
   const instanceAttributes = {};
   const attributes = attributesKeywords.map((key) => {
-    const attributeValue = isEmpty
-      ? ""
-      : String(serviceInstanceAttributes[key]);
+    const attributeValue = isEmpty ? "" : serviceInstanceAttributes[key];
     instanceAttributes[key] = attributeValue;
     return {
       name: key,

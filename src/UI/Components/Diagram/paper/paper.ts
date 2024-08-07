@@ -219,12 +219,12 @@ export class ComposerPaper {
        * Function that checks if cell that we are connecting  to is being the one storing information about said connection.
        * @param elementCell cell that we checking
        * @param connectingCell cell that is being connected to elementCell
-       * @returns boolean whether connections was set
+       * @returns data assigned to ElementCell or null if it's not assigned
        */
-      const wasConnectionDataAssigned = (
+      const assignConnectionData = (
         elementCell: ServiceEntityBlock,
         connectingCell: ServiceEntityBlock,
-      ): boolean => {
+      ) => {
         const cellRelations = elementCell.getRelations();
         const cellName = elementCell.getName();
         const connectingCellName = connectingCell.getName();
@@ -249,13 +249,13 @@ export class ComposerPaper {
                 detail: { cell: sourceCell, actions: ActionEnum.UPDATE },
               }),
             );
-            return true;
           }
         }
 
         if (
           elementCell.get("isEmbedded") &&
-          elementCell.get("embeddedTo") !== null
+          elementCell.get("embeddedTo") !== null &&
+          elementCell.get("holderName") === connectingCellName
         ) {
           elementCell.set("embeddedTo", connectingCell.id);
           toggleLooseElement(this.paper.findViewByModel(elementCell), "remove");
@@ -265,19 +265,12 @@ export class ComposerPaper {
               detail: { cell: elementCell, actions: ActionEnum.UPDATE },
             }),
           );
-          return true;
-        } else {
-          return false;
         }
       };
 
-      const wasConnectionFromSourceSet = wasConnectionDataAssigned(
-        sourceCell,
-        targetCell,
-      );
-      if (!wasConnectionFromSourceSet) {
-        wasConnectionDataAssigned(targetCell, sourceCell);
-      }
+      //as the connection between two cells is bidirectional we need attempt to assign data to both cells
+      assignConnectionData(sourceCell, targetCell);
+      assignConnectionData(targetCell, sourceCell);
     });
   }
 }

@@ -1608,7 +1608,9 @@ export const mockedInstanceTwo: InstanceWithRelations = {
       attrFour: "789",
       service_id: "012",
       should_deploy_fail: false,
-      dictTwo: {},
+      dictTwo: {
+        data: "string",
+      },
     },
     rollback_attributes: null,
     created_at: "2023-09-19T14:39:30.770002",

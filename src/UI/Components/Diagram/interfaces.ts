@@ -12,7 +12,7 @@ enum ActionEnum {
 }
 interface ColumnData {
   name: string;
-  [key: string]: string;
+  [key: string]: unknown;
 }
 interface RouterOptions {
   padding?: number;
