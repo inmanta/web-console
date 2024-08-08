@@ -5,7 +5,7 @@ import { InstanceWithRelations } from "@/Data/Managers/V2/GetInstanceWithRelatio
 import {
   appendColumns,
   appendInstance,
-  defaultGraphPopulation,
+  populateGraphWithDefault,
 } from "./actions";
 import { applyCoordinatesToCells, getCellsCoordinates } from "./helpers";
 import {
@@ -90,7 +90,7 @@ export function diagramInit(
       instance?: InstanceWithRelations,
     ) => {
       if (!instance) {
-        defaultGraphPopulation(graph, mainService);
+        populateGraphWithDefault(graph, mainService);
       } else {
         appendInstance(paper, graph, instance, services);
 

@@ -485,7 +485,7 @@ export function appendEntity(
  * @param {ServiceModel} service - The service model to use for populating the graph.
  * @returns {ServiceEntityBlock[]} An array containing the core entity and the default entities added to the graph.
  */
-export function defaultGraphPopulation(
+export function populateGraphWithDefault(
   graph: dia.Graph,
   service: ServiceModel,
 ) {
