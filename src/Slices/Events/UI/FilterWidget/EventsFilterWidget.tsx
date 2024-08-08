@@ -53,6 +53,7 @@ export const EventsFilterWidget: React.FC<Props> = ({
       ...filter,
       timestamp: timestampFilters.length > 0 ? timestampFilters : undefined,
     });
+
   return (
     <ToolbarGroup variant="filter-group" aria-label="FilterBar" role="toolbar">
       <FilterPicker

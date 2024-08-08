@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   Panel,
   PanelMain,
@@ -6,15 +6,26 @@ import {
   Tab,
   TabTitleText,
   Tabs,
+  Tooltip,
 } from "@patternfly/react-core";
-import styled from "styled-components";
+import { ServiceModel } from "@/Core";
 import { useUrlStateWithString } from "@/Data";
+import { words } from "@/UI";
 
-export enum InstanceTabKey {
-  Documentation = "Documentation",
-  Attributes = "Attributes",
-  Events = "Events",
-  Resources = "Resources",
+import { InstanceDetailsContext } from "../../Core/Context";
+import {
+  AttributesTabContent,
+  DocAttributeDescriptors,
+  DocumentationTabContent,
+  EventsTabContent,
+  ResourcesTabContent,
+} from ".";
+
+enum TabKeys {
+  DOCUMENTATION = "Documentation",
+  ATTRIBUTES = "Attributes",
+  EVENTS = "Events",
+  RESOURCES = "Resources",
 }
 
 /**
@@ -28,10 +39,24 @@ export enum InstanceTabKey {
  *
  * @returns {React.FC} A React Component displaying the TabView
  */
-export const TabView: React.FunctionComponent = () => {
-  const [activeTab, setActiveTab] = useUrlStateWithString<string>({
-    default: InstanceTabKey.Documentation,
+export const TabView: React.FC = () => {
+  const { serviceModelQuery, instance } = useContext(InstanceDetailsContext);
+
+  const docAttributeDescriptors = getDocumentationAttributeDescriptors(
+    serviceModelQuery.data,
+  );
+
+  const [activeTab, setActiveTab] = useUrlStateWithString<TabKeys>({
+    default: docAttributeDescriptors.length
+      ? TabKeys.DOCUMENTATION
+      : TabKeys.ATTRIBUTES,
     key: `tab`,
+    route: "InstanceDetails",
+  });
+
+  const [selectedVersion] = useUrlStateWithString<string>({
+    default: String(instance.version),
+    key: `version`,
     route: "InstanceDetails",
   });
 
@@ -42,8 +67,15 @@ export const TabView: React.FunctionComponent = () => {
       | MouseEvent,
     tabIndex: string | number,
   ) => {
-    setActiveTab(String(tabIndex));
+    setActiveTab(tabIndex as TabKeys);
   };
+
+  const disabledResourceTabTooltip =
+    String(instance.version) !== selectedVersion ? (
+      <Tooltip
+        content={words("instanceDetails.tabs.disabled.resources-tooltip")}
+      />
+    ) : undefined;
 
   return (
     <Panel variant="raised">
@@ -55,41 +87,56 @@ export const TabView: React.FunctionComponent = () => {
             aria-label="Instance-Details-Tabs"
             role="region"
           >
+            {docAttributeDescriptors.length > 0 && (
+              <Tab
+                eventKey={TabKeys.DOCUMENTATION}
+                title={
+                  <TabTitleText>
+                    {words("instanceDetails.tabs.documentation")}
+                  </TabTitleText>
+                }
+                aria-label="documentation-content"
+              >
+                <DocumentationTabContent
+                  docAttributeDescriptors={docAttributeDescriptors}
+                  selectedVersion={selectedVersion}
+                />
+              </Tab>
+            )}
             <Tab
-              eventKey={InstanceTabKey.Documentation}
+              eventKey={TabKeys.ATTRIBUTES}
               title={
-                <TabTitleText>{InstanceTabKey.Documentation}</TabTitleText>
+                <TabTitleText>
+                  {words("instanceDetails.tabs.attributes")}
+                </TabTitleText>
               }
-              aria-label="documentation-content"
-            >
-              <TabContent role="tabpanel">
-                Temporary Documentation Content
-              </TabContent>
-            </Tab>
-            <Tab
-              eventKey={InstanceTabKey.Attributes}
-              title={<TabTitleText>{InstanceTabKey.Attributes}</TabTitleText>}
               aria-label="attributes-content"
             >
-              <TabContent role="tabpanel">
-                Temporary Attributes Content
-              </TabContent>
+              <AttributesTabContent />
             </Tab>
             <Tab
-              eventKey={InstanceTabKey.Events}
-              title={<TabTitleText>{InstanceTabKey.Events}</TabTitleText>}
+              eventKey={TabKeys.EVENTS}
+              title={
+                <TabTitleText>
+                  {words("instanceDetails.tabs.events")}
+                </TabTitleText>
+              }
               aria-label="events-content"
             >
-              <TabContent role="tabpanel">Temporary Events Content</TabContent>
+              <EventsTabContent />
             </Tab>
             <Tab
-              eventKey={InstanceTabKey.Resources}
-              title={<TabTitleText>{InstanceTabKey.Resources}</TabTitleText>}
+              eventKey={TabKeys.RESOURCES}
+              title={
+                <TabTitleText>
+                  {words("instanceDetails.tabs.resources")}
+                </TabTitleText>
+              }
               aria-label="resources-content"
+              isAriaDisabled={String(instance.version) !== selectedVersion}
+              tooltip={disabledResourceTabTooltip}
             >
-              <TabContent role="tabpanel">
-                Temporary Resources Content
-              </TabContent>
+              <ResourcesTabContent />
             </Tab>
           </Tabs>
         </PanelMainBody>
@@ -98,8 +145,34 @@ export const TabView: React.FunctionComponent = () => {
   );
 };
 
-// The height is calculated to fit the tabs neatly into the page.
-// The 330px equals total height of the elements above the tabs with a short margin.
-const TabContent = styled.div`
-  max-height: calc(100vh - 330px);
-`;
+/**
+ * If there are attributes with the documentation tag in the serviceModel,
+ * returns an array containing the needed information
+ * to construct the sections in the documentation tab.
+ *
+ * @param serviceModel - The serviceModel if available.
+ * @returns DocAttributeDescriptors[]
+ */
+const getDocumentationAttributeDescriptors = (
+  serviceModel?: ServiceModel,
+): DocAttributeDescriptors[] => {
+  const docAttributeDescriptors: DocAttributeDescriptors[] = [];
+
+  if (serviceModel && serviceModel.attributes) {
+    for (const attribute of serviceModel.attributes) {
+      if (
+        attribute.attribute_annotations &&
+        attribute.attribute_annotations.web_title &&
+        attribute.attribute_annotations.web_presentation === "documentation"
+      ) {
+        docAttributeDescriptors.push({
+          title: attribute.attribute_annotations.web_title,
+          iconName: attribute.attribute_annotations.web_icon || "FaBook",
+          attributeName: attribute.name,
+        });
+      }
+    }
+  }
+
+  return docAttributeDescriptors;
+};

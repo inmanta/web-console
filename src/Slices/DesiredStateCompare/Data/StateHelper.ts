@@ -7,6 +7,7 @@ export function GetDesiredStateDiffStateHelper(store: Store) {
     store,
     (apiData, query, environment) => {
       const data = RemoteData.mapSuccess((response) => response.data, apiData);
+
       store.dispatch.desiredStateDiff.setList({ environment, data });
     },
     (state, query, environment) =>

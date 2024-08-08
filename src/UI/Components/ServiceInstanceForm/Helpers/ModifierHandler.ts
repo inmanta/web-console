@@ -46,6 +46,7 @@ export class EditModifierHandler implements ModifierHandler {
     if (embeddedEntity) {
       return modifier !== "r";
     }
+
     return modifier === "rw+";
   }
 }

@@ -12,6 +12,7 @@ interface Props {
 
 export const FactsRow: React.FC<Props> = ({ row }) => {
   const { routeManager } = useContext(DependencyContext);
+
   return (
     <Tbody>
       <Tr aria-label="FactsRow">

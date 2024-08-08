@@ -10,6 +10,7 @@ const clearEnvironment = (nameEnvironment = "lsm-frontend") => {
   cy.url().then((url) => {
     const location = new URL(url);
     const id = location.searchParams.get("env");
+
     cy.request("DELETE", `/api/v1/decommission/${id}`);
   });
 };
@@ -50,6 +51,7 @@ const forceUpdateEnvironment = (nameEnvironment = "lsm-frontend") => {
   cy.url().then((url) => {
     const location = new URL(url);
     const id = location.searchParams.get("env");
+
     cy.request({
       method: "POST",
       url: `/lsm/v1/exporter/export_service_definition`,
@@ -212,6 +214,9 @@ if (Cypress.env("edition") === "iso") {
         "false",
       );
 
+      // check if the documentation is displayed
+      cy.get(".markdown-body > h1").should("contain", "Getting started");
+
       // Go back to inventory using the breadcrumbs
       cy.get('[aria-label="BreadcrumbItem"]')
         .contains("Service Inventory: basic-service")
@@ -320,6 +325,7 @@ if (Cypress.env("edition") === "iso") {
         .first()
         .should("contain", '""');
       cy.get(".view-line > :nth-child(1) > .mtk5").first().type("1.2.3.2/32");
+      cy.get(".view-line > :nth-child(1) > .mtk5").first().type("{pagedown}"); // force editor to scroll down
 
       // change the service id to make instance unique
       cy.get(".mtk5").contains("0001").type("{backspace}9");
@@ -334,7 +340,43 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 2);
     });
 
-    it("2.1.5 Delete previously created instance", () => {
+    it("2.1.5 JSON editor invalid should disable buttons", () => {
+      // Go from Home page to Service Inventory of Basic-service
+      cy.visit("/console/");
+
+      cy.intercept(
+        "GET",
+        "/lsm/v1/service_inventory/basic-service?include_deployment_progress=True&limit=20&&sort=created_at.desc",
+      ).as("GetServiceInventory");
+
+      cy.get('[aria-label="Environment card"]')
+        .contains("lsm-frontend")
+        .click();
+      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
+      cy.get("#basic-service").contains("Show inventory").click();
+
+      // make sure the call to get inventory has been executed
+      cy.wait("@GetServiceInventory");
+
+      // Add an instance and fill form
+      cy.get("#add-instance-button").click();
+      cy.get("#editorButton").click();
+
+      // expect Form and submit buttons to be disabled
+      cy.get("#formButton").should("be.disabled");
+      cy.get("button").contains("Confirm").should("be.disabled");
+
+      // Cancel form should still be possible.
+      cy.get("button").contains("Cancel").click();
+
+      // make sure the call to get inventory has been executed
+      cy.wait("@GetServiceInventory");
+
+      // expect two rows to be in the inventory still
+      cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 2);
+    });
+
+    it("2.1.6 Delete previously created instance", () => {
       cy.visit("/console/");
 
       // Add interceptions for the delete and get call to be able to catch responses later on.

@@ -35,11 +35,11 @@ describe("Test GraphCard with LineChart component", () => {
       }),
     ).toBeVisible();
 
-    // eslint-disable-next-line testing-library/no-node-access
     expect(await container.querySelector(".pf-v5-c-chart")).toBeVisible();
 
     await act(async () => {
       const results = await axe(document.body);
+
       expect(results).toHaveNoViolations();
     });
   });
@@ -56,17 +56,18 @@ describe("Test GraphCard with LineChart component", () => {
         }}
       />,
     );
+
     expect(
       await screen.findByRole("heading", {
         name: words(`dashboard.${availableKeys[6] as MetricName}.title`),
       }),
     ).toBeVisible();
 
-    // eslint-disable-next-line testing-library/no-node-access
     expect(await container.querySelector(".pf-v5-c-chart")).toBeVisible();
 
     await act(async () => {
       const results = await axe(document.body);
+
       expect(results).toHaveNoViolations();
     });
   });

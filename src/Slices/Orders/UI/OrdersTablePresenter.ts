@@ -70,6 +70,7 @@ export class OrdersTablePresenter
    */
   getSortableColumnNames(): string[] {
     const sortableColumns = ["created_at"];
+
     return sortableColumns;
   }
 
@@ -104,6 +105,7 @@ export class OrdersTablePresenter
     if (index > -1 && index < this.getNumberOfColumns()) {
       return this.getColumnHeads()[index].apiName;
     }
+
     return undefined;
   }
 

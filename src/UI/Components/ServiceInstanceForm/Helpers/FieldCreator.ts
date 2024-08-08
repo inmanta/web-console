@@ -50,6 +50,7 @@ export class FieldCreator {
     const fieldsFromEmbeddedEntities = service.embedded_entities
       .map((entity) => this.embeddedEntityToField(entity))
       .filter(isNotNull);
+
     if (
       !service.inter_service_relations ||
       service.inter_service_relations.length <= 0
@@ -176,6 +177,7 @@ export class FieldCreator {
     embedded?: boolean,
   ): Field[] {
     const converter = new AttributeInputConverterImpl();
+
     return attributes
       .filter((attribute) =>
         this.fieldModifierHandler.validateModifier(

@@ -20,6 +20,7 @@ it.each`
       sort,
       currentPage: { kind: "CurrentPage", value: currentPage },
     };
+
     expect(getUrl(query, "Europe/Brussels")).toEqual(url);
   },
 );

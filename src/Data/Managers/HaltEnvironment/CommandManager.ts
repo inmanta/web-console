@@ -20,11 +20,13 @@ export function HaltEnvironmentCommandManager(
           environment,
           null,
         );
+
         await updater.update({
           kind: "GetEnvironmentDetails",
           details: false,
           id: environment,
         });
+
         return result;
       };
     },

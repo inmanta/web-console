@@ -26,8 +26,10 @@ export class SearchSanitizer {
 
   private getValidKeys(routeKind: RouteKind): string[] {
     const route = this.routeManager.getRoute(routeKind);
+
     if (route.environmentRole === "Forbidden")
       return this.validKeys.filter((k) => k !== "env");
+
     return this.validKeys;
   }
 
@@ -42,11 +44,13 @@ export class SearchSanitizer {
       parsedSearch,
     );
     const { state } = sanitizedSearch;
+
     if (typeof state === "undefined")
       return this.searchHelper.stringify(sanitizedSearch);
     if (!isObject(state)) {
       return this.searchHelper.stringify(keepKeys(["env"], sanitizedSearch));
     }
+
     return this.searchHelper.stringify(
       Object.assign(sanitizedSearch, {
         state: this.pageStateSanitizer.sanitize(routeKind, state),
@@ -59,11 +63,14 @@ export class SearchSanitizer {
    */
   isSanitized(routeKind: RouteKind, search: string): boolean {
     const parsedSearch = this.searchHelper.parse(search);
+
     if (getKeysExcluding(this.getValidKeys(routeKind), parsedSearch).length > 0)
       return false;
     const { state } = parsedSearch;
+
     if (typeof state === "undefined") return true;
     if (!isObject(state)) return false;
+
     return this.pageStateSanitizer.isSanitized(routeKind, state);
   }
 }

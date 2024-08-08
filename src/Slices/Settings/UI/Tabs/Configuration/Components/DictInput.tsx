@@ -18,12 +18,16 @@ export const DictInputWithRow: React.FC<Props> = ({ info }) => {
         ...value,
         ...getSanitizedNewEntry(newEntry),
       });
+
       if (Maybe.isNone(error)) setNewEntry(["", ""]);
+
       return error;
     },
     reset: async () => {
       const error = await info.reset();
+
       if (Maybe.isNone(error)) setNewEntry(["", ""]);
+
       return error;
     },
     isUpdateable: () => info.isUpdateable(info) || newEntry[0].length > 0,
@@ -58,5 +62,6 @@ const Container = styled.div<{ hasWarning: boolean }>`
 
 const getSanitizedNewEntry = ([key, value]: Entry) => {
   if (key.length <= 0) return {};
+
   return { [key]: value };
 };

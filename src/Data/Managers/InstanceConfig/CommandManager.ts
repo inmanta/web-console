@@ -21,6 +21,7 @@ export function InstanceConfigCommandManager(
     environment: string,
   ): Promise<void> {
     const configData = stateHelper.getOnce(getQuery(command));
+
     if (!RemoteData.isSuccess(configData)) return;
 
     stateHelper.set(
@@ -65,6 +66,7 @@ export function InstanceConfigCommandManager(
         switch (payload.kind) {
           case "RESET":
             reset(command, environment);
+
             return;
           case "UPDATE":
             update(command, payload.option, payload.value, environment);

@@ -23,6 +23,7 @@ export const TriggerDryRunAction: React.FC<Props> = ({
 
   const onTrigger = async () => {
     const error = await trigger();
+
     if (Maybe.isSome(error)) {
       setErrorMessage(error.value);
     }

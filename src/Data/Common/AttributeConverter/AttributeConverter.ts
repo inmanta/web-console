@@ -53,7 +53,7 @@ export interface AttributeResultConverter {
    * @param type The expected inmanta type
    */
   ensureAttributeType(
-    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any */
+    /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
     value: any,
     type: string,
   ): unknown;

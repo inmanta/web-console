@@ -41,23 +41,29 @@ describe("UserManagementPage", () => {
         });
       }),
     );
+
     server.listen();
     const component = setup();
+
     render(component);
 
     const loadingView = await screen.findByLabelText("UserManagement-Loading");
+
     expect(loadingView).toBeInTheDocument();
 
     const emptyView = await screen.findByLabelText("UserManagement-Empty");
+
     expect(emptyView).toBeInTheDocument();
 
     const addUserButton = await screen.findByText(
       words("userManagement.addUser"),
     );
+
     expect(addUserButton).toBeInTheDocument();
 
     await act(async () => {
       const results = await axe(document.body);
+
       expect(results).toHaveNoViolations();
     });
 
@@ -75,17 +81,22 @@ describe("UserManagementPage", () => {
         });
       }),
     );
+
     server.listen();
     const component = setup();
+
     render(component);
 
     const loadingView = await screen.findByLabelText("UserManagement-Loading");
+
     expect(loadingView).toBeInTheDocument();
 
     const successView = await screen.findByLabelText("users-table");
+
     expect(successView).toBeInTheDocument();
 
     const userRows = screen.getAllByTestId("user-row");
+
     expect(userRows).toHaveLength(2);
 
     expect(screen.getByText("test_user")).toBeInTheDocument();
@@ -95,6 +106,7 @@ describe("UserManagementPage", () => {
 
     await act(async () => {
       const results = await axe(document.body);
+
       expect(results).toHaveNoViolations();
     });
 
@@ -114,23 +126,29 @@ describe("UserManagementPage", () => {
         );
       }),
     );
+
     server.listen();
     const component = setup();
+
     render(component);
 
     const loadingView = await screen.findByLabelText("UserManagement-Loading");
+
     expect(loadingView).toBeInTheDocument();
 
     const errorView = await screen.findByLabelText("UserManagement-Failed");
+
     expect(errorView).toBeInTheDocument();
 
     const errorMessage = await screen.findByText(
       "The following error occured: Access to this resource is unauthorized",
     );
+
     expect(errorMessage).toBeVisible();
 
     await act(async () => {
       const results = await axe(document.body);
+
       expect(results).toHaveNoViolations();
     });
 
@@ -150,6 +168,7 @@ describe("UserManagementPage", () => {
       }),
       http.post("/api/v2/user", async ({ request }): Promise<HttpResponse> => {
         const reqBody = await request.json();
+
         if (typeof reqBody !== "object") {
           return HttpResponse.json(
             {
@@ -173,22 +192,28 @@ describe("UserManagementPage", () => {
           );
         }
         data.push({ username: reqBody?.username, auth_method: "database" });
+
         return HttpResponse.json({
           username: "new_user",
           auth_method: "database",
         });
       }),
     );
+
     server.listen();
     const component = setup();
+
     render(component);
 
     const loadingView = await screen.findByLabelText("UserManagement-Loading");
+
     expect(loadingView).toBeInTheDocument();
 
     const successView = await screen.findByLabelText("users-table");
+
     expect(successView).toBeInTheDocument();
     const userRows = screen.getAllByTestId("user-row");
+
     expect(userRows).toHaveLength(2);
 
     await act(async () => {
@@ -208,6 +233,7 @@ describe("UserManagementPage", () => {
     });
 
     const errorMessage = await screen.findByLabelText("error-message");
+
     expect(errorMessage).toBeInTheDocument();
     expect(errorMessage).toHaveTextContent(
       "Invalid request: the password should be at least 8 characters long",
@@ -223,12 +249,14 @@ describe("UserManagementPage", () => {
     });
 
     const updatedRows = await screen.findAllByTestId("user-row");
+
     expect(updatedRows).toHaveLength(3);
 
     expect(screen.getByText("new_user")).toBeInTheDocument();
 
     await act(async () => {
       const results = await axe(document.body);
+
       expect(results).toHaveNoViolations();
     });
 
@@ -261,17 +289,22 @@ describe("UserManagementPage", () => {
         },
       ),
     );
+
     server.listen();
     const component = setup();
+
     render(component);
 
     const loadingView = await screen.findByLabelText("UserManagement-Loading");
+
     expect(loadingView).toBeInTheDocument();
 
     const successView = await screen.findByLabelText("users-table");
+
     expect(successView).toBeInTheDocument();
 
     const userRows = screen.getAllByTestId("user-row");
+
     expect(userRows).toHaveLength(2);
 
     await act(async () => {
@@ -283,10 +316,12 @@ describe("UserManagementPage", () => {
     });
 
     const updatedRows = await screen.findAllByTestId("user-row");
+
     expect(updatedRows).toHaveLength(1);
 
     await act(async () => {
       const results = await axe(document.body);
+
       expect(results).toHaveNoViolations();
     });
 

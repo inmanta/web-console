@@ -9,6 +9,7 @@ export const PageBreadcrumbs: React.FC = () => {
   const { pathname, search } = useLocation();
   const crumbs = routeManager.getCrumbs(pathname);
   const sanitizer = new SearchSanitizer.Sanitizer(routeManager);
+
   return (
     <Breadcrumb>
       {crumbs.map((crumb) => (

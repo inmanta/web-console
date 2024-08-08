@@ -11,5 +11,6 @@ export const Indent: React.FC<React.PropsWithChildren<Props>> = ({
   noToggle,
 }) => {
   const space = level * 16 + (noToggle ? 48 : 0);
+
   return <span style={{ marginLeft: `${space}px` }}>{children}</span>;
 };

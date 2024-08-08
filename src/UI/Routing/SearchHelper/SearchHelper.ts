@@ -7,6 +7,7 @@ export class SearchHelper {
    */
   private clearQuestionMark(search: string): string {
     if (search.startsWith("?")) return search.slice(1);
+
     return search;
   }
 
@@ -31,6 +32,7 @@ export class SearchHelper {
       allowDots: true,
       encodeValuesOnly: true,
     });
+
     return params.length > 0 ? `?${params}` : "";
   }
 
@@ -39,6 +41,7 @@ export class SearchHelper {
    */
   keepEnvOnly(search: string): string {
     const parsedSearch = this.parse(search);
+
     return this.stringify(keepKeys(["env"], parsedSearch));
   }
 }

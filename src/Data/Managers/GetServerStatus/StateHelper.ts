@@ -9,6 +9,7 @@ export function GetServerStatusStateHelper(store: Store) {
       const currentStatus: RemoteData.Type<string, ServerStatus> =
         store.getState().serverStatus.status;
       const newStatus = RemoteData.mapSuccess((wrapped) => wrapped.data, data);
+
       if (
         RemoteData.isLoading(newStatus) &&
         !RemoteData.isNotAsked(currentStatus)

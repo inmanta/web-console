@@ -171,6 +171,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
 
     this.set("items", [names, values]);
     this.removeInvalidLinks();
+
     return this;
   }
 
@@ -248,6 +249,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
 
   getRelations(): Map<string, string> | null {
     const relations = this.get("relatedTo");
+
     return relations ? relations : null;
   }
 
@@ -258,6 +260,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
       this.set("relatedTo", currentRelation.set(id, relationName));
     } else {
       const relationMap = new Map();
+
       this.set("relatedTo", relationMap.set(id, relationName));
     }
   }
@@ -265,10 +268,12 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
   removeRelation(id: string): boolean {
     const currentRelation = this.getRelations();
     let wasThereRelationToRemove = false;
+
     if (currentRelation) {
       wasThereRelationToRemove = currentRelation.delete(id);
       this.set("relatedTo", currentRelation);
     }
+
     return wasThereRelationToRemove;
   }
 
@@ -278,6 +283,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
 
   setTabColor(color: string) {
     const currentClassName = this.attr(["header", "class"]);
+
     return this.attr(["header", "class"], `${currentClassName} -${color}`);
   }
 
@@ -287,11 +293,13 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
     if (initializeButton && this.get("isCollapsed")) {
       this.appendButton();
     }
+
     return this;
   }
 
   editColumns(data: Array<ColumnData>, shouldBeCollapsed = true) {
     this._setColumns(data, shouldBeCollapsed);
+
     return this;
   }
 
@@ -304,6 +312,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
     });
 
     const bbox = this.getBBox();
+
     this.attr("spacer", {
       class: "joint-entityBlock-spacer",
       opacity: 0.1,
@@ -336,8 +345,10 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
 
   toJSON() {
     const json = super.toJSON();
+
     // keeping only the `items` attribute as columns are omitted in our use-case
     delete json.columns;
+
     return json;
   }
 }

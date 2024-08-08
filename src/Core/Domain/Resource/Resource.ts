@@ -141,9 +141,11 @@ export class IdParser {
 
   public static parse(idStr: string): Maybe.Maybe<Id> {
     const groups = idStr.match(IdParser.parseIdRegex)?.groups;
+
     if (!groups) {
       return Maybe.none();
     }
+
     return Maybe.some({
       entityType: groups.type,
       agentName: groups.hostname,
@@ -154,6 +156,7 @@ export class IdParser {
 
   public static getAgentName(idStr: string): Maybe.Maybe<Id["agentName"]> {
     const id = IdParser.parse(idStr);
+
     return Maybe.isSome(id) ? Maybe.some(id.value.agentName) : Maybe.none();
   }
 }

@@ -17,6 +17,7 @@ describe("ServiceInstancesSlice ", () => {
       pageSize: PageSize.initial,
       currentPage: initialCurrentPage,
     };
+
     // Add instances for a service
     store.getActions().serviceInstances.setData({
       query: firstQuery,
@@ -50,6 +51,7 @@ describe("ServiceInstancesSlice ", () => {
       pageSize: PageSize.initial,
       currentPage: initialCurrentPage,
     };
+
     expect(
       store
         .getState()

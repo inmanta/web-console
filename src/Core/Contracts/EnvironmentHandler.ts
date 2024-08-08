@@ -5,6 +5,7 @@ import { Navigate, RemoteData } from "@/Core/Language";
 export interface EnvironmentHandler {
   set(navigate: Navigate, location: Location, environmentId: string): void;
   useSelected(): FlatEnvironment | undefined;
+
   /**
    * If this function is called, it means the environment is required.
    * If it is required, the environment should be defined.

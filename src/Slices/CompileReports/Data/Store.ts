@@ -14,6 +14,7 @@ export interface CompileReportsSlice {
    * Stores the full list of Compile Reports by their environment.
    */
   listByEnv: Record<string, Data>;
+
   /**
    * Sets the compile reports in the listByEnv record.
    */

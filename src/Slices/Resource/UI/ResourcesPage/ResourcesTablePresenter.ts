@@ -53,6 +53,7 @@ export class ResourcesTablePresenter
     if (index > -1 && index < this.getNumberOfColumns()) {
       return this.getColumnHeads()[index].apiName;
     }
+
     return undefined;
   }
 
@@ -69,6 +70,7 @@ export class ResourcesTablePresenter
       "resource_id_value",
       "status",
     ];
+
     return sortableColumns;
   }
 

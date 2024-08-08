@@ -9,15 +9,18 @@ function getLinkToNextPage(headerObj) {
   }
   const linkHeader = headerObj.get("link");
   const splittedLinkHeader = linkHeader.trim().split(",");
+
   for (let i = 0; i < splittedLinkHeader.length; i++) {
     const splittedHeaderParts = splittedLinkHeader[i].trim().split(";");
     const refName = splittedHeaderParts[1].trim();
     const refLink = splittedHeaderParts[0].trim();
+
     if (refName === 'rel="next"') {
       // The link is represented as '<url>'. This chops off the '<' and '>' characters.
       return refLink.slice(1, refLink.length - 1);
     }
   }
+
   return null;
 }
 
@@ -30,6 +33,7 @@ async function getOldDevVersions() {
   let queryUrl =
     "https://api.github.com/orgs/inmanta/packages/npm/web-console/versions?per_page=100";
   let result = [];
+
   while (true) {
     // This API endpoint sorts the packages from new to old.
     const queryResults = await fetch(
@@ -82,6 +86,7 @@ async function getOldDevVersions() {
 
     // Check to see if another page should be queried
     const linkToNextPage = getLinkToNextPage(response_headers);
+
     if (linkToNextPage != null) {
       queryUrl = linkToNextPage;
       console.log(`Fetching the next page from ${queryUrl}`);
@@ -89,6 +94,7 @@ async function getOldDevVersions() {
       if (result.length === 0) {
         console.log("No dev version exist");
       }
+
       return result;
     }
   }
@@ -98,6 +104,7 @@ getOldDevVersions().then(
   (oldDevVersions) => {
     if (oldDevVersions.length == 0) {
       console.log("No old versions found matching the criteria");
+
       return;
     }
     // Make sure we're not starting too many requests at once
@@ -106,6 +113,7 @@ getOldDevVersions().then(
     }
     oldDevVersions.map((oldDevVersion) => {
       const idToDelete = oldDevVersion.id;
+
       console.log(
         `Attempting to delete version ${oldDevVersion.version} with id ${idToDelete} from ${oldDevVersion.updatedAt}`,
       );
@@ -125,6 +133,7 @@ getOldDevVersions().then(
             console.log(`Successfully deleted package ${idToDelete}`);
           } else {
             const error_message = `Deleting package ${idToDelete} failed: ${response.statusText}`;
+
             console.log(error_message);
             throw Error(error_message);
           }

@@ -63,6 +63,7 @@ export const InventoryTable: React.FC<Props> = ({
           },
         }
       : {};
+
     return (
       <Th
         width={getColumnWidth(column.apiName)}

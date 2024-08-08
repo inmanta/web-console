@@ -49,6 +49,7 @@ export default function mermaidPlugin(
       if (defaultFenceRenderer !== undefined) {
         return defaultFenceRenderer(tokens, idx, options, env, slf);
       }
+
       // Missing fence renderer!
       return "";
     }
@@ -58,11 +59,13 @@ export default function mermaidPlugin(
 
     // Create element to render into
     const element = document.createElement("div");
+
     document.body.appendChild(element);
 
     // Render with Mermaid
     try {
       const container_id = `${baseId}-${idx}`;
+
       Mermaid.render(
         container_id,
         token.content,
@@ -70,6 +73,7 @@ export default function mermaidPlugin(
           // We need to forcibly extract the max-width/height attributes to set on img tag
           // Mermaid will render the svg in the container_id.
           const svg = document.getElementById(container_id);
+
           if (svg !== null) {
             imageAttrs.push([
               "style",
@@ -99,6 +103,7 @@ export default function mermaidPlugin(
       "src",
       `data:image/svg+xml,${encodeURIComponent(svgString)}`,
     ]);
+
     return `<img ${slf.renderAttrs({ attrs: imageAttrs })}>`;
   }
 

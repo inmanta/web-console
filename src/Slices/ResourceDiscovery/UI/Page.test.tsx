@@ -49,6 +49,7 @@ function setup() {
 
 test("GIVEN Discovered Resources page THEN shows table", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
@@ -63,6 +64,7 @@ test("GIVEN Discovered Resources page THEN shows table", async () => {
   const rows = await screen.findAllByRole("row", {
     name: "DiscoveredResourceRow",
   });
+
   expect(rows).toHaveLength(17);
   expect(
     within(rows[0]).getByRole("cell", {
@@ -93,18 +95,21 @@ test("GIVEN Discovered Resources page THEN shows table", async () => {
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("GIVEN Discovered Resources page THEN sets sorting parameters correctly on click", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
   apiHelper.resolve(Either.right(DiscoveredResources.response));
 
   const resourceIdButton = await screen.findByRole("button", {
     name: words("discovered.column.resource_id"),
   });
+
   expect(resourceIdButton).toBeVisible();
 
   await act(async () => {
@@ -116,12 +121,14 @@ test("GIVEN Discovered Resources page THEN sets sorting parameters correctly on 
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("GIVEN Discovered Resources WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   //mock that response has more than one site

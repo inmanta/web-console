@@ -13,6 +13,7 @@ export function ModifyEnvironmentCommandManager(
         `/api/v2/environment/${environment}`,
         body,
       );
+
       await updater.update({
         kind: "GetEnvironmentDetails",
         details: true,
@@ -22,6 +23,7 @@ export function ModifyEnvironmentCommandManager(
         kind: "GetEnvironments",
         details: true,
       });
+
       return error;
     },
   );

@@ -7,7 +7,9 @@ interface Props {
 
 export const DependencyResolver: React.FC<Props> = ({ environment }) => {
   const { fileFetcher, environmentModifier } = useContext(DependencyContext);
+
   fileFetcher.setEnvironment(environment);
   environmentModifier.setEnvironment(environment);
+
   return null;
 };

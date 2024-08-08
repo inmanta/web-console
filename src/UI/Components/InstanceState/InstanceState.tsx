@@ -10,6 +10,7 @@ import { State } from "@/Core";
 
 export const InstanceState: React.FC<State> = ({ name, label }) => {
   const visual = getVisual(label);
+
   if (visual === null) return <span>{name}</span>;
 
   return <Label {...visual}>{name}</Label>;

@@ -50,10 +50,12 @@ const DiffView: React.FC<{
     reportId: id,
     version,
   });
+
   useEffect(() => {
     // avoid  double refetching when id is changed
     if (prevId.current !== id) {
       prevId.current = id;
+
       return;
     }
     if (todo <= 0 && !RemoteData.isSuccess(reportData)) return;

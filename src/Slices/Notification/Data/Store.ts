@@ -22,10 +22,12 @@ export const notificationSlice: NotificationSlice = {
     switch (origin) {
       case "center": {
         state.listByEnvForCenter[environment] = data;
+
         return;
       }
       case "drawer": {
         state.listByEnvForDrawer[environment] = data;
+
         return;
       }
     }

@@ -7,6 +7,7 @@ export function ResourceHistoryStateHelper(store: Store) {
     store,
     (data, query) => {
       const value = RemoteData.mapSuccess((data) => data, data);
+
       store.dispatch.resourceHistory.setData({
         id: query.id,
         value,

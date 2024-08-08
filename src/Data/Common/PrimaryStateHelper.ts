@@ -7,6 +7,7 @@ type Data<Kind extends Query.Kind> = RemoteData.Type<
   Query.Error<Kind>,
   Query.Data<Kind>
 >;
+
 type ApiData<Kind extends Query.Kind> = RemoteData.Type<
   Query.Error<Kind>,
   Query.ApiResponse<Kind>
@@ -30,12 +31,14 @@ export function PrimaryStateHelper<Kind extends Query.Kind>(
 
   function enforce(value: undefined | Data<Kind>): Data<Kind> {
     if (typeof value === "undefined") return RemoteData.notAsked();
+
     return value;
   }
 
   function getOnce(query: Query.SubQuery<Kind>): Data<Kind> {
     return enforce(customGet(store.getState(), query));
   }
+
   return {
     set,
     useGetHooked,
@@ -76,6 +79,7 @@ export function PrimaryStateHelperWithEnv<Kind extends Query.Kind>(
 
   function enforce(value: undefined | Data<Kind>): Data<Kind> {
     if (typeof value === "undefined") return RemoteData.notAsked();
+
     return value;
   }
 
@@ -85,6 +89,7 @@ export function PrimaryStateHelperWithEnv<Kind extends Query.Kind>(
   ): Data<Kind> {
     return enforce(customGet(store.getState(), query, environment));
   }
+
   return {
     useGetHooked,
     getOnce,

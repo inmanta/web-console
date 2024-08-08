@@ -99,6 +99,7 @@ export default function diagramInit(
 
         return isConnected === undefined && isAllowed && baseValidators;
       }
+
       return baseValidators;
     },
   });
@@ -163,6 +164,7 @@ export default function diagramInit(
       );
 
       const bbox = elementAsShape.getBBox();
+
       elementAsShape.attr("toggleButton/y", bbox.height - 24);
       elementAsShape.attr("spacer/y", bbox.height - 33);
       elementAsShape.attr("buttonBody/y", bbox.height - 32);
@@ -200,6 +202,7 @@ export default function diagramInit(
     const targetCell = graph.getCell(
       target.id as dia.Cell.ID,
     ) as ServiceEntityBlock;
+
     if (!(sourceCell.getName()[0] === "_")) {
       linkView.model.appendLabel({
         attrs: {
@@ -292,6 +295,7 @@ export default function diagramInit(
           );
 
           updateInstancesToSend(sourceCell, ActionEnum.UPDATE);
+
           return true;
         }
       }
@@ -303,6 +307,7 @@ export default function diagramInit(
         elementCell.set("embeddedTo", connectingCell.id);
         toggleLooseElement(paper.findViewByModel(elementCell), "remove");
         updateInstancesToSend(elementCell, ActionEnum.UPDATE);
+
         return true;
       } else {
         return false;
@@ -313,6 +318,7 @@ export default function diagramInit(
       sourceCell,
       targetCell,
     );
+
     if (!wasConnectionFromSourceSet) {
       wasConnectionDataAssigned(targetCell, sourceCell);
     }
@@ -353,6 +359,7 @@ export default function diagramInit(
   }
 
   paper.unfreeze();
+
   return {
     removeCanvas: () => {
       scroller.remove();
@@ -368,6 +375,7 @@ export default function diagramInit(
 
       if (instance.coordinates) {
         const parsedCoordinates = JSON.parse(instance.coordinates);
+
         applyCoordinatesToCells(graph, parsedCoordinates);
       }
       scroller.zoomToFit({
@@ -381,6 +389,7 @@ export default function diagramInit(
       });
 
       const jsonGraph = graph.toJSON();
+
       return jsonGraph.cells as serializedCell[];
     },
 
@@ -399,11 +408,14 @@ export default function diagramInit(
         isEmbedded,
         holderName,
       );
+
       if (shape.get("isEmbedded")) {
         toggleLooseElement(paper.findViewByModel(shape), "add");
       }
       const shapeCoordinates = shape.getBBox();
+
       scroller.center(shapeCoordinates.x, shapeCoordinates.y + 200);
+
       return shape;
     },
     editEntity: (cellView, serviceModel, attributeValues) => {
@@ -415,6 +427,7 @@ export default function diagramInit(
         attributeValues,
         false,
       );
+
       return cellView.model as ServiceEntityBlock;
     },
     zoom: (delta) => {

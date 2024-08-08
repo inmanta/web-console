@@ -175,6 +175,7 @@ export const checkIfConnectionIsAllowed = (
         targetAsElement,
       );
   }
+
   return (
     !areSourceConnectionsExhausted &&
     !areTargetConnectionExhausted &&
@@ -253,6 +254,7 @@ const doesElementIsEmbeddedWithExhaustedConnections = (
 
     return connectedHolder.length > 0 && doesSourceMatchholderName;
   }
+
   return false;
 };
 
@@ -287,6 +289,7 @@ export const shapesDataTransform = (
     matchingInstances.reduce((reducer, instance) => {
       reducer[instance.service_entity] = reducer[instance.service_entity] || [];
       reducer[instance.service_entity].push(instance);
+
       return reducer;
     }, Object.create({}));
 
@@ -296,6 +299,7 @@ export const shapesDataTransform = (
       const embeddedModel = serviceModel.embedded_entities.find(
         (entity) => entity.name === instancesToEmbed[0].service_entity,
       );
+
       //iterate through instancesToEmbed to recursively join potential nested embedded entities into correct objects in correct state
       instancesToEmbed.forEach((instanceToEmbed) => {
         if (embeddedModel) {
@@ -333,9 +337,9 @@ export const shapesDataTransform = (
         const model = serviceModel.inter_service_relations?.find(
           (relation) => relation.name === attributeName,
         );
+
         if (model) {
           if (model.upper_limit !== 1) {
-            parentInstance.attributes[attributeName];
             if (Array.isArray(parentInstance.attributes[attributeName])) {
               (parentInstance.attributes[attributeName] as string[]).push(id);
             } else {
@@ -371,6 +375,7 @@ export const shapesDataTransform = (
 
   delete parentInstance.embeddedTo;
   delete parentInstance.relatedTo;
+
   return parentInstance;
 };
 
@@ -416,6 +421,7 @@ export const getServiceOrderItems = (
     const serviceModel = services.find(
       (service) => service.name === instance.service_entity,
     );
+
     if (serviceModel) {
       mergedInstances.push(
         shapesDataTransform(instance, embeddedInstances, serviceModel),
@@ -464,6 +470,7 @@ export const updateLabelPosition = (
   linkView: LabelLinkView, //dia.LinkView & dia.Link doesn't have sourceView or targetView properties in the model
 ): { textAnchor: "start" | "end"; x: number; y: number } => {
   let textAnchor, tx, ty, viewCoordinates, anchorCoordinates;
+
   if (side === "target") {
     viewCoordinates = linkView.targetView.model.position();
     anchorCoordinates = linkView.targetPoint;
@@ -518,6 +525,7 @@ export const toggleLooseElement = (
       break;
     case "remove":
       const highlighter = dia.HighlighterView.get(cellView, "loose_element");
+
       if (highlighter) {
         highlighter.remove();
       }
@@ -543,6 +551,7 @@ export const toggleLooseElement = (
  */
 export const getCellsCoordinates = (graph: dia.Graph): SavedCoordinates[] => {
   const cells = graph.getCells();
+
   return cells
     .filter((cell) => cell.attributes.type === "app.ServiceEntityBlock")
     .map((cell) => ({
@@ -564,6 +573,7 @@ export const applyCoordinatesToCells = (
   coordinates: SavedCoordinates[],
 ) => {
   const cells = graph.getCells();
+
   coordinates.forEach((element) => {
     const correspondingCell = cells.find(
       (cell) =>
@@ -571,6 +581,7 @@ export const applyCoordinatesToCells = (
         (element.name === cell.attributes.entityName &&
           isEqual(element.attributes, cell.attributes.instanceAttributes)),
     );
+
     if (correspondingCell) {
       correspondingCell.set("position", {
         x: element.coordinates.x,
@@ -588,14 +599,17 @@ export const applyCoordinatesToCells = (
  */
 export const moveCellFromColliding = (graph: dia.Graph, cell: dia.Cell) => {
   let isColliding = false;
+
   do {
     const overlappingCells = graph
       .findModelsInArea(cell.getBBox())
       .filter((el) => el.id !== cell.id);
+
     if (overlappingCells.length > 0) {
       isColliding = true;
       // an overlap found, revert the position
       const coordinates = cell.position();
+
       cell.set("position", { x: coordinates.x + 50, y: coordinates.y });
     } else {
       isColliding = false;

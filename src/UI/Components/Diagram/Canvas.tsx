@@ -75,16 +75,21 @@ const Canvas: React.FC<{
     const eventData: { kind: "remove" | "add"; id: string } = JSON.parse(
       customEvent.detail,
     );
+
     if (eventData.kind === "remove") {
       setLooseEmbedded((prevSet) => {
         const newSet = new Set(prevSet);
+
         newSet.delete(eventData.id);
+
         return newSet;
       });
     } else {
       setLooseEmbedded((prevSet) => {
         const newSet = new Set(prevSet);
+
         newSet.add(eventData.id);
+
         return newSet;
       });
     }
@@ -97,6 +102,7 @@ const Canvas: React.FC<{
    */
   const handleDictEvent = (event) => {
     const customEvent = event as CustomEvent;
+
     setDictToDisplay(JSON.parse(customEvent.detail));
   };
 
@@ -107,6 +113,7 @@ const Canvas: React.FC<{
    */
   const handleEditEvent = (event) => {
     const customEvent = event as CustomEvent;
+
     setCellToEdit(customEvent.detail);
     setIsFormModalOpen(true);
   };
@@ -164,13 +171,16 @@ const Canvas: React.FC<{
 
     setInstancesToSend((prevInstances) => {
       const updatedInstance = prevInstances.get(cell.id as string);
+
       switch (action) {
         case "update":
           newInstance.action =
             updatedInstance?.action === "create" ? "create" : "update";
+
           return new Map(prevInstances.set(cell.id as string, newInstance));
         case "create":
           newInstance.action = action;
+
           return new Map(prevInstances.set(cell.id as string, newInstance));
         default:
           if (
@@ -192,7 +202,9 @@ const Canvas: React.FC<{
             );
           } else {
             const newInstances = new Map(prevInstances);
+
             newInstances.delete(cell.id as string);
+
             return newInstances;
           }
       }
@@ -207,9 +219,11 @@ const Canvas: React.FC<{
       handleUpdate,
       editable,
     );
+
     setDiagramHandlers(actions);
     if (instance) {
       const isMainInstance = true;
+
       try {
         const cells = actions.addInstance(instance, services, isMainInstance);
         const newInstances = new Map();
@@ -309,6 +323,7 @@ const Canvas: React.FC<{
         onConfirm={(fields, entity, selected) => {
           if (diagramHandlers) {
             const sanitizedAttrs = sanitizeAttributes(fields, entity);
+
             if (cellToEdit) {
               //deep copy
               const shape = diagramHandlers.editEntity(
@@ -316,6 +331,7 @@ const Canvas: React.FC<{
                 selected.model as ServiceModel,
                 entity,
               );
+
               shape.set("sanitizedAttrs", sanitizedAttrs);
               handleUpdate(shape, ActionEnum.UPDATE);
             } else {
@@ -326,6 +342,7 @@ const Canvas: React.FC<{
                 selected.isEmbedded,
                 selected.holderName,
               );
+
               shape.set("sanitizedAttrs", sanitizedAttrs);
               handleUpdate(shape, ActionEnum.CREATE);
             }
@@ -374,6 +391,7 @@ const Canvas: React.FC<{
     </>
   );
 };
+
 export default Canvas;
 
 const ZoomWrapper = styled.div`

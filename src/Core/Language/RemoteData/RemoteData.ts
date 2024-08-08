@@ -52,6 +52,7 @@ export const mapFailed = <F, S, N>(
   data: RemoteData<F, S>,
 ): RemoteData<N, S> => {
   if (!isFailed(data)) return data;
+
   return failed(mapper(data.value));
 };
 
@@ -73,6 +74,7 @@ export const mapSuccess = <F, S, N>(
   data: RemoteData<F, S>,
 ): RemoteData<F, N> => {
   if (!isSuccess(data)) return data;
+
   return success(mapper(data.value));
 };
 
@@ -82,6 +84,7 @@ export const fromEither = <L, R>(
   if (Either.isLeft(either)) {
     return failed(either.value);
   }
+
   return success(either.value);
 };
 
@@ -122,6 +125,7 @@ export const merge = <F1, S1, F2, S2>(
   if (isLoading(data1) || isLoading(data2)) return loading();
   if (isFailed(data1)) return failed(data1.value);
   if (isFailed(data2)) return failed(data2.value);
+
   return success([data1.value, data2.value] as [S1, S2]);
 };
 

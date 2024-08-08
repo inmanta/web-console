@@ -20,6 +20,7 @@ export const EventsTableBody: React.FC<Props> = ({
   });
 
   const rows = tablePresenter.createRows(events);
+
   return (
     <>
       {rows.map((row, index) => (

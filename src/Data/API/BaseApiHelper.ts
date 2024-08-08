@@ -33,10 +33,11 @@ export const BaseApiHelper = (
       });
 
       return response.status;
-    } catch (error) {
+    } catch (_error) {
       return 500;
     }
   }
+
   /**
    * Gets the bearer token for authentication based on the available authentication method.
    * @returns An object containing the authorization header with the bearer token if available.
@@ -70,6 +71,7 @@ export const BaseApiHelper = (
    */
   function formatError(message: string, response: Response): string {
     let errorMessage = message;
+
     if (response.status === 401 || response.status === 403) {
       errorMessage += ` ${words("error.authorizationFailed")}`;
 
@@ -89,6 +91,7 @@ export const BaseApiHelper = (
   function errorHasMessage(error: unknown): error is { message: string } {
     if (!isObject(error)) return false;
     if (!objectHasKey(error, "message")) return false;
+
     return typeof error.message === "string";
   }
 
@@ -120,6 +123,7 @@ export const BaseApiHelper = (
       identity,
       ...params,
     );
+
     return Either.isLeft(result) ? Maybe.some(result.value) : Maybe.none();
   }
 
@@ -330,6 +334,7 @@ export const BaseApiHelper = (
   ): Promise<Either.Type<Error, Blob>> {
     try {
       let response;
+
       await fetch(...params)
         .then(async (res) => {
           response = res;
@@ -342,8 +347,10 @@ export const BaseApiHelper = (
 
       if (response.ok) {
         const data = await response.blob();
+
         return Either.right(data);
       }
+
       return Either.left(
         await transformError(
           formatError(
@@ -379,6 +386,7 @@ export const BaseApiHelper = (
   ): Promise<Either.Type<Error, Data>> {
     try {
       let response;
+
       await fetch(...params)
         .then(async (res) => {
           response = res;
@@ -390,8 +398,10 @@ export const BaseApiHelper = (
         });
       if (response.ok) {
         const data = await transform(response);
+
         return Either.right(data);
       }
+
       return Either.left(
         await transformError(
           formatError(

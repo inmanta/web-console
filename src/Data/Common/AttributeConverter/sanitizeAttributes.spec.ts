@@ -6,6 +6,7 @@ test("GIVEN sanitizeAttributes WHEN passed DictListFields THEN sanitizes all fie
   const fields = [Field.dictList([Field.text, Field.bool])];
   const formState = createFormState(fields);
   const sanitized = sanitizeAttributes(fields, formState);
+
   expect(sanitized).toMatchObject({
     dict_list_field: [
       {

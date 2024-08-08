@@ -13,7 +13,7 @@ import { MomentDatePresenter } from "@/UI/Utils";
 import { words } from "@/UI/words";
 import { AttributesTab } from "./AttributesTab";
 import { ConfigSectionContent } from "./ConfigSectionContent";
-import { DocumentationTabs } from "./DocumentationTab";
+import { MarkdownCard } from "./MarkdownCard";
 import { ResourcesTab } from "./ResourcesTab";
 import { StatusTab } from "./StatusTab";
 
@@ -207,6 +207,7 @@ const documentationTab = (
         attribute.attribute_annotations.web_presentation === "documentation"
       ) {
         const attributeValue = getAttributeValue(attribute.name, row);
+
         webPresentationAttributes.push({
           id: attribute.attribute_annotations.web_title,
           icon: (
@@ -215,7 +216,7 @@ const documentationTab = (
             />
           ),
           view: (
-            <DocumentationTabs
+            <MarkdownCard
               attributeValue={attributeValue}
               web_title={attribute.attribute_annotations.web_title}
             />

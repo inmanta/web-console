@@ -18,6 +18,7 @@ export const server = setupServer(
         },
       });
     }
+
     return HttpResponse.json({
       data: { ...testInstance, id: "test_mpn_id" },
     });
@@ -41,6 +42,7 @@ const createWrapper = () => {
       },
     },
   });
+
   return ({ children }) => (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );

@@ -33,12 +33,15 @@ export interface Interval {
  */
 export function toggleValueInList<T>(value: T, list: T[]): T[] {
   const index = list.indexOf(value);
+
   if (index === -1) {
     return [...list, value];
   }
 
   const clone = [...list];
+
   clone.splice(index, 1);
+
   return clone;
 }
 
@@ -67,6 +70,7 @@ export const isObject = (value: unknown): value is Record<string, unknown> => {
   if (Array.isArray(value)) return false;
   if (value === null) return false;
   if (Object.keys(value).length <= 0) return false;
+
   return true;
 };
 
@@ -97,6 +101,7 @@ export const keepKeys = (
     if (keys.includes(cur)) {
       acc[cur] = object[cur];
     }
+
     return acc;
   }, {});
 
@@ -110,8 +115,10 @@ export const resolvePromiseRecord = async (
     list[index][0],
     result,
   ]);
+
   return resultList.reduce<Record<string, unknown>>((acc, [id, result]) => {
     acc[id] = result;
+
     return acc;
   }, {});
 };

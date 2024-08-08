@@ -75,8 +75,10 @@ export function ContinuousWithEnv<Kind extends Query.Kind>(
         environment !== previousEnvironment
           ? getUrl(urlEncodeParams(query), environment)
           : url;
+
       update(query, urlToUse, environment);
       scheduler.register(getUnique(query, environment), task);
+
       return () => {
         scheduler.unregister(getUnique(query, environment));
       };
@@ -97,6 +99,7 @@ export function ContinuousWithEnv<Kind extends Query.Kind>(
   ): boolean {
     return query.kind === kind && matchingKind === "Continuous";
   }
+
   return {
     useContinuous,
     matches,
