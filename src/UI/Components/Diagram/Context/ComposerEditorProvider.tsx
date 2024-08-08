@@ -10,9 +10,9 @@ import { CanvasProvider } from "./CanvasProvider";
 import { InstanceComposerContext } from "./Context";
 
 /**
- * Props interface for the ComposerWithInstanceProvider component
+ * Props interface for the ComposerEditorProvider component
  *
- * This interface represents the properties that the ComposerWithInstanceProvider component expects to receive.
+ * This interface represents the properties that the ComposerEditorProvider component expects to receive.
  *
  * @interface
  * @property {string} serviceName - The name of the service to be fetched.
@@ -26,10 +26,10 @@ interface Props {
 }
 
 /**
- * ComposerWithInstanceProvider component
+ * ComposerEditorProvider component
  *
  * This component is responsible for providing the instance data to the Canvas component through Context.
- * It fetches all service models, the instance with its relations, and the related inventories.
+ * The difference from ComposerCreatorProvider is that this component also fetches the instance data, it's done to avoid unnecessary requests when displaying composer for creating new instances
  * It also handles the state and effects related to these data.
  *
  * @param {Props} props - The properties that define the behavior and display of the component.
@@ -37,9 +37,9 @@ interface Props {
  * @param {string} props.instance - The ID of the instance to be fetched.
  * @param {boolean} props.editable - A flag indicating if the instance is editable.
  *
- * @returns {React.FC<Props>} The ComposerWithInstanceProvider component.
+ * @returns {React.FC<Props>} The ComposerEditorProvider component.
  */
-export const ComposerWithInstanceProvider: React.FC<Props> = ({
+export const ComposerEditorProvider: React.FC<Props> = ({
   serviceName,
   instance,
   editable,

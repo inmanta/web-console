@@ -191,7 +191,7 @@ export function appendInstance(
   graph: dia.Graph,
   instanceWithRelations: InstanceWithRelations,
   services: ServiceModel[],
-  isMainInstance = false,
+  isMainInstance = true,
   instanceToConnectRelation?: ServiceEntityBlock,
 ): ServiceEntityBlock {
   const serviceInstance = instanceWithRelations.instance;
@@ -485,7 +485,10 @@ export function appendEntity(
  * @param {ServiceModel} service - The service model to use for populating the graph.
  * @returns {ServiceEntityBlock[]} An array containing the core entity and the default entities added to the graph.
  */
-export function populateGraph(graph: dia.Graph, service: ServiceModel) {
+export function defaultGraphPopulation(
+  graph: dia.Graph,
+  service: ServiceModel,
+) {
   const coreEntity = appendEntity(graph, service, {}, true);
   const defaultEntities = addDefaultEntities(graph, service);
   connectEntities(graph, coreEntity, defaultEntities);

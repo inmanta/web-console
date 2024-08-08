@@ -9,9 +9,9 @@ import { CanvasProvider } from "./CanvasProvider";
 import { InstanceComposerContext } from "./Context";
 
 /**
- * Props interface for the ComposerProvider component
+ * Props interface for the ComposerCreatorProvider component
  *
- * This interface represents the properties that the ComposerProvider component expects to receive.
+ * This interface represents the properties that the ComposerCreatorProvider component expects to receive.
  *
  * @interface
  * @property {string} serviceName - The name of the service for which related services and inventories are being fetched.
@@ -21,7 +21,7 @@ interface Props {
 }
 
 /**
- * ComposerProvider component
+ * ComposerCreatorProvider component
  *
  * This component is responsible for providing the service model related data to the Canvas component through Context.
  * It fetches all service models and the related inventories.
@@ -30,9 +30,9 @@ interface Props {
  * @param {Props} props - The properties that define the behavior and display of the component.
  * @param {string} props.serviceName - The name of the service for which related services and inventories are being fetched.
 
- * @returns {React.FC<Props>} The ComposerProvider component.
+ * @returns {React.FC<Props>} The ComposerCreatorProvider component.
  */
-export const ComposerProvider: React.FC<Props> = ({ serviceName }) => {
+export const ComposerCreatorProvider: React.FC<Props> = ({ serviceName }) => {
   const [relatedServiceNames, setRelatedServiceNames] = useState<string[]>([]);
   const { environmentHandler } = useContext(DependencyContext);
   const environment = environmentHandler.useId();

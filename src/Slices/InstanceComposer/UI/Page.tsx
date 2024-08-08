@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { DependencyContext, useRouteParams, words } from "@/UI";
 import { EmptyView, PageContainer } from "@/UI/Components";
-import { ComposerProvider } from "@/UI/Components/Diagram/Context/ComposerProvider";
+import { ComposerCreatorProvider } from "@/UI/Components/Diagram/Context/ComposerCreatorProvider";
 
 /**
  * Renders the Page component for the Instance Composer Page.
@@ -21,7 +21,7 @@ export const Page = () => {
 
   return (
     <PageWrapper>
-      <ComposerProvider serviceName={serviceName} />
+      <ComposerCreatorProvider serviceName={serviceName} />
     </PageWrapper>
   );
 };

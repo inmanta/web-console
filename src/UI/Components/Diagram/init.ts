@@ -2,7 +2,11 @@ import { RefObject } from "react";
 import { dia, shapes, ui } from "@inmanta/rappid";
 import { InstanceAttributeModel, ServiceModel } from "@/Core";
 import { InstanceWithRelations } from "@/Data/Managers/V2/GetInstanceWithRelations";
-import { appendColumns, appendInstance, populateGraph } from "./actions";
+import {
+  appendColumns,
+  appendInstance,
+  defaultGraphPopulation,
+} from "./actions";
 import { applyCoordinatesToCells, getCellsCoordinates } from "./helpers";
 import {
   ConnectionRules,
@@ -86,10 +90,9 @@ export function diagramInit(
       instance?: InstanceWithRelations,
     ) => {
       if (!instance) {
-        populateGraph(graph, mainService);
+        defaultGraphPopulation(graph, mainService);
       } else {
-        const isMainInstance = true;
-        appendInstance(paper, graph, instance, services, isMainInstance);
+        appendInstance(paper, graph, instance, services);
 
         if (instance.coordinates) {
           const parsedCoordinates = JSON.parse(instance.coordinates);

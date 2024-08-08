@@ -98,6 +98,7 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
     const updatedInstance = instancesToSend.get(String(cell.id));
     switch (action) {
       case "update":
+        //action in the instance isn't the same as action passed to this function, this assertion is to make sure that the update action won't change the action state of newly created instance. It will be addressed in next PR to make it clearer.
         newInstance.action =
           updatedInstance?.action === "create" ? "create" : "update";
         copiedInstances.set(String(cell.id), newInstance);

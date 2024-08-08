@@ -21,7 +21,7 @@ interface Props {
 /**
  * Toolbar component
  *
- * This component represents the toolbar of the application.
+ * This component represents the toolbar of the Composer.
  * It contains controls to cancel creating or editing instance or sending serviceOrderItems to the backend.
  * Also, it shows feedback notification to the user.
  *

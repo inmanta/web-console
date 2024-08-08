@@ -7,10 +7,10 @@ import { Inventories } from "@/Data/Managers/V2/GetRelatedInventories";
 import { ComposerServiceOrderItem, DictDialogData } from "../interfaces";
 
 /**
- * The InstanceComposerProviderInterface
+ * The InstanceComposerCreatorProviderInterface
  * Reflects the InstanceComposerContext.
  */
-interface InstanceComposerProviderInterface {
+interface InstanceComposerCreatorProviderInterface {
   instance: InstanceWithRelations | null;
   serviceModels: ServiceModel[];
   mainService: ServiceModel;
@@ -19,11 +19,10 @@ interface InstanceComposerProviderInterface {
 
 /**
  * InstanceComposerContext
- * Should be used to provide context to the InstanceComposerContext page.
- * The logsQuery contains both the events and history data.
+ * Should be used to provide context to the Composer Page.
  */
 export const InstanceComposerContext =
-  createContext<InstanceComposerProviderInterface>({
+  createContext<InstanceComposerCreatorProviderInterface>({
     instance: null,
     serviceModels: [],
     mainService: {} as ServiceModel,

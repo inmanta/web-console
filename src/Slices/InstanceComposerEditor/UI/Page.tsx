@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { DependencyContext, useRouteParams, words } from "@/UI";
 import { EmptyView, PageContainer } from "@/UI/Components";
-import { ComposerWithInstanceProvider } from "@/UI/Components/Diagram/Context/ComposerWithInstanceProvider";
+import { ComposerEditorProvider } from "@/UI/Components/Diagram/Context/ComposerEditorProvider";
 
 /**
  * Renders the Page component for the Instance Composer Editor Page.
@@ -24,7 +24,7 @@ export const Page = () => {
 
   return (
     <PageWrapper>
-      <ComposerWithInstanceProvider
+      <ComposerEditorProvider
         serviceName={serviceName}
         instance={instance}
         editable
