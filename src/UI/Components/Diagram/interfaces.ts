@@ -13,7 +13,7 @@ enum ActionEnum {
 
 interface ColumnData {
   name: string;
-  [key: string]: string;
+  [key: string]: unknown;
 }
 
 interface RouterOptions {
@@ -42,6 +42,12 @@ interface InterServiceRule extends Rule {
   kind: TypeEnum.INTERSERVICE;
   attributeName: string;
 }
+
+export enum EmbeddedEventEnum {
+  REMOVE = "remove",
+  ADD = "add",
+}
+
 export enum TypeEnum {
   EMBEDDED = "Embedded",
   INTERSERVICE = "Inter-Service",
@@ -144,7 +150,7 @@ interface ComposerServiceOrderItem {
   service_entity: string;
   action: null | ServiceOrderItemAction;
   embeddedTo?: string | null;
-  relatedTo?: Map<string, string> | null;
+  relatedTo?: Map<dia.Cell.ID, string> | null;
   metadata?: Record<string, string> | null;
 }
 

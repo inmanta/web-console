@@ -1,6 +1,6 @@
 import { dia, highlighters, ui } from "@inmanta/rappid";
 import { checkIfConnectionIsAllowed, toggleLooseElement } from "./helpers";
-import { ActionEnum, ConnectionRules } from "./interfaces";
+import { ActionEnum, ConnectionRules, EmbeddedEventEnum } from "./interfaces";
 import { ServiceEntityBlock } from "./shapes";
 
 const createHalo = (
@@ -8,7 +8,6 @@ const createHalo = (
   paper: dia.Paper,
   cellView: dia.CellView,
   connectionRules: ConnectionRules,
-  updateInstancesToSend: (cell: ServiceEntityBlock, action: ActionEnum) => void,
 ) => {
   const halo = new ui.Halo({
     cellView: cellView,
@@ -42,7 +41,7 @@ const createHalo = (
       cellView.model.get("isEmbedded") &&
       cellView.model.get("embeddedTo") === undefined
     ) {
-      toggleLooseElement(cellView, "remove");
+      toggleLooseElement(cellView, EmbeddedEventEnum.REMOVE);
     }
     connectedElements.forEach((element) => {
       const elementAsService = element as ServiceEntityBlock;
@@ -55,7 +54,10 @@ const createHalo = (
       //if one of those were embedded into other then update connectedElement as it's got indirectly edited
       if (isEmbedded && isEmbeddedToThisCell) {
         element.set("embeddedTo", undefined);
-        toggleLooseElement(paper.findViewByModel(element), "add");
+        toggleLooseElement(
+          paper.findViewByModel(element),
+          EmbeddedEventEnum.ADD,
+        );
         didElementChange = true;
       }
       if (element.id === cellView.model.get("embeddedTo")) {
@@ -73,14 +75,20 @@ const createHalo = (
       }
 
       if (didElementChange) {
-        updateInstancesToSend(elementAsService, ActionEnum.UPDATE);
+        document.dispatchEvent(
+          new CustomEvent("updateInstancesToSend", {
+            detail: { cell: elementAsService, actions: ActionEnum.UPDATE },
+          }),
+        );
       }
     });
 
-    updateInstancesToSend(
-      cellView.model as ServiceEntityBlock,
-      ActionEnum.DELETE,
+    document.dispatchEvent(
+      new CustomEvent("updateInstancesToSend", {
+        detail: { cell: cellView.model, actions: ActionEnum.DELETE },
+      }),
     );
+
     graph.removeLinks(cellView.model);
     cellView.remove();
     halo.remove();

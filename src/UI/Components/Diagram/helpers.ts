@@ -15,6 +15,7 @@ import {
   TypeEnum,
   LabelLinkView,
   SavedCoordinates,
+  EmbeddedEventEnum,
 } from "@/UI/Components/Diagram/interfaces";
 
 import { ServiceEntityBlock } from "./shapes";
@@ -341,7 +342,9 @@ export const shapesDataTransform = (
         if (model) {
           if (model.upper_limit !== 1) {
             if (Array.isArray(parentInstance.attributes[attributeName])) {
-              (parentInstance.attributes[attributeName] as string[]).push(id);
+              (parentInstance.attributes[attributeName] as dia.Cell.ID[]).push(
+                id,
+              );
             } else {
               parentInstance.attributes[attributeName] = [id];
             }
@@ -444,7 +447,7 @@ const isSingularRelation = (model?: EmbeddedEntity) => {
  * @returns
  */
 export const findCorrespondingId = (
-  neighborRelations: Map<string, string>,
+  neighborRelations: Map<dia.Cell.ID, string>,
   instanceAsTable: ServiceEntityBlock,
 ) => {
   return Array.from(neighborRelations, ([id, attributeName]) => ({
@@ -505,12 +508,12 @@ export const updateLabelPosition = (
 /**
  * Toggle the highlighting of a loose element in a diagram cell view.
  * @param {dia.CellView} cellView - The cell view containing the element.
- * @param {"add" | "remove"} kind - The action to perform, either "add" to add highlighting or "remove" to remove highlighting.
+ * @param {EmbeddedEventEnum} kind - The action to perform, either "add" to add highlighting or "remove" to remove highlighting.
  * @returns {void}
  */
 export const toggleLooseElement = (
   cellView: dia.CellView,
-  kind: "add" | "remove",
+  kind: EmbeddedEventEnum,
 ): void => {
   switch (kind) {
     case "add":
@@ -615,4 +618,25 @@ export const moveCellFromColliding = (graph: dia.Graph, cell: dia.Cell) => {
       isColliding = false;
     }
   } while (isColliding);
+};
+
+/**
+ * Finds the inter-service relations for a given service model or embedded entity.
+ *
+ * @param {ServiceModel | EmbeddedEntity} serviceModel - The service model or embedded entity to find inter-service relations for.
+ * @returns {string[] | undefined} An array of entity types that have inter-service relations with the given service model or embedded entity, or undefined if the service model is undefined.
+ */
+export const findInterServiceRelations = (
+  serviceModel: ServiceModel | EmbeddedEntity,
+): string[] => {
+  const result =
+    serviceModel.inter_service_relations?.map(
+      (relation) => relation.entity_type,
+    ) || [];
+
+  const embeddedEntitiesResult = serviceModel.embedded_entities.flatMap(
+    (embedded_entity) => findInterServiceRelations(embedded_entity),
+  );
+
+  return result.concat(embeddedEntitiesResult);
 };

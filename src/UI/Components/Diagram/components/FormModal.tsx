@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { dia } from "@inmanta/rappid";
 import {
   Alert,
@@ -28,7 +28,10 @@ import {
   FieldCreator,
 } from "../../ServiceInstanceForm";
 import { FieldInput } from "../../ServiceInstanceForm/Components";
+import { CanvasContext, InstanceComposerContext } from "../Context/Context";
 import { ServiceEntityBlock } from "../shapes";
+
+//docstrings and props to be added in the next PR as the structure of the component will be changed
 
 interface PossibleForm {
   key: string;
@@ -46,22 +49,17 @@ interface Selected {
 }
 
 const FormModal = ({
-  isOpen,
-  toggleIsOpen,
-  services,
-  cellView,
   onConfirm,
 }: {
-  isOpen: boolean;
-  toggleIsOpen: (value: boolean) => void;
-  services: ServiceModel[];
-  cellView: dia.CellView | null;
   onConfirm: (
     fields: Field[],
     entity: InstanceAttributeModel,
     selected: Selected,
+    cellToEdit: dia.CellView,
   ) => void;
 }) => {
+  const { cellToEdit, setCellToEdit } = useContext(CanvasContext);
+  const { serviceModels } = useContext(InstanceComposerContext);
   const [possibleForms, setPossibleForms] = useState<PossibleForm[]>([]);
   const [fields, setFields] = useState<Field[]>([]);
   const [formState, setFormState] = useState<InstanceAttributeModel>({});
@@ -80,8 +78,7 @@ const FormModal = ({
       ref={toggleRef}
       onClick={(val) => setIsSelectOpen(val)}
       isExpanded={isSelectOpen}
-      aria-label="service-picker"
-      disabled={cellView !== null}
+      disabled={cellToEdit !== null}
       isFullWidth
       isFullHeight={false}
     >
@@ -105,7 +102,7 @@ const FormModal = ({
         });
 
         const fieldCreator = new FieldCreator(
-          cellView?.model.get("isInEditMode")
+          cellToEdit?.model.get("isInEditMode")
             ? new EditModifierHandler()
             : new CreateModifierHandler(),
         );
@@ -114,9 +111,9 @@ const FormModal = ({
         );
 
         setFields(selectedFields);
-        if (cellView) {
+        if (cellToEdit) {
           setFormState(
-            (cellView.model as ServiceEntityBlock).get("instanceAttributes"),
+            (cellToEdit.model as ServiceEntityBlock).get("instanceAttributes"),
           );
         } else {
           setFormState(createFormState(selectedFields));
@@ -124,7 +121,7 @@ const FormModal = ({
       }
       setIsSelectOpen(false);
     },
-    [cellView],
+    [cellToEdit],
   );
 
   const getUpdate = (path: string, value: unknown, multi = false): void => {
@@ -182,7 +179,7 @@ const FormModal = ({
       return values;
     };
 
-    const tempPossibleForms = getPossibleForms(services, [
+    const tempPossibleForms = getPossibleForms(serviceModels, [
       {
         key: "default_option",
         value: "Choose a Service",
@@ -194,8 +191,8 @@ const FormModal = ({
 
     setPossibleForms(tempPossibleForms);
 
-    if (cellView) {
-      const entity = cellView.model as ServiceEntityBlock;
+    if (cellToEdit) {
+      const entity = cellToEdit.model as ServiceEntityBlock;
       const entityName = entity.getName();
 
       onEntityChosen(
@@ -205,21 +202,21 @@ const FormModal = ({
         tempPossibleForms,
       );
     }
-  }, [services, cellView, onEntityChosen]);
+  }, [serviceModels, cellToEdit, onEntityChosen]);
 
   return (
     <StyledModal
       disableFocusTrap
-      isOpen={isOpen}
+      isOpen={!!cellToEdit}
       title={words(
-        cellView
+        cellToEdit
           ? "inventory.instanceComposer.formModal.edit.title"
           : "inventory.instanceComposer.formModal.create.title",
       )}
       variant={"small"}
       onClose={() => {
         clearStates();
-        toggleIsOpen(false);
+        setCellToEdit(null);
       }}
       actions={[
         <StyledButton
@@ -229,7 +226,7 @@ const FormModal = ({
           width={200}
           onClick={() => {
             clearStates();
-            toggleIsOpen(false);
+            setCellToEdit(null);
           }}
         >
           {words("cancel")}
@@ -241,9 +238,17 @@ const FormModal = ({
           width={200}
           isDisabled={selected === undefined}
           onClick={() => {
-            if (selected) onConfirm(fields, formState, selected);
+            if (selected) {
+              onConfirm(
+                fields,
+                formState,
+                selected,
+                cellToEdit as dia.CellView,
+              );
+            }
+
+            setCellToEdit(null);
             clearStates();
-            toggleIsOpen(false);
           }}
         >
           {words("confirm")}
@@ -294,7 +299,7 @@ const FormModal = ({
               variant="info"
               isInline
               title={
-                cellView
+                cellToEdit
                   ? words("inventory.editInstance.noAttributes")
                   : words("inventory.addInstance.unselectedEntity")
               }
