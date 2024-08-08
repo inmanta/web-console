@@ -104,7 +104,7 @@
     "git-revision-webpack-plugin": "^5.0.0",
     "globals": "^15.9.0",
     "html-webpack-plugin": "^5.6.0",
-    "husky": "^9.0.11",
+    "husky": "^9.1.4",
     "imagemin": "^9.0.0",
     "jest": "^29.7.0",
     "jest-axe": "^8.0.0",
