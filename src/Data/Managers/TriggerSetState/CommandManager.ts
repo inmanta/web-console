@@ -26,6 +26,7 @@ export const getBody = (
   const message = username
     ? `Triggered from the console by ${username}`
     : "Triggered from the console";
+
   return {
     current_version: version,
     target_state: targetState,

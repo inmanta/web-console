@@ -41,6 +41,7 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
       customEvent.detail,
     );
     const newSet = new Set(looseEmbedded);
+
     if (eventData.kind === "remove") {
       newSet.delete(eventData.id);
     } else {
@@ -56,6 +57,7 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
    */
   const handleDictEvent = (event) => {
     const customEvent = event as CustomEvent;
+
     setDictToDisplay(JSON.parse(customEvent.detail));
   };
 
@@ -66,6 +68,7 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
    */
   const handleEditEvent = (event) => {
     const customEvent = event as CustomEvent;
+
     setCellToEdit(customEvent.detail);
   };
 
@@ -96,6 +99,7 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
     const copiedInstances = new Map(instancesToSend); // copy
 
     const updatedInstance = instancesToSend.get(String(cell.id));
+
     switch (action) {
       case "update":
         //action in the instance isn't the same as action passed to this function, this assertion is to make sure that the update action won't change the action state of newly created instance. It will be addressed in next PR to make it clearer.
@@ -135,6 +139,7 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
     document.addEventListener("openEditModal", handleEditEvent);
     document.addEventListener("looseEmbedded", handleLooseEmbeddedEvent);
     document.addEventListener("updateInstancesToSend", updateInstancesToSend);
+
     return () => {
       document.removeEventListener("openDictsModal", handleDictEvent);
       document.removeEventListener("openEditModal", handleEditEvent);
@@ -146,5 +151,6 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
   return <>{children}</>;
 };

@@ -21,6 +21,7 @@ export const transformEmbeddedToStencilElements = (
     );
     const nestedStencilElements =
       transformEmbeddedToStencilElements(embedded_entity);
+
     return [stencilElement, ...nestedStencilElements];
   });
 };

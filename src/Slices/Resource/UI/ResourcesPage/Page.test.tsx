@@ -78,6 +78,7 @@ function setup(entries?: string[]) {
 
 test("ResourcesView shows empty table", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   expect(
@@ -106,12 +107,14 @@ test("ResourcesView shows empty table", async () => {
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("ResourcesView shows failed table", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   expect(
@@ -128,12 +131,14 @@ test("ResourcesView shows failed table", async () => {
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("ResourcesView shows success table", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   expect(
@@ -150,12 +155,14 @@ test("ResourcesView shows success table", async () => {
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("GIVEN ResourcesView WHEN user clicks on requires toggle THEN list of requires is shown", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   await act(async () => {
@@ -169,6 +176,7 @@ test("GIVEN ResourcesView WHEN user clicks on requires toggle THEN list of requi
   const toggle = within(rows[0]).getByRole("button", {
     name: "Toggle-" + Resource.response.data[0].resource_id,
   });
+
   await act(async () => {
     await userEvent.click(toggle);
   });
@@ -183,12 +191,14 @@ test("GIVEN ResourcesView WHEN user clicks on requires toggle THEN list of requi
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("ResourcesView shows next page of resources", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   await act(async () => {
@@ -211,6 +221,7 @@ test("ResourcesView shows next page of resources", async () => {
   ).toBeInTheDocument();
 
   const button = screen.getAllByRole("button", { name: "Go to next page" })[0];
+
   expect(button).toBeEnabled();
 
   await act(async () => {
@@ -238,12 +249,14 @@ test("ResourcesView shows next page of resources", async () => {
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("ResourcesView shows sorting buttons for sortable columns", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   await act(async () => {
@@ -266,12 +279,14 @@ test("ResourcesView shows sorting buttons for sortable columns", async () => {
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("ResourcesView sets sorting parameters correctly on click", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   await act(async () => {
@@ -289,12 +304,14 @@ test("ResourcesView sets sorting parameters correctly on click", async () => {
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("GIVEN ResourcesView WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   //mock that response has more than one site
@@ -312,6 +329,7 @@ test("GIVEN ResourcesView WHEN sorting changes AND we are not on the first page 
   });
 
   const nextPageButton = screen.getAllByLabelText("Go to next page")[0];
+
   expect(nextPageButton).toBeEnabled();
 
   await act(async () => {
@@ -359,6 +377,7 @@ it.each`
   "When using the $filterName filter of type $filterType with value $filterValue and text $placeholderText then the resources with that $filterUrlName should be fetched and shown",
   async ({ filterType, filterValue, placeholderText, filterUrlName }) => {
     const { component, apiHelper } = setup();
+
     render(component);
 
     await act(async () => {
@@ -368,15 +387,18 @@ it.each`
     const initialRows = await screen.findAllByRole("row", {
       name: "Resource Table Row",
     });
+
     expect(initialRows).toHaveLength(6);
 
     const input = await screen.findByPlaceholderText(placeholderText);
+
     await act(async () => {
       await userEvent.click(input);
     });
 
     if (filterType === "select") {
       const option = await screen.findByRole("option", { name: filterValue });
+
       await act(async () => {
         await userEvent.click(option);
       });
@@ -395,6 +417,7 @@ it.each`
 
     await act(async () => {
       const results = await axe(document.body);
+
       expect(results).toHaveNoViolations();
     });
   },
@@ -416,6 +439,7 @@ it.each`
     filterUrlNameTwo,
   }) => {
     const { component, apiHelper } = setup();
+
     render(component);
 
     await act(async () => {
@@ -429,6 +453,7 @@ it.each`
     expect(initialRows).toHaveLength(6);
 
     const inputOne = await screen.findByPlaceholderText(placeholderTextOne);
+
     await act(async () => {
       await userEvent.click(inputOne);
     });
@@ -438,6 +463,7 @@ it.each`
     });
 
     const inputTwo = await screen.findByPlaceholderText(placeholderTextTwo);
+
     await act(async () => {
       await userEvent.click(inputTwo);
     });
@@ -459,6 +485,7 @@ it.each`
 
     await act(async () => {
       const results = await axe(document.body);
+
       expect(results).toHaveNoViolations();
     });
   },
@@ -472,6 +499,7 @@ test("when using the all filters then the resources with that filter values shou
   const filterValueThree = "dir5";
   const filterUrlNameThree = "resource_id_value";
   const { component, apiHelper } = setup();
+
   render(component);
 
   await act(async () => {
@@ -487,6 +515,7 @@ test("when using the all filters then the resources with that filter values shou
   const inputOne = await screen.findByPlaceholderText(
     words("resources.filters.agent.placeholder"),
   );
+
   await act(async () => {
     await userEvent.click(inputOne);
   });
@@ -497,6 +526,7 @@ test("when using the all filters then the resources with that filter values shou
   const inputTwo = await screen.findByPlaceholderText(
     words("resources.filters.type.placeholder"),
   );
+
   await act(async () => {
     await userEvent.click(inputTwo);
   });
@@ -507,6 +537,7 @@ test("when using the all filters then the resources with that filter values shou
   const inputThree = await screen.findByPlaceholderText(
     words("resources.filters.value.placeholder"),
   );
+
   await act(async () => {
     await userEvent.click(inputThree);
   });
@@ -530,6 +561,7 @@ test("when using the all filters then the resources with that filter values shou
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
@@ -542,6 +574,7 @@ test.each`
   "When using the Deploy state filter with value $filterValue and option $option then the matching resources should be fetched and shown",
   async ({ filterValue, option }) => {
     const { component, apiHelper } = setup();
+
     render(component);
 
     await act(async () => {
@@ -561,6 +594,7 @@ test.each`
     const input = await within(toolbar).findByRole("button", {
       name: "Deploy State-toggle",
     });
+
     await act(async () => {
       await userEvent.click(input);
     });
@@ -568,6 +602,7 @@ test.each`
     const toggle = await screen.findByRole("generic", {
       name: `${filterValue}-${option}-toggle`,
     });
+
     await act(async () => {
       await userEvent.click(toggle);
     });
@@ -596,6 +631,7 @@ test.each`
 
     await act(async () => {
       const results = await axe(document.body);
+
       expect(results).toHaveNoViolations();
     });
   },
@@ -603,6 +639,7 @@ test.each`
 
 test("When clicking the clear and reset filters then the state filter is updated correctly", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
@@ -652,12 +689,14 @@ test("When clicking the clear and reset filters then the state filter is updated
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("ResourcesView shows deploy state bar", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   await act(async () => {
@@ -676,12 +715,14 @@ test("ResourcesView shows deploy state bar", async () => {
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("GIVEN ResourcesView WHEN data is loading for next page THEN shows toolbar", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   expect(
@@ -778,12 +819,14 @@ test("GIVEN ResourcesView WHEN data is loading for next page THEN shows toolbar"
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("GIVEN ResourcesView WHEN data is auto-updated THEN shows updated toolbar", async () => {
   const { component, apiHelper, scheduler } = setup();
+
   render(component);
 
   expect(
@@ -865,12 +908,14 @@ test("GIVEN ResourcesView WHEN data is auto-updated THEN shows updated toolbar",
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("ResourcesView shows deploy state bar with available status without processing_events status", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   await act(async () => {
@@ -896,12 +941,14 @@ test("ResourcesView shows deploy state bar with available status without process
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("Given the ResourcesView When clicking on deploy, then the approriate backend request is fired", async () => {
   const { component, apiHelper, environment } = setup();
+
   render(component);
 
   await act(async () => {
@@ -941,12 +988,14 @@ test("Given the ResourcesView When clicking on deploy, then the approriate backe
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("Given the ResourcesView When clicking on repair, then the approriate backend request is fired", async () => {
   const { component, apiHelper, environment } = setup();
+
   render(component);
 
   await act(async () => {
@@ -984,6 +1033,7 @@ test("Given the ResourcesView When clicking on repair, then the approriate backe
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
@@ -991,6 +1041,7 @@ test("Given the ResourcesView When clicking on repair, then the approriate backe
 test("Given the ResourcesView When environment is halted, then deploy and repair buttons are disabled", async () => {
   const { component, apiHelper, environment, store, environmentModifier } =
     setup();
+
   environmentModifier.setEnvironment(environment);
   store.dispatch.environment.setEnvironmentDetailsById({
     id: environment,
@@ -1020,6 +1071,7 @@ test("Given the ResourcesView When environment is halted, then deploy and repair
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });

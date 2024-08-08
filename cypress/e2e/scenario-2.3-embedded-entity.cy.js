@@ -10,6 +10,7 @@ const clearEnvironment = (nameEnvironment = "lsm-frontend") => {
   cy.url().then((url) => {
     const location = new URL(url);
     const id = location.searchParams.get("env");
+
     cy.request("DELETE", `/api/v1/decommission/${id}`);
   });
 };
@@ -50,6 +51,7 @@ const forceUpdateEnvironment = (nameEnvironment = "lsm-frontend") => {
   cy.url().then((url) => {
     const location = new URL(url);
     const id = location.searchParams.get("env");
+
     cy.request({
       method: "POST",
       url: `/lsm/v1/exporter/export_service_definition`,
@@ -136,6 +138,13 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="History-Row"]', { timeout: 60000 }).should(
         "have.length",
         3,
+      );
+
+      // Check if the default selected one is the attributes tab, since this instance has no documentation.
+      cy.get('[aria-label="attributes-content"]').should(
+        "have.attr",
+        "aria-selected",
+        "true",
       );
 
       // Check the state of the instance is up in the history section.

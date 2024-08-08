@@ -21,11 +21,13 @@ test("Given BlockingModal When firing event twice Then Modal will appear and dis
   });
   const modalHalt = screen.getByLabelText("halting-blocker");
   const textHalt = screen.getByText(words("environment.halt.process"));
+
   expect(modalHalt).toBeVisible();
   expect(textHalt).toBeVisible();
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 
@@ -40,6 +42,7 @@ test("Given BlockingModal When firing event twice Then Modal will appear and dis
   });
   const modal = screen.getByLabelText("halting-blocker");
   const text = screen.getByText(words("environment.resume.process"));
+
   expect(modal).toBeVisible();
   expect(text).toBeVisible();
 

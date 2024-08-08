@@ -159,6 +159,7 @@ const embedded = {
   "embedded?": [attrsValues],
   "editableEmbedded?": [attrsValues],
 };
+
 export const b: InstanceAttributeModel = {
   ...attrsValues,
   embedded_base: [embedded],

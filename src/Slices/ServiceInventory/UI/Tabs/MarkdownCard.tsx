@@ -8,15 +8,15 @@ interface Props {
 }
 
 /**
- * Renders a set of tabs for displaying documentation in Markdown.
+ * Renders a Card for displaying documentation in Markdown.
  *
  * @component
  * @param {Props} props - The component props.
  *  @prop {unknown} attributeValue - The value of the attribute.
  *  @prop {string} web_title - The title of the web page.
- * @returns {JSX.Element} The rendered DocumentationTabs component.
+ * @returns {JSX.Element} The rendered MarkdownCard component.
  */
-export const DocumentationTabs = ({ attributeValue, web_title }: Props) => {
+export const MarkdownCard = ({ attributeValue, web_title }: Props) => {
   const data =
     typeof attributeValue === "string"
       ? attributeValue

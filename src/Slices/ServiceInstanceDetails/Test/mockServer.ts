@@ -1,6 +1,13 @@
 import { HttpResponse, delay, http } from "msw";
 import { setupServer } from "msw/node";
-import { historyData, instanceData, serviceModel } from "./mockData";
+import {
+  historyData,
+  historyDataWithDocumentation,
+  instanceData,
+  instanceDataWithDocumentation,
+  serviceModel,
+  serviceModelWithDocumentation,
+} from "./mockData";
 
 export const loadingServer = setupServer(
   // service model
@@ -13,6 +20,7 @@ export const loadingServer = setupServer(
   // history logs
   http.get("/lsm/v1/service_inventory/mobileCore/1d96a1ab/log", async () => {
     await delay(500);
+
     return HttpResponse.json({
       data: historyData,
     });
@@ -21,6 +29,7 @@ export const loadingServer = setupServer(
   // service instance data
   http.get("/lsm/v1/service_inventory/mobileCore/1d96a1ab", async () => {
     await delay(300);
+
     return HttpResponse.json({
       data: instanceData,
     });
@@ -60,6 +69,7 @@ export const errorServerHistory = setupServer(
   // service instance data
   http.get("/lsm/v1/service_inventory/mobileCore/1d96a1ab", async () => {
     delay(300);
+
     return HttpResponse.json({
       data: instanceData,
     });
@@ -108,6 +118,29 @@ export const serverWithConfig = setupServer(
   http.get("/lsm/v1/service_inventory/mobileCore/1d96a1ab", async () => {
     return HttpResponse.json({
       data: instanceData,
+    });
+  }),
+);
+
+export const serverWithDocumentation = setupServer(
+  // service model
+  http.get("/lsm/v1/service_catalog/mobileCore", async () => {
+    return HttpResponse.json({
+      data: serviceModelWithDocumentation,
+    });
+  }),
+
+  // history logs
+  http.get("/lsm/v1/service_inventory/mobileCore/1d96a1ab/log", async () => {
+    return HttpResponse.json({
+      data: historyDataWithDocumentation,
+    });
+  }),
+
+  // service instance data
+  http.get("/lsm/v1/service_inventory/mobileCore/1d96a1ab", async () => {
+    return HttpResponse.json({
+      data: instanceDataWithDocumentation,
     });
   }),
 );

@@ -48,6 +48,7 @@ export class VersionResourceTablePresenter
     if (index > -1 && index < this.getNumberOfColumns()) {
       return this.getColumnHeads()[index].apiName;
     }
+
     return undefined;
   }
 

@@ -14,6 +14,7 @@ export function ResetEnvironmentSettingCommandManager(
           `/api/v2/environment_settings/${id}`,
           environment,
         );
+
         if (Maybe.isNone(error)) {
           await updater.update(
             { kind: "GetEnvironmentSetting", id },
@@ -25,6 +26,7 @@ export function ResetEnvironmentSettingCommandManager(
             id: environment,
           });
         }
+
         return error;
       };
     },

@@ -49,6 +49,7 @@ function setup() {
 
 test("Given the InstanceCellButton When an instance has an identity Then it is shown instead of the id", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   await act(async () => {
@@ -63,6 +64,7 @@ test("Given the InstanceCellButton When an instance has an identity Then it is s
 
 test("Given the InstanceCellButton When an instance doesn't have an identity Then the id is shown", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   await act(async () => {
@@ -80,6 +82,7 @@ test("Given the InstanceCellButton When an instance doesn't have an identity The
 
 test("Given the InstanceCellButton When the instance request fails Then the id is shown", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   await act(async () => {

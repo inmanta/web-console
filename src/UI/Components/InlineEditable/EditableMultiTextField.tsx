@@ -39,6 +39,7 @@ export const EditableMultiTextField: React.FC<Props> = ({
   const onSubmitRequest = async (values: Record<string, string>) => {
     setEditable(false);
     const error = await onSubmit(values);
+
     if (Maybe.isSome(error)) {
       setSubmitError(error.value);
     }
@@ -59,12 +60,15 @@ export const EditableMultiTextField: React.FC<Props> = ({
   const onCloseAlert = () => setSubmitError("");
   const onChange = (label: string) => (input: string) => {
     const updated = { ...fieldValues };
+
     updated[label] = input;
     setFieldValues(updated);
   };
+
   useEffect(() => {
     setFieldValues(initialValues);
   }, [initialValues]);
+
   return (
     <DescriptionListGroup>
       <DescriptionListTerm>

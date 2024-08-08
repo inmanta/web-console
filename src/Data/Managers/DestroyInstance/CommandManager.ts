@@ -10,7 +10,9 @@ export function DestroyInstanceCommandManager(apiHelper: ApiHelper) {
           `/lsm/v2/service_inventory/${service_entity}/${id}/expert?current_version=${version}`,
           environment,
         );
+
         await refetch();
+
         return result;
       };
     },

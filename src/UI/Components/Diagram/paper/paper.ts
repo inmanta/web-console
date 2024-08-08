@@ -91,6 +91,7 @@ export class ComposerPaper {
 
           return isConnected === undefined && isAllowed && baseValidators;
         }
+
         return baseValidators;
       },
     });
@@ -125,6 +126,7 @@ export class ComposerPaper {
         );
 
         const bbox = elementAsShape.getBBox();
+
         elementAsShape.attr("toggleButton/y", bbox.height - 24);
         elementAsShape.attr("spacer/y", bbox.height - 33);
         elementAsShape.attr("buttonBody/y", bbox.height - 32);

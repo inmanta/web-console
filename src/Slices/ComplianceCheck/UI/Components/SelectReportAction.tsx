@@ -35,6 +35,7 @@ export const SelectReportAction: React.FC<Props> = ({
   const onSelect = (value) => {
     if (!RemoteData.isSuccess(reportsData)) return;
     const report = reportsData.value.find((report) => report.id === value);
+
     if (report === undefined) return;
     setSelectedReport(Maybe.some(report));
     setIsOpen(false);

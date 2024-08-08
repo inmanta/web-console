@@ -24,6 +24,7 @@ interface Props {
  */
 export const OrdersRow: React.FC<Props> = ({ row }) => {
   const { routeManager } = useContext(DependencyContext);
+
   return (
     <Tbody>
       <Tr aria-label="ServiceOrderRow">

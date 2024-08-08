@@ -92,6 +92,7 @@ const FormModal = ({
       const chosenModel = possibleForms.find(
         (service) => service.value === value,
       );
+
       if (chosenModel && chosenModel.model) {
         setSelected({
           name: value as string,
@@ -108,6 +109,7 @@ const FormModal = ({
         const selectedFields = fieldCreator.attributesToFields(
           chosenModel.model.attributes,
         );
+
         setFields(selectedFields);
         if (cellToEdit) {
           setFormState(
@@ -139,6 +141,7 @@ const FormModal = ({
     } else {
       setFormState((prev) => {
         const clone = { ...prev };
+
         return set(clone, path, value);
       });
     }
@@ -185,11 +188,13 @@ const FormModal = ({
         holderName: "",
       },
     ]);
+
     setPossibleForms(tempPossibleForms);
 
     if (cellToEdit) {
       const entity = cellToEdit.model as ServiceEntityBlock;
       const entityName = entity.getName();
+
       onEntityChosen(
         entity.get("isEmbedded")
           ? `${entityName} (${entity.get("holderName")})`

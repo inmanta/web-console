@@ -44,6 +44,7 @@ export const useFetchHelpers = () => {
     if (!!authHelper.getToken()) {
       headers.append("Authorization", `Bearer ${authHelper.getToken()}`);
     }
+
     return headers;
   }
 

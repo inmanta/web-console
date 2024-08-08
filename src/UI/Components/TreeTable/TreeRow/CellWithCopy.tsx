@@ -92,9 +92,10 @@ export function formatValue(value: string): string {
 function isJson(value: string): boolean {
   try {
     JSON.parse(value);
-  } catch (e) {
+  } catch (_e) {
     return false;
   }
+
   return true;
 }
 
@@ -107,6 +108,7 @@ export function shouldRenderLink(
 
 function splitValue(value: string): string[] {
   const parts = value.split(",").map((val) => val.trim());
+
   return parts;
 }
 function isValueOfMultipleIds(value: string): boolean {
@@ -126,6 +128,7 @@ export const MultiLinkCell: React.FC<LinkCellProps> = ({
 }) => {
   if (isValueOfMultipleIds(value)) {
     const ids = splitValue(value);
+
     return (
       <Flex
         direction={{ default: "column" }}
@@ -140,6 +143,7 @@ export const MultiLinkCell: React.FC<LinkCellProps> = ({
       </Flex>
     );
   }
+
   return <LinkCell value={value} serviceName={serviceName} onClick={onClick} />;
 };
 

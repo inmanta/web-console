@@ -36,6 +36,7 @@ function setup() {
   );
 
   const onClose = jest.fn();
+
   dependencies.environmentModifier.setEnvironment("env");
 
   const component = (
@@ -55,6 +56,7 @@ function setup() {
 
 test("GIVEN Environment Actions and delete modal WHEN empty or wrong env THEN delete disabled", async () => {
   const { component } = setup();
+
   render(component);
 
   await act(async () => {
@@ -67,6 +69,7 @@ test("GIVEN Environment Actions and delete modal WHEN empty or wrong env THEN de
     name: "delete environment check",
   });
   const deleteButton = screen.getByRole("button", { name: "delete" });
+
   expect(input.value).toHaveLength(0);
   expect(deleteButton).toBeDisabled();
 
@@ -80,6 +83,7 @@ test("GIVEN Environment Actions and delete modal WHEN empty or wrong env THEN de
 
 test("GIVEN Environment Actions and delete modal WHEN correct env THEN delete enabled", async () => {
   const { component } = setup();
+
   render(component);
 
   await act(async () => {
@@ -92,6 +96,7 @@ test("GIVEN Environment Actions and delete modal WHEN correct env THEN delete en
     name: "delete environment check",
   });
   const deleteButton = screen.getByRole("button", { name: "delete" });
+
   expect(input.value).toHaveLength(0);
   expect(deleteButton).toBeDisabled();
 
@@ -104,6 +109,7 @@ test("GIVEN Environment Actions and delete modal WHEN correct env THEN delete en
 
 test("GIVEN Environment Actions and delete modal WHEN correct env & delete button pressed THEN delete executed", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   await act(async () => {
@@ -117,6 +123,7 @@ test("GIVEN Environment Actions and delete modal WHEN correct env & delete butto
   });
 
   const deleteButton = screen.getByRole("button", { name: "delete" });
+
   await act(async () => {
     await userEvent.type(input, "connect");
   });
@@ -126,6 +133,7 @@ test("GIVEN Environment Actions and delete modal WHEN correct env & delete butto
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
   const request = apiHelper.pendingRequests[0];
+
   expect(request).toEqual({
     method: "DELETE",
     environment: "env",
@@ -149,6 +157,7 @@ test("GIVEN Environment Actions and delete modal WHEN correct env & delete butto
 
 test("GIVEN Environment Actions and delete modal WHEN delete executed and error THEN error is shown", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   await act(async () => {
@@ -160,6 +169,7 @@ test("GIVEN Environment Actions and delete modal WHEN delete executed and error 
   const input = screen.getByRole<HTMLInputElement>("textbox", {
     name: "delete environment check",
   });
+
   await act(async () => {
     await userEvent.type(input, "connect");
   });
@@ -172,11 +182,13 @@ test("GIVEN Environment Actions and delete modal WHEN delete executed and error 
   });
 
   const errorAlert = screen.getByTestId("ErrorAlert");
+
   expect(within(errorAlert).getByText("error message")).toBeVisible();
 });
 
 test("GIVEN Environment Actions and delete modal WHEN form is valid and enter is pressed THEN delete is executed", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   await act(async () => {
@@ -198,6 +210,7 @@ test("GIVEN Environment Actions and delete modal WHEN form is valid and enter is
 
 test("GIVEN Environment Actions and clear modal WHEN form is valid and enter is pressed THEN clear is executed", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   await act(async () => {
@@ -219,6 +232,7 @@ test("GIVEN Environment Actions and clear modal WHEN form is valid and enter is 
 
 test("GIVEN Environment Actions and clear modal WHEN correct env & clear button pressed THEN clear is executed", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   await act(async () => {
@@ -241,6 +255,7 @@ test("GIVEN Environment Actions and clear modal WHEN correct env & clear button 
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
   const request = apiHelper.pendingRequests[0];
+
   expect(request).toEqual({
     method: "DELETE",
     environment: "env",
@@ -256,6 +271,7 @@ test("GIVEN Environment Actions and clear modal WHEN correct env & clear button 
 
 test("GIVEN Environment Actions WHEN the environment is protected THEN clear and delete are disabled", async () => {
   const { component, store } = setup();
+
   store.dispatch.environment.setSettingsData({
     environment: "env",
     value: RemoteData.success({

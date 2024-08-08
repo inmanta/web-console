@@ -72,6 +72,7 @@ export function showLinkTools(
     ) {
       return true;
     }
+
     return false;
   };
 
@@ -118,6 +119,7 @@ export function showLinkTools(
           const targetCell = graph.getCell(
             target.id as dia.Cell.ID,
           ) as ServiceEntityBlock;
+
           /**
            * Function that remove any data in this connection between cells
            * @param elementCell cell that we checking
@@ -129,6 +131,7 @@ export function showLinkTools(
             disconnectingCell: ServiceEntityBlock,
           ): void => {
             const elementRelations = elementCell.getRelations();
+
             // resolve any possible embedded connections between cells,
             if (
               elementCell.get("isEmbedded") &&
@@ -171,6 +174,7 @@ export function showLinkTools(
       }),
     ],
   });
+
   linkView.addTools(tools);
 }
 
@@ -198,6 +202,7 @@ export function appendInstance(
   const serviceInstanceModel = services.find(
     (model) => model.name === serviceInstance.service_entity,
   );
+
   if (!serviceInstanceModel) {
     throw Error(words("inventory.instanceComposer.errorMessage"));
   }
@@ -241,6 +246,7 @@ export function appendInstance(
     instanceWithRelations.relatedInstances.forEach((relatedInstance) => {
       const isInstanceMain = false;
       const cellAdded = graph.getCell(relatedInstance.id);
+
       if (!cellAdded) {
         appendInstance(
           paper,
@@ -277,15 +283,18 @@ export function appendInstance(
         //as the fact that we have that cell as relatedInstance tells us that either that or its embedded entities has connection
         if (!isConnected) {
           const neighbors = graph.getNeighbors(cellAdded as dia.Element);
+
           neighbors.map((cell) => {
             const neighborRelations = (
               cell as ServiceEntityBlock
             ).getRelations();
+
             if (neighborRelations) {
               const correspondingId = findCorrespondingId(
                 neighborRelations,
                 instanceAsTable,
               );
+
               if (correspondingId) {
                 isConnected = true;
                 connectEntities(
@@ -385,6 +394,7 @@ export function appendEmbeddedEntity(
         presentedAttr,
         isBlockedFromEditing,
       );
+
       appendedEntity.forEach((entity) => {
         handleInfoIcon(entity, presentedAttr);
       });
@@ -398,6 +408,7 @@ export function appendEmbeddedEntity(
 
     embeddedEntity.inter_service_relations?.map((relation) => {
       const relationId = entityInstance[relation.name] as relationId;
+
       if (relationId) {
         instanceAsTable.addRelation(relationId, relation.name);
         if (
@@ -413,6 +424,7 @@ export function appendEmbeddedEntity(
         }
       }
     });
+
     return instanceAsTable;
   }
 
@@ -491,6 +503,7 @@ export function populateGraphWithDefault(
 ) {
   const coreEntity = appendEntity(graph, service, {}, true);
   const defaultEntities = addDefaultEntities(graph, service);
+
   connectEntities(graph, coreEntity, defaultEntities);
 
   DirectedGraph.layout(graph, {
@@ -498,6 +511,7 @@ export function populateGraphWithDefault(
     edgeSep: 80,
     rankDir: "TB",
   });
+
   return [coreEntity, ...defaultEntities];
 }
 
@@ -523,11 +537,13 @@ export function addDefaultEntities(
         true,
         service.name,
       );
+
       connectEntities(
         graph,
         embeddedEntity,
         addDefaultEntities(graph, embedded_entity),
       );
+
       return embeddedEntity;
     });
 
@@ -553,12 +569,15 @@ export function appendColumns(
   const instanceAttributes = {};
   const attributes = attributesKeywords.map((key) => {
     const attributeValue = isEmpty ? "" : serviceInstanceAttributes[key];
+
     instanceAttributes[key] = attributeValue;
+
     return {
       name: key,
       value: attributeValue,
     };
   });
+
   serviceEntity.set("instanceAttributes", instanceAttributes);
 
   if (isInitial) {
@@ -589,6 +608,7 @@ function connectEntities(
 ) {
   targets.map((target) => {
     const link = new Link();
+
     if (isBlocked) {
       link.set("isBlockedFromEditing", isBlocked);
     }
@@ -622,6 +642,7 @@ function handleAttributes(
 ) {
   const { attributes, embedded_entities } = serviceModel;
   const attributesNames = attributes.map((attribute) => attribute.name);
+
   handleInfoIcon(instanceAsTable, presentedAttr);
   appendColumns(instanceAsTable, attributesNames, attributesValues);
   instanceAsTable.set(

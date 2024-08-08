@@ -51,6 +51,7 @@ export const Canvas: React.FC<{
       editable,
       mainService,
     );
+
     setDiagramHandlers(actions);
     const newInstances = new Map();
 
@@ -75,6 +76,7 @@ export const Canvas: React.FC<{
       });
     } else {
       const cells = actions.addInstance([...serviceModels, mainService]);
+
       cells.forEach((cell) => {
         if (cell.type === "app.ServiceEntityBlock") {
           newInstances.set(cell.id, {
@@ -114,6 +116,7 @@ export const Canvas: React.FC<{
       mainService,
     );
   }, [scroller, relatedInventories.data, mainService]);
+
   return (
     <EventWrapper>
       <DictModal />
@@ -121,6 +124,7 @@ export const Canvas: React.FC<{
         onConfirm={(fields, entity, selected, cellToEdit) => {
           if (diagramHandlers) {
             const sanitizedAttrs = sanitizeAttributes(fields, entity);
+
             if (cellToEdit) {
               //deep copy
               const shape = diagramHandlers.editEntity(
@@ -128,6 +132,7 @@ export const Canvas: React.FC<{
                 selected.model as ServiceModel,
                 entity,
               );
+
               shape.set("sanitizedAttrs", sanitizedAttrs);
               //handleUpdate(shape, ActionEnum.UPDATE);
             }

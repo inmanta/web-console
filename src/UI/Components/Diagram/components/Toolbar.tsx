@@ -155,6 +155,7 @@ const Toolbar: React.FC<Props> = ({
     </Container>
   );
 };
+
 export default Toolbar;
 
 const Container = styled(Flex)`

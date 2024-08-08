@@ -65,6 +65,7 @@ export const ComposerEditorProvider: React.FC<Props> = ({
       const mainService = serviceModels.data.find(
         (service) => service.name === serviceName,
       );
+
       if (mainService) {
         setRelatedServiceNames(findInterServiceRelations(mainService));
       }

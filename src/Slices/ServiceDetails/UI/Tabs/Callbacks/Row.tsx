@@ -26,6 +26,7 @@ export const Row: React.FC<Props> = ({
   numberOfColumns,
 }) => {
   const shortUuid = getShortUuidFromRaw(callback.callback_id);
+
   return (
     <Tbody isExpanded={false}>
       <Tr aria-label={`CallbackRow-${shortUuid}`}>

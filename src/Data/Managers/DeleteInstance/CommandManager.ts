@@ -10,7 +10,9 @@ export function DeleteInstanceCommandManager(apiHelper: ApiHelper) {
           `/lsm/v1/service_inventory/${service_entity}/${id}?current_version=${version}`,
           environment,
         );
+
         await refetch();
+
         return result;
       };
     },

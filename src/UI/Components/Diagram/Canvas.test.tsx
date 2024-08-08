@@ -1,4 +1,3 @@
-/*eslint-disable testing-library/no-node-access*/
 import React, { act } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import {
@@ -75,6 +74,7 @@ const setup = (
     ]),
   );
   history.push("/?env=aaa");
+
   return (
     <QueryClientProvider client={queryClient}>
       <CustomRouter history={history}>
@@ -285,30 +285,37 @@ beforeAll(() => {
 
 it("renders shapes dict Value that can be viewed in dict Modal", async () => {
   const component = setup(mockedInstanceTwoServiceModel, mockedInstanceTwo, []);
+
   render(component);
 
   const button = await screen.findByJointSelector("toggleButton");
+
   await act(async () => {
     await user.click(button);
   });
 
   const dictValue = await screen.findByJointSelector("itemLabel_dictOne_value");
+
   await act(async () => {
     await user.click(dictValue.children[0]);
   });
 
   const modal = await screen.findByRole("dialog");
+
   expect(modal).toBeVisible();
 
   const title = document.querySelector(".pf-v5-c-modal-box__title");
+
   expect(title).toHaveTextContent(
     words("inventory.instanceComposer.dictModal")("dictOne"),
   );
 
   const value = document.querySelector(".pf-v5-c-code-block__code");
+
   expect(value).toHaveTextContent("{}");
 
   const copyButton = await screen.findByLabelText("Copy to clipboard");
+
   await act(async () => {
     await user.click(copyButton);
   });
@@ -316,10 +323,12 @@ it("renders shapes dict Value that can be viewed in dict Modal", async () => {
   const clipboardItems = await navigator.clipboard.read();
   const blob = await clipboardItems[0].getType(clipboardItems[0].types[0]);
   const clipboardText = await blob.text();
+
   console.log(clipboardText);
   expect(clipboardText).toEqual("{}");
 
   const closeButton = await screen.findByLabelText("Close");
+
   await act(async () => {
     await user.click(closeButton);
   });

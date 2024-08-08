@@ -124,11 +124,13 @@ export const ServiceInstanceForm: React.FC<Props> = ({
           } else {
             selection.push(value as string);
           }
+
           return set(clone, path, selection);
         });
       } else {
         setFormState((prev) => {
           const clone = { ...prev };
+
           return set(clone, path, value);
         });
       }
@@ -148,12 +150,13 @@ export const ServiceInstanceForm: React.FC<Props> = ({
 
   // The try catch is there to make certain the provided string is parsable to JSON before setting the formstate.
   const onEditorChange = useCallback(
-    (value: string) => {
+    (value: string, isValid: boolean) => {
       try {
         const parsed = JSON.parse(value);
+
         setFormState(parsed);
-        setIsEditorValid(true);
-      } catch (error) {
+        setIsEditorValid(isValid);
+      } catch (_error) {
         setIsEditorValid(false);
       }
     },

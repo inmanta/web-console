@@ -53,6 +53,7 @@ const defaultStencil = {
 describe("createStencilElement", () => {
   it("returns proper Stencil Elements based on properties passed", () => {
     const defaultElement = createStencilElement("default");
+
     expect(defaultElement).toStrictEqual(defaultStencil);
 
     const embeddedElementWithModel = createStencilElement(
@@ -61,6 +62,7 @@ describe("createStencilElement", () => {
       containerModel.embedded_entities[0],
       "holderName",
     );
+
     expect(embeddedElementWithModel).toStrictEqual({
       ...defaultStencil,
       entity_model: containerModel.embedded_entities[0],

@@ -10,6 +10,7 @@ export const createCookie = (
   hoursToExpire: number,
 ) => {
   const date = new Date();
+
   date.setTime(date.getTime() + hoursToExpire * 60 * 60 * 1000);
   document.cookie =
     cookieName +

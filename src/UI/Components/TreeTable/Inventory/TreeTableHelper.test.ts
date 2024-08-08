@@ -15,6 +15,7 @@ test("TreeTableHelper getExpansionState returns correct expansionState", () => {
   );
   // Act
   const expansionState = treeTableHelper.getExpansionState();
+
   // Assert
   expect(expansionState).toEqual({
     a: false,
@@ -30,7 +31,7 @@ test("TreeTableHelper createRows returns correct list", () => {
     { candidate: null, active: { a: "b", c: { d: "e" } }, rollback: null },
   );
   // Act
-  /* eslint-disable-next-line @typescript-eslint/no-empty-function */
+
   const cb = () => {};
   const { rows } = treeTableHelper.createRows({ c: false }, cb);
   // Assert
@@ -64,6 +65,7 @@ test("TreeTableHelper createRows returns correct list", () => {
       ],
     },
   ];
+
   expect(rows).toMatchObject(expectedRows);
 });
 
@@ -142,5 +144,6 @@ test("TreeTableHelper createRows returns correctly ordered list", () => {
       ],
     },
   ];
+
   expect(rows).toMatchObject(expectedRows);
 });

@@ -7,6 +7,7 @@ export function ResourceLogsStateHelper(store: Store) {
     store,
     (data, { id }) => {
       const value = RemoteData.mapSuccess((data) => data, data);
+
       store.dispatch.resourceLogs.setData({
         id,
         value,

@@ -47,6 +47,7 @@ export class FileFetcherImpl implements FileFetcher {
   ): Either.Type<string, string> {
     if (Either.isRight(either)) {
       const response = either.value;
+
       if (typeof response.message !== "undefined") {
         return Either.left(response.message);
       }
@@ -63,7 +64,7 @@ export class FileFetcherImpl implements FileFetcher {
   private decodeBase64String(data: string): string {
     try {
       return window.atob(data);
-    } catch (e) {
+    } catch (_e) {
       return data;
     }
   }

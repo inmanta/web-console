@@ -51,5 +51,6 @@ export function handleUrlState<Data>(
 
 const getKeyOrEmpty = (obj: Record<string, unknown>, key: string) => {
   const candidate = obj[key];
+
   return isObject(candidate) ? candidate : {};
 };

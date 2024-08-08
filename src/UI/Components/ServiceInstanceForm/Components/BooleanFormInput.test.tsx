@@ -5,6 +5,7 @@ import { BooleanFormInput } from "./BooleanFormInput";
 
 const InputSetup = ({ attributeName = "bool_param", isOptional = false }) => {
   const [inputState, setInputState] = useState<boolean | null>(false);
+
   return (
     <BooleanFormInput
       attributeName={attributeName}
@@ -20,12 +21,14 @@ describe("BooleanFormInput", () => {
   it("Should render radio button input for boolean parameters", async () => {
     render(<InputSetup />);
     const radioButtons = await screen.findAllByRole("radio");
+
     expect(radioButtons.length).toEqual(2);
   });
 
   it("Should render radio button input for optional boolean parameters", async () => {
     render(<InputSetup isOptional />);
     const radioButtons = await screen.findAllByRole("radio");
+
     expect(radioButtons.length).toEqual(3);
   });
 

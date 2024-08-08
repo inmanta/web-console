@@ -12,9 +12,7 @@ export const handle = <Error, Data>(
 ): Promise<Either.Type<Error, Data>> => {
   switch (outcome.kind) {
     case "Loading":
-      return new Promise(() => {
-        undefined;
-      });
+      return new Promise(() => {});
 
     case "Failed":
       return new Promise((resolve) => {

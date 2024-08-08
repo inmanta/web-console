@@ -114,6 +114,7 @@ const data: CompileReport[] = [
     version: 0,
   },
 ];
+
 export const response = {
   data: data,
   links: { self: "/api/v2/compilereport?limit=1000&sort=requested.DESC" },

@@ -55,6 +55,7 @@ export const useGetInstanceWithRelations = (
         headers,
       },
     );
+
     await handleErrors(response, "Failed to fetch instance with id: " + id);
 
     return await response.json();
@@ -74,9 +75,11 @@ export const useGetInstanceWithRelations = (
       await Promise.all(
         instance.referenced_by.map(async (relatedId) => {
           const relatedInstance = await fetchInstance(relatedId);
+
           if (relatedInstance) {
             relatedInstances.push(relatedInstance.data);
           }
+
           return relatedInstance;
         }),
       );

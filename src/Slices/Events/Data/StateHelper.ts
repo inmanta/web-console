@@ -7,6 +7,7 @@ export function EventsStateHelper(store: Store) {
     store,
     (data, { id }) => {
       const value = RemoteData.mapSuccess((data) => data, data);
+
       store.dispatch.events.setData({ id, value });
     },
     (state, { id }) => state.events.byId[id],

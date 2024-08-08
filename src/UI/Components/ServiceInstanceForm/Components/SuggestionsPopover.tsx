@@ -109,6 +109,7 @@ export const SuggestionsPopover = forwardRef<
         case "ArrowDown":
           const firstElement: HTMLButtonElement | null =
             autocompleteRef.current.querySelector("li > button:not(:disabled)");
+
           firstElement && firstElement.focus();
           event.preventDefault(); // by default, the up and down arrow keys scroll the window
           break;
@@ -116,8 +117,9 @@ export const SuggestionsPopover = forwardRef<
         case "Escape":
           setIsOpen(false);
           reference.current && reference.current.focus();
-        // the tab, and enter keys will close the menu, and the tab key will move browser
-        // focus forward one element (by default)
+          // the tab, and enter keys will close the menu, and the tab key will move browser
+          // focus forward one element (by default)
+          break;
         case "Enter":
           event.preventDefault();
           setIsOpen(false);
@@ -168,12 +170,14 @@ export const SuggestionsPopover = forwardRef<
     const filteredOptions: string[] = suggestions.filter((suggestion) =>
       suggestion.toLowerCase().includes(filter.toLowerCase()),
     );
+
     setAutocompleteOptions(filteredOptions);
   }, [filter, suggestions]);
 
   useEffect(() => {
     window.addEventListener("keydown", handleMenuKeys);
     window.addEventListener("click", handleClickOutside);
+
     return () => {
       window.removeEventListener("keydown", handleMenuKeys);
       window.removeEventListener("click", handleClickOutside);

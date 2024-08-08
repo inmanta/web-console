@@ -14,7 +14,9 @@ interface Props {
 
 export const ServiceInstanceDescription: React.FC<Props> = (props) => {
   const { data } = props;
+
   if (data === undefined) return <DescriptionWithQuery {...props} />;
+
   return <DescriptionView {...props} data={data} />;
 };
 
@@ -45,6 +47,7 @@ const DescriptionView: React.FC<ViewProps> = ({
 }) => {
   if (!RemoteData.isSuccess(data)) return null;
   const id = data.value.service_identity_attribute_value || instanceId;
+
   return (
     <Description className={className} withSpace={withSpace}>
       {getDescription(id)}

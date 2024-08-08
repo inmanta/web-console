@@ -30,6 +30,7 @@ export const ResourceHistoryTableRow: React.FC<Props> = ({
     }
     scrollRowIntoView(rowRef);
   };
+
   return (
     <Tbody isExpanded={false}>
       <Tr aria-label="Resource History Table Row">

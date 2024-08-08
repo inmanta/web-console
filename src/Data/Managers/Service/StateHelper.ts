@@ -10,6 +10,7 @@ export function ServiceStateHelper(
     store,
     (data, query, environment) => {
       const unwrapped = RemoteData.mapSuccess((wrapped) => wrapped.data, data);
+
       store.dispatch.services.setSingle({
         query,
         data: unwrapped,

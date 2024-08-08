@@ -64,6 +64,7 @@ function setup() {
 
 test("ResourceHistoryView shows empty table", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   expect(
@@ -85,6 +86,7 @@ test("ResourceHistoryView shows empty table", async () => {
 
 test("ResourceHistoryView shows failed table", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   expect(
@@ -100,6 +102,7 @@ test("ResourceHistoryView shows failed table", async () => {
 
 test("ResourceHistoryView shows success table", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   expect(
@@ -122,6 +125,7 @@ test("ResourceHistoryView shows success table", async () => {
 
 test("ResourceHistoryView shows sorting buttons for sortable columns", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
   apiHelper.resolve(Either.right(ResourceHistory.response));
   expect(await screen.findByRole("button", { name: /Date/i })).toBeVisible();
@@ -129,9 +133,11 @@ test("ResourceHistoryView shows sorting buttons for sortable columns", async () 
 
 test("ResourceHistoryView sets sorting parameters correctly on click", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
   apiHelper.resolve(Either.right(ResourceHistory.response));
   const stateButton = await screen.findByRole("button", { name: /date/i });
+
   expect(stateButton).toBeVisible();
   await act(async () => {
     await userEvent.click(stateButton);
@@ -141,6 +147,7 @@ test("ResourceHistoryView sets sorting parameters correctly on click", async () 
 
 test("GIVEN The ResourceHistoryView WHEN the user clicks on the expansion toggle THEN the tabs are shown", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   await act(async () => {
@@ -160,6 +167,7 @@ test("GIVEN The ResourceHistoryView WHEN the user clicks on the expansion toggle
 
 test("GIVEN The ResourceHistoryView WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   //mock that response has more than one site
@@ -182,6 +190,7 @@ test("GIVEN The ResourceHistoryView WHEN sorting changes AND we are not on the f
   });
 
   const nextPageButton = screen.getByLabelText("Go to next page");
+
   expect(nextPageButton).toBeEnabled();
 
   await act(async () => {

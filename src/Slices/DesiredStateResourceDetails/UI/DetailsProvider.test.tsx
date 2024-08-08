@@ -46,6 +46,7 @@ function setup() {
 
 test("GIVEN DesiredStateResourceDetails page WHEN api returns details THEN shows details", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
   expect(apiHelper.pendingRequests).toEqual([
     {
@@ -66,6 +67,7 @@ test("GIVEN DesiredStateResourceDetails page WHEN api returns details THEN shows
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });

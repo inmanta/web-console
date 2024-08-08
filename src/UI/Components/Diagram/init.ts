@@ -41,6 +41,7 @@ export function diagramInit(
    * https://resources.jointjs.com/docs/jointjs/v3.6/joint.html#dia.Graph
    */
   const graph = new dia.Graph({}, { cellNamespace: shapes });
+
   /**
    * https://resources.jointjs.com/docs/rappid/v3.6/ui.PaperScroller.html
    */
@@ -62,6 +63,7 @@ export function diagramInit(
       };
     },
   });
+
   setScroller(scroller);
 
   paper.on("blank:pointerdown", (evt: dia.Event) => scroller.startPanning(evt));
@@ -79,6 +81,7 @@ export function diagramInit(
   });
 
   paper.unfreeze();
+
   return {
     removeCanvas: () => {
       scroller.remove();
@@ -96,6 +99,7 @@ export function diagramInit(
 
         if (instance.coordinates) {
           const parsedCoordinates = JSON.parse(instance.coordinates);
+
           applyCoordinatesToCells(graph, parsedCoordinates);
         }
       }
@@ -111,6 +115,7 @@ export function diagramInit(
       });
 
       const jsonGraph = graph.toJSON();
+
       return jsonGraph.cells as serializedCell[];
     },
 
@@ -123,6 +128,7 @@ export function diagramInit(
         attributeValues,
         false,
       );
+
       return cellView.model as ServiceEntityBlock;
     },
     getCoordinates: () => getCellsCoordinates(graph),

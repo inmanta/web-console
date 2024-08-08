@@ -28,11 +28,13 @@ export const ActionButton: React.FC<Props> = ({ name, paused }) => {
       pageSize,
       currentPage,
     });
+
     if (Maybe.isSome(result)) {
       setErrorMessage(result.value);
     }
   };
   const isHalted = environmentModifier.useIsHalted();
+
   return (
     <ActionDisabledTooltip
       isDisabled={isHalted}

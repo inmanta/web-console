@@ -116,6 +116,7 @@ class InventoryStencilTab {
       },
       dragStartClone: (cell: dia.Cell) => {
         const name = cell.get("name");
+
         return new ServiceEntityBlock().setName(name);
       },
       dragEndClone: (el) => {

@@ -12,6 +12,7 @@ interface Props extends VersionedServiceInstanceIdentifier {
   instance_identity: string;
   availableStates: string[];
 }
+
 /**
  * ForceStateAction is a component that allows the user to force a state on a service instance.
  * @props {Props} props - The props of the component.
@@ -65,6 +66,7 @@ export const ForceStateAction: React.FC<Props> = ({
 
   const onSubmit = async (targetState: string) => {
     const result = await trigger(targetState);
+
     if (Maybe.isSome(result)) {
       setStateErrorMessage(result.value);
     }

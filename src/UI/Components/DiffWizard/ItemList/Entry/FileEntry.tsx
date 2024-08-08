@@ -32,6 +32,7 @@ export const FileEntry: React.FC<EntryInfo> = ({
 
     if (Either.isLeft(from)) return setFiles(RemoteData.failed(from.value));
     if (Either.isLeft(to)) return setFiles(RemoteData.failed(to.value));
+
     return setFiles(RemoteData.success({ from: from.value, to: to.value }));
   };
 

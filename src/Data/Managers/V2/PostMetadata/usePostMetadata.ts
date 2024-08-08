@@ -12,6 +12,7 @@ export interface PostMetadataInfo {
     value: string;
   };
 }
+
 /**
  * React Query hook for posting metadata.
  *

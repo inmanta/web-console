@@ -24,6 +24,7 @@ jest.mock("react-router-dom", () => ({
 
 const setup = (config: KeycloakAuthConfig | LocalConfig | undefined) => {
   const queryClient = new QueryClient();
+
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider config={config}>
@@ -45,6 +46,7 @@ describe("Login", () => {
 
     await act(async () => {
       const results = await axe(document.body);
+
       expect(results).toHaveNoViolations();
     });
   });
@@ -55,6 +57,7 @@ describe("Login", () => {
     const server = setupServer(
       http.post("/api/v2/login", async ({ request }) => {
         const reqBody = await request.json();
+
         expect(reqBody).toEqual({
           username: "test_user",
           password: "test_password",
@@ -78,31 +81,38 @@ describe("Login", () => {
     render(component);
 
     const usernameInput = screen.getByLabelText("input-username");
+
     await act(async () => {
       await userEvent.type(usernameInput, "test_user");
     });
     const passwordInput = screen.getByLabelText("input-password");
+
     await act(async () => {
       await userEvent.type(passwordInput, "test_password");
     });
 
     const showPasswordButton = screen.getByLabelText("show-password");
+
     await act(async () => {
       await userEvent.click(showPasswordButton);
     });
 
     const passwordInput1 = screen.getByLabelText("input-password");
+
     expect(passwordInput1).toHaveAttribute("type", "text");
 
     const hidePasswordButton = screen.getByLabelText("hide-password");
+
     await act(async () => {
       await userEvent.click(hidePasswordButton);
     });
 
     const passwordInput2 = screen.getByLabelText("input-password");
+
     expect(passwordInput2).toHaveAttribute("type", "password");
 
     const logInButton = screen.getByLabelText("login-button");
+
     await act(async () => {
       await userEvent.click(logInButton);
     });
@@ -119,6 +129,7 @@ describe("Login", () => {
 
     await act(async () => {
       const results = await axe(document.body);
+
       expect(results).toHaveNoViolations();
     });
 
@@ -129,6 +140,7 @@ describe("Login", () => {
     const server = setupServer(
       http.post("/api/v2/login", async ({ request }) => {
         const reqBody = await request.json();
+
         expect(reqBody).toEqual({
           username: "test_user",
           password: "test_password",
@@ -151,15 +163,18 @@ describe("Login", () => {
     render(component);
 
     const usernameInput = screen.getByLabelText("input-username");
+
     await act(async () => {
       await userEvent.type(usernameInput, "test_user");
     });
     const passwordInput = screen.getByLabelText("input-password");
+
     await act(async () => {
       await userEvent.type(passwordInput, "test_password");
     });
 
     const logInButton = screen.getByLabelText("login-button");
+
     await act(async () => {
       await userEvent.click(logInButton);
     });
@@ -172,6 +187,7 @@ describe("Login", () => {
 
     await act(async () => {
       const results = await axe(document.body);
+
       expect(results).toHaveNoViolations();
     });
 
@@ -182,6 +198,7 @@ describe("Login", () => {
     const server = setupServer(
       http.post("/api/v2/login", async ({ request }) => {
         const reqBody = await request.json();
+
         expect(reqBody).toEqual({
           username: "",
           password: "",
@@ -197,12 +214,15 @@ describe("Login", () => {
         );
       }),
     );
+
     server.listen();
 
     const component = setup({ method: "database" });
+
     render(component);
 
     const logInButton = screen.getByLabelText("login-button");
+
     await act(async () => {
       await userEvent.click(logInButton);
     });
@@ -215,6 +235,7 @@ describe("Login", () => {
 
     await act(async () => {
       const results = await axe(document.body);
+
       expect(results).toHaveNoViolations();
     });
 

@@ -53,6 +53,7 @@ export const DuplicateForm: React.FC<Props> = ({ serviceEntity, instance }) => {
     setIsDirty(false);
 
     const result = await trigger(fields, attributes);
+
     if (result.kind === "Left") {
       setIsDirty(true);
       setErrorMessage(result.value);

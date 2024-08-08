@@ -10,11 +10,13 @@ export const Page: React.FC = () => {
   const [data, retry] = queryResolver.useContinuous<"GetServices">({
     kind: "GetServices",
   });
+
   useEffect(() => {
     document.addEventListener("service-deleted", () => {
       retry();
     });
   }, [retry]);
+
   return (
     <PageContainer pageTitle={words("catalog.title")}>
       <RemoteDataView

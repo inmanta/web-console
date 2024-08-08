@@ -39,6 +39,7 @@ export const IntRangeFilter: React.FC<Props> = ({
       to,
       RangeOperator.Operator.To,
     );
+
     update(withNewTo);
     setFrom(undefined);
     setTo(undefined);
@@ -46,6 +47,7 @@ export const IntRangeFilter: React.FC<Props> = ({
 
   const removeChip = (category, value) => {
     const raw = prettyToRaw(value);
+
     update(
       reject(
         intRangeFilters,
@@ -71,11 +73,13 @@ export const IntRangeFilter: React.FC<Props> = ({
   };
   const prettyToRaw = (pretty: string): IntRange.Type => {
     const [operator, value] = pretty.split("|");
+
     return {
       value: parseInt(value, 10),
       operator: operator.trim() as RangeOperator.Operator,
     };
   };
+
   return (
     <>
       <Flex>
@@ -139,5 +143,6 @@ function insertNewValue(
       { value, operator },
     ];
   }
+
   return intRangeFilters;
 }

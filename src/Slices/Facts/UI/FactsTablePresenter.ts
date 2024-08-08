@@ -38,6 +38,7 @@ export class FactsTablePresenter implements TablePresenter<Fact, Fact> {
     if (index > -1 && index < this.getNumberOfColumns()) {
       return this.getColumnHeads()[index].apiName;
     }
+
     return undefined;
   }
 

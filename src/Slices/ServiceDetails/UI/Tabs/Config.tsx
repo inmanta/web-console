@@ -14,6 +14,7 @@ export const Config: React.FC<Props> = ({ serviceName }) => {
     kind: "GetServiceConfig",
     name: serviceName,
   });
+
   return (
     <Card aria-label="ServiceConfig" data-testid="ServiceConfig">
       <CardBody>

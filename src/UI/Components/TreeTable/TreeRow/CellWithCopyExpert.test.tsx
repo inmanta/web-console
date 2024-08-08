@@ -123,6 +123,7 @@ function setup(props, expertMode = false) {
 test("Given CellWithCopyExpert When a cell has a simple value only Then it is shown", async () => {
   const props = { label: "attribute", value: "someValue" };
   const { component } = setup(props);
+
   render(component);
 
   expect(await screen.findByText(props.value)).toBeVisible();
@@ -131,9 +132,11 @@ test("Given CellWithCopyExpert When a cell has a simple value only Then it is sh
 test("Given CellWithCopyExpert When a cell has on click Then it is rendered as a link", async () => {
   const props = { label: "attribute", value: "someValue", hasRelation: true };
   const { component, onClickFn } = setup(props);
+
   render(component);
 
   const cell = await screen.findByText(props.value);
+
   expect(cell).toBeVisible();
 
   await act(async () => {
@@ -150,6 +153,7 @@ test("Given CellWithCopyExpert When a cell has entity and on click Then it is re
     serviceName: "test_service",
   };
   const { component, apiHelper, onClickFn } = setup(props);
+
   render(component);
 
   apiHelper.resolve(
@@ -162,6 +166,7 @@ test("Given CellWithCopyExpert When a cell has entity and on click Then it is re
   );
 
   const cell = await screen.findByText(props.value);
+
   expect(cell).toBeVisible();
   await act(async () => {
     await userEvent.click(cell);
@@ -178,6 +183,7 @@ test("Given CellWithCopyExpert When a cell has entity, multiple values and on cl
     serviceName: "test_service",
   };
   const { component, apiHelper, onClickFn } = setup(props);
+
   render(component);
 
   apiHelper.resolve(
@@ -198,12 +204,14 @@ test("Given CellWithCopyExpert When a cell has entity, multiple values and on cl
   );
 
   const firstCell = await screen.findByText(someValue);
+
   expect(firstCell).toBeVisible();
   await act(async () => {
     await userEvent.click(firstCell);
   });
   expect(onClickFn).toHaveBeenCalledWith(someValue, props.serviceName);
   const otherCell = await screen.findByText(someOtherValue);
+
   expect(otherCell).toBeVisible();
   await act(async () => {
     await userEvent.click(otherCell);
@@ -224,6 +232,7 @@ test("Given CellWithCopyExpert When a cell has access to expertMode Then button 
     attributeType: "string",
   };
   const { component, apiHelper } = setup(props, true);
+
   render(component);
   apiHelper.resolve(
     Either.right({
@@ -234,10 +243,12 @@ test("Given CellWithCopyExpert When a cell has access to expertMode Then button 
     }),
   );
   const button = await screen.findByRole("button");
+
   await act(async () => {
     await userEvent.click(button);
   });
   const input = await screen.findByPlaceholderText("New Attribute");
+
   expect(input).toBeVisible();
   await act(async () => {
     await userEvent.click(button);
@@ -248,6 +259,7 @@ test("Given CellWithCopyExpert When a cell has access to expertMode Then button 
   });
   //had to find input once again as it lost
   const input2 = await screen.findByPlaceholderText("New Attribute");
+
   expect(input2).toBeVisible();
 });
 
@@ -265,6 +277,7 @@ test("Given CellWithCopyExpert When a cell has access to expertMode and input wi
     attributeType: "string",
   };
   const { component, apiHelper } = setup(props, true);
+
   render(component);
   apiHelper.resolve(
     Either.right({
@@ -276,10 +289,12 @@ test("Given CellWithCopyExpert When a cell has access to expertMode and input wi
   );
 
   const button = await screen.findByRole("button");
+
   await act(async () => {
     await userEvent.click(button);
   });
   const input = await screen.findByPlaceholderText("New Attribute");
+
   expect(input).toBeVisible();
   await act(async () => {
     await userEvent.click(button);
@@ -291,6 +306,7 @@ test("Given CellWithCopyExpert When a cell has access to expertMode and input wi
 
   //had to find input once again as it lost
   const input2 = await screen.findByPlaceholderText("New Attribute");
+
   expect(input2).toBeVisible();
 
   // set value and click check/submit button
@@ -301,6 +317,7 @@ test("Given CellWithCopyExpert When a cell has access to expertMode and input wi
   expect(input2).toHaveValue(newValue);
 
   const submitButton = await screen.findByTestId("inline-submit");
+
   expect(submitButton).toBeVisible();
   await act(async () => {
     await userEvent.click(submitButton);
@@ -308,9 +325,11 @@ test("Given CellWithCopyExpert When a cell has access to expertMode and input wi
 
   //expect dialog to pop-up
   const dialog = await screen.findByRole("dialog");
+
   expect(dialog).toBeVisible();
   //close dialog and expect it to be hidden
   const dialogCancel = await screen.findByTestId("dialog-cancel");
+
   expect(dialogCancel).toBeVisible();
   await act(async () => {
     await userEvent.click(dialogCancel);
@@ -322,9 +341,11 @@ test("Given CellWithCopyExpert When a cell has access to expertMode and input wi
     await userEvent.click(submitButton);
   });
   const dialog2 = await screen.findByRole("dialog");
+
   expect(dialog2).toBeVisible();
 
   const closeButton = screen.getByLabelText("Close");
+
   await act(async () => {
     await userEvent.click(closeButton);
   });
@@ -335,6 +356,7 @@ test("Given CellWithCopyExpert When a cell has access to expertMode and input wi
     await userEvent.click(submitButton);
   });
   const dialog3 = await screen.findByRole("dialog");
+
   expect(dialog3).toBeVisible();
 
   const dialogSubmit = await screen.findByTestId("dialog-submit");
@@ -390,6 +412,7 @@ test("Given CellWithCopyExpert When a embedded cell has access to expertMode and
     },
   };
   const { component, apiHelper } = setup(props, true);
+
   render(component);
   apiHelper.resolve(
     Either.right({
@@ -407,6 +430,7 @@ test("Given CellWithCopyExpert When a embedded cell has access to expertMode and
   });
 
   const input = await screen.findByPlaceholderText("New Attribute");
+
   expect(input).toBeVisible();
 
   // set value and click check/submit button
@@ -417,12 +441,14 @@ test("Given CellWithCopyExpert When a embedded cell has access to expertMode and
   expect(input).toHaveValue(newValue);
 
   const submitButton = await screen.findByTestId("inline-submit");
+
   expect(submitButton).toBeVisible();
   await act(async () => {
     await userEvent.click(submitButton);
   });
 
   const dialog = await screen.findByRole("dialog");
+
   expect(dialog).toBeVisible();
 
   const dialogSubmit = await screen.findByTestId("dialog-submit");
@@ -486,6 +512,7 @@ test.each`
       },
     };
     const { component, apiHelper } = setup(props, true);
+
     render(component);
     apiHelper.resolve(
       Either.right({
@@ -503,6 +530,7 @@ test.each`
     });
 
     const input = await screen.findByPlaceholderText("New Attribute");
+
     expect(input).toBeVisible();
 
     // set value and click check/submit button
@@ -512,12 +540,14 @@ test.each`
     });
 
     const submitButton = await screen.findByTestId("inline-submit");
+
     expect(submitButton).toBeVisible();
     await act(async () => {
       await userEvent.click(submitButton);
     });
 
     const dialog = await screen.findByRole("dialog");
+
     expect(dialog).toBeVisible();
 
     const dialogSubmit = await screen.findByTestId("dialog-submit");

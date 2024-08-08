@@ -85,6 +85,7 @@ export const View: React.FC<Props> = ({ resourceId }) => {
               />
             );
           }
+
           return (
             <ResourceLogsTable
               logs={response.data}
