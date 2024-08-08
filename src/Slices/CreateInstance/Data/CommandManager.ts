@@ -26,6 +26,5 @@ export function prepBody(
     (obj, [k, v]) => (v === null ? obj : ((obj[k] = v), obj)),
     {},
   );
-
   return { attributes: attributesWithoutNulls };
 }

@@ -15,7 +15,6 @@ export const ResourceTable: React.FC<Props> = ({ resources, id, ...props }) => {
   const columns = ["Resource", "State"];
   const rows = resources.map((resource) => {
     const resourceId = getResourceIdFromResourceVersionId(resource.resource_id);
-
     return {
       cells: [
         {

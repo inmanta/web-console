@@ -19,7 +19,6 @@ export function ResourceDetailsStateHelper(store: Store) {
         }),
         data,
       );
-
       store.dispatch.resourceDetails.setData({ id: query.id, value });
     },
     (state, query) => state.resourceDetails.byId[query.id],

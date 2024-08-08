@@ -68,7 +68,6 @@ export function OneTime<Kind extends Query.Kind>(
   ): boolean {
     return query.kind === kind && matchingKind === "OneTime";
   }
-
   return {
     useOneTime,
     matches,

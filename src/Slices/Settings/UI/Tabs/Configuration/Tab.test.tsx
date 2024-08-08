@@ -61,7 +61,6 @@ function setup() {
 
 test("GIVEN ConfigurationTab THEN shows all settings", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
@@ -99,14 +98,12 @@ test("GIVEN ConfigurationTab THEN shows all settings", async () => {
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
 
 test("GIVEN ConfigurationTab WHEN editing a dict field THEN shows warning icon", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
 
   await act(async () => {
@@ -132,14 +129,12 @@ test("GIVEN ConfigurationTab WHEN editing a dict field THEN shows warning icon",
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
 
 test("GIVEN ConfigurationTab WHEN editing an enum field THEN shows warning icon", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
 
   await act(async () => {
@@ -171,14 +166,12 @@ test("GIVEN ConfigurationTab WHEN editing an enum field THEN shows warning icon"
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
 
 test("GIVEN ConfigurationTab WHEN editing a boolean field THEN shows warning icon", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
 
   await act(async () => {
@@ -205,14 +198,12 @@ test("GIVEN ConfigurationTab WHEN editing a boolean field THEN shows warning ico
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
 
 test("GIVEN ConfigurationTab WHEN editing a number field THEN shows warning icon", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
 
   await act(async () => {
@@ -235,14 +226,12 @@ test("GIVEN ConfigurationTab WHEN editing a number field THEN shows warning icon
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
 
 test("GIVEN ConfigurationTab WHEN editing a positiveFloat field THEN shows warning icon", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
 
   await act(async () => {
@@ -265,14 +254,12 @@ test("GIVEN ConfigurationTab WHEN editing a positiveFloat field THEN shows warni
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
 
 test("GIVEN ConfigurationTab WHEN editing a string field THEN shows warning icon", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
 
   await act(async () => {
@@ -298,14 +285,12 @@ test("GIVEN ConfigurationTab WHEN editing a string field THEN shows warning icon
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
 
 test("ConfigurationTab can display unknown setting types as strings", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
 
   await act(async () => {
@@ -317,20 +302,17 @@ test("ConfigurationTab can display unknown setting types as strings", async () =
   });
 
   const field = within(row).getByRole("textbox", { name: "string input" });
-
   expect(field).toBeInTheDocument();
   expect(field).toHaveValue("false");
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
 
 test("GIVEN ConfigurationTab and boolean input WHEN changing boolean value and saving THEN update is performed", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
 
   await act(async () => {
@@ -397,14 +379,12 @@ test("GIVEN ConfigurationTab and boolean input WHEN changing boolean value and s
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
 
 test("GIVEN ConfigurationTab and boolean input WHEN clicking reset THEN delete is performed", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
 
   await act(async () => {
@@ -458,14 +438,12 @@ test("GIVEN ConfigurationTab and boolean input WHEN clicking reset THEN delete i
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
 
 test("GIVEN ConfigurationTab and dict input WHEN adding an entry and saving THEN entry is locked in", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
 
   await act(async () => {
@@ -480,14 +458,12 @@ test("GIVEN ConfigurationTab and dict input WHEN adding an entry and saving THEN
   const newKeyInput = within(newEntryRow).getByRole("textbox", {
     name: "editEntryKey",
   });
-
   await act(async () => {
     await userEvent.type(newKeyInput, "testKey");
   });
   const newValueInput = within(newEntryRow).getByRole("textbox", {
     name: "editEntryValue",
   });
-
   await act(async () => {
     await userEvent.type(newValueInput, "testValue");
   });
@@ -546,7 +522,6 @@ test("GIVEN ConfigurationTab and dict input WHEN adding an entry and saving THEN
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });

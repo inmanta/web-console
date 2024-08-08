@@ -7,7 +7,6 @@ export function StateHelper(store: Store) {
     store,
     (data, query, environment) => {
       const value = RemoteData.mapSuccess((wrapped) => wrapped, data);
-
       store.dispatch.agents.setList({
         environment,
         data: value,

@@ -38,7 +38,6 @@ export const NavigationItem: React.FC<Link> = ({
   if (statusIndication) {
     return <CompileReportItem label={label} url={url} key={id} />;
   }
-
   return <RegularItem key={id} label={label} url={url} />;
 };
 
@@ -92,12 +91,10 @@ const CompileReportItem: React.FC<Label & Url> = ({ label, url }) => {
 
   useEffect(() => {
     document.addEventListener("CompileTrigger", retry);
-
     return () => {
       document.removeEventListener("CompileTrigger", retry);
     };
   }, [data, retry]);
-
   return (
     <NavItem styleChildren={false}>
       <NavLink

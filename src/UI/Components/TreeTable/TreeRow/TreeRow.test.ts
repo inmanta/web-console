@@ -11,7 +11,6 @@ test("TreeRow isRowOfMultipleValues returns false for a single value", () => {
       { label: "rollback", value: "" },
     ],
   };
-
   expect(isRowOfMultipleValues(row)).toBeFalsy();
 });
 

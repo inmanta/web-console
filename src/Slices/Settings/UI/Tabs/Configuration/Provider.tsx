@@ -16,7 +16,6 @@ function reducer(
   },
 ) {
   const { type, payload } = action;
-
   switch (type) {
     case "reset":
       return {
@@ -25,11 +24,9 @@ function reducer(
       };
     case "update":
       const copy = JSON.parse(JSON.stringify(state.settings));
-
       if (state.resetedValueName !== "") {
         delete copy[state.resetedValueName];
       }
-
       return {
         settings: _.merge({}, JSON.parse(JSON.stringify(payload)), copy),
         resetedValueName: "",
@@ -67,7 +64,6 @@ export const Provider: React.FC<Props> = ({
   );
   const handleReset = (id: string) => {
     dispatch({ type: "reset", payload: id });
-
     return resetSetting(id);
   };
   const infos = new InputInfoCreator(
@@ -82,7 +78,6 @@ export const Provider: React.FC<Props> = ({
   useEffect(() => {
     dispatch({ type: "update", payload: settings });
   }, [settings]);
-
   return (
     <Container
       infos={infos}

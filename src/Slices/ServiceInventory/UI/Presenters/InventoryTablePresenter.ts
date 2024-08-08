@@ -77,7 +77,6 @@ export class InventoryTablePresenter
     if (index > -1 && index < this.getNumberOfColumns()) {
       return this.getColumnHeads()[index].apiName;
     }
-
     return undefined;
   }
 
@@ -89,11 +88,9 @@ export class InventoryTablePresenter
 
   public getSortableColumnNames(): string[] {
     const sortableColumns = ["state", "created_at", "last_updated"];
-
     if (this.serviceIdentity) {
       sortableColumns.push(this.serviceIdentity);
     }
-
     return sortableColumns;
   }
 

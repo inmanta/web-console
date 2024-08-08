@@ -17,7 +17,6 @@ export const ResourcesTableProvider: React.FC<Props> = ({
 }) => {
   const tablePresenter = new ResourcesTablePresenter();
   const rows = tablePresenter.createRows(resources);
-
   return (
     <ResourcesTable
       {...props}

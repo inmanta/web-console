@@ -12,7 +12,6 @@ test.each`
       { pathname: "", search, hash: "" },
       () => undefined,
     );
-
     expect(value).toEqual(expectedValue);
   },
 );

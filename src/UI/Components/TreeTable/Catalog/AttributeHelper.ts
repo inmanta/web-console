@@ -36,10 +36,8 @@ export class CatalogAttributeHelper
           ...(cur.modifier && { modifier: cur.modifier }),
         },
       };
-
       return acc;
     }, {});
-
     if (
       container.inter_service_relations &&
       container.inter_service_relations.length > 0
@@ -54,12 +52,10 @@ export class CatalogAttributeHelper
             },
             hasRelation: true,
           };
-
           return acc;
         },
         {},
       );
-
       entries = { ...entries, ...entriesFromRelations };
     }
     if (container.embedded_entities.length > 0) {
@@ -80,7 +76,6 @@ export class CatalogAttributeHelper
       .sort()
       .reduce((acc, key) => {
         acc[key] = entries[key];
-
         return acc;
       }, {}) as MultiAttributeNodeDict<CatalogAttributeTree["target"]>;
   }

@@ -20,13 +20,11 @@ export const createFormState = (
         acc[curr.name] = curr.type.includes("dict")
           ? stringifyDict(curr.defaultValue)
           : curr.defaultValue;
-
         return acc;
       }
 
       case "InterServiceRelation": {
         acc[curr.name] = "";
-
         return acc;
       }
 
@@ -36,13 +34,11 @@ export const createFormState = (
         } else {
           acc[curr.name] = createFormState(curr.fields);
         }
-
         return acc;
       }
 
       case "RelationList": {
         acc[curr.name] = [];
-
         return acc;
       }
 
@@ -96,7 +92,6 @@ export const createEditFormState = (
           acc[curr.name] = curr.type.includes("dict")
             ? stringifyDict(originalAttributes?.[curr.name])
             : cloneDeep(originalAttributes?.[curr.name]);
-
           return acc;
         }
 
@@ -104,7 +99,6 @@ export const createEditFormState = (
           acc[curr.name] = originalAttributes?.[curr.name]
             ? originalAttributes?.[curr.name]
             : "";
-
           return acc;
         }
 
@@ -118,13 +112,11 @@ export const createEditFormState = (
               originalAttributes?.[curr.name] as InstanceAttributeModel,
             );
           }
-
           return acc;
         }
 
         case "RelationList": {
           acc[curr.name] = (originalAttributes?.[curr.name] as string[]) || [];
-
           return acc;
         }
 
@@ -138,15 +130,12 @@ export const createEditFormState = (
               nestedOriginalAttributes as InstanceAttributeModel,
             ),
           );
-
           return acc;
         }
       }
     } else {
       const defaultFormStateForField = createFormState([curr]);
-
       acc[curr.name] = defaultFormStateForField[curr.name];
-
       return acc;
     }
   }, {});
@@ -176,7 +165,6 @@ export const createDuplicateFormState = (
           acc[curr.name] = curr.type.includes("dict")
             ? stringifyDict(originalAttributes?.[curr.name])
             : cloneDeep(originalAttributes?.[curr.name]);
-
           return acc;
         }
 
@@ -184,7 +172,6 @@ export const createDuplicateFormState = (
           acc[curr.name] = originalAttributes?.[curr.name]
             ? originalAttributes?.[curr.name]
             : "";
-
           return acc;
         }
 
@@ -197,13 +184,11 @@ export const createDuplicateFormState = (
               originalAttributes?.[curr.name] as InstanceAttributeModel,
             );
           }
-
           return acc;
         }
 
         case "RelationList": {
           acc[curr.name] = (originalAttributes?.[curr.name] as string[]) || [];
-
           return acc;
         }
 
@@ -216,15 +201,12 @@ export const createDuplicateFormState = (
               nestedOriginalAttributes as InstanceAttributeModel,
             ),
           );
-
           return acc;
         }
       }
     } else {
       const defaultFormStateForField = createFormState([curr]);
-
       acc[curr.name] = defaultFormStateForField[curr.name];
-
       return acc;
     }
   }, {});

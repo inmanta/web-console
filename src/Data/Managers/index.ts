@@ -7,6 +7,7 @@ export * from "./DestroyInstance";
 export * from "./EnvironmentSettings";
 export * from "./GenerateToken";
 export * from "./GetSupportArchive";
+export * from "./GetInstanceWithRelations";
 export * from "./GetInstance";
 export * from "./GetServerStatus";
 export * from "./HaltEnvironment";

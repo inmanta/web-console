@@ -10,7 +10,6 @@ export const Page: React.FC = () => {
     kind: "GetProjects",
     environmentDetails: false,
   });
-
   return (
     <PageContainer pageTitle={"Create Environment"}>
       {RemoteData.fold(

@@ -32,10 +32,8 @@ export const FactsTable: React.FC<Props> = ({ facts }) => {
   const [rows, setRows] = useState(sortFactRows(facts, sort.name, sort.order));
   const onSort = (event, index, direction) => {
     const updatedSortColumn = indexToColumnName(index);
-
     setSort({ name: updatedSortColumn, order: direction });
     const updatedRows = sortFactRows(rows, updatedSortColumn, direction);
-
     setRows(updatedRows);
   };
 
@@ -92,13 +90,11 @@ const NameCell = styled(Td)<{ chars: number }>`
 
 function indexToColumnName(index: number): string {
   const columns = factsColumnHeads.map((head) => head.apiName);
-
   return columns[index];
 }
 
 function columnNameToIndex(columnName: string): number {
   const columns = factsColumnHeads.map((head) => head.apiName);
-
   return columns.indexOf(columnName);
 }
 
@@ -112,20 +108,16 @@ export function sortFactRows(
     if (columnName === "updated") {
       const aDate = coalesceDateToMin(a[columnName]);
       const bDate = coalesceDateToMin(b[columnName]);
-
       if (direction === "asc") {
         return aDate - bDate;
       }
-
       return bDate - aDate;
     } else {
       const aValue = a[columnName];
       const bValue = b[columnName];
-
       if (direction === "asc") {
         return aValue.localeCompare(bValue);
       }
-
       return bValue.localeCompare(aValue);
     }
   });
@@ -133,6 +125,5 @@ export function sortFactRows(
 
 function coalesceDateToMin(date?: string) {
   const definedDate = date ? date : 0;
-
   return new Date(definedDate).getTime();
 }

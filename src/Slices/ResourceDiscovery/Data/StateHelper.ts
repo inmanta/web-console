@@ -7,7 +7,6 @@ export function GetDiscoveredResourcesStateHelper(store: Store) {
     store,
     (data, query, environment) => {
       const value = RemoteData.mapSuccess((wrapped) => wrapped, data);
-
       store.dispatch.discoveredResources.setList({
         environment,
         data: value,

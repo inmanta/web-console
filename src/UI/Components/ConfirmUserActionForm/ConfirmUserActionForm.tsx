@@ -9,7 +9,6 @@ export const ConfirmUserActionForm: React.FunctionComponent<{
   const preventDefault = (event: React.FormEvent) => {
     event.preventDefault();
   };
-
   return (
     <Form onSubmit={preventDefault}>
       <ActionGroup>

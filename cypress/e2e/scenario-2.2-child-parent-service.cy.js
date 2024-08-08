@@ -10,7 +10,6 @@ const clearEnvironment = (nameEnvironment = "lsm-frontend") => {
   cy.url().then((url) => {
     const location = new URL(url);
     const id = location.searchParams.get("env");
-
     cy.request("DELETE", `/api/v1/decommission/${id}`);
   });
 };
@@ -51,7 +50,6 @@ const forceUpdateEnvironment = (nameEnvironment = "lsm-frontend") => {
   cy.url().then((url) => {
     const location = new URL(url);
     const id = location.searchParams.get("env");
-
     cy.request({
       method: "POST",
       url: `/lsm/v1/exporter/export_service_definition`,
@@ -102,7 +100,6 @@ if (Cypress.env("edition") === "iso") {
           expect($table).to.have.length(1);
 
           const $td = $table.find("td");
-
           // there can only be 2 table-data cells available
           expect($td).to.have.length(2);
           expect($td.eq(0), "first item").to.have.text(

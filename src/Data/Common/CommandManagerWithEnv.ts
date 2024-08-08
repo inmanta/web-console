@@ -18,10 +18,8 @@ export function CommandManagerWithEnv<Kind extends Command.Kind>(
   ): Command.Trigger<Kind> {
     const { environmentHandler } = useContext(DependencyContext);
     const environment = environmentHandler.useId();
-
     return customGetTrigger(command, environment);
   }
-
   return {
     matches,
     useGetTrigger,

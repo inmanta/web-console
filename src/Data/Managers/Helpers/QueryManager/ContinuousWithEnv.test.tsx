@@ -21,7 +21,6 @@ test("GIVEN QueryManager.ContinuousWithEnv WHEN environment changes THEN the api
   const queryResolver = new QueryResolverImpl(
     new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler),
   );
-
   store.dispatch.environment.setEnvironments(
     RemoteData.success([
       {
@@ -50,7 +49,6 @@ test("GIVEN QueryManager.ContinuousWithEnv WHEN environment changes THEN the api
       useLocation,
       PrimaryRouteManager(""),
     );
-
     return (
       <DependencyProvider
         dependencies={{ ...dependencies, queryResolver, environmentHandler }}
@@ -84,7 +82,6 @@ test("GIVEN QueryManager.ContinuousWithEnv WHEN environment changes THEN the api
   });
 
   const button = screen.getByRole("button", { name: "change-env" });
-
   await act(async () => {
     await userEvent.click(button);
   });

@@ -66,7 +66,6 @@ export class OrderDetailsTablePresenter
    */
   getSortableColumnNames(): string[] {
     const sortableColumns = [];
-
     return sortableColumns;
   }
 
@@ -101,7 +100,6 @@ export class OrderDetailsTablePresenter
     if (index > -1 && index < this.getNumberOfColumns()) {
       return this.getColumnHeads()[index].apiName;
     }
-
     return undefined;
   }
 

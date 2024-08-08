@@ -42,7 +42,6 @@ export const TableProvider: React.FC<Props> = ({
     getOptionsFromService(serviceEntity).length === 0,
   );
   const rows = tablePresenter.createRows(instances);
-
   return (
     <InventoryTable
       {...props}

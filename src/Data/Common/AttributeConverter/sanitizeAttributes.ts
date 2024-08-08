@@ -24,7 +24,6 @@ export function sanitizeAttributes(
           formState[field.name],
           field.type,
         );
-
         return;
       }
 
@@ -36,18 +35,15 @@ export function sanitizeAttributes(
           field.fields,
           formState[field.name] as InstanceAttributeModel,
         );
-
         return;
       }
       case "RelationList": {
         sanitized[field.name] = formState[field.name];
-
         return;
       }
 
       case "DictList": {
         const list = formState[field.name];
-
         if (!Array.isArray(list)) return;
         if (field.max && list.length > field.max) {
           sanitized[field.name] = list
@@ -58,7 +54,6 @@ export function sanitizeAttributes(
             sanitizeAttributes(field.fields, item),
           );
         }
-
         return;
       }
     }

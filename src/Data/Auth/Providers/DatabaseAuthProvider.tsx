@@ -35,7 +35,6 @@ export const DatabaseAuthProvider: React.FC<React.PropsWithChildren> = ({
   };
 
   const isDisabled = () => !getUser();
-
   return (
     <AuthContext.Provider
       value={{ getUser, login, logout, updateUser, getToken, isDisabled }}

@@ -99,7 +99,6 @@ function setup() {
 
 test("Given Drawer Then a list of notifications are shown", async () => {
   const { component, apiHelper, getAllRequest } = setup();
-
   render(component);
   expect(apiHelper.pendingRequests).toEqual([getAllRequest]);
   await act(async () => {
@@ -116,14 +115,12 @@ test("Given Drawer Then a list of notifications are shown", async () => {
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
 
 test("Given Drawer When clicking on 'Clear all' Then all notifications are cleared", async () => {
   const { component, apiHelper, updateRequest, getAllRequest } = setup();
-
   render(component);
 
   await act(async () => {
@@ -166,14 +163,12 @@ test("Given Drawer When clicking on 'Clear all' Then all notifications are clear
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
 
 test("Given Drawer When user clicks on 'Read all' Then all notifications are read", async () => {
   const { component, apiHelper, updateRequest, getAllRequest } = setup();
-
   render(component);
 
   await act(async () => {
@@ -223,21 +218,18 @@ test("Given Drawer When user clicks on 'Read all' Then all notifications are rea
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
 
 test("Given Drawer When user clicks a notification Then it becomes read", async () => {
   const { component, apiHelper, getAllRequest, updateRequest } = setup();
-
   render(component);
   await act(async () => {
     await apiHelper.resolve(Either.right(Mock.response));
   });
 
   const items = screen.getAllByRole("listitem", { name: "NotificationItem" });
-
   await act(async () => {
     await userEvent.click(items[0]);
   });
@@ -265,14 +257,12 @@ test("Given Drawer When user clicks a notification Then it becomes read", async 
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
 
 test("Given Drawer When user clicks a notification with an uri then go to the uri", async () => {
   const { component, apiHelper, history } = setup();
-
   render(component);
   await act(async () => {
     await apiHelper.resolve(Either.right(Mock.response));
@@ -280,12 +270,10 @@ test("Given Drawer When user clicks a notification with an uri then go to the ur
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 
   const items = screen.getAllByRole("listitem", { name: "NotificationItem" });
-
   await act(async () => {
     await userEvent.click(items[0]);
   });
@@ -297,7 +285,6 @@ test("Given Drawer When user clicks a notification with an uri then go to the ur
 
 test("Given Drawer When user clicks a notification without an uri then nothing happens", async () => {
   const { component, apiHelper, history } = setup();
-
   render(component);
   await act(async () => {
     await apiHelper.resolve(Either.right(Mock.response));
@@ -307,7 +294,6 @@ test("Given Drawer When user clicks a notification without an uri then nothing h
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 
@@ -320,7 +306,6 @@ test("Given Drawer When user clicks a notification without an uri then nothing h
 
 test("Given Drawer When user clicks a notification toggle with an uri then do not go to uri", async () => {
   const { component, apiHelper, history } = setup();
-
   render(component);
   await act(async () => {
     await apiHelper.resolve(Either.right(Mock.response));
@@ -332,7 +317,6 @@ test("Given Drawer When user clicks a notification toggle with an uri then do no
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 
@@ -345,7 +329,6 @@ test("Given Drawer When user clicks a notification toggle with an uri then do no
 
 test("Given Drawer When user clicks on 'unread' for 1 notification Then it becomes unread", async () => {
   const { component, apiHelper, getAllRequest, updateRequest } = setup();
-
   render(component);
   await act(async () => {
     await apiHelper.resolve(Either.right(Mock.response));
@@ -389,14 +372,12 @@ test("Given Drawer When user clicks on 'unread' for 1 notification Then it becom
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
 
 test("Given Drawer When user clicks on 'Clear' for 1 notification Then it is cleared", async () => {
   const { component, apiHelper, getAllRequest, updateRequest } = setup();
-
   render(component);
   await act(async () => {
     await apiHelper.resolve(Either.right(Mock.response));
@@ -439,7 +420,6 @@ test("Given Drawer When user clicks on 'Clear' for 1 notification Then it is cle
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });

@@ -19,7 +19,6 @@ export const BlockingModal = () => {
 
     document.addEventListener("halt-event", toggleModalHalt);
     document.addEventListener("resume-event", toggleModalResume);
-
     return () => {
       document.removeEventListener("halt-event", toggleModalHalt);
       document.removeEventListener("resume-event", toggleModalResume);

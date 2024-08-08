@@ -16,6 +16,5 @@ export const TableProvider: React.FC<Props> = ({ agents, ...props }) => {
   const isHalted = environmentModifier.useIsHalted();
   const tablePresenter = new AgentsTablePresenter(isHalted);
   const rows = tablePresenter.createRows(agents);
-
   return <AgentsTable {...props} tablePresenter={tablePresenter} rows={rows} />;
 };

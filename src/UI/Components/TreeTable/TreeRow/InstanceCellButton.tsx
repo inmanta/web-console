@@ -20,7 +20,6 @@ export const InstanceCellButton: React.FC<Props> = ({
     id,
     service_entity: serviceName,
   });
-
   return RemoteData.fold(
     {
       notAsked: () => null,

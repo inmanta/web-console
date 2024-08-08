@@ -54,7 +54,6 @@ function setup() {
 
 test("EventsView shows empty table", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
 
   expect(
@@ -75,14 +74,12 @@ test("EventsView shows empty table", async () => {
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
 
 test("EventsView shows failed table", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
 
   expect(
@@ -97,14 +94,12 @@ test("EventsView shows failed table", async () => {
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
 
 test("EventsView shows success table", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
 
   expect(
@@ -142,14 +137,12 @@ test("EventsView shows success table", async () => {
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
 
 test("EventsView shows updated table", async () => {
   const { component, apiHelper, scheduler } = setup();
-
   render(component);
 
   expect(
@@ -201,7 +194,6 @@ test("EventsView shows updated table", async () => {
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
@@ -238,7 +230,6 @@ test("GIVEN EventsView WHEN sorting changes AND we are not on the first page THE
     },
   };
   const { component, apiHelper } = setup();
-
   render(component);
 
   //mock that response has more than one site
@@ -247,7 +238,6 @@ test("GIVEN EventsView WHEN sorting changes AND we are not on the first page THE
   });
 
   const nextPageButton = screen.getByLabelText("Go to next page");
-
   expect(nextPageButton).toBeEnabled();
 
   await act(async () => {

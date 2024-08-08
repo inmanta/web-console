@@ -53,7 +53,6 @@ export const AttributesFilter: React.FC<Props> = ({
   const removeChip = (category, value) => {
     const { empty, notEmpty } = sets;
     const { id, rule } = prettyToRaw(value as Pretty);
-
     if (rule === AttributeRule.Empty) {
       update({ notEmpty, empty: without(empty, id) });
     } else {
@@ -66,7 +65,6 @@ export const AttributesFilter: React.FC<Props> = ({
   ) => {
     setAttributeSetFilter((current) => {
       if (current === attributeSet) return undefined;
-
       return attributeSet;
     });
   };
@@ -139,7 +137,6 @@ function getChips({ empty, notEmpty }: AttributeSets): Pretty[] {
   const prettyNotEmpty = notEmpty
     .map((id) => ({ id, rule: AttributeRule.NotEmpty }))
     .map(rawToPretty);
-
   return [...prettyEmpty, ...prettyNotEmpty];
 }
 
@@ -202,6 +199,5 @@ function getRuleForAttributeSet(
   if (typeof attributeSet === "undefined") return undefined;
   if (empty.includes(attributeSet)) return AttributeRule.Empty;
   if (notEmpty.includes(attributeSet)) return AttributeRule.NotEmpty;
-
   return undefined;
 }

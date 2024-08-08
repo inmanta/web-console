@@ -20,7 +20,6 @@ const DummyComponent: React.FC<{
 function setup(definition: DefinitionMap) {
   const environmentId = "env";
   const store = getStoreInstance();
-
   store.dispatch.environment.setSettingsData({
     environment: environmentId,
     value: RemoteData.success({
@@ -29,14 +28,12 @@ function setup(definition: DefinitionMap) {
     }),
   });
   const environmentModifier = EnvironmentModifierImpl();
-
   environmentModifier.setEnvironment(environmentId);
   const component = (
     <StoreProvider store={store}>
       <DummyComponent environmentModifier={environmentModifier} />
     </StoreProvider>
   );
-
   return { component, store, environmentId };
 }
 
@@ -44,7 +41,6 @@ test("Given the environmentModifier When the server compile setting is requested
   const { component, store, environmentId } = setup(
     EnvironmentSettings.definition,
   );
-
   // No setting is specified, and the default is true
   store.dispatch.environment.setEnvironmentDetailsById({
     id: environmentId,
@@ -87,7 +83,6 @@ test("Given the environmentModifier When the missing setting is requested Then r
   const { component, store, environmentId } = setup(
     EnvironmentSettings.definition,
   );
-
   // No setting is specified, and the dafault is missing
   store.dispatch.environment.setEnvironmentDetailsById({
     id: environmentId,

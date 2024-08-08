@@ -1,13 +1,9 @@
 import { dia, linkTools } from "@inmanta/rappid";
 import { DirectedGraph } from "@joint/layout-directed-graph";
 import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from "@/Core";
-import { InstanceWithRelations } from "@/Data/Managers/V2/GetInstanceWithRelations";
+import { InstanceWithReferences } from "@/Data/Managers/GetInstanceWithRelations/interface";
 import { words } from "@/UI/words";
-import {
-  findCorrespondingId,
-  moveCellFromColliding,
-  toggleLooseElement,
-} from "./helpers";
+import { findCorrespondingId, toggleLooseElement } from "./helpers";
 import activeImage from "./icons/active-icon.svg";
 import candidateImage from "./icons/candidate-icon.svg";
 import { ActionEnum, ConnectionRules, relationId } from "./interfaces";
@@ -68,7 +64,6 @@ export function showLinkTools(
     ) {
       return true;
     }
-
     return false;
   };
 
@@ -115,7 +110,6 @@ export function showLinkTools(
           const targetCell = graph.getCell(
             target.id as dia.Cell.ID,
           ) as ServiceEntityBlock;
-
           /**
            * Function that remove any data in this connection between cells
            * @param elementCell cell that we checking
@@ -127,7 +121,6 @@ export function showLinkTools(
             disconnectingCell: ServiceEntityBlock,
           ): boolean => {
             const elementRelations = elementCell.getRelations();
-
             // resolve any possible embedded connections between cells,
             if (
               elementCell.get("isEmbedded") &&
@@ -136,7 +129,6 @@ export function showLinkTools(
               elementCell.set("embeddedTo", undefined);
               toggleLooseElement(paper.findViewByModel(elementCell), "add");
               updateInstancesToSend(elementCell, ActionEnum.UPDATE);
-
               return true;
             }
 
@@ -148,7 +140,6 @@ export function showLinkTools(
               elementCell.removeRelation(disconnectingCell.id as string);
 
               updateInstancesToSend(sourceCell, ActionEnum.UPDATE);
-
               return true;
             } else {
               return false;
@@ -159,7 +150,6 @@ export function showLinkTools(
             sourceCell,
             targetCell,
           );
-
           if (!wasConnectionFromSourceSet) {
             wasConnectionDataRemoved(targetCell, sourceCell);
           }
@@ -169,7 +159,6 @@ export function showLinkTools(
       }),
     ],
   });
-
   linkView.addTools(tools);
 }
 
@@ -188,16 +177,15 @@ export function showLinkTools(
 export function appendInstance(
   paper: dia.Paper,
   graph: dia.Graph,
-  instanceWithRelations: InstanceWithRelations,
+  serviceWithReferences: InstanceWithReferences,
   services: ServiceModel[],
   isMainInstance = false,
   instanceToConnectRelation?: ServiceEntityBlock,
 ): ServiceEntityBlock {
-  const serviceInstance = instanceWithRelations.instance;
+  const serviceInstance = serviceWithReferences.instance.data;
   const serviceInstanceModel = services.find(
     (model) => model.name === serviceInstance.service_entity,
   );
-
   if (!serviceInstanceModel) {
     throw Error(words("inventory.instanceComposer.errorMessage"));
   }
@@ -205,7 +193,7 @@ export function appendInstance(
     serviceInstance.service_entity,
   );
 
-  instanceAsTable.set("id", instanceWithRelations.instance.id);
+  instanceAsTable.set("id", serviceWithReferences.instance.data.id);
   instanceAsTable.set("isEmbedded", false);
   instanceAsTable.set("isInEditMode", true);
 
@@ -236,81 +224,70 @@ export function appendInstance(
     );
   }
 
-  if (instanceWithRelations.relatedInstances) {
-    //map through relatedInstances and either append them or connect to them
-    instanceWithRelations.relatedInstances.forEach((relatedInstance) => {
-      const isInstanceMain = false;
-      const cellAdded = graph.getCell(relatedInstance.id);
+  //map through relatedInstances and either append them or connect to them
+  serviceWithReferences.relatedInstances.forEach((relatedInstance) => {
+    const isInstanceMain = false;
+    const cellAdded = graph.getCell(relatedInstance.instance.data.id);
+    if (!cellAdded) {
+      appendInstance(
+        paper,
+        graph,
+        relatedInstance,
+        services,
+        isInstanceMain,
+        instanceAsTable,
+      );
+    } else {
+      //If cell is already in the graph, we need to check if it got in its inter-service relations the one with id that corresponds with created instanceAsTable
+      let isConnected = false;
+      const cellAsBlock = cellAdded as ServiceEntityBlock;
+      const relations = cellAsBlock.getRelations();
 
-      if (!cellAdded) {
-        appendInstance(
-          paper,
-          graph,
-          { instance: relatedInstance },
-          services,
-          isInstanceMain,
-          instanceAsTable,
-        );
-      } else {
-        //If cell is already in the graph, we need to check if it got in its inter-service relations the one with id that corresponds with created instanceAsTable
-        let isConnected = false;
-        const cellAsBlock = cellAdded as ServiceEntityBlock;
-        const relations = cellAsBlock.getRelations();
+      if (relations) {
+        const correspondingId = findCorrespondingId(relations, instanceAsTable);
 
-        if (relations) {
-          const correspondingId = findCorrespondingId(
-            relations,
+        if (correspondingId) {
+          isConnected = true;
+          connectEntities(
+            graph,
             instanceAsTable,
+            [cellAsBlock],
+            serviceInstanceModel.strict_modifier_enforcement,
           );
-
-          if (correspondingId) {
-            isConnected = true;
-            connectEntities(
-              graph,
-              instanceAsTable,
-              [cellAsBlock],
-              serviceInstanceModel.strict_modifier_enforcement,
-            );
-          }
         }
-
-        //If doesn't, or the one we are looking for isn't among the ones stored, we need go through every connected shape and do the same assertion,
-        //as the fact that we have that cell as relatedInstance tells us that either that or its embedded entities has connection
-        if (!isConnected) {
-          const neighbors = graph.getNeighbors(cellAdded as dia.Element);
-
-          neighbors.map((cell) => {
-            const neighborRelations = (
-              cell as ServiceEntityBlock
-            ).getRelations();
-
-            if (neighborRelations) {
-              const correspondingId = findCorrespondingId(
-                neighborRelations,
-                instanceAsTable,
-              );
-
-              if (correspondingId) {
-                isConnected = true;
-                connectEntities(
-                  graph,
-                  instanceAsTable,
-                  [cell as ServiceEntityBlock],
-                  serviceInstanceModel.strict_modifier_enforcement,
-                );
-              }
-            }
-          });
-        }
-        connectEntities(
-          graph,
-          instanceAsTable,
-          [cellAsBlock],
-          serviceInstanceModel.strict_modifier_enforcement,
-        );
       }
-    });
-  }
+
+      //If doesn't, or the one we are looking for isn't among the ones stored, we need go through every connected shape and do the same assertion,
+      //as the fact that we have that cell as relatedInstance tells us that either that or its embedded entities has connection
+      if (!isConnected) {
+        const neighbors = graph.getNeighbors(cellAdded as dia.Element);
+        neighbors.map((cell) => {
+          const neighborRelations = (cell as ServiceEntityBlock).getRelations();
+          if (neighborRelations) {
+            const correspondingId = findCorrespondingId(
+              neighborRelations,
+              instanceAsTable,
+            );
+            if (correspondingId) {
+              isConnected = true;
+              connectEntities(
+                graph,
+                instanceAsTable,
+                [cell as ServiceEntityBlock],
+                serviceInstanceModel.strict_modifier_enforcement,
+              );
+            }
+          }
+        });
+      }
+      connectEntities(
+        graph,
+        instanceAsTable,
+        [cellAsBlock],
+        serviceInstanceModel.strict_modifier_enforcement,
+      );
+    }
+  });
   //auto-layout provided by JointJS
   DirectedGraph.layout(graph, {
     nodeSep: 80,
@@ -389,7 +366,6 @@ export function appendEmbeddedEntity(
         presentedAttr,
         isBlockedFromEditing,
       );
-
       appendedEntity.forEach((entity) => {
         handleInfoIcon(entity, presentedAttr);
       });
@@ -403,7 +379,6 @@ export function appendEmbeddedEntity(
 
     embeddedEntity.inter_service_relations?.map((relation) => {
       const relationId = entityInstance[relation.name] as relationId;
-
       if (relationId) {
         instanceAsTable.addRelation(relationId, relation.name);
         if (
@@ -419,7 +394,6 @@ export function appendEmbeddedEntity(
         }
       }
     });
-
     return instanceAsTable;
   }
 
@@ -474,8 +448,12 @@ export function appendEntity(
   appendColumns(instanceAsTable, attributesNames, entity);
   //add to graph
   instanceAsTable.addTo(graph);
-
-  moveCellFromColliding(graph, instanceAsTable);
+  //auto-layout provided by JointJS
+  DirectedGraph.layout(graph, {
+    nodeSep: 80,
+    edgeSep: 80,
+    rankDir: "TB",
+  });
 
   return instanceAsTable;
 }
@@ -498,13 +476,11 @@ export function appendColumns(
   const instanceAttributes = {};
   const attributes = attributesKeywords.map((key) => {
     instanceAttributes[key] = serviceInstanceAttributes[key];
-
     return {
       name: key,
       value: serviceInstanceAttributes[key] as string,
     };
   });
-
   serviceEntity.set("instanceAttributes", instanceAttributes);
 
   if (isInitial) {
@@ -535,7 +511,6 @@ function connectEntities(
 ) {
   targets.map((target) => {
     const link = new Link();
-
     if (isBlocked) {
       link.set("isBlockedFromEditing", isBlocked);
     }
@@ -569,7 +544,6 @@ function handleAttributes(
 ) {
   const { attributes, embedded_entities } = serviceModel;
   const attributesNames = attributes.map((attribute) => attribute.name);
-
   handleInfoIcon(instanceAsTable, presentedAttr);
   appendColumns(instanceAsTable, attributesNames, attributesValues);
   instanceAsTable.set(

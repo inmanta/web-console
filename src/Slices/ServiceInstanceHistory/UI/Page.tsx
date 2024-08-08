@@ -20,7 +20,6 @@ const Wrapper: React.FC<React.PropsWithChildren<unknown>> = ({
 
 const Wrapped: React.FC<{ service: ServiceModel }> = ({ service }) => {
   const { instance } = useRouteParams<"History">();
-
   return (
     <Wrapper>
       <ServiceInstanceDescription

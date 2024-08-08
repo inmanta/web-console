@@ -2,7 +2,6 @@ import { DeferredApiHelper } from "./DeferredApiHelper";
 
 test("GIVEN DeferredApiHelper WHEN ignore THEN removes first pending request", async () => {
   const helper = new DeferredApiHelper();
-
   helper.get("url1", "env1");
   helper.get("url2", "env2");
   expect(helper.pendingRequests).toHaveLength(2);
@@ -14,7 +13,6 @@ test("GIVEN DeferredApiHelper WHEN ignore THEN removes first pending request", a
 
 test("GIVEN DeferredApiHelper WHEN ignoreRequest THEN removes first matching request", async () => {
   const helper = new DeferredApiHelper();
-
   helper.get("url1", "env1");
   helper.get("url2", "env2");
   helper.post("url3", "env3", { test: 123 });
@@ -39,7 +37,6 @@ test("GIVEN DeferredApiHelper WHEN ignoreRequest THEN removes first matching req
 
 test("GIVEN DeferredApiHelper WHEN resolve THEN resolves first pending request", async () => {
   const helper = new DeferredApiHelper();
-
   helper.get("url1", "env1");
   helper.get("url2", "env2");
   expect(helper.pendingRequests).toHaveLength(2);
@@ -56,7 +53,6 @@ test("GIVEN DeferredApiHelper WHEN resolve THEN resolves first pending request",
 
 test("GIVEN DeferredApiHelper WHEN resolveRequest THEN resolves first matching request", async () => {
   const helper = new DeferredApiHelper();
-
   helper.get("url1", "env1");
   helper.get("url2", "env2");
   helper.post("url3", "env3", { test: "abc" });
@@ -91,7 +87,6 @@ test("GIVEN DeferredApiHelper WHEN resolveRequest THEN resolves first matching r
 
 test("GIVEN DeferredApiHelper WHEN resolveRequest THEN resolves first matching request", async () => {
   const helper = new DeferredApiHelper();
-
   expect(() =>
     helper.resolveRequest(
       { method: "GET", url: "url2", environment: "env2" },

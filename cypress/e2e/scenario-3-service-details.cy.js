@@ -10,7 +10,6 @@ const clearEnvironment = (nameEnvironment = "lsm-frontend") => {
   cy.url().then((url) => {
     const location = new URL(url);
     const id = location.searchParams.get("env");
-
     cy.request("DELETE", `/api/v1/decommission/${id}`);
   });
 };
@@ -51,7 +50,6 @@ const forceUpdateEnvironment = (nameEnvironment = "lsm-frontend") => {
   cy.url().then((url) => {
     const location = new URL(url);
     const id = location.searchParams.get("env");
-
     cy.request({
       method: "POST",
       url: `/lsm/v1/exporter/export_service_definition`,
@@ -164,7 +162,6 @@ if (Cypress.env("edition") === "iso") {
       // Expect no callbacks to be configured.(When there are callbacks, a second tbody will be present.)
       cy.get('[aria-label="CallbacksTable"]').should(($table) => {
         const $tableBody = $table.find("tbody");
-
         expect($tableBody).to.have.length(1);
       });
     });
@@ -288,7 +285,6 @@ if (Cypress.env("edition") === "iso") {
         .first()
         .should(($row) => {
           const $cols = $row.find("td");
-
           expect($cols.eq(1), "name").to.have.text("failed");
         });
 
@@ -386,7 +382,6 @@ if (Cypress.env("edition") === "iso") {
       // Expect new row to be added to the view.
       cy.get('[aria-label="CallbacksTable"]').should(($table) => {
         const $tableBody = $table.find("tbody");
-
         expect($tableBody).to.have.length(2);
       });
 
@@ -400,7 +395,6 @@ if (Cypress.env("edition") === "iso") {
       // Expect to see all values except ALLOCATION_UPDATE to have text-decoration: line-through
       cy.get(".pf-v5-c-description-list__description ul").should(($ul) => {
         const $list = $ul.find("li");
-
         expect($list).to.have.length(10);
       });
 
@@ -456,7 +450,6 @@ if (Cypress.env("edition") === "iso") {
       // Expect row to be gone. So there should only be one tbody left.
       cy.get('[aria-label="CallbacksTable"]').should(($table) => {
         const $tableBody = $table.find("tbody");
-
         expect($tableBody).to.have.length(1);
       });
     });

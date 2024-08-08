@@ -1,6 +1,6 @@
 import { ServiceInstanceModel, ServiceModel } from "@/Core";
-import { InstanceWithRelations } from "@/Data/Managers/V2/GetInstanceWithRelations";
-import { ComposerServiceOrderItem } from "@/UI/Components/Diagram/interfaces";
+import { InstanceWithReferences } from "@/Data/Managers/GetInstanceWithRelations/interface";
+import { InstanceForApi } from "./interfaces";
 
 export const testInstance: ServiceInstanceModel = {
   id: "d938d5bb-8bf1-4b41-9e17-ae0b5069cbbf",
@@ -1418,7 +1418,7 @@ export const testApiInstanceModel: ServiceModel = {
   owned_entities: [],
 };
 
-export const testApiInstance: ComposerServiceOrderItem = {
+export const testApiInstance: InstanceForApi = {
   instance_id: "ae6c9dd7-5392-4374-9f13-df3bb42bf0db",
   service_entity: "embedded-entity-service",
   config: {},
@@ -1430,7 +1430,7 @@ export const testApiInstance: ComposerServiceOrderItem = {
   },
 };
 
-export const testEmbeddedApiInstances: ComposerServiceOrderItem[] = [
+export const testEmbeddedApiInstances: InstanceForApi[] = [
   {
     instance_id: "10591ae5-6840-4816-9851-6bee74afc2a5",
     service_entity: "vlan_assigment_r1",
@@ -1459,7 +1459,7 @@ export const testEmbeddedApiInstances: ComposerServiceOrderItem[] = [
   },
 ];
 
-export const testParentService: ComposerServiceOrderItem = {
+export const testParentService: InstanceForApi = {
   instance_id: "6af44f75-ba4b-4fba-9186-cc61c3c9463c",
   service_entity: "parent-service",
   config: {},
@@ -1471,7 +1471,7 @@ export const testParentService: ComposerServiceOrderItem = {
   },
 };
 
-export const relatedServices: ComposerServiceOrderItem[] = [
+export const relatedServices: InstanceForApi[] = [
   {
     instance_id: "13920268-cce0-4491-93b5-11316aa2fc37",
     service_entity: "child-service",
@@ -1514,110 +1514,124 @@ export const relatedServices: ComposerServiceOrderItem[] = [
   },
 ];
 
-export const mockedInstanceWithRelations: InstanceWithRelations = {
+export const mockedInstanceWithReferences: InstanceWithReferences = {
   instance: {
-    id: "085cdf92-0894-4b82-8d46-1dd9552e7ba3",
-    environment: "efa7c243-81aa-4986-b0b1-c89583cbf846",
-    service_entity: "parent-service",
-    version: 4,
-    config: {},
-    state: "up",
-    candidate_attributes: null,
-    active_attributes: {
-      name: "test12345",
-      service_id: "123412",
-      should_deploy_fail: false,
+    data: {
+      id: "085cdf92-0894-4b82-8d46-1dd9552e7ba3",
+      environment: "efa7c243-81aa-4986-b0b1-c89583cbf846",
+      service_entity: "parent-service",
+      version: 4,
+      config: {},
+      state: "up",
+      candidate_attributes: null,
+      active_attributes: {
+        name: "test12345",
+        service_id: "123412",
+        should_deploy_fail: false,
+      },
+      rollback_attributes: null,
+      created_at: "2023-09-19T14:39:30.770002",
+      last_updated: "2023-09-19T14:39:53.389878",
+      callback: [],
+      deleted: false,
+      deployment_progress: null,
+      service_identity_attribute_value: "test12345",
+      referenced_by: [],
     },
-    rollback_attributes: null,
-    created_at: "2023-09-19T14:39:30.770002",
-    last_updated: "2023-09-19T14:39:53.389878",
-    callback: [],
-    deleted: false,
-    deployment_progress: null,
-    service_identity_attribute_value: "test12345",
-    referenced_by: [],
   },
   relatedInstances: [
     {
-      id: "7cd8b669-597a-4341-9b71-07f550b89826",
-      environment: "efa7c243-81aa-4986-b0b1-c89583cbf846",
-      service_entity: "child-service",
-      version: 4,
-      config: {},
-      state: "up",
-      candidate_attributes: null,
-      active_attributes: {
-        name: "child-test",
-        service_id: "123523534623",
-        parent_entity: "085cdf92-0894-4b82-8d46-1dd9552e7ba3",
-        should_deploy_fail: false,
+      instance: {
+        data: {
+          id: "7cd8b669-597a-4341-9b71-07f550b89826",
+          environment: "efa7c243-81aa-4986-b0b1-c89583cbf846",
+          service_entity: "child-service",
+          version: 4,
+          config: {},
+          state: "up",
+          candidate_attributes: null,
+          active_attributes: {
+            name: "child-test",
+            service_id: "123523534623",
+            parent_entity: "085cdf92-0894-4b82-8d46-1dd9552e7ba3",
+            should_deploy_fail: false,
+          },
+          rollback_attributes: null,
+          created_at: "2023-09-19T14:40:08.999123",
+          last_updated: "2023-09-19T14:40:36.178723",
+          callback: [],
+          deleted: false,
+          deployment_progress: null,
+          service_identity_attribute_value: "child-test",
+          referenced_by: [],
+        },
       },
-      rollback_attributes: null,
-      created_at: "2023-09-19T14:40:08.999123",
-      last_updated: "2023-09-19T14:40:36.178723",
-      callback: [],
-      deleted: false,
-      deployment_progress: null,
-      service_identity_attribute_value: "child-test",
-      referenced_by: [],
+      relatedInstances: [],
     },
     {
-      id: "1548332f-86ab-42fe-bd32-4f3adb9e650b",
-      environment: "efa7c243-81aa-4986-b0b1-c89583cbf846",
-      service_entity: "container-service",
-      version: 4,
-      config: {},
-      state: "up",
-      candidate_attributes: null,
-      active_attributes: {
-        name: "test-container1123",
-        service_id: "123412312",
-        child_container: {
-          name: "123124124",
-          parent_entity: "085cdf92-0894-4b82-8d46-1dd9552e7ba3",
+      instance: {
+        data: {
+          id: "1548332f-86ab-42fe-bd32-4f3adb9e650b",
+          environment: "efa7c243-81aa-4986-b0b1-c89583cbf846",
+          service_entity: "container-service",
+          version: 4,
+          config: {},
+          state: "up",
+          candidate_attributes: null,
+          active_attributes: {
+            name: "test-container1123",
+            service_id: "123412312",
+            child_container: {
+              name: "123124124",
+              parent_entity: "085cdf92-0894-4b82-8d46-1dd9552e7ba3",
+            },
+            should_deploy_fail: false,
+          },
+          rollback_attributes: null,
+          created_at: "2023-09-19T14:39:52.566097",
+          last_updated: "2023-09-19T14:40:14.861344",
+          callback: [],
+          deleted: false,
+          deployment_progress: null,
+          service_identity_attribute_value: "test-container1123",
+          referenced_by: [],
         },
-        should_deploy_fail: false,
       },
-      rollback_attributes: null,
-      created_at: "2023-09-19T14:39:52.566097",
-      last_updated: "2023-09-19T14:40:14.861344",
-      callback: [],
-      deleted: false,
-      deployment_progress: null,
-      service_identity_attribute_value: "test-container1123",
-      referenced_by: [],
+      relatedInstances: [],
     },
   ],
 };
 
-export const mockedInstanceTwo: InstanceWithRelations = {
+export const mockedInstanceTwo: InstanceWithReferences = {
   instance: {
-    id: "085cxf92-0894-4ex2-8d46-1gd9552e7ba3",
-    environment: "efa7c243-81aa-4986-b0b1-c89583cbf846",
-    service_entity: "test-service",
-    version: 4,
-    config: {},
-    state: "up",
-    candidate_attributes: null,
-    active_attributes: {
-      name: "test12345",
-      attrOne: "test12345",
-      dictOne: {},
-      attrTwo: "123",
-      attrThree: "456",
-      attrFour: "789",
-      service_id: "012",
-      should_deploy_fail: false,
-      dictTwo: {},
+    data: {
+      id: "085cxf92-0894-4ex2-8d46-1gd9552e7ba3",
+      environment: "efa7c243-81aa-4986-b0b1-c89583cbf846",
+      service_entity: "test-service",
+      version: 4,
+      config: {},
+      state: "up",
+      candidate_attributes: null,
+      active_attributes: {
+        name: "test12345",
+        attrOne: "test12345",
+        dictOne: {},
+        attrTwo: "123",
+        attrThree: "456",
+        attrFour: "789",
+        service_id: "012",
+        should_deploy_fail: false,
+        dictTwo: {},
+      },
+      rollback_attributes: null,
+      created_at: "2023-09-19T14:39:30.770002",
+      last_updated: "2023-09-19T14:39:53.389878",
+      callback: [],
+      deleted: false,
+      deployment_progress: null,
+      service_identity_attribute_value: "test12345",
+      referenced_by: [],
     },
-    rollback_attributes: null,
-    created_at: "2023-09-19T14:39:30.770002",
-    last_updated: "2023-09-19T14:39:53.389878",
-    callback: [],
-    deleted: false,
-    deployment_progress: null,
-    service_identity_attribute_value: "test12345",
-    referenced_by: [],
   },
   relatedInstances: [],
 };
@@ -2369,34 +2383,36 @@ export const mockedInstanceTwoServiceModel: ServiceModel = {
   owned_entities: [],
 };
 
-export const mockedInstanceThree: InstanceWithRelations = {
+export const mockedInstanceThree: InstanceWithReferences = {
   instance: {
-    id: "085cxf92-0894-4ex2-8d46-1gd9552e7ba3",
-    environment: "efa7c243-81aa-4986-b0b1-c89583cbf846",
-    service_entity: "test-service",
-    version: 4,
-    config: {},
-    state: "up",
-    candidate_attributes: null,
-    active_attributes: {
-      name: "test12345",
-      attrOne: "test12345",
-      dictOne: {},
-      attrTwo: "123",
-      attrThree: "456",
-      attrFour: "789",
-      service_id: "012",
-      should_deploy_fail: false,
-      dictTwo: {},
+    data: {
+      id: "085cxf92-0894-4ex2-8d46-1gd9552e7ba3",
+      environment: "efa7c243-81aa-4986-b0b1-c89583cbf846",
+      service_entity: "test-service",
+      version: 4,
+      config: {},
+      state: "up",
+      candidate_attributes: null,
+      active_attributes: {
+        name: "test12345",
+        attrOne: "test12345",
+        dictOne: {},
+        attrTwo: "123",
+        attrThree: "456",
+        attrFour: "789",
+        service_id: "012",
+        should_deploy_fail: false,
+        dictTwo: {},
+      },
+      rollback_attributes: null,
+      created_at: "2023-09-19T14:39:30.770002",
+      last_updated: "2023-09-19T14:39:53.389878",
+      callback: [],
+      deleted: false,
+      deployment_progress: null,
+      service_identity_attribute_value: "test12345",
+      referenced_by: [],
     },
-    rollback_attributes: null,
-    created_at: "2023-09-19T14:39:30.770002",
-    last_updated: "2023-09-19T14:39:53.389878",
-    callback: [],
-    deleted: false,
-    deployment_progress: null,
-    service_identity_attribute_value: "test12345",
-    referenced_by: [],
   },
   relatedInstances: [],
 };

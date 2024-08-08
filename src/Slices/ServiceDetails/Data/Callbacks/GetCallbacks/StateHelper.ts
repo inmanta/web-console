@@ -7,7 +7,6 @@ type Data = RemoteData.Type<
   Query.Error<"GetCallbacks">,
   Query.Data<"GetCallbacks">
 >;
-
 type ApiData = RemoteData.Type<
   Query.Error<"GetCallbacks">,
   Query.ApiResponse<"GetCallbacks">
@@ -21,7 +20,6 @@ export function CallbacksStateHelper(store: Store) {
       (cb) => cb.service_entity === service_entity,
     );
     const sortedCallbacks = sortBy(serviceCallbacks, ["url"]);
-
     return RemoteData.success(sortedCallbacks);
   }
 

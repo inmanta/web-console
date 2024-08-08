@@ -52,7 +52,6 @@ const customRouter = function (
   const route: g.Point[] = [];
   // Target Point
   const source = link.getSourceElement();
-
   if (source) {
     route.push(
       getOutsidePoint(

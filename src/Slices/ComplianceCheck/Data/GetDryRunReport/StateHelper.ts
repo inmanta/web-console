@@ -7,7 +7,6 @@ export function StateHelper(store: Store) {
     store,
     (apiData, { reportId }) => {
       const data = RemoteData.mapSuccess((response) => response.data, apiData);
-
       store.dispatch.dryRunReport.set({
         reportId,
         data,

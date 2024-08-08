@@ -78,7 +78,6 @@ const setup = (
 
 function createQuerryWrapper(children: React.ReactNode) {
   const queryClient = new QueryClient();
-
   return (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );
@@ -86,7 +85,6 @@ function createQuerryWrapper(children: React.ReactNode) {
 
 test("GIVEN ServiceInstanceForm WHEN passed a TextField THEN shows that field", async () => {
   const { component } = setup([Test.Field.text]);
-
   render(component);
 
   expect(
@@ -99,7 +97,6 @@ test("GIVEN ServiceInstanceForm WHEN passed a TextField THEN shows that field", 
     name: `TextInput-${Test.Field.text.name}`,
   });
   const value = "test text";
-
   expect(textBox).toBeVisible();
   await act(async () => {
     await userEvent.type(textBox, value);
@@ -109,7 +106,6 @@ test("GIVEN ServiceInstanceForm WHEN passed a TextField THEN shows that field", 
 
 test("GIVEN ServiceInstanceForm WHEN passed a TextField with suggestions THEN shows that field", async () => {
   const { component } = setup([Test.Field.textSuggestions]);
-
   render(component);
 
   expect(
@@ -122,7 +118,6 @@ test("GIVEN ServiceInstanceForm WHEN passed a TextField with suggestions THEN sh
     name: `TextInput-${Test.Field.text.name}`,
   });
   const value = "test text";
-
   expect(textBox).toBeVisible();
   await act(async () => {
     await userEvent.type(textBox, value);
@@ -153,12 +148,10 @@ test("GIVEN ServiceInstanceForm WHEN passed a TextField with parameter suggestio
       });
     }),
   );
-
   // Start the interception.
   server.listen();
 
   const { component } = setup([Test.Field.textSuggestions2]);
-
   render(createQuerryWrapper(component));
 
   expect(
@@ -177,7 +170,6 @@ test("GIVEN ServiceInstanceForm WHEN passed a TextField with parameter suggestio
   });
 
   const suggestions = screen.getAllByRole("menuitem");
-
   expect(suggestions).toHaveLength(3);
 
   server.close();
@@ -192,12 +184,10 @@ test("GIVEN ServiceInstanceForm WHEN passed a TextField with parameter suggestio
       return HttpResponse.error();
     }),
   );
-
   // Start the interception.
   server.listen();
 
   const { component } = setup([Test.Field.textSuggestions2]);
-
   render(createQuerryWrapper(component));
 
   expect(
@@ -216,7 +206,6 @@ test("GIVEN ServiceInstanceForm WHEN passed a TextField with parameter suggestio
   });
 
   const suggestions = screen.queryAllByRole("menuitem");
-
   expect(suggestions).toHaveLength(0);
 
   server.close();
@@ -224,7 +213,6 @@ test("GIVEN ServiceInstanceForm WHEN passed a TextField with parameter suggestio
 
 test("GIVEN ServiceInstanceForm WHEN passed a BooleanField THEN shows that field", async () => {
   const { component } = setup([Test.Field.bool]);
-
   render(component);
 
   expect(
@@ -236,7 +224,6 @@ test("GIVEN ServiceInstanceForm WHEN passed a BooleanField THEN shows that field
   expect(screen.getAllByRole("radio")).toHaveLength(3);
 
   const trueRadioButton = screen.getByRole("radio", { name: "True" });
-
   await act(async () => {
     await userEvent.click(trueRadioButton);
   });
@@ -246,7 +233,6 @@ test("GIVEN ServiceInstanceForm WHEN passed a BooleanField THEN shows that field
 
 test("GIVEN ServiceInstanceForm WHEN passed an EnumField THEN shows that field", async () => {
   const { component } = setup([Test.Field.enumField]);
-
   render(component);
 
   expect(
@@ -266,7 +252,6 @@ test("GIVEN ServiceInstanceForm WHEN passed an EnumField THEN shows that field",
   });
 
   const options = screen.getAllByRole("option");
-
   expect(options).toHaveLength(2);
 
   await act(async () => {
@@ -278,19 +263,16 @@ test("GIVEN ServiceInstanceForm WHEN passed an EnumField THEN shows that field",
 
 test("GIVEN ServiceInstanceForm WHEN passed an EnumField with more than one value THEN shows that field with default prompt", async () => {
   const { component } = setup([Test.Field.enumFieldTwoOptions]);
-
   render(component);
 
   const field = screen.getByRole("generic", {
     name: `EnumFieldInput-${Test.Field.enumFieldTwoOptions.name}`,
   });
-
   expect(field).toBeVisible();
 
   const placeholder = screen.getByText(
     `Select value for ${Test.Field.enumFieldTwoOptions.name}`,
   );
-
   expect(placeholder).toBeVisible();
 
   const select = screen.getByTestId(
@@ -302,19 +284,16 @@ test("GIVEN ServiceInstanceForm WHEN passed an EnumField with more than one valu
   });
 
   const options = screen.getAllByRole("option");
-
   expect(options).toHaveLength(2);
 });
 
 test("GIVEN ServiceInstanceForm WHEN passed an EnumField with only one value THEN shows that field with preselected option", async () => {
   const { component } = setup([Test.Field.enumFieldSingleOption]);
-
   render(component);
 
   const field = screen.getByRole("generic", {
     name: `EnumFieldInput-${Test.Field.enumFieldSingleOption.name}`,
   });
-
   expect(field).toBeVisible();
 
   const select = screen.getByTestId(
@@ -328,13 +307,11 @@ test("GIVEN ServiceInstanceForm WHEN passed an EnumField with only one value THE
   });
 
   const option = screen.getByRole("option");
-
   expect(option).toBeInTheDocument();
 });
 
 test("GIVEN ServiceInstanceForm and a NestedField WHEN clicking the toggle THEN the nested FlatField is shown", async () => {
   const { component } = setup([Test.Field.nested([Test.Field.text])]);
-
   render(component);
 
   const group = screen.getByRole("group", {
@@ -368,7 +345,6 @@ test("GIVEN ServiceInstanceForm and a NestedField WHEN clicking the toggle THEN 
 
 test("GIVEN ServiceInstanceForm and a DictListField WHEN clicking all toggles open THEN the nested FlatField is shown", async () => {
   const { component } = setup([Test.Field.dictList([Test.Field.text])]);
-
   render(component);
 
   const group = screen.getByRole("group", {
@@ -410,7 +386,6 @@ test("GIVEN ServiceInstanceForm and a nested DictListField WHEN in EDIT mode, ne
     true,
     originalAttributes,
   );
-
   render(component);
 
   const group = screen.getByRole("group", {
@@ -496,7 +471,6 @@ test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is
   const submitCb = jest.fn();
 
   const { component } = setup(fields, submitCb);
-
   render(component);
 
   await act(async () => {
@@ -512,7 +486,6 @@ test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is
   const group = screen.getByRole("group", {
     name: "nested_field",
   });
-
   await act(async () => {
     await userEvent.click(
       within(group).getByRole("button", {
@@ -576,7 +549,6 @@ test.each`
   "Given ServiceInstanceForm and InputField WHEN updating the input THEN current value is correctly displayed",
   async ({ input, label, newValue }) => {
     const { component } = setup([input], undefined, false, undefined);
-
     render(component);
 
     expect(screen.getByLabelText(label)).toHaveValue("");
@@ -600,7 +572,6 @@ test.each`
       [input.name]: value,
     };
     const { component } = setup([input], undefined, false, originalAttributes);
-
     render(component);
 
     expect(screen.getByLabelText(label)).toHaveValue(value);

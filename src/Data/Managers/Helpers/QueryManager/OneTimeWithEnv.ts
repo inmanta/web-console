@@ -66,7 +66,6 @@ export function OneTimeWithEnv<Kind extends Query.Kind>(
         environment !== previousEnvironment
           ? getUrl(urlEncodeParams(query), environment)
           : url;
-
       update(query, urlToUse, environment);
     }, [url, environment]);
 
@@ -85,7 +84,6 @@ export function OneTimeWithEnv<Kind extends Query.Kind>(
   ): boolean {
     return query.kind === kind && matchingKind === "OneTime";
   }
-
   return {
     useOneTime,
     matches,

@@ -33,7 +33,6 @@ export const Actions: React.FC<ActionsProps> = ({ environment }) => {
     id: environment.id,
   });
   const isProtected = environmentModifier.useIsProtectedEnvironment();
-
   return (
     <>
       <DescriptionListGroup>

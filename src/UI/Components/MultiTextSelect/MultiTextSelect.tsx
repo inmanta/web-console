@@ -128,7 +128,6 @@ export const MultiTextSelect: React.FC<Props> = ({
       const focusedItem = selectOptions.filter((option) => !option.isDisabled)[
         indexToFocus
       ];
-
       setActiveItem(
         `select-multi-typeahead-${focusedItem.value.replace(" ", "-")}`,
       );

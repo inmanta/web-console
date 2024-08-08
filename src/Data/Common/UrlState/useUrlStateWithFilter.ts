@@ -53,11 +53,9 @@ export function handleUrlStateWithFilter<Data>(
     const serialized = Object.entries(config.keys)
       .map(([key, kind]) => {
         if (data[key] === undefined) return {};
-
         return { [key]: serializeValue(kind, data[key]) };
       })
       .reduce((acc, cur) => ({ ...acc, ...cur }), {});
-
     return { ...data, ...serialized };
   };
 
@@ -67,11 +65,9 @@ export function handleUrlStateWithFilter<Data>(
     const parsed = Object.entries(config.keys)
       .map(([key, kind]) => {
         if (value[key] === undefined) return {};
-
         return { [key]: parseValue(kind, value[key]) };
       })
       .reduce((acc, cur) => ({ ...acc, ...cur }), {});
-
     return { ...(value as Data), ...parsed };
   };
 

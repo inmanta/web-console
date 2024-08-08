@@ -17,7 +17,6 @@ interface Props {
 
 export const AttributeTable: React.FunctionComponent<Props> = ({ service }) => {
   const navigate = useNavigateTo();
-
   if (
     service.attributes.length > 0 ||
     service.embedded_entities.length > 0 ||

@@ -30,7 +30,6 @@ export class DiscoveredResourcesTablePresenter
   }
   getSortableColumnNames(): string[] {
     const sortableColumns = ["discovered_resource_id"];
-
     return sortableColumns;
   }
   getColumnHeads(): ColumnHead[] {
@@ -45,7 +44,6 @@ export class DiscoveredResourcesTablePresenter
     if (index > -1 && index < this.getNumberOfColumns()) {
       return this.getColumnHeads()[index].apiName;
     }
-
     return undefined;
   }
 

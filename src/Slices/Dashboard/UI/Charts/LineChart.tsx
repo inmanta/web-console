@@ -18,7 +18,6 @@ import styled, { css } from "styled-components";
 import { LineChartProps } from "../../Core/Domain";
 import { interpolateMetrics } from "../helper";
 import { colorTheme } from "../themes";
-
 interface CustomAxisProps extends ChartAxisProps {
   style: {
     ticks: {
@@ -29,7 +28,6 @@ interface CustomAxisProps extends ChartAxisProps {
 const CustomAxis = ({ ...props }: CustomAxisProps) => {
   return <ChartAxis {...props} />;
 };
-
 export const LineChart: React.FC<LineChartProps> = ({
   title,
   label,
@@ -48,7 +46,6 @@ export const LineChart: React.FC<LineChartProps> = ({
     if (value === null) {
       return null;
     }
-
     return value % 1 === 0 ? value : Math.round(value * 1000) / 1000;
   };
   const chooseWhichLabelToUse = (datum) => {
@@ -61,7 +58,6 @@ export const LineChart: React.FC<LineChartProps> = ({
       return null;
     }
   };
-
   useEffect(() => {
     function handleResize() {
       // Set window width to state if width from ref is available
@@ -75,11 +71,9 @@ export const LineChart: React.FC<LineChartProps> = ({
     window.addEventListener("resize", handleResize);
     // Call handler right away so state gets updated with initial window size
     handleResize();
-
     // Remove event listener on cleanup
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
   return (
     <div ref={ref}>
       <Chart
@@ -133,7 +127,6 @@ export const LineChart: React.FC<LineChartProps> = ({
           }
           tickFormat={(x) => {
             const date = new Date(x).toLocaleString().split(",");
-
             return date[0] + "\n" + date[1];
           }}
           style={{

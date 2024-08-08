@@ -36,7 +36,6 @@ export class ParametersTablePresenter
   }
   getSortableColumnNames(): string[] {
     const sortableColumns = ["name", "source", "updated"];
-
     return sortableColumns;
   }
   getColumnHeads(): ColumnHead[] {
@@ -51,7 +50,6 @@ export class ParametersTablePresenter
     if (index > -1 && index < this.getNumberOfColumns()) {
       return this.getColumnHeads()[index].apiName;
     }
-
     return undefined;
   }
 

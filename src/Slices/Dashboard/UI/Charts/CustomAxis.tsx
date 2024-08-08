@@ -8,7 +8,6 @@ interface CustomAxisProps extends ChartAxisProps {
     };
   };
 }
-
 /**
  * This Custom component was needed to avoid TypeScript issue as
  * ChartAxis props didn't recognize size property in styles,

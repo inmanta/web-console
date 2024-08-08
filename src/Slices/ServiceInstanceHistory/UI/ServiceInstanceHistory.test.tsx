@@ -60,7 +60,6 @@ function setup() {
     useLocation,
     dependencies.routeManager,
   );
-
   store.dispatch.environment.setEnvironments(
     RemoteData.success([
       {
@@ -95,7 +94,6 @@ function setup() {
       </DependencyProvider>
     </MemoryRouter>
   );
-
   return { component, apiHelper };
 }
 
@@ -119,7 +117,6 @@ it("ServiceInstanceHistory renders", async () => {
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
@@ -138,7 +135,6 @@ it("ServiceInstanceHistory shows dates correctly", async () => {
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 

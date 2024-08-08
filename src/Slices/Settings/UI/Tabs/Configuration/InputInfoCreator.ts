@@ -57,22 +57,17 @@ export class InputInfoCreator {
   ): EnvironmentSettings.InputInfo {
     const update = async (value: EnvironmentSettings.Value) => {
       const error = await this.update(definition.name, value);
-
       this.setError(Maybe.withFallback(error, ""));
-
       return error;
     };
 
     const reset = async () => {
       if (initial === definition.default && value !== definition.default) {
         setValue(definition.default);
-
         return Maybe.none();
       } else {
         const error = await this.reset(definition.name);
-
         this.setError(Maybe.withFallback(error, ""));
-
         return error;
       }
     };
@@ -81,14 +76,12 @@ export class InputInfoCreator {
       if (info.initial === undefined && info.value === info.default) {
         return false;
       }
-
       return !_.isEqual(info.value, info.initial);
     };
 
     switch (definition.type) {
       case "bool":
         const BooleanDefinition = definition as BooleanDefinition;
-
         return {
           ...BooleanDefinition,
           type: "bool",
@@ -101,7 +94,6 @@ export class InputInfoCreator {
         };
       case "int":
         const intDefinition = definition as IntDefinition;
-
         return {
           ...intDefinition,
           type: "int",
@@ -114,7 +106,6 @@ export class InputInfoCreator {
         };
       case "positive_float":
         const positiveFloatDefinition = definition as PositiveFloatDefinition;
-
         return {
           ...positiveFloatDefinition,
           type: "positive_float",
@@ -127,7 +118,6 @@ export class InputInfoCreator {
         };
       case "enum":
         const enumerationDefinition = definition as EnumDefinition;
-
         return {
           ...enumerationDefinition,
           type: "enum",
@@ -140,7 +130,6 @@ export class InputInfoCreator {
         };
       case "dict":
         const dictDefinition = definition as DictDefinition;
-
         return {
           ...dictDefinition,
           type: "dict",
@@ -156,7 +145,6 @@ export class InputInfoCreator {
         };
       case "str":
         const strDefinition = definition as StrDefinition;
-
         return {
           ...strDefinition,
           type: "str",
@@ -169,7 +157,6 @@ export class InputInfoCreator {
         };
       default:
         const unknown = definition as UnknownDefinition;
-
         return {
           ...unknown,
           type: "str",

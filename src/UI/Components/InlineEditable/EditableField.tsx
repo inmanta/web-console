@@ -58,7 +58,6 @@ export const EditableField: React.FC<Props> = ({
   const onSubmitRequest = async (value: string) => {
     setEditable(false);
     const error = await onSubmit(value);
-
     if (Maybe.isSome(error)) {
       setSubmitError(error.value);
     }

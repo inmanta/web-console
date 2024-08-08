@@ -43,11 +43,9 @@ export const EnvironmentSettings: React.FC<Props> = ({
 
   const onProjectSubmit = async (projectName: string) => {
     const match = projects.find((project) => project.name === projectName);
-
     if (!match) {
       return Maybe.some(`No matching project found for name '${projectName}'`);
     }
-
     return modifyEnvironmentTrigger({
       name: environment.name,
       project_id: match.id,

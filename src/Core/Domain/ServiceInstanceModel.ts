@@ -64,7 +64,6 @@ export interface ServiceInstanceModel
   service_entity_version?: ParsedNumber;
   desired_state_version?: ParsedNumber;
   transfer_context?: string;
-  metadata?: { [key: string]: string };
 }
 
 /**

@@ -84,7 +84,6 @@ export const ResourceHistoryView: React.FC<Props> = ({
             new MomentDatePresenter(),
           );
           const rows = tablePresenter.createRows(history.data);
-
           return (
             <ResourceHistoryTable
               aria-label="ResourceHistory-Success"

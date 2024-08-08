@@ -173,7 +173,6 @@ function format(value: unknown): string {
     if (Object.keys(value).length === 0) return "{}";
     if (Array.isArray(value)) return value.join(", ");
   }
-
   return "";
 }
 

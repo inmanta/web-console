@@ -11,7 +11,6 @@ import { KeycloakAuthConfig } from "../types";
  */
 const KeycloakProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
   const { keycloak } = useKeycloak();
-
   /**
    * Get the username of the currently logged-in user.
    * @returns  {string|null} The username of the currently logged-in user, or null if no user is logged in.
@@ -72,7 +71,6 @@ const KeycloakProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
 interface Props {
   config: KeycloakAuthConfig;
 }
-
 /**
  * KeycloakAuthProvider component provides authentication functionality using Keycloak.
  */

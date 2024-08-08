@@ -7,7 +7,6 @@ export function StateHelper(store: Store) {
     store,
     (data, { id }) => {
       const value = RemoteData.mapSuccess((data) => data.data, data);
-
       store.dispatch.agentProcess.setData({ id, value });
     },
     (state, { id }) => state.agentProcess.byId[id],

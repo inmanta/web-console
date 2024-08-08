@@ -23,17 +23,14 @@ test("GIVEN The Service Inventory WHEN the user filters on state ('creating') TH
   const initialRows = await screen.findAllByRole("row", {
     name: "InstanceRow-Intro",
   });
-
   expect(initialRows.length).toEqual(2);
 
   const input = await screen.findByPlaceholderText("Select a state...");
-
   await act(async () => {
     await userEvent.click(input);
   });
 
   const option = await screen.findByRole("option", { name: "creating" });
-
   await act(async () => {
     await userEvent.click(option);
   });
@@ -55,6 +52,5 @@ test("GIVEN The Service Inventory WHEN the user filters on state ('creating') TH
   const rowsAfter = await screen.findAllByRole("row", {
     name: "InstanceRow-Intro",
   });
-
   expect(rowsAfter.length).toEqual(1);
 });

@@ -19,7 +19,6 @@ export class AttributesPresenter {
 
   getPairsSafe(attributes: InstanceAttributeModel | null): Pairs | null {
     if (attributes === null) return null;
-
     return this.getPairs(attributes);
   }
 

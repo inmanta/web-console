@@ -131,7 +131,6 @@ test("TreeTable with 1st level of attributes containing annotations should not r
   const documentationButton = screen.getByRole("button", {
     name: "documentation",
   });
-
   expect(documentationButton).toBeInTheDocument();
 
   act(() => {
@@ -216,7 +215,6 @@ test("TreeTable with catalog entries can be expanded", async () => {
       },
     ],
   };
-
   render(catalogSetup(service));
   fireEvent.click(screen.getByRole("button", { name: "Toggle-a" }));
 
@@ -280,7 +278,6 @@ test("TreeTable with catalog entries all can be expanded at once", async () => {
       },
     ],
   };
-
   render(catalogSetup(service));
 
   //get buttons from dropdown

@@ -27,7 +27,6 @@ export const AttributesTab: React.FC<Props> = ({
   setTab = () => {},
 }) => {
   const navigate = useNavigateTo();
-
   return (
     <TreeTableCellContext.Provider
       value={{

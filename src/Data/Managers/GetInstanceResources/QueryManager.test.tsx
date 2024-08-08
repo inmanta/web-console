@@ -88,7 +88,6 @@ const Component: React.FC = ({}) => {
     service_entity: "service",
     version: 1,
   });
-
   return (
     <RemoteDataView
       label="Dummy"
@@ -101,7 +100,6 @@ const Component: React.FC = ({}) => {
 test("Given the InstanceResourcesQueryManager When initial request fails with 409 Then requests are retried", async () => {
   const { component, apiHelper, resourcesRequest, instanceRequest, resolveAs } =
     setup();
-
   render(component);
 
   expect(apiHelper.pendingRequests).toEqual([resourcesRequest(1)]);
@@ -122,7 +120,6 @@ test("Given the InstanceResourcesQueryManager When initial request fails with 40
 test("Given the InstanceResourcesQueryManager When instance fails Then error is shown", async () => {
   const { component, apiHelper, resourcesRequest, instanceRequest, resolveAs } =
     setup();
-
   render(component);
 
   expect(apiHelper.pendingRequests).toEqual([resourcesRequest(1)]);
@@ -141,7 +138,6 @@ test("Given the InstanceResourcesQueryManager When instance fails Then error is 
 test("Given the InstanceResourcesQueryManager When it keeps failing Then it stops at the retryLimit", async () => {
   const { component, apiHelper, resourcesRequest, instanceRequest, resolveAs } =
     setup();
-
   render(component);
 
   // 1st resources
@@ -186,7 +182,6 @@ test("Given the InstanceResourcesQueryManager Then a task is registered on the s
     resolveAs,
     instanceA,
   } = setup();
-
   render(component);
 
   expect(apiHelper.pendingRequests).toEqual([resourcesRequest(1)]);
@@ -210,7 +205,6 @@ test("Given the InstanceResourcesQueryManager When instance call is successful T
     instanceA,
     instanceB,
   } = setup();
-
   render(component);
   store.dispatch.serviceInstances.setData({
     query: {
@@ -231,13 +225,11 @@ test("Given the InstanceResourcesQueryManager When instance call is successful T
   await act(resolveAs.instanceSuccess(4));
   await act(resolveAs.resourcesSuccess);
   const services = store.getState().serviceInstances.byId[`env__?__service`];
-
   if (!RemoteData.isSuccess(services)) fail();
 
   const instance = services.value.data.find(
     (instance) => instance.id === instanceA.id,
   );
-
   expect(instance).not.toBeUndefined();
   expect(instance).toEqual({ ...instanceA, version: 4 });
 });
@@ -245,7 +237,6 @@ test("Given the InstanceResourcesQueryManager When instance call is successful T
 test("Given the InstanceResourcesQueryManager When scheduled instance call is successful Then the store is updated", async () => {
   const { component, store, resolveAs, scheduler, instanceA, instanceB } =
     setup();
-
   render(component);
   store.dispatch.serviceInstances.setData({
     query: {
@@ -269,7 +260,6 @@ test("Given the InstanceResourcesQueryManager When scheduled instance call is su
   await act(resolveAs.resourcesSuccess);
 
   const services = store.getState().serviceInstances.byId[`env__?__service`];
-
   if (!RemoteData.isSuccess(services)) {
     fail();
   }
@@ -277,14 +267,12 @@ test("Given the InstanceResourcesQueryManager When scheduled instance call is su
   const a = services.value.data.find(
     (instance) => instance.id === instanceA.id,
   );
-
   expect(a).not.toBeUndefined();
   expect(a).toEqual({ ...instanceA, version: 4 });
 
   const b = services.value.data.find(
     (instance) => instance.id === instanceB.id,
   );
-
   expect(b).not.toBeUndefined();
   expect(b).toEqual(instanceB);
 });

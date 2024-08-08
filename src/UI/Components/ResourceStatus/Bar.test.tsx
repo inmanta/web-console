@@ -7,7 +7,6 @@ test("GIVEN infoToLegend with info with 1 key THEN returns correct label", () =>
     color: "red",
     total: 10,
   };
-
   expect(infoToLegendItem(info, () => undefined)).toMatchObject({
     id: "unavailable",
     value: 10,
@@ -22,7 +21,6 @@ test("GIVEN infoToLegend with info with 2 keys THEN returns correct label", () =
     color: "red",
     total: 10,
   };
-
   expect(infoToLegendItem(info, () => undefined)).toMatchObject({
     id: "unavailable",
     value: 10,

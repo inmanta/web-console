@@ -28,7 +28,6 @@ const InlineInput = ({
   toggleModal: () => void;
 }) => {
   let input;
-
   if (type.includes("bool")) {
     input = (
       <StyledSwitch
@@ -39,7 +38,6 @@ const InlineInput = ({
     );
   } else if (type.includes("string[]")) {
     let formattedValue;
-
     if (typeof value !== "object") {
       formattedValue = (value as string).replace(/\s/g, "").split(",");
     } else {

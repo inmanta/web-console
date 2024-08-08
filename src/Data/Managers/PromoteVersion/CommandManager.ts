@@ -14,9 +14,7 @@ export function PromoteVersionCommandManager(
           environment,
           null,
         );
-
         await updater.update(query, environment);
-
         return result;
       },
   );

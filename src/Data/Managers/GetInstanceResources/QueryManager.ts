@@ -135,7 +135,6 @@ export function InstanceResourcesQueryManager(
           environment,
           0,
         );
-
         stateHelper.set(resources, query, environment);
         updateInstance(instance, query.service_entity, environment);
       })();
@@ -165,12 +164,10 @@ export function InstanceResourcesQueryManager(
       },
       environment,
     );
-
     if (RemoteData.isSuccess(currentState)) {
       const updatedState = currentState.value.data.map((instance) =>
         instance.id === latest.id ? latest : instance,
       );
-
       instancesStateHelper.set(
         {
           value: { ...currentState.value, data: updatedState },
@@ -193,7 +190,6 @@ export function InstanceResourcesQueryManager(
   ): boolean {
     return query.kind === "GetInstanceResources" && kind === "Continuous";
   }
-
   return {
     useContinuous,
     matches,

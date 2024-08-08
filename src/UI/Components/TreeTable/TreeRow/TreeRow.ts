@@ -51,6 +51,5 @@ interface Leaf {
 export function isRowOfMultipleValues(row: Flat | Leaf): boolean {
   const values = row.valueCells.map(({ value }) => value);
   const nonEmptyValues = values.filter((value) => value.length > 0);
-
   return nonEmptyValues.length > 1;
 }

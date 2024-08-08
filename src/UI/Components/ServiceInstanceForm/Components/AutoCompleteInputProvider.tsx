@@ -66,7 +66,6 @@ export const AutoCompleteInputProvider: React.FC<Props> = ({
             const displayName = service_identity_attribute_value
               ? service_identity_attribute_value
               : id;
-
             return {
               displayName,
               value: id,
@@ -74,7 +73,6 @@ export const AutoCompleteInputProvider: React.FC<Props> = ({
             };
           },
         );
-
         return (
           <AutoCompleteInput
             options={options}

@@ -7,7 +7,6 @@ export function GetEnvironmentSettingStateHelper(store: Store) {
     store,
     (data, query, environment) => {
       const unwrapped = RemoteData.mapSuccess((wrapped) => wrapped.data, data);
-
       store.dispatch.environment.setSettingsData({
         environment,
         value: unwrapped,

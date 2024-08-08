@@ -110,7 +110,6 @@ function setup() {
 
 test("GIVEN ServiceCatalog WHEN click on config tab THEN shows config tab", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
 
   await act(async () => {
@@ -128,14 +127,12 @@ test("GIVEN ServiceCatalog WHEN click on config tab THEN shows config tab", asyn
 
 test("GIVEN ServiceCatalog WHEN config tab is active THEN shows SettingsList", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
   await act(async () => {
     apiHelper.resolve(Either.right({ data: Service.a }));
   });
 
   const configButton = screen.getByRole("tab", { name: "Config" });
-
   await act(async () => {
     await userEvent.click(configButton);
   });

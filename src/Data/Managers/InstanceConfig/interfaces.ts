@@ -18,7 +18,6 @@ export interface GetInstanceConfigManifest {
   usedData: { config: Config; defaults: Config };
   query: GetInstanceConfig;
 }
-
 /**
  * The instanceConfig command updates the config belonging to one specific service instance
  */

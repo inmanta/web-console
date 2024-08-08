@@ -49,7 +49,6 @@ function setup() {
 
 test("GIVEN Facts page THEN shows table", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
@@ -73,7 +72,6 @@ test("GIVEN Facts page THEN shows table", async () => {
   );
 
   const rows = await screen.findAllByRole("row", { name: "FactsRow" });
-
   expect(rows).toHaveLength(8);
   expect(
     within(rows[0]).getByRole("cell", { name: "2021/03/18 18:10:43" }),
@@ -81,14 +79,12 @@ test("GIVEN Facts page THEN shows table", async () => {
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
 
 test("GIVEN Facts page THEN sets sorting parameters correctly on click", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
   apiHelper.resolve(
     Either.right({
@@ -105,7 +101,6 @@ test("GIVEN Facts page THEN sets sorting parameters correctly on click", async (
   const resourceIdButton = await screen.findByRole("button", {
     name: words("facts.column.resourceId"),
   });
-
   expect(resourceIdButton).toBeVisible();
   await act(async () => {
     await userEvent.click(resourceIdButton);
@@ -114,7 +109,6 @@ test("GIVEN Facts page THEN sets sorting parameters correctly on click", async (
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
@@ -127,7 +121,6 @@ test.each`
   "When using the $filterName filter of type $filterType with value $filterValue and text $placeholderText then the facts with that $filterUrlName should be fetched and shown",
   async ({ filterValue, placeholderText, filterUrlName }) => {
     const { component, apiHelper } = setup();
-
     render(component);
 
     apiHelper.resolve(
@@ -148,7 +141,6 @@ test.each`
     ).toHaveLength(8);
 
     const input = await screen.findByPlaceholderText(placeholderText);
-
     await act(async () => {
       await userEvent.click(input);
     });
@@ -180,7 +172,6 @@ test.each`
 
     await act(async () => {
       const results = await axe(document.body);
-
       expect(results).toHaveNoViolations();
     });
   },
@@ -188,7 +179,6 @@ test.each`
 
 test("GIVEN FactsView WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
 
   //mock that response has more than one site
@@ -240,7 +230,6 @@ test("GIVEN FactsView WHEN sorting changes AND we are not on the first page THEN
 
   //sort on the second page
   const resourceIdButton = await screen.findByText("Name");
-
   expect(resourceIdButton).toBeVisible();
 
   await act(async () => {

@@ -80,7 +80,6 @@ function setup(entity = "a") {
 
 test("Duplicate Instance View shows failed state", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
 
   expect(
@@ -95,14 +94,12 @@ test("Duplicate Instance View shows failed state", async () => {
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
 
 test("DuplicateInstance View shows success form", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
   const { service_entity } = ServiceInstance.a;
 
@@ -117,7 +114,6 @@ test("DuplicateInstance View shows success form", async () => {
   ).toBeInTheDocument();
 
   const bandwidthField = screen.getByText("bandwidth");
-
   expect(bandwidthField).toBeVisible();
 
   await act(async () => {
@@ -129,7 +125,6 @@ test("DuplicateInstance View shows success form", async () => {
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 
@@ -189,7 +184,6 @@ test("DuplicateInstance View shows success form", async () => {
 
 test("Given the DuplicateInstance View When changing a embedded entity Then the correct request is fired", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
   const { service_entity } = ServiceInstance.a;
 
@@ -205,7 +199,6 @@ test("Given the DuplicateInstance View When changing a embedded entity Then the 
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 
@@ -221,7 +214,6 @@ test("Given the DuplicateInstance View When changing a embedded entity Then the 
   });
 
   const bandwidthField = screen.getByText("bandwidth");
-
   expect(bandwidthField).toBeVisible();
 
   const firstCloudServiceProviderField = screen.getAllByText(
@@ -295,7 +287,6 @@ test("Given the DuplicateInstance View When changing a embedded entity Then the 
 
 test("Given the DuplicateInstance View When changing an embedded entity Then the inputs are displayed correctly", async () => {
   const { component, apiHelper } = setup("ServiceWithAllAttrs");
-
   render(component);
 
   expect(

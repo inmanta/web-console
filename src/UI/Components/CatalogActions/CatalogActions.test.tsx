@@ -65,7 +65,6 @@ function setup(
       </DependencyProvider>
     </StoreProvider>
   );
-
   return { component, apiHelper, scheduler };
 }
 
@@ -73,7 +72,6 @@ afterEach(cleanup);
 
 test("Given CatalogUpdateButton, when user clicks on button, it should display a modal.", async () => {
   const { component } = setup();
-
   render(component);
 
   const button = screen.getByRole("button", {
@@ -92,31 +90,26 @@ test("Given CatalogUpdateButton, when user clicks on button, it should display a
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
 
 test("Given CatalogUpdateButton, when user cancels the modal, it should not fire the API call and close the modal.", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
 
   const button = screen.getByRole("button", {
     name: words("catalog.button.update"),
   });
-
   await act(async () => {
     await userEvent.click(button);
   });
 
   const cancelButton = await screen.findByText(words("no"));
-
   expect(cancelButton).toBeVisible();
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 
@@ -131,25 +124,21 @@ test("Given CatalogUpdateButton, when user cancels the modal, it should not fire
 
 test("Given CatalogUpdateButton, when user confirms update, it should fire the API call, if success, show a toaster on succes and close the modal.", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 
   const button = screen.getByRole("button", {
     name: words("catalog.button.update"),
   });
-
   await act(async () => {
     await userEvent.click(button);
   });
 
   const confirmButton = await screen.findByText(words("yes"));
-
   expect(confirmButton).toBeVisible();
 
   await act(async () => {
@@ -176,13 +165,11 @@ test("Given CatalogUpdateButton, when user confirms update, it should fire the A
 
 test("Given CatalogUpdateButton, when user confirms the update, it should fire the API call, if failure, it should show an error toast and close the modal.", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
 
   const button = screen.getByRole("button", {
     name: words("catalog.button.update"),
   });
-
   await act(async () => {
     await userEvent.click(button);
   });
@@ -213,7 +200,6 @@ test("Given CatalogUpdateButton, when user confirms the update, it should fire t
 
 test("Given API documentation button, it has the right href link.", async () => {
   const { component } = setup();
-
   render(component);
 
   const button = screen.getByRole("link", {

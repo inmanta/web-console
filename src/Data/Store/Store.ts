@@ -94,6 +94,10 @@ import {
   ServiceInstanceSlice,
 } from "./ServiceInstanceSlice";
 import {
+  serviceInstanceWithRelationsSlice,
+  ServiceInstanceWithRelationsSlice,
+} from "./ServiceInstanceSliceWithRelations";
+import {
   serviceInstancesSlice,
   ServiceInstancesSlice,
 } from "./ServiceInstancesSlice";
@@ -129,6 +133,7 @@ export interface StoreModel {
   serviceConfig: ServiceConfigSlice;
   serviceInstance: ServiceInstanceSlice;
   serviceInstances: ServiceInstancesSlice;
+  serviceInstanceWithRelations: ServiceInstanceWithRelationsSlice;
   services: ServicesSlice;
   orders: OrdersSlice;
   orderDetails: OrderDetailsSlice;
@@ -166,6 +171,7 @@ export const storeModel: StoreModel = {
   serviceConfig: serviceConfigSlice,
   serviceInstance: serviceInstanceSlice,
   serviceInstances: serviceInstancesSlice,
+  serviceInstanceWithRelations: serviceInstanceWithRelationsSlice,
   services: servicesSlice,
   orders: ordersSlice,
   orderDetails: orderDetailsSlice,

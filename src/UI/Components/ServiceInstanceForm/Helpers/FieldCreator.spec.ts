@@ -24,7 +24,6 @@ test("GIVEN FieldCreator for create form WHEN create is provided with a service 
   const fields = new FieldCreator(new CreateModifierHandler()).create(
     Service.a,
   );
-
   expect(fields).toHaveLength(6);
   expect((fields[5] as NestedField).fields).toHaveLength(3);
 });
@@ -77,7 +76,6 @@ test("GIVEN FieldCreator WHEN an attribute has the empty string as default value
     attributes: attributes,
     embedded_entities: [],
   });
-
   expect(fields).toHaveLength(attributes.length);
   expect(fields[0].isOptional).toBeTruthy();
   expect(fields[1].isOptional).toBeFalsy();
@@ -115,7 +113,6 @@ test("GIVEN FieldCreator WHEN an entity has validation_type 'enum' or 'enum?' TH
     attributes: [enumAttribute, optionalEnumAttribute],
     embedded_entities: [],
   });
-
   expect(fields[0].isOptional).toBeFalsy();
   expect(fields[1].isOptional).toBeTruthy();
   expect(fields[0].kind).toMatch("Enum");
@@ -146,7 +143,6 @@ test("GIVEN FieldCreator WHEN an entity has inter service relations THEN they ar
     embedded_entities: embedded,
     inter_service_relations: InterServiceRelations.listWithAll,
   });
-
   expect(fields).toHaveLength(
     embedded.length + InterServiceRelations.listWithAll.length,
   );
@@ -176,7 +172,6 @@ test("GIVEN FieldCreator WHEN attributes are processed for edit form THEN the fi
     attributes: attributesList,
     embedded_entities: [],
   });
-
   expect(fields).toHaveLength(attributesList.length);
   expect(fields[0].isDisabled).toBeTruthy();
   expect(fields[1].isDisabled).toBeFalsy();
@@ -241,7 +236,6 @@ test.each`
       embedded_entities: [embeddedEntity],
     });
     const entityFields = fields[0] as DictListField;
-
     expect(fields[0].isDisabled).toBeTruthy();
     expect(entityFields.fields[0].isDisabled).toBeTruthy();
     expect(entityFields.fields[1].isDisabled).toBeFalsy();
@@ -279,7 +273,6 @@ test.each`
     });
 
     const entityFields = fields[0] as DictListField;
-
     expect(fields[0].isDisabled).toBeFalsy();
     expect(entityFields.fields[0].isDisabled).toBeTruthy();
     expect(entityFields.fields[1].isDisabled).toBeFalsy();

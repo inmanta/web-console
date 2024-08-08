@@ -13,7 +13,6 @@ export function DummyEnvironmentHandler(): EnvironmentHandler {
   function determineSelected(): FlatEnvironment | undefined {
     throw new Error("Method not implemented.");
   }
-
   return {
     useId,
     set,

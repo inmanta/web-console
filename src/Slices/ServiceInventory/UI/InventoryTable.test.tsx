@@ -60,7 +60,6 @@ test("InventoryTable can be expanded", async () => {
     useLocation,
     dependencies.routeManager,
   );
-
   store.dispatch.environment.setEnvironments(
     RemoteData.success([
       {
@@ -120,7 +119,6 @@ test("ServiceInventory can show resources for instance", async () => {
     useLocation,
     dependencies.routeManager,
   );
-
   store.dispatch.environment.setEnvironments(
     RemoteData.success([
       {
@@ -155,7 +153,6 @@ test("ServiceInventory can show resources for instance", async () => {
   );
 
   const expandCell = screen.getByLabelText(`expand-button-${Row.a.id.short}`);
-
   await act(async () => {
     await userEvent.click(within(expandCell).getByRole("button"));
   });
@@ -285,7 +282,6 @@ function setup(expertMode = false, setSortFn: (props) => void = dummySetter) {
 
   const instances = [ServiceInstance.a];
   const actionPresenter = new InstanceActionPresenter(instances, withIdentity);
-
   environmentModifier.setEnvironment("aaa");
   const component = (
     <MemoryRouter initialEntries={[{ search: "?env=aaa" }]}>
@@ -315,7 +311,6 @@ function setup(expertMode = false, setSortFn: (props) => void = dummySetter) {
 
 test("ServiceInventory shows service identity if it's defined", async () => {
   const component = setup();
-
   render(component);
 
   expect(await screen.findByText("Order ID")).toBeVisible();
@@ -325,7 +320,6 @@ test("ServiceInventory shows service identity if it's defined", async () => {
 
 test("ServiceInventory shows sorting buttons for sortable columns", async () => {
   const component = setup();
-
   render(component);
   expect(await screen.findByRole("button", { name: /state/i })).toBeVisible();
   expect(await screen.findByRole("button", { name: /created/i })).toBeVisible();
@@ -339,10 +333,8 @@ test("ServiceInventory sets sorting parameters correctly on click", async () => 
   let sort;
   const expertMode = false;
   const component = setup(expertMode, (value) => (sort = value));
-
   render(component);
   const stateButton = await screen.findByRole("button", { name: /state/i });
-
   expect(stateButton).toBeVisible();
   await act(async () => {
     await userEvent.click(stateButton);
@@ -355,19 +347,16 @@ describe("Actions", () => {
   it("Should have expert options in expert-mode in dropdown and trigger dialog when forcing state", async () => {
     const expertMode = true;
     const component = setup(expertMode);
-
     render(component);
 
     const menuToggle = await screen.findByRole("button", {
       name: "row actions toggle",
     });
-
     await act(async () => {
       await userEvent.click(menuToggle);
     });
 
     const options = await screen.findAllByRole("menuitem");
-
     expect(options).toHaveLength(19);
 
     await act(async () => {
@@ -380,19 +369,16 @@ describe("Actions", () => {
 
   it("Shouldn't have expert options if not in expert-mode in dropdown", async () => {
     const component = setup();
-
     render(component);
 
     const menuToggle = await screen.findByRole("button", {
       name: "row actions toggle",
     });
-
     await act(async () => {
       await userEvent.click(menuToggle);
     });
 
     const options = await screen.findAllByRole("menuitem");
-
     expect(options).toHaveLength(12);
   });
 });

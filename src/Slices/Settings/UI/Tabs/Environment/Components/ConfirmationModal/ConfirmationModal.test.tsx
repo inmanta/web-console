@@ -50,7 +50,6 @@ function setup() {
 
 test("GIVEN ConfirmationModal WHEN enter is pressed and form is invalid THEN modal is not closed", async () => {
   const { component, onClose } = setup();
-
   await render(component);
   await act(async () => {
     await userEvent.keyboard("{enter}");
@@ -60,7 +59,6 @@ test("GIVEN ConfirmationModal WHEN enter is pressed and form is invalid THEN mod
 
 test("GIVEN ConfirmationModal THEN focus is on the input field", async () => {
   const { component } = setup();
-
   await render(component);
   expect(
     screen.getByRole<HTMLInputElement>("textbox", {

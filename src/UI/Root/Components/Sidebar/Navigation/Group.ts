@@ -1,6 +1,5 @@
 import { FeatureManager, RouteManager } from "@/Core";
 import { words } from "@/UI/words";
-
 /**
  * Interface that represents a Group of links in the sidebar navigation
  */

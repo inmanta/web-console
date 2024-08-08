@@ -53,7 +53,6 @@ export const CreateCallbackForm: React.FC<Props> = ({
   const onCreate = async () => {
     setError(null);
     const error = await create();
-
     if (Maybe.isSome(error)) {
       setError(error.value);
     } else {

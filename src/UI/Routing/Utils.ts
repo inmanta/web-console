@@ -23,7 +23,6 @@ export const useNavigateTo = (): NavigateTo => {
   return (routeKind, params, newSearch) => {
     if (newSearch !== undefined) validateSearch(newSearch);
     const pathname = routeManager.getUrl(routeKind, params);
-
     navigate(`${pathname}${newSearch || search}`);
   };
 };
@@ -38,7 +37,6 @@ const validateSearch = (search: string): void => {
  */
 export const useRouteParams = <R extends RouteKind>(): RouteParams<R> => {
   const params = useParams();
-
   return decodeParams(params) as RouteParams<R>;
 };
 
@@ -49,7 +47,6 @@ export const useRouteParams = <R extends RouteKind>(): RouteParams<R> => {
 export const useDocumentTitle = (title: string): void => {
   useEffect(() => {
     const originalTitle = document.title;
-
     document.title = title;
 
     return () => {

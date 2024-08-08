@@ -1,5 +1,0 @@
-change-type: patch
-description: 'Build(deps): Bump undici from 5.28.4 to 6.19.5'
-destination-branches:
-- master
-sections: {}

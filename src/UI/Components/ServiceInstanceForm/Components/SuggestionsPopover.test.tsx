@@ -124,7 +124,6 @@ describe("SuggestionsPopover", () => {
 
     // simulate pressing the enter key on the focused suggestion
     const firstOption = screen.getByText("apple");
-
     fireEvent.keyDown(firstOption, { key: "Enter" });
 
     // Assert that handleSuggestionClick is called with the correct suggestion

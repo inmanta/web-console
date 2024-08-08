@@ -19,7 +19,6 @@ export const TableProvider: React.FC<Props> = ({
     new MomentDatePresenter(),
   );
   const rows = tablePresenter.createRows(compileReports);
-
   return (
     <CompileReportsTable
       {...props}

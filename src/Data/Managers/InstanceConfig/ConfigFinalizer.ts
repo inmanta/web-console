@@ -28,7 +28,6 @@ export class InstanceConfigFinalizer
       },
       environment,
     );
-
     if (!RemoteData.isSuccess(configData)) return configData;
     if (!RemoteData.isSuccess(serviceData)) return serviceData;
     const config = configData.value;
@@ -36,7 +35,6 @@ export class InstanceConfigFinalizer
     const options = getOptionsFromService(service);
     const fullConfig = options.reduce<Config>((acc, option) => {
       acc[option] = getValueForOption(config[option], service.config[option]);
-
       return acc;
     }, {});
     const defaults = options.reduce<Config>((acc, option) => {
@@ -44,10 +42,8 @@ export class InstanceConfigFinalizer
         typeof service.config[option] !== "undefined"
           ? service.config[option]
           : false;
-
       return acc;
     }, {});
-
     return RemoteData.success({ config: fullConfig, defaults });
   }
 }
@@ -66,6 +62,5 @@ function getValueForOption(
 ): boolean {
   if (typeof instance !== "undefined") return instance;
   if (typeof service !== "undefined") return service;
-
   return false;
 }

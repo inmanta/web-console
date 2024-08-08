@@ -4,7 +4,6 @@ import { provide, Location, Replace, StateConfig, Update } from "./helpers";
 import { handleUrlState } from "./useUrlState";
 
 type IsExpanded = (id: string) => boolean;
-
 type OnExpansion = (id: string) => () => void;
 
 type Config = Pick<StateConfig<string[]>, "route"> &

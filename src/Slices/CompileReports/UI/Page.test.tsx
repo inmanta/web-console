@@ -83,7 +83,6 @@ function setup() {
 
 test("CompileReportsView shows empty table", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
 
   await act(async () => {
@@ -110,14 +109,12 @@ test("CompileReportsView shows empty table", async () => {
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
 
 test("CompileReportsView shows failed table", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
 
   await act(async () => {
@@ -138,14 +135,12 @@ test("CompileReportsView shows failed table", async () => {
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
 
 test("CompileReportsView shows success table", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
 
   await act(async () => {
@@ -166,14 +161,12 @@ test("CompileReportsView shows success table", async () => {
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
 
 test("CompileReportsView shows updated table", async () => {
   const { component, apiHelper, scheduler } = setup();
-
   render(component);
 
   await act(async () => {
@@ -213,14 +206,12 @@ test("CompileReportsView shows updated table", async () => {
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
 
 test("When using the status filter with the Success option then the successful compile reports should be fetched and shown", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
 
   await act(async () => {
@@ -257,7 +248,6 @@ test("When using the status filter with the Success option then the successful c
   const option = await screen.findByRole("option", {
     name: words("compileReports.filters.test.success"),
   });
-
   await act(async () => {
     await userEvent.click(option);
   });
@@ -278,19 +268,16 @@ test("When using the status filter with the Success option then the successful c
   const rowsAfter = await screen.findAllByRole("row", {
     name: "Compile Reports Table Row",
   });
-
   expect(rowsAfter).toHaveLength(3);
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
 
 test("When using the status filter with the In Progress opiton then the compile reports of in progress compiles should be fetched and shown", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
 
   await act(async () => {
@@ -326,7 +313,6 @@ test("When using the status filter with the In Progress opiton then the compile 
   const input = screen.getByPlaceholderText(
     words("compileReports.filters.status.placeholder"),
   );
-
   await act(async () => {
     await userEvent.click(input);
   });
@@ -355,19 +341,16 @@ test("When using the status filter with the In Progress opiton then the compile 
   const rowsAfter = await screen.findAllByRole("row", {
     name: "Compile Reports Table Row",
   });
-
   expect(rowsAfter).toHaveLength(3);
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
 
 it("When using the Date filter then the compile reports within the range selected range should be fetched and shown", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
 
   await act(async () => {
@@ -401,7 +384,6 @@ it("When using the Date filter then the compile reports within the range selecte
   });
 
   const fromDatePicker = await screen.findByLabelText("From Date Picker");
-
   await act(async () => {
     await userEvent.click(fromDatePicker);
   });
@@ -453,14 +435,12 @@ it("When using the Date filter then the compile reports within the range selecte
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
 
 test("Given CompileReportsView When recompile is triggered Then table is updated", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
 
   await act(async () => {
@@ -477,7 +457,6 @@ test("Given CompileReportsView When recompile is triggered Then table is updated
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 
@@ -504,7 +483,6 @@ test("Given CompileReportsView When recompile is triggered Then table is updated
 
 test("GIVEN CompileReportsView WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
 
   await act(async () => {
@@ -559,7 +537,6 @@ test("GIVEN CompileReportsView WHEN sorting changes AND we are not on the first 
 
   //sort on the second page
   const resourceIdButton = await screen.findByText("Requested");
-
   expect(resourceIdButton).toBeVisible();
 
   await act(async () => {

@@ -29,12 +29,10 @@ export const DeleteButton: React.FunctionComponent<DeleteProps> = ({
   const onSubmit = async () => {
     setIsOpen(false);
     const result = await onDelete();
-
     if (Maybe.isSome(result)) {
       setErrorMessage(result.value);
     }
   };
-
   return (
     <>
       <ToastAlert

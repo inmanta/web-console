@@ -45,7 +45,6 @@ export const SelectIncludeExcludeFilter: React.FC<Props> = ({
     const updatedSelection = uniq(
       toggleValueInList(selection, safeSelectedStates),
     );
-
     update(updatedSelection);
     setIsFilterOpen(false);
   };
@@ -168,11 +167,9 @@ const ensureInvertedFilterIsNotPresent = (
   selectedStates: string[],
 ): string[] => {
   const invertedFilter = invertFilter(selection);
-
   if (selectedStates.includes(invertedFilter)) {
     return toggleValueInList(invertedFilter, selectedStates);
   }
-
   return selectedStates;
 };
 

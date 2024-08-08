@@ -25,7 +25,6 @@ export class ServiceConfigFinalizer
       },
       environment,
     );
-
     if (!RemoteData.isSuccess(configData)) return configData;
     if (!RemoteData.isSuccess(serviceData)) return serviceData;
     const config = configData.value;
@@ -34,10 +33,8 @@ export class ServiceConfigFinalizer
     const fullConfig: Config = options.reduce<Config>((acc, option) => {
       acc[option] =
         typeof config[option] !== "undefined" ? config[option] : false;
-
       return acc;
     }, {});
-
     return RemoteData.success(fullConfig);
   }
 }

@@ -14,7 +14,6 @@ export interface ResourceHistorySlice {
    * Stores the full list of resources by their environment.
    */
   byId: Record<string, Data>;
-
   /**
    * Sets the resources in the listByEnv record.
    */

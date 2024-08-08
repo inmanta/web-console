@@ -7,7 +7,6 @@ export function StateHelper(store: Store) {
     store,
     (apiData, { version }, environment) => {
       const data = RemoteData.mapSuccess((response) => response.data, apiData);
-
       store.dispatch.dryRuns.setList({
         environment,
         version,
@@ -16,9 +15,7 @@ export function StateHelper(store: Store) {
     },
     (state, { version }, environment) => {
       const slice = state.dryRuns.listByEnvAndVersion[environment];
-
       if (slice === undefined) return undefined;
-
       return slice[version];
     },
   );

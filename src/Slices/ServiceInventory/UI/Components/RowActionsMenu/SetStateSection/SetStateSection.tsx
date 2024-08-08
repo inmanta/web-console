@@ -49,7 +49,6 @@ export const SetStateSection: React.FunctionComponent<Props> = ({
 
   const onSubmit = async (targetState: string) => {
     const result = await trigger(targetState);
-
     if (Maybe.isSome(result)) {
       setStateErrorMessage(result.value);
     }

@@ -151,7 +151,6 @@ const StateLabel: React.FC<StateLabelProps> = ({ service, state }) => {
   const lifecycleState = service.lifecycle.states.find(
     (serviceState) => serviceState.name === state,
   );
-
   if (!lifecycleState) {
     return null;
   }

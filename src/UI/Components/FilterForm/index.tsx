@@ -5,7 +5,6 @@ import { words } from "@/UI/words";
 import { FreeTextFilter } from "./FreeTextFilter";
 
 type Properties = "type" | "agent" | "value";
-
 interface Props {
   filter: Resource.Filter;
   setFilter: (filter: Resource.Filter) => void;
@@ -23,7 +22,6 @@ export const FilterForm: React.FC<Props> = ({ filter, setFilter }) => {
   const removeChip = (id, prop: Properties) => {
     //assingment is neccesary to avoid ts error due to it's limitation to recognize square brackets property
     const chosenProperty = filter[prop];
-
     updateType(
       chosenProperty ? chosenProperty.filter((value) => value !== id) : [],
       prop,
@@ -32,7 +30,6 @@ export const FilterForm: React.FC<Props> = ({ filter, setFilter }) => {
   const onTextInput = (event) => {
     event.preventDefault();
     let newFilter = { ...filter };
-
     if (
       !typeTextInput.length &&
       !agentTextInput.length &&
@@ -69,7 +66,6 @@ export const FilterForm: React.FC<Props> = ({ filter, setFilter }) => {
     setAgentTextInput("");
     setValueTextInput("");
   };
-
   return (
     <ToolbarItem>
       <form onSubmit={onTextInput}>

@@ -14,10 +14,8 @@ export function EnvironmentModifierImpl(): EnvironmentModifier {
     const storeState = useStoreState(
       (state) => state.environment.environmentDetailsById,
     );
-
     if (Maybe.isSome(environment)) {
       const state = storeState[environment.value];
-
       if (state !== undefined && RemoteData.isSuccess(state)) {
         return state.value;
       }
@@ -30,15 +28,12 @@ export function EnvironmentModifierImpl(): EnvironmentModifier {
     const storeState = useStoreState(
       (state) => state.environment.settingsByEnv,
     );
-
     if (Maybe.isSome(environment)) {
       const state = storeState[environment.value];
-
       if (state !== undefined && RemoteData.isSuccess(state)) {
         return state.value;
       }
     }
-
     return null;
   }
 
@@ -48,9 +43,7 @@ export function EnvironmentModifierImpl(): EnvironmentModifier {
 
   function useIsHalted(): boolean {
     const environmentDetails = useCurrentEnvironment();
-
     if (environmentDetails === null) return false;
-
     return environmentDetails.halted;
   }
 
@@ -59,7 +52,6 @@ export function EnvironmentModifierImpl(): EnvironmentModifier {
   ): boolean {
     const environmentDetails = useCurrentEnvironment();
     const environmentSettings = useEnvironmentSettings();
-
     if (environmentDetails === null || environmentSettings === null)
       return false;
     if (
@@ -82,7 +74,6 @@ export function EnvironmentModifierImpl(): EnvironmentModifier {
   function useIsExpertModeEnabled(): boolean {
     return useSetting("enable_lsm_expert_mode");
   }
-
   return {
     useIsHalted,
     setEnvironment,

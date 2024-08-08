@@ -14,9 +14,7 @@ export function ControlAgentCommandManager(
           environment,
           null,
         );
-
         await updater.update(query, environment);
-
         return result;
       };
     },

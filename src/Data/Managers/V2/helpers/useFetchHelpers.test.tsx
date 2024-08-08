@@ -19,7 +19,6 @@ const setup = (getToken: () => string | null = () => null) => {
       {children}
     </DependencyProvider>
   );
-
   return wrapper;
 };
 
@@ -31,7 +30,6 @@ describe("createHeaders", () => {
     const { result } = renderHook(() => useFetchHelpers().createHeaders(env), {
       wrapper,
     });
-
     expect(result.current.get("X-Inmanta-Tid")).toEqual(env);
   });
 
@@ -41,7 +39,6 @@ describe("createHeaders", () => {
     const { result } = renderHook(() => useFetchHelpers().createHeaders(), {
       wrapper,
     });
-
     expect(result.current.get("X-Inmanta-Tid")).toEqual(null);
   });
 
@@ -51,7 +48,6 @@ describe("createHeaders", () => {
     const { result } = renderHook(() => useFetchHelpers().createHeaders(), {
       wrapper,
     });
-
     expect(result.current.get("Authorization")).toEqual(null);
   });
 
@@ -61,13 +57,11 @@ describe("createHeaders", () => {
     const { result } = renderHook(() => useFetchHelpers().createHeaders(), {
       wrapper,
     });
-
     expect(result.current.get("Authorization")).toEqual(null);
   });
 
   it("should return headers with Authorization Token when authHelper hook returns the token", () => {
     const wrapper = setup(() => "token");
-
     createCookie("inmanta_user", "token", 1);
     const { result } = renderHook(() => useFetchHelpers().createHeaders(), {
       wrapper,

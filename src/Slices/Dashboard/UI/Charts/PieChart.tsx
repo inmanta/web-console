@@ -1,6 +1,5 @@
 import React from "react";
 import { ChartPie, ChartThemeColor } from "@patternfly/react-charts";
-
 interface Props {
   name: string;
   metrics: {

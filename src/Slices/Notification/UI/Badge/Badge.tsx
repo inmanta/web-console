@@ -64,7 +64,6 @@ export const View: React.FC<Props> = ({ data, onClick }) => {
       ),
       success: ({ data: notifications }) => {
         const variant = getVariantFromNotifications(notifications);
-
         return (
           <NotificationBadge
             aria-label="Badge"
@@ -86,7 +85,6 @@ const getVariantFromNotifications = (
     return NotificationBadgeVariant.attention;
   }
   if (notifications.some(isUnread)) return NotificationBadgeVariant.unread;
-
   return NotificationBadgeVariant.read;
 };
 

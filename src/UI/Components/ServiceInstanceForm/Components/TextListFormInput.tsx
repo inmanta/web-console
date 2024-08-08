@@ -82,7 +82,6 @@ export const TextListFormInput: React.FC<Props> = ({
     const newChips = currentChips.filter(
       (chip) => !Object.is(chip, chipToDelete),
     );
-
     setCurrentChips(newChips);
     handleInputChange(newChips, null);
   };

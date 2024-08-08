@@ -40,7 +40,6 @@ export const TimestampFilter: React.FC<Props> = ({
       to,
       RangeOperator.Operator.To,
     );
-
     update(withNewTo);
     setFrom(undefined);
     setTo(undefined);
@@ -48,7 +47,6 @@ export const TimestampFilter: React.FC<Props> = ({
 
   const removeChip = (category, value) => {
     const raw = prettyToRaw(value);
-
     update(
       reject(
         timestampFilters,
@@ -75,7 +73,6 @@ export const TimestampFilter: React.FC<Props> = ({
   };
   const prettyToRaw = (pretty: string): DateRange.Type => {
     const [operator, date] = pretty.split("|");
-
     return {
       date: datePresenter.parseFull(date),
       operator: operator.trim() as RangeOperator.Operator,
@@ -148,6 +145,5 @@ function insertNewTimestamp(
       { date, operator },
     ];
   }
-
   return timestampFilters;
 }

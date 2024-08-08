@@ -37,7 +37,6 @@ export class InstanceActionPresenter implements ActionPresenter {
     transferType: "on_update" | "on_delete",
   ): boolean {
     const instance = this.getInstanceForId(id);
-
     if (typeof instance === "undefined") {
       return false;
     }
@@ -48,7 +47,6 @@ export class InstanceActionPresenter implements ActionPresenter {
         (transfer) =>
           transfer.source === instance.state && transfer[transferType],
       );
-
     return transfersFromCurrentSource.length === 0;
   }
 }

@@ -5,7 +5,6 @@ import { useFetchHelpers } from "../helpers";
 interface LoggedUser {
   username: string;
 }
-
 /**
  * React Query hook for getting the current logged in user from the server.
  *

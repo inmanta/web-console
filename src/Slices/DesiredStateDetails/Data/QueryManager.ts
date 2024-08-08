@@ -29,7 +29,6 @@ export function GetVersionResourcesQueryManager(
     getUrl,
     ({ data, links, metadata }) => {
       if (typeof links === "undefined") return { data, handlers: {}, metadata };
-
       return {
         data,
         handlers: getPaginationHandlers(links, metadata),

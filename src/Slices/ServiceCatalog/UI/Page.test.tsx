@@ -96,7 +96,6 @@ function setup() {
 
 test("ServiceCatalog shows updated services", async () => {
   const { component, apiHelper, scheduler } = setup();
-
   render(component);
 
   expect(
@@ -120,14 +119,12 @@ test("ServiceCatalog shows updated services", async () => {
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
 
 test("ServiceCatalog shows updated empty", async () => {
   const { component, apiHelper, scheduler } = setup();
-
   render(component);
 
   expect(
@@ -150,14 +147,12 @@ test("ServiceCatalog shows updated empty", async () => {
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
 
 test("GIVEN ServiceCatalog WHEN new environment selected THEN new query is triggered", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
@@ -186,14 +181,12 @@ test("GIVEN ServiceCatalog WHEN new environment selected THEN new query is trigg
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
 
 test("GIVEN ServiceCatalog WHEN service is deleted THEN command is triggered", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
 
   await act(async () => {
@@ -222,7 +215,6 @@ test("GIVEN ServiceCatalog WHEN service is deleted THEN command is triggered", a
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });

@@ -10,7 +10,6 @@ export class CommandResolverImpl implements CommandResolver {
 
   useGetTrigger(command: Command.Type): Command.Trigger<typeof command.kind> {
     const manager = this.getManager(command);
-
     return manager.useGetTrigger(command);
   }
 
@@ -18,7 +17,6 @@ export class CommandResolverImpl implements CommandResolver {
     const manager = this.managerResolver
       .get()
       .find((manager) => manager.matches(command));
-
     if (typeof manager !== "undefined") return manager;
     throw new Error(`Can't find CommandManager for command ${command.kind}`);
   }

@@ -41,7 +41,6 @@ function setup() {
 
 test("ResourcesView shows empty table", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
 
   expect(
@@ -59,7 +58,6 @@ test("ResourcesView shows empty table", async () => {
 
 test("ResourcesView shows failed table", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
 
   expect(
@@ -77,7 +75,6 @@ test("ResourcesView shows failed table", async () => {
 
 test("ResourcesView shows success table", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
 
   expect(
@@ -99,7 +96,6 @@ test("ResourcesView shows success table", async () => {
 
 test("ResourcesView shows updated table", async () => {
   const { component, apiHelper, scheduler } = setup();
-
   render(component);
 
   expect(

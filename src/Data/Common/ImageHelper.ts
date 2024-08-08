@@ -12,7 +12,6 @@ export class ImageHelper {
   static validateFile(file: FileSize & FileType): Maybe.Maybe<"TYPE" | "SIZE"> {
     if (!this.isFileTypeValid(file)) return Maybe.some("TYPE");
     if (!this.isFileSizeValid(file)) return Maybe.some("SIZE");
-
     return Maybe.none();
   }
 

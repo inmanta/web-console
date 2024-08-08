@@ -52,14 +52,12 @@ export const DiscoveredResourcesTable: React.FC<Props> = ({
             },
           }
         : {};
-
       return (
         <Th key={displayName} {...sortParams}>
           {displayName}
         </Th>
       );
     });
-
   return (
     <Table {...props} variant={TableVariant.compact}>
       <Thead>

@@ -56,7 +56,6 @@ export const serviceInstancesSlice: ServiceInstancesSlice = {
     [(state) => state.byId, (state, storeState) => storeState],
     (byId, storeState) => (query, environment) => {
       const data = byId[serviceKeyMaker.make([environment, query.name])];
-
       if (typeof data === "undefined") return RemoteData.loading();
 
       return RemoteData.mapSuccess(({ data, ...rest }) => {
@@ -67,7 +66,6 @@ export const serviceInstancesSlice: ServiceInstancesSlice = {
               storeState.services.byNameAndEnv[
                 serviceKeyMaker.make([environment, query.name])
               ];
-
             if (!service || service.kind !== "Success") {
               return { ...instance, instanceSetStateTargets: [] };
             }
@@ -78,7 +76,6 @@ export const serviceInstancesSlice: ServiceInstancesSlice = {
             const setStateTargets = setStateTransfers.map(
               (transfer) => transfer.target,
             );
-
             return { ...instance, instanceSetStateTargets: setStateTargets };
           }),
           ...rest,

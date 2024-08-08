@@ -35,7 +35,6 @@ const getLabel =
         ? words("setting.label.trueDefault")
         : words("setting.label.true");
     }
-
     return !defaultValue
       ? words("setting.label.falseDefault")
       : words("setting.label.false");

@@ -37,7 +37,6 @@ export const ImageUpload: React.FC<Props> = ({
 
   const setFilenameFromDataUrl = (dataUrl: string) => {
     const extension = ImageHelper.getExtensionFromDataUrl(dataUrl);
-
     setFilename(extension ? `icon.${extension}` : "icon");
   };
 
@@ -75,16 +74,13 @@ export const ImageUpload: React.FC<Props> = ({
     fileRejections.forEach((FileRejection: FileRejection) => {
       const file = FileRejection.file;
       const errors = ImageHelper.validateFile(file);
-
       if (Maybe.isNone(errors)) {
         setError(words("error.image.unknown")(file.name));
-
         return;
       }
 
       if (errors.value === "TYPE") {
         setError(words("error.image.type")(file.name, file.type));
-
         return;
       }
 
@@ -92,7 +88,6 @@ export const ImageUpload: React.FC<Props> = ({
         words("error.image.size")(file.name, ImageHelper.formatFileSize(file)),
       );
     });
-
     return;
   };
 

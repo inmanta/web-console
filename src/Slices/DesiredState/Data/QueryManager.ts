@@ -30,7 +30,6 @@ export function GetDesiredStatesQueryManager(
       if (typeof links === "undefined") {
         return { data: data, handlers: {}, metadata };
       }
-
       return {
         data: data,
         handlers: getPaginationHandlers(links, metadata),

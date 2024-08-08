@@ -4,7 +4,6 @@ import styled from "styled-components";
 import { BackendMetricData } from "../Core/Domain";
 import { GraphCard } from "./GraphCard";
 import { NumericCard } from "./NumericCard";
-
 interface Props {
   title: string;
   metricType: "lsm" | "orchestrator" | "resource";
@@ -15,7 +14,6 @@ export const Section: React.FC<Props> = ({ title, metricType, metrics }) => {
   const availableKeys = Object.keys(metrics.metrics).filter((key) =>
     key.includes(metricType),
   );
-
   return (
     <Wrapper>
       <Title

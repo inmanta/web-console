@@ -55,7 +55,6 @@ describe("InstanceActionPresenter ", () => {
       instances[0].id,
       "on_delete",
     );
-
     expect(deleteDisabled).toBeTruthy();
   });
 

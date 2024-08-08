@@ -22,7 +22,6 @@ export function getUrl(
     currentPage.value ? `&${currentPage.value}` : ""
   }`;
 }
-
 type Filter = NonNullable<Query.SubQuery<"GetCompileReports">["filter"]>;
 
 const filterToParam = (filter: Filter, timezone: string) => {

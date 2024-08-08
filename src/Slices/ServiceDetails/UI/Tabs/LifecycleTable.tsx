@@ -85,7 +85,6 @@ export const LifecycleTable: React.FunctionComponent<{
       key: transferRow.config_name,
     };
   });
-
   return (
     <Table aria-label="Lifecycle">
       <Thead>

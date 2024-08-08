@@ -95,7 +95,6 @@ function setup(service = Service.a, pageSize = "") {
     useLocation,
     dependencies.routeManager,
   );
-
   store.dispatch.environment.setEnvironments(
     RemoteData.success([
       {
@@ -180,14 +179,12 @@ test("ServiceInventory shows updated instances", async () => {
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
 
 test("ServiceInventory shows error with retry", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
 
   apiHelper.resolve(Either.left("fake error"));
@@ -212,7 +209,6 @@ test("ServiceInventory shows error with retry", async () => {
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
@@ -222,7 +218,6 @@ test("ServiceInventory shows next page of instances", async () => {
     Service.a,
     "&state.Inventory.pageSize=10",
   );
-
   render(component);
 
   apiHelper.resolve(
@@ -257,7 +252,6 @@ test("ServiceInventory shows next page of instances", async () => {
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
@@ -336,14 +330,12 @@ test("GIVEN ResourcesView fetches resources for new instance after instance upda
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
 
 test("ServiceInventory shows instance summary chart", async () => {
   const { component } = setup(Service.withInstanceSummary);
-
   render(component);
 
   expect(
@@ -353,7 +345,6 @@ test("ServiceInventory shows instance summary chart", async () => {
 
 test("ServiceInventory shows disabled composer buttons for non-root instances ", async () => {
   const { component, apiHelper } = setup({ ...Service.a, owner: "owner" });
-
   render(component);
 
   await act(async () => {
@@ -371,7 +362,6 @@ test("ServiceInventory shows disabled composer buttons for non-root instances ",
   const menuToggle = await screen.findByRole("button", {
     name: "row actions toggle",
   });
-
   await act(async () => {
     await userEvent.click(menuToggle);
   });
@@ -379,13 +369,11 @@ test("ServiceInventory shows disabled composer buttons for non-root instances ",
   const button = screen.queryByRole("menuitem", {
     name: "Edit in Composer",
   });
-
   expect(button).not.toBeInTheDocument();
 });
 
 test("ServiceInventory shows enabled composer buttons for root instances ", async () => {
   const { component, apiHelper } = setup(Service.a);
-
   render(component);
 
   await act(async () => {
@@ -409,7 +397,6 @@ test("ServiceInventory shows enabled composer buttons for root instances ", asyn
   const menuToggle = await screen.findByRole("button", {
     name: "row actions toggle",
   });
-
   await act(async () => {
     await userEvent.click(menuToggle);
   });
@@ -421,7 +408,6 @@ test("ServiceInventory shows enabled composer buttons for root instances ", asyn
 
 test("ServiceInventory shows only button to display instance in the composer for non-root", async () => {
   const { component, apiHelper } = setup({ ...Service.a, owner: "owner" });
-
   render(component);
 
   await act(async () => {
@@ -439,7 +425,6 @@ test("ServiceInventory shows only button to display instance in the composer for
   const menuToggle = await screen.findByRole("button", {
     name: "row actions toggle",
   });
-
   await act(async () => {
     await userEvent.click(menuToggle);
   });
@@ -451,7 +436,6 @@ test("ServiceInventory shows only button to display instance in the composer for
 
 test("GIVEN ServiceInventory WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async () => {
   const { component, apiHelper } = setup({ ...Service.a, owner: "owner" });
-
   render(component);
 
   //mock that response has more than one site
@@ -471,7 +455,6 @@ test("GIVEN ServiceInventory WHEN sorting changes AND we are not on the first pa
   });
 
   const nextPageButton = screen.getByLabelText("Go to next page");
-
   expect(nextPageButton).toBeEnabled();
 
   await act(async () => {

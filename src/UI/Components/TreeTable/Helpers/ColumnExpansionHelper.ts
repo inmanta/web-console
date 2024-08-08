@@ -26,7 +26,6 @@ export class ColumnExpansionHelper {
   ): Record<string, number> {
     if (this.numberOfColumns === emptyColumns.length) {
       const equalColumnWidth = this.sumColumnWidth / this.numberOfColumns;
-
       return Object.fromEntries(columns.map((k) => [k, equalColumnWidth]));
     }
     const nonCollapsedWidth =
@@ -52,7 +51,6 @@ export class ColumnExpansionHelper {
         return [col, this.minColumnWidth];
       }
     });
-
     return Object.fromEntries(entries);
   }
 }

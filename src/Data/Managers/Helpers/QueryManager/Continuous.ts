@@ -55,7 +55,6 @@ export function Continuous<Kind extends Query.Kind>(
       stateHelper.set(RemoteData.loading(), query);
       update(query, url);
       scheduler.register(getUnique(query), task);
-
       return () => {
         scheduler.unregister(getUnique(query));
       };
@@ -76,7 +75,6 @@ export function Continuous<Kind extends Query.Kind>(
   ): boolean {
     return query.kind === kind && matchingKind === "Continuous";
   }
-
   return {
     useContinuous,
     matches,

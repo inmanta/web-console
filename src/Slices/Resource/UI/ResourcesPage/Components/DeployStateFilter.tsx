@@ -15,7 +15,6 @@ export const DeployStateFilter: React.FC<Props> = ({ filter, setFilter }) => {
       status: statuses.length > 0 ? statuses : undefined,
       disregardDefault: true,
     });
-
   return (
     <SelectIncludeExcludeFilter
       isVisible={true}

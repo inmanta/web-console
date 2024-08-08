@@ -88,7 +88,6 @@ function setup() {
 
 test("DesiredStatesView shows empty table", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
 
   await act(async () => {
@@ -115,14 +114,12 @@ test("DesiredStatesView shows empty table", async () => {
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
 
 test("DesiredStatesView shows failed table", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
 
   await act(async () => {
@@ -143,14 +140,12 @@ test("DesiredStatesView shows failed table", async () => {
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
 
 test("AgentsView shows success table", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
 
   await act(async () => {
@@ -171,14 +166,12 @@ test("AgentsView shows success table", async () => {
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
 
 test("When using the status filter then only the matching desired states should be fetched and shown", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
 
   await act(async () => {
@@ -212,19 +205,16 @@ test("When using the status filter then only the matching desired states should 
   });
 
   const input = screen.getByRole("combobox", { name: "StatusFilterInput" });
-
   await act(async () => {
     await userEvent.click(input);
   });
 
   const statusOptions = screen.getAllByRole("option");
-
   expect(statusOptions).toHaveLength(4);
 
   const candidateSkippedOption = await screen.findByRole("option", {
     name: words("desiredState.test.skippedCandidate"),
   });
-
   await act(async () => {
     await userEvent.click(candidateSkippedOption);
   });
@@ -250,14 +240,12 @@ test("When using the status filter then only the matching desired states should 
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
 
 test("When using the Date filter then the desired state versions within the range selected range should be fetched and shown", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
 
   await act(async () => {
@@ -289,7 +277,6 @@ test("When using the Date filter then the desired state versions within the rang
   });
 
   const fromDatePicker = screen.getByLabelText("From Date Picker");
-
   await act(async () => {
     await userEvent.click(fromDatePicker);
   });
@@ -298,7 +285,6 @@ test("When using the Date filter then the desired state versions within the rang
   });
 
   const toDatePicker = screen.getByLabelText("To Date Picker");
-
   await act(async () => {
     await userEvent.click(toDatePicker);
   });
@@ -343,14 +329,12 @@ test("When using the Date filter then the desired state versions within the rang
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
 
 test("When using the Version filter then the desired state versions within the range selected range should be fetched and shown", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
 
   await act(async () => {
@@ -384,7 +368,6 @@ test("When using the Version filter then the desired state versions within the r
   });
 
   const fromDatePicker = await screen.findByLabelText("Version range from");
-
   await act(async () => {
     await userEvent.click(fromDatePicker);
   });
@@ -393,7 +376,6 @@ test("When using the Version filter then the desired state versions within the r
   });
 
   const toDatePicker = await screen.findByLabelText("Version range to");
-
   await act(async () => {
     await userEvent.click(toDatePicker);
   });
@@ -434,14 +416,12 @@ test("When using the Version filter then the desired state versions within the r
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
 
 test("Given the Desired states view When promoting a version, then the correct request is be fired", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
 
   await act(async () => {
@@ -518,14 +498,12 @@ test("Given the Desired states view When promoting a version, then the correct r
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
 
 test("Given the Desired states view with filters When promoting a version, then the correct request is be fired", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
 
   await act(async () => {
@@ -555,7 +533,6 @@ test("Given the Desired states view with filters When promoting a version, then 
   const input = screen.getByPlaceholderText(
     words("desiredState.filters.status.placeholder"),
   );
-
   await act(async () => {
     await userEvent.click(input);
   });
@@ -563,7 +540,6 @@ test("Given the Desired states view with filters When promoting a version, then 
   const option = await screen.findByRole("option", {
     name: words("desiredState.test.candidate"),
   });
-
   await act(async () => {
     await userEvent.click(option);
   });
@@ -622,14 +598,12 @@ test("Given the Desired states view with filters When promoting a version, then 
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
 
 test("Given the Desired states view When promoting a version results in an error, then the error is shown", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
 
   await act(async () => {
@@ -680,7 +654,6 @@ test("Given the Desired states view When promoting a version results in an error
 
 test("DesiredStatesView shows CompileWidget", async () => {
   const { component } = setup();
-
   render(component);
 
   expect(screen.getByRole("button", { name: "RecompileButton" })).toBeVisible();
@@ -689,7 +662,6 @@ test("DesiredStatesView shows CompileWidget", async () => {
 describe("DeleteModal ", () => {
   it("Shows form when clicking on modal button", async () => {
     const { component, apiHelper } = setup();
-
     render(component);
 
     await act(async () => {
@@ -723,14 +695,12 @@ describe("DeleteModal ", () => {
 
     await act(async () => {
       const results = await axe(document.body);
-
       expect(results).toHaveNoViolations();
     });
   });
 
   it("Closes modal when cancelled(both cancel buttons scenario)", async () => {
     const { component, apiHelper } = setup();
-
     render(component);
 
     await act(async () => {
@@ -757,7 +727,6 @@ describe("DeleteModal ", () => {
       await userEvent.click(screen.getByRole("menuitem", { name: "Delete" }));
     });
     const noButton = await screen.findByText("No");
-
     await act(async () => {
       await userEvent.click(noButton);
     });
@@ -777,7 +746,6 @@ describe("DeleteModal ", () => {
     });
 
     const closeButton = await screen.findByLabelText("Close");
-
     await act(async () => {
       await userEvent.click(closeButton);
     });
@@ -786,14 +754,12 @@ describe("DeleteModal ", () => {
 
     await act(async () => {
       const results = await axe(document.body);
-
       expect(results).toHaveNoViolations();
     });
   });
 
   it("Sends request when submitted then request is executed and modal closed", async () => {
     const { component, apiHelper } = setup();
-
     render(component);
 
     await act(async () => {
@@ -821,7 +787,6 @@ describe("DeleteModal ", () => {
       await userEvent.click(screen.getByRole("menuitem", { name: "Delete" }));
     });
     const yesButton = await screen.findByText("Yes");
-
     await act(async () => {
       await userEvent.click(yesButton);
     });
@@ -840,7 +805,6 @@ describe("DeleteModal ", () => {
 
     await act(async () => {
       const results = await axe(document.body);
-
       expect(results).toHaveNoViolations();
     });
   });

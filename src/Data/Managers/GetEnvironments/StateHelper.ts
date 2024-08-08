@@ -31,7 +31,6 @@ export function GetEnvironmentsStateHelper(store: Store) {
       store.environment.setEnvironments(data);
     }
   }
-
   return PrimaryStateHelper<"GetEnvironments">(
     store,
     (data, query) => {
@@ -43,7 +42,6 @@ export function GetEnvironmentsStateHelper(store: Store) {
           })),
         ]);
       }, data);
-
       setData(store.dispatch, query, unwrapped);
     },
     (state, query) => getData(state, query),

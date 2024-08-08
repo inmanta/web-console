@@ -62,7 +62,6 @@ function setup() {
 
 test("Diagnose View shows empty table", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
 
   expect(
@@ -77,14 +76,12 @@ test("Diagnose View shows empty table", async () => {
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
 
 test("Diagnose View shows failed table", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
 
   expect(
@@ -99,14 +96,12 @@ test("Diagnose View shows failed table", async () => {
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
 
 test("Diagnose View shows success table", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
 
   expect(
@@ -121,14 +116,12 @@ test("Diagnose View shows success table", async () => {
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
 
 test("Diagnose View shows updated table", async () => {
   const { component, apiHelper, scheduler } = setup();
-
   render(component);
 
   expect(
@@ -151,7 +144,6 @@ test("Diagnose View shows updated table", async () => {
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });

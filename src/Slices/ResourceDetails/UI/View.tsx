@@ -53,6 +53,5 @@ const StatusLabel: React.FC<{
   data: Query.UsedApiData<"GetResourceDetails">;
 }> = ({ data }) => {
   if (!RemoteData.isSuccess(data)) return null;
-
   return <ResourceStatusLabel status={data.value.status} />;
 };

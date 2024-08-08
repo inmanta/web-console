@@ -52,7 +52,6 @@ export const ResourceHistoryTable: React.FC<Props> = ({
               },
             }
           : {};
-
       return (
         <Th key={column} {...sortParams}>
           {column}

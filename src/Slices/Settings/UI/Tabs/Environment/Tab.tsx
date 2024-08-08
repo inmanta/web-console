@@ -43,8 +43,6 @@ const addProjectName = (
   projects: ProjectModel[],
 ): FlatEnvironment => {
   const match = projects.find((p) => p.id === env.project_id);
-
   if (!match) return { ...env, projectName: "" };
-
   return { ...env, projectName: match.name };
 };

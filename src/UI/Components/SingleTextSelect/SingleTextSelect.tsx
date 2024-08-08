@@ -70,7 +70,6 @@ export const SingleTextSelect: React.FC<Props> = ({
 
     if (filterValue && hasCreation && filterValue.trim()) {
       let newSelectOptions: SelectOptionProps[] = options;
-
       newSelectOptions = options.filter((menuItem) =>
         String(menuItem.children)
           .toLowerCase()
@@ -198,7 +197,6 @@ export const SingleTextSelect: React.FC<Props> = ({
       const focusedItem = selectOptions.filter((option) => !option.isDisabled)[
         indexToFocus
       ];
-
       setActiveItem(`select-typeahead-${focusedItem.value.replace(" ", "-")}`);
     }
   };

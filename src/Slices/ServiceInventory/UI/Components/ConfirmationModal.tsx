@@ -64,5 +64,4 @@ const ConfirmationModal: React.FC<ModalProps> = ({
     </React.Fragment>
   );
 };
-
 export default ConfirmationModal;

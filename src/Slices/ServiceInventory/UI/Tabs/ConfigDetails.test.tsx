@@ -25,18 +25,15 @@ function setup() {
     baseApiHelper,
     InstanceConfigStateHelper(store),
   );
-
   store.dispatch.environment.setEnvironmentDetailsById({
     id: ServiceInstance.a.environment,
     value: RemoteData.success({ halted: false } as EnvironmentDetails),
   });
   const environmentModifier = EnvironmentModifierImpl();
-
   environmentModifier.setEnvironment(ServiceInstance.a.environment);
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolverImpl([commandManager]),
   );
-
   return {
     component: (config: Config) => (
       <DependencyProvider
@@ -66,7 +63,6 @@ function setup() {
 it("Config Details takes environment halted status in account", async () => {
   const { component, store } = setup();
   const { rerender } = render(component({}));
-
   await act(async () => {
     store.dispatch.environment.setEnvironmentDetailsById({
       id: ServiceInstance.a.environment,

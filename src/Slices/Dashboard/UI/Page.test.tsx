@@ -64,7 +64,6 @@ function setup() {
 
 test("Home view shows failed table", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
 
   expect(
@@ -79,14 +78,12 @@ test("Home view shows failed table", async () => {
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
 
 test("Home View shows success table", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
 
   expect(
@@ -106,7 +103,6 @@ test("Home View shows success table", async () => {
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });

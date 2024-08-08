@@ -83,7 +83,6 @@ function setup() {
       </DependencyProvider>
     </MemoryRouter>
   );
-
   return {
     component,
     apiHelper,
@@ -106,7 +105,6 @@ test("EnvironmentControls halt the environment when clicked and the environment 
   const dispatchEventSpy = jest.spyOn(document, "dispatchEvent");
 
   const { component, apiHelper } = setup();
-
   render(component);
   await act(async () => {
     await apiHelper.resolve(Either.right({ data: EnvironmentDetails.a }));
@@ -123,7 +121,6 @@ test("EnvironmentControls halt the environment when clicked and the environment 
   });
 
   const [receivedUrl, requestInit] = fetchMock.mock.calls[0];
-
   expect(receivedUrl).toEqual(
     `http://localhost:8888/api/v2/actions/environment/halt`,
   );
@@ -135,7 +132,6 @@ test("EnvironmentControls halt the environment when clicked and the environment 
 
 test("EnvironmentControls don\\t trigger backend call when dialog is not confirmed", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
 
   await act(async () => {
@@ -160,7 +156,6 @@ test("EnvironmentControls resume the environment when clicked and the environmen
   const dispatchEventSpy = jest.spyOn(document, "dispatchEvent");
 
   const { component, apiHelper } = setup();
-
   render(component);
 
   await act(async () => {

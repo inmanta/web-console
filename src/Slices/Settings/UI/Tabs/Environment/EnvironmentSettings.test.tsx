@@ -63,7 +63,6 @@ function setup() {
 
 test("Given environment settings When clicking on the edit name button Then the input field is shown", async () => {
   const { component } = setup();
-
   render(component);
   expect(
     await screen.findByRole("generic", { name: "Name-value" }),
@@ -84,14 +83,12 @@ test("Given environment settings When clicking on the edit name button Then the 
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
 
 test("Given environment settings When submitting the edited name Then the backend request is fired", async () => {
   const { component, apiHelper, selectedEnvironment } = setup();
-
   render(component);
 
   await act(async () => {
@@ -101,7 +98,6 @@ test("Given environment settings When submitting the edited name Then the backen
   });
 
   const textBox = await screen.findByRole("textbox", { name: "Name-input" });
-
   await act(async () => {
     await userEvent.clear(textBox);
   });
@@ -112,7 +108,6 @@ test("Given environment settings When submitting the edited name Then the backen
   expect(apiHelper.pendingRequests).toHaveLength(1);
 
   const request = apiHelper.pendingRequests[0];
-
   expect(request).toEqual({
     method: "POST",
     body: {
@@ -142,14 +137,12 @@ test("Given environment settings When submitting the edited name Then the backen
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
 
 test("Given environment settings When canceling a name edit Then the backend request is not fired", async () => {
   const { component, apiHelper, selectedEnvironment } = setup();
-
   render(component);
 
   await act(async () => {
@@ -159,7 +152,6 @@ test("Given environment settings When canceling a name edit Then the backend req
   });
 
   const textBox = await screen.findByRole("textbox", { name: "Name-input" });
-
   await act(async () => {
     await userEvent.clear(textBox);
   });
@@ -183,7 +175,6 @@ test("Given environment settings When canceling a name edit Then the backend req
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
@@ -196,7 +187,6 @@ test.each`
   "Given environment settings When a name edit yields an error Then the error message is shown and can be closed $displayName",
   async ({ elementName }) => {
     const { component, apiHelper } = setup();
-
     render(component);
 
     await act(async () => {
@@ -206,7 +196,6 @@ test.each`
     });
 
     const textBox = await screen.findByRole("textbox", { name: "Name-input" });
-
     await act(async () => {
       await userEvent.clear(textBox);
     });
@@ -247,7 +236,6 @@ test.each`
 
     await act(async () => {
       const results = await axe(document.body);
-
       expect(results).toHaveNoViolations();
     });
   },
@@ -255,7 +243,6 @@ test.each`
 
 test("Given environment settings When clicking on the edit repository settings button Then the input fields are shown", async () => {
   const { component } = setup();
-
   render(component);
 
   expect(
@@ -286,14 +273,12 @@ test("Given environment settings When clicking on the edit repository settings b
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
 
 test("Given environment settings When submitting the edited repository settings Then the backend request is fired", async () => {
   const { component, apiHelper, selectedEnvironment } = setup();
-
   render(component);
   const newRepository = "github.com/test-env";
   const newBranch = "dev";
@@ -334,7 +319,6 @@ test("Given environment settings When submitting the edited repository settings 
   expect(apiHelper.pendingRequests).toHaveLength(1);
 
   const request = apiHelper.pendingRequests[0];
-
   expect(request).toEqual({
     method: "POST",
     body: {
@@ -375,14 +359,12 @@ test("Given environment settings When submitting the edited repository settings 
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
 
 test("Given environment settings When canceling a repository edit Then the backend request is not fired", async () => {
   const { component, apiHelper, selectedEnvironment } = setup();
-
   render(component);
 
   await act(async () => {
@@ -394,7 +376,6 @@ test("Given environment settings When canceling a repository edit Then the backe
   const textBox = await screen.findByRole("textbox", {
     name: "repo_branch-input",
   });
-
   await act(async () => {
     await userEvent.clear(textBox);
   });
@@ -425,7 +406,6 @@ test("Given environment settings When canceling a repository edit Then the backe
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
@@ -438,7 +418,6 @@ test.each`
   "Given environment settings When a repo edit yields an error Then the error message is shown and can be closed $displayName",
   async ({ elementName }) => {
     const { component, apiHelper } = setup();
-
     render(component);
 
     await act(async () => {
@@ -450,7 +429,6 @@ test.each`
     const textBox = await screen.findByRole("textbox", {
       name: "repo_branch-input",
     });
-
     await act(async () => {
       await userEvent.clear(textBox);
     });
@@ -495,7 +473,6 @@ test.each`
 
     await act(async () => {
       const results = await axe(document.body);
-
       expect(results).toHaveNoViolations();
     });
   },
@@ -503,7 +480,6 @@ test.each`
 
 test("Given environment settings When clicking on the edit project button Then the select field is shown", async () => {
   const { component } = setup();
-
   render(component);
 
   expect(
@@ -528,14 +504,12 @@ test("Given environment settings When clicking on the edit project button Then t
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
 
 test("Given environment settings When submitting the edited project name Then the backend request is fired", async () => {
   const { component, apiHelper, selectedEnvironment } = setup();
-
   render(component);
 
   await act(async () => {
@@ -547,7 +521,6 @@ test("Given environment settings When submitting the edited project name Then th
   const toggle = await screen.findByRole("combobox", {
     name: "Project Name-select-toggleFilterInput",
   });
-
   await act(async () => {
     await userEvent.click(toggle);
   });
@@ -565,7 +538,6 @@ test("Given environment settings When submitting the edited project name Then th
   expect(apiHelper.pendingRequests).toHaveLength(1);
 
   const request = apiHelper.pendingRequests[0];
-
   expect(request).toEqual({
     method: "POST",
     body: {
@@ -600,14 +572,12 @@ test("Given environment settings When submitting the edited project name Then th
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
 
 test("Given environment settings When canceling a project name edit Then the backend request is not fired", async () => {
   const { component, apiHelper, selectedEnvironment } = setup();
-
   render(component);
 
   await act(async () => {
@@ -619,7 +589,6 @@ test("Given environment settings When canceling a project name edit Then the bac
   const toggle = await screen.findByRole("combobox", {
     name: "Project Name-select-toggleFilterInput",
   });
-
   await act(async () => {
     await userEvent.click(toggle);
   });
@@ -644,7 +613,6 @@ test("Given environment settings When canceling a project name edit Then the bac
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
@@ -657,7 +625,6 @@ test.each`
   "Given environment settings When a project name edit yields an error Then the error message is shown and can be closed $displayName",
   async ({ elementName }) => {
     const { component, apiHelper } = setup();
-
     render(component);
 
     await act(async () => {
@@ -669,7 +636,6 @@ test.each`
     const toggle = await screen.findByRole("combobox", {
       name: "Project Name-select-toggleFilterInput",
     });
-
     await act(async () => {
       await userEvent.click(toggle);
     });
@@ -719,7 +685,6 @@ test.each`
 
     await act(async () => {
       const results = await axe(document.body);
-
       expect(results).toHaveNoViolations();
     });
   },
@@ -727,7 +692,6 @@ test.each`
 
 test("Given environment settings When clicking on the edit description button Then the textarea field is shown", async () => {
   const { component } = setup();
-
   render(component);
   expect(
     await screen.findByRole("generic", { name: "Description-value" }),
@@ -749,14 +713,12 @@ test("Given environment settings When clicking on the edit description button Th
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
 
 test("Given environment settings When clicking on the edit icon button Then the image field is shown", async () => {
   const { component } = setup();
-
   render(component);
   expect(await screen.findByRole("img", { name: "Icon-value" })).toBeVisible();
 
@@ -776,7 +738,6 @@ test("Given environment settings When clicking on the edit icon button Then the 
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });

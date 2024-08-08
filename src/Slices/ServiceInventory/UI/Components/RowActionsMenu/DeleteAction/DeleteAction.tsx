@@ -42,12 +42,10 @@ export const DeleteAction: React.FC<Props> = ({
   const onSubmit = async () => {
     setIsOpen(false);
     const result = await trigger(refetch);
-
     if (Maybe.isSome(result)) {
       setErrorMessage(result.value);
     }
   };
-
   return (
     <>
       <ToastAlert

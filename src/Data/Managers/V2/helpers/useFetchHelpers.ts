@@ -35,7 +35,7 @@ export const useFetchHelpers = () => {
    * @returns The headers object.
    */
   function createHeaders(env?: string) {
-    const headers = new Headers({ "Content-Type": "application/json" });
+    const headers = new Headers();
 
     if (env) {
       headers.append("X-Inmanta-Tid", env);
@@ -44,7 +44,6 @@ export const useFetchHelpers = () => {
     if (!!authHelper.getToken()) {
       headers.append("Authorization", `Bearer ${authHelper.getToken()}`);
     }
-
     return headers;
   }
 

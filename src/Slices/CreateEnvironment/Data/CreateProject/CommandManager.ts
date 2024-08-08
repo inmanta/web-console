@@ -12,14 +12,12 @@ export class CreateProjectCommandManager extends CommandManagerWithoutEnv<"Creat
           { data: ProjectModel },
           Command.Body<"CreateProject">
         >(`/api/v2/project`, { name });
-
         if (Either.isRight(result)) {
           await this.updater.update({
             kind: "GetProjects",
             environmentDetails: false,
           });
         }
-
         return result;
       };
     });

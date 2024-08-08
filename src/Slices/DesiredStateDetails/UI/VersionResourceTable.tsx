@@ -53,7 +53,6 @@ export const VersionResourceTable: React.FC<Props> = ({
             },
           }
         : {};
-
       return (
         <StyledTh
           key={displayName}
@@ -86,7 +85,6 @@ interface HeaderProps {
 const getWidth = ({ $characters, $hasSort }: HeaderProps) => {
   const base = `${$characters}ch`;
   const extra = $hasSort ? "60px" : "16px";
-
   return `calc(${base} + ${extra})`;
 };
 

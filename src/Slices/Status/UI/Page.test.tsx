@@ -34,7 +34,6 @@ export class MockArchiveHelper implements ArchiveHelper {
   public resolve;
   constructor() {
     const { promise, resolve } = new Deferred();
-
     this.promise = promise;
     this.resolve = resolve;
   }
@@ -49,7 +48,6 @@ export class MockArchiveHelper implements ArchiveHelper {
 
 function setup(useMockArchiveHelper = false) {
   const store = getStoreInstance();
-
   store.dispatch.serverStatus.setData(
     RemoteData.success(ServerStatus.withoutFeatures),
   );
@@ -103,7 +101,6 @@ function setup(useMockArchiveHelper = false) {
 
 test("GIVEN StatusPage THEN shows server status", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
@@ -135,14 +132,12 @@ test("GIVEN StatusPage THEN shows server status", async () => {
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
 
 test("GIVEN StatusPage without support extension THEN download button is not present", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
 
   await act(async () => {
@@ -157,14 +152,12 @@ test("GIVEN StatusPage without support extension THEN download button is not pre
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
 
 test("GIVEN StatusPage with support extension THEN download button is present", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
 
   await act(async () => {
@@ -177,14 +170,12 @@ test("GIVEN StatusPage with support extension THEN download button is present", 
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
 
 test("GIVEN StatusPage with support extension WHEN user click download THEN an archive is created", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
 
   await act(async () => {
@@ -194,7 +185,6 @@ test("GIVEN StatusPage with support extension WHEN user click download THEN an a
   const downloadButton = screen.getByRole("button", {
     name: "DownloadArchiveButton",
   });
-
   expect(downloadButton).toHaveTextContent(
     words("status.supportArchive.action.download"),
   );
@@ -224,14 +214,12 @@ test("GIVEN StatusPage with support extension WHEN user click download THEN an a
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
 
 test("GIVEN StatusPage with support extension WHEN user click download THEN button goes through correct phases", async () => {
   const { component, apiHelper, archiveHelper } = setup(true);
-
   render(component);
   await act(async () => {
     await apiHelper.resolve(Either.right({ data: ServerStatus.withSupport }));
@@ -240,7 +228,6 @@ test("GIVEN StatusPage with support extension WHEN user click download THEN butt
   const downloadButton = screen.getByRole("button", {
     name: "DownloadArchiveButton",
   });
-
   expect(downloadButton).toHaveTextContent(
     words("status.supportArchive.action.download"),
   );
@@ -274,14 +261,12 @@ test("GIVEN StatusPage with support extension WHEN user click download THEN butt
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });
 
 test("GIVEN StatusPage with support extension WHEN user click download and response is error THEN error is shown", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
 
   await act(async () => {
@@ -303,13 +288,11 @@ test("GIVEN StatusPage with support extension WHEN user click download and respo
     words("status.supportArchive.action.download"),
   );
   const errorContainer = screen.getByTestId("ToastAlert");
-
   expect(errorContainer).toBeVisible();
   expect(within(errorContainer).getByText("error")).toBeVisible();
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 });

@@ -11,9 +11,7 @@ export class PageStateSanitizer {
       this.routeManager.getRoute(routeKind),
     );
     const kinds = lineage.map((route) => route.kind);
-
     if (getKeysExcluding(kinds, pageState).length > 0) return false;
-
     return true;
   }
 
@@ -25,12 +23,10 @@ export class PageStateSanitizer {
       this.routeManager.getRoute(routeKind),
     );
     const kinds = lineage.map((route) => route.kind);
-
     return Object.keys(pageState).reduce((acc, cur) => {
       if (kinds.includes(cur as RouteKind)) {
         acc[cur] = pageState[cur];
       }
-
       return acc;
     }, {});
   }

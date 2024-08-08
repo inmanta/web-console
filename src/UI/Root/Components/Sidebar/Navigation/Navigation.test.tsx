@@ -1,6 +1,6 @@
 import React, { act } from "react";
 import { MemoryRouter } from "react-router-dom";
-import { render, screen, within } from "@testing-library/react";
+import { cleanup, render, screen, within } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { axe, toHaveNoViolations } from "jest-axe";
 import { RemoteData, ServerStatus } from "@/Core";
@@ -30,7 +30,6 @@ function setup(
   const apiHelper = new DeferredApiHelper();
   const scheduler = new StaticScheduler();
   const store = getStoreInstance();
-
   store.dispatch.serverStatus.setData(RemoteData.success(serverStatus));
   const featureManager = new PrimaryFeatureManager(
     GetServerStatusStateHelper(store),
@@ -58,15 +57,15 @@ test("GIVEN Navigation THEN it should be accessible", async () => {
   const { container } = render(component);
 
   expect(await axe(container)).toHaveNoViolations();
+
+  cleanup();
 });
 
 test("GIVEN Navigation WHEN lsm enabled THEN shows all navigation items", () => {
   const { component } = setup(undefined, TestServerStatus.withLsm);
-
   render(component);
 
   const navigation = screen.getByRole("navigation", { name: "Global" });
-
   expect(navigation).toBeVisible();
   expect(within(navigation).getAllByRole("region").length).toEqual(4);
   expect(
@@ -96,11 +95,9 @@ test("GIVEN Navigation WHEN lsm enabled THEN shows all navigation items", () => 
 
 test("GIVEN Navigation WHEN no features enabled THEN no extra features are not shown", () => {
   const { component } = setup(undefined, TestServerStatus.withoutFeatures);
-
   render(component);
 
   const navigation = screen.getByRole("navigation", { name: "Global" });
-
   expect(navigation).toBeVisible();
   expect(within(navigation).getAllByRole("region").length).toEqual(3);
 
@@ -124,11 +121,9 @@ test("GIVEN Navigation WHEN no features enabled THEN no extra features are not s
 
 test("GIVEN Navigation WHEN all features are enabled THEN all extra features are shown", () => {
   const { component } = setup(undefined, TestServerStatus.withAllFeatures);
-
   render(component);
 
   const navigation = screen.getByRole("navigation", { name: "Global" });
-
   expect(navigation).toBeVisible();
   expect(within(navigation).getAllByRole("region").length).toEqual(4);
 
@@ -152,14 +147,12 @@ test("GIVEN Navigation WHEN all features are enabled THEN all extra features are
 
 test("GIVEN Navigation WHEN on 'Service Catalog' THEN 'Service Catalog' is highlighted", () => {
   const { component } = setup(["/lsm/catalog"], TestServerStatus.withLsm);
-
   render(component);
 
   const navigation = screen.getByRole("navigation", { name: "Global" });
   const link = within(navigation).getByRole("link", {
     name: "Service Catalog",
   });
-
   expect(link).toHaveClass("pf-v5-m-current");
 });
 
@@ -168,7 +161,6 @@ test("GIVEN Navigation WHEN Compilation Reports are pending THEN 'Compile Report
     ["/lsm/catalog"],
     TestServerStatus.withLsm,
   );
-
   render(component);
 
   expect(apiHelper.pendingRequests).toHaveLength(1);

@@ -46,9 +46,7 @@ const getEnvironmentId = (
   if (environmentRole === "Forbidden") return Either.right(undefined);
   if (environmentRole === "Required") {
     if (environment) return Either.right(environment.id);
-
     return Either.left(words("error.environment.missing"));
   }
-
   return Either.right(environment ? environment.id : undefined);
 };

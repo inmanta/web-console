@@ -1,8 +1,4 @@
-import {
-  UseMutationResult,
-  useMutation,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { PrimaryBaseUrlManager } from "@/UI";
 import { useFetchHelpers } from "../helpers";
 
@@ -11,12 +7,7 @@ import { useFetchHelpers } from "../helpers";
  *
  * @returns {Mutation} - The mutation object provided by `useMutation` hook.
  */
-export const useRemoveUser = (): UseMutationResult<
-  void,
-  Error,
-  string,
-  unknown
-> => {
+export const useRemoveUser = () => {
   const client = useQueryClient();
   const { createHeaders, handleErrors } = useFetchHelpers();
   const baseUrlManager = new PrimaryBaseUrlManager(

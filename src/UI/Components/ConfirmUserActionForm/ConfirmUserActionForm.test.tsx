@@ -6,7 +6,6 @@ import { ConfirmUserActionForm } from "./ConfirmUserActionForm";
 test("GIVEN DeleteForm WHEN user clicks 'No' THEN closeModal is executed", async () => {
   const submit = jest.fn();
   const closeModal = jest.fn();
-
   render(<ConfirmUserActionForm onSubmit={submit} onCancel={closeModal} />);
 
   await act(async () => {
@@ -20,7 +19,6 @@ test("GIVEN DeleteForm WHEN user clicks 'No' THEN closeModal is executed", async
 test("GIVEN DeleteForm WHEN user clicks 'Yes' THEN submit is executed", async () => {
   const submit = jest.fn();
   const closeModal = jest.fn();
-
   render(<ConfirmUserActionForm onSubmit={submit} onCancel={closeModal} />);
 
   await act(async () => {

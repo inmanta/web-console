@@ -16,7 +16,6 @@ import { words } from "@/UI/words";
 export const Page: React.FC = () => {
   useDocumentTitle("404 Page Not Found");
   const { routeManager } = React.useContext(DependencyContext);
-
   return (
     <PageSection variant="light">
       <EmptyState>

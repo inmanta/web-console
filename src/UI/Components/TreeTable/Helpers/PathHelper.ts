@@ -8,15 +8,12 @@ export class PathHelper {
   public getParent(path: string): string {
     if (!this.isNested(path)) return path;
     const parts = path.split(this.separator);
-
     parts.pop();
-
     return parts.join(this.separator);
   }
 
   public getSelf(path: string): string {
     if (!this.isNested(path)) return path;
-
     return path.split(this.separator).pop() as string;
   }
 

@@ -353,7 +353,6 @@ const getTypeHintForType = (typeName: string): string | undefined => {
   } else if (typeName.includes("dict")) {
     return words("inventory.form.typeHint.dict");
   }
-
   return undefined;
 };
 
@@ -398,7 +397,6 @@ const NestedFieldInput: React.FC<NestedProps> = ({
 
   const getOnDelete = () => () => {
     setShowList(false);
-
     return getUpdate(makePath(path, field.name), null);
   };
 
@@ -537,7 +535,6 @@ const DictListFieldInput: React.FC<DictListProps> = ({
       } else if (lastDigit > index) {
         const truncatedPath = addedPath.slice(0, -1); // truncate the last digit
         const modifiedPath = `${truncatedPath}${lastDigit - 1}`; // deduce 1 from the index
-
         newPaths.push(modifiedPath);
       }
     });

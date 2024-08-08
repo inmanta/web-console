@@ -26,7 +26,6 @@ export const SettingsList: React.FC<Props> = ({
   isDisabled,
 }) => {
   const settings = configToSettings(config);
-
   if (settings.length <= 0) return null;
 
   const handleChange = (name: string) => (checked: boolean) =>

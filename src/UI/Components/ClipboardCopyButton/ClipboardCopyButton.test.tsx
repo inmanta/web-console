@@ -12,7 +12,6 @@ test("Given a ClipboardCopyButton, when the button is hovered, then a tooltip sh
     />,
   );
   const button = await screen.findByLabelText("Copy to clipboard");
-
   await act(async () => {
     await userEvent.hover(button);
   });

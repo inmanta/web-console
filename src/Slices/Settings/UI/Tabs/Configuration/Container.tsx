@@ -28,14 +28,11 @@ export const Container: React.FC<Props> = ({
         setShowUpdateBanner(false);
       }, 2000);
     };
-
     document.addEventListener("settings-update", updateSuccessBanner);
-
     return () => {
       document.removeEventListener("settings-update", updateSuccessBanner);
     };
   }, [setShowUpdateBanner]);
-
   return (
     <Wrapper className={className}>
       {errorMessage && (

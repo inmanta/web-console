@@ -70,7 +70,6 @@ const getEntries = (value: Dict): Entry[] => {
     k,
     v.toString(),
   ]);
-
   return entries.sort();
 };
 

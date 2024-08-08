@@ -21,7 +21,6 @@ describe("DiffPageFilter", () => {
 
   it("updates search filter correctly", () => {
     const setSearchFilterMock = jest.fn();
-
     render(
       <DiffPageFilter
         statuses={mockStatuses}
@@ -32,7 +31,6 @@ describe("DiffPageFilter", () => {
     );
 
     const searchInput = screen.getByLabelText("SearchFilter");
-
     fireEvent.change(searchInput, { target: { value: "example" } });
 
     expect(setSearchFilterMock).toHaveBeenCalledWith("example");

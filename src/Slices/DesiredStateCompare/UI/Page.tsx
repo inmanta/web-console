@@ -15,7 +15,6 @@ import { words } from "@/UI/words";
 
 export const Page: React.FC = () => {
   const { from, to } = useRouteParams<"DesiredStateCompare">();
-
   return <View from={from} to={to} />;
 };
 

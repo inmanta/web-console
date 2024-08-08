@@ -48,7 +48,6 @@ export const ConfirmationModal: React.FC<Props> = ({
     setIsBusy(true);
     setErrorMessage(null);
     const error = await onConfirm();
-
     if (Maybe.isNone(error)) {
       onSuccess ? onSuccess() : onCloseFullClear();
     } else {

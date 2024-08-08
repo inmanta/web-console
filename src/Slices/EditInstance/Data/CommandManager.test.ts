@@ -16,7 +16,6 @@ test("GIVEN getBodyV1 WHEN not setting optional attributes THEN generates correc
   };
 
   const body = getBodyV1(fields, currentAttributes, attributes);
-
   expect(body.attributes.attr1).toEqual("lorem ipsum");
   expect(body.attributes.attr2).toBeUndefined();
   expect(body.attributes.attr3).toBeUndefined();
@@ -37,7 +36,6 @@ test("GIVEN getBodyV1 WHEN changing optional attributes THEN generates correct b
   };
 
   const body = getBodyV1(fields, currentAttributes, attributes);
-
   expect(body.attributes.attr1).toEqual("lorem ipsum");
   expect(body.attributes.attr2).toBeNull();
   expect(body.attributes.attr3).toBeTruthy();
@@ -63,7 +61,6 @@ test("GIVEN getBodyV2 WHEN changing optional attributes THEN generates correct b
   };
 
   const body = getBodyV2(fields, attributes, service_entity, service_version);
-
   expect(body.edit[0]).toEqual({
     edit_id: "test-entity_version=4",
     operation: "replace",

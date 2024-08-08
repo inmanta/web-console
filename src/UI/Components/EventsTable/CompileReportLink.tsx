@@ -10,7 +10,6 @@ interface Props {
 
 export const CompileReportLink: React.FC<Props> = ({ compileId }) => {
   const { routeManager } = useContext(DependencyContext);
-
   return (
     <Link
       to={{

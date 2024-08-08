@@ -88,7 +88,6 @@ function setup() {
 
 test("GIVEN CallbacksTab WHEN user click on delete and confirms THEN callback is deleted", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
 
   await act(async () => {
@@ -106,7 +105,6 @@ test("GIVEN CallbacksTab WHEN user click on delete and confirms THEN callback is
   const deleteButton = await screen.findByRole("button", {
     name: "DeleteCallback-" + shortenUUID,
   });
-
   await act(async () => {
     await userEvent.click(deleteButton);
   });
@@ -114,7 +112,6 @@ test("GIVEN CallbacksTab WHEN user click on delete and confirms THEN callback is
   expect(screen.getByRole("dialog", { name: "Delete Callback" })).toBeVisible();
 
   const yesButton = screen.getByRole("button", { name: "Yes" });
-
   await act(async () => {
     await userEvent.click(yesButton);
   });
@@ -136,7 +133,6 @@ test("GIVEN CallbacksTab WHEN user click on delete and confirms THEN callback is
 
 test("GIVEN CallbacksTab WHEN user fills in form and clicks on Add THEN callback is created", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
 
   await act(async () => {
@@ -154,20 +150,17 @@ test("GIVEN CallbacksTab WHEN user fills in form and clicks on Add THEN callback
   const callbackUrlInput = screen.getByRole("textbox", {
     name: "callbackUrl",
   });
-
   await act(async () => {
     await userEvent.type(callbackUrlInput, "http://www.example.com/");
   });
   const minimalLogLevelInput = screen.getByRole("combobox", {
     name: "MinimalLogLevelFilterInput",
   });
-
   await act(async () => {
     await userEvent.click(minimalLogLevelInput);
   });
 
   const criticalOption = screen.getByRole("option", { name: "CRITICAL" });
-
   await act(async () => {
     await userEvent.click(criticalOption);
   });
@@ -175,7 +168,6 @@ test("GIVEN CallbacksTab WHEN user fills in form and clicks on Add THEN callback
   const eventTypesInput = screen.getByRole("combobox", {
     name: "EventTypesFilterInput",
   });
-
   await act(async () => {
     await userEvent.click(eventTypesInput);
   });
@@ -183,7 +175,6 @@ test("GIVEN CallbacksTab WHEN user fills in form and clicks on Add THEN callback
   const allocationUpdateOption = screen.getByRole("option", {
     name: "ALLOCATION_UPDATE",
   });
-
   await act(async () => {
     await userEvent.click(allocationUpdateOption);
   });
@@ -191,7 +182,6 @@ test("GIVEN CallbacksTab WHEN user fills in form and clicks on Add THEN callback
   const addButton = screen.getByRole("button", {
     name: "Add",
   });
-
   await act(async () => {
     await userEvent.click(addButton);
   });
