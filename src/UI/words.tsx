@@ -244,6 +244,9 @@ const dict = {
     "This tab is only available for the latest version.",
   "instanceDetails.documentation.noAttributeForVersion": (attributeName) =>
     `This version doesn't contain documentation for ${attributeName} yet.`,
+  active_attributes: "Active",
+  candidate_attributes: "Candidate",
+  rollback_attributes: "Rollback",
 
   /**
    * Config related text
