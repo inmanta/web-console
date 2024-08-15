@@ -172,7 +172,7 @@
     "moment-timezone": "^0.5.45",
     "msw": "^2.3.2",
     "process": "^0.11.10",
-    "qs": "^6.12.3",
+    "qs": "^6.13.0",
     "react": "^18.3.1",
     "react-diff-viewer-continued": "^3.4.0",
     "react-dom": "^18.3.1",
