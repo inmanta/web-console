@@ -368,6 +368,64 @@ test("GIVEN ResourcesView WHEN sorting changes AND we are not on the first page 
   );
 });
 
+test("GIVEN ResourcesView WHEN filtering changes AND we are not on the first page THEN we are sent back to the first page", async () => {
+  const { component, apiHelper } = setup();
+
+  render(component);
+
+  //mock that response has more than one site
+  await act(async () => {
+    await apiHelper.resolve(
+      Either.right({
+        data: Resource.response.data.slice(0, 3),
+        links: {
+          ...Resource.response.links,
+          next: "/fake-link?end=fake-first-param",
+        },
+        metadata: Resource.response.metadata,
+      }),
+    );
+  });
+
+  const nextPageButton = screen.getAllByLabelText("Go to next page")[0];
+
+  expect(nextPageButton).toBeEnabled();
+
+  await act(async () => {
+    await userEvent.click(nextPageButton);
+  });
+  //expect the api url to contain start and end keywords that are used for pagination when we are moving to the next page
+  expect(apiHelper.pendingRequests[0].url).toMatch(/(&start=|&end=)/);
+
+  await act(async () => {
+    await apiHelper.resolve(
+      Either.right({
+        data: Resource.response.data.slice(0, 3),
+        links: {
+          ...Resource.response.links,
+          next: "/fake-link?end=fake-first-param",
+        },
+        metadata: Resource.response.metadata,
+      }),
+    );
+  });
+
+  //filter on the second page
+  await act(async () => {
+    await userEvent.type(screen.getByTestId("TypeFilterInput"), "test_type");
+  });
+  await act(async () => {
+    await userEvent.click(screen.getByLabelText("submit search"));
+  });
+
+  // expect the api url to not contain start and end keywords that are used for pagination to assert we are back on the first page.
+  // we are asserting on the second request as the first request is for the updated filtering event, and second is chained to back to the first page with still correct filtering
+  expect(apiHelper.pendingRequests[1].url).not.toMatch(/(&start=|&end=)/);
+  expect(apiHelper.pendingRequests[1].url).toMatch(
+    /(&filter.resource_type=test_type)/,
+  );
+});
+
 it.each`
   filterType  | filterValue | placeholderText                                 | filterUrlName
   ${"search"} | ${"agent2"} | ${words("resources.filters.agent.placeholder")} | ${"agent"}
