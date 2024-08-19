@@ -768,7 +768,6 @@ test("GIVEN AgentsView WHEN filtering changes AND we are not on the first page T
 
   //expect the api url to contain start and end keywords that are used for pagination when we are moving to the next page
   expect(apiHelper.pendingRequests[0].url).toMatch(/(&start=|&end=)/);
-  expect(apiHelper.pendingRequests[0].url).not.toMatch(/(&filter.name=))/);
 
   await act(async () => {
     apiHelper.resolve(
