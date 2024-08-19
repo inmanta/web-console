@@ -1,77 +1,134 @@
-import React, { useCallback, useContext } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import "@inmanta/rappid/joint-plus.css";
 import { useNavigate } from "react-router-dom";
-import { Button, Flex, FlexItem, Tooltip } from "@patternfly/react-core";
+import { AlertVariant, Button, Flex, FlexItem } from "@patternfly/react-core";
 import styled from "styled-components";
+import { usePostMetadata } from "@/Data/Managers/V2/PostMetadata";
+import { usePostOrder } from "@/Data/Managers/V2/PostOrder";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
-import entityIcon from "../icons/new-entity-icon.svg";
+import { ToastAlert } from "../../ToastAlert";
+import { CanvasContext, InstanceComposerContext } from "../Context/Context";
+import { getServiceOrderItems } from "../helpers";
+import { DiagramHandlers } from "../init";
 
-const Toolbar = ({
-  openEntityModal,
-  handleDeploy,
-  serviceName,
-  isDeployDisabled,
-  editable,
-}: {
-  openEntityModal: () => void;
-  handleDeploy: () => void;
+interface Props {
   serviceName: string;
-  isDeployDisabled: boolean;
   editable: boolean;
+  diagramHandlers: DiagramHandlers | null;
+}
+
+/**
+ * Toolbar component
+ *
+ * This component represents the toolbar of the Composer.
+ * It contains controls to cancel creating or editing instance or sending serviceOrderItems to the backend.
+ * Also, it shows feedback notification to the user.
+ *
+ * @param {Object} props - The properties passed to the component.
+ * @param {string} props.serviceName - The name of the service.
+ * @param {boolean} props.editable - A flag indicating if the diagram is editable.
+ * @param {DiagramHandlers | null} props.diagramHandlers - The handlers for various diagram actions.
+ *
+ * @returns {React.FC} The Toolbar component.
+ */
+const Toolbar: React.FC<Props> = ({
+  serviceName,
+  editable,
+  diagramHandlers,
 }) => {
-  const { routeManager } = useContext(DependencyContext);
+  const { serviceModels, mainService, instance } = useContext(
+    InstanceComposerContext,
+  );
+  const { instancesToSend, isDirty, looseEmbedded } = useContext(CanvasContext);
+  const { routeManager, environmentHandler } = useContext(DependencyContext);
+
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertType, setAlertType] = useState(AlertVariant.danger);
+
+  const environment = environmentHandler.useId();
+
+  const metadataMutation = usePostMetadata(environment);
+  const oderMutation = usePostOrder(environment);
+
   const navigate = useNavigate();
   const url = routeManager.useUrl("Inventory", {
     service: serviceName,
   });
   const handleRedirect = useCallback(() => navigate(url), [navigate, url]);
 
+  /**
+   * Handles the filtering of the unchanged entities and sending serviceOrderItems to the backend.
+   *
+   */
+  const handleDeploy = () => {
+    const coordinates = diagramHandlers?.getCoordinates();
+
+    const serviceOrderItems = getServiceOrderItems(
+      instancesToSend,
+      serviceModels,
+    )
+      .filter((item) => item.action !== null)
+      .map((instance) => ({
+        ...instance,
+        metadata: {
+          coordinates: JSON.stringify(coordinates),
+        },
+      }));
+
+    //Temporary workaround to update coordinates in metadata, as currently order endpoint don't handle metadata in the updates.
+    // can't test in jest as I can't add any test-id to the halo handles though.
+    if (instance) {
+      metadataMutation.mutate({
+        service_entity: mainService.name,
+        service_id: instance.instance.id,
+        key: "coordinates",
+        body: {
+          current_version: instance.instance.version,
+          value: JSON.stringify(coordinates),
+        },
+      });
+    }
+
+    oderMutation.mutate(serviceOrderItems);
+  };
+
+  useEffect(() => {
+    if (oderMutation.isSuccess) {
+      //If response is successful then show feedback notification and redirect user to the service inventory view
+      setAlertType(AlertVariant.success);
+      setAlertMessage(words("inventory.instanceComposer.success"));
+
+      setTimeout(() => {
+        navigate(url);
+      }, 1000);
+    } else if (oderMutation.isError) {
+      setAlertType(AlertVariant.danger);
+      setAlertMessage(oderMutation.error.message);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [oderMutation.isSuccess, oderMutation.isError]);
+
   return (
     <Container
       justifyContent={{
-        default: "justifyContentSpaceBetween",
+        default: "justifyContentFlexEnd",
       }}
       alignItems={{ default: "alignItemsFlexEnd" }}
     >
-      <FlexItem>
-        <Flex
-          spacer={{ default: "spacerXs" }}
-          alignItems={{ default: "alignItemsCenter" }}
-        >
-          <FlexItem>
-            <Tooltip
-              content={words(
-                "inventory.instanceComposer.addInstanceButtonTooltip",
-              )}
-            >
-              <IconButton
-                variant="secondary"
-                onClick={(event) => {
-                  event.currentTarget.blur();
-                  openEntityModal();
-                }}
-                aria-label="new-entity-button"
-                isDisabled={!editable}
-              >
-                <Flex alignItems={{ default: "alignItemsCenter" }}>
-                  <FlexItem
-                    spacer={{ default: "spacerXs" }}
-                    style={{ width: "16px", height: "20px" }}
-                  >
-                    <img
-                      src={entityIcon}
-                      alt="Create new entity icon"
-                      aria-label="new-entity-icon"
-                    />
-                  </FlexItem>
-                  <FlexItem>{words("inventory.addInstance.button")}</FlexItem>
-                </Flex>
-              </IconButton>
-            </Tooltip>
-          </FlexItem>
-        </Flex>
-      </FlexItem>
+      {alertMessage && (
+        <ToastAlert
+          data-testid="ToastAlert"
+          title={
+            alertType === AlertVariant.success
+              ? words("inventory.instanceComposer.success.title")
+              : words("inventory.instanceComposer.failed.title")
+          }
+          message={alertMessage}
+          setMessage={setAlertMessage}
+          type={alertType}
+        />
+      )}
       <FlexItem>
         <Flex
           spacer={{ default: "spacerMd" }}
@@ -84,7 +141,12 @@ const Toolbar = ({
             variant="primary"
             width={200}
             onClick={handleDeploy}
-            isDisabled={isDeployDisabled || !editable}
+            isDisabled={
+              instancesToSend.size < 1 ||
+              !isDirty ||
+              looseEmbedded.size > 0 ||
+              !editable
+            }
           >
             {words("deploy")}
           </StyledButton>
@@ -98,14 +160,6 @@ export default Toolbar;
 
 const Container = styled(Flex)`
   padding: 0 0 20px;
-`;
-
-const IconButton = styled(Button)`
-  --pf-v5-c-button--PaddingTop: 3px;
-  --pf-v5-c-button--PaddingRight: 10px;
-  --pf-v5-c-button--PaddingBottom: 3px;
-  --pf-v5-c-button--PaddingLeft: 10px;
-  height: 36px;
 `;
 
 const StyledButton = styled(Button)`

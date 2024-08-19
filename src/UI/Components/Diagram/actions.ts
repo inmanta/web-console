@@ -10,7 +10,12 @@ import {
 } from "./helpers";
 import activeImage from "./icons/active-icon.svg";
 import candidateImage from "./icons/candidate-icon.svg";
-import { ActionEnum, ConnectionRules, relationId } from "./interfaces";
+import {
+  ActionEnum,
+  ConnectionRules,
+  EmbeddedEventEnum,
+  relationId,
+} from "./interfaces";
 import { Link, ServiceEntityBlock } from "./shapes";
 
 /**
@@ -28,7 +33,6 @@ export function showLinkTools(
   paper: dia.Paper,
   graph: dia.Graph,
   linkView: dia.LinkView,
-  updateInstancesToSend: (cell: ServiceEntityBlock, action: ActionEnum) => void,
   connectionRules: ConnectionRules,
 ) {
   const source = linkView.model.source();
@@ -122,10 +126,10 @@ export function showLinkTools(
            * @param disconnectingCell cell that is being connected to elementCell
            * @returns boolean whether connections was set
            */
-          const wasConnectionDataRemoved = (
+          const removeConnectionData = (
             elementCell: ServiceEntityBlock,
             disconnectingCell: ServiceEntityBlock,
-          ): boolean => {
+          ): void => {
             const elementRelations = elementCell.getRelations();
 
             // resolve any possible embedded connections between cells,
@@ -134,35 +138,36 @@ export function showLinkTools(
               elementCell.get("embeddedTo") === disconnectingCell.id
             ) {
               elementCell.set("embeddedTo", undefined);
-              toggleLooseElement(paper.findViewByModel(elementCell), "add");
-              updateInstancesToSend(elementCell, ActionEnum.UPDATE);
+              toggleLooseElement(
+                paper.findViewByModel(elementCell),
+                EmbeddedEventEnum.ADD,
+              );
 
-              return true;
+              document.dispatchEvent(
+                new CustomEvent("updateInstancesToSend", {
+                  detail: { cell: elementCell, actions: ActionEnum.UPDATE },
+                }),
+              );
             }
 
             // resolve any possible relation connections between cells
             if (
               elementRelations &&
-              elementRelations.has(disconnectingCell.id as string)
+              elementRelations.has(String(disconnectingCell.id))
             ) {
-              elementCell.removeRelation(disconnectingCell.id as string);
+              elementCell.removeRelation(String(disconnectingCell.id));
 
-              updateInstancesToSend(sourceCell, ActionEnum.UPDATE);
-
-              return true;
-            } else {
-              return false;
+              document.dispatchEvent(
+                new CustomEvent("updateInstancesToSend", {
+                  detail: { cell: sourceCell, actions: ActionEnum.UPDATE },
+                }),
+              );
             }
           };
 
-          const wasConnectionFromSourceSet = wasConnectionDataRemoved(
-            sourceCell,
-            targetCell,
-          );
-
-          if (!wasConnectionFromSourceSet) {
-            wasConnectionDataRemoved(targetCell, sourceCell);
-          }
+          //as the connection between two cells is bidirectional we need attempt to remove data from both cells
+          removeConnectionData(sourceCell, targetCell);
+          removeConnectionData(targetCell, sourceCell);
 
           linkView.model.remove({ ui: true, tool: toolView.cid });
         },
@@ -190,7 +195,7 @@ export function appendInstance(
   graph: dia.Graph,
   instanceWithRelations: InstanceWithRelations,
   services: ServiceModel[],
-  isMainInstance = false,
+  isMainInstance = true,
   instanceToConnectRelation?: ServiceEntityBlock,
 ): ServiceEntityBlock {
   const serviceInstance = instanceWithRelations.instance;
@@ -467,17 +472,82 @@ export function appendEntity(
   ) {
     instanceAsTable.set("relatedTo", new Map());
   }
-  const attributesNames = serviceModel.attributes.map(
-    (attribute) => attribute.name,
-  );
+  if (serviceModel.key_attributes) {
+    appendColumns(
+      instanceAsTable,
+      serviceModel.key_attributes,
+      entity,
+      true,
+      true,
+    ); // TEMPORARY for v2 until right sidebar is finished
+  }
 
-  appendColumns(instanceAsTable, attributesNames, entity);
   //add to graph
   instanceAsTable.addTo(graph);
 
   moveCellFromColliding(graph, instanceAsTable);
 
   return instanceAsTable;
+}
+
+/**
+ * Populates a graph with default required entities derived from a service model.
+ *
+ * @param {dia.Graph} graph - The jointJS graph to populate.
+ * @param {ServiceModel} service - The service model to use for populating the graph.
+ * @returns {ServiceEntityBlock[]} An array containing the core entity and the default entities added to the graph.
+ */
+export function populateGraphWithDefault(
+  graph: dia.Graph,
+  service: ServiceModel,
+) {
+  const coreEntity = appendEntity(graph, service, {}, true);
+  const defaultEntities = addDefaultEntities(graph, service);
+
+  connectEntities(graph, coreEntity, defaultEntities);
+
+  DirectedGraph.layout(graph, {
+    nodeSep: 80,
+    edgeSep: 80,
+    rankDir: "TB",
+  });
+
+  return [coreEntity, ...defaultEntities];
+}
+
+/**
+ * Adds default entities to a graph based on a service model or an embedded entity.
+ *
+ * @param {dia.Graph} graph - The jointJS graph to which entities should be added.
+ * @param {ServiceModel | EmbeddedEntity} service - The service model or embedded entity used to generate the default entities.
+ * @returns {ServiceEntityBlock[]} An array of service entity blocks that have been added to the graph.
+ */
+export function addDefaultEntities(
+  graph: dia.Graph,
+  service: ServiceModel | EmbeddedEntity,
+): ServiceEntityBlock[] {
+  const embedded_entities = service.embedded_entities
+    .filter((embedded_entity) => embedded_entity.lower_limit > 0)
+    .map((embedded_entity) => {
+      const embeddedEntity = appendEntity(
+        graph,
+        embedded_entity,
+        {},
+        false,
+        true,
+        service.name,
+      );
+
+      connectEntities(
+        graph,
+        embeddedEntity,
+        addDefaultEntities(graph, embedded_entity),
+      );
+
+      return embeddedEntity;
+    });
+
+  return embedded_entities;
 }
 
 /**
@@ -494,14 +564,17 @@ export function appendColumns(
   attributesKeywords: string[],
   serviceInstanceAttributes: InstanceAttributeModel,
   isInitial = true,
+  isEmpty = false, // TODO: temporary solution to handle empty values until right sidebar is finished
 ) {
   const instanceAttributes = {};
   const attributes = attributesKeywords.map((key) => {
-    instanceAttributes[key] = serviceInstanceAttributes[key];
+    const attributeValue = isEmpty ? "" : serviceInstanceAttributes[key];
+
+    instanceAttributes[key] = attributeValue;
 
     return {
       name: key,
-      value: serviceInstanceAttributes[key] as string,
+      value: attributeValue,
     };
   });
 

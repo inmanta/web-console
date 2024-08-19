@@ -142,7 +142,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
         );
         this.attr(`itemLabel_${item.name}_value/cursor`, "pointer");
       } else {
-        value.label = item.value;
+        value.label = String(item.value);
 
         if (item.value !== undefined && item.value !== null) {
           //reproduce internal formatting of the text base on actual dimensions, if text includes elipsis add Tooltip
@@ -247,13 +247,13 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
     }
   }
 
-  getRelations(): Map<string, string> | null {
+  getRelations(): Map<dia.Cell.ID, string> | null {
     const relations = this.get("relatedTo");
 
-    return relations ? relations : null;
+    return relations || null;
   }
 
-  addRelation(id: string, relationName: string): void {
+  addRelation(id: dia.Cell.ID, relationName: string): void {
     const currentRelation = this.getRelations();
 
     if (currentRelation) {
