@@ -105,7 +105,7 @@ export class NavigatorService {
     this.element.appendChild(this.toolbar.el);
 
     new ui.Tooltip({
-      rootTarget: ".zoomHandler",
+      rootTarget: ".zoom-handler",
       target: "[data-tooltip]",
       padding: 16,
     });

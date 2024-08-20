@@ -171,14 +171,14 @@ export const Canvas: React.FC<{
       <CanvasWrapper id="canvas-wrapper" data-testid="Composer-Container">
         <StencilContainer className="stencil-sidebar" ref={LeftSidebar} />
         <CanvasContainer className="canvas" ref={Canvas} />
-        <ZoomHandlerContainer className="zoomHandler" ref={ZoomHandler} />
+        <ZoomHandlerContainer className="zoom-handler" ref={ZoomHandler} />
       </CanvasWrapper>
     </EventWrapper>
   );
 };
 
 /**
- * Wrapper and ref container for the zoom & fullscreen tools from JointJS
+ * Container for the zoom & fullscreen tools from JointJS
  */
 const ZoomHandlerContainer = styled.div`
   position: absolute;
@@ -276,6 +276,9 @@ const ZoomHandlerContainer = styled.div`
   }
 `;
 
+/**
+ * Container for the JointJS canvas.
+ */
 const CanvasContainer = styled.div`
   width: calc(100% - 240px);
   height: 100%;
