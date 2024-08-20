@@ -10,6 +10,7 @@ interface Props {
   service_entity: string;
   data: string;
   onChange: (value: string, valid: boolean) => void;
+  readOnly?: boolean;
 }
 
 /**
@@ -30,6 +31,7 @@ export const JSONEditor: React.FC<Props> = ({
   service_entity,
   data,
   onChange,
+  readOnly = false,
 }) => {
   const { environmentHandler } = useContext(DependencyContext);
   const environment = environmentHandler.useId();
@@ -112,22 +114,25 @@ export const JSONEditor: React.FC<Props> = ({
         defaultValue={data}
         onChange={handleEditorChange}
         onValidate={handleOnValidate}
+        options={{ domReadOnly: readOnly, readOnly: readOnly }}
       />
-      <PanelWrapper variant="bordered" data-testid="Error-container">
-        {errors.length > 0 && (
-          <Alert
-            isInline
-            customIcon={<InfoAltIcon />}
-            isExpandable
-            variant="danger"
-            title={`Errors found : ${errors.length}`}
-          >
-            {errors.map((error, index) => (
-              <p key={index}>{error}</p>
-            ))}
-          </Alert>
-        )}
-      </PanelWrapper>
+      {!readOnly && (
+        <PanelWrapper variant="bordered" data-testid="Error-container">
+          {errors.length > 0 && (
+            <Alert
+              isInline
+              customIcon={<InfoAltIcon />}
+              isExpandable
+              variant="danger"
+              title={`Errors found : ${errors.length}`}
+            >
+              {errors.map((error, index) => (
+                <p key={index}>{error}</p>
+              ))}
+            </Alert>
+          )}
+        </PanelWrapper>
+      )}
     </EditorWrapper>
   );
 };

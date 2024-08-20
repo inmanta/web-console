@@ -1,7 +1,11 @@
 import React from "react";
 import { Grid, GridItem } from "@patternfly/react-core";
 import styled from "styled-components";
-import { ConfigSection, DetailsSection, HistorySection } from "./Components";
+import {
+  ConfigSection,
+  DetailsSection,
+  HistorySection,
+} from "./Components/Sections";
 import { TabView } from "./Tabs";
 
 /**

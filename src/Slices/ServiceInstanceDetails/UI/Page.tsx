@@ -5,7 +5,7 @@ import { useGetServiceModel } from "@/Data/Managers/V2/GetServiceModel";
 import { DependencyContext, useRouteParams, words } from "@/UI";
 import { ErrorView, LoadingView, PageContainer } from "@/UI/Components";
 import { InstanceDetailsContext } from "../Core/Context";
-import { PageTitleWithVersion } from "./Components";
+import { PageTitleWithVersion } from "./Components/Sections";
 import { ServiceInstanceDetailsLayout } from "./ServiceInstanceDetailsLayout";
 
 interface Props {

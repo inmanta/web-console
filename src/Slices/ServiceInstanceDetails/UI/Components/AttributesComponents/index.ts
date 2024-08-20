@@ -1,3 +1,4 @@
 export * from "./AttributesCompare";
-export * from "./AttributesTable";
+export * from "./AttributesViewProvider";
 export * from "./AttributesEditor";
+export * from "./Utils";

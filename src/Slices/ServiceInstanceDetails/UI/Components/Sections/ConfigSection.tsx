@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { Panel } from "@patternfly/react-core";
 import { Config, VersionedServiceInstanceIdentifier } from "@/Core";
 import { ConfigSectionContent } from "@/Slices/ServiceInventory/UI/Tabs/ConfigSectionContent";
-import { InstanceDetailsContext } from "../../Core/Context";
+import { InstanceDetailsContext } from "../../../Core/Context";
 
 /**
  * The ConfigSection Component

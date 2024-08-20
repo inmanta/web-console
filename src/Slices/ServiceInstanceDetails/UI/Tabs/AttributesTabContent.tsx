@@ -2,59 +2,54 @@ import React, { useState } from "react";
 import { ToggleGroup, ToggleGroupItem } from "@patternfly/react-core";
 import styled from "styled-components";
 import {
-  AttributesCompare,
-  AttributesEditor,
-  AttributesTable,
+  AttributesViewProvider,
+  AttributeViewToggles,
 } from "../Components/AttributesComponents";
 import { TabContentWrapper } from "./TabContentWrapper";
 
-enum ToggleKeys {
-  TABLE = "Table",
-  COMPARE = "Compare",
-  EDITOR = "JSON-Editor",
-}
-
+/**
+ * The AttributesTabContent Component
+ *
+ * This component is responsible to display which view is displayed within the tab.
+ * The ToggleOptions allow the user to change between the Table, the Editor, and the Compare views.
+ *
+ * @returns {React.FC} The AttributesTabContent
+ */
 export const AttributesTabContent: React.FC = () => {
-  // Dropdown to select set
-  // code editor / table / compare => the compare needs access to the history logs.
-  // add expert mode
-
-  const [isSelected, setIsSelected] = useState(ToggleKeys.TABLE);
+  const [selectedView, setSelectedView] = useState(AttributeViewToggles.TABLE);
 
   const handleToggleClick = (event, _isSelected: boolean) => {
     const id = event.currentTarget.id;
 
-    setIsSelected(id);
+    setSelectedView(id);
   };
 
   return (
-    <TabContentWrapper role="tabpanel" id={"Attribute-content"}>
+    <TabContentWrapper id={"Attribute-content"}>
       <StyledToggleGroup aria-label="toggle-group-attributes" isCompact>
         <ToggleGroupItem
-          text={ToggleKeys.TABLE}
-          buttonId={ToggleKeys.TABLE}
-          isSelected={isSelected === ToggleKeys.TABLE}
+          text={AttributeViewToggles.TABLE}
+          buttonId={AttributeViewToggles.TABLE}
+          isSelected={selectedView === AttributeViewToggles.TABLE}
           onChange={handleToggleClick}
           isDisabled={false}
         />
         <ToggleGroupItem
-          text={ToggleKeys.EDITOR}
-          buttonId={ToggleKeys.EDITOR}
-          isSelected={isSelected === ToggleKeys.EDITOR}
+          text={AttributeViewToggles.EDITOR}
+          buttonId={AttributeViewToggles.EDITOR}
+          isSelected={selectedView === AttributeViewToggles.EDITOR}
           onChange={handleToggleClick}
           isDisabled={false}
         />
         <ToggleGroupItem
-          text={ToggleKeys.COMPARE}
-          buttonId={ToggleKeys.COMPARE}
-          isSelected={isSelected === ToggleKeys.COMPARE}
+          text={AttributeViewToggles.COMPARE}
+          buttonId={AttributeViewToggles.COMPARE}
+          isSelected={selectedView === AttributeViewToggles.COMPARE}
           onChange={handleToggleClick}
           isDisabled={false}
         />
       </StyledToggleGroup>
-      {isSelected === ToggleKeys.TABLE && <AttributesTable />}
-      {isSelected === ToggleKeys.EDITOR && <AttributesEditor />}
-      {isSelected === ToggleKeys.COMPARE && <AttributesCompare />}
+      <AttributesViewProvider selectedView={selectedView} />
     </TabContentWrapper>
   );
 };

@@ -16,6 +16,16 @@ export interface TreeRowData {
   children?: TreeRowData[];
 }
 
+// The available views mapped to toggleKeys for the AttributesTabContent.
+export enum AttributeViewToggles {
+  TABLE = "Table",
+  COMPARE = "Compare",
+  EDITOR = "JSON-Editor",
+}
+
+// Type representing the possible views for the AttributesTabContent.
+export type AttributeViews = "Table" | "Compare" | "JSON-Editor";
+
 /**
  * Method to get the attributeSets for a given version.
  *
@@ -112,4 +122,51 @@ export const formatTreeRowData = (
   }
 
   return result;
+};
+
+/**
+ * Sort method to sort the treeRows recursively based on a given direction.
+ *
+ * @param {TreeRowData[]} tableData
+ * @param {"asc" | "desc"} direction sort direction.
+ * @returns {TreeRowData[]} sorted TreeRowData[]
+ */
+export const sortTreeRows = (
+  tableData: TreeRowData[],
+  direction: "asc" | "desc",
+): TreeRowData[] => {
+  // Helper function to compare values based on direction
+  const compare = (a: TreeRowData, b: TreeRowData) => {
+    if (a.name < b.name) {
+      return direction === "asc" ? -1 : 1;
+    }
+
+    if (a.name > b.name) {
+      return direction === "asc" ? 1 : -1;
+    }
+
+    return 0;
+  };
+
+  // Sort the data recursively
+  const sortData = (data: TreeRowData[]): TreeRowData[] => {
+    return data
+      .map((row) => ({
+        ...row,
+        children: row.children ? sortData(row.children) : undefined,
+      }))
+      .sort(compare);
+  };
+
+  return sortData(tableData);
+};
+
+export const getAvailableVersions = (instanceLogs: InstanceLog[]) => {
+  const availableVersions: string[] = [];
+
+  instanceLogs.forEach((log) => {
+    availableVersions.push(String(log.version));
+  });
+
+  return availableVersions;
 };
