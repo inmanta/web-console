@@ -124,7 +124,7 @@
     "raw-loader": "^4.0.2",
     "react-svg-loader": "^3.0.3",
     "regenerator-runtime": "^0.14.1",
-    "rimraf": "^5.0.5",
+    "rimraf": "^6.0.1",
     "style-loader": "^4.0.0",
     "svg-url-loader": "^8.0.0",
     "ts-jest": "^29.1.4",
