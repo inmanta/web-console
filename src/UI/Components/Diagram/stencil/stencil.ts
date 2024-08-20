@@ -216,6 +216,7 @@ export class StencilSidebar {
 
       this.instanceTab.stencil.el.classList.remove("joint-hidden");
       this.instanceTab.stencil.unfreeze();
+
       event.target.classList.add("-active");
       event.target.nextSibling.classList.remove("-active");
     });
@@ -230,10 +231,12 @@ export class StencilSidebar {
 
       this.inventoryTab.stencil.el.classList.remove("joint-hidden");
       this.inventoryTab.stencil.unfreeze();
+
       event.target.classList.add("-active");
       event.target.previousSibling.classList.remove("-active");
     });
   }
+
   remove(): void {
     this.instanceTab.stencil.remove();
     this.inventoryTab.stencil.remove();

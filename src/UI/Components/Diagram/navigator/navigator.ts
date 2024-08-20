@@ -149,6 +149,7 @@ export class NavigatorService {
     if (!slider) {
       return;
     }
+
     this.updateSliderProgressBar(slider);
   }
 
