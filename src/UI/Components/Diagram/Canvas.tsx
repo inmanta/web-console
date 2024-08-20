@@ -12,7 +12,8 @@ import DictModal from "./components/DictModal";
 import FormModal from "./components/FormModal";
 import Toolbar from "./components/Toolbar";
 import { createConnectionRules } from "./helpers";
-import { StencilSidebar } from "./stencil";
+import { NavigatorService } from "./navigator/navigator";
+import { StencilSidebar } from "./stencil/stencil";
 
 /**
  * Canvas component for creating, displaying and editing an Instance.
@@ -36,6 +37,10 @@ export const Canvas: React.FC<{
     useState<DiagramHandlers | null>(null);
 
   useEffect(() => {
+    if (!mainService || !serviceModels) {
+      return;
+    }
+
     const connectionRules = createConnectionRules(
       serviceModels.concat(mainService),
       {},
@@ -43,9 +48,7 @@ export const Canvas: React.FC<{
     const actions = diagramInit(
       Canvas,
       (newScroller) => {
-        if (!scroller) {
-          setScroller(newScroller);
-        }
+        setScroller(newScroller);
       },
       connectionRules,
       editable,
@@ -53,10 +56,21 @@ export const Canvas: React.FC<{
     );
 
     setDiagramHandlers(actions);
+
+    return () => {
+      actions.removeCanvas();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mainService, serviceModels]);
+
+  useEffect(() => {
+    if (!diagramHandlers || !serviceModels || !mainService) {
+      return;
+    }
     const newInstances = new Map();
 
     if (instance) {
-      const cells = actions.addInstance(
+      const cells = diagramHandlers.addInstance(
         [...serviceModels, mainService],
         instance,
       );
@@ -75,7 +89,10 @@ export const Canvas: React.FC<{
         }
       });
     } else {
-      const cells = actions.addInstance([...serviceModels, mainService]);
+      const cells = diagramHandlers.addInstance([
+        ...serviceModels,
+        mainService,
+      ]);
 
       cells.forEach((cell) => {
         if (cell.type === "app.ServiceEntityBlock") {
@@ -92,12 +109,8 @@ export const Canvas: React.FC<{
       });
     }
     setInstancesToSend(newInstances);
-
-    return () => {
-      actions.removeCanvas();
-    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [instance, serviceModels, editable, mainService]);
+  }, [instance, serviceModels, mainService, diagramHandlers]);
 
   useEffect(() => {
     if (
@@ -109,13 +122,24 @@ export const Canvas: React.FC<{
       return;
     }
 
-    new StencilSidebar(
+    const sidebar = new StencilSidebar(
       LeftSidebar.current,
       scroller,
       relatedInventories.data,
       mainService,
     );
+
+    return () => sidebar.remove();
   }, [scroller, relatedInventories.data, mainService]);
+
+  useEffect(() => {
+    if (!ZoomHandler.current || !scroller) {
+      return;
+    }
+    const navigator = new NavigatorService(ZoomHandler.current, scroller);
+
+    return () => navigator.remove();
+  }, [scroller]);
 
   return (
     <EventWrapper>
@@ -146,8 +170,8 @@ export const Canvas: React.FC<{
       />
       <CanvasWrapper id="canvas-wrapper" data-testid="Composer-Container">
         <StencilContainer className="stencil-sidebar" ref={LeftSidebar} />
-        <div className="canvas" ref={Canvas} />
-        <ZoomHandlerWrapper className="zoomHandler" ref={ZoomHandler} />
+        <CanvasContainer className="canvas" ref={Canvas} />
+        <ZoomHandlerContainer className="zoomHandler" ref={ZoomHandler} />
       </CanvasWrapper>
     </EventWrapper>
   );
@@ -156,22 +180,127 @@ export const Canvas: React.FC<{
 /**
  * Wrapper and ref container for the zoom & fullscreen tools from JointJS
  */
-const ZoomHandlerWrapper = styled.div`
+const ZoomHandlerContainer = styled.div`
   position: absolute;
-  bottom: 16px;
-  right: 16px;
+  bottom: 1rem;
+  right: 1rem;
+  filter: drop-shadow(
+    0.05rem 0.2rem 0.2rem
+      var(--pf-v5-global--BackgroundColor--dark-transparent-200)
+  );
+
+  .joint-toolbar {
+    padding: 0.5rem 2rem;
+    border: 0;
+  }
+
+  button.joint-widget.joint-theme-default {
+    border: 0;
+    &:hover {
+      background: transparent;
+    }
+  }
+
+  .joint-widget.joint-theme-default {
+    --slider-background: linear-gradient(
+      to right,
+      var(--pf-v5-global--active-color--100) 0%,
+      var(--pf-v5-global--active-color--100) 20%,
+      var(--pf-v5-global--palette--black-400) 20%,
+      var(--pf-v5-global--palette--black-400) 100%
+    );
+
+    output {
+      color: var(--pf-v5-global--palette--black-400);
+    }
+
+    .units {
+      color: var(--pf-v5-global--palette--black-400);
+    }
+
+    /*********** Baseline, reset styles ***********/
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: var(--slider-background);
+      cursor: pointer;
+      width: 8rem;
+      margin-right: 0.5rem;
+    }
+
+    /* Removes default focus */
+    input[type="range"]:focus {
+      outline: none;
+    }
+
+    /******** Chrome, Safari, Opera and Edge Chromium styles ********/
+    /* slider track */
+    input[type="range"]::-webkit-slider-runnable-track {
+      background: var(--slider-background);
+      border-radius: 0.5rem;
+      height: 0.15rem;
+    }
+
+    /* slider thumb */
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none; /* Override default look */
+      appearance: none;
+      margin-top: -3.6px; /* Centers thumb on the track */
+      background-color: var(--pf-v5-global--active-color--100);
+      border-radius: 0.5rem;
+      height: 0.7rem;
+      width: 0.7rem;
+    }
+
+    /*********** Firefox styles ***********/
+    /* slider track */
+    input[type="range"]::-moz-range-track {
+      background-color: var(--slider-background);
+      border-radius: 0.5rem;
+      height: 0.15rem;
+    }
+
+    /* slider thumb */
+    input[type="range"]::-moz-range-thumb {
+      background-color: var(--pf-v5-global--active-color--100);
+      border: none; /*Removes extra border that FF applies*/
+      border-radius: 0.5rem;
+      height: 0.7rem;
+      width: 0.7rem;
+    }
+
+    input[type="range"]:focus::-moz-range-thumb {
+      outline: 3px solid var(--pf-v5-global--active-color--100);
+      outline-offset: 0.125rem;
+    }
+  }
+`;
+
+const CanvasContainer = styled.div`
+  width: calc(100% - 240px);
+  height: 100%;
+  background: var(--pf-v5-global--BackgroundColor--light-300);
+
+  * {
+    font-family: var(--pf-v5-global--FontFamily--monospace);
+  }
+  .joint-paper-background {
+    background: var(--pf-v5-global--BackgroundColor--light-300);
+  }
+
+  .source-arrowhead,
+  .target-arrowhead {
+    fill: var(--pf-v5-global--palette--black-500);
+    stroke-width: 1;
+  }
 `;
 
 /**
  * To be able to have draggable items on the canvas, we need to have a stencil container to which we append the JointJS stencil objects that handle the drag and drop functionality.
  */
 const StencilContainer = styled.div`
-  position: absolute;
-  left: 1px;
-  top: 1px;
   width: 240px;
-  height: calc(100% - 2px);
-  z-index: 1;
+  height: 100%;
   background: var(--pf-v5-global--BackgroundColor--100);
   filter: drop-shadow(
     0.1rem 0.1rem 0.15rem

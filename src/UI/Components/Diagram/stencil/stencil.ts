@@ -149,6 +149,10 @@ class InventoryStencilTab {
  * Class representing a stencil sidebar.
  */
 export class StencilSidebar {
+  instanceTab: InstanceStencilTab;
+  inventoryTab: InventoryStencilTab;
+  tabsToolbar: ui.Toolbar;
+
   /**
    * Creates a stencil sidebar.
    *
@@ -163,18 +167,18 @@ export class StencilSidebar {
     serviceInventories: Inventories,
     service: ServiceModel,
   ) {
-    const instanceTab = new InstanceStencilTab(
+    this.instanceTab = new InstanceStencilTab(
       stencilElement,
       scroller,
       service,
     );
-    const inventoryTab = new InventoryStencilTab(
+    this.inventoryTab = new InventoryStencilTab(
       stencilElement,
       scroller,
       serviceInventories,
     );
 
-    const tabsToolbar = new ui.Toolbar({
+    this.tabsToolbar = new ui.Toolbar({
       id: "tabs-toolbar",
       tools: [
         {
@@ -192,10 +196,10 @@ export class StencilSidebar {
       ],
     });
 
-    stencilElement.appendChild(tabsToolbar.el);
-    tabsToolbar.render();
+    stencilElement.appendChild(this.tabsToolbar.el);
+    this.tabsToolbar.render();
 
-    const firstChild = tabsToolbar.el.firstElementChild;
+    const firstChild = this.tabsToolbar.el.firstElementChild;
     const targetElement = firstChild?.firstElementChild;
 
     //adding active class to the first tab as a default, as Toolbar doesn't apply it when adding 'class' attribute to the tool object
@@ -203,31 +207,36 @@ export class StencilSidebar {
       targetElement.classList.add("-active");
     }
 
-    tabsToolbar.on("new_tab:pointerclick", (event: dia.Event) => {
+    this.tabsToolbar.on("new_tab:pointerclick", (event: dia.Event) => {
       if (event.target.classList.contains("-active")) {
         return;
       }
-      inventoryTab.stencil.el.classList.add("joint-hidden");
-      inventoryTab.stencil.freeze();
+      this.inventoryTab.stencil.el.classList.add("joint-hidden");
+      this.inventoryTab.stencil.freeze();
 
-      instanceTab.stencil.el.classList.remove("joint-hidden");
-      instanceTab.stencil.unfreeze();
+      this.instanceTab.stencil.el.classList.remove("joint-hidden");
+      this.instanceTab.stencil.unfreeze();
       event.target.classList.add("-active");
       event.target.nextSibling.classList.remove("-active");
     });
 
-    tabsToolbar.on("inventory_tab:pointerclick", (event: dia.Event) => {
+    this.tabsToolbar.on("inventory_tab:pointerclick", (event: dia.Event) => {
       if (event.target.classList.contains("-active")) {
         return;
       }
 
-      instanceTab.stencil.el.classList.add("joint-hidden");
-      instanceTab.stencil.freeze();
+      this.instanceTab.stencil.el.classList.add("joint-hidden");
+      this.instanceTab.stencil.freeze();
 
-      inventoryTab.stencil.el.classList.remove("joint-hidden");
-      inventoryTab.stencil.unfreeze();
+      this.inventoryTab.stencil.el.classList.remove("joint-hidden");
+      this.inventoryTab.stencil.unfreeze();
       event.target.classList.add("-active");
       event.target.previousSibling.classList.remove("-active");
     });
+  }
+  remove(): void {
+    this.instanceTab.stencil.remove();
+    this.inventoryTab.stencil.remove();
+    this.tabsToolbar.remove();
   }
 }
