@@ -19,10 +19,7 @@ interface IconButton extends ui.widgets.button {
  * This class extends the ui.widgets.button class and represents a button with an icon.
  * It provides methods for setting the icon and the tooltip of the button.
  *
- * @class
- * @method render - Renders the button with an image element for the icon.
- * @method setIcon - Sets the icon of the button.
- * @method setTooltip - Sets the tooltip of the button.
+
  */
 const IconButton = ui.widgets.button.extend({
   render: function () {
@@ -37,9 +34,27 @@ const IconButton = ui.widgets.button.extend({
 
     return this;
   },
+
+  /**
+   * Sets the icon of the element.
+   *
+   * This method is responsible for setting the source of the image element within the current element to the provided icon.
+   *
+   * @param {string} icon - The source of the icon to set. Defaults to an empty string, which will clear the current icon.
+   */
   setIcon: function (icon = "") {
     this.el.querySelector("img").src = icon;
   },
+
+  /**
+   * Sets the tooltip of the element.
+   *
+   * This method is responsible for setting the tooltip of the current element to the provided tooltip.
+   * It also sets the position of the tooltip.
+   *
+   * @param {string} tooltip - The text of the tooltip to set. Defaults to an empty string, which will clear the current tooltip.
+   * @param {string} direction - The position of the tooltip. Defaults to "right".
+   */
   setTooltip: function (tooltip = "", direction = "right") {
     this.el.dataset.tooltip = tooltip;
     this.el.dataset.tooltipPosition = direction;
