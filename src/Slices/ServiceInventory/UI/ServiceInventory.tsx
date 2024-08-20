@@ -132,11 +132,19 @@ export const ServiceInventory: React.FunctionComponent<{
       .map((state) => state.name);
   };
 
-  //when sorting is triggered, reset the current page
+  //when sorting or filtering is triggered, reset the current page
   useEffect(() => {
     setCurrentPage({ kind: "CurrentPage", value: "" });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sort.order]);
+  }, [
+    sort.order,
+    filter.attributeSetEmpty,
+    filter.attributeSetNotEmpty,
+    filter.state,
+    filter.id_or_service_identity,
+    filter.identity,
+    filter.deleted,
+  ]);
 
   return (
     <ServiceInventoryContext.Provider

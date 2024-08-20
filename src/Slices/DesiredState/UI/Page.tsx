@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { ParsedNumber } from "@/Core";
 import { useUrlStateWithFilter, useUrlStateWithPageSize } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
@@ -47,6 +47,13 @@ export const Page: React.FC = () => {
     setIsModalOpened(modalState);
     setVersionToDelete(modalState ? version : 0);
   }
+
+  //when filtering is triggered, reset the current page
+  useEffect(() => {
+    setCurrentPage({ kind: "CurrentPage", value: "" });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filter.date, filter.version, filter.status]);
+
   return (
     <PageContainer title={words("desiredState.title")}>
       <GetDesiredStatesContext.Provider

@@ -45,11 +45,11 @@ export const Page: React.FC = () => {
 
   const tablePresenter = new FactsTablePresenter();
 
-  //when sorting is triggered, reset the current page
+  //when sorting or filtering is triggered, reset the current page
   useEffect(() => {
     setCurrentPage({ kind: "CurrentPage", value: "" });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sort.order]);
+  }, [sort.order, filter.name, filter.resource_id]);
 
   return (
     <PageContainer title={words("facts.title")}>
