@@ -242,8 +242,6 @@ export class NavigatorService {
 
       fullscreenButton.setIcon(`${requestFullscreen}`);
       fullscreenButton.setTooltip("Toggle full screen");
-
-      //trigger zoom to fit when exiting fullscreen to avoid some elements being out of view
     }
   }
 
