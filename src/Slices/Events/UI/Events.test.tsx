@@ -261,3 +261,74 @@ test("GIVEN EventsView WHEN sorting changes AND we are not on the first page THE
   expect(apiHelper.pendingRequests[1].url).not.toMatch(/(&start=|&end=)/);
   expect(apiHelper.pendingRequests[1].url).toMatch(/(&sort=timestamp.asc)/);
 });
+
+test("GIVEN EventsView WHEN filtering changes AND we are not on the first page THEN we are sent back to the first page", async () => {
+  const response = {
+    data: [
+      {
+        id: "049dd20f-c432-4b93-bf1c-32c572e49cc7",
+        service_instance_id: "bd200aec-4f80-45e1-b2ad-137c442c68b8",
+        service_instance_version: 3,
+        timestamp: "2021-01-11T12:56:56.205131",
+        source: "creating",
+        destination: "awaiting_up",
+        message:
+          "Service instance bd200aec-4f80-45e1-b2ad-137c442c68b8 successfully executed transfer creating -> awaiting_up (error=False)",
+        ignored_transition: false,
+        event_correlation_id: "363cc930-d847-4e8a-b605-41b87a903248",
+        severity: 20,
+        id_compile_report: null,
+        event_type: "RESOURCE_TRANSITION",
+        is_error_transition: false,
+      } as InstanceEvent,
+    ],
+    links: {
+      self: "",
+      next: "/fake-link?end=fake-first-param",
+    },
+    metadata: {
+      total: 103,
+      before: 0,
+      after: 3,
+      page_size: 100,
+    },
+  };
+  const { component, apiHelper } = setup();
+
+  render(component);
+
+  //mock that response has more than one site
+  await act(async () => {
+    apiHelper.resolve(Either.right(response));
+  });
+
+  const nextPageButton = screen.getByLabelText("Go to next page");
+
+  expect(nextPageButton).toBeEnabled();
+
+  await act(async () => {
+    await userEvent.click(nextPageButton);
+  });
+  //expect the api url to contain start and end keywords that are used for pagination when we are moving to the next page
+  expect(apiHelper.pendingRequests[0].url).toMatch(/(&start=|&end=)/);
+  await act(async () => {
+    apiHelper.resolve(Either.right(response));
+  });
+
+  //filter on the second page
+  await act(async () => {
+    await userEvent.click(screen.getByLabelText("EventTypeFilterInput"));
+  });
+  await act(async () => {
+    await userEvent.click(
+      screen.getByRole("option", { name: "CREATE_TRANSITION" }),
+    );
+  });
+
+  // expect the api url to not contain start and end keywords that are used for pagination to assert we are back on the first page.
+  // we are asserting on the second request as the first request is for the updated filtering event, and second is chained to back to the first page with still correct filtering
+  expect(apiHelper.pendingRequests[1].url).not.toMatch(/(&start=|&end=)/);
+  expect(apiHelper.pendingRequests[1].url).toMatch(
+    /(&filter.event_type=CREATE_TRANSITION)/,
+  );
+});
