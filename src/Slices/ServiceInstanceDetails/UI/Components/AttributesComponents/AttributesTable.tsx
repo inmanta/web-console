@@ -215,12 +215,12 @@ export const AttributesTable: React.FC<Props> = ({
 
   /**
    * Recursive function which flattens the data into an array of flattened TreeRowWrapper components
-   * params:
-   * - nodes - array of a single level of tree nodes
-   * - level - number representing how deeply nested the current row is
-   * - posinset - position of the row relative to this row's siblings
-   * - currentRowIndex - position of the row relative to the entire table
-   * - isHidden - defaults to false, true if this row's parent is expanded
+   *
+   * @param {TreeRowData[]} nodes - array of a single level of tree nodes
+   * @param {number} level - number representing how deeply nested the current row is
+   * @param {number} posinset - position of the row relative to this row's siblings
+   * @param {number} currentRowIndex - position of the row relative to the entire table
+   * @param {boolean} isHidden - defaults to false, true if this row's parent is expanded
    */
   const renderRows = (
     [node, ...remainingNodes]: TreeRowData[],

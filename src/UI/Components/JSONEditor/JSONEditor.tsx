@@ -20,6 +20,7 @@ interface Props {
  *  @prop {string} service_entity - The service entity.
  *  @prop {string} data - The data to be displayed in the editor.
  *  @prop {function} onChange - Callback method when the data is changed in the editor.
+ *  @prop {boolean} readOnly - Whether the editor should be readonly or not, defaults to false.
  *
  * @notes The JSON Editor component uses the Monaco Editor, React version.
  * for more information, see https://www.npmjs.com/package/@monaco-editor/react?activeTab=readme

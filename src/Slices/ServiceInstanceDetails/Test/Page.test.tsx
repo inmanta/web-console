@@ -321,7 +321,7 @@ describe("ServiceInstanceDetailsPage", () => {
       await userEvent.click(select2);
       const options = screen.getAllByRole("option");
 
-      // expect only two options, active and candidate
+      // expect only one options, candidate
       expect(options).toHaveLength(1);
       expect(select2).toHaveValue("candidate_attributes");
     });
@@ -337,7 +337,7 @@ describe("ServiceInstanceDetailsPage", () => {
     // In Version 2, the site.name should be "inmanta-lab-0".
     expect(screen.getByText("inmanta-lab-0")).toBeVisible();
 
-    // Go to the JSON view, check that the data is displayed but not editable. Typing shouldn't affect the data.
+    // Go to the JSON view
     const toggleJson = screen.getByText(/json\-editor/i);
 
     await act(async () => {
@@ -361,7 +361,7 @@ describe("ServiceInstanceDetailsPage", () => {
     });
 
     // Change view on compare, and just like before, we can't test the monaco editor in jest,
-    // so we will assert that the dropdowns have changed accordingly.
+    // so we will assert that we now have 4 dropdowns
     const toggleCompare = screen.getByText(/compare/i);
 
     await act(async () => {
@@ -374,6 +374,7 @@ describe("ServiceInstanceDetailsPage", () => {
     expect(selects[0]).toHaveValue("4");
     expect(selects[1]).toHaveValue("active_attributes");
     expect(selects[2]).toHaveValue("4");
+    // by default, if a candidate set is available it will set it to compare
     expect(selects[3]).toHaveValue("candidate_attributes");
 
     // There shouldn't be a documentation tab for this Instance and ServiceModel

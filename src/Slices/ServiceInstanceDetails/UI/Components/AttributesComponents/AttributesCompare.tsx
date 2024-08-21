@@ -196,7 +196,7 @@ export const AttributesCompare: React.FC<Props> = ({
       </StyledFlexContainer>
 
       <DiffEditor
-        height={"calc(100vh - 550px)"}
+        height={"calc(100vh - 525px)"}
         language="json"
         original={JSON.stringify(leftAttributesSets[leftSelectedSet], null, 2)}
         modified={JSON.stringify(
