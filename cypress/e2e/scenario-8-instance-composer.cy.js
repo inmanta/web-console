@@ -65,12 +65,13 @@ const forceUpdateEnvironment = (nameEnvironment = "lsm-frontend") => {
 };
 
 if (Cypress.env("edition") === "iso") {
-  describe("Scenario 8 - Instance Composer", () => {
+  describe("Scenario 8 - Instance Composer", async () => {
     before(() => {
       clearEnvironment();
       forceUpdateEnvironment();
     });
 
+    //Note: trying to toggle fullscreen mode causing in typeError: permission denied, assertion about fullscreen API is not possible, and it's done in Jest test case
     it("8.1 composer opens up has it's default navigation working", () => {
       // Select 'test' environment
       cy.visit("/console/");
@@ -135,7 +136,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#instance-stencil").should("not.be.visible");
       cy.get("#inventory-stencil").should("be.visible");
 
-      cy.get("#instance-tab").click();
+      cy.get("#new-tab").click();
 
       cy.get("#instance-stencil").should("be.visible");
       cy.get("#inventory-stencil").should("not.be.visible");
