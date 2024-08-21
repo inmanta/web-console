@@ -5,7 +5,7 @@ import userEvent from "@testing-library/user-event";
 import { defineObjectsForJointJS } from "../testSetup";
 import { ZoomHandlerService } from "./zoomHandler";
 
-// parts of the ZoomHandlerService that aren't covered are related to the getElementById part as they aren't working on jest, more mocking is pointless as well as zoomHandler is also covered in the cypress
+// parts of the ZoomHandlerService that aren't covered are related to the getElementById() which isn't supported by jest, this part is covered by the E2E tests scenario 8.1
 describe("ZoomHandler", () => {
   defineObjectsForJointJS();
   const canvas = document.createElement("div");
