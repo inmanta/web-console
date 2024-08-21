@@ -155,7 +155,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[role="menuitem"]').should("have.length", 2);
     });
 
-    it("2.1.3 Edit previously created instance", () => {
+    it("2.1.3 Edit previously created instance, Instance Details history, documentation tab", () => {
       cy.visit("/console/");
       cy.get('[aria-label="Environment card"]')
         .contains("lsm-frontend")
@@ -325,7 +325,7 @@ if (Cypress.env("edition") === "iso") {
         .first()
         .should("contain", '""');
       cy.get(".view-line > :nth-child(1) > .mtk5").first().type("1.2.3.2/32");
-      cy.get(".view-line > :nth-child(1) > .mtk5").first().type("{pagedown}"); // force editor to scroll down
+      cy.get(".monaco-scrollable-element").first().type("{pageDown}"); // force editor to scroll down
 
       // change the service id to make instance unique
       cy.get(".mtk5").contains("0001").type("{backspace}9");
@@ -376,7 +376,87 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 2);
     });
 
-    it("2.1.6 Delete previously created instance", () => {
+    it("2.1.6 Instance Details page, attributes tab", () => {
+      cy.visit("/console/");
+      cy.get('[aria-label="Environment card"]')
+        .contains("lsm-frontend")
+        .click();
+      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
+      // Expect to find one badge on the basic-service row.
+      cy.get("#basic-service")
+        .get('[aria-label="Number of instances by label"]')
+        .children()
+        .should("have.length", 1);
+      cy.get("#basic-service").contains("Show inventory").click();
+
+      // Check Instance Details page
+      cy.get('[aria-label="row actions toggle"]', { timeout: 60000 })
+        .last()
+        .click();
+      // The first button should be the one redirecting to the details page.
+      cy.get(".pf-v5-c-menu__item")
+        .first()
+        .contains("Instance Details")
+        .click();
+
+      // click on the attributes tab
+      cy.get('[aria-label="attributes-content"]').click();
+
+      // assert that first element in table is the name attribute
+      cy.get('[data-testid="attribute-key"]').first().should("contain", "name");
+
+      // assert you can sort
+      cy.get("button")
+        .contains(/^Attribute$/)
+        .click();
+
+      // assert the first element is now the address_r1 attribute
+      cy.get('[data-testid="attribute-key"]')
+        .first()
+        .should("contain", "address_r1");
+
+      // this row should contain the active_attribute value 1.2.3.5/32
+      cy.get('[data-testid="address_r1"]').should("contain", "1.2.3.5/32");
+
+      // assert you can reset the sorting
+      cy.get('[aria-label="table-options"]').click();
+      cy.get('[aria-label="Reset-sort"]').click();
+
+      // assert that first element in table is the name attribute again
+      cy.get('[data-testid="attribute-key"]').first().should("contain", "name");
+
+      // assert you can change attributeSets to Candidate
+      cy.get('[aria-label="Select-AttributeSet"]').select(
+        "candidate_attributes",
+      );
+
+      // assert that the address_r1 attribute value is now the candidate value 1.2.3.8/32
+      cy.get('[data-testid="address_r1"]').should("contain", "1.2.3.8/32");
+
+      // click on the JSON-editor tab
+      cy.get("#JSON-Editor").click();
+      cy.get(".view-line").eq(1).should("contain", "name");
+
+      // assert you cannot edit the data displayed.
+      // This can be verified with the presence of the no-user-select class that Monaco add on readonly content.
+      cy.get(".monaco-editor").should("have.class", "no-user-select");
+
+      // click on the compare tab
+      cy.get("#Compare").click();
+
+      // assert you can compare two different versions, and that there are differences.
+      cy.get(".editor.modified")
+        .find(".view-line")
+        .eq(4)
+        .should("contain", '"address_r1": "1.2.3.8/32",');
+
+      cy.get(".editor.original")
+        .find(".view-line")
+        .eq(4)
+        .should("contain", '"address_r1": "1.2.3.5/32",');
+    });
+
+    it("2.1.7 Delete previously created instance", () => {
       cy.visit("/console/");
 
       // Add interceptions for the delete and get call to be able to catch responses later on.

@@ -191,7 +191,7 @@ describe("ServiceInstanceDetailsPage", () => {
     server.close();
   });
 
-  it("Should render a success view without config and update version tags based on selected version in history-section", async () => {
+  it("Should render a success view without config", async () => {
     const server = defaultServer;
 
     server.listen();
@@ -208,6 +208,101 @@ describe("ServiceInstanceDetailsPage", () => {
       "Version: 4",
     );
 
+    // Test that the table has collapsibles
+    // this value is located inside the collapsible section.
+    expect(screen.getByText(/inmanta\-lab/i)).not.toBeVisible();
+
+    await act(async () => {
+      await userEvent.click(
+        screen.getByRole("button", {
+          name: /expand row 1/i,
+        }),
+      );
+    });
+
+    // In Version 4, the site.name should be "inmanta-lab".
+    // assert that we can see the site values now.
+    expect(screen.getByText(/inmanta\-lab/i)).toBeVisible();
+
+    // Test the sorting and expand/collapse all
+    const sortToggle = screen.getByRole("button", {
+      name: /attribute/i,
+    });
+
+    await act(async () => {
+      await userEvent.click(sortToggle);
+    });
+
+    const rowKeys = screen.getAllByTestId("attribute-key");
+
+    expect(rowKeys[0]).toHaveTextContent("epc_version");
+
+    const tableOptionsToggle = screen.getByRole("button", {
+      name: /table\-options/i,
+    });
+
+    await act(async () => {
+      await userEvent.click(tableOptionsToggle);
+    });
+
+    await act(async () => {
+      const tableOptions = screen.getAllByRole("menuitem");
+
+      expect(tableOptions).toHaveLength(3);
+      // collapse all
+      await userEvent.click(tableOptions[0]);
+    });
+
+    expect(screen.getByText(/inmanta\-lab/i)).not.toBeVisible();
+
+    await act(async () => {
+      await userEvent.click(tableOptionsToggle);
+    });
+
+    await act(async () => {
+      const tableOptions = screen.getAllByRole("menuitem");
+
+      expect(tableOptions).toHaveLength(3);
+      // revert sorting
+      await userEvent.click(tableOptions[2]);
+    });
+
+    const rowKeysResetted = screen.getAllByTestId("attribute-key");
+
+    expect(rowKeysResetted[0]).toHaveTextContent("name");
+
+    await act(async () => {
+      await userEvent.click(tableOptionsToggle);
+    });
+
+    await act(async () => {
+      const tableOptions = screen.getAllByRole("menuitem");
+
+      expect(tableOptions).toHaveLength(3);
+      // expand all
+      await userEvent.click(tableOptions[1]);
+    });
+
+    expect(screen.getByText(/inmanta\-lab/i)).toBeVisible();
+
+    // Test that it only has active and candidate attributes for this version
+    const select = screen.getByRole("combobox", {
+      name: /select\-attributeset/i,
+    });
+
+    // change the attributeSet to candidate.
+    await act(async () => {
+      await userEvent.click(select);
+      const options = screen.getAllByRole("option");
+
+      // expect only two options, active and candidate
+      expect(options).toHaveLength(2);
+      const candidate_option = options[1];
+
+      await userEvent.selectOptions(select, candidate_option);
+      expect(select).toHaveValue("candidate_attributes");
+    });
+
     await act(async () => {
       await userEvent.click(screen.getByRole("cell", { name: "2" }));
     });
@@ -216,6 +311,70 @@ describe("ServiceInstanceDetailsPage", () => {
     expect(screen.getByTestId("selected-version")).toHaveTextContent(
       "Version: 2",
     );
+
+    // second Version has only a candidate set
+    const select2 = screen.getByRole("combobox", {
+      name: /select\-attributeset/i,
+    });
+
+    await act(async () => {
+      await userEvent.click(select2);
+      const options = screen.getAllByRole("option");
+
+      // expect only two options, active and candidate
+      expect(options).toHaveLength(1);
+      expect(select2).toHaveValue("candidate_attributes");
+    });
+
+    await act(async () => {
+      await userEvent.click(
+        screen.getByRole("button", {
+          name: /expand row 1/i,
+        }),
+      );
+    });
+
+    // In Version 2, the site.name should be "inmanta-lab-0".
+    expect(screen.getByText("inmanta-lab-0")).toBeVisible();
+
+    // Go to the JSON view, check that the data is displayed but not editable. Typing shouldn't affect the data.
+    const toggleJson = screen.getByText(/json\-editor/i);
+
+    await act(async () => {
+      await userEvent.click(toggleJson);
+    });
+
+    // expect the view to be updated
+    expect(screen.getByTestId("loading-spinner")).toBeVisible();
+
+    // We can't test the monaco editor in jest yet, this is covered in the E2E cases.
+    // We can just test that the dropdown is now pressent too and set on the candidate set.
+    expect(
+      screen.getByRole("combobox", {
+        name: /select\-attributeset/i,
+      }),
+    ).toHaveValue("candidate_attributes");
+
+    // go back to the latest version
+    await act(async () => {
+      await userEvent.click(screen.getByRole("cell", { name: "4" }));
+    });
+
+    // Change view on compare, and just like before, we can't test the monaco editor in jest,
+    // so we will assert that the dropdowns have changed accordingly.
+    const toggleCompare = screen.getByText(/compare/i);
+
+    await act(async () => {
+      await userEvent.click(toggleCompare);
+    });
+
+    const selects = screen.getAllByRole("combobox");
+
+    expect(selects).toHaveLength(4);
+    expect(selects[0]).toHaveValue("4");
+    expect(selects[1]).toHaveValue("active_attributes");
+    expect(selects[2]).toHaveValue("4");
+    expect(selects[3]).toHaveValue("candidate_attributes");
 
     // There shouldn't be a documentation tab for this Instance and ServiceModel
     expect(screen.queryByText("Documentation")).not.toBeInTheDocument();

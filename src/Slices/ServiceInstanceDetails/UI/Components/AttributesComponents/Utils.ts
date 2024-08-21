@@ -37,9 +37,8 @@ export const getAvailableAttributesSets = (
   logs: InstanceLog[],
   version: string,
 ): Partial<Record<AttributeSets, InstanceAttributeModel>> => {
-  const selectedLog: InstanceLog | undefined = logs.find(
-    (log: InstanceLog) => String(log.version) === version,
-  );
+  const selectedLog: InstanceLog | null =
+    logs.find((log: InstanceLog) => String(log.version) === version) || null;
 
   if (!selectedLog) return {};
 
@@ -153,7 +152,7 @@ export const sortTreeRows = (
     return data
       .map((row) => ({
         ...row,
-        children: row.children ? sortData(row.children) : undefined,
+        children: row.children ? sortData(row.children) : [],
       }))
       .sort(compare);
   };
@@ -161,7 +160,13 @@ export const sortTreeRows = (
   return sortData(tableData);
 };
 
-export const getAvailableVersions = (instanceLogs: InstanceLog[]) => {
+/**
+ * Helper method to get the list of versions available in the history logs.
+ *
+ * @param {InstanceLog[]} instanceLogs
+ * @returns string[] An array with the available versions in the history logs.
+ */
+export const getAvailableVersions = (instanceLogs: InstanceLog[]): string[] => {
   const availableVersions: string[] = [];
 
   instanceLogs.forEach((log) => {

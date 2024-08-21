@@ -10,7 +10,16 @@ export const instanceData: ServiceInstanceModel = {
   desired_state_version: 4,
   config: {},
   state: "up",
-  candidate_attributes: null,
+  candidate_attributes: {
+    name: "core1",
+    site: {
+      name: "inmanta-lab-0",
+      infra_vendor: "vcenter",
+    },
+    system_id: 1,
+    epc_version: "11.3.2-1",
+    telco_ip_range: "192.168.126.0/24",
+  },
   active_attributes: {
     name: "core1",
     site: {
@@ -43,8 +52,17 @@ export const historyData: InstanceLog[] = [
     timestamp: "2022-09-02T12:01:19.626854+00:00",
     config: {},
     state: "up",
-    candidate_attributes: null,
     active_attributes: {
+      name: "core1",
+      site: {
+        name: "inmanta-lab",
+        infra_vendor: "vcenter",
+      },
+      system_id: 1,
+      epc_version: "11.3.2-1",
+      telco_ip_range: "192.168.126.0/24",
+    },
+    candidate_attributes: {
       name: "core1",
       site: {
         name: "inmanta-lab",
@@ -216,7 +234,7 @@ export const historyData: InstanceLog[] = [
     candidate_attributes: {
       name: "core1",
       site: {
-        name: "inmanta-lab",
+        name: "inmanta-lab-0",
         infra_vendor: "vcenter",
       },
       system_id: 1,
@@ -301,7 +319,7 @@ export const historyData: InstanceLog[] = [
     candidate_attributes: {
       name: "core1",
       site: {
-        name: "inmanta-lab",
+        name: "inmanta-lab-0",
         infra_vendor: "vcenter",
       },
       system_id: null,
@@ -1468,3 +1486,111 @@ export const historyDataWithDocumentation: InstanceLog[] = [
     transfer_context: "auto",
   },
 ];
+
+export const JSONSchema = {
+  data: {
+    $defs: {
+      clab_host_t: {
+        enum: [
+          "node1.ii.inmanta.com",
+          "node9.ii.inmanta.com",
+          "node11.ii.inmanta.com",
+          "node12.ii.inmanta.com",
+          "node13.ii.inmanta.com",
+        ],
+        title: "clab_host_t",
+        type: "string",
+      },
+      debug_level_t: {
+        enum: ["INFO", "DEBUG", "ERROR", "WARNING"],
+        title: "debug_level_t",
+        type: "string",
+      },
+      peerings: {
+        additionalProperties: false,
+        properties: {
+          peer_address: {
+            format: "ipv4",
+            title: "Peer Address",
+            type: "string",
+          },
+          peer_asn: {
+            title: "Peer Asn",
+            type: "integer",
+          },
+          allowed_prefixes: {
+            anyOf: [
+              {
+                items: {
+                  format: "ipv4network",
+                  type: "string",
+                },
+                type: "array",
+              },
+              {
+                type: "null",
+              },
+            ],
+            default: null,
+            title: "Allowed Prefixes",
+          },
+        },
+        required: ["peer_address", "peer_asn"],
+        title: "peerings",
+        type: "object",
+      },
+    },
+    additionalProperties: false,
+    properties: {
+      name: {
+        maxLength: 12,
+        minLength: 2,
+        title: "Name",
+        type: "string",
+      },
+      lab_index: {
+        maximum: 255,
+        minimum: 0,
+        title: "Lab Index",
+        type: "integer",
+      },
+      lab_topology: {
+        title: "Lab Topology",
+        type: "string",
+      },
+      loglevel: {
+        allOf: [
+          {
+            $ref: "#/$defs/debug_level_t",
+          },
+        ],
+        default: "INFO",
+      },
+      iso_version: {
+        default: "dev",
+        pattern: "^((\\d+(-dev)?)|dev)$",
+        title: "Iso Version",
+        type: "string",
+      },
+      clab_host: {
+        $ref: "#/$defs/clab_host_t",
+      },
+      description: {
+        default: "",
+        title: "Description",
+        type: "string",
+      },
+      peerings: {
+        default: [],
+        items: {
+          $ref: "#/$defs/peerings",
+        },
+        title: "Peerings",
+        type: "array",
+      },
+    },
+    required: ["name", "lab_index", "lab_topology", "clab_host"],
+    title: "containerlab",
+    type: "object",
+  },
+};

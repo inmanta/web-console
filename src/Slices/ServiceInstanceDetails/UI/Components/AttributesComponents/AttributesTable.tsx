@@ -153,6 +153,8 @@ export const AttributesTable: React.FC<Props> = ({
         break;
       case "Reset-sort":
         setTableData(formatTreeRowData(attributeSets[selectedSet]));
+        setActiveSortIndex(0);
+        setActiveSortDirection(undefined);
         break;
       default:
         break;
@@ -281,10 +283,10 @@ export const AttributesTable: React.FC<Props> = ({
 
     return [
       <TreeRowWrapper key={rowIndex} row={{ props: treeRow.props }}>
-        <Td dataLabel="name" treeRow={treeRow}>
+        <Td dataLabel="name" treeRow={treeRow} data-testid="attribute-key">
           <TableText>{node.name}</TableText>
         </Td>
-        <Td dataLabel="value" width={60}>
+        <Td dataLabel="value" width={60} data-testid={node.name}>
           <TableText wrapModifier="truncate">{printValue(node)}</TableText>
         </Td>
       </TreeRowWrapper>,
@@ -333,6 +335,7 @@ export const AttributesTable: React.FC<Props> = ({
               <FormSelectOption
                 value={option}
                 key={index}
+                aria-label={option}
                 label={words(option as AttributeSets)}
               />
             ))}
@@ -346,14 +349,26 @@ export const AttributesTable: React.FC<Props> = ({
             onSelect={onSelect}
           >
             <DropdownList>
-              <DropdownItem value="Collapse-all" key="Collapse-all">
-                Collapse all
+              <DropdownItem
+                aria-label="Collapse-all"
+                value="Collapse-all"
+                key="Collapse-all"
+              >
+                {words("instanceDetails.collapseAll")}
               </DropdownItem>
-              <DropdownItem value="Expand-all" key="Expand-all">
-                Expand all
+              <DropdownItem
+                aria-label="Expand-all"
+                value="Expand-all"
+                key="Expand-all"
+              >
+                {words("instanceDetails.expandAll")}
               </DropdownItem>
-              <DropdownItem value="Reset-sort" key="Reset-sort">
-                Reset Sorting
+              <DropdownItem
+                aria-label="Reset-sort"
+                value="Reset-sort"
+                key="Reset-sort"
+              >
+                {words("instanceDetails.resetSort")}
               </DropdownItem>
             </DropdownList>
           </Dropdown>
@@ -366,12 +381,12 @@ export const AttributesTable: React.FC<Props> = ({
             <Th
               sort={getSortParams()}
               info={{
-                tooltip: "The sorting can be resetted in the table options.",
+                tooltip: words("instanceDetails.table.sorting.tooltip"),
               }}
             >
-              Attribute
+              {words("instanceDetails.table.attributeKey")}
             </Th>
-            <Th>Value</Th>
+            <Th>{words("instanceDetails.table.valueKey")}</Th>
           </Tr>
         </Thead>
         <Tbody>{renderRows(tableData)}</Tbody>

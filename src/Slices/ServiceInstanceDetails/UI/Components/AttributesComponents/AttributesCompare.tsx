@@ -8,7 +8,6 @@ import {
   FormSelectOption,
 } from "@patternfly/react-core";
 import styled from "styled-components";
-
 import { InstanceAttributeModel } from "@/Core";
 import { InstanceLog } from "@/Slices/ServiceInstanceHistory/Core/Domain";
 import { words } from "@/UI";
