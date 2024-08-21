@@ -178,7 +178,7 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
                 })}
                 isDisabled={editDisabled}
               >
-                {words("inventory.instanceComposer.editButton")}
+                {words("instanceComposer.editButton")}
               </Link>
             </MenuItem>
           )}
@@ -191,7 +191,7 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
                   instance: instance.id,
                 })}
               >
-                {words("inventory.instanceComposer.showButton")}
+                {words("instanceComposer.showButton")}
               </Link>
             </MenuItem>
           )}

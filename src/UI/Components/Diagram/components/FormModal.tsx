@@ -82,8 +82,7 @@ const FormModal = ({
       isFullWidth
       isFullHeight={false}
     >
-      {selected?.name ||
-        words("inventory.instanceComposer.formModal.placeholder")}
+      {selected?.name || words("instanceComposer.formModal.placeholder")}
     </MenuToggle>
   );
 
@@ -210,8 +209,8 @@ const FormModal = ({
       isOpen={!!cellToEdit}
       title={words(
         cellToEdit
-          ? "inventory.instanceComposer.formModal.edit.title"
-          : "inventory.instanceComposer.formModal.create.title",
+          ? "instanceComposer.formModal.edit.title"
+          : "instanceComposer.formModal.create.title",
       )}
       variant={"small"}
       onClose={() => {

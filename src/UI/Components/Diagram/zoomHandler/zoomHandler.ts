@@ -1,4 +1,5 @@
 import { ui } from "@inmanta/rappid";
+import { words } from "@/UI/words";
 import exitFullscreen from "../icons/exit-fullscreen.svg";
 import fitToScreen from "../icons/fit-to-screen.svg";
 import requestFullscreen from "../icons/request-fullscreen.svg";
@@ -19,7 +20,6 @@ interface IconButton extends ui.widgets.button {
  * This class extends the ui.widgets.button class and represents a button with an icon.
  * It provides methods for setting the icon and the tooltip of the button.
  *
-
  */
 const IconButton = ui.widgets.button.extend({
   render: function () {
@@ -62,18 +62,18 @@ const IconButton = ui.widgets.button.extend({
 });
 
 /**
- * NavigatorService class
+ * ZoomHandlerService class
  *
  * This class is responsible for managing the navigation of the canvas.
  * It provides methods for zoom to fit, zooming in/out in the canvas and fullscreen toggle.
  *
  * @class
  * @property {ui.Toolbar} toolbar - The toolbar object that contains the navigation controls.
- * @method constructor - Constructs a new instance of the NavigatorService class.
+ * @method constructor - Constructs a new instance of the ZoomHandlerService class.
  * @param {HTMLElement} element - The HTML element that will contain the navigator.
  * @param {ui.PaperScroller} scroller - The scroller object that allows and zooming in the canvas.
  */
-export class NavigatorService {
+export class ZoomHandlerService {
   toolbar: ui.Toolbar;
 
   constructor(
@@ -89,11 +89,21 @@ export class NavigatorService {
         {
           type: "icon-button",
           name: "fullscreen",
+          attrs: {
+            button: {
+              "data-testid": "fullscreen",
+            },
+          },
         },
         {
           type: "icon-button",
           name: "fit-to-screen",
-          tooltip: "Fit to screen",
+          tooltip: words("instanceComposer.zoomHandler.zoomToFit"),
+          attrs: {
+            button: {
+              "data-testid": "fit-to-screen",
+            },
+          },
         },
         {
           id: "zoomSlider",
@@ -102,8 +112,12 @@ export class NavigatorService {
           max: 5 * 100,
           attrs: {
             input: {
-              "data-tooltip": "Slide to zoom",
+              "data-tooltip": words("instanceComposer.zoomHandler.zoom"),
               "data-tooltip-position": "bottom",
+              "data-testid": "slider-input",
+            },
+            output: {
+              "data-testid": "slider-output",
             },
           },
         },
@@ -116,6 +130,8 @@ export class NavigatorService {
     });
 
     this.toolbar.render();
+    this.toolbar.el.dataset.testid = "zoomHandler";
+    this.toolbar.el.dataset.testid = "zoomHandler";
     this.updateFullscreenStyling();
     this.element.appendChild(this.toolbar.el);
 
@@ -134,36 +150,40 @@ export class NavigatorService {
     this.toolbar.on("fit-to-screen:pointerclick", () => this.fitToScreen());
     this.toolbar.on("fullscreen:pointerclick", () => this.toggleFullscreen());
 
-    document.addEventListener("fullscreenchange", () =>
-      this.updateFullscreenStyling(),
-    );
+    this.updateFullscreenStyling = this.updateFullscreenStyling.bind(this);
+    this.updateSliderOnInput = this.updateSliderOnInput.bind(this);
 
-    document
-      .getElementById("zoomSlider")
-      ?.addEventListener("input", (event) => {
-        if (!event.target) {
-          return;
-        }
-        const slider = event.target as HTMLInputElement;
+    document.addEventListener("fullscreenchange", this.updateFullscreenStyling);
 
-        this.updateSliderProgressBar(slider);
-      });
+    const zoomSlider = document.getElementById("zoomSlider");
+
+    if (zoomSlider) {
+      zoomSlider.addEventListener("input", this.updateSliderOnInput);
+    }
   }
 
   /**
-   * Fits all of the canvas'es elements to the screen.
+   * Fits all of the canvas's elements to the screen.
    *
    * This method is responsible for adjusting the zoom level of the canvas so that it shows all it's elements on the screen.
    * It uses the zoomToFit method of the scroller object, which is a joint.ui.PaperScroller.
    */
   fitToScreen() {
     this.scroller.zoomToFit({ useModelGeometry: true, padding: 20 });
-    const slider = document.getElementById("zoomSlider")
-      ?.children[0] as HTMLInputElement;
+    const slider = document.getElementById("zoomSlider")?.children[0];
 
     if (!slider) {
       return;
     }
+
+    this.updateSliderProgressBar(slider as HTMLInputElement);
+  }
+
+  updateSliderOnInput(event) {
+    if (!event.target) {
+      return;
+    }
+    const slider = event.target as HTMLInputElement;
 
     this.updateSliderProgressBar(slider);
   }
@@ -245,7 +265,9 @@ export class NavigatorService {
         ?.forEach((el) => ((el as HTMLElement).style.display = "none"));
 
       fullscreenButton.setIcon(`${exitFullscreen}`);
-      fullscreenButton.setTooltip("Exit full screen");
+      fullscreenButton.setTooltip(
+        words("instanceComposer.zoomHandler.fullscreen.exit"),
+      );
     } else {
       this.changeDisplay("#page-sidebar", "flex");
       this.changeDisplay("#page-header", "grid");
@@ -256,11 +278,24 @@ export class NavigatorService {
         ?.forEach((el) => ((el as HTMLElement).style.display = "block"));
 
       fullscreenButton.setIcon(`${requestFullscreen}`);
-      fullscreenButton.setTooltip("Toggle full screen");
+      fullscreenButton.setTooltip(
+        words("instanceComposer.zoomHandler.fullscreen.toggle"),
+      );
     }
   }
 
   remove() {
     this.toolbar.remove();
+
+    document.removeEventListener(
+      "fullscreenchange",
+      this.updateFullscreenStyling,
+    );
+
+    const zoomSlider = document.getElementById("zoomSlider");
+
+    if (zoomSlider) {
+      zoomSlider.removeEventListener("input", this.updateSliderOnInput);
+    }
   }
 }

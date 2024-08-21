@@ -12,20 +12,28 @@ import DictModal from "./components/DictModal";
 import FormModal from "./components/FormModal";
 import Toolbar from "./components/Toolbar";
 import { createConnectionRules } from "./helpers";
-import { NavigatorService } from "./navigator/navigator";
 import { StencilSidebar } from "./stencil/stencil";
+import { ZoomHandlerService } from "./zoomHandler";
+
+/**
+ * Properties for the Header component.
+ *
+ * @interface
+ * @prop {boolean} editable - A flag indicating if the diagram is editable.
+ */
+interface Props {
+  editable: boolean;
+}
 
 /**
  * Canvas component for creating, displaying and editing an Instance.
  *
- * @param {ServiceModel[]} services - The list of service models .
- * @param {ServiceModel} mainService - The main service model.
- * @param {InstanceWithRelations} instance - The instance with references.
+ * @props {Props} props - The properties passed to the component.
+ * @prop {boolean} props.editable - A flag indicating if the diagram is editable.
+ *
  * @returns {JSX.Element} The rendered Canvas component.
  */
-export const Canvas: React.FC<{
-  editable: boolean;
-}> = ({ editable }) => {
+export const Canvas: React.FC<Props> = ({ editable }) => {
   const { mainService, instance, serviceModels, relatedInventories } =
     useContext(InstanceComposerContext);
   const { setInstancesToSend } = useContext(CanvasContext);
@@ -136,7 +144,7 @@ export const Canvas: React.FC<{
     if (!ZoomHandler.current || !scroller) {
       return;
     }
-    const navigator = new NavigatorService(ZoomHandler.current, scroller);
+    const navigator = new ZoomHandlerService(ZoomHandler.current, scroller);
 
     return () => navigator.remove();
   }, [scroller]);

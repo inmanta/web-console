@@ -26,8 +26,8 @@ import { EnvSelectorWithProvider } from "./EnvSelector";
  * Properties for the Header component.
  *
  * @interface
- * @property {boolean} noEnv - A flag indicating whether there is no environment selected.
- * @property {function} onNotificationsToggle - A function to be called when the notifications badge is clicked.
+ * @prop {boolean} noEnv - A flag indicating whether there is no environment selected.
+ * @prop {function} onNotificationsToggle - A function to be called when the notifications badge is clicked.
  */
 interface Props {
   noEnv: boolean;
@@ -40,9 +40,9 @@ interface Props {
  * This component is responsible for rendering the header of the application.
  *
  * @component
- * @param {Props} props - The properties that define the behavior of the header.
- * @param {boolean} props.noEnv - A flag indicating whether there is no environment selected.
- * @param {function} props.onNotificationsToggle - A function to be called when the notifications badge is clicked.
+ * @props {Props} props - The properties that define the behavior of the header.
+ * @prop {boolean} props.noEnv - A flag indicating whether there is no environment selected.
+ * @prop {function} props.onNotificationsToggle - A function to be called when the notifications badge is clicked.
  * @returns {ReactElement} The rendered Header component.
  */
 export const Header: React.FC<Props> = ({ noEnv, onNotificationsToggle }) => {

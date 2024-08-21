@@ -204,7 +204,7 @@ export function appendInstance(
   );
 
   if (!serviceInstanceModel) {
-    throw Error(words("inventory.instanceComposer.errorMessage"));
+    throw Error(words("instanceComposer.errorMessage"));
   }
   const instanceAsTable = new ServiceEntityBlock().setName(
     serviceInstance.service_entity,

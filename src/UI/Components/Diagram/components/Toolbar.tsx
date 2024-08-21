@@ -12,6 +12,14 @@ import { CanvasContext, InstanceComposerContext } from "../Context/Context";
 import { getServiceOrderItems } from "../helpers";
 import { DiagramHandlers } from "../init";
 
+/**
+ * Properties for the Toolbar component.
+ *
+ * @interface
+ * @prop {string} serviceName - The name of the service.
+ * @prop {boolean} editable - A flag indicating if the diagram is editable.
+ * @prop {DiagramHandlers | null} diagramHandlers - The handlers for various diagram actions.
+ */
 interface Props {
   serviceName: string;
   editable: boolean;
@@ -25,10 +33,10 @@ interface Props {
  * It contains controls to cancel creating or editing instance or sending serviceOrderItems to the backend.
  * Also, it shows feedback notification to the user.
  *
- * @param {Object} props - The properties passed to the component.
- * @param {string} props.serviceName - The name of the service.
- * @param {boolean} props.editable - A flag indicating if the diagram is editable.
- * @param {DiagramHandlers | null} props.diagramHandlers - The handlers for various diagram actions.
+ * @props {Props} props - The properties passed to the component.
+ * @prop {string} props.serviceName - The name of the service.
+ * @prop {boolean} props.editable - A flag indicating if the diagram is editable.
+ * @prop {DiagramHandlers | null} props.diagramHandlers - The handlers for various diagram actions.
  *
  * @returns {React.FC} The Toolbar component.
  */
@@ -97,7 +105,7 @@ const Toolbar: React.FC<Props> = ({
     if (oderMutation.isSuccess) {
       //If response is successful then show feedback notification and redirect user to the service inventory view
       setAlertType(AlertVariant.success);
-      setAlertMessage(words("inventory.instanceComposer.success"));
+      setAlertMessage(words("instanceComposer.success"));
 
       setTimeout(() => {
         navigate(url);
@@ -121,8 +129,8 @@ const Toolbar: React.FC<Props> = ({
           data-testid="ToastAlert"
           title={
             alertType === AlertVariant.success
-              ? words("inventory.instanceComposer.success.title")
-              : words("inventory.instanceComposer.failed.title")
+              ? words("instanceComposer.success.title")
+              : words("instanceComposer.failed.title")
           }
           message={alertMessage}
           setMessage={setAlertMessage}
