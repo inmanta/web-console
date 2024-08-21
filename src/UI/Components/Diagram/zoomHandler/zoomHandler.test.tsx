@@ -29,7 +29,7 @@ describe("ZoomHandler", () => {
     expect(screen.getByTestId("zoomHandler")).toBeInTheDocument();
   });
 
-  it("should fire exitFullscreen function when clicking fullscreen button", async () => {
+  it("should fire requestFullscreen9() function when clicking fullscreen button", async () => {
     //jest + jsdom doesn't implement the fullscreen API, they are mocked in the testSetup()
     const fullScreenSpy = jest.spyOn(
       document.documentElement,
@@ -45,7 +45,7 @@ describe("ZoomHandler", () => {
     expect(fullScreenSpy).toHaveBeenCalled();
   });
 
-  it("should fire exitFullscreen function when clicking fullscreen button and the fullscreenElement exist", async () => {
+  it("should fire exitFullscreen() function when clicking fullscreen button and the fullscreenElement exist", async () => {
     //mock that fullscreen is active, by default it's null
     Object.defineProperty(document, "fullscreenElement", {
       writable: false,
@@ -63,8 +63,8 @@ describe("ZoomHandler", () => {
     expect(exitFullScreenSpy).toHaveBeenCalled();
   });
 
-  it("should fire scroller's function zoomToFit when clicking fit-to-screen button", async () => {
-    //jest + jsdom doesn't implement the fullscreen API, they are mocked in the testSetup()
+  it("should fire scroller's function zoomToFit() when clicking fit-to-screen button", async () => {
+    //we aren't testing the zoomToFit function itself as that is part of JointJS which use logic that isn't supported by Jest
     const zoomToFit = jest.spyOn(scroller, "zoomToFit");
 
     const fitToScreenButton = screen.getByTestId("fit-to-screen");
@@ -76,8 +76,7 @@ describe("ZoomHandler", () => {
     expect(zoomToFit).toHaveBeenCalled();
   });
 
-  it("should update slider output element when slider is triggered", async () => {
-    //jest + jsdom doesn't implement the fullscreen API, they are mocked in the testSetup()
+  it("should update slider input & output element when slider is triggered", async () => {
     const initialSliderOutput = screen.getByTestId("slider-output");
 
     expect(initialSliderOutput).toHaveTextContent("100");
