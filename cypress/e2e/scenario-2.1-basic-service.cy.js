@@ -434,7 +434,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[data-testid="address_r1"]').should("contain", "1.2.3.8/32");
 
       // click on the JSON-editor tab
-      cy.get("#JSON-Editor").click();
+      cy.get("#JSON").click();
       cy.get(".view-line").eq(1).should("contain", "name");
 
       // assert you cannot edit the data displayed.

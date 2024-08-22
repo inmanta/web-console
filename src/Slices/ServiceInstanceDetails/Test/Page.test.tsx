@@ -338,7 +338,7 @@ describe("ServiceInstanceDetailsPage", () => {
     expect(screen.getByText("inmanta-lab-0")).toBeVisible();
 
     // Go to the JSON view
-    const toggleJson = screen.getByText(/json\-editor/i);
+    const toggleJson = screen.getByText(/json/i);
 
     await act(async () => {
       await userEvent.click(toggleJson);
