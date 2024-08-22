@@ -29,7 +29,7 @@ describe("ZoomHandler", () => {
     expect(screen.getByTestId("zoomHandler")).toBeInTheDocument();
   });
 
-  it("should fire requestFullscreen9() function when clicking fullscreen button", async () => {
+  it("should fire requestFullscreen() function when clicking fullscreen button", async () => {
     //jest + jsdom doesn't implement the fullscreen API, they are mocked in the testSetup()
     const fullScreenSpy = jest.spyOn(
       document.documentElement,
