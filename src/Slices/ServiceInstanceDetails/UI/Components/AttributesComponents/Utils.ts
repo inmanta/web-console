@@ -20,11 +20,11 @@ export interface TreeRowData {
 export enum AttributeViewToggles {
   TABLE = "Table",
   COMPARE = "Compare",
-  EDITOR = "JSON-Editor",
+  EDITOR = "JSON",
 }
 
 // Type representing the possible views for the AttributesTabContent.
-export type AttributeViews = "Table" | "Compare" | "JSON-Editor";
+export type AttributeViews = "Table" | "Compare" | "JSON";
 
 /**
  * Method to get the attributeSets for a given version.
