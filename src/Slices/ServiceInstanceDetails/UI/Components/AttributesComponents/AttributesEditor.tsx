@@ -22,8 +22,8 @@ interface Props {
  * It uses the JSON-Editor from the React Monaco Editor.
  *
  * @Props {Props} - The props of the component
- *  @prop {string[]} dropdownOptions - Dropdown options for the available attributesets for the active version on the InstanceDetails page
- *  @prop {Partial<Record<AttributeSets, InstanceAttributeModel>>} attributeSets - The available attributesets for the active version on the InstanceDetails page
+ *  @prop {string[]} dropdownOptions - Dropdown options for the available attribute sets for the active version on the InstanceDetails page
+ *  @prop {Partial<Record<AttributeSets, InstanceAttributeModel>>} attributeSets - The available attribute sets for the active version on the InstanceDetails page
  *  @prop {string} service_entity - the service entity name of the instance
  * @returns {React.FC<Props>} A React Component displaying the selected AttributeSet in a JSON-Editor
  */
