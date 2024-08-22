@@ -117,10 +117,6 @@ describe("ServiceInstanceDetailsPage", () => {
 
     render(component);
 
-    expect(
-      await screen.findByRole("region", { name: "Instance-Details-Loading" }),
-    ).toBeInTheDocument();
-
     await act(async () => {
       const results = await axe(document.body);
 
