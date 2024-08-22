@@ -5,6 +5,7 @@ import {
   historyDataWithDocumentation,
   instanceData,
   instanceDataWithDocumentation,
+  JSONSchema,
   serviceModel,
   serviceModelWithDocumentation,
 } from "./mockData";
@@ -95,6 +96,13 @@ export const defaultServer = setupServer(
   http.get("/lsm/v1/service_inventory/mobileCore/1d96a1ab", () => {
     return HttpResponse.json({
       data: instanceData,
+    });
+  }),
+
+  // get json schema for editor
+  http.get("/lsm/v1/service_catalog/mobileCore/schema", () => {
+    return HttpResponse.json({
+      data: JSONSchema,
     });
   }),
 );

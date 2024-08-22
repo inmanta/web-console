@@ -9,7 +9,7 @@ import { InstanceAttributeModel } from "@/Core";
 import { InstanceLog } from "@/Slices/ServiceInstanceHistory/Core/Domain";
 import { MarkdownCard } from "@/Slices/ServiceInventory/UI/Tabs/MarkdownCard";
 import { words } from "@/UI";
-import { ErrorView } from "@/UI/Components";
+import { ErrorView, LoadingView } from "@/UI/Components";
 import { DynamicFAIcon } from "@/UI/Components/FaIcon";
 import { InstanceDetailsContext } from "../../Core/Context";
 import { TabContentWrapper } from ".";
@@ -48,6 +48,14 @@ export const DocumentationTabContent: React.FC<Props> = ({
 }) => {
   const { logsQuery } = useContext(InstanceDetailsContext);
   const [expanded, setExpanded] = useState(0);
+
+  if (logsQuery.isLoading) {
+    return (
+      <TabContentWrapper id={"documentation"}>
+        <LoadingView />
+      </TabContentWrapper>
+    );
+  }
 
   if (!logsQuery.data) {
     return (

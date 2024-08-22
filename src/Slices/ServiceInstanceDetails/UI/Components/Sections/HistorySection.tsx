@@ -18,7 +18,7 @@ import {
   InstanceState,
   LoadingView,
 } from "@/UI/Components";
-import { InstanceDetailsContext } from "../../Core/Context";
+import { InstanceDetailsContext } from "../../../Core/Context";
 
 /**
  * The HistorySection Component
@@ -67,15 +67,13 @@ export const HistorySection: React.FC = () => {
             <Table aria-label="VersionHistoryTable" isStickyHeader>
               <Thead>
                 <Tr>
-                  <Th width={25}>
+                  <Th style={{ minWidth: "100px" }}>
                     {words("instanceDetails.history.table.version")}
                   </Th>
-                  <Th width={35}>
+                  <Th style={{ minWidth: "100px" }}>
                     {words("instanceDetails.history.table.date")}
                   </Th>
-                  <Th width={40}>
-                    {words("instanceDetails.history.table.status")}
-                  </Th>
+                  <Th>{words("instanceDetails.history.table.status")}</Th>
                 </Tr>
               </Thead>
               <Tbody>

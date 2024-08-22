@@ -10,6 +10,7 @@ interface Props {
   service_entity: string;
   data: string;
   onChange: (value: string, valid: boolean) => void;
+  readOnly?: boolean;
 }
 
 /**
@@ -19,6 +20,7 @@ interface Props {
  *  @prop {string} service_entity - The service entity.
  *  @prop {string} data - The data to be displayed in the editor.
  *  @prop {function} onChange - Callback method when the data is changed in the editor.
+ *  @prop {boolean} readOnly - Whether the editor should be readonly or not, defaults to false.
  *
  * @notes The JSON Editor component uses the Monaco Editor, React version.
  * for more information, see https://www.npmjs.com/package/@monaco-editor/react?activeTab=readme
@@ -30,6 +32,7 @@ export const JSONEditor: React.FC<Props> = ({
   service_entity,
   data,
   onChange,
+  readOnly = false,
 }) => {
   const { environmentHandler } = useContext(DependencyContext);
   const environment = environmentHandler.useId();
@@ -106,28 +109,31 @@ export const JSONEditor: React.FC<Props> = ({
   ) : (
     <EditorWrapper data-testid="JSON-Editor-Wrapper">
       <Editor
-        height={"calc(100vh - 550px)"}
+        height={"calc(100vh - 525px)"}
         width={"100%"}
         defaultLanguage="json"
         defaultValue={data}
         onChange={handleEditorChange}
         onValidate={handleOnValidate}
+        options={{ domReadOnly: readOnly, readOnly: readOnly }}
       />
-      <PanelWrapper variant="bordered" data-testid="Error-container">
-        {errors.length > 0 && (
-          <Alert
-            isInline
-            customIcon={<InfoAltIcon />}
-            isExpandable
-            variant="danger"
-            title={`Errors found : ${errors.length}`}
-          >
-            {errors.map((error, index) => (
-              <p key={index}>{error}</p>
-            ))}
-          </Alert>
-        )}
-      </PanelWrapper>
+      {!readOnly && (
+        <PanelWrapper variant="bordered" data-testid="Error-container">
+          {errors.length > 0 && (
+            <Alert
+              isInline
+              customIcon={<InfoAltIcon />}
+              isExpandable
+              variant="danger"
+              title={`Errors found : ${errors.length}`}
+            >
+              {errors.map((error, index) => (
+                <p key={index}>{error}</p>
+              ))}
+            </Alert>
+          )}
+        </PanelWrapper>
+      )}
     </EditorWrapper>
   );
 };

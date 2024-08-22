@@ -244,6 +244,16 @@ const dict = {
     "This tab is only available for the latest version.",
   "instanceDetails.documentation.noAttributeForVersion": (attributeName) =>
     `This version doesn't contain documentation for ${attributeName} yet.`,
+  active_attributes: "Active",
+  candidate_attributes: "Candidate",
+  rollback_attributes: "Rollback",
+  "instanceDetails.expandAll": "Expand all",
+  "instanceDetails.collapseAll": "Collapse all",
+  "instanceDetails.resetSort": "Reset sorting",
+  "instanceDetails.table.attributeKey": "Attribute",
+  "instanceDetails.table.valueKey": "Value",
+  "instanceDetails.table.sorting.tooltip":
+    "The sorting can be resetted in the table options.",
 
   /**
    * Config related text
