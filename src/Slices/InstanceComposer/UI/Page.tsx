@@ -14,7 +14,7 @@ export const Page = () => {
 
   if (!featureManager.isComposerEnabled()) {
     <EmptyView
-      message={words("inventory.instanceComposer.disabled")}
+      message={words("instanceComposer.disabled")}
       aria-label="ComposersView-Empty"
     />;
   }
@@ -37,7 +37,7 @@ const PageWrapper: React.FC<React.PropsWithChildren<unknown>> = ({
   <PageContainer
     aria-label="Composer"
     {...props}
-    pageTitle={words("inventory.instanceComposer.title")}
+    pageTitle={words("instanceComposer.title")}
   >
     {children}
   </PageContainer>

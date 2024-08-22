@@ -307,7 +307,7 @@ it("renders shapes dict Value that can be viewed in dict Modal", async () => {
   const title = document.querySelector(".pf-v5-c-modal-box__title");
 
   expect(title).toHaveTextContent(
-    words("inventory.instanceComposer.dictModal")("dictOne"),
+    words("instanceComposer.dictModal")("dictOne"),
   );
 
   const value = document.querySelector(".pf-v5-c-code-block__code");

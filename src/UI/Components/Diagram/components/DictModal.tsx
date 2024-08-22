@@ -8,6 +8,11 @@ import {
 } from "@patternfly/react-core";
 import { CanvasContext } from "../Context/Context";
 
+/**
+ * Modal to display the values of a dictionary.
+ *
+ * @returns {React.FC} The DictModal component.
+ */
 const DictModal: React.FC = () => {
   const { dictToDisplay, setDictToDisplay } = useContext(CanvasContext);
   const [copied, setCopied] = useState(false);

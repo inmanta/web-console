@@ -22,17 +22,35 @@ import { DocumentationLinks } from "./Actions/DocumentationLinks";
 import { StatusButton } from "./Actions/StatusButton";
 import { EnvSelectorWithProvider } from "./EnvSelector";
 
+/**
+ * Properties for the Header component.
+ *
+ * @interface
+ * @prop {boolean} noEnv - A flag indicating whether there is no environment selected.
+ * @prop {function} onNotificationsToggle - A function to be called when the notifications badge is clicked.
+ */
 interface Props {
   noEnv: boolean;
   onNotificationsToggle(): void;
 }
 
+/**
+ * Header component of the application.
+ *
+ * This component is responsible for rendering the header of the application.
+ *
+ * @component
+ * @props {Props} props - The properties that define the behavior of the header.
+ * @prop {boolean} props.noEnv - A flag indicating whether there is no environment selected.
+ * @prop {function} props.onNotificationsToggle - A function to be called when the notifications badge is clicked.
+ * @returns {ReactElement} The rendered Header component.
+ */
 export const Header: React.FC<Props> = ({ noEnv, onNotificationsToggle }) => {
   const { routeManager, environmentHandler } = useContext(DependencyContext);
 
   return (
     <>
-      <Masthead>
+      <Masthead id="page-header">
         <MastheadToggle>
           <PageToggleButton
             variant="plain"
@@ -87,6 +105,9 @@ export const Header: React.FC<Props> = ({ noEnv, onNotificationsToggle }) => {
   );
 };
 
+/**
+ * A styled ToolbarItem component.
+ */
 const StyledToolbarItem = styled(ToolbarItem)`
   padding-left: 8px;
   padding-right: 8px;

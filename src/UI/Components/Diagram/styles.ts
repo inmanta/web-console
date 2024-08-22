@@ -4,33 +4,21 @@ import linkBttn from "./icons/link-button.svg";
 import removeBttn from "./icons/remove-button.svg";
 
 export const CanvasWrapper = styled.div`
+  display: flex;
   width: 100%;
   height: calc(80vh - 140px);
   position: relative;
   background: var(--pf-v5-global--palette--black-200);
   margin: 0;
   overflow: hidden;
-  .canvas {
+  border: 1px solid var(--pf-v5-global--BackgroundColor--200);
+
+  &.fullscreen {
+    position: fixed;
     top: 0;
-    bottom: 0;
     left: 0;
-    right: 0;
-    position: absolute;
-    background: var(--pf-v5-global--BackgroundColor--light-300);
-    border: 1px solid var(--pf-v5-global--BorderColor--100);
-
-    * {
-      font-family: var(--pf-v5-global--FontFamily--monospace);
-    }
-    .joint-paper-background {
-      background: var(--pf-v5-global--BackgroundColor--light-300);
-    }
-
-    .source-arrowhead,
-    .target-arrowhead {
-      fill: var(--pf-v5-global--palette--black-500);
-      stroke-width: 1;
-    }
+    width: 100vw;
+    height: 100vh;
   }
 
   #tabs-toolbar {

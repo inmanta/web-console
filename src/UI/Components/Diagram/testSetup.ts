@@ -3,6 +3,14 @@
  * This function sets up mock implementations for various properties and methods used by JointJS library that aren't supported by default in the Jest environment.
  */
 export const defineObjectsForJointJS = () => {
+  Object.defineProperty(document.documentElement, "requestFullscreen", {
+    writable: true,
+    value: jest.fn(),
+  });
+  Object.defineProperty(document, "exitFullscreen", {
+    writable: true,
+    value: jest.fn(),
+  });
   Object.defineProperty(window, "SVGAngle", {
     writable: true,
     value: jest.fn().mockImplementation(() => ({
