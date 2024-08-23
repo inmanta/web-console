@@ -4,7 +4,7 @@ import { InfoAltIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { useUrlStateWithString } from "@/Data";
 import { words } from "@/UI";
-import { InstanceDetailsContext } from "../../Core/Context";
+import { InstanceDetailsContext } from "../../../Core/Context";
 import { InstanceActions } from "./InstanceActions";
 
 interface Props {

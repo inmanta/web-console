@@ -13,7 +13,7 @@ import {
 } from "@patternfly/react-core";
 import { words } from "@/UI";
 import { DateWithTooltip, TextWithCopy } from "@/UI/Components";
-import { InstanceDetailsContext } from "../../Core/Context";
+import { InstanceDetailsContext } from "../../../Core/Context";
 
 /**
  * The DetailsSection Component
