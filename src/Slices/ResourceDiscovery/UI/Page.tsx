@@ -47,7 +47,7 @@ export const Page: React.FC = () => {
   const disabledDiscoveredResourcesView =
     !featureManager.isResourceDiscoveryEnabled();
 
-  //when sorting or filtering is triggered, reset the current page - TBA if filtering is added
+  //when sorting is triggered, reset the current page
   useEffect(() => {
     setCurrentPage({ kind: "CurrentPage", value: "" });
     // eslint-disable-next-line react-hooks/exhaustive-deps
