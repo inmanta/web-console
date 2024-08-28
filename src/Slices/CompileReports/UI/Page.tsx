@@ -43,11 +43,11 @@ export const Page: React.FC = () => {
     currentPage,
   });
 
-  //when sorting or filtering is triggered, reset the current page
+  //when sorting is triggered, reset the current page
   useEffect(() => {
     setCurrentPage({ kind: "CurrentPage", value: "" });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sort.order, filter.requested, filter.status]);
+  }, [sort.order]);
 
   return (
     <PageContainer pageTitle={words("compileReports.title")}>
