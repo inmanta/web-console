@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { dia } from "@inmanta/rappid";
 import { Field, InstanceAttributeModel } from "@/Core";
-import { ComposerServiceOrderItem, DictDialogData } from "../interfaces";
+import { DiagramHandlers } from "../init";
+import {
+  ComposerServiceOrderItem,
+  DictDialogData,
+  StencilState,
+} from "../interfaces";
 import { CanvasContext } from "./Context";
 
 /**
@@ -29,6 +34,9 @@ export const CanvasProvider: React.FC<React.PropsWithChildren<unknown>> = ({
     Map<string, ComposerServiceOrderItem>
   >(new Map());
   const [isDirty, setIsDirty] = useState(false);
+  const [diagramHandlers, setDiagramHandlers] =
+    useState<DiagramHandlers | null>(null);
+  const [stencilState, setStencilState] = useState<StencilState | null>(null);
 
   useEffect(() => {
     if (!isDirty) {
@@ -43,6 +51,10 @@ export const CanvasProvider: React.FC<React.PropsWithChildren<unknown>> = ({
   return (
     <CanvasContext.Provider
       value={{
+        diagramHandlers,
+        setDiagramHandlers: (value: DiagramHandlers) => {
+          setDiagramHandlers(value);
+        },
         dictToDisplay,
         setDictToDisplay: (value: DictDialogData | null) => {
           setDictToDisplay(value);
@@ -64,9 +76,9 @@ export const CanvasProvider: React.FC<React.PropsWithChildren<unknown>> = ({
           setFormState(value);
         },
         instancesToSend,
-        setInstancesToSend: (value: Map<string, ComposerServiceOrderItem>) => {
-          setInstancesToSend(value);
-        },
+        setInstancesToSend,
+        stencilState,
+        setStencilState,
         isDirty,
       }}
     >

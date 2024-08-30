@@ -1,7 +1,5 @@
-import { dia } from "@inmanta/rappid";
-import { EmbeddedEntity, ServiceModel } from "@/Core";
-import { appendColumns } from "../actions";
-import { ServiceEntityBlock } from "../shapes";
+import { uniqueId } from "lodash";
+import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from "@/Core";
 
 /**
  * Transforms embedded entities of a service model or an embedded entity into stencil elements.
@@ -15,8 +13,9 @@ export const transformEmbeddedToStencilElements = (
   return service.embedded_entities.flatMap((embedded_entity) => {
     const stencilElement = createStencilElement(
       embedded_entity.name,
-      true,
       embedded_entity,
+      undefined,
+      true,
       service.name,
     );
     const nestedStencilElements =
@@ -37,19 +36,23 @@ export const transformEmbeddedToStencilElements = (
  */
 export const createStencilElement = (
   name: string,
+  serviceModel: EmbeddedEntity | ServiceModel | undefined = undefined,
+  instanceAttributes: InstanceAttributeModel | undefined = undefined,
   isEmbedded: boolean = false,
-  entityModel?: EmbeddedEntity,
   holderName?: string,
 ) => {
   return {
     type: "standard.Path",
     size: { width: 240, height: 40 },
     name: name,
-    entity_model: entityModel,
+    serviceModel,
+    instanceAttributes,
     holderName,
     disabled: false,
+    id: instanceAttributes?.id || uniqueId(),
     attrs: {
       body: {
+        class: name + "_body",
         width: 7,
         height: 40,
         x: 233,
@@ -57,12 +60,14 @@ export const createStencilElement = (
         stroke: "none",
       },
       bodyTwo: {
+        class: name + "_bodyTwo",
         width: 240,
         height: 40,
         fill: "#FFFFFF",
         stroke: "none",
       },
       label: {
+        class: name + "_text",
         refX: null, // reset the default
         x: "10",
         textAnchor: "start",
@@ -86,31 +91,4 @@ export const createStencilElement = (
       },
     ],
   };
-};
-
-export const createStencilDraggableShape = (
-  cell: dia.Cell,
-  isEmbedded: boolean,
-): ServiceEntityBlock => {
-  const entityModel = cell.get("entity_model") as ServiceModel | EmbeddedEntity;
-  const instanceAsTable = new ServiceEntityBlock().setName(cell.get("name"));
-
-  if (isEmbedded) {
-    instanceAsTable.setTabColor("embedded");
-
-    instanceAsTable.set("isEmbedded", true);
-    instanceAsTable.set("holderName", cell.get("holderName"));
-  }
-
-  if (
-    entityModel.inter_service_relations &&
-    entityModel.inter_service_relations.length > 0
-  ) {
-    instanceAsTable.set("relatedTo", new Map());
-  }
-  if (entityModel.key_attributes) {
-    appendColumns(instanceAsTable, entityModel.key_attributes, {}, true, true);
-  }
-
-  return instanceAsTable;
 };

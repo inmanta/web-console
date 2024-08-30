@@ -20,7 +20,7 @@ export const data: CompileDetails = {
       started: "2021-09-10T09:05:25.000000",
       completed: "2021-09-10T09:05:30.000000",
       command:
-        "/opt/inmanta/bin/python3 -m inmanta.app -vvv export -X -e f7e84432-855c-4d04-b422-50c3ab925a4a",
+        "/opt/inmanta/bin/python3 -m inmanta.app -vvv export  -e f7e84432-855c-4d04-b422-50c3ab925a4a",
       name: "Recompiling configuration model",
       errstream: "error",
       outstream: "success",

@@ -29,7 +29,7 @@ import {
   testEmbeddedApiInstances,
 } from "./Mock";
 import services from "./Mocks/services.json";
-import { appendEntity } from "./actions";
+import { createEntity } from "./actions";
 import {
   createConnectionRules,
   shapesDataTransform,
@@ -993,10 +993,10 @@ describe("checkIfConnectionIsAllowed", () => {
     const paper = new dia.Paper({
       model: graph,
     });
-    const serviceA = appendEntity(graph, Service.a, InstanceAttributesA, false);
-    const serviceB = appendEntity(
-      graph,
+    const serviceA = createEntity(Service.a, false, InstanceAttributesA, false);
+    const serviceB = createEntity(
       Service.a.embedded_entities[0],
+      false,
       (InstanceAttributesA["circuits"] as InstanceAttributeModel[])[0],
       false,
     );
@@ -1017,8 +1017,8 @@ describe("checkIfConnectionIsAllowed", () => {
     const paper = new dia.Paper({
       model: graph,
     });
-    const serviceA = appendEntity(graph, Service.a, InstanceAttributesA, false);
-    const serviceB = appendEntity(graph, Service.b, InstanceAttributesB, false);
+    const serviceA = createEntity(Service.a, false, InstanceAttributesA, false);
+    const serviceB = createEntity(Service.b, false, InstanceAttributesB, false);
 
     const result = checkIfConnectionIsAllowed(
       graph,
@@ -1036,13 +1036,12 @@ describe("checkIfConnectionIsAllowed", () => {
     const paper = new dia.Paper({
       model: graph,
     });
-    const serviceA = appendEntity(graph, Service.a, InstanceAttributesA, false);
-    const serviceB = appendEntity(
-      graph,
+    const serviceA = createEntity(Service.a, false, InstanceAttributesA, false);
+    const serviceB = createEntity(
       Service.a.embedded_entities[0],
+      false,
       (InstanceAttributesA["circuits"] as InstanceAttributeModel[])[0],
       false,
-      true,
     );
 
     serviceA.set("isBlockedFromEditing", true);
@@ -1064,19 +1063,20 @@ describe("checkIfConnectionIsAllowed", () => {
       model: graph,
     });
 
-    const serviceA = appendEntity(graph, Service.a, InstanceAttributesA, false);
-    const serviceA2 = appendEntity(
-      graph,
+    const serviceA = createEntity(Service.a, false, InstanceAttributesA, false);
+    const serviceA2 = createEntity(
       Service.a,
+      true,
+
       InstanceAttributesA,
       false,
     );
-    const serviceB = appendEntity(
-      graph,
+    const serviceB = createEntity(
       Service.a.embedded_entities[0],
+      true,
+
       (InstanceAttributesA["circuits"] as InstanceAttributeModel[])[0],
       false,
-      true,
     );
 
     const link = new Link();
@@ -1423,15 +1423,15 @@ describe("updateLabelPosition", () => {
     const paper = new dia.Paper({
       model: graph,
     });
-    const sourceService = appendEntity(
-      graph,
+    const sourceService = createEntity(
       Service.a,
+      false,
       InstanceAttributesA,
       false,
     );
-    const targetService = appendEntity(
-      graph,
+    const targetService = createEntity(
       Service.b,
+      false,
       InstanceAttributesB,
       false,
     );
@@ -1559,9 +1559,10 @@ describe("toggleLooseElement", () => {
     });
 
     //add highlighter
-    const entity = appendEntity(graph, Service.a, InstanceAttributesA, false);
+    const entity = createEntity(Service.a, false, InstanceAttributesA, false);
 
     toggleLooseElement(paper.findViewByModel(entity), EmbeddedEventEnum.ADD);
+
     expect((dispatchEventSpy.mock.calls[0][0] as CustomEvent).detail).toEqual(
       JSON.stringify({ kind: "add", id: entity.id }),
     );
@@ -1584,7 +1585,7 @@ describe("toggleLooseElement", () => {
     const paper = new dia.Paper({
       model: graph,
     });
-    const entity = appendEntity(graph, Service.a, InstanceAttributesA, false);
+    const entity = createEntity(Service.a, false, InstanceAttributesA, false);
 
     toggleLooseElement(paper.findViewByModel(entity), EmbeddedEventEnum.ADD);
     expect(

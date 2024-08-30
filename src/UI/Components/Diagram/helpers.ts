@@ -16,6 +16,8 @@ import {
   LabelLinkView,
   SavedCoordinates,
   EmbeddedEventEnum,
+  StencilState,
+  ActionEnum,
 } from "@/UI/Components/Diagram/interfaces";
 
 import { ServiceEntityBlock } from "./shapes";
@@ -177,15 +179,26 @@ export const checkIfConnectionIsAllowed = (
       );
   }
 
-  return (
-    !areSourceConnectionsExhausted &&
-    !areTargetConnectionExhausted &&
-    !(
-      doesTargetIsEmbeddedWithExhaustedConnections ||
-      doesSourceIsEmbeddedWithExhaustedConnections
-    ) &&
-    (sourceRule !== undefined || targetRule !== undefined)
-  );
+  const elementsCanBeConnected =
+    sourceRule !== undefined || targetRule !== undefined;
+
+  const connectionIsInterServiceRelation =
+    sourceRule?.kind === TypeEnum.INTERSERVICE ||
+    targetRule?.kind === TypeEnum.INTERSERVICE;
+
+  if (elementsCanBeConnected) {
+    //if elements have interservice relation then we need to check if they are exhausted
+    if (connectionIsInterServiceRelation) {
+      return !areSourceConnectionsExhausted && !areTargetConnectionExhausted;
+    } else {
+      return !(
+        doesTargetIsEmbeddedWithExhaustedConnections ||
+        doesSourceIsEmbeddedWithExhaustedConnections
+      );
+    }
+  }
+
+  return elementsCanBeConnected;
 };
 
 /**
@@ -595,33 +608,7 @@ export const applyCoordinatesToCells = (
 };
 
 /**
- * Moves a cell away from any cells it is colliding with.
- *
- * @param {dia.Graph} graph - The graph containing the cell.
- * @param {dia.Cell} cell - The cell to move.
- */
-export const moveCellFromColliding = (graph: dia.Graph, cell: dia.Cell) => {
-  let isColliding = false;
-
-  do {
-    const overlappingCells = graph
-      .findModelsInArea(cell.getBBox())
-      .filter((el) => el.id !== cell.id);
-
-    if (overlappingCells.length > 0) {
-      isColliding = true;
-      // an overlap found, revert the position
-      const coordinates = cell.position();
-
-      cell.set("position", { x: coordinates.x + 50, y: coordinates.y });
-    } else {
-      isColliding = false;
-    }
-  } while (isColliding);
-};
-
-/**
- * Finds the inter-service relations for a given service model or embedded entity.
+ * Finds the inter-service relations for the given service model or embedded entity.
  *
  * @param {ServiceModel | EmbeddedEntity} serviceModel - The service model or embedded entity to find inter-service relations for.
  * @returns {string[] | undefined} An array of entity types that have inter-service relations with the given service model or embedded entity, or undefined if the service model is undefined.
@@ -639,4 +626,85 @@ export const findInterServiceRelations = (
   );
 
   return result.concat(embeddedEntitiesResult);
+};
+
+export const createStencilState = (
+  serviceModel: ServiceModel | EmbeddedEntity,
+) => {
+  let stencilState: StencilState = {};
+
+  serviceModel.embedded_entities.forEach((entity) => {
+    stencilState[entity.name] = {
+      min: entity.lower_limit,
+      max: entity.upper_limit,
+      current: 0,
+    };
+    if (entity.embedded_entities) {
+      stencilState = {
+        ...stencilState,
+        ...createStencilState(entity),
+      };
+    }
+  });
+
+  return stencilState;
+};
+
+/**
+ * Handles the update of a service entity block.
+ *
+ * @param {ServiceEntityBlock} cell - The service entity block to be updated.
+ * @param {ActionEnum} action - The action to be performed on the service entity block.
+ */
+export const updateInstancesToSend = (
+  cell: ServiceEntityBlock,
+  action: ActionEnum,
+  instancesToSend: Map<string, ComposerServiceOrderItem>,
+) => {
+  const newInstance: ComposerServiceOrderItem = {
+    instance_id: cell.id,
+    service_entity: cell.getName(),
+    config: {},
+    action: null,
+    attributes: cell.get("sanitizedAttrs"),
+    edits: null,
+    embeddedTo: cell.get("embeddedTo"),
+    relatedTo: cell.getRelations(),
+  };
+  const copiedInstances = new Map(instancesToSend); // copy
+
+  const updatedInstance = instancesToSend.get(String(cell.id));
+
+  switch (action) {
+    case "update":
+      //action in the instance isn't the same as action passed to this function, this assertion is to make sure that the update action won't change the action state of newly created instance. It will be addressed in next PR to make it clearer.
+      newInstance.action =
+        updatedInstance?.action === "create" ? "create" : "update";
+      copiedInstances.set(String(cell.id), newInstance);
+      break;
+    case "create":
+      newInstance.action = action;
+      break;
+    default:
+      if (
+        updatedInstance &&
+        (updatedInstance.action === null || updatedInstance.action === "update")
+      ) {
+        copiedInstances.set(String(cell.id), {
+          instance_id: cell.id,
+          service_entity: cell.getName(),
+          config: {},
+          action: "delete",
+          attributes: null,
+          edits: null,
+          embeddedTo: cell.attributes.embeddedTo,
+          relatedTo: cell.attributes.relatedTo,
+        });
+      } else {
+        copiedInstances.delete(String(cell.id));
+      }
+      break;
+  }
+
+  return copiedInstances;
 };

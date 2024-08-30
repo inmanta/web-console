@@ -57,73 +57,6 @@ interface ConnectionRules {
   [serviceName: string]: (InterServiceRule | EmbeddedRule)[];
 }
 
-interface serializedCell {
-  type: string;
-  source?: {
-    id: string;
-  };
-  target?: {
-    id: string;
-  };
-  z: number;
-  id: string;
-  attrs: {
-    headerLabel?: {
-      text: string;
-    };
-    info?: {
-      preserveAspectRatio: string;
-      cursor: string;
-      x: string;
-      "xlink:href": string;
-      "data-tooltip": string;
-      y: number;
-      width: number;
-      height: number;
-    };
-    header?: {
-      fill: string;
-      stroke: string;
-    };
-  };
-  columns?: unknown;
-  padding?: {
-    top: number;
-    bottom: number;
-    left: number;
-    right: number;
-  };
-  size?: {
-    width: number;
-    height: number;
-  };
-  itemMinLabelWidth?: number;
-  itemHeight?: number;
-  itemOffset?: number;
-  itemOverflow?: boolean;
-  isCollapsed?: boolean;
-  itemAboveViewSelector?: string;
-  itemBelowViewSelector?: string;
-  scrollTop: unknown;
-  itemButtonSize?: number;
-  itemIcon?: {
-    width: number;
-    height: number;
-    padding: number;
-  };
-  position?: {
-    x: number;
-    y: number;
-  };
-  angle?: number;
-  entityName?: string;
-  relatedTo?: Map<string, string>;
-  isEmbedded?: boolean;
-  instanceAttributes?: Record<string, unknown>;
-  holderName?: string;
-  embeddedTo?: string;
-}
-
 type relationId = string | null | undefined;
 
 //dia.LinkView & dia.Link doesn't have properties below in the model yet they are available to access and required to update labels
@@ -154,6 +87,14 @@ interface ComposerServiceOrderItem {
   metadata?: Record<string, string> | null;
 }
 
+interface StencilState {
+  [key: string]: {
+    min: ParsedNumber | undefined;
+    max: ParsedNumber | undefined;
+    current: number;
+  };
+}
+
 export {
   ActionEnum,
   ColumnData,
@@ -162,9 +103,9 @@ export {
   InterServiceRule,
   EmbeddedRule,
   ConnectionRules,
-  serializedCell,
   relationId,
   LabelLinkView,
   SavedCoordinates,
   ComposerServiceOrderItem,
+  StencilState,
 };

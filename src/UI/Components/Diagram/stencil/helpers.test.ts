@@ -11,6 +11,7 @@ const defaultStencil = {
   entity_model: undefined,
   holderName: undefined,
   disabled: false,
+  instanceAttributes: undefined,
   attrs: {
     body: {
       width: 7,
@@ -58,8 +59,12 @@ describe("createStencilElement", () => {
 
     const embeddedElementWithModel = createStencilElement(
       "default",
-      true,
       containerModel.embedded_entities[0],
+      {
+        attrOne: "test_value",
+        attrTwo: "other_test_value",
+      },
+      true,
       "holderName",
     );
 
@@ -67,6 +72,10 @@ describe("createStencilElement", () => {
       ...defaultStencil,
       entity_model: containerModel.embedded_entities[0],
       holderName: "holderName",
+      instanceAttributes: {
+        attrOne: "test_value",
+        attrTwo: "other_test_value",
+      },
       attrs: {
         ...defaultStencil.attrs,
         body: { ...defaultStencil.attrs.body, fill: "#0066cc" },

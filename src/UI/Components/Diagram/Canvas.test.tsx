@@ -324,7 +324,6 @@ it("renders shapes dict Value that can be viewed in dict Modal", async () => {
   const blob = await clipboardItems[0].getType(clipboardItems[0].types[0]);
   const clipboardText = await blob.text();
 
-  console.log(clipboardText);
   expect(clipboardText).toEqual("{}");
 
   const closeButton = await screen.findByLabelText("Close");

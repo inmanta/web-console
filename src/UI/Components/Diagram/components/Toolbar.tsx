@@ -10,7 +10,6 @@ import { words } from "@/UI/words";
 import { ToastAlert } from "../../ToastAlert";
 import { CanvasContext, InstanceComposerContext } from "../Context/Context";
 import { getServiceOrderItems } from "../helpers";
-import { DiagramHandlers } from "../init";
 
 /**
  * Properties for the Toolbar component.
@@ -18,12 +17,10 @@ import { DiagramHandlers } from "../init";
  * @interface
  * @prop {string} serviceName - The name of the service.
  * @prop {boolean} editable - A flag indicating if the diagram is editable.
- * @prop {DiagramHandlers | null} diagramHandlers - The handlers for various diagram actions.
  */
 interface Props {
   serviceName: string;
   editable: boolean;
-  diagramHandlers: DiagramHandlers | null;
 }
 
 /**
@@ -40,15 +37,12 @@ interface Props {
  *
  * @returns {React.FC} The Toolbar component.
  */
-const Toolbar: React.FC<Props> = ({
-  serviceName,
-  editable,
-  diagramHandlers,
-}) => {
+const Toolbar: React.FC<Props> = ({ serviceName, editable }) => {
   const { serviceModels, mainService, instance } = useContext(
     InstanceComposerContext,
   );
-  const { instancesToSend, isDirty, looseEmbedded } = useContext(CanvasContext);
+  const { instancesToSend, isDirty, looseEmbedded, diagramHandlers } =
+    useContext(CanvasContext);
   const { routeManager, environmentHandler } = useContext(DependencyContext);
 
   const [alertMessage, setAlertMessage] = useState("");

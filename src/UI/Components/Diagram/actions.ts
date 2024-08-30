@@ -4,10 +4,11 @@ import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from "@/Core";
 import { InstanceWithRelations } from "@/Data/Managers/V2/GetInstanceWithRelations";
 import { words } from "@/UI/words";
 import {
-  findCorrespondingId,
-  moveCellFromColliding,
-  toggleLooseElement,
-} from "./helpers";
+  CreateModifierHandler,
+  FieldCreator,
+  createFormState,
+} from "../ServiceInstanceForm";
+import { findCorrespondingId, toggleLooseElement } from "./helpers";
 import activeImage from "./icons/active-icon.svg";
 import candidateImage from "./icons/candidate-icon.svg";
 import {
@@ -179,6 +180,56 @@ export function showLinkTools(
 }
 
 /**
+ * Function that creates, appends and returns created Entity, differs from appendInstance by the fact that is used from the scope of Instance Composer and uses different set of data
+ *
+ * @param {ServiceModel} serviceModel that we want to base created entity on
+ * @param {InstanceAttributeModel} entity created in the from
+ * @param {boolean} isCore defines whether created entity is main one in given View
+ * @param {boolean} isInEditMode defines whether created entity is is representation of existing instance or new one
+ * @param {string} holderName - name of the entity to which it is embedded/connected
+ * @returns {ServiceEntityBlock} created JointJS shape
+ */
+export function createEntity(
+  serviceModel: ServiceModel | EmbeddedEntity,
+  isCore: boolean,
+  attributes: InstanceAttributeModel | undefined = undefined,
+  isInEditMode: boolean,
+  isEmbedded = false,
+  holderName = "",
+): ServiceEntityBlock {
+  //Create shape for Entity
+  const instanceAsTable = new ServiceEntityBlock().setName(serviceModel.name);
+
+  if (isEmbedded) {
+    instanceAsTable.setTabColor("embedded");
+    instanceAsTable.set("isEmbedded", isEmbedded);
+    instanceAsTable.set("holderName", holderName);
+  } else if (isCore) {
+    instanceAsTable.set("isCore", isCore);
+    instanceAsTable.setTabColor("core");
+  }
+
+  instanceAsTable.set("isInEditMode", isInEditMode);
+  instanceAsTable.set("serviceModel", serviceModel);
+
+  if (
+    serviceModel.inter_service_relations &&
+    serviceModel.inter_service_relations.length > 0
+  ) {
+    instanceAsTable.set("relatedTo", new Map());
+  }
+
+  updateAttributes(
+    instanceAsTable,
+    serviceModel.key_attributes || [],
+    attributes,
+    true,
+  );
+
+  return instanceAsTable;
+}
+
+/**
  * This function converts Instance attributes to display them on the Smart Service Composer canvas.
  * https://resources.jointjs.com/docs/jointjs/v3.6/joint.html#dia.Graph
  *
@@ -197,7 +248,7 @@ export function appendInstance(
   services: ServiceModel[],
   isMainInstance = true,
   instanceToConnectRelation?: ServiceEntityBlock,
-): ServiceEntityBlock {
+): ServiceEntityBlock[] {
   const serviceInstance = instanceWithRelations.instance;
   const serviceInstanceModel = services.find(
     (model) => model.name === serviceInstance.service_entity,
@@ -206,21 +257,34 @@ export function appendInstance(
   if (!serviceInstanceModel) {
     throw Error(words("instanceComposer.errorMessage"));
   }
-  const instanceAsTable = new ServiceEntityBlock().setName(
-    serviceInstance.service_entity,
+
+  const attributes =
+    serviceInstance.candidate_attributes ||
+    serviceInstance.active_attributes ||
+    undefined;
+  const isInEditMode = true;
+
+  const instanceAsTable = createEntity(
+    serviceInstanceModel,
+    isMainInstance,
+    attributes,
+    isInEditMode,
   );
 
   instanceAsTable.set("id", instanceWithRelations.instance.id);
-  instanceAsTable.set("isEmbedded", false);
-  instanceAsTable.set("isInEditMode", true);
 
-  if (isMainInstance) {
-    instanceAsTable.setTabColor("core");
-  }
+  instanceAsTable.set(
+    "isBlockedFromEditing",
+    !serviceInstanceModel.strict_modifier_enforcement || !isMainInstance,
+  );
+
+  instanceAsTable.addTo(graph);
+
+  let embeddedEntities: ServiceEntityBlock[] = [];
 
   //check for any presentable attributes, where candidate attrs have priority, if there is a set, then append them to  JointJS shape and try to display and connect embedded entities
   if (serviceInstance.candidate_attributes) {
-    handleAttributes(
+    embeddedEntities = handleNonDirectAttributes(
       graph,
       paper,
       instanceAsTable,
@@ -230,7 +294,7 @@ export function appendInstance(
       instanceToConnectRelation,
     );
   } else if (serviceInstance.active_attributes) {
-    handleAttributes(
+    embeddedEntities = handleNonDirectAttributes(
       graph,
       paper,
       instanceAsTable,
@@ -244,7 +308,6 @@ export function appendInstance(
   if (instanceWithRelations.relatedInstances) {
     //map through relatedInstances and either append them or connect to them
     instanceWithRelations.relatedInstances.forEach((relatedInstance) => {
-      const isInstanceMain = false;
       const cellAdded = graph.getCell(relatedInstance.id);
 
       if (!cellAdded) {
@@ -253,7 +316,7 @@ export function appendInstance(
           graph,
           { instance: relatedInstance },
           services,
-          isInstanceMain,
+          false,
           instanceAsTable,
         );
       } else {
@@ -278,7 +341,7 @@ export function appendInstance(
             );
           }
         }
-
+        console.log(isConnected);
         //If doesn't, or the one we are looking for isn't among the ones stored, we need go through every connected shape and do the same assertion,
         //as the fact that we have that cell as relatedInstance tells us that either that or its embedded entities has connection
         if (!isConnected) {
@@ -316,14 +379,15 @@ export function appendInstance(
       }
     });
   }
-  //auto-layout provided by JointJS
+
+  // auto-layout provided by JointJS
   DirectedGraph.layout(graph, {
     nodeSep: 80,
     edgeSep: 80,
-    rankDir: "TB",
+    rankDir: "BT",
   });
 
-  return instanceAsTable;
+  return [...embeddedEntities, instanceAsTable];
 }
 
 /**
@@ -362,21 +426,22 @@ export function appendEmbeddedEntity(
   function appendSingleEntity(
     entityInstance: InstanceAttributeModel,
   ): ServiceEntityBlock {
-    const flatAttributes = embeddedEntity.attributes.map(
-      (attribute) => attribute.name,
-    );
+    const isCore = false;
+    const isInEditMode = false;
+    const isEmbedded = true;
 
     //Create shape for Entity
-    const instanceAsTable = new ServiceEntityBlock()
-      .setTabColor("embedded")
-      .setName(embeddedEntity.name);
+    const instanceAsTable = createEntity(
+      embeddedEntity,
+      isCore,
+      entityInstance,
+      isInEditMode,
+      isEmbedded,
+      holderName,
+    );
 
-    appendColumns(instanceAsTable, flatAttributes, entityInstance);
-    instanceAsTable.set("isEmbedded", true);
-    instanceAsTable.set("holderName", holderName);
     instanceAsTable.set("embeddedTo", embeddedTo);
     instanceAsTable.set("isBlockedFromEditing", isBlockedFromEditing);
-    instanceAsTable.set("isInEditMode", true);
 
     //add to graph
     instanceAsTable.addTo(graph);
@@ -436,80 +501,40 @@ export function appendEmbeddedEntity(
 }
 
 /**
- * Function that creates, appends and returns created Entity, differs from appendInstance by the fact that is used from the scope of Instance Composer and uses different set of data
- *
- * @param {dia.Graph} graph JointJS graph object
- * @param {dia.Paper} paper JointJS paper object
- * @param {ServiceModel} serviceModel that we want to base created entity on
- * @param {InstanceAttributeModel} entity created in the from
- * @param {boolean} isCore defines whether created entity is main one in given View
- * @param {string} holderName - name of the entity to which it is embedded/connected
- * @returns {ServiceEntityBlock} created JointJS shape
- */
-export function appendEntity(
-  graph: dia.Graph,
-  serviceModel: ServiceModel | EmbeddedEntity,
-  entity: InstanceAttributeModel,
-  isCore: boolean,
-  isEmbedded = false,
-  holderName = "",
-): ServiceEntityBlock {
-  //Create shape for Entity
-  const instanceAsTable = new ServiceEntityBlock().setName(serviceModel.name);
-
-  if (isEmbedded) {
-    instanceAsTable.setTabColor("embedded");
-  } else if (isCore) {
-    instanceAsTable.setTabColor("core");
-  }
-
-  instanceAsTable.set("isEmbedded", isEmbedded);
-  instanceAsTable.set("holderName", holderName);
-
-  if (
-    serviceModel.inter_service_relations &&
-    serviceModel.inter_service_relations.length > 0
-  ) {
-    instanceAsTable.set("relatedTo", new Map());
-  }
-  if (serviceModel.key_attributes) {
-    appendColumns(
-      instanceAsTable,
-      serviceModel.key_attributes,
-      entity,
-      true,
-      true,
-    ); // TEMPORARY for v2 until right sidebar is finished
-  }
-
-  //add to graph
-  instanceAsTable.addTo(graph);
-
-  moveCellFromColliding(graph, instanceAsTable);
-
-  return instanceAsTable;
-}
-
-/**
  * Populates a graph with default required entities derived from a service model.
  *
  * @param {dia.Graph} graph - The jointJS graph to populate.
- * @param {ServiceModel} service - The service model to use for populating the graph.
+ * @param {ServiceModel} serviceModel - The service model to use for populating the graph.
  * @returns {ServiceEntityBlock[]} An array containing the core entity and the default entities added to the graph.
  */
 export function populateGraphWithDefault(
   graph: dia.Graph,
-  service: ServiceModel,
+  serviceModel: ServiceModel,
 ) {
-  const coreEntity = appendEntity(graph, service, {}, true);
-  const defaultEntities = addDefaultEntities(graph, service);
+  //the most realiable way to get attributes default state is to use Field Creator
 
+  const fieldCreator = new FieldCreator(new CreateModifierHandler());
+  const fields = fieldCreator.attributesToFields(serviceModel.attributes);
+
+  const attrs = createFormState(fields);
+  const isCore = true;
+  const isInEditMode = false;
+
+  const coreEntity = createEntity(serviceModel, isCore, attrs, isInEditMode);
+
+  coreEntity.addTo(graph);
+
+  const defaultEntities = addDefaultEntities(graph, serviceModel);
+
+  defaultEntities.forEach((entity) => {
+    entity.set("embeddedTo", coreEntity.id);
+  });
   connectEntities(graph, coreEntity, defaultEntities);
 
   DirectedGraph.layout(graph, {
     nodeSep: 80,
     edgeSep: 80,
-    rankDir: "TB",
+    rankDir: "BT",
   });
 
   return [coreEntity, ...defaultEntities];
@@ -526,23 +551,45 @@ export function addDefaultEntities(
   graph: dia.Graph,
   service: ServiceModel | EmbeddedEntity,
 ): ServiceEntityBlock[] {
+  //all entities created here are embedded entities
+  const isCore = false;
+  const isInEditMode = false;
+  const isEmbedded = true;
+
   const embedded_entities = service.embedded_entities
     .filter((embedded_entity) => embedded_entity.lower_limit > 0)
     .map((embedded_entity) => {
-      const embeddedEntity = appendEntity(
-        graph,
+      const fieldCreator = new FieldCreator(new CreateModifierHandler());
+      const fields = fieldCreator.attributesToFields(
+        embedded_entity.attributes,
+      );
+      const attrs = createFormState(fields);
+
+      const embeddedEntity = createEntity(
         embedded_entity,
-        {},
-        false,
-        true,
+        isCore,
+        attrs,
+        isInEditMode,
+        isEmbedded,
         service.name,
       );
 
-      connectEntities(
-        graph,
-        embeddedEntity,
-        addDefaultEntities(graph, embedded_entity),
+      document.dispatchEvent(
+        new CustomEvent("updateStencil", {
+          detail: {
+            name: embedded_entity.name,
+            action: EmbeddedEventEnum.ADD,
+          },
+        }),
       );
+
+      embeddedEntity.addTo(graph);
+      const subEmbeddedEntities = addDefaultEntities(graph, embedded_entity);
+
+      subEmbeddedEntities.forEach((entity) => {
+        entity.set("embeddedTo", embeddedEntity.id);
+      });
+      connectEntities(graph, embeddedEntity, subEmbeddedEntities);
 
       return embeddedEntity;
     });
@@ -554,41 +601,54 @@ export function addDefaultEntities(
  *  Function that iterates through service instance attributes for values and appends in jointJS entity for display
  *
  * @param {ServiceEntityBlock} serviceEntity - shape of the entity to which columns will be appended
- * @param {string[]} attributesKeywords - names of the attributes that we iterate for the values
+ * @param {string[]} keyAttributes - names of the attributes that we iterate for the values
  * @param {InstanceAttributeModel} serviceInstanceAttributes - attributes of given instance/entity
- * @param {boolean=true} isInitial - boolean indicating whether should we appendColumns or edit - default = true
+ * @param {boolean=true} isInitial - boolean indicating whether should we updateAttributes or edit - default = true
  * @returns {void}
  */
-export function appendColumns(
+export function updateAttributes(
   serviceEntity: ServiceEntityBlock,
-  attributesKeywords: string[],
-  serviceInstanceAttributes: InstanceAttributeModel,
+  keyAttributes: string[],
+  serviceInstanceAttributes: InstanceAttributeModel | undefined,
   isInitial = true,
-  isEmpty = false, // TODO: temporary solution to handle empty values until right sidebar is finished
 ) {
-  const instanceAttributes = {};
-  const attributes = attributesKeywords.map((key) => {
-    const attributeValue = isEmpty ? "" : serviceInstanceAttributes[key];
+  // const instanceAttributes = {};
+  // const attributes = attributesKeywords.map((key) => {
+  //   const attributeValue = isEmpty ? "" : serviceInstanceAttributes[key];
 
-    instanceAttributes[key] = attributeValue;
+  //   instanceAttributes[key] = attributeValue;
+
+  const attributesToDisplay = keyAttributes.map((key) => {
+    const value = serviceInstanceAttributes
+      ? (serviceInstanceAttributes[key] as string)
+      : "";
 
     return {
       name: key,
-      value: attributeValue,
+      value: value || "",
     };
   });
 
-  serviceEntity.set("instanceAttributes", instanceAttributes);
+  // serviceEntity.set("instanceAttributes", instanceAttributes);
 
   if (isInitial) {
-    serviceEntity.appendColumns(attributes);
-
-    //for initial appending instanceAttributes are equal sanitized ones
-    if (!serviceEntity.get("sanitizedAttrs")) {
-      serviceEntity.set("sanitizedAttrs", instanceAttributes);
-    }
+    serviceEntity.appendColumns(attributesToDisplay);
   } else {
-    serviceEntity.editColumns(attributes, serviceEntity.attributes.isCollapsed);
+    serviceEntity.editColumns(
+      attributesToDisplay,
+      serviceEntity.attributes.isCollapsed,
+    );
+  }
+
+  if (!serviceInstanceAttributes) {
+    return;
+  }
+
+  serviceEntity.set("instanceAttributes", serviceInstanceAttributes);
+
+  if (isInitial && !serviceEntity.get("sanitizedAttrs")) {
+    //for initial appending instanceAttributes are equal sanitized ones
+    serviceEntity.set("sanitizedAttrs", serviceInstanceAttributes);
   }
 }
 
@@ -615,6 +675,7 @@ function connectEntities(
     link.source(source);
     link.target(target);
     graph.addCell(link);
+    graph.trigger("link:connect", link);
   });
 }
 
@@ -631,7 +692,7 @@ function connectEntities(
  *
  * @returns {void}
  */
-function handleAttributes(
+function handleNonDirectAttributes(
   graph: dia.Graph,
   paper: dia.Paper,
   instanceAsTable: ServiceEntityBlock,
@@ -639,48 +700,41 @@ function handleAttributes(
   attributesValues: InstanceAttributeModel,
   presentedAttr?: "candidate" | "active",
   instanceToConnectRelation?: ServiceEntityBlock,
-) {
-  const { attributes, embedded_entities } = serviceModel;
-  const attributesNames = attributes.map((attribute) => attribute.name);
+): ServiceEntityBlock[] {
+  const { embedded_entities } = serviceModel;
 
   handleInfoIcon(instanceAsTable, presentedAttr);
-  appendColumns(instanceAsTable, attributesNames, attributesValues);
-  instanceAsTable.set(
-    "isBlockedFromEditing",
-    !serviceModel.strict_modifier_enforcement,
-  );
-  //add to graph
-  instanceAsTable.addTo(graph);
 
   //iterate through embedded entities to create and connect them
-  embedded_entities.forEach((entity) => {
-    //we are basing iteration on service Model, if there is no value in the instance, skip that entity
-    if (!attributesValues[entity.name]) {
-      return;
-    }
-    const appendedEntities = appendEmbeddedEntity(
-      paper,
-      graph,
-      entity,
-      attributesValues[entity.name] as InstanceAttributeModel,
-      instanceAsTable.id as string,
-      serviceModel.name,
-      instanceToConnectRelation,
-      presentedAttr,
-      !serviceModel.strict_modifier_enforcement,
-    );
+  //we are basing iteration on service Model, if there is no value in the instance, skip that entity
+  const createdEmbedded = embedded_entities
+    .filter((entity) => !!attributesValues[entity.name])
+    .flatMap((entity) => {
+      const appendedEntities = appendEmbeddedEntity(
+        paper,
+        graph,
+        entity,
+        attributesValues[entity.name] as InstanceAttributeModel,
+        instanceAsTable.id as string,
+        serviceModel.name,
+        instanceToConnectRelation,
+        presentedAttr,
+        !serviceModel.strict_modifier_enforcement,
+      );
 
-    appendedEntities.map((entity) => {
-      handleInfoIcon(entity, presentedAttr);
+      appendedEntities.map((entity) => {
+        handleInfoIcon(entity, presentedAttr);
+      });
+
+      connectEntities(
+        graph,
+        instanceAsTable,
+        appendedEntities,
+        !serviceModel.strict_modifier_enforcement,
+      );
+
+      return appendedEntities;
     });
-
-    connectEntities(
-      graph,
-      instanceAsTable,
-      appendedEntities,
-      !serviceModel.strict_modifier_enforcement,
-    );
-  });
 
   serviceModel.inter_service_relations?.forEach((relation) => {
     const relationId = attributesValues[relation.name];
@@ -707,6 +761,8 @@ function handleAttributes(
       );
     }
   });
+
+  return createdEmbedded;
 }
 
 /**

@@ -135,15 +135,25 @@ export class ComposerPaper {
       },
     );
 
+    this.paper.on("blank:pointerdown", () => {
+      document.dispatchEvent(
+        new CustomEvent("sendCellToSidebar", {
+          detail: null,
+        }),
+      );
+    });
+
     this.paper.on("cell:pointerup", (cellView) => {
-      // We don't want a Halo if cellView is a Link or is a representation of an already existing instance that has strict_modifier set to false
-      if (
-        cellView.model instanceof dia.Link ||
-        cellView.model.get("isBlockedFromEditing") ||
-        !editable
-      ) {
+      //We don't want interaction at all if cellView is a Link
+      if (cellView.model instanceof dia.Link) {
         return;
       }
+
+      document.dispatchEvent(
+        new CustomEvent("sendCellToSidebar", {
+          detail: cellView,
+        }),
+      );
 
       const halo = createHalo(graph, this.paper, cellView, connectionRules);
 

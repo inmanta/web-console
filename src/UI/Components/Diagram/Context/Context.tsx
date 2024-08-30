@@ -4,7 +4,12 @@ import { UseQueryResult } from "@tanstack/react-query";
 import { Field, InstanceAttributeModel, ServiceModel } from "@/Core";
 import { InstanceWithRelations } from "@/Data/Managers/V2/GetInstanceWithRelations";
 import { Inventories } from "@/Data/Managers/V2/GetRelatedInventories";
-import { ComposerServiceOrderItem, DictDialogData } from "../interfaces";
+import { DiagramHandlers } from "../init";
+import {
+  ComposerServiceOrderItem,
+  DictDialogData,
+  StencilState,
+} from "../interfaces";
 
 /**
  * The InstanceComposerCreatorProviderInterface
@@ -34,6 +39,9 @@ export const InstanceComposerContext =
  * Reflects the CanvasContext.
  */
 interface CanvasProviderInterface {
+  diagramHandlers: DiagramHandlers | null;
+  setDiagramHandlers: (value: DiagramHandlers) => void;
+
   dictToDisplay: DictDialogData | null;
   setDictToDisplay: (value: DictDialogData | null) => void;
 
@@ -50,7 +58,12 @@ interface CanvasProviderInterface {
   setLooseEmbedded: (value: Set<string>) => void;
 
   instancesToSend: Map<string, ComposerServiceOrderItem>;
-  setInstancesToSend: (value: Map<string, ComposerServiceOrderItem>) => void;
+  setInstancesToSend: React.Dispatch<
+    React.SetStateAction<Map<string, ComposerServiceOrderItem>>
+  >;
+
+  stencilState: StencilState | null;
+  setStencilState: React.Dispatch<React.SetStateAction<StencilState | null>>;
 
   isDirty: boolean;
 }
@@ -60,6 +73,8 @@ interface CanvasProviderInterface {
  * Should be used to provide context to the Canvas and it's children.
  */
 export const CanvasContext = createContext<CanvasProviderInterface>({
+  diagramHandlers: null,
+  setDiagramHandlers: (_value) => {},
   dictToDisplay: null,
   setDictToDisplay: (_value) => {},
   formState: {},
@@ -72,5 +87,7 @@ export const CanvasContext = createContext<CanvasProviderInterface>({
   setLooseEmbedded: (_value) => {},
   instancesToSend: new Map(),
   setInstancesToSend: (_value) => {},
+  stencilState: {},
+  setStencilState: (_value) => {},
   isDirty: false,
 });
