@@ -52,17 +52,11 @@ export const View: React.FC<Props> = ({ resourceId }) => {
     });
   };
 
-  //when sorting or filtering is triggered, reset the current page
+  //when sorting is triggered, reset the current page
   useEffect(() => {
     setCurrentPage({ kind: "CurrentPage", value: "" });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    sort.order,
-    filter.action,
-    filter.message,
-    filter.timestamp,
-    filter.minimal_log_level,
-  ]);
+  }, [sort.order]);
 
   return (
     <>

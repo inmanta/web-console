@@ -55,11 +55,11 @@ export const Page: React.FC<{ version: string }> = ({ version }) => {
 
   const presenter = new VersionResourceTablePresenter();
 
-  //when sorting or filtering is triggered, reset the current page
+  //when sorting is triggered, reset the current page
   useEffect(() => {
     setCurrentPage({ kind: "CurrentPage", value: "" });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sort.order, filter.agent, filter.type, filter.value]);
+  }, [sort.order]);
 
   return (
     <PageContainer pageTitle={words("desiredState.details.title")}>
