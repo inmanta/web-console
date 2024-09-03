@@ -46,23 +46,22 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
   const [scroller, setScroller] = useState<ui.PaperScroller | null>(null);
   const [isStencilStateReady, setIsStencilStateReady] = useState(false);
 
+  const [sidebar, setSidebar] = useState<StencilSidebar | null>(null); // without this state it could happen that cells would load before sidebar is ready so it's state could be outdated
+
   useEffect(() => {
     if (!mainService) {
       return;
     }
-    setStencilState(createStencilState(mainService));
+    setStencilState(createStencilState(mainService, !!instance));
     setIsStencilStateReady(true);
-  }, [mainService, setStencilState]);
+  }, [mainService, instance, setStencilState]);
 
   useEffect(() => {
     if (!mainService || !serviceModels || !isStencilStateReady) {
       return;
     }
 
-    const connectionRules = createConnectionRules(
-      serviceModels.concat(mainService),
-      {},
-    );
+    const connectionRules = createConnectionRules(serviceModels, {});
     const actions = diagramInit(
       Canvas,
       (newScroller) => {
@@ -77,6 +76,7 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
 
     return () => {
       setStencilState(createStencilState(mainService));
+      setIsStencilStateReady(false);
       actions.removeCanvas();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -84,6 +84,30 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
 
   useEffect(() => {
     if (
+      !LeftSidebar.current ||
+      !scroller ||
+      !relatedInventories.data ||
+      !mainService
+    ) {
+      return;
+    }
+
+    const sidebar = new StencilSidebar(
+      LeftSidebar.current,
+      scroller,
+      relatedInventories.data,
+      mainService,
+      serviceModels,
+    );
+
+    setSidebar(sidebar);
+
+    return () => sidebar.remove();
+  }, [scroller, relatedInventories.data, mainService, serviceModels]);
+
+  useEffect(() => {
+    if (
+      !sidebar ||
       !diagramHandlers ||
       !serviceModels ||
       !mainService ||
@@ -110,30 +134,10 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
 
     return () => {
       setStencilState(createStencilState(mainService));
+      setIsStencilStateReady(false);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [diagramHandlers, isStencilStateReady]);
-
-  useEffect(() => {
-    if (
-      !LeftSidebar.current ||
-      !scroller ||
-      !relatedInventories.data ||
-      !mainService
-    ) {
-      return;
-    }
-
-    const sidebar = new StencilSidebar(
-      LeftSidebar.current,
-      scroller,
-      relatedInventories.data,
-      mainService,
-      serviceModels,
-    );
-
-    return () => sidebar.remove();
-  }, [scroller, relatedInventories.data, mainService, serviceModels]);
+  }, [diagramHandlers, isStencilStateReady, sidebar]);
 
   useEffect(() => {
     if (!ZoomHandler.current || !scroller) {

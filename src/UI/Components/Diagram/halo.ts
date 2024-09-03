@@ -70,7 +70,7 @@ const createHalo = (
       if (didElementChange) {
         document.dispatchEvent(
           new CustomEvent("updateInstancesToSend", {
-            detail: { cell: elementAsService, actions: ActionEnum.UPDATE },
+            detail: { cell: elementAsService, action: ActionEnum.UPDATE },
           }),
         );
       }
@@ -78,7 +78,7 @@ const createHalo = (
 
     document.dispatchEvent(
       new CustomEvent("updateInstancesToSend", {
-        detail: { cell: cellView.model, actions: ActionEnum.DELETE },
+        detail: { cell: cellView.model, action: ActionEnum.DELETE },
       }),
     );
 

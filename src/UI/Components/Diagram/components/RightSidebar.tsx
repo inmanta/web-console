@@ -10,7 +10,7 @@ import styled from "styled-components";
 import { InstanceAttributeModel, ServiceModel } from "@/Core";
 import { sanitizeAttributes } from "@/Data";
 import { words } from "@/UI/words";
-import { CanvasContext } from "../Context/Context";
+import { CanvasContext, InstanceComposerContext } from "../Context/Context";
 import { updateInstancesToSend } from "../helpers";
 import { ActionEnum, EmbeddedEventEnum } from "../interfaces";
 import { EntityForm } from "./EntityForm";
@@ -25,9 +25,10 @@ import { EntityForm } from "./EntityForm";
  * @returns {React.FC<Props>} The RightSidebar component.
  */
 export const RightSidebar: React.FC = () => {
-  const { cellToEdit, diagramHandlers, setInstancesToSend } =
+  const { cellToEdit, diagramHandlers, setInstancesToSend, stencilState } =
     useContext(CanvasContext);
-  const [description, setDescription] = useState(null);
+  const { mainService } = useContext(InstanceComposerContext);
+  const [description, setDescription] = useState<string | null>(null);
   const [isAllowedToRemove, setIsAllowedToRemove] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [model, setModel] = useState<ServiceModel | null>(null);
@@ -39,10 +40,13 @@ export const RightSidebar: React.FC = () => {
     }
 
     if (!cellToEdit) {
+      setDescription(mainService.description || null);
+
       return;
     }
 
     const serviceModel = cellToEdit?.model.get("serviceModel");
+    const entityName = cellToEdit?.model.get("entityName");
     const instanceAttributes = cellToEdit?.model.get("instanceAttributes");
 
     if (serviceModel) {
@@ -56,7 +60,16 @@ export const RightSidebar: React.FC = () => {
 
     const isCellCore = cellToEdit?.model.get("isCore");
 
-    setIsAllowedToRemove(isCellCore);
+    //children entities are not allowed to be removed, as well as rw embedded entities in the edit form
+    const canBeRemoved = !cellToEdit.model.get("cantBeRemoved");
+    const lowerLimit = stencilState && stencilState[entityName]?.min;
+
+    const isLowerLimitReached =
+      stencilState &&
+      lowerLimit &&
+      stencilState[entityName]?.current === lowerLimit;
+
+    setIsAllowedToRemove(!isCellCore && canBeRemoved && !isLowerLimitReached);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cellToEdit]);
 
@@ -67,10 +80,22 @@ export const RightSidebar: React.FC = () => {
         spaceItems={{ default: "spaceItemsSm" }}
         justifyContent={{ default: "justifyContentSpaceBetween" }}
       >
-        <FlexItem alignSelf={{ default: "alignSelfCenter" }}>
-          <Title headingLevel="h1">{words("details")}</Title>
-          {description && <TextContent>{description}</TextContent>}
-        </FlexItem>
+        <Flex
+          direction={{ default: "column" }}
+          spaceItems={{ default: "spaceItemsSm" }}
+          alignItems={{ default: "alignItemsCenter" }}
+        >
+          <FlexItem alignSelf={{ default: "alignSelfCenter" }}>
+            <Title headingLevel="h1">{words("details")}</Title>
+          </FlexItem>
+          {description && (
+            <FlexItem>
+              <TextContent aria-label="service-description">
+                {description}
+              </TextContent>
+            </FlexItem>
+          )}
+        </Flex>
         {!!cellToEdit && !!model && (
           <EntityForm
             serviceModel={model}
@@ -143,7 +168,7 @@ export const RightSidebar: React.FC = () => {
                       ?.classList.remove("stencil_text-disabled");
                   }
                 }}
-                isDisabled={isAllowedToRemove || !cellToEdit}
+                isDisabled={!isAllowedToRemove || !cellToEdit}
               >
                 {words("remove")}
               </StyledButton>

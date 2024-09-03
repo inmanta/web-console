@@ -1001,6 +1001,8 @@ describe("checkIfConnectionIsAllowed", () => {
       false,
     );
 
+    graph.addCells([serviceA, serviceB]);
+
     const result = checkIfConnectionIsAllowed(
       graph,
       paper.findViewByModel(serviceA),
@@ -1019,6 +1021,8 @@ describe("checkIfConnectionIsAllowed", () => {
     });
     const serviceA = createEntity(Service.a, false, InstanceAttributesA, false);
     const serviceB = createEntity(Service.b, false, InstanceAttributesB, false);
+
+    graph.addCells([serviceA, serviceB]);
 
     const result = checkIfConnectionIsAllowed(
       graph,
@@ -1042,7 +1046,10 @@ describe("checkIfConnectionIsAllowed", () => {
       false,
       (InstanceAttributesA["circuits"] as InstanceAttributeModel[])[0],
       false,
+      true,
     );
+
+    graph.addCells([serviceA, serviceB]);
 
     serviceA.set("isBlockedFromEditing", true);
 
@@ -1074,10 +1081,12 @@ describe("checkIfConnectionIsAllowed", () => {
     const serviceB = createEntity(
       Service.a.embedded_entities[0],
       true,
-
       (InstanceAttributesA["circuits"] as InstanceAttributeModel[])[0],
       false,
+      true,
     );
+
+    graph.addCells([serviceA, serviceA2, serviceB]);
 
     const link = new Link();
 
@@ -1561,6 +1570,8 @@ describe("toggleLooseElement", () => {
     //add highlighter
     const entity = createEntity(Service.a, false, InstanceAttributesA, false);
 
+    graph.addCell(entity);
+
     toggleLooseElement(paper.findViewByModel(entity), EmbeddedEventEnum.ADD);
 
     expect((dispatchEventSpy.mock.calls[0][0] as CustomEvent).detail).toEqual(
@@ -1586,6 +1597,8 @@ describe("toggleLooseElement", () => {
       model: graph,
     });
     const entity = createEntity(Service.a, false, InstanceAttributesA, false);
+
+    graph.addCell(entity);
 
     toggleLooseElement(paper.findViewByModel(entity), EmbeddedEventEnum.ADD);
     expect(

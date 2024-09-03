@@ -208,7 +208,11 @@ export class ComposerPaper {
         });
       }
 
-      if (linkView.model.get("isBlockedFromEditing") || !editable) {
+      if (
+        linkView.model.get("isBlockedFromEditing") ||
+        !editable ||
+        !linkView.model.get("isRelationshipConnection")
+      ) {
         return;
       }
 
@@ -261,9 +265,10 @@ export class ComposerPaper {
               connectingCell.id,
               cellConnectionRule.attributeName,
             );
+            linkView.model.set("isRelationshipConnection", true);
             document.dispatchEvent(
               new CustomEvent("updateInstancesToSend", {
-                detail: { cell: sourceCell, actions: ActionEnum.UPDATE },
+                detail: { cell: sourceCell, action: ActionEnum.UPDATE },
               }),
             );
           }
@@ -282,7 +287,7 @@ export class ComposerPaper {
 
           document.dispatchEvent(
             new CustomEvent("updateInstancesToSend", {
-              detail: { cell: elementCell, actions: ActionEnum.UPDATE },
+              detail: { cell: elementCell, action: ActionEnum.UPDATE },
             }),
           );
         }

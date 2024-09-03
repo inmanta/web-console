@@ -78,8 +78,9 @@ const Toolbar: React.FC<Props> = ({ serviceName, editable }) => {
         },
       }));
 
-    //Temporary workaround to update coordinates in metadata, as currently order endpoint don't handle metadata in the updates.
+    // Temporary workaround to update coordinates in metadata, as currently order endpoint don't handle metadata in the updates.
     // can't test in jest as I can't add any test-id to the halo handles though.
+
     if (instance) {
       metadataMutation.mutate({
         service_entity: mainService.name,

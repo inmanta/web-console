@@ -7,7 +7,7 @@ import {
   createFormState,
 } from "../../ServiceInstanceForm";
 import { createEntity } from "../actions";
-import { EmbeddedEventEnum } from "../interfaces";
+import { ActionEnum, EmbeddedEventEnum } from "../interfaces";
 import {
   createStencilElement,
   transformEmbeddedToStencilElements,
@@ -65,20 +65,7 @@ class InstanceStencilTab {
           cell.get("holderName"),
         );
       },
-      dragEndClone: (el) => {
-        if (el.get("isEmbedded")) {
-          document.dispatchEvent(
-            new CustomEvent("updateStencil", {
-              detail: {
-                name: el.get("entityName"),
-                action: EmbeddedEventEnum.ADD,
-              },
-            }),
-          );
-        }
-
-        return el.clone();
-      },
+      dragEndClone: (el) => el.clone().set("items", el.get("items")), //cloned element loses key value pairs, so we need to set them again
       layout: {
         columns: 1,
         rowHeight: "compact",
@@ -96,6 +83,25 @@ class InstanceStencilTab {
     stencilElement.appendChild(this.stencil.el);
     this.stencil.render();
     this.stencil.load(transformEmbeddedToStencilElements(service));
+
+    this.stencil.on("element:drop", (elementView) => {
+      if (elementView.model.get("isEmbedded")) {
+        document.dispatchEvent(
+          new CustomEvent("updateStencil", {
+            detail: {
+              name: elementView.model.get("entityName"),
+              action: EmbeddedEventEnum.ADD,
+            },
+          }),
+        );
+      }
+
+      document.dispatchEvent(
+        new CustomEvent("updateInstancesToSend", {
+          detail: { cell: elementView.model, action: ActionEnum.CREATE },
+        }),
+      );
+    });
   }
 }
 
@@ -184,20 +190,7 @@ class InventoryStencilTab {
 
         return entity;
       },
-      dragEndClone: (el) => {
-        document
-          .querySelector(`.${el.get("stencilName")}_body`)
-          ?.classList.add("stencil_accent-disabled");
-        document
-          .querySelector(`.${el.get("stencilName")}_bodyTwo`)
-          ?.classList.add("stencil_body-disabled");
-        document
-          .querySelector(`.${el.get("stencilName")}_text`)
-          ?.classList.add("stencil_text-disabled");
-
-        //set id to the one that has been stored in the stencil which equalt to the instance id
-        return el.clone().set("id", el.get("id"));
-      },
+      dragEndClone: (el) => el.clone().set("id", el.get("id")),
       layout: {
         columns: 1,
         rowHeight: "compact",
@@ -218,6 +211,18 @@ class InventoryStencilTab {
 
     this.stencil.load(groups);
     this.stencil.freeze(); //freeze by default as this tab is not active on init
+
+    this.stencil.on("element:drop", (elementView) => {
+      document
+        .querySelector(`.${elementView.model.get("stencilName")}_body`)
+        ?.classList.add("stencil_accent-disabled");
+      document
+        .querySelector(`.${elementView.model.get("stencilName")}_bodyTwo`)
+        ?.classList.add("stencil_body-disabled");
+      document
+        .querySelector(`.${elementView.model.get("stencilName")}_text`)
+        ?.classList.add("stencil_text-disabled");
+    });
   }
 }
 

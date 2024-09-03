@@ -99,6 +99,11 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
     setStencilState((prev) => {
       const stencilStateCopy = JSON.parse(JSON.stringify(prev));
 
+      // If the stencil doesn't exist, return the previous state - that's the case when we recurrently adding related children to the canvas, these embedded entities aren't tracked
+      if (!stencilStateCopy[eventData.name]) {
+        return stencilStateCopy;
+      }
+
       switch (eventData.action) {
         case "add":
           stencilStateCopy[eventData.name].current += 1;
@@ -110,8 +115,9 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
 
       // If the current count is more than or equal to the max count, disable the stencil of given embedded entity
       if (
+        stencilStateCopy[eventData.name].max !== null &&
         stencilStateCopy[eventData.name].current >=
-        stencilStateCopy[eventData.name].max
+          stencilStateCopy[eventData.name].max
       ) {
         document
           .querySelector(`.${eventData.name}_body`)

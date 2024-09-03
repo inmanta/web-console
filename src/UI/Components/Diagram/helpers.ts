@@ -423,6 +423,7 @@ export const getServiceOrderItems = (
       : mapToArray[index].relatedTo;
   });
   const topServicesNames = services.map((service) => service.name);
+
   // topInstances are instances that have top-level attributes from given serviceModel, and theoretically are the ones accepting embedded-entities
   const topInstances = deepCopiedMapToArray.filter((instance) =>
     topServicesNames.includes(instance.service_entity),
@@ -630,13 +631,14 @@ export const findInterServiceRelations = (
 
 export const createStencilState = (
   serviceModel: ServiceModel | EmbeddedEntity,
+  isInEditMode = false,
 ) => {
   let stencilState: StencilState = {};
 
   serviceModel.embedded_entities.forEach((entity) => {
     stencilState[entity.name] = {
       min: entity.lower_limit,
-      max: entity.upper_limit,
+      max: entity.modifier === "rw" && isInEditMode ? 0 : entity.upper_limit,
       current: 0,
     };
     if (entity.embedded_entities) {
@@ -684,6 +686,7 @@ export const updateInstancesToSend = (
       break;
     case "create":
       newInstance.action = action;
+      copiedInstances.set(String(cell.id), newInstance);
       break;
     default:
       if (

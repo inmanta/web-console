@@ -8,10 +8,11 @@ const defaultStencil = {
   type: "standard.Path",
   size: { width: 240, height: 40 },
   name: "default",
-  entity_model: undefined,
   holderName: undefined,
   disabled: false,
   instanceAttributes: undefined,
+  serviceModel: undefined,
+  id: "1",
   attrs: {
     body: {
       width: 7,
@@ -19,12 +20,14 @@ const defaultStencil = {
       x: 233,
       fill: "#6753AC",
       stroke: "none",
+      class: "default_body",
     },
     bodyTwo: {
       width: 240,
       height: 40,
       fill: "#FFFFFF",
       stroke: "none",
+      class: "default_bodyTwo",
     },
     label: {
       refX: null,
@@ -33,6 +36,7 @@ const defaultStencil = {
       fontFamily: "sans-serif",
       fontSize: 12,
       text: "default",
+      class: "default_text",
     },
   },
   markup: [
@@ -70,7 +74,8 @@ describe("createStencilElement", () => {
 
     expect(embeddedElementWithModel).toStrictEqual({
       ...defaultStencil,
-      entity_model: containerModel.embedded_entities[0],
+      id: "2",
+      serviceModel: containerModel.embedded_entities[0],
       holderName: "holderName",
       instanceAttributes: {
         attrOne: "test_value",
@@ -107,8 +112,8 @@ describe("transformEmbeddedToStencilElements", () => {
       {
         ...defaultStencil,
         name: "embedded",
-
-        entity_model: {
+        id: "3",
+        serviceModel: {
           ...containerModel.embedded_entities[0],
           name: "embedded",
           embedded_entities: [
@@ -121,22 +126,49 @@ describe("transformEmbeddedToStencilElements", () => {
         holderName: "holderName",
         attrs: {
           ...defaultStencil.attrs,
-          body: { ...defaultStencil.attrs.body, fill: "#0066cc" },
-          label: { ...defaultStencil.attrs.label, text: "embedded" },
+          body: {
+            ...defaultStencil.attrs.body,
+            fill: "#0066cc",
+            class: "embedded_body",
+          },
+          bodyTwo: {
+            ...defaultStencil.attrs.bodyTwo,
+            fill: "#FFFFFF",
+            class: "embedded_bodyTwo",
+          },
+          label: {
+            ...defaultStencil.attrs.label,
+            text: "embedded",
+            class: "embedded_text",
+          },
         },
       },
       {
         ...defaultStencil,
         name: "embedded-embedded",
-        entity_model: {
+        id: "4",
+        serviceModel: {
           ...containerModel.embedded_entities[0],
           name: "embedded-embedded",
         },
         holderName: "embedded",
         attrs: {
           ...defaultStencil.attrs,
-          body: { ...defaultStencil.attrs.body, fill: "#0066cc" },
-          label: { ...defaultStencil.attrs.label, text: "embedded-embedded" },
+          body: {
+            ...defaultStencil.attrs.body,
+            fill: "#0066cc",
+            class: "embedded-embedded_body",
+          },
+          bodyTwo: {
+            ...defaultStencil.attrs.bodyTwo,
+            fill: "#FFFFFF",
+            class: "embedded-embedded_bodyTwo",
+          },
+          label: {
+            ...defaultStencil.attrs.label,
+            text: "embedded-embedded",
+            class: "embedded-embedded_text",
+          },
         },
       },
     ]);
