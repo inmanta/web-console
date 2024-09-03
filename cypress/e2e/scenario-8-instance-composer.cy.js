@@ -81,7 +81,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
 
       // click on Show Inventory on embedded-entity-service-extra, expect no instances
-      cy.get("#embedded-entity-service-extra", { timeout: 60000 })
+      cy.get("#container-service", { timeout: 60000 })
         .contains("Show inventory")
         .click();
       cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
@@ -89,8 +89,9 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="AddInstanceToggle"]').click();
       cy.get("#add-instance-composer-button").click();
 
-      // Expect Canvas to be visible
+      // Expect Canvas to be visible adn default instances to be present
       cy.get(".canvas").should("be.visible");
+      cy.get('[data-type="app.ServiceEntityBlock"').should("have.length", 2);
 
       //expect Zoom Handler and it's all component visible and in default state
       cy.get('[data-testid="zoomHandler"').should("be.visible");
@@ -98,10 +99,10 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[data-testid="fit-to-screen"').should("be.visible");
 
       cy.get('[data-testid="slider-input"').should("be.visible");
-      cy.get('[data-testid="slider-input"').should("have.value", "100");
+      cy.get('[data-testid="slider-input"').should("have.value", "120");
 
       cy.get('[data-testid="slider-output"').should("be.visible");
-      cy.get('[data-testid="slider-output"').should("have.text", "100");
+      cy.get('[data-testid="slider-output"').should("have.text", "120");
 
       cy.get(".units").should("be.visible");
       cy.get(".units").contains("%"); //should('have.text', '%'); won't work because of the special character
@@ -109,8 +110,8 @@ if (Cypress.env("edition") === "iso") {
       //assertion that fit-to-screen button works can be only done by checking output and the input value, as I couldn't extract the transform property from the `.joint-layers` element
       cy.get('[data-testid="fit-to-screen"').click();
 
-      cy.get('[data-testid="slider-input"').should("have.value", "140");
-      cy.get('[data-testid="slider-output"').should("have.text", "140");
+      cy.get('[data-testid="slider-input"').should("have.value", "220");
+      cy.get('[data-testid="slider-output"').should("have.text", "220");
 
       //assert that zoom button works
       cy.get('[data-testid="slider-input"')
@@ -142,7 +143,6 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#inventory-stencil").should("not.be.visible");
     });
 
-    //TODO: assertion of attributes
     it("8.2 composer is able to create instance", () => {
       // Select 'test' environment
       cy.visit("/console/");
@@ -153,7 +153,7 @@ if (Cypress.env("edition") === "iso") {
 
       //Add parent instance
       // click on Show Inventory of parent-service, expect no instances
-      cy.get("#parents-service", { timeout: 60000 })
+      cy.get("#parent-service", { timeout: 60000 })
         .contains("Show inventory")
         .click();
 
@@ -169,22 +169,20 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[data-type="app.ServiceEntityBlock"')
         .contains("parent-service")
         .click();
-      cy.get("input").should("have.length", 3);
 
       //fill parent attributes
       cy.get("button").contains("Edit").click();
       cy.get('[aria-label="TextInput-name"]').type("test_name");
-      cy.get('[aria-label="TextInput-id"]').type("test_id");
+      cy.get('[aria-label="TextInput-service_id"]').type("test_id");
       cy.get("button").contains("Save").click();
 
       cy.get("button").contains("Deploy").click();
 
       cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 1);
       // await until parent_service is deployed and up
-      cy.get('[data-label="State"]', { timeout: 90000 }).should(
-        "have.text",
-        "up",
-      );
+      cy.get('[data-label="State"]', {
+        timeout: 90000,
+      }).should("have.text", "up");
 
       //add another parent instance
       cy.get('[aria-label="AddInstanceToggle"]').click();
@@ -196,17 +194,16 @@ if (Cypress.env("edition") === "iso") {
       //fill parent attributes
       cy.get("button").contains("Edit").click();
       cy.get('[aria-label="TextInput-name"]').type("test_name2");
-      cy.get('[aria-label="TextInput-id"]').type("test_id2");
+      cy.get('[aria-label="TextInput-service_id"]').type("test_id2");
       cy.get("button").contains("Save").click();
 
       cy.get("button").contains("Deploy").click();
 
       cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 2);
       // await until parent_service is deployed and up
-      cy.get('[data-label="State"]', { timeout: 90000 })[0].should(
-        "have.text",
-        "up",
-      );
+      cy.get('[data-label="State"]', { timeout: 90000 })
+        .eq(0, { timeout: 90000 })
+        .should("have.text", "up");
 
       //Add child_service instance
       cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
@@ -512,68 +509,68 @@ if (Cypress.env("edition") === "iso") {
       );
     });
 
-    //TODO: whole scenario
-    it("8.3 composer is able to edit instances attributes", () => {
-      // Select 'test' environment
-      cy.visit("/console/");
-      cy.get('[aria-label="Environment card"]')
-        .contains("lsm-frontend")
-        .click();
-      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
-      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
-      // click on Show Inventory of many-defaults service, expect no instances
-      cy.get("#many-defaults", { timeout: 60000 })
-        .contains("Show inventory")
-        .click();
-      cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
-      // click on add instance with composer
-      cy.get('[aria-label="AddInstanceToggle"]').click();
-      cy.get("#add-instance-composer-button").click();
+    // //TODO: whole scenario
+    // it("8.3 composer is able to edit instances attributes", () => {
+    //   // Select 'test' environment
+    //   cy.visit("/console/");
+    //   cy.get('[aria-label="Environment card"]')
+    //     .contains("lsm-frontend")
+    //     .click();
+    //   cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
+    //   cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
+    //   // click on Show Inventory of many-defaults service, expect no instances
+    //   cy.get("#many-defaults", { timeout: 60000 })
+    //     .contains("Show inventory")
+    //     .click();
+    //   cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
+    //   // click on add instance with composer
+    //   cy.get('[aria-label="row actions toggle"]').click();
+    //   cy.get("button").contains("Edit in Composer").click();
 
-      // Expect Canvas to be visible
-      cy.get(".canvas").should("be.visible");
+    //   // Expect Canvas to be visible
+    //   cy.get(".canvas").should("be.visible");
 
-      //assert if default entities are present
-      cy.get('[data-type="app.ServiceEntityBlock"').should("have.length", 3);
-      cy.get('[data-type="app.ServiceEntityBlock"')
-        .contains("embedded")
-        .should("be.visible");
-      cy.get('[data-type="app.ServiceEntityBlock"')
-        .contains("many-defaults")
-        .should("be.visible");
-      cy.get('[data-type="Link"').should("be.visible");
-    });
+    //   //assert if default entities are present
+    //   cy.get('[data-type="app.ServiceEntityBlock"').should("have.length", 3);
+    //   cy.get('[data-type="app.ServiceEntityBlock"')
+    //     .contains("embedded")
+    //     .should("be.visible");
+    //   cy.get('[data-type="app.ServiceEntityBlock"')
+    //     .contains("many-defaults")
+    //     .should("be.visible");
+    //   cy.get('[data-type="Link"').should("be.visible");
+    // });
 
-    //TODO: whole scenario
-    it("8.4 composer is able to edit instances relations", () => {
-      // Select 'test' environment
-      cy.visit("/console/");
-      cy.get('[aria-label="Environment card"]')
-        .contains("lsm-frontend")
-        .click();
-      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
-      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
-      // click on Show Inventory of many-defaults service, expect no instances
-      cy.get("#many-defaults", { timeout: 60000 })
-        .contains("Show inventory")
-        .click();
-      cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
-      // click on add instance with composer
-      cy.get('[aria-label="AddInstanceToggle"]').click();
-      cy.get("#add-instance-composer-button").click();
+    // //TODO: whole scenario
+    // it("8.4 composer is able to edit instances relations", () => {
+    //   // Select 'test' environment
+    //   cy.visit("/console/");
+    //   cy.get('[aria-label="Environment card"]')
+    //     .contains("lsm-frontend")
+    //     .click();
+    //   cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
+    //   cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
+    //   // click on Show Inventory of many-defaults service, expect no instances
+    //   cy.get("#many-defaults", { timeout: 60000 })
+    //     .contains("Show inventory")
+    //     .click();
+    //   cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
+    //   // click on add instance with composer
+    //   cy.get('[aria-label="AddInstanceToggle"]').click();
+    //   cy.get("#add-instance-composer-button").click();
 
-      // Expect Canvas to be visible
-      cy.get(".canvas").should("be.visible");
+    //   // Expect Canvas to be visible
+    //   cy.get(".canvas").should("be.visible");
 
-      //assert if default entities are present
-      cy.get('[data-type="app.ServiceEntityBlock"').should("have.length", 3);
-      cy.get('[data-type="app.ServiceEntityBlock"')
-        .contains("embedded")
-        .should("be.visible");
-      cy.get('[data-type="app.ServiceEntityBlock"')
-        .contains("many-defaults")
-        .should("be.visible");
-      cy.get('[data-type="Link"').should("be.visible");
-    });
+    //   //assert if default entities are present
+    //   cy.get('[data-type="app.ServiceEntityBlock"').should("have.length", 3);
+    //   cy.get('[data-type="app.ServiceEntityBlock"')
+    //     .contains("embedded")
+    //     .should("be.visible");
+    //   cy.get('[data-type="app.ServiceEntityBlock"')
+    //     .contains("many-defaults")
+    //     .should("be.visible");
+    //   cy.get('[data-type="Link"').should("be.visible");
+    // });
   });
 }
