@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { useUrlStateWithFilter, useUrlStateWithPageSize } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import {
@@ -33,18 +33,6 @@ export const Page: React.FC = () => {
     filter,
     currentPage,
   });
-
-  //when filtering is triggered, reset the current page
-  useEffect(() => {
-    setCurrentPage({ kind: "CurrentPage", value: "" });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    filter.cleared,
-    filter.message,
-    filter.read,
-    filter.severity,
-    filter.title,
-  ]);
 
   return (
     <PageContainer pageTitle={words("notification.center.title")}>
