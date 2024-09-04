@@ -24,14 +24,12 @@ import { Link, ServiceEntityBlock } from "./shapes";
  * https://resources.jointjs.com/docs/jointjs/v3.6/joint.html#dia.LinkView
  * https://resources.jointjs.com/docs/jointjs/v3.6/joint.html#linkTools
  *
- * @param {dia.Paper} paper JointJS paper object
  * @param {dia.Graph} graph JointJS graph object
  * @param {dia.LinkView} linkView  - The view for the joint.dia.Link model.
  * @function {(cell: ServiceEntityBlock, action: ActionEnum): void} linkView  - The view for the joint.dia.Link model.
  * @returns {void}
  */
 export function showLinkTools(
-  paper: dia.Paper,
   graph: dia.Graph,
   linkView: dia.LinkView,
   connectionRules: ConnectionRules,
@@ -302,12 +300,14 @@ export function appendInstance(
       const isBlockedFromEditing = true;
 
       if (!cellAdded) {
+        const isMainInstance = false;
+
         appendInstance(
           paper,
           graph,
           { instance: relatedInstance },
           services,
-          false,
+          isMainInstance,
           instanceAsTable,
           isBlockedFromEditing,
         );

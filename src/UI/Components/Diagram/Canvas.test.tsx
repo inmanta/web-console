@@ -87,7 +87,10 @@ const setup = (
                 instance: instance || null,
                 serviceModels,
                 mainService: mainService,
-                relatedInventories: {} as UseQueryResult<Inventories, Error>,
+                relatedInventories: { data: {} } as UseQueryResult<
+                  Inventories,
+                  Error
+                >,
               }}
             >
               <CanvasProvider>
@@ -284,15 +287,11 @@ beforeAll(() => {
 //   });
 
 it("renders shapes dict Value that can be viewed in dict Modal", async () => {
-  const component = setup(mockedInstanceTwoServiceModel, mockedInstanceTwo, []);
+  const component = setup(mockedInstanceTwoServiceModel, mockedInstanceTwo, [
+    mockedInstanceTwoServiceModel,
+  ]);
 
   render(component);
-
-  const button = await screen.findByJointSelector("toggleButton");
-
-  await act(async () => {
-    await user.click(button);
-  });
 
   const dictValue = await screen.findByJointSelector("itemLabel_dictOne_value");
 

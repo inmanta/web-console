@@ -87,7 +87,8 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
       !LeftSidebar.current ||
       !scroller ||
       !relatedInventories.data ||
-      !mainService
+      !mainService ||
+      !serviceModels
     ) {
       return;
     }
