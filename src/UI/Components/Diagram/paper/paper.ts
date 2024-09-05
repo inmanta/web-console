@@ -216,7 +216,7 @@ export class ComposerPaper {
         return;
       }
 
-      showLinkTools(this.paper, graph, linkView, connectionRules);
+      showLinkTools(graph, linkView, connectionRules);
     });
 
     this.paper.on("link:mouseleave", (linkView: dia.LinkView) => {
