@@ -227,7 +227,6 @@ export function appendInstance(
   instanceWithRelations: InstanceWithRelations,
   services: ServiceModel[],
   isMainInstance = true,
-  instanceToConnectRelation?: ServiceEntityBlock,
   isBlockedFromEditing = false,
 ): ServiceEntityBlock[] {
   const serviceInstance = instanceWithRelations.instance;
@@ -252,6 +251,16 @@ export function appendInstance(
     isInEditMode,
   );
 
+  //if instance is not main, we need to apply it's stencil name to the shape to later disable it's adequate blueprint in the sidebar
+  if (!isMainInstance) {
+    instanceAsTable.set(
+      "stencilName",
+      serviceInstance.service_identity_attribute_value
+        ? serviceInstance.service_identity_attribute_value
+        : serviceInstance.id,
+    );
+  }
+
   instanceAsTable.set("id", instanceWithRelations.instance.id);
 
   instanceAsTable.set(
@@ -261,7 +270,7 @@ export function appendInstance(
 
   instanceAsTable.set(
     "cantBeRemoved",
-    !serviceInstanceModel.strict_modifier_enforcement || isBlockedFromEditing,
+    isMainInstance && !serviceInstanceModel.strict_modifier_enforcement,
   );
 
   instanceAsTable.addTo(graph);
@@ -278,7 +287,6 @@ export function appendInstance(
       serviceInstance.candidate_attributes,
       "candidate",
       isBlockedFromEditing,
-      instanceToConnectRelation,
     );
   } else if (serviceInstance.active_attributes) {
     embeddedEntities = handleNonDirectAttributes(
@@ -289,7 +297,6 @@ export function appendInstance(
       serviceInstance.active_attributes,
       "active",
       isBlockedFromEditing,
-      instanceToConnectRelation,
     );
   }
 
@@ -301,16 +308,54 @@ export function appendInstance(
 
       if (!cellAdded) {
         const isMainInstance = false;
-
-        appendInstance(
+        const appendedInstances = appendInstance(
           paper,
           graph,
           { instance: relatedInstance },
           services,
           isMainInstance,
-          instanceAsTable,
           isBlockedFromEditing,
         );
+
+        //disable Inventory Stencil for related instance
+        document
+          .querySelector(`.${appendedInstances[0].get("stencilName")}_body`)
+          ?.classList.add("stencil_accent-disabled");
+        document
+          .querySelector(`.${appendedInstances[0].get("stencilName")}_bodyTwo`)
+          ?.classList.add("stencil_body-disabled");
+        document
+          .querySelector(`.${appendedInstances[0].get("stencilName")}_text`)
+          ?.classList.add("stencil_text-disabled");
+
+        const allCells = graph.getCells() as ServiceEntityBlock[];
+
+        allCells.forEach((cell) => {
+          const relationMap = cell.get("relatedTo") as Map<string, string>;
+          const serviceModel = cell.get("serviceModel") as ServiceModel;
+
+          if (relationMap) {
+            relationMap.forEach((_value, key) => {
+              const relatedCell = allCells.find((cell) => cell.id === key);
+
+              if (relatedCell) {
+                const relation = serviceModel.inter_service_relations?.find(
+                  (relation) => relation.entity_type === relatedCell.getName(),
+                );
+
+                if (relation) {
+                  relatedCell.set("cantBeRemoved", relation.modifier !== "rw+");
+                  connectEntities(
+                    graph,
+                    relatedCell,
+                    [cell],
+                    relation.modifier !== "rw+",
+                  );
+                }
+              }
+            });
+          }
+        });
       } else {
         //If cell is already in the graph, we need to check if it got in its inter-service relations the one with id that corresponds with created instanceAsTable
         let isConnected = false;
@@ -331,6 +376,20 @@ export function appendInstance(
               [cellAsBlock],
               serviceInstanceModel.strict_modifier_enforcement,
             );
+          } else {
+            embeddedEntities.forEach((entity) => {
+              const embeddedId = findCorrespondingId(relations, entity);
+
+              if (embeddedId) {
+                isConnected = true;
+                connectEntities(
+                  graph,
+                  instanceAsTable,
+                  [cellAsBlock],
+                  serviceInstanceModel.strict_modifier_enforcement,
+                );
+              }
+            });
           }
         }
 
@@ -404,7 +463,6 @@ export function appendEmbeddedEntity(
   entityAttributes: InstanceAttributeModel | InstanceAttributeModel[],
   embeddedTo: string | dia.Cell.ID | null,
   holderName: string,
-  instanceToConnectRelation?: ServiceEntityBlock,
   presentedAttr?: "candidate" | "active",
   isBlockedFromEditing?: boolean,
 ): ServiceEntityBlock[] {
@@ -459,7 +517,6 @@ export function appendEmbeddedEntity(
         entityInstance[entity.name] as InstanceAttributeModel,
         instanceAsTable.id as string,
         entity.name,
-        instanceToConnectRelation,
         presentedAttr,
         isBlockedFromEditing,
       );
@@ -480,17 +537,6 @@ export function appendEmbeddedEntity(
 
       if (relationId) {
         instanceAsTable.addRelation(relationId, relation.name);
-        if (
-          instanceToConnectRelation &&
-          relationId === instanceToConnectRelation.id
-        ) {
-          connectEntities(
-            graph,
-            instanceAsTable,
-            [instanceToConnectRelation],
-            isBlockedFromEditing,
-          );
-        }
       }
     });
 
@@ -704,7 +750,6 @@ function handleNonDirectAttributes(
   attributesValues: InstanceAttributeModel,
   presentedAttr: "candidate" | "active",
   isBlockedFromEditing = false,
-  instanceToConnectRelation?: ServiceEntityBlock,
 ): ServiceEntityBlock[] {
   const { embedded_entities } = serviceModel;
 
@@ -722,7 +767,6 @@ function handleNonDirectAttributes(
         attributesValues[entity.name] as InstanceAttributeModel,
         instanceAsTable.id,
         serviceModel.name,
-        instanceToConnectRelation,
         presentedAttr,
         !serviceModel.strict_modifier_enforcement || isBlockedFromEditing,
       );
@@ -752,18 +796,6 @@ function handleNonDirectAttributes(
       } else {
         instanceAsTable.addRelation(relationId as string, relation.name);
       }
-    }
-    if (
-      instanceToConnectRelation &&
-      instanceToConnectRelation.id &&
-      relationId
-    ) {
-      connectEntities(
-        graph,
-        instanceAsTable,
-        [instanceToConnectRelation],
-        !serviceModel.strict_modifier_enforcement || isBlockedFromEditing,
-      );
     }
   });
 

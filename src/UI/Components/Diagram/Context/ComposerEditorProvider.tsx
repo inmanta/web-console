@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { useGetAllServiceModels } from "@/Data/Managers/V2/GetAllServiceModels";
 import { useGetInstanceWithRelations } from "@/Data/Managers/V2/GetInstanceWithRelations";
 import { useGetRelatedInventories } from "@/Data/Managers/V2/GetRelatedInventories";
@@ -50,8 +50,14 @@ export const ComposerEditorProvider: React.FC<Props> = ({
 
   const serviceModels = useGetAllServiceModels(environment).useContinuous();
 
+  const mainModel = useMemo(
+    () => serviceModels.data?.find((service) => service.name === serviceName),
+    [serviceModels.data, serviceName],
+  );
+
   const instanceWithRelations = useGetInstanceWithRelations(
     instance,
+    mainModel,
     environment,
   ).useContinuous();
 

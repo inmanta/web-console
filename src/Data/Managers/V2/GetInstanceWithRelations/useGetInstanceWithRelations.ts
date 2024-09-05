@@ -1,5 +1,10 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
-import { ServiceInstanceModel } from "@/Core";
+import {
+  EmbeddedEntity,
+  InstanceAttributeModel,
+  ServiceInstanceModel,
+  ServiceModel,
+} from "@/Core";
 import { PrimaryBaseUrlManager } from "@/UI";
 import { useFetchHelpers } from "../helpers";
 
@@ -28,6 +33,7 @@ interface GetInstanceWithRelationsHook {
  */
 export const useGetInstanceWithRelations = (
   instanceId: string,
+  serviceModel: ServiceModel | undefined,
   environment: string,
 ): GetInstanceWithRelationsHook => {
   //extracted headers to avoid breaking rules of Hooks
@@ -61,6 +67,63 @@ export const useGetInstanceWithRelations = (
     return await response.json();
   };
 
+  const getAllRelations = (
+    serviceModel: ServiceModel | EmbeddedEntity,
+  ): string[] => {
+    const relations =
+      serviceModel.inter_service_relations?.map((relation) => relation.name) ||
+      [];
+
+    const nestedRelations = serviceModel.embedded_entities?.flatMap((entity) =>
+      getAllRelations(entity),
+    );
+
+    return [...relations, ...nestedRelations];
+  };
+
+  const getAllEmbeddedEntities = (
+    serviceModel: ServiceModel | EmbeddedEntity,
+  ): string[] => {
+    const embedded = serviceModel.embedded_entities.map(
+      (entity) => entity.name,
+    );
+    const nestedEmbedded = serviceModel.embedded_entities?.flatMap((entity) =>
+      getAllEmbeddedEntities(entity),
+    );
+
+    return [...embedded, ...nestedEmbedded];
+  };
+
+  const findAllRelatedIds = (
+    attributes: InstanceAttributeModel,
+    relationNames: string[],
+    embeddedNames: string[],
+  ): string[] => {
+    const relationIDs = relationNames.map(
+      (relationName) => (attributes[relationName] as string) || "",
+    );
+
+    const embeddedRelationsIDs = embeddedNames.flatMap((embeddedName) => {
+      if (!attributes[embeddedName]) {
+        return "";
+      }
+      if (Array.isArray(attributes[embeddedName])) {
+        return (attributes[embeddedName] as InstanceAttributeModel[]).flatMap(
+          (embedded) =>
+            findAllRelatedIds(embedded, relationNames, embeddedNames),
+        );
+      } else {
+        return findAllRelatedIds(
+          attributes[embeddedName] as InstanceAttributeModel,
+          relationNames,
+          embeddedNames,
+        );
+      }
+    });
+
+    return [...relationIDs, ...embeddedRelationsIDs];
+  };
+
   /**
    * Fetches a service instance with its related instances.
    * @param {string} id - The ID of the instance to fetch.
@@ -70,20 +133,37 @@ export const useGetInstanceWithRelations = (
   const fetchInstances = async (id: string): Promise<InstanceWithRelations> => {
     const relatedInstances: ServiceInstanceModel[] = [];
     const instance = (await fetchInstance(id)).data;
+    let serviceIDs: string[] = [];
 
-    if (instance.referenced_by !== null) {
-      await Promise.all(
-        instance.referenced_by.map(async (relatedId) => {
-          const relatedInstance = await fetchInstance(relatedId);
+    if (serviceModel) {
+      const whatAttributesToFetch = getAllRelations(serviceModel);
+      const uniqueAttributes = [...new Set(whatAttributesToFetch)];
+      const allEmbedded = getAllEmbeddedEntities(serviceModel);
+      const attributes =
+        instance.active_attributes || instance.candidate_attributes || {}; //we don't operate on rollback attributes
 
-          if (relatedInstance) {
-            relatedInstances.push(relatedInstance.data);
-          }
-
-          return relatedInstance;
-        }),
-      );
+      serviceIDs = [
+        ...new Set(
+          findAllRelatedIds(attributes, uniqueAttributes, allEmbedded),
+        ),
+      ].filter((id) => id !== "");
     }
+
+    const allIDs = [
+      ...new Set([...serviceIDs, ...(instance.referenced_by || [])]),
+    ];
+
+    await Promise.all(
+      allIDs.map(async (relatedId) => {
+        const relatedInstance = await fetchInstance(relatedId);
+
+        if (relatedInstance) {
+          relatedInstances.push(relatedInstance.data);
+        }
+
+        return relatedInstance;
+      }),
+    );
 
     return {
       instance,
@@ -105,6 +185,7 @@ export const useGetInstanceWithRelations = (
         ],
         queryFn: () => fetchInstances(instanceId),
         retry: false,
+        enabled: serviceModel !== undefined,
       }),
     useContinuous: (): UseQueryResult<InstanceWithRelations, Error> =>
       useQuery({
@@ -115,6 +196,7 @@ export const useGetInstanceWithRelations = (
         ],
         queryFn: () => fetchInstances(instanceId),
         refetchInterval: 5000,
+        enabled: serviceModel !== undefined,
       }),
   };
 };

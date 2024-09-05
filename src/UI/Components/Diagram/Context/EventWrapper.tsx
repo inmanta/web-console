@@ -83,7 +83,12 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
     };
 
     setInstancesToSend((prev) => {
-      return updateInstancesToSend(cell, action, prev);
+      //related instances aren't added to the instancesToSend map, and to avoid unwanted deletion of them, we need to assert that the instance is in the map before editing
+      if (prev.has(String(cell.id)) || action === ActionEnum.CREATE) {
+        return updateInstancesToSend(cell, action, prev);
+      }
+
+      return prev;
     });
   };
 
