@@ -89,8 +89,8 @@ interface ComposerServiceOrderItem {
 
 interface StencilState {
   [key: string]: {
-    min: ParsedNumber | undefined;
-    max: ParsedNumber | undefined;
+    min: ParsedNumber | undefined | null;
+    max: ParsedNumber | undefined | null;
     current: number;
   };
 }

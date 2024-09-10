@@ -392,7 +392,9 @@ if (Cypress.env("edition") === "iso") {
 
       //ints
       cy.get('[aria-label="TextInput-default_int"]').type("{backspace}21");
-      cy.get('[aria-label="TextInput-default_empty_int"]').type("{backspace}1");
+      cy.get('[aria-label="TextInput-default_empty_int"]').type(
+        "{backspace}31",
+      );
       cy.get('[aria-label="TextInput-default_nullable_int"]').type(
         "{backspace}41",
       );
@@ -509,68 +511,312 @@ if (Cypress.env("edition") === "iso") {
       );
     });
 
-    // //TODO: whole scenario
-    // it("8.3 composer is able to edit instances attributes", () => {
-    //   // Select 'test' environment
-    //   cy.visit("/console/");
-    //   cy.get('[aria-label="Environment card"]')
-    //     .contains("lsm-frontend")
-    //     .click();
-    //   cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
-    //   cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
-    //   // click on Show Inventory of many-defaults service, expect no instances
-    //   cy.get("#many-defaults", { timeout: 60000 })
-    //     .contains("Show inventory")
-    //     .click();
-    //   cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
-    //   // click on add instance with composer
-    //   cy.get('[aria-label="row actions toggle"]').click();
-    //   cy.get("button").contains("Edit in Composer").click();
+    it("8.3 composer is able to edit instances attributes", () => {
+      // Select 'test' environment
+      cy.visit("/console/");
+      cy.get('[aria-label="Environment card"]')
+        .contains("lsm-frontend")
+        .click();
+      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
+      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
+      // click on Show Inventory of many-defaults service, expect no instances
+      cy.get("#many-defaults", { timeout: 60000 })
+        .contains("Show inventory")
+        .click();
 
-    //   // Expect Canvas to be visible
-    //   cy.get(".canvas").should("be.visible");
+      cy.get('[aria-label="ServiceInventory-Success"]').should("to.be.visible");
+      cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 1);
+      // click on edit instance with composer
+      cy.get('[aria-label="row actions toggle"]').click();
+      cy.get("button").contains("Edit in Composer").click();
 
-    //   //assert if default entities are present
-    //   cy.get('[data-type="app.ServiceEntityBlock"').should("have.length", 3);
-    //   cy.get('[data-type="app.ServiceEntityBlock"')
-    //     .contains("embedded")
-    //     .should("be.visible");
-    //   cy.get('[data-type="app.ServiceEntityBlock"')
-    //     .contains("many-defaults")
-    //     .should("be.visible");
-    //   cy.get('[data-type="Link"').should("be.visible");
-    // });
+      // Expect Canvas to be visible
+      cy.get(".canvas").should("be.visible");
 
-    // //TODO: whole scenario
-    // it("8.4 composer is able to edit instances relations", () => {
-    //   // Select 'test' environment
-    //   cy.visit("/console/");
-    //   cy.get('[aria-label="Environment card"]')
-    //     .contains("lsm-frontend")
-    //     .click();
-    //   cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
-    //   cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
-    //   // click on Show Inventory of many-defaults service, expect no instances
-    //   cy.get("#many-defaults", { timeout: 60000 })
-    //     .contains("Show inventory")
-    //     .click();
-    //   cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
-    //   // click on add instance with composer
-    //   cy.get('[aria-label="AddInstanceToggle"]').click();
-    //   cy.get("#add-instance-composer-button").click();
+      //assert if default entities are present
+      cy.get('[data-type="app.ServiceEntityBlock"]').should("have.length", 5);
+      cy.get('[data-type="Link"').should("have.length", 4);
 
-    //   // Expect Canvas to be visible
-    //   cy.get(".canvas").should("be.visible");
+      cy.get('[data-type="app.ServiceEntityBlock"]')
+        .contains("embedded")
+        .should("be.visible");
+      cy.get('[data-type="app.ServiceEntityBlock"]')
+        .contains("extra_embedded")
+        .should("be.visible");
+      cy.get('[data-type="app.ServiceEntityBlock"]')
+        .contains("many-defaults")
+        .should("be.visible");
 
-    //   //assert if default entities are present
-    //   cy.get('[data-type="app.ServiceEntityBlock"').should("have.length", 3);
-    //   cy.get('[data-type="app.ServiceEntityBlock"')
-    //     .contains("embedded")
-    //     .should("be.visible");
-    //   cy.get('[data-type="app.ServiceEntityBlock"')
-    //     .contains("many-defaults")
-    //     .should("be.visible");
-    //   cy.get('[data-type="Link"').should("be.visible");
-    // });
+      //related Services should be disabled from editing and removing
+      cy.get('[data-testid="header-parent-service"]').should("have.length", 2);
+
+      cy.get('[data-testid="header-parent-service"]').eq(0).click();
+      cy.get("button").contains("Remove").should("be.disabled");
+      cy.get("button").contains("Edit").should("be.disabled");
+
+      cy.get('[data-testid="header-parent-service"]').eq(1).click();
+      cy.get("button").contains("Remove").should("be.disabled");
+      cy.get("button").contains("Edit").should("be.disabled");
+
+      //edit some of core attributes
+      cy.get('[data-type="app.ServiceEntityBlock"]')
+        .contains("many-defaults")
+        .click();
+      cy.get("button").contains("Edit").should("be.enabled");
+      cy.get("button").contains("Edit").click();
+
+      cy.get('[aria-label="TextInput-default_string"]').type(
+        "{selectAll}{backspace}updated_string",
+      );
+      cy.get('[aria-label="TextInput-default_int"]').type("{backspace}2");
+      cy.get('[aria-label="TextInput-default_float"]').type("{backspace}2");
+      cy.get('[aria-label="BooleanToggleInput-default_bool"]').within(() => {
+        cy.get(".pf-v5-c-switch").click();
+      });
+      cy.get('[aria-label="TextInput-default_empty_dict"]').type(
+        '{selectAll}{backspace}{{}"test2":"value2"{}}',
+      );
+      cy.get("button").contains("Save").click();
+
+      //edit some of embedded attributes
+      cy.get('[data-type="app.ServiceEntityBlock"]')
+        .contains("embedded")
+        .click();
+      cy.get("button").contains("Remove").should("be.disabled");
+      cy.get("button").contains("Edit").should("be.enabled");
+      cy.get("button").contains("Edit").click();
+
+      cy.get('[aria-label="TextInput-default_string"]').type(
+        "{selectAll}{backspace}updated_string",
+      );
+      cy.get('[aria-label="TextInput-default_int"]').type("{backspace}2");
+      cy.get('[aria-label="TextInput-default_float"]').type("{backspace}2");
+      cy.get('[aria-label="BooleanToggleInput-default_bool"]').within(() => {
+        cy.get(".pf-v5-c-switch").click();
+      });
+      cy.get('[aria-label="TextInput-default_empty_dict"]').type(
+        '{selectAll}{backspace}{{}"test2":"value2"{}}',
+      );
+      cy.get("button").contains("Save").click();
+
+      //remove extra_embedded instance
+      cy.get('[data-type="app.ServiceEntityBlock"]')
+        .contains("extra_embedded")
+        .click();
+      cy.get("button").contains("Remove").should("be.enabled");
+      cy.get("button").contains("Remove").click();
+
+      cy.get("button").contains("Deploy").click();
+
+      //assert that many-defaults is deployed and up
+      cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 1);
+      // await until parent_service is deployed and up
+      cy.get('[data-label="State"]', { timeout: 90000 }).should(
+        "have.text",
+        "up",
+      );
+
+      cy.get('[aria-label="ServiceInventory-Success"]').should("to.be.visible");
+      //assert that many-defaults is deployed and up
+      cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 1);
+      // await until parent_service is deployed and up
+      cy.get('[data-label="State"]', { timeout: 90000 }).should(
+        "have.text",
+        "up",
+      );
+
+      //check if core attributes and embedded entities are updated
+      cy.get("#expand-toggle0").click();
+      cy.get("button").contains("Attributes").click();
+
+      cy.get('[aria-label="Row-default_int"]').within(() => {
+        cy.get('[data-label="active"]').should("have.text", "20");
+        cy.get('[data-label="candidate"]').should("have.text", "22");
+      });
+
+      cy.get('[aria-label="Row-default_string"]').within(() => {
+        cy.get('[data-label="active"]').should("have.text", "default_string");
+        cy.get('[data-label="candidate"]').should(
+          "have.text",
+          "updated_string",
+        );
+      });
+
+      cy.get('[aria-label="Toggle-embedded"]').click();
+
+      cy.get('[aria-label="Row-embedded$default_int"]').within(() => {
+        cy.get('[data-label="active"]').should("have.text", "21");
+        cy.get('[data-label="candidate"]').should("have.text", "22");
+      });
+
+      cy.get('[aria-label="Row-embedded$default_float"]').within(() => {
+        cy.get('[data-label="active"]').should("have.text", "2.1");
+        cy.get('[data-label="candidate"]').should("have.text", "2");
+      });
+
+      cy.get('[aria-label="Row-embedded$default_string"]').within(() => {
+        cy.get('[data-label="active"]').should("have.text", "default_string");
+        cy.get('[data-label="candidate"]').should(
+          "have.text",
+          "updated_string",
+        );
+      });
+
+      //assert that extra_embedded attrs are empty as instance was removed
+      cy.get('[aria-label="Toggle-extra_embedded"]').click();
+      cy.get('[aria-label="Toggle-extra_embedded$0"]').click();
+
+      cy.get('[aria-label="Row-extra_embedded$0$default_int"]').within(() => {
+        cy.get('[data-label="active"]').should("have.text", "21");
+        cy.get('[data-label="candidate"]').should("have.text", "");
+      });
+
+      cy.get('[aria-label="Row-extra_embedded$0$default_float"]').within(() => {
+        cy.get('[data-label="active"]').should("have.text", "2.1");
+        cy.get('[data-label="candidate"]').should("have.text", "");
+      });
+
+      cy.get('[aria-label="Row-extra_embedded$0$default_string"]').within(
+        () => {
+          cy.get('[data-label="active"]').should("have.text", "default_string");
+          cy.get('[data-label="candidate"]').should("have.text", "");
+        },
+      );
+    });
+
+    it("8.4 composer is able to edit instances relations", () => {
+      // Select 'test' environment
+      cy.visit("/console/");
+      cy.get('[aria-label="Environment card"]')
+        .contains("lsm-frontend")
+        .click();
+      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
+      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
+      // click on Show Inventory of many-defaults service, expect no instances
+      cy.get("#child-service", { timeout: 60000 })
+        .contains("Show inventory")
+        .click();
+      cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
+      // click on add instance with composer
+      cy.get('[aria-label="AddInstanceToggle"]').click();
+      cy.get("#add-instance-composer-button").click();
+
+      // Expect Canvas to be visible
+      cy.get(".canvas").should("be.visible");
+
+      //assert if default entities are present
+      cy.get('[data-type="app.ServiceEntityBlock"').should("have.length", 1);
+
+      cy.get('[data-type="app.ServiceEntityBlock"]').click();
+      cy.get("button").contains("Remove").should("be.disabled");
+      cy.get("button").contains("Edit").should("be.enabled");
+      cy.get("button").contains("Edit").click();
+
+      cy.get('[aria-label="TextInput-name"]').type("test_child");
+      cy.get('[aria-label="TextInput-service_id"]').type("test_child_id");
+      cy.get("button").contains("Save").click();
+
+      //add parent instance to the canvas and connect it to the core instance
+      cy.get("#inventory-tab").click();
+
+      cy.get(".test_name_bodyTwo")
+        .trigger("mouseover")
+        .trigger("mousedown")
+        .trigger("mousemove", {
+          clientX: 800,
+          clientY: 600,
+        })
+        .trigger("mouseup");
+
+      cy.get('[data-type="app.ServiceEntityBlock"')
+        .contains("child-service")
+        .click();
+      cy.get('[data-action="link"]')
+        .trigger("mouseover")
+        .trigger("mousedown")
+        .trigger("mousemove", {
+          clientX: 800,
+          clientY: 600,
+        })
+        .trigger("mouseup");
+
+      cy.get('[data-type="Link"]').should("have.length", 1);
+
+      cy.get("button").contains("Deploy").click();
+      cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 1);
+      // await until parent_service is deployed and up
+      cy.get('[data-label="State"]', { timeout: 90000 }).should(
+        "have.text",
+        "up",
+      );
+
+      //check if relation is assigned correctly
+      cy.get("#expand-toggle0").click();
+      cy.get("button").contains("Attributes").click();
+
+      cy.get('[aria-label="Row-parent_entity"]').within(() => {
+        cy.get('[data-label="active"]').should("have.text", "test_name");
+      });
+
+      // click on edit instance with composer
+      cy.get('[aria-label="row actions toggle"]').click();
+      cy.get("button").contains("Edit in Composer").click();
+
+      // Expect Canvas to be visible
+      cy.get(".canvas").should("be.visible");
+
+      //assert if default entities are present
+      cy.get('[data-type="app.ServiceEntityBlock"]').should("have.length", 2);
+      cy.get('[data-type="Link"').should("have.length", 1);
+
+      cy.get('[data-type="app.ServiceEntityBlock"]')
+        .contains("parent-service")
+        .click();
+      cy.get("button").contains("Remove").click();
+
+      //add parent instance to the canvas and connect it to the core instance
+      cy.get("#inventory-tab").click();
+
+      //click on core instance to focus canvas view near it
+      cy.get('[data-type="app.ServiceEntityBlock"')
+        .contains("child-service")
+        .click();
+
+      cy.get(".test_name2_bodyTwo")
+        .trigger("mouseover")
+        .trigger("mousedown")
+        .trigger("mousemove", {
+          clientX: 800,
+          clientY: 500,
+        })
+        .trigger("mouseup");
+
+      cy.get('[data-type="app.ServiceEntityBlock"')
+        .contains("child-service")
+        .click();
+      cy.get('[data-action="link"]')
+        .trigger("mouseover")
+        .trigger("mousedown")
+        .trigger("mousemove", {
+          clientX: 800,
+          clientY: 500,
+        })
+        .trigger("mouseup");
+
+      cy.get("button").contains("Deploy").click();
+
+      // await until parent_service is deployed and up
+      cy.get('[data-label="State"]', { timeout: 90000 }).should(
+        "have.text",
+        "up",
+      );
+
+      //check if relation is assigned correctly
+      cy.get("button").contains("Attributes").click();
+
+      cy.get('[aria-label="Row-parent_entity"]').within(() => {
+        cy.get('[data-label="active"]').should("have.text", "test_name2");
+      });
+    });
   });
 }

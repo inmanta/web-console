@@ -300,6 +300,7 @@ export function appendInstance(
     );
   }
 
+  //block
   if (instanceWithRelations.relatedInstances) {
     //map through relatedInstances and either append them or connect to them
     instanceWithRelations.relatedInstances.forEach((relatedInstance) => {
@@ -328,7 +329,11 @@ export function appendInstance(
           .querySelector(`.${appendedInstances[0].get("stencilName")}_text`)
           ?.classList.add("stencil_text-disabled");
 
-        const allCells = graph.getCells() as ServiceEntityBlock[];
+        const allCells = graph
+          .getCells()
+          .filter(
+            (cell) => cell.attributes.type !== "Link",
+          ) as ServiceEntityBlock[];
 
         allCells.forEach((cell) => {
           const relationMap = cell.get("relatedTo") as Map<string, string>;
@@ -336,7 +341,9 @@ export function appendInstance(
 
           if (relationMap) {
             relationMap.forEach((_value, key) => {
-              const relatedCell = allCells.find((cell) => cell.id === key);
+              const relatedCell = appendedInstances.find((cell) => {
+                return cell.id === key;
+              });
 
               if (relatedCell) {
                 const relation = serviceModel.inter_service_relations?.find(

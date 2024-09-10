@@ -121,6 +121,7 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
       // If the current count is more than or equal to the max count, disable the stencil of given embedded entity
       if (
         stencilStateCopy[eventData.name].max !== null &&
+        stencilStateCopy[eventData.name].max !== undefined &&
         stencilStateCopy[eventData.name].current >=
           stencilStateCopy[eventData.name].max
       ) {
