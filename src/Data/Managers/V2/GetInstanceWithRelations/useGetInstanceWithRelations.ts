@@ -28,6 +28,7 @@ interface GetInstanceWithRelationsHook {
 /**
  * React Query hook to fetch an instance with its related instances from the API.
  * @param {string} id - The ID of the instance to fetch.
+ * @param {ServiceModel | undefined} serviceModel - The service Model of the instance
  * @param {string} environment - The environment in which we are looking for instances.
  * @returns  {GetInstanceWithRelationsHook} An object containing a custom hook to fetch the instance with its related instances.
  */
