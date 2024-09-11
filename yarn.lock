@@ -1095,7 +1095,7 @@ __metadata:
     jest-fetch-mock: "npm:^3.0.3"
     jest-junit: "npm:^16.0.0"
     json-bigint: "https://github.com/sidorares/json-bigint.git#3391780b2a3f613bb51536c47e6cddbca31013eb"
-    keycloak-js: "npm:^24.0.3"
+    keycloak-js: "npm:^25.0.5"
     lint-staged: "npm:^15.2.0"
     lodash: "npm:^4.17.21"
     lodash-es: "npm:^4.17.21"
@@ -10531,13 +10531,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"keycloak-js@npm:^24.0.3":
-  version: 24.0.3
-  resolution: "keycloak-js@npm:24.0.3"
+"keycloak-js@npm:^25.0.5":
+  version: 25.0.5
+  resolution: "keycloak-js@npm:25.0.5"
   dependencies:
     js-sha256: "npm:^0.11.0"
     jwt-decode: "npm:^4.0.0"
-  checksum: 10/e93d49194eac407b6bf89a977f280c0aacf438cde40a96a8f8c49d8349fd96f0373988548951ca58e8ae23f3edf2539b6497021e8dbc801c3fba0c087f4be9f5
+  checksum: 10/9472a191dd6ed18b8504e507bdee0cfe5bad5407a4f09588aca0063d726124f7b64e3e4b8b7b96f6de86a1aa212ed633cd9eadd5d7b1e945f6fb3e669dc1722a
   languageName: node
   linkType: hard
 
