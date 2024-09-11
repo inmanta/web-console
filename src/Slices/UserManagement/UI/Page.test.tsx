@@ -269,25 +269,16 @@ describe("UserManagementPage", () => {
       { username: "test_user2", auth_method: "oidc" },
     ];
     const server = setupServer(
-      http.get("/api/v2/user", async () => {
+      http.get("/api/v2/user", () => {
         return HttpResponse.json({
           data,
         });
       }),
-      http.delete(
-        "/api/v2/user/*",
-        async ({ params }): Promise<HttpResponse> => {
-          const userIndex = data.findIndex(
-            (user) => user.username === params[0],
-          );
+      http.delete("/api/v2/user/test_user", () => {
+        data.splice(0, 1);
 
-          if (userIndex !== -1) {
-            data.splice(userIndex, 1);
-          }
-
-          return HttpResponse.json();
-        },
-      ),
+        return HttpResponse.json();
+      }),
     );
 
     server.listen();
