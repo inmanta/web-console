@@ -1,0 +1,5 @@
+description: "Resolve security alert on webpack and path-to-regexp by updating dependency"
+change-type: patch
+destination-branches: [master, iso7]
+sections:
+  other-note: "{{description}}"
