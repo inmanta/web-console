@@ -182,6 +182,9 @@
   },
   "resolutions": {
     "micromatch": "^4.0.8",
+    "webpack": "^5.94.0",
+    "path-to-regexp@0.1.7": "0.1.10",
+    "path-to-regexp": "8.0.0",
     "json5": "^2.2.2",
     "terser-webpack-plugin": "^1.4.5",
     "prismjs": "^1.25.0",

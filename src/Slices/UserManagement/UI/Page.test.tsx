@@ -242,20 +242,11 @@ describe("UserManagementPage", () => {
           data,
         });
       }),
-      http.delete(
-        "/api/v2/user/*",
-        async ({ params }): Promise<HttpResponse> => {
-          const userIndex = data.findIndex(
-            (user) => user.username === params[0],
-          );
+      http.delete("/api/v2/user/test_user", async (): Promise<HttpResponse> => {
+        data.splice(0, 1);
 
-          if (userIndex !== -1) {
-            data.splice(userIndex, 1);
-          }
-
-          return HttpResponse.json();
-        },
-      ),
+        return HttpResponse.json();
+      }),
     );
     server.listen();
     const component = setup();
