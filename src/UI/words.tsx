@@ -254,6 +254,25 @@ const dict = {
   "instanceDetails.table.valueKey": "Value",
   "instanceDetails.table.sorting.tooltip":
     "The sorting can be resetted in the table options.",
+  "instanceDetails.setState.label": "Set state",
+  "instanceDetails.forceState.label": "Force state",
+  "instanceDetails.stateTransfer.confirmTitle": "Confirm set state transfer",
+  "instanceDetails.expertOptions": "Expert Options",
+  "instanceDetails.options": "Options",
+  "instanceDetails.expert.transfer.options": "Select Operation",
+  "instanceDetails.expert.editModal.title": "Confirm Attributes update",
+  "instanceDetails.expert.editModal.message": (selectedSet) => `
+  You are performing an update on the ${selectedSet} in expert mode, are you certain you want to proceed?
+  `,
+  "instanceDetails.expert.confirm.warning":
+    "DANGER: This is an irreversible action!",
+  "instanceDetails.expert.confirm.state.message": (instance, state) => `
+   Are you certain you want to FORCE update the state to : ${state} for ${instance}?
+  `,
+  "instanceDetails.API.message.update": (username) =>
+    username
+      ? `Triggered from the console by ${username}`
+      : "Triggered from the console",
 
   /**
    * Config related text

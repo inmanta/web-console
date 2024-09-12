@@ -5,9 +5,9 @@ export const MarkdownStyles = `
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
   margin: 0;
-  color: var(--pf-global--Color--100);
-  background-color: var(--pf-global--BackgroundColor--100);
-  font-family: var(--pf-global--FontFamily--monospace);
+  color: var(--pf-v5-global--Color--100);
+  background-color: var(--pf-v5-global--BackgroundColor--100);
+  font-family: var(--pf-v5-global--FontFamily--monospace);
   font-size: 16px;
   line-height: 1.5;
   word-wrap: break-word;

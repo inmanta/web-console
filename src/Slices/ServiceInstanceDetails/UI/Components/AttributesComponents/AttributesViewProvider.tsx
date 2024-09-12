@@ -67,6 +67,7 @@ export const AttributesViewProvider: React.FC<Props> = ({ selectedView }) => {
           attributeSets={attributeSets}
           dropdownOptions={dropdownOptions}
           service_entity={instance.service_entity}
+          selectedVersion={selectedVersion}
         />
       )}
       {selectedView === AttributeViewToggles.COMPARE && (

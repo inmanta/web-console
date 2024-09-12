@@ -1,20 +1,30 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import {
+  Button,
   Flex,
   FlexItem,
   FormSelect,
   FormSelectOption,
+  Text,
 } from "@patternfly/react-core";
 import styled from "styled-components";
+import { v4 as uuidv4 } from "uuid";
 import { InstanceAttributeModel } from "@/Core";
-import { words } from "@/UI";
+import {
+  PatchAttributes,
+  usePatchAttributesExpert,
+} from "@/Data/Managers/V2/PATCH/PatchAttributesExpert";
+import { InstanceDetailsContext } from "@/Slices/ServiceInstanceDetails/Core/Context";
+import { DependencyContext, words } from "@/UI";
 import { JSONEditor } from "@/UI/Components/JSONEditor";
+import { ConfirmationModal, ToastAlertMessage } from "../Util";
 import { AttributeSets } from "./Utils";
 
 interface Props {
   dropdownOptions: string[];
   attributeSets: Partial<Record<AttributeSets, InstanceAttributeModel>>;
   service_entity: string;
+  selectedVersion: string;
 }
 
 /**
@@ -31,9 +41,30 @@ export const AttributesEditor: React.FC<Props> = ({
   dropdownOptions,
   attributeSets,
   service_entity,
+  selectedVersion,
 }) => {
+  const { environmentHandler, authHelper } = useContext(DependencyContext);
+  const { instance } = useContext(InstanceDetailsContext);
+  const isLatestVersion = String(instance.version) === selectedVersion;
+
+  const environment = environmentHandler.useId();
+  const username = authHelper.getUser();
+
   const [selectedSet, setSelectedSet] = useState(dropdownOptions[0]);
-  const [editorData, setEditorData] = useState<string>("");
+  const [editorDataOriginal, setEditorDataOriginal] = useState<string>("");
+
+  const { environmentModifier } = useContext(DependencyContext);
+  const [isEditorValid, setIsEditorValid] = useState<boolean>(true);
+  const [editorState, setEditorState] = useState<string>(editorDataOriginal);
+
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
+
+  const expertUpdateQuery = usePatchAttributesExpert(
+    environment,
+    instance.id,
+    instance.service_entity,
+  );
 
   /**
    * Handles the change of the selected attribute Set.
@@ -48,8 +79,47 @@ export const AttributesEditor: React.FC<Props> = ({
     setSelectedSet(value);
   };
 
+  const onEditorUpdate = useCallback(
+    (value: string, isValid: boolean) => {
+      try {
+        const parsed = JSON.parse(value);
+
+        setEditorState(parsed);
+        setIsEditorValid(isValid);
+      } catch (_error) {
+        setIsEditorValid(false);
+      }
+    },
+    [setEditorState, setIsEditorValid],
+  );
+
+  const onConfirm = async () => {
+    const message = words("instanceDetails.API.message.update")(username);
+
+    const patchAttributes: PatchAttributes = {
+      comment: message,
+      attribute_set_name: selectedSet,
+      current_version: instance.version,
+      patch_id: uuidv4(),
+      edit: [
+        {
+          edit_id: `${instance.id}_version=${instance.version}`,
+          operation: "replace",
+          target: ".",
+          value: editorState,
+        },
+      ],
+    };
+
+    expertUpdateQuery.mutate(patchAttributes);
+
+    if (expertUpdateQuery.isError) {
+      setErrorMessage(expertUpdateQuery.error.message);
+    }
+  };
+
   useEffect(() => {
-    setEditorData(JSON.stringify(attributeSets[selectedSet], null, 2));
+    setEditorDataOriginal(JSON.stringify(attributeSets[selectedSet], null, 2));
   }, [attributeSets, selectedSet]);
 
   useEffect(() => {
@@ -62,7 +132,9 @@ export const AttributesEditor: React.FC<Props> = ({
 
   return (
     <>
-      <StyledFlexContainer>
+      <StyledFlexContainer
+        justifyContent={{ default: "justifyContentSpaceBetween" }}
+      >
         <FlexItem>
           <StyledSelect
             value={selectedSet}
@@ -79,16 +151,46 @@ export const AttributesEditor: React.FC<Props> = ({
             ))}
           </StyledSelect>
         </FlexItem>
-        {/* <FlexItem>Edit button Expert mode</FlexItem> */}
+        <FlexItem>
+          {environmentModifier.useIsExpertModeEnabled() && isLatestVersion && (
+            <Button
+              isDisabled={!isEditorValid}
+              aria-label="Expert-Submit-Button"
+              variant="danger"
+              onClick={() => setIsModalOpen(true)}
+            >
+              Force Update
+            </Button>
+          )}
+        </FlexItem>
       </StyledFlexContainer>
       <JSONEditor
-        data={editorData}
+        data={editorDataOriginal}
         service_entity={service_entity}
-        onChange={() => {
-          /** To be implemented with Expert Mode */
-        }}
-        readOnly
+        onChange={onEditorUpdate}
+        readOnly={!environmentModifier.useIsExpertModeEnabled()}
       />
+      <ConfirmationModal
+        title={words("instanceDetails.expert.editModal.title")}
+        onConfirm={onConfirm}
+        id="Confirm-Expert-Edit"
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        setErrorMessage={setErrorMessage}
+      >
+        <Text>
+          {words("instanceDetails.expert.editModal.message")(selectedSet)}
+        </Text>
+      </ConfirmationModal>
+
+      {errorMessage && (
+        <ToastAlertMessage
+          message={errorMessage}
+          id="error-toast-expert-destroy"
+          setMessage={setErrorMessage}
+          variant="danger"
+        />
+      )}
     </>
   );
 };
