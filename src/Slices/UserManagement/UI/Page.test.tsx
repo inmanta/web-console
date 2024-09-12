@@ -269,12 +269,12 @@ describe("UserManagementPage", () => {
       { username: "test_user2", auth_method: "oidc" },
     ];
     const server = setupServer(
-      http.get("/api/v2/user", () => {
+      http.get("/api/v2/user", async () => {
         return HttpResponse.json({
           data,
         });
       }),
-      http.delete("/api/v2/user/test_user", () => {
+      http.delete("/api/v2/user/test_user", async (): Promise<HttpResponse> => {
         data.splice(0, 1);
 
         return HttpResponse.json();
