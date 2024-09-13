@@ -54,7 +54,7 @@
     "@babel/plugin-transform-typescript": "^7.25.2",
     "@eslint/compat": "^1.1.1",
     "@eslint/eslintrc": "^3.1.0",
-    "@eslint/js": "^9.8.0",
+    "@eslint/js": "^9.10.0",
     "@stylistic/eslint-plugin-ts": "^2.6.1",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.4.8",
