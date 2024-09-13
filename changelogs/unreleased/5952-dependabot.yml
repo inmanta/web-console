@@ -1,0 +1,5 @@
+change-type: patch
+description: 'Build(deps-dev): Bump @eslint/js from 9.8.0 to 9.10.0'
+destination-branches:
+- master
+sections: {}
