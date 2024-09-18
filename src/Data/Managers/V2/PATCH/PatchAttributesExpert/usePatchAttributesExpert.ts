@@ -20,11 +20,11 @@ interface PatchEdit {
 }
 
 /**
- * 
- * @param environment 
- * @param instance_id 
- * @param service_entity 
- * @returns 
+ *
+ * @param environment
+ * @param instance_id
+ * @param service_entity
+ * @returns
  */
 export const usePatchAttributesExpert = (
   environment: string,

@@ -257,8 +257,8 @@ const dict = {
   "instanceDetails.setState.label": "Set state",
   "instanceDetails.forceState.label": "Force state",
   "instanceDetails.stateTransfer.confirmTitle": "Confirm set state transfer",
-  "instanceDetails.expertOptions": "Expert Options",
-  "instanceDetails.options": "Options",
+  "instanceDetails.expertActions": "Expert Actions",
+  "instanceDetails.actions": "Actions",
   "instanceDetails.expert.transfer.options": "Select Operation",
   "instanceDetails.expert.editModal.title": "Confirm Attributes update",
   "instanceDetails.expert.editModal.message": (selectedSet) => `

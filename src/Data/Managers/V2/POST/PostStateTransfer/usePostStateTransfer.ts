@@ -26,7 +26,6 @@ export const usePostStateTransfer = (
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
 
   const postStateTransfer = async (data: PostStateTransfer): Promise<void> => {
-    console.log(data);
     const response = await fetch(
       baseUrl +
         `/lsm/v1/service_inventory/${service_entity}/${instance_id}/state`,

@@ -40,8 +40,6 @@ export const ExpertStateTransfer: React.FC<Props> = ({
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [selectedOperation, setSelectedOperation] = useState<string>();
 
-  const targetStates = [...new Set(targets)];
-
   const expertStateOperations = [
     "clear candidate",
     "clear active",
@@ -104,7 +102,7 @@ export const ExpertStateTransfer: React.FC<Props> = ({
   return (
     <>
       <DropdownGroup label={words("instanceDetails.forceState.label")}>
-        {targetStates.map((target) => (
+        {targets.map((target) => (
           <DropdownItem
             isDanger
             onClick={() => onStateSelect(target)}

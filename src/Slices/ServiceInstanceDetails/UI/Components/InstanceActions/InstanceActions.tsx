@@ -5,11 +5,10 @@ import {
   DropdownGroup,
   DropdownItem,
   DropdownList,
-  Icon,
   MenuToggle,
   MenuToggleElement,
 } from "@patternfly/react-core";
-import { CogIcon, CopyIcon, EyeIcon, ToolsIcon } from "@patternfly/react-icons";
+import { CopyIcon, EyeIcon, ToolsIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { ServiceInstanceModel, ServiceModel, TransferModel } from "@/Core";
 import { InstanceDetailsContext } from "@/Slices/ServiceInstanceDetails/Core/Context";
@@ -22,7 +21,7 @@ import {
   StateAction,
 } from "./Actions";
 
-export const InstanceOptions: React.FC = () => {
+export const InstanceActions: React.FC = () => {
   const { instance, serviceModelQuery } = useContext(InstanceDetailsContext);
   const { routeManager, environmentModifier, featureManager } =
     useContext(DependencyContext);
@@ -34,11 +33,11 @@ export const InstanceOptions: React.FC = () => {
     instance.deleted ||
     isTransferDisabled(instance, "on_delete", serviceModelQuery.data);
 
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [isOpenExpert, setIsOpenExpert] = useState(false);
-  const [blockedInterface, setBlockedInterface] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
+  const [isOpenExpert, setIsOpenExpert] = useState<boolean>(false);
+  const [blockedInterface, setBlockedInterface] = useState<boolean>(false);
 
-  const stateTargets = getAvailableStateTargets(
+  const stateTargets: string[] = getAvailableStateTargets(
     instance.state,
     serviceModelQuery.data,
   );
@@ -52,13 +51,8 @@ export const InstanceOptions: React.FC = () => {
       isExpanded={isDropdownOpen}
       ref={toggleRef}
       onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-      icon={
-        <Icon>
-          <CogIcon />
-        </Icon>
-      }
     >
-      {words("instanceDetails.options")}
+      {words("instanceDetails.actions")}
     </MenuToggle>
   );
 
@@ -68,13 +62,8 @@ export const InstanceOptions: React.FC = () => {
       isExpanded={isOpenExpert}
       ref={toggleRef}
       onClick={() => !blockedInterface && setIsOpenExpert(!isOpenExpert)}
-      icon={
-        <Icon>
-          <CogIcon />
-        </Icon>
-      }
     >
-      {words("instanceDetails.expertOptions")}
+      {words("instanceDetails.expertActions")}
     </ExpertMenu>
   );
 
@@ -103,7 +92,7 @@ export const InstanceOptions: React.FC = () => {
               <>
                 <Divider component="li" />
                 <ExpertStateTransfer
-                  targets={expertStateTargets.sort()}
+                  targets={expertStateTargets}
                   instance_display_identity={
                     instance.service_identity_attribute_value ?? instance.id
                   }
@@ -163,7 +152,6 @@ export const InstanceOptions: React.FC = () => {
               </Link>
             </DropdownItem>
           )}
-
           <DropdownItem
             key="Edit"
             isDisabled={editDisabled}
@@ -260,7 +248,7 @@ const ExpertMenu = styled(MenuToggle)`
   }
 `;
 
-const isTransferDisabled = (
+export const isTransferDisabled = (
   instance: ServiceInstanceModel,
   transferType: "on_update" | "on_delete",
   serviceEntity?: ServiceModel,
@@ -279,7 +267,7 @@ const isTransferDisabled = (
   return transfersFromCurrentSource.length === 0;
 };
 
-const getAvailableStateTargets = (
+export const getAvailableStateTargets = (
   currentState: string,
   serviceEntity?: ServiceModel,
 ): string[] => {
@@ -299,7 +287,9 @@ const getAvailableStateTargets = (
   );
 };
 
-const getExpertStateTargets = (serviceEntity?: ServiceModel): string[] => {
+export const getExpertStateTargets = (
+  serviceEntity?: ServiceModel,
+): string[] => {
   if (!serviceEntity) {
     return [];
   }
@@ -307,8 +297,11 @@ const getExpertStateTargets = (serviceEntity?: ServiceModel): string[] => {
   // filter out the possible transfer objects that have the same source as current state.
   const possibleStatesTransfers = serviceEntity.lifecycle.transfers;
 
-  // return the targets only as an array of strings.
-  return possibleStatesTransfers.map(
-    (transfer: TransferModel) => transfer.target,
+  const possibleTargets = new Set(
+    possibleStatesTransfers.map((transfer: TransferModel) => transfer.target),
   );
+
+  const sortedArrayOfTargets: string[] = Array.from(possibleTargets).sort();
+
+  return sortedArrayOfTargets;
 };

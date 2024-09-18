@@ -33,7 +33,7 @@ export const DeleteAction: React.FC<Props> = ({
 
   const environment = environmentHandler.useId();
 
-  const { mutate, isError, error, isSuccess } = useDeleteInstance(
+  const { mutate, isError, error } = useDeleteInstance(
     environment,
     instance_id,
     service_entity,
@@ -69,10 +69,6 @@ export const DeleteAction: React.FC<Props> = ({
       return prev;
     });
   }, [isModalOpen, setInterfaceBlocked]);
-
-  useEffect(() => {
-    console.log("The query was successfull : ", isSuccess);
-  }, [isError, isSuccess]);
 
   return (
     <>
