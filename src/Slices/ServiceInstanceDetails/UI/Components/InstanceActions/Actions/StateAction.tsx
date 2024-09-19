@@ -54,7 +54,7 @@ export const StateAction: React.FC<Props> = ({
   };
 
   const onSubmit = () => {
-    const username = authHelper.getUser;
+    const username = authHelper.getUser();
     const message = words("instanceDetails.API.message.update")(username);
 
     mutate({
