@@ -32,7 +32,7 @@ export const DestroyAction: React.FC<Props> = ({
   const { environmentHandler, authHelper } = useContext(DependencyContext);
 
   const environment = environmentHandler.useId();
-  const username = authHelper.getUser;
+  const username = authHelper.getUser();
   const message = words("instanceDetails.API.message.update")(username);
 
   const { mutate, isError, error } = useDestroyInstance(
