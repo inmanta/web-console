@@ -4,7 +4,8 @@ import { TrashAltIcon } from "@patternfly/react-icons";
 import { ParsedNumber } from "@/Core";
 import { useDeleteInstance } from "@/Data/Managers/V2/DELETE/DeleteInstance";
 import { DependencyContext, words } from "@/UI";
-import { ConfirmationModal, ToastAlertMessage } from "../../Util";
+import { ConfirmationModal } from "../../ConfirmModal";
+import { ToastAlertMessage } from "../../ToastAllert";
 
 interface Props {
   isDisabled: boolean;

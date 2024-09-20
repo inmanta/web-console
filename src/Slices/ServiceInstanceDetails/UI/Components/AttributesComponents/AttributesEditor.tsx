@@ -15,10 +15,11 @@ import {
   usePatchAttributesExpert,
 } from "@/Data/Managers/V2/PATCH/PatchAttributesExpert";
 import { InstanceDetailsContext } from "@/Slices/ServiceInstanceDetails/Core/Context";
+import { AttributeSets } from "@/Slices/ServiceInstanceDetails/Utils";
 import { DependencyContext, words } from "@/UI";
 import { JSONEditor } from "@/UI/Components/JSONEditor";
-import { ConfirmationModal, ToastAlertMessage } from "../Util";
-import { AttributeSets } from "./Utils";
+import { ConfirmationModal } from "../ConfirmModal";
+import { ToastAlertMessage } from "../ToastAllert";
 
 interface Props {
   dropdownOptions: string[];

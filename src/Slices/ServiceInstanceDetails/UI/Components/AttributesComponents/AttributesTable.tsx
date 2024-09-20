@@ -25,13 +25,13 @@ import {
 } from "@patternfly/react-table";
 import styled from "styled-components";
 import { InstanceAttributeModel } from "@/Core";
-import { words } from "@/UI";
 import {
   AttributeSets,
   formatTreeRowData,
   sortTreeRows,
   TreeRowData,
-} from "./Utils";
+} from "@/Slices/ServiceInstanceDetails/Utils";
+import { words } from "@/UI";
 
 interface Props {
   dropdownOptions: string[];

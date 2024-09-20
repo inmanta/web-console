@@ -4,7 +4,8 @@ import { TrashAltIcon } from "@patternfly/react-icons";
 import { ParsedNumber } from "@/Core";
 import { useDestroyInstance } from "@/Data/Managers/V2/DELETE/DestroyInstance/useDestroyInstance";
 import { DependencyContext, words } from "@/UI";
-import { ConfirmationModal, ToastAlertMessage } from "../../Util";
+import { ConfirmationModal } from "../../ConfirmModal";
+import { ToastAlertMessage } from "../../ToastAllert";
 
 interface Props {
   instance_display_identity: string;

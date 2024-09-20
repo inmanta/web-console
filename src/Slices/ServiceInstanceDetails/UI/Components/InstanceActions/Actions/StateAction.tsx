@@ -3,7 +3,8 @@ import { DropdownGroup, DropdownItem, Text } from "@patternfly/react-core";
 import { ParsedNumber } from "@/Core";
 import { usePostStateTransfer } from "@/Data/Managers/V2/POST/PostStateTransfer/usePostStateTransfer";
 import { DependencyContext, words } from "@/UI";
-import { ConfirmationModal, ToastAlertMessage } from "../../Util";
+import { ConfirmationModal } from "../../ConfirmModal";
+import { ToastAlertMessage } from "../../ToastAllert";
 
 interface Props {
   targets: string[];

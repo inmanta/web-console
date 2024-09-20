@@ -1,16 +1,16 @@
 import React, { useContext } from "react";
 import { useUrlStateWithString } from "@/Data";
 import { InstanceDetailsContext } from "@/Slices/ServiceInstanceDetails/Core/Context";
+import {
+  AttributeViews,
+  AttributeViewToggles,
+  getAvailableAttributesSets,
+} from "@/Slices/ServiceInstanceDetails/Utils";
 import { LoadingView } from "@/UI/Components";
 import { AttributesCompare } from "./AttributesCompare";
 import { AttributesEditor } from "./AttributesEditor";
 import { AttributesTable } from "./AttributesTable";
 import { NoDataState } from "./NoDataState";
-import {
-  AttributeViews,
-  AttributeViewToggles,
-  getAvailableAttributesSets,
-} from "./Utils";
 
 interface Props {
   selectedView: AttributeViews;
