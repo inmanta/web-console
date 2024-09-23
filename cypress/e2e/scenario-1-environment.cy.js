@@ -135,9 +135,7 @@ describe("Environment", () => {
     //go back to home and check if env is visible
     cy.get(".pf-v5-c-breadcrumb__item").eq(0).click();
 
-    cy.get('[aria-label="Environment card"]')
-    .contains(testName(2))
-    .click();
+    cy.get('[aria-label="Environment card"]').contains(testName(2)).click();
 
     openSettings(testName(2));
     deleteEnv(testName(2), testProjectName(2));
