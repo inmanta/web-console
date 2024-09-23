@@ -226,7 +226,7 @@ const dict = {
   "instanceDetails.page.errorFallback.title": "Error",
   "instanceDetails.page.noData": "There is no data available to display.",
   "instanceDetails.page.noData.errorTitle": "No Data",
-  "instanceDetails.history.title": "Version History",
+  "instanceDetails.history.title": "History",
   "instanceDetails.history.table.version": "Version",
   "instanceDetails.history.table.date": "Date",
   "instanceDetails.history.table.status": "Status",
