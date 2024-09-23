@@ -70,10 +70,10 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
   };
 
   /**
-   * Handles the update of a service entity block.
+   * Handles the event triggered when the user made update to the instance cell
+   * With removed ability to edit the related instances, we need to assert first if the instance triggered the event is in the instancesToSend map(it could be removed from the canvas)
    *
-   * @param {ServiceEntityBlock} cell - The service entity block to be updated.
-   * @param {ActionEnum} action - The action to be performed on the service entity block.
+   * @param {CustomEvent} event - The event object.
    */
   const handleUpdateInstancesToSend = (event) => {
     const customEvent = event as CustomEvent;
@@ -93,18 +93,21 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
   };
 
   /**
-   * Handles updating the inventory stencil
+   * Handles updating the stencil state for the embedded entities.
+   * If the current count reach the max count, the adequate stencil element will become disabled.
+   *
+   * @param {CustomEvent} event - The event object.
    */
-  const handleUpdateInventoryStencil = (event) => {
+  const handleUpdateStencilState = (event) => {
     const customEvent = event as CustomEvent;
     const eventData: { name: string; action: EmbeddedEventEnum } =
       customEvent.detail;
 
-    //event listener doesn't ger updated state outside setStencilState function, so all logic has to be done inside it
+    //event listener doesn't get updated state outside setStencilState function, so all logic has to be done inside it
     setStencilState((prev) => {
       const stencilStateCopy = JSON.parse(JSON.stringify(prev));
 
-      // If the stencil doesn't exist, return the previous state - that's the case when we recurrently adding related children to the canvas, these embedded entities aren't tracked
+      // If the stencil doesn't exist, return the previous state - that's the case when we recurrently add related children to the canvas, these embedded entities aren't tracked
       if (!stencilStateCopy[eventData.name]) {
         return stencilStateCopy;
       }
@@ -115,6 +118,8 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
           break;
         case "remove":
           stencilStateCopy[eventData.name].current -= 1;
+          break;
+        default:
           break;
       }
 
@@ -158,7 +163,7 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
       "updateInstancesToSend",
       handleUpdateInstancesToSend,
     );
-    document.addEventListener("updateStencil", handleUpdateInventoryStencil);
+    document.addEventListener("updateStencil", handleUpdateStencilState);
 
     return () => {
       document.removeEventListener("openDictsModal", handleDictEvent);
@@ -168,10 +173,7 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
         "updateInstancesToSend",
         handleUpdateInstancesToSend,
       );
-      document.removeEventListener(
-        "updateStencil",
-        handleUpdateInventoryStencil,
-      );
+      document.removeEventListener("updateStencil", handleUpdateStencilState);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

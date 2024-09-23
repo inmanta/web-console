@@ -27,7 +27,7 @@ import {
   testApiInstance,
   testApiInstanceModel,
   testEmbeddedApiInstances,
-} from "./Mock";
+} from "./Mocks/Mock";
 import services from "./Mocks/services.json";
 import { createEntity } from "./actions";
 import {

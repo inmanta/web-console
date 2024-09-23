@@ -2,15 +2,13 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import "@inmanta/rappid/joint-plus.css";
 import { ui } from "@inmanta/rappid";
 import styled from "styled-components";
-import { diagramInit } from "@/UI/Components/Diagram/init";
-import { CanvasWrapper } from "@/UI/Components/Diagram/styles";
-import { CanvasContext, InstanceComposerContext } from "./Context/Context";
+import { CanvasContext, InstanceComposerContext } from "./Context";
 import { EventWrapper } from "./Context/EventWrapper";
-import DictModal from "./components/DictModal";
-import { RightSidebar } from "./components/RightSidebar";
-import Toolbar from "./components/Toolbar";
+import { DictModal, RightSidebar, Toolbar } from "./components";
 import { createConnectionRules, createStencilState } from "./helpers";
-import { StencilSidebar } from "./stencil/stencil";
+import { diagramInit } from "./init";
+import { StencilSidebar } from "./stencil";
+import { CanvasWrapper } from "./styles";
 import { ZoomHandlerService } from "./zoomHandler";
 
 /**
@@ -46,7 +44,9 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
   const [scroller, setScroller] = useState<ui.PaperScroller | null>(null);
   const [isStencilStateReady, setIsStencilStateReady] = useState(false);
 
-  const [sidebar, setSidebar] = useState<StencilSidebar | null>(null); // without this state it could happen that cells would load before sidebar is ready so it's state could be outdated
+  const [stencilSidebar, setStencilSidebar] = useState<StencilSidebar | null>(
+    null,
+  ); // without this state it could happen that cells would load before sidebar is ready so it's state could be outdated
 
   useEffect(() => {
     if (!mainService) {
@@ -101,14 +101,14 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
       serviceModels,
     );
 
-    setSidebar(sidebar);
+    setStencilSidebar(sidebar);
 
     return () => sidebar.remove();
   }, [scroller, relatedInventories.data, mainService, serviceModels]);
 
   useEffect(() => {
     if (
-      !sidebar ||
+      !stencilSidebar ||
       !diagramHandlers ||
       !serviceModels ||
       !mainService ||
@@ -138,7 +138,7 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
       setIsStencilStateReady(false);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [diagramHandlers, isStencilStateReady, sidebar]);
+  }, [diagramHandlers, isStencilStateReady, stencilSidebar]);
 
   useEffect(() => {
     if (!ZoomHandler.current || !scroller) {
@@ -154,8 +154,12 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
       <DictModal />
       <Toolbar serviceName={mainService.name} editable={editable} />
       <CanvasWrapper id="canvas-wrapper" data-testid="Composer-Container">
-        <StencilContainer className="stencil-sidebar" ref={LeftSidebar} />
-        <CanvasContainer className="canvas" ref={Canvas} />
+        <StencilContainer
+          className="stencil-sidebar"
+          data-testid="left_sidebar"
+          ref={LeftSidebar}
+        />
+        <CanvasContainer className="canvas" data-testid="canvas" ref={Canvas} />
         <RightSidebar />
         <ZoomHandlerContainer className="zoom-handler" ref={ZoomHandler} />
       </CanvasWrapper>

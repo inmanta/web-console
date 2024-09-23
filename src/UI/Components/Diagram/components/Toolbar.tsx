@@ -37,7 +37,7 @@ interface Props {
  *
  * @returns {React.FC} The Toolbar component.
  */
-const Toolbar: React.FC<Props> = ({ serviceName, editable }) => {
+export const Toolbar: React.FC<Props> = ({ serviceName, editable }) => {
   const { serviceModels, mainService, instance } = useContext(
     InstanceComposerContext,
   );
@@ -158,8 +158,6 @@ const Toolbar: React.FC<Props> = ({ serviceName, editable }) => {
     </Container>
   );
 };
-
-export default Toolbar;
 
 const Container = styled(Flex)`
   padding: 0 0 20px;

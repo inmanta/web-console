@@ -8,7 +8,6 @@ import {
   FieldCreator,
   createFormState,
 } from "../ServiceInstanceForm";
-import { findCorrespondingId } from "./helpers";
 import activeImage from "./icons/active-icon.svg";
 import candidateImage from "./icons/candidate-icon.svg";
 import {
@@ -199,12 +198,14 @@ export function createEntity(
     instanceAsTable.set("relatedTo", new Map());
   }
 
-  updateAttributes(
-    instanceAsTable,
-    serviceModel.key_attributes || [],
-    attributes,
-    true,
-  );
+  if (attributes) {
+    updateAttributes(
+      instanceAsTable,
+      serviceModel.key_attributes || [],
+      attributes,
+      true,
+    );
+  }
 
   return instanceAsTable;
 }
@@ -300,9 +301,8 @@ export function appendInstance(
     );
   }
 
-  //block
   if (instanceWithRelations.relatedInstances) {
-    //map through relatedInstances and either append them or connect to them
+    //map through relatedInstances and either append them and connect to them as we are going one level deep into connections and related entities should not exist in the graph before this iteration
     instanceWithRelations.relatedInstances.forEach((relatedInstance) => {
       const cellAdded = graph.getCell(relatedInstance.id);
       const isBlockedFromEditing = true;
@@ -329,21 +329,13 @@ export function appendInstance(
           .querySelector(`.${appendedInstances[0].get("stencilName")}_text`)
           ?.classList.add("stencil_text-disabled");
 
-        const allCells = graph
-          .getCells()
-          .filter(
-            (cell) => cell.attributes.type !== "Link",
-          ) as ServiceEntityBlock[];
-
-        allCells.forEach((cell) => {
+        appendedInstances.forEach((cell) => {
           const relationMap = cell.get("relatedTo") as Map<string, string>;
           const serviceModel = cell.get("serviceModel") as ServiceModel;
 
           if (relationMap) {
             relationMap.forEach((_value, key) => {
-              const relatedCell = appendedInstances.find((cell) => {
-                return cell.id === key;
-              });
+              const relatedCell = graph.getCell(key) as ServiceEntityBlock;
 
               if (relatedCell) {
                 const relation = serviceModel.inter_service_relations?.find(
@@ -363,79 +355,6 @@ export function appendInstance(
             });
           }
         });
-      } else {
-        //If cell is already in the graph, we need to check if it got in its inter-service relations the one with id that corresponds with created instanceAsTable
-        let isConnected = false;
-        const cellAsBlock = cellAdded as ServiceEntityBlock;
-        const relations = cellAsBlock.getRelations();
-
-        if (relations) {
-          const correspondingId = findCorrespondingId(
-            relations,
-            instanceAsTable,
-          );
-
-          if (correspondingId) {
-            isConnected = true;
-            connectEntities(
-              graph,
-              instanceAsTable,
-              [cellAsBlock],
-              serviceInstanceModel.strict_modifier_enforcement,
-            );
-          } else {
-            embeddedEntities.forEach((entity) => {
-              const embeddedId = findCorrespondingId(relations, entity);
-
-              if (embeddedId) {
-                isConnected = true;
-                connectEntities(
-                  graph,
-                  instanceAsTable,
-                  [cellAsBlock],
-                  serviceInstanceModel.strict_modifier_enforcement,
-                );
-              }
-            });
-          }
-        }
-
-        //If doesn't, or the one we are looking for isn't among the ones stored, we need go through every connected shape and do the same assertion,
-        //as the fact that we have that cell as relatedInstance tells us that either that or its embedded entities has connection
-        if (!isConnected) {
-          const neighbors = graph.getNeighbors(cellAdded as dia.Element);
-
-          neighbors.map((cell) => {
-            const neighborRelations = (
-              cell as ServiceEntityBlock
-            ).getRelations();
-
-            if (neighborRelations) {
-              const correspondingId = findCorrespondingId(
-                neighborRelations,
-                instanceAsTable,
-              );
-
-              if (correspondingId) {
-                isConnected = true;
-                connectEntities(
-                  graph,
-                  instanceAsTable,
-                  [cell as ServiceEntityBlock],
-                  !serviceInstanceModel.strict_modifier_enforcement ||
-                    isBlockedFromEditing,
-                );
-              }
-            }
-          });
-        }
-        connectEntities(
-          graph,
-          instanceAsTable,
-          [cellAsBlock],
-          !serviceInstanceModel.strict_modifier_enforcement ||
-            isBlockedFromEditing,
-        );
       }
     });
   }
@@ -468,7 +387,7 @@ export function appendEmbeddedEntity(
   graph: dia.Graph,
   embeddedEntity: EmbeddedEntity,
   entityAttributes: InstanceAttributeModel | InstanceAttributeModel[],
-  embeddedTo: string | dia.Cell.ID | null,
+  embeddedTo: string | dia.Cell.ID,
   holderName: string,
   presentedAttr?: "candidate" | "active",
   isBlockedFromEditing?: boolean,
@@ -486,7 +405,7 @@ export function appendEmbeddedEntity(
     entityInstance: InstanceAttributeModel,
   ): ServiceEntityBlock {
     const isCore = false;
-    const isInEditMode = false;
+    const isInEditMode = isBlockedFromEditing || false;
     const isEmbedded = true;
 
     //Create shape for Entity
@@ -523,14 +442,17 @@ export function appendEmbeddedEntity(
         entity,
         entityInstance[entity.name] as InstanceAttributeModel,
         instanceAsTable.id as string,
-        entity.name,
+        embeddedEntity.name,
         presentedAttr,
         isBlockedFromEditing,
       );
 
-      appendedEntity.forEach((entity) => {
-        handleInfoIcon(entity, presentedAttr);
-      });
+      if (presentedAttr) {
+        appendedEntity.forEach((entity) => {
+          handleInfoIcon(entity, presentedAttr);
+        });
+      }
+
       connectEntities(
         graph,
         instanceAsTable,
@@ -539,7 +461,9 @@ export function appendEmbeddedEntity(
       );
     });
 
-    embeddedEntity.inter_service_relations?.map((relation) => {
+    const relations = embeddedEntity.inter_service_relations || [];
+
+    relations.map((relation) => {
       const relationId = entityInstance[relation.name] as relationId;
 
       if (relationId) {
@@ -562,12 +486,12 @@ export function appendEmbeddedEntity(
  *
  * @param {dia.Graph} graph - The jointJS graph to populate.
  * @param {ServiceModel} serviceModel - The service model to use for populating the graph.
- * @returns {ServiceEntityBlock[]} An array containing the core entity and the default entities added to the graph.
+ * @returns {void}
  */
 export function populateGraphWithDefault(
   graph: dia.Graph,
   serviceModel: ServiceModel,
-) {
+): void {
   //the most realiable way to get attributes default state is to use Field Creator
 
   const fieldCreator = new FieldCreator(new CreateModifierHandler());
@@ -593,8 +517,6 @@ export function populateGraphWithDefault(
     edgeSep: 80,
     rankDir: "BT",
   });
-
-  return [coreEntity, ...defaultEntities];
 }
 
 /**
@@ -666,15 +588,9 @@ export function addDefaultEntities(
 export function updateAttributes(
   serviceEntity: ServiceEntityBlock,
   keyAttributes: string[],
-  serviceInstanceAttributes: InstanceAttributeModel | undefined,
+  serviceInstanceAttributes: InstanceAttributeModel,
   isInitial = true,
 ) {
-  // const instanceAttributes = {};
-  // const attributes = attributesKeywords.map((key) => {
-  //   const attributeValue = isEmpty ? "" : serviceInstanceAttributes[key];
-
-  //   instanceAttributes[key] = attributeValue;
-
   const attributesToDisplay = keyAttributes.map((key) => {
     const value = serviceInstanceAttributes
       ? (serviceInstanceAttributes[key] as string)
@@ -685,8 +601,6 @@ export function updateAttributes(
       value: value || "",
     };
   });
-
-  // serviceEntity.set("instanceAttributes", instanceAttributes);
 
   if (isInitial) {
     serviceEntity.appendColumns(attributesToDisplay);
@@ -815,9 +729,9 @@ function handleNonDirectAttributes(
  * @param {"candidate" | "active"=} presentedAttrs *optional* indentify used set of attributes if they are taken from Service Instance
  * @returns {void}
  */
-function handleInfoIcon(
+export function handleInfoIcon(
   instanceAsTable: ServiceEntityBlock,
-  presentedAttrs?: "candidate" | "active",
+  presentedAttrs: "candidate" | "active",
 ) {
   const infoAttrs = {
     preserveAspectRatio: "none",
@@ -836,7 +750,7 @@ function handleInfoIcon(
         height: 15,
       },
     });
-  } else if (presentedAttrs === "active") {
+  } else {
     instanceAsTable.attr({
       info: {
         ...infoAttrs,

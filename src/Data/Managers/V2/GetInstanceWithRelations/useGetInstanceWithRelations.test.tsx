@@ -8,7 +8,7 @@ import {
   childModel,
   testInstance,
   testService,
-} from "@/UI/Components/Diagram/Mock";
+} from "@/UI/Components/Diagram/Mocks/Mock";
 import { useGetInstanceWithRelations } from "./useGetInstanceWithRelations";
 
 export const server = setupServer(
@@ -83,7 +83,7 @@ const createWrapper = () => {
 test("if the fetched instance has referenced instance(s), then query will return the given instance with that related instance(s)", async () => {
   const { result } = renderHook(
     () =>
-      useGetInstanceWithRelations("test_id", testService, "env").useOneTime(),
+      useGetInstanceWithRelations("test_id", "env", testService).useOneTime(),
     {
       wrapper: createWrapper(),
     },
@@ -102,7 +102,7 @@ test("if the fetched instance has referenced instance(s), then query will return
 test("if the fetched instance has inter-service relation(s) in the model, then query will return the given instance with that related instance(s)", async () => {
   const { result } = renderHook(
     () =>
-      useGetInstanceWithRelations("child_id", childModel, "env").useOneTime(),
+      useGetInstanceWithRelations("child_id", "env", childModel).useOneTime(),
     {
       wrapper: createWrapper(),
     },
@@ -123,8 +123,8 @@ test("when instance returned has not referenced instance(s), then the query will
     () =>
       useGetInstanceWithRelations(
         "test_mpn_id",
-        testService,
         "env",
+        testService,
       ).useOneTime(),
     {
       wrapper: createWrapper(),

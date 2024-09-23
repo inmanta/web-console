@@ -1,4 +1,4 @@
-import { containerModel, testApiInstanceModel } from "../Mock";
+import { containerModel, testApiInstanceModel } from "../Mocks/Mock";
 import {
   createStencilElement,
   transformEmbeddedToStencilElements,

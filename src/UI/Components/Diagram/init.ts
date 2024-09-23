@@ -124,7 +124,13 @@ export function diagramInit(
       let cells: ServiceEntityBlock[] = [];
 
       if (!instance) {
-        cells = populateGraphWithDefault(graph, mainService);
+        populateGraphWithDefault(graph, mainService);
+
+        cells = graph
+          .getCells()
+          .filter(
+            (cell) => cell.get("type") !== "Link",
+          ) as ServiceEntityBlock[];
       } else {
         cells = appendInstance(paper, graph, instance, services);
 

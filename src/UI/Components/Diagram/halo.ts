@@ -85,6 +85,7 @@ const createHalo = (
     graph.removeLinks(cellView.model);
     cellView.remove();
     halo.remove();
+    graph.removeCells([cellView.model]);
     //trigger click on blank canvas to clear right sidebar
     paper.trigger("blank:pointerdown");
   });

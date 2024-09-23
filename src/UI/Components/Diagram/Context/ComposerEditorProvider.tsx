@@ -57,8 +57,8 @@ export const ComposerEditorProvider: React.FC<Props> = ({
 
   const instanceWithRelations = useGetInstanceWithRelations(
     instance,
-    mainModel,
     environment,
+    mainModel,
   ).useContinuous();
 
   const relatedInventories = useGetRelatedInventories(

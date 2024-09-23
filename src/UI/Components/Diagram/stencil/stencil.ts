@@ -154,6 +154,7 @@ class InventoryStencilTab {
 
     this.stencil = new ui.Stencil({
       id: "inventory-stencil",
+      testid: "inventory-stencil",
       className: "joint-stencil hidden",
       paper: scroller,
       width: 240,
