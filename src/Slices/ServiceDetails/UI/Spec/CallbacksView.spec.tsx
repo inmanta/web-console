@@ -18,6 +18,7 @@ import {
   dependencies,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
+import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import {
   CallbacksQueryManager,
   CallbacksStateHelper,
@@ -64,19 +65,21 @@ function setup() {
   );
 
   const component = (
-    <MemoryRouter>
-      <DependencyProvider
-        dependencies={{
-          ...dependencies,
-          queryResolver,
-          commandResolver,
-        }}
-      >
-        <StoreProvider store={store}>
-          <CallbacksView service_entity={Service.a.name} />
-        </StoreProvider>
-      </DependencyProvider>
-    </MemoryRouter>
+    <ModalProvider>
+      <MemoryRouter>
+        <DependencyProvider
+          dependencies={{
+            ...dependencies,
+            queryResolver,
+            commandResolver,
+          }}
+        >
+          <StoreProvider store={store}>
+            <CallbacksView service_entity={Service.a.name} />
+          </StoreProvider>
+        </DependencyProvider>
+      </MemoryRouter>
+    </ModalProvider>
   );
 
   return {

@@ -13,6 +13,7 @@ import { ServiceInventoryContext } from "@/Slices/ServiceInventory/UI/ServiceInv
 import { DeferredApiHelper, dependencies, ServiceInstance } from "@/Test";
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
+import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { DeleteAction } from "./DeleteAction";
 
 function setup() {
@@ -40,40 +41,42 @@ function setup() {
 
   return {
     component: (isDisabled = false) => (
-      <StoreProvider store={storeInstance}>
-        <DependencyProvider
-          dependencies={{
-            ...dependencies,
-            commandResolver,
-          }}
-        >
-          <ServiceInventoryContext.Provider
-            value={{
-              labelFiltering: {
-                danger: [],
-                warning: [],
-                success: [],
-                info: [],
-                no_label: [],
-                onClick: jest.fn(),
-              },
-
-              refetch,
+      <ModalProvider>
+        <StoreProvider store={storeInstance}>
+          <DependencyProvider
+            dependencies={{
+              ...dependencies,
+              commandResolver,
             }}
           >
-            <DeleteAction
-              id={ServiceInstance.a.id}
-              instance_identity={
-                ServiceInstance.a.service_identity_attribute_value ??
-                ServiceInstance.a.id
-              }
-              version={ServiceInstance.a.version}
-              isDisabled={isDisabled}
-              service_entity={ServiceInstance.a.service_entity}
-            />
-          </ServiceInventoryContext.Provider>
-        </DependencyProvider>
-      </StoreProvider>
+            <ServiceInventoryContext.Provider
+              value={{
+                labelFiltering: {
+                  danger: [],
+                  warning: [],
+                  success: [],
+                  info: [],
+                  no_label: [],
+                  onClick: jest.fn(),
+                },
+
+                refetch,
+              }}
+            >
+              <DeleteAction
+                id={ServiceInstance.a.id}
+                instance_identity={
+                  ServiceInstance.a.service_identity_attribute_value ??
+                  ServiceInstance.a.id
+                }
+                version={ServiceInstance.a.version}
+                isDisabled={isDisabled}
+                service_entity={ServiceInstance.a.service_entity}
+              />
+            </ServiceInventoryContext.Provider>
+          </DependencyProvider>
+        </StoreProvider>
+      </ModalProvider>
     ),
     storeInstance,
     apiHelper,

@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { MenuItem, Modal } from "@patternfly/react-core";
+import { MenuItem } from "@patternfly/react-core";
 import { TrashAltIcon } from "@patternfly/react-icons";
 import { Maybe, VersionedServiceInstanceIdentifier } from "@/Core";
 import { ServiceInventoryContext } from "@/Slices/ServiceInventory/UI/ServiceInventory";
@@ -9,6 +9,7 @@ import {
   ConfirmUserActionForm,
 } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
+import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
 
 interface Props extends VersionedServiceInstanceIdentifier {
@@ -23,9 +24,20 @@ export const DeleteAction: React.FC<Props> = ({
   version,
   service_entity,
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const { triggerModal, closeModal } = useContext(ModalContext);
   const handleModalToggle = () => {
-    setIsOpen(!isOpen);
+    triggerModal({
+      title: words("inventory.deleteInstance.title"),
+      content: (
+        <>
+          {words("inventory.deleteInstance.header")(
+            instance_identity,
+            service_entity,
+          )}
+          <ConfirmUserActionForm onSubmit={onSubmit} onCancel={closeModal} />
+        </>
+      ),
+    });
   };
   const [errorMessage, setErrorMessage] = useState("");
   const { commandResolver, environmentModifier } =
@@ -40,7 +52,7 @@ export const DeleteAction: React.FC<Props> = ({
   });
   const isHalted = environmentModifier.useIsHalted();
   const onSubmit = async () => {
-    setIsOpen(false);
+    closeModal();
     const result = await trigger(refetch);
 
     if (Maybe.isSome(result)) {
@@ -75,22 +87,6 @@ export const DeleteAction: React.FC<Props> = ({
           {words("inventory.deleteInstance.button")}
         </MenuItem>
       </ActionDisabledTooltip>
-      <Modal
-        disableFocusTrap
-        isOpen={isOpen}
-        title={words("inventory.deleteInstance.title")}
-        variant={"small"}
-        onClose={handleModalToggle}
-      >
-        {words("inventory.deleteInstance.header")(
-          instance_identity,
-          service_entity,
-        )}
-        <ConfirmUserActionForm
-          onSubmit={onSubmit}
-          onCancel={() => setIsOpen(false)}
-        />
-      </Modal>
     </>
   );
 };
