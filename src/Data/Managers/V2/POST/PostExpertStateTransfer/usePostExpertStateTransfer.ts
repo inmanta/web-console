@@ -4,6 +4,9 @@ import { PrimaryBaseUrlManager } from "@/UI";
 
 import { useFetchHelpers } from "../../helpers";
 
+/**
+ * Required attributes to construct the post request to force update the state of an instance in Expert mode
+ */
 export interface PostExpertStateTransfer {
   message: string;
   current_version: ParsedNumber;
@@ -11,6 +14,14 @@ export interface PostExpertStateTransfer {
   operation?: string;
 }
 
+/**
+ * React Query to Force update the state of an instance in expert mode.
+ *
+ * @param {string} environment - The Environment where the instance is located
+ * @param {string} instance_id - The hashed id of the instance
+ * @param {string } service_entity - The service entity type of the instance
+ * @returns {UseMutationResult<void, Error, PostExpertStateTransfer, unknown>} The useMutation ReactQuery Hook
+ */
 export const usePostExpertStateTransfer = (
   environment: string,
   instance_id: string,
@@ -26,7 +37,12 @@ export const usePostExpertStateTransfer = (
 
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
 
-  const postStateTransfer = async (
+  /**
+   * Expert Post state request
+   *
+   * @returns {Promise<void>} - A promise that resolves when the state is updated in Expert mode.
+   */
+  const postStateTransferExpert = async (
     data: PostExpertStateTransfer,
   ): Promise<void> => {
     const response = await fetch(
@@ -43,7 +59,7 @@ export const usePostExpertStateTransfer = (
   };
 
   return useMutation({
-    mutationFn: postStateTransfer,
-    mutationKey: ["post_state_transfer"],
+    mutationFn: postStateTransferExpert,
+    mutationKey: ["post_state_transfer_expert"],
   });
 };

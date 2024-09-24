@@ -54,15 +54,24 @@ export const DeleteAction: React.FC<Props> = ({
     version,
   );
 
+  /**
+   *  When the delete action is selected, block the interface and open the modal
+   */
   const onDeleteSelect = () => {
     setInterfaceBlocked(true);
     setIsModalOpen(true);
   };
 
-  const onSubmitDelete = async () => {
+  /**
+   * async method sending out the request to delete the instance
+   */
+  const onSubmitDelete = async (): Promise<void> => {
     mutate("");
   };
 
+  /**
+   * shorthand method to handle the state updates when the modal is closed
+   */
   const closeModal = useCallback(() => {
     setIsModalOpen(false);
     setInterfaceBlocked(false);

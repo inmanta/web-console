@@ -53,6 +53,12 @@ export const StateAction: React.FC<Props> = ({
     service_entity,
   );
 
+  /**
+   * When a state is selected, block the interface, open the modal,
+   * and set the selected state
+   *
+   * @param {string} value - the selected state
+   */
   const onSelect = (value: string) => {
     setTargetState(value);
     setConfirmationText(
@@ -66,7 +72,10 @@ export const StateAction: React.FC<Props> = ({
     setIsModalOpen(true);
   };
 
-  const onSubmit = async () => {
+  /**
+   * async method sending out the request to update the state of the instance with selected state
+   */
+  const onSubmit = async (): Promise<void> => {
     const username = authHelper.getUser();
     const message = words("instanceDetails.API.message.update")(username);
 
@@ -77,6 +86,9 @@ export const StateAction: React.FC<Props> = ({
     });
   };
 
+  /**
+   *  shorthand method to handle the state updates when the modal is closed
+   */
   const closeModal = useCallback(() => {
     setIsModalOpen(false);
     setInterfaceBlocked(false);
@@ -95,14 +107,6 @@ export const StateAction: React.FC<Props> = ({
 
   return (
     <>
-      {errorMessage && (
-        <ToastAlertMessage
-          message={errorMessage}
-          id="error-toast-state-transfer"
-          setMessage={setErrorMessage}
-          variant="danger"
-        />
-      )}
       <DropdownGroup label={words("instanceDetails.setState.label")}>
         {targets.map((target) => (
           <DropdownItem onClick={() => onSelect(target)} key={target}>
@@ -121,6 +125,14 @@ export const StateAction: React.FC<Props> = ({
       >
         <Text>{confirmationText}</Text>
       </ConfirmationModal>
+      {errorMessage && (
+        <ToastAlertMessage
+          message={errorMessage}
+          id="error-toast-state-transfer"
+          setMessage={setErrorMessage}
+          variant="danger"
+        />
+      )}
     </>
   );
 };

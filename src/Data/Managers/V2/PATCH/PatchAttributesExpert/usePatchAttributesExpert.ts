@@ -4,7 +4,10 @@ import { PrimaryBaseUrlManager } from "@/UI";
 
 import { useFetchHelpers } from "../../helpers";
 
-export interface PatchAttributes {
+/**
+ * Required attributes to construct the patch request to edit an instance attribute set in Expert mode
+ */
+export interface ExpertPatchAttributes {
   comment: string;
   attribute_set_name: string;
   current_version: ParsedNumber;
@@ -12,6 +15,9 @@ export interface PatchAttributes {
   patch_id: string;
 }
 
+/**
+ * Edit content for a patch request
+ */
 interface PatchEdit {
   edit_id: string;
   operation: string;
@@ -20,17 +26,18 @@ interface PatchEdit {
 }
 
 /**
+ * React Query to Patch the attributes of a certain set, for an instance, in expert mode.
  *
- * @param environment
- * @param instance_id
- * @param service_entity
- * @returns
+ * @param {string} environment - The Environment where the instance is located
+ * @param {string} instance_id - The hashed id of the instance
+ * @param {string } service_entity - The service entity type of the instance
+ * @returns {UseMutationResult<void, Error, ExpertPatchAttributes, unknown>} The useMutation ReactQuery Hook
  */
 export const usePatchAttributesExpert = (
   environment: string,
   instance_id: string,
   service_entity: string,
-): UseMutationResult<void, Error, PatchAttributes, unknown> => {
+): UseMutationResult<void, Error, ExpertPatchAttributes, unknown> => {
   const { createHeaders, handleErrors } = useFetchHelpers();
 
   const headers = createHeaders(environment);
@@ -41,8 +48,13 @@ export const usePatchAttributesExpert = (
 
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
 
+  /**
+   * Expert Edit an instance.
+   *
+   * @returns {Promise<void>} - A promise that resolves when the instance is succesfully edited in Expert mode.
+   */
   const patchAttributesExpert = async (
-    data: PatchAttributes,
+    data: ExpertPatchAttributes,
   ): Promise<void> => {
     const response = await fetch(
       baseUrl +
@@ -59,6 +71,6 @@ export const usePatchAttributesExpert = (
 
   return useMutation({
     mutationFn: patchAttributesExpert,
-    mutationKey: ["post_state_transfer"],
+    mutationKey: ["patch_expert_edit"],
   });
 };

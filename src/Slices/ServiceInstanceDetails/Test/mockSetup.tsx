@@ -13,7 +13,15 @@ import {
 } from "@/UI";
 import { ServiceInstanceDetails } from "../UI/Page";
 
-export const setupServiceInstanceDetails = (expertMode = false) => {
+/**
+ * Mock setup for the test cases of the Instance Details page.
+ *
+ * @param {boolean} expertMode - whether to activate the expert mode in the state or not.
+ * @returns {React.FC} A React Element rendering the test setup for Instance Details Page
+ */
+export const setupServiceInstanceDetails = (
+  expertMode: boolean = false,
+): React.JSX.Element => {
   const queryClient = new QueryClient();
   const store = getStoreInstance();
 

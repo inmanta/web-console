@@ -127,7 +127,6 @@ export const InstanceActions: React.FC = () => {
           </DropdownList>
         </Dropdown>
       )}
-
       <Dropdown
         isOpen={isDropdownOpen}
         onOpenChange={(isOpen: boolean) =>
@@ -234,6 +233,7 @@ export const InstanceActions: React.FC = () => {
   );
 };
 
+// styling to keep the action buttons neatly aligned to the right
 const RightAlignedButtons = styled.span`
   float: right;
   margin-right: var(--pf-v5-global--spacer--lg);

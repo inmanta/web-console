@@ -1301,6 +1301,7 @@ export const serviceModelWithConfig: ServiceModel = {
   ...serviceModel,
   config: { option1: true },
 };
+
 export const instanceDataWithConfig: ServiceInstanceModel = {
   ...instanceData,
   config: { option1: true },

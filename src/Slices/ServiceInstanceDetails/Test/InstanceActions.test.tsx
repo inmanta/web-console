@@ -1,7 +1,7 @@
 import { act } from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { defaultServer, defaultServerFailedActions } from "./mockServer";
+import { defaultServer, serverFailedActions } from "./mockServer";
 import { setupServiceInstanceDetails } from "./mockSetup";
 
 const mockedUsedNavigate = jest.fn();
@@ -247,7 +247,7 @@ describe("Page Actions - Success", () => {
 });
 
 describe("Page Actions - Failed", () => {
-  const server = defaultServerFailedActions;
+  const server = serverFailedActions;
 
   // Establish API mocking before all tests.
   beforeAll(() => server.listen());

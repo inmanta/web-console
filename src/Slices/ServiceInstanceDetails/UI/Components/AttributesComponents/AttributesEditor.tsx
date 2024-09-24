@@ -11,7 +11,7 @@ import styled from "styled-components";
 import { v4 as uuidv4 } from "uuid";
 import { InstanceAttributeModel } from "@/Core";
 import {
-  PatchAttributes,
+  ExpertPatchAttributes,
   usePatchAttributesExpert,
 } from "@/Data/Managers/V2/PATCH/PatchAttributesExpert";
 import { InstanceDetailsContext } from "@/Slices/ServiceInstanceDetails/Core/Context";
@@ -77,6 +77,14 @@ export const AttributesEditor: React.FC<Props> = ({
     setSelectedSet(value);
   };
 
+  /**
+   * useCallback hook onEditorUpdate
+   *
+   * Try-catch to set the editorState with the updated data
+   *
+   * @param {string} value - the JSON editor stringified value
+   * @param {boolean} isValid - whether the editor contains known errors or not
+   */
   const onEditorUpdate = useCallback(
     (value: string, isValid: boolean) => {
       try {
@@ -91,10 +99,13 @@ export const AttributesEditor: React.FC<Props> = ({
     [setEditorState, setIsEditorValid],
   );
 
-  const onConfirm = async () => {
+  /**
+   * onConfirm async method sending the patch request to Expert edit the attributes
+   */
+  const onConfirm = async (): Promise<void> => {
     const message = words("instanceDetails.API.message.update")(username);
 
-    const patchAttributes: PatchAttributes = {
+    const patchAttributes: ExpertPatchAttributes = {
       comment: message,
       attribute_set_name: selectedSet,
       current_version: instance.version,
@@ -186,7 +197,6 @@ export const AttributesEditor: React.FC<Props> = ({
           {words("instanceDetails.expert.editModal.message")(selectedSet)}
         </Text>
       </ConfirmationModal>
-
       {errorMessage && (
         <ToastAlertMessage
           message={errorMessage}

@@ -179,24 +179,37 @@ const postStateUpdateFailed = http.post(
   },
 );
 
+/**
+ * Setup a test server where the queries are delayed
+ */
 export const loadingServer = setupServer(
   getServiceModel,
   getHistoryLogsDelayed,
   getInstanceData,
 );
 
+/**
+ * Setup a test server where all the initial GET queries return with an error
+ */
 export const errorServerInstance = setupServer(
   getServiceModelError,
   getHistoryLogsError,
   getInstanceError,
 );
 
+/**
+ * Setup a test server where only the HistoryLogs GET query returns an error
+ */
 export const errorServerHistory = setupServer(
   getServiceModelWithConfig,
   getHistoryLogsError,
   getInstanceDataDelayed,
 );
 
+/**
+ * Setup a default test server where all queries succeed
+ * This server doesn't have documentation for any attributes
+ */
 export const defaultServer = setupServer(
   getServiceModel,
   getHistoryLogs,
@@ -208,7 +221,11 @@ export const defaultServer = setupServer(
   postForceStateUpdate,
 );
 
-export const defaultServerFailedActions = setupServer(
+/**
+ * Setup a test server where only the actions fail
+ * This server doesn't have documentation for any attributes
+ */
+export const serverFailedActions = setupServer(
   getServiceModel,
   getHistoryLogs,
   getInstanceData,
@@ -219,12 +236,18 @@ export const defaultServerFailedActions = setupServer(
   postForceStateUpdateFailed,
 );
 
+/**
+ * Setup a test server with a config for the instance
+ */
 export const serverWithConfig = setupServer(
   getServiceModel,
   getHistoryLogs,
   getInstanceData,
 );
 
+/**
+ * Setup a test server with documentation for a certain attribute
+ */
 export const serverWithDocumentation = setupServer(
   getServiceModelWithDocumentation,
   getHistoryLogsWithDocumentation,

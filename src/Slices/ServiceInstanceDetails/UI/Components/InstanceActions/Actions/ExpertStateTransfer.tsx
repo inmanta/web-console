@@ -55,6 +55,9 @@ export const ExpertStateTransfer: React.FC<Props> = ({
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [selectedOperation, setSelectedOperation] = useState<string>();
 
+  /**
+   * The available expert state operation allowed by the Backend.
+   */
   const expertStateOperations = [
     "clear candidate",
     "clear active",
@@ -72,13 +75,22 @@ export const ExpertStateTransfer: React.FC<Props> = ({
   const { mutate, isError, error, isSuccess, isPending } =
     usePostExpertStateTransfer(environment, instance_id, service_entity);
 
+  /**
+   * When a state is selected in the list, block the interface, open the modal,
+   * and set the selected state target
+   *
+   * @param {string} value - selected state
+   */
   const onStateSelect = (value: string) => {
     setInterfaceBlocked(true);
     setTargetState(value);
     setIsModalOpen(true);
   };
 
-  const onSubmitForceState = async () => {
+  /**
+   * async method sending out the request to force update the state of the instance
+   */
+  const onSubmitForceState = async (): Promise<void> => {
     mutate({
       message: message,
       current_version: version,
@@ -87,10 +99,18 @@ export const ExpertStateTransfer: React.FC<Props> = ({
     });
   };
 
-  const onSelect = (value: string) => {
+  /**
+   * update the state of the selected operation
+   *
+   * @param {string} value - selected operation
+   */
+  const onSelectOperation = (value: string) => {
     setSelectedOperation(value);
   };
 
+  /**
+   *  shorthand method to handle the state updates when the modal is closed
+   */
   const closeModal = useCallback(() => {
     setIsModalOpen(false);
     setInterfaceBlocked(false);
@@ -141,7 +161,7 @@ export const ExpertStateTransfer: React.FC<Props> = ({
             <FormSelect
               id="operation-select"
               value={selectedOperation}
-              onChange={(_event, value) => onSelect(value)}
+              onChange={(_event, value) => onSelectOperation(value)}
             >
               <FormSelectOption key="no-op" label="No operation" />
               {expertStateOperations.map((operation, index) => (

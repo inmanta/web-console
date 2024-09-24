@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Alert, DropdownItem, Text } from "@patternfly/react-core";
 import { TrashAltIcon } from "@patternfly/react-icons";
 import { ParsedNumber } from "@/Core";
-import { useDestroyInstance } from "@/Data/Managers/V2/DELETE/DestroyInstance/useDestroyInstance";
+import { useDestroyInstance } from "@/Data/Managers/V2/DELETE/DestroyInstance";
 import { DependencyContext, words } from "@/UI";
 import { ConfirmationModal } from "../../ConfirmModal";
 import { ToastAlertMessage } from "../../ToastAllert";
@@ -39,8 +39,6 @@ export const DestroyAction: React.FC<Props> = ({
   setInterfaceBlocked,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [confirmationText, setConfirmationText] = useState<string>("");
-  const [modalTitle, setModalTitle] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
 
   const navigate = useNavigate();
@@ -59,26 +57,27 @@ export const DestroyAction: React.FC<Props> = ({
     message,
   );
 
+  /**
+   * When the destroy action is selected, block the interface and open the modal
+   */
   const onDestroySelect = () => {
-    setConfirmationText(
-      words("inventory.destroyInstance.header")(
-        instance_display_identity,
-        service_entity,
-      ),
-    );
-    setModalTitle(words("inventory.destroyInstance.title"));
-
     setInterfaceBlocked(true);
     setIsModalOpen(true);
   };
 
+  /**
+   * shorthand method to handle the state updates when the modal is closed.
+   */
   const closeModal = useCallback(() => {
     setIsModalOpen(false);
     setInterfaceBlocked(false);
     onClose();
   }, [setIsModalOpen, setInterfaceBlocked, onClose]);
 
-  const onSubmitDestroy = async () => {
+  /**
+   * async method sending out the request to destroy the instance
+   */
+  const onSubmitDestroy = async (): Promise<void> => {
     mutate("");
   };
 
@@ -88,6 +87,7 @@ export const DestroyAction: React.FC<Props> = ({
     }
 
     if (isSuccess) {
+      // Because the instance gets destroyed, there's nothing left to display. So we redirect to the inventory.
       navigate(
         `/console/lsm/catalog/${service_entity}/inventory?env=${environment}`,
       );
@@ -105,7 +105,7 @@ export const DestroyAction: React.FC<Props> = ({
         {words("inventory.destroyInstance.button")}
       </DropdownItem>
       <ConfirmationModal
-        title={modalTitle}
+        title={words("inventory.destroyInstance.title")}
         onConfirm={onSubmitDestroy}
         id={instance_display_identity}
         isModalOpen={isModalOpen}
@@ -113,7 +113,12 @@ export const DestroyAction: React.FC<Props> = ({
         setErrorMessage={setErrorMessage}
         isPending={isPending}
       >
-        <Text>{confirmationText}</Text>
+        <Text>
+          {words("inventory.destroyInstance.header")(
+            instance_display_identity,
+            service_entity,
+          )}
+        </Text>
         <br />
         <Alert
           variant="danger"
