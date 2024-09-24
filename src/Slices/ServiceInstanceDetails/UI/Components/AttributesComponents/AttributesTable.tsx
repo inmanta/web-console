@@ -347,6 +347,7 @@ export const AttributesTable: React.FC<Props> = ({
             toggle={toggle}
             onOpenChange={(isOpen: boolean) => setIsToggleOpen(isOpen)}
             onSelect={onSelect}
+            popperProps={{ position: "right" }}
           >
             <DropdownList>
               <DropdownItem
