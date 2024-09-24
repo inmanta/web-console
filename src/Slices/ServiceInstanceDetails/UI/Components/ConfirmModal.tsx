@@ -3,18 +3,32 @@ import { Modal, ModalVariant, Button } from "@patternfly/react-core";
 import { words } from "@/UI";
 import { Spinner } from "@/UI/Components";
 
-interface ModalProps {
+interface Props {
   title: string;
   id: string;
   onConfirm: () => Promise<void>;
   onCancel: () => void;
   isModalOpen: boolean;
   isPending: boolean;
-  setErrorMessage: (message: string) => void;
   children: React.ReactNode | React.ReactNode[];
 }
 
-export const ConfirmationModal: React.FC<ModalProps> = ({
+/**
+ * ConfirmationModal component
+ *
+ * This component is close to being generic
+ *
+ * @props {Props} - The props of the component
+ *  @prop {string} title - the title of the Modal
+ *  @prop {string} id - the id of the Modal, this is reused in the test-ids
+ *  @prop {Promise<void>} onConfirm - callback method when the Modal is confirmed
+ *  @prop {function} onCancel - callback method when the Modal is closed without confirmation
+ *  @prop {boolean} isModalOpen - whether the Modal should be open or not
+ *  @prop {boolean} isPending - display a spinner in the YES button, and disable it
+ *  @prop {JSX.Element} children - any additional content that needs to be displayed within the Modal
+ * @returns {React.FC<Props>} A React Component displaying a modal to confirm a user action
+ */
+export const ConfirmationModal: React.FC<Props> = ({
   title,
   onConfirm,
   isModalOpen,

@@ -110,7 +110,6 @@ export const DestroyAction: React.FC<Props> = ({
         id={instance_display_identity}
         isModalOpen={isModalOpen}
         onCancel={closeModal}
-        setErrorMessage={setErrorMessage}
         isPending={isPending}
       >
         <Text>

@@ -146,7 +146,6 @@ export const ExpertStateTransfer: React.FC<Props> = ({
         id={`Expert-State-Transfer-Confirmation-modal`}
         isModalOpen={isModalOpen}
         onCancel={closeModal}
-        setErrorMessage={setErrorMessage}
         isPending={isPending}
       >
         <Text>
@@ -157,13 +156,19 @@ export const ExpertStateTransfer: React.FC<Props> = ({
         </Text>
         <br />
         <Form>
-          <FormGroup label="Select an operation" fieldId="operation">
+          <FormGroup
+            label={words("instanceDetails.operation.selectLabel")}
+            fieldId="operation"
+          >
             <FormSelect
               id="operation-select"
               value={selectedOperation}
               onChange={(_event, value) => onSelectOperation(value)}
             >
-              <FormSelectOption key="no-op" label="No operation" />
+              <FormSelectOption
+                key="no-op"
+                label={words("instanceDetails.state.noOperation")}
+              />
               {expertStateOperations.map((operation, index) => (
                 <FormSelectOption
                   key={index}

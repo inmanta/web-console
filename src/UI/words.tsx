@@ -273,6 +273,8 @@ const dict = {
     username
       ? `Triggered from the console by ${username}`
       : "Triggered from the console",
+  "instanceDetails.state.noOperation": "no operation",
+  "instanceDetails.operation.selectLabel": "Select an operation",
 
   /**
    * Config related text
