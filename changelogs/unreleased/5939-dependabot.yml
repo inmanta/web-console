@@ -1,0 +1,5 @@
+change-type: patch
+description: 'Build(deps-dev): Bump css-loader from 6.9.1 to 7.1.2'
+destination-branches:
+- master
+sections: {}

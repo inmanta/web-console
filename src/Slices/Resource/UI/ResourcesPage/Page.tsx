@@ -61,18 +61,11 @@ export const Page: React.FC = () => {
 
   const [staleData, setStaleData] = useState(data);
 
-  //when sorting or filtering is triggered, reset the current page
+  //when sorting is triggered, reset the current page
   useEffect(() => {
     setCurrentPage({ kind: "CurrentPage", value: "" });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    sort.order,
-    filter.agent,
-    filter.status,
-    filter.disregardDefault,
-    filter.type,
-    filter.value,
-  ]);
+  }, [sort.order]);
 
   useEffect(() => {
     if (RemoteData.isLoading(data)) return;
