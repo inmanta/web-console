@@ -191,7 +191,6 @@ export const AttributesEditor: React.FC<Props> = ({
         isModalOpen={isModalOpen}
         onCancel={() => setIsModalOpen(false)}
         isPending={isPending}
-        setErrorMessage={setErrorMessage}
       >
         <Text>
           {words("instanceDetails.expert.editModal.message")(selectedSet)}
