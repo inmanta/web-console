@@ -29,6 +29,7 @@ import {
   StaticScheduler,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
+import { ModalProvider } from "../../ModalProvider";
 import { EnvironmentControls } from "./EnvironmentControls";
 
 expect.extend(toHaveNoViolations);
@@ -68,20 +69,22 @@ function setup() {
   );
 
   const component = (
-    <MemoryRouter initialEntries={[{ search: "?env=123" }]}>
-      <DependencyProvider
-        dependencies={{
-          ...dependencies,
-          queryResolver,
-          commandResolver,
-          environmentHandler: MockEnvironmentHandler(EnvironmentDetails.a.id),
-        }}
-      >
-        <StoreProvider store={store}>
-          <EnvironmentControls />
-        </StoreProvider>
-      </DependencyProvider>
-    </MemoryRouter>
+    <ModalProvider>
+      <MemoryRouter initialEntries={[{ search: "?env=123" }]}>
+        <DependencyProvider
+          dependencies={{
+            ...dependencies,
+            queryResolver,
+            commandResolver,
+            environmentHandler: MockEnvironmentHandler(EnvironmentDetails.a.id),
+          }}
+        >
+          <StoreProvider store={store}>
+            <EnvironmentControls />
+          </StoreProvider>
+        </DependencyProvider>
+      </MemoryRouter>
+    </ModalProvider>
   );
 
   return {

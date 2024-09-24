@@ -4,6 +4,7 @@ import { Modal } from "@patternfly/react-core";
 interface Props {
   title: string;
   content: React.ReactNode;
+  actions: React.ReactNode | null;
 }
 export interface ModalContextInterface {
   triggerModal: (props: Props) => void;
@@ -24,13 +25,15 @@ export const ModalProvider: React.FunctionComponent<PropsWithChildren> = ({
   const [isOpen, setIsOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState<React.ReactNode>();
+  const [actions, setAction] = useState<React.ReactNode | null>(null);
 
   const triggerModal = (props: Props) => {
-    const { title, content } = props;
+    const { title, content, actions = null } = props;
 
     setTitle(title);
     setContent(content);
     setIsOpen(true);
+    setAction(actions);
   };
 
   const closeModal = () => {
@@ -52,7 +55,7 @@ export const ModalProvider: React.FunctionComponent<PropsWithChildren> = ({
         title={title}
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
-        actions={<></>}
+        actions={actions}
         ouiaId="GlobalModal"
       >
         {content}
