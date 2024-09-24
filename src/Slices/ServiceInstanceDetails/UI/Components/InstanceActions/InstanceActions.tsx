@@ -10,8 +10,12 @@ import {
 } from "@patternfly/react-core";
 import { CopyIcon, EyeIcon, ToolsIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
-import { ServiceInstanceModel, ServiceModel, TransferModel } from "@/Core";
 import { InstanceDetailsContext } from "@/Slices/ServiceInstanceDetails/Core/Context";
+import {
+  getAvailableStateTargets,
+  getExpertStateTargets,
+  isTransferDisabled,
+} from "@/Slices/ServiceInstanceDetails/Utils";
 import { DependencyContext, words } from "@/UI";
 import { Link } from "@/UI/Components";
 import {
@@ -21,6 +25,19 @@ import {
   StateAction,
 } from "./Actions";
 
+/**
+ * The InstanceActions Component
+ *
+ * This is a dropdown component containing all the instance actions that can be performed
+ * - Edit in form
+ * - Edit in Composer
+ * - Delete instance
+ * - If target states are available, a setState section with the available states
+ *
+ * @note This component requires the InstanceDetailsContext to work
+ *
+ * @returns {React.FC} A React Component displaying the Actions dropdown
+ */
 export const InstanceActions: React.FC = () => {
   const { instance, serviceModelQuery } = useContext(InstanceDetailsContext);
   const { routeManager, environmentModifier, featureManager } =
@@ -34,7 +51,8 @@ export const InstanceActions: React.FC = () => {
     isTransferDisabled(instance, "on_delete", serviceModelQuery.data);
 
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
-  const [isOpenExpert, setIsOpenExpert] = useState<boolean>(false);
+  const [isExpertDropdownOpen, setIsExpertDropdownOpen] =
+    useState<boolean>(false);
   const [blockedInterface, setBlockedInterface] = useState<boolean>(false);
 
   const stateTargets: string[] = getAvailableStateTargets(
@@ -50,6 +68,7 @@ export const InstanceActions: React.FC = () => {
       variant="primary"
       isExpanded={isDropdownOpen}
       ref={toggleRef}
+      aria-label="Actions-Toggle"
       onClick={() => setIsDropdownOpen(!isDropdownOpen)}
     >
       {words("instanceDetails.actions")}
@@ -59,9 +78,10 @@ export const InstanceActions: React.FC = () => {
   const expertToggle = (toggleRef: React.Ref<MenuToggleElement>) => (
     <ExpertMenu
       variant="secondary"
-      isExpanded={isOpenExpert}
+      isExpanded={isExpertDropdownOpen}
       ref={toggleRef}
-      onClick={() => !blockedInterface && setIsOpenExpert(!isOpenExpert)}
+      aria-label="Expert-Actions-Toggle"
+      onClick={() => setIsExpertDropdownOpen(!isExpertDropdownOpen)}
     >
       {words("instanceDetails.expertActions")}
     </ExpertMenu>
@@ -71,9 +91,9 @@ export const InstanceActions: React.FC = () => {
     <RightAlignedButtons>
       {environmentModifier.useIsExpertModeEnabled() && (
         <Dropdown
-          isOpen={isOpenExpert}
+          isOpen={isExpertDropdownOpen}
           onOpenChange={(isOpen: boolean) =>
-            !blockedInterface && setIsOpenExpert(isOpen)
+            !blockedInterface && setIsExpertDropdownOpen(isOpen)
           }
           toggle={expertToggle}
         >
@@ -247,61 +267,3 @@ const ExpertMenu = styled(MenuToggle)`
     );
   }
 `;
-
-export const isTransferDisabled = (
-  instance: ServiceInstanceModel,
-  transferType: "on_update" | "on_delete",
-  serviceEntity?: ServiceModel,
-): boolean => {
-  if (typeof instance === "undefined" || !serviceEntity) {
-    return true;
-  }
-
-  // If the action is allowed, there is a corresponding transfer in the lifecycle,
-  // where the source state is the current state
-  const transfersFromCurrentSource = serviceEntity.lifecycle.transfers.filter(
-    (transfer: TransferModel) =>
-      transfer.source === instance.state && transfer[transferType],
-  );
-
-  return transfersFromCurrentSource.length === 0;
-};
-
-export const getAvailableStateTargets = (
-  currentState: string,
-  serviceEntity?: ServiceModel,
-): string[] => {
-  if (!serviceEntity) {
-    return [];
-  }
-
-  // filter out the possible transfer objects that have the same source as current state.
-  const possibleStatesTransfers = serviceEntity.lifecycle.transfers.filter(
-    (transfer: TransferModel) =>
-      transfer.source === currentState && transfer.api_set_state,
-  );
-
-  // return the targets only as an array of strings.
-  return possibleStatesTransfers.map(
-    (transfer: TransferModel) => transfer.target,
-  );
-};
-
-export const getExpertStateTargets = (
-  serviceEntity?: ServiceModel,
-): string[] => {
-  if (!serviceEntity) {
-    return [];
-  }
-
-  // filter out the possible transfer objects that have the same source as current state.
-  const possibleStatesTransfers = serviceEntity.lifecycle.transfers;
-
-  const possibleTargets = new Set(
-    possibleStatesTransfers.map((transfer: TransferModel) => transfer.target),
-  );
-
-  const sortedArrayOfTargets: string[] = Array.from(possibleTargets).sort();
-
-  return sortedArrayOfTargets;
-};

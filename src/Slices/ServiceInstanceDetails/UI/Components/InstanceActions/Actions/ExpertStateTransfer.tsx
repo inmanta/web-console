@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import {
   Alert,
   DropdownGroup,
@@ -26,6 +26,20 @@ interface Props {
   setInterfaceBlocked: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+/**
+ * The ExpertStateTransfer Component
+ *
+ * @props {Props} props - The props of the components
+ *  @prop {string[]} targets - a list of available states targets for the expert mode
+ *  @prop {string} instance_display_identity - the display value of the instance Id
+ *  @prop {string} instance_id - the hashed id of the instance
+ *  @prop {string} service_entity - the service entity type of the instance
+ *  @prop {ParsedNumber} version - the current version of the instance
+ *  @prop {function} onClose - callback method when the modal gets closed
+ *  @prop {React.Dispatch<React.SetStateAction<boolean>>} setInterfaceBlocked - setState variable to block the interface when the modal is opened.
+ *  This is meant to avoid clickEvents triggering the onOpenChange from the dropdown to shut down the modal.
+ * @returns {React.FC<Props>} A React Component displaying the Expert State transfer Dropdown Item
+ */
 export const ExpertStateTransfer: React.FC<Props> = ({
   service_entity,
   instance_display_identity,
@@ -55,50 +69,43 @@ export const ExpertStateTransfer: React.FC<Props> = ({
   const username = authHelper.getUser();
   const message = words("instanceDetails.API.message.update")(username);
 
-  const { mutate, isError, error } = usePostExpertStateTransfer(
-    environment,
-    instance_id,
-    service_entity,
-  );
-
-  const handleModalToggle = () => {
-    setIsModalOpen(!isModalOpen);
-  };
+  const { mutate, isError, error, isSuccess, isPending } =
+    usePostExpertStateTransfer(environment, instance_id, service_entity);
 
   const onStateSelect = (value: string) => {
     setInterfaceBlocked(true);
     setTargetState(value);
-    handleModalToggle();
+    setIsModalOpen(true);
   };
 
-  const onSubmitForceState = () => {
+  const onSubmitForceState = async () => {
     mutate({
       message: message,
       current_version: version,
       target_state: targetState,
       ...(selectedOperation && { operation: selectedOperation }),
     });
-
-    if (isError) {
-      setErrorMessage(error.message);
-    }
-
-    onClose();
   };
 
   const onSelect = (value: string) => {
     setSelectedOperation(value);
   };
 
-  useEffect(() => {
-    setInterfaceBlocked((prev: boolean) => {
-      if (prev !== isModalOpen) {
-        return isModalOpen;
-      }
+  const closeModal = useCallback(() => {
+    setIsModalOpen(false);
+    setInterfaceBlocked(false);
+    onClose();
+  }, [setIsModalOpen, setInterfaceBlocked, onClose]);
 
-      return prev;
-    });
-  }, [isModalOpen, setInterfaceBlocked]);
+  useEffect(() => {
+    if (isError) {
+      setErrorMessage(error.message);
+    }
+
+    if (isSuccess) {
+      closeModal();
+    }
+  }, [isError, isSuccess, error, closeModal]);
 
   return (
     <>
@@ -118,8 +125,9 @@ export const ExpertStateTransfer: React.FC<Props> = ({
         onConfirm={onSubmitForceState}
         id={`Expert-State-Transfer-Confirmation-modal`}
         isModalOpen={isModalOpen}
-        setIsModalOpen={setIsModalOpen}
+        onCancel={closeModal}
         setErrorMessage={setErrorMessage}
+        isPending={isPending}
       >
         <Text>
           {words("instanceDetails.expert.confirm.state.message")(

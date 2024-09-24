@@ -1,4 +1,8 @@
 /**
+ * @note These tests should be deleted once the collapsible sections are removed from the inventory.
+ */
+
+/**
  * Shorthand method to clear the environment being passed.
  * By default, if no arguments are passed it will target the 'lsm-frontend' environment.
  *

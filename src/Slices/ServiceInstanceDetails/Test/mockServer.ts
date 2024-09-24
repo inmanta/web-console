@@ -130,10 +130,24 @@ const destroyInstance = http.delete(
   },
 );
 
+const destroyInstanceFailed = http.delete(
+  "/lsm/v2/service_inventory/mobileCore/1d96a1ab/expert",
+  async () => {
+    return HttpResponse.error();
+  },
+);
+
 const deleteInstance = http.delete(
-  "/lsm/v2/service_inventory/mobileCore/1d96a1ab/",
+  "lsm/v1/service_inventory/mobileCore/1d96a1ab",
   async () => {
     return HttpResponse.json({ status: 200 });
+  },
+);
+
+const deleteInstanceFailed = http.delete(
+  "lsm/v1/service_inventory/mobileCore/1d96a1ab",
+  async () => {
+    return HttpResponse.error();
   },
 );
 
@@ -143,10 +157,25 @@ const postForceStateUpdate = http.post(
     return HttpResponse.json({ status: 200 });
   },
 );
+
+const postForceStateUpdateFailed = http.post(
+  "/lsm/v1/service_inventory/mobileCore/1d96a1ab/expert/state",
+  async () => {
+    return HttpResponse.error();
+  },
+);
+
 const postStateUpdate = http.post(
   "/lsm/v1/service_inventory/mobileCore/1d96a1ab/state",
   async () => {
     return HttpResponse.json({ status: 200 });
+  },
+);
+
+const postStateUpdateFailed = http.post(
+  "/lsm/v1/service_inventory/mobileCore/1d96a1ab/state",
+  async () => {
+    return HttpResponse.error();
   },
 );
 
@@ -177,6 +206,17 @@ export const defaultServer = setupServer(
   destroyInstance,
   postStateUpdate,
   postForceStateUpdate,
+);
+
+export const defaultServerFailedActions = setupServer(
+  getServiceModel,
+  getHistoryLogs,
+  getInstanceData,
+  getJSONSchema,
+  deleteInstanceFailed,
+  destroyInstanceFailed,
+  postStateUpdateFailed,
+  postForceStateUpdateFailed,
 );
 
 export const serverWithConfig = setupServer(

@@ -3,7 +3,7 @@ import {
   getAvailableStateTargets,
   getExpertStateTargets,
   isTransferDisabled,
-} from "../UI/Components/InstanceActions";
+} from "../Utils";
 import { instanceData, instanceDataDeleted, serviceModel } from "./mockData";
 
 describe("isTransferDisabled", () => {

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { DropdownGroup, DropdownItem, Text } from "@patternfly/react-core";
 import { ParsedNumber } from "@/Core";
 import { usePostStateTransfer } from "@/Data/Managers/V2/POST/PostStateTransfer/usePostStateTransfer";
@@ -16,6 +16,20 @@ interface Props {
   setInterfaceBlocked: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+/**
+ * The StateTransfer Component
+ *
+ * @props {Props} props - The props of the components
+ *  @prop {string[]} targets - a list of available states targets for the expert mode
+ *  @prop {string} instance_display_identity - the display value of the instance Id
+ *  @prop {string} instance_id - the hashed id of the instance
+ *  @prop {string} service_entity - the service entity type of the instance
+ *  @prop {ParsedNumber} version - the current version of the instance
+ *  @prop {function} onClose - callback method when the modal gets closed
+ *  @prop {React.Dispatch<React.SetStateAction<boolean>>} setInterfaceBlocked - setState variable to block the interface when the modal is opened.
+ *  This is meant to avoid clickEvents triggering the onOpenChange from the dropdown to shut down the modal.
+ * @returns {React.FC<Props>} A React Component displaying the State transfer Dropdown Item
+ */
 export const StateAction: React.FC<Props> = ({
   service_entity,
   instance_display_identity,
@@ -28,20 +42,16 @@ export const StateAction: React.FC<Props> = ({
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [confirmationText, setConfirmationText] = useState<string>("");
   const [targetState, setTargetState] = useState<string>("");
-  const [stateErrorMessage, setStateErrorMessage] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   const { environmentHandler, authHelper } = useContext(DependencyContext);
   const environment = environmentHandler.useId();
 
-  const { mutate, isError, error } = usePostStateTransfer(
+  const { mutate, isError, error, isSuccess, isPending } = usePostStateTransfer(
     environment,
     instance_id,
     service_entity,
   );
-
-  const handleModalToggle = () => {
-    setIsModalOpen(!isModalOpen);
-  };
 
   const onSelect = (value: string) => {
     setTargetState(value);
@@ -51,10 +61,12 @@ export const StateAction: React.FC<Props> = ({
         value,
       ),
     );
-    handleModalToggle();
+
+    setInterfaceBlocked(true);
+    setIsModalOpen(true);
   };
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     const username = authHelper.getUser();
     const message = words("instanceDetails.API.message.update")(username);
 
@@ -63,31 +75,31 @@ export const StateAction: React.FC<Props> = ({
       current_version: version,
       target_state: targetState,
     });
-
-    if (isError) {
-      setStateErrorMessage(error.message);
-    }
-
-    onClose();
   };
 
-  useEffect(() => {
-    setInterfaceBlocked((prev: boolean) => {
-      if (prev !== isModalOpen) {
-        return isModalOpen;
-      }
+  const closeModal = useCallback(() => {
+    setIsModalOpen(false);
+    setInterfaceBlocked(false);
+    onClose();
+  }, [setInterfaceBlocked, setIsModalOpen, onClose]);
 
-      return prev;
-    });
-  }, [isModalOpen, setInterfaceBlocked]);
+  useEffect(() => {
+    if (isError && error) {
+      setErrorMessage(error.message);
+    }
+
+    if (isSuccess) {
+      closeModal();
+    }
+  }, [isError, isSuccess, error, closeModal]);
 
   return (
     <>
-      {stateErrorMessage && (
+      {errorMessage && (
         <ToastAlertMessage
-          message={stateErrorMessage}
-          id={instance_display_identity}
-          setMessage={setStateErrorMessage}
+          message={errorMessage}
+          id="error-toast-state-transfer"
+          setMessage={setErrorMessage}
           variant="danger"
         />
       )}
@@ -103,8 +115,9 @@ export const StateAction: React.FC<Props> = ({
         onConfirm={onSubmit}
         id={instance_display_identity}
         isModalOpen={isModalOpen}
-        setIsModalOpen={handleModalToggle}
-        setErrorMessage={setStateErrorMessage}
+        onCancel={closeModal}
+        setErrorMessage={setErrorMessage}
+        isPending={isPending}
       >
         <Text>{confirmationText}</Text>
       </ConfirmationModal>

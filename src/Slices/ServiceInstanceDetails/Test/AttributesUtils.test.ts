@@ -4,7 +4,7 @@ import {
   getAvailableAttributesSets,
   sortTreeRows,
   TreeRowData,
-} from "../UI/Components/AttributesComponents";
+} from "../Utils";
 import { historyData } from "./mockData";
 
 describe("getAvailableAttributesSets", () => {

@@ -1,4 +1,5 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Alert, DropdownItem, Text } from "@patternfly/react-core";
 import { TrashAltIcon } from "@patternfly/react-icons";
 import { ParsedNumber } from "@/Core";
@@ -16,6 +17,19 @@ interface Props {
   setInterfaceBlocked: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+/**
+ * The DestroyAction Component
+ *
+ * @props {Props} props - The props of the components
+ *  @prop {string} instance_display_identity - the display value of the instance Id
+ *  @prop {string} instance_id - the hashed id of the instance
+ *  @prop {string} service_entity - the service entity type of the instance
+ *  @prop {ParsedNumber} version - the current version of the instance
+ *  @prop {function} onClose - callback method when the modal gets closed
+ *  @prop {React.Dispatch<React.SetStateAction<boolean>>} setInterfaceBlocked - setState variable to block the interface when the modal is opened.
+ *  This is meant to avoid clickEvents triggering the onOpenChange from the dropdown to shut down the modal.
+ * @returns {React.FC<Props>} A React Component displaying the Destroy Dropdown Item
+ */
 export const DestroyAction: React.FC<Props> = ({
   service_entity,
   instance_display_identity,
@@ -25,10 +39,11 @@ export const DestroyAction: React.FC<Props> = ({
   setInterfaceBlocked,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-
   const [confirmationText, setConfirmationText] = useState<string>("");
   const [modalTitle, setModalTitle] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
+
+  const navigate = useNavigate();
 
   const { environmentHandler, authHelper } = useContext(DependencyContext);
 
@@ -36,7 +51,7 @@ export const DestroyAction: React.FC<Props> = ({
   const username = authHelper.getUser();
   const message = words("instanceDetails.API.message.update")(username);
 
-  const { mutate, isError, error } = useDestroyInstance(
+  const { mutate, isError, error, isSuccess, isPending } = useDestroyInstance(
     environment,
     instance_id,
     service_entity,
@@ -44,12 +59,7 @@ export const DestroyAction: React.FC<Props> = ({
     message,
   );
 
-  const handleModalToggle = () => {
-    setIsModalOpen(!isModalOpen);
-  };
-
   const onDestroySelect = () => {
-    setInterfaceBlocked(true);
     setConfirmationText(
       words("inventory.destroyInstance.header")(
         instance_display_identity,
@@ -58,34 +68,37 @@ export const DestroyAction: React.FC<Props> = ({
     );
     setModalTitle(words("inventory.destroyInstance.title"));
 
-    handleModalToggle();
+    setInterfaceBlocked(true);
+    setIsModalOpen(true);
   };
 
-  const onSubmitDestroy = () => {
-    mutate("");
+  const closeModal = useCallback(() => {
+    setIsModalOpen(false);
+    setInterfaceBlocked(false);
+    onClose();
+  }, [setIsModalOpen, setInterfaceBlocked, onClose]);
 
+  const onSubmitDestroy = async () => {
+    mutate("");
+  };
+
+  useEffect(() => {
     if (isError) {
       setErrorMessage(error.message);
     }
 
-    onClose();
-  };
-
-  useEffect(() => {
-    setInterfaceBlocked((prev: boolean) => {
-      if (prev !== isModalOpen) {
-        return isModalOpen;
-      }
-
-      return prev;
-    });
-  }, [isModalOpen, setInterfaceBlocked]);
+    if (isSuccess) {
+      navigate(
+        `/console/lsm/catalog/${service_entity}/inventory?env=${environment}`,
+      );
+    }
+  }, [isSuccess, isError, navigate, error, service_entity, environment]);
 
   return (
     <>
       <DropdownItem
         isDanger
-        key={"destroy"}
+        key="destroy"
         icon={<TrashAltIcon />}
         onClick={() => onDestroySelect()}
       >
@@ -96,8 +109,9 @@ export const DestroyAction: React.FC<Props> = ({
         onConfirm={onSubmitDestroy}
         id={instance_display_identity}
         isModalOpen={isModalOpen}
-        setIsModalOpen={setIsModalOpen}
+        onCancel={closeModal}
         setErrorMessage={setErrorMessage}
+        isPending={isPending}
       >
         <Text>{confirmationText}</Text>
         <br />

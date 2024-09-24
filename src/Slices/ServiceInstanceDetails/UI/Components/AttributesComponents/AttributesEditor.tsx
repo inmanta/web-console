@@ -61,11 +61,8 @@ export const AttributesEditor: React.FC<Props> = ({
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
 
-  const expertUpdateQuery = usePatchAttributesExpert(
-    environment,
-    instance.id,
-    instance.service_entity,
-  );
+  const { mutate, isError, error, isPending, isSuccess } =
+    usePatchAttributesExpert(environment, instance.id, instance.service_entity);
 
   /**
    * Handles the change of the selected attribute Set.
@@ -112,12 +109,17 @@ export const AttributesEditor: React.FC<Props> = ({
       ],
     };
 
-    expertUpdateQuery.mutate(patchAttributes);
-
-    if (expertUpdateQuery.isError) {
-      setErrorMessage(expertUpdateQuery.error.message);
-    }
+    mutate(patchAttributes);
   };
+
+  useEffect(() => {
+    if (isError) {
+      setErrorMessage(error.message);
+    }
+    if (isSuccess) {
+      setIsModalOpen(false);
+    }
+  }, [isSuccess, isError, error]);
 
   useEffect(() => {
     setEditorDataOriginal(JSON.stringify(attributeSets[selectedSet], null, 2));
@@ -176,7 +178,8 @@ export const AttributesEditor: React.FC<Props> = ({
         onConfirm={onConfirm}
         id="Confirm-Expert-Edit"
         isModalOpen={isModalOpen}
-        setIsModalOpen={setIsModalOpen}
+        onCancel={() => setIsModalOpen(false)}
+        isPending={isPending}
         setErrorMessage={setErrorMessage}
       >
         <Text>
