@@ -102,7 +102,7 @@ export const JSONEditor: React.FC<Props> = ({
           {
             schema: schema.data,
             fileMatch: ["*"],
-            uri: ""
+            uri: "",
           },
         ],
       });
