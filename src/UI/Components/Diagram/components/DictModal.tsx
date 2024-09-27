@@ -12,6 +12,8 @@ interface DictModal {
   dictToDisplay: DictDialogData | null;
   setDictToDisplay: (value: DictDialogData | null) => void;
 }
+
+//TODO: move this to global modal with right sidebar PR
 const DictModal = ({ dictToDisplay, setDictToDisplay }: DictModal) => {
   const [copied, setCopied] = useState(false);
 
