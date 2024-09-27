@@ -1,15 +1,10 @@
 import React, { useContext, useState } from "react";
-import {
-  AlertVariant,
-  Button,
-  Modal,
-  ModalVariant,
-  Tooltip,
-} from "@patternfly/react-core";
+import { AlertVariant, Button, Tooltip } from "@patternfly/react-core";
 import { FileCodeIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { Either } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
+import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
 import { ConfirmUserActionForm } from "../ConfirmUserActionForm";
 import { ToastAlert } from "../ToastAlert";
@@ -26,6 +21,7 @@ import { ToastAlert } from "../ToastAlert";
  * @returns CatalogActions
  */
 export const CatalogActions: React.FC = () => {
+  const { triggerModal, closeModal } = useContext(ModalContext);
   const { commandResolver, urlManager, environmentHandler } =
     useContext(DependencyContext);
 
@@ -33,17 +29,12 @@ export const CatalogActions: React.FC = () => {
     kind: "UpdateCatalog",
   });
 
-  const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [toastTitle, setToastTitle] = useState("");
   const [toastType, setToastType] = useState(AlertVariant.custom);
 
-  const handleModalToggle = () => {
-    setIsOpen(!isOpen);
-  };
-
   const onSubmit = async () => {
-    handleModalToggle();
+    closeModal();
     const result = await trigger();
 
     if (Either.isRight(result)) {
@@ -55,6 +46,33 @@ export const CatalogActions: React.FC = () => {
       setMessage(result.value);
       setToastType(AlertVariant.danger);
     }
+  };
+  const openModal = () => {
+    triggerModal({
+      title: words("catalog.update.modal.title"),
+      content: (
+        <>
+          <StyledParagraph>
+            {words("catalog.update.confirmation.p1")}
+          </StyledParagraph>
+          <p>
+            <b>{words("catalog.update.confirmation.p2")}</b>
+          </p>
+          <ul>
+            <li>
+              - <b>{words("catalog.update.confirmation.p3")}</b>
+            </li>
+            <li>
+              - <b>{words("catalog.update.confirmation.p4")}</b>
+            </li>
+          </ul>
+          <StyledParagraph>
+            {words("catalog.update.confirmation.p5")}
+          </StyledParagraph>
+          <ConfirmUserActionForm onSubmit={onSubmit} onCancel={closeModal} />
+        </>
+      ),
+    });
   };
 
   return (
@@ -78,50 +96,18 @@ export const CatalogActions: React.FC = () => {
           ></Button>
         </Tooltip>
         <Tooltip content={words("catalog.update.tooltip")}>
-          <Button onClick={handleModalToggle}>
-            {words("catalog.button.update")}
-          </Button>
+          <Button onClick={openModal}>{words("catalog.button.update")}</Button>
         </Tooltip>
       </StyledWrapper>
-      <Modal
-        disableFocusTrap
-        variant={ModalVariant.small}
-        isOpen={isOpen}
-        title={words("catalog.update.modal.title")}
-        onClose={handleModalToggle}
-      >
-        <StyledParagraph>
-          {words("catalog.update.confirmation.p1")}
-        </StyledParagraph>
-        <p>
-          <b>{words("catalog.update.confirmation.p2")}</b>
-        </p>
-        <ul>
-          <li>
-            - <b>{words("catalog.update.confirmation.p3")}</b>
-          </li>
-          <li>
-            - <b>{words("catalog.update.confirmation.p4")}</b>
-          </li>
-        </ul>
-        <StyledParagraph>
-          {words("catalog.update.confirmation.p5")}
-        </StyledParagraph>
-        <ConfirmUserActionForm
-          onSubmit={onSubmit}
-          onCancel={handleModalToggle}
-        />
-      </Modal>
     </>
   );
 };
 
 const StyledWrapper = styled.div`
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-    padding: var(--pf-v5-global--spacer--md);
-}
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  padding: var(--pf-v5-global--spacer--md);
 `;
 const StyledParagraph = styled.p`
   padding-bottom: 10px;

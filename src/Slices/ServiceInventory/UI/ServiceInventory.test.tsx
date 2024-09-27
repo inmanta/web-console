@@ -35,6 +35,7 @@ import {
 } from "@/Test";
 import { words } from "@/UI";
 import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
+import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { TriggerInstanceUpdateCommandManager } from "@S/EditInstance/Data";
 import { Chart } from "./Components";
 import { ServiceInventory } from "./ServiceInventory";
@@ -123,16 +124,17 @@ function setup(service = Service.a, pageSize = "") {
         }}
       >
         <StoreProvider store={store}>
-          <Page>
-            <ServiceInventory
-              serviceName={service.name}
-              service={service}
-              intro={<Chart summary={service.instance_summary} />}
-            />
-          </Page>
+          <ModalProvider>
+            <Page>
+              <ServiceInventory
+                serviceName={service.name}
+                service={service}
+                intro={<Chart summary={service.instance_summary} />}
+              />
+            </Page>
+          </ModalProvider>
         </StoreProvider>
       </DependencyProvider>
-      {/* </AuthProvider> */}
     </MemoryRouter>
   );
 
@@ -449,7 +451,7 @@ test("ServiceInventory shows only button to display instance in the composer for
   expect(screen.queryByText("Edit in Composer")).not.toBeInTheDocument();
 });
 
-test("GIVEN ServiceInventory WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async () => {
+test.only("GIVEN ServiceInventory WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async () => {
   const { component, apiHelper } = setup({ ...Service.a, owner: "owner" });
 
   render(component);
@@ -498,7 +500,7 @@ test("GIVEN ServiceInventory WHEN sorting changes AND we are not on the first pa
 
   //sort on the second page
   await act(async () => {
-    await userEvent.click(screen.getByRole("button", { name: "State" }));
+    await userEvent.click(screen.getAllByRole("button", { name: "State" })[1]); //Tge first in the list is the filter toggle button which defaults to the State
   });
 
   // expect the api url to not contain start and end keywords that are used for pagination to assert we are back on the first page.

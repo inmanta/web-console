@@ -1,11 +1,9 @@
-import React, { useContext, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React from "react";
 import { LoginPage, ListVariant } from "@patternfly/react-core";
 import styled from "styled-components";
-import { useLogin } from "@/Data/Managers/V2/Login";
-import { DependencyContext, words } from "@/UI";
-import { UserCredentialsForm } from "@/UI/Components/UserCredentialsForm";
+import { words } from "@/UI";
 import logo from "@images/logo.svg";
+import { LoginForm } from "./UI/LoginForm";
 
 /**
  * Login component.
@@ -14,18 +12,6 @@ import logo from "@images/logo.svg";
  * @returns {React.FunctionComponent} The rendered component.
  */
 export const Login: React.FunctionComponent = () => {
-  const { authHelper } = useContext(DependencyContext);
-  const navigate = useNavigate();
-
-  const { mutate, isError, error, isSuccess, isPending, data } = useLogin();
-
-  useEffect(() => {
-    if (isSuccess) {
-      authHelper.updateUser(data.data.user.username, data.data.token);
-      navigate("/");
-    }
-  }, [data, isSuccess, authHelper, navigate]);
-
   return (
     <Wrapper>
       <StyledLogin
@@ -35,13 +21,7 @@ export const Login: React.FunctionComponent = () => {
         loginTitle={words("login.title")}
         loginSubtitle={words("login.subtitle")}
       >
-        <UserCredentialsForm
-          isError={isError}
-          isPending={isPending}
-          error={error}
-          onSubmit={(username, password) => mutate({ username, password })}
-          submitButtonText={words("login.login")}
-        />
+        <LoginForm submitButtonText={words("login.login")} />
       </StyledLogin>
     </Wrapper>
   );

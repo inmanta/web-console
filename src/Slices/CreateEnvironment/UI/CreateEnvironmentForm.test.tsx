@@ -284,24 +284,21 @@ test(`Given CreateEnvironmentForm When a new project and valid environment are s
     );
   });
 
+  const projectInput = await screen.findByRole("combobox", {
+    name: "Project Name-select-toggleFilterInput",
+  });
+
+  await act(async () => {
+    await userEvent.click(projectInput);
+  });
+
+  await act(async () => {
+    await userEvent.type(projectInput, "new-project");
+  });
+
   await act(async () => {
     await userEvent.click(
-      await screen.findByRole("combobox", {
-        name: "Project Name-select-toggleFilterInput",
-      }),
-    );
-  });
-  await act(async () => {
-    await userEvent.type(
-      await screen.findByRole("combobox", {
-        name: "Project Name-select-toggleFilterInput",
-      }),
-      "new-project",
-    );
-  });
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("option", { name: 'Create "new-project"' }),
+      await screen.findByRole("option", { name: 'Create "new-project"' }),
     );
   });
 

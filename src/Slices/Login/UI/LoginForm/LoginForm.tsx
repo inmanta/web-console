@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   FormHelperText,
   HelperText,
@@ -19,29 +20,28 @@ import {
   EyeIcon,
   EyeSlashIcon,
 } from "@patternfly/react-icons";
+import { useLogin } from "@/Data/Managers/V2/Login";
+import { DependencyContext } from "@/UI";
 
-interface UserCredentialsFormProps {
-  onSubmit: (username: string, password: string) => void;
-  isPending: boolean;
-  isError: boolean;
-  error: Error | null;
+interface LoginFormProps {
   submitButtonText: string;
   submitButtonLabel?: string;
 }
 
 /**
- * UserCredentialsForm component.
- * @param {UserCredentialsFormProps} props - The component props.
+ * LoginForm component.
+ * @param {LoginFormProps} props - The component props.
  * @returns {JSX.Element} The rendered component.
  */
-export const UserCredentialsForm: React.FC<UserCredentialsFormProps> = ({
-  onSubmit,
-  isPending,
-  isError,
-  error,
+export const LoginForm: React.FC<LoginFormProps> = ({
   submitButtonText,
   submitButtonLabel = "login-button",
 }) => {
+  const { authHelper } = useContext(DependencyContext);
+  const navigate = useNavigate();
+
+  const { data, mutate, isSuccess, isError, error, isPending } = useLogin();
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isPasswordHidden, setIsPasswordHidden] = useState(true);
@@ -70,8 +70,30 @@ export const UserCredentialsForm: React.FC<UserCredentialsFormProps> = ({
     setPassword(value);
   };
 
+  /**
+   * Handles the submission of the login form.
+   *
+   * This function is responsible for preventing the default form submission behavior and then calling the mutate function with the current username and password.
+   * @param {Event} event - The event that triggered the form submission.
+   */
+  const handleSubmit = (
+    event:
+      | React.FormEvent<HTMLFormElement>
+      | React.MouseEvent<HTMLButtonElement, MouseEvent>,
+  ) => {
+    event.preventDefault();
+    mutate({ username, password });
+  };
+
+  useEffect(() => {
+    if (isSuccess) {
+      authHelper.updateUser(data.data.user.username, data.data.token);
+      navigate("/");
+    }
+  }, [isSuccess, navigate, data, authHelper]);
+
   return (
-    <Form className="loginForm">
+    <Form className="loginForm" onSubmit={handleSubmit}>
       {isError && error && (
         <FormHelperText>
           <HelperText>
@@ -131,10 +153,7 @@ export const UserCredentialsForm: React.FC<UserCredentialsFormProps> = ({
           aria-label={submitButtonLabel}
           variant="primary"
           type="submit"
-          onClick={(event) => {
-            event.preventDefault();
-            onSubmit(username, password);
-          }}
+          onClick={handleSubmit}
           isBlock
           isDisabled={isPending}
         >

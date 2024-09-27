@@ -10,6 +10,7 @@ import { setupServer } from "msw/node";
 import { UserInfo } from "@/Data/Managers/V2/GetUsers";
 import { dependencies } from "@/Test";
 import { DependencyProvider, words } from "@/UI";
+import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { UserManagementPage } from "./Page";
 
 expect.extend(toHaveNoViolations);
@@ -21,9 +22,11 @@ const setup = () => {
     <MemoryRouter>
       <QueryClientProvider client={queryClient}>
         <DependencyProvider dependencies={{ ...dependencies }}>
-          <Page>
-            <UserManagementPage />
-          </Page>
+          <ModalProvider>
+            <Page>
+              <UserManagementPage />
+            </Page>
+          </ModalProvider>
         </DependencyProvider>
       </QueryClientProvider>
     </MemoryRouter>
@@ -224,6 +227,7 @@ describe("UserManagementPage", () => {
     await act(async () => {
       await userEvent.type(screen.getByLabelText("input-username"), "new_user");
     });
+
     await act(async () => {
       await userEvent.type(screen.getByLabelText("input-password"), "123456");
     });
@@ -269,7 +273,7 @@ describe("UserManagementPage", () => {
       { username: "test_user2", auth_method: "oidc" },
     ];
     const server = setupServer(
-      http.get("/api/v2/user", async () => {
+      http.get("/api/v2/user", async (): Promise<HttpResponse> => {
         return HttpResponse.json({
           data,
         });

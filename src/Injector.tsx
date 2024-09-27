@@ -25,6 +25,7 @@ import {
 } from "@/UI";
 import { AuthContext } from "./Data/Auth/";
 import { UpdateBanner } from "./UI/Components/UpdateBanner";
+import { ModalProvider } from "./UI/Root/Components/ModalProvider";
 
 interface Props {
   store: Store;
@@ -84,8 +85,10 @@ export const Injector: React.FC<React.PropsWithChildren<Props>> = ({
         authHelper,
       }}
     >
-      <UpdateBanner apiHelper={apiHelper} />
-      {children}
+      <ModalProvider>
+        <UpdateBanner apiHelper={apiHelper} />
+        {children}
+      </ModalProvider>
     </DependencyProvider>
   );
 };

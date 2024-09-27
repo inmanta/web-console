@@ -1,10 +1,10 @@
 import React, { useContext, useState } from "react";
-import { MenuItem, Text } from "@patternfly/react-core";
+import { Button, MenuItem, Text } from "@patternfly/react-core";
 import { Maybe, VersionedServiceInstanceIdentifier } from "@/Core";
 import { ActionDisabledTooltip } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
+import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
-import ConfirmationModal from "../../ConfirmationModal";
 import { ToastAlertMessage } from "../../ToastAlertMessage";
 
 interface Props extends VersionedServiceInstanceIdentifier {
@@ -20,20 +20,17 @@ export const SetStateSection: React.FunctionComponent<Props> = ({
   version,
   targets,
 }) => {
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const { triggerModal, closeModal } = useContext(ModalContext);
   const [confirmationText, setConfirmationText] = useState<string>("");
   const [targetState, setTargetState] = useState<string>("");
   const [stateErrorMessage, setStateErrorMessage] = useState<string>("");
-  const handleModalToggle = () => {
-    setIsModalOpen(!isModalOpen);
-  };
 
   const onSelect = (value: string) => {
     setTargetState(value);
     setConfirmationText(
       words("inventory.statustab.confirmMessage")(instance_identity, value),
     );
-    handleModalToggle();
+    openModal();
   };
 
   const isDisabled = !targets || targets.length === 0;
@@ -53,6 +50,32 @@ export const SetStateSection: React.FunctionComponent<Props> = ({
     if (Maybe.isSome(result)) {
       setStateErrorMessage(result.value);
     }
+    closeModal();
+  };
+
+  const openModal = () => {
+    triggerModal({
+      title: words("inventory.statustab.confirmTitle"),
+      actions: [
+        <Button
+          key="confirm"
+          variant="primary"
+          data-testid={`${id}-state-modal-confirm`}
+          onClick={() => onSubmit(targetState)}
+        >
+          {words("yes")}
+        </Button>,
+        <Button
+          key="cancel"
+          variant="link"
+          data-testid={`${id}-state-modal-cancel`}
+          onClick={closeModal}
+        >
+          {words("no")}
+        </Button>,
+      ],
+      content: <Text> {confirmationText}</Text>,
+    });
   };
 
   return (
@@ -96,17 +119,6 @@ export const SetStateSection: React.FunctionComponent<Props> = ({
           None available
         </MenuItem>
       )}
-      <ConfirmationModal
-        title={words("inventory.statustab.confirmTitle")}
-        onSetInstanceState={onSubmit}
-        id={id}
-        targetState={targetState}
-        isModalOpen={isModalOpen}
-        setIsModalOpen={handleModalToggle}
-        setErrorMessage={setStateErrorMessage}
-      >
-        <Text> {confirmationText}</Text>
-      </ConfirmationModal>
     </>
   );
 };

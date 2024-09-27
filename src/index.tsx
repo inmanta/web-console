@@ -9,7 +9,6 @@ import { getStoreInstance } from "@/Data";
 import { Root } from "@/UI/Root";
 import { AuthProvider } from "./Data/Auth/AuthProvider";
 import { Injector } from "./Injector";
-import { ModalProvider } from "./UI/Root/Components/ModalProvider";
 import CustomRouter from "./UI/Routing/CustomRouter";
 import history from "./UI/Routing/history";
 import ErrorBoundary from "./UI/Utils/ErrorBoundary";
@@ -25,18 +24,16 @@ root.render(
       <StoreProvider store={store}>
         <CustomRouter history={history}>
           <AuthProvider config={globalThis && globalThis.auth}>
-            <ModalProvider>
-              <Flex
-                flexWrap={{ default: "nowrap" }}
-                spaceItems={{ default: "spaceItemsNone" }}
-                direction={{ default: "column" }}
-                style={{ height: "100%" }}
-              >
-                <Injector store={store}>
-                  <Root />
-                </Injector>
-              </Flex>
-            </ModalProvider>
+            <Flex
+              flexWrap={{ default: "nowrap" }}
+              spaceItems={{ default: "spaceItemsNone" }}
+              direction={{ default: "column" }}
+              style={{ height: "100%" }}
+            >
+              <Injector store={store}>
+                <Root />
+              </Injector>
+            </Flex>
           </AuthProvider>
         </CustomRouter>
       </StoreProvider>

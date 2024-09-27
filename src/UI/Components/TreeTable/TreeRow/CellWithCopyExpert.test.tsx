@@ -26,6 +26,7 @@ import {
   EnvironmentModifierImpl,
   EnvironmentHandlerImpl,
 } from "@/UI/Dependency";
+import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { CellWithCopyExpert } from "./CellWithCopyExpert";
 
 function setup(props, expertMode = false) {
@@ -92,29 +93,31 @@ function setup(props, expertMode = false) {
   });
   environmentModifier.setEnvironment("aaa");
   const component = (
-    <MemoryRouter initialEntries={[{ search: "?env=aaa" }]}>
-      <DependencyProvider
-        dependencies={{
-          ...dependencies,
-          queryResolver,
-          commandResolver,
-          environmentModifier,
-          environmentHandler,
-        }}
-      >
-        <StoreProvider store={store}>
-          <TreeTableCellContext.Provider value={{ onClick: onClickFn }}>
-            <Table>
-              <Tbody>
-                <Tr>
-                  <CellWithCopyExpert {...props} />
-                </Tr>
-              </Tbody>
-            </Table>
-          </TreeTableCellContext.Provider>
-        </StoreProvider>
-      </DependencyProvider>
-    </MemoryRouter>
+    <ModalProvider>
+      <MemoryRouter initialEntries={[{ search: "?env=aaa" }]}>
+        <DependencyProvider
+          dependencies={{
+            ...dependencies,
+            queryResolver,
+            commandResolver,
+            environmentModifier,
+            environmentHandler,
+          }}
+        >
+          <StoreProvider store={store}>
+            <TreeTableCellContext.Provider value={{ onClick: onClickFn }}>
+              <Table>
+                <Tbody>
+                  <Tr>
+                    <CellWithCopyExpert {...props} />
+                  </Tr>
+                </Tbody>
+              </Table>
+            </TreeTableCellContext.Provider>
+          </StoreProvider>
+        </DependencyProvider>
+      </MemoryRouter>
+    </ModalProvider>
   );
 
   return { component, apiHelper, scheduler, onClickFn };

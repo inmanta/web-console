@@ -41,14 +41,14 @@ function setup() {
 
   return {
     component: (isDisabled = false) => (
-      <ModalProvider>
-        <StoreProvider store={storeInstance}>
-          <DependencyProvider
-            dependencies={{
-              ...dependencies,
-              commandResolver,
-            }}
-          >
+      <StoreProvider store={storeInstance}>
+        <DependencyProvider
+          dependencies={{
+            ...dependencies,
+            commandResolver,
+          }}
+        >
+          <ModalProvider>
             <ServiceInventoryContext.Provider
               value={{
                 labelFiltering: {
@@ -74,9 +74,9 @@ function setup() {
                 service_entity={ServiceInstance.a.service_entity}
               />
             </ServiceInventoryContext.Provider>
-          </DependencyProvider>
-        </StoreProvider>
-      </ModalProvider>
+          </ModalProvider>
+        </DependencyProvider>
+      </StoreProvider>
     ),
     storeInstance,
     apiHelper,

@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useContext } from "react";
 import { Button, Flex, FlexItem } from "@patternfly/react-core";
 import { Table, Tbody, Th, Thead, Tr } from "@patternfly/react-table";
 import { useGetUsers } from "@/Data/Managers/V2/GetUsers";
+import { UserCredentialsForm } from "@/Slices/UserManagement/UI/Components/AddUserForm";
 import { words } from "@/UI";
 import {
   EmptyView,
@@ -9,14 +10,26 @@ import {
   LoadingView,
   PageContainer,
 } from "@/UI/Components";
-import { AddUserModal } from "./Components/AddUserModal";
+import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { UserInfoRow } from "./Components/UserInfoRow";
 
 export const UserManagementPage: React.FC = () => {
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const { triggerModal } = useContext(ModalContext);
 
   const { data, isLoading, isError, error, refetch } =
     useGetUsers().useOneTime();
+
+  function openModal() {
+    triggerModal({
+      title: words("userManagement.addUser"),
+      content: (
+        <UserCredentialsForm
+          submitButtonText={words("userManagement.addUser")}
+          submitButtonLabel={"add_user-button"}
+        />
+      ),
+    });
+  }
 
   if (isLoading) return <LoadingView ariaLabel="UserManagement-Loading" />;
   if (isError)
@@ -32,13 +45,9 @@ export const UserManagementPage: React.FC = () => {
 
   return (
     <PageContainer pageTitle={words("userManagement.title")}>
-      <AddUserModal
-        isOpen={isAddModalOpen}
-        onClose={() => setIsAddModalOpen(false)}
-      />
       <Flex justifyContent={{ default: "justifyContentFlexEnd" }}>
         <FlexItem>
-          <Button variant="primary" onClick={() => setIsAddModalOpen(true)}>
+          <Button variant="primary" onClick={openModal}>
             {words("userManagement.addUser")}
           </Button>
         </FlexItem>

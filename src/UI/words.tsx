@@ -580,7 +580,7 @@ const dict = {
       the <b>{environment}</b> environment and reset it to its initial state.
     </>
   ),
-  "home.environment.promtInput": (environment: string) => (
+  "home.environment.promptInput": (environment: string) => (
     <>
       Please type <b>{environment}</b> to confirm
     </>

@@ -1,10 +1,11 @@
 import React, { useContext, useState } from "react";
-import { MenuItem, Modal, Text } from "@patternfly/react-core";
+import { MenuItem, Text } from "@patternfly/react-core";
 import { WarningTriangleIcon } from "@patternfly/react-icons";
 import { Maybe, VersionedServiceInstanceIdentifier } from "@/Core";
 import { ServiceInventoryContext } from "@/Slices/ServiceInventory/UI/ServiceInventory";
 import { ToastAlert, ConfirmUserActionForm } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
+import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
 
 interface Props extends VersionedServiceInstanceIdentifier {
@@ -17,10 +18,7 @@ export const DestroyAction: React.FC<Props> = ({
   version,
   service_entity,
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const handleModalToggle = () => {
-    setIsOpen(!isOpen);
-  };
+  const { triggerModal, closeModal } = useContext(ModalContext);
   const [errorMessage, setErrorMessage] = useState("");
   const { commandResolver } = useContext(DependencyContext);
   const { refetch } = useContext(ServiceInventoryContext);
@@ -32,12 +30,31 @@ export const DestroyAction: React.FC<Props> = ({
     version,
   });
   const onSubmit = async () => {
-    setIsOpen(false);
+    closeModal();
     const result = await trigger(refetch);
 
     if (Maybe.isSome(result)) {
       setErrorMessage(result.value);
     }
+  };
+  const openModal = () => {
+    triggerModal({
+      title: words("inventory.destroyInstance.title"),
+      iconVariant: "danger",
+      content: (
+        <>
+          <Text>
+            {words("inventory.destroyInstance.header")(
+              instance_identity,
+              service_entity,
+            )}
+          </Text>
+          <br />
+          <Text>{words("inventory.destroyInstance.text")}</Text>
+          <ConfirmUserActionForm onSubmit={onSubmit} onCancel={closeModal} />
+        </>
+      ),
+    });
   };
 
   return (
@@ -54,32 +71,11 @@ export const DestroyAction: React.FC<Props> = ({
           backgroundColor: "var(--pf-v5-global--palette--red-50)",
         }}
         isDanger
-        onClick={handleModalToggle}
+        onClick={openModal}
         icon={<WarningTriangleIcon />}
       >
         {words("inventory.destroyInstance.button")}
       </MenuItem>
-      <Modal
-        disableFocusTrap
-        variant={"small"}
-        isOpen={isOpen}
-        title={words("inventory.destroyInstance.title")}
-        onClose={handleModalToggle}
-        titleIconVariant="danger"
-      >
-        <Text>
-          {words("inventory.destroyInstance.header")(
-            instance_identity,
-            service_entity,
-          )}
-        </Text>
-        <br />
-        <Text>{words("inventory.destroyInstance.text")}</Text>
-        <ConfirmUserActionForm
-          onSubmit={onSubmit}
-          onCancel={handleModalToggle}
-        />
-      </Modal>
     </>
   );
 };

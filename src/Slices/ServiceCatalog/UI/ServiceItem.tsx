@@ -11,8 +11,6 @@ import {
   Title,
   TextVariants,
   Flex,
-  Modal,
-  ModalVariant,
   Dropdown,
   MenuToggleElement,
   MenuToggle,
@@ -24,6 +22,7 @@ import styled from "styled-components";
 import { Maybe, ServiceModel } from "@/Core";
 import { Spacer, ConfirmUserActionForm, ToastAlert } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
+import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { greyText } from "@/UI/Styles";
 import { words } from "@/UI/words";
 import { SummaryIcons } from "./SummaryIcons";
@@ -33,6 +32,7 @@ interface Props {
 }
 
 export const ServiceItem: React.FunctionComponent<Props> = ({ service }) => {
+  const { triggerModal, closeModal } = useContext(ModalContext);
   const { routeManager, commandResolver } = useContext(DependencyContext);
   const rowRefs = useRef<Record<string, HTMLSpanElement | null>>({});
   const [isOpen, setIsOpen] = useState(false);
@@ -41,13 +41,10 @@ export const ServiceItem: React.FunctionComponent<Props> = ({ service }) => {
     kind: "DeleteService",
     name: service.name,
   });
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const handleModalToggle = () => {
-    setIsDeleteModalOpen(!isDeleteModalOpen);
-  };
+
   const onSubmit = async () => {
-    handleModalToggle();
+    closeModal();
     const result = await trigger();
 
     if (Maybe.isSome(result)) {
@@ -58,6 +55,18 @@ export const ServiceItem: React.FunctionComponent<Props> = ({ service }) => {
 
   const onToggleClick = () => {
     setIsOpen(!isOpen);
+  };
+
+  const openModal = () => {
+    triggerModal({
+      title: words("catalog.delete.modal.title"),
+      content: (
+        <>
+          {words("catalog.delete.title")(service.name)}
+          <ConfirmUserActionForm onSubmit={onSubmit} onCancel={closeModal} />
+        </>
+      ),
+    });
   };
 
   return (
@@ -149,9 +158,7 @@ export const ServiceItem: React.FunctionComponent<Props> = ({ service }) => {
                 </Link>
               </DropdownItem>
               <DropdownItem
-                onClick={() => {
-                  setIsDeleteModalOpen(true);
-                }}
+                onClick={openModal}
                 key={service.name + "-deleteButton"}
                 aria-label={service.name + "-deleteButton"}
               >
@@ -161,19 +168,6 @@ export const ServiceItem: React.FunctionComponent<Props> = ({ service }) => {
           </Dropdown>
         </DataListAction>
       </DataListItemRow>
-      <Modal
-        disableFocusTrap
-        variant={ModalVariant.small}
-        isOpen={isDeleteModalOpen}
-        title={words("catalog.delete.modal.title")}
-        onClose={handleModalToggle}
-      >
-        {words("catalog.delete.title")(service.name)}
-        <ConfirmUserActionForm
-          onSubmit={onSubmit}
-          onCancel={handleModalToggle}
-        />
-      </Modal>
     </DataListItem>
   );
 };

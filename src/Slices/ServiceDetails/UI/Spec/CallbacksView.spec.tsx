@@ -65,21 +65,21 @@ function setup() {
   );
 
   const component = (
-    <ModalProvider>
-      <MemoryRouter>
-        <DependencyProvider
-          dependencies={{
-            ...dependencies,
-            queryResolver,
-            commandResolver,
-          }}
-        >
-          <StoreProvider store={store}>
+    <MemoryRouter>
+      <DependencyProvider
+        dependencies={{
+          ...dependencies,
+          queryResolver,
+          commandResolver,
+        }}
+      >
+        <StoreProvider store={store}>
+          <ModalProvider>
             <CallbacksView service_entity={Service.a.name} />
-          </StoreProvider>
-        </DependencyProvider>
-      </MemoryRouter>
-    </ModalProvider>
+          </ModalProvider>
+        </StoreProvider>
+      </DependencyProvider>
+    </MemoryRouter>
   );
 
   return {
