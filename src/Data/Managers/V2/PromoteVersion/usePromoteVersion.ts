@@ -9,6 +9,8 @@ import { useFetchHelpers } from "../helpers";
 
 /**
  * React Query hook for promoting a version of desired state
+ *
+ * @param {string} env - The environment in which we are trying to promote the version.
  * @returns {Mutation} The mutation object for sending the request.
  */
 export const usePromoteVersion = (

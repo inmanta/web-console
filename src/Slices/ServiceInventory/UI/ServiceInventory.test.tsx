@@ -500,7 +500,7 @@ test.only("GIVEN ServiceInventory WHEN sorting changes AND we are not on the fir
 
   //sort on the second page
   await act(async () => {
-    await userEvent.click(screen.getAllByRole("button", { name: "State" })[1]); //Tge first in the list is the filter toggle button which defaults to the State
+    await userEvent.click(screen.getAllByRole("button", { name: "State" })[1]); //The first in the list is the filter toggle button which defaults to the "State" value
   });
 
   // expect the api url to not contain start and end keywords that are used for pagination to assert we are back on the first page.

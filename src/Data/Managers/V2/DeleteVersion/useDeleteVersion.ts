@@ -9,7 +9,7 @@ import { useFetchHelpers } from "../helpers";
 /**
  * React Query hook for deleting version of Desired State
  *
- * @param {string} env - The environment in which we are retying to remove the version.
+ * @param {string} env - The environment in which we are trying to remove the version.
  * @returns {Mutation} - The mutation object provided by `useMutation` hook.
  */
 export const useDeleteVersion = (
@@ -25,7 +25,7 @@ export const useDeleteVersion = (
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
 
   /**
-   * Deletes a user from the server.
+   * Deletes a version of the desired state.
    *
    * @param {string} version - The version of the desired state to be removed.
    * @returns {Promise<void>} - A promise that resolves when the version is successfully removed.

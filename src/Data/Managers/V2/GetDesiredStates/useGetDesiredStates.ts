@@ -41,9 +41,9 @@ interface GetDesiredStates {
  * React Query hook to fetch a list of desired States
  * @param environment {string} - the environment in which the instance belongs
  *
- * @returns {GetInstance} An object containing the different available queries.
- * @returns {UseQueryResult<Result, Error>} returns.useOneTime - Fetch the instance with a single query.
- * @returns {UseQueryResult<Result, Error>} returns.useContinuous - Fetch the instance with a recursive query with an interval of 5s.
+ * @returns {GetDesiredStates} An object containing the available queries.
+ * @returns {UseQueryResult<Result, Error>} returns.useOneTime - Fetch the desired states with a single query.
+ * @returns {UseQueryResult<Result, Error>} returns.useContinuous - Fetch the desired states with a recurrent query with an interval of 5s.
  */
 export const useGetDesiredStates = (environment: string): GetDesiredStates => {
   const { createHeaders, handleErrors } = useFetchHelpers();

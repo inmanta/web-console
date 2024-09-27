@@ -49,14 +49,21 @@ export const ServiceItem: React.FunctionComponent<Props> = ({ service }) => {
 
     if (Maybe.isSome(result)) {
       setErrorMessage(result.value);
+    } else {
+      document.dispatchEvent(new CustomEvent("service-deleted"));
     }
-    document.dispatchEvent(new CustomEvent("service-deleted"));
   };
 
+  /**
+   * Toggles a dropdown menu.
+   */
   const onToggleClick = () => {
     setIsOpen(!isOpen);
   };
 
+  /**
+   * Opens a modal with a confirmation form.
+   */
   const openModal = () => {
     triggerModal({
       title: words("catalog.delete.modal.title"),
