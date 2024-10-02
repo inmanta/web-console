@@ -29,7 +29,7 @@ interface PatchEdit {
  * React Query to Patch the attributes of a certain set, for an instance, in expert mode.
  *
  * @param {string} environment - The Environment where the instance is located
- * @param {string} instance_id - The hashed id of the instance
+ * @param {string} instance_id - the UUID of the instance
  * @param {string } service_entity - The service entity type of the instance
  * @returns {UseMutationResult<void, Error, ExpertPatchAttributes, unknown>} The useMutation ReactQuery Hook
  */

@@ -18,7 +18,7 @@ export interface PostExpertStateTransfer {
  * React Query to Force update the state of an instance in expert mode.
  *
  * @param {string} environment - The Environment where the instance is located
- * @param {string} instance_id - The hashed id of the instance
+ * @param {string} instance_id - the UUID of the instance
  * @param {string } service_entity - The service entity type of the instance
  * @returns {UseMutationResult<void, Error, PostExpertStateTransfer, unknown>} The useMutation ReactQuery Hook
  */

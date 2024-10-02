@@ -14,7 +14,7 @@ export interface PostStateTransfer {
  * React Query to update the state of an instance.
  *
  * @param {string} environment - The Environment where the instance is located
- * @param {string} instance_id - The hashed id of the instance
+ * @param {string} instance_id - the UUID of the instance
  * @param {string } service_entity - The service entity type of the instance
  * @returns {UseMutationResult<void, Error, PostStateTransfer, unknown>} The useMutation ReactQuery Hook
  */
