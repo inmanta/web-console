@@ -74,7 +74,11 @@ export const getExpertStateTargets = (
   // filter out the possible transfer objects that have the same source as current state.
   const possibleStatesTransfers = serviceEntity.lifecycle.transfers;
 
-  // we are making a set because there can be duplicate entries in the possibleStateTransfers array
+  /**
+   * The list contains a list of all possible transfers. A transfer consists of a state and a possible future targetState.
+   * A state can have mutliple targets, these will have multiple entries in the list of transfers.
+   * We map over the possible transfers, an keep all the available targets, then filter out the duplicates to keep a clean list.
+   */
   const possibleTargets = new Set(
     possibleStatesTransfers.map((transfer: TransferModel) => transfer.target),
   );

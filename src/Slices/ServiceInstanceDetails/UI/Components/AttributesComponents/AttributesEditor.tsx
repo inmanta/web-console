@@ -79,6 +79,7 @@ export const AttributesEditor: React.FC<Props> = ({
 
   /**
    * useCallback hook onEditorUpdate
+   * The method is used in a UseEffect dependency, and would cause too many rerenders if not wrapped in a useCallback hook.
    *
    * Try-catch to set the editorState with the updated data
    *

@@ -78,9 +78,7 @@ describe("Page Actions - Success", () => {
     });
 
     expect(screen.queryByRole("dialog")).toBeNull();
-    expect(
-      screen.queryByTestId("error-toast-expert-state-error-message"),
-    ).toBeNull();
+    expect(screen.queryByTestId("error-toast-expert-state-message")).toBeNull();
   });
 
   it("Expert actions - Destroy", async () => {
@@ -121,9 +119,7 @@ describe("Page Actions - Success", () => {
       await userEvent.click(confirmButton);
     });
 
-    expect(
-      screen.queryByTestId("error-toast-expert-state-error-message"),
-    ).toBeNull();
+    expect(screen.queryByTestId("error-toast-expert-state-message")).toBeNull();
     await waitFor(() =>
       expect(mockedUsedNavigate).toHaveBeenCalledWith(
         "/console/lsm/catalog/mobileCore/inventory?env=aaa",
@@ -185,9 +181,7 @@ describe("Page Actions - Success", () => {
     });
 
     expect(screen.queryByRole("dialog")).toBeNull();
-    expect(
-      screen.queryByTestId("error-toast-expert-state-error-message"),
-    ).toBeNull();
+    expect(screen.queryByTestId("error-toast-expert-state-message")).toBeNull();
   });
 
   it("Normal Instance Actions Enabled - update state action", async () => {
@@ -240,9 +234,7 @@ describe("Page Actions - Success", () => {
     });
 
     expect(screen.queryByRole("dialog")).toBeNull();
-    expect(
-      screen.queryByTestId("error-toast-expert-state-error-message"),
-    ).toBeNull();
+    expect(screen.queryByTestId("error-toast-expert-state-message")).toBeNull();
   });
 });
 
@@ -314,7 +306,7 @@ describe("Page Actions - Failed", () => {
 
     expect(screen.getByRole("dialog")).toBeVisible();
     expect(
-      screen.getByTestId("error-toast-expert-state-error-message"),
+      screen.getByTestId("error-toast-expert-state-message"),
     ).toBeVisible();
   });
 
@@ -358,7 +350,7 @@ describe("Page Actions - Failed", () => {
 
     expect(screen.getByRole("dialog")).toBeVisible();
     expect(
-      screen.getByTestId("error-toast-expert-destroy-error-message"),
+      screen.getByTestId("error-toast-expert-destroy-message"),
     ).toBeVisible();
 
     await waitFor(() => expect(mockedUsedNavigate).not.toHaveBeenCalled());
@@ -419,7 +411,7 @@ describe("Page Actions - Failed", () => {
 
     expect(screen.getByRole("dialog")).toBeVisible();
     expect(
-      screen.getByTestId("error-toast-delete-instance-error-message"),
+      screen.getByTestId("error-toast-delete-instance-message"),
     ).toBeVisible();
   });
 
@@ -474,7 +466,7 @@ describe("Page Actions - Failed", () => {
 
     expect(screen.getByRole("dialog")).toBeVisible();
     expect(
-      screen.getByTestId("error-toast-state-transfer-error-message"),
+      screen.getByTestId("error-toast-state-transfer-message"),
     ).toBeVisible();
   });
 });

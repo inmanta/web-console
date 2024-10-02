@@ -32,7 +32,7 @@ interface Props {
  * @props {Props} props - The props of the components
  *  @prop {string[]} targets - a list of available states targets for the expert mode
  *  @prop {string} instance_display_identity - the display value of the instance Id
- *  @prop {string} instance_id - the hashed id of the instance
+ *  @prop {string} instance_id - the UUID of the instance
  *  @prop {string} service_entity - the service entity type of the instance
  *  @prop {ParsedNumber} version - the current version of the instance
  *  @prop {function} onClose - callback method when the modal gets closed

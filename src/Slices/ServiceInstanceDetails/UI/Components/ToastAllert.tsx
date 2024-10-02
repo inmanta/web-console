@@ -33,10 +33,10 @@ export const ToastAlertMessage: React.FC<Props> = ({
       <Alert
         variant={variant}
         title={message}
-        data-testid={`${id}-error-message`}
+        data-testid={`${id}-message`}
         actionClose={
           <AlertActionCloseButton
-            data-testid={`${id}-close-error-message`}
+            data-testid={`${id}-close-message`}
             onClose={() => setMessage("")}
           />
         }

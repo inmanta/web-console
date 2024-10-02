@@ -1,8 +1,4 @@
 /**
- * @note These tests should be deleted once the collapsible sections are removed from the inventory.
- */
-
-/**
  * Shorthand method to clear the environment being passed.
  * By default, if no arguments are passed it will target the 'lsm-frontend' environment.
  *
@@ -136,43 +132,35 @@ if (Cypress.env("edition") === "iso") {
         .click();
       cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
       cy.get("#basic-service").contains("Show inventory").click();
-      cy.get("#expand-toggle0").click();
 
-      // Wait until state is up
-      cy.get('[aria-label="InstanceRow-Intro"]:first')
-        .find('[data-label="State"]', { timeout: 60000 })
-        .should("contain", "up");
-
-      cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
+      // Go to the instance details
+      cy.get('[aria-label="row actions toggle"]').click();
       cy.get(".pf-v5-c-menu__item")
-        .eq(4)
-        .should("not.have.class", "pf-disabled");
+        .first()
+        .contains("Instance Details")
+        .click();
 
-      cy.get(".pf-v5-c-menu__item").contains("Force State").click();
-      cy.get(".pf-v5-c-menu__item").contains("setting_start").click();
+      // expect to find in the history the up state as last
+      cy.get('[aria-label="History-Row"]').should(($rows) => {
+        expect($rows[0]).to.contain("up");
+        expect($rows[0]).to.contain(3);
+        expect($rows).to.have.length(3);
+      });
 
-      // Modal title for confirmation of Destroying instance should be visible
-      cy.get(".pf-v5-c-modal-box__title-text")
-        .contains("Confirm force state transfer")
-        .should("be.visible");
+      // force state to creating
+      cy.get('[aria-label="Expert-Actions-Toggle"]').click();
+      cy.get(".pf-v5-c-menu__item").contains("creating").click();
 
-      // Cancel modal and expect nothing to change
-      cy.get("button").contains("No").click();
-
-      cy.get('[aria-label="InstanceRow-Intro"]:first')
-        .find('[data-label="State"]')
-        .should("contain", "up");
-
-      // Push new state, confirm modal and expect new value in the State data cell
-      cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
-      cy.get(".pf-v5-c-menu__item").contains("Force State").click();
-      cy.get(".pf-v5-c-menu__item").contains("setting_start").click();
-
+      // add an operation to the force state action
+      cy.get("#operation-select").select("clear candidate");
       cy.get("button").contains("Yes").click();
 
-      cy.get('[aria-label="InstanceRow-Intro"]:first')
-        .find('[data-label="State"]', { timeout: 40000 })
-        .should("contain", "setting_start");
+      // expect to find in the history the creating state as last
+      cy.get('[aria-label="History-Row"]').should(($rows) => {
+        expect($rows[0]).to.contain("creating");
+        expect($rows[0]).to.contain(4);
+        expect($rows).to.have.length(4);
+      });
     });
 
     it("2.4.2 Edit instance attributes", () => {
@@ -188,131 +176,46 @@ if (Cypress.env("edition") === "iso") {
         .children()
         .should("have.length", 1);
       cy.get("#basic-service").contains("Show inventory").click();
-      cy.get("#expand-toggle0").click();
 
-      // Expect row to be expanded
-      cy.get(".pf-v5-c-table__expandable-row-content").should("to.be.visible");
-
-      // Expect to find status tab
-      cy.get(".pf-v5-c-tabs__list li:first").should(
-        "have.class",
-        "pf-m-current",
-      );
-
-      // Expect edit button to be disabled after previous state change
-      cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
-
-      // The fourth button in the dropdown should be the edit button.
-      cy.get(".pf-v5-c-menu__item").eq(4).should("be.disabled");
-
-      // Expect to land on Service Inventory page and to find attributes tab button
-      cy.get(".pf-v5-c-tabs__list")
-        .contains("Attributes", { timeout: 20000 })
+      // Go to the instance details
+      cy.get('[aria-label="row actions toggle"]').click();
+      cy.get(".pf-v5-c-menu__item")
+        .first()
+        .contains("Instance Details")
         .click();
 
-      // Find and check initial values for targetted attribute address_r1
-      cy.get('[aria-label="Row-address_r1"')
-        .find('[data-label="active"]', { timeout: 20000 })
-        .should("contain", "1.2.3.5/32");
-      cy.get('[aria-label="Row-address_r1"')
-        .find('[data-label="active"]')
-        .find("button")
+      // Go to the attributes tab and select the JSON view
+      cy.get('[aria-label="attributes-content"]').click();
+      cy.get("#JSON").click();
+
+      // edit the first line to make editor invalid (Delete the first character of the name property)
+      cy.get(".mtk20").contains("name").type("{home}{rightArrow}{del}");
+
+      // expect the Force Update to be disabled
+      cy.get("button").contains("Force Update").should("be.disabled");
+
+      // Adjust the name property of the instance and make editor valid again
+      cy.get(".mtk20").contains("ame").type("{home}{rightArrow}n");
+
+      // edit the value of the name by removing characters
+      cy.get(".mtk5")
+        .contains("basic-service")
+        .type(
+          "{end}{leftArrow}{leftArrow}{backspace}{backspace}{backspace}{backspace}{backspace}{backspace}{backspace}{backspace}",
+        );
+
+      // confirm edit
+      cy.get("button").contains("Force Update").click();
+      cy.get("button").contains("Yes").click();
+
+      // Go back to inventory using the breadcrumbs
+      cy.get('[aria-label="BreadcrumbItem"]')
+        .contains("Service Inventory: basic-service")
         .click();
 
-      // Type invalid value and submit
-      cy.get('[aria-label="new-attribute-input"]').type(
-        "{selectall}{backspace}invalid",
-      );
-      cy.get('[data-testid="inline-submit"]').click();
-
-      // Expect dialog to pop-up, and after canceling it won't affect input state
-      cy.get(".pf-v5-c-modal-box__title-text")
-        .contains("Update Attribute")
-        .should("be.visible");
-      cy.get('[data-testid="dialog-cancel"]').click();
-      cy.get('[aria-label="new-attribute-input"]', { timeout: 20000 }).should(
-        "have.value",
-        "invalid",
-      );
-
-      // Send invalid value and expect toast alert with error message
-      cy.get('[data-testid="inline-submit"]').click();
-      cy.get('[data-testid="dialog-submit"]').click();
-      cy.get('[data-testid="ToastAlert"]')
-        .contains("Setting new attribute failed")
-        .should("be.visible");
-      cy.get(
-        '[aria-label="Close Danger alert: alert: Setting new attribute failed"]',
-      ).click();
-
-      // Pass valid value then submit and expect new value to be pushed to the cell
-      cy.get('[aria-label="new-attribute-input"]').type(
-        "{selectall}{backspace}1.2.3.8/32",
-      );
-      cy.get('[data-testid="inline-submit"]').click();
-      cy.get('[data-testid="dialog-submit"]').click();
-      cy.get('[aria-label="Row-address_r1"')
-        .find('[data-label="active"]', { timeout: 20000 })
-        .should("contain", "1.2.3.8/32");
-
-      // interface_r1_name
-      cy.get('[aria-label="Row-interface_r1_name"')
-        .find('[data-label="active"]')
-        .should("contain", "eth0");
-      cy.get('[aria-label="Row-interface_r1_name"')
-        .find('[data-label="active"]')
-        .find("button")
-        .click();
-
-      // Type invalid value and submit
-      cy.get('[aria-label="new-attribute-input"]').type(
-        "{selectall}{backspace}eth1",
-      );
-      cy.get('[data-testid="inline-submit"]').click();
-
-      // Expect dialog to pop-up, and after submiting xpect new value to be pushed to the cell
-      cy.get('[data-testid="dialog-submit"]').click();
-      cy.get('[aria-label="Row-interface_r1_name"')
-        .find('[data-label="active"]', { timeout: 20000 })
-        .should("contain", "eth1");
-
-      // should_deploy_fail
-      cy.get('[aria-label="Row-should_deploy_fail"')
-        .find('[data-label="active"]')
-        .should("contain", "false");
-
-      cy.get('[aria-label="Row-should_deploy_fail"')
-        .find('[data-label="active"]')
-        .find("button")
-        .click();
-      cy.get(".pf-v5-c-switch__toggle").click();
-      cy.get('[data-testid="inline-submit"]').click();
-      cy.get('[data-testid="dialog-submit"]').click();
-
-      cy.get('[aria-label="Row-should_deploy_fail"')
-        .find('[data-label="active"]')
-        .should("contain", "true");
-
-      // vlan_id_r1
-      cy.get('[aria-label="Row-vlan_id_r1"')
-        .find('[data-label="active"]')
-        .should("contain", "1");
-      cy.get('[aria-label="Row-vlan_id_r1"')
-        .find('[data-label="active"]')
-        .find("button")
-        .click();
-
-      // Type invalid value and submit
-      cy.get('[aria-label="new-attribute-input"]').type(
-        "{selectall}{backspace}5",
-      );
-      cy.get('[data-testid="inline-submit"]').click();
-
-      // Expect dialog to pop-up, and after submiting xpect new value to be pushed to the cell
-      cy.get('[data-testid="dialog-submit"]').click();
-      cy.get('[aria-label="Row-vlan_id_r1"')
-        .find('[data-label="active"]')
-        .should("contain", "5");
+      // Expect the name of the instance to be updated in the inventory
+      // (Until the BE fixes the history logs not being updated when force updating attributes)
+      cy.get('[aria-label="IdentityCell-basic"]').should("be.visible");
     });
 
     it("2.4.3 Destroy previously created instance", () => {
@@ -328,30 +231,23 @@ if (Cypress.env("edition") === "iso") {
         .children()
         .should("have.length", 1);
       cy.get("#basic-service").contains("Show inventory").click();
-      cy.get("#expand-toggle0").click();
 
-      // Expect row to be expanded
-      cy.get(".pf-v5-c-table__expandable-row-content").should("to.be.visible");
+      // Go to the instance details
+      cy.get('[aria-label="row actions toggle"]').click();
+      cy.get(".pf-v5-c-menu__item")
+        .first()
+        .contains("Instance Details")
+        .click();
 
-      // Expect to find status tab
-      cy.get(".pf-v5-c-tabs__list li:first").should(
-        "have.class",
-        "pf-m-current",
-      );
-
-      // Click on destroy button
-      cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
-      cy.get(".pf-v5-c-menu__item").contains("More actions").click();
+      // Open Expert menu
+      cy.get('[aria-label="Expert-Actions-Toggle"]').click();
       cy.get(".pf-v5-c-menu__item").contains("Destroy").click();
 
-      // Modal title for confirmation of Destroying instance should be visible
-      cy.get(".pf-v5-c-modal-box__title-text")
-        .contains("Destroy instance")
-        .should("be.visible");
-
-      // Confirm modal and expect to new view almost appear informing that there is no instances of that service found
+      // confirm action
       cy.get("button").contains("Yes").click();
-      cy.get('[aria-label="ServiceInventory-Empty"').should("to.be.visible");
+
+      // expect to be redirected on the inventory page, and table to be empty
+      cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
 
       // At the end go back to settings and turn expert mode off
       cy.get(".pf-v5-c-nav__item").contains("Settings").click();
