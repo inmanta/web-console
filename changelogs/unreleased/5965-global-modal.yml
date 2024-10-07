@@ -1,0 +1,6 @@
+description: Create a global modal component for use across the application, to improve performance and reduce code duplication.
+issue-nr: 5965
+change-type: patch
+destination-branches: [master, iso7]
+sections:
+  minor-improvement: "{{description}}"
