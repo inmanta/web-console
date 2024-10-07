@@ -8,6 +8,7 @@ import {
   FieldCreator,
   createFormState,
 } from "../ServiceInstanceForm";
+import { findCorrespondingId } from "./helpers";
 import activeImage from "./icons/active-icon.svg";
 import candidateImage from "./icons/candidate-icon.svg";
 import {
@@ -355,6 +356,61 @@ export function appendInstance(
             });
           }
         });
+      } else {
+        let isConnected = false;
+        const cellAsBlock = cellAdded as ServiceEntityBlock;
+        const relations = cellAsBlock.getRelations();
+
+        if (relations) {
+          const correspondingId = findCorrespondingId(
+            relations,
+            instanceAsTable,
+          );
+
+          if (correspondingId) {
+            isConnected = true;
+            connectEntities(
+              graph,
+              instanceAsTable,
+              [cellAsBlock],
+              serviceInstanceModel.strict_modifier_enforcement,
+            );
+          }
+        }
+        //If doesn't, or the one we are looking for isn't among the ones stored, we need go through every connected shape and do the same assertion,
+        //as the fact that we have that cell as relatedInstance tells us that either that or its embedded entities has connection
+        if (!isConnected) {
+          const neighbors = graph.getNeighbors(cellAdded as dia.Element);
+
+          neighbors.map((cell) => {
+            const neighborRelations = (
+              cell as ServiceEntityBlock
+            ).getRelations();
+
+            if (neighborRelations) {
+              const correspondingId = findCorrespondingId(
+                neighborRelations,
+                instanceAsTable,
+              );
+
+              if (correspondingId) {
+                isConnected = true;
+                connectEntities(
+                  graph,
+                  instanceAsTable,
+                  [cell as ServiceEntityBlock],
+                  serviceInstanceModel.strict_modifier_enforcement,
+                );
+              }
+            }
+          });
+        }
+        connectEntities(
+          graph,
+          instanceAsTable,
+          [cellAsBlock],
+          serviceInstanceModel.strict_modifier_enforcement,
+        );
       }
     });
   }
