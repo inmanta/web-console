@@ -12,7 +12,7 @@ import {
   addDefaultEntities,
   appendEmbeddedEntity,
   appendInstance,
-  createEntity,
+  createComposerEntity,
   handleInfoIcon,
   populateGraphWithDefault,
   showLinkTools,
@@ -27,16 +27,11 @@ beforeAll(() => {
   defineObjectsForJointJS();
 });
 
-describe("createEntity", () => {
+describe("createComposerEntity", () => {
   it("creates a new core entity", () => {
     const isCore = true;
     const isInEditMode = false;
-    const coreEntity = createEntity(
-      parentModel,
-      isCore,
-      undefined,
-      isInEditMode,
-    );
+    const coreEntity = createComposerEntity(parentModel, isCore, isInEditMode);
 
     expect(coreEntity.get("holderName")).toBe(undefined);
     expect(coreEntity.get("isEmbedded")).toBe(undefined);
@@ -48,12 +43,13 @@ describe("createEntity", () => {
     const isCore = false;
     const isEmbedded = true;
     const isInEditMode = false;
+    const attributes = undefined;
 
-    const embeddedEntity = createEntity(
+    const embeddedEntity = createComposerEntity(
       containerModel.embedded_entities[0],
       isCore,
-      undefined,
       isInEditMode,
+      attributes,
       isEmbedded,
       containerModel.name,
     );
@@ -67,12 +63,7 @@ describe("createEntity", () => {
     const isCore = false;
     const isInEditMode = false;
 
-    const childEntity = createEntity(
-      childModel,
-      isCore,
-      undefined,
-      isInEditMode,
-    );
+    const childEntity = createComposerEntity(childModel, isCore, isInEditMode);
 
     expect(childEntity.get("holderName")).toBe(undefined);
     expect(childEntity.get("isEmbedded")).toBe(undefined);
@@ -225,25 +216,26 @@ describe("showLinkTools", () => {
       [parentModel, childModel],
       {},
     );
-
     const paper = new ComposerPaper(connectionRules, graph, editable).paper;
 
     connectionRules[childModel.name][0].modifier = modifier;
 
     const isCore = false;
     const isEmbedded = false;
-    const parentEntity = createEntity(
+    const attributes = undefined;
+
+    const parentEntity = createComposerEntity(
       parentModel,
       isCore,
-      undefined,
       isParentInEditMode,
+      attributes,
       isEmbedded,
     );
-    const childEntity = createEntity(
+    const childEntity = createComposerEntity(
       childModel,
       isCore,
-      undefined,
       isChildInEditMode,
+      attributes,
       isEmbedded,
     );
 
@@ -342,27 +334,30 @@ describe("addDefaultEntities", () => {
     const dispatchEventSpy = jest.spyOn(document, "dispatchEvent");
 
     const graph = new dia.Graph({});
-    const createdEntity1 = createEntity(
+    const attributes = {
+      name: "",
+    };
+    const isCore = false;
+    const isInEditMode = false;
+    const isEmbedded = true;
+
+    const createdEntity1 = createComposerEntity(
       {
         ...containerModel.embedded_entities[0],
         embedded_entities: [{ ...containerModel.embedded_entities[0] }],
       },
-      false,
-      {
-        name: "",
-      },
-      false,
-      true,
+      isCore,
+      isInEditMode,
+      attributes,
+      isEmbedded,
       "container-service",
     );
-    const createdEntity2 = createEntity(
+    const createdEntity2 = createComposerEntity(
       containerModel.embedded_entities[0],
-      false,
-      {
-        name: "",
-      },
-      false,
-      true,
+      isCore,
+      isInEditMode,
+      attributes,
+      isEmbedded,
       "child_container",
     );
 

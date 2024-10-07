@@ -6,7 +6,7 @@ import {
   FieldCreator,
   createFormState,
 } from "../../ServiceInstanceForm";
-import { createEntity } from "../actions";
+import { createComposerEntity } from "../actions";
 import { ActionEnum, EmbeddedEventEnum } from "../interfaces";
 import {
   createStencilElement,
@@ -56,11 +56,11 @@ class InstanceStencilTab {
         const fields = fieldCreator.attributesToFields(serviceModel.attributes);
         const attrs = createFormState(fields);
 
-        return createEntity(
+        return createComposerEntity(
           serviceModel,
           isCore,
-          attrs,
           isInEditMode,
+          attrs,
           isEmbedded,
           cell.get("holderName"),
         );
@@ -177,11 +177,11 @@ class InventoryStencilTab {
         const isCore = false;
         const isInEditMode = false;
 
-        const entity = createEntity(
+        const entity = createComposerEntity(
           cell.get("serviceModel"),
           isCore,
-          cell.get("instanceAttributes"),
           isInEditMode,
+          cell.get("instanceAttributes"),
         );
 
         //set id to the one that is stored in the stencil which equal to the instance id

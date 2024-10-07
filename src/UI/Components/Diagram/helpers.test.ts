@@ -29,7 +29,7 @@ import {
   testEmbeddedApiInstances,
 } from "./Mocks/Mock";
 import services from "./Mocks/services.json";
-import { createEntity } from "./actions";
+import { createComposerEntity } from "./actions";
 import {
   createConnectionRules,
   shapesDataTransform,
@@ -993,12 +993,21 @@ describe("checkIfConnectionIsAllowed", () => {
     const paper = new dia.Paper({
       model: graph,
     });
-    const serviceA = createEntity(Service.a, false, InstanceAttributesA, false);
-    const serviceB = createEntity(
+
+    const isCore = false;
+    const isInEditMode = false;
+
+    const serviceA = createComposerEntity(
+      Service.a,
+      isCore,
+      isInEditMode,
+      InstanceAttributesA,
+    );
+    const serviceB = createComposerEntity(
       Service.a.embedded_entities[0],
-      false,
+      isCore,
+      isInEditMode,
       (InstanceAttributesA["circuits"] as InstanceAttributeModel[])[0],
-      false,
     );
 
     graph.addCells([serviceA, serviceB]);
@@ -1019,8 +1028,22 @@ describe("checkIfConnectionIsAllowed", () => {
     const paper = new dia.Paper({
       model: graph,
     });
-    const serviceA = createEntity(Service.a, false, InstanceAttributesA, false);
-    const serviceB = createEntity(Service.b, false, InstanceAttributesB, false);
+
+    const isCore = false;
+    const isInEditMode = false;
+
+    const serviceA = createComposerEntity(
+      Service.a,
+      isCore,
+      isInEditMode,
+      InstanceAttributesA,
+    );
+    const serviceB = createComposerEntity(
+      Service.b,
+      isCore,
+      isInEditMode,
+      InstanceAttributesB,
+    );
 
     graph.addCells([serviceA, serviceB]);
 
@@ -1040,13 +1063,21 @@ describe("checkIfConnectionIsAllowed", () => {
     const paper = new dia.Paper({
       model: graph,
     });
-    const serviceA = createEntity(Service.a, false, InstanceAttributesA, false);
-    const serviceB = createEntity(
+
+    const isCore = false;
+    const isInEditMode = false;
+
+    const serviceA = createComposerEntity(
+      Service.a,
+      isCore,
+      isInEditMode,
+      InstanceAttributesA,
+    );
+    const serviceB = createComposerEntity(
       Service.a.embedded_entities[0],
-      false,
+      isCore,
+      isInEditMode,
       (InstanceAttributesA["circuits"] as InstanceAttributeModel[])[0],
-      false,
-      true,
     );
 
     graph.addCells([serviceA, serviceB]);
@@ -1070,28 +1101,36 @@ describe("checkIfConnectionIsAllowed", () => {
       model: graph,
     });
 
-    const serviceA = createEntity(Service.a, false, InstanceAttributesA, false);
-    const serviceA2 = createEntity(
+    const isCoreFalse = false;
+    const isCoreTrue = false;
+    const isInEditMode = false;
+
+    const serviceA = createComposerEntity(
       Service.a,
-      true,
-
+      isCoreFalse,
+      isInEditMode,
       InstanceAttributesA,
-      false,
     );
-    const serviceB = createEntity(
+    const serviceB = createComposerEntity(
+      Service.a,
+      isCoreTrue,
+      isInEditMode,
+      InstanceAttributesA,
+    );
+    const serviceC = createComposerEntity(
       Service.a.embedded_entities[0],
-      true,
+      isCoreTrue,
+      isInEditMode,
       (InstanceAttributesA["circuits"] as InstanceAttributeModel[])[0],
-      false,
       true,
     );
 
-    graph.addCells([serviceA, serviceA2, serviceB]);
+    graph.addCells([serviceA, serviceB, serviceC]);
 
     const link = new Link();
 
-    link.source(serviceA2);
-    link.target(serviceB);
+    link.source(serviceB);
+    link.target(serviceC);
     link.addTo(graph);
     serviceB.set("holderName", "service_name_a");
 
@@ -1432,17 +1471,21 @@ describe("updateLabelPosition", () => {
     const paper = new dia.Paper({
       model: graph,
     });
-    const sourceService = createEntity(
+
+    const isCore = false;
+    const isEmbedded = false;
+
+    const sourceService = createComposerEntity(
       Service.a,
-      false,
+      isCore,
+      isEmbedded,
       InstanceAttributesA,
-      false,
     );
-    const targetService = createEntity(
+    const targetService = createComposerEntity(
       Service.b,
-      false,
+      isCore,
+      isEmbedded,
       InstanceAttributesB,
-      false,
     );
 
     graph.addCell(sourceService);
@@ -1567,8 +1610,16 @@ describe("toggleLooseElement", () => {
       model: graph,
     });
 
+    const isCore = false;
+    const isEmbedded = false;
+
     //add highlighter
-    const entity = createEntity(Service.a, false, InstanceAttributesA, false);
+    const entity = createComposerEntity(
+      Service.a,
+      isCore,
+      isEmbedded,
+      InstanceAttributesA,
+    );
 
     graph.addCell(entity);
 
@@ -1596,7 +1647,16 @@ describe("toggleLooseElement", () => {
     const paper = new dia.Paper({
       model: graph,
     });
-    const entity = createEntity(Service.a, false, InstanceAttributesA, false);
+
+    const isCore = false;
+    const isEmbedded = false;
+
+    const entity = createComposerEntity(
+      Service.a,
+      isCore,
+      isEmbedded,
+      InstanceAttributesA,
+    );
 
     graph.addCell(entity);
 

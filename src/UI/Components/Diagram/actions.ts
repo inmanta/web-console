@@ -169,16 +169,18 @@ export function showLinkTools(
  * @param {string} holderName - name of the entity to which it is embedded/connected
  * @returns {ServiceEntityBlock} created JointJS shape
  */
-export function createEntity(
+export function createComposerEntity(
   serviceModel: ServiceModel | EmbeddedEntity,
   isCore: boolean,
-  attributes: InstanceAttributeModel | undefined = undefined,
   isInEditMode: boolean,
+  attributes?: InstanceAttributeModel,
   isEmbedded = false,
   holderName = "",
 ): ServiceEntityBlock {
   //Create shape for Entity
-  const instanceAsTable = new ServiceEntityBlock().setName(serviceModel.name);
+  const instanceAsTable = new ServiceEntityBlock();
+
+  instanceAsTable.setName(serviceModel.name);
 
   if (isEmbedded) {
     instanceAsTable.setTabColor("embedded");
@@ -246,14 +248,14 @@ export function appendInstance(
     undefined;
   const isInEditMode = true;
 
-  const instanceAsTable = createEntity(
+  const instanceAsTable = createComposerEntity(
     serviceInstanceModel,
     isMainInstance,
-    attributes,
     isInEditMode,
+    attributes,
   );
 
-  //if instance is not main, we need to apply it's stencil name to the shape to later disable it's adequate blueprint in the sidebar
+  // If the instance is not main, we need to apply its stencil name to the shape to later disable its adequate stencil in the sidebar
   if (!isMainInstance) {
     instanceAsTable.set(
       "stencilName",
@@ -333,13 +335,14 @@ export function appendInstance(
         appendedInstances.forEach((cell) => {
           const relationMap = cell.get("relatedTo") as Map<string, string>;
           const serviceModel = cell.get("serviceModel") as ServiceModel;
+          const relations = serviceModel.inter_service_relations || [];
 
           if (relationMap) {
             relationMap.forEach((_value, key) => {
               const relatedCell = graph.getCell(key) as ServiceEntityBlock;
 
               if (relatedCell) {
-                const relation = serviceModel.inter_service_relations?.find(
+                const relation = relations.find(
                   (relation) => relation.entity_type === relatedCell.getName(),
                 );
 
@@ -465,11 +468,11 @@ export function appendEmbeddedEntity(
     const isEmbedded = true;
 
     //Create shape for Entity
-    const instanceAsTable = createEntity(
+    const instanceAsTable = createComposerEntity(
       embeddedEntity,
       isCore,
-      entityInstance,
       isInEditMode,
+      entityInstance,
       isEmbedded,
       holderName,
     );
@@ -557,7 +560,12 @@ export function populateGraphWithDefault(
   const isCore = true;
   const isInEditMode = false;
 
-  const coreEntity = createEntity(serviceModel, isCore, attrs, isInEditMode);
+  const coreEntity = createComposerEntity(
+    serviceModel,
+    isCore,
+    isInEditMode,
+    attrs,
+  );
 
   coreEntity.addTo(graph);
 
@@ -600,11 +608,11 @@ export function addDefaultEntities(
       );
       const attrs = createFormState(fields);
 
-      const embeddedEntity = createEntity(
+      const embeddedEntity = createComposerEntity(
         embedded_entity,
         isCore,
-        attrs,
         isInEditMode,
+        attrs,
         isEmbedded,
         service.name,
       );
@@ -762,7 +770,9 @@ function handleNonDirectAttributes(
       return appendedEntities;
     });
 
-  serviceModel.inter_service_relations?.forEach((relation) => {
+  const relations = serviceModel.inter_service_relations || [];
+
+  relations.forEach((relation) => {
     const relationId = attributesValues[relation.name];
 
     if (relationId) {
