@@ -792,7 +792,8 @@ const dict = {
    */
   "common.serviceInstance.select": (attribute: string) =>
     `Select value for ${attribute}`,
-  "common.serviceInstance.relation": `Select an instance`,
+  "common.serviceInstance.relation": (serviceEntity: string) => `Select an instance of ${serviceEntity}`,
+  "common.serviceInstance.relations": (serviceEntity: string) => `Select instances of ${serviceEntity}`,
   "common.environment.select": "Select an environment",
   "common.compileWidget.recompile": "Recompile",
   "common.compileWidget.toast": (update: boolean) =>
