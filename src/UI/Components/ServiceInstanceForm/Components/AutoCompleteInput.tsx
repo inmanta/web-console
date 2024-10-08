@@ -69,9 +69,7 @@ export const AutoCompleteInput: React.FC<Props> = ({
     };
   });
 
-  console.log(serviceEntity,
-    attributeName,
-    description,)
+  console.log(serviceEntity, attributeName, description);
 
   return (
     <FormGroup
@@ -88,7 +86,9 @@ export const AutoCompleteInput: React.FC<Props> = ({
           isDisabled={shouldBeDisabled}
           setSelected={handleInputChange}
           selected={selected as string[]}
-          placeholderText={words("common.serviceInstance.relations")(serviceEntity)}
+          placeholderText={words("common.serviceInstance.relations")(
+            serviceEntity,
+          )}
           onSearchTextChanged={onSearchTextChanged}
           hasChips
         />
@@ -99,7 +99,9 @@ export const AutoCompleteInput: React.FC<Props> = ({
           isDisabled={shouldBeDisabled}
           setSelected={handleInputChange}
           selected={selected as string | null}
-          placeholderText={words("common.serviceInstance.relation")(serviceEntity)}
+          placeholderText={words("common.serviceInstance.relation")(
+            serviceEntity,
+          )}
           onSearchTextChanged={onSearchTextChanged}
         />
       )}
