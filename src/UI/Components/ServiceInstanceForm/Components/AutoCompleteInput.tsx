@@ -69,8 +69,6 @@ export const AutoCompleteInput: React.FC<Props> = ({
     };
   });
 
-  console.log(serviceEntity, attributeName, description);
-
   return (
     <FormGroup
       {...props}
