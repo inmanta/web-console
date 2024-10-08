@@ -1,7 +1,8 @@
 import React from "react";
 import { Modal } from "@patternfly/react-core";
-import { UserInfo } from "@/Data/Managers/V2/GetUsers";
-import { useRemoveUser } from "@/Data/Managers/V2/RemoveUser";
+
+import { useRemoveUser } from "@/Data/Managers/V2/DELETE/RemoveUser";
+import { UserInfo } from "@/Data/Managers/V2/GETTERS/GetUsers";
 import { words } from "@/UI";
 import { ConfirmUserActionForm } from "@/UI/Components";
 

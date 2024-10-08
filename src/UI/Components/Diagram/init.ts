@@ -1,6 +1,6 @@
 import { dia, shapes, ui } from "@inmanta/rappid";
 import { InstanceAttributeModel, ServiceModel } from "@/Core";
-import { InstanceWithRelations } from "@/Data/Managers/V2/GetInstanceWithRelations";
+import { InstanceWithRelations } from "@/Data/Managers/V2/GETTERS/GetInstanceWithRelations";
 import {
   appendColumns,
   appendEntity,

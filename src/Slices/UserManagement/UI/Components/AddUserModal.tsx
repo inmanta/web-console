@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Modal } from "@patternfly/react-core";
-import { useAddUser } from "@/Data/Managers/V2/AddUser";
+import { useAddUser } from "@/Data/Managers/V2/POST/AddUser";
 import { words } from "@/UI";
 import { UserCredentialsForm } from "@/UI/Components/UserCredentialsForm";
 

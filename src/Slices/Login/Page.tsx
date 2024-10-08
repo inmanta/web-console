@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { LoginPage, ListVariant } from "@patternfly/react-core";
 import styled from "styled-components";
-import { useLogin } from "@/Data/Managers/V2/Login";
+import { useLogin } from "@/Data/Managers/V2/POST/Login";
 import { DependencyContext, words } from "@/UI";
 import { UserCredentialsForm } from "@/UI/Components/UserCredentialsForm";
 import logo from "@images/logo.svg";

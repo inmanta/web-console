@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { ServiceModel } from "@/Core";
-import { useGetInstanceWithRelations } from "@/Data/Managers/V2/GetInstanceWithRelations";
+import { useGetInstanceWithRelations } from "@/Data/Managers/V2/GETTERS/GetInstanceWithRelations";
 import { DependencyContext, words } from "@/UI";
 import { ErrorView, LoadingView } from "@/UI/Components";
 import Canvas from "@/UI/Components/Diagram/Canvas";

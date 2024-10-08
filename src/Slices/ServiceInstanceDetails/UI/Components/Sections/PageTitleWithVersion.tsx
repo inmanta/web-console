@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { useUrlStateWithString } from "@/Data";
 import { words } from "@/UI";
 import { InstanceDetailsContext } from "../../../Core/Context";
-import { InstanceActions } from "./InstanceActions";
+import { InstanceActions } from "../InstanceActions";
 
 interface Props {
   title: string;
@@ -50,7 +50,7 @@ export const PageTitleWithVersion: React.FC<Props> = ({ title }) => {
           </Label>
         )}
       </LabelContainer>
-      <InstanceActions />
+      {isLatest && <InstanceActions />}
     </>
   );
 };
