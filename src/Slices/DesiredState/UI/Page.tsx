@@ -3,7 +3,7 @@ import { ParsedNumber, RemoteData } from "@/Core";
 import { useUrlStateWithFilter, useUrlStateWithPageSize } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { getPaginationHandlers } from "@/Data/Managers/Helpers";
-import { useDeleteVersion } from "@/Data/Managers/V2/DeleteVersion";
+import { useDeleteDesiredStateVersion } from "@/Data/Managers/V2/DeleteDesiredStateVersion";
 import { useGetDesiredStates } from "@/Data/Managers/V2/GetDesiredStates";
 import {
   ToastAlert,
@@ -27,7 +27,7 @@ export const Page: React.FC = () => {
   const { environmentHandler } = useContext(DependencyContext);
   const envId = environmentHandler.useId();
   const { triggerModal, closeModal } = useContext(ModalContext);
-  const deleteVersion = useDeleteVersion(envId);
+  const deleteVersion = useDeleteDesiredStateVersion(envId);
 
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -50,7 +50,12 @@ export const Page: React.FC = () => {
     envId,
   ).useContinuous(pageSize, filter, currentPage);
 
-  function setDeleteModal(version: ParsedNumber) {
+  /**
+   * callback function that will open a modal to confirm action to delete a version
+   *
+   * @param version - the version to delete
+   */
+  const setDeleteModal = (version: ParsedNumber) => {
     const onSubmit = async () => {
       await deleteVersion.mutate(version.toString());
       refetch();
@@ -66,7 +71,7 @@ export const Page: React.FC = () => {
         </>
       ),
     });
-  }
+  };
 
   useEffect(() => {
     if (deleteVersion.isError) {

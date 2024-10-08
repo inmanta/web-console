@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import { DropdownItem } from "@patternfly/react-core";
 import { ParsedNumber } from "@/Core";
-import { usePromoteVersion } from "@/Data/Managers/V2/PromoteVersion";
+import { usePromoteDesiredStateVersion } from "@/Data/Managers/V2/PromoteDesiredStateVersion";
 import { ActionDisabledTooltip } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
@@ -12,11 +12,19 @@ interface Props {
   isDisabled: boolean;
 }
 
+/**
+ * PromoteAction component which holds the logic for promoting a desired state version.
+ *
+ * @props {Props} props - The props of the component.
+ * @param version {ParsedNumber} - the version to promote
+ * @param isDisabled {boolean} - if the action is disabled
+ * @returns {React.FunctionComponent}
+ */
 export const PromoteAction: React.FC<Props> = ({ version, isDisabled }) => {
   const { environmentModifier, environmentHandler } =
     useContext(DependencyContext);
   const { setErrorMessage } = useContext(GetDesiredStatesContext);
-  const { mutate, isError, error } = usePromoteVersion(
+  const { mutate, isError, error } = usePromoteDesiredStateVersion(
     environmentHandler.useId(),
   );
   const onSubmit = () => {

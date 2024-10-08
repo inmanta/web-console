@@ -98,7 +98,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
         <FormHelperText>
           <HelperText>
             <HelperTextItem
-              variant={isError ? "error" : "default"}
+              variant="error"
               icon={<ExclamationCircleIcon />}
               aria-label="error-message"
             >

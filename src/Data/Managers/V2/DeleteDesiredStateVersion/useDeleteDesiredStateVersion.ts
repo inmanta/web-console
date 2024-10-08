@@ -12,7 +12,7 @@ import { useFetchHelpers } from "../helpers";
  * @param {string} env - The environment in which we are trying to remove the version.
  * @returns {Mutation} - The mutation object provided by `useMutation` hook.
  */
-export const useDeleteVersion = (
+export const useDeleteDesiredStateVersion = (
   env: string,
 ): UseMutationResult<void, Error, string, unknown> => {
   const client = useQueryClient();
@@ -29,6 +29,7 @@ export const useDeleteVersion = (
    *
    * @param {string} version - The version of the desired state to be removed.
    * @returns {Promise<void>} - A promise that resolves when the version is successfully removed.
+   * @throws {Error} If the response is not successful, an error with the error message is thrown.
    */
   const deleteOrder = async (version: string): Promise<void> => {
     const response = await fetch(baseUrl + `/api/v1/version/${version}`, {
@@ -41,9 +42,9 @@ export const useDeleteVersion = (
 
   return useMutation({
     mutationFn: deleteOrder,
-    mutationKey: ["removeVersion"],
+    mutationKey: ["delete_desired_state_version"],
     onSuccess: () => {
-      // Refetch the desired state queries to update the list
+      //invalidate the desired state queries to update the list
       client.invalidateQueries({
         queryKey: ["get_desired_states-continuous"],
       });

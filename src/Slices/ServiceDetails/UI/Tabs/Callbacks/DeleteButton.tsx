@@ -7,12 +7,20 @@ import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
 import { Callback } from "@S/ServiceDetails/Core/Callback";
 
-interface DeleteProps {
+interface Props {
   callback: Callback;
   service_entity: string;
 }
 
-export const DeleteButton: React.FunctionComponent<DeleteProps> = ({
+/**
+ * DeleteButton component which holds the logic for deleting a desired state version.
+ *
+ * @props {Props} props - The props of the component.
+ * @param version {ParsedNumber} - the version to promote
+ * @param isDisabled {boolean} - if the action is disabled
+ * @returns {React.FunctionComponent}
+ */
+export const DeleteButton: React.FunctionComponent<Props> = ({
   service_entity,
   callback,
   ...props
@@ -27,7 +35,11 @@ export const DeleteButton: React.FunctionComponent<DeleteProps> = ({
 
   const [errorMessage, setErrorMessage] = useState("");
 
-  const onSubmit = async () => {
+  /**
+   * submit function that will close a modal and trigger the delete action
+   * @returns {Promise<void>}
+   */
+  const onSubmit = async (): Promise<void> => {
     closeModal();
     const result = await onDelete();
 

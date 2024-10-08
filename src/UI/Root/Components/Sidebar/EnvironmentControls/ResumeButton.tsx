@@ -6,6 +6,11 @@ import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { ModalContext } from "../../ModalProvider";
 
+/**
+ * `ResumeButton` is a React functional component that renders a button with a tooltip.
+ *
+ * @returns {JSX.Element} A button with a tooltip that triggers a modal when clicked.
+ */
 export const ResumeButton: React.FC = () => {
   const { queryResolver, commandResolver } = useContext(DependencyContext);
   const { triggerModal, closeModal } = useContext(ModalContext);
@@ -15,6 +20,14 @@ export const ResumeButton: React.FC = () => {
       kind: "ResumeEnvironment",
     });
 
+  /**
+   * Handles the toggling of the modal.
+   *
+   * This function triggers a modal with a title, details, and actions.
+   * The actions include a confirmation button and a cancel button.
+   * The confirmation button triggers the resume environment command, resumes all continuous managers, and dispatches a "resume-event".
+   * The cancel button closes the modal.
+   */
   const handleModalToggle = () => {
     triggerModal({
       content: words("environment.resume.details"),

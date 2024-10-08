@@ -7,7 +7,7 @@ import { words } from "@/UI";
 import { ConfirmUserActionForm } from "@/UI/Components";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 
-interface UserInfoRowProps {
+interface Props {
   user: UserInfo;
 }
 
@@ -15,7 +15,7 @@ interface UserInfoRowProps {
  * A functional component that renders a row in the user information table.
  * @param user The user information.
  */
-export const UserInfoRow: React.FC<UserInfoRowProps> = ({ user }) => {
+export const UserInfoRow: React.FC<Props> = ({ user }) => {
   const { triggerModal, closeModal } = useContext(ModalContext);
   const { mutate } = useRemoveUser();
 

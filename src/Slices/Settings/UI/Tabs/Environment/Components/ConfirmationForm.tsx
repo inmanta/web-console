@@ -16,10 +16,25 @@ import { DependencyContext, useNavigateTo } from "@/UI";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
 
+/**
+ * This interface defines two properties: `environment` and `type`.
+ *
+ * @interface
+ * @property {Pick<FlatEnvironment, "id" | "name">} environment - An object that represents the environment. It is a subset of the `FlatEnvironment` type, including only the `id` and `name` properties.
+ * @property {"delete" | "clear"} type - The type of operation. It can be either "delete" or "clear".
+ */
 interface Props {
   environment: Pick<FlatEnvironment, "id" | "name">;
   type: "delete" | "clear";
 }
+
+/**
+ * ConfirmationForm component.
+ * @param {Props} props - The component props.
+ * @param environment {FlatEnvironment} - The environment to delete or clear.
+ * @param type {"delete" | "clear"} - The type of action to perform.
+ * @returns {React.FunctionComponent}
+ */
 export const ConfirmationForm: React.FC<Props> = ({ environment, type }) => {
   const { commandResolver } = useContext(DependencyContext);
   const { closeModal } = useContext(ModalContext);
@@ -40,7 +55,18 @@ export const ConfirmationForm: React.FC<Props> = ({ environment, type }) => {
     id: environment.id,
   });
 
-  async function onConfirm(type: "delete" | "clear") {
+  /**
+   * Handles the confirmation of the form based on the provided type.
+   *
+   * This function sets the component to a busy state, resets the error message, and triggers either a delete or clear operation based on the provided type.
+   * If the operation is successful (i.e., the result is a `None` variant of a `Maybe`), it redirects to home (if the type is "delete") and closes the modal.
+   * If the operation fails (i.e., the result is a `Some` variant of a `Maybe`), it sets the component to a non-busy state and sets the error message.
+   *
+   * @param {"delete" | "clear"} type - The type of operation to perform.
+   * @returns {Promise<void>}
+   * @async
+   */
+  const onConfirm = async (type: "delete" | "clear"): Promise<void> => {
     setIsBusy(true);
     setErrorMessage(null);
     const error =
@@ -55,7 +81,7 @@ export const ConfirmationForm: React.FC<Props> = ({ environment, type }) => {
       setIsBusy(false);
       setErrorMessage(error.value);
     }
-  }
+  };
 
   return (
     <Form
@@ -70,7 +96,7 @@ export const ConfirmationForm: React.FC<Props> = ({ environment, type }) => {
           <Alert
             data-testid="ErrorAlert"
             variant="danger"
-            title="Something went wrong"
+            title={words("error")}
             isInline
           >
             {errorMessage}
@@ -121,5 +147,5 @@ export const ConfirmationForm: React.FC<Props> = ({ environment, type }) => {
 };
 
 const CustomLabel = styled.p`
-  font-weight: normal;
+  /* font-weight: normal; */
 `;

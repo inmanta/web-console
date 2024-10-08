@@ -13,7 +13,7 @@ import { useFetchHelpers } from "../helpers";
  * @param {string} env - The environment in which we are trying to promote the version.
  * @returns {Mutation} The mutation object for sending the request.
  */
-export const usePromoteVersion = (
+export const usePromoteDesiredStateVersion = (
   environment: string,
 ): UseMutationResult<void, Error, string, unknown> => {
   const client = useQueryClient();
@@ -30,7 +30,7 @@ export const usePromoteVersion = (
    * @param {string} version - the stringified version of desired state.
    * @throws {Error} If the response is not successful, an error with the error message is thrown.
    */
-  const promoteVersion = async (version: string): Promise<void> => {
+  const promoteDesiredStateVersion = async (version: string): Promise<void> => {
     const response = await fetch(
       baseUrl + `/api/v2/desiredstate/${version}/promote`,
       {
@@ -43,7 +43,7 @@ export const usePromoteVersion = (
   };
 
   return useMutation({
-    mutationFn: promoteVersion,
+    mutationFn: promoteDesiredStateVersion,
     mutationKey: ["promote_version"],
     onSuccess: () => {
       // Refetch the desired state queries to update the list

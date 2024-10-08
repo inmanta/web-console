@@ -451,7 +451,7 @@ test("ServiceInventory shows only button to display instance in the composer for
   expect(screen.queryByText("Edit in Composer")).not.toBeInTheDocument();
 });
 
-test.only("GIVEN ServiceInventory WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async () => {
+test("GIVEN ServiceInventory WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async () => {
   const { component, apiHelper } = setup({ ...Service.a, owner: "owner" });
 
   render(component);

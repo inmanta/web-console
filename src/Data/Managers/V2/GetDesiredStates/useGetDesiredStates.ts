@@ -9,12 +9,18 @@ import { PrimaryBaseUrlManager } from "@/UI";
 import { useFetchHelpers } from "../helpers";
 import { getUrl } from "./getUrl";
 
+/**
+ * interface of filter object for desired states
+ */
 export interface Filter {
   version?: IntRange.IntRange[];
   date?: DateRange.DateRange[];
   status?: DesiredStateVersionStatus[];
 }
 
+/**
+ * interface of Result of the useGetDesiredStates React Query
+ */
 interface Result {
   data: DesiredStateVersion[];
   links: Pagination.Links;
@@ -55,7 +61,16 @@ export const useGetDesiredStates = (environment: string): GetDesiredStates => {
   );
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
 
-  const fetchInstance = async (
+  /**
+   * Fetches the desired states from the API.
+   *
+   * @param {PageSize.PageSize} pageSize - The number of desired states to fetch per page.
+   * @param {Filter} filter - The filter to apply to the desired states.
+   * @param {CurrentPage} currentPage - The current page of desired states to fetch.
+   * @returns {Promise<Result>} - A promise that resolves with the fetched desired states.
+   * @throws {Error} If the response is not successful, an error with the error message is thrown.
+   */
+  const fetchDesiredStates = async (
     pageSize: PageSize.PageSize,
     filter: Filter,
     currentPage: CurrentPage,
@@ -86,7 +101,7 @@ export const useGetDesiredStates = (environment: string): GetDesiredStates => {
           filter,
           currentPage,
         ],
-        queryFn: () => fetchInstance(pageSize, filter, currentPage),
+        queryFn: () => fetchDesiredStates(pageSize, filter, currentPage),
         retry: false,
       }),
     useContinuous: (
@@ -101,7 +116,7 @@ export const useGetDesiredStates = (environment: string): GetDesiredStates => {
           filter,
           currentPage,
         ],
-        queryFn: () => fetchInstance(pageSize, filter, currentPage),
+        queryFn: () => fetchDesiredStates(pageSize, filter, currentPage),
         refetchInterval: 5000,
       }),
   };

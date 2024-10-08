@@ -5,6 +5,11 @@ import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { ModalContext } from "../../ModalProvider";
 
+/**
+ * `HaltButton` is a React functional component that renders a button with a tooltip.
+ *
+ * @returns {JSX.Element} A button with a tooltip that triggers a modal when clicked.
+ */
 export const HaltButton: React.FC = () => {
   const { queryResolver, commandResolver } = useContext(DependencyContext);
   const { triggerModal, closeModal } = useContext(ModalContext);
@@ -13,6 +18,14 @@ export const HaltButton: React.FC = () => {
       kind: "HaltEnvironment",
     });
 
+  /**
+   * Handles the toggling of the modal.
+   *
+   * This function triggers a modal with a title, details, and actions.
+   * The actions include a confirmation button and a cancel button.
+   * The confirmation button pauses all continuous managers, triggers the halt environment command, resumes all continuous managers, and dispatches a "halt-event".
+   * The cancel button closes the modal.
+   */
   const handleModalToggle = () => {
     triggerModal({
       content: words("environment.halt.details"),

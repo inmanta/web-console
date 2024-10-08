@@ -4,7 +4,7 @@ import { Query, RangeOperator } from "@/Core";
 
 /**
  * Constructs the URL for fetching desired states based on the provided query parameters.
- * @note This function is imported from V1 of Query Manager of the same url query manager, as filters are out of scope of the query manager upgrade/migration
+ * @note This function is imported from V1 of Query Manager of the same url query manager, as filters are out of scope of the query manager upgrade/migration - https://github.com/inmanta/web-console/issues/5973
  *
  * @param query - The query parameters for fetching desired states.
  * @param timezone - The timezone to use for date conversions (default: guessed timezone).
