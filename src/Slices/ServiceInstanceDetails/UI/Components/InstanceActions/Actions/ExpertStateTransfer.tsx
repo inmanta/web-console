@@ -14,7 +14,7 @@ import { ParsedNumber } from "@/Core";
 import { usePostExpertStateTransfer } from "@/Data/Managers/V2/POST/PostExpertStateTransfer";
 import { DependencyContext, words } from "@/UI";
 import { ConfirmationModal } from "../../ConfirmModal";
-import { ToastAlertMessage } from "../../ToastAllert";
+import { ToastAlertMessage } from "../../ToastAlert";
 
 interface Props {
   targets: string[];

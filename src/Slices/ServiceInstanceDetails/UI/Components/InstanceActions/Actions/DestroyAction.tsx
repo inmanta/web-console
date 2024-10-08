@@ -6,7 +6,7 @@ import { ParsedNumber } from "@/Core";
 import { useDestroyInstance } from "@/Data/Managers/V2/DELETE/DestroyInstance";
 import { DependencyContext, words } from "@/UI";
 import { ConfirmationModal } from "../../ConfirmModal";
-import { ToastAlertMessage } from "../../ToastAllert";
+import { ToastAlertMessage } from "../../ToastAlert";
 
 interface Props {
   instance_display_identity: string;

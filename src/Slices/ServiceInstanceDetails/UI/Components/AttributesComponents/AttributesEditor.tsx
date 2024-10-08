@@ -19,7 +19,7 @@ import { AttributeSets } from "@/Slices/ServiceInstanceDetails/Utils";
 import { DependencyContext, words } from "@/UI";
 import { JSONEditor } from "@/UI/Components/JSONEditor";
 import { ConfirmationModal } from "../ConfirmModal";
-import { ToastAlertMessage } from "../ToastAllert";
+import { ToastAlertMessage } from "../ToastAlert";
 
 interface Props {
   dropdownOptions: string[];

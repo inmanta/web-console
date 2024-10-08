@@ -5,7 +5,7 @@ import { ParsedNumber } from "@/Core";
 import { useDeleteInstance } from "@/Data/Managers/V2/DELETE/DeleteInstance";
 import { DependencyContext, words } from "@/UI";
 import { ConfirmationModal } from "../../ConfirmModal";
-import { ToastAlertMessage } from "../../ToastAllert";
+import { ToastAlertMessage } from "../../ToastAlert";
 
 interface Props {
   isDisabled: boolean;
