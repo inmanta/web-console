@@ -7,148 +7,249 @@ import {
   instanceDataWithDocumentation,
   JSONSchema,
   serviceModel,
+  serviceModelWithConfig,
   serviceModelWithDocumentation,
 } from "./mockData";
 
-export const loadingServer = setupServer(
-  // service model
-  http.get("/lsm/v1/service_catalog/mobileCore", async () => {
-    return HttpResponse.json({
-      data: serviceModel,
-    });
-  }),
+const getServiceModel = http.get("/lsm/v1/service_catalog/mobileCore", () => {
+  return HttpResponse.json({
+    data: serviceModel,
+  });
+});
 
-  // history logs
-  http.get("/lsm/v1/service_inventory/mobileCore/1d96a1ab/log", async () => {
+const getServiceModelError = http.get(
+  "/lsm/v1/service_catalog/mobileCore",
+  () => {
+    return HttpResponse.json({ message: "Not Found" }, { status: 404 });
+  },
+);
+
+const getServiceModelWithDocumentation = http.get(
+  "/lsm/v1/service_catalog/mobileCore",
+  async () => {
+    return HttpResponse.json({
+      data: serviceModelWithDocumentation,
+    });
+  },
+);
+
+const getServiceModelWithConfig = http.get(
+  "/lsm/v1/service_catalog/mobileCore",
+  async () => {
+    return HttpResponse.json({
+      data: serviceModelWithConfig,
+    });
+  },
+);
+
+const getHistoryLogs = http.get(
+  "/lsm/v1/service_inventory/mobileCore/1d96a1ab/log",
+  async () => {
+    return HttpResponse.json({
+      data: historyData,
+    });
+  },
+);
+
+const getHistoryLogsError = http.get(
+  "/lsm/v1/service_inventory/mobileCore/1d96a1ab/log",
+  () => {
+    return HttpResponse.json({ message: "Not Found" }, { status: 404 });
+  },
+);
+
+const getHistoryLogsDelayed = http.get(
+  "/lsm/v1/service_inventory/mobileCore/1d96a1ab/log",
+  async () => {
     await delay(500);
 
     return HttpResponse.json({
       data: historyData,
     });
-  }),
+  },
+);
 
-  // service instance data
-  http.get("/lsm/v1/service_inventory/mobileCore/1d96a1ab", async () => {
-    await delay(300);
+const getHistoryLogsWithDocumentation = http.get(
+  "/lsm/v1/service_inventory/mobileCore/1d96a1ab/log",
+  async () => {
+    return HttpResponse.json({
+      data: historyDataWithDocumentation,
+    });
+  },
+);
 
+const getInstanceData = http.get(
+  "/lsm/v1/service_inventory/mobileCore/1d96a1ab",
+  () => {
     return HttpResponse.json({
       data: instanceData,
     });
-  }),
+  },
 );
 
-export const errorServerInstance = setupServer(
-  // service model
-  http.get("/lsm/v1/service_catalog/mobileCore", () => {
+const getInstanceError = http.get(
+  "/lsm/v1/service_inventory/mobileCore/1d96a1ab",
+  () => {
     return HttpResponse.json({ message: "Not Found" }, { status: 404 });
-  }),
-
-  // history logs
-  http.get("/lsm/v1/service_inventory/mobileCore/1d96a1ab/log", () => {
-    return HttpResponse.json({ message: "Not Found" }, { status: 404 });
-  }),
-
-  // service instance data
-  http.get("/lsm/v1/service_inventory/mobileCore/1d96a1ab", () => {
-    return HttpResponse.json({ message: "Not Found" }, { status: 404 });
-  }),
+  },
 );
 
-export const errorServerHistory = setupServer(
-  // service model
-  http.get("/lsm/v1/service_catalog/mobileCore", async () => {
-    return HttpResponse.json({
-      data: serverWithConfig,
-    });
-  }),
-
-  // history logs
-  http.get("/lsm/v1/service_inventory/mobileCore/1d96a1ab/log", () => {
-    return HttpResponse.json({ message: "Not Found" }, { status: 404 });
-  }),
-
-  // service instance data
-  http.get("/lsm/v1/service_inventory/mobileCore/1d96a1ab", async () => {
+const getInstanceDataDelayed = http.get(
+  "/lsm/v1/service_inventory/mobileCore/1d96a1ab",
+  async () => {
     delay(300);
 
     return HttpResponse.json({
       data: instanceData,
     });
-  }),
+  },
 );
 
-export const defaultServer = setupServer(
-  // service model
-  http.get("/lsm/v1/service_catalog/mobileCore", () => {
-    return HttpResponse.json({
-      data: serviceModel,
-    });
-  }),
-
-  // history logs
-  http.get("/lsm/v1/service_inventory/mobileCore/1d96a1ab/log", () => {
-    return HttpResponse.json({
-      data: historyData,
-    });
-  }),
-
-  // service instance data
-  http.get("/lsm/v1/service_inventory/mobileCore/1d96a1ab", () => {
-    return HttpResponse.json({
-      data: instanceData,
-    });
-  }),
-
-  // get json schema for editor
-  http.get("/lsm/v1/service_catalog/mobileCore/schema", () => {
-    return HttpResponse.json({
-      data: JSONSchema,
-    });
-  }),
-);
-
-export const serverWithConfig = setupServer(
-  // service model
-  http.get("/lsm/v1/service_catalog/mobileCore", async () => {
-    return HttpResponse.json({
-      data: serviceModel,
-    });
-  }),
-
-  // history logs
-  http.get("/lsm/v1/service_inventory/mobileCore/1d96a1ab/log", async () => {
-    return HttpResponse.json({
-      data: historyData,
-    });
-  }),
-
-  // service instance data
-  http.get("/lsm/v1/service_inventory/mobileCore/1d96a1ab", async () => {
-    return HttpResponse.json({
-      data: instanceData,
-    });
-  }),
-);
-
-export const serverWithDocumentation = setupServer(
-  // service model
-  http.get("/lsm/v1/service_catalog/mobileCore", async () => {
-    return HttpResponse.json({
-      data: serviceModelWithDocumentation,
-    });
-  }),
-
-  // history logs
-  http.get("/lsm/v1/service_inventory/mobileCore/1d96a1ab/log", async () => {
-    return HttpResponse.json({
-      data: historyDataWithDocumentation,
-    });
-  }),
-
-  // service instance data
-  http.get("/lsm/v1/service_inventory/mobileCore/1d96a1ab", async () => {
+const getInstanceDataWithDocumentation = http.get(
+  "/lsm/v1/service_inventory/mobileCore/1d96a1ab",
+  async () => {
     return HttpResponse.json({
       data: instanceDataWithDocumentation,
     });
-  }),
+  },
+);
+
+const getJSONSchema = http.get(
+  "/lsm/v1/service_catalog/mobileCore/schema",
+  () => {
+    return HttpResponse.json({
+      data: JSONSchema,
+    });
+  },
+);
+
+const destroyInstance = http.delete(
+  "/lsm/v2/service_inventory/mobileCore/1d96a1ab/expert",
+  async () => {
+    return HttpResponse.json({ status: 200 });
+  },
+);
+
+const destroyInstanceFailed = http.delete(
+  "/lsm/v2/service_inventory/mobileCore/1d96a1ab/expert",
+  async () => {
+    return HttpResponse.error();
+  },
+);
+
+const deleteInstance = http.delete(
+  "lsm/v1/service_inventory/mobileCore/1d96a1ab",
+  async () => {
+    return HttpResponse.json({ status: 200 });
+  },
+);
+
+const deleteInstanceFailed = http.delete(
+  "lsm/v1/service_inventory/mobileCore/1d96a1ab",
+  async () => {
+    return HttpResponse.error();
+  },
+);
+
+const postForceStateUpdate = http.post(
+  "/lsm/v1/service_inventory/mobileCore/1d96a1ab/expert/state",
+  async () => {
+    return HttpResponse.json({ status: 200 });
+  },
+);
+
+const postForceStateUpdateFailed = http.post(
+  "/lsm/v1/service_inventory/mobileCore/1d96a1ab/expert/state",
+  async () => {
+    return HttpResponse.error();
+  },
+);
+
+const postStateUpdate = http.post(
+  "/lsm/v1/service_inventory/mobileCore/1d96a1ab/state",
+  async () => {
+    return HttpResponse.json({ status: 200 });
+  },
+);
+
+const postStateUpdateFailed = http.post(
+  "/lsm/v1/service_inventory/mobileCore/1d96a1ab/state",
+  async () => {
+    return HttpResponse.error();
+  },
+);
+
+/**
+ * Setup a test server where the queries are delayed
+ */
+export const loadingServer = setupServer(
+  getServiceModel,
+  getHistoryLogsDelayed,
+  getInstanceData,
+);
+
+/**
+ * Setup a test server where all the initial GET queries return with an error
+ */
+export const errorServerInstance = setupServer(
+  getServiceModelError,
+  getHistoryLogsError,
+  getInstanceError,
+);
+
+/**
+ * Setup a test server where only the HistoryLogs GET query returns an error
+ */
+export const errorServerHistory = setupServer(
+  getServiceModelWithConfig,
+  getHistoryLogsError,
+  getInstanceDataDelayed,
+);
+
+/**
+ * Setup a default test server where all queries succeed
+ * This server doesn't have documentation for any attributes
+ */
+export const defaultServer = setupServer(
+  getServiceModel,
+  getHistoryLogs,
+  getInstanceData,
+  getJSONSchema,
+  deleteInstance,
+  destroyInstance,
+  postStateUpdate,
+  postForceStateUpdate,
+);
+
+/**
+ * Setup a test server where only the actions fail
+ * This server doesn't have documentation for any attributes
+ */
+export const serverFailedActions = setupServer(
+  getServiceModel,
+  getHistoryLogs,
+  getInstanceData,
+  getJSONSchema,
+  deleteInstanceFailed,
+  destroyInstanceFailed,
+  postStateUpdateFailed,
+  postForceStateUpdateFailed,
+);
+
+/**
+ * Setup a test server with a config for the instance
+ */
+export const serverWithConfig = setupServer(
+  getServiceModel,
+  getHistoryLogs,
+  getInstanceData,
+);
+
+/**
+ * Setup a test server with documentation for a certain attribute
+ */
+export const serverWithDocumentation = setupServer(
+  getServiceModelWithDocumentation,
+  getHistoryLogsWithDocumentation,
+  getInstanceDataWithDocumentation,
 );

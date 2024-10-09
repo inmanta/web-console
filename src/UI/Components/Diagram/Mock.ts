@@ -1,5 +1,5 @@
 import { ServiceInstanceModel, ServiceModel } from "@/Core";
-import { InstanceWithRelations } from "@/Data/Managers/V2/GetInstanceWithRelations";
+import { InstanceWithRelations } from "@/Data/Managers/V2/GETTERS/GetInstanceWithRelations";
 import { ComposerServiceOrderItem } from "@/UI/Components/Diagram/interfaces";
 
 export const testInstance: ServiceInstanceModel = {

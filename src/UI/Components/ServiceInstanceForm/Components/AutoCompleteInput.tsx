@@ -74,7 +74,7 @@ export const AutoCompleteInput: React.FC<Props> = ({
       {...props}
       isRequired={!isOptional}
       fieldId={attributeName}
-      label={`An instance of ${serviceEntity}`}
+      label={attributeName}
       aria-label={`${attributeName}-select-input`}
     >
       {multi ? (
@@ -84,7 +84,9 @@ export const AutoCompleteInput: React.FC<Props> = ({
           isDisabled={shouldBeDisabled}
           setSelected={handleInputChange}
           selected={selected as string[]}
-          placeholderText={words("common.serviceInstance.relation")}
+          placeholderText={words("common.serviceInstance.relations")(
+            serviceEntity,
+          )}
           onSearchTextChanged={onSearchTextChanged}
           hasChips
         />
@@ -95,7 +97,9 @@ export const AutoCompleteInput: React.FC<Props> = ({
           isDisabled={shouldBeDisabled}
           setSelected={handleInputChange}
           selected={selected as string | null}
-          placeholderText={words("common.serviceInstance.relation")}
+          placeholderText={words("common.serviceInstance.relation")(
+            serviceEntity,
+          )}
           onSearchTextChanged={onSearchTextChanged}
         />
       )}

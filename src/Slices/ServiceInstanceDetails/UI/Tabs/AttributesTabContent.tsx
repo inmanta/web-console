@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import { ToggleGroup, ToggleGroupItem } from "@patternfly/react-core";
 import styled from "styled-components";
-import {
-  AttributesViewProvider,
-  AttributeViewToggles,
-} from "../Components/AttributesComponents";
+import { AttributeViewToggles } from "../../Utils";
+import { AttributesViewProvider } from "../Components/AttributesComponents";
 import { TabContentWrapper } from "./TabContentWrapper";
 
 /**
