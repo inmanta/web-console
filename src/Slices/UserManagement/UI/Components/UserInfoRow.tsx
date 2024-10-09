@@ -28,7 +28,6 @@ export const UserInfoRow: React.FC<Props> = ({ user }) => {
       content: (
         <>
           <p>{words("userManagement.deleteUserMessage")(user.username)}</p>
-
           <ConfirmUserActionForm
             onSubmit={() => {
               mutate(user.username);
