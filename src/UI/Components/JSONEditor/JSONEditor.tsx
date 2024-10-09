@@ -3,7 +3,8 @@ import { Editor, OnValidate, useMonaco } from "@monaco-editor/react";
 import { Alert, Panel, Spinner } from "@patternfly/react-core";
 import { InfoAltIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
-import { useGetJSONSchema } from "@/Data/Managers/V2/GetJSONSchema";
+
+import { useGetJSONSchema } from "@/Data/Managers/V2/GETTERS/GetJSONSchema";
 import { DependencyContext } from "@/UI";
 
 interface Props {
@@ -74,6 +75,13 @@ export const JSONEditor: React.FC<Props> = ({
     onChange(editorState, isValid);
   }, [editorState, errors, onChange]);
 
+  useEffect(() => {
+    if (data !== editorState) {
+      setEditorState(data);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
+
   // see https://microsoft.github.io/monaco-editor/typedoc/interfaces/languages.json.ModeConfiguration.html
   // and see https://microsoft.github.io/monaco-editor/typedoc/interfaces/languages.json.DiagnosticsOptions.html
   useEffect(() => {
@@ -94,6 +102,7 @@ export const JSONEditor: React.FC<Props> = ({
           {
             schema: schema.data,
             fileMatch: ["*"],
+            uri: "",
           },
         ],
       });
@@ -109,10 +118,11 @@ export const JSONEditor: React.FC<Props> = ({
   ) : (
     <EditorWrapper data-testid="JSON-Editor-Wrapper">
       <Editor
-        height={"calc(100vh - 525px)"}
+        height={"calc(100vh - 550px)"}
         width={"100%"}
         defaultLanguage="json"
         defaultValue={data}
+        value={editorState}
         onChange={handleEditorChange}
         onValidate={handleOnValidate}
         options={{ domReadOnly: readOnly, readOnly: readOnly }}

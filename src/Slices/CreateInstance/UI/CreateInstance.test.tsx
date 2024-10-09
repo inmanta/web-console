@@ -159,7 +159,7 @@ test("Given the CreateInstance View When creating an instance with Inter-service
   });
 
   const relationInputField = screen.getByPlaceholderText(
-    words("common.serviceInstance.relation"),
+    words("common.serviceInstance.relations")("test_entity"),
   );
 
   await act(async () => {
@@ -224,7 +224,7 @@ test("Given the CreateInstance View When creating an instance with Inter-service
   });
 
   const relationInputField = screen.getByPlaceholderText(
-    words("common.serviceInstance.relation"),
+    words("common.serviceInstance.relations")("test_entity"),
   );
 
   await act(async () => {
@@ -281,7 +281,7 @@ test("Given the CreateInstance View When creating an instance with Inter-service
   });
 
   const relationInputField = screen.getByPlaceholderText(
-    words("common.serviceInstance.relation"),
+    words("common.serviceInstance.relations")("test_entity"),
   );
 
   await act(async () => {

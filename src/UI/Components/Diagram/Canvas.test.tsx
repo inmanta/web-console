@@ -10,7 +10,7 @@ import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { RemoteData, ServiceModel } from "@/Core";
 import { getStoreInstance } from "@/Data";
-import { InstanceWithRelations } from "@/Data/Managers/V2/GetInstanceWithRelations";
+import { InstanceWithRelations } from "@/Data/Managers/V2/GETTERS/GetInstanceWithRelations";
 import { Inventories } from "@/Data/Managers/V2/GetRelatedInventories";
 import { dependencies } from "@/Test";
 import * as customQueries from "@/Test/Utils/custom-queries";

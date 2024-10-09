@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
-import { useGetInstance } from "@/Data/Managers/V2/GetInstance";
-import { useGetInstanceLogs } from "@/Data/Managers/V2/GetInstanceLogs";
-import { useGetServiceModel } from "@/Data/Managers/V2/GetServiceModel";
+import { useGetInstance } from "@/Data/Managers/V2/GETTERS/GetInstance";
+import { useGetInstanceLogs } from "@/Data/Managers/V2/GETTERS/GetInstanceLogs";
+import { useGetServiceModel } from "@/Data/Managers/V2/GETTERS/GetServiceModel";
 import { DependencyContext, useRouteParams, words } from "@/UI";
 import { ErrorView, LoadingView, PageContainer } from "@/UI/Components";
 import { InstanceDetailsContext } from "../Core/Context";
