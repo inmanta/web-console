@@ -21,6 +21,7 @@ const customAnchor = function (
 
   if (ref instanceof Element) {
     const refView = this.paper.findView(ref);
+
     refPoint = refView ? refView.getNodeBBox(ref).center() : new g.Point();
   }
 

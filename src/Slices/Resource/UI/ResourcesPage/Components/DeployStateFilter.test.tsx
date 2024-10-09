@@ -6,6 +6,7 @@ import { DeployStateFilter } from "./DeployStateFilter";
 
 const TestWrapper = () => {
   const [filter, setFilter] = useState<Resource.FilterWithDefaultHandling>({});
+
   return (
     <Toolbar clearAllFilters={() => setFilter({})}>
       <ToolbarContent>
@@ -22,6 +23,7 @@ test("Given the deploy state filter When changing the include/exclude options Th
   const menuToggle = await screen.findByRole("button", {
     name: "Deploy State-toggle",
   });
+
   await act(async () => {
     fireEvent.click(menuToggle);
   });

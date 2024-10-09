@@ -4,11 +4,20 @@ import {
   ServiceInstanceModelWithTargetStates,
   ServiceModel,
 } from "@/Core";
+
 import { Service, ServiceInstance } from "@/Test";
 import {
   a as InstanceAttributesA,
   b as InstanceAttributesB,
 } from "@/Test/Data/ServiceInstance/Attributes";
+import {
+  ComposerServiceOrderItem,
+  ConnectionRules,
+  EmbeddedRule,
+  InterServiceRule,
+  LabelLinkView,
+  TypeEnum,
+} from "@/UI/Components/Diagram/interfaces";
 import {
   childModel,
   containerModel,
@@ -25,19 +34,11 @@ import {
   extractRelationsIds,
   checkWhetherConnectionRulesAreExhausted,
   findCorrespondingId,
-  bundleInstances,
+  getServiceOrderItems,
   checkIfConnectionIsAllowed,
   updateLabelPosition,
   toggleLooseElement,
 } from "./helpers";
-import {
-  ConnectionRules,
-  EmbeddedRule,
-  InstanceForApi,
-  InterServiceRule,
-  LabelLinkView,
-  TypeEnum,
-} from "./interfaces";
 import { Link, ServiceEntityBlock } from "./shapes";
 
 jest.mock("uuid", () => ({
@@ -70,6 +71,7 @@ describe("extractRelationsIds", () => {
       expectedLength: number;
     }) => {
       const ids = extractRelationsIds(serviceModel, serviceInstance);
+
       expect(ids).toHaveLength(expectedLength);
     },
   );
@@ -262,6 +264,7 @@ describe("createConnectionRules", () => {
       expectedRules: ConnectionRules;
     }) => {
       const rules = createConnectionRules(services, {});
+
       expect(rules).toStrictEqual(expectedRules);
     },
   );
@@ -269,20 +272,20 @@ describe("createConnectionRules", () => {
 
 describe("shapesDataTransform", () => {
   it("correctly creates object if it is created with embedded objects", () => {
-    const createdObject: InstanceForApi = {
+    const createdObject: ComposerServiceOrderItem = {
       ...testApiInstance,
       action: "create",
     };
-    const createdEmbedded: InstanceForApi[] = testEmbeddedApiInstances.map(
-      (instance) => {
+    const createdEmbedded: ComposerServiceOrderItem[] =
+      testEmbeddedApiInstances.map((instance) => {
         return { ...instance, action: "create" };
-      },
-    );
+      });
     const result = shapesDataTransform(
-      createdEmbedded,
       createdObject,
+      createdEmbedded,
       testApiInstanceModel,
     );
+
     expect(result).toMatchObject({
       instance_id: "ae6c9dd7-5392-4374-9f13-df3bb42bf0db",
       service_entity: "embedded-entity-service",
@@ -310,8 +313,8 @@ describe("shapesDataTransform", () => {
 
   it("correctly creates object if only embedded values are edited", () => {
     //simulate that One isn't changed, second is edited
-    const createdObject: InstanceForApi = { ...testApiInstance };
-    const createdEmbedded: InstanceForApi[] = [
+    const createdObject: ComposerServiceOrderItem = { ...testApiInstance };
+    const createdEmbedded: ComposerServiceOrderItem[] = [
       { ...testEmbeddedApiInstances[0], action: null },
       { ...testEmbeddedApiInstances[1], action: "update" },
     ];
@@ -346,41 +349,44 @@ describe("shapesDataTransform", () => {
       ],
     };
     const result = shapesDataTransform(
-      createdEmbedded,
       createdObject,
+      createdEmbedded,
       testApiInstanceModel,
     );
+
     expect(result).toMatchObject(expectedResult);
 
     //simulate that One isn't changed, second is added
-    const createdEmbedded2: InstanceForApi[] = [
+    const createdEmbedded2: ComposerServiceOrderItem[] = [
       { ...testEmbeddedApiInstances[0], action: null },
       { ...testEmbeddedApiInstances[1], action: "create" },
     ];
 
     const result2 = shapesDataTransform(
-      createdEmbedded2,
       createdObject,
+      createdEmbedded2,
       testApiInstanceModel,
     );
+
     expect(result2).toMatchObject(expectedResult);
 
     //simulate that One is changed, second is added
-    const createdEmbedded3: InstanceForApi[] = [
+    const createdEmbedded3: ComposerServiceOrderItem[] = [
       { ...testEmbeddedApiInstances[0], action: "update" },
       { ...testEmbeddedApiInstances[1], action: "create" },
     ];
     const result3 = shapesDataTransform(
-      createdEmbedded3,
       createdObject,
+      createdEmbedded3,
       testApiInstanceModel,
     );
+
     expect(result3).toMatchObject(expectedResult);
   });
 
   it("correctly creates object if its embedded values are deleted", () => {
-    const createdObject: InstanceForApi = { ...testApiInstance };
-    const createdEmbedded: InstanceForApi[] = [
+    const createdObject: ComposerServiceOrderItem = { ...testApiInstance };
+    const createdEmbedded: ComposerServiceOrderItem[] = [
       { ...testEmbeddedApiInstances[0], action: null },
       { ...testEmbeddedApiInstances[1], action: "delete" },
     ];
@@ -409,19 +415,22 @@ describe("shapesDataTransform", () => {
       ],
     };
     const result = shapesDataTransform(
-      createdEmbedded,
       createdObject,
+      createdEmbedded,
       testApiInstanceModel,
     );
+
     expect(result).toMatchObject(expectedResult);
   });
 
   it("correctly creates object if it is core values are edited", () => {
-    const createdObject: InstanceForApi = {
+    const createdObject: ComposerServiceOrderItem = {
       ...testApiInstance,
       action: "update",
     };
-    const createdEmbedded: InstanceForApi[] = [...testEmbeddedApiInstances];
+    const createdEmbedded: ComposerServiceOrderItem[] = [
+      ...testEmbeddedApiInstances,
+    ];
     const expectedResult = {
       instance_id: "ae6c9dd7-5392-4374-9f13-df3bb42bf0db",
       service_entity: "embedded-entity-service",
@@ -453,33 +462,36 @@ describe("shapesDataTransform", () => {
       ],
     };
     const result = shapesDataTransform(
-      createdEmbedded,
       createdObject,
+      createdEmbedded,
       testApiInstanceModel,
     );
+
     expect(result).toMatchObject(expectedResult);
 
-    const createdEmbedded2: InstanceForApi[] = testEmbeddedApiInstances.map(
-      (instance) => {
+    const createdEmbedded2: ComposerServiceOrderItem[] =
+      testEmbeddedApiInstances.map((instance) => {
         return { ...instance, action: "update" };
-      },
-    );
+      });
     const result2 = shapesDataTransform(
-      createdEmbedded2,
       createdObject,
+      createdEmbedded2,
+
       testApiInstanceModel,
     );
+
     expect(result2).toMatchObject(expectedResult);
 
-    const createdEmbedded3: InstanceForApi[] = [
+    const createdEmbedded3: ComposerServiceOrderItem[] = [
       { ...testEmbeddedApiInstances[0], action: null },
       { ...testEmbeddedApiInstances[1], action: "create" },
     ];
     const result3 = shapesDataTransform(
-      createdEmbedded3,
       createdObject,
+      createdEmbedded3,
       testApiInstanceModel,
     );
+
     expect(result3).toMatchObject(expectedResult);
   });
 
@@ -497,10 +509,11 @@ describe("shapesDataTransform", () => {
       },
     };
     const result = shapesDataTransform(
-      relatedServices,
       relatedServices[0],
+      relatedServices,
       childModel,
     );
+
     expect(result).toMatchObject(expectedResult);
   });
 
@@ -521,10 +534,11 @@ describe("shapesDataTransform", () => {
       },
     };
     const result = shapesDataTransform(
-      relatedServices,
       relatedServices[1],
+      relatedServices,
       containerModel,
     );
+
     expect(result).toMatchObject(expectedResult);
   });
 });
@@ -786,6 +800,7 @@ describe("checkWhetherConnectionRulesAreExhausted", () => {
       ...relationRule,
       upperLimit: undefined,
     };
+
     //editMode set to false
     expect(
       checkWhetherConnectionRulesAreExhausted(
@@ -853,6 +868,7 @@ describe("checkWhetherConnectionRulesAreExhausted", () => {
       ...relationRule,
       upperLimit: null,
     };
+
     //editMode set to false
     expect(
       checkWhetherConnectionRulesAreExhausted([], EmbeddedRuleNoLimit, false),
@@ -988,6 +1004,7 @@ describe("checkIfConnectionIsAllowed", () => {
       paper.findViewByModel(serviceB),
       rules,
     );
+
     expect(result).toBeTruthy();
   });
 
@@ -1006,6 +1023,7 @@ describe("checkIfConnectionIsAllowed", () => {
       paper.findViewByModel(serviceB),
       rules,
     );
+
     expect(result).toBeFalsy();
   });
 
@@ -1023,6 +1041,7 @@ describe("checkIfConnectionIsAllowed", () => {
       false,
       true,
     );
+
     serviceA.set("isBlockedFromEditing", true);
 
     const result = checkIfConnectionIsAllowed(
@@ -1031,6 +1050,7 @@ describe("checkIfConnectionIsAllowed", () => {
       paper.findViewByModel(serviceB),
       rules,
     );
+
     expect(result).toBeFalsy();
   });
 
@@ -1057,6 +1077,7 @@ describe("checkIfConnectionIsAllowed", () => {
     );
 
     const link = new Link();
+
     link.source(serviceA2);
     link.target(serviceB);
     link.addTo(graph);
@@ -1068,6 +1089,7 @@ describe("checkIfConnectionIsAllowed", () => {
       paper.findViewByModel(serviceB),
       rules,
     );
+
     expect(result).toBeFalsy();
   });
 });
@@ -1083,12 +1105,14 @@ describe("findCorrespondingId", () => {
 
   it("return undefined on Map withouth corresponding instance id", () => {
     const map = new Map();
+
     map.set("123", "different-instance");
     expect(findCorrespondingId(map, mockedInstance)).toBeUndefined();
   });
 
   it("return object on Map with corresponding instance id", () => {
     const map = new Map();
+
     map.set("1245", "matching-instance");
 
     expect(findCorrespondingId(map, mockedInstance)).toEqual({
@@ -1098,7 +1122,7 @@ describe("findCorrespondingId", () => {
   });
 });
 
-describe("bundleInstances", () => {
+describe("getServiceOrderItems", () => {
   it("bundles basic instances correctly", () => {
     const createdInstance = {
       instance_id: "123",
@@ -1157,10 +1181,11 @@ describe("bundleInstances", () => {
       relatedTo: undefined,
     };
     const map = new Map();
+
     map.set("123", createdInstance);
     map.set("1234", updatedInstance);
     map.set("12345", deletedInstance);
-    const bundledInstances = bundleInstances(
+    const serviceOrderItems = getServiceOrderItems(
       map,
       services as unknown as ServiceModel[],
     );
@@ -1168,10 +1193,11 @@ describe("bundleInstances", () => {
     const createdCopy = JSON.parse(JSON.stringify(createdInstance));
     const updatedCopy = JSON.parse(JSON.stringify(updatedInstance));
     const deletedCopy = JSON.parse(JSON.stringify(deletedInstance));
+
     delete createdCopy.relatedTo;
     delete updatedCopy.relatedTo;
     delete deletedCopy.relatedTo;
-    expect(bundledInstances).toEqual([createdCopy, updatedCopy, deletedCopy]);
+    expect(serviceOrderItems).toEqual([createdCopy, updatedCopy, deletedCopy]);
   });
 
   it("bundles related instances correctly", () => {
@@ -1203,6 +1229,7 @@ describe("bundleInstances", () => {
     };
 
     const relatedMapChild = new Map();
+
     relatedMapChild.set("1", "parent_entity");
     const childInstance = {
       instance_id: "11",
@@ -1219,6 +1246,7 @@ describe("bundleInstances", () => {
     };
 
     const relatedMapChildManyParents = new Map();
+
     relatedMapChildManyParents.set("1", "parent_entity");
     relatedMapChildManyParents.set("2", "parent_entity");
     const childWithManyParentsInstance = {
@@ -1235,11 +1263,12 @@ describe("bundleInstances", () => {
       relatedTo: relatedMapChildManyParents,
     };
     const map = new Map();
+
     map.set("1", parentServiceOne);
     map.set("2", parentServiceTwo);
     map.set("11", childInstance);
     map.set("12", childWithManyParentsInstance);
-    const bundledInstances = bundleInstances(
+    const serviceOrderItems = getServiceOrderItems(
       map,
       services as unknown as ServiceModel[],
     );
@@ -1250,13 +1279,14 @@ describe("bundleInstances", () => {
     const ChildManyCopy = JSON.parse(
       JSON.stringify(childWithManyParentsInstance),
     );
+
     delete parentOneCopy.relatedTo;
     delete parentTwoCopy.relatedTo;
     childCopy.attributes.parent_entity = "1";
     delete childCopy.relatedTo;
     ChildManyCopy.attributes.parent_entity = ["1", "2"];
     delete ChildManyCopy.relatedTo;
-    expect(bundledInstances).toEqual([
+    expect(serviceOrderItems).toEqual([
       parentOneCopy,
       parentTwoCopy,
       childCopy,
@@ -1333,17 +1363,19 @@ describe("bundleInstances", () => {
       relatedTo: null,
     };
     const map = new Map();
+
     map.set("1", core);
     map.set("12", embeddedOne);
     map.set("123", embeddedTwo);
     map.set("1234", embeddedThree);
     map.set("12345", embeddedFour);
-    const bundledInstances = bundleInstances(
+    const serviceOrderItems = getServiceOrderItems(
       map,
       services as unknown as ServiceModel[],
     );
 
     const coreCopy = JSON.parse(JSON.stringify(core));
+
     delete coreCopy.relatedTo;
     coreCopy.attributes[embeddedOne.service_entity] = embeddedOne.attributes;
     coreCopy.attributes[embeddedTwo.service_entity] = embeddedTwo.attributes;
@@ -1351,7 +1383,7 @@ describe("bundleInstances", () => {
       embeddedThree.attributes,
       embeddedFour.attributes,
     ];
-    expect(bundledInstances).toEqual([coreCopy]);
+    expect(serviceOrderItems).toEqual([coreCopy]);
   });
 });
 describe("updateLabelPosition", () => {
@@ -1399,6 +1431,7 @@ describe("updateLabelPosition", () => {
       InstanceAttributesB,
       false,
     );
+
     graph.addCell(sourceService);
     graph.addCell(targetService);
 
@@ -1406,6 +1439,7 @@ describe("updateLabelPosition", () => {
     targetService.set("position", { x: targetX, y: targetY });
 
     const connection = new Link();
+
     connection.source(sourceService, {
       anchor: {
         name: "center",
@@ -1453,6 +1487,7 @@ describe("updateLabelPosition", () => {
         distance: 0,
       },
     });
+
     return linkView;
   };
 
@@ -1494,6 +1529,7 @@ describe("updateLabelPosition", () => {
         {},
         linkView,
       );
+
       expect(result2).toEqual(sourceResult);
 
       const result = updateLabelPosition(
@@ -1503,6 +1539,7 @@ describe("updateLabelPosition", () => {
         {},
         linkView,
       );
+
       expect(result).toEqual(targetResult);
     },
   );
@@ -1519,6 +1556,7 @@ describe("toggleLooseElement", () => {
 
     //add highlighter
     const entity = appendEntity(graph, Service.a, InstanceAttributesA, false);
+
     toggleLooseElement(paper.findViewByModel(entity), "add");
     expect((dispatchEventSpy.mock.calls[0][0] as CustomEvent).detail).toEqual(
       JSON.stringify({ kind: "add", id: entity.id }),

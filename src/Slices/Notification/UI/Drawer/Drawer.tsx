@@ -53,7 +53,9 @@ export const Drawer: React.FC<Props> = ({
         onClose();
       }
     };
+
     document.addEventListener("click", close);
+
     return () => {
       document.removeEventListener("click", close);
     };

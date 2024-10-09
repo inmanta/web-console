@@ -1,5 +1,6 @@
 import React, { act } from "react";
 import { MemoryRouter } from "react-router-dom";
+import { Page } from "@patternfly/react-core";
 import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
@@ -14,7 +15,7 @@ import { DeferredApiHelper, dependencies, StaticScheduler } from "@/Test";
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import * as DiscoveredResources from "../Data/Mock";
-import { Page } from "./Page";
+import { DiscoveredResourcesPage } from ".";
 
 expect.extend(toHaveNoViolations);
 
@@ -30,7 +31,9 @@ function setup() {
     <MemoryRouter>
       <DependencyProvider dependencies={{ ...dependencies, queryResolver }}>
         <StoreProvider store={store}>
-          <Page />
+          <Page>
+            <DiscoveredResourcesPage />
+          </Page>
         </StoreProvider>
       </DependencyProvider>
     </MemoryRouter>
@@ -46,6 +49,7 @@ function setup() {
 
 test("GIVEN Discovered Resources page THEN shows table", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
@@ -60,6 +64,7 @@ test("GIVEN Discovered Resources page THEN shows table", async () => {
   const rows = await screen.findAllByRole("row", {
     name: "DiscoveredResourceRow",
   });
+
   expect(rows).toHaveLength(17);
   expect(
     within(rows[0]).getByRole("cell", {
@@ -90,18 +95,21 @@ test("GIVEN Discovered Resources page THEN shows table", async () => {
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("GIVEN Discovered Resources page THEN sets sorting parameters correctly on click", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
   apiHelper.resolve(Either.right(DiscoveredResources.response));
 
   const resourceIdButton = await screen.findByRole("button", {
     name: words("discovered.column.resource_id"),
   });
+
   expect(resourceIdButton).toBeVisible();
 
   await act(async () => {
@@ -113,6 +121,63 @@ test("GIVEN Discovered Resources page THEN sets sorting parameters correctly on 
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
+});
+
+test("GIVEN Discovered Resources WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async () => {
+  const { component, apiHelper } = setup();
+
+  render(component);
+
+  //mock that response has more than one site
+  await act(async () => {
+    apiHelper.resolve(
+      Either.right({
+        ...DiscoveredResources.response,
+        metadata: {
+          total: 103,
+          before: 0,
+          after: 3,
+          page_size: 100,
+        },
+        links: {
+          ...DiscoveredResources.response.links,
+          next: "/fake-link?end=fake-first-param",
+        },
+      }),
+    );
+  });
+
+  expect(screen.getByLabelText("Go to next page")).toBeEnabled();
+
+  await act(async () => {
+    await userEvent.click(screen.getByLabelText("Go to next page"));
+  });
+
+  //expect the api url to contain start and end keywords that are used for pagination when we are moving to the next page
+  expect(apiHelper.pendingRequests[0].url).toMatch(/(&start=|&end=)/);
+  expect(apiHelper.pendingRequests[0].url).toMatch(
+    /(&sort=discovered_resource_id.asc)/,
+  );
+
+  await act(async () => {
+    apiHelper.resolve(Either.right(DiscoveredResources.response));
+  });
+
+  const resourceIdButton = await screen.findByRole("button", {
+    name: words("discovered.column.resource_id"),
+  });
+
+  await act(async () => {
+    await userEvent.click(resourceIdButton);
+  });
+
+  // expect the api url to not contain start and end keywords that are used for pagination to assert we are back on the first page.
+  // we are asserting on the second request as the first request is for the updated sorting event, and second is chained to back to the first page with still correct sorting
+  expect(apiHelper.pendingRequests[1].url).not.toMatch(/(&start=|&end=)/);
+  expect(apiHelper.pendingRequests[1].url).toMatch(
+    /(&sort=discovered_resource_id.desc)/,
+  );
 });

@@ -1,0 +1,4 @@
+change-type: patch
+description: Resolution for DOMpurify Security issue
+destination-branches:
+- master

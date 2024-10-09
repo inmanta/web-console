@@ -214,6 +214,68 @@ const dict = {
   "inventory.editAttribute.text": (oldValue: string, newValue: string) =>
     `Are you absolutely sure you want to change attribute from ${oldValue} to ${newValue}? This operation can corrupt the instance.`,
   "inventory.error.mermaid": "Error rendering Mermaid diagram",
+
+  /**
+   * Service Instance Details text
+   */
+  "instanceDetails.title.tag": (version) => `Version: ${version}`,
+  "instanceDetails.title.latest": "Latest Version",
+  "instanceDetails.button": "Instance Details",
+  "instanceDetails.page.errorFallback":
+    "Something went wrong retrieving the instance details",
+  "instanceDetails.page.errorFallback.title": "Error",
+  "instanceDetails.page.noData": "There is no data available to display.",
+  "instanceDetails.page.noData.errorTitle": "No Data",
+  "instanceDetails.history.title": "History",
+  "instanceDetails.history.table.version": "Version",
+  "instanceDetails.history.table.date": "Date",
+  "instanceDetails.history.table.status": "Status",
+  "instanceDetails.history.error": "Error loading Version History",
+  "instanceDetails.details.title": "Details",
+  "instanceDetails.details.created": "Created:",
+  "instanceDetails.details.updated": "Updated:",
+  "instanceDetails.tabs.documentation": "Documentation",
+  "instanceDetails.tabs.attributes": "Attributes",
+  "instanceDetails.tabs.events": "Events",
+  "instanceDetails.tabs.resources": "Resources",
+  "instanceDetails.tabs.documentation.noData":
+    "There is no documentation available for this version.",
+  "instanceDetails.tabs.disabled.resources-tooltip":
+    "This tab is only available for the latest version.",
+  "instanceDetails.documentation.noAttributeForVersion": (attributeName) =>
+    `This version doesn't contain documentation for ${attributeName} yet.`,
+  active_attributes: "Active",
+  candidate_attributes: "Candidate",
+  rollback_attributes: "Rollback",
+  "instanceDetails.expandAll": "Expand all",
+  "instanceDetails.collapseAll": "Collapse all",
+  "instanceDetails.resetSort": "Reset sorting",
+  "instanceDetails.table.attributeKey": "Attribute",
+  "instanceDetails.table.valueKey": "Value",
+  "instanceDetails.table.sorting.tooltip":
+    "The sorting can be resetted in the table options.",
+  "instanceDetails.setState.label": "Set state",
+  "instanceDetails.forceState.label": "Force state",
+  "instanceDetails.stateTransfer.confirmTitle": "Confirm set state transfer",
+  "instanceDetails.expertActions": "Expert Actions",
+  "instanceDetails.actions": "Actions",
+  "instanceDetails.expert.transfer.options": "Select Operation",
+  "instanceDetails.expert.editModal.title": "Confirm Attributes update",
+  "instanceDetails.expert.editModal.message": (selectedSet) => `
+  You are performing an update on the ${selectedSet} in expert mode, are you certain you want to proceed?
+  `,
+  "instanceDetails.expert.confirm.warning":
+    "DANGER: This is an irreversible action!",
+  "instanceDetails.expert.confirm.state.message": (instance, state) => `
+   Are you certain you want to FORCE update the state to : ${state} for ${instance}?
+  `,
+  "instanceDetails.API.message.update": (username) =>
+    username
+      ? `Triggered from the console by ${username}`
+      : "Triggered from the console",
+  "instanceDetails.state.noOperation": "no operation",
+  "instanceDetails.operation.selectLabel": "Select an operation",
+
   /**
    * Config related text
    */
@@ -730,7 +792,10 @@ const dict = {
    */
   "common.serviceInstance.select": (attribute: string) =>
     `Select value for ${attribute}`,
-  "common.serviceInstance.relation": `Select an instance`,
+  "common.serviceInstance.relation": (serviceEntity: string) =>
+    `Select an instance of ${serviceEntity}`,
+  "common.serviceInstance.relations": (serviceEntity: string) =>
+    `Select instances of ${serviceEntity}`,
   "common.environment.select": "Select an environment",
   "common.compileWidget.recompile": "Recompile",
   "common.compileWidget.toast": (update: boolean) =>

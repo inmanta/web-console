@@ -6,7 +6,6 @@
  * not be able to find them.
  */
 
-/* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable import/order */
 const { TextDecoder, TextEncoder, ReadableStream } = require("node:util");
 

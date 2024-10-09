@@ -45,6 +45,7 @@ function setup() {
 
 test("Agent Process Page shows failed view", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   expect(
@@ -59,12 +60,14 @@ test("Agent Process Page shows failed view", async () => {
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("Agent Process Page shows success view", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   expect(
@@ -79,6 +82,7 @@ test("Agent Process Page shows success view", async () => {
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });

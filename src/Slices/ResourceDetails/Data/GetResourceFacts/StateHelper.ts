@@ -7,6 +7,7 @@ export function GetResourceFactsStateHelper(store: Store) {
     store,
     (data, { resourceId }) => {
       const unwrapped = RemoteData.mapSuccess((wrapped) => wrapped.data, data);
+
       store.dispatch.resourceFacts.setList({
         resourceId,
         data: unwrapped,

@@ -1,33 +1,43 @@
 import { dia, g } from "@inmanta/rappid";
-import { InstanceAttributeModel, ParsedNumber } from "@/Core";
+import { ParsedNumber } from "@/Core";
+import {
+  ServiceOrderItemAction,
+  ServiceOrderItemConfig,
+} from "@/Slices/Orders/Core/Query";
 
 enum ActionEnum {
   UPDATE = "update",
   CREATE = "create",
   DELETE = "delete",
 }
+
 interface ColumnData {
   name: string;
   [key: string]: string;
 }
+
 interface RouterOptions {
   padding?: number;
   sourcePadding?: number;
   targetPadding?: number;
 }
+
 interface DictDialogData {
   title: string;
   value: unknown;
 }
+
 interface Rule {
   name: string;
   lowerLimit: ParsedNumber | null | undefined;
   upperLimit: ParsedNumber | null | undefined;
   modifier: string;
 }
+
 interface EmbeddedRule extends Rule {
   kind: TypeEnum.EMBEDDED;
 }
+
 interface InterServiceRule extends Rule {
   kind: TypeEnum.INTERSERVICE;
   attributeName: string;
@@ -41,16 +51,6 @@ interface ConnectionRules {
   [serviceName: string]: (InterServiceRule | EmbeddedRule)[];
 }
 
-interface InstanceForApi {
-  instance_id: string;
-  service_entity: string;
-  config: unknown;
-  action: null | "update" | "create" | "delete";
-  attributes?: InstanceAttributeModel | null;
-  edits?: InstanceAttributeModel[] | null;
-  embeddedTo?: string | null;
-  relatedTo?: Map<string, string> | null;
-}
 interface serializedCell {
   type: string;
   source?: {
@@ -117,6 +117,7 @@ interface serializedCell {
   holderName?: string;
   embeddedTo?: string;
 }
+
 type relationId = string | null | undefined;
 
 //dia.LinkView & dia.Link doesn't have properties below in the model yet they are available to access and required to update labels
@@ -126,6 +127,27 @@ interface LabelLinkView extends dia.LinkView {
   sourcePoint: g.Rect;
   targetPoint: g.Rect;
 }
+
+interface SavedCoordinates {
+  id: string | dia.Cell.ID;
+  name: string;
+  attributes: { [key: string]: unknown };
+  coordinates: { x: number; y: number };
+}
+
+//There is some nuances between composer and ServiceOrderItem which causing that we cannot just extend the above interface, I will attempt to make it as close as possible with incoming redesign
+interface ComposerServiceOrderItem {
+  config: ServiceOrderItemConfig | null;
+  attributes?: Record<string, unknown> | null;
+  edits?: [Record<string, unknown>] | null;
+  instance_id: string | dia.Cell.ID;
+  service_entity: string;
+  action: null | ServiceOrderItemAction;
+  embeddedTo?: string | null;
+  relatedTo?: Map<string, string> | null;
+  metadata?: Record<string, string> | null;
+}
+
 export {
   ActionEnum,
   ColumnData,
@@ -135,7 +157,8 @@ export {
   EmbeddedRule,
   ConnectionRules,
   serializedCell,
-  InstanceForApi,
   relationId,
   LabelLinkView,
+  SavedCoordinates,
+  ComposerServiceOrderItem,
 };

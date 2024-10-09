@@ -1,5 +1,6 @@
 import React, { act } from "react";
 import { MemoryRouter, useLocation } from "react-router-dom";
+import { Page } from "@patternfly/react-core";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
@@ -94,6 +95,7 @@ function setup(service = Service.a, pageSize = "") {
     useLocation,
     dependencies.routeManager,
   );
+
   store.dispatch.environment.setEnvironments(
     RemoteData.success([
       {
@@ -121,11 +123,13 @@ function setup(service = Service.a, pageSize = "") {
         }}
       >
         <StoreProvider store={store}>
-          <ServiceInventory
-            serviceName={service.name}
-            service={service}
-            intro={<Chart summary={service.instance_summary} />}
-          />
+          <Page>
+            <ServiceInventory
+              serviceName={service.name}
+              service={service}
+              intro={<Chart summary={service.instance_summary} />}
+            />
+          </Page>
         </StoreProvider>
       </DependencyProvider>
       {/* </AuthProvider> */}
@@ -176,12 +180,14 @@ test("ServiceInventory shows updated instances", async () => {
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("ServiceInventory shows error with retry", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   apiHelper.resolve(Either.left("fake error"));
@@ -206,6 +212,7 @@ test("ServiceInventory shows error with retry", async () => {
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
@@ -215,6 +222,7 @@ test("ServiceInventory shows next page of instances", async () => {
     Service.a,
     "&state.Inventory.pageSize=10",
   );
+
   render(component);
 
   apiHelper.resolve(
@@ -249,6 +257,7 @@ test("ServiceInventory shows next page of instances", async () => {
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
@@ -327,12 +336,14 @@ test("GIVEN ResourcesView fetches resources for new instance after instance upda
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("ServiceInventory shows instance summary chart", async () => {
   const { component } = setup(Service.withInstanceSummary);
+
   render(component);
 
   expect(
@@ -342,6 +353,7 @@ test("ServiceInventory shows instance summary chart", async () => {
 
 test("ServiceInventory shows disabled composer buttons for non-root instances ", async () => {
   const { component, apiHelper } = setup({ ...Service.a, owner: "owner" });
+
   render(component);
 
   await act(async () => {
@@ -359,6 +371,7 @@ test("ServiceInventory shows disabled composer buttons for non-root instances ",
   const menuToggle = await screen.findByRole("button", {
     name: "row actions toggle",
   });
+
   await act(async () => {
     await userEvent.click(menuToggle);
   });
@@ -366,11 +379,13 @@ test("ServiceInventory shows disabled composer buttons for non-root instances ",
   const button = screen.queryByRole("menuitem", {
     name: "Edit in Composer",
   });
+
   expect(button).not.toBeInTheDocument();
 });
 
 test("ServiceInventory shows enabled composer buttons for root instances ", async () => {
   const { component, apiHelper } = setup(Service.a);
+
   render(component);
 
   await act(async () => {
@@ -394,6 +409,7 @@ test("ServiceInventory shows enabled composer buttons for root instances ", asyn
   const menuToggle = await screen.findByRole("button", {
     name: "row actions toggle",
   });
+
   await act(async () => {
     await userEvent.click(menuToggle);
   });
@@ -405,6 +421,7 @@ test("ServiceInventory shows enabled composer buttons for root instances ", asyn
 
 test("ServiceInventory shows only button to display instance in the composer for non-root", async () => {
   const { component, apiHelper } = setup({ ...Service.a, owner: "owner" });
+
   render(component);
 
   await act(async () => {
@@ -422,6 +439,7 @@ test("ServiceInventory shows only button to display instance in the composer for
   const menuToggle = await screen.findByRole("button", {
     name: "row actions toggle",
   });
+
   await act(async () => {
     await userEvent.click(menuToggle);
   });
@@ -429,4 +447,62 @@ test("ServiceInventory shows only button to display instance in the composer for
   expect(await screen.findByText("Show in Composer")).toBeEnabled();
 
   expect(screen.queryByText("Edit in Composer")).not.toBeInTheDocument();
+});
+
+test("GIVEN ServiceInventory WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async () => {
+  const { component, apiHelper } = setup({ ...Service.a, owner: "owner" });
+
+  render(component);
+
+  //mock that response has more than one site
+  await act(async () => {
+    apiHelper.resolve(
+      Either.right({
+        data: [{ ...ServiceInstance.a, id: "a" }],
+        links: { ...Pagination.links },
+        metadata: {
+          total: 23,
+          before: 0,
+          after: 3,
+          page_size: 20,
+        },
+      }),
+    );
+  });
+
+  const nextPageButton = screen.getByLabelText("Go to next page");
+
+  expect(nextPageButton).toBeEnabled();
+
+  await act(async () => {
+    await userEvent.click(nextPageButton);
+  });
+  //expect the api url to contain start and end keywords that are used for pagination when we are moving to the next page
+  expect(apiHelper.pendingRequests[0].url).toMatch(/(&start=|&end=)/);
+  expect(apiHelper.pendingRequests[0].url).toMatch(/(&sort=created_at.desc)/);
+
+  await act(async () => {
+    apiHelper.resolve(
+      Either.right({
+        data: [{ ...ServiceInstance.a, id: "a" }],
+        links: { ...Pagination.links },
+        metadata: {
+          total: 23,
+          before: 20,
+          after: 0,
+          page_size: 20,
+        },
+      }),
+    );
+  });
+
+  //sort on the second page
+  await act(async () => {
+    await userEvent.click(screen.getByRole("button", { name: "State" }));
+  });
+
+  // expect the api url to not contain start and end keywords that are used for pagination to assert we are back on the first page.
+  // we are asserting on the second request as the first request is for the updated sorting event, and second is chained to back to the first page with still correct sorting
+  expect(apiHelper.pendingRequests[1].url).not.toMatch(/(&start=|&end=)/);
+  expect(apiHelper.pendingRequests[1].url).toMatch(/(&sort=state.asc)/);
 });

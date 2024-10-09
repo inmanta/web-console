@@ -7,6 +7,7 @@ export function StateHelper(store: Store) {
     store,
     (data, query, environment) => {
       const value = RemoteData.mapSuccess((data) => data, data);
+
       store.dispatch.compileReports.setList({
         environment,
         data: value,

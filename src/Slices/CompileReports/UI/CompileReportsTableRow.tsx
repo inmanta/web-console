@@ -15,6 +15,7 @@ interface Props {
 
 export const CompileReportsTableRow: React.FC<Props> = ({ row }) => {
   const { routeManager } = useContext(DependencyContext);
+
   return (
     <Tbody isExpanded={false}>
       <Tr aria-label="Compile Reports Table Row">

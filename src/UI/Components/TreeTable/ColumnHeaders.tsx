@@ -19,6 +19,7 @@ export const ColumnHeaders: React.FC<Props> = ({ columns, emptyColumns }) => {
   const [columnWidths, setColumnWidths] = useState<Record<string, number>>(
     columnExpansionHelper.getDefaultState(columns, emptyColumns),
   );
+
   return (
     <>
       {columns.map((column) => (

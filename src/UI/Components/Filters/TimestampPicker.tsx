@@ -26,6 +26,7 @@ export const TimestampPicker: React.FC<Props> = ({
   timePickerLabel,
 }) => {
   const [timeText, setTimeText] = useState("");
+
   useEffect(() => {
     if (timestamp === undefined) {
       setTimeText("");
@@ -61,6 +62,7 @@ export const TimestampPicker: React.FC<Props> = ({
     if (timestamp && isValidDate(timestamp) && time.split(":").length === 2) {
       const [hour, minute] = time.split(":");
       const updatedDate = new Date(timestamp);
+
       if (hour.length === 2) {
         updatedDate.setHours(hour);
       }
@@ -115,11 +117,13 @@ const validateDateFormat = (
   date: Date | string,
 ): boolean => {
   let formattedDate;
+
   if (typeof date === "string") {
     formattedDate = new Date(date);
   } else {
     formattedDate = date;
   }
+
   return (
     dateString === yyyyMMddFormat(formattedDate) ||
     dateString === formatDateWithSlashes(formattedDate)
@@ -132,6 +136,7 @@ const parseDate = (val: string): Date => {
   } else if (isValidDashedFormat(val)) {
     return new Date(`${val}T00:00:00`);
   }
+
   // The DatePicker component expects a function that returns a Date when the format is correct and undefined if it's not,
   // but the type declaration is not correct.
   return undefined as unknown as Date;

@@ -12,6 +12,7 @@ export const Page = () => {
   const { service: serviceName, instance } =
     useRouteParams<"InstanceComposerViewer">();
   const { featureManager } = useContext(DependencyContext);
+
   return featureManager.isComposerEnabled() ? (
     <ServicesProvider
       serviceName={serviceName}
@@ -45,7 +46,7 @@ const PageWrapper: React.FC<React.PropsWithChildren<unknown>> = ({
 }) => (
   <PageContainer
     {...props}
-    title={words("inventory.instanceComposer.title.view")}
+    pageTitle={words("inventory.instanceComposer.title.view")}
   >
     {children}
   </PageContainer>

@@ -3,13 +3,15 @@ import { Editor, OnValidate, useMonaco } from "@monaco-editor/react";
 import { Alert, Panel, Spinner } from "@patternfly/react-core";
 import { InfoAltIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
-import { useGetJSONSchema } from "@/Data/Managers/V2/GetJSONSchema";
+
+import { useGetJSONSchema } from "@/Data/Managers/V2/GETTERS/GetJSONSchema";
 import { DependencyContext } from "@/UI";
 
 interface Props {
   service_entity: string;
   data: string;
-  onChange: (value: string) => void;
+  onChange: (value: string, valid: boolean) => void;
+  readOnly?: boolean;
 }
 
 /**
@@ -19,6 +21,7 @@ interface Props {
  *  @prop {string} service_entity - The service entity.
  *  @prop {string} data - The data to be displayed in the editor.
  *  @prop {function} onChange - Callback method when the data is changed in the editor.
+ *  @prop {boolean} readOnly - Whether the editor should be readonly or not, defaults to false.
  *
  * @notes The JSON Editor component uses the Monaco Editor, React version.
  * for more information, see https://www.npmjs.com/package/@monaco-editor/react?activeTab=readme
@@ -30,6 +33,7 @@ export const JSONEditor: React.FC<Props> = ({
   service_entity,
   data,
   onChange,
+  readOnly = false,
 }) => {
   const { environmentHandler } = useContext(DependencyContext);
   const environment = environmentHandler.useId();
@@ -66,10 +70,17 @@ export const JSONEditor: React.FC<Props> = ({
   // Whenever the editorState has changed and no errors are found, call the onChange callback.
   // This prevents the string to be invalid based on the provided schema.
   useEffect(() => {
-    if (errors?.length === 0) {
-      onChange(editorState);
-    }
+    const isValid = errors.length < 1;
+
+    onChange(editorState, isValid);
   }, [editorState, errors, onChange]);
+
+  useEffect(() => {
+    if (data !== editorState) {
+      setEditorState(data);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
 
   // see https://microsoft.github.io/monaco-editor/typedoc/interfaces/languages.json.ModeConfiguration.html
   // and see https://microsoft.github.io/monaco-editor/typedoc/interfaces/languages.json.DiagnosticsOptions.html
@@ -91,6 +102,7 @@ export const JSONEditor: React.FC<Props> = ({
           {
             schema: schema.data,
             fileMatch: ["*"],
+            uri: "",
           },
         ],
       });
@@ -99,7 +111,6 @@ export const JSONEditor: React.FC<Props> = ({
     } else {
       setIsLoading(true);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [monaco, schema.data]);
 
   return isLoading ? (
@@ -107,28 +118,32 @@ export const JSONEditor: React.FC<Props> = ({
   ) : (
     <EditorWrapper data-testid="JSON-Editor-Wrapper">
       <Editor
-        height={"50vh"}
+        height={"calc(100vh - 550px)"}
         width={"100%"}
         defaultLanguage="json"
         defaultValue={data}
+        value={editorState}
         onChange={handleEditorChange}
         onValidate={handleOnValidate}
+        options={{ domReadOnly: readOnly, readOnly: readOnly }}
       />
-      <PanelWrapper variant="bordered" data-testid="Error-container">
-        {errors.length > 0 && (
-          <Alert
-            isInline
-            customIcon={<InfoAltIcon />}
-            isExpandable
-            variant="danger"
-            title={`Errors found : ${errors.length}`}
-          >
-            {errors.map((error, index) => (
-              <p key={index}>{error}</p>
-            ))}
-          </Alert>
-        )}
-      </PanelWrapper>
+      {!readOnly && (
+        <PanelWrapper variant="bordered" data-testid="Error-container">
+          {errors.length > 0 && (
+            <Alert
+              isInline
+              customIcon={<InfoAltIcon />}
+              isExpandable
+              variant="danger"
+              title={`Errors found : ${errors.length}`}
+            >
+              {errors.map((error, index) => (
+                <p key={index}>{error}</p>
+              ))}
+            </Alert>
+          )}
+        </PanelWrapper>
+      )}
     </EditorWrapper>
   );
 };

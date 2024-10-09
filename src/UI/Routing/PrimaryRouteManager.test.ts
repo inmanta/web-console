@@ -36,6 +36,7 @@ it.each`
   "GIVEN getLineageFromRoute WHEN passed $routeTxt THEN returns routes #$length $resultTxt",
   ({ route, length, result }) => {
     const routes = routeManager.getLineageFromRoute(route);
+
     expect(routes).toHaveLength(length);
     expect(routes).toEqual(result);
   },
@@ -69,6 +70,7 @@ test("Given getUrlForApiUri When uri is known Then returns url", () => {
 
 test("GIVEN '/lsm/catalog' THEN breadcrumbs should be ['Home','Catalog']", () => {
   const crumbs = routeManager.getCrumbs("/lsm/catalog");
+
   expect(crumbs).toHaveLength(2);
   expect(crumbs).toEqual([
     {
@@ -88,6 +90,7 @@ test("GIVEN '/lsm/catalog' THEN breadcrumbs should be ['Home','Catalog']", () =>
 
 test("GIVEN '/lsm/catalog/xyz/inventory' THEN breadcrumbs should be ['Home', 'Catalog', 'Inventory']", () => {
   const crumbs = routeManager.getCrumbs("/lsm/catalog/xyz/inventory");
+
   expect(crumbs).toHaveLength(3);
   expect(crumbs).toEqual([
     {
@@ -115,6 +118,7 @@ test("GIVEN '/lsm/catalog/xyz/inventory/123/history' THEN breadcrumbs should be 
   const crumbs = routeManager.getCrumbs(
     "/lsm/catalog/xyz/inventory/123/history",
   );
+
   expect(crumbs).toHaveLength(4);
   expect(crumbs).toEqual([
     {
@@ -146,6 +150,7 @@ test("GIVEN '/lsm/catalog/xyz/inventory/123/history' THEN breadcrumbs should be 
 
 test("GIVEN '/resources/123' THEN breadcrumbs should be ['Home', 'Resources', 'Resource Details']", () => {
   const crumbs = routeManager.getCrumbs("/resources/123");
+
   expect(crumbs).toHaveLength(3);
   expect(crumbs).toEqual([
     {

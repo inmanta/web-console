@@ -7,6 +7,7 @@ export function GetOrderDetailsStateHelper(store: Store) {
     store,
     (data, { id }) => {
       const value = RemoteData.mapSuccess((data) => data, data);
+
       store.dispatch.orderDetails.setData({ id, data: value });
     },
     (state, { id }) => state.orderDetails.byId[id],

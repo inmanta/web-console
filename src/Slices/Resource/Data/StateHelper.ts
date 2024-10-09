@@ -16,6 +16,7 @@ export function StateHelper(store: Store) {
         }),
         data,
       );
+
       store.dispatch.resources.setList({
         environment,
         data: unwrapped,

@@ -48,6 +48,7 @@ export class AttributeClassifier {
       } else if (this.isMultiLine(value)) {
         return this.multilineClassifier(key, value);
       }
+
       return Maybe.some({ kind: "SingleLine", key, value });
     } else if (this.isObject(value)) {
       return Maybe.some({
@@ -90,6 +91,7 @@ export class AttributeClassifier {
 
   private isXml(value: string): boolean {
     const trimmedValue = value.trimStart().trimEnd();
+
     return trimmedValue.startsWith("<") && trimmedValue.endsWith(">");
   }
 }

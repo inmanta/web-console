@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button } from "@patternfly/react-core";
 import { Td, Tr } from "@patternfly/react-table";
-import { UserInfo } from "@/Data/Managers/V2/GetUsers";
+import { UserInfo } from "@/Data/Managers/V2/GETTERS/GetUsers";
 import { words } from "@/UI";
 import { DeleteUserModal } from "./DeleteUserModal";
 

@@ -3,8 +3,6 @@
  * When you edit this file, turn the rule off so you know you are not missing anything.
  */
 
-/* eslint-disable react-hooks/exhaustive-deps */
-
 import { useContext } from "react";
 import {
   RemoteData,
@@ -39,6 +37,7 @@ export function ReadOnlyWithEnv<Kind extends Query.Kind>(
   ): boolean {
     return query.kind === kind && matchingKind === "ReadOnly";
   }
+
   return {
     useReadOnly,
     matches,

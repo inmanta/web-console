@@ -1,5 +1,6 @@
 import React, { act } from "react";
 import { MemoryRouter } from "react-router-dom";
+import { Page } from "@patternfly/react-core";
 import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
@@ -26,7 +27,7 @@ import {
   GetParametersStateHelper,
 } from "@S/Parameters/Data";
 import * as Parameters from "@S/Parameters/Data/Mock";
-import { Page } from "./Page";
+import { ParametersPage } from ".";
 
 expect.extend(toHaveNoViolations);
 
@@ -61,7 +62,9 @@ function setup() {
         }}
       >
         <StoreProvider store={store}>
-          <Page />
+          <Page>
+            <ParametersPage />
+          </Page>
         </StoreProvider>
       </DependencyProvider>
     </MemoryRouter>
@@ -72,6 +75,7 @@ function setup() {
 
 test("When using the name filter then only the matching parameters should be fetched and shown", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   await act(async () => {
@@ -81,6 +85,7 @@ test("When using the name filter then only the matching parameters should be fet
   const initialRows = await screen.findAllByRole("row", {
     name: "Parameters Table Row",
   });
+
   expect(initialRows).toHaveLength(10);
 
   const input = screen.getByPlaceholderText(
@@ -110,16 +115,19 @@ test("When using the name filter then only the matching parameters should be fet
   const rowsAfter = await screen.findAllByRole("row", {
     name: "Parameters Table Row",
   });
+
   expect(rowsAfter).toHaveLength(3);
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("When using the source filter then only the matching parameters should be fetched and shown", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   await act(async () => {
@@ -129,6 +137,7 @@ test("When using the source filter then only the matching parameters should be f
   const initialRows = await screen.findAllByRole("row", {
     name: "Parameters Table Row",
   });
+
   expect(initialRows).toHaveLength(10);
 
   await act(async () => {
@@ -172,16 +181,19 @@ test("When using the source filter then only the matching parameters should be f
   const rowsAfter = await screen.findAllByRole("row", {
     name: "Parameters Table Row",
   });
+
   expect(rowsAfter).toHaveLength(3);
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("When using the Updated filter then the parameters within the range selected range should be fetched and shown", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   await act(async () => {
@@ -211,6 +223,7 @@ test("When using the Updated filter then the parameters within the range selecte
   });
 
   const fromDatePicker = screen.getByLabelText("From Date Picker");
+
   await act(async () => {
     await userEvent.click(fromDatePicker);
   });
@@ -219,6 +232,7 @@ test("When using the Updated filter then the parameters within the range selecte
   });
 
   const toDatePicker = screen.getByLabelText("To Date Picker");
+
   await act(async () => {
     await userEvent.click(toDatePicker);
   });
@@ -245,6 +259,7 @@ test("When using the Updated filter then the parameters within the range selecte
   const rowsAfter = await screen.findAllByRole("row", {
     name: "Parameters Table Row",
   });
+
   expect(rowsAfter).toHaveLength(3);
 
   // The chips are hidden in small windows, so resize it
@@ -262,6 +277,62 @@ test("When using the Updated filter then the parameters within the range selecte
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
+});
+
+test("GIVEN ParametersView WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async () => {
+  const { component, apiHelper } = setup();
+
+  render(component);
+
+  //mock that response has more than one site
+  await act(async () => {
+    apiHelper.resolve(
+      Either.right({
+        ...Parameters.response,
+        links: {
+          ...Parameters.response.links,
+          next: "/fake-link?end=fake-first-param",
+        },
+        metadata: {
+          total: 103,
+          before: 0,
+          after: 3,
+          page_size: 100,
+        },
+      }),
+    );
+  });
+
+  expect(screen.getByLabelText("Go to next page")).toBeEnabled();
+
+  await act(async () => {
+    await userEvent.click(screen.getByLabelText("Go to next page"));
+  });
+
+  //expect the api url to contain start and end keywords that are used for pagination when we are moving to the next page
+  expect(apiHelper.pendingRequests[0].url).toMatch(/(&start=|&end=)/);
+  expect(apiHelper.pendingRequests[0].url).toMatch(/(&sort=name.asc)/);
+
+  await act(async () => {
+    apiHelper.resolve(Either.right(Parameters.response));
+  });
+
+  //sort on the second page
+  const resourceIdButton = await screen.findByRole("button", {
+    name: "Name",
+  });
+
+  expect(resourceIdButton).toBeVisible();
+
+  await act(async () => {
+    await userEvent.click(resourceIdButton);
+  });
+
+  // expect the api url to not contain start and end keywords that are used for pagination to assert we are back on the first page.
+  // we are asserting on the second request as the first request is for the updated sorting event, and second is chained to back to the first page with still correct sorting
+  expect(apiHelper.pendingRequests[1].url).not.toMatch(/(&start=|&end=)/);
+  expect(apiHelper.pendingRequests[1].url).toMatch(/(&sort=name.desc)/);
 });

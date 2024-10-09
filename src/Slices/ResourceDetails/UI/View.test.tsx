@@ -1,5 +1,6 @@
 import React, { act } from "react";
 import { MemoryRouter } from "react-router-dom";
+import { Page } from "@patternfly/react-core";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
@@ -47,7 +48,9 @@ function setup() {
         }}
       >
         <StoreProvider store={store}>
-          <View id={Resource.id} />
+          <Page>
+            <View id={Resource.id} />
+          </Page>
         </StoreProvider>
       </DependencyProvider>
     </MemoryRouter>
@@ -76,6 +79,7 @@ test("GIVEN The Resource details view THEN details data is fetched immediately",
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
@@ -106,12 +110,14 @@ test("GIVEN The Resource details view WHEN the user clicks on the requires tab T
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("GIVEN The Resource details view THEN shows status label", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
   await act(async () => {
     await apiHelper.resolve(Either.right({ data: ResourceDetails.a }));
@@ -123,6 +129,7 @@ test("GIVEN The Resource details view THEN shows status label", async () => {
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });

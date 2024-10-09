@@ -5,6 +5,7 @@ import { LegendBar } from "./LegendBar";
 
 test("GIVEN LegendBar WHEN items have an onClick handler THEN handler is executed on click", async () => {
   const onClick = jest.fn();
+
   render(
     <LegendBar
       items={[

@@ -98,6 +98,7 @@ const Body: React.FC<{ item: Item; classify?: Classify }> = ({
         Resource.IdParser.getAgentName(item.id),
         "???",
       );
+
       return (
         <BodyWithMessage
           message={words("desiredState.compare.agent_down")(agent)}
@@ -127,6 +128,7 @@ const BodyWithToggle: React.FC<{
   classify?: Classify;
 }> = ({ item, message, actionLabel, classify }) => {
   const [isShown, setIsShown] = useState(false);
+
   return isShown ? (
     <BodyWithChanges {...{ item, classify }} />
   ) : (

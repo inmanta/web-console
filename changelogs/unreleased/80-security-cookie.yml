@@ -1,0 +1,3 @@
+change-type: patch
+description: Resolution for Cookie Security issue, cookie accepts cookie name, path, and domain with out of bounds characters until version 0.6.0
+destination-branches: [master]

@@ -18,6 +18,7 @@ export const SummaryIcons: React.FC<Props> = ({ summary }) => {
   const nonZeroSummaryEntries = Object.entries(summary.by_label).filter(
     ([, value]) => value > 0,
   );
+
   return (
     <Flex aria-label="Number of instances by label">
       {nonZeroSummaryEntries.map(([labelName, value]) => (

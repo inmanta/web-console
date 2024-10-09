@@ -21,6 +21,7 @@ const valueIsValid = (value: unknown): value is Value =>
 
 export const from = (value: string): PageSize => {
   if (!valueIsValid(value)) return initial;
+
   return { kind: "PageSize", value };
 };
 

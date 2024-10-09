@@ -10,11 +10,13 @@ export function DeleteCallbackCommandManager(
   }: Command.SubCommand<"DeleteCallback">): string {
     return `/lsm/v1/callbacks/${callbackId}`;
   }
+
   return CommandManagerWithEnv<"DeleteCallback">(
     "DeleteCallback",
     (command, environment) => {
       return async () => {
         const result = await apiHelper.delete(getUrl(command), environment);
+
         await updater.update(
           {
             kind: "GetCallbacks",
@@ -22,6 +24,7 @@ export function DeleteCallbackCommandManager(
           },
           environment,
         );
+
         return result;
       };
     },

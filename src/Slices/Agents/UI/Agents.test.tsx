@@ -43,6 +43,7 @@ function setup() {
   const commandResolver = new CommandResolverImpl(
     new CommandManagerResolverImpl(store, apiHelper, defaultAuthContext),
   );
+
   dependencies.environmentModifier.setEnvironment("env");
 
   const component = (
@@ -66,6 +67,7 @@ function setup() {
 
 test("AgentsView shows empty table", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   expect(
@@ -86,12 +88,14 @@ test("AgentsView shows empty table", async () => {
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("AgentsView shows failed table", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   expect(
@@ -106,12 +110,14 @@ test("AgentsView shows failed table", async () => {
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("AgentsView shows success table", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   expect(
@@ -126,12 +132,14 @@ test("AgentsView shows success table", async () => {
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("When using the name filter then only the matching agents should be fetched and shown", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   await act(async () => {
@@ -141,6 +149,7 @@ test("When using the name filter then only the matching agents should be fetched
   const initialRows = await screen.findAllByRole("row", {
     name: "Agents Table Row",
   });
+
   expect(initialRows).toHaveLength(6);
 
   await act(async () => {
@@ -161,6 +170,7 @@ test("When using the name filter then only the matching agents should be fetched
   const input = screen.getByPlaceholderText(
     words("home.filters.env.placeholder"),
   );
+
   await act(async () => {
     await userEvent.click(input);
   });
@@ -185,16 +195,19 @@ test("When using the name filter then only the matching agents should be fetched
   const rowsAfter = await screen.findAllByRole("row", {
     name: "Agents Table Row",
   });
+
   expect(rowsAfter).toHaveLength(3);
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("When using the process name filter then only the matching agents should be fetched and shown", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   await act(async () => {
@@ -204,6 +217,7 @@ test("When using the process name filter then only the matching agents should be
   const initialRows = await screen.findAllByRole("row", {
     name: "Agents Table Row",
   });
+
   expect(initialRows).toHaveLength(6);
 
   await act(async () => {
@@ -223,6 +237,7 @@ test("When using the process name filter then only the matching agents should be
   const input = screen.getByPlaceholderText(
     words("agents.filters.processName.placeholder"),
   );
+
   await act(async () => {
     await userEvent.click(input);
   });
@@ -247,16 +262,19 @@ test("When using the process name filter then only the matching agents should be
   const rowsAfter = await screen.findAllByRole("row", {
     name: "Agents Table Row",
   });
+
   expect(rowsAfter).toHaveLength(3);
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("When using the status filter with the 'up' option then the agents in the 'up' state should be fetched and shown", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   await act(async () => {
@@ -266,6 +284,7 @@ test("When using the status filter with the 'up' option then the agents in the '
   const initialRows = await screen.findAllByRole("row", {
     name: "Agents Table Row",
   });
+
   expect(initialRows).toHaveLength(6);
 
   await act(async () => {
@@ -285,18 +304,21 @@ test("When using the status filter with the 'up' option then the agents in the '
   const input = screen.getByPlaceholderText(
     words("agents.filters.status.placeholder"),
   );
+
   await act(async () => {
     await userEvent.click(input);
   });
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 
   const option = await screen.findByRole("option", {
     name: words("agent.tests.up"),
   });
+
   await act(async () => {
     await userEvent.click(option);
   });
@@ -317,11 +339,13 @@ test("When using the status filter with the 'up' option then the agents in the '
   const rowsAfter = await screen.findAllByRole("row", {
     name: "Agents Table Row",
   });
+
   expect(rowsAfter).toHaveLength(3);
 });
 
 test("Given the Agents view with filters, When pausing an agent, then the correct request is fired", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   await act(async () => {
@@ -331,6 +355,7 @@ test("Given the Agents view with filters, When pausing an agent, then the correc
   const input = screen.getByPlaceholderText(
     words("agents.filters.name.placeholder"),
   );
+
   await act(async () => {
     await userEvent.click(input);
   });
@@ -354,6 +379,7 @@ test("Given the Agents view with filters, When pausing an agent, then the correc
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
   const request = apiHelper.pendingRequests[0];
+
   expect(request).toEqual({
     method: "POST",
     environment: "env",
@@ -378,12 +404,14 @@ test("Given the Agents view with filters, When pausing an agent, then the correc
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("Given the Agents view with filters, When unpausing an agent, then the correct request is fired", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   await act(async () => {
@@ -393,6 +421,7 @@ test("Given the Agents view with filters, When unpausing an agent, then the corr
   const input = screen.getByPlaceholderText(
     words("agents.filters.name.placeholder"),
   );
+
   await act(async () => {
     await userEvent.click(input);
   });
@@ -416,11 +445,13 @@ test("Given the Agents view with filters, When unpausing an agent, then the corr
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
   const request = apiHelper.pendingRequests[0];
+
   expect(request).toEqual({
     method: "POST",
     environment: "env",
@@ -446,6 +477,7 @@ test("Given the Agents view with filters, When unpausing an agent, then the corr
 
 test("Given the Agents view When pausing an agent results in an error, then the error is shown", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   await act(async () => {
@@ -460,6 +492,7 @@ test("Given the Agents view When pausing an agent results in an error, then the 
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 
@@ -468,6 +501,7 @@ test("Given the Agents view When pausing an agent results in an error, then the 
   });
   expect(apiHelper.pendingRequests).toHaveLength(1);
   const request = apiHelper.pendingRequests[0];
+
   expect(request).toEqual({
     method: "POST",
     environment: "env",
@@ -483,6 +517,7 @@ test("Given the Agents view When pausing an agent results in an error, then the 
 
 test("Given the Agents view with the environment halted, When setting keep_paused_on_resume on an agent, Then the correct request is fired", async () => {
   const { component, apiHelper, store } = setup();
+
   store.dispatch.environment.setEnvironmentDetailsById({
     id: "env",
     value: RemoteData.success({ ...EnvironmentDetails.halted, id: "env" }),
@@ -496,6 +531,7 @@ test("Given the Agents view with the environment halted, When setting keep_pause
   const onResumeToggle = await screen.findByRole("checkbox", {
     name: "aws-on-resume-toggle",
   });
+
   expect(onResumeToggle).toBeVisible();
   expect(onResumeToggle).toBeChecked();
   await act(async () => {
@@ -526,12 +562,14 @@ test("Given the Agents view with the environment halted, When setting keep_pause
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("Given the Agents view with the environment halted, When setting unpause_on_resume on an agent, Then the correct request is fired", async () => {
   const { component, apiHelper, store } = setup();
+
   store.dispatch.environment.setEnvironmentDetailsById({
     id: "env",
     value: RemoteData.success({ ...EnvironmentDetails.halted, id: "env" }),
@@ -540,6 +578,7 @@ test("Given the Agents view with the environment halted, When setting unpause_on
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 
@@ -550,6 +589,7 @@ test("Given the Agents view with the environment halted, When setting unpause_on
   const onResumeToggle = await screen.findByRole("checkbox", {
     name: "ecx-on-resume-toggle",
   });
+
   expect(onResumeToggle).toBeVisible();
   expect(onResumeToggle).not.toBeChecked();
   await act(async () => {
@@ -579,6 +619,7 @@ test("Given the Agents view with the environment halted, When setting unpause_on
 
 test("Given the Agents view with the environment NOT halted, THEN the on resume column shouldn't be shown", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   await act(async () => {
@@ -592,16 +633,19 @@ test("Given the Agents view with the environment NOT halted, THEN the on resume 
   const onResumeColumnHeader = tableHeaders.find(
     (header) => header.textContent === "On resume",
   );
+
   expect(onResumeColumnHeader).toBeUndefined();
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("Given the Agents view with the environment halted, THEN the on resume column should be shown", async () => {
   const { component, apiHelper, store } = setup();
+
   store.dispatch.environment.setEnvironmentDetailsById({
     id: "env",
     value: RemoteData.success({ ...EnvironmentDetails.halted, id: "env" }),
@@ -619,10 +663,75 @@ test("Given the Agents view with the environment halted, THEN the on resume colu
   const onResumeColumnHeader = tableHeaders.find(
     (header) => header.textContent === "On resume",
   );
+
   expect(onResumeColumnHeader).toBeDefined();
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
+});
+
+test("GIVEN AgentsView WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async () => {
+  const { component, apiHelper } = setup();
+
+  render(component);
+
+  //mock that response has more than one site
+  await act(async () => {
+    apiHelper.resolve(
+      Either.right({
+        ...AgentsMock.response,
+        metadata: {
+          total: 103,
+          before: 0,
+          after: 3,
+          page_size: 100,
+        },
+        links: {
+          self: "",
+          next: "/fake-link?end=fake-first-param",
+        },
+      }),
+    );
+  });
+
+  expect(screen.getByLabelText("Go to next page")).toBeEnabled();
+
+  await act(async () => {
+    await userEvent.click(screen.getByLabelText("Go to next page"));
+  });
+
+  //expect the api url to contain start and end keywords that are used for pagination when we are moving to the next page
+  expect(apiHelper.pendingRequests[0].url).toMatch(/(&start=|&end=)/);
+  expect(apiHelper.pendingRequests[0].url).toMatch(/(&sort=name.asc)/);
+
+  await act(async () => {
+    apiHelper.resolve(
+      Either.right({
+        ...AgentsMock.response,
+        metadata: {
+          total: 23,
+          before: 0,
+          after: 3,
+          page_size: 20,
+        },
+        links: {
+          self: "",
+          next: "/fake-link?end=fake-first-param",
+        },
+      }),
+    );
+  });
+
+  //sort on the second page
+  await act(async () => {
+    await userEvent.click(screen.getByRole("button", { name: "Name" }));
+  });
+
+  // expect the api url to not contain start and end keywords that are used for pagination to assert we are back on the first page.
+  // we are asserting on the second request as the first request is for the updated sorting event, and second is chained to back to the first page with still correct sorting
+  expect(apiHelper.pendingRequests[1].url).not.toMatch(/(&start=|&end=)/);
+  expect(apiHelper.pendingRequests[1].url).toMatch(/(&sort=name.desc)/);
 });

@@ -23,7 +23,7 @@ import { Summary } from "./Summary";
 export const Wrapper: React.FC<React.PropsWithChildren<unknown>> = ({
   children,
 }) => (
-  <PageContainer title={words("inventory.tabs.resources")}>
+  <PageContainer pageTitle={words("inventory.tabs.resources")}>
     {children}
   </PageContainer>
 );
@@ -60,6 +60,12 @@ export const Page: React.FC = () => {
   });
 
   const [staleData, setStaleData] = useState(data);
+
+  //when sorting is triggered, reset the current page
+  useEffect(() => {
+    setCurrentPage({ kind: "CurrentPage", value: "" });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sort.order]);
 
   useEffect(() => {
     if (RemoteData.isLoading(data)) return;

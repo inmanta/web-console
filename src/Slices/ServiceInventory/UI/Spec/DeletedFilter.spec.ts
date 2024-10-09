@@ -25,20 +25,24 @@ test("GIVEN The Service Inventory WHEN the user filters on deleted ('Only') THEN
   const picker = within(filterBar).getByRole("button", {
     name: "FilterPicker",
   });
+
   await act(async () => {
     await userEvent.click(picker);
   });
   const id = screen.getByRole("option", { name: "Deleted" });
+
   await act(async () => {
     await userEvent.click(id);
   });
   const rule = within(filterBar).getByRole("button", {
     name: "Select Deleted",
   });
+
   await act(async () => {
     await userEvent.click(rule);
   });
   const only = screen.getByRole("option", { name: "Only" });
+
   await act(async () => {
     await userEvent.click(only);
   });
@@ -59,6 +63,7 @@ test("GIVEN The Service Inventory WHEN the user filters on deleted ('Only') THEN
   const rowsAfter = await screen.findAllByRole("row", {
     name: "InstanceRow-Intro",
   });
+
   expect(rowsAfter.length).toEqual(1);
 
   expect(within(rowsAfter[0]).getByText("terminated")).toBeInTheDocument();

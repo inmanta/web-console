@@ -40,10 +40,12 @@ export function StateHelper(store: Store) {
       });
     }
   }
+
   return PrimaryStateHelper<"GetEnvironmentDetails">(
     store,
     (data, query) => {
       const unwrapped = RemoteData.mapSuccess((wrapped) => wrapped.data, data);
+
       setData(store.dispatch, query, unwrapped);
     },
     (state, query) => getData(state, query),

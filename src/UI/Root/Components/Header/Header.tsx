@@ -29,6 +29,7 @@ interface Props {
 
 export const Header: React.FC<Props> = ({ noEnv, onNotificationsToggle }) => {
   const { routeManager, environmentHandler } = useContext(DependencyContext);
+
   return (
     <>
       <Masthead>

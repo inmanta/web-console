@@ -1,5 +1,6 @@
 import React, { act } from "react";
 import { MemoryRouter } from "react-router-dom";
+import { Page } from "@patternfly/react-core";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
@@ -16,7 +17,7 @@ import {
 import { DeferredApiHelper, dependencies, StaticScheduler } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import * as Mock from "@S/Notification/Core/Mock";
-import { Page } from "./Page";
+import { NotificationCenterPage } from ".";
 
 expect.extend(toHaveNoViolations);
 
@@ -44,7 +45,9 @@ const setup = (entries?: string[]) => {
         <DependencyProvider
           dependencies={{ ...dependencies, queryResolver, commandResolver }}
         >
-          <Page />
+          <Page>
+            <NotificationCenterPage />
+          </Page>
         </DependencyProvider>
       </StoreProvider>
     </MemoryRouter>
@@ -55,6 +58,7 @@ const setup = (entries?: string[]) => {
 
 test("Given Notification Center page Then fetches notifications", async () => {
   const { component, apiHelper, request } = setup();
+
   render(component);
   expect(apiHelper.pendingRequests).toEqual([request("?limit=20")]);
   await act(async () => {
@@ -66,12 +70,14 @@ test("Given Notification Center page Then fetches notifications", async () => {
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("Given Notification Center page When user filters on severity Then executes correct request", async () => {
   const { component, apiHelper, request } = setup();
+
   render(component);
   await act(async () => {
     await apiHelper.resolve(Either.right(Mock.response));
@@ -115,12 +121,14 @@ test("Given Notification Center page When user filters on severity Then executes
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("Given Notification Center page When user filters on read Then executes correct request", async () => {
   const { component, apiHelper, request } = setup();
+
   render(component);
   await act(async () => {
     await apiHelper.resolve(Either.right(Mock.response));
@@ -165,12 +173,14 @@ test("Given Notification Center page When user filters on read Then executes cor
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("Given Notification Center page When user filters on message Then executes correct request", async () => {
   const { component, apiHelper, request } = setup();
+
   render(component);
   await act(async () => {
     await apiHelper.resolve(Either.right(Mock.response));
@@ -206,12 +216,14 @@ test("Given Notification Center page When user filters on message Then executes 
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("Given Notification Center page When user filters on title Then executes correct request", async () => {
   const { component, apiHelper, request } = setup();
+
   render(component);
   await act(async () => {
     await apiHelper.resolve(Either.right(Mock.response));
@@ -246,6 +258,7 @@ test("Given Notification Center page When user filters on title Then executes co
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
@@ -254,11 +267,13 @@ test("Given Notification Center page When user clicks next page Then fetches nex
   const { component, apiHelper } = setup([
     "/?state.NotificationCenter.pageSize=20",
   ]);
+
   render(component);
   await act(async () => {
     await apiHelper.resolve(Either.right(Mock.response));
   });
   const button = screen.getByRole("button", { name: "Go to next page" });
+
   expect(button).toBeEnabled();
 
   await act(async () => {
@@ -287,6 +302,7 @@ test("Given Notification Center page When user clicks next page Then fetches nex
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });

@@ -20,6 +20,7 @@ import { InstanceComposer } from "@/Slices/InstanceComposer";
 import { InstanceComposerEditor } from "@/Slices/InstanceComposerEditor";
 import { InstanceComposerViewer } from "@/Slices/InstanceComposerViewer";
 import { ServiceDetails } from "@/Slices/ServiceDetails";
+import { InstanceDetails } from "@/Slices/ServiceInstanceDetails";
 import { AgentProcess } from "@S/AgentProcess";
 import { Agents } from "@S/Agents";
 import { CompileDetails } from "@S/CompileDetails";
@@ -74,6 +75,7 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
     EditInstance: EditInstance.route(baseUrl),
     Events: Events.route(baseUrl),
     History: ServiceInstanceHistory.route(baseUrl),
+    InstanceDetails: InstanceDetails.route(baseUrl),
     InstanceComposer: InstanceComposer.route(baseUrl),
     InstanceComposerEditor: InstanceComposerEditor.route(baseUrl),
     InstanceComposerViewer: InstanceComposerViewer.route(baseUrl),
@@ -113,23 +115,29 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
     if (route.parent) {
       return getLineageFromRoute(getRoute(route.parent), [route, ...routes]);
     }
+
     return [route, ...routes];
   }
 
   function getRelatedUrlWithoutParams(pathname: string): string {
     const routeMatch = getRouteMatchFromUrl(pathname);
+
     if (typeof routeMatch === "undefined") {
       return getUrl("Home", undefined);
     }
     const { route } = routeMatch;
+
     if (!routeHasParams(route)) return pathname;
     const parent = getParentWithoutParams(route);
+
     if (typeof parent === "undefined") return getUrl("Home", undefined);
+
     return getUrl(parent.kind, undefined);
   }
 
   function getParentWithoutParams(route: Route): Route | undefined {
     const lineage = getLineageFromRoute(route);
+
     return lineage.reverse().find((route) => !routeHasParams(route));
   }
 
@@ -154,6 +162,7 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
     params: RouteParams<K>,
   ): string {
     const route = getRoute(kind);
+
     return generatePath(
       route.path,
       params === undefined ? params : encodeParams(params),
@@ -164,8 +173,10 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
     if (uri.length <= 0) return undefined;
     const pattern = "/api/v2/compilereport/:id";
     const match = matchPath(pattern, uri);
+
     if (match === null) return undefined;
     if (match.params.id === undefined) return undefined;
+
     return getUrl("CompileDetails", { id: match.params.id });
   }
 
@@ -175,9 +186,11 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
     if (uri.length <= 0) return undefined;
     const pattern = "/api/v2/compilereport/:id";
     const match = matchPath(pattern, uri);
+
     if (match === null) return undefined;
     if (match.params.id === undefined) return undefined;
     const params = { id: match.params.id };
+
     return {
       kind: "CompileDetails",
       params,
@@ -192,8 +205,10 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
     const routeWithMatch = routeMatchPairs.find(
       (pair): pair is [Route, PathMatch] => pair[1] !== null,
     );
+
     if (typeof routeWithMatch === "undefined") return undefined;
     const [route, match] = routeWithMatch;
+
     return {
       route,
       params:
@@ -210,14 +225,17 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
       route.path,
       params === undefined ? params : encodeParams(params),
     );
+
     return `${path}${search}`;
   }
 
   function getCrumbs(url: string): Crumb[] {
     const routeMatch = getRouteMatchFromUrl(url);
+
     if (typeof routeMatch === "undefined") return [];
     const { route, params } = routeMatch;
     const lineage = getLineageFromRoute(route);
+
     return lineage.map(({ kind, generateLabel, path }, idx) => ({
       kind,
       label: generateLabel(params),
@@ -225,6 +243,7 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
       active: idx === lineage.length - 1,
     }));
   }
+
   return {
     isBaseUrlDefined,
     getRoutes,

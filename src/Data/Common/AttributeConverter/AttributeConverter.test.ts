@@ -6,6 +6,7 @@ import {
 
 describe("AttributeResultConverter ", () => {
   const attributeResultConverter = new AttributeResultConverterImpl();
+
   describe("Extracts updated values correctly", () => {
     it("With a single difference", () => {
       const originalAttributes = { name: "inmanta", bool_param: false };
@@ -14,6 +15,7 @@ describe("AttributeResultConverter ", () => {
         afterChanges,
         originalAttributes,
       );
+
       expect(diff).toEqual({ bool_param: true });
     });
 
@@ -24,6 +26,7 @@ describe("AttributeResultConverter ", () => {
         afterChanges,
         originalAttributes,
       );
+
       expect(diff).toEqual({});
     });
 
@@ -42,6 +45,7 @@ describe("AttributeResultConverter ", () => {
         afterChanges,
         originalAttributes,
       );
+
       expect(diff).toEqual({ name: "inmanta2", bool_param: false });
     });
 
@@ -56,6 +60,7 @@ describe("AttributeResultConverter ", () => {
         afterChanges,
         originalAttributes,
       );
+
       expect(diff).toEqual(afterChanges);
     });
 
@@ -70,6 +75,7 @@ describe("AttributeResultConverter ", () => {
         afterChanges,
         originalAttributes,
       );
+
       expect(diff).toEqual(afterChanges);
     });
 
@@ -84,6 +90,7 @@ describe("AttributeResultConverter ", () => {
         afterChanges,
         originalAttributes,
       );
+
       expect(diff).toEqual({ bool_param: false });
     });
 
@@ -102,6 +109,7 @@ describe("AttributeResultConverter ", () => {
         afterChanges,
         originalAttributes,
       );
+
       expect(diff).toEqual({ name: "inmanta2", another_attribute: null });
     });
 
@@ -118,6 +126,7 @@ describe("AttributeResultConverter ", () => {
         afterChanges,
         originalAttributes,
       );
+
       expect(diff).toEqual({
         name: "inmanta2",
         embedded: [{ a: 2, unchanged: "same" }, { a: { c: "d" } }],
@@ -137,6 +146,7 @@ describe("AttributeResultConverter ", () => {
         afterChanges,
         originalAttributes,
       );
+
       expect(diff).toEqual({ name: "inmanta2" });
     });
   });
@@ -171,6 +181,7 @@ describe("AttributeResultConverter ", () => {
           value,
           type,
         );
+
         expect(result).toEqual(parsedValue);
       },
     );
@@ -178,6 +189,7 @@ describe("AttributeResultConverter ", () => {
       const attributes = [];
       const result =
         attributeResultConverter.parseAttributesToCorrectTypes(attributes);
+
       expect(result).toEqual({});
     });
     it("Converts a filled array of attributes to correct types", () => {
@@ -188,6 +200,7 @@ describe("AttributeResultConverter ", () => {
       ];
       const result =
         attributeResultConverter.parseAttributesToCorrectTypes(attributes);
+
       expect(result).toEqual({
         attribute1: 42,
         attribute2: "hi",
@@ -199,6 +212,7 @@ describe("AttributeResultConverter ", () => {
 
 describe("AttributeInputConverter", () => {
   const attributeInputConverter = new AttributeInputConverterImpl();
+
   describe("Chooses the correct attribute set", () => {
     it("When candidate set is null", () => {
       const instance = {
@@ -206,6 +220,7 @@ describe("AttributeInputConverter", () => {
         active_attributes: { attribute1: 1 },
       };
       const result = attributeInputConverter.getCurrentAttributes(instance);
+
       expect(result).toEqual(instance.active_attributes);
     });
     it("When active set is null", () => {
@@ -214,6 +229,7 @@ describe("AttributeInputConverter", () => {
         active_attributes: null,
       };
       const result = attributeInputConverter.getCurrentAttributes(instance);
+
       expect(result).toEqual(instance.candidate_attributes);
     });
     it("When candidate set is empty", () => {
@@ -222,6 +238,7 @@ describe("AttributeInputConverter", () => {
         active_attributes: { attribute1: 1 },
       };
       const result = attributeInputConverter.getCurrentAttributes(instance);
+
       expect(result).toEqual(instance.active_attributes);
     });
     it("When both active and candidate sets are filled", () => {
@@ -230,6 +247,7 @@ describe("AttributeInputConverter", () => {
         active_attributes: { attribute1: 2 },
       };
       const result = attributeInputConverter.getCurrentAttributes(instance);
+
       expect(result).toEqual(instance.candidate_attributes);
     });
   });
