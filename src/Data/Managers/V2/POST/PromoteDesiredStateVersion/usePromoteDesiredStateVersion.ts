@@ -5,7 +5,7 @@ import {
 } from "@tanstack/react-query";
 import { PrimaryBaseUrlManager } from "@/UI";
 
-import { useFetchHelpers } from "../helpers";
+import { useFetchHelpers } from "../../helpers";
 
 /**
  * React Query hook for promoting a version of desired state

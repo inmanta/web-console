@@ -4,7 +4,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { PrimaryBaseUrlManager } from "@/UI";
-import { useFetchHelpers } from "../helpers";
+import { useFetchHelpers } from "../../helpers";
 
 /**
  * React Query hook for deleting version of Desired State

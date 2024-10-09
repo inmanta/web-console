@@ -6,7 +6,7 @@ import {
   DesiredStateVersionStatus,
 } from "@/Slices/DesiredState/Core/Domain";
 import { PrimaryBaseUrlManager } from "@/UI";
-import { useFetchHelpers } from "../helpers";
+import { useFetchHelpers } from "../../helpers";
 import { getUrl } from "./getUrl";
 
 /**
