@@ -20,7 +20,7 @@ import {
   EyeIcon,
   EyeSlashIcon,
 } from "@patternfly/react-icons";
-import { useLogin } from "@/Data/Managers/V2/Login";
+import { useLogin } from "@/Data/Managers/V2/POST/Login";
 import { DependencyContext } from "@/UI";
 
 interface LoginFormProps {

@@ -19,7 +19,7 @@ import {
   EyeIcon,
   EyeSlashIcon,
 } from "@patternfly/react-icons";
-import { useAddUser } from "@/Data/Managers/V2/AddUser";
+import { useAddUser } from "@/Data/Managers/V2/POST/AddUser";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 
 interface UserCredentialsFormProps {

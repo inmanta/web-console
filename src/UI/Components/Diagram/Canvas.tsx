@@ -6,9 +6,9 @@ import { AlertVariant } from "@patternfly/react-core";
 import styled from "styled-components";
 import { ServiceModel } from "@/Core";
 import { sanitizeAttributes } from "@/Data";
-import { InstanceWithRelations } from "@/Data/Managers/V2/GetInstanceWithRelations";
-import { usePostMetadata } from "@/Data/Managers/V2/PostMetadata";
-import { usePostOrder } from "@/Data/Managers/V2/PostOrder";
+import { InstanceWithRelations } from "@/Data/Managers/V2/GETTERS/GetInstanceWithRelations";
+import { usePostMetadata } from "@/Data/Managers/V2/POST/PostMetadata";
+import { usePostOrder } from "@/Data/Managers/V2/POST/PostOrder";
 import diagramInit, { DiagramHandlers } from "@/UI/Components/Diagram/init";
 import {
   ComposerServiceOrderItem,

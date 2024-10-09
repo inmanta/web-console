@@ -376,7 +376,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 2);
     });
 
-    it("2.1.6 Instance Details page, attributes tab", () => {
+    it("2.1.6 Instance Details page", () => {
       cy.visit("/console/");
       cy.get('[aria-label="Environment card"]')
         .contains("lsm-frontend")
@@ -454,6 +454,20 @@ if (Cypress.env("edition") === "iso") {
         .find(".view-line")
         .eq(4)
         .should("contain", '"address_r1": "1.2.3.5/32",');
+
+      // Update the state to setting_start
+      cy.get('[aria-label="Actions-Toggle"]').click();
+      cy.get(".pf-v5-c-menu__item").last().click();
+
+      // Confirm in the modal
+      cy.get("button").contains("Yes").click();
+
+      // expect to find in the history table,
+      cy.get('[aria-label="History-Row"]').should(($rows) => {
+        expect($rows[0]).to.contain("up");
+        expect($rows[1]).to.contain("setting_inprogress");
+        expect($rows[2]).to.contain("setting_start");
+      });
     });
 
     it("2.1.7 Delete previously created instance", () => {

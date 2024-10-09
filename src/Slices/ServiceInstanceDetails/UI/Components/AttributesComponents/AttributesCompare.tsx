@@ -9,13 +9,13 @@ import {
 } from "@patternfly/react-core";
 import styled from "styled-components";
 import { InstanceAttributeModel } from "@/Core";
-import { InstanceLog } from "@/Slices/ServiceInstanceHistory/Core/Domain";
-import { words } from "@/UI";
 import {
   AttributeSets,
   getAvailableAttributesSets,
   getAvailableVersions,
-} from "./Utils";
+} from "@/Slices/ServiceInstanceDetails/Utils";
+import { InstanceLog } from "@/Slices/ServiceInstanceHistory/Core/Domain";
+import { words } from "@/UI";
 
 interface Props {
   instanceLogs: InstanceLog[];

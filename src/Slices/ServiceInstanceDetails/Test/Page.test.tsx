@@ -1,16 +1,7 @@
-import React, { act } from "react";
-import { MemoryRouter, useLocation } from "react-router-dom";
-import { Page } from "@patternfly/react-core";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { act } from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
 import { axe, toHaveNoViolations } from "jest-axe";
-import { RemoteData } from "@/Core";
-import { getStoreInstance } from "@/Data";
-import { dependencies } from "@/Test";
-import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI";
-import { ServiceInstanceDetails } from "../UI/Page";
 import {
   defaultServer,
   errorServerHistory,
@@ -18,73 +9,16 @@ import {
   loadingServer,
   serverWithDocumentation,
 } from "./mockServer";
+import { setupServiceInstanceDetails } from "./mockSetup";
 
 expect.extend(toHaveNoViolations);
-
-const setup = () => {
-  const queryClient = new QueryClient();
-  const store = getStoreInstance();
-
-  const environmentHandler = EnvironmentHandlerImpl(
-    useLocation,
-    dependencies.routeManager,
-  );
-
-  store.dispatch.environment.setEnvironments(
-    RemoteData.success([
-      {
-        id: "aaa",
-        name: "env-a",
-        project_id: "ppp",
-        repo_branch: "branch",
-        repo_url: "repo",
-        projectName: "project",
-        settings: {
-          enable_lsm_expert_mode: false,
-        },
-      },
-    ]),
-  );
-
-  const component = (
-    <MemoryRouter
-      initialEntries={[
-        {
-          pathname: "/lsm/catalog/mobileCore/inventory/core1/1d96a1ab/details",
-          search: "?env=aaa",
-        },
-      ]}
-    >
-      <QueryClientProvider client={queryClient}>
-        <DependencyProvider
-          dependencies={{
-            ...dependencies,
-            environmentHandler,
-          }}
-        >
-          <StoreProvider store={store}>
-            <Page>
-              <ServiceInstanceDetails
-                instance="core1"
-                service="mobileCore"
-                instanceId="1d96a1ab"
-              />
-            </Page>
-          </StoreProvider>
-        </DependencyProvider>
-      </QueryClientProvider>
-    </MemoryRouter>
-  );
-
-  return component;
-};
 
 describe("ServiceInstanceDetailsPage", () => {
   it("Should render the view in its loading states", async () => {
     const server = loadingServer;
 
     server.listen();
-    const component = setup();
+    const component = setupServiceInstanceDetails();
 
     render(component);
 
@@ -113,7 +47,7 @@ describe("ServiceInstanceDetailsPage", () => {
     const server = errorServerInstance;
 
     server.listen();
-    const component = setup();
+    const component = setupServiceInstanceDetails();
 
     render(component);
 
@@ -137,11 +71,11 @@ describe("ServiceInstanceDetailsPage", () => {
     server.close();
   });
 
-  it("Should render success view without config when there's instance data, but error view in the history section when there are no logs;", async () => {
+  it("Should render success view without config when there's instance data, but error view in the history section when there are no logs", async () => {
     const server = errorServerHistory;
 
     server.listen();
-    const component = setup();
+    const component = setupServiceInstanceDetails();
 
     render(component);
 
@@ -191,7 +125,7 @@ describe("ServiceInstanceDetailsPage", () => {
     const server = defaultServer;
 
     server.listen();
-    const component = setup();
+    const component = setupServiceInstanceDetails();
 
     render(component);
 
@@ -386,7 +320,7 @@ describe("ServiceInstanceDetailsPage", () => {
     const server = serverWithDocumentation;
 
     server.listen();
-    const component = setup();
+    const component = setupServiceInstanceDetails();
 
     render(component);
 
