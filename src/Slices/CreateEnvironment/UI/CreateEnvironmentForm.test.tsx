@@ -274,7 +274,9 @@ test(`Given CreateEnvironmentForm When an existing project, a valid environment 
 test(`Given CreateEnvironmentForm When a new project and valid environment are set and submit is clicked Then sends the correct requests`, async () => {
   const { component, apiHelper } = setup();
 
-  render(component);
+  await act(async () => {
+    render(component);
+  });
 
   await act(async () => {
     apiHelper.resolve(
@@ -284,16 +286,21 @@ test(`Given CreateEnvironmentForm When a new project and valid environment are s
     );
   });
 
-  const projectInput = await screen.findByRole("combobox", {
-    name: "Project Name-select-toggleFilterInput",
+  await act(async () => {
+    await userEvent.click(
+      await screen.findByRole("combobox", {
+        name: "Project Name-select-toggleFilterInput",
+      }),
+    );
   });
 
   await act(async () => {
-    await userEvent.click(projectInput);
-  });
-
-  await act(async () => {
-    await userEvent.type(projectInput, "new-project");
+    await userEvent.type(
+      await screen.findByRole("combobox", {
+        name: "Project Name-select-toggleFilterInput",
+      }),
+      "new-project",
+    );
   });
 
   await act(async () => {
@@ -317,9 +324,11 @@ test(`Given CreateEnvironmentForm When a new project and valid environment are s
     },
     url: `/api/v2/project`,
   });
+
   await act(async () => {
     await apiHelper.resolve(Either.right({ data: Project.a }));
   });
+
   expect(apiHelper.resolvedRequests).toHaveLength(2);
   const updatedProjects = [
     ...Project.filterable,
@@ -335,9 +344,11 @@ test(`Given CreateEnvironmentForm When a new project and valid environment are s
   await act(async () => {
     await userEvent.clear(textBox);
   });
+
   await act(async () => {
     await userEvent.type(textBox, `dev{enter}`);
   });
+
   await act(async () => {
     await userEvent.click(
       await screen.findByRole("button", { name: "submit" }),
