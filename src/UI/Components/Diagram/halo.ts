@@ -21,19 +21,12 @@ const createHalo = (
   halo.removeHandle("unlink");
   halo.removeHandle("remove");
 
-  halo.addHandle({
-    name: "delete",
-  });
   // this change is purely to keep order of the halo buttons
   halo.changeHandle("link", {
     name: "link",
   });
-  halo.addHandle({
-    name: "edit",
-  });
 
-  // additional listeners to add logic for appended tools, if there will be need for any validation on remove then I think we will need custom handle anyway
-  halo.on("action:delete:pointerdown", function () {
+  halo.listenTo(cellView, "action:delete", function () {
     //cellView.model has the same structure as dia.Element needed as parameter to .getNeighbors() yet typescript complains
     const connectedElements = graph.getNeighbors(cellView.model as dia.Element);
 
@@ -77,7 +70,7 @@ const createHalo = (
       if (didElementChange) {
         document.dispatchEvent(
           new CustomEvent("updateInstancesToSend", {
-            detail: { cell: elementAsService, actions: ActionEnum.UPDATE },
+            detail: { cell: elementAsService, action: ActionEnum.UPDATE },
           }),
         );
       }
@@ -85,13 +78,16 @@ const createHalo = (
 
     document.dispatchEvent(
       new CustomEvent("updateInstancesToSend", {
-        detail: { cell: cellView.model, actions: ActionEnum.DELETE },
+        detail: { cell: cellView.model, action: ActionEnum.DELETE },
       }),
     );
 
     graph.removeLinks(cellView.model);
     cellView.remove();
     halo.remove();
+    graph.removeCells([cellView.model]);
+    //trigger click on blank canvas to clear right sidebar
+    paper.trigger("blank:pointerdown");
   });
 
   halo.on("action:link:pointerdown", function () {
@@ -165,15 +161,6 @@ const createHalo = (
         looseElementHighlight.el.classList.remove("-hidden");
       }
     });
-  });
-
-  halo.on("action:edit:pointerdown", function (event) {
-    event.stopPropagation();
-    document.dispatchEvent(
-      new CustomEvent("openEditModal", {
-        detail: cellView,
-      }),
-    );
   });
 
   return halo;

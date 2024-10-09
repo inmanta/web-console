@@ -2367,6 +2367,7 @@ export const mockedInstanceTwoServiceModel: ServiceModel = {
     },
     total: 1,
   },
+  key_attributes: ["dictOne"],
   owner: null,
   owned_entities: [],
 };

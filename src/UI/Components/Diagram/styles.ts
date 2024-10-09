@@ -35,6 +35,7 @@ export const CanvasWrapper = styled.div`
       &:hover {
         background: var(--pf-v5-global--palette--black-400);
       }
+
       &.-active {
         background: var(--pf-v5-global--BackgroundColor--100);
         border-top: 2px solid var(--pf-v5-global--primary-color--100);
@@ -52,6 +53,19 @@ export const CanvasWrapper = styled.div`
 
     .content {
       padding: 12px 0;
+    }
+
+    .stencil_body-disabled {
+      pointer-events: none;
+      fill: var(--pf-v5-global--disabled-color--200);
+    }
+
+    .stencil_text-disabled {
+      fill: var(--pf-v5-global--disabled-color--100);
+    }
+
+    .stencil_accent-disabled {
+      fill: var(--pf-v5-global--disabled-color--100);
     }
   }
 

@@ -103,9 +103,7 @@ export const ComposerCreatorProvider: React.FC<Props> = ({ serviceName }) => {
       <InstanceComposerContext.Provider
         value={{
           mainService,
-          serviceModels: serviceModels.data.filter((service) =>
-            relatedServiceNames?.includes(service.name),
-          ),
+          serviceModels: serviceModels.data,
           instance: null,
           relatedInventories: relatedInventories,
         }}

@@ -48,7 +48,7 @@ interface Selected {
   holderName: string;
 }
 
-const FormModal = ({
+export const FormModal = ({
   onConfirm,
 }: {
   onConfirm: (
@@ -310,11 +310,10 @@ const FormModal = ({
   );
 };
 
-export default FormModal;
-
 const StyledModal = styled(Modal)`
   height: 600px;
 `;
+
 const StyledButton = styled(Button)`
   --pf-v5-c-button--PaddingTop: 0px;
   --pf-v5-c-button--PaddingBottom: 0px;

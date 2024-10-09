@@ -135,15 +135,25 @@ export class ComposerPaper {
       },
     );
 
+    this.paper.on("blank:pointerdown", () => {
+      document.dispatchEvent(
+        new CustomEvent("sendCellToSidebar", {
+          detail: null,
+        }),
+      );
+    });
+
     this.paper.on("cell:pointerup", (cellView) => {
-      // We don't want a Halo if cellView is a Link or is a representation of an already existing instance that has strict_modifier set to false
-      if (
-        cellView.model instanceof dia.Link ||
-        cellView.model.get("isBlockedFromEditing") ||
-        !editable
-      ) {
+      //We don't want interaction at all if cellView is a Link
+      if (cellView.model instanceof dia.Link) {
         return;
       }
+
+      document.dispatchEvent(
+        new CustomEvent("sendCellToSidebar", {
+          detail: cellView,
+        }),
+      );
 
       const halo = createHalo(graph, this.paper, cellView, connectionRules);
 
@@ -198,11 +208,15 @@ export class ComposerPaper {
         });
       }
 
-      if (linkView.model.get("isBlockedFromEditing") || !editable) {
+      if (
+        linkView.model.get("isBlockedFromEditing") ||
+        !editable ||
+        !linkView.model.get("isRelationshipConnection")
+      ) {
         return;
       }
 
-      showLinkTools(this.paper, graph, linkView, connectionRules);
+      showLinkTools(graph, linkView, connectionRules);
     });
 
     this.paper.on("link:mouseleave", (linkView: dia.LinkView) => {
@@ -251,9 +265,10 @@ export class ComposerPaper {
               connectingCell.id,
               cellConnectionRule.attributeName,
             );
+            linkView.model.set("isRelationshipConnection", true);
             document.dispatchEvent(
               new CustomEvent("updateInstancesToSend", {
-                detail: { cell: sourceCell, actions: ActionEnum.UPDATE },
+                detail: { cell: sourceCell, action: ActionEnum.UPDATE },
               }),
             );
           }
@@ -272,7 +287,7 @@ export class ComposerPaper {
 
           document.dispatchEvent(
             new CustomEvent("updateInstancesToSend", {
-              detail: { cell: elementCell, actions: ActionEnum.UPDATE },
+              detail: { cell: elementCell, action: ActionEnum.UPDATE },
             }),
           );
         }

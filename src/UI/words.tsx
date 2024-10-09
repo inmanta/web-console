@@ -22,6 +22,7 @@ const dict = {
   confirm: "Confirm",
   cancel: "Cancel",
   deploy: "Deploy",
+  save: "Save",
   yes: "Yes",
   no: "No",
   null: "null",
@@ -33,6 +34,9 @@ const dict = {
   hideAll: "Hide All",
   showAll: "Show All",
   back: "Back",
+  edit: "Edit",
+  details: "Details",
+  remove: "Remove",
 
   /**
    * Error related text

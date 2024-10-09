@@ -13,7 +13,7 @@ import { CanvasContext } from "../Context/Context";
  *
  * @returns {React.FC} The DictModal component.
  */
-const DictModal: React.FC = () => {
+export const DictModal: React.FC = () => {
   const { dictToDisplay, setDictToDisplay } = useContext(CanvasContext);
   const [copied, setCopied] = useState(false);
 
@@ -60,5 +60,3 @@ const DictModal: React.FC = () => {
     </Modal>
   );
 };
-
-export default DictModal;

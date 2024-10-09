@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 /**
  * Defines objects for JointJS.
  * This function sets up mock implementations for various properties and methods used by JointJS library that aren't supported by default in the Jest environment.
