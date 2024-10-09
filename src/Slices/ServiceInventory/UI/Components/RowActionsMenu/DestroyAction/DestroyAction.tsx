@@ -30,6 +30,9 @@ export const DestroyAction: React.FC<Props> = ({
     version,
   });
 
+  /**
+   * async method sending out the request to destroy the instance
+   */
   const onSubmit = async () => {
     closeModal();
     const result = await trigger(refetch);

@@ -25,6 +25,22 @@ export const DeleteAction: React.FC<Props> = ({
   service_entity,
 }) => {
   const { triggerModal, closeModal } = useContext(ModalContext);
+  const [errorMessage, setErrorMessage] = useState("");
+  const { commandResolver, environmentModifier } =
+    useContext(DependencyContext);
+  const { refetch } = useContext(ServiceInventoryContext);
+
+  const trigger = commandResolver.useGetTrigger<"DeleteInstance">({
+    kind: "DeleteInstance",
+    service_entity,
+    id,
+    version,
+  });
+  const isHalted = environmentModifier.useIsHalted();
+
+  /**
+   * Opens a modal with a confirmation form.
+   */
   const handleModalToggle = () => {
     triggerModal({
       title: words("inventory.deleteInstance.title"),
@@ -39,18 +55,10 @@ export const DeleteAction: React.FC<Props> = ({
       ),
     });
   };
-  const [errorMessage, setErrorMessage] = useState("");
-  const { commandResolver, environmentModifier } =
-    useContext(DependencyContext);
-  const { refetch } = useContext(ServiceInventoryContext);
 
-  const trigger = commandResolver.useGetTrigger<"DeleteInstance">({
-    kind: "DeleteInstance",
-    service_entity,
-    id,
-    version,
-  });
-  const isHalted = environmentModifier.useIsHalted();
+  /**
+   * async method sending out the request to delete the instance
+   */
   const onSubmit = async () => {
     closeModal();
     const result = await trigger(refetch);

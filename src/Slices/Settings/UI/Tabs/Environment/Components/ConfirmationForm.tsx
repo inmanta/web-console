@@ -146,6 +146,7 @@ export const ConfirmationForm: React.FC<Props> = ({ environment, type }) => {
   );
 };
 
+//font-weight is set to normal to remove default style for the input label to make only environment name bold
 const CustomLabel = styled.p`
-  /* font-weight: normal; */
+  font-weight: normal;
 `;
