@@ -19,7 +19,10 @@ export const UserManagementPage: React.FC = () => {
   const { data, isLoading, isError, error, refetch } =
     useGetUsers().useOneTime();
 
-  function openModal() {
+  /**
+   * Opens a modal with a form for user credentials.
+   */
+  const openModal = () => {
     triggerModal({
       title: words("userManagement.addUser"),
       content: (
@@ -29,7 +32,7 @@ export const UserManagementPage: React.FC = () => {
         />
       ),
     });
-  }
+  };
 
   if (isLoading) return <LoadingView ariaLabel="UserManagement-Loading" />;
   if (isError)

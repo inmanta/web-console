@@ -43,6 +43,11 @@ export const ServiceItem: React.FunctionComponent<Props> = ({ service }) => {
   });
   const [errorMessage, setErrorMessage] = useState("");
 
+  /**
+   * Handles the submission of deleting the service.
+   *
+   * @returns {Promise<void>} A Promise that resolves when the operation is complete.
+   */
   const onSubmit = async () => {
     closeModal();
     const result = await trigger();

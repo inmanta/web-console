@@ -75,6 +75,12 @@ export const CellWithCopyExpert: React.FC<Props> = ({
       setWrapWithPopover(false);
     }
   };
+
+  /**
+   * Handles the submission of the form.
+   *
+   * @returns {Promise<void>} A Promise that resolves when the operation is complete.
+   */
   const onSubmit = async () => {
     let newValue = newAttribute;
 
@@ -126,6 +132,10 @@ export const CellWithCopyExpert: React.FC<Props> = ({
     }
     closeModal();
   };
+
+  /**
+   * Opens a modal with a confirmation form.
+   */
   const openModal = () => {
     triggerModal({
       title: words("inventory.editAttribute.header"),

@@ -33,6 +33,16 @@ export const CatalogActions: React.FC = () => {
   const [toastTitle, setToastTitle] = useState("");
   const [toastType, setToastType] = useState(AlertVariant.custom);
 
+  /**
+   * Handles the submission of the form.
+   *
+   * This function closes the modal and triggers an asynchronous operation.
+   * If the operation is successful, it sets the toast title, message, and type to indicate success.
+   * If the operation fails, it sets the toast title, message, and type to indicate failure.
+   * The message in case of failure is the value of the result.
+   *
+   * @returns {Promise<void>} A Promise that resolves when the operation is complete.
+   */
   const onSubmit = async () => {
     closeModal();
     const result = await trigger();
@@ -47,6 +57,10 @@ export const CatalogActions: React.FC = () => {
       setToastType(AlertVariant.danger);
     }
   };
+
+  /**
+   * Opens a modal with a confirmation form.
+   */
   const openModal = () => {
     triggerModal({
       title: words("catalog.update.modal.title"),

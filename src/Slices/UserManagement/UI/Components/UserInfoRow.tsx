@@ -19,6 +19,9 @@ export const UserInfoRow: React.FC<Props> = ({ user }) => {
   const { triggerModal, closeModal } = useContext(ModalContext);
   const { mutate } = useRemoveUser();
 
+  /**
+   * Opens a modal with a confirmation form.
+   */
   const openModal = () => {
     triggerModal({
       title: words("userManagement.deleteUser.title"),

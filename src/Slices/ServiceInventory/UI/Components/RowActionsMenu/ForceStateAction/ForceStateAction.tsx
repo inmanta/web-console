@@ -66,6 +66,9 @@ export const ForceStateAction: React.FC<Props> = ({
 
   const isHalted = environmentModifier.useIsHalted();
 
+  /**
+   * Opens a modal with a confirmation buttons.
+   */
   const openModal = () => {
     triggerModal({
       title: words("inventory.statustab.forceState.confirmTitle"),
@@ -99,6 +102,12 @@ export const ForceStateAction: React.FC<Props> = ({
     });
   };
 
+  /**
+   * Handles the submission of the force state action.
+   *
+   * @param {string} targetState - The target state to be used in the operation.
+   * @returns {Promise<void>} A Promise that resolves when the operation is complete.
+   */
   const onSubmit = async (targetState: string) => {
     const result = await trigger(targetState);
 
@@ -108,6 +117,12 @@ export const ForceStateAction: React.FC<Props> = ({
     closeModal();
   };
 
+  /**
+   * Handles the selection of the state.
+   *
+   * @param {string} value - The target state to be used in the operation.
+   * @returns {Promise<void>} A Promise that resolves when the operation is complete.
+   */
   const onSelect = (value: string) => {
     setTargetState(value);
     setConfirmationText(

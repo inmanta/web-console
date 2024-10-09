@@ -44,6 +44,12 @@ export const SetStateSection: React.FunctionComponent<Props> = ({
   });
   const isHalted = environmentModifier.useIsHalted();
 
+  /**
+   * Handles the submission of the form.
+   *
+   * @param {string} targetState - The target state to be used in the operation.
+   * @returns {Promise<void>} A Promise that resolves when the operation is complete.
+   */
   const onSubmit = async (targetState: string) => {
     const result = await trigger(targetState);
 
@@ -53,6 +59,9 @@ export const SetStateSection: React.FunctionComponent<Props> = ({
     closeModal();
   };
 
+  /**
+   * Opens a modal with a confirmation buttons.
+   */
   const openModal = () => {
     triggerModal({
       title: words("inventory.statustab.confirmTitle"),

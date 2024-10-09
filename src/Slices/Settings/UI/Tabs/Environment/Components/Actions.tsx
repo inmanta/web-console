@@ -22,7 +22,10 @@ export const Actions: React.FC<ActionsProps> = ({ environment }) => {
   const { environmentModifier } = useContext(DependencyContext);
   const isProtected = environmentModifier.useIsProtectedEnvironment();
 
-  function openModal(type: "delete" | "clear") {
+  /**
+   * Opens a modal with a confirmation form.
+   */
+  const openModal = (type: "delete" | "clear") => {
     triggerModal({
       title: words("home.environment.delete.warning"),
       description: (
@@ -33,7 +36,7 @@ export const Actions: React.FC<ActionsProps> = ({ environment }) => {
       iconVariant: "danger",
       content: <ConfirmationForm environment={environment} type={type} />,
     });
-  }
+  };
 
   return (
     <>
