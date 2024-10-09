@@ -61,7 +61,7 @@ export const DeleteButton: React.FunctionComponent<Props> = ({
         isDanger
         onClick={() => {
           triggerModal({
-            title: "Delete Callback",
+            title: words("catalog.callbacks.delete.title"),
             content: (
               <>
                 {words("catalog.callbacks.delete")(callback.url)}

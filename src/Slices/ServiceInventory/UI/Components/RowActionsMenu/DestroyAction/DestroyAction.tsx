@@ -29,6 +29,7 @@ export const DestroyAction: React.FC<Props> = ({
     id,
     version,
   });
+
   const onSubmit = async () => {
     closeModal();
     const result = await trigger(refetch);
@@ -37,6 +38,7 @@ export const DestroyAction: React.FC<Props> = ({
       setErrorMessage(result.value);
     }
   };
+
   const openModal = () => {
     triggerModal({
       title: words("inventory.destroyInstance.title"),

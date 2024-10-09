@@ -378,6 +378,7 @@ const dict = {
     `Are you sure you want to delete service entity ${serviceName}?`,
   "catalog.delete.failed": "Deleting service entity failed",
   "catalog.instances": "Instances",
+  "catalog.callbacks.delete.title": "Delete Callback",
   "catalog.callbacks.delete": (url: string) =>
     `Are you sure you want to delete callback with url "${url}"?`,
   "catalog.callbacks.delete.failed": "Deleting callback failed",
