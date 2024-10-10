@@ -8,7 +8,7 @@ import { ModalContext } from "../../ModalProvider";
 /**
  * `HaltButton` is a React functional component that renders a button with a tooltip.
  *
- * @returns {JSX.Element} A button with a tooltip that triggers a modal when clicked.
+ * @returns {React.FC} A button with a tooltip that triggers a modal when clicked.
  */
 export const HaltButton: React.FC = () => {
   const { queryResolver, commandResolver } = useContext(DependencyContext);
