@@ -1,12 +1,5 @@
 import React, { useState, MouseEvent, useContext } from "react";
-import {
-  Button,
-  Popover,
-  Icon,
-  Modal,
-  Text,
-  Spinner,
-} from "@patternfly/react-core";
+import { Button, Popover, Icon, Spinner } from "@patternfly/react-core";
 import { TimesIcon, PencilAltIcon } from "@patternfly/react-icons";
 import { Td } from "@patternfly/react-table";
 import { set } from "lodash";
@@ -14,6 +7,7 @@ import styled from "styled-components";
 import { Maybe, ParsedNumber } from "@/Core";
 import { AttributeSet } from "@/Core/Domain/ServiceInstanceParams";
 import { DependencyContext } from "@/UI/Dependency";
+import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
 import { ConfirmUserActionForm } from "../../../Components/ConfirmUserActionForm";
 import { ToastAlert } from "../../../Components/ToastAlert";
@@ -54,10 +48,10 @@ export const CellWithCopyExpert: React.FC<Props> = ({
   attributeType,
   parentObject,
 }) => {
+  const { triggerModal, closeModal } = useContext(ModalContext);
   const { commandResolver, environmentModifier } =
     useContext(DependencyContext);
   const [wrapWithPopover, setWrapWithPopover] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [newAttribute, setNewAttribute] = useState<
     string | boolean | number | string[]
   >(value);
@@ -81,7 +75,13 @@ export const CellWithCopyExpert: React.FC<Props> = ({
       setWrapWithPopover(false);
     }
   };
-  const onSubmit = async () => {
+
+  /**
+   * Handles the submission of the form.
+   *
+   * @returns {Promise<void>} A Promise that resolves when the operation is complete.
+   */
+  const onSubmit = async (): Promise<void> => {
     let newValue = newAttribute;
 
     //if string[] then we need to convert initial value to the same format to be able to compare
@@ -91,7 +91,7 @@ export const CellWithCopyExpert: React.FC<Props> = ({
         (newAttribute as string[]).join(", ") === value)
     ) {
       setIsInputOpen(!isInputOpen);
-      setIsModalOpen(!isModalOpen);
+      closeModal();
 
       return;
     }
@@ -130,7 +130,28 @@ export const CellWithCopyExpert: React.FC<Props> = ({
       setStateErrorMessage(result.value);
       setIsSpinnerVisible(false);
     }
-    setIsModalOpen(!isModalOpen);
+    closeModal();
+  };
+
+  /**
+   * Opens a modal with a confirmation form.
+   *
+   * @returns {void}
+   */
+  const openModal = (): void => {
+    triggerModal({
+      title: words("inventory.editAttribute.header"),
+      content: (
+        <>
+          {words("inventory.editAttribute.text")(
+            value,
+            newAttribute.toString(),
+          )}
+          <ConfirmUserActionForm onSubmit={onSubmit} onCancel={closeModal} />
+        </>
+      ),
+      iconVariant: "danger",
+    });
   };
   const cell = (
     <Td
@@ -166,9 +187,7 @@ export const CellWithCopyExpert: React.FC<Props> = ({
           value={newAttribute}
           type={attributeType}
           onChange={(_event, value) => setNewAttribute(value)}
-          toggleModal={() => {
-            setIsModalOpen(!isModalOpen);
-          }}
+          toggleModal={openModal}
         />
       ) : shouldRenderLink(value, hasRelation) ? (
         <MultiLinkCell
@@ -180,25 +199,6 @@ export const CellWithCopyExpert: React.FC<Props> = ({
         value
       )}
       {isSpinnerVisible && <StyledSpinner size="sm" />}
-      <Modal
-        disableFocusTrap
-        variant={"small"}
-        isOpen={isModalOpen}
-        title={words("inventory.editAttribute.header")}
-        onClose={() => setIsModalOpen(!isModalOpen)}
-        titleIconVariant="danger"
-      >
-        <Text>
-          {words("inventory.editAttribute.text")(
-            value,
-            newAttribute.toString(),
-          )}
-        </Text>
-        <ConfirmUserActionForm
-          onSubmit={onSubmit}
-          onCancel={() => setIsModalOpen(!isModalOpen)}
-        />
-      </Modal>
     </Td>
   );
 

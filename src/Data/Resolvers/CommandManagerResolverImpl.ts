@@ -21,8 +21,6 @@ import {
   RepairCommandManager,
   DeployCommandManager,
   GetSupportArchiveCommandManager,
-  PromoteVersionCommandManager,
-  DesiredStatesUpdater,
   ControlAgentCommandManager,
   TriggerCompileCommandManager,
   TriggerDryRun,
@@ -40,7 +38,6 @@ import {
   CreateProjectCommandManager,
 } from "@S/CreateEnvironment/Data";
 import { CreateInstanceCommandManager } from "@S/CreateInstance/Data";
-import { GetDesiredStatesStateHelper } from "@S/DesiredState/Data";
 import { TriggerInstanceUpdateCommandManager } from "@S/EditInstance/Data";
 import { DeleteEnvironmentCommandManager, ProjectsUpdater } from "@S/Home/Data";
 import { UpdateNotificationCommandManager } from "@S/Notification/Data/CommandManager";
@@ -52,7 +49,6 @@ import {
 } from "@S/ServiceDetails/Data";
 import { ClearEnvironmentCommandManager } from "@S/Settings/Data/ClearEnvironmentCommandManager";
 import { AuthContextInterface } from "../Auth";
-import { DeleteVersionCommandManager } from "../Managers/DeleteVersion";
 import { UpdateCatalogCommandManager } from "../Managers/UpdateCatalog/CommandManager";
 import { UpdateInstanceAttributeCommandManager } from "../Managers/UpdateInstanceAttribute";
 
@@ -78,11 +74,6 @@ export class CommandManagerResolverImpl implements CommandManagerResolver {
     const environmentSettingUpdater = new EnvironmentSettingUpdater(
       this.apiHelper,
       GetEnvironmentSettingStateHelper(this.store),
-    );
-    const getDesiredStatesStateHelper = GetDesiredStatesStateHelper(this.store);
-    const desiredStatesUpdater = new DesiredStatesUpdater(
-      getDesiredStatesStateHelper,
-      this.apiHelper,
     );
     const callbacksUpdater = new CallbacksUpdater(
       CallbacksStateHelper(this.store),
@@ -163,8 +154,6 @@ export class CommandManagerResolverImpl implements CommandManagerResolver {
       GenerateTokenCommandManager(this.apiHelper),
       DeployCommandManager(this.apiHelper),
       RepairCommandManager(this.apiHelper),
-      PromoteVersionCommandManager(this.apiHelper, desiredStatesUpdater),
-      DeleteVersionCommandManager(this.apiHelper),
       ControlAgentCommandManager(
         this.apiHelper,
         new GetAgentsUpdater(this.store, this.apiHelper),

@@ -30,10 +30,6 @@ import {
   DryRunsSlice,
 } from "@S/ComplianceCheck/Data/DryRunsSlice";
 import {
-  DesiredStatesSlice,
-  desiredStatesSlice,
-} from "@S/DesiredState/Data/Store";
-import {
   desiredStateDiffSlice,
   DesiredStateDiffSlice,
 } from "@S/DesiredStateCompare/Data/Store";
@@ -106,7 +102,6 @@ export interface StoreModel {
   compileDetails: CompileDetailsSlice;
   compileReports: CompileReportsSlice;
   desiredStateDiff: DesiredStateDiffSlice;
-  desiredStates: DesiredStatesSlice;
   diagnostics: DiagnosticsSlice;
   discoveredResources: DiscoveredResourcesSlice;
   dryRunReport: DryRunReportSlice;
@@ -143,7 +138,6 @@ export const storeModel: StoreModel = {
   compileDetails: compileDetailsSlice,
   compileReports: compileReportsSlice,
   desiredStateDiff: desiredStateDiffSlice,
-  desiredStates: desiredStatesSlice,
   diagnostics: diagnosticsSlice,
   discoveredResources: discoveredResourcesSlice,
   dryRunReport: dryRunReportSlice,

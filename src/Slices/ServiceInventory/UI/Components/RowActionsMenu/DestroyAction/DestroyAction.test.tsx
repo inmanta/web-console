@@ -13,6 +13,7 @@ import { ServiceInventoryContext } from "@/Slices/ServiceInventory/UI/ServiceInv
 import { DeferredApiHelper, dependencies, ServiceInstance } from "@/Test";
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
+import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { DestroyAction } from "./DestroyAction";
 
 function setup() {
@@ -47,30 +48,32 @@ function setup() {
             commandResolver,
           }}
         >
-          <ServiceInventoryContext.Provider
-            value={{
-              labelFiltering: {
-                danger: [],
-                warning: [],
-                success: [],
-                info: [],
-                no_label: [],
-                onClick: jest.fn(),
-              },
+          <ModalProvider>
+            <ServiceInventoryContext.Provider
+              value={{
+                labelFiltering: {
+                  danger: [],
+                  warning: [],
+                  success: [],
+                  info: [],
+                  no_label: [],
+                  onClick: jest.fn(),
+                },
 
-              refetch,
-            }}
-          >
-            <DestroyAction
-              id={ServiceInstance.a.id}
-              instance_identity={
-                ServiceInstance.a.service_identity_attribute_value ??
-                ServiceInstance.a.id
-              }
-              version={ServiceInstance.a.version}
-              service_entity={ServiceInstance.a.service_entity}
-            />
-          </ServiceInventoryContext.Provider>
+                refetch,
+              }}
+            >
+              <DestroyAction
+                id={ServiceInstance.a.id}
+                instance_identity={
+                  ServiceInstance.a.service_identity_attribute_value ??
+                  ServiceInstance.a.id
+                }
+                version={ServiceInstance.a.version}
+                service_entity={ServiceInstance.a.service_entity}
+              />
+            </ServiceInventoryContext.Provider>
+          </ModalProvider>
         </DependencyProvider>
       </StoreProvider>
     ),

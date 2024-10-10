@@ -33,6 +33,8 @@ const dict = {
   hideAll: "Hide All",
   showAll: "Show All",
   back: "Back",
+  username: "Username",
+  password: "Password",
 
   /**
    * Error related text
@@ -399,6 +401,7 @@ const dict = {
     `Are you sure you want to delete service entity ${serviceName}?`,
   "catalog.delete.failed": "Deleting service entity failed",
   "catalog.instances": "Instances",
+  "catalog.callbacks.delete.title": "Delete Callback",
   "catalog.callbacks.delete": (url: string) =>
     `Are you sure you want to delete callback with url "${url}"?`,
   "catalog.callbacks.delete.failed": "Deleting callback failed",
@@ -601,7 +604,7 @@ const dict = {
       the <b>{environment}</b> environment and reset it to its initial state.
     </>
   ),
-  "home.environment.promtInput": (environment: string) => (
+  "home.environment.promptInput": (environment: string) => (
     <>
       Please type <b>{environment}</b> to confirm
     </>

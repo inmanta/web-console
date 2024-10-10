@@ -42,8 +42,7 @@ interface Props {
 /**
  * A form input component for managing a list of text values.
  *
- * @component
- * @param {Props} props - The props for the TextListFormInput component.
+ * @props {Props} props - The props for the TextListFormInput component.
  *  @prop {string} attributeName - The name of the attribute.
  *  @prop {string[]} attributeValue - The value of the attribute.
  *  @prop {string} description - The description of the attribute.
@@ -55,7 +54,7 @@ interface Props {
  *  @prop {function} handleInputChange - The callback for handling input changes.
  *  @prop {string[]} suggestions - The suggestions for the input field.
  *
- *  @returns {JSX.Element} The TextListFormInput component.
+ *  @returns {React.FC<Props>} The TextListFormInput component.
  */
 export const TextListFormInput: React.FC<Props> = ({
   attributeName,

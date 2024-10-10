@@ -53,10 +53,6 @@ import {
   GetDryRunsQueryManager,
 } from "@S/ComplianceCheck/Data";
 import {
-  GetDesiredStatesQueryManager,
-  GetDesiredStatesStateHelper,
-} from "@S/DesiredState/Data";
-import {
   GetDesiredStateDiffQueryManager,
   GetDesiredStateDiffStateHelper,
 } from "@S/DesiredStateCompare/Data";
@@ -264,11 +260,6 @@ export class QueryManagerResolverImpl implements QueryManagerResolver {
       ),
       GetAgentsQueryManager(this.store, this.apiHelper, this.scheduler),
       GetAgentProcessQueryManager(this.store, this.apiHelper),
-      GetDesiredStatesQueryManager(
-        this.apiHelper,
-        GetDesiredStatesStateHelper(this.store),
-        this.scheduler,
-      ),
       GetVersionResourcesQueryManager(
         this.apiHelper,
         GetVersionResourcesStateHelper(this.store),

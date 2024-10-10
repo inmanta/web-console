@@ -25,6 +25,7 @@ import {
 } from "@/Test";
 import { words } from "@/UI";
 import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
+import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { ServiceCatalogPage } from ".";
 
 expect.extend(toHaveNoViolations);
@@ -66,25 +67,27 @@ function setup() {
   );
 
   const component = (
-    <MemoryRouter
-      initialEntries={[{ pathname: "/lsm/catalog", search: `?env=${env1}` }]}
-    >
-      <DependencyProvider
-        dependencies={{
-          ...dependencies,
-          queryResolver,
-          commandResolver,
-          environmentHandler,
-        }}
+    <ModalProvider>
+      <MemoryRouter
+        initialEntries={[{ pathname: "/lsm/catalog", search: `?env=${env1}` }]}
       >
-        <StoreProvider store={store}>
-          <Page>
-            <ServiceCatalogPage />
-            {linkToEnv2}
-          </Page>
-        </StoreProvider>
-      </DependencyProvider>
-    </MemoryRouter>
+        <DependencyProvider
+          dependencies={{
+            ...dependencies,
+            queryResolver,
+            commandResolver,
+            environmentHandler,
+          }}
+        >
+          <StoreProvider store={store}>
+            <Page>
+              <ServiceCatalogPage />
+              {linkToEnv2}
+            </Page>
+          </StoreProvider>
+        </DependencyProvider>
+      </MemoryRouter>
+    </ModalProvider>
   );
 
   return {

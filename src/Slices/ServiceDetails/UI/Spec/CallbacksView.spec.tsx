@@ -18,6 +18,7 @@ import {
   dependencies,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
+import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import {
   CallbacksQueryManager,
   CallbacksStateHelper,
@@ -73,7 +74,9 @@ function setup() {
         }}
       >
         <StoreProvider store={store}>
-          <CallbacksView service_entity={Service.a.name} />
+          <ModalProvider>
+            <CallbacksView service_entity={Service.a.name} />
+          </ModalProvider>
         </StoreProvider>
       </DependencyProvider>
     </MemoryRouter>

@@ -74,6 +74,8 @@ export const StateAction: React.FC<Props> = ({
 
   /**
    * async method sending out the request to update the state of the instance with selected state
+   *
+   * @returns {Promise<void>} A Promise that resolves when the operation is complete.
    */
   const onSubmit = async (): Promise<void> => {
     const username = authHelper.getUser();

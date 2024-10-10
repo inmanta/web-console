@@ -11,8 +11,6 @@ import {
   Title,
   TextVariants,
   Flex,
-  Modal,
-  ModalVariant,
   Dropdown,
   MenuToggleElement,
   MenuToggle,
@@ -24,6 +22,7 @@ import styled from "styled-components";
 import { Maybe, ServiceModel } from "@/Core";
 import { Spacer, ConfirmUserActionForm, ToastAlert } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
+import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { greyText } from "@/UI/Styles";
 import { words } from "@/UI/words";
 import { SummaryIcons } from "./SummaryIcons";
@@ -32,7 +31,16 @@ interface Props {
   service: ServiceModel;
 }
 
-export const ServiceItem: React.FunctionComponent<Props> = ({ service }) => {
+/**
+ * ServiceItem is a component that displays a service item.
+ *
+ * @props {Props} props - The props of the component.
+ * @prop {ServiceModel} service - The service model.
+ *
+ * @returns {React.FC<Props>} A React component that displays a service item.
+ */
+export const ServiceItem: React.FC<Props> = ({ service }) => {
+  const { triggerModal, closeModal } = useContext(ModalContext);
   const { routeManager, commandResolver } = useContext(DependencyContext);
   const rowRefs = useRef<Record<string, HTMLSpanElement | null>>({});
   const [isOpen, setIsOpen] = useState(false);
@@ -41,23 +49,49 @@ export const ServiceItem: React.FunctionComponent<Props> = ({ service }) => {
     kind: "DeleteService",
     name: service.name,
   });
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const handleModalToggle = () => {
-    setIsDeleteModalOpen(!isDeleteModalOpen);
-  };
-  const onSubmit = async () => {
-    handleModalToggle();
+
+  /**
+   * Handles the submission of deleting the service.
+   * if there is an error, it will set the error message, otherwise it will dispatch an event to notify the service has been deleted.
+   *
+   * @returns {Promise<void>} A Promise that resolves when the operation is complete.
+   */
+  const onSubmit = async (): Promise<void> => {
+    closeModal();
     const result = await trigger();
 
     if (Maybe.isSome(result)) {
       setErrorMessage(result.value);
+    } else {
+      document.dispatchEvent(new CustomEvent("service-deleted"));
     }
-    document.dispatchEvent(new CustomEvent("service-deleted"));
   };
 
-  const onToggleClick = () => {
+  /**
+   * Toggles a dropdown menu.
+   *
+   * @returns {void}
+   */
+  const onToggleClick = (): void => {
     setIsOpen(!isOpen);
+  };
+
+  /**
+   * Opens a modal with a confirmation form.
+   *
+   * @returns {void}
+   */
+  const openModal = (): void => {
+    triggerModal({
+      title: words("catalog.delete.modal.title"),
+      content: (
+        <>
+          {words("catalog.delete.title")(service.name)}
+          <ConfirmUserActionForm onSubmit={onSubmit} onCancel={closeModal} />
+        </>
+      ),
+    });
   };
 
   return (
@@ -149,9 +183,7 @@ export const ServiceItem: React.FunctionComponent<Props> = ({ service }) => {
                 </Link>
               </DropdownItem>
               <DropdownItem
-                onClick={() => {
-                  setIsDeleteModalOpen(true);
-                }}
+                onClick={openModal}
                 key={service.name + "-deleteButton"}
                 aria-label={service.name + "-deleteButton"}
               >
@@ -161,19 +193,6 @@ export const ServiceItem: React.FunctionComponent<Props> = ({ service }) => {
           </Dropdown>
         </DataListAction>
       </DataListItemRow>
-      <Modal
-        disableFocusTrap
-        variant={ModalVariant.small}
-        isOpen={isDeleteModalOpen}
-        title={words("catalog.delete.modal.title")}
-        onClose={handleModalToggle}
-      >
-        {words("catalog.delete.title")(service.name)}
-        <ConfirmUserActionForm
-          onSubmit={onSubmit}
-          onCancel={handleModalToggle}
-        />
-      </Modal>
     </DataListItem>
   );
 };

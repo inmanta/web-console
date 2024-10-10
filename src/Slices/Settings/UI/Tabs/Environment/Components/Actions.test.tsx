@@ -21,6 +21,7 @@ import {
   StaticScheduler,
 } from "@/Test";
 import { DependencyProvider } from "@/UI";
+import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { Actions } from "./Actions";
 
 function setup() {
@@ -35,8 +36,6 @@ function setup() {
     new CommandManagerResolverImpl(store, apiHelper, defaultAuthContext),
   );
 
-  const onClose = jest.fn();
-
   dependencies.environmentModifier.setEnvironment("env");
 
   const component = (
@@ -45,13 +44,15 @@ function setup() {
         <DependencyProvider
           dependencies={{ ...dependencies, queryResolver, commandResolver }}
         >
-          <Actions environment={{ id: "env", name: "connect" }} />
+          <ModalProvider>
+            <Actions environment={{ id: "env", name: "connect" }} />
+          </ModalProvider>
         </DependencyProvider>
       </MemoryRouter>
     </StoreProvider>
   );
 
-  return { component, apiHelper, onClose, store };
+  return { component, apiHelper, store };
 }
 
 test("GIVEN Environment Actions and delete modal WHEN empty or wrong env THEN delete disabled", async () => {
@@ -64,6 +65,12 @@ test("GIVEN Environment Actions and delete modal WHEN empty or wrong env THEN de
       await screen.findByRole("button", { name: "Delete environment" }),
     );
   });
+
+  expect(
+    screen.getByRole<HTMLInputElement>("textbox", {
+      name: "delete environment check",
+    }),
+  ).toHaveFocus();
 
   const input = screen.getByRole<HTMLInputElement>("textbox", {
     name: "delete environment check",

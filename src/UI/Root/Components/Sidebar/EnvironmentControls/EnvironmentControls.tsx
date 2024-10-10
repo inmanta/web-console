@@ -13,8 +13,8 @@ import { RemoteData } from "@/Core";
 import { Spinner } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
-import { HaltDialog } from "./HaltDialog";
-import { ResumeDialog } from "./ResumeDialog";
+import { HaltButton } from "./HaltButton";
+import { ResumeButton } from "./ResumeButton";
 
 export const EnvironmentControls: React.FC = () => {
   const { queryResolver, environmentHandler } = useContext(DependencyContext);
@@ -68,7 +68,7 @@ export const EnvironmentControls: React.FC = () => {
             <StackItem>
               <Flex>
                 <FlexItem>
-                  {data.halted ? <ResumeDialog /> : <HaltDialog />}
+                  {data.halted ? <ResumeButton /> : <HaltButton />}
                 </FlexItem>
               </Flex>
             </StackItem>
