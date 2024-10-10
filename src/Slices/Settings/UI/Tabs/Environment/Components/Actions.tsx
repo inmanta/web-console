@@ -13,6 +13,8 @@ import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
 import { ConfirmationForm } from "./ConfirmationForm";
 
+export type EnvActions = "delete" | "clear";
+
 interface Props {
   environment: Pick<FlatEnvironment, "id" | "name">;
 }
@@ -35,7 +37,7 @@ export const Actions: React.FC<Props> = ({ environment }) => {
    *
    * @returns {void}
    */
-  const openModal = (type: "delete" | "clear"): void => {
+  const openModal = (type: EnvActions): void => {
     triggerModal({
       title: words("home.environment.delete.warning"),
       description: (

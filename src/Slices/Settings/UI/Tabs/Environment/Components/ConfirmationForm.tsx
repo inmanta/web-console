@@ -15,17 +15,18 @@ import { FlatEnvironment, Maybe } from "@/Core";
 import { DependencyContext, useNavigateTo } from "@/UI";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
+import { EnvActions } from "./Actions";
 
 interface Props {
   environment: Pick<FlatEnvironment, "id" | "name">;
-  type: "delete" | "clear";
+  type: EnvActions;
 }
 
 /**
  * ConfirmationForm component.
  * @props {Props} props - The component props.
  * @prop {FlatEnvironment} environment - An object that represents the environment. It is a subset of the `FlatEnvironment` type, including only the `id` and `name` properties.
- * @prop {"delete" | "clear"} type- The type of action to perform.
+ * @prop {EnvActions} type- The type of action to perform.
  *
  * @returns {React.FC <Props>} - The rendered confirmation form.
  */
@@ -56,11 +57,11 @@ export const ConfirmationForm: React.FC<Props> = ({ environment, type }) => {
    * If the operation is successful (i.e., the result is a `None` variant of a `Maybe`), it redirects to home (if the type is "delete") and closes the modal.
    * If the operation fails (i.e., the result is a `Some` variant of a `Maybe`), it sets the component to a non-busy state and sets the error message.
    *
-   * @param {"delete" | "clear"} type - The type of operation to perform.
+   * @param {EnvActions} type - The type of operation to perform.
    *
    * @returns {Promise<void>} A Promise that resolves when the operation is complete.
    */
-  const onConfirm = async (type: "delete" | "clear"): Promise<void> => {
+  const onConfirm = async (type: EnvActions): Promise<void> => {
     setIsBusy(true);
     setErrorMessage(null);
     const error =
