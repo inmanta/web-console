@@ -60,7 +60,7 @@ export const ModalContext =
  *
  * @param {Object} props - The properties passed to the component.
  * @param {React.ReactNode} props.children - The children to be rendered within the `ModalContext.Provider`.
- * @returns {JSX.Element} A `ModalContext.Provider` that wraps the children and a `Modal`.
+ * @returns {React.FunctionComponent<PropsWithChildren>} A `ModalContext.Provider` that wraps the children and a `Modal`.
  */
 export const ModalProvider: React.FunctionComponent<PropsWithChildren> = ({
   children,
