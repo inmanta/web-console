@@ -31,7 +31,7 @@ interface LoginFormProps {
 /**
  * LoginForm component.
  * @param {LoginFormProps} props - The component props.
- * @returns {JSX.Element} The rendered component.
+ * @returns {React.FC<LoginFormProps>} The rendered component.
  */
 export const LoginForm: React.FC<LoginFormProps> = ({
   submitButtonText,
