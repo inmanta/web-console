@@ -31,7 +31,7 @@ expect.extend(toHaveNoViolations);
 
 const axe = configureAxe({
   rules: {
-    // disable landmark rules when iting isolated components.
+    // disable landmark rules when testing isolated components.
     region: { enabled: false },
   },
 });
