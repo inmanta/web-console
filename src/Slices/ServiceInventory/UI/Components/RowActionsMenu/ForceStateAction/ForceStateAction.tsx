@@ -29,7 +29,7 @@ interface Props extends VersionedServiceInstanceIdentifier {
  *  @prop {string[]} availableStates - The available states of the service instance.
  *  @prop {string} insetHeight - The inset height of the service instance.
  *
- * @returns {React.FunctionComponent<Props>} A React component that allows the user to force a state on a service instance.
+ * @returns {React.FC<Props>} A React component that allows the user to force a state on a service instance.
  */
 export const ForceStateAction: React.FC<Props> = ({
   service_entity,

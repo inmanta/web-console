@@ -21,8 +21,15 @@ import {
   EyeSlashIcon,
 } from "@patternfly/react-icons";
 import { useLogin } from "@/Data/Managers/V2/POST/Login";
-import { DependencyContext } from "@/UI";
+import { DependencyContext, words } from "@/UI";
 
+/**
+ * The props for the LoginForm component.
+ *
+ * @interface
+ * @prop {string} submitButtonText - The text to display on the submit button.
+ * @prop {string} submitButtonLabel - The aria-label for the submit butt
+ */
 interface LoginFormProps {
   submitButtonText: string;
   submitButtonLabel?: string;
@@ -30,8 +37,11 @@ interface LoginFormProps {
 
 /**
  * LoginForm component.
- * @param {LoginFormProps} props - The component props.
- * @returns {JSX.Element} The rendered component.
+ * @props {LoginFormProps} props - The component
+ * @prop {string} submitButtonText - The text to display on the submit button.
+ * @prop {string} submitButtonLabel - The aria-label for the submit button.
+ *
+ * @returns {React.FC<LoginFormProps>} The rendered component.
  */
 export const LoginForm: React.FC<LoginFormProps> = ({
   submitButtonText,
@@ -50,11 +60,13 @@ export const LoginForm: React.FC<LoginFormProps> = ({
    * Handle the change of the username input field.
    * @param {React.FormEvent<HTMLInputElement>} _event - The event object.
    * @param {string} value - The current value of the input field.
+   *
+   * @returns {void}
    */
   const handleUsernameChange = (
     _event: React.FormEvent<HTMLInputElement>,
     value: string,
-  ) => {
+  ): void => {
     setUsername(value);
   };
 
@@ -62,11 +74,13 @@ export const LoginForm: React.FC<LoginFormProps> = ({
    * Handle the change of the password input field.
    * @param {React.FormEvent<HTMLInputElement>} _event The event object.
    * @param {string} value The current value of the input field.
+   *
+   * @returns {void}
    */
   const handlePasswordChange = (
     _event: React.FormEvent<HTMLInputElement>,
     value: string,
-  ) => {
+  ): void => {
     setPassword(value);
   };
 
@@ -74,13 +88,15 @@ export const LoginForm: React.FC<LoginFormProps> = ({
    * Handles the submission of the login form.
    *
    * This function is responsible for preventing the default form submission behavior and then calling the mutate function with the current username and password.
-   * @param {Event} event - The event that triggered the form submission.
+   * @param {React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement, MouseEvent>} event - The event that triggered the form submission.
+   *
+   * @returns {void}
    */
   const handleSubmit = (
     event:
       | React.FormEvent<HTMLFormElement>
       | React.MouseEvent<HTMLButtonElement, MouseEvent>,
-  ) => {
+  ): void => {
     event.preventDefault();
     mutate({ username, password });
   };
@@ -107,7 +123,11 @@ export const LoginForm: React.FC<LoginFormProps> = ({
           </HelperText>
         </FormHelperText>
       )}
-      <FormGroup label="Username" isRequired fieldId="pf-login-username-id">
+      <FormGroup
+        label={words("username")}
+        isRequired
+        fieldId="pf-login-username-id"
+      >
         <TextInput
           id="pf-login-username-id"
           isRequired
@@ -119,7 +139,11 @@ export const LoginForm: React.FC<LoginFormProps> = ({
           onChange={handleUsernameChange}
         />
       </FormGroup>
-      <FormGroup label={"Password"} isRequired fieldId="pf-login-password-id">
+      <FormGroup
+        label={words("password")}
+        isRequired
+        fieldId="pf-login-password-id"
+      >
         {
           <InputGroup>
             <InputGroupItem isFill>

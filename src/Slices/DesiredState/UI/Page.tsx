@@ -23,6 +23,11 @@ import { DesiredStatesTable } from "./DesiredStatesTable";
 import { GetDesiredStatesContext } from "./GetDesiredStatesContext";
 import { CompareSelection } from "./Utils";
 
+/**
+ * The Page component that renders the desired state page.
+ *
+ * @returns {React.FC} The rendered desired state page.
+ */
 export const Page: React.FC = () => {
   const { environmentHandler } = useContext(DependencyContext);
   const envId = environmentHandler.useId();
@@ -51,9 +56,10 @@ export const Page: React.FC = () => {
   ).useContinuous(pageSize, filter, currentPage);
 
   /**
-   * callback function that will open a modal to confirm action to delete a version
-   *
+   * function that will open a modal to confirm action to delete a version
    * @param version - the version to delete
+   *
+   * @returns {Promise<void>}
    */
   const setDeleteModal = (version: ParsedNumber) => {
     const onSubmit = async () => {

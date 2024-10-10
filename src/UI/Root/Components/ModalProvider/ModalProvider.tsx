@@ -4,17 +4,17 @@ import { Modal, ModalVariant } from "@patternfly/react-core";
 type IconVariant = "success" | "danger" | "warning" | "info" | "custom";
 
 /**
- * `Props` is an interface for the properties accepted by the `triggerModal` function.
+ * `Params` is an interface for the parameters accepted by the `triggerModal` function.
  *
  * @interface
- * @property {string} title - The title of the modal.
- * @property {React.ReactNode} [description] - The description of the modal.
- * @property {React.ReactNode} content - The content of the modal.
- * @property {React.ReactNode | null} [actions] - The actions of the modal.
- * @property {ModalVariant} [variant] - The variant of the modal.
- * @property {IconVariant} [iconVariant] - The variant of the icon in the modal title.
+ * @param {string} title - The title of the modal.
+ * @param {React.ReactNode} [description] - The description of the modal.
+ * @param {React.ReactNode} content - The content of the modal.
+ * @param {React.ReactNode | null} [actions] - The actions of the modal.
+ * @param {ModalVariant} [variant] - The variant of the modal.
+ * @param {IconVariant} [iconVariant] - The variant of the icon in the modal title.
  */
-interface Props {
+interface Params {
   title: string;
   description?: React.ReactNode;
   content: React.ReactNode;
@@ -31,7 +31,7 @@ interface Props {
  * @property {() => void} closeModal - The function to close the modal.
  */
 export interface ModalContextInterface {
-  triggerModal: (props: Props) => void;
+  triggerModal: (params: Params) => void;
   closeModal: () => void;
 }
 
@@ -58,13 +58,11 @@ export const ModalContext =
  * The `triggerModal` function updates the modal's properties and opens the modal.
  * The `closeModal` function closes the modal.
  *
- * @param {Object} props - The properties passed to the component.
- * @param {React.ReactNode} props.children - The children to be rendered within the `ModalContext.Provider`.
- * @returns {JSX.Element} A `ModalContext.Provider` that wraps the children and a `Modal`.
+ * @prop {Object} props - The properties passed to the component.
+ * @prop {React.ReactNode} children - The children to be rendered within the `ModalContext.Provider`.
+ * @returns {React.FC<PropsWithChildren>} A `ModalContext.Provider` that wraps the children and a `Modal`.
  */
-export const ModalProvider: React.FunctionComponent<PropsWithChildren> = ({
-  children,
-}) => {
+export const ModalProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState<React.ReactNode>();
@@ -83,15 +81,15 @@ export const ModalProvider: React.FunctionComponent<PropsWithChildren> = ({
    * The description and actions default to `null` and an empty array, respectively, if they are not provided.
    * The variant defaults to `ModalVariant.small` if it is not provided.
    *
-   * @param {Props} props - The properties to set for the modal.
-   * @param {string} props.title - The title of the modal.
-   * @param {React.ReactNode} props.[description] - The description of the modal.
-   * @param {React.ReactNode} props.content - The content of the modal.
-   * @param {React.ReactNode | null} props.[actions] - The actions of the modal.
-   * @param {ModalVariant} props.[variant] - The variant of the modal.
-   * @param {IconVariant} props.[iconVariant] - The variant of the icon in the modal title.
+   * @prop {Params} params - The params to set for the modal.
+   * @prop {string} title - The title of the modal.
+   * @prop {React.ReactNode} description - *optional* The description of the modal.
+   * @prop {React.ReactNode} content - The content of the modal.
+   * @prop {React.ReactNode | null} actions - *optional*  The actions of the modal.
+   * @prop {ModalVariant} variant - *optional*  The variant of the modal.
+   * @prop {IconVariant} iconVariant - *optional* The variant of the icon in the modal title.
    */
-  const triggerModal = (props: Props) => {
+  const triggerModal = (params: Params) => {
     const {
       title,
       description = null,
@@ -99,7 +97,7 @@ export const ModalProvider: React.FunctionComponent<PropsWithChildren> = ({
       actions = [],
       variant = ModalVariant.small,
       iconVariant,
-    } = props;
+    } = params;
 
     setTitle(title);
     setDescription(description);

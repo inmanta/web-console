@@ -35,10 +35,10 @@ interface Props {
  * This component creates instances of managers, helpers, and resolvers, and provides them through a `DependencyProvider`.
  * It also wraps its children in a `ModalProvider` and an `UpdateBanner`.
  *
- * @param {Object} props - The properties passed to the component.
- * @param {Store} props.store - The store to be used by the managers and resolvers.
- * @param {React.ReactNode} props.children - The children to be rendered within the Injector.
- * @returns {JSX.Element} A `DependencyProvider` that wraps a `ModalProvider`, an `UpdateBanner`, and the children.
+ * @prop {Object} props - The properties passed to the component.
+ * @prop {Store} store - The store to be used by the managers and resolvers.
+ * @prop {React.ReactNode} children - The children to be rendered within the Injector.
+ * @returns {React.FC<React.PropsWithChildren<Props>>} A `DependencyProvider` that wraps a `ModalProvider`, an `UpdateBanner`, and the children.
  */
 export const Injector: React.FC<React.PropsWithChildren<Props>> = ({
   store,

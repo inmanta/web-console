@@ -20,6 +20,7 @@ import {
   EyeSlashIcon,
 } from "@patternfly/react-icons";
 import { useAddUser } from "@/Data/Managers/V2/POST/AddUser";
+import { words } from "@/UI";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 
 interface UserCredentialsFormProps {
@@ -29,8 +30,11 @@ interface UserCredentialsFormProps {
 
 /**
  * UserCredentialsForm component.
- * @param {UserCredentialsFormProps} props - The component props.
- * @returns {JSX.Element} The rendered component.
+ * @props {UserCredentialsFormProps} props - The component props.
+ * @prop {string} submitButtonText - The text to display on the submit button.
+ * @prop {string} submitButtonLabel - The aria-label for the submit button.
+ *
+ * @returns {React.FC<UserCredentialsFormProps>} The rendered component.
  */
 export const UserCredentialsForm: React.FC<UserCredentialsFormProps> = ({
   submitButtonText,
@@ -103,7 +107,11 @@ export const UserCredentialsForm: React.FC<UserCredentialsFormProps> = ({
           </HelperText>
         </FormHelperText>
       )}
-      <FormGroup label="Username" isRequired fieldId="pf-login-username-id">
+      <FormGroup
+        label={words("username")}
+        isRequired
+        fieldId="pf-login-username-id"
+      >
         <TextInput
           id="pf-login-username-id"
           isRequired
@@ -115,7 +123,11 @@ export const UserCredentialsForm: React.FC<UserCredentialsFormProps> = ({
           onChange={handleUsernameChange}
         />
       </FormGroup>
-      <FormGroup label={"Password"} isRequired fieldId="pf-login-password-id">
+      <FormGroup
+        label={words("password")}
+        isRequired
+        fieldId="pf-login-password-id"
+      >
         {
           <InputGroup>
             <InputGroupItem isFill>

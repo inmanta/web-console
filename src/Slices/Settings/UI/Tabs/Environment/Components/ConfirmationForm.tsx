@@ -30,10 +30,11 @@ interface Props {
 
 /**
  * ConfirmationForm component.
- * @param {Props} props - The component props.
- * @param environment {FlatEnvironment} - The environment to delete or clear.
- * @param type {"delete" | "clear"} - The type of action to perform.
- * @returns {React.FunctionComponent}
+ * @props {Props} props - The component props.
+ * @prop {FlatEnvironment} environment- The environment to delete or clear.
+ * @prop {"delete" | "clear"} type- The type of action to perform.
+ *
+ * @returns {React.FC <Props>} - The rendered confirmation form.
  */
 export const ConfirmationForm: React.FC<Props> = ({ environment, type }) => {
   const { commandResolver } = useContext(DependencyContext);
@@ -63,8 +64,8 @@ export const ConfirmationForm: React.FC<Props> = ({ environment, type }) => {
    * If the operation fails (i.e., the result is a `Some` variant of a `Maybe`), it sets the component to a non-busy state and sets the error message.
    *
    * @param {"delete" | "clear"} type - The type of operation to perform.
-   * @returns {Promise<void>}
-   * @async
+   *
+   * @returns {Promise<void>} A Promise that resolves when the operation is complete.
    */
   const onConfirm = async (type: "delete" | "clear"): Promise<void> => {
     setIsBusy(true);

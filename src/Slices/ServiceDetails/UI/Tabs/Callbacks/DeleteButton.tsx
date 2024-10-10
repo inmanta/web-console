@@ -13,14 +13,14 @@ interface Props {
 }
 
 /**
- * DeleteButton component which holds the logic for deleting a desired state version.
+ * DeleteButton component which holds the logic for deleting a callback.
  *
  * @props {Props} props - The props of the component.
- * @param version {ParsedNumber} - the version to promote
- * @param isDisabled {boolean} - if the action is disabled
- * @returns {React.FunctionComponent}
+ * @prop callback {Callback} - the callback object
+ * @prop service_entity {string} - the service entity name
+ * @returns {React.React.FC<Props> }
  */
-export const DeleteButton: React.FunctionComponent<Props> = ({
+export const DeleteButton: React.FC<Props> = ({
   service_entity,
   callback,
   ...props

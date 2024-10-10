@@ -33,6 +33,8 @@ const dict = {
   hideAll: "Hide All",
   showAll: "Show All",
   back: "Back",
+  username: "Username",
+  password: "Password",
 
   /**
    * Error related text

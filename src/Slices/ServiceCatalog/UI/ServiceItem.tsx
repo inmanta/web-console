@@ -31,7 +31,15 @@ interface Props {
   service: ServiceModel;
 }
 
-export const ServiceItem: React.FunctionComponent<Props> = ({ service }) => {
+/**
+ * ServiceItem is a component that displays a service item.
+ *
+ * @props {Props} props - The props of the component.
+ * @prop {ServiceModel} service - The service model.
+ *
+ * @returns {React.FC<Props>} A React component that displays a service item.
+ */
+export const ServiceItem: React.FC<Props> = ({ service }) => {
   const { triggerModal, closeModal } = useContext(ModalContext);
   const { routeManager, commandResolver } = useContext(DependencyContext);
   const rowRefs = useRef<Record<string, HTMLSpanElement | null>>({});
@@ -45,10 +53,11 @@ export const ServiceItem: React.FunctionComponent<Props> = ({ service }) => {
 
   /**
    * Handles the submission of deleting the service.
+   * if there is an error, it will set the error message, otherwise it will dispatch an event to notify the service has been deleted.
    *
    * @returns {Promise<void>} A Promise that resolves when the operation is complete.
    */
-  const onSubmit = async () => {
+  const onSubmit = async (): Promise<void> => {
     closeModal();
     const result = await trigger();
 
@@ -61,15 +70,19 @@ export const ServiceItem: React.FunctionComponent<Props> = ({ service }) => {
 
   /**
    * Toggles a dropdown menu.
+   *
+   * @returns {void}
    */
-  const onToggleClick = () => {
+  const onToggleClick = (): void => {
     setIsOpen(!isOpen);
   };
 
   /**
    * Opens a modal with a confirmation form.
+   *
+   * @returns {void}
    */
-  const openModal = () => {
+  const openModal = (): void => {
     triggerModal({
       title: words("catalog.delete.modal.title"),
       content: (

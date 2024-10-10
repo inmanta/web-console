@@ -81,7 +81,7 @@ export const CellWithCopyExpert: React.FC<Props> = ({
    *
    * @returns {Promise<void>} A Promise that resolves when the operation is complete.
    */
-  const onSubmit = async () => {
+  const onSubmit = async (): Promise<void> => {
     let newValue = newAttribute;
 
     //if string[] then we need to convert initial value to the same format to be able to compare

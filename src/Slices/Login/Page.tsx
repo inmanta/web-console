@@ -9,9 +9,9 @@ import { LoginForm } from "./UI/LoginForm";
  * Login component.
  * This component is responsible for rendering the login page.
  * @note This is being used only when database authentication is enabled.
- * @returns {React.FunctionComponent} The rendered component.
+ * @returns {React.FC} The rendered component.
  */
-export const Login: React.FunctionComponent = () => {
+export const Login: React.FC = () => {
   return (
     <Wrapper>
       <StyledLogin

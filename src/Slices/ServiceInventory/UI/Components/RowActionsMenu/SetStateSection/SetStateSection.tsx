@@ -13,7 +13,19 @@ interface Props extends VersionedServiceInstanceIdentifier {
   onClose: () => void;
 }
 
-export const SetStateSection: React.FunctionComponent<Props> = ({
+/**
+ * SetStateSection is a component that allows the user to set a state on a service instance.
+ *
+ * @props {Props} props - The props of the component.
+ * @prop {string} service_entity - The service entity of the service instance.
+ * @prop {string} id - The id of the service instance.
+ * @prop {string} instance_identity - The instance identity of the service instance.
+ * @prop {string} version - The version of the service instance.
+ * @prop {string[]} targets - The available states of the service instance.
+ *
+ * @returns {React.FC<Props>} A React component that allows the user to set a state on a service instance.
+ */
+export const SetStateSection: React.FC<Props> = ({
   service_entity,
   id,
   instance_identity,

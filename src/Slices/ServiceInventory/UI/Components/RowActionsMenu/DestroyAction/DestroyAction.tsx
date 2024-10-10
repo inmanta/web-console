@@ -12,6 +12,17 @@ interface Props extends VersionedServiceInstanceIdentifier {
   instance_identity: string;
 }
 
+/**
+ * DestroyAction is a component that allows the user to destroy a service instance.
+ *
+ * @props {Props} props - The props of the component.
+ * @prop {string} service_entity - The service entity of the service instance.
+ * @prop {string} id - The id of the service instance.
+ * @prop {string} instance_identity - The instance identity of the service instance.
+ * @prop {string} version - The version of the service instance.
+ *
+ * @returns {React.FC<Props>} A React component that allows the user to destroy a service instance.
+ */
 export const DestroyAction: React.FC<Props> = ({
   id,
   instance_identity,
@@ -31,9 +42,12 @@ export const DestroyAction: React.FC<Props> = ({
   });
 
   /**
-   * async method sending out the request to destroy the instance
+   * async method that is closing modal and sending out the request to destroy the instance
+   * if there is an error, it will set the error message
+   *
+   * @returns {Promise<void>}  A Promise that resolves when the operation is complete.
    */
-  const onSubmit = async () => {
+  const onSubmit = async (): Promise<void> => {
     closeModal();
     const result = await trigger(refetch);
 

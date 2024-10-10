@@ -24,8 +24,11 @@ export const Actions: React.FC<ActionsProps> = ({ environment }) => {
 
   /**
    * Opens a modal with a confirmation form.
+   * @param {string} type - The type of operation. It can be either "delete" or "clear".
+   *
+   * @returns {void}
    */
-  const openModal = (type: "delete" | "clear") => {
+  const openModal = (type: "delete" | "clear"): void => {
     triggerModal({
       title: words("home.environment.delete.warning"),
       description: (

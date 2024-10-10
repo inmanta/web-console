@@ -15,10 +15,12 @@ interface Props {
 /**
  * PromoteAction component which holds the logic for promoting a desired state version.
  *
+ * @note to be able to Promote a desired state version, the we need to disable auto_deploy setting in the application.
+ *
  * @props {Props} props - The props of the component.
- * @param version {ParsedNumber} - the version to promote
- * @param isDisabled {boolean} - if the action is disabled
- * @returns {React.FunctionComponent}
+ * @prop version {ParsedNumber} - the version to promote
+ * @prop isDisabled {boolean} - if the action is disabled
+ * @returns {React.FC<Props>} - The dropdown item that has logic to promote the desired state version wrapped in tooltip.
  */
 export const PromoteAction: React.FC<Props> = ({ version, isDisabled }) => {
   const { environmentModifier, environmentHandler } =
@@ -27,10 +29,16 @@ export const PromoteAction: React.FC<Props> = ({ version, isDisabled }) => {
   const { mutate, isError, error } = usePromoteDesiredStateVersion(
     environmentHandler.useId(),
   );
+  const isHalted = environmentModifier.useIsHalted();
+
+  /**
+   * method triggering mutation to promote the desired state version
+   *
+   * @returns {void}
+   * */
   const onSubmit = () => {
     mutate(version.toString());
   };
-  const isHalted = environmentModifier.useIsHalted();
 
   useEffect(() => {
     if (isError) {

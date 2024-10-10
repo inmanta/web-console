@@ -31,7 +31,7 @@ expect.extend(toHaveNoViolations);
 
 const axe = configureAxe({
   rules: {
-    // disable landmark rules when iting isolated components.
+    // disable landmark rules when testing isolated components.
     region: { enabled: false },
   },
 });
@@ -103,15 +103,18 @@ describe("DesiredStatesView", () => {
         break;
     }
   });
+
   beforeAll(() => {
     server.listen();
   });
+
   afterEach(() => {
     server.resetHandlers();
     GETRequestsFired = 0;
     POSTRequestsFired = 0;
     DELETERequestsFired = 0;
   });
+
   afterAll(() => {
     server.close();
   });
@@ -201,6 +204,7 @@ describe("DesiredStatesView", () => {
   it("When using the status filter then only the matching desired states should be fetched and shown", async () => {
     server.use(
       http.get("/api/v2/desiredstate", async ({ request }) => {
+        //we are expecting that at some point the request will have the filters applied for status and we mock the adequate response
         if (
           request.url.split("?")[1] ===
           "limit=20&sort=version.desc&filter.status=skipped_candidate"
@@ -275,6 +279,7 @@ describe("DesiredStatesView", () => {
   it("When using the Date filter then the desired state versions within the range selected range should be fetched and shown", async () => {
     server.use(
       http.get("/api/v2/desiredstate", async ({ request }) => {
+        //we are expecting that at some point the request will have the filters applied for date and we mock the adequate response
         if (
           request.url.split("?")[1] ===
           "limit=20&sort=version.desc&filter.status=active&filter.status=candidate&filter.status=retired&filter.date=ge%3A2021-12-05%2B23%3A00%3A00&filter.date=le%3A2021-12-06%2B23%3A00%3A00"
@@ -366,6 +371,7 @@ describe("DesiredStatesView", () => {
   it("When using the Version filter then the desired state versions within the range selected range should be fetched and shown", async () => {
     server.use(
       http.get("/api/v2/desiredstate", async ({ request }) => {
+        //we are expecting that at some point the request will have the filters applied for version and we mock the adequate response
         if (
           request.url.split("?")[1] ===
           "limit=20&sort=version.desc&filter.status=active&filter.status=candidate&filter.status=retired&filter.version=ge%3A3&filter.version=le%3A5"
@@ -531,6 +537,7 @@ describe("DesiredStatesView", () => {
   it("Given the Desired states view with filters When promoting a version, then the correct request is be fired", async () => {
     server.use(
       http.get("/api/v2/desiredstate", async ({ request }) => {
+        //we are expecting that at some point the request will have the filters applied for status and we mock the adequate response
         if (
           request.url.split("?")[1] ===
           "limit=20&sort=version.desc&filter.status=candidate"

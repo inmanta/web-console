@@ -57,9 +57,12 @@ export const DeleteAction: React.FC<Props> = ({
   };
 
   /**
-   * async method sending out the request to delete the instance
+   * async method that is closing modal and sending out the request to delete the instance
+   * if there is an error, it will set the error message accordingly
+   *
+   * @returns {Promise<void>} A Promise that resolves when the operation is complete.
    */
-  const onSubmit = async () => {
+  const onSubmit = async (): Promise<void> => {
     closeModal();
     const result = await trigger(refetch);
 
