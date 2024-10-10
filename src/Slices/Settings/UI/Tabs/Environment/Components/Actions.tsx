@@ -13,11 +13,18 @@ import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
 import { ConfirmationForm } from "./ConfirmationForm";
 
-interface ActionsProps {
+interface Props {
   environment: Pick<FlatEnvironment, "id" | "name">;
 }
 
-export const Actions: React.FC<ActionsProps> = ({ environment }) => {
+/**
+ * Actions component.
+ * @props {Props} props - The component props.
+ * @prop {FlatEnvironment} environment - An object that represents the environment. It is a subset of the `FlatEnvironment` type, including only the `id` and `name` properties.
+ *
+ * @returns {React.FC<Props>} - The rendered actions component.
+ */
+export const Actions: React.FC<Props> = ({ environment }) => {
   const { triggerModal } = useContext(ModalContext);
   const { environmentModifier } = useContext(DependencyContext);
   const isProtected = environmentModifier.useIsProtectedEnvironment();

@@ -16,13 +16,6 @@ import { DependencyContext, useNavigateTo } from "@/UI";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
 
-/**
- * This interface defines two properties: `environment` and `type`.
- *
- * @interface
- * @property {Pick<FlatEnvironment, "id" | "name">} environment - An object that represents the environment. It is a subset of the `FlatEnvironment` type, including only the `id` and `name` properties.
- * @property {"delete" | "clear"} type - The type of operation. It can be either "delete" or "clear".
- */
 interface Props {
   environment: Pick<FlatEnvironment, "id" | "name">;
   type: "delete" | "clear";
@@ -31,7 +24,7 @@ interface Props {
 /**
  * ConfirmationForm component.
  * @props {Props} props - The component props.
- * @prop {FlatEnvironment} environment- The environment to delete or clear.
+ * @prop {FlatEnvironment} environment - An object that represents the environment. It is a subset of the `FlatEnvironment` type, including only the `id` and `name` properties.
  * @prop {"delete" | "clear"} type- The type of action to perform.
  *
  * @returns {React.FC <Props>} - The rendered confirmation form.

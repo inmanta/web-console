@@ -51,11 +51,13 @@ export const UserCredentialsForm: React.FC<UserCredentialsFormProps> = ({
    * Handle the change of the username input field.
    * @param {React.FormEvent<HTMLInputElement>} _event - The event object.
    * @param {string} value - The current value of the input field.
+   *
+   * @returns {void}
    */
   const handleUsernameChange = (
     _event: React.FormEvent<HTMLInputElement>,
     value: string,
-  ) => {
+  ): void => {
     setUsername(value);
   };
 
@@ -63,11 +65,13 @@ export const UserCredentialsForm: React.FC<UserCredentialsFormProps> = ({
    * Handle the change of the password input field.
    * @param {React.FormEvent<HTMLInputElement>} _event The event object.
    * @param {string} value The current value of the input field.
+   *
+   * @returns {void}
    */
   const handlePasswordChange = (
     _event: React.FormEvent<HTMLInputElement>,
     value: string,
-  ) => {
+  ): void => {
     setPassword(value);
   };
 
@@ -76,12 +80,14 @@ export const UserCredentialsForm: React.FC<UserCredentialsFormProps> = ({
    *
    * This function is responsible for preventing the default form submission behavior and then calling the mutate function with the current username and password.
    * @param {React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement, MouseEvent>} event - The event that triggered the form submission. This can be either a form submission event or a button click event.
+   *
+   * @returns {void}
    */
   const handleSubmit = (
     event:
       | React.FormEvent<HTMLFormElement>
       | React.MouseEvent<HTMLButtonElement, MouseEvent>,
-  ) => {
+  ): void => {
     event.preventDefault();
     mutate({ username, password });
   };

@@ -25,8 +25,10 @@ export const HaltButton: React.FC = () => {
    * The actions include a confirmation button and a cancel button.
    * The confirmation button pauses all continuous managers, triggers the halt environment command, resumes all continuous managers, and dispatches a "halt-event".
    * The cancel button closes the modal.
+   *
+   * @returns {void}
    */
-  const handleModalToggle = () => {
+  const handleModalToggle = (): void => {
     triggerModal({
       content: words("environment.halt.details"),
       title: words("environment.halt.title"),

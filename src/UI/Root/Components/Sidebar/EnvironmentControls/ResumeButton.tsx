@@ -27,8 +27,10 @@ export const ResumeButton: React.FC = () => {
    * The actions include a confirmation button and a cancel button.
    * The confirmation button triggers the resume environment command, resumes all continuous managers, and dispatches a "resume-event".
    * The cancel button closes the modal.
+   *
+   * @returns {void}
    */
-  const handleModalToggle = () => {
+  const handleModalToggle = (): void => {
     triggerModal({
       content: words("environment.resume.details"),
       title: words("environment.resume.title"),

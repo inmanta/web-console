@@ -60,6 +60,7 @@ export const SetStateSection: React.FC<Props> = ({
    * Handles the submission of the form.
    *
    * @param {string} targetState - The target state to be used in the operation.
+   *
    * @returns {Promise<void>} A Promise that resolves when the operation is complete.
    */
   const onSubmit = async (targetState: string) => {
@@ -73,8 +74,10 @@ export const SetStateSection: React.FC<Props> = ({
 
   /**
    * Opens a modal with a confirmation buttons.
+   *
+   *  @returns {void}
    */
-  const openModal = () => {
+  const openModal = (): void => {
     triggerModal({
       title: words("inventory.statustab.confirmTitle"),
       actions: [
