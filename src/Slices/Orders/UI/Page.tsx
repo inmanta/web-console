@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import {
@@ -37,6 +37,12 @@ export const Page: React.FC = () => {
   });
 
   const disabledOrderView = !featureManager.isOrderViewEnabled();
+
+  //when sorting is triggered, reset the current page
+  useEffect(() => {
+    setCurrentPage({ kind: "CurrentPage", value: "" });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sort.order]);
 
   return (
     <PageContainer title={words("orders.title")}>

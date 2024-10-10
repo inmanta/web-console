@@ -299,7 +299,43 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 2);
     });
 
-    it("2.1.5 Delete previously created instance", () => {
+    it("2.1.5 JSON editor invalid should disable buttons", () => {
+      // Go from Home page to Service Inventory of Basic-service
+      cy.visit("/console/");
+
+      cy.intercept(
+        "GET",
+        "/lsm/v1/service_inventory/basic-service?include_deployment_progress=True&limit=20&&sort=created_at.desc",
+      ).as("GetServiceInventory");
+
+      cy.get('[aria-label="Environment card"]')
+        .contains("lsm-frontend")
+        .click();
+      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
+      cy.get("#basic-service").contains("Show inventory").click();
+
+      // make sure the call to get inventory has been executed
+      cy.wait("@GetServiceInventory");
+
+      // Add an instance and fill form
+      cy.get("#add-instance-button").click();
+      cy.get("#editorButton").click();
+
+      // expect Form and submit buttons to be disabled
+      cy.get("#formButton").should("be.disabled");
+      cy.get("button").contains("Confirm").should("be.disabled");
+
+      // Cancel form should still be possible.
+      cy.get("button").contains("Cancel").click();
+
+      // make sure the call to get inventory has been executed
+      cy.wait("@GetServiceInventory");
+
+      // expect two rows to be in the inventory still
+      cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 2);
+    });
+
+    it("2.1.6 Delete previously created instance", () => {
       cy.visit("/console/");
 
       // Add interceptions for the delete and get call to be able to catch responses later on.

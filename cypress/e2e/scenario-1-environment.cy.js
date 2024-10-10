@@ -134,40 +134,19 @@ describe("Environment", () => {
 
     //go back to home and check if env is visible
     cy.get(".pf-v5-c-breadcrumb__item").eq(0).click();
-    cy.get('[aria-label="Environment card"]').should(
-      "any.contain",
-      testName(2),
-    );
-  });
 
-  it("1.3 delete an environment", function () {
-    //Fill The form and submit
-    cy.visit("/console/environment/create");
-    fillCreateEnvForm({
-      envName: testName(3),
-      projectName: testProjectName(3),
-      shouldPassEnvName: true,
-      fillOptionalInputs: true,
-    });
+    cy.get('[aria-label="Environment card"]').contains(testName(2)).click();
 
-    cy.get("button").contains("Submit").click();
-
-    if (Cypress.env("edition") === "iso") {
-      cy.url().should("contain", "/console/lsm/catalog?env=", {
-        timeout: 10000,
-      });
-    }
-
-    openSettings(testName(3));
-    deleteEnv(testName(3), testProjectName(3));
+    openSettings(testName(2));
+    deleteEnv(testName(2), testProjectName(2));
   });
 
   it("1.4 Edit created environment", function () {
     //Fill The form and submit
     cy.visit("/console/environment/create");
     fillCreateEnvForm({
-      envName: testName(4),
-      projectName: testProjectName(4),
+      envName: testName(3),
+      projectName: testProjectName(3),
       shouldPassEnvName: true,
       fillOptionalInputs: true,
     });
@@ -181,7 +160,7 @@ describe("Environment", () => {
       });
     }
 
-    openSettings(testName(4));
+    openSettings(testName(3));
 
     //change Name value
     cy.get('[aria-label="Name-toggle-edit"]').click();
@@ -237,6 +216,9 @@ describe("Environment", () => {
 
     cy.get("button").contains('Create "New Value Project Name"').click();
     cy.get('[aria-label="Project Name-submit-edit"]').click();
+
+    openSettings("New Value Name");
+    deleteEnv("New Value Name", testProjectName(3));
   });
 
   // specific to ISO

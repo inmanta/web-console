@@ -148,11 +148,11 @@ export const ServiceInstanceForm: React.FC<Props> = ({
 
   // The try catch is there to make certain the provided string is parsable to JSON before setting the formstate.
   const onEditorChange = useCallback(
-    (value: string) => {
+    (value: string, isValid: boolean) => {
       try {
         const parsed = JSON.parse(value);
         setFormState(parsed);
-        setIsEditorValid(true);
+        setIsEditorValid(isValid);
       } catch (error) {
         setIsEditorValid(false);
       }

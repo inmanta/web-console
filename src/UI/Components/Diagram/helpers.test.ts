@@ -4,11 +4,20 @@ import {
   ServiceInstanceModelWithTargetStates,
   ServiceModel,
 } from "@/Core";
+
 import { Service, ServiceInstance } from "@/Test";
 import {
   a as InstanceAttributesA,
   b as InstanceAttributesB,
 } from "@/Test/Data/ServiceInstance/Attributes";
+import {
+  ComposerServiceOrderItem,
+  ConnectionRules,
+  EmbeddedRule,
+  InterServiceRule,
+  LabelLinkView,
+  TypeEnum,
+} from "@/UI/Components/Diagram/interfaces";
 import {
   childModel,
   containerModel,
@@ -25,19 +34,11 @@ import {
   extractRelationsIds,
   checkWhetherConnectionRulesAreExhausted,
   findCorrespondingId,
-  bundleInstances,
+  getServiceOrderItems,
   checkIfConnectionIsAllowed,
   updateLabelPosition,
   toggleLooseElement,
 } from "./helpers";
-import {
-  ConnectionRules,
-  EmbeddedRule,
-  InstanceForApi,
-  InterServiceRule,
-  LabelLinkView,
-  TypeEnum,
-} from "./interfaces";
 import { Link, ServiceEntityBlock } from "./shapes";
 
 jest.mock("uuid", () => ({
@@ -269,18 +270,17 @@ describe("createConnectionRules", () => {
 
 describe("shapesDataTransform", () => {
   it("correctly creates object if it is created with embedded objects", () => {
-    const createdObject: InstanceForApi = {
+    const createdObject: ComposerServiceOrderItem = {
       ...testApiInstance,
       action: "create",
     };
-    const createdEmbedded: InstanceForApi[] = testEmbeddedApiInstances.map(
-      (instance) => {
+    const createdEmbedded: ComposerServiceOrderItem[] =
+      testEmbeddedApiInstances.map((instance) => {
         return { ...instance, action: "create" };
-      },
-    );
+      });
     const result = shapesDataTransform(
-      createdEmbedded,
       createdObject,
+      createdEmbedded,
       testApiInstanceModel,
     );
     expect(result).toMatchObject({
@@ -310,8 +310,8 @@ describe("shapesDataTransform", () => {
 
   it("correctly creates object if only embedded values are edited", () => {
     //simulate that One isn't changed, second is edited
-    const createdObject: InstanceForApi = { ...testApiInstance };
-    const createdEmbedded: InstanceForApi[] = [
+    const createdObject: ComposerServiceOrderItem = { ...testApiInstance };
+    const createdEmbedded: ComposerServiceOrderItem[] = [
       { ...testEmbeddedApiInstances[0], action: null },
       { ...testEmbeddedApiInstances[1], action: "update" },
     ];
@@ -346,41 +346,41 @@ describe("shapesDataTransform", () => {
       ],
     };
     const result = shapesDataTransform(
-      createdEmbedded,
       createdObject,
+      createdEmbedded,
       testApiInstanceModel,
     );
     expect(result).toMatchObject(expectedResult);
 
     //simulate that One isn't changed, second is added
-    const createdEmbedded2: InstanceForApi[] = [
+    const createdEmbedded2: ComposerServiceOrderItem[] = [
       { ...testEmbeddedApiInstances[0], action: null },
       { ...testEmbeddedApiInstances[1], action: "create" },
     ];
 
     const result2 = shapesDataTransform(
-      createdEmbedded2,
       createdObject,
+      createdEmbedded2,
       testApiInstanceModel,
     );
     expect(result2).toMatchObject(expectedResult);
 
     //simulate that One is changed, second is added
-    const createdEmbedded3: InstanceForApi[] = [
+    const createdEmbedded3: ComposerServiceOrderItem[] = [
       { ...testEmbeddedApiInstances[0], action: "update" },
       { ...testEmbeddedApiInstances[1], action: "create" },
     ];
     const result3 = shapesDataTransform(
-      createdEmbedded3,
       createdObject,
+      createdEmbedded3,
       testApiInstanceModel,
     );
     expect(result3).toMatchObject(expectedResult);
   });
 
   it("correctly creates object if its embedded values are deleted", () => {
-    const createdObject: InstanceForApi = { ...testApiInstance };
-    const createdEmbedded: InstanceForApi[] = [
+    const createdObject: ComposerServiceOrderItem = { ...testApiInstance };
+    const createdEmbedded: ComposerServiceOrderItem[] = [
       { ...testEmbeddedApiInstances[0], action: null },
       { ...testEmbeddedApiInstances[1], action: "delete" },
     ];
@@ -409,19 +409,21 @@ describe("shapesDataTransform", () => {
       ],
     };
     const result = shapesDataTransform(
-      createdEmbedded,
       createdObject,
+      createdEmbedded,
       testApiInstanceModel,
     );
     expect(result).toMatchObject(expectedResult);
   });
 
   it("correctly creates object if it is core values are edited", () => {
-    const createdObject: InstanceForApi = {
+    const createdObject: ComposerServiceOrderItem = {
       ...testApiInstance,
       action: "update",
     };
-    const createdEmbedded: InstanceForApi[] = [...testEmbeddedApiInstances];
+    const createdEmbedded: ComposerServiceOrderItem[] = [
+      ...testEmbeddedApiInstances,
+    ];
     const expectedResult = {
       instance_id: "ae6c9dd7-5392-4374-9f13-df3bb42bf0db",
       service_entity: "embedded-entity-service",
@@ -453,31 +455,31 @@ describe("shapesDataTransform", () => {
       ],
     };
     const result = shapesDataTransform(
-      createdEmbedded,
       createdObject,
+      createdEmbedded,
       testApiInstanceModel,
     );
     expect(result).toMatchObject(expectedResult);
 
-    const createdEmbedded2: InstanceForApi[] = testEmbeddedApiInstances.map(
-      (instance) => {
+    const createdEmbedded2: ComposerServiceOrderItem[] =
+      testEmbeddedApiInstances.map((instance) => {
         return { ...instance, action: "update" };
-      },
-    );
+      });
     const result2 = shapesDataTransform(
-      createdEmbedded2,
       createdObject,
+      createdEmbedded2,
+
       testApiInstanceModel,
     );
     expect(result2).toMatchObject(expectedResult);
 
-    const createdEmbedded3: InstanceForApi[] = [
+    const createdEmbedded3: ComposerServiceOrderItem[] = [
       { ...testEmbeddedApiInstances[0], action: null },
       { ...testEmbeddedApiInstances[1], action: "create" },
     ];
     const result3 = shapesDataTransform(
-      createdEmbedded3,
       createdObject,
+      createdEmbedded3,
       testApiInstanceModel,
     );
     expect(result3).toMatchObject(expectedResult);
@@ -497,8 +499,8 @@ describe("shapesDataTransform", () => {
       },
     };
     const result = shapesDataTransform(
-      relatedServices,
       relatedServices[0],
+      relatedServices,
       childModel,
     );
     expect(result).toMatchObject(expectedResult);
@@ -521,8 +523,8 @@ describe("shapesDataTransform", () => {
       },
     };
     const result = shapesDataTransform(
-      relatedServices,
       relatedServices[1],
+      relatedServices,
       containerModel,
     );
     expect(result).toMatchObject(expectedResult);
@@ -1098,7 +1100,7 @@ describe("findCorrespondingId", () => {
   });
 });
 
-describe("bundleInstances", () => {
+describe("getServiceOrderItems", () => {
   it("bundles basic instances correctly", () => {
     const createdInstance = {
       instance_id: "123",
@@ -1160,7 +1162,7 @@ describe("bundleInstances", () => {
     map.set("123", createdInstance);
     map.set("1234", updatedInstance);
     map.set("12345", deletedInstance);
-    const bundledInstances = bundleInstances(
+    const serviceOrderItems = getServiceOrderItems(
       map,
       services as unknown as ServiceModel[],
     );
@@ -1171,7 +1173,7 @@ describe("bundleInstances", () => {
     delete createdCopy.relatedTo;
     delete updatedCopy.relatedTo;
     delete deletedCopy.relatedTo;
-    expect(bundledInstances).toEqual([createdCopy, updatedCopy, deletedCopy]);
+    expect(serviceOrderItems).toEqual([createdCopy, updatedCopy, deletedCopy]);
   });
 
   it("bundles related instances correctly", () => {
@@ -1239,7 +1241,7 @@ describe("bundleInstances", () => {
     map.set("2", parentServiceTwo);
     map.set("11", childInstance);
     map.set("12", childWithManyParentsInstance);
-    const bundledInstances = bundleInstances(
+    const serviceOrderItems = getServiceOrderItems(
       map,
       services as unknown as ServiceModel[],
     );
@@ -1256,7 +1258,7 @@ describe("bundleInstances", () => {
     delete childCopy.relatedTo;
     ChildManyCopy.attributes.parent_entity = ["1", "2"];
     delete ChildManyCopy.relatedTo;
-    expect(bundledInstances).toEqual([
+    expect(serviceOrderItems).toEqual([
       parentOneCopy,
       parentTwoCopy,
       childCopy,
@@ -1338,7 +1340,7 @@ describe("bundleInstances", () => {
     map.set("123", embeddedTwo);
     map.set("1234", embeddedThree);
     map.set("12345", embeddedFour);
-    const bundledInstances = bundleInstances(
+    const serviceOrderItems = getServiceOrderItems(
       map,
       services as unknown as ServiceModel[],
     );
@@ -1351,7 +1353,7 @@ describe("bundleInstances", () => {
       embeddedThree.attributes,
       embeddedFour.attributes,
     ];
-    expect(bundledInstances).toEqual([coreCopy]);
+    expect(serviceOrderItems).toEqual([coreCopy]);
   });
 });
 describe("updateLabelPosition", () => {
