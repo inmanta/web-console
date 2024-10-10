@@ -24,8 +24,10 @@ export const UserInfoRow: React.FC<Props> = ({ user }) => {
 
   /**
    * Opens a modal with a confirmation form.
+   *
+   * @returns {void}
    */
-  const openModal = () => {
+  const openModal = (): void => {
     triggerModal({
       title: words("userManagement.deleteUser.title"),
       content: (

@@ -58,8 +58,10 @@ export const DestroyAction: React.FC<Props> = ({
 
   /**
    * Opens a modal with a confirmation form.
+   *
+   * @returns {void}
    */
-  const openModal = () => {
+  const openModal = (): void => {
     triggerModal({
       title: words("inventory.destroyInstance.title"),
       iconVariant: "danger",

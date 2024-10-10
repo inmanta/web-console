@@ -40,8 +40,10 @@ export const DeleteAction: React.FC<Props> = ({
 
   /**
    * Opens a modal with a confirmation form.
+   *
+   * @returns {void}
    */
-  const handleModalToggle = () => {
+  const handleModalToggle = (): void => {
     triggerModal({
       title: words("inventory.deleteInstance.title"),
       content: (

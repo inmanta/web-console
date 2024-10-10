@@ -43,7 +43,7 @@ export const CatalogActions: React.FC = () => {
    *
    * @returns {Promise<void>} A Promise that resolves when the operation is complete.
    */
-  const onSubmit = async () => {
+  const onSubmit = async (): Promise<void> => {
     closeModal();
     const result = await trigger();
 
@@ -60,8 +60,10 @@ export const CatalogActions: React.FC = () => {
 
   /**
    * Opens a modal with a confirmation form.
+   *
+   * @returns {void}
    */
-  const openModal = () => {
+  const openModal = (): void => {
     triggerModal({
       title: words("catalog.update.modal.title"),
       content: (

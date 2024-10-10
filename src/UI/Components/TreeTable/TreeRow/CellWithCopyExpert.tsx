@@ -135,8 +135,10 @@ export const CellWithCopyExpert: React.FC<Props> = ({
 
   /**
    * Opens a modal with a confirmation form.
+   *
+   * @returns {void}
    */
-  const openModal = () => {
+  const openModal = (): void => {
     triggerModal({
       title: words("inventory.editAttribute.header"),
       content: (
