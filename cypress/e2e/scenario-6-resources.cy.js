@@ -160,10 +160,14 @@ describe("Scenario 6 : Resources", () => {
         .and("contain", "false");
       cy.get(".pf-v5-c-description-list__group")
         .eq(3)
-        .should("contain", "send_event")
+        .should("contain", "receive_events")
         .and("contain", "true");
       cy.get(".pf-v5-c-description-list__group")
         .eq(4)
+        .should("contain", "send_event")
+        .and("contain", "true");
+      cy.get(".pf-v5-c-description-list__group")
+        .eq(5)
         .should("contain", "should_deploy_fail")
         .and("contain", "false");
 
@@ -206,10 +210,14 @@ describe("Scenario 6 : Resources", () => {
         .and("contain", "false");
       cy.get(".pf-v5-c-description-list__group")
         .eq(5)
-        .should("contain", "send_event")
+        .should("contain", "receive_events")
         .and("contain", "true");
       cy.get(".pf-v5-c-description-list__group")
         .eq(6)
+        .should("contain", "send_event")
+        .and("contain", "true");
+      cy.get(".pf-v5-c-description-list__group")
+        .eq(7)
         .should("contain", "should_deploy_fail")
         .and("contain", "false");
 
@@ -660,10 +668,14 @@ describe("Scenario 6 : Resources", () => {
         .and("contain", "false");
       cy.get(".pf-v5-c-description-list__group")
         .eq(3)
-        .should("contain", "send_event")
+        .should("contain", "receive_events")
         .and("contain", "true");
       cy.get(".pf-v5-c-description-list__group")
         .eq(4)
+        .should("contain", "send_event")
+        .and("contain", "true");
+      cy.get(".pf-v5-c-description-list__group")
+        .eq(5)
         .should("contain", "should_deploy_fail")
         .and("contain", "false");
 
