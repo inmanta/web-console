@@ -35,8 +35,10 @@ export function GetCompilationStateQueryManager(
       const update = async () => {
         setCompilerStatusFromCode(await apiHelper.head(URL));
       };
+
       update();
       scheduler.register(query.kind, task);
+
       return () => {
         scheduler.unregister(query.kind);
       };
@@ -56,6 +58,7 @@ export function GetCompilationStateQueryManager(
   ): boolean {
     return query.kind === "GetCompilationState" && kind === "Continuous";
   }
+
   return {
     useContinuous,
     matches,

@@ -1,4 +1,5 @@
 import { dia, g, highlighters } from "@inmanta/rappid";
+import { isEqual } from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import {
   EmbeddedEntity,
@@ -7,13 +8,15 @@ import {
   ServiceModel,
 } from "@/Core";
 import {
+  ComposerServiceOrderItem,
   ConnectionRules,
-  InstanceForApi,
   EmbeddedRule,
   InterServiceRule,
   TypeEnum,
   LabelLinkView,
-} from "./interfaces";
+  SavedCoordinates,
+} from "@/UI/Components/Diagram/interfaces";
+
 import { ServiceEntityBlock } from "./shapes";
 
 export const extractRelationsIds = (
@@ -172,6 +175,7 @@ export const checkIfConnectionIsAllowed = (
         targetAsElement,
       );
   }
+
   return (
     !areSourceConnectionsExhausted &&
     !areTargetConnectionExhausted &&
@@ -250,6 +254,7 @@ const doesElementIsEmbeddedWithExhaustedConnections = (
 
     return connectedHolder.length > 0 && doesSourceMatchholderName;
   }
+
   return false;
 };
 
@@ -257,53 +262,57 @@ const doesElementIsEmbeddedWithExhaustedConnections = (
  * Function that will merge state from Instance Composer to proper object for order_api endpoint.
  * Instance composer state is being split into multiple objects that could be embedded into other available, so we need to recursively
  * go through all of them to group, and sort them
- * @param {InstanceForApi[]} instances all of the instances that were created/edited in the instance, not including the one passed in second parameter
- * @param {InstanceForApi} instance instance which is used taken into consideration as the parent of the possible embedded
+ * @param {ComposerServiceOrderItem} parentInstance Instance that is the main object and to which other instance are eventually connected
+ * @param {ComposerServiceOrderItem[]} instances all of the instances that were created/edited in the instance, not including parentInstance
  * @param {boolean=} isEmbedded boolean informing whether instance passed is embedded or not
  * @returns
  */
 export const shapesDataTransform = (
-  instances: InstanceForApi[],
-  instance: InstanceForApi,
+  parentInstance: ComposerServiceOrderItem,
+  instances: ComposerServiceOrderItem[],
   serviceModel: ServiceModel | EmbeddedEntity,
   isEmbedded = false,
-): InstanceForApi => {
+): ComposerServiceOrderItem => {
   let areEmbeddedEdited = false;
   const matchingInstances = instances.filter(
-    (checkedInstance) => checkedInstance.embeddedTo === instance.instance_id,
+    (checkedInstance) =>
+      checkedInstance.embeddedTo === parentInstance.instance_id,
   );
 
   const notMatchingInstances = instances.filter(
-    (checkedInstance) => checkedInstance.embeddedTo !== instance.instance_id,
+    (checkedInstance) =>
+      checkedInstance.embeddedTo !== parentInstance.instance_id,
   );
 
   //iterate through matching (embedded)instances and group them according to property type to be able to put them in the Array if needed at once
-  const groupedEmbedded: { [instanceId: string]: InstanceForApi[] } =
+  const groupedEmbedded: { [instanceId: string]: ComposerServiceOrderItem[] } =
     matchingInstances.reduce((reducer, instance) => {
       reducer[instance.service_entity] = reducer[instance.service_entity] || [];
       reducer[instance.service_entity].push(instance);
+
       return reducer;
     }, Object.create({}));
 
   for (const [key, instancesToEmbed] of Object.entries(groupedEmbedded)) {
-    if (instance.attributes) {
+    if (parentInstance.attributes) {
       const updated: InstanceAttributeModel[] = [];
       const embeddedModel = serviceModel.embedded_entities.find(
         (entity) => entity.name === instancesToEmbed[0].service_entity,
       );
+
       //iterate through instancesToEmbed to recursively join potential nested embedded entities into correct objects in correct state
       instancesToEmbed.forEach((instanceToEmbed) => {
         if (embeddedModel) {
           const updatedInstance = shapesDataTransform(
-            notMatchingInstances,
             instanceToEmbed,
+            notMatchingInstances,
             embeddedModel,
             !!embeddedModel,
           );
 
           if (!areEmbeddedEdited) {
             areEmbeddedEdited =
-              !instance.action && updatedInstance.action !== null;
+              !parentInstance.action && updatedInstance.action !== null;
           }
           if (
             updatedInstance.action !== "delete" &&
@@ -314,7 +323,7 @@ export const shapesDataTransform = (
         }
       });
 
-      instance.attributes[key] =
+      parentInstance.attributes[key] =
         updated.length === 1 && isSingularRelation(embeddedModel)
           ? updated[0]
           : updated;
@@ -322,22 +331,22 @@ export const shapesDataTransform = (
   }
 
   //convert relatedTo property into valid attribute
-  if (instance.relatedTo) {
-    Array.from(instance.relatedTo).forEach(([id, attributeName]) => {
-      if (instance.attributes) {
+  if (parentInstance.relatedTo) {
+    Array.from(parentInstance.relatedTo).forEach(([id, attributeName]) => {
+      if (parentInstance.attributes) {
         const model = serviceModel.inter_service_relations?.find(
           (relation) => relation.name === attributeName,
         );
+
         if (model) {
           if (model.upper_limit !== 1) {
-            instance.attributes[attributeName];
-            if (Array.isArray(instance.attributes[attributeName])) {
-              (instance.attributes[attributeName] as string[]).push(id);
+            if (Array.isArray(parentInstance.attributes[attributeName])) {
+              (parentInstance.attributes[attributeName] as string[]).push(id);
             } else {
-              instance.attributes[attributeName] = [id];
+              parentInstance.attributes[attributeName] = [id];
             }
           } else {
-            instance.attributes[attributeName] = id;
+            parentInstance.attributes[attributeName] = id;
           }
         }
       }
@@ -346,43 +355,44 @@ export const shapesDataTransform = (
 
   //if any of its embedded instances were edited, and its action is indicating no changes to main attributes, change it to "update"
   if (areEmbeddedEdited) {
-    instance.action = "update";
+    parentInstance.action = "update";
   }
 
   //if its action is "update" and instance isn't embedded change value property to edit as that's what api expect in the body
-  if (instance.action === "update" && !isEmbedded) {
-    if (!!instance.attributes && !instance.edits) {
-      instance.edits = [
+  if (parentInstance.action === "update" && !isEmbedded) {
+    if (!!parentInstance.attributes && !parentInstance.edits) {
+      parentInstance.edits = [
         {
-          edit_id: `${instance.instance_id}_order_update-${uuidv4()}`,
+          edit_id: `${parentInstance.instance_id}_order_update-${uuidv4()}`,
           operation: "replace",
           target: ".",
-          value: instance.attributes,
+          value: parentInstance.attributes,
         },
       ];
     }
-    delete instance.attributes;
+    delete parentInstance.attributes;
   }
 
-  delete instance.embeddedTo;
-  delete instance.relatedTo;
-  return instance;
+  delete parentInstance.embeddedTo;
+  delete parentInstance.relatedTo;
+
+  return parentInstance;
 };
 
 /**
  * Function that takes Map of standalone instances that include core, embedded and related entities and
  * bundle in proper Instance Objects that could be accepted by the order_api request
  *
- * @param {Map<string, InstanceForApi>}instances Map of Instances
+ * @param {Map<string, ComposerServiceOrderItem>}instances Map of Instances
  * @param {ServiceModel[]} services
- * @returns InstanceForApi[]
+ * @returns ComposerServiceOrderItem[]
  */
-export const bundleInstances = (
-  instances: Map<string, InstanceForApi>,
+export const getServiceOrderItems = (
+  instances: Map<string, ComposerServiceOrderItem>,
   services: ServiceModel[],
-): InstanceForApi[] => {
+): ComposerServiceOrderItem[] => {
   const mapToArray = Array.from(instances, (instance) => instance[1]); //only value, the id is stored in the object anyway
-  const deepCopiedMapToArray: InstanceForApi[] = JSON.parse(
+  const deepCopiedMapToArray: ComposerServiceOrderItem[] = JSON.parse(
     JSON.stringify(mapToArray),
   ); //only value, the id is stored in the object anyway
 
@@ -405,15 +415,16 @@ export const bundleInstances = (
     (instance) => !topServicesNames.includes(instance.service_entity),
   );
 
-  const mergedInstances: InstanceForApi[] = [];
+  const mergedInstances: ComposerServiceOrderItem[] = [];
 
   topInstances.forEach((instance) => {
     const serviceModel = services.find(
       (service) => service.name === instance.service_entity,
     );
+
     if (serviceModel) {
       mergedInstances.push(
-        shapesDataTransform(embeddedInstances, instance, serviceModel),
+        shapesDataTransform(instance, embeddedInstances, serviceModel),
       );
     }
   });
@@ -459,6 +470,7 @@ export const updateLabelPosition = (
   linkView: LabelLinkView, //dia.LinkView & dia.Link doesn't have sourceView or targetView properties in the model
 ): { textAnchor: "start" | "end"; x: number; y: number } => {
   let textAnchor, tx, ty, viewCoordinates, anchorCoordinates;
+
   if (side === "target") {
     viewCoordinates = linkView.targetView.model.position();
     anchorCoordinates = linkView.targetPoint;
@@ -513,6 +525,7 @@ export const toggleLooseElement = (
       break;
     case "remove":
       const highlighter = dia.HighlighterView.get(cellView, "loose_element");
+
       if (highlighter) {
         highlighter.remove();
       }
@@ -528,4 +541,78 @@ export const toggleLooseElement = (
       }),
     }),
   );
+};
+
+/**
+ * Gets the coordinates of all cells in the graph. https://resources.jointjs.com/docs/jointjs/v4.0/joint.html#dia.Graph
+ *
+ * @param {dia.Graph} graph - The graph from which to get the cells.
+ * @returns {SavedCoordinates[]} An array of objects, each containing the id, name, attributes, and coordinates of a cell.
+ */
+export const getCellsCoordinates = (graph: dia.Graph): SavedCoordinates[] => {
+  const cells = graph.getCells();
+
+  return cells
+    .filter((cell) => cell.attributes.type === "app.ServiceEntityBlock")
+    .map((cell) => ({
+      id: cell.id,
+      name: cell.attributes.entityName,
+      attributes: cell.attributes.instanceAttributes,
+      coordinates: cell.attributes.position,
+    }));
+};
+
+/**
+ * Applies coordinates to cells in the graph. https://resources.jointjs.com/docs/jointjs/v4.0/joint.html#dia.Graph
+ *
+ * @param {dia.Graph} graph - The graph to which to apply the coordinates.
+ * @param {SavedCoordinates[]} coordinates - The coordinates to apply to the cells.
+ */
+export const applyCoordinatesToCells = (
+  graph: dia.Graph,
+  coordinates: SavedCoordinates[],
+) => {
+  const cells = graph.getCells();
+
+  coordinates.forEach((element) => {
+    const correspondingCell = cells.find(
+      (cell) =>
+        element.id === cell.id ||
+        (element.name === cell.attributes.entityName &&
+          isEqual(element.attributes, cell.attributes.instanceAttributes)),
+    );
+
+    if (correspondingCell) {
+      correspondingCell.set("position", {
+        x: element.coordinates.x,
+        y: element.coordinates.y,
+      });
+    }
+  });
+};
+
+/**
+ * Moves a cell away from any cells it is colliding with.
+ *
+ * @param {dia.Graph} graph - The graph containing the cell.
+ * @param {dia.Cell} cell - The cell to move.
+ */
+export const moveCellFromColliding = (graph: dia.Graph, cell: dia.Cell) => {
+  let isColliding = false;
+
+  do {
+    const overlappingCells = graph
+      .findModelsInArea(cell.getBBox())
+      .filter((el) => el.id !== cell.id);
+
+    if (overlappingCells.length > 0) {
+      isColliding = true;
+      // an overlap found, revert the position
+      const coordinates = cell.position();
+
+      cell.set("position", { x: coordinates.x + 50, y: coordinates.y });
+    } else {
+      isColliding = false;
+    }
+  } while (isColliding);
 };

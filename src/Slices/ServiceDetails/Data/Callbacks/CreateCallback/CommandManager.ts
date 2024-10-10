@@ -15,6 +15,7 @@ export function CreateCallbackCommandManager(
           environment,
           omit(command, "kind"),
         );
+
         if (Either.isLeft(result)) {
           return Maybe.some(result.value);
         } else {
@@ -25,6 +26,7 @@ export function CreateCallbackCommandManager(
             },
             environment,
           );
+
           return Maybe.none();
         }
       };

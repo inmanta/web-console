@@ -26,6 +26,7 @@ export const CreatableSelectInput: React.FC<Props> = ({
   const [submitError, setSubmitError] = useState("");
   const onCreateOption = async (newValue: string) => {
     const result = await onCreate(newValue);
+
     if (Either.isLeft(result)) {
       setSubmitError(result.value);
       onSelect("");

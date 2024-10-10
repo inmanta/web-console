@@ -12,6 +12,7 @@ import { MaybeReport } from "./types";
 
 export const Page: React.FC = () => {
   const { version } = useRouteParams<"ComplianceCheck">();
+
   return <View version={version} />;
 };
 
@@ -48,6 +49,7 @@ export const View: React.FC<Props> = ({ version }) => {
   useEffect(() => {
     if (!RemoteData.isSuccess(data) || data.value.length <= 0) {
       firstReport.current = Maybe.none();
+
       return;
     }
 
@@ -64,6 +66,7 @@ export const View: React.FC<Props> = ({ version }) => {
       const fetchedSelectedReport = data.value.find(
         (report) => report.id === selectedReport.value.id,
       );
+
       if (
         !!fetchedSelectedReport &&
         fetchedSelectedReport.todo !== selectedReport.value.todo

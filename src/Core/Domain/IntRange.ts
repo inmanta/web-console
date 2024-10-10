@@ -17,8 +17,10 @@ export const serializeList = (ranges: IntRange[]): string[] =>
 export const parse = (candidate: unknown): IntRange | undefined => {
   if (typeof candidate !== "string") return undefined;
   const [operator, valueString] = candidate.split("__");
+
   if (!isValidOperator(operator) || !isValidNumber(valueString))
     return undefined;
+
   return {
     operator,
     value: parseInt(valueString, 10),
@@ -27,6 +29,7 @@ export const parse = (candidate: unknown): IntRange | undefined => {
 
 export const parseList = (candidate: unknown): IntRange[] | undefined => {
   if (!Array.isArray(candidate)) return undefined;
+
   return candidate.map(parse).filter(isNotUndefined);
 };
 

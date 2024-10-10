@@ -47,6 +47,7 @@ export class ResourceHistoryTablePresenter
     if (index > -1 && index < this.getNumberOfColumns()) {
       return this.getColumnHeads()[index].apiName;
     }
+
     return undefined;
   }
 
@@ -58,6 +59,7 @@ export class ResourceHistoryTablePresenter
 
   public getSortableColumnNames(): string[] {
     const sortableColumns = ["date"];
+
     return sortableColumns;
   }
 

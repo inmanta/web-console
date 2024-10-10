@@ -10,6 +10,7 @@ const clearEnvironment = (nameEnvironment = "lsm-frontend") => {
   cy.url().then((url) => {
     const location = new URL(url);
     const id = location.searchParams.get("env");
+
     cy.request("DELETE", `/api/v1/decommission/${id}`);
   });
 };
@@ -50,6 +51,7 @@ const forceUpdateEnvironment = (nameEnvironment = "lsm-frontend") => {
   cy.url().then((url) => {
     const location = new URL(url);
     const id = location.searchParams.get("env");
+
     cy.request({
       method: "POST",
       url: `/lsm/v1/exporter/export_service_definition`,
@@ -602,6 +604,12 @@ describe("Scenario 6 : Resources", () => {
       cy.get(
         "#PaginationWidget-top-top-toggle > .pf-v5-c-menu-toggle__text > b:first-of-type",
       ).should("have.text", "21 - 40");
+
+      // Change sorting and expect to be redirected to the first page of the table
+      cy.get("button").contains("Type").click();
+      cy.get(
+        "#PaginationWidget-top-top-toggle > .pf-v5-c-menu-toggle__text > b:first-of-type",
+      ).should("have.text", "1 - 20");
     });
   } else {
     it("6.6 Resources for OSS", () => {

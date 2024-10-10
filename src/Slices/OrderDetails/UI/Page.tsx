@@ -19,7 +19,7 @@ export const Page: React.FC = () => {
   const disabledOrderDetailsView = !featureManager.isOrderViewEnabled();
 
   return (
-    <PageContainer title={words("ordersDetails.title")}>
+    <PageContainer pageTitle={words("ordersDetails.title")}>
       <RemoteDataView
         data={data}
         label="OrderDetailsView"

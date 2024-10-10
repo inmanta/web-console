@@ -64,6 +64,7 @@ function setup() {
 
 test("ResourceHistoryView shows empty table", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   expect(
@@ -85,6 +86,7 @@ test("ResourceHistoryView shows empty table", async () => {
 
 test("ResourceHistoryView shows failed table", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   expect(
@@ -98,8 +100,9 @@ test("ResourceHistoryView shows failed table", async () => {
   ).toBeInTheDocument();
 });
 
-test("ResourceHistory shows success table", async () => {
+test("ResourceHistoryView shows success table", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   expect(
@@ -122,16 +125,19 @@ test("ResourceHistory shows success table", async () => {
 
 test("ResourceHistoryView shows sorting buttons for sortable columns", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
   apiHelper.resolve(Either.right(ResourceHistory.response));
   expect(await screen.findByRole("button", { name: /Date/i })).toBeVisible();
 });
 
-test("ResourcesView sets sorting parameters correctly on click", async () => {
+test("ResourceHistoryView sets sorting parameters correctly on click", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
   apiHelper.resolve(Either.right(ResourceHistory.response));
   const stateButton = await screen.findByRole("button", { name: /date/i });
+
   expect(stateButton).toBeVisible();
   await act(async () => {
     await userEvent.click(stateButton);
@@ -139,8 +145,9 @@ test("ResourcesView sets sorting parameters correctly on click", async () => {
   expect(apiHelper.pendingRequests[0].url).toContain("&sort=date.asc");
 });
 
-test("GIVEN The Resources table WHEN the user clicks on the expansion toggle THEN the tabs are shown", async () => {
+test("GIVEN The ResourceHistoryView WHEN the user clicks on the expansion toggle THEN the tabs are shown", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   await act(async () => {
@@ -156,4 +163,64 @@ test("GIVEN The Resources table WHEN the user clicks on the expansion toggle THE
     screen.getAllByRole("tab", { name: "Desired State" })[0],
   ).toBeVisible();
   expect(screen.getAllByRole("tab", { name: "Requires" })[0]).toBeVisible();
+});
+
+test("GIVEN The ResourceHistoryView WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async () => {
+  const { component, apiHelper } = setup();
+
+  render(component);
+
+  //mock that response has more than one site
+  await act(async () => {
+    apiHelper.resolve(
+      Either.right({
+        ...ResourceHistory.response,
+        metadata: {
+          total: 103,
+          before: 0,
+          after: 3,
+          page_size: 100,
+        },
+        links: {
+          ...ResourceHistory.response.links,
+          next: "/fake-link?end=fake-first-param",
+        },
+      }),
+    );
+  });
+
+  const nextPageButton = screen.getByLabelText("Go to next page");
+
+  expect(nextPageButton).toBeEnabled();
+
+  await act(async () => {
+    await userEvent.click(nextPageButton);
+  });
+  //expect the api url to contain start and end keywords that are used for pagination when we are moving to the next page
+  expect(apiHelper.pendingRequests[0].url).toMatch(/(&start=|&end=)/);
+  expect(apiHelper.pendingRequests[0].url).toMatch(/(&sort=date.desc)/);
+
+  await act(async () => {
+    apiHelper.resolve(
+      Either.right({
+        ...ResourceHistory.response,
+        metadata: {
+          total: 103,
+          before: 100,
+          after: 0,
+          page_size: 100,
+        },
+      }),
+    );
+  });
+
+  //sort on the second page
+  await act(async () => {
+    await userEvent.click(screen.getByRole("button", { name: "Date" }));
+  });
+
+  // expect the api url to not contain start and end keywords that are used for pagination to assert we are back on the first page.
+  // we are asserting on the second request as the first request is for the updated sorting event, and second is chained to back to the first page with still correct sorting
+  expect(apiHelper.pendingRequests[1].url).not.toMatch(/(&start=|&end=)/);
+  expect(apiHelper.pendingRequests[1].url).toMatch(/(&sort=date.asc)/);
 });

@@ -1,5 +1,6 @@
 import React, { act } from "react";
 import { MemoryRouter } from "react-router-dom";
+import { Page } from "@patternfly/react-core";
 import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
@@ -14,7 +15,7 @@ import { DeferredApiHelper, dependencies, StaticScheduler } from "@/Test";
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import { Mock } from "@S/Facts/Test";
-import { Page } from "./Page";
+import { FactsPage } from ".";
 
 expect.extend(toHaveNoViolations);
 
@@ -30,7 +31,9 @@ function setup() {
     <MemoryRouter>
       <DependencyProvider dependencies={{ ...dependencies, queryResolver }}>
         <StoreProvider store={store}>
-          <Page />
+          <Page>
+            <FactsPage />
+          </Page>
         </StoreProvider>
       </DependencyProvider>
     </MemoryRouter>
@@ -46,6 +49,7 @@ function setup() {
 
 test("GIVEN Facts page THEN shows table", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
@@ -69,6 +73,7 @@ test("GIVEN Facts page THEN shows table", async () => {
   );
 
   const rows = await screen.findAllByRole("row", { name: "FactsRow" });
+
   expect(rows).toHaveLength(8);
   expect(
     within(rows[0]).getByRole("cell", { name: "2021/03/18 18:10:43" }),
@@ -76,12 +81,14 @@ test("GIVEN Facts page THEN shows table", async () => {
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("GIVEN Facts page THEN sets sorting parameters correctly on click", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
   apiHelper.resolve(
     Either.right({
@@ -98,6 +105,7 @@ test("GIVEN Facts page THEN sets sorting parameters correctly on click", async (
   const resourceIdButton = await screen.findByRole("button", {
     name: words("facts.column.resourceId"),
   });
+
   expect(resourceIdButton).toBeVisible();
   await act(async () => {
     await userEvent.click(resourceIdButton);
@@ -106,6 +114,7 @@ test("GIVEN Facts page THEN sets sorting parameters correctly on click", async (
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
@@ -118,6 +127,7 @@ test.each`
   "When using the $filterName filter of type $filterType with value $filterValue and text $placeholderText then the facts with that $filterUrlName should be fetched and shown",
   async ({ filterValue, placeholderText, filterUrlName }) => {
     const { component, apiHelper } = setup();
+
     render(component);
 
     apiHelper.resolve(
@@ -138,6 +148,7 @@ test.each`
     ).toHaveLength(8);
 
     const input = await screen.findByPlaceholderText(placeholderText);
+
     await act(async () => {
       await userEvent.click(input);
     });
@@ -169,7 +180,75 @@ test.each`
 
     await act(async () => {
       const results = await axe(document.body);
+
       expect(results).toHaveNoViolations();
     });
   },
 );
+
+test("GIVEN FactsView WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async () => {
+  const { component, apiHelper } = setup();
+
+  render(component);
+
+  //mock that response has more than one site
+  await act(async () => {
+    apiHelper.resolve(
+      Either.right({
+        data: Mock.list,
+        metadata: {
+          total: 103,
+          before: 0,
+          after: 3,
+          page_size: 100,
+        },
+        links: {
+          self: "",
+          next: "/fake-link?end=fake-first-param",
+        },
+      }),
+    );
+  });
+
+  expect(screen.getByLabelText("Go to next page")).toBeEnabled();
+
+  await act(async () => {
+    await userEvent.click(screen.getByLabelText("Go to next page"));
+  });
+
+  //expect the api url to contain start and end keywords that are used for pagination when we are moving to the next page
+  expect(apiHelper.pendingRequests[0].url).toMatch(/(&start=|&end=)/);
+  expect(apiHelper.pendingRequests[0].url).toMatch(/(&sort=name.asc)/);
+
+  await act(async () => {
+    apiHelper.resolve(
+      Either.right({
+        data: Mock.list,
+        metadata: {
+          total: 103,
+          before: 0,
+          after: 3,
+          page_size: 100,
+        },
+        links: {
+          self: "",
+          next: "/fake-link?end=fake-first-param",
+        },
+      }),
+    );
+  });
+
+  //sort on the second page
+  const resourceIdButton = await screen.findByText("Name");
+
+  expect(resourceIdButton).toBeVisible();
+
+  await act(async () => {
+    await userEvent.click(resourceIdButton);
+  });
+
+  // expect the api url to not contain start and end keywords that are used for pagination to assert we are back on the first page.
+  // we are asserting on the second request as the first request is for the updated sorting event, and second is chained to back to the first page with still correct sorting
+  expect(apiHelper.pendingRequests[1].url).not.toMatch(/(&start=|&end=)/);
+  expect(apiHelper.pendingRequests[1].url).toMatch(/(&sort=name.desc)/);
+});

@@ -1,5 +1,6 @@
 import React from "react";
 import { HistoryRouterProps, Router } from "react-router-dom";
+
 /**
  * CustomRouter is base for implemntation usePrompt hook which allows to halt and resume navigation on demand.
  *

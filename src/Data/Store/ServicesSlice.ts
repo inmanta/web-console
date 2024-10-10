@@ -12,6 +12,7 @@ export interface ServicesSlice {
    * Stores the full list of service names by their environment.
    */
   listByEnv: Record<string, RemoteData.Type<string, ServiceModel[]>>;
+
   /**
    * Sets a list of service names linked to an environment.
    * It also stores the services in the servicesByNameAndEnv record.
@@ -23,10 +24,12 @@ export interface ServicesSlice {
       data: RemoteData.Type<string, ServiceModel[]>;
     }
   >;
+
   /**
    * Stores a single service by its name and environment.
    */
   byNameAndEnv: Record<string, RemoteData.Type<string, ServiceModel>>;
+
   /**
    * Sets a single service linked to an environment and service name.
    * This should not add services to the namesByEnv record
@@ -51,9 +54,11 @@ export const servicesSlice: ServicesSlice = {
     const toDelete = Object.keys(byNameAndEnv).filter((key) =>
       serviceKeyMaker.matches([environment, ""], key),
     );
+
     toDelete.forEach((key) => delete byNameAndEnv[key]);
     services.forEach((service) => {
       const key = serviceKeyMaker.make([environment, service.name]);
+
       byNameAndEnv[key] = RemoteData.success(service);
     });
   }),

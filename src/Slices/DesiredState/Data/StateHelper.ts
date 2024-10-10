@@ -7,6 +7,7 @@ export function GetDesiredStatesStateHelper(store: Store) {
     store,
     (data, query, environment) => {
       const value = RemoteData.mapSuccess((wrapped) => wrapped, data);
+
       store.dispatch.desiredStates.setList({
         environment,
         data: value,

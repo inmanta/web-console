@@ -67,9 +67,11 @@ function setup(service) {
 
 test("Given the CreateInstance View When creating an instance with attributes Then the correct request is fired", async () => {
   const { component, apiHelper } = setup(Service.a);
+
   render(component);
 
   const bandwidthField = screen.getByText("bandwidth");
+
   expect(bandwidthField).toBeVisible();
 
   await act(async () => {
@@ -77,20 +79,24 @@ test("Given the CreateInstance View When creating an instance with attributes Th
   });
 
   const customerLocationsField = screen.getByText("customer_locations");
+
   await act(async () => {
     await userEvent.type(customerLocationsField, "5");
   });
 
   const orderIdField = screen.getByText("order_id");
+
   await act(async () => {
     await userEvent.type(orderIdField, "7007");
   });
 
   const networkField = screen.getByText("network");
+
   expect(networkField).toBeValid();
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 
@@ -135,6 +141,7 @@ test("Given the CreateInstance View When creating an instance with attributes Th
 
 test("Given the CreateInstance View When creating an instance with Inter-service-relations only Then the correct request is fired", async () => {
   const { component, apiHelper } = setup(Service.withRelationsOnly);
+
   render(component);
 
   await act(async () => {
@@ -152,7 +159,7 @@ test("Given the CreateInstance View When creating an instance with Inter-service
   });
 
   const relationInputField = screen.getByPlaceholderText(
-    words("common.serviceInstance.relation"),
+    words("common.serviceInstance.relations")("test_entity"),
   );
 
   await act(async () => {
@@ -175,6 +182,7 @@ test("Given the CreateInstance View When creating an instance with Inter-service
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 
@@ -198,6 +206,7 @@ test("Given the CreateInstance View When creating an instance with Inter-service
 
 test("Given the CreateInstance View When creating an instance with Inter-service-relations only Then the correct request is fired", async () => {
   const { component, apiHelper } = setup(Service.withRelationsOnly);
+
   render(component);
 
   await act(async () => {
@@ -215,7 +224,7 @@ test("Given the CreateInstance View When creating an instance with Inter-service
   });
 
   const relationInputField = screen.getByPlaceholderText(
-    words("common.serviceInstance.relation"),
+    words("common.serviceInstance.relations")("test_entity"),
   );
 
   await act(async () => {
@@ -254,6 +263,7 @@ test("Given the CreateInstance View When creating an instance with Inter-service
 
 test("Given the CreateInstance View When creating an instance with Inter-service-relations only Then the correct request is fired", async () => {
   const { component, apiHelper } = setup(Service.withRelationsOnly);
+
   render(component);
 
   await act(async () => {
@@ -271,7 +281,7 @@ test("Given the CreateInstance View When creating an instance with Inter-service
   });
 
   const relationInputField = screen.getByPlaceholderText(
-    words("common.serviceInstance.relation"),
+    words("common.serviceInstance.relations")("test_entity"),
   );
 
   await act(async () => {
@@ -310,10 +320,12 @@ test("Given the CreateInstance View When creating an instance with Inter-service
 
 test("Given the CreateInstance View When creating entity with default values Then the inputs have correct values set", async () => {
   const { component } = setup(Service.ServiceWithAllAttrs);
+
   render(component);
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 

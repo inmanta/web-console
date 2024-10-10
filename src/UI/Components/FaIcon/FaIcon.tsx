@@ -29,7 +29,6 @@ interface Props {
 export const DynamicFAIcon = ({ ...props }: Props) => {
   const FAIcon = loadable(() =>
     Promise.resolve(
-      // eslint-disable-next-line import/namespace
       fa[props.icon as keyof typeof fa] || fa["FaQuestionCircle"],
     ),
   );

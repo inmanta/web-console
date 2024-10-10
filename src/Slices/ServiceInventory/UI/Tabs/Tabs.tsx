@@ -12,8 +12,8 @@ import { DynamicFAIcon } from "@/UI/Components/FaIcon";
 import { MomentDatePresenter } from "@/UI/Utils";
 import { words } from "@/UI/words";
 import { AttributesTab } from "./AttributesTab";
-import { ConfigTab } from "./ConfigTab";
-import { DocumentationTabs } from "./DocumentationTab";
+import { ConfigSectionContent } from "./ConfigSectionContent";
+import { MarkdownCard } from "./MarkdownCard";
 import { ResourcesTab } from "./ResourcesTab";
 import { StatusTab } from "./StatusTab";
 
@@ -176,7 +176,11 @@ const configTab = (
   id: TabKey.Config,
   title: words("config.title"),
   icon: <CogIcon />,
-  view: <ConfigTab serviceInstanceIdentifier={serviceInstanceIdentifier} />,
+  view: (
+    <ConfigSectionContent
+      serviceInstanceIdentifier={serviceInstanceIdentifier}
+    />
+  ),
   isDisabled,
   ref,
 });
@@ -203,6 +207,7 @@ const documentationTab = (
         attribute.attribute_annotations.web_presentation === "documentation"
       ) {
         const attributeValue = getAttributeValue(attribute.name, row);
+
         webPresentationAttributes.push({
           id: attribute.attribute_annotations.web_title,
           icon: (
@@ -211,7 +216,7 @@ const documentationTab = (
             />
           ),
           view: (
-            <DocumentationTabs
+            <MarkdownCard
               attributeValue={attributeValue}
               web_title={attribute.attribute_annotations.web_title}
             />

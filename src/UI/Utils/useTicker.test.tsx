@@ -17,8 +17,10 @@ test("GIVEN useTickerWithInterval WHEN provided with interval THEN executes at t
   const Component: React.FC = () => {
     useTickerWithInterval("OneSecond");
     callback();
+
     return null;
   };
+
   render(<Component />);
 
   await act(async () => {
@@ -35,6 +37,7 @@ test("GIVEN useTickerWithUnixMs WHEN provided with timestamp longer than 1 hour 
   const Component: React.FC = () => {
     useTickerWithUnixMs(value);
     callback();
+
     return null;
   };
 
@@ -53,8 +56,10 @@ test("GIVEN useTickerWithUnixMs WHEN provided with timestamp less than 1 minute 
   const Component: React.FC = () => {
     useTickerWithUnixMs(value);
     callback();
+
     return null;
   };
+
   render(<Component />);
 
   await act(async () => {

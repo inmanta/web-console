@@ -19,6 +19,7 @@ function setup() {
   const apiHelper = new DeferredApiHelper();
 
   const storeInstance = getStoreInstance();
+
   storeInstance.dispatch.environment.setEnvironmentDetailsById({
     id: ServiceInstance.a.environment,
     value: RemoteData.success({ halted: false } as EnvironmentDetails),
@@ -36,6 +37,7 @@ function setup() {
     ),
   );
   const refetch = jest.fn();
+
   return {
     component: () => (
       <StoreProvider store={storeInstance}>
@@ -81,10 +83,12 @@ function setup() {
 describe("DeleteModal ", () => {
   it("Shows form when clicking on modal button", async () => {
     const { component } = setup();
+
     render(component());
     const modalButton = await screen.findByText(
       words("inventory.destroyInstance.button"),
     );
+
     await act(async () => {
       await userEvent.click(modalButton);
     });
@@ -94,14 +98,17 @@ describe("DeleteModal ", () => {
 
   it("Closes modal when cancelled", async () => {
     const { component } = setup();
+
     render(component());
     const modalButton = await screen.findByText(
       words("inventory.destroyInstance.button"),
     );
+
     await act(async () => {
       await userEvent.click(modalButton);
     });
     const noButton = await screen.findByText(words("no"));
+
     await act(async () => {
       await userEvent.click(noButton);
     });
@@ -110,14 +117,17 @@ describe("DeleteModal ", () => {
 
   it("Sends request when submitted", async () => {
     const { component, apiHelper, refetch } = setup();
+
     render(component());
     const modalButton = await screen.findByText(
       words("inventory.destroyInstance.button"),
     );
+
     await act(async () => {
       await userEvent.click(modalButton);
     });
     const yesButton = await screen.findByText(words("yes"));
+
     await act(async () => {
       await userEvent.click(yesButton);
     });
@@ -134,6 +144,7 @@ describe("DeleteModal ", () => {
   it("Doesn't take environment halted status in account", async () => {
     const { component, storeInstance } = setup();
     const { rerender } = render(component());
+
     act(() => {
       storeInstance.dispatch.environment.setEnvironmentDetailsById({
         id: ServiceInstance.a.environment,

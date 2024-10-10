@@ -13,6 +13,7 @@ interface Props {
 
 export const Row: React.FC<Props> = ({ row, version }) => {
   const { routeManager } = useContext(DependencyContext);
+
   return (
     <Tbody>
       <Tr aria-label="Resource Table Row">

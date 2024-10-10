@@ -52,6 +52,7 @@ function setup() {
 
 test("GIVEN ResourceLogsView THEN shows resource logs", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   expect(
@@ -76,11 +77,13 @@ test("GIVEN ResourceLogsView THEN shows resource logs", async () => {
   const rows = await screen.findAllByRole("rowgroup", {
     name: "ResourceLogRow",
   });
+
   expect(rows).toHaveLength(3);
 });
 
 test("GIVEN ResourceLogsView WHEN filtered on message THEN only shows relevant logs", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   await act(async () => {
@@ -90,6 +93,7 @@ test("GIVEN ResourceLogsView WHEN filtered on message THEN only shows relevant l
   const messageFilter = screen.getByRole("searchbox", {
     name: "MessageFilter",
   });
+
   await act(async () => {
     await userEvent.type(messageFilter, "failed{enter}");
   });
@@ -106,5 +110,50 @@ test("GIVEN ResourceLogsView WHEN filtered on message THEN only shows relevant l
   const row = await screen.findByRole("rowgroup", {
     name: "ResourceLogRow",
   });
+
   expect(row).toBeInTheDocument();
+});
+
+test("GIVEN ResourceLogsView WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async () => {
+  const { component, apiHelper } = setup();
+
+  render(component);
+
+  //mock that response has more than one site
+  await act(async () => {
+    apiHelper.resolve(
+      Either.right({
+        ...ResourceLogs.response,
+        metadata: {
+          total: 103,
+          before: 0,
+          after: 3,
+          page_size: 100,
+        },
+      }),
+    );
+  });
+
+  expect(screen.getByLabelText("Go to next page")).toBeEnabled();
+  await act(async () => {
+    await userEvent.click(screen.getByLabelText("Go to next page"));
+  });
+
+  //expect the api url to contain start and end keywords that are used for pagination when we are moving to the next page
+  expect(apiHelper.pendingRequests[0].url).toMatch(/(&start=|&end=)/);
+  expect(apiHelper.pendingRequests[0].url).toMatch(/(&sort=timestamp.desc)/);
+
+  await act(async () => {
+    apiHelper.resolve(Either.right(ResourceLogs.response));
+  });
+
+  //sort on the second page
+  await act(async () => {
+    await userEvent.click(screen.getByText("Timestamp"));
+  });
+
+  // expect the api url to not contain start and end keywords that are used for pagination to assert we are back on the first page.
+  // we are asserting on the second request as the first request is for the updated sorting event, and second is chained to back to the first page with still correct sorting
+  expect(apiHelper.pendingRequests[1].url).not.toMatch(/(&start=|&end=)/);
+  expect(apiHelper.pendingRequests[1].url).toMatch(/(&sort=timestamp.asc)/);
 });

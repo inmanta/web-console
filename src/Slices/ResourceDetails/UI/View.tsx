@@ -30,7 +30,7 @@ export const View: React.FC<Props> = ({ id }) => {
   });
 
   return (
-    <PageContainer title={words("resources.details.title")}>
+    <PageContainer pageTitle={words("resources.details.title")}>
       <CustomFlex>
         <FlexItem>
           <Description>{id}</Description>
@@ -53,5 +53,6 @@ const StatusLabel: React.FC<{
   data: Query.UsedApiData<"GetResourceDetails">;
 }> = ({ data }) => {
   if (!RemoteData.isSuccess(data)) return null;
+
   return <ResourceStatusLabel status={data.value.status} />;
 };

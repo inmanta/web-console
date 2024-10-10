@@ -43,12 +43,14 @@ export const Page: React.FC = () => {
   const [compareSelection, setCompareSelection] = useState<CompareSelection>({
     kind: "None",
   });
+
   function setDeleteModal(version: ParsedNumber, modalState: boolean) {
     setIsModalOpened(modalState);
     setVersionToDelete(modalState ? version : 0);
   }
+
   return (
-    <PageContainer title={words("desiredState.title")}>
+    <PageContainer pageTitle={words("desiredState.title")}>
       <GetDesiredStatesContext.Provider
         value={{
           filter,

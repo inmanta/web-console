@@ -17,6 +17,7 @@ it.each`
       filter,
       currentPage: { kind: "CurrentPage", value: currentPage },
     };
+
     expect(getUrl(query)).toEqual(url);
   },
 );

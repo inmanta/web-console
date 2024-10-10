@@ -33,6 +33,7 @@ export class AttributeInputConverterImpl implements AttributeInputConverter {
    */
   getInputType(attributeModel: AttributeModel): InputType {
     if (attributeModel.type.includes("bool")) return "bool";
+
     return this.matchTextInputWithPatternflyInput(
       attributeModel.name,
       attributeModel.type,
@@ -76,13 +77,16 @@ export class AttributeInputConverterImpl implements AttributeInputConverter {
       return TextInputTypes.number;
     }
     const pfInputTypeNames = Object.keys(TextInputTypes);
+
     for (const inputType of pfInputTypeNames) {
       if (attributeName.includes(inputType)) {
         return TextInputTypes[inputType];
       }
     }
+
     return TextInputTypes.text;
   }
+
   /**
    * Updates to an instance should be applied (compared) to the candidate attribute set, if it's not empty,
    * and to the active attribute set otherwise
@@ -107,11 +111,12 @@ export class AttributeResultConverterImpl implements AttributeResultConverter {
    * @param type The expected inmanta type
    */
   ensureAttributeType(
-    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any */
+    /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
     value: any,
     type: string,
   ): unknown {
     let parsedValue = value;
+
     try {
       if (type.includes("bool")) {
         parsedValue = toOptionalBoolean(value);
@@ -123,24 +128,29 @@ export class AttributeResultConverterImpl implements AttributeResultConverter {
         const parts = value.split(",").map((piece) => {
           const trimmed = piece.trim();
           const converted = Number(trimmed);
+
           if (Number.isFinite(converted)) {
             return converted;
           }
+
           return trimmed;
         });
+
         parsedValue = parts;
       } else if (isNumberType(type)) {
         parsedValue = parseNumberWithType(type, value);
       } else if (type.includes("[]")) {
         const parts = value.split(",").map((piece) => piece.trim());
+
         parsedValue = parts;
       } else if (type.includes("dict")) {
         parsedValue = JSON.parse(value);
       }
-    } catch (error) {
+    } catch (_error) {
       // Let the backend validate for now
       parsedValue = value;
     }
+
     return parsedValue;
   }
 
@@ -162,6 +172,7 @@ export class AttributeResultConverterImpl implements AttributeResultConverter {
         };
       }),
     );
+
     return attributesTypeCorrect;
   }
 
@@ -181,6 +192,7 @@ export class AttributeResultConverterImpl implements AttributeResultConverter {
     // Make sure that we include values of nested embedded entities when checking the difference if only a part of them has changed
     // Otherwise a partial update might not be valid or might remove previously set nested attributes
     const richDiff = cloneDeep(originalAttributes);
+
     merge(richDiff, attributesAfterChanges);
     // Don't include changes from undefined to null, but allow setting a value explicitly to null
     const changedAttributeNames = Object.keys(richDiff).filter(
@@ -192,9 +204,11 @@ export class AttributeResultConverterImpl implements AttributeResultConverter {
         !isEqual(richDiff[attributeName], originalAttributes[attributeName]),
     );
     const updatedAttributes = {};
+
     for (const attribute of changedAttributeNames) {
       updatedAttributes[attribute] = richDiff[attribute];
     }
+
     return updatedAttributes;
   }
 }

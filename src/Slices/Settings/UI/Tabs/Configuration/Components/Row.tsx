@@ -34,6 +34,7 @@ const getDescription = (
   if (typeof info.default === "object") {
     return `${info.doc}\ndefault: ${JSON.stringify(info.default)}`;
   }
+
   return `${info.doc}\ndefault: ${info.default}`;
 };
 

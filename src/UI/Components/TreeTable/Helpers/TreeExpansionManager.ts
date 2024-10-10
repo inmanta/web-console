@@ -9,6 +9,7 @@ export class TreeExpansionManager {
 
   private createState(keys: string[], state = false): ExpansionState {
     const pairs = keys.map((id) => [id, state]);
+
     return fromEntries(pairs);
   }
 
@@ -18,6 +19,7 @@ export class TreeExpansionManager {
 
   toggle(state: ExpansionState, key: string): ExpansionState {
     if (state[key]) return this.close(state, key);
+
     return this.open(state, key);
   }
 
@@ -25,6 +27,7 @@ export class TreeExpansionManager {
     if (shouldOpen) {
       return this.openAll(state);
     }
+
     return this.closeAll(state);
   }
 
@@ -43,6 +46,7 @@ export class TreeExpansionManager {
     );
 
     const closedState = this.createState([...keysToClose, key]);
+
     return {
       ...state,
       ...closedState,
@@ -66,6 +70,7 @@ export class TreeExpansionManager {
   merge(state: ExpansionState, keys: string[]): ExpansionState {
     const entries = keys.map((key) => {
       if (typeof state[key] === "undefined") return [key, false];
+
       return [key, state[key]];
     });
 

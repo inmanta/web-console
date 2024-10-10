@@ -68,6 +68,7 @@ const createHalo = (
         const wasThereRelationToRemove = elementAsService.removeRelation(
           cellView.model.id as string,
         );
+
         didElementChange = didElementChange || wasThereRelationToRemove;
       }
 
@@ -102,6 +103,7 @@ const createHalo = (
         element,
         connectionRules,
       );
+
       if (!isAllowed) {
         return;
       }
@@ -142,6 +144,7 @@ const createHalo = (
         shape,
         "available-to-connect",
       );
+
       if (highlighter) {
         highlighter.remove();
       }
@@ -167,4 +170,5 @@ const createHalo = (
 
   return halo;
 };
+
 export default createHalo;

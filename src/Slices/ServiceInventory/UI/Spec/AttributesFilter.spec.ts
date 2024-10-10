@@ -65,5 +65,6 @@ test("GIVEN The Service Inventory WHEN the user filters on AttributeSet ('Active
   const rowsAfter = await screen.findAllByRole("row", {
     name: "InstanceRow-Intro",
   });
+
   expect(rowsAfter.length).toEqual(1);
 });

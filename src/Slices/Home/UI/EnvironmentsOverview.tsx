@@ -39,6 +39,7 @@ export const EnvironmentsOverview: React.FC<Props> = ({
     filteredByProjectName,
     environmentFilter,
   );
+
   return (
     <>
       <FilterToolbar
@@ -64,6 +65,7 @@ function filterByName(
     if (environmentFilter && environmentFilter.length > 0) {
       return environment.name.includes(environmentFilter);
     }
+
     return true;
   });
 }
@@ -76,6 +78,7 @@ function filterByProject(
     if (projectFilter && projectFilter.length > 0) {
       return projectFilter.includes(environment.projectName);
     }
+
     return true;
   });
 }

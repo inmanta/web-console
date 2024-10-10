@@ -24,6 +24,7 @@ test("TreeTableHelper getExpansionState returns correct expansionState", () => {
     service,
   );
   const expansionState = treeTableHelper.getExpansionState();
+
   expect(expansionState).toEqual({
     a: false,
     "a.b": false,
@@ -201,5 +202,6 @@ test("TreeTableHelper createRows returns correctly ordered list", () => {
       ],
     },
   ];
+
   expect(rows).toMatchObject(expectedRows);
 });

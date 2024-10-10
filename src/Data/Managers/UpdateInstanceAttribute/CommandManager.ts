@@ -38,6 +38,7 @@ export const composeCommandBody = (
   const comment = username
     ? `Triggered from the console by ${username}`
     : "Triggered from the console";
+
   return {
     patch_id: service_entity + "-update-" + id + "-" + version,
     attribute_set_name,

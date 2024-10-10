@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 
 import {
   useUrlStateWithFilter,
@@ -43,8 +43,14 @@ export const Page: React.FC = () => {
     currentPage,
   });
 
+  //when sorting is triggered, reset the current page
+  useEffect(() => {
+    setCurrentPage({ kind: "CurrentPage", value: "" });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sort.order]);
+
   return (
-    <PageContainer title={words("compileReports.title")}>
+    <PageContainer pageTitle={words("compileReports.title")}>
       <CompileReportsTableControls
         filter={filter}
         setFilter={setFilter}

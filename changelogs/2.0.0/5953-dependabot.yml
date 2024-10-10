@@ -1,0 +1,5 @@
+change-type: patch
+description: 'Build(deps-dev): Bump lint-staged from 15.2.0 to 15.2.10'
+destination-branches:
+- master
+sections: {}

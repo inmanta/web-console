@@ -18,6 +18,7 @@ function useConfirmExit(confirmExit: () => boolean, when = true) {
 
     history.push = (...args: Parameters<typeof push>) => {
       const result = confirmExit();
+
       if (result !== false) {
         push(...args);
       }
@@ -28,6 +29,7 @@ function useConfirmExit(confirmExit: () => boolean, when = true) {
     };
   }, [confirmExit, when]);
 }
+
 /**
  * Prompts the user with an Alert before they leave the current screen.
  *
@@ -57,7 +59,9 @@ export function usePrompt(message: string, when = true) {
 
   const confirmExit = useCallback(() => {
     const confirm = window.confirm(message);
+
     return confirm;
   }, [message]);
+
   useConfirmExit(confirmExit, when);
 }

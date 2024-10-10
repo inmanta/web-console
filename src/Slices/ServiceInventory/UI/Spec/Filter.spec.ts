@@ -24,11 +24,13 @@ test("GIVEN The Service Inventory WHEN the user filters on something THEN a data
   const beforeRows = await screen.findAllByRole("row", {
     name: "InstanceRow-Intro",
   });
+
   expect(beforeRows.length).toEqual(2);
 
   const input = await screen.findByPlaceholderText(
     words("inventory.filters.state.placeholder"),
   );
+
   await act(async () => {
     await userEvent.click(input);
   });
@@ -36,6 +38,7 @@ test("GIVEN The Service Inventory WHEN the user filters on something THEN a data
   const option = await screen.findByRole("option", {
     name: `${words("inventory.test.creating")}`,
   });
+
   await act(async () => {
     await userEvent.click(option);
   });
@@ -57,5 +60,6 @@ test("GIVEN The Service Inventory WHEN the user filters on something THEN a data
   const rowsAfter = await screen.findAllByRole("row", {
     name: "InstanceRow-Intro",
   });
+
   expect(rowsAfter.length).toEqual(1);
 });

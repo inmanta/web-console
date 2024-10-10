@@ -26,6 +26,7 @@ describe("Given the Events Page", () => {
       const { component, apiHelper } = new EventsPageComposer().compose(
         Service.a,
       );
+
       render(component);
 
       await act(async () => {
@@ -41,6 +42,7 @@ describe("Given the Events Page", () => {
       const initialRows = await screen.findAllByRole("row", {
         name: "Event table row",
       });
+
       expect(initialRows).toHaveLength(14);
 
       await act(async () => {
@@ -56,11 +58,13 @@ describe("Given the Events Page", () => {
       });
 
       const input = await screen.findByPlaceholderText(placeholderText);
+
       await act(async () => {
         await userEvent.click(input);
       });
       if (filterType === "select") {
         const option = await screen.findByRole("option", { name: filterValue });
+
         await act(async () => {
           await userEvent.click(option);
         });
@@ -87,6 +91,7 @@ describe("Given the Events Page", () => {
       const rowsAfter = await screen.findAllByRole("row", {
         name: "Event table row",
       });
+
       expect(rowsAfter).toHaveLength(3);
     },
   );
@@ -95,6 +100,7 @@ describe("Given the Events Page", () => {
     const { component, apiHelper } = new EventsPageComposer().compose(
       Service.a,
     );
+
     render(component);
 
     await act(async () => {
@@ -110,6 +116,7 @@ describe("Given the Events Page", () => {
     const initialRows = await screen.findAllByRole("row", {
       name: "Event table row",
     });
+
     expect(initialRows).toHaveLength(14);
 
     await act(async () => {
@@ -125,6 +132,7 @@ describe("Given the Events Page", () => {
     });
 
     const fromDatePicker = await screen.findByLabelText("From Date Picker");
+
     await act(async () => {
       await userEvent.click(fromDatePicker);
     });
@@ -132,6 +140,7 @@ describe("Given the Events Page", () => {
       await userEvent.type(fromDatePicker, `2021-04-28`);
     });
     const toDatePicker = await screen.findByLabelText("To Date Picker");
+
     await act(async () => {
       await userEvent.click(toDatePicker);
     });
@@ -159,6 +168,7 @@ describe("Given the Events Page", () => {
     const rowsAfter = await screen.findAllByRole("row", {
       name: "Event table row",
     });
+
     expect(rowsAfter).toHaveLength(3);
 
     // The chips are hidden in small windows, so resize it
@@ -184,6 +194,7 @@ describe("Given the Events Page", () => {
       const { component, apiHelper } = new EventsPageComposer().compose(
         Service.a,
       );
+
       render(component);
 
       await act(async () => {
@@ -199,6 +210,7 @@ describe("Given the Events Page", () => {
       const initialRows = await screen.findAllByRole("row", {
         name: "Event table row",
       });
+
       expect(initialRows).toHaveLength(14);
 
       await act(async () => {
@@ -216,6 +228,7 @@ describe("Given the Events Page", () => {
       const toDatePicker = await screen.findByLabelText(
         `${filterType} Date Picker`,
       );
+
       await act(async () => {
         await userEvent.click(toDatePicker);
       });
@@ -245,6 +258,7 @@ describe("Given the Events Page", () => {
       const rowsAfter = await screen.findAllByRole("row", {
         name: "Event table row",
       });
+
       expect(rowsAfter).toHaveLength(3);
 
       // The chips are hidden in small windows, so resize it

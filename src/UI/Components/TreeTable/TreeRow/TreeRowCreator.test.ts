@@ -7,9 +7,7 @@ import { PathHelper } from "@/UI/Components/TreeTable/Helpers/PathHelper";
 import { TreeRow } from "./TreeRow";
 import { extractInventoryValues, TreeRowCreator } from "./TreeRowCreator";
 
-const onToggle = () => {
-  undefined;
-};
+const onToggle = () => {};
 
 const attributes: Attributes = {
   candidate: {

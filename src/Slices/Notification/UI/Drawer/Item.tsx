@@ -38,6 +38,7 @@ export const Item: React.FC<Props> = ({ notification, onUpdate }) => {
       navigate(detailsLink.kind, { id: detailsLink.params.id });
     }
   };
+
   return (
     <NotificationDrawerListItem
       variant={getSeverityForNotification(notification.severity)}

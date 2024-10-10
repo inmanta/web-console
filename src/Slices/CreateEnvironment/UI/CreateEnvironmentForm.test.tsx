@@ -60,6 +60,7 @@ function setup() {
 
 test("Given CreateEnvironmentForm When project and environment are not set Then the submit button is disabled", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   await act(async () => {
@@ -74,12 +75,14 @@ test("Given CreateEnvironmentForm When project and environment are not set Then 
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("Given CreateEnvironmentForm When no projects are known, THEN cannot add empty project name", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   await act(async () => {
@@ -120,12 +123,14 @@ test("Given CreateEnvironmentForm When no projects are known, THEN cannot add em
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test(`Given CreateEnvironmentForm When an existing project and valid environment are set and submit is clicked Then sends the correct request`, async () => {
   const { component, apiHelper } = setup();
+
   render(component);
   await act(async () => {
     apiHelper.resolve(
@@ -149,6 +154,7 @@ test(`Given CreateEnvironmentForm When an existing project and valid environment
   });
 
   const textBox = await screen.findByRole("textbox", { name: "Name-input" });
+
   await act(async () => {
     await userEvent.clear(textBox);
   });
@@ -158,6 +164,7 @@ test(`Given CreateEnvironmentForm When an existing project and valid environment
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 
@@ -180,6 +187,7 @@ test(`Given CreateEnvironmentForm When an existing project and valid environment
 
 test(`Given CreateEnvironmentForm When an existing project, a valid environment and repository settings are set and submit is clicked Then sends the correct request`, async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   await act(async () => {
@@ -204,6 +212,7 @@ test(`Given CreateEnvironmentForm When an existing project, a valid environment 
   });
 
   const textBox = await screen.findByRole("textbox", { name: "Name-input" });
+
   await act(async () => {
     await userEvent.clear(textBox);
   });
@@ -216,6 +225,7 @@ test(`Given CreateEnvironmentForm When an existing project, a valid environment 
   const branchTextBox = await screen.findByRole("textbox", {
     name: "Branch-input",
   });
+
   await act(async () => {
     await userEvent.clear(branchTextBox);
   });
@@ -225,6 +235,7 @@ test(`Given CreateEnvironmentForm When an existing project, a valid environment 
   const urlTextBox = await screen.findByRole("textbox", {
     name: "Repository-input",
   });
+
   await act(async () => {
     await userEvent.clear(urlTextBox);
   });
@@ -234,6 +245,7 @@ test(`Given CreateEnvironmentForm When an existing project, a valid environment 
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 
@@ -261,6 +273,7 @@ test(`Given CreateEnvironmentForm When an existing project, a valid environment 
 
 test(`Given CreateEnvironmentForm When a new project and valid environment are set and submit is clicked Then sends the correct requests`, async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   await act(async () => {
@@ -294,10 +307,12 @@ test(`Given CreateEnvironmentForm When a new project and valid environment are s
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 
   const request = apiHelper.pendingRequests[0];
+
   expect(request).toEqual({
     method: "PUT",
     body: {
@@ -319,6 +334,7 @@ test(`Given CreateEnvironmentForm When a new project and valid environment are s
   });
 
   const textBox = await screen.findByRole("textbox", { name: "Name-input" });
+
   await act(async () => {
     await userEvent.clear(textBox);
   });
@@ -356,6 +372,7 @@ test(`Given CreateEnvironmentForm When a new project and valid environment are s
 
 test("Given CreateEnvironmentForm When creating a new project is not successful Then shows error message", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   await act(async () => {
@@ -420,6 +437,7 @@ test("Given CreateEnvironmentForm When creating a new project is not successful 
 test(`Given CreateEnvironmentForm When an existing project and invalid environment are set and submit is clicked 
       Then shows the error message`, async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   await act(async () => {
@@ -445,6 +463,7 @@ test(`Given CreateEnvironmentForm When an existing project and invalid environme
   });
 
   const textBox = await screen.findByRole("textbox", { name: "Name-input" });
+
   await act(async () => {
     await userEvent.clear(textBox);
   });
@@ -495,6 +514,7 @@ test(`Given CreateEnvironmentForm When an existing project and invalid environme
 
 test(`Given CreateEnvironmentForm When an existing project, a valid environment and description are set and submit is clicked Then sends the correct requests`, async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   await act(async () => {
@@ -519,6 +539,7 @@ test(`Given CreateEnvironmentForm When an existing project, a valid environment 
   });
 
   const textBox = await screen.findByRole("textbox", { name: "Name-input" });
+
   await act(async () => {
     await userEvent.clear(textBox);
   });
@@ -530,6 +551,7 @@ test(`Given CreateEnvironmentForm When an existing project, a valid environment 
   const descriptionInput = screen.getByRole("textbox", {
     name: "Description-input",
   });
+
   await act(async () => {
     await userEvent.clear(descriptionInput);
   });
@@ -560,6 +582,7 @@ test(`Given CreateEnvironmentForm When an existing project, a valid environment 
 
 test(`Given CreateEnvironmentForm When an existing project, a valid environment and repository settings are set then removed and submit is clicked Then sends the correct request`, async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   await act(async () => {
@@ -583,6 +606,7 @@ test(`Given CreateEnvironmentForm When an existing project, a valid environment 
   });
 
   const textBox = await screen.findByRole("textbox", { name: "Name-input" });
+
   await act(async () => {
     await userEvent.clear(textBox);
   });
@@ -594,6 +618,7 @@ test(`Given CreateEnvironmentForm When an existing project, a valid environment 
   const branchTextBox = await screen.findByRole("textbox", {
     name: "Branch-input",
   });
+
   await act(async () => {
     await userEvent.clear(branchTextBox);
   });
@@ -605,6 +630,7 @@ test(`Given CreateEnvironmentForm When an existing project, a valid environment 
   const urlTextBox = await screen.findByRole("textbox", {
     name: "Repository-input",
   });
+
   await act(async () => {
     await userEvent.clear(urlTextBox);
   });

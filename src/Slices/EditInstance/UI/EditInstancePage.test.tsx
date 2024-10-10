@@ -102,6 +102,7 @@ function setup(entity = "a", multiNested = false) {
 
 test("Edit Instance View shows failed state", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
 
   expect(
@@ -116,12 +117,14 @@ test("Edit Instance View shows failed state", async () => {
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("EditInstance View shows success form", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
   const { service_entity, id, version } = ServiceInstance.a;
 
@@ -136,6 +139,7 @@ test("EditInstance View shows success form", async () => {
   ).toBeInTheDocument();
 
   const bandwidthField = screen.getByText("bandwidth");
+
   expect(bandwidthField).toBeVisible();
 
   await act(async () => {
@@ -159,12 +163,14 @@ test("EditInstance View shows success form", async () => {
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("Given the EditInstance View When changing a v1 embedded entity Then the correct request is fired", async () => {
   const { component, apiHelper } = setup();
+
   render(component);
   const { service_entity, id, version } = ServiceInstance.a;
 
@@ -188,6 +194,7 @@ test("Given the EditInstance View When changing a v1 embedded entity Then the co
   expect(screen.getByLabelText("TextInput-service_id")).toBeDisabled();
 
   const bandwidthField = screen.getByText("bandwidth");
+
   expect(bandwidthField).toBeVisible();
 
   await act(async () => {
@@ -212,12 +219,14 @@ test("Given the EditInstance View When changing a v1 embedded entity Then the co
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("Given the EditInstance View When changing a v2 embedded entity Then the correct request  with correct body is fired", async () => {
   const { component, apiHelper } = setup("d");
+
   render(component);
   const { service_entity, id, version } = ServiceInstance.d;
 
@@ -241,6 +250,7 @@ test("Given the EditInstance View When changing a v2 embedded entity Then the co
   expect(screen.getByLabelText("TextInput-service_id")).toBeDisabled();
 
   const bandwidthField = screen.getByText("bandwidth");
+
   expect(bandwidthField).toBeVisible();
 
   await act(async () => {
@@ -290,12 +300,14 @@ test("Given the EditInstance View When changing a v2 embedded entity Then the co
 
   await act(async () => {
     const results = await axe(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("Given the EditInstance View When changing an embedded entity Then the inputs are displayed correctly", async () => {
   const { component, apiHelper } = setup("ServiceWithAllAttrs");
+
   render(component);
 
   expect(
@@ -537,12 +549,14 @@ test("Given the EditInstance View When changing an embedded entity Then the inpu
 
   await act(async () => {
     const results = await axeLimited(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("Given the EditInstance View When adding new nested embedded entity Then the inputs for it are displayed correctly", async () => {
   const { component, apiHelper } = setup("ServiceWithAllAttrs");
+
   render(component);
 
   expect(
@@ -558,6 +572,7 @@ test("Given the EditInstance View When adding new nested embedded entity Then th
   const editableOptionalEmbedded_base = screen.getByLabelText(
     "DictListFieldInput-editableOptionalEmbedded_base",
   );
+
   await act(async () => {
     await userEvent.click(
       screen.getByRole("button", { name: "editableOptionalEmbedded_base" }),
@@ -710,12 +725,14 @@ test("Given the EditInstance View When adding new nested embedded entity Then th
 
   await act(async () => {
     const results = await axeLimited(document.body);
+
     expect(results).toHaveNoViolations();
   });
 });
 
 test("GIVEN the EditInstance View WHEN changing an embedded entity with nested embedded entities THEN the new fields are enabled", async () => {
   const { component, apiHelper } = setup("a", true);
+
   render(component);
 
   expect(

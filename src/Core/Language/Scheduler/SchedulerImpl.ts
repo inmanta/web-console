@@ -21,6 +21,7 @@ export class SchedulerImpl implements Scheduler {
 
   pauseTasks(): void {
     const tasksToPause = this.tasks.toObject();
+
     Object.keys(tasksToPause).forEach((key) => {
       this.tasks.drop(key);
       this.pausedTasks.set(key, this.wrapTask(tasksToPause[key]));
@@ -32,6 +33,7 @@ export class SchedulerImpl implements Scheduler {
 
   resumeTasks(): void {
     const tasksToResume = this.pausedTasks.toObject();
+
     Object.keys(tasksToResume).forEach((key) => {
       this.pausedTasks.drop(key);
       this.tasks.set(key, this.wrapTask(tasksToResume[key]));
@@ -48,6 +50,7 @@ export class SchedulerImpl implements Scheduler {
 
   register(id: string, task: Task): void {
     const setCompleted = this.tasks.set(id, this.wrapTask(task));
+
     if (!setCompleted) {
       throw new Error(`A task with id ${id} is already registered`);
     }
@@ -56,20 +59,24 @@ export class SchedulerImpl implements Scheduler {
 
   private wrapTask(task: Task): Task {
     if (!this.taskWrapper) return task;
+
     return this.taskWrapper(task);
   }
 
   private async execute(): Promise<void> {
     if (this.tasks.isEmpty()) {
       this.ongoing = false;
+
       return;
     }
     const taskRecord = this.tasks.toObject();
+
     this.nextEffects = mapValues(taskRecord, (task) => task.effect());
     this.nextUpdates = mapValues(taskRecord, (task) => task.update);
 
     forIn(await resolvePromiseRecord(this.nextEffects), (data, key) => {
       const update = this.nextUpdates[key];
+
       if (typeof update === "undefined") return;
       update(data);
     });

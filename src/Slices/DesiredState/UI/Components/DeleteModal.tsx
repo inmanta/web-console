@@ -29,6 +29,7 @@ export const DeleteModal: React.FC<Props> = ({ version, isOpened }) => {
     });
     setDeleteModal(0, false);
   };
+
   return (
     <Modal
       disableFocusTrap

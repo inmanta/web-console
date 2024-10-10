@@ -1,6 +1,6 @@
 import { dia, shapes, ui } from "@inmanta/rappid";
 import { InstanceAttributeModel, ServiceModel } from "@/Core";
-import { InstanceWithReferences } from "@/Data/Managers/GetInstanceWithRelations/interface";
+import { InstanceWithRelations } from "@/Data/Managers/V2/GETTERS/GetInstanceWithRelations";
 import {
   appendColumns,
   appendEntity,
@@ -9,12 +9,18 @@ import {
 } from "./actions";
 import { anchorNamespace } from "./anchors";
 import createHalo from "./halo";
-import { checkIfConnectionIsAllowed, toggleLooseElement } from "./helpers";
+import {
+  applyCoordinatesToCells,
+  checkIfConnectionIsAllowed,
+  getCellsCoordinates,
+  toggleLooseElement,
+} from "./helpers";
 import collapseButton from "./icons/collapse-icon.svg";
 import expandButton from "./icons/expand-icon.svg";
 import {
   ActionEnum,
   ConnectionRules,
+  SavedCoordinates,
   TypeEnum,
   serializedCell,
 } from "./interfaces";
@@ -93,6 +99,7 @@ export default function diagramInit(
 
         return isConnected === undefined && isAllowed && baseValidators;
       }
+
       return baseValidators;
     },
   });
@@ -157,6 +164,7 @@ export default function diagramInit(
       );
 
       const bbox = elementAsShape.getBBox();
+
       elementAsShape.attr("toggleButton/y", bbox.height - 24);
       elementAsShape.attr("spacer/y", bbox.height - 33);
       elementAsShape.attr("buttonBody/y", bbox.height - 32);
@@ -194,6 +202,7 @@ export default function diagramInit(
     const targetCell = graph.getCell(
       target.id as dia.Cell.ID,
     ) as ServiceEntityBlock;
+
     if (!(sourceCell.getName()[0] === "_")) {
       linkView.model.appendLabel({
         attrs: {
@@ -286,6 +295,7 @@ export default function diagramInit(
           );
 
           updateInstancesToSend(sourceCell, ActionEnum.UPDATE);
+
           return true;
         }
       }
@@ -297,6 +307,7 @@ export default function diagramInit(
         elementCell.set("embeddedTo", connectingCell.id);
         toggleLooseElement(paper.findViewByModel(elementCell), "remove");
         updateInstancesToSend(elementCell, ActionEnum.UPDATE);
+
         return true;
       } else {
         return false;
@@ -307,6 +318,7 @@ export default function diagramInit(
       sourceCell,
       targetCell,
     );
+
     if (!wasConnectionFromSourceSet) {
       wasConnectionDataAssigned(targetCell, sourceCell);
     }
@@ -347,6 +359,7 @@ export default function diagramInit(
   }
 
   paper.unfreeze();
+
   return {
     removeCanvas: () => {
       scroller.remove();
@@ -354,12 +367,17 @@ export default function diagramInit(
     },
 
     addInstance: (
-      instance: InstanceWithReferences,
+      instance: InstanceWithRelations,
       services: ServiceModel[],
       isMainInstance: boolean,
     ) => {
       appendInstance(paper, graph, instance, services, isMainInstance);
 
+      if (instance.coordinates) {
+        const parsedCoordinates = JSON.parse(instance.coordinates);
+
+        applyCoordinatesToCells(graph, parsedCoordinates);
+      }
       scroller.zoomToFit({
         useModelGeometry: true,
         padding: 20,
@@ -371,6 +389,7 @@ export default function diagramInit(
       });
 
       const jsonGraph = graph.toJSON();
+
       return jsonGraph.cells as serializedCell[];
     },
 
@@ -389,11 +408,14 @@ export default function diagramInit(
         isEmbedded,
         holderName,
       );
+
       if (shape.get("isEmbedded")) {
         toggleLooseElement(paper.findViewByModel(shape), "add");
       }
       const shapeCoordinates = shape.getBBox();
+
       scroller.center(shapeCoordinates.x, shapeCoordinates.y + 200);
+
       return shape;
     },
     editEntity: (cellView, serviceModel, attributeValues) => {
@@ -405,18 +427,20 @@ export default function diagramInit(
         attributeValues,
         false,
       );
+
       return cellView.model as ServiceEntityBlock;
     },
     zoom: (delta) => {
       scroller.zoom(0.05 * delta, { min: 0.4, max: 1.2, grid: 0.05 });
     },
+    getCoordinates: () => getCellsCoordinates(graph),
   };
 }
 
 export interface DiagramHandlers {
   removeCanvas: () => void;
   addInstance: (
-    instance: InstanceWithReferences,
+    instance: InstanceWithRelations,
     services: ServiceModel[],
     isMainInstance: boolean,
   ) => serializedCell[];
@@ -433,4 +457,5 @@ export interface DiagramHandlers {
     attributeValues: InstanceAttributeModel,
   ) => ServiceEntityBlock;
   zoom: (delta: 1 | -1) => void;
+  getCoordinates: () => SavedCoordinates[];
 }

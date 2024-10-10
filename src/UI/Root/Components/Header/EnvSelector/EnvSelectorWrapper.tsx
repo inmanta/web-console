@@ -37,6 +37,7 @@ export const EnvSelectorWrapper: React.FC<Props> = ({
     const matchingEnvItem = selectorItems.find(
       (envItem) => envItem.displayName === value,
     );
+
     if (matchingEnvItem) {
       setToggleText(value);
       onSelectEnvironment(matchingEnvItem);

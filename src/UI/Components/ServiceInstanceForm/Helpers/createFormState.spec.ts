@@ -5,6 +5,7 @@ import { createEditFormState, createFormState } from "./createFormState";
 test("GIVEN fieldsToFormState WHEN passed a DictListField THEN creates formState correctly", () => {
   const fields = [Field.dictList([Field.text])];
   const formState = createFormState(fields);
+
   expect(formState).toMatchObject({
     [Field.dictList().name]: [
       {
@@ -17,6 +18,7 @@ test("GIVEN fieldsToFormState WHEN passed a DictListField THEN creates formState
 test("GIVEN createFormState WHEN passed a dict field with a default value THEN creates formState correctly", () => {
   const fields = [Field.dictionary];
   const formState = createFormState(fields);
+
   expect(formState).toEqual({
     [Field.dictionary.name]: "{}",
   });
@@ -28,6 +30,7 @@ test("Given createEditFormState v1 WHEN passed editable nested fields and curren
     "v1",
     ServiceInstance.nestedEditable.candidate_attributes,
   );
+
   expect(formState).toMatchObject({
     id_attr: "val",
     other_attr1: "test",
@@ -56,6 +59,7 @@ test("Given createEditFormState v1 WHEN passed editable nested fields and curren
 test("GIVEN fieldsToFormState WHEN passed a interservice relations THEN creates formState correctly", () => {
   const fields = Field.RelationListFields;
   const formState = createFormState(fields);
+
   expect(formState).toMatchObject({
     relation1: [],
     relation2: [],
@@ -74,6 +78,7 @@ test("GIVEN createEditFormState v1 WHEN passed a interservice relations and curr
     relation4: ["id"],
     relation6: ["abc"],
   });
+
   expect(formState).toMatchObject({
     relation1: ["id123", "id456"],
     relation2: [],
@@ -90,6 +95,7 @@ test("Given createEditFormState v2 WHEN passed editable nested fields and curren
     "v2",
     ServiceInstance.nestedEditable.candidate_attributes,
   );
+
   expect(formState).toMatchObject(
     ServiceInstance.nestedEditable
       .candidate_attributes as InstanceAttributeModel,
