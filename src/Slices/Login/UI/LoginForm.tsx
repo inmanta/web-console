@@ -23,27 +23,20 @@ import {
 import { useLogin } from "@/Data/Managers/V2/POST/Login";
 import { DependencyContext, words } from "@/UI";
 
-/**
- * The props for the LoginForm component.
- *
- * @interface
- * @prop {string} submitButtonText - The text to display on the submit button.
- * @prop {string} submitButtonLabel - The aria-label for the submit butt
- */
-interface LoginFormProps {
+interface Props {
   submitButtonText: string;
   submitButtonLabel?: string;
 }
 
 /**
  * LoginForm component.
- * @props {LoginFormProps} props - The component
+ * @props {Props} props - The component
  * @prop {string} submitButtonText - The text to display on the submit button.
  * @prop {string} submitButtonLabel - The aria-label for the submit button.
  *
- * @returns {React.FC<LoginFormProps>} The rendered component.
+ * @returns {React.FC<Props>} The rendered component.
  */
-export const LoginForm: React.FC<LoginFormProps> = ({
+export const LoginForm: React.FC<Props> = ({
   submitButtonText,
   submitButtonLabel = "login-button",
 }) => {
