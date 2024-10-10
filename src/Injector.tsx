@@ -33,7 +33,7 @@ interface Props {
 
 /**
  * This component creates instances of managers, helpers, and resolvers, and provides them through a `DependencyProvider`.
- * It also wraps its children in a `ModalProvider` and an `UpdateBanner`.
+ * It also contains `ModalProvider` and an `UpdateBanner`.
  *
  * @prop {Object} props - The properties passed to the component.
  * @prop {Store} store - The store to be used by the managers and resolvers.
