@@ -40,7 +40,7 @@ export const DeleteButton: React.FC<Props> = ({
    * submit function that will close a modal and trigger the delete action
    * if there is an error, it will set the error message
    *
-   * @returns {Promise<void>}
+   * @returns {Promise<void>} A Promise that resolves when the operation is complete.
    */
   const onSubmit = async (): Promise<void> => {
     closeModal();
