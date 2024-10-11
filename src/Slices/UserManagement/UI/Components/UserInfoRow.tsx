@@ -13,8 +13,8 @@ interface Props {
 
 /**
  * A functional component that renders a row in the user information table.
- * @props {Props} props The props of the component.
- * @prop {UserInfo} user The user information.
+ * @props {Props} props - The props of the component.
+ * @prop {UserInfo} user - The user information.
  *
  * @returns {React.FC<Props>} The rendered user info row with button to be able to delete the user.
  */

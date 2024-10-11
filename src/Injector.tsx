@@ -35,7 +35,7 @@ interface Props {
  * This component creates instances of managers, helpers, and resolvers, and provides them through a `DependencyProvider`.
  * It also contains `ModalProvider` and an `UpdateBanner`.
  *
- * @prop {Object} props - The properties passed to the component.
+ * @props {Props} props - The properties passed to the component.
  * @prop {Store} store - The store to be used by the managers and resolvers.
  * @prop {React.ReactNode} children - The children to be rendered within the Injector.
  * @returns {React.FC<React.PropsWithChildren<Props>>} A `DependencyProvider` that wraps a `ModalProvider`, an `UpdateBanner`, and the children.

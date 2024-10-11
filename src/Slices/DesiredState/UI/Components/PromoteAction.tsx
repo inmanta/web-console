@@ -15,7 +15,7 @@ interface Props {
 /**
  * PromoteAction component which holds the logic for promoting a desired state version.
  *
- * @note to be able to Promote a desired state version, the we need to disable auto_deploy setting in the application.
+ * @note to be able to Promote a desired state version, we need to disable auto_deploy setting in the application.
  *
  * @props {Props} props - The props of the component.
  * @prop version {ParsedNumber} - the version to promote

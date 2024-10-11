@@ -29,7 +29,7 @@ interface Props {
  * @prop {FlatEnvironment} environment - An object that represents the environment. It is a subset of the `FlatEnvironment` type, including only the `id` and `name` properties.
  * @prop {EnvActions} type- The type of action to perform.
  *
- * @returns {React.FC <Props>} - The rendered confirmation form.
+ * @returns {React.FC<Props>} - The rendered confirmation form.
  */
 export const ConfirmationForm: React.FC<Props> = ({ environment, type }) => {
   const { commandResolver } = useContext(DependencyContext);

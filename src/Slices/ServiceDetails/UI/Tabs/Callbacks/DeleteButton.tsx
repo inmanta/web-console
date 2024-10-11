@@ -19,7 +19,7 @@ interface Props {
  * @prop callback {Callback} - the callback object
  * @prop service_entity {string} - the service entity name
  *
- * @returns {React.React.FC<Props> }
+ * @returns {React.React.FC<Props>} The rendered Component to delete a callback.
  */
 export const DeleteButton: React.FC<Props> = ({
   service_entity,
@@ -40,7 +40,7 @@ export const DeleteButton: React.FC<Props> = ({
    * submit function that will close a modal and trigger the delete action
    * if there is an error, it will set the error message
    *
-   * @returns {Promise<void>}
+   * @returns {Promise<void>} A Promise that resolves when the operation is complete.
    */
   const onSubmit = async (): Promise<void> => {
     closeModal();
