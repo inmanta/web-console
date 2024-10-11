@@ -715,7 +715,7 @@ describe("Scenario 6 : Resources", () => {
         .eq(4)
         .should("contain", "purged")
         .and("contain", "false");
-        cy.get(".pf-v5-c-description-list__group")
+      cy.get(".pf-v5-c-description-list__group")
         .eq(5)
         .should("contain", "receive_events")
         .and("contain", "true");
