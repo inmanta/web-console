@@ -81,13 +81,13 @@ export const ModalProvider: React.FC<PropsWithChildren> = ({ children }) => {
    * The description and actions default to `null` and an empty array, respectively, if they are not provided.
    * The variant defaults to `ModalVariant.small` if it is not provided.
    *
-   * @prop {Params} params - The params to set for the modal.
-   * @prop {string} title - The title of the modal.
-   * @prop {React.ReactNode} description - *optional* The description of the modal.
-   * @prop {React.ReactNode} content - The content of the modal.
-   * @prop {React.ReactNode | null} actions - *optional*  The actions of the modal.
-   * @prop {ModalVariant} variant - *optional*  The variant of the modal.
-   * @prop {IconVariant} iconVariant - *optional* The variant of the icon in the modal title.
+   * @param {Params} params - The params to set for the modal.
+   * @param {string} params.title - The title of the modal.
+   * @param {React.ReactNode} params.description - *optional* The description of the modal.
+   * @param {React.ReactNode} params.content - The content of the modal.
+   * @param {React.ReactNode | null} params.actions - *optional*  The actions of the modal.
+   * @param {ModalVariant} params.variant - *optional*  The variant of the modal.
+   * @param {IconVariant} params.iconVariant - *optional* The variant of the icon in the modal title.
    */
   const triggerModal = (params: Params) => {
     const {
