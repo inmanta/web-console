@@ -57,7 +57,7 @@ export const Page: React.FC = () => {
 
   /**
    * function that will open a modal to confirm action to delete a version
-   * @param version - the version to delete
+   * @param {ParsedNumber} version - the version to delete
    *
    * @returns {Promise<void>} A Promise that resolves when the operation is complete.
    */
