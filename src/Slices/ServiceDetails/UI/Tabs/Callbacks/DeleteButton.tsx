@@ -19,7 +19,7 @@ interface Props {
  * @prop callback {Callback} - the callback object
  * @prop service_entity {string} - the service entity name
  *
- * @returns {React.React.FC<Props> }
+ * @returns {React.React.FC<Props>} The rendered Component to delete a callback.
  */
 export const DeleteButton: React.FC<Props> = ({
   service_entity,
