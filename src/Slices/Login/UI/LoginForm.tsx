@@ -83,7 +83,7 @@ export const LoginForm: React.FC<Props> = ({
    * This function is responsible for preventing the default form submission behavior and then calling the mutate function with the current username and password.
    * @param {React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement, MouseEvent>} event - The event that triggered the form submission.
    *
-   * @returns {void}
+   * @returns {void} A Promise that resolves when the operation is complete.
    */
   const handleSubmit = (
     event:
