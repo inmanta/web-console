@@ -58,6 +58,8 @@ export const ModalContext =
  * The `triggerModal` function updates the modal's properties and opens the modal.
  * The `closeModal` function closes the modal.
  *
+ * the provider use the Modal component from the patternfly-react library, to gain more information about the Modal component and attributes used in this component, please visit the following link: https://www.patternfly.org/components/modal/
+ *
  * @prop {Object} props - The properties passed to the component.
  * @prop {React.ReactNode} children - The children to be rendered within the `ModalContext.Provider`.
  * @returns {React.FC<PropsWithChildren>} A `ModalContext.Provider` that wraps the children and a `Modal`.
@@ -80,6 +82,8 @@ export const ModalProvider: React.FC<PropsWithChildren> = ({ children }) => {
    * The properties include the title, description, content, actions, variant, and icon variant.
    * The description and actions default to `null` and an empty array, respectively, if they are not provided.
    * The variant defaults to `ModalVariant.small` if it is not provided.
+   *
+   *  trigger pass the properties that are used by the Modal component from the patternfly-react library, to gain more information about the Modal component and its attributes used in this component, please visit the following link: https://www.patternfly.org/components/modal/
    *
    * @param {Params} params - The params to set for the modal.
    * @param {string} params.title - The title of the modal.
