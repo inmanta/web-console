@@ -134,33 +134,29 @@ export const UserCredentialsForm: React.FC<UserCredentialsFormProps> = ({
         isRequired
         fieldId="pf-login-password-id"
       >
-        {
-          <InputGroup>
-            <InputGroupItem isFill>
-              <TextInput
-                isRequired
-                type={isPasswordHidden ? "password" : "text"}
-                id="pf-login-password-id"
-                name="pf-login-password-id"
-                aria-label="input-password"
-                validated={ValidatedOptions.default}
-                value={password}
-                onChange={handlePasswordChange}
-              />
-            </InputGroupItem>
-            <InputGroupItem>
-              <Button
-                variant="control"
-                onClick={() => setIsPasswordHidden(!isPasswordHidden)}
-                aria-label={
-                  isPasswordHidden ? "show-password" : "hide-password"
-                }
-              >
-                {isPasswordHidden ? <EyeIcon /> : <EyeSlashIcon />}
-              </Button>
-            </InputGroupItem>
-          </InputGroup>
-        }
+        <InputGroup>
+          <InputGroupItem isFill>
+            <TextInput
+              isRequired
+              type={isPasswordHidden ? "password" : "text"}
+              id="pf-login-password-id"
+              name="pf-login-password-id"
+              aria-label="input-password"
+              validated={ValidatedOptions.default}
+              value={password}
+              onChange={handlePasswordChange}
+            />
+          </InputGroupItem>
+          <InputGroupItem>
+            <Button
+              variant="control"
+              onClick={() => setIsPasswordHidden(!isPasswordHidden)}
+              aria-label={isPasswordHidden ? "show-password" : "hide-password"}
+            >
+              {isPasswordHidden ? <EyeIcon /> : <EyeSlashIcon />}
+            </Button>
+          </InputGroupItem>
+        </InputGroup>
       </FormGroup>
       <ActionGroup>
         <Button

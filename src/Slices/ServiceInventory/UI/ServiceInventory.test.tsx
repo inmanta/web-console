@@ -500,7 +500,7 @@ test("GIVEN ServiceInventory WHEN sorting changes AND we are not on the first pa
 
   //sort on the second page
   await act(async () => {
-    await userEvent.click(screen.getAllByRole("button", { name: "State" })[0]);
+    await userEvent.click(screen.getByRole("button", { name: "State" }));
   });
 
   // expect the api url to not contain start and end keywords that are used for pagination to assert we are back on the first page.
