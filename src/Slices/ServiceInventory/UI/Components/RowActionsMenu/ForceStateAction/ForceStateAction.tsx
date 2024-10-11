@@ -67,7 +67,7 @@ export const ForceStateAction: React.FC<Props> = ({
   const isHalted = environmentModifier.useIsHalted();
 
   /**
-   * Opens a modal with a confirmation buttons.
+   * Opens a modal with confirmation buttons.
    *
    * @returns {void}
    */
