@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useMemo, useState } from "react";
-import { useGetAllServiceModels } from "@/Data/Managers/V2/GetAllServiceModels";
-import { useGetInstanceWithRelations } from "@/Data/Managers/V2/GetInstanceWithRelations";
-import { useGetRelatedInventories } from "@/Data/Managers/V2/GetRelatedInventories";
+import { useGetAllServiceModels } from "@/Data/Managers/V2/GETTERS/GetAllServiceModels";
+import { useGetInstanceWithRelations } from "@/Data/Managers/V2/GETTERS/GetInstanceWithRelations";
+import { useGetRelatedInventories } from "@/Data/Managers/V2/GETTERS/GetRelatedInventories";
 import { DependencyContext, words } from "@/UI";
 import { ErrorView, LoadingView } from "@/UI/Components";
 import { Canvas } from "@/UI/Components/Diagram/Canvas";

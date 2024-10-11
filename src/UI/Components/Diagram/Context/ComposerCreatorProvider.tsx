@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useGetAllServiceModels } from "@/Data/Managers/V2/GetAllServiceModels";
-import { useGetRelatedInventories } from "@/Data/Managers/V2/GetRelatedInventories";
+import { useGetAllServiceModels } from "@/Data/Managers/V2/GETTERS/GetAllServiceModels";
+import { useGetRelatedInventories } from "@/Data/Managers/V2/GETTERS/GetRelatedInventories";
 import { DependencyContext, words } from "@/UI";
 import { ErrorView, LoadingView } from "@/UI/Components";
 import { Canvas } from "@/UI/Components/Diagram/Canvas";

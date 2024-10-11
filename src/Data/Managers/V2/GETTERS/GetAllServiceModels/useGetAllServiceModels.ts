@@ -1,7 +1,7 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { ServiceModel } from "@/Core";
 import { PrimaryBaseUrlManager } from "@/UI";
-import { useFetchHelpers } from "../helpers";
+import { useFetchHelpers } from "../../helpers";
 
 /**
  * Return Signature of the useGetAllServiceModels React Query

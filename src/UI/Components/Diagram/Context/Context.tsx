@@ -2,8 +2,8 @@ import { createContext } from "react";
 import { dia } from "@inmanta/rappid";
 import { UseQueryResult } from "@tanstack/react-query";
 import { Field, InstanceAttributeModel, ServiceModel } from "@/Core";
-import { InstanceWithRelations } from "@/Data/Managers/V2/GetInstanceWithRelations";
-import { Inventories } from "@/Data/Managers/V2/GetRelatedInventories";
+import { InstanceWithRelations } from "@/Data/Managers/V2/GETTERS/GetInstanceWithRelations";
+import { Inventories } from "@/Data/Managers/V2/GETTERS/GetRelatedInventories";
 import { DiagramHandlers } from "../init";
 import {
   ComposerServiceOrderItem,
