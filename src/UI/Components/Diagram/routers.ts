@@ -14,7 +14,7 @@ export const routerNamespace = { ...routers };
  * @param {number} angle - The rotation of the element in degrees
  * @param {g.Point} anchor - Point object with x and y coordinates that represent anchor of given entity
  * @param {number} padding - padding of the Link
- * @returns {g.Point}
+ * @returns {g.Point} - Point object with x and y coordinates
  */
 function getOutsidePoint(
   bbox: g.Rect,
@@ -50,7 +50,7 @@ const customRouter = function (
   vertices: Array<g.Point>,
   routerOptions: RouterOptions,
   linkView: dia.LinkView,
-) {
+): g.Point[] {
   const link = linkView.model;
   const route: g.Point[] = [];
   // Target Point

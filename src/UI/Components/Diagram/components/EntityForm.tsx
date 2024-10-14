@@ -20,6 +20,23 @@ interface Props {
   isForDisplay: boolean;
 }
 
+/**
+ * `EntityForm` is a React functional component that renders a form for a service entity.
+ * The form fields are created based on the attributes of the service model.
+ *
+ * When the form is submitted, the `onSave` callback is called with the form fields and the form state.
+ * The form can be reset to its initial state by clicking the cancel button, which also calls the `onCancel` callback.
+ *
+ * @props {Props} props - The properties passed to the component.
+ * @prop {ServiceModel} serviceModel - The service model for which to create the form.
+ * @prop {boolean} isEdited - A flag that indicates whether the form is in edit mode.
+ * @prop {InstanceAttributeModel} initialState - The initial state of the form.
+ * @prop {Function} onSave - The callback to call when the form is submitted.
+ * @prop {Function} onCancel - The callback to call when the cancel button is clicked.
+ * @prop {boolean} isForDisplay - A flag that indicates whether the form is for display only.
+ *
+ * @returns {React.FC<Props>} The EntityForm component.
+ */
 export const EntityForm: React.FC<Props> = ({
   serviceModel,
   isEdited,
@@ -32,6 +49,14 @@ export const EntityForm: React.FC<Props> = ({
   const [formState, setFormState] =
     useState<InstanceAttributeModel>(initialState);
 
+  /**
+   * Type representing a function to update the state within the form.
+   *
+   * @param {string} path - The path within the form state to update.
+   * @param {unknown} value - The new value to set at the specified path.
+   * @param {boolean} [multi] - Optional flag indicating if the update is for multiple values. Default is false.
+   * @returns {void}
+   */
   const getUpdate = (path: string, value: unknown, multi = false): void => {
     if (multi) {
       setFormState((prev) => {

@@ -3,6 +3,17 @@ import { checkIfConnectionIsAllowed, toggleLooseElement } from "./helpers";
 import { ActionEnum, ConnectionRules, EmbeddedEventEnum } from "./interfaces";
 import { ServiceEntityBlock } from "./shapes";
 
+/**
+ * Creates a halo around a cell view in a graph.
+ *
+ * it removes all default handles and adds custom event listeners when the link is being triggered from the button and when it's being dropped, both on other cell and on the empty space, and delete the cell. that is being triggered from the form sidebar
+ *
+ * @param graph - The graph containing the cell view.
+ * @param paper - The paper to draw on.
+ * @param cellView - The cell view to create a halo around.
+ * @param connectionRules - The rules for connecting cells.
+ * @returns The created halo.
+ */
 const createHalo = (
   graph: dia.Graph,
   paper: dia.Paper,

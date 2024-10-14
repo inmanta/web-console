@@ -16,13 +16,13 @@ import { ActionEnum, EmbeddedEventEnum } from "../interfaces";
 import { EntityForm } from "./EntityForm";
 
 /**
- * RightSidebar component
+ * `RightSidebar` is a React functional component that renders a sidebar for editing and removing entities.
+ * The sidebar displays the details of the selected entity and provides options to edit or remove the entity.
+ * The state of the sidebar is updated based on the selected entity and the user's interactions with the sidebar and/or composer's canvas.
+ * When the user submits the edit form, the `onSave` callback is called with the updated attributes and the form state.
+ * The user can also remove the entity by clicking the remove button, which triggers the `action:delete` event on the entity.
  *
- * This component is responsible for displaying the right sidebar in the application.
- * It contains the EntityForm and handles the state and effects related to it.
- *
- *
- * @returns {React.FC<Props>} The RightSidebar component.
+ * @returns {React.FC} The RightSidebar component.
  */
 export const RightSidebar: React.FC = () => {
   const { cellToEdit, diagramHandlers, setInstancesToSend, stencilState } =

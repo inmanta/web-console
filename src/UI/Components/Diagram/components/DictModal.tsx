@@ -11,6 +11,8 @@ import { CanvasContext } from "../Context/Context";
 /**
  * Modal to display the values of a dictionary.
  *
+ * @note to be replaced by global modal in the future.
+ *
  * @returns {React.FC} The DictModal component.
  */
 export const DictModal: React.FC = () => {

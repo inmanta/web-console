@@ -27,8 +27,8 @@ interface Props {
  * It fetches all service models and the related inventories.
  * It also handles the state and effects related to these data.
  * 
- * @param {Props} props - The properties that define the behavior and display of the component.
- * @param {string} props.serviceName - The name of the service for which related services and inventories are being fetched.
+ * @props {Props} props - The properties that define the behavior and display of the component.
+ * @prop {string} serviceName - The name of the service for which related services and inventories are being fetched.
 
  * @returns {React.FC<Props>} The ComposerCreatorProvider component.
  */

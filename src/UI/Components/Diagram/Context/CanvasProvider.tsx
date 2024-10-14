@@ -15,8 +15,8 @@ import { CanvasContext } from "./Context";
  * This component is a context provider for the Canvas component and it's children.
  * It maintains the state for various properties related to the canvas and also provides functions to update these states.
  *
- * @param {React.PropsWithChildren<unknown>} props - The properties that define the behavior and display of the component.
- * @param {React.ReactNode} props.children - The children components to be wrapped by the provider.
+ * @props {React.PropsWithChildren<unknown>} props - The properties that define the behavior and display of the component.
+ * @prop {React.ReactNode} children - The children components to be wrapped by the provider.
  *
  * @returns {React.FC<React.PropsWithChildren<unknown>>} The CanvasProvider component.
  */

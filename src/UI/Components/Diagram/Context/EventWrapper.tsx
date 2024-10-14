@@ -10,8 +10,8 @@ import { CanvasContext } from "./Context";
  * This component is a higher-order component that wraps its children and provides event handling for all necessary communication from withing JointJS code to the Composer.
  * It uses the CanvasContext to get and set various state variables.
  *
- * @param {React.PropsWithChildren} props - The properties that define the behavior and display of the component.
- * @param {React.ReactNode} props.children - The children components to be wrapped.
+ * @props {React.PropsWithChildren} props - The properties that define the behavior and display of the component.
+ * @prop {React.ReactNode} children - The children components to be wrapped.
  *
  * @returns {React.FC<React.PropsWithChildren>} The EventWrapper component.
  */
@@ -31,8 +31,10 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
    * Handles the event triggered when there are loose embedded entities on the canvas.
    *
    * @param {CustomEvent} event - The event object.
+   *
+   * @returns {void}
    */
-  const handleLooseEmbeddedEvent = (event) => {
+  const handleLooseEmbeddedEvent = (event): void => {
     const customEvent = event as CustomEvent;
     const eventData: { kind: EmbeddedEventEnum; id: string } = JSON.parse(
       customEvent.detail,
@@ -51,8 +53,10 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
    * Handles the event triggered when the user wants to see the dictionary properties of an entity.
    *
    * @param {CustomEvent} event - The event object.
+   *
+   * @returns {void}
    */
-  const handleDictEvent = (event) => {
+  const handleDictEvent = (event): void => {
     const customEvent = event as CustomEvent;
 
     setDictToDisplay(JSON.parse(customEvent.detail));
@@ -62,8 +66,10 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
    * Handles the event triggered when the user wants to edit an entity.
    *
    * @param {CustomEvent} event - The event object.
+   *
+   * @returns {void}
    */
-  const handleEditEvent = (event) => {
+  const handleEditEvent = (event): void => {
     const customEvent = event as CustomEvent;
 
     setCellToEdit(customEvent.detail);
@@ -74,8 +80,10 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
    * With removed ability to edit the related instances, we need to assert first if the instance triggered the event is in the instancesToSend map(it could be removed from the canvas)
    *
    * @param {CustomEvent} event - The event object.
+   *
+   * @returns {void}
    */
-  const handleUpdateInstancesToSend = (event) => {
+  const handleUpdateInstancesToSend = (event): void => {
     const customEvent = event as CustomEvent;
     const { cell, action } = customEvent.detail as {
       cell: ServiceEntityBlock;
@@ -97,8 +105,10 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
    * If the current count reach the max count, the adequate stencil element will become disabled.
    *
    * @param {CustomEvent} event - The event object.
+   *
+   * @returns {void}
    */
-  const handleUpdateStencilState = (event) => {
+  const handleUpdateStencilState = (event): void => {
     const customEvent = event as CustomEvent;
     const eventData: { name: string; action: EmbeddedEventEnum } =
       customEvent.detail;

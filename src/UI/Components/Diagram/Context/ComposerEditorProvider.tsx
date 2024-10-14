@@ -15,9 +15,9 @@ import { InstanceComposerContext } from "./Context";
  * This interface represents the properties that the ComposerEditorProvider component expects to receive.
  *
  * @interface
- * @property {string} serviceName - The name of the service to be fetched.
- * @property {string} instance - The ID of the instance to be fetched.
- * @property {boolean} editable - A flag indicating if the canvas should editable.
+ * @prop {string} serviceName - The name of the service to be fetched.
+ * @prop {string} instance - The ID of the instance to be fetched.
+ * @prop {boolean} editable - A flag indicating if the canvas should editable.
  */
 interface Props {
   serviceName: string;
@@ -32,10 +32,10 @@ interface Props {
  * The difference from ComposerCreatorProvider is that this component also fetches the instance data, it's done to avoid unnecessary requests when displaying composer for creating new instances
  * It also handles the state and effects related to these data.
  *
- * @param {Props} props - The properties that define the behavior and display of the component.
- * @param {string} props.serviceName - The name of the service for which the instance is being fetched.
- * @param {string} props.instance - The ID of the instance to be fetched.
- * @param {boolean} props.editable - A flag indicating if the instance is editable.
+ * @props {Props} props - The properties that define the behavior and display of the component.
+ * @prop {string} serviceName - The name of the service for which the instance is being fetched.
+ * @prop {string} instance - The ID of the instance to be fetched.
+ * @prop {boolean} editable - A flag indicating if the instance is editable.
  *
  * @returns {React.FC<Props>} The ComposerEditorProvider component.
  */

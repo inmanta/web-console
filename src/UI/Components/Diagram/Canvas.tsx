@@ -25,9 +25,9 @@ interface Props {
  * Canvas component for creating, displaying and editing an Instance.
  *
  * @props {Props} props - The properties passed to the component.
- * @prop {boolean} props.editable - A flag indicating if the diagram is editable.
+ * @prop {boolean} editable - A flag indicating if the diagram is editable.
  *
- * @returns {JSX.Element} The rendered Canvas component.
+ * @returns {React.FC<Props>} The rendered Canvas component.
  */
 export const Canvas: React.FC<Props> = ({ editable }) => {
   const { mainService, instance, serviceModels, relatedInventories } =

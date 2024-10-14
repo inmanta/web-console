@@ -458,7 +458,7 @@ export function appendEmbeddedEntity(
    * Then connect it with it's eventual children and other entities that have inter-service relation to this Entity
    *
    * @param entityInstance instance of entity Attributes
-   * @returns ServiceEntityBlock
+   * @returns appended embedded entity to the graph
    */
   function appendSingleEntity(
     entityInstance: InstanceAttributeModel,
@@ -700,7 +700,7 @@ function connectEntities(
   source: ServiceEntityBlock,
   targets: ServiceEntityBlock[],
   isBlocked?: boolean,
-) {
+): void {
   targets.map((target) => {
     const link = new Link();
 
@@ -725,7 +725,7 @@ function connectEntities(
  * @param {"candidate" | "active"} presentedAttrs *optional* identify used set of attributes if they are taken from Service Instance
  * @param {ServiceEntityBlock=} instanceToConnectRelation *optional* shape to which eventually should embedded entity or  be connected to
  *
- * @returns {void}
+ * @returns {ServiceEntityBlock[]} - returns array of created embedded entities, that are connected to given entity
  */
 function handleNonDirectAttributes(
   graph: dia.Graph,
@@ -798,7 +798,7 @@ function handleNonDirectAttributes(
 export function handleInfoIcon(
   instanceAsTable: ServiceEntityBlock,
   presentedAttrs: "candidate" | "active",
-) {
+): void {
   const infoAttrs = {
     preserveAspectRatio: "none",
     cursor: "pointer",
