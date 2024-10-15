@@ -33,16 +33,10 @@ export const SetStateSection: React.FC<Props> = ({
   targets,
 }) => {
   const { triggerModal, closeModal } = useContext(ModalContext);
-  const [confirmationText, setConfirmationText] = useState<string>("");
-  const [targetState, setTargetState] = useState<string>("");
   const [stateErrorMessage, setStateErrorMessage] = useState<string>("");
 
   const onSelect = (value: string) => {
-    setTargetState(value);
-    setConfirmationText(
-      words("inventory.statustab.confirmMessage")(instance_identity, value),
-    );
-    openModal();
+    openModal(value);
   };
 
   const isDisabled = !targets || targets.length === 0;
@@ -57,27 +51,28 @@ export const SetStateSection: React.FC<Props> = ({
   const isHalted = environmentModifier.useIsHalted();
 
   /**
-   * Handles the submission of the form.
-   *
-   * @param {string} targetState - The target state to be used in the operation.
-   *
-   * @returns {Promise<void>} A Promise that resolves when the operation is complete.
-   */
-  const onSubmit = async (targetState: string) => {
-    const result = await trigger(targetState);
-
-    if (Maybe.isSome(result)) {
-      setStateErrorMessage(result.value);
-    }
-    closeModal();
-  };
-
-  /**
    * Opens a modal with a confirmation buttons.
+   * @param {string} targetState - The target state to be used in the operation.
    *
    *  @returns {void}
    */
-  const openModal = (): void => {
+  const openModal = (targetState: string): void => {
+    /**
+     * Handles the submission of the form.
+     *
+     * @param {string} targetState - The target state to be used in the operation.
+     *
+     * @returns {Promise<void>} A Promise that resolves when the operation is complete.
+     */
+    const onSubmit = async () => {
+      const result = await trigger(targetState);
+
+      if (Maybe.isSome(result)) {
+        setStateErrorMessage(result.value);
+      }
+      closeModal();
+    };
+
     triggerModal({
       title: words("inventory.statustab.confirmTitle"),
       actions: [
@@ -85,7 +80,7 @@ export const SetStateSection: React.FC<Props> = ({
           key="confirm"
           variant="primary"
           data-testid={`${id}-state-modal-confirm`}
-          onClick={() => onSubmit(targetState)}
+          onClick={onSubmit}
         >
           {words("yes")}
         </Button>,
@@ -98,7 +93,14 @@ export const SetStateSection: React.FC<Props> = ({
           {words("no")}
         </Button>,
       ],
-      content: <Text> {confirmationText}</Text>,
+      content: (
+        <Text>
+          {words("inventory.statustab.confirmMessage")(
+            instance_identity,
+            targetState,
+          )}
+        </Text>
+      ),
     });
   };
 

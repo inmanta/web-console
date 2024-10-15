@@ -39,8 +39,6 @@ export const ForceStateAction: React.FC<Props> = ({
   availableStates,
 }) => {
   const { triggerModal, closeModal } = useContext(ModalContext);
-  const [confirmationText, setConfirmationText] = useState<string>("");
-  const [targetState, setTargetState] = useState<string>("");
   const [stateErrorMessage, setStateErrorMessage] = useState<string>("");
 
   const menuItems = availableStates.sort().map((target) => (
@@ -68,10 +66,26 @@ export const ForceStateAction: React.FC<Props> = ({
 
   /**
    * Opens a modal with confirmation buttons.
+   * @param {string} targetState - The target state to be used in the operation.
+
    *
    * @returns {void}
    */
-  const openModal = (): void => {
+  const openModal = (targetState: string): void => {
+    /**
+     * Handles the submission of the force state action.
+     *
+     * @returns {Promise<void>} A Promise that resolves when the operation is complete.
+     */
+    const onSubmit = async () => {
+      const result = await trigger(targetState);
+
+      if (Maybe.isSome(result)) {
+        setStateErrorMessage(result.value);
+      }
+      closeModal();
+    };
+
     triggerModal({
       title: words("inventory.statustab.forceState.confirmTitle"),
       iconVariant: "danger",
@@ -80,7 +94,7 @@ export const ForceStateAction: React.FC<Props> = ({
           key="confirm"
           variant="danger"
           data-testid={`${id}-state-modal-confirm`}
-          onClick={() => onSubmit(targetState)}
+          onClick={onSubmit}
         >
           {words("yes")}
         </Button>,
@@ -95,7 +109,12 @@ export const ForceStateAction: React.FC<Props> = ({
       ],
       content: (
         <>
-          <Text>{confirmationText}</Text>
+          <Text>
+            {words("inventory.statustab.forceState.message")(
+              instance_identity,
+              targetState,
+            )}
+          </Text>
           <br />
           <Text>{words("inventory.statustab.forceState.confirmMessage")}</Text>
           <Text>{words("inventory.statustab.forceState.confirmQuestion")}</Text>
@@ -105,32 +124,13 @@ export const ForceStateAction: React.FC<Props> = ({
   };
 
   /**
-   * Handles the submission of the force state action.
-   * @param {string} targetState - The target state to be used in the operation.
-   *
-   * @returns {Promise<void>} A Promise that resolves when the operation is complete.
-   */
-  const onSubmit = async (targetState: string) => {
-    const result = await trigger(targetState);
-
-    if (Maybe.isSome(result)) {
-      setStateErrorMessage(result.value);
-    }
-    closeModal();
-  };
-
-  /**
    * Handles the selection of the state.
    * @param {string} value - The target state to be used in the operation.
    *
    * @returns {Promise<void>} A Promise that resolves when the operation is complete.
    */
   const onSelect = (value: string) => {
-    setTargetState(value);
-    setConfirmationText(
-      words("inventory.statustab.forceState.message")(instance_identity, value),
-    );
-    openModal();
+    openModal(value);
   };
 
   return (
