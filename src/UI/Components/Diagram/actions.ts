@@ -305,7 +305,7 @@ export function appendInstance(
   }
 
   if (instanceWithRelations.relatedInstances) {
-    //map through relatedInstances and either append them and connect to them as we are going one level deep into connections and related entities should not exist in the graph before this iteration
+    //map through relatedInstances and either append them and connect to them or connect to already existing ones
     instanceWithRelations.relatedInstances.forEach((relatedInstance) => {
       const cellAdded = graph.getCell(relatedInstance.id);
       const isBlockedFromEditing = true;
@@ -360,6 +360,7 @@ export function appendInstance(
           }
         });
       } else {
+        //If cell is already in the graph, we need to check if it got in its inter-service relations the one with id that corresponds with created instanceAsTable
         let isConnected = false;
         const cellAsBlock = cellAdded as ServiceEntityBlock;
         const relations = cellAsBlock.getRelations();

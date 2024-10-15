@@ -91,7 +91,7 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
     };
 
     setInstancesToSend((prev) => {
-      //related instances aren't added to the instancesToSend map, and to avoid unwanted deletion of them, we need to assert that the instance is in the map before editing
+      //related instances aren't added to the instancesToSend map, this condition is here to prevent situation where we try to remove the related instance from the canvas and it's end up here with status to delete it from the inventory
       if (prev.has(String(cell.id)) || action === ActionEnum.CREATE) {
         return updateInstancesToSend(cell, action, prev);
       }

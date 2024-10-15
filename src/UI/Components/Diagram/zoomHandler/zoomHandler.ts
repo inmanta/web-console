@@ -68,7 +68,7 @@ const IconButton = ui.widgets.button.extend({
  * It provides methods for zoom to fit, zooming in/out in the canvas and fullscreen toggle.
  *
  * @class
- * @property {ui.Toolbar} toolbar - The toolbar object that contains the navigation controls.
+ * @prop {ui.Toolbar} toolbar - The toolbar object that contains the navigation controls.
  * @method constructor - Constructs a new instance of the ZoomHandlerService class.
  * @param {HTMLElement} element - The HTML element that will contain the navigator.
  * @param {ui.PaperScroller} scroller - The scroller object that allows and zooming in the canvas.
