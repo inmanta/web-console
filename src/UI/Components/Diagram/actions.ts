@@ -335,9 +335,7 @@ export function appendInstance(
           .querySelector(`.${appendedInstances[0].get("stencilName")}_text`)
           ?.classList.add("stencil_text-disabled");
 
-        const mainRelations =
-          findFullInterServiceRelations(serviceInstanceModel);
-
+        //try to connected appended entities to the one existing in the graph
         appendedInstances.forEach((cell) => {
           const relationMap = cell.get("relatedTo") as Map<string, string>;
           const serviceModel = cell.get("serviceModel") as ServiceModel;
@@ -353,7 +351,7 @@ export function appendInstance(
                 );
 
                 if (relation) {
-                  relatedCell.set("cantBeRemoved", relation.modifier !== "rw+");
+                  cell.set("cantBeRemoved", relation.modifier !== "rw+");
                   connectEntities(
                     graph,
                     relatedCell,
@@ -361,41 +359,6 @@ export function appendInstance(
                     relation.modifier !== "rw+",
                   );
                 }
-              }
-            });
-          } else {
-            const remainingCells = [instanceAsTable, ...embeddedEntities];
-
-            remainingCells.map((remainingCell) => {
-              const relationMap = remainingCell.get("relatedTo") as Map<
-                string,
-                string
-              >;
-
-              if (relationMap) {
-                relationMap.forEach((_value, key) => {
-                  const relatedCell = graph.getCell(key) as ServiceEntityBlock;
-
-                  if (relatedCell) {
-                    const relation = mainRelations.find(
-                      (relation) =>
-                        relation.entity_type === relatedCell.getName(),
-                    );
-
-                    if (relation) {
-                      relatedCell.set(
-                        "cantBeRemoved",
-                        relation.modifier !== "rw+",
-                      );
-                      connectEntities(
-                        graph,
-                        relatedCell,
-                        [remainingCell],
-                        relation.modifier !== "rw+",
-                      );
-                    }
-                  }
-                });
               }
             });
           }
@@ -456,6 +419,38 @@ export function appendInstance(
           [cellAsBlock],
           serviceInstanceModel.strict_modifier_enforcement,
         );
+      }
+    });
+
+    //if we are in the children view above implementation won't be enough to connect all entities, thus we need to iterate through core & embedded entities
+
+    const mainRelations = findFullInterServiceRelations(serviceInstanceModel);
+
+    const remainingCells = [instanceAsTable, ...embeddedEntities];
+
+    remainingCells.map((remainingCell) => {
+      const relationMap = remainingCell.get("relatedTo") as Map<string, string>;
+
+      if (relationMap) {
+        relationMap.forEach((_value, key) => {
+          const relatedCell = graph.getCell(key) as ServiceEntityBlock;
+
+          if (relatedCell) {
+            const relation = mainRelations.find(
+              (relation) => relation.entity_type === relatedCell.getName(),
+            );
+
+            if (relation) {
+              relatedCell.set("cantBeRemoved", relation.modifier !== "rw+");
+              connectEntities(
+                graph,
+                relatedCell,
+                [remainingCell],
+                relation.modifier !== "rw+",
+              );
+            }
+          }
+        });
       }
     });
   }
