@@ -141,11 +141,13 @@ if (Cypress.env("edition") === "iso") {
         .click();
 
       // expect to find in the history the up state as last
-      cy.get('[aria-label="History-Row"]').should(($rows) => {
-        expect($rows[0], { timeout: 30000 }).to.contain("up");
-        expect($rows[0]).to.contain(3);
-        expect($rows).to.have.length(3);
-      });
+      cy.get('[aria-label="History-Row"]', { timeout: 30000 }).should(
+        ($rows) => {
+          expect($rows[0]).to.contain("up");
+          expect($rows[0]).to.contain(3);
+          expect($rows).to.have.length(3);
+        },
+      );
 
       // force state to creating
       cy.get('[aria-label="Expert-Actions-Toggle"]').click();
@@ -156,11 +158,13 @@ if (Cypress.env("edition") === "iso") {
       cy.get("button").contains("Yes").click();
 
       // expect to find in the history the creating state as last
-      cy.get('[aria-label="History-Row"]').should(($rows) => {
-        expect($rows[0], { timeout: 30000 }).to.contain("creating");
-        expect($rows[0]).to.contain(4);
-        expect($rows).to.have.length(4);
-      });
+      cy.get('[aria-label="History-Row"]', { timeout: 30000 }).should(
+        ($rows) => {
+          expect($rows[0]).to.contain("creating");
+          expect($rows[0]).to.contain(4);
+          expect($rows).to.have.length(4);
+        },
+      );
     });
 
     it("2.4.2 Edit instance attributes", () => {
