@@ -229,7 +229,7 @@ if (Cypress.env("edition") === "iso") {
         .should("be.visible");
       cy.get('[data-type="Link"').should("be.visible");
 
-      //assert default embedded entities are present and first one is disabled as it reached it max limit
+      //assert default embedded entities are present and first one is disabled as it reached its max limit
       cy.get("#instance-stencil").within(() => {
         cy.get(".embedded_bodyTwo").should("be.visible");
         cy.get(".embedded_bodyTwo").should(
