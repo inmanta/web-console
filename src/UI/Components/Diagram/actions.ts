@@ -351,7 +351,7 @@ export function appendInstance(
                 );
 
                 if (relation) {
-                  cell.set("cantBeRemoved", relation.modifier !== "rw+");
+                  relatedCell.set("cantBeRemoved", relation.modifier !== "rw+");
                   connectEntities(
                     graph,
                     relatedCell,
