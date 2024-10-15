@@ -518,7 +518,6 @@ if (Cypress.env("edition") === "iso") {
         .contains("lsm-frontend")
         .click();
       cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
-      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
       // click on Show Inventory of many-defaults service, expect no instances
       cy.get("#many-defaults", { timeout: 60000 })
         .contains("Show inventory")
@@ -690,7 +689,6 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="Environment card"]')
         .contains("lsm-frontend")
         .click();
-      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
       cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
       // click on Show Inventory of many-defaults service, expect no instances
       cy.get("#child-service", { timeout: 60000 })
