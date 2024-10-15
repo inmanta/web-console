@@ -8,7 +8,7 @@ module.exports = defineConfig({
   video: false,
   reporter: "junit",
   viewportWidth: 1500,
-  viewportHeight: 700,
+  viewportHeight: 900,
   reporterOptions: {
     mochaFile: "cypress/reports/junit/test-report-[hash].xml",
   },

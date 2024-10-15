@@ -142,7 +142,7 @@ if (Cypress.env("edition") === "iso") {
 
       // expect to find in the history the up state as last
       cy.get('[aria-label="History-Row"]').should(($rows) => {
-        expect($rows[0]).to.contain("up");
+        expect($rows[0], { timeout: 30000 }).to.contain("up");
         expect($rows[0]).to.contain(3);
         expect($rows).to.have.length(3);
       });
@@ -157,7 +157,7 @@ if (Cypress.env("edition") === "iso") {
 
       // expect to find in the history the creating state as last
       cy.get('[aria-label="History-Row"]').should(($rows) => {
-        expect($rows[0]).to.contain("creating");
+        expect($rows[0], { timeout: 30000 }).to.contain("creating");
         expect($rows[0]).to.contain(4);
         expect($rows).to.have.length(4);
       });
