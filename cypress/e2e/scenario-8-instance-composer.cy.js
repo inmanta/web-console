@@ -93,7 +93,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get(".canvas").should("be.visible");
       cy.get('[data-type="app.ServiceEntityBlock"').should("have.length", 2);
 
-      //expect Zoom Handler and it's all component visible and in default state
+      //expect Zoom Handler and all its component visible and in default state
       cy.get('[data-testid="zoomHandler"').should("be.visible");
       cy.get('[data-testid="fullscreen"').should("be.visible");
       cy.get('[data-testid="fit-to-screen"').should("be.visible");
