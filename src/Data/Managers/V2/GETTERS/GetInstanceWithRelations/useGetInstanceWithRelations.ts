@@ -124,9 +124,9 @@ export const useGetInstanceWithRelations = (
     relationNames: string[],
     embeddedNames: string[],
   ): string[] => {
-    const relationIds = relationNames
-      .map((relationName) => attributes[relationName])
-      .filter((id) => id !== undefined) as string[];
+    const relationIds = relationNames.map(
+      (relationName) => attributes[relationName],
+    );
 
     const embeddedRelationsIds = embeddedNames.flatMap((embeddedName) => {
       if (!attributes[embeddedName]) {
@@ -149,7 +149,11 @@ export const useGetInstanceWithRelations = (
       }
     });
 
-    return [...relationIds, ...embeddedRelationsIds];
+    const ids = [...relationIds, ...embeddedRelationsIds].filter(
+      (id) => id !== undefined && id !== null && id !== "",
+    ) as string[];
+
+    return ids;
   };
 
   /**
@@ -211,7 +215,7 @@ export const useGetInstanceWithRelations = (
         ],
         queryFn: () => fetchInstances(instanceId),
         retry: false,
-        enabled: !serviceModel,
+        enabled: serviceModel !== undefined,
       }),
     useContinuous: (): UseQueryResult<InstanceWithRelations, Error> =>
       useQuery({
@@ -222,7 +226,7 @@ export const useGetInstanceWithRelations = (
         ],
         queryFn: () => fetchInstances(instanceId),
         refetchInterval: 5000,
-        enabled: !serviceModel,
+        enabled: serviceModel !== undefined,
       }),
   };
 };

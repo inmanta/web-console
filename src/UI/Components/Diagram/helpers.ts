@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 import {
   EmbeddedEntity,
   InstanceAttributeModel,
+  InterServiceRelation,
   ServiceInstanceModel,
   ServiceModel,
 } from "@/Core";
@@ -159,6 +160,19 @@ export const checkIfConnectionIsAllowed = (
       targetAsElement.get("isInEditMode");
     const isSourceInEditMode: boolean | undefined =
       sourceAsElement.get("isInEditMode");
+
+    const isSourceBlockedFromEditing: boolean | undefined = sourceAsElement.get(
+      "isBlockedFromEditing",
+    );
+
+    if (isSourceBlockedFromEditing) {
+      const targetHolder = targetAsElement.get("holderName");
+      const isTargetEmbedded = targetAsElement.get("isEmbedded");
+
+      if (isTargetEmbedded && targetHolder === sourceName) {
+        return false; // if source is blocked from editing then we can't connect embedded entities to it
+      }
+    }
 
     areTargetConnectionExhausted = checkWhetherConnectionRulesAreExhausted(
       connectedElementsToTarget,
@@ -626,9 +640,10 @@ export const applyCoordinatesToCells = (
 };
 
 /**
- * Finds the inter-service relations for the given service model or embedded entity.
+ * Finds the inter-service relations entity types for the given service model or embedded entity.
  *
  * @param {ServiceModel | EmbeddedEntity} serviceModel - The service model or embedded entity to find inter-service relations for.
+ *
  * @returns {string[]} An array of entity types that have inter-service relations with the given service model or embedded entity
  */
 export const findInterServiceRelations = (
@@ -641,6 +656,25 @@ export const findInterServiceRelations = (
 
   const embeddedEntitiesResult = serviceModel.embedded_entities.flatMap(
     (embedded_entity) => findInterServiceRelations(embedded_entity),
+  );
+
+  return result.concat(embeddedEntitiesResult);
+};
+
+/**
+ * Finds the inter-service relations objects for the given service model or embedded entity.
+ *
+ * @param {ServiceModel | EmbeddedEntity} serviceModel - The service model or embedded entity to find inter-service relations for.
+ *
+ * @returns {string[]} An array of inter-service relations objects that have inter-service relations
+ * */
+export const findFullInterServiceRelations = (
+  serviceModel: ServiceModel | EmbeddedEntity,
+): InterServiceRelation[] => {
+  const result = serviceModel.inter_service_relations || [];
+
+  const embeddedEntitiesResult = serviceModel.embedded_entities.flatMap(
+    (embedded_entity) => findFullInterServiceRelations(embedded_entity),
   );
 
   return result.concat(embeddedEntitiesResult);

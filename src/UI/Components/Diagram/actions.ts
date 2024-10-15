@@ -8,7 +8,7 @@ import {
   FieldCreator,
   createFormState,
 } from "../ServiceInstanceForm";
-import { findCorrespondingId } from "./helpers";
+import { findCorrespondingId, findFullInterServiceRelations } from "./helpers";
 import activeImage from "./icons/active-icon.svg";
 import candidateImage from "./icons/candidate-icon.svg";
 import {
@@ -163,10 +163,12 @@ export function showLinkTools(
  * Function that creates, appends and returns created Entity, differs from appendInstance by the fact that is used from the scope of Instance Composer and uses different set of data
  *
  * @param {ServiceModel} serviceModel that we want to base created entity on
- * @param {InstanceAttributeModel} entity created in the from
  * @param {boolean} isCore defines whether created entity is main one in given View
  * @param {boolean} isInEditMode defines whether created entity is is representation of existing instance or new one
+ * @param {InstanceAttributeModel} attributes of the entity
+ * @param {boolean} isEmbedded defines whether created entity is embedded
  * @param {string} holderName - name of the entity to which it is embedded/connected
+ *
  * @returns {ServiceEntityBlock} created JointJS shape
  */
 export function createComposerEntity(
@@ -219,10 +221,11 @@ export function createComposerEntity(
  *
  * @param {dia.Graph} graph JointJS graph object
  * @param {dia.Paper} paper JointJS paper object
- * @param {ServiceInstanceModel} serviceInstance that we want to display
- * @param {ServiceModel} service that hold definitions for attributes which we want to display as instance Object doesn't differentiate core attributes from i.e. embedded entities
+ * @param {InstanceWithRelations} instanceWithRelations that we want to display
+ * @param {ServiceModel[]} services that hold definitions for attributes which we want to display as instance Object doesn't differentiate core attributes from i.e. embedded entities
  * @param {boolean} isMainInstance boolean value determining if the instance is the core one
- * @param {string} relatedTo id of the service instance with which appended instance has relation
+ * @param {boolean} isBlockedFromEditing boolean value determining if the instance is blocked from editing
+ *
  * @returns {ServiceEntityBlock} appendedInstance to allow connect related Instances added concurrently
  */
 export function appendInstance(
@@ -332,10 +335,13 @@ export function appendInstance(
           .querySelector(`.${appendedInstances[0].get("stencilName")}_text`)
           ?.classList.add("stencil_text-disabled");
 
+        const mainRelations =
+          findFullInterServiceRelations(serviceInstanceModel);
+
         appendedInstances.forEach((cell) => {
           const relationMap = cell.get("relatedTo") as Map<string, string>;
           const serviceModel = cell.get("serviceModel") as ServiceModel;
-          const relations = serviceModel.inter_service_relations || [];
+          const relations = findFullInterServiceRelations(serviceModel);
 
           if (relationMap) {
             relationMap.forEach((_value, key) => {
@@ -355,6 +361,41 @@ export function appendInstance(
                     relation.modifier !== "rw+",
                   );
                 }
+              }
+            });
+          } else {
+            const remainingCells = [instanceAsTable, ...embeddedEntities];
+
+            remainingCells.map((remainingCell) => {
+              const relationMap = remainingCell.get("relatedTo") as Map<
+                string,
+                string
+              >;
+
+              if (relationMap) {
+                relationMap.forEach((_value, key) => {
+                  const relatedCell = graph.getCell(key) as ServiceEntityBlock;
+
+                  if (relatedCell) {
+                    const relation = mainRelations.find(
+                      (relation) =>
+                        relation.entity_type === relatedCell.getName(),
+                    );
+
+                    if (relation) {
+                      relatedCell.set(
+                        "cantBeRemoved",
+                        relation.modifier !== "rw+",
+                      );
+                      connectEntities(
+                        graph,
+                        relatedCell,
+                        [remainingCell],
+                        relation.modifier !== "rw+",
+                      );
+                    }
+                  }
+                });
               }
             });
           }
@@ -439,7 +480,9 @@ export function appendInstance(
  * @param {InstanceAttributeModel} entityAttributes - attributes of given entity
  * @param {string | null} embeddedTo - id of the entity/shape in which this shape is embedded
  * @param {string} holderName - name of the entity to which it is embedded/connected
- * @param {ServiceEntityBlock} instanceToConnectRelation - eventual shape to which inter-service relations should be connected
+ * @param {"candidate" | "active"} instanceToConnectRelation - flag whether we are displaying candidate or active attributes
+ * @param {boolean} isBlockedFromEditing boolean value determining if the instance is blocked from editin
+ *
  * @returns {ServiceEntityBlock[]} created JointJS shapes
  */
 export function appendEmbeddedEntity(
@@ -552,7 +595,7 @@ export function populateGraphWithDefault(
   graph: dia.Graph,
   serviceModel: ServiceModel,
 ): void {
-  //the most realiable way to get attributes default state is to use Field Creator
+  //the most reliable way to get attributes default state is to use Field Creator
 
   const fieldCreator = new FieldCreator(new CreateModifierHandler());
   const fields = fieldCreator.attributesToFields(serviceModel.attributes);

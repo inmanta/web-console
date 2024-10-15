@@ -41,6 +41,7 @@ import {
   updateLabelPosition,
   toggleLooseElement,
   findInterServiceRelations,
+  findFullInterServiceRelations,
 } from "./helpers";
 import { Link, ServiceEntityBlock } from "./shapes";
 
@@ -1057,7 +1058,7 @@ describe("checkIfConnectionIsAllowed", () => {
     expect(result).toBeFalsy();
   });
 
-  it("WHEN one element has rule describing other, but the other is blocked from editing THEN return false", () => {
+  it("WHEN one element has rule describing other, and the other is blocked from editing THEN return true", () => {
     const rules = createConnectionRules([Service.a], {});
     const graph = new dia.Graph();
     const paper = new dia.Paper({
@@ -1078,6 +1079,46 @@ describe("checkIfConnectionIsAllowed", () => {
       isCore,
       isInEditMode,
       (InstanceAttributesA["circuits"] as InstanceAttributeModel[])[0],
+    );
+
+    graph.addCells([serviceA, serviceB]);
+
+    serviceB.set("isBlockedFromEditing", true);
+
+    const result = checkIfConnectionIsAllowed(
+      graph,
+      paper.findViewByModel(serviceA),
+      paper.findViewByModel(serviceB),
+      rules,
+    );
+
+    expect(result).toBeTruthy();
+  });
+
+  it("WHEN one element has rule describing other, but is blocked from editing THEN return false", () => {
+    const rules = createConnectionRules([Service.a], {});
+    const graph = new dia.Graph();
+    const paper = new dia.Paper({
+      model: graph,
+    });
+
+    const isCore = false;
+    const isInEditMode = false;
+    const isEmbedded = true;
+
+    const serviceA = createComposerEntity(
+      Service.a,
+      isCore,
+      isInEditMode,
+      InstanceAttributesA,
+    );
+    const serviceB = createComposerEntity(
+      Service.a.embedded_entities[0],
+      isCore,
+      isInEditMode,
+      (InstanceAttributesA["circuits"] as InstanceAttributeModel[])[0],
+      isEmbedded,
+      Service.a.name,
     );
 
     graph.addCells([serviceA, serviceB]);
@@ -1689,5 +1730,43 @@ describe("findInterServiceRelations", () => {
     const result = findInterServiceRelations(containerModel);
 
     expect(result).toEqual(["parent-service"]);
+  });
+});
+
+describe("findIFullInterServiceRelations", () => {
+  it("it returns empty array WHEN service doesn't have inter-service relations", () => {
+    const result = findFullInterServiceRelations(parentModel);
+
+    expect(result).toEqual([]);
+  });
+
+  it("it returns related service names WHEN service have direct inter-service relations", () => {
+    const result = findFullInterServiceRelations(childModel);
+
+    expect(result).toEqual([
+      {
+        description: "",
+        entity_type: "parent-service",
+        lower_limit: 1,
+        modifier: "rw+",
+        name: "parent_entity",
+        upper_limit: 1,
+      },
+    ]);
+  });
+
+  it("it returns related service names WHEN service have inter-service relations in embedded entities", () => {
+    const result = findFullInterServiceRelations(containerModel);
+
+    expect(result).toEqual([
+      {
+        description: "",
+        entity_type: "parent-service",
+        lower_limit: 1,
+        modifier: "rw+",
+        name: "parent_entity",
+        upper_limit: 1,
+      },
+    ]);
   });
 });

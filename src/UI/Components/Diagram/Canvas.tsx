@@ -131,6 +131,7 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
         relatedTo: cell.get("relatedTo"),
       });
     });
+
     setInstancesToSend(newInstances);
 
     return () => {
