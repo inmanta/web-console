@@ -11,9 +11,11 @@ import { CanvasContext } from "../Context/Context";
 /**
  * Modal to display the values of a dictionary.
  *
+ * @note to be replaced by global modal in the future.
+ *
  * @returns {React.FC} The DictModal component.
  */
-const DictModal: React.FC = () => {
+export const DictModal: React.FC = () => {
   const { dictToDisplay, setDictToDisplay } = useContext(CanvasContext);
   const [copied, setCopied] = useState(false);
 
@@ -60,5 +62,3 @@ const DictModal: React.FC = () => {
     </Modal>
   );
 };
-
-export default DictModal;

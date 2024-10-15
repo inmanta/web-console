@@ -91,8 +91,6 @@ describe("ZoomHandler", () => {
   });
 
   it("should remove zoomHandler from the dom when remove() method is fired", async () => {
-    screen.debug();
-
     zoomHandler.remove();
 
     expect(screen.queryByTestId("zoomHandler")).not.toBeInTheDocument();

@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useGetAllServiceModels } from "@/Data/Managers/V2/GetAllServiceModels";
-import { useGetRelatedInventories } from "@/Data/Managers/V2/GetRelatedInventories";
+import { useGetAllServiceModels } from "@/Data/Managers/V2/GETTERS/GetAllServiceModels";
+import { useGetRelatedInventories } from "@/Data/Managers/V2/GETTERS/GetRelatedInventories";
 import { DependencyContext, words } from "@/UI";
 import { ErrorView, LoadingView } from "@/UI/Components";
 import { Canvas } from "@/UI/Components/Diagram/Canvas";
@@ -27,8 +27,8 @@ interface Props {
  * It fetches all service models and the related inventories.
  * It also handles the state and effects related to these data.
  * 
- * @param {Props} props - The properties that define the behavior and display of the component.
- * @param {string} props.serviceName - The name of the service for which related services and inventories are being fetched.
+ * @props {Props} props - The properties that define the behavior and display of the component.
+ * @prop {string} serviceName - The name of the service for which related services and inventories are being fetched.
 
  * @returns {React.FC<Props>} The ComposerCreatorProvider component.
  */
@@ -103,9 +103,7 @@ export const ComposerCreatorProvider: React.FC<Props> = ({ serviceName }) => {
       <InstanceComposerContext.Provider
         value={{
           mainService,
-          serviceModels: serviceModels.data.filter((service) =>
-            relatedServiceNames?.includes(service.name),
-          ),
+          serviceModels: serviceModels.data,
           instance: null,
           relatedInventories: relatedInventories,
         }}

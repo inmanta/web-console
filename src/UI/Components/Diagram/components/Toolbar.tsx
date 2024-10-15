@@ -3,14 +3,13 @@ import "@inmanta/rappid/joint-plus.css";
 import { useNavigate } from "react-router-dom";
 import { AlertVariant, Button, Flex, FlexItem } from "@patternfly/react-core";
 import styled from "styled-components";
-import { usePostMetadata } from "@/Data/Managers/V2/PostMetadata";
-import { usePostOrder } from "@/Data/Managers/V2/PostOrder";
+import { usePostMetadata } from "@/Data/Managers/V2/POST/PostMetadata";
+import { usePostOrder } from "@/Data/Managers/V2/POST/PostOrder";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { ToastAlert } from "../../ToastAlert";
 import { CanvasContext, InstanceComposerContext } from "../Context/Context";
 import { getServiceOrderItems } from "../helpers";
-import { DiagramHandlers } from "../init";
 
 /**
  * Properties for the Toolbar component.
@@ -18,12 +17,10 @@ import { DiagramHandlers } from "../init";
  * @interface
  * @prop {string} serviceName - The name of the service.
  * @prop {boolean} editable - A flag indicating if the diagram is editable.
- * @prop {DiagramHandlers | null} diagramHandlers - The handlers for various diagram actions.
  */
 interface Props {
   serviceName: string;
   editable: boolean;
-  diagramHandlers: DiagramHandlers | null;
 }
 
 /**
@@ -40,15 +37,12 @@ interface Props {
  *
  * @returns {React.FC} The Toolbar component.
  */
-const Toolbar: React.FC<Props> = ({
-  serviceName,
-  editable,
-  diagramHandlers,
-}) => {
+export const Toolbar: React.FC<Props> = ({ serviceName, editable }) => {
   const { serviceModels, mainService, instance } = useContext(
     InstanceComposerContext,
   );
-  const { instancesToSend, isDirty, looseEmbedded } = useContext(CanvasContext);
+  const { instancesToSend, isDirty, looseEmbedded, diagramHandlers } =
+    useContext(CanvasContext);
   const { routeManager, environmentHandler } = useContext(DependencyContext);
 
   const [alertMessage, setAlertMessage] = useState("");
@@ -84,8 +78,9 @@ const Toolbar: React.FC<Props> = ({
         },
       }));
 
-    //Temporary workaround to update coordinates in metadata, as currently order endpoint don't handle metadata in the updates.
+    // Temporary workaround to update coordinates in metadata, as currently order endpoint don't handle metadata in the updates.
     // can't test in jest as I can't add any test-id to the halo handles though.
+
     if (instance) {
       metadataMutation.mutate({
         service_entity: mainService.name,
@@ -163,8 +158,6 @@ const Toolbar: React.FC<Props> = ({
     </Container>
   );
 };
-
-export default Toolbar;
 
 const Container = styled(Flex)`
   padding: 0 0 20px;

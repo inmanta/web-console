@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 import {
   EmbeddedEntity,
   InstanceAttributeModel,
+  InterServiceRelation,
   ServiceInstanceModel,
   ServiceModel,
 } from "@/Core";
@@ -16,10 +17,19 @@ import {
   LabelLinkView,
   SavedCoordinates,
   EmbeddedEventEnum,
+  StencilState,
+  ActionEnum,
 } from "@/UI/Components/Diagram/interfaces";
 
 import { ServiceEntityBlock } from "./shapes";
 
+/**
+ * Extracts the IDs of the relations of a service instance.
+ *
+ * @param service - The service model.
+ * @param instance - The service instance.
+ * @returns {string[]} An array of relation IDs.
+ */
 export const extractRelationsIds = (
   service: ServiceModel,
   instance: ServiceInstanceModel,
@@ -102,11 +112,11 @@ export const createConnectionRules = (
  * Function that takes source of the connection and eventual target, and check if the rules allows connection between entities, and
  * whether source & target didn't exhaust eventual limits for given type of connection
  *
- * @param {dia.Graph} graph
- * @param {dia.CellView | dia.ElementView | undefined} tgtView
- * @param {dia.CellView | dia.ElementView} srcView
- * @param {ConnectionRules} rules
- * @returns {boolean}
+ * @param {dia.Graph} graph - jointjs graph
+ * @param {dia.CellView | dia.ElementView | undefined} tgtView - target of the connection
+ * @param {dia.CellView | dia.ElementView} srcView - source of the connection
+ * @param {ConnectionRules} rules - rules for connections
+ * @returns {boolean} - whether connection is allowed
  */
 export const checkIfConnectionIsAllowed = (
   graph: dia.Graph,
@@ -151,6 +161,19 @@ export const checkIfConnectionIsAllowed = (
     const isSourceInEditMode: boolean | undefined =
       sourceAsElement.get("isInEditMode");
 
+    const isSourceBlockedFromEditing: boolean | undefined = sourceAsElement.get(
+      "isBlockedFromEditing",
+    );
+
+    if (isSourceBlockedFromEditing) {
+      const targetHolder = targetAsElement.get("holderName");
+      const isTargetEmbedded = targetAsElement.get("isEmbedded");
+
+      if (isTargetEmbedded && targetHolder === sourceName) {
+        return false; // if source is blocked from editing then we can't connect embedded entities to it
+      }
+    }
+
     areTargetConnectionExhausted = checkWhetherConnectionRulesAreExhausted(
       connectedElementsToTarget,
       targetRule,
@@ -177,15 +200,26 @@ export const checkIfConnectionIsAllowed = (
       );
   }
 
-  return (
-    !areSourceConnectionsExhausted &&
-    !areTargetConnectionExhausted &&
-    !(
-      doesTargetIsEmbeddedWithExhaustedConnections ||
-      doesSourceIsEmbeddedWithExhaustedConnections
-    ) &&
-    (sourceRule !== undefined || targetRule !== undefined)
-  );
+  const elementsCanBeConnected =
+    sourceRule !== undefined || targetRule !== undefined;
+
+  const connectionIsInterServiceRelation =
+    sourceRule?.kind === TypeEnum.INTERSERVICE ||
+    targetRule?.kind === TypeEnum.INTERSERVICE;
+
+  if (elementsCanBeConnected) {
+    //if elements have interservice relation then we need to check if they are exhausted
+    if (connectionIsInterServiceRelation) {
+      return !areSourceConnectionsExhausted && !areTargetConnectionExhausted;
+    } else {
+      return !(
+        doesTargetIsEmbeddedWithExhaustedConnections ||
+        doesSourceIsEmbeddedWithExhaustedConnections
+      );
+    }
+  }
+
+  return elementsCanBeConnected;
 };
 
 /**
@@ -194,7 +228,7 @@ export const checkIfConnectionIsAllowed = (
  * @param {ServiceEntityBlock[]} connectedElements list of connected elements to given shape
  * @param {EmbeddedRule | InterServiceRule | undefined} rule telling which shapes can connect to each other and about their limitations
  * @param {boolean} editMode which defines whether connectionts rule is assesed for instance edited or newly created
- * @returns {boolean}
+ * @returns {boolean} - whether connection are exhausted
  */
 export const checkWhetherConnectionRulesAreExhausted = (
   connectedElements: ServiceEntityBlock[],
@@ -226,7 +260,7 @@ export const checkWhetherConnectionRulesAreExhausted = (
  * @param {dia.Element} source element that originate our connection
  * @param {ServiceEntityBlock[]} connectedElementsToSource array of elements that are connected to the given entity
  * @param {dia.Element} target element that is destination for the connection
- * @returns {boolean}
+ * @returns {boolean} - whether element is embedded and its available connections are exhausted
  */
 const doesElementIsEmbeddedWithExhaustedConnections = (
   source: dia.Element,
@@ -265,8 +299,9 @@ const doesElementIsEmbeddedWithExhaustedConnections = (
  * go through all of them to group, and sort them
  * @param {ComposerServiceOrderItem} parentInstance Instance that is the main object and to which other instance are eventually connected
  * @param {ComposerServiceOrderItem[]} instances all of the instances that were created/edited in the instance, not including parentInstance
+ * @param {ServiceModel | EmbeddedEntity} serviceModel - ServiceModel or EmbeddedEntity that is the model for the current iteration to build upon
  * @param {boolean=} isEmbedded boolean informing whether instance passed is embedded or not
- * @returns
+ * @returns {ComposerServiceOrderItem} - object that could be sent to the backend or embedded into other object that could be sent
  */
 export const shapesDataTransform = (
   parentInstance: ComposerServiceOrderItem,
@@ -387,8 +422,8 @@ export const shapesDataTransform = (
  * bundle in proper Instance Objects that could be accepted by the order_api request
  *
  * @param {Map<string, ComposerServiceOrderItem>}instances Map of Instances
- * @param {ServiceModel[]} services
- * @returns ComposerServiceOrderItem[]
+ * @param {ServiceModel[]} services - Array of service models
+ * @returns {ComposerServiceOrderItem[]}
  */
 export const getServiceOrderItems = (
   instances: Map<string, ComposerServiceOrderItem>,
@@ -410,6 +445,7 @@ export const getServiceOrderItems = (
       : mapToArray[index].relatedTo;
   });
   const topServicesNames = services.map((service) => service.name);
+
   // topInstances are instances that have top-level attributes from given serviceModel, and theoretically are the ones accepting embedded-entities
   const topInstances = deepCopiedMapToArray.filter((instance) =>
     topServicesNames.includes(instance.service_entity),
@@ -440,16 +476,21 @@ const isSingularRelation = (model?: EmbeddedEntity) => {
 };
 
 /**
- *
  * Find if the relations of some instance includes Id of the instance passed through prop
- * @param neighborRelations map of ids that could include id of intanceAsTable
- * @param instanceAsTable Instance to which should instances connect to
- * @returns
+ * @param {Map<dia.Cell.ID, string>} neighborRelations map of ids that could include id of instanceAsTable
+ * @param {ServiceEntityBlock} instanceAsTable Instance to which should instances connect to
+ *
+ * @returns {{ id: dia.Cell.ID, attributeName: string} | undefined}
  */
 export const findCorrespondingId = (
   neighborRelations: Map<dia.Cell.ID, string>,
   instanceAsTable: ServiceEntityBlock,
-) => {
+):
+  | {
+      id: dia.Cell.ID;
+      attributeName: string;
+    }
+  | undefined => {
   return Array.from(neighborRelations, ([id, attributeName]) => ({
     id,
     attributeName,
@@ -509,6 +550,7 @@ export const updateLabelPosition = (
  * Toggle the highlighting of a loose element in a diagram cell view.
  * @param {dia.CellView} cellView - The cell view containing the element.
  * @param {EmbeddedEventEnum} kind - The action to perform, either "add" to add highlighting or "remove" to remove highlighting.
+ *
  * @returns {void}
  */
 export const toggleLooseElement = (
@@ -550,6 +592,7 @@ export const toggleLooseElement = (
  * Gets the coordinates of all cells in the graph. https://resources.jointjs.com/docs/jointjs/v4.0/joint.html#dia.Graph
  *
  * @param {dia.Graph} graph - The graph from which to get the cells.
+ *
  * @returns {SavedCoordinates[]} An array of objects, each containing the id, name, attributes, and coordinates of a cell.
  */
 export const getCellsCoordinates = (graph: dia.Graph): SavedCoordinates[] => {
@@ -570,11 +613,13 @@ export const getCellsCoordinates = (graph: dia.Graph): SavedCoordinates[] => {
  *
  * @param {dia.Graph} graph - The graph to which to apply the coordinates.
  * @param {SavedCoordinates[]} coordinates - The coordinates to apply to the cells.
+ *
+ * @returns {void}
  */
 export const applyCoordinatesToCells = (
   graph: dia.Graph,
   coordinates: SavedCoordinates[],
-) => {
+): void => {
   const cells = graph.getCells();
 
   coordinates.forEach((element) => {
@@ -595,36 +640,11 @@ export const applyCoordinatesToCells = (
 };
 
 /**
- * Moves a cell away from any cells it is colliding with.
- *
- * @param {dia.Graph} graph - The graph containing the cell.
- * @param {dia.Cell} cell - The cell to move.
- */
-export const moveCellFromColliding = (graph: dia.Graph, cell: dia.Cell) => {
-  let isColliding = false;
-
-  do {
-    const overlappingCells = graph
-      .findModelsInArea(cell.getBBox())
-      .filter((el) => el.id !== cell.id);
-
-    if (overlappingCells.length > 0) {
-      isColliding = true;
-      // an overlap found, revert the position
-      const coordinates = cell.position();
-
-      cell.set("position", { x: coordinates.x + 50, y: coordinates.y });
-    } else {
-      isColliding = false;
-    }
-  } while (isColliding);
-};
-
-/**
- * Finds the inter-service relations for a given service model or embedded entity.
+ * Finds the inter-service relations entity types for the given service model or embedded entity.
  *
  * @param {ServiceModel | EmbeddedEntity} serviceModel - The service model or embedded entity to find inter-service relations for.
- * @returns {string[] | undefined} An array of entity types that have inter-service relations with the given service model or embedded entity, or undefined if the service model is undefined.
+ *
+ * @returns {string[]} An array of entity types that have inter-service relations with the given service model or embedded entity
  */
 export const findInterServiceRelations = (
   serviceModel: ServiceModel | EmbeddedEntity,
@@ -639,4 +659,115 @@ export const findInterServiceRelations = (
   );
 
   return result.concat(embeddedEntitiesResult);
+};
+
+/**
+ * Finds the inter-service relations objects for the given service model or embedded entity.
+ *
+ * @param {ServiceModel | EmbeddedEntity} serviceModel - The service model or embedded entity to find inter-service relations for.
+ *
+ * @returns {string[]} An array of inter-service relations objects that have inter-service relations
+ * */
+export const findFullInterServiceRelations = (
+  serviceModel: ServiceModel | EmbeddedEntity,
+): InterServiceRelation[] => {
+  const result = serviceModel.inter_service_relations || [];
+
+  const embeddedEntitiesResult = serviceModel.embedded_entities.flatMap(
+    (embedded_entity) => findFullInterServiceRelations(embedded_entity),
+  );
+
+  return result.concat(embeddedEntitiesResult);
+};
+
+/**
+ * Creates a stencil state for a given service model or embedded entity.
+ *
+ * @param serviceModel - The service model or embedded entity to create a stencil state for.
+ * @param isInEditMode - A boolean indicating whether the stencil is in edit mode. Defaults to false.
+ * @returns {StencilState} The created stencil state.
+ */
+export const createStencilState = (
+  serviceModel: ServiceModel | EmbeddedEntity,
+  isInEditMode = false,
+): StencilState => {
+  let stencilState: StencilState = {};
+
+  serviceModel.embedded_entities.forEach((entity) => {
+    stencilState[entity.name] = {
+      min: entity.lower_limit,
+      max: entity.modifier === "rw" && isInEditMode ? 0 : entity.upper_limit,
+      current: 0,
+    };
+    if (entity.embedded_entities) {
+      stencilState = {
+        ...stencilState,
+        ...createStencilState(entity),
+      };
+    }
+  });
+
+  return stencilState;
+};
+
+/**
+ * Updates the instances to send based on the action performed on a cell.
+ *
+ * @param cell - The cell that the action was performed on.
+ * @param action - The action that was performed.
+ * @param instancesToSend - The current map of instances to send.
+ * @returns  {Map<string, ComposerServiceOrderItem>} The updated map of instances to send.
+ */
+export const updateInstancesToSend = (
+  cell: ServiceEntityBlock,
+  action: ActionEnum,
+  instancesToSend: Map<string, ComposerServiceOrderItem>,
+): Map<string, ComposerServiceOrderItem> => {
+  const newInstance: ComposerServiceOrderItem = {
+    instance_id: cell.id,
+    service_entity: cell.getName(),
+    config: {},
+    action: null,
+    attributes: cell.get("sanitizedAttrs"),
+    edits: null,
+    embeddedTo: cell.get("embeddedTo"),
+    relatedTo: cell.getRelations(),
+  };
+  const copiedInstances = new Map(instancesToSend); // copy
+
+  const updatedInstance = instancesToSend.get(String(cell.id));
+
+  switch (action) {
+    case "update":
+      //action in the instance isn't the same as action passed to this function, this assertion is to make sure that the update action won't change the action state of newly created instance.
+      newInstance.action =
+        updatedInstance?.action === "create" ? "create" : "update";
+      copiedInstances.set(String(cell.id), newInstance);
+      break;
+    case "create":
+      newInstance.action = action;
+      copiedInstances.set(String(cell.id), newInstance);
+      break;
+    default:
+      if (
+        updatedInstance &&
+        (updatedInstance.action === null || updatedInstance.action === "update")
+      ) {
+        copiedInstances.set(String(cell.id), {
+          instance_id: cell.id,
+          service_entity: cell.getName(),
+          config: {},
+          action: "delete",
+          attributes: null,
+          edits: null,
+          embeddedTo: cell.attributes.embeddedTo,
+          relatedTo: cell.attributes.relatedTo,
+        });
+      } else {
+        copiedInstances.delete(String(cell.id));
+      }
+      break;
+  }
+
+  return copiedInstances;
 };

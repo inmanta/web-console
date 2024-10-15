@@ -2,17 +2,13 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import "@inmanta/rappid/joint-plus.css";
 import { ui } from "@inmanta/rappid";
 import styled from "styled-components";
-import { ServiceModel } from "@/Core";
-import { sanitizeAttributes } from "@/Data";
-import { diagramInit, DiagramHandlers } from "@/UI/Components/Diagram/init";
-import { CanvasWrapper } from "@/UI/Components/Diagram/styles";
-import { CanvasContext, InstanceComposerContext } from "./Context/Context";
+import { CanvasContext, InstanceComposerContext } from "./Context";
 import { EventWrapper } from "./Context/EventWrapper";
-import DictModal from "./components/DictModal";
-import FormModal from "./components/FormModal";
-import Toolbar from "./components/Toolbar";
-import { createConnectionRules } from "./helpers";
-import { StencilSidebar } from "./stencil/stencil";
+import { DictModal, RightSidebar, Toolbar } from "./components";
+import { createConnectionRules, createStencilState } from "./helpers";
+import { diagramInit } from "./init";
+import { StencilSidebar } from "./stencil";
+import { CanvasWrapper } from "./styles";
 import { ZoomHandlerService } from "./zoomHandler";
 
 /**
@@ -29,30 +25,43 @@ interface Props {
  * Canvas component for creating, displaying and editing an Instance.
  *
  * @props {Props} props - The properties passed to the component.
- * @prop {boolean} props.editable - A flag indicating if the diagram is editable.
+ * @prop {boolean} editable - A flag indicating if the diagram is editable.
  *
- * @returns {JSX.Element} The rendered Canvas component.
+ * @returns {React.FC<Props>} The rendered Canvas component.
  */
 export const Canvas: React.FC<Props> = ({ editable }) => {
   const { mainService, instance, serviceModels, relatedInventories } =
     useContext(InstanceComposerContext);
-  const { setInstancesToSend } = useContext(CanvasContext);
+  const {
+    setStencilState,
+    setInstancesToSend,
+    diagramHandlers,
+    setDiagramHandlers,
+  } = useContext(CanvasContext);
   const Canvas = useRef<HTMLDivElement>(null);
   const LeftSidebar = useRef<HTMLDivElement>(null);
   const ZoomHandler = useRef<HTMLDivElement>(null);
   const [scroller, setScroller] = useState<ui.PaperScroller | null>(null);
-  const [diagramHandlers, setDiagramHandlers] =
-    useState<DiagramHandlers | null>(null);
+  const [isStencilStateReady, setIsStencilStateReady] = useState(false);
+
+  const [stencilSidebar, setStencilSidebar] = useState<StencilSidebar | null>(
+    null,
+  ); // without this state it could happen that cells would load before sidebar is ready so it's state could be outdated
 
   useEffect(() => {
-    if (!mainService || !serviceModels) {
+    if (!mainService) {
+      return;
+    }
+    setStencilState(createStencilState(mainService, !!instance));
+    setIsStencilStateReady(true);
+  }, [mainService, instance, setStencilState]);
+
+  useEffect(() => {
+    if (!mainService || !serviceModels || !isStencilStateReady) {
       return;
     }
 
-    const connectionRules = createConnectionRules(
-      serviceModels.concat(mainService),
-      {},
-    );
+    const connectionRules = createConnectionRules(serviceModels, {});
     const actions = diagramInit(
       Canvas,
       (newScroller) => {
@@ -66,66 +75,20 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
     setDiagramHandlers(actions);
 
     return () => {
+      setStencilState(createStencilState(mainService));
+      setIsStencilStateReady(false);
       actions.removeCanvas();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mainService, serviceModels]);
-
-  useEffect(() => {
-    if (!diagramHandlers || !serviceModels || !mainService) {
-      return;
-    }
-    const newInstances = new Map();
-
-    if (instance) {
-      const cells = diagramHandlers.addInstance(
-        [...serviceModels, mainService],
-        instance,
-      );
-
-      cells.forEach((cell) => {
-        if (cell.type === "app.ServiceEntityBlock") {
-          newInstances.set(cell.id, {
-            instance_id: cell.id,
-            service_entity: cell.entityName,
-            config: {},
-            action: null,
-            attributes: cell.instanceAttributes,
-            embeddedTo: cell.embeddedTo,
-            relatedTo: cell.relatedTo,
-          });
-        }
-      });
-    } else {
-      const cells = diagramHandlers.addInstance([
-        ...serviceModels,
-        mainService,
-      ]);
-
-      cells.forEach((cell) => {
-        if (cell.type === "app.ServiceEntityBlock") {
-          newInstances.set(cell.id, {
-            instance_id: cell.id,
-            service_entity: cell.entityName,
-            config: {},
-            action: "create",
-            attributes: cell.instanceAttributes,
-            embeddedTo: cell.embeddedTo,
-            relatedTo: cell.relatedTo,
-          });
-        }
-      });
-    }
-    setInstancesToSend(newInstances);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [instance, serviceModels, mainService, diagramHandlers]);
+  }, [mainService, serviceModels, isStencilStateReady]);
 
   useEffect(() => {
     if (
       !LeftSidebar.current ||
       !scroller ||
       !relatedInventories.data ||
-      !mainService
+      !mainService ||
+      !serviceModels
     ) {
       return;
     }
@@ -135,10 +98,48 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
       scroller,
       relatedInventories.data,
       mainService,
+      serviceModels,
     );
 
+    setStencilSidebar(sidebar);
+
     return () => sidebar.remove();
-  }, [scroller, relatedInventories.data, mainService]);
+  }, [scroller, relatedInventories.data, mainService, serviceModels]);
+
+  useEffect(() => {
+    if (
+      !stencilSidebar ||
+      !diagramHandlers ||
+      !serviceModels ||
+      !mainService ||
+      !isStencilStateReady
+    ) {
+      return;
+    }
+    const newInstances = new Map();
+
+    const cells = diagramHandlers.addInstance(serviceModels, instance);
+
+    cells.forEach((cell) => {
+      newInstances.set(cell.id, {
+        instance_id: cell.id,
+        service_entity: cell.get("entityName"),
+        config: {},
+        action: instance ? null : "create",
+        attributes: cell.get("instanceAttributes"),
+        embeddedTo: cell.get("embeddedTo"),
+        relatedTo: cell.get("relatedTo"),
+      });
+    });
+
+    setInstancesToSend(newInstances);
+
+    return () => {
+      setStencilState(createStencilState(mainService));
+      setIsStencilStateReady(false);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [diagramHandlers, isStencilStateReady, stencilSidebar]);
 
   useEffect(() => {
     if (!ZoomHandler.current || !scroller) {
@@ -152,33 +153,15 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
   return (
     <EventWrapper>
       <DictModal />
-      <FormModal
-        onConfirm={(fields, entity, selected, cellToEdit) => {
-          if (diagramHandlers) {
-            const sanitizedAttrs = sanitizeAttributes(fields, entity);
-
-            if (cellToEdit) {
-              //deep copy
-              const shape = diagramHandlers.editEntity(
-                cellToEdit,
-                selected.model as ServiceModel,
-                entity,
-              );
-
-              shape.set("sanitizedAttrs", sanitizedAttrs);
-              //handleUpdate(shape, ActionEnum.UPDATE);
-            }
-          }
-        }}
-      />
-      <Toolbar
-        serviceName={mainService.name}
-        editable={editable}
-        diagramHandlers={diagramHandlers}
-      />
+      <Toolbar serviceName={mainService.name} editable={editable} />
       <CanvasWrapper id="canvas-wrapper" data-testid="Composer-Container">
-        <StencilContainer className="stencil-sidebar" ref={LeftSidebar} />
-        <CanvasContainer className="canvas" ref={Canvas} />
+        <StencilContainer
+          className="stencil-sidebar"
+          data-testid="left_sidebar"
+          ref={LeftSidebar}
+        />
+        <CanvasContainer className="canvas" data-testid="canvas" ref={Canvas} />
+        <RightSidebar />
         <ZoomHandlerContainer className="zoom-handler" ref={ZoomHandler} />
       </CanvasWrapper>
     </EventWrapper>
@@ -190,8 +173,8 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
  */
 const ZoomHandlerContainer = styled.div`
   position: absolute;
-  bottom: 1rem;
-  right: 1rem;
+  bottom: 12px;
+  right: 316px;
   filter: drop-shadow(
     0.05rem 0.2rem 0.2rem
       var(--pf-v5-global--BackgroundColor--dark-transparent-200)
@@ -288,7 +271,7 @@ const ZoomHandlerContainer = styled.div`
  * Container for the JointJS canvas.
  */
 const CanvasContainer = styled.div`
-  width: calc(100% - 240px);
+  width: calc(100% - 540px); //240 left sidebar + 300 right sidebar
   height: 100%;
   background: var(--pf-v5-global--BackgroundColor--light-300);
 

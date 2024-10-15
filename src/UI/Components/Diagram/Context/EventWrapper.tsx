@@ -1,9 +1,6 @@
 import React, { useContext, useEffect } from "react";
-import {
-  ActionEnum,
-  ComposerServiceOrderItem,
-  EmbeddedEventEnum,
-} from "../interfaces";
+import { updateInstancesToSend } from "../helpers";
+import { ActionEnum, EmbeddedEventEnum } from "../interfaces";
 import { ServiceEntityBlock } from "../shapes";
 import { CanvasContext } from "./Context";
 
@@ -13,8 +10,8 @@ import { CanvasContext } from "./Context";
  * This component is a higher-order component that wraps its children and provides event handling for all necessary communication from withing JointJS code to the Composer.
  * It uses the CanvasContext to get and set various state variables.
  *
- * @param {React.PropsWithChildren} props - The properties that define the behavior and display of the component.
- * @param {React.ReactNode} props.children - The children components to be wrapped.
+ * @props {React.PropsWithChildren} props - The properties that define the behavior and display of the component.
+ * @prop {React.ReactNode} children - The children components to be wrapped.
  *
  * @returns {React.FC<React.PropsWithChildren>} The EventWrapper component.
  */
@@ -22,7 +19,7 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
   children,
 }) => {
   const {
-    instancesToSend,
+    setStencilState,
     setInstancesToSend,
     setCellToEdit,
     setDictToDisplay,
@@ -34,8 +31,10 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
    * Handles the event triggered when there are loose embedded entities on the canvas.
    *
    * @param {CustomEvent} event - The event object.
+   *
+   * @returns {void}
    */
-  const handleLooseEmbeddedEvent = (event) => {
+  const handleLooseEmbeddedEvent = (event): void => {
     const customEvent = event as CustomEvent;
     const eventData: { kind: EmbeddedEventEnum; id: string } = JSON.parse(
       customEvent.detail,
@@ -54,8 +53,10 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
    * Handles the event triggered when the user wants to see the dictionary properties of an entity.
    *
    * @param {CustomEvent} event - The event object.
+   *
+   * @returns {void}
    */
-  const handleDictEvent = (event) => {
+  const handleDictEvent = (event): void => {
     const customEvent = event as CustomEvent;
 
     setDictToDisplay(JSON.parse(customEvent.detail));
@@ -65,89 +66,124 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
    * Handles the event triggered when the user wants to edit an entity.
    *
    * @param {CustomEvent} event - The event object.
+   *
+   * @returns {void}
    */
-  const handleEditEvent = (event) => {
+  const handleEditEvent = (event): void => {
     const customEvent = event as CustomEvent;
 
     setCellToEdit(customEvent.detail);
   };
 
   /**
-   * Handles the update of a service entity block.
+   * Handles the event triggered when the user made update to the instance cell
+   * With removed ability to edit the related instances, we need to assert first if the instance triggered the event is in the instancesToSend map(it could be removed from the canvas)
    *
-   * @param {ServiceEntityBlock} cell - The service entity block to be updated.
-   * @param {ActionEnum} action - The action to be performed on the service entity block.
+   * @param {CustomEvent} event - The event object.
+   *
+   * @returns {void}
    */
-  const updateInstancesToSend = (event) => {
+  const handleUpdateInstancesToSend = (event): void => {
     const customEvent = event as CustomEvent;
     const { cell, action } = customEvent.detail as {
       cell: ServiceEntityBlock;
       action: ActionEnum;
     };
 
-    const newInstance: ComposerServiceOrderItem = {
-      instance_id: cell.id,
-      service_entity: cell.getName(),
-      config: {},
-      action: null,
-      attributes: cell.get("sanitizedAttrs"),
-      edits: null,
-      embeddedTo: cell.get("embeddedTo"),
-      relatedTo: cell.getRelations(),
-    };
+    setInstancesToSend((prev) => {
+      //related instances aren't added to the instancesToSend map, this condition is here to prevent situation where we try to remove the related instance from the canvas and it's end up here with status to delete it from the inventory
+      if (prev.has(String(cell.id)) || action === ActionEnum.CREATE) {
+        return updateInstancesToSend(cell, action, prev);
+      }
 
-    const copiedInstances = new Map(instancesToSend); // copy
+      return prev;
+    });
+  };
 
-    const updatedInstance = instancesToSend.get(String(cell.id));
+  /**
+   * Handles updating the stencil state for the embedded entities.
+   * If the current count reach the max count, the adequate stencil element will become disabled.
+   *
+   * @param {CustomEvent} event - The event object.
+   *
+   * @returns {void}
+   */
+  const handleUpdateStencilState = (event): void => {
+    const customEvent = event as CustomEvent;
+    const eventData: { name: string; action: EmbeddedEventEnum } =
+      customEvent.detail;
 
-    switch (action) {
-      case "update":
-        //action in the instance isn't the same as action passed to this function, this assertion is to make sure that the update action won't change the action state of newly created instance. It will be addressed in next PR to make it clearer.
-        newInstance.action =
-          updatedInstance?.action === "create" ? "create" : "update";
-        copiedInstances.set(String(cell.id), newInstance);
-        break;
-      case "create":
-        newInstance.action = action;
-        break;
-      default:
-        if (
-          updatedInstance &&
-          (updatedInstance.action === null ||
-            updatedInstance.action === "update")
-        ) {
-          copiedInstances.set(String(cell.id), {
-            instance_id: cell.id,
-            service_entity: cell.getName(),
-            config: {},
-            action: "delete",
-            attributes: null,
-            edits: null,
-            embeddedTo: cell.attributes.embeddedTo,
-            relatedTo: cell.attributes.relatedTo,
-          });
-        } else {
-          copiedInstances.delete(String(cell.id));
-        }
-        break;
-    }
-    setInstancesToSend(copiedInstances);
+    //event listener doesn't get updated state outside setStencilState function, so all logic has to be done inside it
+    setStencilState((prev) => {
+      const stencilStateCopy = JSON.parse(JSON.stringify(prev));
+
+      // If the stencil doesn't exist, return the previous state - that's the case when we recurrently add related children to the canvas, these embedded entities aren't tracked
+      if (!stencilStateCopy[eventData.name]) {
+        return stencilStateCopy;
+      }
+
+      switch (eventData.action) {
+        case "add":
+          stencilStateCopy[eventData.name].current += 1;
+          break;
+        case "remove":
+          stencilStateCopy[eventData.name].current -= 1;
+          break;
+        default:
+          break;
+      }
+
+      // If the current count is more than or equal to the max count, disable the stencil of given embedded entity
+      if (
+        stencilStateCopy[eventData.name].max !== null &&
+        stencilStateCopy[eventData.name].max !== undefined &&
+        stencilStateCopy[eventData.name].current >=
+          stencilStateCopy[eventData.name].max
+      ) {
+        document
+          .querySelector(`.${eventData.name}_body`)
+          ?.classList.add("stencil_accent-disabled");
+        document
+          .querySelector(`.${eventData.name}_bodyTwo`)
+          ?.classList.add("stencil_body-disabled");
+        document
+          .querySelector(`.${eventData.name}_text`)
+          ?.classList.add("stencil_text-disabled");
+      } else {
+        document
+          .querySelector(`.${eventData.name}_body`)
+          ?.classList.remove("stencil_accent-disabled");
+        document
+          .querySelector(`.${eventData.name}_bodyTwo`)
+          ?.classList.remove("stencil_body-disabled");
+        document
+          .querySelector(`.${eventData.name}_text`)
+          ?.classList.remove("stencil_text-disabled");
+      }
+
+      return stencilStateCopy;
+    });
   };
 
   useEffect(() => {
     document.addEventListener("openDictsModal", handleDictEvent);
-    document.addEventListener("openEditModal", handleEditEvent);
+    document.addEventListener("sendCellToSidebar", handleEditEvent);
     document.addEventListener("looseEmbedded", handleLooseEmbeddedEvent);
-    document.addEventListener("updateInstancesToSend", updateInstancesToSend);
+    document.addEventListener(
+      "updateInstancesToSend",
+      handleUpdateInstancesToSend,
+    );
+    document.addEventListener("updateStencil", handleUpdateStencilState);
 
     return () => {
       document.removeEventListener("openDictsModal", handleDictEvent);
-      document.removeEventListener("openEditModal", handleEditEvent);
+      document.removeEventListener("sendCellToSidebar", handleEditEvent);
       document.removeEventListener("looseEmbedded", handleLooseEmbeddedEvent);
       document.removeEventListener(
         "updateInstancesToSend",
-        updateInstancesToSend,
+        handleUpdateInstancesToSend,
       );
+      document.removeEventListener("updateStencil", handleUpdateStencilState);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

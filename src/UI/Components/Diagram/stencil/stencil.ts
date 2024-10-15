@@ -1,10 +1,15 @@
 import { dia, ui } from "@inmanta/rappid";
 import { ServiceModel } from "@/Core";
-import { Inventories } from "@/Data/Managers/V2/GetRelatedInventories";
-import { ServiceEntityBlock } from "../shapes";
+import { Inventories } from "@/Data/Managers/V2/GETTERS/GetRelatedInventories";
+import {
+  CreateModifierHandler,
+  FieldCreator,
+  createFormState,
+} from "../../ServiceInstanceForm";
+import { createComposerEntity } from "../actions";
+import { ActionEnum, EmbeddedEventEnum } from "../interfaces";
 import {
   createStencilElement,
-  createStencilDraggableShape,
   transformEmbeddedToStencilElements,
 } from "./helpers";
 
@@ -41,11 +46,26 @@ class InstanceStencilTab {
       canDrag: (cellView) => {
         return !cellView.model.get("disabled");
       },
-      dragStartClone: (cell: dia.Cell) =>
-        createStencilDraggableShape(cell, true),
-      dragEndClone: (el) => {
-        return el.clone();
+      dragStartClone: (cell: dia.Cell) => {
+        const serviceModel = cell.get("serviceModel");
+        const isCore = false;
+        const isInEditMode = false;
+        const isEmbedded = true;
+
+        const fieldCreator = new FieldCreator(new CreateModifierHandler());
+        const fields = fieldCreator.attributesToFields(serviceModel.attributes);
+        const attrs = createFormState(fields);
+
+        return createComposerEntity(
+          serviceModel,
+          isCore,
+          isInEditMode,
+          attrs,
+          isEmbedded,
+          cell.get("holderName"),
+        );
       },
+      dragEndClone: (el) => el.clone().set("items", el.get("items")), //cloned element loses key value pairs, so we need to set them again
       layout: {
         columns: 1,
         rowHeight: "compact",
@@ -63,6 +83,25 @@ class InstanceStencilTab {
     stencilElement.appendChild(this.stencil.el);
     this.stencil.render();
     this.stencil.load(transformEmbeddedToStencilElements(service));
+
+    this.stencil.on("element:drop", (elementView) => {
+      if (elementView.model.get("isEmbedded")) {
+        document.dispatchEvent(
+          new CustomEvent("updateStencil", {
+            detail: {
+              name: elementView.model.get("entityName"),
+              action: EmbeddedEventEnum.ADD,
+            },
+          }),
+        );
+      }
+
+      document.dispatchEvent(
+        new CustomEvent("updateInstancesToSend", {
+          detail: { cell: elementView.model, action: ActionEnum.CREATE },
+        }),
+      );
+    });
   }
 }
 
@@ -83,19 +122,39 @@ class InventoryStencilTab {
     stencilElement: HTMLElement,
     scroller: ui.PaperScroller,
     serviceInventories: Inventories,
+    serviceModels: ServiceModel[],
   ) {
     const groups = {};
 
     //Create object with service names as keys and all of the service instances as StencilElements, to be used in the Stencil Sidebar
-    Object.keys(serviceInventories).forEach(
-      (serviceName) =>
-        (groups[serviceName] = serviceInventories[serviceName].map((service) =>
-          createStencilElement(service.service_entity),
-        )),
-    );
+    Object.keys(serviceInventories).forEach((serviceName) => {
+      const serviceModel = serviceModels.find(
+        (model) => model.name === serviceName,
+      );
+
+      return (groups[serviceName] = serviceInventories[serviceName].map(
+        (instance) => {
+          const attributes =
+            instance.candidate_attributes ||
+            instance.active_attributes ||
+            undefined;
+
+          const displayName = instance.service_identity_attribute_value
+            ? instance.service_identity_attribute_value
+            : instance.id;
+
+          //add the instance id to the attributes object, to then pass it to the actual object on canvas
+          return createStencilElement(displayName, serviceModel, {
+            ...attributes,
+            id: instance.id,
+          });
+        },
+      ));
+    });
 
     this.stencil = new ui.Stencil({
       id: "inventory-stencil",
+      testid: "inventory-stencil",
       className: "joint-stencil hidden",
       paper: scroller,
       width: 240,
@@ -115,13 +174,24 @@ class InventoryStencilTab {
         "standard.Path": ["description"],
       },
       dragStartClone: (cell: dia.Cell) => {
-        const name = cell.get("name");
+        const isCore = false;
+        const isInEditMode = false;
 
-        return new ServiceEntityBlock().setName(name);
+        const entity = createComposerEntity(
+          cell.get("serviceModel"),
+          isCore,
+          isInEditMode,
+          cell.get("instanceAttributes"),
+        );
+
+        //set id to the one that is stored in the stencil which equal to the instance id
+        entity.set("id", cell.get("id"));
+        entity.set("isBlockedFromEditing", true);
+        entity.set("stencilName", cell.get("name"));
+
+        return entity;
       },
-      dragEndClone: (el) => {
-        return el.clone();
-      },
+      dragEndClone: (el) => el.clone().set("id", el.get("id")),
       layout: {
         columns: 1,
         rowHeight: "compact",
@@ -142,6 +212,18 @@ class InventoryStencilTab {
 
     this.stencil.load(groups);
     this.stencil.freeze(); //freeze by default as this tab is not active on init
+
+    this.stencil.on("element:drop", (elementView) => {
+      document
+        .querySelector(`.${elementView.model.get("stencilName")}_body`)
+        ?.classList.add("stencil_accent-disabled");
+      document
+        .querySelector(`.${elementView.model.get("stencilName")}_bodyTwo`)
+        ?.classList.add("stencil_body-disabled");
+      document
+        .querySelector(`.${elementView.model.get("stencilName")}_text`)
+        ?.classList.add("stencil_text-disabled");
+    });
   }
 }
 
@@ -166,6 +248,7 @@ export class StencilSidebar {
     scroller: ui.PaperScroller,
     serviceInventories: Inventories,
     service: ServiceModel,
+    serviceModels: ServiceModel[],
   ) {
     this.instanceTab = new InstanceStencilTab(
       stencilElement,
@@ -176,6 +259,7 @@ export class StencilSidebar {
       stencilElement,
       scroller,
       serviceInventories,
+      serviceModels,
     );
 
     this.tabsToolbar = new ui.Toolbar({

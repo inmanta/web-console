@@ -3,15 +3,19 @@ import { dia, shapes, ui } from "@inmanta/rappid";
 import { InstanceAttributeModel, ServiceModel } from "@/Core";
 import { InstanceWithRelations } from "@/Data/Managers/V2/GETTERS/GetInstanceWithRelations";
 import {
-  appendColumns,
+  updateAttributes,
   appendInstance,
   populateGraphWithDefault,
 } from "./actions";
-import { applyCoordinatesToCells, getCellsCoordinates } from "./helpers";
+import {
+  applyCoordinatesToCells,
+  getCellsCoordinates,
+  toggleLooseElement,
+} from "./helpers";
 import {
   ConnectionRules,
+  EmbeddedEventEnum,
   SavedCoordinates,
-  serializedCell,
 } from "./interfaces";
 import { ComposerPaper } from "./paper";
 import { ServiceEntityBlock } from "./shapes";
@@ -66,7 +70,32 @@ export function diagramInit(
 
   setScroller(scroller);
 
-  paper.on("blank:pointerdown", (evt: dia.Event) => scroller.startPanning(evt));
+  //trigger highlighter when user drag element from stencil
+  graph.on("add", function (cell) {
+    const paperRepresentation = paper.findViewByModel(cell);
+
+    if (
+      cell.get("isEmbedded") &&
+      !cell.get("embeddedTo") &&
+      paperRepresentation
+    ) {
+      toggleLooseElement(paperRepresentation, EmbeddedEventEnum.ADD);
+    }
+  });
+
+  //programmatically trigger link:connect event, when we connect elements not by user interaction
+  graph.on("link:connect", (link: dia.Link) => {
+    const linkView = paper.findViewByModel(link);
+
+    if (linkView) {
+      paper.trigger("link:connect", linkView);
+    }
+  });
+
+  paper.on(
+    "blank:pointerdown",
+    (evt: dia.Event) => evt && scroller.startPanning(evt),
+  );
 
   if (canvasRef.current) {
     canvasRef.current.appendChild(scroller.el);
@@ -90,15 +119,25 @@ export function diagramInit(
 
     addInstance: (
       services: ServiceModel[],
-      instance?: InstanceWithRelations,
+      instance: InstanceWithRelations | null,
     ) => {
+      let cells: ServiceEntityBlock[] = [];
+
       if (!instance) {
         populateGraphWithDefault(graph, mainService);
-      } else {
-        appendInstance(paper, graph, instance, services);
 
-        if (instance.coordinates) {
-          const parsedCoordinates = JSON.parse(instance.coordinates);
+        cells = graph
+          .getCells()
+          .filter(
+            (cell) => cell.get("type") !== "Link",
+          ) as ServiceEntityBlock[];
+      } else {
+        cells = appendInstance(paper, graph, instance, services);
+
+        if (instance.instance.metadata?.coordinates) {
+          const parsedCoordinates = JSON.parse(
+            instance.instance.metadata?.coordinates,
+          );
 
           applyCoordinatesToCells(graph, parsedCoordinates);
         }
@@ -114,15 +153,13 @@ export function diagramInit(
         maxScaleY: 1.2,
       });
 
-      const jsonGraph = graph.toJSON();
-
-      return jsonGraph.cells as serializedCell[];
+      return cells;
     },
 
     editEntity: (cellView, serviceModel, attributeValues) => {
       //line below resolves issue that appendColumns did update values in the model, but visual representation wasn't updated
       cellView.model.set("items", []);
-      appendColumns(
+      updateAttributes(
         cellView.model as ServiceEntityBlock,
         serviceModel.key_attributes || [],
         attributeValues,
@@ -153,12 +190,12 @@ export interface DiagramHandlers {
    * @param {ServiceModel[]} services - The array of service models to which the instance or it's related instances belongs.
    * @param {InstanceWithRelations} [instance] - The instance to be added to the canvas. If not provided, a default instance of main type will be created.
    *
-   * @returns {serializedCell[]} The serialized cells of the graph after adding the instance.
+   * @returns {ServiceEntityBlock[]} The created cells after adding the instance.
    */
   addInstance: (
     services: ServiceModel[],
-    instance?: InstanceWithRelations,
-  ) => serializedCell[];
+    instance: InstanceWithRelations | null,
+  ) => ServiceEntityBlock[];
 
   /**
    * Edits an entity in the canvas.

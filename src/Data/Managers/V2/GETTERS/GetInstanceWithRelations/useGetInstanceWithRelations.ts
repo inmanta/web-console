@@ -1,5 +1,10 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
-import { ServiceInstanceModel } from "@/Core";
+import {
+  EmbeddedEntity,
+  InstanceAttributeModel,
+  ServiceInstanceModel,
+  ServiceModel,
+} from "@/Core";
 import { PrimaryBaseUrlManager } from "@/UI";
 import { useFetchHelpers } from "../../helpers";
 
@@ -24,11 +29,13 @@ interface GetInstanceWithRelationsHook {
  * React Query hook to fetch an instance with its related instances from the API.
  * @param {string} id - The ID of the instance to fetch.
  * @param {string} environment - The environment in which we are looking for instances.
+ * @param {ServiceModel} serviceModel - The service Model of the instance (optional as it can be undefined at the init of the component that use the hook)
  * @returns  {GetInstanceWithRelationsHook} An object containing a custom hook to fetch the instance with its related instances.
  */
 export const useGetInstanceWithRelations = (
   instanceId: string,
   environment: string,
+  serviceModel?: ServiceModel,
 ): GetInstanceWithRelationsHook => {
   //extracted headers to avoid breaking rules of Hooks
   const { createHeaders, handleErrors } = useFetchHelpers();
@@ -62,6 +69,94 @@ export const useGetInstanceWithRelations = (
   };
 
   /**
+   * This function is responsible for extracting the names of all inter-service relations from the provided service model or embedded entity.
+   * It also recursively extracts the names of all relations from any embedded entities within the provided service model or embedded entity.
+   *
+   * @param {ServiceModel | EmbeddedEntity} serviceModel - The service model or embedded entity from which to extract the relations.
+   * @returns {string[]} An array of the names of all relations.
+   */
+  const getAllRelationsNames = (
+    serviceModel: ServiceModel | EmbeddedEntity,
+  ): string[] => {
+    const relations =
+      serviceModel.inter_service_relations?.map((relation) => relation.name) ||
+      [];
+
+    const nestedRelations = serviceModel.embedded_entities?.flatMap((entity) =>
+      getAllRelationsNames(entity),
+    );
+
+    return [...relations, ...nestedRelations];
+  };
+
+  /**
+   * This function is responsible for extracting the names of all embedded entities from the provided service model or embedded entity.
+   * It also recursively extracts the names of all embedded entities from any embedded entities within the provided service model or embedded entity.
+   *
+   * @param {ServiceModel | EmbeddedEntity} serviceModel - The service model or embedded entity from which to extract the embedded entities.
+   * @returns {string[]} An array of the names of all embedded entities.
+   */
+  const getAllEmbeddedEntitiesNames = (
+    serviceModel: ServiceModel | EmbeddedEntity,
+  ): string[] => {
+    const embedded = serviceModel.embedded_entities.map(
+      (entity) => entity.name,
+    );
+    const nestedEmbedded = serviceModel.embedded_entities?.flatMap((entity) =>
+      getAllEmbeddedEntitiesNames(entity),
+    );
+
+    return [...embedded, ...nestedEmbedded];
+  };
+
+  /**
+   * This function is responsible for extracting the Ids of all related instances from the provided attributes.
+   * It does this by mapping over the provided relation names and extracting the corresponding Ids from the attributes.
+   * It also recursively extracts the Ids of all related instances from any embedded entities within the provided attributes.
+   *
+   * @param {InstanceAttributeModel} attributes - The attributes from which to extract the related Ids.
+   * @param {string[]} relationNames - The names of the relations to extract.
+   * @param {string[]} embeddedNames - The names of the embedded entities that can have relations.
+   * @returns {string[]} An array of the Ids of all related instances.
+   */
+  const getAllRelatedIds = (
+    attributes: InstanceAttributeModel,
+    relationNames: string[],
+    embeddedNames: string[],
+  ): string[] => {
+    const relationIds = relationNames.map(
+      (relationName) => attributes[relationName],
+    );
+
+    const embeddedRelationsIds = embeddedNames.flatMap((embeddedName) => {
+      if (!attributes[embeddedName]) {
+        return "";
+      }
+      const embeddedAttributes = attributes[embeddedName] as
+        | InstanceAttributeModel
+        | InstanceAttributeModel[];
+
+      if (Array.isArray(embeddedAttributes)) {
+        return embeddedAttributes.flatMap((embedded) =>
+          getAllRelatedIds(embedded, relationNames, embeddedNames),
+        );
+      } else {
+        return getAllRelatedIds(
+          embeddedAttributes,
+          relationNames,
+          embeddedNames,
+        );
+      }
+    });
+
+    const ids = [...relationIds, ...embeddedRelationsIds].filter(
+      (id) => id !== undefined && id !== null && id !== "",
+    ) as string[];
+
+    return ids;
+  };
+
+  /**
    * Fetches a service instance with its related instances.
    * @param {string} id - The ID of the instance to fetch.
    * @returns {Promise<InstanceWithRelations>} An object containing the fetched instance and its related instances.
@@ -70,20 +165,35 @@ export const useGetInstanceWithRelations = (
   const fetchInstances = async (id: string): Promise<InstanceWithRelations> => {
     const relatedInstances: ServiceInstanceModel[] = [];
     const instance = (await fetchInstance(id)).data;
+    let serviceIds: string[] = [];
 
-    if (instance.referenced_by !== null) {
-      await Promise.all(
-        instance.referenced_by.map(async (relatedId) => {
-          const relatedInstance = await fetchInstance(relatedId);
+    if (serviceModel) {
+      const attributesToFetch = getAllRelationsNames(serviceModel);
+      const uniqueAttributes = [...new Set(attributesToFetch)];
+      const allEmbedded = getAllEmbeddedEntitiesNames(serviceModel);
+      const attributes =
+        instance.active_attributes || instance.candidate_attributes || {}; //we don't operate on rollback attributes
 
-          if (relatedInstance) {
-            relatedInstances.push(relatedInstance.data);
-          }
-
-          return relatedInstance;
-        }),
-      );
+      serviceIds = [
+        ...new Set(getAllRelatedIds(attributes, uniqueAttributes, allEmbedded)),
+      ];
     }
+
+    const allIds = [
+      ...new Set([...serviceIds, ...(instance.referenced_by || [])]),
+    ];
+
+    await Promise.all(
+      allIds.map(async (relatedId) => {
+        const relatedInstance = await fetchInstance(relatedId);
+
+        if (relatedInstance) {
+          relatedInstances.push(relatedInstance.data);
+        }
+
+        return relatedInstance;
+      }),
+    );
 
     return {
       instance,
@@ -105,6 +215,7 @@ export const useGetInstanceWithRelations = (
         ],
         queryFn: () => fetchInstances(instanceId),
         retry: false,
+        enabled: serviceModel !== undefined,
       }),
     useContinuous: (): UseQueryResult<InstanceWithRelations, Error> =>
       useQuery({
@@ -115,6 +226,7 @@ export const useGetInstanceWithRelations = (
         ],
         queryFn: () => fetchInstances(instanceId),
         refetchInterval: 5000,
+        enabled: serviceModel !== undefined,
       }),
   };
 };
