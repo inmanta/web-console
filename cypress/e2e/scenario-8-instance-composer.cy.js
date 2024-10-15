@@ -89,7 +89,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="AddInstanceToggle"]').click();
       cy.get("#add-instance-composer-button").click();
 
-      // Expect Canvas to be visible adn default instances to be present
+      // Expect Canvas to be visible and default instances to be present
       cy.get(".canvas").should("be.visible");
       cy.get('[data-type="app.ServiceEntityBlock"').should("have.length", 2);
 
