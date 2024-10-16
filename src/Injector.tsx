@@ -25,11 +25,21 @@ import {
 } from "@/UI";
 import { AuthContext } from "./Data/Auth/";
 import { UpdateBanner } from "./UI/Components/UpdateBanner";
+import { ModalProvider } from "./UI/Root/Components/ModalProvider";
 
 interface Props {
   store: Store;
 }
 
+/**
+ * This component creates instances of managers, helpers, and resolvers, and provides them through a `DependencyProvider`.
+ * It also contains `ModalProvider` and an `UpdateBanner`.
+ *
+ * @props {Props} props - The properties passed to the component.
+ * @prop {Store} store - The store to be used by the managers and resolvers.
+ * @prop {React.ReactNode} children - The children to be rendered within the Injector.
+ * @returns {React.FC<React.PropsWithChildren<Props>>} A `DependencyProvider` that wraps a `ModalProvider`, an `UpdateBanner`, and the children.
+ */
 export const Injector: React.FC<React.PropsWithChildren<Props>> = ({
   store,
   children,
@@ -84,8 +94,10 @@ export const Injector: React.FC<React.PropsWithChildren<Props>> = ({
         authHelper,
       }}
     >
-      <UpdateBanner apiHelper={apiHelper} />
-      {children}
+      <ModalProvider>
+        <UpdateBanner apiHelper={apiHelper} />
+        {children}
+      </ModalProvider>
     </DependencyProvider>
   );
 };

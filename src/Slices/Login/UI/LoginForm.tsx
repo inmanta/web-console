@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   FormHelperText,
   HelperText,
@@ -19,29 +20,31 @@ import {
   EyeIcon,
   EyeSlashIcon,
 } from "@patternfly/react-icons";
+import { useLogin } from "@/Data/Managers/V2/POST/Login";
+import { DependencyContext, words } from "@/UI";
 
-interface UserCredentialsFormProps {
-  onSubmit: (username: string, password: string) => void;
-  isPending: boolean;
-  isError: boolean;
-  error: Error | null;
+interface Props {
   submitButtonText: string;
   submitButtonLabel?: string;
 }
 
 /**
- * UserCredentialsForm component.
- * @param {UserCredentialsFormProps} props - The component props.
- * @returns {JSX.Element} The rendered component.
+ * LoginForm component.
+ * @props {Props} props - The component
+ * @prop {string} submitButtonText - The text to display on the submit button.
+ * @prop {string} submitButtonLabel - The aria-label for the submit button.
+ *
+ * @returns {React.FC<Props>} The rendered component.
  */
-export const UserCredentialsForm: React.FC<UserCredentialsFormProps> = ({
-  onSubmit,
-  isPending,
-  isError,
-  error,
+export const LoginForm: React.FC<Props> = ({
   submitButtonText,
   submitButtonLabel = "login-button",
 }) => {
+  const { authHelper } = useContext(DependencyContext);
+  const navigate = useNavigate();
+
+  const { data, mutate, isSuccess, isError, error, isPending } = useLogin();
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isPasswordHidden, setIsPasswordHidden] = useState(true);
@@ -50,11 +53,13 @@ export const UserCredentialsForm: React.FC<UserCredentialsFormProps> = ({
    * Handle the change of the username input field.
    * @param {React.FormEvent<HTMLInputElement>} _event - The event object.
    * @param {string} value - The current value of the input field.
+   *
+   * @returns {void}
    */
   const handleUsernameChange = (
     _event: React.FormEvent<HTMLInputElement>,
     value: string,
-  ) => {
+  ): void => {
     setUsername(value);
   };
 
@@ -62,21 +67,47 @@ export const UserCredentialsForm: React.FC<UserCredentialsFormProps> = ({
    * Handle the change of the password input field.
    * @param {React.FormEvent<HTMLInputElement>} _event The event object.
    * @param {string} value The current value of the input field.
+   *
+   * @returns {void}
    */
   const handlePasswordChange = (
     _event: React.FormEvent<HTMLInputElement>,
     value: string,
-  ) => {
+  ): void => {
     setPassword(value);
   };
 
+  /**
+   * Handles the submission of the login form.
+   *
+   * This function is responsible for preventing the default form submission behavior and then calling the mutate function with the current username and password.
+   * @param {React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement, MouseEvent>} event - The event that triggered the form submission.
+   *
+   * @returns {void} A Promise that resolves when the operation is complete.
+   */
+  const handleSubmit = (
+    event:
+      | React.FormEvent<HTMLFormElement>
+      | React.MouseEvent<HTMLButtonElement, MouseEvent>,
+  ): void => {
+    event.preventDefault();
+    mutate({ username, password });
+  };
+
+  useEffect(() => {
+    if (isSuccess) {
+      authHelper.updateUser(data.data.user.username, data.data.token);
+      navigate("/");
+    }
+  }, [isSuccess, navigate, data, authHelper]);
+
   return (
-    <Form className="loginForm">
+    <Form className="loginForm" onSubmit={handleSubmit}>
       {isError && error && (
         <FormHelperText>
           <HelperText>
             <HelperTextItem
-              variant={isError ? "error" : "default"}
+              variant="error"
               icon={<ExclamationCircleIcon />}
               aria-label="error-message"
             >
@@ -85,7 +116,11 @@ export const UserCredentialsForm: React.FC<UserCredentialsFormProps> = ({
           </HelperText>
         </FormHelperText>
       )}
-      <FormGroup label="Username" isRequired fieldId="pf-login-username-id">
+      <FormGroup
+        label={words("username")}
+        isRequired
+        fieldId="pf-login-username-id"
+      >
         <TextInput
           id="pf-login-username-id"
           isRequired
@@ -97,7 +132,11 @@ export const UserCredentialsForm: React.FC<UserCredentialsFormProps> = ({
           onChange={handleUsernameChange}
         />
       </FormGroup>
-      <FormGroup label={"Password"} isRequired fieldId="pf-login-password-id">
+      <FormGroup
+        label={words("password")}
+        isRequired
+        fieldId="pf-login-password-id"
+      >
         {
           <InputGroup>
             <InputGroupItem isFill>
@@ -131,10 +170,7 @@ export const UserCredentialsForm: React.FC<UserCredentialsFormProps> = ({
           aria-label={submitButtonLabel}
           variant="primary"
           type="submit"
-          onClick={(event) => {
-            event.preventDefault();
-            onSubmit(username, password);
-          }}
+          onClick={handleSubmit}
           isBlock
           isDisabled={isPending}
         >

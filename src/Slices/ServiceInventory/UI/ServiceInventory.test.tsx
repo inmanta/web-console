@@ -35,6 +35,7 @@ import {
 } from "@/Test";
 import { words } from "@/UI";
 import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
+import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { TriggerInstanceUpdateCommandManager } from "@S/EditInstance/Data";
 import { Chart } from "./Components";
 import { ServiceInventory } from "./ServiceInventory";
@@ -123,16 +124,17 @@ function setup(service = Service.a, pageSize = "") {
         }}
       >
         <StoreProvider store={store}>
-          <Page>
-            <ServiceInventory
-              serviceName={service.name}
-              service={service}
-              intro={<Chart summary={service.instance_summary} />}
-            />
-          </Page>
+          <ModalProvider>
+            <Page>
+              <ServiceInventory
+                serviceName={service.name}
+                service={service}
+                intro={<Chart summary={service.instance_summary} />}
+              />
+            </Page>
+          </ModalProvider>
         </StoreProvider>
       </DependencyProvider>
-      {/* </AuthProvider> */}
     </MemoryRouter>
   );
 

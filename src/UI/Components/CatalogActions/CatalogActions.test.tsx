@@ -19,6 +19,7 @@ import {
   StaticScheduler,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
+import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
 import { CatalogActions } from "./CatalogActions";
 expect.extend(toHaveNoViolations);
@@ -61,7 +62,9 @@ function setup(
           queryResolver,
         }}
       >
-        <CatalogActions />
+        <ModalProvider>
+          <CatalogActions />
+        </ModalProvider>
       </DependencyProvider>
     </StoreProvider>
   );
