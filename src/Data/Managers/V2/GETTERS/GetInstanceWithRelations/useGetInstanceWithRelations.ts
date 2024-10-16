@@ -117,6 +117,7 @@ export const useGetInstanceWithRelations = (
    * @param {InstanceAttributeModel} attributes - The attributes from which to extract the related Ids.
    * @param {string[]} relationNames - The names of the relations to extract.
    * @param {string[]} embeddedNames - The names of the embedded entities that can have relations.
+   *
    * @returns {string[]} An array of the Ids of all related instances.
    */
   const getAllRelatedIds = (

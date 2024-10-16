@@ -26,7 +26,8 @@ import { Link, ServiceEntityBlock } from "./shapes";
  *
  * @param {dia.Graph} graph JointJS graph object
  * @param {dia.LinkView} linkView  - The view for the joint.dia.Link model.
- * @function {(cell: ServiceEntityBlock, action: ActionEnum): void} linkView  - The view for the joint.dia.Link model.
+ * @param {ConnectionRules} connectionRules  - The rules for the connections between entities.
+ *
  * @returns {void}
  */
 export function showLinkTools(
@@ -475,7 +476,7 @@ export function appendInstance(
  * @param {InstanceAttributeModel} entityAttributes - attributes of given entity
  * @param {string | null} embeddedTo - id of the entity/shape in which this shape is embedded
  * @param {string} holderName - name of the entity to which it is embedded/connected
- * @param {"candidate" | "active"} instanceToConnectRelation - flag whether we are displaying candidate or active attributes
+ * @param {"candidate" | "active"} ConnectionRules - flag whether we are displaying candidate or active attributes
  * @param {boolean} isBlockedFromEditing boolean value determining if the instance is blocked from editin
  *
  * @returns {ServiceEntityBlock[]} created JointJS shapes

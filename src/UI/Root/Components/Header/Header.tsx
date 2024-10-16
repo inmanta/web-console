@@ -43,7 +43,7 @@ interface Props {
  * @props {Props} props - The properties that define the behavior of the header.
  * @prop {boolean} props.noEnv - A flag indicating whether there is no environment selected.
  * @prop {function} props.onNotificationsToggle - A function to be called when the notifications badge is clicked.
- * @returns {ReactElement} The rendered Header component.
+ * @returns {React.FC<Props> } The rendered Header component.
  */
 export const Header: React.FC<Props> = ({ noEnv, onNotificationsToggle }) => {
   const { routeManager, environmentHandler } = useContext(DependencyContext);

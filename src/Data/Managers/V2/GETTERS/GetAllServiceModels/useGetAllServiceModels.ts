@@ -32,6 +32,12 @@ export const useGetAllServiceModels = (
   );
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
 
+  /**
+   * Fetches all service models from the service catalog.
+   *
+   * @returns {Promise<{ data: ServiceModel[] }>} A promise that resolves to an object containing an array of service models.
+   * @throws Will throw an error if the fetch operation fails.
+   */
   const fetchServices = async (): Promise<{ data: ServiceModel[] }> => {
     const response = await fetch(`${baseUrl}/lsm/v1/service_catalog`, {
       headers,
