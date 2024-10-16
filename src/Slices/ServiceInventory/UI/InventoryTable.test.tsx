@@ -39,6 +39,7 @@ import {
   EnvironmentHandlerImpl,
   EnvironmentModifierImpl,
 } from "@/UI/Dependency";
+import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { InventoryTable } from "./InventoryTable";
 import { InstanceActionPresenter } from "./Presenters";
 
@@ -299,12 +300,14 @@ function setup(expertMode = false, setSortFn: (props) => void = dummySetter) {
         }}
       >
         <StoreProvider store={store}>
-          <InventoryTable
-            rows={[Row.a]}
-            tablePresenter={tablePresenterWithIdentity(actionPresenter)}
-            setSort={setSortFn}
-            sort={{ name: "created_at", order: "desc" }}
-          />
+          <ModalProvider>
+            <InventoryTable
+              rows={[Row.a]}
+              tablePresenter={tablePresenterWithIdentity(actionPresenter)}
+              setSort={setSortFn}
+              sort={{ name: "created_at", order: "desc" }}
+            />
+          </ModalProvider>
         </StoreProvider>
       </DependencyProvider>
     </MemoryRouter>
@@ -372,6 +375,8 @@ describe("Actions", () => {
 
     await act(async () => {
       await userEvent.click(await screen.findByTestId("forceState"));
+    });
+    await act(async () => {
       await userEvent.click(screen.getByText("rejected"));
     });
 

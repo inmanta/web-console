@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import {
   Button,
   DescriptionListDescription,
@@ -9,30 +9,46 @@ import { TrashAltIcon } from "@patternfly/react-icons";
 import { FlatEnvironment } from "@/Core";
 import { ActionDisabledTooltip, TextWithCopy } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
-import { useNavigateTo } from "@/UI/Routing";
+import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
-import { ConfirmationModal } from "./ConfirmationModal";
+import { ConfirmationForm } from "./ConfirmationForm";
 
-interface ActionsProps {
+export type EnvActions = "delete" | "clear";
+
+interface Props {
   environment: Pick<FlatEnvironment, "id" | "name">;
 }
 
-export const Actions: React.FC<ActionsProps> = ({ environment }) => {
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [isClearModalOpen, setIsClearModalOpen] = useState(false);
-  const { commandResolver, environmentModifier } =
-    useContext(DependencyContext);
-  const navigateTo = useNavigateTo();
-  const redirectToHome = () => navigateTo("Home", undefined);
-  const deleteTrigger = commandResolver.useGetTrigger<"DeleteEnvironment">({
-    kind: "DeleteEnvironment",
-    id: environment.id,
-  });
-  const clearTrigger = commandResolver.useGetTrigger<"ClearEnvironment">({
-    kind: "ClearEnvironment",
-    id: environment.id,
-  });
+/**
+ * Actions component.
+ * @props {Props} props - The component props.
+ * @prop {FlatEnvironment} environment - An object that represents the environment. It is a subset of the `FlatEnvironment` type, including only the `id` and `name` properties.
+ *
+ * @returns {React.FC<Props>} - The rendered actions component.
+ */
+export const Actions: React.FC<Props> = ({ environment }) => {
+  const { triggerModal } = useContext(ModalContext);
+  const { environmentModifier } = useContext(DependencyContext);
   const isProtected = environmentModifier.useIsProtectedEnvironment();
+
+  /**
+   * Opens a modal with a confirmation form.
+   * @param {string} type - The type of operation. It can be either "delete" or "clear".
+   *
+   * @returns {void}
+   */
+  const openModal = (type: EnvActions): void => {
+    triggerModal({
+      title: words("home.environment.delete.warning"),
+      description: (
+        <p>
+          {words(`home.environment.${type}.confirmation`)(environment.name)}
+        </p>
+      ),
+      iconVariant: "danger",
+      content: <ConfirmationForm environment={environment} type={type} />,
+    });
+  };
 
   return (
     <>
@@ -57,7 +73,7 @@ export const Actions: React.FC<ActionsProps> = ({ environment }) => {
             <Button
               variant="secondary"
               isDanger
-              onClick={() => setIsClearModalOpen(true)}
+              onClick={() => openModal("clear")}
               isDisabled={isProtected}
             >
               {words("home.environment.clear")}
@@ -74,7 +90,7 @@ export const Actions: React.FC<ActionsProps> = ({ environment }) => {
           >
             <Button
               variant="danger"
-              onClick={() => setIsDeleteModalOpen(true)}
+              onClick={() => openModal("delete")}
               icon={<TrashAltIcon />}
               isDisabled={isProtected}
             >
@@ -83,21 +99,6 @@ export const Actions: React.FC<ActionsProps> = ({ environment }) => {
           </ActionDisabledTooltip>
         </DescriptionListDescription>
       </DescriptionListGroup>
-      <ConfirmationModal
-        actionType="delete"
-        environment={environment.name}
-        isOpen={isDeleteModalOpen}
-        onConfirm={deleteTrigger}
-        onClose={() => setIsDeleteModalOpen(false)}
-        onSuccess={redirectToHome}
-      />
-      <ConfirmationModal
-        actionType="clear"
-        environment={environment.name}
-        isOpen={isClearModalOpen}
-        onConfirm={clearTrigger}
-        onClose={() => setIsClearModalOpen(false)}
-      />
     </>
   );
 };

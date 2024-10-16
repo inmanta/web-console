@@ -24,7 +24,6 @@ export { TriggerSetStateCommandManager } from "./TriggerSetState";
 export * from "./TriggerForceState";
 export * from "./Deploy";
 export * from "./Repair";
-export * from "./PromoteVersion";
 export * from "./ControlAgent";
 export * from "./GetCompilerStatus";
 export * from "./GetCompilationState";
