@@ -112,10 +112,11 @@ export const EntityForm: React.FC<Props> = ({
           />
         </FlexItem>
       )}
-      <FlexItem>
+      <FlexItem flex={{ default: "flex_1" }}>
         <Form
           onSubmit={(event) => {
             event.preventDefault();
+            onSave(fields, formState);
           }}
         >
           {fields.map((field) => (
