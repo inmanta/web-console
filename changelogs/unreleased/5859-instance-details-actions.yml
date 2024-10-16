@@ -1,0 +1,6 @@
+description: "Redesign of the instance composer"
+issue-nr: 5985
+change-type: minor
+destination-branches: [master]
+sections:
+  feature: "{{description}}"
