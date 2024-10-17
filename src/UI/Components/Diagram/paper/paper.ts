@@ -267,7 +267,7 @@ export class ComposerPaper {
             );
             linkView.model.set("isRelationshipConnection", true);
             document.dispatchEvent(
-              new CustomEvent("updateInstancesToSend", {
+              new CustomEvent("updateServiceOrderItems", {
                 detail: { cell: sourceCell, action: ActionEnum.UPDATE },
               }),
             );
@@ -286,7 +286,7 @@ export class ComposerPaper {
           );
 
           document.dispatchEvent(
-            new CustomEvent("updateInstancesToSend", {
+            new CustomEvent("updateServiceOrderItems", {
               detail: { cell: elementCell, action: ActionEnum.UPDATE },
             }),
           );

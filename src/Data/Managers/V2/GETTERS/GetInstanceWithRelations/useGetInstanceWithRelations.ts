@@ -102,11 +102,11 @@ export const useGetInstanceWithRelations = (
     const embeddedEntities = serviceModel.embedded_entities.map(
       (entity) => entity.name,
     );
-    const nestedEmbeddedEntities = serviceModel.embedded_entities?.flatMap((embeddedEntity) =>
-      getAllEmbeddedEntitiesNames(entity),
+    const nestedEmbeddedEntities = serviceModel.embedded_entities?.flatMap(
+      (embeddedEntity) => getAllEmbeddedEntitiesNames(embeddedEntity),
     );
 
-    return [...embedded, ...nestedEmbedded];
+    return [...embeddedEntities, ...nestedEmbeddedEntities];
   };
 
   /**
@@ -125,34 +125,36 @@ export const useGetInstanceWithRelations = (
     relationNames: string[],
     embeddedNames: string[],
   ): string[] => {
-    const relationIds = relationNames.map(
-      (relationName) => attributes[relationName],
-    );
+    // Map relation names to corresponding IDs from attributes
+    const relationIds = relationNames
+      .map((relationName) => attributes[relationName])
+      .filter((id): id is string => typeof id === "string"); // Filter to ensure only you only keep strings
 
+    // Extract IDs from embedded relations recursively
     const embeddedRelationsIds = embeddedNames.flatMap((embeddedName) => {
-      if (!attributes[embeddedName]) {
-        return "";
+      const embeddedAttributes = attributes[embeddedName];
+
+      if (!embeddedAttributes) {
+        return []; // Return an empty array instead of an empty string
       }
-      const embeddedAttributes = attributes[embeddedName] as
-        | InstanceAttributeModel
-        | InstanceAttributeModel[];
 
       if (Array.isArray(embeddedAttributes)) {
+        // Recursively collect IDs from an array of embedded attributes
         return embeddedAttributes.flatMap((embedded) =>
           getAllRelatedIds(embedded, relationNames, embeddedNames),
         );
       } else {
+        // Recursively collect IDs from a single embedded attribute
         return getAllRelatedIds(
-          embeddedAttributes,
+          embeddedAttributes as InstanceAttributeModel, //InstanceAttributeModel is a Record<string, unknown> so casting is required here
           relationNames,
           embeddedNames,
         );
       }
     });
 
-    const ids = [...relationIds, ...embeddedRelationsIds].filter(
-      (id) => id !== undefined && id !== null && id !== "",
-    ) as string[];
+    // Combine and filter out falsy values (undefined, null, "")
+    const ids = [...relationIds, ...embeddedRelationsIds].filter(Boolean);
 
     return ids;
   };
@@ -175,9 +177,7 @@ export const useGetInstanceWithRelations = (
       const attributes =
         instance.active_attributes || instance.candidate_attributes || {}; //we don't operate on rollback attributes
 
-      serviceIds = [
-        ...new Set(getAllRelatedIds(attributes, uniqueAttributes, allEmbedded)),
-      ];
+      serviceIds = getAllRelatedIds(attributes, uniqueAttributes, allEmbedded);
     }
 
     const allIds = [

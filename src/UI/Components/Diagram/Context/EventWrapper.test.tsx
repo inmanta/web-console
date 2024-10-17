@@ -134,9 +134,10 @@ describe("cellToEdit", () => {
   });
 });
 
-describe("updateInstancesToSend", () => {
+describe("updateServiceOrderItems", () => {
   const InstancesComponent = (): JSX.Element => {
-    const { instancesToSend, setInstancesToSend } = useContext(CanvasContext);
+    const { serviceOrderItems, setServiceOrderItems } =
+      useContext(CanvasContext);
 
     useEffect(() => {
       const testInstances = new Map();
@@ -151,15 +152,15 @@ describe("updateInstancesToSend", () => {
         id: "2",
         action: ActionEnum.CREATE,
       });
-      setInstancesToSend(testInstances);
-    }, [setInstancesToSend]);
+      setServiceOrderItems(testInstances);
+    }, [setServiceOrderItems]);
 
     return (
       <div>
         <span data-testid="instancesIds">
-          {JSON.stringify(Array.from(instancesToSend.keys()))}
+          {JSON.stringify(Array.from(serviceOrderItems.keys()))}
         </span>
-        {Array.from(instancesToSend.entries()).map((value) => (
+        {Array.from(serviceOrderItems.entries()).map((value) => (
           <div data-testid={value[0]} key={value[0]}>
             {JSON.stringify(value[1].attributes)}
           </div>
@@ -168,14 +169,14 @@ describe("updateInstancesToSend", () => {
     );
   };
 
-  it("updateInstancesToSend Event handler won't assign the data when update is on the instance that isn't already in the Context", async () => {
+  it("updateServiceOrderItems Event handler won't assign the data when update is on the instance that isn't already in the Context", async () => {
     await act(async () => render(setup(<InstancesComponent />)));
 
     expect(screen.getByTestId("instancesIds")).toHaveTextContent('["1","2"]');
 
     await act(async () => {
       document.dispatchEvent(
-        new CustomEvent("updateInstancesToSend", {
+        new CustomEvent("updateServiceOrderItems", {
           detail: {
             cell: new ServiceEntityBlock()
               .set("attributes", "value3")
@@ -189,14 +190,14 @@ describe("updateInstancesToSend", () => {
     expect(screen.getByTestId("instancesIds")).toHaveTextContent('["1","2"]');
   });
 
-  it("updateInstancesToSend Event handler will add instance to the Context", async () => {
+  it("updateServiceOrderItems Event handler will add instance to the Context", async () => {
     await act(async () => render(setup(<InstancesComponent />)));
 
     expect(screen.getByTestId("instancesIds")).toHaveTextContent('["1","2"]');
 
     await act(async () => {
       document.dispatchEvent(
-        new CustomEvent("updateInstancesToSend", {
+        new CustomEvent("updateServiceOrderItems", {
           detail: {
             cell: new ServiceEntityBlock()
               .set("sanitizedAttrs", "value3")
@@ -213,14 +214,14 @@ describe("updateInstancesToSend", () => {
     expect(screen.getByTestId("3")).toHaveTextContent("value3");
   });
 
-  it("updateInstancesToSend Event handler updates correctly the instance", async () => {
+  it("updateServiceOrderItems Event handler updates correctly the instance", async () => {
     await act(async () => render(setup(<InstancesComponent />)));
 
     expect(screen.getByTestId("2")).toHaveTextContent("value2");
 
     await act(async () => {
       document.dispatchEvent(
-        new CustomEvent("updateInstancesToSend", {
+        new CustomEvent("updateServiceOrderItems", {
           detail: {
             cell: new ServiceEntityBlock()
               .set("sanitizedAttrs", "updatedValue2")

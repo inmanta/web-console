@@ -51,14 +51,14 @@ export const useGetAllServiceModels = (
   return {
     useOneTime: (): UseQueryResult<ServiceModel[], Error> =>
       useQuery({
-        queryKey: ["get_service_models-one_time"],
+        queryKey: ["get_all_service_models-one_time"],
         queryFn: fetchServices,
         retry: false,
         select: (data) => data.data,
       }),
     useContinuous: (): UseQueryResult<ServiceModel[], Error> =>
       useQuery({
-        queryKey: ["get_service_models-continuous"],
+        queryKey: ["get_all_service_models-continuous"],
         queryFn: fetchServices,
         refetchInterval: 5000,
         select: (data) => data.data,

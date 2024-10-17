@@ -17,7 +17,7 @@ export const Page: React.FC = () => {
   if (!featureManager.isComposerEnabled()) {
     <EmptyView
       message={words("instanceComposer.disabled")}
-      aria-label="ComposersView-Empty"
+      aria-label="ComposerCreateView-Empty"
     />;
   }
 
@@ -37,7 +37,7 @@ const PageWrapper: React.FC<React.PropsWithChildren<unknown>> = ({
   ...props
 }) => (
   <PageContainer
-    aria-label="Composer"
+    aria-label="ComposerCreateView"
     {...props}
     pageTitle={words("instanceComposer.title")}
   >

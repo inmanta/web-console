@@ -30,7 +30,7 @@ export const CanvasProvider: React.FC<React.PropsWithChildren<unknown>> = ({
   );
   const [fields, setFields] = useState<Field[]>([]);
   const [formState, setFormState] = useState<InstanceAttributeModel>({});
-  const [instancesToSend, setInstancesToSend] = useState<
+  const [serviceOrderItems, setServiceOrderItems] = useState<
     Map<string, ComposerServiceOrderItem>
   >(new Map());
   const [isDirty, setIsDirty] = useState(false);
@@ -39,14 +39,15 @@ export const CanvasProvider: React.FC<React.PropsWithChildren<unknown>> = ({
   const [stencilState, setStencilState] = useState<StencilState | null>(null);
 
   useEffect(() => {
+    //check if any of the edited serviceOrderItems got it action changed from default - its a condition to disable the deploy button when we are in the edit view
     if (!isDirty) {
       setIsDirty(
-        Array.from(instancesToSend).filter(
+        Array.from(serviceOrderItems).filter(
           ([_key, item]) => item.action !== null,
         ).length > 0,
       );
     }
-  }, [instancesToSend, isDirty]);
+  }, [serviceOrderItems, isDirty]);
 
   return (
     <CanvasContext.Provider
@@ -75,8 +76,8 @@ export const CanvasProvider: React.FC<React.PropsWithChildren<unknown>> = ({
         setFormState: (value: InstanceAttributeModel) => {
           setFormState(value);
         },
-        instancesToSend,
-        setInstancesToSend,
+        serviceOrderItems,
+        setServiceOrderItems,
         stencilState,
         setStencilState,
         isDirty,

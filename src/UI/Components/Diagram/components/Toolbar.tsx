@@ -41,7 +41,7 @@ export const Toolbar: React.FC<Props> = ({ serviceName, editable }) => {
   const { serviceModels, mainService, instance } = useContext(
     InstanceComposerContext,
   );
-  const { instancesToSend, isDirty, looseEmbedded, diagramHandlers } =
+  const { serviceOrderItems, isDirty, looseEmbedded, diagramHandlers } =
     useContext(CanvasContext);
   const { routeManager, environmentHandler } = useContext(DependencyContext);
 
@@ -67,7 +67,7 @@ export const Toolbar: React.FC<Props> = ({ serviceName, editable }) => {
     const coordinates = diagramHandlers?.getCoordinates();
 
     const serviceOrderItems = getServiceOrderItems(
-      instancesToSend,
+      serviceOrderItems,
       serviceModels,
     )
       .filter((item) => item.action !== null)
@@ -145,7 +145,7 @@ export const Toolbar: React.FC<Props> = ({ serviceName, editable }) => {
             width={200}
             onClick={handleDeploy}
             isDisabled={
-              instancesToSend.size < 1 ||
+              serviceOrderItems.size < 1 ||
               !isDirty ||
               looseEmbedded.size > 0 ||
               !editable

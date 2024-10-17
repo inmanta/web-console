@@ -140,7 +140,7 @@ export function showLinkTools(
               elementCell.removeRelation(String(disconnectingCell.id));
 
               document.dispatchEvent(
-                new CustomEvent("updateInstancesToSend", {
+                new CustomEvent("updateServiceOrderItems", {
                   detail: { cell: sourceCell, actions: ActionEnum.UPDATE },
                 }),
               );

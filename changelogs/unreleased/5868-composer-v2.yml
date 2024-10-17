@@ -1,0 +1,10 @@
+description: "Complete redesign of Instance Composer, main focus was to adjust composer to match it's general functionalities with regular form, and make it more UX friendly. 
+This change includes: 
+Added left sidebar to have better access to the form fields of given part of the instance
+Added left sidebar from which we can drag and drop the embedded entities and existing related instances - related instances can not be edited no more
+Changed the navigation panel, now zooming in and out is done through the slider, added zoom to fit functionality and full screen mode"
+issue-nr: 5868
+change-type: minor
+destination-branches: [master]
+sections:
+  feature: "{{description}}"

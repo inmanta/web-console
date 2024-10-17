@@ -11,7 +11,7 @@ import { InstanceAttributeModel, ServiceModel } from "@/Core";
 import { sanitizeAttributes } from "@/Data";
 import { words } from "@/UI/words";
 import { CanvasContext, InstanceComposerContext } from "../Context/Context";
-import { updateInstancesToSend } from "../helpers";
+import { updateServiceOrderItems } from "../helpers";
 import { ActionEnum, EmbeddedEventEnum } from "../interfaces";
 import { EntityForm } from "./EntityForm";
 
@@ -25,7 +25,7 @@ import { EntityForm } from "./EntityForm";
  * @returns {React.FC} The RightSidebar component.
  */
 export const RightSidebar: React.FC = () => {
-  const { cellToEdit, diagramHandlers, setInstancesToSend, stencilState } =
+  const { cellToEdit, diagramHandlers, setServiceOrderItems, stencilState } =
     useContext(CanvasContext);
   const { mainService } = useContext(InstanceComposerContext);
   const [description, setDescription] = useState<string | null>(null);
@@ -116,8 +116,8 @@ export const RightSidebar: React.FC = () => {
 
                   shape.set("sanitizedAttrs", sanitizedAttrs);
 
-                  setInstancesToSend((prev) =>
-                    updateInstancesToSend(shape, ActionEnum.UPDATE, prev),
+                  setServiceOrderItems((prev) =>
+                    updateServiceOrderItems(shape, ActionEnum.UPDATE, prev),
                   );
                 }
               }

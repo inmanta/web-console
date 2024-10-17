@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { useGetAllServiceModels } from "@/Data/Managers/V2/GETTERS/GetAllServiceModels";
 import { useGetInstanceWithRelations } from "@/Data/Managers/V2/GETTERS/GetInstanceWithRelations";
-import { useGetRelatedInventories } from "@/Data/Managers/V2/GETTERS/GetRelatedInventories";
+import { useGetInventoryList } from "@/Data/Managers/V2/GETTERS/GetInventoryList";
 import { DependencyContext, words } from "@/UI";
 import { ErrorView, LoadingView } from "@/UI/Components";
 import { Canvas } from "@/UI/Components/Diagram/Canvas";
@@ -50,7 +50,7 @@ export const ComposerEditorProvider: React.FC<Props> = ({
 
   const serviceModels = useGetAllServiceModels(environment).useContinuous();
 
-  const mainModel = useMemo(
+  const mainService = useMemo(
     () => serviceModels.data?.find((service) => service.name === serviceName),
     [serviceModels.data, serviceName],
   );
@@ -58,25 +58,21 @@ export const ComposerEditorProvider: React.FC<Props> = ({
   const instanceWithRelations = useGetInstanceWithRelations(
     instance,
     environment,
-    mainModel,
+    mainService,
   ).useContinuous();
 
-  const relatedInventories = useGetRelatedInventories(
+  const relatedInventoriesQuery = useGetInventoryList(
     relatedServiceNames,
     environment,
   ).useContinuous();
 
   useEffect(() => {
     if (serviceModels.isSuccess) {
-      const mainService = serviceModels.data.find(
-        (service) => service.name === serviceName,
-      );
-
       if (mainService) {
         setRelatedServiceNames(findInterServiceRelations(mainService));
       }
     }
-  }, [serviceModels.isSuccess, serviceName, serviceModels.data]);
+  }, [serviceModels.isSuccess, serviceName, serviceModels.data, mainService]);
 
   if (serviceModels.isError) {
     return (
@@ -90,23 +86,19 @@ export const ComposerEditorProvider: React.FC<Props> = ({
     );
   }
 
-  if (relatedInventories.isError) {
+  if (relatedInventoriesQuery.isError) {
     return (
       <ErrorView
         data-testid="ErrorView"
         title={words("error")}
-        message={words("error.general")(relatedInventories.error.message)}
+        message={words("error.general")(relatedInventoriesQuery.error.message)}
         aria-label="ServicesWithMainProvider-failed"
-        retry={relatedInventories.refetch}
+        retry={relatedInventoriesQuery.refetch}
       />
     );
   }
 
   if (serviceModels.isSuccess && instanceWithRelations.isSuccess) {
-    const mainService = serviceModels.data.find(
-      (service) => service.name === serviceName,
-    );
-
     if (!mainService) {
       return (
         <ErrorView
@@ -127,7 +119,7 @@ export const ComposerEditorProvider: React.FC<Props> = ({
           mainService,
           serviceModels: serviceModels.data,
           instance: instanceWithRelations.data,
-          relatedInventories: relatedInventories,
+          relatedInventoriesQuery: relatedInventoriesQuery,
         }}
       >
         <CanvasProvider>

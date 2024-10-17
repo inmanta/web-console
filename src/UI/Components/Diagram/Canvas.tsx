@@ -12,7 +12,7 @@ import { CanvasWrapper } from "./styles";
 import { ZoomHandlerService } from "./zoomHandler";
 
 /**
- * Properties for the Header component.
+ * Properties for the Canvas component.
  *
  * @interface
  * @prop {boolean} editable - A flag indicating if the diagram is editable.
@@ -30,11 +30,11 @@ interface Props {
  * @returns {React.FC<Props>} The rendered Canvas component.
  */
 export const Canvas: React.FC<Props> = ({ editable }) => {
-  const { mainService, instance, serviceModels, relatedInventories } =
+  const { mainService, instance, serviceModels, relatedInventoriesQuery } =
     useContext(InstanceComposerContext);
   const {
     setStencilState,
-    setInstancesToSend,
+    setServiceOrderItems,
     diagramHandlers,
     setDiagramHandlers,
   } = useContext(CanvasContext);
@@ -48,6 +48,7 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
     null,
   ); // without this state it could happen that cells would load before sidebar is ready so its state could be outdated
 
+  // create stencil state and set flag to true to enable the other components to be created - the flag is created to allow the components to be depended of that states, passing the state as a dependency would cause an infinite loop
   useEffect(() => {
     if (!mainService) {
       return;
@@ -56,6 +57,7 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
     setIsStencilStateReady(true);
   }, [mainService, instance, setStencilState]);
 
+  // create the diagram & set diagram handlers and the scroller only when service models and main service is defined and the stencil state is ready
   useEffect(() => {
     if (!mainService || !serviceModels || !isStencilStateReady) {
       return;
@@ -82,11 +84,15 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mainService, serviceModels, isStencilStateReady]);
 
+  /**
+   * create the stencil sidebar only left sidebar ref, the scroller, related inventories, main service and service models are defined
+   * It's done in separate useEffect to enable eventual re-renders of the sidebar independently of the diagram, e.g. when the related inventories are loaded
+   */
   useEffect(() => {
     if (
       !LeftSidebar.current ||
       !scroller ||
-      !relatedInventories.data ||
+      !relatedInventoriesQuery.data ||
       !mainService ||
       !serviceModels
     ) {
@@ -96,7 +102,7 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
     const sidebar = new StencilSidebar(
       LeftSidebar.current,
       scroller,
-      relatedInventories.data,
+      relatedInventoriesQuery.data,
       mainService,
       serviceModels,
     );
@@ -104,8 +110,13 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
     setStencilSidebar(sidebar);
 
     return () => sidebar.remove();
-  }, [scroller, relatedInventories.data, mainService, serviceModels]);
+  }, [scroller, relatedInventoriesQuery.data, mainService, serviceModels]);
 
+  /**
+   * add the instances to the diagram only when the stencil sidebar, diagram handlers, service models, main service and stencil state are defined
+   *
+   * we need to add instances after stencil has been created to ensure that the stencil will get updated in case there are any embedded entities and relations that will get appendend on the canvas
+   */
   useEffect(() => {
     if (
       !stencilSidebar ||
@@ -132,7 +143,7 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
       });
     });
 
-    setInstancesToSend(newInstances);
+    setServiceOrderItems(newInstances);
 
     return () => {
       setStencilState(createStencilState(mainService));
@@ -141,6 +152,9 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [diagramHandlers, isStencilStateReady, stencilSidebar]);
 
+  /**
+   * add the zoom handler only when the scroller is defined as it's needed to create the zoom handler
+   */
   useEffect(() => {
     if (!ZoomHandler.current || !scroller) {
       return;

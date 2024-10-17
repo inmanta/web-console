@@ -1,6 +1,6 @@
 import { dia, ui } from "@inmanta/rappid";
 import { ServiceModel } from "@/Core";
-import { Inventories } from "@/Data/Managers/V2/GETTERS/GetRelatedInventories";
+import { Inventories } from "@/Data/Managers/V2/GETTERS/GetInventoryList";
 import {
   CreateModifierHandler,
   FieldCreator,
@@ -97,7 +97,7 @@ class InstanceStencilTab {
       }
 
       document.dispatchEvent(
-        new CustomEvent("updateInstancesToSend", {
+        new CustomEvent("updateServiceOrderItems", {
           detail: { cell: elementView.model, action: ActionEnum.CREATE },
         }),
       );

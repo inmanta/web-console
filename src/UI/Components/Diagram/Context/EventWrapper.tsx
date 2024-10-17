@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import { updateInstancesToSend } from "../helpers";
+import { updateServiceOrderItems } from "../helpers";
 import { ActionEnum, EmbeddedEventEnum } from "../interfaces";
 import { ServiceEntityBlock } from "../shapes";
 import { CanvasContext } from "./Context";
@@ -20,7 +20,7 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
 }) => {
   const {
     setStencilState,
-    setInstancesToSend,
+    setServiceOrderItems,
     setCellToEdit,
     setDictToDisplay,
     looseEmbedded,
@@ -29,6 +29,7 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
 
   /**
    * Handles the event triggered when there are loose embedded entities on the canvas.
+   * The loose embedded entities are the entities that are not connected to the main entity. If there are any, they will be highlighted and deploy button will be disabled.
    *
    * @param {CustomEvent} event - The event object.
    *
@@ -77,23 +78,25 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
 
   /**
    * Handles the event triggered when the user made update to the instance cell
-   * With removed ability to edit the related instances, we need to assert first if the instance triggered the event is in the instancesToSend map(it could be removed from the canvas)
+   * we need to assert first if the instance triggered the event is in the serviceOrderItems map,
+   * as the related instances aren't added to the serviceOrderItems map as we don't want to accidentally delete or edit them,
+   * yet they can exist on the canvas and be removed from it.
    *
    * @param {CustomEvent} event - The event object.
    *
    * @returns {void}
    */
-  const handleUpdateInstancesToSend = (event): void => {
+  const handleUpdateServiceOrderItems = (event): void => {
     const customEvent = event as CustomEvent;
     const { cell, action } = customEvent.detail as {
       cell: ServiceEntityBlock;
       action: ActionEnum;
     };
 
-    setInstancesToSend((prev) => {
-      // related instances aren't added to the instancesToSend map, this condition is here to prevent situation where we try to remove the related instance from the canvas and it ends up here with status to delete it from the inventory
+    setServiceOrderItems((prev) => {
+      // related instances aren't added to the serviceOrderItems map, this condition is here to prevent situation where we try to remove the related instance from the canvas and it ends up here with status to delete it from the inventory
       if (prev.has(String(cell.id)) || action === ActionEnum.CREATE) {
-        return updateInstancesToSend(cell, action, prev);
+        return updateServiceOrderItems(cell, action, prev);
       }
 
       return prev;
@@ -102,7 +105,7 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
 
   /**
    * Handles updating the stencil state for the embedded entities.
-   * If the current count reach the max count, the adequate stencil element will become disabled.
+   * If the current count of the instances created from adequate stencil is more than or equal to the max count,, the adequate stencil element will become disabled.
    *
    * @param {CustomEvent} event - The event object.
    *
@@ -117,49 +120,43 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
     setStencilState((prev) => {
       const stencilStateCopy = JSON.parse(JSON.stringify(prev));
 
-      // If the stencil doesn't exist, return the previous state - that's the case when we recurrently add related children to the canvas, these embedded entities aren't tracked
-      if (!stencilStateCopy[eventData.name]) {
+      const name = eventData.name;
+      const stencil = stencilStateCopy[name];
+
+      // If the stencil doesn't exist, return the previous state - that's the case when we add related instance through appendInstance() function which is related through it's own embedded entity - then the stencil state doesn't have that stencil stored
+      if (!stencil) {
         return stencilStateCopy;
       }
 
       switch (eventData.action) {
         case "add":
-          stencilStateCopy[eventData.name].current += 1;
+          stencil.current += 1;
           break;
         case "remove":
-          stencilStateCopy[eventData.name].current -= 1;
+          stencil.current -= 1;
           break;
         default:
           break;
       }
+      const elements = [
+        { selector: `.${name}_body`, class: "stencil_accent-disabled" },
+        { selector: `.${name}_bodyTwo`, class: "stencil_body-disabled" },
+        { selector: `.${name}_text`, class: "stencil_text-disabled" },
+      ];
 
-      // If the current count is more than or equal to the max count, disable the stencil of given embedded entity
-      if (
-        stencilStateCopy[eventData.name].max !== null &&
-        stencilStateCopy[eventData.name].max !== undefined &&
-        stencilStateCopy[eventData.name].current >=
-          stencilStateCopy[eventData.name].max
-      ) {
-        document
-          .querySelector(`.${eventData.name}_body`)
-          ?.classList.add("stencil_accent-disabled");
-        document
-          .querySelector(`.${eventData.name}_bodyTwo`)
-          ?.classList.add("stencil_body-disabled");
-        document
-          .querySelector(`.${eventData.name}_text`)
-          ?.classList.add("stencil_text-disabled");
-      } else {
-        document
-          .querySelector(`.${eventData.name}_body`)
-          ?.classList.remove("stencil_accent-disabled");
-        document
-          .querySelector(`.${eventData.name}_bodyTwo`)
-          ?.classList.remove("stencil_body-disabled");
-        document
-          .querySelector(`.${eventData.name}_text`)
-          ?.classList.remove("stencil_text-disabled");
-      }
+      const shouldDisable =
+        stencil.max !== null &&
+        stencil.max !== undefined &&
+        stencil.current >= stencil.max;
+
+      // If the current count of the instances created from given stencil is more than or equal to the max count, disable the stencil of given embedded entity
+      elements.forEach(({ selector, class: className }) => {
+        const element = document.querySelector(selector);
+
+        if (element) {
+          element.classList.toggle(className, shouldDisable);
+        }
+      });
 
       return stencilStateCopy;
     });
@@ -170,8 +167,8 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
     document.addEventListener("sendCellToSidebar", handleEditEvent);
     document.addEventListener("looseEmbedded", handleLooseEmbeddedEvent);
     document.addEventListener(
-      "updateInstancesToSend",
-      handleUpdateInstancesToSend,
+      "updateServiceOrderItems",
+      handleUpdateServiceOrderItems,
     );
     document.addEventListener("updateStencil", handleUpdateStencilState);
 
@@ -180,8 +177,8 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
       document.removeEventListener("sendCellToSidebar", handleEditEvent);
       document.removeEventListener("looseEmbedded", handleLooseEmbeddedEvent);
       document.removeEventListener(
-        "updateInstancesToSend",
-        handleUpdateInstancesToSend,
+        "updateServiceOrderItems",
+        handleUpdateServiceOrderItems,
       );
       document.removeEventListener("updateStencil", handleUpdateStencilState);
     };

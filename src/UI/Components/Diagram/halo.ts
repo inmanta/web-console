@@ -80,7 +80,7 @@ const createHalo = (
 
       if (didElementChange) {
         document.dispatchEvent(
-          new CustomEvent("updateInstancesToSend", {
+          new CustomEvent("updateServiceOrderItems", {
             detail: { cell: elementAsService, action: ActionEnum.UPDATE },
           }),
         );
@@ -88,7 +88,7 @@ const createHalo = (
     });
 
     document.dispatchEvent(
-      new CustomEvent("updateInstancesToSend", {
+      new CustomEvent("updateServiceOrderItems", {
         detail: { cell: cellView.model, action: ActionEnum.DELETE },
       }),
     );

@@ -3,7 +3,7 @@ import { dia } from "@inmanta/rappid";
 import { UseQueryResult } from "@tanstack/react-query";
 import { Field, InstanceAttributeModel, ServiceModel } from "@/Core";
 import { InstanceWithRelations } from "@/Data/Managers/V2/GETTERS/GetInstanceWithRelations";
-import { Inventories } from "@/Data/Managers/V2/GETTERS/GetRelatedInventories";
+import { Inventories } from "@/Data/Managers/V2/GETTERS/GetInventoryList";
 import { DiagramHandlers } from "../init";
 import {
   ComposerServiceOrderItem,
@@ -19,7 +19,7 @@ interface InstanceComposerCreatorProviderInterface {
   instance: InstanceWithRelations | null;
   serviceModels: ServiceModel[];
   mainService: ServiceModel;
-  relatedInventories: UseQueryResult<Inventories, Error>;
+  relatedInventoriesQuery: UseQueryResult<Inventories, Error>;
 }
 
 /**
@@ -31,7 +31,7 @@ export const InstanceComposerContext =
     instance: null,
     serviceModels: [],
     mainService: {} as ServiceModel,
-    relatedInventories: {} as UseQueryResult<Inventories, Error>,
+    relatedInventoriesQuery: {} as UseQueryResult<Inventories, Error>,
   });
 
 /**
@@ -57,8 +57,8 @@ interface CanvasProviderInterface {
   looseEmbedded: Set<string>;
   setLooseEmbedded: (value: Set<string>) => void;
 
-  instancesToSend: Map<string, ComposerServiceOrderItem>;
-  setInstancesToSend: React.Dispatch<
+  serviceOrderItems: Map<string, ComposerServiceOrderItem>;
+  setServiceOrderItems: React.Dispatch<
     React.SetStateAction<Map<string, ComposerServiceOrderItem>>
   >;
 
@@ -85,28 +85,28 @@ interface CanvasProviderInterface {
  * @prop {(value: dia.CellView | null): void} setCellToEdit: Function to set the cell to edit.
  * @prop {Set<string>} looseEmbedded: The set of loose embedded entities on canvas.
  * @prop {(value: Set<string>): void} setLooseEmbedded: Function to set the loose embedded entities.
- * @prop {Map<string, ComposerServiceOrderItem>} instancesToSend: The instances to send to the backend.
- * @prop {React.Dispatch<React.SetStateAction<Map<string, ComposerServiceOrderItem>>>} setInstancesToSend: Function to set the instances to send.
+ * @prop {Map<string, ComposerServiceOrderItem>} serviceOrderItems: The instances to send to the backend.
+ * @prop {React.Dispatch<React.SetStateAction<Map<string, ComposerServiceOrderItem>>>} setServiceOrderItems: Function to set the instances to send.
  * @prop {StencilState | null} stencilState: The state of the stencil.
  * @prop {React.Dispatch<React.SetStateAction<StencilState | null>>} setStencilState: Function to set the state of the stencil.
  * @prop {boolean} isDirty: A flag indicating whether the canvas is dirty, which mean that service instance was modified.
  */
 export const CanvasContext = createContext<CanvasProviderInterface>({
   diagramHandlers: null,
-  setDiagramHandlers: (_value) => {},
+  setDiagramHandlers: () => {},
   dictToDisplay: null,
-  setDictToDisplay: (_value) => {},
+  setDictToDisplay: () => {},
   formState: {},
-  setFormState: (_value) => {},
+  setFormState: () => {},
   fields: [],
-  setFields: (_value) => {},
+  setFields: () => {},
   cellToEdit: null,
-  setCellToEdit: (_value) => {},
+  setCellToEdit: () => {},
   looseEmbedded: new Set(),
-  setLooseEmbedded: (_value) => {},
-  instancesToSend: new Map(),
-  setInstancesToSend: (_value) => {},
+  setLooseEmbedded: () => {},
+  serviceOrderItems: new Map(),
+  setServiceOrderItems: () => {},
   stencilState: {},
-  setStencilState: (_value) => {},
+  setStencilState: () => {},
   isDirty: false,
 });

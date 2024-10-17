@@ -715,13 +715,13 @@ export const createStencilState = (
  *
  * @param cell - The cell that the action was performed on.
  * @param action - The action that was performed.
- * @param instancesToSend - The current map of instances to send.
+ * @param serviceOrderItems - The current map of instances to send.
  * @returns  {Map<string, ComposerServiceOrderItem>} The updated map of instances to send.
  */
-export const updateInstancesToSend = (
+export const updateServiceOrderItems = (
   cell: ServiceEntityBlock,
   action: ActionEnum,
-  instancesToSend: Map<string, ComposerServiceOrderItem>,
+  serviceOrderItems: Map<string, ComposerServiceOrderItem>,
 ): Map<string, ComposerServiceOrderItem> => {
   const newInstance: ComposerServiceOrderItem = {
     instance_id: cell.id,
@@ -733,9 +733,9 @@ export const updateInstancesToSend = (
     embeddedTo: cell.get("embeddedTo"),
     relatedTo: cell.getRelations(),
   };
-  const copiedInstances = new Map(instancesToSend); // copy
+  const copiedInstances = new Map(serviceOrderItems); // copy
 
-  const updatedInstance = instancesToSend.get(String(cell.id));
+  const updatedInstance = serviceOrderItems.get(String(cell.id));
 
   switch (action) {
     case "update":

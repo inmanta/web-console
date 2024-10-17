@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useGetAllServiceModels } from "@/Data/Managers/V2/GETTERS/GetAllServiceModels";
-import { useGetRelatedInventories } from "@/Data/Managers/V2/GETTERS/GetRelatedInventories";
+import { useGetInventoryList } from "@/Data/Managers/V2/GETTERS/GetInventoryList";
 import { DependencyContext, words } from "@/UI";
 import { ErrorView, LoadingView } from "@/UI/Components";
 import { Canvas } from "@/UI/Components/Diagram/Canvas";
@@ -39,7 +39,7 @@ export const ComposerCreatorProvider: React.FC<Props> = ({ serviceName }) => {
 
   const serviceModels = useGetAllServiceModels(environment).useContinuous();
 
-  const relatedInventories = useGetRelatedInventories(
+  const relatedInventoriesQuery = useGetInventoryList(
     relatedServiceNames,
     environment,
   ).useContinuous();
@@ -62,20 +62,20 @@ export const ComposerCreatorProvider: React.FC<Props> = ({ serviceName }) => {
         data-testid="ErrorView"
         title={words("error")}
         message={words("error.general")(serviceModels.error.message)}
-        aria-label="ServicesWithMainProvider-failed"
+        aria-label="ComposerCreatorProvider-serviceModels_failed"
         retry={serviceModels.refetch}
       />
     );
   }
 
-  if (relatedInventories.isError) {
+  if (relatedInventoriesQuery.isError) {
     return (
       <ErrorView
         data-testid="ErrorView"
         title={words("error")}
-        message={words("error.general")(relatedInventories.error.message)}
-        aria-label="ServicesWithMainProvider-failed"
-        retry={relatedInventories.refetch}
+        message={words("error.general")(relatedInventoriesQuery.error.message)}
+        aria-label="ComposerCreatorProvider-relatedInventoriesQuery_failed"
+        retry={relatedInventoriesQuery.refetch}
       />
     );
   }
@@ -93,7 +93,7 @@ export const ComposerCreatorProvider: React.FC<Props> = ({ serviceName }) => {
           message={words("instanceComposer.noServiceModel.errorMessage")(
             serviceName,
           )}
-          aria-label="ServicesWithMainProvider-NoMAinService"
+          aria-label="ComposerCreatorProvider-NoMainService"
           retry={serviceModels.refetch}
         />
       );
@@ -105,7 +105,7 @@ export const ComposerCreatorProvider: React.FC<Props> = ({ serviceName }) => {
           mainService,
           serviceModels: serviceModels.data,
           instance: null,
-          relatedInventories: relatedInventories,
+          relatedInventoriesQuery: relatedInventoriesQuery,
         }}
       >
         <CanvasProvider>
@@ -115,5 +115,5 @@ export const ComposerCreatorProvider: React.FC<Props> = ({ serviceName }) => {
     );
   }
 
-  return <LoadingView aria-label="ServicesWithMainProvider-loading" />;
+  return <LoadingView aria-label="ComposerCreatorProvider-loading" />;
 };
