@@ -7,7 +7,7 @@ import { AutoCompleteInput } from "./AutoCompleteInput";
 interface Props {
   serviceName: string;
   attributeName: string;
-  attributeValue: string | string[];
+  attributeValue: string | string[] | null;
   description?: string;
   isOptional: boolean;
   isDisabled?: boolean;
@@ -67,10 +67,13 @@ export const AutoCompleteInputProvider: React.FC<Props> = ({
               ? service_identity_attribute_value
               : id;
 
+            const isSelected =
+              alreadySelected !== null && alreadySelected.includes(id);
+
             return {
               displayName,
               value: id,
-              isSelected: alreadySelected.includes(id),
+              isSelected,
             };
           },
         );
