@@ -16,6 +16,22 @@ interface Props {
   multi?: boolean;
 }
 
+/**
+ * A React component that provides an autocomplete input field for inter service relations.
+ *
+ * @props {object} props - The properties passed to the component.
+ * @prop {string} serviceName - The name of the service.
+ * @prop {string} attributeName - The name of the attribute.
+ * @prop {string | string[] | null} attributeValue - The value of the attribute.
+ * @prop {string} description - The description of the attribute.
+ * @prop {boolean} isOptional - Whether the attribute is optional.
+ * @prop {boolean} isDisabled - Whether the input field should be disabled.
+ * @prop {(value): void;} handleInputChange - The function to handle input changes.
+ * @prop {string[]} alreadySelected - The already selected options.
+ * @prop {boolean} multi - Whether multiple options can be selected.
+ *
+ * @returns {React.FC<Props> | null} The rendered autocomplete input field or null if the data is not yet available or fetching failed.
+ */
 export const AutoCompleteInputProvider: React.FC<Props> = ({
   serviceName,
   attributeName,
@@ -68,7 +84,7 @@ export const AutoCompleteInputProvider: React.FC<Props> = ({
               : id;
 
             const isSelected =
-              alreadySelected !== null && alreadySelected.includes(id);
+              alreadySelected !== null && alreadySelected.includes(id); //it can be that the value for this inter-serviceRelation is set to null
 
             return {
               displayName,
