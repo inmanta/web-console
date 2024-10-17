@@ -85,7 +85,7 @@ const setup = (
                 instance: instance || null,
                 serviceModels,
                 mainService: mainService,
-                relatedInventories: { data: {} } as UseQueryResult<
+                relatedInventoriesQuery: { data: {} } as UseQueryResult<
                   Inventories,
                   Error
                 >,
