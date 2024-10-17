@@ -84,7 +84,7 @@ export const AutoCompleteInputProvider: React.FC<Props> = ({
               : id;
 
             const isSelected =
-              alreadySelected !== null && alreadySelected.includes(id); //it can be that the value for this inter-serviceRelation is set to null
+              alreadySelected !== null && alreadySelected.includes(id); //it can be that the value for inter-service relation is set to null
 
             return {
               displayName,
