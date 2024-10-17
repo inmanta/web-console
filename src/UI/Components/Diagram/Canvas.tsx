@@ -46,7 +46,7 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
 
   const [stencilSidebar, setStencilSidebar] = useState<StencilSidebar | null>(
     null,
-  ); // without this state it could happen that cells would load before sidebar is ready so it's state could be outdated
+  ); // without this state it could happen that cells would load before sidebar is ready so its state could be outdated
 
   useEffect(() => {
     if (!mainService) {
