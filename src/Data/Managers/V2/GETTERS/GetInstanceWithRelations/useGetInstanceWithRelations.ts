@@ -99,7 +99,7 @@ export const useGetInstanceWithRelations = (
   const getAllEmbeddedEntitiesNames = (
     serviceModel: ServiceModel | EmbeddedEntity,
   ): string[] => {
-    const embedded = serviceModel.embedded_entities.map(
+    const embeddedEntities = serviceModel.embedded_entities.map(
       (entity) => entity.name,
     );
     const nestedEmbeddedEntities = serviceModel.embedded_entities?.flatMap((embeddedEntity) =>
