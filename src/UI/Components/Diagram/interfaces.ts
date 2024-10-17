@@ -13,7 +13,7 @@ enum ActionEnum {
 
 interface ColumnData {
   name: string;
-  [key: string]: string;
+  [key: string]: unknown;
 }
 
 interface RouterOptions {
@@ -42,6 +42,12 @@ interface InterServiceRule extends Rule {
   kind: TypeEnum.INTERSERVICE;
   attributeName: string;
 }
+
+export enum EmbeddedEventEnum {
+  REMOVE = "remove",
+  ADD = "add",
+}
+
 export enum TypeEnum {
   EMBEDDED = "Embedded",
   INTERSERVICE = "Inter-Service",
@@ -49,73 +55,6 @@ export enum TypeEnum {
 
 interface ConnectionRules {
   [serviceName: string]: (InterServiceRule | EmbeddedRule)[];
-}
-
-interface serializedCell {
-  type: string;
-  source?: {
-    id: string;
-  };
-  target?: {
-    id: string;
-  };
-  z: number;
-  id: string;
-  attrs: {
-    headerLabel?: {
-      text: string;
-    };
-    info?: {
-      preserveAspectRatio: string;
-      cursor: string;
-      x: string;
-      "xlink:href": string;
-      "data-tooltip": string;
-      y: number;
-      width: number;
-      height: number;
-    };
-    header?: {
-      fill: string;
-      stroke: string;
-    };
-  };
-  columns?: unknown;
-  padding?: {
-    top: number;
-    bottom: number;
-    left: number;
-    right: number;
-  };
-  size?: {
-    width: number;
-    height: number;
-  };
-  itemMinLabelWidth?: number;
-  itemHeight?: number;
-  itemOffset?: number;
-  itemOverflow?: boolean;
-  isCollapsed?: boolean;
-  itemAboveViewSelector?: string;
-  itemBelowViewSelector?: string;
-  scrollTop: unknown;
-  itemButtonSize?: number;
-  itemIcon?: {
-    width: number;
-    height: number;
-    padding: number;
-  };
-  position?: {
-    x: number;
-    y: number;
-  };
-  angle?: number;
-  entityName?: string;
-  relatedTo?: Map<string, string>;
-  isEmbedded?: boolean;
-  instanceAttributes?: Record<string, unknown>;
-  holderName?: string;
-  embeddedTo?: string;
 }
 
 type relationId = string | null | undefined;
@@ -144,8 +83,16 @@ interface ComposerServiceOrderItem {
   service_entity: string;
   action: null | ServiceOrderItemAction;
   embeddedTo?: string | null;
-  relatedTo?: Map<string, string> | null;
+  relatedTo?: Map<dia.Cell.ID, string> | null;
   metadata?: Record<string, string> | null;
+}
+
+interface StencilState {
+  [key: string]: {
+    min: ParsedNumber | undefined | null;
+    max: ParsedNumber | undefined | null;
+    current: number;
+  };
 }
 
 export {
@@ -156,9 +103,9 @@ export {
   InterServiceRule,
   EmbeddedRule,
   ConnectionRules,
-  serializedCell,
   relationId,
   LabelLinkView,
   SavedCoordinates,
   ComposerServiceOrderItem,
+  StencilState,
 };

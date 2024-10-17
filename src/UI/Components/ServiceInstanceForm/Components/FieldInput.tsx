@@ -141,7 +141,7 @@ export const FieldInput: React.FC<Props> = ({
             getUpdate(makePath(path, field.name), toOptionalBoolean(value))
           }
           description={field.description}
-          key={field.name}
+          key={field.id || field.name}
           shouldBeDisabled={
             field.isDisabled &&
             get(originalState, makePath(path, field.name)) !== undefined &&
@@ -157,7 +157,7 @@ export const FieldInput: React.FC<Props> = ({
             getUpdate(makePath(path, field.name), toOptionalBoolean(value))
           }
           description={field.description}
-          key={field.name}
+          key={field.id || field.name}
           shouldBeDisabled={
             field.isDisabled &&
             get(originalState, makePath(path, field.name)) !== undefined &&
@@ -185,7 +185,7 @@ export const FieldInput: React.FC<Props> = ({
           }
           placeholder={getPlaceholderForType(field.type)}
           typeHint={getTypeHintForType(field.type)}
-          key={field.name}
+          key={field.id || field.name}
           suggestions={suggestionsList}
         />
       );
@@ -208,7 +208,7 @@ export const FieldInput: React.FC<Props> = ({
           }}
           placeholder={getPlaceholderForType(field.type)}
           typeHint={getTypeHintForType(field.type)}
-          key={field.name}
+          key={field.id || field.name}
           isTextarea
         />
       );
@@ -233,7 +233,7 @@ export const FieldInput: React.FC<Props> = ({
           }
           placeholder={getPlaceholderForType(field.type)}
           typeHint={getTypeHintForType(field.type)}
-          key={field.name}
+          key={field.id || field.name}
           suggestions={suggestionsList}
         />
       );
@@ -266,7 +266,7 @@ export const FieldInput: React.FC<Props> = ({
           description={field.description}
           isOptional={field.isOptional}
           handleInputChange={getEnumUpdate}
-          key={field.name}
+          key={field.id || field.name}
           shouldBeDisabled={
             field.isDisabled &&
             get(originalState, makePath(path, field.name)) !== undefined &&
