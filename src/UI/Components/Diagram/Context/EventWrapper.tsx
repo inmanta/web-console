@@ -7,7 +7,7 @@ import { CanvasContext } from "./Context";
 /**
  * EventWrapper component
  *
- * This component is a higher-order component that wraps its children and provides event handling for all necessary communication from withing JointJS code to the Composer.
+ * This component is a higher-order component that wraps its children and provides event handling for all necessary communication from within JointJS code to the Composer.
  * It uses the CanvasContext to get and set various state variables.
  *
  * @props {React.PropsWithChildren} props - The properties that define the behavior and display of the component.
