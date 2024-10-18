@@ -309,7 +309,7 @@ export function appendInstance(
   }
 
   if (instanceWithRelations.relatedInstances) {
-    //map through relatedInstances and either append them and connect to them or connect to already existing ones
+    //map through inter-service related instances and either append them and connect to them or connect to already existing ones
     instanceWithRelations.relatedInstances.forEach((relatedInstance) => {
       const cellAdded = graph.getCell(relatedInstance.id);
       const isBlockedFromEditing = true;
