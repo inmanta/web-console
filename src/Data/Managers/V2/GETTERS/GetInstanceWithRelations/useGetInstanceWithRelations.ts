@@ -167,7 +167,7 @@ export const useGetInstanceWithRelations = (
    */
   const fetchInstances = async (id: string): Promise<InstanceWithRelations> => {
     const relatedInstances: ServiceInstanceModel[] = [];
-    const instance = (await fetchInstance(id)).data;
+const { data: instance } = await fetchInstance(id);
     let serviceIds: string[] = [];
 
     if (serviceModel) {
