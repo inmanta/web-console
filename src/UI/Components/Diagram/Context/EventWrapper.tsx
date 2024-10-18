@@ -129,15 +129,16 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
       }
 
       switch (eventData.action) {
-        case "add":
+        case EmbeddedEventEnum.ADD:
           stencil.current += 1;
           break;
-        case "remove":
+        case EmbeddedEventEnum.REMOVE:
           stencil.current -= 1;
           break;
         default:
           break;
       }
+
       const elements = [
         { selector: `.${name}_body`, class: "stencil_accent-disabled" },
         { selector: `.${name}_bodyTwo`, class: "stencil_body-disabled" },

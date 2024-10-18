@@ -561,7 +561,7 @@ export const toggleLooseElement = (
   kind: EmbeddedEventEnum,
 ): void => {
   switch (kind) {
-    case "add":
+    case EmbeddedEventEnum.ADD:
       highlighters.mask.add(cellView, "root", "loose_element", {
         padding: 0,
         className: "loose_element-highlight",
@@ -571,7 +571,7 @@ export const toggleLooseElement = (
         },
       });
       break;
-    case "remove":
+    case EmbeddedEventEnum.REMOVE:
       const highlighter = dia.HighlighterView.get(cellView, "loose_element");
 
       if (highlighter) {
