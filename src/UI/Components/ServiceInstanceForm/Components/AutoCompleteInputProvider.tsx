@@ -61,7 +61,6 @@ export const AutoCompleteInputProvider: React.FC<Props> = ({
       ),
       failed: () => null,
       success: (instancesResponse) => {
-        console.log(alreadySelected);
         const options = instancesResponse.data.map(
           ({ id, service_identity_attribute_value }) => {
             const displayName = service_identity_attribute_value
