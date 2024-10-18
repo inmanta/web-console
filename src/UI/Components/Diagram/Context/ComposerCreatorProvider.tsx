@@ -14,7 +14,7 @@ import { InstanceComposerContext } from "./Context";
  * This interface represents the properties that the ComposerCreatorProvider component expects to receive.
  *
  * @interface
- * @property {string} serviceName - The name of the service for which related services and inventories are being fetched.
+ * @property {string} serviceName - The name of the service for which inter-service related services and inventories are being fetched.
  */
 interface Props {
   serviceName: string;
@@ -28,7 +28,7 @@ interface Props {
  * It also handles the state and effects related to these data.
  * 
  * @props {Props} props - The properties that define the behavior and display of the component.
- * @prop {string} serviceName - The name of the service for which related services and inventories are being fetched.
+ * @prop {string} serviceName - The name of the service for which inter-service related services and inventories are being fetched.
 
  * @returns {React.FC<Props>} The ComposerCreatorProvider component.
  */

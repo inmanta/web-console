@@ -185,9 +185,9 @@ export interface DiagramHandlers {
    * Adds an instance to the canvas.
    *
    * This function is responsible for adding a fetched instance with all it's relations to the canvas or adds minimal default instance for the main service model.
-   * It creates a new elements for the instance, it's embedded entities and related entities, adds them to the graph, and returns the serialized cells of the graph.
+   * It creates a new elements for the instance, it's embedded entities and inter-service related entities, adds them to the graph, and returns the serialized cells of the graph.
    *
-   * @param {ServiceModel[]} services - The array of service models to which the instance or it's related instances belongs.
+   * @param {ServiceModel[]} services - The array of service models to which the instance or it's  ineter-service related instances belongs.
    * @param {InstanceWithRelations} [instance] - The instance to be added to the canvas. If not provided, a default instance of main type will be created.
    *
    * @returns {ServiceEntityBlock[]} The created cells after adding the instance.

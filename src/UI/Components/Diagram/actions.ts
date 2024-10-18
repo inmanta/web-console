@@ -227,7 +227,7 @@ export function createComposerEntity(
  * @param {boolean} isMainInstance boolean value determining if the instance is the core one
  * @param {boolean} isBlockedFromEditing boolean value determining if the instance is blocked from editing
  *
- * @returns {ServiceEntityBlock} appendedInstance to allow connect inter-service related Instances added concurrently
+ * @returns {ServiceEntityBlock} appendedInstance to allow connect related by inter-service relations Instances added concurrently
  */
 export function appendInstance(
   paper: dia.Paper,

@@ -79,7 +79,7 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
   /**
    * Handles the event triggered when the user made update to the instance cell
    * we need to assert first if the instance triggered the event is in the serviceOrderItems map,
-   * as the related instances aren't added to the serviceOrderItems map as we don't want to accidentally delete or edit them,
+   * as the inter-service related instances aren't added to the serviceOrderItems map as we don't want to accidentally delete or edit them,
    * yet they can exist on the canvas and be removed from it.
    *
    * @param {CustomEvent} event - The event object.
@@ -94,7 +94,7 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
     };
 
     setServiceOrderItems((prev) => {
-      // inter-service related instances aren't added to the serviceOrderItems map, this condition is here to prevent situation where we try to remove the related instance from the canvas and it ends up here with status to delete it from the inventory
+      // inter-service related instances aren't added to the serviceOrderItems map, this condition is here to prevent situation where we try to remove the inter-service related instance from the canvas and it ends up here with status to delete it from the inventory
       if (prev.has(String(cell.id)) || action === ActionEnum.CREATE) {
         return updateServiceOrderItems(cell, action, prev);
       }
@@ -123,7 +123,7 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
       const name = eventData.name;
       const stencil = stencilStateCopy[name];
 
-      // If the stencil doesn't exist, return the previous state - that's the case when we add related instance through appendInstance() function which is inter-service related through it's own embedded entity - then the stencil state doesn't have that stencil stored
+      // If the stencil doesn't exist, return the previous state - that's the case when we add inter-service related instance through appendInstance() function which is connected through it's own embedded entity - then the stencil state doesn't have that stencil stored
       if (!stencil) {
         return stencilStateCopy;
       }

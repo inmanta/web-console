@@ -258,7 +258,7 @@ export const checkWhetherConnectionRulesAreExhausted = (
  *  Function that checks if source is embedded, and if it is then if it is connected to the its owner/holder, and
  *  also if the the entity that we would like to connect is also the same type as the owner/holder.
  *
- *  Second boolean is to make it possible to connect nested embedded/related entities.
+ *  Second boolean is to make it possible to connect nested embedded/inter-service related entities.
  *
  * @param {dia.Element} source element that originate our connection
  * @param {ServiceEntityBlock[]} connectedElementsToSource array of elements that are connected to the given entity
@@ -421,7 +421,7 @@ export const shapesDataTransform = (
 };
 
 /**
- * Function that takes Map of standalone instances that include core, embedded and related entities and
+ * Function that takes Map of standalone instances that include core, embedded and inter-service related entities and
  * bundle in proper Instance Objects that could be accepted by the order_api request
  *
  * @param {Map<string, ComposerServiceOrderItem>}instances Map of Instances
