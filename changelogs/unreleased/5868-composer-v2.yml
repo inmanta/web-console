@@ -2,7 +2,7 @@ description: "Complete redesign of the Instance Composer, main focus was to alig
 This change includes: 
 Added left sidebar to have better access to the form fields of given part of the instance
 Added left sidebar from which we can drag and drop the embedded entities and existing related instances - related instances can not be edited no more
-Changed the navigation panel, now zooming in and out is done through the slider, added zoom to fit functionality and full screen mode"
+Zooming can now be done with a slider, and two new functionalities have been added. Zoom-to-fit and full-screen mode."
 issue-nr: 5868
 change-type: minor
 destination-branches: [master]
