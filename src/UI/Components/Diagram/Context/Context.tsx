@@ -87,7 +87,7 @@ interface CanvasProviderInterface {
  * @prop {(value: Set<string>): void} setLooseElement: Function to set the loose embedded entities.
  * @prop {Map<string, ComposerServiceOrderItem>} serviceOrderItems: The instances to send to the backend.
  * @prop {React.Dispatch<React.SetStateAction<Map<string, ComposerServiceOrderItem>>>} setServiceOrderItems: Function to set the instances to send.
- * @prop {StencilState | null} stencilState: The state of the stencil it holds information about amount of embedded entities of each type on the canvas, and if any more can be added.
+ * @prop {StencilState | null} stencilState: The state of the stencil it holds information about amount of embedded entities of each type on the canvas, and limitation and minimal requirements of those in the instance.
  * @prop {React.Dispatch<React.SetStateAction<StencilState | null>>} setStencilState: Function to set the state of the stencil.
  * @prop {boolean} isDirty: A flag indicating whether the canvas is dirty, which mean that service instance was modified.
  */
