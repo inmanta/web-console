@@ -227,7 +227,7 @@ export function createComposerEntity(
  * @param {boolean} isMainInstance boolean value determining if the instance is the core one
  * @param {boolean} isBlockedFromEditing boolean value determining if the instance is blocked from editing
  *
- * @returns {ServiceEntityBlock} appendedInstance to allow connect related Instances added concurrently
+ * @returns {ServiceEntityBlock} appendedInstance to allow connect inter-service related Instances added concurrently
  */
 export function appendInstance(
   paper: dia.Paper,
@@ -325,7 +325,7 @@ export function appendInstance(
           isBlockedFromEditing,
         );
 
-        //disable Inventory Stencil for related instance
+        //disable Inventory Stencil for inter-service relation instance
         document
           .querySelector(`.${appendedInstances[0].get("stencilName")}_body`)
           ?.classList.add("stencil_accent-disabled");
