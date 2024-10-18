@@ -39,7 +39,7 @@ export const CanvasProvider: React.FC<React.PropsWithChildren<unknown>> = ({
   const [stencilState, setStencilState] = useState<StencilState | null>(null);
 
   useEffect(() => {
-    //check if any of the edited serviceOrderItems got it action changed from default - its a condition to disable the deploy button when we are in the edit view
+    // check if any of the edited serviceOrderItems got its action changed from default - its a condition to disable the deploy button when we are in the edit view
     if (!isDirty) {
       setIsDirty(
         Array.from(serviceOrderItems).filter(
