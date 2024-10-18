@@ -104,7 +104,7 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
   };
 
   /**
-   * Handles updating the stencil state for the embedded entities.
+   * Handles updating the stencil state
    * If the current count of elements created from a certain type of stencil is more than or equal to the max count, the corresponding stencil element will be disabled.
    *
    * @param {CustomEvent} event - The event object.
