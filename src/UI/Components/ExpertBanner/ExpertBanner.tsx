@@ -6,11 +6,6 @@ import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { ToastAlert } from "../ToastAlert";
 
-/**
- * The properties of the ExpertBanner component.
- * @interface Props
- * @property {string} [environmentId] - *optional* The ID of the environment.
- */
 interface Props {
   environmentId?: string;
 }
@@ -19,7 +14,7 @@ interface Props {
  * A React component that displays a banner when the expert mode is enabled.
  *
  * @props {object} props - The properties passed to the component.
- * @prop {string} environmentId - The ID of the environment.
+ * @prop {string} [environmentId] - *optional* The ID of the environment.
  * @returns { React.FC<Props> | null} The rendered banner if the expert mode is enabled, otherwise null.
  */
 export const ExpertBanner: React.FC<Props> = ({ environmentId }) => {
