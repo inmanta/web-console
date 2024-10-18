@@ -1,4 +1,4 @@
-description: "Complete redesign of Instance Composer, main focus was to adjust composer to match it's general functionalities with regular form, and make it more UX friendly. 
+description: "Complete redesign of the Instance Composer, main focus was to align its general functionalities with regular form, and improve the user experience. 
 This change includes: 
 Added left sidebar to have better access to the form fields of given part of the instance
 Added left sidebar from which we can drag and drop the embedded entities and existing related instances - related instances can not be edited no more
