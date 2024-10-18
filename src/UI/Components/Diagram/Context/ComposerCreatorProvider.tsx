@@ -57,27 +57,21 @@ export const ComposerCreatorProvider: React.FC<Props> = ({ serviceName }) => {
   }, [serviceModels.isSuccess, serviceName, serviceModels.data]);
 
   if (serviceModels.isError) {
-    return (
-      <ErrorView
-        data-testid="ErrorView"
-        title={words("error")}
-        message={words("error.general")(serviceModels.error.message)}
-        aria-label="ComposerCreatorProvider-serviceModels_failed"
-        retry={serviceModels.refetch}
-      />
-    );
+    const message = words("error.general")(serviceModels.error.message);
+    const retry = serviceModels.refetch;
+    const ariaLabel = "ComposerCreatorProvider-serviceModels_failed";
+
+    return renderErrorView(message, ariaLabel, retry);
   }
 
   if (relatedInventoriesQuery.isError) {
-    return (
-      <ErrorView
-        data-testid="ErrorView"
-        title={words("error")}
-        message={words("error.general")(relatedInventoriesQuery.error.message)}
-        aria-label="ComposerCreatorProvider-relatedInventoriesQuery_failed"
-        retry={relatedInventoriesQuery.refetch}
-      />
+    const message = words("error.general")(
+      relatedInventoriesQuery.error.message,
     );
+    const retry = relatedInventoriesQuery.refetch;
+    const ariaLabel = "ComposerCreatorProvider-relatedInventoriesQuery_failed";
+
+    return renderErrorView(message, ariaLabel, retry);
   }
 
   if (serviceModels.isSuccess) {
@@ -86,17 +80,13 @@ export const ComposerCreatorProvider: React.FC<Props> = ({ serviceName }) => {
     );
 
     if (!mainService) {
-      return (
-        <ErrorView
-          data-testid="ErrorView"
-          title={words("error")}
-          message={words("instanceComposer.noServiceModel.errorMessage")(
-            serviceName,
-          )}
-          aria-label="ComposerCreatorProvider-noServiceModel_failed"
-          retry={serviceModels.refetch}
-        />
+      const message = words("instanceComposer.noServiceModel.errorMessage")(
+        serviceName,
       );
+      const retry = serviceModels.refetch;
+      const ariaLabel = "ComposerCreatorProvider-noServiceModel_failed";
+
+      return renderErrorView(message, ariaLabel, retry);
     }
 
     return (
@@ -117,3 +107,26 @@ export const ComposerCreatorProvider: React.FC<Props> = ({ serviceName }) => {
 
   return <LoadingView aria-label="ComposerCreatorProvider-loading" />;
 };
+
+/**
+ * Renders an error view component.
+ *
+ * @param {string} message - The error message to display.
+ * @param {string} ariaLabel - The ARIA label for accessibility.
+ * @param {Function} retry - The function to call when retrying the action.
+ *
+ * @returns {React.ReactElement} The rendered error view component.
+ */
+export const renderErrorView = (
+  message: string,
+  ariaLabel: string,
+  retry: () => void,
+): React.ReactElement => (
+  <ErrorView
+    data-testid="ErrorView"
+    title={words("error")}
+    message={message}
+    aria-label={ariaLabel}
+    retry={retry}
+  />
+);

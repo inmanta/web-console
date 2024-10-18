@@ -8,6 +8,7 @@ import { Canvas } from "@/UI/Components/Diagram/Canvas";
 import { findInterServiceRelations } from "../helpers";
 import { CanvasProvider } from "./CanvasProvider";
 import { InstanceComposerContext } from "./Context";
+import { renderErrorView } from ".";
 
 /**
  * Props interface for the ComposerEditorProvider component
@@ -94,44 +95,34 @@ export const ComposerEditorProvider: React.FC<Props> = ({
     );
   }
   if (instanceWithRelationsQuery.isError) {
-    return (
-      <ErrorView
-        data-testid="ErrorView"
-        title={words("error")}
-        message={words("error.general")(
-          instanceWithRelationsQuery.error.message,
-        )}
-        aria-label="ComposerEditor-instanceWithRelationsQuery_failed"
-        retry={instanceWithRelationsQuery.refetch}
-      />
+    const message = words("error.general")(
+      instanceWithRelationsQuery.error.message,
     );
+    const retry = instanceWithRelationsQuery.refetch;
+    const ariaLabel = "ComposerEditor-instanceWithRelationsQuery_failed";
+
+    return renderErrorView(message, ariaLabel, retry);
   }
 
   if (relatedInventoriesQuery.isError) {
-    return (
-      <ErrorView
-        data-testid="ErrorView"
-        title={words("error")}
-        message={words("error.general")(relatedInventoriesQuery.error.message)}
-        aria-label="ComposerEditor-relatedInvetoriesQuery_failed"
-        retry={relatedInventoriesQuery.refetch}
-      />
+    const message = words("error.general")(
+      relatedInventoriesQuery.error.message,
     );
+    const retry = relatedInventoriesQuery.refetch;
+    const ariaLabel = "ComposerEditor-relatedInventoriesQuery_failed";
+
+    return renderErrorView(message, ariaLabel, retry);
   }
 
   if (serviceModelsQuery.isSuccess && instanceWithRelationsQuery.isSuccess) {
     if (!mainService) {
-      return (
-        <ErrorView
-          data-testid="ErrorView"
-          title={words("error")}
-          message={words("instanceComposer.noServiceModel.errorMessage")(
-            serviceName,
-          )}
-          aria-label="ComposerEditor-NoMainService_failed"
-          retry={serviceModelsQuery.refetch}
-        />
+      const message = words("instanceComposer.noServiceModel.errorMessage")(
+        serviceName,
       );
+      const retry = serviceModelsQuery.refetch;
+      const ariaLabel = "ComposerEditor-NoMainService_failed";
+
+      return renderErrorView(message, ariaLabel, retry);
     }
 
     return (
