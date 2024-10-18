@@ -1,7 +1,8 @@
 description: "Complete redesign of the Instance Composer, main focus was to align its general functionalities with regular form, and improve the user experience. 
 This change includes: 
 A right sidebar, to have better access to the form fields of different parts of the instance
-Added left sidebar from which we can drag and drop the embedded entities and existing related instances - related instances can not be edited no more
+A left sidebar, from which we can drag and drop embedded entities and existing Inter-Service Relations from the inventory.
+Inter-Service Relations can only be edited when opened individualy in the Instance Composer.
 Zooming can now be done with a slider, and two new functionalities have been added. Zoom-to-fit and full-screen mode."
 issue-nr: 5868
 change-type: minor
