@@ -789,6 +789,7 @@ const dict = {
     `Your license has expired ${days} days ago!`,
   "banner.certificate.will.expire": (days: number) =>
     `Your license will expire in ${days} days.`,
+  "banner.disableExpertMode": "Disable expert mode",
 
   /**
    * Common

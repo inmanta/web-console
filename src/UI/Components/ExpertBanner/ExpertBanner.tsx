@@ -1,20 +1,74 @@
-import React, { useContext } from "react";
-import { Banner } from "@patternfly/react-core";
+import React, { useContext, useEffect, useState } from "react";
+import { Banner, Button, Spinner } from "@patternfly/react-core";
+import styled from "styled-components";
+import { useUpdateEnvConfig } from "@/Data/Managers/V2/POST/UpdateEnvConfig";
 import { DependencyContext } from "@/UI/Dependency";
+import { words } from "@/UI/words";
+import { ToastAlert } from "../ToastAlert";
 
-export const ExpertBanner = () => {
+/**
+ * The properties of the ExpertBanner component.
+ * @interface Props
+ * @property {string} [environmentId] - *optional* The ID of the environment.
+ */
+interface Props {
+  environmentId?: string;
+}
+
+/**
+ * A React component that displays a banner when the expert mode is enabled.
+ *
+ * @props {object} props - The properties passed to the component.
+ * @prop {string} environmentId - The ID of the environment.
+ * @returns { React.FC<Props> | null} The rendered banner if the expert mode is enabled, otherwise null.
+ */
+export const ExpertBanner: React.FC<Props> = ({ environmentId }) => {
+  const [errorMessage, setMessage] = useState<string | undefined>(undefined);
   const { environmentModifier } = useContext(DependencyContext);
+  const { mutate, isError, error } = useUpdateEnvConfig(environmentId);
+  const [isLoading, setIsLoading] = useState(false); // isLoading is to indicate the asynchronous operation is in progress, as we need to wait until setting will be updated, getters are still in the V1
+
+  useEffect(() => {
+    if (isError) {
+      setMessage(error.message);
+      setIsLoading(false);
+    }
+  }, [isError, error]);
 
   return environmentModifier.useIsExpertModeEnabled() ? (
-    <React.Fragment>
+    <>
+      {isError && errorMessage && (
+        <ToastAlert
+          data-testid="ToastAlert"
+          title={words("error")}
+          message={errorMessage}
+          setMessage={setMessage}
+        />
+      )}
       <Banner
         isSticky
         variant="red"
         id="expert-mode-banner"
         aria-label="expertModeActive"
       >
-        LSM expert mode is enabled, proceed with caution.
+        LSM expert mode is enabled, proceed with caution.{" "}
+        <Button
+          variant="link"
+          isInline
+          onClick={() => {
+            setIsLoading(true);
+            mutate({ id: "enable_lsm_expert_mode", value: false });
+          }}
+        >
+          {words("banner.disableExpertMode")}
+        </Button>
+        {isLoading && <StyledSpinner size="sm" />}
       </Banner>
-    </React.Fragment>
+    </>
   ) : null;
 };
+
+const StyledSpinner = styled(Spinner)`
+  margin-left: 0.5rem;
+  --pf-v5-c-spinner--Color: white;
+`;
