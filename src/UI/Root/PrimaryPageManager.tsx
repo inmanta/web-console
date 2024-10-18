@@ -1,6 +1,6 @@
 import React from "react";
 import { PageManager, Page, RouteDictionary, PageDictionary } from "@/Core";
-import { InstanceComposerPage } from "@/Slices/InstanceComposer/UI";
+import { InstanceComposerPage } from "@/Slices/InstanceComposerCreator/UI";
 import { InstanceComposerEditorPage } from "@/Slices/InstanceComposerEditor/UI";
 import { InstanceComposerViewerPage } from "@/Slices/InstanceComposerViewer/UI";
 import { OrderDetailsPage } from "@/Slices/OrderDetails/UI";

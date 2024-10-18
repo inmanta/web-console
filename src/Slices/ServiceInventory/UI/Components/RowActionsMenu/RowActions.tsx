@@ -37,7 +37,6 @@ export interface InstanceActionsProps {
   editDisabled: boolean;
   deleteDisabled: boolean;
   diagnoseDisabled: boolean;
-  composerAvailable: boolean;
   availableStates: string[];
 }
 
@@ -46,7 +45,6 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
   editDisabled,
   deleteDisabled,
   diagnoseDisabled,
-  composerAvailable,
   availableStates,
 }) => {
   const { routeManager, environmentModifier, featureManager } =
@@ -61,8 +59,7 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
   const menuRef = React.useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = React.useState(false);
 
-  const composerEnabled =
-    featureManager.isComposerEnabled() && composerAvailable;
+  const composerEnabled = featureManager.isComposerEnabled();
 
   const onToggleClick = () => {
     setIsOpen(!isOpen);
@@ -181,7 +178,7 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
                 })}
                 isDisabled={editDisabled}
               >
-                {words("inventory.instanceComposer.editButton")}
+                {words("instanceComposer.editButton")}
               </Link>
             </MenuItem>
           )}
@@ -194,7 +191,7 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
                   instance: instance.id,
                 })}
               >
-                {words("inventory.instanceComposer.showButton")}
+                {words("instanceComposer.showButton")}
               </Link>
             </MenuItem>
           )}

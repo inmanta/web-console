@@ -150,7 +150,7 @@ export const InstanceActions: React.FC = () => {
                   instance: instance.id,
                 })}
               >
-                {words("inventory.instanceComposer.editButton")}
+                {words("instanceComposer.editButton")}
               </Link>
             </DropdownItem>
           ) : (
@@ -167,7 +167,7 @@ export const InstanceActions: React.FC = () => {
                   instance: instance.id,
                 })}
               >
-                {words("inventory.instanceComposer.showButton")}
+                {words("instanceComposer.showButton")}
               </Link>
             </DropdownItem>
           )}
