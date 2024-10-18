@@ -69,7 +69,7 @@ interface CanvasProviderInterface {
 }
 
 /**
- * CanvasContext is a React context that provides a way to pass data through the component tree without having to pass props down manually at every level.
+ * CanvasContext is a React context that provides a way to share the state of the Composer between all its children components.
  * It is used to share common information that can be considered "global" for a tree of React components.
  *
  * The context includes the following values:
