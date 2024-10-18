@@ -28,7 +28,8 @@ interface Props {
 /**
  * ComposerEditorProvider component
  *
- * This component is responsible for providing the instance data to the Canvas component through Context.
+ * This component is responsible for providing the service model related data to the Canvas component through Context.
+ * It fetches the service models for the entire catalog, and the inventories for the all Inter-service relations that can be connected to the created instance and most importantly instance user want to edit with all it's closest inter-service relations.
  * The difference from ComposerCreatorProvider is that this component also fetches the instance data, it's done to avoid unnecessary requests when displaying composer for creating new instances
  * It also handles the state and effects related to these data.
  *
@@ -127,7 +128,7 @@ export const ComposerEditorProvider: React.FC<Props> = ({
           message={words("instanceComposer.noServiceModel.errorMessage")(
             serviceName,
           )}
-          aria-label="ComposerEditor-NoMAinService"
+          aria-label="ComposerEditor-NoMainService_failed"
           retry={serviceModelsQuery.refetch}
         />
       );

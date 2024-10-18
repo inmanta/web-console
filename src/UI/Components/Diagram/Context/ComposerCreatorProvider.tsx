@@ -24,7 +24,7 @@ interface Props {
  * ComposerCreatorProvider component
  *
  * This component is responsible for providing the service model related data to the Canvas component through Context.
- * It fetches all service models and the related inventories.
+ * It fetches the service models for the entire catalog, and the inventories for the all Inter-service relations that can be connected to the created instance.
  * It also handles the state and effects related to these data.
  * 
  * @props {Props} props - The properties that define the behavior and display of the component.
@@ -93,7 +93,7 @@ export const ComposerCreatorProvider: React.FC<Props> = ({ serviceName }) => {
           message={words("instanceComposer.noServiceModel.errorMessage")(
             serviceName,
           )}
-          aria-label="ComposerCreatorProvider-NoMainService"
+          aria-label="ComposerCreatorProvider-noServiceModel_failed"
           retry={serviceModels.refetch}
         />
       );
