@@ -23,7 +23,7 @@ import { CanvasContext } from "./Context";
 export const CanvasProvider: React.FC<React.PropsWithChildren<unknown>> = ({
   children,
 }) => {
-  const [looseEmbedded, setLooseEmbedded] = useState<Set<string>>(new Set());
+  const [looseElement, setLooseElement] = useState<Set<string>>(new Set());
   const [cellToEdit, setCellToEdit] = useState<dia.CellView | null>(null);
   const [dictToDisplay, setDictToDisplay] = useState<DictDialogData | null>(
     null,
@@ -64,9 +64,9 @@ export const CanvasProvider: React.FC<React.PropsWithChildren<unknown>> = ({
         setCellToEdit: (value: dia.CellView | null) => {
           setCellToEdit(value);
         },
-        looseEmbedded,
-        setLooseEmbedded: (value: Set<string>) => {
-          setLooseEmbedded(value);
+        looseElement,
+        setLooseElement: (value: Set<string>) => {
+          setLooseElement(value);
         },
         fields,
         setFields: (value: Field[]) => {

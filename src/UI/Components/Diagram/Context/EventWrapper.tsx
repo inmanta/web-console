@@ -23,8 +23,8 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
     setServiceOrderItems,
     setCellToEdit,
     setDictToDisplay,
-    looseEmbedded,
-    setLooseEmbedded,
+    looseElement,
+    setLooseElement,
   } = useContext(CanvasContext);
 
   /**
@@ -35,19 +35,19 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
    *
    * @returns {void}
    */
-  const handleLooseEmbeddedEvent = (event): void => {
+  const handleLooseElementEvent = (event): void => {
     const customEvent = event as CustomEvent;
     const eventData: { kind: EmbeddedEventEnum; id: string } = JSON.parse(
       customEvent.detail,
     );
-    const newSet = new Set(looseEmbedded);
+    const newSet = new Set(looseElement);
 
     if (eventData.kind === "remove") {
       newSet.delete(eventData.id);
     } else {
       newSet.add(eventData.id);
     }
-    setLooseEmbedded(newSet);
+    setLooseElement(newSet);
   };
 
   /**
@@ -104,7 +104,7 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
   };
 
   /**
-   * Handles updating the stencil state for the embedded entities.
+   * Handles updating the stencil state
    * If the current count of the instances created from adequate stencil is more than or equal to the max count,, the adequate stencil element will become disabled.
    *
    * @param {CustomEvent} event - The event object.
@@ -165,7 +165,7 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
   useEffect(() => {
     document.addEventListener("openDictsModal", handleDictEvent);
     document.addEventListener("sendCellToSidebar", handleEditEvent);
-    document.addEventListener("looseEmbedded", handleLooseEmbeddedEvent);
+    document.addEventListener("looseElement", handleLooseElementEvent);
     document.addEventListener(
       "updateServiceOrderItems",
       handleUpdateServiceOrderItems,
@@ -175,7 +175,7 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
     return () => {
       document.removeEventListener("openDictsModal", handleDictEvent);
       document.removeEventListener("sendCellToSidebar", handleEditEvent);
-      document.removeEventListener("looseEmbedded", handleLooseEmbeddedEvent);
+      document.removeEventListener("looseElement", handleLooseElementEvent);
       document.removeEventListener(
         "updateServiceOrderItems",
         handleUpdateServiceOrderItems,

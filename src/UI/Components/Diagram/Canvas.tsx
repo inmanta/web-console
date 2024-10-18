@@ -99,7 +99,7 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
       return;
     }
 
-    const sidebar = new StencilSidebar(
+    const stencilSidebar = new StencilSidebar(
       LeftSidebar.current,
       scroller,
       relatedInventoriesQuery.data,
@@ -107,14 +107,13 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
       serviceModels,
     );
 
-    setStencilSidebar(sidebar);
+    setStencilSidebar(stencilSidebar);
 
-    return () => sidebar.remove();
+    return () => stencilSidebar.remove();
   }, [scroller, relatedInventoriesQuery.data, mainService, serviceModels]);
 
   /**
    * add the instances to the diagram only when the stencil sidebar, diagram handlers, service models, main service and stencil state are defined
-   *
    * we need to add instances after stencil has been created to ensure that the stencil will get updated in case there are any embedded entities and relations that will get appendend on the canvas
    */
   useEffect(() => {

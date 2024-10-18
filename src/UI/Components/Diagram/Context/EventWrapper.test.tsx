@@ -16,63 +16,63 @@ const setup = (testingComponent: JSX.Element) => {
   );
 };
 
-describe("looseEmbedded", () => {
+describe("looseElement", () => {
   const TestingComponent = (): JSX.Element => {
-    const { looseEmbedded } = useContext(CanvasContext);
+    const { looseElement } = useContext(CanvasContext);
 
     return (
       <div>
-        <span data-testid="looseEmbedded">{looseEmbedded.size}</span>
+        <span data-testid="looseElement">{looseElement.size}</span>
       </div>
     );
   };
 
-  it("looseEmbedded Event handler can successfully add and remove items", async () => {
+  it("looseElement Event handler can successfully add and remove items", async () => {
     render(setup(<TestingComponent />));
 
-    expect(screen.getByTestId("looseEmbedded")).toHaveTextContent("0");
+    expect(screen.getByTestId("looseElement")).toHaveTextContent("0");
 
     await act(async () => {
       document.dispatchEvent(
-        new CustomEvent("looseEmbedded", {
+        new CustomEvent("looseElement", {
           detail: JSON.stringify({ kind: "add", id: "1" }),
         }),
       );
     });
-    expect(screen.getByTestId("looseEmbedded")).toHaveTextContent("1");
+    expect(screen.getByTestId("looseElement")).toHaveTextContent("1");
 
     await act(async () => {
       document.dispatchEvent(
-        new CustomEvent("looseEmbedded", {
+        new CustomEvent("looseElement", {
           detail: JSON.stringify({ kind: "remove", id: "1" }),
         }),
       );
     });
-    expect(screen.getByTestId("looseEmbedded")).toHaveTextContent("0");
+    expect(screen.getByTestId("looseElement")).toHaveTextContent("0");
   });
 
-  it("looseEmbedded Event handler won't duplicate the same id", async () => {
+  it("looseElement Event handler won't duplicate the same id", async () => {
     render(setup(<TestingComponent />));
 
-    expect(screen.getByTestId("looseEmbedded")).toHaveTextContent("0");
+    expect(screen.getByTestId("looseElement")).toHaveTextContent("0");
 
     await act(async () => {
       document.dispatchEvent(
-        new CustomEvent("looseEmbedded", {
+        new CustomEvent("looseElement", {
           detail: JSON.stringify({ kind: "add", id: "1" }),
         }),
       );
     });
-    expect(screen.getByTestId("looseEmbedded")).toHaveTextContent("1");
+    expect(screen.getByTestId("looseElement")).toHaveTextContent("1");
 
     await act(async () => {
       document.dispatchEvent(
-        new CustomEvent("looseEmbedded", {
+        new CustomEvent("looseElement", {
           detail: JSON.stringify({ kind: "add", id: "1" }),
         }),
       );
     });
-    expect(screen.getByTestId("looseEmbedded")).toHaveTextContent("1");
+    expect(screen.getByTestId("looseElement")).toHaveTextContent("1");
   });
 });
 
@@ -116,7 +116,7 @@ describe("cellToEdit", () => {
     );
   };
 
-  it("looseEmbedded Event handler assign the data correctly to the Context", async () => {
+  it("looseElement Event handler assign the data correctly to the Context", async () => {
     render(setup(<TestingComponent />));
 
     expect(screen.getByTestId("cellToEdit")).toHaveTextContent("null");

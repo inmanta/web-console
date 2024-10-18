@@ -41,7 +41,7 @@ export const Toolbar: React.FC<Props> = ({ serviceName, editable }) => {
   const { serviceModels, mainService, instance } = useContext(
     InstanceComposerContext,
   );
-  const { serviceOrderItems, isDirty, looseEmbedded, diagramHandlers } =
+  const { serviceOrderItems, isDirty, looseElement, diagramHandlers } =
     useContext(CanvasContext);
   const { routeManager, environmentHandler } = useContext(DependencyContext);
 
@@ -147,7 +147,7 @@ export const Toolbar: React.FC<Props> = ({ serviceName, editable }) => {
             isDisabled={
               serviceOrderItems.size < 1 ||
               !isDirty ||
-              looseEmbedded.size > 0 ||
+              looseElement.size > 0 ||
               !editable
             }
           >

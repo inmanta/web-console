@@ -48,18 +48,20 @@ export const ComposerEditorProvider: React.FC<Props> = ({
   const { environmentHandler } = useContext(DependencyContext);
   const environment = environmentHandler.useId();
 
-  const serviceModels = useGetAllServiceModels(environment).useContinuous();
+  const serviceModelsQuery =
+    useGetAllServiceModels(environment).useContinuous();
 
   const mainService = useMemo(
-    () => serviceModels.data?.find((service) => service.name === serviceName),
-    [serviceModels.data, serviceName],
+    () =>
+      serviceModelsQuery.data?.find((service) => service.name === serviceName),
+    [serviceModelsQuery.data, serviceName],
   );
 
-  const instanceWithRelations = useGetInstanceWithRelations(
+  const instanceWithRelationsQuery = useGetInstanceWithRelations(
     instance,
     environment,
     mainService,
-  ).useContinuous();
+  ).useOneTime();
 
   const relatedInventoriesQuery = useGetInventoryList(
     relatedServiceNames,
@@ -67,21 +69,39 @@ export const ComposerEditorProvider: React.FC<Props> = ({
   ).useContinuous();
 
   useEffect(() => {
-    if (serviceModels.isSuccess) {
+    if (serviceModelsQuery.isSuccess) {
       if (mainService) {
         setRelatedServiceNames(findInterServiceRelations(mainService));
       }
     }
-  }, [serviceModels.isSuccess, serviceName, serviceModels.data, mainService]);
+  }, [
+    serviceModelsQuery.isSuccess,
+    serviceName,
+    serviceModelsQuery.data,
+    mainService,
+  ]);
 
-  if (serviceModels.isError) {
+  if (serviceModelsQuery.isError) {
     return (
       <ErrorView
         data-testid="ErrorView"
         title={words("error")}
-        message={words("error.general")(serviceModels.error.message)}
-        aria-label="ServicesWithMainProvider-failed"
-        retry={serviceModels.refetch}
+        message={words("error.general")(serviceModelsQuery.error.message)}
+        aria-label="ComposerEditor-serviceModelsQuery_failed"
+        retry={serviceModelsQuery.refetch}
+      />
+    );
+  }
+  if (instanceWithRelationsQuery.isError) {
+    return (
+      <ErrorView
+        data-testid="ErrorView"
+        title={words("error")}
+        message={words("error.general")(
+          instanceWithRelationsQuery.error.message,
+        )}
+        aria-label="ComposerEditor-instanceWithRelationsQuery_failed"
+        retry={instanceWithRelationsQuery.refetch}
       />
     );
   }
@@ -92,13 +112,13 @@ export const ComposerEditorProvider: React.FC<Props> = ({
         data-testid="ErrorView"
         title={words("error")}
         message={words("error.general")(relatedInventoriesQuery.error.message)}
-        aria-label="ServicesWithMainProvider-failed"
+        aria-label="ComposerEditor-relatedInvetoriesQuery_failed"
         retry={relatedInventoriesQuery.refetch}
       />
     );
   }
 
-  if (serviceModels.isSuccess && instanceWithRelations.isSuccess) {
+  if (serviceModelsQuery.isSuccess && instanceWithRelationsQuery.isSuccess) {
     if (!mainService) {
       return (
         <ErrorView
@@ -107,8 +127,8 @@ export const ComposerEditorProvider: React.FC<Props> = ({
           message={words("instanceComposer.noServiceModel.errorMessage")(
             serviceName,
           )}
-          aria-label="ServicesWithMainProvider-NoMAinService"
-          retry={serviceModels.refetch}
+          aria-label="ComposerEditor-NoMAinService"
+          retry={serviceModelsQuery.refetch}
         />
       );
     }
@@ -117,8 +137,8 @@ export const ComposerEditorProvider: React.FC<Props> = ({
       <InstanceComposerContext.Provider
         value={{
           mainService,
-          serviceModels: serviceModels.data,
-          instance: instanceWithRelations.data,
+          serviceModels: serviceModelsQuery.data,
+          instance: instanceWithRelationsQuery.data,
           relatedInventoriesQuery: relatedInventoriesQuery,
         }}
       >
@@ -129,5 +149,5 @@ export const ComposerEditorProvider: React.FC<Props> = ({
     );
   }
 
-  return <LoadingView aria-label="ServicesWithMainProvider-loading" />;
+  return <LoadingView aria-label="ComposerEditor-loading" />;
 };

@@ -19,7 +19,7 @@ export const Page: React.FC = () => {
     return (
       <EmptyView
         message={words("instanceComposer.disabled")}
-        aria-label="ComposerView-Disabled"
+        aria-label="InstaceComposerEditor-Disabled"
       />
     );
   }

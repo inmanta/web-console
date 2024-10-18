@@ -41,12 +41,8 @@ const createHalo = (
     //cellView.model has the same structure as dia.Element needed as parameter to .getNeighbors() yet typescript complains
     const connectedElements = graph.getNeighbors(cellView.model as dia.Element);
 
-    if (
-      cellView.model.get("isEmbedded") &&
-      cellView.model.get("embeddedTo") === undefined
-    ) {
-      toggleLooseElement(cellView, EmbeddedEventEnum.REMOVE);
-    }
+    toggleLooseElement(cellView, EmbeddedEventEnum.REMOVE);
+
     connectedElements.forEach((element) => {
       const elementAsService = element as ServiceEntityBlock;
       const isEmbedded = element.get("isEmbedded");
@@ -83,6 +79,10 @@ const createHalo = (
           new CustomEvent("updateServiceOrderItems", {
             detail: { cell: elementAsService, action: ActionEnum.UPDATE },
           }),
+        );
+        toggleLooseElement(
+          paper.findViewByModel(element),
+          EmbeddedEventEnum.ADD,
         );
       }
     });

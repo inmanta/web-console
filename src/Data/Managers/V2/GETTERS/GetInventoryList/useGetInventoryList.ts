@@ -15,7 +15,7 @@ export interface Inventories {
 /**
  * Return Signature of the useGetInventoryList React Query
  */
-interface GetRelatedInventories {
+interface GetInventoryList {
   useOneTime: () => UseQueryResult<Inventories, Error>;
   useContinuous: () => UseQueryResult<Inventories, Error>;
 }
@@ -26,14 +26,14 @@ interface GetRelatedInventories {
  * @param {string[]} serviceNames - the  array of service names
  * @param environment {string} - the environment in which the instance belongs
  *
- * @returns {GetRelatedInventories} An object containing the different available queries.
+ * @returns {GetInventoryList} An object containing the different available queries.
  * @returns {UseQueryResult<Inventories, Error>} returns.useOneTime - Fetch the service inventories as a single query.
  * @returns {UseQueryResult<Inventories, Error>} returns.useContinuous - Fetch the service inventories  with a recursive query with an interval of 5s.
  */
 export const useGetInventoryList = (
   serviceNames: string[],
   environment: string,
-): GetRelatedInventories => {
+): GetInventoryList => {
   const { createHeaders, handleErrors } = useFetchHelpers();
   const headers = createHeaders(environment);
 
@@ -76,9 +76,7 @@ export const useGetInventoryList = (
    */
   const fetchAllServices = async (): Promise<Inventories> => {
     const responses = await Promise.all(
-      serviceNames.map(
-        async (serviceName) => await fetchSingleService(serviceName),
-      ),
+      serviceNames.map(async (serviceName) => fetchSingleService(serviceName)),
     );
 
     // Map the responses to an object of service names and arrays of service instances for each service
@@ -90,13 +88,13 @@ export const useGetInventoryList = (
   return {
     useOneTime: (): UseQueryResult<Inventories, Error> =>
       useQuery({
-        queryKey: ["get_inventory__list-one_time", serviceNames],
+        queryKey: ["get_inventory_list-one_time", serviceNames],
         queryFn: fetchAllServices,
         retry: false,
       }),
     useContinuous: (): UseQueryResult<Inventories, Error> =>
       useQuery({
-        queryKey: ["get_inventory__list-continuous", serviceNames],
+        queryKey: ["get_inventory_list-continuous", serviceNames],
         queryFn: fetchAllServices,
         refetchInterval: 5000,
       }),

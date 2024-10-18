@@ -124,11 +124,14 @@ export const checkIfConnectionIsAllowed = (
   srcView: dia.CellView | dia.ElementView,
   rules: ConnectionRules,
 ): boolean => {
+  if (!tgtView) {
+    return false;
+  }
   let areSourceConnectionsExhausted = false;
   let areTargetConnectionExhausted = false;
   let doesSourceIsEmbeddedWithExhaustedConnections = false;
   let doesTargetIsEmbeddedWithExhaustedConnections = false;
-  const targetName = (tgtView?.model as ServiceEntityBlock).getName();
+  const targetName = (tgtView.model as ServiceEntityBlock).getName();
   const sourceName = (srcView.model as ServiceEntityBlock).getName();
 
   const targetRule = rules[targetName].find(
@@ -579,7 +582,7 @@ export const toggleLooseElement = (
       break;
   }
   document.dispatchEvent(
-    new CustomEvent("looseEmbedded", {
+    new CustomEvent("looseElement", {
       detail: JSON.stringify({
         kind,
         id: cellView.model.id,

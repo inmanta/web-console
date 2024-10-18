@@ -16,7 +16,7 @@ import {
 } from "@/Core";
 import { Dashboard } from "@/Slices/Dashboard";
 import { DuplicateInstance } from "@/Slices/DuplicateInstance";
-import { InstanceComposer } from "@/Slices/InstanceComposer";
+import { InstanceComposer } from "@/Slices/InstanceComposerCreator";
 import { InstanceComposerEditor } from "@/Slices/InstanceComposerEditor";
 import { InstanceComposerViewer } from "@/Slices/InstanceComposerViewer";
 import { ServiceDetails } from "@/Slices/ServiceDetails";

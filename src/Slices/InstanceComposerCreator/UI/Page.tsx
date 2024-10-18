@@ -4,7 +4,7 @@ import { EmptyView, PageContainer } from "@/UI/Components";
 import { ComposerCreatorProvider } from "@/UI/Components/Diagram/Context/ComposerCreatorProvider";
 
 /**
- * Renders the Page component for the Instance Composer Page.
+ * Renders the Page component for the Instance Composer Creator Page.
  * If the composer feature is enabled, it renders the Canvas.
  * If the composer feature is disabled, it renders an EmptyView component with a message indicating that the composer is disabled.
  *

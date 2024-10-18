@@ -54,8 +54,8 @@ interface CanvasProviderInterface {
   cellToEdit: dia.CellView | null;
   setCellToEdit: (value: dia.CellView | null) => void;
 
-  looseEmbedded: Set<string>;
-  setLooseEmbedded: (value: Set<string>) => void;
+  looseElement: Set<string>;
+  setLooseElement: (value: Set<string>) => void;
 
   serviceOrderItems: Map<string, ComposerServiceOrderItem>;
   setServiceOrderItems: React.Dispatch<
@@ -83,11 +83,11 @@ interface CanvasProviderInterface {
  * @prop {(value: Field[]): void} setFields: Function to set the form fields.
  * @prop {dia.CellView | null} cellToEdit: The cell to edit.
  * @prop {(value: dia.CellView | null): void} setCellToEdit: Function to set the cell to edit.
- * @prop {Set<string>} looseEmbedded: The set of loose embedded entities on canvas.
- * @prop {(value: Set<string>): void} setLooseEmbedded: Function to set the loose embedded entities.
+ * @prop {Set<string>} looseElement: The set of loose embedded entities on canvas.
+ * @prop {(value: Set<string>): void} setLooseElement: Function to set the loose embedded entities.
  * @prop {Map<string, ComposerServiceOrderItem>} serviceOrderItems: The instances to send to the backend.
  * @prop {React.Dispatch<React.SetStateAction<Map<string, ComposerServiceOrderItem>>>} setServiceOrderItems: Function to set the instances to send.
- * @prop {StencilState | null} stencilState: The state of the stencil.
+ * @prop {StencilState | null} stencilState: The state of the stencil it holds information about amount of embedded entities of each type on the canvas, and if any more can be added.
  * @prop {React.Dispatch<React.SetStateAction<StencilState | null>>} setStencilState: Function to set the state of the stencil.
  * @prop {boolean} isDirty: A flag indicating whether the canvas is dirty, which mean that service instance was modified.
  */
@@ -102,8 +102,8 @@ export const CanvasContext = createContext<CanvasProviderInterface>({
   setFields: () => {},
   cellToEdit: null,
   setCellToEdit: () => {},
-  looseEmbedded: new Set(),
-  setLooseEmbedded: () => {},
+  looseElement: new Set(),
+  setLooseElement: () => {},
   serviceOrderItems: new Map(),
   setServiceOrderItems: () => {},
   stencilState: {},
