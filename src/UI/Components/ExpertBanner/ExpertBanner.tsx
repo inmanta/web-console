@@ -21,7 +21,7 @@ export const ExpertBanner: React.FC<Props> = ({ environmentId }) => {
   const [errorMessage, setMessage] = useState<string | undefined>(undefined);
   const { environmentModifier } = useContext(DependencyContext);
   const { mutate, isError, error } = useUpdateEnvConfig(environmentId);
-  const [isLoading, setIsLoading] = useState(false); // isLoading is to indicate the asynchronous operation is in progress, as we need to wait until setting will be updated, getters are still in the V1
+  const [isLoading, setIsLoading] = useState(false); // isLoading is to indicate the asynchronous operation is in progress, as we need to wait until setting will be updated, getters are still in the V1 - task https://github.com/inmanta/web-console/issues/5999
 
   useEffect(() => {
     if (isError) {
