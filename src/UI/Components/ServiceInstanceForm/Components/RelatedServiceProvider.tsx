@@ -8,7 +8,7 @@ import { AutoCompleteInputProvider } from "./AutoCompleteInputProvider";
 interface Props {
   serviceName: string;
   attributeName: string;
-  attributeValue: string | string[];
+  attributeValue: string | string[] | null;
   description?: string;
   isOptional: boolean;
   handleInputChange: (value) => void;

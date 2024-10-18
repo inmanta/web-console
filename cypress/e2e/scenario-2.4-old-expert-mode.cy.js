@@ -353,16 +353,8 @@ if (Cypress.env("edition") === "iso") {
       cy.get("button").contains("Yes").click();
       cy.get('[aria-label="ServiceInventory-Empty"').should("to.be.visible");
 
-      // At the end go back to settings and turn expert mode off
-      cy.get(".pf-v5-c-nav__item").contains("Settings").click();
-      cy.get("button").contains("Configuration").click();
-      cy.get('[aria-label="Row-enable_lsm_expert_mode"]')
-        .find(".pf-v5-c-switch")
-        .click();
-      cy.get('[data-testid="Warning"]').should("exist");
-      cy.get('[aria-label="Row-enable_lsm_expert_mode"]')
-        .find('[aria-label="SaveAction"]')
-        .click();
+      // At the end turn expert mode off through the banner
+      cy.get("button").contains("Disable").click();
       cy.get('[data-testid="Warning"]').should("not.exist");
       cy.get("[id='expert-mode-banner']").should("not.exist");
     });
