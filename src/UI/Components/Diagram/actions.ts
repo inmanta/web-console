@@ -336,7 +336,7 @@ export function appendInstance(
           .querySelector(`.${appendedInstances[0].get("stencilName")}_text`)
           ?.classList.add("stencil_text-disabled");
 
-        //try to connected appended entities to the one existing in the graph
+        //try to connect appended entities to the one existing in the graph
         appendedInstances.forEach((cell) => {
           const relationMap = cell.get("relatedTo") as Map<string, string>;
           const serviceModel = cell.get("serviceModel") as ServiceModel;
