@@ -113,7 +113,7 @@ export function appendInstance(
     attributes,
   );
 
-  // If the instance is not main, we need to apply its stencil name to the shape to later disable its adequate stencil in the sidebar
+  // If the instance is not main, we need to apply its stencil name to the shape to later disable its coressponding stencil in the sidebar
   if (!isMainInstance) {
     instanceAsTable.set(
       "stencilName",
@@ -191,7 +191,7 @@ export function appendInstance(
           .querySelector(`.${appendedInstances[0].get("stencilName")}_text`)
           ?.classList.add("stencil_text-disabled");
 
-        //try to connected appended entities to the one existing in the graph
+        //try to connect appended entities to the one existing in the graph
         appendedInstances.forEach((cell) => {
           const relationMap = cell.get("relatedTo") as Map<string, string>;
           const serviceModel = cell.get("serviceModel") as ServiceModel;

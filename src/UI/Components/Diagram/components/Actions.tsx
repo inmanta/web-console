@@ -51,7 +51,7 @@ export const Actions: React.FC<Props> = ({ serviceName, editable }) => {
   const environment = environmentHandler.useId();
 
   const metadataMutation = usePostMetadata(environment);
-  const oderMutation = usePostOrder(environment);
+  const orderMutation = usePostOrder(environment);
 
   const navigate = useNavigate();
   const url = routeManager.useUrl("Inventory", {
@@ -90,11 +90,11 @@ export const Actions: React.FC<Props> = ({ serviceName, editable }) => {
       });
     }
 
-    oderMutation.mutate(orderItems);
+    orderMutation.mutate(orderItems);
   };
 
   useEffect(() => {
-    if (oderMutation.isSuccess) {
+    if (orderMutation.isSuccess) {
       //If response is successful then show feedback notification and redirect user to the service inventory view
       setAlertType(AlertVariant.success);
       setAlertMessage(words("instanceComposer.success"));
@@ -102,12 +102,12 @@ export const Actions: React.FC<Props> = ({ serviceName, editable }) => {
       setTimeout(() => {
         navigate(url);
       }, 1000);
-    } else if (oderMutation.isError) {
+    } else if (orderMutation.isError) {
       setAlertType(AlertVariant.danger);
-      setAlertMessage(oderMutation.error.message);
+      setAlertMessage(orderMutation.error.message);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [oderMutation.isSuccess, oderMutation.isError]);
+  }, [orderMutation.isSuccess, orderMutation.isError]);
 
   return (
     <Container
