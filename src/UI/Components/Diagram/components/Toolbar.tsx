@@ -51,7 +51,7 @@ export const Toolbar: React.FC<Props> = ({ serviceName, editable }) => {
   const environment = environmentHandler.useId();
 
   const metadataMutation = usePostMetadata(environment);
-  const oderMutation = usePostOrder(environment);
+  const orderMutation = usePostOrder(environment);
 
   const navigate = useNavigate();
   const url = routeManager.useUrl("Inventory", {
