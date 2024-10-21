@@ -259,7 +259,7 @@ export function appendInstance(
     attributes,
   );
 
-  // If the instance is not main, we need to apply its stencil name to the shape to later disable its adequate stencil in the sidebar
+  // If the instance is not main, we need to apply its stencil name to the shape to later disable its coressponding stencil in the sidebar
   if (!isMainInstance) {
     instanceAsTable.set(
       "stencilName",
