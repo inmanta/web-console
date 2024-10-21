@@ -12,7 +12,7 @@ import { CanvasContext, InstanceComposerContext } from "../Context/Context";
 import { getServiceOrderItems } from "../helpers";
 
 /**
- * Properties for the Toolbar component.
+ * Properties for the Actions component.
  *
  * @interface
  * @prop {string} serviceName - The name of the service.
@@ -24,9 +24,9 @@ interface Props {
 }
 
 /**
- * Toolbar component
+ * Actions component
  *
- * This component represents the toolbar of the Composer.
+ * This component represents the actions for the Composer.
  * It contains controls to cancel creating or editing instance or sending serviceOrderItems to the backend.
  * Also, it shows feedback notification to the user.
  *
@@ -35,9 +35,9 @@ interface Props {
  * @prop {boolean} props.editable - A flag indicating if the diagram is editable.
  * @prop {DiagramHandlers | null} props.diagramHandlers - The handlers for various diagram actions.
  *
- * @returns {React.FC} The Toolbar component.
+ * @returns {React.FC} The Actions component.
  */
-export const Toolbar: React.FC<Props> = ({ serviceName, editable }) => {
+export const Actions: React.FC<Props> = ({ serviceName, editable }) => {
   const { serviceModels, mainService, instance } = useContext(
     InstanceComposerContext,
   );
@@ -66,10 +66,7 @@ export const Toolbar: React.FC<Props> = ({ serviceName, editable }) => {
   const handleDeploy = () => {
     const coordinates = diagramHandlers?.getCoordinates();
 
-    const serviceOrderItems = getServiceOrderItems(
-      serviceOrderItems,
-      serviceModels,
-    )
+    const orderItems = getServiceOrderItems(serviceOrderItems, serviceModels)
       .filter((item) => item.action !== null)
       .map((instance) => ({
         ...instance,
@@ -93,7 +90,7 @@ export const Toolbar: React.FC<Props> = ({ serviceName, editable }) => {
       });
     }
 
-    oderMutation.mutate(serviceOrderItems);
+    oderMutation.mutate(orderItems);
   };
 
   useEffect(() => {

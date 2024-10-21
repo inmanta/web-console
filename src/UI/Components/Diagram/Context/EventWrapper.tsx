@@ -150,7 +150,7 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
         stencil.max !== undefined &&
         stencil.current >= stencil.max;
 
-      // If the current count of the instances created from given stencil is more than or equal to the max count, disable the stencil of given embedded entity
+      // As in the docstrings mentioned, If the current count of the instances created from given stencil is more than or equal to the max count, disable the stencil of given embedded entity
       elements.forEach(({ selector, class: className }) => {
         const element = document.querySelector(selector);
 

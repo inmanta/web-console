@@ -4,7 +4,7 @@ import { ui } from "@inmanta/rappid";
 import styled from "styled-components";
 import { CanvasContext, InstanceComposerContext } from "./Context";
 import { EventWrapper } from "./Context/EventWrapper";
-import { DictModal, RightSidebar, Toolbar } from "./components";
+import { DictModal, RightSidebar, Actions } from "./components";
 import { createConnectionRules, createStencilState } from "./helpers";
 import { diagramInit } from "./init";
 import { StencilSidebar } from "./stencil";
@@ -85,7 +85,7 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
   }, [mainService, serviceModels, isStencilStateReady]);
 
   /**
-   * create the stencil sidebar only left sidebar ref, the scroller, related inventories by inter-service relations, main service and service models are defined
+   * create the stencil sidebar only if sidebar ref, the scroller, related inventories by inter-service relations, main service and service models are defined
    * It's done in separate useEffect to enable eventual re-renders of the sidebar independently of the diagram, e.g. when the related inventories by inter-service relations are loaded
    */
   useEffect(() => {
@@ -166,10 +166,10 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
   return (
     <EventWrapper>
       <DictModal />
-      <Toolbar serviceName={mainService.name} editable={editable} />
+      <Actions serviceName={mainService.name} editable={editable} />
       <CanvasWrapper id="canvas-wrapper" data-testid="Composer-Container">
         <StencilContainer
-          className="stencil-sidebar"
+          className="left_sidebar"
           data-testid="left_sidebar"
           ref={LeftSidebar}
         />

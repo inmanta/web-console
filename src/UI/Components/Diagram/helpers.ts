@@ -1,4 +1,4 @@
-import { dia, g, highlighters } from "@inmanta/rappid";
+import { dia, g, highlighters, linkTools } from "@inmanta/rappid";
 import { isEqual } from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import {
@@ -774,3 +774,144 @@ export const updateServiceOrderItems = (
 
   return copiedInstances;
 };
+
+/**
+ * Function to display the methods to alter the connection objects - currently, the only function visible is the one removing connections.
+ * https://resources.jointjs.com/docs/jointjs/v3.6/joint.html#dia.LinkView
+ * https://resources.jointjs.com/docs/jointjs/v3.6/joint.html#linkTools
+ *
+ * @param {dia.Graph} graph JointJS graph object
+ * @param {dia.LinkView} linkView  - The view for the joint.dia.Link model.
+ * @param {ConnectionRules} connectionRules  - The rules for the connections between entities.
+ *
+ * @returns {void}
+ */
+export function showLinkTools(
+  graph: dia.Graph,
+  linkView: dia.LinkView,
+  connectionRules: ConnectionRules,
+) {
+  const source = linkView.model.source();
+  const target = linkView.model.target();
+
+  const sourceCell = graph.getCell(
+    source.id as dia.Cell.ID,
+  ) as ServiceEntityBlock;
+  const targetCell = graph.getCell(
+    target.id as dia.Cell.ID,
+  ) as ServiceEntityBlock;
+
+  /**
+   * checks if the connection between cells can be deleted thus if we should hide linkTool
+   * @param {ServiceEntityBlock} cellOne ServiceEntityBlock
+   * @param {ServiceEntityBlock} cellTwo ServiceEntityBlock
+   * @returns {boolean}
+   */
+  const shouldHideLinkTool = (
+    cellOne: ServiceEntityBlock,
+    cellTwo: ServiceEntityBlock,
+  ): boolean => {
+    const nameOne = cellOne.getName();
+    const nameTwo = cellTwo.getName();
+
+    const elementConnectionRule = connectionRules[nameOne].find(
+      (rule) => rule.name === nameTwo,
+    );
+
+    const isElementInEditMode: boolean | undefined =
+      cellOne.get("isInEditMode");
+
+    if (
+      isElementInEditMode &&
+      elementConnectionRule &&
+      elementConnectionRule.modifier !== "rw+"
+    ) {
+      return true;
+    }
+
+    return false;
+  };
+
+  if (
+    shouldHideLinkTool(sourceCell, targetCell) ||
+    shouldHideLinkTool(targetCell, sourceCell)
+  ) {
+    return;
+  }
+
+  const tools = new dia.ToolsView({
+    tools: [
+      new linkTools.Remove({
+        distance: "50%",
+        markup: [
+          {
+            tagName: "circle",
+            selector: "button",
+            attributes: {
+              r: 7,
+              class: "joint-link_remove-circle",
+              "stroke-width": 2,
+              cursor: "pointer",
+            },
+          },
+          {
+            tagName: "path",
+            selector: "icon",
+            attributes: {
+              d: "M -3 -3 3 3 M -3 3 3 -3",
+              class: "joint-link_remove-path",
+              "stroke-width": 2,
+              "pointer-events": "none",
+            },
+          },
+        ],
+        action: (_evt, linkView: dia.LinkView, toolView: dia.ToolView) => {
+          const source = linkView.model.source();
+          const target = linkView.model.target();
+
+          const sourceCell = graph.getCell(
+            source.id as dia.Cell.ID,
+          ) as ServiceEntityBlock;
+          const targetCell = graph.getCell(
+            target.id as dia.Cell.ID,
+          ) as ServiceEntityBlock;
+
+          /**
+           * Function that remove any data in this connection between cells
+           * @param {ServiceEntityBlock} elementCell cell that we checking
+           * @param {ServiceEntityBlock} disconnectingCell cell that is being connected to elementCell
+           * @returns {void}
+           */
+          const removeConnectionData = (
+            elementCell: ServiceEntityBlock,
+            disconnectingCell: ServiceEntityBlock,
+          ): void => {
+            const elementRelations = elementCell.getRelations();
+
+            // resolve any possible relation connections between cells
+            if (
+              elementRelations &&
+              elementRelations.has(String(disconnectingCell.id))
+            ) {
+              elementCell.removeRelation(String(disconnectingCell.id));
+
+              document.dispatchEvent(
+                new CustomEvent("updateServiceOrderItems", {
+                  detail: { cell: sourceCell, actions: ActionEnum.UPDATE },
+                }),
+              );
+            }
+          };
+
+          //as the connection between two cells is bidirectional we need attempt to remove data from both cells
+          removeConnectionData(sourceCell, targetCell);
+          removeConnectionData(targetCell, sourceCell);
+
+          linkView.model.remove({ ui: true, tool: toolView.cid });
+        },
+      }),
+    ],
+  });
+
+  linkView.addTools(tools);
+}

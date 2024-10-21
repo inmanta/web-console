@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Alert, Button, Flex, FlexItem, Form } from "@patternfly/react-core";
+import { Alert, Flex, FlexItem, Form } from "@patternfly/react-core";
 import { set, uniqueId } from "lodash";
 import styled from "styled-components";
 import { Field, InstanceAttributeModel, ServiceModel } from "@/Core";
@@ -10,6 +10,7 @@ import {
 } from "@/UI/Components/ServiceInstanceForm";
 import { FieldInput } from "@/UI/Components/ServiceInstanceForm/Components";
 import { words } from "@/UI/words";
+import { StyledButton } from "./RightSidebar";
 
 interface Props {
   serviceModel: ServiceModel;
@@ -50,11 +51,11 @@ export const EntityForm: React.FC<Props> = ({
     useState<InstanceAttributeModel>(initialState);
 
   /**
-   * Type representing a function to update the state within the form.
+   *function to update the state within the form.
    *
    * @param {string} path - The path within the form state to update.
    * @param {unknown} value - The new value to set at the specified path.
-   * @param {boolean} [multi] - Optional flag indicating if the update is for multiple values. Default is false.
+   * @param {boolean} [multi] - Optional flag indicating if the update is for an array of values.
    * @returns {void}
    */
   const getUpdate = (path: string, value: unknown, multi = false): void => {
@@ -78,6 +79,32 @@ export const EntityForm: React.FC<Props> = ({
         return set(clone, path, value);
       });
     }
+  };
+
+  /**
+   * Handles the cancel action for the form.
+   * Resets the form state to its initial state and calls the onCancel callback.
+   *
+   * @returns {void}
+   */
+  const handleCancel = (): void => {
+    setFormState(initialState);
+    onCancel();
+  };
+
+  /**
+   * Handles the save action for the form.
+   * Prevents the default button click behavior and calls the onSave callback with the current fields and form state.
+   *
+   * @param {React.MouseEvent<HTMLButtonElement, globalThis.MouseEvent>} event - The mouse event triggered by clicking the save button.
+   *
+   * @returns {void}
+   */
+  const handleSave = (
+    event: React.MouseEvent<HTMLButtonElement, globalThis.MouseEvent>,
+  ): void => {
+    event.preventDefault();
+    onSave(fields, formState);
   };
 
   useEffect(() => {
@@ -104,11 +131,7 @@ export const EntityForm: React.FC<Props> = ({
           <Alert
             variant="info"
             isInline
-            title={
-              isEdited
-                ? words("inventory.editInstance.noAttributes")
-                : words("inventory.addInstance.unselectedEntity")
-            }
+            title={words("instanceComposer.formModal.noAttributes")}
           />
         </FlexItem>
       )}
@@ -138,26 +161,12 @@ export const EntityForm: React.FC<Props> = ({
       {!isForDisplay && (
         <Flex justifyContent={{ default: "justifyContentCenter" }}>
           <FlexItem>
-            <StyledButton
-              variant="tertiary"
-              width={200}
-              onClick={() => {
-                setFormState(initialState);
-                onCancel();
-              }}
-            >
+            <StyledButton variant="tertiary" width={200} onClick={handleCancel}>
               {words("cancel")}
             </StyledButton>
           </FlexItem>
           <FlexItem>
-            <StyledButton
-              variant="primary"
-              width={200}
-              onClick={(event) => {
-                event.preventDefault();
-                onSave(fields, formState);
-              }}
-            >
+            <StyledButton variant="primary" width={200} onClick={handleSave}>
               {words("save")}
             </StyledButton>
           </FlexItem>
@@ -171,10 +180,4 @@ const StyledFlex = styled(Flex)`
   min-height: 100%;
   width: 100%;
   overflow-y: scroll;
-`;
-const StyledButton = styled(Button)`
-  --pf-v5-c-button--PaddingTop: 0px;
-  --pf-v5-c-button--PaddingBottom: 0px;
-  width: 101px;
-  height: 30px;
 `;

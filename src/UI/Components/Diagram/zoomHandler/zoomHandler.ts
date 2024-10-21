@@ -15,9 +15,9 @@ interface IconButton extends ui.widgets.button {
 }
 
 /**
- * IconButton class
+ * IconButton
  *
- * This class extends the ui.widgets.button class and represents a button with an icon.
+ * It extends the ui.widgets.button class and represents a button with an icon.
  * It provides methods for setting the icon and the tooltip of the button.
  *
  */
@@ -64,11 +64,11 @@ const IconButton = ui.widgets.button.extend({
 /**
  * ZoomHandlerService class
  *
- * This class is responsible for managing the navigation of the canvas.
+ * This class is responsible for managing the paning of the canvas.
  * It provides methods for zoom to fit, zooming in/out in the canvas and fullscreen toggle.
  *
  * @class
- * @prop {ui.Toolbar} toolbar - The toolbar object that contains the navigation controls.
+ * @prop {ui.Toolbar} toolbar - The toolbar object that contains the paning controls.
  * @method constructor - Constructs a new instance of the ZoomHandlerService class.
  * @param {HTMLElement} element - The HTML element that will contain the navigator.
  * @param {ui.PaperScroller} scroller - The scroller object that allows and zooming in the canvas.
@@ -255,14 +255,25 @@ export class ZoomHandlerService {
       "fullscreen",
     ) as IconButton;
 
+    const canvas = document.querySelector("#canvas-wrapper");
+    const banners = document.querySelectorAll(".pf-v5-c-banner");
+
+    if (canvas) {
+      canvas.classList.toggle("fullscreen", !!document.fullscreenElement);
+    }
+
+    if (banners) {
+      banners.forEach(
+        (el) =>
+          ((el as HTMLElement).style.display = document.fullscreenElement
+            ? "none"
+            : "block"),
+      );
+    }
+
     if (document.fullscreenElement) {
       this.changeDisplay("#page-sidebar", "none");
       this.changeDisplay("#page-header", "none");
-
-      document.querySelector("#canvas-wrapper")?.classList.add("fullscreen");
-      document
-        .querySelectorAll(".pf-v5-c-banner")
-        ?.forEach((el) => ((el as HTMLElement).style.display = "none"));
 
       fullscreenButton.setIcon(`${exitFullscreen}`);
       fullscreenButton.setTooltip(
@@ -271,11 +282,6 @@ export class ZoomHandlerService {
     } else {
       this.changeDisplay("#page-sidebar", "flex");
       this.changeDisplay("#page-header", "grid");
-
-      document.querySelector("#canvas-wrapper")?.classList.remove("fullscreen");
-      document
-        .querySelectorAll(".pf-v5-c-banner")
-        ?.forEach((el) => ((el as HTMLElement).style.display = "block"));
 
       fullscreenButton.setIcon(`${requestFullscreen}`);
       fullscreenButton.setTooltip(

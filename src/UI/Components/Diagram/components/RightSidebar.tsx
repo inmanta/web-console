@@ -22,6 +22,12 @@ import { EntityForm } from "./EntityForm";
  * When the user submits the edit form, the `onSave` callback is called with the updated attributes and the form state.
  * The user can also remove the entity by clicking the remove button, which triggers the `action:delete` event on the entity.
  *
+ * The removal differs from deleting the instance:
+ * Remove - removes the entity from the canvas only (does not delete the instance from the backend).
+ * Delete - deletes the instance from the backend.
+ *
+ * Deleting a whole instance is not possible through composer, we can only delete parts of the instance if the service model allows it.
+ *
  * @returns {React.FC} The RightSidebar component.
  */
 export const RightSidebar: React.FC = () => {
@@ -45,9 +51,9 @@ export const RightSidebar: React.FC = () => {
       return;
     }
 
-    const serviceModel = cellToEdit?.model.get("serviceModel");
-    const entityName = cellToEdit?.model.get("entityName");
-    const instanceAttributes = cellToEdit?.model.get("instanceAttributes");
+    const serviceModel = cellToEdit.model.get("serviceModel");
+    const entityName = cellToEdit.model.get("entityName");
+    const instanceAttributes = cellToEdit.model.get("instanceAttributes");
 
     if (serviceModel) {
       setDescription(serviceModel.description);
@@ -58,18 +64,29 @@ export const RightSidebar: React.FC = () => {
       setAttributes(instanceAttributes);
     }
 
-    const isCellCore = cellToEdit?.model.get("isCore");
+    setIsAllowedToRemove((_prev) => {
+      const isCellCore = cellToEdit.model.get("isCore");
 
-    //children entities are not allowed to be removed, as well as rw embedded entities in the edit form
-    const canBeRemoved = !cellToEdit.model.get("cantBeRemoved");
-    const lowerLimit = stencilState && stencilState[entityName]?.min;
+      //children entities are not allowed to be removed, as well as rw embedded entities in the edit form
+      const canBeRemoved = !cellToEdit.model.get("cantBeRemoved");
 
-    const isLowerLimitReached =
-      stencilState &&
-      lowerLimit &&
-      stencilState[entityName]?.current === lowerLimit;
+      if (!stencilState) {
+        return isCellCore && canBeRemoved;
+      }
 
-    setIsAllowedToRemove(!isCellCore && canBeRemoved && !isLowerLimitReached);
+      const entityState = stencilState[entityName];
+
+      if (!entityState) {
+        return isCellCore && canBeRemoved;
+      }
+
+      const lowerLimit = entityState.min;
+
+      const isLowerLimitReached =
+        lowerLimit && entityState.current === lowerLimit;
+
+      return !isCellCore && canBeRemoved && !isLowerLimitReached;
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cellToEdit]);
 
@@ -209,7 +226,7 @@ const Wrapper = styled.div`
   overflow: auto;
 `;
 
-const StyledButton = styled(Button)`
+export const StyledButton = styled(Button)`
   --pf-v5-c-button--PaddingTop: 0px;
   --pf-v5-c-button--PaddingBottom: 0px;
   width: 101px;

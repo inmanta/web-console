@@ -13,14 +13,12 @@ import {
   appendEmbeddedEntity,
   appendInstance,
   createComposerEntity,
-  handleInfoIcon,
+  addInfoIcon,
   populateGraphWithDefault,
-  showLinkTools,
   updateAttributes,
 } from "./actions";
-import { createConnectionRules } from "./helpers";
 import { ComposerPaper } from "./paper";
-import { Link, ServiceEntityBlock } from "./shapes";
+import { ServiceEntityBlock } from "./shapes";
 import { defineObjectsForJointJS } from "./testSetup";
 
 beforeAll(() => {
@@ -204,106 +202,6 @@ describe("updateAttributes", () => {
   });
 });
 
-describe("showLinkTools", () => {
-  const setup = (
-    isParentInEditMode: boolean,
-    isChildInEditMode: boolean,
-    modifier: "rw+" | "rw",
-  ) => {
-    const editable = true;
-    const graph = new dia.Graph({});
-    const connectionRules = createConnectionRules(
-      [parentModel, childModel],
-      {},
-    );
-    const paper = new ComposerPaper(connectionRules, graph, editable).paper;
-
-    connectionRules[childModel.name][0].modifier = modifier;
-
-    const isCore = false;
-    const isEmbedded = false;
-    const attributes = undefined;
-
-    const parentEntity = createComposerEntity(
-      parentModel,
-      isCore,
-      isParentInEditMode,
-      attributes,
-      isEmbedded,
-    );
-    const childEntity = createComposerEntity(
-      childModel,
-      isCore,
-      isChildInEditMode,
-      attributes,
-      isEmbedded,
-    );
-
-    graph.addCell(parentEntity);
-    graph.addCell(childEntity);
-
-    const link = new Link();
-
-    link.source(parentEntity);
-    link.target(childEntity);
-
-    graph.addCell(link);
-    const linkView = paper.findViewByModel(link) as dia.LinkView;
-
-    return { graph, linkView, connectionRules };
-  };
-
-  it("adds tools to the link when instances aren't in EditMode and there is no rule with rw modifier", () => {
-    const isParentInEditMode = false;
-    const isChildInEditMode = false;
-    const modifier = "rw+";
-    const { graph, linkView, connectionRules } = setup(
-      isParentInEditMode,
-      isChildInEditMode,
-      modifier,
-    );
-
-    expect(linkView.hasTools()).toBeFalsy();
-
-    showLinkTools(graph, linkView, connectionRules);
-
-    expect(linkView.hasTools()).toBeTruthy();
-  });
-
-  it("adds tools to the link when only instance without rule is in edit mode", () => {
-    const isParentInEditMode = true;
-    const isChildInEditMode = false;
-    const modifier = "rw";
-    const { graph, linkView, connectionRules } = setup(
-      isParentInEditMode,
-      isChildInEditMode,
-      modifier,
-    );
-
-    expect(linkView.hasTools()).toBeFalsy();
-
-    showLinkTools(graph, linkView, connectionRules);
-
-    expect(linkView.hasTools()).toBeTruthy();
-  });
-
-  it("doesn't add tools to the link when instance with rw rule is in edit mode", () => {
-    const isParentInEditMode = false;
-    const isChildInEditMode = true;
-    const modifier = "rw";
-    const { graph, linkView, connectionRules } = setup(
-      isParentInEditMode,
-      isChildInEditMode,
-      modifier,
-    );
-
-    expect(linkView.hasTools()).toBeFalsy();
-
-    showLinkTools(graph, linkView, connectionRules);
-    expect(linkView.hasTools()).toBeFalsy();
-  });
-});
-
 describe("addDefaultEntities", () => {
   it("return empty array for service without embedded entities to add to the graph ", () => {
     const graph = new dia.Graph({});
@@ -441,14 +339,14 @@ describe("populateGraphWithDefault", () => {
   });
 });
 
-describe("handleInfoIcon", () => {
+describe("addInfoIcon", () => {
   it('sets "info" attribute with active icon and active tooltip if presentedAttrs are set to active', () => {
     const addedEntity = new ServiceEntityBlock();
 
     expect(addedEntity.get("attrs")).toBeDefined();
     expect(addedEntity.get("attrs")?.info).toBeUndefined();
 
-    handleInfoIcon(addedEntity, "active");
+    addInfoIcon(addedEntity, "active");
     expect(addedEntity.get("attrs")).toBeDefined();
     expect(addedEntity.get("attrs")?.info).toMatchObject({
       preserveAspectRatio: "none",
@@ -468,7 +366,7 @@ describe("handleInfoIcon", () => {
     expect(addedEntity.get("attrs")).toBeDefined();
     expect(addedEntity.get("attrs")?.info).toBeUndefined();
 
-    handleInfoIcon(addedEntity, "candidate");
+    addInfoIcon(addedEntity, "candidate");
 
     expect(addedEntity.get("attrs")).toBeDefined();
     expect(addedEntity.get("attrs")?.info).toMatchObject({

@@ -220,6 +220,7 @@ const dict = {
   "instanceComposer.formModal.placeholder": "Choose a Service",
   "instanceComposer.formModal.create.title": "Add Entity",
   "instanceComposer.formModal.edit.title": "Edit Entity",
+  "instanceComposer.formModal.noAttributes": "There are no attributes to edit.",
   "instanceComposer.success": "The request got sent successfully",
   "instanceComposer.success.title": "Instance Composed successfully",
   "instanceComposer.failed.title": "Instance Composing failed",

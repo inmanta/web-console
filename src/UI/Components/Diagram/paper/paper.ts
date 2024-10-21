@@ -1,8 +1,11 @@
 import { dia, shapes } from "@inmanta/rappid";
-import { showLinkTools } from "../actions";
 import { anchorNamespace } from "../anchors";
 import createHalo from "../halo";
-import { checkIfConnectionIsAllowed, toggleLooseElement } from "../helpers";
+import {
+  checkIfConnectionIsAllowed,
+  showLinkTools,
+  toggleLooseElement,
+} from "../helpers";
 import collapseButton from "../icons/collapse-icon.svg";
 import expandButton from "../icons/expand-icon.svg";
 import {
@@ -96,6 +99,7 @@ export class ComposerPaper {
       },
     });
 
+    //Event that is triggered when user clicks on the cell's dictionary icon. It's used to open the dictionary modal.
     this.paper.on(
       "element:showDict",
       (_elementView: dia.ElementView, event: dia.Event) => {
@@ -107,6 +111,7 @@ export class ComposerPaper {
       },
     );
 
+    //Event that is triggered when user clicks on the toggle button for the cells that have more than 4 attributes. It's used to collapse or expand the cell.
     this.paper.on(
       "element:toggleButton:pointerdown",
       (elementView: dia.ElementView, event: dia.Event) => {
@@ -135,6 +140,7 @@ export class ComposerPaper {
       },
     );
 
+    //Event that is triggered when user clicks on the blank space of the paper. It's used to clear the sidebar.
     this.paper.on("blank:pointerdown", () => {
       document.dispatchEvent(
         new CustomEvent("sendCellToSidebar", {
@@ -143,6 +149,7 @@ export class ComposerPaper {
       );
     });
 
+    //Event that is triggered when user clicks on the cell. It's used to send the cell data to the sidebar and create a Halo around the cell. with option to link it to another cell
     this.paper.on("cell:pointerup", (cellView) => {
       //We don't want interaction at all if cellView is a Link
       if (cellView.model instanceof dia.Link) {
@@ -160,6 +167,7 @@ export class ComposerPaper {
       halo.render();
     });
 
+    //Event that is triggered when user clicks on the link. It's used to show the link tools and the link labels for connected cells
     this.paper.on("link:mouseenter", (linkView) => {
       const source = linkView.model.source();
       const target = linkView.model.target();
@@ -219,11 +227,13 @@ export class ComposerPaper {
       showLinkTools(graph, linkView, connectionRules);
     });
 
+    //Event that is triggered when user leaves the link. It's used to remove the link tools and the link labels for connected cells
     this.paper.on("link:mouseleave", (linkView: dia.LinkView) => {
       linkView.removeTools();
       linkView.model.labels([]);
     });
 
+    //Event that is triggered when user drags the link from one cell to another. It's used to update the connection between the cells
     this.paper.on("link:connect", (linkView: dia.LinkView) => {
       //only id values are stored in the linkView
       const source = linkView.model.source();

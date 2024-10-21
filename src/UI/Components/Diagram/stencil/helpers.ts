@@ -2,7 +2,8 @@ import { uniqueId } from "lodash";
 import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from "@/Core";
 
 /**
- * Transforms embedded entities of a service model or an embedded entity into stencil elements.
+ * It recursively goes through embedded entities in the service model or embedded entity and creates stencil elements for each of them.
+ * Stencil Elements are the visual representation of the entities in the Stencil Sidebar
  *
  * @param {ServiceModel | EmbeddedEntity} service - The service model or embedded entity whose embedded entities are to be transformed.
  * @returns {Array} An array of stencil elements created from the embedded entities

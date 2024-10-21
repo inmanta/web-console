@@ -37,7 +37,7 @@ interface Props {
 }
 
 /**
- * Type representing a function to update the state within the form.
+ * function to update the state within the form.
  *
  * @param {string} path - The path within the form state to update.
  * @param {unknown} value - The new value to set at the specified path.
