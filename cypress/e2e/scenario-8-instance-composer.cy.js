@@ -125,7 +125,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[data-testid="slider-output"').should("have.text", "80");
 
       //expect Left Sidebar and it's all component visible and in default state
-      cy.get(".stencil-sidebar").should("be.visible");
+      cy.get(".left_sidebar").should("be.visible");
       cy.get("#tabs-toolbar").should("be.visible");
 
       cy.get("#instance-stencil").should("be.visible");
