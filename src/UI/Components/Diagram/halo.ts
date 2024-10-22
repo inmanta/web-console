@@ -80,10 +80,6 @@ const createHalo = (
             detail: { cell: elementAsService, action: ActionEnum.UPDATE },
           }),
         );
-        toggleLooseElement(
-          paper.findViewByModel(element),
-          EmbeddedEventEnum.ADD,
-        );
       }
     });
 
