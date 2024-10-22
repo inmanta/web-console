@@ -71,13 +71,13 @@ export const RightSidebar: React.FC = () => {
       const canBeRemoved = !cellToEdit.model.get("cantBeRemoved");
 
       if (!stencilState) {
-        return isCellCore && canBeRemoved;
+        return !isCellCore && canBeRemoved;
       }
 
       const entityState = stencilState[entityName];
 
       if (!entityState) {
-        return isCellCore && canBeRemoved;
+        return !isCellCore && canBeRemoved;
       }
 
       const lowerLimit = entityState.min;
