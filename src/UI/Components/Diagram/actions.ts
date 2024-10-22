@@ -169,6 +169,7 @@ export function appendInstance(
       const cellAdded = graph.getCell(relatedInstance.id);
       const isBlockedFromEditing = true;
 
+      //If cell isn't in the graph, we need to append it and connect it to the one we are currently working on
       if (!cellAdded) {
         const isMainInstance = false;
         const appendedInstances = appendInstance(
@@ -192,33 +193,7 @@ export function appendInstance(
           ?.classList.add("stencil_text-disabled");
 
         //try to connect appended entities to the one existing in the graph
-        appendedInstances.forEach((cell) => {
-          const relationMap = cell.get("relatedTo") as Map<string, string>;
-          const serviceModel = cell.get("serviceModel") as ServiceModel;
-          const relations = findFullInterServiceRelations(serviceModel);
-
-          if (relationMap) {
-            relationMap.forEach((_value, key) => {
-              const relatedCell = graph.getCell(key) as ServiceEntityBlock;
-
-              if (relatedCell) {
-                const relation = relations.find(
-                  (relation) => relation.entity_type === relatedCell.getName(),
-                );
-
-                if (relation) {
-                  relatedCell.set("cantBeRemoved", relation.modifier !== "rw+");
-                  connectEntities(
-                    graph,
-                    relatedCell,
-                    [cell],
-                    relation.modifier !== "rw+",
-                  );
-                }
-              }
-            });
-          }
-        });
+        connectAppendedEntities(appendedInstances, graph);
       } else {
         //If cell is already in the graph, we need to check if it got in its inter-service relations the one with id that corresponds with created instanceAsTable
         let isConnected = false;
@@ -280,33 +255,7 @@ export function appendInstance(
 
     //if we are in the children view above implementation won't be enough to connect all entities, thus we need to iterate through core & embedded entities
 
-    const mainRelations = findFullInterServiceRelations(serviceInstanceModel);
-
-    remainingCells.map((remainingCell) => {
-      const relationMap = remainingCell.get("relatedTo") as Map<string, string>;
-
-      if (relationMap) {
-        relationMap.forEach((_value, key) => {
-          const relatedCell = graph.getCell(key) as ServiceEntityBlock;
-
-          if (relatedCell) {
-            const relation = mainRelations.find(
-              (relation) => relation.entity_type === relatedCell.getName(),
-            );
-
-            if (relation) {
-              relatedCell.set("cantBeRemoved", relation.modifier !== "rw+");
-              connectEntities(
-                graph,
-                relatedCell,
-                [remainingCell],
-                relation.modifier !== "rw+",
-              );
-            }
-          }
-        });
-      }
-    });
+    connectAppendedEntities(remainingCells, graph);
   }
 
   // auto-layout provided by JointJS
@@ -718,3 +667,47 @@ export function addInfoIcon(
     });
   }
 }
+
+/**
+ * Connects the appended entities to the entities they are related to.
+ * This function look for Map of relations in the appended entities and connects them through the id
+ *
+ * @param {ServiceEntityBlock[]} appendedInstances - The appended entities to connect.
+ * @param {dia.Graph} graph - The graph to which the entities are appended.
+ * @returns {void}
+ */
+const connectAppendedEntities = (
+  appendedEntities: ServiceEntityBlock[],
+  graph: dia.Graph,
+): void => {
+  appendedEntities.forEach((cell) => {
+    const relationMap = cell.get("relatedTo") as Map<string, string>;
+    const model = cell.get("serviceModel") as ServiceModel;
+    const relations = findFullInterServiceRelations(model);
+
+    //if there is relationMap, we iterate through them, and search for cell with corresponding id
+    if (relationMap) {
+      relationMap.forEach((_value, key) => {
+        const relatedCell = graph.getCell(key) as ServiceEntityBlock;
+
+        //if we find the cell, we check if it has relation with the cell we are currently working on
+        if (relatedCell) {
+          const relation = relations.find(
+            (relation) => relation.entity_type === relatedCell.getName(),
+          );
+
+          //if it has, we connect them
+          if (relation) {
+            relatedCell.set("cantBeRemoved", relation.modifier !== "rw+");
+            connectEntities(
+              graph,
+              relatedCell,
+              [cell],
+              relation.modifier !== "rw+",
+            );
+          }
+        }
+      });
+    }
+  });
+};
