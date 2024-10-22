@@ -53,11 +53,15 @@ export const ComposerEditorProvider: React.FC<Props> = ({
   const serviceModelsQuery =
     useGetAllServiceModels(environment).useContinuous();
 
-  const mainService = useMemo(
-    () =>
-      serviceModelsQuery.data?.find((service) => service.name === serviceName),
-    [serviceModelsQuery.data, serviceName],
-  );
+  const mainService = useMemo(() => {
+    const data = serviceModelsQuery.data;
+
+    if (data) {
+      return data.find((service) => service.name === serviceName);
+    } else {
+      return undefined;
+    }
+  }, [serviceModelsQuery.data, serviceName]);
 
   const instanceWithRelationsQuery = useGetInstanceWithRelations(
     instance,

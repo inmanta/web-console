@@ -182,15 +182,25 @@ export function appendInstance(
         );
 
         //disable Inventory Stencil for inter-service relation instance
-        document
-          .querySelector(`.${appendedInstances[0].get("stencilName")}_body`)
-          ?.classList.add("stencil_accent-disabled");
-        document
-          .querySelector(`.${appendedInstances[0].get("stencilName")}_bodyTwo`)
-          ?.classList.add("stencil_body-disabled");
-        document
-          .querySelector(`.${appendedInstances[0].get("stencilName")}_text`)
-          ?.classList.add("stencil_text-disabled");
+        const elements = [
+          [
+            `.${appendedInstances[0].get("stencilName")}_body`,
+            "stencil_accent-disabled",
+          ],
+          [
+            `.${appendedInstances[0].get("stencilName")}_bodyTwo`,
+            "stencil_body-disabled",
+          ],
+          `.${appendedInstances[0].get("stencilName")}_text, 'stencil_text-disabled`,
+        ];
+
+        elements.forEach(([elementName, className]) => {
+          const element = document.querySelector(elementName);
+
+          if (element) {
+            element.classList.add(className);
+          }
+        });
 
         //try to connect appended entities to the one existing in the graph
         connectAppendedEntities(appendedInstances, graph);

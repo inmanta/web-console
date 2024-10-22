@@ -34,7 +34,7 @@ export const extractRelationsIds = (
   service: ServiceModel,
   instance: ServiceInstanceModel,
 ): string[] => {
-  const relationKeys = service.inter_service_relations?.map(
+  const relationKeys = service.inter_service_relations.map(
     (relation) => relation.name,
   );
 
@@ -127,6 +127,7 @@ export const checkIfConnectionIsAllowed = (
   if (!tgtView) {
     return false;
   }
+
   let areSourceConnectionsExhausted = false;
   let areTargetConnectionExhausted = false;
   let doesSourceIsEmbeddedWithExhaustedConnections = false;
@@ -148,7 +149,7 @@ export const checkIfConnectionIsAllowed = (
     (element) => element.cid === srcView.model.cid,
   );
   const targetAsElement = allElements.find(
-    (element) => element.cid === tgtView?.model.cid,
+    (element) => element.cid === tgtView.model.cid,
   );
 
   if (sourceAsElement && targetAsElement) {
@@ -206,9 +207,10 @@ export const checkIfConnectionIsAllowed = (
   const elementsCanBeConnected =
     sourceRule !== undefined || targetRule !== undefined;
 
+  //the info about the connection between elements can be one directional
   const connectionIsInterServiceRelation =
-    sourceRule?.kind === TypeEnum.INTERSERVICE ||
-    targetRule?.kind === TypeEnum.INTERSERVICE;
+    (sourceRule && sourceRule.kind === TypeEnum.INTERSERVICE) ||
+    (targetRule && targetRule.kind === TypeEnum.INTERSERVICE);
 
   if (elementsCanBeConnected) {
     //if elements have interservice relation then we need to check if they are exhausted
@@ -238,8 +240,13 @@ export const checkWhetherConnectionRulesAreExhausted = (
   rule: EmbeddedRule | InterServiceRule | undefined,
   editMode: boolean,
 ): boolean => {
+  //if there is no rule then there shouldn't be possibility to connect them
+  if (!rule) {
+    return true;
+  }
+
   const targetConnectionsForGivenRule = connectedElements.filter(
-    (element) => element.getName() === rule?.name,
+    (element) => element.getName() === rule.name,
   );
 
   //if is in edit mode and its modifier is r/rw then the connections are basically exhausted
@@ -247,8 +254,8 @@ export const checkWhetherConnectionRulesAreExhausted = (
     return true;
   }
   //undefined and null are equal to no limit
-  if (rule?.upperLimit !== undefined && rule?.upperLimit !== null) {
-    return targetConnectionsForGivenRule.length >= rule?.upperLimit;
+  if (rule.upperLimit !== undefined && rule.upperLimit !== null) {
+    return targetConnectionsForGivenRule.length >= rule.upperLimit;
   } else {
     return false;
   }
@@ -373,7 +380,7 @@ export const shapesDataTransform = (
   if (parentInstance.relatedTo) {
     Array.from(parentInstance.relatedTo).forEach(([id, attributeName]) => {
       if (parentInstance.attributes) {
-        const model = serviceModel.inter_service_relations?.find(
+        const model = serviceModel.inter_service_relations.find(
           (relation) => relation.name === attributeName,
         );
 
@@ -653,7 +660,7 @@ export const findInterServiceRelations = (
   serviceModel: ServiceModel | EmbeddedEntity,
 ): string[] => {
   const result =
-    serviceModel.inter_service_relations?.map(
+    serviceModel.inter_service_relations.map(
       (relation) => relation.entity_type,
     ) || [];
 
@@ -743,8 +750,14 @@ export const updateServiceOrderItems = (
   switch (action) {
     case "update":
       //action in the instance isn't the same as action passed to this function, this assertion is to make sure that the update action won't change the action state of newly created instance.
+      if (!updatedInstance) {
+        throw new Error(
+          "Something went wrong with the data processing, refresh the page and try again.",
+        ); //updating instance that doesn't exist in the map shouldn't happen
+      }
+
       newInstance.action =
-        updatedInstance?.action === "create" ? "create" : "update";
+        updatedInstance.action === "create" ? "create" : "update";
       copiedInstances.set(String(cell.id), newInstance);
       break;
     case "create":

@@ -134,9 +134,12 @@ export function diagramInit(
       } else {
         cells = appendInstance(paper, graph, instance, services);
 
-        if (instance.instance.metadata?.coordinates) {
+        if (
+          instance.instance.metadata &&
+          instance.instance.metadata.coordinates
+        ) {
           const parsedCoordinates = JSON.parse(
-            instance.instance.metadata?.coordinates,
+            instance.instance.metadata.coordinates,
           );
 
           applyCoordinatesToCells(graph, parsedCoordinates);

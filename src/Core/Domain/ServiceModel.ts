@@ -116,7 +116,7 @@ export interface ServiceModel extends ServiceIdentifier {
   config: Config;
   instance_summary?: InstanceSummary | null;
   embedded_entities: EmbeddedEntity[];
-  inter_service_relations?: InterServiceRelation[];
+  inter_service_relations: InterServiceRelation[];
   strict_modifier_enforcement?: boolean;
   key_attributes?: string[] | null;
   owner: null | string;
@@ -151,7 +151,7 @@ export interface EmbeddedEntity extends RelationAttribute {
   description?: string;
   attributes: AttributeModel[];
   embedded_entities: EmbeddedEntity[];
-  inter_service_relations?: InterServiceRelation[];
+  inter_service_relations: InterServiceRelation[];
   key_attributes?: string[] | null;
   attribute_annotations?: AttributeAnnotations;
 }

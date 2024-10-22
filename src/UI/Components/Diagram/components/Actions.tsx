@@ -10,6 +10,7 @@ import { words } from "@/UI/words";
 import { ToastAlert } from "../../ToastAlert";
 import { CanvasContext, InstanceComposerContext } from "../Context/Context";
 import { getServiceOrderItems } from "../helpers";
+import { SavedCoordinates } from "../interfaces";
 
 /**
  * Properties for the Actions component.
@@ -64,7 +65,14 @@ export const Actions: React.FC<Props> = ({ serviceName, editable }) => {
    *
    */
   const handleDeploy = () => {
-    const coordinates = diagramHandlers?.getCoordinates();
+    let coordinates: SavedCoordinates[] = [];
+
+    if (!diagramHandlers) {
+      setAlertType(AlertVariant.danger);
+      setAlertMessage("failed to save instance coordinates on deploy");
+    } else {
+      coordinates = diagramHandlers.getCoordinates();
+    }
 
     const orderItems = getServiceOrderItems(serviceOrderItems, serviceModels)
       .filter((item) => item.action !== null)
@@ -77,7 +85,6 @@ export const Actions: React.FC<Props> = ({ serviceName, editable }) => {
 
     // Temporary workaround to update coordinates in metadata, as currently order endpoint don't handle metadata in the updates.
     // can't test in jest as I can't add any test-id to the halo handles though.
-
     if (instance) {
       metadataMutation.mutate({
         service_entity: mainService.name,

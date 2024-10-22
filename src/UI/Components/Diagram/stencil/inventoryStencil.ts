@@ -116,15 +116,25 @@ export class InventoryStencilTab {
     this.stencil.freeze(); //freeze by default as this tab is not active on init
 
     this.stencil.on("element:drop", (elementView) => {
-      document
-        .querySelector(`.${elementView.model.get("stencilName")}_body`)
-        ?.classList.add("stencil_accent-disabled");
-      document
-        .querySelector(`.${elementView.model.get("stencilName")}_bodyTwo`)
-        ?.classList.add("stencil_body-disabled");
-      document
-        .querySelector(`.${elementView.model.get("stencilName")}_text`)
-        ?.classList.add("stencil_text-disabled");
+      const elements = [
+        [
+          `.${elementView.model.get("stencilName")}_body`,
+          "stencil_accent-disabled",
+        ],
+        [
+          `.${elementView.model.get("stencilName")}_bodyTwo`,
+          "stencil_body-disabled",
+        ],
+        `.${elementView.model.get("stencilName")}_text, 'stencil_text-disabled`,
+      ];
+
+      elements.forEach(([elementName, className]) => {
+        const element = document.querySelector(elementName);
+
+        if (element) {
+          element.classList.add(className);
+        }
+      });
     });
   }
 }

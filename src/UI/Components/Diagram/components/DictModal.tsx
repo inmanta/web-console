@@ -19,11 +19,11 @@ export const DictModal: React.FC = () => {
   const { dictToDisplay, setDictToDisplay } = useContext(CanvasContext);
   const [copied, setCopied] = useState(false);
 
-  return (
+  return dictToDisplay !== null ? (
     <Modal
       disableFocusTrap
-      isOpen={dictToDisplay !== null}
-      title={"Values of " + dictToDisplay?.title}
+      isOpen={true}
+      title={"Values of " + dictToDisplay.title}
       variant="medium"
       onClose={() => {
         setDictToDisplay(null);
@@ -60,5 +60,5 @@ export const DictModal: React.FC = () => {
         </CodeBlock>
       )}
     </Modal>
-  );
+  ) : null;
 };

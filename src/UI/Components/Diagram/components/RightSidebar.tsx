@@ -7,7 +7,7 @@ import {
   Title,
 } from "@patternfly/react-core";
 import styled from "styled-components";
-import { InstanceAttributeModel, ServiceModel } from "@/Core";
+import { Field, InstanceAttributeModel, ServiceModel } from "@/Core";
 import { sanitizeAttributes } from "@/Data";
 import { words } from "@/UI/words";
 import { CanvasContext, InstanceComposerContext } from "../Context/Context";
@@ -39,6 +39,92 @@ export const RightSidebar: React.FC = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [model, setModel] = useState<ServiceModel | null>(null);
   const [attributes, setAttributes] = useState<InstanceAttributeModel>({});
+
+  /**
+   * Handles the removal of a cell.
+   *
+   * If the cell to edit is not defined, the function returns early.
+   * Triggers the delete action on the cell.
+   * If the cell is embedded, dispatches a custom event to update the stencil.
+   * If the cell is an inter-service relation entity, enables the Inventory Stencil Element for the instance.
+   *
+   * @returns {void}
+   */
+  const onRemove = (): void => {
+    if (!cellToEdit) {
+      return;
+    }
+    //logic of deleting cell stayed in the halo which triggers the event
+    cellToEdit.trigger("action:delete");
+
+    const isEmbedded = cellToEdit.model.get("isEmbedded");
+
+    if (isEmbedded) {
+      //dispatch event instead of calling function directly from context
+      document.dispatchEvent(
+        new CustomEvent("updateStencil", {
+          detail: {
+            name: cellToEdit.model.get("entityName"),
+            action: EmbeddedEventEnum.REMOVE,
+          },
+        }),
+      );
+    }
+
+    //stencilName is only available for inter-service relation entities
+    const stencilName = cellToEdit.model.get("stencilName");
+
+    if (stencilName) {
+      //enable Inventory Stencil element for inter-service relation instance
+      const elements = [
+        [`.${stencilName}_body`, "stencil_accent-disabled"],
+        [`.${stencilName}_bodyTwo`, "stencil_body-disabled"],
+        `.${stencilName}_text, 'stencil_text-disabled`,
+      ];
+
+      elements.forEach(([elementName, className]) => {
+        const element = document.querySelector(elementName);
+
+        if (element) {
+          element.classList.remove(className);
+        }
+      });
+    }
+  };
+
+  /**
+   * Handles the cancel action for the form.
+   * Closes the form by setting the form open state to false.
+   */
+  const onCancel = (): void => {
+    setIsFormOpen(false);
+  };
+
+  /**
+   * Handles the save action for the form.
+   * Sanitizes the form attributes and updates the entity in the diagram.
+   * Updates the service order items with the new shape and closes the form.
+   *
+   * @param {Field[]} fields - The fields of the form.
+   * @param {InstanceAttributeModel} formState - The current state of the form.
+   */
+  const onSave = (fields: Field[], formState: InstanceAttributeModel) => {
+    if (cellToEdit && diagramHandlers && model) {
+      const sanitizedAttrs = sanitizeAttributes(fields, formState);
+
+      if (cellToEdit) {
+        //deep copy
+        const shape = diagramHandlers.editEntity(cellToEdit, model, formState);
+
+        shape.set("sanitizedAttrs", sanitizedAttrs);
+
+        setServiceOrderItems((prev) =>
+          updateServiceOrderItems(shape, ActionEnum.UPDATE, prev),
+        );
+      }
+    }
+    setIsFormOpen(false);
+  };
 
   useEffect(() => {
     if (isFormOpen) {
@@ -116,33 +202,11 @@ export const RightSidebar: React.FC = () => {
         {!!cellToEdit && !!model && (
           <EntityForm
             serviceModel={model}
-            isEdited={cellToEdit?.model.get("isInEditMode")}
+            isEdited={cellToEdit.model.get("isInEditMode")}
             initialState={attributes}
             isForDisplay={!isFormOpen}
-            onSave={(fields, formState) => {
-              if (cellToEdit && diagramHandlers) {
-                const sanitizedAttrs = sanitizeAttributes(fields, formState);
-
-                if (cellToEdit) {
-                  //deep copy
-                  const shape = diagramHandlers.editEntity(
-                    cellToEdit,
-                    model,
-                    formState,
-                  );
-
-                  shape.set("sanitizedAttrs", sanitizedAttrs);
-
-                  setServiceOrderItems((prev) =>
-                    updateServiceOrderItems(shape, ActionEnum.UPDATE, prev),
-                  );
-                }
-              }
-              setIsFormOpen(false);
-            }}
-            onCancel={() => {
-              setIsFormOpen(false);
-            }}
+            onSave={onSave}
+            onCancel={onCancel}
           />
         )}
 
@@ -152,39 +216,7 @@ export const RightSidebar: React.FC = () => {
               <StyledButton
                 variant="danger"
                 width={200}
-                onClick={() => {
-                  //logic of deleting cell stayed in the halo which triggers the event
-                  cellToEdit?.trigger("action:delete");
-
-                  const isEmbedded = cellToEdit?.model.get("isEmbedded");
-
-                  if (isEmbedded) {
-                    //dispatch event instead of calling function directly from context
-                    document.dispatchEvent(
-                      new CustomEvent("updateStencil", {
-                        detail: {
-                          name: cellToEdit?.model.get("entityName"),
-                          action: EmbeddedEventEnum.REMOVE,
-                        },
-                      }),
-                    );
-                  }
-
-                  //stencilName is only available for inter-service relation entities
-                  const stencilName = cellToEdit?.model.get("stencilName");
-
-                  if (stencilName) {
-                    document
-                      .querySelector(`.${stencilName}_body`)
-                      ?.classList.remove("stencil_accent-disabled");
-                    document
-                      .querySelector(`.${stencilName}_bodyTwo`)
-                      ?.classList.remove("stencil_body-disabled");
-                    document
-                      .querySelector(`.${stencilName}_text`)
-                      ?.classList.remove("stencil_text-disabled");
-                  }
-                }}
+                onClick={onRemove}
                 isDisabled={!isAllowedToRemove || !cellToEdit}
               >
                 {words("remove")}

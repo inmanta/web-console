@@ -170,7 +170,14 @@ export class ZoomHandlerService {
    */
   fitToScreen() {
     this.scroller.zoomToFit({ useModelGeometry: true, padding: 20 });
-    const slider = document.getElementById("zoomSlider")?.children[0];
+
+    const sliderWrapper = document.getElementById("zoomSlider");
+
+    if (!sliderWrapper) {
+      return;
+    }
+
+    const slider = sliderWrapper.children[0];
 
     if (!slider) {
       return;

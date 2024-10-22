@@ -61,11 +61,14 @@ export class StencilSidebar {
     this.tabsToolbar.render();
 
     const firstChild = this.tabsToolbar.el.firstElementChild;
-    const targetElement = firstChild?.firstElementChild;
 
     //adding active class to the first tab as a default, as Toolbar doesn't apply it when adding 'class' attribute to the tool object
-    if (targetElement?.classList) {
-      targetElement.classList.add("-active");
+    if (firstChild) {
+      const targetElement = firstChild.firstElementChild;
+
+      if (targetElement && targetElement.classList) {
+        targetElement.classList.add("-active");
+      }
     }
 
     this.tabsToolbar.on("new_tab:pointerclick", (event: dia.Event) => {
