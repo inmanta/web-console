@@ -26,7 +26,7 @@ import { EntityForm } from "./EntityForm";
  * Remove - removes the entity from the canvas only (does not delete the instance from the backend).
  * Delete - deletes the instance from the backend.
  *
- * Deleting a whole instance is not possible through composer, we can only delete parts of the instance if the service model allows it.
+ * Deleting a whole instance is not possible through composer, we can only delete embedded entities of the instance or remove the inter-service relation connections if the service model allows it.
  *
  * @returns {React.FC} The RightSidebar component.
  */
@@ -54,17 +54,18 @@ export const RightSidebar: React.FC = () => {
     if (!cellToEdit) {
       return;
     }
+    const { model } = cellToEdit;
+
     //logic of deleting cell stayed in the halo which triggers the event
     cellToEdit.trigger("action:delete");
-
-    const isEmbedded = cellToEdit.model.get("isEmbedded");
+    const isEmbedded = model.get("isEmbedded");
 
     if (isEmbedded) {
       //dispatch event instead of calling function directly from context
       document.dispatchEvent(
         new CustomEvent("updateStencil", {
           detail: {
-            name: cellToEdit.model.get("entityName"),
+            name: model.get("entityName"),
             action: EmbeddedEventEnum.REMOVE,
           },
         }),
@@ -72,7 +73,7 @@ export const RightSidebar: React.FC = () => {
     }
 
     //stencilName is only available for inter-service relation entities
-    const stencilName = cellToEdit.model.get("stencilName");
+    const stencilName = model.get("stencilName");
 
     if (stencilName) {
       //enable Inventory Stencil element for inter-service relation instance
@@ -121,7 +122,6 @@ export const RightSidebar: React.FC = () => {
       const sanitizedAttrs = sanitizeAttributes(fields, formState);
 
       if (cellToEdit) {
-        //deep copy
         const shape = diagramHandlers.editEntity(cellToEdit, model, formState);
 
         shape.set("sanitizedAttrs", sanitizedAttrs);
@@ -145,9 +145,10 @@ export const RightSidebar: React.FC = () => {
       return;
     }
 
-    const serviceModel = cellToEdit.model.get("serviceModel");
-    const entityName = cellToEdit.model.get("entityName");
-    const instanceAttributes = cellToEdit.model.get("instanceAttributes");
+    const { model } = cellToEdit;
+    const serviceModel = model.get("serviceModel");
+    const entityName = model.get("entityName");
+    const instanceAttributes = model.get("instanceAttributes");
 
     if (serviceModel) {
       setDescription(serviceModel.description);
@@ -158,11 +159,11 @@ export const RightSidebar: React.FC = () => {
       setAttributes(instanceAttributes);
     }
 
-    setIsAllowedToRemove((_prev) => {
-      const isCellCore = cellToEdit.model.get("isCore");
+    setIsAllowedToRemove(() => {
+      const isCellCore = model.get("isCore");
 
       //children entities are not allowed to be removed, as well as rw embedded entities in the edit form
-      const canBeRemoved = !cellToEdit.model.get("cantBeRemoved");
+      const canBeRemoved = !model.get("cantBeRemoved");
 
       if (!stencilState) {
         return !isCellCore && canBeRemoved;

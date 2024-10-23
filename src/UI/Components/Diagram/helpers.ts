@@ -21,6 +21,7 @@ import {
   ActionEnum,
 } from "@/UI/Components/Diagram/interfaces";
 
+import { words } from "@/UI/words";
 import { ServiceEntityBlock } from "./shapes";
 
 /**
@@ -113,18 +114,18 @@ export const createConnectionRules = (
  * whether source & target didn't exhaust eventual limits for given type of connection
  *
  * @param {dia.Graph} graph - jointjs graph
- * @param {dia.CellView | dia.ElementView | undefined} tgtView - target of the connection
- * @param {dia.CellView | dia.ElementView} srcView - source of the connection
+ * @param {dia.CellView | dia.ElementView | undefined} targetView - target of the connection
+ * @param {dia.CellView | dia.ElementView} sourceView - source of the connection
  * @param {ConnectionRules} rules - rules for connections
  * @returns {boolean} - whether connection is allowed
  */
 export const checkIfConnectionIsAllowed = (
   graph: dia.Graph,
-  tgtView: dia.CellView | dia.ElementView | undefined,
-  srcView: dia.CellView | dia.ElementView,
+  targetView: dia.CellView | dia.ElementView | undefined,
+  sourceView: dia.CellView | dia.ElementView,
   rules: ConnectionRules,
 ): boolean => {
-  if (!tgtView) {
+  if (!targetView) {
     return false;
   }
 
@@ -132,8 +133,8 @@ export const checkIfConnectionIsAllowed = (
   let areTargetConnectionExhausted = false;
   let doesSourceIsEmbeddedWithExhaustedConnections = false;
   let doesTargetIsEmbeddedWithExhaustedConnections = false;
-  const targetName = (tgtView.model as ServiceEntityBlock).getName();
-  const sourceName = (srcView.model as ServiceEntityBlock).getName();
+  const targetName = (targetView.model as ServiceEntityBlock).getName();
+  const sourceName = (sourceView.model as ServiceEntityBlock).getName();
 
   const targetRule = rules[targetName].find(
     (object) => object.name === sourceName,
@@ -146,10 +147,10 @@ export const checkIfConnectionIsAllowed = (
   //to receive neighbors we need to convert celView to Element
   const allElements = graph.getElements();
   const sourceAsElement = allElements.find(
-    (element) => element.cid === srcView.model.cid,
+    (element) => element.cid === sourceView.model.cid,
   );
   const targetAsElement = allElements.find(
-    (element) => element.cid === tgtView.model.cid,
+    (element) => element.cid === targetView.model.cid,
   );
 
   if (sourceAsElement && targetAsElement) {
@@ -485,22 +486,22 @@ const isSingularRelation = (model?: EmbeddedEntity) => {
   return !!model && !!model.upper_limit && model.upper_limit === 1;
 };
 
+interface CorrespondingId {
+  id: dia.Cell.ID;
+  attributeName: string;
+}
+
 /**
  * Find if the relations of some instance includes Id of the instance passed through prop
  * @param {Map<dia.Cell.ID, string>} neighborRelations map of ids that could include id of instanceAsTable
  * @param {ServiceEntityBlock} instanceAsTable Instance to which should instances connect to
  *
- * @returns {{ id: dia.Cell.ID, attributeName: string} | undefined}
+ * @returns {CorrespondingId | undefined}
  */
 export const findCorrespondingId = (
   neighborRelations: Map<dia.Cell.ID, string>,
   instanceAsTable: ServiceEntityBlock,
-):
-  | {
-      id: dia.Cell.ID;
-      attributeName: string;
-    }
-  | undefined => {
+): CorrespondingId | undefined => {
   return Array.from(neighborRelations, ([id, attributeName]) => ({
     id,
     attributeName,
@@ -748,32 +749,33 @@ export const updateServiceOrderItems = (
   const updatedInstance = serviceOrderItems.get(String(cell.id));
 
   switch (action) {
-    case "update":
-      //action in the instance isn't the same as action passed to this function, this assertion is to make sure that the update action won't change the action state of newly created instance.
+    case ActionEnum.UPDATE:
       if (!updatedInstance) {
-        throw new Error(
-          "Something went wrong with the data processing, refresh the page and try again.",
-        ); //updating instance that doesn't exist in the map shouldn't happen
+        throw new Error(words("instanceComposer.error.updateInstanceNotInMap")); //updating instance that doesn't exist in the map shouldn't happen
       }
 
+      //action in the instance isn't the same as action passed to this function, this assertion is to make sure that the update action won't change the action state of newly created instance.
       newInstance.action =
-        updatedInstance.action === "create" ? "create" : "update";
+        updatedInstance.action === ActionEnum.CREATE
+          ? ActionEnum.CREATE
+          : ActionEnum.UPDATE;
       copiedInstances.set(String(cell.id), newInstance);
       break;
-    case "create":
+    case ActionEnum.CREATE:
       newInstance.action = action;
       copiedInstances.set(String(cell.id), newInstance);
       break;
     default:
       if (
         updatedInstance &&
-        (updatedInstance.action === null || updatedInstance.action === "update")
+        (updatedInstance.action === null ||
+          updatedInstance.action === ActionEnum.UPDATE)
       ) {
         copiedInstances.set(String(cell.id), {
           instance_id: cell.id,
           service_entity: cell.getName(),
           config: {},
-          action: "delete",
+          action: ActionEnum.DELETE,
           attributes: null,
           edits: null,
           embeddedTo: cell.attributes.embeddedTo,
@@ -807,12 +809,12 @@ export function showLinkTools(
   const source = linkView.model.source();
   const target = linkView.model.target();
 
-  const sourceCell = graph.getCell(
-    source.id as dia.Cell.ID,
-  ) as ServiceEntityBlock;
-  const targetCell = graph.getCell(
-    target.id as dia.Cell.ID,
-  ) as ServiceEntityBlock;
+  if (!source.id || !target.id) {
+    return;
+  }
+
+  const sourceCell = graph.getCell(source.id) as ServiceEntityBlock;
+  const targetCell = graph.getCell(target.id) as ServiceEntityBlock;
 
   /**
    * checks if the connection between cells can be deleted thus if we should hide linkTool
@@ -879,8 +881,9 @@ export function showLinkTools(
           },
         ],
         action: (_evt, linkView: dia.LinkView, toolView: dia.ToolView) => {
-          const source = linkView.model.source();
-          const target = linkView.model.target();
+          const { model } = linkView;
+          const source = model.source();
+          const target = model.target();
 
           const sourceCell = graph.getCell(
             source.id as dia.Cell.ID,
@@ -920,7 +923,7 @@ export function showLinkTools(
           removeConnectionData(sourceCell, targetCell);
           removeConnectionData(targetCell, sourceCell);
 
-          linkView.model.remove({ ui: true, tool: toolView.cid });
+          model.remove({ ui: true, tool: toolView.cid });
         },
       }),
     ],

@@ -24,6 +24,7 @@ interface Props {
 /**
  * `EntityForm` is a React functional component that renders a form for a service entity.
  * The form fields are created based on the attributes of the service model.
+ * unlike the InstanceForm, this is a sub-form and doesn't have the embedded/inter-service-relation form elements
  *
  * When the form is submitted, the `onSave` callback is called with the form fields and the form state.
  * The form can be reset to its initial state by clicking the cancel button, which also calls the `onCancel` callback.
@@ -51,7 +52,7 @@ export const EntityForm: React.FC<Props> = ({
     useState<InstanceAttributeModel>(initialState);
 
   /**
-   *function to update the state within the form.
+   * function to update the state within the form.
    *
    * @param {string} path - The path within the form state to update.
    * @param {unknown} value - The new value to set at the specified path.

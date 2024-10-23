@@ -205,6 +205,8 @@ const dict = {
    */
 
   "instanceComposer.noData.errorTitle": "No Data",
+  "instanceComposer.error.updateInstanceNotInMap":
+    "Updated instance is not in the map, if error persists please refresh the page",
   "instanceComposer.noData.errorMessage": (serviceId) =>
     `There is no data available to display for the given Id:${serviceId}`,
   "instanceComposer.noServiceModel.errorTitle": "No Service Model",

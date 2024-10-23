@@ -27,7 +27,7 @@ import {
   testApiInstance,
   testApiInstanceModel,
   testEmbeddedApiInstances,
-} from "./Mocks/Mock";
+} from "./Mocks";
 import services from "./Mocks/services.json";
 import { createComposerEntity } from "./actions";
 import {

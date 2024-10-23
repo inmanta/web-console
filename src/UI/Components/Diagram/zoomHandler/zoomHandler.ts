@@ -89,6 +89,7 @@ export class ZoomHandlerService {
         {
           type: "icon-button",
           name: "fullscreen",
+          tooltip: words("instanceComposer.zoomHandler.fullscreen.toggle"),
           attrs: {
             button: {
               "data-testid": "fullscreen",
@@ -130,7 +131,6 @@ export class ZoomHandlerService {
     });
 
     this.toolbar.render();
-    this.toolbar.el.dataset.testid = "zoomHandler";
     this.toolbar.el.dataset.testid = "zoomHandler";
     this.updateFullscreenStyling();
     this.element.appendChild(this.toolbar.el);
@@ -211,11 +211,7 @@ export class ZoomHandlerService {
 
     slider.style.setProperty(
       "--slider-background",
-      "linear-gradient(to right, var(--pf-v5-global--active-color--100) 0%, var(--pf-v5-global--active-color--100) " +
-        value +
-        "%, var(--pf-v5-global--palette--black-400) " +
-        value +
-        "%, var(--pf-v5-global--palette--black-400) 100%)",
+      `linear-gradient(to right, var(--pf-v5-global--active-color--100) 0%, var(--pf-v5-global--active-color--100), ${value}% var(--pf-v5-global--palette--black-400) ${value}%, var(--pf-v5-global--palette--black-400) 100%)`,
     );
   }
 

@@ -6,7 +6,7 @@ import {
   containerModel,
   mockedInstanceWithRelations,
   parentModel,
-} from "./Mocks/Mock";
+} from "./Mocks";
 import services from "./Mocks/services.json";
 import {
   addDefaultEntities,

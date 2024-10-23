@@ -71,24 +71,24 @@ export class ComposerPaper {
         },
       },
       defaultLink: () => new Link(),
-      validateConnection: (srcView, srcMagnet, tgtView, tgtMagnet) => {
+      validateConnection: (sourceView, srcMagnet, targetView, tgtMagnet) => {
         const baseValidators =
-          srcMagnet !== tgtMagnet && srcView.cid !== tgtView.cid;
+          srcMagnet !== tgtMagnet && sourceView.cid !== targetView.cid;
 
-        const srcViewAsElement = graph
+        const sourceViewAsElement = graph
           .getElements()
-          .find((element) => element.cid === srcView.model.cid);
+          .find((element) => element.cid === sourceView.model.cid);
 
-        //find srcView as Element to get Neighbors and check if it's already connected to the target
-        if (srcViewAsElement) {
-          const connectedElements = graph.getNeighbors(srcViewAsElement);
+        //find sourceView as Element to get Neighbors and check if it's already connected to the target
+        if (sourceViewAsElement) {
+          const connectedElements = graph.getNeighbors(sourceViewAsElement);
           const isConnected = connectedElements.find(
-            (connectedElement) => connectedElement.cid === tgtView.model.cid,
+            (connectedElement) => connectedElement.cid === targetView.model.cid,
           );
           const isAllowed = checkIfConnectionIsAllowed(
             graph,
-            tgtView,
-            srcView,
+            targetView,
+            sourceView,
             connectionRules,
           );
 
@@ -150,7 +150,7 @@ export class ComposerPaper {
     });
 
     //Event that is triggered when user clicks on the cell. It's used to send the cell data to the sidebar and create a Halo around the cell. with option to link it to another cell
-    this.paper.on("cell:pointerup", (cellView) => {
+    this.paper.on("cell:pointerup", (cellView: dia.CellView) => {
       //We don't want interaction at all if cellView is a Link
       if (cellView.model instanceof dia.Link) {
         return;
@@ -168,9 +168,10 @@ export class ComposerPaper {
     });
 
     //Event that is triggered when user clicks on the link. It's used to show the link tools and the link labels for connected cells
-    this.paper.on("link:mouseenter", (linkView) => {
-      const source = linkView.model.source();
-      const target = linkView.model.target();
+    this.paper.on("link:mouseenter", (linkView: dia.LinkView) => {
+      const { model } = linkView;
+      const source = model.source();
+      const target = model.target();
 
       if (!source.id || !target.id) {
         return;
@@ -181,7 +182,7 @@ export class ComposerPaper {
 
       // source or target cell have name starting with "_" means that it shouldn't have label when hovering
       if (!(sourceCell.getName()[0] === "_")) {
-        linkView.model.appendLabel({
+        model.appendLabel({
           attrs: {
             rect: {
               fill: "none",
@@ -199,7 +200,7 @@ export class ComposerPaper {
       }
 
       if (!(targetCell.getName()[0] === "_")) {
-        linkView.model.appendLabel({
+        model.appendLabel({
           attrs: {
             rect: {
               fill: "none",
@@ -217,9 +218,9 @@ export class ComposerPaper {
       }
 
       if (
-        linkView.model.get("isBlockedFromEditing") ||
+        model.get("isBlockedFromEditing") ||
         !editable ||
-        !linkView.model.get("isRelationshipConnection")
+        !model.get("isRelationshipConnection")
       ) {
         return;
       }
@@ -235,16 +236,17 @@ export class ComposerPaper {
 
     //Event that is triggered when user drags the link from one cell to another. It's used to update the connection between the cells
     this.paper.on("link:connect", (linkView: dia.LinkView) => {
+      const { model } = linkView;
       //only id values are stored in the linkView
-      const source = linkView.model.source();
-      const target = linkView.model.target();
+      const source = model.source();
+      const target = model.target();
 
-      const sourceCell = graph.getCell(
-        source.id as dia.Cell.ID,
-      ) as ServiceEntityBlock;
-      const targetCell = graph.getCell(
-        target.id as dia.Cell.ID,
-      ) as ServiceEntityBlock;
+      if (!source.id || !target.id) {
+        return;
+      }
+
+      const sourceCell = graph.getCell(source.id) as ServiceEntityBlock;
+      const targetCell = graph.getCell(target.id) as ServiceEntityBlock;
 
       /**
        * Function that checks if cell that we are connecting  to is being the one storing information about said connection.
@@ -275,7 +277,7 @@ export class ComposerPaper {
               connectingCell.id,
               cellConnectionRule.attributeName,
             );
-            linkView.model.set("isRelationshipConnection", true);
+            model.set("isRelationshipConnection", true);
             document.dispatchEvent(
               new CustomEvent("updateServiceOrderItems", {
                 detail: { cell: sourceCell, action: ActionEnum.UPDATE },

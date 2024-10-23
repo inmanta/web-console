@@ -79,7 +79,7 @@ export const useGetInstanceWithRelations = (
     serviceModel: ServiceModel | EmbeddedEntity,
   ): string[] => {
     const relations =
-      serviceModel.inter_service_relations?.map((relation) => relation.name) ||
+      serviceModel.inter_service_relations.map((relation) => relation.name) ||
       [];
 
     const nestedRelations = serviceModel.embedded_entities.flatMap((entity) =>

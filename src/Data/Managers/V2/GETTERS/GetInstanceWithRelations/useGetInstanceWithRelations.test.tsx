@@ -8,7 +8,7 @@ import {
   childModel,
   testInstance,
   testService,
-} from "@/UI/Components/Diagram/Mocks/Mock";
+} from "@/UI/Components/Diagram/Mocks";
 import { useGetInstanceWithRelations } from "./useGetInstanceWithRelations";
 
 export const server = setupServer(
