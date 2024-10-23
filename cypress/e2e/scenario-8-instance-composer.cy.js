@@ -72,7 +72,7 @@ if (Cypress.env("edition") === "iso") {
     });
 
     // Note: trying to toggle fullscreen mode results in typeError: permission denied, assertion about fullscreen API is not possible, and it's done in Jest test case
-    it("8.1 composer opens up has it's default navigation working", () => {
+    it("8.1 composer opens up has its default paning working", () => {
       // Select 'test' environment
       cy.visit("/console/");
       cy.get('[aria-label="Environment card"]')
