@@ -20,7 +20,7 @@ export class InstanceStencilTab {
    *
    * @param {HTMLElement} stencilElement - The HTML element to which the stencil will be appended.
    * @param {ui.PaperScroller} scroller - The jointJS scroller associated with the stencil.
-   * @param {ServiceModel} service - The service model used to populate the stencil with adequate Elements.
+   * @param {ServiceModel} service - The service model used to populate the stencil with corresponding Elements.
    */
   constructor(
     stencilElement: HTMLElement,
@@ -41,22 +41,18 @@ export class InstanceStencilTab {
       },
       dragStartClone: (cell: dia.Cell) => {
         const serviceModel = cell.get("serviceModel");
-        const isCore = false;
-        const isInEditMode = false;
-        const isEmbedded = true;
 
         const fieldCreator = new FieldCreator(new CreateModifierHandler());
         const fields = fieldCreator.attributesToFields(serviceModel.attributes);
-        const attrs = createFormState(fields);
 
-        return createComposerEntity(
+        return createComposerEntity({
           serviceModel,
-          isCore,
-          isInEditMode,
-          attrs,
-          isEmbedded,
-          cell.get("holderName"),
-        );
+          isCore: false,
+          isInEditMode: false,
+          attributes: createFormState(fields),
+          isEmbedded: true,
+          holderName: cell.get("holderName"),
+        });
       },
       dragEndClone: (el) => el.clone().set("items", el.get("items")), //cloned element loses key value pairs, so we need to set them again
       layout: {

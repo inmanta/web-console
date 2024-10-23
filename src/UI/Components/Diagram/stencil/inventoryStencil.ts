@@ -18,7 +18,7 @@ export class InventoryStencilTab {
    *
    * @param {HTMLElement} stencilElement - The HTML element to which the stencil will be appended.
    * @param {ui.PaperScroller} scroller - The jointJS scroller associated with the stencil.
-   * @param {Inventories} serviceInventories - The service inventories used to populate the stencil with adequate Elements.
+   * @param {Inventories} serviceInventories - The service inventories used to populate the stencil with corresponding Elements.
    */
   constructor(
     stencilElement: HTMLElement,
@@ -76,15 +76,12 @@ export class InventoryStencilTab {
         "standard.Path": ["description"],
       },
       dragStartClone: (cell: dia.Cell) => {
-        const isCore = false;
-        const isInEditMode = false;
-
-        const entity = createComposerEntity(
-          cell.get("serviceModel"),
-          isCore,
-          isInEditMode,
-          cell.get("instanceAttributes"),
-        );
+        const entity = createComposerEntity({
+          serviceModel: cell.get("serviceModel"),
+          isCore: false,
+          isInEditMode: false,
+          attributes: cell.get("instanceAttributes"),
+        });
 
         //set id to the one that is stored in the stencil which equal to the instance id
         entity.set("id", cell.get("id"));

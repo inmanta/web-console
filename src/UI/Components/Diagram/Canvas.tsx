@@ -4,7 +4,7 @@ import { ui } from "@inmanta/rappid";
 import styled from "styled-components";
 import { CanvasContext, InstanceComposerContext } from "./Context";
 import { EventWrapper } from "./Context/EventWrapper";
-import { DictModal, RightSidebar, Actions } from "./components";
+import { DictModal, RightSidebar, ComposerActions } from "./components";
 import { createConnectionRules, createStencilState } from "./helpers";
 import { diagramInit } from "./init";
 import { StencilSidebar } from "./stencil";
@@ -158,15 +158,15 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
     if (!ZoomHandler.current || !scroller) {
       return;
     }
-    const navigator = new ZoomHandlerService(ZoomHandler.current, scroller);
+    const zoomHandler = new ZoomHandlerService(ZoomHandler.current, scroller);
 
-    return () => navigator.remove();
+    return () => zoomHandler.remove();
   }, [scroller]);
 
   return (
     <EventWrapper>
       <DictModal />
-      <Actions serviceName={mainService.name} editable={editable} />
+      <ComposerActions serviceName={mainService.name} editable={editable} />
       <CanvasWrapper id="canvas-wrapper" data-testid="Composer-Container">
         <StencilContainer
           className="left_sidebar"

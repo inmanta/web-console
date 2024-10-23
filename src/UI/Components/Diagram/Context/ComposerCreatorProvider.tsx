@@ -33,14 +33,16 @@ interface Props {
  * @returns {React.FC<Props>} The ComposerCreatorProvider component.
  */
 export const ComposerCreatorProvider: React.FC<Props> = ({ serviceName }) => {
-  const [relatedServiceNames, setRelatedServiceNames] = useState<string[]>([]);
+  const [interServiceRelationNames, setInterServiceRelationNames] = useState<
+    string[]
+  >([]);
   const { environmentHandler } = useContext(DependencyContext);
   const environment = environmentHandler.useId();
 
   const serviceModels = useGetAllServiceModels(environment).useContinuous();
 
   const relatedInventoriesQuery = useGetInventoryList(
-    relatedServiceNames,
+    interServiceRelationNames,
     environment,
   ).useContinuous();
 
@@ -51,7 +53,7 @@ export const ComposerCreatorProvider: React.FC<Props> = ({ serviceName }) => {
       );
 
       if (mainService) {
-        setRelatedServiceNames(findInterServiceRelations(mainService));
+        setInterServiceRelationNames(findInterServiceRelations(mainService));
       }
     }
   }, [serviceModels.isSuccess, serviceName, serviceModels.data]);

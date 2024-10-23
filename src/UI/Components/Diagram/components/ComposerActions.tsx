@@ -13,7 +13,7 @@ import { getServiceOrderItems } from "../helpers";
 import { SavedCoordinates } from "../interfaces";
 
 /**
- * Properties for the Actions component.
+ * Properties for the ComposerActions component.
  *
  * @interface
  * @prop {string} serviceName - The name of the service.
@@ -25,7 +25,7 @@ interface Props {
 }
 
 /**
- * Actions component
+ * ComposerActions component
  *
  * This component represents the actions for the Composer.
  * It contains controls to cancel creating or editing instance or sending serviceOrderItems to the backend.
@@ -36,9 +36,9 @@ interface Props {
  * @prop {boolean} props.editable - A flag indicating if the diagram is editable.
  * @prop {DiagramHandlers | null} props.diagramHandlers - The handlers for various diagram actions.
  *
- * @returns {React.FC} The Actions component.
+ * @returns {React.FC} The ComposerActions component.
  */
-export const Actions: React.FC<Props> = ({ serviceName, editable }) => {
+export const ComposerActions: React.FC<Props> = ({ serviceName, editable }) => {
   const { serviceModels, mainService, instance } = useContext(
     InstanceComposerContext,
   );

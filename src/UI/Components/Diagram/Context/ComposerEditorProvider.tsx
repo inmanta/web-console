@@ -46,7 +46,9 @@ export const ComposerEditorProvider: React.FC<Props> = ({
   instance,
   editable,
 }) => {
-  const [relatedServiceNames, setRelatedServiceNames] = useState<string[]>([]);
+  const [interServiceRelationNames, setInterServiceRelationNames] = useState<
+    string[]
+  >([]);
   const { environmentHandler } = useContext(DependencyContext);
   const environment = environmentHandler.useId();
 
@@ -70,14 +72,14 @@ export const ComposerEditorProvider: React.FC<Props> = ({
   ).useOneTime();
 
   const relatedInventoriesQuery = useGetInventoryList(
-    relatedServiceNames,
+    interServiceRelationNames,
     environment,
   ).useContinuous();
 
   useEffect(() => {
     if (serviceModelsQuery.isSuccess) {
       if (mainService) {
-        setRelatedServiceNames(findInterServiceRelations(mainService));
+        setInterServiceRelationNames(findInterServiceRelations(mainService));
       }
     }
   }, [

@@ -23,7 +23,7 @@ import {
   childModel,
   containerModel,
   parentModel,
-  relatedServices,
+  interServiceRelations,
   testApiInstance,
   testApiInstanceModel,
   testEmbeddedApiInstances,
@@ -515,8 +515,8 @@ describe("shapesDataTransform", () => {
       },
     };
     const result = shapesDataTransform(
-      relatedServices[0],
-      relatedServices,
+      interServiceRelations[0],
+      interServiceRelations,
       childModel,
     );
 
@@ -540,8 +540,8 @@ describe("shapesDataTransform", () => {
       },
     };
     const result = shapesDataTransform(
-      relatedServices[1],
-      relatedServices,
+      interServiceRelations[1],
+      interServiceRelations,
       containerModel,
     );
 
@@ -997,21 +997,21 @@ describe("checkIfConnectionIsAllowed", () => {
       model: graph,
     });
 
-    const isCore = false;
-    const isInEditMode = false;
-
-    const serviceA = createComposerEntity(
-      Service.a,
-      isCore,
-      isInEditMode,
-      InstanceAttributesA,
-    );
-    const serviceB = createComposerEntity(
-      Service.a.embedded_entities[0],
-      isCore,
-      isInEditMode,
-      (InstanceAttributesA["circuits"] as InstanceAttributeModel[])[0],
-    );
+    const serviceA = createComposerEntity({
+      serviceModel: Service.a,
+      isCore: false,
+      isInEditMode: false,
+      attributes: InstanceAttributesA,
+    });
+    const serviceB = createComposerEntity({
+      serviceModel: Service.a.embedded_entities[0],
+      isCore: false,
+      isInEditMode: false,
+      attributes: (
+        InstanceAttributesA["circuits"] as InstanceAttributeModel[]
+      )[0],
+      isEmbedded: true,
+    });
 
     graph.addCells([serviceA, serviceB]);
 
@@ -1032,21 +1032,18 @@ describe("checkIfConnectionIsAllowed", () => {
       model: graph,
     });
 
-    const isCore = false;
-    const isInEditMode = false;
-
-    const serviceA = createComposerEntity(
-      Service.a,
-      isCore,
-      isInEditMode,
-      InstanceAttributesA,
-    );
-    const serviceB = createComposerEntity(
-      Service.b,
-      isCore,
-      isInEditMode,
-      InstanceAttributesB,
-    );
+    const serviceA = createComposerEntity({
+      serviceModel: Service.a,
+      isCore: false,
+      isInEditMode: false,
+      attributes: InstanceAttributesA,
+    });
+    const serviceB = createComposerEntity({
+      serviceModel: Service.b,
+      isCore: false,
+      isInEditMode: false,
+      attributes: InstanceAttributesB,
+    });
 
     graph.addCells([serviceA, serviceB]);
 
@@ -1067,21 +1064,20 @@ describe("checkIfConnectionIsAllowed", () => {
       model: graph,
     });
 
-    const isCore = false;
-    const isInEditMode = false;
-
-    const serviceA = createComposerEntity(
-      Service.a,
-      isCore,
-      isInEditMode,
-      InstanceAttributesA,
-    );
-    const serviceB = createComposerEntity(
-      Service.a.embedded_entities[0],
-      isCore,
-      isInEditMode,
-      (InstanceAttributesA["circuits"] as InstanceAttributeModel[])[0],
-    );
+    const serviceA = createComposerEntity({
+      serviceModel: Service.a,
+      isCore: false,
+      isInEditMode: false,
+      attributes: InstanceAttributesA,
+    });
+    const serviceB = createComposerEntity({
+      serviceModel: Service.a.embedded_entities[0],
+      isCore: false,
+      isInEditMode: false,
+      attributes: (
+        InstanceAttributesA["circuits"] as InstanceAttributeModel[]
+      )[0],
+    });
 
     graph.addCells([serviceA, serviceB]);
 
@@ -1104,24 +1100,22 @@ describe("checkIfConnectionIsAllowed", () => {
       model: graph,
     });
 
-    const isCore = false;
-    const isInEditMode = false;
-    const isEmbedded = true;
-
-    const serviceA = createComposerEntity(
-      Service.a,
-      isCore,
-      isInEditMode,
-      InstanceAttributesA,
-    );
-    const serviceB = createComposerEntity(
-      Service.a.embedded_entities[0],
-      isCore,
-      isInEditMode,
-      (InstanceAttributesA["circuits"] as InstanceAttributeModel[])[0],
-      isEmbedded,
-      Service.a.name,
-    );
+    const serviceA = createComposerEntity({
+      serviceModel: Service.a,
+      isCore: false,
+      isInEditMode: false,
+      attributes: InstanceAttributesA,
+    });
+    const serviceB = createComposerEntity({
+      serviceModel: Service.a.embedded_entities[0],
+      isCore: false,
+      isInEditMode: false,
+      attributes: (
+        InstanceAttributesA["circuits"] as InstanceAttributeModel[]
+      )[0],
+      isEmbedded: true,
+      holderName: Service.a.name,
+    });
 
     graph.addCells([serviceA, serviceB]);
 
@@ -1144,29 +1138,27 @@ describe("checkIfConnectionIsAllowed", () => {
       model: graph,
     });
 
-    const isCoreFalse = false;
-    const isCoreTrue = false;
-    const isInEditMode = false;
-
-    const serviceA = createComposerEntity(
-      Service.a,
-      isCoreFalse,
-      isInEditMode,
-      InstanceAttributesA,
-    );
-    const serviceB = createComposerEntity(
-      Service.a,
-      isCoreTrue,
-      isInEditMode,
-      InstanceAttributesA,
-    );
-    const serviceC = createComposerEntity(
-      Service.a.embedded_entities[0],
-      isCoreTrue,
-      isInEditMode,
-      (InstanceAttributesA["circuits"] as InstanceAttributeModel[])[0],
-      true,
-    );
+    const serviceA = createComposerEntity({
+      serviceModel: Service.a,
+      isCore: false,
+      isInEditMode: false,
+      attributes: InstanceAttributesA,
+    });
+    const serviceB = createComposerEntity({
+      serviceModel: Service.a,
+      isCore: true,
+      isInEditMode: false,
+      attributes: InstanceAttributesA,
+    });
+    const serviceC = createComposerEntity({
+      serviceModel: Service.a.embedded_entities[0],
+      isCore: true,
+      isInEditMode: false,
+      attributes: (
+        InstanceAttributesA["circuits"] as InstanceAttributeModel[]
+      )[0],
+      isEmbedded: true,
+    });
 
     graph.addCells([serviceA, serviceB, serviceC]);
 
@@ -1515,21 +1507,20 @@ describe("updateLabelPosition", () => {
       model: graph,
     });
 
-    const isCore = false;
-    const isEmbedded = false;
-
-    const sourceService = createComposerEntity(
-      Service.a,
-      isCore,
-      isEmbedded,
-      InstanceAttributesA,
-    );
-    const targetService = createComposerEntity(
-      Service.b,
-      isCore,
-      isEmbedded,
-      InstanceAttributesB,
-    );
+    const sourceService = createComposerEntity({
+      serviceModel: Service.a,
+      isCore: false,
+      isEmbedded: false,
+      isInEditMode: false,
+      attributes: InstanceAttributesA,
+    });
+    const targetService = createComposerEntity({
+      serviceModel: Service.a,
+      isCore: false,
+      isEmbedded: false,
+      isInEditMode: false,
+      attributes: InstanceAttributesB,
+    });
 
     graph.addCell(sourceService);
     graph.addCell(targetService);
@@ -1653,21 +1644,20 @@ describe("toggleLooseElement", () => {
       model: graph,
     });
 
-    const isCore = false;
-    const isEmbedded = false;
-
     //add highlighter
-    const entity = createComposerEntity(
-      Service.a,
-      isCore,
-      isEmbedded,
-      InstanceAttributesA,
-    );
+    const entity = createComposerEntity({
+      serviceModel: Service.a,
+      isCore: false,
+      isEmbedded: false,
+      isInEditMode: false,
+      attributes: InstanceAttributesA,
+    });
 
     graph.addCell(entity);
 
     toggleLooseElement(paper.findViewByModel(entity), EmbeddedEventEnum.ADD);
 
+    //assert the arguments of the first call - calls is array of the arguments of each call
     expect((dispatchEventSpy.mock.calls[0][0] as CustomEvent).detail).toEqual(
       JSON.stringify({ kind: "add", id: entity.id }),
     );
@@ -1680,6 +1670,8 @@ describe("toggleLooseElement", () => {
     expect(
       dia.HighlighterView.get(paper.findViewByModel(entity), "loose_element"),
     ).toBeNull();
+
+    //assert the arguments of the second call
     expect((dispatchEventSpy.mock.calls[1][0] as CustomEvent).detail).toEqual(
       JSON.stringify({ kind: "remove", id: entity.id }),
     );
@@ -1691,15 +1683,13 @@ describe("toggleLooseElement", () => {
       model: graph,
     });
 
-    const isCore = false;
-    const isEmbedded = false;
-
-    const entity = createComposerEntity(
-      Service.a,
-      isCore,
-      isEmbedded,
-      InstanceAttributesA,
-    );
+    const entity = createComposerEntity({
+      serviceModel: Service.a,
+      isCore: false,
+      isEmbedded: false,
+      isInEditMode: false,
+      attributes: InstanceAttributesA,
+    });
 
     graph.addCell(entity);
 
@@ -1789,24 +1779,17 @@ describe("showLinkTools", () => {
 
     connectionRules[childModel.name][0].modifier = modifier;
 
-    const isCore = false;
-    const isEmbedded = false;
-    const attributes = undefined;
-
-    const parentEntity = createComposerEntity(
-      parentModel,
-      isCore,
-      isParentInEditMode,
-      attributes,
-      isEmbedded,
-    );
-    const childEntity = createComposerEntity(
-      childModel,
-      isCore,
-      isChildInEditMode,
-      attributes,
-      isEmbedded,
-    );
+    const parentEntity = createComposerEntity({
+      serviceModel: parentModel,
+      isCore: false,
+      isInEditMode: isParentInEditMode,
+    });
+    const childEntity = createComposerEntity({
+      serviceModel: childModel,
+      isCore: false,
+      isInEditMode: isChildInEditMode,
+      isEmbedded: true,
+    });
 
     graph.addCell(parentEntity);
     graph.addCell(childEntity);

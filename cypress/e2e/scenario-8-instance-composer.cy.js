@@ -143,7 +143,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#inventory-stencil").should("not.be.visible");
     });
 
-    it("8.2 composer is able to create instance", () => {
+    it("8.2 composer create view can perform it's required functions and deploy created instance", () => {
       // Select 'test' environment
       cy.visit("/console/");
       cy.get('[aria-label="Environment card"]')
@@ -179,10 +179,6 @@ if (Cypress.env("edition") === "iso") {
       cy.get("button").contains("Deploy").click();
 
       cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 1);
-      // await until parent_service is deployed and up
-      cy.get('[data-label="State"]', {
-        timeout: 90000,
-      }).should("have.text", "up");
 
       //add another parent instance
       cy.get('[aria-label="AddInstanceToggle"]').click();
@@ -200,9 +196,12 @@ if (Cypress.env("edition") === "iso") {
       cy.get("button").contains("Deploy").click();
 
       cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 2);
-      // await until parent_service is deployed and up
+      // await until two parent_service are deployed and up
       cy.get('[data-label="State"]', { timeout: 90000 })
-        .eq(0, { timeout: 90000 })
+        .eq(1)
+        .should("have.text", "up");
+      cy.get('[data-label="State"]', { timeout: 90000 })
+        .eq(0)
         .should("have.text", "up");
 
       //Add child_service instance
@@ -219,7 +218,7 @@ if (Cypress.env("edition") === "iso") {
       // Expect Canvas to be visible
       cy.get(".canvas").should("be.visible");
 
-      //assert if default entities are present
+      //assert if default entities are present, on init on the canvas we should have already basic required structure for the service instance
       cy.get('[data-type="app.ServiceEntityBlock"').should("have.length", 2);
       cy.get('[data-type="app.ServiceEntityBlock"')
         .contains("embedded")
@@ -254,7 +253,6 @@ if (Cypress.env("edition") === "iso") {
         .contains("many-defaults")
         .click();
       cy.get("button").contains("Remove").should("be.disabled");
-      cy.get("button").contains("Edit").should("be.enabled");
       cy.get("input").should("have.length", 21);
 
       //fill some of core attributes
@@ -314,12 +312,11 @@ if (Cypress.env("edition") === "iso") {
 
       cy.get("button").contains("Save").click();
 
-      //assert that embedded instance have all attributes, can't be removed and can be edited
+      //assert that embedded instance have all attributes, this particular embedded entity can't be removed but can be edited
       cy.get('[data-type="app.ServiceEntityBlock"')
         .contains("embedded")
         .click();
       cy.get("button").contains("Remove").should("be.disabled");
-      cy.get("button").contains("Edit").should("be.enabled");
       cy.get("input").should("have.length", 21);
 
       //fill some of embedded attributes, they are exactly the same as core attributes so we need to check only one fully, as the logic is the same
@@ -375,6 +372,28 @@ if (Cypress.env("edition") === "iso") {
       cy.get("button").contains("Edit").should("be.enabled");
       cy.get("input").should("have.length", 21);
 
+      //remove extra_embedded instance to simulate that user added that by a mistake yet want to remove it
+      cy.get("button").contains("Remove").click();
+      cy.get('[data-type="app.ServiceEntityBlock"')
+        .contains("extra_embedded")
+        .should("not.exist");
+
+      //Drag once again extra_embedded onto canvas and assert that is highlighted as loose element
+      cy.get(".extra_embedded_bodyTwo")
+        .trigger("mouseover")
+        .trigger("mousedown")
+        .trigger("mousemove", {
+          clientX: 800,
+          clientY: 500,
+        })
+        .trigger("mouseup");
+
+      cy.get(".joint-loose_element-highlight").should("be.visible");
+
+      //assert that extra_embedded instance have all attributes, can be removed and can be edited
+      cy.get('[data-type="app.ServiceEntityBlock"')
+        .contains("extra_embedded")
+        .click();
       //fill some of embedded attributes, they are exactly the same as core attributes so we need to check only one fully, as the logic is the same
       cy.get("button").contains("Edit").click();
 
@@ -511,7 +530,7 @@ if (Cypress.env("edition") === "iso") {
       );
     });
 
-    it("8.3 composer is able to edit instances attributes", () => {
+    it("8.3 composer edit view can perform it's required functions and deploy edited instance", () => {
       // Select 'test' environment
       cy.visit("/console/");
       cy.get('[aria-label="Environment card"]')
@@ -532,7 +551,7 @@ if (Cypress.env("edition") === "iso") {
       // Expect Canvas to be visible
       cy.get(".canvas").should("be.visible");
 
-      //assert if default entities are present
+      //assert if default entities are present, on init on the canvas we should have already basic required structure for the service instance
       cy.get('[data-type="app.ServiceEntityBlock"]').should("have.length", 5);
       cy.get('[data-type="Link"').should("have.length", 4);
 
@@ -561,7 +580,6 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[data-type="app.ServiceEntityBlock"]')
         .contains("many-defaults")
         .click();
-      cy.get("button").contains("Edit").should("be.enabled");
       cy.get("button").contains("Edit").click();
 
       cy.get('[aria-label="TextInput-default_string"]').type(
@@ -582,7 +600,6 @@ if (Cypress.env("edition") === "iso") {
         .contains("embedded")
         .click();
       cy.get("button").contains("Remove").should("be.disabled");
-      cy.get("button").contains("Edit").should("be.enabled");
       cy.get("button").contains("Edit").click();
 
       cy.get('[aria-label="TextInput-default_string"]').type(
@@ -602,7 +619,6 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[data-type="app.ServiceEntityBlock"]')
         .contains("extra_embedded")
         .click();
-      cy.get("button").contains("Remove").should("be.enabled");
       cy.get("button").contains("Remove").click();
 
       cy.get("button").contains("Deploy").click();
@@ -683,7 +699,7 @@ if (Cypress.env("edition") === "iso") {
       );
     });
 
-    it("8.4 composer is able to edit instances relations", () => {
+    it("8.4 composer edit view is able to add/remove instances relations", () => {
       // Select 'test' environment
       cy.visit("/console/");
       cy.get('[aria-label="Environment card"]')
@@ -702,12 +718,11 @@ if (Cypress.env("edition") === "iso") {
       // Expect Canvas to be visible
       cy.get(".canvas").should("be.visible");
 
-      //assert if default entities are present
+      //assert if default entities are present, on init on the canvas we should have already basic required structure for the service instance
       cy.get('[data-type="app.ServiceEntityBlock"').should("have.length", 1);
 
       cy.get('[data-type="app.ServiceEntityBlock"]').click();
       cy.get("button").contains("Remove").should("be.disabled");
-      cy.get("button").contains("Edit").should("be.enabled");
       cy.get("button").contains("Edit").click();
 
       cy.get('[aria-label="TextInput-name"]').type("test_child");
@@ -763,7 +778,7 @@ if (Cypress.env("edition") === "iso") {
       // Expect Canvas to be visible
       cy.get(".canvas").should("be.visible");
 
-      //assert if default entities are present
+      //assert if default entities are present, on init on the canvas we should have already basic required structure for the service instance
       cy.get('[data-type="app.ServiceEntityBlock"]').should("have.length", 2);
       cy.get('[data-type="Link"').should("have.length", 1);
 

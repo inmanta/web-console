@@ -93,9 +93,10 @@ test("if the fetched instance has referenced instance(s), then query will return
 
   expect(result.current.data).toBeDefined();
   expect(result.current.data?.instance.id).toEqual("test_id");
-  expect(result.current.data?.relatedInstances).toHaveLength(1);
+  expect(result.current.data?.interServiceRelations).toHaveLength(1);
   expect(
-    (result.current.data?.relatedInstances as ServiceInstanceModel[])[0].id,
+    (result.current.data?.interServiceRelations as ServiceInstanceModel[])[0]
+      .id,
   ).toEqual("test_mpn_id");
 });
 
@@ -112,13 +113,14 @@ test("if the fetched instance has inter-service relation(s) in the model, then q
 
   expect(result.current.data).toBeDefined();
   expect(result.current.data?.instance.id).toEqual("child_id");
-  expect(result.current.data?.relatedInstances).toHaveLength(1);
+  expect(result.current.data?.interServiceRelations).toHaveLength(1);
   expect(
-    (result.current.data?.relatedInstances as ServiceInstanceModel[])[0].id,
+    (result.current.data?.interServiceRelations as ServiceInstanceModel[])[0]
+      .id,
   ).toEqual("test_mpn_id");
 });
 
-test("when instance returned has not referenced instance(s), then the query will return the given instance without relatedInstances", async () => {
+test("when instance returned has not referenced instance(s), then the query will return the given instance without interServiceRelations", async () => {
   const { result } = renderHook(
     () =>
       useGetInstanceWithRelations(
@@ -135,5 +137,5 @@ test("when instance returned has not referenced instance(s), then the query will
 
   expect(result.current.data).toBeDefined();
   expect(result.current.data?.instance.id).toEqual("test_mpn_id");
-  expect(result.current.data?.relatedInstances).toHaveLength(0);
+  expect(result.current.data?.interServiceRelations).toHaveLength(0);
 });

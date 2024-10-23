@@ -13,7 +13,7 @@ import { useFetchHelpers } from "../../helpers";
  */
 export interface InstanceWithRelations {
   instance: ServiceInstanceModel;
-  relatedInstances?: ServiceInstanceModel[];
+  interServiceRelations?: ServiceInstanceModel[];
   coordinates?: string;
 }
 
@@ -120,7 +120,7 @@ export const useGetInstanceWithRelations = (
    *
    * @returns {string[]} An array of the Ids of all related instances.
    */
-  const getAllRelatedIds = (
+  const getInterServiceRelationIds = (
     attributes: InstanceAttributeModel,
     relationNames: string[],
     embeddedNames: string[],
@@ -141,11 +141,11 @@ export const useGetInstanceWithRelations = (
       if (Array.isArray(embeddedAttributes)) {
         // Recursively collect IDs from an array of embedded attributes
         return embeddedAttributes.flatMap((embedded) =>
-          getAllRelatedIds(embedded, relationNames, embeddedNames),
+          getInterServiceRelationIds(embedded, relationNames, embeddedNames),
         );
       } else {
         // Recursively collect IDs from a single embedded attribute
-        return getAllRelatedIds(
+        return getInterServiceRelationIds(
           embeddedAttributes as InstanceAttributeModel, //InstanceAttributeModel is a Record<string, unknown> so casting is required here
           relationNames,
           embeddedNames,
@@ -165,10 +165,10 @@ export const useGetInstanceWithRelations = (
    * @returns {Promise<InstanceWithRelations>} An object containing the fetched instance and its related instances.
    * @throws Error if the instance fails to fetch.
    */
-  const fetchAllInstances = async (
+  const fetchInstanceWithRelations = async (
     id: string,
   ): Promise<InstanceWithRelations> => {
-    const relatedInstances: ServiceInstanceModel[] = [];
+    const interServiceRelations: ServiceInstanceModel[] = [];
     const { data: instance } = await fetchSingleInstance(id);
     let serviceIds: string[] = [];
 
@@ -179,7 +179,11 @@ export const useGetInstanceWithRelations = (
       const attributes =
         instance.active_attributes || instance.candidate_attributes || {}; //we don't operate on rollback attributes
 
-      serviceIds = getAllRelatedIds(attributes, uniqueAttributes, allEmbedded);
+      serviceIds = getInterServiceRelationIds(
+        attributes,
+        uniqueAttributes,
+        allEmbedded,
+      );
     }
 
     const allIds = [
@@ -188,19 +192,19 @@ export const useGetInstanceWithRelations = (
 
     await Promise.all(
       allIds.map(async (relatedId) => {
-        const relatedInstance = await fetchSingleInstance(relatedId);
+        const interServiceRelation = await fetchSingleInstance(relatedId);
 
-        if (relatedInstance) {
-          relatedInstances.push(relatedInstance.data);
+        if (interServiceRelation) {
+          interServiceRelations.push(interServiceRelation.data);
         }
 
-        return relatedInstance;
+        return interServiceRelation;
       }),
     );
 
     return {
       instance,
-      relatedInstances,
+      interServiceRelations,
     };
   };
 
@@ -216,7 +220,7 @@ export const useGetInstanceWithRelations = (
           instanceId,
           environment,
         ],
-        queryFn: () => fetchAllInstances(instanceId),
+        queryFn: () => fetchInstanceWithRelations(instanceId),
         retry: false,
         enabled: serviceModel !== undefined,
       }),
@@ -227,7 +231,7 @@ export const useGetInstanceWithRelations = (
           instanceId,
           environment,
         ],
-        queryFn: () => fetchAllInstances(instanceId),
+        queryFn: () => fetchInstanceWithRelations(instanceId),
         retry: false,
         refetchInterval: 5000,
         enabled: serviceModel !== undefined,

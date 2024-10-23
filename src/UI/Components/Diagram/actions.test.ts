@@ -27,9 +27,11 @@ beforeAll(() => {
 
 describe("createComposerEntity", () => {
   it("creates a new core entity", () => {
-    const isCore = true;
-    const isInEditMode = false;
-    const coreEntity = createComposerEntity(parentModel, isCore, isInEditMode);
+    const coreEntity = createComposerEntity({
+      serviceModel: parentModel,
+      isCore: true,
+      isInEditMode: false,
+    });
 
     expect(coreEntity.get("holderName")).toBe(undefined);
     expect(coreEntity.get("isEmbedded")).toBe(undefined);
@@ -38,19 +40,13 @@ describe("createComposerEntity", () => {
   });
 
   it("creates a new embedded entity", () => {
-    const isCore = false;
-    const isEmbedded = true;
-    const isInEditMode = false;
-    const attributes = undefined;
-
-    const embeddedEntity = createComposerEntity(
-      containerModel.embedded_entities[0],
-      isCore,
-      isInEditMode,
-      attributes,
-      isEmbedded,
-      containerModel.name,
-    );
+    const embeddedEntity = createComposerEntity({
+      serviceModel: containerModel.embedded_entities[0],
+      isCore: false,
+      isInEditMode: false,
+      isEmbedded: true,
+      holderName: containerModel.name,
+    });
 
     expect(embeddedEntity.get("holderName")).toBe(containerModel.name);
     expect(embeddedEntity.get("isEmbedded")).toBe(true);
@@ -58,10 +54,11 @@ describe("createComposerEntity", () => {
     expect(embeddedEntity.get("isInEditMode")).toBe(false);
   });
   it("creates a new entity with inster-service relations", () => {
-    const isCore = false;
-    const isInEditMode = false;
-
-    const childEntity = createComposerEntity(childModel, isCore, isInEditMode);
+    const childEntity = createComposerEntity({
+      serviceModel: childModel,
+      isCore: false,
+      isInEditMode: false,
+    });
 
     expect(childEntity.get("holderName")).toBe(undefined);
     expect(childEntity.get("isEmbedded")).toBe(undefined);
@@ -202,7 +199,7 @@ describe("updateAttributes", () => {
   });
 });
 
-describe("addDefaultEntities", () => {
+describe("createComposerEntity", () => {
   it("return empty array for service without embedded entities to add to the graph ", () => {
     const graph = new dia.Graph({});
     const embedded = addDefaultEntities(graph, parentModel);
@@ -217,6 +214,8 @@ describe("addDefaultEntities", () => {
     const embedded = addDefaultEntities(graph, containerModel);
 
     expect(dispatchEventSpy).toHaveBeenCalledTimes(1);
+
+    //assert the arguments of the first call - calls is array of the arguments of each call
     expect(
       (dispatchEventSpy.mock.calls[0][0] as CustomEvent).detail,
     ).toMatchObject({
@@ -235,29 +234,26 @@ describe("addDefaultEntities", () => {
     const attributes = {
       name: "",
     };
-    const isCore = false;
-    const isInEditMode = false;
-    const isEmbedded = true;
 
-    const createdEntity1 = createComposerEntity(
-      {
+    const createdEntity1 = createComposerEntity({
+      serviceModel: {
         ...containerModel.embedded_entities[0],
         embedded_entities: [{ ...containerModel.embedded_entities[0] }],
       },
-      isCore,
-      isInEditMode,
+      isCore: false,
+      isInEditMode: false,
       attributes,
-      isEmbedded,
-      "container-service",
-    );
-    const createdEntity2 = createComposerEntity(
-      containerModel.embedded_entities[0],
-      isCore,
-      isInEditMode,
+      isEmbedded: true,
+      holderName: "container-service",
+    });
+    const createdEntity2 = createComposerEntity({
+      serviceModel: containerModel.embedded_entities[0],
+      isCore: false,
+      isInEditMode: false,
       attributes,
-      isEmbedded,
-      "child_container",
-    );
+      isEmbedded: true,
+      holderName: "child_container",
+    });
 
     addDefaultEntities(graph, {
       ...containerModel,
@@ -271,12 +267,14 @@ describe("addDefaultEntities", () => {
 
     expect(dispatchEventSpy).toHaveBeenCalledTimes(2);
 
+    //assert the arguments of the first call - calls is array of the arguments of each call
     expect(
       (dispatchEventSpy.mock.calls[0][0] as CustomEvent).detail,
     ).toMatchObject({
       action: "add",
       name: "child_container",
     });
+    //assert the arguments of the second call
     expect(
       (dispatchEventSpy.mock.calls[1][0] as CustomEvent).detail,
     ).toMatchObject({
@@ -298,8 +296,6 @@ describe("addDefaultEntities", () => {
     expect(addedCells[0].get("embeddedTo")).toStrictEqual(
       createdEntity2.get("embeddedTo"),
     );
-
-    //assert that  other cells were added to graph
   });
 });
 
@@ -452,6 +448,7 @@ describe("appendEmbeddedEntity", () => {
       expect(cells[0].get("cantBeRemoved")).toBe(true);
       expect(cells[0].get("relatedTo")).toMatchObject(expectedMap);
       expect(dispatchEventSpy).toHaveBeenCalledTimes(1);
+      //assert the arguments of the first call - calls is array of the arguments of each call
       expect(
         (dispatchEventSpy.mock.calls[0][0] as CustomEvent).detail,
       ).toMatchObject({
@@ -658,7 +655,7 @@ describe("appendInstance", () => {
 
     const mockedInstance: InstanceWithRelations = {
       instance: mockedInstanceWithRelations.instance,
-      relatedInstances: [],
+      interServiceRelations: [],
     };
     const isCore = true;
     const isBlockedFromEditing = false;

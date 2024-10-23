@@ -1,5 +1,6 @@
 import { dia } from "@inmanta/rappid";
 import { DirectedGraph } from "@joint/layout-directed-graph";
+import { uniqueId } from "lodash";
 import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from "@/Core";
 import { InstanceWithRelations } from "@/Data/Managers/V2/GETTERS/GetInstanceWithRelations";
 import { words } from "@/UI/words";
@@ -14,6 +15,20 @@ import candidateImage from "./icons/candidate-icon.svg";
 import { EmbeddedEventEnum, relationId } from "./interfaces";
 import { Link, ServiceEntityBlock } from "./shapes";
 
+interface Options {
+  serviceModel: ServiceModel | EmbeddedEntity;
+  isCore: boolean;
+  isInEditMode: boolean;
+  attributes?: InstanceAttributeModel;
+  isEmbedded?: boolean;
+  holderName?: string;
+  embeddedTo?: "string" | dia.Cell.ID;
+  isBlockedFromEditing?: boolean;
+  cantBeRemoved?: boolean;
+  stencilName?: string;
+  id?: string;
+}
+
 /**
  * Function that creates, appends and returns created Entity
  *
@@ -26,23 +41,32 @@ import { Link, ServiceEntityBlock } from "./shapes";
  *
  * @returns {ServiceEntityBlock} created JointJS shape
  */
-export function createComposerEntity(
-  serviceModel: ServiceModel | EmbeddedEntity,
-  isCore: boolean,
-  isInEditMode: boolean,
-  attributes?: InstanceAttributeModel,
+export function createComposerEntity({
+  serviceModel,
+  isCore,
+  isInEditMode,
+  attributes,
   isEmbedded = false,
   holderName = "",
-): ServiceEntityBlock {
+  embeddedTo,
+  isBlockedFromEditing,
+  cantBeRemoved,
+  stencilName,
+  id = uniqueId(),
+}: Options): ServiceEntityBlock {
   //Create shape for Entity
   const instanceAsTable = new ServiceEntityBlock();
 
   instanceAsTable.setName(serviceModel.name);
+  instanceAsTable.set("id", id);
 
   if (isEmbedded) {
     instanceAsTable.setTabColor("embedded");
+    instanceAsTable.set("embeddedTo", embeddedTo);
     instanceAsTable.set("isEmbedded", isEmbedded);
     instanceAsTable.set("holderName", holderName);
+    // If the instance is not core, we need to apply its stencil name to the shape to later disable its corresponding stencil in the sidebar
+    instanceAsTable.set("stencilName", stencilName);
   } else if (isCore) {
     instanceAsTable.set("isCore", isCore);
     instanceAsTable.setTabColor("core");
@@ -50,6 +74,8 @@ export function createComposerEntity(
 
   instanceAsTable.set("isInEditMode", isInEditMode);
   instanceAsTable.set("serviceModel", serviceModel);
+  instanceAsTable.set("isBlockedFromEditing", isBlockedFromEditing);
+  instanceAsTable.set("cantBeRemoved", cantBeRemoved);
 
   if (
     serviceModel.inter_service_relations &&
@@ -104,36 +130,23 @@ export function appendInstance(
     serviceInstance.candidate_attributes ||
     serviceInstance.active_attributes ||
     undefined;
-  const isInEditMode = true;
 
-  const instanceAsTable = createComposerEntity(
-    serviceInstanceModel,
-    isMainInstance,
-    isInEditMode,
+  const stencilName = serviceInstance.service_identity_attribute_value
+    ? serviceInstance.service_identity_attribute_value
+    : serviceInstance.id;
+
+  const instanceAsTable = createComposerEntity({
+    serviceModel: serviceInstanceModel,
+    isCore: isMainInstance,
+    isInEditMode: true,
     attributes,
-  );
-
-  // If the instance is not main, we need to apply its stencil name to the shape to later disable its coressponding stencil in the sidebar
-  if (!isMainInstance) {
-    instanceAsTable.set(
-      "stencilName",
-      serviceInstance.service_identity_attribute_value
-        ? serviceInstance.service_identity_attribute_value
-        : serviceInstance.id,
-    );
-  }
-
-  instanceAsTable.set("id", instanceWithRelations.instance.id);
-
-  instanceAsTable.set(
-    "isBlockedFromEditing",
-    !serviceInstanceModel.strict_modifier_enforcement || isBlockedFromEditing,
-  );
-
-  instanceAsTable.set(
-    "cantBeRemoved",
-    isMainInstance && !serviceInstanceModel.strict_modifier_enforcement,
-  );
+    cantBeRemoved:
+      isMainInstance && !serviceInstanceModel.strict_modifier_enforcement,
+    isBlockedFromEditing:
+      !serviceInstanceModel.strict_modifier_enforcement || isBlockedFromEditing,
+    stencilName: isMainInstance ? stencilName : undefined,
+    id: instanceWithRelations.instance.id,
+  });
 
   instanceAsTable.addTo(graph);
 
@@ -150,6 +163,7 @@ export function appendInstance(
       "candidate",
       isBlockedFromEditing,
     );
+    addInfoIcon(instanceAsTable, "candidate");
   } else if (serviceInstance.active_attributes) {
     embeddedEntities = addEmbeddedEntities(
       graph,
@@ -160,108 +174,111 @@ export function appendInstance(
       "active",
       isBlockedFromEditing,
     );
+    addInfoIcon(instanceAsTable, "active");
   }
   const remainingCells = [instanceAsTable, ...embeddedEntities];
 
-  if (instanceWithRelations.relatedInstances) {
+  if (instanceWithRelations.interServiceRelations) {
     //map through inter-service related instances and either append them and connect to them or connect to already existing ones
-    instanceWithRelations.relatedInstances.forEach((relatedInstance) => {
-      const cellAdded = graph.getCell(relatedInstance.id);
-      const isBlockedFromEditing = true;
+    instanceWithRelations.interServiceRelations.forEach(
+      (interServiceRelation) => {
+        const cellAdded = graph.getCell(interServiceRelation.id);
+        const isBlockedFromEditing = true;
 
-      //If cell isn't in the graph, we need to append it and connect it to the one we are currently working on
-      if (!cellAdded) {
-        const isMainInstance = false;
-        const appendedInstances = appendInstance(
-          paper,
-          graph,
-          { instance: relatedInstance },
-          services,
-          isMainInstance,
-          isBlockedFromEditing,
-        );
-
-        //disable Inventory Stencil for inter-service relation instance
-        const elements = [
-          [
-            `.${appendedInstances[0].get("stencilName")}_body`,
-            "stencil_accent-disabled",
-          ],
-          [
-            `.${appendedInstances[0].get("stencilName")}_bodyTwo`,
-            "stencil_body-disabled",
-          ],
-          `.${appendedInstances[0].get("stencilName")}_text, 'stencil_text-disabled`,
-        ];
-
-        elements.forEach(([elementName, className]) => {
-          const element = document.querySelector(elementName);
-
-          if (element) {
-            element.classList.add(className);
-          }
-        });
-
-        //try to connect appended entities to the one existing in the graph
-        connectAppendedEntities(appendedInstances, graph);
-      } else {
-        //If cell is already in the graph, we need to check if it got in its inter-service relations the one with id that corresponds with created instanceAsTable
-        let isConnected = false;
-        const cellAsBlock = cellAdded as ServiceEntityBlock;
-        const relations = cellAsBlock.getRelations();
-
-        if (relations) {
-          const correspondingId = findCorrespondingId(
-            relations,
-            instanceAsTable,
+        //If cell isn't in the graph, we need to append it and connect it to the one we are currently working on
+        if (!cellAdded) {
+          const isMainInstance = false;
+          const appendedInstances = appendInstance(
+            paper,
+            graph,
+            { instance: interServiceRelation },
+            services,
+            isMainInstance,
+            isBlockedFromEditing,
           );
 
-          if (correspondingId) {
-            isConnected = true;
-            connectEntities(
-              graph,
-              instanceAsTable,
-              [cellAsBlock],
-              serviceInstanceModel.strict_modifier_enforcement,
-            );
-          }
-        }
-        //If doesn't, or the one we are looking for isn't among the ones stored, we need go through every connected shape and do the same assertion,
-        //as the fact that we have that cell as relatedInstance tells us that either that or its embedded entities has connection
-        if (!isConnected) {
-          const neighbors = graph.getNeighbors(cellAdded as dia.Element);
+          //disable Inventory Stencil for inter-service relation instance
+          const elements = [
+            [
+              `.${appendedInstances[0].get("stencilName")}_body`,
+              "stencil_accent-disabled",
+            ],
+            [
+              `.${appendedInstances[0].get("stencilName")}_bodyTwo`,
+              "stencil_body-disabled",
+            ],
+            `.${appendedInstances[0].get("stencilName")}_text, 'stencil_text-disabled`,
+          ];
 
-          neighbors.map((cell) => {
-            const neighborRelations = (
-              cell as ServiceEntityBlock
-            ).getRelations();
+          elements.forEach(([elementName, className]) => {
+            const element = document.querySelector(elementName);
 
-            if (neighborRelations) {
-              const correspondingId = findCorrespondingId(
-                neighborRelations,
-                instanceAsTable,
-              );
-
-              if (correspondingId) {
-                isConnected = true;
-                connectEntities(
-                  graph,
-                  instanceAsTable,
-                  [cell as ServiceEntityBlock],
-                  serviceInstanceModel.strict_modifier_enforcement,
-                );
-              }
+            if (element) {
+              element.classList.add(className);
             }
           });
+
+          //try to connect appended entities to the one existing in the graph
+          connectAppendedEntities(appendedInstances, graph);
+        } else {
+          //If cell is already in the graph, we need to check if it got in its inter-service relations the one with id that corresponds with created instanceAsTable
+          let isConnected = false;
+          const cellAsBlock = cellAdded as ServiceEntityBlock;
+          const relations = cellAsBlock.getRelations();
+
+          if (relations) {
+            const correspondingId = findCorrespondingId(
+              relations,
+              instanceAsTable,
+            );
+
+            if (correspondingId) {
+              isConnected = true;
+              connectEntities(
+                graph,
+                instanceAsTable,
+                [cellAsBlock],
+                serviceInstanceModel.strict_modifier_enforcement,
+              );
+            }
+          }
+          //If doesn't, or the one we are looking for isn't among the ones stored, we need go through every connected shape and do the same assertion,
+          //as the fact that we have that cell as interServiceRelation tells us that either that or its embedded entities has connection
+          if (!isConnected) {
+            const neighbors = graph.getNeighbors(cellAdded as dia.Element);
+
+            neighbors.map((cell) => {
+              const neighborRelations = (
+                cell as ServiceEntityBlock
+              ).getRelations();
+
+              if (neighborRelations) {
+                const correspondingId = findCorrespondingId(
+                  neighborRelations,
+                  instanceAsTable,
+                );
+
+                if (correspondingId) {
+                  isConnected = true;
+                  connectEntities(
+                    graph,
+                    instanceAsTable,
+                    [cell as ServiceEntityBlock],
+                    serviceInstanceModel.strict_modifier_enforcement,
+                  );
+                }
+              }
+            });
+          }
+          connectEntities(
+            graph,
+            instanceAsTable,
+            [cellAsBlock],
+            serviceInstanceModel.strict_modifier_enforcement,
+          );
         }
-        connectEntities(
-          graph,
-          instanceAsTable,
-          [cellAsBlock],
-          serviceInstanceModel.strict_modifier_enforcement,
-        );
-      }
-    });
+      },
+    );
 
     //if we are in the children view above implementation won't be enough to connect all entities, thus we need to iterate through core & embedded entities
 
@@ -315,23 +332,22 @@ export function appendEmbeddedEntity(
   function appendSingleEntity(
     entityInstance: InstanceAttributeModel,
   ): ServiceEntityBlock {
-    const isCore = false;
-    const isInEditMode = isBlockedFromEditing || false;
-    const isEmbedded = true;
-
     //Create shape for Entity
-    const instanceAsTable = createComposerEntity(
-      embeddedEntity,
-      isCore,
-      isInEditMode,
-      entityInstance,
-      isEmbedded,
+    const instanceAsTable = createComposerEntity({
+      serviceModel: embeddedEntity,
+      isCore: false,
+      isInEditMode: isBlockedFromEditing || false,
+      attributes: entityInstance,
+      isEmbedded: true,
       holderName,
-    );
+      embeddedTo,
+      isBlockedFromEditing,
+      cantBeRemoved: embeddedEntity.modifier !== "rw+",
+    });
 
-    instanceAsTable.set("embeddedTo", embeddedTo);
-    instanceAsTable.set("isBlockedFromEditing", isBlockedFromEditing);
-    instanceAsTable.set("cantBeRemoved", embeddedEntity.modifier !== "rw+");
+    if (presentedAttr) {
+      addInfoIcon(instanceAsTable, presentedAttr);
+    }
 
     document.dispatchEvent(
       new CustomEvent("updateStencil", {
@@ -357,12 +373,6 @@ export function appendEmbeddedEntity(
         presentedAttr,
         isBlockedFromEditing,
       );
-
-      if (presentedAttr) {
-        appendedEntity.forEach((entity) => {
-          addInfoIcon(entity, presentedAttr);
-        });
-      }
 
       connectEntities(
         graph,
@@ -408,16 +418,12 @@ export function populateGraphWithDefault(
   const fieldCreator = new FieldCreator(new CreateModifierHandler());
   const fields = fieldCreator.attributesToFields(serviceModel.attributes);
 
-  const attrs = createFormState(fields);
-  const isCore = true;
-  const isInEditMode = false;
-
-  const coreEntity = createComposerEntity(
+  const coreEntity = createComposerEntity({
     serviceModel,
-    isCore,
-    isInEditMode,
-    attrs,
-  );
+    isCore: true,
+    isInEditMode: false,
+    attributes: createFormState(fields),
+  });
 
   coreEntity.addTo(graph);
 
@@ -446,11 +452,6 @@ export function addDefaultEntities(
   graph: dia.Graph,
   service: ServiceModel | EmbeddedEntity,
 ): ServiceEntityBlock[] {
-  //all entities created here are embedded entities
-  const isCore = false;
-  const isInEditMode = false;
-  const isEmbedded = true;
-
   const embedded_entities = service.embedded_entities
     .filter((embedded_entity) => embedded_entity.lower_limit > 0)
     .map((embedded_entity) => {
@@ -458,16 +459,15 @@ export function addDefaultEntities(
       const fields = fieldCreator.attributesToFields(
         embedded_entity.attributes,
       );
-      const attrs = createFormState(fields);
 
-      const embeddedEntity = createComposerEntity(
-        embedded_entity,
-        isCore,
-        isInEditMode,
-        attrs,
-        isEmbedded,
-        service.name,
-      );
+      const embeddedEntity = createComposerEntity({
+        serviceModel: embedded_entity,
+        isCore: false,
+        isInEditMode: false,
+        attributes: createFormState(fields),
+        isEmbedded: true,
+        holderName: service.name,
+      });
 
       document.dispatchEvent(
         new CustomEvent("updateStencil", {
@@ -586,8 +586,6 @@ function addEmbeddedEntities(
 ): ServiceEntityBlock[] {
   const { embedded_entities } = serviceModel;
 
-  addInfoIcon(instanceAsTable, presentedAttr);
-
   //iterate through embedded entities to create and connect them
   //we are basing iteration on service Model, if there is no value in the instance, skip that entity
   const createdEmbedded = embedded_entities
@@ -603,10 +601,6 @@ function addEmbeddedEntities(
         presentedAttr,
         !serviceModel.strict_modifier_enforcement || isBlockedFromEditing,
       );
-
-      appendedEntities.map((entity) => {
-        addInfoIcon(entity, presentedAttr);
-      });
 
       connectEntities(
         graph,

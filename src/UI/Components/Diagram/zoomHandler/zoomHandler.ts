@@ -70,7 +70,7 @@ const IconButton = ui.widgets.button.extend({
  * @class
  * @prop {ui.Toolbar} toolbar - The toolbar object that contains the paning controls.
  * @method constructor - Constructs a new instance of the ZoomHandlerService class.
- * @param {HTMLElement} element - The HTML element that will contain the navigator.
+ * @param {HTMLElement} element - The HTML element that will contain the zoomHandler.
  * @param {ui.PaperScroller} scroller - The scroller object that allows and zooming in the canvas.
  */
 export class ZoomHandlerService {

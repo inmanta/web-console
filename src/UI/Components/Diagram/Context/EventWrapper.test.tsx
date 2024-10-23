@@ -16,7 +16,7 @@ const setup = (testingComponent: JSX.Element) => {
   );
 };
 
-describe("looseElement", () => {
+describe("looseElement event handler -", () => {
   const TestingComponent = (): JSX.Element => {
     const { looseElement } = useContext(CanvasContext);
 

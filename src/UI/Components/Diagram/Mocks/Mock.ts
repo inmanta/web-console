@@ -1471,7 +1471,7 @@ export const testParentService: ComposerServiceOrderItem = {
   },
 };
 
-export const relatedServices: ComposerServiceOrderItem[] = [
+export const interServiceRelations: ComposerServiceOrderItem[] = [
   {
     instance_id: "13920268-cce0-4491-93b5-11316aa2fc37",
     service_entity: "child-service",
@@ -1537,7 +1537,7 @@ export const mockedInstanceWithRelations: InstanceWithRelations = {
     service_identity_attribute_value: "test12345",
     referenced_by: [],
   },
-  relatedInstances: [
+  interServiceRelations: [
     {
       id: "7cd8b669-597a-4341-9b71-07f550b89826",
       environment: "efa7c243-81aa-4986-b0b1-c89583cbf846",
@@ -1621,7 +1621,7 @@ export const mockedInstanceTwo: InstanceWithRelations = {
     service_identity_attribute_value: "test12345",
     referenced_by: [],
   },
-  relatedInstances: [],
+  interServiceRelations: [],
 };
 
 export const mockedInstanceTwoServiceModel: ServiceModel = {
@@ -2401,7 +2401,7 @@ export const mockedInstanceThree: InstanceWithRelations = {
     service_identity_attribute_value: "test12345",
     referenced_by: [],
   },
-  relatedInstances: [],
+  interServiceRelations: [],
 };
 
 export const mockedInstanceThreeServiceModel: ServiceModel = {

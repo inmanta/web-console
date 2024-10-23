@@ -93,6 +93,14 @@ export const RightSidebar: React.FC = () => {
   };
 
   /**
+   * Handles the edit action for the form.
+   * Opens the form by setting the form open state to true.
+   */
+  const onEdit = (): void => {
+    setIsFormOpen(true);
+  };
+
+  /**
    * Handles the cancel action for the form.
    * Closes the form by setting the form open state to false.
    */
@@ -226,9 +234,7 @@ export const RightSidebar: React.FC = () => {
               <StyledButton
                 variant="primary"
                 width={200}
-                onClick={() => {
-                  setIsFormOpen(true);
-                }}
+                onClick={onEdit}
                 isDisabled={
                   !cellToEdit || cellToEdit.model.get("isBlockedFromEditing")
                 }
