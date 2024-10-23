@@ -110,7 +110,7 @@ export const useGetInstanceWithRelations = (
   };
 
   /**
-   * This function is responsible for extracting the Ids of all related instances from the provided attributes.
+   * This function extracts all the inter-service-relation ids from the provided attributes.
    * It does this by mapping over the provided relation names and extracting the corresponding Ids from the attributes.
    * It also recursively extracts the Ids of all related instances from any embedded entities within the provided attributes.
    *
