@@ -110,7 +110,7 @@ export const useGetInstanceWithRelations = (
   };
 
   /**
-   * This function is responsible for extracting the Ids of all related instances from the provided attributes.
+   * This function extracts all the inter-service-relation ids from the provided attributes.
    * It does this by mapping over the provided relation names and extracting the corresponding Ids from the attributes.
    * It also recursively extracts the Ids of all related instances from any embedded entities within the provided attributes.
    *
@@ -160,7 +160,7 @@ export const useGetInstanceWithRelations = (
   };
 
   /**
-   * Fetches a service instance with its related instances. The related instances are all instances connected with given instance by inter-service relation, both, as a parent and as a child.
+   *  For a given instance Id, fetches the root instance with its corresponding inter-service-relation instances.
    * @param {string} id - The ID of the instance to fetch.
    * @returns {Promise<InstanceWithRelations>} An object containing the fetched instance and its related instances.
    * @throws Error if the instance fails to fetch.

@@ -48,7 +48,7 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
     null,
   ); // without this state it could happen that cells would load before sidebar is ready so its state could be outdated
 
-  // create stencil state and set flag to true to enable the other components to be created - the flag is created to allow the components to be depended of that states, passing the state as a dependency would cause an infinite loop
+  // create stencil state and set flag to true to enable the other components to be created - the flag is created to allow the components to depend from that states, passing the state as a dependency would cause an infinite loop
   useEffect(() => {
     if (!mainService) {
       return;

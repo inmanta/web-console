@@ -1,7 +1,7 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import "@inmanta/rappid/joint-plus.css";
 import { useNavigate } from "react-router-dom";
-import { AlertVariant, Button, Flex, FlexItem } from "@patternfly/react-core";
+import { AlertVariant, Flex, FlexItem } from "@patternfly/react-core";
 import styled from "styled-components";
 import { usePostMetadata } from "@/Data/Managers/V2/POST/PostMetadata";
 import { usePostOrder } from "@/Data/Managers/V2/POST/PostOrder";
@@ -11,6 +11,7 @@ import { ToastAlert } from "../../ToastAlert";
 import { CanvasContext, InstanceComposerContext } from "../Context/Context";
 import { getServiceOrderItems } from "../helpers";
 import { SavedCoordinates } from "../interfaces";
+import { StyledButton } from "./RightSidebar";
 
 /**
  * Properties for the ComposerActions component.
@@ -165,11 +166,4 @@ export const ComposerActions: React.FC<Props> = ({ serviceName, editable }) => {
 
 const Container = styled(Flex)`
   padding: 0 0 20px;
-`;
-
-const StyledButton = styled(Button)`
-  --pf-v5-c-button--PaddingTop: 3px;
-  --pf-v5-c-button--PaddingBottom: 3px;
-  width: 101px;
-  height: 36px;
 `;
