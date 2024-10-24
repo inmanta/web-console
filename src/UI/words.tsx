@@ -206,9 +206,9 @@ const dict = {
 
   "instanceComposer.noData.errorTitle": "No Data",
   "instanceComposer.error.updateInstanceNotInMap":
-    "Updated instance is not in the map, if error persists please refresh the page",
+    "Updated instance is not in the map, if error persists please refresh the page.",
   "instanceComposer.noData.errorMessage": (serviceId) =>
-    `There is no data available to display for the given Id:${serviceId}`,
+    `There is no data available to display for the given id: ${serviceId}`,
   "instanceComposer.noServiceModel.errorTitle": "No Service Model",
   "instanceComposer.noServiceModel.errorMessage": (serviceName) =>
     `There is no service model available for ${serviceName}`,
@@ -216,7 +216,8 @@ const dict = {
   "instanceComposer.addInstanceButtonTooltip":
     "Add new instance to the canvas.",
   "instanceComposer.orderDescription": "Requested with Instance Composer",
-  "instanceComposer.errorMessage": "missing Instance Model",
+  "instanceComposer.errorMessage.missingModel":
+    "The instance attribute model is missing",
   "instanceComposer.editButton": "Edit in Composer",
   "instanceComposer.showButton": "Show in Composer",
   "instanceComposer.formModal.placeholder": "Choose a Service",
@@ -224,11 +225,11 @@ const dict = {
   "instanceComposer.formModal.edit.title": "Edit Entity",
   "instanceComposer.formModal.noAttributes": "There are no attributes to edit.",
   "instanceComposer.success": "The request got sent successfully",
-  "instanceComposer.success.title": "Instance Composed successfully",
+  "instanceComposer.success.title": "Instance composed successfully",
   "instanceComposer.failed.title": "Instance Composing failed",
   "instanceComposer.dictModal": (valueName: string) => `Values of ${valueName}`,
   "instanceComposer.disabled":
-    "Your licence doesn't give you access to the Instance Composer, please contact support for more details.",
+    "Your license doesn't give you access to the Instance Composer, please contact support for more details.",
   "instanceComposer.title": "Instance Composer",
   "instanceComposer.title.edit": "Instance Composer Editor",
   "instanceComposer.title.view": "Instance Composer Viewer",

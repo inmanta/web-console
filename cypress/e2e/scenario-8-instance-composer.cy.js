@@ -230,14 +230,14 @@ if (Cypress.env("edition") === "iso") {
 
       //assert default embedded entities are present and first one is disabled as it reached its max limit
       cy.get("#instance-stencil").within(() => {
-        cy.get(".embedded_bodyTwo").should("be.visible");
-        cy.get(".embedded_bodyTwo").should(
+        cy.get(".bodyTwo_embedded").should("be.visible");
+        cy.get(".bodyTwo_embedded").should(
           "have.class",
           "stencil_body-disabled",
         );
 
-        cy.get(".extra_embedded_bodyTwo").should("be.visible");
-        cy.get(".extra_embedded_bodyTwo").should(
+        cy.get(".bodyTwo_extra_embedded").should("be.visible");
+        cy.get(".bodyTwo_extra_embedded").should(
           "have.not.class",
           "stencil_body-disabled",
         );
@@ -353,7 +353,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get("button").contains("Save").click();
 
       //Drag extra_embedded onto canvas and assert that is highlighted as loose element
-      cy.get(".extra_embedded_bodyTwo")
+      cy.get(".bodyTwo_extra_embedded")
         .trigger("mouseover")
         .trigger("mousedown")
         .trigger("mousemove", {
@@ -379,7 +379,7 @@ if (Cypress.env("edition") === "iso") {
         .should("not.exist");
 
       //Drag once again extra_embedded onto canvas and assert that is highlighted as loose element
-      cy.get(".extra_embedded_bodyTwo")
+      cy.get(".bodyTwo_extra_embedded")
         .trigger("mouseover")
         .trigger("mousedown")
         .trigger("mousemove", {
@@ -449,7 +449,7 @@ if (Cypress.env("edition") === "iso") {
       //add parent instance to the canvas and connect it to the core instance
       cy.get("#inventory-tab").click();
 
-      cy.get(".test_name_bodyTwo")
+      cy.get(".bodyTwo_test_name")
         .trigger("mouseover")
         .trigger("mousedown")
         .trigger("mousemove", {
@@ -475,7 +475,7 @@ if (Cypress.env("edition") === "iso") {
       //add another parent instance to the canvas and connect it to the embedded instance
       cy.get('[data-name="fit-to-screen"]').click();
 
-      cy.get(".test_name2_bodyTwo")
+      cy.get(".bodyTwo_test_name2")
         .trigger("mouseover")
         .trigger("mousedown")
         .trigger("mousemove", {
@@ -732,7 +732,7 @@ if (Cypress.env("edition") === "iso") {
       //add parent instance to the canvas and connect it to the core instance
       cy.get("#inventory-tab").click();
 
-      cy.get(".test_name_bodyTwo")
+      cy.get(".bodyTwo_test_name")
         .trigger("mouseover")
         .trigger("mousedown")
         .trigger("mousemove", {
@@ -795,7 +795,7 @@ if (Cypress.env("edition") === "iso") {
         .contains("child-service")
         .click();
 
-      cy.get(".test_name2_bodyTwo")
+      cy.get(".bodyTwo_test_name2")
         .trigger("mouseover")
         .trigger("mousedown")
         .trigger("mousemove", {

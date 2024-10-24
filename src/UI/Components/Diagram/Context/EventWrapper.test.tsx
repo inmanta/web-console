@@ -259,9 +259,9 @@ describe("updateStencil", () => {
         ))}
         {Object.keys(stencilState).map((key) => (
           <div data-testid={key} key={`${key}-stencil_mock`}>
-            <div data-testid={`${key}_body`} className={`${key}_body`} />
-            <div data-testid={`${key}_bodyTwo`} className={`${key}_bodyTwo`} />
-            <div data-testid={`${key}_text`} className={`${key}_text`} />
+            <div data-testid={`body_${key}`} className={`body_${key}`} />
+            <div data-testid={`bodyTwo_${key}`} className={`bodyTwo_${key}`} />
+            <div data-testid={`text_${key}`} className={`text_${key}`} />
           </div>
         ))}
       </div>
@@ -334,22 +334,22 @@ describe("updateStencil", () => {
   it("updateStencil Event handler correctly apply classNames to the elements in the DOM", async () => {
     render(setup(<TestingComponent />));
 
-    expect(screen.getByTestId("test_body")).not.toHaveClass(
+    expect(screen.getByTestId("body_test")).not.toHaveClass(
       "stencil_accent-disabled",
     );
-    expect(screen.getByTestId("test_bodyTwo")).not.toHaveClass(
+    expect(screen.getByTestId("bodyTwo_test")).not.toHaveClass(
       "stencil_body-disabled",
     );
-    expect(screen.getByTestId("test_text")).not.toHaveClass(
+    expect(screen.getByTestId("text_test")).not.toHaveClass(
       "stencil_text-disabled",
     );
-    expect(screen.getByTestId("test2_body")).not.toHaveClass(
+    expect(screen.getByTestId("body_test2")).not.toHaveClass(
       "stencil_accent-disabled",
     );
-    expect(screen.getByTestId("test2_bodyTwo")).not.toHaveClass(
+    expect(screen.getByTestId("bodyTwo_test2")).not.toHaveClass(
       "stencil_body-disabled",
     );
-    expect(screen.getByTestId("test2_text")).not.toHaveClass(
+    expect(screen.getByTestId("text_test2")).not.toHaveClass(
       "stencil_text-disabled",
     );
 
@@ -362,13 +362,13 @@ describe("updateStencil", () => {
     });
 
     //expect disabled classes as test got current increased to max value
-    expect(screen.getByTestId("test_body")).toHaveClass(
+    expect(screen.getByTestId("body_test")).toHaveClass(
       "stencil_accent-disabled",
     );
-    expect(screen.getByTestId("test_bodyTwo")).toHaveClass(
+    expect(screen.getByTestId("bodyTwo_test")).toHaveClass(
       "stencil_body-disabled",
     );
-    expect(screen.getByTestId("test_text")).toHaveClass(
+    expect(screen.getByTestId("text_test")).toHaveClass(
       "stencil_text-disabled",
     );
 
@@ -381,13 +381,13 @@ describe("updateStencil", () => {
     });
 
     //expect no disabled classes as test2 doesn't have max set
-    expect(screen.getByTestId("test2_body")).not.toHaveClass(
+    expect(screen.getByTestId("body_test2")).not.toHaveClass(
       "stencil_accent-disabled",
     );
-    expect(screen.getByTestId("test2_bodyTwo")).not.toHaveClass(
+    expect(screen.getByTestId("bodyTwo_test2")).not.toHaveClass(
       "stencil_body-disabled",
     );
-    expect(screen.getByTestId("test2_text")).not.toHaveClass(
+    expect(screen.getByTestId("text_test2")).not.toHaveClass(
       "stencil_text-disabled",
     );
 
@@ -400,13 +400,13 @@ describe("updateStencil", () => {
     });
 
     //expect no disabled classes as test got current decreased to 0, below max value
-    expect(screen.getByTestId("test_body")).not.toHaveClass(
+    expect(screen.getByTestId("body_test")).not.toHaveClass(
       "stencil_accent-disabled",
     );
-    expect(screen.getByTestId("test_bodyTwo")).not.toHaveClass(
+    expect(screen.getByTestId("bodyTwo_test")).not.toHaveClass(
       "stencil_body-disabled",
     );
-    expect(screen.getByTestId("test_text")).not.toHaveClass(
+    expect(screen.getByTestId("text_test")).not.toHaveClass(
       "stencil_text-disabled",
     );
   });

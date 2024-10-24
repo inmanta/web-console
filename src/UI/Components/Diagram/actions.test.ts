@@ -647,7 +647,7 @@ describe("appendInstance", () => {
         true,
         false,
       ),
-    ).toThrow("missing Instance Model");
+    ).toThrow("The instance attribute model is missing");
   });
 
   it("appends instance to the graph", () => {

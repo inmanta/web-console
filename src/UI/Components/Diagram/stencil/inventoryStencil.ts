@@ -9,12 +9,13 @@ const PADDING_S = GRID_SIZE;
 
 /**
  * Class initializing the Service Inventory Stencil Tab.
+ * This stencil tab is used to drag and drop the inter-service related instances onto the diagram.
  */
 export class InventoryStencilTab {
   stencil: ui.Stencil;
 
   /**
-   * Creates an inventory stencil tab.
+   * Creates the Service Inventory Stencil Tab.
    *
    * @param {HTMLElement} stencilElement - The HTML element to which the stencil will be appended.
    * @param {ui.PaperScroller} scroller - The jointJS scroller associated with the stencil.
@@ -33,6 +34,10 @@ export class InventoryStencilTab {
       const serviceModel = serviceModels.find(
         (model) => model.name === serviceName,
       );
+
+      if (!serviceModel) {
+        return;
+      }
 
       return (groups[serviceName] = serviceInventories[serviceName].map(
         (instance) => {
@@ -114,19 +119,22 @@ export class InventoryStencilTab {
 
     this.stencil.on("element:drop", (elementView) => {
       const elements = [
-        [
-          `.${elementView.model.get("stencilName")}_body`,
-          "stencil_accent-disabled",
-        ],
-        [
-          `.${elementView.model.get("stencilName")}_bodyTwo`,
-          "stencil_body-disabled",
-        ],
-        `.${elementView.model.get("stencilName")}_text, 'stencil_text-disabled`,
+        {
+          selector: `.body_${elementView.model.get("stencilName")}`,
+          className: "stencil_accent-disabled",
+        },
+        {
+          selector: `.bodyTwo_${elementView.model.get("stencilName")}`,
+          className: "stencil_body-disabled",
+        },
+        {
+          selector: `.text_${elementView.model.get("stencilName")}`,
+          className: "stencil_text-disabled",
+        },
       ];
 
-      elements.forEach(([elementName, className]) => {
-        const element = document.querySelector(elementName);
+      elements.forEach(({ selector, className }) => {
+        const element = document.querySelector(selector);
 
         if (element) {
           element.classList.add(className);

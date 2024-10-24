@@ -1,3 +1,4 @@
+import { shapes } from "@inmanta/rappid";
 import { uniqueId } from "lodash";
 import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from "@/Core";
 
@@ -6,16 +7,17 @@ import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from "@/Core";
  * Stencil Elements are the visual representation of the entities in the Stencil Sidebar
  *
  * @param {ServiceModel | EmbeddedEntity} service - The service model or embedded entity whose embedded entities are to be transformed.
- * @returns {Array} An array of stencil elements created from the embedded entities
+ *
+ * @returns {shapes.standard.Path[]} An array of stencil elements created from the embedded entities
  */
 export const transformEmbeddedToStencilElements = (
   service: ServiceModel | EmbeddedEntity,
-) => {
+): shapes.standard.Path[] => {
   return service.embedded_entities.flatMap((embedded_entity) => {
     const stencilElement = createStencilElement(
       embedded_entity.name,
       embedded_entity,
-      undefined,
+      {},
       true,
       service.name,
     );
@@ -30,19 +32,27 @@ export const transformEmbeddedToStencilElements = (
  * Creates a stencil element with the given parameters.
  *
  * @param {string} name - The name of the stencil element.
+ * @param {EmbeddedEntity | ServiceModel} serviceModel - The embedded entity model associated with the entity that the stencil element represent.
+ * @param {InstanceAttributeModel} instanceAttributes - The instance attributes of the entity that the stencil element represent.
  * @param {boolean} isEmbedded - A boolean indicating whether the entity that the stencil represent is embedded or not. Defaults to false.
- * @param {EmbeddedEntity} entityModel - The embedded entity model associated with the entity that the stencil element represent. Optional.
  * @param {string} holderName - The name of the holder of the element that the stencil element represent. Optional.
- * @returns {Object} An object representing the stencil element.
+ *
+ * @returns {shapes.standard.Path} An object representing the stencil element.
  */
 export const createStencilElement = (
   name: string,
-  serviceModel: EmbeddedEntity | ServiceModel | undefined = undefined,
-  instanceAttributes: InstanceAttributeModel | undefined = undefined,
+  serviceModel: EmbeddedEntity | ServiceModel,
+  instanceAttributes: InstanceAttributeModel,
   isEmbedded: boolean = false,
   holderName?: string,
-) => {
-  return {
+): shapes.standard.Path => {
+  let id = uniqueId();
+
+  if (instanceAttributes && instanceAttributes.id) {
+    id = instanceAttributes.id as string;
+  }
+
+  return new shapes.standard.Path({
     type: "standard.Path",
     size: { width: 240, height: 40 },
     name: name,
@@ -50,10 +60,10 @@ export const createStencilElement = (
     instanceAttributes,
     holderName,
     disabled: false,
-    id: instanceAttributes?.id || uniqueId(),
+    id,
     attrs: {
       body: {
-        class: name + "_body",
+        class: "body_" + name,
         width: 7,
         height: 40,
         x: 233,
@@ -61,15 +71,15 @@ export const createStencilElement = (
         stroke: "none",
       },
       bodyTwo: {
-        class: name + "_bodyTwo",
+        class: "bodyTwo_" + name,
         width: 240,
         height: 40,
         fill: "#FFFFFF",
         stroke: "none",
       },
       label: {
-        class: name + "_text",
-        refX: null, // reset the default
+        class: "text_" + name,
+        refX: undefined, // reset the default
         x: "10",
         textAnchor: "start",
         fontFamily: "sans-serif",
@@ -91,5 +101,5 @@ export const createStencilElement = (
         selector: "label",
       },
     ],
-  };
+  });
 };

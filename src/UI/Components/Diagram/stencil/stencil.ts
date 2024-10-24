@@ -11,6 +11,29 @@ export class StencilSidebar {
   instanceTab: InstanceStencilTab;
   inventoryTab: InventoryStencilTab;
   tabsToolbar: ui.Toolbar;
+  toggleTabVisibility = (
+    event: dia.Event,
+    tabOne: Tab,
+    tabTwo: Tab,
+    siblingOrder: "prev" | "next",
+  ) => {
+    if (event.target.classList.contains("-active")) {
+      return;
+    }
+    tabOne.stencil.el.classList.add("joint-hidden");
+    tabOne.stencil.freeze();
+
+    tabTwo.stencil.el.classList.remove("joint-hidden");
+    tabTwo.stencil.unfreeze();
+
+    event.target.classList.add("-active");
+
+    if (siblingOrder === "prev") {
+      event.target.previousSibling.classList.remove("-active");
+    } else {
+      event.target.nextSibling.classList.remove("-active");
+    }
+  };
 
   /**
    * Creates a stencil sidebar.
@@ -71,34 +94,23 @@ export class StencilSidebar {
       }
     }
 
-    this.tabsToolbar.on("new_tab:pointerclick", (event: dia.Event) => {
-      if (event.target.classList.contains("-active")) {
-        return;
-      }
-      this.inventoryTab.stencil.el.classList.add("joint-hidden");
-      this.inventoryTab.stencil.freeze();
+    this.tabsToolbar.on("new_tab:pointerclick", (event: dia.Event) =>
+      this.toggleTabVisibility(
+        event,
+        this.inventoryTab,
+        this.instanceTab,
+        "next",
+      ),
+    );
 
-      this.instanceTab.stencil.el.classList.remove("joint-hidden");
-      this.instanceTab.stencil.unfreeze();
-
-      event.target.classList.add("-active");
-      event.target.nextSibling.classList.remove("-active");
-    });
-
-    this.tabsToolbar.on("inventory_tab:pointerclick", (event: dia.Event) => {
-      if (event.target.classList.contains("-active")) {
-        return;
-      }
-
-      this.instanceTab.stencil.el.classList.add("joint-hidden");
-      this.instanceTab.stencil.freeze();
-
-      this.inventoryTab.stencil.el.classList.remove("joint-hidden");
-      this.inventoryTab.stencil.unfreeze();
-
-      event.target.classList.add("-active");
-      event.target.previousSibling.classList.remove("-active");
-    });
+    this.tabsToolbar.on("inventory_tab:pointerclick", (event: dia.Event) =>
+      this.toggleTabVisibility(
+        event,
+        this.instanceTab,
+        this.inventoryTab,
+        "prev",
+      ),
+    );
   }
 
   remove(): void {
@@ -107,3 +119,5 @@ export class StencilSidebar {
     this.tabsToolbar.remove();
   }
 }
+
+type Tab = InstanceStencilTab | InventoryStencilTab;

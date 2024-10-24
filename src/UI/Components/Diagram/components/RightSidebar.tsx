@@ -78,13 +78,22 @@ export const RightSidebar: React.FC = () => {
     if (stencilName) {
       //enable Inventory Stencil element for inter-service relation instance
       const elements = [
-        [`.${stencilName}_body`, "stencil_accent-disabled"],
-        [`.${stencilName}_bodyTwo`, "stencil_body-disabled"],
-        `.${stencilName}_text, 'stencil_text-disabled`,
+        {
+          selector: `.body_${stencilName}`,
+          className: "stencil_accent-disabled",
+        },
+        {
+          selector: `.bodyTwo_${stencilName}`,
+          className: "stencil_body-disabled",
+        },
+        {
+          selector: `.text_${stencilName}`,
+          className: "stencil_text-disabled",
+        },
       ];
 
-      elements.forEach(([elementName, className]) => {
-        const element = document.querySelector(elementName);
+      elements.forEach(({ selector, className }) => {
+        const element = document.querySelector(selector);
 
         if (element) {
           element.classList.remove(className);

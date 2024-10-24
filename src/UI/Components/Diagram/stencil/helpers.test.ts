@@ -4,63 +4,8 @@ import {
   transformEmbeddedToStencilElements,
 } from "./helpers";
 
-const defaultStencil = {
-  type: "standard.Path",
-  size: { width: 240, height: 40 },
-  name: "default",
-  holderName: undefined,
-  disabled: false,
-  instanceAttributes: undefined,
-  serviceModel: undefined,
-  id: "1",
-  attrs: {
-    body: {
-      width: 7,
-      height: 40,
-      x: 233,
-      fill: "#6753AC",
-      stroke: "none",
-      class: "default_body",
-    },
-    bodyTwo: {
-      width: 240,
-      height: 40,
-      fill: "#FFFFFF",
-      stroke: "none",
-      class: "default_bodyTwo",
-    },
-    label: {
-      refX: null,
-      x: "10",
-      textAnchor: "start",
-      fontFamily: "sans-serif",
-      fontSize: 12,
-      text: "default",
-      class: "default_text",
-    },
-  },
-  markup: [
-    {
-      tagName: "rect",
-      selector: "bodyTwo",
-    },
-    {
-      tagName: "rect",
-      selector: "body",
-    },
-    {
-      tagName: "text",
-      selector: "label",
-    },
-  ],
-};
-
 describe("createStencilElement", () => {
-  it("returns proper Stencil Elements based on properties passed", () => {
-    const defaultElement = createStencilElement("default");
-
-    expect(defaultElement).toStrictEqual(defaultStencil);
-
+  it("returns single instance of Stencil Element based on properties passed", () => {
     const embeddedElementWithModel = createStencilElement(
       "default",
       containerModel.embedded_entities[0],
@@ -72,25 +17,54 @@ describe("createStencilElement", () => {
       "holderName",
     );
 
-    expect(embeddedElementWithModel).toStrictEqual({
-      ...defaultStencil,
-      id: "2",
-      serviceModel: containerModel.embedded_entities[0],
-      holderName: "holderName",
-      instanceAttributes: {
-        attrOne: "test_value",
-        attrTwo: "other_test_value",
-      },
-      attrs: {
-        ...defaultStencil.attrs,
-        body: { ...defaultStencil.attrs.body, fill: "#0066cc" },
-      },
+    expect(embeddedElementWithModel.id).toEqual("1");
+    expect(embeddedElementWithModel.attributes.name).toEqual("default");
+    expect(embeddedElementWithModel.attributes.serviceModel).toStrictEqual(
+      containerModel.embedded_entities[0],
+    );
+    expect(embeddedElementWithModel.attributes.holderName).toEqual(
+      "holderName",
+    );
+    expect(
+      embeddedElementWithModel.attributes.instanceAttributes,
+    ).toStrictEqual({
+      attrOne: "test_value",
+      attrTwo: "other_test_value",
+    });
+    expect(embeddedElementWithModel.attributes.attrs?.body).toStrictEqual({
+      width: 7,
+      height: 40,
+      x: 233,
+      d: "M 0 0 H calc(w) V calc(h) H 0 Z",
+      strokeWidth: 2,
+      fill: "#0066cc",
+      stroke: "none",
+      class: "body_default",
+    });
+    expect(embeddedElementWithModel.attributes.attrs?.bodyTwo).toStrictEqual({
+      width: 240,
+      height: 40,
+      fill: "#FFFFFF",
+      stroke: "none",
+      class: "bodyTwo_default",
+    });
+    expect(embeddedElementWithModel.attributes.attrs?.label).toStrictEqual({
+      x: "10",
+      textAnchor: "start",
+      fontFamily: "sans-serif",
+      fontSize: 12,
+      text: "default",
+      refX: undefined,
+      class: "text_default",
+      y: "calc(h/2)",
+      textVerticalAnchor: "middle",
+      fill: "#333333",
     });
   });
 });
 
 describe("transformEmbeddedToStencilElements", () => {
-  it("returns proper Stencil Elements based on the Service Model passed", () => {
+  it("returns all Stencil Elements based on the Service Model passed", () => {
     const result = transformEmbeddedToStencilElements({
       ...testApiInstanceModel,
       name: "holderName",
@@ -108,69 +82,29 @@ describe("transformEmbeddedToStencilElements", () => {
       ],
     });
 
-    expect(result).toStrictEqual([
-      {
-        ...defaultStencil,
-        name: "embedded",
-        id: "3",
-        serviceModel: {
-          ...containerModel.embedded_entities[0],
-          name: "embedded",
-          embedded_entities: [
-            {
-              ...containerModel.embedded_entities[0],
-              name: "embedded-embedded",
-            },
-          ],
-        },
-        holderName: "holderName",
-        attrs: {
-          ...defaultStencil.attrs,
-          body: {
-            ...defaultStencil.attrs.body,
-            fill: "#0066cc",
-            class: "embedded_body",
-          },
-          bodyTwo: {
-            ...defaultStencil.attrs.bodyTwo,
-            fill: "#FFFFFF",
-            class: "embedded_bodyTwo",
-          },
-          label: {
-            ...defaultStencil.attrs.label,
-            text: "embedded",
-            class: "embedded_text",
-          },
-        },
-      },
-      {
-        ...defaultStencil,
-        name: "embedded-embedded",
-        id: "4",
-        serviceModel: {
+    expect(result.length).toEqual(2);
+    expect(result[0].id).toEqual("2");
+    expect(result[0].attributes.name).toEqual("embedded");
+    expect(result[0].attributes.serviceModel).toStrictEqual({
+      ...containerModel.embedded_entities[0],
+      name: "embedded",
+      embedded_entities: [
+        {
           ...containerModel.embedded_entities[0],
           name: "embedded-embedded",
         },
-        holderName: "embedded",
-        attrs: {
-          ...defaultStencil.attrs,
-          body: {
-            ...defaultStencil.attrs.body,
-            fill: "#0066cc",
-            class: "embedded-embedded_body",
-          },
-          bodyTwo: {
-            ...defaultStencil.attrs.bodyTwo,
-            fill: "#FFFFFF",
-            class: "embedded-embedded_bodyTwo",
-          },
-          label: {
-            ...defaultStencil.attrs.label,
-            text: "embedded-embedded",
-            class: "embedded-embedded_text",
-          },
-        },
-      },
-    ]);
+      ],
+    });
+    expect(result[0].attributes.holderName).toEqual("holderName");
+    expect(result[0].attributes.instanceAttributes).toStrictEqual({});
+
+    expect(result[1].id).toEqual("3");
+    expect(result[1].attributes.name).toEqual("embedded-embedded");
+    expect(result[1].attributes.serviceModel).toStrictEqual({
+      ...containerModel.embedded_entities[0],
+      name: "embedded-embedded",
+    });
+    expect(result[1].attributes.holderName).toEqual("embedded");
+    expect(result[1].attributes.instanceAttributes).toStrictEqual({});
   });
 });

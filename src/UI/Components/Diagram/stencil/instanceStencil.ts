@@ -11,12 +11,13 @@ import { transformEmbeddedToStencilElements } from "./helpers";
 
 /**
  * Class initializing the Service Instance Stencil Tab.
+ * This stencil tab is used to drag and drop the embedded elements onto the diagram.
  */
 export class InstanceStencilTab {
   stencil: ui.Stencil;
 
   /**
-   * Creates an instance service stencil Tab.
+   * Creates the Service Instance Stencil Tab.
    *
    * @param {HTMLElement} stencilElement - The HTML element to which the stencil will be appended.
    * @param {ui.PaperScroller} scroller - The jointJS scroller associated with the stencil.

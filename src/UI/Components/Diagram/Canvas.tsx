@@ -44,9 +44,7 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
   const [scroller, setScroller] = useState<ui.PaperScroller | null>(null);
   const [isStencilStateReady, setIsStencilStateReady] = useState(false);
 
-  const [stencilSidebar, setStencilSidebar] = useState<StencilSidebar | null>(
-    null,
-  ); // without this state it could happen that cells would load before sidebar is ready so its state could be outdated
+  const [leftSidebar, setLeftSidebar] = useState<StencilSidebar | null>(null); // without this state it could happen that cells would load before sidebar is ready so its state could be outdated
 
   // create stencil state and set flag to true to enable the other components to be created - the flag is created to allow the components to depend from that states, passing the state as a dependency would cause an infinite loop
   useEffect(() => {
@@ -99,7 +97,7 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
       return;
     }
 
-    const stencilSidebar = new StencilSidebar(
+    const leftSidebar = new StencilSidebar(
       LeftSidebar.current,
       scroller,
       relatedInventoriesQuery.data,
@@ -107,9 +105,9 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
       serviceModels,
     );
 
-    setStencilSidebar(stencilSidebar);
+    setLeftSidebar(leftSidebar);
 
-    return () => stencilSidebar.remove();
+    return () => leftSidebar.remove();
   }, [scroller, relatedInventoriesQuery.data, mainService, serviceModels]);
 
   /**
@@ -118,7 +116,7 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
    */
   useEffect(() => {
     if (
-      !stencilSidebar ||
+      !leftSidebar ||
       !diagramHandlers ||
       !serviceModels ||
       !mainService ||
@@ -149,7 +147,7 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
       setIsStencilStateReady(false);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [diagramHandlers, isStencilStateReady, stencilSidebar]);
+  }, [diagramHandlers, isStencilStateReady, leftSidebar]);
 
   /**
    * add the zoom handler only when the scroller is defined as it's needed to create the zoom handler
@@ -168,7 +166,7 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
       <DictModal />
       <ComposerActions serviceName={mainService.name} editable={editable} />
       <CanvasWrapper id="canvas-wrapper" data-testid="Composer-Container">
-        <StencilContainer
+        <LeftSidebarContainer
           className="left_sidebar"
           data-testid="left_sidebar"
           ref={LeftSidebar}
@@ -305,7 +303,7 @@ const CanvasContainer = styled.div`
 /**
  * To be able to have draggable items on the canvas, we need to have a stencil container to which we append the JointJS stencil objects that handle the drag and drop functionality.
  */
-const StencilContainer = styled.div`
+const LeftSidebarContainer = styled.div`
   width: 240px;
   height: 100%;
   background: var(--pf-v5-global--BackgroundColor--100);

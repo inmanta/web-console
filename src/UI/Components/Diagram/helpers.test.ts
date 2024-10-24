@@ -60,11 +60,11 @@ describe("extractRelationsIds", () => {
   };
 
   it.each`
-    serviceModel                                                              | serviceInstance                | expectedLength
-    ${Service.ServiceWithAllAttrs}                                            | ${ServiceInstance.allAttrs}    | ${0}
-    ${{ ...Service.ServiceWithAllAttrs, inter_service_relations: undefined }} | ${ServiceInstance.allAttrs}    | ${0}
-    ${Service.withRelationsOnly}                                              | ${serviceInstanceForThirdTest} | ${0}
-    ${Service.withRelationsOnly}                                              | ${ServiceInstance.allAttrs}    | ${0}
+    serviceModel                          | serviceInstance                | expectedLength
+    ${Service.ServiceWithAllAttrs}        | ${ServiceInstance.allAttrs}    | ${0}
+    ${{ ...Service.ServiceWithAllAttrs }} | ${ServiceInstance.allAttrs}    | ${0}
+    ${Service.withRelationsOnly}          | ${serviceInstanceForThirdTest} | ${0}
+    ${Service.withRelationsOnly}          | ${ServiceInstance.allAttrs}    | ${0}
   `(
     "should return empty array for given service model examples",
     ({
@@ -990,6 +990,13 @@ Object.defineProperty(global.SVGSVGElement.prototype, "createSVGPoint", {
 });
 
 describe("checkIfConnectionIsAllowed", () => {
+  const serviceA = createComposerEntity({
+    serviceModel: Service.a,
+    isCore: false,
+    isInEditMode: false,
+    attributes: InstanceAttributesA,
+  });
+
   it("WHEN one element has rule describing other THEN return true", () => {
     const rules = createConnectionRules([Service.a], {});
     const graph = new dia.Graph();
@@ -997,13 +1004,7 @@ describe("checkIfConnectionIsAllowed", () => {
       model: graph,
     });
 
-    const serviceA = createComposerEntity({
-      serviceModel: Service.a,
-      isCore: false,
-      isInEditMode: false,
-      attributes: InstanceAttributesA,
-    });
-    const serviceB = createComposerEntity({
+    const embeddedService = createComposerEntity({
       serviceModel: Service.a.embedded_entities[0],
       isCore: false,
       isInEditMode: false,
@@ -1013,12 +1014,12 @@ describe("checkIfConnectionIsAllowed", () => {
       isEmbedded: true,
     });
 
-    graph.addCells([serviceA, serviceB]);
+    graph.addCells([serviceA, embeddedService]);
 
     const result = checkIfConnectionIsAllowed(
       graph,
       paper.findViewByModel(serviceA),
-      paper.findViewByModel(serviceB),
+      paper.findViewByModel(embeddedService),
       rules,
     );
 
@@ -1032,25 +1033,19 @@ describe("checkIfConnectionIsAllowed", () => {
       model: graph,
     });
 
-    const serviceA = createComposerEntity({
-      serviceModel: Service.a,
-      isCore: false,
-      isInEditMode: false,
-      attributes: InstanceAttributesA,
-    });
-    const serviceB = createComposerEntity({
+    const independendService = createComposerEntity({
       serviceModel: Service.b,
       isCore: false,
       isInEditMode: false,
       attributes: InstanceAttributesB,
     });
 
-    graph.addCells([serviceA, serviceB]);
+    graph.addCells([serviceA, independendService]);
 
     const result = checkIfConnectionIsAllowed(
       graph,
       paper.findViewByModel(serviceA),
-      paper.findViewByModel(serviceB),
+      paper.findViewByModel(independendService),
       rules,
     );
 
@@ -1064,29 +1059,22 @@ describe("checkIfConnectionIsAllowed", () => {
       model: graph,
     });
 
-    const serviceA = createComposerEntity({
-      serviceModel: Service.a,
-      isCore: false,
-      isInEditMode: false,
-      attributes: InstanceAttributesA,
-    });
-    const serviceB = createComposerEntity({
+    const blockedService = createComposerEntity({
       serviceModel: Service.a.embedded_entities[0],
       isCore: false,
       isInEditMode: false,
       attributes: (
         InstanceAttributesA["circuits"] as InstanceAttributeModel[]
       )[0],
+      isBlockedFromEditing: true,
     });
 
-    graph.addCells([serviceA, serviceB]);
-
-    serviceB.set("isBlockedFromEditing", true);
+    graph.addCells([serviceA, blockedService]);
 
     const result = checkIfConnectionIsAllowed(
       graph,
       paper.findViewByModel(serviceA),
-      paper.findViewByModel(serviceB),
+      paper.findViewByModel(blockedService),
       rules,
     );
 
@@ -1100,12 +1088,8 @@ describe("checkIfConnectionIsAllowed", () => {
       model: graph,
     });
 
-    const serviceA = createComposerEntity({
-      serviceModel: Service.a,
-      isCore: false,
-      isInEditMode: false,
-      attributes: InstanceAttributesA,
-    });
+    serviceA.set("isBlockedFromEditing", true);
+
     const serviceB = createComposerEntity({
       serviceModel: Service.a.embedded_entities[0],
       isCore: false,
@@ -1119,8 +1103,6 @@ describe("checkIfConnectionIsAllowed", () => {
 
     graph.addCells([serviceA, serviceB]);
 
-    serviceA.set("isBlockedFromEditing", true);
-
     const result = checkIfConnectionIsAllowed(
       graph,
       paper.findViewByModel(serviceA),
@@ -1129,6 +1111,9 @@ describe("checkIfConnectionIsAllowed", () => {
     );
 
     expect(result).toBeFalsy();
+
+    //set back to default
+    serviceA.set("isBlockedFromEditing", false);
   });
 
   it("WHEN one element has rule describing other, but the other is and embedded entity already connected to parent THEN return false", () => {
@@ -1138,19 +1123,14 @@ describe("checkIfConnectionIsAllowed", () => {
       model: graph,
     });
 
-    const serviceA = createComposerEntity({
-      serviceModel: Service.a,
-      isCore: false,
-      isInEditMode: false,
-      attributes: InstanceAttributesA,
-    });
-    const serviceB = createComposerEntity({
+    const connectedCoreEntity = createComposerEntity({
       serviceModel: Service.a,
       isCore: true,
       isInEditMode: false,
       attributes: InstanceAttributesA,
     });
-    const serviceC = createComposerEntity({
+
+    const connectedEmbeddedEntity = createComposerEntity({
       serviceModel: Service.a.embedded_entities[0],
       isCore: true,
       isInEditMode: false,
@@ -1158,21 +1138,21 @@ describe("checkIfConnectionIsAllowed", () => {
         InstanceAttributesA["circuits"] as InstanceAttributeModel[]
       )[0],
       isEmbedded: true,
+      holderName: "service_name_a",
     });
 
-    graph.addCells([serviceA, serviceB, serviceC]);
+    graph.addCells([serviceA, connectedCoreEntity, connectedEmbeddedEntity]);
 
     const link = new Link();
 
-    link.source(serviceB);
-    link.target(serviceC);
+    link.source(connectedCoreEntity);
+    link.target(connectedEmbeddedEntity);
     link.addTo(graph);
-    serviceB.set("holderName", "service_name_a");
 
     const result = checkIfConnectionIsAllowed(
       graph,
       paper.findViewByModel(serviceA),
-      paper.findViewByModel(serviceB),
+      paper.findViewByModel(connectedEmbeddedEntity),
       rules,
     );
 

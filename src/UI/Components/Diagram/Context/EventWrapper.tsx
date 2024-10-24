@@ -140,9 +140,9 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
       }
 
       const elements = [
-        { selector: `.${name}_body`, class: "stencil_accent-disabled" },
-        { selector: `.${name}_bodyTwo`, class: "stencil_body-disabled" },
-        { selector: `.${name}_text`, class: "stencil_text-disabled" },
+        { selector: `.body_${name}`, className: "stencil_accent-disabled" },
+        { selector: `.bodyTwo_${name}`, className: "stencil_body-disabled" },
+        { selector: `.text_${name}`, className: "stencil_text-disabled" },
       ];
 
       const shouldDisable =
@@ -151,7 +151,7 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
         stencil.current >= stencil.max;
 
       // As in the docstrings mentioned, If the current count of the instances created from given stencil is more than or equal to the max count, disable the stencil of given embedded entity
-      elements.forEach(({ selector, class: className }) => {
+      elements.forEach(({ selector, className }) => {
         const element = document.querySelector(selector);
 
         if (element) {

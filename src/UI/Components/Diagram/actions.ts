@@ -123,7 +123,7 @@ export function appendInstance(
   );
 
   if (!serviceInstanceModel) {
-    throw Error(words("instanceComposer.errorMessage"));
+    throw Error(words("instanceComposer.errorMessage.missingModel"));
   }
 
   const attributes =
@@ -199,19 +199,22 @@ export function appendInstance(
 
           //disable Inventory Stencil for inter-service relation instance
           const elements = [
-            [
-              `.${appendedInstances[0].get("stencilName")}_body`,
-              "stencil_accent-disabled",
-            ],
-            [
-              `.${appendedInstances[0].get("stencilName")}_bodyTwo`,
-              "stencil_body-disabled",
-            ],
-            `.${appendedInstances[0].get("stencilName")}_text, 'stencil_text-disabled`,
+            {
+              selector: `.body_${appendedInstances[0].get("stencilName")}`,
+              className: "stencil_accent-disabled",
+            },
+            {
+              selector: `.bodyTwo_${appendedInstances[0].get("stencilName")}`,
+              className: "stencil_body-disabled",
+            },
+            {
+              selector: `.text_${appendedInstances[0].get("stencilName")}`,
+              className: "stencil_text-disabled",
+            },
           ];
 
-          elements.forEach(([elementName, className]) => {
-            const element = document.querySelector(elementName);
+          elements.forEach(({ selector, className }) => {
+            const element = document.querySelector(selector);
 
             if (element) {
               element.classList.add(className);
