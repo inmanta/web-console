@@ -169,7 +169,7 @@ describe("updateServiceOrderItems", () => {
     );
   };
 
-  it("updateServiceOrderItems Event handler won't assign the data when update is on the instance that isn't already in the Context", async () => {
+  it("updateServiceOrderItems Event handler won't assign the data when update is for the the inter-service relation instance that aren't added in the Context", async () => {
     await act(async () => render(setup(<InstancesComponent />)));
 
     expect(screen.getByTestId("instancesIds")).toHaveTextContent('["1","2"]');

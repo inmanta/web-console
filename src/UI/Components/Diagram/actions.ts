@@ -35,9 +35,14 @@ interface Options {
  * @param {ServiceModel} serviceModel that we want to base created entity on
  * @param {boolean} isCore defines whether created entity is main one in given View
  * @param {boolean} isInEditMode defines whether created entity is is representation of existing instance or new one
- * @param {InstanceAttributeModel} attributes of the entity
- * @param {boolean} isEmbedded defines whether created entity is embedded
- * @param {string} holderName - name of the entity to which it is embedded/connected
+ * @param {InstanceAttributeModel} [attributes] of the entity
+ * @param {boolean} [isEmbedded] defines whether created entity is embedded
+ * @param {string} [holderName] - name of the entity to which it is embedded/connected
+ * @param {string | dia.Cell.ID} [embeddedTo] - id of the entity/shape in which this shape is embedded
+ * @param {boolean} [isBlockedFromEditing] - boolean value determining if the instance is blocked from editing
+ * @param {boolean} [cantBeRemoved] - boolean value determining if the instance can't be removed
+ * @param {string} [stencilName] - name of the stencil that should be disabled in the sidebar
+ * @param {string} [id] - unique id of the entity default to uniqueId()
  *
  * @returns {ServiceEntityBlock} created JointJS shape
  */

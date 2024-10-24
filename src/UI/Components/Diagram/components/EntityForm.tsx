@@ -60,23 +60,27 @@ export const EntityForm: React.FC<Props> = ({
    * @returns {void}
    */
   const getUpdate = (path: string, value: unknown, multi = false): void => {
+    //if multi is true, it means the field is a multi-select field and we need to update the array of values
     if (multi) {
       setFormState((prev) => {
         const clone = { ...prev };
         let selection = (clone[path] as string[]) || [];
 
+        //if the value is already in the array, remove it, otherwise add it
         if (selection.includes(value as string)) {
           selection = selection.filter((item) => item !== (value as string));
         } else {
           selection.push(value as string);
         }
 
+        //update the form state with the new selection property with help of _lodash set function
         return set(clone, path, selection);
       });
     } else {
       setFormState((prev) => {
         const clone = { ...prev };
 
+        //update the form state with the new value with help of _lodash set function
         return set(clone, path, value);
       });
     }

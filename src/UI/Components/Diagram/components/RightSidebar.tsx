@@ -22,11 +22,11 @@ import { EntityForm } from "./EntityForm";
  * When the user submits the edit form, the `onSave` callback is called with the updated attributes and the form state.
  * The user can also remove the entity by clicking the remove button, which triggers the `action:delete` event on the entity.
  *
- * The removal differs from deleting the instance:
- * Remove - removes the entity from the canvas only (does not delete the instance from the backend).
- * Delete - deletes the instance from the backend.
+ * The removal of the entity has different end result based on the type of the entity:
+ * - Core entity cannot be removed.
+ * - Embedded entities are removed from the canvas(if service model allows it), and will be erased from the service instance.
+ * - Inter-service relation entities are removed from the canvas(if service model allows it), but won't be deleted from the environment.
  *
- * Deleting a whole instance is not possible through composer, we can only delete embedded entities of the instance or remove the inter-service relation connections if the service model allows it.
  *
  * @returns {React.FC} The RightSidebar component.
  */
