@@ -6,6 +6,7 @@ describe("ServicesSlice", () => {
   const serviceModels: ServiceModel[] = [
     {
       attributes: [],
+      inter_service_relations: [],
       environment: "env-id",
       lifecycle: { initial_state: "", states: [], transfers: [] },
       name: "test_service",
@@ -16,6 +17,7 @@ describe("ServicesSlice", () => {
     },
     {
       attributes: [],
+      inter_service_relations: [],
       environment: "env-id",
       lifecycle: { initial_state: "", states: [], transfers: [] },
       name: "another_test_service",

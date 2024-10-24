@@ -76,6 +76,7 @@ test("GIVEN FieldCreator WHEN an attribute has the empty string as default value
   const fields = new FieldCreator(new CreateModifierHandler()).create({
     attributes: attributes,
     embedded_entities: [],
+    inter_service_relations: [],
   });
 
   expect(fields).toHaveLength(attributes.length);
@@ -114,6 +115,7 @@ test("GIVEN FieldCreator WHEN an entity has validation_type 'enum' or 'enum?' TH
   const fields = new FieldCreator(new CreateModifierHandler()).create({
     attributes: [enumAttribute, optionalEnumAttribute],
     embedded_entities: [],
+    inter_service_relations: [],
   });
 
   expect(fields[0].isOptional).toBeFalsy();
@@ -175,6 +177,7 @@ test("GIVEN FieldCreator WHEN attributes are processed for edit form THEN the fi
   const fields = new FieldCreator(new CreateModifierHandler(), true).create({
     attributes: attributesList,
     embedded_entities: [],
+    inter_service_relations: [],
   });
 
   expect(fields).toHaveLength(attributesList.length);
@@ -239,6 +242,7 @@ test.each`
     const fields = new FieldCreator(new CreateModifierHandler(), true).create({
       attributes: [],
       embedded_entities: [embeddedEntity],
+      inter_service_relations: [],
     });
     const entityFields = fields[0] as DictListField;
 
@@ -276,6 +280,7 @@ test.each`
     const fields = new FieldCreator(new CreateModifierHandler(), true).create({
       attributes: [],
       embedded_entities: [embeddedEntity],
+      inter_service_relations: [],
     });
 
     const entityFields = fields[0] as DictListField;

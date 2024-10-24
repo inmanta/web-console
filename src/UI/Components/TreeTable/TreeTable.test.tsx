@@ -100,6 +100,7 @@ test("TreeTable with 1st level of attributes containing annotations should not r
       },
     ],
     embedded_entities: [],
+    inter_service_relations: [],
     config: {},
     lifecycle: {
       initial_state: "initial",

@@ -22,6 +22,7 @@ const dict = {
   confirm: "Confirm",
   cancel: "Cancel",
   deploy: "Deploy",
+  save: "Save",
   yes: "Yes",
   no: "No",
   null: "null",
@@ -33,6 +34,9 @@ const dict = {
   hideAll: "Hide All",
   showAll: "Show All",
   back: "Back",
+  edit: "Edit",
+  details: "Details",
+  remove: "Remove",
   username: "Username",
   password: "Password",
 
@@ -165,27 +169,6 @@ const dict = {
   "inventory.form.placeholder.dict": '{"key": "value"}',
   "inventory.form.button": "Form",
   "inventory.editor.button": "JSON-Editor",
-  "inventory.instanceComposer.labelButtonTooltip": "Toggle connection labels",
-  "inventory.instanceComposer.addInstanceButtonTooltip":
-    "Add new instance to the canvas.",
-  "inventory.instanceComposer.orderDescription":
-    "Requested with Instance Composer",
-  "inventory.instanceComposer.errorMessage": "missing Instance Model",
-  "inventory.instanceComposer.editButton": "Edit in Composer",
-  "inventory.instanceComposer.showButton": "Show in Composer",
-  "inventory.instanceComposer.formModal.placeholder": "Choose a Service",
-  "inventory.instanceComposer.formModal.create.title": "Add Entity",
-  "inventory.instanceComposer.formModal.edit.title": "Edit Entity",
-  "inventory.instanceComposer.success": "The request got sent successfully",
-  "inventory.instanceComposer.success.title": "Instance Composed successfully",
-  "inventory.instanceComposer.failed.title": "Instance Composing failed",
-  "inventory.instanceComposer.dictModal": (valueName: string) =>
-    `Values of ${valueName}`,
-  "inventory.instanceComposer.disabled":
-    "Your licence doesn't give you access to the Instance Composer, please contact support for more details.",
-  "inventory.instanceComposer.title": "Instance Composer",
-  "inventory.instanceComposer.title.edit": "Instance Composer Editor",
-  "inventory.instanceComposer.title.view": "Instance Composer Viewer",
   "inventory.deleteInstance.button": "Delete",
   "inventory.deleteInstance.failed": "Deleting instance failed",
   "inventory.deleteInstance.title": "Delete instance",
@@ -216,6 +199,44 @@ const dict = {
   "inventory.editAttribute.text": (oldValue: string, newValue: string) =>
     `Are you absolutely sure you want to change attribute from ${oldValue} to ${newValue}? This operation can corrupt the instance.`,
   "inventory.error.mermaid": "Error rendering Mermaid diagram",
+
+  /**
+   * Instance Composer text
+   */
+
+  "instanceComposer.noData.errorTitle": "No Data",
+  "instanceComposer.error.updateInstanceNotInMap":
+    "Updated instance is not in the map, if error persists please refresh the page.",
+  "instanceComposer.noData.errorMessage": (serviceId) =>
+    `There is no data available to display for the given id: ${serviceId}`,
+  "instanceComposer.noServiceModel.errorTitle": "No Service Model",
+  "instanceComposer.noServiceModel.errorMessage": (serviceName) =>
+    `There is no service model available for ${serviceName}`,
+  "instanceComposer.labelButtonTooltip": "Toggle connection labels",
+  "instanceComposer.addInstanceButtonTooltip":
+    "Add new instance to the canvas.",
+  "instanceComposer.orderDescription": "Requested with Instance Composer",
+  "instanceComposer.errorMessage.missingModel":
+    "The instance attribute model is missing",
+  "instanceComposer.editButton": "Edit in Composer",
+  "instanceComposer.showButton": "Show in Composer",
+  "instanceComposer.formModal.placeholder": "Choose a Service",
+  "instanceComposer.formModal.create.title": "Add Entity",
+  "instanceComposer.formModal.edit.title": "Edit Entity",
+  "instanceComposer.formModal.noAttributes": "There are no attributes to edit.",
+  "instanceComposer.success": "The request got sent successfully",
+  "instanceComposer.success.title": "Instance composed successfully",
+  "instanceComposer.failed.title": "Instance Composing failed",
+  "instanceComposer.dictModal": (valueName: string) => `Values of ${valueName}`,
+  "instanceComposer.disabled":
+    "Your license doesn't give you access to the Instance Composer, please contact support for more details.",
+  "instanceComposer.title": "Instance Composer",
+  "instanceComposer.title.edit": "Instance Composer Editor",
+  "instanceComposer.title.view": "Instance Composer Viewer",
+  "instanceComposer.zoomHandler.fullscreen.toggle": "Toggle full screen",
+  "instanceComposer.zoomHandler.fullscreen.exit": "Exit full screen",
+  "instanceComposer.zoomHandler.zoomToFit": "Fit to screen",
+  "instanceComposer.zoomHandler.zoom": "Slide to zoom",
 
   /**
    * Service Instance Details text

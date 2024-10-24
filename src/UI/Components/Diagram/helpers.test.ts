@@ -13,6 +13,7 @@ import {
 import {
   ComposerServiceOrderItem,
   ConnectionRules,
+  EmbeddedEventEnum,
   EmbeddedRule,
   InterServiceRule,
   LabelLinkView,
@@ -21,13 +22,14 @@ import {
 import {
   childModel,
   containerModel,
-  relatedServices,
+  parentModel,
+  interServiceRelations,
   testApiInstance,
   testApiInstanceModel,
   testEmbeddedApiInstances,
-} from "./Mock";
+} from "./Mocks";
 import services from "./Mocks/services.json";
-import { appendEntity } from "./actions";
+import { createComposerEntity } from "./actions";
 import {
   createConnectionRules,
   shapesDataTransform,
@@ -38,7 +40,11 @@ import {
   checkIfConnectionIsAllowed,
   updateLabelPosition,
   toggleLooseElement,
+  findInterServiceRelations,
+  findFullInterServiceRelations,
+  showLinkTools,
 } from "./helpers";
+import { ComposerPaper } from "./paper";
 import { Link, ServiceEntityBlock } from "./shapes";
 
 jest.mock("uuid", () => ({
@@ -54,11 +60,11 @@ describe("extractRelationsIds", () => {
   };
 
   it.each`
-    serviceModel                                                              | serviceInstance                | expectedLength
-    ${Service.ServiceWithAllAttrs}                                            | ${ServiceInstance.allAttrs}    | ${0}
-    ${{ ...Service.ServiceWithAllAttrs, inter_service_relations: undefined }} | ${ServiceInstance.allAttrs}    | ${0}
-    ${Service.withRelationsOnly}                                              | ${serviceInstanceForThirdTest} | ${0}
-    ${Service.withRelationsOnly}                                              | ${ServiceInstance.allAttrs}    | ${0}
+    serviceModel                          | serviceInstance                | expectedLength
+    ${Service.ServiceWithAllAttrs}        | ${ServiceInstance.allAttrs}    | ${0}
+    ${{ ...Service.ServiceWithAllAttrs }} | ${ServiceInstance.allAttrs}    | ${0}
+    ${Service.withRelationsOnly}          | ${serviceInstanceForThirdTest} | ${0}
+    ${Service.withRelationsOnly}          | ${ServiceInstance.allAttrs}    | ${0}
   `(
     "should return empty array for given service model examples",
     ({
@@ -509,8 +515,8 @@ describe("shapesDataTransform", () => {
       },
     };
     const result = shapesDataTransform(
-      relatedServices[0],
-      relatedServices,
+      interServiceRelations[0],
+      interServiceRelations,
       childModel,
     );
 
@@ -534,8 +540,8 @@ describe("shapesDataTransform", () => {
       },
     };
     const result = shapesDataTransform(
-      relatedServices[1],
-      relatedServices,
+      interServiceRelations[1],
+      interServiceRelations,
       containerModel,
     );
 
@@ -984,24 +990,36 @@ Object.defineProperty(global.SVGSVGElement.prototype, "createSVGPoint", {
 });
 
 describe("checkIfConnectionIsAllowed", () => {
+  const serviceA = createComposerEntity({
+    serviceModel: Service.a,
+    isCore: false,
+    isInEditMode: false,
+    attributes: InstanceAttributesA,
+  });
+
   it("WHEN one element has rule describing other THEN return true", () => {
     const rules = createConnectionRules([Service.a], {});
     const graph = new dia.Graph();
     const paper = new dia.Paper({
       model: graph,
     });
-    const serviceA = appendEntity(graph, Service.a, InstanceAttributesA, false);
-    const serviceB = appendEntity(
-      graph,
-      Service.a.embedded_entities[0],
-      (InstanceAttributesA["circuits"] as InstanceAttributeModel[])[0],
-      false,
-    );
+
+    const embeddedService = createComposerEntity({
+      serviceModel: Service.a.embedded_entities[0],
+      isCore: false,
+      isInEditMode: false,
+      attributes: (
+        InstanceAttributesA["circuits"] as InstanceAttributeModel[]
+      )[0],
+      isEmbedded: true,
+    });
+
+    graph.addCells([serviceA, embeddedService]);
 
     const result = checkIfConnectionIsAllowed(
       graph,
       paper.findViewByModel(serviceA),
-      paper.findViewByModel(serviceB),
+      paper.findViewByModel(embeddedService),
       rules,
     );
 
@@ -1014,35 +1032,76 @@ describe("checkIfConnectionIsAllowed", () => {
     const paper = new dia.Paper({
       model: graph,
     });
-    const serviceA = appendEntity(graph, Service.a, InstanceAttributesA, false);
-    const serviceB = appendEntity(graph, Service.b, InstanceAttributesB, false);
+
+    const independendService = createComposerEntity({
+      serviceModel: Service.b,
+      isCore: false,
+      isInEditMode: false,
+      attributes: InstanceAttributesB,
+    });
+
+    graph.addCells([serviceA, independendService]);
 
     const result = checkIfConnectionIsAllowed(
       graph,
       paper.findViewByModel(serviceA),
-      paper.findViewByModel(serviceB),
+      paper.findViewByModel(independendService),
       rules,
     );
 
     expect(result).toBeFalsy();
   });
 
-  it("WHEN one element has rule describing other, but the other is blocked from editing THEN return false", () => {
+  it("WHEN one element has rule describing other, and the other is blocked from editing THEN return true", () => {
     const rules = createConnectionRules([Service.a], {});
     const graph = new dia.Graph();
     const paper = new dia.Paper({
       model: graph,
     });
-    const serviceA = appendEntity(graph, Service.a, InstanceAttributesA, false);
-    const serviceB = appendEntity(
+
+    const blockedService = createComposerEntity({
+      serviceModel: Service.a.embedded_entities[0],
+      isCore: false,
+      isInEditMode: false,
+      attributes: (
+        InstanceAttributesA["circuits"] as InstanceAttributeModel[]
+      )[0],
+      isBlockedFromEditing: true,
+    });
+
+    graph.addCells([serviceA, blockedService]);
+
+    const result = checkIfConnectionIsAllowed(
       graph,
-      Service.a.embedded_entities[0],
-      (InstanceAttributesA["circuits"] as InstanceAttributeModel[])[0],
-      false,
-      true,
+      paper.findViewByModel(serviceA),
+      paper.findViewByModel(blockedService),
+      rules,
     );
 
+    expect(result).toBeTruthy();
+  });
+
+  it("WHEN one element has rule describing other, but is blocked from editing THEN return false", () => {
+    const rules = createConnectionRules([Service.a], {});
+    const graph = new dia.Graph();
+    const paper = new dia.Paper({
+      model: graph,
+    });
+
     serviceA.set("isBlockedFromEditing", true);
+
+    const serviceB = createComposerEntity({
+      serviceModel: Service.a.embedded_entities[0],
+      isCore: false,
+      isInEditMode: false,
+      attributes: (
+        InstanceAttributesA["circuits"] as InstanceAttributeModel[]
+      )[0],
+      isEmbedded: true,
+      holderName: Service.a.name,
+    });
+
+    graph.addCells([serviceA, serviceB]);
 
     const result = checkIfConnectionIsAllowed(
       graph,
@@ -1052,6 +1111,9 @@ describe("checkIfConnectionIsAllowed", () => {
     );
 
     expect(result).toBeFalsy();
+
+    //set back to default
+    serviceA.set("isBlockedFromEditing", false);
   });
 
   it("WHEN one element has rule describing other, but the other is and embedded entity already connected to parent THEN return false", () => {
@@ -1061,32 +1123,36 @@ describe("checkIfConnectionIsAllowed", () => {
       model: graph,
     });
 
-    const serviceA = appendEntity(graph, Service.a, InstanceAttributesA, false);
-    const serviceA2 = appendEntity(
-      graph,
-      Service.a,
-      InstanceAttributesA,
-      false,
-    );
-    const serviceB = appendEntity(
-      graph,
-      Service.a.embedded_entities[0],
-      (InstanceAttributesA["circuits"] as InstanceAttributeModel[])[0],
-      false,
-      true,
-    );
+    const connectedCoreEntity = createComposerEntity({
+      serviceModel: Service.a,
+      isCore: true,
+      isInEditMode: false,
+      attributes: InstanceAttributesA,
+    });
+
+    const connectedEmbeddedEntity = createComposerEntity({
+      serviceModel: Service.a.embedded_entities[0],
+      isCore: true,
+      isInEditMode: false,
+      attributes: (
+        InstanceAttributesA["circuits"] as InstanceAttributeModel[]
+      )[0],
+      isEmbedded: true,
+      holderName: "service_name_a",
+    });
+
+    graph.addCells([serviceA, connectedCoreEntity, connectedEmbeddedEntity]);
 
     const link = new Link();
 
-    link.source(serviceA2);
-    link.target(serviceB);
+    link.source(connectedCoreEntity);
+    link.target(connectedEmbeddedEntity);
     link.addTo(graph);
-    serviceB.set("holderName", "service_name_a");
 
     const result = checkIfConnectionIsAllowed(
       graph,
       paper.findViewByModel(serviceA),
-      paper.findViewByModel(serviceB),
+      paper.findViewByModel(connectedEmbeddedEntity),
       rules,
     );
 
@@ -1386,6 +1452,7 @@ describe("getServiceOrderItems", () => {
     expect(serviceOrderItems).toEqual([coreCopy]);
   });
 });
+
 describe("updateLabelPosition", () => {
   Object.defineProperty(global.SVGElement.prototype, "getBBox", {
     writable: true,
@@ -1419,18 +1486,21 @@ describe("updateLabelPosition", () => {
     const paper = new dia.Paper({
       model: graph,
     });
-    const sourceService = appendEntity(
-      graph,
-      Service.a,
-      InstanceAttributesA,
-      false,
-    );
-    const targetService = appendEntity(
-      graph,
-      Service.b,
-      InstanceAttributesB,
-      false,
-    );
+
+    const sourceService = createComposerEntity({
+      serviceModel: Service.a,
+      isCore: false,
+      isEmbedded: false,
+      isInEditMode: false,
+      attributes: InstanceAttributesA,
+    });
+    const targetService = createComposerEntity({
+      serviceModel: Service.a,
+      isCore: false,
+      isEmbedded: false,
+      isInEditMode: false,
+      attributes: InstanceAttributesB,
+    });
 
     graph.addCell(sourceService);
     graph.addCell(targetService);
@@ -1555,9 +1625,19 @@ describe("toggleLooseElement", () => {
     });
 
     //add highlighter
-    const entity = appendEntity(graph, Service.a, InstanceAttributesA, false);
+    const entity = createComposerEntity({
+      serviceModel: Service.a,
+      isCore: false,
+      isEmbedded: false,
+      isInEditMode: false,
+      attributes: InstanceAttributesA,
+    });
 
-    toggleLooseElement(paper.findViewByModel(entity), "add");
+    graph.addCell(entity);
+
+    toggleLooseElement(paper.findViewByModel(entity), EmbeddedEventEnum.ADD);
+
+    //assert the arguments of the first call - calls is array of the arguments of each call
     expect((dispatchEventSpy.mock.calls[0][0] as CustomEvent).detail).toEqual(
       JSON.stringify({ kind: "add", id: entity.id }),
     );
@@ -1566,10 +1646,12 @@ describe("toggleLooseElement", () => {
     ).not.toBeNull();
 
     //remove
-    toggleLooseElement(paper.findViewByModel(entity), "remove");
+    toggleLooseElement(paper.findViewByModel(entity), EmbeddedEventEnum.REMOVE);
     expect(
       dia.HighlighterView.get(paper.findViewByModel(entity), "loose_element"),
     ).toBeNull();
+
+    //assert the arguments of the second call
     expect((dispatchEventSpy.mock.calls[1][0] as CustomEvent).detail).toEqual(
       JSON.stringify({ kind: "remove", id: entity.id }),
     );
@@ -1580,16 +1662,176 @@ describe("toggleLooseElement", () => {
     const paper = new dia.Paper({
       model: graph,
     });
-    const entity = appendEntity(graph, Service.a, InstanceAttributesA, false);
 
-    toggleLooseElement(paper.findViewByModel(entity), "add");
+    const entity = createComposerEntity({
+      serviceModel: Service.a,
+      isCore: false,
+      isEmbedded: false,
+      isInEditMode: false,
+      attributes: InstanceAttributesA,
+    });
+
+    graph.addCell(entity);
+
+    toggleLooseElement(paper.findViewByModel(entity), EmbeddedEventEnum.ADD);
     expect(
       dia.HighlighterView.get(paper.findViewByModel(entity), "loose_element"),
     ).not.toBeNull();
 
-    toggleLooseElement(paper.findViewByModel(entity), "remove");
+    toggleLooseElement(paper.findViewByModel(entity), EmbeddedEventEnum.REMOVE);
     expect(
       dia.HighlighterView.get(paper.findViewByModel(entity), "loose_element"),
     ).toBeNull();
+  });
+});
+
+describe("findInterServiceRelations", () => {
+  it("it returns empty array WHEN service doesn't have inter-service relations", () => {
+    const result = findInterServiceRelations(parentModel);
+
+    expect(result).toEqual([]);
+  });
+
+  it("it returns related service names WHEN service have direct inter-service relations", () => {
+    const result = findInterServiceRelations(childModel);
+
+    expect(result).toEqual(["parent-service"]);
+  });
+
+  it("it returns related service names WHEN service have inter-service relations in embedded entities", () => {
+    const result = findInterServiceRelations(containerModel);
+
+    expect(result).toEqual(["parent-service"]);
+  });
+});
+
+describe("findIFullInterServiceRelations", () => {
+  it("it returns empty array WHEN service doesn't have inter-service relations", () => {
+    const result = findFullInterServiceRelations(parentModel);
+
+    expect(result).toEqual([]);
+  });
+
+  it("it returns related service names WHEN service have direct inter-service relations", () => {
+    const result = findFullInterServiceRelations(childModel);
+
+    expect(result).toEqual([
+      {
+        description: "",
+        entity_type: "parent-service",
+        lower_limit: 1,
+        modifier: "rw+",
+        name: "parent_entity",
+        upper_limit: 1,
+      },
+    ]);
+  });
+
+  it("it returns related service names WHEN service have inter-service relations in embedded entities", () => {
+    const result = findFullInterServiceRelations(containerModel);
+
+    expect(result).toEqual([
+      {
+        description: "",
+        entity_type: "parent-service",
+        lower_limit: 1,
+        modifier: "rw+",
+        name: "parent_entity",
+        upper_limit: 1,
+      },
+    ]);
+  });
+});
+
+describe("showLinkTools", () => {
+  const setup = (
+    isParentInEditMode: boolean,
+    isChildInEditMode: boolean,
+    modifier: "rw+" | "rw",
+  ) => {
+    const editable = true;
+    const graph = new dia.Graph({});
+    const connectionRules = createConnectionRules(
+      [parentModel, childModel],
+      {},
+    );
+    const paper = new ComposerPaper(connectionRules, graph, editable).paper;
+
+    connectionRules[childModel.name][0].modifier = modifier;
+
+    const parentEntity = createComposerEntity({
+      serviceModel: parentModel,
+      isCore: false,
+      isInEditMode: isParentInEditMode,
+    });
+    const childEntity = createComposerEntity({
+      serviceModel: childModel,
+      isCore: false,
+      isInEditMode: isChildInEditMode,
+      isEmbedded: true,
+    });
+
+    graph.addCell(parentEntity);
+    graph.addCell(childEntity);
+
+    const link = new Link();
+
+    link.source(parentEntity);
+    link.target(childEntity);
+
+    graph.addCell(link);
+    const linkView = paper.findViewByModel(link) as dia.LinkView;
+
+    return { graph, linkView, connectionRules };
+  };
+
+  it("adds tools to the link when instances aren't in EditMode and there is no rule with rw modifier", () => {
+    const isParentInEditMode = false;
+    const isChildInEditMode = false;
+    const modifier = "rw+";
+    const { graph, linkView, connectionRules } = setup(
+      isParentInEditMode,
+      isChildInEditMode,
+      modifier,
+    );
+
+    expect(linkView.hasTools()).toBeFalsy();
+
+    showLinkTools(graph, linkView, connectionRules);
+
+    expect(linkView.hasTools()).toBeTruthy();
+  });
+
+  it("adds tools to the link when only instance without rule is in edit mode", () => {
+    const isParentInEditMode = true;
+    const isChildInEditMode = false;
+    const modifier = "rw";
+    const { graph, linkView, connectionRules } = setup(
+      isParentInEditMode,
+      isChildInEditMode,
+      modifier,
+    );
+
+    expect(linkView.hasTools()).toBeFalsy();
+
+    showLinkTools(graph, linkView, connectionRules);
+
+    expect(linkView.hasTools()).toBeTruthy();
+  });
+
+  it("doesn't add tools to the link when instance with rw rule is in edit mode", () => {
+    const isParentInEditMode = false;
+    const isChildInEditMode = true;
+    const modifier = "rw";
+    const { graph, linkView, connectionRules } = setup(
+      isParentInEditMode,
+      isChildInEditMode,
+      modifier,
+    );
+
+    expect(linkView.hasTools()).toBeFalsy();
+
+    showLinkTools(graph, linkView, connectionRules);
+    expect(linkView.hasTools()).toBeFalsy();
   });
 });
