@@ -21,7 +21,6 @@ import {
   words,
 } from "@/UI";
 import { Canvas } from "@/UI/Components/Diagram/Canvas";
-// import { ComposerServiceOrderItem } from "@/UI/Components/Diagram/interfaces";
 import CustomRouter from "@/UI/Routing/CustomRouter";
 import history from "@/UI/Routing/history";
 import { CanvasProvider } from "./Context/CanvasProvider";

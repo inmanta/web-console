@@ -16,7 +16,7 @@ const setup = (testingComponent: JSX.Element) => {
   );
 };
 
-describe("looseElement event handler -", () => {
+describe("looseElement event handler - triggered when entity is being added to the canvas, gets or loose connection to other entity - keep track on the unconnected entities", () => {
   const TestingComponent = (): JSX.Element => {
     const { looseElement } = useContext(CanvasContext);
 
@@ -76,7 +76,7 @@ describe("looseElement event handler -", () => {
   });
 });
 
-describe("dictToDisplay", () => {
+describe("dictToDisplay - event handler that accepts dictionary value to display it in the modal as we aren't displaying those in the canvas", () => {
   const TestingComponent = (): JSX.Element => {
     const { dictToDisplay } = useContext(CanvasContext);
 
@@ -105,7 +105,7 @@ describe("dictToDisplay", () => {
   });
 });
 
-describe("cellToEdit", () => {
+describe("cellToEdit - event handler that recieves cell object from the canvas to pass it to the Right Sidebar component", () => {
   const TestingComponent = (): JSX.Element => {
     const { cellToEdit } = useContext(CanvasContext);
 
@@ -134,7 +134,7 @@ describe("cellToEdit", () => {
   });
 });
 
-describe("updateServiceOrderItems", () => {
+describe("updateServiceOrderItems - event handler that keeps track of the elements of the instance that should be converted to the complete instance at the deploy", () => {
   const InstancesComponent = (): JSX.Element => {
     const { serviceOrderItems, setServiceOrderItems } =
       useContext(CanvasContext);
@@ -235,7 +235,7 @@ describe("updateServiceOrderItems", () => {
   });
 });
 
-describe("updateStencil", () => {
+describe("updateStencil - eventHandler that updates how many elements(embedded/inter-service relation) are in the canvas, to keep track to disable/enable stencil elements from the left sidebar", () => {
   const TestingComponent = (): JSX.Element => {
     const { stencilState, setStencilState } = useContext(CanvasContext);
 
