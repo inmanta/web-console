@@ -784,6 +784,8 @@ const dict = {
    * Banners
    */
   "banner.expertMode": "LSM expert mode is enabled, proceed with caution. ",
+  "banner,updateBanner": (currentVersion: string) =>
+    `You are running ${currentVersion}, a new version is available! Please hard-reload (Ctrl+F5 | Cmd + Shift + R) your page to load the new version.`,
   "banner.entitlement.expired": (days: number) =>
     `Your license has expired ${days} days ago!`,
   "banner.certificate.expired": (days: number) =>
