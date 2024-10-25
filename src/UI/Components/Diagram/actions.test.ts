@@ -729,7 +729,7 @@ describe("appendInstance", () => {
       should_deploy_fail: false,
     });
 
-    //assert that the first cell is the container-service, which would be main body of another inter-service relation in edit mode and has it's attributes set as expected
+    //assert that the first cell is the container-service, which would be main body of another inter-service relation in edit mode and has its attributes set as expected
     expect(filteredCells[2].get("entityName")).toBe("container-service");
     expect(filteredCells[2].get("isCore")).toBe(undefined);
     expect(filteredCells[2].get("isEmbedded")).toBe(undefined);
