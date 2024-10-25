@@ -24,7 +24,7 @@ interface Props {
  * ComposerCreatorProvider component
  *
  * This component is responsible for providing the service model related data to the Canvas component through Context.
- * It fetches the service models for the entire catalog, and the inventories for the all Inter-service relations that can be connected to the created instance.
+ * It fetches the service models for the entire catalog, and the inventories for all the Inter-service relations that can be connected to the created instance.
  * It also handles the state and effects related to these data.
  * 
  * @props {Props} props - The properties that define the behavior and display of the component.

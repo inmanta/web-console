@@ -23,10 +23,9 @@ import { EntityForm } from "./EntityForm";
  * The user can also remove the entity by clicking the remove button, which triggers the `action:delete` event on the entity.
  *
  * The removal of the entity has different end result based on the type of the entity:
- * - Core entity cannot be removed.
+ * - Core entity cannot be removed or deleted in the Composer.
  * - Embedded entities are removed from the canvas(if service model allows it), and will be erased from the service instance.
  * - Inter-service relation entities are removed from the canvas(if service model allows it), but won't be deleted from the environment.
- *
  *
  * @returns {React.FC} The RightSidebar component.
  */

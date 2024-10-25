@@ -11,7 +11,7 @@ import { transformEmbeddedToStencilElements } from "./helpers";
 
 /**
  * Class initializing the Service Instance Stencil Tab.
- * This stencil tab is used to drag and drop the embedded elements onto the diagram.
+ * This stencil tab is used to drag and drop the embedded entity elements onto the diagram.
  */
 export class InstanceStencilTab {
   stencil: ui.Stencil;

@@ -83,7 +83,7 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
   }, [mainService, serviceModels, isStencilStateReady]);
 
   /**
-   * create the stencil sidebar only if sidebar ref, the scroller, related inventories by inter-service relations, main service and service models are defined
+   * create the left-sidebar only if the left-sidebar ref, the scroller, the related inventories by inter-service relations, the main service and service models are defined
    * It's done in separate useEffect to enable eventual re-renders of the sidebar independently of the diagram, e.g. when the related inventories by inter-service relations are loaded
    */
   useEffect(() => {
