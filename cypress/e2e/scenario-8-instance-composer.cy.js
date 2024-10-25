@@ -71,7 +71,7 @@ if (Cypress.env("edition") === "iso") {
       forceUpdateEnvironment();
     });
 
-    // Note: trying to toggle fullscreen mode results in typeError: permission denied, assertion about fullscreen API is not possible, and it's done in Jest test case
+    // Note: The fullscreen mode is tested in Jest. In Cypress this functionality has to be stubbed, and would be redundant with the Unit tests. 
     it("8.1 composer opens up has its default paning working", () => {
       // Select 'test' environment
       cy.visit("/console/");
