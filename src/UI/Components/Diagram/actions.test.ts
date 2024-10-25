@@ -755,7 +755,7 @@ describe("appendInstance", () => {
       should_deploy_fail: false,
     });
 
-    //assert that the first cell is the container-service, which would be embedded entity of container-service and would be targer point of inter-service relation in edit mode and has it's attributes set as expected
+    //assert that the first cell is the container-service, which would be embedded entity of container-service and would be target point of inter-service relation in edit mode and has its attributes set as expected
     expect(filteredCells[3].get("entityName")).toBe("child_container");
     expect(filteredCells[3].get("isCore")).toBe(undefined);
     expect(filteredCells[3].get("isEmbedded")).toBe(true);
