@@ -136,17 +136,41 @@ interface StencilState {
   };
 }
 
+/**
+ * interface representing options for configuring a composer entity in the canvas.
+ */
 interface ComposerEntityOptions {
+  /** The service model or embedded entity associated with the composer entity. */
   serviceModel: ServiceModel | EmbeddedEntity;
+
+  /** Indicates if the entity is a core entity. */
   isCore: boolean;
+
+  /** Indicates if the entity is in edit mode. */
   isInEditMode: boolean;
+
+  /** Optional attributes of the entity. */
   attributes?: InstanceAttributeModel;
+
+  /** Optional flag indicating if the entity is embedded. */
   isEmbedded?: boolean;
+
+  /** Optional name of the holder of the entity. */
   holderName?: string;
+
+  /** Optional identifier of the entity to which this entity is embedded. */
   embeddedTo?: "string" | dia.Cell.ID;
+
+  /** Optional flag indicating if the entity is blocked from editing. */
   isBlockedFromEditing?: boolean;
+
+  /** Optional flag indicating if the entity cannot be removed. */
   cantBeRemoved?: boolean;
+
+  /** Optional name of the stencil associated with the entity. */
   stencilName?: string;
+
+  /** Optional identifier of the entity. */
   id?: string;
 }
 
