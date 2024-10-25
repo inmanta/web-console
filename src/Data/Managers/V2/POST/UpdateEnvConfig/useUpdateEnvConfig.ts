@@ -20,7 +20,7 @@ interface ConfigUpdate {
  * @returns {UseMutationResult<void, Error, ConfigUpdate, unknown>}- The mutation object from `useMutation` hook.
  */
 export const useUpdateEnvConfig = (
-  environment: string | undefined,
+  environment: string,
 ): UseMutationResult<void, Error, ConfigUpdate, unknown> => {
   const client = useQueryClient();
 

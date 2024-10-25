@@ -783,6 +783,7 @@ const dict = {
   /**
    * Banners
    */
+  "banner.expertMode": "LSM expert mode is enabled, proceed with caution. ",
   "banner.entitlement.expired": (days: number) =>
     `Your license has expired ${days} days ago!`,
   "banner.certificate.expired": (days: number) =>

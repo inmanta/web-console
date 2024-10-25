@@ -7,14 +7,14 @@ import { words } from "@/UI/words";
 import { ToastAlert } from "../ToastAlert";
 
 interface Props {
-  environmentId?: string;
+  environmentId: string;
 }
 
 /**
  * A React component that displays a banner when the expert mode is enabled.
  *
  * @props {object} props - The properties passed to the component.
- * @prop {string} [environmentId] - *optional* The ID of the environment.
+ * @prop {string} environmentId -The ID of the environment.
  * @returns { React.FC<Props> | null} The rendered banner if the expert mode is enabled, otherwise null.
  */
 export const ExpertBanner: React.FC<Props> = ({ environmentId }) => {
@@ -46,7 +46,7 @@ export const ExpertBanner: React.FC<Props> = ({ environmentId }) => {
         id="expert-mode-banner"
         aria-label="expertModeActive"
       >
-        LSM expert mode is enabled, proceed with caution.{" "}
+        {words("banner.expertMode")}
         <Button
           variant="link"
           isInline
