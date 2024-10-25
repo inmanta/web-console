@@ -1,9 +1,12 @@
 import React, { useContext, useState } from "react";
 import {
+  Button,
   DescriptionList,
   DescriptionListDescription,
   DescriptionListGroup,
   DescriptionListTerm,
+  Flex,
+  FlexItem,
   TabContent,
 } from "@patternfly/react-core";
 import { InstanceDetailsContext } from "../../Core/Context";
@@ -13,8 +16,9 @@ import {
   EventIcon,
   LoadingView,
   DateWithTimeDiffTooltip,
+  Link,
 } from "@/UI/Components";
-import { words } from "@/UI";
+import { DependencyContext, words } from "@/UI";
 import {
   ExpandableRowContent,
   Table,
@@ -63,7 +67,8 @@ interface Props {
  *
  */
 export const EventsTabContent: React.FC<Props> = ({ selectedVersion }) => {
-  const { logsQuery } = useContext(InstanceDetailsContext);
+  const { logsQuery, instance } = useContext(InstanceDetailsContext);
+  const { routeManager } = useContext(DependencyContext);
   const [expanded, setExpanded] = useState<string[]>([]);
 
   if (logsQuery.isLoading) {
@@ -100,13 +105,30 @@ export const EventsTabContent: React.FC<Props> = ({ selectedVersion }) => {
     return !regex.test(message);
   };
 
-  const getLastIndexEvents = () => {
-    return events.length - 1;
-  };
+  const getDiffTimestamp = (index: number) => {
+    // We want the time difference between each row/timestamp. If we are on the last row, then there is no new row to compare against.
+    if (index === events.length - 1) {
+      return events[index].timestamp;
+    }
+
+    return events[index + 1].timestamp;
+  }
 
   return (
     <TabContent role="tabpanel" id="events">
       <TabContentWrapper>
+        <Flex>
+          <FlexItem align={{ default: 'alignRight' }}>
+            <Link
+              pathname={routeManager.getUrl("Events", {
+                service: instance.service_entity,
+                instance: instance.id,
+              })}
+            >
+              {words("instanceDetails.events.seeAll")}
+            </Link>
+          </FlexItem>
+        </Flex>
         <Table
           aria-label="Expandable-events-table"
           variant="compact"
@@ -118,13 +140,13 @@ export const EventsTabContent: React.FC<Props> = ({ selectedVersion }) => {
               <Th width={15} key="eventType">
                 {words("instanceDetails.events.column.eventType")}
               </Th>
-              <Th width={15} key="date">
+              <Th width={20} key="date">
                 {words("instanceDetails.events.column.date")}
               </Th>
-              <Th width={25} key="source-state">
+              <Th width={20} key="source-state">
                 {words("instanceDetails.events.column.sourceState")}
               </Th>
-              <Th width={25} key="destination-state">
+              <Th width={20} key="destination-state">
                 {words("instanceDetails.events.column.destinationState")}
               </Th>
               <Th width={25} key="report">
@@ -153,9 +175,7 @@ export const EventsTabContent: React.FC<Props> = ({ selectedVersion }) => {
                 <Td>
                   <DateWithTimeDiffTooltip
                     timestamp1={event.timestamp}
-                    timestamp2={
-                      events[index === 0 ? index : index - 1].timestamp
-                    }
+                    timestamp2={getDiffTimestamp(index)}
                   />
                 </Td>
                 <Td>{event.source}</Td>
@@ -220,7 +240,7 @@ type Transition = Pick<
  * If the transition is `is_error_transition` then we want the rows in an orange/golden hue.
  * Unlike on the main event page, the history logs don't contain the `ignored_transition`. These are grayed out in the main event page.
  */
-const StyledBody = styled(Tbody)<{ $transition: Transition }>`
+const StyledBody = styled(Tbody) <{ $transition: Transition }>`
   ${({ $transition }) => {
     return $transition.is_error_transition
       ? "background-color: var(--pf-v5-global--palette--gold-50)"
