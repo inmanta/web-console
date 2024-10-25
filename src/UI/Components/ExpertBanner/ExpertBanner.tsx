@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Banner, Button, Spinner } from "@patternfly/react-core";
+import { Banner, Button, Flex, Spinner } from "@patternfly/react-core";
 import styled from "styled-components";
 import { useUpdateEnvConfig } from "@/Data/Managers/V2/POST/UpdateEnvConfig";
 import { DependencyContext } from "@/UI/Dependency";
@@ -46,18 +46,23 @@ export const ExpertBanner: React.FC<Props> = ({ environmentId }) => {
         id="expert-mode-banner"
         aria-label="expertModeActive"
       >
-        {words("banner.expertMode")}
-        <Button
-          variant="link"
-          isInline
-          onClick={() => {
-            setIsLoading(true);
-            mutate({ id: "enable_lsm_expert_mode", value: false });
-          }}
+        <Flex
+          justifyContent={{ default: "justifyContentCenter" }}
+          gap={{ default: "gapXs" }}
         >
-          {words("banner.disableExpertMode")}
-        </Button>
-        {isLoading && <StyledSpinner size="sm" />}
+          {words("banner.expertMode")}
+          <Button
+            variant="link"
+            isInline
+            onClick={() => {
+              setIsLoading(true);
+              mutate({ id: "enable_lsm_expert_mode", value: false });
+            }}
+          >
+            {words("banner.disableExpertMode")}
+          </Button>
+          {isLoading && <StyledSpinner size="sm" />}
+        </Flex>
       </Banner>
     </>
   ) : null;
