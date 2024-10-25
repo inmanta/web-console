@@ -3,6 +3,7 @@ import { Banner, Flex } from "@patternfly/react-core";
 import { ApiHelper } from "@/Core";
 import { GetVersionFileQueryManager } from "@/Data/Managers/GetVersionFile/OnteTimeQueryManager";
 import { DependencyContext } from "@/UI/Dependency";
+import { words } from "@/UI/words";
 
 interface Props {
   apiHelper: ApiHelper;
@@ -26,9 +27,7 @@ export const UpdateBanner: React.FunctionComponent<Props> = (props) => {
     <React.Fragment>
       <Banner isSticky variant="gold" aria-label="newVersionAvailable">
         <Flex justifyContent={{ default: "justifyContentCenter" }}>
-          You are running {currentVersion}, a new version is available! Please
-          hard-reload (Ctrl+F5 | Cmd + Shift + R) your page to load the new
-          version.
+          {words("banner.updateBanner")(currentVersion)}
         </Flex>
       </Banner>
     </React.Fragment>
