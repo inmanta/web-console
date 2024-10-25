@@ -123,7 +123,7 @@ export const TabView: React.FC = () => {
               }
               aria-label="events-content"
             >
-              <EventsTabContent />
+              <EventsTabContent selectedVersion={selectedVersion} />
             </Tab>
             <Tab
               eventKey={TabKeys.RESOURCES}

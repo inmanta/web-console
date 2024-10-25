@@ -16,44 +16,12 @@ import {
   ErrorView,
   LoadingView,
   PaginationWidget,
-  ServiceProvider,
 } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
-import { useRouteParams } from "@/UI/Routing";
 import { words } from "@/UI/words";
-import { Chart, TableControls } from "./Components";
+import { TableControls } from "./Components";
 import { TableProvider } from "./TableProvider";
 import { Wrapper } from "./Wrapper";
-
-/**
- * The main page component for the Service Inventory.
- */
-export const Page: React.FC = () => {
-  const { service: serviceName } = useRouteParams<"Inventory">();
-
-  return (
-    <ServiceProvider
-      serviceName={serviceName}
-      Wrapper={Wrapper}
-      Dependant={PreppedServiceInventory}
-    />
-  );
-};
-
-/**
- * A prepped version of the ServiceInventory component.
- * @param {ServiceModel} service - Service Model.
- * @returns {JSX.Element} - The rendered ServiceInventory component.
- */
-const PreppedServiceInventory: React.FC<{ service: ServiceModel }> = ({
-  service,
-}) => (
-  <ServiceInventory
-    service={service}
-    serviceName={service.name}
-    intro={<Chart summary={service.instance_summary} />}
-  />
-);
 
 interface Props {
   labelFiltering: {
