@@ -12,22 +12,12 @@ import {
 import { findCorrespondingId, findFullInterServiceRelations } from "./helpers";
 import activeImage from "./icons/active-icon.svg";
 import candidateImage from "./icons/candidate-icon.svg";
-import { EmbeddedEventEnum, relationId } from "./interfaces";
+import {
+  ComposerEntityOptions,
+  EmbeddedEventEnum,
+  relationId,
+} from "./interfaces";
 import { Link, ServiceEntityBlock } from "./shapes";
-
-interface Options {
-  serviceModel: ServiceModel | EmbeddedEntity;
-  isCore: boolean;
-  isInEditMode: boolean;
-  attributes?: InstanceAttributeModel;
-  isEmbedded?: boolean;
-  holderName?: string;
-  embeddedTo?: "string" | dia.Cell.ID;
-  isBlockedFromEditing?: boolean;
-  cantBeRemoved?: boolean;
-  stencilName?: string;
-  id?: string;
-}
 
 /**
  * Function that creates, appends and returns created Entity
@@ -54,11 +44,11 @@ export function createComposerEntity({
   isEmbedded = false,
   holderName = "",
   embeddedTo,
-  isBlockedFromEditing,
-  cantBeRemoved,
+  isBlockedFromEditing = false,
+  cantBeRemoved = false,
   stencilName,
   id = uniqueId(),
-}: Options): ServiceEntityBlock {
+}: ComposerEntityOptions): ServiceEntityBlock {
   //Create shape for Entity
   const instanceAsTable = new ServiceEntityBlock();
 
@@ -181,117 +171,109 @@ export function appendInstance(
     );
     addInfoIcon(instanceAsTable, "active");
   }
-  const remainingCells = [instanceAsTable, ...embeddedEntities];
 
-  if (instanceWithRelations.interServiceRelations) {
-    //map through inter-service related instances and either append them and connect to them or connect to already existing ones
-    instanceWithRelations.interServiceRelations.forEach(
-      (interServiceRelation) => {
-        const cellAdded = graph.getCell(interServiceRelation.id);
-        const isBlockedFromEditing = true;
+  //map through inter-service related instances and either append them and connect to them or connect to already existing ones
+  instanceWithRelations.interServiceRelations.forEach(
+    (interServiceRelation) => {
+      const cellAdded = graph.getCell(interServiceRelation.id);
+      const isBlockedFromEditing = true;
 
-        //If cell isn't in the graph, we need to append it and connect it to the one we are currently working on
-        if (!cellAdded) {
-          const isMainInstance = false;
-          const appendedInstances = appendInstance(
-            paper,
-            graph,
-            { instance: interServiceRelation },
-            services,
-            isMainInstance,
-            isBlockedFromEditing,
+      //If cell isn't in the graph, we need to append it and connect it to the one we are currently working on
+      if (!cellAdded) {
+        const isMainInstance = false;
+        const appendedInstances = appendInstance(
+          paper,
+          graph,
+          { instance: interServiceRelation, interServiceRelations: [] },
+          services,
+          isMainInstance,
+          isBlockedFromEditing,
+        );
+
+        //disable Inventory Stencil for inter-service relation instance
+        const elements = [
+          {
+            selector: `.body_${appendedInstances[0].get("stencilName")}`,
+            className: "stencil_accent-disabled",
+          },
+          {
+            selector: `.bodyTwo_${appendedInstances[0].get("stencilName")}`,
+            className: "stencil_body-disabled",
+          },
+          {
+            selector: `.text_${appendedInstances[0].get("stencilName")}`,
+            className: "stencil_text-disabled",
+          },
+        ];
+
+        elements.forEach(({ selector, className }) => {
+          const element = document.querySelector(selector);
+
+          if (element) {
+            element.classList.add(className);
+          }
+        });
+      } else {
+        //If cell is already in the graph, we need to check if it got in its inter-service relations the one with id that corresponds with created instanceAsTable
+        let isConnected = false;
+        const cellAsBlock = cellAdded as ServiceEntityBlock;
+        const relations = cellAsBlock.getRelations();
+
+        if (relations) {
+          const correspondingId = findCorrespondingId(
+            relations,
+            instanceAsTable,
           );
 
-          //disable Inventory Stencil for inter-service relation instance
-          const elements = [
-            {
-              selector: `.body_${appendedInstances[0].get("stencilName")}`,
-              className: "stencil_accent-disabled",
-            },
-            {
-              selector: `.bodyTwo_${appendedInstances[0].get("stencilName")}`,
-              className: "stencil_body-disabled",
-            },
-            {
-              selector: `.text_${appendedInstances[0].get("stencilName")}`,
-              className: "stencil_text-disabled",
-            },
-          ];
+          if (correspondingId) {
+            isConnected = true;
+            connectEntities(
+              graph,
+              instanceAsTable,
+              [cellAsBlock],
+              serviceInstanceModel.strict_modifier_enforcement,
+            );
+          }
+        }
+        //If doesn't, or the one we are looking for isn't among the ones stored, we need go through every connected shape and do the same assertion,
+        //as the fact that we have that cell as interServiceRelation tells us that either that or its embedded entities has connection
+        if (!isConnected) {
+          const neighbors = graph.getNeighbors(cellAdded as dia.Element);
 
-          elements.forEach(({ selector, className }) => {
-            const element = document.querySelector(selector);
+          neighbors.map((cell) => {
+            const neighborRelations = (
+              cell as ServiceEntityBlock
+            ).getRelations();
 
-            if (element) {
-              element.classList.add(className);
+            if (neighborRelations) {
+              const correspondingId = findCorrespondingId(
+                neighborRelations,
+                instanceAsTable,
+              );
+
+              if (correspondingId) {
+                isConnected = true;
+                connectEntities(
+                  graph,
+                  instanceAsTable,
+                  [cell as ServiceEntityBlock],
+                  serviceInstanceModel.strict_modifier_enforcement,
+                );
+              }
             }
           });
-
-          //try to connect appended entities to the one existing in the graph
-          connectAppendedEntities(appendedInstances, graph);
-        } else {
-          //If cell is already in the graph, we need to check if it got in its inter-service relations the one with id that corresponds with created instanceAsTable
-          let isConnected = false;
-          const cellAsBlock = cellAdded as ServiceEntityBlock;
-          const relations = cellAsBlock.getRelations();
-
-          if (relations) {
-            const correspondingId = findCorrespondingId(
-              relations,
-              instanceAsTable,
-            );
-
-            if (correspondingId) {
-              isConnected = true;
-              connectEntities(
-                graph,
-                instanceAsTable,
-                [cellAsBlock],
-                serviceInstanceModel.strict_modifier_enforcement,
-              );
-            }
-          }
-          //If doesn't, or the one we are looking for isn't among the ones stored, we need go through every connected shape and do the same assertion,
-          //as the fact that we have that cell as interServiceRelation tells us that either that or its embedded entities has connection
-          if (!isConnected) {
-            const neighbors = graph.getNeighbors(cellAdded as dia.Element);
-
-            neighbors.map((cell) => {
-              const neighborRelations = (
-                cell as ServiceEntityBlock
-              ).getRelations();
-
-              if (neighborRelations) {
-                const correspondingId = findCorrespondingId(
-                  neighborRelations,
-                  instanceAsTable,
-                );
-
-                if (correspondingId) {
-                  isConnected = true;
-                  connectEntities(
-                    graph,
-                    instanceAsTable,
-                    [cell as ServiceEntityBlock],
-                    serviceInstanceModel.strict_modifier_enforcement,
-                  );
-                }
-              }
-            });
-          }
-          connectEntities(
-            graph,
-            instanceAsTable,
-            [cellAsBlock],
-            serviceInstanceModel.strict_modifier_enforcement,
-          );
         }
-      },
-    );
+        connectEntities(
+          graph,
+          instanceAsTable,
+          [cellAsBlock],
+          serviceInstanceModel.strict_modifier_enforcement,
+        );
+      }
+    },
+  );
 
-    //if we are in the children view above implementation won't be enough to connect all entities, thus we need to iterate through core & embedded entities
-
-    connectAppendedEntities(remainingCells, graph);
-  }
+  connectAppendedEntities([instanceAsTable, ...embeddedEntities], graph);
 
   // auto-layout provided by JointJS
   DirectedGraph.layout(graph, {

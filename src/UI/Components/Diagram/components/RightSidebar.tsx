@@ -35,7 +35,7 @@ export const RightSidebar: React.FC = () => {
     useContext(CanvasContext);
   const { mainService } = useContext(InstanceComposerContext);
   const [description, setDescription] = useState<string | null>(null);
-  const [isAllowedToRemove, setIsAllowedToRemove] = useState(false);
+  const [isRemovable, setIsRemovable] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [model, setModel] = useState<ServiceModel | null>(null);
   const [attributes, setAttributes] = useState<InstanceAttributeModel>({});
@@ -168,7 +168,7 @@ export const RightSidebar: React.FC = () => {
       setAttributes(instanceAttributes);
     }
 
-    setIsAllowedToRemove(() => {
+    setIsRemovable(() => {
       const isCellCore = model.get("isCore");
 
       //children entities are not allowed to be removed, as well as rw embedded entities in the edit form
@@ -235,7 +235,7 @@ export const RightSidebar: React.FC = () => {
                 variant="danger"
                 width={200}
                 onClick={onRemove}
-                isDisabled={!isAllowedToRemove || !cellToEdit}
+                isDisabled={!isRemovable || !cellToEdit}
               >
                 {words("remove")}
               </StyledButton>

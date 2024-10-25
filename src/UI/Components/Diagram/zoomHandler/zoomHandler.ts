@@ -132,7 +132,7 @@ export class ZoomHandlerService {
 
     this.toolbar.render();
     this.toolbar.el.dataset.testid = "zoomHandler";
-    this.updateFullscreenStyling();
+    this.updateFullscreenStyling(); //set the icon of the button as adding icons through object properties wasn't loading the icons properly
     this.element.appendChild(this.toolbar.el);
 
     new ui.Tooltip({
@@ -145,7 +145,7 @@ export class ZoomHandlerService {
       "fit-to-screen",
     ) as IconButton;
 
-    fullscreenButton.setIcon(`${fitToScreen}`);
+    fullscreenButton.setIcon(`${fitToScreen}`); //set the icon of the button as adding icons through object properties wasn't loading the icons properly
 
     this.toolbar.on("fit-to-screen:pointerclick", () => this.fitToScreen());
     this.toolbar.on("fullscreen:pointerclick", () => this.toggleFullscreen());

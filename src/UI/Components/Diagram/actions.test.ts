@@ -92,7 +92,6 @@ describe("updateAttributes", () => {
       service_id: "123412",
       should_deploy_fail: false,
     });
-    // expect(instanceAsTable.get("dataToDisplay")).toMatchObject({}); //if length of attributes is more than 4 then we will have dataToDisplay attribute
     expect(instanceAsTable.get("items")).toMatchObject([
       [
         {
@@ -137,7 +136,6 @@ describe("updateAttributes", () => {
       service_id: "123412",
       should_deploy_fail: false,
     });
-    // expect(instanceAsTable.get("dataToDisplay")).toMatchObject({}); //if length of attributes is more than 4 then we will have dataToDisplay attribute
     expect(instanceAsTable.get("items")).toMatchObject([[], []]);
   });
 
@@ -400,8 +398,8 @@ describe("appendEmbeddedEntity", () => {
 
   it.each`
     entityAttributes                               | embeddedTo | holderName             | isBlockedFromEditing | expectedMap
-    ${{ name: "child123" }}                        | ${"123"}   | ${"container-service"} | ${undefined}         | ${new Map([])}
-    ${{ name: "child123", parent_entity: "1234" }} | ${"123"}   | ${"container-service"} | ${undefined}         | ${new Map().set("1234", "parent_entity")}
+    ${{ name: "child123" }}                        | ${"123"}   | ${"container-service"} | ${false}             | ${new Map([])}
+    ${{ name: "child123", parent_entity: "1234" }} | ${"123"}   | ${"container-service"} | ${false}             | ${new Map().set("1234", "parent_entity")}
     ${{ name: "child123" }}                        | ${"123"}   | ${"container-service"} | ${true}              | ${new Map([])}
     ${{ name: "child123" }}                        | ${"123"}   | ${"container-service"} | ${false}             | ${new Map([])}
     ${{ name: "child123" }}                        | ${"123"}   | ${"container-service"} | ${false}             | ${new Map([])}
@@ -469,7 +467,6 @@ describe("appendEmbeddedEntity", () => {
     ];
     const embeddedTo = "123";
     const holderName = "container-service";
-    const isBlockedFromEditing = undefined;
     const expectedMap = new Map().set("1234", "parent_entity");
     const expectedMap2 = new Map().set("12346", "parent_entity");
 
@@ -481,7 +478,6 @@ describe("appendEmbeddedEntity", () => {
       embeddedTo,
       holderName,
       presentedAttrs,
-      isBlockedFromEditing,
     );
 
     const cells = graph.getCells();
@@ -494,7 +490,7 @@ describe("appendEmbeddedEntity", () => {
     expect(cells[0].get("isEmbedded")).toBe(true);
     expect(cells[0].get("embeddedTo")).toBe("123");
 
-    expect(cells[0].get("isBlockedFromEditing")).toBe(isBlockedFromEditing);
+    expect(cells[0].get("isBlockedFromEditing")).toBe(false);
     expect(cells[0].get("cantBeRemoved")).toBe(true);
     expect(cells[0].get("relatedTo")).toMatchObject(expectedMap);
 
@@ -503,7 +499,7 @@ describe("appendEmbeddedEntity", () => {
     expect(cells[1].get("isEmbedded")).toBe(true);
     expect(cells[1].get("embeddedTo")).toBe("123");
 
-    expect(cells[1].get("isBlockedFromEditing")).toBe(isBlockedFromEditing);
+    expect(cells[1].get("isBlockedFromEditing")).toBe(false);
     expect(cells[1].get("cantBeRemoved")).toBe(true);
     expect(cells[1].get("relatedTo")).toMatchObject(expectedMap2);
   });
@@ -547,7 +543,7 @@ describe("appendEmbeddedEntity", () => {
       ];
       const embeddedTo = "123";
       const holderName = "container-service";
-      const isBlockedFromEditing = undefined;
+      const isBlockedFromEditing = false;
       const expectedMap = new Map().set("1234", "parent_entity");
       const expectedMap2 = new Map().set("12346", "parent_entity");
 
@@ -559,7 +555,6 @@ describe("appendEmbeddedEntity", () => {
         embeddedTo,
         holderName,
         presentedAttrs,
-        isBlockedFromEditing,
       );
 
       expect(dispatchEventSpy).toHaveBeenCalledTimes(2);
@@ -638,16 +633,8 @@ describe("appendInstance", () => {
       interServiceRelations: [],
     };
     const isCore = true;
-    const isBlockedFromEditing = false;
 
-    appendInstance(
-      paper,
-      graph,
-      mockedInstance,
-      serviceModels,
-      isCore,
-      isBlockedFromEditing,
-    );
+    appendInstance(paper, graph, mockedInstance, serviceModels, isCore);
 
     const cells = graph.getCells();
 

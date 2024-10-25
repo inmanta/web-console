@@ -13,7 +13,7 @@ import { useFetchHelpers } from "../../helpers";
  */
 export interface InstanceWithRelations {
   instance: ServiceInstanceModel;
-  interServiceRelations?: ServiceInstanceModel[];
+  interServiceRelations: ServiceInstanceModel[];
   coordinates?: string;
 }
 

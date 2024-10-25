@@ -1,5 +1,10 @@
 import { dia, g } from "@inmanta/rappid";
-import { ParsedNumber } from "@/Core";
+import {
+  EmbeddedEntity,
+  InstanceAttributeModel,
+  ParsedNumber,
+  ServiceModel,
+} from "@/Core";
 import {
   ServiceOrderItemAction,
   ServiceOrderItemConfig,
@@ -131,6 +136,20 @@ interface StencilState {
   };
 }
 
+interface ComposerEntityOptions {
+  serviceModel: ServiceModel | EmbeddedEntity;
+  isCore: boolean;
+  isInEditMode: boolean;
+  attributes?: InstanceAttributeModel;
+  isEmbedded?: boolean;
+  holderName?: string;
+  embeddedTo?: "string" | dia.Cell.ID;
+  isBlockedFromEditing?: boolean;
+  cantBeRemoved?: boolean;
+  stencilName?: string;
+  id?: string;
+}
+
 export {
   ActionEnum,
   ColumnData,
@@ -146,4 +165,5 @@ export {
   StencilState,
   TypeEnum,
   EmbeddedEventEnum,
+  ComposerEntityOptions,
 };
