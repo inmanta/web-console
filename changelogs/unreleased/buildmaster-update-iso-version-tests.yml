@@ -1,0 +1,3 @@
+description: Set the iso-version to iso-7 for the E2E test suit
+change-type: patch
+destination-branches: [iso7]
