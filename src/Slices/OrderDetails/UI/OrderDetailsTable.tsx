@@ -41,7 +41,11 @@ export const OrderDetailsTable: React.FC<Props> = ({
     <Table {...props} variant={TableVariant.compact}>
       <Thead>
         <Tr>
-          <Th style={{ width: "15px" }} aria-hidden />
+          <Th
+            style={{ width: "15px" }}
+            aria-hidden
+            screenReaderText={words("common.emptyColumnHeader")}
+          />
           {heads}
         </Tr>
       </Thead>
