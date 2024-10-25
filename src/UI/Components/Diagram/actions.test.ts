@@ -706,7 +706,7 @@ describe("appendInstance", () => {
       should_deploy_fail: false,
     });
 
-    //assert that the first cell is the child-service, which would be inter-service relation in edit mode and has it's attributes set as expected
+    //assert that the first cell is the child-service, which would be inter-service relation in edit mode and has its attributes set as expected
     expect(filteredCells[1].get("entityName")).toBe("child-service");
     expect(filteredCells[1].get("isCore")).toBe(undefined);
     expect(filteredCells[1].get("isEmbedded")).toBe(undefined);
