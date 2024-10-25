@@ -27,7 +27,6 @@ import { EntityForm } from "./EntityForm";
  * - Embedded entities are removed from the canvas(if service model allows it), and will be erased from the service instance.
  * - Inter-service relation entities are removed from the canvas(if service model allows it), but won't be deleted from the environment.
  *
- *
  * @returns {React.FC} The RightSidebar component.
  */
 export const RightSidebar: React.FC = () => {
