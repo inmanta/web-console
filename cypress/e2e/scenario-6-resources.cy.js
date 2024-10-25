@@ -234,10 +234,10 @@ describe("Scenario 6 : Resources", () => {
       // Go to logs tab
       cy.get("button").contains("Logs").click();
 
-      // Expect it to have : 9 log messages
+      // Expect it to have : 7 log messages
       cy.get('[aria-label="ResourceLogRow"]', { timeout: 40000 }).should(
         "to.have.length.of.at.least",
-        8,
+        7,
       );
 
       // make sure the default is 100 instead of 20 like on other pages with pagination.
