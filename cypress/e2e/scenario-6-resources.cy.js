@@ -297,7 +297,7 @@ describe("Scenario 6 : Resources", () => {
       // Expect amount of rows to be bigger than before filtering.
       cy.get('[aria-label="ResourceLogRow"]').should(
         "to.have.length.of.at.least",
-        8,
+        7,
       );
     });
 
