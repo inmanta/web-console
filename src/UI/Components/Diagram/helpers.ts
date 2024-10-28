@@ -207,7 +207,6 @@ export const checkIfConnectionIsAllowed = (
 
   const elementsCanBeConnected =
     sourceRule !== undefined || targetRule !== undefined;
-
   //the info about the connection between elements can be one directional
   const connectionIsInterServiceRelation =
     (sourceRule && sourceRule.kind === TypeEnum.INTERSERVICE) ||
@@ -241,9 +240,8 @@ export const checkWhetherConnectionRulesAreExhausted = (
   rule: EmbeddedRule | InterServiceRule | undefined,
   editMode: boolean,
 ): boolean => {
-  //if there is no rule then there shouldn't be possibility to connect them
   if (!rule) {
-    return true;
+    return false;
   }
 
   const targetConnectionsForGivenRule = connectedElements.filter(
