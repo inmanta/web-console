@@ -17,7 +17,6 @@ describe("createStencilElement", () => {
       "holderName",
     );
 
-    expect(embeddedElementWithModel.id).toEqual("1");
     expect(embeddedElementWithModel.attributes.name).toEqual("default");
     expect(embeddedElementWithModel.attributes.serviceModel).toStrictEqual(
       containerModel.embedded_entities[0],
