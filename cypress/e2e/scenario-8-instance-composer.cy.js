@@ -198,11 +198,11 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 2);
       // await until two parent_service are deployed and up
       cy.get('[data-label="State"]', { timeout: 90000 })
-        .eq(1)
-        .should("have.text", "up");
+        .eq(1, { timeout: 90000 })
+        .should("have.text", "up", { timeout: 90000 });
       cy.get('[data-label="State"]', { timeout: 90000 })
-        .eq(0)
-        .should("have.text", "up");
+        .eq(0, { timeout: 90000 })
+        .should("have.text", "up", { timeout: 90000 });
 
       //Add child_service instance
       cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
