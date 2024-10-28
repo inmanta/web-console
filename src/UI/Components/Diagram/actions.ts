@@ -1,6 +1,5 @@
 import { dia } from "@inmanta/rappid";
 import { DirectedGraph } from "@joint/layout-directed-graph";
-import { uniqueId } from "lodash";
 import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from "@/Core";
 import { InstanceWithRelations } from "@/Data/Managers/V2/GETTERS/GetInstanceWithRelations";
 import { words } from "@/UI/words";
@@ -32,7 +31,7 @@ import { Link, ServiceEntityBlock } from "./shapes";
  * @param {boolean} [isBlockedFromEditing] - boolean value determining if the instance is blocked from editing
  * @param {boolean} [cantBeRemoved] - boolean value determining if the instance can't be removed
  * @param {string} [stencilName] - name of the stencil that should be disabled in the sidebar
- * @param {string} [id] - unique id of the entity default to uniqueId()
+ * @param {string} [id] - unique id of the entity, optional
  *
  * @returns {ServiceEntityBlock} created JointJS shape
  */
@@ -47,13 +46,17 @@ export function createComposerEntity({
   isBlockedFromEditing = false,
   cantBeRemoved = false,
   stencilName,
-  id = uniqueId(),
+  id,
 }: ComposerEntityOptions): ServiceEntityBlock {
   //Create shape for Entity
   const instanceAsTable = new ServiceEntityBlock();
 
   instanceAsTable.setName(serviceModel.name);
-  instanceAsTable.set("id", id);
+
+  //if there is if provided, we use it, if not we use default one, created by JointJS
+  if (id) {
+    instanceAsTable.set("id", id);
+  }
 
   if (isEmbedded) {
     instanceAsTable.setTabColor("embedded");

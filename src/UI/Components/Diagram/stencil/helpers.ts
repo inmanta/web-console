@@ -1,5 +1,5 @@
 import { shapes } from "@inmanta/rappid";
-import { uniqueId } from "lodash";
+import { v4 as uuidv4 } from "uuid";
 import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from "@/Core";
 
 /**
@@ -46,7 +46,7 @@ export const createStencilElement = (
   isEmbedded: boolean = false,
   holderName?: string,
 ): shapes.standard.Path => {
-  let id = uniqueId();
+  let id = uuidv4();
 
   if (instanceAttributes && instanceAttributes.id) {
     id = instanceAttributes.id as string;
