@@ -70,7 +70,7 @@ cd ../..
 
 echo "Replace dist folder on the orchestrator with current build..."
 # remove old build output and copy dist to the the orchestrator
-docker exec inmanta_orchestrator rm -rf /usr/share/inmanta/web-console
+docker exec -u root inmanta_orchestrator rm -rf /usr/share/inmanta/web-console
 
 docker cp dist inmanta_orchestrator:/usr/share/inmanta/web-console
 
