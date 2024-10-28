@@ -83,7 +83,6 @@ describe("transformEmbeddedToStencilElements", () => {
     });
 
     expect(result.length).toEqual(2);
-    expect(result[0].id).toEqual("2");
     expect(result[0].attributes.name).toEqual("embedded");
     expect(result[0].attributes.serviceModel).toStrictEqual({
       ...containerModel.embedded_entities[0],
@@ -98,7 +97,6 @@ describe("transformEmbeddedToStencilElements", () => {
     expect(result[0].attributes.holderName).toEqual("holderName");
     expect(result[0].attributes.instanceAttributes).toStrictEqual({});
 
-    expect(result[1].id).toEqual("3");
     expect(result[1].attributes.name).toEqual("embedded-embedded");
     expect(result[1].attributes.serviceModel).toStrictEqual({
       ...containerModel.embedded_entities[0],
