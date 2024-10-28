@@ -4,37 +4,90 @@ import linkBttn from "./icons/link-button.svg";
 import removeBttn from "./icons/remove-button.svg";
 
 export const CanvasWrapper = styled.div`
+  display: flex;
   width: 100%;
   height: calc(80vh - 140px);
   position: relative;
   background: var(--pf-v5-global--palette--black-200);
   margin: 0;
   overflow: hidden;
-  .canvas {
+  border: 1px solid var(--pf-v5-global--BackgroundColor--200);
+
+  &.fullscreen {
+    position: fixed;
     top: 0;
-    bottom: 0;
     left: 0;
-    right: 0;
-    position: absolute;
-    background: var(--pf-v5-global--BackgroundColor--light-300);
-    * {
-      font-family: var(--pf-v5-global--FontFamily--monospace);
+    width: 100vw;
+    height: 100vh;
+  }
+
+  #tabs-toolbar {
+    padding: 12px 0 0;
+    border: 0;
+    button {
+      width: 120px;
+      border-radius: 0;
+      border-color: transparent;
+      background: var(--pf-v5-global--BackgroundColor--200);
+      margin: 0;
+      justify-content: center;
+
+      &:hover {
+        background: var(--pf-v5-global--palette--black-400);
+      }
+
+      &.-active {
+        background: var(--pf-v5-global--BackgroundColor--100);
+        border-top: 2px solid var(--pf-v5-global--primary-color--100);
+      }
     }
-    .joint-element {
-      filter: drop-shadow(
-        0.1rem 0.1rem 0.15rem
-          var(--pf-v5-global--BackgroundColor--dark-transparent-200)
-      );
-    }
-    .joint-paper-background {
-      background: var(--pf-v5-global--BackgroundColor--light-300);
+  }
+
+  .joint-stencil {
+    top: 52px;
+    border: 0;
+
+    &.joint-hidden {
+      visibility: hidden; //note: display: none breaks the stencil-groups
     }
 
-    .source-arrowhead,
-    .target-arrowhead {
-      fill: var(--pf-v5-global--palette--black-500);
-      stroke-width: 1;
+    .content {
+      padding: 12px 0;
     }
+
+    .stencil_body-disabled {
+      pointer-events: none;
+      fill: var(--pf-v5-global--disabled-color--200);
+    }
+
+    .stencil_text-disabled {
+      fill: var(--pf-v5-global--disabled-color--100);
+    }
+
+    .stencil_accent-disabled {
+      fill: var(--pf-v5-global--disabled-color--100);
+    }
+  }
+
+  .joint-element {
+    filter: drop-shadow(
+      0.1rem 0.1rem 0.15rem
+        var(--pf-v5-global--BackgroundColor--dark-transparent-200)
+    );
+  }
+
+  .joint-stencil.searchable > .content {
+    top: 60px;
+  }
+
+  .joint-stencil.joint-theme-default .search {
+    padding-left: 10px;
+    border: 1px solid var(--pf-v5-global--BackgroundColor--200);
+    border-bottom: 1px solid var(--pf-v5-global--palette--black-700);
+  }
+
+  .joint-stencil.joint-theme-default .search-wrap {
+    padding: 10px;
   }
 
   //  ***  ui.Halo ***

@@ -353,38 +353,6 @@ test("ServiceInventory shows instance summary chart", async () => {
   ).toBeInTheDocument();
 });
 
-test("ServiceInventory shows disabled composer buttons for non-root instances ", async () => {
-  const { component, apiHelper } = setup({ ...Service.a, owner: "owner" });
-
-  render(component);
-
-  await act(async () => {
-    apiHelper.resolve(
-      Either.right({
-        data: [{ ...ServiceInstance.a, id: "a" }],
-        links: { ...Pagination.links },
-        metadata: Pagination.metadata,
-      }),
-    );
-  });
-
-  expect(screen.queryByRole("Add in Composer")).not.toBeInTheDocument();
-
-  const menuToggle = await screen.findByRole("button", {
-    name: "row actions toggle",
-  });
-
-  await act(async () => {
-    await userEvent.click(menuToggle);
-  });
-
-  const button = screen.queryByRole("menuitem", {
-    name: "Edit in Composer",
-  });
-
-  expect(button).not.toBeInTheDocument();
-});
-
 test("ServiceInventory shows enabled composer buttons for root instances ", async () => {
   const { component, apiHelper } = setup(Service.a);
 
@@ -436,7 +404,13 @@ test("ServiceInventory shows only button to display instance in the composer for
     );
   });
 
-  expect(screen.queryByText("Add in Composer")).not.toBeInTheDocument();
+  await act(async () => {
+    await userEvent.click(
+      screen.getByRole("button", { name: "AddInstanceToggle" }),
+    );
+  });
+
+  expect(screen.getByText("Add in Composer")).toBeInTheDocument();
 
   const menuToggle = await screen.findByRole("button", {
     name: "row actions toggle",
@@ -448,7 +422,7 @@ test("ServiceInventory shows only button to display instance in the composer for
 
   expect(await screen.findByText("Show in Composer")).toBeEnabled();
 
-  expect(screen.queryByText("Edit in Composer")).not.toBeInTheDocument();
+  expect(screen.getByText("Edit in Composer")).toBeInTheDocument();
 });
 
 test("GIVEN ServiceInventory WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async () => {

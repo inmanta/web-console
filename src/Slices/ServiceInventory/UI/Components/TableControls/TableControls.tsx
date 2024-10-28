@@ -37,8 +37,7 @@ export const TableControls: React.FC<Props> = ({
   const [isOpen, setIsOpen] = useState(false);
   const { routeManager, featureManager } = useContext(DependencyContext);
 
-  const composerEnabled =
-    service.owner === null && featureManager.isComposerEnabled();
+  const composerEnabled = featureManager.isComposerEnabled();
 
   const states = service.lifecycle.states.map((state) => state.name).sort();
 
