@@ -9,6 +9,7 @@ import {
 } from "@patternfly/react-table";
 import { useExpansion } from "@/Data";
 import { ServiceOrderItem } from "@/Slices/Orders/Core/Query";
+import { words } from "@/UI";
 import { OrderDetailsRow } from "./OrderDetailsRow";
 import { OrderDetailsTablePresenter } from "./OrderDetailsTablePresenter";
 
