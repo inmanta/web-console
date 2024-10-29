@@ -20,6 +20,15 @@ enum ActionEnum {
 }
 
 /**
+ * Enum representing types of entities on the canvas.
+ */
+enum EntityType {
+  CORE = "core",
+  EMBEDDED = "embedded",
+  RELATION = "relation",
+}
+
+/**
  * Interface representing data for a column for displayable attributes in the entity.
  */
 interface ColumnData {
@@ -190,4 +199,5 @@ export {
   TypeEnum,
   EmbeddedEventEnum,
   ComposerEntityOptions,
+  EntityType,
 };

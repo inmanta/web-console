@@ -1,7 +1,7 @@
 import { dia, shapes, util } from "@inmanta/rappid";
 import { updateLabelPosition } from "./helpers";
 import expandButton from "./icons/expand-icon.svg";
-import { ColumnData } from "./interfaces";
+import { ColumnData, EntityType } from "./interfaces";
 
 /**
  * https://resources.jointjs.com/tutorial/custom-elements
@@ -220,7 +220,14 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
     }
   }
 
-  setName(name: string, options?: object) {
+  /**
+   * Sets the name of the entity and updates the header label with a shortened version if necessary.
+   *
+   * @param {string} name - The name to set for the entity.
+   * @param {object} [options] - Optional settings for the attribute update.
+   * @returns {this} The current instance for method chaining.
+   */
+  setName(name: string, options?: object): this {
     const shortenName = util.breakText(
       name,
       { width: 140, height: 30 },
@@ -247,12 +254,23 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
     }
   }
 
+  /**
+   * Retrieves the inter-service relations of the entity.
+   *
+   * @returns {Map<dia.Cell.ID, string> | null} - Map of relations
+   */
   getRelations(): Map<dia.Cell.ID, string> | null {
     const relations = this.get("relatedTo");
 
     return relations || null;
   }
 
+  /**
+   * Adds a inter-service relation to the entity.
+   *
+   * @param {dia.Cell.ID} id - The identifier of the relation.
+   * @param {string} relationName - The name of the relation.
+   */
   addRelation(id: dia.Cell.ID, relationName: string): void {
     const currentRelation = this.getRelations();
 
@@ -265,6 +283,12 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
     }
   }
 
+  /**
+   * Removes a  inter-service relation by its identifier.
+   *
+   * @param {string} id - The identifier of the relation to remove.
+   * @returns {boolean} True if the relation was removed, false otherwise.
+   */
   removeRelation(id: string): boolean {
     const currentRelation = this.getRelations();
     let wasThereRelationToRemove = false;
@@ -277,24 +301,42 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
     return wasThereRelationToRemove;
   }
 
+  /**
+   * Retrieves the name of the entity.
+   *
+   * @returns {string} The name of the entity.
+   */
   getName(): string {
     return this.get("entityName");
   }
 
-  setTabColor(type: "core" | "embedded" | "relation") {
+  /**
+   * Sets the tab color based on the entity type.
+   *
+   * @param {EntityType} type - The type of the entity.
+   * @returns {this} updated entity block
+   */
+  setTabColor(type: EntityType): this {
     switch (type) {
-      case "core":
+      case EntityType.CORE:
         return this.attr(["header", "fill"], "#F0AB00");
-      case "embedded":
+      case EntityType.EMBEDDED:
         return this.attr(["header", "fill"], "#0066CC");
-      case "relation":
+      case EntityType.RELATION:
         return this.attr(["header", "fill"], "#6753AC");
       default:
-        return;
+        return this;
     }
   }
 
-  appendColumns(data: Array<ColumnData>, initializeButton = true) {
+  /**
+   * Appends columns to the entity and optionally initializes a expand/collapse button.
+   *
+   * @param {Array<ColumnData>} data - The array of column data to append.
+   * @param {boolean} [initializeButton=true] - Flag indicating whether to initialize a button to expand/collapse.
+   * @returns {this} The updated entity block.
+   */
+  appendColumns(data: Array<ColumnData>, initializeButton = true): this {
     this._setColumns(data, initializeButton);
 
     if (initializeButton && this.get("isCollapsed")) {
@@ -304,13 +346,28 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
     return this;
   }
 
-  editColumns(data: Array<ColumnData>, shouldBeCollapsed = true) {
+  /**
+   * Edits the columns of the entity and optionally sets the collapsed state.
+   *
+   * @param {Array<ColumnData>} data - The array of column data to set.
+   * @param {boolean} [shouldBeCollapsed=true] - Flag indicating whether the entity should be collapsed.
+   * @returns {this} The updated entity block.
+   */
+  editColumns(data: Array<ColumnData>, shouldBeCollapsed = true): this {
     this._setColumns(data, shouldBeCollapsed);
 
     return this;
   }
 
-  appendButton() {
+  /**
+   * Appends a button to the entity block.
+   *
+   * This method sets the padding and attributes for the spacer, button body, and toggle button.
+   * It positions the button based on the bounding box of the entity block.
+   *
+   * @returns {void}
+   */
+  appendButton(): void {
     this.set("padding", {
       bottom: 44,
       left: 10,
@@ -350,7 +407,12 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
     });
   }
 
-  toJSON() {
+  /**
+   * Converts the entity to a JSON representation.
+   *
+   * @returns {dia.Cell.JSON<any, dia.Element.Attributes>} The JSON representation of the entity.
+   */
+  toJSON(): dia.Cell.JSON<any, dia.Element.Attributes> {
     const json = super.toJSON();
 
     // keeping only the `items` attribute as columns are omitted in our use-case

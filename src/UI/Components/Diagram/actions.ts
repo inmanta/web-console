@@ -14,6 +14,7 @@ import candidateImage from "./icons/candidate-icon.svg";
 import {
   ComposerEntityOptions,
   EmbeddedEventEnum,
+  EntityType,
   relationId,
 } from "./interfaces";
 import { Link, ServiceEntityBlock } from "./shapes";
@@ -59,7 +60,7 @@ export function createComposerEntity({
   }
 
   if (isEmbedded) {
-    instanceAsTable.setTabColor("embedded");
+    instanceAsTable.setTabColor(EntityType.EMBEDDED);
     instanceAsTable.set("embeddedTo", embeddedTo);
     instanceAsTable.set("isEmbedded", isEmbedded);
     instanceAsTable.set("holderName", holderName);
@@ -67,9 +68,9 @@ export function createComposerEntity({
     instanceAsTable.set("stencilName", stencilName);
   } else if (isCore) {
     instanceAsTable.set("isCore", isCore);
-    instanceAsTable.setTabColor("core");
+    instanceAsTable.setTabColor(EntityType.CORE);
   } else {
-    instanceAsTable.setTabColor("relation");
+    instanceAsTable.setTabColor(EntityType.RELATION);
   }
 
   instanceAsTable.set("isInEditMode", isInEditMode);
