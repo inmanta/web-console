@@ -23,17 +23,17 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
         attrs: {
           body: {
             class: "joint-entityBlock-body",
-            strokeWidth: 1,
+            strokeWidth: 0,
             cursor: "default",
           },
           header: {
-            class: "joint-entityBlock-header",
-            strokeWidth: 1,
+            strokeWidth: 0,
             cursor: "grab",
           },
           headerLabel: {
-            class: "joint-entityBlock-header-label",
+            fontFamily: `"RedHatMono", "Liberation Mono", consolas, "SFMono-Regular", menlo, monaco, "Courier New", monospace`,
             textTransform: "uppercase",
+            fill: "#FFFFFF",
             fontSize: 14,
             textWrap: {
               ellipsis: true,
@@ -281,10 +281,17 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
     return this.get("entityName");
   }
 
-  setTabColor(color: string) {
-    const currentClassName = this.attr(["header", "class"]);
-
-    return this.attr(["header", "class"], `${currentClassName} -${color}`);
+  setTabColor(type: "core" | "embedded" | "relation") {
+    switch (type) {
+      case "core":
+        return this.attr(["header", "fill"], "#F0AB00");
+      case "embedded":
+        return this.attr(["header", "fill"], "#0066CC");
+      case "relation":
+        return this.attr(["header", "fill"], "#6753AC");
+      default:
+        return;
+    }
   }
 
   appendColumns(data: Array<ColumnData>, initializeButton = true) {

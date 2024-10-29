@@ -136,7 +136,7 @@ describe("Canvas.tsx", () => {
 
     const header = screen.getByJointSelector("header");
 
-    expect(header).toHaveClass("-core");
+    expect(header.getAttribute("fill")).toContain("#F0AB00");
   });
 
   it("navigating out of the View works correctly", async () => {

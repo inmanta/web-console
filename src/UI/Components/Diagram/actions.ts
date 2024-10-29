@@ -68,6 +68,8 @@ export function createComposerEntity({
   } else if (isCore) {
     instanceAsTable.set("isCore", isCore);
     instanceAsTable.setTabColor("core");
+  } else {
+    instanceAsTable.setTabColor("relation");
   }
 
   instanceAsTable.set("isInEditMode", isInEditMode);
