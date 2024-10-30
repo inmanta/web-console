@@ -69,6 +69,7 @@ export const ComposerEditorProvider: React.FC<Props> = ({
     instance,
     environment,
     mainService,
+    !editable, //if editable is true, we don't fetch referenced_by instances as they should be displayed to keep it aligned with the regular instance form
   ).useOneTime();
 
   const relatedInventoriesQuery = useGetInventoryList(

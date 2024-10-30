@@ -458,6 +458,9 @@ if (Cypress.env("edition") === "iso") {
         })
         .trigger("mouseup");
 
+      //highlighted loose element should be visible
+      cy.get(".joint-loose_element-highlight").should("be.visible");
+
       cy.get('[data-type="app.ServiceEntityBlock"')
         .contains("many-defaults")
         .click();
@@ -469,6 +472,9 @@ if (Cypress.env("edition") === "iso") {
           clientY: 500,
         })
         .trigger("mouseup");
+
+      //highlighted loose element should be removed
+      cy.get(".joint-loose_element-highlight").should("not.exist");
 
       cy.get('[data-type="Link"]').should("have.length", 3);
 

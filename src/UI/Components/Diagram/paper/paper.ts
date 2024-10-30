@@ -225,7 +225,7 @@ export class ComposerPaper {
         return;
       }
 
-      showLinkTools(graph, linkView, connectionRules);
+      showLinkTools(this.paper, graph, linkView, connectionRules);
     });
 
     //Event that is triggered when user leaves the link. It's used to remove the link tools and the link labels for connected cells
@@ -282,6 +282,10 @@ export class ComposerPaper {
               new CustomEvent("updateServiceOrderItems", {
                 detail: { cell: sourceCell, action: ActionEnum.UPDATE },
               }),
+            );
+            toggleLooseElement(
+              this.paper.findViewByModel(connectingCell),
+              EmbeddedEventEnum.REMOVE,
             );
           }
         }
