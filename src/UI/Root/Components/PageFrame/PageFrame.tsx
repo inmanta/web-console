@@ -26,7 +26,7 @@ export const PageFrame: React.FC<React.PropsWithChildren<Props>> = ({
   return (
     <>
       <div role="alert" aria-label="bannerNotifications">
-        <ExpertBanner />
+        {environmentId && <ExpertBanner environmentId={environmentId} />}
         <LicenseBanner />
       </div>
       <div className="pf-m-grow" style={{ minHeight: "0%" }}>

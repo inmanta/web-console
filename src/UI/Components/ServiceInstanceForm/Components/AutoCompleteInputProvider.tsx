@@ -12,7 +12,7 @@ interface Props {
   isOptional: boolean;
   isDisabled?: boolean;
   handleInputChange: (value) => void;
-  alreadySelected: string[];
+  alreadySelected: string[] | null;
   multi?: boolean;
 }
 
