@@ -141,6 +141,8 @@ describe("ComposerEditorProvider", () => {
         name: "ComposerEditorProvider-ServiceModelsQuery_failed",
       }),
     ).toBeInTheDocument();
+
+    expect(await screen.findByText("Something went wrong")).toBeInTheDocument();
   });
 
   it("if there is error when fetching related inventories the error view is shown", async () => {
@@ -168,6 +170,8 @@ describe("ComposerEditorProvider", () => {
         name: "ComposerEditorProvider-RelatedInventoriesQuery_failed",
       }),
     ).toBeInTheDocument();
+
+    expect(await screen.findByText("Something went wrong")).toBeInTheDocument();
   });
 
   it("if there is error when fetching instance with relations the error view is shown", async () => {
@@ -195,6 +199,8 @@ describe("ComposerEditorProvider", () => {
         name: "ComposerEditorProvider-InstanceWithRelationsQuery_failed",
       }),
     ).toBeInTheDocument();
+
+    expect(await screen.findByText("Something went wrong")).toBeInTheDocument();
   });
 
   it("if there is error no main service model the error view is shown", async () => {
@@ -220,6 +226,12 @@ describe("ComposerEditorProvider", () => {
       await screen.findByRole("region", {
         name: "ComposerEditorProvider-NoServiceModel_failed",
       }),
+    ).toBeInTheDocument();
+
+    expect(
+      await screen.findByText(
+        "There is no service model available for child-service",
+      ),
     ).toBeInTheDocument();
   });
 

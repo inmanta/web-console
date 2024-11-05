@@ -123,6 +123,8 @@ describe("ComposerCreatorProvider", () => {
         name: "ComposerCreatorProvider-ServiceModelsQuery_failed",
       }),
     ).toBeInTheDocument();
+
+    expect(await screen.findByText("Something went wrong")).toBeInTheDocument();
   });
 
   it("if there is error when related inventories the error view is shown", async () => {
@@ -148,6 +150,8 @@ describe("ComposerCreatorProvider", () => {
         name: "ComposerCreatorProvider-RelatedInventoriesQuery_failed",
       }),
     ).toBeInTheDocument();
+
+    expect(await screen.findByText("Something went wrong")).toBeInTheDocument();
   });
 
   it("if there is error no main service model the error view is shown", async () => {
@@ -173,6 +177,12 @@ describe("ComposerCreatorProvider", () => {
       await screen.findByRole("region", {
         name: "ComposerCreatorProvider-NoServiceModel_failed",
       }),
+    ).toBeInTheDocument();
+
+    expect(
+      await screen.findByText(
+        "There is no service model available for child-service",
+      ),
     ).toBeInTheDocument();
   });
 
