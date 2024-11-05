@@ -4,7 +4,7 @@ import { ui } from "@inmanta/rappid";
 import styled from "styled-components";
 import { CanvasContext, InstanceComposerContext } from "./Context";
 import { EventWrapper } from "./Context/EventWrapper";
-import { DictModal, RightSidebar, ComposerActions } from "./components";
+import { DictModal, RightSidebar } from "./components";
 import { createConnectionRules, createStencilState } from "./helpers";
 import { diagramInit } from "./init";
 import { StencilSidebar } from "./stencil";
@@ -164,7 +164,6 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
   return (
     <EventWrapper>
       <DictModal />
-      <ComposerActions serviceName={mainService.name} editable={editable} />
       <CanvasWrapper id="canvas-wrapper" data-testid="Composer-Container">
         <LeftSidebarContainer
           className="left_sidebar"

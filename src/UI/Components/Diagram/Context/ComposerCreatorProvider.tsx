@@ -1,9 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
+import { FlexItem, Flex } from "@patternfly/react-core";
 import { useGetAllServiceModels } from "@/Data/Managers/V2/GETTERS/GetAllServiceModels";
 import { useGetInventoryList } from "@/Data/Managers/V2/GETTERS/GetInventoryList";
 import { DependencyContext, words } from "@/UI";
-import { ErrorView, LoadingView } from "@/UI/Components";
+import { ErrorView, LoadingView, PageContainer } from "@/UI/Components";
 import { Canvas } from "@/UI/Components/Diagram/Canvas";
+import { ComposerActions } from "../components";
 import { findInterServiceRelations } from "../helpers";
 import { CanvasProvider } from "./CanvasProvider";
 import { InstanceComposerContext } from "./Context";
@@ -61,7 +63,7 @@ export const ComposerCreatorProvider: React.FC<Props> = ({ serviceName }) => {
   if (serviceModels.isError) {
     const message = words("error.general")(serviceModels.error.message);
     const retry = serviceModels.refetch;
-    const ariaLabel = "ComposerCreatorProvider-serviceModels_failed";
+    const ariaLabel = "ComposerCreatorProvider-ServiceModelsQuery_failed";
 
     return renderErrorView(message, ariaLabel, retry);
   }
@@ -71,7 +73,7 @@ export const ComposerCreatorProvider: React.FC<Props> = ({ serviceName }) => {
       relatedInventoriesQuery.error.message,
     );
     const retry = relatedInventoriesQuery.refetch;
-    const ariaLabel = "ComposerCreatorProvider-relatedInventoriesQuery_failed";
+    const ariaLabel = "ComposerCreatorProvider-RelatedInventoriesQuery_failed";
 
     return renderErrorView(message, ariaLabel, retry);
   }
@@ -86,7 +88,7 @@ export const ComposerCreatorProvider: React.FC<Props> = ({ serviceName }) => {
         serviceName,
       );
       const retry = serviceModels.refetch;
-      const ariaLabel = "ComposerCreatorProvider-noServiceModel_failed";
+      const ariaLabel = "ComposerCreatorProvider-NoServiceModel_failed";
 
       return renderErrorView(message, ariaLabel, retry);
     }
@@ -101,13 +103,24 @@ export const ComposerCreatorProvider: React.FC<Props> = ({ serviceName }) => {
         }}
       >
         <CanvasProvider>
-          <Canvas editable />
+          <PageContainer
+            pageTitle={
+              <Flex justifyContent={{ default: "justifyContentSpaceBetween" }}>
+                <FlexItem> {words("instanceComposer.title")}</FlexItem>
+                <FlexItem>
+                  <ComposerActions serviceName={serviceName} editable />
+                </FlexItem>
+              </Flex>
+            }
+          >
+            <Canvas editable />
+          </PageContainer>
         </CanvasProvider>
       </InstanceComposerContext.Provider>
     );
   }
 
-  return <LoadingView aria-label="ComposerCreatorProvider-loading" />;
+  return <LoadingView ariaLabel="ComposerCreatorProvider-Loading" />;
 };
 
 /**
@@ -128,7 +141,7 @@ export const renderErrorView = (
     data-testid="ErrorView"
     title={words("error")}
     message={message}
-    aria-label={ariaLabel}
+    ariaLabel={ariaLabel}
     retry={retry}
   />
 );

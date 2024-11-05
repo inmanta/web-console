@@ -165,5 +165,5 @@ export const ComposerActions: React.FC<Props> = ({ serviceName, editable }) => {
 };
 
 const Container = styled(Flex)`
-  padding: 0 0 20px;
+  margin-right: var(--pf-v5-global--spacer--lg);
 `;

@@ -139,22 +139,6 @@ describe("Canvas.tsx", () => {
     expect(header).toHaveClass("-core");
   });
 
-  it("navigating out of the View works correctly", async () => {
-    const component = setup(mockedInstanceTwoServiceModel, mockedInstanceTwo, [
-      mockedInstanceTwoServiceModel,
-    ]);
-
-    render(component);
-    expect(window.location.pathname).toEqual("/");
-
-    await act(async () => {
-      await user.click(screen.getByRole("button", { name: "Cancel" }));
-    });
-    expect(window.location.pathname).toEqual(
-      "/lsm/catalog/test-service/inventory",
-    );
-  });
-
   it("renders shapes dict Value that can be viewed in dict Modal", async () => {
     const component = setup(mockedInstanceTwoServiceModel, mockedInstanceTwo, [
       mockedInstanceTwoServiceModel,
