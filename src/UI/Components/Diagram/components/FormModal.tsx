@@ -131,7 +131,11 @@ const FormModal = ({
       | React.FormEvent<HTMLFormElement>,
   ): void => {
     event.preventDefault();
-    if (selected) onConfirm(fields, formState, selected);
+
+    if (selected) {
+      onConfirm(fields, formState, selected);
+    }
+
     clearStates();
     toggleIsOpen(false);
   };
@@ -315,7 +319,10 @@ const FormModal = ({
           width={200}
           isDisabled={selected === undefined}
           onClick={() => {
-            if (selected) onConfirm(fields, formState, selected);
+            if (selected) {
+              onConfirm(fields, formState, selected);
+            }
+
             clearStates();
             toggleIsOpen(false);
           }}
