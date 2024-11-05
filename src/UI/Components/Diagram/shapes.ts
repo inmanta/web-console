@@ -353,7 +353,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
    * @param {boolean} [shouldBeCollapsed=true] - Flag indicating whether the entity should be collapsed.
    * @returns {this} The updated entity block.
    */
-  editColumns(data: Array<ColumnData>, shouldBeCollapsed = true): this {
+  updateColumns(data: Array<ColumnData>, shouldBeCollapsed = true): this {
     this._setColumns(data, shouldBeCollapsed);
 
     return this;

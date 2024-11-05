@@ -517,7 +517,7 @@ export function updateAttributes(
   if (isInitial) {
     serviceEntity.appendColumns(attributesToDisplay);
   } else {
-    serviceEntity.editColumns(
+    serviceEntity.updateColumns(
       attributesToDisplay,
       serviceEntity.attributes.isCollapsed,
     );
