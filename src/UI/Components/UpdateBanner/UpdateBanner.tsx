@@ -1,9 +1,8 @@
 import React, { useContext, useState } from "react";
-import { Banner, Flex } from "@patternfly/react-core";
+import { Banner } from "@patternfly/react-core";
 import { ApiHelper } from "@/Core";
 import { GetVersionFileQueryManager } from "@/Data/Managers/GetVersionFile/OnteTimeQueryManager";
 import { DependencyContext } from "@/UI/Dependency";
-import { words } from "@/UI/words";
 
 interface Props {
   apiHelper: ApiHelper;
@@ -26,9 +25,9 @@ export const UpdateBanner: React.FunctionComponent<Props> = (props) => {
   const banner = (
     <React.Fragment>
       <Banner isSticky variant="gold" aria-label="newVersionAvailable">
-        <Flex justifyContent={{ default: "justifyContentCenter" }}>
-          {words("banner.updateBanner")(currentVersion)}
-        </Flex>
+        You are running {currentVersion}, a new version is available! Please
+        hard-reload (Ctrl+F5 | Cmd + Shift + R) your page to load the new
+        version.
       </Banner>
     </React.Fragment>
   );
