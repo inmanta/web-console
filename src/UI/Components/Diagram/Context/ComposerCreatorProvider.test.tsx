@@ -99,7 +99,7 @@ describe("ComposerCreatorProvider", () => {
     server.close();
   });
 
-  it("if there is error when fetching service models show error view", async () => {
+  it("if there is error when fetching service models the error view is shown", async () => {
     server.use(
       http.get("/lsm/v1/service_catalog", async () => {
         return HttpResponse.json(
@@ -125,7 +125,7 @@ describe("ComposerCreatorProvider", () => {
     ).toBeInTheDocument();
   });
 
-  it("if there is error when related inventories show error view", async () => {
+  it("if there is error when related inventories the error view is shown", async () => {
     render(setup());
     server.use(
       http.get("/lsm/v1/service_inventory/parent-service", async () => {
@@ -150,7 +150,7 @@ describe("ComposerCreatorProvider", () => {
     ).toBeInTheDocument();
   });
 
-  it("if there is error no main service model show error view", async () => {
+  it("if there is error no main service model the error view is shown", async () => {
     server.use(
       http.get("/lsm/v1/service_catalog", async () => {
         return HttpResponse.json({
