@@ -938,7 +938,7 @@ const removeConnectionData = (
         !(embeddedToID === cell.id),
     );
 
-    //all cells left are the inter-service relation connections, if there is only one then we should highlight the cell, if more then it's not loose embedded, zero shouldn't be possible as we are including current connection in the array
+    //all cells left are the inter-service relation connections, if there is only one then we should highlight the cell, if more then it's not loose inter-service relation cell, zero shouldn't be possible as we are including current connection in the array
     if (interServiceRelations.length === 1) {
       toggleLooseElement(
         paper.findViewByModel(cellToDisconnect),
