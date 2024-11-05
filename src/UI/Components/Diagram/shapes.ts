@@ -349,7 +349,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
   }
 
   /**
-   * Edits the columns of the entity and optionally sets the collapsed state.
+   * Updates the columns of the entity and optionally sets the collapsed state.
    *
    * @param {Array<ColumnData>} data - The array of column data to set.
    * @param {boolean} [shouldBeCollapsed=true] - Flag indicating whether the entity should be collapsed.
