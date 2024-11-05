@@ -906,7 +906,7 @@ export function showLinkTools(
 }
 
 /**
- * Function that remove data about niter-service relation between cells
+ * Function that remove data about inter-service relation between cells
  * @param {dia.Paper} paper JointJS paper object
  * @param {dia.Graph} graph JointJS graph object
  * @param {ServiceEntityBlock} elementCell cell that we checking
