@@ -6,8 +6,6 @@ import { ColumnData } from "./interfaces";
 /**
  * https://resources.jointjs.com/tutorial/custom-elements
  * https://resources.jointjs.com/tutorial/ts-shape
- *
- * actions that ServiceEntity as return updated state of the object, that's the approach that was presented by the JointJS demo.
  */
 export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
   defaults() {
