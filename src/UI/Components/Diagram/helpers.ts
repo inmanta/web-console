@@ -910,38 +910,38 @@ export function showLinkTools(
  * @param {dia.Paper} paper JointJS paper object
  * @param {dia.Graph} graph JointJS graph object
  * @param {ServiceEntityBlock} elementCell cell that we checking
- * @param {ServiceEntityBlock} disconnectingCell cell that is being connected to elementCell
+ * @param {ServiceEntityBlock} cellToDisconnect cell that is being connected to elementCell
  * @returns {void}
  */
 const removeConnectionData = (
   paper: dia.Paper,
   graph: dia.Graph,
   elementCell: ServiceEntityBlock,
-  disconnectingCell: ServiceEntityBlock,
+  cellToDisconnect: ServiceEntityBlock,
 ): void => {
   const elementRelations = elementCell.getRelations();
 
   // resolve any possible relation connections between cells
-  if (elementRelations && elementRelations.has(String(disconnectingCell.id))) {
-    elementCell.removeRelation(String(disconnectingCell.id));
+  if (elementRelations && elementRelations.has(String(cellToDisconnect.id))) {
+    elementCell.removeRelation(String(cellToDisconnect.id));
 
     //get all connected entities to inter-service relation cell (the current relation that will be removed is included here)
-    const disconnectingCellNeighbors = graph.getNeighbors(disconnectingCell);
+    const disconnectedCellNeighbors = graph.getNeighbors(cellToDisconnect);
 
-    //the inters-service relataion cell can be also embedded entity, so attempt to get id of the holder
-    const embeddedToID = disconnectingCell.get("embeddedTo");
+    //check if the cell that we are connected is also connected to the other cell as embedded Entity
+    const embeddedToID = cellToDisconnect.get("embeddedTo");
 
-    //filter out every cell that is either embedded entity of to the disconnectingCell or is core or the disconnectingCell is embedded to it
-    const interServiceRelations = disconnectingCellNeighbors.filter(
+    //filter out every cell that is either embedded entity to the cellToDisconnect or is core or the cellToDisconnect is embedded to it
+    const interServiceRelations = disconnectedCellNeighbors.filter(
       (cell) =>
-        !(cell.get("embeddedTo") === disconnectingCell.id) ||
+        !(cell.get("embeddedTo") === cellToDisconnect.id) ||
         !(embeddedToID === cell.id),
     );
 
-    //all left are the inter-service relation connections, if there is more than one then we should highlight the cell
+    //all cells left are the inter-service relation connections, if there is only one then we should highlight the cell, if more then it's not loose embedded, zero shouldn't be possible as we are including current connection in the array
     if (interServiceRelations.length === 1) {
       toggleLooseElement(
-        paper.findViewByModel(disconnectingCell),
+        paper.findViewByModel(cellToDisconnect),
         EmbeddedEventEnum.ADD,
       );
     }
