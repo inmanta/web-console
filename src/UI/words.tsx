@@ -287,7 +287,8 @@ const dict = {
   "instanceDetails.events.exportReport": "Export",
   "instanceDetails.events.validationReport": "Validation",
   "instanceDetails.events.seeAll": "See all events",
-  "instanceDetails.events.dateTooltip": (dateDiff: string) => `${dateDiff} since last event`,
+  "instanceDetails.events.dateTooltip": (dateDiff: string) =>
+    `${dateDiff} since last event`,
 
   /**
    * Config related text

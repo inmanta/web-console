@@ -1,6 +1,5 @@
 import React, { useContext, useState } from "react";
 import {
-  Button,
   DescriptionList,
   DescriptionListDescription,
   DescriptionListGroup,
@@ -9,16 +8,6 @@ import {
   FlexItem,
   TabContent,
 } from "@patternfly/react-core";
-import { InstanceDetailsContext } from "../../Core/Context";
-import { TabContentWrapper } from "./TabContentWrapper";
-import {
-  ErrorView,
-  EventIcon,
-  LoadingView,
-  DateWithTimeDiffTooltip,
-  Link,
-} from "@/UI/Components";
-import { DependencyContext, words } from "@/UI";
 import {
   ExpandableRowContent,
   Table,
@@ -28,10 +17,20 @@ import {
   Thead,
   Tr,
 } from "@patternfly/react-table";
+import styled from "styled-components";
 import { InstanceEvent } from "@/Core";
 import { InstanceLog } from "@/Slices/ServiceInstanceHistory/Core/Domain";
+import { DependencyContext, words } from "@/UI";
+import {
+  ErrorView,
+  EventIcon,
+  LoadingView,
+  DateWithTimeDiffTooltip,
+  Link,
+} from "@/UI/Components";
+import { InstanceDetailsContext } from "../../Core/Context";
 import { CompileReportLink } from "../Components/CompileReportLink";
-import styled from "styled-components";
+import { TabContentWrapper } from "./TabContentWrapper";
 
 interface Props {
   selectedVersion: string;
@@ -90,6 +89,7 @@ export const EventsTabContent: React.FC<Props> = ({ selectedVersion }) => {
   const selectedVersionLogs: InstanceLog = logsQuery.data.filter(
     (log) => String(log.version) === selectedVersion,
   )[0];
+
   const events: InstanceEvent[] = selectedVersionLogs.events;
 
   const isExpanded = (eventId) => expanded.includes(eventId);
@@ -97,11 +97,13 @@ export const EventsTabContent: React.FC<Props> = ({ selectedVersion }) => {
   const updateExpanded = (eventId: string, isExpanding = true) =>
     setExpanded((prevExpanded) => {
       const otherExpanded = prevExpanded.filter((id) => id !== eventId);
+
       return isExpanding ? [...otherExpanded, eventId] : otherExpanded;
     });
 
   const isExportReport = (message: string) => {
     const regex = /validate|validation/i;
+
     return !regex.test(message);
   };
 
@@ -112,13 +114,13 @@ export const EventsTabContent: React.FC<Props> = ({ selectedVersion }) => {
     }
 
     return events[index + 1].timestamp;
-  }
+  };
 
   return (
     <TabContent role="tabpanel" id="events">
       <TabContentWrapper>
         <Flex>
-          <FlexItem align={{ default: 'alignRight' }}>
+          <FlexItem align={{ default: "alignRight" }}>
             <Link
               pathname={routeManager.getUrl("Events", {
                 service: instance.service_entity,
@@ -136,7 +138,7 @@ export const EventsTabContent: React.FC<Props> = ({ selectedVersion }) => {
         >
           <Thead>
             <Tr>
-              <Th screenReaderText="Row expansion" />
+              <Th screenReaderText="Row expansion column" />
               <Th width={15} key="eventType">
                 {words("instanceDetails.events.column.eventType")}
               </Th>
@@ -155,11 +157,11 @@ export const EventsTabContent: React.FC<Props> = ({ selectedVersion }) => {
             </Tr>
           </Thead>
           {events.map((event: InstanceEvent, index: number) => (
-            <StyledBody $transition={event}>
+            <StyledBody $transition={event} key={`styled-row-${index}`}>
               <Tr
                 key={index}
                 id={`event-row-${event.id}`}
-                aria-label="Event table row"
+                aria-label="Event-table-row"
               >
                 <Td
                   expand={{
@@ -172,15 +174,17 @@ export const EventsTabContent: React.FC<Props> = ({ selectedVersion }) => {
                 <Td>
                   <EventIcon eventType={event.event_type} />
                 </Td>
-                <Td>
+                <Td aria-label={`Event-date-${index}`}>
                   <DateWithTimeDiffTooltip
                     timestamp1={event.timestamp}
                     timestamp2={getDiffTimestamp(index)}
                   />
                 </Td>
-                <Td>{event.source}</Td>
-                <Td>{event.destination}</Td>
-                <Td>
+                <Td aria-label={`Event-source-${index}`}>{event.source}</Td>
+                <Td aria-label={`Event-target-${index}`}>
+                  {event.destination}
+                </Td>
+                <Td aria-label={`Event-compile-${index}`}>
                   {event.id_compile_report && (
                     <CompileReportLink
                       compileId={event.id_compile_report}
@@ -200,7 +204,9 @@ export const EventsTabContent: React.FC<Props> = ({ selectedVersion }) => {
                         <DescriptionListTerm>
                           {words("events.column.message")}
                         </DescriptionListTerm>
-                        <DescriptionListDescription>
+                        <DescriptionListDescription
+                          aria-label={`Event-message-${index}`}
+                        >
                           {event.message}
                         </DescriptionListDescription>
                       </DescriptionListGroup>
@@ -208,7 +214,9 @@ export const EventsTabContent: React.FC<Props> = ({ selectedVersion }) => {
                         <DescriptionListTerm>
                           {words("events.details.title")}
                         </DescriptionListTerm>
-                        <DescriptionListDescription>
+                        <DescriptionListDescription
+                          aria-label={`Event-details-${index}`}
+                        >
                           <pre
                             style={{
                               whiteSpace: "pre-wrap",
@@ -240,10 +248,10 @@ type Transition = Pick<
  * If the transition is `is_error_transition` then we want the rows in an orange/golden hue.
  * Unlike on the main event page, the history logs don't contain the `ignored_transition`. These are grayed out in the main event page.
  */
-const StyledBody = styled(Tbody) <{ $transition: Transition }>`
+const StyledBody = styled(Tbody)<{ $transition: Transition }>`
   ${({ $transition }) => {
     return $transition.is_error_transition
       ? "background-color: var(--pf-v5-global--palette--gold-50)"
-      : "";
+      : "background-color: inherit";
   }};
 `;

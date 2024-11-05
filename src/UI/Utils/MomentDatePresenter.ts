@@ -19,7 +19,7 @@ export class MomentDatePresenter implements DatePresenter {
     return {
       full: this.getFull(timestamp),
       relative: this.getRelative(timestamp),
-      dateTimeMilliseconds: `${this.getDate(timestamp)} ${this.getTime(timestamp)}`
+      dateTimeMilliseconds: `${this.getDate(timestamp)} ${this.getTime(timestamp)}`,
     };
   }
 

@@ -411,6 +411,124 @@ describe("ServiceInstanceDetailsPage", () => {
       ),
     ).not.toBeVisible();
 
+    // Events
+
+    // Select the Events tab
+    await act(async () => {
+      await userEvent.click(screen.getByText("Events"));
+    });
+
+    // Should have a link to navigate to the full events page
+    const allEventsLink = screen.getByRole("link", {
+      name: /see all events/i,
+    });
+    expect(allEventsLink).toBeVisible();
+
+    // Should have the right href attribute
+    expect(allEventsLink).toHaveAttribute(
+      "href",
+      "/lsm/catalog/mobileCore/inventory/1d96a1ab/events?env=aaa&state.InstanceDetails.version=1&state.InstanceDetails.tab=Events",
+    );
+
+    // In this version, expect only two rows with aria-label Event table row
+    expect(
+      screen.getAllByRole("row", {
+        name: /Event\-table\-row/i,
+      }),
+    ).toHaveLength(2);
+
+    // The source state should be empty since this is the very first version and thus only has a target-state.
+    expect(
+      screen.getByRole("cell", {
+        name: /event\-source\-0/i,
+      }),
+    ).toBeEmptyDOMElement();
+    expect(
+      screen.getByRole("cell", {
+        name: /event\-source\-1/i,
+      }),
+    ).toBeEmptyDOMElement();
+
+    // both should have the same target state "start"
+    expect(
+      screen.getByRole("cell", {
+        name: /event\-target\-0/i,
+      }),
+    ).toHaveTextContent(/start/i);
+    expect(
+      screen.getByRole("cell", {
+        name: /event\-target\-1/i,
+      }),
+    ).toHaveTextContent(/start/i);
+
+    // the timestamps should be up to three fractions seconds
+    expect(
+      screen.getByRole("cell", {
+        name: /event\-date\-0/i,
+      }),
+    ).toHaveTextContent(/2022\/09\/02 13:56:856/i);
+    expect(
+      screen.getByRole("cell", {
+        name: /event\-date\-1/i,
+      }),
+    ).toHaveTextContent(/2022\/09\/02 13:56:840/i);
+
+    // expect that there are no compile reports available for these rows
+    expect(
+      screen.getByRole("cell", {
+        name: /event\-compile\-0/i,
+      }),
+    ).toBeEmptyDOMElement();
+    expect(
+      screen.getByRole("cell", {
+        name: /event\-compile\-1/i,
+      }),
+    ).toBeEmptyDOMElement();
+
+    // Select the version 3rd in the history, this one should contain three rows, and have one with a warning color, one with a validation report, and one with an export report.
+    await act(async () => {
+      await userEvent.click(screen.getByRole("cell", { name: "3" }));
+    });
+
+    const rowsVersion3 = screen.getAllByRole("row", {
+      name: /Event\-table\-row/i,
+    });
+
+    expect(rowsVersion3).toHaveLength(3);
+
+    expect(rowsVersion3[0]).toHaveStyle(
+      "background-color: var(--pf-v5-global--palette--gold-50)",
+    );
+    expect(rowsVersion3[1]).not.toHaveStyle("background-color: inherit");
+    expect(rowsVersion3[2]).not.toHaveStyle("background-color: inherit");
+
+    expect(
+      screen.getByRole("cell", {
+        name: /event\-compile\-0/i,
+      }),
+    ).toHaveTextContent(/validation/i);
+    expect(
+      screen.getByRole("cell", {
+        name: /event\-compile\-1/i,
+      }),
+    ).toHaveTextContent(/export/i);
+    expect(
+      screen.getByRole("cell", {
+        name: /event\-compile\-2/i,
+      }),
+    ).toBeEmptyDOMElement();
+
+    expect(
+      screen.getByRole("cell", {
+        name: /event\-target\-0/i,
+      }),
+    ).toHaveTextContent(/creating/i);
+    expect(
+      screen.getByRole("cell", {
+        name: /event\-source\-0/i,
+      }),
+    ).toHaveTextContent(/acknowledged/i);
+
     server.close();
   });
 });
