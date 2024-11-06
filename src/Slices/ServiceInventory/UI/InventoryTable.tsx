@@ -70,12 +70,10 @@ export const InventoryTable: React.FC<Props> = ({
         width={getColumnWidth(column.apiName)}
         key={column.displayName}
         {...sortParams}
-        {...(column.apiName === "actions" && { "aria-hidden": true })}
-        screenReaderText={
-          column.apiName === "actions"
-            ? words("common.emptyColumnHeader")
-            : undefined
-        }
+        {...(column.apiName === "actions" && {
+          "aria-hidden": true,
+          screenReaderText: words("common.emptyColumnHeader"),
+        })}
       >
         {column.apiName === "actions" ? "" : column.displayName}
       </Th>

@@ -1,5 +1,5 @@
 description: Add screen reader text for empty columns headers to improve accessibility
-issue-nr: 5942
+issue-nr: 5949
 change-type: minor
 destination-branches: [master, iso7]
 sections:
