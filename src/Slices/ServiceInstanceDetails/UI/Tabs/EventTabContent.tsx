@@ -87,14 +87,29 @@ export const EventsTabContent: React.FC<Props> = ({ selectedVersion }) => {
   }
 
   const selectedVersionLogs: InstanceLog = logsQuery.data.filter(
-    (log) => String(log.version) === selectedVersion,
+    (log: InstanceLog) => String(log.version) === selectedVersion,
   )[0];
+
+  // When we make an update to the instance, like changing the state, it can briefly happen we don't yet have logs for the version.
+  if (!selectedVersionLogs) {
+    return (
+      <TabContentWrapper id="events">
+        <LoadingView />
+      </TabContentWrapper>
+    );
+  }
 
   const events: InstanceEvent[] = selectedVersionLogs.events;
 
   const isExpanded = (eventId) => expanded.includes(eventId);
 
-  const updateExpanded = (eventId: string, isExpanding = true) =>
+  /**
+   * 
+   * @param {string} eventId 
+   * @param {boolean} isExpanding 
+   * @returns 
+   */
+  const updateExpanded = (eventId: string, isExpanding: boolean = true) =>
     setExpanded((prevExpanded) => {
       const otherExpanded = prevExpanded.filter((id) => id !== eventId);
 
@@ -122,6 +137,7 @@ export const EventsTabContent: React.FC<Props> = ({ selectedVersion }) => {
         <Flex>
           <FlexItem align={{ default: "alignRight" }}>
             <Link
+              aria-label="See-all-events"
               pathname={routeManager.getUrl("Events", {
                 service: instance.service_entity,
                 instance: instance.id,
