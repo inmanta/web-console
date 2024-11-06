@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   ClipboardCopyButton,
   CodeBlock,
@@ -6,20 +6,24 @@ import {
   CodeBlockCode,
   Modal,
 } from "@patternfly/react-core";
-import { DictDialogData } from "../interfaces";
+import { CanvasContext } from "../Context/Context";
 
-interface DictModal {
-  dictToDisplay: DictDialogData | null;
-  setDictToDisplay: (value: DictDialogData | null) => void;
-}
-const DictModal = ({ dictToDisplay, setDictToDisplay }: DictModal) => {
+/**
+ * Modal to display the values of a dictionary.
+ *
+ * @note to be replaced by global modal in the future.
+ *
+ * @returns {React.FC} The DictModal component.
+ */
+export const DictModal: React.FC = () => {
+  const { dictToDisplay, setDictToDisplay } = useContext(CanvasContext);
   const [copied, setCopied] = useState(false);
 
-  return (
+  return dictToDisplay !== null ? (
     <Modal
       disableFocusTrap
-      isOpen={dictToDisplay !== null}
-      title={"Values of " + dictToDisplay?.title}
+      isOpen={true}
+      title={"Values of " + dictToDisplay.title}
       variant="medium"
       onClose={() => {
         setDictToDisplay(null);
@@ -56,7 +60,5 @@ const DictModal = ({ dictToDisplay, setDictToDisplay }: DictModal) => {
         </CodeBlock>
       )}
     </Modal>
-  );
+  ) : null;
 };
-
-export default DictModal;

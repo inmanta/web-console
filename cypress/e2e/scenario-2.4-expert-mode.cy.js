@@ -141,11 +141,13 @@ if (Cypress.env("edition") === "iso") {
         .click();
 
       // expect to find in the history the up state as last
-      cy.get('[aria-label="History-Row"]').should(($rows) => {
-        expect($rows[0]).to.contain("up");
-        expect($rows[0]).to.contain(3);
-        expect($rows).to.have.length(3);
-      });
+      cy.get('[aria-label="History-Row"]', { timeout: 30000 }).should(
+        ($rows) => {
+          expect($rows[0]).to.contain("up");
+          expect($rows[0]).to.contain(3);
+          expect($rows).to.have.length(3);
+        },
+      );
 
       // force state to creating
       cy.get('[aria-label="Expert-Actions-Toggle"]').click();
@@ -156,11 +158,13 @@ if (Cypress.env("edition") === "iso") {
       cy.get("button").contains("Yes").click();
 
       // expect to find in the history the creating state as last
-      cy.get('[aria-label="History-Row"]').should(($rows) => {
-        expect($rows[0]).to.contain("creating");
-        expect($rows[0]).to.contain(4);
-        expect($rows).to.have.length(4);
-      });
+      cy.get('[aria-label="History-Row"]', { timeout: 30000 }).should(
+        ($rows) => {
+          expect($rows[0]).to.contain("creating");
+          expect($rows[0]).to.contain(4);
+          expect($rows).to.have.length(4);
+        },
+      );
     });
 
     it("2.4.2 Edit instance attributes", () => {
@@ -249,16 +253,8 @@ if (Cypress.env("edition") === "iso") {
       // expect to be redirected on the inventory page, and table to be empty
       cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
 
-      // At the end go back to settings and turn expert mode off
-      cy.get(".pf-v5-c-nav__item").contains("Settings").click();
-      cy.get("button").contains("Configuration").click();
-      cy.get('[aria-label="Row-enable_lsm_expert_mode"]')
-        .find(".pf-v5-c-switch")
-        .click();
-      cy.get('[data-testid="Warning"]').should("exist");
-      cy.get('[aria-label="Row-enable_lsm_expert_mode"]')
-        .find('[aria-label="SaveAction"]')
-        .click();
+      // At the end turn expert mode off through the banner
+      cy.get("button").contains("Disable").click();
       cy.get('[data-testid="Warning"]').should("not.exist");
       cy.get("[id='expert-mode-banner']").should("not.exist");
     });

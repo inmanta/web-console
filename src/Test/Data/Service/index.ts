@@ -26,6 +26,7 @@ export const a: ServiceModel = {
   embedded_entities: EmbeddedEntity.list,
   owner: null,
   owned_entities: [],
+  inter_service_relations: [],
 };
 
 export const b: ServiceModel = {

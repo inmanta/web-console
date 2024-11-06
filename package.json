@@ -1,6 +1,6 @@
 {
   "name": "@inmanta/web-console",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "Web Console for Inmanta Orchestrator",
   "exports": "./dist/index.js",
   "repository": "https://github.com/inmanta/web-console.git",
@@ -34,7 +34,7 @@
     "install:orchestrator:oss": "sh ./shell-scripts/setup-orchestrator.sh flag='-ti' version='oss' release='dev' branch='oss_case_1'",
     "install:orchestrator:ci": "sh ./shell-scripts/setup-orchestrator.sh",
     "kill-server": "sh ./shell-scripts/clear-server.sh",
-    "update:dist": "docker exec inmanta_orchestrator rm -rf /usr/share/inmanta/web-console && docker cp dist inmanta_orchestrator:/usr/share/inmanta/web-console"
+    "update:dist": "docker exec -u root inmanta_orchestrator rm -rf /usr/share/inmanta/web-console && docker cp dist inmanta_orchestrator:/usr/share/inmanta/web-console"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
@@ -76,7 +76,7 @@
     "@types/react-syntax-highlighter": "^15.5.13",
     "@types/react-test-renderer": "^18.3.0",
     "@types/styled-components": "^5.1.26",
-    "@types/uuid": "^9",
+    "@types/uuid": "^10",
     "@types/webpack": "^5.28.5",
     "@typescript-eslint/eslint-plugin": "^8.13.0",
     "@typescript-eslint/parser": "^8.13.0",

@@ -230,8 +230,8 @@ describe("Environment", () => {
         .contains("lsm-frontend")
         .click();
       cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
-      cy.get('[aria-label="ServiceCatalog-Success"]', {
-        timeout: 30000,
+      cy.get('[aria-label="ServiceCatalog-Empty"]', {
+        timeout: 10000,
       }).should("to.be.visible");
 
       //Go to settings
@@ -246,8 +246,8 @@ describe("Environment", () => {
         .click();
       cy.get(".pf-v5-c-nav__link").contains("Service Catalog").click();
 
-      cy.get('[aria-label="ServiceCatalog-Success"]', {
-        timeout: 20000,
+      cy.get('[aria-label="ServiceCatalog-Empty"]', {
+        timeout: 10000,
       }).should("to.be.visible");
 
       //Go to settings and get Id of an environment

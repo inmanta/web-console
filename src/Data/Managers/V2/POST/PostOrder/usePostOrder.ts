@@ -31,7 +31,7 @@ export const usePostOrder = (
       method: "POST",
       body: JSON.stringify({
         service_order_items: serviceOrderItems,
-        description: words("inventory.instanceComposer.orderDescription"),
+        description: words("instanceComposer.orderDescription"),
       }),
       headers,
     });

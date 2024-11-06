@@ -23,6 +23,7 @@ export type FieldLikeWithFormState = Field;
 interface BaseField {
   name: string;
   description?: string;
+  id?: string;
   isOptional: boolean;
   isDisabled: boolean;
   suggestion?: FormSuggestion | null;

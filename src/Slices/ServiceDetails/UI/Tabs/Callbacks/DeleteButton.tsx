@@ -1,33 +1,49 @@
 import React, { useContext, useState } from "react";
-import { Button, Modal, ModalVariant } from "@patternfly/react-core";
+import { Button } from "@patternfly/react-core";
 import { Maybe } from "@/Core";
 import { ConfirmUserActionForm, ToastAlert } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
+import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
 import { Callback } from "@S/ServiceDetails/Core/Callback";
 
-interface DeleteProps {
+interface Props {
   callback: Callback;
   service_entity: string;
 }
 
-export const DeleteButton: React.FunctionComponent<DeleteProps> = ({
+/**
+ * DeleteButton component which holds the logic for deleting a callback.
+ *
+ * @props {Props} props - The props of the component.
+ * @prop callback {Callback} - the callback object
+ * @prop service_entity {string} - the service entity name
+ *
+ * @returns {React.React.FC<Props>} The rendered Component to delete a callback.
+ */
+export const DeleteButton: React.FC<Props> = ({
   service_entity,
   callback,
   ...props
 }) => {
   const { commandResolver } = useContext(DependencyContext);
+  const { triggerModal, closeModal } = useContext(ModalContext);
   const onDelete = commandResolver.useGetTrigger<"DeleteCallback">({
     kind: "DeleteCallback",
     callbackId: callback.callback_id,
     service_entity,
   });
 
-  const [isOpen, setIsOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  const onSubmit = async () => {
-    setIsOpen(false);
+  /**
+   * submit function that will close a modal and trigger the delete action
+   * if there is an error, it will set the error message
+   *
+   * @returns {Promise<void>} A Promise that resolves when the operation is complete.
+   */
+  const onSubmit = async (): Promise<void> => {
+    closeModal();
     const result = await onDelete();
 
     if (Maybe.isSome(result)) {
@@ -43,23 +59,23 @@ export const DeleteButton: React.FunctionComponent<DeleteProps> = ({
         message={errorMessage}
         setMessage={setErrorMessage}
       />
-      <Modal
-        disableFocusTrap
-        variant={ModalVariant.small}
-        isOpen={isOpen}
-        title="Delete Callback"
-        onClose={() => setIsOpen(false)}
-      >
-        {words("catalog.callbacks.delete")(callback.url)}
-        <ConfirmUserActionForm
-          onSubmit={onSubmit}
-          onCancel={() => setIsOpen(false)}
-        />
-      </Modal>
       <Button
         variant="secondary"
         isDanger
-        onClick={() => setIsOpen(true)}
+        onClick={() => {
+          triggerModal({
+            title: words("catalog.callbacks.delete.title"),
+            content: (
+              <>
+                {words("catalog.callbacks.delete")(callback.url)}
+                <ConfirmUserActionForm
+                  onSubmit={onSubmit}
+                  onCancel={closeModal}
+                />
+              </>
+            ),
+          });
+        }}
         {...props}
       >
         {words("delete")}
