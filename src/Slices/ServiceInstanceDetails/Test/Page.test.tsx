@@ -422,6 +422,7 @@ describe("ServiceInstanceDetailsPage", () => {
     const allEventsLink = screen.getByRole("link", {
       name: /see all events/i,
     });
+
     expect(allEventsLink).toBeVisible();
 
     // Should have the right href attribute
