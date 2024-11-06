@@ -63,7 +63,7 @@ interface Props {
  *
  * @note We are using the events that are pressent in the history logs for the instance details view.
  * A link button allows the user to navigate the the full events page.
- * 
+ *
  * @prop {Props} props - The EventsTabContent Props
  *  @prop {string} selectedVersion - The actively selected version on the page.
  *
@@ -106,7 +106,7 @@ export const EventsTabContent: React.FC<Props> = ({ selectedVersion }) => {
 
   /**
    * Check to verify if an event row id is already expanded or not.
-   * 
+   *
    * @param {string} eventId - the event id
    * @returns {boolean}
    */
@@ -114,10 +114,10 @@ export const EventsTabContent: React.FC<Props> = ({ selectedVersion }) => {
 
   /**
    * Updates the expanded state variable, adding or removing the eventId of the array of expanded items.
-   * 
+   *
    * @param {string} eventId
    * @param {boolean} isExpanding
-   * @returns {void} 
+   * @returns {void}
    */
   const updateExpanded = (eventId: string, isExpanding: boolean = true): void =>
     setExpanded((prevExpanded) => {
@@ -129,7 +129,7 @@ export const EventsTabContent: React.FC<Props> = ({ selectedVersion }) => {
   /**
    * Check if the message in the event contains one of the key-words used in validation reports.
    * If the message doesn't contain "validate/validation" then we can assume it is an export report.
-   * 
+   *
    * @param {string} message - the event message
    * @returns {boolean}
    */
@@ -141,7 +141,7 @@ export const EventsTabContent: React.FC<Props> = ({ selectedVersion }) => {
 
   /**
    * Get the next timestamp in the events log of the selected version.
-   * 
+   *
    * @param {number} index - the index of the current timestamp
    * @returns {string} the timestamp that comes after the current one, or the current timestamp if there is no next index available.
    */
@@ -288,10 +288,10 @@ type HighlightedTransition = Pick<
 
 /**
  * If the transition is `is_error_transition` then we want the rows in an orange/golden hue.
- * Unlike on the main event page, the history logs don't contain the `ignored_transition`. 
+ * Unlike on the main event page, the history logs don't contain the `ignored_transition`.
  * These are grayed out in the main event page.
  */
-const StyledBody = styled(Tbody) <{ $transition: HighlightedTransition }>`
+const StyledBody = styled(Tbody)<{ $transition: HighlightedTransition }>`
   ${({ $transition }) => {
     return $transition.is_error_transition
       ? "background-color: var(--pf-v5-global--palette--gold-50)"

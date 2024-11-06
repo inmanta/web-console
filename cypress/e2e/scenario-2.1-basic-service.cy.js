@@ -526,7 +526,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="Event-target-0"]').should("contain", "creating");
 
       // click on "see all events" and confirm you are redirected on the events page.
-      cy.get('a').contains("See all events").click();
+      cy.get("a").contains("See all events").click();
 
       cy.get(".pf-v5-c-title")
         .contains("Service Instance Events")

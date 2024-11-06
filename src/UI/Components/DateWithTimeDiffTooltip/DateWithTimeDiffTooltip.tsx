@@ -12,18 +12,18 @@ interface Props {
 
 /**
  * DateWithTimeDiffTooltip Component
- * 
+ *
  * Displays a Timestamp with a tooltip showing the time difference between two timestamps in milliseconds.
  * The timestamp is displayed to the third second fraction.
- * 
- * @Note Moment will round any further fraction. 
+ *
+ * @Note Moment will round any further fraction.
  * We are getting the timestamps to the fourth fraction from the API, but we can't display them with the current Moment library.
- * 
+ *
  * @prop {Props} props - The Props of the DateWitTimeDiffTooltip
  *  @prop {string} timestamp1 - The first timestamp that needs to be compared with.
  *  @prop {string} timestamp2 - The second timestamp that needs to be compared against.
- * 
- * @returns A DateWithTimeDiffTooltip Component. 
+ *
+ * @returns A DateWithTimeDiffTooltip Component.
  */
 export const DateWithTimeDiffTooltip: React.FC<Props> = ({
   timestamp1,
