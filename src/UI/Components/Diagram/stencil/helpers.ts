@@ -1,4 +1,5 @@
 import { shapes } from "@inmanta/rappid";
+import { global_palette_white } from "@patternfly/react-tokens";
 import { v4 as uuidv4 } from "uuid";
 import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from "@/Core";
 import { HeaderColor } from "../interfaces";
@@ -75,7 +76,7 @@ export const createStencilElement = (
         class: "bodyTwo_" + name,
         width: 240,
         height: 40,
-        fill: "#FFFFFF",
+        fill: global_palette_white.var,
         stroke: "none",
       },
       label: {

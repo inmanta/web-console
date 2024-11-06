@@ -1,4 +1,5 @@
 import { dia, ui } from "@inmanta/rappid";
+import { global_palette_white } from "@patternfly/react-tokens";
 import { ServiceModel } from "@/Core";
 import { Inventories } from "@/Data/Managers/V2/GETTERS/GetInventoryList";
 import { createComposerEntity } from "../actions";
@@ -107,7 +108,7 @@ export class InventoryStencilTab {
         centre: false,
         dx: 0,
         dy: 10,
-        background: "#FFFFFF",
+        background: global_palette_white.var,
       },
     });
 

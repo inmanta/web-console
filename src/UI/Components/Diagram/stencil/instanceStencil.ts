@@ -1,4 +1,5 @@
 import { dia, ui } from "@inmanta/rappid";
+import { global_palette_white } from "@patternfly/react-tokens";
 import { ServiceModel } from "@/Core";
 import {
   CreateModifierHandler,
@@ -67,7 +68,7 @@ export class InstanceStencilTab {
         centre: false,
         dx: 0,
         dy: 0,
-        background: "#FFFFFF",
+        background: global_palette_white.var,
       },
     });
     stencilElement.appendChild(this.stencil.el);
