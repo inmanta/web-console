@@ -9,6 +9,7 @@ import {
 } from "@patternfly/react-table";
 import { Sort } from "@/Core";
 import { useUrlStateWithExpansion } from "@/Data";
+import { words } from "@/UI";
 import { ResourceHistoryRow } from "@S/ResourceDetails/Core/ResourceHistory";
 import { ResourceHistoryTableRow } from "./ResourceHistoryTableRow";
 import { ResourceHistoryTablePresenter } from "./TablePresenter";
@@ -63,7 +64,10 @@ export const ResourceHistoryTable: React.FC<Props> = ({
     <Table {...props} variant={TableVariant.compact}>
       <Thead>
         <Tr>
-          <Th />
+          <Th
+            aria-hidden
+            screenReaderText={words("common.emptyColumnHeader")}
+          />
           {heads}
         </Tr>
       </Thead>
