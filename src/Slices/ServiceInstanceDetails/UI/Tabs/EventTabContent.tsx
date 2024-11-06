@@ -104,10 +104,10 @@ export const EventsTabContent: React.FC<Props> = ({ selectedVersion }) => {
   const isExpanded = (eventId) => expanded.includes(eventId);
 
   /**
-   * 
-   * @param {string} eventId 
-   * @param {boolean} isExpanding 
-   * @returns 
+   *
+   * @param {string} eventId
+   * @param {boolean} isExpanding
+   * @returns
    */
   const updateExpanded = (eventId: string, isExpanding: boolean = true) =>
     setExpanded((prevExpanded) => {

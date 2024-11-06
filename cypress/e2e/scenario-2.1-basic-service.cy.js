@@ -476,9 +476,15 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="Event-table-row"]').should("have.length", 3);
 
       // open the first row of the events to confirm the data is correct. We can't assert all exact strings because the id's and dates are variable.
-      cy.get('#expand-toggle0').click();
-      cy.get('[aria-label="Event-message-0"]').should("contain", "setting_inprogress -> up (error=False)")
-      cy.get('[aria-label="Event-details-0"]').should("contain", '"service_instance_version": 8,');
+      cy.get("#expand-toggle0").click();
+      cy.get('[aria-label="Event-message-0"]').should(
+        "contain",
+        "setting_inprogress -> up (error=False)",
+      );
+      cy.get('[aria-label="Event-details-0"]').should(
+        "contain",
+        '"service_instance_version": 8,',
+      );
 
       // close the row again and click on the export link in the second row. Expect to land on the compile report page.
       cy.get('[aria-label="Event-compile-1"]').should("contain", "Export");
@@ -522,7 +528,9 @@ if (Cypress.env("edition") === "iso") {
       // click on "see all events" and confirm you are redirected on the events page.
       cy.get('[aria-label="See-all-events"]').click();
 
-      cy.get(".pf-v5-c-title").contains("Service Instance Events").should("to.exist");
+      cy.get(".pf-v5-c-title")
+        .contains("Service Instance Events")
+        .should("to.exist");
     });
 
     it("2.1.7 Delete previously created instance", () => {
