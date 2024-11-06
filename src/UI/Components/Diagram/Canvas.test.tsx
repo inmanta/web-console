@@ -136,7 +136,9 @@ describe("Canvas.tsx", () => {
 
     const header = screen.getByJointSelector("header");
 
-    expect(header.getAttribute("fill")).toContain("#F0AB00");
+    expect(header.getAttribute("fill")).toContain(
+      "var(--pf-v5-global--palette--gold-400)",
+    );
   });
 
   it("navigating out of the View works correctly", async () => {

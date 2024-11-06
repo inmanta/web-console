@@ -36,14 +36,14 @@ describe("createStencilElement", () => {
       x: 233,
       d: "M 0 0 H calc(w) V calc(h) H 0 Z",
       strokeWidth: 2,
-      fill: "#0066cc",
+      fill: "var(--pf-v5-global--palette--blue-400)",
       stroke: "none",
       class: "body_default",
     });
     expect(embeddedElementWithModel.attributes.attrs?.bodyTwo).toStrictEqual({
       width: 240,
       height: 40,
-      fill: "#FFFFFF",
+      fill: "var(--pf-v5-global--palette--white)",
       stroke: "none",
       class: "bodyTwo_default",
     });
