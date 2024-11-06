@@ -163,48 +163,60 @@ describe("Given StatusList", () => {
 
     expect(within(coreSchedulerManagerItem).getByText("total")).toBeVisible();
 
-    const totalSubList = screen.getByLabelText("StatusSubList-total");
+    const totalNestedListItem = screen.getByLabelText(
+      "StatusNestedListItem-total",
+    );
 
-    expect(totalSubList).toBeVisible();
-    expect(within(totalSubList).getByText("total")).toBeVisible();
+    expect(totalNestedListItem).toBeVisible();
+    expect(within(totalNestedListItem).getByText("total")).toBeVisible();
 
-    expect(within(totalSubList).getByText("connected")).toBeVisible();
-    expect(within(totalSubList).getByText("true")).toBeVisible();
+    expect(within(totalNestedListItem).getByText("connected")).toBeVisible();
+    expect(within(totalNestedListItem).getByText("true")).toBeVisible();
 
-    expect(within(totalSubList).getByText("max_pool")).toBeVisible();
-    expect(within(totalSubList).getByText("9")).toBeVisible();
-
-    expect(within(totalSubList).getByText("open_connections")).toBeVisible();
-    expect(within(totalSubList).getByText("3")).toBeVisible();
-
-    expect(within(totalSubList).getByText("free_connections")).toBeVisible();
-    expect(within(totalSubList).getByText("4")).toBeVisible();
+    expect(within(totalNestedListItem).getByText("max_pool")).toBeVisible();
+    expect(within(totalNestedListItem).getByText("9")).toBeVisible();
 
     expect(
-      within(totalSubList).getByText("pool_exhaustion_count"),
+      within(totalNestedListItem).getByText("open_connections"),
     ).toBeVisible();
-    expect(within(totalSubList).getByText("209")).toBeVisible();
-
-    const prodSubList = screen.getByLabelText("StatusSubList-prod");
-
-    expect(prodSubList).toBeVisible();
-    expect(within(prodSubList).getByText("prod")).toBeVisible();
-
-    expect(within(prodSubList).getByText("connected")).toBeVisible();
-    expect(within(prodSubList).getByText("true")).toBeVisible();
-
-    expect(within(prodSubList).getByText("max_pool")).toBeVisible();
-    expect(within(prodSubList).getByText("3")).toBeVisible();
-
-    expect(within(prodSubList).getByText("open_connections")).toBeVisible();
-    expect(within(prodSubList).getByText("1")).toBeVisible();
-
-    expect(within(prodSubList).getByText("free_connections")).toBeVisible();
-    expect(within(prodSubList).getByText("2")).toBeVisible();
+    expect(within(totalNestedListItem).getByText("3")).toBeVisible();
 
     expect(
-      within(prodSubList).getByText("pool_exhaustion_count"),
+      within(totalNestedListItem).getByText("free_connections"),
     ).toBeVisible();
-    expect(within(prodSubList).getByText("209")).toBeVisible();
+    expect(within(totalNestedListItem).getByText("4")).toBeVisible();
+
+    expect(
+      within(totalNestedListItem).getByText("pool_exhaustion_count"),
+    ).toBeVisible();
+    expect(within(totalNestedListItem).getByText("209")).toBeVisible();
+
+    const prodNestedListItem = screen.getByLabelText(
+      "StatusNestedListItem-prod",
+    );
+
+    expect(prodNestedListItem).toBeVisible();
+    expect(within(prodNestedListItem).getByText("prod")).toBeVisible();
+
+    expect(within(prodNestedListItem).getByText("connected")).toBeVisible();
+    expect(within(prodNestedListItem).getByText("true")).toBeVisible();
+
+    expect(within(prodNestedListItem).getByText("max_pool")).toBeVisible();
+    expect(within(prodNestedListItem).getByText("3")).toBeVisible();
+
+    expect(
+      within(prodNestedListItem).getByText("open_connections"),
+    ).toBeVisible();
+    expect(within(prodNestedListItem).getByText("1")).toBeVisible();
+
+    expect(
+      within(prodNestedListItem).getByText("free_connections"),
+    ).toBeVisible();
+    expect(within(prodNestedListItem).getByText("2")).toBeVisible();
+
+    expect(
+      within(prodNestedListItem).getByText("pool_exhaustion_count"),
+    ).toBeVisible();
+    expect(within(prodNestedListItem).getByText("209")).toBeVisible();
   });
 });

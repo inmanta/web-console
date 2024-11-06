@@ -46,7 +46,9 @@ export const StatusItem: React.FC<Props> = ({
           <CompactDescriptionList isHorizontal isCompact isFluid>
             {details.map(([key, value]) => {
               if (typeof value === "object") {
-                return <SubList key={key} name={key} properties={value} />;
+                return (
+                  <NestedListItem key={key} name={key} properties={value} />
+                );
               } else {
                 return (
                   <DescriptionListGroup key={key}>
@@ -83,7 +85,7 @@ const IndentedDescriptionListGroup = styled(DescriptionListGroup)`
   padding-left: var(--pf-v5-global--spacer--md);
 `;
 
-interface SubListProps {
+interface NestedListItemProps {
   name: string;
   properties: Record<string, string>;
 }
@@ -91,14 +93,17 @@ interface SubListProps {
 /**
  * Renders sub list for Status value that is a Record instead of string.
  *
- * @props {SubListProps} props - The properties for the SubList component.
+ * @props {NestedListItemProps} props - The properties for the NestedListItem component.
  * @prop {string} name - The name of the property.
- * @prop {Record<string, string>} properties - The sub properties to display in the SubList components.
- * @returns {React.FC<SubListProps>} The rendered SubList component.
+ * @prop {Record<string, string>} properties - The sub properties to display in the NestedListItem components.
+ * @returns {React.FC<NestedListItemProps>} The rendered NestedListItem component.
  */
-const SubList: React.FC<SubListProps> = ({ name, properties }) => {
+const NestedListItem: React.FC<NestedListItemProps> = ({
+  name,
+  properties,
+}) => {
   return (
-    <ListItem aria-label={`StatusSubList-${name}`}>
+    <ListItem aria-label={`StatusNestedListItem-${name}`}>
       <DescriptionListGroup>
         <DescriptionListTerm>{name}</DescriptionListTerm>
       </DescriptionListGroup>
