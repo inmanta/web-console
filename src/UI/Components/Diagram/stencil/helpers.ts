@@ -1,6 +1,7 @@
 import { shapes } from "@inmanta/rappid";
 import { v4 as uuidv4 } from "uuid";
 import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from "@/Core";
+import { HeaderColor } from "../interfaces";
 
 /**
  * It recursively goes through embedded entities in the service model or embedded entity and creates stencil elements for each of them.
@@ -67,7 +68,7 @@ export const createStencilElement = (
         width: 7,
         height: 40,
         x: 233,
-        fill: isEmbedded ? "#0066cc" : "#6753AC",
+        fill: isEmbedded ? HeaderColor.EMBEDDED : HeaderColor.RELATION,
         stroke: "none",
       },
       bodyTwo: {

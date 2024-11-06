@@ -11,6 +11,15 @@ import {
 } from "@/Slices/Orders/Core/Query";
 
 /**
+ * Enum representing header colors for different types of entities.
+ */
+enum HeaderColor {
+  CORE = "#F0AB00",
+  EMBEDDED = "#0066CC",
+  RELATION = "#6753AC",
+}
+
+/**
  * Enum representing types of actions possible to perform on entities.
  */
 enum ActionEnum {
@@ -184,6 +193,7 @@ interface ComposerEntityOptions {
 }
 
 export {
+  HeaderColor,
   ActionEnum,
   ColumnData,
   RouterOptions,

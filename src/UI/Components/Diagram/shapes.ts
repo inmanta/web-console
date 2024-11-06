@@ -1,7 +1,7 @@
 import { dia, shapes, util } from "@inmanta/rappid";
 import { updateLabelPosition } from "./helpers";
 import expandButton from "./icons/expand-icon.svg";
-import { ColumnData, EntityType } from "./interfaces";
+import { ColumnData, EntityType, HeaderColor } from "./interfaces";
 
 /**
  * https://resources.jointjs.com/tutorial/custom-elements
@@ -316,16 +316,16 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
    * Sets the tab color based on the entity type.
    *
    * @param {EntityType} type - The type of the entity.
-   * @returns {this} updated entity block
+   * @returns {this} updated entity block - this.attr(x, y) returns updated object - or the current entity block as default scenario
    */
   setTabColor(type: EntityType): this {
     switch (type) {
       case EntityType.CORE:
-        return this.attr(["header", "fill"], "#F0AB00");
+        return this.attr(["header", "fill"], HeaderColor.CORE);
       case EntityType.EMBEDDED:
-        return this.attr(["header", "fill"], "#0066CC");
+        return this.attr(["header", "fill"], HeaderColor.EMBEDDED);
       case EntityType.RELATION:
-        return this.attr(["header", "fill"], "#6753AC");
+        return this.attr(["header", "fill"], HeaderColor.RELATION);
       default:
         return this;
     }
