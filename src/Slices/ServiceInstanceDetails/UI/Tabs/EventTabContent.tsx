@@ -63,6 +63,9 @@ interface Props {
  *
  * @note We are using the events that are pressent in the history logs for the instance details view.
  * A link button allows the user to navigate the the full events page.
+ * 
+ * @prop {Props} props - The EventsTabContent Props
+ *  @prop {string} selectedVersion - The actively selected version on the page.
  *
  */
 export const EventsTabContent: React.FC<Props> = ({ selectedVersion }) => {
@@ -86,7 +89,7 @@ export const EventsTabContent: React.FC<Props> = ({ selectedVersion }) => {
     );
   }
 
-  const selectedVersionLogs: InstanceLog = logsQuery.data.filter(
+  const selectedVersionLogs: InstanceLog | undefined = logsQuery.data.filter(
     (log: InstanceLog) => String(log.version) === selectedVersion,
   )[0];
 
@@ -101,28 +104,48 @@ export const EventsTabContent: React.FC<Props> = ({ selectedVersion }) => {
 
   const events: InstanceEvent[] = selectedVersionLogs.events;
 
-  const isExpanded = (eventId) => expanded.includes(eventId);
+  /**
+   * Check to verify if an event row id is already expanded or not.
+   * 
+   * @param {string} eventId - the event id
+   * @returns {boolean}
+   */
+  const isExpanded = (eventId: string): boolean => expanded.includes(eventId);
 
   /**
-   *
+   * Updates the expanded state variable, adding or removing the eventId of the array of expanded items.
+   * 
    * @param {string} eventId
    * @param {boolean} isExpanding
-   * @returns
+   * @returns {void} 
    */
-  const updateExpanded = (eventId: string, isExpanding: boolean = true) =>
+  const updateExpanded = (eventId: string, isExpanding: boolean = true): void =>
     setExpanded((prevExpanded) => {
       const otherExpanded = prevExpanded.filter((id) => id !== eventId);
 
       return isExpanding ? [...otherExpanded, eventId] : otherExpanded;
     });
 
-  const isExportReport = (message: string) => {
+  /**
+   * Check if the message in the event contains one of the key-words used in validation reports.
+   * If the message doesn't contain "validate/validation" then we can assume it is an export report.
+   * 
+   * @param {string} message - the event message
+   * @returns {boolean}
+   */
+  const isExportReport = (message: string): boolean => {
     const regex = /validate|validation/i;
 
     return !regex.test(message);
   };
 
-  const getDiffTimestamp = (index: number) => {
+  /**
+   * Get the next timestamp in the events log of the selected version.
+   * 
+   * @param {number} index - the index of the current timestamp
+   * @returns {string} the timestamp that comes after the current one, or the current timestamp if there is no next index available.
+   */
+  const getNextTimestamp = (index: number): string => {
     // We want the time difference between each row/timestamp. If we are on the last row, then there is no new row to compare against.
     if (index === events.length - 1) {
       return events[index].timestamp;
@@ -193,7 +216,7 @@ export const EventsTabContent: React.FC<Props> = ({ selectedVersion }) => {
                 <Td aria-label={`Event-date-${index}`}>
                   <DateWithTimeDiffTooltip
                     timestamp1={event.timestamp}
-                    timestamp2={getDiffTimestamp(index)}
+                    timestamp2={getNextTimestamp(index)}
                   />
                 </Td>
                 <Td aria-label={`Event-source-${index}`}>{event.source}</Td>
@@ -255,16 +278,20 @@ export const EventsTabContent: React.FC<Props> = ({ selectedVersion }) => {
   );
 };
 
-type Transition = Pick<
+/**
+ * The transitions we would like to highlight in the UI
+ */
+type HighlightedTransition = Pick<
   InstanceEvent,
   "ignored_transition" | "is_error_transition"
 >;
 
 /**
  * If the transition is `is_error_transition` then we want the rows in an orange/golden hue.
- * Unlike on the main event page, the history logs don't contain the `ignored_transition`. These are grayed out in the main event page.
+ * Unlike on the main event page, the history logs don't contain the `ignored_transition`. 
+ * These are grayed out in the main event page.
  */
-const StyledBody = styled(Tbody)<{ $transition: Transition }>`
+const StyledBody = styled(Tbody) <{ $transition: HighlightedTransition }>`
   ${({ $transition }) => {
     return $transition.is_error_transition
       ? "background-color: var(--pf-v5-global--palette--gold-50)"
