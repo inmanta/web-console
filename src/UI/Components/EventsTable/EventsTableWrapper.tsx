@@ -9,7 +9,6 @@ import {
   Tr,
 } from "@patternfly/react-table";
 import { Sort } from "@/Core";
-import { words } from "@/UI/words";
 import { EventsTablePresenter } from "./EventsTablePresenter";
 
 interface Props {
@@ -45,10 +44,7 @@ export const EventsTableWrapper: React.FC<React.PropsWithChildren<Props>> = ({
     <Table aria-label={props["aria-label"]}>
       <Thead>
         <Tr>
-          <Th
-            aria-hidden
-            screenReaderText={words("common.emptyColumnHeader")}
-          />
+          <Th aria-hidden />
           {heads}
         </Tr>
       </Thead>

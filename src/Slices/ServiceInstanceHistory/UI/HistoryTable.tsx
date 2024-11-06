@@ -41,10 +41,7 @@ export const HistoryTable: React.FC<Props> = ({ service, logs }) => {
       <Table>
         <Thead>
           <Tr>
-            <Th
-              aria-hidden
-              screenReaderText={words("common.emptyColumnHeader")}
-            />
+            <Th aria-hidden />
             {columnHeads.map((head) => (
               <Th key={head}>{head}</Th>
             ))}

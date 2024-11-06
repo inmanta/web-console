@@ -40,10 +40,7 @@ export const ResourceLogsTable: React.FC<Props> = ({
     <Table aria-label="ResourceLogsTable" variant="compact">
       <Thead>
         <Tr>
-          <Th
-            aria-hidden
-            screenReaderText={words("common.emptyColumnHeader")}
-          />
+          <Th />
           <Th
             sort={{
               sortBy: { index: 0, direction: sort.order },

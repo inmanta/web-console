@@ -10,7 +10,6 @@ import {
 import styled from "styled-components";
 import { Resource, Sort } from "@/Core";
 import { useExpansion } from "@/Data";
-import { words } from "@/UI";
 import { ResourceTableRow } from "./ResourceTableRow";
 import { ResourcesTablePresenter } from "./ResourcesTablePresenter";
 
@@ -68,10 +67,7 @@ export const ResourcesTable: React.FC<Props> = ({
     <Table {...props} variant={TableVariant.compact}>
       <Thead>
         <Tr>
-          <Th
-            aria-hidden
-            screenReaderText={words("common.emptyColumnHeader")}
-          />
+          <Th aria-hidden />
           {heads}
         </Tr>
       </Thead>

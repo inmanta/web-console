@@ -9,7 +9,6 @@ import {
 } from "@patternfly/react-table";
 import { useExpansion } from "@/Data";
 import { ServiceOrderItem } from "@/Slices/Orders/Core/Query";
-import { words } from "@/UI";
 import { OrderDetailsRow } from "./OrderDetailsRow";
 import { OrderDetailsTablePresenter } from "./OrderDetailsTablePresenter";
 
@@ -42,11 +41,7 @@ export const OrderDetailsTable: React.FC<Props> = ({
     <Table {...props} variant={TableVariant.compact}>
       <Thead>
         <Tr>
-          <Th
-            style={{ width: "15px" }}
-            aria-hidden
-            screenReaderText={words("common.emptyColumnHeader")}
-          />
+          <Th style={{ width: "15px" }} aria-hidden />
           {heads}
         </Tr>
       </Thead>

@@ -833,7 +833,6 @@ const dict = {
   "common.compileWidget.compiling": "Compiling",
   "common.compileWidget.compilationDisabled.hint":
     "The server_compile setting is disabled. You can enable it on the settings page under the configuration tab.",
-  "common.emptyColumnHeader": "Column header for collapsible-expandable action",
 
   /**
    * Login

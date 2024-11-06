@@ -8,7 +8,6 @@ import {
   Tr,
 } from "@patternfly/react-table";
 import { Sort } from "@/Core";
-import { words } from "@/UI";
 import { ServiceOrder, SortKey } from "../Core/Query";
 import { OrdersRow } from "./OrdersRow";
 import { OrdersTablePresenter } from "./OrdersTablePresenter";
@@ -76,10 +75,7 @@ export const OrdersTable: React.FC<Props> = ({
       <Thead>
         <Tr aria-hidden>
           {heads}
-          <Th
-            aria-hidden
-            screenReaderText={words("common.emptyColumnHeader")}
-          />
+          <Th />
         </Tr>
       </Thead>
       {rows.map((row) => (

@@ -9,7 +9,6 @@ import {
 } from "@patternfly/react-table";
 import { Sort } from "@/Core";
 import { useExpansion } from "@/Data";
-import { words } from "@/UI";
 import { DiscoveredResource, SortKey } from "../Core/Query";
 import { DiscoveredResourceRow } from "./DiscoveredResourcesRow";
 import { DiscoveredResourcesTablePresenter } from "./DiscoveredResourcesTablePresenter";
@@ -65,10 +64,7 @@ export const DiscoveredResourcesTable: React.FC<Props> = ({
     <Table {...props} variant={TableVariant.compact}>
       <Thead>
         <Tr>
-          <Th
-            aria-hidden
-            screenReaderText={words("common.emptyColumnHeader")}
-          />
+          <Th aria-hidden />
           {heads}
         </Tr>
       </Thead>
