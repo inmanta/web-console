@@ -105,6 +105,11 @@ export const StatusList: React.FC<Props> = ({
   );
 };
 
+type DetailKey = string;
+
+type DetailValue = Record<string, string> | string;
+export type DetailTuple = [DetailKey, DetailValue];
+
 /**
  * Converts a Record<string, unknown> to an array of key-value pairs where values are either strings or nested records with string values.
  *
@@ -112,11 +117,9 @@ export const StatusList: React.FC<Props> = ({
  * We know from the core team that we can safely assume that we don't need to handle nested records more than one level deep.
  *
  * @param {Record<string, unknown>} obj - The record to convert.
- * @returns {[string, Record<string, string> | string][]} An array of key-value pairs where values are either strings or nested records with string values.
+ * @returns {DetailTuple[]} An array of key-value pairs where values are either strings or nested records with string values.
  */
-const toDetails = (
-  obj: Record<string, unknown>,
-): [string, Record<string, string> | string][] =>
+const toDetails = (obj: Record<string, unknown>): DetailTuple[] =>
   Object.entries(obj).map(([key, value]) => {
     return [
       key,
