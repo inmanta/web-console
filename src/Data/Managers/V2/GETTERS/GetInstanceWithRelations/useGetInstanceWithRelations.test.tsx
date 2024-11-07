@@ -178,7 +178,12 @@ test("if the fetched instance has inter-service relation(s) in the model, and th
   );
   const { result } = renderHook(
     () =>
-      useGetInstanceWithRelations("child_id", "env", childModel).useOneTime(),
+      useGetInstanceWithRelations(
+        "child_id",
+        "env",
+        false,
+        childModel,
+      ).useOneTime(),
     {
       wrapper: createWrapper(),
     },

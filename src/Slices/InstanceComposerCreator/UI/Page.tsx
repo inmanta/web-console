@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { DependencyContext, useRouteParams, words } from "@/UI";
-import { EmptyView, PageContainer } from "@/UI/Components";
+import { EmptyView } from "@/UI/Components";
 import { ComposerCreatorProvider } from "@/UI/Components/Diagram/Context/ComposerCreatorProvider";
 
 /**
@@ -21,26 +21,5 @@ export const Page: React.FC = () => {
     />;
   }
 
-  return (
-    <PageWrapper>
-      <ComposerCreatorProvider serviceName={serviceName} />
-    </PageWrapper>
-  );
+  return <ComposerCreatorProvider serviceName={serviceName} />;
 };
-
-/**
- * Wrapper component for the Page component.
- * Renders the PageContainer component with the provided props and children.
- */
-const PageWrapper: React.FC<React.PropsWithChildren<unknown>> = ({
-  children,
-  ...props
-}) => (
-  <PageContainer
-    aria-label="ComposerCreateView"
-    {...props}
-    pageTitle={words("instanceComposer.title")}
-  >
-    {children}
-  </PageContainer>
-);
