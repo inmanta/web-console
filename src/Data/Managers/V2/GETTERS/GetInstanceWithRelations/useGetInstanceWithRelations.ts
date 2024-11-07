@@ -129,7 +129,7 @@ export const useGetInstanceWithRelations = (
   ): string[] => {
     // Map relation names to corresponding IDs from attributes
     const relationIds = relationNames
-      .map((relationName) => attributes[relationName])
+      .flatMap((relationName) => attributes[relationName]) //relations can be in the array of strings so we need to flatten it just in case
       .filter((id): id is string => typeof id === "string"); // Filter to ensure only you only keep strings
 
     // Extract IDs from embedded relations recursively
