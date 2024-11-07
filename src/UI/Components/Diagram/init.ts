@@ -72,13 +72,14 @@ export function diagramInit(
 
   //trigger highlighter when user drag element from stencil
   graph.on("add", function (cell) {
+    //if it's a link, we don't want to assert any highlighting, if the canvas is not editable then there shouldn't be any highlighting in the first place as there are no loose elements by default and no way to add them
+    if (cell.get("type") === "Link" || !editable) {
+      return;
+    }
+
     const paperRepresentation = paper.findViewByModel(cell);
 
-    if (
-      cell.get("isEmbedded") &&
-      !cell.get("embeddedTo") &&
-      paperRepresentation
-    ) {
+    if (!cell.get("isCore") && paperRepresentation) {
       toggleLooseElement(paperRepresentation, EmbeddedEventEnum.ADD);
     }
   });

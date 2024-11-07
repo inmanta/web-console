@@ -29,12 +29,14 @@ interface GetInstanceWithRelationsHook {
  * React Query hook to fetch an instance with its related instances from the API. The related instances are all instances connected with given instance by inter-service relation, both, as a parent and as a child.
  * @param {string} id - The ID of the instance to fetch.
  * @param {string} environment - The environment in which we are looking for instances.
- * @param {ServiceModel} serviceModel - The service Model of the instance (optional as it can be undefined at the init of the component that use the hook)
+ * @param {boolean} includesReferencedBy - A flag indicating if we should fetch instances that reference our main instance - defaults to false.
+ * @param {ServiceModel} [serviceModel] - The service Model of the instance (optional as it can be undefined at the init of the component that use the hook)
  * @returns  {GetInstanceWithRelationsHook} An object containing a custom hook to fetch the instance with its related instances.
  */
 export const useGetInstanceWithRelations = (
   instanceId: string,
   environment: string,
+  includesReferencedBy: boolean = false,
   serviceModel?: ServiceModel,
 ): GetInstanceWithRelationsHook => {
   //extracted headers to avoid breaking rules of Hooks
@@ -57,7 +59,7 @@ export const useGetInstanceWithRelations = (
   ): Promise<{ data: ServiceInstanceModel }> => {
     //we use this endpoint instead /lsm/v1/service_inventory/{service_entity}/{service_id} because referenced_by property includes only ids, without information about service_entity for given ids
     const response = await fetch(
-      `${baseUrl}/lsm/v1/service_inventory?service_id=${id}&include_deployment_progress=false&exclude_read_only_attributes=false&include_referenced_by=true&include_metadata=true`,
+      `${baseUrl}/lsm/v1/service_inventory?service_id=${id}&include_deployment_progress=false&exclude_read_only_attributes=false&include_referenced_by=${includesReferencedBy}&include_metadata=true`,
       {
         headers,
       },

@@ -83,7 +83,12 @@ const createWrapper = () => {
 test("if the fetched instance has referenced instance(s), then query will return the given instance with that related instance(s)", async () => {
   const { result } = renderHook(
     () =>
-      useGetInstanceWithRelations("test_id", "env", testService).useOneTime(),
+      useGetInstanceWithRelations(
+        "test_id",
+        "env",
+        false,
+        testService,
+      ).useOneTime(),
     {
       wrapper: createWrapper(),
     },
@@ -103,7 +108,12 @@ test("if the fetched instance has referenced instance(s), then query will return
 test("if the fetched instance has inter-service relation(s) in the model, then query will return the given instance with that related instance(s)", async () => {
   const { result } = renderHook(
     () =>
-      useGetInstanceWithRelations("child_id", "env", childModel).useOneTime(),
+      useGetInstanceWithRelations(
+        "child_id",
+        "env",
+        false,
+        childModel,
+      ).useOneTime(),
     {
       wrapper: createWrapper(),
     },
@@ -126,6 +136,7 @@ test("when instance returned has not referenced instance(s), then the query will
       useGetInstanceWithRelations(
         "test_mpn_id",
         "env",
+        false,
         testService,
       ).useOneTime(),
     {

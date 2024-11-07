@@ -793,6 +793,7 @@ export const updateServiceOrderItems = (
  * https://resources.jointjs.com/docs/jointjs/v3.6/joint.html#dia.LinkView
  * https://resources.jointjs.com/docs/jointjs/v3.6/joint.html#linkTools
  *
+ * @param {dia.Paper} paper - JointJS paper object
  * @param {dia.Graph} graph JointJS graph object
  * @param {dia.LinkView} linkView  - The view for the joint.dia.Link model.
  * @param {ConnectionRules} connectionRules  - The rules for the connections between entities.
@@ -800,6 +801,7 @@ export const updateServiceOrderItems = (
  * @returns {void}
  */
 export function showLinkTools(
+  paper: dia.Paper,
   graph: dia.Graph,
   linkView: dia.LinkView,
   connectionRules: ConnectionRules,
@@ -890,36 +892,9 @@ export function showLinkTools(
             target.id as dia.Cell.ID,
           ) as ServiceEntityBlock;
 
-          /**
-           * Function that remove any data in this connection between cells
-           * @param {ServiceEntityBlock} elementCell cell that we checking
-           * @param {ServiceEntityBlock} disconnectingCell cell that is being connected to elementCell
-           * @returns {void}
-           */
-          const removeConnectionData = (
-            elementCell: ServiceEntityBlock,
-            disconnectingCell: ServiceEntityBlock,
-          ): void => {
-            const elementRelations = elementCell.getRelations();
-
-            // resolve any possible relation connections between cells
-            if (
-              elementRelations &&
-              elementRelations.has(String(disconnectingCell.id))
-            ) {
-              elementCell.removeRelation(String(disconnectingCell.id));
-
-              document.dispatchEvent(
-                new CustomEvent("updateServiceOrderItems", {
-                  detail: { cell: sourceCell, actions: ActionEnum.UPDATE },
-                }),
-              );
-            }
-          };
-
           //as the connection between two cells is bidirectional we need attempt to remove data from both cells
-          removeConnectionData(sourceCell, targetCell);
-          removeConnectionData(targetCell, sourceCell);
+          removeConnectionData(paper, graph, sourceCell, targetCell);
+          removeConnectionData(paper, graph, targetCell, sourceCell);
 
           model.remove({ ui: true, tool: toolView.cid });
         },
@@ -929,3 +904,52 @@ export function showLinkTools(
 
   linkView.addTools(tools);
 }
+
+/**
+ * Function that remove data about inter-service relation between cells
+ * @param {dia.Paper} paper JointJS paper object
+ * @param {dia.Graph} graph JointJS graph object
+ * @param {ServiceEntityBlock} elementCell cell that we checking
+ * @param {ServiceEntityBlock} cellToDisconnect cell that is being connected to elementCell
+ * @returns {void}
+ */
+const removeConnectionData = (
+  paper: dia.Paper,
+  graph: dia.Graph,
+  elementCell: ServiceEntityBlock,
+  cellToDisconnect: ServiceEntityBlock,
+): void => {
+  const elementRelations = elementCell.getRelations();
+
+  // resolve any possible relation connections between cells
+  if (elementRelations && elementRelations.has(String(cellToDisconnect.id))) {
+    elementCell.removeRelation(String(cellToDisconnect.id));
+
+    //get all connected entities to inter-service relation cell (the current relation that will be removed is included here)
+    const disconnectedCellNeighbors = graph.getNeighbors(cellToDisconnect);
+
+    //check if the cell that we are connected is also connected to the other cell as embedded Entity
+    const embeddedToID = cellToDisconnect.get("embeddedTo");
+
+    //filter out every cell that is either embedded entity to the cellToDisconnect or is core or the cellToDisconnect is embedded to it
+    const interServiceRelations = disconnectedCellNeighbors.filter(
+      (cell) =>
+        !(cell.get("embeddedTo") === cellToDisconnect.id) ||
+        !(embeddedToID === cell.id),
+    );
+
+    //all cells left are the inter-service relation connections, if there is only one then we should highlight the cell, if more then it's not loose inter-service relation cell, zero shouldn't be possible as we are including current connection in the array
+    if (interServiceRelations.length === 1) {
+      toggleLooseElement(
+        paper.findViewByModel(cellToDisconnect),
+        EmbeddedEventEnum.ADD,
+      );
+    }
+
+    document.dispatchEvent(
+      new CustomEvent("updateServiceOrderItems", {
+        detail: { cell: elementCell, actions: ActionEnum.UPDATE },
+      }),
+    );
+  }
+};
