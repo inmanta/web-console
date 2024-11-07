@@ -70,9 +70,8 @@ export const FailureCard: React.FC<Props> = ({ resourceId, failure }) => {
                     variant="plain"
                     onClick={onToggleClick}
                     isExpanded={isOpen}
-                  >
-                    <EllipsisVIcon />
-                  </MenuToggle>
+                    icon={<EllipsisVIcon />}
+                  />
                 )}
                 isOpen={isOpen}
                 popperProps={{ position: "right" }}

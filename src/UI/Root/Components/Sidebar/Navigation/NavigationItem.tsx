@@ -115,7 +115,7 @@ const CompileReportItem: React.FC<Label & Url> = ({ label, url }) => {
           <Tooltip key={"ongoing-compilation-tooltip"} content={"Compiling"}>
             <StyledIndication
               aria-label="CompileReportsIndication"
-              className="--pf-v5-c-label--m-blue__content--before--BorderColor"
+              className="pf-t--global--icon--color--brand--default"
             />
           </Tooltip>
         )}

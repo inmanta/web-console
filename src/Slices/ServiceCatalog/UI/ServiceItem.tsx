@@ -15,6 +15,7 @@ import {
   MenuToggle,
   DropdownList,
   DropdownItem,
+  Content,
 } from "@patternfly/react-core";
 import { EllipsisVIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
@@ -196,7 +197,7 @@ export const ServiceItem: React.FC<Props> = ({ service }) => {
   );
 };
 
-const StyledText = styled(Text)`
+const StyledText = styled(Content)`
   ${greyText};
 `;
 

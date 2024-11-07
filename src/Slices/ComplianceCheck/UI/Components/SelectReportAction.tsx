@@ -9,7 +9,6 @@ import {
   Spinner,
   ToolbarGroup,
 } from "@patternfly/react-core";
-import { t_temp_dev_tbd as global_Color_100 /* CODEMODS: you should update this color token */ } from "@patternfly/react-tokens";
 import styled from "styled-components";
 import { Maybe, RemoteData } from "@/Core";
 import { MomentDatePresenter } from "@/UI/Utils";
@@ -145,6 +144,6 @@ const StyledLabel = styled(Label)`
 `;
 
 const StyledSpinner = styled(Spinner)`
-  --pf-v5-c-spinner--Color: ${global_Color_100.var};
+  --pf-v5-c-spinner--Color: var(pf-t--global--icon--color--brand--default);
   margin-right: 8px;
 `;

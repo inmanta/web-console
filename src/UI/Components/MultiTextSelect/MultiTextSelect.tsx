@@ -216,7 +216,7 @@ export const MultiTextSelect: React.FC<Props> = ({
             disabled={props.isDisabled}
           >
             {hasChips && (
-              <LabelGroup aria-label="Current selections" numChips={0}>
+              <LabelGroup aria-label="Current selections" numLabels={0}>
                 {selected.map((selection) => (
                   <Label variant="outline"
                     disabled={props.isDisabled}

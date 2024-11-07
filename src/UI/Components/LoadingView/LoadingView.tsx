@@ -1,5 +1,5 @@
 import React from "react";
-import { EmptyState, EmptyStateIcon, Title } from "@patternfly/react-core";
+import { EmptyState, Title } from "@patternfly/react-core";
 import { Spinner } from "@/UI/Components/Spinner";
 import { Delayed } from "@/UI/Utils";
 import { words } from "@/UI/words";
@@ -14,9 +14,8 @@ export const LoadingView: React.FC<Props> = ({
   ariaLabel,
   ...props
 }) => (
-  <EmptyState isFullHeight {...props} aria-label={ariaLabel} role="region">
+  <EmptyState isFullHeight {...props} aria-label={ariaLabel} role="region" icon={Spinner}>
     <Delayed delay={instant ? undefined : 200}>
-      <EmptyStateIcon icon={Spinner} />
       <Title size="lg" headingLevel="h2">
         {words("loading")}
       </Title>

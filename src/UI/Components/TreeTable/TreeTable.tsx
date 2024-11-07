@@ -69,9 +69,8 @@ export const TreeTable: React.FC<Props> = ({
                   isExpanded={isOpen}
                   variant="plain"
                   onClick={() => setIsOpen((value) => !value)}
-                >
-                  <EllipsisVIcon />
-                </MenuToggle>
+                  icon={<EllipsisVIcon />}
+                />
               )}
               isOpen={isOpen}
               popperProps={{ position: "right" }}

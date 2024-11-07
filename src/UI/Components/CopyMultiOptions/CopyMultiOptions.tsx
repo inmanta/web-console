@@ -77,9 +77,9 @@ export const CopyMultiOptions: React.FC<Props> = ({
       variant="plain"
       isExpanded={isOpen}
       aria-label="Copy to clipboard"
+      icon={<CopyIcon />}
     >
       {text}
-      <CopyIcon />
     </MenuToggle>
   );
 

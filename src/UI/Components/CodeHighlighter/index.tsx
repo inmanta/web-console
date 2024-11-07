@@ -74,11 +74,10 @@ export const CodeHighlighter: React.FC<Props> = ({
       disabledContent={words("codehighlighter.lineWrapping.on")}
       key={`wraplonglines-${keyId}`}
     >
-      <DropdownItem onClick={() => setWraplongLines(!wrapLongLines)}>
-        <Icon style={{ opacity: wrapLongLines ? "1" : "0.4" }}>
+      <DropdownItem onClick={() => setWraplongLines(!wrapLongLines)}
+        icon={<Icon style={{ opacity: wrapLongLines ? "1" : "0.4" }}>
           <TextWidthIcon />
-        </Icon>
-      </DropdownItem>
+        </Icon>} />
     </ToggleTooltip>,
     <ToggleTooltip
       enabled={showLineNumbers}
@@ -86,11 +85,10 @@ export const CodeHighlighter: React.FC<Props> = ({
       disabledContent={words("codehighlighter.lineNumbers.on")}
       key={`showlinenumbers-${keyId}`}
     >
-      <DropdownItem onClick={() => setShowLineNumbers(!showLineNumbers)}>
-        <Icon style={{ opacity: showLineNumbers ? "1" : "0.4" }}>
+      <DropdownItem onClick={() => setShowLineNumbers(!showLineNumbers)}
+        icon={<Icon style={{ opacity: showLineNumbers ? "1" : "0.4" }}>
           <ListOlIcon />
-        </Icon>
-      </DropdownItem>
+        </Icon>} />
     </ToggleTooltip>,
   ];
 

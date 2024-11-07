@@ -6,7 +6,6 @@ import {
   CardFooter,
   CardTitle,
   EmptyState,
-  EmptyStateIcon,
   EmptyStateVariant,
   Gallery,
   PageSection,
@@ -59,8 +58,7 @@ const CreateNewEnvironmentCard: React.FC<{ url: string }> = ({ url }) => (
     <Bullseye>
       <Link pathname={url}>
         <StyledCardContent>
-          <AlignedEmptyState variant={EmptyStateVariant.xs}>
-            <EmptyStateIcon icon={PlusCircleIcon} />
+          <AlignedEmptyState variant={EmptyStateVariant.xs} icon={PlusCircleIcon}>
             <Title headingLevel="h2" size="md">
               {words("home.create.env.desciption")}
             </Title>

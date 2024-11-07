@@ -73,9 +73,8 @@ export const RejectionCard: React.FC<Props> = ({
                     variant="plain"
                     onClick={onToggleClick}
                     isExpanded={isOpen}
-                  >
-                    <EllipsisVIcon />
-                  </MenuToggle>
+                    icon={<EllipsisVIcon />}
+                  />
                 )}
                 isOpen={isOpen}
                 isPlain
