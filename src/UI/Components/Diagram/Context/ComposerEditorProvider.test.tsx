@@ -26,7 +26,7 @@ import {
 import { defineObjectsForJointJS } from "../testSetup";
 import { ComposerEditorProvider } from "./ComposerEditorProvider";
 
-const setup = (editable: boolean = false, instanceId: string) => {
+const setup = (instanceId: string, editable: boolean = true) => {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -126,7 +126,7 @@ describe("ComposerEditorProvider", () => {
       }),
     );
 
-    render(setup(true, "13920268-cce0-4491-93b5-11316aa2fc37"));
+    render(setup("13920268-cce0-4491-93b5-11316aa2fc37"));
 
     expect(
       await screen.findByRole("region", {
@@ -146,7 +146,7 @@ describe("ComposerEditorProvider", () => {
   });
 
   it("if there is error when fetching related inventories the error view is shown", async () => {
-    render(setup(true, "13920268-cce0-4491-93b5-11316aa2fc37"));
+    render(setup("13920268-cce0-4491-93b5-11316aa2fc37"));
 
     server.use(
       http.get("/lsm/v1/service_inventory/parent-service", async () => {
@@ -175,7 +175,7 @@ describe("ComposerEditorProvider", () => {
   });
 
   it("if there is error when fetching instance with relations the error view is shown", async () => {
-    render(setup(true, "13920268-cce0-4491-93b5-11316aa2fc37"));
+    render(setup("13920268-cce0-4491-93b5-11316aa2fc37"));
 
     server.use(
       http.get("/lsm/v1/service_inventory", async () => {
@@ -212,7 +212,7 @@ describe("ComposerEditorProvider", () => {
       }),
     );
 
-    render(setup(true, "13920268-cce0-4491-93b5-11316aa2fc37"));
+    render(setup("13920268-cce0-4491-93b5-11316aa2fc37"));
 
     expect(
       await screen.findByRole("region", {
@@ -236,14 +236,14 @@ describe("ComposerEditorProvider", () => {
   });
 
   it("if provider is editable show Instance Composer Editor title ", async () => {
-    render(setup(true, "13920268-cce0-4491-93b5-11316aa2fc37"));
+    render(setup("13920268-cce0-4491-93b5-11316aa2fc37"));
 
     const title = await screen.findByText("Instance Composer Editor");
 
     expect(title).toBeInTheDocument();
   });
   it("if provider is editable show Instance Composer Editor title ", async () => {
-    render(setup(false, "13920268-cce0-4491-93b5-11316aa2fc37"));
+    render(setup("13920268-cce0-4491-93b5-11316aa2fc37", false));
 
     const title = await screen.findByText("Instance Composer Viewer");
 
@@ -251,7 +251,7 @@ describe("ComposerEditorProvider", () => {
   });
 
   it("navigating out of the View works correctly", async () => {
-    render(setup(true, "13920268-cce0-4491-93b5-11316aa2fc37"));
+    render(setup("13920268-cce0-4491-93b5-11316aa2fc37"));
 
     expect(window.location.pathname).toEqual("/");
 

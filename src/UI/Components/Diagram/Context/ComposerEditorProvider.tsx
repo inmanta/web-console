@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { Flex, FlexItem } from "@patternfly/react-core";
-import { ServiceModel } from "@/Core";
 import { useGetAllServiceModels } from "@/Data/Managers/V2/GETTERS/GetAllServiceModels";
 import { useGetInstanceWithRelations } from "@/Data/Managers/V2/GETTERS/GetInstanceWithRelations";
 import { useGetInventoryList } from "@/Data/Managers/V2/GETTERS/GetInventoryList";
@@ -136,11 +135,16 @@ export const ComposerEditorProvider: React.FC<Props> = ({
     return renderErrorView(message, ariaLabel, retry);
   }
 
-  if (serviceModelsQuery.isSuccess && instanceWithRelationsQuery.isSuccess) {
+  if (
+    serviceModelsQuery.isSuccess &&
+    instanceWithRelationsQuery.isSuccess &&
+    mainService
+  ) {
+    // there is no possibility to instanceWithRelationsQuery be in success state without mainService, and there is assertion above the if services are fetch but there is no mainService to display errorView
     return (
       <InstanceComposerContext.Provider
         value={{
-          mainService: mainService as ServiceModel, // there is no possibility to instanceWithRelationsQuery be in success state without mainService, and there is assertion above the if services are fetch but there is no mainService to display errorView
+          mainService: mainService,
           serviceModels: serviceModelsQuery.data,
           instance: instanceWithRelationsQuery.data,
           relatedInventoriesQuery: relatedInventoriesQuery,
