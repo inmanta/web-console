@@ -48,10 +48,12 @@ export const Link: React.FC<Props> = forwardRef<HTMLAnchorElement, Props>(
   },
 );
 
-const StyledRRLink = styled(RRLink)<{ $variant?: string }>`
+const StyledRRLink = styled(RRLink)<{ $variant?: "plain" | "default" }>`
   display: inline-block;
   width: 100%;
   color: ${({ $variant }) =>
-    $variant === "plain" ? "inherit" : "var(--pf-global--primary-color--100)"};
+    $variant === "plain"
+      ? "inherit"
+      : "var(--pf-v5-global--primary-color--100)"};
   ${({ $variant }) => ($variant === "plain" ? "text-decoration:none" : "")};
 `;

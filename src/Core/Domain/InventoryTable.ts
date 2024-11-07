@@ -5,6 +5,7 @@ import { Uuid } from "./Uuid";
 export interface DateInfo {
   full: string;
   relative: string;
+  dateTimeMilliseconds: string;
 }
 
 export interface AttributesSummary {

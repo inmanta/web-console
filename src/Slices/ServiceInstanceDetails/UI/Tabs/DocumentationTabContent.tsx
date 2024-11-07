@@ -51,7 +51,7 @@ export const DocumentationTabContent: React.FC<Props> = ({
 
   if (logsQuery.isLoading) {
     return (
-      <TabContentWrapper id={"documentation"}>
+      <TabContentWrapper id="documentation">
         <LoadingView />
       </TabContentWrapper>
     );
@@ -59,7 +59,7 @@ export const DocumentationTabContent: React.FC<Props> = ({
 
   if (!logsQuery.data) {
     return (
-      <TabContentWrapper id={"documentation"}>
+      <TabContentWrapper id="documentation">
         <ErrorView
           message={words("instanceDetails.tabs.documentation.noData")}
         />
@@ -81,7 +81,7 @@ export const DocumentationTabContent: React.FC<Props> = ({
   };
 
   return (
-    <TabContentWrapper id={"documentation"}>
+    <TabContentWrapper id="documentation">
       <Accordion asDefinitionList togglePosition="start">
         {sections.map((section, index) => (
           <AccordionItem key={section.title}>

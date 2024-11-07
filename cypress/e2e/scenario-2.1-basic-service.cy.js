@@ -468,6 +468,69 @@ if (Cypress.env("edition") === "iso") {
         expect($rows[1]).to.contain("setting_inprogress");
         expect($rows[2]).to.contain("setting_start");
       });
+
+      // click on the events tab
+      cy.get('[aria-label="events-content"]').click();
+
+      // check that there are three rows
+      cy.get('[aria-label="Event-table-row"]').should("have.length", 3);
+
+      // open the first row of the events to confirm the data is correct. We can't assert all exact strings because the id's and dates are variable.
+      cy.get("#expand-toggle0").click();
+      cy.get('[aria-label="Event-message-0"]').should(
+        "contain",
+        "setting_inprogress -> up (error=False)",
+      );
+      cy.get('[aria-label="Event-details-0"]').should(
+        "contain",
+        '"service_instance_version": 8,',
+      );
+
+      // close the row again and click on the export link in the second row. Expect to land on the compile report page.
+      cy.get('[aria-label="Event-compile-1"]').should("contain", "Export");
+      cy.get('[aria-label="Event-compile-1"] > a').click();
+
+      cy.get(".pf-v5-c-title").contains("Compile Details").should("to.exist");
+
+      // go back to the service inventory
+      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
+      cy.get("#basic-service").contains("Show inventory").click();
+
+      // go back to the details page
+      cy.get('[aria-label="row actions toggle"]', { timeout: 60000 })
+        .last()
+        .click();
+
+      cy.get(".pf-v5-c-menu__item")
+        .first()
+        .contains("Instance Details")
+        .click();
+
+      // change version and go to events page. The second version should contain a validation report.
+      cy.get('[aria-label="History-Row"]').eq(7).click();
+      cy.get('[data-testid="selected-version"]').should(
+        "have.text",
+        "Version: 2",
+      );
+
+      cy.get('[aria-label="events-content"]').click();
+
+      cy.get('[aria-label="Event-compile-1"]').should("contain", "Export");
+      cy.get('[aria-label="Event-compile-2"]').should("contain", "Validation");
+
+      // check that there are four rows for this version
+      cy.get('[aria-label="Event-table-row"]').should("have.length", 4);
+
+      // check the source/target states are correct
+      cy.get('[aria-label="Event-source-0"]').should("contain", "start");
+      cy.get('[aria-label="Event-target-0"]').should("contain", "creating");
+
+      // click on "see all events" and confirm you are redirected on the events page.
+      cy.get("a").contains("See all events").click();
+
+      cy.get(".pf-v5-c-title")
+        .contains("Service Instance Events")
+        .should("to.exist");
     });
 
     it("2.1.7 Delete previously created instance", () => {

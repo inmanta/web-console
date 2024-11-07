@@ -263,6 +263,8 @@ const dict = {
   "instanceDetails.tabs.resources": "Resources",
   "instanceDetails.tabs.documentation.noData":
     "There is no documentation available for this version.",
+  "instanceDetails.tabs.events.noData":
+    "There is no events data available for this version.",
   "instanceDetails.tabs.disabled.resources-tooltip":
     "This tab is only available for the latest version.",
   "instanceDetails.documentation.noAttributeForVersion": (attributeName) =>
@@ -298,6 +300,18 @@ const dict = {
       : "Triggered from the console",
   "instanceDetails.state.noOperation": "no operation",
   "instanceDetails.operation.selectLabel": "Select an operation",
+  "instanceDetails.events.column.eventType": "Event type",
+  "instanceDetails.events.column.date": "Date",
+  "instanceDetails.events.column.sourceState": "Source state",
+  "instanceDetails.events.column.destinationState": "Destination state",
+  "instanceDetails.events.column.report": "Compile Report",
+  "instanceDetails.events.rowDetails.message": "Message",
+  "instanceDetails.events.rowDetails.details": "Event details",
+  "instanceDetails.events.exportReport": "Export",
+  "instanceDetails.events.validationReport": "Validation",
+  "instanceDetails.events.seeAll": "See all events",
+  "instanceDetails.events.dateTooltip": (dateDiff: string) =>
+    `${dateDiff} since last event`,
 
   /**
    * Config related text
