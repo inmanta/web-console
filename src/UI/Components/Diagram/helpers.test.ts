@@ -4,7 +4,6 @@ import {
   ServiceInstanceModelWithTargetStates,
   ServiceModel,
 } from "@/Core";
-
 import { Service, ServiceInstance } from "@/Test";
 import {
   a as InstanceAttributesA,
@@ -1782,14 +1781,14 @@ describe("showLinkTools", () => {
     graph.addCell(link);
     const linkView = paper.findViewByModel(link) as dia.LinkView;
 
-    return { graph, linkView, connectionRules };
+    return { paper, graph, linkView, connectionRules };
   };
 
   it("adds tools to the link when instances aren't in EditMode and there is no rule with rw modifier", () => {
     const isParentInEditMode = false;
     const isChildInEditMode = false;
     const modifier = "rw+";
-    const { graph, linkView, connectionRules } = setup(
+    const { paper, graph, linkView, connectionRules } = setup(
       isParentInEditMode,
       isChildInEditMode,
       modifier,
@@ -1797,7 +1796,7 @@ describe("showLinkTools", () => {
 
     expect(linkView.hasTools()).toBeFalsy();
 
-    showLinkTools(graph, linkView, connectionRules);
+    showLinkTools(paper, graph, linkView, connectionRules);
 
     expect(linkView.hasTools()).toBeTruthy();
   });
@@ -1806,7 +1805,7 @@ describe("showLinkTools", () => {
     const isParentInEditMode = true;
     const isChildInEditMode = false;
     const modifier = "rw";
-    const { graph, linkView, connectionRules } = setup(
+    const { paper, graph, linkView, connectionRules } = setup(
       isParentInEditMode,
       isChildInEditMode,
       modifier,
@@ -1814,7 +1813,7 @@ describe("showLinkTools", () => {
 
     expect(linkView.hasTools()).toBeFalsy();
 
-    showLinkTools(graph, linkView, connectionRules);
+    showLinkTools(paper, graph, linkView, connectionRules);
 
     expect(linkView.hasTools()).toBeTruthy();
   });
@@ -1823,7 +1822,7 @@ describe("showLinkTools", () => {
     const isParentInEditMode = false;
     const isChildInEditMode = true;
     const modifier = "rw";
-    const { graph, linkView, connectionRules } = setup(
+    const { paper, graph, linkView, connectionRules } = setup(
       isParentInEditMode,
       isChildInEditMode,
       modifier,
@@ -1831,7 +1830,7 @@ describe("showLinkTools", () => {
 
     expect(linkView.hasTools()).toBeFalsy();
 
-    showLinkTools(graph, linkView, connectionRules);
+    showLinkTools(paper, graph, linkView, connectionRules);
     expect(linkView.hasTools()).toBeFalsy();
   });
 });

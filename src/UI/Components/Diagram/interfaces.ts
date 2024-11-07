@@ -1,5 +1,10 @@
 import { dia, g } from "@inmanta/rappid";
 import {
+  global_palette_purple_500,
+  global_palette_gold_400,
+  global_palette_blue_400,
+} from "@patternfly/react-tokens";
+import {
   EmbeddedEntity,
   InstanceAttributeModel,
   ParsedNumber,
@@ -11,12 +16,30 @@ import {
 } from "@/Slices/Orders/Core/Query";
 
 /**
+ * Enum representing header colors for different types of entities.
+ */
+const HeaderColor = {
+  CORE: global_palette_gold_400.var,
+  EMBEDDED: global_palette_blue_400.var,
+  RELATION: global_palette_purple_500.var,
+};
+
+/**
  * Enum representing types of actions possible to perform on entities.
  */
 enum ActionEnum {
   UPDATE = "update",
   CREATE = "create",
   DELETE = "delete",
+}
+
+/**
+ * Enum representing types of entities on the canvas.
+ */
+enum EntityType {
+  CORE = "core",
+  EMBEDDED = "embedded",
+  RELATION = "relation",
 }
 
 /**
@@ -175,6 +198,7 @@ interface ComposerEntityOptions {
 }
 
 export {
+  HeaderColor,
   ActionEnum,
   ColumnData,
   RouterOptions,
@@ -190,4 +214,5 @@ export {
   TypeEnum,
   EmbeddedEventEnum,
   ComposerEntityOptions,
+  EntityType,
 };

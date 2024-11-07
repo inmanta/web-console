@@ -8,6 +8,7 @@ import {
 } from "@patternfly/react-table";
 import { Row, ServiceModel, Sort } from "@/Core";
 import { useUrlStateWithExpansion } from "@/Data";
+import { words } from "@/UI";
 import { InstanceRow } from "./InstanceRow";
 import { InventoryTablePresenter } from "./Presenters";
 
@@ -69,7 +70,10 @@ export const InventoryTable: React.FC<Props> = ({
         width={getColumnWidth(column.apiName)}
         key={column.displayName}
         {...sortParams}
-        {...(column.apiName === "actions" && { "aria-hidden": true })}
+        {...(column.apiName === "actions" && {
+          "aria-hidden": true,
+          screenReaderText: words("common.emptyColumnHeader"),
+        })}
       >
         {column.apiName === "actions" ? "" : column.displayName}
       </Th>
@@ -80,7 +84,10 @@ export const InventoryTable: React.FC<Props> = ({
     <Table {...props}>
       <Thead>
         <Tr>
-          <Th aria-hidden />
+          <Th
+            aria-hidden
+            screenReaderText={words("common.emptyColumnHeader")}
+          />
           {heads}
         </Tr>
       </Thead>

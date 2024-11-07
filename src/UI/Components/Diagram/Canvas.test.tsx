@@ -136,7 +136,9 @@ describe("Canvas.tsx", () => {
 
     const header = screen.getByJointSelector("header");
 
-    expect(header).toHaveClass("-core");
+    expect(header.getAttribute("fill")).toContain(
+      "var(--pf-v5-global--palette--gold-400)",
+    );
   });
 
   it("renders shapes dict Value that can be viewed in dict Modal", async () => {
