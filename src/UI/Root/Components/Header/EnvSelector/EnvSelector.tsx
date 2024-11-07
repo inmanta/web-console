@@ -7,7 +7,6 @@ import {
   DropdownList,
   MenuToggle,
   MenuToggleElement,
-  TextContent,
   Tooltip,
 } from "@patternfly/react-core";
 import { UserCircleIcon } from "@patternfly/react-icons";

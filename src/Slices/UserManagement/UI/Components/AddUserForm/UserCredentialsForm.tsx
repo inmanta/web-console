@@ -12,7 +12,7 @@ import {
   ActionGroup,
   ValidatedOptions,
   Spinner,
-  Text,
+  Content,
 } from "@patternfly/react-core";
 import {
   ExclamationCircleIcon,
@@ -167,7 +167,7 @@ export const UserCredentialsForm: React.FC<UserCredentialsFormProps> = ({
           isBlock
           isDisabled={isPending}
         >
-          {isPending ? <Spinner size="md" /> : <Text>{submitButtonText}</Text>}
+          {isPending ? <Spinner size="md" /> : <Content component="p">{submitButtonText}</Content>}
         </Button>
       </ActionGroup>
     </Form>

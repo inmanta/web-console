@@ -76,7 +76,7 @@ function setup() {
               />
             }
             isNotificationDrawerExpanded={true}
-            header={
+            masthead={
               <Masthead>
                 <Badge onClick={toggleCallback} />
               </Masthead>

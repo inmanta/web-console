@@ -54,6 +54,6 @@ const StyledRRLink = styled(RRLink)<{ $variant?: "plain" | "default" }>`
   color: ${({ $variant }) =>
     $variant === "plain"
       ? "inherit"
-      : "var(--pf-v5-global--primary-color--100)"};
+      : "var(--pf-t--temp--dev--tbd)"/* CODEMODS: original v5 color was --pf-v5-global--primary-color--100 */};
   ${({ $variant }) => ($variant === "plain" ? "text-decoration:none" : "")};
 `;

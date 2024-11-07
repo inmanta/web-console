@@ -1,8 +1,8 @@
 import React from "react";
 import {
-  global_danger_color_100,
-  global_primary_color_100,
-  global_success_color_100,
+  t_temp_dev_tbd as global_danger_color_100 /* CODEMODS: you should update this color token */,
+  t_temp_dev_tbd as global_primary_color_100 /* CODEMODS: you should update this color token */,
+  t_temp_dev_tbd as global_success_color_100 /* CODEMODS: you should update this color token */,
 } from "@patternfly/react-tokens";
 import { words } from "@/UI";
 import { LegendBar, LegendItemDetails } from "@/UI/Components";

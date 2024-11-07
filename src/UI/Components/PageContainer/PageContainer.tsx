@@ -12,11 +12,11 @@ export const PageContainer: React.FC<React.PropsWithChildren<Props>> = ({
   ...props
 }) => (
   <>
-    <PageSection variant="light" padding={{ default: "noPadding" }}>
+    <PageSection hasBodyWrapper={false}  padding={{ default: "noPadding" }}>
       <PageTitle role="heading">{pageTitle}</PageTitle>
     </PageSection>
-    <PageSection
-      variant="light"
+    <PageSection hasBodyWrapper={false}
+      
       {...props}
       isFilled
       padding={{ default: "padding" }}

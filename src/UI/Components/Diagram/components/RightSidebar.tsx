@@ -3,7 +3,7 @@ import {
   Button,
   Flex,
   FlexItem,
-  TextContent,
+  Content,
   Title,
 } from "@patternfly/react-core";
 import styled from "styled-components";
@@ -210,9 +210,9 @@ export const RightSidebar: React.FC = () => {
           </FlexItem>
           {description && (
             <FlexItem>
-              <TextContent aria-label="service-description">
+              <Content aria-label="service-description">
                 {description}
-              </TextContent>
+              </Content>
             </FlexItem>
           )}
         </Flex>

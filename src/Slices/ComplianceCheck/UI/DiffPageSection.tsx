@@ -71,7 +71,7 @@ const DiffView: React.FC<{
 
   return (
     <>
-      <PageSection variant="light" hasShadowBottom>
+      <PageSection hasBodyWrapper={false}  hasShadowBottom>
         <DiffWizard.Controls
           data={diffData}
           refs={refs}
@@ -79,7 +79,7 @@ const DiffView: React.FC<{
           to={version}
         />
       </PageSection>
-      <PageSection isFilled>
+      <PageSection hasBodyWrapper={false} isFilled>
         <PagePadder>
           <RemoteDataView
             data={reportData}

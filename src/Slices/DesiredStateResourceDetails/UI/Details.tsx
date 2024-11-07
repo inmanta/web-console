@@ -12,7 +12,7 @@ interface Props {
 export const Details: React.FC<Props> = ({ details, ...props }) => (
   <div {...props}>
     <Title headingLevel="h2">{words("resources.attributes.title")}</Title>
-    <PageSection variant="light">
+    <PageSection hasBodyWrapper={false} >
       <AttributeList attributes={classifier.classify(details.attributes)} />
     </PageSection>
   </div>

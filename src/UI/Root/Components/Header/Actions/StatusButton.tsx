@@ -31,9 +31,7 @@ export const StatusButton: React.FC = () => {
         entryDelay={500}
       >
         <StyledLink pathname={routeManager.getUrl("Status", undefined)} envOnly>
-          <Button aria-label="ServerStatus action" variant="plain">
-            <StyledIcon color={statusColor} />
-          </Button>
+          <Button icon={<StyledIcon color={statusColor} />} aria-label="ServerStatus action" variant="plain" />
         </StyledLink>
       </Tooltip>
     </StyledToolbarItem>

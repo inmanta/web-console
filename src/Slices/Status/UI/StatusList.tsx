@@ -50,7 +50,7 @@ export const StatusList: React.FC<Props> = ({
           omit(status, ["product", "extensions", "slices", "features"]),
         )}
         icon={
-          <Icon style={{ color: "var(--pf-v5-global--palette--blue-500)" }}>
+          <Icon style={{ color: "var(--pf-t--temp--dev--tbd)"/* CODEMODS: original v5 color was --pf-v5-global--palette--blue-500 */ }}>
             <TagIcon />
           </Icon>
         }
@@ -59,7 +59,7 @@ export const StatusList: React.FC<Props> = ({
         name="API"
         details={[["url", apiUrl]]}
         icon={
-          <Icon style={{ color: "var(--pf-v5-global--primary-color--200)" }}>
+          <Icon style={{ color: "var(--pf-t--temp--dev--tbd)"/* CODEMODS: original v5 color was --pf-v5-global--primary-color--200 */ }}>
             <ClusterIcon />
           </Icon>
         }
@@ -68,7 +68,7 @@ export const StatusList: React.FC<Props> = ({
         name="Web Console"
         details={[["commit hash", featureManager.getCommitHash()]]}
         icon={
-          <Icon style={{ color: "var(--pf-v5-global--palette--blue-500)" }}>
+          <Icon style={{ color: "var(--pf-t--temp--dev--tbd)"/* CODEMODS: original v5 color was --pf-v5-global--palette--blue-500 */ }}>
             <DesktopIcon />
           </Icon>
         }
@@ -80,7 +80,7 @@ export const StatusList: React.FC<Props> = ({
           details={toDetails(omit(extension, "name"))}
           icon={
             <Icon
-              style={{ color: "var(--pf-v5-global--palette--light-blue-400)" }}
+              style={{ color: "var(--pf-t--temp--dev--tbd)"/* CODEMODS: original v5 color was --pf-v5-global--palette--light-blue-400 */ }}
             >
               <IntegrationIcon />
             </Icon>
@@ -94,7 +94,7 @@ export const StatusList: React.FC<Props> = ({
           name={slice.name}
           details={toDetails(slice.status)}
           icon={
-            <Icon style={{ color: "var(--pf-v5-global--palette--green-500)" }}>
+            <Icon style={{ color: "var(--pf-t--temp--dev--tbd)"/* CODEMODS: original v5 color was --pf-v5-global--palette--green-500 */ }}>
               <ModuleIcon />
             </Icon>
           }

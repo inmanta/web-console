@@ -1,18 +1,17 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
-  Button,
-  Chip,
-  ChipGroup,
-  MenuToggle,
-  MenuToggleElement,
-  Select,
-  SelectList,
-  SelectOption,
-  SelectOptionProps,
-  TextInputGroup,
-  TextInputGroupMain,
-  TextInputGroupUtilities,
-} from "@patternfly/react-core";
+	Label, LabelGroup, Button,
+	MenuToggle,
+	MenuToggleElement,
+	Select,
+	SelectList,
+	SelectOption,
+	SelectOptionProps,
+	TextInputGroup,
+	TextInputGroupMain,
+	TextInputGroupUtilities
+} from '@patternfly/react-core';
+
 import { TimesIcon } from "@patternfly/react-icons";
 import { checkIfOptionMatchInput } from "../SingleTextSelect";
 
@@ -217,25 +216,29 @@ export const MultiTextSelect: React.FC<Props> = ({
             disabled={props.isDisabled}
           >
             {hasChips && (
-              <ChipGroup aria-label="Current selections" numChips={0}>
+              <LabelGroup aria-label="Current selections" numChips={0}>
                 {selected.map((selection) => (
-                  <Chip
+                  <Label variant="outline"
                     disabled={props.isDisabled}
                     key={selection}
-                    onClick={(ev) => {
+                    onClose={(ev) => {
                       ev.stopPropagation();
                       onSelect(selection);
                     }}
                   >
                     {getDisplayValue(selection)}
-                  </Chip>
+                  </Label>
                 ))}
-              </ChipGroup>
+              </LabelGroup>
             )}
           </TextInputGroupMain>
           <TextInputGroupUtilities>
             {selected.length > 0 && (
-              <Button
+              <Button icon={props.toggleIcon ? (
+                  props.toggleIcon
+                ) : (
+                  <TimesIcon aria-hidden />
+                )}
                 disabled={props.isDisabled}
                 variant="plain"
                 onClick={() => {
@@ -243,13 +246,7 @@ export const MultiTextSelect: React.FC<Props> = ({
                   textInputRef?.current?.focus();
                 }}
                 aria-label="Clear input value"
-              >
-                {props.toggleIcon ? (
-                  props.toggleIcon
-                ) : (
-                  <TimesIcon aria-hidden />
-                )}
-              </Button>
+               />
             )}
           </TextInputGroupUtilities>
         </TextInputGroup>

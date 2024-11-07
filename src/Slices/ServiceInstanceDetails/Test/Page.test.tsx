@@ -498,7 +498,7 @@ describe("ServiceInstanceDetailsPage", () => {
     expect(rowsVersion3).toHaveLength(3);
 
     expect(rowsVersion3[0]).toHaveStyle(
-      "background-color: var(--pf-v5-global--palette--gold-50)",
+      "var(--pf-t--temp--dev--tbd)"/* CODEMODS: original v5 color was --pf-v5-global--palette--gold-50 */,
     );
     expect(rowsVersion3[1]).not.toHaveStyle("background-color: inherit");
     expect(rowsVersion3[2]).not.toHaveStyle("background-color: inherit");

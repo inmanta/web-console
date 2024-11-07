@@ -168,7 +168,9 @@ export const CellWithCopyExpert: React.FC<Props> = ({
         />
       )}
       {environmentModifier.useIsExpertModeEnabled() && (
-        <Button
+        <Button icon={<Icon status="danger">
+            {isInputOpen ? <TimesIcon /> : <PencilAltIcon />}
+          </Icon>}
           variant="link"
           isDanger
           onClick={() => {
@@ -176,9 +178,7 @@ export const CellWithCopyExpert: React.FC<Props> = ({
             setIsInputOpen(!isInputOpen);
           }}
         >
-          <Icon status="danger">
-            {isInputOpen ? <TimesIcon /> : <PencilAltIcon />}
-          </Icon>
+          
         </Button>
       )}
       {isInputOpen ? (

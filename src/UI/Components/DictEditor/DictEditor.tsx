@@ -116,7 +116,7 @@ const Row: React.FC<RowProps> = ({
         />
       </SlimTd>
       <SlimTd>
-        <Button
+        <Button icon={<TrashAltIcon />}
           onClick={onClear}
           variant={isDeleteable ? "link" : "plain"}
           isDanger
@@ -124,7 +124,7 @@ const Row: React.FC<RowProps> = ({
           isDisabled={!isDeleteable}
           aria-label="DeleteEntryAction"
         >
-          <TrashAltIcon />
+          
         </Button>
       </SlimTd>
     </Tr>

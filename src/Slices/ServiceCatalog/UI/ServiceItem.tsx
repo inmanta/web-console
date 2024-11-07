@@ -7,9 +7,8 @@ import {
   DataListItemCells,
   DataListCell,
   DataListAction,
-  Text,
   Title,
-  TextVariants,
+  ContentVariants,
   Flex,
   Dropdown,
   MenuToggleElement,
@@ -118,7 +117,7 @@ export const ServiceItem: React.FC<Props> = ({ service }) => {
               {service.description && (
                 <div id={`${service.name}-description`}>
                   <Spacer />
-                  <StyledText component={TextVariants.small}>
+                  <StyledText component={ContentVariants.small}>
                     {service.description}
                   </StyledText>
                   <Spacer />
@@ -131,7 +130,7 @@ export const ServiceItem: React.FC<Props> = ({ service }) => {
           aria-labelledby={service.name + "-inventory"}
           id={service.name + "-inventory"}
           aria-label="Inventory Link"
-          isPlainButtonAction
+          
         >
           <Link
             to={{
@@ -148,7 +147,7 @@ export const ServiceItem: React.FC<Props> = ({ service }) => {
           aria-labelledby={service.name + "-action"}
           id={service.name + "-action"}
           aria-label="Actions"
-          isPlainButtonAction
+          
         >
           <Dropdown
             toggle={(toggleRef: React.Ref<MenuToggleElement>) => (

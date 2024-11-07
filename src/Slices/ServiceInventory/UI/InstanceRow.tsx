@@ -123,5 +123,5 @@ const ActionWrapper = styled.span`
 
 const StyledRow = styled(Tr)<{ $deleted: boolean }>`
   ${(p) =>
-    p.$deleted ? "background-color: var(--pf-v5-global--palette--red-50);" : ""}
+    p.$deleted ? "var(--pf-t--temp--dev--tbd)"/* CODEMODS: original v5 color was --pf-v5-global--palette--red-50 */ : ""}
 `;

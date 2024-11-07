@@ -1,5 +1,5 @@
 import { shapes } from "@inmanta/rappid";
-import { global_palette_white } from "@patternfly/react-tokens";
+import { t_temp_dev_tbd as global_palette_white /* CODEMODS: you should update this color token */ } from "@patternfly/react-tokens";
 import { v4 as uuidv4 } from "uuid";
 import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from "@/Core";
 import { HeaderColor } from "../interfaces";

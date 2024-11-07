@@ -1,11 +1,13 @@
 import React, { useContext, useState } from "react";
 import {
-  ClipboardCopyButton,
-  CodeBlock,
-  CodeBlockAction,
-  CodeBlockCode,
-  Modal,
-} from "@patternfly/react-core";
+	ClipboardCopyButton,
+	CodeBlock,
+	CodeBlockAction,
+	CodeBlockCode
+} from '@patternfly/react-core';
+import {
+	Modal
+} from '@patternfly/react-core/deprecated';
 import { CanvasContext } from "../Context/Context";
 
 /**

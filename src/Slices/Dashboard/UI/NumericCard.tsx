@@ -6,7 +6,7 @@ import {
   CardTitle,
   Flex,
   FlexItem,
-  Text,
+  Content,
   Title,
 } from "@patternfly/react-core";
 import styled from "styled-components";
@@ -39,7 +39,7 @@ export const NumericCard = ({ metrics }: { metrics: Metric }) => {
         </Flex>
       </CardHeader>
       <CardBody>
-        <Text
+        <Content component="p"
           style={{
             fontWeight: 500,
             fontSize: lastData === null ? 40 : 60,
@@ -47,7 +47,7 @@ export const NumericCard = ({ metrics }: { metrics: Metric }) => {
           }}
         >
           {lastData == null ? "no data" : Math.round(lastData)}
-        </Text>
+        </Content>
       </CardBody>
     </StyledCard>
   );

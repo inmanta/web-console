@@ -42,7 +42,7 @@ export const ExpertBanner: React.FC<Props> = ({ environmentId }) => {
       )}
       <Banner
         isSticky
-        variant="red"
+        color="red"
         id="expert-mode-banner"
         aria-label="expertModeActive"
       >

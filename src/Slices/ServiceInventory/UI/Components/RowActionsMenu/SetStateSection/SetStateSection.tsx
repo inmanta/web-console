@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Button, MenuItem, Text } from "@patternfly/react-core";
+import { Button, MenuItem, Content } from "@patternfly/react-core";
 import { Maybe, VersionedServiceInstanceIdentifier } from "@/Core";
 import { ActionDisabledTooltip } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
@@ -94,12 +94,12 @@ export const SetStateSection: React.FC<Props> = ({
         </Button>,
       ],
       content: (
-        <Text>
+        <Content component="p">
           {words("inventory.statustab.confirmMessage")(
             instance_identity,
             targetState,
           )}
-        </Text>
+        </Content>
       ),
     });
   };

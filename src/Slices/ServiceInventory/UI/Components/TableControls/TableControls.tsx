@@ -51,9 +51,7 @@ export const TableControls: React.FC<Props> = ({
       variant="secondary"
       isExpanded={isOpen}
       onClick={onToggleClick}
-      splitButtonOptions={{
-        variant: "action",
-        items: [
+      splitButtonItems={[
           <Link
             key="main-action"
             pathname={routeManager.getUrl("CreateInstance", {
@@ -69,8 +67,7 @@ export const TableControls: React.FC<Props> = ({
               <PlusIcon /> {words("inventory.addInstance.button")}
             </MenuToggleAction>
           </Link>,
-        ],
-      }}
+        ]}
       aria-label="AddInstanceToggle"
     />
   );
@@ -79,7 +76,7 @@ export const TableControls: React.FC<Props> = ({
     <Toolbar clearAllFilters={() => setFilter({})}>
       <ToolbarContent>
         <FilterWidget filter={filter} setFilter={setFilter} states={states} />
-        <ToolbarGroup align={{ default: "alignRight" }}>
+        <ToolbarGroup align={{ default: "alignEnd" }}>
           {composerEnabled ? (
             <ToolbarItem>
               <Dropdown
@@ -112,8 +109,8 @@ export const TableControls: React.FC<Props> = ({
                 })}
                 search={location.search}
               >
-                <Button id="add-instance-button">
-                  <PlusIcon /> {words("inventory.addInstance.button")}
+                <Button icon={<PlusIcon />} id="add-instance-button">
+                   {words("inventory.addInstance.button")}
                 </Button>
               </Link>
             </ToolbarItem>
