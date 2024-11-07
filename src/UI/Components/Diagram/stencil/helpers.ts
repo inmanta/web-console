@@ -1,6 +1,8 @@
 import { shapes } from "@inmanta/rappid";
+import { global_palette_white } from "@patternfly/react-tokens";
 import { v4 as uuidv4 } from "uuid";
 import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from "@/Core";
+import { HeaderColor } from "../interfaces";
 
 /**
  * It recursively goes through embedded entities in the service model or embedded entity and creates stencil elements for each of them.
@@ -67,14 +69,14 @@ export const createStencilElement = (
         width: 7,
         height: 40,
         x: 233,
-        fill: isEmbedded ? "#0066cc" : "#6753AC",
+        fill: isEmbedded ? HeaderColor.EMBEDDED : HeaderColor.RELATION,
         stroke: "none",
       },
       bodyTwo: {
         class: "bodyTwo_" + name,
         width: 240,
         height: 40,
-        fill: "#FFFFFF",
+        fill: global_palette_white.var,
         stroke: "none",
       },
       label: {

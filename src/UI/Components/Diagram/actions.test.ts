@@ -36,6 +36,9 @@ describe("createComposerEntity", () => {
     expect(coreEntity.get("holderName")).toBe(undefined);
     expect(coreEntity.get("isEmbedded")).toBe(undefined);
     expect(coreEntity.get("isCore")).toBe(true);
+    expect(coreEntity.attr("header/fill")).toBe(
+      "var(--pf-v5-global--palette--gold-400)",
+    );
     expect(coreEntity.get("isInEditMode")).toBe(false);
   });
 
@@ -51,8 +54,12 @@ describe("createComposerEntity", () => {
     expect(embeddedEntity.get("holderName")).toBe(containerModel.name);
     expect(embeddedEntity.get("isEmbedded")).toBe(true);
     expect(embeddedEntity.get("isCore")).toBe(undefined);
+    expect(embeddedEntity.attr("header/fill")).toBe(
+      "var(--pf-v5-global--palette--blue-400)",
+    );
     expect(embeddedEntity.get("isInEditMode")).toBe(false);
   });
+
   it("creates a new entity with inster-service relations", () => {
     const childEntity = createComposerEntity({
       serviceModel: childModel,
@@ -64,6 +71,9 @@ describe("createComposerEntity", () => {
     expect(childEntity.get("isEmbedded")).toBe(undefined);
     expect(childEntity.get("isCore")).toBe(undefined);
     expect(childEntity.get("isInEditMode")).toBe(false);
+    expect(childEntity.attr("header/fill")).toBe(
+      "var(--pf-v5-global--palette--purple-500)",
+    );
     expect(childEntity.get("relatedTo")).toMatchObject(new Map());
   });
 });

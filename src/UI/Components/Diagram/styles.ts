@@ -171,22 +171,6 @@ export const CanvasWrapper = styled.div`
   .joint-entityBlock-body {
     stroke: var(--pf-v5-global--BackgroundColor--100);
   }
-  .joint-entityBlock-header {
-    fill: var(--pf-v5-global--active-color--100);
-    stroke: var(--pf-v5-global--active-color--100);
-
-    &.-embedded {
-      fill: var(--pf-v5-global--palette--cyan-300);
-      stroke: var(--pf-v5-global--palette--cyan-300);
-    }
-    &.-core {
-      fill: var(--pf-v5-global--warning-color--100);
-      stroke: var(--pf-v5-global--warning-color--100);
-    }
-  }
-  .joint-entityBlock-header-label {
-    fill: var(--pf-v5-global--Color--light-100);
-  }
   .joint-entityBlock-itemLabels {
     fill: var(--pf-v5-global--Color--100);
   }
