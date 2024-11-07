@@ -38,8 +38,8 @@ export const FreeTextFilter: React.FC<Props> = ({
 
   return (
     <ToolbarFilter
-      chips={searchEntries ? searchEntries : []}
-      deleteChip={removeChip}
+      labels={searchEntries ? searchEntries : []}
+      deleteLabel={removeChip}
       categoryName={filterPropertyName}
       showToolbarItem={!isHidden}
     >
@@ -57,12 +57,12 @@ export const FreeTextFilter: React.FC<Props> = ({
           />
         </InputGroupItem>
         <InputGroupItem>
-          <Button
+          <Button icon={<SearchIcon />}
             variant={ButtonVariant.control}
             aria-label="submit search"
             onClick={onTextInput}
           >
-            <SearchIcon />
+            
           </Button>
         </InputGroupItem>
       </InputGroup>

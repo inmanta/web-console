@@ -29,7 +29,7 @@ export const Frame: React.FC<FrameProps> = ({
 }) => {
   const DoneState = () => (
     <Icon aria-label="done-state" role="img" size="lg">
-      <CheckCircleIcon color="var(--pf-v5-global--success-color--100)" />
+      <CheckCircleIcon color="var(--pf-t--temp--dev--tbd)"/* CODEMODS: original v5 color was --pf-v5-global--success-color--100 */ />
     </Icon>
   );
 
@@ -39,7 +39,7 @@ export const Frame: React.FC<FrameProps> = ({
 
   const ErrorState = () => (
     <Icon aria-label="error-state" role="img" size="lg">
-      <ExclamationCircleIcon color="var(--pf-v5-global--danger-color--100)" />
+      <ExclamationCircleIcon color="var(--pf-t--temp--dev--tbd)"/* CODEMODS: original v5 color was --pf-v5-global--danger-color--100 */ />
     </Icon>
   );
 

@@ -9,7 +9,7 @@ import {
   Spinner,
   ToolbarGroup,
 } from "@patternfly/react-core";
-import { global_Color_100 } from "@patternfly/react-tokens";
+import { t_temp_dev_tbd as global_Color_100 /* CODEMODS: you should update this color token */ } from "@patternfly/react-tokens";
 import styled from "styled-components";
 import { Maybe, RemoteData } from "@/Core";
 import { MomentDatePresenter } from "@/UI/Utils";
@@ -42,7 +42,7 @@ export const SelectReportAction: React.FC<Props> = ({
   };
 
   return (
-    <ToolbarGroup align={{ default: "alignLeft" }}>
+    <ToolbarGroup align={{ default: "alignStart" }}>
       <Picker
         reportsData={reportsData}
         selectedReport={selectedReport}

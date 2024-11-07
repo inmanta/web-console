@@ -48,7 +48,7 @@ export const View: React.FC<Diff.Identifiers> = ({ from, to }) => {
       <StyledPageSection variant="light">
         <PageTitle>{words("desiredState.compare.title")}</PageTitle>
       </StyledPageSection>
-      <PageSection variant="light">
+      <PageSection hasBodyWrapper={false} >
         <ToolBarContainer>
           <ToolbarContent style={{ padding: 0 }}>
             <DiffWizard.DiffPageFilter
@@ -60,7 +60,7 @@ export const View: React.FC<Diff.Identifiers> = ({ from, to }) => {
           </ToolbarContent>
         </ToolBarContainer>
       </PageSection>
-      <PageSection variant="light" hasShadowBottom>
+      <PageSection hasBodyWrapper={false}  hasShadowBottom>
         <DiffWizard.Controls
           data={filteredData}
           refs={refs}
@@ -68,7 +68,7 @@ export const View: React.FC<Diff.Identifiers> = ({ from, to }) => {
           to={to}
         />
       </PageSection>
-      <PageSection isFilled>
+      <PageSection hasBodyWrapper={false} isFilled>
         <PagePadder>
           <RemoteDataView
             data={filteredData}

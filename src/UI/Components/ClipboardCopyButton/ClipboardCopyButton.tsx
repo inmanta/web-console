@@ -36,7 +36,7 @@ export const ClipboardCopyButton: React.FC<Props> = ({
 
   return (
     <WidthLimitedTooltip content={<div>{tooltipText}</div>} entryDelay={200}>
-      <Button
+      <Button icon={<CopyIcon />}
         {...props}
         variant={variant || "plain"}
         aria-label="Copy to clipboard"
@@ -44,7 +44,7 @@ export const ClipboardCopyButton: React.FC<Props> = ({
         onClick={onClick}
         isDisabled={isDisabled}
       >
-        <CopyIcon />
+        
       </Button>
     </WidthLimitedTooltip>
   );

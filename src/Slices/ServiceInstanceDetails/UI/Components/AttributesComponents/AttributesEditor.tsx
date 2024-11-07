@@ -5,7 +5,7 @@ import {
   FlexItem,
   FormSelect,
   FormSelectOption,
-  Text,
+  Content,
 } from "@patternfly/react-core";
 import styled from "styled-components";
 import { v4 as uuidv4 } from "uuid";
@@ -193,9 +193,9 @@ export const AttributesEditor: React.FC<Props> = ({
         onCancel={() => setIsModalOpen(false)}
         isPending={isPending}
       >
-        <Text>
+        <Content component="p">
           {words("instanceDetails.expert.editModal.message")(selectedSet)}
-        </Text>
+        </Content>
       </ConfirmationModal>
       {errorMessage && (
         <ToastAlertMessage

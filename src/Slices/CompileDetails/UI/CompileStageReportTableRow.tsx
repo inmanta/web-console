@@ -116,7 +116,7 @@ const StyledBody = styled(Tbody)<{
   $failed?: boolean;
 }>`
   ${({ $failed }) =>
-    $failed ? "background-color: var(--pf-v5-global--palette--red-50)" : ""};
+    $failed ? "var(--pf-t--temp--dev--tbd)"/* CODEMODS: original v5 color was --pf-v5-global--palette--red-50 */ : ""};
 `;
 
 const PaddedDescriptionList = styled(DescriptionList)`

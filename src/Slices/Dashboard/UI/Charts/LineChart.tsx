@@ -1,19 +1,21 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
-  Chart,
-  ChartAxis,
-  ChartGroup,
-  ChartLine,
-  ChartLegendTooltip,
-  createContainer,
-  ChartStack,
-  ChartArea,
-  ChartLabel,
-  ChartLabelProps,
-  ChartScatter,
-  ChartLegend,
-  ChartAxisProps,
-} from "@patternfly/react-charts";
+	ChartLabelProps,
+	ChartAxisProps
+} from '@patternfly/react-charts';
+import {
+	Chart,
+	ChartAxis,
+	ChartGroup,
+	ChartLine,
+	ChartLegendTooltip,
+	createContainer,
+	ChartStack,
+	ChartArea,
+	ChartLabel,
+	ChartScatter,
+	ChartLegend
+} from '@patternfly/react-charts/victory';
 import styled, { css } from "styled-components";
 import { LineChartProps } from "../../Core/Domain";
 import { interpolateMetrics } from "../helper";

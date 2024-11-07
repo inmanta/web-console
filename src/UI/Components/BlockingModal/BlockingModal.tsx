@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Flex, FlexItem, Modal, Spinner, Text } from "@patternfly/react-core";
+import {
+	Flex,
+	FlexItem,
+	Spinner,
+	
+} from '@patternfly/react-core';
+import {
+	Modal
+} from '@patternfly/react-core/deprecated';
 import styled from "styled-components";
 import { words } from "@/UI/words";
 

@@ -1,9 +1,9 @@
 import {
-  global_danger_color_100,
-  global_Color_200,
-  global_info_color_100,
-  global_success_color_100,
-  global_warning_color_100,
+  t_temp_dev_tbd as global_danger_color_100 /* CODEMODS: you should update this color token */,
+  t_temp_dev_tbd as global_Color_200 /* CODEMODS: you should update this color token */,
+  t_temp_dev_tbd as global_info_color_100 /* CODEMODS: you should update this color token */,
+  t_temp_dev_tbd as global_success_color_100 /* CODEMODS: you should update this color token */,
+  t_temp_dev_tbd as global_warning_color_100 /* CODEMODS: you should update this color token */,
 } from "@patternfly/react-tokens";
 import { Severity } from "@S/Notification/Core/Domain";
 

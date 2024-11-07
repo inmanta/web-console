@@ -19,16 +19,16 @@ export const labelColorConfig: Record<
 };
 
 export const colorConfig: Record<Resource.Status, string> = {
-  [Resource.Status.deployed]: "var(--pf-v5-global--success-color--100)",
-  [Resource.Status.skipped]: "var(--pf-v5-global--palette--cyan-100)",
+  [Resource.Status.deployed]: "var(--pf-t--temp--dev--tbd)"/* CODEMODS: original v5 color was --pf-v5-global--success-color--100 */,
+  [Resource.Status.skipped]: "var(--pf-t--temp--dev--tbd)"/* CODEMODS: original v5 color was --pf-v5-global--palette--cyan-100 */,
   [Resource.Status.skipped_for_undefined]:
-    "var(--pf-v5-global--palette--cyan-100)",
-  [Resource.Status.cancelled]: "var(--pf-v5-global--palette--cyan-100)",
-  [Resource.Status.failed]: "var(--pf-v5-global--danger-color--100)",
-  [Resource.Status.unavailable]: "var(--pf-v5-global--warning-color--100)",
-  [Resource.Status.undefined]: "var(--pf-v5-global--warning-color--100)",
-  [Resource.Status.deploying]: "var(--pf-v5-global--info-color--100)",
-  [Resource.Status.available]: "var(--pf-v5-global--disabled-color--200)",
-  [Resource.Status.dry]: "var(--pf-v5-global--palette--purple-300)",
-  [Resource.Status.orphaned]: "var(--pf-v5-global--palette--purple-300)",
+    "var(--pf-t--temp--dev--tbd)"/* CODEMODS: original v5 color was --pf-v5-global--palette--cyan-100 */,
+  [Resource.Status.cancelled]: "var(--pf-t--temp--dev--tbd)"/* CODEMODS: original v5 color was --pf-v5-global--palette--cyan-100 */,
+  [Resource.Status.failed]: "var(--pf-t--temp--dev--tbd)"/* CODEMODS: original v5 color was --pf-v5-global--danger-color--100 */,
+  [Resource.Status.unavailable]: "var(--pf-t--temp--dev--tbd)"/* CODEMODS: original v5 color was --pf-v5-global--warning-color--100 */,
+  [Resource.Status.undefined]: "var(--pf-t--temp--dev--tbd)"/* CODEMODS: original v5 color was --pf-v5-global--warning-color--100 */,
+  [Resource.Status.deploying]: "var(--pf-t--temp--dev--tbd)"/* CODEMODS: original v5 color was --pf-v5-global--info-color--100 */,
+  [Resource.Status.available]: "var(--pf-t--temp--dev--tbd)"/* CODEMODS: original v5 color was --pf-v5-global--disabled-color--200 */,
+  [Resource.Status.dry]: "var(--pf-t--temp--dev--tbd)"/* CODEMODS: original v5 color was --pf-v5-global--palette--purple-300 */,
+  [Resource.Status.orphaned]: "var(--pf-t--temp--dev--tbd)"/* CODEMODS: original v5 color was --pf-v5-global--palette--purple-300 */,
 };

@@ -84,7 +84,7 @@ export const TextFormInput: React.FC<Props> = ({
       isRequired={!isOptional}
       fieldId={attributeName}
       label={attributeName}
-      labelIcon={
+      labelHelp={
         typeHint ? (
           <Popover bodyContent={<div>{typeHint}</div>}>
             <button

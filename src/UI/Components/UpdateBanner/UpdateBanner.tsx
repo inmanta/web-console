@@ -25,7 +25,7 @@ export const UpdateBanner: React.FunctionComponent<Props> = (props) => {
 
   const banner = (
     <React.Fragment>
-      <Banner isSticky variant="gold" aria-label="newVersionAvailable">
+      <Banner isSticky color="yellow" aria-label="newVersionAvailable">
         <Flex justifyContent={{ default: "justifyContentCenter" }}>
           {words("banner.updateBanner")(currentVersion)}
         </Flex>

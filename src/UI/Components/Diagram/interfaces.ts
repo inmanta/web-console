@@ -1,8 +1,8 @@
 import { dia, g } from "@inmanta/rappid";
 import {
-  global_palette_purple_500,
-  global_palette_gold_400,
-  global_palette_blue_400,
+  t_temp_dev_tbd as global_palette_purple_500 /* CODEMODS: you should update this color token */,
+  t_temp_dev_tbd as global_palette_gold_400 /* CODEMODS: you should update this color token */,
+  t_temp_dev_tbd as global_palette_blue_400 /* CODEMODS: you should update this color token */,
 } from "@patternfly/react-tokens";
 import {
   EmbeddedEntity,

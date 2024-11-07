@@ -112,18 +112,18 @@ export const IntRangeFilter: React.FC<Props> = ({
         )}
         <FlexItem>
           <ToolbarFilter
-            chips={getChips(intRangeFilters)}
-            deleteChip={removeChip}
+            labels={getChips(intRangeFilters)}
+            deleteLabel={removeChip}
             categoryName={categoryName}
             showToolbarItem={isVisible}
           >
-            <Button
+            <Button icon={<SearchIcon />}
               onClick={onApply}
               isDisabled={!(from || to)}
               aria-label={`Apply ${categoryName} filter`}
               variant="tertiary"
             >
-              <SearchIcon />
+              
             </Button>
           </ToolbarFilter>
         </FlexItem>

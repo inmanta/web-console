@@ -1,5 +1,5 @@
 import { dia, ui } from "@inmanta/rappid";
-import { global_palette_white } from "@patternfly/react-tokens";
+import { t_temp_dev_tbd as global_palette_white /* CODEMODS: you should update this color token */ } from "@patternfly/react-tokens";
 import { ServiceModel } from "@/Core";
 import {
   CreateModifierHandler,

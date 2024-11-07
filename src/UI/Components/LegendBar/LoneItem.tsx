@@ -1,7 +1,7 @@
 import React from "react";
 import {
-  global_Color_100,
-  global_palette_blue_50,
+  t_temp_dev_tbd as global_Color_100 /* CODEMODS: you should update this color token */,
+  t_temp_dev_tbd as global_palette_blue_50 /* CODEMODS: you should update this color token */,
 } from "@patternfly/react-tokens";
 import { Container } from "./Item";
 

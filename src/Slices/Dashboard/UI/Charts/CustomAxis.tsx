@@ -1,5 +1,10 @@
 import React from "react";
-import { ChartAxis, ChartAxisProps } from "@patternfly/react-charts";
+import {
+	ChartAxisProps
+} from '@patternfly/react-charts';
+import {
+	ChartAxis
+} from '@patternfly/react-charts/victory';
 
 interface CustomAxisProps extends ChartAxisProps {
   style: {

@@ -35,8 +35,8 @@ export const VersionFilter: React.FC<Props> = ({
 
   return (
     <ToolbarFilter
-      chips={versions}
-      deleteChip={removeChip}
+      labels={versions}
+      deleteLabel={removeChip}
       categoryName="Version"
       showToolbarItem={isVisible}
     >
@@ -54,12 +54,12 @@ export const VersionFilter: React.FC<Props> = ({
           />
         </InputGroupItem>
         <InputGroupItem>
-          <Button
+          <Button icon={<SearchIcon />}
             variant={ButtonVariant.control}
             aria-label="search button for search input"
             onClick={onIdInput}
           >
-            <SearchIcon />
+            
           </Button>
         </InputGroupItem>
       </InputGroup>

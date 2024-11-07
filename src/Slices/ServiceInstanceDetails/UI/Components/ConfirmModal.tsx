@@ -1,5 +1,11 @@
 import React from "react";
-import { Modal, ModalVariant, Button } from "@patternfly/react-core";
+import {
+	Button
+} from '@patternfly/react-core';
+import {
+	Modal,
+	ModalVariant
+} from '@patternfly/react-core/deprecated';
 import { words } from "@/UI";
 import { Spinner } from "@/UI/Components";
 

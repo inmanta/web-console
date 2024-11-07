@@ -1,5 +1,8 @@
 import React from "react";
-import { ChartPie, ChartThemeColor } from "@patternfly/react-charts";
+import {
+	ChartPie,
+	ChartThemeColor
+} from '@patternfly/react-charts/victory';
 
 interface Props {
   name: string;

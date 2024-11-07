@@ -137,7 +137,7 @@ describe("Canvas.tsx", () => {
     const header = screen.getByJointSelector("header");
 
     expect(header.getAttribute("fill")).toContain(
-      "var(--pf-v5-global--palette--gold-400)",
+      "var(--pf-t--temp--dev--tbd)"/* CODEMODS: original v5 color was --pf-v5-global--palette--gold-400 */,
     );
   });
 

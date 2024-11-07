@@ -2,10 +2,10 @@ import React, { useContext } from "react";
 import {
   Toolbar,
   Masthead,
-  MastheadBrand,
+  MastheadLogo,
   MastheadContent,
   MastheadMain,
-  MastheadToggle,
+  MastheadToggle, MastheadBrand,
   PageToggleButton,
   ToolbarContent,
   ToolbarGroup,
@@ -51,7 +51,8 @@ export const Header: React.FC<Props> = ({ noEnv, onNotificationsToggle }) => {
   return (
     <>
       <Masthead id="page-header">
-        <MastheadToggle>
+        
+        <MastheadMain><MastheadToggle>
           <PageToggleButton
             variant="plain"
             aria-label="Main Navigation"
@@ -60,8 +61,7 @@ export const Header: React.FC<Props> = ({ noEnv, onNotificationsToggle }) => {
             <BarsIcon />
           </PageToggleButton>
         </MastheadToggle>
-        <MastheadMain>
-          <MastheadBrand
+          <MastheadBrand data-codemods><MastheadLogo data-codemods
             href={
               noEnv
                 ? routeManager.getUrl("Home", undefined)
@@ -70,15 +70,15 @@ export const Header: React.FC<Props> = ({ noEnv, onNotificationsToggle }) => {
             }
           >
             <img src={logo} alt="Inmanta Logo" aria-label="Inmanta Logo" />
-          </MastheadBrand>
+          </MastheadLogo></MastheadBrand>
         </MastheadMain>
         <MastheadContent>
           <Toolbar id="uncontrolled-toolbar" isFullHeight isStatic>
             <ToolbarContent>
               <ToolbarGroup
-                variant="icon-button-group"
-                align={{ default: "alignRight" }}
-                spacer={{ default: "spacerNone", md: "spacerMd" }}
+                variant="action-group-plain"
+                align={{ default: "alignEnd" }}
+                gap={{ default: "gapNone", md: "gapMd" }}
               >
                 {!noEnv && (
                   <StyledToolbarItem>

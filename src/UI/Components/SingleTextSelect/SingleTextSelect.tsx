@@ -271,7 +271,7 @@ export const SingleTextSelect: React.FC<Props> = ({
 
         <TextInputGroupUtilities>
           {!!inputValue && (
-            <Button
+            <Button icon={props.toggleIcon ? props.toggleIcon : <TimesIcon aria-hidden />}
               variant="plain"
               onClick={() => {
                 setSelected("");
@@ -281,9 +281,7 @@ export const SingleTextSelect: React.FC<Props> = ({
               }}
               aria-label="Clear input value"
               disabled={props.isDisabled}
-            >
-              {props.toggleIcon ? props.toggleIcon : <TimesIcon aria-hidden />}
-            </Button>
+             />
           )}
         </TextInputGroupUtilities>
       </TextInputGroup>

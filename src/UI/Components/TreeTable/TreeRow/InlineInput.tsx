@@ -72,15 +72,15 @@ const InlineInput = ({
     <>
       {" "}
       {input}
-      <Button
+      <Button icon={<Icon status="danger">
+          <CheckIcon />
+        </Icon>}
         data-testid="inline-submit"
         variant="link"
         isDanger
         onClick={toggleModal}
       >
-        <Icon status="danger">
-          <CheckIcon />
-        </Icon>
+        
       </Button>
     </>
   );

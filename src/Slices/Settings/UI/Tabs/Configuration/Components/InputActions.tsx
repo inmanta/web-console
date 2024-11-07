@@ -39,11 +39,11 @@ const InputUpdateAction: React.FC<{
 const InputResetAction: React.FC<{
   info: Info<"reset">;
 }> = ({ info }) => (
-  <Button
+  <Button icon={<UndoIcon />}
     variant="tertiary"
     aria-label="ResetAction"
     onClick={() => info.reset()}
   >
-    <UndoIcon /> Reset
+     Reset
   </Button>
 );

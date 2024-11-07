@@ -1,11 +1,14 @@
 import React, { useContext } from "react";
-import { ChartDonut, ChartLegend } from "@patternfly/react-charts";
 import {
-  global_danger_color_100,
-  global_info_color_100,
-  global_palette_black_300,
-  global_success_color_100,
-  global_warning_color_100,
+	ChartDonut,
+	ChartLegend
+} from '@patternfly/react-charts/victory';
+import {
+  t_temp_dev_tbd as global_danger_color_100 /* CODEMODS: you should update this color token */,
+  t_temp_dev_tbd as global_info_color_100 /* CODEMODS: you should update this color token */,
+  t_temp_dev_tbd as global_palette_black_300 /* CODEMODS: you should update this color token */,
+  t_temp_dev_tbd as global_success_color_100 /* CODEMODS: you should update this color token */,
+  t_temp_dev_tbd as global_warning_color_100 /* CODEMODS: you should update this color token */,
 } from "@patternfly/react-tokens";
 import { InstancesByLabel } from "@/Core";
 import { ServiceInventoryContext } from "@/Slices/ServiceInventory/UI/ServiceInventory";

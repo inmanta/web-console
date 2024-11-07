@@ -84,18 +84,18 @@ export const DocumentationTabContent: React.FC<Props> = ({
     <TabContentWrapper id="documentation">
       <Accordion asDefinitionList togglePosition="start">
         {sections.map((section, index) => (
-          <AccordionItem key={section.title}>
+          <AccordionItem isExpanded={expanded === index} key={section.title}>
             <AccordionToggle
               onClick={() => {
                 onToggle(index);
               }}
-              isExpanded={expanded === index}
+              
               id={`${section.title}-accordion-toggle`}
             >
               <DynamicFAIcon icon={section.iconName} /> {section.title}
             </AccordionToggle>
             <AccordionContent
-              isHidden={expanded !== index}
+              
               id={`${section.title}-accordion-toggle`}
             >
               <MarkdownCard

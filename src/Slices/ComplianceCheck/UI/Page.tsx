@@ -104,7 +104,7 @@ export const View: React.FC<Props> = ({ version }) => {
       <StyledPageSection variant="light">
         <PageTitle>{words("desiredState.complianceCheck.title")}</PageTitle>
       </StyledPageSection>
-      <PageSection variant="light">
+      <PageSection hasBodyWrapper={false} >
         <ToolBarContainer>
           <ToolbarContent style={{ padding: 0 }}>
             <SelectReportAction

@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Text, Tooltip } from "@patternfly/react-core";
+import { Button, Tooltip } from "@patternfly/react-core";
 import { AngleDownIcon, AngleRightIcon } from "@patternfly/react-icons";
 import { ExpandableRowContent, Tbody, Td, Tr } from "@patternfly/react-table";
 import styled from "styled-components";

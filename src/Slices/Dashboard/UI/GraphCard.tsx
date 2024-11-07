@@ -22,7 +22,7 @@ export const GraphCard: React.FC<GraphCardProps> = ({
   const [formatedMetrics, max] = formatMetricsToStacked(metrics, isStacked);
 
   return (
-    <Card id={`trend-card-${metrics.name}`} component="div" isRounded>
+    <Card id={`trend-card-${metrics.name}`} component="div" >
       <CardHeader>
         <Flex
           direction={{ default: "column" }}

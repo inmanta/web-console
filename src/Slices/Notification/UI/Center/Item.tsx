@@ -49,7 +49,7 @@ export const Item: React.FC<Props> = ({ notification, onUpdate }) => {
           aria-labelledby="multi-actions-item1 multi-actions-action1"
           id="multi-actions-action1"
           aria-label="Actions"
-          isPlainButtonAction
+          
         >
           <ActionList {...{ onUpdate }} {...notification} />
         </DataListAction>
