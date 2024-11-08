@@ -2,7 +2,7 @@ import React from "react";
 import {
 	ChartPie,
 	ChartThemeColor
-} from '@patternfly/react-charts/victory';
+} from '@patternfly/react-charts';
 
 interface Props {
   name: string;

@@ -18,7 +18,7 @@ export const NumericCard = ({ metrics }: { metrics: Metric }) => {
   const lastData = metrics.data[metrics.data.length - 1];
 
   return (
-    <StyledCard id={`trend-card-${metrics.name}`} component="div" isRounded>
+    <StyledCard id={`trend-card-${metrics.name}`} component="div">
       <CardHeader>
         <Flex
           direction={{ default: "column" }}

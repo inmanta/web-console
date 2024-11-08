@@ -45,7 +45,7 @@ export const View: React.FC<Diff.Identifiers> = ({ from, to }) => {
 
   return (
     <>
-      <StyledPageSection variant="light">
+      <StyledPageSection>
         <PageTitle>{words("desiredState.compare.title")}</PageTitle>
       </StyledPageSection>
       <PageSection hasBodyWrapper={false} >

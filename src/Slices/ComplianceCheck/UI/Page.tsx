@@ -101,7 +101,7 @@ export const View: React.FC<Props> = ({ version }) => {
         message={errorMessage}
         setMessage={setErrorMessage}
       />
-      <StyledPageSection variant="light">
+      <StyledPageSection>
         <PageTitle>{words("desiredState.complianceCheck.title")}</PageTitle>
       </StyledPageSection>
       <PageSection hasBodyWrapper={false} >

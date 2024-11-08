@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import {
+  Content,
 	Flex,
 	FlexItem,
 	Spinner,
-	
 } from '@patternfly/react-core';
 import {
 	Modal
@@ -67,7 +67,7 @@ const StyledSpinner = styled(Spinner)`
   --pf-v5-c-spinner--Color: var(--pf-v5-global--BackgroundColor--100);
 `;
 
-const StyledText = styled(Text)`
+const StyledText = styled(Content)`
   color: var(--pf-v5-global--Color--light-100);
   font-size: 1rem;
   padding-bottom: 0.5rem;

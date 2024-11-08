@@ -42,9 +42,7 @@ export const Block: React.FC<Props> = ({ item, refs, classify }) => {
       />
       <StyledCard
         isExpanded={isExpanded}
-        isFlat
         isCompact
-        isRounded
         aria-label="DiffBlock"
         data-testid="DiffBlock"
       >

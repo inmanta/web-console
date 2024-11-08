@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import {
 	ChartDonut,
 	ChartLegend
-} from '@patternfly/react-charts/victory';
+} from '@patternfly/react-charts';
 import {
   t_temp_dev_tbd as global_danger_color_100 /* CODEMODS: you should update this color token */,
   t_temp_dev_tbd as global_info_color_100 /* CODEMODS: you should update this color token */,

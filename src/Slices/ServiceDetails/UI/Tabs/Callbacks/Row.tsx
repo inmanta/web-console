@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Tooltip } from "@patternfly/react-core";
+import { Button, Content, Tooltip } from "@patternfly/react-core";
 import { AngleDownIcon, AngleRightIcon } from "@patternfly/react-icons";
 import { ExpandableRowContent, Tbody, Td, Tr } from "@patternfly/react-table";
 import styled from "styled-components";
@@ -87,7 +87,7 @@ const Toggle: React.FC<{
   );
 };
 
-const StyledText = styled(Text)`
+const StyledText = styled(Content)`
   padding-left: 36px;
 `;
 const StyledButton = styled(Button)`
