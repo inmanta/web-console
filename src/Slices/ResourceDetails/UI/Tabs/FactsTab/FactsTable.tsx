@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
-  Table /* data-codemods */,
+  Table,
   Tbody,
   Td,
   Th,

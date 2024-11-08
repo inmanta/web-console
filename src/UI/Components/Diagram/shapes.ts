@@ -1,7 +1,7 @@
 import { dia, shapes, util } from "@inmanta/rappid";
 import {
   t_global_font_family_mono,
-  t_temp_dev_tbd as global_palette_white /* CODEMODS: you should update this color token */,
+  t_global_text_color_inverse,
 } from "@patternfly/react-tokens";
 import { updateLabelPosition } from "./helpers";
 import expandButton from "./icons/expand-icon.svg";
@@ -39,7 +39,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
           headerLabel: {
             fontFamily: t_global_font_family_mono.var,
             textTransform: "uppercase",
-            fill: global_palette_white.var,
+            fill: t_global_text_color_inverse.var,
             fontSize: 14,
             textWrap: {
               ellipsis: true,

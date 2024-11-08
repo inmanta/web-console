@@ -1,8 +1,8 @@
 import React from "react";
 import {
-  t_temp_dev_tbd as global_danger_color_100 /* CODEMODS: you should update this color token */,
-  t_temp_dev_tbd as global_primary_color_100 /* CODEMODS: you should update this color token */,
-  t_temp_dev_tbd as global_success_color_100 /* CODEMODS: you should update this color token */,
+  t_global_icon_color_status_danger_default,
+  t_global_icon_color_status_info_default,
+  t_global_icon_color_status_success_default,
 } from "@patternfly/react-tokens";
 import { words } from "@/UI";
 import { LegendBar, LegendItemDetails } from "@/UI/Components";
@@ -71,7 +71,7 @@ const fromProgressToItems = (
       value: Number(
         items.filter((item) => item.status.state === "acknowledged").length,
       ),
-      backgroundColor: global_success_color_100.var,
+      backgroundColor: t_global_icon_color_status_success_default.var,
     },
     {
       id: "failed",
@@ -79,7 +79,7 @@ const fromProgressToItems = (
       value: Number(
         items.filter((item) => item.status.state === "failed").length,
       ),
-      backgroundColor: global_danger_color_100.var,
+      backgroundColor: t_global_icon_color_status_danger_default.var,
     },
     {
       id: "completed",
@@ -87,7 +87,7 @@ const fromProgressToItems = (
       value: Number(
         items.filter((item) => item.status.state === "completed").length,
       ),
-      backgroundColor: global_success_color_100.var,
+      backgroundColor: t_global_icon_color_status_success_default.var,
     },
     {
       id: "in_progress",
@@ -95,7 +95,7 @@ const fromProgressToItems = (
       value: Number(
         items.filter((item) => item.status.state === "in_progress").length,
       ),
-      backgroundColor: global_primary_color_100.var,
+      backgroundColor: t_global_icon_color_status_info_default.var,
     },
   ].filter((item) => item.value > 0);
 };

@@ -1,5 +1,5 @@
 import { dia, ui } from "@inmanta/rappid";
-import { t_temp_dev_tbd as global_palette_white /* CODEMODS: you should update this color token */ } from "@patternfly/react-tokens";
+import { t_global_text_color_inverse } from "@patternfly/react-tokens";
 import { ServiceModel } from "@/Core";
 import {
   CreateModifierHandler,
@@ -68,7 +68,7 @@ export class InstanceStencilTab {
         centre: false,
         dx: 0,
         dy: 0,
-        background: global_palette_white.var,
+        background: t_global_text_color_inverse.var,
       },
     });
     stencilElement.appendChild(this.stencil.el);

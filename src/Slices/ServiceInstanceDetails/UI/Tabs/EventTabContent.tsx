@@ -294,7 +294,7 @@ type HighlightedTransition = Pick<
 const StyledBody = styled(Tbody)<{ $transition: HighlightedTransition }>`
   ${({ $transition }) => {
     return $transition.is_error_transition
-      ? "var(--pf-t--temp--dev--tbd)"/* CODEMODS: original v5 color was --pf-v5-global--palette--gold-50 */
+      ? "var(--pf-t--global--color--status--warning--default)"
       : "background-color: inherit";
   }};
 `;

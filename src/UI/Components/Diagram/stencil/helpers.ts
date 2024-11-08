@@ -1,5 +1,5 @@
 import { shapes } from "@inmanta/rappid";
-import { t_temp_dev_tbd as global_palette_white /* CODEMODS: you should update this color token */ } from "@patternfly/react-tokens";
+import { t_global_text_color_inverse } from "@patternfly/react-tokens";
 import { v4 as uuidv4 } from "uuid";
 import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from "@/Core";
 import { HeaderColor } from "../interfaces";
@@ -76,7 +76,7 @@ export const createStencilElement = (
         class: "bodyTwo_" + name,
         width: 240,
         height: 40,
-        fill: global_palette_white.var,
+        fill: t_global_text_color_inverse.var,
         stroke: "none",
       },
       label: {

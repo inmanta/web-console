@@ -1,5 +1,5 @@
 import { dia, ui } from "@inmanta/rappid";
-import { t_temp_dev_tbd as global_palette_white /* CODEMODS: you should update this color token */ } from "@patternfly/react-tokens";
+import { t_global_text_color_inverse } from "@patternfly/react-tokens";
 import { ServiceModel } from "@/Core";
 import { Inventories } from "@/Data/Managers/V2/GETTERS/GetInventoryList";
 import { createComposerEntity } from "../actions";
@@ -108,7 +108,7 @@ export class InventoryStencilTab {
         centre: false,
         dx: 0,
         dy: 10,
-        background: global_palette_white.var,
+        background: t_global_text_color_inverse.var,
       },
     });
 

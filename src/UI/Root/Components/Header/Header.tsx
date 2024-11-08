@@ -11,6 +11,7 @@ import {
   ToolbarGroup,
   ToolbarItem,
   Tooltip,
+  Brand,
 } from "@patternfly/react-core";
 import { BarsIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
@@ -61,7 +62,7 @@ export const Header: React.FC<Props> = ({ noEnv, onNotificationsToggle }) => {
             <BarsIcon />
           </PageToggleButton>
         </MastheadToggle>
-          <MastheadBrand data-codemods><MastheadLogo data-codemods
+          <MastheadBrand><MastheadLogo 
             href={
               noEnv
                 ? routeManager.getUrl("Home", undefined)
@@ -69,7 +70,7 @@ export const Header: React.FC<Props> = ({ noEnv, onNotificationsToggle }) => {
                   `?env=${environmentHandler.useId()}`
             }
           >
-            <img src={logo} alt="Inmanta Logo" aria-label="Inmanta Logo" />
+            <Brand src={logo} alt="Inmanta-logo"/>
           </MastheadLogo></MastheadBrand>
         </MastheadMain>
         <MastheadContent>

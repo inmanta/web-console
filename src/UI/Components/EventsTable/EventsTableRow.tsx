@@ -89,8 +89,8 @@ type Transition = Pick<EventRow, "ignoredTransition" | "isErrorTransition">;
 const StyledBody = styled(Tbody)<{ $transition: Transition }>`
   ${({ $transition }) =>
     $transition.isErrorTransition
-      ? "var(--pf-t--temp--dev--tbd)"/* CODEMODS: original v5 color was --pf-v5-global--palette--gold-50 */
+      ? "var(--pf-t--global--background--color--highlight--default)"
       : $transition.ignoredTransition
-        ? "var(--pf-t--temp--dev--tbd)"/* CODEMODS: original v5 color was --pf-v5-global--palette--black-200 */
+        ? "var(--pf-t--global--background--color--disabled--default)"
         : ""};
 `;

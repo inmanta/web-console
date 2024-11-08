@@ -2,7 +2,7 @@ import React from "react";
 import { Button, TextInput } from "@patternfly/react-core";
 import { TrashAltIcon } from "@patternfly/react-icons";
 import {
-  Table /* data-codemods */,
+  Table,
   Tbody,
   Td,
   Tr,

@@ -219,7 +219,7 @@ export const CodeHighlighter: React.FC<Props> = ({
                     resize: "vertical",
                     scrollbarGutter: "stable",
                     borderRight:
-                      "var(--pf-t--temp--dev--tbd)"/* CODEMODS: original v5 color was --pf-v5-global--BorderColor--100 */,
+                      "var(--pf-t--global--border--color--brand--default)",
                   }}
                   showLineNumbers={showLineNumbers}
                   showInlineLineNumbers

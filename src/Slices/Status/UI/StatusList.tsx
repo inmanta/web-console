@@ -40,7 +40,6 @@ export const StatusList: React.FC<Props> = ({
       {...props}
       isPlain
       isBordered
-      iconSize="large"
       className={className}
       aria-label="StatusList"
     >
@@ -50,8 +49,8 @@ export const StatusList: React.FC<Props> = ({
           omit(status, ["product", "extensions", "slices", "features"]),
         )}
         icon={
-          <Icon style={{ color: "var(--pf-t--temp--dev--tbd)"/* CODEMODS: original v5 color was --pf-v5-global--palette--blue-500 */ }}>
-            <TagIcon />
+          <Icon size="xl">
+            <TagIcon style={{ color: "var(--pf-t--global--icon--color--brand--default)" }}  />
           </Icon>
         }
       />
@@ -59,7 +58,7 @@ export const StatusList: React.FC<Props> = ({
         name="API"
         details={[["url", apiUrl]]}
         icon={
-          <Icon style={{ color: "var(--pf-t--temp--dev--tbd)"/* CODEMODS: original v5 color was --pf-v5-global--primary-color--200 */ }}>
+          <Icon size="xl" status="custom">
             <ClusterIcon />
           </Icon>
         }
@@ -68,7 +67,7 @@ export const StatusList: React.FC<Props> = ({
         name="Web Console"
         details={[["commit hash", featureManager.getCommitHash()]]}
         icon={
-          <Icon style={{ color: "var(--pf-t--temp--dev--tbd)"/* CODEMODS: original v5 color was --pf-v5-global--palette--blue-500 */ }}>
+          <Icon size="xl" status="info">
             <DesktopIcon />
           </Icon>
         }
@@ -80,9 +79,9 @@ export const StatusList: React.FC<Props> = ({
           details={toDetails(omit(extension, "name"))}
           icon={
             <Icon
-              style={{ color: "var(--pf-t--temp--dev--tbd)"/* CODEMODS: original v5 color was --pf-v5-global--palette--light-blue-400 */ }}
+              size="xl"
             >
-              <IntegrationIcon />
+              <IntegrationIcon style={{ color: "var(--pf-t--global--icon--color--severity--none--default)" }} />
             </Icon>
           }
           category="extension"
@@ -94,7 +93,7 @@ export const StatusList: React.FC<Props> = ({
           name={slice.name}
           details={toDetails(slice.status)}
           icon={
-            <Icon style={{ color: "var(--pf-t--temp--dev--tbd)"/* CODEMODS: original v5 color was --pf-v5-global--palette--green-500 */ }}>
+            <Icon size="xl" status="success">
               <ModuleIcon />
             </Icon>
           }
