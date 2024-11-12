@@ -1,0 +1,3 @@
+description: Fix failing 6th scenario in the E2E test suite for OSS
+change-type: patch
+destination-branches: [master]
