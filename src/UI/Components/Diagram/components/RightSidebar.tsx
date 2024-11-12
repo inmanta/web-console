@@ -15,6 +15,10 @@ import { updateServiceOrderItems } from "../helpers";
 import { ActionEnum, EmbeddedEventEnum } from "../interfaces";
 import { EntityForm } from "./EntityForm";
 
+interface Props {
+  editable: boolean;
+}
+
 /**
  * `RightSidebar` is a React functional component that renders a sidebar for editing and removing entities.
  * The sidebar displays the details of the selected entity and provides options to edit or remove the entity.
@@ -29,7 +33,7 @@ import { EntityForm } from "./EntityForm";
  *
  * @returns {React.FC} The RightSidebar component.
  */
-export const RightSidebar: React.FC = () => {
+export const RightSidebar: React.FC<Props> = ({ editable }) => {
   const { cellToEdit, diagramHandlers, setServiceOrderItems, stencilState } =
     useContext(CanvasContext);
   const { mainService } = useContext(InstanceComposerContext);
@@ -227,7 +231,7 @@ export const RightSidebar: React.FC = () => {
           />
         )}
 
-        {!isFormOpen && (
+        {!(isFormOpen || !editable) && (
           <Flex justifyContent={{ default: "justifyContentCenter" }}>
             <FlexItem>
               <StyledButton

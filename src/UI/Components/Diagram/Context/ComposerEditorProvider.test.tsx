@@ -242,7 +242,8 @@ describe("ComposerEditorProvider", () => {
 
     expect(title).toBeInTheDocument();
   });
-  it("if provider is editable show Instance Composer Editor title ", async () => {
+
+  it("if provider is not editable show Instance Composer Viewer title ", async () => {
     render(setup("13920268-cce0-4491-93b5-11316aa2fc37", false));
 
     const title = await screen.findByText("Instance Composer Viewer");
