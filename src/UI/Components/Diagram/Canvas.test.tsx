@@ -190,4 +190,26 @@ describe("Canvas.tsx", () => {
 
     expect(modal).not.toBeVisible();
   });
+
+  it("renders right sidebar without buttons when not editable", async () => {
+    const component = setup(
+      mockedInstanceTwoServiceModel,
+      mockedInstanceTwo,
+      [mockedInstanceTwoServiceModel],
+      false,
+    );
+
+    render(component);
+    const headerLabel = await screen.findByJointSelector("headerLabel");
+
+    await act(async () => {
+      await user.click(headerLabel);
+    });
+
+    const removeButton = await screen.queryByText("Remove");
+    const editButton = await screen.queryByText("Edit");
+
+    expect(removeButton).toBeNull();
+    expect(editButton).toBeNull();
+  });
 });
