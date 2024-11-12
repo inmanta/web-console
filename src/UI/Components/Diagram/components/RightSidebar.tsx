@@ -31,6 +31,9 @@ interface Props {
  * - Embedded entities are removed from the canvas(if service model allows it), and will be erased from the service instance.
  * - Inter-service relation entities are removed from the canvas(if service model allows it), but won't be deleted from the environment.
  *
+ * @props {Props} props - The properties passed to the component
+ * @prop {boolean} editable - A flag indication if the composer is editable
+ *
  * @returns {React.FC} The RightSidebar component.
  */
 export const RightSidebar: React.FC<Props> = ({ editable }) => {
