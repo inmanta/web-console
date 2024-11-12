@@ -279,6 +279,14 @@ export class ComposerPaper {
             );
             model.set("isRelationshipConnection", true);
             document.dispatchEvent(
+              new CustomEvent("updateInterServiceRelations", {
+                detail: {
+                  action: EmbeddedEventEnum.ADD,
+                  name: cellConnectionRule.name,
+                },
+              }),
+            );
+            document.dispatchEvent(
               new CustomEvent("updateServiceOrderItems", {
                 detail: { cell: sourceCell, action: ActionEnum.UPDATE },
               }),

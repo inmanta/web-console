@@ -71,6 +71,16 @@ const createHalo = (
           cellView.model.id as string,
         );
 
+        if (wasThereRelationToRemove) {
+          document.dispatchEvent(
+            new CustomEvent("updateInterServiceRelations", {
+              detail: {
+                action: EmbeddedEventEnum.REMOVE,
+                name: cellView.model.get("entityName"),
+              },
+            }),
+          );
+        }
         didElementChange = didElementChange || wasThereRelationToRemove;
       }
 

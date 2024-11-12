@@ -1,6 +1,10 @@
 import React, { useContext, useEffect } from "react";
 import { updateServiceOrderItems } from "../helpers";
-import { ActionEnum, EmbeddedEventEnum } from "../interfaces";
+import {
+  ActionEnum,
+  EmbeddedEventEnum,
+  InterServiceRelationOnCanvas,
+} from "../interfaces";
 import { ServiceEntityBlock } from "../shapes";
 import { CanvasContext } from "./Context";
 
@@ -19,6 +23,7 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
   children,
 }) => {
   const {
+    setInterServiceRelationsOnCanvas,
     setStencilState,
     setServiceOrderItems,
     setCellToEdit,
@@ -163,6 +168,37 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
     });
   };
 
+  /**
+   * Handles the event triggered when there is a addition/removal of inter-service relation.
+   *
+   * @param {CustomEvent} event - The event object.
+   *
+   * @returns {void}
+   */
+  const handleInterServiceRelationOnCavas = (event): void => {
+    const customEvent = event as CustomEvent;
+    const { name, action } = customEvent.detail;
+
+    setInterServiceRelationsOnCanvas((prev) => {
+      const copy: Map<string, InterServiceRelationOnCanvas> = new Map(
+        JSON.parse(JSON.stringify([...prev])),
+      );
+      const copiedRelation = copy.get(name);
+
+      if (copiedRelation) {
+        copy.set(name, {
+          ...copiedRelation,
+          current:
+            action === EmbeddedEventEnum.ADD
+              ? ++copiedRelation.current
+              : --copiedRelation.current,
+        });
+      }
+
+      return copy;
+    });
+  };
+
   useEffect(() => {
     document.addEventListener("openDictsModal", handleDictEvent);
     document.addEventListener("sendCellToSidebar", handleEditEvent);
@@ -172,6 +208,10 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
       handleUpdateServiceOrderItems,
     );
     document.addEventListener("updateStencil", handleUpdateStencilState);
+    document.addEventListener(
+      "updateInterServiceRelations",
+      handleInterServiceRelationOnCavas,
+    );
 
     return () => {
       document.removeEventListener("openDictsModal", handleDictEvent);
@@ -182,6 +222,10 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
         handleUpdateServiceOrderItems,
       );
       document.removeEventListener("updateStencil", handleUpdateStencilState);
+      document.removeEventListener(
+        "updateInterServiceRelations",
+        handleInterServiceRelationOnCavas,
+      );
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

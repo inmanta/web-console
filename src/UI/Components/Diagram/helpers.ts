@@ -88,18 +88,16 @@ export const createConnectionRules = (
       createConnectionRules([entity], rules);
     });
 
-    if (service.inter_service_relations) {
-      service.inter_service_relations.map((relation) => {
-        tempRules.push({
-          kind: TypeEnum.INTERSERVICE,
-          name: relation.entity_type,
-          attributeName: relation.name,
-          lowerLimit: relation.lower_limit || null,
-          upperLimit: relation.upper_limit || null,
-          modifier: relation.modifier,
-        });
+    service.inter_service_relations.map((relation) => {
+      tempRules.push({
+        kind: TypeEnum.INTERSERVICE,
+        name: relation.entity_type,
+        attributeName: relation.name,
+        lowerLimit: relation.lower_limit || null,
+        upperLimit: relation.upper_limit || null,
+        modifier: relation.modifier,
       });
-    }
+    });
 
     if (tempRules.length > 0) {
       rules[service.name] = rules[service.name].concat(tempRules);
@@ -945,6 +943,15 @@ const removeConnectionData = (
         EmbeddedEventEnum.ADD,
       );
     }
+
+    document.dispatchEvent(
+      new CustomEvent("updateInterServiceRelations", {
+        detail: {
+          action: EmbeddedEventEnum.REMOVE,
+          name: cellToDisconnect.get("entityName"),
+        },
+      }),
+    );
 
     document.dispatchEvent(
       new CustomEvent("updateServiceOrderItems", {

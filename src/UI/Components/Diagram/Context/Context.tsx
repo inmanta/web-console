@@ -8,6 +8,7 @@ import { DiagramHandlers } from "../init";
 import {
   ComposerServiceOrderItem,
   DictDialogData,
+  InterServiceRelationOnCanvas,
   StencilState,
 } from "../interfaces";
 
@@ -62,6 +63,11 @@ interface CanvasProviderInterface {
     React.SetStateAction<Map<string, ComposerServiceOrderItem>>
   >;
 
+  interServiceRelationsOnCanvas: Map<string, InterServiceRelationOnCanvas>;
+  setInterServiceRelationsOnCanvas: React.Dispatch<
+    React.SetStateAction<Map<string, InterServiceRelationOnCanvas>>
+  >;
+
   stencilState: StencilState | null;
   setStencilState: React.Dispatch<React.SetStateAction<StencilState | null>>;
 
@@ -106,6 +112,8 @@ export const CanvasContext = createContext<CanvasProviderInterface>({
   setLooseElement: () => {},
   serviceOrderItems: new Map(),
   setServiceOrderItems: () => {},
+  interServiceRelationsOnCanvas: new Map(),
+  setInterServiceRelationsOnCanvas: () => {},
   stencilState: {},
   setStencilState: () => {},
   isDirty: false,

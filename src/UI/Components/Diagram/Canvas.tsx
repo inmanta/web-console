@@ -5,7 +5,12 @@ import styled from "styled-components";
 import { CanvasContext, InstanceComposerContext } from "./Context";
 import { EventWrapper } from "./Context/EventWrapper";
 import { DictModal, RightSidebar } from "./components";
-import { createConnectionRules, createStencilState } from "./helpers";
+import { Validation } from "./components/Validation";
+import {
+  createConnectionRules,
+  createStencilState,
+  findFullInterServiceRelations,
+} from "./helpers";
 import { diagramInit } from "./init";
 import { StencilSidebar } from "./stencil";
 import { CanvasWrapper } from "./styles";
@@ -33,6 +38,7 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
   const { mainService, instance, serviceModels, relatedInventoriesQuery } =
     useContext(InstanceComposerContext);
   const {
+    setInterServiceRelationsOnCanvas,
     setStencilState,
     setServiceOrderItems,
     diagramHandlers,
@@ -43,21 +49,33 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
   const ZoomHandler = useRef<HTMLDivElement>(null);
   const [scroller, setScroller] = useState<ui.PaperScroller | null>(null);
   const [isStencilStateReady, setIsStencilStateReady] = useState(false);
-
   const [leftSidebar, setLeftSidebar] = useState<StencilSidebar | null>(null); // without this state it could happen that cells would load before sidebar is ready so its state could be outdated
 
   // create stencil state and set flag to true to enable the other components to be created - the flag is created to allow the components to depend from that states, passing the state as a dependency would cause an infinite loop
   useEffect(() => {
-    if (!mainService) {
-      return;
-    }
     setStencilState(createStencilState(mainService, !!instance));
+    const interServiceRelations = findFullInterServiceRelations(mainService);
+    const interServiceRelationsOnCanvas = new Map();
+
+    interServiceRelations.forEach((relation) => {
+      interServiceRelationsOnCanvas.set(relation.entity_type, {
+        min: relation.lower_limit,
+        max: relation.upper_limit,
+        current: 0,
+      });
+    });
+    setInterServiceRelationsOnCanvas(interServiceRelationsOnCanvas);
     setIsStencilStateReady(true);
-  }, [mainService, instance, setStencilState]);
+  }, [
+    mainService,
+    instance,
+    setStencilState,
+    setInterServiceRelationsOnCanvas,
+  ]);
 
   // create the diagram & set diagram handlers and the scroller only when service models and main service is defined and the stencil state is ready
   useEffect(() => {
-    if (!mainService || !serviceModels || !isStencilStateReady) {
+    if (!isStencilStateReady) {
       return;
     }
 
@@ -87,13 +105,7 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
    * It's done in separate useEffect to enable eventual re-renders of the sidebar independently of the diagram, e.g. when the related inventories by inter-service relations are loaded
    */
   useEffect(() => {
-    if (
-      !LeftSidebar.current ||
-      !scroller ||
-      !relatedInventoriesQuery.data ||
-      !mainService ||
-      !serviceModels
-    ) {
+    if (!LeftSidebar.current || !scroller || !relatedInventoriesQuery.data) {
       return;
     }
 
@@ -115,13 +127,7 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
    * we need to add instances after stencil has been created to ensure that the stencil will get updated in case there are any embedded entities and relations that will get appendend on the canvas
    */
   useEffect(() => {
-    if (
-      !leftSidebar ||
-      !diagramHandlers ||
-      !serviceModels ||
-      !mainService ||
-      !isStencilStateReady
-    ) {
+    if (!leftSidebar || !diagramHandlers || !isStencilStateReady) {
       return;
     }
     const newInstances = new Map();
@@ -174,6 +180,7 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
         <RightSidebar />
         <ZoomHandlerContainer className="zoom-handler" ref={ZoomHandler} />
       </CanvasWrapper>
+      {editable && <Validation />}
     </EventWrapper>
   );
 };

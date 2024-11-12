@@ -160,6 +160,21 @@ interface StencilState {
 }
 
 /**
+ * Interface representing the state of a inter-service relations on Canvas.
+ */
+interface InterServiceRelationOnCanvas {
+  min: ParsedNumber | undefined | null;
+  max: ParsedNumber | undefined | null;
+  current: number;
+}
+
+interface InterServiceRelationOnCanvasWithMin {
+  min: ParsedNumber;
+  max: ParsedNumber | undefined | null;
+  current: number;
+}
+
+/**
  * interface representing options for configuring a composer entity in the canvas.
  */
 interface ComposerEntityOptions {
@@ -215,4 +230,6 @@ export {
   EmbeddedEventEnum,
   ComposerEntityOptions,
   EntityType,
+  InterServiceRelationOnCanvas,
+  InterServiceRelationOnCanvasWithMin,
 };
