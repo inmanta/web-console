@@ -6,7 +6,7 @@ import { words } from "@/UI/words";
 import { CanvasContext } from "../Context";
 
 export const Validation = () => {
-  const { interServiceRelationsOnCanvas } = useContext(CanvasContext);
+  const { isDirty, interServiceRelationsOnCanvas } = useContext(CanvasContext);
 
   const interServiceRelationsThatAreMissing = Array.from(
     interServiceRelationsOnCanvas,
@@ -17,7 +17,8 @@ export const Validation = () => {
       value.current < value.min,
   );
 
-  if (interServiceRelationsThatAreMissing.length === 0) {
+  //dirty flag is set to false on initial load for edited instances, that solves issue of flickering as we are starting canvas from empty state and populate it from ground up
+  if (interServiceRelationsThatAreMissing.length === 0 || !isDirty) {
     return null;
   }
 
