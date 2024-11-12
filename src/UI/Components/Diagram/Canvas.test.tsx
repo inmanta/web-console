@@ -191,7 +191,7 @@ describe("Canvas.tsx", () => {
     expect(modal).not.toBeVisible();
   });
 
-  it("renders right sidebar with disabled buttons when not editable", async () => {
+  it("renders right sidebar without buttons when not editable", async () => {
     const component = setup(
       mockedInstanceTwoServiceModel,
       mockedInstanceTwo,
