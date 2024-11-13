@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { PageSection, Toolbar, ToolbarContent } from "@patternfly/react-core";
-import styled from "styled-components";
 import { Diff, Maybe, RemoteData } from "@/Core";
 import { DiffWizard, ToastAlert, PageTitle } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
@@ -101,11 +100,11 @@ export const View: React.FC<Props> = ({ version }) => {
         message={errorMessage}
         setMessage={setErrorMessage}
       />
-      <StyledPageSection>
+      <PageSection>
         <PageTitle>{words("desiredState.complianceCheck.title")}</PageTitle>
-      </StyledPageSection>
+      </PageSection>
       <PageSection hasBodyWrapper={false} >
-        <ToolBarContainer>
+        <Toolbar>
           <ToolbarContent style={{ padding: 0 }}>
             <SelectReportAction
               setSelectedReport={setSelectedReport}
@@ -120,7 +119,7 @@ export const View: React.FC<Props> = ({ version }) => {
             />
             <TriggerDryRunAction version={version} updateList={updateList} />
           </ToolbarContent>
-        </ToolBarContainer>
+        </Toolbar>
       </PageSection>
       <DiffPageSection
         report={selectedReport}
@@ -131,11 +130,3 @@ export const View: React.FC<Props> = ({ version }) => {
     </>
   );
 };
-
-const StyledPageSection = styled(PageSection)`
-  padding-bottom: 0;
-`;
-
-const ToolBarContainer = styled(Toolbar)`
-  z-index: var(--pf-v5-global--ZIndex--xl);
-`;

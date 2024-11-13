@@ -1,5 +1,5 @@
-import React, { useContext } from "react";
-import { Nav, NavGroup } from "@patternfly/react-core";
+import React, { useContext, useState } from "react";
+import { Nav, NavExpandable, NavGroup } from "@patternfly/react-core";
 import { DependencyContext } from "@/UI/Dependency";
 import {
   envrionment,
@@ -19,6 +19,7 @@ export const Navigation: React.FC<{ environment: string | undefined }> = ({
   environment,
 }) => {
   const { featureManager, routeManager } = useContext(DependencyContext);
+
   const isEnvPresent = typeof environment !== "undefined";
   const groups = [
     envrionment(routeManager, isEnvPresent),
@@ -30,7 +31,7 @@ export const Navigation: React.FC<{ environment: string | undefined }> = ({
   ];
 
   return (
-    <Nav >
+    <Nav>
       {groups.map(({ id, title, links }) => (
         <NavGroup title={title} key={id}>
           {links.map(NavigationItem)}

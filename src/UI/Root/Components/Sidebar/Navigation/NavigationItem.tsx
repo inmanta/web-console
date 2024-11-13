@@ -43,15 +43,12 @@ export const NavigationItem: React.FC<Link> = ({
 };
 
 const RegularItem: React.FC<Label & Url> = ({ label, url }) => (
-  <NavItem styleChildren={false}>
+  <NavItem>
     <NavLink
       to={{
         pathname: url,
         search: new SearchHelper().keepEnvOnly(location.search),
       }}
-      className={({ isActive }) =>
-        "pf-v5-c-nav__link" + (isActive ? " pf-v5-m-current" : "")
-      }
       end
     >
       {label}
@@ -60,21 +57,24 @@ const RegularItem: React.FC<Label & Url> = ({ label, url }) => (
 );
 
 const LockedItem: React.FC<Label> = ({ label }) => (
-  <StyledNavItem styleChildren={false}>
+  <NavItem
+    disabled
+    preventDefault
+    icon={
+      <Tooltip
+        content={"Select an environment to enable this link"}
+        position="right"
+      >
+        <LockIcon />
+      </Tooltip>
+    }>
     {label}
-    <StyledTooltip
-      content={"Select an environment to enable this link"}
-      position="right"
-    >
-      <StyledLockIcon />
-    </StyledTooltip>
-  </StyledNavItem>
+  </NavItem>
 );
 
 const ExternalItem: React.FC<Label & Url> = ({ label, url }) => (
-  <NavItem styleChildren={false}>
+  <NavItem>
     <a
-      className="pf-v5-c-nav__link"
       href={url}
       target="_blank"
       rel="noreferrer"
@@ -99,23 +99,19 @@ const CompileReportItem: React.FC<Label & Url> = ({ label, url }) => {
   }, [data, retry]);
 
   return (
-    <NavItem styleChildren={false}>
+    <NavItem>
       <NavLink
         to={{
           pathname: url,
           search: new SearchHelper().keepEnvOnly(location.search),
         }}
-        className={({ isActive }) =>
-          "pf-v5-c-nav__link" + (isActive ? " pf-v5-m-current" : "")
-        }
         end
       >
         {label}
         {data.kind === "Success" && data.value === true && (
           <Tooltip key={"ongoing-compilation-tooltip"} content={"Compiling"}>
-            <StyledIndication
+            <CompileReportsIndication
               aria-label="CompileReportsIndication"
-              className="pf-t--global--icon--color--brand--default"
             />
           </Tooltip>
         )}
@@ -124,29 +120,19 @@ const CompileReportItem: React.FC<Label & Url> = ({ label, url }) => {
   );
 };
 
-const StyledNavItem = styled(NavItem)`
-  --pf-v5-c-nav__link--hover--BackgroundColor: none;
-  --pf-v5-c-nav__link--active--BackgroundColor: none;
-`;
 
-const StyledLockIcon = styled(LockIcon)`
-  transform: scale(0.7) translateY(2px);
-  margin-left: 4px;
-`;
 
-const StyledTooltip = styled(Tooltip)`
-  --pf-v5-c-tooltip__content--Color: black;
-  --pf-v5-c-tooltip__content--BackgroundColor: white;
-`;
-
-//Indication colors based on <Label color="blue" /> component
+// animation keyframes for the flickering dot CompileReportsIndication
 const pendingAnimation = keyframes`
  0% { opacity: .2}
  50% { opacity: 1}
  100% { opacity: .2}
 `;
 
-const StyledIndication = styled.div`
+/**
+ * Flickering dot to display whenever a compile is ongoing
+ */
+const CompileReportsIndication = styled.div`
   width: 10px;
   height: 10px;
   margin-left: 10px;
@@ -155,11 +141,11 @@ const StyledIndication = styled.div`
     position: absolute;
     top: 1px;
     content: "";
-    background-color: #e7f1fa;
+    background-color: var(--pf-t--global--icon--color--status--custom--default);
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    border: 1px solid #bee1f4;
+    border: 1px solid var(--pf-t--global--border--color--status--custom--default);
     animation: ${pendingAnimation} 2s infinite;
   }
 `;

@@ -7,6 +7,7 @@ import {
   Title,
   Flex,
   FlexItem,
+  Content,
 } from "@patternfly/react-core";
 import styled from "styled-components";
 import { words } from "@/UI";
@@ -36,9 +37,9 @@ export const GraphCard: React.FC<GraphCardProps> = ({
             </CardTitle>
           </FlexItem>
           <FlexItem>
-            <StyledDescription>
+            <Content component="p">
               {words(`dashboard.${metrics.name as MetricName}.description`)}
-            </StyledDescription>
+            </Content>
           </FlexItem>
         </Flex>
       </CardHeader>
@@ -61,6 +62,3 @@ export const GraphCard: React.FC<GraphCardProps> = ({
     </Card>
   );
 };
-export const StyledDescription = styled.span`
-  color: var(--pf-v5-global--Color--200);
-`;

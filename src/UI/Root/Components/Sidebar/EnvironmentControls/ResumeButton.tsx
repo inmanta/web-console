@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Button, Tooltip } from "@patternfly/react-core";
+import { Button, Icon, Tooltip } from "@patternfly/react-core";
 import { PlayIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { DependencyContext } from "@/UI/Dependency";
@@ -61,15 +61,9 @@ export const ResumeButton: React.FC = () => {
       content={<div>{words("environment.resume.tooltip")}</div>}
       position="right"
     >
-      <GreenButton icon={<PlayIcon />} onClick={handleModalToggle}>
+      <Button icon={<Icon status="success"><PlayIcon /></ Icon>} variant="control" onClick={handleModalToggle}>
         {words("environment.resume.button")}
-      </GreenButton>
+      </Button>
     </Tooltip>
   );
 };
-
-const GreenButton = styled(Button)`
-  && {
-    background-color: var(--pf-v5-global--success-color--100);
-  }
-`;
