@@ -117,10 +117,13 @@ const HistoryRowContent: React.FC<HistoryRowProps> = ({ log }) => {
   return (
     <>
       <Td dataLabel="version">{String(log.version)}</Td>
-      <Td dataLabel="date">
-        <DateWithTooltip timestamp={log.created_at} />
+      <Td
+        dataLabel="timestamp"
+        data-testid={`version-${log.version}-timestamp`}
+      >
+        <DateWithTooltip isFull timestamp={log.timestamp} />
       </Td>
-      <Td dataLabel="state">
+      <Td dataLabel="state" data-testid={`version-${log.version}-state`}>
         <StateLabel state={log.state} service={serviceModelQuery.data} />
       </Td>
     </>

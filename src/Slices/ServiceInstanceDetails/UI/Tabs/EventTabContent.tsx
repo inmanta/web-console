@@ -181,8 +181,8 @@ export const EventsTabContent: React.FC<Props> = ({ selectedVersion }) => {
               <Th width={15} key="eventType">
                 {words("instanceDetails.events.column.eventType")}
               </Th>
-              <Th width={20} key="date">
-                {words("instanceDetails.events.column.date")}
+              <Th width={20} key="timestamp">
+                {words("instanceDetails.events.column.timestamp")}
               </Th>
               <Th width={20} key="source-state">
                 {words("instanceDetails.events.column.sourceState")}
