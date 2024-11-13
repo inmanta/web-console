@@ -71,7 +71,7 @@ export const HistorySection: React.FC = () => {
                     {words("instanceDetails.history.table.version")}
                   </Th>
                   <Th style={{ minWidth: "100px" }}>
-                    {words("instanceDetails.history.table.date")}
+                    {words("instanceDetails.history.table.timestamp")}
                   </Th>
                   <Th>{words("instanceDetails.history.table.status")}</Th>
                 </Tr>

@@ -251,7 +251,7 @@ const dict = {
   "instanceDetails.page.noData.errorTitle": "No Data",
   "instanceDetails.history.title": "History",
   "instanceDetails.history.table.version": "Version",
-  "instanceDetails.history.table.date": "Timestamp",
+  "instanceDetails.history.table.timestamp": "Timestamp",
   "instanceDetails.history.table.status": "Status",
   "instanceDetails.history.error": "Error loading Version History",
   "instanceDetails.details.title": "Details",
