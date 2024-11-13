@@ -740,10 +740,10 @@ describe("Scenario 6 : Resources", () => {
 
       // Go to logs tab
       cy.get("button").contains("Logs").click();
-      // Expect it to have : 5 log messages
+      // Expect it to have 8 log messages
       cy.get('[aria-label="ResourceLogRow"]', { timeout: 40000 }).should(
         "to.have.length.of.at.least",
-        5,
+        8,
       );
 
       // make sure the default is 100 instead of 20 like on other pages with pagination.
@@ -754,18 +754,18 @@ describe("Scenario 6 : Resources", () => {
         .find("svg")
         .should("exist");
 
-      // Expect last log message to contain "End run for resource frontend_model::TestResource[internal,name=a],"
+      // Expect last log message to contain "Setting deployed due to known good status"
       cy.get('[aria-label="ResourceLogRow"]')
         .eq(0)
-        .should("contain", "End run for resource frontend_model::TestResource");
+        .should("contain", "Setting deployed due to known good status");
 
       // Click top message open
       cy.get('[aria-label="Details"]').eq(0).click();
 
-      // Expect to find "End run for resource frontend_model::TestResource[internal,name=a],v=1 in deploy x" displayed in expansion where x is uuid that isn't asserted there.
+      // Expect to find "Setting deployed due to known good status" displayed in expansion
       cy.get(".pf-v5-c-description-list__text").should(
         "contain",
-        "End run for resource frontend_model::TestResource[internal,name=a],v=1 in deploy ",
+        "Setting deployed due to known good status",
       );
     });
   }
