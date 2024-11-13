@@ -77,6 +77,7 @@ const createHalo = (
               detail: {
                 action: EmbeddedEventEnum.REMOVE,
                 name: cellView.model.get("entityName"),
+                id: elementAsService.id,
               },
             }),
           );

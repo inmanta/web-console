@@ -15,6 +15,7 @@ import {
   ComposerEntityOptions,
   EmbeddedEventEnum,
   EntityType,
+  InterServiceRelationOnCanvasWithMin,
   relationId,
 } from "./interfaces";
 import { Link, ServiceEntityBlock } from "./shapes";
@@ -78,11 +79,29 @@ export function createComposerEntity({
   instanceAsTable.set("isBlockedFromEditing", isBlockedFromEditing);
   instanceAsTable.set("cantBeRemoved", cantBeRemoved);
 
-  if (
-    serviceModel.inter_service_relations &&
-    serviceModel.inter_service_relations.length > 0
-  ) {
+  if (serviceModel.inter_service_relations.length > 0) {
     instanceAsTable.set("relatedTo", new Map());
+    const relations: InterServiceRelationOnCanvasWithMin[] = [];
+
+    serviceModel.inter_service_relations.forEach((relation) => {
+      if (relation.lower_limit > 0) {
+        relations.push({
+          name: relation.entity_type,
+          min: relation.lower_limit,
+          current: 0,
+        });
+      }
+    });
+
+    document.dispatchEvent(
+      new CustomEvent("addInterServiceRelationToTracker", {
+        detail: {
+          id: instanceAsTable.id,
+          name: serviceModel.name,
+          relations,
+        },
+      }),
+    );
   }
 
   if (attributes) {

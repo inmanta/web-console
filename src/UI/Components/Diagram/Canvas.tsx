@@ -6,11 +6,7 @@ import { CanvasContext, InstanceComposerContext } from "./Context";
 import { EventWrapper } from "./Context/EventWrapper";
 import { DictModal, RightSidebar } from "./components";
 import { Validation } from "./components/Validation";
-import {
-  createConnectionRules,
-  createStencilState,
-  findFullInterServiceRelations,
-} from "./helpers";
+import { createConnectionRules, createStencilState } from "./helpers";
 import { diagramInit } from "./init";
 import { StencilSidebar } from "./stencil";
 import { CanvasWrapper } from "./styles";
@@ -38,7 +34,6 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
   const { mainService, instance, serviceModels, relatedInventoriesQuery } =
     useContext(InstanceComposerContext);
   const {
-    setInterServiceRelationsOnCanvas,
     setStencilState,
     setServiceOrderItems,
     diagramHandlers,
@@ -54,24 +49,8 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
   // create stencil state and set flag to true to enable the other components to be created - the flag is created to allow the components to depend from that states, passing the state as a dependency would cause an infinite loop
   useEffect(() => {
     setStencilState(createStencilState(mainService, !!instance));
-    const interServiceRelations = findFullInterServiceRelations(mainService);
-    const interServiceRelationsOnCanvas = new Map();
-
-    interServiceRelations.forEach((relation) => {
-      interServiceRelationsOnCanvas.set(relation.entity_type, {
-        min: relation.lower_limit,
-        max: relation.upper_limit,
-        current: 0,
-      });
-    });
-    setInterServiceRelationsOnCanvas(interServiceRelationsOnCanvas);
     setIsStencilStateReady(true);
-  }, [
-    mainService,
-    instance,
-    setStencilState,
-    setInterServiceRelationsOnCanvas,
-  ]);
+  }, [mainService, instance, setStencilState]);
 
   // create the diagram & set diagram handlers and the scroller only when service models and main service is defined and the stencil state is ready
   useEffect(() => {

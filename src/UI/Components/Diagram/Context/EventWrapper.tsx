@@ -1,10 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import { updateServiceOrderItems } from "../helpers";
-import {
-  ActionEnum,
-  EmbeddedEventEnum,
-  InterServiceRelationOnCanvas,
-} from "../interfaces";
+import { ActionEnum, EmbeddedEventEnum } from "../interfaces";
 import { ServiceEntityBlock } from "../shapes";
 import { CanvasContext } from "./Context";
 
@@ -169,30 +165,64 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
   };
 
   /**
+   * Handles the event triggered when there is a creation of entity that has required inter-service relation.
+   *
+   * @param {CustomEvent} event - The event object.
+   *
+   * @returns {void}
+   */
+  const handleInterServiceRelationInTracker = (event): void => {
+    const customEvent = event as CustomEvent;
+    const { id, name, relations } = customEvent.detail;
+
+    setInterServiceRelationsOnCanvas((prev) => {
+      const copy = new Map(prev);
+
+      copy.set(id, {
+        name,
+        relations,
+      });
+
+      return copy;
+    });
+  };
+
+  /**
    * Handles the event triggered when there is a addition/removal of inter-service relation.
    *
    * @param {CustomEvent} event - The event object.
    *
    * @returns {void}
    */
-  const handleInterServiceRelationOnCavas = (event): void => {
+  const updateInterServiceRelationInTracker = (event): void => {
     const customEvent = event as CustomEvent;
-    const { name, action } = customEvent.detail;
+    const { id, name, action } = customEvent.detail;
 
     setInterServiceRelationsOnCanvas((prev) => {
-      const copy: Map<string, InterServiceRelationOnCanvas> = new Map(
-        JSON.parse(JSON.stringify([...prev])),
-      );
-      const copiedRelation = copy.get(name);
+      const copy = new Map(prev);
+      const cellsRelations = copy.get(id);
 
-      if (copiedRelation) {
-        copy.set(name, {
-          ...copiedRelation,
-          current:
-            action === EmbeddedEventEnum.ADD
-              ? ++copiedRelation.current
-              : --copiedRelation.current,
-        });
+      if (cellsRelations) {
+        const indexOfRelationToUpdate = cellsRelations.relations.findIndex(
+          (relation) => relation.name === name,
+        );
+
+        if (indexOfRelationToUpdate > -1) {
+          const relationToUpdate =
+            cellsRelations.relations[indexOfRelationToUpdate];
+
+          let current = relationToUpdate.current;
+
+          relationToUpdate.current =
+            action === EmbeddedEventEnum.ADD ? ++current : --current;
+
+          cellsRelations.relations.splice(
+            indexOfRelationToUpdate,
+            1,
+            relationToUpdate,
+          );
+          copy.set(id, cellsRelations);
+        }
       }
 
       return copy;
@@ -209,8 +239,12 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
     );
     document.addEventListener("updateStencil", handleUpdateStencilState);
     document.addEventListener(
+      "addInterServiceRelationToTracker",
+      handleInterServiceRelationInTracker,
+    );
+    document.addEventListener(
       "updateInterServiceRelations",
-      handleInterServiceRelationOnCavas,
+      updateInterServiceRelationInTracker,
     );
 
     return () => {
@@ -223,8 +257,12 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
       );
       document.removeEventListener("updateStencil", handleUpdateStencilState);
       document.removeEventListener(
+        "addInterServiceRelationToTracker",
+        handleInterServiceRelationInTracker,
+      );
+      document.addEventListener(
         "updateInterServiceRelations",
-        handleInterServiceRelationOnCavas,
+        updateInterServiceRelationInTracker,
       );
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps

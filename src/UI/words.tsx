@@ -228,8 +228,10 @@ const dict = {
   "instanceComposer.success.title": "Instance composed successfully",
   "instanceComposer.failed.title": "Instance Composing failed",
   "instanceComposer.dictModal": (valueName: string) => `Values of ${valueName}`,
-  "instanceComposer.missingRelations": (amount: number) =>
-    `Missing inter-service relations: ${amount}`,
+  "instanceComposer.entitiesWithoutRelations": (amount: number) =>
+    `Entities with missing inter-service relations: ${amount}`,
+  "instanceComposer.missingRelations": (name: string, relations: string) =>
+    `${name} has missing inter-service relations: ${relations}`,
   "instanceComposer.disabled":
     "Your license doesn't give you access to the Instance Composer, please contact support for more details.",
   "instanceComposer.title": "Instance Composer",

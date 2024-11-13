@@ -283,6 +283,7 @@ export class ComposerPaper {
                 detail: {
                   action: EmbeddedEventEnum.ADD,
                   name: cellConnectionRule.name,
+                  id: elementCell.id,
                 },
               }),
             );

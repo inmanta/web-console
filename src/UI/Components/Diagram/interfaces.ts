@@ -159,19 +159,15 @@ interface StencilState {
   };
 }
 
-/**
- * Interface representing the state of a inter-service relations on Canvas.
- */
-interface InterServiceRelationOnCanvas {
-  min: ParsedNumber | undefined | null;
-  max: ParsedNumber | undefined | null;
+interface InterServiceRelationOnCanvasWithMin {
+  name: string;
+  min: ParsedNumber;
   current: number;
 }
 
-interface InterServiceRelationOnCanvasWithMin {
-  min: ParsedNumber;
-  max: ParsedNumber | undefined | null;
-  current: number;
+interface relationCounterForCell {
+  name: string;
+  relations: InterServiceRelationOnCanvasWithMin[];
 }
 
 /**
@@ -230,6 +226,6 @@ export {
   EmbeddedEventEnum,
   ComposerEntityOptions,
   EntityType,
-  InterServiceRelationOnCanvas,
   InterServiceRelationOnCanvasWithMin,
+  relationCounterForCell,
 };

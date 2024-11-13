@@ -949,6 +949,7 @@ const removeConnectionData = (
         detail: {
           action: EmbeddedEventEnum.REMOVE,
           name: cellToDisconnect.get("entityName"),
+          id: elementCell.id,
         },
       }),
     );

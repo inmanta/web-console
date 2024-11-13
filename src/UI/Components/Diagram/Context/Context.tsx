@@ -8,8 +8,8 @@ import { DiagramHandlers } from "../init";
 import {
   ComposerServiceOrderItem,
   DictDialogData,
-  InterServiceRelationOnCanvas,
   StencilState,
+  relationCounterForCell,
 } from "../interfaces";
 
 /**
@@ -63,9 +63,9 @@ interface CanvasProviderInterface {
     React.SetStateAction<Map<string, ComposerServiceOrderItem>>
   >;
 
-  interServiceRelationsOnCanvas: Map<string, InterServiceRelationOnCanvas>;
+  interServiceRelationsOnCanvas: Map<string, relationCounterForCell>;
   setInterServiceRelationsOnCanvas: React.Dispatch<
-    React.SetStateAction<Map<string, InterServiceRelationOnCanvas>>
+    React.SetStateAction<Map<string, relationCounterForCell>>
   >;
 
   stencilState: StencilState | null;
