@@ -98,7 +98,6 @@ const createHalo = (
     );
 
     if (cellView.model.get("relatedTo")) {
-      console.log(cellView.id, cellView.model.id);
       document.dispatchEvent(
         new CustomEvent("removeInterServiceRelationFromTracker", {
           detail: {
