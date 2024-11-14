@@ -12,7 +12,7 @@ import { sanitizeAttributes } from "@/Data";
 import { words } from "@/UI/words";
 import { CanvasContext, InstanceComposerContext } from "../Context/Context";
 import { updateServiceOrderItems } from "../helpers";
-import { ActionEnum, EmbeddedEventEnum } from "../interfaces";
+import { ActionEnum, EventActionEnum } from "../interfaces";
 import { EntityForm } from "./EntityForm";
 
 interface Props {
@@ -72,7 +72,7 @@ export const RightSidebar: React.FC<Props> = ({ editable }) => {
         new CustomEvent("updateStencil", {
           detail: {
             name: model.get("entityName"),
-            action: EmbeddedEventEnum.REMOVE,
+            action: EventActionEnum.REMOVE,
           },
         }),
       );

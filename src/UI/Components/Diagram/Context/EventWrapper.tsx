@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import { updateServiceOrderItems } from "../helpers";
-import { ActionEnum, EmbeddedEventEnum } from "../interfaces";
+import { ActionEnum, EventActionEnum } from "../interfaces";
 import { ServiceEntityBlock } from "../shapes";
 import { CanvasContext } from "./Context";
 
@@ -38,7 +38,7 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
    */
   const handleLooseElementEvent = (event): void => {
     const customEvent = event as CustomEvent;
-    const eventData: { kind: EmbeddedEventEnum; id: string } = JSON.parse(
+    const eventData: { kind: EventActionEnum; id: string } = JSON.parse(
       customEvent.detail,
     );
     const newSet = new Set(looseElement);
@@ -114,7 +114,7 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
    */
   const handleUpdateStencilState = (event): void => {
     const customEvent = event as CustomEvent;
-    const eventData: { name: string; action: EmbeddedEventEnum } =
+    const eventData: { name: string; action: EventActionEnum } =
       customEvent.detail;
 
     //event listener doesn't get updated state outside setStencilState function, so all logic has to be done inside it
@@ -130,10 +130,10 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
       }
 
       switch (eventData.action) {
-        case EmbeddedEventEnum.ADD:
+        case EventActionEnum.ADD:
           stencil.current += 1;
           break;
-        case EmbeddedEventEnum.REMOVE:
+        case EventActionEnum.REMOVE:
           stencil.current -= 1;
           break;
         default:
@@ -171,7 +171,7 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
    *
    * @returns {void}
    */
-  const handleInterServiceRelationInTracker = (event): void => {
+  const handleAddInterServiceRelationInTracker = (event): void => {
     const customEvent = event as CustomEvent;
     const { id, name, relations } = customEvent.detail;
 
@@ -182,6 +182,26 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
         name,
         relations,
       });
+
+      return copy;
+    });
+  };
+
+  /**
+   * Handles the event triggered when there is a removal of entity that has required inter-service relation.
+   *
+   * @param {CustomEvent} event - The event object.
+   *
+   * @returns {void}
+   */
+  const handleRemoveInterServiceRelationInTracker = (event): void => {
+    const customEvent = event as CustomEvent;
+    const { id } = customEvent.detail;
+
+    setInterServiceRelationsOnCanvas((prev) => {
+      const copy = new Map(prev);
+
+      copy.delete(id);
 
       return copy;
     });
@@ -214,7 +234,7 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
           let current = relationToUpdate.current;
 
           relationToUpdate.current =
-            action === EmbeddedEventEnum.ADD ? ++current : --current;
+            action === EventActionEnum.ADD ? ++current : --current;
 
           cellsRelations.relations.splice(
             indexOfRelationToUpdate,
@@ -240,7 +260,11 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
     document.addEventListener("updateStencil", handleUpdateStencilState);
     document.addEventListener(
       "addInterServiceRelationToTracker",
-      handleInterServiceRelationInTracker,
+      handleAddInterServiceRelationInTracker,
+    );
+    document.addEventListener(
+      "removeInterServiceRelationFromTracker",
+      handleRemoveInterServiceRelationInTracker,
     );
     document.addEventListener(
       "updateInterServiceRelations",
@@ -258,7 +282,11 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
       document.removeEventListener("updateStencil", handleUpdateStencilState);
       document.removeEventListener(
         "addInterServiceRelationToTracker",
-        handleInterServiceRelationInTracker,
+        handleAddInterServiceRelationInTracker,
+      );
+      document.removeEventListener(
+        "removeInterServiceRelationFromTracker",
+        handleRemoveInterServiceRelationInTracker,
       );
       document.addEventListener(
         "updateInterServiceRelations",

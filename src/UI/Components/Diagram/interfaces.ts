@@ -95,7 +95,7 @@ interface InterServiceRule extends Rule {
 /**
  * Enum representing the types of embedded events.
  */
-enum EmbeddedEventEnum {
+enum EventActionEnum {
   REMOVE = "remove",
   ADD = "add",
 }
@@ -223,7 +223,7 @@ export {
   ComposerServiceOrderItem,
   StencilState,
   TypeEnum,
-  EmbeddedEventEnum,
+  EventActionEnum,
   ComposerEntityOptions,
   EntityType,
   InterServiceRelationOnCanvasWithMin,

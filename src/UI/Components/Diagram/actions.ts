@@ -13,7 +13,7 @@ import activeImage from "./icons/active-icon.svg";
 import candidateImage from "./icons/candidate-icon.svg";
 import {
   ComposerEntityOptions,
-  EmbeddedEventEnum,
+  EventActionEnum,
   EntityType,
   InterServiceRelationOnCanvasWithMin,
   relationId,
@@ -368,7 +368,7 @@ export function appendEmbeddedEntity(
       new CustomEvent("updateStencil", {
         detail: {
           name: embeddedEntity.name,
-          action: EmbeddedEventEnum.ADD,
+          action: EventActionEnum.ADD,
         },
       }),
     );
@@ -488,7 +488,7 @@ export function addDefaultEntities(
         new CustomEvent("updateStencil", {
           detail: {
             name: embedded_entity.name,
-            action: EmbeddedEventEnum.ADD,
+            action: EventActionEnum.ADD,
           },
         }),
       );

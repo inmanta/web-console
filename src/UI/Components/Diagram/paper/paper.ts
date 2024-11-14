@@ -11,7 +11,7 @@ import expandButton from "../icons/expand-icon.svg";
 import {
   ActionEnum,
   ConnectionRules,
-  EmbeddedEventEnum,
+  EventActionEnum,
   TypeEnum,
 } from "../interfaces";
 import { routerNamespace } from "../routers";
@@ -281,7 +281,7 @@ export class ComposerPaper {
             document.dispatchEvent(
               new CustomEvent("updateInterServiceRelations", {
                 detail: {
-                  action: EmbeddedEventEnum.ADD,
+                  action: EventActionEnum.ADD,
                   name: cellConnectionRule.name,
                   id: elementCell.id,
                 },
@@ -294,7 +294,7 @@ export class ComposerPaper {
             );
             toggleLooseElement(
               this.paper.findViewByModel(connectingCell),
-              EmbeddedEventEnum.REMOVE,
+              EventActionEnum.REMOVE,
             );
           }
         }
@@ -307,7 +307,7 @@ export class ComposerPaper {
           elementCell.set("embeddedTo", connectingCell.id);
           toggleLooseElement(
             this.paper.findViewByModel(elementCell),
-            EmbeddedEventEnum.REMOVE,
+            EventActionEnum.REMOVE,
           );
 
           document.dispatchEvent(

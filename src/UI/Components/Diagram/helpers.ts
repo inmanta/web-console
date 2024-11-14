@@ -16,7 +16,7 @@ import {
   TypeEnum,
   LabelLinkView,
   SavedCoordinates,
-  EmbeddedEventEnum,
+  EventActionEnum,
   StencilState,
   ActionEnum,
 } from "@/UI/Components/Diagram/interfaces";
@@ -556,16 +556,16 @@ export const updateLabelPosition = (
 /**
  * Toggle the highlighting of a loose element in a diagram cell view.
  * @param {dia.CellView} cellView - The cell view containing the element.
- * @param {EmbeddedEventEnum} kind - The action to perform, either "add" to add highlighting or "remove" to remove highlighting.
+ * @param {EventActionEnum} kind - The action to perform, either "add" to add highlighting or "remove" to remove highlighting.
  *
  * @returns {void}
  */
 export const toggleLooseElement = (
   cellView: dia.CellView,
-  kind: EmbeddedEventEnum,
+  kind: EventActionEnum,
 ): void => {
   switch (kind) {
-    case EmbeddedEventEnum.ADD:
+    case EventActionEnum.ADD:
       highlighters.mask.add(cellView, "root", "loose_element", {
         padding: 0,
         className: "loose_element-highlight",
@@ -575,7 +575,7 @@ export const toggleLooseElement = (
         },
       });
       break;
-    case EmbeddedEventEnum.REMOVE:
+    case EventActionEnum.REMOVE:
       const highlighter = dia.HighlighterView.get(cellView, "loose_element");
 
       if (highlighter) {
@@ -940,14 +940,14 @@ const removeConnectionData = (
     if (interServiceRelations.length === 1) {
       toggleLooseElement(
         paper.findViewByModel(cellToDisconnect),
-        EmbeddedEventEnum.ADD,
+        EventActionEnum.ADD,
       );
     }
 
     document.dispatchEvent(
       new CustomEvent("updateInterServiceRelations", {
         detail: {
-          action: EmbeddedEventEnum.REMOVE,
+          action: EventActionEnum.REMOVE,
           name: cellToDisconnect.get("entityName"),
           id: elementCell.id,
         },

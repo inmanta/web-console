@@ -5,8 +5,8 @@ import { DiagramHandlers } from "../init";
 import {
   ComposerServiceOrderItem,
   DictDialogData,
-  InterServiceRelationOnCanvas,
   StencilState,
+  relationCounterForCell,
 } from "../interfaces";
 import { CanvasContext } from "./Context";
 
@@ -39,7 +39,7 @@ export const CanvasProvider: React.FC<React.PropsWithChildren<unknown>> = ({
     useState<DiagramHandlers | null>(null);
   const [stencilState, setStencilState] = useState<StencilState | null>(null);
   const [interServiceRelationsOnCanvas, setInterServiceRelationsOnCanvas] =
-    useState<Map<string, InterServiceRelationOnCanvas>>(new Map());
+    useState<Map<string, relationCounterForCell>>(new Map());
 
   useEffect(() => {
     // check if any of the edited serviceOrderItems got its action changed from default - its a condition to disable the deploy button when we are in the edit view

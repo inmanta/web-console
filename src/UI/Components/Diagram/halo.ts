@@ -1,6 +1,6 @@
 import { dia, highlighters, ui } from "@inmanta/rappid";
 import { checkIfConnectionIsAllowed, toggleLooseElement } from "./helpers";
-import { ActionEnum, ConnectionRules, EmbeddedEventEnum } from "./interfaces";
+import { ActionEnum, ConnectionRules, EventActionEnum } from "./interfaces";
 import { ServiceEntityBlock } from "./shapes";
 
 /**
@@ -41,7 +41,7 @@ const createHalo = (
     //cellView.model has the same structure as dia.Element needed as parameter to .getNeighbors() yet typescript complains
     const connectedElements = graph.getNeighbors(cellView.model as dia.Element);
 
-    toggleLooseElement(cellView, EmbeddedEventEnum.REMOVE);
+    toggleLooseElement(cellView, EventActionEnum.REMOVE);
 
     connectedElements.forEach((element) => {
       const elementAsService = element as ServiceEntityBlock;
@@ -54,10 +54,7 @@ const createHalo = (
       //if one of those were embedded into other then update connectedElement as it's got indirectly edited
       if (isEmbedded && isEmbeddedToThisCell) {
         element.set("embeddedTo", undefined);
-        toggleLooseElement(
-          paper.findViewByModel(element),
-          EmbeddedEventEnum.ADD,
-        );
+        toggleLooseElement(paper.findViewByModel(element), EventActionEnum.ADD);
         didElementChange = true;
       }
       if (element.id === cellView.model.get("embeddedTo")) {
@@ -75,7 +72,7 @@ const createHalo = (
           document.dispatchEvent(
             new CustomEvent("updateInterServiceRelations", {
               detail: {
-                action: EmbeddedEventEnum.REMOVE,
+                action: EventActionEnum.REMOVE,
                 name: cellView.model.get("entityName"),
                 id: elementAsService.id,
               },
@@ -99,6 +96,17 @@ const createHalo = (
         detail: { cell: cellView.model, action: ActionEnum.DELETE },
       }),
     );
+
+    if (cellView.model.get("relatedTo")) {
+      console.log(cellView.id, cellView.model.id);
+      document.dispatchEvent(
+        new CustomEvent("removeInterServiceRelationFromTracker", {
+          detail: {
+            id: cellView.model.id,
+          },
+        }),
+      );
+    }
 
     graph.removeLinks(cellView.model);
     cellView.remove();

@@ -12,7 +12,7 @@ import {
 import {
   ComposerServiceOrderItem,
   ConnectionRules,
-  EmbeddedEventEnum,
+  EventActionEnum,
   EmbeddedRule,
   InterServiceRule,
   LabelLinkView,
@@ -1634,7 +1634,7 @@ describe("toggleLooseElement", () => {
 
     graph.addCell(entity);
 
-    toggleLooseElement(paper.findViewByModel(entity), EmbeddedEventEnum.ADD);
+    toggleLooseElement(paper.findViewByModel(entity), EventActionEnum.ADD);
 
     //assert the arguments of the first call - calls is array of the arguments of each call
     expect((dispatchEventSpy.mock.calls[0][0] as CustomEvent).detail).toEqual(
@@ -1645,7 +1645,7 @@ describe("toggleLooseElement", () => {
     ).not.toBeNull();
 
     //remove
-    toggleLooseElement(paper.findViewByModel(entity), EmbeddedEventEnum.REMOVE);
+    toggleLooseElement(paper.findViewByModel(entity), EventActionEnum.REMOVE);
     expect(
       dia.HighlighterView.get(paper.findViewByModel(entity), "loose_element"),
     ).toBeNull();
@@ -1672,12 +1672,12 @@ describe("toggleLooseElement", () => {
 
     graph.addCell(entity);
 
-    toggleLooseElement(paper.findViewByModel(entity), EmbeddedEventEnum.ADD);
+    toggleLooseElement(paper.findViewByModel(entity), EventActionEnum.ADD);
     expect(
       dia.HighlighterView.get(paper.findViewByModel(entity), "loose_element"),
     ).not.toBeNull();
 
-    toggleLooseElement(paper.findViewByModel(entity), EmbeddedEventEnum.REMOVE);
+    toggleLooseElement(paper.findViewByModel(entity), EventActionEnum.REMOVE);
     expect(
       dia.HighlighterView.get(paper.findViewByModel(entity), "loose_element"),
     ).toBeNull();
