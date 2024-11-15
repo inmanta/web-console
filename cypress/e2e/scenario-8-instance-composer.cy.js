@@ -157,6 +157,10 @@ if (Cypress.env("edition") === "iso") {
         .contains("Show inventory")
         .click();
 
+      cy.get('[joint-selector="itemLabel_name"]')
+        .contains("name")
+        .should("be.visible");
+
       cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
       // click on add instance with composer
       cy.get('[aria-label="AddInstanceToggle"]').click();
@@ -175,6 +179,13 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="TextInput-name"]').type("test_name");
       cy.get('[aria-label="TextInput-service_id"]').type("test_id");
       cy.get("button").contains("Save").click();
+
+      cy.get('[joint-selector="itemLabel_name"]')
+        .contains("name")
+        .should("be.visible");
+      cy.get('[joint-selector="itemBody_name_value"]')
+        .contains("test_name")
+        .should("be.visible");
 
       cy.get("button").contains("Deploy").click();
 

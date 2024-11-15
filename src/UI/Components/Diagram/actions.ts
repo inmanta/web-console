@@ -22,7 +22,7 @@ import { Link, ServiceEntityBlock } from "./shapes";
 /**
  * Function that creates, appends and returns created Entity
  *
- * @param {ServiceModel} serviceModel that we want to base created entity on
+ * @param {ServiceModel | EmbeddedEntity} serviceModel that we want to base created entity on
  * @param {boolean} isCore defines whether created entity is main one in given View
  * @param {boolean} isInEditMode defines whether created entity is is representation of existing instance or new one
  * @param {InstanceAttributeModel} [attributes] of the entity
@@ -86,12 +86,14 @@ export function createComposerEntity({
   }
 
   if (attributes) {
-    updateAttributes(
-      instanceAsTable,
-      serviceModel.key_attributes || [],
-      attributes,
-      true,
-    );
+    const keyAttributes = serviceModel.key_attributes || [];
+
+    //service_identity is a unique attribute to Service model, but doesn't exist in the Embedded Entity model
+    if ("service_identity" in serviceModel && serviceModel.service_identity) {
+      keyAttributes.push(serviceModel.service_identity);
+    }
+
+    updateAttributes(instanceAsTable, keyAttributes, attributes, true);
   }
 
   return instanceAsTable;
