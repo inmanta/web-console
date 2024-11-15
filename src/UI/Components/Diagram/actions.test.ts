@@ -76,100 +76,6 @@ describe("createComposerEntity", () => {
     );
     expect(childEntity.get("relatedTo")).toMatchObject(new Map());
   });
-
-  it("return empty array for service without embedded entities to add to the graph ", () => {
-    const graph = new dia.Graph({});
-    const embedded = addDefaultEntities(graph, parentModel);
-
-    expect(embedded).toMatchObject([]);
-  });
-
-  it("adds default entity for service with embedded entities to the graph ", () => {
-    const dispatchEventSpy = jest.spyOn(document, "dispatchEvent");
-    const graph = new dia.Graph({});
-
-    const embedded = addDefaultEntities(graph, containerModel);
-
-    expect(dispatchEventSpy).toHaveBeenCalledTimes(2);
-
-    //assert the arguments of the first call - calls is array of the arguments of each call
-    expect(
-      (dispatchEventSpy.mock.calls[0][0] as CustomEvent).detail,
-    ).toMatchObject({
-      name: "child_container",
-      id: expect.any(String),
-      relations: [{ current: 0, min: 1, name: "parent-service" }],
-    }); //add relations to Tracker
-
-    //assert the arguments of the second call - calls is array of the arguments of each call
-    expect(
-      (dispatchEventSpy.mock.calls[1][0] as CustomEvent).detail,
-    ).toMatchObject({
-      action: "add",
-      name: "child_container",
-    }); //update stencil state
-
-    expect(embedded.length).toBe(1);
-
-    expect(embedded[0].getName()).toStrictEqual("child_container");
-  });
-
-  it("adds default entity for service with nested embedded entities to the graph ", () => {
-    const dispatchEventSpy = jest.spyOn(document, "dispatchEvent");
-
-    const graph = new dia.Graph({});
-    const attributes = {
-      name: "",
-    };
-
-    const createdEntity1 = createComposerEntity({
-      serviceModel: {
-        ...containerModel.embedded_entities[0],
-        embedded_entities: [{ ...containerModel.embedded_entities[0] }],
-      },
-      isCore: false,
-      isInEditMode: false,
-      attributes,
-      isEmbedded: true,
-      holderName: "container-service",
-    });
-
-    const createdEntity2 = createComposerEntity({
-      serviceModel: containerModel.embedded_entities[0],
-      isCore: false,
-      isInEditMode: false,
-      attributes,
-      isEmbedded: true,
-      holderName: "child_container",
-    });
-
-    addDefaultEntities(graph, {
-      ...containerModel,
-      embedded_entities: [
-        {
-          ...containerModel.embedded_entities[0],
-          embedded_entities: containerModel.embedded_entities,
-        },
-      ],
-    });
-
-    expect(dispatchEventSpy).toHaveBeenCalledTimes(6);
-
-    const addedCells = graph
-      .getCells()
-      .filter((cell) => cell.get("type") !== "Link") as ServiceEntityBlock[];
-
-    //we return only top level embedded entities from addDefaultEntities so to get all we need to check graph directly
-    expect(addedCells).toHaveLength(2);
-
-    expect(addedCells[0].get("embeddedTo")).toStrictEqual(
-      createdEntity1.get("embeddedTo"),
-    );
-
-    expect(addedCells[0].get("embeddedTo")).toStrictEqual(
-      createdEntity2.get("embeddedTo"),
-    );
-  });
 });
 
 describe("updateAttributes", () => {
@@ -298,6 +204,102 @@ describe("updateAttributes", () => {
       service_id: "newId",
       should_deploy_fail: false,
     });
+  });
+});
+
+describe("addDefaultEntities", () => {
+  it("return empty array for service without embedded entities to add to the graph ", () => {
+    const graph = new dia.Graph({});
+    const embedded = addDefaultEntities(graph, parentModel);
+
+    expect(embedded).toMatchObject([]);
+  });
+
+  it("adds default entity for service with embedded entities to the graph ", () => {
+    const dispatchEventSpy = jest.spyOn(document, "dispatchEvent");
+    const graph = new dia.Graph({});
+
+    const embedded = addDefaultEntities(graph, containerModel);
+
+    expect(dispatchEventSpy).toHaveBeenCalledTimes(2);
+
+    //assert the arguments of the first call - calls is array of the arguments of each call
+    expect(
+      (dispatchEventSpy.mock.calls[0][0] as CustomEvent).detail,
+    ).toMatchObject({
+      name: "child_container",
+      id: expect.any(String),
+      relations: [{ current: 0, min: 1, name: "parent-service" }],
+    }); //add relations to Tracker
+
+    //assert the arguments of the second call - calls is array of the arguments of each call
+    expect(
+      (dispatchEventSpy.mock.calls[1][0] as CustomEvent).detail,
+    ).toMatchObject({
+      action: "add",
+      name: "child_container",
+    }); //update stencil state
+
+    expect(embedded.length).toBe(1);
+
+    expect(embedded[0].getName()).toStrictEqual("child_container");
+  });
+
+  it("adds default entity for service with nested embedded entities to the graph ", () => {
+    const dispatchEventSpy = jest.spyOn(document, "dispatchEvent");
+
+    const graph = new dia.Graph({});
+    const attributes = {
+      name: "",
+    };
+
+    const createdEntity1 = createComposerEntity({
+      serviceModel: {
+        ...containerModel.embedded_entities[0],
+        embedded_entities: [{ ...containerModel.embedded_entities[0] }],
+      },
+      isCore: false,
+      isInEditMode: false,
+      attributes,
+      isEmbedded: true,
+      holderName: "container-service",
+    });
+
+    const createdEntity2 = createComposerEntity({
+      serviceModel: containerModel.embedded_entities[0],
+      isCore: false,
+      isInEditMode: false,
+      attributes,
+      isEmbedded: true,
+      holderName: "child_container",
+    });
+
+    addDefaultEntities(graph, {
+      ...containerModel,
+      embedded_entities: [
+        {
+          ...containerModel.embedded_entities[0],
+          embedded_entities: containerModel.embedded_entities,
+        },
+      ],
+    });
+
+    expect(dispatchEventSpy).toHaveBeenCalledTimes(6);
+
+    const addedCells = graph
+      .getCells()
+      .filter((cell) => cell.get("type") !== "Link") as ServiceEntityBlock[];
+
+    //we return only top level embedded entities from addDefaultEntities so to get all we need to check graph directly
+    expect(addedCells).toHaveLength(2);
+
+    expect(addedCells[0].get("embeddedTo")).toStrictEqual(
+      createdEntity1.get("embeddedTo"),
+    );
+
+    expect(addedCells[0].get("embeddedTo")).toStrictEqual(
+      createdEntity2.get("embeddedTo"),
+    );
   });
 });
 
