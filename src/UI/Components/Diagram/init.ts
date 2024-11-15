@@ -161,11 +161,12 @@ export function diagramInit(
     },
 
     editEntity: (cellView, serviceModel, attributeValues) => {
-      const keyAttributes = serviceModel.key_attributes || [];
+      let keyAttributes = serviceModel.key_attributes || [];
 
       //service_identity is a unique attribute to Service model, but doesn't exist in the Embedded Entity model
       if ("service_identity" in serviceModel && serviceModel.service_identity) {
         keyAttributes.push(serviceModel.service_identity);
+        keyAttributes = Array.from(new Set(keyAttributes)); //remove possible duplicates
       }
       //line below resolves issue that appendColumns did update values in the model, but visual representation wasn't updated
       cellView.model.set("items", []);
