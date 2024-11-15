@@ -159,12 +159,18 @@ interface StencilState {
   };
 }
 
+/**
+ * Interface representing a relation on the canvas with a minimum value.
+ */
 interface InterServiceRelationOnCanvasWithMin {
   name: string;
   min: ParsedNumber;
   current: number;
 }
 
+/**
+ * Interface representing a relation counter for a cell.
+ */
 interface relationCounterForCell {
   name: string;
   relations: InterServiceRelationOnCanvasWithMin[];

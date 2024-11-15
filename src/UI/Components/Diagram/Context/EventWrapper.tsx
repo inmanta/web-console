@@ -1,6 +1,10 @@
 import React, { useContext, useEffect } from "react";
 import { updateServiceOrderItems } from "../helpers";
-import { ActionEnum, EventActionEnum } from "../interfaces";
+import {
+  ActionEnum,
+  EventActionEnum,
+  relationCounterForCell,
+} from "../interfaces";
 import { ServiceEntityBlock } from "../shapes";
 import { CanvasContext } from "./Context";
 
@@ -220,7 +224,7 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
 
     setInterServiceRelationsOnCanvas((prev) => {
       const copy = new Map(prev);
-      const cellsRelations = copy.get(id);
+      const cellsRelations: relationCounterForCell | undefined = copy.get(id);
 
       if (cellsRelations) {
         const indexOfRelationToUpdate = cellsRelations.relations.findIndex(

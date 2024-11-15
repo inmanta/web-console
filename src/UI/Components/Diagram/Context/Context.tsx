@@ -74,6 +74,9 @@ interface CanvasProviderInterface {
   isDirty: boolean;
 }
 
+/**
+ * The default values for the CanvasContext. Look for the in detail description of the values in the CanvasContext docstrings.
+ */
 export const defaultCanvasContext: CanvasProviderInterface = {
   diagramHandlers: null,
   setDiagramHandlers: () => {},
