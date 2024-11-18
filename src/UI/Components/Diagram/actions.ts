@@ -358,25 +358,27 @@ export function appendEmbeddedEntity(
     instanceAsTable.addTo(graph);
 
     //iterate through embedded entities to create and connect them
-    embeddedEntity.embedded_entities.forEach((entity) => {
-      const appendedEntity = appendEmbeddedEntity(
-        paper,
-        graph,
-        entity,
-        entityInstance[entity.name] as InstanceAttributeModel,
-        instanceAsTable.id as string,
-        embeddedEntity.name,
-        presentedAttr,
-        isBlockedFromEditing,
-      );
+    embeddedEntity.embedded_entities
+      .filter((entity) => entity.modifier !== "r")
+      .forEach((entity) => {
+        const appendedEntity = appendEmbeddedEntity(
+          paper,
+          graph,
+          entity,
+          entityInstance[entity.name] as InstanceAttributeModel,
+          instanceAsTable.id as string,
+          embeddedEntity.name,
+          presentedAttr,
+          isBlockedFromEditing,
+        );
 
-      connectEntities(
-        graph,
-        instanceAsTable,
-        appendedEntity,
-        isBlockedFromEditing,
-      );
-    });
+        connectEntities(
+          graph,
+          instanceAsTable,
+          appendedEntity,
+          isBlockedFromEditing,
+        );
+      });
 
     const relations = embeddedEntity.inter_service_relations || [];
 
@@ -581,11 +583,12 @@ function addEmbeddedEntities(
   isBlockedFromEditing = false,
 ): ServiceEntityBlock[] {
   const { embedded_entities } = serviceModel;
-
   //iterate through embedded entities to create and connect them
-  //we are basing iteration on service Model, if there is no value in the instance, skip that entity
+  //we are basing iteration on service Model, if there is no value in the instance and if the value has modifier set to "r", skip that entity
   const createdEmbedded = embedded_entities
-    .filter((entity) => !!attributesValues[entity.name])
+    .filter(
+      (entity) => !!attributesValues[entity.name] && entity.modifier !== "r",
+    )
     .flatMap((entity) => {
       const appendedEntities = appendEmbeddedEntity(
         paper,
