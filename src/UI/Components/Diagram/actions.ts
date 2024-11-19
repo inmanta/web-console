@@ -479,7 +479,7 @@ export function addDefaultEntities(
  * Helper function to add single default Embedded Entity to the graph - it's created to avoid code duplication in the addDefaultEntities function
  *
  * @param {dia.Graph} graph - The jointJS graph to which entities should be added.
- * @param { EmbeddedEntity} service - The service model or embedded entity used to generate the default entities.
+ * @param {EmbeddedEntity} service - The service model or embedded entity used to generate the default entities.
  * @param {InstanceAttributeModel} attributes - attributes of given instance/entity
  * @param {string} holderName - name of the entity to which it is embedded/connected
  * @returns {ServiceEntityBlock}
