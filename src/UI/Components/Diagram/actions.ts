@@ -359,7 +359,7 @@ export function appendEmbeddedEntity(
 
     //iterate through embedded entities to create and connect them
     embeddedEntity.embedded_entities
-      .filter((entity) => entity.modifier !== "r")
+      .filter((entity) => entity.modifier !== "r") // filter out read-only embedded entities to de-clutter the view
       .forEach((entity) => {
         const appendedEntity = appendEmbeddedEntity(
           paper,
