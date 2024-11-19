@@ -169,7 +169,8 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
   };
 
   /**
-   * Handles the event triggered when there is a creation of entity that has required inter-service relation.
+   * Handles the event triggered when there is a creation of cell/entity that has required inter-service relation.
+   * This event is fired when cell of given {id} is added to the canvas. It only happens when the cell has some required inter-service relation attributes to fill.
    *
    * @param {CustomEvent} event - The event object.
    *
@@ -192,7 +193,8 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
   };
 
   /**
-   * Handles the event triggered when there is a removal of entity that has required inter-service relation.
+   * Handles the event triggered when there is a removal of cell/entity that has required inter-service relation.
+   * This event is fired when cell of given {id} is removed from the canvas. It only happens when the cell has some required inter-service relation attributes to fill.
    *
    * @param {CustomEvent} event - The event object.
    *
@@ -212,13 +214,14 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
   };
 
   /**
-   * Handles the event triggered when there is a addition/removal of inter-service relation.
+   * Handles the event triggered when there is a update of inter-service relation for given cell/entity.
+   * This event is fired when inter-service relation of given {name} is connected/disconnected to cell of given {id}
    *
    * @param {CustomEvent} event - The event object.
    *
    * @returns {void}
    */
-  const handleUpdateCellWithInterServiceRelations = (event): void => {
+  const handleUpdateOfInterServiceRelationsInCell = (event): void => {
     const customEvent = event as CustomEvent;
     const { id, name, action } = customEvent.detail;
 
@@ -272,7 +275,7 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
     );
     document.addEventListener(
       "updateInterServiceRelations",
-      handleUpdateCellWithInterServiceRelations,
+      handleUpdateOfInterServiceRelationsInCell,
     );
 
     return () => {
@@ -294,7 +297,7 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
       );
       document.addEventListener(
         "updateInterServiceRelations",
-        handleUpdateCellWithInterServiceRelations,
+        handleUpdateOfInterServiceRelationsInCell,
       );
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
