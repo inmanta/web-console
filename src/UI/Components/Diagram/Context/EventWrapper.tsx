@@ -3,7 +3,7 @@ import { updateServiceOrderItems } from "../helpers";
 import {
   ActionEnum,
   EventActionEnum,
-  relationCounterForCell,
+  RelationCounterForCell,
 } from "../interfaces";
 import { ServiceEntityBlock } from "../shapes";
 import { CanvasContext } from "./Context";
@@ -175,7 +175,7 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
    *
    * @returns {void}
    */
-  const handleAddInterServiceRelationInTracker = (event): void => {
+  const handleAddCellWithInterServiceRelations = (event): void => {
     const customEvent = event as CustomEvent;
     const { id, name, relations } = customEvent.detail;
 
@@ -198,7 +198,7 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
    *
    * @returns {void}
    */
-  const handleRemoveInterServiceRelationInTracker = (event): void => {
+  const handleRemoveCellWithInterServiceRelations = (event): void => {
     const customEvent = event as CustomEvent;
     const { id } = customEvent.detail;
 
@@ -218,13 +218,13 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
    *
    * @returns {void}
    */
-  const updateInterServiceRelationInTracker = (event): void => {
+  const handleUpdateCellWithInterServiceRelations = (event): void => {
     const customEvent = event as CustomEvent;
     const { id, name, action } = customEvent.detail;
 
     setInterServiceRelationsOnCanvas((prev) => {
       const copy = new Map(prev);
-      const cellsRelations: relationCounterForCell | undefined = copy.get(id);
+      const cellsRelations: RelationCounterForCell | undefined = copy.get(id);
 
       if (cellsRelations) {
         const indexOfRelationToUpdate = cellsRelations.relations.findIndex(
@@ -264,15 +264,15 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
     document.addEventListener("updateStencil", handleUpdateStencilState);
     document.addEventListener(
       "addInterServiceRelationToTracker",
-      handleAddInterServiceRelationInTracker,
+      handleAddCellWithInterServiceRelations,
     );
     document.addEventListener(
       "removeInterServiceRelationFromTracker",
-      handleRemoveInterServiceRelationInTracker,
+      handleRemoveCellWithInterServiceRelations,
     );
     document.addEventListener(
       "updateInterServiceRelations",
-      updateInterServiceRelationInTracker,
+      handleUpdateCellWithInterServiceRelations,
     );
 
     return () => {
@@ -286,15 +286,15 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
       document.removeEventListener("updateStencil", handleUpdateStencilState);
       document.removeEventListener(
         "addInterServiceRelationToTracker",
-        handleAddInterServiceRelationInTracker,
+        handleAddCellWithInterServiceRelations,
       );
       document.removeEventListener(
         "removeInterServiceRelationFromTracker",
-        handleRemoveInterServiceRelationInTracker,
+        handleRemoveCellWithInterServiceRelations,
       );
       document.addEventListener(
         "updateInterServiceRelations",
-        updateInterServiceRelationInTracker,
+        handleUpdateCellWithInterServiceRelations,
       );
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps

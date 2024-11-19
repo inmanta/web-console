@@ -4,10 +4,10 @@ import { InfoAltIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { words } from "@/UI/words";
 import { CanvasContext } from "../Context";
-import { relationCounterForCell } from "../interfaces";
+import { RelationCounterForCell } from "../interfaces";
 
 /**
- * Validation component that checks for missing inter-service relations on the canvas and displays an alert if any are found.
+ * Validation component that currently checks for missing inter-service relations on the canvas and displays an alert if any are found.
  *
  * This component uses the CanvasContext to get the current state of the canvas, including whether it is dirty and the inter-service relations.
  * It filters the relations to find those that are missing (i.e., current count is less than the minimum required) and displays an alert with the details.
@@ -37,7 +37,7 @@ export const Validation: React.FC = () => {
         customIcon={<InfoAltIcon />}
         isExpandable
         variant="danger"
-        title={words("instanceComposer.entitiesWithoutRelations")(
+        title={words("instanceComposer.validation.title")(
           interServiceRelationsThatAreMissing.length,
         )}
       >
@@ -55,7 +55,7 @@ const PanelWrapper = styled(Panel)`
 `;
 
 interface Props {
-  entity: relationCounterForCell;
+  entity: RelationCounterForCell;
 }
 
 /**
@@ -64,24 +64,23 @@ interface Props {
  * This component filters the relations of the entity to find those that are below the minimum required count and displays their names.
  *
  * @param {Object} props - The properties for the component.
- * @param {relationCounterForCell} entity - The entity object containing name and relations.
+ * @param {RelationCounterForCell} entity - The entity object containing name and relations.
  * @param {string} entity.name - The name of the entity.
  * @param {InterServiceRelationOnCanvasWithMin} .entity.relations - The relations of the entity, each with a name, current count, and minimum required count.
  * @returns {React.FC<Props>} The rendered text content component displaying the missing relations.
  */
 const MissingRelationsForGivenCell: React.FC<Props> = ({ entity }) => {
   const { name, relations } = entity;
-  const relationsToRender = relations.filter(
-    (relation) => relation.current < relation.min,
-  );
-  const relationNames = relationsToRender.map((relation) => relation.name);
 
-  return (
-    <TextContent aria-label={`missingRelationsParagraph-${name}`}>
+  return relations.map((relation) => (
+    <TextContent
+      aria-label={`missingRelationsParagraph-${name}_${relation.name}`}
+    >
       {words("instanceComposer.missingRelations")(
         name,
-        relationNames.join(", "),
+        Number(relation.min),
+        relation.name,
       )}
     </TextContent>
-  );
+  ));
 };

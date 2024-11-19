@@ -160,7 +160,7 @@ interface StencilState {
 }
 
 /**
- * Interface representing a relation on the canvas with a minimum value.
+ * Interface representing a relation attribute on the canvas with a set minimum amount of relations.
  */
 interface InterServiceRelationOnCanvasWithMin {
   name: string;
@@ -171,7 +171,7 @@ interface InterServiceRelationOnCanvasWithMin {
 /**
  * Interface representing a relation counter for a cell.
  */
-interface relationCounterForCell {
+interface RelationCounterForCell {
   name: string;
   relations: InterServiceRelationOnCanvasWithMin[];
 }
@@ -233,5 +233,5 @@ export {
   ComposerEntityOptions,
   EntityType,
   InterServiceRelationOnCanvasWithMin,
-  relationCounterForCell,
+  RelationCounterForCell,
 };

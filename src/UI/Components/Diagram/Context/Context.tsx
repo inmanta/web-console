@@ -9,7 +9,7 @@ import {
   ComposerServiceOrderItem,
   DictDialogData,
   StencilState,
-  relationCounterForCell,
+  RelationCounterForCell,
 } from "../interfaces";
 
 /**
@@ -63,9 +63,9 @@ interface CanvasProviderInterface {
     React.SetStateAction<Map<string, ComposerServiceOrderItem>>
   >;
 
-  interServiceRelationsOnCanvas: Map<string, relationCounterForCell>;
+  interServiceRelationsOnCanvas: Map<string, RelationCounterForCell>;
   setInterServiceRelationsOnCanvas: React.Dispatch<
-    React.SetStateAction<Map<string, relationCounterForCell>>
+    React.SetStateAction<Map<string, RelationCounterForCell>>
   >;
 
   stencilState: StencilState | null;
