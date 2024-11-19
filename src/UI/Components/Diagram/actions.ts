@@ -359,7 +359,7 @@ export function appendEmbeddedEntity(
 
     //iterate through embedded entities to create and connect them
     embeddedEntity.embedded_entities
-      .filter((entity) => entity.modifier !== "r") // filter out read-only embedded entities to de-clutter the view
+      .filter((entity) => entity.modifier !== "r") // filter out read-only embedded entities to de-clutter the view as they can't be edited and can be in multiple places which would result with enormous tree of cells in the graph and the canvas
       .forEach((entity) => {
         const appendedEntity = appendEmbeddedEntity(
           paper,
@@ -584,7 +584,7 @@ function addEmbeddedEntities(
 ): ServiceEntityBlock[] {
   const { embedded_entities } = serviceModel;
   //iterate through embedded entities to create and connect them
-  //we are basing iteration on service Model, if there is no value in the instance and if the value has modifier set to "r", skip that entity
+  //we are basing iteration on service Model, if there is no value in the instance and if the value has modifier set to "r", skip that entity - "r" entities are read-only, they can't be edited and can be in multiple places which would result with enormous tree of cells in the graph and the canvas which would discourage user from using the Instance Composer
   const createdEmbedded = embedded_entities
     .filter(
       (entity) => !!attributesValues[entity.name] && entity.modifier !== "r",

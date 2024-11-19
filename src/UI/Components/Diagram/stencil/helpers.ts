@@ -16,7 +16,7 @@ export const transformEmbeddedToStencilElements = (
   service: ServiceModel | EmbeddedEntity,
 ): shapes.standard.Path[] => {
   return service.embedded_entities
-    .filter((embedded_entity) => embedded_entity.modifier !== "r") // filter out read-only embedded entities from the stencil
+    .filter((embedded_entity) => embedded_entity.modifier !== "r") // filter out read-only embedded entities from the stencil as they can't be created by the user
     .flatMap((embedded_entity) => {
       const stencilElement = createStencilElement(
         embedded_entity.name,
