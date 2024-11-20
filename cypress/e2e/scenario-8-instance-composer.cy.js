@@ -157,10 +157,6 @@ if (Cypress.env("edition") === "iso") {
         .contains("Show inventory")
         .click();
 
-      cy.get('[joint-selector="itemLabel_name"]')
-        .contains("name")
-        .should("be.visible");
-
       cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
       // click on add instance with composer
       cy.get('[aria-label="AddInstanceToggle"]').click();
@@ -173,6 +169,10 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[data-type="app.ServiceEntityBlock"')
         .contains("parent-service")
         .click();
+
+      cy.get('[joint-selector="itemLabel_name"]')
+        .contains("name")
+        .should("be.visible");
 
       //fill parent attributes
       cy.get("button").contains("Edit").click();
