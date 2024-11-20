@@ -335,6 +335,14 @@ describe("ServiceInstanceDetailsPage", () => {
       "Version: 4",
     );
 
+    // should display the right timestamp in the rows for each version
+    expect(screen.getByTestId("version-4-timestamp")).toHaveTextContent(
+      "2022/09/02 14:01:19",
+    );
+    expect(screen.getByTestId("version-3-timestamp")).toHaveTextContent(
+      "2022/09/02 13:56:16",
+    );
+
     expect(screen.getByText("Documentation")).toBeInTheDocument();
     expect(screen.getByText("Topography")).toBeInTheDocument();
     expect(
