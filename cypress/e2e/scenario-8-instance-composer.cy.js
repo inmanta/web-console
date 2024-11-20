@@ -728,12 +728,12 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[data-testid="Error-container"]').should("be.visible");
       cy.get('[data-testid="Error-container"]').should(
         "have.text",
-        "Danger alert:Entities with missing inter-service relations: 1",
+        "Danger alert:  found: 1",
       );
       cy.get('[aria-label="Danger alert details"]').click();
       cy.get('[aria-label="missingRelationsParagraph-child-service"]').should(
         "have.text",
-        "child-service has missing inter-service relations: parent-service",
+        "Expected at least 1 parent-service inter-service relation(s) for child-service",
       );
 
       //assert if default entities are present, on init on the canvas we should have already basic required structure for the service instance

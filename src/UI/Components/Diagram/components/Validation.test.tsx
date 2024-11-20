@@ -46,9 +46,7 @@ describe("Given a Validation component", () => {
 
     render(setup(isDirty, interServiceRelationsOnCanvas));
     expect(screen.queryByTestId("Error-container")).toBeDefined();
-    expect(
-      screen.getByText("Entities with missing inter-service relations: 1"),
-    ).toBeDefined();
+    expect(screen.getByText("Erros found: 1")).toBeDefined();
 
     await act(async () => {
       await userEvent.click(screen.getByLabelText("Danger alert details"));
@@ -56,7 +54,7 @@ describe("Given a Validation component", () => {
 
     expect(
       screen.getByText(
-        "test has missing inter-service relations: relation-test",
+        "Expected at least 1 relation-test inter-service relation(s) for test",
       ),
     ).toBeDefined();
   });
