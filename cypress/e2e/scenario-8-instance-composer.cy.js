@@ -183,7 +183,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[joint-selector="itemLabel_name"]')
         .contains("name")
         .should("be.visible");
-      cy.get('[joint-selector="itemBody_name_value"]')
+      cy.get('[joint-selector="itemLabel_name_value"]')
         .contains("test_name")
         .should("be.visible");
 
