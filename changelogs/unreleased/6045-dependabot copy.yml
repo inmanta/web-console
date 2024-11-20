@@ -1,5 +1,0 @@
-change-type: patch
-description: "Build(deps-dev): Bump @testing-library/jest-dom from 6.4.8 to 6.6.3"
-destination-branches:
-  - master
-sections: {}
