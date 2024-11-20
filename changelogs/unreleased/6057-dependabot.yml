@@ -1,0 +1,5 @@
+change-type: patch
+description: 'Build(deps): Bump cross-spawn from 7.0.3 to 7.0.6'
+destination-branches:
+- master
+sections: {}

@@ -71,7 +71,7 @@ export const HistorySection: React.FC = () => {
                     {words("instanceDetails.history.table.version")}
                   </Th>
                   <Th style={{ minWidth: "100px" }}>
-                    {words("instanceDetails.history.table.date")}
+                    {words("instanceDetails.history.table.timestamp")}
                   </Th>
                   <Th>{words("instanceDetails.history.table.status")}</Th>
                 </Tr>
@@ -117,10 +117,13 @@ const HistoryRowContent: React.FC<HistoryRowProps> = ({ log }) => {
   return (
     <>
       <Td dataLabel="version">{String(log.version)}</Td>
-      <Td dataLabel="date">
-        <DateWithTooltip timestamp={log.created_at} />
+      <Td
+        dataLabel="timestamp"
+        data-testid={`version-${log.version}-timestamp`}
+      >
+        <DateWithTooltip isFull timestamp={log.timestamp} />
       </Td>
-      <Td dataLabel="state">
+      <Td dataLabel="state" data-testid={`version-${log.version}-state`}>
         <StateLabel state={log.state} service={serviceModelQuery.data} />
       </Td>
     </>
