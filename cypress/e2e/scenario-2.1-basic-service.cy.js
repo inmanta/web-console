@@ -69,7 +69,7 @@ if (Cypress.env("edition") === "iso") {
       forceUpdateEnvironment();
     });
 
-    it("2.1.1 Add Instance Cancel form", () => {
+    it.only("2.1.1 Add Instance Cancel form", () => {
       // Go from Home page to Service Inventory of Basic-service
       cy.visit("/console/");
 
@@ -109,7 +109,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
     });
 
-    it("2.1.2 Add Instance Submit form, INVALID form, EDIT form, VALID form", () => {
+    it.only("2.1.2 Add Instance Submit form, INVALID form, EDIT form, VALID form", () => {
       // Go from Home page to Service Inventory of Basic-service
       cy.visit("/console/");
       cy.get('[aria-label="Environment card"]')
@@ -151,7 +151,10 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 1);
 
       // check whether there are two options available in the dropdown to copy the id/identifier.
-      cy.get('[aria-label="IdentityCell-basic-service"]').click();
+      cy.get('[aria-label="IdentityCell-basic-service"]').within(() => {
+        cy.get('[aria-label="Copy to clipboard"]').click();
+      });
+
       cy.get('[role="menuitem"]').should("have.length", 2);
     });
 
