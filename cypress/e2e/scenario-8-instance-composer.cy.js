@@ -171,10 +171,8 @@ if (Cypress.env("edition") === "iso") {
         .click();
 
       //fill parent attributes
-      cy.get("button").contains("Edit").click();
       cy.get('[aria-label="TextInput-name"]').type("test_name");
       cy.get('[aria-label="TextInput-service_id"]').type("test_id");
-      cy.get("button").contains("Save").click();
 
       cy.get("button").contains("Deploy").click();
 
@@ -188,10 +186,8 @@ if (Cypress.env("edition") === "iso") {
         .click();
 
       //fill parent attributes
-      cy.get("button").contains("Edit").click();
       cy.get('[aria-label="TextInput-name"]').type("test_name2");
       cy.get('[aria-label="TextInput-service_id"]').type("test_id2");
-      cy.get("button").contains("Save").click();
 
       cy.get("button").contains("Deploy").click();
 
@@ -256,7 +252,6 @@ if (Cypress.env("edition") === "iso") {
       cy.get("input").should("have.length", 21);
 
       //fill some of core attributes
-      cy.get("button").contains("Edit").click();
 
       //strings
       cy.get('[aria-label="TextInput-name"]').type("many-defaults");
@@ -310,8 +305,6 @@ if (Cypress.env("edition") === "iso") {
         '{{}"test2":"value2"{}}',
       );
 
-      cy.get("button").contains("Save").click();
-
       //assert that embedded instance have all attributes, this particular embedded entity can't be removed but can be edited
       cy.get('[data-type="app.ServiceEntityBlock"')
         .contains("embedded")
@@ -320,7 +313,6 @@ if (Cypress.env("edition") === "iso") {
       cy.get("input").should("have.length", 21);
 
       //fill some of embedded attributes, they are exactly the same as core attributes so we need to check only one fully, as the logic is the same
-      cy.get("button").contains("Edit").click();
 
       //strings
       cy.get('[aria-label="TextInput-name"]').type("embedded");
@@ -349,8 +341,6 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="TextInput-default_nullable_float"]').type(
         "{backspace}4.1",
       );
-
-      cy.get("button").contains("Save").click();
 
       //Drag extra_embedded onto canvas and assert that is highlighted as loose element
       cy.get(".bodyTwo_extra_embedded")
@@ -395,7 +385,6 @@ if (Cypress.env("edition") === "iso") {
         .contains("extra_embedded")
         .click();
       //fill some of embedded attributes, they are exactly the same as core attributes so we need to check only one fully, as the logic is the same
-      cy.get("button").contains("Edit").click();
 
       //strings
       cy.get('[aria-label="TextInput-name"]').type("extra_embedded");
@@ -426,8 +415,6 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="TextInput-default_nullable_float"]').type(
         "{backspace}4.1",
       );
-
-      cy.get("button").contains("Save").click();
 
       //connect core instance with extra_embedded instance
       cy.get('[data-name="fit-to-screen"]').click();
@@ -586,7 +573,6 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[data-type="app.ServiceEntityBlock"]')
         .contains("many-defaults")
         .click();
-      cy.get("button").contains("Edit").click();
 
       cy.get('[aria-label="TextInput-default_string"]').type(
         "{selectAll}{backspace}updated_string",
@@ -599,14 +585,12 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="TextInput-default_empty_dict"]').type(
         '{selectAll}{backspace}{{}"test2":"value2"{}}',
       );
-      cy.get("button").contains("Save").click();
 
       //edit some of embedded attributes
       cy.get('[data-type="app.ServiceEntityBlock"]')
         .contains("embedded")
         .click();
       cy.get("button").contains("Remove").should("be.disabled");
-      cy.get("button").contains("Edit").click();
 
       cy.get('[aria-label="TextInput-default_string"]').type(
         "{selectAll}{backspace}updated_string",
@@ -619,7 +603,6 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="TextInput-default_empty_dict"]').type(
         '{selectAll}{backspace}{{}"test2":"value2"{}}',
       );
-      cy.get("button").contains("Save").click();
 
       //remove extra_embedded instance
       cy.get('[data-type="app.ServiceEntityBlock"]')
@@ -729,11 +712,9 @@ if (Cypress.env("edition") === "iso") {
 
       cy.get('[data-type="app.ServiceEntityBlock"]').click();
       cy.get("button").contains("Remove").should("be.disabled");
-      cy.get("button").contains("Edit").click();
 
       cy.get('[aria-label="TextInput-name"]').type("test_child");
       cy.get('[aria-label="TextInput-service_id"]').type("test_child_id");
-      cy.get("button").contains("Save").click();
 
       //add parent instance to the canvas and connect it to the core instance
       cy.get("#inventory-tab").click();
