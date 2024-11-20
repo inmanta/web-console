@@ -19,6 +19,7 @@ interface Props {
   onSave: (fields: Field[], formState: InstanceAttributeModel) => void;
   isDisabled: boolean;
   isRemovable: boolean;
+  showButtons: boolean;
   onRemove: () => void;
 }
 
@@ -36,6 +37,7 @@ interface Props {
  * @prop {InstanceAttributeModel} initialState - The initial state of the form.
  * @prop {Function} onSave - The callback to call when the form is submitted.
  * @prop {boolean} isRemovable - A flag that indicates whether the entity can be removed.
+ * @prop {boolean} showButtons - A flag that indicates whether to show buttons or not
  * @prop {Function} onRemove - The callback to call when the cancel Remove is clicked.
  *
  * @returns {React.FC<Props>} The EntityForm component.
@@ -47,6 +49,7 @@ export const EntityForm: React.FC<Props> = ({
   onSave,
   isDisabled,
   isRemovable,
+  showButtons,
   onRemove,
 }) => {
   const [fields, setFields] = useState<Field[]>([]);
@@ -82,6 +85,7 @@ export const EntityForm: React.FC<Props> = ({
           selection.push(value as string);
         }
         updatedValue = set(clone, path, selection);
+        onSave(fields, updatedValue); // onSave has to be called within setState to avoid async behavior of setState
 
         //update the form state with the new selection property with help of _lodash set function
         return updatedValue;
@@ -91,12 +95,12 @@ export const EntityForm: React.FC<Props> = ({
         const clone = { ...prev };
 
         updatedValue = set(clone, path, value);
+        onSave(fields, updatedValue); // onSave has to be called within setState to avoid async behavior of setState
 
         //update the form state with the new value with help of _lodash set function
         return updatedValue;
       });
     }
-    onSave(fields, updatedValue);
   };
 
   /**
@@ -157,9 +161,9 @@ export const EntityForm: React.FC<Props> = ({
         )}
         <FlexItem>
           <Form
+            data-testid="entity-form"
             onSubmit={(event) => {
               event.preventDefault();
-              onSave(fields, formState);
             }}
           >
             {fields.map((field) => (
@@ -176,30 +180,32 @@ export const EntityForm: React.FC<Props> = ({
           </Form>
         </FlexItem>
       </StyledFlex>
-      <Flex justifyContent={{ default: "justifyContentCenter" }}>
+      {showButtons && (
         <Flex justifyContent={{ default: "justifyContentCenter" }}>
+          <Flex justifyContent={{ default: "justifyContentCenter" }}>
+            <FlexItem>
+              <StyledButton
+                variant="danger"
+                width={200}
+                onClick={onRemove}
+                isDisabled={!isRemovable}
+              >
+                {words("remove")}
+              </StyledButton>
+            </FlexItem>
+          </Flex>
           <FlexItem>
             <StyledButton
-              variant="danger"
+              variant="tertiary"
               width={200}
-              onClick={onRemove}
-              isDisabled={!isRemovable}
+              isDisabled={!isDirty}
+              onClick={onCancel}
             >
-              {words("remove")}
+              {words("cancel")}
             </StyledButton>
           </FlexItem>
         </Flex>
-        <FlexItem>
-          <StyledButton
-            variant="tertiary"
-            width={200}
-            isDisabled={!isDirty}
-            onClick={onCancel}
-          >
-            {words("cancel")}
-          </StyledButton>
-        </FlexItem>
-      </Flex>
+      )}
     </>
   );
 };

@@ -214,6 +214,7 @@ export const RightSidebar: React.FC<Props> = ({ editable }) => {
             isDisabled={!editable || isInterServiceRelation}
             isRemovable={isRemovable}
             onRemove={onRemove}
+            showButtons={editable}
           />
         )}
       </StyledFlex>
