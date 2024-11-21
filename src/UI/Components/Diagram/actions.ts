@@ -378,25 +378,27 @@ export function appendEmbeddedEntity(
     instanceAsTable.addTo(graph);
 
     //iterate through embedded entities to create and connect them
-    embeddedEntity.embedded_entities.forEach((entity) => {
-      const appendedEntity = appendEmbeddedEntity(
-        paper,
-        graph,
-        entity,
-        entityInstance[entity.name] as InstanceAttributeModel,
-        instanceAsTable.id as string,
-        embeddedEntity.name,
-        presentedAttr,
-        isBlockedFromEditing,
-      );
+    embeddedEntity.embedded_entities
+      .filter((entity) => entity.modifier !== "r") // filter out read-only embedded entities to de-clutter the view as they can't be edited and can be in multiple places which would result with enormous tree of cells in the graph and the canvas
+      .forEach((entity) => {
+        const appendedEntity = appendEmbeddedEntity(
+          paper,
+          graph,
+          entity,
+          entityInstance[entity.name] as InstanceAttributeModel,
+          instanceAsTable.id as string,
+          embeddedEntity.name,
+          presentedAttr,
+          isBlockedFromEditing,
+        );
 
-      connectEntities(
-        graph,
-        instanceAsTable,
-        appendedEntity,
-        isBlockedFromEditing,
-      );
-    });
+        connectEntities(
+          graph,
+          instanceAsTable,
+          appendedEntity,
+          isBlockedFromEditing,
+        );
+      });
 
     const relations = embeddedEntity.inter_service_relations || [];
 
@@ -470,43 +472,74 @@ export function addDefaultEntities(
 ): ServiceEntityBlock[] {
   const embedded_entities = service.embedded_entities
     .filter((embedded_entity) => embedded_entity.lower_limit > 0)
-    .map((embedded_entity) => {
+    .flatMap((embedded_entity) => {
       const fieldCreator = new FieldCreator(new CreateModifierHandler());
       const fields = fieldCreator.attributesToFields(
         embedded_entity.attributes,
       );
+      const attributes = createFormState(fields);
 
-      const embeddedEntity = createComposerEntity({
-        serviceModel: embedded_entity,
-        isCore: false,
-        isInEditMode: false,
-        attributes: createFormState(fields),
-        isEmbedded: true,
-        holderName: service.name,
-      });
+      if (embedded_entity.lower_limit > 1) {
+        const embedded_entities: ServiceEntityBlock[] = [];
 
-      document.dispatchEvent(
-        new CustomEvent("updateStencil", {
-          detail: {
-            name: embedded_entity.name,
-            action: EventActionEnum.ADD,
-          },
-        }),
-      );
+        for (let i = 0; i < embedded_entity.lower_limit; i++) {
+          embedded_entities.push(
+            addSingleEntity(graph, embedded_entity, attributes, service.name),
+          );
+        }
 
-      embeddedEntity.addTo(graph);
-      const subEmbeddedEntities = addDefaultEntities(graph, embedded_entity);
+        return embedded_entities;
+      }
 
-      subEmbeddedEntities.forEach((entity) => {
-        entity.set("embeddedTo", embeddedEntity.id);
-      });
-      connectEntities(graph, embeddedEntity, subEmbeddedEntities);
-
-      return embeddedEntity;
+      return addSingleEntity(graph, embedded_entity, attributes, service.name);
     });
 
   return embedded_entities;
 }
+
+/**
+ * Helper function to add single default Embedded Entity to the graph - it's created to avoid code duplication in the addDefaultEntities function
+ *
+ * @param {dia.Graph} graph - The jointJS graph to which entities should be added.
+ * @param {EmbeddedEntity} service - The service model or embedded entity used to generate the default entities.
+ * @param {InstanceAttributeModel} attributes - attributes of given instance/entity
+ * @param {string} holderName - name of the entity to which it is embedded/connected
+ * @returns {ServiceEntityBlock}
+ */
+const addSingleEntity = (
+  graph: dia.Graph,
+  model: EmbeddedEntity,
+  attributes: InstanceAttributeModel,
+  holderName: string,
+): ServiceEntityBlock => {
+  const embeddedEntity = createComposerEntity({
+    serviceModel: model,
+    isCore: false,
+    isInEditMode: false,
+    attributes,
+    isEmbedded: true,
+    holderName,
+  });
+
+  document.dispatchEvent(
+    new CustomEvent("updateStencil", {
+      detail: {
+        name: model.name,
+        action: EventActionEnum.ADD,
+      },
+    }),
+  );
+
+  embeddedEntity.addTo(graph);
+  const subEmbeddedEntities = addDefaultEntities(graph, model);
+
+  subEmbeddedEntities.forEach((entity) => {
+    entity.set("embeddedTo", embeddedEntity.id);
+  });
+  connectEntities(graph, embeddedEntity, subEmbeddedEntities);
+
+  return embeddedEntity;
+};
 
 /**
  *  Function that iterates through service instance attributes for values and appends in jointJS entity for display
@@ -601,11 +634,12 @@ function addEmbeddedEntities(
   isBlockedFromEditing = false,
 ): ServiceEntityBlock[] {
   const { embedded_entities } = serviceModel;
-
   //iterate through embedded entities to create and connect them
-  //we are basing iteration on service Model, if there is no value in the instance, skip that entity
+  //we are basing iteration on service Model, if there is no value in the instance and if the value has modifier set to "r", skip that entity - "r" entities are read-only, they can't be edited and can be in multiple places which would result with enormous tree of cells in the graph and the canvas which would discourage user from using the Instance Composer
   const createdEmbedded = embedded_entities
-    .filter((entity) => !!attributesValues[entity.name])
+    .filter(
+      (entity) => !!attributesValues[entity.name] && entity.modifier !== "r",
+    )
     .flatMap((entity) => {
       const appendedEntities = appendEmbeddedEntity(
         paper,

@@ -193,7 +193,7 @@ export const RightSidebar: React.FC<Props> = ({ editable }) => {
       const lowerLimit = entityState.min;
 
       const isLowerLimitReached =
-        lowerLimit && entityState.current === lowerLimit;
+        lowerLimit && entityState.current <= lowerLimit;
 
       return !isCellCore && canBeRemoved && !isLowerLimitReached;
     });

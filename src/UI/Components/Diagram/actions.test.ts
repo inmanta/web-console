@@ -289,6 +289,40 @@ describe("addDefaultEntities", () => {
     expect(embedded[0].getName()).toStrictEqual("child_container");
   });
 
+  it("adds all default entities to the graph for service with embedded entity with lower_limit > 1 ", () => {
+    const dispatchEventSpy = jest.spyOn(document, "dispatchEvent");
+    const graph = new dia.Graph({});
+    const customModel = {
+      ...containerModel,
+      embedded_entities: [
+        { ...containerModel.embedded_entities[0], lower_limit: 2 },
+      ],
+    };
+
+    const embedded = addDefaultEntities(graph, customModel);
+
+    expect(dispatchEventSpy).toHaveBeenCalledTimes(2);
+
+    //assert the arguments of the first call - calls is array of the arguments of each call
+    expect(
+      (dispatchEventSpy.mock.calls[0][0] as CustomEvent).detail,
+    ).toMatchObject({
+      action: "add",
+      name: "child_container",
+    });
+    //assert the arguments of the second call - calls is array of the arguments of each call
+    expect(
+      (dispatchEventSpy.mock.calls[1][0] as CustomEvent).detail,
+    ).toMatchObject({
+      action: "add",
+      name: "child_container",
+    });
+    expect(embedded.length).toBe(2);
+
+    expect(embedded[0].getName()).toStrictEqual("child_container");
+    expect(embedded[1].getName()).toStrictEqual("child_container");
+  });
+
   it("adds default entity for service with nested embedded entities to the graph ", () => {
     const dispatchEventSpy = jest.spyOn(document, "dispatchEvent");
 
@@ -658,6 +692,38 @@ describe("appendEmbeddedEntity", () => {
       );
     },
   );
+
+  it(`doesn't append nested embedded entities with "r" modifier to the graph or paper`, () => {
+    const { graph, paper, embeddedModel } = setup();
+    const rModel = {
+      ...embeddedModel,
+      embedded_entities: [
+        { ...embeddedModel, name: "container-r", modifier: "r" },
+      ],
+    };
+    const presentedAttrs = undefined;
+    const isBlockedFromEditing = false;
+    const entityAttributes = {};
+    const embeddedTo = "123";
+    const holderName = "test";
+
+    appendEmbeddedEntity(
+      paper,
+      graph,
+      rModel,
+      entityAttributes,
+      embeddedTo,
+      holderName,
+      presentedAttrs,
+      isBlockedFromEditing,
+    );
+
+    const cells = graph.getCells();
+
+    expect(cells).toHaveLength(1);
+
+    expect(cells[0].get("entityName")).toBe("child_container");
+  });
 });
 
 describe("appendInstance", () => {
@@ -824,5 +890,29 @@ describe("appendInstance", () => {
       name: "123124124",
       parent_entity: "085cdf92-0894-4b82-8d46-1dd9552e7ba3",
     });
+  });
+
+  it("won't append embedded entities with modifier 'r' to the graph or paper", () => {
+    const { graph, paper } = setup();
+    const rModel: ServiceModel = {
+      ...containerModel,
+      embedded_entities: [
+        { ...containerModel.embedded_entities[0], modifier: "r" },
+      ],
+    };
+
+    const mockedInstance: InstanceWithRelations = {
+      instance: mockedInstanceWithRelations.interServiceRelations[1], // container service
+      interServiceRelations: [],
+    };
+    const isCore = true;
+
+    appendInstance(paper, graph, mockedInstance, [rModel], isCore);
+
+    const cells = graph.getCells();
+
+    expect(cells).toHaveLength(1);
+
+    expect(cells[0].get("entityName")).toBe("container-service");
   });
 });
