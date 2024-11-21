@@ -95,7 +95,7 @@ interface InterServiceRule extends Rule {
 /**
  * Enum representing the types of embedded events.
  */
-enum EmbeddedEventEnum {
+enum EventActionEnum {
   REMOVE = "remove",
   ADD = "add",
 }
@@ -160,6 +160,23 @@ interface StencilState {
 }
 
 /**
+ * Interface representing a relation attribute on the canvas with a set minimum amount of relations.
+ */
+interface InterServiceRelationOnCanvasWithMin {
+  name: string;
+  min: ParsedNumber;
+  current: number;
+}
+
+/**
+ * Interface representing a relation counter for a cell.
+ */
+interface RelationCounterForCell {
+  name: string;
+  relations: InterServiceRelationOnCanvasWithMin[];
+}
+
+/**
  * interface representing options for configuring a composer entity in the canvas.
  */
 interface ComposerEntityOptions {
@@ -212,7 +229,9 @@ export {
   ComposerServiceOrderItem,
   StencilState,
   TypeEnum,
-  EmbeddedEventEnum,
+  EventActionEnum,
   ComposerEntityOptions,
   EntityType,
+  InterServiceRelationOnCanvasWithMin,
+  RelationCounterForCell,
 };

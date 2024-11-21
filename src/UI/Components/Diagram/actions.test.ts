@@ -265,15 +265,25 @@ describe("addDefaultEntities", () => {
 
     const embedded = addDefaultEntities(graph, containerModel);
 
-    expect(dispatchEventSpy).toHaveBeenCalledTimes(1);
+    expect(dispatchEventSpy).toHaveBeenCalledTimes(2);
 
     //assert the arguments of the first call - calls is array of the arguments of each call
     expect(
       (dispatchEventSpy.mock.calls[0][0] as CustomEvent).detail,
     ).toMatchObject({
+      name: "child_container",
+      id: expect.any(String),
+      relations: [{ current: 0, min: 1, name: "parent-service" }],
+    }); //add relations to Tracker
+
+    //assert the arguments of the second call - calls is array of the arguments of each call
+    expect(
+      (dispatchEventSpy.mock.calls[1][0] as CustomEvent).detail,
+    ).toMatchObject({
       action: "add",
       name: "child_container",
-    });
+    }); //update stencil state
+
     expect(embedded.length).toBe(1);
 
     expect(embedded[0].getName()).toStrictEqual("child_container");
@@ -291,22 +301,7 @@ describe("addDefaultEntities", () => {
 
     const embedded = addDefaultEntities(graph, customModel);
 
-    expect(dispatchEventSpy).toHaveBeenCalledTimes(2);
-
-    //assert the arguments of the first call - calls is array of the arguments of each call
-    expect(
-      (dispatchEventSpy.mock.calls[0][0] as CustomEvent).detail,
-    ).toMatchObject({
-      action: "add",
-      name: "child_container",
-    });
-    //assert the arguments of the second call - calls is array of the arguments of each call
-    expect(
-      (dispatchEventSpy.mock.calls[1][0] as CustomEvent).detail,
-    ).toMatchObject({
-      action: "add",
-      name: "child_container",
-    });
+    expect(dispatchEventSpy).toHaveBeenCalledTimes(4);
     expect(embedded.length).toBe(2);
 
     expect(embedded[0].getName()).toStrictEqual("child_container");
@@ -332,6 +327,7 @@ describe("addDefaultEntities", () => {
       isEmbedded: true,
       holderName: "container-service",
     });
+
     const createdEntity2 = createComposerEntity({
       serviceModel: containerModel.embedded_entities[0],
       isCore: false,
@@ -351,22 +347,7 @@ describe("addDefaultEntities", () => {
       ],
     });
 
-    expect(dispatchEventSpy).toHaveBeenCalledTimes(2);
-
-    //assert the arguments of the first call - calls is array of the arguments of each call
-    expect(
-      (dispatchEventSpy.mock.calls[0][0] as CustomEvent).detail,
-    ).toMatchObject({
-      action: "add",
-      name: "child_container",
-    });
-    //assert the arguments of the second call
-    expect(
-      (dispatchEventSpy.mock.calls[1][0] as CustomEvent).detail,
-    ).toMatchObject({
-      action: "add",
-      name: "child_container",
-    });
+    expect(dispatchEventSpy).toHaveBeenCalledTimes(6);
 
     const addedCells = graph
       .getCells()
@@ -533,14 +514,23 @@ describe("appendEmbeddedEntity", () => {
       expect(cells[0].get("isBlockedFromEditing")).toBe(isBlockedFromEditing);
       expect(cells[0].get("cantBeRemoved")).toBe(true);
       expect(cells[0].get("relatedTo")).toMatchObject(expectedMap);
-      expect(dispatchEventSpy).toHaveBeenCalledTimes(1);
+      expect(dispatchEventSpy).toHaveBeenCalledTimes(2);
       //assert the arguments of the first call - calls is array of the arguments of each call
       expect(
         (dispatchEventSpy.mock.calls[0][0] as CustomEvent).detail,
       ).toMatchObject({
+        name: "child_container",
+        id: expect.any(String),
+        relations: [{ current: 0, min: 1, name: "parent-service" }],
+      }); //add relations to Tracker
+
+      //assert the arguments of the second call - calls is array of the arguments of each call
+      expect(
+        (dispatchEventSpy.mock.calls[1][0] as CustomEvent).detail,
+      ).toMatchObject({
         action: "add",
         name: "child_container",
-      });
+      }); //update stencil state
     },
   );
 
@@ -571,7 +561,7 @@ describe("appendEmbeddedEntity", () => {
     const cells = graph.getCells();
 
     expect(cells).toHaveLength(2);
-    expect(dispatchEventSpy).toHaveBeenCalledTimes(2);
+    expect(dispatchEventSpy).toHaveBeenCalledTimes(4);
 
     //assert first cell
     expect(cells[0].get("entityName")).toBe("child_container");
@@ -645,7 +635,7 @@ describe("appendEmbeddedEntity", () => {
         presentedAttrs,
       );
 
-      expect(dispatchEventSpy).toHaveBeenCalledTimes(2);
+      expect(dispatchEventSpy).toHaveBeenCalledTimes(4);
 
       const cells = graph.getCells();
       const filteredCells = graph

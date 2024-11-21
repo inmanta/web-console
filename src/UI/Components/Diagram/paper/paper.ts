@@ -11,7 +11,7 @@ import expandButton from "../icons/expand-icon.svg";
 import {
   ActionEnum,
   ConnectionRules,
-  EmbeddedEventEnum,
+  EventActionEnum,
   TypeEnum,
 } from "../interfaces";
 import { routerNamespace } from "../routers";
@@ -279,13 +279,22 @@ export class ComposerPaper {
             );
             model.set("isRelationshipConnection", true);
             document.dispatchEvent(
+              new CustomEvent("updateInterServiceRelations", {
+                detail: {
+                  action: EventActionEnum.ADD,
+                  name: cellConnectionRule.name,
+                  id: elementCell.id,
+                },
+              }),
+            );
+            document.dispatchEvent(
               new CustomEvent("updateServiceOrderItems", {
                 detail: { cell: sourceCell, action: ActionEnum.UPDATE },
               }),
             );
             toggleLooseElement(
               this.paper.findViewByModel(connectingCell),
-              EmbeddedEventEnum.REMOVE,
+              EventActionEnum.REMOVE,
             );
           }
         }
@@ -298,7 +307,7 @@ export class ComposerPaper {
           elementCell.set("embeddedTo", connectingCell.id);
           toggleLooseElement(
             this.paper.findViewByModel(elementCell),
-            EmbeddedEventEnum.REMOVE,
+            EventActionEnum.REMOVE,
           );
 
           document.dispatchEvent(
