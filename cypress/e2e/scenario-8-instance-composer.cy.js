@@ -742,7 +742,9 @@ if (Cypress.env("edition") === "iso") {
         "Danger alert:Errors found: 1",
       );
       cy.get('[aria-label="Danger alert details"]').click();
-      cy.get('[aria-label="missingRelationsParagraph-child-service"]').should(
+      cy.get(
+        '[aria-label="missingRelationsParagraph-child-service_parent-service_0"]',
+      ).should(
         "have.text",
         "Expected at least 1 parent-service inter-service relation(s) for child-service",
       );

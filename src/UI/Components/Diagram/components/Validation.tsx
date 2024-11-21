@@ -72,9 +72,10 @@ interface Props {
 const MissingRelationsForGivenCell: React.FC<Props> = ({ entity }) => {
   const { name, relations } = entity;
 
-  return relations.map((relation) => (
+  return relations.map((relation, index) => (
     <TextContent
-      aria-label={`missingRelationsParagraph-${name}_${relation.name}`}
+      key={`missingRelationsParagraph-${name}_${relation.name}_${index}`}
+      aria-label={`missingRelationsParagraph-${name}_${relation.name}_${index}`}
     >
       {words("instanceComposer.missingRelations")(
         name,
