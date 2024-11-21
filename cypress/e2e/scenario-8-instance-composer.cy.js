@@ -195,6 +195,16 @@ if (Cypress.env("edition") === "iso") {
       //fill parent attributes
       cy.get('[aria-label="TextInput-name"]').type("test_name");
       cy.get('[aria-label="TextInput-service_id"]').type("test_id");
+      cy.get('[joint-selector="itemLabel_name"]')
+        .contains("name")
+        .should("be.visible");
+
+      cy.get('[joint-selector="itemLabel_name"]')
+        .contains("name")
+        .should("be.visible");
+      cy.get('[joint-selector="itemLabel_name_value"]')
+        .contains("test_name")
+        .should("be.visible");
 
       cy.get("button").contains("Deploy").click();
 

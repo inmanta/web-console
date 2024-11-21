@@ -8,7 +8,11 @@ import {
   FieldCreator,
   createFormState,
 } from "../ServiceInstanceForm";
-import { findCorrespondingId, findFullInterServiceRelations } from "./helpers";
+import {
+  findCorrespondingId,
+  findFullInterServiceRelations,
+  getKeyAttributesNames,
+} from "./helpers";
 import activeImage from "./icons/active-icon.svg";
 import candidateImage from "./icons/candidate-icon.svg";
 import {
@@ -22,7 +26,7 @@ import { Link, ServiceEntityBlock } from "./shapes";
 /**
  * Function that creates, appends and returns created Entity
  *
- * @param {ServiceModel} serviceModel that we want to base created entity on
+ * @param {ServiceModel | EmbeddedEntity} serviceModel that we want to base created entity on
  * @param {boolean} isCore defines whether created entity is main one in given View
  * @param {boolean} isInEditMode defines whether created entity is is representation of existing instance or new one
  * @param {InstanceAttributeModel} [attributes] of the entity
@@ -86,12 +90,9 @@ export function createComposerEntity({
   }
 
   if (attributes) {
-    updateAttributes(
-      instanceAsTable,
-      serviceModel.key_attributes || [],
-      attributes,
-      true,
-    );
+    const keyAttributes = getKeyAttributesNames(serviceModel);
+
+    updateAttributes(instanceAsTable, keyAttributes, attributes, true);
   }
 
   return instanceAsTable;
@@ -450,43 +451,74 @@ export function addDefaultEntities(
 ): ServiceEntityBlock[] {
   const embedded_entities = service.embedded_entities
     .filter((embedded_entity) => embedded_entity.lower_limit > 0)
-    .map((embedded_entity) => {
+    .flatMap((embedded_entity) => {
       const fieldCreator = new FieldCreator(new CreateModifierHandler());
       const fields = fieldCreator.attributesToFields(
         embedded_entity.attributes,
       );
+      const attributes = createFormState(fields);
 
-      const embeddedEntity = createComposerEntity({
-        serviceModel: embedded_entity,
-        isCore: false,
-        isInEditMode: false,
-        attributes: createFormState(fields),
-        isEmbedded: true,
-        holderName: service.name,
-      });
+      if (embedded_entity.lower_limit > 1) {
+        const embedded_entities: ServiceEntityBlock[] = [];
 
-      document.dispatchEvent(
-        new CustomEvent("updateStencil", {
-          detail: {
-            name: embedded_entity.name,
-            action: EmbeddedEventEnum.ADD,
-          },
-        }),
-      );
+        for (let i = 0; i < embedded_entity.lower_limit; i++) {
+          embedded_entities.push(
+            addSingleEntity(graph, embedded_entity, attributes, service.name),
+          );
+        }
 
-      embeddedEntity.addTo(graph);
-      const subEmbeddedEntities = addDefaultEntities(graph, embedded_entity);
+        return embedded_entities;
+      }
 
-      subEmbeddedEntities.forEach((entity) => {
-        entity.set("embeddedTo", embeddedEntity.id);
-      });
-      connectEntities(graph, embeddedEntity, subEmbeddedEntities);
-
-      return embeddedEntity;
+      return addSingleEntity(graph, embedded_entity, attributes, service.name);
     });
 
   return embedded_entities;
 }
+
+/**
+ * Helper function to add single default Embedded Entity to the graph - it's created to avoid code duplication in the addDefaultEntities function
+ *
+ * @param {dia.Graph} graph - The jointJS graph to which entities should be added.
+ * @param {EmbeddedEntity} service - The service model or embedded entity used to generate the default entities.
+ * @param {InstanceAttributeModel} attributes - attributes of given instance/entity
+ * @param {string} holderName - name of the entity to which it is embedded/connected
+ * @returns {ServiceEntityBlock}
+ */
+const addSingleEntity = (
+  graph: dia.Graph,
+  model: EmbeddedEntity,
+  attributes: InstanceAttributeModel,
+  holderName: string,
+): ServiceEntityBlock => {
+  const embeddedEntity = createComposerEntity({
+    serviceModel: model,
+    isCore: false,
+    isInEditMode: false,
+    attributes,
+    isEmbedded: true,
+    holderName,
+  });
+
+  document.dispatchEvent(
+    new CustomEvent("updateStencil", {
+      detail: {
+        name: model.name,
+        action: EmbeddedEventEnum.ADD,
+      },
+    }),
+  );
+
+  embeddedEntity.addTo(graph);
+  const subEmbeddedEntities = addDefaultEntities(graph, model);
+
+  subEmbeddedEntities.forEach((entity) => {
+    entity.set("embeddedTo", embeddedEntity.id);
+  });
+  connectEntities(graph, embeddedEntity, subEmbeddedEntities);
+
+  return embeddedEntity;
+};
 
 /**
  *  Function that iterates through service instance attributes for values and appends in jointJS entity for display
