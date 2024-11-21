@@ -961,3 +961,27 @@ const removeConnectionData = (
     );
   }
 };
+
+/**
+ * Retrieves the key attribute names from a service model or embedded entity.
+ *
+ * This function extracts the key attribute names from the provided service model or embedded entity. If the service model has a unique `service_identity` attribute, it is added to the key attributes.
+ * Duplicate attributes are removed before returning the final list of key attribute names.
+ *
+ * @param {ServiceModel | EmbeddedEntity} serviceModel - The service model or embedded entity from which to extract key attribute names.
+ * @returns {string[]} An array of key attribute names.
+ */
+export const getKeyAttributesNames = (
+  serviceModel: ServiceModel | EmbeddedEntity,
+): string[] => {
+  let keyAttributes = serviceModel.key_attributes || [];
+
+  //service_identity is a unique attribute to Service model, but doesn't exist in the Embedded Entity model
+  if ("service_identity" in serviceModel && serviceModel.service_identity) {
+    keyAttributes.push(serviceModel.service_identity);
+
+    keyAttributes = Array.from(new Set(keyAttributes)); //remove possible duplicates
+  }
+
+  return keyAttributes;
+};

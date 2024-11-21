@@ -1,6 +1,6 @@
 import { RefObject } from "react";
 import { dia, shapes, ui } from "@inmanta/rappid";
-import { InstanceAttributeModel, ServiceModel } from "@/Core";
+import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from "@/Core";
 import { InstanceWithRelations } from "@/Data/Managers/V2/GETTERS/GetInstanceWithRelations";
 import {
   updateAttributes,
@@ -10,6 +10,7 @@ import {
 import {
   applyCoordinatesToCells,
   getCellsCoordinates,
+  getKeyAttributesNames,
   toggleLooseElement,
 } from "./helpers";
 import {
@@ -161,11 +162,13 @@ export function diagramInit(
     },
 
     editEntity: (cellView, serviceModel, attributeValues) => {
+      const keyAttributes = getKeyAttributesNames(serviceModel);
+
       //line below resolves issue that appendColumns did update values in the model, but visual representation wasn't updated
       cellView.model.set("items", []);
       updateAttributes(
         cellView.model as ServiceEntityBlock,
-        serviceModel.key_attributes || [],
+        keyAttributes,
         attributeValues,
         false,
       );
@@ -215,7 +218,7 @@ export interface DiagramHandlers {
    */
   editEntity: (
     cellView: dia.CellView,
-    serviceModel: ServiceModel,
+    serviceModel: ServiceModel | EmbeddedEntity,
     attributeValues: InstanceAttributeModel,
   ) => ServiceEntityBlock;
 
