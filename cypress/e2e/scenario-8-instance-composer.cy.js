@@ -170,11 +170,22 @@ if (Cypress.env("edition") === "iso") {
         .contains("parent-service")
         .click();
 
+      cy.get('[joint-selector="itemLabel_name"]')
+        .contains("name")
+        .should("be.visible");
+
       //fill parent attributes
       cy.get("button").contains("Edit").click();
       cy.get('[aria-label="TextInput-name"]').type("test_name");
       cy.get('[aria-label="TextInput-service_id"]').type("test_id");
       cy.get("button").contains("Save").click();
+
+      cy.get('[joint-selector="itemLabel_name"]')
+        .contains("name")
+        .should("be.visible");
+      cy.get('[joint-selector="itemLabel_name_value"]')
+        .contains("test_name")
+        .should("be.visible");
 
       cy.get("button").contains("Deploy").click();
 

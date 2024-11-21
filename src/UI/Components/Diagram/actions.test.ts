@@ -2,6 +2,11 @@ import { dia } from "@inmanta/rappid";
 import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from "@/Core";
 import { InstanceWithRelations } from "@/Data/Managers/V2/GETTERS/GetInstanceWithRelations";
 import {
+  CreateModifierHandler,
+  FieldCreator,
+  createFormState,
+} from "../ServiceInstanceForm";
+import {
   childModel,
   containerModel,
   mockedInstanceWithRelations,
@@ -40,6 +45,7 @@ describe("createComposerEntity", () => {
       "var(--pf-v5-global--palette--gold-400)",
     );
     expect(coreEntity.get("isInEditMode")).toBe(false);
+    expect(coreEntity.get("items")).toStrictEqual([[], []]);
   });
 
   it("creates a new embedded entity", () => {
@@ -76,6 +82,44 @@ describe("createComposerEntity", () => {
     );
     expect(childEntity.get("relatedTo")).toMatchObject(new Map());
   });
+
+  it.each`
+    serviceModel                           | isCore   | isEmbedded
+    ${parentModel}                         | ${false} | ${false}
+    ${containerModel}                      | ${true}  | ${false}
+    ${containerModel.embedded_entities[0]} | ${false} | ${true}
+  `(
+    "it appends correctly attributes to the body",
+    ({ serviceModel, isCore, isEmbedded }) => {
+      const fieldCreator = new FieldCreator(new CreateModifierHandler());
+      const fields = fieldCreator.attributesToFields(serviceModel.attributes);
+      const attributes = createFormState(fields);
+
+      const coreEntity = createComposerEntity({
+        serviceModel,
+        isCore,
+        isEmbedded,
+        isInEditMode: false,
+        attributes,
+      });
+
+      expect(coreEntity.get("items")).toStrictEqual([
+        [
+          {
+            id: "name",
+            label: "name",
+            span: 2,
+          },
+        ],
+        [
+          {
+            id: "name_value",
+            label: "",
+          },
+        ],
+      ]);
+    },
+  );
 });
 
 describe("updateAttributes", () => {
