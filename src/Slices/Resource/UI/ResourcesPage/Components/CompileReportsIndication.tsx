@@ -7,20 +7,21 @@ const pendingAnimation = keyframes`
  100% { opacity: .2}
 `;
 
-export const DotIndication = styled.span`
+export const CompileReportsIndication = styled.span`
   width: 10px;
   height: 10px;
   margin-left: 10px;
   position: relative;
   &::before {
     position: absolute;
-    top: 5px;
+    top: 1px;
     content: "";
-    background-color: var(--pf-v5-global--primary-color--100);
+    background-color: var(--pf-t--global--icon--color--status--custom--default);
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    border: 1px solid #bee1f4;
+    border: 1px solid
+      var(--pf-t--global--border--color--status--custom--default);
     animation: ${pendingAnimation} 2s infinite;
   }
 `;

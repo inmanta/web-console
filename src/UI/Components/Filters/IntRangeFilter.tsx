@@ -117,14 +117,13 @@ export const IntRangeFilter: React.FC<Props> = ({
             categoryName={categoryName}
             showToolbarItem={isVisible}
           >
-            <Button icon={<SearchIcon />}
+            <Button
+              icon={<SearchIcon />}
               onClick={onApply}
               isDisabled={!(from || to)}
               aria-label={`Apply ${categoryName} filter`}
               variant="tertiary"
-            >
-              
-            </Button>
+            ></Button>
           </ToolbarFilter>
         </FlexItem>
       </Flex>

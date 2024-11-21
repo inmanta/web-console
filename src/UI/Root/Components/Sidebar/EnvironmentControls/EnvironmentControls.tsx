@@ -1,6 +1,5 @@
 import React, { useContext, useEffect } from "react";
 import {
-  Bullseye,
   Flex,
   FlexItem,
   Label,
@@ -9,7 +8,6 @@ import {
 } from "@patternfly/react-core";
 import { ExclamationTriangleIcon } from "@patternfly/react-icons";
 import { RemoteData } from "@/Core";
-import { Spinner } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { HaltButton } from "./HaltButton";

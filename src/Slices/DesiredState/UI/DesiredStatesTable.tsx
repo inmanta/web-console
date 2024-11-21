@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  Table,
-  TableVariant,
-  Th,
-  Thead,
-  Tr,
-} from "@patternfly/react-table";
+import { Table, TableVariant, Th, Thead, Tr } from "@patternfly/react-table";
 import { words } from "@/UI/words";
 import { DesiredStateVersion } from "@S/DesiredState/Core/Domain";
 import { DesiredStatesTableRow } from "./DesiredStatesTableRow";

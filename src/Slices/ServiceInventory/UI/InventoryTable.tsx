@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  Table,
-  Thead,
-  Tr,
-  Th,
-  OnSort,
-} from "@patternfly/react-table";
+import { Table, Thead, Tr, Th, OnSort } from "@patternfly/react-table";
 import { Row, ServiceModel, Sort } from "@/Core";
 import { useUrlStateWithExpansion } from "@/Data";
 import { words } from "@/UI";

@@ -71,7 +71,7 @@ const DiffView: React.FC<{
 
   return (
     <>
-      <PageSection hasBodyWrapper={false}  hasShadowBottom>
+      <PageSection hasBodyWrapper={false} hasShadowBottom>
         <DiffWizard.Controls
           data={diffData}
           refs={refs}

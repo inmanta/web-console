@@ -57,13 +57,12 @@ export const FreeTextFilter: React.FC<Props> = ({
           />
         </InputGroupItem>
         <InputGroupItem>
-          <Button icon={<SearchIcon />}
+          <Button
+            icon={<SearchIcon />}
             variant={ButtonVariant.control}
             aria-label="submit search"
             onClick={onTextInput}
-          >
-            
-          </Button>
+          ></Button>
         </InputGroupItem>
       </InputGroup>
     </ToolbarFilter>

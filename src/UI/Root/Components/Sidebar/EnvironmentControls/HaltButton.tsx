@@ -60,7 +60,12 @@ export const HaltButton: React.FC = () => {
       content={<div>{words("environment.halt.button.tooltip")}</div>}
       position="right"
     >
-      <Button variant="stateful" state="attention" icon={<StopIcon />} onClick={handleModalToggle}>
+      <Button
+        variant="stateful"
+        state="attention"
+        icon={<StopIcon />}
+        onClick={handleModalToggle}
+      >
         {words("environment.halt.button")}
       </Button>
     </Tooltip>

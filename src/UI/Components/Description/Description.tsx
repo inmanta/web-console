@@ -1,5 +1,5 @@
-import { Content, ContentVariants } from "@patternfly/react-core";
 import React from "react";
+import { Content, ContentVariants } from "@patternfly/react-core";
 import styled from "styled-components";
 
 interface Props {

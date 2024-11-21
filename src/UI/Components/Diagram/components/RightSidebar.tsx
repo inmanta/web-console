@@ -1,11 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import {
-  Button,
-  Flex,
-  FlexItem,
-  Content,
-  Title,
-} from "@patternfly/react-core";
+import { Button, Flex, FlexItem, Content, Title } from "@patternfly/react-core";
 import styled from "styled-components";
 import { Field, InstanceAttributeModel, ServiceModel } from "@/Core";
 import { sanitizeAttributes } from "@/Data";
@@ -210,9 +204,7 @@ export const RightSidebar: React.FC = () => {
           </FlexItem>
           {description && (
             <FlexItem>
-              <Content aria-label="service-description">
-                {description}
-              </Content>
+              <Content aria-label="service-description">{description}</Content>
             </FlexItem>
           )}
         </Flex>

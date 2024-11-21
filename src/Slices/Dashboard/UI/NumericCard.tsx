@@ -18,7 +18,7 @@ export const NumericCard = ({ metrics }: { metrics: Metric }) => {
   const lastData = metrics.data[metrics.data.length - 1];
 
   return (
-    <Gallery hasGutter maxWidths={{ default: '300px' }}>
+    <Gallery hasGutter maxWidths={{ default: "300px" }}>
       <GalleryItem>
         <Card id={`trend-card-${metrics.name}`} component="div">
           <CardHeader>
@@ -28,7 +28,11 @@ export const NumericCard = ({ metrics }: { metrics: Metric }) => {
             >
               <FlexItem>
                 <CardTitle>
-                  <Title headingLevel="h3" size="lg" style={{ fontWeight: 500 }}>
+                  <Title
+                    headingLevel="h3"
+                    size="lg"
+                    style={{ fontWeight: 500 }}
+                  >
                     {words(`dashboard.${metrics.name as MetricName}.title`)}
                   </Title>
                 </CardTitle>
@@ -41,7 +45,8 @@ export const NumericCard = ({ metrics }: { metrics: Metric }) => {
             </Flex>
           </CardHeader>
           <CardBody>
-            <Content component="p"
+            <Content
+              component="p"
               style={{
                 fontWeight: 500,
                 fontSize: lastData === null ? 40 : 60,

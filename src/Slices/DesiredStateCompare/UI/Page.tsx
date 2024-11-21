@@ -1,6 +1,5 @@
 import React, { useContext, useRef, useState } from "react";
 import { PageSection, Toolbar, ToolbarContent } from "@patternfly/react-core";
-import styled from "styled-components";
 import { Diff, RemoteData } from "@/Core";
 import {
   RemoteDataView,
@@ -45,11 +44,11 @@ export const View: React.FC<Diff.Identifiers> = ({ from, to }) => {
 
   return (
     <>
-      <StyledPageSection>
+      <PageSection>
         <PageTitle>{words("desiredState.compare.title")}</PageTitle>
-      </StyledPageSection>
-      <PageSection hasBodyWrapper={false} >
-        <ToolBarContainer>
+      </PageSection>
+      <PageSection hasBodyWrapper={false}>
+        <Toolbar>
           <ToolbarContent style={{ padding: 0 }}>
             <DiffWizard.DiffPageFilter
               statuses={statuses}
@@ -58,9 +57,9 @@ export const View: React.FC<Diff.Identifiers> = ({ from, to }) => {
               setSearchFilter={setSearchFilter}
             />
           </ToolbarContent>
-        </ToolBarContainer>
+        </Toolbar>
       </PageSection>
-      <PageSection hasBodyWrapper={false}  hasShadowBottom>
+      <PageSection hasBodyWrapper={false} hasShadowBottom>
         <DiffWizard.Controls
           data={filteredData}
           refs={refs}
@@ -89,11 +88,3 @@ export const View: React.FC<Diff.Identifiers> = ({ from, to }) => {
     </>
   );
 };
-
-const StyledPageSection = styled(PageSection)`
-  padding-bottom: 0;
-`;
-
-const ToolBarContainer = styled(Toolbar)`
-  z-index: var(--pf-v5-global--ZIndex--xl);
-`;

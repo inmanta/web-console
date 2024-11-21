@@ -41,7 +41,6 @@ export const FilterPicker: React.FC<Props> = ({
         } as React.CSSProperties
       }
     >
-      
       {filterKind}
     </MenuToggle>
   );

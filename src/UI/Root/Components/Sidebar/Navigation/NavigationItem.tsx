@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { Label, NavItem, Tooltip } from "@patternfly/react-core";
 import { LockIcon } from "@patternfly/react-icons";
-import styled, { keyframes } from "styled-components";
+import { CompileReportsIndication } from "@/Slices/Resource/UI/ResourcesPage/Components/CompileReportsIndication";
 import { DependencyContext } from "@/UI/Dependency";
 import { SearchHelper } from "@/UI/Routing";
 
@@ -67,18 +67,15 @@ const LockedItem: React.FC<Label> = ({ label }) => (
       >
         <LockIcon />
       </Tooltip>
-    }>
+    }
+  >
     {label}
   </NavItem>
 );
 
 const ExternalItem: React.FC<Label & Url> = ({ label, url }) => (
   <NavItem>
-    <a
-      href={url}
-      target="_blank"
-      rel="noreferrer"
-    >
+    <a href={url} target="_blank" rel="noreferrer">
       {label}
     </a>
   </NavItem>
@@ -110,42 +107,10 @@ const CompileReportItem: React.FC<Label & Url> = ({ label, url }) => {
         {label}
         {data.kind === "Success" && data.value === true && (
           <Tooltip key={"ongoing-compilation-tooltip"} content={"Compiling"}>
-            <CompileReportsIndication
-              aria-label="CompileReportsIndication"
-            />
+            <CompileReportsIndication aria-label="CompileReportsIndication" />
           </Tooltip>
         )}
       </NavLink>
     </NavItem>
   );
 };
-
-
-
-// animation keyframes for the flickering dot CompileReportsIndication
-const pendingAnimation = keyframes`
- 0% { opacity: .2}
- 50% { opacity: 1}
- 100% { opacity: .2}
-`;
-
-/**
- * Flickering dot to display whenever a compile is ongoing
- */
-const CompileReportsIndication = styled.div`
-  width: 10px;
-  height: 10px;
-  margin-left: 10px;
-  position: relative;
-  &::before {
-    position: absolute;
-    top: 1px;
-    content: "";
-    background-color: var(--pf-t--global--icon--color--status--custom--default);
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    border: 1px solid var(--pf-t--global--border--color--status--custom--default);
-    animation: ${pendingAnimation} 2s infinite;
-  }
-`;

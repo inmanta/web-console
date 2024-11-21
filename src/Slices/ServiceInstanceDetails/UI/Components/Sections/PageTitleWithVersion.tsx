@@ -56,7 +56,7 @@ export const PageTitleWithVersion: React.FC<Props> = ({ title }) => {
 };
 
 const LabelContainer = styled.span`
-  margin-left: var(--pf-v5-global--spacer--md);
+  margin-left: var(--pf-t--global--spacer--md);
   display: inline-flex;
-  gap: var(--pf-v5-global--spacer--sm);
+  gap: var(--pf-t--global--spacer--sm);
 `;

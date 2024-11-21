@@ -12,7 +12,6 @@ import {
   chart_color_red_orange_400,
   chart_theme_gray_ColorScale_300,
   chart_theme_purple_ColorScale_300,
-
 } from "@patternfly/react-tokens";
 
 export const colorTheme = {

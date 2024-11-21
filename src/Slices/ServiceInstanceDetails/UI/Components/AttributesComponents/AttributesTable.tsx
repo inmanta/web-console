@@ -209,7 +209,8 @@ export const AttributesTable: React.FC<Props> = ({
       onClick={onToggleClick}
       isExpanded={isToggleOpen}
       icon={<EllipsisVIcon />}
-    />);
+    />
+  );
 
   /**
    * Recursive function which flattens the data into an array of flattened TreeRowWrapper components
@@ -271,12 +272,12 @@ export const AttributesTable: React.FC<Props> = ({
     const childRows =
       node.children && node.children.length
         ? renderRows(
-          node.children,
-          level + 1,
-          1,
-          rowIndex + 1,
-          !isExpanded || isHidden,
-        )
+            node.children,
+            level + 1,
+            1,
+            rowIndex + 1,
+            !isExpanded || isHidden,
+          )
         : [];
 
     return [
@@ -396,5 +397,4 @@ export const AttributesTable: React.FC<Props> = ({
 
 const StyledSelect = styled(FormSelect)`
   width: 180px;
-  margin-top: var(--pf-v5-global--spacer--md);
 `;

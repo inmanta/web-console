@@ -9,7 +9,6 @@ import {
   FlexItem,
   Content,
 } from "@patternfly/react-core";
-import styled from "styled-components";
 import { words } from "@/UI";
 import { GraphCardProps, Metric, MetricName } from "../Core/Domain";
 import { LineChart } from "./Charts/LineChart";
@@ -23,7 +22,7 @@ export const GraphCard: React.FC<GraphCardProps> = ({
   const [formatedMetrics, max] = formatMetricsToStacked(metrics, isStacked);
 
   return (
-    <Card id={`trend-card-${metrics.name}`} component="div" >
+    <Card id={`trend-card-${metrics.name}`} component="div">
       <CardHeader>
         <Flex
           direction={{ default: "column" }}

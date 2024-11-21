@@ -16,8 +16,12 @@ export const Page: React.FC = () => {
   const { routeManager } = React.useContext(DependencyContext);
 
   return (
-    <PageSection hasBodyWrapper={false} >
-      <EmptyState  headingLevel="h3" icon={ExclamationTriangleIcon}  titleText={<>{words("notFound.title")}</>}>
+    <PageSection hasBodyWrapper={false}>
+      <EmptyState
+        headingLevel="h3"
+        icon={ExclamationTriangleIcon}
+        titleText={<>{words("notFound.title")}</>}
+      >
         <EmptyStateFooter>
           <Link pathname={routeManager.getUrl("Home", undefined)}>
             <Button>{words("notFound.home")}</Button>

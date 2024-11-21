@@ -115,6 +115,5 @@ export const CompileStageReportTableRow: React.FC<Props> = ({
 const StyledBody = styled(Tbody)<{
   $failed?: boolean;
 }>`
-  ${({ $failed }) =>
-    $failed ? "var(--pf-t--color--red-orange--50)" : ""};
+  ${({ $failed }) => ($failed ? "var(--pf-t--color--red-orange--50)" : "")};
 `;

@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  Table,
-  TableVariant,
-  Th,
-  Thead,
-  Tr,
-} from "@patternfly/react-table";
+import { Table, TableVariant, Th, Thead, Tr } from "@patternfly/react-table";
 import { useExpansion } from "@/Data";
 import { words } from "@/UI";
 import { MomentDatePresenter } from "@/UI/Utils";

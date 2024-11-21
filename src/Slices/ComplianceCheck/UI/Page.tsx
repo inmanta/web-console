@@ -103,7 +103,7 @@ export const View: React.FC<Props> = ({ version }) => {
       <PageSection>
         <PageTitle>{words("desiredState.complianceCheck.title")}</PageTitle>
       </PageSection>
-      <PageSection hasBodyWrapper={false} >
+      <PageSection hasBodyWrapper={false}>
         <Toolbar>
           <ToolbarContent style={{ padding: 0 }}>
             <SelectReportAction

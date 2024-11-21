@@ -50,7 +50,11 @@ export const StatusList: React.FC<Props> = ({
         )}
         icon={
           <Icon size="xl">
-            <TagIcon style={{ color: "var(--pf-t--global--icon--color--brand--default)" }}  />
+            <TagIcon
+              style={{
+                color: "var(--pf-t--global--icon--color--brand--default)",
+              }}
+            />
           </Icon>
         }
       />
@@ -78,10 +82,13 @@ export const StatusList: React.FC<Props> = ({
           name={extension.name}
           details={toDetails(omit(extension, "name"))}
           icon={
-            <Icon
-              size="xl"
-            >
-              <IntegrationIcon style={{ color: "var(--pf-t--global--icon--color--severity--none--default)" }} />
+            <Icon size="xl">
+              <IntegrationIcon
+                style={{
+                  color:
+                    "var(--pf-t--global--icon--color--severity--none--default)",
+                }}
+              />
             </Icon>
           }
           category="extension"

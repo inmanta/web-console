@@ -3,7 +3,6 @@ import {
   NotificationBadge,
   NotificationBadgeVariant,
 } from "@patternfly/react-core";
-import styled from "styled-components";
 import { RemoteData } from "@/Core";
 import { ToastAlert } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";

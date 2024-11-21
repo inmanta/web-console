@@ -89,15 +89,11 @@ export const DocumentationTabContent: React.FC<Props> = ({
               onClick={() => {
                 onToggle(index);
               }}
-              
               id={`${section.title}-accordion-toggle`}
             >
               <DynamicFAIcon icon={section.iconName} /> {section.title}
             </AccordionToggle>
-            <AccordionContent
-              
-              id={`${section.title}-accordion-toggle`}
-            >
+            <AccordionContent id={`${section.title}-accordion-toggle`}>
               <MarkdownCard
                 attributeValue={section.value}
                 web_title={section.title}

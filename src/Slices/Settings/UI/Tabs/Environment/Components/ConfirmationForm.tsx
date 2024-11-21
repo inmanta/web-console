@@ -132,7 +132,12 @@ export const ConfirmationForm: React.FC<Props> = ({ environment, type }) => {
           </FlexItem>
 
           <FlexItem>
-            <Button icon={words("cancel")} key="cancel" variant="plain" onClick={closeModal} />
+            <Button
+              icon={words("cancel")}
+              key="cancel"
+              variant="plain"
+              onClick={closeModal}
+            />
           </FlexItem>
         </Flex>
       </ActionGroup>

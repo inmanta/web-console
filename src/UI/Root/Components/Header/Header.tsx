@@ -5,7 +5,8 @@ import {
   MastheadLogo,
   MastheadContent,
   MastheadMain,
-  MastheadToggle, MastheadBrand,
+  MastheadToggle,
+  MastheadBrand,
   PageToggleButton,
   ToolbarContent,
   ToolbarGroup,
@@ -13,6 +14,7 @@ import {
   Tooltip,
   Brand,
 } from "@patternfly/react-core";
+import { BarsIcon } from "@patternfly/react-icons";
 import { Badge } from "@/Slices/Notification/UI/Badge";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
@@ -20,7 +22,6 @@ import logo from "@images/logo.svg";
 import { DocumentationLinks } from "./Actions/DocumentationLinks";
 import { StatusButton } from "./Actions/StatusButton";
 import { EnvSelectorWithProvider } from "./EnvSelector";
-import { BarsIcon } from "@patternfly/react-icons";
 
 /**
  * Properties for the Header component.
@@ -51,23 +52,24 @@ export const Header: React.FC<Props> = ({ noEnv, onNotificationsToggle }) => {
   return (
     <>
       <Masthead id="page-header">
-        <MastheadMain><MastheadToggle>
-          <PageToggleButton
-            variant="plain"
-            aria-label="Main Navigation">
-            <BarsIcon />
-          </PageToggleButton>
-        </MastheadToggle>
-          <MastheadBrand><MastheadLogo
-            href={
-              noEnv
-                ? routeManager.getUrl("Home", undefined)
-                : routeManager.getUrl("Dashboard", undefined) +
-                `?env=${environmentHandler.useId()}`
-            }
-          >
-            <Brand src={logo} alt="Inmanta-logo" />
-          </MastheadLogo></MastheadBrand>
+        <MastheadMain>
+          <MastheadToggle>
+            <PageToggleButton variant="plain" aria-label="Main Navigation">
+              <BarsIcon />
+            </PageToggleButton>
+          </MastheadToggle>
+          <MastheadBrand>
+            <MastheadLogo
+              href={
+                noEnv
+                  ? routeManager.getUrl("Home", undefined)
+                  : routeManager.getUrl("Dashboard", undefined) +
+                    `?env=${environmentHandler.useId()}`
+              }
+            >
+              <Brand src={logo} alt="Inmanta-logo" />
+            </MastheadLogo>
+          </MastheadBrand>
         </MastheadMain>
         <MastheadContent>
           <Toolbar id="uncontrolled-toolbar" isFullHeight isStatic>

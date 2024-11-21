@@ -22,11 +22,6 @@ export const GlobalStyles = createGlobalStyle`
     --pf-v5-c-icon__content--m-custom--Color: #D2D2D2;
   }
 
-  .pf-v5-c-page__header-nav {
-    align-self: auto;
-    background-color: transparent;
-  }
-
   tbody > tr:where(.pf-v5-c-table__tr):not(.pf-v5-c-table__expandable-row):hover {
     background-color: var(--pf-v5-global--BackgroundColor--150);
   }

@@ -174,7 +174,11 @@ export const LoginForm: React.FC<Props> = ({
           isBlock
           isDisabled={isPending}
         >
-          {isPending ? <Spinner size="md" /> : <Content component="p">{submitButtonText}</Content>}
+          {isPending ? (
+            <Spinner size="md" />
+          ) : (
+            <Content component="p">{submitButtonText}</Content>
+          )}
         </Button>
       </ActionGroup>
     </Form>

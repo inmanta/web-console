@@ -132,8 +132,13 @@ const Progress: React.FC<{ report: DomainProgress }> = ({ report }) => {
       {current} / {tot}
     </Label>
   ) : (
-    <Label variant="filled" color="orange" isCompact icon={<Spinner size="sm" />}>
-       {current} / {tot}
+    <Label
+      variant="filled"
+      color="orange"
+      isCompact
+      icon={<Spinner size="sm" />}
+    >
+      {current} / {tot}
     </Label>
   );
 };

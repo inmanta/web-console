@@ -13,5 +13,10 @@ export const Toggle: React.FC<ToggleProps> = ({
   onToggle,
   ...props
 }) => (
-  <Button icon={expanded ? <AngleDownIcon /> : <AngleRightIcon />} variant="plain" onClick={onToggle} {...props} />
+  <Button
+    icon={expanded ? <AngleDownIcon /> : <AngleRightIcon />}
+    variant="plain"
+    onClick={onToggle}
+    {...props}
+  />
 );

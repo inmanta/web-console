@@ -14,7 +14,13 @@ export const LoadingView: React.FC<Props> = ({
   ariaLabel,
   ...props
 }) => (
-  <EmptyState isFullHeight {...props} aria-label={ariaLabel} role="region" icon={Spinner}>
+  <EmptyState
+    isFullHeight
+    {...props}
+    aria-label={ariaLabel}
+    role="region"
+    icon={Spinner}
+  >
     <Delayed delay={instant ? undefined : 200}>
       <Title size="lg" headingLevel="h2">
         {words("loading")}

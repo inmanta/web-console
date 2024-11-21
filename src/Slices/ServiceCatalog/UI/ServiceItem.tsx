@@ -131,7 +131,6 @@ export const ServiceItem: React.FC<Props> = ({ service }) => {
           aria-labelledby={service.name + "-inventory"}
           id={service.name + "-inventory"}
           aria-label="Inventory Link"
-          
         >
           <Link
             to={{
@@ -148,7 +147,6 @@ export const ServiceItem: React.FC<Props> = ({ service }) => {
           aria-labelledby={service.name + "-action"}
           id={service.name + "-action"}
           aria-label="Actions"
-          
         >
           <Dropdown
             toggle={(toggleRef: React.Ref<MenuToggleElement>) => (

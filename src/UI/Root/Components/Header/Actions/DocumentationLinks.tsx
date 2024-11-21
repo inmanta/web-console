@@ -18,7 +18,11 @@ export const DocumentationLinks: React.FC = () => {
           entryDelay={500}
         >
           <StyledLink to={urlManager.getDocumentationLink()} target="_blank">
-            <Button icon={<BookIcon />} aria-label="documentation link" variant="plain" />
+            <Button
+              icon={<BookIcon />}
+              aria-label="documentation link"
+              variant="plain"
+            />
           </StyledLink>
         </Tooltip>
       </StyledToolbarItem>
@@ -29,7 +33,11 @@ export const DocumentationLinks: React.FC = () => {
           entryDelay={500}
         >
           <StyledLink to={urlManager.getGeneralAPILink()} target="_blank">
-            <Button icon={<FileCodeIcon />} aria-label="general API link" variant="plain" />
+            <Button
+              icon={<FileCodeIcon />}
+              aria-label="general API link"
+              variant="plain"
+            />
           </StyledLink>
         </Tooltip>
       </StyledToolbarItem>

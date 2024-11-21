@@ -1,8 +1,5 @@
 import React, { useContext } from "react";
-import {
-	ChartDonut,
-	ChartLegend
-} from '@patternfly/react-charts';
+import { ChartDonut, ChartLegend } from "@patternfly/react-charts";
 import {
   t_global_icon_color_status_danger_default,
   t_global_icon_color_status_info_default,

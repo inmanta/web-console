@@ -1,5 +1,5 @@
-import React, { useContext, useState } from "react";
-import { Nav, NavExpandable, NavGroup } from "@patternfly/react-core";
+import React, { useContext } from "react";
+import { Nav, NavGroup } from "@patternfly/react-core";
 import { DependencyContext } from "@/UI/Dependency";
 import {
   envrionment,

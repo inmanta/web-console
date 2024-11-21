@@ -11,7 +11,7 @@ export const PageSectionWithTitle: React.FC<Props> = ({
   title,
   ...props
 }) => (
-  <PageSection hasBodyWrapper={false}  {...props}>
+  <PageSection hasBodyWrapper={false} {...props}>
     <PageTitle>{title}</PageTitle>
     {children}
   </PageSection>

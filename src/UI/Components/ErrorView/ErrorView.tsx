@@ -28,7 +28,14 @@ export const ErrorView: React.FC<Props> = ({
 }) => {
   return (
     <Delayed delay={delay}>
-      <EmptyState  headingLevel="h2" icon={ExclamationTriangleIcon}  titleText={<>{title || words("error")}</>} {...props} aria-label={ariaLabel} role="region">
+      <EmptyState
+        headingLevel="h2"
+        icon={ExclamationTriangleIcon}
+        titleText={<>{title || words("error")}</>}
+        {...props}
+        aria-label={ariaLabel}
+        role="region"
+      >
         <EmptyStateBody>
           <StyledErrorMessage>{message}</StyledErrorMessage>
         </EmptyStateBody>

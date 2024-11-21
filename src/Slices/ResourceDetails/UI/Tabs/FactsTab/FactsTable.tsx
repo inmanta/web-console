@@ -1,13 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Table,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Tr,
-} from "@patternfly/react-table";
-import styled from "styled-components";
+import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
 import { Sort } from "@/Core";
 import { Order } from "@/Core/Domain/Sort";
 import { ColumnHead } from "@/UI/Presenters";
@@ -69,10 +61,10 @@ export const FactsTable: React.FC<Props> = ({ facts }) => {
       <Tbody>
         {rows.map((fact) => (
           <Tr key={fact.id} aria-label="Facts table row">
-            <NameCell chars={fact.name.length}>{fact.name}</NameCell>
-            <DateCell>
+            <Td>{fact.name}</Td>
+            <Td>
               {fact.updated && new MomentDatePresenter().getFull(fact.updated)}
-            </DateCell>
+            </Td>
             <Td>{fact.value}</Td>
           </Tr>
         ))}
@@ -80,15 +72,6 @@ export const FactsTable: React.FC<Props> = ({ facts }) => {
     </Table>
   );
 };
-
-const DateCell = styled(Td)`
-  --pf-v5-c-table--cell--Width: 20ch;
-`;
-
-const NameCell = styled(Td)<{ chars: number }>`
-  --pf-v5-c-table--cell--Width: calc(${(p) => p.chars}ch + 40px);
-  --pf-v5-c-table--cell--MinWidth: 120px;
-`;
 
 function indexToColumnName(index: number): string {
   const columns = factsColumnHeads.map((head) => head.apiName);

@@ -72,7 +72,6 @@ export const StatusSection: React.FC<Props> = ({ compileDetails }) => {
                 <Icon status="success">
                   <CheckCircleIcon />
                 </Icon>
-
               ) : compileDetails.success === false ? (
                 <Icon status="danger">
                   <ExclamationCircleIcon />
