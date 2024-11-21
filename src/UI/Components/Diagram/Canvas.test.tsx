@@ -207,6 +207,25 @@ describe("Canvas.tsx", () => {
     });
 
     expect(screen.queryByText("Remove")).toBeNull();
-    expect(screen.queryByText("Edit")).toBeNull();
+    expect(screen.getAllByText("Cancel")).toHaveLength(1); // the cancel button to cancel the whole composer process will be always there
+  });
+
+  it("renders right sidebar with buttons when editable", async () => {
+    const component = setup(
+      mockedInstanceTwoServiceModel,
+      mockedInstanceTwo,
+      [mockedInstanceTwoServiceModel],
+      true,
+    );
+
+    render(component);
+    const headerLabel = await screen.findByJointSelector("headerLabel");
+
+    await act(async () => {
+      await user.click(headerLabel);
+    });
+
+    expect(screen.getByText("Remove")).toBeNull();
+    expect(screen.getAllByText("Cancel")).toHaveLength(2);
   });
 });
