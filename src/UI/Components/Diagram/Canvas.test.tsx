@@ -206,10 +206,7 @@ describe("Canvas.tsx", () => {
       await user.click(headerLabel);
     });
 
-    const removeButton = await screen.queryByText("Remove");
-    const editButton = await screen.queryByText("Edit");
-
-    expect(removeButton).toBeNull();
-    expect(editButton).toBeNull();
+    expect(screen.queryByText("Remove")).toBeNull();
+    expect(screen.queryByText("Edit")).toBeNull();
   });
 });
