@@ -42,6 +42,7 @@ import {
   findInterServiceRelations,
   findFullInterServiceRelations,
   showLinkTools,
+  getKeyAttributesNames,
 } from "./helpers";
 import { ComposerPaper } from "./paper";
 import { Link, ServiceEntityBlock } from "./shapes";
@@ -1832,5 +1833,36 @@ describe("showLinkTools", () => {
 
     showLinkTools(paper, graph, linkView, connectionRules);
     expect(linkView.hasTools()).toBeFalsy();
+  });
+});
+
+describe("getKeyAttributesNames", () => {
+  it("returns an empty array when there are no key attributes or identity value", () => {
+    const result = getKeyAttributesNames(Service.a);
+
+    expect(result).toEqual([]);
+  });
+  it("returns an array with key attributes names when there are key attributes", () => {
+    const result = getKeyAttributesNames({
+      ...containerModel,
+      embedded_entities: [
+        { ...containerModel.embedded_entities[0], key_attributes: [] },
+      ],
+    });
+
+    expect(result).toEqual(["name"]);
+  });
+  it("returns an array with identity value when there is identity value", () => {
+    const result = getKeyAttributesNames(parentModel);
+
+    expect(result).toEqual(["name"]);
+  });
+  it("returns an array without duplicates when key attributes and identity value overlaps", () => {
+    const result = getKeyAttributesNames({
+      ...containerModel,
+      service_identity: "name",
+    });
+
+    expect(result).toEqual(["name"]);
   });
 });

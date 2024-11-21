@@ -96,7 +96,8 @@ export class InventoryStencilTab {
 
         return entity;
       },
-      dragEndClone: (el) => el.clone().set("id", el.get("id")),
+      dragEndClone: (el) =>
+        el.clone().set("id", el.get("id")).set("items", el.get("items")), //cloned element loses key value pairs, so we need to set them again
       layout: {
         columns: 1,
         rowHeight: "compact",
