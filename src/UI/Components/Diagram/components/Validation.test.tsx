@@ -46,7 +46,7 @@ describe("Given a Validation component", () => {
 
     render(setup(isDirty, interServiceRelationsOnCanvas));
     expect(screen.queryByTestId("Error-container")).toBeDefined();
-    expect(screen.getByText("Errors  found: 1")).toBeDefined();
+    expect(screen.getByText("Errors found: 1")).toBeDefined();
 
     await act(async () => {
       await userEvent.click(screen.getByLabelText("Danger alert details"));
