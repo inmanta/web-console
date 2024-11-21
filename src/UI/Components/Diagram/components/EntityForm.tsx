@@ -143,6 +143,7 @@ export const EntityForm: React.FC<Props> = ({
 
     setFields(selectedFields.map((field) => ({ ...field, id: uuidv4() })));
     setFormState(initialState);
+    setIsDirty(false);
   }, [serviceModel, isEdited, initialState]);
 
   useEffect(() => {
