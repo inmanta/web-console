@@ -165,10 +165,32 @@ if (Cypress.env("edition") === "iso") {
       // Expect Canvas to be visible
       cy.get(".canvas").should("be.visible");
 
-      //assert that core instance have all attributes, can't be removed and can be edited
       cy.get('[data-type="app.ServiceEntityBlock"')
         .contains("parent-service")
         .click();
+
+      //assert that core instance can't be removed, and cancel button is by default disabled
+      cy.get('[data-testid="Composer-Container"]').within(() => {
+        cy.get("button").contains("Cancel").should("be.disabled");
+        cy.get("button").contains("Remove").should("be.disabled");
+      });
+
+      //fill parent attributes
+      cy.get('[aria-label="TextInput-name"]').type("test_name");
+      cy.get('[aria-label="TextInput-service_id"]').type("test_id");
+
+      //clear all inputs and assert that cancel button is enabled
+      cy.get('[data-testid="Composer-Container"]').within(() => {
+        cy.get("button").contains("Cancel").should("be.enabled");
+        cy.get("button").contains("Cancel").click();
+      });
+
+      //assert that inputs are cleared and cancel button is set back to disabled
+      cy.get('[aria-label="TextInput-name"]').should("have.value", "");
+      cy.get('[aria-label="TextInput-service_id"]').should("have.value", "");
+      cy.get('[data-testid="Composer-Container"]').within(() => {
+        cy.get("button").contains("Cancel").should("be.disabled");
+      });
 
       //fill parent attributes
       cy.get('[aria-label="TextInput-name"]').type("test_name");
@@ -244,7 +266,7 @@ if (Cypress.env("edition") === "iso") {
         "Service entity with many default attributes.",
       );
 
-      //assert that core instance have all attributes, can't be removed and can be edited
+      //assert that core instance have all attributes, can't be removed
       cy.get('[data-type="app.ServiceEntityBlock"')
         .contains("many-defaults")
         .click();
@@ -354,12 +376,15 @@ if (Cypress.env("edition") === "iso") {
 
       cy.get(".joint-loose_element-highlight").should("be.visible");
 
-      //assert that extra_embedded instance have all attributes, can be removed and can be edited
+      //assert that extra_embedded instance have all attributes, can be removed
       cy.get('[data-type="app.ServiceEntityBlock"')
         .contains("extra_embedded")
         .click();
-      cy.get("button").contains("Remove").should("be.enabled");
-      cy.get("button").contains("Edit").should("be.enabled");
+
+      cy.get('[data-testid="Composer-Container"]').within(() => {
+        cy.get("button").contains("Remove").should("be.enabled");
+        cy.get("button").contains("Cancel").should("be.disabled");
+      });
       cy.get("input").should("have.length", 21);
 
       //remove extra_embedded instance to simulate that user added that by a mistake yet want to remove it
@@ -380,7 +405,6 @@ if (Cypress.env("edition") === "iso") {
 
       cy.get(".joint-loose_element-highlight").should("be.visible");
 
-      //assert that extra_embedded instance have all attributes, can be removed and can be edited
       cy.get('[data-type="app.ServiceEntityBlock"')
         .contains("extra_embedded")
         .click();
@@ -558,16 +582,18 @@ if (Cypress.env("edition") === "iso") {
         .contains("many-defaults")
         .should("be.visible");
 
-      //related Services should be disabled from editing and removing
+      //related Services should be disabled from removing
       cy.get('[data-testid="header-parent-service"]').should("have.length", 2);
 
       cy.get('[data-testid="header-parent-service"]').eq(0).click();
-      cy.get("button").contains("Remove").should("be.disabled");
-      cy.get("button").contains("Edit").should("be.disabled");
+
+      cy.get('[data-testid="Composer-Container"]').within(() => {
+        cy.get("button").contains("Cancel").should("be.disabled");
+        cy.get("button").contains("Remove").should("be.disabled");
+      });
 
       cy.get('[data-testid="header-parent-service"]').eq(1).click();
       cy.get("button").contains("Remove").should("be.disabled");
-      cy.get("button").contains("Edit").should("be.disabled");
 
       //edit some of core attributes
       cy.get('[data-type="app.ServiceEntityBlock"]')
