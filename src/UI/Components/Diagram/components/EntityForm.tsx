@@ -52,7 +52,7 @@ export const EntityForm: React.FC<Props> = ({
   showButtons,
   onRemove,
 }) => {
-  const [fields, setFields] = useState<Field[]>([]);
+  const [fields, setFields] = useState<Field[] | null>(null);
   const [formState, setFormState] =
     useState<InstanceAttributeModel>(initialState);
   const [isDirty, setIsDirty] = useState(false);
@@ -66,6 +66,9 @@ export const EntityForm: React.FC<Props> = ({
    * @returns {void}
    */
   const getUpdate = (path: string, value: unknown, multi = false): void => {
+    if (!fields) {
+      return;
+    }
     if (!isDirty) {
       setIsDirty(true);
     }
@@ -112,8 +115,11 @@ export const EntityForm: React.FC<Props> = ({
    * @returns {void}
    */
   const onCancel = (): void => {
+    if (!fields) {
+      return;
+    }
     onSave(fields, initialState);
-    createFields();
+    createFieldsAndState();
     setFormState(initialState);
     setIsDirty(false);
   };
@@ -126,7 +132,7 @@ export const EntityForm: React.FC<Props> = ({
    *
    * @returns {void}
    */
-  const createFields = useCallback(() => {
+  const createFieldsAndState = useCallback(() => {
     const fieldCreator = new FieldCreator(
       new CreateModifierHandler(),
       isEdited,
@@ -136,11 +142,12 @@ export const EntityForm: React.FC<Props> = ({
     );
 
     setFields(selectedFields.map((field) => ({ ...field, id: uuidv4() })));
-  }, [serviceModel, isEdited]);
+    setFormState(initialState);
+  }, [serviceModel, isEdited, initialState]);
 
   useEffect(() => {
-    createFields();
-  }, [createFields]);
+    createFieldsAndState();
+  }, [createFieldsAndState]);
 
   return (
     <>
@@ -150,7 +157,7 @@ export const EntityForm: React.FC<Props> = ({
         spaceItems={{ default: "spaceItemsSm" }}
         flexWrap={{ default: "nowrap" }}
       >
-        {fields.length <= 0 && (
+        {fields && fields.length <= 0 && (
           <FlexItem>
             <Alert
               variant="info"
@@ -166,17 +173,21 @@ export const EntityForm: React.FC<Props> = ({
               event.preventDefault();
             }}
           >
-            {fields.map((field) => (
-              <FieldInput
-                originalState={initialState}
-                key={field.name}
-                field={{ ...field, isDisabled: isDisabled || field.isDisabled }}
-                formState={formState}
-                getUpdate={getUpdate}
-                path={null}
-                suggestions={field.suggestion}
-              />
-            ))}
+            {fields &&
+              fields.map((field) => (
+                <FieldInput
+                  originalState={initialState}
+                  key={field.name}
+                  field={{
+                    ...field,
+                    isDisabled: isDisabled || field.isDisabled,
+                  }}
+                  formState={formState}
+                  getUpdate={getUpdate}
+                  path={null}
+                  suggestions={field.suggestion}
+                />
+              ))}
           </Form>
         </FlexItem>
       </StyledFlex>
