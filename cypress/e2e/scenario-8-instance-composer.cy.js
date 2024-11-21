@@ -739,7 +739,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[data-testid="Error-container"]').should("be.visible");
       cy.get('[data-testid="Error-container"]').should(
         "have.text",
-        "Danger alert:  found: 1",
+        "Danger alert:Errors found: 1",
       );
       cy.get('[aria-label="Danger alert details"]').click();
       cy.get('[aria-label="missingRelationsParagraph-child-service"]').should(
