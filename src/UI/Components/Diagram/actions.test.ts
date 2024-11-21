@@ -301,7 +301,7 @@ describe("addDefaultEntities", () => {
 
     const embedded = addDefaultEntities(graph, customModel);
 
-    expect(dispatchEventSpy).toHaveBeenCalledTimes(2);
+    expect(dispatchEventSpy).toHaveBeenCalledTimes(4);
 
     //assert the arguments of the first call - calls is array of the arguments of each call
     expect(
