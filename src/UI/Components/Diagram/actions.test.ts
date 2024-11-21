@@ -251,7 +251,7 @@ describe("updateAttributes", () => {
   });
 });
 
-describe("createComposerEntity", () => {
+describe("addDefaultEntities", () => {
   it("return empty array for service without embedded entities to add to the graph ", () => {
     const graph = new dia.Graph({});
     const embedded = addDefaultEntities(graph, parentModel);
@@ -277,6 +277,40 @@ describe("createComposerEntity", () => {
     expect(embedded.length).toBe(1);
 
     expect(embedded[0].getName()).toStrictEqual("child_container");
+  });
+
+  it("adds all default entities to the graph for service with embedded entity with lower_limit > 1 ", () => {
+    const dispatchEventSpy = jest.spyOn(document, "dispatchEvent");
+    const graph = new dia.Graph({});
+    const customModel = {
+      ...containerModel,
+      embedded_entities: [
+        { ...containerModel.embedded_entities[0], lower_limit: 2 },
+      ],
+    };
+
+    const embedded = addDefaultEntities(graph, customModel);
+
+    expect(dispatchEventSpy).toHaveBeenCalledTimes(2);
+
+    //assert the arguments of the first call - calls is array of the arguments of each call
+    expect(
+      (dispatchEventSpy.mock.calls[0][0] as CustomEvent).detail,
+    ).toMatchObject({
+      action: "add",
+      name: "child_container",
+    });
+    //assert the arguments of the second call - calls is array of the arguments of each call
+    expect(
+      (dispatchEventSpy.mock.calls[1][0] as CustomEvent).detail,
+    ).toMatchObject({
+      action: "add",
+      name: "child_container",
+    });
+    expect(embedded.length).toBe(2);
+
+    expect(embedded[0].getName()).toStrictEqual("child_container");
+    expect(embedded[1].getName()).toStrictEqual("child_container");
   });
 
   it("adds default entity for service with nested embedded entities to the graph ", () => {
