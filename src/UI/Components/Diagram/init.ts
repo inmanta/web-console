@@ -15,7 +15,7 @@ import {
 } from "./helpers";
 import {
   ConnectionRules,
-  EmbeddedEventEnum,
+  EventActionEnum,
   SavedCoordinates,
 } from "./interfaces";
 import { ComposerPaper } from "./paper";
@@ -81,7 +81,7 @@ export function diagramInit(
     const paperRepresentation = paper.findViewByModel(cell);
 
     if (!cell.get("isCore") && paperRepresentation) {
-      toggleLooseElement(paperRepresentation, EmbeddedEventEnum.ADD);
+      toggleLooseElement(paperRepresentation, EventActionEnum.ADD);
     }
   });
 

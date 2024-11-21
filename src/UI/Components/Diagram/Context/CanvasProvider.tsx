@@ -6,6 +6,7 @@ import {
   ComposerServiceOrderItem,
   DictDialogData,
   StencilState,
+  RelationCounterForCell,
 } from "../interfaces";
 import { CanvasContext } from "./Context";
 
@@ -37,6 +38,8 @@ export const CanvasProvider: React.FC<React.PropsWithChildren<unknown>> = ({
   const [diagramHandlers, setDiagramHandlers] =
     useState<DiagramHandlers | null>(null);
   const [stencilState, setStencilState] = useState<StencilState | null>(null);
+  const [interServiceRelationsOnCanvas, setInterServiceRelationsOnCanvas] =
+    useState<Map<string, RelationCounterForCell>>(new Map());
 
   useEffect(() => {
     // check if any of the edited serviceOrderItems got its action changed from default - its a condition to disable the deploy button when we are in the edit view
@@ -53,33 +56,32 @@ export const CanvasProvider: React.FC<React.PropsWithChildren<unknown>> = ({
     <CanvasContext.Provider
       value={{
         diagramHandlers,
-        setDiagramHandlers: (value: DiagramHandlers) => {
-          setDiagramHandlers(value);
-        },
+        setDiagramHandlers,
+
         dictToDisplay,
-        setDictToDisplay: (value: DictDialogData | null) => {
-          setDictToDisplay(value);
-        },
+        setDictToDisplay,
+
         cellToEdit,
-        setCellToEdit: (value: dia.CellView | null) => {
-          setCellToEdit(value);
-        },
+        setCellToEdit,
+
         looseElement,
-        setLooseElement: (value: Set<string>) => {
-          setLooseElement(value);
-        },
+        setLooseElement,
+
         fields,
-        setFields: (value: Field[]) => {
-          setFields(value);
-        },
+        setFields,
+
         formState,
-        setFormState: (value: InstanceAttributeModel) => {
-          setFormState(value);
-        },
+        setFormState,
+
+        interServiceRelationsOnCanvas,
+        setInterServiceRelationsOnCanvas,
+
         serviceOrderItems,
         setServiceOrderItems,
+
         stencilState,
         setStencilState,
+
         isDirty,
       }}
     >

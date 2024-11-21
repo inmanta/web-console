@@ -1,8 +1,8 @@
 import React, { act, useContext, useEffect } from "react";
 import "@testing-library/jest-dom";
 import { screen } from "@testing-library/dom";
-import { render } from "@testing-library/react";
-import { ActionEnum } from "../interfaces";
+import { render, renderHook } from "@testing-library/react";
+import { ActionEnum, EventActionEnum } from "../interfaces";
 import { ServiceEntityBlock } from "../shapes";
 import { CanvasProvider } from "./CanvasProvider";
 import { CanvasContext } from "./Context";
@@ -105,7 +105,7 @@ describe("dictToDisplay - event handler that accepts dictionary value to display
   });
 });
 
-describe("cellToEdit - event handler that recieves cell object from the canvas to pass it to the Right Sidebar component", () => {
+describe("cellToEdit - event handler that receives cell object from the canvas to pass it to the Right Sidebar component", () => {
   const TestingComponent = (): JSX.Element => {
     const { cellToEdit } = useContext(CanvasContext);
 
@@ -408,6 +408,164 @@ describe("updateStencil - eventHandler that updates how many elements(embedded/i
     );
     expect(screen.getByTestId("text_test")).not.toHaveClass(
       "stencil_text-disabled",
+    );
+  });
+});
+
+describe("addInterServiceRelationToTracker - eventHandler that adds to the Map inter-service relations with defined minimal count to the Map- it doesn't take care of verifying values, that is taken care of outside of the event handler", () => {
+  it("adds succesfully interServiceRelation to the Map", async () => {
+    const { result } = renderHook(
+      () => {
+        const { interServiceRelationsOnCanvas } = useContext(CanvasContext);
+
+        return interServiceRelationsOnCanvas;
+      },
+      {
+        wrapper: ({ children }) => (
+          <CanvasProvider>
+            <EventWrapper>{children}</EventWrapper>
+          </CanvasProvider>
+        ),
+      },
+    );
+
+    expect(result.current).toStrictEqual(new Map());
+
+    await act(async () => {
+      document.dispatchEvent(
+        new CustomEvent("addInterServiceRelationToTracker", {
+          detail: {
+            id: "1",
+            name: "test",
+            relations: [{ current: 0, min: 1, name: "test2" }],
+          },
+        }),
+      );
+    });
+
+    expect(result.current).toStrictEqual(
+      new Map().set("1", {
+        name: "test",
+        relations: [{ current: 0, min: 1, name: "test2" }],
+      }),
+    );
+  });
+});
+
+describe("removeInterServiceRelationFromTracker - event handler that removes inter-service relations from the tracker, it happens when cell with given ID is removed from the canvas", () => {
+  it("removes successfully the interServiceRationTracker from the Map", async () => {
+    const { result } = renderHook(
+      () => {
+        const {
+          interServiceRelationsOnCanvas,
+          setInterServiceRelationsOnCanvas,
+        } = useContext(CanvasContext);
+
+        useEffect(() => {
+          setInterServiceRelationsOnCanvas(
+            new Map().set("1", {
+              name: "test",
+              relations: [{ current: 0, min: 1, name: "test2" }],
+            }),
+          );
+        }, [setInterServiceRelationsOnCanvas]);
+
+        return interServiceRelationsOnCanvas;
+      },
+      {
+        wrapper: ({ children }) => (
+          <CanvasProvider>
+            <EventWrapper>{children}</EventWrapper>
+          </CanvasProvider>
+        ),
+      },
+    );
+
+    expect(result.current).toStrictEqual(
+      new Map().set("1", {
+        name: "test",
+        relations: [{ current: 0, min: 1, name: "test2" }],
+      }),
+    );
+
+    await act(async () => {
+      document.dispatchEvent(
+        new CustomEvent("removeInterServiceRelationFromTracker", {
+          detail: {
+            id: "1",
+          },
+        }),
+      );
+    });
+    expect(result.current).toStrictEqual(new Map());
+  });
+});
+
+describe("updateInterServiceRelations", () => {
+  it("updates successfully the interServiceRationTracker in the Map", async () => {
+    const { result } = renderHook(
+      () => {
+        const {
+          interServiceRelationsOnCanvas,
+          setInterServiceRelationsOnCanvas,
+        } = useContext(CanvasContext);
+
+        useEffect(() => {
+          setInterServiceRelationsOnCanvas(
+            new Map().set("1", {
+              name: "test",
+              relations: [{ current: 0, min: 1, name: "test2" }],
+            }),
+          );
+        }, [setInterServiceRelationsOnCanvas]);
+
+        return interServiceRelationsOnCanvas;
+      },
+      {
+        wrapper: ({ children }) => (
+          <CanvasProvider>
+            <EventWrapper>{children}</EventWrapper>
+          </CanvasProvider>
+        ),
+      },
+    );
+
+    await act(async () => {
+      document.dispatchEvent(
+        new CustomEvent("updateInterServiceRelations", {
+          detail: {
+            action: EventActionEnum.ADD,
+            name: "test2",
+            id: "1",
+          },
+        }),
+      );
+    });
+
+    expect(result.current).toStrictEqual(
+      new Map().set("1", {
+        name: "test",
+        relations: [{ current: 1, min: 1, name: "test2" }],
+      }),
+    );
+
+    await act(async () => {
+      document.dispatchEvent(
+        new CustomEvent("updateInterServiceRelations", {
+          detail: {
+            action: EventActionEnum.REMOVE,
+            name: "test2",
+            id: "1",
+          },
+        }),
+      );
+    });
+
+    expect(result.current).toStrictEqual(
+      new Map().set("1", {
+        name: "test",
+        relations: [{ current: 0, min: 1, name: "test2" }],
+      }),
     );
   });
 });

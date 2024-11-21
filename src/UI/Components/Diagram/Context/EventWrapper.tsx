@@ -1,6 +1,10 @@
 import React, { useContext, useEffect } from "react";
 import { updateServiceOrderItems } from "../helpers";
-import { ActionEnum, EmbeddedEventEnum } from "../interfaces";
+import {
+  ActionEnum,
+  EventActionEnum,
+  RelationCounterForCell,
+} from "../interfaces";
 import { ServiceEntityBlock } from "../shapes";
 import { CanvasContext } from "./Context";
 
@@ -19,6 +23,7 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
   children,
 }) => {
   const {
+    setInterServiceRelationsOnCanvas,
     setStencilState,
     setServiceOrderItems,
     setCellToEdit,
@@ -37,7 +42,7 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
    */
   const handleLooseElementEvent = (event): void => {
     const customEvent = event as CustomEvent;
-    const eventData: { kind: EmbeddedEventEnum; id: string } = JSON.parse(
+    const eventData: { kind: EventActionEnum; id: string } = JSON.parse(
       customEvent.detail,
     );
     const newSet = new Set(looseElement);
@@ -113,7 +118,7 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
    */
   const handleUpdateStencilState = (event): void => {
     const customEvent = event as CustomEvent;
-    const eventData: { name: string; action: EmbeddedEventEnum } =
+    const eventData: { name: string; action: EventActionEnum } =
       customEvent.detail;
 
     //event listener doesn't get updated state outside setStencilState function, so all logic has to be done inside it
@@ -129,10 +134,10 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
       }
 
       switch (eventData.action) {
-        case EmbeddedEventEnum.ADD:
+        case EventActionEnum.ADD:
           stencil.current += 1;
           break;
-        case EmbeddedEventEnum.REMOVE:
+        case EventActionEnum.REMOVE:
           stencil.current -= 1;
           break;
         default:
@@ -163,6 +168,94 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
     });
   };
 
+  /**
+   * Handles the event triggered when there is a creation of cell/entity that has required inter-service relation.
+   * This event is fired when cell of given {id} is added to the canvas. It only happens when the cell has some required inter-service relation attributes to fill.
+   *
+   * @param {CustomEvent} event - The event object.
+   *
+   * @returns {void}
+   */
+  const handleAddCellWithInterServiceRelations = (event): void => {
+    const customEvent = event as CustomEvent;
+    const { id, name, relations } = customEvent.detail;
+
+    setInterServiceRelationsOnCanvas((prev) => {
+      const copy = new Map(prev);
+
+      copy.set(id, {
+        name,
+        relations,
+      });
+
+      return copy;
+    });
+  };
+
+  /**
+   * Handles the event triggered when there is a removal of cell/entity that has required inter-service relation.
+   * This event is fired when cell of given {id} is removed from the canvas. It only happens when the cell has some required inter-service relation attributes to fill.
+   *
+   * @param {CustomEvent} event - The event object.
+   *
+   * @returns {void}
+   */
+  const handleRemoveCellWithInterServiceRelations = (event): void => {
+    const customEvent = event as CustomEvent;
+    const { id } = customEvent.detail;
+
+    setInterServiceRelationsOnCanvas((prev) => {
+      const copy = new Map(prev);
+
+      copy.delete(id);
+
+      return copy;
+    });
+  };
+
+  /**
+   * Handles the event triggered when there is a update of inter-service relation for given cell/entity.
+   * This event is fired when inter-service relation of given {name} is connected/disconnected to cell of given {id}
+   *
+   * @param {CustomEvent} event - The event object.
+   *
+   * @returns {void}
+   */
+  const handleUpdateOfInterServiceRelationsInCell = (event): void => {
+    const customEvent = event as CustomEvent;
+    const { id, name, action } = customEvent.detail;
+
+    setInterServiceRelationsOnCanvas((prev) => {
+      const copy = new Map(prev);
+      const cellsRelations: RelationCounterForCell | undefined = copy.get(id);
+
+      if (cellsRelations) {
+        const indexOfRelationToUpdate = cellsRelations.relations.findIndex(
+          (relation) => relation.name === name,
+        );
+
+        if (indexOfRelationToUpdate > -1) {
+          const relationToUpdate =
+            cellsRelations.relations[indexOfRelationToUpdate];
+
+          let current = relationToUpdate.current;
+
+          relationToUpdate.current =
+            action === EventActionEnum.ADD ? ++current : --current;
+
+          cellsRelations.relations.splice(
+            indexOfRelationToUpdate,
+            1,
+            relationToUpdate,
+          );
+          copy.set(id, cellsRelations);
+        }
+      }
+
+      return copy;
+    });
+  };
+
   useEffect(() => {
     document.addEventListener("openDictsModal", handleDictEvent);
     document.addEventListener("sendCellToSidebar", handleEditEvent);
@@ -172,6 +265,18 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
       handleUpdateServiceOrderItems,
     );
     document.addEventListener("updateStencil", handleUpdateStencilState);
+    document.addEventListener(
+      "addInterServiceRelationToTracker",
+      handleAddCellWithInterServiceRelations,
+    );
+    document.addEventListener(
+      "removeInterServiceRelationFromTracker",
+      handleRemoveCellWithInterServiceRelations,
+    );
+    document.addEventListener(
+      "updateInterServiceRelations",
+      handleUpdateOfInterServiceRelationsInCell,
+    );
 
     return () => {
       document.removeEventListener("openDictsModal", handleDictEvent);
@@ -182,6 +287,18 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
         handleUpdateServiceOrderItems,
       );
       document.removeEventListener("updateStencil", handleUpdateStencilState);
+      document.removeEventListener(
+        "addInterServiceRelationToTracker",
+        handleAddCellWithInterServiceRelations,
+      );
+      document.removeEventListener(
+        "removeInterServiceRelationFromTracker",
+        handleRemoveCellWithInterServiceRelations,
+      );
+      document.addEventListener(
+        "updateInterServiceRelations",
+        handleUpdateOfInterServiceRelationsInCell,
+      );
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

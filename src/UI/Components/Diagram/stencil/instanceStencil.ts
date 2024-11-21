@@ -7,7 +7,7 @@ import {
   createFormState,
 } from "../../ServiceInstanceForm";
 import { createComposerEntity } from "../actions";
-import { ActionEnum, EmbeddedEventEnum } from "../interfaces";
+import { ActionEnum, EventActionEnum } from "../interfaces";
 import { transformEmbeddedToStencilElements } from "./helpers";
 
 /**
@@ -56,7 +56,8 @@ export class InstanceStencilTab {
           holderName: cell.get("holderName"),
         });
       },
-      dragEndClone: (el) => el.clone().set("items", el.get("items")), //cloned element loses key value pairs, so we need to set them again
+      dragEndClone: (el) =>
+        el.clone().set("items", el.get("items")).set("id", el.get("id")), //cloned element loses key value pairs, so we need to set them again
       layout: {
         columns: 1,
         rowHeight: "compact",
@@ -81,7 +82,7 @@ export class InstanceStencilTab {
           new CustomEvent("updateStencil", {
             detail: {
               name: elementView.model.get("entityName"),
-              action: EmbeddedEventEnum.ADD,
+              action: EventActionEnum.ADD,
             },
           }),
         );

@@ -72,7 +72,7 @@ if (Cypress.env("edition") === "iso") {
     });
 
     // Note: The fullscreen mode is tested in Jest. In Cypress this functionality has to be stubbed, and would be redundant with the Unit tests.
-    it("8.1 composer opens up has its default paning working", () => {
+    it("8.1 composer opens up has its default panning working", () => {
       // Select 'test' environment
       cy.visit("/console/");
       cy.get('[aria-label="Environment card"]')
@@ -232,7 +232,7 @@ if (Cypress.env("edition") === "iso") {
         .eq(0, { timeout: 90000 })
         .should("have.text", "up", { timeout: 90000 });
 
-      //Add child_service instance
+      //Add many-defaults instance
       cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
       // click on Show Inventory of many-defaults service, expect no instances
       cy.get("#many-defaults", { timeout: 60000 })
@@ -743,6 +743,20 @@ if (Cypress.env("edition") === "iso") {
       // Expect Canvas to be visible
       cy.get(".canvas").should("be.visible");
 
+      //Assert error message is visible as there is missing relation
+      cy.get('[data-testid="Error-container"]').should("be.visible");
+      cy.get('[data-testid="Error-container"]').should(
+        "have.text",
+        "Danger alert:Errors found: 1",
+      );
+      cy.get('[aria-label="Danger alert details"]').click();
+      cy.get(
+        '[aria-label="missingRelationsParagraph-child-service_parent-service_0"]',
+      ).should(
+        "have.text",
+        "Expected at least 1 parent-service inter-service relation(s) for child-service",
+      );
+
       //assert if default entities are present, on init on the canvas we should have already basic required structure for the service instance
       cy.get('[data-type="app.ServiceEntityBlock"').should("have.length", 1);
 
@@ -838,6 +852,8 @@ if (Cypress.env("edition") === "iso") {
           clientY: 500,
         })
         .trigger("mouseup");
+
+      cy.get('[data-testid="Error-container"]').should("not.exist");
 
       cy.get("button").contains("Deploy").click();
 
