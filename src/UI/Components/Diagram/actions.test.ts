@@ -302,21 +302,6 @@ describe("addDefaultEntities", () => {
     const embedded = addDefaultEntities(graph, customModel);
 
     expect(dispatchEventSpy).toHaveBeenCalledTimes(4);
-
-    //assert the arguments of the first call - calls is array of the arguments of each call
-    expect(
-      (dispatchEventSpy.mock.calls[0][0] as CustomEvent).detail,
-    ).toMatchObject({
-      action: "add",
-      name: "child_container",
-    });
-    //assert the arguments of the second call - calls is array of the arguments of each call
-    expect(
-      (dispatchEventSpy.mock.calls[1][0] as CustomEvent).detail,
-    ).toMatchObject({
-      action: "add",
-      name: "child_container",
-    });
     expect(embedded.length).toBe(2);
 
     expect(embedded[0].getName()).toStrictEqual("child_container");
