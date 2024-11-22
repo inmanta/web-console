@@ -352,7 +352,7 @@ export function appendEmbeddedEntity(
     const instanceAsTable = createComposerEntity({
       serviceModel: embeddedEntity,
       isCore: false,
-      isInEditMode: isBlockedFromEditing || false,
+      isInEditMode: true,
       attributes: entityInstance,
       isEmbedded: true,
       holderName,

@@ -956,7 +956,7 @@ const removeConnectionData = (
 
     document.dispatchEvent(
       new CustomEvent("updateServiceOrderItems", {
-        detail: { cell: elementCell, actions: ActionEnum.UPDATE },
+        detail: { cell: elementCell, action: ActionEnum.UPDATE },
       }),
     );
   }

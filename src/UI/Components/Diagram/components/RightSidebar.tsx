@@ -152,11 +152,7 @@ export const RightSidebar: React.FC<Props> = ({ editable }) => {
       setAttributes(instanceAttributes);
     }
 
-    if (stencilName) {
-      setIsInterServiceRelation(true);
-    } else {
-      setIsInterServiceRelation(false);
-    }
+    setIsInterServiceRelation(!!stencilName);
 
     setIsRemovable(() => {
       const isCellCore = model.get("isCore");
