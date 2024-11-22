@@ -38,7 +38,7 @@ interface Props {
  * @prop {Function} onSave - The callback to call when the form is submitted.
  * @prop {boolean} isRemovable - A flag that indicates whether the entity can be removed.
  * @prop {boolean} showButtons - A flag that indicates whether to show buttons or not
- * @prop {Function} onRemove - The callback to call when the cancel Remove is clicked.
+ * @prop {Function} onRemove - The callback to call when the "Remove" button is clicked.
  *
  * @returns {React.FC<Props>} The EntityForm component.
  */
