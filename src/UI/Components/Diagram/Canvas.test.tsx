@@ -206,10 +206,26 @@ describe("Canvas.tsx", () => {
       await user.click(headerLabel);
     });
 
-    const removeButton = await screen.queryByText("Remove");
-    const editButton = await screen.queryByText("Edit");
+    expect(screen.queryByText("Remove")).toBeNull();
+    expect(screen.queryByText("Cancel")).toBeNull();
+  });
 
-    expect(removeButton).toBeNull();
-    expect(editButton).toBeNull();
+  it("renders right sidebar with buttons when editable", async () => {
+    const component = setup(
+      mockedInstanceTwoServiceModel,
+      mockedInstanceTwo,
+      [mockedInstanceTwoServiceModel],
+      true,
+    );
+
+    render(component);
+    const headerLabel = await screen.findByJointSelector("headerLabel");
+
+    await act(async () => {
+      await user.click(headerLabel);
+    });
+
+    expect(screen.getByText("Remove")).toBeVisible();
+    expect(screen.getByText("Cancel")).toBeVisible();
   });
 });

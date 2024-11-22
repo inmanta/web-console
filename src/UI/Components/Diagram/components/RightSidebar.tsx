@@ -42,9 +42,31 @@ export const RightSidebar: React.FC<Props> = ({ editable }) => {
   const { mainService } = useContext(InstanceComposerContext);
   const [description, setDescription] = useState<string | null>(null);
   const [isRemovable, setIsRemovable] = useState(false);
-  const [isFormOpen, setIsFormOpen] = useState(false);
   const [model, setModel] = useState<ServiceModel | null>(null);
+  const [isInterServiceRelation, setIsInterServiceRelation] = useState(false);
   const [attributes, setAttributes] = useState<InstanceAttributeModel>({});
+
+  /**
+   * Handles the save action for the form.
+   * Sanitizes the form attributes and updates the entity in the diagram.
+   * Updates the service order items with the new shape and closes the form.
+   *
+   * @param {Field[]} fields - The fields of the form.
+   * @param {InstanceAttributeModel} formState - The current state of the form.
+   */
+  const onSave = (fields: Field[], formState: InstanceAttributeModel) => {
+    if (cellToEdit && diagramHandlers && model) {
+      const sanitizedAttrs = sanitizeAttributes(fields, formState);
+
+      const shape = diagramHandlers.editEntity(cellToEdit, model, formState);
+
+      shape.set("sanitizedAttrs", sanitizedAttrs);
+
+      setServiceOrderItems((prev) =>
+        updateServiceOrderItems(shape, ActionEnum.UPDATE, prev),
+      );
+    }
+  };
 
   /**
    * Handles the removal of a cell.
@@ -108,52 +130,7 @@ export const RightSidebar: React.FC<Props> = ({ editable }) => {
     }
   };
 
-  /**
-   * Handles the edit action for the form.
-   * Opens the form by setting the form open state to true.
-   */
-  const onEdit = (): void => {
-    setIsFormOpen(true);
-  };
-
-  /**
-   * Handles the cancel action for the form.
-   * Closes the form by setting the form open state to false.
-   */
-  const onCancel = (): void => {
-    setIsFormOpen(false);
-  };
-
-  /**
-   * Handles the save action for the form.
-   * Sanitizes the form attributes and updates the entity in the diagram.
-   * Updates the service order items with the new shape and closes the form.
-   *
-   * @param {Field[]} fields - The fields of the form.
-   * @param {InstanceAttributeModel} formState - The current state of the form.
-   */
-  const onSave = (fields: Field[], formState: InstanceAttributeModel) => {
-    if (cellToEdit && diagramHandlers && model) {
-      const sanitizedAttrs = sanitizeAttributes(fields, formState);
-
-      if (cellToEdit) {
-        const shape = diagramHandlers.editEntity(cellToEdit, model, formState);
-
-        shape.set("sanitizedAttrs", sanitizedAttrs);
-
-        setServiceOrderItems((prev) =>
-          updateServiceOrderItems(shape, ActionEnum.UPDATE, prev),
-        );
-      }
-    }
-    setIsFormOpen(false);
-  };
-
   useEffect(() => {
-    if (isFormOpen) {
-      setIsFormOpen(false); //as sidebar is always open, we need to close form when we click on another entity
-    }
-
     if (!cellToEdit) {
       setDescription(mainService.description || null);
 
@@ -163,6 +140,7 @@ export const RightSidebar: React.FC<Props> = ({ editable }) => {
     const { model } = cellToEdit;
     const serviceModel = model.get("serviceModel");
     const entityName = model.get("entityName");
+    const stencilName = model.get("stencilName");
     const instanceAttributes = model.get("instanceAttributes");
 
     if (serviceModel) {
@@ -173,6 +151,8 @@ export const RightSidebar: React.FC<Props> = ({ editable }) => {
     if (instanceAttributes) {
       setAttributes(instanceAttributes);
     }
+
+    setIsInterServiceRelation(!!stencilName);
 
     setIsRemovable(() => {
       const isCellCore = model.get("isCore");
@@ -228,37 +208,12 @@ export const RightSidebar: React.FC<Props> = ({ editable }) => {
             serviceModel={model}
             isEdited={cellToEdit.model.get("isInEditMode")}
             initialState={attributes}
-            isForDisplay={!isFormOpen}
             onSave={onSave}
-            onCancel={onCancel}
+            isDisabled={!editable || isInterServiceRelation}
+            isRemovable={isRemovable}
+            onRemove={onRemove}
+            showButtons={editable}
           />
-        )}
-
-        {!(isFormOpen || !editable) && (
-          <Flex justifyContent={{ default: "justifyContentCenter" }}>
-            <FlexItem>
-              <StyledButton
-                variant="danger"
-                width={200}
-                onClick={onRemove}
-                isDisabled={!isRemovable || !cellToEdit}
-              >
-                {words("remove")}
-              </StyledButton>
-            </FlexItem>
-            <FlexItem>
-              <StyledButton
-                variant="primary"
-                width={200}
-                onClick={onEdit}
-                isDisabled={
-                  !cellToEdit || cellToEdit.model.get("isBlockedFromEditing")
-                }
-              >
-                {words("edit")}
-              </StyledButton>
-            </FlexItem>
-          </Flex>
         )}
       </StyledFlex>
     </Wrapper>

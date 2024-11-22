@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Alert, Flex, FlexItem, Form } from "@patternfly/react-core";
-import { set, uniqueId } from "lodash";
+import { set } from "lodash";
 import styled from "styled-components";
+import { v4 as uuidv4 } from "uuid";
 import { Field, InstanceAttributeModel, ServiceModel } from "@/Core";
 import {
   CreateModifierHandler,
-  EditModifierHandler,
   FieldCreator,
 } from "@/UI/Components/ServiceInstanceForm";
 import { FieldInput } from "@/UI/Components/ServiceInstanceForm/Components";
@@ -17,8 +17,10 @@ interface Props {
   isEdited: boolean;
   initialState: InstanceAttributeModel;
   onSave: (fields: Field[], formState: InstanceAttributeModel) => void;
-  onCancel: () => void;
-  isForDisplay: boolean;
+  isDisabled: boolean;
+  isRemovable: boolean;
+  showButtons: boolean;
+  onRemove: () => void;
 }
 
 /**
@@ -34,8 +36,9 @@ interface Props {
  * @prop {boolean} isEdited - A flag that indicates whether the form is in edit mode.
  * @prop {InstanceAttributeModel} initialState - The initial state of the form.
  * @prop {Function} onSave - The callback to call when the form is submitted.
- * @prop {Function} onCancel - The callback to call when the cancel button is clicked.
- * @prop {boolean} isForDisplay - A flag that indicates whether the form is for display only.
+ * @prop {boolean} isRemovable - A flag that indicates whether the entity can be removed.
+ * @prop {boolean} showButtons - A flag that indicates whether to show buttons or not
+ * @prop {Function} onRemove - The callback to call when the "Remove" button is clicked.
  *
  * @returns {React.FC<Props>} The EntityForm component.
  */
@@ -44,12 +47,15 @@ export const EntityForm: React.FC<Props> = ({
   isEdited,
   initialState,
   onSave,
-  onCancel,
-  isForDisplay,
+  isDisabled,
+  isRemovable,
+  showButtons,
+  onRemove,
 }) => {
-  const [fields, setFields] = useState<Field[]>([]);
+  const [fields, setFields] = useState<Field[] | null>(null);
   const [formState, setFormState] =
     useState<InstanceAttributeModel>(initialState);
+  const [isDirty, setIsDirty] = useState(false);
 
   /**
    * function to update the state within the form.
@@ -60,7 +66,16 @@ export const EntityForm: React.FC<Props> = ({
    * @returns {void}
    */
   const getUpdate = (path: string, value: unknown, multi = false): void => {
+    if (!fields) {
+      return;
+    }
+    if (!isDirty) {
+      setIsDirty(true);
+    }
+
     //if multi is true, it means the field is a multi-select field and we need to update the array of values
+    let updatedValue = {};
+
     if (multi) {
       setFormState((prev) => {
         const clone = { ...prev };
@@ -72,29 +87,23 @@ export const EntityForm: React.FC<Props> = ({
         } else {
           selection.push(value as string);
         }
+        updatedValue = set(clone, path, selection);
+        onSave(fields, updatedValue); // onSave has to be called within setState to avoid async behavior of setState
 
         //update the form state with the new selection property with help of _lodash set function
-        return set(clone, path, selection);
+        return updatedValue;
       });
     } else {
       setFormState((prev) => {
         const clone = { ...prev };
 
+        updatedValue = set(clone, path, value);
+        onSave(fields, updatedValue); // onSave has to be called within setState to avoid async behavior of setState
+
         //update the form state with the new value with help of _lodash set function
-        return set(clone, path, value);
+        return updatedValue;
       });
     }
-  };
-
-  /**
-   * Handles the cancel action for the form.
-   * Resets the form state to its initial state and calls the onCancel callback.
-   *
-   * @returns {void}
-   */
-  const handleCancel = (): void => {
-    setFormState(initialState);
-    onCancel();
   };
 
   /**
@@ -105,79 +114,111 @@ export const EntityForm: React.FC<Props> = ({
    *
    * @returns {void}
    */
-  const handleSave = (
-    event: React.MouseEvent<HTMLButtonElement, globalThis.MouseEvent>,
-  ): void => {
-    event.preventDefault();
-    onSave(fields, formState);
+  const onCancel = (): void => {
+    if (!fields) {
+      return;
+    }
+    onSave(fields, initialState);
+    createFieldsAndState();
+    setFormState(initialState);
+    setIsDirty(false);
   };
 
-  useEffect(() => {
+  /**
+   * Creates fields for the entity form using the FieldCreator class and sets them in the state.
+   *
+   * This function is memoized using useCallback to avoid unnecessary re-renders. It creates a new FieldCreator instance with a CreateModifierHandler and the isEdited flag.
+   * It then converts the service model attributes to fields and assigns a unique ID to each field before setting them in the state.
+   *
+   * @returns {void}
+   */
+  const createFieldsAndState = useCallback(() => {
     const fieldCreator = new FieldCreator(
-      isEdited ? new EditModifierHandler() : new CreateModifierHandler(),
+      new CreateModifierHandler(),
+      isEdited,
     );
     const selectedFields = fieldCreator.attributesToFields(
       serviceModel.attributes,
     );
 
-    setFields(selectedFields.map((field) => ({ ...field, id: uniqueId() })));
+    setFields(selectedFields.map((field) => ({ ...field, id: uuidv4() })));
     setFormState(initialState);
+    setIsDirty(false);
   }, [serviceModel, isEdited, initialState]);
 
+  useEffect(() => {
+    createFieldsAndState();
+  }, [createFieldsAndState]);
+
   return (
-    <StyledFlex
-      flex={{ default: "flex_1" }}
-      direction={{ default: "column" }}
-      spaceItems={{ default: "spaceItemsSm" }}
-      flexWrap={{ default: "nowrap" }}
-    >
-      {fields.length <= 0 && (
-        <FlexItem>
-          <Alert
-            variant="info"
-            isInline
-            title={words("instanceComposer.formModal.noAttributes")}
-          />
-        </FlexItem>
-      )}
-      <FlexItem flex={{ default: "flex_1" }}>
-        <Form
-          onSubmit={(event) => {
-            event.preventDefault();
-            onSave(fields, formState);
-          }}
-        >
-          {fields.map((field) => (
-            <FieldInput
-              originalState={initialState}
-              key={field.name}
-              field={{
-                ...field,
-                isDisabled: isForDisplay ? isForDisplay : field.isDisabled, //if form is for display only, all fields should be disabled
-              }}
-              formState={formState}
-              getUpdate={getUpdate}
-              path={null}
-              suggestions={field.suggestion}
+    <>
+      <StyledFlex
+        flex={{ default: "flex_1" }}
+        direction={{ default: "column" }}
+        spaceItems={{ default: "spaceItemsSm" }}
+        flexWrap={{ default: "nowrap" }}
+      >
+        {fields && fields.length <= 0 && (
+          <FlexItem>
+            <Alert
+              variant="info"
+              isInline
+              title={words("instanceComposer.formModal.noAttributes")}
             />
-          ))}
-        </Form>
-      </FlexItem>
-      {!isForDisplay && (
-        <Flex justifyContent={{ default: "justifyContentCenter" }}>
-          <FlexItem>
-            <StyledButton variant="tertiary" width={200} onClick={handleCancel}>
-              {words("cancel")}
-            </StyledButton>
           </FlexItem>
+        )}
+        <FlexItem>
+          <Form
+            data-testid="entity-form"
+            onSubmit={(event) => {
+              event.preventDefault();
+            }}
+          >
+            {fields &&
+              fields.map((field) => (
+                <FieldInput
+                  originalState={initialState}
+                  key={field.name}
+                  field={{
+                    ...field,
+                    isDisabled: isDisabled || field.isDisabled,
+                  }}
+                  formState={formState}
+                  getUpdate={getUpdate}
+                  path={null}
+                  suggestions={field.suggestion}
+                />
+              ))}
+          </Form>
+        </FlexItem>
+      </StyledFlex>
+      {showButtons && (
+        <Flex justifyContent={{ default: "justifyContentCenter" }}>
+          <Flex justifyContent={{ default: "justifyContentCenter" }}>
+            <FlexItem>
+              <StyledButton
+                variant="danger"
+                width={200}
+                onClick={onRemove}
+                isDisabled={!isRemovable}
+              >
+                {words("remove")}
+              </StyledButton>
+            </FlexItem>
+          </Flex>
           <FlexItem>
-            <StyledButton variant="primary" width={200} onClick={handleSave}>
-              {words("save")}
+            <StyledButton
+              variant="tertiary"
+              width={200}
+              isDisabled={!isDirty}
+              onClick={onCancel}
+            >
+              {words("cancel")}
             </StyledButton>
           </FlexItem>
         </Flex>
       )}
-    </StyledFlex>
+    </>
   );
 };
 
