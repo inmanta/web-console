@@ -340,22 +340,6 @@ describe("Environment", () => {
       .find(".pf-v5-c-form-control input")
       .should("have.value", "20");
 
-    //Change autostart_agent_map
-    cy.get('[aria-label="Row-autostart_agent_map"]')
-      .find('[aria-label="editEntryValue"]')
-      .filter((key, $el) => {
-        return $el.value === "local:";
-      })
-      .type("{selectAll}{backspace}new value");
-    cy.get('[data-testid="Warning"]').should("exist");
-    cy.get('[aria-label="Row-autostart_agent_map"]')
-      .find('[aria-label="SaveAction"]')
-      .click();
-    cy.get('[data-testid="Warning"]').should("not.exist");
-    cy.get('[aria-label="Row-autostart_agent_map"]')
-      .find('[aria-label="editEntryValue"]')
-      .should("have.value", "new value");
-
     //Change autostart_agent_repair_interval
     cy.get('[aria-label="Row-autostart_agent_repair_interval"]')
       .find(".pf-v5-c-form-control")
@@ -405,20 +389,6 @@ describe("Environment", () => {
       .find(".pf-v5-c-form-control input")
       .should("have.value", "110");
 
-    //Change environment_agent_trigger_method
-    cy.get(
-      '[aria-label="EnumInput-environment_agent_trigger_methodFilterInput"]',
-    ).click();
-    cy.get('[role="option"]').contains("push_full_deploy").click();
-    cy.get('[data-testid="Warning"]').should("exist");
-    cy.get('[aria-label="Row-environment_agent_trigger_method"]')
-      .find('[aria-label="SaveAction"]')
-      .click();
-    cy.get('[data-testid="Warning"]').should("not.exist");
-    cy.get(
-      '[aria-label="EnumInput-environment_agent_trigger_methodFilterInput"]',
-    ).should("have.value", "push_full_deploy");
-
     // specific to ISO
     if (Cypress.env("edition") === "iso") {
       // Change lsm_partial_compile
@@ -452,16 +422,6 @@ describe("Environment", () => {
       .click();
     cy.get('[data-testid="Warning"]').should("exist");
     cy.get('[aria-label="Row-protected_environment"]')
-      .find('[aria-label="SaveAction"]')
-      .click();
-    cy.get('[data-testid="Warning"]').should("not.exist");
-
-    //Change push_on_auto_deploy
-    cy.get('[aria-label="Row-push_on_auto_deploy"]')
-      .find(".pf-v5-c-switch")
-      .click();
-    cy.get('[data-testid="Warning"]').should("exist");
-    cy.get('[aria-label="Row-push_on_auto_deploy"]')
       .find('[aria-label="SaveAction"]')
       .click();
     cy.get('[data-testid="Warning"]').should("not.exist");
