@@ -14,10 +14,13 @@ import { Inventories } from "@/Data/Managers/V2/GETTERS/GetInventoryList";
 import { dependencies } from "@/Test";
 import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
 import { PrimaryRouteManager } from "@/UI/Routing";
-import { CanvasContext, InstanceComposerContext } from "../Context";
+import {
+  CanvasContext,
+  InstanceComposerContext,
+  defaultCanvasContext,
+} from "../Context";
 import { containerModel } from "../Mocks";
 import { addDefaultEntities } from "../actions";
-import { DiagramHandlers } from "../init";
 import { StencilState } from "../interfaces";
 import { ComposerPaper } from "../paper";
 import { defineObjectsForJointJS } from "../testSetup";
@@ -55,13 +58,7 @@ describe("RightSidebar.", () => {
         },
       ]),
     );
-    const diagramHandlers = {
-      editEntity: jest.fn(),
-      addInstance: () => [],
-      removeCanvas: () => {},
-      getCoordinates: () => {},
-    } as unknown as DiagramHandlers; //mock as we only need editEntity to spy on
-    const setServiceOrderItems = jest.fn();
+
     const component = (
       <QueryClientProvider client={client}>
         <MemoryRouter initialEntries={[{ search: "?env=aaa" }]}>
@@ -82,26 +79,10 @@ describe("RightSidebar.", () => {
               >
                 <CanvasContext.Provider
                   value={{
-                    diagramHandlers,
-                    setDiagramHandlers: () => {},
-                    dictToDisplay: null,
-                    setDictToDisplay: () => {},
-                    formState: {},
-                    setFormState: () => {},
-                    fields: [],
-                    setFields: () => {},
+                    ...defaultCanvasContext,
                     cellToEdit,
-                    setCellToEdit: () => {},
-                    looseElement: new Set(),
-                    setLooseElement: () => {},
-                    serviceOrderItems: new Map(),
-                    setServiceOrderItems,
                     stencilState,
-                    setStencilState: () => {},
-                    isDirty: false,
-                    interServiceRelationsOnCanvas: new Map(),
-                    setInterServiceRelationsOnCanvas: () => {},
-                  }} //temporary as there is default value in the incoming PR
+                  }}
                 >
                   <RightSidebar editable={true} />
                 </CanvasContext.Provider>
@@ -112,7 +93,7 @@ describe("RightSidebar.", () => {
       </QueryClientProvider>
     );
 
-    return { component, diagramHandlers, setServiceOrderItems };
+    return { component };
   };
 
   beforeAll(() => {
