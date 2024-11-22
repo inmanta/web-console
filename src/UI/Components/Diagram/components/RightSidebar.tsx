@@ -154,6 +154,8 @@ export const RightSidebar: React.FC<Props> = ({ editable }) => {
 
     if (stencilName) {
       setIsInterServiceRelation(true);
+    } else {
+      setIsInterServiceRelation(false);
     }
 
     setIsRemovable(() => {
