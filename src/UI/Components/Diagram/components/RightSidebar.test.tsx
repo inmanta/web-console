@@ -99,6 +99,8 @@ describe("RightSidebar.", () => {
                     stencilState,
                     setStencilState: () => {},
                     isDirty: false,
+                    interServiceRelationsOnCanvas: new Map(),
+                    setInterServiceRelationsOnCanvas: () => {},
                   }} //temporary as there is default value in the incoming PR
                 >
                   <RightSidebar editable={true} />
