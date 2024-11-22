@@ -292,7 +292,7 @@ const IconContainer = styled.div`
 `;
 
 const BorderedArea = styled.div`
-  border: 1px solid var(--pf-v5-global--BorderColor--100);
+  border: 1px solid var(--pf-t--global--border--color--nonstatus--gray--default);
   width: 100%;
   margin-bottom: 1em;
 `;

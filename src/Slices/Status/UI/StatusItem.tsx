@@ -6,10 +6,14 @@ import {
   DescriptionListGroup,
   DescriptionListDescription,
   Title,
-  Flex,
-  FlexItem,
+  Label,
+  DataListItem,
+  DataListItemRow,
+  DataListItemCells,
+  DataListCell,
+  List,
 } from "@patternfly/react-core";
-import styled from "styled-components";
+import { uniqueId } from "lodash";
 import { DetailTuple } from "./StatusList";
 
 interface Props {
@@ -35,55 +39,61 @@ export const StatusItem: React.FC<Props> = ({
   icon,
   category,
 }) => (
-  <ListItem icon={icon} aria-label={`StatusItem-${name}`}>
-    <Flex direction={{ default: "column" }}>
-      <FlexItem>
-        <InlineTitle headingLevel="h2">{name}</InlineTitle>
-        <Category>{category}</Category>
-      </FlexItem>
-      {details.length > 0 && (
-        <FlexItem>
-          <CompactDescriptionList isHorizontal isCompact isFluid>
-            {details.map(([key, value]) => {
-              if (typeof value === "object") {
-                return (
-                  <NestedListItem key={key} name={key} properties={value} />
-                );
-              } else {
-                return (
-                  <DescriptionListGroup key={key}>
-                    <DescriptionListTerm>{key}</DescriptionListTerm>
-                    <DescriptionListDescription>
-                      {value}
-                    </DescriptionListDescription>
-                  </DescriptionListGroup>
-                );
-              }
-            })}
-          </CompactDescriptionList>
-        </FlexItem>
-      )}
-    </Flex>
-  </ListItem>
+  <DataListItem aria-label={`StatusItem-${name}`}>
+    <DataListItemRow key={`${category}-${name}-title`}>
+      <DataListItemCells
+        dataListCells={[
+          <DataListCell key={uniqueId()}>
+            <Title headingLevel="h2">
+              {icon} {name}{" "}
+              {category && <Label variant="outline">{category}</Label>}
+            </Title>
+          </DataListCell>,
+        ]}
+      />
+    </DataListItemRow>
+    <DataListItemRow key={`${category}-${name}-content`}>
+      <DataListItemCells
+        dataListCells={[
+          <DataListCell key={uniqueId()}>
+            {details.length > 0 && (
+              <List>
+                {details.map(([key, value]) => {
+                  if (typeof value === "object") {
+                    return (
+                      <NestedListItem
+                        key={`${key}-${value}`}
+                        name={key}
+                        properties={value}
+                      />
+                    );
+                  } else {
+                    return (
+                      <DescriptionList
+                        key={`${key}-${value}`}
+                        isHorizontal
+                        horizontalTermWidthModifier={{
+                          default: "20ch",
+                        }}
+                      >
+                        <DescriptionListGroup>
+                          <DescriptionListTerm>{key}</DescriptionListTerm>
+                          <DescriptionListDescription>
+                            {value}
+                          </DescriptionListDescription>
+                        </DescriptionListGroup>
+                      </DescriptionList>
+                    );
+                  }
+                })}
+              </List>
+            )}
+          </DataListCell>,
+        ]}
+      />
+    </DataListItemRow>
+  </DataListItem>
 );
-
-const Category = styled.span`
-  color: var(--pf-v5-global--palette--black-500);
-`;
-
-const InlineTitle = styled(Title)`
-  display: inline-block;
-  padding-right: var(--pf-v5-global--spacer--sm);
-`;
-
-const CompactDescriptionList = styled(DescriptionList)`
-  --pf-v5-c-description-list--m-compact--RowGap: 0;
-  margin-bottom: var(--pf-v5-global--spacer--md);
-`;
-
-const IndentedDescriptionListGroup = styled(DescriptionListGroup)`
-  padding-left: var(--pf-v5-global--spacer--md);
-`;
 
 interface NestedListItemProps {
   name: string;
@@ -103,16 +113,30 @@ const NestedListItem: React.FC<NestedListItemProps> = ({
   properties,
 }) => {
   return (
-    <ListItem aria-label={`StatusNestedListItem-${name}`}>
-      <DescriptionListGroup>
-        <DescriptionListTerm>{name}</DescriptionListTerm>
-      </DescriptionListGroup>
-      {Object.entries(properties).map(([subKey, subValue]) => (
-        <IndentedDescriptionListGroup key={name + "_" + subKey}>
-          <DescriptionListTerm>{subKey}</DescriptionListTerm>
-          <DescriptionListDescription>{subValue}</DescriptionListDescription>
-        </IndentedDescriptionListGroup>
-      ))}
-    </ListItem>
+    <List aria-label={`StatusNestedListItem-${name}`} isPlain>
+      <ListItem>
+        <b>{name}</b>
+      </ListItem>
+      <List key={`${name}-nested-list`}>
+        {Object.entries(properties).map(([subKey, subValue]) => (
+          <ListItem key={name + "_" + subKey}>
+            <DescriptionList
+              isHorizontal
+              isCompact
+              horizontalTermWidthModifier={{
+                default: "20ch",
+              }}
+            >
+              <DescriptionListGroup>
+                <DescriptionListTerm>{subKey}</DescriptionListTerm>
+                <DescriptionListDescription>
+                  {subValue}
+                </DescriptionListDescription>
+              </DescriptionListGroup>
+            </DescriptionList>
+          </ListItem>
+        ))}
+      </List>
+    </List>
   );
 };

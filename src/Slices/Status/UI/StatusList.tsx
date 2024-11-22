@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Icon, List } from "@patternfly/react-core";
+import { DataList, Icon } from "@patternfly/react-core";
 import {
   ClusterIcon,
   DesktopIcon,
@@ -36,12 +36,11 @@ export const StatusList: React.FC<Props> = ({
   const { featureManager } = useContext(DependencyContext);
 
   return (
-    <List
+    <DataList
       {...props}
-      isPlain
-      isBordered
       className={className}
       aria-label="StatusList"
+      isCompact
     >
       <StatusItem
         name={status.product}
@@ -49,7 +48,7 @@ export const StatusList: React.FC<Props> = ({
           omit(status, ["product", "extensions", "slices", "features"]),
         )}
         icon={
-          <Icon size="xl">
+          <Icon size="lg">
             <TagIcon
               style={{
                 color: "var(--pf-t--global--icon--color--brand--default)",
@@ -62,7 +61,7 @@ export const StatusList: React.FC<Props> = ({
         name="API"
         details={[["url", apiUrl]]}
         icon={
-          <Icon size="xl" status="custom">
+          <Icon size="lg" status="custom">
             <ClusterIcon />
           </Icon>
         }
@@ -71,7 +70,7 @@ export const StatusList: React.FC<Props> = ({
         name="Web Console"
         details={[["commit hash", featureManager.getCommitHash()]]}
         icon={
-          <Icon size="xl" status="info">
+          <Icon size="lg" status="info">
             <DesktopIcon />
           </Icon>
         }
@@ -82,7 +81,7 @@ export const StatusList: React.FC<Props> = ({
           name={extension.name}
           details={toDetails(omit(extension, "name"))}
           icon={
-            <Icon size="xl">
+            <Icon size="lg">
               <IntegrationIcon
                 style={{
                   color:
@@ -100,14 +99,14 @@ export const StatusList: React.FC<Props> = ({
           name={slice.name}
           details={toDetails(slice.status)}
           icon={
-            <Icon size="xl" status="success">
+            <Icon size="lg" status="success">
               <ModuleIcon />
             </Icon>
           }
           category="component"
         />
       ))}
-    </List>
+    </DataList>
   );
 };
 

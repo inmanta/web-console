@@ -1,4 +1,4 @@
-import { dia, ui } from "@inmanta/rappid";
+import { ui } from "@inmanta/rappid";
 import { ServiceModel } from "@/Core";
 import { Inventories } from "@/Data/Managers/V2/GETTERS/GetInventoryList";
 import { InstanceStencilTab } from "./instanceStencil";
@@ -11,27 +11,43 @@ export class StencilSidebar {
   instanceTab: InstanceStencilTab;
   inventoryTab: InventoryStencilTab;
   tabsToolbar: ui.Toolbar;
+
   toggleTabVisibility = (
-    event: dia.Event,
-    tabOne: Tab,
-    tabTwo: Tab,
-    siblingOrder: "prev" | "next",
+    newActiveTab: Tab,
+    oldActiveTab: Tab,
+    newTabId: string,
   ) => {
-    if (event.target.classList.contains("-active")) {
-      return;
-    }
-    tabOne.stencil.el.classList.add("joint-hidden");
-    tabOne.stencil.freeze();
+    oldActiveTab.stencil.el.classList.add("joint-hidden");
+    oldActiveTab.stencil.freeze();
 
-    tabTwo.stencil.el.classList.remove("joint-hidden");
-    tabTwo.stencil.unfreeze();
+    newActiveTab.stencil.el.classList.remove("joint-hidden");
+    newActiveTab.stencil.unfreeze();
 
-    event.target.classList.add("-active");
+    const tabs: NodeListOf<HTMLElement> = document.querySelectorAll(
+      '[aria-label="stencil-sidebar-tabs"] li',
+    );
 
-    if (siblingOrder === "prev") {
-      event.target.previousSibling.classList.remove("-active");
-    } else {
-      event.target.nextSibling.classList.remove("-active");
+    tabs.forEach((tab) =>
+      tab.classList.toggle("pf-m-current", tab.id === newTabId),
+    );
+  };
+
+  toggleTab = (clickedElement: EventTarget) => {
+    if (clickedElement instanceof HTMLElement) {
+      // The clickedElement can also be the entire tabContainer, which we don't want to react on.
+      clickedElement.innerText === "Inventory" &&
+        this.toggleTabVisibility(
+          this.inventoryTab,
+          this.instanceTab,
+          "inventory-tab",
+        );
+
+      clickedElement.innerText === "New" &&
+        this.toggleTabVisibility(
+          this.instanceTab,
+          this.inventoryTab,
+          "new-tab",
+        );
     }
   };
 
@@ -64,53 +80,45 @@ export class StencilSidebar {
 
     this.tabsToolbar = new ui.Toolbar({
       id: "tabs-toolbar",
-      tools: [
-        {
-          type: "button",
-          name: "new_tab",
-          text: "New",
-          id: "new-tab",
-        },
-        {
-          type: "button",
-          name: "inventory_tab",
-          text: "Inventory",
-          id: "inventory-tab",
-        },
-      ],
+      tools: [],
     });
 
+    const tabButtons: HTMLElement = document.createElement("div");
+
+    tabButtons.classList.add("pf-v6-c-tabs", "pf-m-inset-lg");
+    tabButtons.role = "region";
+    tabButtons.innerHTML = `
+        <ul class="pf-v6-c-tabs__list" role="tablist" aria-label="stencil-sidebar-tabs">
+          <li class="pf-v6-c-tabs__item  pf-m-current" role="presentation" id="new-tab">
+            <button
+              type="button"
+              class="pf-v6-c-tabs__link"
+              role="tab"
+              name="new_tab"
+            >
+              <span class="pf-v6-c-tabs__item-text">New</span>
+            </button>
+          </li>
+          <li class="pf-v6-c-tabs__item" role="presentation" id="inventory-tab">
+            <button
+              type="button"
+              class="pf-v6-c-tabs__link"
+              role="tab"
+              name="inventory_tab"
+            >
+              <span class="pf-v6-c-tabs__item-text">Inventory</span>
+            </button>
+          </li>
+        </ul>
+     `;
+
+    tabButtons.addEventListener("click", (event: Event) => {
+      !!event.target && this.toggleTab(event.target);
+    });
+
+    this.tabsToolbar.el.appendChild(tabButtons);
     stencilElement.appendChild(this.tabsToolbar.el);
     this.tabsToolbar.render();
-
-    const firstChild = this.tabsToolbar.el.firstElementChild;
-
-    //adding active class to the first tab as a default, as Toolbar doesn't apply it when adding 'class' attribute to the tool object
-    if (firstChild) {
-      const targetElement = firstChild.firstElementChild;
-
-      if (targetElement && targetElement.classList) {
-        targetElement.classList.add("-active");
-      }
-    }
-
-    this.tabsToolbar.on("new_tab:pointerclick", (event: dia.Event) =>
-      this.toggleTabVisibility(
-        event,
-        this.inventoryTab,
-        this.instanceTab,
-        "next",
-      ),
-    );
-
-    this.tabsToolbar.on("inventory_tab:pointerclick", (event: dia.Event) =>
-      this.toggleTabVisibility(
-        event,
-        this.instanceTab,
-        this.inventoryTab,
-        "prev",
-      ),
-    );
   }
 
   remove(): void {
