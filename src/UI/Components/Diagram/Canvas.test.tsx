@@ -207,7 +207,7 @@ describe("Canvas.tsx", () => {
     });
 
     expect(screen.queryByText("Remove")).toBeNull();
-    expect(screen.getAllByText("Cancel")).toHaveLength(1); // the cancel button to cancel the whole composer process will be always there
+    expect(screen.queryByText("Cancel")).toBeNull();
   });
 
   it("renders right sidebar with buttons when editable", async () => {
@@ -225,7 +225,7 @@ describe("Canvas.tsx", () => {
       await user.click(headerLabel);
     });
 
-    expect(screen.getByText("Remove")).toBeNull();
-    expect(screen.getAllByText("Cancel")).toHaveLength(2);
+    expect(screen.getByText("Remove")).toBeVisible();
+    expect(screen.getByText("Cancel")).toBeVisible();
   });
 });
