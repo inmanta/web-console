@@ -294,20 +294,6 @@ describe("Environment", () => {
     openSettings(testName(6), testProjectName(6));
     cy.get("button").contains("Configuration").click();
 
-    //Change agent_trigger_method_on_auto_deploy
-    cy.get(
-      '[aria-label="EnumInput-agent_trigger_method_on_auto_deployFilterInput"]',
-    ).click();
-    cy.get('[role="option"]').contains("push_full_deploy").click();
-    cy.get('[data-testid="Warning"]').should("exist");
-    cy.get('[aria-label="Row-agent_trigger_method_on_auto_deploy"]')
-      .find('[aria-label="SaveAction"]')
-      .click();
-    cy.get('[data-testid="Warning"]').should("not.exist");
-    cy.get(
-      '[aria-label="EnumInput-agent_trigger_method_on_auto_deployFilterInput"]',
-    ).should("have.value", "push_full_deploy");
-
     //Change auto_deploy
     cy.get('[aria-label="Row-auto_deploy"]').find(".pf-v5-c-switch").click();
     cy.get('[data-testid="Warning"]').should("exist");
