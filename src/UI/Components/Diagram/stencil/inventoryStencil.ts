@@ -3,10 +3,7 @@ import { global_palette_white } from "@patternfly/react-tokens";
 import { ServiceModel } from "@/Core";
 import { Inventories } from "@/Data/Managers/V2/GETTERS/GetInventoryList";
 import { createComposerEntity } from "../actions";
-import {
-  changeStencilElementAvailability,
-  createStencilElement,
-} from "./helpers";
+import { toggleDisabledStencil, createStencilElement } from "./helpers";
 
 const GRID_SIZE = 8;
 const PADDING_S = GRID_SIZE;
@@ -126,7 +123,7 @@ export class InventoryStencilTab {
       const stencilName = elementView.model.get("stencilName");
 
       if (stencilName) {
-        changeStencilElementAvailability(stencilName, "disable");
+        toggleDisabledStencil(stencilName, true);
       }
     });
   }

@@ -20,7 +20,7 @@ import {
 } from "./interfaces";
 import { ComposerPaper } from "./paper";
 import { ServiceEntityBlock } from "./shapes";
-import { changeStencilElementAvailability } from "./stencil/helpers";
+import { toggleDisabledStencil } from "./stencil/helpers";
 
 /**
  * Initializes the diagram.
@@ -134,7 +134,7 @@ export function diagramInit(
           }
 
           if (stencilName) {
-            changeStencilElementAvailability(stencilName, "disable");
+            toggleDisabledStencil(stencilName, true);
           }
           cell.set("items", copy.items); // converted cells lacks "items" attribute
         }

@@ -114,13 +114,13 @@ export const createStencilElement = (
  * This function enables or disables stencil elements for an inter-service relation instance by toggling specific CSS classes.
  *
  * @param {string} stencilName - The name of the stencil.
- * @param {"enable" | "disable"} action - The action to perform, either "enable" or "disable".
+ * @param {boolean} force - if force is true, adds the disabled className . If force is false, removes disabled className
  *
  * @returns {void}
  */
-export const changeStencilElementAvailability = (
+export const toggleDisabledStencil = (
   stencilName: string,
-  action: "enable" | "disable",
+  force?: boolean,
 ): void => {
   //disable Inventory Stencil for inter-service relation instance
   const elements = [
@@ -142,7 +142,7 @@ export const changeStencilElementAvailability = (
     const element = document.querySelector(selector);
 
     if (element) {
-      element.classList.toggle(className, action === "disable");
+      element.classList.toggle(className, force);
     }
   });
 };

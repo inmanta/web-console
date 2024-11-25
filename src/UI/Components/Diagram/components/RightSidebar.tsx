@@ -13,7 +13,7 @@ import { words } from "@/UI/words";
 import { CanvasContext, InstanceComposerContext } from "../Context/Context";
 import { updateServiceOrderItems } from "../helpers";
 import { ActionEnum, EventActionEnum } from "../interfaces";
-import { changeStencilElementAvailability } from "../stencil/helpers";
+import { toggleDisabledStencil } from "../stencil/helpers";
 import { EntityForm } from "./EntityForm";
 
 interface Props {
@@ -105,7 +105,7 @@ export const RightSidebar: React.FC<Props> = ({ editable }) => {
     const stencilName = model.get("stencilName");
 
     if (stencilName) {
-      changeStencilElementAvailability(stencilName, "enable");
+      toggleDisabledStencil(stencilName, false);
     }
   };
 

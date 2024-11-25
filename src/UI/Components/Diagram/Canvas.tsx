@@ -8,6 +8,7 @@ import { DictModal, RightSidebar } from "./components";
 import { Validation } from "./components/Validation";
 import { createConnectionRules, createStencilState } from "./helpers";
 import { diagramInit } from "./init";
+import { ActionEnum } from "./interfaces";
 import { StencilSidebar } from "./stencil";
 import { CanvasWrapper } from "./styles";
 import { ZoomHandlerService } from "./zoomHandler";
@@ -132,7 +133,7 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
           instance_id: cell.id,
           service_entity: cell.get("entityName"),
           config: {},
-          action: instance ? null : "create",
+          action: instance ? null : ActionEnum.CREATE,
           attributes: cell.get("instanceAttributes"),
           embeddedTo: cell.get("embeddedTo"),
           relatedTo: cell.get("relatedTo"),

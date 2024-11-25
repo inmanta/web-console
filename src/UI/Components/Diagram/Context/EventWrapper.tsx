@@ -6,6 +6,7 @@ import {
   RelationCounterForCell,
 } from "../interfaces";
 import { ServiceEntityBlock } from "../shapes";
+import { toggleDisabledStencil } from "../stencil/helpers";
 import { CanvasContext } from "./Context";
 
 /**
@@ -144,25 +145,12 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
           break;
       }
 
-      const elements = [
-        { selector: `.body_${name}`, className: "stencil_accent-disabled" },
-        { selector: `.bodyTwo_${name}`, className: "stencil_body-disabled" },
-        { selector: `.text_${name}`, className: "stencil_text-disabled" },
-      ];
-
       const shouldDisable =
         stencil.max !== null &&
         stencil.max !== undefined &&
         stencil.current >= stencil.max;
 
-      // As in the docstrings mentioned, If the current count of the instances created from given stencil is more than or equal to the max count, disable the stencil of given embedded entity
-      elements.forEach(({ selector, className }) => {
-        const element = document.querySelector(selector);
-
-        if (element) {
-          element.classList.toggle(className, shouldDisable);
-        }
-      });
+      toggleDisabledStencil(name, shouldDisable);
 
       return stencilStateCopy;
     });

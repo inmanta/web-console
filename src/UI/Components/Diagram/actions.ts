@@ -23,7 +23,7 @@ import {
   relationId,
 } from "./interfaces";
 import { Link, ServiceEntityBlock } from "./shapes";
-import { changeStencilElementAvailability } from "./stencil/helpers";
+import { toggleDisabledStencil } from "./stencil/helpers";
 
 /**
  * Function that creates, appends and returns created Entity
@@ -217,10 +217,7 @@ export function appendInstance(
           isBlockedFromEditing,
         );
 
-        changeStencilElementAvailability(
-          appendedInstances[0].get("stencilName"),
-          "disable",
-        );
+        toggleDisabledStencil(appendedInstances[0].get("stencilName"), true);
       } else {
         //If cell is already in the graph, we need to check if it got in its inter-service relations the one with id that corresponds with created instanceAsTable
         let isConnected = false;
