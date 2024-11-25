@@ -23,6 +23,7 @@ import {
   relationId,
 } from "./interfaces";
 import { Link, ServiceEntityBlock } from "./shapes";
+import { changeStencilElementAvailability } from "./stencil/helpers";
 
 /**
  * Function that creates, appends and returns created Entity
@@ -216,29 +217,10 @@ export function appendInstance(
           isBlockedFromEditing,
         );
 
-        //disable Inventory Stencil for inter-service relation instance
-        const elements = [
-          {
-            selector: `.body_${appendedInstances[0].get("stencilName")}`,
-            className: "stencil_accent-disabled",
-          },
-          {
-            selector: `.bodyTwo_${appendedInstances[0].get("stencilName")}`,
-            className: "stencil_body-disabled",
-          },
-          {
-            selector: `.text_${appendedInstances[0].get("stencilName")}`,
-            className: "stencil_text-disabled",
-          },
-        ];
-
-        elements.forEach(({ selector, className }) => {
-          const element = document.querySelector(selector);
-
-          if (element) {
-            element.classList.add(className);
-          }
-        });
+        changeStencilElementAvailability(
+          appendedInstances[0].get("stencilName"),
+          "disable",
+        );
       } else {
         //If cell is already in the graph, we need to check if it got in its inter-service relations the one with id that corresponds with created instanceAsTable
         let isConnected = false;

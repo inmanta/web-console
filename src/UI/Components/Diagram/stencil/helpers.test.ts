@@ -1,5 +1,7 @@
+import { screen } from "@testing-library/react";
 import { containerModel, testApiInstanceModel } from "../Mocks";
 import {
+  changeStencilElementAvailability,
   createStencilElement,
   transformEmbeddedToStencilElements,
 } from "./helpers";
@@ -103,5 +105,114 @@ describe("transformEmbeddedToStencilElements", () => {
     });
     expect(result[1].attributes.holderName).toEqual("embedded");
     expect(result[1].attributes.instanceAttributes).toStrictEqual({});
+  });
+});
+
+describe("changeStencilElementAvailability", () => {
+  const setup = (name: string, disabled: boolean) => {
+    const elementsInfo = [
+      [`body_${name}`, "stencil_accent-disabled"],
+      [`bodyTwo_${name}`, "stencil_body-disabled"],
+      [`text_${name}`, "stencil_text-disabled"],
+    ];
+
+    const elements = elementsInfo.map((element, index) => {
+      const div = document.createElement("div");
+
+      div.classList.add(element[0]);
+      div.setAttribute("data-testid", `${name}-${index}`);
+
+      if (disabled) {
+        div.classList.add(element[1]);
+      }
+
+      return div;
+    });
+
+    document.body.append(...elements);
+  };
+
+  beforeEach(() => {
+    document.body.innerHTML = "";
+  });
+
+  it("disables the stencil elements", () => {
+    setup("test", false);
+
+    expect(screen.getByTestId("test-0")).not.toHaveClass(
+      "stencil_accent-disabled",
+    );
+    expect(screen.getByTestId("test-1")).not.toHaveClass(
+      "stencil_body-disabled",
+    );
+    expect(screen.getByTestId("test-2")).not.toHaveClass(
+      "stencil_text-disabled",
+    );
+
+    changeStencilElementAvailability("test", "disable");
+
+    expect(screen.getByTestId("test-0")).toHaveClass("stencil_accent-disabled");
+    expect(screen.getByTestId("test-1")).toHaveClass("stencil_body-disabled");
+    expect(screen.getByTestId("test-2")).toHaveClass("stencil_text-disabled");
+  });
+
+  it("enables the stencil elements", () => {
+    setup("test", true);
+
+    expect(screen.getByTestId("test-0")).toHaveClass("stencil_accent-disabled");
+    expect(screen.getByTestId("test-1")).toHaveClass("stencil_body-disabled");
+    expect(screen.getByTestId("test-2")).toHaveClass("stencil_text-disabled");
+
+    changeStencilElementAvailability("test", "enable");
+
+    expect(screen.getByTestId("test-0")).not.toHaveClass(
+      "stencil_accent-disabled",
+    );
+    expect(screen.getByTestId("test-1")).not.toHaveClass(
+      "stencil_body-disabled",
+    );
+    expect(screen.getByTestId("test-2")).not.toHaveClass(
+      "stencil_text-disabled",
+    );
+  });
+
+  it("if we try to enable the enabled stencil elements nothing happens", () => {
+    setup("test", false);
+
+    expect(screen.getByTestId("test-0")).not.toHaveClass(
+      "stencil_accent-disabled",
+    );
+    expect(screen.getByTestId("test-1")).not.toHaveClass(
+      "stencil_body-disabled",
+    );
+    expect(screen.getByTestId("test-2")).not.toHaveClass(
+      "stencil_text-disabled",
+    );
+
+    changeStencilElementAvailability("test", "enable");
+
+    expect(screen.getByTestId("test-0")).not.toHaveClass(
+      "stencil_accent-disabled",
+    );
+    expect(screen.getByTestId("test-1")).not.toHaveClass(
+      "stencil_body-disabled",
+    );
+    expect(screen.getByTestId("test-2")).not.toHaveClass(
+      "stencil_text-disabled",
+    );
+  });
+
+  it("if we try to disable the disabled stencil elements nothing happens", () => {
+    setup("test", true);
+
+    expect(screen.getByTestId("test-0")).toHaveClass("stencil_accent-disabled");
+    expect(screen.getByTestId("test-1")).toHaveClass("stencil_body-disabled");
+    expect(screen.getByTestId("test-2")).toHaveClass("stencil_text-disabled");
+
+    changeStencilElementAvailability("test", "disable");
+
+    expect(screen.getByTestId("test-0")).toHaveClass("stencil_accent-disabled");
+    expect(screen.getByTestId("test-1")).toHaveClass("stencil_body-disabled");
+    expect(screen.getByTestId("test-2")).toHaveClass("stencil_text-disabled");
   });
 });
