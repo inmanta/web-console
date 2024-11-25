@@ -59,20 +59,18 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
     if (!isStencilStateReady || diagramHandlers) {
       return;
     }
-    let tempScroller;
 
     const connectionRules = createConnectionRules(serviceModels, {});
     const actions = diagramInit(
       Canvas,
       (newScroller) => {
-        tempScroller = newScroller;
+        setScroller(newScroller);
       },
       connectionRules,
       editable,
       mainService,
     );
 
-    setScroller(tempScroller);
     setDiagramHandlers(actions);
 
     return () => {
