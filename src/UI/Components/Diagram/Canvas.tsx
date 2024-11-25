@@ -55,6 +55,7 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
 
   // create the diagram & set diagram handlers and the scroller only when service models and main service is defined and the stencil state is ready
   useEffect(() => {
+    //if diagram handlers are already set or the stencil state is not ready, return early to avoid re-creating the diagram or to creating it too early
     if (!isStencilStateReady || diagramHandlers) {
       return;
     }
@@ -82,8 +83,7 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
   }, [mainService, serviceModels, isStencilStateReady]);
 
   /**
-   * create the left-sidebar only if the left-sidebar ref, the scroller, the related inventories by inter-service relations, the main service and service models are defined
-   * It's done in separate useEffect to enable eventual re-renders of the sidebar independently of the diagram, e.g. when the related inventories by inter-service relations are loaded
+   * create the stencil sidebar and zoom handler only when the scroller, related inventories and main service are defined and the ref for sidebar and zoomHandler is there
    */
   useEffect(() => {
     if (
