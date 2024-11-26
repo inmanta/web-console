@@ -1,4 +1,3 @@
-import { uniqueId } from "lodash";
 import { InstanceAttributeModel } from "@/Core";
 import { InstanceLog } from "@/Slices/ServiceInstanceHistory/Core/Domain";
 
@@ -67,6 +66,7 @@ export const getAvailableAttributesSets = (
  */
 export const formatTreeRowData = (
   attributes: Record<string, unknown>,
+  path: string = "",
 ): TreeRowData[] => {
   const result: TreeRowData[] = [];
 
@@ -77,7 +77,7 @@ export const formatTreeRowData = (
       //  default
       const node: TreeRowData = {
         value: value,
-        id: uniqueId(key),
+        id: path + key,
         name: key,
         children: [],
       };
@@ -95,15 +95,18 @@ export const formatTreeRowData = (
               // If the item is an object, we need to add the properties into the children
               node?.children?.push({
                 name: `${index}`,
-                id: `${uniqueId(key)}`,
+                id: path + key + "." + index,
                 value: item,
-                children: formatTreeRowData(item as Record<string, unknown>),
+                children: formatTreeRowData(
+                  item as Record<string, unknown>,
+                  path + key + ".",
+                ),
               });
             } else {
               // If the item is a primitive value, add it directly. They don't need a collapsible section.
               node?.children?.push({
                 name: `${index}`,
-                id: `${uniqueId(key)}`,
+                id: path + key + "." + index,
                 value: item,
               });
             }
@@ -111,7 +114,10 @@ export const formatTreeRowData = (
         } else {
           // this case is when we are dealing with a normal object. We call the recursion.
           node?.children?.push(
-            ...formatTreeRowData(value as Record<string, unknown>),
+            ...formatTreeRowData(
+              value as Record<string, unknown>,
+              path + key + ".",
+            ),
           );
         }
       }
