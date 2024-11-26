@@ -1149,7 +1149,7 @@ __metadata:
     "@patternfly/react-icons": "npm:^5.4.0"
     "@patternfly/react-styles": "npm:^5.3.1"
     "@patternfly/react-table": "npm:^5.4.9"
-    "@patternfly/react-tokens": "npm:^5.3.1"
+    "@patternfly/react-tokens": "npm:^5.4.1"
     "@react-keycloak/web": "npm:^3.4.0"
     "@stylistic/eslint-plugin-ts": "npm:^2.6.1"
     "@tanstack/react-query": "npm:^5.37.1"
@@ -1913,7 +1913,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@patternfly/react-tokens@npm:^5.2.1, @patternfly/react-tokens@npm:^5.3.0, @patternfly/react-tokens@npm:^5.3.1":
+"@patternfly/react-tokens@npm:^5.2.1, @patternfly/react-tokens@npm:^5.3.0":
   version: 5.3.1
   resolution: "@patternfly/react-tokens@npm:5.3.1"
   checksum: 10/bdc63babf07969f6c959ee6f8368239fe00090ac39b265961130638dad613b3680ba7f660805c73d1a7a83baf84d74293f3f071bbc6d8f5b4fc43dcbd6e6dd11
