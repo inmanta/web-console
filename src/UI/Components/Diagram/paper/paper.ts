@@ -287,9 +287,10 @@ export class ComposerPaper {
                 },
               }),
             );
+
             document.dispatchEvent(
               new CustomEvent("updateServiceOrderItems", {
-                detail: { cell: sourceCell, action: ActionEnum.UPDATE },
+                detail: { cell: targetCell, action: ActionEnum.UPDATE },
               }),
             );
             toggleLooseElement(

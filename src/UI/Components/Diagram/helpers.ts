@@ -375,27 +375,31 @@ export const shapesDataTransform = (
 
   //convert relatedTo property into valid attribute
   if (parentInstance.relatedTo) {
-    Array.from(parentInstance.relatedTo).forEach(([id, attributeName]) => {
-      if (parentInstance.attributes) {
-        const model = serviceModel.inter_service_relations.find(
-          (relation) => relation.name === attributeName,
+    const tempHolderForRelation: InstanceAttributeModel = {}; //this is solution for the case when we are updating the instance with Array of the relations
+
+    serviceModel.inter_service_relations.forEach((relation) => {
+      if (parentInstance.relatedTo) {
+        const relations = Array.from(parentInstance.relatedTo).filter(
+          ([_id, attributeName]) => attributeName === relation.name,
         );
 
-        if (model) {
-          if (model.upper_limit !== 1) {
-            if (Array.isArray(parentInstance.attributes[attributeName])) {
-              (parentInstance.attributes[attributeName] as dia.Cell.ID[]).push(
-                id,
-              );
-            } else {
-              parentInstance.attributes[attributeName] = [id];
-            }
-          } else {
-            parentInstance.attributes[attributeName] = id;
-          }
+        if (relation.upper_limit !== 1) {
+          tempHolderForRelation[relation.name] = relations.map(([id]) => id);
+        } else {
+          tempHolderForRelation[relation.name] = relations[0]
+            ? relations[0][0]
+            : undefined;
         }
       }
     });
+
+    Array.from(Object.entries(tempHolderForRelation)).forEach(
+      ([key, value]) => {
+        if (parentInstance.attributes) {
+          parentInstance.attributes[key] = value;
+        }
+      },
+    );
   }
 
   //if any of its embedded instances were edited, and its action is indicating no changes to main attributes, change it to "update"

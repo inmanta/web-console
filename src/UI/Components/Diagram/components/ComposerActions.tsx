@@ -43,8 +43,13 @@ export const ComposerActions: React.FC<Props> = ({ serviceName, editable }) => {
   const { serviceModels, mainService, instance } = useContext(
     InstanceComposerContext,
   );
-  const { serviceOrderItems, isDirty, looseElement, diagramHandlers } =
-    useContext(CanvasContext);
+  const {
+    serviceOrderItems,
+    isDirty,
+    looseElement,
+    diagramHandlers,
+    interServiceRelationsOnCanvas,
+  } = useContext(CanvasContext);
   const { routeManager, environmentHandler } = useContext(DependencyContext);
 
   const [alertMessage, setAlertMessage] = useState("");
@@ -100,6 +105,13 @@ export const ComposerActions: React.FC<Props> = ({ serviceName, editable }) => {
 
     orderMutation.mutate(orderItems);
   };
+  const missingInterServiceRelations = Array.from(
+    interServiceRelationsOnCanvas,
+  ).filter(
+    ([_key, value]) =>
+      value.relations.filter((relation) => relation.current < relation.min)
+        .length > 0,
+  );
 
   useEffect(() => {
     if (orderMutation.isSuccess) {
@@ -153,7 +165,8 @@ export const ComposerActions: React.FC<Props> = ({ serviceName, editable }) => {
               serviceOrderItems.size < 1 ||
               !isDirty ||
               looseElement.size > 0 ||
-              !editable
+              !editable ||
+              missingInterServiceRelations.length > 0
             }
           >
             {words("deploy")}
