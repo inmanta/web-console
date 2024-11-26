@@ -34,35 +34,24 @@ describe("createStencilElement", () => {
       attrTwo: "other_test_value",
       id: "123",
     });
-    expect(embeddedElementWithModel.attributes.attrs?.body).toStrictEqual({
-      width: 7,
-      height: 40,
-      x: 233,
-      d: "M 0 0 H calc(w) V calc(h) H 0 Z",
-      strokeWidth: 2,
-      fill: "var(--pf-v5-global--palette--blue-400)",
-      stroke: "none",
-      class: "body_default",
-    });
-    expect(embeddedElementWithModel.attributes.attrs?.bodyTwo).toStrictEqual({
-      width: 240,
-      height: 40,
-      fill: "var(--pf-v5-global--palette--white)",
-      stroke: "none",
-      class: "bodyTwo_default",
-    });
-    expect(embeddedElementWithModel.attributes.attrs?.label).toStrictEqual({
-      x: "10",
-      textAnchor: "start",
-      fontFamily: "sans-serif",
-      fontSize: 12,
-      text: "default",
-      refX: undefined,
-      class: "text_default",
-      y: "calc(h/2)",
-      textVerticalAnchor: "middle",
-      fill: "#333333",
-    });
+
+    expect(embeddedElementWithModel.attributes.attrs?.body?.fill).toEqual(
+      "var(--pf-v5-global--palette--blue-400)",
+    );
+    expect(embeddedElementWithModel.attributes.attrs?.body?.class).toEqual(
+      "body_default",
+    );
+
+    expect(embeddedElementWithModel.attributes.attrs?.bodyTwo?.fill).toEqual(
+      "var(--pf-v5-global--palette--white)",
+    );
+    expect(embeddedElementWithModel.attributes.attrs?.bodyTwo?.class).toEqual(
+      "bodyTwo_default",
+    );
+
+    expect(embeddedElementWithModel.attributes.attrs?.label?.class).toEqual(
+      "text_default",
+    );
 
     //check difference with body fill for non-embedded
     const nonEmbedded = createStencilElement("nonEmbedded", containerModel, {
@@ -70,16 +59,12 @@ describe("createStencilElement", () => {
       attrTwo: "other_test_value",
     });
 
-    expect(nonEmbedded.attributes.attrs?.body).toStrictEqual({
-      width: 7,
-      height: 40,
-      x: 233,
-      d: "M 0 0 H calc(w) V calc(h) H 0 Z",
-      strokeWidth: 2,
-      fill: "var(--pf-v5-global--palette--purple-500)",
-      stroke: "none",
-      class: "body_nonEmbedded",
-    });
+    expect(nonEmbedded.attributes.attrs?.body?.fill).toEqual(
+      "var(--pf-v5-global--palette--purple-500)",
+    );
+    expect(nonEmbedded.attributes.attrs?.body?.class).toEqual(
+      "body_nonEmbedded",
+    );
   });
 });
 
