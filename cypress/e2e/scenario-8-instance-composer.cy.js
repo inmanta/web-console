@@ -965,6 +965,7 @@ if (Cypress.env("edition") === "iso") {
         .should("have.text", "up", { timeout: 90000 });
 
       //go to details view
+      cy.get('[aria-label="row actions toggle"]').click();
       cy.get("button").contains("Instance Details").click();
 
       //assert that in Active attribute we have only 1 relation
