@@ -23,6 +23,7 @@ import {
   relationId,
 } from "./interfaces";
 import { Link, ServiceEntityBlock } from "./shapes";
+import { toggleDisabledStencil } from "./stencil/helpers";
 
 /**
  * Function that creates, appends and returns created Entity
@@ -69,13 +70,12 @@ export function createComposerEntity({
     instanceAsTable.set("embeddedTo", embeddedTo);
     instanceAsTable.set("isEmbedded", isEmbedded);
     instanceAsTable.set("holderName", holderName);
-    // If the instance is not core, we need to apply its stencil name to the shape to later disable its corresponding stencil in the sidebar
-    instanceAsTable.set("stencilName", stencilName);
   } else if (isCore) {
     instanceAsTable.set("isCore", isCore);
     instanceAsTable.setTabColor(EntityType.CORE);
   } else {
     instanceAsTable.setTabColor(EntityType.RELATION);
+    instanceAsTable.set("stencilName", stencilName);
   }
 
   instanceAsTable.set("isInEditMode", isInEditMode);
@@ -165,7 +165,7 @@ export function appendInstance(
       isMainInstance && !serviceInstanceModel.strict_modifier_enforcement,
     isBlockedFromEditing:
       !serviceInstanceModel.strict_modifier_enforcement || isBlockedFromEditing,
-    stencilName: isMainInstance ? stencilName : undefined,
+    stencilName: !isMainInstance ? stencilName : undefined,
     id: instanceWithRelations.instance.id,
   });
 
@@ -216,29 +216,7 @@ export function appendInstance(
           isBlockedFromEditing,
         );
 
-        //disable Inventory Stencil for inter-service relation instance
-        const elements = [
-          {
-            selector: `.body_${appendedInstances[0].get("stencilName")}`,
-            className: "stencil_accent-disabled",
-          },
-          {
-            selector: `.bodyTwo_${appendedInstances[0].get("stencilName")}`,
-            className: "stencil_body-disabled",
-          },
-          {
-            selector: `.text_${appendedInstances[0].get("stencilName")}`,
-            className: "stencil_text-disabled",
-          },
-        ];
-
-        elements.forEach(({ selector, className }) => {
-          const element = document.querySelector(selector);
-
-          if (element) {
-            element.classList.add(className);
-          }
-        });
+        toggleDisabledStencil(appendedInstances[0].get("stencilName"), true);
       } else {
         //If cell is already in the graph, we need to check if it got in its inter-service relations the one with id that corresponds with created instanceAsTable
         let isConnected = false;

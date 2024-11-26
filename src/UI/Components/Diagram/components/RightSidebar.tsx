@@ -13,6 +13,7 @@ import { words } from "@/UI/words";
 import { CanvasContext, InstanceComposerContext } from "../Context/Context";
 import { updateServiceOrderItems } from "../helpers";
 import { ActionEnum, EventActionEnum } from "../interfaces";
+import { toggleDisabledStencil } from "../stencil/helpers";
 import { EntityForm } from "./EntityForm";
 
 interface Props {
@@ -104,29 +105,7 @@ export const RightSidebar: React.FC<Props> = ({ editable }) => {
     const stencilName = model.get("stencilName");
 
     if (stencilName) {
-      //enable Inventory Stencil element for inter-service relation instance
-      const elements = [
-        {
-          selector: `.body_${stencilName}`,
-          className: "stencil_accent-disabled",
-        },
-        {
-          selector: `.bodyTwo_${stencilName}`,
-          className: "stencil_body-disabled",
-        },
-        {
-          selector: `.text_${stencilName}`,
-          className: "stencil_text-disabled",
-        },
-      ];
-
-      elements.forEach(({ selector, className }) => {
-        const element = document.querySelector(selector);
-
-        if (element) {
-          element.classList.remove(className);
-        }
-      });
+      toggleDisabledStencil(stencilName, false);
     }
   };
 
