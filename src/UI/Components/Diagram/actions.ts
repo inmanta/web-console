@@ -70,13 +70,12 @@ export function createComposerEntity({
     instanceAsTable.set("embeddedTo", embeddedTo);
     instanceAsTable.set("isEmbedded", isEmbedded);
     instanceAsTable.set("holderName", holderName);
-    // If the instance is not core, we need to apply its stencil name to the shape to later disable its corresponding stencil in the sidebar
-    instanceAsTable.set("stencilName", stencilName);
   } else if (isCore) {
     instanceAsTable.set("isCore", isCore);
     instanceAsTable.setTabColor(EntityType.CORE);
   } else {
     instanceAsTable.setTabColor(EntityType.RELATION);
+    instanceAsTable.set("stencilName", stencilName);
   }
 
   instanceAsTable.set("isInEditMode", isInEditMode);
@@ -166,7 +165,7 @@ export function appendInstance(
       isMainInstance && !serviceInstanceModel.strict_modifier_enforcement,
     isBlockedFromEditing:
       !serviceInstanceModel.strict_modifier_enforcement || isBlockedFromEditing,
-    stencilName: isMainInstance ? stencilName : undefined,
+    stencilName: isMainInstance ? undefined : stencilName,
     id: instanceWithRelations.instance.id,
   });
 
