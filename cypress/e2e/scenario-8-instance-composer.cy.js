@@ -78,7 +78,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="Environment card"]')
         .contains("lsm-frontend")
         .click();
-      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
+      cy.get("a").contains("Service Catalog").click();
 
       // click on Show Inventory on embedded-entity-service-extra, expect no instances
       cy.get("#container-service", { timeout: 60000 })
@@ -149,7 +149,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="Environment card"]')
         .contains("lsm-frontend")
         .click();
-      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
+      cy.get("a").contains("Service Catalog").click();
 
       //Add parent instance
       // click on Show Inventory of parent-service, expect no instances
@@ -233,7 +233,7 @@ if (Cypress.env("edition") === "iso") {
         .should("have.text", "up", { timeout: 90000 });
 
       //Add many-defaults instance
-      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
+      cy.get("a").contains("Service Catalog").click();
       // click on Show Inventory of many-defaults service, expect no instances
       cy.get("#many-defaults", { timeout: 60000 })
         .contains("Show inventory")
@@ -563,7 +563,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="Environment card"]')
         .contains("lsm-frontend")
         .click();
-      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
+      cy.get("a").contains("Service Catalog").click();
       // click on Show Inventory of many-defaults service, expect no instances
       cy.get("#many-defaults", { timeout: 60000 })
         .contains("Show inventory")
@@ -724,13 +724,13 @@ if (Cypress.env("edition") === "iso") {
       );
     });
 
-    it("8.4 composer edit view is able to add/remove instances relations", () => {
+    it("8.4 composer edit view is able to edit instances relations", () => {
       // Select 'test' environment
       cy.visit("/console/");
       cy.get('[aria-label="Environment card"]')
         .contains("lsm-frontend")
         .click();
-      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
+      cy.get("a").contains("Service Catalog").click();
       // click on Show Inventory of many-defaults service, expect no instances
       cy.get("#child-service", { timeout: 60000 })
         .contains("Show inventory")
@@ -869,6 +869,137 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="Row-parent_entity"]').within(() => {
         cy.get('[data-label="active"]').should("have.text", "test_name2");
       });
+    });
+
+    it("8.5 composer edit view is able to remove inter-service relation from instance", () => {
+      // Select 'test' environment
+      cy.visit("/console/");
+      cy.get('[aria-label="Environment card"]')
+        .contains("lsm-frontend")
+        .click();
+      cy.get("a").contains("Service Catalog").click();
+      // click on Show Inventory of many-defaults service, expect no instances
+      cy.get("#child-with-many-parents-service", { timeout: 60000 })
+        .contains("Show inventory")
+        .click();
+      cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
+      // click on add instance with composer
+      cy.get('[aria-label="AddInstanceToggle"]').click();
+      cy.get("#add-instance-composer-button").click();
+
+      //fill child attributes
+      cy.get('[data-type="app.ServiceEntityBlock"')
+        .contains("child-with-many")
+        .click();
+      cy.get('[aria-label="TextInput-name"]').type("child_test");
+      cy.get('[aria-label="TextInput-service_id"]').type("child_test_id");
+
+      //add parent instances to the canvas and connect them to the core instance
+      cy.get("#inventory-tab").click();
+
+      //add first inter-service relation
+      cy.get(".bodyTwo_test_name")
+        .trigger("mouseover")
+        .trigger("mousedown")
+        .trigger("mousemove", {
+          clientX: 800,
+          clientY: 500,
+        })
+        .trigger("mouseup");
+
+      cy.get('[data-type="app.ServiceEntityBlock"')
+        .contains("child-with-many")
+        .click();
+      cy.get('[data-action="link"]')
+        .trigger("mouseover")
+        .trigger("mousedown")
+        .trigger("mousemove", {
+          clientX: 800,
+          clientY: 600,
+        })
+        .trigger("mouseup");
+
+      //add second inter-service relation
+      cy.get(".bodyTwo_test_name2")
+        .trigger("mouseover")
+        .trigger("mousedown")
+        .trigger("mousemove", {
+          clientX: 800,
+          clientY: 700,
+        })
+        .trigger("mouseup");
+
+      cy.get('[data-type="app.ServiceEntityBlock"')
+        .contains("child-with-many")
+        .click();
+      cy.get('[data-action="link"]')
+        .trigger("mouseover")
+        .trigger("mousedown")
+        .trigger("mousemove", {
+          clientX: 800,
+          clientY: 800,
+        })
+        .trigger("mouseup");
+
+      cy.get('[data-type="Link"]').should("have.length", 2);
+
+      cy.get("button").contains("Deploy").click();
+
+      cy.get('[data-label="State"]', { timeout: 90000 })
+        .eq(0, { timeout: 90000 })
+        .should("have.text", "up", { timeout: 90000 });
+
+      // click on edit instance with composer
+      cy.get('[aria-label="row actions toggle"]').click();
+      cy.get("button").contains("Edit in Composer").click();
+
+      cy.get('[data-type="app.ServiceEntityBlock"')
+        .contains("test_name2")
+        .click();
+
+      cy.get("button").contains("Remove").click();
+      cy.get("button").contains("Deploy").click();
+
+      cy.get('[data-label="State"]', { timeout: 90000 })
+        .eq(0, { timeout: 90000 })
+        .should("have.text", "up", { timeout: 90000 });
+
+      //go to details view
+      cy.get('[aria-label="row actions toggle"]').click();
+      cy.get("button").contains("Instance Details").click();
+
+      //assert that in Active attribute we have only 1 relation
+      cy.get('[aria-label="Expand row 2"]').click();
+
+      const uuidRegex =
+        /^[0-9a-f]{8}-[0-9a-f]{4}-[4][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+      cy.get('[data-testid="0"]')
+        .invoke("text")
+        .then((text) => {
+          expect(text).to.match(uuidRegex);
+        });
+
+      cy.get('[data-testid="1"]').should("not.exist");
+
+      //assert that in Rollback attribute we have 2 relations
+      cy.get('[aria-label="Select-AttributeSet"]').select(
+        "rollback_attributes",
+      );
+
+      cy.get('[aria-label="Expand row 2"]').click();
+
+      cy.get('[data-testid="0"]')
+        .invoke("text")
+        .then((text) => {
+          expect(text).to.match(uuidRegex);
+        });
+
+      cy.get('[data-testid="1"]')
+        .invoke("text")
+        .then((text) => {
+          expect(text).to.match(uuidRegex);
+        });
     });
   });
 }
