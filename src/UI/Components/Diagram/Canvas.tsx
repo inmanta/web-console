@@ -74,10 +74,6 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
 
     setDiagramHandlers(actions);
 
-    return () => {
-      setStencilState(createStencilState(mainService));
-      setIsStencilStateReady(false);
-    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mainService, serviceModels, isStencilStateReady]);
 
