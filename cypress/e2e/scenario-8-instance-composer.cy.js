@@ -78,7 +78,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="Environment card"]')
         .contains("lsm-frontend")
         .click();
-      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
+      cy.get("a").contains("Service Catalog").click();
 
       // click on Show Inventory on embedded-entity-service-extra, expect no instances
       cy.get("#container-service", { timeout: 60000 })
@@ -149,7 +149,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="Environment card"]')
         .contains("lsm-frontend")
         .click();
-      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
+      cy.get("a").contains("Service Catalog").click();
 
       //Add parent instance
       // click on Show Inventory of parent-service, expect no instances
@@ -233,7 +233,7 @@ if (Cypress.env("edition") === "iso") {
         .should("have.text", "up", { timeout: 90000 });
 
       //Add many-defaults instance
-      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
+      cy.get("a").contains("Service Catalog").click();
       // click on Show Inventory of many-defaults service, expect no instances
       cy.get("#many-defaults", { timeout: 60000 })
         .contains("Show inventory")
@@ -563,7 +563,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="Environment card"]')
         .contains("lsm-frontend")
         .click();
-      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
+      cy.get("a").contains("Service Catalog").click();
       // click on Show Inventory of many-defaults service, expect no instances
       cy.get("#many-defaults", { timeout: 60000 })
         .contains("Show inventory")
@@ -730,7 +730,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="Environment card"]')
         .contains("lsm-frontend")
         .click();
-      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
+      cy.get("a").contains("Service Catalog").click();
       // click on Show Inventory of many-defaults service, expect no instances
       cy.get("#child-service", { timeout: 60000 })
         .contains("Show inventory")
@@ -877,7 +877,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="Environment card"]')
         .contains("lsm-frontend")
         .click();
-      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
+      cy.get("a").contains("Service Catalog").click();
       // click on Show Inventory of many-defaults service, expect no instances
       cy.get("#child-with-many-parents-service", { timeout: 60000 })
         .contains("Show inventory")
