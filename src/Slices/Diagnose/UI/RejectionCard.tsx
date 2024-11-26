@@ -11,10 +11,8 @@ import {
   MenuToggleElement,
 } from "@patternfly/react-core";
 import { EllipsisVIcon } from "@patternfly/react-icons";
-import styled from "styled-components";
 import { Link } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
-import { greyText } from "@/UI/Styles";
 import { words } from "@/UI/words";
 import { Rejection } from "@S/Diagnose/Core/Domain";
 import { Pre } from "./Pre";
@@ -91,7 +89,7 @@ export const RejectionCard: React.FC<Props> = ({
       >
         <CardTitle>{words("diagnose.rejection.title")}</CardTitle>
       </CardHeader>
-      {error && <StyledCardTitle>{error.type}</StyledCardTitle>}
+      {error && <CardTitle>{error.type}</CardTitle>}
       <CardBody>
         {error && <Pre>{error.message}</Pre>}
         {trace && <Traceback trace={trace} />}
@@ -99,7 +97,3 @@ export const RejectionCard: React.FC<Props> = ({
     </Card>
   );
 };
-
-const StyledCardTitle = styled(CardTitle)`
-  ${greyText}
-`;

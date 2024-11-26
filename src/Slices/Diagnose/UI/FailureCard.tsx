@@ -11,10 +11,8 @@ import {
   MenuToggleElement,
 } from "@patternfly/react-core";
 import { EllipsisVIcon } from "@patternfly/react-icons";
-import styled from "styled-components";
 import { Link } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
-import { greyText } from "@/UI/Styles";
 import { getResourceIdFromResourceVersionId } from "@/UI/Utils";
 import { words } from "@/UI/words";
 import { Failure } from "@S/Diagnose/Core/Domain";
@@ -87,14 +85,10 @@ export const FailureCard: React.FC<Props> = ({ resourceId, failure }) => {
       >
         <CardTitle>{words("diagnose.failure.title")}</CardTitle>
       </CardHeader>
-      <StyledCardTitle>{resourceId}</StyledCardTitle>
+      <CardTitle>{resourceId}</CardTitle>
       <CardBody>
         <Pre>{failure.message}</Pre>
       </CardBody>
     </Card>
   );
 };
-
-const StyledCardTitle = styled(CardTitle)`
-  ${greyText};
-`;

@@ -19,6 +19,7 @@ import { PlusCircleIcon } from "@patternfly/react-icons";
 import { FlatEnvironment } from "@/Core";
 import { DependencyContext } from "@/UI";
 import { words } from "@/UI/words";
+import fallBackImage from "@images/inmanta-wings.svg";
 
 interface Props {
   environments: FlatEnvironment[];
@@ -78,7 +79,6 @@ const EnvironmentCard: React.FC<EnvironmentCardProps> = ({
   return (
     <Card
       isClickable
-      isCompact
       aria-label="Environment card"
       data-testid="Environment card"
     >
@@ -89,9 +89,9 @@ const EnvironmentCard: React.FC<EnvironmentCardProps> = ({
         }}
       >
         <Brand
-          src={environment.icon ? `data:${environment.icon}` : ""}
+          src={environment.icon ? `data:${environment.icon}` : fallBackImage}
           alt="environment-logo"
-          style={{ width: "50px" }}
+          style={{ maxHeight: "50px", maxWidth: "200px" }}
         />
         <CardTitle>
           <Title headingLevel="h3">{environment.name}</Title>

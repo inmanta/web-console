@@ -3,7 +3,6 @@ import { Button, Popover, Icon, Spinner } from "@patternfly/react-core";
 import { TimesIcon, PencilAltIcon } from "@patternfly/react-icons";
 import { Td } from "@patternfly/react-table";
 import { set } from "lodash";
-import styled from "styled-components";
 import { Maybe, ParsedNumber } from "@/Core";
 import { AttributeSet } from "@/Core/Domain/ServiceInstanceParams";
 import { DependencyContext } from "@/UI/Dependency";
@@ -11,15 +10,15 @@ import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
 import { ConfirmUserActionForm } from "../../../Components/ConfirmUserActionForm";
 import { ToastAlert } from "../../../Components/ToastAlert";
+import { ClipboardCopyButton } from "../../ClipboardCopyButton";
 import { TreeTableCellContext } from "../RowReferenceContext";
 import {
   formatValue,
   MultiLinkCell,
   shouldRenderLink,
-  StyledButton,
   StyledPopoverBody,
 } from "./CellWithCopy";
-import InlineInput from "./InlineInput";
+import { InlineInput } from "./InlineInput";
 
 interface Props {
   className: string;
@@ -199,7 +198,7 @@ export const CellWithCopyExpert: React.FC<Props> = ({
       ) : (
         value
       )}
-      {isSpinnerVisible && <StyledSpinner size="sm" />}
+      {isSpinnerVisible && <Spinner size="sm" isInline />}
     </Td>
   );
 
@@ -208,7 +207,7 @@ export const CellWithCopyExpert: React.FC<Props> = ({
       bodyContent={
         <>
           <StyledPopoverBody>{formatValue(value)}</StyledPopoverBody>
-          <StyledButton
+          <ClipboardCopyButton
             value={value}
             tooltipContent={words("attribute.value.copy")}
           />
@@ -222,8 +221,3 @@ export const CellWithCopyExpert: React.FC<Props> = ({
     cell
   );
 };
-
-const StyledSpinner = styled(Spinner)`
-  --pf-v5-c-spinner--Color: var(--pf-v5-global--Color--100);
-  margin-left: 8px;
-`;

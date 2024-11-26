@@ -44,6 +44,7 @@ export const ClipboardCopyButton: React.FC<Props> = ({
         className={className}
         onClick={onClick}
         isDisabled={isDisabled}
+        size="sm"
       ></Button>
     </WidthLimitedTooltip>
   );

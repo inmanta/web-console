@@ -1,8 +1,7 @@
 import React from "react";
-import { Button } from "@patternfly/react-core";
+import { Button, Spinner } from "@patternfly/react-core";
 import { Modal, ModalVariant } from "@patternfly/react-core/deprecated";
 import { words } from "@/UI";
-import { Spinner } from "@/UI/Components";
 
 interface Props {
   title: string;
@@ -61,7 +60,7 @@ export const ConfirmationModal: React.FC<Props> = ({
           isDisabled={isPending}
         >
           {words("yes")}
-          {isPending && <Spinner variant="small" />}
+          {isPending && <Spinner size="sm" />}
         </Button>,
         <Button
           key="cancel"

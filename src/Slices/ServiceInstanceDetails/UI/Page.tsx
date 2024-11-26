@@ -5,7 +5,7 @@ import { useGetServiceModel } from "@/Data/Managers/V2/GETTERS/GetServiceModel";
 import { DependencyContext, useRouteParams, words } from "@/UI";
 import { ErrorView, LoadingView, PageContainer } from "@/UI/Components";
 import { InstanceDetailsContext } from "../Core/Context";
-import { PageTitleWithVersion } from "./Components/Sections";
+import { VersionedPageTitleWithActions } from "./Components/Sections";
 import { ServiceInstanceDetailsLayout } from "./ServiceInstanceDetailsLayout";
 
 interface Props {
@@ -84,7 +84,7 @@ export const ServiceInstanceDetails: React.FC<Props> = ({
     >
       <PageContainer
         aria-label="Instance-Details-Success"
-        pageTitle={<PageTitleWithVersion title={pageTitle} />}
+        pageTitle={<VersionedPageTitleWithActions title={pageTitle} />}
       >
         <ServiceInstanceDetailsLayout />
       </PageContainer>

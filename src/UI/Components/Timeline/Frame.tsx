@@ -84,7 +84,9 @@ const FrameContainer = styled.div`
 const Line = styled.div`
   width: 200px;
   height: 2px;
-  background-color: var(--pf-v5-global--BorderColor--100);
+  background-color: var(
+    --pf-t--global--border--color--nonstatus--gray--default
+  );
   margin: 0 10px;
   transform: translateY(10px);
 `;

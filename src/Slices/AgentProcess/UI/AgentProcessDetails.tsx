@@ -1,22 +1,15 @@
 import React from "react";
+import { Content } from "@patternfly/react-core";
 import { JsonFormatter, XmlFormatter } from "@/Data";
 import { MomentDatePresenter, words } from "@/UI";
-import {
-  AttributeClassifier,
-  AttributeList,
-  PagePadder,
-  PageTitle,
-} from "@/UI/Components";
+import { AttributeClassifier, AttributeList } from "@/UI/Components";
 import { AgentProcess } from "@S/AgentProcess/Core/Domain";
 
 interface Props {
   agentProcess: AgentProcess;
 }
 
-export const AgentProcessDetails: React.FC<Props> = ({
-  agentProcess,
-  ...props
-}) => {
+export const AgentProcessDetails: React.FC<Props> = ({ agentProcess }) => {
   const classifier = new AttributeClassifier(
     new JsonFormatter(),
     new XmlFormatter(),
@@ -46,12 +39,12 @@ export const AgentProcessDetails: React.FC<Props> = ({
   );
 
   return (
-    <PagePadder {...props}>
-      <PageTitle>{`${words("agentProcess.title")} ${
-        agentProcess.hostname
-      }`}</PageTitle>
+    <Content>
+      <Content component="h1">
+        {`${words("agentProcess.title")} ${agentProcess.hostname}`}
+      </Content>
       <AttributeList attributes={classifiedReport} />
-    </PagePadder>
+    </Content>
   );
 };
 

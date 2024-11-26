@@ -1,8 +1,7 @@
 import React from "react";
-import { Label } from "@patternfly/react-core";
+import { Label, Spinner } from "@patternfly/react-core";
 import styled from "styled-components";
 import { words } from "@/UI";
-import { Spinner } from "@/UI/Components";
 import { ServiceOrderItemState, ServiceOrderState } from "../Core/Query";
 
 /**
@@ -25,7 +24,7 @@ export const OrderStatusLabel: React.FC<{
       return (
         <Label color="blue">
           <PaddedLabel>{words("orders.status.in_progress")}</PaddedLabel>
-          <Spinner variant="small" />
+          <Spinner size="sm" />
         </Label>
       );
     case "partial":

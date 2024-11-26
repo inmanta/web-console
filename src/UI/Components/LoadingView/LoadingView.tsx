@@ -1,6 +1,5 @@
 import React from "react";
-import { EmptyState, Title } from "@patternfly/react-core";
-import { Spinner } from "@/UI/Components/Spinner";
+import { EmptyState, Spinner, Title } from "@patternfly/react-core";
 import { Delayed } from "@/UI/Utils";
 import { words } from "@/UI/words";
 

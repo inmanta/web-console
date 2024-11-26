@@ -265,12 +265,6 @@ const Wrapper = styled.div`
   overflow: auto;
 `;
 
-export const StyledButton = styled(Button)`
-  --pf-v5-c-button--PaddingTop: 0px;
-  --pf-v5-c-button--PaddingBottom: 0px;
-  width: 101px;
-`;
-
 const StyledFlex = styled(Flex)`
   min-height: 100%;
 `;

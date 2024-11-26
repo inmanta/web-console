@@ -131,51 +131,51 @@ export const CanvasWrapper = styled.div`
   }
 
   .joint-link_remove-circle {
-    fill: var(--pf-v5-global--BackgroundColor--light-300);
-    stroke: var(--pf-v5-global--palette--red-100);
+    fill: var(--pf-t--global--background--color--secondary--default);
+    stroke: var(--pf-t--global--icon--color--status--danger--default);
   }
   .joint-link_remove-path {
     fill: none;
-    stroke: var(--pf-v5-global--palette--red-100);
+    stroke: var(--pf-t--global--border--color--status--danger--default);
   }
   .joint-halo-highlight {
-    stroke: var(--pf-v5-global--palette--light-green-300);
-    fill: var(--pf-v5-global--palette--light-green-300);
+    stroke: var(--pf-t--global--border--color--status--success--default);
+    fill: var(--pf-t--global--color--status--success--default);
   }
   .joint-loose_element-highlight {
-    stroke: var(--pf-v5-global--palette--red-100);
-    fill: var(--pf-v5-global--palette--red-100);
+    stroke: var(--pf-t--global--border--color--status--danger--default);
+    fill: var(--pf-t--global--color--status--danger--default);
     &.-hidden {
       display: none;
     }
   }
   .joint-entityBlock-body {
-    stroke: var(--pf-v5-global--BackgroundColor--100);
+    stroke: var(--pf-t--global--background--color--primary--default);
   }
   .joint-entityBlock-itemLabels {
-    fill: var(--pf-v5-global--Color--100);
+    fill: var(--pf-t--global--text--color--regular);
   }
   .joint-entityBlock-itemLabels-one {
-    fill: var(--pf-v5-global--palette--black-500);
+    fill: var(--pf-t--global--text--color--regular);
   }
   .joint-entityBlock-spacer {
-    fill: var(--pf-v5-global--Color--100);
-    stroke: var(--pf-v5-global--Color--100);
+    fill: var(--pf-t--global--border--color--on-secondary);
+    stroke: var(--pf-t--global--border--color--on-secondary);
   }
   .joint-link-marker {
-    stroke: var(--pf-v5-global--palette--black-400);
-    fill: var(--pf-v5-global--palette--black-400);
+    stroke: var(--pf-t--global--border--color--on-secondary);
+    fill: var(--pf-t--global--border--color--on-secondary);
   }
   .joint-link-line {
-    stroke: var(--pf-v5-global--palette--black-400);
+    stroke: var(--pf-t--global--border--color--on-secondary);
   }
 
   .joint-paper svg {
     overflow: visible;
   }
   .joint-label-text {
-    font-family: var(--pf-v5-global--FontFamily--monospace);
-    fill: var(--pf-v5-global--palette--black-500);
+    font-family: var(--pf-t--global--font--family--mono);
+    fill: var(--pf-t--global--text--color--regular);
     transform: none;
   }
 `;

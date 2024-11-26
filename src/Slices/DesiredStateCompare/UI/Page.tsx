@@ -1,13 +1,12 @@
 import React, { useContext, useRef, useState } from "react";
-import { PageSection, Toolbar, ToolbarContent } from "@patternfly/react-core";
-import { Diff, RemoteData } from "@/Core";
 import {
-  RemoteDataView,
-  PageTitle,
-  DiffWizard,
-  PagePadder,
-  EmptyView,
-} from "@/UI/Components";
+  Content,
+  PageSection,
+  Toolbar,
+  ToolbarContent,
+} from "@patternfly/react-core";
+import { Diff, RemoteData } from "@/Core";
+import { RemoteDataView, DiffWizard, EmptyView } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { useRouteParams } from "@/UI/Routing";
 import { words } from "@/UI/words";
@@ -45,7 +44,11 @@ export const View: React.FC<Diff.Identifiers> = ({ from, to }) => {
   return (
     <>
       <PageSection>
-        <PageTitle>{words("desiredState.compare.title")}</PageTitle>
+        <Content>
+          <Content component="h1">
+            {words("desiredState.compare.title")}
+          </Content>
+        </Content>
       </PageSection>
       <PageSection hasBodyWrapper={false}>
         <Toolbar>
@@ -68,22 +71,20 @@ export const View: React.FC<Diff.Identifiers> = ({ from, to }) => {
         />
       </PageSection>
       <PageSection hasBodyWrapper={false} isFilled>
-        <PagePadder>
-          <RemoteDataView
-            data={filteredData}
-            label="CompareView"
-            SuccessView={(resources) =>
-              resources.length <= 0 ? (
-                <EmptyView message={words("desiredState.compare.empty")} />
-              ) : (
-                <DiffWizard.ItemList
-                  items={resources.map(DiffWizard.fromResourceToItem)}
-                  refs={refs}
-                />
-              )
-            }
-          />
-        </PagePadder>
+        <RemoteDataView
+          data={filteredData}
+          label="CompareView"
+          SuccessView={(resources) =>
+            resources.length <= 0 ? (
+              <EmptyView message={words("desiredState.compare.empty")} />
+            ) : (
+              <DiffWizard.ItemList
+                items={resources.map(DiffWizard.fromResourceToItem)}
+                refs={refs}
+              />
+            )
+          }
+        />
       </PageSection>
     </>
   );

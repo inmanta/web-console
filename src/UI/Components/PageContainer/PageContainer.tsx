@@ -1,6 +1,5 @@
 import React from "react";
-import { PageSection, PageSectionProps } from "@patternfly/react-core";
-import { PageTitle } from "../PageTitle";
+import { Content, PageSection, PageSectionProps } from "@patternfly/react-core";
 
 interface Props extends PageSectionProps {
   pageTitle: string | React.ReactNode;
@@ -12,8 +11,10 @@ export const PageContainer: React.FC<React.PropsWithChildren<Props>> = ({
   ...props
 }) => (
   <>
-    <PageSection hasBodyWrapper={false} padding={{ default: "noPadding" }}>
-      <PageTitle role="heading">{pageTitle}</PageTitle>
+    <PageSection hasBodyWrapper={false}>
+      <Content>
+        <Content component="h1">{pageTitle}</Content>
+      </Content>
     </PageSection>
     <PageSection
       hasBodyWrapper={false}

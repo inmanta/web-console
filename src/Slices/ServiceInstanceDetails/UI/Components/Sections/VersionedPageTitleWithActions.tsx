@@ -26,7 +26,7 @@ interface Props {
  *
  * @returns {React.FC<Props>} A React Component that displays the page title with the correct version tag
  */
-export const PageTitleWithVersion: React.FC<Props> = ({ title }) => {
+export const VersionedPageTitleWithActions: React.FC<Props> = ({ title }) => {
   const { instance } = useContext(InstanceDetailsContext);
 
   const [selectedVersion] = useUrlStateWithString<string>({

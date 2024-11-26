@@ -62,7 +62,7 @@ export const TreeRowView: React.FC<RowProps> = ({
   switch (row.kind) {
     case "Flat":
       return (
-        <StyledTr aria-label={`Row-${row.id}`}>
+        <Tr aria-label={`Row-${row.id}`}>
           <Td dataLabel={row.primaryCell.label}>
             <Indent level={0} noToggle>
               {annotations?.web_presentation !== "documentation" ? (
@@ -86,7 +86,7 @@ export const TreeRowView: React.FC<RowProps> = ({
                   }
                   hasRelation={hasRelation}
                   serviceName={serviceName}
-                  className={"pf-v5-m-truncate"}
+                  className={"pf-v6-c-truncate"}
                   key={`${label}-${value}-expert`}
                   path={row.id}
                   instanceId={id}
@@ -103,17 +103,17 @@ export const TreeRowView: React.FC<RowProps> = ({
                   }
                   hasRelation={hasRelation}
                   serviceName={serviceName}
-                  className={"pf-v5-m-truncate"}
+                  className={"pf-v6-c-truncate"}
                   key={`${label}-${value}`}
                 />
               ),
             )}
-        </StyledTr>
+        </Tr>
       );
 
     case "Root":
       return (
-        <StyledTr aria-label={`Row-${row.id}`}>
+        <Tr aria-label={`Row-${row.id}`}>
           <Td dataLabel="name" colSpan={4}>
             <Indent level={0}>
               <Split>
@@ -145,15 +145,12 @@ export const TreeRowView: React.FC<RowProps> = ({
               </Split>
             </Indent>
           </Td>
-        </StyledTr>
+        </Tr>
       );
 
     case "Branch":
       return (
-        <StyledTr
-          aria-label={`Row-${row.id}`}
-          isExpanded={row.isExpandedByParent}
-        >
+        <Tr aria-label={`Row-${row.id}`} isExpanded={row.isExpandedByParent}>
           <Td colSpan={4} dataLabel={row.primaryCell.label}>
             <Indent level={row.level}>
               <Toggle
@@ -181,15 +178,12 @@ export const TreeRowView: React.FC<RowProps> = ({
               )}
             </Indent>
           </Td>
-        </StyledTr>
+        </Tr>
       );
 
     case "Leaf":
       return (
-        <StyledTr
-          aria-label={`Row-${row.id}`}
-          isExpanded={row.isExpandedByParent}
-        >
+        <Tr aria-label={`Row-${row.id}`} isExpanded={row.isExpandedByParent}>
           <Td dataLabel={row.primaryCell.label}>
             <Indent level={row.level} noToggle>
               {row.primaryCell.value}
@@ -202,7 +196,7 @@ export const TreeRowView: React.FC<RowProps> = ({
                 value={label === "description" && value === "null" ? "" : value}
                 hasRelation={hasRelation}
                 serviceName={serviceName}
-                className={"pf-v5-m-truncate"}
+                className={"pf-v6-c-truncate"}
                 key={`${label}-${value}-expert`}
                 path={row.id}
                 instanceId={id}
@@ -217,12 +211,12 @@ export const TreeRowView: React.FC<RowProps> = ({
                 value={label === "description" && value === "null" ? "" : value}
                 hasRelation={hasRelation}
                 serviceName={serviceName}
-                className={"pf-v5-m-truncate"}
+                className={"pf-v6-c-truncate"}
                 key={`${label}-${value}`}
               />
             ),
           )}
-        </StyledTr>
+        </Tr>
       );
   }
 };
@@ -265,10 +259,4 @@ const DocumentationCell: FC<DocumentationCellProps> = ({
 
 const Spacer = styled.span`
   padding-left: 10px;
-`;
-
-const StyledTr = styled(Tr)`
-  > * {
-    --pf-v5-c-table--cell--FontSize: 16px;
-  }
 `;
