@@ -165,7 +165,7 @@ export function appendInstance(
       isMainInstance && !serviceInstanceModel.strict_modifier_enforcement,
     isBlockedFromEditing:
       !serviceInstanceModel.strict_modifier_enforcement || isBlockedFromEditing,
-    stencilName: isMainInstance ? undefined : stencilName,
+    stencilName: isMainInstance && stencilName,
     id: instanceWithRelations.instance.id,
   });
 
