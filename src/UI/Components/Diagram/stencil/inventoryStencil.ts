@@ -3,7 +3,7 @@ import { global_palette_white } from "@patternfly/react-tokens";
 import { ServiceModel } from "@/Core";
 import { Inventories } from "@/Data/Managers/V2/GETTERS/GetInventoryList";
 import { createComposerEntity } from "../actions";
-import { createStencilElement } from "./helpers";
+import { toggleDisabledStencil, createStencilElement } from "./helpers";
 
 const GRID_SIZE = 8;
 const PADDING_S = GRID_SIZE;
@@ -120,28 +120,11 @@ export class InventoryStencilTab {
     this.stencil.freeze(); //freeze by default as this tab is not active on init
 
     this.stencil.on("element:drop", (elementView) => {
-      const elements = [
-        {
-          selector: `.body_${elementView.model.get("stencilName")}`,
-          className: "stencil_accent-disabled",
-        },
-        {
-          selector: `.bodyTwo_${elementView.model.get("stencilName")}`,
-          className: "stencil_body-disabled",
-        },
-        {
-          selector: `.text_${elementView.model.get("stencilName")}`,
-          className: "stencil_text-disabled",
-        },
-      ];
+      const stencilName = elementView.model.get("stencilName");
 
-      elements.forEach(({ selector, className }) => {
-        const element = document.querySelector(selector);
-
-        if (element) {
-          element.classList.add(className);
-        }
-      });
+      if (stencilName) {
+        toggleDisabledStencil(stencilName, true);
+      }
     });
   }
 }
