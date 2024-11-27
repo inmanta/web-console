@@ -224,7 +224,7 @@ const dict = {
   "instanceComposer.formModal.create.title": "Add Entity",
   "instanceComposer.formModal.edit.title": "Edit Entity",
   "instanceComposer.formModal.noAttributes":
-    "There are no attributes fields to display.",
+    "There are no attribute fields to display.",
   "instanceComposer.formModal.noElementSelected.title": "No details available",
   "instanceComposer.formModal.noElementSelected":
     "Select an element to display the form.",
