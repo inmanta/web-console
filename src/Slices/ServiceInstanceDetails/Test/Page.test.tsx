@@ -256,14 +256,6 @@ describe("ServiceInstanceDetailsPage", () => {
       expect(select2).toHaveValue("candidate_attributes");
     });
 
-    await act(async () => {
-      await userEvent.click(
-        screen.getByRole("button", {
-          name: /expand row 1/i,
-        }),
-      );
-    });
-
     // In Version 2, the site.name should be "inmanta-lab-0".
     expect(screen.getByText("inmanta-lab-0")).toBeVisible();
 
