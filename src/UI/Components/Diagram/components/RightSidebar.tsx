@@ -1,11 +1,17 @@
 import React, { useContext, useEffect, useState } from "react";
 import {
   Button,
+  EmptyState,
+  EmptyStateBody,
+  EmptyStateHeader,
+  EmptyStateIcon,
+  EmptyStateVariant,
   Flex,
   FlexItem,
   TextContent,
   Title,
 } from "@patternfly/react-core";
+import { CubesIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { Field, InstanceAttributeModel, ServiceModel } from "@/Core";
 import { sanitizeAttributes } from "@/Data";
@@ -182,7 +188,7 @@ export const RightSidebar: React.FC<Props> = ({ editable }) => {
             </FlexItem>
           )}
         </Flex>
-        {!!cellToEdit && !!model && (
+        {!!cellToEdit && !!model ? (
           <EntityForm
             serviceModel={model}
             isEdited={cellToEdit.model.get("isInEditMode")}
@@ -193,6 +199,24 @@ export const RightSidebar: React.FC<Props> = ({ editable }) => {
             onRemove={onRemove}
             showButtons={editable}
           />
+        ) : (
+          <Flex
+            flex={{ default: "flex_1" }}
+            alignItems={{ default: "alignItemsCenter" }}
+          >
+            <EmptyState variant={EmptyStateVariant.sm}>
+              <EmptyStateHeader
+                titleText={words(
+                  "instanceComposer.formModal.noElementSelected.title",
+                )}
+                headingLevel="h4"
+                icon={<EmptyStateIcon icon={CubesIcon} />}
+              />
+              <EmptyStateBody>
+                {words("instanceComposer.formModal.noElementSelected")}
+              </EmptyStateBody>
+            </EmptyState>
+          </Flex>
         )}
       </StyledFlex>
     </Wrapper>

@@ -106,6 +106,11 @@ describe("RightSidebar.", () => {
 
     render(component);
     expect(screen.queryByTestId("entity-form")).toBeNull();
+
+    expect(screen.getByText("No details available")).toBeVisible();
+    expect(
+      screen.getByText("Select an element to display the form."),
+    ).toBeVisible();
   });
 
   it("it should not render Form with cell that doesn't have service model", () => {
@@ -124,6 +129,11 @@ describe("RightSidebar.", () => {
     render(component);
 
     expect(screen.queryByTestId("entity-form")).toBeNull();
+
+    expect(screen.getByText("No details available")).toBeVisible();
+    expect(
+      screen.getByText("Select an element to display the form."),
+    ).toBeVisible();
   });
 
   it("it should render Form when cell with service model exist", () => {
@@ -140,5 +150,10 @@ describe("RightSidebar.", () => {
     render(component);
 
     expect(screen.queryByTestId("entity-form")).toBeVisible();
+
+    expect(screen.queryByText("No details available")).toBeNull();
+    expect(
+      screen.queryByText("Select an element to display the form."),
+    ).toBeNull();
   });
 });
