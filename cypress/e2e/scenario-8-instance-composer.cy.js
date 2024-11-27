@@ -792,7 +792,7 @@ if (Cypress.env("edition") === "iso") {
         });
 
       // click on edit instance with composer
-      cy.get('[aria-label="row actions toggle"]').click();
+      cy.get('[aria-label="Actions-Toggle"]').click();
       cy.get("button").contains("Edit in Composer").click();
 
       // Expect Canvas to be visible
