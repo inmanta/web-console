@@ -987,8 +987,6 @@ if (Cypress.env("edition") === "iso") {
         "rollback_attributes",
       );
 
-      cy.get('[aria-label="Expand row 2"]').click();
-
       cy.get('[data-testid="0"]')
         .invoke("text")
         .then((text) => {
