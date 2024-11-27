@@ -28,8 +28,8 @@ export const Frame: React.FC<FrameProps> = ({
   success,
 }) => {
   const DoneState = () => (
-    <Icon aria-label="done-state" role="img" size="lg">
-      <CheckCircleIcon color="var(--pf-t--temp--dev--tbd)"/* CODEMODS: original v5 color was --pf-v5-global--success-color--100 */ />
+    <Icon aria-label="done-state" role="img" size="lg" status="success">
+      <CheckCircleIcon />
     </Icon>
   );
 
@@ -38,8 +38,8 @@ export const Frame: React.FC<FrameProps> = ({
   );
 
   const ErrorState = () => (
-    <Icon aria-label="error-state" role="img" size="lg">
-      <ExclamationCircleIcon color="var(--pf-t--temp--dev--tbd)"/* CODEMODS: original v5 color was --pf-v5-global--danger-color--100 */ />
+    <Icon aria-label="error-state" role="img" size="lg" status="danger">
+      <ExclamationCircleIcon />
     </Icon>
   );
 
@@ -84,7 +84,9 @@ const FrameContainer = styled.div`
 const Line = styled.div`
   width: 200px;
   height: 2px;
-  background-color: var(--pf-v5-global--BorderColor--100);
+  background-color: var(
+    --pf-t--global--border--color--nonstatus--gray--default
+  );
   margin: 0 10px;
   transform: translateY(10px);
 `;

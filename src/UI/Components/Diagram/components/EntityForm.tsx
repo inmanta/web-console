@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Alert, Flex, FlexItem, Form } from "@patternfly/react-core";
+import { Alert, Button, Flex, FlexItem, Form } from "@patternfly/react-core";
 import { set, uniqueId } from "lodash";
-import styled from "styled-components";
 import { Field, InstanceAttributeModel, ServiceModel } from "@/Core";
 import {
   CreateModifierHandler,
@@ -10,7 +9,6 @@ import {
 } from "@/UI/Components/ServiceInstanceForm";
 import { FieldInput } from "@/UI/Components/ServiceInstanceForm/Components";
 import { words } from "@/UI/words";
-import { StyledButton } from "./RightSidebar";
 
 interface Props {
   serviceModel: ServiceModel;
@@ -125,7 +123,7 @@ export const EntityForm: React.FC<Props> = ({
   }, [serviceModel, isEdited, initialState]);
 
   return (
-    <StyledFlex
+    <Flex
       flex={{ default: "flex_1" }}
       direction={{ default: "column" }}
       spaceItems={{ default: "spaceItemsSm" }}
@@ -166,23 +164,17 @@ export const EntityForm: React.FC<Props> = ({
       {!isForDisplay && (
         <Flex justifyContent={{ default: "justifyContentCenter" }}>
           <FlexItem>
-            <StyledButton variant="tertiary" width={200} onClick={handleCancel}>
+            <Button variant="tertiary" width={200} onClick={handleCancel}>
               {words("cancel")}
-            </StyledButton>
+            </Button>
           </FlexItem>
           <FlexItem>
-            <StyledButton variant="primary" width={200} onClick={handleSave}>
+            <Button variant="primary" width={200} onClick={handleSave}>
               {words("save")}
-            </StyledButton>
+            </Button>
           </FlexItem>
         </Flex>
       )}
-    </StyledFlex>
+    </Flex>
   );
 };
-
-const StyledFlex = styled(Flex)`
-  min-height: 100%;
-  width: 100%;
-  overflow-y: scroll;
-`;

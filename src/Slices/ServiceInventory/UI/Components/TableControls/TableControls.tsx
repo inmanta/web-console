@@ -52,22 +52,22 @@ export const TableControls: React.FC<Props> = ({
       isExpanded={isOpen}
       onClick={onToggleClick}
       splitButtonItems={[
-          <Link
-            key="main-action"
-            pathname={routeManager.getUrl("CreateInstance", {
-              service: serviceName,
-            })}
-            search={location.search}
-            variant="plain"
+        <Link
+          key="main-action"
+          pathname={routeManager.getUrl("CreateInstance", {
+            service: serviceName,
+          })}
+          search={location.search}
+          variant="plain"
+        >
+          <MenuToggleAction
+            aria-label="add-instance-button"
+            id="add-instance-button"
           >
-            <MenuToggleAction
-              aria-label="add-instance-button"
-              id="add-instance-button"
-            >
-              <PlusIcon /> {words("inventory.addInstance.button")}
-            </MenuToggleAction>
-          </Link>,
-        ]}
+            <PlusIcon /> {words("inventory.addInstance.button")}
+          </MenuToggleAction>
+        </Link>,
+      ]}
       aria-label="AddInstanceToggle"
     />
   );
@@ -93,8 +93,10 @@ export const TableControls: React.FC<Props> = ({
                     })}
                     search={location.search}
                   >
-                    <DropdownItem id="add-instance-composer-button">
-                      <PlusIcon />
+                    <DropdownItem
+                      id="add-instance-composer-button"
+                      icon={<PlusIcon />}
+                    >
                       {words("inventory.addInstance.composerButton")}
                     </DropdownItem>
                   </Link>
@@ -110,7 +112,7 @@ export const TableControls: React.FC<Props> = ({
                 search={location.search}
               >
                 <Button icon={<PlusIcon />} id="add-instance-button">
-                   {words("inventory.addInstance.button")}
+                  {words("inventory.addInstance.button")}
                 </Button>
               </Link>
             </ToolbarItem>

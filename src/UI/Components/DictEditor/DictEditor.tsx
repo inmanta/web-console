@@ -1,12 +1,7 @@
 import React from "react";
 import { Button, TextInput } from "@patternfly/react-core";
 import { TrashAltIcon } from "@patternfly/react-icons";
-import {
-  Table /* data-codemods */,
-  Tbody,
-  Td,
-  Tr,
-} from "@patternfly/react-table";
+import { Table, Tbody, Td, Tr } from "@patternfly/react-table";
 import { omit } from "lodash-es";
 import styled from "styled-components";
 import { ParsedNumber } from "@/Core";
@@ -116,16 +111,15 @@ const Row: React.FC<RowProps> = ({
         />
       </SlimTd>
       <SlimTd>
-        <Button icon={<TrashAltIcon />}
+        <Button
+          icon={<TrashAltIcon />}
           onClick={onClear}
           variant={isDeleteable ? "link" : "plain"}
           isDanger
           size="sm"
           isDisabled={!isDeleteable}
           aria-label="DeleteEntryAction"
-        >
-          
-        </Button>
+        ></Button>
       </SlimTd>
     </Tr>
   );

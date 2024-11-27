@@ -41,7 +41,7 @@ export const Item: React.FC<Props> = ({ notification, onUpdate }) => {
               </div>
               <p>{notification.message}</p>
 
-              <CustomDateWithTooltip timestamp={notification.created} />
+              <DateWithTooltip timestamp={notification.created} />
             </DataListCell>,
           ]}
         />
@@ -49,7 +49,6 @@ export const Item: React.FC<Props> = ({ notification, onUpdate }) => {
           aria-labelledby="multi-actions-item1 multi-actions-action1"
           id="multi-actions-action1"
           aria-label="Actions"
-          
         >
           <ActionList {...{ onUpdate }} {...notification} />
         </DataListAction>
@@ -84,17 +83,6 @@ interface CustomItemProps {
 }
 
 const CustomItem = styled(DataListItem)<CustomItemProps>`
-  --pf-v5-c-data-list__item-row--PaddingRight: 24px;
-  --pf-v5-c-data-list__item-row--PaddingLeft: 24px;
-  --pf-v5-c-data-list__item-content--md--PaddingBottom: 16px;
-  --pf-v5-c-data-list__cell--PaddingTop: 16px;
-  --pf-v5-c-data-list__item-action--PaddingBottom: 16px;
-  --pf-v5-c-data-list__item-action--PaddingTop: 16px;
-  --pf-v5-c-data-list__item--before--BackgroundColor: ${(p) =>
+  --pf-v6-c-data-list__item--before--BackgroundColor: ${(p) =>
     p.$read ? "transparent" : getColorForVisualSeverity(p.$severity)};
-`;
-
-const CustomDateWithTooltip = styled(DateWithTooltip)`
-  color: var(--pf-v5-global--Color--200);
-  font-size: var(--pf-v5-global--FontSize--sm);
 `;

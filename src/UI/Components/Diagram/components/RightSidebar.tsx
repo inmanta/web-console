@@ -1,11 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import {
-  Button,
-  Flex,
-  FlexItem,
-  Content,
-  Title,
-} from "@patternfly/react-core";
+import { Button, Flex, FlexItem, Content, Title } from "@patternfly/react-core";
 import styled from "styled-components";
 import { Field, InstanceAttributeModel, ServiceModel } from "@/Core";
 import { sanitizeAttributes } from "@/Data";
@@ -210,9 +204,7 @@ export const RightSidebar: React.FC = () => {
           </FlexItem>
           {description && (
             <FlexItem>
-              <Content aria-label="service-description">
-                {description}
-              </Content>
+              <Content aria-label="service-description">{description}</Content>
             </FlexItem>
           )}
         </Flex>
@@ -230,17 +222,17 @@ export const RightSidebar: React.FC = () => {
         {!isFormOpen && (
           <Flex justifyContent={{ default: "justifyContentCenter" }}>
             <FlexItem>
-              <StyledButton
+              <Button
                 variant="danger"
                 width={200}
                 onClick={onRemove}
                 isDisabled={!isRemovable || !cellToEdit}
               >
                 {words("remove")}
-              </StyledButton>
+              </Button>
             </FlexItem>
             <FlexItem>
-              <StyledButton
+              <Button
                 variant="primary"
                 width={200}
                 onClick={onEdit}
@@ -249,7 +241,7 @@ export const RightSidebar: React.FC = () => {
                 }
               >
                 {words("edit")}
-              </StyledButton>
+              </Button>
             </FlexItem>
           </Flex>
         )}
@@ -265,19 +257,12 @@ const Wrapper = styled.div`
   z-index: 1px;
   top: 1px;
   right: 1px;
-  background: var(--pf-v5-global--BackgroundColor--100);
+  background: var(--pf-t--global--background--color--primary--default);
   padding: 16px;
   filter: drop-shadow(
-    -0.1rem 0.1rem 0.15rem var(--pf-v5-global--BackgroundColor--dark-transparent-200)
+    -0.1rem 0.1rem 0.15rem var(--pf-t--global--box-shadow--color--100)
   );
   overflow: auto;
-`;
-
-export const StyledButton = styled(Button)`
-  --pf-v5-c-button--PaddingTop: 0px;
-  --pf-v5-c-button--PaddingBottom: 0px;
-  width: 101px;
-  height: 30px;
 `;
 
 const StyledFlex = styled(Flex)`

@@ -1,6 +1,5 @@
 import React, { useContext, useEffect } from "react";
 import {
-  Bullseye,
   Flex,
   FlexItem,
   Label,
@@ -8,9 +7,7 @@ import {
   StackItem,
 } from "@patternfly/react-core";
 import { ExclamationTriangleIcon } from "@patternfly/react-icons";
-import styled from "styled-components";
 import { RemoteData } from "@/Core";
-import { Spinner } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { HaltButton } from "./HaltButton";
@@ -49,22 +46,18 @@ export const EnvironmentControls: React.FC = () => {
   return RemoteData.fold(
     {
       notAsked: () => null,
-      loading: () => (
-        <Bullseye>
-          <Spinner variant="light" />
-        </Bullseye>
-      ),
+      loading: () => null,
       failed: () => null,
       success: (data) => {
         return (
-          <PaddedStack>
-            <PaddedStackItem>
+          <Stack hasGutter>
+            <StackItem>
               {data.halted && (
                 <Label color="orange" icon={<ExclamationTriangleIcon />}>
                   {words("environment.halt.label")}
                 </Label>
               )}
-            </PaddedStackItem>
+            </StackItem>
             <StackItem>
               <Flex>
                 <FlexItem>
@@ -72,17 +65,10 @@ export const EnvironmentControls: React.FC = () => {
                 </FlexItem>
               </Flex>
             </StackItem>
-          </PaddedStack>
+          </Stack>
         );
       },
     },
     data,
   );
 };
-
-const PaddedStack = styled(Stack)`
-  padding-left: 1.5rem;
-`;
-const PaddedStackItem = styled(StackItem)`
-  padding-bottom: 1rem;
-`;

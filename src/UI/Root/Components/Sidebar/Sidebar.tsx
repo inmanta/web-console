@@ -12,7 +12,7 @@ export const Sidebar: React.FC<{
   environment: string | undefined;
 }> = ({ environment }) => {
   return (
-    <PageSidebar aria-label="PageSidebar"  role="sidebar">
+    <PageSidebar aria-label="PageSidebar" role="sidebar">
       <PageSidebarBody>
         <Stack>
           <StackItem>

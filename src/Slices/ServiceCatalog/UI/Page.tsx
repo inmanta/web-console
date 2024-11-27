@@ -1,4 +1,5 @@
 import React, { useContext, useEffect } from "react";
+import { Content } from "@patternfly/react-core";
 import { EmptyView, PageContainer, RemoteDataView } from "@/UI/Components";
 import { CatalogActions } from "@/UI/Components/CatalogActions";
 import { DependencyContext } from "@/UI/Dependency";
@@ -18,7 +19,14 @@ export const Page: React.FC = () => {
   }, [retry]);
 
   return (
-    <PageContainer pageTitle={words("catalog.title")}>
+    <PageContainer
+      pageTitle={
+        <Content component="h1">
+          {words("catalog.title")}
+          <CatalogActions />
+        </Content>
+      }
+    >
       <RemoteDataView
         data={data}
         retry={retry}
@@ -26,7 +34,6 @@ export const Page: React.FC = () => {
         SuccessView={(services) =>
           services.length <= 0 ? (
             <>
-              <CatalogActions />
               <EmptyView
                 aria-label="ServiceCatalog-Empty"
                 message={words("catalog.empty.message")}
@@ -34,7 +41,6 @@ export const Page: React.FC = () => {
             </>
           ) : (
             <div aria-label="ServiceCatalog-Success">
-              <CatalogActions />
               <CatalogDataList services={services} />
             </div>
           )

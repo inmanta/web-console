@@ -184,20 +184,18 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
  */
 const ZoomHandlerContainer = styled.div`
   position: absolute;
-  bottom: 12px;
+  bottom: 25px;
   right: 316px;
   filter: drop-shadow(
-    0.05rem 0.2rem 0.2rem
-      var(--pf-v5-global--BackgroundColor--dark-transparent-200)
+    0.05rem 0.2rem 0.2rem var(--pf-t--global--box-shadow--color--100)
   );
 
   .joint-toolbar {
     padding: 0.5rem 2rem;
-    border: 0;
+    border-radius: var(--pf-t--global--border--radius--pill);
   }
 
   button.joint-widget.joint-theme-default {
-    border: 0;
     &:hover {
       background: transparent;
     }
@@ -206,18 +204,18 @@ const ZoomHandlerContainer = styled.div`
   .joint-widget.joint-theme-default {
     --slider-background: linear-gradient(
       to right,
-      var(--pf-v5-global--active-color--100) 0%,
-      var(--pf-v5-global--active-color--100) 20%,
-      var(--pf-v5-global--palette--black-400) 20%,
-      var(--pf-v5-global--palette--black-400) 100%
+      var(--pf-t--global--border--color--brand--default) 0%,
+      var(--pf-t--global--border--color--brand--default) 20%,
+      var(--pf-t--global--border--color--nonstatus--gray--default) 20%,
+      var(--pf-t--global--border--color--nonstatus--gray--default) 100%
     );
 
     output {
-      color: var(--pf-v5-global--palette--black-400);
+      color: var(--pf-t--global--text--color--subtle);
     }
 
     .units {
-      color: var(--pf-v5-global--palette--black-400);
+      color: var(--pf-t--global--text--color--subtle);
     }
 
     /*********** Baseline, reset styles ***********/
@@ -248,7 +246,7 @@ const ZoomHandlerContainer = styled.div`
       -webkit-appearance: none; /* Override default look */
       appearance: none;
       margin-top: -3.6px; /* Centers thumb on the track */
-      background-color: var(--pf-v5-global--active-color--100);
+      background-color: var(--pf-t--global--border--color--brand--default);
       border-radius: 0.5rem;
       height: 0.7rem;
       width: 0.7rem;
@@ -264,7 +262,7 @@ const ZoomHandlerContainer = styled.div`
 
     /* slider thumb */
     input[type="range"]::-moz-range-thumb {
-      background-color: var(--pf-v5-global--active-color--100);
+      background-color: var(--pf-t--global--border--color--brand--default);
       border: none; /*Removes extra border that FF applies*/
       border-radius: 0.5rem;
       height: 0.7rem;
@@ -272,7 +270,7 @@ const ZoomHandlerContainer = styled.div`
     }
 
     input[type="range"]:focus::-moz-range-thumb {
-      outline: 3px solid var(--pf-v5-global--active-color--100);
+      outline: 3px solid var(--pf-t--global--border--color--brand--default);
       outline-offset: 0.125rem;
     }
   }
@@ -284,18 +282,15 @@ const ZoomHandlerContainer = styled.div`
 const CanvasContainer = styled.div`
   width: calc(100% - 540px); //240 left sidebar + 300 right sidebar
   height: 100%;
-  background: var(--pf-v5-global--BackgroundColor--light-300);
+  background: var(--pf-t--global--background--color--secondary--default);
 
   * {
-    font-family: var(--pf-v5-global--FontFamily--monospace);
-  }
-  .joint-paper-background {
-    background: var(--pf-v5-global--BackgroundColor--light-300);
+    font-family: var(--pf-t--global--font--family--mono);
   }
 
   .source-arrowhead,
   .target-arrowhead {
-    fill: var(--pf-v5-global--palette--black-500);
+    fill: var(--pf-t--global--text--color--regular);
     stroke-width: 1;
   }
 `;
@@ -306,9 +301,8 @@ const CanvasContainer = styled.div`
 const LeftSidebarContainer = styled.div`
   width: 240px;
   height: 100%;
-  background: var(--pf-v5-global--BackgroundColor--100);
+  background: var(--pf-t--global--background--color--primary--default);
   filter: drop-shadow(
-    0.1rem 0.1rem 0.15rem
-      var(--pf-v5-global--BackgroundColor--dark-transparent-200)
+    0.1rem 0.1rem 0.15rem var(--pf-t--global--box-shadow--color--100)
   );
 `;

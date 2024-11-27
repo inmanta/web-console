@@ -15,7 +15,7 @@ export const Page: React.FC = () => {
   });
 
   return (
-    <PageSection hasBodyWrapper={false} >
+    <PageSection hasBodyWrapper={false}>
       <RemoteDataView
         data={data}
         label="AgentProcessView"

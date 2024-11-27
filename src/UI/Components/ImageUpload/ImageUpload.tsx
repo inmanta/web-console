@@ -111,10 +111,9 @@ export const ImageUpload: React.FC<Props> = ({
 
   return (
     <>
-      <ImagePreview {...props} dataUrl={dataUrl} />
       <FileUpload
         hideDefaultPreview
-        id="simple-text-file"
+        id="file-upload"
         type="dataURL"
         filename={filename || ""}
         filenameAriaLabel={ariaLabel}
@@ -132,6 +131,7 @@ export const ImageUpload: React.FC<Props> = ({
         }}
         validated={validated}
       >
+        <ImagePreview {...props} dataUrl={dataUrl} />
         {error && (
           <Alert
             isInline

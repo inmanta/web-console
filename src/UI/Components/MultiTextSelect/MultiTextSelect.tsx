@@ -1,16 +1,18 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
-	Label, LabelGroup, Button,
-	MenuToggle,
-	MenuToggleElement,
-	Select,
-	SelectList,
-	SelectOption,
-	SelectOptionProps,
-	TextInputGroup,
-	TextInputGroupMain,
-	TextInputGroupUtilities
-} from '@patternfly/react-core';
+  Label,
+  LabelGroup,
+  Button,
+  MenuToggle,
+  MenuToggleElement,
+  Select,
+  SelectList,
+  SelectOption,
+  SelectOptionProps,
+  TextInputGroup,
+  TextInputGroupMain,
+  TextInputGroupUtilities,
+} from "@patternfly/react-core";
 
 import { TimesIcon } from "@patternfly/react-icons";
 import { checkIfOptionMatchInput } from "../SingleTextSelect";
@@ -216,9 +218,10 @@ export const MultiTextSelect: React.FC<Props> = ({
             disabled={props.isDisabled}
           >
             {hasChips && (
-              <LabelGroup aria-label="Current selections" numChips={0}>
+              <LabelGroup aria-label="Current selections" numLabels={0}>
                 {selected.map((selection) => (
-                  <Label variant="outline"
+                  <Label
+                    variant="outline"
                     disabled={props.isDisabled}
                     key={selection}
                     onClose={(ev) => {
@@ -234,11 +237,14 @@ export const MultiTextSelect: React.FC<Props> = ({
           </TextInputGroupMain>
           <TextInputGroupUtilities>
             {selected.length > 0 && (
-              <Button icon={props.toggleIcon ? (
-                  props.toggleIcon
-                ) : (
-                  <TimesIcon aria-hidden />
-                )}
+              <Button
+                icon={
+                  props.toggleIcon ? (
+                    props.toggleIcon
+                  ) : (
+                    <TimesIcon aria-hidden />
+                  )
+                }
                 disabled={props.isDisabled}
                 variant="plain"
                 onClick={() => {
@@ -246,7 +252,7 @@ export const MultiTextSelect: React.FC<Props> = ({
                   textInputRef?.current?.focus();
                 }}
                 aria-label="Clear input value"
-               />
+              />
             )}
           </TextInputGroupUtilities>
         </TextInputGroup>

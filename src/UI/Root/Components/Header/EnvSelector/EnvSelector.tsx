@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import {
+  Content,
   Divider,
   Dropdown,
   DropdownGroup,
@@ -99,7 +100,7 @@ export const EnvSelector: React.FC<Props> = ({
   );
 };
 
-const StyledText = styled(TextContent)`
+const StyledText = styled(Content)`
   font-weight: bold;
   text-align: start;
 `;

@@ -8,12 +8,12 @@ import {
   DescriptionListTerm,
   Flex,
   FlexItem,
+  Icon,
 } from "@patternfly/react-core";
 import {
   CheckCircleIcon,
   ExclamationCircleIcon,
 } from "@patternfly/react-icons";
-import styled from "styled-components";
 import { Timeline } from "@/UI/Components/Timeline";
 import { words } from "@/UI/words";
 import { CompileDetails } from "@S/CompileDetails/Core/Domain";
@@ -35,7 +35,7 @@ interface Props {
 export const StatusSection: React.FC<Props> = ({ compileDetails }) => {
   return (
     <>
-      <StyledFlex justifyContent={{ default: "justifyContentCenter" }}>
+      <Flex justifyContent={{ default: "justifyContentCenter" }}>
         <FlexItem>
           <Timeline
             requested={compileDetails.requested}
@@ -44,8 +44,8 @@ export const StatusSection: React.FC<Props> = ({ compileDetails }) => {
             success={compileDetails.success}
           />
         </FlexItem>
-      </StyledFlex>
-      <StyledList isHorizontal columnModifier={{ default: "2Col" }}>
+      </Flex>
+      <DescriptionList isHorizontal columnModifier={{ default: "2Col" }}>
         <>
           <DescriptionListGroup>
             <DescriptionListTerm>
@@ -69,9 +69,13 @@ export const StatusSection: React.FC<Props> = ({ compileDetails }) => {
             </DescriptionListTerm>
             <DescriptionListDescription>
               {compileDetails.success ? (
-                <GreenCheckCircle />
+                <Icon status="success">
+                  <CheckCircleIcon />
+                </Icon>
               ) : compileDetails.success === false ? (
-                <RedExclamationCircle />
+                <Icon status="danger">
+                  <ExclamationCircleIcon />
+                </Icon>
               ) : (
                 ""
               )}
@@ -96,8 +100,8 @@ export const StatusSection: React.FC<Props> = ({ compileDetails }) => {
             </DescriptionListGroup>
           )}
         </>
-      </StyledList>
-      <StyledList>
+      </DescriptionList>
+      <DescriptionList>
         <DescriptionListGroup>
           <DescriptionListTerm>
             {words("compileDetails.status.envVars")}
@@ -110,23 +114,7 @@ export const StatusSection: React.FC<Props> = ({ compileDetails }) => {
             </CodeBlock>
           </DescriptionListDescription>
         </DescriptionListGroup>
-      </StyledList>
+      </DescriptionList>
     </>
   );
 };
-
-const StyledFlex = styled(Flex)`
-  padding-bottom: 2em;
-`;
-
-const StyledList = styled(DescriptionList)`
-  padding-top: 1em;
-`;
-
-const GreenCheckCircle = styled(CheckCircleIcon)`
-  color: var(--pf-v5-global--success-color--100);
-`;
-
-const RedExclamationCircle = styled(ExclamationCircleIcon)`
-  color: var(--pf-v5-global--danger-color--100);
-`;

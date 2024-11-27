@@ -1,14 +1,6 @@
 import React, { useEffect, useState } from "react";
-import {
-	Flex,
-	FlexItem,
-	Spinner,
-	
-} from '@patternfly/react-core';
-import {
-	Modal
-} from '@patternfly/react-core/deprecated';
-import styled from "styled-components";
+import { Content, Flex, FlexItem, Spinner } from "@patternfly/react-core";
+import { Modal } from "@patternfly/react-core/deprecated";
 import { words } from "@/UI/words";
 
 export const BlockingModal = () => {
@@ -35,7 +27,7 @@ export const BlockingModal = () => {
   }, []);
 
   return (
-    <StyledModal
+    <Modal
       aria-label="halting-blocker"
       isOpen={isBlockerOpen}
       disableFocusTrap
@@ -48,28 +40,12 @@ export const BlockingModal = () => {
         alignItems={{ default: "alignItemsCenter" }}
       >
         <FlexItem>
-          <StyledText>{message}</StyledText>
+          <Content component="h2">{message}</Content>
         </FlexItem>
         <FlexItem>
-          <StyledSpinner size="lg" />
+          <Spinner size="lg" />
         </FlexItem>
       </Flex>
-    </StyledModal>
+    </Modal>
   );
 };
-
-const StyledModal = styled(Modal)`
-  background-color: transparent;
-  box-shadow: none;
-`;
-
-const StyledSpinner = styled(Spinner)`
-  --pf-v5-c-spinner--Color: var(--pf-v5-global--BackgroundColor--100);
-`;
-
-const StyledText = styled(Text)`
-  color: var(--pf-v5-global--Color--light-100);
-  font-size: 1rem;
-  padding-bottom: 0.5rem;
-  text-transform: uppercase;
-`;

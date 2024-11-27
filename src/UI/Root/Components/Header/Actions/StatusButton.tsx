@@ -24,28 +24,26 @@ export const StatusButton: React.FC = () => {
   }, []);
 
   return (
-    <StyledToolbarItem>
+    <ToolbarItem>
       <Tooltip
         content={words("dashboard.status_page.tooltip")}
         position="bottom"
         entryDelay={500}
       >
         <StyledLink pathname={routeManager.getUrl("Status", undefined)} envOnly>
-          <Button icon={<StyledIcon color={statusColor} />} aria-label="ServerStatus action" variant="plain" />
+          <Button
+            icon={<StyledIcon color={statusColor} />}
+            aria-label="ServerStatus action"
+            variant="plain"
+          />
         </StyledLink>
       </Tooltip>
-    </StyledToolbarItem>
+    </ToolbarItem>
   );
 };
 
 const StyledIcon = styled(PortIcon)`
   color: ${(props) => props.color};
-`;
-
-const StyledToolbarItem = styled(ToolbarItem)`
-  &:hover {
-    background-color: var(--pf-v5-global--primary-color--200);
-  }
 `;
 
 const StyledLink = styled(Link)`

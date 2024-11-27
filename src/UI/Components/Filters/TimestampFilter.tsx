@@ -123,14 +123,13 @@ export const TimestampFilter: React.FC<Props> = ({
           categoryName="Date"
           showToolbarItem={isVisible}
         >
-          <Button icon={<SearchIcon />}
+          <Button
+            icon={<SearchIcon />}
             onClick={onApply}
             isDisabled={!(from || to)}
             aria-label="Apply date filter"
             variant="tertiary"
-          >
-            
-          </Button>
+          ></Button>
         </ToolbarFilter>
       </FlexItem>
     </Flex>

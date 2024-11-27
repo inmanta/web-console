@@ -1,14 +1,11 @@
 import React, { useContext } from "react";
+import { ChartDonut, ChartLegend } from "@patternfly/react-charts";
 import {
-	ChartDonut,
-	ChartLegend
-} from '@patternfly/react-charts/victory';
-import {
-  t_temp_dev_tbd as global_danger_color_100 /* CODEMODS: you should update this color token */,
-  t_temp_dev_tbd as global_info_color_100 /* CODEMODS: you should update this color token */,
-  t_temp_dev_tbd as global_palette_black_300 /* CODEMODS: you should update this color token */,
-  t_temp_dev_tbd as global_success_color_100 /* CODEMODS: you should update this color token */,
-  t_temp_dev_tbd as global_warning_color_100 /* CODEMODS: you should update this color token */,
+  t_global_icon_color_status_danger_default,
+  t_global_icon_color_status_info_default,
+  t_global_icon_color_status_success_default,
+  t_global_icon_color_status_warning_default,
+  t_global_icon_color_severity_undefined_default,
 } from "@patternfly/react-tokens";
 import { InstancesByLabel } from "@/Core";
 import { ServiceInventoryContext } from "@/Slices/ServiceInventory/UI/ServiceInventory";
@@ -161,11 +158,11 @@ export const SummaryChart: React.FC<Props> = ({ by_label, total }) => {
 };
 
 const colorsForChart = {
-  danger: global_danger_color_100,
-  warning: global_warning_color_100,
-  success: global_success_color_100,
-  info: global_info_color_100,
-  no_label: global_palette_black_300,
+  danger: t_global_icon_color_status_danger_default,
+  warning: t_global_icon_color_status_warning_default,
+  success: t_global_icon_color_status_success_default,
+  info: t_global_icon_color_status_info_default,
+  no_label: t_global_icon_color_severity_undefined_default,
 };
 
 const orderedLabels = ["danger", "warning", "success", "info", "no_label"];

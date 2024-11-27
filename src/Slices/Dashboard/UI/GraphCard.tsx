@@ -7,8 +7,8 @@ import {
   Title,
   Flex,
   FlexItem,
+  Content,
 } from "@patternfly/react-core";
-import styled from "styled-components";
 import { words } from "@/UI";
 import { GraphCardProps, Metric, MetricName } from "../Core/Domain";
 import { LineChart } from "./Charts/LineChart";
@@ -22,7 +22,7 @@ export const GraphCard: React.FC<GraphCardProps> = ({
   const [formatedMetrics, max] = formatMetricsToStacked(metrics, isStacked);
 
   return (
-    <Card id={`trend-card-${metrics.name}`} component="div" >
+    <Card id={`trend-card-${metrics.name}`} component="div">
       <CardHeader>
         <Flex
           direction={{ default: "column" }}
@@ -36,9 +36,9 @@ export const GraphCard: React.FC<GraphCardProps> = ({
             </CardTitle>
           </FlexItem>
           <FlexItem>
-            <StyledDescription>
+            <Content component="p">
               {words(`dashboard.${metrics.name as MetricName}.description`)}
-            </StyledDescription>
+            </Content>
           </FlexItem>
         </Flex>
       </CardHeader>
@@ -61,6 +61,3 @@ export const GraphCard: React.FC<GraphCardProps> = ({
     </Card>
   );
 };
-export const StyledDescription = styled.span`
-  color: var(--pf-v5-global--Color--200);
-`;

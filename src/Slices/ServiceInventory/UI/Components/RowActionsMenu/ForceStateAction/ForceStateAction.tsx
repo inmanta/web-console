@@ -116,8 +116,12 @@ export const ForceStateAction: React.FC<Props> = ({
             )}
           </Content>
           <br />
-          <Content component="p">{words("inventory.statustab.forceState.confirmMessage")}</Content>
-          <Content component="p">{words("inventory.statustab.forceState.confirmQuestion")}</Content>
+          <Content component="p">
+            {words("inventory.statustab.forceState.confirmMessage")}
+          </Content>
+          <Content component="p">
+            {words("inventory.statustab.forceState.confirmQuestion")}
+          </Content>
         </>
       ),
     });
@@ -157,7 +161,8 @@ export const ForceStateAction: React.FC<Props> = ({
           icon={<WarningTriangleIcon />}
           direction="down"
           style={{
-            backgroundColor: "var(--pf-t--temp--dev--tbd)"/* CODEMODS: original v5 color was --pf-v5-global--palette--red-50 */,
+            backgroundColor:
+              "var(--pf-t--global--border--color--status--danger--default)",
           }}
           drilldownMenu={
             <DrilldownMenu
@@ -166,7 +171,8 @@ export const ForceStateAction: React.FC<Props> = ({
             >
               <MenuItem
                 style={{
-                  backgroundColor: "var(--pf-t--temp--dev--tbd)"/* CODEMODS: original v5 color was --pf-v5-global--palette--red-50 */,
+                  backgroundColor:
+                    "var(--pf-t--global--border--color--status--danger--default)",
                 }}
                 icon={<WarningTriangleIcon />}
                 itemId="group:expertstate_breadcrumb"

@@ -5,15 +5,16 @@ import {
   MastheadLogo,
   MastheadContent,
   MastheadMain,
-  MastheadToggle, MastheadBrand,
+  MastheadToggle,
+  MastheadBrand,
   PageToggleButton,
   ToolbarContent,
   ToolbarGroup,
   ToolbarItem,
   Tooltip,
+  Brand,
 } from "@patternfly/react-core";
 import { BarsIcon } from "@patternfly/react-icons";
-import styled from "styled-components";
 import { Badge } from "@/Slices/Notification/UI/Badge";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
@@ -51,26 +52,24 @@ export const Header: React.FC<Props> = ({ noEnv, onNotificationsToggle }) => {
   return (
     <>
       <Masthead id="page-header">
-        
-        <MastheadMain><MastheadToggle>
-          <PageToggleButton
-            variant="plain"
-            aria-label="Main Navigation"
-            id="uncontrolled-nav-toggle"
-          >
-            <BarsIcon />
-          </PageToggleButton>
-        </MastheadToggle>
-          <MastheadBrand data-codemods><MastheadLogo data-codemods
-            href={
-              noEnv
-                ? routeManager.getUrl("Home", undefined)
-                : routeManager.getUrl("Dashboard", undefined) +
-                  `?env=${environmentHandler.useId()}`
-            }
-          >
-            <img src={logo} alt="Inmanta Logo" aria-label="Inmanta Logo" />
-          </MastheadLogo></MastheadBrand>
+        <MastheadMain>
+          <MastheadToggle>
+            <PageToggleButton variant="plain" aria-label="Main Navigation">
+              <BarsIcon />
+            </PageToggleButton>
+          </MastheadToggle>
+          <MastheadBrand>
+            <MastheadLogo
+              href={
+                noEnv
+                  ? routeManager.getUrl("Home", undefined)
+                  : routeManager.getUrl("Dashboard", undefined) +
+                    `?env=${environmentHandler.useId()}`
+              }
+            >
+              <Brand src={logo} alt="Inmanta-logo" />
+            </MastheadLogo>
+          </MastheadBrand>
         </MastheadMain>
         <MastheadContent>
           <Toolbar id="uncontrolled-toolbar" isFullHeight isStatic>
@@ -81,7 +80,7 @@ export const Header: React.FC<Props> = ({ noEnv, onNotificationsToggle }) => {
                 gap={{ default: "gapNone", md: "gapMd" }}
               >
                 {!noEnv && (
-                  <StyledToolbarItem>
+                  <ToolbarItem>
                     <Tooltip
                       content={words("dashboard.notifications.tooltip")}
                       position="bottom"
@@ -89,7 +88,7 @@ export const Header: React.FC<Props> = ({ noEnv, onNotificationsToggle }) => {
                     >
                       <Badge onClick={onNotificationsToggle} />
                     </Tooltip>
-                  </StyledToolbarItem>
+                  </ToolbarItem>
                 )}
                 <StatusButton />
                 <DocumentationLinks />
@@ -104,14 +103,3 @@ export const Header: React.FC<Props> = ({ noEnv, onNotificationsToggle }) => {
     </>
   );
 };
-
-/**
- * A styled ToolbarItem component.
- */
-const StyledToolbarItem = styled(ToolbarItem)`
-  padding-left: 8px;
-  padding-right: 8px;
-  &:hover {
-    background-color: var(--pf-v5-global--primary-color--200);
-  }
-`;

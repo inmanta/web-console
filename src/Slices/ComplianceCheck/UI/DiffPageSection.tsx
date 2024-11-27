@@ -1,12 +1,7 @@
 import React, { useContext, useEffect, useRef } from "react";
 import { PageSection } from "@patternfly/react-core";
 import { Diff, Maybe, ParsedNumber, RemoteData } from "@/Core";
-import {
-  EmptyView,
-  PagePadder,
-  RemoteDataView,
-  DiffWizard,
-} from "@/UI/Components";
+import { EmptyView, RemoteDataView, DiffWizard } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { LoadingIndicator } from "./Components";
@@ -71,7 +66,7 @@ const DiffView: React.FC<{
 
   return (
     <>
-      <PageSection hasBodyWrapper={false}  hasShadowBottom>
+      <PageSection hasBodyWrapper={false} hasShadowBottom>
         <DiffWizard.Controls
           data={diffData}
           refs={refs}
@@ -80,34 +75,32 @@ const DiffView: React.FC<{
         />
       </PageSection>
       <PageSection hasBodyWrapper={false} isFilled>
-        <PagePadder>
-          <RemoteDataView
-            data={reportData}
-            SuccessView={(data) => (
-              <>
-                {data.summary.todo > 0 && (
-                  <LoadingIndicator progress={getProgress(data.summary)} />
-                )}
-                {data.diff.length <= 0 ? (
-                  <EmptyView message={words("desiredState.compare.empty")} />
-                ) : (
-                  <DiffWizard.ItemList
-                    items={data.diff
-                      .filter(
-                        (resource) =>
-                          statuses.includes(resource.status) &&
-                          resource.resource_id
-                            .toLocaleLowerCase()
-                            .includes(searchFilter.toLocaleLowerCase()),
-                      )
-                      .map(DiffWizard.fromResourceToItem)}
-                    refs={refs}
-                  />
-                )}
-              </>
-            )}
-          />
-        </PagePadder>
+        <RemoteDataView
+          data={reportData}
+          SuccessView={(data) => (
+            <>
+              {data.summary.todo > 0 && (
+                <LoadingIndicator progress={getProgress(data.summary)} />
+              )}
+              {data.diff.length <= 0 ? (
+                <EmptyView message={words("desiredState.compare.empty")} />
+              ) : (
+                <DiffWizard.ItemList
+                  items={data.diff
+                    .filter(
+                      (resource) =>
+                        statuses.includes(resource.status) &&
+                        resource.resource_id
+                          .toLocaleLowerCase()
+                          .includes(searchFilter.toLocaleLowerCase()),
+                    )
+                    .map(DiffWizard.fromResourceToItem)}
+                  refs={refs}
+                />
+              )}
+            </>
+          )}
+        />
       </PageSection>
     </>
   );

@@ -1,23 +1,25 @@
 import React, { useContext } from "react";
 import {
+  Brand,
   Bullseye,
   Card,
   CardBody,
   CardFooter,
+  CardHeader,
   CardTitle,
+  Content,
   EmptyState,
-  EmptyStateIcon,
   EmptyStateVariant,
   Gallery,
+  Label,
   PageSection,
   Title,
 } from "@patternfly/react-core";
 import { PlusCircleIcon } from "@patternfly/react-icons";
-import styled from "styled-components";
 import { FlatEnvironment } from "@/Core";
 import { DependencyContext } from "@/UI";
-import { Link } from "@/UI/Components";
 import { words } from "@/UI/words";
+import fallBackImage from "@images/inmanta-wings.svg";
 
 interface Props {
   environments: FlatEnvironment[];
@@ -29,16 +31,7 @@ export const CardView: React.FC<Props> = ({ environments, ...props }) => {
 
   return (
     <PageSection hasBodyWrapper={false}>
-      <Gallery
-        hasGutter
-        minWidths={{
-          default: "30ch",
-        }}
-        maxWidths={{
-          default: "30ch",
-        }}
-        {...props}
-      >
+      <Gallery hasGutter {...props}>
         <CreateNewEnvironmentCard
           url={routeManager.getUrl("CreateEnvironment", undefined)}
         />
@@ -55,20 +48,23 @@ export const CardView: React.FC<Props> = ({ environments, ...props }) => {
 };
 
 const CreateNewEnvironmentCard: React.FC<{ url: string }> = ({ url }) => (
-  <StyledCard isClickable isCompact>
+  <Card isClickable isCompact variant="secondary">
+    <CardHeader
+      selectableActions={{
+        to: url,
+        selectableActionAriaLabelledby: "Create-environment",
+      }}
+    ></CardHeader>
     <Bullseye>
-      <Link pathname={url}>
-        <StyledCardContent>
-          <AlignedEmptyState variant={EmptyStateVariant.xs}>
-            <EmptyStateIcon icon={PlusCircleIcon} />
-            <Title headingLevel="h2" size="md">
-              {words("home.create.env.desciption")}
-            </Title>
-          </AlignedEmptyState>
-        </StyledCardContent>
-      </Link>
+      <Content>
+        <EmptyState variant={EmptyStateVariant.xs} icon={PlusCircleIcon}>
+          <Title headingLevel="h2" size="md">
+            {words("home.create.env.desciption")}
+          </Title>
+        </EmptyState>
+      </Content>
     </Bullseye>
-  </StyledCard>
+  </Card>
 );
 
 interface EnvironmentCardProps {
@@ -81,87 +77,32 @@ const EnvironmentCard: React.FC<EnvironmentCardProps> = ({
   pathname,
 }) => {
   return (
-    <StyledLink pathname={pathname} search={`env=${environment.id}`}>
-      <StyledCard
-        isClickable
-        isCompact
-        aria-label={"Environment card"}
-        data-testid="Environment card"
+    <Card
+      isClickable
+      aria-label="Environment card"
+      data-testid="Environment card"
+    >
+      <CardHeader
+        selectableActions={{
+          to: `${pathname}?env=${environment.id}`,
+          selectableActionAriaLabelledby: "Select-environment",
+        }}
       >
-        <StyledTitle component="h3">
-          {environment.icon ? (
-            <StyledIcon
-              src={`data:${environment.icon}`}
-              alt={words("home.environment.icon")(environment.name)}
-              aria-label={`${environment.name}-icon`}
-            />
-          ) : (
-            <FillerIcon aria-label={`${environment.name}-icon`}>
-              {environment.name[0].toUpperCase()}
-            </FillerIcon>
-          )}
-          {environment.name}
-        </StyledTitle>
-        <CardBody>
-          <StyledCardContent>{environment.description}</StyledCardContent>
-        </CardBody>
-        <CardFooter>
-          <StyledFooterDiv>{environment.projectName}</StyledFooterDiv>
-        </CardFooter>
-      </StyledCard>
-    </StyledLink>
+        <Brand
+          src={environment.icon ? `data:${environment.icon}` : fallBackImage}
+          alt="environment-logo"
+          style={{ maxHeight: "50px", maxWidth: "200px" }}
+        />
+        <CardTitle>
+          <Title headingLevel="h3">{environment.name}</Title>
+        </CardTitle>
+      </CardHeader>
+      <CardBody>
+        <Content>{environment.description}</Content>
+      </CardBody>
+      <CardFooter>
+        <Label>{environment.projectName}</Label>
+      </CardFooter>
+    </Card>
   );
 };
-
-const StyledLink = styled(Link)`
-  text-decoration: auto;
-  color: var(--pf-v5-global--Color--100);
-`;
-
-const StyledCardContent = styled.div`
-  white-space: pre-wrap;
-  height: 20ch;
-`;
-
-const StyledFooterDiv = styled.div`
-  color: var(--pf-v5-global--secondary-color--100);
-`;
-
-const StyledIcon = styled.img`
-  width: 40px;
-  height: 40px;
-  object-fit: contain;
-  display: inline-block;
-`;
-
-const FillerIcon = styled.div`
-  display: inline-block;
-  width: 40px;
-  height: 40px;
-  line-height: 40px;
-  text-align: center;
-  color: white;
-  background-color: var(--pf-v5-global--custom-color--100);
-  border-radius: 50%;
-`;
-
-const StyledTitle = styled(CardTitle)`
-  display: flex;
-  gap: 10px;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  align-items: center;
-  font-weight: var(--pf-v5-global--FontWeight--bold);
-}
-`;
-
-const StyledCard = styled(Card)`
-  height: 30ch;
-  &.pf-m-clickable:hover {
-    box-shadow: var(--pf-v5-global--BoxShadow--lg);
-  }
-`;
-
-const AlignedEmptyState = styled(EmptyState)`
-  margin-top: 54px;
-`;

@@ -9,8 +9,6 @@ import {
   Spinner,
   ToolbarGroup,
 } from "@patternfly/react-core";
-import { t_temp_dev_tbd as global_Color_100 /* CODEMODS: you should update this color token */ } from "@patternfly/react-tokens";
-import styled from "styled-components";
 import { Maybe, RemoteData } from "@/Core";
 import { MomentDatePresenter } from "@/UI/Utils";
 import { Progress as DomainProgress } from "@S/ComplianceCheck/Core/Domain";
@@ -130,21 +128,17 @@ const Progress: React.FC<{ report: DomainProgress }> = ({ report }) => {
   }, [tot, current, report.total, report.todo, done]);
 
   return done ? (
-    <StyledLabel variant="outline" isCompact>
+    <Label variant="outline" isCompact>
       {current} / {tot}
-    </StyledLabel>
+    </Label>
   ) : (
-    <StyledLabel variant="filled" color="orange" isCompact>
-      <StyledSpinner size="sm" /> {current} / {tot}
-    </StyledLabel>
+    <Label
+      variant="filled"
+      color="orange"
+      isCompact
+      icon={<Spinner size="sm" />}
+    >
+      {current} / {tot}
+    </Label>
   );
 };
-
-const StyledLabel = styled(Label)`
-  margin-right: 4px;
-`;
-
-const StyledSpinner = styled(Spinner)`
-  --pf-v5-c-spinner--Color: ${global_Color_100.var};
-  margin-right: 8px;
-`;

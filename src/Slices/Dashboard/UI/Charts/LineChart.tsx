@@ -1,21 +1,19 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
-	ChartLabelProps,
-	ChartAxisProps
-} from '@patternfly/react-charts';
-import {
-	Chart,
-	ChartAxis,
-	ChartGroup,
-	ChartLine,
-	ChartLegendTooltip,
-	createContainer,
-	ChartStack,
-	ChartArea,
-	ChartLabel,
-	ChartScatter,
-	ChartLegend
-} from '@patternfly/react-charts/victory';
+  Chart,
+  ChartAxis,
+  ChartGroup,
+  ChartLine,
+  ChartLegendTooltip,
+  createContainer,
+  ChartStack,
+  ChartArea,
+  ChartLabel,
+  ChartScatter,
+  ChartLegend,
+  ChartAxisProps,
+  ChartLabelProps,
+} from "@patternfly/react-charts";
 import styled, { css } from "styled-components";
 import { LineChartProps } from "../../Core/Domain";
 import { interpolateMetrics } from "../helper";
@@ -86,7 +84,7 @@ export const LineChart: React.FC<LineChartProps> = ({
     <div ref={ref}>
       <Chart
         ariaDesc={title}
-        title={title}
+        ariaTitle={title}
         containerComponent={
           <CursorVoronoiContainer
             labels={({ datum }) => chooseWhichLabelToUse(datum)}

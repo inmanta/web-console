@@ -50,13 +50,12 @@ export const IdFilter: React.FC<Props> = ({ id, isVisible, update }) => {
           />
         </InputGroupItem>
         <InputGroupItem>
-          <Button icon={<SearchIcon />}
+          <Button
+            icon={<SearchIcon />}
             variant={ButtonVariant.control}
             aria-label="search button for search input"
             onClick={onIdInput}
-          >
-            
-          </Button>
+          ></Button>
         </InputGroupItem>
       </InputGroup>
     </ToolbarFilter>

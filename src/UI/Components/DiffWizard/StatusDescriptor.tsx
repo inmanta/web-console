@@ -30,36 +30,40 @@ const descriptorStyles = css`
   flex-shrink: 0;
   width: 18px;
   height: 18px;
-  line-height: 18px;
-  font-size: 12px;
-  border-radius: 2px;
+  line-height: var(--pf-t--global--font--size--body--lg);
+  font-size: var(--pf-t--global--icon--size--font--md);
+  border-radius: var(--pf-t--global--border--radius--tiny);
   text-align: center;
-  font-weight: bolder;
-  color: white;
+  font-weight: var(--pf-t--global--font--weight--400);
   margin: 1.5px 0;
 `;
 
 const Added = styled.div`
   ${descriptorStyles};
-  background-color: var(--pf-v5-global--success-color--100);
+  background-color: var(--pf-t--global--color--status--success--default);
+  color: var(--pf-t--global--text--color--status--on-success--default);
 `;
 
 const Deleted = styled.div`
   ${descriptorStyles};
-  background-color: var(--pf-v5-global--danger-color--100);
+  background-color: var(--pf-t--global--color--status--danger--default);
+  color: var(--pf-t--global--text--color--status--on-danger--default);
 `;
 
 const Modified = styled.div`
   ${descriptorStyles};
-  background-color: var(--pf-v5-global--warning-color--100);
+  background-color: var(--pf-t--global--color--status--warning--default);
+  color: var(--pf-t--global--text--color--status--on-warning--default);
 `;
 
 const Unmodified = styled.div`
   ${descriptorStyles};
-  background-color: var(--pf-v5-global--Color--100);
+  background-color: var(--pf-t--global--icon--color--disabled);
+  color: var(--pf-t--global--icon--color--on-disabled);
 `;
 
 const Missing = styled.div`
   ${descriptorStyles};
-  background-color: var(--pf-v5-global--info-color--100);
+  background-color: var(--pf-t--global--color--status--info--default);
+  color: var(--pf-t--global--text--color--status--on-info--default);
 `;

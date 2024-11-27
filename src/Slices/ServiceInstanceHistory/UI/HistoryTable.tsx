@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  Table /* data-codemods */,
-  Th,
-  Thead,
-  Tr,
-} from "@patternfly/react-table";
+import { Table, Th, Thead, Tr } from "@patternfly/react-table";
 import { ServiceModel } from "@/Core";
 import { useUrlStateWithExpansion } from "@/Data";
 import { InstanceState } from "@/UI/Components";

@@ -74,11 +74,14 @@ export const CodeHighlighter: React.FC<Props> = ({
       disabledContent={words("codehighlighter.lineWrapping.on")}
       key={`wraplonglines-${keyId}`}
     >
-      <DropdownItem onClick={() => setWraplongLines(!wrapLongLines)}>
-        <Icon style={{ opacity: wrapLongLines ? "1" : "0.4" }}>
-          <TextWidthIcon />
-        </Icon>
-      </DropdownItem>
+      <DropdownItem
+        onClick={() => setWraplongLines(!wrapLongLines)}
+        icon={
+          <Icon style={{ opacity: wrapLongLines ? "1" : "0.4" }}>
+            <TextWidthIcon />
+          </Icon>
+        }
+      />
     </ToggleTooltip>,
     <ToggleTooltip
       enabled={showLineNumbers}
@@ -86,11 +89,14 @@ export const CodeHighlighter: React.FC<Props> = ({
       disabledContent={words("codehighlighter.lineNumbers.on")}
       key={`showlinenumbers-${keyId}`}
     >
-      <DropdownItem onClick={() => setShowLineNumbers(!showLineNumbers)}>
-        <Icon style={{ opacity: showLineNumbers ? "1" : "0.4" }}>
-          <ListOlIcon />
-        </Icon>
-      </DropdownItem>
+      <DropdownItem
+        onClick={() => setShowLineNumbers(!showLineNumbers)}
+        icon={
+          <Icon style={{ opacity: showLineNumbers ? "1" : "0.4" }}>
+            <ListOlIcon />
+          </Icon>
+        }
+      />
     </ToggleTooltip>,
   ];
 
@@ -221,7 +227,7 @@ export const CodeHighlighter: React.FC<Props> = ({
                     resize: "vertical",
                     scrollbarGutter: "stable",
                     borderRight:
-                      "var(--pf-t--temp--dev--tbd)"/* CODEMODS: original v5 color was --pf-v5-global--BorderColor--100 */,
+                      "var(--pf-t--global--border--color--brand--default)",
                   }}
                   showLineNumbers={showLineNumbers}
                   showInlineLineNumbers
@@ -286,7 +292,7 @@ const IconContainer = styled.div`
 `;
 
 const BorderedArea = styled.div`
-  border: 1px solid var(--pf-v5-global--BorderColor--100);
+  border: 1px solid var(--pf-t--global--border--color--nonstatus--gray--default);
   width: 100%;
   margin-bottom: 1em;
 `;

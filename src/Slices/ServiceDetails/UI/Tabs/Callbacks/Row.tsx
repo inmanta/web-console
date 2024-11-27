@@ -1,8 +1,7 @@
 import React from "react";
-import { Button, Tooltip } from "@patternfly/react-core";
+import { Button, Content, Tooltip } from "@patternfly/react-core";
 import { AngleDownIcon, AngleRightIcon } from "@patternfly/react-icons";
 import { ExpandableRowContent, Tbody, Td, Tr } from "@patternfly/react-table";
-import styled from "styled-components";
 import { getShortUuidFromRaw } from "@/Core";
 import { TextWithCopy } from "@/UI/Components";
 import { words } from "@/UI/words";
@@ -17,7 +16,7 @@ interface Props {
   onToggle: () => void;
   numberOfColumns: number;
 }
-
+// TODO PF-6 MIGRATION : Update the toggle column to use the semantic of PF-6. Current implementation is messing up the alignment of the rows.
 export const Row: React.FC<Props> = ({
   callback,
   service_entity,
@@ -38,7 +37,7 @@ export const Row: React.FC<Props> = ({
               isExpanded={isExpanded}
             />
           ) : (
-            <StyledText>{callback.url}</StyledText>
+            <Content>{callback.url}</Content>
           )}
         </Td>
         <Td>
@@ -81,15 +80,8 @@ const Toggle: React.FC<{
   isExpanded: boolean;
 }> = ({ text, onClick, isExpanded }) => {
   return (
-    <StyledButton variant="plain" aria-label="Action" onClick={onClick}>
+    <Button variant="plain" aria-label="Action" onClick={onClick}>
       {isExpanded ? <AngleDownIcon /> : <AngleRightIcon />} {text}
-    </StyledButton>
+    </Button>
   );
 };
-
-const StyledText = styled(Text)`
-  padding-left: 36px;
-`;
-const StyledButton = styled(Button)`
-  color: var(--pf-v5-c-table--cell--Color) !important;
-`;

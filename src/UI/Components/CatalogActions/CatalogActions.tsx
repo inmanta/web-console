@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { AlertVariant, Button, Tooltip } from "@patternfly/react-core";
+import { AlertVariant, Button, Content, Tooltip } from "@patternfly/react-core";
 import { FileCodeIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { Either } from "@/Core";
@@ -68,23 +68,19 @@ export const CatalogActions: React.FC = () => {
       title: words("catalog.update.modal.title"),
       content: (
         <>
-          <StyledParagraph>
-            {words("catalog.update.confirmation.p1")}
-          </StyledParagraph>
-          <p>
+          <Content>{words("catalog.update.confirmation.p1")}</Content>
+          <Content>
             <b>{words("catalog.update.confirmation.p2")}</b>
-          </p>
-          <ul>
-            <li>
+          </Content>
+          <Content component="ul">
+            <Content component="li">
               - <b>{words("catalog.update.confirmation.p3")}</b>
-            </li>
-            <li>
+            </Content>
+            <Content component="li">
               - <b>{words("catalog.update.confirmation.p4")}</b>
-            </li>
-          </ul>
-          <StyledParagraph>
-            {words("catalog.update.confirmation.p5")}
-          </StyledParagraph>
+            </Content>
+          </Content>
+          <Content>{words("catalog.update.confirmation.p5")}</Content>
           <ConfirmUserActionForm onSubmit={onSubmit} onCancel={closeModal} />
         </>
       ),
@@ -123,9 +119,5 @@ const StyledWrapper = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
-  padding: var(--pf-v5-global--spacer--md);
-`;
-const StyledParagraph = styled.p`
-  padding-bottom: 10px;
-  padding-top: 10px;
+  padding: var(--pf-t--global--spacer--control--horizontal--default);
 `;

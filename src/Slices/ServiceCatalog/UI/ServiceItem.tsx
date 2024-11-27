@@ -7,7 +7,6 @@ import {
   DataListItemCells,
   DataListCell,
   DataListAction,
-  Title,
   ContentVariants,
   Flex,
   Dropdown,
@@ -15,14 +14,13 @@ import {
   MenuToggle,
   DropdownList,
   DropdownItem,
+  Content,
 } from "@patternfly/react-core";
 import { EllipsisVIcon } from "@patternfly/react-icons";
-import styled from "styled-components";
 import { Maybe, ServiceModel } from "@/Core";
-import { Spacer, ConfirmUserActionForm, ToastAlert } from "@/UI/Components";
+import { ConfirmUserActionForm, ToastAlert } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
-import { greyText } from "@/UI/Styles";
 import { words } from "@/UI/words";
 import { SummaryIcons } from "./SummaryIcons";
 
@@ -105,32 +103,35 @@ export const ServiceItem: React.FC<Props> = ({ service }) => {
       <DataListItemRow>
         <DataListItemCells
           dataListCells={[
-            <StyledDataListCell key="primary content">
-              <Flex alignItems={{ default: "alignItemsCenter" }}>
-                <Title id={serviceKey} headingLevel="h2" size="xl">
+            <DataListCell key="primary content">
+              <Flex
+                alignItems={{ default: "alignItemsFlexStart" }}
+                columnGap={{ default: "columnGapMd" }}
+              >
+                <Content id={serviceKey} component="h2">
                   {service.name}
-                </Title>
+                </Content>
                 {service.instance_summary && (
-                  <SummaryIcons summary={service.instance_summary} />
+                  <Content>
+                    <SummaryIcons summary={service.instance_summary} />
+                  </Content>
                 )}
               </Flex>
               {service.description && (
-                <div id={`${service.name}-description`}>
-                  <Spacer />
-                  <StyledText component={ContentVariants.small}>
-                    {service.description}
-                  </StyledText>
-                  <Spacer />
-                </div>
+                <Content
+                  component={ContentVariants.small}
+                  id={`${service.name}-description`}
+                >
+                  {service.description}
+                </Content>
               )}
-            </StyledDataListCell>,
+            </DataListCell>,
           ]}
         />
         <DataListAction
           aria-labelledby={service.name + "-inventory"}
           id={service.name + "-inventory"}
           aria-label="Inventory Link"
-          
         >
           <Link
             to={{
@@ -147,7 +148,6 @@ export const ServiceItem: React.FC<Props> = ({ service }) => {
           aria-labelledby={service.name + "-action"}
           id={service.name + "-action"}
           aria-label="Actions"
-          
         >
           <Dropdown
             toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
@@ -195,13 +195,3 @@ export const ServiceItem: React.FC<Props> = ({ service }) => {
     </DataListItem>
   );
 };
-
-const StyledText = styled(Text)`
-  ${greyText};
-`;
-
-const StyledDataListCell = styled(DataListCell)`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-`;

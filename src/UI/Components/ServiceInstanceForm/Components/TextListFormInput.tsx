@@ -3,17 +3,19 @@
  */
 import React, { useEffect } from "react";
 import {
-	Label, LabelGroup, Button,
-	FormGroup,
-	FormHelperText,
-	HelperText,
-	HelperTextItem,
-	Popover,
-	TextInputGroup,
-	TextInputGroupMain,
-	TextInputGroupUtilities,
-	TextInputTypes
-} from '@patternfly/react-core';
+  Label,
+  LabelGroup,
+  Button,
+  FormGroup,
+  FormHelperText,
+  HelperText,
+  HelperTextItem,
+  Popover,
+  TextInputGroup,
+  TextInputGroupMain,
+  TextInputGroupUtilities,
+  TextInputTypes,
+} from "@patternfly/react-core";
 
 import { HelpIcon, TimesIcon } from "@patternfly/react-icons";
 import { words } from "@/UI/words";
@@ -138,14 +140,13 @@ export const TextListFormInput: React.FC<Props> = ({
       labelHelp={
         typeHint ? (
           <Popover bodyContent={<div>{typeHint}</div>}>
-            <button
+            <Button
+              variant="control"
               type="button"
+              icon={<HelpIcon />}
               aria-label={`More info for ${attributeName} field`}
               onClick={(e) => e.preventDefault()}
-              className="pf-v5-c-form__group-label-help"
-            >
-              <HelpIcon />
-            </button>
+            />
           </Popover>
         ) : (
           <></>
@@ -179,7 +180,8 @@ export const TextListFormInput: React.FC<Props> = ({
         >
           <LabelGroup>
             {currentChips.map((currentChip) => (
-              <Label variant="outline"
+              <Label
+                variant="outline"
                 key={currentChip}
                 onClose={() => deleteChip(currentChip)}
                 disabled={shouldBeDisabled}
@@ -190,17 +192,19 @@ export const TextListFormInput: React.FC<Props> = ({
           </LabelGroup>
         </TextInputGroupMain>
         <TextInputGroupUtilities>
-          <Button icon={words("catalog.callbacks.add")}
+          <Button
+            icon={words("catalog.callbacks.add")}
             variant="plain"
             onClick={addChip}
             isDisabled={shouldBeDisabled}
-           />
-          <Button icon={<TimesIcon />}
+          />
+          <Button
+            icon={<TimesIcon />}
             variant="plain"
             onClick={clearChipsAndInput}
             aria-label="Clear button and input"
             isDisabled={shouldBeDisabled}
-           />
+          />
         </TextInputGroupUtilities>
       </TextInputGroup>
     </FormGroup>
