@@ -342,7 +342,7 @@ if (Cypress.env("edition") === "iso") {
       });
     });
 
-    xit("3.4 Callbacks", () => {
+    it("3.4 Callbacks", () => {
       // Select card 'test' environment on home page
       cy.visit("/console/");
       cy.get('[aria-label="Environment card"]')
