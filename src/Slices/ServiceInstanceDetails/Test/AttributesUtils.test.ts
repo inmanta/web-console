@@ -209,7 +209,7 @@ describe("formatTreeRowData", () => {
             value: { subKey1: "subValue1" },
             children: [
               {
-                id: expect.stringMatching(/^arrayKey.subKey1/),
+                id: expect.stringMatching(/^arrayKey.0.subKey1/),
                 name: "subKey1",
                 value: "subValue1",
                 children: [],
@@ -222,7 +222,7 @@ describe("formatTreeRowData", () => {
             value: { subKey2: "subValue2" },
             children: [
               {
-                id: expect.stringMatching(/^arrayKey.subKey2/),
+                id: expect.stringMatching(/^arrayKey.1.subKey2/),
                 name: "subKey2",
                 value: "subValue2",
                 children: [],
