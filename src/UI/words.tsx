@@ -218,6 +218,8 @@ const dict = {
   "instanceComposer.orderDescription": "Requested with Instance Composer",
   "instanceComposer.errorMessage.missingModel":
     "The instance attribute model is missing",
+  "instanceComposer.errorMessage.coordinatesRequest":
+    "Failed to save instance coordinates on deploy.",
   "instanceComposer.editButton": "Edit in Composer",
   "instanceComposer.showButton": "Show in Composer",
   "instanceComposer.formModal.placeholder": "Choose a Service",
