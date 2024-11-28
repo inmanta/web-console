@@ -109,16 +109,21 @@ test("Given environments overview When filtering by name and project Then only t
   expect(await screen.findByTestId("Environment card")).toBeVisible();
 });
 
-test("Given environments overview When rendering environment with icon Then the icon is shown", async () => {
+test("Given environments overview When rendering environment with icon Then the icon is shown, otherwise, show default icon", async () => {
   const { component } = setup();
 
   render(component);
-  const cardWithIcon = await screen.findByRole("img", {
-    name: "test-env1-icon",
+
+  screen.logTestingPlaygroundURL();
+  const cardWithIcon = screen.getByRole("img", {
+    name: "test-env1-environment-logo",
   });
 
   expect(cardWithIcon).toBeVisible();
-  const cardWithoutIcon = screen.queryByRole("img", { name: "dev-env2-icon" });
 
-  expect(cardWithoutIcon).not.toBeInTheDocument();
+  const cardWithDefaultIcon = screen.getByRole("img", {
+    name: "dev-env2-environment-logo",
+  });
+
+  expect(cardWithDefaultIcon).toBeVisible();
 });

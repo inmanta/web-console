@@ -8,7 +8,7 @@ describe("TextListInputField", () => {
   const handleClick = jest.fn();
 
   it("Should render an inputfield with chips when values are preset.", () => {
-    const { container } = render(
+    render(
       <TextListFormInput
         attributeName="text_list"
         type={TextInputTypes.text}
@@ -19,15 +19,13 @@ describe("TextListInputField", () => {
       />,
     );
 
-    const chips = container.getElementsByClassName(
-      "pf-v5-c-chip-group__list-item",
-    );
+    const chips = screen.getAllByRole("listitem");
 
     expect(chips.length).toBe(3);
   });
 
   it("Should add an new chip when a new value is added.", async () => {
-    const { container } = render(
+    render(
       <TextListFormInput
         attributeName="text_list"
         type={TextInputTypes.text}
@@ -48,9 +46,7 @@ describe("TextListInputField", () => {
       await userEvent.click(addButton);
     });
 
-    const chips = container.getElementsByClassName(
-      "pf-v5-c-chip-group__list-item",
-    );
+    const chips = screen.getAllByRole("listitem");
 
     expect(chips.length).toBe(4);
     expect(handleClick).toHaveBeenCalledWith(
@@ -60,7 +56,7 @@ describe("TextListInputField", () => {
   });
 
   it("Should remove one chip from the input on delete.", async () => {
-    const { container } = render(
+    render(
       <TextListFormInput
         attributeName="text_list"
         type={TextInputTypes.text}
@@ -72,27 +68,21 @@ describe("TextListInputField", () => {
     );
 
     await act(async () => {
-      const deleteButton = screen.getByRole("button", { name: "close value1" });
+      const deleteButton = screen.getByRole("button", {
+        name: /close value1/i,
+      });
 
       await userEvent.click(deleteButton);
     });
 
-    const chips = container.getElementsByClassName(
-      "pf-v5-c-chip-group__list-item",
-    );
+    const chips = screen.getAllByRole("listitem");
 
     expect(chips.length).toBe(2);
     expect(handleClick).toHaveBeenCalledWith(["value2", "value3"], null);
-
-    const chipsContainer = container.getElementsByClassName(
-      "pf-v5-c-text-input-group__main",
-    );
-
-    expect(chipsContainer[0].childElementCount).toBe(2);
   });
 
   it("Should remove all chips when the clear button is used.", async () => {
-    const { container } = render(
+    render(
       <TextListFormInput
         attributeName="text_list"
         type={TextInputTypes.text}
@@ -111,14 +101,10 @@ describe("TextListInputField", () => {
       await userEvent.click(deleteButton);
     });
 
-    const chipsContainer = container.getElementsByClassName(
-      "pf-v5-c-text-input-group__main",
-    );
+    const chips = screen.queryAllByRole("listitem");
 
-    expect(chipsContainer[0].childElementCount).toBe(1);
-    expect(chipsContainer[0].firstChild).toHaveClass(
-      "pf-v5-c-text-input-group__text",
-    );
+    expect(chips.length).toBe(0);
+
     expect(handleClick).toHaveBeenCalledWith([], null);
   });
 

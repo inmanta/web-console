@@ -4,8 +4,10 @@ import {
   CodeBlock,
   CodeBlockAction,
   CodeBlockCode,
+  Modal,
+  ModalBody,
+  ModalHeader,
 } from "@patternfly/react-core";
-import { Modal } from "@patternfly/react-core/deprecated";
 import { CanvasContext } from "../Context/Context";
 
 /**
@@ -23,42 +25,51 @@ export const DictModal: React.FC = () => {
     <Modal
       disableFocusTrap
       isOpen={true}
-      title={"Values of " + dictToDisplay.title}
       variant="medium"
       onClose={() => {
         setDictToDisplay(null);
       }}
     >
-      {dictToDisplay && (
-        <CodeBlock
-          actions={
-            <CodeBlockAction>
-              <ClipboardCopyButton
-                id="basic-copy-button"
-                textId="code-content"
-                aria-label="Copy to clipboard"
-                onClick={() =>
-                  navigator.clipboard.writeText(
-                    JSON.stringify(dictToDisplay.value),
-                  )
-                }
-                exitDelay={copied ? 1500 : 600}
-                maxWidth="110px"
-                variant="plain"
-                onTooltipHidden={() => setCopied(false)}
-              >
-                {copied
-                  ? "Successfully copied to clipboard!"
-                  : "Copy to clipboard"}
-              </ClipboardCopyButton>
-            </CodeBlockAction>
-          }
-        >
-          <CodeBlockCode id="code-content">
-            {JSON.stringify(dictToDisplay.value, null, 2)}
-          </CodeBlockCode>
-        </CodeBlock>
-      )}
+      <ModalHeader
+        title={"Values of " + dictToDisplay.title}
+        labelId="dict-modal-title"
+      />
+      <ModalBody
+        tabIndex={0}
+        id="dict-modal-body"
+        aria-label="Scrollable modal content"
+      >
+        {dictToDisplay && (
+          <CodeBlock
+            actions={
+              <CodeBlockAction>
+                <ClipboardCopyButton
+                  id="basic-copy-button"
+                  textId="copy-to-clipboard"
+                  aria-label="Copy to clipboard"
+                  onClick={() =>
+                    navigator.clipboard.writeText(
+                      JSON.stringify(dictToDisplay.value),
+                    )
+                  }
+                  exitDelay={copied ? 1500 : 600}
+                  maxWidth="110px"
+                  variant="plain"
+                  onTooltipHidden={() => setCopied(false)}
+                >
+                  {copied
+                    ? "Successfully copied to clipboard!"
+                    : "Copy to clipboard"}
+                </ClipboardCopyButton>
+              </CodeBlockAction>
+            }
+          >
+            <CodeBlockCode id="code-content">
+              {JSON.stringify(dictToDisplay.value, null, 2)}
+            </CodeBlockCode>
+          </CodeBlock>
+        )}
+      </ModalBody>
     </Modal>
   ) : null;
 };

@@ -69,20 +69,21 @@ export const StatusItem: React.FC<Props> = ({
                     );
                   } else {
                     return (
-                      <DescriptionList
-                        key={`${key}-${value}`}
-                        isHorizontal
-                        horizontalTermWidthModifier={{
-                          default: "20ch",
-                        }}
-                      >
-                        <DescriptionListGroup>
-                          <DescriptionListTerm>{key}</DescriptionListTerm>
-                          <DescriptionListDescription>
-                            {value}
-                          </DescriptionListDescription>
-                        </DescriptionListGroup>
-                      </DescriptionList>
+                      <ListItem key={`${key}-${value}`}>
+                        <DescriptionList
+                          isHorizontal
+                          horizontalTermWidthModifier={{
+                            default: "20ch",
+                          }}
+                        >
+                          <DescriptionListGroup>
+                            <DescriptionListTerm>{key}</DescriptionListTerm>
+                            <DescriptionListDescription>
+                              {value}
+                            </DescriptionListDescription>
+                          </DescriptionListGroup>
+                        </DescriptionList>
+                      </ListItem>
                     );
                   }
                 })}

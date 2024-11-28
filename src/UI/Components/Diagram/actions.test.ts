@@ -37,7 +37,7 @@ describe("createComposerEntity", () => {
     expect(coreEntity.get("isEmbedded")).toBe(undefined);
     expect(coreEntity.get("isCore")).toBe(true);
     expect(coreEntity.attr("header/fill")).toBe(
-      "var(--pf-t--temp--dev--tbd)" /* CODEMODS: original v5 color was --pf-v5-global--palette--gold-400 */,
+      "var(--pf-t--chart--color--yellow--300, #dca614)",
     );
     expect(coreEntity.get("isInEditMode")).toBe(false);
   });
@@ -55,7 +55,7 @@ describe("createComposerEntity", () => {
     expect(embeddedEntity.get("isEmbedded")).toBe(true);
     expect(embeddedEntity.get("isCore")).toBe(undefined);
     expect(embeddedEntity.attr("header/fill")).toBe(
-      "var(--pf-t--temp--dev--tbd)" /* CODEMODS: original v5 color was --pf-v5-global--palette--blue-400 */,
+      "var(--pf-t--chart--color--blue--400, #004d99)",
     );
     expect(embeddedEntity.get("isInEditMode")).toBe(false);
   });
@@ -72,7 +72,7 @@ describe("createComposerEntity", () => {
     expect(childEntity.get("isCore")).toBe(undefined);
     expect(childEntity.get("isInEditMode")).toBe(false);
     expect(childEntity.attr("header/fill")).toBe(
-      "var(--pf-t--temp--dev--tbd)" /* CODEMODS: original v5 color was --pf-v5-global--palette--purple-500 */,
+      "var(--pf-t--chart--color--purple--300, #5e40be)",
     );
     expect(childEntity.get("relatedTo")).toMatchObject(new Map());
   });

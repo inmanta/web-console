@@ -160,7 +160,7 @@ test("GIVEN Navigation WHEN on 'Service Catalog' THEN 'Service Catalog' is highl
     name: "Service Catalog",
   });
 
-  expect(link).toHaveClass("pf-v5-m-current");
+  expect(link).toHaveClass("active");
 });
 
 test("GIVEN Navigation WHEN Compilation Reports are pending THEN 'Compile Reports' Indication is visible", async () => {

@@ -268,8 +268,13 @@ describe("Given the Events Page", () => {
       });
 
       expect(await screen.findByText(chip, { exact: false })).toBeVisible();
+
       await act(async () => {
-        await userEvent.click(await screen.findByLabelText("close"));
+        await userEvent.click(
+          screen.getByRole("button", {
+            name: `Close ${chip}`,
+          }),
+        );
       });
       expect(apiHelper.pendingRequests[0].url).toMatch(
         `/lsm/v1/service_inventory/${Service.a.name}/id1/events?limit=20&sort=timestamp.desc`,

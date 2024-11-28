@@ -21,7 +21,7 @@ export const Page: React.FC = () => {
   return (
     <PageContainer
       pageTitle={
-        <Content component="h1">
+        <Content>
           {words("catalog.title")}
           <CatalogActions />
         </Content>
