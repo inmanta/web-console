@@ -849,6 +849,10 @@ if (Cypress.env("edition") === "iso") {
       //check if relation is updated correctly
       cy.get('[aria-label="row actions toggle"]').click();
       cy.get("button").contains("Instance Details").click();
+      cy.get('[data-testid="selected-version"]').should(
+        "have.text",
+        "Version: 8",
+      ); // initial open of the details view will show the outdated version
 
       cy.get('[aria-label="parent_entity_value"]')
         .invoke("text")
