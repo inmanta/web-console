@@ -99,7 +99,7 @@ export const formatTreeRowData = (
                 value: item,
                 children: formatTreeRowData(
                   item as Record<string, unknown>,
-                  path + key + ".",
+                  path + key + "." + index + ".",
                 ),
               });
             } else {
