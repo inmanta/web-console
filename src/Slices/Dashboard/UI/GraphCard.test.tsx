@@ -18,7 +18,8 @@ const axe = configureAxe({
 describe("Test GraphCard with LineChart component", () => {
   it("Line Chart version", async () => {
     const availableKeys = Object.keys(mockedMetrics.metrics);
-    const { container } = render(
+
+    render(
       <GraphCard
         isStacked={false}
         timestamps={mockedMetrics.timestamps}
@@ -35,7 +36,11 @@ describe("Test GraphCard with LineChart component", () => {
       }),
     ).toBeVisible();
 
-    expect(await container.querySelector(".pf-v5-c-chart")).toBeVisible();
+    expect(
+      screen.getByRole("img", {
+        name: /service counter/i,
+      }),
+    ).toBeVisible();
 
     await act(async () => {
       const results = await axe(document.body);
@@ -46,7 +51,8 @@ describe("Test GraphCard with LineChart component", () => {
 
   it("Area Chart version", async () => {
     const availableKeys = Object.keys(mockedMetrics.metrics);
-    const { container } = render(
+
+    render(
       <GraphCard
         isStacked={true}
         timestamps={mockedMetrics.timestamps}
@@ -63,7 +69,11 @@ describe("Test GraphCard with LineChart component", () => {
       }),
     ).toBeVisible();
 
-    expect(await container.querySelector(".pf-v5-c-chart")).toBeVisible();
+    expect(
+      screen.getByRole("img", {
+        name: /agents count/i,
+      }),
+    ).toBeVisible();
 
     await act(async () => {
       const results = await axe(document.body);

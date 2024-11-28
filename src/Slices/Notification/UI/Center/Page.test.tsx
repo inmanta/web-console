@@ -4,7 +4,7 @@ import { Page } from "@patternfly/react-core";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
-import { axe, toHaveNoViolations } from "jest-axe";
+import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { Either } from "@/Core";
 import {
   CommandManagerResolverImpl,
@@ -20,6 +20,13 @@ import * as Mock from "@S/Notification/Core/Mock";
 import { NotificationCenterPage } from ".";
 
 expect.extend(toHaveNoViolations);
+
+const axe = configureAxe({
+  rules: {
+    // disable landmark rules when testing isolated components.
+    region: { enabled: false },
+  },
+});
 
 const setup = (entries?: string[]) => {
   const apiHelper = new DeferredApiHelper();
@@ -210,7 +217,7 @@ test("Given Notification Center page When user filters on message Then executes 
   ).toHaveLength(2);
 
   await act(async () => {
-    await userEvent.click(screen.getByRole("button", { name: "close abc" }));
+    await userEvent.click(screen.getByRole("button", { name: /close abc/i }));
   });
   expect(apiHelper.pendingRequests).toEqual([request("?limit=20")]);
 
@@ -252,7 +259,7 @@ test("Given Notification Center page When user filters on title Then executes co
     }),
   ).toHaveLength(2);
   await act(async () => {
-    await userEvent.click(screen.getByRole("button", { name: "close abc" }));
+    await userEvent.click(screen.getByRole("button", { name: /close abc/i }));
   });
   expect(apiHelper.pendingRequests).toEqual([request("?limit=20")]);
 

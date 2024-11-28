@@ -196,7 +196,10 @@ export const EventsTabContent: React.FC<Props> = ({ selectedVersion }) => {
             </Tr>
           </Thead>
           {events.map((event: InstanceEvent, index: number) => (
-            <StyledBody $transition={event} key={`styled-row-${index}`}>
+            <BodyWithHighlightedRows
+              $transition={event}
+              key={`styled-row-${index}`}
+            >
               <Tr
                 key={index}
                 id={`event-row-${event.id}`}
@@ -270,7 +273,7 @@ export const EventsTabContent: React.FC<Props> = ({ selectedVersion }) => {
                   </ExpandableRowContent>
                 </Td>
               </Tr>
-            </StyledBody>
+            </BodyWithHighlightedRows>
           ))}
         </Table>
       </TabContentWrapper>
@@ -291,10 +294,12 @@ type HighlightedTransition = Pick<
  * Unlike on the main event page, the history logs don't contain the `ignored_transition`.
  * These are grayed out in the main event page.
  */
-const StyledBody = styled(Tbody)<{ $transition: HighlightedTransition }>`
+const BodyWithHighlightedRows = styled(Tbody)<{
+  $transition: HighlightedTransition;
+}>`
   ${({ $transition }) => {
     return $transition.is_error_transition
-      ? "var(--pf-t--global--color--status--warning--default)"
+      ? "background-color: var(--pf-t--global--color--status--warning--default)"
       : "background-color: inherit";
   }};
 `;
