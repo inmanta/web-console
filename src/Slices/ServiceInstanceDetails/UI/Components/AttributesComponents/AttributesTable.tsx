@@ -283,10 +283,20 @@ export const AttributesTable: React.FC<Props> = ({
 
     return [
       <TreeRowWrapper key={rowIndex} row={{ props: treeRow.props }}>
-        <Td dataLabel="name" treeRow={treeRow} data-testid="attribute-key">
+        <Td
+          dataLabel="name"
+          treeRow={treeRow}
+          data-testid="attribute-key"
+          aria-label={node.id + "_attribute"}
+        >
           <TableText>{node.name}</TableText>
         </Td>
-        <Td dataLabel="value" width={60} data-testid={node.name}>
+        <Td
+          dataLabel="value"
+          width={60}
+          data-testid={node.name}
+          aria-label={node.id + "_value"}
+        >
           <TableText wrapModifier="truncate">{printValue(node)}</TableText>
         </Td>
       </TreeRowWrapper>,

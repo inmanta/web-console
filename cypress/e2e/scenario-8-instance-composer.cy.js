@@ -1,5 +1,3 @@
-//TODO: tests are commented out as there is ongoing redesign of the instance composer which will affect how the user interact with it and how e2e test should look like
-
 /**
  * Shorthand method to clear the environment being passed.
  * By default, if no arguments are passed it will target the 'lsm-frontend' environment.
@@ -65,6 +63,9 @@ const forceUpdateEnvironment = (nameEnvironment = "lsm-frontend") => {
 };
 
 if (Cypress.env("edition") === "iso") {
+  const uuidRegex =
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[4][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
   describe("Scenario 8 - Instance Composer", async () => {
     before(() => {
       clearEnvironment();
@@ -536,24 +537,27 @@ if (Cypress.env("edition") === "iso") {
       );
 
       //check if embedded entities are present and relations are assigned correctly
-      cy.get("#expand-toggle0").click();
-      cy.get("button").contains("Attributes").click();
+      cy.get('[aria-label="row actions toggle"]').click();
+      cy.get("button").contains("Instance Details").click();
 
-      cy.get('[aria-label="Toggle-embedded"]').click();
+      //check if embedded entities are present and relations are assigned correctly
+      cy.get('[aria-label="Expand row 27"]').click(); //toggle extra_embedded
+      cy.get('[aria-label="Expand row 28"]').click(); //toggle fist entity of extra_embedded
 
-      cy.get('[aria-label="Toggle-extra_embedded"]').click();
-      cy.get('[aria-label="Toggle-extra_embedded$0"]').click();
+      cy.get('[aria-label="parent_service_value"]')
+        .invoke("text")
+        .then((text) => {
+          expect(text).to.match(uuidRegex);
+        });
 
-      cy.get('[aria-label="Row-parent_service"]').within(() => {
-        cy.get('[data-label="active"]').should("have.text", "test_name");
-      });
-      cy.get('[aria-label="Row-embedded$parent_service"]').within(() => {
-        cy.get('[data-label="active"]').should("have.text", "test_name2");
-      });
-      cy.get('[aria-label="Row-extra_embedded$0$parent_service"]').within(
-        () => {
-          cy.get('[data-label="active"]').should("have.text", "null");
-        },
+      cy.get('[aria-label="embedded.parent_service_value"]')
+        .invoke("text")
+        .then((text) => {
+          expect(text).to.match(uuidRegex);
+        });
+      cy.get('[aria-label="extra_embedded.0.parent_service_value"]').should(
+        "have.text",
+        "null",
       );
     });
 
@@ -666,62 +670,36 @@ if (Cypress.env("edition") === "iso") {
       );
 
       //check if core attributes and embedded entities are updated
-      cy.get("#expand-toggle0").click();
-      cy.get("button").contains("Attributes").click();
+      cy.get('[aria-label="row actions toggle"]').click();
+      cy.get("button").contains("Instance Details").click();
 
-      cy.get('[aria-label="Row-default_int"]').within(() => {
-        cy.get('[data-label="active"]').should("have.text", "20");
-        cy.get('[data-label="candidate"]').should("have.text", "22");
-      });
-
-      cy.get('[aria-label="Row-default_string"]').within(() => {
-        cy.get('[data-label="active"]').should("have.text", "default_string");
-        cy.get('[data-label="candidate"]').should(
-          "have.text",
-          "updated_string",
-        );
-      });
-
-      cy.get('[aria-label="Toggle-embedded"]').click();
-
-      cy.get('[aria-label="Row-embedded$default_int"]').within(() => {
-        cy.get('[data-label="active"]').should("have.text", "21");
-        cy.get('[data-label="candidate"]').should("have.text", "22");
-      });
-
-      cy.get('[aria-label="Row-embedded$default_float"]').within(() => {
-        cy.get('[data-label="active"]').should("have.text", "2.1");
-        cy.get('[data-label="candidate"]').should("have.text", "2");
-      });
-
-      cy.get('[aria-label="Row-embedded$default_string"]').within(() => {
-        cy.get('[data-label="active"]').should("have.text", "default_string");
-        cy.get('[data-label="candidate"]').should(
-          "have.text",
-          "updated_string",
-        );
-      });
-
-      //assert that extra_embedded attrs are empty as instance was removed
-      cy.get('[aria-label="Toggle-extra_embedded"]').click();
-      cy.get('[aria-label="Toggle-extra_embedded$0"]').click();
-
-      cy.get('[aria-label="Row-extra_embedded$0$default_int"]').within(() => {
-        cy.get('[data-label="active"]').should("have.text", "21");
-        cy.get('[data-label="candidate"]').should("have.text", "");
-      });
-
-      cy.get('[aria-label="Row-extra_embedded$0$default_float"]').within(() => {
-        cy.get('[data-label="active"]').should("have.text", "2.1");
-        cy.get('[data-label="candidate"]').should("have.text", "");
-      });
-
-      cy.get('[aria-label="Row-extra_embedded$0$default_string"]').within(
-        () => {
-          cy.get('[data-label="active"]').should("have.text", "default_string");
-          cy.get('[data-label="candidate"]').should("have.text", "");
-        },
+      //Go to candidate attributes and assert that they are updated
+      cy.get('[aria-label="Select-AttributeSet"]').select(
+        "candidate_attributes",
       );
+      cy.get('[aria-label="default_int_value"]').should("have.text", "22");
+
+      cy.get('[aria-label="default_string_value"]').should(
+        "have.text",
+        "updated_string",
+      );
+
+      cy.get('[aria-label="Expand row 1"]').click(); //toggle embedded
+
+      cy.get('[aria-label="embedded.default_int_value"]').should(
+        "have.text",
+        "22",
+      );
+      cy.get('[aria-label="embedded.default_float_value"]').should(
+        "have.text",
+        "2",
+      );
+      cy.get('[aria-label="embedded.default_string_value"]').should(
+        "have.text",
+        "updated_string",
+      );
+
+      cy.get('[aria-label="extra_embedded_value"]').should("have.text", "[]");
     });
 
     it("8.4 composer edit view is able to edit instances relations", () => {
@@ -801,15 +779,20 @@ if (Cypress.env("edition") === "iso") {
       );
 
       //check if relation is assigned correctly
-      cy.get("#expand-toggle0").click();
-      cy.get("button").contains("Attributes").click();
+      cy.get('[aria-label="row actions toggle"]').click();
+      cy.get("button").contains("Instance Details").click();
 
-      cy.get('[aria-label="Row-parent_entity"]').within(() => {
-        cy.get('[data-label="active"]').should("have.text", "test_name");
-      });
+      let oldUuid = "";
+
+      cy.get('[aria-label="parent_entity_value"]')
+        .invoke("text")
+        .then((text) => {
+          expect(text).to.match(uuidRegex);
+          oldUuid = text;
+        });
 
       // click on edit instance with composer
-      cy.get('[aria-label="row actions toggle"]').click();
+      cy.get('[aria-label="Actions-Toggle"]').click();
       cy.get("button").contains("Edit in Composer").click();
 
       // Expect Canvas to be visible
@@ -863,12 +846,20 @@ if (Cypress.env("edition") === "iso") {
         "up",
       );
 
-      //check if relation is assigned correctly
-      cy.get("button").contains("Attributes").click();
+      //check if relation is updated correctly
+      cy.get('[aria-label="row actions toggle"]').click();
+      cy.get("button").contains("Instance Details").click();
+      cy.get('[data-testid="selected-version"]').should(
+        "have.text",
+        "Version: 8",
+      ); // initial open of the details view will show the outdated version
 
-      cy.get('[aria-label="Row-parent_entity"]').within(() => {
-        cy.get('[data-label="active"]').should("have.text", "test_name2");
-      });
+      cy.get('[aria-label="parent_entity_value"]')
+        .invoke("text")
+        .then((text) => {
+          expect(text).to.match(uuidRegex);
+          expect(text).to.not.be.equal(oldUuid);
+        });
     });
 
     it("8.5 composer edit view is able to remove inter-service relation from instance", () => {
@@ -971,9 +962,6 @@ if (Cypress.env("edition") === "iso") {
       //assert that in Active attribute we have only 1 relation
       cy.get('[aria-label="Expand row 2"]').click();
 
-      const uuidRegex =
-        /^[0-9a-f]{8}-[0-9a-f]{4}-[4][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-
       cy.get('[data-testid="0"]')
         .invoke("text")
         .then((text) => {
@@ -986,8 +974,6 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="Select-AttributeSet"]').select(
         "rollback_attributes",
       );
-
-      cy.get('[aria-label="Expand row 2"]').click();
 
       cy.get('[data-testid="0"]')
         .invoke("text")
