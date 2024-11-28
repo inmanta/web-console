@@ -53,6 +53,7 @@ const CreateNewEnvironmentCard: React.FC<{ url: string }> = ({ url }) => (
       selectableActions={{
         to: url,
         selectableActionAriaLabelledby: "Create-environment",
+        selectableActionAriaLabel: "Create environment",
       }}
     ></CardHeader>
     <Bullseye>
@@ -86,11 +87,12 @@ const EnvironmentCard: React.FC<EnvironmentCardProps> = ({
         selectableActions={{
           to: `${pathname}?env=${environment.id}`,
           selectableActionAriaLabelledby: "Select-environment",
+          selectableActionAriaLabel: "Select environment",
         }}
       >
         <Brand
           src={environment.icon ? `data:${environment.icon}` : fallBackImage}
-          alt="environment-logo"
+          alt={`${environment.name}-environment-logo`}
           style={{ maxHeight: "50px", maxWidth: "200px" }}
         />
         <CardTitle>

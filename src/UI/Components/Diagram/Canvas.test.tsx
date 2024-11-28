@@ -137,7 +137,7 @@ describe("Canvas.tsx", () => {
     const header = screen.getByJointSelector("header");
 
     expect(header.getAttribute("fill")).toContain(
-      "var(--pf-t--temp--dev--tbd)" /* CODEMODS: original v5 color was --pf-v5-global--palette--gold-400 */,
+      "var(--pf-t--chart--color--yellow--300, #dca614)",
     );
   });
 
@@ -176,13 +176,13 @@ describe("Canvas.tsx", () => {
 
     expect(modal).toBeVisible();
 
-    const title = document.querySelector(".pf-v5-c-modal-box__title");
+    const title = document.querySelector("#dict-modal-title");
 
     expect(title).toHaveTextContent(
       words("instanceComposer.dictModal")("dictOne"),
     );
 
-    const value = document.querySelector(".pf-v5-c-code-block__code");
+    const value = document.querySelector("#dict-modal-body");
 
     expect(value).toHaveTextContent("{}");
 
