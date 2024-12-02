@@ -41,7 +41,7 @@ export class InventoryStencilTab {
       }
 
       return (groups[serviceName] = serviceInventories[serviceName].map(
-        (instance) => {
+        (instance, index) => {
           const attributes =
             instance.candidate_attributes ||
             instance.active_attributes ||
@@ -52,10 +52,16 @@ export class InventoryStencilTab {
             : instance.id;
 
           //add the instance id to the attributes object, to then pass it to the actual object on canvas
-          return createStencilElement(displayName, serviceModel, {
-            ...attributes,
-            id: instance.id,
-          });
+          return createStencilElement(
+            displayName,
+            serviceModel,
+            {
+              ...attributes,
+              id: instance.id,
+            },
+            false,
+            index === 0,
+          );
         },
       ));
     });
@@ -101,7 +107,6 @@ export class InventoryStencilTab {
       layout: {
         columns: 1,
         rowHeight: "compact",
-        rowGap: 10,
         marginY: 10,
         horizontalAlign: "left",
         // reset defaults

@@ -17,6 +17,7 @@ describe("createStencilElement", () => {
         attrTwo: "other_test_value",
       },
       true,
+      true,
       "holderName",
     );
 
@@ -52,6 +53,9 @@ describe("createStencilElement", () => {
     expect(embeddedElementWithModel.attributes.attrs?.label?.class).toEqual(
       "text_default",
     );
+    expect(
+      embeddedElementWithModel.attributes.attrs?.borderTop?.height,
+    ).toEqual(1);
 
     //check difference with body fill for non-embedded
     const nonEmbedded = createStencilElement("nonEmbedded", containerModel, {
@@ -65,6 +69,9 @@ describe("createStencilElement", () => {
     expect(nonEmbedded.attributes.attrs?.body?.class).toEqual(
       "body_nonEmbedded",
     );
+    expect(
+      embeddedElementWithModel.attributes.attrs?.borderTop?.height,
+    ).toEqual(0);
   });
 });
 
