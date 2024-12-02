@@ -6,7 +6,7 @@ import { DependencyContext, words } from "@/UI";
 import { ErrorView, LoadingView, PageContainer } from "@/UI/Components";
 import { Canvas } from "@/UI/Components/Diagram/Canvas";
 import { ComposerActions } from "../components";
-import { findInterServiceRelations } from "../helpers";
+import { findInterServiceRelations } from "../helpers/relations";
 import { CanvasProvider } from "./CanvasProvider";
 import { InstanceComposerContext } from "./Context";
 

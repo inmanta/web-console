@@ -8,11 +8,11 @@ import {
   FieldCreator,
   createFormState,
 } from "../ServiceInstanceForm";
+import { getKeyAttributesNames } from "./helpers/misc";
 import {
   findCorrespondingId,
   findFullInterServiceRelations,
-  getKeyAttributesNames,
-} from "./helpers";
+} from "./helpers/relations";
 import activeImage from "./icons/active-icon.svg";
 import candidateImage from "./icons/candidate-icon.svg";
 import {

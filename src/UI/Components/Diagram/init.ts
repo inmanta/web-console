@@ -11,8 +11,8 @@ import {
   applyCoordinatesToCells,
   getCellsCoordinates,
   getKeyAttributesNames,
-  toggleLooseElement,
-} from "./helpers";
+} from "./helpers/misc";
+import { toggleLooseElement } from "./helpers/visual";
 import {
   ConnectionRules,
   EventActionEnum,

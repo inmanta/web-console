@@ -2,7 +2,7 @@ import { shapes } from "@inmanta/rappid";
 import { global_palette_white } from "@patternfly/react-tokens";
 import { v4 as uuidv4 } from "uuid";
 import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from "@/Core";
-import { HeaderColor } from "../interfaces";
+import { HeaderColor, StencilState } from "../interfaces";
 
 /**
  * It recursively goes through embedded entities in the service model or embedded entity and creates stencil elements for each of them.
@@ -145,4 +145,34 @@ export const toggleDisabledStencil = (
       element.classList.toggle(className, force);
     }
   });
+};
+
+/**
+ * Creates a stencil state for a given service model or embedded entity.
+ *
+ * @param serviceModel - The service model or embedded entity to create a stencil state for.
+ * @param isInEditMode - A boolean indicating whether the stencil is in edit mode. Defaults to false.
+ * @returns {StencilState} The created stencil state.
+ */
+export const createStencilState = (
+  serviceModel: ServiceModel | EmbeddedEntity,
+  isInEditMode = false,
+): StencilState => {
+  let stencilState: StencilState = {};
+
+  serviceModel.embedded_entities.forEach((entity) => {
+    stencilState[entity.name] = {
+      min: entity.lower_limit,
+      max: entity.modifier === "rw" && isInEditMode ? 0 : entity.upper_limit,
+      current: 0,
+    };
+    if (entity.embedded_entities) {
+      stencilState = {
+        ...stencilState,
+        ...createStencilState(entity),
+      };
+    }
+  });
+
+  return stencilState;
 };

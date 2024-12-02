@@ -6,10 +6,11 @@ import { CanvasContext, InstanceComposerContext } from "./Context";
 import { EventWrapper } from "./Context/EventWrapper";
 import { DictModal, RightSidebar } from "./components";
 import { Validation } from "./components/Validation";
-import { createConnectionRules, createStencilState } from "./helpers";
+import { createConnectionRules } from "./helpers/connections";
 import { diagramInit } from "./init";
 import { ActionEnum } from "./interfaces";
 import { StencilSidebar } from "./stencil";
+import { createStencilState } from "./stencil/helpers";
 import { CanvasWrapper } from "./styles";
 import { ZoomHandlerService } from "./zoomHandler";
 
