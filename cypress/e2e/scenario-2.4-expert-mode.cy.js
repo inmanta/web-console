@@ -160,9 +160,9 @@ if (Cypress.env("edition") === "iso") {
       // expect to find in the history the creating state as last
       cy.get('[aria-label="History-Row"]', { timeout: 30000 }).should(
         ($rows) => {
-          expect($rows[0]).to.contain("creating");
-          expect($rows[0]).to.contain(4);
-          expect($rows).to.have.length(4);
+          expect($rows[1]).to.contain("creating");
+          expect($rows[1]).to.contain(4);
+          expect($rows).to.have.length(5);
         },
       );
     });
