@@ -133,9 +133,9 @@ describe("5 Compile reports", () => {
     // Expect to have no environment variables
     cy.get(".pf-v5-c-code-block__content").should("have.text", "{}");
 
-    // Expect to have 2 stages in collapsible
+    // Expect to have 3 stages in collapsible
     cy.get("tbody").should(($rowElements) => {
-      expect($rowElements).to.have.length(2);
+      expect($rowElements).to.have.length(3);
     });
 
     // Click on init stage arrow

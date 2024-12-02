@@ -174,7 +174,9 @@ export function diagramInit(
             instance.instance.metadata.coordinates,
           );
 
-          applyCoordinatesToCells(graph, parsedCoordinates);
+          if (parsedCoordinates.version === "v2") {
+            applyCoordinatesToCells(graph, parsedCoordinates.data);
+          }
         }
       }
 

@@ -75,7 +75,9 @@ export const ComposerActions: React.FC<Props> = ({ serviceName, editable }) => {
 
     if (!diagramHandlers) {
       setAlertType(AlertVariant.danger);
-      setAlertMessage("failed to save instance coordinates on deploy");
+      setAlertMessage(
+        words("instanceComposer.errorMessage.coordinatesRequest"),
+      );
     } else {
       coordinates = diagramHandlers.getCoordinates();
     }
@@ -85,7 +87,10 @@ export const ComposerActions: React.FC<Props> = ({ serviceName, editable }) => {
       .map((instance) => ({
         ...instance,
         metadata: {
-          coordinates: JSON.stringify(coordinates),
+          coordinates: JSON.stringify({
+            version: "v2",
+            data: coordinates,
+          }),
         },
       }));
 
@@ -98,7 +103,10 @@ export const ComposerActions: React.FC<Props> = ({ serviceName, editable }) => {
         key: "coordinates",
         body: {
           current_version: instance.instance.version,
-          value: JSON.stringify(coordinates),
+          value: JSON.stringify({
+            version: "v2",
+            data: coordinates,
+          }),
         },
       });
     }
@@ -109,8 +117,9 @@ export const ComposerActions: React.FC<Props> = ({ serviceName, editable }) => {
     interServiceRelationsOnCanvas,
   ).filter(
     ([_key, value]) =>
-      value.relations.filter((relation) => relation.current < relation.min)
-        .length > 0,
+      value.relations.filter(
+        (relation) => relation.currentAmount < relation.min,
+      ).length > 0,
   );
 
   useEffect(() => {

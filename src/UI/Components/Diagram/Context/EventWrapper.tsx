@@ -226,9 +226,9 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
           const relationToUpdate =
             cellsRelations.relations[indexOfRelationToUpdate];
 
-          let current = relationToUpdate.current;
+          let current = relationToUpdate.currentAmount;
 
-          relationToUpdate.current =
+          relationToUpdate.currentAmount =
             action === EventActionEnum.ADD ? ++current : --current;
 
           cellsRelations.relations.splice(

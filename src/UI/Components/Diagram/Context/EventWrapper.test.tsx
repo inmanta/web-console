@@ -437,7 +437,7 @@ describe("addInterServiceRelationToTracker - eventHandler that adds to the Map i
           detail: {
             id: "1",
             name: "test",
-            relations: [{ current: 0, min: 1, name: "test2" }],
+            relations: [{ currentAmount: 0, min: 1, name: "test2" }],
           },
         }),
       );
@@ -446,7 +446,7 @@ describe("addInterServiceRelationToTracker - eventHandler that adds to the Map i
     expect(result.current).toStrictEqual(
       new Map().set("1", {
         name: "test",
-        relations: [{ current: 0, min: 1, name: "test2" }],
+        relations: [{ currentAmount: 0, min: 1, name: "test2" }],
       }),
     );
   });
@@ -465,7 +465,7 @@ describe("removeInterServiceRelationFromTracker - event handler that removes int
           setInterServiceRelationsOnCanvas(
             new Map().set("1", {
               name: "test",
-              relations: [{ current: 0, min: 1, name: "test2" }],
+              relations: [{ currentAmount: 0, min: 1, name: "test2" }],
             }),
           );
         }, [setInterServiceRelationsOnCanvas]);
@@ -484,7 +484,7 @@ describe("removeInterServiceRelationFromTracker - event handler that removes int
     expect(result.current).toStrictEqual(
       new Map().set("1", {
         name: "test",
-        relations: [{ current: 0, min: 1, name: "test2" }],
+        relations: [{ currentAmount: 0, min: 1, name: "test2" }],
       }),
     );
 
@@ -514,7 +514,7 @@ describe("updateInterServiceRelations", () => {
           setInterServiceRelationsOnCanvas(
             new Map().set("1", {
               name: "test",
-              relations: [{ current: 0, min: 1, name: "test2" }],
+              relations: [{ currentAmount: 0, min: 1, name: "test2" }],
             }),
           );
         }, [setInterServiceRelationsOnCanvas]);
@@ -545,7 +545,7 @@ describe("updateInterServiceRelations", () => {
     expect(result.current).toStrictEqual(
       new Map().set("1", {
         name: "test",
-        relations: [{ current: 1, min: 1, name: "test2" }],
+        relations: [{ currentAmount: 1, min: 1, name: "test2" }],
       }),
     );
 
@@ -564,7 +564,7 @@ describe("updateInterServiceRelations", () => {
     expect(result.current).toStrictEqual(
       new Map().set("1", {
         name: "test",
-        relations: [{ current: 0, min: 1, name: "test2" }],
+        relations: [{ currentAmount: 0, min: 1, name: "test2" }],
       }),
     );
   });
