@@ -151,7 +151,7 @@ if (Cypress.env("edition") === "iso") {
 
       // force state to creating
       cy.get('[aria-label="Expert-Actions-Toggle"]').click();
-      cy.get(".pf-v5-c-menu__item").contains("creating").click();
+      cy.get("button").contains("creating").click();
 
       // add an operation to the force state action
       cy.get("#operation-select").select("clear candidate");
@@ -160,9 +160,9 @@ if (Cypress.env("edition") === "iso") {
       // expect to find in the history the creating state as last
       cy.get('[aria-label="History-Row"]', { timeout: 30000 }).should(
         ($rows) => {
-          expect($rows[0]).to.contain("creating");
-          expect($rows[0]).to.contain(4);
-          expect($rows).to.have.length(4);
+          expect($rows[1]).to.contain("creating");
+          expect($rows[1]).to.contain(4);
+          expect($rows).to.have.length(5);
         },
       );
     });

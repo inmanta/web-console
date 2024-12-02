@@ -21,8 +21,9 @@ export const Validation: React.FC = () => {
     interServiceRelationsOnCanvas,
   ).filter(
     ([_key, value]) =>
-      value.relations.filter((relation) => relation.current < relation.min)
-        .length > 0,
+      value.relations.filter(
+        (relation) => relation.currentAmount < relation.min,
+      ).length > 0,
   );
 
   //dirty flag is set to false on initial load for edited instances, that solves issue of flickering as we are starting canvas from empty state and populate it from ground up
