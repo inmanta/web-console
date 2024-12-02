@@ -151,7 +151,7 @@ if (Cypress.env("edition") === "iso") {
 
       // force state to creating
       cy.get('[aria-label="Expert-Actions-Toggle"]').click();
-      cy.get(".pf-v5-c-menu__item").contains("creating").click();
+      cy.get("button").contains("creating").click();
 
       // add an operation to the force state action
       cy.get("#operation-select").select("clear candidate");
