@@ -1,0 +1,5 @@
+change-type: patch
+description: 'Build(deps-dev): Bump @types/backbone from 1.4.19 to 1.4.22'
+destination-branches:
+- master
+sections: {}
