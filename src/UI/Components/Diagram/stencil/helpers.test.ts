@@ -69,9 +69,7 @@ describe("createStencilElement", () => {
     expect(nonEmbedded.attributes.attrs?.body?.class).toEqual(
       "body_nonEmbedded",
     );
-    expect(
-      embeddedElementWithModel.attributes.attrs?.borderTop?.height,
-    ).toEqual(0);
+    expect(nonEmbedded.attributes.attrs?.borderTop?.height).toEqual(0);
   });
 });
 
