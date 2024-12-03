@@ -17,7 +17,7 @@ if [[ -f "./shell-scripts/env.sh" ]]; then
     echo "env.sh found - sourcing..."
     # shellcheck disable=SC1091
     source ./shell-scripts/env.sh
-    LOCAL_SETUP_REPO=https://demo:$GITLAB_TOKEN@code.inmanta.com:inmanta/local-setup.git
+    LOCAL_SETUP_REPO=https://demo:$GITLAB_TOKEN@code.inmanta.com/inmanta/local-setup.git
 else
     echo "No env.sh file found, checking for GITLAB_TOKEN variable instead"
     if [ -n "$GITLAB_TOKEN" ]; then
