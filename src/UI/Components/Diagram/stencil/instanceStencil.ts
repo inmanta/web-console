@@ -61,7 +61,6 @@ export class InstanceStencilTab {
       layout: {
         columns: 1,
         rowHeight: "compact",
-        rowGap: 10,
         horizontalAlign: "left",
         marginY: 10,
         // reset defaults

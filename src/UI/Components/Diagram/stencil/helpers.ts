@@ -1,5 +1,8 @@
 import { shapes } from "@inmanta/rappid";
-import { global_palette_white } from "@patternfly/react-tokens";
+import {
+  global_BackgroundColor_200,
+  global_palette_white,
+} from "@patternfly/react-tokens";
 import { v4 as uuidv4 } from "uuid";
 import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from "@/Core";
 import { HeaderColor, StencilState } from "../interfaces";
@@ -17,12 +20,13 @@ export const transformEmbeddedToStencilElements = (
 ): shapes.standard.Path[] => {
   return service.embedded_entities
     .filter((embedded_entity) => embedded_entity.modifier !== "r") // filter out read-only embedded entities from the stencil as they can't be created by the user
-    .flatMap((embedded_entity) => {
+    .flatMap((embedded_entity, index) => {
       const stencilElement = createStencilElement(
         embedded_entity.name,
         embedded_entity,
         {},
         true,
+        index === 0,
         service.name,
       );
       const nestedStencilElements =
@@ -48,6 +52,7 @@ export const createStencilElement = (
   serviceModel: EmbeddedEntity | ServiceModel,
   instanceAttributes: InstanceAttributeModel,
   isEmbeddedEntity: boolean = false,
+  showBorderTop: boolean = false,
   holderName?: string,
 ): shapes.standard.Path => {
   let id = uuidv4();
@@ -90,6 +95,22 @@ export const createStencilElement = (
         fontSize: 12,
         text: name,
       },
+      borderBottom: {
+        width: 233,
+        height: 1,
+        x: 0,
+        y: 39,
+        fill: global_BackgroundColor_200.var,
+        stroke: "none",
+      },
+      borderTop: {
+        width: 233,
+        height: showBorderTop ? 1 : 0,
+        x: 0,
+        y: 0,
+        fill: global_BackgroundColor_200.var,
+        stroke: "none",
+      },
     },
     markup: [
       {
@@ -103,6 +124,14 @@ export const createStencilElement = (
       {
         tagName: "text",
         selector: "label",
+      },
+      {
+        tagName: "rect",
+        selector: "borderBottom",
+      },
+      {
+        tagName: "rect",
+        selector: "borderTop",
       },
     ],
   });
