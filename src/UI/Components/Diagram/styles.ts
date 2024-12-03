@@ -69,13 +69,6 @@ export const CanvasWrapper = styled.div`
     }
   }
 
-  .joint-element {
-    filter: drop-shadow(
-      0.1rem 0.1rem 0.15rem
-        var(--pf-v5-global--BackgroundColor--dark-transparent-200)
-    );
-  }
-
   .joint-stencil.searchable > .content {
     top: 60px;
   }

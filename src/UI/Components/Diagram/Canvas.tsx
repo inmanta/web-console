@@ -310,6 +310,7 @@ const LeftSidebarContainer = styled.div`
     0.1rem 0.1rem 0.15rem
       var(--pf-v5-global--BackgroundColor--dark-transparent-200)
   );
+  z-index: 1;
 
   &.view_mode {
     display: none;
