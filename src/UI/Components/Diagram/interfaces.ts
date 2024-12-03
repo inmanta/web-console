@@ -165,7 +165,7 @@ interface StencilState {
 interface InterServiceRelationOnCanvasWithMin {
   name: string;
   min: ParsedNumber;
-  current: number;
+  currentAmount: number;
 }
 
 /**

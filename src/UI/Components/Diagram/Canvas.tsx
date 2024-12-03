@@ -157,11 +157,15 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
       <DictModal />
       <CanvasWrapper id="canvas-wrapper" data-testid="Composer-Container">
         <LeftSidebarContainer
-          className="left_sidebar"
+          className={`left_sidebar ${!editable && "view_mode"}`}
           data-testid="left_sidebar"
           ref={LeftSidebar}
         />
-        <CanvasContainer className="canvas" data-testid="canvas" ref={Canvas} />
+        <CanvasContainer
+          className={`canvas ${!editable && "view_mode"}`}
+          data-testid="canvas"
+          ref={Canvas}
+        />
         <RightSidebar editable={editable} />
         <ZoomHandlerContainer className="zoom-handler" ref={ZoomHandler} />
       </CanvasWrapper>
@@ -277,6 +281,10 @@ const CanvasContainer = styled.div`
   height: 100%;
   background: var(--pf-v5-global--BackgroundColor--light-300);
 
+  &.view_mode {
+    width: calc(100% - 300px);
+  }
+
   * {
     font-family: var(--pf-v5-global--FontFamily--monospace);
   }
@@ -302,4 +310,8 @@ const LeftSidebarContainer = styled.div`
     0.1rem 0.1rem 0.15rem
       var(--pf-v5-global--BackgroundColor--dark-transparent-200)
   );
+
+  &.view_mode {
+    display: none;
+  }
 `;

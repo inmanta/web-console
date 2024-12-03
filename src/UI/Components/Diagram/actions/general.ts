@@ -75,7 +75,7 @@ export function createComposerEntity({
         relations.push({
           name: relation.entity_type,
           min: relation.lower_limit,
-          current: 0,
+          currentAmount: 0,
         });
       }
     });

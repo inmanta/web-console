@@ -191,7 +191,7 @@ describe("Canvas.tsx", () => {
     expect(modal).not.toBeVisible();
   });
 
-  it("renders right sidebar without buttons when not editable", async () => {
+  it("renders right sidebar without buttons and left sidebar when not editable", async () => {
     const component = setup(
       mockedInstanceTwoServiceModel,
       mockedInstanceTwo,
@@ -208,6 +208,8 @@ describe("Canvas.tsx", () => {
 
     expect(screen.queryByText("Remove")).toBeNull();
     expect(screen.queryByText("Cancel")).toBeNull();
+
+    expect(screen.getByTestId("left_sidebar")).not.toBeVisible(); // Left sidebar is set to display:none when not editable
   });
 
   it("renders right sidebar with buttons when editable", async () => {
@@ -227,5 +229,7 @@ describe("Canvas.tsx", () => {
 
     expect(screen.getByText("Remove")).toBeVisible();
     expect(screen.getByText("Cancel")).toBeVisible();
+
+    expect(screen.getByTestId("left_sidebar")).toBeVisible();
   });
 });

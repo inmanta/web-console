@@ -26,9 +26,9 @@ describe("Given a Validation component", () => {
     isDirty  | interServiceRelationsOnCanvas
     ${false} | ${new Map()}
     ${true}  | ${new Map()}
-    ${false} | ${new Map().set("1", { name: "test", relations: [{ name: "relation-test", current: 0, min: 1 }] })}
-    ${false} | ${new Map().set("1", { name: "test", relations: [{ name: "relation-test", current: 1, min: 1 }] })}
-    ${true}  | ${new Map().set("1", { name: "test", relations: [{ name: "relation-test", current: 1, min: 1 }] })}
+    ${false} | ${new Map().set("1", { name: "test", relations: [{ name: "relation-test", currentAmount: 0, min: 1 }] })}
+    ${false} | ${new Map().set("1", { name: "test", relations: [{ name: "relation-test", currentAmount: 1, min: 1 }] })}
+    ${true}  | ${new Map().set("1", { name: "test", relations: [{ name: "relation-test", currentAmount: 1, min: 1 }] })}
   `(
     "when requirements for render are not met should not render",
     ({ isDirty, interServiceRelationsOnCanvas }) => {
@@ -41,7 +41,7 @@ describe("Given a Validation component", () => {
     const isDirty = true;
     const interServiceRelationsOnCanvas = new Map().set("1", {
       name: "test",
-      relations: [{ name: "relation-test", current: 0, min: 1 }],
+      relations: [{ name: "relation-test", currentAmount: 0, min: 1 }],
     });
 
     render(setup(isDirty, interServiceRelationsOnCanvas));
