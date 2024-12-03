@@ -6,7 +6,7 @@ import { CanvasContext, InstanceComposerContext } from "./Context";
 import { EventWrapper } from "./Context/EventWrapper";
 import { DictModal, RightSidebar } from "./components";
 import { Validation } from "./components/Validation";
-import { createConnectionRules } from "./helpers/connections";
+import { createConnectionRules } from "./helpers";
 import { diagramInit } from "./init";
 import { ActionEnum } from "./interfaces";
 import { StencilSidebar } from "./stencil";

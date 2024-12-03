@@ -1,6 +1,6 @@
 import { dia } from "@inmanta/rappid";
 import { InstanceAttributeModel } from "@/Core";
-import { getKeyAttributesNames } from "../helpers/misc";
+import { getKeyAttributesNames } from "../helpers";
 import {
   ComposerEntityOptions,
   EntityType,

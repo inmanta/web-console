@@ -9,8 +9,8 @@ import {
   applyCoordinatesToCells,
   getCellsCoordinates,
   getKeyAttributesNames,
-} from "./helpers/misc";
-import { toggleLooseElement } from "./helpers/visual";
+} from "./helpers";
+import { toggleLooseElement } from "./helpers";
 import {
   ConnectionRules,
   EventActionEnum,

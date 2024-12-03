@@ -17,7 +17,7 @@ import { Field, InstanceAttributeModel, ServiceModel } from "@/Core";
 import { sanitizeAttributes } from "@/Data";
 import { words } from "@/UI/words";
 import { CanvasContext, InstanceComposerContext } from "../Context/Context";
-import { updateServiceOrderItems } from "../helpers/misc";
+import { updateServiceOrderItems } from "../helpers";
 import { ActionEnum, EventActionEnum } from "../interfaces";
 import { toggleDisabledStencil } from "../stencil/helpers";
 import { EntityForm } from "./EntityForm";
