@@ -3,7 +3,7 @@ import {
   global_FontFamily_monospace,
   global_palette_white,
 } from "@patternfly/react-tokens";
-import { updateLabelPosition } from "./helpers/visual";
+import { updateLabelPosition } from "./helpers";
 import expandButton from "./icons/expand-icon.svg";
 import { ColumnData, EntityType, HeaderColor } from "./interfaces";
 

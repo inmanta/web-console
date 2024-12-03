@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import { updateServiceOrderItems } from "../helpers/misc";
+import { updateServiceOrderItems } from "../helpers";
 import {
   ActionEnum,
   EventActionEnum,

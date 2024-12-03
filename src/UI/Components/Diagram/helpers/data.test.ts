@@ -15,7 +15,7 @@ import {
   shapesDataTransform,
   getServiceOrderItems,
   getKeyAttributesNames,
-} from "./misc";
+} from "./data";
 
 jest.mock("uuid", () => ({
   v4: jest.fn(() => "1"),
@@ -320,27 +320,11 @@ describe("getServiceOrderItems", () => {
       relatedTo: undefined,
     };
     const updatedInstance = {
+      ...createdInstance,
+      attributes: undefined,
+      action: "update",
+      edits: createdInstance.attributes,
       instance_id: "1234",
-      service_entity: "basic-service",
-      config: {},
-      action: "create",
-      attributes: {
-        address_r1: "123.1.1.4",
-        vlan_id_r1: 123,
-        address_r2: "123.1.1.1",
-        vlan_id_r2: 12,
-        short_comment: "This has be to shorter than 10000 characters.",
-        name: "testtwo",
-        service_id: "1234abcde",
-        should_deploy_fail: false,
-        ip_r1: "124",
-        interface_r1_name: "interface_r1",
-        ip_r2: "124.1.1.1",
-        interface_r2_name: "interface_r2",
-      },
-      edits: null,
-      embeddedTo: undefined,
-      relatedTo: undefined,
     };
     const deletedInstance = {
       instance_id: "12345",
@@ -369,7 +353,11 @@ describe("getServiceOrderItems", () => {
     delete createdCopy.relatedTo;
     delete updatedCopy.relatedTo;
     delete deletedCopy.relatedTo;
-    expect(serviceOrderItems).toEqual([createdCopy, updatedCopy, deletedCopy]);
+    expect(serviceOrderItems).toStrictEqual([
+      createdCopy,
+      updatedCopy,
+      deletedCopy,
+    ]);
   });
 
   it("bundles related instances correctly", () => {
@@ -387,17 +375,13 @@ describe("getServiceOrderItems", () => {
       relatedTo: null,
     };
     const parentServiceTwo = {
+      ...parentServiceOne,
       instance_id: "2",
-      service_entity: "parent-service",
-      config: {},
-      action: "create",
       attributes: {
         name: "parent2",
         service_id: "2",
         should_deploy_fail: false,
       },
-      edits: null,
-      relatedTo: null,
     };
 
     const relatedMapChild = new Map();

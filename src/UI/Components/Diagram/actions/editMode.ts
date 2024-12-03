@@ -3,10 +3,7 @@ import { DirectedGraph } from "@joint/layout-directed-graph";
 import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from "@/Core";
 import { InstanceWithRelations } from "@/Data/Managers/V2/GETTERS/GetInstanceWithRelations";
 import { words } from "@/UI/words";
-import {
-  findCorrespondingId,
-  findFullInterServiceRelations,
-} from "../helpers/relations";
+import { findCorrespondingId, findFullInterServiceRelations } from "../helpers";
 import activeImage from "../icons/active-icon.svg";
 import candidateImage from "../icons/candidate-icon.svg";
 import { EventActionEnum, relationId } from "../interfaces";
