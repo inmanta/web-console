@@ -3,119 +3,13 @@ import { DirectedGraph } from "@joint/layout-directed-graph";
 import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from "@/Core";
 import { InstanceWithRelations } from "@/Data/Managers/V2/GETTERS/GetInstanceWithRelations";
 import { words } from "@/UI/words";
-import {
-  CreateModifierHandler,
-  FieldCreator,
-  createFormState,
-} from "../ServiceInstanceForm";
-import {
-  findCorrespondingId,
-  findFullInterServiceRelations,
-  getKeyAttributesNames,
-} from "./helpers";
-import activeImage from "./icons/active-icon.svg";
-import candidateImage from "./icons/candidate-icon.svg";
-import {
-  ComposerEntityOptions,
-  EventActionEnum,
-  EntityType,
-  InterServiceRelationOnCanvasWithMin,
-  relationId,
-} from "./interfaces";
-import { Link, ServiceEntityBlock } from "./shapes";
-import { toggleDisabledStencil } from "./stencil/helpers";
-
-/**
- * Function that creates, appends and returns created Entity
- *
- * @param {ServiceModel | EmbeddedEntity} serviceModel that we want to base created entity on
- * @param {boolean} isCore defines whether created entity is main one in given View
- * @param {boolean} isInEditMode defines whether created entity is is representation of existing instance or new one
- * @param {InstanceAttributeModel} [attributes] of the entity
- * @param {boolean} [isEmbedded] defines whether created entity is embedded
- * @param {string} [holderName] - name of the entity to which it is embedded/connected
- * @param {string | dia.Cell.ID} [embeddedTo] - id of the entity/shape in which this shape is embedded
- * @param {boolean} [isBlockedFromEditing] - boolean value determining if the instance is blocked from editing
- * @param {boolean} [cantBeRemoved] - boolean value determining if the instance can't be removed
- * @param {string} [stencilName] - name of the stencil that should be disabled in the sidebar
- * @param {string} [id] - unique id of the entity, optional
- *
- * @returns {ServiceEntityBlock} created JointJS shape
- */
-export function createComposerEntity({
-  serviceModel,
-  isCore,
-  isInEditMode,
-  attributes,
-  isEmbedded = false,
-  holderName = "",
-  embeddedTo,
-  isBlockedFromEditing = false,
-  cantBeRemoved = false,
-  stencilName,
-  id,
-}: ComposerEntityOptions): ServiceEntityBlock {
-  //Create shape for Entity
-  const instanceAsTable = new ServiceEntityBlock();
-
-  instanceAsTable.setName(serviceModel.name);
-
-  //if there is if provided, we use it, if not we use default one, created by JointJS
-  if (id) {
-    instanceAsTable.set("id", id);
-  }
-
-  if (isEmbedded) {
-    instanceAsTable.setTabColor(EntityType.EMBEDDED);
-    instanceAsTable.set("embeddedTo", embeddedTo);
-    instanceAsTable.set("isEmbedded", isEmbedded);
-    instanceAsTable.set("holderName", holderName);
-  } else if (isCore) {
-    instanceAsTable.set("isCore", isCore);
-    instanceAsTable.setTabColor(EntityType.CORE);
-  } else {
-    instanceAsTable.setTabColor(EntityType.RELATION);
-    instanceAsTable.set("stencilName", stencilName);
-  }
-
-  instanceAsTable.set("isInEditMode", isInEditMode);
-  instanceAsTable.set("serviceModel", serviceModel);
-  instanceAsTable.set("isBlockedFromEditing", isBlockedFromEditing);
-  instanceAsTable.set("cantBeRemoved", cantBeRemoved);
-
-  if (serviceModel.inter_service_relations.length > 0) {
-    instanceAsTable.set("relatedTo", new Map());
-    const relations: InterServiceRelationOnCanvasWithMin[] = [];
-
-    serviceModel.inter_service_relations.forEach((relation) => {
-      if (relation.lower_limit > 0) {
-        relations.push({
-          name: relation.entity_type,
-          min: relation.lower_limit,
-          currentAmount: 0,
-        });
-      }
-    });
-
-    document.dispatchEvent(
-      new CustomEvent("addInterServiceRelationToTracker", {
-        detail: {
-          id: instanceAsTable.id,
-          name: serviceModel.name,
-          relations,
-        },
-      }),
-    );
-  }
-
-  if (attributes) {
-    const keyAttributes = getKeyAttributesNames(serviceModel);
-
-    updateAttributes(instanceAsTable, keyAttributes, attributes, true);
-  }
-
-  return instanceAsTable;
-}
+import { findCorrespondingId, findFullInterServiceRelations } from "../helpers";
+import activeImage from "../icons/active-icon.svg";
+import candidateImage from "../icons/candidate-icon.svg";
+import { EventActionEnum, relationId } from "../interfaces";
+import { ServiceEntityBlock } from "../shapes";
+import { toggleDisabledStencil } from "../stencil/helpers";
+import { connectEntities, createComposerEntity } from "./general";
 
 /**
  * This function converts Instance attributes to display them on the Smart Service Composer canvas.
@@ -290,6 +184,76 @@ export function appendInstance(
 }
 
 /**
+ * Function that appends attributes into the entity and creates nested embedded entities that connects to given instance/entity
+ *
+ * @param {dia.Graph} graph JointJS graph object
+ * @param {dia.Paper} paper JointJS paper object
+ * @param {ServiceEntityBlock} instanceAsTable created Entity
+ * @param {ServiceModel} serviceModel - serviceModel model of given instance/entity
+ * @param {InstanceAttributeModel} attributesValues - attributes of given instance/entity
+ * @param {"candidate" | "active"} presentedAttrs *optional* identify used set of attributes if they are taken from Service Instance
+ * @param {ServiceEntityBlock=} instanceToConnectRelation *optional* shape to which eventually should embedded entity or  be connected to
+ *
+ * @returns {ServiceEntityBlock[]} - returns array of created embedded entities, that are connected to given entity
+ */
+function addEmbeddedEntities(
+  graph: dia.Graph,
+  paper: dia.Paper,
+  instanceAsTable: ServiceEntityBlock,
+  serviceModel: ServiceModel,
+  attributesValues: InstanceAttributeModel,
+  presentedAttr: "candidate" | "active",
+  isBlockedFromEditing = false,
+): ServiceEntityBlock[] {
+  const { embedded_entities } = serviceModel;
+  //iterate through embedded entities to create and connect them
+  //we are basing iteration on service Model, if there is no value in the instance and if the value has modifier set to "r", skip that entity - "r" entities are read-only, they can't be edited and can be in multiple places which would result with enormous tree of cells in the graph and the canvas which would discourage user from using the Instance Composer
+  const createdEmbedded = embedded_entities
+    .filter(
+      (entity) => !!attributesValues[entity.name] && entity.modifier !== "r",
+    )
+    .flatMap((entity) => {
+      const appendedEntities = appendEmbeddedEntity(
+        paper,
+        graph,
+        entity,
+        attributesValues[entity.name] as InstanceAttributeModel,
+        instanceAsTable.id,
+        serviceModel.name,
+        presentedAttr,
+        !serviceModel.strict_modifier_enforcement || isBlockedFromEditing,
+      );
+
+      connectEntities(
+        graph,
+        instanceAsTable,
+        appendedEntities,
+        !serviceModel.strict_modifier_enforcement,
+      );
+
+      return appendedEntities;
+    });
+
+  const relations = serviceModel.inter_service_relations || [];
+
+  relations.forEach((relation) => {
+    const relationId = attributesValues[relation.name];
+
+    if (relationId) {
+      if (Array.isArray(relationId)) {
+        relationId.forEach((id) => {
+          instanceAsTable.addRelation(id, relation.name);
+        });
+      } else {
+        instanceAsTable.addRelation(relationId as string, relation.name);
+      }
+    }
+  });
+
+  return createdEmbedded;
+}
+
+/**
  * Function that creates, appends and returns created embedded entities which then are used to connects to it's parent
  * Supports recursion to display the whole tree
  *
@@ -396,267 +360,6 @@ export function appendEmbeddedEntity(
   } else {
     return [appendSingleEntity(entityAttributes)];
   }
-}
-
-/**
- * Populates a graph with default required entities derived from a service model.
- *
- * @param {dia.Graph} graph - The jointJS graph to populate.
- * @param {ServiceModel} serviceModel - The service model to use for populating the graph.
- * @returns {void}
- */
-export function populateGraphWithDefault(
-  graph: dia.Graph,
-  serviceModel: ServiceModel,
-): void {
-  //the most reliable way to get attributes default state is to use Field Creator
-
-  const fieldCreator = new FieldCreator(new CreateModifierHandler());
-  const fields = fieldCreator.attributesToFields(serviceModel.attributes);
-
-  const coreEntity = createComposerEntity({
-    serviceModel,
-    isCore: true,
-    isInEditMode: false,
-    attributes: createFormState(fields),
-  });
-
-  coreEntity.addTo(graph);
-
-  const defaultEntities = addDefaultEntities(graph, serviceModel);
-
-  defaultEntities.forEach((entity) => {
-    entity.set("embeddedTo", coreEntity.id);
-  });
-  connectEntities(graph, coreEntity, defaultEntities);
-
-  DirectedGraph.layout(graph, {
-    nodeSep: 80,
-    edgeSep: 80,
-    rankDir: "BT",
-  });
-}
-
-/**
- * Adds default entities to a graph based on a service model or an embedded entity.
- *
- * @param {dia.Graph} graph - The jointJS graph to which entities should be added.
- * @param {ServiceModel | EmbeddedEntity} service - The service model or embedded entity used to generate the default entities.
- * @returns {ServiceEntityBlock[]} An array of service entity blocks that have been added to the graph.
- */
-export function addDefaultEntities(
-  graph: dia.Graph,
-  service: ServiceModel | EmbeddedEntity,
-): ServiceEntityBlock[] {
-  const embedded_entities = service.embedded_entities
-    .filter((embedded_entity) => embedded_entity.lower_limit > 0)
-    .flatMap((embedded_entity) => {
-      const fieldCreator = new FieldCreator(new CreateModifierHandler());
-      const fields = fieldCreator.attributesToFields(
-        embedded_entity.attributes,
-      );
-      const attributes = createFormState(fields);
-
-      if (embedded_entity.lower_limit > 1) {
-        const embedded_entities: ServiceEntityBlock[] = [];
-
-        for (let i = 0; i < embedded_entity.lower_limit; i++) {
-          embedded_entities.push(
-            addSingleEntity(graph, embedded_entity, attributes, service.name),
-          );
-        }
-
-        return embedded_entities;
-      }
-
-      return addSingleEntity(graph, embedded_entity, attributes, service.name);
-    });
-
-  return embedded_entities;
-}
-
-/**
- * Helper function to add single default Embedded Entity to the graph - it's created to avoid code duplication in the addDefaultEntities function
- *
- * @param {dia.Graph} graph - The jointJS graph to which entities should be added.
- * @param {EmbeddedEntity} service - The service model or embedded entity used to generate the default entities.
- * @param {InstanceAttributeModel} attributes - attributes of given instance/entity
- * @param {string} holderName - name of the entity to which it is embedded/connected
- * @returns {ServiceEntityBlock}
- */
-const addSingleEntity = (
-  graph: dia.Graph,
-  model: EmbeddedEntity,
-  attributes: InstanceAttributeModel,
-  holderName: string,
-): ServiceEntityBlock => {
-  const embeddedEntity = createComposerEntity({
-    serviceModel: model,
-    isCore: false,
-    isInEditMode: false,
-    attributes,
-    isEmbedded: true,
-    holderName,
-  });
-
-  document.dispatchEvent(
-    new CustomEvent("updateStencil", {
-      detail: {
-        name: model.name,
-        action: EventActionEnum.ADD,
-      },
-    }),
-  );
-
-  embeddedEntity.addTo(graph);
-  const subEmbeddedEntities = addDefaultEntities(graph, model);
-
-  subEmbeddedEntities.forEach((entity) => {
-    entity.set("embeddedTo", embeddedEntity.id);
-  });
-  connectEntities(graph, embeddedEntity, subEmbeddedEntities);
-
-  return embeddedEntity;
-};
-
-/**
- *  Function that iterates through service instance attributes for values and appends in jointJS entity for display
- *
- * @param {ServiceEntityBlock} serviceEntity - shape of the entity to which columns will be appended
- * @param {string[]} keyAttributes - names of the attributes that we iterate for the values
- * @param {InstanceAttributeModel} serviceInstanceAttributes - attributes of given instance/entity
- * @param {boolean=true} isInitial - boolean indicating whether should we updateAttributes or edit - default = true
- * @returns {void}
- */
-export function updateAttributes(
-  serviceEntity: ServiceEntityBlock,
-  keyAttributes: string[],
-  serviceInstanceAttributes: InstanceAttributeModel,
-  isInitial = true,
-) {
-  const attributesToDisplay = keyAttributes.map((key) => {
-    const value = serviceInstanceAttributes
-      ? (serviceInstanceAttributes[key] as string)
-      : "";
-
-    return {
-      name: key,
-      value: value || "",
-    };
-  });
-
-  if (isInitial) {
-    serviceEntity.appendColumns(attributesToDisplay);
-  } else {
-    serviceEntity.updateColumns(
-      attributesToDisplay,
-      serviceEntity.attributes.isCollapsed,
-    );
-  }
-
-  serviceEntity.set("instanceAttributes", serviceInstanceAttributes);
-
-  if (isInitial && !serviceEntity.get("sanitizedAttrs")) {
-    //for initial appending instanceAttributes are equal sanitized ones
-    serviceEntity.set("sanitizedAttrs", serviceInstanceAttributes);
-  }
-}
-
-/**
- * Function that create connection/link between two Entities
- * @param {dia.Graph} graph JointJS graph object
- * @param {ServiceEntityBlock} source JointJS shape object
- * @param {ServiceEntityBlock} target JointJS shape object
- * @param {boolean} isBlocked parameter determining whether we are showing tools for linkView
- * @returns {void}
- */
-function connectEntities(
-  graph: dia.Graph,
-  source: ServiceEntityBlock,
-  targets: ServiceEntityBlock[],
-  isBlocked?: boolean,
-): void {
-  targets.map((target) => {
-    const link = new Link();
-
-    if (isBlocked) {
-      link.set("isBlockedFromEditing", isBlocked);
-    }
-    link.source(source);
-    link.target(target);
-    graph.addCell(link);
-    graph.trigger("link:connect", link);
-  });
-}
-
-/**
- * Function that appends attributes into the entity and creates nested embedded entities that connects to given instance/entity
- *
- * @param {dia.Graph} graph JointJS graph object
- * @param {dia.Paper} paper JointJS paper object
- * @param {ServiceEntityBlock} instanceAsTable created Entity
- * @param {ServiceModel} serviceModel - serviceModel model of given instance/entity
- * @param {InstanceAttributeModel} attributesValues - attributes of given instance/entity
- * @param {"candidate" | "active"} presentedAttrs *optional* identify used set of attributes if they are taken from Service Instance
- * @param {ServiceEntityBlock=} instanceToConnectRelation *optional* shape to which eventually should embedded entity or  be connected to
- *
- * @returns {ServiceEntityBlock[]} - returns array of created embedded entities, that are connected to given entity
- */
-function addEmbeddedEntities(
-  graph: dia.Graph,
-  paper: dia.Paper,
-  instanceAsTable: ServiceEntityBlock,
-  serviceModel: ServiceModel,
-  attributesValues: InstanceAttributeModel,
-  presentedAttr: "candidate" | "active",
-  isBlockedFromEditing = false,
-): ServiceEntityBlock[] {
-  const { embedded_entities } = serviceModel;
-  //iterate through embedded entities to create and connect them
-  //we are basing iteration on service Model, if there is no value in the instance and if the value has modifier set to "r", skip that entity - "r" entities are read-only, they can't be edited and can be in multiple places which would result with enormous tree of cells in the graph and the canvas which would discourage user from using the Instance Composer
-  const createdEmbedded = embedded_entities
-    .filter(
-      (entity) => !!attributesValues[entity.name] && entity.modifier !== "r",
-    )
-    .flatMap((entity) => {
-      const appendedEntities = appendEmbeddedEntity(
-        paper,
-        graph,
-        entity,
-        attributesValues[entity.name] as InstanceAttributeModel,
-        instanceAsTable.id,
-        serviceModel.name,
-        presentedAttr,
-        !serviceModel.strict_modifier_enforcement || isBlockedFromEditing,
-      );
-
-      connectEntities(
-        graph,
-        instanceAsTable,
-        appendedEntities,
-        !serviceModel.strict_modifier_enforcement,
-      );
-
-      return appendedEntities;
-    });
-
-  const relations = serviceModel.inter_service_relations || [];
-
-  relations.forEach((relation) => {
-    const relationId = attributesValues[relation.name];
-
-    if (relationId) {
-      if (Array.isArray(relationId)) {
-        relationId.forEach((id) => {
-          instanceAsTable.addRelation(id, relation.name);
-        });
-      } else {
-        instanceAsTable.addRelation(relationId as string, relation.name);
-      }
-    }
-  });
-
-  return createdEmbedded;
 }
 
 /**

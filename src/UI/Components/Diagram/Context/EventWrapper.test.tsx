@@ -241,8 +241,8 @@ describe("updateStencil - eventHandler that updates how many elements(embedded/i
 
     useEffect(() => {
       setStencilState({
-        test: { current: 0, min: 0, max: 1 },
-        test2: { current: 0, min: 0, max: null },
+        test: { currentAmount: 0, min: 0, max: 1 },
+        test2: { currentAmount: 0, min: 0, max: null },
       });
     }, [setStencilState]);
 
@@ -254,7 +254,7 @@ describe("updateStencil - eventHandler that updates how many elements(embedded/i
       <div>
         {Object.keys(stencilState).map((key) => (
           <span data-testid={`${key}-current`} key={`${key}-current`}>
-            {stencilState[key].current}
+            {stencilState[key].currentAmount}
           </span>
         ))}
         {Object.keys(stencilState).map((key) => (

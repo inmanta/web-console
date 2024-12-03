@@ -4,6 +4,7 @@ import {
   ActionEnum,
   EventActionEnum,
   RelationCounterForCell,
+  StencilState,
 } from "../interfaces";
 import { ServiceEntityBlock } from "../shapes";
 import { toggleDisabledStencil } from "../stencil/helpers";
@@ -124,7 +125,7 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
 
     //event listener doesn't get updated state outside setStencilState function, so all logic has to be done inside it
     setStencilState((prev) => {
-      const stencilStateCopy = JSON.parse(JSON.stringify(prev));
+      const stencilStateCopy: StencilState = JSON.parse(JSON.stringify(prev));
 
       const name = eventData.name;
       const stencil = stencilStateCopy[name];
@@ -136,10 +137,10 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
 
       switch (eventData.action) {
         case EventActionEnum.ADD:
-          stencil.current += 1;
+          stencil.currentAmount += 1;
           break;
         case EventActionEnum.REMOVE:
-          stencil.current -= 1;
+          stencil.currentAmount -= 1;
           break;
         default:
           break;
@@ -148,7 +149,7 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
       const shouldDisable =
         stencil.max !== null &&
         stencil.max !== undefined &&
-        stencil.current >= stencil.max;
+        stencil.currentAmount >= stencil.max;
 
       toggleDisabledStencil(name, shouldDisable);
 

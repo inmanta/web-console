@@ -1,5 +1,6 @@
 import { dia, highlighters, ui } from "@inmanta/rappid";
-import { checkIfConnectionIsAllowed, toggleLooseElement } from "./helpers";
+import { checkIfConnectionIsAllowed } from "./helpers";
+import { toggleLooseElement } from "./helpers";
 import { ActionEnum, ConnectionRules, EventActionEnum } from "./interfaces";
 import { ServiceEntityBlock } from "./shapes";
 

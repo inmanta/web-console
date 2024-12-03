@@ -6,7 +6,7 @@ import {
   FieldCreator,
   createFormState,
 } from "../../ServiceInstanceForm";
-import { createComposerEntity } from "../actions";
+import { createComposerEntity } from "../actions/general";
 import { ActionEnum, EventActionEnum } from "../interfaces";
 import { transformEmbeddedToStencilElements } from "./helpers";
 

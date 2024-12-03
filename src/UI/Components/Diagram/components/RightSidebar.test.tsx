@@ -20,7 +20,7 @@ import {
   defaultCanvasContext,
 } from "../Context";
 import { containerModel } from "../Mocks";
-import { addDefaultEntities } from "../actions";
+import { addDefaultEntities } from "../actions/createMode";
 import { StencilState } from "../interfaces";
 import { ComposerPaper } from "../paper";
 import { defineObjectsForJointJS } from "../testSetup";

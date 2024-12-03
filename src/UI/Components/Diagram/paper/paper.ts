@@ -1,11 +1,8 @@
 import { dia, shapes } from "@inmanta/rappid";
 import { anchorNamespace } from "../anchors";
 import createHalo from "../halo";
-import {
-  checkIfConnectionIsAllowed,
-  showLinkTools,
-  toggleLooseElement,
-} from "../helpers";
+import { checkIfConnectionIsAllowed } from "../helpers";
+import { showLinkTools, toggleLooseElement } from "../helpers";
 import collapseButton from "../icons/collapse-icon.svg";
 import expandButton from "../icons/expand-icon.svg";
 import {
