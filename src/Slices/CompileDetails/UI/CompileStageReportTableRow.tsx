@@ -58,7 +58,14 @@ export const CompileStageReportTableRow: React.FC<Props> = ({
       </Tr>
       <Tr isExpanded={isExpanded}>
         <Td colSpan={numberOfColumns}>
-          <DescriptionList isHorizontal>
+          <DescriptionList
+            isHorizontal
+            isFillColumns
+            style={{
+              paddingTop:
+                "var(--pf-t--global--spacer--control--vertical--default",
+            }}
+          >
             <DescriptionListGroup>
               <DescriptionListTerm>
                 {words("compileDetails.stages.columns.command")}
