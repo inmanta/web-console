@@ -104,6 +104,10 @@ test("GIVEN Navigation WHEN no features enabled THEN no extra features are not s
   expect(navigation).toBeVisible();
   expect(within(navigation).getAllByRole("region").length).toEqual(3);
 
+  const links = within(navigation).getAllByRole("link", {
+    name: "Sidebar-Navigation-Item",
+  });
+
   // no lsm
   expect(
     within(navigation).queryByRole("region", {
@@ -112,14 +116,12 @@ test("GIVEN Navigation WHEN no features enabled THEN no extra features are not s
   ).not.toBeInTheDocument();
 
   // no orderView
-  expect(
-    within(navigation).queryByRole("link", { name: "Orders" }),
-  ).not.toBeInTheDocument();
+  expect(links.find((item) => item.textContent === "Orders")).toBeUndefined();
 
   // no resourceDiscovery
   expect(
-    within(navigation).queryByRole("link", { name: "Discovered Resources" }),
-  ).not.toBeInTheDocument();
+    links.find((item) => item.textContent === "Discovered Resources"),
+  ).toBeUndefined();
 });
 
 test("GIVEN Navigation WHEN all features are enabled THEN all extra features are shown", () => {
@@ -132,6 +134,10 @@ test("GIVEN Navigation WHEN all features are enabled THEN all extra features are
   expect(navigation).toBeVisible();
   expect(within(navigation).getAllByRole("region").length).toEqual(4);
 
+  const links = within(navigation).getAllByRole("link", {
+    name: "Sidebar-Navigation-Item",
+  });
+
   // lsm
   expect(
     within(navigation).getByRole("region", {
@@ -141,12 +147,12 @@ test("GIVEN Navigation WHEN all features are enabled THEN all extra features are
 
   // has orderView
   expect(
-    within(navigation).getByRole("link", { name: "Orders" }),
+    links.find((item) => item.textContent === "Orders"),
   ).toBeInTheDocument();
 
   // has resourceDiscovery
   expect(
-    within(navigation).getByRole("link", { name: "Discovered Resources" }),
+    links.find((item) => item.textContent === "Discovered Resources"),
   ).toBeInTheDocument();
 });
 
@@ -156,9 +162,11 @@ test("GIVEN Navigation WHEN on 'Service Catalog' THEN 'Service Catalog' is highl
   render(component);
 
   const navigation = screen.getByRole("navigation", { name: "Global" });
-  const link = within(navigation).getByRole("link", {
-    name: "Service Catalog",
+  const links = within(navigation).getAllByRole("link", {
+    name: "Sidebar-Navigation-Item",
   });
+
+  const link = links.find((item) => item.textContent === "Service Catalog");
 
   expect(link).toHaveClass("active");
 });

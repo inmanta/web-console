@@ -164,7 +164,9 @@ test("GIVEN ConfigurationTab WHEN editing an enum field THEN shows warning icon"
 
   await act(async () => {
     await userEvent.click(
-      within(row).getByRole("option", { name: "push_full_deploy" }),
+      screen.getByRole("option", {
+        name: /push_full_deploy/i,
+      }),
     );
   });
   expect(within(row).getByTestId("Warning")).toBeInTheDocument();
