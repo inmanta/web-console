@@ -17,12 +17,12 @@ if [[ -f "./shell-scripts/env.sh" ]]; then
     echo "env.sh found - sourcing..."
     # shellcheck disable=SC1091
     source ./shell-scripts/env.sh
-    LOCAL_SETUP_REPO=git@code.inmanta.com:inmanta/local-setup.git
+    LOCAL_SETUP_REPO=https://demo:$GITLAB_TOKEN@code.inmanta.com:inmanta/local-setup.git
 else
     echo "No env.sh file found, checking for GITLAB_TOKEN variable instead"
     if [ -n "$GITLAB_TOKEN" ]; then
     echo "GITLAB_TOKEN successfuly found."
-    LOCAL_SETUP_REPO=git@code.inmanta.com:inmanta/local-setup.git
+    LOCAL_SETUP_REPO=https://demo:$GITLAB_TOKEN@code.inmanta.com:inmanta/local-setup.git
     else
     echo "GITLAB_TOKEN variable not supplied."
     exit 1
@@ -47,7 +47,6 @@ mkdir temp
 echo "Cloning the local-setup repo in the temp folder..."
 cd temp && git clone $LOCAL_SETUP_REPO
 cd local-setup
-chmod +x resources/load_db_dump.sh
 
 echo "Pulling $VERSION - $RELEASE"
 yarn run pull $VERSION $RELEASE
