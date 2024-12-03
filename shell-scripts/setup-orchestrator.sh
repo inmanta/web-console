@@ -22,7 +22,7 @@ else
     echo "No env.sh file found, checking for GITLAB_TOKEN variable instead"
     if [ -n "$GITLAB_TOKEN" ]; then
     echo "GITLAB_TOKEN successfuly found."
-    LOCAL_SETUP_REPO=https://demo:$GITLAB_TOKEN@code.inmanta.com:inmanta/local-setup.git
+    LOCAL_SETUP_REPO=https://jenkins:$GITLAB_TOKEN@code.inmanta.com/inmanta/local-setup.git
     else
     echo "GITLAB_TOKEN variable not supplied."
     exit 1
