@@ -17,14 +17,14 @@ import { ServiceEntityBlock } from "../shapes";
  * @param {ComposerServiceOrderItem} parentInstance Instance that is the main object and to which other instance are eventually connected
  * @param {ComposerServiceOrderItem[]} instances all of the instances that were created/edited in the instance, not including parentInstance
  * @param {ServiceModel | EmbeddedEntity} serviceModel - ServiceModel or EmbeddedEntity that is the model for the current iteration to build upon
- * @param {boolean=} isEmbedded boolean informing whether instance passed is embedded or not
+ * @param {boolean=} isEmbeddedEntity boolean informing whether instance passed is embedded or not
  * @returns {ComposerServiceOrderItem} - object that could be sent to the backend or embedded into other object that could be sent
  */
 export const shapesDataTransform = (
   parentInstance: ComposerServiceOrderItem,
   instances: ComposerServiceOrderItem[],
   serviceModel: ServiceModel | EmbeddedEntity,
-  isEmbedded = false,
+  isEmbeddedEntity = false,
 ): ComposerServiceOrderItem => {
   let areEmbeddedEdited = false;
   const matchingInstances = instances.filter(
@@ -118,7 +118,7 @@ export const shapesDataTransform = (
   }
 
   //if its action is "update" and instance isn't embedded change value property to edit as that's what api expect in the body
-  if (parentInstance.action === "update" && !isEmbedded) {
+  if (parentInstance.action === "update" && !isEmbeddedEntity) {
     if (!!parentInstance.attributes && !parentInstance.edits) {
       parentInstance.edits = [
         {

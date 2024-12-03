@@ -93,9 +93,9 @@ export const RightSidebar: React.FC<Props> = ({ editable }) => {
 
     //logic of deleting cell stayed in the halo which triggers the event
     cellToEdit.trigger("action:delete");
-    const isEmbedded = model.get("isEmbedded");
+    const isEmbeddedEntity = model.get("isEmbeddedEntity");
 
-    if (isEmbedded) {
+    if (isEmbeddedEntity) {
       //dispatch event instead of calling function directly from context
       document.dispatchEvent(
         new CustomEvent("updateStencil", {

@@ -51,14 +51,14 @@ describe("updateLabelPosition", () => {
     const sourceService = createComposerEntity({
       serviceModel: Service.a,
       isCore: false,
-      isEmbedded: false,
+      isEmbeddedEntity: false,
       isInEditMode: false,
       attributes: InstanceAttributesA,
     });
     const targetService = createComposerEntity({
       serviceModel: Service.a,
       isCore: false,
-      isEmbedded: false,
+      isEmbeddedEntity: false,
       isInEditMode: false,
       attributes: InstanceAttributesB,
     });
@@ -189,7 +189,7 @@ describe("toggleLooseElement", () => {
     const entity = createComposerEntity({
       serviceModel: Service.a,
       isCore: false,
-      isEmbedded: false,
+      isEmbeddedEntity: false,
       isInEditMode: false,
       attributes: InstanceAttributesA,
     });
@@ -227,7 +227,7 @@ describe("toggleLooseElement", () => {
     const entity = createComposerEntity({
       serviceModel: Service.a,
       isCore: false,
-      isEmbedded: false,
+      isEmbeddedEntity: false,
       isInEditMode: false,
       attributes: InstanceAttributesA,
     });
@@ -271,7 +271,7 @@ describe("showLinkTools", () => {
       serviceModel: childModel,
       isCore: false,
       isInEditMode: isChildInEditMode,
-      isEmbedded: true,
+      isEmbeddedEntity: true,
     });
 
     graph.addCell(parentEntity);

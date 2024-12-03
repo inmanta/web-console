@@ -27,7 +27,7 @@ describe("createComposerEntity", () => {
     });
 
     expect(coreEntity.get("holderName")).toBe(undefined);
-    expect(coreEntity.get("isEmbedded")).toBe(undefined);
+    expect(coreEntity.get("isEmbeddedEntity")).toBe(undefined);
     expect(coreEntity.get("isCore")).toBe(true);
     expect(coreEntity.attr("header/fill")).toBe(
       "var(--pf-v5-global--palette--gold-400)",
@@ -41,12 +41,12 @@ describe("createComposerEntity", () => {
       serviceModel: containerModel.embedded_entities[0],
       isCore: false,
       isInEditMode: false,
-      isEmbedded: true,
+      isEmbeddedEntity: true,
       holderName: containerModel.name,
     });
 
     expect(embeddedEntity.get("holderName")).toBe(containerModel.name);
-    expect(embeddedEntity.get("isEmbedded")).toBe(true);
+    expect(embeddedEntity.get("isEmbeddedEntity")).toBe(true);
     expect(embeddedEntity.get("isCore")).toBe(undefined);
     expect(embeddedEntity.attr("header/fill")).toBe(
       "var(--pf-v5-global--palette--blue-400)",
@@ -62,7 +62,7 @@ describe("createComposerEntity", () => {
     });
 
     expect(childEntity.get("holderName")).toBe(undefined);
-    expect(childEntity.get("isEmbedded")).toBe(undefined);
+    expect(childEntity.get("isEmbeddedEntity")).toBe(undefined);
     expect(childEntity.get("isCore")).toBe(undefined);
     expect(childEntity.get("isInEditMode")).toBe(false);
     expect(childEntity.attr("header/fill")).toBe(
@@ -72,13 +72,13 @@ describe("createComposerEntity", () => {
   });
 
   it.each`
-    serviceModel                           | isCore   | isEmbedded
+    serviceModel                           | isCore   | isEmbeddedEntity
     ${parentModel}                         | ${false} | ${false}
     ${containerModel}                      | ${true}  | ${false}
     ${containerModel.embedded_entities[0]} | ${false} | ${true}
   `(
     "it appends correctly attributes to the body",
-    ({ serviceModel, isCore, isEmbedded }) => {
+    ({ serviceModel, isCore, isEmbeddedEntity }) => {
       const fieldCreator = new FieldCreator(new CreateModifierHandler());
       const fields = fieldCreator.attributesToFields(serviceModel.attributes);
       const attributes = createFormState(fields);
@@ -86,7 +86,7 @@ describe("createComposerEntity", () => {
       const coreEntity = createComposerEntity({
         serviceModel,
         isCore,
-        isEmbedded,
+        isEmbeddedEntity,
         isInEditMode: false,
         attributes,
       });

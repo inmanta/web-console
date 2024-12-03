@@ -299,7 +299,7 @@ export function appendEmbeddedEntity(
       isCore: false,
       isInEditMode: true,
       attributes: entityInstance,
-      isEmbedded: true,
+      isEmbeddedEntity: true,
       holderName,
       embeddedTo,
       isBlockedFromEditing,

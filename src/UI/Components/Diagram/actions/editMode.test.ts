@@ -117,7 +117,7 @@ describe("appendEmbeddedEntity", () => {
       expect(cells).toHaveLength(1);
       expect(cells[0].get("entityName")).toBe("child_container");
       expect(cells[0].get("holderName")).toBe("container-service");
-      expect(cells[0].get("isEmbedded")).toBe(true);
+      expect(cells[0].get("isEmbeddedEntity")).toBe(true);
       expect(cells[0].get("embeddedTo")).toBe("123");
 
       //we assign to this property attributes without inter-service relations
@@ -179,7 +179,7 @@ describe("appendEmbeddedEntity", () => {
 
     //assert first cell
     expect(cells[0].get("entityName")).toBe("child_container");
-    expect(cells[0].get("isEmbedded")).toBe(true);
+    expect(cells[0].get("isEmbeddedEntity")).toBe(true);
     expect(cells[0].get("embeddedTo")).toBe("123");
 
     expect(cells[0].get("isBlockedFromEditing")).toBe(false);
@@ -188,7 +188,7 @@ describe("appendEmbeddedEntity", () => {
 
     //assert second cell
     expect(cells[1].get("entityName")).toBe("child_container");
-    expect(cells[1].get("isEmbedded")).toBe(true);
+    expect(cells[1].get("isEmbeddedEntity")).toBe(true);
     expect(cells[1].get("embeddedTo")).toBe("123");
 
     expect(cells[1].get("isBlockedFromEditing")).toBe(false);
@@ -262,7 +262,7 @@ describe("appendEmbeddedEntity", () => {
       //assert first cell
       expect(filteredCells[0].get("entityName")).toBe("child_container");
       expect(filteredCells[0].get("holderName")).toBe("container-service");
-      expect(filteredCells[0].get("isEmbedded")).toBe(true);
+      expect(filteredCells[0].get("isEmbeddedEntity")).toBe(true);
       expect(filteredCells[0].get("embeddedTo")).toBe("123");
 
       expect(filteredCells[0].get("isBlockedFromEditing")).toBe(
@@ -278,7 +278,7 @@ describe("appendEmbeddedEntity", () => {
       expect(filteredCells[1].get("entityName")).toBe("nested_container");
       expect(filteredCells[1].get("holderName")).toBe("child_container");
 
-      expect(filteredCells[1].get("isEmbedded")).toBe(true);
+      expect(filteredCells[1].get("isEmbeddedEntity")).toBe(true);
       expect(filteredCells[1].get("embeddedTo")).toBe(filteredCells[0].id);
 
       expect(filteredCells[1].get("isBlockedFromEditing")).toBe(
@@ -402,7 +402,7 @@ describe("appendInstance", () => {
     //assert that the first cell is the parent-service, which would be core instance and has it's attributes set as expected
     expect(filteredCells[0].get("entityName")).toBe("parent-service");
     expect(filteredCells[0].get("isCore")).toBe(true);
-    expect(filteredCells[0].get("isEmbedded")).toBe(undefined);
+    expect(filteredCells[0].get("isEmbeddedEntity")).toBe(undefined);
     expect(filteredCells[0].get("isBlockedFromEditing")).toBe(false);
     expect(filteredCells[0].get("isInEditMode")).toBe(true);
     expect(filteredCells[0].get("cantBeRemoved")).toBe(false);
@@ -420,7 +420,7 @@ describe("appendInstance", () => {
     //assert that the first cell is the child-service, which would be inter-service relation in edit mode and has its attributes set as expected
     expect(filteredCells[1].get("entityName")).toBe("child-service");
     expect(filteredCells[1].get("isCore")).toBe(undefined);
-    expect(filteredCells[1].get("isEmbedded")).toBe(undefined);
+    expect(filteredCells[1].get("isEmbeddedEntity")).toBe(undefined);
     expect(filteredCells[1].get("isBlockedFromEditing")).toBe(true);
     expect(filteredCells[1].get("isInEditMode")).toBe(true);
     expect(filteredCells[1].get("cantBeRemoved")).toBe(false);
@@ -443,7 +443,7 @@ describe("appendInstance", () => {
     //assert that the first cell is the container-service, which would be main body of another inter-service relation in edit mode and has its attributes set as expected
     expect(filteredCells[2].get("entityName")).toBe("container-service");
     expect(filteredCells[2].get("isCore")).toBe(undefined);
-    expect(filteredCells[2].get("isEmbedded")).toBe(undefined);
+    expect(filteredCells[2].get("isEmbeddedEntity")).toBe(undefined);
     expect(filteredCells[2].get("isBlockedFromEditing")).toBe(true);
     expect(filteredCells[2].get("isInEditMode")).toBe(true);
     expect(filteredCells[2].get("cantBeRemoved")).toBe(false);
@@ -469,7 +469,7 @@ describe("appendInstance", () => {
     //assert that the first cell is the container-service, which would be embedded entity of container-service and would be target point of inter-service relation in edit mode and has its attributes set as expected
     expect(filteredCells[3].get("entityName")).toBe("child_container");
     expect(filteredCells[3].get("isCore")).toBe(undefined);
-    expect(filteredCells[3].get("isEmbedded")).toBe(true);
+    expect(filteredCells[3].get("isEmbeddedEntity")).toBe(true);
     expect(filteredCells[3].get("isBlockedFromEditing")).toBe(true);
     expect(filteredCells[3].get("isInEditMode")).toBe(true);
     expect(filteredCells[3].get("cantBeRemoved")).toBe(true);

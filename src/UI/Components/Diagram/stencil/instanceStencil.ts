@@ -52,7 +52,7 @@ export class InstanceStencilTab {
           isCore: false,
           isInEditMode: false,
           attributes: createFormState(fields),
-          isEmbedded: true,
+          isEmbeddedEntity: true,
           holderName: cell.get("holderName"),
         });
       },
@@ -77,7 +77,7 @@ export class InstanceStencilTab {
     this.stencil.load(transformEmbeddedToStencilElements(service));
 
     this.stencil.on("element:drop", (elementView) => {
-      if (elementView.model.get("isEmbedded")) {
+      if (elementView.model.get("isEmbeddedEntity")) {
         document.dispatchEvent(
           new CustomEvent("updateStencil", {
             detail: {

@@ -38,7 +38,7 @@ export const transformEmbeddedToStencilElements = (
  * @param {string} name - The name of the stencil element.
  * @param {EmbeddedEntity | ServiceModel} serviceModel - The embedded entity model associated with the entity that the stencil element represent.
  * @param {InstanceAttributeModel} instanceAttributes - The instance attributes of the entity that the stencil element represent.
- * @param {boolean} isEmbedded - A boolean indicating whether the entity that the stencil represent is embedded or not. Defaults to false.
+ * @param {boolean} isEmbeddedEntity - A boolean indicating whether the entity that the stencil represent is embedded or not. Defaults to false.
  * @param {string} holderName - The name of the holder of the element that the stencil element represent. Optional.
  *
  * @returns {shapes.standard.Path} An object representing the stencil element.
@@ -47,7 +47,7 @@ export const createStencilElement = (
   name: string,
   serviceModel: EmbeddedEntity | ServiceModel,
   instanceAttributes: InstanceAttributeModel,
-  isEmbedded: boolean = false,
+  isEmbeddedEntity: boolean = false,
   holderName?: string,
 ): shapes.standard.Path => {
   let id = uuidv4();
@@ -71,7 +71,7 @@ export const createStencilElement = (
         width: 7,
         height: 40,
         x: 233,
-        fill: isEmbedded ? HeaderColor.EMBEDDED : HeaderColor.RELATION,
+        fill: isEmbeddedEntity ? HeaderColor.EMBEDDED : HeaderColor.RELATION,
         stroke: "none",
       },
       bodyTwo: {

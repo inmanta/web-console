@@ -82,7 +82,7 @@ describe("addDefaultEntities", () => {
       isCore: false,
       isInEditMode: false,
       attributes,
-      isEmbedded: true,
+      isEmbeddedEntity: true,
       holderName: "container-service",
     });
 
@@ -91,7 +91,7 @@ describe("addDefaultEntities", () => {
       isCore: false,
       isInEditMode: false,
       attributes,
-      isEmbedded: true,
+      isEmbeddedEntity: true,
       holderName: "child_container",
     });
 
@@ -154,7 +154,7 @@ describe("populateGraphWithDefault", () => {
     expect(addedCells[1].getName()).toBe(
       containerModel.embedded_entities[0].name,
     );
-    expect(addedCells[1].get("isEmbedded")).toBeTruthy();
+    expect(addedCells[1].get("isEmbeddedEntity")).toBeTruthy();
     expect(addedCells[1].get("holderName")).toBe(containerModel.name);
     expect(addedCells[1].get("embeddedTo")).toBe(addedCells[0].id);
   });

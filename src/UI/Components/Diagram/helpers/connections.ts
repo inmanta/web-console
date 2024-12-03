@@ -122,7 +122,7 @@ export const checkIfConnectionIsAllowed = (
 
     if (isSourceBlockedFromEditing) {
       const targetHolder = targetAsElement.get("holderName");
-      const isTargetEmbedded = targetAsElement.get("isEmbedded");
+      const isTargetEmbedded = targetAsElement.get("isEmbeddedEntity");
 
       if (isTargetEmbedded && targetHolder === sourceName) {
         return false; // if source is blocked from editing then we can't connect embedded entities to it
@@ -226,7 +226,7 @@ const doesElementIsEmbeddedWithExhaustedConnections = (
   connectedElementsToSource: ServiceEntityBlock[],
   target: dia.Element,
 ): boolean => {
-  const isSourceEmbedded = source.get("isEmbedded");
+  const isSourceEmbedded = source.get("isEmbeddedEntity");
   const sourceHolderName = source.get("holderName");
   const isTargetBlocked = target.get("isBlockedFromEditing");
 

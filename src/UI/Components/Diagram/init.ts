@@ -121,7 +121,7 @@ export function diagramInit(
           const copy = graphJSON.cells.find((c) => c.id === cell.id);
           const stencilName = cell.get("stencilName");
 
-          if (cell.get("isEmbedded")) {
+          if (cell.get("isEmbeddedEntity")) {
             document.dispatchEvent(
               new CustomEvent("updateStencil", {
                 detail: {

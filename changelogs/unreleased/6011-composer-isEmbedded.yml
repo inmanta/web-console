@@ -1,0 +1,4 @@
+description: change property name from isEmbedded to isEmbeddedEntity in instance composer elements
+issue-nr: 6011
+change-type: patch
+destination-branches: [master]
