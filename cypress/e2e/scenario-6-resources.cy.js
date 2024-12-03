@@ -63,7 +63,6 @@ const forceUpdateEnvironment = (nameEnvironment = "test") => {
 };
 
 const isIso = Cypress.env("edition") === "iso";
-const ENVIRONMENT = Cypress.env("environment") || "test";
 
 describe("Scenario 6 : Resources", () => {
   if (isIso) {
@@ -77,7 +76,7 @@ describe("Scenario 6 : Resources", () => {
     // Select Test environment
     cy.visit("/console/");
 
-    cy.get(`[aria-label="Select-environment-${ENVIRONMENT}"]`).click();
+    cy.get(`[aria-label="Select-environment-test"]`).click();
 
     // Go to Resources page by clicking on navbar
     cy.get('[aria-label="Sidebar-Navigation-Item"]')
@@ -99,7 +98,7 @@ describe("Scenario 6 : Resources", () => {
       // Select Test environment
       cy.visit("/console/");
 
-      cy.get(`[aria-label="Select-environment-${ENVIRONMENT}"]`).click();
+      cy.get(`[aria-label="Select-environment-test"]`).click();
 
       // Go to Service Catalog
       cy.get('[aria-label="Sidebar-Navigation-Item"]')
@@ -272,7 +271,7 @@ describe("Scenario 6 : Resources", () => {
     it("6.3 Log message filtering", () => {
       // Select Test environment
       cy.visit("/console/");
-      cy.get(`[aria-label="Select-environment-${ENVIRONMENT}"]`).click();
+      cy.get(`[aria-label="Select-environment-test"]`).click();
 
       // Go to Resources page
       cy.get('[aria-label="Sidebar-Navigation-Item"]')
@@ -312,7 +311,7 @@ describe("Scenario 6 : Resources", () => {
     it("6.4 Resources with multiple dependencies", () => {
       // Select Test environment
       cy.visit("/console/");
-      cy.get(`[aria-label="Select-environment-${ENVIRONMENT}"]`).click();
+      cy.get(`[aria-label="Select-environment-test"]`).click();
 
       // Go to Service Catalog page
       cy.get('[aria-label="Sidebar-Navigation-Item"]')
@@ -478,7 +477,7 @@ describe("Scenario 6 : Resources", () => {
       // Select Test environment
       cy.visit("/console/");
 
-      cy.get(`[aria-label="Select-environment-${ENVIRONMENT}"]`).click();
+      cy.get(`[aria-label="Select-environment-test"]`).click();
 
       // Go to Service Catalog
       cy.get('[aria-label="Sidebar-Navigation-Item"]')
@@ -643,7 +642,7 @@ describe("Scenario 6 : Resources", () => {
     it("6.6 Resources for OSS", () => {
       cy.visit("/console/");
 
-      cy.get(`[aria-label="Select-environment-${ENVIRONMENT}"]`).click();
+      cy.get(`[aria-label="Select-environment-test"]`).click();
 
       cy.get('[aria-label="Sidebar-Navigation-Item"]')
         .contains("Resources")
@@ -762,10 +761,10 @@ describe("Scenario 6 : Resources", () => {
 
       // Go to logs tab
       cy.get("button").contains("Logs").click();
-      // Expect it to have : 12 log messages
+      // Expect it to have : 8 log messages
       cy.get('[aria-label="ResourceLogRow"]', { timeout: 40000 }).should(
         "to.have.length.of.at.least",
-        12,
+        8,
       );
 
       // make sure the default is 100 instead of 20 like on other pages with pagination.

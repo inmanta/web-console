@@ -63,7 +63,6 @@ const forceUpdateEnvironment = (nameEnvironment = "test") => {
 };
 
 const isIso = Cypress.env("edition") === "iso";
-const ENVIRONMENT = Cypress.env("environment") || "test";
 
 describe("5 Compile reports", () => {
   if (isIso) {
@@ -76,7 +75,7 @@ describe("5 Compile reports", () => {
   it("5.1 initial state", () => {
     cy.visit("/console/");
 
-    cy.get(`[aria-label="Select-environment-${ENVIRONMENT}"]`).click();
+    cy.get(`[aria-label="Select-environment-test"]`).click();
 
     // go to compile reports page
     cy.get('[aria-label="Sidebar-Navigation-Item"]')
@@ -163,7 +162,7 @@ describe("5 Compile reports", () => {
       cy.visit("/console/");
 
       // click on test environment card
-      cy.get(`[aria-label="Select-environment-${ENVIRONMENT}"]`).click();
+      cy.get(`[aria-label="Select-environment-test"]`).click();
       cy.get('[aria-label="Sidebar-Navigation-Item"]')
         .contains("Service Catalog")
         .click();

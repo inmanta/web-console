@@ -63,7 +63,6 @@ const forceUpdateEnvironment = (nameEnvironment = "test") => {
 };
 
 const isIso = Cypress.env("edition") === "iso";
-const ENVIRONMENT = Cypress.env("environment") || "test";
 
 describe("Scenario 4 Desired State", () => {
   if (isIso) {
@@ -76,7 +75,7 @@ describe("Scenario 4 Desired State", () => {
   it("4.1 Initial setup", () => {
     // Go from Home page to Service Inventory of Basic-service
     cy.visit("/console/");
-    cy.get(`[aria-label="Select-environment-${ENVIRONMENT}"]`).click();
+    cy.get(`[aria-label="Select-environment-test"]`).click();
 
     if (isIso) {
       cy.get('[aria-label="Sidebar-Navigation-Item"]')

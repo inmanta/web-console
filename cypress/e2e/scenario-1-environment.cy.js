@@ -12,7 +12,7 @@ beforeEach(() => {
   cy.request("/api/v1/project").as("projects");
   cy.get("@projects").then((response) => {
     response.body.projects.map((project) => {
-      if (project.name !== Cypress.env("project")) {
+      if (!/frontend/.test(project.name)) {
         cy.request("DELETE", `api/v1/project/${project.id}`);
       }
     });
