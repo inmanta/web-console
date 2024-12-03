@@ -87,7 +87,7 @@ const EnvironmentCard: React.FC<EnvironmentCardProps> = ({
         selectableActions={{
           to: `${pathname}?env=${environment.id}`,
           selectableActionAriaLabelledby: "Select-environment",
-          selectableActionAriaLabel: "Select environment",
+          selectableActionAriaLabel: `Select-environment-${environment.name}`,
         }}
       >
         <Brand

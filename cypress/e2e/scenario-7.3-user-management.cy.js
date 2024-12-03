@@ -10,7 +10,7 @@ if (Cypress.env("local-auth")) {
     cy.get("[id=toggle-button]", { timeout: 20000 }).should("contain", "admin");
     cy.get("[id=toggle-button]").click();
 
-    cy.get(".pf-v5-c-menu__item").contains("User Management").click();
+    cy.get('[role="menuitem"]').contains("User Management").click();
 
     cy.get("h1").contains("User Management").should("be.visible");
 
@@ -48,7 +48,7 @@ if (Cypress.env("local-auth")) {
     cy.get("[id=toggle-button]", { timeout: 20000 }).should("contain", "admin");
     cy.get("[id=toggle-button]").click();
 
-    cy.get(".pf-v5-c-menu__item").contains("User Management").click();
+    cy.get('[role="menuitem"]').contains("User Management").click();
 
     cy.get("h1").contains("User Management").should("be.visible");
 

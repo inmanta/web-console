@@ -3,7 +3,7 @@ const { defineConfig } = require("cypress");
 module.exports = defineConfig({
   env: {
     edition: "iso",
-    project: "lsm-frontend",
+    environment: "test",
   },
   video: false,
   reporter: "junit",

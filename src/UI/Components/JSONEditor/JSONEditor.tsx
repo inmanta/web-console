@@ -128,7 +128,7 @@ export const JSONEditor: React.FC<Props> = ({
         options={{ domReadOnly: readOnly, readOnly: readOnly }}
       />
       {!readOnly && (
-        <PanelWrapper variant="bordered" data-testid="Error-container">
+        <Panel data-testid="Error-container">
           {errors.length > 0 && (
             <Alert
               isInline
@@ -142,16 +142,12 @@ export const JSONEditor: React.FC<Props> = ({
               ))}
             </Alert>
           )}
-        </PanelWrapper>
+        </Panel>
       )}
     </EditorWrapper>
   );
 };
 
 const EditorWrapper = styled.div`
-  border: 1px solid #d2d2d2;
-`;
-
-const PanelWrapper = styled(Panel)`
-  min-height: 55px;
+  border-radius: var(--pf-t--global--border--radius--large);
 `;

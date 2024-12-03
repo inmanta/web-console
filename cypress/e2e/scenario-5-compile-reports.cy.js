@@ -4,9 +4,9 @@
  *
  * @param {string} nameEnvironment
  */
-const clearEnvironment = (nameEnvironment = "lsm-frontend") => {
+const clearEnvironment = (nameEnvironment = "test") => {
   cy.visit("/console/");
-  cy.get('[aria-label="Environment card"]').contains(nameEnvironment).click();
+  cy.get(`[aria-label="Select-environment-${nameEnvironment}"]`).click();
   cy.url().then((url) => {
     const location = new URL(url);
     const id = location.searchParams.get("env");
@@ -45,9 +45,9 @@ const checkStatusCompile = (id) => {
  *
  * @param {string} nameEnvironment
  */
-const forceUpdateEnvironment = (nameEnvironment = "lsm-frontend") => {
+const forceUpdateEnvironment = (nameEnvironment = "test") => {
   cy.visit("/console/");
-  cy.get('[aria-label="Environment card"]').contains(nameEnvironment).click();
+  cy.get(`[aria-label="Select-environment-${nameEnvironment}"]`).click();
   cy.url().then((url) => {
     const location = new URL(url);
     const id = location.searchParams.get("env");
@@ -63,7 +63,7 @@ const forceUpdateEnvironment = (nameEnvironment = "lsm-frontend") => {
 };
 
 const isIso = Cypress.env("edition") === "iso";
-const PROJECT = Cypress.env("project") || "lsm-frontend";
+const ENVIRONMENT = Cypress.env("environment") || "test";
 
 describe("5 Compile reports", () => {
   if (isIso) {
@@ -76,10 +76,12 @@ describe("5 Compile reports", () => {
   it("5.1 initial state", () => {
     cy.visit("/console/");
 
-    cy.get('[aria-label="Environment card"]').contains(PROJECT).click();
+    cy.get(`[aria-label="Select-environment-${ENVIRONMENT}"]`).click();
 
     // go to compile reports page
-    cy.get(".pf-v5-c-nav__link").contains("Compile Reports").click();
+    cy.get('[aria-label="Sidebar-Navigation-Item"]')
+      .contains("Compile Reports")
+      .click();
 
     // expect it to have 2 item shown in the table, or 3 if it is the OSS edition
     cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
@@ -123,27 +125,27 @@ describe("5 Compile reports", () => {
     cy.get("button").contains("Show Details").eq(0).click();
 
     // Expect to be redirected to compile details page
-    cy.get(".pf-v5-c-title").contains("Compile Details").should("to.exist");
+    cy.get("h1").contains("Compile Details").should("to.exist");
 
     // Expect message to be : Compile triggered from the console
-    cy.get(".pf-v5-c-description-list__group")
+    cy.get(".pf-v6-c-description-list__group")
       .eq(3)
       .should("contain", "Compile triggered from the console");
 
     // Expect to have no environment variables
-    cy.get(".pf-v5-c-code-block__content").should("have.text", "{}");
+    cy.get(".pf-v6-c-code-block__content").should("have.text", "{}");
 
     // Expect to have 2 stages in collapsible
     cy.get("tbody").should(($rowElements) => {
-      expect($rowElements).to.have.length(2);
+      expect($rowElements).to.have.length(3);
     });
 
     // Click on init stage arrow
     cy.get("#expand-toggle0").click();
 
     // expect to see Command Empty, Return code 0 an output stream and no error stream.
-    cy.get(".pf-v5-c-table__expandable-row.pf-m-expanded")
-      .find(".pf-v5-c-description-list__group")
+    cy.get(".pf-v6-c-table__expandable-row.pf-m-expanded")
+      .find(".pf-v6-c-description-list__group")
       .should(($rowGroups) => {
         expect($rowGroups).to.have.length(4);
 
@@ -161,8 +163,10 @@ describe("5 Compile reports", () => {
       cy.visit("/console/");
 
       // click on test environment card
-      cy.get('[aria-label="Environment card"]').contains(PROJECT).click();
-      cy.get(".pf-v5-c-nav__link").contains("Service Catalog").click();
+      cy.get(`[aria-label="Select-environment-${ENVIRONMENT}"]`).click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]')
+        .contains("Service Catalog")
+        .click();
 
       // Click on Show Inventory on basic service
       cy.get("#basic-service").contains("Show inventory").click();
@@ -185,7 +189,9 @@ describe("5 Compile reports", () => {
       cy.get(".pf-v5-c-chart").should("be.visible");
 
       // Go to compiled Reports page
-      cy.get(".pf-v5-c-nav__link").contains("Compile Reports").click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]')
+        .contains("Compile Reports")
+        .click();
 
       // Expect all compiles to be succesful
       cy.get("tbody", { timeout: 60000 }).should(($tableBody) => {
@@ -214,10 +220,10 @@ describe("5 Compile reports", () => {
       cy.get("button").contains("Show Details").eq(0).click();
 
       // Expect to be redirected to compile details page
-      cy.get(".pf-v5-c-title").contains("Compile Details").should("to.exist");
+      cy.get("h1").contains("Compile Details").should("to.exist");
 
       // Expect trigger to be lsm_export
-      cy.get(".pf-v5-c-description-list__group")
+      cy.get(".pf-v6-c-description-list__group")
         .eq(4)
         .should("contain", "lsm_export");
 
@@ -233,10 +239,10 @@ describe("5 Compile reports", () => {
       cy.visit("/console/");
 
       // click on test environment card
-      cy.get('[aria-label="Environment card"]')
-        .contains("lsm-frontend")
+      cy.get(`[aria-label="Select-environment-test"]`).click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]')
+        .contains("Service Catalog")
         .click();
-      cy.get(".pf-v5-c-nav__link").contains("Service Catalog").click();
 
       // Click on Show Inventory on basic-service
       cy.get("#basic-service").contains("Show inventory").click();
@@ -245,7 +251,7 @@ describe("5 Compile reports", () => {
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 })
         .eq(0)
         .click();
-      cy.get(".pf-v5-c-menu__item").contains("Duplicate").click();
+      cy.get('[role="menuitem"]').contains("Duplicate").click();
 
       // Add Instance
       cy.get("#service_id").clear();
@@ -255,7 +261,7 @@ describe("5 Compile reports", () => {
 
       // Expect to see a rejected service instance in the table
       cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
-        const $rows = $tableBody.find(".pf-v5-c-table__expandable-row");
+        const $rows = $tableBody.find(".pf-v6-c-table__expandable-row");
 
         expect($rows).to.have.length(2);
 
@@ -263,7 +269,9 @@ describe("5 Compile reports", () => {
       });
 
       // Go to the compile report page
-      cy.get(".pf-v5-c-nav__link").contains("Compile Reports").click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]')
+        .contains("Compile Reports")
+        .click();
 
       // expect the last compile to be failed.
       cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
@@ -282,13 +290,13 @@ describe("5 Compile reports", () => {
       cy.get("button").contains("Show Details").eq(0).click();
 
       // Expect to be redirected to compile details page
-      cy.get(".pf-v5-c-title").contains("Compile Details").should("to.exist");
+      cy.get("h1").contains("Compile Details").should("to.exist");
 
       // Expect trigger to be lsm
-      cy.get(".pf-v5-c-description-list__group").eq(4).should("contain", "lsm");
+      cy.get(".pf-v6-c-description-list__group").eq(4).should("contain", "lsm");
 
       // Expect Error Type : inmanta.ast.AttributeException
-      cy.get(".pf-v5-c-description-list__description")
+      cy.get(".pf-v6-c-description-list__description")
         .eq(6)
         .should("contain", "inmanta.ast.AttributeException");
     });
@@ -298,10 +306,10 @@ describe("5 Compile reports", () => {
       cy.visit("/console/");
 
       // click on test environment card
-      cy.get('[aria-label="Environment card"]')
-        .contains("lsm-frontend")
+      cy.get(`[aria-label="Select-environment-test"]`).click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]')
+        .contains("Service Catalog")
         .click();
-      cy.get(".pf-v5-c-nav__link").contains("Service Catalog").click();
 
       // Click on Show Inventory on basic-service
       cy.get("#basic-service").contains("Show inventory").click();
@@ -310,20 +318,22 @@ describe("5 Compile reports", () => {
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 })
         .eq(0)
         .click();
-      cy.get(".pf-v5-c-menu__item").contains("More actions").click();
-      cy.get(".pf-v5-c-menu__item").contains("Delete").click();
+      cy.get('[role="menuitem"]').contains("More actions").click();
+      cy.get('[role="menuitem"]').contains("Delete").click();
 
       // confirm modal
-      cy.get(".pf-v5-c-form__actions").contains("Yes").click();
+      cy.get(".pf-v6-c-form__actions").contains("Yes").click();
 
       // expect resource to be deleted
-      cy.get(".pf-v5-c-table__toggle", { timeout: 25000 }).should(
+      cy.get(".pf-v6-c-table__toggle", { timeout: 25000 }).should(
         "have.length",
         1,
       );
 
       // go back to Compile Reports
-      cy.get(".pf-v5-c-nav__link").contains("Compile Reports").click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]')
+        .contains("Compile Reports")
+        .click();
 
       // Expect no new compiles to be visible. The last compile report is a failed one.
       cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
@@ -360,12 +370,12 @@ describe("5 Compile reports", () => {
       cy.visit("/console/");
 
       // click on test environment card
-      cy.get('[aria-label="Environment card"]')
-        .contains("lsm-frontend")
-        .click();
+      cy.get(`[aria-label="Select-environment-test"]`).click();
 
       // Go to the compile report page
-      cy.get(".pf-v5-c-nav__link").contains("Compile Reports").click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]')
+        .contains("Compile Reports")
+        .click();
 
       // Click on filter dropdown
       cy.get('[aria-label="StatusFilterInput"]').click();

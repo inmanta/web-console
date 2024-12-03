@@ -6,9 +6,9 @@
  *
  * @param {string} nameEnvironment
  */
-const clearEnvironment = (nameEnvironment = "lsm-frontend") => {
+const clearEnvironment = (nameEnvironment = "test") => {
   cy.visit("/console/");
-  cy.get('[aria-label="Environment card"]').contains(nameEnvironment).click();
+  cy.get(`[aria-label="Select-environment-${nameEnvironment}"]`).click();
   cy.url().then((url) => {
     const location = new URL(url);
     const id = location.searchParams.get("env");
@@ -47,9 +47,9 @@ const checkStatusCompile = (id) => {
  *
  * @param {string} nameEnvironment
  */
-const forceUpdateEnvironment = (nameEnvironment = "lsm-frontend") => {
+const forceUpdateEnvironment = (nameEnvironment = "test") => {
   cy.visit("/console/");
-  cy.get('[aria-label="Environment card"]').contains(nameEnvironment).click();
+  cy.get(`[aria-label="Select-environment-${nameEnvironment}"]`).click();
   cy.url().then((url) => {
     const location = new URL(url);
     const id = location.searchParams.get("env");
@@ -75,10 +75,10 @@ if (Cypress.env("edition") === "iso") {
     it("8.1 composer opens up has its default paning working", () => {
       // Select 'test' environment
       cy.visit("/console/");
-      cy.get('[aria-label="Environment card"]')
-        .contains("lsm-frontend")
+      cy.get(`[aria-label="Select-environment-test"]`).click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]')
+        .contains("Service Catalog")
         .click();
-      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
 
       // click on Show Inventory on embedded-entity-service-extra, expect no instances
       cy.get("#container-service", { timeout: 60000 })
@@ -146,10 +146,10 @@ if (Cypress.env("edition") === "iso") {
     it("8.2 composer create view can perform it's required functions and deploy created instance", () => {
       // Select 'test' environment
       cy.visit("/console/");
-      cy.get('[aria-label="Environment card"]')
-        .contains("lsm-frontend")
+      cy.get(`[aria-label="Select-environment-test"]`).click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]')
+        .contains("Service Catalog")
         .click();
-      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
 
       //Add parent instance
       // click on Show Inventory of parent-service, expect no instances
@@ -205,7 +205,9 @@ if (Cypress.env("edition") === "iso") {
         .should("have.text", "up", { timeout: 90000 });
 
       //Add child_service instance
-      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]')
+        .contains("Service Catalog")
+        .click();
       // click on Show Inventory of many-defaults service, expect no instances
       cy.get("#many-defaults", { timeout: 60000 })
         .contains("Show inventory")
@@ -252,7 +254,10 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[data-type="app.ServiceEntityBlock"')
         .contains("many-defaults")
         .click();
-      cy.get("button").contains("Remove").should("be.disabled");
+      cy.get("button")
+        .contains("span", "Remove")
+        .parent()
+        .should("be.disabled");
       cy.get("input").should("have.length", 21);
 
       //fill some of core attributes
@@ -290,11 +295,11 @@ if (Cypress.env("edition") === "iso") {
 
       //booleans
       cy.get('[aria-label="BooleanToggleInput-default_bool"]').within(() => {
-        cy.get(".pf-v5-c-switch").click();
+        cy.get(".pf-v6-c-switch").click();
       });
       cy.get('[aria-label="BooleanToggleInput-default_empty_bool"]').within(
         () => {
-          cy.get(".pf-v5-c-switch").click();
+          cy.get(".pf-v6-c-switch").click();
         },
       );
       cy.get("#default_nullable_bool-false").click();
@@ -316,7 +321,10 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[data-type="app.ServiceEntityBlock"')
         .contains("embedded")
         .click();
-      cy.get("button").contains("Remove").should("be.disabled");
+      cy.get("button")
+        .contains("span", "Remove")
+        .parent()
+        .should("be.disabled");
       cy.get("input").should("have.length", 21);
 
       //fill some of embedded attributes, they are exactly the same as core attributes so we need to check only one fully, as the logic is the same
@@ -368,8 +376,8 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[data-type="app.ServiceEntityBlock"')
         .contains("extra_embedded")
         .click();
-      cy.get("button").contains("Remove").should("be.enabled");
-      cy.get("button").contains("Edit").should("be.enabled");
+      cy.get("button").contains("span", "Remove").parent().should("be.enabled");
+      cy.get("button").contains("span", "Edit").parent().should("be.enabled");
       cy.get("input").should("have.length", 21);
 
       //remove extra_embedded instance to simulate that user added that by a mistake yet want to remove it
@@ -539,10 +547,10 @@ if (Cypress.env("edition") === "iso") {
     it("8.3 composer edit view can perform it's required functions and deploy edited instance", () => {
       // Select 'test' environment
       cy.visit("/console/");
-      cy.get('[aria-label="Environment card"]')
-        .contains("lsm-frontend")
+      cy.get(`[aria-label="Select-environment-test"]`).click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]')
+        .contains("Service Catalog")
         .click();
-      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
       // click on Show Inventory of many-defaults service, expect no instances
       cy.get("#many-defaults", { timeout: 60000 })
         .contains("Show inventory")
@@ -575,12 +583,18 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[data-testid="header-parent-service"]').should("have.length", 2);
 
       cy.get('[data-testid="header-parent-service"]').eq(0).click();
-      cy.get("button").contains("Remove").should("be.disabled");
-      cy.get("button").contains("Edit").should("be.disabled");
+      cy.get("button")
+        .contains("span", "Remove")
+        .parent()
+        .should("be.disabled");
+      cy.get("button").contains("span", "Edit").parent().should("be.disabled");
 
       cy.get('[data-testid="header-parent-service"]').eq(1).click();
-      cy.get("button").contains("Remove").should("be.disabled");
-      cy.get("button").contains("Edit").should("be.disabled");
+      cy.get("button")
+        .contains("span", "Remove")
+        .parent()
+        .should("be.disabled");
+      cy.get("button").contains("span", "Edit").parent().should("be.disabled");
 
       //edit some of core attributes
       cy.get('[data-type="app.ServiceEntityBlock"]')
@@ -594,7 +608,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="TextInput-default_int"]').type("{backspace}2");
       cy.get('[aria-label="TextInput-default_float"]').type("{backspace}2");
       cy.get('[aria-label="BooleanToggleInput-default_bool"]').within(() => {
-        cy.get(".pf-v5-c-switch").click();
+        cy.get(".pf-v6-c-switch").click();
       });
       cy.get('[aria-label="TextInput-default_empty_dict"]').type(
         '{selectAll}{backspace}{{}"test2":"value2"{}}',
@@ -605,7 +619,10 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[data-type="app.ServiceEntityBlock"]')
         .contains("embedded")
         .click();
-      cy.get("button").contains("Remove").should("be.disabled");
+      cy.get("button")
+        .contains("span", "Remove")
+        .parent()
+        .should("be.disabled");
       cy.get("button").contains("Edit").click();
 
       cy.get('[aria-label="TextInput-default_string"]').type(
@@ -614,7 +631,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="TextInput-default_int"]').type("{backspace}2");
       cy.get('[aria-label="TextInput-default_float"]').type("{backspace}2");
       cy.get('[aria-label="BooleanToggleInput-default_bool"]').within(() => {
-        cy.get(".pf-v5-c-switch").click();
+        cy.get(".pf-v6-c-switch").click();
       });
       cy.get('[aria-label="TextInput-default_empty_dict"]').type(
         '{selectAll}{backspace}{{}"test2":"value2"{}}',
@@ -708,10 +725,10 @@ if (Cypress.env("edition") === "iso") {
     it("8.4 composer edit view is able to add/remove instances relations", () => {
       // Select 'test' environment
       cy.visit("/console/");
-      cy.get('[aria-label="Environment card"]')
-        .contains("lsm-frontend")
+      cy.get(`[aria-label="Select-environment-test"]`).click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]')
+        .contains("Service Catalog")
         .click();
-      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
       // click on Show Inventory of many-defaults service, expect no instances
       cy.get("#child-service", { timeout: 60000 })
         .contains("Show inventory")
@@ -728,7 +745,10 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[data-type="app.ServiceEntityBlock"').should("have.length", 1);
 
       cy.get('[data-type="app.ServiceEntityBlock"]').click();
-      cy.get("button").contains("Remove").should("be.disabled");
+      cy.get("button")
+        .contains("span", "Remove")
+        .parent()
+        .should("be.disabled");
       cy.get("button").contains("Edit").click();
 
       cy.get('[aria-label="TextInput-name"]').type("test_child");

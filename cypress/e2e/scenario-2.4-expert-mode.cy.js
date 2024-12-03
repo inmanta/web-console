@@ -4,9 +4,9 @@
  *
  * @param {string} nameEnvironment
  */
-const clearEnvironment = (nameEnvironment = "lsm-frontend") => {
+const clearEnvironment = (nameEnvironment = "test") => {
   cy.visit("/console/");
-  cy.get('[aria-label="Environment card"]').contains(nameEnvironment).click();
+  cy.get(`[aria-label="Select-environment-${nameEnvironment}"]`).click();
   cy.url().then((url) => {
     const location = new URL(url);
     const id = location.searchParams.get("env");
@@ -45,9 +45,9 @@ const checkStatusCompile = (id) => {
  *
  * @param {string} nameEnvironment
  */
-const forceUpdateEnvironment = (nameEnvironment = "lsm-frontend") => {
+const forceUpdateEnvironment = (nameEnvironment = "test") => {
   cy.visit("/console/");
-  cy.get('[aria-label="Environment card"]').contains(nameEnvironment).click();
+  cy.get(`[aria-label="Select-environment-${nameEnvironment}"]`).click();
   cy.url().then((url) => {
     const location = new URL(url);
     const id = location.searchParams.get("env");
@@ -78,10 +78,10 @@ if (Cypress.env("edition") === "iso") {
         "/lsm/v1/service_inventory/basic-service?include_deployment_progress=True&limit=20&&sort=created_at.desc",
       ).as("GetServiceInventory");
 
-      cy.get('[aria-label="Environment card"]')
-        .contains("lsm-frontend")
+      cy.get(`[aria-label="Select-environment-test"]`).click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]')
+        .contains("Service Catalog")
         .click();
-      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
       cy.get("#basic-service").contains("Show inventory").click();
 
       // Make sure the call to get inventory has been executed
@@ -109,12 +109,14 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="ServiceInventory-Success"]').should("to.be.visible");
 
       // Go to the settings, then to the configuration tab
-      cy.get(".pf-v5-c-nav__item").contains("Settings").click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]')
+        .contains("Settings")
+        .click();
       cy.get("button").contains("Configuration").click();
 
       // Change enable_lsm_expert_mode
       cy.get('[aria-label="Row-enable_lsm_expert_mode"]')
-        .find(".pf-v5-c-switch")
+        .find(".pf-v6-c-switch")
         .click();
       cy.get('[data-testid="Warning"]').should("exist");
       cy.get('[aria-label="Row-enable_lsm_expert_mode"]')
@@ -127,18 +129,15 @@ if (Cypress.env("edition") === "iso") {
 
       // Go back to service inventory
       cy.visit("/console/");
-      cy.get('[aria-label="Environment card"]')
-        .contains("lsm-frontend")
+      cy.get(`[aria-label="Select-environment-test"]`).click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]')
+        .contains("Service Catalog")
         .click();
-      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
       cy.get("#basic-service").contains("Show inventory").click();
 
       // Go to the instance details
       cy.get('[aria-label="row actions toggle"]').click();
-      cy.get(".pf-v5-c-menu__item")
-        .first()
-        .contains("Instance Details")
-        .click();
+      cy.get('[role="menuitem"]').first().contains("Instance Details").click();
 
       // expect to find in the history the up state as last
       cy.get('[aria-label="History-Row"]', { timeout: 30000 }).should(
@@ -151,7 +150,7 @@ if (Cypress.env("edition") === "iso") {
 
       // force state to creating
       cy.get('[aria-label="Expert-Actions-Toggle"]').click();
-      cy.get(".pf-v5-c-menu__item").contains("creating").click();
+      cy.get('[role="menuitem"]').contains("creating").click();
 
       // add an operation to the force state action
       cy.get("#operation-select").select("clear candidate");
@@ -169,10 +168,10 @@ if (Cypress.env("edition") === "iso") {
 
     it("2.4.2 Edit instance attributes", () => {
       cy.visit("/console/");
-      cy.get('[aria-label="Environment card"]')
-        .contains("lsm-frontend")
+      cy.get(`[aria-label="Select-environment-test"]`).click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]')
+        .contains("Service Catalog")
         .click();
-      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
 
       // Expect to find one badge on the basic-service row.
       cy.get("#basic-service")
@@ -183,10 +182,7 @@ if (Cypress.env("edition") === "iso") {
 
       // Go to the instance details
       cy.get('[aria-label="row actions toggle"]').click();
-      cy.get(".pf-v5-c-menu__item")
-        .first()
-        .contains("Instance Details")
-        .click();
+      cy.get('[role="menuitem"]').contains("Instance Details").click();
 
       // Go to the attributes tab and select the JSON view
       cy.get('[aria-label="attributes-content"]').click();
@@ -196,7 +192,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get(".mtk20").contains("name").type("{home}{rightArrow}{del}");
 
       // expect the Force Update to be disabled
-      cy.get("button").contains("Force Update").should("be.disabled");
+      cy.get('[aria-label="Expert-Submit-Button"]').should("be.disabled");
 
       // Adjust the name property of the instance and make editor valid again
       cy.get(".mtk20").contains("ame").type("{home}{rightArrow}n");
@@ -209,7 +205,7 @@ if (Cypress.env("edition") === "iso") {
         );
 
       // confirm edit
-      cy.get("button").contains("Force Update").click();
+      cy.get('[aria-label="Expert-Submit-Button"]').click();
       cy.get("button").contains("Yes").click();
 
       // Go back to inventory using the breadcrumbs
@@ -224,10 +220,10 @@ if (Cypress.env("edition") === "iso") {
 
     it("2.4.3 Destroy previously created instance", () => {
       cy.visit("/console/");
-      cy.get('[aria-label="Environment card"]')
-        .contains("lsm-frontend")
+      cy.get(`[aria-label="Select-environment-test"]`).click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]')
+        .contains("Service Catalog")
         .click();
-      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
 
       // Expect to find one badge on the basic-service row.
       cy.get("#basic-service")
@@ -238,14 +234,11 @@ if (Cypress.env("edition") === "iso") {
 
       // Go to the instance details
       cy.get('[aria-label="row actions toggle"]').click();
-      cy.get(".pf-v5-c-menu__item")
-        .first()
-        .contains("Instance Details")
-        .click();
+      cy.get('[role="menuitem"]').first().contains("Instance Details").click();
 
       // Open Expert menu
       cy.get('[aria-label="Expert-Actions-Toggle"]').click();
-      cy.get(".pf-v5-c-menu__item").contains("Destroy").click();
+      cy.get('[role="menuitem"]').contains("Destroy").click();
 
       // confirm action
       cy.get("button").contains("Yes").click();
