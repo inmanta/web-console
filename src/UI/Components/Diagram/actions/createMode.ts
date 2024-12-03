@@ -107,7 +107,7 @@ const addSingleEntity = (
     isCore: false,
     isInEditMode: false,
     attributes,
-    isEmbedded: true,
+    isEmbeddedEntity: true,
     holderName,
   });
 

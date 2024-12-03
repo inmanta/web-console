@@ -586,7 +586,7 @@ describe("checkIfConnectionIsAllowed", () => {
       attributes: (
         InstanceAttributesA["circuits"] as InstanceAttributeModel[]
       )[0],
-      isEmbedded: true,
+      isEmbeddedEntity: true,
     });
 
     graph.addCells([serviceA, embeddedService]);
@@ -672,7 +672,7 @@ describe("checkIfConnectionIsAllowed", () => {
       attributes: (
         InstanceAttributesA["circuits"] as InstanceAttributeModel[]
       )[0],
-      isEmbedded: true,
+      isEmbeddedEntity: true,
       holderName: Service.a.name,
     });
 
@@ -712,7 +712,7 @@ describe("checkIfConnectionIsAllowed", () => {
       attributes: (
         InstanceAttributesA["circuits"] as InstanceAttributeModel[]
       )[0],
-      isEmbedded: true,
+      isEmbeddedEntity: true,
       holderName: "service_name_a",
     });
 

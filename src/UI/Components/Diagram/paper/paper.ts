@@ -298,7 +298,7 @@ export class ComposerPaper {
         }
 
         if (
-          elementCell.get("isEmbedded") &&
+          elementCell.get("isEmbeddedEntity") &&
           elementCell.get("embeddedTo") !== null &&
           elementCell.get("holderName") === connectingCellName
         ) {

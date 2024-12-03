@@ -46,14 +46,14 @@ const createHalo = (
 
     connectedElements.forEach((element) => {
       const elementAsService = element as ServiceEntityBlock;
-      const isEmbedded = element.get("isEmbedded");
+      const isEmbeddedEntity = element.get("isEmbeddedEntity");
       const isEmbeddedToThisCell =
         element.get("embeddedTo") === cellView.model.id;
 
       let didElementChange = false;
 
       //if one of those were embedded into other then update connectedElement as it's got indirectly edited
-      if (isEmbedded && isEmbeddedToThisCell) {
+      if (isEmbeddedEntity && isEmbeddedToThisCell) {
         element.set("embeddedTo", undefined);
         toggleLooseElement(paper.findViewByModel(element), EventActionEnum.ADD);
         didElementChange = true;

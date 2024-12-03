@@ -193,7 +193,7 @@ interface ComposerEntityOptions {
   attributes?: InstanceAttributeModel;
 
   /** Optional flag indicating if the entity is embedded. */
-  isEmbedded?: boolean;
+  isEmbeddedEntity?: boolean;
 
   /** Optional name of the holder of the entity. */
   holderName?: string;

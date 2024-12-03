@@ -15,7 +15,7 @@ import { Link, ServiceEntityBlock } from "../shapes";
  * @param {boolean} isCore defines whether created entity is main one in given View
  * @param {boolean} isInEditMode defines whether created entity is is representation of existing instance or new one
  * @param {InstanceAttributeModel} [attributes] of the entity
- * @param {boolean} [isEmbedded] defines whether created entity is embedded
+ * @param {boolean} [isEmbeddedEntity] defines whether created entity is embedded
  * @param {string} [holderName] - name of the entity to which it is embedded/connected
  * @param {string | dia.Cell.ID} [embeddedTo] - id of the entity/shape in which this shape is embedded
  * @param {boolean} [isBlockedFromEditing] - boolean value determining if the instance is blocked from editing
@@ -30,7 +30,7 @@ export function createComposerEntity({
   isCore,
   isInEditMode,
   attributes,
-  isEmbedded = false,
+  isEmbeddedEntity = false,
   holderName = "",
   embeddedTo,
   isBlockedFromEditing = false,
@@ -48,10 +48,10 @@ export function createComposerEntity({
     instanceAsTable.set("id", id);
   }
 
-  if (isEmbedded) {
+  if (isEmbeddedEntity) {
     instanceAsTable.setTabColor(EntityType.EMBEDDED);
     instanceAsTable.set("embeddedTo", embeddedTo);
-    instanceAsTable.set("isEmbedded", isEmbedded);
+    instanceAsTable.set("isEmbeddedEntity", isEmbeddedEntity);
     instanceAsTable.set("holderName", holderName);
   } else if (isCore) {
     instanceAsTable.set("isCore", isCore);
