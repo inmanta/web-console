@@ -9,7 +9,7 @@ import {
   LabelLinkView,
 } from "@/UI/Components/Diagram/interfaces";
 import { childModel, parentModel } from "../Mocks";
-import { createComposerEntity } from "../actions";
+import { createComposerEntity } from "../actions/general";
 import { ComposerPaper } from "../paper";
 import { Link } from "../shapes";
 import { defineObjectsForJointJS } from "../testSetup";

@@ -2,7 +2,7 @@ import { dia, ui } from "@inmanta/rappid";
 import { global_palette_white } from "@patternfly/react-tokens";
 import { ServiceModel } from "@/Core";
 import { Inventories } from "@/Data/Managers/V2/GETTERS/GetInventoryList";
-import { createComposerEntity } from "../actions";
+import { createComposerEntity } from "../actions/general";
 import { toggleDisabledStencil, createStencilElement } from "./helpers";
 
 const GRID_SIZE = 8;
