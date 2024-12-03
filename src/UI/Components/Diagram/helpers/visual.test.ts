@@ -20,7 +20,9 @@ import {
   showLinkTools,
 } from "./visual";
 
-defineObjectsForJointJS();
+beforeAll(() => {
+  defineObjectsForJointJS();
+});
 
 describe("updateLabelPosition", () => {
   /**

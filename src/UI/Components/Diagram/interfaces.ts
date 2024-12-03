@@ -155,7 +155,7 @@ interface StencilState {
   [key: string]: {
     min: ParsedNumber | undefined | null;
     max: ParsedNumber | undefined | null;
-    current: number;
+    currentAmount: number;
   };
 }
 

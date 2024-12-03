@@ -31,7 +31,7 @@ describe("addDefaultEntities", () => {
     ).toMatchObject({
       name: "child_container",
       id: expect.any(String),
-      relations: [{ current: 0, min: 1, name: "parent-service" }],
+      relations: [{ currentAmount: 0, min: 1, name: "parent-service" }],
     }); //add relations to Tracker
 
     //assert the arguments of the second call - calls is array of the arguments of each call

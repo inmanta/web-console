@@ -1,16 +1,26 @@
-import { ServiceModel } from "@/Core";
+import { dia } from "@inmanta/rappid";
+import { InstanceAttributeModel, ServiceModel } from "@/Core";
 import { Service } from "@/Test";
+import {
+  a as InstanceAttributesA,
+  b as InstanceAttributesB,
+} from "@/Test/Data/ServiceInstance/Attributes";
 import {
   ConnectionRules,
   EmbeddedRule,
   InterServiceRule,
   TypeEnum,
 } from "@/UI/Components/Diagram/interfaces";
-import { ServiceEntityBlock } from "../shapes";
+import { createComposerEntity } from "../actions/general";
+import { Link, ServiceEntityBlock } from "../shapes";
+import { defineObjectsForJointJS } from "../testSetup";
 import {
   createConnectionRules,
   checkWhetherConnectionRulesAreExhausted,
+  checkIfConnectionIsAllowed,
 } from "./connections";
+
+defineObjectsForJointJS();
 
 describe("createConnectionRules", () => {
   const rulesForSecondTest = {
@@ -551,5 +561,176 @@ describe("checkWhetherConnectionRulesAreExhausted", () => {
         false,
       ),
     ).toBeFalsy();
+  });
+});
+
+describe("checkIfConnectionIsAllowed", () => {
+  const serviceA = createComposerEntity({
+    serviceModel: Service.a,
+    isCore: false,
+    isInEditMode: false,
+    attributes: InstanceAttributesA,
+  });
+
+  it("WHEN one element has rule describing other THEN return true", () => {
+    const rules = createConnectionRules([Service.a], {});
+    const graph = new dia.Graph();
+    const paper = new dia.Paper({
+      model: graph,
+    });
+
+    const embeddedService = createComposerEntity({
+      serviceModel: Service.a.embedded_entities[0],
+      isCore: false,
+      isInEditMode: false,
+      attributes: (
+        InstanceAttributesA["circuits"] as InstanceAttributeModel[]
+      )[0],
+      isEmbedded: true,
+    });
+
+    graph.addCells([serviceA, embeddedService]);
+
+    const result = checkIfConnectionIsAllowed(
+      graph,
+      paper.findViewByModel(serviceA),
+      paper.findViewByModel(embeddedService),
+      rules,
+    );
+
+    expect(result).toBeTruthy();
+  });
+
+  it("WHEN one element has not rule describing other THEN returns false", () => {
+    const rules = createConnectionRules([Service.a, Service.b], {});
+    const graph = new dia.Graph();
+    const paper = new dia.Paper({
+      model: graph,
+    });
+
+    const independendService = createComposerEntity({
+      serviceModel: Service.b,
+      isCore: false,
+      isInEditMode: false,
+      attributes: InstanceAttributesB,
+    });
+
+    graph.addCells([serviceA, independendService]);
+
+    const result = checkIfConnectionIsAllowed(
+      graph,
+      paper.findViewByModel(serviceA),
+      paper.findViewByModel(independendService),
+      rules,
+    );
+
+    expect(result).toBeFalsy();
+  });
+
+  it("WHEN one element has rule describing other, and the other is blocked from editing THEN return true", () => {
+    const rules = createConnectionRules([Service.a], {});
+    const graph = new dia.Graph();
+    const paper = new dia.Paper({
+      model: graph,
+    });
+
+    const blockedService = createComposerEntity({
+      serviceModel: Service.a.embedded_entities[0],
+      isCore: false,
+      isInEditMode: false,
+      attributes: (
+        InstanceAttributesA["circuits"] as InstanceAttributeModel[]
+      )[0],
+      isBlockedFromEditing: true,
+    });
+
+    graph.addCells([serviceA, blockedService]);
+
+    const result = checkIfConnectionIsAllowed(
+      graph,
+      paper.findViewByModel(serviceA),
+      paper.findViewByModel(blockedService),
+      rules,
+    );
+
+    expect(result).toBeTruthy();
+  });
+
+  it("WHEN one element has rule describing other, but is blocked from editing THEN return false", () => {
+    const rules = createConnectionRules([Service.a], {});
+    const graph = new dia.Graph();
+    const paper = new dia.Paper({
+      model: graph,
+    });
+
+    serviceA.set("isBlockedFromEditing", true);
+
+    const serviceB = createComposerEntity({
+      serviceModel: Service.a.embedded_entities[0],
+      isCore: false,
+      isInEditMode: false,
+      attributes: (
+        InstanceAttributesA["circuits"] as InstanceAttributeModel[]
+      )[0],
+      isEmbedded: true,
+      holderName: Service.a.name,
+    });
+
+    graph.addCells([serviceA, serviceB]);
+
+    const result = checkIfConnectionIsAllowed(
+      graph,
+      paper.findViewByModel(serviceA),
+      paper.findViewByModel(serviceB),
+      rules,
+    );
+
+    expect(result).toBeFalsy();
+
+    //set back to default
+    serviceA.set("isBlockedFromEditing", false);
+  });
+
+  it("WHEN one element has rule describing other, but the other is and embedded entity already connected to parent THEN return false", () => {
+    const rules = createConnectionRules([Service.a], {});
+    const graph = new dia.Graph();
+    const paper = new dia.Paper({
+      model: graph,
+    });
+
+    const connectedCoreEntity = createComposerEntity({
+      serviceModel: Service.a,
+      isCore: true,
+      isInEditMode: false,
+      attributes: InstanceAttributesA,
+    });
+
+    const connectedEmbeddedEntity = createComposerEntity({
+      serviceModel: Service.a.embedded_entities[0],
+      isCore: true,
+      isInEditMode: false,
+      attributes: (
+        InstanceAttributesA["circuits"] as InstanceAttributeModel[]
+      )[0],
+      isEmbedded: true,
+      holderName: "service_name_a",
+    });
+
+    graph.addCells([serviceA, connectedCoreEntity, connectedEmbeddedEntity]);
+
+    const link = new Link();
+
+    link.source(connectedCoreEntity);
+    link.target(connectedEmbeddedEntity);
+    link.addTo(graph);
+
+    const result = checkIfConnectionIsAllowed(
+      graph,
+      paper.findViewByModel(serviceA),
+      paper.findViewByModel(connectedEmbeddedEntity),
+      rules,
+    );
+
+    expect(result).toBeFalsy();
   });
 });
