@@ -114,7 +114,6 @@ test("Given environments overview When rendering environment with icon Then the 
 
   render(component);
 
-  screen.logTestingPlaygroundURL();
   const cardWithIcon = screen.getByRole("img", {
     name: "test-env1-environment-logo",
   });
