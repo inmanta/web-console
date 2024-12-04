@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Alert, Panel, TextContent } from "@patternfly/react-core";
+import { Alert, Panel, Content } from "@patternfly/react-core";
 import { InfoAltIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { words } from "@/UI/words";
@@ -74,7 +74,7 @@ const MissingRelationsForGivenCell: React.FC<Props> = ({ entity }) => {
   const { name, relations } = entity;
 
   return relations.map((relation, index) => (
-    <TextContent
+    <Content
       key={`missingRelationsParagraph-${name}_${relation.name}_${index}`}
       aria-label={`missingRelationsParagraph-${name}_${relation.name}_${index}`}
     >
@@ -83,6 +83,6 @@ const MissingRelationsForGivenCell: React.FC<Props> = ({ entity }) => {
         Number(relation.min),
         relation.name,
       )}
-    </TextContent>
+    </Content>
   ));
 };
