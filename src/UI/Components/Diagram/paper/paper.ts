@@ -1,17 +1,14 @@
 import { dia, shapes } from "@inmanta/rappid";
 import { anchorNamespace } from "../anchors";
 import createHalo from "../halo";
-import {
-  checkIfConnectionIsAllowed,
-  showLinkTools,
-  toggleLooseElement,
-} from "../helpers";
+import { checkIfConnectionIsAllowed } from "../helpers";
+import { showLinkTools, toggleLooseElement } from "../helpers";
 import collapseButton from "../icons/collapse-icon.svg";
 import expandButton from "../icons/expand-icon.svg";
 import {
   ActionEnum,
   ConnectionRules,
-  EmbeddedEventEnum,
+  EventActionEnum,
   TypeEnum,
 } from "../interfaces";
 import { routerNamespace } from "../routers";
@@ -279,26 +276,36 @@ export class ComposerPaper {
             );
             model.set("isRelationshipConnection", true);
             document.dispatchEvent(
+              new CustomEvent("updateInterServiceRelations", {
+                detail: {
+                  action: EventActionEnum.ADD,
+                  name: cellConnectionRule.name,
+                  id: elementCell.id,
+                },
+              }),
+            );
+
+            document.dispatchEvent(
               new CustomEvent("updateServiceOrderItems", {
-                detail: { cell: sourceCell, action: ActionEnum.UPDATE },
+                detail: { cell: targetCell, action: ActionEnum.UPDATE },
               }),
             );
             toggleLooseElement(
               this.paper.findViewByModel(connectingCell),
-              EmbeddedEventEnum.REMOVE,
+              EventActionEnum.REMOVE,
             );
           }
         }
 
         if (
-          elementCell.get("isEmbedded") &&
+          elementCell.get("isEmbeddedEntity") &&
           elementCell.get("embeddedTo") !== null &&
           elementCell.get("holderName") === connectingCellName
         ) {
           elementCell.set("embeddedTo", connectingCell.id);
           toggleLooseElement(
             this.paper.findViewByModel(elementCell),
-            EmbeddedEventEnum.REMOVE,
+            EventActionEnum.REMOVE,
           );
 
           document.dispatchEvent(

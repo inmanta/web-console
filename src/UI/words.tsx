@@ -218,16 +218,30 @@ const dict = {
   "instanceComposer.orderDescription": "Requested with Instance Composer",
   "instanceComposer.errorMessage.missingModel":
     "The instance attribute model is missing",
+  "instanceComposer.errorMessage.coordinatesRequest":
+    "Failed to save instance coordinates on deploy.",
   "instanceComposer.editButton": "Edit in Composer",
   "instanceComposer.showButton": "Show in Composer",
   "instanceComposer.formModal.placeholder": "Choose a Service",
   "instanceComposer.formModal.create.title": "Add Entity",
   "instanceComposer.formModal.edit.title": "Edit Entity",
-  "instanceComposer.formModal.noAttributes": "There are no attributes to edit.",
+  "instanceComposer.formModal.noAttributes":
+    "There are no attribute fields to display.",
+  "instanceComposer.formModal.noElementSelected.title": "No details available",
+  "instanceComposer.formModal.noElementSelected":
+    "Select an element to display the form.",
   "instanceComposer.success": "The request got sent successfully",
   "instanceComposer.success.title": "Instance composed successfully",
   "instanceComposer.failed.title": "Instance Composing failed",
   "instanceComposer.dictModal": (valueName: string) => `Values of ${valueName}`,
+  "instanceComposer.validation.title": (amount: number) =>
+    `Errors found: ${amount}`,
+  "instanceComposer.missingRelations": (
+    name: string,
+    amount: number,
+    relations: string,
+  ) =>
+    `Expected at least ${amount} ${relations} inter-service relation(s) for ${name}`,
   "instanceComposer.disabled":
     "Your license doesn't give you access to the Instance Composer, please contact support for more details.",
   "instanceComposer.title": "Instance Composer",
@@ -251,7 +265,7 @@ const dict = {
   "instanceDetails.page.noData.errorTitle": "No Data",
   "instanceDetails.history.title": "History",
   "instanceDetails.history.table.version": "Version",
-  "instanceDetails.history.table.date": "Date",
+  "instanceDetails.history.table.timestamp": "Timestamp",
   "instanceDetails.history.table.status": "Status",
   "instanceDetails.history.error": "Error loading Version History",
   "instanceDetails.details.title": "Details",
@@ -301,7 +315,7 @@ const dict = {
   "instanceDetails.state.noOperation": "no operation",
   "instanceDetails.operation.selectLabel": "Select an operation",
   "instanceDetails.events.column.eventType": "Event type",
-  "instanceDetails.events.column.date": "Date",
+  "instanceDetails.events.column.timestamp": "Timestamp",
   "instanceDetails.events.column.sourceState": "Source state",
   "instanceDetails.events.column.destinationState": "Destination state",
   "instanceDetails.events.column.report": "Compile Report",

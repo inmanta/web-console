@@ -6,8 +6,8 @@ import {
   FieldCreator,
   createFormState,
 } from "../../ServiceInstanceForm";
-import { createComposerEntity } from "../actions";
-import { ActionEnum, EmbeddedEventEnum } from "../interfaces";
+import { createComposerEntity } from "../actions/general";
+import { ActionEnum, EventActionEnum } from "../interfaces";
 import { transformEmbeddedToStencilElements } from "./helpers";
 
 /**
@@ -52,15 +52,15 @@ export class InstanceStencilTab {
           isCore: false,
           isInEditMode: false,
           attributes: createFormState(fields),
-          isEmbedded: true,
+          isEmbeddedEntity: true,
           holderName: cell.get("holderName"),
         });
       },
-      dragEndClone: (el) => el.clone().set("items", el.get("items")), //cloned element loses key value pairs, so we need to set them again
+      dragEndClone: (el) =>
+        el.clone().set("items", el.get("items")).set("id", el.get("id")), //cloned element loses key value pairs, so we need to set them again
       layout: {
         columns: 1,
         rowHeight: "compact",
-        rowGap: 10,
         horizontalAlign: "left",
         marginY: 10,
         // reset defaults
@@ -76,12 +76,12 @@ export class InstanceStencilTab {
     this.stencil.load(transformEmbeddedToStencilElements(service));
 
     this.stencil.on("element:drop", (elementView) => {
-      if (elementView.model.get("isEmbedded")) {
+      if (elementView.model.get("isEmbeddedEntity")) {
         document.dispatchEvent(
           new CustomEvent("updateStencil", {
             detail: {
               name: elementView.model.get("entityName"),
-              action: EmbeddedEventEnum.ADD,
+              action: EventActionEnum.ADD,
             },
           }),
         );

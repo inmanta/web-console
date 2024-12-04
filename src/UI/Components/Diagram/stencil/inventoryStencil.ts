@@ -2,8 +2,8 @@ import { dia, ui } from "@inmanta/rappid";
 import { t_global_text_color_inverse } from "@patternfly/react-tokens";
 import { ServiceModel } from "@/Core";
 import { Inventories } from "@/Data/Managers/V2/GETTERS/GetInventoryList";
-import { createComposerEntity } from "../actions";
-import { createStencilElement } from "./helpers";
+import { createComposerEntity } from "../actions/general";
+import { toggleDisabledStencil, createStencilElement } from "./helpers";
 
 const GRID_SIZE = 8;
 const PADDING_S = GRID_SIZE;
@@ -41,7 +41,7 @@ export class InventoryStencilTab {
       }
 
       return (groups[serviceName] = serviceInventories[serviceName].map(
-        (instance) => {
+        (instance, index) => {
           const attributes =
             instance.candidate_attributes ||
             instance.active_attributes ||
@@ -52,10 +52,16 @@ export class InventoryStencilTab {
             : instance.id;
 
           //add the instance id to the attributes object, to then pass it to the actual object on canvas
-          return createStencilElement(displayName, serviceModel, {
-            ...attributes,
-            id: instance.id,
-          });
+          return createStencilElement(
+            displayName,
+            serviceModel,
+            {
+              ...attributes,
+              id: instance.id,
+            },
+            false,
+            index === 0,
+          );
         },
       ));
     });
@@ -96,11 +102,11 @@ export class InventoryStencilTab {
 
         return entity;
       },
-      dragEndClone: (el) => el.clone().set("id", el.get("id")),
+      dragEndClone: (el) =>
+        el.clone().set("id", el.get("id")).set("items", el.get("items")), //cloned element loses key value pairs, so we need to set them again
       layout: {
         columns: 1,
         rowHeight: "compact",
-        rowGap: 10,
         marginY: 10,
         horizontalAlign: "left",
         // reset defaults
@@ -119,28 +125,11 @@ export class InventoryStencilTab {
     this.stencil.freeze(); //freeze by default as this tab is not active on init
 
     this.stencil.on("element:drop", (elementView) => {
-      const elements = [
-        {
-          selector: `.body_${elementView.model.get("stencilName")}`,
-          className: "stencil_accent-disabled",
-        },
-        {
-          selector: `.bodyTwo_${elementView.model.get("stencilName")}`,
-          className: "stencil_body-disabled",
-        },
-        {
-          selector: `.text_${elementView.model.get("stencilName")}`,
-          className: "stencil_text-disabled",
-        },
-      ];
+      const stencilName = elementView.model.get("stencilName");
 
-      elements.forEach(({ selector, className }) => {
-        const element = document.querySelector(selector);
-
-        if (element) {
-          element.classList.add(className);
-        }
-      });
+      if (stencilName) {
+        toggleDisabledStencil(stencilName, true);
+      }
     });
   }
 }

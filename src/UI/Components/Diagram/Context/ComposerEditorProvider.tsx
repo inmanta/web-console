@@ -1,10 +1,12 @@
 import React, { useContext, useEffect, useMemo, useState } from "react";
+import { Flex, FlexItem } from "@patternfly/react-core";
 import { useGetAllServiceModels } from "@/Data/Managers/V2/GETTERS/GetAllServiceModels";
 import { useGetInstanceWithRelations } from "@/Data/Managers/V2/GETTERS/GetInstanceWithRelations";
 import { useGetInventoryList } from "@/Data/Managers/V2/GETTERS/GetInventoryList";
 import { DependencyContext, words } from "@/UI";
-import { ErrorView, LoadingView } from "@/UI/Components";
+import { ErrorView, LoadingView, PageContainer } from "@/UI/Components";
 import { Canvas } from "@/UI/Components/Diagram/Canvas";
+import { ComposerActions } from "../components";
 import { findInterServiceRelations } from "../helpers";
 import { CanvasProvider } from "./CanvasProvider";
 import { InstanceComposerContext } from "./Context";
@@ -96,17 +98,19 @@ export const ComposerEditorProvider: React.FC<Props> = ({
         data-testid="ErrorView"
         title={words("error")}
         message={words("error.general")(serviceModelsQuery.error.message)}
-        aria-label="ComposerEditor-serviceModelsQuery_failed"
+        ariaLabel="ComposerEditorProvider-ServiceModelsQuery_failed"
         retry={serviceModelsQuery.refetch}
       />
     );
   }
+
   if (instanceWithRelationsQuery.isError) {
     const message = words("error.general")(
       instanceWithRelationsQuery.error.message,
     );
     const retry = instanceWithRelationsQuery.refetch;
-    const ariaLabel = "ComposerEditor-instanceWithRelationsQuery_failed";
+    const ariaLabel =
+      "ComposerEditorProvider-InstanceWithRelationsQuery_failed";
 
     return renderErrorView(message, ariaLabel, retry);
   }
@@ -116,37 +120,59 @@ export const ComposerEditorProvider: React.FC<Props> = ({
       relatedInventoriesQuery.error.message,
     );
     const retry = relatedInventoriesQuery.refetch;
-    const ariaLabel = "ComposerEditor-relatedInventoriesQuery_failed";
+    const ariaLabel = "ComposerEditorProvider-RelatedInventoriesQuery_failed";
 
     return renderErrorView(message, ariaLabel, retry);
   }
 
-  if (serviceModelsQuery.isSuccess && instanceWithRelationsQuery.isSuccess) {
-    if (!mainService) {
-      const message = words("instanceComposer.noServiceModel.errorMessage")(
-        serviceName,
-      );
-      const retry = serviceModelsQuery.refetch;
-      const ariaLabel = "ComposerEditor-NoMainService_failed";
+  if (serviceModelsQuery.isSuccess && !mainService) {
+    const message = words("instanceComposer.noServiceModel.errorMessage")(
+      serviceName,
+    );
+    const retry = serviceModelsQuery.refetch;
+    const ariaLabel = "ComposerEditorProvider-NoServiceModel_failed";
 
-      return renderErrorView(message, ariaLabel, retry);
-    }
+    return renderErrorView(message, ariaLabel, retry);
+  }
 
+  if (
+    serviceModelsQuery.isSuccess &&
+    instanceWithRelationsQuery.isSuccess &&
+    mainService
+  ) {
+    // there is no possibility to instanceWithRelationsQuery be in success state without mainService, and there is assertion above the if services are fetch but there is no mainService to display errorView
     return (
       <InstanceComposerContext.Provider
         value={{
-          mainService,
+          mainService: mainService,
           serviceModels: serviceModelsQuery.data,
           instance: instanceWithRelationsQuery.data,
           relatedInventoriesQuery: relatedInventoriesQuery,
         }}
       >
         <CanvasProvider>
-          <Canvas editable={editable} />
+          <PageContainer
+            pageTitle={
+              <Flex justifyContent={{ default: "justifyContentSpaceBetween" }}>
+                <FlexItem>
+                  {words(
+                    editable
+                      ? "instanceComposer.title.edit"
+                      : "instanceComposer.title.view",
+                  )}
+                </FlexItem>
+                <FlexItem>
+                  <ComposerActions serviceName={serviceName} editable />
+                </FlexItem>
+              </Flex>
+            }
+          >
+            <Canvas editable={editable} />
+          </PageContainer>
         </CanvasProvider>
       </InstanceComposerContext.Provider>
     );
   }
 
-  return <LoadingView aria-label="ComposerEditor-loading" />;
+  return <LoadingView ariaLabel="ComposerEditorProvider-Loading" />;
 };

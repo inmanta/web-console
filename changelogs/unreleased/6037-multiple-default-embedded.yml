@@ -1,0 +1,6 @@
+description: Instance composer will render all required by default embedded entities in the canvas
+issue-nr: 6037
+change-type: patch
+destination-branches: [master]
+sections:
+  minor-improvement: "{{description}}"

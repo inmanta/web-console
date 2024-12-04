@@ -1,13 +1,27 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Button, Flex, FlexItem, Content, Title } from "@patternfly/react-core";
+import {
+  Content,
+  EmptyState,
+  EmptyStateBody,
+  EmptyStateVariant,
+  Flex,
+  FlexItem,
+  Title,
+} from "@patternfly/react-core";
+import { CubesIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { Field, InstanceAttributeModel, ServiceModel } from "@/Core";
 import { sanitizeAttributes } from "@/Data";
 import { words } from "@/UI/words";
 import { CanvasContext, InstanceComposerContext } from "../Context/Context";
 import { updateServiceOrderItems } from "../helpers";
-import { ActionEnum, EmbeddedEventEnum } from "../interfaces";
+import { ActionEnum, EventActionEnum } from "../interfaces";
+import { toggleDisabledStencil } from "../stencil/helpers";
 import { EntityForm } from "./EntityForm";
+
+interface Props {
+  editable: boolean;
+}
 
 /**
  * `RightSidebar` is a React functional component that renders a sidebar for editing and removing entities.
@@ -21,17 +35,42 @@ import { EntityForm } from "./EntityForm";
  * - Embedded entities are removed from the canvas(if service model allows it), and will be erased from the service instance.
  * - Inter-service relation entities are removed from the canvas(if service model allows it), but won't be deleted from the environment.
  *
+ * @props {Props} props - The properties passed to the component
+ * @prop {boolean} editable - A flag indication if the composer is editable
+ *
  * @returns {React.FC} The RightSidebar component.
  */
-export const RightSidebar: React.FC = () => {
+export const RightSidebar: React.FC<Props> = ({ editable }) => {
   const { cellToEdit, diagramHandlers, setServiceOrderItems, stencilState } =
     useContext(CanvasContext);
   const { mainService } = useContext(InstanceComposerContext);
   const [description, setDescription] = useState<string | null>(null);
   const [isRemovable, setIsRemovable] = useState(false);
-  const [isFormOpen, setIsFormOpen] = useState(false);
   const [model, setModel] = useState<ServiceModel | null>(null);
+  const [isInterServiceRelation, setIsInterServiceRelation] = useState(false);
   const [attributes, setAttributes] = useState<InstanceAttributeModel>({});
+
+  /**
+   * Handles the save action for the form.
+   * Sanitizes the form attributes and updates the entity in the diagram.
+   * Updates the service order items with the new shape and closes the form.
+   *
+   * @param {Field[]} fields - The fields of the form.
+   * @param {InstanceAttributeModel} formState - The current state of the form.
+   */
+  const onSave = (fields: Field[], formState: InstanceAttributeModel) => {
+    if (cellToEdit && diagramHandlers && model) {
+      const sanitizedAttrs = sanitizeAttributes(fields, formState);
+
+      const shape = diagramHandlers.editEntity(cellToEdit, model, formState);
+
+      shape.set("sanitizedAttrs", sanitizedAttrs);
+
+      setServiceOrderItems((prev) =>
+        updateServiceOrderItems(shape, ActionEnum.UPDATE, prev),
+      );
+    }
+  };
 
   /**
    * Handles the removal of a cell.
@@ -51,15 +90,15 @@ export const RightSidebar: React.FC = () => {
 
     //logic of deleting cell stayed in the halo which triggers the event
     cellToEdit.trigger("action:delete");
-    const isEmbedded = model.get("isEmbedded");
+    const isEmbeddedEntity = model.get("isEmbeddedEntity");
 
-    if (isEmbedded) {
+    if (isEmbeddedEntity) {
       //dispatch event instead of calling function directly from context
       document.dispatchEvent(
         new CustomEvent("updateStencil", {
           detail: {
             name: model.get("entityName"),
-            action: EmbeddedEventEnum.REMOVE,
+            action: EventActionEnum.REMOVE,
           },
         }),
       );
@@ -69,78 +108,11 @@ export const RightSidebar: React.FC = () => {
     const stencilName = model.get("stencilName");
 
     if (stencilName) {
-      //enable Inventory Stencil element for inter-service relation instance
-      const elements = [
-        {
-          selector: `.body_${stencilName}`,
-          className: "stencil_accent-disabled",
-        },
-        {
-          selector: `.bodyTwo_${stencilName}`,
-          className: "stencil_body-disabled",
-        },
-        {
-          selector: `.text_${stencilName}`,
-          className: "stencil_text-disabled",
-        },
-      ];
-
-      elements.forEach(({ selector, className }) => {
-        const element = document.querySelector(selector);
-
-        if (element) {
-          element.classList.remove(className);
-        }
-      });
+      toggleDisabledStencil(stencilName, false);
     }
-  };
-
-  /**
-   * Handles the edit action for the form.
-   * Opens the form by setting the form open state to true.
-   */
-  const onEdit = (): void => {
-    setIsFormOpen(true);
-  };
-
-  /**
-   * Handles the cancel action for the form.
-   * Closes the form by setting the form open state to false.
-   */
-  const onCancel = (): void => {
-    setIsFormOpen(false);
-  };
-
-  /**
-   * Handles the save action for the form.
-   * Sanitizes the form attributes and updates the entity in the diagram.
-   * Updates the service order items with the new shape and closes the form.
-   *
-   * @param {Field[]} fields - The fields of the form.
-   * @param {InstanceAttributeModel} formState - The current state of the form.
-   */
-  const onSave = (fields: Field[], formState: InstanceAttributeModel) => {
-    if (cellToEdit && diagramHandlers && model) {
-      const sanitizedAttrs = sanitizeAttributes(fields, formState);
-
-      if (cellToEdit) {
-        const shape = diagramHandlers.editEntity(cellToEdit, model, formState);
-
-        shape.set("sanitizedAttrs", sanitizedAttrs);
-
-        setServiceOrderItems((prev) =>
-          updateServiceOrderItems(shape, ActionEnum.UPDATE, prev),
-        );
-      }
-    }
-    setIsFormOpen(false);
   };
 
   useEffect(() => {
-    if (isFormOpen) {
-      setIsFormOpen(false); //as sidebar is always open, we need to close form when we click on another entity
-    }
-
     if (!cellToEdit) {
       setDescription(mainService.description || null);
 
@@ -150,6 +122,7 @@ export const RightSidebar: React.FC = () => {
     const { model } = cellToEdit;
     const serviceModel = model.get("serviceModel");
     const entityName = model.get("entityName");
+    const stencilName = model.get("stencilName");
     const instanceAttributes = model.get("instanceAttributes");
 
     if (serviceModel) {
@@ -160,6 +133,8 @@ export const RightSidebar: React.FC = () => {
     if (instanceAttributes) {
       setAttributes(instanceAttributes);
     }
+
+    setIsInterServiceRelation(!!stencilName);
 
     setIsRemovable(() => {
       const isCellCore = model.get("isCore");
@@ -180,7 +155,7 @@ export const RightSidebar: React.FC = () => {
       const lowerLimit = entityState.min;
 
       const isLowerLimitReached =
-        lowerLimit && entityState.current === lowerLimit;
+        lowerLimit && entityState.currentAmount <= lowerLimit;
 
       return !isCellCore && canBeRemoved && !isLowerLimitReached;
     });
@@ -189,7 +164,7 @@ export const RightSidebar: React.FC = () => {
 
   return (
     <Wrapper>
-      <StyledFlex
+      <Flex
         direction={{ default: "column" }}
         spaceItems={{ default: "spaceItemsSm" }}
         justifyContent={{ default: "justifyContentSpaceBetween" }}
@@ -208,44 +183,37 @@ export const RightSidebar: React.FC = () => {
             </FlexItem>
           )}
         </Flex>
-        {!!cellToEdit && !!model && (
+        {!!cellToEdit && !!model ? (
           <EntityForm
             serviceModel={model}
             isEdited={cellToEdit.model.get("isInEditMode")}
             initialState={attributes}
-            isForDisplay={!isFormOpen}
             onSave={onSave}
-            onCancel={onCancel}
+            isDisabled={!editable || isInterServiceRelation}
+            isRemovable={isRemovable}
+            onRemove={onRemove}
+            showButtons={editable}
           />
-        )}
-
-        {!isFormOpen && (
-          <Flex justifyContent={{ default: "justifyContentCenter" }}>
-            <FlexItem>
-              <Button
-                variant="danger"
-                width={200}
-                onClick={onRemove}
-                isDisabled={!isRemovable || !cellToEdit}
-              >
-                {words("remove")}
-              </Button>
-            </FlexItem>
-            <FlexItem>
-              <Button
-                variant="primary"
-                width={200}
-                onClick={onEdit}
-                isDisabled={
-                  !cellToEdit || cellToEdit.model.get("isBlockedFromEditing")
-                }
-              >
-                {words("edit")}
-              </Button>
-            </FlexItem>
+        ) : (
+          <Flex
+            flex={{ default: "flex_1" }}
+            alignItems={{ default: "alignItemsCenter" }}
+          >
+            <EmptyState
+              headingLevel="h4"
+              variant={EmptyStateVariant.sm}
+              icon={CubesIcon}
+              titleText={words(
+                "instanceComposer.formModal.noElementSelected.title",
+              )}
+            >
+              <EmptyStateBody>
+                {words("instanceComposer.formModal.noElementSelected")}
+              </EmptyStateBody>
+            </EmptyState>
           </Flex>
         )}
-      </StyledFlex>
+      </Flex>
     </Wrapper>
   );
 };
@@ -263,8 +231,4 @@ const Wrapper = styled.div`
     -0.1rem 0.1rem 0.15rem var(--pf-t--global--box-shadow--color--100)
   );
   overflow: auto;
-`;
-
-const StyledFlex = styled(Flex)`
-  min-height: 100%;
 `;

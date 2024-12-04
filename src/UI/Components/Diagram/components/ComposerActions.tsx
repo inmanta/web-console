@@ -41,8 +41,13 @@ export const ComposerActions: React.FC<Props> = ({ serviceName, editable }) => {
   const { serviceModels, mainService, instance } = useContext(
     InstanceComposerContext,
   );
-  const { serviceOrderItems, isDirty, looseElement, diagramHandlers } =
-    useContext(CanvasContext);
+  const {
+    serviceOrderItems,
+    isDirty,
+    looseElement,
+    diagramHandlers,
+    interServiceRelationsOnCanvas,
+  } = useContext(CanvasContext);
   const { routeManager, environmentHandler } = useContext(DependencyContext);
 
   const [alertMessage, setAlertMessage] = useState("");
@@ -68,7 +73,9 @@ export const ComposerActions: React.FC<Props> = ({ serviceName, editable }) => {
 
     if (!diagramHandlers) {
       setAlertType(AlertVariant.danger);
-      setAlertMessage("failed to save instance coordinates on deploy");
+      setAlertMessage(
+        words("instanceComposer.errorMessage.coordinatesRequest"),
+      );
     } else {
       coordinates = diagramHandlers.getCoordinates();
     }
@@ -78,7 +85,10 @@ export const ComposerActions: React.FC<Props> = ({ serviceName, editable }) => {
       .map((instance) => ({
         ...instance,
         metadata: {
-          coordinates: JSON.stringify(coordinates),
+          coordinates: JSON.stringify({
+            version: "v2",
+            data: coordinates,
+          }),
         },
       }));
 
@@ -91,13 +101,24 @@ export const ComposerActions: React.FC<Props> = ({ serviceName, editable }) => {
         key: "coordinates",
         body: {
           current_version: instance.instance.version,
-          value: JSON.stringify(coordinates),
+          value: JSON.stringify({
+            version: "v2",
+            data: coordinates,
+          }),
         },
       });
     }
 
     orderMutation.mutate(orderItems);
   };
+  const missingInterServiceRelations = Array.from(
+    interServiceRelationsOnCanvas,
+  ).filter(
+    ([_key, value]) =>
+      value.relations.filter(
+        (relation) => relation.currentAmount < relation.min,
+      ).length > 0,
+  );
 
   useEffect(() => {
     if (orderMutation.isSuccess) {
@@ -151,7 +172,8 @@ export const ComposerActions: React.FC<Props> = ({ serviceName, editable }) => {
               serviceOrderItems.size < 1 ||
               !isDirty ||
               looseElement.size > 0 ||
-              !editable
+              !editable ||
+              missingInterServiceRelations.length > 0
             }
           >
             {words("deploy")}

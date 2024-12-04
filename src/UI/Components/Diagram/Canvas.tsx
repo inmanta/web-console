@@ -4,10 +4,13 @@ import { ui } from "@inmanta/rappid";
 import styled from "styled-components";
 import { CanvasContext, InstanceComposerContext } from "./Context";
 import { EventWrapper } from "./Context/EventWrapper";
-import { DictModal, RightSidebar, ComposerActions } from "./components";
-import { createConnectionRules, createStencilState } from "./helpers";
+import { DictModal, RightSidebar } from "./components";
+import { Validation } from "./components/Validation";
+import { createConnectionRules } from "./helpers";
 import { diagramInit } from "./init";
+import { ActionEnum } from "./interfaces";
 import { StencilSidebar } from "./stencil";
+import { createStencilState } from "./stencil/helpers";
 import { CanvasWrapper } from "./styles";
 import { ZoomHandlerService } from "./zoomHandler";
 
@@ -37,27 +40,25 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
     setServiceOrderItems,
     diagramHandlers,
     setDiagramHandlers,
+    setCellToEdit,
   } = useContext(CanvasContext);
   const Canvas = useRef<HTMLDivElement>(null);
   const LeftSidebar = useRef<HTMLDivElement>(null);
   const ZoomHandler = useRef<HTMLDivElement>(null);
   const [scroller, setScroller] = useState<ui.PaperScroller | null>(null);
   const [isStencilStateReady, setIsStencilStateReady] = useState(false);
-
   const [leftSidebar, setLeftSidebar] = useState<StencilSidebar | null>(null); // without this state it could happen that cells would load before sidebar is ready so its state could be outdated
 
   // create stencil state and set flag to true to enable the other components to be created - the flag is created to allow the components to depend from that states, passing the state as a dependency would cause an infinite loop
   useEffect(() => {
-    if (!mainService) {
-      return;
-    }
     setStencilState(createStencilState(mainService, !!instance));
     setIsStencilStateReady(true);
   }, [mainService, instance, setStencilState]);
 
   // create the diagram & set diagram handlers and the scroller only when service models and main service is defined and the stencil state is ready
   useEffect(() => {
-    if (!mainService || !serviceModels || !isStencilStateReady) {
+    //if diagram handlers are already set or the stencil state is not ready, return early to avoid re-creating the diagram or to creating it too early
+    if (!isStencilStateReady || diagramHandlers) {
       return;
     }
 
@@ -74,25 +75,18 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
 
     setDiagramHandlers(actions);
 
-    return () => {
-      setStencilState(createStencilState(mainService));
-      setIsStencilStateReady(false);
-      actions.removeCanvas();
-    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mainService, serviceModels, isStencilStateReady]);
 
   /**
-   * create the left-sidebar only if the left-sidebar ref, the scroller, the related inventories by inter-service relations, the main service and service models are defined
-   * It's done in separate useEffect to enable eventual re-renders of the sidebar independently of the diagram, e.g. when the related inventories by inter-service relations are loaded
+   * create the stencil sidebar and zoom handler only when the scroller, related inventories and main service are defined and the ref for sidebar and zoomHandler is there
    */
   useEffect(() => {
     if (
       !LeftSidebar.current ||
+      !ZoomHandler.current ||
       !scroller ||
-      !relatedInventoriesQuery.data ||
-      !mainService ||
-      !serviceModels
+      !relatedInventoriesQuery.data
     ) {
       return;
     }
@@ -104,10 +98,14 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
       mainService,
       serviceModels,
     );
+    const zoomHandler = new ZoomHandlerService(ZoomHandler.current, scroller);
 
     setLeftSidebar(leftSidebar);
 
-    return () => leftSidebar.remove();
+    return () => {
+      leftSidebar.remove();
+      zoomHandler.remove();
+    };
   }, [scroller, relatedInventoriesQuery.data, mainService, serviceModels]);
 
   /**
@@ -115,66 +113,63 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
    * we need to add instances after stencil has been created to ensure that the stencil will get updated in case there are any embedded entities and relations that will get appendend on the canvas
    */
   useEffect(() => {
-    if (
-      !leftSidebar ||
-      !diagramHandlers ||
-      !serviceModels ||
-      !mainService ||
-      !isStencilStateReady
-    ) {
+    if (!leftSidebar || !diagramHandlers || !isStencilStateReady) {
       return;
     }
+
     const newInstances = new Map();
+    const copiedGraph = diagramHandlers.saveAndClearCanvas();
 
-    const cells = diagramHandlers.addInstance(serviceModels, instance);
+    if (copiedGraph.cells.length > 0) {
+      diagramHandlers.loadState(copiedGraph);
+    } else {
+      const cells = diagramHandlers.addInstance(serviceModels, instance);
 
-    cells.forEach((cell) => {
-      newInstances.set(cell.id, {
-        instance_id: cell.id,
-        service_entity: cell.get("entityName"),
-        config: {},
-        action: instance ? null : "create",
-        attributes: cell.get("instanceAttributes"),
-        embeddedTo: cell.get("embeddedTo"),
-        relatedTo: cell.get("relatedTo"),
+      cells.forEach((cell) => {
+        newInstances.set(cell.id, {
+          instance_id: cell.id,
+          service_entity: cell.get("entityName"),
+          config: {},
+          action: instance ? null : ActionEnum.CREATE,
+          attributes: cell.get("instanceAttributes"),
+          embeddedTo: cell.get("embeddedTo"),
+          relatedTo: cell.get("relatedTo"),
+        });
       });
-    });
 
-    setServiceOrderItems(newInstances);
+      setServiceOrderItems(newInstances);
+    }
 
     return () => {
-      setStencilState(createStencilState(mainService));
-      setIsStencilStateReady(false);
+      setCellToEdit(null);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [diagramHandlers, isStencilStateReady, leftSidebar]);
-
-  /**
-   * add the zoom handler only when the scroller is defined as it's needed to create the zoom handler
-   */
-  useEffect(() => {
-    if (!ZoomHandler.current || !scroller) {
-      return;
-    }
-    const zoomHandler = new ZoomHandlerService(ZoomHandler.current, scroller);
-
-    return () => zoomHandler.remove();
-  }, [scroller]);
+  }, [
+    diagramHandlers,
+    isStencilStateReady,
+    leftSidebar,
+    serviceModels,
+    instance,
+  ]);
 
   return (
     <EventWrapper>
       <DictModal />
-      <ComposerActions serviceName={mainService.name} editable={editable} />
       <CanvasWrapper id="canvas-wrapper" data-testid="Composer-Container">
         <LeftSidebarContainer
-          className="left_sidebar"
+          className={`left_sidebar ${!editable && "view_mode"}`}
           data-testid="left_sidebar"
           ref={LeftSidebar}
         />
-        <CanvasContainer className="canvas" data-testid="canvas" ref={Canvas} />
-        <RightSidebar />
+        <CanvasContainer
+          className={`canvas ${!editable && "view_mode"}`}
+          data-testid="canvas"
+          ref={Canvas}
+        />
+        <RightSidebar editable={editable} />
         <ZoomHandlerContainer className="zoom-handler" ref={ZoomHandler} />
       </CanvasWrapper>
+      {editable && <Validation />}
     </EventWrapper>
   );
 };
@@ -284,6 +279,10 @@ const CanvasContainer = styled.div`
   height: 100%;
   background: var(--pf-t--global--background--color--secondary--default);
 
+  &.view_mode {
+    width: calc(100% - 300px);
+  }
+
   * {
     font-family: var(--pf-t--global--font--family--mono);
   }
@@ -305,4 +304,9 @@ const LeftSidebarContainer = styled.div`
   filter: drop-shadow(
     0.1rem 0.1rem 0.15rem var(--pf-t--global--box-shadow--color--100)
   );
+  z-index: 1;
+
+  &.view_mode {
+    display: none;
+  }
 `;

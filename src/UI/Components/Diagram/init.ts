@@ -1,24 +1,24 @@
 import { RefObject } from "react";
 import { dia, shapes, ui } from "@inmanta/rappid";
-import { InstanceAttributeModel, ServiceModel } from "@/Core";
+import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from "@/Core";
 import { InstanceWithRelations } from "@/Data/Managers/V2/GETTERS/GetInstanceWithRelations";
-import {
-  updateAttributes,
-  appendInstance,
-  populateGraphWithDefault,
-} from "./actions";
+import { populateGraphWithDefault } from "./actions/createMode";
+import { appendInstance } from "./actions/editMode";
+import { updateAttributes } from "./actions/general";
 import {
   applyCoordinatesToCells,
   getCellsCoordinates,
-  toggleLooseElement,
+  getKeyAttributesNames,
 } from "./helpers";
+import { toggleLooseElement } from "./helpers";
 import {
   ConnectionRules,
-  EmbeddedEventEnum,
+  EventActionEnum,
   SavedCoordinates,
 } from "./interfaces";
 import { ComposerPaper } from "./paper";
 import { ServiceEntityBlock } from "./shapes";
+import { toggleDisabledStencil } from "./stencil/helpers";
 
 /**
  * Initializes the diagram.
@@ -80,7 +80,7 @@ export function diagramInit(
     const paperRepresentation = paper.findViewByModel(cell);
 
     if (!cell.get("isCore") && paperRepresentation) {
-      toggleLooseElement(paperRepresentation, EmbeddedEventEnum.ADD);
+      toggleLooseElement(paperRepresentation, EventActionEnum.ADD);
     }
   });
 
@@ -113,9 +113,38 @@ export function diagramInit(
   paper.unfreeze();
 
   return {
-    removeCanvas: () => {
-      scroller.remove();
-      paper.remove();
+    /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+    loadState: (graphJSON: any) => {
+      graph.fromJSON(graphJSON);
+      graph.getCells().forEach((cell) => {
+        if (cell.get("type") !== "Link") {
+          const copy = graphJSON.cells.find((c) => c.id === cell.id);
+          const stencilName = cell.get("stencilName");
+
+          if (cell.get("isEmbeddedEntity")) {
+            document.dispatchEvent(
+              new CustomEvent("updateStencil", {
+                detail: {
+                  name: cell.get("entityName"),
+                },
+              }),
+            );
+          }
+
+          if (stencilName) {
+            toggleDisabledStencil(stencilName, true);
+          }
+          cell.set("items", copy.items); // converted cells lacks "items" attribute
+        }
+      });
+    },
+
+    saveAndClearCanvas: () => {
+      const copy = graph.toJSON();
+
+      graph.getCells().forEach((cell) => cell.remove());
+
+      return copy;
     },
 
     addInstance: (
@@ -143,7 +172,9 @@ export function diagramInit(
             instance.instance.metadata.coordinates,
           );
 
-          applyCoordinatesToCells(graph, parsedCoordinates);
+          if (parsedCoordinates.version === "v2") {
+            applyCoordinatesToCells(graph, parsedCoordinates.data);
+          }
         }
       }
 
@@ -161,11 +192,13 @@ export function diagramInit(
     },
 
     editEntity: (cellView, serviceModel, attributeValues) => {
+      const keyAttributes = getKeyAttributesNames(serviceModel);
+
       //line below resolves issue that appendColumns did update values in the model, but visual representation wasn't updated
       cellView.model.set("items", []);
       updateAttributes(
         cellView.model as ServiceEntityBlock,
-        serviceModel.key_attributes || [],
+        keyAttributes,
         attributeValues,
         false,
       );
@@ -178,12 +211,21 @@ export function diagramInit(
 
 export interface DiagramHandlers {
   /**
-   * Removes the canvas.
+   * Saves the canvas state to JSON format and then clear the canvas.
    *
-   * This function is responsible for cleaning up the canvas when it is no longer needed.
-   * removes the scroller and paper elements.
+   * This function is responsible for cleaning up the canvas, and it's used when stencil/sidebar is updated to keep them aligned with each other
    */
-  removeCanvas: () => void;
+  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+  saveAndClearCanvas: () => any; //graph.toJSON() return object of Any type, the type is different from dia.Graph so I couldn't use it there and left as explicit any
+
+  /**
+   * it loads the state of the canvas from the provided JSON object.
+   *
+   * @param {any} graphJSON - The JSON object representing the state of the canvas. graph.toJSON() return object of Any type, the type is different from dia.Graph so I couldn't use it there and left as explicit any
+   * @returns {void}
+   */
+  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+  loadState: (graphJSON: any) => void;
 
   /**
    * Adds an instance to the canvas.
@@ -215,7 +257,7 @@ export interface DiagramHandlers {
    */
   editEntity: (
     cellView: dia.CellView,
-    serviceModel: ServiceModel,
+    serviceModel: ServiceModel | EmbeddedEntity,
     attributeValues: InstanceAttributeModel,
   ) => ServiceEntityBlock;
 

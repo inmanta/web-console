@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { DependencyContext, useRouteParams, words } from "@/UI";
-import { EmptyView, PageContainer } from "@/UI/Components";
+import { EmptyView } from "@/UI/Components";
 import { ComposerEditorProvider } from "@/UI/Components/Diagram/Context/ComposerEditorProvider";
 
 /**
@@ -25,25 +25,10 @@ export const Page: React.FC = () => {
   }
 
   return (
-    <PageWrapper>
-      <ComposerEditorProvider
-        serviceName={serviceName}
-        instance={instance}
-        editable
-      />
-    </PageWrapper>
+    <ComposerEditorProvider
+      serviceName={serviceName}
+      instance={instance}
+      editable
+    />
   );
 };
-
-/**
- * PageWrapper component.
- * Wraps the content of the Page component with a PageContainer.
- */
-const PageWrapper: React.FC<React.PropsWithChildren<unknown>> = ({
-  children,
-  ...props
-}) => (
-  <PageContainer {...props} pageTitle={words("instanceComposer.title.edit")}>
-    {children}
-  </PageContainer>
-);

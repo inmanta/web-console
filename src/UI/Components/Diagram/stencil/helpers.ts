@@ -1,8 +1,11 @@
 import { shapes } from "@inmanta/rappid";
-import { t_global_text_color_inverse } from "@patternfly/react-tokens";
+import {
+  t_global_border_color_200,
+  t_global_text_color_inverse,
+} from "@patternfly/react-tokens";
 import { v4 as uuidv4 } from "uuid";
 import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from "@/Core";
-import { HeaderColor } from "../interfaces";
+import { HeaderColor, StencilState } from "../interfaces";
 
 /**
  * It recursively goes through embedded entities in the service model or embedded entity and creates stencil elements for each of them.
@@ -15,19 +18,22 @@ import { HeaderColor } from "../interfaces";
 export const transformEmbeddedToStencilElements = (
   service: ServiceModel | EmbeddedEntity,
 ): shapes.standard.Path[] => {
-  return service.embedded_entities.flatMap((embedded_entity) => {
-    const stencilElement = createStencilElement(
-      embedded_entity.name,
-      embedded_entity,
-      {},
-      true,
-      service.name,
-    );
-    const nestedStencilElements =
-      transformEmbeddedToStencilElements(embedded_entity);
+  return service.embedded_entities
+    .filter((embedded_entity) => embedded_entity.modifier !== "r") // filter out read-only embedded entities from the stencil as they can't be created by the user
+    .flatMap((embedded_entity, index) => {
+      const stencilElement = createStencilElement(
+        embedded_entity.name,
+        embedded_entity,
+        {},
+        true,
+        index === 0,
+        service.name,
+      );
+      const nestedStencilElements =
+        transformEmbeddedToStencilElements(embedded_entity);
 
-    return [stencilElement, ...nestedStencilElements];
-  });
+      return [stencilElement, ...nestedStencilElements];
+    });
 };
 
 /**
@@ -36,7 +42,7 @@ export const transformEmbeddedToStencilElements = (
  * @param {string} name - The name of the stencil element.
  * @param {EmbeddedEntity | ServiceModel} serviceModel - The embedded entity model associated with the entity that the stencil element represent.
  * @param {InstanceAttributeModel} instanceAttributes - The instance attributes of the entity that the stencil element represent.
- * @param {boolean} isEmbedded - A boolean indicating whether the entity that the stencil represent is embedded or not. Defaults to false.
+ * @param {boolean} isEmbeddedEntity - A boolean indicating whether the entity that the stencil represent is embedded or not. Defaults to false.
  * @param {string} holderName - The name of the holder of the element that the stencil element represent. Optional.
  *
  * @returns {shapes.standard.Path} An object representing the stencil element.
@@ -45,7 +51,8 @@ export const createStencilElement = (
   name: string,
   serviceModel: EmbeddedEntity | ServiceModel,
   instanceAttributes: InstanceAttributeModel,
-  isEmbedded: boolean = false,
+  isEmbeddedEntity: boolean = false,
+  showBorderTop: boolean = false,
   holderName?: string,
 ): shapes.standard.Path => {
   let id = uuidv4();
@@ -69,7 +76,7 @@ export const createStencilElement = (
         width: 7,
         height: 40,
         x: 233,
-        fill: isEmbedded ? HeaderColor.EMBEDDED : HeaderColor.RELATION,
+        fill: isEmbeddedEntity ? HeaderColor.EMBEDDED : HeaderColor.RELATION,
         stroke: "none",
       },
       bodyTwo: {
@@ -88,6 +95,22 @@ export const createStencilElement = (
         fontSize: 12,
         text: name,
       },
+      borderBottom: {
+        width: 233,
+        height: 1,
+        x: 0,
+        y: 39,
+        fill: t_global_border_color_200.var,
+        stroke: "none",
+      },
+      borderTop: {
+        width: 233,
+        height: showBorderTop ? 1 : 0,
+        x: 0,
+        y: 0,
+        fill: t_global_border_color_200.var,
+        stroke: "none",
+      },
     },
     markup: [
       {
@@ -102,6 +125,83 @@ export const createStencilElement = (
         tagName: "text",
         selector: "label",
       },
+      {
+        tagName: "rect",
+        selector: "borderBottom",
+      },
+      {
+        tagName: "rect",
+        selector: "borderTop",
+      },
     ],
   });
+};
+
+/**
+ * Changes the availability of stencil elements by toggling their CSS classes.
+ *
+ * This function enables or disables stencil elements for an inter-service relation instance by toggling specific CSS classes.
+ *
+ * @param {string} stencilName - The name of the stencil.
+ * @param {boolean} force - if force is true, adds the disabled className . If force is false, removes disabled className
+ *
+ * @returns {void}
+ */
+export const toggleDisabledStencil = (
+  stencilName: string,
+  force?: boolean,
+): void => {
+  //disable Inventory Stencil for inter-service relation instance
+  const elements = [
+    {
+      selector: `.body_${stencilName}`,
+      className: "stencil_accent-disabled",
+    },
+    {
+      selector: `.bodyTwo_${stencilName}`,
+      className: "stencil_body-disabled",
+    },
+    {
+      selector: `.text_${stencilName}`,
+      className: "stencil_text-disabled",
+    },
+  ];
+
+  elements.forEach(({ selector, className }) => {
+    const element = document.querySelector(selector);
+
+    if (element) {
+      element.classList.toggle(className, force);
+    }
+  });
+};
+
+/**
+ * Creates a stencil state for a given service model or embedded entity.
+ *
+ * @param serviceModel - The service model or embedded entity to create a stencil state for.
+ * @param isInEditMode - A boolean indicating whether the stencil is in edit mode. Defaults to false.
+ * @returns {StencilState} The created stencil state.
+ */
+export const createStencilState = (
+  serviceModel: ServiceModel | EmbeddedEntity,
+  isInEditMode = false,
+): StencilState => {
+  let stencilState: StencilState = {};
+
+  serviceModel.embedded_entities.forEach((entity) => {
+    stencilState[entity.name] = {
+      min: entity.lower_limit,
+      max: entity.modifier === "rw" && isInEditMode ? 0 : entity.upper_limit,
+      currentAmount: 0,
+    };
+    if (entity.embedded_entities) {
+      stencilState = {
+        ...stencilState,
+        ...createStencilState(entity),
+      };
+    }
+  });
+
+  return stencilState;
 };

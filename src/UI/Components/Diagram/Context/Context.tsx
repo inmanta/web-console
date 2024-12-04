@@ -9,6 +9,7 @@ import {
   ComposerServiceOrderItem,
   DictDialogData,
   StencilState,
+  RelationCounterForCell,
 } from "../interfaces";
 
 /**
@@ -62,11 +63,41 @@ interface CanvasProviderInterface {
     React.SetStateAction<Map<string, ComposerServiceOrderItem>>
   >;
 
+  interServiceRelationsOnCanvas: Map<string, RelationCounterForCell>;
+  setInterServiceRelationsOnCanvas: React.Dispatch<
+    React.SetStateAction<Map<string, RelationCounterForCell>>
+  >;
+
   stencilState: StencilState | null;
   setStencilState: React.Dispatch<React.SetStateAction<StencilState | null>>;
 
   isDirty: boolean;
 }
+
+/**
+ * The default values for the CanvasContext. Look for the in detail description of the values in the CanvasContext docstrings.
+ */
+export const defaultCanvasContext: CanvasProviderInterface = {
+  diagramHandlers: null,
+  setDiagramHandlers: () => {},
+  dictToDisplay: null,
+  setDictToDisplay: () => {},
+  formState: {},
+  setFormState: () => {},
+  fields: [],
+  setFields: () => {},
+  cellToEdit: null,
+  setCellToEdit: () => {},
+  looseElement: new Set(),
+  setLooseElement: () => {},
+  serviceOrderItems: new Map(),
+  setServiceOrderItems: () => {},
+  interServiceRelationsOnCanvas: new Map(),
+  setInterServiceRelationsOnCanvas: () => {},
+  stencilState: {},
+  setStencilState: () => {},
+  isDirty: false,
+};
 
 /**
  * CanvasContext is a React context that provides a way to share the state of the Composer between all its children components.
@@ -91,22 +122,5 @@ interface CanvasProviderInterface {
  * @prop {React.Dispatch<React.SetStateAction<StencilState | null>>} setStencilState: Function to set the state of the stencil.
  * @prop {boolean} isDirty: A flag indicating whether the canvas is dirty, which mean that service instance was modified.
  */
-export const CanvasContext = createContext<CanvasProviderInterface>({
-  diagramHandlers: null,
-  setDiagramHandlers: () => {},
-  dictToDisplay: null,
-  setDictToDisplay: () => {},
-  formState: {},
-  setFormState: () => {},
-  fields: [],
-  setFields: () => {},
-  cellToEdit: null,
-  setCellToEdit: () => {},
-  looseElement: new Set(),
-  setLooseElement: () => {},
-  serviceOrderItems: new Map(),
-  setServiceOrderItems: () => {},
-  stencilState: {},
-  setStencilState: () => {},
-  isDirty: false,
-});
+export const CanvasContext =
+  createContext<CanvasProviderInterface>(defaultCanvasContext);

@@ -141,22 +141,6 @@ describe("Canvas.tsx", () => {
     );
   });
 
-  it("navigating out of the View works correctly", async () => {
-    const component = setup(mockedInstanceTwoServiceModel, mockedInstanceTwo, [
-      mockedInstanceTwoServiceModel,
-    ]);
-
-    render(component);
-    expect(window.location.pathname).toEqual("/");
-
-    await act(async () => {
-      await user.click(screen.getByRole("button", { name: "Cancel" }));
-    });
-    expect(window.location.pathname).toEqual(
-      "/lsm/catalog/test-service/inventory",
-    );
-  });
-
   it("renders shapes dict Value that can be viewed in dict Modal", async () => {
     const component = setup(mockedInstanceTwoServiceModel, mockedInstanceTwo, [
       mockedInstanceTwoServiceModel,
@@ -205,5 +189,47 @@ describe("Canvas.tsx", () => {
     });
 
     expect(modal).not.toBeVisible();
+  });
+
+  it("renders right sidebar without buttons and left sidebar when not editable", async () => {
+    const component = setup(
+      mockedInstanceTwoServiceModel,
+      mockedInstanceTwo,
+      [mockedInstanceTwoServiceModel],
+      false,
+    );
+
+    render(component);
+    const headerLabel = await screen.findByJointSelector("headerLabel");
+
+    await act(async () => {
+      await user.click(headerLabel);
+    });
+
+    expect(screen.queryByText("Remove")).toBeNull();
+    expect(screen.queryByText("Cancel")).toBeNull();
+
+    expect(screen.getByTestId("left_sidebar")).not.toBeVisible(); // Left sidebar is set to display:none when not editable
+  });
+
+  it("renders right sidebar with buttons when editable", async () => {
+    const component = setup(
+      mockedInstanceTwoServiceModel,
+      mockedInstanceTwo,
+      [mockedInstanceTwoServiceModel],
+      true,
+    );
+
+    render(component);
+    const headerLabel = await screen.findByJointSelector("headerLabel");
+
+    await act(async () => {
+      await user.click(headerLabel);
+    });
+
+    expect(screen.getByText("Remove")).toBeVisible();
+    expect(screen.getByText("Cancel")).toBeVisible();
+
+    expect(screen.getByTestId("left_sidebar")).toBeVisible();
   });
 });

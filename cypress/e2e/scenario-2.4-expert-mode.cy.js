@@ -156,13 +156,11 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#operation-select").select("clear candidate");
       cy.get("button").contains("Yes").click();
 
-      // expect to find in the history the creating state as last
-      cy.get('[aria-label="History-Row"]', { timeout: 30000 }).should(
-        ($rows) => {
-          expect($rows[0]).to.contain("creating");
-          expect($rows[0]).to.contain(4);
-          expect($rows).to.have.length(4);
-        },
+      // expect to find in the history the creating state after the up state
+      cy.get('[data-testid="version-3-state"]').should("have.text", "up");
+      cy.get('[data-testid="version-4-state"]', { timeout: 30000 }).should(
+        "have.text",
+        "creating",
       );
     });
 
