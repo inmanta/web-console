@@ -1,4 +1,9 @@
 import { dia, shapes } from "@inmanta/rappid";
+import {
+  dispatchSendCellToSidebar,
+  dispatchUpdateInterServiceRelations,
+  dispatchUpdateServiceOrderItems,
+} from "../Context/dispatchers";
 import { anchorNamespace } from "../anchors";
 import createHalo from "../halo";
 import { checkIfConnectionIsAllowed } from "../helpers";
@@ -139,11 +144,7 @@ export class ComposerPaper {
 
     //Event that is triggered when user clicks on the blank space of the paper. It's used to clear the sidebar.
     this.paper.on("blank:pointerdown", () => {
-      document.dispatchEvent(
-        new CustomEvent("sendCellToSidebar", {
-          detail: null,
-        }),
-      );
+      dispatchSendCellToSidebar(null);
     });
 
     //Event that is triggered when user clicks on the cell. It's used to send the cell data to the sidebar and create a Halo around the cell. with option to link it to another cell
@@ -153,11 +154,7 @@ export class ComposerPaper {
         return;
       }
 
-      document.dispatchEvent(
-        new CustomEvent("sendCellToSidebar", {
-          detail: cellView,
-        }),
-      );
+      dispatchSendCellToSidebar(cellView);
 
       const halo = createHalo(graph, this.paper, cellView, connectionRules);
 
@@ -275,21 +272,14 @@ export class ComposerPaper {
               cellConnectionRule.attributeName,
             );
             model.set("isRelationshipConnection", true);
-            document.dispatchEvent(
-              new CustomEvent("updateInterServiceRelations", {
-                detail: {
-                  action: EventActionEnum.ADD,
-                  name: cellConnectionRule.name,
-                  id: elementCell.id,
-                },
-              }),
-            );
 
-            document.dispatchEvent(
-              new CustomEvent("updateServiceOrderItems", {
-                detail: { cell: targetCell, action: ActionEnum.UPDATE },
-              }),
+            dispatchUpdateInterServiceRelations(
+              EventActionEnum.ADD,
+              cellConnectionRule.name,
+              elementCell.id,
             );
+            dispatchUpdateServiceOrderItems(targetCell, ActionEnum.UPDATE);
+
             toggleLooseElement(
               this.paper.findViewByModel(connectingCell),
               EventActionEnum.REMOVE,
@@ -308,11 +298,7 @@ export class ComposerPaper {
             EventActionEnum.REMOVE,
           );
 
-          document.dispatchEvent(
-            new CustomEvent("updateServiceOrderItems", {
-              detail: { cell: elementCell, action: ActionEnum.UPDATE },
-            }),
-          );
+          dispatchUpdateServiceOrderItems(elementCell, ActionEnum.UPDATE);
         }
       };
 

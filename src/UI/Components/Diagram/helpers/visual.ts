@@ -5,6 +5,11 @@ import {
   EventActionEnum,
   ActionEnum,
 } from "@/UI/Components/Diagram/interfaces";
+import {
+  dispatchLooseElement,
+  dispatchUpdateInterServiceRelations,
+  dispatchUpdateServiceOrderItems,
+} from "../Context/dispatchers";
 import { ServiceEntityBlock } from "../shapes";
 
 /**
@@ -88,14 +93,7 @@ export const toggleLooseElement = (
     default:
       break;
   }
-  document.dispatchEvent(
-    new CustomEvent("looseElement", {
-      detail: JSON.stringify({
-        kind,
-        id: cellView.model.id,
-      }),
-    }),
-  );
+  dispatchLooseElement(kind, cellView.model.id);
 };
 
 /**
@@ -256,20 +254,12 @@ const removeConnectionData = (
       );
     }
 
-    document.dispatchEvent(
-      new CustomEvent("updateInterServiceRelations", {
-        detail: {
-          action: EventActionEnum.REMOVE,
-          name: cellToDisconnect.get("entityName"),
-          id: elementCell.id,
-        },
-      }),
+    dispatchUpdateInterServiceRelations(
+      EventActionEnum.REMOVE,
+      cellToDisconnect.get("entityName"),
+      elementCell.id,
     );
 
-    document.dispatchEvent(
-      new CustomEvent("updateServiceOrderItems", {
-        detail: { cell: elementCell, action: ActionEnum.UPDATE },
-      }),
-    );
+    dispatchUpdateServiceOrderItems(elementCell, ActionEnum.UPDATE);
   }
 };

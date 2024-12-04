@@ -17,6 +17,7 @@ import { Field, InstanceAttributeModel, ServiceModel } from "@/Core";
 import { sanitizeAttributes } from "@/Data";
 import { words } from "@/UI/words";
 import { CanvasContext, InstanceComposerContext } from "../Context/Context";
+import { dispatchUpdateStencil } from "../Context/dispatchers";
 import { updateServiceOrderItems } from "../helpers";
 import { ActionEnum, EventActionEnum } from "../interfaces";
 import { toggleDisabledStencil } from "../stencil/helpers";
@@ -97,14 +98,7 @@ export const RightSidebar: React.FC<Props> = ({ editable }) => {
 
     if (isEmbeddedEntity) {
       //dispatch event instead of calling function directly from context
-      document.dispatchEvent(
-        new CustomEvent("updateStencil", {
-          detail: {
-            name: model.get("entityName"),
-            action: EventActionEnum.REMOVE,
-          },
-        }),
-      );
+      dispatchUpdateStencil(model.get("entityName"), EventActionEnum.REMOVE);
     }
 
     //stencilName is only available for inter-service relation entities
