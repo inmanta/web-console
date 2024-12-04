@@ -2,7 +2,7 @@ import { dia } from "@inmanta/rappid";
 import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from "@/Core";
 import { InstanceWithRelations } from "@/Data/Managers/V2/GETTERS/GetInstanceWithRelations";
 import { containerModel, mockedInstanceWithRelations } from "../Mocks";
-import services from "../Mocks/services.json";
+import { serviceModels } from "../Mocks/services";
 import {
   appendEmbeddedEntity,
   appendInstance,
@@ -329,7 +329,6 @@ describe("appendInstance", () => {
   const setup = () => {
     const graph = new dia.Graph({});
     const paper = new ComposerPaper({}, graph, true).paper;
-    const serviceModels = services as unknown as ServiceModel[];
 
     return { graph, paper, serviceModels };
   };

@@ -1,4 +1,3 @@
-import { ServiceModel } from "@/Core";
 import { Service } from "@/Test";
 import { ComposerServiceOrderItem } from "@/UI/Components/Diagram/interfaces";
 import {
@@ -10,7 +9,7 @@ import {
   testApiInstanceModel,
   testEmbeddedApiInstances,
 } from "../Mocks";
-import services from "../Mocks/services.json";
+import { serviceModels } from "../Mocks/services";
 import {
   shapesDataTransform,
   getServiceOrderItems,
@@ -341,10 +340,7 @@ describe("getServiceOrderItems", () => {
     map.set("123", createdInstance);
     map.set("1234", updatedInstance);
     map.set("12345", deletedInstance);
-    const serviceOrderItems = getServiceOrderItems(
-      map,
-      services as unknown as ServiceModel[],
-    );
+    const serviceOrderItems = getServiceOrderItems(map, serviceModels);
 
     const createdCopy = JSON.parse(JSON.stringify(createdInstance));
     const updatedCopy = JSON.parse(JSON.stringify(updatedInstance));
@@ -424,10 +420,7 @@ describe("getServiceOrderItems", () => {
     map.set("2", parentServiceTwo);
     map.set("11", childInstance);
     map.set("12", childWithManyParentsInstance);
-    const serviceOrderItems = getServiceOrderItems(
-      map,
-      services as unknown as ServiceModel[],
-    );
+    const serviceOrderItems = getServiceOrderItems(map, serviceModels);
 
     const parentOneCopy = JSON.parse(JSON.stringify(parentServiceOne));
     const parentTwoCopy = JSON.parse(JSON.stringify(parentServiceTwo));
@@ -525,10 +518,7 @@ describe("getServiceOrderItems", () => {
     map.set("123", embeddedTwo);
     map.set("1234", embeddedThree);
     map.set("12345", embeddedFour);
-    const serviceOrderItems = getServiceOrderItems(
-      map,
-      services as unknown as ServiceModel[],
-    );
+    const serviceOrderItems = getServiceOrderItems(map, serviceModels);
 
     const coreCopy = JSON.parse(JSON.stringify(core));
 

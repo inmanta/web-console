@@ -15,7 +15,7 @@ import { SuggestionsPopover } from "./SuggestionsPopover";
 interface Props {
   attributeName: string;
   attributeValue: string;
-  description?: string;
+  description?: string | null;
   isOptional: boolean;
   type: TextInputTypes;
   typeHint?: string;
@@ -33,7 +33,7 @@ interface Props {
  * @param {Props} props - The props for the TextListFormInput component.
  *  @prop {string} attributeName - The name of the attribute.
  *  @prop {string} attributeValue - The value of the attribute.
- *  @prop {string} description - The description of the attribute.
+ *  @prop {string | null} description - The description of the attribute.
  *  @prop {boolean} isOptional - Whether the attribute is optional.
  *  @prop {boolean} shouldBeDisabled - Whether the attribute should be disabled. Default is false.
  *  @prop {string} typeHint - The type hint for the attribute.

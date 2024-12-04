@@ -22,7 +22,7 @@ export type FieldLikeWithFormState = Field;
 
 interface BaseField {
   name: string;
-  description?: string;
+  description?: string | null;
   id?: string;
   isOptional: boolean;
   isDisabled: boolean;
@@ -72,14 +72,14 @@ export interface DictListField extends BaseField {
   kind: "DictList";
   fields: Field[];
   min: ParsedNumber;
-  max?: ParsedNumber;
+  max?: ParsedNumber | null;
 }
 
 export interface RelationListField extends BaseField {
   kind: "RelationList";
   serviceEntity: string;
   min: ParsedNumber;
-  max?: ParsedNumber;
+  max?: ParsedNumber | null;
 }
 
 export interface InterServiceRelationField extends BaseField {
