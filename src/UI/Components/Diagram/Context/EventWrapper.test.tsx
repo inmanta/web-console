@@ -259,9 +259,12 @@ describe("updateStencil - eventHandler that updates how many elements(embedded/i
         ))}
         {Object.keys(stencilState).map((key) => (
           <div data-testid={key} key={`${key}-stencil_mock`}>
-            <div data-testid={`body_${key}`} className={`body_${key}`} />
-            <div data-testid={`bodyTwo_${key}`} className={`bodyTwo_${key}`} />
-            <div data-testid={`text_${key}`} className={`text_${key}`} />
+            <div data-testid={`body_${key}`} aria-labelledby={`body_${key}`} />
+            <div
+              data-testid={`bodyTwo_${key}`}
+              aria-labelledby={`bodyTwo_${key}`}
+            />
+            <div data-testid={`text_${key}`} aria-labelledby={`text_${key}`} />
           </div>
         ))}
       </div>
