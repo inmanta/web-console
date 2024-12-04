@@ -72,7 +72,7 @@ export const createStencilElement = (
     id,
     attrs: {
       body: {
-        class: "body_" + name,
+        "aria-labelledby": "body_" + name,
         width: 7,
         height: 40,
         x: 233,
@@ -80,14 +80,14 @@ export const createStencilElement = (
         stroke: "none",
       },
       bodyTwo: {
-        class: "bodyTwo_" + name,
+        "aria-labelledby": "bodyTwo_" + name,
         width: 240,
         height: 40,
         fill: global_palette_white.var,
         stroke: "none",
       },
       label: {
-        class: "text_" + name,
+        "aria-labelledby": "text_" + name,
         refX: undefined, // reset the default
         x: "10",
         textAnchor: "start",
@@ -154,15 +154,15 @@ export const toggleDisabledStencil = (
   //disable Inventory Stencil for inter-service relation instance
   const elements = [
     {
-      selector: `.body_${stencilName}`,
+      selector: `[aria-labelledby="body_${stencilName}"]`,
       className: "stencil_accent-disabled",
     },
     {
-      selector: `.bodyTwo_${stencilName}`,
+      selector: `[aria-labelledby="bodyTwo_${stencilName}"]`,
       className: "stencil_body-disabled",
     },
     {
-      selector: `.text_${stencilName}`,
+      selector: `[aria-labelledby="text_${stencilName}"]`,
       className: "stencil_text-disabled",
     },
   ];
