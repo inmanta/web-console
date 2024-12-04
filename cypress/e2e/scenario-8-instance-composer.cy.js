@@ -259,14 +259,16 @@ if (Cypress.env("edition") === "iso") {
 
       //assert default embedded entities are present and first one is disabled as it reached its max limit
       cy.get("#instance-stencil").within(() => {
-        cy.get(".bodyTwo_embedded").should("be.visible");
-        cy.get(".bodyTwo_embedded").should(
+        cy.get('[aria-labelledby="bodyTwo_embedded"]').should("be.visible");
+        cy.get('[aria-labelledby="bodyTwo_embedded"]').should(
           "have.class",
           "stencil_body-disabled",
         );
 
-        cy.get(".bodyTwo_extra_embedded").should("be.visible");
-        cy.get(".bodyTwo_extra_embedded").should(
+        cy.get('[aria-labelledby="bodyTwo_extra_embedded"]').should(
+          "be.visible",
+        );
+        cy.get('[aria-labelledby="bodyTwo_extra_embedded"]').should(
           "have.not.class",
           "stencil_body-disabled",
         );
@@ -471,7 +473,7 @@ if (Cypress.env("edition") === "iso") {
       //add parent instance to the canvas and connect it to the core instance
       cy.get("#inventory-tab").click();
 
-      cy.get(".bodyTwo_test_name")
+      cy.get('[aria-labelledby="bodyTwo_test_name"]')
         .trigger("mouseover")
         .trigger("mousedown")
         .trigger("mousemove", {
@@ -503,7 +505,7 @@ if (Cypress.env("edition") === "iso") {
       //add another parent instance to the canvas and connect it to the embedded instance
       cy.get('[data-name="fit-to-screen"]').click();
 
-      cy.get(".bodyTwo_test_name2")
+      cy.get('[aria-labelledby="bodyTwo_test_name2"]')
         .trigger("mouseover")
         .trigger("mousedown")
         .trigger("mousemove", {
@@ -747,7 +749,7 @@ if (Cypress.env("edition") === "iso") {
       //add parent instance to the canvas and connect it to the core instance
       cy.get("#inventory-tab").click();
 
-      cy.get(".bodyTwo_test_name")
+      cy.get('[aria-labelledby="bodyTwo_test_name"]')
         .trigger("mouseover")
         .trigger("mousedown")
         .trigger("mousemove", {
@@ -815,7 +817,7 @@ if (Cypress.env("edition") === "iso") {
         .contains("child-service")
         .click();
 
-      cy.get(".bodyTwo_test_name2")
+      cy.get('[aria-labelledby="bodyTwo_test_name2"]')
         .trigger("mouseover")
         .trigger("mousedown")
         .trigger("mousemove", {
@@ -889,7 +891,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#inventory-tab").click();
 
       //add first inter-service relation
-      cy.get(".bodyTwo_test_name")
+      cy.get('[aria-labelledby="bodyTwo_test_name"]')
         .trigger("mouseover")
         .trigger("mousedown")
         .trigger("mousemove", {
@@ -911,7 +913,7 @@ if (Cypress.env("edition") === "iso") {
         .trigger("mouseup");
 
       //add second inter-service relation
-      cy.get(".bodyTwo_test_name2")
+      cy.get('[aria-labelledby="bodyTwo_test_name2"]')
         .trigger("mouseover")
         .trigger("mousedown")
         .trigger("mousemove", {
