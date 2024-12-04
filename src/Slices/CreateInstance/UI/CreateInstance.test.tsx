@@ -101,9 +101,7 @@ test("Given the CreateInstance View When creating an instance with attributes Th
   });
 
   await act(async () => {
-    await userEvent.click(
-      screen.getByRole("button", { name: words("confirm") }),
-    );
+    await userEvent.click(screen.getByText(words("confirm")));
   });
 
   expect(apiHelper.pendingRequests[0]).toEqual({
@@ -187,9 +185,7 @@ test("Given the CreateInstance View When creating an instance with Inter-service
   });
 
   await act(async () => {
-    await userEvent.click(
-      screen.getByRole("button", { name: words("confirm") }),
-    );
+    await userEvent.click(screen.getByText(words("confirm")));
   });
 
   expect(apiHelper.pendingRequests[0]).toEqual({

@@ -18,14 +18,14 @@ const TimestampLabel: React.FC<Props> = ({ timestamp, className }) => (
   </TimestampContainer>
 );
 
-const TimeLabel = styled.p`
+const TimeLabel = styled.div`
   display: inline-block;
   font-weight: 600;
 `;
 
-const DayLabel = styled.p`
+const DayLabel = styled.div`
   display: inline-block;
-  font-weight: 400;
+  font-weight: 500;
 `;
 
 const TimestampContainer = styled.div`

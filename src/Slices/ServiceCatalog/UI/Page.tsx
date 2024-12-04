@@ -1,5 +1,4 @@
 import React, { useContext, useEffect } from "react";
-import { Content } from "@patternfly/react-core";
 import { EmptyView, PageContainer, RemoteDataView } from "@/UI/Components";
 import { CatalogActions } from "@/UI/Components/CatalogActions";
 import { DependencyContext } from "@/UI/Dependency";
@@ -21,10 +20,10 @@ export const Page: React.FC = () => {
   return (
     <PageContainer
       pageTitle={
-        <Content>
+        <>
           {words("catalog.title")}
           <CatalogActions />
-        </Content>
+        </>
       }
     >
       <RemoteDataView

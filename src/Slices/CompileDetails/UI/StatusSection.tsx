@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  Bullseye,
   CodeBlock,
   CodeBlockCode,
   DescriptionList,
@@ -34,19 +35,23 @@ interface Props {
 
 export const StatusSection: React.FC<Props> = ({ compileDetails }) => {
   return (
-    <>
-      <Flex justifyContent={{ default: "justifyContentCenter" }}>
-        <FlexItem>
+    <Flex rowGap={{ default: "rowGapXl" }} direction={{ default: "column" }}>
+      <FlexItem>
+        <Bullseye>
           <Timeline
             requested={compileDetails.requested}
             started={compileDetails.started}
             completed={compileDetails.completed}
             success={compileDetails.success}
           />
-        </FlexItem>
-      </Flex>
-      <DescriptionList isHorizontal columnModifier={{ default: "2Col" }}>
-        <>
+        </Bullseye>
+      </FlexItem>
+      <FlexItem>
+        <DescriptionList
+          isHorizontal
+          isFillColumns
+          columnModifier={{ default: "2Col" }}
+        >
           <DescriptionListGroup>
             <DescriptionListTerm>
               {words("compileDetails.status.export")}
@@ -89,7 +94,7 @@ export const StatusSection: React.FC<Props> = ({ compileDetails }) => {
               {compileDetails.metadata["message"] as string}
             </DescriptionListDescription>
           </DescriptionListGroup>
-          {compileDetails.metadata["type"] && (
+          {compileDetails.metadata["type"] ? (
             <DescriptionListGroup>
               <DescriptionListTerm>
                 {words("compileDetails.status.trigger")}
@@ -98,23 +103,31 @@ export const StatusSection: React.FC<Props> = ({ compileDetails }) => {
                 {compileDetails.metadata["type"] as string}
               </DescriptionListDescription>
             </DescriptionListGroup>
+          ) : (
+            ""
           )}
-        </>
-      </DescriptionList>
-      <DescriptionList>
-        <DescriptionListGroup>
-          <DescriptionListTerm>
-            {words("compileDetails.status.envVars")}
-          </DescriptionListTerm>
-          <DescriptionListDescription>
-            <CodeBlock>
-              <CodeBlockCode>
-                {JSON.stringify(compileDetails.environment_variables, null, 2)}
-              </CodeBlockCode>
-            </CodeBlock>
-          </DescriptionListDescription>
-        </DescriptionListGroup>
-      </DescriptionList>
-    </>
+        </DescriptionList>
+      </FlexItem>
+      <FlexItem>
+        <DescriptionList isHorizontal isAutoFit>
+          <DescriptionListGroup>
+            <DescriptionListTerm>
+              {words("compileDetails.status.envVars")}
+            </DescriptionListTerm>
+            <DescriptionListDescription>
+              <CodeBlock>
+                <CodeBlockCode>
+                  {JSON.stringify(
+                    compileDetails.environment_variables,
+                    null,
+                    2,
+                  )}
+                </CodeBlockCode>
+              </CodeBlock>
+            </DescriptionListDescription>
+          </DescriptionListGroup>
+        </DescriptionList>
+      </FlexItem>
+    </Flex>
   );
 };

@@ -28,7 +28,7 @@ export const UserManagementPage: React.FC = () => {
       content: (
         <UserCredentialsForm
           submitButtonText={words("userManagement.addUser")}
-          submitButtonLabel={"add_user-button"}
+          submitButtonLabel={"confirm-button"}
         />
       ),
     });
@@ -50,7 +50,11 @@ export const UserManagementPage: React.FC = () => {
     <PageContainer pageTitle={words("userManagement.title")}>
       <Flex justifyContent={{ default: "justifyContentFlexEnd" }}>
         <FlexItem>
-          <Button variant="primary" onClick={openModal}>
+          <Button
+            variant="primary"
+            onClick={openModal}
+            aria-label="add_user-button"
+          >
             {words("userManagement.addUser")}
           </Button>
         </FlexItem>

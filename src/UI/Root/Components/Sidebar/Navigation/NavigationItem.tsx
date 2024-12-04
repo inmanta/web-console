@@ -43,8 +43,9 @@ export const NavigationItem: React.FC<Link> = ({
 };
 
 const RegularItem: React.FC<Label & Url> = ({ label, url }) => (
-  <NavItem>
+  <NavItem itemId={label}>
     <NavLink
+      aria-label="Sidebar-Navigation-Item"
       to={{
         pathname: url,
         search: new SearchHelper().keepEnvOnly(location.search),
@@ -58,6 +59,7 @@ const RegularItem: React.FC<Label & Url> = ({ label, url }) => (
 
 const LockedItem: React.FC<Label> = ({ label }) => (
   <NavItem
+    itemId={label}
     disabled
     preventDefault
     icon={
@@ -74,8 +76,13 @@ const LockedItem: React.FC<Label> = ({ label }) => (
 );
 
 const ExternalItem: React.FC<Label & Url> = ({ label, url }) => (
-  <NavItem>
-    <a href={url} target="_blank" rel="noreferrer">
+  <NavItem itemId={label}>
+    <a
+      href={url}
+      target="_blank"
+      rel="noreferrer"
+      aria-label="Sidebar-Navigation-Item-External"
+    >
       {label}
     </a>
   </NavItem>
@@ -96,13 +103,14 @@ const CompileReportItem: React.FC<Label & Url> = ({ label, url }) => {
   }, [data, retry]);
 
   return (
-    <NavItem>
+    <NavItem itemId={label}>
       <NavLink
         to={{
           pathname: url,
           search: new SearchHelper().keepEnvOnly(location.search),
         }}
         end
+        aria-label="Sidebar-Navigation-Item"
       >
         {label}
         {data.kind === "Success" && data.value === true && (
