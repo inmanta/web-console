@@ -236,34 +236,44 @@ export const InstanceActions: React.FC = () => {
 // styling to keep the action buttons neatly aligned to the right
 const RightAlignedButtons = styled.span`
   float: right;
-  margin-right: var(--pf-v5-global--spacer--lg);
+  margin-right: var(--pf-t--global--spacer--lg);
   display: flex;
-  gap: var(--pf-v5-global--spacer--lg);
+  gap: var(--pf-t--global--spacer--lg);
 `;
 
 // There is no actual variant for a red dropdown. This is why we override the colors for the expert dropdown.
 const ExpertMenu = styled(MenuToggle)`
-  &.pf-v5-c-menu-toggle {
-    --pf-v5-c-menu-toggle--m-secondary--before--BorderColor: var(
-      --pf-v5-global--danger-color--100
+  &.pf-v6-c-menu-toggle.pf-m-secondary {
+    --pf-v6-c-menu-toggle--m-secondary--BorderColor: var(
+      --pf-t--global--border--color--status--danger--default
     );
-    --pf-v5-c-menu-toggle--m-secondary--Color: var(
-      --pf-v5-global--danger-color--100
+    --pf-v6-c-menu-toggle--m-secondary--Color: var(
+      --pf-t--global--text--color--status--danger--default
     );
-    --pf-v5-c-menu-toggle--m-secondary--hover--before--BorderColor: var(
-      --pf-v5-global--danger-color--200
+    --pf-v6-c-menu-toggle--m-secondary__toggle-icon--Color: var(
+      --pf-t--global--icon--color--status--danger--default
     );
-    --pf-v5-c-menu-toggle--m-secondary--focus--before--BorderColor: var(
-      --pf-v5-global--danger-color--200
+  }
+  &.pf-v6-c-menu-toggle:is(.pf-m-expanded, [aria-expanded="true"]) {
+    --pf-v6-c-menu-toggle--Color: var(
+      --pf-t--global--text--color--status--danger--default
     );
-    --pf-v5-c-menu-toggle--m-secondary--active--before--BorderColor: var(
-      --pf-v5-global--danger-color--200
+    --pf-v6-c-menu-toggle--BorderColor: var(
+      --pf-t--global--border--color--status--danger--clicked
     );
-    --pf-v5-c-menu-toggle--m-secondary--m-expanded--Color: var(
-      --pf-v5-global--danger-color--100
+    --pf-v6-c-menu-toggle__toggle-icon--Color: var(
+      --pf-t--global--icon--color--status--danger--clicked
     );
-    --pf-v5-c-menu-toggle--m-expanded__toggle--m-secondary--before--BorderColor: var(
-      --pf-v5-global--danger-color--100
+  }
+  &.pf-v6-c-menu-toggle:is(:hover, :focus) {
+    --pf-v6-c-menu-toggle--Color: var(
+      --pf-t--global--text--color--status--danger--hover
+    );
+    --pf-v6-c-menu-toggle--BorderColor: var(
+      --pf-t--global--border--color--status--danger--hover
+    );
+    --pf-v6-c-menu-toggle__toggle-icon--Color: var(
+      --pf-t--global--icon--color--status--danger--hover
     );
   }
 `;

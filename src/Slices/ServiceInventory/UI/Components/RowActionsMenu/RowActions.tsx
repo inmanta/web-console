@@ -115,9 +115,8 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
       variant="plain"
       onClick={onToggleClick}
       isExpanded={isOpen}
-    >
-      <EllipsisVIcon />
-    </MenuToggle>
+      icon={<EllipsisVIcon />}
+    />
   );
 
   const menu = (

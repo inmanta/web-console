@@ -1,8 +1,7 @@
 import React from "react";
-import { Label } from "@patternfly/react-core";
+import { Label, Spinner } from "@patternfly/react-core";
 import styled from "styled-components";
 import { CompileStatus } from "@/Core";
-import { Spinner } from "@/UI/Components";
 
 export const StatusLabel: React.FC<{ status: CompileStatus }> = ({
   status,
@@ -16,7 +15,7 @@ export const StatusLabel: React.FC<{ status: CompileStatus }> = ({
       return (
         <Label color="blue">
           <PaddedLabel>{status}</PaddedLabel>
-          <Spinner variant="small" />
+          <Spinner size="sm" />
         </Label>
       );
     case CompileStatus.queued:

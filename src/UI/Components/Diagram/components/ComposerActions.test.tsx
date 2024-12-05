@@ -149,8 +149,8 @@ describe("ComposerActions.", () => {
     expect(screen.getByText("Cancel")).toBeVisible();
     expect(screen.getByText("Cancel")).toBeEnabled();
 
-    expect(screen.getByText("Deploy")).toBeVisible();
-    expect(screen.getByText("Deploy")).toBeDisabled(); //for default canvas context deploy should be disabled by default
+    expect(screen.getByRole("button", { name: "Deploy" })).toBeVisible();
+    expect(screen.getByRole("button", { name: "Deploy" })).toBeDisabled(); //for default canvas context deploy should be disabled by default
   });
 
   it.each`
@@ -183,13 +183,13 @@ describe("ComposerActions.", () => {
       };
 
       render(setup(null, canvasContext, editable));
-      expect(screen.getByText("Deploy")).toBeDisabled();
+      expect(screen.getByRole("button", { name: "Deploy" })).toBeDisabled();
     },
   );
 
   it("should have deploy button enabled when all conditions are met", () => {
     render(setup(null, validContextForEnabledDeploy));
-    expect(screen.getByText("Deploy")).toBeEnabled();
+    expect(screen.getByRole("button", { name: "Deploy" })).toBeEnabled();
   });
 
   it("shows success message and redirects when deploy button is clicked", async () => {
@@ -200,9 +200,9 @@ describe("ComposerActions.", () => {
     );
 
     render(setup(null, validContextForEnabledDeploy));
-    expect(screen.getByText("Deploy")).toBeEnabled();
+    expect(screen.getByRole("button", { name: "Deploy" })).toBeEnabled();
     await act(async () => {
-      await userEvent.click(screen.getByText("Deploy"));
+      await userEvent.click(screen.getByRole("button", { name: "Deploy" }));
     });
 
     expect(
@@ -232,9 +232,9 @@ describe("ComposerActions.", () => {
     };
 
     render(setup(null, canvasContext));
-    expect(screen.getByText("Deploy")).toBeEnabled();
+    expect(screen.getByRole("button", { name: "Deploy" })).toBeEnabled();
     await act(async () => {
-      await userEvent.click(screen.getByText("Deploy"));
+      await userEvent.click(screen.getByRole("button", { name: "Deploy" }));
     });
 
     expect(
@@ -257,9 +257,9 @@ describe("ComposerActions.", () => {
     );
 
     render(setup(null, validContextForEnabledDeploy));
-    expect(screen.getByText("Deploy")).toBeEnabled();
+    expect(screen.getByRole("button", { name: "Deploy" })).toBeEnabled();
     await act(async () => {
-      await userEvent.click(screen.getByText("Deploy"));
+      await userEvent.click(screen.getByRole("button", { name: "Deploy" }));
     });
 
     expect(await screen.findByText("Failed to deploy instance.")).toBeVisible();

@@ -234,6 +234,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
             variant="primary"
             onClick={onConfirm}
             isDisabled={isSubmitDisabled || !isEditorValid}
+            aria-label="submit"
           >
             {words("confirm")}
           </Button>
@@ -241,6 +242,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
 
         <Button
           variant="link"
+          aria-label="cancel"
           onClick={() => {
             if (isDirty) {
               setIsDirty(false);

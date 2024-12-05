@@ -5,7 +5,7 @@ import {
   FlexItem,
   FormSelect,
   FormSelectOption,
-  Text,
+  Content,
 } from "@patternfly/react-core";
 import styled from "styled-components";
 import { v4 as uuidv4 } from "uuid";
@@ -147,9 +147,7 @@ export const AttributesEditor: React.FC<Props> = ({
 
   return (
     <>
-      <StyledFlexContainer
-        justifyContent={{ default: "justifyContentSpaceBetween" }}
-      >
+      <Flex justifyContent={{ default: "justifyContentSpaceBetween" }}>
         <FlexItem>
           <StyledSelect
             value={selectedSet}
@@ -178,7 +176,7 @@ export const AttributesEditor: React.FC<Props> = ({
             </Button>
           )}
         </FlexItem>
-      </StyledFlexContainer>
+      </Flex>
       <JSONEditor
         data={editorDataOriginal}
         service_entity={service_entity}
@@ -193,9 +191,9 @@ export const AttributesEditor: React.FC<Props> = ({
         onCancel={() => setIsModalOpen(false)}
         isPending={isPending}
       >
-        <Text>
+        <Content component="p">
           {words("instanceDetails.expert.editModal.message")(selectedSet)}
-        </Text>
+        </Content>
       </ConfirmationModal>
       {errorMessage && (
         <ToastAlertMessage
@@ -211,9 +209,4 @@ export const AttributesEditor: React.FC<Props> = ({
 
 const StyledSelect = styled(FormSelect)`
   width: 180px;
-`;
-
-const StyledFlexContainer = styled(Flex)`
-  margin-top: var(--pf-v5-global--spacer--md);
-  margin-bottom: var(--pf-v5-global--spacer--md);
 `;

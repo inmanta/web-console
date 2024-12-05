@@ -82,8 +82,8 @@ export const AttributesFilter: React.FC<Props> = ({
         </ToolbarItem>
       )}
       <ToolbarFilter
-        chips={getChips(sets)}
-        deleteChip={removeChip}
+        labels={getChips(sets)}
+        deleteLabel={removeChip}
         categoryName="AttributeSet"
         showToolbarItem={isVisible}
       >

@@ -776,7 +776,7 @@ const dict = {
   "desiredState.compare.action.compareWithSelected": "Compare with selected",
   "desiredState.compare.action.compareWithCurrentState":
     "Compare with current state",
-  "desiredState.compare.selectionLabel": "Compare versions",
+  "desiredState.compare.selectionLabel": "Selected for compare: ",
   "desiredState.compare.deleted": "This resource has been deleted.",
   "desiredState.compare.deleted.action": "Show attributes",
   "desiredState.compare.unmodified": "This resource has not been modified.",

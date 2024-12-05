@@ -164,7 +164,9 @@ test("GIVEN ConfigurationTab WHEN editing an enum field THEN shows warning icon"
 
   await act(async () => {
     await userEvent.click(
-      within(row).getByRole("option", { name: "push_full_deploy" }),
+      screen.getByRole("option", {
+        name: /push_full_deploy/i,
+      }),
     );
   });
   expect(within(row).getByTestId("Warning")).toBeInTheDocument();
@@ -195,7 +197,7 @@ test("GIVEN ConfigurationTab WHEN editing a boolean field THEN shows warning ico
 
   await act(async () => {
     await userEvent.click(
-      within(row).getByRole<HTMLInputElement>("checkbox", {
+      within(row).getByRole<HTMLInputElement>("switch", {
         name: "Toggle-auto_deploy",
       }),
     );
@@ -341,7 +343,7 @@ test("GIVEN ConfigurationTab and boolean input WHEN changing boolean value and s
     name: "Row-auto_deploy",
   });
 
-  const toggle = within(row).getByRole<HTMLInputElement>("checkbox", {
+  const toggle = within(row).getByRole<HTMLInputElement>("switch", {
     name: "Toggle-auto_deploy",
   });
 
@@ -415,7 +417,7 @@ test("GIVEN ConfigurationTab and boolean input WHEN clicking reset THEN delete i
     name: "Row-auto_deploy",
   });
 
-  const toggle = within(row).getByRole<HTMLInputElement>("checkbox", {
+  const toggle = within(row).getByRole<HTMLInputElement>("switch", {
     name: "Toggle-auto_deploy",
   });
 

@@ -386,20 +386,36 @@ test("Given the EditInstance View When changing an embedded entity Then the inpu
     );
   });
 
-  expect(within(embedded_base).queryByText("Add")).toBeDisabled();
-  expect(within(embedded_base).queryByText("Delete")).toBeDisabled();
-
-  expect(within(editableEmbedded_base).queryByText("Add")).toBeEnabled();
-  expect(within(editableEmbedded_base).queryByText("Delete")).toBeDisabled();
-
-  expect(within(optionalEmbedded_base).queryByText("Add")).toBeDisabled();
-  expect(within(optionalEmbedded_base).queryByText("Delete")).toBeDisabled();
+  expect(
+    within(embedded_base).queryByRole("button", { name: "Add" }),
+  ).toBeDisabled();
+  expect(
+    within(embedded_base).queryByRole("button", { name: "Delete" }),
+  ).toBeDisabled();
 
   expect(
-    within(editableOptionalEmbedded_base).queryByText("Add"),
+    within(editableEmbedded_base).queryByRole("button", { name: "Add" }),
   ).toBeEnabled();
   expect(
-    within(editableOptionalEmbedded_base).queryByText("Delete"),
+    within(editableEmbedded_base).queryByRole("button", { name: "Delete" }),
+  ).toBeDisabled();
+
+  expect(
+    within(optionalEmbedded_base).queryByRole("button", { name: "Add" }),
+  ).toBeDisabled();
+  expect(
+    within(optionalEmbedded_base).queryByRole("button", { name: "Delete" }),
+  ).toBeDisabled();
+
+  expect(
+    within(editableOptionalEmbedded_base).queryByRole("button", {
+      name: "Add",
+    }),
+  ).toBeEnabled();
+  expect(
+    within(editableOptionalEmbedded_base).queryByRole("button", {
+      name: "Delete",
+    }),
   ).toBeEnabled();
 
   //check if direct attributes for embedded entities are correctly displayed
@@ -525,26 +541,40 @@ test("Given the EditInstance View When changing an embedded entity Then the inpu
     );
   });
 
-  expect(within(nested_embedded_base).queryByText("Add")).toBeDisabled();
-  expect(within(nested_embedded_base).queryByText("Delete")).toBeDisabled();
-
-  expect(within(nested_editableEmbedded_base).queryByText("Add")).toBeEnabled();
   expect(
-    within(nested_editableEmbedded_base).queryByText("Delete"),
+    within(nested_embedded_base).queryByRole("button", { name: "Add" }),
+  ).toBeDisabled();
+  expect(
+    within(nested_embedded_base).queryByRole("button", { name: "Delete" }),
   ).toBeDisabled();
 
   expect(
-    within(nested_optionalEmbedded_base).queryByText("Add"),
-  ).toBeDisabled();
-  expect(
-    within(nested_optionalEmbedded_base).queryByText("Delete"),
-  ).toBeDisabled();
-
-  expect(
-    within(nested_editableOptionalEmbedded_base).queryByText("Add"),
+    within(nested_editableEmbedded_base).queryByRole("button", { name: "Add" }),
   ).toBeEnabled();
   expect(
-    within(nested_editableOptionalEmbedded_base).queryByText("Delete"),
+    within(nested_editableEmbedded_base).queryByRole("button", {
+      name: "Delete",
+    }),
+  ).toBeDisabled();
+
+  expect(
+    within(nested_optionalEmbedded_base).queryByRole("button", { name: "Add" }),
+  ).toBeDisabled();
+  expect(
+    within(nested_optionalEmbedded_base).queryByRole("button", {
+      name: "Delete",
+    }),
+  ).toBeDisabled();
+
+  expect(
+    within(nested_editableOptionalEmbedded_base).queryByRole("button", {
+      name: "Add",
+    }),
+  ).toBeEnabled();
+  expect(
+    within(nested_editableOptionalEmbedded_base).queryByRole("button", {
+      name: "Delete",
+    }),
   ).toBeEnabled();
 
   await act(async () => {
@@ -692,27 +722,43 @@ test("Given the EditInstance View When adding new nested embedded entity Then th
     );
   });
 
-  expect(within(nested_embedded_base).queryByText("Add")).toBeEnabled();
-  expect(within(nested_embedded_base).queryByText("Delete")).toBeDisabled();
-
-  expect(within(nested_editableEmbedded_base).queryByText("Add")).toBeEnabled();
   expect(
-    within(nested_editableEmbedded_base).queryByText("Delete"),
+    within(nested_embedded_base).queryByRole("button", { name: "Add" }),
+  ).toBeEnabled();
+  expect(
+    within(nested_embedded_base).queryByRole("button", { name: "Delete" }),
   ).toBeDisabled();
 
-  expect(within(nested_optionalEmbedded_base).queryByText("Add")).toBeEnabled();
+  expect(
+    within(nested_editableEmbedded_base).queryByRole("button", { name: "Add" }),
+  ).toBeEnabled();
+  expect(
+    within(nested_editableEmbedded_base).queryByRole("button", {
+      name: "Delete",
+    }),
+  ).toBeDisabled();
+
+  expect(
+    within(nested_optionalEmbedded_base).queryByRole("button", { name: "Add" }),
+  ).toBeEnabled();
   await act(async () => {
     await userEvent.click(
       within(nested_optionalEmbedded_base).getByText("Add"),
     );
   });
+
   expect(
-    within(nested_optionalEmbedded_base).queryByText("Delete"),
+    within(nested_optionalEmbedded_base).queryByRole("button", {
+      name: "Delete",
+    }),
   ).toBeEnabled();
 
   expect(
-    within(nested_editableOptionalEmbedded_base).queryByText("Add"),
+    within(nested_editableOptionalEmbedded_base).queryByRole("button", {
+      name: "Add",
+    }),
   ).toBeEnabled();
+
   await act(async () => {
     await userEvent.click(
       within(nested_editableOptionalEmbedded_base).getByText("Add"),
@@ -720,7 +766,9 @@ test("Given the EditInstance View When adding new nested embedded entity Then th
   });
 
   expect(
-    within(nested_editableOptionalEmbedded_base).queryByText("Delete"),
+    within(nested_editableOptionalEmbedded_base).queryByRole("button", {
+      name: "Delete",
+    }),
   ).toBeEnabled();
 
   await act(async () => {

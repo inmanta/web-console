@@ -17,7 +17,7 @@ interface Props {
 
 export const Details: React.FC<Props> = ({ event_types }) => {
   return (
-    <StyledDescriptionList>
+    <DescriptionList>
       <DescriptionListGroup>
         <DescriptionListTerm>
           {words("catalog.callbacks.eventTypes")}
@@ -26,13 +26,9 @@ export const Details: React.FC<Props> = ({ event_types }) => {
           <CheckedList all={EventTypesList} available={event_types} />
         </DescriptionListDescription>
       </DescriptionListGroup>
-    </StyledDescriptionList>
+    </DescriptionList>
   );
 };
-
-const StyledDescriptionList = styled(DescriptionList)`
-  --pf-v5-c-description-list--m-horizontal__term--width: 20ch;
-`;
 
 const CheckedList: React.FC<{ all: string[]; available: string[] }> = ({
   all,

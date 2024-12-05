@@ -30,8 +30,8 @@ export const IdFilter: React.FC<Props> = ({ id, isVisible, update }) => {
 
   return (
     <ToolbarFilter
-      chips={chips}
-      deleteChip={removeChip}
+      labels={chips}
+      deleteLabel={removeChip}
       categoryName="Id"
       showToolbarItem={isVisible}
     >
@@ -51,12 +51,11 @@ export const IdFilter: React.FC<Props> = ({ id, isVisible, update }) => {
         </InputGroupItem>
         <InputGroupItem>
           <Button
+            icon={<SearchIcon />}
             variant={ButtonVariant.control}
             aria-label="search button for search input"
             onClick={onIdInput}
-          >
-            <SearchIcon />
-          </Button>
+          ></Button>
         </InputGroupItem>
       </InputGroup>
     </ToolbarFilter>
