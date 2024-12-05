@@ -39,20 +39,20 @@ describe("createStencilElement", () => {
     expect(embeddedElementWithModel.attributes.attrs?.body?.fill).toEqual(
       "var(--pf-t--chart--color--blue--400, #004d99)",
     );
-    expect(embeddedElementWithModel.attributes.attrs?.body?.class).toEqual(
-      "body_default",
-    );
+    expect(
+      embeddedElementWithModel.attributes.attrs?.body?.["aria-labelledby"],
+    ).toEqual("body_default");
 
     expect(embeddedElementWithModel.attributes.attrs?.bodyTwo?.fill).toEqual(
       "var(--pf-t--global--text--color--inverse)",
     );
-    expect(embeddedElementWithModel.attributes.attrs?.bodyTwo?.class).toEqual(
-      "bodyTwo_default",
-    );
+    expect(
+      embeddedElementWithModel.attributes.attrs?.bodyTwo?.["aria-labelledby"],
+    ).toEqual("bodyTwo_default");
 
-    expect(embeddedElementWithModel.attributes.attrs?.label?.class).toEqual(
-      "text_default",
-    );
+    expect(
+      embeddedElementWithModel.attributes.attrs?.label?.["aria-labelledby"],
+    ).toEqual("text_default");
     expect(
       embeddedElementWithModel.attributes.attrs?.borderTop?.height,
     ).toEqual(1);
@@ -66,7 +66,7 @@ describe("createStencilElement", () => {
     expect(nonEmbedded.attributes.attrs?.body?.fill).toEqual(
       "var(--pf-t--chart--color--purple--300, #5e40be)",
     );
-    expect(nonEmbedded.attributes.attrs?.body?.class).toEqual(
+    expect(nonEmbedded.attributes.attrs?.body?.["aria-labelledby"]).toEqual(
       "body_nonEmbedded",
     );
     expect(nonEmbedded.attributes.attrs?.borderTop?.height).toEqual(0);
@@ -128,8 +128,8 @@ describe("toggleDisabledStencil", () => {
     const elements = elementsInfo.map((element, index) => {
       const div = document.createElement("div");
 
-      div.classList.add(element[0]);
       div.setAttribute("data-testid", `${name}-${index}`);
+      div.setAttribute("aria-labelledby", element[0]);
 
       if (disabled) {
         div.classList.add(element[1]);
