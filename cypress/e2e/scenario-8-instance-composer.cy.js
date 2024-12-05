@@ -378,7 +378,7 @@ if (Cypress.env("edition") === "iso") {
       );
 
       //Drag extra_embedded onto canvas and assert that is highlighted as loose element
-      cy.get(".bodyTwo_extra_embedded")
+      cy.get('[aria-labelledby="bodyTwo_extra_embedded"]')
         .trigger("mouseover")
         .trigger("mousedown")
         .trigger("mousemove", {
@@ -407,7 +407,7 @@ if (Cypress.env("edition") === "iso") {
         .should("not.exist");
 
       //Drag once again extra_embedded onto canvas and assert that is highlighted as loose element
-      cy.get(".bodyTwo_extra_embedded")
+      cy.get('[aria-labelledby="bodyTwo_extra_embedded"]')
         .trigger("mouseover")
         .trigger("mousedown")
         .trigger("mousemove", {
