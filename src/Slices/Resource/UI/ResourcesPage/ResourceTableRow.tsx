@@ -2,7 +2,12 @@ import React from "react";
 import { Tbody, Tr, Td, ExpandableRowContent } from "@patternfly/react-table";
 import styled from "styled-components";
 import { Resource } from "@/Core";
-import { ResourceLink, ResourceStatusLabel, Toggle } from "@/UI/Components";
+import {
+  labelColorConfig,
+  ResourceLink,
+  ResourceStatusLabel,
+  Toggle,
+} from "@/UI/Components";
 import { words } from "@/UI/words";
 import { RequiresTableWithData } from "./Components";
 
@@ -39,7 +44,7 @@ export const ResourceTableRow: React.FC<Props> = ({
         {row.numberOfDependencies as React.ReactNode}
       </CenteredCell>
       <Td dataLabel={words("resources.column.deployState")}>
-        <ResourceStatusLabel status={row.deployState} />
+        <ResourceStatusLabel status={labelColorConfig[row.deployState]} />
       </Td>
       <StyledCell>
         <ResourceLink

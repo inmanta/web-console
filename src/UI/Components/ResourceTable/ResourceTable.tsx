@@ -2,7 +2,10 @@ import React from "react";
 import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
 import { InstanceResourceModel } from "@/Core";
 import { ResourceLink } from "@/UI/Components/ResourceLink";
-import { ResourceStatusLabel } from "@/UI/Components/ResourceStatus";
+import {
+  labelColorConfig,
+  ResourceStatusLabel,
+} from "@/UI/Components/ResourceStatus";
 import { getResourceIdFromResourceVersionId } from "@/UI/Utils";
 
 interface Props {
@@ -21,7 +24,13 @@ export const ResourceTable: React.FC<Props> = ({ resources, id, ...props }) => {
         {
           title: <ResourceLink resourceId={resourceId} />,
         },
-        { title: <ResourceStatusLabel status={resource.resource_state} /> },
+        {
+          title: (
+            <ResourceStatusLabel
+              status={labelColorConfig[resource.resource_state]}
+            />
+          ),
+        },
       ],
       key: resourceId,
     };

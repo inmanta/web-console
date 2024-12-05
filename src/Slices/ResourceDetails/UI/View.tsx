@@ -5,6 +5,7 @@ import { Query, RemoteData } from "@/Core";
 import { useUrlStateWithString } from "@/Data";
 import {
   Description,
+  labelColorConfig,
   PageContainer,
   ResourceStatusLabel,
 } from "@/UI/Components";
@@ -54,5 +55,5 @@ const StatusLabel: React.FC<{
 }> = ({ data }) => {
   if (!RemoteData.isSuccess(data)) return null;
 
-  return <ResourceStatusLabel status={data.value.status} />;
+  return <ResourceStatusLabel status={labelColorConfig[data.value.status]} />;
 };
