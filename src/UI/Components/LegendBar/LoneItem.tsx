@@ -1,7 +1,7 @@
 import React from "react";
 import {
-  global_Color_100,
-  global_palette_blue_50,
+  t_global_background_color_100,
+  t_global_text_color_brand_default,
 } from "@patternfly/react-tokens";
 import { Container } from "./Item";
 
@@ -12,8 +12,8 @@ export interface Props {
 export const LoneItem: React.FC<Props> = ({ label }) => (
   <Container
     value={1}
-    backgroundColor={global_palette_blue_50.var}
-    color={global_Color_100.var}
+    backgroundColor={t_global_background_color_100.var}
+    color={t_global_text_color_brand_default.var}
   >
     {label}
   </Container>

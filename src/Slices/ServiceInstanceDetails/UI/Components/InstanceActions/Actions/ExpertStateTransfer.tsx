@@ -7,7 +7,7 @@ import {
   FormGroup,
   FormSelect,
   FormSelectOption,
-  Text,
+  Content,
 } from "@patternfly/react-core";
 import { uniqueId } from "lodash";
 import { ParsedNumber } from "@/Core";
@@ -148,12 +148,12 @@ export const ExpertStateTransfer: React.FC<Props> = ({
         onCancel={closeModal}
         isPending={isPending}
       >
-        <Text>
+        <Content component="p">
           {words("instanceDetails.expert.confirm.state.message")(
             instance_display_identity,
             targetState,
           )}
-        </Text>
+        </Content>
         <br />
         <Form>
           <FormGroup

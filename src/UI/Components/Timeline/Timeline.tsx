@@ -45,7 +45,7 @@ const Container = styled.div`
 
 const Diff = styled.p`
   position: absolute;
-  top: 41px;
+  top: 40px;
   text-align: center;
   width: 200px;
   font-size: 14px;

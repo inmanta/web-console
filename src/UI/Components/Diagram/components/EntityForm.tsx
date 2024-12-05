@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Alert, Flex, FlexItem, Form } from "@patternfly/react-core";
+import { Alert, Button, Flex, FlexItem, Form } from "@patternfly/react-core";
 import { set } from "lodash";
-import styled from "styled-components";
 import { v4 as uuidv4 } from "uuid";
 import { Field, InstanceAttributeModel, ServiceModel } from "@/Core";
 import {
@@ -10,7 +9,6 @@ import {
 } from "@/UI/Components/ServiceInstanceForm";
 import { FieldInput } from "@/UI/Components/ServiceInstanceForm/Components";
 import { words } from "@/UI/words";
-import { StyledButton } from "./RightSidebar";
 
 interface Props {
   serviceModel: ServiceModel;
@@ -152,7 +150,7 @@ export const EntityForm: React.FC<Props> = ({
 
   return (
     <>
-      <StyledFlex
+      <Flex
         flex={{ default: "flex_1" }}
         direction={{ default: "column" }}
         spaceItems={{ default: "spaceItemsSm" }}
@@ -191,39 +189,33 @@ export const EntityForm: React.FC<Props> = ({
               ))}
           </Form>
         </FlexItem>
-      </StyledFlex>
+      </Flex>
       {showButtons && (
         <Flex justifyContent={{ default: "justifyContentCenter" }}>
           <Flex justifyContent={{ default: "justifyContentCenter" }}>
             <FlexItem>
-              <StyledButton
+              <Button
                 variant="danger"
                 width={200}
                 onClick={onRemove}
                 isDisabled={!isRemovable}
               >
                 {words("remove")}
-              </StyledButton>
+              </Button>
             </FlexItem>
           </Flex>
           <FlexItem>
-            <StyledButton
+            <Button
               variant="tertiary"
               width={200}
               isDisabled={!isDirty}
               onClick={onCancel}
             >
               {words("cancel")}
-            </StyledButton>
+            </Button>
           </FlexItem>
         </Flex>
       )}
     </>
   );
 };
-
-const StyledFlex = styled(Flex)`
-  min-height: 100%;
-  width: 100%;
-  overflow-y: scroll;
-`;

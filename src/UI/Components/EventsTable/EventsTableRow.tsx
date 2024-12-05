@@ -89,8 +89,8 @@ type Transition = Pick<EventRow, "ignoredTransition" | "isErrorTransition">;
 const StyledBody = styled(Tbody)<{ $transition: Transition }>`
   ${({ $transition }) =>
     $transition.isErrorTransition
-      ? "background-color: var(--pf-v5-global--palette--gold-50)"
+      ? "var(--pf-t--global--background--color--highlight--default)"
       : $transition.ignoredTransition
-        ? "background-color: var(--pf-v5-global--palette--black-200)"
+        ? "var(--pf-t--global--background--color--disabled--default)"
         : ""};
 `;

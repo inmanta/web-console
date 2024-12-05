@@ -1,14 +1,12 @@
 import React, { useContext, useRef, useState } from "react";
-import { PageSection, Toolbar, ToolbarContent } from "@patternfly/react-core";
-import styled from "styled-components";
-import { Diff, RemoteData } from "@/Core";
 import {
-  RemoteDataView,
-  PageTitle,
-  DiffWizard,
-  PagePadder,
-  EmptyView,
-} from "@/UI/Components";
+  Content,
+  PageSection,
+  Toolbar,
+  ToolbarContent,
+} from "@patternfly/react-core";
+import { Diff, RemoteData } from "@/Core";
+import { RemoteDataView, DiffWizard, EmptyView } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { useRouteParams } from "@/UI/Routing";
 import { words } from "@/UI/words";
@@ -45,11 +43,15 @@ export const View: React.FC<Diff.Identifiers> = ({ from, to }) => {
 
   return (
     <>
-      <StyledPageSection variant="light">
-        <PageTitle>{words("desiredState.compare.title")}</PageTitle>
-      </StyledPageSection>
-      <PageSection variant="light">
-        <ToolBarContainer>
+      <PageSection>
+        <Content>
+          <Content component="h1">
+            {words("desiredState.compare.title")}
+          </Content>
+        </Content>
+      </PageSection>
+      <PageSection hasBodyWrapper={false}>
+        <Toolbar>
           <ToolbarContent style={{ padding: 0 }}>
             <DiffWizard.DiffPageFilter
               statuses={statuses}
@@ -58,9 +60,9 @@ export const View: React.FC<Diff.Identifiers> = ({ from, to }) => {
               setSearchFilter={setSearchFilter}
             />
           </ToolbarContent>
-        </ToolBarContainer>
+        </Toolbar>
       </PageSection>
-      <PageSection variant="light" hasShadowBottom>
+      <PageSection hasBodyWrapper={false} hasShadowBottom>
         <DiffWizard.Controls
           data={filteredData}
           refs={refs}
@@ -68,32 +70,22 @@ export const View: React.FC<Diff.Identifiers> = ({ from, to }) => {
           to={to}
         />
       </PageSection>
-      <PageSection isFilled>
-        <PagePadder>
-          <RemoteDataView
-            data={filteredData}
-            label="CompareView"
-            SuccessView={(resources) =>
-              resources.length <= 0 ? (
-                <EmptyView message={words("desiredState.compare.empty")} />
-              ) : (
-                <DiffWizard.ItemList
-                  items={resources.map(DiffWizard.fromResourceToItem)}
-                  refs={refs}
-                />
-              )
-            }
-          />
-        </PagePadder>
+      <PageSection hasBodyWrapper={false} isFilled>
+        <RemoteDataView
+          data={filteredData}
+          label="CompareView"
+          SuccessView={(resources) =>
+            resources.length <= 0 ? (
+              <EmptyView message={words("desiredState.compare.empty")} />
+            ) : (
+              <DiffWizard.ItemList
+                items={resources.map(DiffWizard.fromResourceToItem)}
+                refs={refs}
+              />
+            )
+          }
+        />
       </PageSection>
     </>
   );
 };
-
-const StyledPageSection = styled(PageSection)`
-  padding-bottom: 0;
-`;
-
-const ToolBarContainer = styled(Toolbar)`
-  z-index: var(--pf-v5-global--ZIndex--xl);
-`;

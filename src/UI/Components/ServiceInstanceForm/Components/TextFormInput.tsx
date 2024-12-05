@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import {
+  Button,
   FormGroup,
   FormHelperText,
   HelperText,
@@ -84,17 +85,16 @@ export const TextFormInput: React.FC<Props> = ({
       isRequired={!isOptional}
       fieldId={attributeName}
       label={attributeName}
-      labelIcon={
+      labelHelp={
         typeHint ? (
           <Popover bodyContent={<div>{typeHint}</div>}>
-            <button
+            <Button
+              variant="control"
               type="button"
+              icon={<HelpIcon />}
               aria-label={`More info for ${attributeName} field`}
               onClick={(e) => e.preventDefault()}
-              className="pf-v5-c-form__group-label-help"
-            >
-              <HelpIcon />
-            </button>
+            />
           </Popover>
         ) : (
           <></>

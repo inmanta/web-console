@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { MenuItem, Text } from "@patternfly/react-core";
+import { MenuItem, Content } from "@patternfly/react-core";
 import { WarningTriangleIcon } from "@patternfly/react-icons";
 import { Maybe, VersionedServiceInstanceIdentifier } from "@/Core";
 import { ServiceInventoryContext } from "@/Slices/ServiceInventory/UI/ServiceInventory";
@@ -67,14 +67,16 @@ export const DestroyAction: React.FC<Props> = ({
       iconVariant: "danger",
       content: (
         <>
-          <Text>
+          <Content component="p">
             {words("inventory.destroyInstance.header")(
               instance_identity,
               service_entity,
             )}
-          </Text>
+          </Content>
           <br />
-          <Text>{words("inventory.destroyInstance.text")}</Text>
+          <Content component="p">
+            {words("inventory.destroyInstance.text")}
+          </Content>
           <ConfirmUserActionForm onSubmit={onSubmit} onCancel={closeModal} />
         </>
       ),
@@ -92,7 +94,8 @@ export const DestroyAction: React.FC<Props> = ({
       <MenuItem
         itemId="expert-destroy"
         style={{
-          backgroundColor: "var(--pf-v5-global--palette--red-50)",
+          backgroundColor:
+            "var(--pf-t--global--border--color--status--danger--default)",
         }}
         isDanger
         onClick={openModal}

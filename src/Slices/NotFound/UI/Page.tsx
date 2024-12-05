@@ -2,9 +2,7 @@ import * as React from "react";
 import {
   Button,
   EmptyState,
-  EmptyStateIcon,
   PageSection,
-  EmptyStateHeader,
   EmptyStateFooter,
 } from "@patternfly/react-core";
 import { ExclamationTriangleIcon } from "@patternfly/react-icons";
@@ -18,13 +16,12 @@ export const Page: React.FC = () => {
   const { routeManager } = React.useContext(DependencyContext);
 
   return (
-    <PageSection variant="light">
-      <EmptyState>
-        <EmptyStateHeader
-          titleText={<>{words("notFound.title")}</>}
-          icon={<EmptyStateIcon icon={ExclamationTriangleIcon} />}
-          headingLevel="h3"
-        />
+    <PageSection hasBodyWrapper={false}>
+      <EmptyState
+        headingLevel="h3"
+        icon={ExclamationTriangleIcon}
+        titleText={<>{words("notFound.title")}</>}
+      >
         <EmptyStateFooter>
           <Link pathname={routeManager.getUrl("Home", undefined)}>
             <Button>{words("notFound.home")}</Button>

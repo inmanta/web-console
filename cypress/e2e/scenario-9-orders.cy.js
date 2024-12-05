@@ -4,9 +4,9 @@
  *
  * @param {string} nameEnvironment
  */
-const clearEnvironment = (nameEnvironment = "lsm-frontend") => {
+const clearEnvironment = (nameEnvironment = "test") => {
   cy.visit("/console/");
-  cy.get('[aria-label="Environment card"]').contains(nameEnvironment).click();
+  cy.get(`[aria-label="Select-environment-${nameEnvironment}"]`).click();
   cy.url().then((url) => {
     const location = new URL(url);
     const id = location.searchParams.get("env");
@@ -45,9 +45,9 @@ const checkStatusCompile = (id) => {
  *
  * @param {string} nameEnvironment
  */
-const forceUpdateEnvironment = (nameEnvironment = "lsm-frontend") => {
+const forceUpdateEnvironment = (nameEnvironment = "test") => {
   cy.visit("/console/");
-  cy.get('[aria-label="Environment card"]').contains(nameEnvironment).click();
+  cy.get(`[aria-label="Select-environment-${nameEnvironment}"]`).click();
   cy.url().then((url) => {
     const location = new URL(url);
     const id = location.searchParams.get("env");
@@ -71,12 +71,12 @@ if (Cypress.env("edition") === "iso") {
 
     it("Displays a Partial order with multiple dependencies correctly", () => {
       cy.visit("/console/");
-      cy.get('[aria-label="Environment card"]')
-        .contains("lsm-frontend")
-        .click();
+      cy.get(`[aria-label="Select-environment-test"]`).click();
 
       // go to the Orders page
-      cy.get(".pf-v5-c-nav__link").contains("Orders").click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]')
+        .contains("Orders")
+        .click();
 
       // it shouldn't have any orders yet
       cy.get('[aria-label="ServiceOrderRow"]').should("not.to.exist");

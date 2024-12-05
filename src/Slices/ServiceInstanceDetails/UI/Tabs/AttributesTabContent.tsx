@@ -54,5 +54,4 @@ export const AttributesTabContent: React.FC = () => {
 
 const StyledToggleGroup = styled(ToggleGroup)`
   justify-content: center;
-  margin-top: var(--pf-v5-global--spacer--md);
 `;

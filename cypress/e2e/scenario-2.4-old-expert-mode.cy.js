@@ -8,9 +8,9 @@
  *
  * @param {string} nameEnvironment
  */
-const clearEnvironment = (nameEnvironment = "lsm-frontend") => {
+const clearEnvironment = (nameEnvironment = "test") => {
   cy.visit("/console/");
-  cy.get('[aria-label="Environment card"]').contains(nameEnvironment).click();
+  cy.get(`[aria-label="Select-environment-${nameEnvironment}"]`).click();
   cy.url().then((url) => {
     const location = new URL(url);
     const id = location.searchParams.get("env");
@@ -49,9 +49,9 @@ const checkStatusCompile = (id) => {
  *
  * @param {string} nameEnvironment
  */
-const forceUpdateEnvironment = (nameEnvironment = "lsm-frontend") => {
+const forceUpdateEnvironment = (nameEnvironment = "test") => {
   cy.visit("/console/");
-  cy.get('[aria-label="Environment card"]').contains(nameEnvironment).click();
+  cy.get(`[aria-label="Select-environment-${nameEnvironment}"]`).click();
   cy.url().then((url) => {
     const location = new URL(url);
     const id = location.searchParams.get("env");
@@ -82,10 +82,10 @@ if (Cypress.env("edition") === "iso") {
         "/lsm/v1/service_inventory/basic-service?include_deployment_progress=True&limit=20&&sort=created_at.desc",
       ).as("GetServiceInventory");
 
-      cy.get('[aria-label="Environment card"]')
-        .contains("lsm-frontend")
+      cy.get(`[aria-label="Select-environment-test"]`).click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]')
+        .contains("Service Catalog")
         .click();
-      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
       cy.get("#basic-service").contains("Show inventory").click();
 
       // Make sure the call to get inventory has been executed
@@ -113,12 +113,14 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="ServiceInventory-Success"]').should("to.be.visible");
 
       // Go to the settings, then to the configuration tab
-      cy.get(".pf-v5-c-nav__item").contains("Settings").click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]')
+        .contains("Settings")
+        .click();
       cy.get("button").contains("Configuration").click();
 
       // Change enable_lsm_expert_mode
       cy.get('[aria-label="Row-enable_lsm_expert_mode"]')
-        .find(".pf-v5-c-switch")
+        .find(".pf-v6-c-switch")
         .click();
       cy.get('[data-testid="Warning"]').should("exist");
       cy.get('[aria-label="Row-enable_lsm_expert_mode"]')
@@ -131,10 +133,10 @@ if (Cypress.env("edition") === "iso") {
 
       // Go back to service inventory
       cy.visit("/console/");
-      cy.get('[aria-label="Environment card"]')
-        .contains("lsm-frontend")
+      cy.get(`[aria-label="Select-environment-test"]`).click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]')
+        .contains("Service Catalog")
         .click();
-      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
       cy.get("#basic-service").contains("Show inventory").click();
       cy.get("#expand-toggle0").click();
 
@@ -144,15 +146,13 @@ if (Cypress.env("edition") === "iso") {
         .should("contain", "up");
 
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
-      cy.get(".pf-v5-c-menu__item")
-        .eq(4)
-        .should("not.have.class", "pf-disabled");
+      cy.get('[role="menuitem"]').eq(4).should("not.have.class", "pf-disabled");
 
-      cy.get(".pf-v5-c-menu__item").contains("Force State").click();
-      cy.get(".pf-v5-c-menu__item").contains("setting_start").click();
+      cy.get('[role="menuitem"]').contains("Force State").click();
+      cy.get('[role="menuitem"]').contains("setting_start").click();
 
       // Modal title for confirmation of Destroying instance should be visible
-      cy.get(".pf-v5-c-modal-box__title-text")
+      cy.get(".pf-v6-c-modal-box__header")
         .contains("Confirm force state transfer")
         .should("be.visible");
 
@@ -165,8 +165,8 @@ if (Cypress.env("edition") === "iso") {
 
       // Push new state, confirm modal and expect new value in the State data cell
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
-      cy.get(".pf-v5-c-menu__item").contains("Force State").click();
-      cy.get(".pf-v5-c-menu__item").contains("setting_start").click();
+      cy.get('[role="menuitem"]').contains("Force State").click();
+      cy.get('[role="menuitem"]').contains("setting_start").click();
 
       cy.get("button").contains("Yes").click();
 
@@ -177,10 +177,10 @@ if (Cypress.env("edition") === "iso") {
 
     it("2.4.2 Edit instance attributes", () => {
       cy.visit("/console/");
-      cy.get('[aria-label="Environment card"]')
-        .contains("lsm-frontend")
+      cy.get(`[aria-label="Select-environment-test"]`).click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]')
+        .contains("Service Catalog")
         .click();
-      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
 
       // Expect to find one badge on the basic-service row.
       cy.get("#basic-service")
@@ -191,10 +191,12 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#expand-toggle0").click();
 
       // Expect row to be expanded
-      cy.get(".pf-v5-c-table__expandable-row-content").should("to.be.visible");
+      cy.get('[aria-label="InstanceRow-Details"]')
+        .first()
+        .should("to.be.visible");
 
       // Expect to find status tab
-      cy.get(".pf-v5-c-tabs__list li:first").should(
+      cy.get(".pf-v6-c-tabs__list li:first").should(
         "have.class",
         "pf-m-current",
       );
@@ -203,10 +205,10 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
 
       // The fourth button in the dropdown should be the edit button.
-      cy.get(".pf-v5-c-menu__item").eq(4).should("be.disabled");
+      cy.get('[role="menuitem"]').eq(4).should("be.disabled");
 
       // Expect to land on Service Inventory page and to find attributes tab button
-      cy.get(".pf-v5-c-tabs__list")
+      cy.get(".pf-v6-c-tabs__list")
         .contains("Attributes", { timeout: 20000 })
         .click();
 
@@ -226,7 +228,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[data-testid="inline-submit"]').click();
 
       // Expect dialog to pop-up, and after canceling it won't affect input state
-      cy.get(".pf-v5-c-modal-box__title-text")
+      cy.get(".pf-v6-c-modal-box__header")
         .contains("Update Attribute")
         .should("be.visible");
       cy.get('[data-testid="dialog-cancel"]').click();
@@ -285,7 +287,7 @@ if (Cypress.env("edition") === "iso") {
         .find('[data-label="active"]')
         .find("button")
         .click();
-      cy.get(".pf-v5-c-switch__toggle").click();
+      cy.get(".pf-v6-c-switch__toggle").click();
       cy.get('[data-testid="inline-submit"]').click();
       cy.get('[data-testid="dialog-submit"]').click();
 
@@ -317,10 +319,10 @@ if (Cypress.env("edition") === "iso") {
 
     it("2.4.3 Destroy previously created instance", () => {
       cy.visit("/console/");
-      cy.get('[aria-label="Environment card"]')
-        .contains("lsm-frontend")
+      cy.get(`[aria-label="Select-environment-test"]`).click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]')
+        .contains("Service Catalog")
         .click();
-      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
 
       // Expect to find one badge on the basic-service row.
       cy.get("#basic-service")
@@ -331,21 +333,23 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#expand-toggle0").click();
 
       // Expect row to be expanded
-      cy.get(".pf-v5-c-table__expandable-row-content").should("to.be.visible");
+      cy.get('[aria-label="InstanceRow-Details"]')
+        .first()
+        .should("to.be.visible");
 
       // Expect to find status tab
-      cy.get(".pf-v5-c-tabs__list li:first").should(
+      cy.get(".pf-v6-c-tabs__list li:first").should(
         "have.class",
         "pf-m-current",
       );
 
       // Click on destroy button
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
-      cy.get(".pf-v5-c-menu__item").contains("More actions").click();
-      cy.get(".pf-v5-c-menu__item").contains("Destroy").click();
+      cy.get('[role="menuitem"]').contains("More actions").click();
+      cy.get('[role="menuitem"]').contains("Destroy").click();
 
       // Modal title for confirmation of Destroying instance should be visible
-      cy.get(".pf-v5-c-modal-box__title-text")
+      cy.get(".pf-v6-c-modal-box__header")
         .contains("Destroy instance")
         .should("be.visible");
 

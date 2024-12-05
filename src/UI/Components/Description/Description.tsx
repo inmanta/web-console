@@ -1,5 +1,5 @@
 import React from "react";
-import { TextContent, Text, TextVariants } from "@patternfly/react-core";
+import { Content, ContentVariants } from "@patternfly/react-core";
 import styled from "styled-components";
 
 interface Props {
@@ -13,10 +13,10 @@ export const Description: React.FC<React.PropsWithChildren<Props>> = ({
   withSpace,
 }) => (
   <StyledTextContent className={className} $withSpace={withSpace}>
-    <Text component={TextVariants.small}>{children}</Text>
+    <Content component={ContentVariants.small}>{children}</Content>
   </StyledTextContent>
 );
 
-const StyledTextContent = styled(TextContent)<{ $withSpace?: boolean }>`
+const StyledTextContent = styled(Content)<{ $withSpace?: boolean }>`
   ${(p) => (p.$withSpace ? "padding-bottom: 16px" : "")};
 `;

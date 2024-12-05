@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  EmptyState,
-  EmptyStateBody,
-  EmptyStateIcon,
-  EmptyStateHeader,
-} from "@patternfly/react-core";
+import { EmptyState, EmptyStateBody } from "@patternfly/react-core";
 import { ExclamationCircleIcon } from "@patternfly/react-icons";
 import { words } from "@/UI/words";
 
@@ -14,12 +9,12 @@ interface Props {
 }
 
 export const EmptyView: React.FC<Props> = ({ title, message, ...props }) => (
-  <EmptyState {...props}>
-    <EmptyStateHeader
-      titleText={<>{title || words("empty.title")}</>}
-      icon={<EmptyStateIcon icon={ExclamationCircleIcon} />}
-      headingLevel="h2"
-    />
+  <EmptyState
+    headingLevel="h2"
+    icon={ExclamationCircleIcon}
+    titleText={<>{title || words("empty.title")}</>}
+    {...props}
+  >
     <EmptyStateBody>{message}</EmptyStateBody>
   </EmptyState>
 );

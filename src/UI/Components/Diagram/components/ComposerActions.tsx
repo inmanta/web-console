@@ -1,8 +1,7 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import "@inmanta/rappid/joint-plus.css";
 import { useNavigate } from "react-router-dom";
-import { AlertVariant, Flex, FlexItem } from "@patternfly/react-core";
-import styled from "styled-components";
+import { AlertVariant, Button, Flex, FlexItem } from "@patternfly/react-core";
 import { usePostMetadata } from "@/Data/Managers/V2/POST/PostMetadata";
 import { usePostOrder } from "@/Data/Managers/V2/POST/PostOrder";
 import { DependencyContext } from "@/UI/Dependency";
@@ -11,7 +10,6 @@ import { ToastAlert } from "../../ToastAlert";
 import { CanvasContext, InstanceComposerContext } from "../Context/Context";
 import { getServiceOrderItems } from "../helpers";
 import { SavedCoordinates } from "../interfaces";
-import { StyledButton } from "./RightSidebar";
 
 /**
  * Properties for the ComposerActions component.
@@ -139,7 +137,7 @@ export const ComposerActions: React.FC<Props> = ({ serviceName, editable }) => {
   }, [orderMutation.isSuccess, orderMutation.isError]);
 
   return (
-    <Container
+    <Flex
       justifyContent={{
         default: "justifyContentFlexEnd",
       }}
@@ -163,10 +161,10 @@ export const ComposerActions: React.FC<Props> = ({ serviceName, editable }) => {
           spacer={{ default: "spacerMd" }}
           alignItems={{ default: "alignItemsCenter" }}
         >
-          <StyledButton variant="tertiary" width={200} onClick={handleRedirect}>
+          <Button variant="tertiary" width={200} onClick={handleRedirect}>
             {words("cancel")}
-          </StyledButton>
-          <StyledButton
+          </Button>
+          <Button
             variant="primary"
             width={200}
             onClick={handleDeploy}
@@ -179,13 +177,9 @@ export const ComposerActions: React.FC<Props> = ({ serviceName, editable }) => {
             }
           >
             {words("deploy")}
-          </StyledButton>
+          </Button>
         </Flex>
       </FlexItem>
-    </Container>
+    </Flex>
   );
 };
-
-const Container = styled(Flex)`
-  margin-right: var(--pf-v5-global--spacer--lg);
-`;

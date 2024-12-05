@@ -29,8 +29,8 @@ export const SeverityFilter: React.FC<Props> = ({ filter, setFilter }) => {
 
   return (
     <ToolbarFilter
-      chips={filter.severity ? [filter.severity] : []}
-      deleteChip={deleteChip}
+      labels={filter.severity ? [filter.severity] : []}
+      deleteLabel={deleteChip}
       categoryName="Severity"
     >
       <SingleTextSelect

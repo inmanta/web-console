@@ -6,6 +6,8 @@ import logo from "@images/logo.svg";
 import { LoginForm } from "./UI/LoginForm";
 
 /**
+ * PF-MIGRATION TODO : UPDATE based on new guidelines
+ *
  * Login component.
  * This component is responsible for rendering the login page.
  * @note This is being used only when database authentication is enabled.
@@ -14,7 +16,7 @@ import { LoginForm } from "./UI/LoginForm";
 export const Login: React.FC = () => {
   return (
     <Wrapper>
-      <StyledLogin
+      <LoginPage
         brandImgSrc={logo}
         footerListVariants={ListVariant.inline}
         brandImgAlt="Inmanta logo"
@@ -22,7 +24,7 @@ export const Login: React.FC = () => {
         loginSubtitle={words("login.subtitle")}
       >
         <LoginForm submitButtonText={words("login.login")} />
-      </StyledLogin>
+      </LoginPage>
     </Wrapper>
   );
 };
@@ -34,16 +36,4 @@ const Wrapper = styled.div`
   position: absolute;
   top: 0;
   left: 0;
-`;
-const StyledLogin = styled(LoginPage)`
-  background-color: var(--pf-v5-global--BackgroundColor--dark-300);
-  .pf-v5-c-login__container {
-    @media (min-width: 1200px) {
-      width: 100%;
-      max-width: 500px !important;
-      display: block !important;
-      padding-inline-start: 0px;
-      padding-inline-end: 0px;
-    }
-  }
 `;

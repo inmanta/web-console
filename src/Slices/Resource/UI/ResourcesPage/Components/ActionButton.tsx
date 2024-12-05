@@ -3,7 +3,7 @@ import { Button, Tooltip } from "@patternfly/react-core";
 import { ActionDisabledTooltip } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
-import { DotIndication } from "./DotIndicator";
+import { CompileReportsIndication } from "./CompileReportsIndication";
 
 interface Props {
   kind: "Deploy" | "Repair";
@@ -56,7 +56,9 @@ export const ResourcePageActionButton: React.FC<Props> = ({
         onClick={() => handleClick()}
       >
         {textContent}
-        {showSpinner && <DotIndication data-testid="dot-indication" />}
+        {showSpinner && (
+          <CompileReportsIndication data-testid="dot-indication" />
+        )}
       </Button>
     </Tooltip>
   );

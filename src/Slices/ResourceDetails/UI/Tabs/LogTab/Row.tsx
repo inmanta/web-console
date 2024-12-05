@@ -72,17 +72,17 @@ const getStyleForLevel = (level: string) => {
   switch (level) {
     case "WARNING":
       return css`
-        background-color: var(--pf-v5-global--palette--gold-50);
-        --pf-v5-c-table__expandable-row--after--BorderColor: var(
-          --pf-v5-global--palette--gold-100
+        background-color: var(--pf-t--global--color--status--warning--default);
+        --pf-v6-c-table--BorderColor: var(
+          --pf-t--global--border--color--status--warning--default
         );
       `;
     case "ERROR":
     case "CRITICAL":
       return css`
-        background-color: var(--pf-v5-global--palette--red-50);
-        --pf-v5-c-table__expandable-row--after--BorderColor: var(
-          --pf-v5-global--palette--red-100
+        background-color: var(--pf-t--global--color--status--danger--default);
+        --pf-v6-c-table--BorderColor: var(
+          --pf-t--global--border--color--status--danger--default
         );
       `;
     default:

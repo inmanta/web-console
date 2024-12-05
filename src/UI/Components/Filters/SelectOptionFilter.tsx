@@ -33,8 +33,8 @@ export const SelectOptionFilter: React.FC<Props> = ({
 
   return (
     <ToolbarFilter
-      chips={selectedStates}
-      deleteChip={removeChip}
+      labels={selectedStates}
+      deleteLabel={removeChip}
       categoryName={filterPropertyName}
       showToolbarItem={isVisible}
     >

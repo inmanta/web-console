@@ -50,8 +50,8 @@ export const DeletedFilter: React.FC<Props> = ({
 
   return (
     <ToolbarFilter
-      chips={deleted ? [deleted] : []}
-      deleteChip={removeChip}
+      labels={deleted ? [deleted] : []}
+      deleteLabel={removeChip}
       categoryName="Deleted"
       showToolbarItem={isVisible}
     >

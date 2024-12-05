@@ -1,4 +1,4 @@
-import React, { ReactText } from "react";
+import React from "react";
 import { Tabs, Tab, TabTitleText, TabTitleIcon } from "@patternfly/react-core";
 
 export interface TabDescriptor<K extends string> {
@@ -24,7 +24,7 @@ export const IconTabs = <Key extends string>({
   onChange,
   tabs,
 }: Props<Key>): ReturnType<React.FC<Props<Key>>> => {
-  const setActiveTabWithEventKey = (event, eventKey: ReactText) =>
+  const setActiveTabWithEventKey = (_event, eventKey: number | string) =>
     onChange(eventKey as Key);
 
   return (

@@ -18,7 +18,14 @@ export const Page: React.FC = () => {
   }, [retry]);
 
   return (
-    <PageContainer pageTitle={words("catalog.title")}>
+    <PageContainer
+      pageTitle={
+        <>
+          {words("catalog.title")}
+          <CatalogActions />
+        </>
+      }
+    >
       <RemoteDataView
         data={data}
         retry={retry}
@@ -26,7 +33,6 @@ export const Page: React.FC = () => {
         SuccessView={(services) =>
           services.length <= 0 ? (
             <>
-              <CatalogActions />
               <EmptyView
                 aria-label="ServiceCatalog-Empty"
                 message={words("catalog.empty.message")}
@@ -34,7 +40,6 @@ export const Page: React.FC = () => {
             </>
           ) : (
             <div aria-label="ServiceCatalog-Success">
-              <CatalogActions />
               <CatalogDataList services={services} />
             </div>
           )

@@ -1,5 +1,5 @@
 import React, { PropsWithChildren, createContext, useState } from "react";
-import { Modal, ModalVariant } from "@patternfly/react-core";
+import { Modal, ModalVariant } from "@patternfly/react-core/deprecated";
 
 type IconVariant = "success" | "danger" | "warning" | "info" | "custom";
 
