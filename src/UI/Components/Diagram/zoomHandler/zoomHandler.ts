@@ -211,7 +211,11 @@ export class ZoomHandlerService {
 
     slider.style.setProperty(
       "--slider-background",
-      `linear-gradient(to right, var(--pf-v5-global--active-color--100) 0%, var(--pf-v5-global--active-color--100), ${value}% var(--pf-v5-global--palette--black-400) ${value}%, var(--pf-v5-global--palette--black-400) 100%)`,
+      `linear-gradient(to right, 
+        var(--pf-t--global--border--color--brand--default) 0%, 
+        var(--pf-t--global--border--color--brand--default), ${value}% 
+        var(--pf-t--global--border--color--nonstatus--gray--default) ${value}%, 
+        var(--pf-t--global--border--color--nonstatus--gray--default) 100%)`,
     );
   }
 
@@ -259,7 +263,7 @@ export class ZoomHandlerService {
     ) as IconButton;
 
     const canvas = document.querySelector("#canvas-wrapper");
-    const banners = document.querySelectorAll(".pf-v5-c-banner");
+    const banners = document.querySelectorAll(".pf-v6-c-banner"); // TODO: Needs to be updated to avoid targetting a class
 
     if (canvas) {
       canvas.classList.toggle("fullscreen", !!document.fullscreenElement);

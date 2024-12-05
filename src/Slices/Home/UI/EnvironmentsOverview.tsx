@@ -1,4 +1,5 @@
 import React from "react";
+import { PageSection } from "@patternfly/react-core";
 import { FlatEnvironment } from "@/Core";
 import { useUrlStateWithFilter } from "@/Data";
 import { CardView } from "./CardView";
@@ -42,16 +43,22 @@ export const EnvironmentsOverview: React.FC<Props> = ({
 
   return (
     <>
-      <FilterToolbar
-        projectNames={projectNames}
-        projectFilter={projectFilter}
-        setProjectFilter={setProjectFilter}
-        environmentFilter={environmentFilter}
-        setEnvironmentFilter={setEnvironmentFilter}
-        clearFilters={() =>
-          setFilter({ projectFilter: undefined, environmentFilter: undefined })
-        }
-      />
+      <PageSection>
+        <FilterToolbar
+          projectNames={projectNames}
+          projectFilter={projectFilter}
+          setProjectFilter={setProjectFilter}
+          environmentFilter={environmentFilter}
+          setEnvironmentFilter={setEnvironmentFilter}
+          clearFilters={() =>
+            setFilter({
+              projectFilter: undefined,
+              environmentFilter: undefined,
+            })
+          }
+        />
+      </PageSection>
+
       <CardView environments={filteredByEnvName} {...props} />
     </>
   );

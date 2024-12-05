@@ -32,8 +32,8 @@ export const LogLevelFilter: React.FC<Props> = ({ filter, setFilter }) => {
 
   return (
     <ToolbarFilter
-      chips={filter.minimal_log_level ? [filter.minimal_log_level] : []}
-      deleteChip={deleteChip}
+      labels={filter.minimal_log_level ? [filter.minimal_log_level] : []}
+      deleteLabel={deleteChip}
       categoryName="Minimal Log Level"
     >
       <SingleTextSelect

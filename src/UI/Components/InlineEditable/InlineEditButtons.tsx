@@ -6,25 +6,34 @@ export const EnableEditButton: React.FC<{
   onClick: () => void;
   "aria-label": string;
 }> = ({ onClick, ...props }) => (
-  <Button aria-label={props["aria-label"]} onClick={onClick} variant="plain">
-    <PencilAltIcon />
-  </Button>
+  <Button
+    icon={<PencilAltIcon />}
+    aria-label={props["aria-label"]}
+    onClick={onClick}
+    variant="plain"
+  />
 );
 
 export const SubmitEditButton: React.FC<{
   onClick: () => void;
   "aria-label": string;
 }> = ({ onClick, ...props }) => (
-  <Button aria-label={props["aria-label"]} onClick={onClick} variant="link">
-    <CheckIcon />
-  </Button>
+  <Button
+    icon={<CheckIcon />}
+    aria-label={props["aria-label"]}
+    onClick={onClick}
+    variant="link"
+  ></Button>
 );
 
 export const CancelEditButton: React.FC<{
   onClick: () => void;
   "aria-label": string;
 }> = ({ onClick, ...props }) => (
-  <Button aria-label={props["aria-label"]} onClick={onClick} variant="plain">
-    <TimesIcon />
-  </Button>
+  <Button
+    icon={<TimesIcon />}
+    aria-label={props["aria-label"]}
+    onClick={onClick}
+    variant="plain"
+  />
 );

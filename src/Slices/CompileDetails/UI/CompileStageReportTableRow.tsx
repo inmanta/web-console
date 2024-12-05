@@ -58,7 +58,14 @@ export const CompileStageReportTableRow: React.FC<Props> = ({
       </Tr>
       <Tr isExpanded={isExpanded}>
         <Td colSpan={numberOfColumns}>
-          <PaddedDescriptionList isHorizontal>
+          <DescriptionList
+            isHorizontal
+            isFillColumns
+            style={{
+              paddingTop:
+                "var(--pf-t--global--spacer--control--vertical--default",
+            }}
+          >
             <DescriptionListGroup>
               <DescriptionListTerm>
                 {words("compileDetails.stages.columns.command")}
@@ -105,7 +112,7 @@ export const CompileStageReportTableRow: React.FC<Props> = ({
                 />
               </DescriptionListDescription>
             </DescriptionListGroup>
-          </PaddedDescriptionList>
+          </DescriptionList>
         </Td>
       </Tr>
     </StyledBody>
@@ -115,11 +122,5 @@ export const CompileStageReportTableRow: React.FC<Props> = ({
 const StyledBody = styled(Tbody)<{
   $failed?: boolean;
 }>`
-  ${({ $failed }) =>
-    $failed ? "background-color: var(--pf-v5-global--palette--red-50)" : ""};
-`;
-
-const PaddedDescriptionList = styled(DescriptionList)`
-  padding-bottom: 1em;
-  padding-top: 1em;
+  ${({ $failed }) => ($failed ? "var(--pf-t--color--red-orange--50)" : "")};
 `;

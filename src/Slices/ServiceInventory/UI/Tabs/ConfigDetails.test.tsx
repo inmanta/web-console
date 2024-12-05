@@ -75,6 +75,6 @@ it("Config Details takes environment halted status in account", async () => {
   });
   rerender(component({ enabled: true }));
   expect(
-    await screen.findByRole("checkbox", { name: "enabled-True" }),
+    await screen.findByRole("switch", { name: "enabled-True" }),
   ).toBeDisabled();
 });

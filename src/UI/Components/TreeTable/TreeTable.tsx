@@ -8,7 +8,6 @@ import {
 } from "@patternfly/react-core";
 import { EllipsisVIcon } from "@patternfly/react-icons";
 import { Tbody, Thead, Tr, Th, Table } from "@patternfly/react-table";
-import styled from "styled-components";
 import { ParsedNumber } from "@/Core";
 import { words } from "@/UI/words";
 import { ColumnHeaders } from "./ColumnHeaders";
@@ -44,13 +43,13 @@ export const TreeTable: React.FC<Props> = ({
   const emptyColumns = treeTableHelper.getEmptyAttributeSets();
 
   return (
-    <StyledTableComposable
+    <Table
       variant="compact"
       data-testid={id ? `attributes-tree-table-${id}` : "attributes-tree-table"}
     >
       <Thead>
-        <StyledTr>
-          <Th key={firstColumn} className="pf-v5-m-width-40">
+        <Tr>
+          <Th key={firstColumn} width={30}>
             <Indent level={0} noToggle>
               {firstColumn}
             </Indent>
@@ -69,9 +68,8 @@ export const TreeTable: React.FC<Props> = ({
                   isExpanded={isOpen}
                   variant="plain"
                   onClick={() => setIsOpen((value) => !value)}
-                >
-                  <EllipsisVIcon />
-                </MenuToggle>
+                  icon={<EllipsisVIcon />}
+                />
               )}
               isOpen={isOpen}
               popperProps={{ position: "right" }}
@@ -94,7 +92,7 @@ export const TreeTable: React.FC<Props> = ({
               </DropdownList>
             </Dropdown>
           </Th>
-        </StyledTr>
+        </Tr>
       </Thead>
       <Tbody>
         {rows.map((row) => (
@@ -111,13 +109,6 @@ export const TreeTable: React.FC<Props> = ({
           />
         ))}
       </Tbody>
-    </StyledTableComposable>
+    </Table>
   );
 };
-
-const StyledTableComposable = styled(Table)`
-  --pf-v5-c-table__expandable-row--after--border-width--base: 0px;
-`;
-const StyledTr = styled(Tr)`
-  --pf-v5-c-table--cell--Overflow: visible;
-`;

@@ -72,8 +72,8 @@ export const SelectIncludeExcludeFilter: React.FC<Props> = ({
 
   return (
     <ToolbarFilter
-      chips={selectedStates}
-      deleteChip={removeChip}
+      labels={selectedStates}
+      deleteLabel={removeChip}
       categoryName={filterPropertyName}
       showToolbarItem={isVisible}
     >
@@ -123,9 +123,8 @@ const IncludeExcludeOption: React.FC<RowProps> = ({
       <MenuNameItem>{state}</MenuNameItem>
     </Td>
     <Td>
-      <span className="pf-v5-c-select__menu-wrapper">
+      <span>
         <ClickableMenuItem
-          className="pf-v5-c-select__menu-item"
           onClick={onInclude}
           aria-label={`${state}-include-toggle`}
         >
@@ -142,9 +141,8 @@ const IncludeExcludeOption: React.FC<RowProps> = ({
       </span>
     </Td>
     <Td>
-      <div className="pf-v5-c-select__menu-wrapper">
+      <div>
         <ClickableMenuItem
-          className="pf-v5-c-select__menu-item"
           onClick={onExclude}
           aria-label={`${state}-exclude-toggle`}
         >
@@ -186,18 +184,18 @@ const UnborderedRow = styled(Tr)`
 `;
 
 const ActiveIncludeIcon = styled(CheckIcon)`
-  color: var(--pf-v5-global--active-color--100);
+  color: var(--pf-t--global--icon--color--status--success--default);
 `;
 const InactiveIncludeIcon = styled(CheckCircleIcon)`
-  color: var(--pf-v5-global--disabled-color--200);
+  color: var(--pf-t--global--icon--color--disabled);
 `;
 
 const ActiveExcludeIcon = styled(TimesIcon)`
-  color: var(--pf-v5-global--danger-color--100);
+  color: var(--pf-t--global--icon--color--status--danger--default);
 `;
 
 const InactiveExcludeIcon = styled(TimesCircleIcon)`
-  color: var(--pf-v5-global--disabled-color--200);
+  color: var(--pf-t--global--icon--color--disabled);
 `;
 
 const ClickableMenuItem = styled.span`
@@ -206,15 +204,6 @@ const ClickableMenuItem = styled.span`
 
 const MenuNameItem = styled.span`
   position: relative;
-  width: var(--pf-v5-c-select__menu-item--Width);
-  padding: var(--pf-v5-c-select__menu-item--PaddingTop)
-    var(--pf-v5-c-select__menu-item--PaddingRight)
-    var(--pf-v5-c-select__menu-item--PaddingBottom)
-    var(--pf-v5-c-select__menu-item--PaddingLeft);
-  font-size: var(--pf-v5-c-select__menu-item--FontSize);
-  font-weight: var(--pf-v5-c-select__menu-item--FontWeight);
-  line-height: var(--pf-v5-c-select__menu-item--LineHeight);
-  color: var(--pf-v5-c-select__menu-item--Color);
   text-align: left;
   white-space: nowrap;
   background-color: transparent;

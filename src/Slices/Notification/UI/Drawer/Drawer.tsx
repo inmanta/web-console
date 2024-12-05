@@ -16,7 +16,6 @@ import {
   NotificationDrawerList,
 } from "@patternfly/react-core";
 import { EllipsisVIcon } from "@patternfly/react-icons";
-import styled from "styled-components";
 import { RemoteData } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
 import { useNavigateTo } from "@/UI/Routing";
@@ -115,8 +114,8 @@ export const View: React.FC<ViewProps> = ({
       <NotificationDrawerHeader count={count} onClose={() => onClose()}>
         <ActionList {...{ onClearAll, onReadAll, onClose }} />
       </NotificationDrawerHeader>
-      <CustomNotificationDrawerBody>
-        <CustomNotificationDrawerList>
+      <NotificationDrawerBody>
+        <NotificationDrawerList>
           {RemoteData.fold(
             {
               notAsked: () => null,
@@ -134,20 +133,11 @@ export const View: React.FC<ViewProps> = ({
             },
             data,
           )}
-        </CustomNotificationDrawerList>
-      </CustomNotificationDrawerBody>
+        </NotificationDrawerList>
+      </NotificationDrawerBody>
     </NotificationDrawer>
   );
 };
-
-const CustomNotificationDrawerBody = styled(NotificationDrawerBody)`
-  padding-bottom: 300px;
-  background-color: var(--pf-v5-global--BackgroundColor--200);
-`;
-
-const CustomNotificationDrawerList = styled(NotificationDrawerList)`
-  overflow-y: visible;
-`;
 
 interface ActionListProps {
   onClearAll(): void;
@@ -182,9 +172,8 @@ const ActionList: React.FC<ActionListProps> = ({
           variant="plain"
           onClick={onToggleClick}
           isExpanded={isOpen}
-        >
-          <EllipsisVIcon />
-        </MenuToggle>
+          icon={<EllipsisVIcon />}
+        />
       )}
       isOpen={isOpen}
       onOpenChange={(isOpen: boolean) => setIsOpen(isOpen)}

@@ -34,13 +34,13 @@ export const FilterPicker: React.FC<Props> = ({
       onClick={() => setIsOpen((value) => !value)}
       isExpanded={isOpen}
       aria-label={"FilterPicker"}
+      icon={<FilterIcon />}
       style={
         {
           minWidth: "150px",
         } as React.CSSProperties
       }
     >
-      <StyledIcon />
       {filterKind}
     </MenuToggle>
   );
@@ -66,8 +66,4 @@ export const FilterPicker: React.FC<Props> = ({
 
 const StyledToolbarItem = styled(ToolbarItem)`
   align-self: start;
-`;
-
-const StyledIcon = styled(FilterIcon)`
-  margin-right: 5px;
 `;

@@ -7,11 +7,21 @@ import {
   TextInputTypes,
 } from "@patternfly/react-core";
 import { CheckIcon } from "@patternfly/react-icons";
-import styled from "styled-components";
 import { words } from "@/UI/words";
 import { TextListFormInput } from "../../ServiceInstanceForm/Components/TextListFormInput";
 
-const InlineInput = ({
+interface Props {
+  label: string;
+  value: string | number | boolean | string[];
+  type: string;
+  onChange: (
+    event: React.FormEvent<HTMLInputElement> | null,
+    value: string | number | boolean | string[],
+  ) => void;
+  toggleModal: () => void;
+}
+
+export const InlineInput: React.FC<Props> = ({
   label,
   value,
   type,
@@ -31,7 +41,7 @@ const InlineInput = ({
 
   if (type.includes("bool")) {
     input = (
-      <StyledSwitch
+      <Switch
         isChecked={value.toString().toLowerCase() === "true"}
         onChange={(event, checked) => onChange(event, checked)}
         aria-label={`new-attribute-toggle-${label}`}
@@ -46,7 +56,7 @@ const InlineInput = ({
       formattedValue = value;
     }
     input = (
-      <StyledTextForm
+      <TextListFormInput
         aria-label="new-attribute-input"
         attributeValue={formattedValue as string[]}
         isOptional={true}
@@ -58,7 +68,7 @@ const InlineInput = ({
     );
   } else {
     input = (
-      <StyledInput
+      <TextInput
         value={value as string | number | undefined}
         type={type.toLowerCase().includes("int") ? "number" : "text"}
         onChange={(event, value) => onChange(event, value)}
@@ -73,32 +83,16 @@ const InlineInput = ({
       {" "}
       {input}
       <Button
+        icon={
+          <Icon status="danger">
+            <CheckIcon />
+          </Icon>
+        }
         data-testid="inline-submit"
         variant="link"
         isDanger
         onClick={toggleModal}
-      >
-        <Icon status="danger">
-          <CheckIcon />
-        </Icon>
-      </Button>
+      ></Button>
     </>
   );
 };
-
-export default InlineInput;
-
-const StyledInput = styled(TextInput)`
-  max-width: 200px;
-`;
-
-const StyledSwitch = styled(Switch)`
-  --pf-v5-c-switch__input--focus__toggle--OutlineWidth: 0;
-  --pf-v5-c-switch__input--checked__toggle--BackgroundColor: var(
-    --pf-v5-global--danger-color--100
-  );
-`;
-const StyledTextForm = styled(TextListFormInput)`
-  display: inline-block;
-  width: 350px;
-`;

@@ -19,6 +19,7 @@ export const Navigation: React.FC<{ environment: string | undefined }> = ({
   environment,
 }) => {
   const { featureManager, routeManager } = useContext(DependencyContext);
+
   const isEnvPresent = typeof environment !== "undefined";
   const groups = [
     envrionment(routeManager, isEnvPresent),
@@ -30,7 +31,7 @@ export const Navigation: React.FC<{ environment: string | undefined }> = ({
   ];
 
   return (
-    <Nav theme="dark">
+    <Nav>
       {groups.map(({ id, title, links }) => (
         <NavGroup title={title} key={id}>
           {links.map(NavigationItem)}

@@ -37,14 +37,14 @@ describe("createStencilElement", () => {
     });
 
     expect(embeddedElementWithModel.attributes.attrs?.body?.fill).toEqual(
-      "var(--pf-v5-global--palette--blue-400)",
+      "var(--pf-t--chart--color--blue--400, #004d99)",
     );
     expect(embeddedElementWithModel.attributes.attrs?.body?.class).toEqual(
       "body_default",
     );
 
     expect(embeddedElementWithModel.attributes.attrs?.bodyTwo?.fill).toEqual(
-      "var(--pf-v5-global--palette--white)",
+      "var(--pf-t--global--text--color--inverse)",
     );
     expect(embeddedElementWithModel.attributes.attrs?.bodyTwo?.class).toEqual(
       "bodyTwo_default",
@@ -64,7 +64,7 @@ describe("createStencilElement", () => {
     });
 
     expect(nonEmbedded.attributes.attrs?.body?.fill).toEqual(
-      "var(--pf-v5-global--palette--purple-500)",
+      "var(--pf-t--chart--color--purple--300, #5e40be)",
     );
     expect(nonEmbedded.attributes.attrs?.body?.class).toEqual(
       "body_nonEmbedded",

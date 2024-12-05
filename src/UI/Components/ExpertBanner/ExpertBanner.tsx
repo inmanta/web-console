@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Banner, Button, Flex, Spinner } from "@patternfly/react-core";
-import styled from "styled-components";
 import { useUpdateEnvConfig } from "@/Data/Managers/V2/POST/UpdateEnvConfig";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
@@ -42,7 +41,7 @@ export const ExpertBanner: React.FC<Props> = ({ environmentId }) => {
       )}
       <Banner
         isSticky
-        variant="red"
+        color="red"
         id="expert-mode-banner"
         aria-label="expertModeActive"
       >
@@ -61,14 +60,9 @@ export const ExpertBanner: React.FC<Props> = ({ environmentId }) => {
           >
             {words("banner.disableExpertMode")}
           </Button>
-          {isLoading && <StyledSpinner size="sm" />}
+          {isLoading && <Spinner isInline size="sm" />}
         </Flex>
       </Banner>
     </>
   ) : null;
 };
-
-const StyledSpinner = styled(Spinner)`
-  margin-left: 0.5rem;
-  --pf-v5-c-spinner--Color: white;
-`;
