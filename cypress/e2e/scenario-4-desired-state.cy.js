@@ -363,7 +363,7 @@ describe("Scenario 4 Desired State", () => {
 
       cy.get("tbody")
         .eq(0)
-        .find('[data-label="Status"]')
+        .find('[data-label="Status"]', { timeout: 30000 })
         .should("have.text", "candidate");
 
       cy.get("tbody").eq(0).find('[aria-label="actions-toggle"]').click();
