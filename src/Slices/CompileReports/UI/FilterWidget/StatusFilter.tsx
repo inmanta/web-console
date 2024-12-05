@@ -25,10 +25,10 @@ export const StatusFilter: React.FC<Props> = ({
 
   return (
     <ToolbarFilter
-      chips={selected ? [selected] : []}
+      labels={selected ? [selected] : []}
       showToolbarItem={isVisible}
       categoryName={Kind.Status}
-      deleteChip={deleteChip}
+      deleteLabel={deleteChip}
     >
       <SingleTextSelect
         toggleAriaLabel={Kind.Status}

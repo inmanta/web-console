@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { DropdownItem, Text } from "@patternfly/react-core";
+import { DropdownItem, Content } from "@patternfly/react-core";
 import { TrashAltIcon } from "@patternfly/react-icons";
 import { ParsedNumber } from "@/Core";
 import { useDeleteInstance } from "@/Data/Managers/V2/DELETE/DeleteInstance";
@@ -107,12 +107,12 @@ export const DeleteAction: React.FC<Props> = ({
         onCancel={closeModal}
         isPending={isPending}
       >
-        <Text>
+        <Content component="p">
           {words("inventory.deleteInstance.header")(
             instance_display_identity,
             service_entity,
           )}
-        </Text>
+        </Content>
         <br />
       </ConfirmationModal>
       {errorMessage && (

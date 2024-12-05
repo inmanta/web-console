@@ -1,5 +1,5 @@
 import React, { Component, ErrorInfo, ReactNode } from "react";
-import { Button, ClipboardCopy } from "@patternfly/react-core";
+import { Button, ClipboardCopy, Content } from "@patternfly/react-core";
 import styled from "styled-components";
 import { ErrorView } from "../Components";
 
@@ -56,11 +56,11 @@ class ErrorBoundary extends Component<Props, State> {
               <Button variant="primary" onClick={() => location.reload()}>
                 Reload the page
               </Button>
-              <this.StyledParagraph>
+              <Content component="p">
                 If this error keeps happening, please contact{" "}
                 <a href="mailto:support@inmanta.com">support@inmanta.com</a> for
                 more assistance.
-              </this.StyledParagraph>
+              </Content>
             </this.StyledCenteredContainer>
           </this.StyledClipboardContainer>
         </React.Fragment>
@@ -80,10 +80,6 @@ class ErrorBoundary extends Component<Props, State> {
     gap: 10px;
     flex-direction: column;
     margin-top: 20px;
-  `;
-  public StyledParagraph = styled.p`
-    font-style: italic;
-    color: var(--pf-v5-global--palette--blue-400);
   `;
 }
 

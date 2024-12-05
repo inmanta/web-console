@@ -208,9 +208,8 @@ export const AttributesTable: React.FC<Props> = ({
       variant="plain"
       onClick={onToggleClick}
       isExpanded={isToggleOpen}
-    >
-      <EllipsisVIcon />
-    </MenuToggle>
+      icon={<EllipsisVIcon />}
+    />
   );
 
   /**
@@ -408,5 +407,4 @@ export const AttributesTable: React.FC<Props> = ({
 
 const StyledSelect = styled(FormSelect)`
   width: 180px;
-  margin-top: var(--pf-v5-global--spacer--md);
 `;

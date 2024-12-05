@@ -119,7 +119,7 @@ test("ConfigTab can reset all settings", async () => {
   expect(resetButton).toBeVisible();
 
   expect(
-    screen.getByRole("checkbox", { name: "auto_creating-False" }),
+    screen.getByRole("switch", { name: "auto_creating-False" }),
   ).toBeVisible();
 
   await act(async () => {
@@ -131,7 +131,7 @@ test("ConfigTab can reset all settings", async () => {
   });
 
   expect(
-    await screen.findByRole("checkbox", { name: "auto_creating-True" }),
+    await screen.findByRole("switch", { name: "auto_creating-True" }),
   ).toBeVisible();
 });
 
@@ -140,7 +140,7 @@ test("ConfigTab can change 1 toggle", async () => {
 
   render(component);
 
-  const toggle = await screen.findByRole("checkbox", {
+  const toggle = await screen.findByRole("switch", {
     name: "auto_designed-True",
   });
 
@@ -157,11 +157,11 @@ test("ConfigTab can change 1 toggle", async () => {
   });
 
   expect(
-    screen.getByRole("checkbox", { name: "auto_creating-False" }),
+    screen.getByRole("switch", { name: "auto_creating-False" }),
   ).toBeVisible();
 
   expect(
-    await screen.findByRole("checkbox", { name: "auto_designed-False" }),
+    await screen.findByRole("switch", { name: "auto_designed-False" }),
   ).toBeVisible();
 });
 
@@ -177,7 +177,7 @@ test("ConfigTab handles hooks with environment modifier correctly", async () => 
   });
   render(component);
 
-  const toggle = await screen.findByRole("checkbox", {
+  const toggle = await screen.findByRole("switch", {
     name: "auto_designed-True",
   });
 

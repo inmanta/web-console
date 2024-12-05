@@ -1,7 +1,7 @@
 import React, { act } from "react";
 import { MemoryRouter, useLocation } from "react-router-dom";
 import { Page } from "@patternfly/react-core";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { axe, toHaveNoViolations } from "jest-axe";
@@ -474,7 +474,15 @@ test("GIVEN ServiceInventory WHEN sorting changes AND we are not on the first pa
 
   //sort on the second page
   await act(async () => {
-    await userEvent.click(screen.getByRole("button", { name: "State" }));
+    const columnheader = screen.getByRole("columnheader", {
+      name: /state/i,
+    });
+
+    await userEvent.click(
+      within(columnheader).getByRole("button", {
+        name: /state/i,
+      }),
+    );
   });
 
   // expect the api url to not contain start and end keywords that are used for pagination to assert we are back on the first page.

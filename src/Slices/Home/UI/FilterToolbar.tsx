@@ -33,7 +33,7 @@ export const FilterToolbar: React.FC<Props> = ({
           aria-label="FilterBar"
           role="toolbar"
         >
-          <ToolbarItem variant="search-filter">
+          <ToolbarItem>
             <SimpleFreeTextFilter
               isVisible={true}
               filterPropertyName={"environment"}
@@ -42,7 +42,7 @@ export const FilterToolbar: React.FC<Props> = ({
               searchEntry={environmentFilter}
             />
           </ToolbarItem>
-          <ToolbarItem variant="search-filter">
+          <ToolbarItem>
             <SelectOptionFilter
               isVisible={true}
               possibleStates={projectNames}

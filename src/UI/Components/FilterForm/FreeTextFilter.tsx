@@ -4,8 +4,8 @@ import {
   ToolbarFilter,
   TextInput,
   ButtonVariant,
-  ToolbarChip,
-  ToolbarChipGroup,
+  ToolbarLabel,
+  ToolbarLabelGroup,
   ToolbarItem,
   ToolbarGroup,
 } from "@patternfly/react-core";
@@ -17,8 +17,8 @@ interface Props {
   placeholder: string;
   searchEntries?: string[];
   removeChip: (
-    category: string | ToolbarChipGroup,
-    chip: string | ToolbarChip,
+    category: string | ToolbarLabelGroup,
+    chip: string | ToolbarLabel,
   ) => void;
   value: string;
   setValue: (value: string) => void;
@@ -37,8 +37,8 @@ export const FreeTextFilter: React.FC<Props> = ({
 }) => {
   return (
     <ToolbarFilter
-      chips={searchEntries ? searchEntries : []}
-      deleteChip={removeChip}
+      labels={searchEntries ? searchEntries : []}
+      deleteLabel={removeChip}
       categoryName={filterPropertyName}
       showToolbarItem={!isHidden}
     >

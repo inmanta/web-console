@@ -551,12 +551,9 @@ test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is
     );
   });
   await act(async () => {
-    await userEvent.click(
-      screen.getByRole("button", { name: words("confirm") }),
-    );
+    await userEvent.click(screen.getByText(words("confirm")));
   });
 
-  expect(submitCb).toBeCalled();
   expect(submitCb).toHaveBeenCalledWith(
     {
       [Test.Field.text.name]: "test text",

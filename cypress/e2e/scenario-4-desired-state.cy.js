@@ -4,9 +4,9 @@
  *
  * @param {string} nameEnvironment
  */
-const clearEnvironment = (nameEnvironment = "lsm-frontend") => {
+const clearEnvironment = (nameEnvironment = "test") => {
   cy.visit("/console/");
-  cy.get('[aria-label="Environment card"]').contains(nameEnvironment).click();
+  cy.get(`[aria-label="Select-environment-${nameEnvironment}"]`).click();
   cy.url().then((url) => {
     const location = new URL(url);
     const id = location.searchParams.get("env");
@@ -45,9 +45,9 @@ const checkStatusCompile = (id) => {
  *
  * @param {string} nameEnvironment
  */
-const forceUpdateEnvironment = (nameEnvironment = "lsm-frontend") => {
+const forceUpdateEnvironment = (nameEnvironment = "test") => {
   cy.visit("/console/");
-  cy.get('[aria-label="Environment card"]').contains(nameEnvironment).click();
+  cy.get(`[aria-label="Select-environment-${nameEnvironment}"]`).click();
   cy.url().then((url) => {
     const location = new URL(url);
     const id = location.searchParams.get("env");
@@ -63,7 +63,6 @@ const forceUpdateEnvironment = (nameEnvironment = "lsm-frontend") => {
 };
 
 const isIso = Cypress.env("edition") === "iso";
-const PROJECT = Cypress.env("project") || "lsm-frontend";
 
 describe("Scenario 4 Desired State", () => {
   if (isIso) {
@@ -76,10 +75,12 @@ describe("Scenario 4 Desired State", () => {
   it("4.1 Initial setup", () => {
     // Go from Home page to Service Inventory of Basic-service
     cy.visit("/console/");
-    cy.get('[aria-label="Environment card"]').contains(PROJECT).click();
+    cy.get(`[aria-label="Select-environment-test"]`).click();
 
     if (isIso) {
-      cy.get(".pf-v5-c-nav__link").contains("Service Catalog").click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]')
+        .contains("Service Catalog")
+        .click();
       cy.get("#basic-service").contains("Show inventory").click();
       cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
 
@@ -108,7 +109,9 @@ describe("Scenario 4 Desired State", () => {
     }
 
     //got to desired stated page
-    cy.get(".pf-v5-c-nav__link").contains("Desired State").click();
+    cy.get('[aria-label="Sidebar-Navigation-Item"]')
+      .contains("Desired State")
+      .click();
 
     if (!isIso) {
       // Hit the compile button; OSS don't get compiled on initial state.
@@ -164,7 +167,7 @@ describe("Scenario 4 Desired State", () => {
 
     // go to details of first resource
     cy.get("tbody").eq(0).contains("Show Details").click();
-    cy.get(".pf-v5-c-content").should(
+    cy.get(".pf-v6-c-content--small").should(
       "have.text",
       "frontend_model::TestResource[internal,name=default-0001]",
     );
@@ -193,92 +196,92 @@ describe("Scenario 4 Desired State", () => {
       cy.get("tbody").eq(0).contains("Show Details").click();
 
       // Go through each row and check value
-      cy.get(".pf-v5-c-description-list__group")
+      cy.get(".pf-v6-c-description-list__group")
         .eq(1)
-        .find(".pf-v5-c-description-list__term")
+        .find(".pf-v6-c-description-list__term")
         .should("have.text", "next_desired_state_version");
 
-      cy.get(".pf-v5-c-description-list__group")
+      cy.get(".pf-v6-c-description-list__group")
         .eq(1)
-        .find(".pf-v5-c-description-list__description")
+        .find(".pf-v6-c-description-list__description")
         .should("have.text", "4");
 
-      cy.get(".pf-v5-c-description-list__group")
+      cy.get(".pf-v6-c-description-list__group")
         .eq(2)
-        .find(".pf-v5-c-description-list__term")
+        .find(".pf-v6-c-description-list__term")
         .should("have.text", "next_version");
-      cy.get(".pf-v5-c-description-list__group")
+      cy.get(".pf-v6-c-description-list__group")
         .eq(2)
-        .find(".pf-v5-c-description-list__description")
+        .find(".pf-v6-c-description-list__description")
         .should("have.text", "4");
 
-      cy.get(".pf-v5-c-description-list__group")
+      cy.get(".pf-v6-c-description-list__group")
         .eq(3)
-        .find(".pf-v5-c-description-list__term")
+        .find(".pf-v6-c-description-list__term")
         .should("have.text", "purge_on_delete");
-      cy.get(".pf-v5-c-description-list__group")
+      cy.get(".pf-v6-c-description-list__group")
         .eq(3)
-        .find(".pf-v5-c-description-list__description")
+        .find(".pf-v6-c-description-list__description")
         .should("have.text", "false");
 
-      cy.get(".pf-v5-c-description-list__group")
+      cy.get(".pf-v6-c-description-list__group")
         .eq(4)
-        .find(".pf-v5-c-description-list__term")
+        .find(".pf-v6-c-description-list__term")
         .should("have.text", "purged");
-      cy.get(".pf-v5-c-description-list__group")
+      cy.get(".pf-v6-c-description-list__group")
         .eq(4)
-        .find(".pf-v5-c-description-list__description")
+        .find(".pf-v6-c-description-list__description")
         .should("have.text", "false");
 
-      cy.get(".pf-v5-c-description-list__group")
+      cy.get(".pf-v6-c-description-list__group")
         .eq(5)
-        .find(".pf-v5-c-description-list__term")
+        .find(".pf-v6-c-description-list__term")
         .should("have.text", "receive_events");
-      cy.get(".pf-v5-c-description-list__group")
+      cy.get(".pf-v6-c-description-list__group")
         .eq(5)
-        .find(".pf-v5-c-description-list__description")
+        .find(".pf-v6-c-description-list__description")
         .should("include.text", "true");
 
-      cy.get(".pf-v5-c-description-list__group")
+      cy.get(".pf-v6-c-description-list__group")
         .eq(6)
-        .find(".pf-v5-c-description-list__term")
+        .find(".pf-v6-c-description-list__term")
         .should("have.text", "requires");
-      cy.get(".pf-v5-c-description-list__group")
+      cy.get(".pf-v6-c-description-list__group")
         .eq(6)
-        .find(".pf-v5-c-description-list__description")
+        .find(".pf-v6-c-description-list__description")
         .should(
           "include.text",
           "frontend_model::TestResource[internal,name=default-0001]",
         );
 
-      cy.get(".pf-v5-c-description-list__group")
+      cy.get(".pf-v6-c-description-list__group")
         .eq(7)
-        .find(".pf-v5-c-description-list__term")
+        .find(".pf-v6-c-description-list__term")
         .should("have.text", "resources");
-      cy.get(".pf-v5-c-description-list__group")
+      cy.get(".pf-v6-c-description-list__group")
         .eq(7)
-        .find(".pf-v5-c-description-list__description")
+        .find(".pf-v6-c-description-list__description")
         .should(
           "include.text",
           '"frontend_model::TestResource[internal,name=default-0001]"',
         );
 
-      cy.get(".pf-v5-c-description-list__group")
+      cy.get(".pf-v6-c-description-list__group")
         .eq(8)
-        .find(".pf-v5-c-description-list__term")
+        .find(".pf-v6-c-description-list__term")
         .should("have.text", "send_event");
-      cy.get(".pf-v5-c-description-list__group")
+      cy.get(".pf-v6-c-description-list__group")
         .eq(8)
-        .find(".pf-v5-c-description-list__description")
+        .find(".pf-v6-c-description-list__description")
         .should("have.text", "false");
 
-      cy.get(".pf-v5-c-description-list__group")
+      cy.get(".pf-v6-c-description-list__group")
         .eq(9)
-        .find(".pf-v5-c-description-list__term")
+        .find(".pf-v6-c-description-list__term")
         .should("have.text", "service_entity");
-      cy.get(".pf-v5-c-description-list__group")
+      cy.get(".pf-v6-c-description-list__group")
         .eq(9)
-        .find(".pf-v5-c-description-list__description")
+        .find(".pf-v6-c-description-list__description")
         .should("have.text", "basic-service");
     }
 
@@ -296,7 +299,7 @@ describe("Scenario 4 Desired State", () => {
 
     // Delete the retired version.
     cy.get("tbody").eq(1).find('[aria-label="actions-toggle"]').click();
-    cy.get(".pf-v5-c-menu__item").contains("Delete").click();
+    cy.get('[role="menuitem"]').contains("Delete").click();
     cy.get("#cancel").click();
 
     cy.get("@TABLE_LENGTH").then((length) => {
@@ -307,7 +310,7 @@ describe("Scenario 4 Desired State", () => {
     });
 
     cy.get("tbody").eq(1).find('[aria-label="actions-toggle"]').click();
-    cy.get(".pf-v5-c-menu__item").contains("Delete").click();
+    cy.get('[role="menuitem"]').contains("Delete").click();
     cy.get("#submit").click();
 
     // The active version should remain in the table.
@@ -338,15 +341,19 @@ describe("Scenario 4 Desired State", () => {
     });
 
     // Update the settings to disable the auto-deploy setting.
-    cy.get(".pf-v5-c-nav__item").contains("Settings").click();
-    cy.get(".pf-v5-c-tabs__link").contains("Configuration").click();
-    cy.get('[aria-label="Row-auto_deploy"]').find(".pf-v5-c-switch").click();
+    cy.get('[aria-label="Sidebar-Navigation-Item"]')
+      .contains("Settings")
+      .click();
+    cy.get(".pf-v6-c-tabs__link").contains("Configuration").click();
+    cy.get('[aria-label="Row-auto_deploy"]').find(".pf-v6-c-switch").click();
     cy.get('[aria-label="Row-auto_deploy"]')
       .find('[aria-label="SaveAction"]')
       .click();
 
     // Go back to the desired state page.
-    cy.get(".pf-v5-c-nav__link").contains("Desired State").click();
+    cy.get('[aria-label="Sidebar-Navigation-Item"]')
+      .contains("Desired State")
+      .click();
 
     // Recompile, to get a candidate version.
     cy.get("button", { timeout: 30000 }).contains("Recompile").click();
@@ -360,7 +367,7 @@ describe("Scenario 4 Desired State", () => {
         .should("have.text", "candidate");
 
       cy.get("tbody").eq(0).find('[aria-label="actions-toggle"]').click();
-      cy.get(".pf-v5-c-menu__item").contains("Promote").click();
+      cy.get('[role="menuitem"]').contains("Promote").click();
       cy.get("tbody")
         .eq(0)
         .find('[data-label="Status"]')
@@ -373,38 +380,42 @@ describe("Scenario 4 Desired State", () => {
     });
 
     // Turn back the auto-deploy setting to true.
-    cy.get(".pf-v5-c-nav__item").contains("Settings").click();
-    cy.get(".pf-v5-c-tabs__link").contains("Configuration").click();
-    cy.get('[aria-label="Row-auto_deploy"]').find(".pf-v5-c-switch").click();
+    cy.get('[aria-label="Sidebar-Navigation-Item"]')
+      .contains("Settings")
+      .click();
+    cy.get(".pf-v6-c-tabs__link").contains("Configuration").click();
+    cy.get('[aria-label="Row-auto_deploy"]').find(".pf-v6-c-switch").click();
     cy.get('[aria-label="Row-auto_deploy"]')
       .find('[aria-label="SaveAction"]')
       .click();
 
     // Get back to the Desired State page.
-    cy.get(".pf-v5-c-nav__link").contains("Desired State").click();
+    cy.get('[aria-label="Sidebar-Navigation-Item"]')
+      .contains("Desired State")
+      .click();
 
     cy.get("tbody").eq(0).find('[aria-label="actions-toggle"]').click();
-    cy.get(".pf-v5-c-menu__item").contains("Select for compare").click();
+    cy.get('[role="menuitem"]').contains("Select for compare").click();
     cy.get("tbody").eq(1).find('[aria-label="actions-toggle"]').click();
-    cy.get(".pf-v5-c-menu__item").contains("Compare with selected").click();
-    cy.get(".pf-v5-c-title").eq(0).should("have.text", "Compare");
+    cy.get('[role="menuitem"]').contains("Compare with selected").click();
+    cy.get("h1").eq(0).should("have.text", "Compare");
     //go back
-    cy.get(".pf-v5-c-nav__link").contains("Desired State").click();
+    cy.get('[aria-label="Sidebar-Navigation-Item"]')
+      .contains("Desired State")
+      .click();
 
     cy.get("tbody")
       .eq(isIso ? -2 : -1)
       .find('[aria-label="actions-toggle"]')
       .click();
 
-    cy.get(".pf-v5-c-menu__item")
-      .contains("Compare with current state")
-      .click();
+    cy.get('[role="menuitem"]').contains("Compare with current state").click();
 
-    cy.get(".pf-v5-c-title").should("have.text", "Compliance Check");
+    cy.get("h1").should("have.text", "Compliance Check");
     cy.get('[aria-label="ReportListSelect"]')
       .contains("No Dry runs exist")
       .should("be.visible");
-    cy.get(".pf-v5-c-button").contains("Perform dry run").click();
+    cy.get(".pf-v6-c-button").contains("Perform dry run").click();
 
     cy.get('[aria-label="StatusFilter"]').click();
     cy.get('[role="option"]').contains("unmodified").click();
@@ -433,7 +444,7 @@ describe("Scenario 4 Desired State", () => {
     });
 
     // expect diff module to say No changes have been found
-    cy.get(".pf-v5-c-card__expandable-content", { timeout: 20000 }).should(
+    cy.get(".pf-v6-c-card__expandable-content", { timeout: 20000 }).should(
       ($expandableRow) => {
         expect($expandableRow).to.have.length(isIso ? 2 : 5);
 
@@ -453,21 +464,21 @@ describe("Scenario 4 Desired State", () => {
     );
 
     // go back to desired state page
-    cy.get(".pf-v5-c-nav__link").contains("Desired State").click();
+    cy.get('[aria-label="Sidebar-Navigation-Item"]')
+      .contains("Desired State")
+      .click();
 
     // click on version latest kebab menu
     cy.get("tbody").eq(0).find('[aria-label="actions-toggle"]').click();
 
     // select Compare with current state
-    cy.get(".pf-v5-c-menu__item")
-      .contains("Compare with current state")
-      .click();
+    cy.get('[role="menuitem"]').contains("Compare with current state").click();
 
     // expect to land on compliance check page
-    cy.get(".pf-v5-c-title").should("have.text", "Compliance Check");
+    cy.get("h1").should("have.text", "Compliance Check");
 
     // Expect diff-module to be empty
-    cy.get(".pf-v5-c-page__main-section")
+    cy.get(".pf-v6-c-page__main-section")
       .eq(1)
       .children()
       .should("have.length", 1);
@@ -477,7 +488,7 @@ describe("Scenario 4 Desired State", () => {
       .should("be.visible");
 
     // perform dry-run
-    cy.get(".pf-v5-c-button").contains("Perform dry run").click();
+    cy.get(".pf-v6-c-button").contains("Perform dry run").click();
 
     cy.get('[aria-label="StatusFilter"]').click();
     cy.get('[role="option"]').contains("unmodified").click();
@@ -502,7 +513,7 @@ describe("Scenario 4 Desired State", () => {
     });
 
     // await the end of the dry-run and expect to find two rows with expandable content.
-    cy.get(".pf-v5-c-card__expandable-content", { timeout: 20000 }).should(
+    cy.get(".pf-v6-c-card__expandable-content", { timeout: 20000 }).should(
       ($expandableRow) => {
         expect($expandableRow).to.have.length(isIso ? 2 : 5);
         expect($expandableRow.eq(0), "first-row").to.have.text(
@@ -526,7 +537,7 @@ describe("Scenario 4 Desired State", () => {
 
     // expect diff-module to only show the modified file.Only for ISO, the table would be empty on OSS.
     if (isIso) {
-      cy.get(".pf-v5-c-card__expandable-content", { timeout: 20000 }).should(
+      cy.get(".pf-v6-c-card__expandable-content", { timeout: 20000 }).should(
         ($expandableRow) => {
           expect($expandableRow).to.have.length(1);
 
@@ -540,15 +551,15 @@ describe("Scenario 4 Desired State", () => {
     }
 
     // go back to desired state
-    cy.get(".pf-v5-c-nav__link").contains("Desired State").click();
+    cy.get('[aria-label="Sidebar-Navigation-Item"]')
+      .contains("Desired State")
+      .click();
 
     // click again on kebab menu of version 5
     cy.get("tbody").eq(0).find('[aria-label="actions-toggle"]').click();
 
     // select again compare with current state
-    cy.get(".pf-v5-c-menu__item")
-      .contains("Compare with current state")
-      .click();
+    cy.get('[role="menuitem"]').contains("Compare with current state").click();
 
     cy.get('[aria-label="StatusFilter"]').click();
     cy.get('[role="option"]').contains("unmodified").click();
@@ -565,7 +576,7 @@ describe("Scenario 4 Desired State", () => {
       }
     });
     // expect the view to still contain the diff of the last dry-run comparison
-    cy.get(".pf-v5-c-card__expandable-content", { timeout: 20000 }).should(
+    cy.get(".pf-v6-c-card__expandable-content", { timeout: 20000 }).should(
       ($expandableRow) => {
         expect($expandableRow).to.have.length(isIso ? 2 : 5);
         expect($expandableRow.eq(0), "first-row").to.have.text(
@@ -581,7 +592,7 @@ describe("Scenario 4 Desired State", () => {
     );
 
     // click on Perform dry run
-    cy.get(".pf-v5-c-button").contains("Perform dry run").click();
+    cy.get(".pf-v6-c-button").contains("Perform dry run").click();
 
     // click on the dropdown containing the different dry-runs
     cy.get('[aria-label="ReportListSelect"]').click();

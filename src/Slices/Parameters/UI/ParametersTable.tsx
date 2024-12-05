@@ -1,7 +1,7 @@
 import React from "react";
 import {
   OnSort,
-  Table /* data-codemods */,
+  Table,
   TableVariant,
   Th,
   Thead,

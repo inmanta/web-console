@@ -38,7 +38,7 @@ export const DiffPageFilter: React.FC<Props> = ({
       : [words("showAll"), () => setStatuses(Diff.statuses)];
 
   return (
-    <ToolbarGroup align={{ default: "alignLeft" }}>
+    <ToolbarGroup align={{ default: "alignStart" }}>
       <ToolbarItem>
         <MultiTextSelect
           aria-label="StatusFilterOptions"

@@ -68,7 +68,7 @@ export const filterable: EnvironmentExpertOnly[] = [
   {
     projectName: "prod",
     id: "789",
-    name: "test-env1",
+    name: "test-env2",
     project_id: "444",
     repo_branch: "master",
     repo_url: "gitlab.com/test",

@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Alert, DropdownItem, Text } from "@patternfly/react-core";
+import { Alert, DropdownItem, Content } from "@patternfly/react-core";
 import { TrashAltIcon } from "@patternfly/react-icons";
 import { ParsedNumber } from "@/Core";
 import { useDestroyInstance } from "@/Data/Managers/V2/DELETE/DestroyInstance";
@@ -112,12 +112,12 @@ export const DestroyAction: React.FC<Props> = ({
         onCancel={closeModal}
         isPending={isPending}
       >
-        <Text>
+        <Content component="p">
           {words("inventory.destroyInstance.header")(
             instance_display_identity,
             service_entity,
           )}
-        </Text>
+        </Content>
         <br />
         <Alert
           variant="danger"

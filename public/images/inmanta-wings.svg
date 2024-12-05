@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.1"
+   id="Layer_1"
+   x="0px"
+   y="0px"
+   width="350"
+   height="350"
+   viewBox="0 0 350.00001 350.00001"
+   enable-background="new 0 0 255.12 141.73"
+   xml:space="preserve"
+   sodipodi:docname="inmanta-wings.svg"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
+   inkscape:export-filename="/home/stefan/Nextcloud/company/artwork/logo/inmanta-wings-square-large.png"
+   inkscape:export-xdpi="300.06857"
+   inkscape:export-ydpi="300.06857"><metadata
+   id="metadata25"><rdf:RDF><cc:Work
+       rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
+         rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title></dc:title></cc:Work></rdf:RDF></metadata><defs
+   id="defs23" /><sodipodi:namedview
+   pagecolor="#ffffff"
+   bordercolor="#666666"
+   borderopacity="1"
+   objecttolerance="10"
+   gridtolerance="10"
+   guidetolerance="10"
+   inkscape:pageopacity="0"
+   inkscape:pageshadow="2"
+   inkscape:window-width="1853"
+   inkscape:window-height="1025"
+   id="namedview21"
+   showgrid="false"
+   fit-margin-top="0"
+   fit-margin-left="0"
+   fit-margin-right="0"
+   fit-margin-bottom="0"
+   inkscape:zoom="0.95"
+   inkscape:cx="126.69101"
+   inkscape:cy="70.924945"
+   inkscape:window-x="67"
+   inkscape:window-y="27"
+   inkscape:window-maximized="1"
+   inkscape:current-layer="Layer_1" />
+<g
+   id="g18"
+   transform="matrix(3.0528758,0,0,3.0528758,-196.22665,-36.308908)">
+	<defs
+   id="defs3">
+		<rect
+   id="SVGID_1_"
+   x="64.276001"
+   y="33.193001"
+   width="114.646"
+   height="72.046997" />
+	</defs>
+	<clipPath
+   id="SVGID_2_">
+		<use
+   xlink:href="#SVGID_1_"
+   overflow="visible"
+   id="use5"
+   style="overflow:visible"
+   x="0"
+   y="0"
+   width="100%"
+   height="100%" />
+	</clipPath>
+	<path
+   clip-path="url(#SVGID_2_)"
+   d="m 144.842,33.195 c 0,0 -9.012,24.702 -17.11,35.21 -8.097,10.512 -34.585,28.116 -34.585,28.116 0,0 35.003,5.758 50.402,4.806 15.404,-0.959 35.313,-6.771 35.313,-6.771 0,0 -12.047,-29.766 -17.827,-39.844 -5.786,-10.079 -16.193,-21.517 -16.193,-21.517"
+   id="path8"
+   inkscape:connector-curvature="0"
+   style="fill:#009aa5" />
+	<path
+   clip-path="url(#SVGID_2_)"
+   d="m 100.586,52.749 c 0,0 45.716,31.872 58.414,35.859 12.697,3.981 19.922,5.898 19.922,5.898 0,0 -23.332,8.905 -49.79,6.707 -26.458,-2.193 -36.454,-4.454 -36.454,-4.454 0,0 6.702,-6.271 7.858,-13.232 1.155,-6.963 0.05,-30.778 0.05,-30.778"
+   id="path10"
+   inkscape:connector-curvature="0"
+   style="fill:#40a3ad" />
+	<path
+   clip-path="url(#SVGID_2_)"
+   d="m 93.003,96.73 c 0,0 -21.57,6.014 -27.09,8.061 -5.52,2.053 3.972,-3.483 12.79,-6.212 8.818,-2.733 19.857,-5.753 19.857,-5.753 z"
+   id="path12"
+   inkscape:connector-curvature="0"
+   style="fill:#009aa5" />
+	<path
+   clip-path="url(#SVGID_2_)"
+   d="m 126.342,70.038 c -13.588,-8.823 -25.838,-17.383 -25.838,-17.383 0,0 1.11,23.923 -0.044,30.917 -1.156,6.996 -7.873,13.296 -7.873,13.296 0,0 24.398,-16.184 33.755,-26.83"
+   id="path14"
+   inkscape:connector-curvature="0"
+   style="fill:#a6cbd1" />
+	<path
+   clip-path="url(#SVGID_2_)"
+   d="m 98.381,92.902 c -0.342,0.092 -1.434,0.396 -3,0.831 -1.479,1.867 -2.718,3.043 -2.829,3.152 0.004,-0.005 0.013,-0.005 0.018,-0.009 0.269,-0.177 2.518,-1.671 5.811,-3.974"
+   id="path16"
+   inkscape:connector-curvature="0"
+   style="fill:#65aeb8" />
+</g>
+</svg>

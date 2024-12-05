@@ -4,7 +4,7 @@ import {
   Divider,
   DrilldownMenu,
   MenuItem,
-  Text,
+  Content,
 } from "@patternfly/react-core";
 import { WarningTriangleIcon } from "@patternfly/react-icons";
 import { Maybe, VersionedServiceInstanceIdentifier } from "@/Core";
@@ -109,15 +109,19 @@ export const ForceStateAction: React.FC<Props> = ({
       ],
       content: (
         <>
-          <Text>
+          <Content component="p">
             {words("inventory.statustab.forceState.message")(
               instance_identity,
               targetState,
             )}
-          </Text>
+          </Content>
           <br />
-          <Text>{words("inventory.statustab.forceState.confirmMessage")}</Text>
-          <Text>{words("inventory.statustab.forceState.confirmQuestion")}</Text>
+          <Content component="p">
+            {words("inventory.statustab.forceState.confirmMessage")}
+          </Content>
+          <Content component="p">
+            {words("inventory.statustab.forceState.confirmQuestion")}
+          </Content>
         </>
       ),
     });
@@ -157,7 +161,8 @@ export const ForceStateAction: React.FC<Props> = ({
           icon={<WarningTriangleIcon />}
           direction="down"
           style={{
-            backgroundColor: "var(--pf-v5-global--palette--red-50)",
+            backgroundColor:
+              "var(--pf-t--global--border--color--status--danger--default)",
           }}
           drilldownMenu={
             <DrilldownMenu
@@ -166,7 +171,8 @@ export const ForceStateAction: React.FC<Props> = ({
             >
               <MenuItem
                 style={{
-                  backgroundColor: "var(--pf-v5-global--palette--red-50)",
+                  backgroundColor:
+                    "var(--pf-t--global--border--color--status--danger--default)",
                 }}
                 icon={<WarningTriangleIcon />}
                 itemId="group:expertstate_breadcrumb"

@@ -4,9 +4,9 @@
  *
  * @param {string} nameEnvironment
  */
-const clearEnvironment = (nameEnvironment = "lsm-frontend") => {
+const clearEnvironment = (nameEnvironment = "test") => {
   cy.visit("/console/");
-  cy.get('[aria-label="Environment card"]').contains(nameEnvironment).click();
+  cy.get(`[aria-label="Select-environment-${nameEnvironment}"]`).click();
   cy.url().then((url) => {
     const location = new URL(url);
     const id = location.searchParams.get("env");
@@ -45,9 +45,9 @@ const checkStatusCompile = (id) => {
  *
  * @param {string} nameEnvironment
  */
-const forceUpdateEnvironment = (nameEnvironment = "lsm-frontend") => {
+const forceUpdateEnvironment = (nameEnvironment = "test") => {
   cy.visit("/console/");
-  cy.get('[aria-label="Environment card"]').contains(nameEnvironment).click();
+  cy.get(`[aria-label="Select-environment-${nameEnvironment}"]`).click();
   cy.url().then((url) => {
     const location = new URL(url);
     const id = location.searchParams.get("env");
@@ -72,10 +72,10 @@ if (Cypress.env("edition") === "iso") {
       // Go from Home page to Service Inventory of embedded-service
       cy.visit("/console/");
 
-      cy.get('[aria-label="Environment card"]')
-        .contains("lsm-frontend")
+      cy.get(`[aria-label="Select-environment-test"]`).click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]')
+        .contains("Service Catalog")
         .click();
-      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
       cy.get("#embedded-entity-service").contains("Show inventory").click();
 
       // make sure the call to get inventory has been executed
@@ -114,10 +114,10 @@ if (Cypress.env("edition") === "iso") {
     it("2.3.2 - show diagonse view", () => {
       // Go from Home page to Service Inventory of Embedded-service
       cy.visit("/console/");
-      cy.get('[aria-label="Environment card"]')
-        .contains("lsm-frontend")
+      cy.get(`[aria-label="Select-environment-test"]`).click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]')
+        .contains("Service Catalog")
         .click();
-      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
       // Expect to find one badge on the embedded-service row.
       cy.get("#embedded-entity-service")
         .get('[aria-label="Number of instances by label"]')
@@ -129,10 +129,7 @@ if (Cypress.env("edition") === "iso") {
       // Check Instance Details page
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
       // The first button should be the one redirecting to the details page.
-      cy.get(".pf-v5-c-menu__item")
-        .first()
-        .contains("Instance Details")
-        .click();
+      cy.get('[role="menuitem"]').contains("Instance Details").click();
 
       // Check if there are three versions in the history table
       cy.get('[aria-label="History-Row"]', { timeout: 60000 }).should(
@@ -158,10 +155,12 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#expand-toggle0").click();
 
       // expect row to be expanded
-      cy.get(".pf-v5-c-table__expandable-row-content").should("to.be.visible");
+      cy.get('[aria-label="InstanceRow-Details"]')
+        .first()
+        .should("to.be.visible");
 
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
-      cy.get(".pf-v5-c-menu__item").contains("Diagnose").click();
+      cy.get('[role="menuitem"]').contains("Diagnose").click();
 
       // Diagonse sub-page should open and be empty
       cy.get("h1").contains("Diagnose Service Instance").should("be.visible");
@@ -171,10 +170,10 @@ if (Cypress.env("edition") === "iso") {
 
     it("2.3.3 - Show history view", () => {
       cy.visit("/console/");
-      cy.get('[aria-label="Environment card"]')
-        .contains("lsm-frontend")
+      cy.get(`[aria-label="Select-environment-test"]`).click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]')
+        .contains("Service Catalog")
         .click();
-      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
       // Expect to find one badge on the embedded-service row.
       cy.get("#embedded-entity-service")
         .get('[aria-label="Number of instances by label"]')
@@ -184,38 +183,37 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#expand-toggle0").click();
 
       // expect row to be expanded
-      cy.get(".pf-v5-c-table__expandable-row-content").should("to.be.visible");
+      cy.get(".pf-v6-c-table__expandable-row-content").should("to.be.visible");
 
       // Expect to find status tab
-      cy.get(".pf-v5-c-tabs__list li:first").should(
+      cy.get(".pf-v6-c-tabs__list li:first").should(
         "have.class",
         "pf-m-current",
       );
       //await for instance state to change to up
       cy.get('[data-label="State"]')
-        .find(".pf-v5-c-label.pf-m-green", { timeout: 60000 })
+        .find(".pf-v6-c-label", { timeout: 60000 })
         .should("contain", "up");
 
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
-      cy.get(".pf-v5-c-menu__item").contains("More actions").click();
-      cy.get(".pf-v5-c-menu__item").contains("History").click();
+      cy.get('[role="menuitem"]').contains("More actions").click();
+      cy.get('[role="menuitem"]').contains("History").click();
 
       // History sub-page should open and be empty then go to Home page
       cy.get("h1").contains("Service Instance History").should("be.visible");
-      // due to lack of Id in rows I had to assert that each toggle button is separeate history log
-      cy.get(".pf-v5-c-table")
-        .find(".pf-v5-c-table__toggle")
-        .should("have.length", 3);
+
+      cy.get('[aria-label="Details"]').should("have.length", 3);
+
       cy.visit("/console/");
     });
 
     it("2.3.4 Delete previously created instance", () => {
       cy.visit("/console/");
 
-      cy.get('[aria-label="Environment card"]')
-        .contains("lsm-frontend")
+      cy.get(`[aria-label="Select-environment-test"]`).click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]')
+        .contains("Service Catalog")
         .click();
-      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
       cy.get("#embedded-entity-service").contains("Show inventory").click();
 
       // expand first row
@@ -223,24 +221,18 @@ if (Cypress.env("edition") === "iso") {
 
       // delete but cancel deletion in modal
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
-      cy.get(".pf-v5-c-menu__item").contains("More actions").click();
-      cy.get(".pf-v5-c-menu__item").contains("Delete").click();
+      cy.get('[role="menuitem"]').contains("More actions").click();
+      cy.get('[role="menuitem"]').contains("Delete").click();
 
-      cy.get(".pf-v5-c-modal-box__title-text").should(
-        "contain",
-        "Delete instance",
-      );
-      cy.get(".pf-v5-c-form__actions").contains("No").click();
+      cy.get(".pf-v6-c-modal-box__header").should("contain", "Delete instance");
+      cy.get(".pf-v6-c-form__actions").contains("No").click();
 
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
-      cy.get(".pf-v5-c-menu__item").contains("More actions").click();
-      cy.get(".pf-v5-c-menu__item").contains("Delete").click();
+      cy.get('[role="menuitem"]').contains("More actions").click();
+      cy.get('[role="menuitem"]').contains("Delete").click();
 
-      cy.get(".pf-v5-c-modal-box__title-text").should(
-        "contain",
-        "Delete instance",
-      );
-      cy.get(".pf-v5-c-form__actions").contains("Yes").click();
+      cy.get(".pf-v6-c-modal-box__header").should("contain", "Delete instance");
+      cy.get(".pf-v6-c-form__actions").contains("Yes").click();
 
       // check response if instance has been deleted succesfully.
       cy.get('[aria-label="ServiceInventory-Empty"]', {

@@ -15,7 +15,7 @@ export const LicenseBanner: React.FC = () => {
   );
 
   return expirationMessage ? (
-    <Banner isSticky variant="red" aria-label="licenceExpired">
+    <Banner isSticky color="red" aria-label="licenceExpired">
       <Flex justifyContent={{ default: "justifyContentCenter" }}>
         {expirationMessage}
       </Flex>

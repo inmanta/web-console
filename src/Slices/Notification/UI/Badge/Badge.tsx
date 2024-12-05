@@ -3,7 +3,6 @@ import {
   NotificationBadge,
   NotificationBadgeVariant,
 } from "@patternfly/react-core";
-import styled from "styled-components";
 import { RemoteData } from "@/Core";
 import { ToastAlert } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
@@ -34,14 +33,14 @@ export const View: React.FC<Props> = ({ data, onClick }) => {
   return RemoteData.fold(
     {
       notAsked: () => (
-        <PlainBadge
+        <NotificationBadge
           aria-label="Badge"
           variant={NotificationBadgeVariant.read}
           isDisabled
         />
       ),
       loading: () => (
-        <PlainBadge
+        <NotificationBadge
           aria-label="Badge"
           variant={NotificationBadgeVariant.read}
           isDisabled
@@ -55,7 +54,7 @@ export const View: React.FC<Props> = ({ data, onClick }) => {
             title={words("error")}
             setMessage={setError}
           />
-          <PlainBadge
+          <NotificationBadge
             aria-label="Badge"
             variant={NotificationBadgeVariant.read}
             isDisabled
@@ -97,9 +96,3 @@ const isError = (notification: Notification) =>
   notification.severity === "error";
 
 const isUnread = (notification: Notification) => notification.read === false;
-
-const PlainBadge = styled(NotificationBadge)`
-  --pf-v5-c-button--m-plain--hover--Color: var(--pf-v5-global--Color--200);
-  --pf-v5-c-button--m-plain--focus--Color: var(--pf-v5-global--Color--200);
-  --pf-v5-c-button--m-plain--active--Color: var(--pf-v5-global--Color--200);
-`;
