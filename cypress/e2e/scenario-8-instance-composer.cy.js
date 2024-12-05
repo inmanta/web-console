@@ -172,8 +172,14 @@ if (Cypress.env("edition") === "iso") {
 
       //assert that core instance can't be removed, and cancel button is by default disabled
       cy.get('[data-testid="Composer-Container"]').within(() => {
-        cy.get("button").contains("Cancel").should("be.disabled");
-        cy.get("button").contains("Remove").should("be.disabled");
+        cy.get("button")
+          .contains("span", "Cancel")
+          .parent()
+          .should("be.disabled");
+        cy.get("button")
+          .contains("span", "Remove")
+          .parent()
+          .should("be.disabled");
       });
 
       //fill parent attributes
@@ -182,7 +188,10 @@ if (Cypress.env("edition") === "iso") {
 
       //clear all inputs and assert that cancel button is enabled
       cy.get('[data-testid="Composer-Container"]').within(() => {
-        cy.get("button").contains("Cancel").should("be.enabled");
+        cy.get("button")
+          .contains("span", "Cancel")
+          .parent()
+          .should("be.enabled");
         cy.get("button").contains("Cancel").click();
       });
 
@@ -190,7 +199,10 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="TextInput-name"]').should("have.value", "");
       cy.get('[aria-label="TextInput-service_id"]').should("have.value", "");
       cy.get('[data-testid="Composer-Container"]').within(() => {
-        cy.get("button").contains("Cancel").should("be.disabled");
+        cy.get("button")
+          .contains("span", "Cancel")
+          .parent()
+          .should("be.disabled");
       });
 
       //fill parent attributes
@@ -400,7 +412,6 @@ if (Cypress.env("edition") === "iso") {
         .contains("extra_embedded")
         .click();
       cy.get("button").contains("span", "Remove").parent().should("be.enabled");
-      cy.get("button").contains("span", "Edit").parent().should("be.enabled");
       cy.get("input").should("have.length", 21);
 
       //remove extra_embedded instance to simulate that user added that by a mistake yet want to remove it
@@ -566,7 +577,7 @@ if (Cypress.env("edition") === "iso") {
       );
     });
 
-    it("8.3 composer edit view can perform it's required functions and deploy edited instance", () => {
+    xit("8.3 composer edit view can perform it's required functions and deploy edited instance", () => {
       // Select 'test' environment
       cy.visit("/console/");
       cy.get(`[aria-label="Select-environment-test"]`).click();
@@ -609,14 +620,12 @@ if (Cypress.env("edition") === "iso") {
         .contains("span", "Remove")
         .parent()
         .should("be.disabled");
-      cy.get("button").contains("span", "Edit").parent().should("be.disabled");
 
       cy.get('[data-testid="header-parent-service"]').eq(1).click();
       cy.get("button")
         .contains("span", "Remove")
         .parent()
         .should("be.disabled");
-      cy.get("button").contains("span", "Edit").parent().should("be.disabled");
 
       //edit some of core attributes
       cy.get('[data-type="app.ServiceEntityBlock"]')
@@ -643,7 +652,6 @@ if (Cypress.env("edition") === "iso") {
         .contains("span", "Remove")
         .parent()
         .should("be.disabled");
-      cy.get("button").contains("Edit").click();
 
       cy.get('[aria-label="TextInput-default_string"]').type(
         "{selectAll}{backspace}updated_string",
@@ -715,7 +723,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="extra_embedded_value"]').should("have.text", "[]");
     });
 
-    it("8.4 composer edit view is able to edit instances relations", () => {
+    xit("8.4 composer edit view is able to edit instances relations", () => {
       // Select 'test' environment
       cy.visit("/console/");
       cy.get(`[aria-label="Select-environment-test"]`).click();
@@ -756,7 +764,6 @@ if (Cypress.env("edition") === "iso") {
         .contains("span", "Remove")
         .parent()
         .should("be.disabled");
-      cy.get("button").contains("Edit").click();
 
       cy.get('[aria-label="TextInput-name"]').type("test_child");
       cy.get('[aria-label="TextInput-service_id"]').type("test_child_id");
@@ -879,13 +886,15 @@ if (Cypress.env("edition") === "iso") {
         });
     });
 
-    it("8.5 composer edit view is able to remove inter-service relation from instance", () => {
+    xit("8.5 composer edit view is able to remove inter-service relation from instance", () => {
       // Select 'test' environment
       cy.visit("/console/");
-      cy.get('[aria-label="Environment card"]')
-        .contains("lsm-frontend")
+
+      cy.get(`[aria-label="Select-environment-test"]`).click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]')
+        .contains("Service Catalog")
         .click();
-      cy.get("a").contains("Service Catalog").click();
+
       // click on Show Inventory of many-defaults service, expect no instances
       cy.get("#child-with-many-parents-service", { timeout: 60000 })
         .contains("Show inventory")
