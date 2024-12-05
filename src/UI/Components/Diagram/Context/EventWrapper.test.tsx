@@ -1,12 +1,24 @@
 import React, { act, useContext, useEffect } from "react";
+import { dia } from "@inmanta/rappid";
 import "@testing-library/jest-dom";
 import { screen } from "@testing-library/dom";
 import { render, renderHook } from "@testing-library/react";
 import { ActionEnum, EventActionEnum } from "../interfaces";
+import { ComposerPaper } from "../paper";
 import { ServiceEntityBlock } from "../shapes";
+import { defineObjectsForJointJS } from "../testSetup";
 import { CanvasProvider } from "./CanvasProvider";
 import { CanvasContext } from "./Context";
 import { EventWrapper } from "./EventWrapper";
+import {
+  dispatchAddInterServiceRelationToTracker,
+  dispatchLooseElement,
+  dispatchRemoveInterServiceRelationFromTracker,
+  dispatchSendCellToSidebar,
+  dispatchUpdateInterServiceRelations,
+  dispatchUpdateServiceOrderItems,
+  dispatchUpdateStencil,
+} from "./dispatchers";
 
 const setup = (testingComponent: JSX.Element) => {
   return (
@@ -33,20 +45,12 @@ describe("looseElement event handler - triggered when entity is being added to t
     expect(screen.getByTestId("looseElement")).toHaveTextContent("0");
 
     await act(async () => {
-      document.dispatchEvent(
-        new CustomEvent("looseElement", {
-          detail: JSON.stringify({ kind: "add", id: "1" }),
-        }),
-      );
+      dispatchLooseElement(EventActionEnum.ADD, "1");
     });
     expect(screen.getByTestId("looseElement")).toHaveTextContent("1");
 
     await act(async () => {
-      document.dispatchEvent(
-        new CustomEvent("looseElement", {
-          detail: JSON.stringify({ kind: "remove", id: "1" }),
-        }),
-      );
+      dispatchLooseElement(EventActionEnum.REMOVE, "1");
     });
     expect(screen.getByTestId("looseElement")).toHaveTextContent("0");
   });
@@ -57,20 +61,12 @@ describe("looseElement event handler - triggered when entity is being added to t
     expect(screen.getByTestId("looseElement")).toHaveTextContent("0");
 
     await act(async () => {
-      document.dispatchEvent(
-        new CustomEvent("looseElement", {
-          detail: JSON.stringify({ kind: "add", id: "1" }),
-        }),
-      );
+      dispatchLooseElement(EventActionEnum.ADD, "1");
     });
     expect(screen.getByTestId("looseElement")).toHaveTextContent("1");
 
     await act(async () => {
-      document.dispatchEvent(
-        new CustomEvent("looseElement", {
-          detail: JSON.stringify({ kind: "add", id: "1" }),
-        }),
-      );
+      dispatchLooseElement(EventActionEnum.ADD, "1");
     });
     expect(screen.getByTestId("looseElement")).toHaveTextContent("1");
   });
@@ -106,31 +102,43 @@ describe("dictToDisplay - event handler that accepts dictionary value to display
 });
 
 describe("cellToEdit - event handler that receives cell object from the canvas to pass it to the Right Sidebar component", () => {
-  const TestingComponent = (): JSX.Element => {
-    const { cellToEdit } = useContext(CanvasContext);
+  it("sendCellToSidebar Event handler assign the data correctly to the Context", async () => {
+    defineObjectsForJointJS();
+    const { result } = renderHook(
+      () => {
+        const { cellToEdit } = useContext(CanvasContext);
 
-    return (
-      <div>
-        <span data-testid="cellToEdit">{JSON.stringify(cellToEdit)}</span>
-      </div>
+        return cellToEdit;
+      },
+      {
+        wrapper: ({ children }) => (
+          <CanvasProvider>
+            <EventWrapper>{children}</EventWrapper>
+          </CanvasProvider>
+        ),
+      },
     );
-  };
 
-  it("looseElement Event handler assign the data correctly to the Context", async () => {
-    render(setup(<TestingComponent />));
+    expect(result.current).toBeNull();
 
-    expect(screen.getByTestId("cellToEdit")).toHaveTextContent("null");
+    const graph = new dia.Graph();
+    const paper = new ComposerPaper({}, graph, true).paper;
+    const cell = new ServiceEntityBlock();
+
+    graph.addCell(cell);
 
     await act(async () => {
-      document.dispatchEvent(
-        new CustomEvent("sendCellToSidebar", {
-          detail: JSON.stringify({ test: "value" }),
-        }),
-      );
+      dispatchSendCellToSidebar(paper.findViewByModel(cell));
     });
-    expect(screen.getByTestId("cellToEdit")).toHaveTextContent(
-      '{\\"test\\":\\"value\\"}',
-    );
+
+    expect(result.current).not.toBeNull();
+    expect(result.current?.model.id).toEqual(cell.id);
+
+    await act(async () => {
+      dispatchSendCellToSidebar(null);
+    });
+
+    expect(result.current).toBeNull();
   });
 });
 
@@ -175,16 +183,11 @@ describe("updateServiceOrderItems - event handler that keeps track of the elemen
     expect(screen.getByTestId("instancesIds")).toHaveTextContent('["1","2"]');
 
     await act(async () => {
-      document.dispatchEvent(
-        new CustomEvent("updateServiceOrderItems", {
-          detail: {
-            cell: new ServiceEntityBlock()
-              .set("attributes", "value3")
-              .set("id", "3"),
-            action: ActionEnum.UPDATE,
-          },
-        }),
-      );
+      const cell = new ServiceEntityBlock()
+        .set("sanitizedAttrs", "value3")
+        .set("id", "3");
+
+      dispatchUpdateServiceOrderItems(cell, ActionEnum.UPDATE);
     });
 
     expect(screen.getByTestId("instancesIds")).toHaveTextContent('["1","2"]');
@@ -196,16 +199,11 @@ describe("updateServiceOrderItems - event handler that keeps track of the elemen
     expect(screen.getByTestId("instancesIds")).toHaveTextContent('["1","2"]');
 
     await act(async () => {
-      document.dispatchEvent(
-        new CustomEvent("updateServiceOrderItems", {
-          detail: {
-            cell: new ServiceEntityBlock()
-              .set("sanitizedAttrs", "value3")
-              .set("id", "3"),
-            action: ActionEnum.CREATE,
-          },
-        }),
-      );
+      const cell = new ServiceEntityBlock()
+        .set("sanitizedAttrs", "value3")
+        .set("id", "3");
+
+      dispatchUpdateServiceOrderItems(cell, ActionEnum.CREATE);
     });
 
     expect(screen.getByTestId("instancesIds")).toHaveTextContent(
@@ -220,16 +218,11 @@ describe("updateServiceOrderItems - event handler that keeps track of the elemen
     expect(screen.getByTestId("2")).toHaveTextContent("value2");
 
     await act(async () => {
-      document.dispatchEvent(
-        new CustomEvent("updateServiceOrderItems", {
-          detail: {
-            cell: new ServiceEntityBlock()
-              .set("sanitizedAttrs", "updatedValue2")
-              .set("id", "2"),
-            action: ActionEnum.UPDATE,
-          },
-        }),
-      );
+      const cell = new ServiceEntityBlock()
+        .set("sanitizedAttrs", "updatedValue2")
+        .set("id", "2");
+
+      dispatchUpdateServiceOrderItems(cell, ActionEnum.UPDATE);
     });
     expect(screen.getByTestId("2")).toHaveTextContent("updatedValue2");
   });
@@ -259,9 +252,12 @@ describe("updateStencil - eventHandler that updates how many elements(embedded/i
         ))}
         {Object.keys(stencilState).map((key) => (
           <div data-testid={key} key={`${key}-stencil_mock`}>
-            <div data-testid={`body_${key}`} className={`body_${key}`} />
-            <div data-testid={`bodyTwo_${key}`} className={`bodyTwo_${key}`} />
-            <div data-testid={`text_${key}`} className={`text_${key}`} />
+            <div data-testid={`body_${key}`} aria-labelledby={`body_${key}`} />
+            <div
+              data-testid={`bodyTwo_${key}`}
+              aria-labelledby={`bodyTwo_${key}`}
+            />
+            <div data-testid={`text_${key}`} aria-labelledby={`text_${key}`} />
           </div>
         ))}
       </div>
@@ -275,33 +271,21 @@ describe("updateStencil - eventHandler that updates how many elements(embedded/i
     expect(screen.getByTestId("test2-current")).toHaveTextContent("0");
 
     await act(async () => {
-      document.dispatchEvent(
-        new CustomEvent("updateStencil", {
-          detail: { name: "test", action: "add" },
-        }),
-      );
+      dispatchUpdateStencil("test", EventActionEnum.ADD);
     });
 
     expect(screen.getByTestId("test-current")).toHaveTextContent("1");
     expect(screen.getByTestId("test2-current")).toHaveTextContent("0");
 
     await act(async () => {
-      document.dispatchEvent(
-        new CustomEvent("updateStencil", {
-          detail: { name: "test2", action: "add" },
-        }),
-      );
+      dispatchUpdateStencil("test2", EventActionEnum.ADD);
     });
 
     expect(screen.getByTestId("test-current")).toHaveTextContent("1");
     expect(screen.getByTestId("test2-current")).toHaveTextContent("1");
 
     await act(async () => {
-      document.dispatchEvent(
-        new CustomEvent("updateStencil", {
-          detail: { name: "test3", action: "add" },
-        }),
-      );
+      dispatchUpdateStencil("test3", EventActionEnum.ADD);
     });
 
     expect(screen.getByTestId("test-current")).toHaveTextContent("1");
@@ -309,22 +293,14 @@ describe("updateStencil - eventHandler that updates how many elements(embedded/i
     expect(screen.queryByTestId("test23-current")).toBeNull();
 
     await act(async () => {
-      document.dispatchEvent(
-        new CustomEvent("updateStencil", {
-          detail: { name: "test", action: "remove" },
-        }),
-      );
+      dispatchUpdateStencil("test", EventActionEnum.REMOVE);
     });
 
     expect(screen.getByTestId("test-current")).toHaveTextContent("0");
     expect(screen.getByTestId("test2-current")).toHaveTextContent("1");
 
     await act(async () => {
-      document.dispatchEvent(
-        new CustomEvent("updateStencil", {
-          detail: { name: "test2", action: "remove" },
-        }),
-      );
+      dispatchUpdateStencil("test2", EventActionEnum.REMOVE);
     });
 
     expect(screen.getByTestId("test-current")).toHaveTextContent("0");
@@ -354,11 +330,7 @@ describe("updateStencil - eventHandler that updates how many elements(embedded/i
     );
 
     await act(async () => {
-      document.dispatchEvent(
-        new CustomEvent("updateStencil", {
-          detail: { name: "test", action: "add" },
-        }),
-      );
+      dispatchUpdateStencil("test", EventActionEnum.ADD);
     });
 
     //expect disabled classes as test got current increased to max value
@@ -373,11 +345,7 @@ describe("updateStencil - eventHandler that updates how many elements(embedded/i
     );
 
     await act(async () => {
-      document.dispatchEvent(
-        new CustomEvent("updateStencil", {
-          detail: { name: "test2", action: "add" },
-        }),
-      );
+      dispatchUpdateStencil("test2", EventActionEnum.ADD);
     });
 
     //expect no disabled classes as test2 doesn't have max set
@@ -392,11 +360,7 @@ describe("updateStencil - eventHandler that updates how many elements(embedded/i
     );
 
     await act(async () => {
-      document.dispatchEvent(
-        new CustomEvent("updateStencil", {
-          detail: { name: "test", action: "remove" },
-        }),
-      );
+      dispatchUpdateStencil("test", EventActionEnum.REMOVE);
     });
 
     //expect no disabled classes as test got current decreased to 0, below max value
@@ -413,7 +377,7 @@ describe("updateStencil - eventHandler that updates how many elements(embedded/i
 });
 
 describe("addInterServiceRelationToTracker - eventHandler that adds to the Map inter-service relations with defined minimal count to the Map- it doesn't take care of verifying values, that is taken care of outside of the event handler", () => {
-  it("adds succesfully interServiceRelation to the Map", async () => {
+  it("adds successfully interServiceRelation to the Map", async () => {
     const { result } = renderHook(
       () => {
         const { interServiceRelationsOnCanvas } = useContext(CanvasContext);
@@ -432,15 +396,9 @@ describe("addInterServiceRelationToTracker - eventHandler that adds to the Map i
     expect(result.current).toStrictEqual(new Map());
 
     await act(async () => {
-      document.dispatchEvent(
-        new CustomEvent("addInterServiceRelationToTracker", {
-          detail: {
-            id: "1",
-            name: "test",
-            relations: [{ currentAmount: 0, min: 1, name: "test2" }],
-          },
-        }),
-      );
+      dispatchAddInterServiceRelationToTracker("1", "test", [
+        { currentAmount: 0, min: 1, name: "test2" },
+      ]);
     });
 
     expect(result.current).toStrictEqual(
@@ -489,14 +447,9 @@ describe("removeInterServiceRelationFromTracker - event handler that removes int
     );
 
     await act(async () => {
-      document.dispatchEvent(
-        new CustomEvent("removeInterServiceRelationFromTracker", {
-          detail: {
-            id: "1",
-          },
-        }),
-      );
+      dispatchRemoveInterServiceRelationFromTracker("1");
     });
+
     expect(result.current).toStrictEqual(new Map());
   });
 });
@@ -530,16 +483,11 @@ describe("updateInterServiceRelations", () => {
       },
     );
 
+    const name = "test2";
+    const id = "1";
+
     await act(async () => {
-      document.dispatchEvent(
-        new CustomEvent("updateInterServiceRelations", {
-          detail: {
-            action: EventActionEnum.ADD,
-            name: "test2",
-            id: "1",
-          },
-        }),
-      );
+      dispatchUpdateInterServiceRelations(EventActionEnum.ADD, name, id);
     });
 
     expect(result.current).toStrictEqual(
@@ -550,15 +498,7 @@ describe("updateInterServiceRelations", () => {
     );
 
     await act(async () => {
-      document.dispatchEvent(
-        new CustomEvent("updateInterServiceRelations", {
-          detail: {
-            action: EventActionEnum.REMOVE,
-            name: "test2",
-            id: "1",
-          },
-        }),
-      );
+      dispatchUpdateInterServiceRelations(EventActionEnum.REMOVE, name, id);
     });
 
     expect(result.current).toStrictEqual(

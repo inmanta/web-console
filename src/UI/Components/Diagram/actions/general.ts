@@ -1,5 +1,6 @@
 import { dia } from "@inmanta/rappid";
 import { InstanceAttributeModel } from "@/Core";
+import { dispatchAddInterServiceRelationToTracker } from "../Context/dispatchers";
 import { getKeyAttributesNames } from "../helpers";
 import {
   ComposerEntityOptions,
@@ -80,14 +81,10 @@ export function createComposerEntity({
       }
     });
 
-    document.dispatchEvent(
-      new CustomEvent("addInterServiceRelationToTracker", {
-        detail: {
-          id: instanceAsTable.id,
-          name: serviceModel.name,
-          relations,
-        },
-      }),
+    dispatchAddInterServiceRelationToTracker(
+      instanceAsTable.id,
+      serviceModel.name,
+      relations,
     );
   }
 

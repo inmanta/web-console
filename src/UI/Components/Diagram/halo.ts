@@ -1,4 +1,9 @@
 import { dia, highlighters, ui } from "@inmanta/rappid";
+import {
+  dispatchRemoveInterServiceRelationFromTracker,
+  dispatchUpdateInterServiceRelations,
+  dispatchUpdateServiceOrderItems,
+} from "./Context/dispatchers";
 import { checkIfConnectionIsAllowed } from "./helpers";
 import { toggleLooseElement } from "./helpers";
 import { ActionEnum, ConnectionRules, EventActionEnum } from "./interfaces";
@@ -70,42 +75,23 @@ const createHalo = (
         );
 
         if (wasThereRelationToRemove) {
-          document.dispatchEvent(
-            new CustomEvent("updateInterServiceRelations", {
-              detail: {
-                action: EventActionEnum.REMOVE,
-                name: cellView.model.get("entityName"),
-                id: elementAsService.id,
-              },
-            }),
+          dispatchUpdateInterServiceRelations(
+            EventActionEnum.REMOVE,
+            cellView.model.get("entityName"),
+            elementAsService.id,
           );
         }
         didElementChange = didElementChange || wasThereRelationToRemove;
       }
 
       if (didElementChange) {
-        document.dispatchEvent(
-          new CustomEvent("updateServiceOrderItems", {
-            detail: { cell: elementAsService, action: ActionEnum.UPDATE },
-          }),
-        );
+        dispatchUpdateServiceOrderItems(elementAsService, ActionEnum.UPDATE);
       }
     });
-
-    document.dispatchEvent(
-      new CustomEvent("updateServiceOrderItems", {
-        detail: { cell: cellView.model, action: ActionEnum.DELETE },
-      }),
-    );
+    dispatchUpdateServiceOrderItems(cellView.model, ActionEnum.DELETE);
 
     if (cellView.model.get("relatedTo")) {
-      document.dispatchEvent(
-        new CustomEvent("removeInterServiceRelationFromTracker", {
-          detail: {
-            id: cellView.model.id,
-          },
-        }),
-      );
+      dispatchRemoveInterServiceRelationFromTracker(cellView.model.id);
     }
 
     graph.removeLinks(cellView.model);

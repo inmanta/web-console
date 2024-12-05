@@ -2,6 +2,7 @@ import { RefObject } from "react";
 import { dia, shapes, ui } from "@inmanta/rappid";
 import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from "@/Core";
 import { InstanceWithRelations } from "@/Data/Managers/V2/GETTERS/GetInstanceWithRelations";
+import { dispatchUpdateStencil } from "./Context/dispatchers";
 import { populateGraphWithDefault } from "./actions/createMode";
 import { appendInstance } from "./actions/editMode";
 import { updateAttributes } from "./actions/general";
@@ -122,13 +123,7 @@ export function diagramInit(
           const stencilName = cell.get("stencilName");
 
           if (cell.get("isEmbeddedEntity")) {
-            document.dispatchEvent(
-              new CustomEvent("updateStencil", {
-                detail: {
-                  name: cell.get("entityName"),
-                },
-              }),
-            );
+            dispatchUpdateStencil(cell.get("entityName"));
           }
 
           if (stencilName) {
