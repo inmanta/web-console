@@ -10,7 +10,7 @@ import {
 interface Props {
   isChecked: boolean | undefined;
   attributeName: string;
-  description?: string;
+  description?: string | null;
   handleInputChange: (value, event) => void;
   shouldBeDisabled?: boolean;
 }

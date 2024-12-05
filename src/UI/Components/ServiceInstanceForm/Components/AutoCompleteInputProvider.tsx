@@ -8,7 +8,7 @@ interface Props {
   serviceName: string;
   attributeName: string;
   attributeValue: string | string[] | null;
-  description?: string;
+  description?: string | null;
   isOptional: boolean;
   isDisabled?: boolean;
   handleInputChange: (value) => void;
@@ -23,7 +23,7 @@ interface Props {
  * @prop {string} serviceName - The name of the service.
  * @prop {string} attributeName - The name of the attribute.
  * @prop {string | string[] | null} attributeValue - The value of the attribute.
- * @prop {string} description - The description of the attribute.
+ * @prop {string | null} description - The description of the attribute.
  * @prop {boolean} isOptional - Whether the attribute is optional.
  * @prop {boolean} isDisabled - Whether the input field should be disabled.
  * @prop {(value): void;} handleInputChange - The function to handle input changes.

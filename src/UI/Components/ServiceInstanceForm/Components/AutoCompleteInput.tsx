@@ -23,7 +23,7 @@ interface Props {
   selected: string | string[] | null;
   serviceEntity: string;
   attributeName: string;
-  description?: string;
+  description?: string | null;
   isOptional: boolean;
   shouldBeDisabled?: boolean;
   handleInputChange: (value) => void;
@@ -35,16 +35,16 @@ interface Props {
  * Component that renders an autocomplete input.
  *
  * @param props - The props of the component.
- *  @prop options - The options to be displayed in the autocomplete.
- *  @prop selected - The selected value.
- *  @prop serviceEntity - The entity that the autocomplete is related to.
- *  @prop attributeName - The name of the attribute.
- *  @prop description - The description of the attribute.
- *  @prop isOptional - Whether the attribute is optional.
- *  @prop shouldBeDisabled - Whether the input should be disabled.
- *  @prop handleInputChange - The function to be called when the input changes.
- *  @prop onSearchTextChanged - The function to be called when the search text changes.
- *  @prop multi - Whether the input should allow multiple selections.
+ *  @prop {Option[]} options - The options to be displayed in the autocomplete.
+ *  @prop {string | string[] | null} selected - The selected value.
+ *  @prop {string} serviceEntity - The entity that the autocomplete is related to.
+ *  @prop {string} attributeName - The name of the attribute.
+ *  @prop {string | null} description - The description of the attribute.
+ *  @prop {boolean} isOptional - Whether the attribute is optional.
+ *  @prop {boolean} shouldBeDisabled - Whether the input should be disabled.
+ *  @prop {(value): void} handleInputChange - The function to be called when the input changes.
+ *  @prop {(value: string): void} onSearchTextChanged - The function to be called when the search text changes.
+ *  @prop {boolean} multi - Whether the input should allow multiple selections.
  *
  * @returns The rendered component.
  */

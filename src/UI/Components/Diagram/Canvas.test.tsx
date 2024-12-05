@@ -25,8 +25,11 @@ import CustomRouter from "@/UI/Routing/CustomRouter";
 import history from "@/UI/Routing/history";
 import { CanvasProvider } from "./Context/CanvasProvider";
 import { InstanceComposerContext } from "./Context/Context";
-import { mockedInstanceTwo, mockedInstanceTwoServiceModel } from "./Mocks";
-import services from "./Mocks/services.json";
+import {
+  mockedInstanceTwo,
+  mockedInstanceTwoServiceModel,
+  serviceModels,
+} from "./Mocks";
 import "@testing-library/jest-dom";
 import { defineObjectsForJointJS } from "./testSetup";
 
@@ -40,7 +43,7 @@ const screen = baseWithin(document.body, allQueries);
 const setup = (
   mainService: ServiceModel,
   instance?: InstanceWithRelations,
-  serviceModels: ServiceModel[] = services as unknown as ServiceModel[],
+  models: ServiceModel[] = serviceModels,
   editable: boolean = true,
 ) => {
   const queryClient = new QueryClient();
@@ -82,7 +85,7 @@ const setup = (
             <InstanceComposerContext.Provider
               value={{
                 instance: instance || null,
-                serviceModels,
+                serviceModels: models,
                 mainService: mainService,
                 relatedInventoriesQuery: { data: {} } as UseQueryResult<
                   Inventories,

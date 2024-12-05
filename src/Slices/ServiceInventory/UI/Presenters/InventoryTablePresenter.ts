@@ -31,7 +31,7 @@ export class InventoryTablePresenter
     private actionPresenter: ActionPresenter,
     private statePresenter: StatePresenter,
     private serviceIdentity?: string,
-    private serviceIdentityDisplayName?: string,
+    private serviceIdentityDisplayName?: string | null,
     private isConfigDisabled?: boolean,
   ) {
     this.columnHeads = [
