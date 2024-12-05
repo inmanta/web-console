@@ -33,9 +33,8 @@ export const KebabDropdown: React.FC<Props> = ({ name, paused }) => {
           variant="plain"
           onClick={onToggleClick}
           isExpanded={isOpen}
-        >
-          <EllipsisVIcon />
-        </MenuToggle>
+          icon={<EllipsisVIcon />}
+        />
       )}
       isOpen={isOpen}
       onOpenChange={(isOpen: boolean) => setIsOpen(isOpen)}

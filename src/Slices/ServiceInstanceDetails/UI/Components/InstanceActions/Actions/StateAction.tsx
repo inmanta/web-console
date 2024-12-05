@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { DropdownGroup, DropdownItem, Text } from "@patternfly/react-core";
+import { DropdownGroup, DropdownItem, Content } from "@patternfly/react-core";
 import { ParsedNumber } from "@/Core";
 import { usePostStateTransfer } from "@/Data/Managers/V2/POST/PostStateTransfer/usePostStateTransfer";
 import { DependencyContext, words } from "@/UI";
@@ -124,7 +124,7 @@ export const StateAction: React.FC<Props> = ({
         onCancel={closeModal}
         isPending={isPending}
       >
-        <Text>{confirmationText}</Text>
+        <Content component="p">{confirmationText}</Content>
       </ConfirmationModal>
       {errorMessage && (
         <ToastAlertMessage

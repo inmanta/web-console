@@ -3,9 +3,9 @@
  */
 import React, { useEffect } from "react";
 import {
+  Label,
+  LabelGroup,
   Button,
-  Chip,
-  ChipGroup,
   FormGroup,
   FormHelperText,
   HelperText,
@@ -16,6 +16,7 @@ import {
   TextInputGroupUtilities,
   TextInputTypes,
 } from "@patternfly/react-core";
+
 import { HelpIcon, TimesIcon } from "@patternfly/react-icons";
 import { words } from "@/UI/words";
 import { SuggestionsPopover } from "./SuggestionsPopover";
@@ -136,17 +137,16 @@ export const TextListFormInput: React.FC<Props> = ({
       fieldId={attributeName}
       label={attributeName}
       className={shouldBeDisabled ? "is-disabled" : ""}
-      labelIcon={
+      labelHelp={
         typeHint ? (
           <Popover bodyContent={<div>{typeHint}</div>}>
-            <button
+            <Button
+              variant="control"
               type="button"
+              icon={<HelpIcon />}
               aria-label={`More info for ${attributeName} field`}
               onClick={(e) => e.preventDefault()}
-              className="pf-v5-c-form__group-label-help"
-            >
-              <HelpIcon />
-            </button>
+            />
           </Popover>
         ) : (
           <></>
@@ -178,34 +178,33 @@ export const TextListFormInput: React.FC<Props> = ({
           onChange={handleChangeInput}
           onFocus={() => setIsOpen(true)}
         >
-          <ChipGroup>
+          <LabelGroup>
             {currentChips.map((currentChip) => (
-              <Chip
+              <Label
+                variant="outline"
                 key={currentChip}
-                onClick={() => deleteChip(currentChip)}
+                onClose={() => deleteChip(currentChip)}
                 disabled={shouldBeDisabled}
               >
                 {currentChip}
-              </Chip>
+              </Label>
             ))}
-          </ChipGroup>
+          </LabelGroup>
         </TextInputGroupMain>
         <TextInputGroupUtilities>
           <Button
+            icon={words("catalog.callbacks.add")}
             variant="plain"
             onClick={addChip}
             isDisabled={shouldBeDisabled}
-          >
-            {words("catalog.callbacks.add")}
-          </Button>
+          />
           <Button
+            icon={<TimesIcon />}
             variant="plain"
             onClick={clearChipsAndInput}
             aria-label="Clear button and input"
             isDisabled={shouldBeDisabled}
-          >
-            <TimesIcon />
-          </Button>
+          />
         </TextInputGroupUtilities>
       </TextInputGroup>
     </FormGroup>

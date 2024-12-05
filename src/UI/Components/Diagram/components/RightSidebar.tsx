@@ -1,14 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
 import {
-  Button,
+  Content,
   EmptyState,
   EmptyStateBody,
-  EmptyStateHeader,
-  EmptyStateIcon,
   EmptyStateVariant,
   Flex,
   FlexItem,
-  TextContent,
   Title,
 } from "@patternfly/react-core";
 import { CubesIcon } from "@patternfly/react-icons";
@@ -167,7 +164,7 @@ export const RightSidebar: React.FC<Props> = ({ editable }) => {
 
   return (
     <Wrapper>
-      <StyledFlex
+      <Flex
         direction={{ default: "column" }}
         spaceItems={{ default: "spaceItemsSm" }}
         justifyContent={{ default: "justifyContentSpaceBetween" }}
@@ -182,9 +179,7 @@ export const RightSidebar: React.FC<Props> = ({ editable }) => {
           </FlexItem>
           {description && (
             <FlexItem>
-              <TextContent aria-label="service-description">
-                {description}
-              </TextContent>
+              <Content aria-label="service-description">{description}</Content>
             </FlexItem>
           )}
         </Flex>
@@ -204,21 +199,21 @@ export const RightSidebar: React.FC<Props> = ({ editable }) => {
             flex={{ default: "flex_1" }}
             alignItems={{ default: "alignItemsCenter" }}
           >
-            <EmptyState variant={EmptyStateVariant.sm}>
-              <EmptyStateHeader
-                titleText={words(
-                  "instanceComposer.formModal.noElementSelected.title",
-                )}
-                headingLevel="h4"
-                icon={<EmptyStateIcon icon={CubesIcon} />}
-              />
+            <EmptyState
+              headingLevel="h4"
+              variant={EmptyStateVariant.sm}
+              icon={CubesIcon}
+              titleText={words(
+                "instanceComposer.formModal.noElementSelected.title",
+              )}
+            >
               <EmptyStateBody>
                 {words("instanceComposer.formModal.noElementSelected")}
               </EmptyStateBody>
             </EmptyState>
           </Flex>
         )}
-      </StyledFlex>
+      </Flex>
     </Wrapper>
   );
 };
@@ -230,21 +225,10 @@ const Wrapper = styled.div`
   z-index: 1px;
   top: 1px;
   right: 1px;
-  background: var(--pf-v5-global--BackgroundColor--100);
+  background: var(--pf-t--global--background--color--primary--default);
   padding: 16px;
   filter: drop-shadow(
-    -0.1rem 0.1rem 0.15rem var(--pf-v5-global--BackgroundColor--dark-transparent-200)
+    -0.1rem 0.1rem 0.15rem var(--pf-t--global--box-shadow--color--100)
   );
   overflow: auto;
-`;
-
-export const StyledButton = styled(Button)`
-  --pf-v5-c-button--PaddingTop: 0px;
-  --pf-v5-c-button--PaddingBottom: 0px;
-  width: 101px;
-  height: 30px;
-`;
-
-const StyledFlex = styled(Flex)`
-  min-height: 100%;
 `;

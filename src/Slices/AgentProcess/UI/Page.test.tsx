@@ -76,9 +76,9 @@ test("Agent Process Page shows success view", async () => {
 
   apiHelper.resolve(Either.right({ data: AgentProcessMock.data }));
 
-  expect(
-    await screen.findByRole("generic", { name: "AgentProcessView-Success" }),
-  ).toBeInTheDocument();
+  expect(await screen.findByRole("heading")).toHaveTextContent(
+    "Agent Process hostname1",
+  );
 
   await act(async () => {
     const results = await axe(document.body);

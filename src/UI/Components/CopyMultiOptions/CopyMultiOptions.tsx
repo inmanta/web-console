@@ -3,6 +3,7 @@ import {
   Dropdown,
   DropdownItem,
   DropdownList,
+  Icon,
   MenuToggle,
   MenuToggleElement,
   Tooltip,
@@ -77,9 +78,13 @@ export const CopyMultiOptions: React.FC<Props> = ({
       variant="plain"
       isExpanded={isOpen}
       aria-label="Copy to clipboard"
+      icon={
+        <Icon size="sm">
+          <CopyIcon />
+        </Icon>
+      }
     >
       {text}
-      <CopyIcon />
     </MenuToggle>
   );
 

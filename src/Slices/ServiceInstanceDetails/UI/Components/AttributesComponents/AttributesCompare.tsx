@@ -103,9 +103,7 @@ export const AttributesCompare: React.FC<Props> = ({
 
   return (
     <>
-      <StyledFlexContainer
-        justifyContent={{ default: "justifyContentSpaceBetween" }}
-      >
+      <Flex justifyContent={{ default: "justifyContentSpaceBetween" }}>
         <Flex>
           <FlexItem>
             <StyledVersionSelect
@@ -193,7 +191,7 @@ export const AttributesCompare: React.FC<Props> = ({
             </StyledSetSelect>
           </FlexItem>
         </Flex>
-      </StyledFlexContainer>
+      </Flex>
 
       <DiffEditor
         height={"calc(100vh - 525px)"}
@@ -215,9 +213,4 @@ const StyledSetSelect = styled(FormSelect)`
 
 const StyledVersionSelect = styled(FormSelect)`
   width: 100px;
-`;
-
-const StyledFlexContainer = styled(Flex)`
-  margin-top: var(--pf-v5-global--spacer--md);
-  margin-bottom: var(--pf-v5-global--spacer--md);
 `;

@@ -201,6 +201,11 @@ describe("UserManagementPage", () => {
           auth_method: "database",
         });
       }),
+      http.delete("/api/v2/user/test_user", async (): Promise<HttpResponse> => {
+        data.splice(0, 1);
+
+        return HttpResponse.json({ status: 204 });
+      }),
     );
 
     server.listen();
@@ -233,7 +238,7 @@ describe("UserManagementPage", () => {
     });
 
     await act(async () => {
-      await userEvent.click(screen.getByLabelText("add_user-button"));
+      await userEvent.click(screen.getByLabelText("confirm-button"));
     });
 
     const errorMessage = await screen.findByLabelText("error-message");
@@ -249,7 +254,7 @@ describe("UserManagementPage", () => {
     });
 
     await act(async () => {
-      fireEvent.click(screen.getByLabelText("add_user-button"));
+      fireEvent.click(screen.getByLabelText("confirm-button"));
     });
 
     const updatedRows = await screen.findAllByTestId("user-row");
@@ -281,7 +286,7 @@ describe("UserManagementPage", () => {
       http.delete("/api/v2/user/test_user", async (): Promise<HttpResponse> => {
         data.splice(0, 1);
 
-        return HttpResponse.json();
+        return HttpResponse.json({ status: 204 });
       }),
     );
 

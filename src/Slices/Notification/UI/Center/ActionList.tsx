@@ -43,9 +43,8 @@ export const ActionList: React.FC<Props> = ({ read, id, onUpdate }) => {
           variant="plain"
           onClick={onToggleClick}
           isExpanded={isOpen}
-        >
-          <EllipsisVIcon />
-        </MenuToggle>
+          icon={<EllipsisVIcon />}
+        />
       )}
     >
       <DropdownItem

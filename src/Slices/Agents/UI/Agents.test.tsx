@@ -528,7 +528,7 @@ test("Given the Agents view with the environment halted, When setting keep_pause
     await apiHelper.resolve(Either.right(AgentsMock.response));
   });
 
-  const onResumeToggle = await screen.findByRole("checkbox", {
+  const onResumeToggle = await screen.findByRole("switch", {
     name: "aws-on-resume-toggle",
   });
 
@@ -586,7 +586,7 @@ test("Given the Agents view with the environment halted, When setting unpause_on
     await apiHelper.resolve(Either.right(AgentsMock.response));
   });
 
-  const onResumeToggle = await screen.findByRole("checkbox", {
+  const onResumeToggle = await screen.findByRole("switch", {
     name: "ecx-on-resume-toggle",
   });
 

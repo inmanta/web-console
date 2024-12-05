@@ -1,8 +1,8 @@
 import { dia, g } from "@inmanta/rappid";
 import {
-  global_palette_purple_500,
-  global_palette_gold_400,
-  global_palette_blue_400,
+  t_chart_color_yellow_300,
+  t_chart_color_blue_400,
+  t_chart_color_purple_300,
 } from "@patternfly/react-tokens";
 import {
   EmbeddedEntity,
@@ -19,9 +19,9 @@ import {
  * Enum representing header colors for different types of entities.
  */
 const HeaderColor = {
-  CORE: global_palette_gold_400.var,
-  EMBEDDED: global_palette_blue_400.var,
-  RELATION: global_palette_purple_500.var,
+  CORE: t_chart_color_yellow_300.var,
+  EMBEDDED: t_chart_color_blue_400.var,
+  RELATION: t_chart_color_purple_300.var,
 };
 
 /**

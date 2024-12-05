@@ -1,7 +1,7 @@
 import React from "react";
 import { Flex, FlexItem, Title } from "@patternfly/react-core";
 import { InstanceSummary } from "@/Core";
-import { EmptyView, Spacer, SummaryChart } from "@/UI/Components";
+import { EmptyView, SummaryChart } from "@/UI/Components";
 import { words } from "@/UI/words";
 
 interface Props {
@@ -11,8 +11,7 @@ interface Props {
 export const Details: React.FC<Props> = ({ instanceSummary }) => {
   return (
     <Flex spaceItems={{ default: "spaceItemsXl" }}>
-      <Flex direction={{ default: "column" }}>
-        <Spacer />
+      <Flex direction={{ default: "column" }} rowGap={{ default: "rowGapMd" }}>
         <FlexItem>
           <Title headingLevel="h3">{words("catalog.summary.title")}</Title>
         </FlexItem>
