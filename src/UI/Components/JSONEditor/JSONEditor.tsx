@@ -2,8 +2,6 @@ import React, { useContext, useEffect, useState } from "react";
 import { Editor, OnValidate, useMonaco } from "@monaco-editor/react";
 import { Alert, Panel, Spinner } from "@patternfly/react-core";
 import { InfoAltIcon } from "@patternfly/react-icons";
-import styled from "styled-components";
-
 import { useGetJSONSchema } from "@/Data/Managers/V2/GETTERS/GetJSONSchema";
 import { DependencyContext } from "@/UI";
 
@@ -116,7 +114,7 @@ export const JSONEditor: React.FC<Props> = ({
   return isLoading ? (
     <Spinner data-testid="loading-spinner" />
   ) : (
-    <EditorWrapper data-testid="JSON-Editor-Wrapper">
+    <div data-testid="JSON-Editor-Wrapper">
       <Editor
         height={"calc(100vh - 550px)"}
         width={"100%"}
@@ -144,10 +142,6 @@ export const JSONEditor: React.FC<Props> = ({
           )}
         </Panel>
       )}
-    </EditorWrapper>
+    </div>
   );
 };
-
-const EditorWrapper = styled.div`
-  border-radius: var(--pf-t--global--border--radius--large);
-`;

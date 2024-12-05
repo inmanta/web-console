@@ -97,7 +97,7 @@ describe("EntityForm.", () => {
 
     render(component);
 
-    expect(screen.getByText("Remove")).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Remove" })).toBeDisabled();
   });
 
   it("when Remove is clicked then onRemove is being called", async () => {
@@ -117,10 +117,10 @@ describe("EntityForm.", () => {
 
     render(component);
 
-    expect(screen.getByText("Remove")).toBeEnabled();
+    expect(screen.getByRole("button", { name: "Remove" })).toBeEnabled();
 
     await act(async () => {
-      await userEvent.click(screen.getByText("Remove"));
+      await userEvent.click(screen.getByRole("button", { name: "Remove" }));
     });
     expect(onRemove).toHaveBeenCalled();
   });
@@ -197,7 +197,7 @@ describe("EntityForm.", () => {
 
     render(component);
 
-    expect(screen.getByText("Cancel")).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Cancel" })).toBeDisabled();
     expect(screen.getByLabelText("TextInput-service_id")).toHaveValue("");
     expect(screen.getByLabelText("TextInput-name")).toHaveValue("");
 
@@ -222,14 +222,14 @@ describe("EntityForm.", () => {
       );
     });
 
-    expect(screen.getByText("Cancel")).toBeEnabled();
+    expect(screen.getByRole("button", { name: "Cancel" })).toBeEnabled();
     expect(screen.getByLabelText("TextInput-service_id")).toHaveValue(
       "test_id",
     );
     expect(screen.getByLabelText("TextInput-name")).toHaveValue("test_name");
 
     await act(async () => {
-      await userEvent.click(screen.getByText("Cancel"));
+      await userEvent.click(screen.getByRole("button", { name: "Cancel" }));
     });
     expect(onSave).toHaveBeenCalledWith(expect.any(Array), {
       name: "",
@@ -237,7 +237,7 @@ describe("EntityForm.", () => {
       should_deploy_fail: false,
     });
 
-    expect(screen.getByText("Cancel")).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Cancel" })).toBeDisabled();
     expect(screen.getByLabelText("TextInput-service_id")).toHaveValue("");
     expect(screen.getByLabelText("TextInput-name")).toHaveValue("");
   });
