@@ -6,6 +6,7 @@ import {
   FieldCreator,
   createFormState,
 } from "@/UI/Components/ServiceInstanceForm";
+import { dispatchUpdateStencil } from "../Context/dispatchers";
 import { EventActionEnum } from "../interfaces";
 import { ServiceEntityBlock } from "../shapes";
 import { connectEntities, createComposerEntity } from "./general";
@@ -111,14 +112,7 @@ const addSingleEntity = (
     holderName,
   });
 
-  document.dispatchEvent(
-    new CustomEvent("updateStencil", {
-      detail: {
-        name: model.name,
-        action: EventActionEnum.ADD,
-      },
-    }),
-  );
+  dispatchUpdateStencil(model.name, EventActionEnum.ADD);
 
   embeddedEntity.addTo(graph);
   const subEmbeddedEntities = addDefaultEntities(graph, model);

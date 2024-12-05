@@ -6,6 +6,10 @@ import {
   FieldCreator,
   createFormState,
 } from "../../ServiceInstanceForm";
+import {
+  dispatchUpdateServiceOrderItems,
+  dispatchUpdateStencil,
+} from "../Context/dispatchers";
 import { createComposerEntity } from "../actions/general";
 import { ActionEnum, EventActionEnum } from "../interfaces";
 import { transformEmbeddedToStencilElements } from "./helpers";
@@ -77,21 +81,13 @@ export class InstanceStencilTab {
 
     this.stencil.on("element:drop", (elementView) => {
       if (elementView.model.get("isEmbeddedEntity")) {
-        document.dispatchEvent(
-          new CustomEvent("updateStencil", {
-            detail: {
-              name: elementView.model.get("entityName"),
-              action: EventActionEnum.ADD,
-            },
-          }),
+        dispatchUpdateStencil(
+          elementView.model.get("name"),
+          EventActionEnum.ADD,
         );
       }
 
-      document.dispatchEvent(
-        new CustomEvent("updateServiceOrderItems", {
-          detail: { cell: elementView.model, action: ActionEnum.CREATE },
-        }),
-      );
+      dispatchUpdateServiceOrderItems(elementView.model, ActionEnum.CREATE);
     });
   }
 }

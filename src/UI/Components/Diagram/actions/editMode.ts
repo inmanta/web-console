@@ -3,6 +3,7 @@ import { DirectedGraph } from "@joint/layout-directed-graph";
 import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from "@/Core";
 import { InstanceWithRelations } from "@/Data/Managers/V2/GETTERS/GetInstanceWithRelations";
 import { words } from "@/UI/words";
+import { dispatchUpdateStencil } from "../Context/dispatchers";
 import { findCorrespondingId, findFullInterServiceRelations } from "../helpers";
 import activeImage from "../icons/active-icon.svg";
 import candidateImage from "../icons/candidate-icon.svg";
@@ -307,14 +308,7 @@ export function appendEmbeddedEntity(
       addInfoIcon(instanceAsTable, presentedAttr);
     }
 
-    document.dispatchEvent(
-      new CustomEvent("updateStencil", {
-        detail: {
-          name: embeddedEntity.name,
-          action: EventActionEnum.ADD,
-        },
-      }),
-    );
+    dispatchUpdateStencil(embeddedEntity.name, EventActionEnum.ADD);
 
     //add to graph
     instanceAsTable.addTo(graph);
