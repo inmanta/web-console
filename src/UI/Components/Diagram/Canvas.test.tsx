@@ -25,8 +25,11 @@ import CustomRouter from "@/UI/Routing/CustomRouter";
 import history from "@/UI/Routing/history";
 import { CanvasProvider } from "./Context/CanvasProvider";
 import { InstanceComposerContext } from "./Context/Context";
-import { mockedInstanceTwo, mockedInstanceTwoServiceModel } from "./Mocks";
-import { serviceModels } from "./Mocks/services";
+import {
+  mockedInstanceTwo,
+  mockedInstanceTwoServiceModel,
+  serviceModels,
+} from "./Mocks";
 import "@testing-library/jest-dom";
 import { defineObjectsForJointJS } from "./testSetup";
 

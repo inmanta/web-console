@@ -8,8 +8,8 @@ import {
   testApiInstance,
   testApiInstanceModel,
   testEmbeddedApiInstances,
+  serviceModels,
 } from "../Mocks";
-import { serviceModels } from "../Mocks/services";
 import {
   shapesDataTransform,
   getServiceOrderItems,
