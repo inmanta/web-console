@@ -6,7 +6,6 @@ import {
   DescriptionListTerm,
   Label,
 } from "@patternfly/react-core";
-import { ExclamationCircleIcon } from "@patternfly/react-icons";
 import { Tr, Td } from "@patternfly/react-table";
 import styled from "styled-components";
 import { ServiceOrderItem } from "@/Slices/Orders/Core/Query";
@@ -106,7 +105,7 @@ export const OrderDetailsRow: React.FC<Props> = ({
                       language="json"
                     />
                   ) : (
-                    <Label icon={<ExclamationCircleIcon />} variant="outline">
+                    <Label status="info" variant="outline">
                       {words("orders.row.empty")}
                     </Label>
                   )}

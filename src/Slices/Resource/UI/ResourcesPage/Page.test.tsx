@@ -935,9 +935,8 @@ test("ResourcesView shows deploy state bar with available status without process
   expect(availableItem).toBeVisible();
   expect(availableItem).toHaveAttribute("data-value", "1");
   expect(availableItem).not.toHaveAttribute("data-value", "3");
-  expect(
-    screen.getByRole("cell", { name: "Status-processing_events" }),
-  ).toBeVisible();
+
+  expect(screen.queryByTestId("Status-processing_events")).toBeVisible();
 
   await act(async () => {
     const results = await axe(document.body);

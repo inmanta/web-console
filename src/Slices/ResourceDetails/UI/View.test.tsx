@@ -123,9 +123,7 @@ test("GIVEN The Resource details view THEN shows status label", async () => {
     await apiHelper.resolve(Either.right({ data: ResourceDetails.a }));
   });
 
-  expect(
-    screen.getByRole("generic", { name: "Status-deployed" }),
-  ).toBeVisible();
+  expect(screen.getByTestId("Status-deployed")).toBeVisible();
 
   await act(async () => {
     const results = await axe(document.body);

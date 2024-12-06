@@ -6,7 +6,6 @@ import {
   Stack,
   StackItem,
 } from "@patternfly/react-core";
-import { ExclamationTriangleIcon } from "@patternfly/react-icons";
 import { RemoteData } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
@@ -53,7 +52,7 @@ export const EnvironmentControls: React.FC = () => {
           <Stack hasGutter>
             <StackItem>
               {data.halted && (
-                <Label color="orange" icon={<ExclamationTriangleIcon />}>
+                <Label status="warning">
                   {words("environment.halt.label")}
                 </Label>
               )}

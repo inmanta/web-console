@@ -1,6 +1,6 @@
 import { ReactElement } from "react";
 import { ServiceInstanceModelWithTargetStates, ServiceModel } from "@/Core";
-import { InstanceState } from "@/UI/Components";
+import { InstanceStateLabel } from "@/UI/Components";
 import { StatePresenter } from "./StatePresenter";
 
 export class InstanceStatePresenter implements StatePresenter {
@@ -30,7 +30,7 @@ export class InstanceStatePresenter implements StatePresenter {
       return null;
     }
 
-    return InstanceState({
+    return InstanceStateLabel({
       name: lifecycleState.name,
       label: lifecycleState.label,
     }) as ReactElement;
