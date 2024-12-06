@@ -150,60 +150,51 @@ export const EntityForm: React.FC<Props> = ({
 
   return (
     <>
-      <Flex
-        flex={{ default: "flex_1" }}
-        direction={{ default: "column" }}
-        spaceItems={{ default: "spaceItemsSm" }}
-        flexWrap={{ default: "nowrap" }}
-      >
-        {fields && fields.length <= 0 && (
-          <FlexItem>
-            <Alert
-              variant="info"
-              isInline
-              title={words("instanceComposer.formModal.noAttributes")}
-            />
-          </FlexItem>
-        )}
+      {fields && fields.length <= 0 && (
         <FlexItem>
-          <Form
-            data-testid="entity-form"
-            onSubmit={(event) => {
-              event.preventDefault();
-            }}
-          >
-            {fields &&
-              fields.map((field) => (
-                <FieldInput
-                  originalState={initialState}
-                  key={field.name}
-                  field={{
-                    ...field,
-                    isDisabled: isDisabled || field.isDisabled,
-                  }}
-                  formState={formState}
-                  getUpdate={getUpdate}
-                  path={null}
-                  suggestions={field.suggestion}
-                />
-              ))}
-          </Form>
+          <Alert
+            variant="info"
+            isInline
+            title={words("instanceComposer.formModal.noAttributes")}
+          />
         </FlexItem>
-      </Flex>
+      )}
+      <FlexItem flex={{ default: "flex_1" }}>
+        <Form
+          data-testid="entity-form"
+          onSubmit={(event) => {
+            event.preventDefault();
+          }}
+        >
+          {fields &&
+            fields.map((field) => (
+              <FieldInput
+                originalState={initialState}
+                key={field.name}
+                field={{
+                  ...field,
+                  isDisabled: isDisabled || field.isDisabled,
+                }}
+                formState={formState}
+                getUpdate={getUpdate}
+                path={null}
+                suggestions={field.suggestion}
+              />
+            ))}
+        </Form>
+      </FlexItem>
       {showButtons && (
         <Flex justifyContent={{ default: "justifyContentCenter" }}>
-          <Flex justifyContent={{ default: "justifyContentCenter" }}>
-            <FlexItem>
-              <Button
-                variant="danger"
-                width={200}
-                onClick={onRemove}
-                isDisabled={!isRemovable}
-              >
-                {words("remove")}
-              </Button>
-            </FlexItem>
-          </Flex>
+          <FlexItem>
+            <Button
+              variant="danger"
+              width={200}
+              onClick={onRemove}
+              isDisabled={!isRemovable}
+            >
+              {words("remove")}
+            </Button>
+          </FlexItem>
           <FlexItem>
             <Button
               variant="tertiary"

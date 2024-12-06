@@ -29,6 +29,7 @@ const createHalo = (
   const halo = new ui.Halo({
     cellView: cellView,
     type: "toolbar",
+    rx: 5,
   });
 
   halo.removeHandle("clone");
@@ -135,6 +136,7 @@ const createHalo = (
           attrs: {
             "stroke-opacity": 0.5,
             "stroke-width": 5,
+            rx: 6,
             filter: "drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4))",
           },
         });

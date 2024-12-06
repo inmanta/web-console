@@ -157,62 +157,52 @@ export const RightSidebar: React.FC<Props> = ({ editable }) => {
   }, [cellToEdit]);
 
   return (
-    <Wrapper>
-      <Flex
-        direction={{ default: "column" }}
-        spaceItems={{ default: "spaceItemsSm" }}
-        justifyContent={{ default: "justifyContentSpaceBetween" }}
-      >
+    <Wrapper
+      direction={{ default: "column" }}
+      spaceItems={{ default: "spaceItemsSm" }}
+      flexWrap={{ default: "nowrap" }}
+    >
+      <FlexItem alignSelf={{ default: "alignSelfCenter" }}>
+        <Title headingLevel="h1">{words("details")}</Title>
+      </FlexItem>
+      {description && (
+        <Content aria-label="service-description">{description}</Content>
+      )}
+      {!!cellToEdit && !!model ? (
+        <EntityForm
+          serviceModel={model}
+          isEdited={cellToEdit.model.get("isInEditMode")}
+          initialState={attributes}
+          onSave={onSave}
+          isDisabled={!editable || isInterServiceRelation}
+          isRemovable={isRemovable}
+          onRemove={onRemove}
+          showButtons={editable}
+        />
+      ) : (
         <Flex
-          direction={{ default: "column" }}
-          spaceItems={{ default: "spaceItemsSm" }}
+          flex={{ default: "flex_1" }}
           alignItems={{ default: "alignItemsCenter" }}
         >
-          <FlexItem alignSelf={{ default: "alignSelfCenter" }}>
-            <Title headingLevel="h1">{words("details")}</Title>
-          </FlexItem>
-          {description && (
-            <FlexItem>
-              <Content aria-label="service-description">{description}</Content>
-            </FlexItem>
-          )}
-        </Flex>
-        {!!cellToEdit && !!model ? (
-          <EntityForm
-            serviceModel={model}
-            isEdited={cellToEdit.model.get("isInEditMode")}
-            initialState={attributes}
-            onSave={onSave}
-            isDisabled={!editable || isInterServiceRelation}
-            isRemovable={isRemovable}
-            onRemove={onRemove}
-            showButtons={editable}
-          />
-        ) : (
-          <Flex
-            flex={{ default: "flex_1" }}
-            alignItems={{ default: "alignItemsCenter" }}
+          <EmptyState
+            headingLevel="h4"
+            variant={EmptyStateVariant.sm}
+            icon={CubesIcon}
+            titleText={words(
+              "instanceComposer.formModal.noElementSelected.title",
+            )}
           >
-            <EmptyState
-              headingLevel="h4"
-              variant={EmptyStateVariant.sm}
-              icon={CubesIcon}
-              titleText={words(
-                "instanceComposer.formModal.noElementSelected.title",
-              )}
-            >
-              <EmptyStateBody>
-                {words("instanceComposer.formModal.noElementSelected")}
-              </EmptyStateBody>
-            </EmptyState>
-          </Flex>
-        )}
-      </Flex>
+            <EmptyStateBody>
+              {words("instanceComposer.formModal.noElementSelected")}
+            </EmptyStateBody>
+          </EmptyState>
+        </Flex>
+      )}
     </Wrapper>
   );
 };
 
-const Wrapper = styled.div`
+const Wrapper = styled(Flex)`
   height: 100%;
   width: 300px;
   position: absolute;
