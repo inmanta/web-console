@@ -579,7 +579,7 @@ if (Cypress.env("edition") === "iso") {
       );
     });
 
-    xit("8.3 composer edit view can perform it's required functions and deploy edited instance", () => {
+    it("8.3 composer edit view can perform it's required functions and deploy edited instance", () => {
       // Select 'test' environment
       cy.visit("/console/");
       cy.get(`[aria-label="Select-environment-test"]`).click();
@@ -725,7 +725,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="extra_embedded_value"]').should("have.text", "[]");
     });
 
-    xit("8.4 composer edit view is able to edit instances relations", () => {
+    it("8.4 composer edit view is able to edit instances relations", () => {
       // Select 'test' environment
       cy.visit("/console/");
       cy.get(`[aria-label="Select-environment-test"]`).click();
@@ -744,6 +744,7 @@ if (Cypress.env("edition") === "iso") {
       // Expect Canvas to be visible
       cy.get(".canvas").should("be.visible");
 
+      cy.get("main").scrollTo("bottom"); //scroll to the bottom as the error container is clipped in 1500x900 viewport
       //Assert error message is visible as there is missing relation
       cy.get('[data-testid="Error-container"]').should("be.visible");
       cy.get('[data-testid="Error-container"]').should(
@@ -888,7 +889,7 @@ if (Cypress.env("edition") === "iso") {
         });
     });
 
-    xit("8.5 composer edit view is able to remove inter-service relation from instance", () => {
+    it("8.5 composer edit view is able to remove inter-service relation from instance", () => {
       // Select 'test' environment
       cy.visit("/console/");
 

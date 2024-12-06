@@ -6,7 +6,7 @@ import removeBttn from "./icons/remove-button.svg";
 export const CanvasWrapper = styled.div`
   display: flex;
   width: 100%;
-  height: calc(80vh - 140px);
+  height: calc(80vh - 170px);
   border-radius: var(--pf-t--global--border--radius--small);
   color: var(--pf-t--global--text--color--regular);
   position: relative;
@@ -121,11 +121,12 @@ export const CanvasWrapper = styled.div`
     &:after {
       position: relative;
       border: 1px dashed var(--pf-t--global--border--color--brand--default);
+      border-radius: var(--pf-t--global--border--radius--medium);
       content: "";
       display: inline-block;
-      width: calc(100% + 10px);
+      width: calc(100% + 18px);
       height: calc(100% + 20px);
-      left: -5px;
+      left: -9px;
       top: -5px;
     }
   }
