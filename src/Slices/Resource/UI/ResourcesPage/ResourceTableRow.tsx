@@ -44,7 +44,10 @@ export const ResourceTableRow: React.FC<Props> = ({
         {row.numberOfDependencies as React.ReactNode}
       </CenteredCell>
       <Td dataLabel={words("resources.column.deployState")}>
-        <ResourceStatusLabel status={labelColorConfig[row.deployState]} />
+        <ResourceStatusLabel
+          status={labelColorConfig[row.deployState]}
+          label={row.deployState}
+        />
       </Td>
       <StyledCell>
         <ResourceLink

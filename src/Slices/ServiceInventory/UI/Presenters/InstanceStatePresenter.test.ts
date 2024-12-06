@@ -14,8 +14,7 @@ test("InstanceStatePresenter returns correct InstanceState when every input is c
   const stateLabel = statePresenter.getForId(instances[0].id);
 
   expect(stateLabel).toBeTruthy();
-  expect(stateLabel?.props.color).toEqual("blue");
-  expect(stateLabel?.props.icon.type.displayName).toEqual("InfoCircleIcon");
+  expect(stateLabel?.props.status).toBe("info");
 });
 
 test("InstanceStatePresenter returns null when the instance can't be found", () => {

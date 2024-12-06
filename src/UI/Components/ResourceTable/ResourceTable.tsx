@@ -28,6 +28,7 @@ export const ResourceTable: React.FC<Props> = ({ resources, id, ...props }) => {
           title: (
             <ResourceStatusLabel
               status={labelColorConfig[resource.resource_state]}
+              label={resource.resource_state}
             />
           ),
         },

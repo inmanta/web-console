@@ -24,7 +24,10 @@ export const RequiresTable: React.FC<Props> = ({
           <ResourceLink resourceId={resource_id} />
         </Td>
         <Td width={15}>
-          <ResourceStatusLabel status={labelColorConfig[status]} />
+          <ResourceStatusLabel
+            status={labelColorConfig[status]}
+            label={status}
+          />
         </Td>
       </Tr>
     ))}

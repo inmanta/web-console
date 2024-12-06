@@ -1,8 +1,10 @@
 import React from "react";
 import { Label, LabelProps } from "@patternfly/react-core";
+import { Resource } from "@/Core";
 
 interface Props {
   status: NonNullable<LabelProps["status"] | LabelProps["color"]>;
+  label: Resource.Status;
 }
 
 const nonStatus: LabelProps["color"][] = ["grey", "purple"];
@@ -19,18 +21,18 @@ const isColor = (value): value is LabelProps["color"] => {
  * @param {NonNullable<LabelProps["status"] | LabelProps["color"]>} props.status - Status of the resource
  * @returns React Component rendering a Label with the status of the resource
  */
-export const ResourceStatusLabel: React.FC<Props> = ({ status }) => {
+export const ResourceStatusLabel: React.FC<Props> = ({ status, label }) => {
   if (!isColor(status)) {
     return (
-      <Label variant="outline" status={status} aria-label={`Status-${status}`}>
-        {status}
+      <Label variant="outline" status={status} data-testid={`Status-${label}`}>
+        {label}
       </Label>
     );
   }
 
   return (
-    <Label color={status} aria-label={`Status-${status}`}>
-      {status}
+    <Label color={status} data-testid={`Status-${label}`}>
+      {label}
     </Label>
   );
 };

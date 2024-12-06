@@ -55,5 +55,10 @@ const StatusLabel: React.FC<{
 }> = ({ data }) => {
   if (!RemoteData.isSuccess(data)) return null;
 
-  return <ResourceStatusLabel status={labelColorConfig[data.value.status]} />;
+  return (
+    <ResourceStatusLabel
+      status={labelColorConfig[data.value.status]}
+      label={data.value.status}
+    />
+  );
 };
