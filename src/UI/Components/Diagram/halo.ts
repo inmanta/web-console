@@ -1,4 +1,5 @@
 import { dia, highlighters, ui } from "@inmanta/rappid";
+import { t_global_border_radius_small } from "@patternfly/react-tokens";
 import {
   dispatchRemoveInterServiceRelationFromTracker,
   dispatchUpdateInterServiceRelations,
@@ -29,7 +30,7 @@ const createHalo = (
   const halo = new ui.Halo({
     cellView: cellView,
     type: "toolbar",
-    rx: 5,
+    rx: t_global_border_radius_small.value,
   });
 
   halo.removeHandle("clone");
@@ -136,7 +137,7 @@ const createHalo = (
           attrs: {
             "stroke-opacity": 0.5,
             "stroke-width": 5,
-            rx: 6,
+            rx: t_global_border_radius_small.var,
             filter: "drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4))",
           },
         });
