@@ -1,4 +1,5 @@
 import { dia, g, highlighters, linkTools } from "@inmanta/rappid";
+import { t_global_border_radius_small } from "@patternfly/react-tokens";
 import {
   ConnectionRules,
   LabelLinkView,
@@ -79,6 +80,7 @@ export const toggleLooseElement = (
         className: "loose_element-highlight",
         attrs: {
           "stroke-width": 3,
+          rx: t_global_border_radius_small.value,
           filter: "drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4))",
         },
       });

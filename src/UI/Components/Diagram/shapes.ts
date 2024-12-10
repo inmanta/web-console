@@ -1,5 +1,6 @@
 import { dia, shapes, util } from "@inmanta/rappid";
 import {
+  t_global_border_radius_small,
   t_global_font_family_mono,
   t_global_text_color_inverse,
 } from "@patternfly/react-tokens";
@@ -31,11 +32,14 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
             class: "joint-entityBlock-body",
             strokeWidth: 0,
             cursor: "default",
+            rx: t_global_border_radius_small.value,
           },
           header: {
             strokeWidth: 0,
             cursor: "grab",
+            d: "M1,0 h257 q6,0 6,6 v24 h-264 v-24 q0,-6 6,-6",
           },
+
           headerLabel: {
             fontFamily: t_global_font_family_mono.var,
             textTransform: "uppercase",
@@ -188,9 +192,10 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
         selector: "body",
       },
       {
-        tagName: "rect",
+        tagName: "path",
         selector: "header",
       },
+
       {
         tagName: "text",
         selector: "headerLabel",
@@ -400,6 +405,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
       y: bbox.height - 32,
       width: 264,
       height: 32,
+      rx: t_global_border_radius_small.value,
     });
     this.attr("toggleButton", {
       event: "element:toggleButton:pointerdown",

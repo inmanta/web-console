@@ -7,7 +7,7 @@ import { words } from "@/UI/words";
 import { AgentRow } from "@S/Agents/Core/Domain";
 import {
   ActionButton,
-  StatusLabel,
+  AgentStatusLabel,
   KebabDropdown,
   OnResumeToggle,
 } from "./Components";
@@ -36,7 +36,7 @@ export const AgentsTableRow: React.FC<Props> = ({ row }) => {
           )}
         </Td>
         <Td width={10} dataLabel={words("agents.columns.status")}>
-          <StatusLabel status={row.status} />
+          <AgentStatusLabel status={row.status} />
         </Td>
         <Td width={15} dataLabel={words("agents.columns.failover")}>
           {row.last_failover && (

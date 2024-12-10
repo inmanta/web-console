@@ -7,7 +7,7 @@ import {
   DesiredStateVersion,
   DesiredStateVersionStatus,
 } from "@S/DesiredState/Core/Domain";
-import { Actions, ResourcesLink, StatusLabel } from "./Components";
+import { Actions, ResourcesLink, DesiredStateStatusLabel } from "./Components";
 
 interface Props {
   row: DesiredStateVersion;
@@ -23,7 +23,7 @@ export const DesiredStatesTableRow: React.FC<Props> = ({ row }) => (
         {row.version as React.ReactNode}
       </Td>
       <Td dataLabel={words("desiredState.columns.status")} width={20}>
-        <StatusLabel status={row.status} />
+        <DesiredStateStatusLabel status={row.status} />
       </Td>
       <Td dataLabel={words("desiredState.columns.resources")} width={20}>
         {row.total as React.ReactNode}

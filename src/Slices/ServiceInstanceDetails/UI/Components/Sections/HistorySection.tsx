@@ -15,7 +15,7 @@ import { words } from "@/UI";
 import {
   DateWithTooltip,
   ErrorView,
-  InstanceState,
+  InstanceStateLabel,
   LoadingView,
 } from "@/UI/Components";
 import { InstanceDetailsContext } from "../../../Core/Context";
@@ -157,7 +157,7 @@ const StateLabel: React.FC<StateLabelProps> = ({ service, state }) => {
     return null;
   }
 
-  return InstanceState({
+  return InstanceStateLabel({
     name: lifecycleState.name,
     label: lifecycleState.label,
   });

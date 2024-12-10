@@ -7,7 +7,7 @@ import { DateWithTooltip } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { CompileReportRow } from "@S/CompileReports/Core/Domain";
-import { StatusLabel } from "./Components";
+import { CompileStatusLabel } from "./Components";
 
 interface Props {
   row: CompileReportRow;
@@ -23,7 +23,7 @@ export const CompileReportsTableRow: React.FC<Props> = ({ row }) => {
           <DateWithTooltip timestamp={row.requested} />
         </Td>
         <StyledCell dataLabel={words("compileReports.columns.status")}>
-          <StatusLabel status={row.status} />
+          <CompileStatusLabel status={row.status} />
         </StyledCell>
         <Td dataLabel={words("compileReports.columns.message")}>
           {row.message}
