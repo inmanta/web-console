@@ -132,7 +132,7 @@ test("GIVEN DesiredStateCompare WHEN StatusFilter = 'Added' THEN only 'Added' re
   });
 
   expect(
-    screen.getAllByRole("listitem", { name: "DiffSummaryListItem" }),
+    screen.getAllByRole("menuitem", { name: "DiffSummaryListItem" }),
   ).toHaveLength(11);
 
   expect(await screen.findAllByTestId("DiffBlock")).toHaveLength(11);
@@ -173,7 +173,7 @@ test("GIVEN DesiredStateCompare WHEN StatusFilter = 'Added' THEN only 'Added' re
   });
 
   expect(
-    await screen.findAllByRole("listitem", { name: "DiffSummaryListItem" }),
+    await screen.findAllByRole("menuitem", { name: "DiffSummaryListItem" }),
   ).toHaveLength(2);
 
   expect(await screen.findAllByTestId("DiffBlock")).toHaveLength(2);
@@ -285,7 +285,7 @@ test("GIVEN DesiredStateCompare page WHEN SearchFilter is used, ONLY show the re
   });
 
   expect(
-    screen.getAllByRole("listitem", { name: "DiffSummaryListItem" }),
+    screen.getAllByRole("menuitem", { name: "DiffSummaryListItem" }),
   ).toHaveLength(11);
 
   expect(await screen.findAllByTestId("DiffBlock")).toHaveLength(11);
