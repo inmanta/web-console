@@ -1,1 +1,1 @@
-export * from "./InstanceState";
+export * from "./InstanceStateLabel";

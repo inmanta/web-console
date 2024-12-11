@@ -2,7 +2,7 @@ import React from "react";
 import { Table, Th, Thead, Tr } from "@patternfly/react-table";
 import { ServiceModel } from "@/Core";
 import { useUrlStateWithExpansion } from "@/Data";
-import { InstanceState } from "@/UI/Components";
+import { InstanceStateLabel } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { InstanceLog } from "@S/ServiceInstanceHistory/Core/Domain";
 import { AttributesPresenter } from "@S/ServiceInventory/UI/Presenters";
@@ -81,7 +81,7 @@ const State: React.FC<{ service: ServiceModel; state: string }> = ({
     return null;
   }
 
-  return InstanceState({
+  return InstanceStateLabel({
     name: lifecycleState.name,
     label: lifecycleState.label,
   });

@@ -1,0 +1,5 @@
+description: Align colors of labels and fix colors of progress bars
+change-type: patch
+destination-branches: [master]
+sections:
+  minor-improvement: "{{description}}"

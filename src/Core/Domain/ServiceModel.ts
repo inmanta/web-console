@@ -10,7 +10,7 @@ import { FormSuggestion } from "./ServiceInstanceModel";
 export type AttributeModel = AttributeValidation & {
   name: string;
   type: string;
-  description?: string;
+  description?: string | null;
   modifier: string;
   default_value:
     | string
@@ -108,11 +108,12 @@ export interface InstanceSummary {
  */
 export interface ServiceModel extends ServiceIdentifier {
   environment: string;
-  description?: string;
+  description?: string | null;
   lifecycle: LifecycleModel;
   attributes: AttributeModel[];
   service_identity?: string;
-  service_identity_display_name?: string;
+  service_identity_display_name?: string | null;
+  entity_annotations?: Record<string, unknown>;
   config: Config;
   instance_summary?: InstanceSummary | null;
   embedded_entities: EmbeddedEntity[];
@@ -130,7 +131,7 @@ export interface ServiceModel extends ServiceIdentifier {
  */
 export interface RelationAttribute {
   lower_limit: ParsedNumber;
-  upper_limit?: ParsedNumber;
+  upper_limit?: ParsedNumber | null;
   modifier: string;
 }
 
@@ -139,7 +140,8 @@ export interface RelationAttribute {
  */
 export interface InterServiceRelation extends RelationAttribute {
   name: string;
-  description?: string;
+  attribute_annotations?: Record<string, unknown>;
+  description?: string | null;
   entity_type: string;
 }
 
@@ -148,12 +150,13 @@ export interface InterServiceRelation extends RelationAttribute {
  */
 export interface EmbeddedEntity extends RelationAttribute {
   name: string;
-  description?: string;
+  description?: string | null;
   attributes: AttributeModel[];
   embedded_entities: EmbeddedEntity[];
   inter_service_relations: InterServiceRelation[];
   key_attributes?: string[] | null;
   attribute_annotations?: AttributeAnnotations;
+  entity_annotations?: Record<string, unknown>;
 }
 
 /**
@@ -161,7 +164,7 @@ export interface EmbeddedEntity extends RelationAttribute {
  */
 interface MinimalEmbeddedEntity {
   name: string;
-  description?: string;
+  description?: string | null;
   attributes: Pick<AttributeModel, "name" | "type" | "description">[];
   inter_service_relations?: Pick<
     InterServiceRelation,

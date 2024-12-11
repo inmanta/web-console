@@ -1,1 +1,2 @@
-export * from "./Mock";
+export * from "./isntances";
+export * from "./services";
