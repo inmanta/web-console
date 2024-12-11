@@ -92,18 +92,18 @@ test("GIVEN DesiredStateCompare THEN shows 'Jump To' action with dropdown", asyn
 
   expect(button).toBeVisible();
   expect(
-    screen.queryByRole("list", { name: "DiffSummaryList" }),
+    screen.queryByRole("menu", { name: "DiffSummaryList" }),
   ).not.toBeInTheDocument();
 
   await act(async () => {
     await userEvent.click(button);
   });
   expect(
-    screen.getByRole("list", {
+    screen.getByRole("menu", {
       name: "DiffSummaryList",
     }),
   ).toBeVisible();
-  const items = screen.getAllByRole("listitem", {
+  const items = screen.getAllByRole("menuitem", {
     name: "DiffSummaryListItem",
   });
 
