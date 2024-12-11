@@ -4,7 +4,7 @@ import { PrimaryBaseUrlManager } from "@/UI";
 import { useFetchHelpers } from "../../helpers";
 
 /**
- * Return Signature of the useGetResources React Query
+ * Return Signature of the useGetInstanceResources React Query
  */
 interface getInstanceResources {
   useOneTime: () => UseQueryResult<InstanceResourceModel[], Error>;
