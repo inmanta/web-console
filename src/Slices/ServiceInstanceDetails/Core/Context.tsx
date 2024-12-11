@@ -14,7 +14,7 @@ interface InstanceProviderInterface {
 }
 
 /**
- * InstanceDetailsContext
+ * IntstanceDetailsContext
  * Should be used to provide context to the InstanceDetails page.
  * The logsQuery contains both the events and history data.
  */

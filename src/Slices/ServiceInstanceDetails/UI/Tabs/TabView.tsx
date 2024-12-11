@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import {
   Panel,
   PanelMain,
@@ -77,25 +77,6 @@ export const TabView: React.FC = () => {
       />
     ) : undefined;
 
-  useEffect(() => {
-    if (
-      selectedVersion !== String(instance.version) &&
-      activeTab === TabKeys.RESOURCES
-    ) {
-      setActiveTab(
-        docAttributeDescriptors.length
-          ? TabKeys.DOCUMENTATION
-          : TabKeys.ATTRIBUTES,
-      );
-    }
-  }, [
-    selectedVersion,
-    setActiveTab,
-    activeTab,
-    docAttributeDescriptors.length,
-    instance.version,
-  ]);
-
   return (
     <Panel variant="raised">
       <PanelMain>
@@ -152,7 +133,6 @@ export const TabView: React.FC = () => {
                 </TabTitleText>
               }
               aria-label="resources-content"
-              isDisabled={String(instance.version) !== selectedVersion}
               isAriaDisabled={String(instance.version) !== selectedVersion}
               tooltip={disabledResourceTabTooltip}
             >
