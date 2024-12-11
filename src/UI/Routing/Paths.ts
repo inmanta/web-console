@@ -2,7 +2,6 @@ import { RouteKind } from "@/Core";
 import { InstanceComposer } from "@/Slices/InstanceComposerCreator";
 import { InstanceComposerViewer } from "@/Slices/InstanceComposerViewer";
 import { InstanceDetails } from "@/Slices/ServiceInstanceDetails";
-import { AgentProcess } from "@S/AgentProcess";
 import { Agents } from "@S/Agents";
 import { CompileDetails } from "@S/CompileDetails";
 import { CompileReports } from "@S/CompileReports";
@@ -72,7 +71,6 @@ export const paths: Paths = {
   /**
    * Resource Manager
    */
-  AgentProcess: AgentProcess.path,
   Agents: Agents.path,
   DiscoveredResources: DiscoveredResources.path,
   Facts: Facts.path,
