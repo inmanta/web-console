@@ -1,21 +1,9 @@
 import React from "react";
-import { MemoryRouter, useLocation } from "react-router-dom";
-import {
-  QueryClient,
-  QueryClientProvider,
-  UseQueryResult,
-} from "@tanstack/react-query";
+import { UseQueryResult } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
-import { StoreProvider } from "easy-peasy";
-import { RemoteData, ServiceInstanceModel, ServiceModel } from "@/Core";
-import { getStoreInstance } from "@/Data";
+import { ServiceInstanceModel, ServiceModel } from "@/Core";
 import { InstanceLog } from "@/Slices/ServiceInstanceHistory/Core/Domain";
-import { dependencies } from "@/Test";
-import {
-  DependencyProvider,
-  EnvironmentHandlerImpl,
-  EnvironmentModifierImpl,
-} from "@/UI";
+
 import { InstanceDetailsContext } from "../../Core/Context";
 import { instanceData } from "../../Test/mockData";
 import {
@@ -23,88 +11,22 @@ import {
   emptyResourcesServer,
   defaultServer,
 } from "../../Test/mockServer";
+import { SetupWrapper } from "../../Test/mockSetup";
 import { ResourcesTabContent } from "./ResourcesTabContent";
 
 const setup = (instance: ServiceInstanceModel) => {
-  const queryClient = new QueryClient();
-  const store = getStoreInstance();
-
-  const environmentHandler = EnvironmentHandlerImpl(
-    useLocation,
-    dependencies.routeManager,
-  );
-
-  const environmentModifier = EnvironmentModifierImpl();
-
-  store.dispatch.environment.setSettingsData({
-    environment: "aaa",
-    value: RemoteData.success({
-      settings: {},
-      definition: {},
-    }),
-  });
-
-  store.dispatch.environment.setEnvironments(
-    RemoteData.success([
-      {
-        id: "aaa",
-        name: "env-a",
-        project_id: "ppp",
-        repo_branch: "branch",
-        repo_url: "repo",
-        projectName: "project",
-        settings: {},
-      },
-    ]),
-  );
-
-  store.dispatch.environment.setEnvironmentDetailsById({
-    id: "aaa",
-    value: RemoteData.success({
-      id: "aaa",
-      name: "env-a",
-      project_id: "ppp",
-      repo_branch: "branch",
-      repo_url: "repo",
-      projectName: "project",
-      halted: false,
-      settings: {},
-    }),
-  });
-
-  environmentModifier.setEnvironment("aaa");
-
   return (
-    <MemoryRouter
-      initialEntries={[
-        {
-          pathname: "/lsm/catalog/mobileCore/inventory/core1/1d96a1ab/details",
-          search: "?env=aaa",
-        },
-      ]}
-    >
-      <QueryClientProvider client={queryClient}>
-        <DependencyProvider
-          dependencies={{
-            ...dependencies,
-            environmentHandler,
-            environmentModifier,
-          }}
-        >
-          <StoreProvider store={store}>
-            <InstanceDetailsContext.Provider
-              value={{
-                instance,
-                logsQuery: {} as UseQueryResult<InstanceLog[], Error>,
-                serviceModelQuery: {} as UseQueryResult<ServiceModel, Error>,
-              }}
-            >
-              <ResourcesTabContent />
-            </InstanceDetailsContext.Provider>
-          </StoreProvider>
-        </DependencyProvider>
-      </QueryClientProvider>
-    </MemoryRouter>
+    <SetupWrapper expertMode={false}>
+      <InstanceDetailsContext.Provider
+        value={{
+          instance,
+          logsQuery: {} as UseQueryResult<InstanceLog[], Error>,
+          serviceModelQuery: {} as UseQueryResult<ServiceModel, Error>,
+        }}
+      >
+        <ResourcesTabContent />
+      </InstanceDetailsContext.Provider>
+    </SetupWrapper>
   );
 };
 
