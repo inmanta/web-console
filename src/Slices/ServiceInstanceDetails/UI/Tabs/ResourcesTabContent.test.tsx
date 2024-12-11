@@ -22,7 +22,6 @@ import {
   errorServerInstance,
   emptyResourcesServer,
   defaultServer,
-  serverWithDocumentation,
 } from "../../Test/mockServer";
 import { ResourcesTabContent } from "./ResourcesTabContent";
 
@@ -109,28 +108,7 @@ const setup = (instance: ServiceInstanceModel) => {
   );
 };
 
-it("should render success view correctly", async () => {
-  const server = defaultServer;
-
-  server.listen();
-
-  render(setup(instanceData));
-
-  expect(screen.getByLabelText("Resources-Loading")).toBeVisible();
-
-  expect(await screen.findByText("Deployment Progress")).toBeVisible();
-  expect(screen.getByText("1 / 1")).toBeVisible();
-  expect(screen.getByLabelText("LegendItem-deployed")).toHaveTextContent("1");
-
-  expect(screen.getByText("Resource")).toBeVisible();
-  expect(screen.getByText("State")).toBeVisible();
-
-  expect(screen.getByLabelText("Status-deployed")).toBeVisible();
-
-  expect(screen.getByText("test_resource[]")).toBeVisible();
-
-  server.close();
-});
+//Note: success view is test in the Page.test.tsx file as we cover there logic for redirecting to the proper tab when changing version
 
 it("should render error view correctly", async () => {
   const server = errorServerInstance;
@@ -168,7 +146,7 @@ it("should render information about no resources correctly", async () => {
 });
 
 it("should render information about no deployment progress data correctly", async () => {
-  const server = serverWithDocumentation;
+  const server = defaultServer;
 
   server.listen();
 
