@@ -8,7 +8,6 @@ import { Filter } from "@S/Agents/Core/Query";
 
 enum Kind {
   Name = "Name",
-  ProcessName = "Process Name",
   Status = "Status",
 }
 
@@ -22,13 +21,6 @@ export const AgentsFilterWidget: React.FC<Props> = ({ filter, setFilter }) => {
 
   const updateName = (names: string[]) =>
     setFilter({ ...filter, name: names.length > 0 ? names : undefined });
-
-  const updateProcessName = (processNames: string[]) => {
-    setFilter({
-      ...filter,
-      process_name: processNames.length > 0 ? processNames : undefined,
-    });
-  };
 
   const agentStatuses = Object.keys(AgentStatus).map((k) => AgentStatus[k]);
 
@@ -46,7 +38,7 @@ export const AgentsFilterWidget: React.FC<Props> = ({ filter, setFilter }) => {
       <FilterPicker
         setFilterKind={setFilterKind}
         filterKind={filterKind}
-        items={[Kind.Name, Kind.ProcessName, Kind.Status]}
+        items={[Kind.Name, Kind.Status]}
       />
       <SelectOptionFilter
         filterPropertyName={Kind.Status}
@@ -62,13 +54,6 @@ export const AgentsFilterWidget: React.FC<Props> = ({ filter, setFilter }) => {
         searchEntries={filter.name}
         update={updateName}
         placeholder={words("agents.filters.name.placeholder")}
-      />
-      <FreeTextFilter
-        isHidden={filterKind !== Kind.ProcessName}
-        filterPropertyName={Kind.ProcessName}
-        searchEntries={filter.process_name}
-        update={updateProcessName}
-        placeholder={words("agents.filters.processName.placeholder")}
       />
     </ToolbarGroup>
   );

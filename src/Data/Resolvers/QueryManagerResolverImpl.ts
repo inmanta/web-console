@@ -44,7 +44,6 @@ import {
   EnvironmentDetailsOneTimeQueryManager,
 } from "@/Slices/Settings/Data/GetEnvironmentDetails";
 import { GetProjectsQueryManager } from "@/Slices/Settings/Data/GetProjects";
-import { GetAgentProcessQueryManager } from "@S/AgentProcess/Data";
 import { GetAgentsQueryManager } from "@S/Agents/Data";
 import { CompileDetailsQueryManager } from "@S/CompileDetails/Data";
 import { CompileReportsQueryManager } from "@S/CompileReports/Data";
@@ -259,7 +258,6 @@ export class QueryManagerResolverImpl implements QueryManagerResolver {
         this.scheduler,
       ),
       GetAgentsQueryManager(this.store, this.apiHelper, this.scheduler),
-      GetAgentProcessQueryManager(this.store, this.apiHelper),
       GetVersionResourcesQueryManager(
         this.apiHelper,
         GetVersionResourcesStateHelper(this.store),

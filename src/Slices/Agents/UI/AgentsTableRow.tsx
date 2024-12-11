@@ -1,7 +1,5 @@
 import React, { useContext } from "react";
-import { Button } from "@patternfly/react-core";
 import { Tbody, Td, Tr } from "@patternfly/react-table";
-import { DateWithTooltip, Link } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { AgentRow } from "@S/Agents/Core/Domain";
@@ -17,41 +15,25 @@ interface Props {
 }
 
 export const AgentsTableRow: React.FC<Props> = ({ row }) => {
-  const { routeManager, environmentModifier } = useContext(DependencyContext);
+  const { environmentModifier } = useContext(DependencyContext);
   const isHalted = environmentModifier.useIsHalted();
 
   return (
     <Tbody isExpanded={false}>
       <Tr aria-label="Agents Table Row">
         <Td dataLabel={words("agents.columns.name")}>{row.name}</Td>
-        <Td dataLabel={words("agents.columns.process")}>
-          {row.process_id && (
-            <Link
-              pathname={routeManager.getUrl("AgentProcess", {
-                id: row.process_id,
-              })}
-            >
-              <Button variant="link">{row.process_name}</Button>
-            </Link>
-          )}
-        </Td>
-        <Td width={10} dataLabel={words("agents.columns.status")}>
+        <Td dataLabel={words("agents.columns.status")}>
           <AgentStatusLabel status={row.status} />
         </Td>
-        <Td width={15} dataLabel={words("agents.columns.failover")}>
-          {row.last_failover && (
-            <DateWithTooltip timestamp={row.last_failover} />
-          )}
-        </Td>
         {isHalted && (
-          <Td width={10} dataLabel={words("agents.columns.unpause")}>
+          <Td dataLabel={words("agents.columns.unpause")}>
             <OnResumeToggle
               name={row.name}
               unpauseOnResume={row.unpause_on_resume}
             />
           </Td>
         )}
-        <Td modifier="fitContent">
+        <Td modifier="fitContent" isActionCell>
           <ActionButton name={row.name} paused={row.paused} />
         </Td>
         <Td isActionCell>

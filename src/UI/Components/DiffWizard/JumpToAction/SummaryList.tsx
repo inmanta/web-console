@@ -1,10 +1,10 @@
 import React from "react";
 import {
-  SimpleList,
-  SimpleListItem,
-  SimpleListProps,
+  DropdownItem,
+  DropdownList,
+  Flex,
+  Truncate,
 } from "@patternfly/react-core";
-import styled from "styled-components";
 import { StatusDescriptor } from "@/UI/Components/DiffWizard/StatusDescriptor";
 import { Item, Refs } from "@/UI/Components/DiffWizard/types";
 
@@ -14,55 +14,36 @@ interface Props {
 }
 
 export const SummaryList: React.FC<Props> = ({ items, refs }) => {
-  const onSelect: SimpleListProps["onSelect"] = (_ref, listItemProps) => {
-    if (listItemProps.itemId === undefined) return;
-    if (refs.current[listItemProps.itemId] === undefined) return;
-    refs.current[listItemProps.itemId].scrollIntoView({
+  const onSelect = (itemId: string) => {
+    if (itemId === undefined) return;
+    if (refs.current[itemId] === undefined) return;
+    refs.current[itemId].scrollIntoView({
       behavior: "smooth",
     });
-    refs.current[listItemProps.itemId].focus();
+    refs.current[itemId].focus();
   };
 
   return (
-    <StyledSimpleList onSelect={onSelect} aria-label="DiffSummaryList">
+    <DropdownList aria-label="DiffSummaryList">
       {items.map((item) => (
-        <SimpleListItem
+        <DropdownItem
           key={item.id}
           itemId={item.id}
+          onClick={() => onSelect(item.id)}
           aria-label="DiffSummaryListItem"
         >
           <Descriptor {...item} />
-        </SimpleListItem>
+        </DropdownItem>
       ))}
-    </StyledSimpleList>
+    </DropdownList>
   );
 };
 
 const Descriptor: React.FC<Pick<Item, "id" | "status">> = ({ id, status }) => {
   return (
-    <Container>
-      <StyledStatusDescriptor status={status} />
-      <Id>{id}</Id>
-    </Container>
+    <Flex flexWrap={{ default: "nowrap" }}>
+      <StatusDescriptor status={status} />
+      <Truncate content={id} tooltipPosition="top" position="end" />
+    </Flex>
   );
 };
-
-const Container = styled.div`
-  display: flex;
-  flex-shrink: 0;
-  align-items: stretch;
-`;
-
-const StyledStatusDescriptor = styled(StatusDescriptor)`
-  margin-right: 8px;
-`;
-
-const StyledSimpleList = styled(SimpleList)`
-  width: fit-content;
-  max-height: 500px;
-  overflow-y: auto;
-`;
-
-const Id = styled.div`
-  white-space: pre;
-`;

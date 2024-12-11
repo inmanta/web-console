@@ -742,13 +742,6 @@ const dict = {
   "facts.column.resourceId": "Resource Id",
   "facts.empty.message": "No facts found",
 
-  /** Agent Process */
-  "agentProcess.title": "Agent Process",
-  "agentProcess.hostname": "Hostname",
-  "agentProcess.firstSeen": "First seen",
-  "agentProcess.lastSeen": "Last seen",
-  "agentProcess.expired": "Expired",
-
   /** Desired State */
   "desiredState.title": "Desired State",
   "desiredState.empty.message": "No desired state versions found",

@@ -1,0 +1,3 @@
+description: Fix webpack configuration to use the correct path for fonts. Align vertical alignment of text to be centered in rows.
+change-type: patch
+destination-branches: [master]

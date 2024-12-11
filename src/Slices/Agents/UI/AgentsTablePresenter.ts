@@ -10,12 +10,7 @@ export class AgentsTablePresenter implements TablePresenter<Agent, AgentRow> {
   constructor(isHalted: boolean) {
     this.columnHeads = [
       { displayName: words("agents.columns.name"), apiName: "name" },
-      { displayName: words("agents.columns.process"), apiName: "process_name" },
       { displayName: words("agents.columns.status"), apiName: "status" },
-      {
-        displayName: words("agents.columns.failover"),
-        apiName: "last_failover",
-      },
       {
         displayName: words("agents.columns.unpause"),
         apiName: "unpause_on_resume",
@@ -57,7 +52,7 @@ export class AgentsTablePresenter implements TablePresenter<Agent, AgentRow> {
   }
 
   getSortableColumnNames(): string[] {
-    const sortableColumns = ["name", "process_name", "status", "last_failover"];
+    const sortableColumns = ["name", "status"];
 
     return sortableColumns;
   }

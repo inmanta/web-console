@@ -12,7 +12,7 @@ export class MomentDatePresenter implements DatePresenter {
   diff(timestamp1: string, timestamp2: string): string {
     return `${moment
       .duration(moment(timestamp1).diff(moment(timestamp2)))
-      .asSeconds()} seconds`;
+      .asSeconds()} s`;
   }
 
   get(timestamp: string): DateInfo {

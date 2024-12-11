@@ -21,6 +21,9 @@ export const JumpToAction: React.FC<Props> = ({ items, refs }) => {
   return (
     <Dropdown
       onSelect={() => setIsOpen(false)}
+      onOpenChange={(open) => setIsOpen(open)}
+      isScrollable
+      popperProps={{ preventOverflow: true, maxWidth: "800px" }}
       toggle={(toggleref: React.Ref<MenuToggleElement>) => (
         <MenuToggle
           ref={toggleref}

@@ -27,15 +27,15 @@ export const StatusDescriptor: React.FC<Props> = ({ status, className }) => {
 };
 
 const descriptorStyles = css`
-  flex-shrink: 0;
-  width: 18px;
-  height: 18px;
-  line-height: var(--pf-t--global--font--size--body--lg);
+  width: 30px;
+  min-width: 30px;
+  display: inline-block;
+  line-height: var(--pf-t--global--font--line-height--body);
   font-size: var(--pf-t--global--icon--size--font--md);
-  border-radius: var(--pf-t--global--border--radius--tiny);
+  border-radius: var(--pf-t--global--border--radius--small);
   text-align: center;
   font-weight: var(--pf-t--global--font--weight--400);
-  margin: 1.5px 0;
+  margin: 0 var(--pf-t--global--spacer--sm);
 `;
 
 const Added = styled.div`

@@ -32,7 +32,6 @@ const kinds = [
   /**
    * Resource Manager
    */
-  "AgentProcess",
   "Agents",
   "DiscoveredResources",
   "Facts",
@@ -81,7 +80,6 @@ export interface RouteKindWithId<K extends RouteKind = RouteKind> {
  * Only contains routes that have parameters (environment not included)
  */
 interface RouteParamKeysManifest {
-  AgentProcess: "id";
   CompileDetails: "id";
   ComplianceCheck: "version";
   CreateInstance: "service";

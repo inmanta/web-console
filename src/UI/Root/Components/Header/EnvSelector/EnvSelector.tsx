@@ -35,6 +35,9 @@ export const EnvSelector: React.FC<Props> = ({
   return (
     <Dropdown
       isOpen={isOpen}
+      popperProps={{
+        position: "end",
+      }}
       onOpenChange={(open: boolean) => setIsOpen(open)}
       toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
         <MenuToggle
