@@ -14,6 +14,7 @@ export * from "./ProjectModel";
 export * from "./InstanceResourceModel";
 export * from "./ServiceInstanceModel";
 export * as ServiceInstanceParams from "./ServiceInstanceParams";
+export * as InstanceResourcesParams from "./InstanceResourcesParams";
 export * from "./ServiceModel";
 export * from "./LogLevel";
 export * as PageSize from "./PageSize";

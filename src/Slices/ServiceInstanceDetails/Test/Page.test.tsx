@@ -530,6 +530,52 @@ describe("ServiceInstanceDetailsPage", () => {
       }),
     ).toHaveTextContent(/acknowledged/i);
 
+    // Resources Tab
+
+    // Make sure the version is set to latest
+    await act(async () => {
+      await userEvent.click(screen.getAllByLabelText("History-Row")[0]);
+    });
+
+    // Select the Resources tab
+    await act(async () => {
+      await userEvent.click(screen.getByText("Resources"));
+    });
+
+    expect(screen.getByText("Deployment Progress")).toBeVisible();
+    expect(screen.getByText("1 / 1")).toBeVisible();
+    expect(screen.getByLabelText("LegendItem-deployed")).toHaveTextContent("1");
+
+    expect(screen.getByText("Resource")).toBeVisible();
+    expect(screen.getByText("State")).toBeVisible();
+
+    expect(screen.getByLabelText("Status-deployed")).toBeVisible();
+
+    expect(screen.getByText("test_resource[]")).toBeVisible();
+
+    // Change Version to older
+    await act(async () => {
+      await userEvent.click(screen.getAllByLabelText("History-Row")[1]);
+    });
+
+    expect(screen.queryByText("Latest Version")).toBeNull();
+    expect(
+      screen.getByRole("tab", { name: "resources-content" }),
+    ).toBeDisabled();
+
+    expect(screen.getByLabelText("Status-deployed")).not.toBeVisible();
+
+    expect(screen.getByText("test_resource[]")).not.toBeVisible();
+
+    // Change Version to latest
+    await act(async () => {
+      await userEvent.click(screen.getAllByLabelText("History-Row")[0]);
+    });
+
+    expect(
+      screen.getByRole("tab", { name: "resources-content" }),
+    ).toBeEnabled();
+
     server.close();
   });
 });

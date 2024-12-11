@@ -38,7 +38,7 @@ export const useGetInstance = (
 
   const fetchInstance = async (): Promise<{ data: ServiceInstanceModel }> => {
     const response = await fetch(
-      `${baseUrl}/lsm/v1/service_inventory/${service}/${instanceId}`,
+      `${baseUrl}/lsm/v1/service_inventory/${service}/${instanceId}?include_deployment_progress=true`,
       {
         headers,
       },

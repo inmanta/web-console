@@ -123,6 +123,31 @@ const getJSONSchema = http.get(
   },
 );
 
+const getResources = http.get(
+  "/lsm/v1/service_inventory/mobileCore/1d96a1ab/resources",
+  () => {
+    return HttpResponse.json({
+      data: [{ resource_id: "test_resource[],", resource_state: "deployed" }],
+    });
+  },
+);
+
+const getResourcesEmpty = http.get(
+  "/lsm/v1/service_inventory/mobileCore/1d96a1ab/resources",
+  () => {
+    return HttpResponse.json({
+      data: [],
+    });
+  },
+);
+
+const getResourcesError = http.get(
+  "/lsm/v1/service_inventory/mobileCore/1d96a1ab/resources",
+  () => {
+    return HttpResponse.json({ message: "Not Found" }, { status: 404 });
+  },
+);
+
 const destroyInstance = http.delete(
   "/lsm/v2/service_inventory/mobileCore/1d96a1ab/expert",
   async () => {
@@ -186,6 +211,7 @@ export const loadingServer = setupServer(
   getServiceModel,
   getHistoryLogsDelayed,
   getInstanceData,
+  getResources,
 );
 
 /**
@@ -195,6 +221,7 @@ export const errorServerInstance = setupServer(
   getServiceModelError,
   getHistoryLogsError,
   getInstanceError,
+  getResourcesError,
 );
 
 /**
@@ -204,6 +231,7 @@ export const errorServerHistory = setupServer(
   getServiceModelWithConfig,
   getHistoryLogsError,
   getInstanceDataDelayed,
+  getResources,
 );
 
 /**
@@ -219,6 +247,7 @@ export const defaultServer = setupServer(
   destroyInstance,
   postStateUpdate,
   postForceStateUpdate,
+  getResources,
 );
 
 /**
@@ -234,6 +263,7 @@ export const serverFailedActions = setupServer(
   destroyInstanceFailed,
   postStateUpdateFailed,
   postForceStateUpdateFailed,
+  getResources,
 );
 
 /**
@@ -243,6 +273,7 @@ export const serverWithConfig = setupServer(
   getServiceModel,
   getHistoryLogs,
   getInstanceData,
+  getResources,
 );
 
 /**
@@ -252,4 +283,7 @@ export const serverWithDocumentation = setupServer(
   getServiceModelWithDocumentation,
   getHistoryLogsWithDocumentation,
   getInstanceDataWithDocumentation,
+  getResources,
 );
+
+export const emptyResourcesServer = setupServer(getResourcesEmpty);
