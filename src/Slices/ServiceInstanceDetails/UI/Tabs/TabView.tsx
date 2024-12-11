@@ -152,7 +152,6 @@ export const TabView: React.FC = () => {
                 </TabTitleText>
               }
               aria-label="resources-content"
-              isDisabled={String(instance.version) !== selectedVersion}
               isAriaDisabled={String(instance.version) !== selectedVersion}
               tooltip={disabledResourceTabTooltip}
             >
