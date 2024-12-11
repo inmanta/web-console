@@ -10,7 +10,7 @@ import {
   TabContent,
 } from "@patternfly/react-core";
 import { DeploymentProgress } from "@/Core";
-import { useGetInstanceResources } from "@/Data/Managers/V2/GETTERS/GetInstanceResources/useGetInstanceResources";
+import { useGetInstanceResources } from "@/Data/Managers/V2/GETTERS/GetInstanceResources";
 import { DeploymentProgressBar } from "@/Slices/ServiceInventory/UI/Components";
 import { DependencyContext, words } from "@/UI";
 import {
