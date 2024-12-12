@@ -549,7 +549,7 @@ describe("ServiceInstanceDetailsPage", () => {
     expect(screen.getByText("Resource")).toBeVisible();
     expect(screen.getByText("State")).toBeVisible();
 
-    expect(screen.getByLabelText("Status-deployed")).toBeVisible();
+    expect(screen.getByTestId("Status-deployed")).toBeVisible();
 
     expect(screen.getByText("test_resource[]")).toBeVisible();
 
@@ -563,7 +563,7 @@ describe("ServiceInstanceDetailsPage", () => {
       screen.getByRole("tab", { name: "resources-content" }),
     ).toBeDisabled();
 
-    expect(screen.getByLabelText("Status-deployed")).not.toBeVisible();
+    expect(screen.getByTestId("Status-deployed")).not.toBeVisible();
 
     expect(screen.getByText("test_resource[]")).not.toBeVisible();
 
