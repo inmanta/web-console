@@ -128,7 +128,7 @@ const dict = {
   "inventory.statusTab.events": "Events",
   "inventory.resourcesTab.empty.title": "No resources found",
   "inventory.resourcesTab.empty.body":
-    "No resources could be found for this instance",
+    "No resources could be found for this instance.",
   "inventory.resourcesTab.failed.title": "Something went wrong",
   "inventory.resourcesTab.failed.body": (error: string) =>
     `There was an error retrieving data: ${error}`,
@@ -275,6 +275,9 @@ const dict = {
   "instanceDetails.tabs.attributes": "Attributes",
   "instanceDetails.tabs.events": "Events",
   "instanceDetails.tabs.resources": "Resources",
+  "instanceDetails.tabs.resources.deploymentProgress": "Deployment Progress",
+  "instanceDetails.tabs.resources.EmptyResources":
+    "There is no data about deployment progress.",
   "instanceDetails.tabs.documentation.noData":
     "There is no documentation available for this version.",
   "instanceDetails.tabs.events.noData":
