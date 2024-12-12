@@ -190,7 +190,7 @@ export class ZoomHandlerService {
     if (!event.target) {
       return;
     }
-    const slider = event.target as HTMLInputElement;
+    const slider: HTMLInputElement = event.target;
 
     this.updateSliderProgressBar(slider);
   }
@@ -213,8 +213,8 @@ export class ZoomHandlerService {
       "--slider-background",
       `linear-gradient(to right, 
         var(--pf-t--global--border--color--brand--default) 0%, 
-        var(--pf-t--global--border--color--brand--default), ${value}% 
-        var(--pf-t--global--border--color--nonstatus--gray--default) ${value}%, 
+        var(--pf-t--global--border--color--brand--default), ${value.toFixed(0)}%, 
+        var(--pf-t--global--border--color--nonstatus--gray--default) ${value.toFixed(0)}%, 
         var(--pf-t--global--border--color--nonstatus--gray--default) 100%)`,
     );
   }
