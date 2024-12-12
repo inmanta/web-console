@@ -45,11 +45,10 @@ export const TabView: React.FC = () => {
   const docAttributeDescriptors = getDocumentationAttributeDescriptors(
     serviceModelQuery.data,
   );
+  const docsAttributeLength = docAttributeDescriptors.length;
 
   const [activeTab, setActiveTab] = useUrlStateWithString<TabKeys>({
-    default: docAttributeDescriptors.length
-      ? TabKeys.DOCUMENTATION
-      : TabKeys.ATTRIBUTES,
+    default: docsAttributeLength ? TabKeys.DOCUMENTATION : TabKeys.ATTRIBUTES,
     key: `tab`,
     route: "InstanceDetails",
   });
@@ -83,16 +82,14 @@ export const TabView: React.FC = () => {
       activeTab === TabKeys.RESOURCES
     ) {
       setActiveTab(
-        docAttributeDescriptors.length
-          ? TabKeys.DOCUMENTATION
-          : TabKeys.ATTRIBUTES,
+        docsAttributeLength ? TabKeys.DOCUMENTATION : TabKeys.ATTRIBUTES,
       );
     }
   }, [
     selectedVersion,
     setActiveTab,
     activeTab,
-    docAttributeDescriptors.length,
+    docsAttributeLength,
     instance.version,
   ]);
 
@@ -106,7 +103,7 @@ export const TabView: React.FC = () => {
             aria-label="Instance-Details-Tabs"
             role="region"
           >
-            {docAttributeDescriptors.length > 0 && (
+            {docsAttributeLength > 0 && (
               <Tab
                 eventKey={TabKeys.DOCUMENTATION}
                 title={
