@@ -22,7 +22,7 @@ export function getUrl(
   const includeDeletedParam =
     filter?.deleted === "Include" ? "&include_deleted=true" : "";
 
-  return `/lsm/v1/service_inventory/${name}?&include_deployment_progress=${capitalize(
+  return `/lsm/v1/service_inventory/${name}?include_deployment_progress=${capitalize(
     includeDeploymentProgress.toString(),
   )}&limit=${pageSize.value}${filterParam}${sortParam}${includeDeletedParam}${
     currentPage.value ? `&${currentPage.value}` : ""
