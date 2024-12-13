@@ -80,6 +80,17 @@ export const DocumentationTabContent: React.FC<Props> = ({
     }
   };
 
+  if (sections.length === 1) {
+    return (
+      <TabContentWrapper id="documentation">
+        <MarkdownCard
+          attributeValue={sections[0].value}
+          web_title={sections[0].title}
+        />
+      </TabContentWrapper>
+    );
+  }
+
   return (
     <TabContentWrapper id="documentation">
       <Accordion asDefinitionList togglePosition="start">
