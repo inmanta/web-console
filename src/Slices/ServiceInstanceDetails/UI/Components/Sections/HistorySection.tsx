@@ -8,6 +8,7 @@ import {
   Title,
 } from "@patternfly/react-core";
 import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
+import styled from "styled-components";
 import { ServiceModel } from "@/Core";
 import { useUrlStateWithString } from "@/Data";
 import { InstanceLog } from "@/Slices/ServiceInstanceHistory/Core/Domain";
@@ -78,16 +79,17 @@ export const HistorySection: React.FC = () => {
               </Thead>
               <Tbody>
                 {logsQuery.data.map((log: InstanceLog) => (
-                  <Tr
+                  <StyledRow
                     key={String(log.version)}
                     isSelectable
                     isClickable
                     onRowClick={() => setSelectedVersion(String(log.version))}
                     isRowSelected={String(log.version) === selectedVersion}
                     aria-label="History-Row"
+                    className={log.deleted ? "-terminated" : ""}
                   >
                     <HistoryRowContent log={log} />
-                  </Tr>
+                  </StyledRow>
                 ))}
               </Tbody>
             </Table>
@@ -97,6 +99,20 @@ export const HistorySection: React.FC = () => {
     </Panel>
   );
 };
+
+const StyledRow = styled(Tr)`
+  &.-terminated {
+    &:hover {
+      background-color: var(--pf-t--global--color--nonstatus--red--clicked);
+    }
+    &.pf-m-clickable {
+      background-color: var(--pf-t--global--color--nonstatus--red--default);
+    }
+    &.pf-m-selected {
+      background-color: var(--pf-t--global--color--nonstatus--red--clicked);
+    }
+  }
+`;
 
 interface HistoryRowProps {
   log: InstanceLog;
