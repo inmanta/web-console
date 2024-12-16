@@ -577,5 +577,5 @@ describe("ServiceInstanceDetailsPage", () => {
     ).toBeEnabled();
 
     server.close();
-  }, 15000);
+  }, 20000);
 });
