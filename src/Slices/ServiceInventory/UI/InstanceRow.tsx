@@ -123,5 +123,7 @@ const ActionWrapper = styled.span`
 
 const StyledRow = styled(Tr)<{ $deleted: boolean }>`
   ${(p) =>
-    p.$deleted ? "var(--pf-t--global--color--nonstatus--red--default)" : ""}
+    p.$deleted
+      ? "background-color: var(--pf-t--global--color--nonstatus--red--default)"
+      : ""}
 `;

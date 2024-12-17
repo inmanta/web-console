@@ -817,6 +817,7 @@ if (Cypress.env("edition") === "iso") {
           expect(text).to.match(uuidRegex);
           oldUuid = text;
         });
+      cy.wait(1000); // wait for the async assertion
 
       // click on edit instance with composer
       cy.get('[aria-label="Actions-Toggle"]').click();
