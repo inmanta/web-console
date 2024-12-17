@@ -205,73 +205,6 @@ test("When using the name filter then only the matching agents should be fetched
   });
 });
 
-test("When using the process name filter then only the matching agents should be fetched and shown", async () => {
-  const { component, apiHelper } = setup();
-
-  render(component);
-
-  await act(async () => {
-    await apiHelper.resolve(Either.right(AgentsMock.response));
-  });
-
-  const initialRows = await screen.findAllByRole("row", {
-    name: "Agents Table Row",
-  });
-
-  expect(initialRows).toHaveLength(6);
-
-  await act(async () => {
-    await userEvent.click(
-      within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
-        "button",
-        { name: "FilterPicker" },
-      ),
-    );
-  });
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("option", { name: words("agent.tests.processName") }),
-    );
-  });
-
-  const input = screen.getByPlaceholderText(
-    words("agents.filters.processName.placeholder"),
-  );
-
-  await act(async () => {
-    await userEvent.click(input);
-  });
-
-  await act(async () => {
-    await userEvent.type(input, "internal{enter}");
-  });
-
-  expect(apiHelper.pendingRequests[0].url).toEqual(
-    `/api/v2/agents?limit=20&filter.process_name=internal&sort=name.asc`,
-  );
-
-  await act(async () => {
-    await apiHelper.resolve(
-      Either.right({
-        ...AgentsMock.response,
-        data: AgentsMock.response.data.slice(0, 3),
-      }),
-    );
-  });
-
-  const rowsAfter = await screen.findAllByRole("row", {
-    name: "Agents Table Row",
-  });
-
-  expect(rowsAfter).toHaveLength(3);
-
-  await act(async () => {
-    const results = await axe(document.body);
-
-    expect(results).toHaveNoViolations();
-  });
-});
-
 test("When using the status filter with the 'up' option then the agents in the 'up' state should be fetched and shown", async () => {
   const { component, apiHelper } = setup();
 
@@ -628,7 +561,7 @@ test("Given the Agents view with the environment NOT halted, THEN the on resume 
 
   const tableHeaders = await screen.findAllByRole("columnheader");
 
-  expect(tableHeaders).toHaveLength(4);
+  expect(tableHeaders).toHaveLength(2);
 
   const onResumeColumnHeader = tableHeaders.find(
     (header) => header.textContent === "On resume",
@@ -658,7 +591,7 @@ test("Given the Agents view with the environment halted, THEN the on resume colu
 
   const tableHeaders = await screen.findAllByRole("columnheader");
 
-  expect(tableHeaders).toHaveLength(5);
+  expect(tableHeaders).toHaveLength(3);
 
   const onResumeColumnHeader = tableHeaders.find(
     (header) => header.textContent === "On resume",

@@ -59,7 +59,6 @@ import {
   GetServices,
   GetServicesManifest,
 } from "@/Data/Managers/Services/interface";
-import * as GetAgentProcess from "@S/AgentProcess/Core/Query";
 import * as GetAgents from "@S/Agents/Core/Query";
 import * as GetCompileDetails from "@S/CompileDetails/Core/Query";
 import * as GetCompileReports from "@S/CompileReports/Core/Query";
@@ -120,7 +119,6 @@ export type Query =
   | GetFacts.Query
   | GetResourceFacts.Query
   | GetAgents.Query
-  | GetAgentProcess.Query
   | GetDesiredStates.Query
   | GetVersionResources.Query
   | GetCompilerStatus
@@ -171,7 +169,6 @@ interface Manifest {
   GetEnvironmentsContinuous: GetEnvironmentsContinuousManifest;
   GetResourceFacts: GetResourceFacts.Manifest;
   GetAgents: GetAgents.Manifest;
-  GetAgentProcess: GetAgentProcess.Manifest;
   GetDesiredStates: GetDesiredStates.Manifest;
   GetVersionResources: GetVersionResources.Manifest;
   GetCompilerStatus: GetCompilerStatusManifest;

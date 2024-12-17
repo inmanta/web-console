@@ -282,7 +282,7 @@ test("GIVEN ComplianceCheck page WHEN StatusFilter = 'Added' THEN only 'Added' r
   });
 
   expect(
-    screen.getAllByRole("listitem", { name: "DiffSummaryListItem" }),
+    screen.getAllByRole("menuitem", { name: "DiffSummaryListItem" }),
   ).toHaveLength(11);
 
   await act(async () => {
@@ -328,7 +328,7 @@ test("GIVEN ComplianceCheck page WHEN StatusFilter = 'Added' THEN only 'Added' r
     );
   });
   expect(
-    await screen.findAllByRole("listitem", { name: "DiffSummaryListItem" }),
+    await screen.findAllByRole("menuitem", { name: "DiffSummaryListItem" }),
   ).toHaveLength(2);
 
   expect(await screen.findAllByTestId("DiffBlock")).toHaveLength(2);
@@ -366,7 +366,7 @@ test("GIVEN ComplianceCheck page WHEN SearchFilter is used, ONLY show the resour
   });
 
   expect(
-    screen.getAllByRole("listitem", { name: "DiffSummaryListItem" }),
+    screen.getAllByRole("menuitem", { name: "DiffSummaryListItem" }),
   ).toHaveLength(11);
 
   expect(await screen.findAllByTestId("DiffBlock")).toHaveLength(11);

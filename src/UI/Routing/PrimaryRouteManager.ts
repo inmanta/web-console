@@ -21,7 +21,6 @@ import { InstanceComposerEditor } from "@/Slices/InstanceComposerEditor";
 import { InstanceComposerViewer } from "@/Slices/InstanceComposerViewer";
 import { ServiceDetails } from "@/Slices/ServiceDetails";
 import { InstanceDetails } from "@/Slices/ServiceInstanceDetails";
-import { AgentProcess } from "@S/AgentProcess";
 import { Agents } from "@S/Agents";
 import { CompileDetails } from "@S/CompileDetails";
 import { CompileReports } from "@S/CompileReports";
@@ -87,7 +86,6 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
     /**
      * Resource Manager
      */
-    AgentProcess: AgentProcess.route(baseUrl),
     Agents: Agents.route(baseUrl),
     DiscoveredResources: DiscoveredResources.route(baseUrl),
     Facts: Facts.route(baseUrl),
