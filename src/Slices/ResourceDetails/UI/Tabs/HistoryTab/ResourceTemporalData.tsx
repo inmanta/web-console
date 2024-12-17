@@ -5,7 +5,6 @@ import {
   DescriptionListGroup,
   DescriptionListTerm,
 } from "@patternfly/react-core";
-import styled from "styled-components";
 import { Query } from "@/Core";
 import { RemoteDataView } from "@/UI/Components";
 import { MomentDatePresenter } from "@/UI/Utils";
@@ -22,10 +21,7 @@ export const ResourceTemporalData: React.FC<Props> = ({ data }) => (
     data={data}
     label="ResourceTemporalData"
     SuccessView={(resourceDetails) => (
-      <StyledDescriptionList
-        isHorizontal
-        aria-label="ResourceTemporalData-Success"
-      >
+      <DescriptionList isHorizontal aria-label="ResourceTemporalData-Success">
         <DescriptionListGroup>
           <DescriptionListTerm>
             {words("resources.info.lastDeploy")}
@@ -44,11 +40,7 @@ export const ResourceTemporalData: React.FC<Props> = ({ data }) => (
             {datePresenter.getFull(resourceDetails.first_generated_time)}
           </DescriptionListDescription>
         </DescriptionListGroup>
-      </StyledDescriptionList>
+      </DescriptionList>
     )}
   />
 );
-
-const StyledDescriptionList = styled(DescriptionList)`
-  padding: 24px;
-`;

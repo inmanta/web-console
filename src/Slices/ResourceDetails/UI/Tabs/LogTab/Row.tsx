@@ -1,6 +1,5 @@
 import React from "react";
 import { Tbody, Td, Tr, ExpandableRowContent } from "@patternfly/react-table";
-import styled, { css } from "styled-components";
 import { CodeText } from "@/UI/Components";
 import { MomentDatePresenter } from "@/UI/Utils";
 import { ResourceLog } from "@S/ResourceDetails/Core/ResourceLog";
@@ -27,12 +26,8 @@ export const Row: React.FC<Props> = ({
   toggleActionType,
 }) => {
   return (
-    <StyledTbody
-      isExpanded={false}
-      $level={log.level}
-      aria-label="ResourceLogRow"
-    >
-      <Tr>
+    <Tbody isExpanded={false} aria-label="ResourceLogRow">
+      <Tr className={getClassForLevel(log.level)}>
         <Td
           expand={{
             rowIndex: index,
@@ -40,10 +35,9 @@ export const Row: React.FC<Props> = ({
             onToggle,
           }}
         />
-        {/* The width values represent percentages */}
-        <Td width={15}>{datePresenter.getFull(log.timestamp)}</Td>
-        <Td width={10}>{log.action}</Td>
-        <Td width={10}>{log.level}</Td>
+        <Td modifier="fitContent">{datePresenter.getFull(log.timestamp)}</Td>
+        <Td modifier="fitContent">{log.action}</Td>
+        <Td modifier="fitContent">{log.level}</Td>
         <Td modifier="truncate">
           <CodeText singleLine>{log.msg}</CodeText>
         </Td>
@@ -52,7 +46,7 @@ export const Row: React.FC<Props> = ({
         </Td>
       </Tr>
       {isExpanded && (
-        <Tr isExpanded={isExpanded}>
+        <Tr isExpanded={isExpanded} className={getClassForLevel(log.level)}>
           <Td colSpan={numberOfColumns}>
             <ExpandableRowContent>
               <Details log={log} />
@@ -60,31 +54,17 @@ export const Row: React.FC<Props> = ({
           </Td>
         </Tr>
       )}
-    </StyledTbody>
+    </Tbody>
   );
 };
 
-const StyledTbody = styled(Tbody)<{ $level: string }>`
-  ${(p) => getStyleForLevel(p.$level)};
-`;
-
-const getStyleForLevel = (level: string) => {
+const getClassForLevel = (level: string): string => {
   switch (level) {
     case "WARNING":
-      return css`
-        background-color: var(--pf-t--global--color--status--warning--default);
-        --pf-v6-c-table--BorderColor: var(
-          --pf-t--global--border--color--status--warning--default
-        );
-      `;
+      return "warning";
     case "ERROR":
     case "CRITICAL":
-      return css`
-        background-color: var(--pf-t--global--color--status--danger--default);
-        --pf-v6-c-table--BorderColor: var(
-          --pf-t--global--border--color--status--danger--default
-        );
-      `;
+      return "danger";
     default:
       return "";
   }

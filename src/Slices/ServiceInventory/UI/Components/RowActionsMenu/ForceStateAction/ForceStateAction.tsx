@@ -162,7 +162,7 @@ export const ForceStateAction: React.FC<Props> = ({
           direction="down"
           style={{
             backgroundColor:
-              "var(--pf-t--global--border--color--status--danger--default)",
+              "var(--pf-t--global--color--nonstatus--red--default)",
           }}
           drilldownMenu={
             <DrilldownMenu
@@ -172,12 +172,13 @@ export const ForceStateAction: React.FC<Props> = ({
               <MenuItem
                 style={{
                   backgroundColor:
-                    "var(--pf-t--global--border--color--status--danger--default)",
+                    "var(--pf-t--global--color--nonstatus--red--default)",
                 }}
                 icon={<WarningTriangleIcon />}
                 itemId="group:expertstate_breadcrumb"
                 direction="up"
                 aria-hidden
+                isDanger
               >
                 Force state to:
               </MenuItem>

@@ -50,8 +50,8 @@ export const InstanceRow: React.FC<Props> = ({
 
   return (
     <Tbody isExpanded={false}>
-      <StyledRow
-        $deleted={row.deleted}
+      <Tr
+        className={row.deleted ? "danger" : ""}
         id={`instance-row-${row.id.short}`}
         aria-label="InstanceRow-Intro"
       >
@@ -94,7 +94,7 @@ export const InstanceRow: React.FC<Props> = ({
           <DateWithTooltip timestamp={row.updatedAt} />
         </Td>
         <Td dataLabel="actions">{rowActions}</Td>
-      </StyledRow>
+      </Tr>
       <Tr
         isExpanded={isExpanded}
         data-testid={`details_${row.id.short}`}
@@ -119,11 +119,4 @@ export const InstanceRow: React.FC<Props> = ({
 
 const ActionWrapper = styled.span`
   cursor: pointer;
-`;
-
-const StyledRow = styled(Tr)<{ $deleted: boolean }>`
-  ${(p) =>
-    p.$deleted
-      ? "background-color: var(--pf-t--global--color--nonstatus--red--default)"
-      : ""}
 `;

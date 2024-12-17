@@ -1,7 +1,12 @@
 import React, { useContext, useState } from "react";
-import { AlertVariant, Button, Content, Tooltip } from "@patternfly/react-core";
+import {
+  AlertVariant,
+  Button,
+  Content,
+  Flex,
+  Tooltip,
+} from "@patternfly/react-core";
 import { FileCodeIcon } from "@patternfly/react-icons";
-import styled from "styled-components";
 import { Either } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
@@ -96,7 +101,11 @@ export const CatalogActions: React.FC = () => {
         setMessage={setMessage}
         type={toastType}
       />
-      <StyledWrapper>
+      <Flex
+        direction={{ default: "row" }}
+        fullWidth={{ default: "fullWidth" }}
+        justifyContent={{ default: "justifyContentFlexEnd" }}
+      >
         <Tooltip content={words("catalog.API.tooltip")} entryDelay={500}>
           <Button
             variant="plain"
@@ -110,14 +119,7 @@ export const CatalogActions: React.FC = () => {
         <Tooltip content={words("catalog.update.tooltip")}>
           <Button onClick={openModal}>{words("catalog.button.update")}</Button>
         </Tooltip>
-      </StyledWrapper>
+      </Flex>
     </>
   );
 };
-
-const StyledWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  padding: var(--pf-t--global--spacer--control--horizontal--default);
-`;

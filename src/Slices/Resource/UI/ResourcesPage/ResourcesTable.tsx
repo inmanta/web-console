@@ -7,7 +7,6 @@ import {
   Thead,
   Tr,
 } from "@patternfly/react-table";
-import styled from "styled-components";
 import { Resource, Sort } from "@/Core";
 import { useExpansion } from "@/Data";
 import { words } from "@/UI";
@@ -28,7 +27,7 @@ export const ResourcesTable: React.FC<Props> = ({
   ...props
 }) => {
   const [isExpanded, onExpansion] = useExpansion();
-  const onSort: OnSort = (event, index, order) => {
+  const onSort: OnSort = (_event, index, order) => {
     setSort({
       name: tablePresenter.getColumnNameForIndex(index) as Resource.SortKey,
       order,
@@ -53,14 +52,9 @@ export const ResourcesTable: React.FC<Props> = ({
         : {};
 
       return (
-        <StyledTh
-          key={displayName}
-          {...sortParams}
-          $characters={displayName.length}
-          $hasSort={hasSort}
-        >
+        <Th key={displayName} {...sortParams} modifier="fitContent">
           {displayName}
-        </StyledTh>
+        </Th>
       );
     });
 
@@ -68,17 +62,15 @@ export const ResourcesTable: React.FC<Props> = ({
     <Table {...props} variant={TableVariant.compact}>
       <Thead>
         <Tr>
-          <Th
-            aria-hidden
-            screenReaderText={words("common.emptyColumnHeader")}
-          />
+          <Th screenReaderText={words("common.emptyColumnHeader")} />
           {heads}
         </Tr>
       </Thead>
-      {rows.map((row) => (
+      {rows.map((row, index) => (
         <ResourceTableRow
           row={row}
           key={row.id}
+          index={index}
           isExpanded={isExpanded(row.id)}
           onToggle={onExpansion(row.id)}
           numberOfColumns={tablePresenter.getNumberOfColumns()}
@@ -87,21 +79,3 @@ export const ResourcesTable: React.FC<Props> = ({
     </Table>
   );
 };
-
-interface HeaderProps {
-  $characters: number;
-  $hasSort: boolean;
-}
-
-const getWidth = ({ $characters, $hasSort }: HeaderProps) => {
-  const base = `${$characters}ch`;
-  const extra = $hasSort ? "60px" : "16px";
-
-  return `calc(${base} + ${extra})`;
-};
-
-const StyledTh = styled(Th)<HeaderProps>`
-  &&& {
-    min-width: ${getWidth};
-  }
-`;

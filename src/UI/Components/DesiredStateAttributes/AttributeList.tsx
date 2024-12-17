@@ -109,5 +109,7 @@ const MultiTextWithCopy = styled(TextWithCopy)`
 
 const TextContainer = styled.span<{ $variant?: AttributeTextVariant }>`
   ${(p) =>
-    p.$variant === "monospace" ? "font-family: monospace;" : "inherit"};
+    p.$variant === "monospace"
+      ? "font-family: var(--pf-t--global--font--family--mono)"
+      : "inherit"};
 `;

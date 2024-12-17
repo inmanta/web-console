@@ -1,6 +1,8 @@
 import React, { useContext, useEffect } from "react";
 import {
   Divider,
+  Stack,
+  StackItem,
   Toolbar,
   ToolbarContent,
   ToolbarItem,
@@ -52,50 +54,54 @@ export const ResourceHistoryView: React.FC<Props> = ({
   }, [sort.order]);
 
   return (
-    <>
-      <ResourceTemporalData data={details} />
+    <Stack hasGutter>
+      <StackItem>
+        <ResourceTemporalData data={details} />
+      </StackItem>
       <Divider />
-      <Toolbar>
-        <ToolbarContent>
-          <ToolbarItem variant="pagination">
-            <PaginationWidget
-              data={data}
-              pageSize={pageSize}
-              setPageSize={setPageSize}
-              setCurrentPage={setCurrentPage}
-            />
-          </ToolbarItem>
-        </ToolbarContent>
-      </Toolbar>
-      <RemoteDataView
-        data={data}
-        retry={retry}
-        label="ResourceHistory"
-        SuccessView={(history) => {
-          if (history.data.length <= 0) {
+      <StackItem isFilled>
+        <Toolbar>
+          <ToolbarContent>
+            <ToolbarItem variant="pagination">
+              <PaginationWidget
+                data={data}
+                pageSize={pageSize}
+                setPageSize={setPageSize}
+                setCurrentPage={setCurrentPage}
+              />
+            </ToolbarItem>
+          </ToolbarContent>
+        </Toolbar>
+        <RemoteDataView
+          data={data}
+          retry={retry}
+          label="ResourceHistory"
+          SuccessView={(history) => {
+            if (history.data.length <= 0) {
+              return (
+                <EmptyView
+                  message={words("resources.history.empty.message")}
+                  aria-label="ResourceHistory-Empty"
+                />
+              );
+            }
+            const tablePresenter = new ResourceHistoryTablePresenter(
+              new MomentDatePresenter(),
+            );
+            const rows = tablePresenter.createRows(history.data);
+
             return (
-              <EmptyView
-                message={words("resources.history.empty.message")}
-                aria-label="ResourceHistory-Empty"
+              <ResourceHistoryTable
+                aria-label="ResourceHistory-Success"
+                rows={rows}
+                sort={sort}
+                setSort={setSort}
+                tablePresenter={tablePresenter}
               />
             );
-          }
-          const tablePresenter = new ResourceHistoryTablePresenter(
-            new MomentDatePresenter(),
-          );
-          const rows = tablePresenter.createRows(history.data);
-
-          return (
-            <ResourceHistoryTable
-              aria-label="ResourceHistory-Success"
-              rows={rows}
-              sort={sort}
-              setSort={setSort}
-              tablePresenter={tablePresenter}
-            />
-          );
-        }}
-      />
-    </>
+          }}
+        />
+      </StackItem>
+    </Stack>
   );
 };

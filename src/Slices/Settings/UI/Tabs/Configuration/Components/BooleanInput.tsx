@@ -1,6 +1,5 @@
 import React from "react";
-import { Switch } from "@patternfly/react-core";
-import styled from "styled-components";
+import { Flex, FlexItem, Switch } from "@patternfly/react-core";
 import { EnvironmentSettings } from "@/Core";
 import { Warning } from "./Warning";
 
@@ -9,22 +8,17 @@ interface Props {
 }
 
 export const BooleanInput: React.FC<Props> = ({ info }) => (
-  <Container>
-    <Switch
-      isChecked={info.value}
-      onChange={(_event, value) => info.set(value)}
-      aria-label={`Toggle-${info.name}`}
-    />
-    {info.isUpdateable(info) && <StyledWarning />}
-  </Container>
+  <Flex direction={{ default: "row" }}>
+    <FlexItem>
+      <Switch
+        isChecked={info.value}
+        onChange={(_event, value) => info.set(value)}
+        aria-label={`Toggle-${info.name}`}
+      />
+    </FlexItem>
+
+    <FlexItem style={{ minWidth: "20px" }}>
+      {info.isUpdateable(info) && <Warning />}
+    </FlexItem>
+  </Flex>
 );
-
-const StyledWarning = styled(Warning)`
-  margin-left: 16px;
-`;
-
-const Container = styled.div`
-  display: inline-flex;
-  align-items: center;
-  vertical-align: bottom;
-`;

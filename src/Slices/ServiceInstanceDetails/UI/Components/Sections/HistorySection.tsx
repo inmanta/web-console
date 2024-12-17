@@ -7,8 +7,7 @@ import {
   PanelMainBody,
   Title,
 } from "@patternfly/react-core";
-import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
-import styled from "styled-components";
+import { Table, Tbody, Td, Tr } from "@patternfly/react-table";
 import { ServiceModel } from "@/Core";
 import { useUrlStateWithString } from "@/Data";
 import { InstanceLog } from "@/Slices/ServiceInstanceHistory/Core/Domain";
@@ -65,31 +64,20 @@ export const HistorySection: React.FC = () => {
            * Otherwise, it will still display the stale data under the error messages above.
            */}
           {logsQuery.data && !logsQuery.isLoading && !logsQuery.isError && (
-            <Table aria-label="VersionHistoryTable" isStickyHeader>
-              <Thead>
-                <Tr>
-                  <Th style={{ minWidth: "100px" }}>
-                    {words("instanceDetails.history.table.version")}
-                  </Th>
-                  <Th style={{ minWidth: "100px" }}>
-                    {words("instanceDetails.history.table.timestamp")}
-                  </Th>
-                  <Th>{words("instanceDetails.history.table.status")}</Th>
-                </Tr>
-              </Thead>
+            <Table aria-label="VersionHistoryTable">
               <Tbody>
                 {logsQuery.data.map((log: InstanceLog) => (
-                  <StyledRow
+                  <Tr
                     key={String(log.version)}
                     isSelectable
                     isClickable
                     onRowClick={() => setSelectedVersion(String(log.version))}
                     isRowSelected={String(log.version) === selectedVersion}
                     aria-label="History-Row"
-                    className={log.deleted ? "-terminated" : ""}
+                    className={log.deleted ? "danger" : ""}
                   >
                     <HistoryRowContent log={log} />
-                  </StyledRow>
+                  </Tr>
                 ))}
               </Tbody>
             </Table>
@@ -99,20 +87,6 @@ export const HistorySection: React.FC = () => {
     </Panel>
   );
 };
-
-const StyledRow = styled(Tr)`
-  &.-terminated {
-    &:hover {
-      background-color: var(--pf-t--global--color--nonstatus--red--clicked);
-    }
-    &.pf-m-clickable {
-      background-color: var(--pf-t--global--color--nonstatus--red--default);
-    }
-    &.pf-m-selected {
-      background-color: var(--pf-t--global--color--nonstatus--red--clicked);
-    }
-  }
-`;
 
 interface HistoryRowProps {
   log: InstanceLog;
