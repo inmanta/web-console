@@ -49,6 +49,11 @@ export const VersionedPageTitleWithActions: React.FC<Props> = ({ title }) => {
             {words("instanceDetails.title.latest")}
           </Label>
         )}
+        {instance.deleted && (
+          <Label color="red" icon={<InfoAltIcon />}>
+            {instance.state}
+          </Label>
+        )}
       </LabelContainer>
       {isLatest && <InstanceActions />}
     </>

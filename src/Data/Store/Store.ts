@@ -8,10 +8,6 @@ import {
   DiscoveredResourcesSlice,
   discoveredResourcesSlice,
 } from "@/Slices/ResourceDiscovery/Data/Store";
-import {
-  agentProcessSlice,
-  AgentProcessSlice,
-} from "@S/AgentProcess/Data/Store";
 import { agentsSlice, AgentsSlice } from "@S/Agents/Data/Store";
 import {
   compileDetailsSlice,
@@ -96,7 +92,6 @@ import {
 import { servicesSlice, ServicesSlice } from "./ServicesSlice";
 
 export interface StoreModel {
-  agentProcess: AgentProcessSlice;
   agents: AgentsSlice;
   callbacks: CallbacksSlice;
   compileDetails: CompileDetailsSlice;
@@ -132,7 +127,6 @@ export interface StoreModel {
 }
 
 export const storeModel: StoreModel = {
-  agentProcess: agentProcessSlice,
   agents: agentsSlice,
   callbacks: callbacksSlice,
   compileDetails: compileDetailsSlice,

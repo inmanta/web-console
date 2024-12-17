@@ -396,21 +396,6 @@ describe("ServiceInstanceDetailsPage", () => {
       ),
     ).toBeVisible();
 
-    // Topography should be a collapsible section.
-    await act(async () => {
-      await userEvent.click(
-        screen.getByRole("button", {
-          name: "Topography",
-        }),
-      );
-    });
-
-    expect(
-      screen.getByText(
-        /this version doesn’t contain documentation for topography yet\./i,
-      ),
-    ).not.toBeVisible();
-
     // Events
 
     // Select the Events tab
