@@ -2,7 +2,6 @@ import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@patternfly/react-core";
 import { Tbody, Td, Tr } from "@patternfly/react-table";
-import styled from "styled-components";
 import { DateWithTooltip } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
@@ -19,12 +18,15 @@ export const CompileReportsTableRow: React.FC<Props> = ({ row }) => {
   return (
     <Tbody isExpanded={false}>
       <Tr aria-label="Compile Reports Table Row">
-        <Td width={15} dataLabel={words("compileReports.columns.requested")}>
+        <Td width={10} dataLabel={words("compileReports.columns.requested")}>
           <DateWithTooltip timestamp={row.requested} />
         </Td>
-        <StyledCell dataLabel={words("compileReports.columns.status")}>
+        <Td
+          modifier="fitContent"
+          dataLabel={words("compileReports.columns.status")}
+        >
           <CompileStatusLabel status={row.status} />
-        </StyledCell>
+        </Td>
         <Td dataLabel={words("compileReports.columns.message")}>
           {row.message}
         </Td>
@@ -52,9 +54,3 @@ export const CompileReportsTableRow: React.FC<Props> = ({ row }) => {
     </Tbody>
   );
 };
-
-const StyledCell = styled(Td)`
-  && {
-    width: 120px;
-  }
-`;

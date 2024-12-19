@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
 import { DescriptionList } from "@patternfly/react-core";
-import styled from "styled-components";
 import { FlatEnvironment, Maybe, ProjectModel } from "@/Core";
 import {
   EditableTextField,
@@ -67,7 +66,7 @@ export const EnvironmentSettings: React.FC<Props> = ({
     });
 
   return (
-    <PaddedList>
+    <DescriptionList>
       <EditableTextField
         initialValue={environment.name}
         label={words("settings.tabs.environment.name")}
@@ -99,11 +98,6 @@ export const EnvironmentSettings: React.FC<Props> = ({
         onSubmit={onIconSubmit}
       />
       <Actions environment={environment} />
-    </PaddedList>
+    </DescriptionList>
   );
 };
-
-const PaddedList = styled(DescriptionList)`
-  padding-top: 1em;
-  max-width: 600px;
-`;

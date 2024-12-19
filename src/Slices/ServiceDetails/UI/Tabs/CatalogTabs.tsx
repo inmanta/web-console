@@ -1,6 +1,5 @@
 import React from "react";
-import { Tabs, Tab } from "@patternfly/react-core";
-import styled from "styled-components";
+import { Tabs, Tab, TabContentBody } from "@patternfly/react-core";
 import { ServiceModel } from "@/Core";
 import { useUrlStateWithString } from "@/Data";
 import { AttributeTable } from "./AttributeTable";
@@ -34,14 +33,14 @@ export const CatalogTabs: React.FunctionComponent<Props> = ({ service }) => {
         <Details instanceSummary={service.instance_summary} />
       </Tab>
       <Tab eventKey="attributes" title="Attributes">
-        <OverflowContainer>
+        <TabContentBody hasPadding>
           <AttributeTable service={service} />
-        </OverflowContainer>
+        </TabContentBody>
       </Tab>
       <Tab eventKey="lifecycle_states" title="Lifecycle States">
-        <OverflowContainer>
+        <TabContentBody hasPadding>
           <LifecycleTable lifecycle={service.lifecycle} />
-        </OverflowContainer>
+        </TabContentBody>
       </Tab>
       <Tab eventKey="config" title="Config">
         <Config serviceName={service.name} />
@@ -52,7 +51,3 @@ export const CatalogTabs: React.FunctionComponent<Props> = ({ service }) => {
     </Tabs>
   );
 };
-
-const OverflowContainer = styled.div`
-  overflow-x: auto;
-`;

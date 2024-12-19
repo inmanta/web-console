@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Alert, AlertActionCloseButton } from "@patternfly/react-core";
+import { Alert, AlertActionCloseButton, Stack } from "@patternfly/react-core";
 import { Tbody, Table } from "@patternfly/react-table";
-import styled from "styled-components";
 import { EnvironmentSettings } from "@/Core";
 import { words } from "@/UI";
 import { InputRow } from "./Components";
@@ -37,9 +36,9 @@ export const Container: React.FC<Props> = ({
   }, [setShowUpdateBanner]);
 
   return (
-    <Wrapper className={className}>
+    <Stack hasGutter style={{ maxWidth: "1000px" }} className={className}>
       {errorMessage && (
-        <StyledAlert
+        <Alert
           variant="danger"
           title={errorMessage}
           aria-live="polite"
@@ -48,7 +47,7 @@ export const Container: React.FC<Props> = ({
         />
       )}
       {showUpdateBanner && (
-        <StyledAlert
+        <Alert
           variant="success"
           title={words("settings.update")}
           aria-live="polite"
@@ -60,26 +59,13 @@ export const Container: React.FC<Props> = ({
           isInline
         />
       )}
-      <StyledTable variant="compact" borders={false}>
+      <Table variant="compact" borders={false}>
         <Tbody>
           {infos.map((info) => (
             <InputRow info={info} key={info.name} />
           ))}
         </Tbody>
-      </StyledTable>
-    </Wrapper>
+      </Table>
+    </Stack>
   );
 };
-
-const StyledAlert = styled(Alert)`
-  margin-bottom: 1rem;
-`;
-
-const Wrapper = styled.div`
-  padding-top: 1rem;
-  overflow-x: auto;
-`;
-
-const StyledTable = styled(Table)`
-  width: auto;
-`;

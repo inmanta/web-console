@@ -95,7 +95,7 @@ export const DestroyAction: React.FC<Props> = ({
         itemId="expert-destroy"
         style={{
           backgroundColor:
-            "var(--pf-t--global--border--color--status--danger--default)",
+            "var(--pf-t--global--color--nonstatus--red--default)",
         }}
         isDanger
         onClick={openModal}
