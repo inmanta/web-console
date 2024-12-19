@@ -9,7 +9,6 @@ import {
   ResourceTable,
 } from "@/UI/Components";
 import { InstanceDetailsContext } from "../../Core/Context";
-import { ProgressBar } from "../Components/DeploymentProgress";
 import { TabContentWrapper } from "./TabContentWrapper";
 
 export const ResourcesTabContent: React.FC = () => {
@@ -34,7 +33,6 @@ export const ResourcesTabContent: React.FC = () => {
           />
         ) : (
           <TabContentBody>
-            <ProgressBar deployment_progress={instance.deployment_progress} />
             <ResourceTable resources={data} aria-label="Resource-table" />
           </TabContentBody>
         )}

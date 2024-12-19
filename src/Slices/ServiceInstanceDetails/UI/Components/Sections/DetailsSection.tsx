@@ -14,6 +14,7 @@ import {
 import { words } from "@/UI";
 import { DateWithTooltip, TextWithCopy } from "@/UI/Components";
 import { InstanceDetailsContext } from "../../../Core/Context";
+import { ProgressBar } from "../ProgressBar";
 
 /**
  * The DetailsSection Component
@@ -78,6 +79,7 @@ export const DetailsSection: React.FC = () => {
                   <DateWithTooltip timestamp={instance.last_updated} />
                 </DescriptionListDescription>
               </DescriptionListGroup>
+              <ProgressBar deployment_progress={instance.deployment_progress} />
             </DescriptionList>
           </CardBody>
         </CardExpandableContent>

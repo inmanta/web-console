@@ -1,7 +1,6 @@
 import React from "react";
 import {
   Content,
-  DescriptionList,
   DescriptionListDescription,
   DescriptionListGroup,
   DescriptionListTerm,
@@ -25,41 +24,26 @@ interface Props {
  * @returns {JSX.Element} The rendered ProgressBar component.
  */
 export const ProgressBar: React.FC<Props> = ({ deployment_progress }) => {
-  if (!deployment_progress) {
-    return (
-      <Flex>{words("instanceDetails.tabs.resources.EmptyResources")}</Flex>
-    );
-  }
-
   return (
-    <DescriptionList
-      isHorizontal
-      horizontalTermWidthModifier={{
-        default: "15ch",
-      }}
-      style={{
-        marginLeft:
-          "var(--pf-t--global--spacer--control--horizontal--spacious)",
-      }}
-    >
-      <DescriptionListGroup>
-        <DescriptionListTerm>
-          {words("instanceDetails.tabs.resources.deploymentProgress")}
-        </DescriptionListTerm>
-        <DescriptionListDescription>
-          <Flex>
-            <FlexItem flex={{ default: "flex_1" }}>
-              <DeploymentProgressBar progress={deployment_progress} />
-            </FlexItem>
-            <FlexItem flex={{ default: "flex_1" }}>
+    <DescriptionListGroup>
+      <DescriptionListTerm>
+        {words("instanceDetails.tabs.resources.deploymentProgress")}
+      </DescriptionListTerm>
+      <DescriptionListDescription>
+        <Flex>
+          <FlexItem flex={{ default: "flex_1" }}>
+            <DeploymentProgressBar progress={deployment_progress} />
+          </FlexItem>
+          {deployment_progress && (
+            <FlexItem>
               <Content>
                 {Number(deployment_progress.deployed)} /{" "}
                 {Number(deployment_progress.total)}
               </Content>
             </FlexItem>
-          </Flex>
-        </DescriptionListDescription>
-      </DescriptionListGroup>
-    </DescriptionList>
+          )}
+        </Flex>
+      </DescriptionListDescription>
+    </DescriptionListGroup>
   );
 };
