@@ -1,5 +1,6 @@
 import React from "react";
 import { Tbody, Td, Tr, ExpandableRowContent } from "@patternfly/react-table";
+import { LogLevelString } from "@/Core";
 import { CodeText } from "@/UI/Components";
 import { MomentDatePresenter } from "@/UI/Utils";
 import { ResourceLog } from "@S/ResourceDetails/Core/ResourceLog";
@@ -60,10 +61,10 @@ export const Row: React.FC<Props> = ({
 
 const getClassForLevel = (level: string): string => {
   switch (level) {
-    case "WARNING":
+    case LogLevelString.WARNING:
       return "warning";
-    case "ERROR":
-    case "CRITICAL":
+    case LogLevelString.ERROR:
+    case LogLevelString.CRITICAL:
       return "danger";
     default:
       return "";
