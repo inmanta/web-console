@@ -20,7 +20,7 @@ interface GetDiagnostics {
  *
  * @returns {GetInstance} An object containing the different available queries.
  * @returns {UseQueryResult<ServiceInstanceModel, Error>} returns.useOneTime - Fetch the instance with a single query.
- * @returns {UseQueryResult<ServiceInstanceModel, Error>} returns.useContinuous - Fetch the instance with a recursive query with an interval of 5s.
+ * @returns {UseQueryResult<ServiceInstanceModel, Error>} returns.useContinuous - Fetch the diagnose report with a recursive query with an interval of 5s.
  */
 export const useGetDiagnostics = (
   service: string,
