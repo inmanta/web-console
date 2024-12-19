@@ -264,6 +264,11 @@ const dict = {
   "instanceDetails.page.noData": "There is no data available to display.",
   "instanceDetails.page.noData.errorTitle": "No Data",
   "instanceDetails.history.title": "History",
+  "instanceDetails.history.diagnose": "Diagnose",
+  "instanceDetails.history.diagnose.slider.title":
+    "The number of lifecycle versions to look back when looking for failures.",
+  "instanceDetails.history.diagnose.slider.description":
+    "By default diagnosis is run against the latest version of the service -1.",
   "instanceDetails.history.table.version": "Version",
   "instanceDetails.history.table.timestamp": "Timestamp",
   "instanceDetails.history.table.status": "Status",
@@ -378,6 +383,8 @@ const dict = {
   "history.tabs.details": "Details",
   "history.tabs.attributes": "Attributes",
   "history.tabs.events": "Events",
+
+  "diagnose.action": "Apply",
 
   "diagnose.empty": (instanceId: string) =>
     `No errors were found for instance ${instanceId}`,
