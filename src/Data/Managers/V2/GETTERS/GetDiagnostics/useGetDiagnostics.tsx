@@ -7,8 +7,8 @@ import { useFetchHelpers } from "../../helpers";
  * Return Signature of the useGetDiagnostics React Query
  */
 interface GetDiagnostics {
-  useOneTime: (version: string) => UseQueryResult<RawDiagnostics, Error>;
-  useContinuous: (version: string) => UseQueryResult<RawDiagnostics, Error>;
+  useOneTime: (lookBehind: string) => UseQueryResult<RawDiagnostics, Error>;
+  useContinuous: (lookBehind: string) => UseQueryResult<RawDiagnostics, Error>;
 }
 
 /**
@@ -55,17 +55,24 @@ export const useGetDiagnostics = (
   };
 
   return {
-    useOneTime: (version: string): UseQueryResult<RawDiagnostics, Error> =>
+    useOneTime: (lookBehind: string): UseQueryResult<RawDiagnostics, Error> =>
       useQuery({
-        queryKey: ["get_diagnostics-one_time", service, instanceId, version],
-        queryFn: () => fetchDiagnostics(version),
+        queryKey: ["get_diagnostics-one_time", service, instanceId, lookBehind],
+        queryFn: () => fetchDiagnostics(lookBehind),
         retry: false,
         select: (data) => data.data,
       }),
-    useContinuous: (version: string): UseQueryResult<RawDiagnostics, Error> =>
+    useContinuous: (
+      lookBehind: string,
+    ): UseQueryResult<RawDiagnostics, Error> =>
       useQuery({
-        queryKey: ["get_diagnostics-continuous", service, instanceId, version],
-        queryFn: () => fetchDiagnostics(version),
+        queryKey: [
+          "get_diagnostics-continuous",
+          service,
+          instanceId,
+          lookBehind,
+        ],
+        queryFn: () => fetchDiagnostics(lookBehind),
         retry: false,
         select: (data) => data.data,
         refetchInterval: 5000,
