@@ -1,5 +1,4 @@
 import React from "react";
-import styled from "styled-components";
 import { Description, PageContainer } from "@/UI/Components";
 import { useRouteParams } from "@/UI/Routing";
 import { words } from "@/UI/words";
@@ -11,12 +10,8 @@ export const Page: React.FC = () => {
 
   return (
     <PageContainer pageTitle={words("desiredState.resourceDetails.title")}>
-      <StyledDescription>{resourceId}</StyledDescription>
+      <Description>{resourceId}</Description>
       <DetailsProvider version={version} resourceId={resourceId} />
     </PageContainer>
   );
 };
-
-const StyledDescription = styled(Description)`
-  margin-bottom: 16px;
-`;

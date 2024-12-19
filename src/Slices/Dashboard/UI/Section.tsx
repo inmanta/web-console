@@ -1,6 +1,5 @@
 import React from "react";
 import { Flex, FlexItem, Title } from "@patternfly/react-core";
-import styled from "styled-components";
 import { BackendMetricData } from "../Core/Domain";
 import { GraphCard } from "./GraphCard";
 import { NumericCard } from "./NumericCard";
@@ -17,7 +16,7 @@ export const Section: React.FC<Props> = ({ title, metricType, metrics }) => {
   );
 
   return (
-    <Wrapper>
+    <FlexItem>
       <Title
         headingLevel="h2"
         style={{ paddingBottom: "20px", fontWeight: 700 }}
@@ -60,10 +59,6 @@ export const Section: React.FC<Props> = ({ title, metricType, metrics }) => {
           ),
         )}
       </Flex>
-    </Wrapper>
+    </FlexItem>
   );
 };
-
-const Wrapper = styled.div`
-  padding-bottom: 40px;
-`;

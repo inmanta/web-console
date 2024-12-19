@@ -15,9 +15,48 @@ export const GlobalStyles = createGlobalStyle`
    * PF-6 has by default the inherit value for the vertical-align property on the tr element and tbody element. 
    * Which results in the content of the tr element to be aligned to the top of the row as it inherits the userAgent stylesheet value "top".
    **/
-  tr {
+  tbody tr {
     vertical-align: middle;
   }
+
+  /**
+   * Add the .danger class to the table row to apply the danger color to the row.
+   **/
+  .pf-v6-c-table tr:where(.danger) {
+    background-color: var(--pf-t--global--color--nonstatus--red--default);
+    &.pf-m-clickable {
+      background-color: var(--pf-t--global--color--nonstatus--red--default);
+    }
+    &.pf-m-selected {
+      background-color: var(--pf-t--global--color--nonstatus--red--clicked);
+    }
+    &:hover {
+      background-color: var(--pf-t--global--color--nonstatus--red--hover);
+    }
+  }
+
+  /**
+   * Add the .warning class to the table row to apply the danger color to the row.
+   **/
+  .pf-v6-c-table tr:where(.warning) {
+    background-color: var(--pf-t--global--color--nonstatus--yellow--default);
+    &.pf-m-clickable {
+      background-color: var(--pf-t--global--color--nonstatus--yellow--default);
+    }
+    &.pf-m-selected {
+      background-color: var(--pf-t--global--color--nonstatus--yellow--clicked);
+    }
+    &:not(.pf-m-expanded):hover {
+      background-color: var(--pf-t--global--color--nonstatus--yellow--hover);
+    }
+  }
+
+  /**
+   * Enforce the toggle columns to have the minimal width everywhere.
+   **/
+  .pf-v6-c-table .pf-v6-c-table__toggle {
+    --pf-v6-c-table--cell--Width: 0%;
+  } 
 
   .pf-v6-c-select {
     min-width: 180px;

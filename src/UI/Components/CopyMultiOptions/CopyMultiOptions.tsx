@@ -10,7 +10,6 @@ import {
 } from "@patternfly/react-core";
 import { CopyIcon } from "@patternfly/react-icons";
 import copy from "copy-to-clipboard";
-import styled from "styled-components";
 import { words } from "@/UI";
 
 interface Props {
@@ -79,8 +78,10 @@ export const CopyMultiOptions: React.FC<Props> = ({
       isExpanded={isOpen}
       aria-label="Copy to clipboard"
       icon={
-        <Icon size="sm">
-          <CopyIcon />
+        <Icon>
+          <CopyIcon
+            style={{ color: "var(--pf-t--global--icon--color--subtle)" }}
+          />
         </Icon>
       }
     >
@@ -97,20 +98,16 @@ export const CopyMultiOptions: React.FC<Props> = ({
     >
       <DropdownList>
         {options.map((value, index) => (
-          <WidthLimitedTooltip
+          <Tooltip
             key={index}
             content={<div>{tooltipText}</div>}
             entryDelay={200}
             position="right"
           >
             <DropdownItem value={value}>{value}</DropdownItem>
-          </WidthLimitedTooltip>
+          </Tooltip>
         ))}
       </DropdownList>
     </Dropdown>
   );
 };
-
-const WidthLimitedTooltip = styled(Tooltip)`
-  width: 150px;
-`;

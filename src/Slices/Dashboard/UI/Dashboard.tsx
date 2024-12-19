@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Button } from "@patternfly/react-core";
+import { Button, Flex } from "@patternfly/react-core";
 import moment from "moment";
 import styled from "styled-components";
 import { RemoteData } from "@/Core";
@@ -46,23 +46,28 @@ export const Dashboard: React.FC = () => {
                   {words("dashboard.refresh")}
                 </Button>
               </RefreshWrapper>
-              {featureManager.isLsmEnabled() && (
+              <Flex
+                direction={{ default: "column" }}
+                gap={{ default: "gapLg" }}
+              >
+                {featureManager.isLsmEnabled() && (
+                  <Section
+                    title={words("navigation.lifecycleServiceManager")}
+                    metricType="lsm"
+                    metrics={metrics}
+                  />
+                )}
                 <Section
-                  title={words("navigation.lifecycleServiceManager")}
-                  metricType="lsm"
+                  title={words("navigation.orchestrationEngine")}
+                  metricType="orchestrator"
                   metrics={metrics}
                 />
-              )}
-              <Section
-                title={words("navigation.orchestrationEngine")}
-                metricType="orchestrator"
-                metrics={metrics}
-              />
-              <Section
-                title={words("navigation.resourceManager")}
-                metricType="resource"
-                metrics={metrics}
-              />
+                <Section
+                  title={words("navigation.resourceManager")}
+                  metricType="resource"
+                  metrics={metrics}
+                />
+              </Flex>
             </Wrapper>
           ),
         },

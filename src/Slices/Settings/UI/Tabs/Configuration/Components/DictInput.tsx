@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import styled from "styled-components";
+import { Flex, FlexItem } from "@patternfly/react-core";
 import { EnvironmentSettings, Maybe } from "@/Core";
 import { DictEditor, Entry, Dict } from "@/UI/Components";
 import { Row } from "./Row";
@@ -32,33 +32,29 @@ export const DictInputWithRow: React.FC<Props> = ({ info }) => {
     },
     isUpdateable: () => info.isUpdateable(info) || newEntry[0].length > 0,
   };
-  const isDeleteEntryAllowed = (value: Dict, key: string) =>
+  const isDeleteEntryAllowed = (_value: Dict, key: string) =>
     !Object.keys(info.default).includes(key);
 
   return (
     <Row info={customInfo}>
-      <Container hasWarning={customInfo.isUpdateable()}>
-        <DictEditor
-          value={info.value}
-          setValue={info.set}
-          newEntry={newEntry}
-          setNewEntry={setNewEntry}
-          isDeleteEntryAllowed={isDeleteEntryAllowed}
-        />
-        {customInfo.isUpdateable() && <StyledWarning />}
-      </Container>
+      <Flex direction={{ default: "row" }}>
+        <FlexItem grow={{ default: "grow" }}>
+          <DictEditor
+            value={info.value}
+            setValue={info.set}
+            newEntry={newEntry}
+            setNewEntry={setNewEntry}
+            isDeleteEntryAllowed={isDeleteEntryAllowed}
+          />
+        </FlexItem>
+
+        <FlexItem style={{ minWidth: "20px" }}>
+          {customInfo.isUpdateable() && <Warning />}
+        </FlexItem>
+      </Flex>
     </Row>
   );
 };
-
-const StyledWarning = styled(Warning)`
-  height: 36px;
-`;
-
-const Container = styled.div<{ hasWarning: boolean }>`
-  display: flex;
-  margin-right: ${(p) => (p.hasWarning ? "0" : "16px")};
-`;
 
 const getSanitizedNewEntry = ([key, value]: Entry) => {
   if (key.length <= 0) return {};

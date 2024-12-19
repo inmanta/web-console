@@ -1,6 +1,5 @@
 import React from "react";
-import { TextInput } from "@patternfly/react-core";
-import styled from "styled-components";
+import { Flex, FlexItem, TextInput } from "@patternfly/react-core";
 import { EnvironmentSettings } from "@/Core";
 import { Warning } from "./Warning";
 
@@ -10,23 +9,19 @@ interface Props {
 
 export const StringInput: React.FC<Props> = ({ info }) => {
   return (
-    <Container hasWarning={info.isUpdateable(info)}>
-      <TextInput
-        value={info.value}
-        onChange={(_event, value) => info.set(value)}
-        aria-label="string input"
-        type="text"
-      />
-      {info.isUpdateable(info) && <StyledWarning />}
-    </Container>
+    <Flex direction={{ default: "row" }}>
+      <FlexItem grow={{ default: "grow" }}>
+        <TextInput
+          value={info.value}
+          onChange={(_event, value) => info.set(value)}
+          aria-label="string input"
+          type="text"
+        />
+      </FlexItem>
+
+      <FlexItem style={{ minWidth: "20px" }}>
+        {info.isUpdateable(info) && <Warning />}
+      </FlexItem>
+    </Flex>
   );
 };
-
-const StyledWarning = styled(Warning)`
-  height: 36px;
-  margin-left: 16px;
-`;
-const Container = styled.div<{ hasWarning: boolean }>`
-  display: flex;
-  margin-right: ${(p) => (p.hasWarning ? "0" : "16px")};
-`;

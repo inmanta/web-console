@@ -1,6 +1,5 @@
 import React, { useContext, useState } from "react";
 import { Button, Flex, FlexItem, Form } from "@patternfly/react-core";
-import styled from "styled-components";
 import { Either, ProjectModel } from "@/Core";
 import { CreatableSelectInput, InlinePlainAlert } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
@@ -146,7 +145,7 @@ const FormControls: React.FC<{
   onSubmit: () => void;
   onCancel: () => void;
 }> = ({ isSubmitDisabled, onSubmit, onCancel }) => (
-  <PaddedControls direction={{ default: "row" }}>
+  <Flex direction={{ default: "row" }} rowGap={{ default: "rowGap2xl" }}>
     <FlexItem>
       <Button
         aria-label="submit"
@@ -161,9 +160,5 @@ const FormControls: React.FC<{
         {words("cancel")}
       </Button>
     </FlexItem>
-  </PaddedControls>
+  </Flex>
 );
-
-const PaddedControls = styled(Flex)`
-  padding-top: 1em;
-`;

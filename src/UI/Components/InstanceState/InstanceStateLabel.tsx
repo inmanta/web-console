@@ -1,5 +1,5 @@
 import React from "react";
-import { Label } from "@patternfly/react-core";
+import { Content, Label } from "@patternfly/react-core";
 import { State } from "@/Core";
 
 export const InstanceStateLabel: React.FC<State> = ({ name, label }) => {
@@ -11,5 +11,5 @@ export const InstanceStateLabel: React.FC<State> = ({ name, label }) => {
     );
   }
 
-  return <Label>{name}</Label>;
+  return <Content>{name}</Content>;
 };

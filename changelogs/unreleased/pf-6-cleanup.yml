@@ -1,0 +1,3 @@
+description: Last cleanup phase for PF6 migration.
+change-type: patch
+destination-branches: [master]
