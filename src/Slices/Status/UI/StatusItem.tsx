@@ -57,7 +57,7 @@ export const StatusItem: React.FC<Props> = ({
         dataListCells={[
           <DataListCell key={uniqueId()}>
             {details.length > 0 && (
-              <List>
+              <List isPlain>
                 {details.map(([key, value]) => {
                   if (typeof value === "object") {
                     return (
@@ -118,7 +118,7 @@ const NestedListItem: React.FC<NestedListItemProps> = ({
       <ListItem>
         <b>{name}</b>
       </ListItem>
-      <List key={`${name}-nested-list`}>
+      <List key={`${name}-nested-list`} isPlain={false}>
         {Object.entries(properties).map(([subKey, subValue]) => (
           <ListItem key={name + "_" + subKey}>
             <DescriptionList

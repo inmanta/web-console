@@ -1,5 +1,5 @@
 import React, { useContext, useRef } from "react";
-import { Tooltip } from "@patternfly/react-core";
+import { TabContentBody, Tooltip } from "@patternfly/react-core";
 import { CogIcon, InfoCircleIcon, KeyIcon } from "@patternfly/react-icons";
 import { ErrorView, IconTabs, TabDescriptor } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
@@ -59,7 +59,11 @@ const environmentTab = (): TabDescriptor<TabKey> => ({
   id: TabKey.Environment,
   title: words("settings.tabs.environment"),
   icon: <InfoCircleIcon />,
-  view: <EnvironmentTab />,
+  view: (
+    <TabContentBody hasPadding>
+      <EnvironmentTab />
+    </TabContentBody>
+  ),
 });
 
 const configurationTab = (environmentId: string): TabDescriptor<TabKey> => ({

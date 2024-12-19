@@ -5,7 +5,6 @@ import {
   DescriptionListGroup,
   DescriptionListTerm,
 } from "@patternfly/react-core";
-import styled from "styled-components";
 import { isObjectEmpty, Maybe } from "@/Core";
 import { JsonFormatter, XmlFormatter } from "@/Data";
 import { AttributeClassifier, AttributeList, CodeText } from "@/UI/Components";
@@ -19,14 +18,14 @@ export const Details: React.FC<Props> = ({ log }) => {
   return (
     <DescriptionList>
       <DescriptionListGroup>
-        <StyledTerm>Message</StyledTerm>
+        <DescriptionListTerm>Message</DescriptionListTerm>
         <DescriptionListDescription>
           <CodeText>{log.msg}</CodeText>
         </DescriptionListDescription>
       </DescriptionListGroup>
       {!isObjectEmpty(log.kwargs) && (
         <DescriptionListGroup>
-          <StyledTerm>Kwargs</StyledTerm>
+          <DescriptionListTerm>Kwargs</DescriptionListTerm>
           <DescriptionListDescription>
             <AttributeList
               attributes={classifier.classify(log.kwargs)}
@@ -38,10 +37,6 @@ export const Details: React.FC<Props> = ({ log }) => {
     </DescriptionList>
   );
 };
-
-const StyledTerm = styled(DescriptionListTerm)`
-  font-size: 1rem;
-`;
 
 const classifier = new AttributeClassifier(
   new JsonFormatter(),

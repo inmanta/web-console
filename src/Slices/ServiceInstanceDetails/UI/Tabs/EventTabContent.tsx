@@ -6,6 +6,7 @@ import {
   DescriptionListTerm,
   Flex,
   FlexItem,
+  Stack,
   TabContent,
 } from "@patternfly/react-core";
 import {
@@ -17,7 +18,6 @@ import {
   Thead,
   Tr,
 } from "@patternfly/react-table";
-import styled from "styled-components";
 import { InstanceEvent } from "@/Core";
 import { InstanceLog } from "@/Slices/ServiceInstanceHistory/Core/Domain";
 import { DependencyContext, words } from "@/UI";
@@ -63,6 +63,10 @@ interface Props {
  *
  * @note We are using the events that are pressent in the history logs for the instance details view.
  * A link button allows the user to navigate the the full events page.
+ *
+ * If the transition is `is_error_transition` then we want the rows in an orange/golden hue.
+ * Unlike on the main event page, the history logs don't contain the `ignored_transition`.
+ * These are grayed out in the main event page.
  *
  * @prop {Props} props - The EventsTabContent Props
  *  @prop {string} selectedVersion - The actively selected version on the page.
@@ -157,149 +161,127 @@ export const EventsTabContent: React.FC<Props> = ({ selectedVersion }) => {
   return (
     <TabContent role="tabpanel" id="events">
       <TabContentWrapper>
-        <Flex>
-          <FlexItem align={{ default: "alignRight" }}>
-            <Link
-              aria-label="See-all-events"
-              pathname={routeManager.getUrl("Events", {
-                service: instance.service_entity,
-                instance: instance.id,
-              })}
-            >
-              {words("instanceDetails.events.seeAll")}
-            </Link>
-          </FlexItem>
-        </Flex>
-        <Table
-          aria-label="Expandable-events-table"
-          variant="compact"
-          isExpandable
-        >
-          <Thead>
-            <Tr>
-              <Th screenReaderText="Row expansion column" />
-              <Th width={15} key="eventType">
-                {words("instanceDetails.events.column.eventType")}
-              </Th>
-              <Th width={20} key="timestamp">
-                {words("instanceDetails.events.column.timestamp")}
-              </Th>
-              <Th width={20} key="source-state">
-                {words("instanceDetails.events.column.sourceState")}
-              </Th>
-              <Th width={20} key="destination-state">
-                {words("instanceDetails.events.column.destinationState")}
-              </Th>
-              <Th width={25} key="report">
-                {words("instanceDetails.events.column.report")}
-              </Th>
-            </Tr>
-          </Thead>
-          {events.map((event: InstanceEvent, index: number) => (
-            <BodyWithHighlightedRows
-              $transition={event}
-              key={`styled-row-${index}`}
-            >
-              <Tr
-                key={index}
-                id={`event-row-${event.id}`}
-                aria-label="Event-table-row"
+        <Stack hasGutter>
+          <Flex>
+            <FlexItem align={{ default: "alignRight" }}>
+              <Link
+                aria-label="See-all-events"
+                pathname={routeManager.getUrl("Events", {
+                  service: instance.service_entity,
+                  instance: instance.id,
+                })}
               >
-                <Td
-                  expand={{
-                    rowIndex: index,
-                    isExpanded: isExpanded(event.id),
-                    onToggle: () =>
-                      updateExpanded(event.id, !isExpanded(event.id)),
-                  }}
-                ></Td>
-                <Td>
-                  <EventIcon eventType={event.event_type} />
-                </Td>
-                <Td aria-label={`Event-date-${index}`}>
-                  <DateWithTimeDiffTooltip
-                    timestamp1={event.timestamp}
-                    timestamp2={getNextTimestamp(index)}
-                  />
-                </Td>
-                <Td aria-label={`Event-source-${index}`}>{event.source}</Td>
-                <Td aria-label={`Event-target-${index}`}>
-                  {event.destination}
-                </Td>
-                <Td aria-label={`Event-compile-${index}`}>
-                  {event.id_compile_report && (
-                    <CompileReportLink
-                      compileId={event.id_compile_report}
-                      isExport={isExportReport(event.message)}
+                {words("instanceDetails.events.seeAll")}
+              </Link>
+            </FlexItem>
+          </Flex>
+          <Table
+            aria-label="Expandable-events-table"
+            variant="compact"
+            isExpandable
+          >
+            <Thead>
+              <Tr>
+                <Th screenReaderText="Row expansion column" />
+                <Th width={15} key="eventType">
+                  {words("instanceDetails.events.column.eventType")}
+                </Th>
+                <Th width={20} key="timestamp">
+                  {words("instanceDetails.events.column.timestamp")}
+                </Th>
+                <Th width={20} key="source-state">
+                  {words("instanceDetails.events.column.sourceState")}
+                </Th>
+                <Th width={20} key="destination-state">
+                  {words("instanceDetails.events.column.destinationState")}
+                </Th>
+                <Th width={25} key="report">
+                  {words("instanceDetails.events.column.report")}
+                </Th>
+              </Tr>
+            </Thead>
+            {events.map((event: InstanceEvent, index: number) => (
+              <Tbody key={`styled-row-${index}`}>
+                <Tr
+                  key={index}
+                  id={`event-row-${event.id}`}
+                  aria-label="Event-table-row"
+                  className={event.is_error_transition ? "warning" : ""}
+                >
+                  <Td
+                    expand={{
+                      rowIndex: index,
+                      isExpanded: isExpanded(event.id),
+                      onToggle: () =>
+                        updateExpanded(event.id, !isExpanded(event.id)),
+                    }}
+                  ></Td>
+                  <Td>
+                    <EventIcon eventType={event.event_type} />
+                  </Td>
+                  <Td aria-label={`Event-date-${index}`}>
+                    <DateWithTimeDiffTooltip
+                      timestamp1={event.timestamp}
+                      timestamp2={getNextTimestamp(index)}
                     />
-                  )}
-                </Td>
-              </Tr>
-              <Tr
-                isExpanded={isExpanded(event.id)}
-                data-testid={`details_${event.id}`}
-              >
-                <Td colSpan={5}>
-                  <ExpandableRowContent>
-                    <DescriptionList>
-                      <DescriptionListGroup>
-                        <DescriptionListTerm>
-                          {words("events.column.message")}
-                        </DescriptionListTerm>
-                        <DescriptionListDescription
-                          aria-label={`Event-message-${index}`}
-                        >
-                          {event.message}
-                        </DescriptionListDescription>
-                      </DescriptionListGroup>
-                      <DescriptionListGroup>
-                        <DescriptionListTerm>
-                          {words("events.details.title")}
-                        </DescriptionListTerm>
-                        <DescriptionListDescription
-                          aria-label={`Event-details-${index}`}
-                        >
-                          <pre
-                            style={{
-                              whiteSpace: "pre-wrap",
-                              fontFamily: "Liberation Mono",
-                            }}
+                  </Td>
+                  <Td aria-label={`Event-source-${index}`}>{event.source}</Td>
+                  <Td aria-label={`Event-target-${index}`}>
+                    {event.destination}
+                  </Td>
+                  <Td aria-label={`Event-compile-${index}`}>
+                    {event.id_compile_report && (
+                      <CompileReportLink
+                        compileId={event.id_compile_report}
+                        isExport={isExportReport(event.message)}
+                      />
+                    )}
+                  </Td>
+                </Tr>
+                <Tr
+                  isExpanded={isExpanded(event.id)}
+                  data-testid={`details_${event.id}`}
+                  className={event.is_error_transition ? "warning" : ""}
+                >
+                  <Td colSpan={6}>
+                    <ExpandableRowContent>
+                      <DescriptionList>
+                        <DescriptionListGroup>
+                          <DescriptionListTerm>
+                            {words("events.column.message")}
+                          </DescriptionListTerm>
+                          <DescriptionListDescription
+                            aria-label={`Event-message-${index}`}
                           >
-                            <code>{JSON.stringify(event, null, 2)}</code>
-                          </pre>
-                        </DescriptionListDescription>
-                      </DescriptionListGroup>
-                    </DescriptionList>
-                  </ExpandableRowContent>
-                </Td>
-              </Tr>
-            </BodyWithHighlightedRows>
-          ))}
-        </Table>
+                            {event.message}
+                          </DescriptionListDescription>
+                        </DescriptionListGroup>
+                        <DescriptionListGroup>
+                          <DescriptionListTerm>
+                            {words("events.details.title")}
+                          </DescriptionListTerm>
+                          <DescriptionListDescription
+                            aria-label={`Event-details-${index}`}
+                          >
+                            <pre
+                              style={{
+                                whiteSpace: "pre-wrap",
+                                fontFamily: "Liberation Mono",
+                              }}
+                            >
+                              <code>{JSON.stringify(event, null, 2)}</code>
+                            </pre>
+                          </DescriptionListDescription>
+                        </DescriptionListGroup>
+                      </DescriptionList>
+                    </ExpandableRowContent>
+                  </Td>
+                </Tr>
+              </Tbody>
+            ))}
+          </Table>
+        </Stack>
       </TabContentWrapper>
     </TabContent>
   );
 };
-
-/**
- * The transitions we would like to highlight in the UI
- */
-type HighlightedTransition = Pick<
-  InstanceEvent,
-  "ignored_transition" | "is_error_transition"
->;
-
-/**
- * If the transition is `is_error_transition` then we want the rows in an orange/golden hue.
- * Unlike on the main event page, the history logs don't contain the `ignored_transition`.
- * These are grayed out in the main event page.
- */
-const BodyWithHighlightedRows = styled(Tbody)<{
-  $transition: HighlightedTransition;
-}>`
-  ${({ $transition }) => {
-    return $transition.is_error_transition
-      ? "background-color: var(--pf-t--global--color--status--warning--default)"
-      : "background-color: inherit";
-  }};
-`;

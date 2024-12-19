@@ -121,13 +121,19 @@ test("GIVEN ConfigurationTab WHEN editing a dict field THEN shows warning icon",
   const newKeyInput = within(newEntryRow).getByRole("textbox", {
     name: "editEntryKey",
   });
+  const newValueInput = within(newEntryRow).getByRole("textbox", {
+    name: /editentryvalue/i,
+  });
 
   expect(
     within(row).queryByRole("generic", { name: "Warning" }),
   ).not.toBeInTheDocument();
+
   await act(async () => {
     await userEvent.type(newKeyInput, "testKey");
+    await userEvent.type(newValueInput, "testValue");
   });
+
   expect(within(row).getByTestId("Warning")).toBeInTheDocument();
 
   await act(async () => {
