@@ -58,7 +58,7 @@ export const ResourceTableRow: React.FC<Props> = ({
         />
       </Td>
     </Tr>
-    {row.numberOfDependencies > 0 && (
+    {isExpanded && (
       <Tr isExpanded={isExpanded}>
         <Td colSpan={numberOfColumns}>
           <ExpandableRowContent>

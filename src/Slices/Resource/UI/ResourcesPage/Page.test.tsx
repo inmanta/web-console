@@ -173,12 +173,14 @@ test("GIVEN ResourcesView WHEN user clicks on requires toggle THEN list of requi
     name: "Resource Table Row",
   });
 
-  const toggle = within(rows[0]).getByRole("button", {
+  const toggleCell = within(rows[0]).getByRole("cell", {
     name: "Toggle-" + Resource.response.data[0].resource_id,
   });
 
+  const toggleButton = within(toggleCell).getByRole("button");
+
   await act(async () => {
-    await userEvent.click(toggle);
+    await userEvent.click(toggleButton);
   });
 
   await act(async () => {
