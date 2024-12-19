@@ -48,7 +48,7 @@ export const useGetDiagnostics = (
 
     await handleErrors(
       response,
-      `Failed to fetch instance for id: ${instanceId}`,
+      `Failed to fetch diagnostics for id: ${instanceId}`,
     );
 
     return response.json();
