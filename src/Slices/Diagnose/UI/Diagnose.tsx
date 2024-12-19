@@ -24,7 +24,7 @@ export const Diagnose: React.FC<Props> = ({
     serviceName,
     instanceId,
     env,
-  ).useContinuous(lookBehind);
+  ).useOneTime(lookBehind);
 
   if (isError) {
     return <ErrorView ariaLabel="Diagnostics-Error" message={error.message} />;

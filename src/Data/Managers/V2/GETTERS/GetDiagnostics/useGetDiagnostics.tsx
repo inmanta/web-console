@@ -8,7 +8,6 @@ import { useFetchHelpers } from "../../helpers";
  */
 interface GetDiagnostics {
   useOneTime: (lookBehind: string) => UseQueryResult<RawDiagnostics, Error>;
-  useContinuous: (lookBehind: string) => UseQueryResult<RawDiagnostics, Error>;
 }
 
 /**
@@ -20,7 +19,6 @@ interface GetDiagnostics {
  *
  * @returns {GetInstance} An object containing the different available queries.
  * @returns {UseQueryResult<ServiceInstanceModel, Error>} returns.useOneTime - Fetch the diagnose report with a single query.
- * @returns {UseQueryResult<ServiceInstanceModel, Error>} returns.useContinuous - Fetch the diagnose report with a recursive query with an interval of 5s.
  */
 export const useGetDiagnostics = (
   service: string,
@@ -61,21 +59,6 @@ export const useGetDiagnostics = (
         queryFn: () => fetchDiagnostics(lookBehind),
         retry: false,
         select: (data) => data.data,
-      }),
-    useContinuous: (
-      lookBehind: string,
-    ): UseQueryResult<RawDiagnostics, Error> =>
-      useQuery({
-        queryKey: [
-          "get_diagnostics-continuous",
-          service,
-          instanceId,
-          lookBehind,
-        ],
-        queryFn: () => fetchDiagnostics(lookBehind),
-        retry: false,
-        select: (data) => data.data,
-        refetchInterval: 5000,
       }),
   };
 };
