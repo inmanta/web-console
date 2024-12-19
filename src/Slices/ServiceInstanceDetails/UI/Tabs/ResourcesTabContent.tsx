@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { TabContent, TabContentBody } from "@patternfly/react-core";
+import { Content, TabContent, TabContentBody } from "@patternfly/react-core";
 import { useGetInstanceResources } from "@/Data/Managers/V2/GETTERS/GetInstanceResources";
 import { DependencyContext, words } from "@/UI";
 import {
@@ -9,7 +9,6 @@ import {
   ResourceTable,
 } from "@/UI/Components";
 import { InstanceDetailsContext } from "../../Core/Context";
-import { ProgressBar } from "../Components/DeploymentProgress";
 import { TabContentWrapper } from "./TabContentWrapper";
 
 export const ResourcesTabContent: React.FC = () => {
@@ -34,7 +33,11 @@ export const ResourcesTabContent: React.FC = () => {
           />
         ) : (
           <TabContentBody>
-            <ProgressBar deployment_progress={instance.deployment_progress} />
+            {!instance.deployment_progress && (
+              <Content>
+                {words("instanceDetails.tabs.resources.EmptyResources")}
+              </Content>
+            )}
             <ResourceTable resources={data} aria-label="Resource-table" />
           </TabContentBody>
         )}

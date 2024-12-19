@@ -10,7 +10,11 @@ import {
   DescriptionListGroup,
   DescriptionListTerm,
   Panel,
+  Flex,
+  FlexItem,
+  Content,
 } from "@patternfly/react-core";
+import { DeploymentProgressBar } from "@/Slices/ServiceInventory/UI/Components";
 import { words } from "@/UI";
 import { DateWithTooltip, TextWithCopy } from "@/UI/Components";
 import { InstanceDetailsContext } from "../../../Core/Context";
@@ -78,6 +82,28 @@ export const DetailsSection: React.FC = () => {
                   <DateWithTooltip timestamp={instance.last_updated} />
                 </DescriptionListDescription>
               </DescriptionListGroup>
+              <DescriptionListGroup>
+                <DescriptionListTerm>
+                  {words("instanceDetails.tabs.resources.deploymentProgress")}
+                </DescriptionListTerm>
+                <DescriptionListDescription>
+                  <Flex>
+                    <FlexItem flex={{ default: "flex_1" }}>
+                      <DeploymentProgressBar
+                        progress={instance.deployment_progress}
+                      />
+                    </FlexItem>
+                    {instance.deployment_progress && (
+                      <FlexItem>
+                        <Content>
+                          {Number(instance.deployment_progress.deployed)} /{" "}
+                          {Number(instance.deployment_progress.total)}
+                        </Content>
+                      </FlexItem>
+                    )}
+                  </Flex>
+                </DescriptionListDescription>
+              </DescriptionListGroup>{" "}
             </DescriptionList>
           </CardBody>
         </CardExpandableContent>
