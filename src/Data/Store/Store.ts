@@ -37,7 +37,6 @@ import {
   versionedResourceDetailsSlice,
   VersionedResourceDetailsSlice,
 } from "@S/DesiredStateResourceDetails/Data/Store";
-import { diagnosticsSlice, DiagnosticsSlice } from "@S/Diagnose/Data/Store";
 import { factsSlice, FactsSlice } from "@S/Facts/Data/Store";
 import {
   notificationSlice,
@@ -97,7 +96,6 @@ export interface StoreModel {
   compileDetails: CompileDetailsSlice;
   compileReports: CompileReportsSlice;
   desiredStateDiff: DesiredStateDiffSlice;
-  diagnostics: DiagnosticsSlice;
   discoveredResources: DiscoveredResourcesSlice;
   dryRunReport: DryRunReportSlice;
   dryRuns: DryRunsSlice;
@@ -132,7 +130,6 @@ export const storeModel: StoreModel = {
   compileDetails: compileDetailsSlice,
   compileReports: compileReportsSlice,
   desiredStateDiff: desiredStateDiffSlice,
-  diagnostics: diagnosticsSlice,
   discoveredResources: discoveredResourcesSlice,
   dryRunReport: dryRunReportSlice,
   dryRuns: dryRunsSlice,

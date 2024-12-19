@@ -1,42 +1,66 @@
 import React, { useContext } from "react";
-import { RemoteData } from "@/Core";
-import { PageContainer, ServiceInstanceDescription } from "@/UI/Components";
+
+import { useUrlStateWithString } from "@/Data";
+import { useGetInstance } from "@/Data/Managers/V2/GETTERS/GetInstance";
+import {
+  Description,
+  ErrorView,
+  LoadingView,
+  PageContainer,
+} from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { useRouteParams } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { Diagnose } from "./Diagnose";
+import { LookBackSlider } from "./LookBackSlider";
 
 export const Page: React.FC = () => {
   const { service, instance } = useRouteParams<"Diagnose">();
-  const { queryResolver } = useContext(DependencyContext);
+  const { environmentHandler } = useContext(DependencyContext);
 
-  const [data] = queryResolver.useContinuous<"GetServiceInstance">({
-    kind: "GetServiceInstance",
-    service_entity: service,
-    id: instance,
-  });
+  const [amountOfVersionToLookBehind, setAmountOfVersionToLookBehind] =
+    useUrlStateWithString<string>({
+      default: "1",
+      key: `lookBehind`,
+      route: "Diagnose",
+    });
+  const { data, error, isError, isSuccess } = useGetInstance(
+    service,
+    instance,
+    environmentHandler.useId(),
+  ).useContinuous();
 
-  return (
-    <PageContainer pageTitle={words("diagnose.title")}>
-      <ServiceInstanceDescription
-        instanceId={instance}
-        serviceName={service}
-        getDescription={words("diagnose.main.subtitle")}
-        data={data}
-        withSpace
-      />
-      <Diagnose
-        serviceName={service}
-        instanceId={instance}
-        instanceIdentity={RemoteData.withFallback(
-          RemoteData.mapSuccess(
-            (instanceData) =>
-              instanceData.service_identity_attribute_value || instanceData.id,
-            data,
-          ),
-          instance,
-        )}
-      />
-    </PageContainer>
-  );
+  const handleSliding = (value: number) => {
+    setAmountOfVersionToLookBehind(value.toString());
+  };
+
+  if (isError) {
+    return <ErrorView ariaLabel="DiagnosePage-Error" message={error.message} />;
+  }
+
+  if (isSuccess) {
+    const id = data.service_identity_attribute_value || instance;
+    const versionAsNumber = Number(data.version);
+
+    return (
+      <PageContainer pageTitle={words("diagnose.title")}>
+        <LookBackSlider
+          instanceVersion={versionAsNumber}
+          initialLookBehind={Number(amountOfVersionToLookBehind)}
+          setSelectedVersion={handleSliding}
+        />
+        <Description withSpace>
+          {words("diagnose.main.subtitle")(id)}
+        </Description>
+        <Diagnose
+          serviceName={service}
+          instanceId={instance}
+          lookBehind={amountOfVersionToLookBehind}
+          instanceIdentity={data.service_identity_attribute_value || data.id}
+        />
+      </PageContainer>
+    );
+  }
+
+  return <LoadingView ariaLabel="DiagnosePage-Loading" />;
 };
