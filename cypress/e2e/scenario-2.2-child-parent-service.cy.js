@@ -157,8 +157,8 @@ if (Cypress.env("edition") === "iso") {
       cy.get(".pf-v6-c-form__actions").contains("Yes").click();
 
       // check status change before compile
-      cy.get('[aria-label="InstanceRow-Intro"]:first', { timeout: 20000 })
-        .find('[data-label="State"]')
+      cy.get('[aria-label="InstanceRow-Intro"]:first')
+        .find('[data-label="State"]', { timeout: 20000 })
         .should("contain", "delete_validating_up");
 
       cy.get('[aria-label="InstanceRow-Intro"]:first')

@@ -2,7 +2,7 @@ import React, { act } from "react";
 import { MemoryRouter } from "react-router-dom";
 import { Page } from "@patternfly/react-core";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { axe, toHaveNoViolations } from "jest-axe";
 import { HttpResponse, http } from "msw";
@@ -254,7 +254,7 @@ describe("UserManagementPage", () => {
     });
 
     await act(async () => {
-      fireEvent.click(screen.getByLabelText("confirm-button"));
+      await userEvent.click(screen.getByLabelText("confirm-button"));
     });
 
     const updatedRows = await screen.findAllByTestId("user-row");
@@ -308,11 +308,11 @@ describe("UserManagementPage", () => {
     expect(userRows).toHaveLength(2);
 
     await act(async () => {
-      fireEvent.click(screen.getAllByText("Delete")[0]);
+      await userEvent.click(screen.getAllByText("Delete")[0]);
     });
 
     await act(async () => {
-      fireEvent.click(screen.getByText("Yes"));
+      await userEvent.click(screen.getByText("Yes"));
     });
 
     const updatedRows = await screen.findAllByTestId("user-row");
