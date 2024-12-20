@@ -142,12 +142,12 @@ if (Cypress.env("edition") === "iso") {
       // Go to Lifecycle states
       cy.get("button").contains("Lifecycle States").click();
 
-      // Expect to find table with 16 different state rows.
+      // Expect to find table with 17 different state rows.
       cy.get('[aria-label="Lifecycle"').should(($table) => {
         const $tableBody = $table.find("tbody");
         const $dataRows = $tableBody.find("tr");
 
-        expect($dataRows).to.have.length(16);
+        expect($dataRows).to.have.length(17);
       });
 
       // Go to Config tab
