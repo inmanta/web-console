@@ -151,10 +151,9 @@ if (Cypress.env("edition") === "iso") {
       // Go to Config tab
       cy.get("button").contains("Config").click();
 
-      // Expect it to be an empty table
-      cy.get(".pf-v5-c-empty-state")
-        .should("contain", "There is nothing here")
-        .and("contain", "No settings found");
+      // Expect it to have setting in the config
+      cy.get('[aria-label="ServiceConfig"]').should("be.visible");
+      cy.get('[aria-label="SettingsList"]').should("have.length", 1);
 
       // Go to Callback tab
       cy.get("button").contains("Callbacks").click();
