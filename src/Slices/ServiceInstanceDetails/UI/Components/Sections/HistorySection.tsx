@@ -1,6 +1,9 @@
 import React, { useContext } from "react";
 import {
+  Button,
   Divider,
+  Flex,
+  FlexItem,
   Panel,
   PanelHeader,
   PanelMain,
@@ -11,11 +14,12 @@ import { Table, Tbody, Td, Tr } from "@patternfly/react-table";
 import { ServiceModel } from "@/Core";
 import { useUrlStateWithString } from "@/Data";
 import { InstanceLog } from "@/Slices/ServiceInstanceHistory/Core/Domain";
-import { words } from "@/UI";
+import { DependencyContext, words } from "@/UI";
 import {
   DateWithTooltip,
   ErrorView,
   InstanceStateLabel,
+  Link,
   LoadingView,
 } from "@/UI/Components";
 import { InstanceDetailsContext } from "../../../Core/Context";
@@ -34,7 +38,7 @@ import { InstanceDetailsContext } from "../../../Core/Context";
  */
 export const HistorySection: React.FC = () => {
   const { instance, logsQuery } = useContext(InstanceDetailsContext);
-
+  const { routeManager } = useContext(DependencyContext);
   const [selectedVersion, setSelectedVersion] = useUrlStateWithString<string>({
     default: String(instance.version),
     key: `version`,
@@ -44,9 +48,26 @@ export const HistorySection: React.FC = () => {
   return (
     <Panel variant="raised" isScrollable>
       <PanelHeader>
-        <Title headingLevel="h2">
-          {words("instanceDetails.history.title")}
-        </Title>
+        <Flex justifyContent={{ default: "justifyContentSpaceBetween" }}>
+          <FlexItem>
+            <Title headingLevel="h2">
+              {words("instanceDetails.history.title")}
+            </Title>
+          </FlexItem>
+          <FlexItem>
+            <Link
+              pathname={routeManager.getUrl("Diagnose", {
+                service: instance.service_entity,
+                instance: instance.id,
+              })}
+              isDisabled={instance.deleted}
+            >
+              <Button variant="secondary">
+                {words("instanceDetails.history.diagnose")}
+              </Button>
+            </Link>
+          </FlexItem>
+        </Flex>
       </PanelHeader>
       <Divider />
       <PanelMain>
@@ -58,12 +79,7 @@ export const HistorySection: React.FC = () => {
               ariaLabel="History-Error"
             />
           )}
-          {/**Because of the caching of React queries,
-           * there's an additional check to make sure the table shows the data only
-           * when the section is not in error state or loading.
-           * Otherwise, it will still display the stale data under the error messages above.
-           */}
-          {logsQuery.data && !logsQuery.isLoading && !logsQuery.isError && (
+          {logsQuery.isSuccess && (
             <Table aria-label="VersionHistoryTable">
               <Tbody>
                 {logsQuery.data.map((log: InstanceLog) => (
