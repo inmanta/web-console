@@ -6,9 +6,9 @@ export const labelColorConfig: Record<
   NonNullable<LabelProps["status"] | LabelProps["color"]>
 > = {
   [Resource.Status.deployed]: "success",
-  [Resource.Status.skipped]: "custom",
-  [Resource.Status.skipped_for_undefined]: "custom",
-  [Resource.Status.cancelled]: "custom",
+  [Resource.Status.skipped]: "teal",
+  [Resource.Status.skipped_for_undefined]: "teal",
+  [Resource.Status.cancelled]: "teal",
   [Resource.Status.failed]: "danger",
   [Resource.Status.unavailable]: "warning",
   [Resource.Status.undefined]: "warning",

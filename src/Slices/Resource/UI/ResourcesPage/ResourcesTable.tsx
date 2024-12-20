@@ -34,6 +34,7 @@ export const ResourcesTable: React.FC<Props> = ({
     });
   };
   const activeSortIndex = tablePresenter.getIndexForColumnName(sort.name);
+  const smallHeaders = ["requires", "status"];
   const heads = tablePresenter
     .getColumnHeads()
     .map(({ apiName, displayName }, columnIndex) => {
@@ -51,8 +52,12 @@ export const ResourcesTable: React.FC<Props> = ({
           }
         : {};
 
+      const widthModifier = smallHeaders.includes(apiName)
+        ? "fitContent"
+        : "nowrap";
+
       return (
-        <Th key={displayName} {...sortParams} modifier="fitContent">
+        <Th key={displayName} {...sortParams} modifier={widthModifier}>
           {displayName}
         </Th>
       );
@@ -62,7 +67,10 @@ export const ResourcesTable: React.FC<Props> = ({
     <Table {...props} variant={TableVariant.compact}>
       <Thead>
         <Tr>
-          <Th screenReaderText={words("common.emptyColumnHeader")} />
+          <Th
+            modifier="fitContent"
+            screenReaderText={words("common.emptyColumnHeader")}
+          />
           {heads}
         </Tr>
       </Thead>

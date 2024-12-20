@@ -36,12 +36,7 @@ export const StatusList: React.FC<Props> = ({
   const { featureManager } = useContext(DependencyContext);
 
   return (
-    <DataList
-      {...props}
-      className={className}
-      aria-label="StatusList"
-      isCompact
-    >
+    <DataList {...props} className={className} aria-label="StatusList">
       <StatusItem
         name={status.product}
         details={toDetails(

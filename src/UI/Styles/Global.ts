@@ -52,11 +52,17 @@ export const GlobalStyles = createGlobalStyle`
   }
 
   /**
-   * Enforce the toggle columns to have the minimal width everywhere.
+   * Enforce the toggle columns to have the maximal width everywhere.
    **/
   .pf-v6-c-table .pf-v6-c-table__toggle {
-    --pf-v6-c-table--cell--Width: 0%;
+    --pf-v6-c-table--cell--MaxWidth: 10px;
   } 
+
+  .pf-v6-c-table tr:where(.pf-v6-c-table__tr) > th:where(.hidden-toggle-cell) {
+    --pf-v6-c-table--cell--MaxWidth: 10px !important;
+    min-width: 10px !important;
+    --pf-v6-c-table--cell--Width: 10px !important;
+  }
 
   .pf-v6-c-select {
     min-width: 180px;
