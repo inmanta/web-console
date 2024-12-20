@@ -58,12 +58,6 @@ export const GlobalStyles = createGlobalStyle`
     --pf-v6-c-table--cell--MaxWidth: 10px;
   } 
 
-  .pf-v6-c-table tr:where(.pf-v6-c-table__tr) > th:where(.hidden-toggle-cell) {
-    --pf-v6-c-table--cell--MaxWidth: 10px !important;
-    min-width: 10px !important;
-    --pf-v6-c-table--cell--Width: 10px !important;
-  }
-
   .pf-v6-c-select {
     min-width: 180px;
   }
