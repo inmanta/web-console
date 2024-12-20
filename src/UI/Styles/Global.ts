@@ -52,10 +52,10 @@ export const GlobalStyles = createGlobalStyle`
   }
 
   /**
-   * Enforce the toggle columns to have the minimal width everywhere.
+   * Enforce the toggle columns to have the maximal width everywhere.
    **/
   .pf-v6-c-table .pf-v6-c-table__toggle {
-    --pf-v6-c-table--cell--Width: 0%;
+    --pf-v6-c-table--cell--MaxWidth: 10px;
   } 
 
   .pf-v6-c-select {

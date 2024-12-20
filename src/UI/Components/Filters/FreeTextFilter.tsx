@@ -1,13 +1,10 @@
 import React, { useState } from "react";
 import {
-  Button,
   ToolbarFilter,
   InputGroup,
-  TextInput,
-  ButtonVariant,
   InputGroupItem,
+  SearchInput,
 } from "@patternfly/react-core";
-import { SearchIcon } from "@patternfly/react-icons";
 
 interface Props {
   isHidden?: boolean;
@@ -45,7 +42,7 @@ export const FreeTextFilter: React.FC<Props> = ({
     >
       <InputGroup>
         <InputGroupItem isFill>
-          <TextInput
+          <SearchInput
             data-testid={`${filterPropertyName}FilterInput`}
             name={`${filterPropertyName}FilterInput`}
             type="search"
@@ -55,14 +52,6 @@ export const FreeTextFilter: React.FC<Props> = ({
             placeholder={placeholder}
             onKeyDown={onTextInput}
           />
-        </InputGroupItem>
-        <InputGroupItem>
-          <Button
-            icon={<SearchIcon />}
-            variant={ButtonVariant.control}
-            aria-label="submit search"
-            onClick={onTextInput}
-          ></Button>
         </InputGroupItem>
       </InputGroup>
     </ToolbarFilter>

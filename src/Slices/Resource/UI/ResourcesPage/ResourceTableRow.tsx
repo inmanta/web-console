@@ -27,7 +27,7 @@ export const ResourceTableRow: React.FC<Props> = ({
   <Tbody>
     <Tr aria-label="Resource Table Row">
       <Td
-        style={{ width: "0%" }} // This is to enforce the same width when there is no expandable content.
+        className="toggle-cell" // This is to enforce the same width when there is no expandable content.
         aria-label={`Toggle-${row.id}${row.numberOfDependencies <= 0 ? "-hidden" : ""}`}
         expand={
           row.numberOfDependencies > 0
@@ -39,9 +39,15 @@ export const ResourceTableRow: React.FC<Props> = ({
             : undefined
         }
       ></Td>
-      <Td dataLabel={words("resources.column.type")}>{row.type}</Td>
-      <Td dataLabel={words("resources.column.agent")}>{row.agent}</Td>
-      <Td dataLabel={words("resources.column.value")}>{row.value}</Td>
+      <Td dataLabel={words("resources.column.type")} modifier="breakWord">
+        {row.type}
+      </Td>
+      <Td dataLabel={words("resources.column.agent")} modifier="breakWord">
+        {row.agent}
+      </Td>
+      <Td dataLabel={words("resources.column.value")} modifier="breakWord">
+        {row.value}
+      </Td>
       <Td dataLabel={words("resources.column.requires")}>
         {row.numberOfDependencies as React.ReactNode}
       </Td>
@@ -51,7 +57,7 @@ export const ResourceTableRow: React.FC<Props> = ({
           label={row.deployState}
         />
       </Td>
-      <Td isActionCell>
+      <Td isActionCell width={10}>
         <ResourceLink
           resourceId={row.id}
           linkText={words("resources.link.details")}

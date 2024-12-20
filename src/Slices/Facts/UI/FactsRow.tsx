@@ -21,7 +21,7 @@ export const FactsRow: React.FC<Props> = ({ row }) => {
         <Td modifier="breakWord" dataLabel={words("facts.column.value")}>
           {row.value}
         </Td>
-        <Td>
+        <Td modifier="breakWord" dataLabel={words("facts.column.resourceId")}>
           <Link
             pathname={routeManager.getUrl("ResourceDetails", {
               resourceId: row.resource_id,

@@ -90,7 +90,7 @@ test("GIVEN ResourceLogsView WHEN filtered on message THEN only shows relevant l
     apiHelper.resolve(Either.right(ResourceLogs.response));
   });
 
-  const messageFilter = screen.getByRole("searchbox", {
+  const messageFilter = screen.getByRole("textbox", {
     name: "MessageFilter",
   });
 
