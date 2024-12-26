@@ -195,7 +195,7 @@ test("Given Notification Center page When user filters on message Then executes 
 
   await act(async () => {
     await userEvent.type(
-      screen.getByRole("searchbox", { name: "MessageFilter" }),
+      screen.getByRole("textbox", { name: "MessageFilter" }),
       "abc{enter}",
     );
   });
@@ -238,7 +238,7 @@ test("Given Notification Center page When user filters on title Then executes co
 
   await act(async () => {
     await userEvent.type(
-      screen.getByRole("searchbox", { name: "TitleFilter" }),
+      screen.getByRole("textbox", { name: "TitleFilter" }),
       "abc{enter}",
     );
   });

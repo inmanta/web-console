@@ -122,7 +122,7 @@ export const IntRangeFilter: React.FC<Props> = ({
               onClick={onApply}
               isDisabled={!(from || to)}
               aria-label={`Apply ${categoryName} filter`}
-              variant="tertiary"
+              variant="control"
             ></Button>
           </ToolbarFilter>
         </FlexItem>

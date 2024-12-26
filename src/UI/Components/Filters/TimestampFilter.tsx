@@ -128,7 +128,7 @@ export const TimestampFilter: React.FC<Props> = ({
             onClick={onApply}
             isDisabled={!(from || to)}
             aria-label="Apply date filter"
-            variant="tertiary"
+            variant="control"
           ></Button>
         </ToolbarFilter>
       </FlexItem>
