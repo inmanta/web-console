@@ -1,5 +1,5 @@
 import { EventType, ServiceInstanceModel, ServiceModel } from "@/Core";
-import { InstanceLog } from "@/Slices/ServiceInstanceHistory/Core/Domain";
+import { InstanceLog } from "@/Core/Domain/HistoryLog";
 
 export const instanceData: ServiceInstanceModel = {
   id: "1d96a1ab",

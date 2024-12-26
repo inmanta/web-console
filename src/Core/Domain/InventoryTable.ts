@@ -24,18 +24,17 @@ export interface Attributes {
 
 export interface Row {
   id: Uuid;
-  attributesSummary?: AttributesSummary;
-  attributes: Attributes;
   createdAt: string;
   updatedAt: string;
   version: ParsedNumber;
-  instanceSetStateTargets: string[];
   service_entity: string;
+  state: string;
   environment: string;
   deploymentProgress?: DeploymentProgress | null;
   serviceIdentityValue?: string;
   deleted: boolean;
-  configDisabled?: boolean;
+  editDisabled: boolean;
+  deleteDisabled: boolean;
 }
 
 export interface State {

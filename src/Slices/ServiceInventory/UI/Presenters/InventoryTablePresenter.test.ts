@@ -1,21 +1,8 @@
 import { ServiceModel } from "@/Core";
-import {
-  ServiceInstance,
-  DummyActionPresenter,
-  DummyDatePresenter,
-  tablePresenter,
-} from "@/Test";
-import { DummyStatePresenter } from "@/Test/Mock/DummyStatePresenter";
-import { AttributesPresenter } from "./AttributesPresenter";
-import { InstanceActionPresenter } from "./InstanceActionPresenter";
+import { ServiceInstance, tablePresenter } from "@/Test";
 import { InventoryTablePresenter } from "./InventoryTablePresenter";
 
-const presenter = new InventoryTablePresenter(
-  new DummyDatePresenter(),
-  new AttributesPresenter(),
-  new DummyActionPresenter(),
-  new DummyStatePresenter(),
-);
+const presenter = new InventoryTablePresenter();
 const rows = presenter.createRows([ServiceInstance.a]);
 
 test("TablePresenter short id", () => {
@@ -45,14 +32,7 @@ test("TablePresenter returns sortable columns correctly", () => {
 });
 
 describe("TablePresenter with identity ", () => {
-  const presenterWithIdentity = new InventoryTablePresenter(
-    new DummyDatePresenter(),
-    new AttributesPresenter(),
-    new DummyActionPresenter(),
-    new DummyStatePresenter(),
-    "service_id",
-    "Service ID",
-  );
+  const presenterWithIdentity = new InventoryTablePresenter();
 
   test("returns sortable columns correctly", () => {
     expect(presenterWithIdentity.getSortableColumnNames()).toEqual([

@@ -19,7 +19,7 @@ import {
   Tr,
 } from "@patternfly/react-table";
 import { InstanceEvent } from "@/Core";
-import { InstanceLog } from "@/Slices/ServiceInstanceHistory/Core/Domain";
+import { InstanceLog } from "@/Core/Domain/HistoryLog";
 import { DependencyContext, words } from "@/UI";
 import {
   ErrorView,
