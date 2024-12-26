@@ -368,7 +368,7 @@ describe("Scenario 6 : Resources", () => {
 
       // Click open collapsible row for resource waiting-entity
       cy.get(
-        '[aria-label="Toggle-frontend_model::TestResource[internal,name=waiting-entity]"]',
+        '[aria-label="Toggle-frontend_model::TestResource[internal,name=waiting-entity]"] > button',
         { timeout: 20000 },
       ).click();
       // Expect to find three rows with
