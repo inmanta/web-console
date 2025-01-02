@@ -145,9 +145,6 @@ if (Cypress.env("edition") === "iso") {
         .click();
       cy.get("#parent-service").contains("Show inventory").click();
 
-      // open row from element
-      cy.get("#expand-toggle0", { timeout: 20000 }).click();
-
       // try delete item (Should not be possible)
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
       cy.get('[role="menuitem"]').contains("More actions").click();
@@ -171,9 +168,6 @@ if (Cypress.env("edition") === "iso") {
         .click();
 
       cy.get("#child-service").contains("Show inventory").click();
-
-      // open row from element
-      cy.get("#expand-toggle0").click();
 
       // try delete item (Should be possible)
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
