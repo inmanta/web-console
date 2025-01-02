@@ -492,7 +492,6 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 })
         .eq(0)
         .click();
-      cy.get('[role="menuitem"]').contains("More actions").click();
       cy.get('[role="menuitem"]').contains("Delete").click();
 
       // Confirm deletion
@@ -502,7 +501,6 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 })
         .eq(1)
         .click();
-      cy.get('[role="menuitem"]').contains("More actions").click();
       cy.get('[role="menuitem"]').contains("Delete").click();
 
       // Confirm deletion
