@@ -51,7 +51,7 @@ export const FactsTable: React.FC<Props> = ({
         : {};
 
       return (
-        <Th key={displayName} {...sortParams} modifier="fitContent">
+        <Th key={displayName} {...sortParams} modifier="nowrap">
           {displayName}
         </Th>
       );

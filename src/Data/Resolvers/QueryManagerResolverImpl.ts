@@ -60,10 +60,6 @@ import {
   GetVersionResourcesStateHelper,
 } from "@S/DesiredStateDetails/Data";
 import { GetDesiredStateResourceDetailsQueryManager } from "@S/DesiredStateResourceDetails/Data";
-import {
-  DiagnosticsQueryManager,
-  DiagnosticsStateHelper,
-} from "@S/Diagnose/Data";
 import { EventsQueryManager, EventsStateHelper } from "@S/Events/Data";
 import { GetFactsQueryManager } from "@S/Facts/Data";
 import {
@@ -202,11 +198,6 @@ export class QueryManagerResolverImpl implements QueryManagerResolver {
         this.apiHelper,
         InstanceConfigStateHelper(this.store),
         new InstanceConfigFinalizer(serviceStateHelper),
-      ),
-      DiagnosticsQueryManager(
-        this.apiHelper,
-        DiagnosticsStateHelper(this.store),
-        this.scheduler,
       ),
       GetDiscoveredResourcesQueryManager(
         this.apiHelper,
