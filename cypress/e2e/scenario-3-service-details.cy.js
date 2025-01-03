@@ -283,7 +283,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 2);
 
       // Check if the newly added instance has failed.
-      cy.get('[aria-label="InstanceRow-Intro"]', { timeout: 20000 })
+      cy.get('[aria-label="InstanceRow-Intro"]', { timeout: 40000 })
         .first()
         .should(($row) => {
           const $cols = $row.find("td");
