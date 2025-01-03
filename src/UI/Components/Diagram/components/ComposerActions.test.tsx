@@ -1,4 +1,4 @@
-import React, { act } from "react";
+import React from "react";
 import { MemoryRouter, useLocation } from "react-router-dom";
 import {
   QueryClient,
@@ -201,9 +201,8 @@ describe("ComposerActions.", () => {
 
     render(setup(null, validContextForEnabledDeploy));
     expect(screen.getByRole("button", { name: "Deploy" })).toBeEnabled();
-    await act(async () => {
-      await userEvent.click(screen.getByRole("button", { name: "Deploy" }));
-    });
+
+    await userEvent.click(screen.getByRole("button", { name: "Deploy" }));
 
     expect(
       await screen.findByText("The request got sent successfully"),
@@ -233,9 +232,8 @@ describe("ComposerActions.", () => {
 
     render(setup(null, canvasContext));
     expect(screen.getByRole("button", { name: "Deploy" })).toBeEnabled();
-    await act(async () => {
-      await userEvent.click(screen.getByRole("button", { name: "Deploy" }));
-    });
+
+    await userEvent.click(screen.getByRole("button", { name: "Deploy" }));
 
     expect(
       screen.getByText("Failed to save instance coordinates on deploy."),
@@ -258,9 +256,8 @@ describe("ComposerActions.", () => {
 
     render(setup(null, validContextForEnabledDeploy));
     expect(screen.getByRole("button", { name: "Deploy" })).toBeEnabled();
-    await act(async () => {
-      await userEvent.click(screen.getByRole("button", { name: "Deploy" }));
-    });
+
+    await userEvent.click(screen.getByRole("button", { name: "Deploy" }));
 
     expect(await screen.findByText("Failed to deploy instance.")).toBeVisible();
   });

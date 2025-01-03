@@ -1,4 +1,4 @@
-import React, { act } from "react";
+import React from "react";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { LegendBar } from "./LegendBar";
@@ -22,11 +22,9 @@ test("GIVEN LegendBar WHEN items have an onClick handler THEN handler is execute
 
   expect(onClick).not.toHaveBeenCalled();
 
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("generic", { name: "LegendItem-test" }),
-    );
-  });
+  await userEvent.click(
+    screen.getByRole("generic", { name: "LegendItem-test" }),
+  );
 
   expect(onClick).toHaveBeenCalledWith("test");
 });

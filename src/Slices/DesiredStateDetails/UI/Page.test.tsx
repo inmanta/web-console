@@ -168,9 +168,7 @@ test("GIVEN DesiredStateDetails page WHEN sorting changes AND we are not on the 
 
   expect(screen.getByLabelText("Go to next page")).toBeEnabled();
 
-  await act(async () => {
-    await userEvent.click(screen.getByLabelText("Go to next page"));
-  });
+  await userEvent.click(screen.getByLabelText("Go to next page"));
 
   //expect the api url to contain start and end keywords that are used for pagination when we are moving to the next page
   expect(apiHelper.pendingRequests[0].url).toMatch(/(&start=|&end=)/);
@@ -195,9 +193,7 @@ test("GIVEN DesiredStateDetails page WHEN sorting changes AND we are not on the 
   });
 
   //sort on the second page
-  await act(async () => {
-    await userEvent.click(screen.getByRole("button", { name: "Type" }));
-  });
+  await userEvent.click(screen.getByRole("button", { name: "Type" }));
 
   // expect the api url to not contain start and end keywords that are used for pagination to assert we are back on the first page.
   // we are asserting on the second request as the first request is for the updated sorting event, and second is chained to back to the first page with still correct sorting

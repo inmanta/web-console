@@ -221,18 +221,16 @@ test("GIVEN AttributeTable WHEN passed embedded attributes THEN expendable rows 
   });
 
   //show embedded entity
-  await act(async () => {
-    await userEvent.click(toggleButton);
-  });
+  await userEvent.click(toggleButton);
+
   const row = await screen.findByRole("row", {
     name: "Row-embedded$embedded_single",
   });
 
   expect(row).toBeVisible();
   //collapse embedded entity
-  await act(async () => {
-    await userEvent.click(toggleButton);
-  });
+  await userEvent.click(toggleButton);
+
   expect(row).not.toBeVisible();
 
   await act(async () => {

@@ -142,13 +142,11 @@ describe("ServiceInstanceDetailsPage", () => {
     // this value is located inside the collapsible section.
     expect(screen.getByText(/inmanta\-lab/i)).not.toBeVisible();
 
-    await act(async () => {
-      await userEvent.click(
-        screen.getByRole("button", {
-          name: /expand row 1/i,
-        }),
-      );
-    });
+    await userEvent.click(
+      screen.getByRole("button", {
+        name: /expand row 1/i,
+      }),
+    );
 
     // In Version 4, the site.name should be "inmanta-lab".
     // assert that we can see the site values now.
@@ -159,9 +157,7 @@ describe("ServiceInstanceDetailsPage", () => {
       name: /attribute/i,
     });
 
-    await act(async () => {
-      await userEvent.click(sortToggle);
-    });
+    await userEvent.click(sortToggle);
 
     const rowKeys = screen.getAllByTestId("attribute-key");
 
@@ -171,47 +167,35 @@ describe("ServiceInstanceDetailsPage", () => {
       name: /table\-options/i,
     });
 
-    await act(async () => {
-      await userEvent.click(tableOptionsToggle);
-    });
+    await userEvent.click(tableOptionsToggle);
 
-    await act(async () => {
-      const tableOptions = screen.getAllByRole("menuitem");
+    const tableOptions1 = screen.getAllByRole("menuitem");
 
-      expect(tableOptions).toHaveLength(3);
-      // collapse all
-      await userEvent.click(tableOptions[0]);
-    });
+    expect(tableOptions1).toHaveLength(3);
+    // collapse all
+    await userEvent.click(tableOptions1[0]);
 
     expect(screen.getByText(/inmanta\-lab/i)).not.toBeVisible();
 
-    await act(async () => {
-      await userEvent.click(tableOptionsToggle);
-    });
+    await userEvent.click(tableOptionsToggle);
 
-    await act(async () => {
-      const tableOptions = screen.getAllByRole("menuitem");
+    const tableOptions2 = screen.getAllByRole("menuitem");
 
-      expect(tableOptions).toHaveLength(3);
-      // revert sorting
-      await userEvent.click(tableOptions[2]);
-    });
+    expect(tableOptions2).toHaveLength(3);
+    // revert sorting
+    await userEvent.click(tableOptions2[2]);
 
     const rowKeysResetted = screen.getAllByTestId("attribute-key");
 
     expect(rowKeysResetted[0]).toHaveTextContent("name");
 
-    await act(async () => {
-      await userEvent.click(tableOptionsToggle);
-    });
+    await userEvent.click(tableOptionsToggle);
 
-    await act(async () => {
-      const tableOptions = screen.getAllByRole("menuitem");
+    const tableOptions3 = screen.getAllByRole("menuitem");
 
-      expect(tableOptions).toHaveLength(3);
-      // expand all
-      await userEvent.click(tableOptions[1]);
-    });
+    expect(tableOptions3).toHaveLength(3);
+    // expand all
+    await userEvent.click(tableOptions3[1]);
 
     expect(screen.getByText(/inmanta\-lab/i)).toBeVisible();
 
@@ -221,21 +205,17 @@ describe("ServiceInstanceDetailsPage", () => {
     });
 
     // change the attributeSet to candidate.
-    await act(async () => {
-      await userEvent.click(select);
-      const options = screen.getAllByRole("option");
+    await userEvent.click(select);
+    const options1 = screen.getAllByRole("option");
 
-      // expect only two options, active and candidate
-      expect(options).toHaveLength(2);
-      const candidate_option = options[1];
+    // expect only two options, active and candidate
+    expect(options1).toHaveLength(2);
+    const candidate_option = options1[1];
 
-      await userEvent.selectOptions(select, candidate_option);
-      expect(select).toHaveValue("candidate_attributes");
-    });
+    await userEvent.selectOptions(select, candidate_option);
+    expect(select).toHaveValue("candidate_attributes");
 
-    await act(async () => {
-      await userEvent.click(screen.getByRole("cell", { name: "2" }));
-    });
+    await userEvent.click(screen.getByRole("cell", { name: "2" }));
 
     expect(screen.queryByText("Latest Version")).not.toBeInTheDocument();
     expect(screen.getByTestId("selected-version")).toHaveTextContent(
@@ -247,14 +227,12 @@ describe("ServiceInstanceDetailsPage", () => {
       name: /select\-attributeset/i,
     });
 
-    await act(async () => {
-      await userEvent.click(select2);
-      const options = screen.getAllByRole("option");
+    await userEvent.click(select2);
+    const options2 = screen.getAllByRole("option");
 
-      // expect only one options, candidate
-      expect(options).toHaveLength(1);
-      expect(select2).toHaveValue("candidate_attributes");
-    });
+    // expect only one options, candidate
+    expect(options2).toHaveLength(1);
+    expect(select2).toHaveValue("candidate_attributes");
 
     // In Version 2, the site.name should be "inmanta-lab-0".
     expect(screen.getByText("inmanta-lab-0")).toBeVisible();
@@ -262,9 +240,7 @@ describe("ServiceInstanceDetailsPage", () => {
     // Go to the JSON view
     const toggleJson = screen.getByText(/json/i);
 
-    await act(async () => {
-      await userEvent.click(toggleJson);
-    });
+    await userEvent.click(toggleJson);
 
     // expect the view to be updated
     expect(screen.getByTestId("loading-spinner")).toBeVisible();
@@ -278,17 +254,13 @@ describe("ServiceInstanceDetailsPage", () => {
     ).toHaveValue("candidate_attributes");
 
     // go back to the latest version
-    await act(async () => {
-      await userEvent.click(screen.getByRole("cell", { name: "4" }));
-    });
+    await userEvent.click(screen.getByRole("cell", { name: "4" }));
 
     // Change view on compare, and just like before, we can't test the monaco editor in jest,
     // so we will assert that we now have 4 dropdowns
     const toggleCompare = screen.getByText(/compare/i);
 
-    await act(async () => {
-      await userEvent.click(toggleCompare);
-    });
+    await userEvent.click(toggleCompare);
 
     const selects = screen.getAllByRole("combobox");
 
@@ -345,9 +317,7 @@ describe("ServiceInstanceDetailsPage", () => {
 
     // candidate attribute set
     // in this version, we should have documentation available
-    await act(async () => {
-      await userEvent.click(screen.getByRole("cell", { name: "3" }));
-    });
+    await userEvent.click(screen.getByRole("cell", { name: "3" }));
 
     expect(screen.queryByText("Latest Version")).not.toBeInTheDocument();
     expect(screen.getByTestId("selected-version")).toHaveTextContent(
@@ -363,9 +333,7 @@ describe("ServiceInstanceDetailsPage", () => {
 
     // rollback attribute set
     // in this version, topography documentation is an empty string, so fall back to message informing the user.
-    await act(async () => {
-      await userEvent.click(screen.getByRole("cell", { name: "2" }));
-    });
+    await userEvent.click(screen.getByRole("cell", { name: "2" }));
 
     expect(screen.queryByText("Latest Version")).not.toBeInTheDocument();
     expect(screen.getByTestId("selected-version")).toHaveTextContent(
@@ -380,9 +348,7 @@ describe("ServiceInstanceDetailsPage", () => {
     ).toBeVisible();
 
     // in this version, topography attribute didn't exist yet in any attribute set, but is available in the ServiceModel.
-    await act(async () => {
-      await userEvent.click(screen.getByRole("cell", { name: "1" }));
-    });
+    await userEvent.click(screen.getByRole("cell", { name: "1" }));
 
     expect(screen.queryByText("Latest Version")).not.toBeInTheDocument();
     expect(screen.getByTestId("selected-version")).toHaveTextContent(
@@ -399,9 +365,7 @@ describe("ServiceInstanceDetailsPage", () => {
     // Events
 
     // Select the Events tab
-    await act(async () => {
-      await userEvent.click(screen.getByText("Events"));
-    });
+    await userEvent.click(screen.getByText("Events"));
 
     // Should have a link to navigate to the full events page
     const allEventsLink = screen.getByRole("link", {
@@ -472,9 +436,7 @@ describe("ServiceInstanceDetailsPage", () => {
     ).toBeEmptyDOMElement();
 
     // Select the version 3rd in the history, this one should contain three rows, and have one with a warning color, one with a validation report, and one with an export report.
-    await act(async () => {
-      await userEvent.click(screen.getByRole("cell", { name: "3" }));
-    });
+    await userEvent.click(screen.getByRole("cell", { name: "3" }));
 
     const rowsVersion3 = screen.getAllByRole("row", {
       name: /Event\-table\-row/i,
@@ -518,14 +480,10 @@ describe("ServiceInstanceDetailsPage", () => {
     // Resources Tab
 
     // Make sure the version is set to latest
-    await act(async () => {
-      await userEvent.click(screen.getAllByLabelText("History-Row")[0]);
-    });
+    await userEvent.click(screen.getAllByLabelText("History-Row")[0]);
 
     // Select the Resources tab
-    await act(async () => {
-      await userEvent.click(screen.getByText("Resources"));
-    });
+    await userEvent.click(screen.getByText("Resources"));
 
     expect(screen.getByText("Deployment Progress")).toBeVisible();
     expect(screen.getByText("1 / 1")).toBeVisible();
@@ -539,9 +497,7 @@ describe("ServiceInstanceDetailsPage", () => {
     expect(screen.getByText("test_resource[]")).toBeVisible();
 
     // Change Version to older
-    await act(async () => {
-      await userEvent.click(screen.getAllByLabelText("History-Row")[1]);
-    });
+    await userEvent.click(screen.getAllByLabelText("History-Row")[1]);
 
     expect(screen.queryByText("Latest Version")).toBeNull();
     expect(
@@ -553,9 +509,7 @@ describe("ServiceInstanceDetailsPage", () => {
     expect(screen.getByText("test_resource[]")).not.toBeVisible();
 
     // Change Version to latest
-    await act(async () => {
-      await userEvent.click(screen.getAllByLabelText("History-Row")[0]);
-    });
+    await userEvent.click(screen.getAllByLabelText("History-Row")[0]);
 
     expect(
       screen.getByRole("tab", { name: "resources-content" }),

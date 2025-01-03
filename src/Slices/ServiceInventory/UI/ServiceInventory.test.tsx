@@ -238,11 +238,9 @@ test("ServiceInventory shows next page of instances", async () => {
     await screen.findByRole("cell", { name: "IdCell-a" }),
   ).toBeInTheDocument();
 
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("button", { name: "Go to next page" }),
-    );
-  });
+  await userEvent.click(
+    screen.getByRole("button", { name: "Go to next page" }),
+  );
 
   apiHelper.resolve(
     Either.right({
@@ -288,11 +286,9 @@ test("ServiceInventory shows enabled composer buttons for root instances ", asyn
     );
   });
 
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("button", { name: "AddInstanceToggle" }),
-    );
-  });
+  await userEvent.click(
+    screen.getByRole("button", { name: "AddInstanceToggle" }),
+  );
 
   expect(await screen.findByText("Add in Composer")).toBeEnabled();
 
@@ -300,9 +296,7 @@ test("ServiceInventory shows enabled composer buttons for root instances ", asyn
     name: "row actions toggle",
   });
 
-  await act(async () => {
-    await userEvent.click(menuToggle);
-  });
+  await userEvent.click(menuToggle);
 
   expect(await screen.findByText("Edit in Composer")).toBeEnabled();
 
@@ -324,11 +318,9 @@ test("ServiceInventory shows only button to display instance in the composer for
     );
   });
 
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("button", { name: "AddInstanceToggle" }),
-    );
-  });
+  await userEvent.click(
+    screen.getByRole("button", { name: "AddInstanceToggle" }),
+  );
 
   expect(screen.getByText("Add in Composer")).toBeInTheDocument();
 
@@ -336,9 +328,7 @@ test("ServiceInventory shows only button to display instance in the composer for
     name: "row actions toggle",
   });
 
-  await act(async () => {
-    await userEvent.click(menuToggle);
-  });
+  await userEvent.click(menuToggle);
 
   expect(await screen.findByText("Show in Composer")).toBeEnabled();
 
@@ -370,9 +360,8 @@ test("GIVEN ServiceInventory WHEN sorting changes AND we are not on the first pa
 
   expect(nextPageButton).toBeEnabled();
 
-  await act(async () => {
-    await userEvent.click(nextPageButton);
-  });
+  await userEvent.click(nextPageButton);
+
   //expect the api url to contain start and end keywords that are used for pagination when we are moving to the next page
   expect(apiHelper.pendingRequests[0].url).toMatch(/(&start=|&end=)/);
   expect(apiHelper.pendingRequests[0].url).toMatch(/(&sort=created_at.desc)/);
@@ -393,17 +382,15 @@ test("GIVEN ServiceInventory WHEN sorting changes AND we are not on the first pa
   });
 
   //sort on the second page
-  await act(async () => {
-    const columnheader = screen.getByRole("columnheader", {
-      name: /state/i,
-    });
-
-    await userEvent.click(
-      within(columnheader).getByRole("button", {
-        name: /state/i,
-      }),
-    );
+  const columnheader = screen.getByRole("columnheader", {
+    name: /state/i,
   });
+
+  await userEvent.click(
+    within(columnheader).getByRole("button", {
+      name: /state/i,
+    }),
+  );
 
   // expect the api url to not contain start and end keywords that are used for pagination to assert we are back on the first page.
   // we are asserting on the second request as the first request is for the updated sorting event, and second is chained to back to the first page with still correct sorting

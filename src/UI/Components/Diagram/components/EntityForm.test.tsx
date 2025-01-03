@@ -1,7 +1,7 @@
 import React from "react";
 import { MemoryRouter, useLocation } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { act, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { InstanceAttributeModel, RemoteData } from "@/Core";
@@ -119,9 +119,8 @@ describe("EntityForm.", () => {
 
     expect(screen.getByRole("button", { name: "Remove" })).toBeEnabled();
 
-    await act(async () => {
-      await userEvent.click(screen.getByRole("button", { name: "Remove" }));
-    });
+    await userEvent.click(screen.getByRole("button", { name: "Remove" }));
+
     expect(onRemove).toHaveBeenCalled();
   });
 
@@ -201,26 +200,20 @@ describe("EntityForm.", () => {
     expect(screen.getByLabelText("TextInput-service_id")).toHaveValue("");
     expect(screen.getByLabelText("TextInput-name")).toHaveValue("");
 
-    await act(async () => {
-      await userEvent.type(screen.getByLabelText("TextInput-service_id"), "t");
-    });
+    await userEvent.type(screen.getByLabelText("TextInput-service_id"), "t");
+
     expect(onSave).toHaveBeenCalledWith(expect.any(Array), {
       name: "",
       service_id: "t",
       should_deploy_fail: false,
     });
-    await act(async () => {
-      await userEvent.type(
-        screen.getByLabelText("TextInput-service_id"),
-        "est_id",
-      );
-    });
-    await act(async () => {
-      await userEvent.type(
-        screen.getByLabelText("TextInput-name"),
-        "test_name",
-      );
-    });
+
+    await userEvent.type(
+      screen.getByLabelText("TextInput-service_id"),
+      "est_id",
+    );
+
+    await userEvent.type(screen.getByLabelText("TextInput-name"), "test_name");
 
     expect(screen.getByRole("button", { name: "Cancel" })).toBeEnabled();
     expect(screen.getByLabelText("TextInput-service_id")).toHaveValue(
@@ -228,9 +221,8 @@ describe("EntityForm.", () => {
     );
     expect(screen.getByLabelText("TextInput-name")).toHaveValue("test_name");
 
-    await act(async () => {
-      await userEvent.click(screen.getByRole("button", { name: "Cancel" }));
-    });
+    await userEvent.click(screen.getByRole("button", { name: "Cancel" }));
+
     expect(onSave).toHaveBeenCalledWith(expect.any(Array), {
       name: "",
       service_id: "",

@@ -1,4 +1,4 @@
-import React, { useState, act } from "react";
+import React, { useState } from "react";
 import { Link, Route, Routes } from "react-router-dom";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
@@ -50,15 +50,11 @@ test("GIVEN usePrompt WHEN hook's parameter is equal true and user cancel alert 
   render(setup());
   const button = screen.getByText("Click");
 
-  await act(async () => {
-    await userEvent.click(button);
-  });
+  await userEvent.click(button);
 
   const link = screen.getByText("Link");
 
-  await act(async () => {
-    await userEvent.click(link);
-  });
+  await userEvent.click(link);
 
   expect(prompt).toHaveBeenCalledTimes(1);
   expect(window.location.pathname).toMatch("/");
@@ -71,9 +67,8 @@ test("GIVEN usePrompt WHEN hook's parameter is equal false THEN page is changed"
 
   const link = screen.getByText("Link");
 
-  await act(async () => {
-    await userEvent.click(link);
-  });
+  await userEvent.click(link);
+
   expect(prompt).toHaveBeenCalledTimes(0);
   expect(window.location.pathname).toMatch("/page");
 });
@@ -86,20 +81,15 @@ test("GIVEN usePrompt WHEN hook's parameter is equal true and user confirm alert
   //cleanup doesn't reset page url so I had to manually go back to "/"
   const homeLink = screen.getByText("Home");
 
-  await act(async () => {
-    await userEvent.click(homeLink);
-  });
+  await userEvent.click(homeLink);
+
   const button = screen.getByText("Click");
 
-  await act(async () => {
-    await userEvent.click(button);
-  });
+  await userEvent.click(button);
 
   const link = screen.getByText("Link");
 
-  await act(async () => {
-    await userEvent.click(link);
-  });
+  await userEvent.click(link);
 
   expect(prompt).toHaveBeenCalledTimes(1);
   expect(window.location.pathname).toMatch("/page");

@@ -95,9 +95,8 @@ test("GIVEN DesiredStateCompare THEN shows 'Jump To' action with dropdown", asyn
     screen.queryByRole("menu", { name: "DiffSummaryList" }),
   ).not.toBeInTheDocument();
 
-  await act(async () => {
-    await userEvent.click(button);
-  });
+  await userEvent.click(button);
+
   expect(
     screen.getByRole("menu", {
       name: "DiffSummaryList",
@@ -125,11 +124,7 @@ test("GIVEN DesiredStateCompare WHEN StatusFilter = 'Added' THEN only 'Added' re
     await apiHelper.resolve(Either.right(DesiredStateDiff.response));
   });
 
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("button", { name: words("jumpTo") }),
-    );
-  });
+  await userEvent.click(screen.getByRole("button", { name: words("jumpTo") }));
 
   expect(
     screen.getAllByRole("menuitem", { name: "DiffSummaryListItem" }),
@@ -141,9 +136,7 @@ test("GIVEN DesiredStateCompare WHEN StatusFilter = 'Added' THEN only 'Added' re
     screen.queryByRole("listbox", { name: "StatusFilterOptions" }),
   ).not.toBeInTheDocument();
 
-  await act(async () => {
-    await userEvent.click(screen.getByRole("button", { name: "StatusFilter" }));
-  });
+  await userEvent.click(screen.getByRole("button", { name: "StatusFilter" }));
 
   expect(
     screen.getByRole("listbox", { name: "StatusFilterOptions" }),
@@ -153,24 +146,13 @@ test("GIVEN DesiredStateCompare WHEN StatusFilter = 'Added' THEN only 'Added' re
 
   expect(statusOptions).toHaveLength(7);
 
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("button", { name: words("showAll") }),
-    );
-  });
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("button", { name: words("hideAll") }),
-    );
-  });
-  await act(async () => {
-    await userEvent.click(statusOptions[0]);
-  });
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("button", { name: words("jumpTo") }),
-    );
-  });
+  await userEvent.click(screen.getByRole("button", { name: words("showAll") }));
+
+  await userEvent.click(screen.getByRole("button", { name: words("hideAll") }));
+
+  await userEvent.click(statusOptions[0]);
+
+  await userEvent.click(screen.getByRole("button", { name: words("jumpTo") }));
 
   expect(
     await screen.findAllByRole("menuitem", { name: "DiffSummaryListItem" }),
@@ -196,16 +178,13 @@ test("GIVEN DesiredStateCompare WHEN File Resource THEN it shows prompt that can
 
   const blocks = await screen.findAllByTestId("DiffBlock");
 
-  await act(async () => {
-    await userEvent.click(within(blocks[1]).getByLabelText("Details"));
-  });
-  await act(async () => {
-    await userEvent.click(
-      within(blocks[1]).getByRole("button", {
-        name: words("desiredState.compare.file.show"),
-      }),
-    );
-  });
+  await userEvent.click(within(blocks[1]).getByLabelText("Details"));
+
+  await userEvent.click(
+    within(blocks[1]).getByRole("button", {
+      name: words("desiredState.compare.file.show"),
+    }),
+  );
 
   expect(apiHelper.pendingRequests).toEqual([
     {
@@ -231,13 +210,11 @@ test("GIVEN DesiredStateCompare WHEN File Resource THEN it shows prompt that can
     await apiHelper.resolve(Either.right({ content: window.btoa("efghijkl") }));
   });
 
-  await act(async () => {
-    await userEvent.click(
-      within(blocks[1]).getByRole("button", {
-        name: words("desiredState.compare.file.hide"),
-      }),
-    );
-  });
+  await userEvent.click(
+    within(blocks[1]).getByRole("button", {
+      name: words("desiredState.compare.file.hide"),
+    }),
+  );
 
   expect(
     within(blocks[1]).getByRole("button", {
@@ -245,13 +222,11 @@ test("GIVEN DesiredStateCompare WHEN File Resource THEN it shows prompt that can
     }),
   ).toBeVisible();
 
-  await act(async () => {
-    await userEvent.click(
-      within(blocks[1]).getByRole("button", {
-        name: words("desiredState.compare.file.show"),
-      }),
-    );
-  });
+  await userEvent.click(
+    within(blocks[1]).getByRole("button", {
+      name: words("desiredState.compare.file.show"),
+    }),
+  );
 
   await act(async () => {
     await apiHelper.resolve(Either.left("errormessage"));
@@ -278,11 +253,7 @@ test("GIVEN DesiredStateCompare page WHEN SearchFilter is used, ONLY show the re
     await apiHelper.resolve(Either.right(DesiredStateDiff.response));
   });
 
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("button", { name: words("jumpTo") }),
-    );
-  });
+  await userEvent.click(screen.getByRole("button", { name: words("jumpTo") }));
 
   expect(
     screen.getAllByRole("menuitem", { name: "DiffSummaryListItem" }),
@@ -290,29 +261,23 @@ test("GIVEN DesiredStateCompare page WHEN SearchFilter is used, ONLY show the re
 
   expect(await screen.findAllByTestId("DiffBlock")).toHaveLength(11);
 
-  await act(async () => {
-    await userEvent.type(
-      screen.getByRole("searchbox", { name: "SearchFilter" }),
-      "std",
-    );
-  });
+  await userEvent.type(
+    screen.getByRole("searchbox", { name: "SearchFilter" }),
+    "std",
+  );
 
   expect(await screen.findAllByTestId("DiffBlock")).toHaveLength(1);
 
-  await act(async () => {
-    await userEvent.type(
-      screen.getByRole("searchbox", { name: "SearchFilter" }),
-      "44554",
-    );
-  });
+  await userEvent.type(
+    screen.getByRole("searchbox", { name: "SearchFilter" }),
+    "44554",
+  );
 
   expect(screen.queryAllByTestId("DiffBlock")).toHaveLength(0);
 
-  await act(async () => {
-    await userEvent.clear(
-      screen.getByRole("searchbox", { name: "SearchFilter" }),
-    );
-  });
+  await userEvent.clear(
+    screen.getByRole("searchbox", { name: "SearchFilter" }),
+  );
 
   expect(await screen.findAllByTestId("DiffBlock")).toHaveLength(11);
 

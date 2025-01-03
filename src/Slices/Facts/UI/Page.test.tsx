@@ -107,9 +107,9 @@ test("GIVEN Facts page THEN sets sorting parameters correctly on click", async (
   });
 
   expect(resourceIdButton).toBeVisible();
-  await act(async () => {
-    await userEvent.click(resourceIdButton);
-  });
+
+  await userEvent.click(resourceIdButton);
+
   expect(apiHelper.pendingRequests[0].url).toContain("&sort=resource_id.asc");
 
   await act(async () => {
@@ -149,13 +149,7 @@ test.each`
 
     const input = await screen.findByPlaceholderText(placeholderText);
 
-    await act(async () => {
-      await userEvent.click(input);
-    });
-
-    await act(async () => {
-      await userEvent.type(input, `${filterValue}{enter}`);
-    });
+    await userEvent.type(input, `${filterValue}{enter}`);
 
     expect(apiHelper.pendingRequests[0].url).toEqual(
       `/api/v2/facts?limit=20&filter.${filterUrlName}=${filterValue}&sort=name.asc`,
@@ -212,9 +206,7 @@ test("GIVEN FactsView WHEN sorting changes AND we are not on the first page THEN
 
   expect(screen.getByLabelText("Go to next page")).toBeEnabled();
 
-  await act(async () => {
-    await userEvent.click(screen.getByLabelText("Go to next page"));
-  });
+  await userEvent.click(screen.getByLabelText("Go to next page"));
 
   //expect the api url to contain start and end keywords that are used for pagination when we are moving to the next page
   expect(apiHelper.pendingRequests[0].url).toMatch(/(&start=|&end=)/);
@@ -243,9 +235,7 @@ test("GIVEN FactsView WHEN sorting changes AND we are not on the first page THEN
 
   expect(resourceIdButton).toBeVisible();
 
-  await act(async () => {
-    await userEvent.click(resourceIdButton);
-  });
+  await userEvent.click(resourceIdButton);
 
   // expect the api url to not contain start and end keywords that are used for pagination to assert we are back on the first page.
   // we are asserting on the second request as the first request is for the updated sorting event, and second is chained to back to the first page with still correct sorting

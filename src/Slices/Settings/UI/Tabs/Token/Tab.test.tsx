@@ -39,9 +39,7 @@ test("GIVEN TokenTab WHEN generate button is clicked THEN generate call is execu
   expect(generateButton).toBeEnabled();
   expect(apiHelper.pendingRequests).toHaveLength(0);
 
-  await act(async () => {
-    await userEvent.click(generateButton);
-  });
+  await userEvent.click(generateButton);
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
@@ -57,16 +55,13 @@ test("GIVEN TokenTab WHEN api clientType is selected and generate button is clic
 
   render(component);
 
-  await act(async () => {
-    await userEvent.click(screen.getByRole("button", { name: "AgentOption" }));
-  });
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("button", {
-        name: words("settings.tabs.token.generate"),
-      }),
-    );
-  });
+  await userEvent.click(screen.getByRole("button", { name: "AgentOption" }));
+
+  await userEvent.click(
+    screen.getByRole("button", {
+      name: words("settings.tabs.token.generate"),
+    }),
+  );
 
   expect(apiHelper.pendingRequests[0]).toEqual({
     method: "POST",
@@ -81,13 +76,11 @@ test("GIVEN TokenTab WHEN generate fails THEN the error is shown", async () => {
 
   render(component);
 
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("button", {
-        name: words("settings.tabs.token.generate"),
-      }),
-    );
-  });
+  await userEvent.click(
+    screen.getByRole("button", {
+      name: words("settings.tabs.token.generate"),
+    }),
+  );
 
   await act(async () => {
     await apiHelper.resolve(Either.left("error message"));
@@ -110,13 +103,12 @@ test("GIVEN TokenTab WHEN generate succeeds THEN the token is shown", async () =
   expect(copyButton).toBeDisabled();
   expect(tokenOutput).toHaveValue("");
 
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("button", {
-        name: words("settings.tabs.token.generate"),
-      }),
-    );
-  });
+  await userEvent.click(
+    screen.getByRole("button", {
+      name: words("settings.tabs.token.generate"),
+    }),
+  );
+
   await act(async () => {
     await apiHelper.resolve(Either.right({ data: "tokenstring123" }));
   });

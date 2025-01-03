@@ -1,4 +1,4 @@
-import React, { act } from "react";
+import React from "react";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { LookBackSlider } from "./LookBackSlider";
@@ -27,21 +27,13 @@ it("LookBackSlider calls callback with adequate value on apply", async () => {
 
   expect(screen.getByLabelText("LookBack-Slider")).toBeInTheDocument();
 
-  await act(async () => {
-    await userEvent.click(screen.getByRole("slider"));
-  });
+  await userEvent.click(screen.getByRole("slider"));
 
-  await act(async () => {
-    await userEvent.type(screen.getByRole("slider"), "{arrowRight}"); // to simulate changing slider, I think that's cleaner approach as patternfly slider is not actual input
-  });
+  await userEvent.type(screen.getByRole("slider"), "{arrowRight}"); // to simulate changing slider, I think that's cleaner approach as patternfly slider is not actual input
 
-  await act(async () => {
-    await userEvent.type(screen.getByRole("slider"), "{arrowRight}"); // to simulate changing slider, I think that's cleaner approach as patternfly slider is not actual input
-  });
+  await userEvent.type(screen.getByRole("slider"), "{arrowRight}"); // to simulate changing slider, I think that's cleaner approach as patternfly slider is not actual input
 
-  await act(async () => {
-    await userEvent.click(screen.getByText("Apply"));
-  });
+  await userEvent.click(screen.getByText("Apply"));
 
   expect(callback).toHaveBeenCalledWith(3);
 });

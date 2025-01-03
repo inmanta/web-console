@@ -199,9 +199,7 @@ test("GIVEN StatusPage with support extension WHEN user click download THEN an a
     words("status.supportArchive.action.download"),
   );
 
-  await act(async () => {
-    await userEvent.click(downloadButton);
-  });
+  await userEvent.click(downloadButton);
 
   expect(downloadButton).toHaveTextContent(
     words("status.supportArchive.action.downloading"),
@@ -245,9 +243,7 @@ test("GIVEN StatusPage with support extension WHEN user click download THEN butt
     words("status.supportArchive.action.download"),
   );
 
-  await act(async () => {
-    await userEvent.click(downloadButton);
-  });
+  await userEvent.click(downloadButton);
 
   expect(downloadButton).toHaveTextContent(
     words("status.supportArchive.action.downloading"),
@@ -292,9 +288,8 @@ test("GIVEN StatusPage with support extension WHEN user click download and respo
     name: "DownloadArchiveButton",
   });
 
-  await act(async () => {
-    await userEvent.click(downloadButton);
-  });
+  await userEvent.click(downloadButton);
+
   await act(async () => {
     await apiHelper.resolve(Either.left("error"));
   });

@@ -1,4 +1,3 @@
-import { act } from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { defaultServer, serverFailedActions } from "./mockServer";
@@ -44,38 +43,32 @@ describe("Page Actions - Success", () => {
       name: "Expert-Actions-Toggle",
     });
 
-    await act(async () => {
-      await userEvent.click(expertDropdown);
-    });
+    await userEvent.click(expertDropdown);
 
     // expect 16 menu items (1 for the  destroy, and 15 state options)
     expect(screen.getAllByRole("menuitem")).toHaveLength(16);
 
     const stateUp = screen.getByRole("menuitem", { name: "up" });
 
-    await act(async () => {
-      await userEvent.click(stateUp);
+    await userEvent.click(stateUp);
+
+    const confirmButton = screen.getByRole("button", {
+      name: /yes/i,
     });
 
-    await act(async () => {
-      const confirmButton = screen.getByRole("button", {
-        name: /yes/i,
-      });
+    const operationsSelect = screen.getByRole("combobox");
 
-      const operationsSelect = screen.getByRole("combobox");
+    await userEvent.click(operationsSelect);
 
-      await userEvent.click(operationsSelect);
+    const options = screen.getAllByRole("option");
 
-      const options = screen.getAllByRole("option");
+    expect(options).toHaveLength(6);
 
-      expect(options).toHaveLength(6);
+    await userEvent.selectOptions(operationsSelect, options[1]);
 
-      await userEvent.selectOptions(operationsSelect, options[1]);
+    expect(operationsSelect).toHaveValue("clear candidate");
 
-      expect(operationsSelect).toHaveValue("clear candidate");
-
-      await userEvent.click(confirmButton);
-    });
+    await userEvent.click(confirmButton);
 
     expect(screen.queryByRole("dialog")).toBeNull();
     expect(screen.queryByTestId("error-toast-expert-state-message")).toBeNull();
@@ -99,25 +92,19 @@ describe("Page Actions - Success", () => {
       name: "Expert-Actions-Toggle",
     });
 
-    await act(async () => {
-      await userEvent.click(expertDropdown);
+    await userEvent.click(expertDropdown);
+
+    const destroyAction = screen.getByRole("menuitem", {
+      name: /destroy/i,
     });
 
-    await act(async () => {
-      const destroyAction = screen.getByRole("menuitem", {
-        name: /destroy/i,
-      });
+    await userEvent.click(destroyAction);
 
-      await userEvent.click(destroyAction);
+    const confirmButton = screen.getByRole("button", {
+      name: /yes/i,
     });
 
-    await act(async () => {
-      const confirmButton = screen.getByRole("button", {
-        name: /yes/i,
-      });
-
-      await userEvent.click(confirmButton);
-    });
+    await userEvent.click(confirmButton);
 
     expect(screen.queryByTestId("error-toast-expert-state-message")).toBeNull();
     await waitFor(() =>
@@ -144,14 +131,12 @@ describe("Page Actions - Success", () => {
       screen.queryByRole("button", { name: /expert actions/i }),
     ).not.toBeInTheDocument();
 
-    await act(async () => {
-      // expect to find action dropdown
-      const actionDropdown = screen.getByRole("button", {
-        name: "Actions-Toggle",
-      });
-
-      await userEvent.click(actionDropdown);
+    // expect to find action dropdown
+    const actionDropdown = screen.getByRole("button", {
+      name: "Actions-Toggle",
     });
+
+    await userEvent.click(actionDropdown);
 
     const actions = screen.getAllByRole("menuitem");
 
@@ -162,9 +147,7 @@ describe("Page Actions - Success", () => {
     });
 
     // delete instance
-    await act(async () => {
-      await userEvent.click(actions[3]);
-    });
+    await userEvent.click(actions[3]);
 
     expect(
       screen.getByText(
@@ -172,13 +155,11 @@ describe("Page Actions - Success", () => {
       ),
     ).toBeVisible();
 
-    await act(async () => {
-      const confirmButton = screen.getByRole("button", {
-        name: /yes/i,
-      });
-
-      await userEvent.click(confirmButton);
+    const confirmButton = screen.getByRole("button", {
+      name: /yes/i,
     });
+
+    await userEvent.click(confirmButton);
 
     expect(screen.queryByRole("dialog")).toBeNull();
     expect(screen.queryByTestId("error-toast-expert-state-message")).toBeNull();
@@ -201,37 +182,31 @@ describe("Page Actions - Success", () => {
       screen.queryByRole("button", { name: /expert actions/i }),
     ).not.toBeInTheDocument();
 
-    await act(async () => {
-      // expect to find action dropdown
-      const actionDropdown = screen.getByRole("button", {
-        name: "Actions-Toggle",
-      });
-
-      await userEvent.click(actionDropdown);
+    // expect to find action dropdown
+    const actionDropdown = screen.getByRole("button", {
+      name: "Actions-Toggle",
     });
+
+    await userEvent.click(actionDropdown);
 
     const updateStartState = screen.getByRole("menuitem", {
       name: /update_start/i,
     });
 
     // update state instance
-    await act(async () => {
-      await userEvent.click(updateStartState);
+    await userEvent.click(updateStartState);
+
+    const confirmButton = screen.getByRole("button", {
+      name: /yes/i,
     });
 
-    await act(async () => {
-      const confirmButton = screen.getByRole("button", {
-        name: /yes/i,
-      });
+    expect(
+      screen.getByText(
+        /are you sure you want to set state of instance core1 to update_start\?/i,
+      ),
+    ).toBeVisible();
 
-      expect(
-        screen.getByText(
-          /are you sure you want to set state of instance core1 to update_start\?/i,
-        ),
-      ).toBeVisible();
-
-      await userEvent.click(confirmButton);
-    });
+    await userEvent.click(confirmButton);
 
     expect(screen.queryByRole("dialog")).toBeNull();
     expect(screen.queryByTestId("error-toast-expert-state-message")).toBeNull();
@@ -271,38 +246,32 @@ describe("Page Actions - Failed", () => {
       name: "Expert-Actions-Toggle",
     });
 
-    await act(async () => {
-      await userEvent.click(expertDropdown);
-    });
+    await userEvent.click(expertDropdown);
 
     // expect 16 menu items (1 for the  destroy, and 15 state options)
     expect(screen.getAllByRole("menuitem")).toHaveLength(16);
 
     const stateUp = screen.getByRole("menuitem", { name: "up" });
 
-    await act(async () => {
-      await userEvent.click(stateUp);
+    await userEvent.click(stateUp);
+
+    const confirmButton = screen.getByRole("button", {
+      name: /yes/i,
     });
 
-    await act(async () => {
-      const confirmButton = screen.getByRole("button", {
-        name: /yes/i,
-      });
+    const operationsSelect = screen.getByRole("combobox");
 
-      const operationsSelect = screen.getByRole("combobox");
+    await userEvent.click(operationsSelect);
 
-      await userEvent.click(operationsSelect);
+    const options = screen.getAllByRole("option");
 
-      const options = screen.getAllByRole("option");
+    expect(options).toHaveLength(6);
 
-      expect(options).toHaveLength(6);
+    await userEvent.selectOptions(operationsSelect, options[1]);
 
-      await userEvent.selectOptions(operationsSelect, options[1]);
+    expect(operationsSelect).toHaveValue("clear candidate");
 
-      expect(operationsSelect).toHaveValue("clear candidate");
-
-      await userEvent.click(confirmButton);
-    });
+    await userEvent.click(confirmButton);
 
     expect(screen.getByRole("dialog")).toBeVisible();
     expect(
@@ -328,25 +297,19 @@ describe("Page Actions - Failed", () => {
       name: "Expert-Actions-Toggle",
     });
 
-    await act(async () => {
-      await userEvent.click(expertDropdown);
+    await userEvent.click(expertDropdown);
+
+    const destroyAction = screen.getByRole("menuitem", {
+      name: /destroy/i,
     });
 
-    await act(async () => {
-      const destroyAction = screen.getByRole("menuitem", {
-        name: /destroy/i,
-      });
+    await userEvent.click(destroyAction);
 
-      await userEvent.click(destroyAction);
+    const confirmButton = screen.getByRole("button", {
+      name: /yes/i,
     });
 
-    await act(async () => {
-      const confirmButton = screen.getByRole("button", {
-        name: /yes/i,
-      });
-
-      await userEvent.click(confirmButton);
-    });
+    await userEvent.click(confirmButton);
 
     expect(screen.getByRole("dialog")).toBeVisible();
     expect(
@@ -373,14 +336,12 @@ describe("Page Actions - Failed", () => {
       screen.queryByRole("button", { name: /expert actions/i }),
     ).not.toBeInTheDocument();
 
-    await act(async () => {
-      // expect to find action dropdown
-      const actionDropdown = screen.getByRole("button", {
-        name: "Actions-Toggle",
-      });
-
-      await userEvent.click(actionDropdown);
+    // expect to find action dropdown
+    const actionDropdown = screen.getByRole("button", {
+      name: "Actions-Toggle",
     });
+
+    await userEvent.click(actionDropdown);
 
     const actions = screen.getAllByRole("menuitem");
 
@@ -391,9 +352,7 @@ describe("Page Actions - Failed", () => {
     });
 
     // delete instance
-    await act(async () => {
-      await userEvent.click(actions[3]);
-    });
+    await userEvent.click(actions[3]);
 
     expect(
       screen.getByText(
@@ -401,13 +360,11 @@ describe("Page Actions - Failed", () => {
       ),
     ).toBeVisible();
 
-    await act(async () => {
-      const confirmButton = screen.getByRole("button", {
-        name: /yes/i,
-      });
-
-      await userEvent.click(confirmButton);
+    const confirmButton = screen.getByRole("button", {
+      name: /yes/i,
     });
+
+    await userEvent.click(confirmButton);
 
     expect(screen.getByRole("dialog")).toBeVisible();
     expect(
@@ -432,37 +389,31 @@ describe("Page Actions - Failed", () => {
       screen.queryByRole("button", { name: /expert actions/i }),
     ).not.toBeInTheDocument();
 
-    await act(async () => {
-      // expect to find action dropdown
-      const actionDropdown = screen.getByRole("button", {
-        name: "Actions-Toggle",
-      });
-
-      await userEvent.click(actionDropdown);
+    // expect to find action dropdown
+    const actionDropdown = screen.getByRole("button", {
+      name: "Actions-Toggle",
     });
+
+    await userEvent.click(actionDropdown);
 
     const updateStartState = screen.getByRole("menuitem", {
       name: /update_start/i,
     });
 
     // update state instance
-    await act(async () => {
-      await userEvent.click(updateStartState);
+    await userEvent.click(updateStartState);
+
+    const confirmButton = screen.getByRole("button", {
+      name: /yes/i,
     });
 
-    await act(async () => {
-      const confirmButton = screen.getByRole("button", {
-        name: /yes/i,
-      });
+    expect(
+      screen.getByText(
+        /are you sure you want to set state of instance core1 to update_start\?/i,
+      ),
+    ).toBeVisible();
 
-      expect(
-        screen.getByText(
-          /are you sure you want to set state of instance core1 to update_start\?/i,
-        ),
-      ).toBeVisible();
-
-      await userEvent.click(confirmButton);
-    });
+    await userEvent.click(confirmButton);
 
     expect(screen.getByRole("dialog")).toBeVisible();
     expect(

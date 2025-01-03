@@ -1,4 +1,4 @@
-import React, { act } from "react";
+import React from "react";
 import { MemoryRouter } from "react-router-dom";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
@@ -37,12 +37,7 @@ it.each`
       words("home.filters.env.placeholder"),
     );
 
-    await act(async () => {
-      await userEvent.click(input);
-    });
-    await act(async () => {
-      await userEvent.type(input, filterValue);
-    });
+    await userEvent.type(input, filterValue);
 
     expect(screen.queryAllByTestId("Environment card")).toHaveLength(
       numberOfResults,
@@ -62,15 +57,11 @@ test("Given environments overview When filtering by project Then only the matchi
     words("home.filters.project.placeholder"),
   );
 
-  await act(async () => {
-    await userEvent.click(input);
-  });
+  await userEvent.click(input);
 
   const option = await screen.findByRole("option", { name: "default" });
 
-  await act(async () => {
-    await userEvent.click(option);
-  });
+  await userEvent.click(option);
 
   expect(screen.queryAllByTestId("Environment card")).toHaveLength(2);
 });
@@ -86,25 +77,17 @@ test("Given environments overview When filtering by name and project Then only t
     words("home.filters.project.placeholder"),
   );
 
-  await act(async () => {
-    await userEvent.click(projectInput);
-  });
+  await userEvent.click(projectInput);
 
   const option = await screen.findByRole("option", { name: "default" });
 
-  await act(async () => {
-    await userEvent.click(option);
-  });
+  await userEvent.click(option);
+
   const nameInput = await screen.findByPlaceholderText(
     words("home.filters.env.placeholder"),
   );
 
-  await act(async () => {
-    await userEvent.click(nameInput);
-  });
-  await act(async () => {
-    await userEvent.type(nameInput, "test");
-  });
+  await userEvent.type(nameInput, "test");
 
   expect(await screen.findByTestId("Environment card")).toBeVisible();
 });

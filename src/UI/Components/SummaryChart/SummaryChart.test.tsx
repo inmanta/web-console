@@ -1,6 +1,6 @@
 import assert from "assert";
 import React from "react";
-import { act, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { ServiceInventoryContext } from "@/Slices/ServiceInventory/UI/ServiceInventory";
 import { Service } from "@/Test";
@@ -85,16 +85,13 @@ test("SummaryChart labels displayed are being clickable with callback passing la
       ,
     </ServiceInventoryContext.Provider>,
   );
-  await act(async () => {
-    await userEvent.click(screen.getByText("danger: 0"));
-  });
+
+  await userEvent.click(screen.getByText("danger: 0"));
 
   expect(testFn).toHaveBeenCalledTimes(1);
   expect(testFn).toHaveBeenCalledWith(["test1"]);
 
-  await act(async () => {
-    await userEvent.click(screen.getByText("warning: 0"));
-  });
+  await userEvent.click(screen.getByText("warning: 0"));
 
   expect(testFn).toHaveBeenCalledTimes(2);
   expect(testFn).toHaveBeenCalledWith(["test2"]);

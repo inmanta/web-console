@@ -289,12 +289,9 @@ test("TreeTable with catalog entries all can be expanded at once", async () => {
     name: "expand-collapse-dropdown-toggle",
   });
 
-  await act(async () => {
-    await userEvent.click(dropdown);
-  });
-  await act(async () => {
-    await userEvent.click(screen.getByRole("option", { name: "Expand all" }));
-  });
+  await userEvent.click(dropdown);
+
+  await userEvent.click(screen.getByRole("option", { name: "Expand all" }));
 
   const row1 = screen.getByRole("row", { name: "Row-a$c$d" });
   const row2 = screen.getByRole("row", { name: "Row-a$e$f" });
@@ -306,11 +303,9 @@ test("TreeTable with catalog entries all can be expanded at once", async () => {
 
   fireEvent.click(dropdown);
 
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("option", { name: words("inventory.tabs.collapse") }),
-    );
-  });
+  await userEvent.click(
+    screen.getByRole("option", { name: words("inventory.tabs.collapse") }),
+  );
 
   expect(row1).not.toBeVisible();
   expect(row2).not.toBeVisible();

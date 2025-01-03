@@ -237,30 +237,24 @@ test("When using the status filter with the Success option then the successful c
 
   expect(initialRows).toHaveLength(8);
 
-  await act(async () => {
-    await userEvent.click(
-      within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
-        "button",
-        { name: "FilterPicker" },
-      ),
-    );
-  });
+  await userEvent.click(
+    within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
+      "button",
+      { name: "FilterPicker" },
+    ),
+  );
 
   const input = screen.getByPlaceholderText(
     words("compileReports.filters.status.placeholder"),
   );
 
-  await act(async () => {
-    await userEvent.click(input);
-  });
+  await userEvent.click(input);
 
   const option = await screen.findByRole("option", {
     name: words("compileReports.filters.test.success"),
   });
 
-  await act(async () => {
-    await userEvent.click(option);
-  });
+  await userEvent.click(option);
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
     `/api/v2/compilereport?limit=20&sort=requested.desc&filter.success=true`,
@@ -307,37 +301,30 @@ test("When using the status filter with the In Progress opiton then the compile 
 
   expect(initialRows).toHaveLength(8);
 
-  await act(async () => {
-    await userEvent.click(
-      within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
-        "button",
-        { name: "FilterPicker" },
-      ),
-    );
-  });
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("option", {
-        name: words("compileReports.columns.status"),
-      }),
-    );
-  });
+  await userEvent.click(
+    within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
+      "button",
+      { name: "FilterPicker" },
+    ),
+  );
+
+  await userEvent.click(
+    screen.getByRole("option", {
+      name: words("compileReports.columns.status"),
+    }),
+  );
 
   const input = screen.getByPlaceholderText(
     words("compileReports.filters.status.placeholder"),
   );
 
-  await act(async () => {
-    await userEvent.click(input);
-  });
+  await userEvent.click(input);
 
   const option = await screen.findByRole("option", {
     name: words("compileReports.tests.filters.result.inProgress"),
   });
 
-  await act(async () => {
-    await userEvent.click(option);
-  });
+  await userEvent.click(option);
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
     `/api/v2/compilereport?limit=20&sort=requested.desc&filter.started=true&filter.completed=false`,
@@ -384,40 +371,28 @@ it("When using the Date filter then the compile reports within the range selecte
 
   expect(initialRows).toHaveLength(8);
 
-  await act(async () => {
-    await userEvent.click(
-      within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
-        "button",
-        { name: "FilterPicker" },
-      ),
-    );
-  });
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("option", {
-        name: words("compileReports.columns.requested"),
-      }),
-    );
-  });
+  await userEvent.click(
+    within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
+      "button",
+      { name: "FilterPicker" },
+    ),
+  );
+
+  await userEvent.click(
+    screen.getByRole("option", {
+      name: words("compileReports.columns.requested"),
+    }),
+  );
 
   const fromDatePicker = await screen.findByLabelText("From Date Picker");
 
-  await act(async () => {
-    await userEvent.click(fromDatePicker);
-  });
-  await act(async () => {
-    await userEvent.type(fromDatePicker, "2021-09-28");
-  });
+  await userEvent.type(fromDatePicker, "2021-09-28");
 
   const toDatePicker = await screen.findByLabelText("To Date Picker");
 
-  await act(async () => {
-    await userEvent.click(toDatePicker);
-    await userEvent.type(toDatePicker, "2021-09-30");
-  });
-  await act(async () => {
-    await userEvent.click(await screen.findByLabelText("Apply date filter"));
-  });
+  await userEvent.type(toDatePicker, "2021-09-30");
+
+  await userEvent.click(await screen.findByLabelText("Apply date filter"));
 
   expect(apiHelper.pendingRequests[0].url).toMatch(
     `/api/v2/compilereport?limit=20&sort=requested.desc&filter.requested=ge%3A2021-09-`,
@@ -481,9 +456,7 @@ test("Given CompileReportsView When recompile is triggered Then table is updated
     expect(results).toHaveNoViolations();
   });
 
-  await act(async () => {
-    await userEvent.click(button);
-  });
+  await userEvent.click(button);
 
   await act(async () => {
     await apiHelper.resolve(Either.right({}));
@@ -531,9 +504,7 @@ test("GIVEN CompileReportsView WHEN sorting changes AND we are not on the first 
 
   expect(screen.getByLabelText("Go to next page")).toBeEnabled();
 
-  await act(async () => {
-    await userEvent.click(screen.getByLabelText("Go to next page"));
-  });
+  await userEvent.click(screen.getByLabelText("Go to next page"));
 
   //expect the api url to contain start and end keywords that are used for pagination when we are moving to the next page
   expect(apiHelper.pendingRequests[0].url).toMatch(/(&start=|&end=)/);
@@ -562,9 +533,7 @@ test("GIVEN CompileReportsView WHEN sorting changes AND we are not on the first 
 
   expect(resourceIdButton).toBeVisible();
 
-  await act(async () => {
-    await userEvent.click(resourceIdButton);
-  });
+  await userEvent.click(resourceIdButton);
 
   // expect the api url to not contain start and end keywords that are used for pagination to assert we are back on the first page.
   // we are asserting on the second request as the first request is for the updated sorting event, and second is chained to back to the first page with still correct sorting

@@ -179,9 +179,7 @@ test("GIVEN ResourcesView WHEN user clicks on requires toggle THEN list of requi
 
   const toggleButton = within(toggleCell).getByRole("button");
 
-  await act(async () => {
-    await userEvent.click(toggleButton);
-  });
+  await userEvent.click(toggleButton);
 
   await act(async () => {
     await apiHelper.resolve(Either.right(ResourceDetails.response));
@@ -226,9 +224,7 @@ test("ResourcesView shows next page of resources", async () => {
 
   expect(button).toBeEnabled();
 
-  await act(async () => {
-    await userEvent.click(button);
-  });
+  await userEvent.click(button);
 
   await act(async () => {
     await apiHelper.resolve(
@@ -298,9 +294,8 @@ test("ResourcesView sets sorting parameters correctly on click", async () => {
   const stateButton = await screen.findByRole("button", { name: "Agent" });
 
   expect(stateButton).toBeVisible();
-  await act(async () => {
-    await userEvent.click(stateButton);
-  });
+
+  await userEvent.click(stateButton);
 
   expect(apiHelper.pendingRequests[0].url).toContain("&sort=agent.asc");
 
@@ -334,9 +329,8 @@ test("GIVEN ResourcesView WHEN sorting changes AND we are not on the first page 
 
   expect(nextPageButton).toBeEnabled();
 
-  await act(async () => {
-    await userEvent.click(nextPageButton);
-  });
+  await userEvent.click(nextPageButton);
+
   //expect the api url to contain start and end keywords that are used for pagination when we are moving to the next page
   expect(apiHelper.pendingRequests[0].url).toMatch(/(&start=|&end=)/);
   expect(apiHelper.pendingRequests[0].url).toMatch(/(&sort=resource_type.asc)/);
@@ -353,14 +347,13 @@ test("GIVEN ResourcesView WHEN sorting changes AND we are not on the first page 
       }),
     );
   });
+
   //sort on the second page
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("button", {
-        name: "Type",
-      }),
-    );
-  });
+  await userEvent.click(
+    screen.getByRole("button", {
+      name: "Type",
+    }),
+  );
 
   // expect the api url to not contain start and end keywords that are used for pagination to assert we are back on the first page.
   // we are asserting on the second request as the first request is for the updated sorting event, and second is chained to back to the first page with still correct sorting
@@ -394,20 +387,14 @@ it.each`
 
     const input = await screen.findByPlaceholderText(placeholderText);
 
-    await act(async () => {
-      await userEvent.click(input);
-    });
+    await userEvent.click(input);
 
     if (filterType === "select") {
       const option = await screen.findByRole("option", { name: filterValue });
 
-      await act(async () => {
-        await userEvent.click(option);
-      });
+      await userEvent.click(option);
     } else {
-      await act(async () => {
-        await userEvent.type(input, `${filterValue}{enter}`);
-      });
+      await userEvent.type(input, `${filterValue}{enter}`);
     }
 
     expect(apiHelper.pendingRequests[0].url).toContain(
@@ -456,23 +443,11 @@ it.each`
 
     const inputOne = await screen.findByPlaceholderText(placeholderTextOne);
 
-    await act(async () => {
-      await userEvent.click(inputOne);
-    });
-
-    await act(async () => {
-      await userEvent.type(inputOne, `${filterValueOne}`);
-    });
+    await userEvent.type(inputOne, `${filterValueOne}`);
 
     const inputTwo = await screen.findByPlaceholderText(placeholderTextTwo);
 
-    await act(async () => {
-      await userEvent.click(inputTwo);
-    });
-
-    await act(async () => {
-      await userEvent.type(inputTwo, `${filterValueTwo}{enter}`);
-    });
+    await userEvent.type(inputTwo, `${filterValueTwo}{enter}`);
 
     expect(apiHelper.pendingRequests[0].url).toContain(
       `filter.status=%21orphaned`,
@@ -518,34 +493,19 @@ test("when using the all filters then the resources with that filter values shou
     words("resources.filters.agent.placeholder"),
   );
 
-  await act(async () => {
-    await userEvent.click(inputOne);
-  });
-  await act(async () => {
-    await userEvent.type(inputOne, `${filterValueOne}`);
-  });
+  await userEvent.type(inputOne, `${filterValueOne}`);
 
   const inputTwo = await screen.findByPlaceholderText(
     words("resources.filters.type.placeholder"),
   );
 
-  await act(async () => {
-    await userEvent.click(inputTwo);
-  });
-  await act(async () => {
-    await userEvent.type(inputTwo, `${filterValueTwo}`);
-  });
+  await userEvent.type(inputTwo, `${filterValueTwo}`);
 
   const inputThree = await screen.findByPlaceholderText(
     words("resources.filters.value.placeholder"),
   );
 
-  await act(async () => {
-    await userEvent.click(inputThree);
-  });
-  await act(async () => {
-    await userEvent.type(inputThree, `${filterValueThree}{enter}`);
-  });
+  await userEvent.type(inputThree, `${filterValueThree}{enter}`);
 
   expect(apiHelper.pendingRequests[0].url).toContain(
     `filter.status=%21orphaned`,
@@ -597,17 +557,13 @@ test.each`
       name: "Deploy State-toggle",
     });
 
-    await act(async () => {
-      await userEvent.click(input);
-    });
+    await userEvent.click(input);
 
     const toggle = await screen.findByRole("generic", {
       name: `${filterValue}-${option}-toggle`,
     });
 
-    await act(async () => {
-      await userEvent.click(toggle);
-    });
+    await userEvent.click(toggle);
 
     expect(apiHelper.pendingRequests[0].url).toEqual(
       `/api/v2/resource?deploy_summary=True&limit=20&filter.status=%21orphaned&filter.status=${
@@ -662,9 +618,8 @@ test("When clicking the clear and reset filters then the state filter is updated
   const visibleClearButton = clearButtons[clearButtons.length - 1];
 
   expect(visibleClearButton).toBeVisible();
-  await act(async () => {
-    await userEvent.click(visibleClearButton);
-  });
+
+  await userEvent.click(visibleClearButton);
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
     `/api/v2/resource?deploy_summary=True&limit=20&&sort=resource_type.asc`,
@@ -679,11 +634,10 @@ test("When clicking the clear and reset filters then the state filter is updated
       }),
     );
   });
-  await act(async () => {
-    await userEvent.click(
-      await screen.findByRole("button", { name: "Reset-filters" }),
-    );
-  });
+
+  await userEvent.click(
+    await screen.findByRole("button", { name: "Reset-filters" }),
+  );
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
     `/api/v2/resource?deploy_summary=True&limit=20&filter.status=%21orphaned&sort=resource_type.asc`,
@@ -765,9 +719,7 @@ test("GIVEN ResourcesView WHEN data is loading for next page THEN shows toolbar"
 
   expect(nextButton).toBeEnabled();
 
-  await act(async () => {
-    await userEvent.click(nextButton);
-  });
+  await userEvent.click(nextButton);
 
   expect(
     await screen.findByRole("region", { name: "ResourcesView-Loading" }),
@@ -960,13 +912,11 @@ test("Given the ResourcesView When clicking on deploy, then the approriate backe
     await screen.findByRole("grid", { name: "ResourcesView-Success" }),
   ).toBeInTheDocument();
 
-  await act(async () => {
-    await userEvent.click(
-      await screen.findByRole("button", {
-        name: words("resources.deploySummary.deploy"),
-      }),
-    );
-  });
+  await userEvent.click(
+    await screen.findByRole("button", {
+      name: words("resources.deploySummary.deploy"),
+    }),
+  );
 
   expect(
     await screen.findByRole("button", {
@@ -1007,13 +957,11 @@ test("Given the ResourcesView When clicking on repair, then the approriate backe
     await screen.findByRole("grid", { name: "ResourcesView-Success" }),
   ).toBeInTheDocument();
 
-  await act(async () => {
-    await userEvent.click(
-      await screen.findByRole("button", {
-        name: words("resources.deploySummary.repair"),
-      }),
-    );
-  });
+  await userEvent.click(
+    await screen.findByRole("button", {
+      name: words("resources.deploySummary.repair"),
+    }),
+  );
 
   expect(
     await screen.findByRole("button", {

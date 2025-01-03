@@ -1,4 +1,4 @@
-import React, { act } from "react";
+import React from "react";
 import { MemoryRouter } from "react-router";
 import { Router } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -69,9 +69,8 @@ test("GIVEN EnvironmentSelector and a project WHEN user clicks on toggle THEN li
 
   const toggle = screen.getByText(`${envA.name} (${envA.projectName})`);
 
-  await act(async () => {
-    await userEvent.click(toggle);
-  });
+  await userEvent.click(toggle);
+
   const listItem = screen.getAllByText(`${envB.name} (${envB.projectName})`)[0];
 
   expect(listItem).toBeVisible();
@@ -89,17 +88,13 @@ test("GIVEN EnvironmentSelector and populated store WHEN user clicks on an item 
 
   const toggle = screen.getByText(`${envA.name} (${envA.projectName})`);
 
-  await act(async () => {
-    await userEvent.click(toggle);
-  });
+  await userEvent.click(toggle);
 
   const listItem = screen.getAllByText(`${envB.name} (${envB.projectName})`)[0];
 
   expect(listItem).toBeVisible();
 
-  await act(async () => {
-    await userEvent.click(listItem);
-  });
+  await userEvent.click(listItem);
 
   expect(
     screen.queryByRole("button", {
@@ -122,15 +117,11 @@ test("GIVEN EnvironmentSelector and environments with identical names WHEN user 
     name: `${envA.name} (${envA.projectName})`,
   });
 
-  await act(async () => {
-    await userEvent.click(toggle);
-  });
+  await userEvent.click(toggle);
 
   const menuItems = screen.getAllByRole("menuitem");
 
-  await act(async () => {
-    await userEvent.click(menuItems[2]);
-  });
+  await userEvent.click(menuItems[2]);
 
   expect(
     screen.getByRole("button", {

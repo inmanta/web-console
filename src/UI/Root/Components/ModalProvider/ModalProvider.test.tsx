@@ -1,6 +1,6 @@
 import React from "react";
 import { useContext } from "react";
-import { act, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { ModalContext, ModalProvider } from "./ModalProvider";
 
@@ -50,18 +50,16 @@ describe("ModalProvider", () => {
     render(setup());
 
     expect(screen.getByText("Click me")).toBeVisible();
-    await act(async () => {
-      await userEvent.click(screen.getByText("Click me"));
-    });
+
+    await userEvent.click(screen.getByText("Click me"));
 
     expect(screen.getByTestId("GlobalModal")).toBeVisible();
     expect(screen.getByTestId("content")).toBeVisible();
     expect(screen.getByText("Title")).toBeVisible();
 
     expect(screen.getByLabelText("Close")).toBeVisible();
-    await act(async () => {
-      await userEvent.click(screen.getByLabelText("Close"));
-    });
+
+    await userEvent.click(screen.getByLabelText("Close"));
 
     expect(screen.queryByTestId("GlobalModal")).toBeNull();
     expect(screen.queryByTestId("content")).toBeNull();
@@ -72,18 +70,16 @@ describe("ModalProvider", () => {
     render(setup());
 
     expect(screen.getByText("Click me")).toBeVisible();
-    await act(async () => {
-      await userEvent.click(screen.getByText("Click me"));
-    });
+
+    await userEvent.click(screen.getByText("Click me"));
 
     expect(screen.getByTestId("GlobalModal")).toBeVisible();
     expect(screen.getByTestId("content")).toBeVisible();
     expect(screen.getByText("Title")).toBeVisible();
 
     expect(screen.getByLabelText("additionalCloseButton")).toBeVisible();
-    await act(async () => {
-      await userEvent.click(screen.getByLabelText("additionalCloseButton"));
-    });
+
+    await userEvent.click(screen.getByLabelText("additionalCloseButton"));
 
     expect(screen.queryByTestId("GlobalModal")).toBeNull();
     expect(screen.queryByTestId("content")).toBeNull();
