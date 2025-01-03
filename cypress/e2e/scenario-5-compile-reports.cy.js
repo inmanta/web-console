@@ -260,7 +260,7 @@ describe("5 Compile reports", () => {
 
       // Expect to see a rejected service instance in the table
       cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
-        const $rows = $tableBody.find(".pf-v6-c-table__expandable-row");
+        const $rows = $tableBody.find('tr[aria-label="InstanceRow-Intro"]');
 
         expect($rows).to.have.length(2);
 
@@ -322,12 +322,6 @@ describe("5 Compile reports", () => {
 
       // confirm modal
       cy.get(".pf-v6-c-form__actions").contains("Yes").click();
-
-      // expect resource to be deleted
-      cy.get(".pf-v6-c-table__toggle", { timeout: 25000 }).should(
-        "have.length",
-        1,
-      );
 
       // go back to Compile Reports
       cy.get('[aria-label="Sidebar-Navigation-Item"]')

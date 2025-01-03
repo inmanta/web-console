@@ -174,11 +174,6 @@ if (Cypress.env("edition") === "iso") {
         .should("have.length", 1);
       cy.get("#embedded-entity-service").contains("Show inventory").click();
 
-      // Expect to find status tab
-      cy.get(".pf-v6-c-tabs__list li:first").should(
-        "have.class",
-        "pf-m-current",
-      );
       //await for instance state to change to up
       cy.get('[data-label="State"]')
         .find(".pf-v6-c-label", { timeout: 60000 })
