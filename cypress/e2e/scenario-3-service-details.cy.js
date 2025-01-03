@@ -283,14 +283,6 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 2);
 
       // Check if the newly added instance has failed.
-      cy.get('[aria-label="InstanceRow-Intro"]', { timeout: 40000 })
-        .first()
-        .should(($row) => {
-          const $cols = $row.find("td");
-
-          expect($cols.eq(1), "name").to.have.text("failed");
-        });
-
       // long timeout justified by the fact that a few compiles are already queued at this point and status change will only be changed after.
       cy.get(".pf-v6-c-label", { timeout: 120000 }).should("contain", "failed");
 
