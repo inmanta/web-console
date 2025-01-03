@@ -6,7 +6,6 @@
   "repository": "https://github.com/inmanta/web-console.git",
   "license": "Apache-2.0",
   "scripts": {
-    "prepare": "husky install",
     "prebuild": "yarn clean",
     "build": "webpack --config webpack.prod.cjs",
     "start": "webpack serve --hot --color --progress --config webpack.dev.cjs",
@@ -104,7 +103,6 @@
     "git-revision-webpack-plugin": "^5.0.0",
     "globals": "^15.9.0",
     "html-webpack-plugin": "^5.6.0",
-    "husky": "^9.1.6",
     "imagemin": "^9.0.0",
     "jest": "^29.7.0",
     "jest-axe": "^9.0.0",
