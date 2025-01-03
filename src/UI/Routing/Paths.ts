@@ -29,7 +29,6 @@ import { ResourceDetails } from "@S/ResourceDetails";
 import { DiscoveredResources } from "@S/ResourceDiscovery";
 import { ServiceCatalog } from "@S/ServiceCatalog";
 import { ServiceDetails } from "@S/ServiceDetails";
-import { ServiceInstanceHistory } from "@S/ServiceInstanceHistory";
 import { ServiceInventory } from "@S/ServiceInventory";
 import { Settings } from "@S/Settings";
 import { Status } from "@S/Status";
@@ -58,7 +57,6 @@ export const paths: Paths = {
   DuplicateInstance: DuplicateInstance.path,
   EditInstance: EditInstance.path,
   Events: Events.path,
-  History: ServiceInstanceHistory.path,
   InstanceComposer: InstanceComposer.path,
   InstanceComposerEditor: InstanceComposerEditor.path,
   InstanceComposerViewer: InstanceComposerViewer.path,

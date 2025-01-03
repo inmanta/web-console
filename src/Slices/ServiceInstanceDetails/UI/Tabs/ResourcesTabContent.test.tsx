@@ -2,7 +2,7 @@ import React from "react";
 import { UseQueryResult } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { ServiceInstanceModel, ServiceModel } from "@/Core";
-import { InstanceLog } from "@/Slices/ServiceInstanceHistory/Core/Domain";
+import { InstanceLog } from "@/Core/Domain/HistoryLog";
 
 import { InstanceDetailsContext } from "../../Core/Context";
 import { instanceData } from "../../Test/mockData";

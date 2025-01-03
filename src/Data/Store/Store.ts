@@ -63,10 +63,6 @@ import {
   CallbacksSlice,
   callbacksSlice,
 } from "@S/ServiceDetails/Data/CallbacksSlice";
-import {
-  InstanceLogsSlice,
-  instanceLogsSlice,
-} from "@S/ServiceInstanceHistory/Data/Store";
 import { serverStatusSlice, ServerStatusSlice } from "@S/Status/Data/Store";
 import { environmentSlice, EnvironmentSlice } from "./EnvironmentSlice";
 import {
@@ -103,7 +99,6 @@ export interface StoreModel {
   events: EventsSlice;
   facts: FactsSlice;
   instanceConfig: InstanceConfigSlice;
-  instanceLogs: InstanceLogsSlice;
   instanceResources: InstanceResourcesSlice;
   notification: NotificationSlice;
   parameters: ParametersSlice;
@@ -137,7 +132,6 @@ export const storeModel: StoreModel = {
   events: eventsSlice,
   facts: factsSlice,
   instanceConfig: instanceConfigSlice,
-  instanceLogs: instanceLogsSlice,
   instanceResources: instanceResourcesSlice,
   notification: notificationSlice,
   parameters: parametersSlice,

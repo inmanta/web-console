@@ -1,0 +1,6 @@
+description: Remove the collapsible functionality in the Service Inventory table. The new Instance Details page replaces the content of the collapsible sections.
+issue-nr: 6104
+change-type: patch
+destination-branches: [master]
+sections:
+  minor-improvement: "{{description}}"

@@ -152,13 +152,6 @@ if (Cypress.env("edition") === "iso") {
         .contains("Service Inventory: embedded-entity-service")
         .click();
 
-      cy.get("#expand-toggle0").click();
-
-      // expect row to be expanded
-      cy.get('[aria-label="InstanceRow-Details"]')
-        .first()
-        .should("to.be.visible");
-
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
       cy.get('[role="menuitem"]').contains("Diagnose").click();
 
@@ -180,29 +173,11 @@ if (Cypress.env("edition") === "iso") {
         .children()
         .should("have.length", 1);
       cy.get("#embedded-entity-service").contains("Show inventory").click();
-      cy.get("#expand-toggle0").click();
 
-      // expect row to be expanded
-      cy.get(".pf-v6-c-table__expandable-row-content").should("to.be.visible");
-
-      // Expect to find status tab
-      cy.get(".pf-v6-c-tabs__list li:first").should(
-        "have.class",
-        "pf-m-current",
-      );
       //await for instance state to change to up
       cy.get('[data-label="State"]')
         .find(".pf-v6-c-label", { timeout: 60000 })
         .should("contain", "up");
-
-      cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
-      cy.get('[role="menuitem"]').contains("More actions").click();
-      cy.get('[role="menuitem"]').contains("History").click();
-
-      // History sub-page should open and be empty then go to Home page
-      cy.get("h1").contains("Service Instance History").should("be.visible");
-
-      cy.get('[aria-label="Details"]').should("have.length", 3);
 
       cy.visit("/console/");
     });
@@ -216,19 +191,14 @@ if (Cypress.env("edition") === "iso") {
         .click();
       cy.get("#embedded-entity-service").contains("Show inventory").click();
 
-      // expand first row
-      cy.get("#expand-toggle0", { timeout: 20000 }).click();
-
       // delete but cancel deletion in modal
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
-      cy.get('[role="menuitem"]').contains("More actions").click();
       cy.get('[role="menuitem"]').contains("Delete").click();
 
       cy.get(".pf-v6-c-modal-box__header").should("contain", "Delete instance");
       cy.get(".pf-v6-c-form__actions").contains("No").click();
 
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
-      cy.get('[role="menuitem"]').contains("More actions").click();
       cy.get('[role="menuitem"]').contains("Delete").click();
 
       cy.get(".pf-v6-c-modal-box__header").should("contain", "Delete instance");

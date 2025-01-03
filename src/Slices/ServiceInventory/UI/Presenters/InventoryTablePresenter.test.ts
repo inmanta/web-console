@@ -1,22 +1,13 @@
-import { ServiceModel } from "@/Core";
-import {
-  ServiceInstance,
-  DummyActionPresenter,
-  DummyDatePresenter,
-  tablePresenter,
-} from "@/Test";
-import { DummyStatePresenter } from "@/Test/Mock/DummyStatePresenter";
-import { AttributesPresenter } from "./AttributesPresenter";
-import { InstanceActionPresenter } from "./InstanceActionPresenter";
+import { Service, ServiceInstance } from "@/Test";
 import { InventoryTablePresenter } from "./InventoryTablePresenter";
 
-const presenter = new InventoryTablePresenter(
-  new DummyDatePresenter(),
-  new AttributesPresenter(),
-  new DummyActionPresenter(),
-  new DummyStatePresenter(),
-);
-const rows = presenter.createRows([ServiceInstance.a]);
+const tablePresenter = () => new InventoryTablePresenter();
+
+const tablePresenterWithIdentity = () =>
+  new InventoryTablePresenter("service_id", "Service ID");
+
+const presenter = new InventoryTablePresenter();
+const rows = presenter.createRows([ServiceInstance.a], Service.a);
 
 test("TablePresenter short id", () => {
   expect(rows[0].id.short.length).toBe(4);
@@ -45,14 +36,7 @@ test("TablePresenter returns sortable columns correctly", () => {
 });
 
 describe("TablePresenter with identity ", () => {
-  const presenterWithIdentity = new InventoryTablePresenter(
-    new DummyDatePresenter(),
-    new AttributesPresenter(),
-    new DummyActionPresenter(),
-    new DummyStatePresenter(),
-    "service_id",
-    "Service ID",
-  );
+  const presenterWithIdentity = tablePresenterWithIdentity();
 
   test("returns sortable columns correctly", () => {
     expect(presenterWithIdentity.getSortableColumnNames()).toEqual([
@@ -83,20 +67,7 @@ describe("TablePresenter with identity ", () => {
 });
 
 describe("TablePresenter with Actions", () => {
-  const instances = [ServiceInstance.a];
-  const partialEntity = {
-    name: "cloudconnectv2",
-    lifecycle: {
-      states: [{ name: "creating", label: "info" }],
-      transfers: [{}],
-    },
-  } as ServiceModel;
-  const actionPresenter = new InstanceActionPresenter(instances, partialEntity);
   const presenterWithActions = new InventoryTablePresenter(
-    new DummyDatePresenter(),
-    new AttributesPresenter(),
-    actionPresenter,
-    new DummyStatePresenter(),
     "service_id",
     "Service ID",
   );
@@ -104,7 +75,6 @@ describe("TablePresenter with Actions", () => {
   test("TablePresenter converts column name to index correctly", () => {
     expect(presenterWithActions.getIndexForColumnName("id")).toEqual(-1);
     expect(presenterWithActions.getIndexForColumnName("state")).toEqual(1);
-    expect(presenterWithActions.getIndexForColumnName("actions")).toEqual(5);
     expect(presenterWithActions.getIndexForColumnName("history")).toEqual(-1);
     expect(presenterWithActions.getIndexForColumnName(undefined)).toEqual(-1);
   });

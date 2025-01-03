@@ -1,5 +1,5 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
-import { InstanceLog } from "@/Slices/ServiceInstanceHistory/Core/Domain";
+import { InstanceLog } from "@/Core/Domain/HistoryLog";
 import { PrimaryBaseUrlManager } from "@/UI";
 import { useFetchHelpers } from "../../helpers";
 

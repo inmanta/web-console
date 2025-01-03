@@ -1,5 +1,5 @@
 import { InstanceAttributeModel } from "@/Core";
-import { InstanceLog } from "@/Slices/ServiceInstanceHistory/Core/Domain";
+import { InstanceLog } from "@/Core/Domain/HistoryLog";
 
 // A type for the possible AttributeSets.
 export type AttributeSets =

@@ -21,7 +21,7 @@ test.each`
   },
 );
 
-const { Home, Catalog, Inventory, CreateInstance, History, Events, Diagnose } =
+const { Home, Catalog, Inventory, CreateInstance, Events, Diagnose } =
   routeManager.getRouteDictionary();
 
 it.each`
@@ -29,7 +29,6 @@ it.each`
   ${Catalog}        | ${"Catalog"}        | ${2}   | ${[Home, Catalog]}                            | ${"[Home, Catalog]"}
   ${Inventory}      | ${"Inventory"}      | ${3}   | ${[Home, Catalog, Inventory]}                 | ${"[Home, Catalog, Inventory]"}
   ${CreateInstance} | ${"CreateInstance"} | ${4}   | ${[Home, Catalog, Inventory, CreateInstance]} | ${"[Home, Catalog, Inventory, CreateInstance]"}
-  ${History}        | ${"History"}        | ${4}   | ${[Home, Catalog, Inventory, History]}        | ${"[Home, Catalog, Inventory, History]"}
   ${Events}         | ${"Events"}         | ${4}   | ${[Home, Catalog, Inventory, Events]}         | ${"[Home, Catalog, Inventory, Events]"}
   ${Diagnose}       | ${"Diagnose"}       | ${4}   | ${[Home, Catalog, Inventory, Diagnose]}       | ${"[Home, Catalog, Inventory, Diagnose]"}
 `(
@@ -48,7 +47,6 @@ it.each`
   ${"/lsm/catalog"}                            | ${{ route: Catalog, params: undefined }}                            | ${"Catalog(undefined)"}
   ${"/lsm/catalog/xyz/inventory"}              | ${{ route: Inventory, params: { service: "xyz" } }}                 | ${"Inventory({service: 'xyz'})"}
   ${"/lsm/catalog/xyz/inventory/add"}          | ${{ route: CreateInstance, params: { service: "xyz" } }}            | ${"CreateInstance({service: 'xyz'})"}
-  ${"/lsm/catalog/xyz/inventory/123/history"}  | ${{ route: History, params: { service: "xyz", instance: "123" } }}  | ${"History({service: 'xyz', instance: '123'})"}
   ${"/lsm/catalog/xyz/inventory/123/events"}   | ${{ route: Events, params: { service: "xyz", instance: "123" } }}   | ${"Events({service: 'xyz', instance: '123'})"}
   ${"/lsm/catalog/xyz/inventory/123/diagnose"} | ${{ route: Diagnose, params: { service: "xyz", instance: "123" } }} | ${"Diagnose({service: 'xyz', instance: '123'})"}
 `(
@@ -109,40 +107,6 @@ test("GIVEN '/lsm/catalog/xyz/inventory' THEN breadcrumbs should be ['Home', 'Ca
       kind: "Inventory",
       label: "Service Inventory: xyz",
       url: "/lsm/catalog/xyz/inventory",
-      active: true,
-    },
-  ]);
-});
-
-test("GIVEN '/lsm/catalog/xyz/inventory/123/history' THEN breadcrumbs should be ['Home','Catalog', 'Inventory', 'History']", () => {
-  const crumbs = routeManager.getCrumbs(
-    "/lsm/catalog/xyz/inventory/123/history",
-  );
-
-  expect(crumbs).toHaveLength(4);
-  expect(crumbs).toEqual([
-    {
-      kind: "Home",
-      label: "Home",
-      url: "/",
-      active: false,
-    },
-    {
-      kind: "Catalog",
-      label: "Service Catalog",
-      url: "/lsm/catalog",
-      active: false,
-    },
-    {
-      kind: "Inventory",
-      label: "Service Inventory: xyz",
-      url: "/lsm/catalog/xyz/inventory",
-      active: false,
-    },
-    {
-      kind: "History",
-      label: "Service Instance History",
-      url: "/lsm/catalog/xyz/inventory/123/history",
       active: true,
     },
   ]);

@@ -8,7 +8,7 @@ import {
   Title,
 } from "@patternfly/react-core";
 import { InstanceAttributeModel } from "@/Core";
-import { InstanceLog } from "@/Slices/ServiceInstanceHistory/Core/Domain";
+import { InstanceLog } from "@/Core/Domain/HistoryLog";
 import { MarkdownCard } from "@/Slices/ServiceInventory/UI/Tabs/MarkdownCard";
 import { words } from "@/UI";
 import { ErrorView, LoadingView } from "@/UI/Components";

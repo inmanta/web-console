@@ -9,12 +9,12 @@ import {
 } from "@patternfly/react-core";
 import styled from "styled-components";
 import { InstanceAttributeModel } from "@/Core";
+import { InstanceLog } from "@/Core/Domain/HistoryLog";
 import {
   AttributeSets,
   getAvailableAttributesSets,
   getAvailableVersions,
 } from "@/Slices/ServiceInstanceDetails/Utils";
-import { InstanceLog } from "@/Slices/ServiceInstanceHistory/Core/Domain";
 import { words } from "@/UI";
 
 interface Props {

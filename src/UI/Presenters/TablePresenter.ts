@@ -1,5 +1,7 @@
+import { ServiceModel } from "@/Core";
+
 export interface TablePresenter<S, T> {
-  createRows(sourceData: S[]): T[];
+  createRows(sourceData: S[], service?: ServiceModel): T[];
 
   getColumnHeadDisplayNames(): string[];
 

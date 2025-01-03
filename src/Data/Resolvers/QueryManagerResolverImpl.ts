@@ -88,10 +88,6 @@ import {
   CallbacksStateHelper,
 } from "@S/ServiceDetails/Data";
 import {
-  GetInstanceLogsQueryManager,
-  GetInstanceLogsStateHelper,
-} from "@S/ServiceInstanceHistory/Data";
-import {
   GetEnvironmentsContinuousQueryManager,
   GetEnvironmentsContinuousStateHelper,
 } from "../Managers/GetEnvironmentsContinuous";
@@ -196,11 +192,6 @@ export class QueryManagerResolverImpl implements QueryManagerResolver {
       EventsQueryManager(
         this.apiHelper,
         EventsStateHelper(this.store),
-        this.scheduler,
-      ),
-      GetInstanceLogsQueryManager(
-        this.apiHelper,
-        GetInstanceLogsStateHelper(this.store),
         this.scheduler,
       ),
       InstanceConfigQueryManager(

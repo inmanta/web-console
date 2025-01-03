@@ -31,7 +31,6 @@ import { ParametersPage } from "@S/Parameters/UI";
 import { ResourcesPage } from "@S/Resource/UI/ResourcesPage";
 import { ResourceDetailsPage } from "@S/ResourceDetails/UI";
 import { ServiceCatalogPage } from "@S/ServiceCatalog/UI";
-import { ServiceInstanceHistoryPage } from "@S/ServiceInstanceHistory/UI";
 import { ServiceInventoryPage } from "@S/ServiceInventory/UI";
 import { SettingsPage } from "@S/Settings/UI";
 import { StatusPage } from "@S/Status/UI";
@@ -115,10 +114,6 @@ export class PrimaryPageManager implements PageManager {
       DuplicateInstance: {
         ...this.routeDictionary.DuplicateInstance,
         element: <DuplicateInstancePage />,
-      },
-      History: {
-        ...this.routeDictionary.History,
-        element: <ServiceInstanceHistoryPage />,
       },
       Diagnose: { ...this.routeDictionary.Diagnose, element: <DiagnosePage /> },
       Events: { ...this.routeDictionary.Events, element: <EventsPage /> },
