@@ -1,0 +1,3 @@
+description: Remove the act() function from the tests. act() around userEvents is no longer required for the latest version of @testing-library.
+change-type: patch
+destination-branches: [master]
