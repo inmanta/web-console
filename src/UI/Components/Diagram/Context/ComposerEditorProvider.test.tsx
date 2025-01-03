@@ -1,4 +1,4 @@
-import React, { act } from "react";
+import React from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
@@ -259,11 +259,11 @@ describe("ComposerEditorProvider", () => {
     const composer = await screen.findByTestId("Composer-Container");
 
     expect(composer).toBeInTheDocument();
-    await act(async () => {
-      await userEvent.click(
-        await screen.findByRole("button", { name: "Cancel" }),
-      );
-    });
+
+    await userEvent.click(
+      await screen.findByRole("button", { name: "Cancel" }),
+    );
+
     expect(window.location.pathname).toEqual(
       "/lsm/catalog/child-service/inventory",
     );

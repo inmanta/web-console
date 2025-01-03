@@ -1,4 +1,4 @@
-import React, { act } from "react";
+import React from "react";
 import { MemoryRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor } from "@testing-library/react";
@@ -74,9 +74,7 @@ describe("Given ExpertBanner", () => {
 
     render(setup(true));
 
-    await act(async () => {
-      await userEvent.click(screen.getByText("Disable expert mode"));
-    });
+    await userEvent.click(screen.getByText("Disable expert mode"));
 
     expect(mutateSpy).toHaveBeenCalledWith({
       id: "enable_lsm_expert_mode",
@@ -105,9 +103,7 @@ describe("Given ExpertBanner", () => {
     server.listen();
     render(setup(true));
 
-    await act(async () => {
-      await userEvent.click(screen.getByText("Disable expert mode"));
-    });
+    await userEvent.click(screen.getByText("Disable expert mode"));
 
     await waitFor(() => {
       expect(screen.getByText("Something went wrong")).toBeVisible();

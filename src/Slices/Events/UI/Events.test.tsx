@@ -250,9 +250,8 @@ test("GIVEN EventsView WHEN sorting changes AND we are not on the first page THE
 
   expect(nextPageButton).toBeEnabled();
 
-  await act(async () => {
-    await userEvent.click(nextPageButton);
-  });
+  await userEvent.click(nextPageButton);
+
   //expect the api url to contain start and end keywords that are used for pagination when we are moving to the next page
   expect(apiHelper.pendingRequests[0].url).toMatch(/(&start=|&end=)/);
   expect(apiHelper.pendingRequests[0].url).toMatch(/(&sort=timestamp.desc)/);
@@ -262,9 +261,7 @@ test("GIVEN EventsView WHEN sorting changes AND we are not on the first page THE
   });
 
   //sort on the second page
-  await act(async () => {
-    await userEvent.click(screen.getByText("Date"));
-  });
+  await userEvent.click(screen.getByText("Date"));
 
   // expect the api url to not contain start and end keywords that are used for pagination to assert we are back on the first page.
   // we are asserting on the second request as the first request is for the updated sorting event, and second is chained to back to the first page with still correct sorting

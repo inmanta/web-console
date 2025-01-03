@@ -1,4 +1,4 @@
-import React, { act } from "react";
+import React from "react";
 import { MemoryRouter } from "react-router-dom";
 import { Table /* data-codemods */, Tbody, Tr } from "@patternfly/react-table";
 import { render, screen } from "@testing-library/react";
@@ -85,9 +85,7 @@ test("Given CellWithCopy When a cell has on click Then it is rendered as a link"
 
   expect(cell).toBeVisible();
 
-  await act(async () => {
-    await userEvent.click(cell);
-  });
+  await userEvent.click(cell);
 
   expect(onClickFn).toBeCalledWith(props.value);
 });
@@ -116,9 +114,7 @@ test("Given CellWithCopy When a cell has entity and on click Then it is rendered
 
   expect(cell).toBeVisible();
 
-  await act(async () => {
-    await userEvent.click(cell);
-  });
+  await userEvent.click(cell);
 
   expect(onClickFn).toBeCalledWith(props.value, props.serviceName);
 });
@@ -156,9 +152,7 @@ test("Given CellWithCopy When a cell has entity, multiple values and on click Th
 
   expect(firstCell).toBeVisible();
 
-  await act(async () => {
-    await userEvent.click(firstCell);
-  });
+  await userEvent.click(firstCell);
 
   expect(onClickFn).toBeCalledWith(someValue, props.serviceName);
 
@@ -166,9 +160,7 @@ test("Given CellWithCopy When a cell has entity, multiple values and on click Th
 
   expect(otherCell).toBeVisible();
 
-  await act(async () => {
-    await userEvent.click(otherCell);
-  });
+  await userEvent.click(otherCell);
 
   expect(onClickFn).toBeCalledWith(someOtherValue, props.serviceName);
 });

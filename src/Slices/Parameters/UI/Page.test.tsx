@@ -92,12 +92,7 @@ test("When using the name filter then only the matching parameters should be fet
     words("parameters.filters.name.placeholder"),
   );
 
-  await act(async () => {
-    await userEvent.click(input);
-  });
-  await act(async () => {
-    await userEvent.type(input, "param{enter}");
-  });
+  await userEvent.type(input, "param{enter}");
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
     `/api/v2/parameters?limit=20&sort=name.asc&filter.name=param`,
@@ -140,30 +135,22 @@ test("When using the source filter then only the matching parameters should be f
 
   expect(initialRows).toHaveLength(10);
 
-  await act(async () => {
-    await userEvent.click(
-      within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
-        "button",
-        { name: "FilterPicker" },
-      ),
-    );
-  });
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("option", { name: words("parameters.columns.source") }),
-    );
-  });
+  await userEvent.click(
+    within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
+      "button",
+      { name: "FilterPicker" },
+    ),
+  );
+
+  await userEvent.click(
+    screen.getByRole("option", { name: words("parameters.columns.source") }),
+  );
 
   const input = screen.getByPlaceholderText(
     words("parameters.filters.source.placeholder"),
   );
 
-  await act(async () => {
-    await userEvent.click(input);
-  });
-  await act(async () => {
-    await userEvent.type(input, "plugin{enter}");
-  });
+  await userEvent.type(input, "plugin{enter}");
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
     `/api/v2/parameters?limit=20&sort=name.asc&filter.source=plugin`,
@@ -206,42 +193,28 @@ test("When using the Updated filter then the parameters within the range selecte
 
   expect(initialRows).toHaveLength(10);
 
-  await act(async () => {
-    await userEvent.click(
-      within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
-        "button",
-        { name: "FilterPicker" },
-      ),
-    );
-  });
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("option", {
-        name: words("parameters.columns.updated.tests"),
-      }),
-    );
-  });
+  await userEvent.click(
+    within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
+      "button",
+      { name: "FilterPicker" },
+    ),
+  );
+
+  await userEvent.click(
+    screen.getByRole("option", {
+      name: words("parameters.columns.updated.tests"),
+    }),
+  );
 
   const fromDatePicker = screen.getByLabelText("From Date Picker");
 
-  await act(async () => {
-    await userEvent.click(fromDatePicker);
-  });
-  await act(async () => {
-    await userEvent.type(fromDatePicker, `2022/01/31`);
-  });
+  await userEvent.type(fromDatePicker, `2022/01/31`);
 
   const toDatePicker = screen.getByLabelText("To Date Picker");
 
-  await act(async () => {
-    await userEvent.click(toDatePicker);
-  });
-  await act(async () => {
-    await userEvent.type(toDatePicker, `2022-02-01`);
-  });
-  await act(async () => {
-    await userEvent.click(screen.getByLabelText("Apply date filter"));
-  });
+  await userEvent.type(toDatePicker, `2022-02-01`);
+
+  await userEvent.click(screen.getByLabelText("Apply date filter"));
 
   expect(apiHelper.pendingRequests[0].url).toMatch(
     `/api/v2/parameters?limit=20&sort=name.asc&filter.updated=ge%3A2022-01-30%2B23%3A00%3A00&filter.updated=le%3A2022-01-31%2B23%3A00%3A00`,
@@ -308,9 +281,7 @@ test("GIVEN ParametersView WHEN sorting changes AND we are not on the first page
 
   expect(screen.getByLabelText("Go to next page")).toBeEnabled();
 
-  await act(async () => {
-    await userEvent.click(screen.getByLabelText("Go to next page"));
-  });
+  await userEvent.click(screen.getByLabelText("Go to next page"));
 
   //expect the api url to contain start and end keywords that are used for pagination when we are moving to the next page
   expect(apiHelper.pendingRequests[0].url).toMatch(/(&start=|&end=)/);
@@ -327,9 +298,7 @@ test("GIVEN ParametersView WHEN sorting changes AND we are not on the first page
 
   expect(resourceIdButton).toBeVisible();
 
-  await act(async () => {
-    await userEvent.click(resourceIdButton);
-  });
+  await userEvent.click(resourceIdButton);
 
   // expect the api url to not contain start and end keywords that are used for pagination to assert we are back on the first page.
   // we are asserting on the second request as the first request is for the updated sorting event, and second is chained to back to the first page with still correct sorting

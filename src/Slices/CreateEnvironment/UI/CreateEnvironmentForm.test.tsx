@@ -97,27 +97,19 @@ test("Given CreateEnvironmentForm When no projects are known, THEN cannot add em
     name: "Project Name-select-toggleFilterInput",
   });
 
-  await act(async () => {
-    await userEvent.click(inputProject);
-  });
+  await userEvent.click(inputProject);
 
   expect(screen.queryByRole("option")).not.toBeInTheDocument();
 
-  await act(async () => {
-    await userEvent.type(inputProject, "    ");
-  });
+  await userEvent.type(inputProject, "    ");
 
   expect(screen.queryByRole("option")).not.toBeInTheDocument();
 
-  await act(async () => {
-    await userEvent.clear(inputProject);
-  });
+  await userEvent.clear(inputProject);
 
   expect(screen.queryByRole("option")).not.toBeInTheDocument();
 
-  await act(async () => {
-    await userEvent.type(inputProject, "test");
-  });
+  await userEvent.type(inputProject, "test");
 
   expect(screen.getByRole("option")).toBeInTheDocument();
 
@@ -140,27 +132,21 @@ test(`Given CreateEnvironmentForm When an existing project and valid environment
     );
   });
 
-  await act(async () => {
-    await userEvent.click(
-      await screen.findByRole("combobox", {
-        name: "Project Name-select-toggleFilterInput",
-      }),
-    );
-  });
-  await act(async () => {
-    await userEvent.click(
-      await screen.findByRole("option", { name: Project.filterable[0].name }),
-    );
-  });
+  await userEvent.click(
+    await screen.findByRole("combobox", {
+      name: "Project Name-select-toggleFilterInput",
+    }),
+  );
+
+  await userEvent.click(
+    await screen.findByRole("option", { name: Project.filterable[0].name }),
+  );
 
   const textBox = await screen.findByRole("textbox", { name: "Name-input" });
 
-  await act(async () => {
-    await userEvent.clear(textBox);
-  });
-  await act(async () => {
-    await userEvent.type(textBox, `dev{enter}`);
-  });
+  await userEvent.clear(textBox);
+
+  await userEvent.type(textBox, `dev{enter}`);
 
   await act(async () => {
     const results = await axe(document.body);
@@ -168,11 +154,7 @@ test(`Given CreateEnvironmentForm When an existing project and valid environment
     expect(results).toHaveNoViolations();
   });
 
-  await act(async () => {
-    await userEvent.click(
-      await screen.findByRole("button", { name: "submit" }),
-    );
-  });
+  await userEvent.click(await screen.findByRole("button", { name: "submit" }));
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
@@ -198,27 +180,20 @@ test(`Given CreateEnvironmentForm When an existing project, a valid environment 
     );
   });
 
-  await act(async () => {
-    await userEvent.click(
-      await screen.findByRole("combobox", {
-        name: "Project Name-select-toggleFilterInput",
-      }),
-    );
-  });
-  await act(async () => {
-    await userEvent.click(
-      await screen.findByRole("option", { name: Project.filterable[0].name }),
-    );
-  });
+  await userEvent.click(
+    await screen.findByRole("combobox", {
+      name: "Project Name-select-toggleFilterInput",
+    }),
+  );
+
+  await userEvent.click(
+    await screen.findByRole("option", { name: Project.filterable[0].name }),
+  );
 
   const textBox = await screen.findByRole("textbox", { name: "Name-input" });
 
-  await act(async () => {
-    await userEvent.clear(textBox);
-  });
-  await act(async () => {
-    await userEvent.type(textBox, `dev{enter}`);
-  });
+  await userEvent.clear(textBox);
+  await userEvent.type(textBox, `dev{enter}`);
 
   const repository = "github.com/test-env";
   const branch = "dev";
@@ -226,22 +201,15 @@ test(`Given CreateEnvironmentForm When an existing project, a valid environment 
     name: "Branch-input",
   });
 
-  await act(async () => {
-    await userEvent.clear(branchTextBox);
-  });
-  await act(async () => {
-    await userEvent.type(branchTextBox, branch);
-  });
+  await userEvent.clear(branchTextBox);
+  await userEvent.type(branchTextBox, branch);
+
   const urlTextBox = await screen.findByRole("textbox", {
     name: "Repository-input",
   });
 
-  await act(async () => {
-    await userEvent.clear(urlTextBox);
-  });
-  await act(async () => {
-    await userEvent.type(urlTextBox, repository);
-  });
+  await userEvent.clear(urlTextBox);
+  await userEvent.type(urlTextBox, repository);
 
   await act(async () => {
     const results = await axe(document.body);
@@ -249,11 +217,7 @@ test(`Given CreateEnvironmentForm When an existing project, a valid environment 
     expect(results).toHaveNoViolations();
   });
 
-  await act(async () => {
-    await userEvent.click(
-      await screen.findByRole("button", { name: "submit" }),
-    );
-  });
+  await userEvent.click(await screen.findByRole("button", { name: "submit" }));
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
 
@@ -286,28 +250,22 @@ test(`Given CreateEnvironmentForm When a new project and valid environment are s
     );
   });
 
-  await act(async () => {
-    await userEvent.click(
-      await screen.findByRole("combobox", {
-        name: "Project Name-select-toggleFilterInput",
-      }),
-    );
-  });
+  await userEvent.click(
+    await screen.findByRole("combobox", {
+      name: "Project Name-select-toggleFilterInput",
+    }),
+  );
 
-  await act(async () => {
-    await userEvent.type(
-      await screen.findByRole("combobox", {
-        name: "Project Name-select-toggleFilterInput",
-      }),
-      "new-project",
-    );
-  });
+  await userEvent.type(
+    await screen.findByRole("combobox", {
+      name: "Project Name-select-toggleFilterInput",
+    }),
+    "new-project",
+  );
 
-  await act(async () => {
-    await userEvent.click(
-      await screen.findByRole("option", { name: 'Create "new-project"' }),
-    );
-  });
+  await userEvent.click(
+    await screen.findByRole("option", { name: 'Create "new-project"' }),
+  );
 
   await act(async () => {
     const results = await axe(document.body);
@@ -341,19 +299,10 @@ test(`Given CreateEnvironmentForm When a new project and valid environment are s
 
   const textBox = await screen.findByRole("textbox", { name: "Name-input" });
 
-  await act(async () => {
-    await userEvent.clear(textBox);
-  });
+  await userEvent.clear(textBox);
+  await userEvent.type(textBox, `dev{enter}`);
 
-  await act(async () => {
-    await userEvent.type(textBox, `dev{enter}`);
-  });
-
-  await act(async () => {
-    await userEvent.click(
-      await screen.findByRole("button", { name: "submit" }),
-    );
-  });
+  await userEvent.click(await screen.findByRole("button", { name: "submit" }));
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
 
@@ -390,26 +339,23 @@ test("Given CreateEnvironmentForm When creating a new project is not successful 
       }),
     );
   });
-  await act(async () => {
-    await userEvent.click(
-      await screen.findByRole("combobox", {
-        name: "Project Name-select-toggleFilterInput",
-      }),
-    );
-  });
-  await act(async () => {
-    await userEvent.type(
-      await screen.findByRole("combobox", {
-        name: "Project Name-select-toggleFilterInput",
-      }),
-      "new-project",
-    );
-  });
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("option", { name: 'Create "new-project"' }),
-    );
-  });
+
+  await userEvent.click(
+    await screen.findByRole("combobox", {
+      name: "Project Name-select-toggleFilterInput",
+    }),
+  );
+
+  await userEvent.type(
+    await screen.findByRole("combobox", {
+      name: "Project Name-select-toggleFilterInput",
+    }),
+    "new-project",
+  );
+
+  await userEvent.click(
+    screen.getByRole("option", { name: 'Create "new-project"' }),
+  );
 
   const request = apiHelper.pendingRequests[0];
 
@@ -431,11 +377,9 @@ test("Given CreateEnvironmentForm When creating a new project is not successful 
     await screen.findByRole("generic", { name: "Project Name-error-message" }),
   ).toBeVisible();
 
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("button", { name: "Project Name-close-error" }),
-    );
-  });
+  await userEvent.click(
+    screen.getByRole("button", { name: "Project Name-close-error" }),
+  );
 
   expect(
     screen.queryByRole("generic", { name: "Project Name-error-message" }),
@@ -457,34 +401,23 @@ test(`Given CreateEnvironmentForm When an existing project and invalid environme
   });
 
   // Input data
-  await act(async () => {
-    await userEvent.click(
-      await screen.findByRole("combobox", {
-        name: "Project Name-select-toggleFilterInput",
-      }),
-    );
-  });
-  await act(async () => {
-    await userEvent.click(
-      await screen.findByRole("option", { name: Project.filterable[0].name }),
-    );
-  });
+  await userEvent.click(
+    await screen.findByRole("combobox", {
+      name: "Project Name-select-toggleFilterInput",
+    }),
+  );
+
+  await userEvent.click(
+    await screen.findByRole("option", { name: Project.filterable[0].name }),
+  );
 
   const textBox = await screen.findByRole("textbox", { name: "Name-input" });
 
-  await act(async () => {
-    await userEvent.clear(textBox);
-  });
+  await userEvent.clear(textBox);
+  await userEvent.type(textBox, `test-env1{enter}`);
 
-  await act(async () => {
-    await userEvent.type(textBox, `test-env1{enter}`);
-  });
   // Submit request
-  await act(async () => {
-    await userEvent.click(
-      await screen.findByRole("button", { name: "submit" }),
-    );
-  });
+  await userEvent.click(await screen.findByRole("button", { name: "submit" }));
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
 
@@ -509,11 +442,9 @@ test(`Given CreateEnvironmentForm When an existing project and invalid environme
     await screen.findByRole("generic", { name: "submit-error-message" }),
   ).toBeVisible();
 
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("button", { name: "submit-close-error" }),
-    );
-  });
+  await userEvent.click(
+    screen.getByRole("button", { name: "submit-close-error" }),
+  );
 
   expect(
     screen.queryByRole("generic", { name: "submit-error-message" }),
@@ -533,45 +464,30 @@ test(`Given CreateEnvironmentForm When an existing project, a valid environment 
     );
   });
 
-  await act(async () => {
-    await userEvent.click(
-      await screen.findByRole("combobox", {
-        name: "Project Name-select-toggleFilterInput",
-      }),
-    );
-  });
-  await act(async () => {
-    await userEvent.click(
-      await screen.findByRole("option", { name: Project.filterable[0].name }),
-    );
-  });
+  await userEvent.click(
+    await screen.findByRole("combobox", {
+      name: "Project Name-select-toggleFilterInput",
+    }),
+  );
+
+  await userEvent.click(
+    await screen.findByRole("option", { name: Project.filterable[0].name }),
+  );
 
   const textBox = await screen.findByRole("textbox", { name: "Name-input" });
 
-  await act(async () => {
-    await userEvent.clear(textBox);
-  });
-  await act(async () => {
-    await userEvent.type(textBox, `dev{enter}`);
-  });
+  await userEvent.clear(textBox);
+  await userEvent.type(textBox, `dev{enter}`);
 
   const description = "description text";
   const descriptionInput = screen.getByRole("textbox", {
     name: "Description-input",
   });
 
-  await act(async () => {
-    await userEvent.clear(descriptionInput);
-  });
-  await act(async () => {
-    await userEvent.type(descriptionInput, description);
-  });
+  await userEvent.clear(descriptionInput);
+  await userEvent.type(descriptionInput, description);
 
-  await act(async () => {
-    await userEvent.click(
-      await screen.findByRole("button", { name: "submit" }),
-    );
-  });
+  await userEvent.click(await screen.findByRole("button", { name: "submit" }));
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
 
@@ -600,63 +516,43 @@ test(`Given CreateEnvironmentForm When an existing project, a valid environment 
       }),
     );
   });
-  await act(async () => {
-    await userEvent.click(
-      await screen.findByRole("combobox", {
-        name: "Project Name-select-toggleFilterInput",
-      }),
-    );
-  });
-  await act(async () => {
-    await userEvent.click(
-      await screen.findByRole("option", { name: Project.filterable[0].name }),
-    );
-  });
+
+  await userEvent.click(
+    await screen.findByRole("combobox", {
+      name: "Project Name-select-toggleFilterInput",
+    }),
+  );
+
+  await userEvent.click(
+    await screen.findByRole("option", { name: Project.filterable[0].name }),
+  );
 
   const textBox = await screen.findByRole("textbox", { name: "Name-input" });
 
-  await act(async () => {
-    await userEvent.clear(textBox);
-  });
-  await act(async () => {
-    await userEvent.type(textBox, `dev{enter}`);
-  });
+  await userEvent.clear(textBox);
+  await userEvent.type(textBox, `dev{enter}`);
 
   const branch = "dev";
   const branchTextBox = await screen.findByRole("textbox", {
     name: "Branch-input",
   });
 
-  await act(async () => {
-    await userEvent.clear(branchTextBox);
-  });
-  await act(async () => {
-    await userEvent.type(branchTextBox, branch);
-  });
+  await userEvent.clear(branchTextBox);
+  await userEvent.type(branchTextBox, branch);
 
   const repository = "github.com/test-env";
   const urlTextBox = await screen.findByRole("textbox", {
     name: "Repository-input",
   });
 
-  await act(async () => {
-    await userEvent.clear(urlTextBox);
-  });
-  await act(async () => {
-    await userEvent.type(urlTextBox, repository);
-  });
+  await userEvent.clear(urlTextBox);
+  await userEvent.type(urlTextBox, repository);
 
-  await act(async () => {
-    await userEvent.clear(branchTextBox);
-  });
-  await act(async () => {
-    await userEvent.clear(urlTextBox);
-  });
-  await act(async () => {
-    await userEvent.click(
-      await screen.findByRole("button", { name: "submit" }),
-    );
-  });
+  await userEvent.clear(branchTextBox);
+
+  await userEvent.clear(urlTextBox);
+
+  await userEvent.click(await screen.findByRole("button", { name: "submit" }));
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
 

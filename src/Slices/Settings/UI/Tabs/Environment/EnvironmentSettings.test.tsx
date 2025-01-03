@@ -69,11 +69,9 @@ test("Given environment settings When clicking on the edit name button Then the 
     await screen.findByRole("generic", { name: "Name-value" }),
   ).toBeVisible();
 
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("button", { name: "Name-toggle-edit" }),
-    );
-  });
+  await userEvent.click(
+    screen.getByRole("button", { name: "Name-toggle-edit" }),
+  );
 
   expect(
     await screen.findByRole("textbox", { name: "Name-input" }),
@@ -94,20 +92,15 @@ test("Given environment settings When submitting the edited name Then the backen
 
   render(component);
 
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("button", { name: "Name-toggle-edit" }),
-    );
-  });
+  await userEvent.click(
+    screen.getByRole("button", { name: "Name-toggle-edit" }),
+  );
 
   const textBox = await screen.findByRole("textbox", { name: "Name-input" });
 
-  await act(async () => {
-    await userEvent.clear(textBox);
-  });
-  await act(async () => {
-    await userEvent.type(textBox, `dev{enter}`);
-  });
+  await userEvent.clear(textBox);
+
+  await userEvent.type(textBox, `dev{enter}`);
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
 
@@ -152,25 +145,19 @@ test("Given environment settings When canceling a name edit Then the backend req
 
   render(component);
 
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("button", { name: "Name-toggle-edit" }),
-    );
-  });
+  await userEvent.click(
+    screen.getByRole("button", { name: "Name-toggle-edit" }),
+  );
 
   const textBox = await screen.findByRole("textbox", { name: "Name-input" });
 
-  await act(async () => {
-    await userEvent.clear(textBox);
-  });
-  await act(async () => {
-    await userEvent.type(textBox, "dev");
-  });
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("button", { name: "Name-cancel-edit" }),
-    );
-  });
+  await userEvent.clear(textBox);
+
+  await userEvent.type(textBox, "dev");
+
+  await userEvent.click(
+    screen.getByRole("button", { name: "Name-cancel-edit" }),
+  );
 
   expect(apiHelper.pendingRequests).toHaveLength(0);
   // The field is shown with the original value
@@ -199,20 +186,15 @@ test.each`
 
     render(component);
 
-    await act(async () => {
-      await userEvent.click(
-        screen.getByRole("button", { name: "Name-toggle-edit" }),
-      );
-    });
+    await userEvent.click(
+      screen.getByRole("button", { name: "Name-toggle-edit" }),
+    );
 
     const textBox = await screen.findByRole("textbox", { name: "Name-input" });
 
-    await act(async () => {
-      await userEvent.clear(textBox);
-    });
-    await act(async () => {
-      await userEvent.type(textBox, `dev{enter}`);
-    });
+    await userEvent.clear(textBox);
+
+    await userEvent.type(textBox, `dev{enter}`);
 
     expect(apiHelper.pendingRequests).toHaveLength(1);
 
@@ -237,9 +219,7 @@ test.each`
     ).not.toBeInTheDocument();
 
     // Closing the alert
-    await act(async () => {
-      await userEvent.click(screen.getByRole("button", { name: elementName }));
-    });
+    await userEvent.click(screen.getByRole("button", { name: elementName }));
 
     expect(
       screen.queryByRole("generic", { name: "Name-error-message" }),
@@ -265,11 +245,9 @@ test("Given environment settings When clicking on the edit repository settings b
     await screen.findByRole("generic", { name: "repo_url-value" }),
   ).toBeVisible();
 
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("button", { name: "Repository Settings-toggle-edit" }),
-    );
-  });
+  await userEvent.click(
+    screen.getByRole("button", { name: "Repository Settings-toggle-edit" }),
+  );
 
   expect(
     await screen.findByRole("textbox", { name: "repo_branch-input" }),
@@ -298,38 +276,29 @@ test("Given environment settings When submitting the edited repository settings 
   const newRepository = "github.com/test-env";
   const newBranch = "dev";
 
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("button", { name: "Repository Settings-toggle-edit" }),
-    );
-  });
+  await userEvent.click(
+    screen.getByRole("button", { name: "Repository Settings-toggle-edit" }),
+  );
 
   const branchTextBox = await screen.findByRole("textbox", {
     name: "repo_branch-input",
   });
 
-  await act(async () => {
-    await userEvent.clear(branchTextBox);
-  });
-  await act(async () => {
-    await userEvent.type(branchTextBox, newBranch);
-  });
+  await userEvent.clear(branchTextBox);
+
+  await userEvent.type(branchTextBox, newBranch);
 
   const urlTextBox = await screen.findByRole("textbox", {
     name: "repo_url-input",
   });
 
-  await act(async () => {
-    await userEvent.clear(urlTextBox);
-  });
-  await act(async () => {
-    await userEvent.type(urlTextBox, newRepository);
-  });
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("button", { name: "Repository Settings-submit-edit" }),
-    );
-  });
+  await userEvent.clear(urlTextBox);
+
+  await userEvent.type(urlTextBox, newRepository);
+
+  await userEvent.click(
+    screen.getByRole("button", { name: "Repository Settings-submit-edit" }),
+  );
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
 
@@ -385,27 +354,21 @@ test("Given environment settings When canceling a repository edit Then the backe
 
   render(component);
 
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("button", { name: "Repository Settings-toggle-edit" }),
-    );
-  });
+  await userEvent.click(
+    screen.getByRole("button", { name: "Repository Settings-toggle-edit" }),
+  );
 
   const textBox = await screen.findByRole("textbox", {
     name: "repo_branch-input",
   });
 
-  await act(async () => {
-    await userEvent.clear(textBox);
-  });
-  await act(async () => {
-    await userEvent.type(textBox, "dev");
-  });
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("button", { name: "Repository Settings-cancel-edit" }),
-    );
-  });
+  await userEvent.clear(textBox);
+
+  await userEvent.type(textBox, "dev");
+
+  await userEvent.click(
+    screen.getByRole("button", { name: "Repository Settings-cancel-edit" }),
+  );
 
   expect(apiHelper.pendingRequests).toHaveLength(0);
 
@@ -441,22 +404,17 @@ test.each`
 
     render(component);
 
-    await act(async () => {
-      await userEvent.click(
-        screen.getByRole("button", { name: "Repository Settings-toggle-edit" }),
-      );
-    });
+    await userEvent.click(
+      screen.getByRole("button", { name: "Repository Settings-toggle-edit" }),
+    );
 
     const textBox = await screen.findByRole("textbox", {
       name: "repo_branch-input",
     });
 
-    await act(async () => {
-      await userEvent.clear(textBox);
-    });
-    await act(async () => {
-      await userEvent.type(textBox, `dev{enter}`);
-    });
+    await userEvent.clear(textBox);
+
+    await userEvent.type(textBox, `dev{enter}`);
 
     expect(apiHelper.pendingRequests).toHaveLength(1);
 
@@ -483,9 +441,7 @@ test.each`
     ).not.toBeInTheDocument();
 
     // Closing the alert
-    await act(async () => {
-      await userEvent.click(screen.getByRole("button", { name: elementName }));
-    });
+    await userEvent.click(screen.getByRole("button", { name: elementName }));
 
     expect(
       screen.queryByRole("generic", {
@@ -510,11 +466,9 @@ test("Given environment settings When clicking on the edit project button Then t
     await screen.findByRole("generic", { name: "Project Name-value" }),
   ).toBeVisible();
 
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("button", { name: "Project Name-toggle-edit" }),
-    );
-  });
+  await userEvent.click(
+    screen.getByRole("button", { name: "Project Name-toggle-edit" }),
+  );
 
   expect(
     await screen.findByRole("combobox", {
@@ -538,29 +492,21 @@ test("Given environment settings When submitting the edited project name Then th
 
   render(component);
 
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("button", { name: "Project Name-toggle-edit" }),
-    );
-  });
+  await userEvent.click(
+    screen.getByRole("button", { name: "Project Name-toggle-edit" }),
+  );
 
   const toggle = await screen.findByRole("combobox", {
     name: "Project Name-select-toggleFilterInput",
   });
 
-  await act(async () => {
-    await userEvent.click(toggle);
-  });
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("option", { name: "project_name_b" }),
-    );
-  });
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("button", { name: "Project Name-submit-edit" }),
-    );
-  });
+  await userEvent.click(toggle);
+
+  await userEvent.click(screen.getByRole("option", { name: "project_name_b" }));
+
+  await userEvent.click(
+    screen.getByRole("button", { name: "Project Name-submit-edit" }),
+  );
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
 
@@ -610,29 +556,21 @@ test("Given environment settings When canceling a project name edit Then the bac
 
   render(component);
 
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("button", { name: "Project Name-toggle-edit" }),
-    );
-  });
+  await userEvent.click(
+    screen.getByRole("button", { name: "Project Name-toggle-edit" }),
+  );
 
   const toggle = await screen.findByRole("combobox", {
     name: "Project Name-select-toggleFilterInput",
   });
 
-  await act(async () => {
-    await userEvent.click(toggle);
-  });
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("option", { name: "project_name_b" }),
-    );
-  });
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("button", { name: "Project Name-cancel-edit" }),
-    );
-  });
+  await userEvent.click(toggle);
+
+  await userEvent.click(screen.getByRole("option", { name: "project_name_b" }));
+
+  await userEvent.click(
+    screen.getByRole("button", { name: "Project Name-cancel-edit" }),
+  );
 
   expect(apiHelper.pendingRequests).toHaveLength(0);
   expect(
@@ -660,29 +598,23 @@ test.each`
 
     render(component);
 
-    await act(async () => {
-      await userEvent.click(
-        screen.getByRole("button", { name: "Project Name-toggle-edit" }),
-      );
-    });
+    await userEvent.click(
+      screen.getByRole("button", { name: "Project Name-toggle-edit" }),
+    );
 
     const toggle = await screen.findByRole("combobox", {
       name: "Project Name-select-toggleFilterInput",
     });
 
-    await act(async () => {
-      await userEvent.click(toggle);
-    });
-    await act(async () => {
-      await userEvent.click(
-        screen.getByRole("option", { name: "project_name_b" }),
-      );
-    });
-    await act(async () => {
-      await userEvent.click(
-        screen.getByRole("button", { name: "Project Name-submit-edit" }),
-      );
-    });
+    await userEvent.click(toggle);
+
+    await userEvent.click(
+      screen.getByRole("option", { name: "project_name_b" }),
+    );
+
+    await userEvent.click(
+      screen.getByRole("button", { name: "Project Name-submit-edit" }),
+    );
 
     expect(apiHelper.pendingRequests).toHaveLength(1);
 
@@ -709,9 +641,7 @@ test.each`
     ).not.toBeInTheDocument();
 
     // Closing the alert
-    await act(async () => {
-      await userEvent.click(screen.getByRole("button", { name: elementName }));
-    });
+    await userEvent.click(screen.getByRole("button", { name: elementName }));
 
     expect(
       screen.queryByRole("generic", { name: "Project Name-error-message" }),
@@ -733,11 +663,9 @@ test("Given environment settings When clicking on the edit description button Th
     await screen.findByRole("generic", { name: "Description-value" }),
   ).toBeVisible();
 
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("button", { name: "Description-toggle-edit" }),
-    );
-  });
+  await userEvent.click(
+    screen.getByRole("button", { name: "Description-toggle-edit" }),
+  );
 
   expect(
     await screen.findByRole("textbox", { name: "Description-input" }),
@@ -760,11 +688,9 @@ test("Given environment settings When clicking on the edit icon button Then the 
   render(component);
   expect(await screen.findByRole("img", { name: "Icon-value" })).toBeVisible();
 
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("button", { name: "Icon-toggle-edit" }),
-    );
-  });
+  await userEvent.click(
+    screen.getByRole("button", { name: "Icon-toggle-edit" }),
+  );
 
   expect(
     await screen.findByRole("textbox", { name: "Icon-input" }),

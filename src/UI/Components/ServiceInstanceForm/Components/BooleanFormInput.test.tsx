@@ -1,4 +1,4 @@
-import React, { useState, act } from "react";
+import React, { useState } from "react";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { BooleanFormInput } from "./BooleanFormInput";
@@ -37,19 +37,16 @@ describe("BooleanFormInput", () => {
 
     expect(await screen.findByTestId("opt_bool_param-false")).toBeChecked();
 
-    await act(async () => {
-      await userEvent.click(await screen.findByTestId("opt_bool_param-true"));
-    });
+    await userEvent.click(await screen.findByTestId("opt_bool_param-true"));
+
     expect(await screen.findByTestId("opt_bool_param-true")).toBeChecked();
 
-    await act(async () => {
-      await userEvent.click(await screen.findByTestId("opt_bool_param-none"));
-    });
+    await userEvent.click(await screen.findByTestId("opt_bool_param-none"));
+
     expect(await screen.findByTestId("opt_bool_param-none")).toBeChecked();
 
-    await act(async () => {
-      await userEvent.click(await screen.findByTestId("opt_bool_param-false"));
-    });
+    await userEvent.click(await screen.findByTestId("opt_bool_param-false"));
+
     expect(await screen.findByTestId("opt_bool_param-false")).toBeChecked();
   });
 });

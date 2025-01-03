@@ -35,9 +35,7 @@ test("GIVEN ServiceInventory WHEN on 2nd page with outdated 1st page and user cl
 
   expect(button).toBeEnabled();
 
-  await act(async () => {
-    await userEvent.click(button);
-  });
+  await userEvent.click(button);
 
   expect(apiHelper.pendingRequests).toEqual([]);
 });

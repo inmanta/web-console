@@ -1,4 +1,4 @@
-import React, { act } from "react";
+import React from "react";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { CanvasContext, defaultCanvasContext } from "../Context";
@@ -48,9 +48,7 @@ describe("Given a Validation component", () => {
     expect(screen.queryByTestId("Error-container")).toBeDefined();
     expect(screen.getByText("Errors found: 1")).toBeDefined();
 
-    await act(async () => {
-      await userEvent.click(screen.getByLabelText("Danger alert details"));
-    });
+    await userEvent.click(screen.getByLabelText("Danger alert details"));
 
     expect(
       screen.getByText(
