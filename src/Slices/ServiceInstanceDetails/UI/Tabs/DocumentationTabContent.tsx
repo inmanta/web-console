@@ -14,6 +14,7 @@ import { words } from "@/UI";
 import { ErrorView, LoadingView } from "@/UI/Components";
 import { DynamicFAIcon } from "@/UI/Components/FaIcon";
 import { InstanceDetailsContext } from "../../Core/Context";
+import { getAttributeSetsFromInstance } from "../../Utils";
 import { TabContentWrapper } from ".";
 
 // Interface representing the needed properties to display the documentation sections.
@@ -75,11 +76,7 @@ export const DocumentationTabContent: React.FC<Props> = ({
 
     selectedSet = getSelectedAttributeSet(logsQuery.data, selectedVersion);
   } else {
-    selectedSet =
-      instance.active_attributes ||
-      instance.candidate_attributes ||
-      instance.rollback_attributes ||
-      undefined;
+    selectedSet = getAttributeSetsFromInstance(instance);
   }
 
   const sections = selectedSet
