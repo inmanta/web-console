@@ -48,28 +48,40 @@ export const DocumentationTabContent: React.FC<Props> = ({
   docAttributeDescriptors,
   selectedVersion,
 }) => {
-  const { logsQuery } = useContext(InstanceDetailsContext);
+  const { logsQuery, instance } = useContext(InstanceDetailsContext);
   const [expanded, setExpanded] = useState(0);
 
-  if (logsQuery.isLoading) {
-    return (
-      <TabContentWrapper id="documentation">
-        <LoadingView />
-      </TabContentWrapper>
-    );
+  const isLatest = selectedVersion === String(instance.version);
+  let selectedSet: InstanceAttributeModel | void;
+
+  if (!isLatest) {
+    if (logsQuery.isLoading) {
+      return (
+        <TabContentWrapper id="documentation">
+          <LoadingView />
+        </TabContentWrapper>
+      );
+    }
+
+    if (!logsQuery.data) {
+      return (
+        <TabContentWrapper id="documentation">
+          <ErrorView
+            message={words("instanceDetails.tabs.documentation.noData")}
+          />
+        </TabContentWrapper>
+      );
+    }
+
+    selectedSet = getSelectedAttributeSet(logsQuery.data, selectedVersion);
+  } else {
+    selectedSet =
+      instance.active_attributes ||
+      instance.candidate_attributes ||
+      instance.rollback_attributes ||
+      undefined;
   }
 
-  if (!logsQuery.data) {
-    return (
-      <TabContentWrapper id="documentation">
-        <ErrorView
-          message={words("instanceDetails.tabs.documentation.noData")}
-        />
-      </TabContentWrapper>
-    );
-  }
-
-  const selectedSet = getSelectedAttributeSet(logsQuery.data, selectedVersion);
   const sections = selectedSet
     ? getDocumentationSections(docAttributeDescriptors, selectedSet)
     : [];
