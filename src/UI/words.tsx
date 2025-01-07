@@ -28,6 +28,7 @@ const dict = {
   null: "null",
   loading: "Loading",
   retry: "Retry",
+  add: "Add",
   delete: "Delete",
   empty: "Empty",
   jumpTo: "Jump to",

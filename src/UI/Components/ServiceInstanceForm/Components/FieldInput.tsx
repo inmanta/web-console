@@ -25,6 +25,7 @@ import { RelatedServiceProvider } from "./RelatedServiceProvider";
 import { SelectFormInput } from "./SelectFormInput";
 import { TextFormInput } from "./TextFormInput";
 import { TextListFormInput } from "./TextListFormInput";
+import { v4 as uuidv4 } from 'uuid';
 
 interface Props {
   field: Field;
@@ -176,7 +177,7 @@ export const FieldInput: React.FC<Props> = ({
           shouldBeDisabled={
             field.isDisabled &&
             get(originalState, makePath(path, field.name).split(".")) !==
-              undefined &&
+            undefined &&
             !isNew
           }
           type={field.inputType}
@@ -423,11 +424,11 @@ const NestedFieldInput: React.FC<NestedProps> = ({
                     (!isNew &&
                       field.isDisabled &&
                       get(originalState, makePath(path, field.name)) !==
-                        undefined) ||
+                      undefined) ||
                     showList
                   }
                 >
-                  {words("catalog.callbacks.add")}
+                  {words("add")}
                 </Button>
                 <Button
                   variant="link"
@@ -491,6 +492,15 @@ const DictListFieldInput: React.FC<DictListProps> = ({
     (get(formState, makePath(path, field.name)) as Array<unknown>) || [];
   const [addedItemsPaths, setAddedItemPaths] = useState<string[]>([]);
 
+  const [itemIds, setItemIds] = useState<string[]>([]);
+
+  useEffect(() => {
+    // Initialize itemIds with unique IDs if not already set
+    if (itemIds.length === 0 && list.length > 0) {
+      setItemIds(list.map(() => uuidv4()));
+    }
+  }, [list]);
+
   /**
    * Add a new formField group of the same type to the list.
    * Stores the paths of the newly added elements.
@@ -508,6 +518,8 @@ const DictListFieldInput: React.FC<DictListProps> = ({
       `${makePath(path, field.name)}.${list.length}`,
     ]);
 
+    setItemIds([...itemIds, uuidv4()]);
+
     getUpdate(makePath(path, field.name), [
       ...list,
       createFormState(field.fields),
@@ -522,6 +534,9 @@ const DictListFieldInput: React.FC<DictListProps> = ({
    */
   const getOnDelete = (index: number) => () => {
     const newPaths: string[] = [];
+
+    // Remove the item from the list of unique IDs
+    setItemIds(itemIds.filter((_, i) => i !== index));
 
     /**
      * We need to update the stored paths after the deleted item,
@@ -545,13 +560,12 @@ const DictListFieldInput: React.FC<DictListProps> = ({
     setAddedItemPaths([...newPaths]);
 
     getUpdate(makePath(path, field.name), [
-      ...list.slice(0, index),
-      ...list.slice(index + 1, list.length),
+      ...list.filter((_, i) => i !== index)
     ]);
   };
 
   return (
-    <StyledFormFieldGroupExpandable
+    <FormFieldGroupExpandable
       aria-label={`DictListFieldInput-${makePath(path, field.name)}`}
       header={
         <FormFieldGroupHeader
@@ -559,9 +573,8 @@ const DictListFieldInput: React.FC<DictListProps> = ({
             text: field.name,
             id: `DictListFieldInput-${makePath(path, field.name)}`,
           }}
-          titleDescription={`${
-            field.description !== null ? field.description : ""
-          } (${words("inventory.createInstance.items")(list.length)})`}
+          titleDescription={`${field.description !== null ? field.description : ""
+            } (${words("inventory.createInstance.items")(list.length)})`}
           actions={
             <Button
               variant="link"
@@ -570,23 +583,23 @@ const DictListFieldInput: React.FC<DictListProps> = ({
               isDisabled={
                 (field.isDisabled &&
                   get(originalState, makePath(path, field.name)) !==
-                    undefined) ||
+                  undefined) ||
                 (!!field.max && list.length >= field.max)
               }
             >
-              Add
+              {words("add")}
             </Button>
           }
         />
       }
     >
       {list.map((_item, index) => (
-        <StyledFormFieldGroupExpandable
+        <FormFieldGroupExpandable
           aria-label={`DictListFieldInputItem-${makePath(
             path,
             `${field.name}.${index}`,
           )}`}
-          key={makePath(path, `${field.name}.${index}`)}
+          key={makePath(path, `${field.name}.${itemIds[index]}`)}
           header={
             <FormFieldGroupHeader
               titleText={{
@@ -604,11 +617,11 @@ const DictListFieldInput: React.FC<DictListProps> = ({
                     (!isNew &&
                       field.isDisabled &&
                       get(originalState, makePath(path, field.name)) !==
-                        undefined) ||
+                      undefined) ||
                     field.min > index
                   }
                 >
-                  Delete
+                  {words("delete")}
                 </Button>
               }
             />
@@ -631,9 +644,9 @@ const DictListFieldInput: React.FC<DictListProps> = ({
               suggestions={childField.suggestion}
             />
           ))}
-        </StyledFormFieldGroupExpandable>
+        </FormFieldGroupExpandable>
       ))}
-    </StyledFormFieldGroupExpandable>
+    </FormFieldGroupExpandable>
   );
 };
 
