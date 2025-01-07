@@ -94,9 +94,7 @@ test("GIVEN ResourceLogsView WHEN filtered on message THEN only shows relevant l
     name: "MessageFilter",
   });
 
-  await act(async () => {
-    await userEvent.type(messageFilter, "failed{enter}");
-  });
+  await userEvent.type(messageFilter, "failed{enter}");
 
   await act(async () => {
     apiHelper.resolve(
@@ -135,9 +133,8 @@ test("GIVEN ResourceLogsView WHEN sorting changes AND we are not on the first pa
   });
 
   expect(screen.getByLabelText("Go to next page")).toBeEnabled();
-  await act(async () => {
-    await userEvent.click(screen.getByLabelText("Go to next page"));
-  });
+
+  await userEvent.click(screen.getByLabelText("Go to next page"));
 
   //expect the api url to contain start and end keywords that are used for pagination when we are moving to the next page
   expect(apiHelper.pendingRequests[0].url).toMatch(/(&start=|&end=)/);
@@ -148,9 +145,7 @@ test("GIVEN ResourceLogsView WHEN sorting changes AND we are not on the first pa
   });
 
   //sort on the second page
-  await act(async () => {
-    await userEvent.click(screen.getByText("Timestamp"));
-  });
+  await userEvent.click(screen.getByText("Timestamp"));
 
   // expect the api url to not contain start and end keywords that are used for pagination to assert we are back on the first page.
   // we are asserting on the second request as the first request is for the updated sorting event, and second is chained to back to the first page with still correct sorting

@@ -126,9 +126,7 @@ test("OrderDetailsView shows view for a partial order", async () => {
 
   expect(serviceOrderItemRows).toHaveLength(2);
 
-  await act(async () => {
-    await userEvent.click(screen.getAllByLabelText("Toggle-DetailsRow")[0]);
-  });
+  await userEvent.click(screen.getAllByLabelText("Toggle-DetailsRow")[0]);
   const rowDetails = await screen.findByLabelText("Expanded-Details");
 
   expect(rowDetails).toHaveTextContent(/Show Compile Report/);
@@ -185,9 +183,8 @@ test("OrderDetailsView shows view for a in progress order", async () => {
 
   expect(serviceOrderItemRows).toHaveLength(1);
 
-  await act(async () => {
-    await userEvent.click(screen.getByLabelText("Toggle-DetailsRow"));
-  });
+  await userEvent.click(screen.getByLabelText("Toggle-DetailsRow"));
+
   const rowDetails = await screen.findByLabelText("Expanded-Details");
 
   expect(rowDetails).not.toHaveTextContent(/Show Compile Report/);
@@ -244,9 +241,8 @@ test("OrderDetailsView shows view for completed order", async () => {
 
   expect(serviceOrderItemRows).toHaveLength(1);
 
-  await act(async () => {
-    await userEvent.click(screen.getByLabelText("Toggle-DetailsRow"));
-  });
+  await userEvent.click(screen.getByLabelText("Toggle-DetailsRow"));
+
   const rowDetails = await screen.findByLabelText("Expanded-Details");
 
   expect(rowDetails).toHaveTextContent(/Show Compile Report/);

@@ -224,22 +224,14 @@ describe("UserManagementPage", () => {
 
     expect(userRows).toHaveLength(2);
 
-    await act(async () => {
-      await userEvent.click(screen.getByText("Add User"));
-    });
+    await userEvent.click(screen.getByText("Add User"));
 
     //mock error scenario
-    await act(async () => {
-      await userEvent.type(screen.getByLabelText("input-username"), "new_user");
-    });
+    await userEvent.type(screen.getByLabelText("input-username"), "new_user");
 
-    await act(async () => {
-      await userEvent.type(screen.getByLabelText("input-password"), "123456");
-    });
+    await userEvent.type(screen.getByLabelText("input-password"), "123456");
 
-    await act(async () => {
-      await userEvent.click(screen.getByLabelText("confirm-button"));
-    });
+    await userEvent.click(screen.getByLabelText("confirm-button"));
 
     const errorMessage = await screen.findByLabelText("error-message");
 
@@ -249,13 +241,9 @@ describe("UserManagementPage", () => {
     );
 
     //mock success scenario
-    await act(async () => {
-      await userEvent.type(screen.getByLabelText("input-password"), "12345678");
-    });
+    await userEvent.type(screen.getByLabelText("input-password"), "12345678");
 
-    await act(async () => {
-      await userEvent.click(screen.getByLabelText("confirm-button"));
-    });
+    await userEvent.click(screen.getByLabelText("confirm-button"));
 
     const updatedRows = await screen.findAllByTestId("user-row");
 
@@ -307,13 +295,9 @@ describe("UserManagementPage", () => {
 
     expect(userRows).toHaveLength(2);
 
-    await act(async () => {
-      await userEvent.click(screen.getAllByText("Delete")[0]);
-    });
+    await userEvent.click(screen.getAllByText("Delete")[0]);
 
-    await act(async () => {
-      await userEvent.click(screen.getByText("Yes"));
-    });
+    await userEvent.click(screen.getByText("Yes"));
 
     const updatedRows = await screen.findAllByTestId("user-row");
 

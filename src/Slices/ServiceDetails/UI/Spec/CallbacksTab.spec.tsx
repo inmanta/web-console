@@ -123,9 +123,7 @@ test("GIVEN ServiceDetails WHEN click on callbacks tab THEN shows callbacks tab"
 
   const callbacksButton = screen.getByRole("tab", { name: "Callbacks" });
 
-  await act(async () => {
-    await userEvent.click(callbacksButton);
-  });
+  await userEvent.click(callbacksButton);
 
   expect(
     screen.getByRole("region", { name: "Callbacks-Loading" }),

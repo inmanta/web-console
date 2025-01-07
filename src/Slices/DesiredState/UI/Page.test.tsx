@@ -229,27 +229,22 @@ describe("DesiredStatesView", () => {
 
     expect(initialRows).toHaveLength(9);
 
-    await act(async () => {
-      await userEvent.click(
-        within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
-          "button",
-          { name: "FilterPicker" },
-        ),
-      );
-    });
-    await act(async () => {
-      await userEvent.click(
-        screen.getByRole("option", {
-          name: words("desiredState.columns.status"),
-        }),
-      );
-    });
+    await userEvent.click(
+      within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
+        "button",
+        { name: "FilterPicker" },
+      ),
+    );
+
+    await userEvent.click(
+      screen.getByRole("option", {
+        name: words("desiredState.columns.status"),
+      }),
+    );
 
     const input = screen.getByRole("combobox", { name: "StatusFilterInput" });
 
-    await act(async () => {
-      await userEvent.click(input);
-    });
+    await userEvent.click(input);
 
     const statusOptions = screen.getAllByRole("option");
 
@@ -259,9 +254,7 @@ describe("DesiredStatesView", () => {
       name: words("desiredState.test.skippedCandidate"),
     });
 
-    await act(async () => {
-      await userEvent.click(candidateSkippedOption);
-    });
+    await userEvent.click(candidateSkippedOption);
 
     const rowsAfter = await screen.findAllByRole("row", {
       name: "DesiredStates Table Row",
@@ -304,43 +297,28 @@ describe("DesiredStatesView", () => {
 
     expect(initialRows).toHaveLength(9);
 
-    await act(async () => {
-      await userEvent.click(
-        within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
-          "button",
-          { name: "FilterPicker" },
-        ),
-      );
-    });
-    await act(async () => {
-      await userEvent.click(
-        screen.getByRole("option", {
-          name: words("desiredState.columns.date"),
-        }),
-      );
-    });
+    await userEvent.click(
+      within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
+        "button",
+        { name: "FilterPicker" },
+      ),
+    );
+
+    await userEvent.click(
+      screen.getByRole("option", {
+        name: words("desiredState.columns.date"),
+      }),
+    );
 
     const fromDatePicker = screen.getByLabelText("From Date Picker");
 
-    await act(async () => {
-      await userEvent.click(fromDatePicker);
-    });
-    await act(async () => {
-      await userEvent.type(fromDatePicker, `2021-12-06`);
-    });
+    await userEvent.type(fromDatePicker, `2021-12-06`);
 
     const toDatePicker = screen.getByLabelText("To Date Picker");
 
-    await act(async () => {
-      await userEvent.click(toDatePicker);
-    });
-    await act(async () => {
-      await userEvent.type(toDatePicker, "2021-12-07");
-    });
+    await userEvent.type(toDatePicker, "2021-12-07");
 
-    await act(async () => {
-      await userEvent.click(screen.getByLabelText("Apply date filter"));
-    });
+    await userEvent.click(screen.getByLabelText("Apply date filter"));
 
     const rowsAfter = await screen.findAllByRole("row", {
       name: "DesiredStates Table Row",
@@ -396,48 +374,28 @@ describe("DesiredStatesView", () => {
 
     expect(initialRows).toHaveLength(9);
 
-    await act(async () => {
-      await userEvent.click(
-        within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
-          "button",
-          { name: "FilterPicker" },
-        ),
-      );
-    });
+    await userEvent.click(
+      within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
+        "button",
+        { name: "FilterPicker" },
+      ),
+    );
 
-    await act(async () => {
-      await userEvent.click(
-        screen.getByRole("option", {
-          name: words("desiredState.columns.version"),
-        }),
-      );
-    });
+    await userEvent.click(
+      screen.getByRole("option", {
+        name: words("desiredState.columns.version"),
+      }),
+    );
 
     const fromDatePicker = await screen.findByLabelText("Version range from");
 
-    await act(async () => {
-      await userEvent.click(fromDatePicker);
-    });
-
-    await act(async () => {
-      await userEvent.type(fromDatePicker, `3`);
-    });
+    await userEvent.type(fromDatePicker, `3`);
 
     const toDatePicker = await screen.findByLabelText("Version range to");
 
-    await act(async () => {
-      await userEvent.click(toDatePicker);
-    });
+    await userEvent.type(toDatePicker, `5`);
 
-    await act(async () => {
-      await userEvent.type(toDatePicker, `5`);
-    });
-
-    await act(async () => {
-      await userEvent.click(
-        await screen.findByLabelText("Apply Version filter"),
-      );
-    });
+    await userEvent.click(await screen.findByLabelText("Apply Version filter"));
 
     const rowsAfter = await screen.findAllByRole("row", {
       name: "DesiredStates Table Row",
@@ -482,13 +440,11 @@ describe("DesiredStatesView", () => {
     expect(POSTRequestsFired).toBe(0);
     expect(GETRequestsFired).toBe(1);
 
-    await act(async () => {
-      await userEvent.click(
-        within(rows[8]).getByRole("button", {
-          name: "actions-toggle",
-        }),
-      );
-    });
+    await userEvent.click(
+      within(rows[8]).getByRole("button", {
+        name: "actions-toggle",
+      }),
+    );
 
     expect(
       within(rows[8]).getByRole("button", {
@@ -502,21 +458,20 @@ describe("DesiredStatesView", () => {
       }),
     ).toBeDisabled();
 
-    await act(async () => {
-      await userEvent.click(
-        within(rows[0]).getByRole("button", {
-          name: "actions-toggle",
-        }),
-      );
-    });
+    // close first opened popup, to avoid conflict with the next one.
+    await userEvent.click(
+      within(rows[8]).getByRole("button", {
+        name: "actions-toggle",
+      }),
+    );
 
-    await act(async () => {
-      await userEvent.click(
-        screen.getByRole("menuitem", {
-          name: words("desiredState.actions.promote"),
-        }),
-      );
-    });
+    await userEvent.click(
+      within(rows[0]).getByRole("button", {
+        name: "actions-toggle",
+      }),
+    );
+
+    await userEvent.click(screen.getByRole("menuitem", { name: /promote/i }));
 
     const rowsAfter = await screen.findAllByRole("row", {
       name: "DesiredStates Table Row",
@@ -565,37 +520,31 @@ describe("DesiredStatesView", () => {
 
     expect(initialRows).toHaveLength(9);
 
-    await act(async () => {
-      await userEvent.click(
-        within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
-          "button",
-          { name: "FilterPicker" },
-        ),
-      );
-    });
-    await act(async () => {
-      await userEvent.click(
-        screen.getByRole("option", {
-          name: words("desiredState.columns.status"),
-        }),
-      );
-    });
+    await userEvent.click(
+      within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
+        "button",
+        { name: "FilterPicker" },
+      ),
+    );
+
+    await userEvent.click(
+      screen.getByRole("option", {
+        name: words("desiredState.columns.status"),
+      }),
+    );
 
     const input = screen.getByPlaceholderText(
       words("desiredState.filters.status.placeholder"),
     );
 
-    await act(async () => {
-      await userEvent.click(input);
-    });
+    await userEvent.click(input);
 
     const option = await screen.findByRole("option", {
       name: words("desiredState.test.candidate"),
     });
 
-    await act(async () => {
-      await userEvent.click(option);
-    });
+    await userEvent.click(option);
+
     expect(POSTRequestsFired).toBe(0);
     expect(GETRequestsFired).toBe(2);
 
@@ -603,21 +552,17 @@ describe("DesiredStatesView", () => {
       name: "DesiredStates Table Row",
     });
 
-    await act(async () => {
-      await userEvent.click(
-        within(rows[0]).getByRole("button", {
-          name: "actions-toggle",
-        }),
-      );
-    });
+    await userEvent.click(
+      within(rows[0]).getByRole("button", {
+        name: "actions-toggle",
+      }),
+    );
 
-    await act(async () => {
-      await userEvent.click(
-        screen.getByRole("menuitem", {
-          name: words("desiredState.actions.promote"),
-        }),
-      );
-    });
+    await userEvent.click(
+      screen.getByRole("menuitem", {
+        name: words("desiredState.actions.promote"),
+      }),
+    );
 
     const rowsAfter = await screen.findAllByRole("row", {
       name: "DesiredStates Table Row",
@@ -654,21 +599,17 @@ describe("DesiredStatesView", () => {
       name: "DesiredStates Table Row",
     });
 
-    await act(async () => {
-      await userEvent.click(
-        within(rows[0]).getByRole("button", {
-          name: "actions-toggle",
-        }),
-      );
-    });
+    await userEvent.click(
+      within(rows[0]).getByRole("button", {
+        name: "actions-toggle",
+      }),
+    );
 
-    await act(async () => {
-      await userEvent.click(
-        screen.getByRole("menuitem", {
-          name: words("desiredState.actions.promote"),
-        }),
-      );
-    });
+    await userEvent.click(
+      screen.getByRole("menuitem", {
+        name: words("desiredState.actions.promote"),
+      }),
+    );
 
     expect(await screen.findByText("something happened")).toBeVisible();
   });
@@ -702,17 +643,13 @@ describe("DesiredStatesView", () => {
         name: "DesiredStates Table Row",
       });
 
-      await act(async () => {
-        await userEvent.click(
-          within(rows[0]).getByRole("button", {
-            name: "actions-toggle",
-          }),
-        );
-      });
+      await userEvent.click(
+        within(rows[0]).getByRole("button", {
+          name: "actions-toggle",
+        }),
+      );
 
-      await act(async () => {
-        await userEvent.click(screen.getByRole("menuitem", { name: "Delete" }));
-      });
+      await userEvent.click(screen.getByRole("menuitem", { name: "Delete" }));
 
       expect(
         await screen.findByText(words("inventory.deleteVersion.header")(9)),
@@ -743,42 +680,32 @@ describe("DesiredStatesView", () => {
       });
 
       //close by "no" button scenario
-      await act(async () => {
-        await userEvent.click(
-          within(rows[0]).getByRole("button", {
-            name: "actions-toggle",
-          }),
-        );
-      });
+      await userEvent.click(
+        within(rows[0]).getByRole("button", {
+          name: "actions-toggle",
+        }),
+      );
 
-      await act(async () => {
-        await userEvent.click(screen.getByRole("menuitem", { name: "Delete" }));
-      });
+      await userEvent.click(screen.getByRole("menuitem", { name: "Delete" }));
+
       const noButton = await screen.findByText("No");
 
-      await act(async () => {
-        await userEvent.click(noButton);
-      });
+      await userEvent.click(noButton);
 
       expect(screen.queryByText("Yes")).not.toBeInTheDocument();
 
       //close by close button scenario
-      await act(async () => {
-        await userEvent.click(
-          within(rows[0]).getByRole("button", {
-            name: "actions-toggle",
-          }),
-        );
-      });
-      await act(async () => {
-        await userEvent.click(screen.getByRole("menuitem", { name: "Delete" }));
-      });
+      await userEvent.click(
+        within(rows[0]).getByRole("button", {
+          name: "actions-toggle",
+        }),
+      );
+
+      await userEvent.click(screen.getByRole("menuitem", { name: "Delete" }));
 
       const closeButton = await screen.findByLabelText("Close");
 
-      await act(async () => {
-        await userEvent.click(closeButton);
-      });
+      await userEvent.click(closeButton);
 
       expect(screen.queryByText("Yes")).not.toBeInTheDocument();
 
@@ -812,22 +739,17 @@ describe("DesiredStatesView", () => {
       expect(DELETERequestsFired).toBe(0);
       expect(GETRequestsFired).toBe(1);
 
-      await act(async () => {
-        await userEvent.click(
-          within(rows[0]).getByRole("button", {
-            name: "actions-toggle",
-          }),
-        );
-      });
+      await userEvent.click(
+        within(rows[0]).getByRole("button", {
+          name: "actions-toggle",
+        }),
+      );
 
-      await act(async () => {
-        await userEvent.click(screen.getByRole("menuitem", { name: "Delete" }));
-      });
+      await userEvent.click(screen.getByRole("menuitem", { name: "Delete" }));
+
       const yesButton = await screen.findByText("Yes");
 
-      await act(async () => {
-        await userEvent.click(yesButton);
-      });
+      await userEvent.click(yesButton);
 
       expect(screen.queryByText("No")).not.toBeInTheDocument();
 

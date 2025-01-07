@@ -1,4 +1,4 @@
-import React, { act } from "react";
+import React from "react";
 import { TextInputTypes } from "@patternfly/react-core";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
@@ -36,15 +36,13 @@ describe("TextListInputField", () => {
       />,
     );
 
-    await act(async () => {
-      const input = screen.getByRole("textbox");
+    const input = screen.getByRole("textbox");
 
-      await userEvent.type(input, "test");
+    await userEvent.type(input, "test");
 
-      const addButton = screen.getByRole("button", { name: "Add" });
+    const addButton = screen.getByRole("button", { name: "Add" });
 
-      await userEvent.click(addButton);
-    });
+    await userEvent.click(addButton);
 
     const chips = screen.getAllByRole("listitem");
 
@@ -67,13 +65,11 @@ describe("TextListInputField", () => {
       />,
     );
 
-    await act(async () => {
-      const deleteButton = screen.getByRole("button", {
-        name: /close value1/i,
-      });
-
-      await userEvent.click(deleteButton);
+    const deleteButton = screen.getByRole("button", {
+      name: /close value1/i,
     });
+
+    await userEvent.click(deleteButton);
 
     const chips = screen.getAllByRole("listitem");
 
@@ -93,13 +89,11 @@ describe("TextListInputField", () => {
       />,
     );
 
-    await act(async () => {
-      const deleteButton = screen.getByRole("button", {
-        name: "Clear button and input",
-      });
-
-      await userEvent.click(deleteButton);
+    const deleteButton = screen.getByRole("button", {
+      name: "Clear button and input",
     });
+
+    await userEvent.click(deleteButton);
 
     const chips = screen.queryAllByRole("listitem");
 

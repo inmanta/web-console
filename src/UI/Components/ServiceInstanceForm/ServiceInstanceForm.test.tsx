@@ -1,4 +1,4 @@
-import React, { act } from "react";
+import React from "react";
 import "@testing-library/jest-dom";
 import { Route, Routes } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -101,9 +101,9 @@ test("GIVEN ServiceInstanceForm WHEN passed a TextField THEN shows that field", 
   const value = "test text";
 
   expect(textBox).toBeVisible();
-  await act(async () => {
-    await userEvent.type(textBox, value);
-  });
+
+  await userEvent.type(textBox, value);
+
   expect(textBox).toHaveValue(value);
 });
 
@@ -124,9 +124,9 @@ test("GIVEN ServiceInstanceForm WHEN passed a TextField with suggestions THEN sh
   const value = "test text";
 
   expect(textBox).toBeVisible();
-  await act(async () => {
-    await userEvent.type(textBox, value);
-  });
+
+  await userEvent.type(textBox, value);
+
   expect(textBox).toHaveValue(value);
 });
 
@@ -172,9 +172,7 @@ test("GIVEN ServiceInstanceForm WHEN passed a TextField with parameter suggestio
   });
 
   // simulate click on the input to show the suggestions
-  await act(async () => {
-    await userEvent.click(textBox);
-  });
+  await userEvent.click(textBox);
 
   const suggestions = screen.getAllByRole("menuitem");
 
@@ -211,9 +209,7 @@ test("GIVEN ServiceInstanceForm WHEN passed a TextField with parameter suggestio
   });
 
   // simulate click on the input to show the suggestions
-  await act(async () => {
-    await userEvent.click(textBox);
-  });
+  await userEvent.click(textBox);
 
   const suggestions = screen.queryAllByRole("menuitem");
 
@@ -237,9 +233,7 @@ test("GIVEN ServiceInstanceForm WHEN passed a BooleanField THEN shows that field
 
   const trueRadioButton = screen.getByRole("radio", { name: "True" });
 
-  await act(async () => {
-    await userEvent.click(trueRadioButton);
-  });
+  await userEvent.click(trueRadioButton);
 
   expect(trueRadioButton).toBeChecked();
 });
@@ -261,17 +255,13 @@ test("GIVEN ServiceInstanceForm WHEN passed an EnumField THEN shows that field",
 
   expect(select).toHaveTextContent("local");
 
-  await act(async () => {
-    await userEvent.click(select);
-  });
+  await userEvent.click(select);
 
   const options = screen.getAllByRole("option");
 
   expect(options).toHaveLength(2);
 
-  await act(async () => {
-    await userEvent.click(options[0]);
-  });
+  await userEvent.click(options[0]);
 
   expect(select).toHaveTextContent("ci");
 });
@@ -297,9 +287,7 @@ test("GIVEN ServiceInstanceForm WHEN passed an EnumField with more than one valu
     `${Test.Field.enumFieldTwoOptions.name}-select-toggle`,
   );
 
-  await act(async () => {
-    await userEvent.click(select);
-  });
+  await userEvent.click(select);
 
   const options = screen.getAllByRole("option");
 
@@ -323,9 +311,7 @@ test("GIVEN ServiceInstanceForm WHEN passed an EnumField with only one value THE
 
   expect(select).toHaveTextContent("local");
 
-  await act(async () => {
-    await userEvent.click(select);
-  });
+  await userEvent.click(select);
 
   const option = screen.getByRole("option");
 
@@ -343,23 +329,19 @@ test("GIVEN ServiceInstanceForm and a NestedField WHEN clicking the toggle THEN 
 
   expect(group).toBeVisible();
 
-  await act(async () => {
-    await userEvent.click(
-      within(group).getByRole("button", {
-        name: words("catalog.callbacks.add"),
-      }),
-    );
-  });
+  await userEvent.click(
+    within(group).getByRole("button", {
+      name: words("catalog.callbacks.add"),
+    }),
+  );
 
   expect(
     screen.queryByRole("textbox", { name: Test.Field.text.name }),
   ).not.toBeInTheDocument();
 
-  await act(async () => {
-    await userEvent.click(
-      within(group).getByRole("button", { name: "nested_field" }),
-    );
-  });
+  await userEvent.click(
+    within(group).getByRole("button", { name: "nested_field" }),
+  );
 
   expect(
     screen.getByRole("textbox", { name: `TextInput-${Test.Field.text.name}` }),
@@ -381,16 +363,13 @@ test("GIVEN ServiceInstanceForm and a DictListField WHEN clicking all toggles op
     screen.queryByRole("textbox", { name: Test.Field.text.name }),
   ).not.toBeInTheDocument();
 
-  await act(async () => {
-    await userEvent.click(
-      within(group).getByRole("button", {
-        name: "dict_list_field",
-      }),
-    );
-  });
-  await act(async () => {
-    await userEvent.click(within(group).getByRole("button", { name: "0" }));
-  });
+  await userEvent.click(
+    within(group).getByRole("button", {
+      name: "dict_list_field",
+    }),
+  );
+
+  await userEvent.click(within(group).getByRole("button", { name: "0" }));
 
   expect(
     screen.getByRole("textbox", { name: `TextInput-${Test.Field.text.name}` }),
@@ -423,16 +402,13 @@ test("GIVEN ServiceInstanceForm and a nested DictListField WHEN in EDIT mode, ne
     screen.queryByRole("textbox", { name: Test.Field.textDisabled.name }),
   ).not.toBeInTheDocument();
 
-  await act(async () => {
-    await userEvent.click(
-      within(group).getByRole("button", {
-        name: "nested_dict_list_field",
-      }),
-    );
-  });
-  await act(async () => {
-    await userEvent.click(within(group).getByRole("button", { name: "0" }));
-  });
+  await userEvent.click(
+    within(group).getByRole("button", {
+      name: "nested_dict_list_field",
+    }),
+  );
+
+  await userEvent.click(within(group).getByRole("button", { name: "0" }));
 
   expect(
     screen.queryByRole("textbox", {
@@ -446,18 +422,13 @@ test("GIVEN ServiceInstanceForm and a nested DictListField WHEN in EDIT mode, ne
 
   expect(nestedGroup).toBeVisible();
 
-  await act(async () => {
-    await userEvent.click(
-      within(nestedGroup).getByRole("button", {
-        name: "dict_list_field",
-      }),
-    );
-  });
-  await act(async () => {
-    await userEvent.click(
-      within(nestedGroup).getByRole("button", { name: "0" }),
-    );
-  });
+  await userEvent.click(
+    within(nestedGroup).getByRole("button", {
+      name: "dict_list_field",
+    }),
+  );
+
+  await userEvent.click(within(nestedGroup).getByRole("button", { name: "0" }));
 
   const disabledNestedTextField = within(nestedGroup).getByRole("textbox", {
     name: `TextInput-${Test.Field.textDisabled.name}`,
@@ -465,17 +436,11 @@ test("GIVEN ServiceInstanceForm and a nested DictListField WHEN in EDIT mode, ne
 
   expect(disabledNestedTextField).toBeDisabled();
 
-  await act(async () => {
-    await userEvent.click(
-      within(nestedGroup).getByRole("button", { name: "Add" }),
-    );
-  });
+  await userEvent.click(
+    within(nestedGroup).getByRole("button", { name: "Add" }),
+  );
 
-  await act(async () => {
-    await userEvent.click(
-      within(nestedGroup).getByRole("button", { name: "1" }),
-    );
-  });
+  await userEvent.click(within(nestedGroup).getByRole("button", { name: "1" }));
 
   const nestedTextFields = screen.getAllByRole("textbox", {
     name: `TextInput-${Test.Field.textDisabled.name}`,
@@ -499,60 +464,46 @@ test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is
 
   render(component);
 
-  await act(async () => {
-    await userEvent.type(
-      screen.getByRole("textbox", { name: `TextInput-${fields[0].name}` }),
-      "test text",
-    );
-  });
-  await act(async () => {
-    await userEvent.click(screen.getByRole("radio", { name: words("true") }));
-  });
+  await userEvent.type(
+    screen.getByRole("textbox", { name: `TextInput-${fields[0].name}` }),
+    "test text",
+  );
+
+  await userEvent.click(screen.getByRole("radio", { name: words("true") }));
 
   const group = screen.getByRole("group", {
     name: "nested_field",
   });
 
-  await act(async () => {
-    await userEvent.click(
-      within(group).getByRole("button", {
-        name: words("catalog.callbacks.add"),
-      }),
-    );
-  });
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("button", { name: nestedField.name }),
-    );
-  });
-  await act(async () => {
-    await userEvent.type(
-      screen.getByRole("textbox", {
-        name: `TextInput-${nestedField.fields[0].name}`,
-      }),
-      "test text 2",
-    );
-  });
+  await userEvent.click(
+    within(group).getByRole("button", {
+      name: words("catalog.callbacks.add"),
+    }),
+  );
 
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("button", { name: dictListField.name }),
-    );
-  });
-  await act(async () => {
-    await userEvent.click(screen.getByRole("button", { name: "0" }));
-  });
-  await act(async () => {
-    await userEvent.type(
-      screen.getByRole("textbox", {
-        name: `TextInput-${dictListField.fields[0].name}`,
-      }),
-      "test text 3",
-    );
-  });
-  await act(async () => {
-    await userEvent.click(screen.getByText(words("confirm")));
-  });
+  await userEvent.click(screen.getByRole("button", { name: nestedField.name }));
+
+  await userEvent.type(
+    screen.getByRole("textbox", {
+      name: `TextInput-${nestedField.fields[0].name}`,
+    }),
+    "test text 2",
+  );
+
+  await userEvent.click(
+    screen.getByRole("button", { name: dictListField.name }),
+  );
+
+  await userEvent.click(screen.getByRole("button", { name: "0" }));
+
+  await userEvent.type(
+    screen.getByRole("textbox", {
+      name: `TextInput-${dictListField.fields[0].name}`,
+    }),
+    "test text 3",
+  );
+
+  await userEvent.click(screen.getByText(words("confirm")));
 
   expect(submitCb).toHaveBeenCalledWith(
     {
@@ -578,9 +529,7 @@ test.each`
 
     expect(screen.getByLabelText(label)).toHaveValue("");
 
-    await act(async () => {
-      await userEvent.type(screen.getByLabelText(label), newValue);
-    });
+    await userEvent.type(screen.getByLabelText(label), newValue);
 
     expect(screen.getByLabelText(label)).toHaveValue(newValue);
   },
@@ -602,13 +551,11 @@ test.each`
 
     expect(screen.getByLabelText(label)).toHaveValue(value);
 
-    await act(async () => {
-      await userEvent.clear(screen.getByLabelText(label));
-      await userEvent.type(
-        screen.getByLabelText(label),
-        "{selectAll}{backspace}" + newValue,
-      );
-    });
+    await userEvent.clear(screen.getByLabelText(label));
+    await userEvent.type(
+      screen.getByLabelText(label),
+      "{selectAll}{backspace}" + newValue,
+    );
 
     expect(screen.getByLabelText(label)).toHaveValue(newValue);
   },
