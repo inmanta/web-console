@@ -19,7 +19,6 @@ const kinds = [
   "DuplicateInstance",
   "EditInstance",
   "Events",
-  "History",
   "InstanceDetails",
   "InstanceComposer",
   "InstanceComposerEditor",
@@ -90,7 +89,6 @@ interface RouteParamKeysManifest {
   DuplicateInstance: "service" | "instance";
   EditInstance: "service" | "instance";
   Events: "service" | "instance";
-  History: "service" | "instance";
   InstanceDetails: "service" | "instance" | "instanceId";
   InstanceComposer: "service";
   InstanceComposerEditor: "service" | "instance";

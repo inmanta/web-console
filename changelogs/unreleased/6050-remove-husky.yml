@@ -1,0 +1,4 @@
+description: Remove Husky from the project.
+issue-nr: 6050
+change-type: patch
+destination-branches: [master]

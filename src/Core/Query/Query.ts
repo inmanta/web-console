@@ -83,7 +83,6 @@ import * as GetResourceHistory from "@S/ResourceDetails/Core/GetResourceHistoryQ
 import * as GetResourceLogs from "@S/ResourceDetails/Core/GetResourceLogsQuery";
 import * as GetDiscoveredResources from "@S/ResourceDiscovery/Core/Query";
 import * as GetCallbacks from "@S/ServiceDetails/Core/GetCallbacksQuery";
-import * as GetInstanceLogs from "@S/ServiceInstanceHistory/Core/Query";
 import * as GetEnvironmentDetails from "@S/Settings/Core/GetEnvironmentDetailsQuery";
 import * as GetProjects from "@S/Settings/Core/GetProjectsQuery";
 
@@ -95,7 +94,6 @@ export type Query =
   | GetServiceConfig
   | GetInstanceResources
   | GetInstanceEvents.Query
-  | GetInstanceLogs.Query
   | GetInstanceConfig
   | GetMetrics.Query
   | GetDiagnostics.Query
@@ -145,7 +143,6 @@ interface Manifest {
   GetServiceConfig: GetServiceConfigManifest;
   GetInstanceResources: GetInstanceResourcesManifest;
   GetInstanceEvents: GetInstanceEvents.Manifest;
-  GetInstanceLogs: GetInstanceLogs.Manifest;
   GetInstanceConfig: GetInstanceConfigManifest;
   GetDiagnostics: GetDiagnostics.Manifest;
   GetDiscoveredResources: GetDiscoveredResources.Manifest;

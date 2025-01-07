@@ -1,4 +1,4 @@
-import { InstanceLog } from "@/Slices/ServiceInstanceHistory/Core/Domain";
+import { InstanceLog } from "@/Core/Domain/HistoryLog";
 import {
   formatTreeRowData,
   getAttributeSetsFromInstance,

@@ -12,8 +12,8 @@ import {
 } from "@patternfly/react-core";
 import { Table, Tbody, Td, Tr } from "@patternfly/react-table";
 import { ServiceModel } from "@/Core";
+import { InstanceLog } from "@/Core/Domain/HistoryLog";
 import { useUrlStateWithString } from "@/Data";
-import { InstanceLog } from "@/Slices/ServiceInstanceHistory/Core/Domain";
 import { DependencyContext, words } from "@/UI";
 import {
   DateWithTooltip,
@@ -149,7 +149,7 @@ interface StateLabelProps {
  *  @prop {string} state - the state that needs to be be matched against the available states in the model
  * @returns {React.FC<StateLabelProps>} A React Component displaying a label tag for the state with the right color
  */
-const StateLabel: React.FC<StateLabelProps> = ({ service, state }) => {
+export const StateLabel: React.FC<StateLabelProps> = ({ service, state }) => {
   if (!service) {
     return state;
   }
