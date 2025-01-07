@@ -1,4 +1,10 @@
-import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import {
   Button,
   FormFieldGroupExpandable,
@@ -489,7 +495,7 @@ const DictListFieldInput: React.FC<DictListProps> = ({
 }) => {
   const list = useMemo(
     () => (get(formState, makePath(path, field.name)) as Array<unknown>) || [],
-    [formState, path, field.name]
+    [formState, path, field.name],
   );
 
   const [addedItemsPaths, setAddedItemPaths] = useState<string[]>([]);
