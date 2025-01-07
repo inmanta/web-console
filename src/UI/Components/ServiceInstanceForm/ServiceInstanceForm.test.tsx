@@ -331,7 +331,7 @@ test("GIVEN ServiceInstanceForm and a NestedField WHEN clicking the toggle THEN 
 
   await userEvent.click(
     within(group).getByRole("button", {
-      name: words("catalog.callbacks.add"),
+      name: words("add"),
     }),
   );
 
@@ -450,6 +450,60 @@ test("GIVEN ServiceInstanceForm and a nested DictListField WHEN in EDIT mode, ne
   expect(nestedTextFields[1]).toBeEnabled();
 });
 
+test("GIVEN ServiceInstanceForm WHEN Deleting an item that isn't the last index, removes the correct item", async () => {
+  const dictListField = Test.Field.dictList([
+    { ...Test.Field.text, name: "flat_field" },
+  ]);
+  const fields = [dictListField];
+  const originalAttributes = {
+    dict_list_field: [
+      { flat_field: "flat_field_text_1" },
+      { flat_field: "flat_field_text_2" },
+      { flat_field: "flat_field_text_3" },
+    ],
+  };
+
+  const { component } = setup(fields, undefined, true, originalAttributes);
+
+  render(component);
+
+  const group = screen.getByRole("group", {
+    name: "dict_list_field",
+  });
+
+  expect(group).toBeVisible();
+
+  await userEvent.click(
+    screen.getByRole("button", { name: dictListField.name }),
+  );
+
+  // Open all the collapsible sections
+  await userEvent.click(screen.getByRole("button", { name: "0" }));
+  await userEvent.click(screen.getByRole("button", { name: "1" }));
+  await userEvent.click(screen.getByRole("button", { name: "2" }));
+
+  const textBoxes = screen.getAllByRole("textbox");
+
+  expect(textBoxes).toHaveLength(3);
+  expect(textBoxes[0]).toHaveValue("flat_field_text_1");
+
+  // expect the first delete button to be disabled
+  expect(
+    screen.getAllByRole("button", { name: words("delete") })[0],
+  ).toBeDisabled();
+
+  // Delete the second item of the list.
+  await userEvent.click(
+    within(group).getAllByRole("button", { name: words("delete") })[1],
+  );
+
+  const updatedTextBoxes = screen.getAllByRole("textbox");
+
+  expect(updatedTextBoxes).toHaveLength(2);
+  expect(updatedTextBoxes[0]).toHaveValue("flat_field_text_1");
+  expect(updatedTextBoxes[1]).toHaveValue("flat_field_text_3");
+});
+
 test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is executed with formState", async () => {
   const nestedField = Test.Field.nested([
     { ...Test.Field.text, name: "flat_field_text_2" },
@@ -477,7 +531,7 @@ test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is
 
   await userEvent.click(
     within(group).getByRole("button", {
-      name: words("catalog.callbacks.add"),
+      name: words("add"),
     }),
   );
 
