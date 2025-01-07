@@ -535,17 +535,6 @@ test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is
     }),
   );
 
-  await userEvent.click(
-    screen.getByRole("button", { name: nestedField.name }),
-  );
-
-  await userEvent.type(
-    screen.getByRole("textbox", {
-      name: `TextInput-${nestedField.fields[0].name}`,
-    }),
-    "test text 2",
-  );
-
   await userEvent.click(screen.getByRole("button", { name: nestedField.name }));
 
   await userEvent.type(
