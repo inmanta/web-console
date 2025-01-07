@@ -816,7 +816,6 @@ if (Cypress.env("edition") === "iso") {
           expect(text).to.match(uuidRegex);
           cy.wrap(text).as("oldUuid");
         });
-      cy.wait(1000); // wait for the async assertion
 
       // click on edit instance with composer
       cy.get('[aria-label="Actions-Toggle"]').click();
@@ -881,15 +880,14 @@ if (Cypress.env("edition") === "iso") {
         "Version: 8",
       ); // initial open of the details view will show the outdated version
 
-      // FLAKE: the uuid is not always updated correctly
-      // cy.get('[aria-label="parent_entity_value"]')
-      //   .invoke("text")
-      //   .then((text) => {
-      //     cy.get("@oldUuid").then((oldUuid) => {
-      //       expect(text).to.match(uuidRegex);
-      //       expect(text).to.not.be.equal(oldUuid);
-      //     });
-      //   });
+      cy.get("@oldUuid").then((oldUuid) => {
+        cy.get('[aria-label="parent_entity_value"]')
+          .invoke("text")
+          .then((text) => {
+            expect(text).to.match(uuidRegex);
+            expect(text).to.not.be.equal(oldUuid);
+          });
+      });
     });
 
     it("8.5 composer edit view is able to remove inter-service relation from instance", () => {
