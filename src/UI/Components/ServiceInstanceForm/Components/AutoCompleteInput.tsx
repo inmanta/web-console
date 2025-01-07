@@ -77,6 +77,11 @@ export const AutoCompleteInput: React.FC<Props> = ({
       label={attributeName}
       aria-label={`${attributeName}-select-input`}
     >
+      <FormHelperText>
+        <HelperText>
+          <HelperTextItem>{description}</HelperTextItem>
+        </HelperText>
+      </FormHelperText>
       {multi ? (
         <MultiTextSelect
           options={initialOptions}
@@ -103,11 +108,6 @@ export const AutoCompleteInput: React.FC<Props> = ({
           onSearchTextChanged={onSearchTextChanged}
         />
       )}
-      <FormHelperText>
-        <HelperText>
-          <HelperTextItem>{description}</HelperTextItem>
-        </HelperText>
-      </FormHelperText>
     </FormGroup>
   );
 };
