@@ -120,12 +120,9 @@ test("DuplicateInstance View shows success form", async () => {
 
   expect(bandwidthField).toBeVisible();
 
-  await act(async () => {
-    await userEvent.type(bandwidthField, "3");
-  });
-  await act(async () => {
-    await userEvent.click(screen.getByText(words("confirm")));
-  });
+  await userEvent.type(bandwidthField, "3");
+
+  await userEvent.click(screen.getByText(words("confirm")));
 
   await act(async () => {
     const results = await axe(document.body);
@@ -209,16 +206,11 @@ test("Given the DuplicateInstance View When changing a embedded entity Then the 
     expect(results).toHaveNoViolations();
   });
 
-  await act(async () => {
-    await userEvent.click(screen.getByRole("button", { name: "circuits" }));
-  });
-  await act(async () => {
-    await userEvent.click(screen.getByRole("button", { name: "1" }));
-  });
+  await userEvent.click(screen.getByRole("button", { name: "circuits" }));
 
-  await act(async () => {
-    await userEvent.click(screen.getByRole("button", { name: "csp_endpoint" }));
-  });
+  await userEvent.click(screen.getByRole("button", { name: "1" }));
+
+  await userEvent.click(screen.getByRole("button", { name: "csp_endpoint" }));
 
   const bandwidthField = screen.getByText("bandwidth");
 
@@ -228,16 +220,11 @@ test("Given the DuplicateInstance View When changing a embedded entity Then the 
     "cloud_service_provider",
   )[0];
 
-  await act(async () => {
-    await userEvent.type(firstCloudServiceProviderField, "2");
-  });
+  await userEvent.type(firstCloudServiceProviderField, "2");
 
-  await act(async () => {
-    await userEvent.type(bandwidthField, "22");
-  });
-  await act(async () => {
-    await userEvent.click(screen.getByText(words("confirm")));
-  });
+  await userEvent.type(bandwidthField, "22");
+
+  await userEvent.click(screen.getByText(words("confirm")));
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
 
@@ -334,26 +321,19 @@ test("Given the DuplicateInstance View When changing an embedded entity Then the
     "DictListFieldInput-editableOptionalEmbedded_base",
   );
 
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("button", { name: "embedded_base" }),
-    );
-  });
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("button", { name: "editableEmbedded_base" }),
-    );
-  });
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("button", { name: "optionalEmbedded_base" }),
-    );
-  });
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("button", { name: "editableOptionalEmbedded_base" }),
-    );
-  });
+  await userEvent.click(screen.getByRole("button", { name: "embedded_base" }));
+
+  await userEvent.click(
+    screen.getByRole("button", { name: "editableEmbedded_base" }),
+  );
+
+  await userEvent.click(
+    screen.getByRole("button", { name: "optionalEmbedded_base" }),
+  );
+
+  await userEvent.click(
+    screen.getByRole("button", { name: "editableOptionalEmbedded_base" }),
+  );
 
   expect(
     within(embedded_base).queryByRole("button", { name: "Add" }),
@@ -388,11 +368,10 @@ test("Given the DuplicateInstance View When changing an embedded entity Then the
   ).toBeEnabled();
 
   //check if direct attributes for embedded entities are correctly displayed
-  await act(async () => {
-    await userEvent.click(
-      within(embedded_base).getByRole("button", { name: "0" }),
-    );
-  });
+  await userEvent.click(
+    within(embedded_base).getByRole("button", { name: "0" }),
+  );
+
   expect(within(embedded_base).queryByDisplayValue("string")).toBeEnabled();
   expect(
     within(embedded_base).queryByDisplayValue("editableString"),
@@ -479,35 +458,27 @@ test("Given the DuplicateInstance View When changing an embedded entity Then the
     "DictListFieldInput-embedded_base.0.editableEmbedded?",
   );
 
-  await act(async () => {
-    await userEvent.click(
-      within(embedded_base).getByRole("button", { name: "embedded" }),
-    );
-  });
+  await userEvent.click(
+    within(embedded_base).getByRole("button", { name: "embedded" }),
+  );
 
-  await act(async () => {
-    await userEvent.click(
-      within(embedded_base).getByRole("button", {
-        name: "editableEmbedded",
-      }),
-    );
-  });
+  await userEvent.click(
+    within(embedded_base).getByRole("button", {
+      name: "editableEmbedded",
+    }),
+  );
 
-  await act(async () => {
-    await userEvent.click(
-      within(embedded_base).getByRole("button", {
-        name: "embedded?",
-      }),
-    );
-  });
+  await userEvent.click(
+    within(embedded_base).getByRole("button", {
+      name: "embedded?",
+    }),
+  );
 
-  await act(async () => {
-    await userEvent.click(
-      within(embedded_base).getByRole("button", {
-        name: "editableEmbedded?",
-      }),
-    );
-  });
+  await userEvent.click(
+    within(embedded_base).getByRole("button", {
+      name: "editableEmbedded?",
+    }),
+  );
 
   expect(
     within(nested_embedded_base).queryByRole("button", { name: "Add" }),

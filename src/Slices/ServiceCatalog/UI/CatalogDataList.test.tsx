@@ -127,9 +127,7 @@ test("GIVEN CatalogDataList WHEN service THEN service details has correct link",
 
   const dropdown = screen.getByLabelText("Actions-dropdown");
 
-  await act(async () => {
-    await userEvent.click(dropdown);
-  });
+  await userEvent.click(dropdown);
 
   const link = screen.getByRole("link", {
     name: words("catalog.button.details"),

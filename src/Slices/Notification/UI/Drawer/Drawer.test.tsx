@@ -130,15 +130,11 @@ test("Given Drawer When clicking on 'Clear all' Then all notifications are clear
     await apiHelper.resolve(Either.right(Mock.response));
   });
 
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("button", { name: "NotificationListActions" }),
-    );
-  });
+  await userEvent.click(
+    screen.getByRole("button", { name: "NotificationListActions" }),
+  );
 
-  await act(async () => {
-    await userEvent.click(screen.getByRole("menuitem", { name: "Clear all" }));
-  });
+  await userEvent.click(screen.getByRole("menuitem", { name: "Clear all" }));
 
   expect(apiHelper.pendingRequests).toEqual([
     updateRequest("abcdefgh01", { read: true, cleared: true }),
@@ -179,16 +175,14 @@ test("Given Drawer When user clicks on 'Read all' Then all notifications are rea
   await act(async () => {
     await apiHelper.resolve(Either.right(Mock.response));
   });
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("button", { name: "NotificationListActions" }),
-    );
-  });
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("menuitem", { name: "Mark all as read" }),
-    );
-  });
+
+  await userEvent.click(
+    screen.getByRole("button", { name: "NotificationListActions" }),
+  );
+
+  await userEvent.click(
+    screen.getByRole("menuitem", { name: "Mark all as read" }),
+  );
 
   expect(apiHelper.pendingRequests).toEqual([
     updateRequest("abcdefgh01", { read: true }),
@@ -238,9 +232,7 @@ test("Given Drawer When user clicks a notification Then it becomes read", async 
 
   const items = screen.getAllByRole("listitem", { name: "NotificationItem" });
 
-  await act(async () => {
-    await userEvent.click(items[0]);
-  });
+  await userEvent.click(items[0]);
 
   expect(apiHelper.pendingRequests).toEqual([
     updateRequest("abcdefgh01", { read: true }),
@@ -286,9 +278,7 @@ test("Given Drawer When user clicks a notification with an uri then go to the ur
 
   const items = screen.getAllByRole("listitem", { name: "NotificationItem" });
 
-  await act(async () => {
-    await userEvent.click(items[0]);
-  });
+  await userEvent.click(items[0]);
 
   expect(history.location.pathname).toBe(
     "/compilereports/f2c68117-24bd-43cf-a9dc-ce42b934a614",
@@ -311,9 +301,7 @@ test("Given Drawer When user clicks a notification without an uri then nothing h
     expect(results).toHaveNoViolations();
   });
 
-  await act(async () => {
-    await userEvent.click(items[3]);
-  });
+  await userEvent.click(items[3]);
 
   expect(history.location.pathname).toBe("/");
 });
@@ -336,9 +324,7 @@ test("Given Drawer When user clicks a notification toggle with an uri then do no
     expect(results).toHaveNoViolations();
   });
 
-  await act(async () => {
-    await userEvent.click(items[0]);
-  });
+  await userEvent.click(items[0]);
 
   expect(history.location.pathname).toBe("/");
 });
@@ -356,14 +342,11 @@ test("Given Drawer When user clicks on 'unread' for 1 notification Then it becom
     name: "NotificationListItemActions",
   });
 
-  await act(async () => {
-    await userEvent.click(actions);
-  });
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("menuitem", { name: "Mark as unread" }),
-    );
-  });
+  await userEvent.click(actions);
+
+  await userEvent.click(
+    screen.getByRole("menuitem", { name: "Mark as unread" }),
+  );
 
   expect(apiHelper.pendingRequests).toEqual([
     updateRequest("abcdefgh03", { read: false }),
@@ -408,12 +391,9 @@ test("Given Drawer When user clicks on 'Clear' for 1 notification Then it is cle
     name: "NotificationListItemActions",
   });
 
-  await act(async () => {
-    await userEvent.click(actions);
-  });
-  await act(async () => {
-    await userEvent.click(screen.getByRole("menuitem", { name: "Clear" }));
-  });
+  await userEvent.click(actions);
+
+  await userEvent.click(screen.getByRole("menuitem", { name: "Clear" }));
 
   expect(apiHelper.pendingRequests).toEqual([
     updateRequest("abcdefgh03", { read: true, cleared: true }),

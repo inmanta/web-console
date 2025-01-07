@@ -1,4 +1,4 @@
-import React, { act } from "react";
+import React from "react";
 import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { DictEditor } from "./DictEditor";
@@ -48,9 +48,7 @@ test("GIVEN DictEditor WHEN deleteEntry clicked THEN that entry is removed", asy
 
   expect(deleteA).toBeEnabled();
 
-  await act(async () => {
-    await userEvent.click(deleteA);
-  });
+  await userEvent.click(deleteA);
 
   expect(setValue).toHaveBeenCalledTimes(1);
 
