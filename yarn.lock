@@ -953,6 +953,7 @@ __metadata:
     "@types/loadable__component": "npm:^5.13.9"
     "@types/lodash": "npm:^4.17.13"
     "@types/lodash-es": "npm:^4.17.12"
+    "@types/markdown-it-emoji": "npm:^3"
     "@types/node": "npm:^22.5.0"
     "@types/qs": "npm:^6.9.17"
     "@types/react-dom": "npm:^18.3.0"
@@ -1006,6 +1007,7 @@ __metadata:
     lodash-es: "npm:^4.17.21"
     madge: "npm:^6.1.0"
     markdown-it: "npm:^14.1.0"
+    markdown-it-emoji: "npm:^3.0.0"
     mermaid: "npm:^9.0.0"
     mini-css-extract-plugin: "npm:^2.9.0"
     mocha: "npm:^10.8.2"
@@ -2313,6 +2315,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/linkify-it@npm:^5":
+  version: 5.0.0
+  resolution: "@types/linkify-it@npm:5.0.0"
+  checksum: 10/c3919044d4876f9d71d037e861745cd2485c95ac8c36a4fa67b132d4e60eb1d067e123cc7965c9cf5110eea351517d767f0d306af5e9147d6d0af87bc374ddcf
+  languageName: node
+  linkType: hard
+
 "@types/loadable__component@npm:^5.13.9":
   version: 5.13.9
   resolution: "@types/loadable__component@npm:5.13.9"
@@ -2342,6 +2351,32 @@ __metadata:
   version: 4.17.13
   resolution: "@types/lodash@npm:4.17.13"
   checksum: 10/ddb34e20810c71be2d9445bcc4b64ec25b83976738454de709854b79c7f655b03704b76235445699956d65012987720e0e429a35489de65495cdb5420202d905
+  languageName: node
+  linkType: hard
+
+"@types/markdown-it-emoji@npm:^3":
+  version: 3.0.1
+  resolution: "@types/markdown-it-emoji@npm:3.0.1"
+  dependencies:
+    "@types/markdown-it": "npm:^14"
+  checksum: 10/cf11b177dca826d7617bc89b8d1ee2a5203bd1a370a62a699e3c6eb0299e7c10c71694d796dedfc05f888834c00e662274c0b2b71c4e73927ac57d189fc6f99c
+  languageName: node
+  linkType: hard
+
+"@types/markdown-it@npm:^14":
+  version: 14.1.2
+  resolution: "@types/markdown-it@npm:14.1.2"
+  dependencies:
+    "@types/linkify-it": "npm:^5"
+    "@types/mdurl": "npm:^2"
+  checksum: 10/ca2f239c8d59610b9f936fd40261a6ccf2fa1ae27a21816c031e5712542dcf9ee01e2fe29b31118df90716e11ade54e47d92a498e9b6488800e77ca8827255a2
+  languageName: node
+  linkType: hard
+
+"@types/mdurl@npm:^2":
+  version: 2.0.0
+  resolution: "@types/mdurl@npm:2.0.0"
+  checksum: 10/78746e96c655ceed63db06382da466fd52c7e9dc54d60b12973dfdd110cae06b9439c4b90e17bb8d4461109184b3ea9f3e9f96b3e4bf4aa9fe18b6ac35f283c8
   languageName: node
   linkType: hard
 
@@ -10611,6 +10646,13 @@ __metadata:
   dependencies:
     tmpl: "npm:1.0.5"
   checksum: 10/4c66ddfc654537333da952c084f507fa4c30c707b1635344eb35be894d797ba44c901a9cebe914aa29a7f61357543ba09b09dddbd7f65b4aee756b450f169f40
+  languageName: node
+  linkType: hard
+
+"markdown-it-emoji@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "markdown-it-emoji@npm:3.0.0"
+  checksum: 10/31cb31d2f3c89367ead154b6073100f05ef1172cf2ef50306efbcbfdc7ae3c7b191ee05a3b45777959e61aae349acbed6fb4057bb51c7923594f37712ec223ab
   languageName: node
   linkType: hard
 

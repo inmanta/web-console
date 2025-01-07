@@ -1,0 +1,6 @@
+description: Add support for emoji to the Documentation Tab
+issue-nr: 5931
+change-type: minor
+destination-branches: [master]
+sections:
+  minor-improvement: "{{description}}"

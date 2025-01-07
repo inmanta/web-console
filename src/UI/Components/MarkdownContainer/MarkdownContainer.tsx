@@ -1,5 +1,6 @@
 import React from "react";
 import markdownit from "markdown-it";
+import { full } from "markdown-it-emoji";
 import mermaidPlugin from "./MermaidPlugin";
 
 /**
@@ -29,6 +30,7 @@ export const MarkdownContainer = ({ text, web_title }: Props) => {
     typographer: true,
   });
 
+  md.use(full);
   md.use((md) => mermaidPlugin(md, web_title, {}));
 
   const result = md.render(text);
