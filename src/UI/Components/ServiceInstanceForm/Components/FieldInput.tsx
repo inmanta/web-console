@@ -6,7 +6,6 @@ import {
 } from "@patternfly/react-core";
 import { PlusIcon } from "@patternfly/react-icons";
 import { get } from "lodash-es";
-import styled from "styled-components";
 import { v4 as uuidv4 } from "uuid";
 import {
   InstanceAttributeModel,
@@ -404,7 +403,7 @@ const NestedFieldInput: React.FC<NestedProps> = ({
   };
 
   return (
-    <StyledFormFieldGroupExpandable
+    <FormFieldGroupExpandable
       aria-label={`NestedFieldInput-${makePath(path, field.name)}`}
       header={
         <FormFieldGroupHeader
@@ -456,7 +455,7 @@ const NestedFieldInput: React.FC<NestedProps> = ({
             isNew={isNew}
           />
         ))}
-    </StyledFormFieldGroupExpandable>
+    </FormFieldGroupExpandable>
   );
 };
 
@@ -492,7 +491,7 @@ const DictListFieldInput: React.FC<DictListProps> = ({
     () => (get(formState, makePath(path, field.name)) as Array<unknown>) || [],
     [formState, path, field.name]
   );
-  
+
   const [addedItemsPaths, setAddedItemPaths] = useState<string[]>([]);
 
   const [itemIds, setItemIds] = useState<string[]>([]);
@@ -653,7 +652,3 @@ const DictListFieldInput: React.FC<DictListProps> = ({
     </FormFieldGroupExpandable>
   );
 };
-
-const StyledFormFieldGroupExpandable = styled(FormFieldGroupExpandable)`
-  min-height: 0;
-`;
