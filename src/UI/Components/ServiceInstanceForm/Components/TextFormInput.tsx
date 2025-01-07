@@ -101,6 +101,11 @@ export const TextFormInput: React.FC<Props> = ({
         )
       }
     >
+      <FormHelperText>
+        <HelperText>
+          <HelperTextItem>{description}</HelperTextItem>
+        </HelperText>
+      </FormHelperText>
       {isTextarea ? (
         <TextArea
           value={inputValue || ""}
@@ -145,11 +150,6 @@ export const TextFormInput: React.FC<Props> = ({
           )}
         </>
       )}
-      <FormHelperText>
-        <HelperText>
-          <HelperTextItem>{description}</HelperTextItem>
-        </HelperText>
-      </FormHelperText>
     </FormGroup>
   );
 };

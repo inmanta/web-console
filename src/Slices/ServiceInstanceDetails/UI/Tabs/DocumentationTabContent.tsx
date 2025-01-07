@@ -7,7 +7,7 @@ import {
   Flex,
   Title,
 } from "@patternfly/react-core";
-import { InstanceAttributeModel } from "@/Core";
+import { InstanceAttributeModel, ServiceInstanceModel } from "@/Core";
 import { InstanceLog } from "@/Slices/ServiceInstanceHistory/Core/Domain";
 import { MarkdownCard } from "@/Slices/ServiceInventory/UI/Tabs/MarkdownCard";
 import { words } from "@/UI";
@@ -48,28 +48,36 @@ export const DocumentationTabContent: React.FC<Props> = ({
   docAttributeDescriptors,
   selectedVersion,
 }) => {
-  const { logsQuery } = useContext(InstanceDetailsContext);
+  const { logsQuery, instance } = useContext(InstanceDetailsContext);
   const [expanded, setExpanded] = useState(0);
 
-  if (logsQuery.isLoading) {
-    return (
-      <TabContentWrapper id="documentation">
-        <LoadingView />
-      </TabContentWrapper>
-    );
+  const isLatest = selectedVersion === String(instance.version);
+  let selectedSet: InstanceAttributeModel | void;
+
+  if (!isLatest) {
+    if (logsQuery.isLoading) {
+      return (
+        <TabContentWrapper id="documentation">
+          <LoadingView />
+        </TabContentWrapper>
+      );
+    }
+
+    if (!logsQuery.data) {
+      return (
+        <TabContentWrapper id="documentation">
+          <ErrorView
+            message={words("instanceDetails.tabs.documentation.noData")}
+          />
+        </TabContentWrapper>
+      );
+    }
+
+    selectedSet = getSelectedAttributeSet(logsQuery.data, selectedVersion);
+  } else {
+    selectedSet = getSelectedAttributeSetFromInstance(instance);
   }
 
-  if (!logsQuery.data) {
-    return (
-      <TabContentWrapper id="documentation">
-        <ErrorView
-          message={words("instanceDetails.tabs.documentation.noData")}
-        />
-      </TabContentWrapper>
-    );
-  }
-
-  const selectedSet = getSelectedAttributeSet(logsQuery.data, selectedVersion);
   const sections = selectedSet
     ? getDocumentationSections(docAttributeDescriptors, selectedSet)
     : [];
@@ -188,6 +196,31 @@ const getSelectedAttributeSet = (
 
   if (selectedLog.rollback_attributes) {
     return selectedLog.rollback_attributes;
+  }
+
+  return;
+};
+
+/**
+ * Retrieves the first attribute set that contains data
+ * Prioritizing the active-attributes.
+ *
+ * @param {ServiceInstanceModel} instance - the instance that contains the attributeSets.
+ * @returns {InstanceAttributeModel | void}
+ */
+const getSelectedAttributeSetFromInstance = (
+  instance: ServiceInstanceModel,
+): InstanceAttributeModel | void => {
+  if (instance.active_attributes) {
+    return instance.active_attributes;
+  }
+
+  if (instance.candidate_attributes) {
+    return instance.candidate_attributes;
+  }
+
+  if (instance.rollback_attributes) {
+    return instance.rollback_attributes;
   }
 
   return;

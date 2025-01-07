@@ -1,0 +1,6 @@
+description: Align all the input descriptions in the service instance forms
+issue-nr: 5921
+change-type: minor
+destination-branches: [master, iso7]
+sections:
+  minor-improvement: "{{description}}"
