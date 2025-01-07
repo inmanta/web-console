@@ -87,31 +87,6 @@ if (Cypress.env("edition") === "iso") {
       // Check if only one row has been added to the table.
       cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 1);
 
-      // open row from element
-      cy.get("#expand-toggle0").click();
-
-      // Go to ressource tab expect it be empty
-      cy.get(".pf-v6-c-tabs__item-text").contains("Resources").click();
-      cy.get('[aria-label="ResourceTable-Empty"]').should("to.be.visible");
-
-      cy.intercept("**/resources**").as("GetVersion");
-
-      // expect one item with deployed state
-      cy.get('[aria-label="ResourceTable-Success"]', { timeout: 60000 }).should(
-        ($table) => {
-          expect($table).to.have.length(1);
-
-          const $td = $table.find("td");
-
-          // there can only be 2 table-data cells available
-          expect($td).to.have.length(2);
-          expect($td.eq(0), "first item").to.have.text(
-            "frontend_model::TestResource[internal,name=default-0001]",
-          );
-          expect($td.eq(1), "second item").to.have.text("deployed");
-        },
-      );
-
       // click on service catalog in breadcrumb
       cy.get('[aria-label="BreadcrumbItem"]')
         .contains("Service Catalog")
@@ -145,25 +120,12 @@ if (Cypress.env("edition") === "iso") {
         .click();
       cy.get("#parent-service").contains("Show inventory").click();
 
-      // open row from element
-      cy.get("#expand-toggle0", { timeout: 20000 }).click();
-
       // try delete item (Should not be possible)
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
-      cy.get('[role="menuitem"]').contains("More actions").click();
       cy.get('[role="menuitem"]').contains("Delete").click();
 
       cy.get(".pf-v6-c-modal-box__header").should("contain", "Delete instance");
       cy.get(".pf-v6-c-form__actions").contains("Yes").click();
-
-      // check status change before compile
-      cy.get('[aria-label="InstanceRow-Intro"]:first')
-        .find('[data-label="State"]', { timeout: 20000 })
-        .should("contain", "delete_validating_up");
-
-      cy.get('[aria-label="InstanceRow-Intro"]:first')
-        .find('[data-label="State"]', { timeout: 60000 })
-        .should("not.contain", "delete_validating_up");
 
       // click on service catalog in breadcrumb
       cy.get('[aria-label="BreadcrumbItem"]')
@@ -172,12 +134,8 @@ if (Cypress.env("edition") === "iso") {
 
       cy.get("#child-service").contains("Show inventory").click();
 
-      // open row from element
-      cy.get("#expand-toggle0").click();
-
       // try delete item (Should be possible)
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
-      cy.get('[role="menuitem"]').contains("More actions").click();
       cy.get('[role="menuitem"]').contains("Delete").click();
 
       cy.get(".pf-v6-c-modal-box__header").should("contain", "Delete instance");

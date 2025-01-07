@@ -24,7 +24,6 @@ import { defaultAuthContext } from "@/Data/Auth/AuthContext";
 import {
   Service,
   ServiceInstance,
-  InstanceResource,
   Pagination,
   StaticScheduler,
   DynamicQueryManagerResolverImpl,
@@ -256,85 +255,6 @@ test("ServiceInventory shows next page of instances", async () => {
   expect(
     await screen.findByRole("cell", { name: "IdCell-b" }),
   ).toBeInTheDocument();
-
-  await act(async () => {
-    const results = await axe(document.body);
-
-    expect(results).toHaveNoViolations();
-  });
-});
-
-test("GIVEN ResourcesView fetches resources for new instance after instance update", async () => {
-  const { component, apiHelper, scheduler } = setup();
-
-  render(component);
-
-  await act(async () => {
-    await apiHelper.resolve(
-      Either.right({
-        data: [ServiceInstance.a],
-        links: Pagination.links,
-        metadata: Pagination.metadata,
-      }),
-    );
-  });
-
-  expect(
-    await screen.findByRole("grid", { name: "ServiceInventory-Success" }),
-  ).toBeInTheDocument();
-
-  await act(async () => {
-    await userEvent.click(screen.getByRole("button", { name: "Details" }));
-  });
-  await act(async () => {
-    await userEvent.click(
-      await screen.findByRole("tab", {
-        name: words("inventory.tabs.resources"),
-      }),
-    );
-  });
-
-  await act(async () => {
-    await apiHelper.resolve(Either.right({ data: InstanceResource.listA }));
-  });
-
-  expect(
-    screen.getByRole("cell", { name: "[resource_id_a]" }),
-  ).toBeInTheDocument();
-
-  scheduler.executeAll();
-
-  await act(async () => {
-    await apiHelper.resolve(
-      Either.right({
-        data: [{ ...ServiceInstance.a, version: 4 }],
-        links: Pagination.links,
-        metadata: Pagination.metadata,
-      }),
-    );
-  });
-
-  expect(apiHelper.pendingRequests[0].url).toMatch(
-    `/lsm/v1/service_inventory/${ServiceInstance.a.service_entity}/${ServiceInstance.a.id}/resources?current_version=3`,
-  );
-  await act(async () => {
-    await apiHelper.resolve(Either.left({ message: "Conflict", status: 409 }));
-  });
-
-  expect(apiHelper.pendingRequests[0].url).toMatch(
-    "/lsm/v1/service_inventory/service_name_a/service_instance_id_a",
-  );
-  await act(async () => {
-    await apiHelper.resolve(
-      Either.right({
-        data: { ...ServiceInstance.a, version: 4 },
-      }),
-    );
-  });
-
-  expect(apiHelper.pendingRequests[0].url).toMatch(
-    `/lsm/v1/service_inventory/${ServiceInstance.a.service_entity}/${ServiceInstance.a.id}/resources?current_version=4`,
-  );
 
   await act(async () => {
     const results = await axe(document.body);

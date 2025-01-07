@@ -44,7 +44,6 @@ import { Resource } from "@S/Resource";
 import { ResourceDetails } from "@S/ResourceDetails";
 import { DiscoveredResources } from "@S/ResourceDiscovery";
 import { ServiceCatalog } from "@S/ServiceCatalog";
-import { ServiceInstanceHistory } from "@S/ServiceInstanceHistory";
 import { ServiceInventory } from "@S/ServiceInventory";
 import { Settings } from "@S/Settings";
 import { Status } from "@S/Status";
@@ -73,7 +72,6 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
     DuplicateInstance: DuplicateInstance.route(baseUrl),
     EditInstance: EditInstance.route(baseUrl),
     Events: Events.route(baseUrl),
-    History: ServiceInstanceHistory.route(baseUrl),
     InstanceDetails: InstanceDetails.route(baseUrl),
     InstanceComposer: InstanceComposer.route(baseUrl),
     InstanceComposerEditor: InstanceComposerEditor.route(baseUrl),

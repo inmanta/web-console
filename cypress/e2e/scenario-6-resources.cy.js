@@ -623,15 +623,6 @@ describe("Scenario 6 : Resources", () => {
         "#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type",
       ).should("have.text", "21 - 40");
 
-      //Change page and come back to check if we are at the same page as we was
-      cy.get('[aria-label="Sidebar-Navigation-Item"]')
-        .contains("Dashboard")
-        .click();
-      cy.go("back");
-      cy.get(
-        "#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type",
-      ).should("have.text", "21 - 40");
-
       // Change sorting and expect to be redirected to the first page of the table
       cy.get("button").contains("Type").click();
       cy.get(
