@@ -808,13 +808,13 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="row actions toggle"]').click();
       cy.get("button").contains("Instance Details").click();
 
-      let oldUuid = "";
+      cy.wrap("").as("oldUuid");
 
       cy.get('[aria-label="parent_entity_value"]')
         .invoke("text")
         .then((text) => {
           expect(text).to.match(uuidRegex);
-          oldUuid = text;
+          cy.wrap(text).as("oldUuid");
         });
       cy.wait(1000); // wait for the async assertion
 
@@ -884,8 +884,10 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="parent_entity_value"]')
         .invoke("text")
         .then((text) => {
-          expect(text).to.match(uuidRegex);
-          expect(text).to.not.be.equal(oldUuid);
+          cy.get("@oldUuid").then((oldUuid) => {
+            expect(text).to.match(uuidRegex);
+            expect(text).to.not.be.equal(oldUuid);
+          });
         });
     });
 
