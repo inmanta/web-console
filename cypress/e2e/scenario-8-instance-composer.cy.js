@@ -815,7 +815,6 @@ if (Cypress.env("edition") === "iso") {
           cy.wrap(text).as("oldUuid");
         });
       cy.wait("@oldUuid");
-
       // click on edit instance with composer
       cy.get('[aria-label="Actions-Toggle"]').click();
       cy.get("button").contains("Edit in Composer").click();
@@ -885,11 +884,9 @@ if (Cypress.env("edition") === "iso") {
           cy.wrap(text).as("newUuid");
         });
 
-      cy.wait < string,
-        string >
-          ["@oldUuid", "@newUuid"].thne(([oldUuid, newUuid]) => {
-            expect(oldUuid).to.not.be.equal(newUuid);
-          });
+      cy.wait(["@oldUuid", "@newUuid"]).then(([oldUuid, newUuid]) => {
+        expect(oldUuid).to.not.be.equal(newUuid);
+      });
     });
 
     it("8.5 composer edit view is able to remove inter-service relation from instance", () => {
