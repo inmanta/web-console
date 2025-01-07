@@ -744,7 +744,6 @@ if (Cypress.env("edition") === "iso") {
       // Expect Canvas to be visible
       cy.get(".canvas").should("be.visible");
 
-      //      cy.get("main").scrollTo("bottom"); //scroll to the bottom as the error container is clipped in 1500x900 viewport
       //Assert error message is visible as there is missing relation
       cy.get('[data-testid="Error-container"]').should("be.visible");
       cy.get('[data-testid="Error-container"]').should(
