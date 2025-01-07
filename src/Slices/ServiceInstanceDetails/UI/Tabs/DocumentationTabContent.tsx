@@ -7,14 +7,13 @@ import {
   Flex,
   Title,
 } from "@patternfly/react-core";
-import { InstanceAttributeModel } from "@/Core";
+import { InstanceAttributeModel, ServiceInstanceModel } from "@/Core";
 import { InstanceLog } from "@/Slices/ServiceInstanceHistory/Core/Domain";
 import { MarkdownCard } from "@/Slices/ServiceInventory/UI/Tabs/MarkdownCard";
 import { words } from "@/UI";
 import { ErrorView, LoadingView } from "@/UI/Components";
 import { DynamicFAIcon } from "@/UI/Components/FaIcon";
 import { InstanceDetailsContext } from "../../Core/Context";
-import { getAttributeSetsFromInstance } from "../../Utils";
 import { TabContentWrapper } from ".";
 
 // Interface representing the needed properties to display the documentation sections.
@@ -76,7 +75,7 @@ export const DocumentationTabContent: React.FC<Props> = ({
 
     selectedSet = getSelectedAttributeSet(logsQuery.data, selectedVersion);
   } else {
-    selectedSet = getAttributeSetsFromInstance(instance);
+    selectedSet = getSelectedAttributeSetFromInstance(instance);
   }
 
   const sections = selectedSet
@@ -197,6 +196,31 @@ const getSelectedAttributeSet = (
 
   if (selectedLog.rollback_attributes) {
     return selectedLog.rollback_attributes;
+  }
+
+  return;
+};
+
+/**
+ * Retrieves the first attribute set that contains data
+ * Prioritizing the active-attributes.
+ *
+ * @param {ServiceInstanceModel} instance - the instance that contains the attributeSets.
+ * @returns {InstanceAttributeModel | void}
+ */
+const getSelectedAttributeSetFromInstance = (
+  instance: ServiceInstanceModel,
+): InstanceAttributeModel | void => {
+  if (instance.active_attributes) {
+    return instance.active_attributes;
+  }
+
+  if (instance.candidate_attributes) {
+    return instance.candidate_attributes;
+  }
+
+  if (instance.rollback_attributes) {
+    return instance.rollback_attributes;
   }
 
   return;
