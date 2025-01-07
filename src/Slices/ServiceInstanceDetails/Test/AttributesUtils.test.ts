@@ -1,11 +1,12 @@
 import { InstanceLog } from "@/Core/Domain/HistoryLog";
 import {
   formatTreeRowData,
+  getAttributeSetsFromInstance,
   getAvailableAttributesSets,
   sortTreeRows,
   TreeRowData,
 } from "../Utils";
-import { historyData } from "./mockData";
+import { historyData, instanceData } from "./mockData";
 
 describe("getAvailableAttributesSets", () => {
   it("should return an empty object if no log matches the version", () => {
@@ -115,6 +116,59 @@ describe("getAvailableAttributesSets", () => {
         epc_version: "11.3.2-1",
         telco_ip_range: "192.168.126.0/24",
       },
+    });
+  });
+});
+
+describe("getAttributeSetsFromInstance", () => {
+  it("should return an empty object if no attribute sets exist in the instance", () => {
+    const result = getAttributeSetsFromInstance({
+      ...instanceData,
+      active_attributes: null,
+      candidate_attributes: null,
+      rollback_attributes: null,
+    });
+
+    expect(result).toStrictEqual({});
+  });
+
+  it("should return only the existing attribute sets if some are missing", () => {
+    const result = getAttributeSetsFromInstance(instanceData);
+
+    expect(result).toStrictEqual({
+      active_attributes: instanceData.active_attributes,
+      candidate_attributes: instanceData.candidate_attributes,
+    });
+
+    const result2 = getAttributeSetsFromInstance({
+      ...instanceData,
+      candidate_attributes: null,
+    });
+
+    expect(result2).toStrictEqual({
+      active_attributes: instanceData.active_attributes,
+    });
+
+    const result3 = getAttributeSetsFromInstance({
+      ...instanceData,
+      active_attributes: null,
+    });
+
+    expect(result3).toStrictEqual({
+      candidate_attributes: instanceData.candidate_attributes,
+    });
+  });
+
+  it("should return all attributes if they exist in the instance", () => {
+    const result = getAttributeSetsFromInstance({
+      ...instanceData,
+      rollback_attributes: instanceData.active_attributes,
+    });
+
+    expect(result).toStrictEqual({
+      active_attributes: instanceData.active_attributes,
+      candidate_attributes: instanceData.candidate_attributes,
+      rollback_attributes: instanceData.active_attributes,
     });
   });
 });
