@@ -20,7 +20,6 @@ The frontend uses the (patternfly v4 framework)[https://www.patternfly.org/v4/] 
 
 | Command                             | Description                                                       |
 |-------------------------------------|-------------------------------------------------------------------|
-| `prepare`                           | runs `husky install`                                              |
 | `prebuild`                          | runs `yarn clean`                                                 |
 | `build`                             | build the project with webpack in prod mode                       |
 | `start`                             | runs the project with webpack in dev mode and live reload         |
@@ -69,12 +68,6 @@ The base url of the backend services can also be specified here, e.g.:
 
     API_BASEURL=http://localhost:8888
 
-
-### Pre-commit hook
-
-`husky` configures the git hooks. https://github.com/typicode/husky  
-`lint-staged` runs scripts on matched staged source files. https://github.com/okonet/lint-staged  
-There is no need to manually configure anything. Just by installing the dependencies, the git hooks are configured.
 
 ### Testing the Web-console with Cypress
 
