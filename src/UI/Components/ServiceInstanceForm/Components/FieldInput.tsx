@@ -7,6 +7,7 @@ import {
 import { PlusIcon } from "@patternfly/react-icons";
 import { get } from "lodash-es";
 import styled from "styled-components";
+import { v4 as uuidv4 } from "uuid";
 import {
   InstanceAttributeModel,
   DictListField,
@@ -25,7 +26,6 @@ import { RelatedServiceProvider } from "./RelatedServiceProvider";
 import { SelectFormInput } from "./SelectFormInput";
 import { TextFormInput } from "./TextFormInput";
 import { TextListFormInput } from "./TextListFormInput";
-import { v4 as uuidv4 } from 'uuid';
 
 interface Props {
   field: Field;
@@ -177,7 +177,7 @@ export const FieldInput: React.FC<Props> = ({
           shouldBeDisabled={
             field.isDisabled &&
             get(originalState, makePath(path, field.name).split(".")) !==
-            undefined &&
+              undefined &&
             !isNew
           }
           type={field.inputType}
@@ -424,7 +424,7 @@ const NestedFieldInput: React.FC<NestedProps> = ({
                     (!isNew &&
                       field.isDisabled &&
                       get(originalState, makePath(path, field.name)) !==
-                      undefined) ||
+                        undefined) ||
                     showList
                   }
                 >
@@ -499,7 +499,7 @@ const DictListFieldInput: React.FC<DictListProps> = ({
     if (itemIds.length === 0 && list.length > 0) {
       setItemIds(list.map(() => uuidv4()));
     }
-  }, [list]);
+  }, [list, itemIds.length]);
 
   /**
    * Add a new formField group of the same type to the list.
@@ -560,7 +560,7 @@ const DictListFieldInput: React.FC<DictListProps> = ({
     setAddedItemPaths([...newPaths]);
 
     getUpdate(makePath(path, field.name), [
-      ...list.filter((_, i) => i !== index)
+      ...list.filter((_, i) => i !== index),
     ]);
   };
 
@@ -573,8 +573,9 @@ const DictListFieldInput: React.FC<DictListProps> = ({
             text: field.name,
             id: `DictListFieldInput-${makePath(path, field.name)}`,
           }}
-          titleDescription={`${field.description !== null ? field.description : ""
-            } (${words("inventory.createInstance.items")(list.length)})`}
+          titleDescription={`${
+            field.description !== null ? field.description : ""
+          } (${words("inventory.createInstance.items")(list.length)})`}
           actions={
             <Button
               variant="link"
@@ -583,7 +584,7 @@ const DictListFieldInput: React.FC<DictListProps> = ({
               isDisabled={
                 (field.isDisabled &&
                   get(originalState, makePath(path, field.name)) !==
-                  undefined) ||
+                    undefined) ||
                 (!!field.max && list.length >= field.max)
               }
             >
@@ -617,7 +618,7 @@ const DictListFieldInput: React.FC<DictListProps> = ({
                     (!isNew &&
                       field.isDisabled &&
                       get(originalState, makePath(path, field.name)) !==
-                      undefined) ||
+                        undefined) ||
                     field.min > index
                   }
                 >
