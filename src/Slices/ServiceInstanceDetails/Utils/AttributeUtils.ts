@@ -1,4 +1,4 @@
-import { InstanceAttributeModel } from "@/Core";
+import { InstanceAttributeModel, ServiceInstanceModel } from "@/Core";
 import { InstanceLog } from "@/Slices/ServiceInstanceHistory/Core/Domain";
 
 // A type for the possible AttributeSets.
@@ -53,6 +53,34 @@ export const getAvailableAttributesSets = (
 
   if (selectedLog.rollback_attributes) {
     sets["rollback_attributes"] = selectedLog.rollback_attributes;
+  }
+
+  return sets;
+};
+
+/**
+ * Method to get the attributeSets from instance.
+ * It's being used to get the attributeSets from the instance model when selected version is the latest one,
+ * to avoid any differences that could occur in the logs
+ *
+ * @param {ServiceInstanceModel} logs - Service Instance
+ * @returns {Partial<Record<AttributeSets, InstanceAttributeModel>>} - The available attributeSets.
+ */
+export const getAttributeSetsFromInstance = (
+  instance: ServiceInstanceModel,
+): Partial<Record<AttributeSets, InstanceAttributeModel>> => {
+  const sets = {};
+
+  if (instance.active_attributes) {
+    sets["active_attributes"] = instance.active_attributes;
+  }
+
+  if (instance.candidate_attributes) {
+    sets["candidate_attributes"] = instance.candidate_attributes;
+  }
+
+  if (instance.rollback_attributes) {
+    sets["rollback_attributes"] = instance.rollback_attributes;
   }
 
   return sets;

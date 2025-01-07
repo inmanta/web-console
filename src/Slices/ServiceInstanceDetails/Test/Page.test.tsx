@@ -339,7 +339,7 @@ describe("ServiceInstanceDetailsPage", () => {
     expect(screen.getByText("Topography")).toBeInTheDocument();
     expect(
       screen.getByRole("heading", {
-        name: /we are adding documentation/i,
+        name: /Getting started/i,
       }),
     ).toBeVisible();
 
