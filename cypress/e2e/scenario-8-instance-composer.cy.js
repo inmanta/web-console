@@ -808,13 +808,15 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="row actions toggle"]').click();
       cy.get("button").contains("Instance Details").click();
 
+      cy.wrap("").as("oldUuid");
+
       cy.get('[aria-label="parent_entity_value"]')
         .invoke("text")
         .then((text) => {
           expect(text).to.match(uuidRegex);
           cy.wrap(text).as("oldUuid");
         });
-      cy.wait("@oldUuid");
+
       // click on edit instance with composer
       cy.get('[aria-label="Actions-Toggle"]').click();
       cy.get("button").contains("Edit in Composer").click();
