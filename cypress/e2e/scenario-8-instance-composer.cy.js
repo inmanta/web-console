@@ -877,24 +877,26 @@ if (Cypress.env("edition") === "iso") {
         "Version: 8",
       ); // initial open of the details view will show the outdated version
 
+      //Make sure we are at the active attirubtes
+      cy.get('[aria-label="Select-AttributeSet"]').select("active_attributes");
+
       cy.get('[aria-label="parent_entity_value"]')
         .invoke("text")
         .then((text) => {
           expect(text).to.match(uuidRegex);
           cy.wrap(text).as("newUuid");
         });
-      cy.wait("@newUuid");
 
       //Go to rollback attributes and get old uuid to assert change
       cy.get('[aria-label="Select-AttributeSet"]').select(
         "rollback_attributes",
       );
+
       cy.get('[aria-label="parent_entity_value"]')
         .invoke("text")
         .then((text) => {
           cy.wrap(text).as("oldUuid");
         });
-      cy.wait("@oldUuid");
 
       cy.then(function () {
         expect(this.oldUuid).to.not.be.equal(this.newUuid);
