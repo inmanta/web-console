@@ -67,10 +67,6 @@ if (Cypress.env("edition") === "iso") {
     /^[0-9a-f]{8}-[0-9a-f]{4}-[4][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
   describe("Scenario 8 - Instance Composer", async () => {
-    Cypress.Commands.add("aliases", function (aliasNames) {
-      return aliasNames.map((a) => this[a]);
-    });
-
     before(() => {
       clearEnvironment();
       forceUpdateEnvironment();
@@ -890,8 +886,8 @@ if (Cypress.env("edition") === "iso") {
           cy.wrap(text).as("newUuid");
         });
 
-      cy.aliases(["@oldUuid", "@newUuid"]).then(([oldUuid, newUuid]) => {
-        expect(oldUuid).to.not.be.equal(newUuid);
+      cy.then(function () {
+        expect(this.oldUuid).to.not.be.equal(this.newUuid);
       });
     });
 
