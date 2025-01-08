@@ -15,6 +15,7 @@ import {
   TextInputGroupMain,
   TextInputGroupUtilities,
   TextInputTypes,
+  Truncate,
 } from "@patternfly/react-core";
 
 import { HelpIcon, TimesIcon } from "@patternfly/react-icons";
@@ -186,7 +187,7 @@ export const TextListFormInput: React.FC<Props> = ({
                 onClose={() => deleteChip(currentChip)}
                 disabled={shouldBeDisabled}
               >
-                {currentChip}
+                <Truncate content={currentChip} />
               </Label>
             ))}
           </LabelGroup>
