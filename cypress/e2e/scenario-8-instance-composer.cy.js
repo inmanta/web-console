@@ -884,19 +884,29 @@ if (Cypress.env("edition") === "iso") {
         .invoke("text")
         .then((text) => {
           expect(text).to.match(uuidRegex);
-          cy.wrap(text).as("newUuid");
         });
 
-      //Go to rollback attributes and get old uuid to assert change
-      cy.get('[aria-label="Select-AttributeSet"]').select(
+      cy.get('[aria-label="left-side-attribute-set-select"]').select(
+        "active_attributes",
+      );
+      cy.get('[aria-label="right-side-attribute-set-select"]').select(
         "rollback_attributes",
       );
+      cy.get(".editor.original").within(() => {
+        cy.get(".mtk5")
+          .invoke("text")
+          .then((text) => {
+            cy.wrap(text).as("newUuid");
+          });
+      });
 
-      cy.get('[aria-label="parent_entity_value"]')
-        .invoke("text")
-        .then((text) => {
-          cy.wrap(text).as("oldUuid");
-        });
+      cy.get(".editor.modified").within(() => {
+        cy.get(".mtk5")
+          .invoke("text")
+          .then((text) => {
+            cy.wrap(text).as("oldUuid");
+          });
+      });
 
       cy.then(function () {
         expect(this.oldUuid).to.not.be.equal(this.newUuid);
