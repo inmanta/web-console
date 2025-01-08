@@ -504,8 +504,8 @@ if (Cypress.env("edition") === "iso") {
 
       cy.get('[aria-label="events-content"]').click();
 
-      cy.get('[aria-label="Event-compile-1"]').should("contain", "Export");
-      cy.get('[aria-label="Event-compile-2"]').should("contain", "Validation");
+      cy.get('[aria-label="Event-compile-2"]').should("contain", "Export");
+      cy.get('[aria-label="Event-compile-1"]').should("contain", "Validation");
 
       // check that there are four rows for this version
       cy.get('[aria-label="Event-table-row"]').should("have.length", 4);
