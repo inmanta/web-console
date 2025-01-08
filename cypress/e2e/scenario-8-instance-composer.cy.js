@@ -886,6 +886,8 @@ if (Cypress.env("edition") === "iso") {
           expect(text).to.match(uuidRegex);
         });
 
+      cy.get("#Compare").click();
+
       cy.get('[aria-label="left-side-attribute-set-select"]').select(
         "active_attributes",
       );
