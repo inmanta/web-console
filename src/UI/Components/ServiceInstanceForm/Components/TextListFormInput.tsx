@@ -186,7 +186,7 @@ export const TextListFormInput: React.FC<Props> = ({
                 key={currentChip}
                 onClose={() => deleteChip(currentChip)}
                 disabled={shouldBeDisabled}
-                aria-label={`Close ${currentChip}`}
+                closeBtnAriaLabel={`Close ${currentChip}`}
               >
                 <Truncate content={currentChip} />
               </Label>
