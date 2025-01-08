@@ -65,9 +65,7 @@ describe("TextListInputField", () => {
       />,
     );
 
-    const deleteButton = screen.getByRole("button", {
-      name: /close value1/i,
-    });
+    const deleteButton = screen.getByLabelText(/close value1/i);
 
     await userEvent.click(deleteButton);
 
