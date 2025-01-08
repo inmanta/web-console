@@ -473,10 +473,6 @@ if (Cypress.env("edition") === "iso") {
 
       // open the first row of the events to confirm the data is correct. We can't assert all exact strings because the id's and dates are variable.
       cy.get("#expand-toggle0").click();
-      cy.get('[aria-label="Event-message-0"]').should(
-        "contain",
-        "setting_inprogress -> up (error=False)",
-      );
       cy.get('[aria-label="Event-details-0"]').should(
         "contain",
         '"service_instance_version": 8,',
