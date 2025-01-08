@@ -81,7 +81,7 @@ if (Cypress.env("edition") === "iso") {
         .contains("Service Catalog")
         .click();
 
-      // click on Show Inventory on embedded-entity-service-extra, expect no instances
+      // click on Show Inventory on #container-service, expect no instances
       cy.get("#container-service", { timeout: 60000 })
         .contains("Show inventory")
         .click();
@@ -891,9 +891,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="left-side-attribute-set-select"]').select(
         "active_attributes",
       );
-      cy.get('[aria-label="right-side-attribute-set-select"]').select(
-        "rollback_attributes",
-      );
+      cy.get('[aria-label="right-side-version-select"]').select("4");
       cy.get(".editor.original").within(() => {
         cy.get(".mtk5")
           .invoke("text")
