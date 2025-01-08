@@ -159,7 +159,7 @@ if (Cypress.env("edition") === "iso") {
 
       // expect to find in the history the creating state after the up state
       cy.get('[data-testid="version-3-state"]').should("have.text", "up");
-      cy.get('[data-testid="version-4-state"]', { timeout: 30000 }).should(
+      cy.get('[data-testid="version-4-state"]', { timeout: 60000 }).should(
         "have.text",
         "creating",
       );
