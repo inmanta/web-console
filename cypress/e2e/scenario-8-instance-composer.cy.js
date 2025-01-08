@@ -808,13 +808,10 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="row actions toggle"]').click();
       cy.get("button").contains("Instance Details").click();
 
-      cy.wrap("").as("oldUuid");
-
       cy.get('[aria-label="parent_entity_value"]')
         .invoke("text")
         .then((text) => {
           expect(text).to.match(uuidRegex);
-          cy.wrap(text).as("oldUuid");
         });
 
       // click on edit instance with composer
@@ -879,12 +876,25 @@ if (Cypress.env("edition") === "iso") {
         "have.text",
         "Version: 8",
       ); // initial open of the details view will show the outdated version
+
       cy.get('[aria-label="parent_entity_value"]')
         .invoke("text")
         .then((text) => {
           expect(text).to.match(uuidRegex);
           cy.wrap(text).as("newUuid");
         });
+      cy.wait("@newUuid");
+
+      //Go to rollback attributes and get old uuid to assert change
+      cy.get('[aria-label="Select-AttributeSet"]').select(
+        "rollback_attributes",
+      );
+      cy.get('[aria-label="parent_entity_value"]')
+        .invoke("text")
+        .then((text) => {
+          cy.wrap(text).as("oldUuid");
+        });
+      cy.wait("@oldUuid");
 
       cy.then(function () {
         expect(this.oldUuid).to.not.be.equal(this.newUuid);
