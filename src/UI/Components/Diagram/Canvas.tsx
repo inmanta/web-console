@@ -220,6 +220,7 @@ const ZoomHandlerContainer = styled.div`
       background: var(--slider-background);
       cursor: pointer;
       width: 8rem;
+      height: 0.15rem;
       margin-right: 0.5rem;
     }
 
