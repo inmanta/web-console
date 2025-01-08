@@ -136,8 +136,9 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#basic-service").contains("Show inventory").click();
 
       // Go to the instance details
-      cy.get('[aria-label="row actions toggle"]').click();
-      cy.get('[role="menuitem"]').first().contains("Instance Details").click();
+      cy.get('[aria-label="instance-details-link"]', { timeout: 20000 })
+        .first()
+        .click();
 
       // expect to find in the history the up state as last
       cy.get('[aria-label="History-Row"]', { timeout: 30000 }).should(
@@ -232,8 +233,9 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#basic-service").contains("Show inventory").click();
 
       // Go to the instance details
-      cy.get('[aria-label="row actions toggle"]').click();
-      cy.get('[role="menuitem"]').first().contains("Instance Details").click();
+      cy.get('[aria-label="instance-details-link"]', { timeout: 20000 })
+        .first()
+        .click();
 
       // Open Expert menu
       cy.get('[aria-label="Expert-Actions-Toggle"]').click();
