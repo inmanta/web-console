@@ -179,8 +179,9 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#basic-service").contains("Show inventory").click();
 
       // Go to the instance details
-      cy.get('[aria-label="row actions toggle"]').click();
-      cy.get('[role="menuitem"]').contains("Instance Details").click();
+      cy.get('[aria-label="instance-details-link"]', { timeout: 20000 })
+        .last()
+        .click();
 
       // Go to the attributes tab and select the JSON view
       cy.get('[aria-label="attributes-content"]').click();

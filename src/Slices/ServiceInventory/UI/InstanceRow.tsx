@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Button, Flex, FlexItem } from "@patternfly/react-core";
 import { Tbody, Tr, Td } from "@patternfly/react-table";
 import styled from "styled-components";
 import { Row, ServiceModel } from "@/Core";
 import { StateLabel } from "@/Slices/ServiceInstanceDetails/UI/Components/Sections";
+import { DependencyContext } from "@/UI";
 import { DateWithTooltip } from "@/UI/Components";
 import { CopyMultiOptions } from "@/UI/Components/CopyMultiOptions";
 import { words } from "@/UI/words";
@@ -22,9 +25,14 @@ export const InstanceRow: React.FC<Props> = ({
   idDataLabel,
   service,
 }) => {
-  const openTabAndScrollTo = () => () => {
-    // Replace with opening the instance details and opening the resource tab
-  };
+  const { routeManager } = useContext(DependencyContext);
+
+  const instanceDetailsUrl = routeManager.useUrl("InstanceDetails", {
+    service: service.name,
+    instance: row.serviceIdentityValue || row.id.full,
+    instanceId: row.id.full,
+  });
+  const navigate = useNavigate();
 
   return (
     <Tbody>
@@ -54,7 +62,12 @@ export const InstanceRow: React.FC<Props> = ({
         <Td dataLabel={words("inventory.collumn.deploymentProgress")}>
           <ActionWrapper
             id={`instance-row-resources-${row.id.short}`}
-            onClick={openTabAndScrollTo()}
+            aria-label="deploy-progress"
+            onClick={() =>
+              navigate(
+                `${instanceDetailsUrl}&state.InstanceDetails.tab=Resources`,
+              )
+            }
           >
             <DeploymentProgressBar progress={row.deploymentProgress} />
           </ActionWrapper>
@@ -66,15 +79,36 @@ export const InstanceRow: React.FC<Props> = ({
           <DateWithTooltip timestamp={row.updatedAt} />
         </Td>
         <Td dataLabel="actions" isActionCell>
-          <RowActions
-            instanceId={row.id.full}
-            service_identity_attribute_value={row.serviceIdentityValue}
-            entity={service.name}
-            editDisabled={row.editDisabled}
-            deleteDisabled={row.deleteDisabled}
-            diagnoseDisabled={row.deleted}
-            version={row.version}
-          />
+          <Flex flexWrap={{ default: "nowrap" }}>
+            <FlexItem>
+              <Link
+                aria-label="instance-details-link"
+                to={{
+                  pathname: routeManager.getUrl("InstanceDetails", {
+                    service: service.name,
+                    instance: row.serviceIdentityValue || row.id.full,
+                    instanceId: row.id.full,
+                  }),
+                  search: location.search,
+                }}
+              >
+                <Button variant="link">
+                  {words("instanceDetails.button")}
+                </Button>
+              </Link>
+            </FlexItem>
+            <FlexItem>
+              <RowActions
+                instanceId={row.id.full}
+                service_identity_attribute_value={row.serviceIdentityValue}
+                entity={service.name}
+                editDisabled={row.editDisabled}
+                deleteDisabled={row.deleteDisabled}
+                diagnoseDisabled={row.deleted}
+                version={row.version}
+              />
+            </FlexItem>
+          </Flex>
         </Td>
       </Tr>
     </Tbody>
