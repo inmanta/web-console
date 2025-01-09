@@ -1,3 +1,3 @@
-description: Fix composer flake
+description: Fix changelog destination
 change-type: patch
 destination-branches: [master]
