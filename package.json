@@ -190,7 +190,7 @@
   "resolutions": {
     "ansi-regex": "^5.0.1",
     "async": "^3.2.2",
-    "browserslist": "^4.16.5",
+    "browserslist": "^4.21.0",
     "cookie": "^0.7.0",
     "dompurify": "^2.5.4",
     "follow-redirects": "^1.15.4",
