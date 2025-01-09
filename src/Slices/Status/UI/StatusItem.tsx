@@ -15,7 +15,7 @@ import {
   FlexItem,
   Flex,
 } from "@patternfly/react-core";
-import { c_description_list_m_display_lg__description_FontSize } from "@patternfly/react-tokens";
+import { t_global_font_size_200 } from "@patternfly/react-tokens";
 import { uniqueId } from "lodash";
 import { DetailTuple } from "./StatusList";
 
@@ -87,18 +87,20 @@ export const StatusItem: React.FC<Props> = ({
                             default: "25ch",
                           }}
                           isCompact
-                          displaySize="lg"
                         >
                           <DescriptionListGroup>
                             <DescriptionListTerm
                               style={{
-                                fontSize:
-                                  c_description_list_m_display_lg__description_FontSize.value,
+                                fontSize: t_global_font_size_200.value,
                               }}
                             >
                               {key}
                             </DescriptionListTerm>
-                            <DescriptionListDescription>
+                            <DescriptionListDescription
+                              style={{
+                                fontSize: t_global_font_size_200.value,
+                              }}
+                            >
                               {value}
                             </DescriptionListDescription>
                           </DescriptionListGroup>
@@ -138,8 +140,7 @@ const NestedListItem: React.FC<NestedListItemProps> = ({
       <ListItem>
         <b
           style={{
-            fontSize:
-              c_description_list_m_display_lg__description_FontSize.value,
+            fontSize: t_global_font_size_200.value,
           }}
         >
           {name}
@@ -154,18 +155,20 @@ const NestedListItem: React.FC<NestedListItemProps> = ({
               horizontalTermWidthModifier={{
                 default: "25ch",
               }}
-              displaySize="lg"
             >
               <DescriptionListGroup>
                 <DescriptionListTerm
                   style={{
-                    fontSize:
-                      c_description_list_m_display_lg__description_FontSize.value,
+                    fontSize: t_global_font_size_200.value,
                   }}
                 >
                   {subKey}
                 </DescriptionListTerm>
-                <DescriptionListDescription>
+                <DescriptionListDescription
+                  style={{
+                    fontSize: t_global_font_size_200.value,
+                  }}
+                >
                   {subValue}
                 </DescriptionListDescription>
               </DescriptionListGroup>
