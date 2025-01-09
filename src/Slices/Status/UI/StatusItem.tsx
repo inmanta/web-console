@@ -15,9 +15,9 @@ import {
   FlexItem,
   Flex,
 } from "@patternfly/react-core";
+import { c_description_list_m_display_lg__description_FontSize } from "@patternfly/react-tokens";
 import { uniqueId } from "lodash";
 import { DetailTuple } from "./StatusList";
-import { c_description_list_m_display_lg__description_FontSize } from "@patternfly/react-tokens";
 
 interface Props {
   name: string;
