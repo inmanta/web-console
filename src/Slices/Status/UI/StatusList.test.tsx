@@ -90,7 +90,7 @@ describe("Given StatusList", () => {
     expect(coreItem).toBeVisible();
 
     expect(
-      within(coreItem).getByRole("heading", { name: "core extension" }),
+      within(coreItem).getByRole("heading", { name: "core" }),
     ).toBeVisible();
     expect(within(coreItem).getByText("extension")).toBeVisible();
 
