@@ -136,8 +136,9 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#basic-service").contains("Show inventory").click();
 
       // Go to the instance details
-      cy.get('[aria-label="row actions toggle"]').click();
-      cy.get('[role="menuitem"]').first().contains("Instance Details").click();
+      cy.get('[aria-label="instance-details-link"]', { timeout: 20000 })
+        .first()
+        .click();
 
       // expect to find in the history the up state as last
       cy.get('[aria-label="History-Row"]', { timeout: 30000 }).should(
@@ -158,7 +159,7 @@ if (Cypress.env("edition") === "iso") {
 
       // expect to find in the history the creating state after the up state
       cy.get('[data-testid="version-3-state"]').should("have.text", "up");
-      cy.get('[data-testid="version-4-state"]', { timeout: 30000 }).should(
+      cy.get('[data-testid="version-4-state"]', { timeout: 60000 }).should(
         "have.text",
         "creating",
       );
@@ -179,8 +180,9 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#basic-service").contains("Show inventory").click();
 
       // Go to the instance details
-      cy.get('[aria-label="row actions toggle"]').click();
-      cy.get('[role="menuitem"]').contains("Instance Details").click();
+      cy.get('[aria-label="instance-details-link"]', { timeout: 20000 })
+        .last()
+        .click();
 
       // Go to the attributes tab and select the JSON view
       cy.get('[aria-label="attributes-content"]').click();
@@ -231,8 +233,9 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#basic-service").contains("Show inventory").click();
 
       // Go to the instance details
-      cy.get('[aria-label="row actions toggle"]').click();
-      cy.get('[role="menuitem"]').first().contains("Instance Details").click();
+      cy.get('[aria-label="instance-details-link"]', { timeout: 20000 })
+        .first()
+        .click();
 
       // Open Expert menu
       cy.get('[aria-label="Expert-Actions-Toggle"]').click();

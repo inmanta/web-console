@@ -212,7 +212,7 @@ test("ServiceInventory sets sorting parameters correctly on click", async () => 
 });
 
 describe("Actions", () => {
-  it("Should have 7 options in total", async () => {
+  it("Should have 6 options in total", async () => {
     const component = setup();
 
     render(component);
@@ -225,6 +225,6 @@ describe("Actions", () => {
 
     const options = await screen.findAllByRole("menuitem");
 
-    expect(options).toHaveLength(7);
+    expect(options).toHaveLength(6);
   });
 });
