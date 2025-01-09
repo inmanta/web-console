@@ -875,6 +875,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="instance-details-link"]', { timeout: 20000 })
         .first()
         .click();
+
       cy.get('[data-testid="selected-version"]').should(
         "have.text",
         "Version: 8",
