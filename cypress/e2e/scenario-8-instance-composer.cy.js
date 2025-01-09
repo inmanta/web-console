@@ -81,7 +81,7 @@ if (Cypress.env("edition") === "iso") {
         .contains("Service Catalog")
         .click();
 
-      // click on Show Inventory on embedded-entity-service-extra, expect no instances
+      // click on Show Inventory on #container-service, expect no instances
       cy.get("#container-service", { timeout: 60000 })
         .contains("Show inventory")
         .click();
@@ -811,15 +811,11 @@ if (Cypress.env("edition") === "iso") {
         .first()
         .click();
 
-      cy.wrap("").as("oldUuid");
-
       cy.get('[aria-label="parent_entity_value"]')
         .invoke("text")
         .then((text) => {
           expect(text).to.match(uuidRegex);
-          cy.wrap(text).as("oldUuid");
         });
-      cy.wait(1000); // wait for the async assertion
 
       // click on edit instance with composer
       cy.get('[aria-label="Actions-Toggle"]').click();
@@ -885,15 +881,41 @@ if (Cypress.env("edition") === "iso") {
         "Version: 8",
       ); // initial open of the details view will show the outdated version
 
-      // FLAKE: the uuid is not always updated correctly
-      // cy.get('[aria-label="parent_entity_value"]')
-      //   .invoke("text")
-      //   .then((text) => {
-      //     cy.get("@oldUuid").then((oldUuid) => {
-      //       expect(text).to.match(uuidRegex);
-      //       expect(text).to.not.be.equal(oldUuid);
-      //     });
-      //   });
+      //Make sure we are at the active attirubtes
+      cy.get('[aria-label="Select-AttributeSet"]').select("active_attributes");
+
+      cy.get('[aria-label="parent_entity_value"]')
+        .invoke("text")
+        .then((text) => {
+          expect(text).to.match(uuidRegex);
+        });
+
+      cy.get("#Compare").click();
+
+      cy.get('[aria-label="left-side-attribute-set-select"]').select(
+        "active_attributes",
+      );
+      cy.get('[aria-label="right-side-version-select"]').select("4");
+      cy.wait(500);
+      cy.get(".editor.original").within(() => {
+        cy.get(".mtk5")
+          .invoke("text")
+          .then((text) => {
+            cy.wrap(text).as("newUuid");
+          });
+      });
+
+      cy.get(".editor.modified").within(() => {
+        cy.get(".mtk5")
+          .invoke("text")
+          .then((text) => {
+            cy.wrap(text).as("oldUuid");
+          });
+      });
+
+      cy.then(function () {
+        expect(this.oldUuid).to.not.be.equal(this.newUuid);
+      });
     });
 
     it("8.5 composer edit view is able to remove inter-service relation from instance", () => {
