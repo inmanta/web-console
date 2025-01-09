@@ -12,7 +12,10 @@ import {
   DataListItemCells,
   DataListCell,
   List,
+  FlexItem,
+  Flex,
 } from "@patternfly/react-core";
+import { t_global_font_size_200 } from "@patternfly/react-tokens";
 import { uniqueId } from "lodash";
 import { DetailTuple } from "./StatusList";
 
@@ -44,10 +47,18 @@ export const StatusItem: React.FC<Props> = ({
       <DataListItemCells
         dataListCells={[
           <DataListCell key={uniqueId()}>
-            <Title headingLevel="h2">
-              {icon} {name}{" "}
-              {category && <Label variant="outline">{category}</Label>}
-            </Title>
+            <Flex alignItems={{ default: "alignItemsCenter" }}>
+              <FlexItem>
+                <Title headingLevel="h2">
+                  {icon} {name}
+                </Title>
+              </FlexItem>
+              {category && (
+                <FlexItem>
+                  <Label variant="outline">{category}</Label>
+                </FlexItem>
+              )}
+            </Flex>
           </DataListCell>,
         ]}
       />
@@ -73,12 +84,23 @@ export const StatusItem: React.FC<Props> = ({
                         <DescriptionList
                           isHorizontal
                           horizontalTermWidthModifier={{
-                            default: "20ch",
+                            default: "25ch",
                           }}
+                          isCompact
                         >
                           <DescriptionListGroup>
-                            <DescriptionListTerm>{key}</DescriptionListTerm>
-                            <DescriptionListDescription>
+                            <DescriptionListTerm
+                              style={{
+                                fontSize: t_global_font_size_200.value,
+                              }}
+                            >
+                              {key}
+                            </DescriptionListTerm>
+                            <DescriptionListDescription
+                              style={{
+                                fontSize: t_global_font_size_200.value,
+                              }}
+                            >
                               {value}
                             </DescriptionListDescription>
                           </DescriptionListGroup>
@@ -116,7 +138,13 @@ const NestedListItem: React.FC<NestedListItemProps> = ({
   return (
     <List aria-label={`StatusNestedListItem-${name}`} isPlain>
       <ListItem>
-        <b>{name}</b>
+        <b
+          style={{
+            fontSize: t_global_font_size_200.value,
+          }}
+        >
+          {name}
+        </b>
       </ListItem>
       <List key={`${name}-nested-list`} isPlain={false}>
         {Object.entries(properties).map(([subKey, subValue]) => (
@@ -125,12 +153,22 @@ const NestedListItem: React.FC<NestedListItemProps> = ({
               isHorizontal
               isCompact
               horizontalTermWidthModifier={{
-                default: "20ch",
+                default: "25ch",
               }}
             >
               <DescriptionListGroup>
-                <DescriptionListTerm>{subKey}</DescriptionListTerm>
-                <DescriptionListDescription>
+                <DescriptionListTerm
+                  style={{
+                    fontSize: t_global_font_size_200.value,
+                  }}
+                >
+                  {subKey}
+                </DescriptionListTerm>
+                <DescriptionListDescription
+                  style={{
+                    fontSize: t_global_font_size_200.value,
+                  }}
+                >
                   {subValue}
                 </DescriptionListDescription>
               </DescriptionListGroup>
