@@ -4,7 +4,7 @@ module.exports = defineConfig({
   env: {
     edition: "iso",
   },
-  video: true,
+  video: false,
   reporter: "junit",
   viewportWidth: 1500,
   viewportHeight: 900,
