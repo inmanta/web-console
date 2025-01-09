@@ -112,9 +112,8 @@ test("GIVEN Discovered Resources page THEN sets sorting parameters correctly on 
 
   expect(resourceIdButton).toBeVisible();
 
-  await act(async () => {
-    await userEvent.click(resourceIdButton);
-  });
+  await userEvent.click(resourceIdButton);
+
   expect(apiHelper.pendingRequests[0].url).toContain(
     "&sort=discovered_resource_id.desc",
   );
@@ -152,9 +151,7 @@ test("GIVEN Discovered Resources WHEN sorting changes AND we are not on the firs
 
   expect(screen.getByLabelText("Go to next page")).toBeEnabled();
 
-  await act(async () => {
-    await userEvent.click(screen.getByLabelText("Go to next page"));
-  });
+  await userEvent.click(screen.getByLabelText("Go to next page"));
 
   //expect the api url to contain start and end keywords that are used for pagination when we are moving to the next page
   expect(apiHelper.pendingRequests[0].url).toMatch(/(&start=|&end=)/);
@@ -170,9 +167,7 @@ test("GIVEN Discovered Resources WHEN sorting changes AND we are not on the firs
     name: words("discovered.column.resource_id"),
   });
 
-  await act(async () => {
-    await userEvent.click(resourceIdButton);
-  });
+  await userEvent.click(resourceIdButton);
 
   // expect the api url to not contain start and end keywords that are used for pagination to assert we are back on the first page.
   // we are asserting on the second request as the first request is for the updated sorting event, and second is chained to back to the first page with still correct sorting

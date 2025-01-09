@@ -225,6 +225,7 @@ export const useGetInstanceWithRelations = (
         queryFn: () => fetchInstanceWithRelations(instanceId),
         retry: false,
         enabled: serviceModel !== undefined,
+        gcTime: 0,
       }),
     useContinuous: (): UseQueryResult<InstanceWithRelations, Error> =>
       useQuery({

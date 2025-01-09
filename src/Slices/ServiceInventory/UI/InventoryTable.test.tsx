@@ -1,4 +1,4 @@
-import React, { act } from "react";
+import React from "react";
 import { MemoryRouter, useLocation } from "react-router";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
@@ -204,15 +204,15 @@ test("ServiceInventory sets sorting parameters correctly on click", async () => 
   const stateButton = await screen.findByRole("button", { name: /state/i });
 
   expect(stateButton).toBeVisible();
-  await act(async () => {
-    await userEvent.click(stateButton);
-  });
+
+  await userEvent.click(stateButton);
+
   expect(sort.name).toEqual("state");
   expect(sort.order).toEqual("asc");
 });
 
 describe("Actions", () => {
-  it("Should have 7 options in total", async () => {
+  it("Should have 6 options in total", async () => {
     const component = setup();
 
     render(component);
@@ -221,12 +221,10 @@ describe("Actions", () => {
       name: "row actions toggle",
     });
 
-    await act(async () => {
-      await userEvent.click(menuToggle);
-    });
+    await userEvent.click(menuToggle);
 
     const options = await screen.findAllByRole("menuitem");
 
-    expect(options).toHaveLength(7);
+    expect(options).toHaveLength(6);
   });
 });

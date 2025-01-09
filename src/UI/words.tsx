@@ -28,6 +28,7 @@ const dict = {
   null: "null",
   loading: "Loading",
   retry: "Retry",
+  add: "Add",
   delete: "Delete",
   empty: "Empty",
   jumpTo: "Jump to",
@@ -257,7 +258,7 @@ const dict = {
    */
   "instanceDetails.title.tag": (version) => `Version: ${version}`,
   "instanceDetails.title.latest": "Latest Version",
-  "instanceDetails.button": "Instance Details",
+  "instanceDetails.button": "Show instance",
   "instanceDetails.page.errorFallback":
     "Something went wrong retrieving the instance details",
   "instanceDetails.page.errorFallback.title": "Error",

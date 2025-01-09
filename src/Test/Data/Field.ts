@@ -169,7 +169,7 @@ export const nestedDictList = (fields?: Field[]): DictListField => ({
   isDisabled: false,
   min: 1,
   max: 4,
-  fields: [dictList(fields)] || [],
+  fields: [dictList(fields)],
 });
 
 export const nestedEditable: Field[] = [

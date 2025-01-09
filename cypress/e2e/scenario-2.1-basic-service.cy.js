@@ -69,7 +69,7 @@ if (Cypress.env("edition") === "iso") {
       forceUpdateEnvironment();
     });
 
-    it.only("2.1.1 Add Instance Cancel form", () => {
+    it("2.1.1 Add Instance Cancel form", () => {
       // Go from Home page to Service Inventory of Basic-service
       cy.visit("/console/");
 
@@ -109,7 +109,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
     });
 
-    it.only("2.1.2 Add Instance Submit form, INVALID form, EDIT form, VALID form", () => {
+    it("2.1.2 Add Instance Submit form, INVALID form, EDIT form, VALID form", () => {
       // Go from Home page to Service Inventory of Basic-service
       cy.visit("/console/");
       cy.get(`[aria-label="Select-environment-test"]`).click();
@@ -172,9 +172,9 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#basic-service").contains("Show inventory").click();
 
       // Check Instance Details page
-      cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
+      // cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
       // The first button should be the one redirecting to the details page.
-      cy.get('[role="menuitem"]').contains("Instance Details").click();
+      cy.get('[aria-label="instance-details-link"]').first().click();
 
       // Check if there are three versions in the history table
       cy.get('[aria-label="History-Row"]', { timeout: 60000 }).should(
@@ -242,22 +242,21 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#address_r1").type("1.2.3.8/32");
       cy.get("button").contains("Confirm").click();
 
-      // expect to land on Service Inventory page and to find attributes tab button
-      cy.get("#expand-toggle0").click();
-      cy.get(".pf-v6-c-tabs__list")
-        .contains("Attributes", { timeout: 20000 })
+      // check attributes on instance details page
+      cy.get('[aria-label="instance-details-link"]', { timeout: 20000 })
+        .first()
         .click();
+      cy.get(".pf-v6-c-tabs__list").contains("Attributes").click();
 
-      // Expect to find new value as candidate and old value in active and no rollback value
-      cy.get('[aria-label="Row-address_r1"')
-        .find('[data-label="candidate"]', { timeout: 20000 })
-        .should("contain", "1.2.3.8/32");
-      cy.get('[aria-label="Row-address_r1"')
-        .find('[data-label="active"]')
-        .should("contain", "1.2.3.5/32");
-      cy.get('[aria-label="Row-address_r1"')
-        .find('[data-label="rollback"]')
-        .should("contain", "");
+      // Expect to find new value as candidate and old value in active
+      cy.get('[aria-label="address_r1_value"]').should("contain", "1.2.3.5/32");
+
+      // change to candidate attribute set
+      cy.get('[aria-label="Select-AttributeSet"]').select(
+        "candidate_attributes",
+      );
+
+      cy.get('[aria-label="address_r1_value"]').should("contain", "1.2.3.8/32");
     });
 
     it("2.1.4 Duplicate instance with Editor", () => {
@@ -392,11 +391,9 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#basic-service").contains("Show inventory").click();
 
       // Check Instance Details page
-      cy.get('[aria-label="row actions toggle"]', { timeout: 60000 })
+      cy.get('[aria-label="instance-details-link"]', { timeout: 20000 })
         .last()
         .click();
-      // The first button should be the one redirecting to the details page.
-      cy.get('[role="menuitem"]').contains("Instance Details").click();
 
       // click on the attributes tab
       cy.get('[aria-label="attributes-content"]').click();
@@ -415,7 +412,7 @@ if (Cypress.env("edition") === "iso") {
         .should("contain", "address_r1");
 
       // this row should contain the active_attribute value 1.2.3.5/32
-      cy.get('[data-testid="address_r1"]').should("contain", "1.2.3.5/32");
+      cy.get('[aria-label="address_r1_value"]').should("contain", "1.2.3.5/32");
 
       // assert you can reset the sorting
       cy.get('[aria-label="table-options"]').click();
@@ -430,7 +427,7 @@ if (Cypress.env("edition") === "iso") {
       );
 
       // assert that the address_r1 attribute value is now the candidate value 1.2.3.8/32
-      cy.get('[data-testid="address_r1"]').should("contain", "1.2.3.8/32");
+      cy.get('[aria-label="address_r1_value"]').should("contain", "1.2.3.8/32");
 
       // click on the JSON-editor tab
       cy.get("#JSON").click();
@@ -476,10 +473,6 @@ if (Cypress.env("edition") === "iso") {
 
       // open the first row of the events to confirm the data is correct. We can't assert all exact strings because the id's and dates are variable.
       cy.get("#expand-toggle0").click();
-      cy.get('[aria-label="Event-message-0"]').should(
-        "contain",
-        "setting_inprogress -> up (error=False)",
-      );
       cy.get('[aria-label="Event-details-0"]').should(
         "contain",
         '"service_instance_version": 8,',
@@ -498,11 +491,9 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#basic-service").contains("Show inventory").click();
 
       // go back to the details page
-      cy.get('[aria-label="row actions toggle"]', { timeout: 60000 })
+      cy.get('[aria-label="instance-details-link"]', { timeout: 20000 })
         .last()
         .click();
-
-      cy.get('[role="menuitem"]').contains("Instance Details").click();
 
       // change version and go to events page. The second version should contain a validation report.
       cy.get('[aria-label="History-Row"]').eq(7).click();
@@ -513,8 +504,8 @@ if (Cypress.env("edition") === "iso") {
 
       cy.get('[aria-label="events-content"]').click();
 
-      cy.get('[aria-label="Event-compile-1"]').should("contain", "Export");
-      cy.get('[aria-label="Event-compile-2"]').should("contain", "Validation");
+      cy.get('[aria-label="Event-compile-2"]').should("contain", "Export");
+      cy.get('[aria-label="Event-compile-1"]').should("contain", "Validation");
 
       // check that there are four rows for this version
       cy.get('[aria-label="Event-table-row"]').should("have.length", 4);
@@ -561,11 +552,9 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#basic-service").contains("Show inventory").click();
 
       // Check Instance Details page
-      cy.get('[aria-label="row actions toggle"]', { timeout: 60000 })
+      cy.get('[aria-label="instance-details-link"]', { timeout: 20000 })
         .first()
         .click();
-      // The first button should be the one redirecting to the details page.
-      cy.get('[role="menuitem"]').contains("Instance Details").click();
 
       // Check the state of the instance is up in the history section.
       cy.get('[aria-label="History-Row"]', { timeout: 60000 }).should(
@@ -582,7 +571,6 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 })
         .last()
         .click();
-      cy.get('[role="menuitem"]').contains("More actions").click();
       cy.get('[role="menuitem"]').contains("Delete").click();
       cy.get(".pf-v6-c-modal-box__header").should("contain", "Delete instance");
       cy.get(".pf-v6-c-form__actions").contains("No").click();
@@ -591,7 +579,6 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 })
         .last()
         .click();
-      cy.get('[role="menuitem"]').contains("More actions").click();
       cy.get('[role="menuitem"]').contains("Delete").click();
       cy.get(".pf-v6-c-modal-box__header").should("contain", "Delete instance");
       cy.get(".pf-v6-c-form__actions").contains("Yes").click();

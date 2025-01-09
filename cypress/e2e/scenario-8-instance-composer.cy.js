@@ -555,8 +555,9 @@ if (Cypress.env("edition") === "iso") {
       );
 
       //check if embedded entities are present and relations are assigned correctly
-      cy.get('[aria-label="row actions toggle"]').click();
-      cy.get("button").contains("Instance Details").click();
+      cy.get('[aria-label="instance-details-link"]', { timeout: 20000 })
+        .first()
+        .click();
 
       //check if embedded entities are present and relations are assigned correctly
       cy.get('[aria-label="Expand row 27"]').click(); //toggle extra_embedded
@@ -693,8 +694,9 @@ if (Cypress.env("edition") === "iso") {
       );
 
       //check if core attributes and embedded entities are updated
-      cy.get('[aria-label="row actions toggle"]').click();
-      cy.get("button").contains("Instance Details").click();
+      cy.get('[aria-label="instance-details-link"]', { timeout: 20000 })
+        .first()
+        .click();
 
       //Go to candidate attributes and assert that they are updated
       cy.get('[aria-label="Select-AttributeSet"]').select(
@@ -870,8 +872,9 @@ if (Cypress.env("edition") === "iso") {
       );
 
       //check if relation is updated correctly
-      cy.get('[aria-label="row actions toggle"]').click();
-      cy.get("button").contains("Instance Details").click();
+      cy.get('[aria-label="instance-details-link"]', { timeout: 20000 })
+        .first()
+        .click();
       cy.get('[data-testid="selected-version"]').should(
         "have.text",
         "Version: 8",
@@ -1010,8 +1013,9 @@ if (Cypress.env("edition") === "iso") {
         .should("have.text", "up", { timeout: 90000 });
 
       //go to details view
-      cy.get('[aria-label="row actions toggle"]').click();
-      cy.get("button").contains("Instance Details").click();
+      cy.get('[aria-label="instance-details-link"]', { timeout: 20000 })
+        .first()
+        .click();
 
       //assert that in Active attribute we have only 1 relation
       cy.get('[aria-label="Expand row 2"]').click();

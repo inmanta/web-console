@@ -127,9 +127,9 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="ServiceInventory-Success"]').should("to.be.visible");
 
       // Check Instance Details page
-      cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
-      // The first button should be the one redirecting to the details page.
-      cy.get('[role="menuitem"]').contains("Instance Details").click();
+      cy.get('[aria-label="instance-details-link"]', { timeout: 20000 })
+        .first()
+        .click();
 
       // Check if there are three versions in the history table
       cy.get('[aria-label="History-Row"]', { timeout: 60000 }).should(
@@ -161,7 +161,7 @@ if (Cypress.env("edition") === "iso") {
       cy.visit("/console/");
     });
 
-    it("2.3.3 - Show history view", () => {
+    it("2.3.3 - Deploy progress bar should navigate to Resources of instance details", () => {
       cy.visit("/console/");
       cy.get(`[aria-label="Select-environment-test"]`).click();
       cy.get('[aria-label="Sidebar-Navigation-Item"]')
@@ -174,10 +174,15 @@ if (Cypress.env("edition") === "iso") {
         .should("have.length", 1);
       cy.get("#embedded-entity-service").contains("Show inventory").click();
 
-      //await for instance state to change to up
-      cy.get('[data-label="State"]')
-        .find(".pf-v6-c-label", { timeout: 60000 })
-        .should("contain", "up");
+      cy.get('[aria-label="deploy-progress"]', { timeout: 20000 })
+        .first()
+        .click();
+
+      cy.get('[aria-label="resources-content"]').should(
+        "have.attr",
+        "aria-selected",
+        "true",
+      );
 
       cy.visit("/console/");
     });

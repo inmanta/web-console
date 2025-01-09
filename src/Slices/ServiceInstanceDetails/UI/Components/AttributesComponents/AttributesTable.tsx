@@ -295,8 +295,9 @@ export const AttributesTable: React.FC<Props> = ({
           width={60}
           data-testid={node.name}
           aria-label={node.id + "_value"}
+          modifier="truncate"
         >
-          <TableText wrapModifier="truncate">{printValue(node)}</TableText>
+          {printValue(node)}
         </Td>
       </TreeRowWrapper>,
       ...childRows,
@@ -396,7 +397,7 @@ export const AttributesTable: React.FC<Props> = ({
             >
               {words("instanceDetails.table.attributeKey")}
             </Th>
-            <Th>{words("instanceDetails.table.valueKey")}</Th>
+            <Th width={60}>{words("instanceDetails.table.valueKey")}</Th>
           </Tr>
         </Thead>
         <Tbody>{renderRows(tableData)}</Tbody>

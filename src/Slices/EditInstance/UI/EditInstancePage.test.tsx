@@ -142,12 +142,9 @@ test("EditInstance View shows success form", async () => {
 
   expect(bandwidthField).toBeVisible();
 
-  await act(async () => {
-    await userEvent.type(bandwidthField, "2");
-  });
-  await act(async () => {
-    await userEvent.click(screen.getByText(words("confirm")));
-  });
+  await userEvent.type(bandwidthField, "2");
+
+  await userEvent.click(screen.getByText(words("confirm")));
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
@@ -184,12 +181,9 @@ test("Given the EditInstance View When changing a v1 embedded entity Then the co
     await screen.findByRole("generic", { name: "EditInstance-Success" }),
   ).toBeInTheDocument();
 
-  await act(async () => {
-    await userEvent.click(screen.getByRole("button", { name: "circuits" }));
-  });
-  await act(async () => {
-    await userEvent.click(screen.getByRole("button", { name: "0" }));
-  });
+  await userEvent.click(screen.getByRole("button", { name: "circuits" }));
+
+  await userEvent.click(screen.getByRole("button", { name: "0" }));
 
   expect(screen.getByLabelText("TextInput-service_id")).toBeDisabled();
 
@@ -197,12 +191,9 @@ test("Given the EditInstance View When changing a v1 embedded entity Then the co
 
   expect(bandwidthField).toBeVisible();
 
-  await act(async () => {
-    await userEvent.type(bandwidthField, "22");
-  });
-  await act(async () => {
-    await userEvent.click(screen.getByText(words("confirm")));
-  });
+  await userEvent.type(bandwidthField, "22");
+
+  await userEvent.click(screen.getByText(words("confirm")));
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
 
@@ -240,12 +231,9 @@ test("Given the EditInstance View When changing a v2 embedded entity Then the co
     await screen.findByRole("generic", { name: "EditInstance-Success" }),
   ).toBeInTheDocument();
 
-  await act(async () => {
-    await userEvent.click(screen.getByRole("button", { name: "circuits" }));
-  });
-  await act(async () => {
-    await userEvent.click(screen.getByRole("button", { name: "0" }));
-  });
+  await userEvent.click(screen.getByRole("button", { name: "circuits" }));
+
+  await userEvent.click(screen.getByRole("button", { name: "0" }));
 
   expect(screen.getByLabelText("TextInput-service_id")).toBeDisabled();
 
@@ -253,12 +241,9 @@ test("Given the EditInstance View When changing a v2 embedded entity Then the co
 
   expect(bandwidthField).toBeVisible();
 
-  await act(async () => {
-    await userEvent.type(bandwidthField, "24");
-  });
-  await act(async () => {
-    await userEvent.click(screen.getByText(words("confirm")));
-  });
+  await userEvent.type(bandwidthField, "24");
+
+  await userEvent.click(screen.getByText(words("confirm")));
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
 
@@ -365,26 +350,19 @@ test("Given the EditInstance View When changing an embedded entity Then the inpu
     "DictListFieldInput-editableOptionalEmbedded_base",
   );
 
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("button", { name: "embedded_base" }),
-    );
-  });
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("button", { name: "editableEmbedded_base" }),
-    );
-  });
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("button", { name: "optionalEmbedded_base" }),
-    );
-  });
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("button", { name: "editableOptionalEmbedded_base" }),
-    );
-  });
+  await userEvent.click(screen.getByRole("button", { name: "embedded_base" }));
+
+  await userEvent.click(
+    screen.getByRole("button", { name: "editableEmbedded_base" }),
+  );
+
+  await userEvent.click(
+    screen.getByRole("button", { name: "optionalEmbedded_base" }),
+  );
+
+  await userEvent.click(
+    screen.getByRole("button", { name: "editableOptionalEmbedded_base" }),
+  );
 
   expect(
     within(embedded_base).queryByRole("button", { name: "Add" }),
@@ -419,12 +397,10 @@ test("Given the EditInstance View When changing an embedded entity Then the inpu
   ).toBeEnabled();
 
   //check if direct attributes for embedded entities are correctly displayed
+  await userEvent.click(
+    within(embedded_base).getByRole("button", { name: "0" }),
+  );
 
-  await act(async () => {
-    await userEvent.click(
-      within(embedded_base).getByRole("button", { name: "0" }),
-    );
-  });
   expect(within(embedded_base).queryByDisplayValue("string")).toBeDisabled();
   expect(
     within(embedded_base).queryByDisplayValue("editableString"),
@@ -511,35 +487,27 @@ test("Given the EditInstance View When changing an embedded entity Then the inpu
     "DictListFieldInput-embedded_base.0.editableEmbedded?",
   );
 
-  await act(async () => {
-    await userEvent.click(
-      within(embedded_base).getByRole("button", { name: "embedded" }),
-    );
-  });
+  await userEvent.click(
+    within(embedded_base).getByRole("button", { name: "embedded" }),
+  );
 
-  await act(async () => {
-    await userEvent.click(
-      within(embedded_base).getByRole("button", {
-        name: "editableEmbedded",
-      }),
-    );
-  });
+  await userEvent.click(
+    within(embedded_base).getByRole("button", {
+      name: "editableEmbedded",
+    }),
+  );
 
-  await act(async () => {
-    await userEvent.click(
-      within(embedded_base).getByRole("button", {
-        name: "embedded?",
-      }),
-    );
-  });
+  await userEvent.click(
+    within(embedded_base).getByRole("button", {
+      name: "embedded?",
+    }),
+  );
 
-  await act(async () => {
-    await userEvent.click(
-      within(embedded_base).getByRole("button", {
-        name: "editableEmbedded?",
-      }),
-    );
-  });
+  await userEvent.click(
+    within(embedded_base).getByRole("button", {
+      name: "editableEmbedded?",
+    }),
+  );
 
   expect(
     within(nested_embedded_base).queryByRole("button", { name: "Add" }),
@@ -603,23 +571,16 @@ test("Given the EditInstance View When adding new nested embedded entity Then th
     "DictListFieldInput-editableOptionalEmbedded_base",
   );
 
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("button", { name: "editableOptionalEmbedded_base" }),
-    );
-  });
+  await userEvent.click(
+    screen.getByRole("button", { name: "editableOptionalEmbedded_base" }),
+  );
 
-  await act(async () => {
-    await userEvent.click(
-      within(editableOptionalEmbedded_base).getByText("Add"),
-    );
-  });
+  await userEvent.click(within(editableOptionalEmbedded_base).getByText("Add"));
 
-  await act(async () => {
-    await userEvent.click(
-      within(editableOptionalEmbedded_base).getByRole("button", { name: "1" }),
-    );
-  });
+  await userEvent.click(
+    within(editableOptionalEmbedded_base).getByRole("button", { name: "1" }),
+  );
+
   const addedOptionalEmbedded = screen.getByLabelText(
     "DictListFieldInputItem-editableOptionalEmbedded_base.1",
   );
@@ -692,35 +653,27 @@ test("Given the EditInstance View When adding new nested embedded entity Then th
     "DictListFieldInput-editableOptionalEmbedded_base.1.editableEmbedded?",
   );
 
-  await act(async () => {
-    await userEvent.click(
-      within(addedOptionalEmbedded).getByRole("button", { name: "embedded" }),
-    );
-  });
+  await userEvent.click(
+    within(addedOptionalEmbedded).getByRole("button", { name: "embedded" }),
+  );
 
-  await act(async () => {
-    await userEvent.click(
-      within(addedOptionalEmbedded).getByRole("button", {
-        name: "editableEmbedded",
-      }),
-    );
-  });
+  await userEvent.click(
+    within(addedOptionalEmbedded).getByRole("button", {
+      name: "editableEmbedded",
+    }),
+  );
 
-  await act(async () => {
-    await userEvent.click(
-      within(addedOptionalEmbedded).getByRole("button", {
-        name: "embedded?",
-      }),
-    );
-  });
+  await userEvent.click(
+    within(addedOptionalEmbedded).getByRole("button", {
+      name: "embedded?",
+    }),
+  );
 
-  await act(async () => {
-    await userEvent.click(
-      within(addedOptionalEmbedded).getByRole("button", {
-        name: "editableEmbedded?",
-      }),
-    );
-  });
+  await userEvent.click(
+    within(addedOptionalEmbedded).getByRole("button", {
+      name: "editableEmbedded?",
+    }),
+  );
 
   expect(
     within(nested_embedded_base).queryByRole("button", { name: "Add" }),
@@ -741,11 +694,8 @@ test("Given the EditInstance View When adding new nested embedded entity Then th
   expect(
     within(nested_optionalEmbedded_base).queryByRole("button", { name: "Add" }),
   ).toBeEnabled();
-  await act(async () => {
-    await userEvent.click(
-      within(nested_optionalEmbedded_base).getByText("Add"),
-    );
-  });
+
+  await userEvent.click(within(nested_optionalEmbedded_base).getByText("Add"));
 
   expect(
     within(nested_optionalEmbedded_base).queryByRole("button", {
@@ -759,11 +709,9 @@ test("Given the EditInstance View When adding new nested embedded entity Then th
     }),
   ).toBeEnabled();
 
-  await act(async () => {
-    await userEvent.click(
-      within(nested_editableOptionalEmbedded_base).getByText("Add"),
-    );
-  });
+  await userEvent.click(
+    within(nested_editableOptionalEmbedded_base).getByText("Add"),
+  );
 
   expect(
     within(nested_editableOptionalEmbedded_base).queryByRole("button", {
@@ -791,67 +739,45 @@ test("GIVEN the EditInstance View WHEN changing an embedded entity with nested e
     await apiHelper.resolve(Either.right({ data: ServiceInstance.a }));
   });
 
-  await act(async () => {
-    await userEvent.click(screen.getByRole("button", { name: "embedded" }));
-  });
+  await userEvent.click(screen.getByRole("button", { name: "embedded" }));
 
-  await act(async () => {
-    await userEvent.click(screen.getByText("Add"));
-  });
+  await userEvent.click(screen.getByText("Add"));
 
-  await act(async () => {
-    await userEvent.click(screen.getByRole("button", { name: "0" }));
-  });
+  await userEvent.click(screen.getByRole("button", { name: "0" }));
 
-  await act(async () => {
-    await userEvent.click(screen.getAllByText("Add")[1]);
-  });
+  await userEvent.click(screen.getAllByText("Add")[1]);
 
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("button", { name: "embedded_single" }),
-    );
-  });
+  await userEvent.click(
+    screen.getByRole("button", { name: "embedded_single" }),
+  );
 
-  await act(async () => {
-    await userEvent.click(screen.getAllByText("Add")[2]);
-  });
+  await userEvent.click(screen.getAllByText("Add")[2]);
 
   const another_embedded_group = screen.getByLabelText(
     "DictListFieldInput-embedded.0.embedded_single.another_embedded",
   );
 
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("button", { name: "another_embedded" }),
-    );
-  });
+  await userEvent.click(
+    screen.getByRole("button", { name: "another_embedded" }),
+  );
 
-  await act(async () => {
-    await userEvent.click(
-      within(another_embedded_group).getByRole("button", { name: "0" }),
-    );
-  });
+  await userEvent.click(
+    within(another_embedded_group).getByRole("button", { name: "0" }),
+  );
 
   const deep_nested_group = screen.getByLabelText(
     "DictListFieldInput-embedded.0.embedded_single.another_embedded.0.another_deeper_embedded",
   );
 
-  await act(async () => {
-    await userEvent.click(within(deep_nested_group).getByText("Add"));
-  });
+  await userEvent.click(within(deep_nested_group).getByText("Add"));
 
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("button", { name: "another_deeper_embedded" }),
-    );
-  });
+  await userEvent.click(
+    screen.getByRole("button", { name: "another_deeper_embedded" }),
+  );
 
-  await act(async () => {
-    await userEvent.click(
-      within(deep_nested_group).getByRole("button", { name: "0" }),
-    );
-  });
+  await userEvent.click(
+    within(deep_nested_group).getByRole("button", { name: "0" }),
+  );
 
   // expect all fields in deep_nested_group to be enabled
   const deep_nested_group_fields =

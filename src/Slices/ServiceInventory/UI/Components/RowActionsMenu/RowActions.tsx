@@ -12,7 +12,6 @@ import {
   EllipsisVIcon,
   EyeIcon,
   FileMedicalAltIcon,
-  InfoAltIcon,
   ToolsIcon,
 } from "@patternfly/react-icons";
 import { ParsedNumber } from "@/Core";
@@ -71,18 +70,6 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
       popperProps={{ position: "right" }}
     >
       <DropdownList>
-        <DropdownItem itemId="instance-details" icon={<InfoAltIcon />}>
-          <Link
-            variant="plain"
-            pathname={routeManager.getUrl("InstanceDetails", {
-              service: entity,
-              instance: service_identity_attribute_value || instanceId,
-              instanceId: instanceId,
-            })}
-          >
-            {words("instanceDetails.button")}
-          </Link>
-        </DropdownItem>
         <DropdownItem
           itemId="diagnose"
           isDisabled={diagnoseDisabled}

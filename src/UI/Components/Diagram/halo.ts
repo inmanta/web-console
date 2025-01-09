@@ -137,7 +137,7 @@ const createHalo = (
           attrs: {
             "stroke-opacity": 0.5,
             "stroke-width": 5,
-            rx: t_global_border_radius_small.var,
+            rx: t_global_border_radius_small.value,
             filter: "drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4))",
           },
         });
