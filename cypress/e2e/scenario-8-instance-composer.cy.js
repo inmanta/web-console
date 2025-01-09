@@ -807,8 +807,9 @@ if (Cypress.env("edition") === "iso") {
       );
 
       //check if relation is assigned correctly
-      cy.get('[aria-label="row actions toggle"]').click();
-      cy.get("button").contains("Instance Details").click();
+      cy.get('[aria-label="instance-details-link"]', { timeout: 20000 })
+        .first()
+        .click();
 
       cy.get('[aria-label="parent_entity_value"]')
         .invoke("text")
@@ -875,7 +876,6 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="instance-details-link"]', { timeout: 20000 })
         .first()
         .click();
-
       cy.get('[data-testid="selected-version"]').should(
         "have.text",
         "Version: 8",
