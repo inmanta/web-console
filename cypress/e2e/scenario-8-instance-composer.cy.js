@@ -892,6 +892,7 @@ if (Cypress.env("edition") === "iso") {
         "active_attributes",
       );
       cy.get('[aria-label="right-side-version-select"]').select("4");
+      cy.wait(500);
       cy.get(".editor.original").within(() => {
         cy.get(".mtk5")
           .invoke("text")
