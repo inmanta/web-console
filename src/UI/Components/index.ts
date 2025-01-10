@@ -29,6 +29,7 @@ export * from "./InstanceState";
 export * from "./LegendBar";
 export * from "./Link";
 export * from "./LoadingView";
+export * from "./LogViewer"
 export * from "./MultiTextSelect";
 export * from "./PageContainer";
 export * from "./PageSectionWithTitle";
