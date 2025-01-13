@@ -159,10 +159,13 @@ export const EntityForm: React.FC<Props> = ({
         );
 
         shape.set("sanitizedAttrs", sanitizedAttrs);
-
-        setServiceOrderItems((prev) =>
-          updateServiceOrderItems(shape, ActionEnum.UPDATE, prev),
-        );
+        setServiceOrderItems((prev) => {
+          if (prev.has(String(shape.id))) {
+            return updateServiceOrderItems(shape, ActionEnum.UPDATE, prev);
+          } else {
+            return prev;
+          }
+        });
       }
     },
     [cellToEdit, diagramHandlers, fields, serviceModel, setServiceOrderItems],
