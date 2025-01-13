@@ -20,6 +20,12 @@ it("LookBackSlider calls callback with adequate value on apply", async () => {
     ),
   ).toBeInTheDocument();
 
+  expect(
+    screen.getByText(
+      "The slider determines how many lifecycle versions to look back when diagnosing failures.",
+    ),
+  ).toBeInTheDocument();
+
   expect(screen.getByLabelText("LookBack-Slider")).toBeInTheDocument();
 
   await userEvent.click(screen.getByRole("slider"));

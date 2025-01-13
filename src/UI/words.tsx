@@ -266,8 +266,6 @@ const dict = {
   "instanceDetails.page.noData.errorTitle": "No Data",
   "instanceDetails.history.title": "History",
   "instanceDetails.history.diagnose": "Diagnose",
-  "instanceDetails.history.diagnose.slider.title":
-    "The number of lifecycle versions to look back when looking for failures.",
   "instanceDetails.history.table.version": "Version",
   "instanceDetails.history.table.timestamp": "Timestamp",
   "instanceDetails.history.table.status": "Status",
@@ -396,7 +394,10 @@ const dict = {
   "diagnose.main.subtitle": (instanceId: string) =>
     `The following errors were found related to instance ${instanceId}`,
   "diagnose.title": "Diagnose Service Instance",
-
+  "diagnose.slider.title":
+    "The number of lifecycle versions to look back when diagnosing failures.",
+  "diagnose.slider.description":
+    "The slider determines how many lifecycle versions to look back when diagnosing failures.",
   /**
    * Orders related text
    */

@@ -38,8 +38,9 @@ export const LookBackSlider: React.FC<Props> = ({
   return (
     <Flex gap={{ default: "gapSm" }} direction={{ default: "column" }}>
       <FlexItem>
-        <Content component="h2">
-          {words("instanceDetails.history.diagnose.slider.title")}
+        <Content component="h2">{words("diagnose.slider.title")}</Content>
+        <Content component="small">
+          {words("diagnose.slider.description")}
         </Content>
       </FlexItem>
       <FlexItem>
