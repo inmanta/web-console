@@ -268,8 +268,6 @@ const dict = {
   "instanceDetails.history.diagnose": "Diagnose",
   "instanceDetails.history.diagnose.slider.title":
     "The number of lifecycle versions to look back when looking for failures.",
-  "instanceDetails.history.diagnose.slider.description":
-    "By default diagnosis is run against the latest version of the service -1.",
   "instanceDetails.history.table.version": "Version",
   "instanceDetails.history.table.timestamp": "Timestamp",
   "instanceDetails.history.table.status": "Status",
