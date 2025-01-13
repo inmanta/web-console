@@ -50,8 +50,7 @@ export const EntityForm: React.FC<Props> = ({
   showButtons,
   onRemove,
 }) => {
-  const { diagramHandlers, setServiceOrderItems, setCellToEdit } =
-    useContext(CanvasContext);
+  const { diagramHandlers, setServiceOrderItems } = useContext(CanvasContext);
   const [serviceModel, setServiceModel] = useState<ServiceModel | null>(null);
   const [fields, setFields] = useState<Field[] | null>(null);
   const [originalState, setOriginalState] = useState<InstanceAttributeModel>(

@@ -10,14 +10,14 @@ import { getStoreInstance } from "@/Data";
 import { dependencies } from "@/Test";
 import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
 import { PrimaryRouteManager } from "@/UI/Routing";
-import { EntityForm } from "./EntityForm";
 import { CanvasContext, defaultCanvasContext } from "../Context";
-import { ComposerPaper } from "../paper";
-import { ServiceEntityBlock } from "../shapes";
-import { getCellsCoordinates } from "../helpers";
 import { parentModel } from "../Mocks";
 import { createComposerEntity } from "../actions";
+import { getCellsCoordinates } from "../helpers";
+import { ComposerPaper } from "../paper";
+import { ServiceEntityBlock } from "../shapes";
 import { defineObjectsForJointJS } from "../testSetup";
+import { EntityForm } from "./EntityForm";
 
 describe("EntityForm.", () => {
   const setup = (
