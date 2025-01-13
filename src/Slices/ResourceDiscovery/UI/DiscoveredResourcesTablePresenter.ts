@@ -20,7 +20,7 @@ export class DiscoveredResourcesTablePresenter
       },
       {
         displayName: words("discovered.column.discovery_resource"),
-        apiName: "discovery_resource_id",
+        apiName: "discovery_resource_uri",
       },
     ];
     this.numberOfColumns = this.columnHeads.length + 1;

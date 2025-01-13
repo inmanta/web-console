@@ -53,7 +53,6 @@ export const DiscoveredResourceRow: React.FC<Props> = ({
         <Td
           dataLabel={words("discovered.column.discovery_resource")}
           data-testid={words("discovered.column.discovery_resource")}
-          colSpan={numberOfColumns}
         >
           <ManagedResourceLink
             resourceUri={row.discovery_resource_uri}
