@@ -1,25 +1,43 @@
 import React from "react";
 import { MemoryRouter, useLocation } from "react-router-dom";
+import { dia } from "@inmanta/rappid";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
-import { InstanceAttributeModel, RemoteData } from "@/Core";
+import { RemoteData } from "@/Core";
 import { getStoreInstance } from "@/Data";
 import { dependencies } from "@/Test";
 import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
 import { PrimaryRouteManager } from "@/UI/Routing";
-import { parentModel } from "../Mocks";
 import { EntityForm } from "./EntityForm";
+import { CanvasContext, defaultCanvasContext } from "../Context";
+import { ComposerPaper } from "../paper";
+import { ServiceEntityBlock } from "../shapes";
+import { getCellsCoordinates } from "../helpers";
+import { parentModel } from "../Mocks";
+import { createComposerEntity } from "../actions";
+import { defineObjectsForJointJS } from "../testSetup";
 
 describe("EntityForm.", () => {
   const setup = (
     showButtons: boolean,
     isRemovable: boolean,
-    isEdited: boolean,
-    isDisabled,
-    attributes: InstanceAttributeModel,
+    isDisabled: boolean,
   ) => {
+    const graph = new dia.Graph();
+    const paper = new ComposerPaper({}, graph, true).paper;
+
+    const cell = createComposerEntity({
+      serviceModel: parentModel,
+      isCore: true,
+      isInEditMode: false,
+      attributes: { name: "", service_id: "", should_deploy_fail: false },
+    });
+
+    graph.addCell(cell);
+    const cellView = paper.findViewByModel(cell);
+
     const client = new QueryClient();
     const environmentHandler = EnvironmentHandlerImpl(
       useLocation,
@@ -47,8 +65,8 @@ describe("EntityForm.", () => {
         },
       ]),
     );
-    const onSave = jest.fn();
     const onRemove = jest.fn();
+    const editEntity = jest.fn().mockReturnValue(cellView.model);
 
     const component = (
       <QueryClientProvider client={client}>
@@ -57,16 +75,29 @@ describe("EntityForm.", () => {
             <DependencyProvider
               dependencies={{ ...dependencies, environmentHandler }}
             >
-              <EntityForm
-                serviceModel={parentModel}
-                isEdited={isEdited}
-                initialState={attributes}
-                onSave={onSave}
-                isDisabled={isDisabled}
-                isRemovable={isRemovable}
-                onRemove={onRemove}
-                showButtons={showButtons}
-              />
+              <CanvasContext.Provider
+                value={{
+                  ...defaultCanvasContext,
+                  diagramHandlers: {
+                    saveAndClearCanvas: () => {},
+                    loadState: () => {},
+                    addInstance: (_services, _instance) => [
+                      new ServiceEntityBlock(),
+                    ],
+                    getCoordinates: () => getCellsCoordinates(graph),
+                    editEntity: (_cell, serviceModel, attributeValues) =>
+                      editEntity(cellView, serviceModel, attributeValues),
+                  },
+                }}
+              >
+                <EntityForm
+                  cellToEdit={cellView}
+                  isDisabled={isDisabled}
+                  isRemovable={isRemovable}
+                  onRemove={onRemove}
+                  showButtons={showButtons}
+                />
+              </CanvasContext.Provider>
             </DependencyProvider>
           </StoreProvider>
         </MemoryRouter>
@@ -75,25 +106,21 @@ describe("EntityForm.", () => {
 
     return {
       component,
-      onSave,
+      editEntity,
       onRemove,
     };
   };
 
+  beforeAll(() => {
+    defineObjectsForJointJS();
+  });
+
   it("when isRemovable is set to false then Remove button is disabled", () => {
     const showButtons = true;
     const isRemovable = false;
-    const isEdited = false;
     const isDisabled = false;
-    const attributes = {};
 
-    const { component } = setup(
-      showButtons,
-      isRemovable,
-      isEdited,
-      isDisabled,
-      attributes,
-    );
+    const { component } = setup(showButtons, isRemovable, isDisabled);
 
     render(component);
 
@@ -103,17 +130,9 @@ describe("EntityForm.", () => {
   it("when Remove is clicked then onRemove is being called", async () => {
     const showButtons = true;
     const isRemovable = true;
-    const isEdited = false;
     const isDisabled = false;
-    const attributes = {};
 
-    const { component, onRemove } = setup(
-      showButtons,
-      isRemovable,
-      isEdited,
-      isDisabled,
-      attributes,
-    );
+    const { component, onRemove } = setup(showButtons, isRemovable, isDisabled);
 
     render(component);
 
@@ -127,21 +146,9 @@ describe("EntityForm.", () => {
   it("when isDisabled is set to false, then all inputs are disabled", () => {
     const showButtons = true;
     const isRemovable = false;
-    const isEdited = false;
     const isDisabled = true;
-    const attributes = {
-      name: "",
-      should_deploy_fail: false,
-      service_id: "",
-    };
 
-    const { component } = setup(
-      showButtons,
-      isRemovable,
-      isEdited,
-      isDisabled,
-      attributes,
-    );
+    const { component } = setup(showButtons, isRemovable, isDisabled);
 
     render(component);
 
@@ -153,21 +160,9 @@ describe("EntityForm.", () => {
   it("when showButtons is set to false, then all buttons are hidden", () => {
     const showButtons = false;
     const isRemovable = false;
-    const isEdited = false;
     const isDisabled = true;
-    const attributes = {
-      name: "",
-      should_deploy_fail: false,
-      service_id: "",
-    };
 
-    const { component } = setup(
-      showButtons,
-      isRemovable,
-      isEdited,
-      isDisabled,
-      attributes,
-    );
+    const { component } = setup(showButtons, isRemovable, isDisabled);
 
     render(component);
 
@@ -178,20 +173,12 @@ describe("EntityForm.", () => {
   it("when form state will get updated cancel button will change state form disabled to enabled and when clicked then form is being cleared to initial state and cancel button will be back disabled", async () => {
     const showButtons = true;
     const isRemovable = false;
-    const isEdited = false;
     const isDisabled = false;
-    const attributes = {
-      name: "",
-      should_deploy_fail: false,
-      service_id: "",
-    };
 
-    const { component, onSave } = setup(
+    const { component, editEntity } = setup(
       showButtons,
       isRemovable,
-      isEdited,
       isDisabled,
-      attributes,
     );
 
     render(component);
@@ -202,7 +189,7 @@ describe("EntityForm.", () => {
 
     await userEvent.type(screen.getByLabelText("TextInput-service_id"), "t");
 
-    expect(onSave).toHaveBeenCalledWith(expect.any(Array), {
+    expect(editEntity).toHaveBeenCalledWith(expect.any(Object), parentModel, {
       name: "",
       service_id: "t",
       should_deploy_fail: false,
@@ -223,7 +210,7 @@ describe("EntityForm.", () => {
 
     await userEvent.click(screen.getByRole("button", { name: "Cancel" }));
 
-    expect(onSave).toHaveBeenCalledWith(expect.any(Array), {
+    expect(editEntity).toHaveBeenCalledWith(expect.any(Object), parentModel, {
       name: "",
       service_id: "",
       should_deploy_fail: false,
