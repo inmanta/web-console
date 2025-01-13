@@ -4,19 +4,20 @@ import { ResourceLink } from "@/UI/Components";
 
 interface Props {
   resourceUri: string | null;
+  type: "managed" | "discovery";
 }
 
 /**
- * @Component that renders a link to the managed resource
+ * @Component that renders a link to the managed or the discovery resource
  * or a "-" if the resourceUri is null or empty.
  *
- * managed_resource_uri comes in format : /api/v2/resource/<rid>
+ * uris comes in format : /api/v2/resource/<rid>
  *
- * @param resourceUri : API URI of the managed resource
+ * @param resourceUri : API URI of the managed/discovery resource
  *
  * @returns ManagedResourceLink component
  */
-export const ManagedResourceLink: React.FC<Props> = ({ resourceUri }) => {
+export const ManagedResourceLink: React.FC<Props> = ({ resourceUri, type }) => {
   if (!resourceUri) {
     return <></>;
   }
@@ -30,7 +31,7 @@ export const ManagedResourceLink: React.FC<Props> = ({ resourceUri }) => {
   return (
     <ResourceLink
       resourceId={rid}
-      linkText={words("discovered_resources.show_resource")}
+      linkText={words(`discovered_resources.show_resource.${type}`)}
     />
   );
 };

@@ -13,10 +13,7 @@ import { DiscoveredResource } from "../Core/Query";
 import { ManagedResourceLink } from "./Components";
 
 interface Props {
-  row: Pick<
-    DiscoveredResource,
-    "discovered_resource_id" | "values" | "managed_resource_uri"
-  >;
+  row: DiscoveredResource;
   isExpanded: boolean;
   onToggle: () => void;
   numberOfColumns: number;
@@ -31,7 +28,7 @@ export const DiscoveredResourceRow: React.FC<Props> = ({
   return (
     <Tbody>
       <Tr aria-label="DiscoveredResourceRow">
-        <Td style={{ width: "15px" }}>
+        <Td>
           <Toggle
             expanded={isExpanded}
             onToggle={onToggle}
@@ -40,7 +37,6 @@ export const DiscoveredResourceRow: React.FC<Props> = ({
         </Td>
         <Td
           dataLabel={words("discovered.column.resource_id")}
-          style={{ width: "50vw" }}
           data-testid={words("discovered.column.resource_id")}
         >
           {row.discovered_resource_id}
@@ -49,28 +45,43 @@ export const DiscoveredResourceRow: React.FC<Props> = ({
           dataLabel={words("discovered.column.managed_resource")}
           data-testid={words("discovered.column.managed_resource")}
         >
-          <ManagedResourceLink resourceUri={row.managed_resource_uri} />
+          <ManagedResourceLink
+            resourceUri={row.managed_resource_uri}
+            type="managed"
+          />
+        </Td>
+        <Td
+          dataLabel={words("discovered.column.discovery_resource")}
+          data-testid={words("discovered.column.discovery_resource")}
+          colSpan={numberOfColumns}
+        >
+          <ManagedResourceLink
+            resourceUri={row.discovery_resource_uri}
+            type="discovery"
+          />
         </Td>
       </Tr>
       {isExpanded && (
-        <Tr aria-label="Expanded-Discovered-Row" isExpanded={isExpanded}>
-          <Td colSpan={numberOfColumns}>
-            <PaddedDescriptionList isHorizontal>
-              <DescriptionListGroup>
-                <DescriptionListTerm>
-                  {words("discovered_resources.values")}
-                </DescriptionListTerm>
-                <DescriptionListDescription>
-                  <CodeHighlighter
-                    keyId="Json"
-                    code={JSON.stringify(row.values, null, 2)}
-                    language="json"
-                  />
-                </DescriptionListDescription>
-              </DescriptionListGroup>
-            </PaddedDescriptionList>
-          </Td>
-        </Tr>
+        <>
+          <Tr aria-label="Expanded-Discovered-Row" isExpanded={isExpanded}>
+            <Td colSpan={numberOfColumns}>
+              <PaddedDescriptionList isHorizontal>
+                <DescriptionListGroup>
+                  <DescriptionListTerm>
+                    {words("discovered_resources.values")}
+                  </DescriptionListTerm>
+                  <DescriptionListDescription>
+                    <CodeHighlighter
+                      keyId="Json"
+                      code={JSON.stringify(row.values, null, 2)}
+                      language="json"
+                    />
+                  </DescriptionListDescription>
+                </DescriptionListGroup>
+              </PaddedDescriptionList>
+            </Td>
+          </Tr>
+        </>
       )}
     </Tbody>
   );
