@@ -41,9 +41,6 @@ export const LookBackSlider: React.FC<Props> = ({
         <Content component="h2">
           {words("instanceDetails.history.diagnose.slider.title")}
         </Content>
-        <Content component="small">
-          {words("instanceDetails.history.diagnose.slider.description")}
-        </Content>
       </FlexItem>
       <FlexItem>
         <Flex alignItems={{ default: "alignItemsCenter" }}>

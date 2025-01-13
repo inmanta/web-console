@@ -19,11 +19,6 @@ it("LookBackSlider calls callback with adequate value on apply", async () => {
       "The number of lifecycle versions to look back when looking for failures.",
     ),
   ).toBeInTheDocument();
-  expect(
-    screen.getByText(
-      "By default diagnosis is run against the latest version of the service -1.",
-    ),
-  ).toBeInTheDocument();
 
   expect(screen.getByLabelText("LookBack-Slider")).toBeInTheDocument();
 
