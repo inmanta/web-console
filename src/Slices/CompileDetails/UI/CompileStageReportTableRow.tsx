@@ -8,7 +8,7 @@ import {
 } from "@patternfly/react-core";
 import { ExclamationCircleIcon } from "@patternfly/react-icons";
 import { Td, Tr, Tbody } from "@patternfly/react-table";
-import { CodeHighlighter } from "@/UI/Components";
+import { CodeHighlighter, LogViewerComponent } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { CompileStageReportRow } from "@S/CompileDetails/Core/Domain";
 
@@ -101,11 +101,15 @@ export const CompileStageReportTableRow: React.FC<Props> = ({
                 {words("compileDetails.stages.columns.outstream")}
               </DescriptionListTerm>
               <DescriptionListDescription>
-                <CodeHighlighter
+                {/* <CodeHighlighter
                   keyId="outstream"
                   scrollBottom
                   code={row.outstream}
                   language="python"
+                /> */}
+                <LogViewerComponent
+                  key="outstream"
+                  data={row.outstream}
                 />
               </DescriptionListDescription>
             </DescriptionListGroup>

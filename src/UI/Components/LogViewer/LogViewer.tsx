@@ -8,48 +8,37 @@ import {
     ToolbarItem,
     ToolbarToggleGroup,    
 } from '@patternfly/react-core';
-import { DownloadIcon, EllipsisVIcon, ExpandIcon, OutlinedPlayCircleIcon, PauseIcon, PlayIcon } from '@patternfly/react-icons';
+import { ArrowDownIcon, DownloadIcon, EllipsisVIcon, ExpandIcon, OutlinedPlayCircleIcon, PauseIcon, PlayIcon } from '@patternfly/react-icons';
 import { LogViewer, LogViewerSearch } from '@patternfly/react-log-viewer';
 
 interface LogViewerProps {
-    data: string[];
+    data: string;
 }
+
+/**
+ * Splits a string into an array by splitting it every time there's a newline (\n).
+ *
+ * @param {string} input - The input string to be split.
+ * @returns {string[]} - The resulting array of strings.
+ */
+const splitStringByNewline = (input: string): string[] => {
+    return input.split('\n');
+  };
 
 export const LogViewerComponent: React.FC<LogViewerProps> = ({ data }) => {
     const [isPaused, setIsPaused] = useState(false);
-    const [isFullScreen, setIsFullScreen] = useState(false);
-    const [itemCount, setItemCount] = useState(1);
     const [currentItemCount, setCurrentItemCount] = useState(0);
     const [renderData, setRenderData] = useState('');
     const [buffer, setBuffer] = useState<string[]>([]);
     const [linesBehind, setLinesBehind] = useState(0);
-    const [timer, setTimer] = useState<number | null>(null);
     const logViewerRef = useRef<any>();
 
     useEffect(() => {
-        setTimer(
-            window.setInterval(() => {
-                setItemCount((itemCount) => itemCount + 1);
-            }, 500)
-        );
-        return () => {
-            if (timer) {
-                window.clearInterval(timer);
-            }
-        };
-    }, []);
+        setBuffer(splitStringByNewline(data));
+    }, [data]);
 
     useEffect(() => {
-        if (itemCount > data.length) {
-            if (timer) {
-                window.clearInterval(timer);
-            }
-        } else {
-            setBuffer(data.slice(0, itemCount));
-        }
-    }, [itemCount]);
-
-    useEffect(() => {
+        console.log('Buffer updated:', buffer.length);
         if (!isPaused && buffer.length > 0) {
             setCurrentItemCount(buffer.length);
             setRenderData(buffer.join('\n'));
@@ -63,46 +52,9 @@ export const LogViewerComponent: React.FC<LogViewerProps> = ({ data }) => {
         }
     }, [isPaused, buffer]);
 
-    useEffect(() => {
-        const handleFullscreenChange = () => {
-            const isFullscreen =
-                document.fullscreenElement
-
-            setIsFullScreen(!!isFullscreen);
-        };
-
-        document.addEventListener('fullscreenchange', handleFullscreenChange);
-        document.addEventListener('mozfullscreenchange', handleFullscreenChange);
-        document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
-        document.addEventListener('msfullscreenchange', handleFullscreenChange);
-
-        return () => {
-            document.removeEventListener('fullscreenchange', handleFullscreenChange);
-            document.removeEventListener('mozfullscreenchange', handleFullscreenChange);
-            document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
-            document.removeEventListener('msfullscreenchange', handleFullscreenChange);
-        };
-    }, []);
-
-    const onExpandClick = useCallback(() => {
-        const element = document.querySelector('#complex-toolbar-demo');
-
-        if (!isFullScreen) {
-            if (element?.requestFullscreen) {
-                element.requestFullscreen();
-            }
-            setIsFullScreen(true);
-        } else {
-            if (document.exitFullscreen) {
-                document.exitFullscreen();
-            }
-            setIsFullScreen(false);
-        }
-    }, [isFullScreen]);
-
     const onDownloadClick = useCallback(() => {
         const element = document.createElement('a');
-        const dataToDownload = data;
+        const dataToDownload = splitStringByNewline(data);
         const file = new Blob(dataToDownload, { type: 'text/plain' });
         element.href = URL.createObjectURL(file);
         element.download = `logs.txt`;
@@ -137,12 +89,11 @@ export const LogViewerComponent: React.FC<LogViewerProps> = ({ data }) => {
             onClick={() => {
                 setIsPaused(!isPaused);
             }}
-            icon={isPaused ? <PlayIcon /> : <PauseIcon />}
+            icon={<ArrowDownIcon/>}
         >
-            {isPaused ? ` Resume Log` : ` Pause Log`}
+            Scroll to bottom
         </Button>
     );
-
 
     const leftAlignedToolbarGroup = (
         <React.Fragment>
@@ -167,13 +118,6 @@ export const LogViewerComponent: React.FC<LogViewerProps> = ({ data }) => {
                         </Button>
                     </Tooltip>
                 </ToolbarItem>
-                <ToolbarItem>
-                    <Tooltip position="top" content={<div>Expand</div>}>
-                        <Button onClick={onExpandClick} variant="plain" aria-label="View log viewer in full screen">
-                            <ExpandIcon />
-                        </Button>
-                    </Tooltip>
-                </ToolbarItem>
             </ToolbarGroup>
         </React.Fragment>
     );
@@ -183,9 +127,8 @@ export const LogViewerComponent: React.FC<LogViewerProps> = ({ data }) => {
             setIsPaused(false);
         };
         return (
-            <Button onClick={handleClick} isBlock>
-                <OutlinedPlayCircleIcon />
-                resume {linesBehind === 0 ? null : `and show ${linesBehind} lines`}
+            <Button onClick={handleClick} isBlock icon={<ArrowDownIcon />}>
+                Jump to bottom {linesBehind === 0 ? null : `and show ${linesBehind} lines`}
             </Button>
         );
     };
@@ -194,8 +137,10 @@ export const LogViewerComponent: React.FC<LogViewerProps> = ({ data }) => {
         <LogViewer
             data={renderData}
             scrollToRow={currentItemCount}
-            innerRef={logViewerRef}
-            height={isFullScreen ? '100%' : 600}
+            hasLineNumbers={false}
+            ref={logViewerRef}
+            height={600}
+            useAnsiClasses
             toolbar={
                 <Toolbar>
                     <ToolbarContent>
@@ -204,8 +149,6 @@ export const LogViewerComponent: React.FC<LogViewerProps> = ({ data }) => {
                     </ToolbarContent>
                 </Toolbar>
             }
-            overScanCount={10}
-            footer={isPaused && <FooterButton />}
             onScroll={onScroll}
         />
     );

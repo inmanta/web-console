@@ -123,6 +123,15 @@ module.exports = {
         ],
       },
       {
+        // The logViewer is importing css files in its implementation. This configuration resolves those paths.
+        test: /\.css$/,
+        include: [
+          path.resolve(__dirname, "src"),
+          path.resolve(__dirname, "node_modules/@patternfly/react-log-viewer"),
+        ],
+        use: ["style-loader", "css-loader"],
+      },
+      {
         // this configuration is used to ensure that Webpack can correctly handle and resolve both .js and .mjs files,
         // even if the paths to these modules are not fully specified. This can help avoid issues with module resolution and improve compatibility with various libraries and codebase
         test: /\.m?js$/,
