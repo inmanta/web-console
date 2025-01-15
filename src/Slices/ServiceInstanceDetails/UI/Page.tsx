@@ -7,6 +7,7 @@ import { ErrorView, LoadingView, PageContainer } from "@/UI/Components";
 import { InstanceDetailsContext } from "../Core/Context";
 import { VersionedPageTitleWithActions } from "./Components/Sections";
 import { ServiceInstanceDetailsLayout } from "./ServiceInstanceDetailsLayout";
+import { useUrlStateWithString } from "@/Data";
 
 interface Props {
   service: string;
@@ -30,6 +31,11 @@ export const ServiceInstanceDetails: React.FC<Props> = ({
 }) => {
   const { environmentHandler } = useContext(DependencyContext);
   const environment = environmentHandler.useId();
+  const [selectedVersion] = useUrlStateWithString<string>({
+    default: "",
+    key: `version`,
+    route: "InstanceDetails",
+  });
   const instanceDetails = useGetInstance(
     service,
     instanceId,
@@ -40,6 +46,7 @@ export const ServiceInstanceDetails: React.FC<Props> = ({
     service,
     instanceId,
     environment,
+    selectedVersion,
   ).useContinuous();
 
   const serviceModelQuery = useGetServiceModel(

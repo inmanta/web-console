@@ -124,7 +124,7 @@ export const HistorySection: React.FC = () => {
                         <Button
                           variant="tertiary"
                           size="sm"
-                          isLoading={logsQuery.isFetchingPreviousPage}
+                          isLoading={logsQuery.isFetchingNextPage}
                           onClick={() => logsQuery.fetchNextPage()}
                         >
                           {words("load.previous")}

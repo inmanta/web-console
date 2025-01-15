@@ -36,13 +36,10 @@ export const useGetInfiniteInstanceLogs = (
   service: string,
   instance: string,
   environment: string,
+  selectedVersion: string,
 ): GetInstanceLogs => {
   const { createHeaders, handleErrors } = useFetchHelpers();
-  const [selectedVersion] = useUrlStateWithString<string>({
-    default: "",
-    key: `version`,
-    route: "InstanceDetails",
-  });
+
   const headers = createHeaders(environment);
 
   const baseUrlManager = new PrimaryBaseUrlManager(
