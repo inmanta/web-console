@@ -96,7 +96,7 @@ export const HistorySection: React.FC = () => {
                           isLoading={logsQuery.isFetchingPreviousPage}
                           onClick={() => logsQuery.fetchPreviousPage()}
                         >
-                          load previous
+                          {words("load.newer")}
                         </Button>
                       </Flex>
                     </Td>
@@ -127,7 +127,7 @@ export const HistorySection: React.FC = () => {
                           isLoading={logsQuery.isFetchingPreviousPage}
                           onClick={() => logsQuery.fetchNextPage()}
                         >
-                          load more
+                          {words("load.previous")}
                         </Button>
                       </Flex>
                     </Td>
