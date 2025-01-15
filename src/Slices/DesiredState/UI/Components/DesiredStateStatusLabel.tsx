@@ -1,5 +1,6 @@
 import React from "react";
 import { Label } from "@patternfly/react-core";
+import { InfoAltIcon } from "@patternfly/react-icons";
 import { DesiredStateVersionStatus } from "@S/DesiredState/Core/Domain";
 
 /**
@@ -31,7 +32,7 @@ export const DesiredStateStatusLabel: React.FC<{
       );
     case DesiredStateVersionStatus.candidate:
       return (
-        <Label status="info" variant="outline">
+        <Label color="blue" variant="outline" icon={<InfoAltIcon />}>
           {status}
         </Label>
       );

@@ -17,6 +17,7 @@ import {
   CopyIcon,
   EllipsisVIcon,
   ExpandArrowsAltIcon,
+  InfoAltIcon,
   ListOlIcon,
   LongArrowAltDownIcon,
   TextWidthIcon,
@@ -207,8 +208,8 @@ export const CodeHighlighter: React.FC<Props> = ({
     <>
       <span ref={codeBlockRef}>
         {isEmpty(code) ? (
-          <Label variant="outline" status="info">
-            <pre>{words("empty")}</pre>
+          <Label color="blue" variant="outline" icon={<InfoAltIcon />}>
+            {words("empty")}
           </Label>
         ) : isShortSingleLine(code) ? (
           <pre>{code}</pre>

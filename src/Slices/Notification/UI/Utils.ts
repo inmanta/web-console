@@ -1,7 +1,7 @@
 import {
   t_global_icon_color_status_danger_default,
   t_global_icon_color_status_custom_default,
-  t_global_icon_color_status_info_default,
+  t_global_color_brand_default,
   t_global_icon_color_status_success_default,
   t_global_icon_color_status_warning_default,
 } from "@patternfly/react-tokens";
@@ -36,7 +36,7 @@ export const getColorForVisualSeverity = (severity: VisualSeverity): string => {
     case "custom":
       return t_global_icon_color_status_custom_default.var;
     case "info":
-      return t_global_icon_color_status_info_default.var;
+      return t_global_color_brand_default.var;
     case "success":
       return t_global_icon_color_status_success_default.var;
   }

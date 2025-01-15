@@ -9,6 +9,7 @@ import {
   DescriptionListTerm,
   Label,
 } from "@patternfly/react-core";
+import { InfoAltIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { ServiceOrderItemStatus } from "@/Slices/Orders/Core/Query";
 import { DependencyContext, words } from "@/UI";
@@ -34,7 +35,7 @@ export const OrderStateDetails: React.FC<Props> = ({ state }) => {
 
   if (!state.failure_type && !state.reason && !state.validation_compile_id) {
     return (
-      <Label status="info" variant="outline">
+      <Label color="blue" variant="outline" icon={<InfoAltIcon />}>
         {words("orders.row.empty")}
       </Label>
     );
