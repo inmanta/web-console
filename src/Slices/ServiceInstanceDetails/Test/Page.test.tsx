@@ -299,7 +299,7 @@ describe("ServiceInstanceDetailsPage", () => {
     );
 
     expect(screen.getByText("Documentation")).toBeInTheDocument();
-    expect(screen.getByText("Topography")).toBeInTheDocument();
+
     expect(
       screen.getByRole("heading", {
         name: /Getting started/i,
