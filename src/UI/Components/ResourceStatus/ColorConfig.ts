@@ -12,7 +12,7 @@ export const labelColorConfig: Record<
   [Resource.Status.failed]: "danger",
   [Resource.Status.unavailable]: "warning",
   [Resource.Status.undefined]: "warning",
-  [Resource.Status.deploying]: "info",
+  [Resource.Status.deploying]: "blue",
   [Resource.Status.available]: "grey",
   [Resource.Status.dry]: "purple",
   [Resource.Status.orphaned]: "purple",
@@ -35,7 +35,7 @@ export const colorConfig: Record<Resource.Status, string> = {
   [Resource.Status.undefined]:
     "var(--pf-t--global--color--status--warning--default)",
   [Resource.Status.deploying]:
-    "var(--pf-t--global--color--status--unread--default)",
+    "var(--pf-t--global--color--nonstatus--blue--default)",
   [Resource.Status.available]:
     "var(--pf-t--global--color--nonstatus--gray--default)",
   [Resource.Status.dry]: "var(--pf-t--global--color--status--info--default)",

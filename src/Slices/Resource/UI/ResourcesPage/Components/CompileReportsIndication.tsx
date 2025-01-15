@@ -16,12 +16,12 @@ export const CompileReportsIndication = styled.span`
     position: absolute;
     top: 1px;
     content: "";
-    background-color: var(--pf-t--global--icon--color--status--custom--default);
+    background-color: var(--pf-t--global--color--nonstatus--blue--default);
     width: 8px;
     height: 8px;
     border-radius: 50%;
     border: 1px solid
-      var(--pf-t--global--border--color--status--custom--default);
+      var(--pf-t--global--border--color--nonstatus--blue--default);
     animation: ${pendingAnimation} 2s infinite;
   }
 `;
