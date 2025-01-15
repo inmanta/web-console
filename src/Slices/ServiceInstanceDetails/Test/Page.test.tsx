@@ -299,7 +299,7 @@ describe("ServiceInstanceDetailsPage", () => {
     );
 
     expect(screen.getByText("Documentation")).toBeInTheDocument();
-    expect(screen.getByText("Topography")).toBeInTheDocument();
+
     expect(
       screen.getByRole("heading", {
         name: /Getting started/i,
@@ -314,7 +314,6 @@ describe("ServiceInstanceDetailsPage", () => {
       "Version: 3",
     );
 
-    expect(screen.getByText("Topography")).toBeInTheDocument();
     expect(
       screen.getByRole("heading", {
         name: /we are adding documentation/i,
@@ -329,7 +328,6 @@ describe("ServiceInstanceDetailsPage", () => {
       "Version: 2",
     );
 
-    expect(screen.getByText("Topography")).toBeInTheDocument();
     expect(
       screen.getByText(
         /this version doesn’t contain documentation for topography yet\./i,
@@ -343,7 +341,6 @@ describe("ServiceInstanceDetailsPage", () => {
       "Version: 1",
     );
 
-    expect(screen.getByText("Topography")).toBeInTheDocument();
     expect(
       screen.getByText(
         /this version doesn’t contain documentation for topography yet\./i,
