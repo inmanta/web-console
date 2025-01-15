@@ -4,14 +4,13 @@ import {
   DescriptionListDescription,
   DescriptionListGroup,
   DescriptionListTerm,
-  Truncate,
 } from "@patternfly/react-core";
 import { Tbody, Tr, Td } from "@patternfly/react-table";
 import styled from "styled-components";
 import { CodeHighlighter, Toggle } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { DiscoveredResource } from "../Core/Query";
-import { ManagedResourceLink } from "./Components";
+import { DiscoveredResourceLink } from "./Components";
 
 interface Props {
   row: DiscoveredResource;
@@ -39,15 +38,16 @@ export const DiscoveredResourceRow: React.FC<Props> = ({
         <Td
           dataLabel={words("discovered.column.resource_id")}
           data-testid={words("discovered.column.resource_id")}
+          modifier="truncate"
         >
-          <Truncate content={row.discovered_resource_id} />
+          {row.discovered_resource_id}
         </Td>
         <Td
           dataLabel={words("discovered.column.managed_resource")}
           data-testid={words("discovered.column.managed_resource")}
           width={15}
         >
-          <ManagedResourceLink
+          <DiscoveredResourceLink
             resourceUri={row.managed_resource_uri}
             type="managed"
           />
@@ -57,7 +57,7 @@ export const DiscoveredResourceRow: React.FC<Props> = ({
           data-testid={words("discovered.column.discovery_resource")}
           width={20}
         >
-          <ManagedResourceLink
+          <DiscoveredResourceLink
             resourceUri={row.discovery_resource_uri}
             type="discovery"
           />

@@ -15,9 +15,12 @@ interface Props {
  *
  * @param resourceUri : API URI of the managed/discovery resource
  *
- * @returns ManagedResourceLink component
+ * @returns DiscoveredResourceLink component
  */
-export const ManagedResourceLink: React.FC<Props> = ({ resourceUri, type }) => {
+export const DiscoveredResourceLink: React.FC<Props> = ({
+  resourceUri,
+  type,
+}) => {
   if (!resourceUri) {
     return <></>;
   }
