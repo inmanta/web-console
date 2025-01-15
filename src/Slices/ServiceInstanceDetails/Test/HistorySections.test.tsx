@@ -1,14 +1,13 @@
+import React from "react";
+import { UseInfiniteQueryResult, UseQueryResult } from "@tanstack/react-query";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { ServiceModel } from "@/Core";
+import { InstanceLog } from "@/Core/Domain/HistoryLog";
 import { InstanceDetailsContext } from "../Core/Context";
 import { HistorySection } from "../UI/Components/Sections";
 import { historyData, instanceData } from "./mockData";
-import { UseInfiniteQueryResult, UseQueryResult } from "@tanstack/react-query";
-import { InstanceLog } from "@/Core/Domain/HistoryLog";
-import React from "react";
-import { render, screen } from "@testing-library/react";
 import { SetupWrapper } from "./mockSetup";
-import exp from "constants";
-import userEvent from "@testing-library/user-event";
 
 const setup = (hasNextPage: boolean, hasPreviousPage: boolean) => {
   const fetchNextPage = jest.fn();
@@ -70,6 +69,7 @@ describe("HistorySection infinite query", () => {
     render(component);
 
     const button = screen.getByRole("button", { name: "Load Newer" });
+
     expect(button).toBeInTheDocument();
 
     await userEvent.click(button);
@@ -83,6 +83,7 @@ describe("HistorySection infinite query", () => {
     render(component);
 
     const button = screen.getByRole("button", { name: "Load Previous" });
+
     expect(button).toBeInTheDocument();
 
     await userEvent.click(button);

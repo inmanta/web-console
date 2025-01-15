@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { useUrlStateWithString } from "@/Data";
 import { useGetInfiniteInstanceLogs } from "@/Data/Managers/V2/GETTERS/GetInfiniteInstanceLogs";
 import { useGetInstance } from "@/Data/Managers/V2/GETTERS/GetInstance";
 import { useGetServiceModel } from "@/Data/Managers/V2/GETTERS/GetServiceModel";
@@ -7,7 +8,6 @@ import { ErrorView, LoadingView, PageContainer } from "@/UI/Components";
 import { InstanceDetailsContext } from "../Core/Context";
 import { VersionedPageTitleWithActions } from "./Components/Sections";
 import { ServiceInstanceDetailsLayout } from "./ServiceInstanceDetailsLayout";
-import { useUrlStateWithString } from "@/Data";
 
 interface Props {
   service: string;
