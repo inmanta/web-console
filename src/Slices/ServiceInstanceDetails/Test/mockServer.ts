@@ -1,14 +1,14 @@
 import { HttpResponse, delay, http } from "msw";
 import { setupServer } from "msw/node";
 import {
-  historyData,
-  historyDataWithDocumentation,
+  logsResponse,
   instanceData,
   instanceDataWithDocumentation,
   JSONSchema,
   serviceModel,
   serviceModelWithConfig,
   serviceModelWithDocumentation,
+  logsWithDocumentationResponse,
 } from "./mockData";
 
 const getServiceModel = http.get("/lsm/v1/service_catalog/mobileCore", () => {
@@ -45,9 +45,7 @@ const getServiceModelWithConfig = http.get(
 const getHistoryLogs = http.get(
   "/lsm/v1/service_inventory/mobileCore/1d96a1ab/log",
   async () => {
-    return HttpResponse.json({
-      data: historyData,
-    });
+    return HttpResponse.json(logsResponse);
   },
 );
 
@@ -63,18 +61,14 @@ const getHistoryLogsDelayed = http.get(
   async () => {
     await delay(500);
 
-    return HttpResponse.json({
-      data: historyData,
-    });
+    return HttpResponse.json(logsResponse);
   },
 );
 
 const getHistoryLogsWithDocumentation = http.get(
   "/lsm/v1/service_inventory/mobileCore/1d96a1ab/log",
   async () => {
-    return HttpResponse.json({
-      data: historyDataWithDocumentation,
-    });
+    return HttpResponse.json(logsWithDocumentationResponse);
   },
 );
 

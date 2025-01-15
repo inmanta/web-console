@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
+import { useGetInfiniteInstanceLogs } from "@/Data/Managers/V2/GETTERS/GetInfiniteInstanceLogs";
 import { useGetInstance } from "@/Data/Managers/V2/GETTERS/GetInstance";
-import { useGetInstanceLogs } from "@/Data/Managers/V2/GETTERS/GetInstanceLogs";
 import { useGetServiceModel } from "@/Data/Managers/V2/GETTERS/GetServiceModel";
 import { DependencyContext, useRouteParams, words } from "@/UI";
 import { ErrorView, LoadingView, PageContainer } from "@/UI/Components";
@@ -30,14 +30,13 @@ export const ServiceInstanceDetails: React.FC<Props> = ({
 }) => {
   const { environmentHandler } = useContext(DependencyContext);
   const environment = environmentHandler.useId();
-
   const instanceDetails = useGetInstance(
     service,
     instanceId,
     environment,
   ).useContinuous();
 
-  const logsQuery = useGetInstanceLogs(
+  const logsQuery = useGetInfiniteInstanceLogs(
     service,
     instanceId,
     environment,

@@ -73,7 +73,9 @@ export const HistorySection: React.FC = () => {
       <PanelMain>
         <PanelMainBody>
           {logsQuery.isLoading && <LoadingView ariaLabel="History-Loading" />}
-          {logsQuery.isError && (
+          {(logsQuery.isError ||
+            logsQuery.isFetchNextPageError ||
+            logsQuery.isFetchPreviousPageError) && (
             <ErrorView
               message={words("instanceDetails.history.error")}
               ariaLabel="History-Error"
@@ -82,6 +84,24 @@ export const HistorySection: React.FC = () => {
           {logsQuery.isSuccess && (
             <Table aria-label="VersionHistoryTable">
               <Tbody>
+                {logsQuery.hasPreviousPage && (
+                  <Tr isBorderRow>
+                    <Td colSpan={3}>
+                      <Flex
+                        justifyContent={{ default: "justifyContentCenter" }}
+                      >
+                        <Button
+                          variant="tertiary"
+                          size="sm"
+                          isLoading={logsQuery.isFetchingPreviousPage}
+                          onClick={() => logsQuery.fetchPreviousPage()}
+                        >
+                          load previous
+                        </Button>
+                      </Flex>
+                    </Td>
+                  </Tr>
+                )}
                 {logsQuery.data.map((log: InstanceLog) => (
                   <Tr
                     key={String(log.version)}
@@ -95,6 +115,24 @@ export const HistorySection: React.FC = () => {
                     <HistoryRowContent log={log} />
                   </Tr>
                 ))}
+                {logsQuery.hasNextPage && (
+                  <Tr>
+                    <Td colSpan={3}>
+                      <Flex
+                        justifyContent={{ default: "justifyContentCenter" }}
+                      >
+                        <Button
+                          variant="tertiary"
+                          size="sm"
+                          isLoading={logsQuery.isFetchingPreviousPage}
+                          onClick={() => logsQuery.fetchNextPage()}
+                        >
+                          load more
+                        </Button>
+                      </Flex>
+                    </Td>
+                  </Tr>
+                )}
               </Tbody>
             </Table>
           )}
