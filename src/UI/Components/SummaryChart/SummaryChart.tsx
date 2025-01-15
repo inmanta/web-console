@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { ChartDonut, ChartLegend } from "@patternfly/react-charts";
 import {
   t_global_icon_color_status_danger_default,
-  t_global_icon_color_nonstatus_on_blue_default,
+  t_global_color_brand_default,
   t_global_icon_color_status_success_default,
   t_global_icon_color_status_warning_default,
   t_global_icon_color_severity_undefined_default,
@@ -141,7 +141,7 @@ export const SummaryChart: React.FC<Props> = ({ by_label, total }) => {
                         ...props.style,
                         cursor:
                           labelFiltering[label] &&
-                          labelFiltering[label].length > 0
+                            labelFiltering[label].length > 0
                             ? "pointer"
                             : "default",
                       },
@@ -161,7 +161,7 @@ const colorsForChart = {
   danger: t_global_icon_color_status_danger_default,
   warning: t_global_icon_color_status_warning_default,
   success: t_global_icon_color_status_success_default,
-  info: t_global_icon_color_nonstatus_on_blue_default,
+  info: t_global_color_brand_default,
   no_label: t_global_icon_color_severity_undefined_default,
 };
 

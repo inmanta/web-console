@@ -1,6 +1,6 @@
 import React from "react";
 import {
-  t_global_icon_color_nonstatus_on_blue_default,
+  t_global_color_brand_default,
   t_global_icon_color_status_danger_default,
   t_global_icon_color_status_success_default,
 } from "@patternfly/react-tokens";
@@ -42,7 +42,7 @@ function fromProgressToItems(progress: Progress): LegendItemDetails[] {
       id: "waiting",
       label: words("inventory.deploymentProgress.waiting"),
       value: Number(progress.waiting),
-      backgroundColor: t_global_icon_color_nonstatus_on_blue_default.var,
+      backgroundColor: t_global_color_brand_default.var,
     },
   ].filter((item) => item.value > 0);
 }
