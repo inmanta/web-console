@@ -1,6 +1,6 @@
 import React, { ReactElement } from "react";
 import { Label, FlexItem, Flex, Tooltip } from "@patternfly/react-core";
-import { OutlinedCircleIcon } from "@patternfly/react-icons";
+import { InfoAltIcon, OutlinedCircleIcon } from "@patternfly/react-icons";
 import { InstanceSummary } from "@/Core";
 import { words } from "@/UI/words";
 
@@ -55,7 +55,7 @@ function getLabelforName(labelName: string, value: number): ReactElement {
       );
     case "info":
       return (
-        <Label status="info" variant="outline">
+        <Label color="blue" variant="outline" icon={<InfoAltIcon />}>
           {value}
         </Label>
       );

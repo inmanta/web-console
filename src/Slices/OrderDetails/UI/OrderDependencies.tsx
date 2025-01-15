@@ -5,6 +5,7 @@ import { ServiceOrderItemDependencies } from "@/Slices/Orders/Core/Query";
 import { OrderStatusLabel } from "@/Slices/Orders/UI/OrderStatusLabel";
 import { words } from "@/UI";
 import { TextWithCopy } from "@/UI/Components";
+import { InfoAltIcon } from "@patternfly/react-icons";
 
 interface Props {
   dependencies: ServiceOrderItemDependencies;
@@ -23,7 +24,7 @@ interface Props {
 export const OrderDependencies: React.FC<Props> = ({ dependencies }) => {
   if (!Object.keys(dependencies).length) {
     return (
-      <Label status="info" variant="outline">
+      <Label color="blue" variant="outline" icon={<InfoAltIcon />}>
         {words("orders.row.empty")}
       </Label>
     );

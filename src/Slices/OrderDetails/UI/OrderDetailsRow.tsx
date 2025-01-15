@@ -14,6 +14,7 @@ import { CodeHighlighter, TextWithCopy, Toggle } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { OrderDependencies } from "./OrderDependencies";
 import { OrderStateDetails } from "./OrderStateDetails";
+import { InfoAltIcon } from "@patternfly/react-icons";
 
 interface Props {
   row: ServiceOrderItem;
@@ -105,7 +106,7 @@ export const OrderDetailsRow: React.FC<Props> = ({
                       language="json"
                     />
                   ) : (
-                    <Label status="info" variant="outline">
+                    <Label color="blue" variant="outline" icon={<InfoAltIcon />}>
                       {words("orders.row.empty")}
                     </Label>
                   )}
