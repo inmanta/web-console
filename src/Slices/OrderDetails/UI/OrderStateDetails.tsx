@@ -9,10 +9,10 @@ import {
   DescriptionListTerm,
   Label,
 } from "@patternfly/react-core";
+import { InfoAltIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { ServiceOrderItemStatus } from "@/Slices/Orders/Core/Query";
 import { DependencyContext, words } from "@/UI";
-import { InfoAltIcon } from "@patternfly/react-icons";
 
 interface Props {
   state: ServiceOrderItemStatus;

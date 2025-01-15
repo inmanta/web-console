@@ -141,7 +141,7 @@ export const SummaryChart: React.FC<Props> = ({ by_label, total }) => {
                         ...props.style,
                         cursor:
                           labelFiltering[label] &&
-                            labelFiltering[label].length > 0
+                          labelFiltering[label].length > 0
                             ? "pointer"
                             : "default",
                       },
