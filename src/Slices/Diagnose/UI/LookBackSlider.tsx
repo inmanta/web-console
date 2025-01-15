@@ -33,8 +33,36 @@ export const LookBackSlider: React.FC<Props> = ({
   initialLookBehind,
   setSelectedVersion,
 }) => {
-  const [sliderValue, setSliderValue] = useState(initialLookBehind);
-
+  const [valueContinuous, setValueContinuous] = useState(initialLookBehind);
+  const [inputValueContinuous, setInputValueContinuous] =
+    useState(initialLookBehind);
+  const handleChange = (
+    _event: SliderOnChangeEvent,
+    value: number,
+    inputValue?: number,
+    setLocalInputValue?: React.Dispatch<React.SetStateAction<number>>,
+  ) => {
+    let newValue;
+    if (inputValue === undefined) {
+      newValue = value;
+    } else {
+      if (inputValue > instanceVersion - 1) {
+        newValue = instanceVersion - 1;
+        if (setLocalInputValue) {
+          setLocalInputValue(instanceVersion - 1);
+        }
+      } else if (inputValue < 1) {
+        newValue = 1;
+        if (setLocalInputValue) {
+          setLocalInputValue(1);
+        }
+      } else {
+        newValue = inputValue;
+      }
+    }
+    setInputValueContinuous(newValue);
+    setValueContinuous(newValue);
+  };
   return (
     <Flex gap={{ default: "gapSm" }} direction={{ default: "column" }}>
       <FlexItem>
@@ -50,10 +78,10 @@ export const LookBackSlider: React.FC<Props> = ({
             spacer={{ default: "spacerSm" }}
           >
             <Slider
-              value={sliderValue}
-              onChange={(_event: SliderOnChangeEvent, value: number) => {
-                setSliderValue(value);
-              }}
+              value={valueContinuous}
+              inputValue={inputValueContinuous}
+              isInputVisible
+              onChange={handleChange}
               min={1}
               max={instanceVersion - 1}
               step={1}
@@ -67,7 +95,7 @@ export const LookBackSlider: React.FC<Props> = ({
       <FlexItem>
         <Button
           variant="primary"
-          onClick={() => setSelectedVersion(sliderValue)}
+          onClick={() => setSelectedVersion(valueContinuous)}
         >
           {words("diagnose.action")}
         </Button>
