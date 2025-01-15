@@ -43,6 +43,7 @@ export const LookBackSlider: React.FC<Props> = ({
     setLocalInputValue?: React.Dispatch<React.SetStateAction<number>>,
   ) => {
     let newValue;
+
     if (inputValue === undefined) {
       newValue = value;
     } else {
@@ -63,6 +64,7 @@ export const LookBackSlider: React.FC<Props> = ({
     setInputValueContinuous(newValue);
     setValueContinuous(newValue);
   };
+
   return (
     <Flex gap={{ default: "gapSm" }} direction={{ default: "column" }}>
       <FlexItem>
