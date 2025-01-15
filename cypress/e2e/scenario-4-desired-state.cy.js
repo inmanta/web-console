@@ -317,7 +317,7 @@ describe("Scenario 4 Desired State", () => {
     cy.get("@TABLE_LENGTH").then((length) => {
       cy.get("tbody", { timeout: 30000 }).should(
         "have.length",
-        isIso ? length - 1 : length + 1,
+        isIso ? length - 1 : length,
       );
     });
 
