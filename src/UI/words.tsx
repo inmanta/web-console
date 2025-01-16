@@ -40,8 +40,8 @@ const dict = {
   remove: "Remove",
   username: "Username",
   password: "Password",
-  "load.previous": "Load Previous",
-  "load.newer": "Load Newer",
+  "load.previous": "Load older",
+  "load.newer": "Load latest",
 
   /**
    * Error related text
