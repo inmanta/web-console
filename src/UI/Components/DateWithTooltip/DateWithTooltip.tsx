@@ -32,6 +32,7 @@ export const DateWithTooltip: React.FC<Props> = ({
 }) => {
   useTickerWithUnixMs(datePresenter.toUnixMs(timestamp));
   const date = datePresenter.get(timestamp);
+
   return (
     <Tooltip content={isFull ? date.relative : date.full} entryDelay={200}>
       <span className={className}>{isFull ? date.full : date.relative}</span>
