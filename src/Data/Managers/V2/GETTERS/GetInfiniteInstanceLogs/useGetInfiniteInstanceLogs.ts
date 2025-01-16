@@ -17,7 +17,9 @@ export interface LogsResponse {
  * Return Signature of the useGetInstanceLogs React Query
  */
 interface GetInstanceLogs {
-  useContinuous: () => UseInfiniteQueryResult<InstanceLog[], Error>;
+  useContinuous: (
+    selectedVersion: string,
+  ) => UseInfiniteQueryResult<InstanceLog[], Error>;
 }
 
 /**
@@ -35,7 +37,6 @@ export const useGetInfiniteInstanceLogs = (
   service: string,
   instance: string,
   environment: string,
-  selectedVersion: string,
 ): GetInstanceLogs => {
   const { createHeaders, handleErrors } = useFetchHelpers();
 
@@ -46,8 +47,10 @@ export const useGetInfiniteInstanceLogs = (
     globalThis.location.pathname,
   );
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
-
-  const fetchInstance = async ({ pageParam }): Promise<LogsResponse> => {
+  const fetchInstance = async (
+    { pageParam },
+    selectedVersion,
+  ): Promise<LogsResponse> => {
     const initialParameters = selectedVersion
       ? `limit=50&end=${Number(selectedVersion) + 1}`
       : "limit=50";
@@ -65,10 +68,12 @@ export const useGetInfiniteInstanceLogs = (
   };
 
   return {
-    useContinuous: (): UseInfiniteQueryResult<InstanceLog[], Error> =>
+    useContinuous: (
+      selectedVersion: string,
+    ): UseInfiniteQueryResult<InstanceLog[], Error> =>
       useInfiniteQuery({
         queryKey: ["get_instance_logs-continuous", service, instance],
-        queryFn: fetchInstance,
+        queryFn: (query) => fetchInstance(query, selectedVersion),
         refetchInterval: 5000,
         select: (data) => {
           return data.pages.flatMap((page) => page.data);

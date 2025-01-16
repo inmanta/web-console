@@ -55,9 +55,9 @@ describe("HistorySection infinite query", () => {
     ).toBeInTheDocument();
 
     const buttonPrevious = screen.queryByRole("button", {
-      name: "Load Previous",
+      name: "Load older",
     });
-    const buttonNewer = screen.queryByRole("button", { name: "Load Newer" });
+    const buttonNewer = screen.queryByRole("button", { name: "Load latest" });
 
     expect(buttonPrevious).toBeNull();
     expect(buttonNewer).toBeNull();
@@ -68,7 +68,7 @@ describe("HistorySection infinite query", () => {
 
     render(component);
 
-    const button = screen.getByRole("button", { name: "Load Newer" });
+    const button = screen.getByRole("button", { name: "Load latest" });
 
     expect(button).toBeInTheDocument();
 
@@ -82,7 +82,7 @@ describe("HistorySection infinite query", () => {
 
     render(component);
 
-    const button = screen.getByRole("button", { name: "Load Previous" });
+    const button = screen.getByRole("button", { name: "Load older" });
 
     expect(button).toBeInTheDocument();
 

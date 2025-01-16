@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useUrlStateWithString } from "@/Data";
 import { useGetInfiniteInstanceLogs } from "@/Data/Managers/V2/GETTERS/GetInfiniteInstanceLogs";
 import { useGetInstance } from "@/Data/Managers/V2/GETTERS/GetInstance";
@@ -13,6 +13,7 @@ interface Props {
   service: string;
   instance: string;
   instanceId: string;
+  version: string;
 }
 
 /**
@@ -28,14 +29,11 @@ export const ServiceInstanceDetails: React.FC<Props> = ({
   service,
   instance,
   instanceId,
+  version,
 }) => {
   const { environmentHandler } = useContext(DependencyContext);
   const environment = environmentHandler.useId();
-  const [selectedVersion] = useUrlStateWithString<string>({
-    default: "",
-    key: `version`,
-    route: "InstanceDetails",
-  });
+
   const instanceDetails = useGetInstance(
     service,
     instanceId,
@@ -46,8 +44,7 @@ export const ServiceInstanceDetails: React.FC<Props> = ({
     service,
     instanceId,
     environment,
-    selectedVersion,
-  ).useContinuous();
+  ).useContinuous(version);
 
   const serviceModelQuery = useGetServiceModel(
     service,
@@ -118,12 +115,28 @@ export const ServiceInstanceDetails: React.FC<Props> = ({
  */
 export const Page: React.FC = () => {
   const { service, instance, instanceId } = useRouteParams<"InstanceDetails">();
+  const [selectedVersion] = useUrlStateWithString<string>({
+    default: "",
+    key: `version`,
+    route: "InstanceDetails",
+  });
+  const [initialVersion, setInitialVersion] = useState("-1");
 
+  useEffect(() => {
+    if (initialVersion === "-1") {
+      setInitialVersion(selectedVersion);
+    }
+  }, [selectedVersion]);
+
+  if (initialVersion === "-1") {
+    return null;
+  }
   return (
     <ServiceInstanceDetails
       service={service}
       instance={instance}
       instanceId={instanceId}
+      version={initialVersion}
     />
   );
 };
