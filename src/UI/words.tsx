@@ -40,8 +40,8 @@ const dict = {
   remove: "Remove",
   username: "Username",
   password: "Password",
-  "load.previous": "Load older",
-  "load.latest": "Load latest",
+  "load.previous": "Load previous",
+  "load.next": "Load next",
 
   /**
    * Error related text
@@ -259,7 +259,7 @@ const dict = {
    * Service Instance Details text
    */
   "instanceDetails.title.tag": (version) => `Version: ${version}`,
-  "instanceDetails.title.latest": "Latest Version",
+  "instanceDetails.title.next": "Latest Version",
   "instanceDetails.button": "Show instance",
   "instanceDetails.page.errorFallback":
     "Something went wrong retrieving the instance details",

@@ -128,6 +128,8 @@ export const Page: React.FC = () => {
     }
   }, [selectedVersion, initialVersion]);
 
+  //if the initial version is -1, return null,
+  //  it is done to avoid passing empty string to the InfiniteQuery before the version is set from the url, otherwise we would get inadequate data at initial load, and only after the update the correct one.
   if (initialVersion === "-1") {
     return null;
   }

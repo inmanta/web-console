@@ -55,12 +55,12 @@ describe("HistorySection infinite query", () => {
     ).toBeInTheDocument();
 
     const buttonPrevious = screen.queryByRole("button", {
-      name: "Load older",
+      name: "Load previous",
     });
-    const buttonNewer = screen.queryByRole("button", { name: "Load latest" });
+    const buttonNext = screen.queryByRole("button", { name: "Load next" });
 
     expect(buttonPrevious).toBeNull();
-    expect(buttonNewer).toBeNull();
+    expect(buttonNext).toBeNull();
   });
 
   it("should render with functional button to fetch newer versions", async () => {
@@ -68,7 +68,7 @@ describe("HistorySection infinite query", () => {
 
     render(component);
 
-    const button = screen.getByRole("button", { name: "Load latest" });
+    const button = screen.getByRole("button", { name: "Load next" });
 
     expect(button).toBeInTheDocument();
 
@@ -82,7 +82,7 @@ describe("HistorySection infinite query", () => {
 
     render(component);
 
-    const button = screen.getByRole("button", { name: "Load older" });
+    const button = screen.getByRole("button", { name: "Load previous" });
 
     expect(button).toBeInTheDocument();
 

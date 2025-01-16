@@ -46,7 +46,7 @@ export const VersionedPageTitleWithActions: React.FC<Props> = ({ title }) => {
         </Label>
         {isLatest && (
           <Label color="green" icon={<InfoAltIcon />}>
-            {words("instanceDetails.title.latest")}
+            {words("instanceDetails.title.next")}
           </Label>
         )}
         {instance.deleted && (
