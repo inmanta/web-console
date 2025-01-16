@@ -41,7 +41,7 @@ const dict = {
   username: "Username",
   password: "Password",
   "load.previous": "Load older",
-  "load.newer": "Load latest",
+  "load.latest": "Load latest",
 
   /**
    * Error related text
