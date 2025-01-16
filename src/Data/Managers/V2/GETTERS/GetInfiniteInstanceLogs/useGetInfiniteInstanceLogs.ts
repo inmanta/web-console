@@ -14,9 +14,9 @@ export interface LogsResponse {
 }
 
 /**
- * Return Signature of the useGetInstanceLogs React Query
+ * Return Signature of the useGetInfiniteInstanceLogs React Query
  */
-interface GetInstanceLogs {
+interface GetInfiniteInstanceLogs {
   useContinuous: (
     selectedVersion: string,
   ) => UseInfiniteQueryResult<InstanceLog[], Error>;
@@ -29,7 +29,7 @@ interface GetInstanceLogs {
  * @param instanceId {string} - the instance ID for which the data needs to be fetched.
  * @param environment {string} - the environment in which the instance belongs
  *
- * @returns {GetInstanceLogs} An object containing the different available queries.
+ * @returns {GetInfiniteInstanceLogs} An object containing the different available queries.
  * @returns {UseInfiniteQueryResult<InstanceLog[], Error>} returns.useOneTime - Fetch the logs with a single query.
  * @returns {UseInfiniteQueryResult<InstanceLog[], Error>} returns.useContinuous - Fetch the logs with a recursive query with an interval of 5s.
  */
@@ -37,7 +37,7 @@ export const useGetInfiniteInstanceLogs = (
   service: string,
   instance: string,
   environment: string,
-): GetInstanceLogs => {
+): GetInfiniteInstanceLogs => {
   const { createHeaders, handleErrors } = useFetchHelpers();
 
   const headers = createHeaders(environment);
