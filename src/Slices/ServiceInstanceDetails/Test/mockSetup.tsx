@@ -29,6 +29,7 @@ export const setupServiceInstanceDetails = (
           instance="core1"
           service="mobileCore"
           instanceId="1d96a1ab"
+          version="1"
         />
       </Page>
     </SetupWrapper>

@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { UseQueryResult } from "@tanstack/react-query";
+import { UseInfiniteQueryResult, UseQueryResult } from "@tanstack/react-query";
 import { ServiceInstanceModel, ServiceModel } from "@/Core";
 import { InstanceLog } from "@/Core/Domain/HistoryLog";
 
@@ -9,7 +9,7 @@ import { InstanceLog } from "@/Core/Domain/HistoryLog";
  */
 interface InstanceProviderInterface {
   instance: ServiceInstanceModel;
-  logsQuery: UseQueryResult<InstanceLog[], Error>;
+  logsQuery: UseInfiniteQueryResult<InstanceLog[], Error>;
   serviceModelQuery: UseQueryResult<ServiceModel, Error>;
 }
 
@@ -20,6 +20,6 @@ interface InstanceProviderInterface {
  */
 export const InstanceDetailsContext = createContext<InstanceProviderInterface>({
   instance: {} as ServiceInstanceModel,
-  logsQuery: {} as UseQueryResult<InstanceLog[], Error>,
+  logsQuery: {} as UseInfiniteQueryResult<InstanceLog[], Error>,
   serviceModelQuery: {} as UseQueryResult<ServiceModel, Error>,
 });
