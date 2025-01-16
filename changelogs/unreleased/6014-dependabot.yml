@@ -1,0 +1,5 @@
+change-type: patch
+description: "Build(deps): Bump http-proxy-middleware from 2.0.6 to 2.0.7"
+destination-branches:
+  - master
+sections: {}

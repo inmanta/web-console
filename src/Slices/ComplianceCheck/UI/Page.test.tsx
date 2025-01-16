@@ -74,9 +74,7 @@ test("GIVEN ComplianceCheck page THEN user sees latest dry run report", async ()
     datePresenter.getFull(Mock.listResponse.data[0].date),
   );
 
-  await act(async () => {
-    await userEvent.click(select);
-  });
+  await userEvent.click(select);
 
   const options = screen.getAllByRole<HTMLButtonElement>("option");
 
@@ -133,9 +131,7 @@ test("GIVEN ComplianceCheck page When a report is selected from the list THEN th
   // Also verify that the option shows the selected icon
   const select = screen.getByRole("button", { name: "ReportListSelect" });
 
-  await act(async () => {
-    await userEvent.click(select);
-  });
+  await userEvent.click(select);
 
   const options = screen.getAllByRole<HTMLButtonElement>("option");
 
@@ -143,9 +139,8 @@ test("GIVEN ComplianceCheck page When a report is selected from the list THEN th
   expect(options[0]).toHaveAttribute("aria-selected", "true");
 
   // Select a different report
-  await act(async () => {
-    await userEvent.click(options[1]);
-  });
+  await userEvent.click(options[1]);
+
   // Verify the request
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
@@ -157,18 +152,15 @@ test("GIVEN ComplianceCheck page When a report is selected from the list THEN th
     await apiHelper.resolve(Either.right(Mock.reportResponse));
   });
   // Verify that it's selected
-  await act(async () => {
-    await userEvent.click(select);
-  });
+  await userEvent.click(select);
 
   expect(screen.getAllByRole<HTMLButtonElement>("option")[1]).toHaveAttribute(
     "aria-selected",
     "true",
   );
   // Go back to the first one
-  await act(async () => {
-    await userEvent.click(screen.getAllByRole<HTMLButtonElement>("option")[0]);
-  });
+  await userEvent.click(screen.getAllByRole<HTMLButtonElement>("option")[0]);
+
   // Verify the request
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
@@ -180,9 +172,7 @@ test("GIVEN ComplianceCheck page When a report is selected from the list THEN th
     await apiHelper.resolve(Either.right(Mock.reportResponse));
   });
   // Verify that it's selected
-  await act(async () => {
-    await userEvent.click(select);
-  });
+  await userEvent.click(select);
 
   expect(screen.getAllByRole<HTMLButtonElement>("option")[0]).toHaveAttribute(
     "aria-selected",
@@ -213,9 +203,7 @@ test("GIVEN ComplianceCheck page WHEN user clicks on 'Perform dry run' THEN new 
     name: words("desiredState.complianceCheck.action.dryRun"),
   });
 
-  await act(async () => {
-    await userEvent.click(dryRunButton);
-  });
+  await userEvent.click(dryRunButton);
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
@@ -245,9 +233,7 @@ test("GIVEN ComplianceCheck page WHEN user clicks on 'Perform dry run' THEN new 
   expect(select).toBeInTheDocument();
   expect(select).toHaveTextContent(datePresenter.getFull(Mock.a.date));
 
-  await act(async () => {
-    await userEvent.click(select);
-  });
+  await userEvent.click(select);
 
   const options = screen.getAllByRole<HTMLButtonElement>("option");
 
@@ -275,14 +261,10 @@ test("GIVEN ComplianceCheck page WHEN StatusFilter = 'Added' THEN only 'Added' r
     await apiHelper.resolve(Either.right(Mock.reportResponse));
   });
 
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("button", { name: words("jumpTo") }),
-    );
-  });
+  await userEvent.click(screen.getByRole("button", { name: words("jumpTo") }));
 
   expect(
-    screen.getAllByRole("listitem", { name: "DiffSummaryListItem" }),
+    screen.getAllByRole("menuitem", { name: "DiffSummaryListItem" }),
   ).toHaveLength(11);
 
   await act(async () => {
@@ -297,9 +279,7 @@ test("GIVEN ComplianceCheck page WHEN StatusFilter = 'Added' THEN only 'Added' r
     screen.queryByRole("listbox", { name: "StatusFilterOptions" }),
   ).not.toBeInTheDocument();
 
-  await act(async () => {
-    await userEvent.click(screen.getByRole("button", { name: "StatusFilter" }));
-  });
+  await userEvent.click(screen.getByRole("button", { name: "StatusFilter" }));
 
   expect(
     screen.getByRole("listbox", { name: "StatusFilterOptions" }),
@@ -308,27 +288,19 @@ test("GIVEN ComplianceCheck page WHEN StatusFilter = 'Added' THEN only 'Added' r
   const statusOptions = screen.getAllByRole("option");
 
   expect(statusOptions).toHaveLength(7);
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("button", { name: words("showAll") }),
-    );
-  });
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("button", { name: words("hideAll") }),
-    );
-  });
+
+  await userEvent.click(screen.getByRole("button", { name: words("showAll") }));
+
+  await userEvent.click(screen.getByRole("button", { name: words("hideAll") }));
+
   await act(async () => {
     await userEvent.click(statusOptions[0]);
   });
 
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("button", { name: words("jumpTo") }),
-    );
-  });
+  await userEvent.click(screen.getByRole("button", { name: words("jumpTo") }));
+
   expect(
-    await screen.findAllByRole("listitem", { name: "DiffSummaryListItem" }),
+    await screen.findAllByRole("menuitem", { name: "DiffSummaryListItem" }),
   ).toHaveLength(2);
 
   expect(await screen.findAllByTestId("DiffBlock")).toHaveLength(2);
@@ -353,11 +325,7 @@ test("GIVEN ComplianceCheck page WHEN SearchFilter is used, ONLY show the resour
     await apiHelper.resolve(Either.right(Mock.reportResponse));
   });
 
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("button", { name: words("jumpTo") }),
-    );
-  });
+  await userEvent.click(screen.getByRole("button", { name: words("jumpTo") }));
 
   await act(async () => {
     const results = await axe(document.body);
@@ -366,34 +334,28 @@ test("GIVEN ComplianceCheck page WHEN SearchFilter is used, ONLY show the resour
   });
 
   expect(
-    screen.getAllByRole("listitem", { name: "DiffSummaryListItem" }),
+    screen.getAllByRole("menuitem", { name: "DiffSummaryListItem" }),
   ).toHaveLength(11);
 
   expect(await screen.findAllByTestId("DiffBlock")).toHaveLength(11);
 
-  await act(async () => {
-    await userEvent.type(
-      screen.getByRole("searchbox", { name: "SearchFilter" }),
-      "lsm",
-    );
-  });
+  await userEvent.type(
+    screen.getByRole("searchbox", { name: "SearchFilter" }),
+    "lsm",
+  );
 
   expect(await screen.findAllByTestId("DiffBlock")).toHaveLength(10);
 
-  await act(async () => {
-    await userEvent.type(
-      screen.getByRole("searchbox", { name: "SearchFilter" }),
-      "44554",
-    );
-  });
+  await userEvent.type(
+    screen.getByRole("searchbox", { name: "SearchFilter" }),
+    "44554",
+  );
 
   expect(screen.queryAllByTestId("DiffBlock")).toHaveLength(0);
 
-  await act(async () => {
-    await userEvent.clear(
-      screen.getByRole("searchbox", { name: "SearchFilter" }),
-    );
-  });
+  await userEvent.clear(
+    screen.getByRole("searchbox", { name: "SearchFilter" }),
+  );
 
   expect(await screen.findAllByTestId("DiffBlock")).toHaveLength(11);
 

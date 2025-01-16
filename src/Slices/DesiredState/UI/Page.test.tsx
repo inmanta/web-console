@@ -1,20 +1,19 @@
 import React, { act } from "react";
 import { MemoryRouter } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
-import { Either, Maybe } from "@/Core";
+import { HttpResponse, http } from "msw";
+import { setupServer } from "msw/node";
 import {
   QueryResolverImpl,
   getStoreInstance,
   CommandResolverImpl,
-  PromoteVersionCommandManager,
-  DesiredStatesUpdater,
   GetCompilerStatusQueryManager,
   TriggerCompileCommandManager,
 } from "@/Data";
-import { DeleteVersionCommandManager } from "@/Data/Managers/DeleteVersion";
 import {
   DynamicQueryManagerResolverImpl,
   StaticScheduler,
@@ -24,10 +23,7 @@ import {
 } from "@/Test";
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
-import {
-  GetDesiredStatesQueryManager,
-  GetDesiredStatesStateHelper,
-} from "@S/DesiredState/Data";
+import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import * as DesiredStateVersions from "@S/DesiredState/Data/Mock";
 import { Page } from "./Page";
 
@@ -41,807 +37,730 @@ const axe = configureAxe({
 });
 
 function setup() {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  });
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
-  const getDesiredStatesStateHelper = GetDesiredStatesStateHelper(store);
-  const desiredStatesUpdater = new DesiredStatesUpdater(
-    getDesiredStatesStateHelper,
-    apiHelper,
-  );
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolverImpl([
-      GetDesiredStatesQueryManager(
-        apiHelper,
-        getDesiredStatesStateHelper,
-        scheduler,
-      ),
       GetCompilerStatusQueryManager(apiHelper, scheduler),
     ]),
   );
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolverImpl([
-      PromoteVersionCommandManager(apiHelper, desiredStatesUpdater),
-      DeleteVersionCommandManager(apiHelper),
       TriggerCompileCommandManager(apiHelper),
     ]),
   );
 
   const component = (
-    <MemoryRouter>
-      <DependencyProvider
-        dependencies={{
-          ...dependencies,
-          queryResolver,
-          commandResolver,
-        }}
-      >
-        <StoreProvider store={store}>
-          <Page />
-        </StoreProvider>
-      </DependencyProvider>
-    </MemoryRouter>
+    <QueryClientProvider client={queryClient}>
+      <ModalProvider>
+        <MemoryRouter>
+          <DependencyProvider
+            dependencies={{
+              ...dependencies,
+              queryResolver,
+              commandResolver,
+            }}
+          >
+            <StoreProvider store={store}>
+              <Page />
+            </StoreProvider>
+          </DependencyProvider>
+        </MemoryRouter>
+      </ModalProvider>
+    </QueryClientProvider>
   );
 
   return { component, apiHelper, scheduler };
 }
 
-test("DesiredStatesView shows empty table", async () => {
-  const { component, apiHelper } = setup();
+describe("DesiredStatesView", () => {
+  let GETRequestsFired = 0;
+  let POSTRequestsFired = 0;
+  let DELETERequestsFired = 0;
 
-  render(component);
+  const server = setupServer();
 
-  await act(async () => {
-    await apiHelper.resolve(204);
+  server.events.on("request:start", async ({ request }) => {
+    switch (request.method) {
+      case "GET":
+        GETRequestsFired++;
+        break;
+      case "POST":
+        POSTRequestsFired++;
+        break;
+      case "DELETE":
+        DELETERequestsFired++;
+        break;
+      default:
+        break;
+    }
   });
 
-  expect(
-    await screen.findByRole("region", { name: "DesiredStatesView-Loading" }),
-  ).toBeInTheDocument();
+  beforeAll(() => {
+    server.listen();
+  });
 
-  await act(async () => {
-    apiHelper.resolve(
-      Either.right({
-        data: [],
-        links: { self: "" },
-        metadata: { total: 0, before: 0, after: 0, page_size: 1000 },
+  afterEach(() => {
+    server.resetHandlers();
+    GETRequestsFired = 0;
+    POSTRequestsFired = 0;
+    DELETERequestsFired = 0;
+  });
+
+  afterAll(() => {
+    server.close();
+  });
+
+  it("DesiredStatesView shows empty table", async () => {
+    server.use(
+      http.get("/api/v2/desiredstate", async () => {
+        return HttpResponse.json({
+          data: [],
+          links: { self: "" },
+          metadata: { total: 0, before: 0, after: 0, page_size: 1000 },
+        });
       }),
     );
+
+    const { component } = setup();
+
+    render(component);
+
+    expect(
+      await screen.findByRole("region", { name: "DesiredStatesView-Loading" }),
+    ).toBeInTheDocument();
+
+    expect(
+      await screen.findByRole("generic", { name: "DesiredStatesView-Empty" }),
+    ).toBeInTheDocument();
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 
-  expect(
-    await screen.findByRole("generic", { name: "DesiredStatesView-Empty" }),
-  ).toBeInTheDocument();
+  it("DesiredStatesView shows failed table", async () => {
+    server.use(
+      http.get("/api/v2/desiredstate", async () => {
+        return HttpResponse.json({ message: "Not Found" }, { status: 404 });
+      }),
+    );
 
-  await act(async () => {
-    const results = await axe(document.body);
+    const { component } = setup();
 
-    expect(results).toHaveNoViolations();
-  });
-});
+    render(component);
 
-test("DesiredStatesView shows failed table", async () => {
-  const { component, apiHelper } = setup();
+    expect(
+      await screen.findByRole("region", { name: "DesiredStatesView-Loading" }),
+    ).toBeInTheDocument();
 
-  render(component);
+    expect(
+      await screen.findByRole("region", { name: "DesiredStatesView-Failed" }),
+    ).toBeInTheDocument();
 
-  await act(async () => {
-    await apiHelper.resolve(204);
-  });
+    await act(async () => {
+      const results = await axe(document.body);
 
-  expect(
-    await screen.findByRole("region", { name: "DesiredStatesView-Loading" }),
-  ).toBeInTheDocument();
-
-  await act(async () => {
-    await apiHelper.resolve(Either.left("error"));
+      expect(results).toHaveNoViolations();
+    });
   });
 
-  expect(
-    await screen.findByRole("region", { name: "DesiredStatesView-Failed" }),
-  ).toBeInTheDocument();
+  it("AgentsView shows success table", async () => {
+    server.use(
+      http.get("/api/v2/desiredstate", async () => {
+        return HttpResponse.json(DesiredStateVersions.response);
+      }),
+    );
 
-  await act(async () => {
-    const results = await axe(document.body);
+    const { component } = setup();
 
-    expect(results).toHaveNoViolations();
-  });
-});
+    render(component);
 
-test("AgentsView shows success table", async () => {
-  const { component, apiHelper } = setup();
+    expect(
+      await screen.findByRole("region", { name: "DesiredStatesView-Loading" }),
+    ).toBeInTheDocument();
 
-  render(component);
+    expect(
+      await screen.findByRole("grid", { name: "DesiredStatesView-Success" }),
+    ).toBeInTheDocument();
 
-  await act(async () => {
-    await apiHelper.resolve(204);
-  });
+    await act(async () => {
+      const results = await axe(document.body);
 
-  expect(
-    await screen.findByRole("region", { name: "DesiredStatesView-Loading" }),
-  ).toBeInTheDocument();
-
-  await act(async () => {
-    await apiHelper.resolve(Either.right(DesiredStateVersions.response));
+      expect(results).toHaveNoViolations();
+    });
   });
 
-  expect(
-    await screen.findByRole("grid", { name: "DesiredStatesView-Success" }),
-  ).toBeInTheDocument();
+  it("When using the status filter then only the matching desired states should be fetched and shown", async () => {
+    server.use(
+      http.get("/api/v2/desiredstate", async ({ request }) => {
+        //we are expecting that at some point the request will have the filters applied for status and we mock the adequate response
+        if (
+          request.url.split("?")[1] ===
+          "limit=20&sort=version.desc&filter.status=skipped_candidate"
+        ) {
+          return HttpResponse.json({
+            ...DesiredStateVersions.response,
+            data: DesiredStateVersions.response.data.slice(0, 3),
+          });
+        } else {
+          return HttpResponse.json(DesiredStateVersions.response);
+        }
+      }),
+    );
 
-  await act(async () => {
-    const results = await axe(document.body);
+    const { component } = setup();
 
-    expect(results).toHaveNoViolations();
-  });
-});
+    render(component);
 
-test("When using the status filter then only the matching desired states should be fetched and shown", async () => {
-  const { component, apiHelper } = setup();
+    const initialRows = await screen.findAllByRole("row", {
+      name: "DesiredStates Table Row",
+    });
 
-  render(component);
+    expect(initialRows).toHaveLength(9);
 
-  await act(async () => {
-    await apiHelper.resolve(204);
-  });
-
-  await act(async () => {
-    await apiHelper.resolve(Either.right(DesiredStateVersions.response));
-  });
-
-  const initialRows = await screen.findAllByRole("row", {
-    name: "DesiredStates Table Row",
-  });
-
-  expect(initialRows).toHaveLength(9);
-
-  await act(async () => {
     await userEvent.click(
       within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
         "button",
         { name: "FilterPicker" },
       ),
     );
-  });
-  await act(async () => {
+
     await userEvent.click(
       screen.getByRole("option", {
         name: words("desiredState.columns.status"),
       }),
     );
-  });
 
-  const input = screen.getByRole("combobox", { name: "StatusFilterInput" });
+    const input = screen.getByRole("combobox", { name: "StatusFilterInput" });
 
-  await act(async () => {
     await userEvent.click(input);
-  });
 
-  const statusOptions = screen.getAllByRole("option");
+    const statusOptions = screen.getAllByRole("option");
 
-  expect(statusOptions).toHaveLength(4);
+    expect(statusOptions).toHaveLength(4);
 
-  const candidateSkippedOption = await screen.findByRole("option", {
-    name: words("desiredState.test.skippedCandidate"),
-  });
+    const candidateSkippedOption = await screen.findByRole("option", {
+      name: words("desiredState.test.skippedCandidate"),
+    });
 
-  await act(async () => {
     await userEvent.click(candidateSkippedOption);
+
+    const rowsAfter = await screen.findAllByRole("row", {
+      name: "DesiredStates Table Row",
+    });
+
+    expect(rowsAfter).toHaveLength(3);
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 
-  expect(apiHelper.pendingRequests[0].url).toEqual(
-    `/api/v2/desiredstate?limit=20&sort=version.desc&filter.status=skipped_candidate`,
-  );
-
-  await act(async () => {
-    await apiHelper.resolve(
-      Either.right({
-        ...DesiredStateVersions.response,
-        data: DesiredStateVersions.response.data.slice(0, 3),
+  it("When using the Date filter then the desired state versions within the range selected range should be fetched and shown", async () => {
+    server.use(
+      http.get("/api/v2/desiredstate", async ({ request }) => {
+        //we are expecting that at some point the request will have the filters applied for date and we mock the adequate response
+        if (
+          request.url.split("?")[1] ===
+          "limit=20&sort=version.desc&filter.status=active&filter.status=candidate&filter.status=retired&filter.date=ge%3A2021-12-05%2B23%3A00%3A00&filter.date=le%3A2021-12-06%2B23%3A00%3A00"
+        ) {
+          return HttpResponse.json({
+            ...DesiredStateVersions.response,
+            data: DesiredStateVersions.response.data.slice(0, 3),
+          });
+        } else {
+          return HttpResponse.json(DesiredStateVersions.response);
+        }
       }),
     );
-  });
 
-  const rowsAfter = await screen.findAllByRole("row", {
-    name: "DesiredStates Table Row",
-  });
+    const { component } = setup();
 
-  expect(rowsAfter).toHaveLength(3);
+    render(component);
 
-  await act(async () => {
-    const results = await axe(document.body);
+    const initialRows = await screen.findAllByRole("row", {
+      name: "DesiredStates Table Row",
+    });
 
-    expect(results).toHaveNoViolations();
-  });
-});
+    expect(initialRows).toHaveLength(9);
 
-test("When using the Date filter then the desired state versions within the range selected range should be fetched and shown", async () => {
-  const { component, apiHelper } = setup();
-
-  render(component);
-
-  await act(async () => {
-    await apiHelper.resolve(204);
-  });
-
-  await act(async () => {
-    await apiHelper.resolve(Either.right(DesiredStateVersions.response));
-  });
-
-  const initialRows = await screen.findAllByRole("row", {
-    name: "DesiredStates Table Row",
-  });
-
-  expect(initialRows).toHaveLength(9);
-
-  await act(async () => {
     await userEvent.click(
       within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
         "button",
         { name: "FilterPicker" },
       ),
     );
-  });
-  await act(async () => {
+
     await userEvent.click(
-      screen.getByRole("option", { name: words("desiredState.columns.date") }),
+      screen.getByRole("option", {
+        name: words("desiredState.columns.date"),
+      }),
     );
-  });
 
-  const fromDatePicker = screen.getByLabelText("From Date Picker");
+    const fromDatePicker = screen.getByLabelText("From Date Picker");
 
-  await act(async () => {
-    await userEvent.click(fromDatePicker);
-  });
-  await act(async () => {
     await userEvent.type(fromDatePicker, `2021-12-06`);
-  });
 
-  const toDatePicker = screen.getByLabelText("To Date Picker");
+    const toDatePicker = screen.getByLabelText("To Date Picker");
 
-  await act(async () => {
-    await userEvent.click(toDatePicker);
-  });
-  await act(async () => {
     await userEvent.type(toDatePicker, "2021-12-07");
-  });
 
-  await act(async () => {
     await userEvent.click(screen.getByLabelText("Apply date filter"));
-  });
-  expect(apiHelper.pendingRequests[0].url).toMatch(
-    `/api/v2/desiredstate?limit=20&sort=version.desc&filter.status=active&filter.status=candidate&filter.status=retired&filter.date=ge%3A2021-12-05%2B23%3A00%3A00&filter.date=le%3A2021-12-06%2B23%3A00%3A00`,
-  );
 
-  await act(async () => {
-    await apiHelper.resolve(
-      Either.right({
-        ...DesiredStateVersions.response,
-        data: DesiredStateVersions.response.data.slice(0, 3),
+    const rowsAfter = await screen.findAllByRole("row", {
+      name: "DesiredStates Table Row",
+    });
+
+    expect(rowsAfter).toHaveLength(3);
+
+    // The chips are hidden in small windows, so resize it
+    window = Object.assign(window, { innerWidth: 1200 });
+    await act(async () => {
+      window.dispatchEvent(new Event("resize"));
+    });
+
+    expect(
+      await screen.findByText("from | 2021/12/06 00:00:00", { exact: false }),
+    ).toBeVisible();
+    expect(
+      await screen.findByText("to | 2021/12/07 00:00:00", { exact: false }),
+    ).toBeVisible();
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
+  });
+
+  it("When using the Version filter then the desired state versions within the range selected range should be fetched and shown", async () => {
+    server.use(
+      http.get("/api/v2/desiredstate", async ({ request }) => {
+        //we are expecting that at some point the request will have the filters applied for version and we mock the adequate response
+        if (
+          request.url.split("?")[1] ===
+          "limit=20&sort=version.desc&filter.status=active&filter.status=candidate&filter.status=retired&filter.version=ge%3A3&filter.version=le%3A5"
+        ) {
+          return HttpResponse.json({
+            ...DesiredStateVersions.response,
+            data: DesiredStateVersions.response.data.slice(0, 3),
+          });
+        } else {
+          return HttpResponse.json(DesiredStateVersions.response);
+        }
       }),
     );
-  });
 
-  const rowsAfter = await screen.findAllByRole("row", {
-    name: "DesiredStates Table Row",
-  });
+    const { component } = setup();
 
-  expect(rowsAfter).toHaveLength(3);
+    render(component);
 
-  // The chips are hidden in small windows, so resize it
-  window = Object.assign(window, { innerWidth: 1200 });
-  await act(async () => {
-    window.dispatchEvent(new Event("resize"));
-  });
+    const initialRows = await screen.findAllByRole("row", {
+      name: "DesiredStates Table Row",
+    });
 
-  expect(
-    await screen.findByText("from | 2021/12/06 00:00:00", { exact: false }),
-  ).toBeVisible();
-  expect(
-    await screen.findByText("to | 2021/12/07 00:00:00", { exact: false }),
-  ).toBeVisible();
+    expect(initialRows).toHaveLength(9);
 
-  await act(async () => {
-    const results = await axe(document.body);
-
-    expect(results).toHaveNoViolations();
-  });
-});
-
-test("When using the Version filter then the desired state versions within the range selected range should be fetched and shown", async () => {
-  const { component, apiHelper } = setup();
-
-  render(component);
-
-  await act(async () => {
-    await apiHelper.resolve(204);
-  });
-
-  await act(async () => {
-    await apiHelper.resolve(Either.right(DesiredStateVersions.response));
-  });
-
-  const initialRows = await screen.findAllByRole("row", {
-    name: "DesiredStates Table Row",
-  });
-
-  expect(initialRows).toHaveLength(9);
-
-  await act(async () => {
     await userEvent.click(
       within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
         "button",
         { name: "FilterPicker" },
       ),
     );
-  });
-  await act(async () => {
+
     await userEvent.click(
       screen.getByRole("option", {
         name: words("desiredState.columns.version"),
       }),
     );
-  });
 
-  const fromDatePicker = await screen.findByLabelText("Version range from");
+    const fromDatePicker = await screen.findByLabelText("Version range from");
 
-  await act(async () => {
-    await userEvent.click(fromDatePicker);
-  });
-  await act(async () => {
     await userEvent.type(fromDatePicker, `3`);
-  });
 
-  const toDatePicker = await screen.findByLabelText("Version range to");
+    const toDatePicker = await screen.findByLabelText("Version range to");
 
-  await act(async () => {
-    await userEvent.click(toDatePicker);
-  });
-  await act(async () => {
     await userEvent.type(toDatePicker, `5`);
-  });
 
-  await act(async () => {
     await userEvent.click(await screen.findByLabelText("Apply Version filter"));
-  });
-  expect(apiHelper.pendingRequests[0].url).toMatch(
-    `/api/v2/desiredstate?limit=20&sort=version.desc&filter.status=active&filter.status=candidate&filter.status=retired&filter.version=ge%3A3&filter.version=le%3A5`,
-  );
 
-  await act(async () => {
-    await apiHelper.resolve(
-      Either.right({
-        ...DesiredStateVersions.response,
-        data: DesiredStateVersions.response.data.slice(0, 3),
+    const rowsAfter = await screen.findAllByRole("row", {
+      name: "DesiredStates Table Row",
+    });
+
+    expect(rowsAfter).toHaveLength(3);
+
+    // The chips are hidden in small windows, so resize it
+    window = Object.assign(window, { innerWidth: 1200 });
+    await act(async () => {
+      await window.dispatchEvent(new Event("resize"));
+    });
+
+    expect(await screen.findByText("from | 3", { exact: false })).toBeVisible();
+    expect(await screen.findByText("to | 5", { exact: false })).toBeVisible();
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
+  });
+
+  it("Given the Desired states view When promoting a version, then the correct request is be fired", async () => {
+    server.use(
+      http.get("/api/v2/desiredstate", async () => {
+        return HttpResponse.json(DesiredStateVersions.response);
+      }),
+      http.post("/api/v2/desiredstate/9/promote", async () => {
+        return HttpResponse.json({ status: 200 });
       }),
     );
-  });
 
-  const rowsAfter = await screen.findAllByRole("row", {
-    name: "DesiredStates Table Row",
-  });
+    const { component } = setup();
 
-  expect(rowsAfter).toHaveLength(3);
+    render(component);
 
-  // The chips are hidden in small windows, so resize it
-  window = Object.assign(window, { innerWidth: 1200 });
-  await act(async () => {
-    await window.dispatchEvent(new Event("resize"));
-  });
+    const rows = await screen.findAllByRole("row", {
+      name: "DesiredStates Table Row",
+    });
 
-  expect(await screen.findByText("from | 3", { exact: false })).toBeVisible();
-  expect(await screen.findByText("to | 5", { exact: false })).toBeVisible();
+    expect(POSTRequestsFired).toBe(0);
+    expect(GETRequestsFired).toBe(1);
 
-  await act(async () => {
-    const results = await axe(document.body);
-
-    expect(results).toHaveNoViolations();
-  });
-});
-
-test("Given the Desired states view When promoting a version, then the correct request is be fired", async () => {
-  const { component, apiHelper } = setup();
-
-  render(component);
-
-  await act(async () => {
-    await apiHelper.resolve(204);
-  });
-
-  await act(async () => {
-    await apiHelper.resolve(Either.right(DesiredStateVersions.response));
-  });
-  const rows = await screen.findAllByRole("row", {
-    name: "DesiredStates Table Row",
-  });
-
-  await act(async () => {
     await userEvent.click(
       within(rows[8]).getByRole("button", {
         name: "actions-toggle",
       }),
     );
-  });
 
-  expect(
-    within(rows[8]).getByRole("button", {
-      name: "actions-toggle",
-    }),
-  ).toHaveAttribute("aria-expanded", "true");
+    expect(
+      within(rows[8]).getByRole("button", {
+        name: "actions-toggle",
+      }),
+    ).toHaveAttribute("aria-expanded", "true");
 
-  expect(
-    screen.getByRole("menuitem", {
-      name: words("desiredState.actions.promote"),
-    }),
-  ).toBeDisabled();
+    expect(
+      screen.getByRole("menuitem", {
+        name: words("desiredState.actions.promote"),
+      }),
+    ).toBeDisabled();
 
-  await act(async () => {
+    // close first opened popup, to avoid conflict with the next one.
+    await userEvent.click(
+      within(rows[8]).getByRole("button", {
+        name: "actions-toggle",
+      }),
+    );
+
     await userEvent.click(
       within(rows[0]).getByRole("button", {
         name: "actions-toggle",
       }),
     );
+
+    await userEvent.click(screen.getByRole("menuitem", { name: /promote/i }));
+
+    const rowsAfter = await screen.findAllByRole("row", {
+      name: "DesiredStates Table Row",
+    });
+
+    expect(rowsAfter).toHaveLength(9);
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
+
+    expect(POSTRequestsFired).toBe(1);
+    expect(GETRequestsFired).toBe(2);
   });
 
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("menuitem", {
-        name: words("desiredState.actions.promote"),
+  it("Given the Desired states view with filters When promoting a version, then the correct request is be fired", async () => {
+    server.use(
+      http.get("/api/v2/desiredstate", async ({ request }) => {
+        //we are expecting that at some point the request will have the filters applied for status and we mock the adequate response
+        if (
+          request.url.split("?")[1] ===
+          "limit=20&sort=version.desc&filter.status=candidate"
+        ) {
+          return HttpResponse.json({
+            ...DesiredStateVersions.response,
+            data: DesiredStateVersions.response.data.slice(0, 3),
+          });
+        } else {
+          return HttpResponse.json(DesiredStateVersions.response);
+        }
+      }),
+      http.post("/api/v2/desiredstate/9/promote", async () => {
+        return HttpResponse.json({ status: 200 });
       }),
     );
-  });
 
-  expect(apiHelper.pendingRequests).toHaveLength(1);
+    const { component } = setup();
 
-  const request = apiHelper.pendingRequests[0];
+    render(component);
 
-  expect(request).toEqual({
-    method: "POST",
-    environment: "env",
-    url: "/api/v2/desiredstate/9/promote",
-    body: null,
-  });
+    const initialRows = await screen.findAllByRole("row", {
+      name: "DesiredStates Table Row",
+    });
 
-  await act(async () => {
-    await apiHelper.resolve(Maybe.none());
-  });
+    expect(initialRows).toHaveLength(9);
 
-  expect(apiHelper.resolvedRequests).toHaveLength(3);
-  expect(apiHelper.pendingRequests).toHaveLength(1);
-
-  await act(async () => {
-    await apiHelper.resolve(Either.right(DesiredStateVersions.response));
-  });
-
-  expect(apiHelper.resolvedRequests).toHaveLength(4);
-  expect(apiHelper.pendingRequests).toHaveLength(0);
-
-  await act(async () => {
-    const results = await axe(document.body);
-
-    expect(results).toHaveNoViolations();
-  });
-});
-
-test("Given the Desired states view with filters When promoting a version, then the correct request is be fired", async () => {
-  const { component, apiHelper } = setup();
-
-  render(component);
-
-  await act(async () => {
-    await apiHelper.resolve(204);
-  });
-
-  await act(async () => {
-    await apiHelper.resolve(Either.right(DesiredStateVersions.response));
-  });
-
-  await act(async () => {
     await userEvent.click(
       within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
         "button",
         { name: "FilterPicker" },
       ),
     );
-  });
-  await act(async () => {
+
     await userEvent.click(
       screen.getByRole("option", {
         name: words("desiredState.columns.status"),
       }),
     );
-  });
 
-  const input = screen.getByPlaceholderText(
-    words("desiredState.filters.status.placeholder"),
-  );
+    const input = screen.getByPlaceholderText(
+      words("desiredState.filters.status.placeholder"),
+    );
 
-  await act(async () => {
     await userEvent.click(input);
-  });
 
-  const option = await screen.findByRole("option", {
-    name: words("desiredState.test.candidate"),
-  });
+    const option = await screen.findByRole("option", {
+      name: words("desiredState.test.candidate"),
+    });
 
-  await act(async () => {
     await userEvent.click(option);
-  });
 
-  await act(async () => {
-    await apiHelper.resolve(Either.right(DesiredStateVersions.response));
-  });
-  const rows = await screen.findAllByRole("row", {
-    name: "DesiredStates Table Row",
-  });
+    expect(POSTRequestsFired).toBe(0);
+    expect(GETRequestsFired).toBe(2);
 
-  await act(async () => {
-    await userEvent.click(
-      within(rows[0]).getByRole("button", {
-        name: "actions-toggle",
-      }),
-    );
-  });
-
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("menuitem", {
-        name: words("desiredState.actions.promote"),
-      }),
-    );
-  });
-  expect(apiHelper.pendingRequests).toHaveLength(1);
-
-  const request = apiHelper.pendingRequests[0];
-
-  expect(request).toEqual({
-    method: "POST",
-    environment: "env",
-    url: "/api/v2/desiredstate/9/promote",
-    body: null,
-  });
-
-  await act(async () => {
-    await apiHelper.resolve(Maybe.none());
-  });
-
-  expect(apiHelper.resolvedRequests).toHaveLength(4);
-  expect(apiHelper.pendingRequests).toHaveLength(1);
-  expect(apiHelper.pendingRequests[0]).toEqual({
-    method: "GET",
-    environment: "env",
-    url: "/api/v2/desiredstate?limit=20&sort=version.desc&filter.status=candidate",
-  });
-
-  await act(async () => {
-    await apiHelper.resolve(Either.right(DesiredStateVersions.response));
-  });
-
-  expect(apiHelper.resolvedRequests).toHaveLength(5);
-  expect(apiHelper.pendingRequests).toHaveLength(0);
-
-  await act(async () => {
-    const results = await axe(document.body);
-
-    expect(results).toHaveNoViolations();
-  });
-});
-
-test("Given the Desired states view When promoting a version results in an error, then the error is shown", async () => {
-  const { component, apiHelper } = setup();
-
-  render(component);
-
-  await act(async () => {
-    await apiHelper.resolve(204);
-  });
-
-  await act(async () => {
-    await apiHelper.resolve(Either.right(DesiredStateVersions.response));
-  });
-  const rows = await screen.findAllByRole("row", {
-    name: "DesiredStates Table Row",
-  });
-
-  await act(async () => {
-    await userEvent.click(
-      within(rows[0]).getByRole("button", {
-        name: "actions-toggle",
-      }),
-    );
-  });
-
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("menuitem", {
-        name: words("desiredState.actions.promote"),
-      }),
-    );
-  });
-
-  expect(apiHelper.pendingRequests).toHaveLength(1);
-
-  const request = apiHelper.pendingRequests[0];
-
-  expect(request).toEqual({
-    method: "POST",
-    environment: "env",
-    url: "/api/v2/desiredstate/9/promote",
-    body: null,
-  });
-
-  await act(async () => {
-    await apiHelper.resolve(Maybe.some("something happened"));
-    await apiHelper.resolve(Either.right(DesiredStateVersions.response));
-  });
-
-  expect(await screen.findByText("something happened")).toBeVisible();
-});
-
-test("DesiredStatesView shows CompileWidget", async () => {
-  const { component } = setup();
-
-  render(component);
-
-  expect(screen.getByRole("button", { name: "RecompileButton" })).toBeVisible();
-});
-
-describe("DeleteModal ", () => {
-  it("Shows form when clicking on modal button", async () => {
-    const { component, apiHelper } = setup();
-
-    render(component);
-
-    await act(async () => {
-      await apiHelper.resolve(204);
-    });
-
-    await act(async () => {
-      await apiHelper.resolve(Either.right(DesiredStateVersions.response));
-    });
     const rows = await screen.findAllByRole("row", {
       name: "DesiredStates Table Row",
     });
 
-    await act(async () => {
-      await userEvent.click(
-        within(rows[0]).getByRole("button", {
-          name: "actions-toggle",
-        }),
-      );
+    await userEvent.click(
+      within(rows[0]).getByRole("button", {
+        name: "actions-toggle",
+      }),
+    );
+
+    await userEvent.click(
+      screen.getByRole("menuitem", {
+        name: words("desiredState.actions.promote"),
+      }),
+    );
+
+    const rowsAfter = await screen.findAllByRole("row", {
+      name: "DesiredStates Table Row",
     });
 
+    expect(rowsAfter).toHaveLength(3);
+
     await act(async () => {
-      await userEvent.click(screen.getByRole("menuitem", { name: "Delete" }));
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
     });
+    expect(POSTRequestsFired).toBe(1);
+    expect(GETRequestsFired).toBe(3);
+  });
+
+  it("Given the Desired states view When promoting a version results in an error, then the error is shown", async () => {
+    server.use(
+      http.get("/api/v2/desiredstate", async () => {
+        return HttpResponse.json(DesiredStateVersions.response);
+      }),
+      http.post("/api/v2/desiredstate/9/promote", async () => {
+        return HttpResponse.json(
+          { message: "something happened" },
+          { status: 500 },
+        );
+      }),
+    );
+    const { component } = setup();
+
+    render(component);
+
+    const rows = await screen.findAllByRole("row", {
+      name: "DesiredStates Table Row",
+    });
+
+    await userEvent.click(
+      within(rows[0]).getByRole("button", {
+        name: "actions-toggle",
+      }),
+    );
+
+    await userEvent.click(
+      screen.getByRole("menuitem", {
+        name: words("desiredState.actions.promote"),
+      }),
+    );
+
+    expect(await screen.findByText("something happened")).toBeVisible();
+  });
+
+  it("DesiredStatesView shows CompileWidget", async () => {
+    server.use(
+      http.get("/api/v2/desiredstate", async () => {
+        return HttpResponse.json(DesiredStateVersions.response);
+      }),
+    );
+    const { component } = setup();
+
+    render(component);
 
     expect(
-      await screen.findByText(words("inventory.deleteVersion.header")(9)),
+      await screen.findByRole("button", { name: "RecompileButton" }),
     ).toBeVisible();
-    expect(await screen.findByText("Yes")).toBeVisible();
-    expect(await screen.findByText("No")).toBeVisible();
-
-    await act(async () => {
-      const results = await axe(document.body);
-
-      expect(results).toHaveNoViolations();
-    });
   });
 
-  it("Closes modal when cancelled(both cancel buttons scenario)", async () => {
-    const { component, apiHelper } = setup();
+  describe("DeleteModal ", () => {
+    it("Shows form when clicking on modal button", async () => {
+      server.use(
+        http.get("/api/v2/desiredstate", async () => {
+          return HttpResponse.json(DesiredStateVersions.response);
+        }),
+      );
+      const { component } = setup();
 
-    render(component);
+      render(component);
+      const rows = await screen.findAllByRole("row", {
+        name: "DesiredStates Table Row",
+      });
 
-    await act(async () => {
-      await apiHelper.resolve(204);
-    });
-
-    await act(async () => {
-      await apiHelper.resolve(Either.right(DesiredStateVersions.response));
-    });
-    const rows = await screen.findAllByRole("row", {
-      name: "DesiredStates Table Row",
-    });
-
-    //close by "no" button scenario
-    await act(async () => {
       await userEvent.click(
         within(rows[0]).getByRole("button", {
           name: "actions-toggle",
         }),
       );
-    });
 
-    await act(async () => {
       await userEvent.click(screen.getByRole("menuitem", { name: "Delete" }));
-    });
-    const noButton = await screen.findByText("No");
 
-    await act(async () => {
+      expect(
+        await screen.findByText(words("inventory.deleteVersion.header")(9)),
+      ).toBeVisible();
+      expect(await screen.findByText("Yes")).toBeVisible();
+      expect(await screen.findByText("No")).toBeVisible();
+
+      await act(async () => {
+        const results = await axe(document.body);
+
+        expect(results).toHaveNoViolations();
+      });
+    });
+
+    it("Closes modal when cancelled(both cancel buttons scenario)", async () => {
+      server.use(
+        http.get("/api/v2/desiredstate", async () => {
+          return HttpResponse.json(DesiredStateVersions.response);
+        }),
+      );
+
+      const { component } = setup();
+
+      render(component);
+
+      const rows = await screen.findAllByRole("row", {
+        name: "DesiredStates Table Row",
+      });
+
+      //close by "no" button scenario
+      await userEvent.click(
+        within(rows[0]).getByRole("button", {
+          name: "actions-toggle",
+        }),
+      );
+
+      await userEvent.click(screen.getByRole("menuitem", { name: "Delete" }));
+
+      const noButton = await screen.findByText("No");
+
       await userEvent.click(noButton);
-    });
 
-    expect(screen.queryByText("Yes")).not.toBeInTheDocument();
+      expect(screen.queryByText("Yes")).not.toBeInTheDocument();
 
-    //close by close button scenario
-    await act(async () => {
+      //close by close button scenario
       await userEvent.click(
         within(rows[0]).getByRole("button", {
           name: "actions-toggle",
         }),
       );
-    });
-    await act(async () => {
+
       await userEvent.click(screen.getByRole("menuitem", { name: "Delete" }));
-    });
 
-    const closeButton = await screen.findByLabelText("Close");
+      const closeButton = await screen.findByLabelText("Close");
 
-    await act(async () => {
       await userEvent.click(closeButton);
+
+      expect(screen.queryByText("Yes")).not.toBeInTheDocument();
+
+      await act(async () => {
+        const results = await axe(document.body);
+
+        expect(results).toHaveNoViolations();
+      });
     });
 
-    expect(screen.queryByText("Yes")).not.toBeInTheDocument();
+    it("Sends request when submitted then request is executed and modal closed", async () => {
+      server.use(
+        http.get("/api/v2/desiredstate", async () => {
+          return HttpResponse.json(DesiredStateVersions.response);
+        }),
+        http.delete("/api/v1/version/9", async () => {
+          return HttpResponse.json({ status: 204 });
+        }),
+      );
 
-    await act(async () => {
-      const results = await axe(document.body);
+      const { component } = setup();
 
-      expect(results).toHaveNoViolations();
-    });
-  });
+      render(component);
 
-  it("Sends request when submitted then request is executed and modal closed", async () => {
-    const { component, apiHelper } = setup();
+      const rows = await screen.findAllByRole("row", {
+        name: "DesiredStates Table Row",
+      });
 
-    render(component);
+      expect(rows).toHaveLength(9);
 
-    await act(async () => {
-      await apiHelper.resolve(204);
-    });
+      expect(DELETERequestsFired).toBe(0);
+      expect(GETRequestsFired).toBe(1);
 
-    await act(async () => {
-      await apiHelper.resolve(Either.right(DesiredStateVersions.response));
-    });
-    const rows = await screen.findAllByRole("row", {
-      name: "DesiredStates Table Row",
-    });
-
-    expect(rows).toHaveLength(9);
-
-    await act(async () => {
       await userEvent.click(
         within(rows[0]).getByRole("button", {
           name: "actions-toggle",
         }),
       );
-    });
 
-    await act(async () => {
       await userEvent.click(screen.getByRole("menuitem", { name: "Delete" }));
-    });
-    const yesButton = await screen.findByText("Yes");
 
-    await act(async () => {
+      const yesButton = await screen.findByText("Yes");
+
       await userEvent.click(yesButton);
-    });
 
-    expect(apiHelper.pendingRequests[0]).toEqual({
-      environment: "env",
-      method: "DELETE",
-      url: `/api/v1/version/9`,
-    });
+      expect(screen.queryByText("No")).not.toBeInTheDocument();
 
-    await act(async () => {
-      await apiHelper.resolve(Either.right(null));
-    });
+      //delete request is fired and it will retrigger the get request,
+      expect(DELETERequestsFired).toBe(1);
+      expect(GETRequestsFired).toBe(3);
+      await act(async () => {
+        const results = await axe(document.body);
 
-    expect(screen.queryByText("No")).not.toBeInTheDocument();
-
-    await act(async () => {
-      const results = await axe(document.body);
-
-      expect(results).toHaveNoViolations();
+        expect(results).toHaveNoViolations();
+      });
     });
   });
 });

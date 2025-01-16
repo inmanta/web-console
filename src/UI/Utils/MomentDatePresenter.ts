@@ -12,13 +12,14 @@ export class MomentDatePresenter implements DatePresenter {
   diff(timestamp1: string, timestamp2: string): string {
     return `${moment
       .duration(moment(timestamp1).diff(moment(timestamp2)))
-      .asSeconds()} seconds`;
+      .asSeconds()} s`;
   }
 
   get(timestamp: string): DateInfo {
     return {
       full: this.getFull(timestamp),
       relative: this.getRelative(timestamp),
+      dateTimeMilliseconds: `${this.getDate(timestamp)} ${this.getTime(timestamp)}`,
     };
   }
 
@@ -31,7 +32,7 @@ export class MomentDatePresenter implements DatePresenter {
   }
 
   getTime(timestamp: string): string {
-    return this.format(timestamp, "HH:mm:ss");
+    return this.format(timestamp, "HH:mm:SSS");
   }
 
   private getRelative(timestamp: string): string {

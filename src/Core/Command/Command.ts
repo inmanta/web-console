@@ -10,10 +10,6 @@ import {
   DeleteService,
   DeleteServiceManifest,
 } from "@/Data/Managers/DeleteService/interface";
-import {
-  DeleteVersion,
-  DeleteVersionManifest,
-} from "@/Data/Managers/DeleteVersion/interface";
 import { Deploy, DeployManifest } from "@/Data/Managers/Deploy/interface";
 import {
   DestroyInstance,
@@ -47,10 +43,6 @@ import {
   ModifyEnvironment,
   ModifyEnvironmentManifest,
 } from "@/Data/Managers/ModifyEnvironment/interface";
-import {
-  PromoteVersion,
-  PromoteVersionManifest,
-} from "@/Data/Managers/PromoteVersion/interface";
 import { Repair, RepairManifest } from "@/Data/Managers/Repair/interface";
 import {
   ResumeEnvironment,
@@ -107,13 +99,11 @@ export type Command =
   | DeleteInstance
   | DestroyInstance
   | DeleteService
-  | DeleteVersion
   | Deploy
   | GenerateToken
   | GetSupportArchive
   | HaltEnvironment
   | ModifyEnvironment
-  | PromoteVersion
   | UpdateCatalog
   | Repair
   | ResetEnvironmentSetting
@@ -147,13 +137,11 @@ interface Manifest {
   DeleteInstance: DeleteInstanceManifest;
   DestroyInstance: DestroyInstanceManifest;
   DeleteService: DeleteServiceManifest;
-  DeleteVersion: DeleteVersionManifest;
   Deploy: DeployManifest;
   GenerateToken: GenerateTokenManifest;
   GetSupportArchive: GetSupportArchiveManifest;
   HaltEnvironment: HaltEnvironmentManifest;
   ModifyEnvironment: ModifyEnvironmentManifest;
-  PromoteVersion: PromoteVersionManifest;
   UpdateCatalog: UpdateCatalogManifest;
   Repair: RepairManifest;
   ResetEnvironmentSetting: ResetEnvironmentSettingManifest;

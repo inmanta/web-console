@@ -18,6 +18,7 @@ import {
   dependencies,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
+import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import {
   CallbacksQueryManager,
   CallbacksStateHelper,
@@ -73,7 +74,9 @@ function setup() {
         }}
       >
         <StoreProvider store={store}>
-          <CallbacksView service_entity={Service.a.name} />
+          <ModalProvider>
+            <CallbacksView service_entity={Service.a.name} />
+          </ModalProvider>
         </StoreProvider>
       </DependencyProvider>
     </MemoryRouter>
@@ -107,17 +110,13 @@ test("GIVEN CallbacksTab WHEN user click on delete and confirms THEN callback is
     name: "DeleteCallback-" + shortenUUID,
   });
 
-  await act(async () => {
-    await userEvent.click(deleteButton);
-  });
+  await userEvent.click(deleteButton);
 
   expect(screen.getByRole("dialog", { name: "Delete Callback" })).toBeVisible();
 
   const yesButton = screen.getByRole("button", { name: "Yes" });
 
-  await act(async () => {
-    await userEvent.click(yesButton);
-  });
+  await userEvent.click(yesButton);
 
   await act(async () => {
     apiHelper.resolve(Maybe.none());
@@ -155,46 +154,35 @@ test("GIVEN CallbacksTab WHEN user fills in form and clicks on Add THEN callback
     name: "callbackUrl",
   });
 
-  await act(async () => {
-    await userEvent.type(callbackUrlInput, "http://www.example.com/");
-  });
+  await userEvent.type(callbackUrlInput, "http://www.example.com/");
+
   const minimalLogLevelInput = screen.getByRole("combobox", {
     name: "MinimalLogLevelFilterInput",
   });
 
-  await act(async () => {
-    await userEvent.click(minimalLogLevelInput);
-  });
+  await userEvent.click(minimalLogLevelInput);
 
   const criticalOption = screen.getByRole("option", { name: "CRITICAL" });
 
-  await act(async () => {
-    await userEvent.click(criticalOption);
-  });
+  await userEvent.click(criticalOption);
 
   const eventTypesInput = screen.getByRole("combobox", {
     name: "EventTypesFilterInput",
   });
 
-  await act(async () => {
-    await userEvent.click(eventTypesInput);
-  });
+  await userEvent.click(eventTypesInput);
 
   const allocationUpdateOption = screen.getByRole("option", {
     name: "ALLOCATION_UPDATE",
   });
 
-  await act(async () => {
-    await userEvent.click(allocationUpdateOption);
-  });
+  await userEvent.click(allocationUpdateOption);
 
   const addButton = screen.getByRole("button", {
     name: "Add",
   });
 
-  await act(async () => {
-    await userEvent.click(addButton);
-  });
+  await userEvent.click(addButton);
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0].url).toMatch("/lsm/v1/callbacks");

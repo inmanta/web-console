@@ -12,7 +12,7 @@ interface Props {
   isChecked: boolean | null;
   isOptional: boolean;
   attributeName: string;
-  description?: string;
+  description?: string | null;
   handleInputChange: (value, event) => void;
   shouldBeDisabled?: boolean;
 }

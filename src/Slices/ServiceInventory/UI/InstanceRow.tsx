@@ -1,68 +1,46 @@
-import React, { useRef, useState } from "react";
-
-import { Tbody, Tr, Td, ExpandableRowContent } from "@patternfly/react-table";
+import React, { useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Button, Flex, FlexItem } from "@patternfly/react-core";
+import { Tbody, Tr, Td } from "@patternfly/react-table";
 import styled from "styled-components";
-import { Row, ServiceModel, VersionedServiceInstanceIdentifier } from "@/Core";
+import { Row, ServiceModel } from "@/Core";
+import { StateLabel } from "@/Slices/ServiceInstanceDetails/UI/Components/Sections";
+import { DependencyContext } from "@/UI";
 import { DateWithTooltip } from "@/UI/Components";
 import { CopyMultiOptions } from "@/UI/Components/CopyMultiOptions";
-import { scrollRowIntoView } from "@/UI/Utils";
 import { words } from "@/UI/words";
 import { DeploymentProgressBar, IdWithCopy } from "./Components";
-
-import { Tabs, TabKey } from "./Tabs";
+import { RowActions } from "./Components/RowActionsMenu/RowActions";
 
 interface Props {
   row: Row;
-  index: number;
-  isExpanded: boolean;
-  onToggle: () => void;
-  numberOfColumns: number;
-  rowActions: React.ReactElement | null;
-  state: React.ReactElement | null;
-  service?: ServiceModel;
-  serviceInstanceIdentifier: VersionedServiceInstanceIdentifier;
   shouldUseServiceIdentity?: boolean;
   idDataLabel: string;
+  service: ServiceModel;
 }
 
 export const InstanceRow: React.FC<Props> = ({
   row,
-  index,
-  isExpanded,
-  onToggle,
-  numberOfColumns,
-  rowActions,
-  state,
-  serviceInstanceIdentifier,
   shouldUseServiceIdentity,
   idDataLabel,
   service,
 }) => {
-  const [activeTab, setActiveTab] = useState<TabKey | string>(TabKey.Status);
-  const rowRef = useRef<HTMLSpanElement>(null);
-  const openTabAndScrollTo = (tab: TabKey) => () => {
-    setActiveTab(tab);
-    if (!isExpanded) {
-      onToggle();
-    }
-    scrollRowIntoView(rowRef);
-  };
+  const { routeManager } = useContext(DependencyContext);
+
+  const instanceDetailsUrl = routeManager.useUrl("InstanceDetails", {
+    service: service.name,
+    instance: row.serviceIdentityValue || row.id.full,
+    instanceId: row.id.full,
+  });
+  const navigate = useNavigate();
 
   return (
-    <Tbody isExpanded={false}>
-      <StyledRow
-        $deleted={row.deleted}
+    <Tbody>
+      <Tr
+        className={row.deleted ? "danger" : ""}
         id={`instance-row-${row.id.short}`}
         aria-label="InstanceRow-Intro"
       >
-        <Td
-          aria-label={`expand-button-${row.id.short}`}
-          expand={{
-            rowIndex: index,
-            isExpanded,
-            onToggle,
-          }}
-        />
         {shouldUseServiceIdentity && row.serviceIdentityValue ? (
           <Td
             dataLabel={idDataLabel}
@@ -78,11 +56,18 @@ export const InstanceRow: React.FC<Props> = ({
             <IdWithCopy uuid={row.id} />
           </Td>
         )}
-        <Td dataLabel={words("inventory.column.state")}>{state}</Td>
+        <Td dataLabel={words("inventory.column.state")}>
+          <StateLabel service={service} state={row.state} />
+        </Td>
         <Td dataLabel={words("inventory.collumn.deploymentProgress")}>
           <ActionWrapper
             id={`instance-row-resources-${row.id.short}`}
-            onClick={openTabAndScrollTo(TabKey.Resources)}
+            aria-label="deploy-progress"
+            onClick={() =>
+              navigate(
+                `${instanceDetailsUrl}&state.InstanceDetails.tab=Resources`,
+              )
+            }
           >
             <DeploymentProgressBar progress={row.deploymentProgress} />
           </ActionWrapper>
@@ -93,24 +78,37 @@ export const InstanceRow: React.FC<Props> = ({
         <Td dataLabel={words("inventory.column.updatedAt")}>
           <DateWithTooltip timestamp={row.updatedAt} />
         </Td>
-        <Td dataLabel="actions">{rowActions}</Td>
-      </StyledRow>
-      <Tr
-        isExpanded={isExpanded}
-        data-testid={`details_${row.id.short}`}
-        aria-label="InstanceRow-Details"
-      >
-        <Td colSpan={numberOfColumns}>
-          <ExpandableRowContent>
-            <Tabs
-              activeTab={activeTab}
-              setActiveTab={setActiveTab}
-              row={row}
-              state={state}
-              serviceInstanceIdentifier={serviceInstanceIdentifier}
-              service={service}
-            />
-          </ExpandableRowContent>
+        <Td dataLabel="actions" isActionCell>
+          <Flex flexWrap={{ default: "nowrap" }}>
+            <FlexItem>
+              <Link
+                aria-label="instance-details-link"
+                to={{
+                  pathname: routeManager.getUrl("InstanceDetails", {
+                    service: service.name,
+                    instance: row.serviceIdentityValue || row.id.full,
+                    instanceId: row.id.full,
+                  }),
+                  search: location.search,
+                }}
+              >
+                <Button variant="link">
+                  {words("instanceDetails.button")}
+                </Button>
+              </Link>
+            </FlexItem>
+            <FlexItem>
+              <RowActions
+                instanceId={row.id.full}
+                service_identity_attribute_value={row.serviceIdentityValue}
+                entity={service.name}
+                editDisabled={row.editDisabled}
+                deleteDisabled={row.deleteDisabled}
+                diagnoseDisabled={row.deleted}
+                version={row.version}
+              />
+            </FlexItem>
+          </Flex>
         </Td>
       </Tr>
     </Tbody>
@@ -119,9 +117,4 @@ export const InstanceRow: React.FC<Props> = ({
 
 const ActionWrapper = styled.span`
   cursor: pointer;
-`;
-
-const StyledRow = styled(Tr)<{ $deleted: boolean }>`
-  ${(p) =>
-    p.$deleted ? "background-color: var(--pf-v5-global--palette--red-50);" : ""}
 `;

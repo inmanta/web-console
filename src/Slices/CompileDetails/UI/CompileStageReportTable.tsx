@@ -1,12 +1,7 @@
 import React from "react";
-import {
-  Table /* data-codemods */,
-  TableVariant,
-  Th,
-  Thead,
-  Tr,
-} from "@patternfly/react-table";
+import { Table, TableVariant, Th, Thead, Tr } from "@patternfly/react-table";
 import { useExpansion } from "@/Data";
+import { words } from "@/UI";
 import { MomentDatePresenter } from "@/UI/Utils";
 import { CompileStageReport } from "@S/CompileDetails/Core/Domain";
 import { CompileStageReportTablePresenter } from "./CompileStageReportTablePresenter";
@@ -37,7 +32,11 @@ export const CompileStageReportTable: React.FC<Props> = ({
     <Table {...props} variant={TableVariant.compact}>
       <Thead>
         <Tr>
-          <Th aria-hidden key="toggle" />
+          <Th
+            aria-hidden
+            key="toggle"
+            screenReaderText={words("common.emptyColumnHeader")}
+          />
           {heads}
         </Tr>
       </Thead>

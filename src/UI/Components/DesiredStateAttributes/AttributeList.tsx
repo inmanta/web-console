@@ -23,16 +23,22 @@ export const AttributeList: React.FC<Props> = ({
   attributes,
   variant = "default",
 }) => (
-  <StyledDescriptionList isHorizontal isAutoColumnWidths>
+  <DescriptionList
+    isHorizontal
+    isAutoColumnWidths
+    horizontalTermWidthModifier={{
+      default: "25ch",
+    }}
+  >
     {attributes.map((attribute) => (
       <DescriptionListGroup key={attribute.key}>
-        <StyledDescriptionListTerm>{attribute.key}</StyledDescriptionListTerm>
+        <DescriptionListTerm>{attribute.key}</DescriptionListTerm>
         <DescriptionListDescription>
           <AttributeValue attribute={attribute} variant={variant} />
         </DescriptionListDescription>
       </DescriptionListGroup>
     ))}
-  </StyledDescriptionList>
+  </DescriptionList>
 );
 
 const AttributeValue: React.FC<{
@@ -95,15 +101,6 @@ const AttributeValue: React.FC<{
   }
 };
 
-const StyledDescriptionList = styled(DescriptionList)`
-  --pf-v5-c-description-list--m-horizontal__term--width: 24ch;
-  --pf-v5-c-description-list--RowGap: 0.5rem;
-`;
-
-const StyledDescriptionListTerm = styled(DescriptionListTerm)`
-  overflow-wrap: anywhere;
-`;
-
 const MultiTextWithCopy = styled(TextWithCopy)`
   display: block;
   max-width: 80ch;
@@ -111,5 +108,8 @@ const MultiTextWithCopy = styled(TextWithCopy)`
 `;
 
 const TextContainer = styled.span<{ $variant?: AttributeTextVariant }>`
-  ${(p) => (p.$variant === "monospace" ? "font-family: monospace;" : "")};
+  ${(p) =>
+    p.$variant === "monospace"
+      ? "font-family: var(--pf-t--global--font--family--mono)"
+      : "inherit"};
 `;

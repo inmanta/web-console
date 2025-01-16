@@ -1,9 +1,9 @@
 import {
-  global_danger_color_100,
-  global_Color_200,
-  global_info_color_100,
-  global_success_color_100,
-  global_warning_color_100,
+  t_global_icon_color_status_danger_default,
+  t_global_icon_color_status_custom_default,
+  t_global_color_brand_default,
+  t_global_icon_color_status_success_default,
+  t_global_icon_color_status_warning_default,
 } from "@patternfly/react-tokens";
 import { Severity } from "@S/Notification/Core/Domain";
 
@@ -30,14 +30,14 @@ export type VisualSeverity =
 export const getColorForVisualSeverity = (severity: VisualSeverity): string => {
   switch (severity) {
     case "danger":
-      return global_danger_color_100.var;
+      return t_global_icon_color_status_danger_default.var;
     case "warning":
-      return global_warning_color_100.var;
+      return t_global_icon_color_status_warning_default.var;
     case "custom":
-      return global_Color_200.var;
+      return t_global_icon_color_status_custom_default.var;
     case "info":
-      return global_info_color_100.var;
+      return t_global_color_brand_default.var;
     case "success":
-      return global_success_color_100.var;
+      return t_global_icon_color_status_success_default.var;
   }
 };

@@ -29,6 +29,7 @@ import {
   StaticScheduler,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
+import { ModalProvider } from "../../ModalProvider";
 import { EnvironmentControls } from "./EnvironmentControls";
 
 expect.extend(toHaveNoViolations);
@@ -68,20 +69,22 @@ function setup() {
   );
 
   const component = (
-    <MemoryRouter initialEntries={[{ search: "?env=123" }]}>
-      <DependencyProvider
-        dependencies={{
-          ...dependencies,
-          queryResolver,
-          commandResolver,
-          environmentHandler: MockEnvironmentHandler(EnvironmentDetails.a.id),
-        }}
-      >
-        <StoreProvider store={store}>
-          <EnvironmentControls />
-        </StoreProvider>
-      </DependencyProvider>
-    </MemoryRouter>
+    <ModalProvider>
+      <MemoryRouter initialEntries={[{ search: "?env=123" }]}>
+        <DependencyProvider
+          dependencies={{
+            ...dependencies,
+            queryResolver,
+            commandResolver,
+            environmentHandler: MockEnvironmentHandler(EnvironmentDetails.a.id),
+          }}
+        >
+          <StoreProvider store={store}>
+            <EnvironmentControls />
+          </StoreProvider>
+        </DependencyProvider>
+      </MemoryRouter>
+    </ModalProvider>
   );
 
   return {
@@ -115,12 +118,9 @@ test("EnvironmentControls halt the environment when clicked and the environment 
 
   expect(stopButton).toBeVisible();
 
-  await act(async () => {
-    await userEvent.click(stopButton);
-  });
-  await act(async () => {
-    await userEvent.click(await screen.findByText("Yes"));
-  });
+  await userEvent.click(stopButton);
+
+  await userEvent.click(await screen.findByText("Yes"));
 
   const [receivedUrl, requestInit] = fetchMock.mock.calls[0];
 
@@ -146,12 +146,9 @@ test("EnvironmentControls don\\t trigger backend call when dialog is not confirm
 
   expect(stopButton).toBeVisible();
 
-  await act(async () => {
-    await userEvent.click(stopButton);
-  });
-  await act(async () => {
-    await userEvent.click(await screen.findByText("No"));
-  });
+  await userEvent.click(stopButton);
+
+  await userEvent.click(await screen.findByText("No"));
 
   expect(fetchMock.mock.calls).toHaveLength(0);
 });
@@ -175,12 +172,9 @@ test("EnvironmentControls resume the environment when clicked and the environmen
 
   expect(start).toBeVisible();
 
-  await act(async () => {
-    await userEvent.click(start);
-  });
-  await act(async () => {
-    await userEvent.click(await screen.findByText("Yes"));
-  });
+  await userEvent.click(start);
+
+  await userEvent.click(await screen.findByText("Yes"));
 
   const [receivedUrl, requestInit] = fetchMock.mock.calls[0];
 

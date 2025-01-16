@@ -1,8 +1,8 @@
 import React from "react";
 import {
-  global_danger_color_100,
-  global_primary_color_100,
-  global_success_color_100,
+  t_global_color_brand_default,
+  t_global_icon_color_status_danger_default,
+  t_global_icon_color_status_success_default,
 } from "@patternfly/react-tokens";
 import { DeploymentProgress } from "@/Core";
 import { LegendBar, LegendItemDetails } from "@/UI/Components";
@@ -29,20 +29,20 @@ function fromProgressToItems(progress: Progress): LegendItemDetails[] {
       id: "deployed",
       label: words("inventory.deploymentProgress.deployed"),
       value: Number(progress.deployed),
-      backgroundColor: global_success_color_100.var,
+      backgroundColor: t_global_icon_color_status_success_default.var,
     },
 
     {
       id: "failed",
       label: words("inventory.deploymentProgress.failed"),
       value: Number(progress.failed),
-      backgroundColor: global_danger_color_100.var,
+      backgroundColor: t_global_icon_color_status_danger_default.var,
     },
     {
       id: "waiting",
       label: words("inventory.deploymentProgress.waiting"),
       value: Number(progress.waiting),
-      backgroundColor: global_primary_color_100.var,
+      backgroundColor: t_global_color_brand_default.var,
     },
   ].filter((item) => item.value > 0);
 }

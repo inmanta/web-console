@@ -1,6 +1,6 @@
 import React from "react";
 import { PageManager, Page, RouteDictionary, PageDictionary } from "@/Core";
-import { InstanceComposerPage } from "@/Slices/InstanceComposer/UI";
+import { InstanceComposerPage } from "@/Slices/InstanceComposerCreator/UI";
 import { InstanceComposerEditorPage } from "@/Slices/InstanceComposerEditor/UI";
 import { InstanceComposerViewerPage } from "@/Slices/InstanceComposerViewer/UI";
 import { OrderDetailsPage } from "@/Slices/OrderDetails/UI";
@@ -9,7 +9,6 @@ import { DiscoveredResourcesPage } from "@/Slices/ResourceDiscovery/UI";
 import { ServiceDetailsPage } from "@/Slices/ServiceDetails/UI";
 import { ServiceInstanceDetailsPage } from "@/Slices/ServiceInstanceDetails/UI";
 import { UserManagementPage } from "@/Slices/UserManagement/UI/Page";
-import { AgentProcessPage } from "@S/AgentProcess/UI";
 import { AgentsPage } from "@S/Agents/UI";
 import { CompileDetailsPage } from "@S/CompileDetails/UI";
 import { CompileReportsPage } from "@S/CompileReports/UI";
@@ -32,7 +31,6 @@ import { ParametersPage } from "@S/Parameters/UI";
 import { ResourcesPage } from "@S/Resource/UI/ResourcesPage";
 import { ResourceDetailsPage } from "@S/ResourceDetails/UI";
 import { ServiceCatalogPage } from "@S/ServiceCatalog/UI";
-import { ServiceInstanceHistoryPage } from "@S/ServiceInstanceHistory/UI";
 import { ServiceInventoryPage } from "@S/ServiceInventory/UI";
 import { SettingsPage } from "@S/Settings/UI";
 import { StatusPage } from "@S/Status/UI";
@@ -117,10 +115,6 @@ export class PrimaryPageManager implements PageManager {
         ...this.routeDictionary.DuplicateInstance,
         element: <DuplicateInstancePage />,
       },
-      History: {
-        ...this.routeDictionary.History,
-        element: <ServiceInstanceHistoryPage />,
-      },
       Diagnose: { ...this.routeDictionary.Diagnose, element: <DiagnosePage /> },
       Events: { ...this.routeDictionary.Events, element: <EventsPage /> },
 
@@ -137,10 +131,6 @@ export class PrimaryPageManager implements PageManager {
         element: <DiscoveredResourcesPage />,
       },
       Facts: { ...this.routeDictionary.Facts, element: <FactsPage /> },
-      AgentProcess: {
-        ...this.routeDictionary.AgentProcess,
-        element: <AgentProcessPage />,
-      },
       ResourceDetails: {
         ...this.routeDictionary.ResourceDetails,
         element: <ResourceDetailsPage />,

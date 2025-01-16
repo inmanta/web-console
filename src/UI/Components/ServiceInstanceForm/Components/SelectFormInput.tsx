@@ -17,7 +17,7 @@ interface Props {
   options: Record<string, string | ParsedNumber>;
   attributeName: string;
   attributeValue: string;
-  description?: string;
+  description?: string | null;
   isOptional: boolean;
   shouldBeDisabled?: boolean;
   handleInputChange: (value) => void;
@@ -31,7 +31,7 @@ interface Props {
  *  @prop {Record<string, string | ParsedNumber>} options - The options for the select input.
  *  @prop {string} attributeName - The name of the attribute.
  *  @prop {string} attributeValue - The value of the attribute.
- *  @prop {string} description - The description of the attribute.
+ *  @prop {string | null} description - The description of the attribute.
  *  @prop {boolean} isOptional - Whether the attribute is optional.
  *  @prop {boolean} shouldBeDisabled - Whether the attribute should be disabled. Default is false.
  *  @prop {function} handleInputChange - The callback for handling input changes.

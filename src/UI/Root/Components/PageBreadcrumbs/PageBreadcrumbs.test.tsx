@@ -1,4 +1,4 @@
-import React, { act } from "react";
+import React from "react";
 import { MemoryRouter } from "react-router-dom";
 import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
@@ -81,9 +81,7 @@ test("GIVEN Breadcrumbs on Inventory WHEN user clicks catalog breadcrumb link TH
 
   const link = screen.getByRole("link", { name: "Service Catalog" });
 
-  await act(async () => {
-    await userEvent.click(link);
-  });
+  await userEvent.click(link);
 
   const crumbsAfter = screen.getAllByRole("listitem", {
     name: "BreadcrumbItem",
@@ -109,9 +107,7 @@ test("GIVEN Breadcrumbs on Add Instance WHEN user clicks inventory breadcrumb li
 
   const link = screen.getByRole("link", { name: "Service Inventory: service" });
 
-  await act(async () => {
-    await userEvent.click(link);
-  });
+  await userEvent.click(link);
 
   const crumbsAfter = screen.getAllByRole("listitem", {
     name: "BreadcrumbItem",

@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Button } from "@patternfly/react-core";
+import { Button, Truncate } from "@patternfly/react-core";
 import { Link } from "@/UI/Components/Link";
 import { DependencyContext } from "@/UI/Dependency";
 
@@ -18,7 +18,9 @@ export const ResourceLink: React.FC<Props> = ({ resourceId, linkText }) => {
       })}
       envOnly
     >
-      <Button variant="link">{linkText ? linkText : resourceId}</Button>
+      <Button variant="link">
+        <Truncate content={linkText ? linkText : resourceId} />
+      </Button>
     </Link>
   );
 };

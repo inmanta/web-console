@@ -39,7 +39,7 @@ export const Provider: React.FC<Props> = ({
       loading: () => <Filler />,
       failed: () => <Filler />,
       success: ({ handlers, metadata }) => (
-        <StyledPagination
+        <PaginationComponent
           itemCount={Number(metadata.total)}
           perPage={Number(pageSize.value)}
           titles={{
@@ -85,11 +85,4 @@ export const Provider: React.FC<Props> = ({
 const Filler = styled.div`
   height: 36px;
   width: 264px;
-`;
-
-const StyledPagination = styled(PaginationComponent)`
-  .pf-v5-c-pagination__nav {
-    //overwrite display, as by default navigation will hide on small resolutions
-    display: flex;
-  }
 `;

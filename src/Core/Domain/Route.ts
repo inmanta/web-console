@@ -19,7 +19,6 @@ const kinds = [
   "DuplicateInstance",
   "EditInstance",
   "Events",
-  "History",
   "InstanceDetails",
   "InstanceComposer",
   "InstanceComposerEditor",
@@ -32,7 +31,6 @@ const kinds = [
   /**
    * Resource Manager
    */
-  "AgentProcess",
   "Agents",
   "DiscoveredResources",
   "Facts",
@@ -81,7 +79,6 @@ export interface RouteKindWithId<K extends RouteKind = RouteKind> {
  * Only contains routes that have parameters (environment not included)
  */
 interface RouteParamKeysManifest {
-  AgentProcess: "id";
   CompileDetails: "id";
   ComplianceCheck: "version";
   CreateInstance: "service";
@@ -92,7 +89,6 @@ interface RouteParamKeysManifest {
   DuplicateInstance: "service" | "instance";
   EditInstance: "service" | "instance";
   Events: "service" | "instance";
-  History: "service" | "instance";
   InstanceDetails: "service" | "instance" | "instanceId";
   InstanceComposer: "service";
   InstanceComposerEditor: "service" | "instance";

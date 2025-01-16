@@ -1,5 +1,5 @@
 import { EventType, ServiceInstanceModel, ServiceModel } from "@/Core";
-import { InstanceLog } from "@/Slices/ServiceInstanceHistory/Core/Domain";
+import { InstanceLog } from "@/Core/Domain/HistoryLog";
 
 export const instanceData: ServiceInstanceModel = {
   id: "1d96a1ab",
@@ -35,7 +35,12 @@ export const instanceData: ServiceInstanceModel = {
   last_updated: "2022-09-02T12:01:19.626854+00:00",
   callback: [],
   deleted: false,
-  deployment_progress: null,
+  deployment_progress: {
+    deployed: 1,
+    waiting: 0,
+    failed: 0,
+    total: 1,
+  },
   service_identity_attribute_value: "core1",
   referenced_by: null,
   transfer_context: "stable",
@@ -75,7 +80,12 @@ export const instanceDataDeleted: ServiceInstanceModel = {
   last_updated: "2022-09-02T12:01:19.626854+00:00",
   callback: [],
   deleted: true,
-  deployment_progress: null,
+  deployment_progress: {
+    deployed: 1,
+    waiting: 0,
+    failed: 0,
+    total: 1,
+  },
   service_identity_attribute_value: "core1",
   referenced_by: null,
   transfer_context: "stable",
@@ -515,7 +525,19 @@ export const historyData: InstanceLog[] = [
     transfer_context: "auto",
   },
 ];
-
+export const logsResponse = {
+  data: historyData,
+  links: {
+    next: "/lsm/v1/service_inventory/Lab/bd1f6d03-a0fc-4ce1-bb42-45de2de33b0b/log?limit=50&sort=version.desc&end=34",
+    self: "/lsm/v1/service_inventory/Lab/bd1f6d03-a0fc-4ce1-bb42-45de2de33b0b/log?limit=50&sort=version.desc",
+  },
+  metadata: {
+    total: 83,
+    before: 0,
+    after: 33,
+    page_size: 50,
+  },
+};
 export const serviceModel: ServiceModel = {
   attributes: [
     {
@@ -1444,12 +1466,12 @@ export const historyDataWithDocumentation: InstanceLog[] = [
         source: "acknowledged",
         destination: "creating",
         message:
-          "Service instance 1d96a1ab successfully executed transfer acknowledged -> creating (error=False)",
+          "Service instance 1d96a1ab successfully executed transfer with validation report acknowledged -> creating (error=False)",
         ignored_transition: false,
         event_correlation_id: "332bc22f-ff3b-4035-9a95-142cdccb1a66",
         severity: 20,
         severity_text: "INFO",
-        id_compile_report: null,
+        id_compile_report: "xxx-report-id",
         event_type: EventType.AUTO_TRANSITION,
         is_error_transition: false,
       },
@@ -1469,7 +1491,7 @@ export const historyDataWithDocumentation: InstanceLog[] = [
         severity_text: "INFO",
         id_compile_report: "d2845b93-8a02-41ca-89cc-6f508be51e2b",
         event_type: EventType.AUTO_TRANSITION,
-        is_error_transition: false,
+        is_error_transition: true,
       },
       {
         id: "d0cc1fe6-e700-4810-9810-8809b6c1635b",
@@ -1630,6 +1652,20 @@ export const historyDataWithDocumentation: InstanceLog[] = [
     transfer_context: "auto",
   },
 ];
+
+export const logsWithDocumentationResponse = {
+  data: historyDataWithDocumentation,
+  links: {
+    next: "/lsm/v1/service_inventory/Lab/bd1f6d03-a0fc-4ce1-bb42-45de2de33b0b/log?limit=50&sort=version.desc&end=34",
+    self: "/lsm/v1/service_inventory/Lab/bd1f6d03-a0fc-4ce1-bb42-45de2de33b0b/log?limit=50&sort=version.desc",
+  },
+  metadata: {
+    total: 83,
+    before: 0,
+    after: 33,
+    page_size: 50,
+  },
+};
 
 export const JSONSchema = {
   data: {

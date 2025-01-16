@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Flex, FlexItem } from "@patternfly/react-core";
-import styled from "styled-components";
 import { RemoteData, Resource } from "@/Core";
 import {
   useUrlStateWithFilter,
@@ -110,7 +109,7 @@ export const Page: React.FC = () => {
                 resources={resources.data}
                 aria-label="ResourcesView-Success"
               />
-              <StyledFlex justifyContent={{ default: "justifyContentFlexEnd" }}>
+              <Flex justifyContent={{ default: "justifyContentFlexEnd" }}>
                 <FlexItem>
                   <PaginationWidget
                     data={staleData}
@@ -120,7 +119,7 @@ export const Page: React.FC = () => {
                     variant="bottom"
                   />
                 </FlexItem>
-              </StyledFlex>
+              </Flex>
             </>
           )
         }
@@ -128,7 +127,3 @@ export const Page: React.FC = () => {
     </Wrapper>
   );
 };
-
-const StyledFlex = styled(Flex)`
-  padding-right: 16px;
-`;

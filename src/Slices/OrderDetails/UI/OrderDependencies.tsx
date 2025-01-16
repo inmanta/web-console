@@ -1,8 +1,7 @@
 import React from "react";
 import { Card, Label } from "@patternfly/react-core";
-import { ExclamationCircleIcon } from "@patternfly/react-icons";
+import { InfoAltIcon } from "@patternfly/react-icons";
 import { Table, Tbody, Td, Tr } from "@patternfly/react-table";
-import styled from "styled-components";
 import { ServiceOrderItemDependencies } from "@/Slices/Orders/Core/Query";
 import { OrderStatusLabel } from "@/Slices/Orders/UI/OrderStatusLabel";
 import { words } from "@/UI";
@@ -25,7 +24,7 @@ interface Props {
 export const OrderDependencies: React.FC<Props> = ({ dependencies }) => {
   if (!Object.keys(dependencies).length) {
     return (
-      <Label icon={<ExclamationCircleIcon />} variant="outline">
+      <Label color="blue" variant="outline" icon={<InfoAltIcon />}>
         {words("orders.row.empty")}
       </Label>
     );
@@ -43,9 +42,9 @@ export const OrderDependencies: React.FC<Props> = ({ dependencies }) => {
                   tooltipContent={words("serviceIdentity.copy")}
                 />
               </Td>
-              <StyledStatusCell>
+              <Td>
                 <OrderStatusLabel status={status} />
-              </StyledStatusCell>
+              </Td>
             </Tr>
           ))}
         </Tbody>
@@ -53,8 +52,3 @@ export const OrderDependencies: React.FC<Props> = ({ dependencies }) => {
     </Card>
   );
 };
-
-const StyledStatusCell = styled(Td)`
-  float: right;
-  margin-right: 20px;
-`;

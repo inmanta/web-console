@@ -1,4 +1,4 @@
-import React, { act } from "react";
+import React from "react";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 
@@ -13,9 +13,7 @@ test("Given a ClipboardCopyButton, when the button is hovered, then a tooltip sh
   );
   const button = await screen.findByLabelText("Copy to clipboard");
 
-  await act(async () => {
-    await userEvent.hover(button);
-  });
+  await userEvent.hover(button);
 
   expect(await screen.findByRole("tooltip")).toBeInTheDocument();
 });

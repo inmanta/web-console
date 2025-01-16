@@ -16,12 +16,11 @@ import {
 } from "@/Core";
 import { Dashboard } from "@/Slices/Dashboard";
 import { DuplicateInstance } from "@/Slices/DuplicateInstance";
-import { InstanceComposer } from "@/Slices/InstanceComposer";
+import { InstanceComposer } from "@/Slices/InstanceComposerCreator";
 import { InstanceComposerEditor } from "@/Slices/InstanceComposerEditor";
 import { InstanceComposerViewer } from "@/Slices/InstanceComposerViewer";
 import { ServiceDetails } from "@/Slices/ServiceDetails";
 import { InstanceDetails } from "@/Slices/ServiceInstanceDetails";
-import { AgentProcess } from "@S/AgentProcess";
 import { Agents } from "@S/Agents";
 import { CompileDetails } from "@S/CompileDetails";
 import { CompileReports } from "@S/CompileReports";
@@ -45,7 +44,6 @@ import { Resource } from "@S/Resource";
 import { ResourceDetails } from "@S/ResourceDetails";
 import { DiscoveredResources } from "@S/ResourceDiscovery";
 import { ServiceCatalog } from "@S/ServiceCatalog";
-import { ServiceInstanceHistory } from "@S/ServiceInstanceHistory";
 import { ServiceInventory } from "@S/ServiceInventory";
 import { Settings } from "@S/Settings";
 import { Status } from "@S/Status";
@@ -74,7 +72,6 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
     DuplicateInstance: DuplicateInstance.route(baseUrl),
     EditInstance: EditInstance.route(baseUrl),
     Events: Events.route(baseUrl),
-    History: ServiceInstanceHistory.route(baseUrl),
     InstanceDetails: InstanceDetails.route(baseUrl),
     InstanceComposer: InstanceComposer.route(baseUrl),
     InstanceComposerEditor: InstanceComposerEditor.route(baseUrl),
@@ -87,7 +84,6 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
     /**
      * Resource Manager
      */
-    AgentProcess: AgentProcess.route(baseUrl),
     Agents: Agents.route(baseUrl),
     DiscoveredResources: DiscoveredResources.route(baseUrl),
     Facts: Facts.route(baseUrl),

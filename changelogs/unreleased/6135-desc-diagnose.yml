@@ -1,0 +1,4 @@
+description: Remove confusing description from diagnose page
+issue-nr: 6135
+change-type: patch
+destination-branches: [master]

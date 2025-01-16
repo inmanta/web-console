@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import {
+  Content,
   Divider,
   Dropdown,
   DropdownGroup,
@@ -7,7 +8,6 @@ import {
   DropdownList,
   MenuToggle,
   MenuToggleElement,
-  TextContent,
   Tooltip,
 } from "@patternfly/react-core";
 import { UserCircleIcon } from "@patternfly/react-icons";
@@ -35,6 +35,9 @@ export const EnvSelector: React.FC<Props> = ({
   return (
     <Dropdown
       isOpen={isOpen}
+      popperProps={{
+        position: "end",
+      }}
       onOpenChange={(open: boolean) => setIsOpen(open)}
       toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
         <MenuToggle
@@ -100,7 +103,7 @@ export const EnvSelector: React.FC<Props> = ({
   );
 };
 
-const StyledText = styled(TextContent)`
+const StyledText = styled(Content)`
   font-weight: bold;
   text-align: start;
 `;

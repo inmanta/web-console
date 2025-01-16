@@ -1,0 +1,3 @@
+description: Remove iso7 as a destination branch from task 5949 to avoid issues in the pipeline
+change-type: patch
+destination-branches: [master]

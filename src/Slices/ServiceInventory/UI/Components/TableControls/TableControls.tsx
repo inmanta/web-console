@@ -37,8 +37,7 @@ export const TableControls: React.FC<Props> = ({
   const [isOpen, setIsOpen] = useState(false);
   const { routeManager, featureManager } = useContext(DependencyContext);
 
-  const composerEnabled =
-    service.owner === null && featureManager.isComposerEnabled();
+  const composerEnabled = featureManager.isComposerEnabled();
 
   const states = service.lifecycle.states.map((state) => state.name).sort();
 
@@ -52,26 +51,23 @@ export const TableControls: React.FC<Props> = ({
       variant="secondary"
       isExpanded={isOpen}
       onClick={onToggleClick}
-      splitButtonOptions={{
-        variant: "action",
-        items: [
-          <Link
-            key="main-action"
-            pathname={routeManager.getUrl("CreateInstance", {
-              service: serviceName,
-            })}
-            search={location.search}
-            variant="plain"
+      splitButtonItems={[
+        <Link
+          key="main-action"
+          pathname={routeManager.getUrl("CreateInstance", {
+            service: serviceName,
+          })}
+          search={location.search}
+          variant="plain"
+        >
+          <MenuToggleAction
+            aria-label="add-instance-button"
+            id="add-instance-button"
           >
-            <MenuToggleAction
-              aria-label="add-instance-button"
-              id="add-instance-button"
-            >
-              <PlusIcon /> {words("inventory.addInstance.button")}
-            </MenuToggleAction>
-          </Link>,
-        ],
-      }}
+            <PlusIcon /> {words("inventory.addInstance.button")}
+          </MenuToggleAction>
+        </Link>,
+      ]}
       aria-label="AddInstanceToggle"
     />
   );
@@ -80,7 +76,7 @@ export const TableControls: React.FC<Props> = ({
     <Toolbar clearAllFilters={() => setFilter({})}>
       <ToolbarContent>
         <FilterWidget filter={filter} setFilter={setFilter} states={states} />
-        <ToolbarGroup align={{ default: "alignRight" }}>
+        <ToolbarGroup align={{ default: "alignEnd" }}>
           {composerEnabled ? (
             <ToolbarItem>
               <Dropdown
@@ -97,8 +93,10 @@ export const TableControls: React.FC<Props> = ({
                     })}
                     search={location.search}
                   >
-                    <DropdownItem id="add-instance-composer-button">
-                      <PlusIcon />
+                    <DropdownItem
+                      id="add-instance-composer-button"
+                      icon={<PlusIcon />}
+                    >
                       {words("inventory.addInstance.composerButton")}
                     </DropdownItem>
                   </Link>
@@ -113,8 +111,8 @@ export const TableControls: React.FC<Props> = ({
                 })}
                 search={location.search}
               >
-                <Button id="add-instance-button">
-                  <PlusIcon /> {words("inventory.addInstance.button")}
+                <Button icon={<PlusIcon />} id="add-instance-button">
+                  {words("inventory.addInstance.button")}
                 </Button>
               </Link>
             </ToolbarItem>

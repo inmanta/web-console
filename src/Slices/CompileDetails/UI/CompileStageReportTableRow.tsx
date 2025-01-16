@@ -4,9 +4,10 @@ import {
   DescriptionListDescription,
   DescriptionListGroup,
   DescriptionListTerm,
+  Icon,
 } from "@patternfly/react-core";
+import { ExclamationCircleIcon } from "@patternfly/react-icons";
 import { Td, Tr, Tbody } from "@patternfly/react-table";
-import styled from "styled-components";
 import { CodeHighlighter } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { CompileStageReportRow } from "@S/CompileDetails/Core/Domain";
@@ -26,15 +27,13 @@ export const CompileStageReportTableRow: React.FC<Props> = ({
   numberOfColumns,
   index,
 }) => {
+  const failed =
+    row.returncode !== null &&
+    row.returncode !== undefined &&
+    row.returncode !== 0;
+
   return (
-    <StyledBody
-      isExpanded={false}
-      $failed={
-        row.returncode !== null &&
-        row.returncode !== undefined &&
-        row.returncode !== 0
-      }
-    >
+    <Tbody isExpanded={false}>
       <Tr aria-label="Compile Run Reports Table Row" key={row.id}>
         <Td
           expand={{
@@ -44,21 +43,39 @@ export const CompileStageReportTableRow: React.FC<Props> = ({
           }}
         />
         <Td dataLabel={words("compileDetails.stages.columns.name")}>
+          {failed && (
+            <Icon status="danger">
+              <ExclamationCircleIcon />
+            </Icon>
+          )}{" "}
           {row.name}
         </Td>
         <Td dataLabel={words("compileDetails.stages.columns.command")}>
           {row.shortCommand}
         </Td>
-        <Td dataLabel={words("compileDetails.stages.columns.delay")}>
+        <Td
+          dataLabel={words("compileDetails.stages.columns.delay")}
+          modifier="fitContent"
+        >
           {row.startDelay}
         </Td>
-        <Td dataLabel={words("compileDetails.stages.columns.duration")}>
+        <Td
+          dataLabel={words("compileDetails.stages.columns.duration")}
+          modifier="fitContent"
+        >
           {row.duration}
         </Td>
       </Tr>
       <Tr isExpanded={isExpanded}>
         <Td colSpan={numberOfColumns}>
-          <PaddedDescriptionList isHorizontal>
+          <DescriptionList
+            isHorizontal
+            isFillColumns
+            style={{
+              paddingTop:
+                "var(--pf-t--global--spacer--control--vertical--default",
+            }}
+          >
             <DescriptionListGroup>
               <DescriptionListTerm>
                 {words("compileDetails.stages.columns.command")}
@@ -105,21 +122,9 @@ export const CompileStageReportTableRow: React.FC<Props> = ({
                 />
               </DescriptionListDescription>
             </DescriptionListGroup>
-          </PaddedDescriptionList>
+          </DescriptionList>
         </Td>
       </Tr>
-    </StyledBody>
+    </Tbody>
   );
 };
-
-const StyledBody = styled(Tbody)<{
-  $failed?: boolean;
-}>`
-  ${({ $failed }) =>
-    $failed ? "background-color: var(--pf-v5-global--palette--red-50)" : ""};
-`;
-
-const PaddedDescriptionList = styled(DescriptionList)`
-  padding-bottom: 1em;
-  padding-top: 1em;
-`;

@@ -82,20 +82,15 @@ describe("Login", () => {
 
     const usernameInput = screen.getByLabelText("input-username");
 
-    await act(async () => {
-      await userEvent.type(usernameInput, "test_user");
-    });
+    await userEvent.type(usernameInput, "test_user");
+
     const passwordInput = screen.getByLabelText("input-password");
 
-    await act(async () => {
-      await userEvent.type(passwordInput, "test_password");
-    });
+    await userEvent.type(passwordInput, "test_password");
 
     const showPasswordButton = screen.getByLabelText("show-password");
 
-    await act(async () => {
-      await userEvent.click(showPasswordButton);
-    });
+    await userEvent.click(showPasswordButton);
 
     const passwordInput1 = screen.getByLabelText("input-password");
 
@@ -103,9 +98,7 @@ describe("Login", () => {
 
     const hidePasswordButton = screen.getByLabelText("hide-password");
 
-    await act(async () => {
-      await userEvent.click(hidePasswordButton);
-    });
+    await userEvent.click(hidePasswordButton);
 
     const passwordInput2 = screen.getByLabelText("input-password");
 
@@ -113,9 +106,7 @@ describe("Login", () => {
 
     const logInButton = screen.getByLabelText("login-button");
 
-    await act(async () => {
-      await userEvent.click(logInButton);
-    });
+    await userEvent.click(logInButton);
 
     await waitFor(() =>
       expect(spiedCreateCookie).toHaveBeenCalledWith(
@@ -164,20 +155,15 @@ describe("Login", () => {
 
     const usernameInput = screen.getByLabelText("input-username");
 
-    await act(async () => {
-      await userEvent.type(usernameInput, "test_user");
-    });
+    await userEvent.type(usernameInput, "test_user");
+
     const passwordInput = screen.getByLabelText("input-password");
 
-    await act(async () => {
-      await userEvent.type(passwordInput, "test_password");
-    });
+    await userEvent.type(passwordInput, "test_password");
 
     const logInButton = screen.getByLabelText("login-button");
 
-    await act(async () => {
-      await userEvent.click(logInButton);
-    });
+    await userEvent.click(logInButton);
 
     await waitFor(() => {
       expect(screen.getByLabelText("error-message")).toHaveTextContent(
@@ -223,9 +209,7 @@ describe("Login", () => {
 
     const logInButton = screen.getByLabelText("login-button");
 
-    await act(async () => {
-      await userEvent.click(logInButton);
-    });
+    await userEvent.click(logInButton);
 
     await waitFor(() => {
       expect(screen.getByLabelText("error-message")).toHaveTextContent(

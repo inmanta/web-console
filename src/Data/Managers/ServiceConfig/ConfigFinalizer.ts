@@ -4,7 +4,7 @@ import {
   ConfigFinalizer,
   StateHelperWithEnv,
 } from "@/Core";
-import { getOptionsFromService } from "@/Data/Common";
+import { getConfigFromService } from "@/Data/Common";
 
 export class ServiceConfigFinalizer
   implements ConfigFinalizer<"GetServiceConfig">
@@ -30,7 +30,7 @@ export class ServiceConfigFinalizer
     if (!RemoteData.isSuccess(serviceData)) return serviceData;
     const config = configData.value;
     const service = serviceData.value;
-    const options = getOptionsFromService(service);
+    const options = getConfigFromService(service);
     const fullConfig: Config = options.reduce<Config>((acc, option) => {
       acc[option] =
         typeof config[option] !== "undefined" ? config[option] : false;

@@ -44,6 +44,7 @@ export const ActionButton: React.FC<Props> = ({ name, paused }) => {
       <Button
         variant="secondary"
         isDisabled={isHalted}
+        aria-disabled={isHalted}
         size="sm"
         onClick={onSubmit}
       >

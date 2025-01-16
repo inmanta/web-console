@@ -1,6 +1,6 @@
 import React from "react";
 import { Tbody, Td, Tr, ExpandableRowContent } from "@patternfly/react-table";
-import styled, { css } from "styled-components";
+import { LogLevelString } from "@/Core";
 import { CodeText } from "@/UI/Components";
 import { MomentDatePresenter } from "@/UI/Utils";
 import { ResourceLog } from "@S/ResourceDetails/Core/ResourceLog";
@@ -27,12 +27,8 @@ export const Row: React.FC<Props> = ({
   toggleActionType,
 }) => {
   return (
-    <StyledTbody
-      isExpanded={false}
-      $level={log.level}
-      aria-label="ResourceLogRow"
-    >
-      <Tr>
+    <Tbody isExpanded={false} aria-label="ResourceLogRow">
+      <Tr className={getClassForLevel(log.level)}>
         <Td
           expand={{
             rowIndex: index,
@@ -40,10 +36,9 @@ export const Row: React.FC<Props> = ({
             onToggle,
           }}
         />
-        {/* The width values represent percentages */}
-        <Td width={15}>{datePresenter.getFull(log.timestamp)}</Td>
-        <Td width={10}>{log.action}</Td>
-        <Td width={10}>{log.level}</Td>
+        <Td modifier="fitContent">{datePresenter.getFull(log.timestamp)}</Td>
+        <Td modifier="fitContent">{log.action}</Td>
+        <Td modifier="fitContent">{log.level}</Td>
         <Td modifier="truncate">
           <CodeText singleLine>{log.msg}</CodeText>
         </Td>
@@ -52,7 +47,7 @@ export const Row: React.FC<Props> = ({
         </Td>
       </Tr>
       {isExpanded && (
-        <Tr isExpanded={isExpanded}>
+        <Tr isExpanded={isExpanded} className={getClassForLevel(log.level)}>
           <Td colSpan={numberOfColumns}>
             <ExpandableRowContent>
               <Details log={log} />
@@ -60,31 +55,17 @@ export const Row: React.FC<Props> = ({
           </Td>
         </Tr>
       )}
-    </StyledTbody>
+    </Tbody>
   );
 };
 
-const StyledTbody = styled(Tbody)<{ $level: string }>`
-  ${(p) => getStyleForLevel(p.$level)};
-`;
-
-const getStyleForLevel = (level: string) => {
+const getClassForLevel = (level: string): string => {
   switch (level) {
-    case "WARNING":
-      return css`
-        background-color: var(--pf-v5-global--palette--gold-50);
-        --pf-v5-c-table__expandable-row--after--BorderColor: var(
-          --pf-v5-global--palette--gold-100
-        );
-      `;
-    case "ERROR":
-    case "CRITICAL":
-      return css`
-        background-color: var(--pf-v5-global--palette--red-50);
-        --pf-v5-c-table__expandable-row--after--BorderColor: var(
-          --pf-v5-global--palette--red-100
-        );
-      `;
+    case LogLevelString.WARNING:
+      return "warning";
+    case LogLevelString.ERROR:
+    case LogLevelString.CRITICAL:
+      return "danger";
     default:
       return "";
   }

@@ -1,15 +1,15 @@
 import React from "react";
 import {
   OnSort,
-  Table /* data-codemods */,
+  Table,
   TableVariant,
   Th,
   Thead,
   Tr,
 } from "@patternfly/react-table";
-import styled from "styled-components";
 import { Resource, Sort } from "@/Core";
 import { useExpansion } from "@/Data";
+import { words } from "@/UI";
 import { ResourceTableRow } from "./ResourceTableRow";
 import { ResourcesTablePresenter } from "./ResourcesTablePresenter";
 
@@ -27,13 +27,14 @@ export const ResourcesTable: React.FC<Props> = ({
   ...props
 }) => {
   const [isExpanded, onExpansion] = useExpansion();
-  const onSort: OnSort = (event, index, order) => {
+  const onSort: OnSort = (_event, index, order) => {
     setSort({
       name: tablePresenter.getColumnNameForIndex(index) as Resource.SortKey,
       order,
     });
   };
   const activeSortIndex = tablePresenter.getIndexForColumnName(sort.name);
+  const smallHeaders = ["requires", "status"];
   const heads = tablePresenter
     .getColumnHeads()
     .map(({ apiName, displayName }, columnIndex) => {
@@ -51,15 +52,14 @@ export const ResourcesTable: React.FC<Props> = ({
           }
         : {};
 
+      const widthModifier = smallHeaders.includes(apiName)
+        ? "fitContent"
+        : "nowrap";
+
       return (
-        <StyledTh
-          key={displayName}
-          {...sortParams}
-          $characters={displayName.length}
-          $hasSort={hasSort}
-        >
+        <Th key={displayName} {...sortParams} modifier={widthModifier}>
           {displayName}
-        </StyledTh>
+        </Th>
       );
     });
 
@@ -67,14 +67,18 @@ export const ResourcesTable: React.FC<Props> = ({
     <Table {...props} variant={TableVariant.compact}>
       <Thead>
         <Tr>
-          <Th aria-hidden />
+          <Th
+            modifier="fitContent"
+            screenReaderText={words("common.emptyColumnHeader")}
+          />
           {heads}
         </Tr>
       </Thead>
-      {rows.map((row) => (
+      {rows.map((row, index) => (
         <ResourceTableRow
           row={row}
           key={row.id}
+          index={index}
           isExpanded={isExpanded(row.id)}
           onToggle={onExpansion(row.id)}
           numberOfColumns={tablePresenter.getNumberOfColumns()}
@@ -83,21 +87,3 @@ export const ResourcesTable: React.FC<Props> = ({
     </Table>
   );
 };
-
-interface HeaderProps {
-  $characters: number;
-  $hasSort: boolean;
-}
-
-const getWidth = ({ $characters, $hasSort }: HeaderProps) => {
-  const base = `${$characters}ch`;
-  const extra = $hasSort ? "60px" : "16px";
-
-  return `calc(${base} + ${extra})`;
-};
-
-const StyledTh = styled(Th)<HeaderProps>`
-  &&& {
-    min-width: ${getWidth};
-  }
-`;

@@ -1,8 +1,12 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { PageSection, Toolbar, ToolbarContent } from "@patternfly/react-core";
-import styled from "styled-components";
+import {
+  Content,
+  PageSection,
+  Toolbar,
+  ToolbarContent,
+} from "@patternfly/react-core";
 import { Diff, Maybe, RemoteData } from "@/Core";
-import { DiffWizard, ToastAlert, PageTitle } from "@/UI/Components";
+import { DiffWizard, ToastAlert } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { useRouteParams } from "@/UI/Routing";
 import { words } from "@/UI/words";
@@ -101,11 +105,15 @@ export const View: React.FC<Props> = ({ version }) => {
         message={errorMessage}
         setMessage={setErrorMessage}
       />
-      <StyledPageSection variant="light">
-        <PageTitle>{words("desiredState.complianceCheck.title")}</PageTitle>
-      </StyledPageSection>
-      <PageSection variant="light">
-        <ToolBarContainer>
+      <PageSection>
+        <Content>
+          <Content component="h1">
+            {words("desiredState.complianceCheck.title")}
+          </Content>
+        </Content>
+      </PageSection>
+      <PageSection hasBodyWrapper={false}>
+        <Toolbar>
           <ToolbarContent style={{ padding: 0 }}>
             <SelectReportAction
               setSelectedReport={setSelectedReport}
@@ -120,7 +128,7 @@ export const View: React.FC<Props> = ({ version }) => {
             />
             <TriggerDryRunAction version={version} updateList={updateList} />
           </ToolbarContent>
-        </ToolBarContainer>
+        </Toolbar>
       </PageSection>
       <DiffPageSection
         report={selectedReport}
@@ -131,11 +139,3 @@ export const View: React.FC<Props> = ({ version }) => {
     </>
   );
 };
-
-const StyledPageSection = styled(PageSection)`
-  padding-bottom: 0;
-`;
-
-const ToolBarContainer = styled(Toolbar)`
-  z-index: var(--pf-v5-global--ZIndex--xl);
-`;

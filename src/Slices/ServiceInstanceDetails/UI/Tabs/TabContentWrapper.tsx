@@ -4,6 +4,6 @@ import styled from "styled-components";
 // The 330px equals total height of the elements above the tabs with a short margin.
 export const TabContentWrapper = styled.div`
   max-height: calc(100vh - 350px);
-  padding-top: var(--pf-v5-global--spacer--xl);
+  padding-top: var(--pf-t--global--spacer--action--horizontal--spacious);
   overflow: auto;
 `;

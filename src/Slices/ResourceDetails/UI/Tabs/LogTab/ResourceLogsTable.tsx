@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  OnSort,
-  Table /* data-codemods */,
-  Th,
-  Thead,
-  Tr,
-} from "@patternfly/react-table";
-import styled from "styled-components";
+import { OnSort, Table, Th, Thead, Tr } from "@patternfly/react-table";
 import { Sort } from "@/Core";
 import { useUrlStateWithExpansion } from "@/Data";
 import { words } from "@/UI/words";
@@ -40,7 +33,10 @@ export const ResourceLogsTable: React.FC<Props> = ({
     <Table aria-label="ResourceLogsTable" variant="compact">
       <Thead>
         <Tr>
-          <Th />
+          <Th
+            aria-hidden
+            screenReaderText={words("common.emptyColumnHeader")}
+          />
           <Th
             sort={{
               sortBy: { index: 0, direction: sort.order },
@@ -50,8 +46,8 @@ export const ResourceLogsTable: React.FC<Props> = ({
           >
             {words("resources.logs.timestamp")}
           </Th>
-          <ActionTypeTh>{words("resources.logs.actionType")}</ActionTypeTh>
-          <LogLevelTh>{words("resources.logs.logLevel")}</LogLevelTh>
+          <Th width={15}>{words("resources.logs.actionType")}</Th>
+          <Th width={15}>{words("resources.logs.logLevel")}</Th>
           <Th>{words("resources.logs.message")}</Th>
         </Tr>
       </Thead>
@@ -73,11 +69,3 @@ export const ResourceLogsTable: React.FC<Props> = ({
 function getUniqueId(log: ResourceLog): string {
   return `${log.action_id}_${log.timestamp}`;
 }
-
-const LogLevelTh = styled(Th)`
-  --pf-v5-c-table--cell--MinWidth: 10ch;
-`;
-
-const ActionTypeTh = styled(Th)`
-  --pf-v5-c-table--cell--MinWidth: 12ch;
-`;

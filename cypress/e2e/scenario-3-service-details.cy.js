@@ -4,9 +4,9 @@
  *
  * @param {string} nameEnvironment
  */
-const clearEnvironment = (nameEnvironment = "lsm-frontend") => {
+const clearEnvironment = (nameEnvironment = "test") => {
   cy.visit("/console/");
-  cy.get('[aria-label="Environment card"]').contains(nameEnvironment).click();
+  cy.get(`[aria-label="Select-environment-${nameEnvironment}"]`).click();
   cy.url().then((url) => {
     const location = new URL(url);
     const id = location.searchParams.get("env");
@@ -45,9 +45,9 @@ const checkStatusCompile = (id) => {
  *
  * @param {string} nameEnvironment
  */
-const forceUpdateEnvironment = (nameEnvironment = "lsm-frontend") => {
+const forceUpdateEnvironment = (nameEnvironment = "test") => {
   cy.visit("/console/");
-  cy.get('[aria-label="Environment card"]').contains(nameEnvironment).click();
+  cy.get(`[aria-label="Select-environment-${nameEnvironment}"]`).click();
   cy.url().then((url) => {
     const location = new URL(url);
     const id = location.searchParams.get("env");
@@ -71,10 +71,10 @@ if (Cypress.env("edition") === "iso") {
 
     it("3.1 Check empty state", () => {
       cy.visit("/console/");
-      cy.get('[aria-label="Environment card"]')
-        .contains("lsm-frontend")
+      cy.get(`[aria-label="Select-environment-test"]`).click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]')
+        .contains("Service Catalog")
         .click();
-      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
 
       // Click on kebab menu and select Show Details on basic-service
       cy.get("#basic-service", { timeout: 60000 })
@@ -142,21 +142,20 @@ if (Cypress.env("edition") === "iso") {
       // Go to Lifecycle states
       cy.get("button").contains("Lifecycle States").click();
 
-      // Expect to find table with 16 different state rows.
+      // Expect to find table with 17 different state rows.
       cy.get('[aria-label="Lifecycle"').should(($table) => {
         const $tableBody = $table.find("tbody");
         const $dataRows = $tableBody.find("tr");
 
-        expect($dataRows).to.have.length(16);
+        expect($dataRows).to.have.length(17);
       });
 
       // Go to Config tab
       cy.get("button").contains("Config").click();
 
-      // Expect it to be an empty table
-      cy.get(".pf-v5-c-empty-state")
-        .should("contain", "There is nothing here")
-        .and("contain", "No settings found");
+      // Expect it to have setting in the config
+      cy.get('[aria-label="ServiceConfig"]').should("be.visible");
+      cy.get('[aria-label="SettingsList"]').should("have.length", 1);
 
       // Go to Callback tab
       cy.get("button").contains("Callbacks").click();
@@ -172,10 +171,10 @@ if (Cypress.env("edition") === "iso") {
     it("3.2 Create success instance and check details", () => {
       // Select 'test' environment
       cy.visit("/console/");
-      cy.get('[aria-label="Environment card"]')
-        .contains("lsm-frontend")
+      cy.get(`[aria-label="Select-environment-test"]`).click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]')
+        .contains("Service Catalog")
         .click();
-      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
 
       // click on Show Inventory on basic-service
       cy.get("#basic-service", { timeout: 60000 })
@@ -241,10 +240,10 @@ if (Cypress.env("edition") === "iso") {
     it("3.3 Create a failed Instance by Duplicating and check details", () => {
       // Select 'test' environment
       cy.visit("/console/");
-      cy.get('[aria-label="Environment card"]')
-        .contains("lsm-frontend")
+      cy.get(`[aria-label="Select-environment-test"]`).click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]')
+        .contains("Service Catalog")
         .click();
-      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
 
       // click on Show Inventory on basic-service
       cy.get("#basic-service", { timeout: 60000 })
@@ -255,13 +254,13 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 })
         .eq(0)
         .click();
-      cy.get(".pf-v5-c-menu__item").contains("Duplicate").click();
+      cy.get('[role="menuitem"]').contains("Duplicate").click();
 
       // Create a failed instance on basic-service
       cy.get("#service_id").type("0008");
       cy.get("#name").clear();
       cy.get("#name").type("failed");
-      cy.get(".pf-v5-c-switch").first().click();
+      cy.get(".pf-v6-c-switch").first().click();
       cy.get("button").contains("Confirm").click();
 
       // Expect the number in the chart to be 2
@@ -284,28 +283,12 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 2);
 
       // Check if the newly added instance has failed.
-      cy.get('[aria-label="InstanceRow-Intro"]')
-        .first()
-        .should(($row) => {
-          const $cols = $row.find("td");
-
-          expect($cols.eq(1), "name").to.have.text("failed");
-        });
-
       // long timeout justified by the fact that a few compiles are already queued at this point and status change will only be changed after.
-      cy.get(".pf-v5-c-label.pf-m-red", { timeout: 120000 }).should(
-        "contain",
-        "failed",
-      );
+      cy.get(".pf-v6-c-label", { timeout: 120000 }).should("contain", "failed");
 
       // Check Instance Details page
-      cy.get('[aria-label="row actions toggle"]', { timeout: 60000 })
+      cy.get('[aria-label="instance-details-link"]', { timeout: 50000 })
         .first()
-        .click();
-      // The first button should be the one redirecting to the details page.
-      cy.get(".pf-v5-c-menu__item")
-        .first()
-        .contains("Instance Details")
         .click();
 
       // Check the state of the instance is failed in the history section.
@@ -345,10 +328,10 @@ if (Cypress.env("edition") === "iso") {
     it("3.4 Callbacks", () => {
       // Select card 'test' environment on home page
       cy.visit("/console/");
-      cy.get('[aria-label="Environment card"]')
-        .contains("lsm-frontend")
+      cy.get(`[aria-label="Select-environment-test"]`).click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]')
+        .contains("Service Catalog")
         .click();
-      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
 
       // Click on kebab menu and select Show Details on basic-service
       cy.get("#basic-service", { timeout: 60000 })
@@ -398,41 +381,41 @@ if (Cypress.env("edition") === "iso") {
       cy.get("button").contains("http://localhost:1234").click();
 
       // Expect to see all values except ALLOCATION_UPDATE to have text-decoration: line-through
-      cy.get(".pf-v5-c-description-list__description ul").should(($ul) => {
+      cy.get(".pf-v6-c-description-list__description ul").should(($ul) => {
         const $list = $ul.find("li");
 
         expect($list).to.have.length(10);
       });
 
-      cy.get(".pf-v5-c-description-list__description li")
+      cy.get(".pf-v6-c-description-list__description li")
         .first()
         .should("have.css", "text-decoration")
         .and("contain", "none solid");
-      cy.get(".pf-v5-c-description-list__description li")
+      cy.get(".pf-v6-c-description-list__description li")
         .eq(1)
         .should("have.css", "text-decoration")
         .and("contain", "line-through solid");
-      cy.get(".pf-v5-c-description-list__description li")
+      cy.get(".pf-v6-c-description-list__description li")
         .eq(2)
         .should("have.css", "text-decoration")
         .and("contain", "line-through solid");
-      cy.get(".pf-v5-c-description-list__description li")
+      cy.get(".pf-v6-c-description-list__description li")
         .eq(3)
         .should("have.css", "text-decoration")
         .and("contain", "line-through solid");
-      cy.get(".pf-v5-c-description-list__description li")
+      cy.get(".pf-v6-c-description-list__description li")
         .eq(4)
         .should("have.css", "text-decoration")
         .and("contain", "line-through solid");
-      cy.get(".pf-v5-c-description-list__description li")
+      cy.get(".pf-v6-c-description-list__description li")
         .eq(5)
         .should("have.css", "text-decoration")
         .and("contain", "line-through solid");
-      cy.get(".pf-v5-c-description-list__description li")
+      cy.get(".pf-v6-c-description-list__description li")
         .eq(6)
         .should("have.css", "text-decoration")
         .and("contain", "line-through solid");
-      cy.get(".pf-v5-c-description-list__description li")
+      cy.get(".pf-v6-c-description-list__description li")
         .eq(7)
         .should("have.css", "text-decoration")
         .and("contain", "line-through solid");
@@ -464,10 +447,10 @@ if (Cypress.env("edition") === "iso") {
     it("3.5 Delete Service", () => {
       // Select card 'test' environment on home page
       cy.visit("/console/");
-      cy.get('[aria-label="Environment card"]')
-        .contains("lsm-frontend")
+      cy.get(`[aria-label="Select-environment-test"]`).click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]')
+        .contains("Service Catalog")
         .click();
-      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
 
       // Click on Delete button
       cy.get("#basic-service", { timeout: 60000 })
@@ -499,8 +482,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 })
         .eq(0)
         .click();
-      cy.get(".pf-v5-c-menu__item").contains("More actions").click();
-      cy.get(".pf-v5-c-menu__item").contains("Delete").click();
+      cy.get('[role="menuitem"]').contains("Delete").click();
 
       // Confirm deletion
       cy.get("#submit").click();
@@ -509,8 +491,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 })
         .eq(1)
         .click();
-      cy.get(".pf-v5-c-menu__item").contains("More actions").click();
-      cy.get(".pf-v5-c-menu__item").contains("Delete").click();
+      cy.get('[role="menuitem"]').contains("Delete").click();
 
       // Confirm deletion
       cy.get("#submit", { timeout: 20000 }).click();

@@ -57,7 +57,7 @@ export const CellWithCopy: React.FC<Props> = ({
       bodyContent={
         <>
           <StyledPopoverBody>{formatValue(value)}</StyledPopoverBody>
-          <StyledButton
+          <ClipboardCopyButton
             value={value}
             tooltipContent={words("attribute.value.copy")}
           />
@@ -73,16 +73,9 @@ export const CellWithCopy: React.FC<Props> = ({
 };
 
 export const StyledPopoverBody = styled.div`
-  padding-right: var(--pf-v5-c-popover--c-button--sibling--PaddingRight);
   overflow-y: auto;
   max-height: 50vh;
   white-space: pre-wrap;
-`;
-
-export const StyledButton = styled(ClipboardCopyButton)`
-  position: absolute;
-  top: var(--pf-v5-c-popover--c-button--Top);
-  right: calc(var(--pf-v5-c-popover--c-button--Right) + 0.5rem);
 `;
 
 export function formatValue(value: string): string {

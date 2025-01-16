@@ -152,102 +152,25 @@ test("When using the name filter then only the matching agents should be fetched
 
   expect(initialRows).toHaveLength(6);
 
-  await act(async () => {
-    await userEvent.click(
-      within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
-        "button",
-        { name: "FilterPicker" },
-      ),
-    );
-  });
+  await userEvent.click(
+    within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
+      "button",
+      { name: "FilterPicker" },
+    ),
+  );
 
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("option", { name: words("attribute.name") }),
-    );
-  });
+  await userEvent.click(
+    screen.getByRole("option", { name: words("attribute.name") }),
+  );
 
   const input = screen.getByPlaceholderText(
     words("home.filters.env.placeholder"),
   );
 
-  await act(async () => {
-    await userEvent.click(input);
-  });
-
-  await act(async () => {
-    await userEvent.type(input, "internal{enter}");
-  });
+  await userEvent.type(input, "internal{enter}");
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
     `/api/v2/agents?limit=20&filter.name=internal&sort=name.asc`,
-  );
-
-  await act(async () => {
-    await apiHelper.resolve(
-      Either.right({
-        ...AgentsMock.response,
-        data: AgentsMock.response.data.slice(0, 3),
-      }),
-    );
-  });
-
-  const rowsAfter = await screen.findAllByRole("row", {
-    name: "Agents Table Row",
-  });
-
-  expect(rowsAfter).toHaveLength(3);
-
-  await act(async () => {
-    const results = await axe(document.body);
-
-    expect(results).toHaveNoViolations();
-  });
-});
-
-test("When using the process name filter then only the matching agents should be fetched and shown", async () => {
-  const { component, apiHelper } = setup();
-
-  render(component);
-
-  await act(async () => {
-    await apiHelper.resolve(Either.right(AgentsMock.response));
-  });
-
-  const initialRows = await screen.findAllByRole("row", {
-    name: "Agents Table Row",
-  });
-
-  expect(initialRows).toHaveLength(6);
-
-  await act(async () => {
-    await userEvent.click(
-      within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
-        "button",
-        { name: "FilterPicker" },
-      ),
-    );
-  });
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("option", { name: words("agent.tests.processName") }),
-    );
-  });
-
-  const input = screen.getByPlaceholderText(
-    words("agents.filters.processName.placeholder"),
-  );
-
-  await act(async () => {
-    await userEvent.click(input);
-  });
-
-  await act(async () => {
-    await userEvent.type(input, "internal{enter}");
-  });
-
-  expect(apiHelper.pendingRequests[0].url).toEqual(
-    `/api/v2/agents?limit=20&filter.process_name=internal&sort=name.asc`,
   );
 
   await act(async () => {
@@ -287,27 +210,22 @@ test("When using the status filter with the 'up' option then the agents in the '
 
   expect(initialRows).toHaveLength(6);
 
-  await act(async () => {
-    await userEvent.click(
-      within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
-        "button",
-        { name: "FilterPicker" },
-      ),
-    );
-  });
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("option", { name: words("agent.tests.status") }),
-    );
-  });
+  await userEvent.click(
+    within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
+      "button",
+      { name: "FilterPicker" },
+    ),
+  );
+
+  await userEvent.click(
+    screen.getByRole("option", { name: words("agent.tests.status") }),
+  );
 
   const input = screen.getByPlaceholderText(
     words("agents.filters.status.placeholder"),
   );
 
-  await act(async () => {
-    await userEvent.click(input);
-  });
+  await userEvent.click(input);
 
   await act(async () => {
     const results = await axe(document.body);
@@ -319,9 +237,7 @@ test("When using the status filter with the 'up' option then the agents in the '
     name: words("agent.tests.up"),
   });
 
-  await act(async () => {
-    await userEvent.click(option);
-  });
+  await userEvent.click(option);
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
     `/api/v2/agents?limit=20&filter.status=up&sort=name.asc`,
@@ -356,12 +272,7 @@ test("Given the Agents view with filters, When pausing an agent, then the correc
     words("agents.filters.name.placeholder"),
   );
 
-  await act(async () => {
-    await userEvent.click(input);
-  });
-  await act(async () => {
-    await userEvent.type(input, "aws{enter}");
-  });
+  await userEvent.type(input, "aws{enter}");
 
   await act(async () => {
     await apiHelper.resolve(Either.right(AgentsMock.response));
@@ -373,9 +284,7 @@ test("Given the Agents view with filters, When pausing an agent, then the correc
     name: words("agents.actions.pause"),
   });
 
-  await act(async () => {
-    await userEvent.click(pauseAgentButton);
-  });
+  await userEvent.click(pauseAgentButton);
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
   const request = apiHelper.pendingRequests[0];
@@ -422,12 +331,7 @@ test("Given the Agents view with filters, When unpausing an agent, then the corr
     words("agents.filters.name.placeholder"),
   );
 
-  await act(async () => {
-    await userEvent.click(input);
-  });
-  await act(async () => {
-    await userEvent.type(input, "bru{enter}");
-  });
+  await userEvent.type(input, "bru{enter}");
 
   await act(async () => {
     await apiHelper.resolve(Either.right(AgentsMock.response));
@@ -439,9 +343,7 @@ test("Given the Agents view with filters, When unpausing an agent, then the corr
     name: words("agents.actions.unpause"),
   });
 
-  await act(async () => {
-    await userEvent.click(unpauseAgentButton);
-  });
+  await userEvent.click(unpauseAgentButton);
 
   await act(async () => {
     const results = await axe(document.body);
@@ -496,9 +398,8 @@ test("Given the Agents view When pausing an agent results in an error, then the 
     expect(results).toHaveNoViolations();
   });
 
-  await act(async () => {
-    await userEvent.click(pauseAgentButton);
-  });
+  await userEvent.click(pauseAgentButton);
+
   expect(apiHelper.pendingRequests).toHaveLength(1);
   const request = apiHelper.pendingRequests[0];
 
@@ -528,15 +429,14 @@ test("Given the Agents view with the environment halted, When setting keep_pause
     await apiHelper.resolve(Either.right(AgentsMock.response));
   });
 
-  const onResumeToggle = await screen.findByRole("checkbox", {
+  const onResumeToggle = await screen.findByRole("switch", {
     name: "aws-on-resume-toggle",
   });
 
   expect(onResumeToggle).toBeVisible();
   expect(onResumeToggle).toBeChecked();
-  await act(async () => {
-    await userEvent.click(onResumeToggle);
-  });
+
+  await userEvent.click(onResumeToggle);
 
   expect(apiHelper.pendingRequests[0]).toEqual({
     method: "POST",
@@ -586,15 +486,14 @@ test("Given the Agents view with the environment halted, When setting unpause_on
     await apiHelper.resolve(Either.right(AgentsMock.response));
   });
 
-  const onResumeToggle = await screen.findByRole("checkbox", {
+  const onResumeToggle = await screen.findByRole("switch", {
     name: "ecx-on-resume-toggle",
   });
 
   expect(onResumeToggle).toBeVisible();
   expect(onResumeToggle).not.toBeChecked();
-  await act(async () => {
-    await userEvent.click(onResumeToggle);
-  });
+
+  await userEvent.click(onResumeToggle);
 
   expect(apiHelper.pendingRequests[0]).toEqual({
     method: "POST",
@@ -628,7 +527,7 @@ test("Given the Agents view with the environment NOT halted, THEN the on resume 
 
   const tableHeaders = await screen.findAllByRole("columnheader");
 
-  expect(tableHeaders).toHaveLength(4);
+  expect(tableHeaders).toHaveLength(2);
 
   const onResumeColumnHeader = tableHeaders.find(
     (header) => header.textContent === "On resume",
@@ -658,7 +557,7 @@ test("Given the Agents view with the environment halted, THEN the on resume colu
 
   const tableHeaders = await screen.findAllByRole("columnheader");
 
-  expect(tableHeaders).toHaveLength(5);
+  expect(tableHeaders).toHaveLength(3);
 
   const onResumeColumnHeader = tableHeaders.find(
     (header) => header.textContent === "On resume",
@@ -699,9 +598,7 @@ test("GIVEN AgentsView WHEN sorting changes AND we are not on the first page THE
 
   expect(screen.getByLabelText("Go to next page")).toBeEnabled();
 
-  await act(async () => {
-    await userEvent.click(screen.getByLabelText("Go to next page"));
-  });
+  await userEvent.click(screen.getByLabelText("Go to next page"));
 
   //expect the api url to contain start and end keywords that are used for pagination when we are moving to the next page
   expect(apiHelper.pendingRequests[0].url).toMatch(/(&start=|&end=)/);
@@ -726,9 +623,7 @@ test("GIVEN AgentsView WHEN sorting changes AND we are not on the first page THE
   });
 
   //sort on the second page
-  await act(async () => {
-    await userEvent.click(screen.getByRole("button", { name: "Name" }));
-  });
+  await userEvent.click(screen.getByRole("button", { name: "Name" }));
 
   // expect the api url to not contain start and end keywords that are used for pagination to assert we are back on the first page.
   // we are asserting on the second request as the first request is for the updated sorting event, and second is chained to back to the first page with still correct sorting

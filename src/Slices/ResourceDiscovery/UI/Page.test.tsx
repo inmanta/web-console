@@ -84,14 +84,35 @@ test("GIVEN Discovered Resources page THEN shows table", async () => {
     "/resources/cloudflare%3A%3Adns_record%3A%3ACnameRecord%5Bhttps%3A%2F%2Fapi.cloudflare.com%2Fclient%2Fv4%2F%2Cname%3Dartifacts.ssh.inmanta.com%5D",
   );
 
+  // with correct uri to discovery resource
+  const rowWithDiscoveryResource = within(rows[0]).getByRole("cell", {
+    name: "Show discovery resource",
+  });
+
+  expect(rowWithDiscoveryResource).toBeVisible();
+
+  expect(within(rowWithDiscoveryResource).getByRole("link")).toHaveAttribute(
+    "href",
+    "/resources/cloudflare%3A%3Adns_record%3A%3ACnameRecord%5Bhttps%3A%2F%2Fapi.cloudflare.com%2Fclient%2Fv4%2F%2Cname%3Dartifacts.ssh.inmanta.com%5D",
+  );
+
   // uri is null
   expect(within(rows[1]).getByTestId("Managed resource")).toHaveTextContent("");
+  expect(within(rows[1]).getByTestId("Discovery resource")).toHaveTextContent(
+    "",
+  );
 
   // uri doesn't have a rid
   expect(within(rows[2]).getByTestId("Managed resource")).toHaveTextContent("");
+  expect(within(rows[2]).getByTestId("Discovery resource")).toHaveTextContent(
+    "",
+  );
 
   // uri is an empty string
   expect(within(rows[3]).getByTestId("Managed resource")).toHaveTextContent("");
+  expect(within(rows[3]).getByTestId("Discovery resource")).toHaveTextContent(
+    "",
+  );
 
   await act(async () => {
     const results = await axe(document.body);
@@ -112,9 +133,8 @@ test("GIVEN Discovered Resources page THEN sets sorting parameters correctly on 
 
   expect(resourceIdButton).toBeVisible();
 
-  await act(async () => {
-    await userEvent.click(resourceIdButton);
-  });
+  await userEvent.click(resourceIdButton);
+
   expect(apiHelper.pendingRequests[0].url).toContain(
     "&sort=discovered_resource_id.desc",
   );
@@ -152,9 +172,7 @@ test("GIVEN Discovered Resources WHEN sorting changes AND we are not on the firs
 
   expect(screen.getByLabelText("Go to next page")).toBeEnabled();
 
-  await act(async () => {
-    await userEvent.click(screen.getByLabelText("Go to next page"));
-  });
+  await userEvent.click(screen.getByLabelText("Go to next page"));
 
   //expect the api url to contain start and end keywords that are used for pagination when we are moving to the next page
   expect(apiHelper.pendingRequests[0].url).toMatch(/(&start=|&end=)/);
@@ -170,9 +188,7 @@ test("GIVEN Discovered Resources WHEN sorting changes AND we are not on the firs
     name: words("discovered.column.resource_id"),
   });
 
-  await act(async () => {
-    await userEvent.click(resourceIdButton);
-  });
+  await userEvent.click(resourceIdButton);
 
   // expect the api url to not contain start and end keywords that are used for pagination to assert we are back on the first page.
   // we are asserting on the second request as the first request is for the updated sorting event, and second is chained to back to the first page with still correct sorting

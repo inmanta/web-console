@@ -84,7 +84,7 @@ export const TimestampFilter: React.FC<Props> = ({
 
   return (
     <Flex
-      style={{ gap: "var(--pf-v5-global--spacer--md)" }}
+      style={{ gap: "var(--pf-t--global--spacer--md)" }}
       flexWrap={{ lg: "nowrap" }}
     >
       {isVisible && (
@@ -118,19 +118,18 @@ export const TimestampFilter: React.FC<Props> = ({
       )}
       <FlexItem>
         <ToolbarFilter
-          chips={getChips(timestampFilters)}
-          deleteChip={removeChip}
+          labels={getChips(timestampFilters)}
+          deleteLabel={removeChip}
           categoryName="Date"
           showToolbarItem={isVisible}
         >
           <Button
+            icon={<SearchIcon />}
             onClick={onApply}
             isDisabled={!(from || to)}
             aria-label="Apply date filter"
-            variant="tertiary"
-          >
-            <SearchIcon />
-          </Button>
+            variant="control"
+          ></Button>
         </ToolbarFilter>
       </FlexItem>
     </Flex>

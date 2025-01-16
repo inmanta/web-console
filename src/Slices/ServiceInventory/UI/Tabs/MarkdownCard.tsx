@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, CardBody } from "@patternfly/react-core";
+import { Panel } from "@patternfly/react-core";
 import { MarkdownContainer } from "@/UI/Components/MarkdownContainer";
 
 interface Props {
@@ -23,10 +23,8 @@ export const MarkdownCard = ({ attributeValue, web_title }: Props) => {
       : JSON.stringify(attributeValue);
 
   return (
-    <Card>
-      <CardBody>
-        <MarkdownContainer text={data} web_title={web_title} />
-      </CardBody>
-    </Card>
+    <Panel>
+      <MarkdownContainer text={data} web_title={web_title} />
+    </Panel>
   );
 };

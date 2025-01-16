@@ -31,8 +31,8 @@ export const ReadFilter: React.FC<Props> = ({ filter, setFilter }) => {
 
   return (
     <ToolbarFilter
-      chips={filterToChips(filter)}
-      deleteChip={deleteChip}
+      labels={filterToChips(filter)}
+      deleteLabel={deleteChip}
       categoryName="Read"
     >
       <SingleTextSelect

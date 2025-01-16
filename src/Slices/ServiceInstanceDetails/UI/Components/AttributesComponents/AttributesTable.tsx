@@ -208,9 +208,8 @@ export const AttributesTable: React.FC<Props> = ({
       variant="plain"
       onClick={onToggleClick}
       isExpanded={isToggleOpen}
-    >
-      <EllipsisVIcon />
-    </MenuToggle>
+      icon={<EllipsisVIcon />}
+    />
   );
 
   /**
@@ -283,11 +282,22 @@ export const AttributesTable: React.FC<Props> = ({
 
     return [
       <TreeRowWrapper key={rowIndex} row={{ props: treeRow.props }}>
-        <Td dataLabel="name" treeRow={treeRow} data-testid="attribute-key">
+        <Td
+          dataLabel="name"
+          treeRow={treeRow}
+          data-testid="attribute-key"
+          aria-label={node.id + "_attribute"}
+        >
           <TableText>{node.name}</TableText>
         </Td>
-        <Td dataLabel="value" width={60} data-testid={node.name}>
-          <TableText wrapModifier="truncate">{printValue(node)}</TableText>
+        <Td
+          dataLabel="value"
+          width={60}
+          data-testid={node.name}
+          aria-label={node.id + "_value"}
+          modifier="truncate"
+        >
+          {printValue(node)}
         </Td>
       </TreeRowWrapper>,
       ...childRows,
@@ -387,7 +397,7 @@ export const AttributesTable: React.FC<Props> = ({
             >
               {words("instanceDetails.table.attributeKey")}
             </Th>
-            <Th>{words("instanceDetails.table.valueKey")}</Th>
+            <Th width={60}>{words("instanceDetails.table.valueKey")}</Th>
           </Tr>
         </Thead>
         <Tbody>{renderRows(tableData)}</Tbody>
@@ -398,5 +408,4 @@ export const AttributesTable: React.FC<Props> = ({
 
 const StyledSelect = styled(FormSelect)`
   width: 180px;
-  margin-top: var(--pf-v5-global--spacer--md);
 `;

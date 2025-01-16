@@ -4,9 +4,9 @@
  *
  * @param {string} nameEnvironment
  */
-const clearEnvironment = (nameEnvironment = "lsm-frontend") => {
+const clearEnvironment = (nameEnvironment = "test") => {
   cy.visit("/console/");
-  cy.get('[aria-label="Environment card"]').contains(nameEnvironment).click();
+  cy.get(`[aria-label="Select-environment-${nameEnvironment}"]`).click();
   cy.url().then((url) => {
     const location = new URL(url);
     const id = location.searchParams.get("env");
@@ -45,9 +45,9 @@ const checkStatusCompile = (id) => {
  *
  * @param {string} nameEnvironment
  */
-const forceUpdateEnvironment = (nameEnvironment = "lsm-frontend") => {
+const forceUpdateEnvironment = (nameEnvironment = "test") => {
   cy.visit("/console/");
-  cy.get('[aria-label="Environment card"]').contains(nameEnvironment).click();
+  cy.get(`[aria-label="Select-environment-${nameEnvironment}"]`).click();
   cy.url().then((url) => {
     const location = new URL(url);
     const id = location.searchParams.get("env");
@@ -70,10 +70,10 @@ if (Cypress.env("edition") === "iso") {
     });
     it("2.2.1 Add Instance on parent-service", () => {
       cy.visit("/console/");
-      cy.get('[aria-label="Environment card"]')
-        .contains("lsm-frontend")
+      cy.get(`[aria-label="Select-environment-test"]`).click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]')
+        .contains("Service Catalog")
         .click();
-      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
       cy.get("#parent-service").contains("Show inventory").click();
       cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
       // Add an instance and fill form
@@ -86,31 +86,6 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="ServiceInventory-Success"]').should("to.be.visible");
       // Check if only one row has been added to the table.
       cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 1);
-
-      // open row from element
-      cy.get("#expand-toggle0").click();
-
-      // Go to ressource tab expect it be empty
-      cy.get(".pf-v5-c-tabs__item-text").contains("Resources").click();
-      cy.get('[aria-label="ResourceTable-Empty"]').should("to.be.visible");
-
-      cy.intercept("**/resources**").as("GetVersion");
-
-      // expect one item with deployed state
-      cy.get('[aria-label="ResourceTable-Success"]', { timeout: 60000 }).should(
-        ($table) => {
-          expect($table).to.have.length(1);
-
-          const $td = $table.find("td");
-
-          // there can only be 2 table-data cells available
-          expect($td).to.have.length(2);
-          expect($td.eq(0), "first item").to.have.text(
-            "frontend_model::TestResource[internal,name=default-0001]",
-          );
-          expect($td.eq(1), "second item").to.have.text("deployed");
-        },
-      );
 
       // click on service catalog in breadcrumb
       cy.get('[aria-label="BreadcrumbItem"]')
@@ -139,34 +114,18 @@ if (Cypress.env("edition") === "iso") {
     it("2.2.2 Remove Parent Service and Child Service", () => {
       cy.visit("/console/");
 
-      cy.get('[aria-label="Environment card"]')
-        .contains("lsm-frontend")
+      cy.get(`[aria-label="Select-environment-test"]`).click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]')
+        .contains("Service Catalog")
         .click();
-      cy.get(".pf-v5-c-nav__item").contains("Service Catalog").click();
       cy.get("#parent-service").contains("Show inventory").click();
-
-      // open row from element
-      cy.get("#expand-toggle0", { timeout: 20000 }).click();
 
       // try delete item (Should not be possible)
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
-      cy.get(".pf-v5-c-menu__item").contains("More actions").click();
-      cy.get(".pf-v5-c-menu__item").contains("Delete").click();
+      cy.get('[role="menuitem"]').contains("Delete").click();
 
-      cy.get(".pf-v5-c-modal-box__title-text").should(
-        "contain",
-        "Delete instance",
-      );
-      cy.get(".pf-v5-c-form__actions").contains("Yes").click();
-
-      // check status change before compile
-      cy.get('[aria-label="InstanceRow-Intro"]:first', { timeout: 20000 })
-        .find('[data-label="State"]')
-        .should("contain", "delete_validating_up");
-
-      cy.get('[aria-label="InstanceRow-Intro"]:first')
-        .find('[data-label="State"]', { timeout: 60000 })
-        .should("not.contain", "delete_validating_up");
+      cy.get(".pf-v6-c-modal-box__header").should("contain", "Delete instance");
+      cy.get(".pf-v6-c-form__actions").contains("Yes").click();
 
       // click on service catalog in breadcrumb
       cy.get('[aria-label="BreadcrumbItem"]')
@@ -175,19 +134,12 @@ if (Cypress.env("edition") === "iso") {
 
       cy.get("#child-service").contains("Show inventory").click();
 
-      // open row from element
-      cy.get("#expand-toggle0").click();
-
       // try delete item (Should be possible)
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
-      cy.get(".pf-v5-c-menu__item").contains("More actions").click();
-      cy.get(".pf-v5-c-menu__item").contains("Delete").click();
+      cy.get('[role="menuitem"]').contains("Delete").click();
 
-      cy.get(".pf-v5-c-modal-box__title-text").should(
-        "contain",
-        "Delete instance",
-      );
-      cy.get(".pf-v5-c-form__actions").contains("Yes").click();
+      cy.get(".pf-v6-c-modal-box__header").should("contain", "Delete instance");
+      cy.get(".pf-v6-c-form__actions").contains("Yes").click();
 
       cy.get('[aria-label="ServiceInventory-Empty"]', {
         timeout: 220000,

@@ -10,7 +10,7 @@ if (Cypress.env("local-auth")) {
     cy.get("[id=toggle-button]", { timeout: 20000 }).should("contain", "admin");
     cy.get("[id=toggle-button]").click();
 
-    cy.get(".pf-v5-c-menu__item").contains("Logout").click();
+    cy.get('[role="menuitem"]').contains("Logout").click();
 
     cy.get('[id="pf-login-username-id"]').should("be.visible");
     cy.get('[id="pf-login-password-id"]').should("be.visible");

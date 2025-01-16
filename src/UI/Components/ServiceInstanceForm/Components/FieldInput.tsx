@@ -1,4 +1,10 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import {
   Button,
   FormFieldGroupExpandable,
@@ -6,7 +12,7 @@ import {
 } from "@patternfly/react-core";
 import { PlusIcon } from "@patternfly/react-icons";
 import { get } from "lodash-es";
-import styled from "styled-components";
+import { v4 as uuidv4 } from "uuid";
 import {
   InstanceAttributeModel,
   DictListField,
@@ -37,7 +43,7 @@ interface Props {
 }
 
 /**
- * Type representing a function to update the state within the form.
+ * function to update the state within the form.
  *
  * @param {string} path - The path within the form state to update.
  * @param {unknown} value - The new value to set at the specified path.
@@ -141,7 +147,7 @@ export const FieldInput: React.FC<Props> = ({
             getUpdate(makePath(path, field.name), toOptionalBoolean(value))
           }
           description={field.description}
-          key={field.name}
+          key={field.id || field.name}
           shouldBeDisabled={
             field.isDisabled &&
             get(originalState, makePath(path, field.name)) !== undefined &&
@@ -157,7 +163,7 @@ export const FieldInput: React.FC<Props> = ({
             getUpdate(makePath(path, field.name), toOptionalBoolean(value))
           }
           description={field.description}
-          key={field.name}
+          key={field.id || field.name}
           shouldBeDisabled={
             field.isDisabled &&
             get(originalState, makePath(path, field.name)) !== undefined &&
@@ -185,7 +191,7 @@ export const FieldInput: React.FC<Props> = ({
           }
           placeholder={getPlaceholderForType(field.type)}
           typeHint={getTypeHintForType(field.type)}
-          key={field.name}
+          key={field.id || field.name}
           suggestions={suggestionsList}
         />
       );
@@ -208,7 +214,7 @@ export const FieldInput: React.FC<Props> = ({
           }}
           placeholder={getPlaceholderForType(field.type)}
           typeHint={getTypeHintForType(field.type)}
-          key={field.name}
+          key={field.id || field.name}
           isTextarea
         />
       );
@@ -233,7 +239,7 @@ export const FieldInput: React.FC<Props> = ({
           }
           placeholder={getPlaceholderForType(field.type)}
           typeHint={getTypeHintForType(field.type)}
-          key={field.name}
+          key={field.id || field.name}
           suggestions={suggestionsList}
         />
       );
@@ -266,7 +272,7 @@ export const FieldInput: React.FC<Props> = ({
           description={field.description}
           isOptional={field.isOptional}
           handleInputChange={getEnumUpdate}
-          key={field.name}
+          key={field.id || field.name}
           shouldBeDisabled={
             field.isDisabled &&
             get(originalState, makePath(path, field.name)) !== undefined &&
@@ -403,7 +409,7 @@ const NestedFieldInput: React.FC<NestedProps> = ({
   };
 
   return (
-    <StyledFormFieldGroupExpandable
+    <FormFieldGroupExpandable
       aria-label={`NestedFieldInput-${makePath(path, field.name)}`}
       header={
         <FormFieldGroupHeader
@@ -427,7 +433,7 @@ const NestedFieldInput: React.FC<NestedProps> = ({
                     showList
                   }
                 >
-                  {words("catalog.callbacks.add")}
+                  {words("add")}
                 </Button>
                 <Button
                   variant="link"
@@ -455,7 +461,7 @@ const NestedFieldInput: React.FC<NestedProps> = ({
             isNew={isNew}
           />
         ))}
-    </StyledFormFieldGroupExpandable>
+    </FormFieldGroupExpandable>
   );
 };
 
@@ -487,9 +493,21 @@ const DictListFieldInput: React.FC<DictListProps> = ({
   path,
   isNew = false,
 }) => {
-  const list =
-    (get(formState, makePath(path, field.name)) as Array<unknown>) || [];
+  const list = useMemo(
+    () => (get(formState, makePath(path, field.name)) as Array<unknown>) || [],
+    [formState, path, field.name],
+  );
+
   const [addedItemsPaths, setAddedItemPaths] = useState<string[]>([]);
+
+  const [itemIds, setItemIds] = useState<string[]>([]);
+
+  useEffect(() => {
+    // Initialize itemIds with unique IDs if not already set
+    if (itemIds.length === 0 && list.length > 0) {
+      setItemIds(list.map(() => uuidv4()));
+    }
+  }, [list, itemIds.length]);
 
   /**
    * Add a new formField group of the same type to the list.
@@ -508,6 +526,8 @@ const DictListFieldInput: React.FC<DictListProps> = ({
       `${makePath(path, field.name)}.${list.length}`,
     ]);
 
+    setItemIds([...itemIds, uuidv4()]);
+
     getUpdate(makePath(path, field.name), [
       ...list,
       createFormState(field.fields),
@@ -522,6 +542,9 @@ const DictListFieldInput: React.FC<DictListProps> = ({
    */
   const getOnDelete = (index: number) => () => {
     const newPaths: string[] = [];
+
+    // Remove the item from the list of unique IDs
+    setItemIds(itemIds.filter((_, i) => i !== index));
 
     /**
      * We need to update the stored paths after the deleted item,
@@ -545,13 +568,12 @@ const DictListFieldInput: React.FC<DictListProps> = ({
     setAddedItemPaths([...newPaths]);
 
     getUpdate(makePath(path, field.name), [
-      ...list.slice(0, index),
-      ...list.slice(index + 1, list.length),
+      ...list.filter((_, i) => i !== index),
     ]);
   };
 
   return (
-    <StyledFormFieldGroupExpandable
+    <FormFieldGroupExpandable
       aria-label={`DictListFieldInput-${makePath(path, field.name)}`}
       header={
         <FormFieldGroupHeader
@@ -574,19 +596,19 @@ const DictListFieldInput: React.FC<DictListProps> = ({
                 (!!field.max && list.length >= field.max)
               }
             >
-              Add
+              {words("add")}
             </Button>
           }
         />
       }
     >
       {list.map((_item, index) => (
-        <StyledFormFieldGroupExpandable
+        <FormFieldGroupExpandable
           aria-label={`DictListFieldInputItem-${makePath(
             path,
             `${field.name}.${index}`,
           )}`}
-          key={makePath(path, `${field.name}.${index}`)}
+          key={makePath(path, `${field.name}.${itemIds[index]}`)}
           header={
             <FormFieldGroupHeader
               titleText={{
@@ -608,7 +630,7 @@ const DictListFieldInput: React.FC<DictListProps> = ({
                     field.min > index
                   }
                 >
-                  Delete
+                  {words("delete")}
                 </Button>
               }
             />
@@ -631,12 +653,8 @@ const DictListFieldInput: React.FC<DictListProps> = ({
               suggestions={childField.suggestion}
             />
           ))}
-        </StyledFormFieldGroupExpandable>
+        </FormFieldGroupExpandable>
       ))}
-    </StyledFormFieldGroupExpandable>
+    </FormFieldGroupExpandable>
   );
 };
-
-const StyledFormFieldGroupExpandable = styled(FormFieldGroupExpandable)`
-  min-height: 0;
-`;

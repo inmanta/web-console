@@ -65,19 +65,16 @@ const Widget: React.FC<WidgetProps> = ({
         variant="primary"
         ref={toggleref}
         isExpanded={isOpen}
-        splitButtonOptions={{
-          variant: "action",
-          items: [
-            <MenuToggleAction
-              key="action"
-              onClick={onRecompile}
-              aria-label="RecompileButton"
-              isDisabled={isDisabled}
-            >
-              {words("common.compileWidget.recompile")}
-            </MenuToggleAction>,
-          ],
-        }}
+        splitButtonItems={[
+          <MenuToggleAction
+            key="action"
+            onClick={onRecompile}
+            aria-label="RecompileButton"
+            isDisabled={isDisabled}
+          >
+            {words("common.compileWidget.recompile")}
+          </MenuToggleAction>,
+        ]}
         onClick={(value) => onToggle(value)}
       />
     )}

@@ -1,6 +1,5 @@
 import React from "react";
-import { SelectOptionProps } from "@patternfly/react-core";
-import styled from "styled-components";
+import { Flex, FlexItem, SelectOptionProps } from "@patternfly/react-core";
 import { EnvironmentSettings } from "@/Core";
 import { SingleTextSelect } from "@/UI/Components";
 import { Warning } from "./Warning";
@@ -16,23 +15,19 @@ export const EnumInput: React.FC<Props> = ({ info }) => {
   });
 
   return (
-    <>
-      <StyledSingleTextSelect
-        selected={info.value}
-        setSelected={setSelected}
-        options={options}
-        toggleAriaLabel={`EnumInput-${info.name}`}
-      />
-      {info.isUpdateable(info) && <StyledWarning />}
-    </>
+    <Flex direction={{ default: "row" }}>
+      <FlexItem grow={{ default: "grow" }}>
+        <SingleTextSelect
+          selected={info.value}
+          setSelected={setSelected}
+          options={options}
+          toggleAriaLabel={`EnumInput-${info.name}`}
+        />
+      </FlexItem>
+
+      <FlexItem style={{ minWidth: "20px" }}>
+        {info.isUpdateable(info) && <Warning />}
+      </FlexItem>
+    </Flex>
   );
 };
-
-const StyledWarning = styled(Warning)`
-  height: 36px;
-  margin-left: 16px;
-`;
-
-const StyledSingleTextSelect = styled(SingleTextSelect)`
-  width: 300px;
-`;
