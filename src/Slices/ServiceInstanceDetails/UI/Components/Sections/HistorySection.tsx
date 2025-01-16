@@ -111,6 +111,7 @@ export const HistorySection: React.FC = () => {
                     isRowSelected={String(log.version) === selectedVersion}
                     aria-label="History-Row"
                     className={log.deleted ? "danger" : ""}
+                    id="tooltip-boundary"
                   >
                     <HistoryRowContent log={log} />
                   </Tr>
