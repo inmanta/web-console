@@ -10,14 +10,25 @@ import {
   FlexItem,
 } from "@patternfly/react-core";
 import styled from "styled-components";
+import { DetailTuple } from "./StatusList";
 
 interface Props {
   name: string;
-  details: [string, string][];
+  details: DetailTuple[];
   icon: React.ReactNode;
   category?: string;
 }
 
+/**
+ * Renders a status item
+ *
+ * @props {Props} props - The properties for the status item component.
+ * @prop {string} name - The name of the status item.
+ * @prop {DetailTuple[]} details - The details of the status item, which can include nested objects.
+ * @prop {React.ReactNode} icon - The icon to display for the status item.
+ * @prop {string} [category] - The category of the status item.
+ * @returns {React.FC<Props>} The rendered status item component.
+ */
 export const StatusItem: React.FC<Props> = ({
   name,
   details,
@@ -33,12 +44,22 @@ export const StatusItem: React.FC<Props> = ({
       {details.length > 0 && (
         <FlexItem>
           <CompactDescriptionList isHorizontal isCompact isFluid>
-            {details.map(([key, value]) => (
-              <DescriptionListGroup key={key}>
-                <DescriptionListTerm>{key}</DescriptionListTerm>
-                <DescriptionListDescription>{value}</DescriptionListDescription>
-              </DescriptionListGroup>
-            ))}
+            {details.map(([key, value]) => {
+              if (typeof value === "object") {
+                return (
+                  <NestedListItem key={key} name={key} properties={value} />
+                );
+              } else {
+                return (
+                  <DescriptionListGroup key={key}>
+                    <DescriptionListTerm>{key}</DescriptionListTerm>
+                    <DescriptionListDescription>
+                      {value}
+                    </DescriptionListDescription>
+                  </DescriptionListGroup>
+                );
+              }
+            })}
           </CompactDescriptionList>
         </FlexItem>
       )}
@@ -52,10 +73,46 @@ const Category = styled.span`
 
 const InlineTitle = styled(Title)`
   display: inline-block;
-  padding-right: 8px;
+  padding-right: var(--pf-v5-global--spacer--sm);
 `;
 
 const CompactDescriptionList = styled(DescriptionList)`
   --pf-v5-c-description-list--m-compact--RowGap: 0;
-  margin-bottom: 16px;
+  margin-bottom: var(--pf-v5-global--spacer--md);
 `;
+
+const IndentedDescriptionListGroup = styled(DescriptionListGroup)`
+  padding-left: var(--pf-v5-global--spacer--md);
+`;
+
+interface NestedListItemProps {
+  name: string;
+  properties: Record<string, string>;
+}
+
+/**
+ * Renders sub list for Status value that is a Record instead of string.
+ *
+ * @props {NestedListItemProps} props - The properties for the NestedListItem component.
+ * @prop {string} name - The name of the property.
+ * @prop {Record<string, string>} properties - The sub properties to display in the NestedListItem components.
+ * @returns {React.FC<NestedListItemProps>} The rendered NestedListItem component.
+ */
+const NestedListItem: React.FC<NestedListItemProps> = ({
+  name,
+  properties,
+}) => {
+  return (
+    <ListItem aria-label={`StatusNestedListItem-${name}`}>
+      <DescriptionListGroup>
+        <DescriptionListTerm>{name}</DescriptionListTerm>
+      </DescriptionListGroup>
+      {Object.entries(properties).map(([subKey, subValue]) => (
+        <IndentedDescriptionListGroup key={name + "_" + subKey}>
+          <DescriptionListTerm>{subKey}</DescriptionListTerm>
+          <DescriptionListDescription>{subValue}</DescriptionListDescription>
+        </IndentedDescriptionListGroup>
+      ))}
+    </ListItem>
+  );
+};
