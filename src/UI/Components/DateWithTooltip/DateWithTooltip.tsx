@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { Tooltip } from "@patternfly/react-core";
 import { MomentDatePresenter, useTickerWithUnixMs } from "@/UI/Utils";
 
@@ -32,17 +32,19 @@ export const DateWithTooltip: React.FC<Props> = ({
 }) => {
   useTickerWithUnixMs(datePresenter.toUnixMs(timestamp));
   const date = datePresenter.get(timestamp);
-
+  const tooltipRef = useRef(null);
   return (
-    <Tooltip
-      content={isFull ? date.relative : date.full}
-      entryDelay={200}
-      appendTo={() =>
-        document.getElementById("tooltip-boundary") as HTMLElement
-      }
-      flipBehavior={["top", "bottom"]}
-    >
-      <span className={className}>{isFull ? date.full : date.relative}</span>
-    </Tooltip>
+    <div ref={tooltipRef}>
+      <Tooltip
+        content={isFull ? date.relative : date.full}
+        entryDelay={200}
+        appendTo={() =>
+          document.getElementById("tooltip-boundary") as HTMLElement
+        }
+        flipBehavior={["top", "bottom"]}
+      >
+        <span className={className}>{isFull ? date.full : date.relative}</span>
+      </Tooltip>
+    </div>
   );
 };
