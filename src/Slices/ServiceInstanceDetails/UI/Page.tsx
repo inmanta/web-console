@@ -126,11 +126,12 @@ export const Page: React.FC = () => {
     if (initialVersion === "-1") {
       setInitialVersion(selectedVersion);
     }
-  }, [selectedVersion]);
+  }, [selectedVersion, initialVersion]);
 
   if (initialVersion === "-1") {
     return null;
   }
+
   return (
     <ServiceInstanceDetails
       service={service}

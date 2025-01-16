@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React from "react";
 import { Tooltip } from "@patternfly/react-core";
 import { MomentDatePresenter, useTickerWithUnixMs } from "@/UI/Utils";
 
@@ -32,6 +32,7 @@ export const DateWithTooltip: React.FC<Props> = ({
 }) => {
   useTickerWithUnixMs(datePresenter.toUnixMs(timestamp));
   const date = datePresenter.get(timestamp);
+
   return (
     <Tooltip
       content={isFull ? date.relative : date.full}
