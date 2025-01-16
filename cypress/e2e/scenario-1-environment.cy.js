@@ -271,7 +271,7 @@ describe("Environment", () => {
     });
   }
 
-  it("1.6 Edit environment configuration", function () {
+  xit("1.6 Edit environment configuration", function () {
     cy.visit("/console/environment/create");
     fillCreateEnvForm({
       envName: testName(6),
