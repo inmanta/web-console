@@ -1,5 +1,6 @@
 import React from "react";
 import { Label, Spinner } from "@patternfly/react-core";
+import { InfoAltIcon } from "@patternfly/react-icons";
 import { CompileStatus } from "@/Core";
 
 /**
@@ -37,7 +38,7 @@ export const CompileStatusLabel: React.FC<{ status: CompileStatus }> = ({
       );
     case CompileStatus.queued:
       return (
-        <Label status="info" variant="outline">
+        <Label color="blue" variant="outline" icon={<InfoAltIcon />}>
           {status}
         </Label>
       );

@@ -1,7 +1,5 @@
 import React, { useContext } from "react";
-import { Label } from "@patternfly/react-core";
-import { InfoAltIcon } from "@patternfly/react-icons";
-import styled from "styled-components";
+import { Flex, FlexItem, Label } from "@patternfly/react-core";
 import { useUrlStateWithString } from "@/Data";
 import { words } from "@/UI";
 import { InstanceDetailsContext } from "../../../Core/Context";
@@ -14,8 +12,9 @@ interface Props {
 /**
  * The PageTitleWithVersion Component
  *
- * When the version is the latest active version,
- * an additional tag is displayed to inform the user they are visualizing the latest version.
+ * When the version is the latest active version, we don't display a tag.
+ * When the version is not the latest active version, we display a tag with the version number.
+ * If the instance is deleted, we display a label with the terminated-state.
  *
  * The title section also contains InstanceActions
  *
@@ -38,30 +37,28 @@ export const VersionedPageTitleWithActions: React.FC<Props> = ({ title }) => {
   const isLatest = selectedVersion === String(instance.version);
 
   return (
-    <>
-      {title}
-      <LabelContainer>
-        <Label data-testid="selected-version">
-          {words("instanceDetails.title.tag")(selectedVersion)}
-        </Label>
-        {isLatest && (
-          <Label color="green" icon={<InfoAltIcon />}>
-            {words("instanceDetails.title.next")}
-          </Label>
-        )}
+    <Flex justifyContent={{ default: "justifyContentSpaceBetween" }}>
+      <Flex
+        alignItems={{ default: "alignItemsCenter" }}
+        gap={{ default: "gapSm" }}
+      >
+        {title}
+        {!isLatest && [
+          <Label
+            data-testid="selected-version"
+            key="selected-version"
+            color="purple"
+          >
+            {words("instanceDetails.title.tag")(selectedVersion)}
+          </Label>,
+        ]}
         {instance.deleted && (
-          <Label color="red" icon={<InfoAltIcon />}>
+          <Label status="danger" data-testid="terminated" key="terminated">
             {instance.state}
           </Label>
         )}
-      </LabelContainer>
-      {isLatest && <InstanceActions />}
-    </>
+      </Flex>
+      <FlexItem>{isLatest && <InstanceActions />}</FlexItem>
+    </Flex>
   );
 };
-
-const LabelContainer = styled.span`
-  margin-left: var(--pf-t--global--spacer--md);
-  display: inline-flex;
-  gap: var(--pf-t--global--spacer--sm);
-`;

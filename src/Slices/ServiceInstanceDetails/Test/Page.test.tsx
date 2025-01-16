@@ -133,11 +133,6 @@ describe("ServiceInstanceDetailsPage", () => {
       await screen.findByRole("region", { name: "Instance-Details-Success" }),
     ).toBeInTheDocument();
 
-    expect(screen.getByText("Latest Version")).toBeInTheDocument();
-    expect(screen.getByTestId("selected-version")).toHaveTextContent(
-      "Version: 4",
-    );
-
     // Test that the table has collapsibles
     // this value is located inside the collapsible section.
     expect(screen.getByText(/inmanta\-lab/i)).not.toBeVisible();
@@ -292,12 +287,8 @@ describe("ServiceInstanceDetailsPage", () => {
       await screen.findByRole("region", { name: "Instance-Details-Success" }),
     ).toBeInTheDocument();
 
-    // active attribute set
-    // in this version, we should have documentation available
-    expect(screen.getByText("Latest Version")).toBeInTheDocument();
-    expect(screen.getByTestId("selected-version")).toHaveTextContent(
-      "Version: 4",
-    );
+    // active attribute set. By default, the latest version is selected, and shouldn't display a label.
+    expect(screen.queryByTestId("selected-version")).not.toBeInTheDocument();
 
     // should display the right timestamp in the rows for each version
     expect(screen.getByTestId("version-4-timestamp")).toHaveTextContent(
@@ -308,7 +299,7 @@ describe("ServiceInstanceDetailsPage", () => {
     );
 
     expect(screen.getByText("Documentation")).toBeInTheDocument();
-    expect(screen.getByText("Topography")).toBeInTheDocument();
+
     expect(
       screen.getByRole("heading", {
         name: /Getting started/i,
@@ -319,12 +310,10 @@ describe("ServiceInstanceDetailsPage", () => {
     // in this version, we should have documentation available
     await userEvent.click(screen.getByRole("cell", { name: "3" }));
 
-    expect(screen.queryByText("Latest Version")).not.toBeInTheDocument();
     expect(screen.getByTestId("selected-version")).toHaveTextContent(
       "Version: 3",
     );
 
-    expect(screen.getByText("Topography")).toBeInTheDocument();
     expect(
       screen.getByRole("heading", {
         name: /we are adding documentation/i,
@@ -335,12 +324,10 @@ describe("ServiceInstanceDetailsPage", () => {
     // in this version, topography documentation is an empty string, so fall back to message informing the user.
     await userEvent.click(screen.getByRole("cell", { name: "2" }));
 
-    expect(screen.queryByText("Latest Version")).not.toBeInTheDocument();
     expect(screen.getByTestId("selected-version")).toHaveTextContent(
       "Version: 2",
     );
 
-    expect(screen.getByText("Topography")).toBeInTheDocument();
     expect(
       screen.getByText(
         /this version doesn’t contain documentation for topography yet\./i,
@@ -350,12 +337,10 @@ describe("ServiceInstanceDetailsPage", () => {
     // in this version, topography attribute didn't exist yet in any attribute set, but is available in the ServiceModel.
     await userEvent.click(screen.getByRole("cell", { name: "1" }));
 
-    expect(screen.queryByText("Latest Version")).not.toBeInTheDocument();
     expect(screen.getByTestId("selected-version")).toHaveTextContent(
       "Version: 1",
     );
 
-    expect(screen.getByText("Topography")).toBeInTheDocument();
     expect(
       screen.getByText(
         /this version doesn’t contain documentation for topography yet\./i,

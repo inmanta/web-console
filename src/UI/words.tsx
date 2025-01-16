@@ -268,10 +268,6 @@ const dict = {
   "instanceDetails.page.noData.errorTitle": "No Data",
   "instanceDetails.history.title": "History",
   "instanceDetails.history.diagnose": "Diagnose",
-  "instanceDetails.history.diagnose.slider.title":
-    "The number of lifecycle versions to look back when looking for failures.",
-  "instanceDetails.history.diagnose.slider.description":
-    "By default diagnosis is run against the latest version of the service -1.",
   "instanceDetails.history.table.version": "Version",
   "instanceDetails.history.table.timestamp": "Timestamp",
   "instanceDetails.history.table.status": "Status",
@@ -400,6 +396,10 @@ const dict = {
   "diagnose.main.subtitle": (instanceId: string) =>
     `The following errors were found related to instance ${instanceId}`,
   "diagnose.title": "Diagnose Service Instance",
+  "diagnose.slider.title":
+    "The number of lifecycle versions to look back when diagnosing failures.",
+  "diagnose.slider.description":
+    "The slider determines how many lifecycle versions to look back when diagnosing failures.",
 
   /**
    * Orders related text
@@ -597,9 +597,11 @@ const dict = {
   /** Discovered Resources related text */
   "discovered.column.resource_id": "Resource Id",
   "discovered.column.managed_resource": "Managed resource",
+  "discovered.column.discovery_resource": "Discovery resource",
   "discovered_resources.title": "Discovered Resources",
   "discovered_resources.values": "values",
-  "discovered_resources.show_resource": "Show managed resource",
+  "discovered_resources.show_resource.managed": "Show managed resource",
+  "discovered_resources.show_resource.discovery": "Show discovery resource",
 
   /** Compile report related text */
   "compileReports.title": "Compile Reports",

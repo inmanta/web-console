@@ -1,5 +1,6 @@
 import React from "react";
 import { Card, Label } from "@patternfly/react-core";
+import { InfoAltIcon } from "@patternfly/react-icons";
 import { Table, Tbody, Td, Tr } from "@patternfly/react-table";
 import { ServiceOrderItemDependencies } from "@/Slices/Orders/Core/Query";
 import { OrderStatusLabel } from "@/Slices/Orders/UI/OrderStatusLabel";
@@ -23,7 +24,7 @@ interface Props {
 export const OrderDependencies: React.FC<Props> = ({ dependencies }) => {
   if (!Object.keys(dependencies).length) {
     return (
-      <Label status="info" variant="outline">
+      <Label color="blue" variant="outline" icon={<InfoAltIcon />}>
         {words("orders.row.empty")}
       </Label>
     );
