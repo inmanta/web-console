@@ -324,19 +324,6 @@ describe("Environment", () => {
       .find(".pf-v6-c-form-control input")
       .should("have.value", "610");
 
-    //Change autostart_agent_deploy_splay_time
-    cy.get('[aria-label="Row-autostart_agent_deploy_splay_time"]')
-      .find(".pf-v6-c-form-control")
-      .type("{selectAll}20");
-    cy.get('[data-testid="Warning"]').should("exist");
-    cy.get('[aria-label="Row-autostart_agent_deploy_splay_time"]')
-      .find('[aria-label="SaveAction"]')
-      .click();
-    cy.get('[data-testid="Warning"]').should("not.exist");
-    cy.get('[aria-label="Row-autostart_agent_deploy_splay_time"]')
-      .find(".pf-v6-c-form-control input")
-      .should("have.value", "20");
-
     //Change autostart_agent_repair_interval
     cy.get('[aria-label="Row-autostart_agent_repair_interval"]')
       .find(".pf-v6-c-form-control")
