@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import {
   Panel,
   PanelMain,
@@ -45,11 +45,10 @@ export const TabView: React.FC = () => {
   const docAttributeDescriptors = getDocumentationAttributeDescriptors(
     serviceModelQuery.data,
   );
+  const docsAttributeLength = docAttributeDescriptors.length;
 
   const [activeTab, setActiveTab] = useUrlStateWithString<TabKeys>({
-    default: docAttributeDescriptors.length
-      ? TabKeys.DOCUMENTATION
-      : TabKeys.ATTRIBUTES,
+    default: docsAttributeLength ? TabKeys.DOCUMENTATION : TabKeys.ATTRIBUTES,
     key: `tab`,
     route: "InstanceDetails",
   });
@@ -77,6 +76,23 @@ export const TabView: React.FC = () => {
       />
     ) : undefined;
 
+  useEffect(() => {
+    if (
+      selectedVersion !== String(instance.version) &&
+      activeTab === TabKeys.RESOURCES
+    ) {
+      setActiveTab(
+        docsAttributeLength ? TabKeys.DOCUMENTATION : TabKeys.ATTRIBUTES,
+      );
+    }
+  }, [
+    selectedVersion,
+    setActiveTab,
+    activeTab,
+    docsAttributeLength,
+    instance.version,
+  ]);
+
   return (
     <Panel variant="raised">
       <PanelMain>
@@ -87,7 +103,7 @@ export const TabView: React.FC = () => {
             aria-label="Instance-Details-Tabs"
             role="region"
           >
-            {docAttributeDescriptors.length > 0 && (
+            {docsAttributeLength > 0 && (
               <Tab
                 eventKey={TabKeys.DOCUMENTATION}
                 title={
@@ -123,7 +139,7 @@ export const TabView: React.FC = () => {
               }
               aria-label="events-content"
             >
-              <EventsTabContent />
+              <EventsTabContent selectedVersion={selectedVersion} />
             </Tab>
             <Tab
               eventKey={TabKeys.RESOURCES}
@@ -133,6 +149,7 @@ export const TabView: React.FC = () => {
                 </TabTitleText>
               }
               aria-label="resources-content"
+              isDisabled={String(instance.version) !== selectedVersion}
               isAriaDisabled={String(instance.version) !== selectedVersion}
               tooltip={disabledResourceTabTooltip}
             >

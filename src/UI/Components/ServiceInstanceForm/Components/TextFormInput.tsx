@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import {
+  Button,
   FormGroup,
   FormHelperText,
   HelperText,
@@ -15,7 +16,7 @@ import { SuggestionsPopover } from "./SuggestionsPopover";
 interface Props {
   attributeName: string;
   attributeValue: string;
-  description?: string;
+  description?: string | null;
   isOptional: boolean;
   type: TextInputTypes;
   typeHint?: string;
@@ -33,7 +34,7 @@ interface Props {
  * @param {Props} props - The props for the TextListFormInput component.
  *  @prop {string} attributeName - The name of the attribute.
  *  @prop {string} attributeValue - The value of the attribute.
- *  @prop {string} description - The description of the attribute.
+ *  @prop {string | null} description - The description of the attribute.
  *  @prop {boolean} isOptional - Whether the attribute is optional.
  *  @prop {boolean} shouldBeDisabled - Whether the attribute should be disabled. Default is false.
  *  @prop {string} typeHint - The type hint for the attribute.
@@ -84,23 +85,27 @@ export const TextFormInput: React.FC<Props> = ({
       isRequired={!isOptional}
       fieldId={attributeName}
       label={attributeName}
-      labelIcon={
+      labelHelp={
         typeHint ? (
           <Popover bodyContent={<div>{typeHint}</div>}>
-            <button
+            <Button
+              variant="control"
               type="button"
+              icon={<HelpIcon />}
               aria-label={`More info for ${attributeName} field`}
               onClick={(e) => e.preventDefault()}
-              className="pf-v5-c-form__group-label-help"
-            >
-              <HelpIcon />
-            </button>
+            />
           </Popover>
         ) : (
           <></>
         )
       }
     >
+      <FormHelperText>
+        <HelperText>
+          <HelperTextItem>{description}</HelperTextItem>
+        </HelperText>
+      </FormHelperText>
       {isTextarea ? (
         <TextArea
           value={inputValue || ""}
@@ -145,11 +150,6 @@ export const TextFormInput: React.FC<Props> = ({
           )}
         </>
       )}
-      <FormHelperText>
-        <HelperText>
-          <HelperTextItem>{description}</HelperTextItem>
-        </HelperText>
-      </FormHelperText>
     </FormGroup>
   );
 };

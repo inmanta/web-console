@@ -1,17 +1,19 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { useUrlStateWithString } from "@/Data";
+import { useGetInfiniteInstanceLogs } from "@/Data/Managers/V2/GETTERS/GetInfiniteInstanceLogs";
 import { useGetInstance } from "@/Data/Managers/V2/GETTERS/GetInstance";
-import { useGetInstanceLogs } from "@/Data/Managers/V2/GETTERS/GetInstanceLogs";
 import { useGetServiceModel } from "@/Data/Managers/V2/GETTERS/GetServiceModel";
 import { DependencyContext, useRouteParams, words } from "@/UI";
 import { ErrorView, LoadingView, PageContainer } from "@/UI/Components";
 import { InstanceDetailsContext } from "../Core/Context";
-import { PageTitleWithVersion } from "./Components/Sections";
+import { VersionedPageTitleWithActions } from "./Components/Sections";
 import { ServiceInstanceDetailsLayout } from "./ServiceInstanceDetailsLayout";
 
 interface Props {
   service: string;
   instance: string;
   instanceId: string;
+  version: string;
 }
 
 /**
@@ -27,6 +29,7 @@ export const ServiceInstanceDetails: React.FC<Props> = ({
   service,
   instance,
   instanceId,
+  version,
 }) => {
   const { environmentHandler } = useContext(DependencyContext);
   const environment = environmentHandler.useId();
@@ -37,11 +40,11 @@ export const ServiceInstanceDetails: React.FC<Props> = ({
     environment,
   ).useContinuous();
 
-  const logsQuery = useGetInstanceLogs(
+  const logsQuery = useGetInfiniteInstanceLogs(
     service,
     instanceId,
     environment,
-  ).useContinuous();
+  ).useContinuous(version);
 
   const serviceModelQuery = useGetServiceModel(
     service,
@@ -84,7 +87,7 @@ export const ServiceInstanceDetails: React.FC<Props> = ({
     >
       <PageContainer
         aria-label="Instance-Details-Success"
-        pageTitle={<PageTitleWithVersion title={pageTitle} />}
+        pageTitle={<VersionedPageTitleWithActions title={pageTitle} />}
       >
         <ServiceInstanceDetailsLayout />
       </PageContainer>
@@ -112,12 +115,31 @@ export const ServiceInstanceDetails: React.FC<Props> = ({
  */
 export const Page: React.FC = () => {
   const { service, instance, instanceId } = useRouteParams<"InstanceDetails">();
+  const [selectedVersion] = useUrlStateWithString<string>({
+    default: "",
+    key: `version`,
+    route: "InstanceDetails",
+  });
+  const [initialVersion, setInitialVersion] = useState("-1");
+
+  useEffect(() => {
+    if (initialVersion === "-1") {
+      setInitialVersion(selectedVersion);
+    }
+  }, [selectedVersion, initialVersion]);
+
+  //if the initial version is -1, return null,
+  //  it is done to avoid passing empty string to the InfiniteQuery before the version is set from the url, otherwise we would get inadequate data at initial load, and only after the update the correct one.
+  if (initialVersion === "-1") {
+    return null;
+  }
 
   return (
     <ServiceInstanceDetails
       service={service}
       instance={instance}
       instanceId={instanceId}
+      version={initialVersion}
     />
   );
 };

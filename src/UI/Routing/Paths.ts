@@ -1,7 +1,7 @@
 import { RouteKind } from "@/Core";
+import { InstanceComposer } from "@/Slices/InstanceComposerCreator";
 import { InstanceComposerViewer } from "@/Slices/InstanceComposerViewer";
 import { InstanceDetails } from "@/Slices/ServiceInstanceDetails";
-import { AgentProcess } from "@S/AgentProcess";
 import { Agents } from "@S/Agents";
 import { CompileDetails } from "@S/CompileDetails";
 import { CompileReports } from "@S/CompileReports";
@@ -19,7 +19,6 @@ import { EditInstance } from "@S/EditInstance";
 import { Events } from "@S/Events";
 import { Facts } from "@S/Facts";
 import { Home } from "@S/Home";
-import { InstanceComposer } from "@S/InstanceComposer";
 import { InstanceComposerEditor } from "@S/InstanceComposerEditor";
 import { Notification } from "@S/Notification";
 import { OrderDetails } from "@S/OrderDetails";
@@ -30,7 +29,6 @@ import { ResourceDetails } from "@S/ResourceDetails";
 import { DiscoveredResources } from "@S/ResourceDiscovery";
 import { ServiceCatalog } from "@S/ServiceCatalog";
 import { ServiceDetails } from "@S/ServiceDetails";
-import { ServiceInstanceHistory } from "@S/ServiceInstanceHistory";
 import { ServiceInventory } from "@S/ServiceInventory";
 import { Settings } from "@S/Settings";
 import { Status } from "@S/Status";
@@ -59,7 +57,6 @@ export const paths: Paths = {
   DuplicateInstance: DuplicateInstance.path,
   EditInstance: EditInstance.path,
   Events: Events.path,
-  History: ServiceInstanceHistory.path,
   InstanceComposer: InstanceComposer.path,
   InstanceComposerEditor: InstanceComposerEditor.path,
   InstanceComposerViewer: InstanceComposerViewer.path,
@@ -72,7 +69,6 @@ export const paths: Paths = {
   /**
    * Resource Manager
    */
-  AgentProcess: AgentProcess.path,
   Agents: Agents.path,
   DiscoveredResources: DiscoveredResources.path,
   Facts: Facts.path,

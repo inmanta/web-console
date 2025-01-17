@@ -1,4 +1,4 @@
-import React, { act } from "react";
+import React from "react";
 import { MemoryRouter, useLocation } from "react-router-dom";
 import { Table /* data-codemods */, Tbody, Tr } from "@patternfly/react-table";
 import { render, screen } from "@testing-library/react";
@@ -26,6 +26,7 @@ import {
   EnvironmentModifierImpl,
   EnvironmentHandlerImpl,
 } from "@/UI/Dependency";
+import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { CellWithCopyExpert } from "./CellWithCopyExpert";
 
 function setup(props, expertMode = false) {
@@ -92,29 +93,31 @@ function setup(props, expertMode = false) {
   });
   environmentModifier.setEnvironment("aaa");
   const component = (
-    <MemoryRouter initialEntries={[{ search: "?env=aaa" }]}>
-      <DependencyProvider
-        dependencies={{
-          ...dependencies,
-          queryResolver,
-          commandResolver,
-          environmentModifier,
-          environmentHandler,
-        }}
-      >
-        <StoreProvider store={store}>
-          <TreeTableCellContext.Provider value={{ onClick: onClickFn }}>
-            <Table>
-              <Tbody>
-                <Tr>
-                  <CellWithCopyExpert {...props} />
-                </Tr>
-              </Tbody>
-            </Table>
-          </TreeTableCellContext.Provider>
-        </StoreProvider>
-      </DependencyProvider>
-    </MemoryRouter>
+    <ModalProvider>
+      <MemoryRouter initialEntries={[{ search: "?env=aaa" }]}>
+        <DependencyProvider
+          dependencies={{
+            ...dependencies,
+            queryResolver,
+            commandResolver,
+            environmentModifier,
+            environmentHandler,
+          }}
+        >
+          <StoreProvider store={store}>
+            <TreeTableCellContext.Provider value={{ onClick: onClickFn }}>
+              <Table>
+                <Tbody>
+                  <Tr>
+                    <CellWithCopyExpert {...props} />
+                  </Tr>
+                </Tbody>
+              </Table>
+            </TreeTableCellContext.Provider>
+          </StoreProvider>
+        </DependencyProvider>
+      </MemoryRouter>
+    </ModalProvider>
   );
 
   return { component, apiHelper, scheduler, onClickFn };
@@ -139,9 +142,8 @@ test("Given CellWithCopyExpert When a cell has on click Then it is rendered as a
 
   expect(cell).toBeVisible();
 
-  await act(async () => {
-    await userEvent.click(cell);
-  });
+  await userEvent.click(cell);
+
   expect(onClickFn).toHaveBeenCalledWith(props.value);
 });
 
@@ -168,9 +170,9 @@ test("Given CellWithCopyExpert When a cell has entity and on click Then it is re
   const cell = await screen.findByText(props.value);
 
   expect(cell).toBeVisible();
-  await act(async () => {
-    await userEvent.click(cell);
-  });
+
+  await userEvent.click(cell);
+
   expect(onClickFn).toHaveBeenCalledWith(props.value, props.serviceName);
 });
 
@@ -206,16 +208,16 @@ test("Given CellWithCopyExpert When a cell has entity, multiple values and on cl
   const firstCell = await screen.findByText(someValue);
 
   expect(firstCell).toBeVisible();
-  await act(async () => {
-    await userEvent.click(firstCell);
-  });
+
+  await userEvent.click(firstCell);
+
   expect(onClickFn).toHaveBeenCalledWith(someValue, props.serviceName);
   const otherCell = await screen.findByText(someOtherValue);
 
   expect(otherCell).toBeVisible();
-  await act(async () => {
-    await userEvent.click(otherCell);
-  });
+
+  await userEvent.click(otherCell);
+
   expect(onClickFn).toHaveBeenCalledWith(someOtherValue, props.serviceName);
 });
 
@@ -244,19 +246,18 @@ test("Given CellWithCopyExpert When a cell has access to expertMode Then button 
   );
   const button = await screen.findByRole("button");
 
-  await act(async () => {
-    await userEvent.click(button);
-  });
+  await userEvent.click(button);
+
   const input = await screen.findByPlaceholderText("New Attribute");
 
   expect(input).toBeVisible();
-  await act(async () => {
-    await userEvent.click(button);
-  });
+
+  await userEvent.click(button);
+
   expect(input).not.toBeVisible();
-  await act(async () => {
-    await userEvent.click(button);
-  });
+
+  await userEvent.click(button);
+
   //had to find input once again as it lost
   const input2 = await screen.findByPlaceholderText("New Attribute");
 
@@ -290,19 +291,17 @@ test("Given CellWithCopyExpert When a cell has access to expertMode and input wi
 
   const button = await screen.findByRole("button");
 
-  await act(async () => {
-    await userEvent.click(button);
-  });
+  await userEvent.click(button);
+
   const input = await screen.findByPlaceholderText("New Attribute");
 
   expect(input).toBeVisible();
-  await act(async () => {
-    await userEvent.click(button);
-  });
+
+  await userEvent.click(button);
+
   expect(input).not.toBeVisible();
-  await act(async () => {
-    await userEvent.click(button);
-  });
+
+  await userEvent.click(button);
 
   //had to find input once again as it lost
   const input2 = await screen.findByPlaceholderText("New Attribute");
@@ -310,18 +309,16 @@ test("Given CellWithCopyExpert When a cell has access to expertMode and input wi
   expect(input2).toBeVisible();
 
   // set value and click check/submit button
-  await act(async () => {
-    await userEvent.clear(input2);
-    await userEvent.type(input2, newValue);
-  });
+  await userEvent.clear(input2);
+  await userEvent.type(input2, newValue);
+
   expect(input2).toHaveValue(newValue);
 
   const submitButton = await screen.findByTestId("inline-submit");
 
   expect(submitButton).toBeVisible();
-  await act(async () => {
-    await userEvent.click(submitButton);
-  });
+
+  await userEvent.click(submitButton);
 
   //expect dialog to pop-up
   const dialog = await screen.findByRole("dialog");
@@ -331,39 +328,34 @@ test("Given CellWithCopyExpert When a cell has access to expertMode and input wi
   const dialogCancel = await screen.findByTestId("dialog-cancel");
 
   expect(dialogCancel).toBeVisible();
-  await act(async () => {
-    await userEvent.click(dialogCancel);
-  });
+
+  await userEvent.click(dialogCancel);
+
   expect(dialog).not.toBeVisible();
 
   //click sumbit button again then close it by X icon
-  await act(async () => {
-    await userEvent.click(submitButton);
-  });
+  await userEvent.click(submitButton);
+
   const dialog2 = await screen.findByRole("dialog");
 
   expect(dialog2).toBeVisible();
 
   const closeButton = screen.getByLabelText("Close");
 
-  await act(async () => {
-    await userEvent.click(closeButton);
-  });
+  await userEvent.click(closeButton);
+
   expect(dialog2).not.toBeVisible();
 
   //click sumbit button again then click confirmation button in the dialog and expect to patch request to be sent
-  await act(async () => {
-    await userEvent.click(submitButton);
-  });
+  await userEvent.click(submitButton);
+
   const dialog3 = await screen.findByRole("dialog");
 
   expect(dialog3).toBeVisible();
 
   const dialogSubmit = await screen.findByTestId("dialog-submit");
 
-  await act(async () => {
-    await userEvent.click(dialogSubmit);
-  });
+  await userEvent.click(dialogSubmit);
 
   expect(
     apiHelper.pendingRequests.find((request) => request.method === "PATCH"),
@@ -425,27 +417,23 @@ test("Given CellWithCopyExpert When a embedded cell has access to expertMode and
 
   const editButton = await screen.findByRole("button");
 
-  await act(async () => {
-    await userEvent.click(editButton);
-  });
+  await userEvent.click(editButton);
 
   const input = await screen.findByPlaceholderText("New Attribute");
 
   expect(input).toBeVisible();
 
   // set value and click check/submit button
-  await act(async () => {
-    await userEvent.clear(input);
-    await userEvent.type(input, newValue);
-  });
+  await userEvent.clear(input);
+  await userEvent.type(input, newValue);
+
   expect(input).toHaveValue(newValue);
 
   const submitButton = await screen.findByTestId("inline-submit");
 
   expect(submitButton).toBeVisible();
-  await act(async () => {
-    await userEvent.click(submitButton);
-  });
+
+  await userEvent.click(submitButton);
 
   const dialog = await screen.findByRole("dialog");
 
@@ -453,9 +441,7 @@ test("Given CellWithCopyExpert When a embedded cell has access to expertMode and
 
   const dialogSubmit = await screen.findByTestId("dialog-submit");
 
-  await act(async () => {
-    await userEvent.click(dialogSubmit);
-  });
+  await userEvent.click(dialogSubmit);
 
   expect(
     apiHelper.pendingRequests.find((request) => request.method === "PATCH"),
@@ -525,26 +511,21 @@ test.each`
 
     const editButton = await screen.findByRole("button");
 
-    await act(async () => {
-      await userEvent.click(editButton);
-    });
+    await userEvent.click(editButton);
 
     const input = await screen.findByPlaceholderText("New Attribute");
 
     expect(input).toBeVisible();
 
     // set value and click check/submit button
-    await act(async () => {
-      await userEvent.clear(input);
-      await userEvent.type(input, newValue);
-    });
+    await userEvent.clear(input);
+    await userEvent.type(input, newValue);
 
     const submitButton = await screen.findByTestId("inline-submit");
 
     expect(submitButton).toBeVisible();
-    await act(async () => {
-      await userEvent.click(submitButton);
-    });
+
+    await userEvent.click(submitButton);
 
     const dialog = await screen.findByRole("dialog");
 
@@ -552,9 +533,7 @@ test.each`
 
     const dialogSubmit = await screen.findByTestId("dialog-submit");
 
-    await act(async () => {
-      await userEvent.click(dialogSubmit);
-    });
+    await userEvent.click(dialogSubmit);
 
     expect(
       apiHelper.pendingRequests.find((request) => request.method === "PATCH"),

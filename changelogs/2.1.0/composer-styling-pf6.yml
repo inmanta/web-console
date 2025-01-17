@@ -1,0 +1,3 @@
+description: match composer element styling with patternfly v6, resolve e2e issues after upgrade
+change-type: patch
+destination-branches: [master]

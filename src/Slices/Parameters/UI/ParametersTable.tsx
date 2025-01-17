@@ -1,7 +1,7 @@
 import React from "react";
 import {
   OnSort,
-  Table /* data-codemods */,
+  Table,
   TableVariant,
   Th,
   Thead,
@@ -52,7 +52,7 @@ export const ParametersTable: React.FC<Props> = ({
         : {};
 
       return (
-        <Th key={displayName} {...sortParams}>
+        <Th key={displayName} {...sortParams} width={20}>
           {displayName}
         </Th>
       );

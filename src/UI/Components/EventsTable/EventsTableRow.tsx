@@ -6,7 +6,6 @@ import {
   DescriptionListTerm,
 } from "@patternfly/react-core";
 import { ExpandableRowContent, Tbody, Td, Tr } from "@patternfly/react-table";
-import styled from "styled-components";
 import { EventRow } from "@/Core";
 import { DateWithTooltip } from "@/UI/Components/DateWithTooltip";
 import { EventIcon } from "@/UI/Components/EventIcon";
@@ -28,8 +27,13 @@ export const EventsTableRow: React.FC<Props> = ({
   onToggle,
   numberOfColumns,
 }) => (
-  <StyledBody isExpanded={false} $transition={row}>
-    <Tr id={`event-row-${row.id}`} aria-label="Event table row">
+  <Tbody isExpanded={false}>
+    <Tr
+      id={`event-row-${row.id}`}
+      aria-label="Event table row"
+      className={row.isErrorTransition ? "warning" : ""}
+      isStriped={row.ignoredTransition}
+    >
       <Td
         expand={{
           rowIndex: index,
@@ -47,7 +51,12 @@ export const EventsTableRow: React.FC<Props> = ({
       <Td>{row.source}</Td>
       <Td>{row.destination}</Td>
     </Tr>
-    <Tr isExpanded={isExpanded} data-testid={`details_${row.id}`}>
+    <Tr
+      isExpanded={isExpanded}
+      data-testid={`details_${row.id}`}
+      className={row.isErrorTransition ? "warning" : ""}
+      isStriped={row.ignoredTransition}
+    >
       <Td colSpan={numberOfColumns}>
         <ExpandableRowContent>
           <DescriptionList>
@@ -81,16 +90,5 @@ export const EventsTableRow: React.FC<Props> = ({
         </ExpandableRowContent>
       </Td>
     </Tr>
-  </StyledBody>
+  </Tbody>
 );
-
-type Transition = Pick<EventRow, "ignoredTransition" | "isErrorTransition">;
-
-const StyledBody = styled(Tbody)<{ $transition: Transition }>`
-  ${({ $transition }) =>
-    $transition.isErrorTransition
-      ? "background-color: var(--pf-v5-global--palette--gold-50)"
-      : $transition.ignoredTransition
-        ? "background-color: var(--pf-v5-global--palette--black-200)"
-        : ""};
-`;

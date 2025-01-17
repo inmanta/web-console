@@ -101,5 +101,5 @@ const infos: Info[] = groups.map((group) => ({
 
 const StretchedLegendBar = styled(LegendBar)`
   flex-grow: 1;
-  margin-right: var(--pf-v5-global--spacer--lg);
+  margin-right: var(--pf-t--global--spacer--lg);
 `;

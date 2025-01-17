@@ -1,33 +1,25 @@
 import React from "react";
-import { Icon } from "@patternfly/react-core";
+import { Content, Flex, FlexItem, Icon } from "@patternfly/react-core";
 import { ArrowsAltHIcon } from "@patternfly/react-icons";
-import styled from "styled-components";
 import { Diff } from "@/Core";
 
 export const Versus: React.FC<Diff.Identifiers> = ({ from, to }) => (
-  <VersusContainer>
-    <IntroHeader>{from}</IntroHeader>
-    <Icon size="md">
-      <StyledIcon />
-    </Icon>
-    <IntroHeader isTarget>{to}</IntroHeader>
-  </VersusContainer>
+  <Flex
+    direction={{ default: "row" }}
+    alignItems={{ default: "alignItemsBaseline" }}
+    fullWidth={{ default: "fullWidth" }}
+    justifyContent={{ default: "justifyContentCenter" }}
+  >
+    <FlexItem>
+      <Content component="h2">{from}</Content>
+    </FlexItem>
+    <FlexItem>
+      <Icon size="md">
+        <ArrowsAltHIcon />
+      </Icon>
+    </FlexItem>
+    <FlexItem>
+      <Content component="h2">{to}</Content>
+    </FlexItem>
+  </Flex>
 );
-
-const StyledIcon = styled(ArrowsAltHIcon)`
-  flex-shrink: 0;
-  height: 36px;
-`;
-
-const IntroHeader = styled.div<{ isTarget?: boolean }>`
-  font-size: 21px;
-  line-height: 36px;
-  width: 100%;
-  text-align: center;
-  ${(p) => (p.isTarget ? "padding-right" : "padding-left")}: 12px;
-`;
-
-const VersusContainer = styled.div`
-  display: flex;
-  justify-content: center;
-`;

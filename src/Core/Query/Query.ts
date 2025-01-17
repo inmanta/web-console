@@ -59,7 +59,6 @@ import {
   GetServices,
   GetServicesManifest,
 } from "@/Data/Managers/Services/interface";
-import * as GetAgentProcess from "@S/AgentProcess/Core/Query";
 import * as GetAgents from "@S/Agents/Core/Query";
 import * as GetCompileDetails from "@S/CompileDetails/Core/Query";
 import * as GetCompileReports from "@S/CompileReports/Core/Query";
@@ -84,7 +83,6 @@ import * as GetResourceHistory from "@S/ResourceDetails/Core/GetResourceHistoryQ
 import * as GetResourceLogs from "@S/ResourceDetails/Core/GetResourceLogsQuery";
 import * as GetDiscoveredResources from "@S/ResourceDiscovery/Core/Query";
 import * as GetCallbacks from "@S/ServiceDetails/Core/GetCallbacksQuery";
-import * as GetInstanceLogs from "@S/ServiceInstanceHistory/Core/Query";
 import * as GetEnvironmentDetails from "@S/Settings/Core/GetEnvironmentDetailsQuery";
 import * as GetProjects from "@S/Settings/Core/GetProjectsQuery";
 
@@ -96,7 +94,6 @@ export type Query =
   | GetServiceConfig
   | GetInstanceResources
   | GetInstanceEvents.Query
-  | GetInstanceLogs.Query
   | GetInstanceConfig
   | GetMetrics.Query
   | GetDiagnostics.Query
@@ -120,7 +117,6 @@ export type Query =
   | GetFacts.Query
   | GetResourceFacts.Query
   | GetAgents.Query
-  | GetAgentProcess.Query
   | GetDesiredStates.Query
   | GetVersionResources.Query
   | GetCompilerStatus
@@ -147,7 +143,6 @@ interface Manifest {
   GetServiceConfig: GetServiceConfigManifest;
   GetInstanceResources: GetInstanceResourcesManifest;
   GetInstanceEvents: GetInstanceEvents.Manifest;
-  GetInstanceLogs: GetInstanceLogs.Manifest;
   GetInstanceConfig: GetInstanceConfigManifest;
   GetDiagnostics: GetDiagnostics.Manifest;
   GetDiscoveredResources: GetDiscoveredResources.Manifest;
@@ -171,7 +166,6 @@ interface Manifest {
   GetEnvironmentsContinuous: GetEnvironmentsContinuousManifest;
   GetResourceFacts: GetResourceFacts.Manifest;
   GetAgents: GetAgents.Manifest;
-  GetAgentProcess: GetAgentProcess.Manifest;
   GetDesiredStates: GetDesiredStates.Manifest;
   GetVersionResources: GetVersionResources.Manifest;
   GetCompilerStatus: GetCompilerStatusManifest;

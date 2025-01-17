@@ -44,7 +44,6 @@ import {
   EnvironmentDetailsOneTimeQueryManager,
 } from "@/Slices/Settings/Data/GetEnvironmentDetails";
 import { GetProjectsQueryManager } from "@/Slices/Settings/Data/GetProjects";
-import { GetAgentProcessQueryManager } from "@S/AgentProcess/Data";
 import { GetAgentsQueryManager } from "@S/Agents/Data";
 import { CompileDetailsQueryManager } from "@S/CompileDetails/Data";
 import { CompileReportsQueryManager } from "@S/CompileReports/Data";
@@ -52,10 +51,6 @@ import {
   GetDryRunReportQueryManager,
   GetDryRunsQueryManager,
 } from "@S/ComplianceCheck/Data";
-import {
-  GetDesiredStatesQueryManager,
-  GetDesiredStatesStateHelper,
-} from "@S/DesiredState/Data";
 import {
   GetDesiredStateDiffQueryManager,
   GetDesiredStateDiffStateHelper,
@@ -65,10 +60,6 @@ import {
   GetVersionResourcesStateHelper,
 } from "@S/DesiredStateDetails/Data";
 import { GetDesiredStateResourceDetailsQueryManager } from "@S/DesiredStateResourceDetails/Data";
-import {
-  DiagnosticsQueryManager,
-  DiagnosticsStateHelper,
-} from "@S/Diagnose/Data";
 import { EventsQueryManager, EventsStateHelper } from "@S/Events/Data";
 import { GetFactsQueryManager } from "@S/Facts/Data";
 import {
@@ -96,10 +87,6 @@ import {
   CallbacksQueryManager,
   CallbacksStateHelper,
 } from "@S/ServiceDetails/Data";
-import {
-  GetInstanceLogsQueryManager,
-  GetInstanceLogsStateHelper,
-} from "@S/ServiceInstanceHistory/Data";
 import {
   GetEnvironmentsContinuousQueryManager,
   GetEnvironmentsContinuousStateHelper,
@@ -207,20 +194,10 @@ export class QueryManagerResolverImpl implements QueryManagerResolver {
         EventsStateHelper(this.store),
         this.scheduler,
       ),
-      GetInstanceLogsQueryManager(
-        this.apiHelper,
-        GetInstanceLogsStateHelper(this.store),
-        this.scheduler,
-      ),
       InstanceConfigQueryManager(
         this.apiHelper,
         InstanceConfigStateHelper(this.store),
         new InstanceConfigFinalizer(serviceStateHelper),
-      ),
-      DiagnosticsQueryManager(
-        this.apiHelper,
-        DiagnosticsStateHelper(this.store),
-        this.scheduler,
       ),
       GetDiscoveredResourcesQueryManager(
         this.apiHelper,
@@ -263,12 +240,6 @@ export class QueryManagerResolverImpl implements QueryManagerResolver {
         this.scheduler,
       ),
       GetAgentsQueryManager(this.store, this.apiHelper, this.scheduler),
-      GetAgentProcessQueryManager(this.store, this.apiHelper),
-      GetDesiredStatesQueryManager(
-        this.apiHelper,
-        GetDesiredStatesStateHelper(this.store),
-        this.scheduler,
-      ),
       GetVersionResourcesQueryManager(
         this.apiHelper,
         GetVersionResourcesStateHelper(this.store),

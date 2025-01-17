@@ -1,21 +1,25 @@
 import React, { useContext } from "react";
 import {
+  Button,
   Divider,
+  Flex,
+  FlexItem,
   Panel,
   PanelHeader,
   PanelMain,
   PanelMainBody,
   Title,
 } from "@patternfly/react-core";
-import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
+import { Table, Tbody, Td, Tr } from "@patternfly/react-table";
 import { ServiceModel } from "@/Core";
+import { InstanceLog } from "@/Core/Domain/HistoryLog";
 import { useUrlStateWithString } from "@/Data";
-import { InstanceLog } from "@/Slices/ServiceInstanceHistory/Core/Domain";
-import { words } from "@/UI";
+import { DependencyContext, words } from "@/UI";
 import {
   DateWithTooltip,
   ErrorView,
-  InstanceState,
+  InstanceStateLabel,
+  Link,
   LoadingView,
 } from "@/UI/Components";
 import { InstanceDetailsContext } from "../../../Core/Context";
@@ -34,7 +38,7 @@ import { InstanceDetailsContext } from "../../../Core/Context";
  */
 export const HistorySection: React.FC = () => {
   const { instance, logsQuery } = useContext(InstanceDetailsContext);
-
+  const { routeManager } = useContext(DependencyContext);
   const [selectedVersion, setSelectedVersion] = useUrlStateWithString<string>({
     default: String(instance.version),
     key: `version`,
@@ -44,39 +48,60 @@ export const HistorySection: React.FC = () => {
   return (
     <Panel variant="raised" isScrollable>
       <PanelHeader>
-        <Title headingLevel="h2">
-          {words("instanceDetails.history.title")}
-        </Title>
+        <Flex justifyContent={{ default: "justifyContentSpaceBetween" }}>
+          <FlexItem>
+            <Title headingLevel="h2">
+              {words("instanceDetails.history.title")}
+            </Title>
+          </FlexItem>
+          <FlexItem>
+            <Link
+              pathname={routeManager.getUrl("Diagnose", {
+                service: instance.service_entity,
+                instance: instance.id,
+              })}
+              isDisabled={instance.deleted}
+            >
+              <Button variant="secondary">
+                {words("instanceDetails.history.diagnose")}
+              </Button>
+            </Link>
+          </FlexItem>
+        </Flex>
       </PanelHeader>
       <Divider />
       <PanelMain>
         <PanelMainBody>
           {logsQuery.isLoading && <LoadingView ariaLabel="History-Loading" />}
-          {logsQuery.isError && (
+          {(logsQuery.isError ||
+            logsQuery.isFetchNextPageError ||
+            logsQuery.isFetchPreviousPageError) && (
             <ErrorView
               message={words("instanceDetails.history.error")}
               ariaLabel="History-Error"
             />
           )}
-          {/**Because of the caching of React queries,
-           * there's an additional check to make sure the table shows the data only
-           * when the section is not in error state or loading.
-           * Otherwise, it will still display the stale data under the error messages above.
-           */}
-          {logsQuery.data && !logsQuery.isLoading && !logsQuery.isError && (
-            <Table aria-label="VersionHistoryTable" isStickyHeader>
-              <Thead>
-                <Tr>
-                  <Th style={{ minWidth: "100px" }}>
-                    {words("instanceDetails.history.table.version")}
-                  </Th>
-                  <Th style={{ minWidth: "100px" }}>
-                    {words("instanceDetails.history.table.date")}
-                  </Th>
-                  <Th>{words("instanceDetails.history.table.status")}</Th>
-                </Tr>
-              </Thead>
+          {logsQuery.isSuccess && (
+            <Table aria-label="VersionHistoryTable">
               <Tbody>
+                {logsQuery.hasPreviousPage && (
+                  <Tr isBorderRow>
+                    <Td colSpan={3}>
+                      <Flex
+                        justifyContent={{ default: "justifyContentCenter" }}
+                      >
+                        <Button
+                          variant="tertiary"
+                          size="sm"
+                          isLoading={logsQuery.isFetchingPreviousPage}
+                          onClick={() => logsQuery.fetchPreviousPage()}
+                        >
+                          {words("load.next")}
+                        </Button>
+                      </Flex>
+                    </Td>
+                  </Tr>
+                )}
                 {logsQuery.data.map((log: InstanceLog) => (
                   <Tr
                     key={String(log.version)}
@@ -85,10 +110,29 @@ export const HistorySection: React.FC = () => {
                     onRowClick={() => setSelectedVersion(String(log.version))}
                     isRowSelected={String(log.version) === selectedVersion}
                     aria-label="History-Row"
+                    className={log.deleted ? "danger" : ""}
                   >
                     <HistoryRowContent log={log} />
                   </Tr>
                 ))}
+                {logsQuery.hasNextPage && (
+                  <Tr>
+                    <Td colSpan={3}>
+                      <Flex
+                        justifyContent={{ default: "justifyContentCenter" }}
+                      >
+                        <Button
+                          variant="tertiary"
+                          size="sm"
+                          isLoading={logsQuery.isFetchingNextPage}
+                          onClick={() => logsQuery.fetchNextPage()}
+                        >
+                          {words("load.previous")}
+                        </Button>
+                      </Flex>
+                    </Td>
+                  </Tr>
+                )}
               </Tbody>
             </Table>
           )}
@@ -117,10 +161,13 @@ const HistoryRowContent: React.FC<HistoryRowProps> = ({ log }) => {
   return (
     <>
       <Td dataLabel="version">{String(log.version)}</Td>
-      <Td dataLabel="date">
-        <DateWithTooltip timestamp={log.created_at} />
+      <Td
+        dataLabel="timestamp"
+        data-testid={`version-${log.version}-timestamp`}
+      >
+        <DateWithTooltip isFull timestamp={log.timestamp} />
       </Td>
-      <Td dataLabel="state">
+      <Td dataLabel="state" data-testid={`version-${log.version}-state`}>
         <StateLabel state={log.state} service={serviceModelQuery.data} />
       </Td>
     </>
@@ -140,7 +187,7 @@ interface StateLabelProps {
  *  @prop {string} state - the state that needs to be be matched against the available states in the model
  * @returns {React.FC<StateLabelProps>} A React Component displaying a label tag for the state with the right color
  */
-const StateLabel: React.FC<StateLabelProps> = ({ service, state }) => {
+export const StateLabel: React.FC<StateLabelProps> = ({ service, state }) => {
   if (!service) {
     return state;
   }
@@ -154,7 +201,7 @@ const StateLabel: React.FC<StateLabelProps> = ({ service, state }) => {
     return null;
   }
 
-  return InstanceState({
+  return InstanceStateLabel({
     name: lifecycleState.name,
     label: lifecycleState.label,
   });

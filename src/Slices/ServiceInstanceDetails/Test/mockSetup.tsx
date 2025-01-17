@@ -1,4 +1,4 @@
-import React from "react";
+import React, { PropsWithChildren } from "react";
 import { MemoryRouter, useLocation } from "react-router-dom";
 import { Page } from "@patternfly/react-core";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -22,6 +22,37 @@ import { ServiceInstanceDetails } from "../UI/Page";
 export const setupServiceInstanceDetails = (
   expertMode: boolean = false,
 ): React.JSX.Element => {
+  const component = (
+    <SetupWrapper expertMode={expertMode}>
+      <Page>
+        <ServiceInstanceDetails
+          instance="core1"
+          service="mobileCore"
+          instanceId="1d96a1ab"
+          version="1"
+        />
+      </Page>
+    </SetupWrapper>
+  );
+
+  return component;
+};
+
+interface Props {
+  expertMode: boolean;
+}
+
+/**
+ * Wrapper for the test setup of the Instance Details page.
+ *
+ * @params {Props} props - The props of the component.
+ * @param {boolean} expertMode - whether to activate the expert mode in the state or not.
+ * @returns {React.FC<PropsWithChildren<Props>>} A React Component that provides the test setup for Instance Details Page
+ */
+export const SetupWrapper: React.FC<PropsWithChildren<Props>> = ({
+  children,
+  expertMode,
+}) => {
   const queryClient = new QueryClient();
   const store = getStoreInstance();
 
@@ -76,7 +107,7 @@ export const setupServiceInstanceDetails = (
 
   environmentModifier.setEnvironment("aaa");
 
-  const component = (
+  return (
     <MemoryRouter
       initialEntries={[
         {
@@ -93,19 +124,9 @@ export const setupServiceInstanceDetails = (
             environmentModifier,
           }}
         >
-          <StoreProvider store={store}>
-            <Page>
-              <ServiceInstanceDetails
-                instance="core1"
-                service="mobileCore"
-                instanceId="1d96a1ab"
-              />
-            </Page>
-          </StoreProvider>
+          <StoreProvider store={store}>{children}</StoreProvider>
         </DependencyProvider>
       </QueryClientProvider>
     </MemoryRouter>
   );
-
-  return component;
 };

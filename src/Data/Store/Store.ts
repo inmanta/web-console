@@ -8,10 +8,6 @@ import {
   DiscoveredResourcesSlice,
   discoveredResourcesSlice,
 } from "@/Slices/ResourceDiscovery/Data/Store";
-import {
-  agentProcessSlice,
-  AgentProcessSlice,
-} from "@S/AgentProcess/Data/Store";
 import { agentsSlice, AgentsSlice } from "@S/Agents/Data/Store";
 import {
   compileDetailsSlice,
@@ -30,10 +26,6 @@ import {
   DryRunsSlice,
 } from "@S/ComplianceCheck/Data/DryRunsSlice";
 import {
-  DesiredStatesSlice,
-  desiredStatesSlice,
-} from "@S/DesiredState/Data/Store";
-import {
   desiredStateDiffSlice,
   DesiredStateDiffSlice,
 } from "@S/DesiredStateCompare/Data/Store";
@@ -45,7 +37,6 @@ import {
   versionedResourceDetailsSlice,
   VersionedResourceDetailsSlice,
 } from "@S/DesiredStateResourceDetails/Data/Store";
-import { diagnosticsSlice, DiagnosticsSlice } from "@S/Diagnose/Data/Store";
 import { factsSlice, FactsSlice } from "@S/Facts/Data/Store";
 import {
   notificationSlice,
@@ -72,10 +63,6 @@ import {
   CallbacksSlice,
   callbacksSlice,
 } from "@S/ServiceDetails/Data/CallbacksSlice";
-import {
-  InstanceLogsSlice,
-  instanceLogsSlice,
-} from "@S/ServiceInstanceHistory/Data/Store";
 import { serverStatusSlice, ServerStatusSlice } from "@S/Status/Data/Store";
 import { environmentSlice, EnvironmentSlice } from "./EnvironmentSlice";
 import {
@@ -100,14 +87,11 @@ import {
 import { servicesSlice, ServicesSlice } from "./ServicesSlice";
 
 export interface StoreModel {
-  agentProcess: AgentProcessSlice;
   agents: AgentsSlice;
   callbacks: CallbacksSlice;
   compileDetails: CompileDetailsSlice;
   compileReports: CompileReportsSlice;
   desiredStateDiff: DesiredStateDiffSlice;
-  desiredStates: DesiredStatesSlice;
-  diagnostics: DiagnosticsSlice;
   discoveredResources: DiscoveredResourcesSlice;
   dryRunReport: DryRunReportSlice;
   dryRuns: DryRunsSlice;
@@ -115,7 +99,6 @@ export interface StoreModel {
   events: EventsSlice;
   facts: FactsSlice;
   instanceConfig: InstanceConfigSlice;
-  instanceLogs: InstanceLogsSlice;
   instanceResources: InstanceResourcesSlice;
   notification: NotificationSlice;
   parameters: ParametersSlice;
@@ -137,14 +120,11 @@ export interface StoreModel {
 }
 
 export const storeModel: StoreModel = {
-  agentProcess: agentProcessSlice,
   agents: agentsSlice,
   callbacks: callbacksSlice,
   compileDetails: compileDetailsSlice,
   compileReports: compileReportsSlice,
   desiredStateDiff: desiredStateDiffSlice,
-  desiredStates: desiredStatesSlice,
-  diagnostics: diagnosticsSlice,
   discoveredResources: discoveredResourcesSlice,
   dryRunReport: dryRunReportSlice,
   dryRuns: dryRunsSlice,
@@ -152,7 +132,6 @@ export const storeModel: StoreModel = {
   events: eventsSlice,
   facts: factsSlice,
   instanceConfig: instanceConfigSlice,
-  instanceLogs: instanceLogsSlice,
   instanceResources: instanceResourcesSlice,
   notification: notificationSlice,
   parameters: parametersSlice,

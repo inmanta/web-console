@@ -31,9 +31,8 @@ export const RowOptions: React.FC<{
           variant="plain"
           onClick={onToggleClick}
           isExpanded={isOpen}
-        >
-          <EllipsisVIcon />
-        </MenuToggle>
+          icon={<EllipsisVIcon />}
+        />
       )}
       isOpen={isOpen}
     >

@@ -2,8 +2,6 @@ import React, { useContext, useEffect, useState } from "react";
 import { Editor, OnValidate, useMonaco } from "@monaco-editor/react";
 import { Alert, Panel, Spinner } from "@patternfly/react-core";
 import { InfoAltIcon } from "@patternfly/react-icons";
-import styled from "styled-components";
-
 import { useGetJSONSchema } from "@/Data/Managers/V2/GETTERS/GetJSONSchema";
 import { DependencyContext } from "@/UI";
 
@@ -116,7 +114,7 @@ export const JSONEditor: React.FC<Props> = ({
   return isLoading ? (
     <Spinner data-testid="loading-spinner" />
   ) : (
-    <EditorWrapper data-testid="JSON-Editor-Wrapper">
+    <div data-testid="JSON-Editor-Wrapper">
       <Editor
         height={"calc(100vh - 550px)"}
         width={"100%"}
@@ -128,7 +126,7 @@ export const JSONEditor: React.FC<Props> = ({
         options={{ domReadOnly: readOnly, readOnly: readOnly }}
       />
       {!readOnly && (
-        <PanelWrapper variant="bordered" data-testid="Error-container">
+        <Panel data-testid="Error-container">
           {errors.length > 0 && (
             <Alert
               isInline
@@ -142,16 +140,8 @@ export const JSONEditor: React.FC<Props> = ({
               ))}
             </Alert>
           )}
-        </PanelWrapper>
+        </Panel>
       )}
-    </EditorWrapper>
+    </div>
   );
 };
-
-const EditorWrapper = styled.div`
-  border: 1px solid #d2d2d2;
-`;
-
-const PanelWrapper = styled(Panel)`
-  min-height: 55px;
-`;

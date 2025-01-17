@@ -1,7 +1,7 @@
 import { createContext } from "react";
-import { UseQueryResult } from "@tanstack/react-query";
+import { UseInfiniteQueryResult, UseQueryResult } from "@tanstack/react-query";
 import { ServiceInstanceModel, ServiceModel } from "@/Core";
-import { InstanceLog } from "@/Slices/ServiceInstanceHistory/Core/Domain";
+import { InstanceLog } from "@/Core/Domain/HistoryLog";
 
 /**
  * The InstanceProviderInterface
@@ -9,17 +9,17 @@ import { InstanceLog } from "@/Slices/ServiceInstanceHistory/Core/Domain";
  */
 interface InstanceProviderInterface {
   instance: ServiceInstanceModel;
-  logsQuery: UseQueryResult<InstanceLog[], Error>;
+  logsQuery: UseInfiniteQueryResult<InstanceLog[], Error>;
   serviceModelQuery: UseQueryResult<ServiceModel, Error>;
 }
 
 /**
- * IntstanceDetailsContext
+ * InstanceDetailsContext
  * Should be used to provide context to the InstanceDetails page.
  * The logsQuery contains both the events and history data.
  */
 export const InstanceDetailsContext = createContext<InstanceProviderInterface>({
   instance: {} as ServiceInstanceModel,
-  logsQuery: {} as UseQueryResult<InstanceLog[], Error>,
+  logsQuery: {} as UseInfiniteQueryResult<InstanceLog[], Error>,
   serviceModelQuery: {} as UseQueryResult<ServiceModel, Error>,
 });

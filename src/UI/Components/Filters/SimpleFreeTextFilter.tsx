@@ -1,13 +1,10 @@
 import React from "react";
 import {
-  Button,
   ToolbarFilter,
   InputGroup,
-  TextInput,
-  ButtonVariant,
   InputGroupItem,
+  SearchInput,
 } from "@patternfly/react-core";
-import { SearchIcon } from "@patternfly/react-icons";
 
 interface Props {
   isVisible: boolean;
@@ -26,20 +23,16 @@ export const SimpleFreeTextFilter: React.FC<Props> = ({
 }) => {
   const removeChip = () => update(undefined);
 
-  const onSelect = () => {
-    update(searchEntry);
-  };
-
   return (
     <ToolbarFilter
-      chips={searchEntry ? [searchEntry] : []}
-      deleteChip={removeChip}
+      labels={searchEntry ? [searchEntry] : []}
+      deleteLabel={removeChip}
       categoryName={filterPropertyName}
       showToolbarItem={isVisible}
     >
       <InputGroup>
         <InputGroupItem isFill>
-          <TextInput
+          <SearchInput
             data-testid={`${filterPropertyName}FilterInput`}
             name={`${filterPropertyName}FilterInput`}
             type="search"
@@ -48,15 +41,6 @@ export const SimpleFreeTextFilter: React.FC<Props> = ({
             value={searchEntry}
             placeholder={placeholder}
           />
-        </InputGroupItem>
-        <InputGroupItem>
-          <Button
-            variant={ButtonVariant.control}
-            aria-label="submit search"
-            onClick={onSelect}
-          >
-            <SearchIcon />
-          </Button>
         </InputGroupItem>
       </InputGroup>
     </ToolbarFilter>

@@ -5,8 +5,8 @@ import {
   AccordionItem,
   AccordionToggle,
 } from "@patternfly/react-core";
-import { InstanceAttributeModel } from "@/Core";
-import { InstanceLog } from "@/Slices/ServiceInstanceHistory/Core/Domain";
+import { InstanceAttributeModel, ServiceInstanceModel } from "@/Core";
+import { InstanceLog } from "@/Core/Domain/HistoryLog";
 import { MarkdownCard } from "@/Slices/ServiceInventory/UI/Tabs/MarkdownCard";
 import { words } from "@/UI";
 import { ErrorView, LoadingView } from "@/UI/Components";
@@ -46,28 +46,36 @@ export const DocumentationTabContent: React.FC<Props> = ({
   docAttributeDescriptors,
   selectedVersion,
 }) => {
-  const { logsQuery } = useContext(InstanceDetailsContext);
+  const { logsQuery, instance } = useContext(InstanceDetailsContext);
   const [expanded, setExpanded] = useState(0);
 
-  if (logsQuery.isLoading) {
-    return (
-      <TabContentWrapper id={"documentation"}>
-        <LoadingView />
-      </TabContentWrapper>
-    );
+  const isLatest = selectedVersion === String(instance.version);
+  let selectedSet: InstanceAttributeModel | void;
+
+  if (!isLatest) {
+    if (logsQuery.isLoading) {
+      return (
+        <TabContentWrapper id="documentation">
+          <LoadingView />
+        </TabContentWrapper>
+      );
+    }
+
+    if (!logsQuery.data) {
+      return (
+        <TabContentWrapper id="documentation">
+          <ErrorView
+            message={words("instanceDetails.tabs.documentation.noData")}
+          />
+        </TabContentWrapper>
+      );
+    }
+
+    selectedSet = getSelectedAttributeSet(logsQuery.data, selectedVersion);
+  } else {
+    selectedSet = getSelectedAttributeSetFromInstance(instance);
   }
 
-  if (!logsQuery.data) {
-    return (
-      <TabContentWrapper id={"documentation"}>
-        <ErrorView
-          message={words("instanceDetails.tabs.documentation.noData")}
-        />
-      </TabContentWrapper>
-    );
-  }
-
-  const selectedSet = getSelectedAttributeSet(logsQuery.data, selectedVersion);
   const sections = selectedSet
     ? getDocumentationSections(docAttributeDescriptors, selectedSet)
     : [];
@@ -80,24 +88,31 @@ export const DocumentationTabContent: React.FC<Props> = ({
     }
   };
 
+  if (sections.length === 1) {
+    return (
+      <TabContentWrapper id="documentation">
+        <MarkdownCard
+          attributeValue={sections[0].value}
+          web_title={sections[0].title}
+        />
+      </TabContentWrapper>
+    );
+  }
+
   return (
-    <TabContentWrapper id={"documentation"}>
+    <TabContentWrapper id="documentation">
       <Accordion asDefinitionList togglePosition="start">
         {sections.map((section, index) => (
-          <AccordionItem key={section.title}>
+          <AccordionItem isExpanded={expanded === index} key={section.title}>
             <AccordionToggle
               onClick={() => {
                 onToggle(index);
               }}
-              isExpanded={expanded === index}
               id={`${section.title}-accordion-toggle`}
             >
               <DynamicFAIcon icon={section.iconName} /> {section.title}
             </AccordionToggle>
-            <AccordionContent
-              isHidden={expanded !== index}
-              id={`${section.title}-accordion-toggle`}
-            >
+            <AccordionContent id={`${section.title}-accordion-toggle`}>
               <MarkdownCard
                 attributeValue={section.value}
                 web_title={section.title}
@@ -172,6 +187,31 @@ const getSelectedAttributeSet = (
 
   if (selectedLog.rollback_attributes) {
     return selectedLog.rollback_attributes;
+  }
+
+  return;
+};
+
+/**
+ * Retrieves the first attribute set that contains data
+ * Prioritizing the active-attributes.
+ *
+ * @param {ServiceInstanceModel} instance - the instance that contains the attributeSets.
+ * @returns {InstanceAttributeModel | void}
+ */
+const getSelectedAttributeSetFromInstance = (
+  instance: ServiceInstanceModel,
+): InstanceAttributeModel | void => {
+  if (instance.active_attributes) {
+    return instance.active_attributes;
+  }
+
+  if (instance.candidate_attributes) {
+    return instance.candidate_attributes;
+  }
+
+  if (instance.rollback_attributes) {
+    return instance.rollback_attributes;
   }
 
   return;

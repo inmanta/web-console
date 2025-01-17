@@ -1,18 +1,13 @@
-import { ReactElement } from "react";
 import {
   Row,
+  ServiceInstanceModel,
   ServiceInstanceModelWithTargetStates,
+  ServiceModel,
   getUuidFromRaw,
 } from "@/Core";
-import {
-  ActionPresenter,
-  TablePresenter,
-  DatePresenter,
-  ColumnHead,
-} from "@/UI/Presenters";
+import { isTransferDisabled } from "@/Slices/ServiceInstanceDetails/Utils";
+import { TablePresenter, ColumnHead } from "@/UI/Presenters";
 import { words } from "@/UI/words";
-import { AttributesPresenter } from "./AttributesPresenter";
-import { StatePresenter } from "./StatePresenter";
 
 /**
  * The TablePresenter is responsible for formatting the domain data.
@@ -20,19 +15,14 @@ import { StatePresenter } from "./StatePresenter";
  * This class should not hold state as state should be kept in the Redux Store.
  */
 export class InventoryTablePresenter
-  implements TablePresenter<ServiceInstanceModelWithTargetStates, Row>
+  implements TablePresenter<ServiceInstanceModel, Row>
 {
   readonly columnHeads: ColumnHead[];
   readonly numberOfColumns: number;
 
   constructor(
-    private _datePresenter: DatePresenter,
-    private _attributesPresenter: AttributesPresenter,
-    private actionPresenter: ActionPresenter,
-    private statePresenter: StatePresenter,
     private serviceIdentity?: string,
-    private serviceIdentityDisplayName?: string,
-    private isConfigDisabled?: boolean,
+    private serviceIdentityDisplayName?: string | null,
   ) {
     this.columnHeads = [
       {
@@ -52,17 +42,15 @@ export class InventoryTablePresenter
         displayName: words("inventory.column.updatedAt"),
         apiName: "last_updated",
       },
-      { displayName: words("inventory.column.actions"), apiName: "actions" },
     ];
     this.numberOfColumns = this.columnHeads.length + 1;
   }
 
-  public getActionsFor(id: string): ReactElement | null {
-    return this.actionPresenter.getForId(id);
-  }
-
-  public createRows(instances: ServiceInstanceModelWithTargetStates[]): Row[] {
-    return instances.map((instance) => this.instanceToRow(instance));
+  public createRows(
+    instances: ServiceInstanceModelWithTargetStates[],
+    service: ServiceModel,
+  ): Row[] {
+    return instances.map((instance) => this.instanceToRow(instance, service));
   }
 
   public getColumnHeadDisplayNames(): string[] {
@@ -123,22 +111,18 @@ export class InventoryTablePresenter
     return this.numberOfColumns;
   }
 
-  public getStateFor(id: string): ReactElement | null {
-    return this.statePresenter.getForId(id);
-  }
-
-  private instanceToRow(instance: ServiceInstanceModelWithTargetStates): Row {
+  private instanceToRow(
+    instance: ServiceInstanceModel,
+    service: ServiceModel,
+  ): Row {
     const {
       id,
-      candidate_attributes,
-      active_attributes,
-      rollback_attributes,
       created_at,
       last_updated,
       version,
-      instanceSetStateTargets,
       environment,
       service_entity,
+      state,
       deployment_progress,
       service_identity_attribute_value,
       deleted,
@@ -146,21 +130,17 @@ export class InventoryTablePresenter
 
     return {
       id: getUuidFromRaw(id),
-      attributes: {
-        candidate: candidate_attributes,
-        active: active_attributes,
-        rollback: rollback_attributes,
-      },
+      state: state,
       createdAt: created_at,
       updatedAt: last_updated,
       version: version,
-      instanceSetStateTargets,
       environment,
       service_entity,
       deploymentProgress: deployment_progress,
       serviceIdentityValue: service_identity_attribute_value,
       deleted,
-      configDisabled: this.isConfigDisabled,
+      editDisabled: isTransferDisabled(instance, "on_update", service),
+      deleteDisabled: isTransferDisabled(instance, "on_delete", service),
     };
   }
 }

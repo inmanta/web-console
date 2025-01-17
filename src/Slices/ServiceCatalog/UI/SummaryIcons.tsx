@@ -1,12 +1,6 @@
 import React, { ReactElement } from "react";
 import { Label, FlexItem, Flex, Tooltip } from "@patternfly/react-core";
-import {
-  CheckCircleIcon,
-  ExclamationCircleIcon,
-  ExclamationTriangleIcon,
-  InfoCircleIcon,
-  OutlinedCircleIcon,
-} from "@patternfly/react-icons";
+import { InfoAltIcon, OutlinedCircleIcon } from "@patternfly/react-icons";
 import { InstanceSummary } from "@/Core";
 import { words } from "@/UI/words";
 
@@ -43,29 +37,33 @@ function getLabelforName(labelName: string, value: number): ReactElement {
   switch (labelName) {
     case "danger":
       return (
-        <Label icon={<ExclamationCircleIcon />} color="red">
+        <Label status="danger" variant="outline">
           {value}
         </Label>
       );
     case "warning":
       return (
-        <Label icon={<ExclamationTriangleIcon />} color="orange">
+        <Label status="warning" variant="outline">
           {value}
         </Label>
       );
     case "success":
       return (
-        <Label icon={<CheckCircleIcon />} color="green">
+        <Label status="success" variant="outline">
           {value}
         </Label>
       );
     case "info":
       return (
-        <Label icon={<InfoCircleIcon />} color="blue">
+        <Label color="blue" variant="outline" icon={<InfoAltIcon />}>
           {value}
         </Label>
       );
     default:
-      return <Label icon={<OutlinedCircleIcon />}>{value}</Label>;
+      return (
+        <Label variant="outline" icon={<OutlinedCircleIcon />}>
+          {value}
+        </Label>
+      );
   }
 }

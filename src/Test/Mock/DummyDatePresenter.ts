@@ -27,6 +27,7 @@ export class DummyDatePresenter implements DatePresenter {
     return {
       full: "full",
       relative: "relative",
+      dateTimeMilliseconds: "dateTimeMilliseconds",
     };
   }
   parseFull(): Date {

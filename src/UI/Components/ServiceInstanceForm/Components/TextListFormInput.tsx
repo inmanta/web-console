@@ -3,9 +3,9 @@
  */
 import React, { useEffect } from "react";
 import {
+  Label,
+  LabelGroup,
   Button,
-  Chip,
-  ChipGroup,
   FormGroup,
   FormHelperText,
   HelperText,
@@ -15,7 +15,9 @@ import {
   TextInputGroupMain,
   TextInputGroupUtilities,
   TextInputTypes,
+  Truncate,
 } from "@patternfly/react-core";
+
 import { HelpIcon, TimesIcon } from "@patternfly/react-icons";
 import { words } from "@/UI/words";
 import { SuggestionsPopover } from "./SuggestionsPopover";
@@ -26,7 +28,7 @@ import { SuggestionsPopover } from "./SuggestionsPopover";
 interface Props {
   attributeName: string;
   attributeValue: string[];
-  description?: string;
+  description?: string | null;
   isOptional: boolean;
   shouldBeDisabled?: boolean;
   type: TextInputTypes;
@@ -42,11 +44,10 @@ interface Props {
 /**
  * A form input component for managing a list of text values.
  *
- * @component
- * @param {Props} props - The props for the TextListFormInput component.
+ * @props {Props} props - The props for the TextListFormInput component.
  *  @prop {string} attributeName - The name of the attribute.
  *  @prop {string[]} attributeValue - The value of the attribute.
- *  @prop {string} description - The description of the attribute.
+ *  @prop {string | null} description - The description of the attribute.
  *  @prop {boolean} isOptional - Whether the attribute is optional.
  *  @prop {boolean} shouldBeDisabled - Whether the attribute should be disabled. Default is false.
  *  @prop {string} typeHint - The type hint for the attribute.
@@ -55,7 +56,7 @@ interface Props {
  *  @prop {function} handleInputChange - The callback for handling input changes.
  *  @prop {string[]} suggestions - The suggestions for the input field.
  *
- *  @returns {JSX.Element} The TextListFormInput component.
+ *  @returns {React.FC<Props>} The TextListFormInput component.
  */
 export const TextListFormInput: React.FC<Props> = ({
   attributeName,
@@ -137,17 +138,16 @@ export const TextListFormInput: React.FC<Props> = ({
       fieldId={attributeName}
       label={attributeName}
       className={shouldBeDisabled ? "is-disabled" : ""}
-      labelIcon={
+      labelHelp={
         typeHint ? (
           <Popover bodyContent={<div>{typeHint}</div>}>
-            <button
+            <Button
+              variant="control"
               type="button"
+              icon={<HelpIcon />}
               aria-label={`More info for ${attributeName} field`}
               onClick={(e) => e.preventDefault()}
-              className="pf-v5-c-form__group-label-help"
-            >
-              <HelpIcon />
-            </button>
+            />
           </Popover>
         ) : (
           <></>
@@ -179,34 +179,34 @@ export const TextListFormInput: React.FC<Props> = ({
           onChange={handleChangeInput}
           onFocus={() => setIsOpen(true)}
         >
-          <ChipGroup>
+          <LabelGroup>
             {currentChips.map((currentChip) => (
-              <Chip
+              <Label
+                variant="outline"
                 key={currentChip}
-                onClick={() => deleteChip(currentChip)}
+                onClose={() => deleteChip(currentChip)}
                 disabled={shouldBeDisabled}
+                closeBtnAriaLabel={`Close ${currentChip}`}
               >
-                {currentChip}
-              </Chip>
+                <Truncate content={currentChip} />
+              </Label>
             ))}
-          </ChipGroup>
+          </LabelGroup>
         </TextInputGroupMain>
         <TextInputGroupUtilities>
           <Button
+            icon={words("catalog.callbacks.add")}
             variant="plain"
             onClick={addChip}
             isDisabled={shouldBeDisabled}
-          >
-            {words("catalog.callbacks.add")}
-          </Button>
+          />
           <Button
+            icon={<TimesIcon />}
             variant="plain"
             onClick={clearChipsAndInput}
             aria-label="Clear button and input"
             isDisabled={shouldBeDisabled}
-          >
-            <TimesIcon />
-          </Button>
+          />
         </TextInputGroupUtilities>
       </TextInputGroup>
     </FormGroup>

@@ -74,21 +74,15 @@ test("Given the CreateInstance View When creating an instance with attributes Th
 
   expect(bandwidthField).toBeVisible();
 
-  await act(async () => {
-    await userEvent.type(bandwidthField, "2");
-  });
+  await userEvent.type(bandwidthField, "2");
 
   const customerLocationsField = screen.getByText("customer_locations");
 
-  await act(async () => {
-    await userEvent.type(customerLocationsField, "5");
-  });
+  await userEvent.type(customerLocationsField, "5");
 
   const orderIdField = screen.getByText("order_id");
 
-  await act(async () => {
-    await userEvent.type(orderIdField, "7007");
-  });
+  await userEvent.type(orderIdField, "7007");
 
   const networkField = screen.getByText("network");
 
@@ -100,11 +94,7 @@ test("Given the CreateInstance View When creating an instance with attributes Th
     expect(results).toHaveNoViolations();
   });
 
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("button", { name: words("confirm") }),
-    );
-  });
+  await userEvent.click(screen.getByText(words("confirm")));
 
   expect(apiHelper.pendingRequests[0]).toEqual({
     method: "POST",
@@ -162,9 +152,7 @@ test("Given the CreateInstance View When creating an instance with Inter-service
     words("common.serviceInstance.relations")("test_entity"),
   );
 
-  await act(async () => {
-    await userEvent.type(relationInputField, "a");
-  });
+  await userEvent.type(relationInputField, "a");
 
   await act(async () => {
     apiHelper.resolve(Either.right({ data: [ServiceInstance.a] }));
@@ -174,9 +162,7 @@ test("Given the CreateInstance View When creating an instance with Inter-service
 
   expect(options.length).toBe(1);
 
-  await act(async () => {
-    await userEvent.click(options[0]);
-  });
+  await userEvent.click(options[0]);
 
   expect(options[0]).toHaveClass("pf-m-selected");
 
@@ -186,11 +172,7 @@ test("Given the CreateInstance View When creating an instance with Inter-service
     expect(results).toHaveNoViolations();
   });
 
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("button", { name: words("confirm") }),
-    );
-  });
+  await userEvent.click(screen.getByText(words("confirm")));
 
   expect(apiHelper.pendingRequests[0]).toEqual({
     method: "POST",
@@ -227,9 +209,8 @@ test("Given the CreateInstance View When creating an instance with Inter-service
     words("common.serviceInstance.relations")("test_entity"),
   );
 
-  await act(async () => {
-    await userEvent.type(relationInputField, "a");
-  });
+  await userEvent.type(relationInputField, "a");
+
   expect(apiHelper.pendingRequests[0]).toEqual({
     method: "GET",
     url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=250&filter.id_or_service_identity=a`,
@@ -239,22 +220,30 @@ test("Given the CreateInstance View When creating an instance with Inter-service
   await act(async () => {
     await apiHelper.resolve(Either.right({ data: [ServiceInstance.a] }));
   });
-  await act(async () => {
-    await userEvent.type(relationInputField, "{selectall}{backspace}ab");
-  });
-  expect(apiHelper.pendingRequests[0]).toEqual({
+
+  await userEvent.type(relationInputField, "{selectall}{backspace}ab");
+
+  expect(apiHelper.pendingRequests[2]).toEqual({
     method: "GET",
     url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=250&filter.id_or_service_identity=ab`,
     environment: "env",
   });
+
+  // clear all pending requests
   await act(async () => {
-    apiHelper.resolve(Either.right({ data: [] }));
+    while (apiHelper.pendingRequests.length > 0) {
+      apiHelper.resolve(Either.right({ data: [] }));
+    }
   });
 
-  await act(async () => {
-    await userEvent.type(relationInputField, "{backspace}{backspace}");
-  });
+  await userEvent.type(relationInputField, "{backspace}{backspace}");
+
   expect(apiHelper.pendingRequests[0]).toEqual({
+    method: "GET",
+    url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=250&filter.id_or_service_identity=a`,
+    environment: "env",
+  });
+  expect(apiHelper.pendingRequests[1]).toEqual({
     method: "GET",
     url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=250&filter.id_or_service_identity=`,
     environment: "env",
@@ -284,9 +273,8 @@ test("Given the CreateInstance View When creating an instance with Inter-service
     words("common.serviceInstance.relations")("test_entity"),
   );
 
-  await act(async () => {
-    await userEvent.type(relationInputField, "a");
-  });
+  await userEvent.type(relationInputField, "a");
+
   expect(apiHelper.pendingRequests[0]).toEqual({
     method: "GET",
     url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=250&filter.id_or_service_identity=a`,
@@ -296,22 +284,30 @@ test("Given the CreateInstance View When creating an instance with Inter-service
   await act(async () => {
     await apiHelper.resolve(Either.right({ data: [ServiceInstance.a] }));
   });
-  await act(async () => {
-    await userEvent.type(relationInputField, "{selectall}{backspace}ab");
-  });
-  expect(apiHelper.pendingRequests[0]).toEqual({
+
+  await userEvent.type(relationInputField, "{selectall}{backspace}ab");
+
+  expect(apiHelper.pendingRequests[2]).toEqual({
     method: "GET",
     url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=250&filter.id_or_service_identity=ab`,
     environment: "env",
   });
+
+  // clear all pending requests
   await act(async () => {
-    apiHelper.resolve(Either.right({ data: [] }));
+    while (apiHelper.pendingRequests.length > 0) {
+      apiHelper.resolve(Either.right({ data: [] }));
+    }
   });
 
-  await act(async () => {
-    await userEvent.type(relationInputField, "{backspace}{backspace}");
-  });
+  await userEvent.type(relationInputField, "{backspace}{backspace}");
+
   expect(apiHelper.pendingRequests[0]).toEqual({
+    method: "GET",
+    url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=250&filter.id_or_service_identity=a`,
+    environment: "env",
+  });
+  expect(apiHelper.pendingRequests[1]).toEqual({
     method: "GET",
     url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=250&filter.id_or_service_identity=`,
     environment: "env",
@@ -405,19 +401,14 @@ test("Given the CreateInstance View When creating entity with default values The
     "DictListFieldInput-embedded_base",
   );
 
-  await act(async () => {
-    await userEvent.click(
-      screen.getByRole("button", { name: "embedded_base" }),
-    );
-  });
+  await userEvent.click(screen.getByRole("button", { name: "embedded_base" }));
 
   //check if direct attributes for embedded entities have correct default values
 
-  await act(async () => {
-    await userEvent.click(
-      within(embedded_base).getByRole("button", { name: "0" }),
-    );
-  });
+  await userEvent.click(
+    within(embedded_base).getByRole("button", { name: "0" }),
+  );
+
   expect(
     within(embedded_base).queryByLabelText("TextInput-string"),
   ).toHaveValue("default_string");

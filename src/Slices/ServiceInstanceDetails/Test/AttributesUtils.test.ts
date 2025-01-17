@@ -1,11 +1,12 @@
-import { InstanceLog } from "@/Slices/ServiceInstanceHistory/Core/Domain";
+import { InstanceLog } from "@/Core/Domain/HistoryLog";
 import {
   formatTreeRowData,
+  getAttributeSetsFromInstance,
   getAvailableAttributesSets,
   sortTreeRows,
   TreeRowData,
 } from "../Utils";
-import { historyData } from "./mockData";
+import { historyData, instanceData } from "./mockData";
 
 describe("getAvailableAttributesSets", () => {
   it("should return an empty object if no log matches the version", () => {
@@ -119,6 +120,59 @@ describe("getAvailableAttributesSets", () => {
   });
 });
 
+describe("getAttributeSetsFromInstance", () => {
+  it("should return an empty object if no attribute sets exist in the instance", () => {
+    const result = getAttributeSetsFromInstance({
+      ...instanceData,
+      active_attributes: null,
+      candidate_attributes: null,
+      rollback_attributes: null,
+    });
+
+    expect(result).toStrictEqual({});
+  });
+
+  it("should return only the existing attribute sets if some are missing", () => {
+    const result = getAttributeSetsFromInstance(instanceData);
+
+    expect(result).toStrictEqual({
+      active_attributes: instanceData.active_attributes,
+      candidate_attributes: instanceData.candidate_attributes,
+    });
+
+    const result2 = getAttributeSetsFromInstance({
+      ...instanceData,
+      candidate_attributes: null,
+    });
+
+    expect(result2).toStrictEqual({
+      active_attributes: instanceData.active_attributes,
+    });
+
+    const result3 = getAttributeSetsFromInstance({
+      ...instanceData,
+      active_attributes: null,
+    });
+
+    expect(result3).toStrictEqual({
+      candidate_attributes: instanceData.candidate_attributes,
+    });
+  });
+
+  it("should return all attributes if they exist in the instance", () => {
+    const result = getAttributeSetsFromInstance({
+      ...instanceData,
+      rollback_attributes: instanceData.active_attributes,
+    });
+
+    expect(result).toStrictEqual({
+      active_attributes: instanceData.active_attributes,
+      candidate_attributes: instanceData.candidate_attributes,
+      rollback_attributes: instanceData.active_attributes,
+    });
+  });
+});
+
 describe("formatTreeRowData", () => {
   it("should return an empty array when the attributes object is empty", () => {
     const result = formatTreeRowData({});
@@ -174,13 +228,13 @@ describe("formatTreeRowData", () => {
         value: { child1: "value1", child2: 456 },
         children: [
           {
-            id: expect.stringMatching(/^child1/),
+            id: expect.stringMatching(/^parent.child1/),
             name: "child1",
             value: "value1",
             children: [],
           },
           {
-            id: expect.stringMatching(/^child2/),
+            id: expect.stringMatching(/^parent.child2/),
             name: "child2",
             value: 456,
             children: [],
@@ -209,7 +263,7 @@ describe("formatTreeRowData", () => {
             value: { subKey1: "subValue1" },
             children: [
               {
-                id: expect.stringMatching(/^subKey1/),
+                id: expect.stringMatching(/^arrayKey.0.subKey1/),
                 name: "subKey1",
                 value: "subValue1",
                 children: [],
@@ -222,7 +276,7 @@ describe("formatTreeRowData", () => {
             value: { subKey2: "subValue2" },
             children: [
               {
-                id: expect.stringMatching(/^subKey2/),
+                id: expect.stringMatching(/^arrayKey.1.subKey2/),
                 name: "subKey2",
                 value: "subValue2",
                 children: [],
@@ -252,12 +306,12 @@ describe("formatTreeRowData", () => {
         value: { level2: { level3: "deepValue" } },
         children: [
           {
-            id: expect.stringMatching(/^level2/),
+            id: expect.stringMatching(/^level1.level2/),
             name: "level2",
             value: { level3: "deepValue" },
             children: [
               {
-                id: expect.stringMatching(/^level3/),
+                id: expect.stringMatching(/^level1.level2.level3/),
                 name: "level3",
                 value: "deepValue",
                 children: [],

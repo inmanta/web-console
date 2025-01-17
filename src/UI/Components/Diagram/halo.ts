@@ -1,18 +1,36 @@
 import { dia, highlighters, ui } from "@inmanta/rappid";
-import { checkIfConnectionIsAllowed, toggleLooseElement } from "./helpers";
-import { ActionEnum, ConnectionRules } from "./interfaces";
+import { t_global_border_radius_small } from "@patternfly/react-tokens";
+import {
+  dispatchRemoveInterServiceRelationFromTracker,
+  dispatchUpdateInterServiceRelations,
+  dispatchUpdateServiceOrderItems,
+} from "./Context/dispatchers";
+import { checkIfConnectionIsAllowed } from "./helpers";
+import { toggleLooseElement } from "./helpers";
+import { ActionEnum, ConnectionRules, EventActionEnum } from "./interfaces";
 import { ServiceEntityBlock } from "./shapes";
 
+/**
+ * Creates a halo around a cell view in a graph.
+ *
+ * it removes all default handles and adds custom event listeners when the link is being triggered from the button and when it's being dropped, both on other cell and on the empty space, and delete the cell. that is being triggered from the form sidebar
+ *
+ * @param graph - The graph containing the cell view.
+ * @param paper - The paper to draw on.
+ * @param cellView - The cell view to create a halo around.
+ * @param connectionRules - The rules for connecting cells.
+ * @returns The created halo.
+ */
 const createHalo = (
   graph: dia.Graph,
   paper: dia.Paper,
   cellView: dia.CellView,
   connectionRules: ConnectionRules,
-  updateInstancesToSend: (cell: ServiceEntityBlock, action: ActionEnum) => void,
 ) => {
   const halo = new ui.Halo({
     cellView: cellView,
     type: "toolbar",
+    rx: t_global_border_radius_small.value,
   });
 
   halo.removeHandle("clone");
@@ -22,40 +40,29 @@ const createHalo = (
   halo.removeHandle("unlink");
   halo.removeHandle("remove");
 
-  halo.addHandle({
-    name: "delete",
-  });
   // this change is purely to keep order of the halo buttons
   halo.changeHandle("link", {
     name: "link",
   });
-  halo.addHandle({
-    name: "edit",
-  });
 
-  // additional listeners to add logic for appended tools, if there will be need for any validation on remove then I think we will need custom handle anyway
-  halo.on("action:delete:pointerdown", function () {
+  halo.listenTo(cellView, "action:delete", function () {
     //cellView.model has the same structure as dia.Element needed as parameter to .getNeighbors() yet typescript complains
     const connectedElements = graph.getNeighbors(cellView.model as dia.Element);
 
-    if (
-      cellView.model.get("isEmbedded") &&
-      cellView.model.get("embeddedTo") === undefined
-    ) {
-      toggleLooseElement(cellView, "remove");
-    }
+    toggleLooseElement(cellView, EventActionEnum.REMOVE);
+
     connectedElements.forEach((element) => {
       const elementAsService = element as ServiceEntityBlock;
-      const isEmbedded = element.get("isEmbedded");
+      const isEmbeddedEntity = element.get("isEmbeddedEntity");
       const isEmbeddedToThisCell =
         element.get("embeddedTo") === cellView.model.id;
 
       let didElementChange = false;
 
       //if one of those were embedded into other then update connectedElement as it's got indirectly edited
-      if (isEmbedded && isEmbeddedToThisCell) {
+      if (isEmbeddedEntity && isEmbeddedToThisCell) {
         element.set("embeddedTo", undefined);
-        toggleLooseElement(paper.findViewByModel(element), "add");
+        toggleLooseElement(paper.findViewByModel(element), EventActionEnum.ADD);
         didElementChange = true;
       }
       if (element.id === cellView.model.get("embeddedTo")) {
@@ -69,21 +76,32 @@ const createHalo = (
           cellView.model.id as string,
         );
 
+        if (wasThereRelationToRemove) {
+          dispatchUpdateInterServiceRelations(
+            EventActionEnum.REMOVE,
+            cellView.model.get("entityName"),
+            elementAsService.id,
+          );
+        }
         didElementChange = didElementChange || wasThereRelationToRemove;
       }
 
       if (didElementChange) {
-        updateInstancesToSend(elementAsService, ActionEnum.UPDATE);
+        dispatchUpdateServiceOrderItems(elementAsService, ActionEnum.UPDATE);
       }
     });
+    dispatchUpdateServiceOrderItems(cellView.model, ActionEnum.DELETE);
 
-    updateInstancesToSend(
-      cellView.model as ServiceEntityBlock,
-      ActionEnum.DELETE,
-    );
+    if (cellView.model.get("relatedTo")) {
+      dispatchRemoveInterServiceRelationFromTracker(cellView.model.id);
+    }
+
     graph.removeLinks(cellView.model);
     cellView.remove();
     halo.remove();
+    graph.removeCells([cellView.model]);
+    //trigger click on blank canvas to clear right sidebar
+    paper.trigger("blank:pointerdown");
   });
 
   halo.on("action:link:pointerdown", function () {
@@ -119,6 +137,7 @@ const createHalo = (
           attrs: {
             "stroke-opacity": 0.5,
             "stroke-width": 5,
+            rx: t_global_border_radius_small.value,
             filter: "drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4))",
           },
         });
@@ -157,15 +176,6 @@ const createHalo = (
         looseElementHighlight.el.classList.remove("-hidden");
       }
     });
-  });
-
-  halo.on("action:edit:pointerdown", function (event) {
-    event.stopPropagation();
-    document.dispatchEvent(
-      new CustomEvent("openEditModal", {
-        detail: cellView,
-      }),
-    );
   });
 
   return halo;

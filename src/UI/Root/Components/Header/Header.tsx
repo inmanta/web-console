@@ -2,18 +2,19 @@ import React, { useContext } from "react";
 import {
   Toolbar,
   Masthead,
-  MastheadBrand,
+  MastheadLogo,
   MastheadContent,
   MastheadMain,
   MastheadToggle,
+  MastheadBrand,
   PageToggleButton,
   ToolbarContent,
   ToolbarGroup,
   ToolbarItem,
   Tooltip,
+  Brand,
 } from "@patternfly/react-core";
 import { BarsIcon } from "@patternfly/react-icons";
-import styled from "styled-components";
 import { Badge } from "@/Slices/Notification/UI/Badge";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
@@ -22,48 +23,64 @@ import { DocumentationLinks } from "./Actions/DocumentationLinks";
 import { StatusButton } from "./Actions/StatusButton";
 import { EnvSelectorWithProvider } from "./EnvSelector";
 
+/**
+ * Properties for the Header component.
+ *
+ * @interface
+ * @prop {boolean} noEnv - A flag indicating whether there is no environment selected.
+ * @prop {function} onNotificationsToggle - A function to be called when the notifications badge is clicked.
+ */
 interface Props {
   noEnv: boolean;
   onNotificationsToggle(): void;
 }
 
+/**
+ * Header component of the application.
+ *
+ * This component is responsible for rendering the header of the application.
+ *
+ * @component
+ * @props {Props} props - The properties that define the behavior of the header.
+ * @prop {boolean} props.noEnv - A flag indicating whether there is no environment selected.
+ * @prop {function} props.onNotificationsToggle - A function to be called when the notifications badge is clicked.
+ * @returns {React.FC<Props> } The rendered Header component.
+ */
 export const Header: React.FC<Props> = ({ noEnv, onNotificationsToggle }) => {
   const { routeManager, environmentHandler } = useContext(DependencyContext);
 
   return (
     <>
-      <Masthead>
-        <MastheadToggle>
-          <PageToggleButton
-            variant="plain"
-            aria-label="Main Navigation"
-            id="uncontrolled-nav-toggle"
-          >
-            <BarsIcon />
-          </PageToggleButton>
-        </MastheadToggle>
+      <Masthead id="page-header">
         <MastheadMain>
-          <MastheadBrand
-            href={
-              noEnv
-                ? routeManager.getUrl("Home", undefined)
-                : routeManager.getUrl("Dashboard", undefined) +
-                  `?env=${environmentHandler.useId()}`
-            }
-          >
-            <img src={logo} alt="Inmanta Logo" aria-label="Inmanta Logo" />
+          <MastheadToggle>
+            <PageToggleButton variant="plain" aria-label="Main Navigation">
+              <BarsIcon />
+            </PageToggleButton>
+          </MastheadToggle>
+          <MastheadBrand>
+            <MastheadLogo
+              href={
+                noEnv
+                  ? routeManager.getUrl("Home", undefined)
+                  : routeManager.getUrl("Dashboard", undefined) +
+                    `?env=${environmentHandler.useId()}`
+              }
+            >
+              <Brand src={logo} alt="Inmanta-logo" />
+            </MastheadLogo>
           </MastheadBrand>
         </MastheadMain>
         <MastheadContent>
           <Toolbar id="uncontrolled-toolbar" isFullHeight isStatic>
             <ToolbarContent>
               <ToolbarGroup
-                variant="icon-button-group"
-                align={{ default: "alignRight" }}
-                spacer={{ default: "spacerNone", md: "spacerMd" }}
+                variant="action-group-plain"
+                align={{ default: "alignEnd" }}
+                gap={{ default: "gapNone", md: "gapMd" }}
               >
                 {!noEnv && (
-                  <StyledToolbarItem>
+                  <ToolbarItem>
                     <Tooltip
                       content={words("dashboard.notifications.tooltip")}
                       position="bottom"
@@ -71,7 +88,7 @@ export const Header: React.FC<Props> = ({ noEnv, onNotificationsToggle }) => {
                     >
                       <Badge onClick={onNotificationsToggle} />
                     </Tooltip>
-                  </StyledToolbarItem>
+                  </ToolbarItem>
                 )}
                 <StatusButton />
                 <DocumentationLinks />
@@ -86,11 +103,3 @@ export const Header: React.FC<Props> = ({ noEnv, onNotificationsToggle }) => {
     </>
   );
 };
-
-const StyledToolbarItem = styled(ToolbarItem)`
-  padding-left: 8px;
-  padding-right: 8px;
-  &:hover {
-    background-color: var(--pf-v5-global--primary-color--200);
-  }
-`;

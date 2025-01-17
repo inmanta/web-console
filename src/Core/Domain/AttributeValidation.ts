@@ -41,10 +41,14 @@ interface IntValidation {
 
 interface IpValidation {
   validation_type:
+    | "pydantic.IPvAnyInterface"
+    | "pydantic.IPvAnyAddress"
     | "ipaddress.IPv4Address"
     | "ipaddress.IPv4Address?"
     | "ipaddress.IPv4Interface"
     | "pydantic.constr[]"
-    | "ipaddress.IPv4Network";
+    | "ipaddress.IPv4Network"
+    | "pydantic.PositiveInt?"
+    | "pydantic.PositiveInt";
   validation_parameters: { [key: string]: string } | null;
 }

@@ -1,0 +1,4 @@
+description: Fix un-responsive space in service inventory dropdown
+issue-nr: 6134
+change-type: patch
+destination-branches: [master]

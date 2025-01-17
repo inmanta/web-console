@@ -2,14 +2,14 @@ import React, { useContext, useState } from "react";
 import {
   AlertVariant,
   Button,
-  Modal,
-  ModalVariant,
+  Content,
+  Flex,
   Tooltip,
 } from "@patternfly/react-core";
 import { FileCodeIcon } from "@patternfly/react-icons";
-import styled from "styled-components";
 import { Either } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
+import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
 import { ConfirmUserActionForm } from "../ConfirmUserActionForm";
 import { ToastAlert } from "../ToastAlert";
@@ -26,6 +26,7 @@ import { ToastAlert } from "../ToastAlert";
  * @returns CatalogActions
  */
 export const CatalogActions: React.FC = () => {
+  const { triggerModal, closeModal } = useContext(ModalContext);
   const { commandResolver, urlManager, environmentHandler } =
     useContext(DependencyContext);
 
@@ -33,17 +34,22 @@ export const CatalogActions: React.FC = () => {
     kind: "UpdateCatalog",
   });
 
-  const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [toastTitle, setToastTitle] = useState("");
   const [toastType, setToastType] = useState(AlertVariant.custom);
 
-  const handleModalToggle = () => {
-    setIsOpen(!isOpen);
-  };
-
-  const onSubmit = async () => {
-    handleModalToggle();
+  /**
+   * Handles the submission of the form.
+   *
+   * This function closes the modal and triggers an asynchronous operation.
+   * If the operation is successful, it sets the toast title, message, and type to indicate success.
+   * If the operation fails, it sets the toast title, message, and type to indicate failure.
+   * The message in case of failure is the value of the result.
+   *
+   * @returns {Promise<void>} A Promise that resolves when the operation is complete.
+   */
+  const onSubmit = async (): Promise<void> => {
+    closeModal();
     const result = await trigger();
 
     if (Either.isRight(result)) {
@@ -57,6 +63,35 @@ export const CatalogActions: React.FC = () => {
     }
   };
 
+  /**
+   * Opens a modal with a confirmation form.
+   *
+   * @returns {void}
+   */
+  const openModal = (): void => {
+    triggerModal({
+      title: words("catalog.update.modal.title"),
+      content: (
+        <>
+          <Content>{words("catalog.update.confirmation.p1")}</Content>
+          <Content>
+            <b>{words("catalog.update.confirmation.p2")}</b>
+          </Content>
+          <Content component="ul">
+            <Content component="li">
+              - <b>{words("catalog.update.confirmation.p3")}</b>
+            </Content>
+            <Content component="li">
+              - <b>{words("catalog.update.confirmation.p4")}</b>
+            </Content>
+          </Content>
+          <Content>{words("catalog.update.confirmation.p5")}</Content>
+          <ConfirmUserActionForm onSubmit={onSubmit} onCancel={closeModal} />
+        </>
+      ),
+    });
+  };
+
   return (
     <>
       <ToastAlert
@@ -66,7 +101,11 @@ export const CatalogActions: React.FC = () => {
         setMessage={setMessage}
         type={toastType}
       />
-      <StyledWrapper>
+      <Flex
+        direction={{ default: "row" }}
+        fullWidth={{ default: "fullWidth" }}
+        justifyContent={{ default: "justifyContentFlexEnd" }}
+      >
         <Tooltip content={words("catalog.API.tooltip")} entryDelay={500}>
           <Button
             variant="plain"
@@ -78,52 +117,9 @@ export const CatalogActions: React.FC = () => {
           ></Button>
         </Tooltip>
         <Tooltip content={words("catalog.update.tooltip")}>
-          <Button onClick={handleModalToggle}>
-            {words("catalog.button.update")}
-          </Button>
+          <Button onClick={openModal}>{words("catalog.button.update")}</Button>
         </Tooltip>
-      </StyledWrapper>
-      <Modal
-        disableFocusTrap
-        variant={ModalVariant.small}
-        isOpen={isOpen}
-        title={words("catalog.update.modal.title")}
-        onClose={handleModalToggle}
-      >
-        <StyledParagraph>
-          {words("catalog.update.confirmation.p1")}
-        </StyledParagraph>
-        <p>
-          <b>{words("catalog.update.confirmation.p2")}</b>
-        </p>
-        <ul>
-          <li>
-            - <b>{words("catalog.update.confirmation.p3")}</b>
-          </li>
-          <li>
-            - <b>{words("catalog.update.confirmation.p4")}</b>
-          </li>
-        </ul>
-        <StyledParagraph>
-          {words("catalog.update.confirmation.p5")}
-        </StyledParagraph>
-        <ConfirmUserActionForm
-          onSubmit={onSubmit}
-          onCancel={handleModalToggle}
-        />
-      </Modal>
+      </Flex>
     </>
   );
 };
-
-const StyledWrapper = styled.div`
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-    padding: var(--pf-v5-global--spacer--md);
-}
-`;
-const StyledParagraph = styled.p`
-  padding-bottom: 10px;
-  padding-top: 10px;
-`;

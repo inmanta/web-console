@@ -1,0 +1,6 @@
+description: Fix slider display issue in firefox, fix rounding in the highlighter, fix fetching cache issue for composer initial load, fix overflow issue for text list field in composer
+issue-nr: 6124
+change-type: patch
+destination-branches: [master]
+sections:
+  minor-improvement: "{{description}}"

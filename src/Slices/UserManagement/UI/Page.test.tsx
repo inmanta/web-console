@@ -2,7 +2,7 @@ import React, { act } from "react";
 import { MemoryRouter } from "react-router-dom";
 import { Page } from "@patternfly/react-core";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { axe, toHaveNoViolations } from "jest-axe";
 import { HttpResponse, http } from "msw";
@@ -10,6 +10,7 @@ import { setupServer } from "msw/node";
 import { UserInfo } from "@/Data/Managers/V2/GETTERS/GetUsers";
 import { dependencies } from "@/Test";
 import { DependencyProvider, words } from "@/UI";
+import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { UserManagementPage } from "./Page";
 
 expect.extend(toHaveNoViolations);
@@ -21,9 +22,11 @@ const setup = () => {
     <MemoryRouter>
       <QueryClientProvider client={queryClient}>
         <DependencyProvider dependencies={{ ...dependencies }}>
-          <Page>
-            <UserManagementPage />
-          </Page>
+          <ModalProvider>
+            <Page>
+              <UserManagementPage />
+            </Page>
+          </ModalProvider>
         </DependencyProvider>
       </QueryClientProvider>
     </MemoryRouter>
@@ -198,6 +201,11 @@ describe("UserManagementPage", () => {
           auth_method: "database",
         });
       }),
+      http.delete("/api/v2/user/test_user", async (): Promise<HttpResponse> => {
+        data.splice(0, 1);
+
+        return HttpResponse.json({ status: 204 });
+      }),
     );
 
     server.listen();
@@ -216,21 +224,14 @@ describe("UserManagementPage", () => {
 
     expect(userRows).toHaveLength(2);
 
-    await act(async () => {
-      await userEvent.click(screen.getByText("Add User"));
-    });
+    await userEvent.click(screen.getByText("Add User"));
 
     //mock error scenario
-    await act(async () => {
-      await userEvent.type(screen.getByLabelText("input-username"), "new_user");
-    });
-    await act(async () => {
-      await userEvent.type(screen.getByLabelText("input-password"), "123456");
-    });
+    await userEvent.type(screen.getByLabelText("input-username"), "new_user");
 
-    await act(async () => {
-      await userEvent.click(screen.getByLabelText("add_user-button"));
-    });
+    await userEvent.type(screen.getByLabelText("input-password"), "123456");
+
+    await userEvent.click(screen.getByLabelText("confirm-button"));
 
     const errorMessage = await screen.findByLabelText("error-message");
 
@@ -240,13 +241,9 @@ describe("UserManagementPage", () => {
     );
 
     //mock success scenario
-    await act(async () => {
-      await userEvent.type(screen.getByLabelText("input-password"), "12345678");
-    });
+    await userEvent.type(screen.getByLabelText("input-password"), "12345678");
 
-    await act(async () => {
-      fireEvent.click(screen.getByLabelText("add_user-button"));
-    });
+    await userEvent.click(screen.getByLabelText("confirm-button"));
 
     const updatedRows = await screen.findAllByTestId("user-row");
 
@@ -269,7 +266,7 @@ describe("UserManagementPage", () => {
       { username: "test_user2", auth_method: "oidc" },
     ];
     const server = setupServer(
-      http.get("/api/v2/user", async () => {
+      http.get("/api/v2/user", async (): Promise<HttpResponse> => {
         return HttpResponse.json({
           data,
         });
@@ -277,7 +274,7 @@ describe("UserManagementPage", () => {
       http.delete("/api/v2/user/test_user", async (): Promise<HttpResponse> => {
         data.splice(0, 1);
 
-        return HttpResponse.json();
+        return HttpResponse.json({ status: 204 });
       }),
     );
 
@@ -298,13 +295,9 @@ describe("UserManagementPage", () => {
 
     expect(userRows).toHaveLength(2);
 
-    await act(async () => {
-      fireEvent.click(screen.getAllByText("Delete")[0]);
-    });
+    await userEvent.click(screen.getAllByText("Delete")[0]);
 
-    await act(async () => {
-      fireEvent.click(screen.getByText("Yes"));
-    });
+    await userEvent.click(screen.getByText("Yes"));
 
     const updatedRows = await screen.findAllByTestId("user-row");
 

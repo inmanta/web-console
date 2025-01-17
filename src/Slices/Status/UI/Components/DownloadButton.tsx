@@ -1,6 +1,5 @@
 import React from "react";
 import { Button } from "@patternfly/react-core";
-import styled from "styled-components";
 import { words } from "@/UI/words";
 
 export type Phase = "Default" | "Downloading";
@@ -12,7 +11,7 @@ interface Props {
 
 export const DownloadButton: React.FC<Props> = ({ phase, onClick }) => {
   return (
-    <StyledButton
+    <Button
       spinnerAriaValueText={phaseLabelRecord[phase]}
       isLoading={phase !== "Default"}
       variant="primary"
@@ -21,7 +20,7 @@ export const DownloadButton: React.FC<Props> = ({ phase, onClick }) => {
       aria-label="DownloadArchiveButton"
     >
       {phaseLabelRecord[phase]}
-    </StyledButton>
+    </Button>
   );
 };
 
@@ -29,7 +28,3 @@ const phaseLabelRecord: Record<Phase, string> = {
   Default: words("status.supportArchive.action.download"),
   Downloading: words("status.supportArchive.action.downloading"),
 };
-
-const StyledButton = styled(Button)`
-  width: 32ch;
-`;

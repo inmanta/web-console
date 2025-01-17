@@ -1,435 +1,313 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import "@inmanta/rappid/joint-plus.css";
-import { useNavigate } from "react-router-dom";
-import { dia } from "@inmanta/rappid";
-import { AlertVariant } from "@patternfly/react-core";
+import { ui } from "@inmanta/rappid";
 import styled from "styled-components";
-import { ServiceModel } from "@/Core";
-import { sanitizeAttributes } from "@/Data";
-import { InstanceWithRelations } from "@/Data/Managers/V2/GETTERS/GetInstanceWithRelations";
-import { usePostMetadata } from "@/Data/Managers/V2/POST/PostMetadata";
-import { usePostOrder } from "@/Data/Managers/V2/POST/PostOrder";
-import diagramInit, { DiagramHandlers } from "@/UI/Components/Diagram/init";
-import {
-  ComposerServiceOrderItem,
-  ActionEnum,
-  DictDialogData,
-} from "@/UI/Components/Diagram/interfaces";
+import { CanvasContext, InstanceComposerContext } from "./Context";
+import { EventWrapper } from "./Context/EventWrapper";
+import { DictModal, RightSidebar } from "./components";
+import { Validation } from "./components/Validation";
+import { createConnectionRules } from "./helpers";
+import { diagramInit } from "./init";
+import { ActionEnum } from "./interfaces";
+import { StencilSidebar } from "./stencil";
+import { createStencilState } from "./stencil/helpers";
+import { CanvasWrapper } from "./styles";
+import { ZoomHandlerService } from "./zoomHandler";
 
-import { CanvasWrapper } from "@/UI/Components/Diagram/styles";
-import { DependencyContext } from "@/UI/Dependency";
-import { words } from "@/UI/words";
-import { ToastAlert } from "../ToastAlert";
-import DictModal from "./components/DictModal";
-import FormModal from "./components/FormModal";
-import Toolbar from "./components/Toolbar";
-import { getServiceOrderItems, createConnectionRules } from "./helpers";
-import { ServiceEntityBlock } from "./shapes";
+/**
+ * Properties for the Canvas component.
+ *
+ * @interface
+ * @prop {boolean} editable - A flag indicating if the diagram is editable.
+ */
+interface Props {
+  editable: boolean;
+}
 
 /**
  * Canvas component for creating, displaying and editing an Instance.
  *
- * @param {ServiceModel[]} services - The list of service models.
- * @param {string} mainServiceName - The name of the main service.
- * @param {InstanceWithRelations} instance - The instance with references.
- * @returns {JSX.Element} The rendered Canvas component.
+ * @props {Props} props - The properties passed to the component.
+ * @prop {boolean} editable - A flag indicating if the diagram is editable.
+ *
+ * @returns {React.FC<Props>} The rendered Canvas component.
  */
-const Canvas: React.FC<{
-  services: ServiceModel[];
-  mainServiceName: string;
-  instance?: InstanceWithRelations;
-  editable: boolean;
-}> = ({ services, mainServiceName, instance, editable = true }) => {
-  const { environmentHandler, routeManager } = useContext(DependencyContext);
-  const environment = environmentHandler.useId();
-  const oderMutation = usePostOrder(environment);
-  const metadataMutation = usePostMetadata(environment);
-  const canvas = useRef<HTMLDivElement>(null);
-  const [looseEmbedded, setLooseEmbedded] = useState<Set<string>>(new Set());
-  const [alertMessage, setAlertMessage] = useState("");
-  const [alertType, setAlertType] = useState(AlertVariant.danger);
-  const [isFormModalOpen, setIsFormModalOpen] = useState(false);
-  const [cellToEdit, setCellToEdit] = useState<dia.CellView | null>(null);
-  const [dictToDisplay, setDictToDisplay] = useState<DictDialogData | null>(
-    null,
-  );
-  const [diagramHandlers, setDiagramHandlers] =
-    useState<DiagramHandlers | null>(null);
-  const [instancesToSend, setInstancesToSend] = useState<
-    Map<string, ComposerServiceOrderItem>
-  >(new Map());
-  const [isDirty, setIsDirty] = useState(false);
+export const Canvas: React.FC<Props> = ({ editable }) => {
+  const { mainService, instance, serviceModels, relatedInventoriesQuery } =
+    useContext(InstanceComposerContext);
+  const {
+    setStencilState,
+    setServiceOrderItems,
+    diagramHandlers,
+    setDiagramHandlers,
+    setCellToEdit,
+  } = useContext(CanvasContext);
+  const Canvas = useRef<HTMLDivElement>(null);
+  const LeftSidebar = useRef<HTMLDivElement>(null);
+  const ZoomHandler = useRef<HTMLDivElement>(null);
+  const [scroller, setScroller] = useState<ui.PaperScroller | null>(null);
+  const [isStencilStateReady, setIsStencilStateReady] = useState(false);
+  const [leftSidebar, setLeftSidebar] = useState<StencilSidebar | null>(null); // without this state it could happen that cells would load before sidebar is ready so its state could be outdated
 
-  const navigate = useNavigate();
-  const url = routeManager.useUrl("Inventory", {
-    service: mainServiceName,
-  });
-
-  /**
-   * Handles the event triggered when there are loose embedded entities on the canvas.
-   *
-   * @param {CustomEvent} event - The event object.
-   */
-  const handleLooseEmbeddedEvent = (event) => {
-    const customEvent = event as CustomEvent;
-    const eventData: { kind: "remove" | "add"; id: string } = JSON.parse(
-      customEvent.detail,
-    );
-
-    if (eventData.kind === "remove") {
-      setLooseEmbedded((prevSet) => {
-        const newSet = new Set(prevSet);
-
-        newSet.delete(eventData.id);
-
-        return newSet;
-      });
-    } else {
-      setLooseEmbedded((prevSet) => {
-        const newSet = new Set(prevSet);
-
-        newSet.add(eventData.id);
-
-        return newSet;
-      });
-    }
-  };
-
-  /**
-   * Handles the event triggered when the user wants to see the dictionary properties of an entity.
-   *
-   * @param {CustomEvent} event - The event object.
-   */
-  const handleDictEvent = (event) => {
-    const customEvent = event as CustomEvent;
-
-    setDictToDisplay(JSON.parse(customEvent.detail));
-  };
-
-  /**
-   * Handles the event triggered when the user wants to edit an entity.
-   *
-   * @param {CustomEvent} event - The event object.
-   */
-  const handleEditEvent = (event) => {
-    const customEvent = event as CustomEvent;
-
-    setCellToEdit(customEvent.detail);
-    setIsFormModalOpen(true);
-  };
-
-  /**
-   * Handles the filtering of the unchanged entities and sending serviceOrderItems to the backend.
-   *
-   */
-  const handleDeploy = () => {
-    const coordinates = diagramHandlers?.getCoordinates();
-
-    const serviceOrderItems = getServiceOrderItems(instancesToSend, services)
-      .filter((item) => item.action !== null)
-      .map((instance) => ({
-        ...instance,
-        metadata: {
-          coordinates: JSON.stringify(coordinates),
-        },
-      }));
-
-    //Temporary workaround to update coordinates in metadata, as currently order endpoint don't handle metadata in the updates.
-    // can't test in jest as I can't add any test-id to the halo handles though.
-    if (instance) {
-      metadataMutation.mutate({
-        service_entity: mainServiceName,
-        service_id: instance.instance.id,
-        key: "coordinates",
-        body: {
-          current_version: instance.instance.version,
-          value: JSON.stringify(coordinates),
-        },
-      });
-    }
-
-    oderMutation.mutate(serviceOrderItems);
-  };
-
-  /**
-   * Handles the update of a service entity block.
-   *
-   * @param {ServiceEntityBlock} cell - The service entity block to be updated.
-   * @param {ActionEnum} action - The action to be performed on the service entity block.
-   */
-  const handleUpdate = (cell: ServiceEntityBlock, action: ActionEnum) => {
-    const newInstance: ComposerServiceOrderItem = {
-      instance_id: cell.id,
-      service_entity: cell.getName(),
-      config: {},
-      action: null,
-      attributes: cell.get("sanitizedAttrs"),
-      edits: null,
-      embeddedTo: cell.get("embeddedTo"),
-      relatedTo: cell.getRelations(),
-    };
-
-    setInstancesToSend((prevInstances) => {
-      const updatedInstance = prevInstances.get(cell.id as string);
-
-      switch (action) {
-        case "update":
-          newInstance.action =
-            updatedInstance?.action === "create" ? "create" : "update";
-
-          return new Map(prevInstances.set(cell.id as string, newInstance));
-        case "create":
-          newInstance.action = action;
-
-          return new Map(prevInstances.set(cell.id as string, newInstance));
-        default:
-          if (
-            updatedInstance &&
-            (updatedInstance.action === null ||
-              updatedInstance.action === "update")
-          ) {
-            return new Map(
-              prevInstances.set(cell.id as string, {
-                instance_id: cell.id,
-                service_entity: cell.getName(),
-                config: {},
-                action: "delete",
-                attributes: null,
-                edits: null,
-                embeddedTo: cell.attributes.embeddedTo,
-                relatedTo: cell.attributes.relatedTo,
-              }),
-            );
-          } else {
-            const newInstances = new Map(prevInstances);
-
-            newInstances.delete(cell.id as string);
-
-            return newInstances;
-          }
-      }
-    });
-  };
-
+  // create stencil state and set flag to true to enable the other components to be created - the flag is created to allow the components to depend from that states, passing the state as a dependency would cause an infinite loop
   useEffect(() => {
-    const connectionRules = createConnectionRules(services, {});
+    setStencilState(createStencilState(mainService, !!instance));
+    setIsStencilStateReady(true);
+  }, [mainService, instance, setStencilState]);
+
+  // create the diagram & set diagram handlers and the scroller only when service models and main service is defined and the stencil state is ready
+  useEffect(() => {
+    //if diagram handlers are already set or the stencil state is not ready, return early to avoid re-creating the diagram or to creating it too early
+    if (!isStencilStateReady || diagramHandlers) {
+      return;
+    }
+
+    const connectionRules = createConnectionRules(serviceModels, {});
     const actions = diagramInit(
-      canvas,
+      Canvas,
+      (newScroller) => {
+        setScroller(newScroller);
+      },
       connectionRules,
-      handleUpdate,
       editable,
+      mainService,
     );
 
     setDiagramHandlers(actions);
-    if (instance) {
-      const isMainInstance = true;
 
-      try {
-        const cells = actions.addInstance(instance, services, isMainInstance);
-        const newInstances = new Map();
-
-        cells.forEach((cell) => {
-          if (cell.type === "app.ServiceEntityBlock") {
-            newInstances.set(cell.id, {
-              instance_id: cell.id,
-              service_entity: cell.entityName,
-              config: {},
-              action: null,
-              attributes: cell.instanceAttributes,
-              embeddedTo: cell.embeddedTo,
-              relatedTo: cell.relatedTo,
-            });
-          }
-        });
-        setInstancesToSend(newInstances);
-      } catch (error) {
-        setAlertType(AlertVariant.danger);
-        setAlertMessage(String(error));
-      }
-    }
-
-    return () => {
-      actions.removeCanvas();
-    };
-  }, [instance, services, mainServiceName, editable]);
-
-  useEffect(() => {
-    if (!isDirty) {
-      setIsDirty(
-        Array.from(instancesToSend).filter(
-          ([_key, item]) => item.action !== null,
-        ).length > 0,
-      );
-    }
-  }, [instancesToSend, services, isDirty]);
-
-  useEffect(() => {
-    if (oderMutation.isSuccess) {
-      //If response is successful then show feedback notification and redirect user to the service inventory view
-      setAlertType(AlertVariant.success);
-      setAlertMessage(words("inventory.instanceComposer.success"));
-
-      setTimeout(() => {
-        navigate(url);
-      }, 1000);
-    } else if (oderMutation.isError) {
-      setAlertType(AlertVariant.danger);
-      setAlertMessage(oderMutation.error.message);
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [oderMutation.isSuccess, oderMutation.isError]);
+  }, [mainService, serviceModels, isStencilStateReady]);
 
+  /**
+   * create the stencil sidebar and zoom handler only when the scroller, related inventories and main service are defined and the ref for sidebar and zoomHandler is there
+   */
   useEffect(() => {
-    document.addEventListener("openDictsModal", handleDictEvent);
-    document.addEventListener("openEditModal", handleEditEvent);
-    document.addEventListener("looseEmbedded", handleLooseEmbeddedEvent);
+    if (
+      !LeftSidebar.current ||
+      !ZoomHandler.current ||
+      !scroller ||
+      !relatedInventoriesQuery.data
+    ) {
+      return;
+    }
+
+    const leftSidebar = new StencilSidebar(
+      LeftSidebar.current,
+      scroller,
+      relatedInventoriesQuery.data,
+      mainService,
+      serviceModels,
+    );
+    const zoomHandler = new ZoomHandlerService(ZoomHandler.current, scroller);
+
+    setLeftSidebar(leftSidebar);
 
     return () => {
-      document.removeEventListener("openDictsModal", handleDictEvent);
-      document.removeEventListener("openEditModal", handleEditEvent);
-      document.addEventListener("looseEmbedded", handleLooseEmbeddedEvent);
+      leftSidebar.remove();
+      zoomHandler.remove();
     };
-  }, []);
+  }, [scroller, relatedInventoriesQuery.data, mainService, serviceModels]);
+
+  /**
+   * add the instances to the diagram only when the stencil sidebar, diagram handlers, service models, main service and stencil state are defined
+   * we need to add instances after stencil has been created to ensure that the stencil will get updated in case there are any embedded entities and relations that will get appendend on the canvas
+   */
+  useEffect(() => {
+    if (!leftSidebar || !diagramHandlers || !isStencilStateReady) {
+      return;
+    }
+
+    const newInstances = new Map();
+    const copiedGraph = diagramHandlers.saveAndClearCanvas();
+
+    if (copiedGraph.cells.length > 0) {
+      diagramHandlers.loadState(copiedGraph);
+    } else {
+      const cells = diagramHandlers.addInstance(serviceModels, instance);
+
+      cells.forEach((cell) => {
+        newInstances.set(cell.id, {
+          instance_id: cell.id,
+          service_entity: cell.get("entityName"),
+          config: {},
+          action: instance ? null : ActionEnum.CREATE,
+          attributes: cell.get("instanceAttributes"),
+          embeddedTo: cell.get("embeddedTo"),
+          relatedTo: cell.get("relatedTo"),
+        });
+      });
+
+      setServiceOrderItems(newInstances);
+    }
+
+    return () => {
+      setCellToEdit(null);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    diagramHandlers,
+    isStencilStateReady,
+    leftSidebar,
+    serviceModels,
+    instance,
+  ]);
 
   return (
-    <>
-      {alertMessage && (
-        <ToastAlert
-          data-testid="ToastAlert"
-          title={
-            alertType === AlertVariant.success
-              ? words("inventory.instanceComposer.success.title")
-              : words("inventory.instanceComposer.failed.title")
-          }
-          message={alertMessage}
-          setMessage={setAlertMessage}
-          type={alertType}
-        />
-      )}
-      <DictModal
-        dictToDisplay={dictToDisplay}
-        setDictToDisplay={setDictToDisplay}
-      />
-      <FormModal
-        isOpen={isFormModalOpen}
-        toggleIsOpen={(value: boolean) => {
-          if (cellToEdit && !value) {
-            setCellToEdit(null);
-          }
-          setIsFormModalOpen(value);
-        }}
-        services={services}
-        cellView={cellToEdit}
-        onConfirm={(fields, entity, selected) => {
-          if (diagramHandlers) {
-            const sanitizedAttrs = sanitizeAttributes(fields, entity);
-
-            if (cellToEdit) {
-              //deep copy
-              const shape = diagramHandlers.editEntity(
-                cellToEdit,
-                selected.model as ServiceModel,
-                entity,
-              );
-
-              shape.set("sanitizedAttrs", sanitizedAttrs);
-              handleUpdate(shape, ActionEnum.UPDATE);
-            } else {
-              const shape = diagramHandlers.addEntity(
-                entity,
-                selected.model as ServiceModel,
-                selected.name === mainServiceName,
-                selected.isEmbedded,
-                selected.holderName,
-              );
-
-              shape.set("sanitizedAttrs", sanitizedAttrs);
-              handleUpdate(shape, ActionEnum.CREATE);
-            }
-          }
-        }}
-      />
-      <Toolbar
-        openEntityModal={() => {
-          setIsFormModalOpen(true);
-        }}
-        serviceName={mainServiceName}
-        handleDeploy={handleDeploy}
-        isDeployDisabled={
-          instancesToSend.size < 1 || !isDirty || looseEmbedded.size > 0
-        }
-        editable={editable}
-      />
+    <EventWrapper>
+      <DictModal />
       <CanvasWrapper id="canvas-wrapper" data-testid="Composer-Container">
-        <div className="canvas" ref={canvas} />
-        <ZoomWrapper>
-          <button
-            className="zoom-in"
-            onClick={(event) => {
-              event.stopPropagation();
-
-              if (diagramHandlers) {
-                diagramHandlers.zoom(1);
-              }
-            }}
-          >
-            +
-          </button>
-          <button
-            className="zoom-out"
-            onClick={(event) => {
-              event.stopPropagation();
-              if (diagramHandlers) {
-                diagramHandlers.zoom(-1);
-              }
-            }}
-          >
-            -
-          </button>
-        </ZoomWrapper>
+        <LeftSidebarContainer
+          className={`left_sidebar ${!editable && "view_mode"}`}
+          data-testid="left_sidebar"
+          ref={LeftSidebar}
+        />
+        <CanvasContainer
+          className={`canvas ${!editable && "view_mode"}`}
+          data-testid="canvas"
+          ref={Canvas}
+        />
+        <RightSidebar editable={editable} />
+        <ZoomHandlerContainer className="zoom-handler" ref={ZoomHandler} />
       </CanvasWrapper>
-    </>
+      {editable && <Validation />}
+    </EventWrapper>
   );
 };
 
-export default Canvas;
-
-const ZoomWrapper = styled.div`
-  display: flex;
-  gap: 1px;
+/**
+ * Container for the zoom & fullscreen tools from JointJS
+ */
+const ZoomHandlerContainer = styled.div`
   position: absolute;
-  bottom: 16px;
-  right: 16px;
-  box-shadow: 0px 4px 4px 0px
-    var(--pf-v5-global--BackgroundColor--dark-transparent-200);
-  border-radius: 5px;
-  background: var(--pf-v5-global--BackgroundColor--dark-transparent-200);
+  bottom: 25px;
+  right: 316px;
+  filter: drop-shadow(
+    0.05rem 0.2rem 0.2rem var(--pf-t--global--box-shadow--color--100)
+  );
 
-  button {
-    display: flex;
-    width: 24px;
-    height: 22px;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    flex-shrink: 0;
-    background: var(--pf-v5-global--BackgroundColor--100);
-    padding: 0;
-    border: 0;
+  .joint-toolbar {
+    padding: 0.5rem 2rem;
+    border-radius: var(--pf-t--global--border--radius--pill);
+  }
 
-    &.zoom-in {
-      border-top-left-radius: 4px;
-      border-bottom-left-radius: 4px;
-    }
-    &.zoom-out {
-      border-top-right-radius: 4px;
-      border-bottom-right-radius: 4px;
-    }
+  button.joint-widget.joint-theme-default {
     &:hover {
-      background: var(--pf-v5-global--BackgroundColor--light-300);
+      background: transparent;
     }
-    &:active {
-      background: var(--pf-v5-global--Color--light-300);
+  }
+
+  .joint-widget.joint-theme-default {
+    --slider-background: linear-gradient(
+      to right,
+      var(--pf-t--global--border--color--brand--default) 0%,
+      var(--pf-t--global--border--color--brand--default) 20%,
+      var(--pf-t--global--border--color--nonstatus--gray--default) 20%,
+      var(--pf-t--global--border--color--nonstatus--gray--default) 100%
+    );
+
+    output {
+      color: var(--pf-t--global--text--color--subtle);
     }
+
+    .units {
+      color: var(--pf-t--global--text--color--subtle);
+    }
+
+    /*********** Baseline, reset styles ***********/
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: var(--slider-background);
+      cursor: pointer;
+      width: 8rem;
+      height: 0.15rem;
+      margin-right: 0.5rem;
+    }
+
+    /* Removes default focus */
+    input[type="range"]:focus {
+      outline: none;
+    }
+
+    /******** Chrome, Safari, Opera and Edge Chromium styles ********/
+    /* slider track */
+    input[type="range"]::-webkit-slider-runnable-track {
+      background: var(--slider-background);
+      border-radius: 0.5rem;
+      height: 0.15rem;
+    }
+
+    /* slider thumb */
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none; /* Override default look */
+      appearance: none;
+      margin-top: -3.6px; /* Centers thumb on the track */
+      background-color: var(--pf-t--global--border--color--brand--default);
+      border-radius: 0.5rem;
+      height: 0.7rem;
+      width: 0.7rem;
+    }
+
+    /*********** Firefox styles ***********/
+    /* slider track */
+    input[type="range"]::-moz-range-track {
+      background-color: var(--slider-background);
+      border-radius: 0.5rem;
+      height: 0.15rem;
+    }
+
+    /* slider thumb */
+    input[type="range"]::-moz-range-thumb {
+      background-color: var(--pf-t--global--border--color--brand--default);
+      border: none; /*Removes extra border that FF applies*/
+      border-radius: 0.5rem;
+      height: 0.7rem;
+      width: 0.7rem;
+    }
+
+    input[type="range"]:focus::-moz-range-thumb {
+      outline: 3px solid var(--pf-t--global--border--color--brand--default);
+      outline-offset: 0.125rem;
+    }
+  }
+`;
+
+/**
+ * Container for the JointJS canvas.
+ */
+const CanvasContainer = styled.div`
+  width: calc(100% - 540px); //240 left sidebar + 300 right sidebar
+  height: 100%;
+  background: var(--pf-t--global--background--color--secondary--default);
+
+  &.view_mode {
+    width: calc(100% - 300px);
+  }
+
+  * {
+    font-family: var(--pf-t--global--font--family--mono);
+  }
+
+  .source-arrowhead,
+  .target-arrowhead {
+    fill: var(--pf-t--global--text--color--regular);
+    stroke-width: 1;
+  }
+`;
+
+/**
+ * To be able to have draggable items on the canvas, we need to have a stencil container to which we append the JointJS stencil objects that handle the drag and drop functionality.
+ */
+const LeftSidebarContainer = styled.div`
+  width: 240px;
+  height: 100%;
+  background: var(--pf-t--global--background--color--primary--default);
+  filter: drop-shadow(
+    0.1rem 0.1rem 0.15rem var(--pf-t--global--box-shadow--color--100)
+  );
+  z-index: 1;
+
+  &.view_mode {
+    display: none;
   }
 `;

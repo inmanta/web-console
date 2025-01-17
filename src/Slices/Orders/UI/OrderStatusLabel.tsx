@@ -1,12 +1,14 @@
 import React from "react";
-import { Label } from "@patternfly/react-core";
-import styled from "styled-components";
+import { Label, Spinner } from "@patternfly/react-core";
 import { words } from "@/UI";
-import { Spinner } from "@/UI/Components";
 import { ServiceOrderItemState, ServiceOrderState } from "../Core/Query";
 
 /**
  * Custom label tag for orders and serviceOrderItems
+ *
+ * When a order is in progress, the status is displayed with a spinner
+ * When a order is successful, acknowledged, or completed, the status is displayed with a success color
+ * When a order has failed, the status is displayed with a danger color
  *
  * @param status  ServiceOrderItemState | ServiceOrderState
  * @returns ReactNode
@@ -18,21 +20,24 @@ export const OrderStatusLabel: React.FC<{
     case "acknowledged":
     case "success":
     case "completed":
-      return <Label color="green">{status}</Label>;
+      return (
+        <Label status="success" variant="outline">
+          {status}
+        </Label>
+      );
     case "failed":
-      return <Label color="red">{status}</Label>;
+      return (
+        <Label status="danger" variant="outline">
+          {status}
+        </Label>
+      );
     case "in_progress":
       return (
-        <Label color="blue">
-          <PaddedLabel>{words("orders.status.in_progress")}</PaddedLabel>
-          <Spinner variant="small" />
+        <Label color="blue" icon={<Spinner size="sm" />} variant="outline">
+          {words("orders.status.in_progress")}
         </Label>
       );
     case "partial":
-      return <Label color="orange">{status}</Label>;
+      return <Label status="warning">{status}</Label>;
   }
 };
-
-const PaddedLabel = styled.span`
-  padding-right: 1ch;
-`;

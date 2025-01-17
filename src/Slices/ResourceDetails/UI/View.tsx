@@ -1,10 +1,10 @@
 import React, { useContext } from "react";
 import { Flex, FlexItem } from "@patternfly/react-core";
-import styled from "styled-components";
 import { Query, RemoteData } from "@/Core";
 import { useUrlStateWithString } from "@/Data";
 import {
   Description,
+  labelColorConfig,
   PageContainer,
   ResourceStatusLabel,
 } from "@/UI/Components";
@@ -31,28 +31,29 @@ export const View: React.FC<Props> = ({ id }) => {
 
   return (
     <PageContainer pageTitle={words("resources.details.title")}>
-      <CustomFlex>
+      <Flex>
         <FlexItem>
           <Description>{id}</Description>
         </FlexItem>
         <FlexItem>
           <StatusLabel {...{ data }} />
         </FlexItem>
-      </CustomFlex>
+      </Flex>
 
       <Tabs {...{ id, data, activeTab, setActiveTab }} />
     </PageContainer>
   );
 };
 
-const CustomFlex = styled(Flex)`
-  margin-bottom: 16px;
-`;
-
 const StatusLabel: React.FC<{
   data: Query.UsedApiData<"GetResourceDetails">;
 }> = ({ data }) => {
   if (!RemoteData.isSuccess(data)) return null;
 
-  return <ResourceStatusLabel status={data.value.status} />;
+  return (
+    <ResourceStatusLabel
+      status={labelColorConfig[data.value.status]}
+      label={data.value.status}
+    />
+  );
 };

@@ -77,9 +77,8 @@ const ActionList: React.FC<Props> = ({ notification, onUpdate }) => {
           variant="plain"
           isExpanded={isOpen}
           onClick={onToggle}
-        >
-          <EllipsisVIcon />
-        </MenuToggle>
+          icon={<EllipsisVIcon />}
+        />
       )}
       onSelect={() => setIsOpen(false)}
       popperProps={{ position: "right" }}
@@ -110,44 +109,4 @@ const ActionList: React.FC<Props> = ({ notification, onUpdate }) => {
       </DropdownList>
     </Dropdown>
   );
-
-  // return (
-  //   <Dropdown
-  //     position="right"
-  //     onSelect={() => setIsOpen(false)}
-  //     toggle={
-  //       <KebabToggle
-  //         onToggle={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>, value: boolean) =>
-  //           onToggle(value, e)
-  //         }
-  //         aria-label="NotificationItemActions"
-  //       />
-  //     }
-  //     isOpen={isOpen}
-  //     isPlain
-  //     dropdownItems={[
-  //       <DropdownItem
-  //         key="read"
-  //         component="button"
-  //         onClick={(event) => {
-  //           event.stopPropagation();
-  //           onUpdate({ read: false });
-  //         }}
-  //         isDisabled={!notification.read}
-  //       >
-  //         {words("notification.unread")}
-  //       </DropdownItem>,
-  //       <DropdownItem
-  //         key="cleared"
-  //         component="button"
-  //         onClick={(event) => {
-  //           event.stopPropagation();
-  //           onUpdate({ read: true, cleared: true });
-  //         }}
-  //       >
-  //         {words("notification.drawer.clear")}
-  //       </DropdownItem>,
-  //     ]}
-  //   />
-  // );
 };

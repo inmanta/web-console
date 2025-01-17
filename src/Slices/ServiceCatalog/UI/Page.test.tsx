@@ -25,6 +25,7 @@ import {
 } from "@/Test";
 import { words } from "@/UI";
 import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
+import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { ServiceCatalogPage } from ".";
 
 expect.extend(toHaveNoViolations);
@@ -66,25 +67,27 @@ function setup() {
   );
 
   const component = (
-    <MemoryRouter
-      initialEntries={[{ pathname: "/lsm/catalog", search: `?env=${env1}` }]}
-    >
-      <DependencyProvider
-        dependencies={{
-          ...dependencies,
-          queryResolver,
-          commandResolver,
-          environmentHandler,
-        }}
+    <ModalProvider>
+      <MemoryRouter
+        initialEntries={[{ pathname: "/lsm/catalog", search: `?env=${env1}` }]}
       >
-        <StoreProvider store={store}>
-          <Page>
-            <ServiceCatalogPage />
-            {linkToEnv2}
-          </Page>
-        </StoreProvider>
-      </DependencyProvider>
-    </MemoryRouter>
+        <DependencyProvider
+          dependencies={{
+            ...dependencies,
+            queryResolver,
+            commandResolver,
+            environmentHandler,
+          }}
+        >
+          <StoreProvider store={store}>
+            <Page>
+              <ServiceCatalogPage />
+              {linkToEnv2}
+            </Page>
+          </StoreProvider>
+        </DependencyProvider>
+      </MemoryRouter>
+    </ModalProvider>
   );
 
   return {
@@ -172,9 +175,7 @@ test("GIVEN ServiceCatalog WHEN new environment selected THEN new query is trigg
     await apiHelper.resolve(Either.right({ data: [Service.a] }));
   });
 
-  await act(async () => {
-    await userEvent.click(screen.getByText("change environment"));
-  });
+  await userEvent.click(screen.getByText("change environment"));
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.resolvedRequests).toHaveLength(1);
@@ -200,17 +201,13 @@ test("GIVEN ServiceCatalog WHEN service is deleted THEN command is triggered", a
     await apiHelper.resolve(Either.right({ data: [Service.a] }));
   });
 
-  await act(async () => {
-    await userEvent.click(screen.getByLabelText("Actions-dropdown"));
-  });
-  await act(async () => {
-    await userEvent.click(
-      screen.getByLabelText(Service.a.name + "-deleteButton"),
-    );
-  });
-  await act(async () => {
-    await userEvent.click(screen.getByText(words("yes")));
-  });
+  await userEvent.click(screen.getByLabelText("Actions-dropdown"));
+
+  await userEvent.click(
+    screen.getByLabelText(Service.a.name + "-deleteButton"),
+  );
+
+  await userEvent.click(screen.getByText(words("yes")));
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.resolvedRequests).toHaveLength(1);

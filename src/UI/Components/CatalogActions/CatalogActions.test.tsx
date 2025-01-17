@@ -19,6 +19,7 @@ import {
   StaticScheduler,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
+import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
 import { CatalogActions } from "./CatalogActions";
 expect.extend(toHaveNoViolations);
@@ -61,7 +62,9 @@ function setup(
           queryResolver,
         }}
       >
-        <CatalogActions />
+        <ModalProvider>
+          <CatalogActions />
+        </ModalProvider>
       </DependencyProvider>
     </StoreProvider>
   );
@@ -82,9 +85,7 @@ test("Given CatalogUpdateButton, when user clicks on button, it should display a
 
   expect(button).toBeVisible();
 
-  await act(async () => {
-    await userEvent.click(button);
-  });
+  await userEvent.click(button);
 
   expect(
     await screen.findByText(words("catalog.update.modal.title")),
@@ -106,9 +107,7 @@ test("Given CatalogUpdateButton, when user cancels the modal, it should not fire
     name: words("catalog.button.update"),
   });
 
-  await act(async () => {
-    await userEvent.click(button);
-  });
+  await userEvent.click(button);
 
   const cancelButton = await screen.findByText(words("no"));
 
@@ -120,9 +119,7 @@ test("Given CatalogUpdateButton, when user cancels the modal, it should not fire
     expect(results).toHaveNoViolations();
   });
 
-  await act(async () => {
-    await userEvent.click(cancelButton);
-  });
+  await userEvent.click(cancelButton);
 
   expect(cancelButton).not.toBeVisible();
   expect(apiHelper.pendingRequests).toHaveLength(0);
@@ -144,17 +141,13 @@ test("Given CatalogUpdateButton, when user confirms update, it should fire the A
     name: words("catalog.button.update"),
   });
 
-  await act(async () => {
-    await userEvent.click(button);
-  });
+  await userEvent.click(button);
 
   const confirmButton = await screen.findByText(words("yes"));
 
   expect(confirmButton).toBeVisible();
 
-  await act(async () => {
-    await userEvent.click(confirmButton);
-  });
+  await userEvent.click(confirmButton);
 
   expect(confirmButton).not.toBeVisible();
   expect(apiHelper.pendingRequests).toHaveLength(1);
@@ -183,17 +176,13 @@ test("Given CatalogUpdateButton, when user confirms the update, it should fire t
     name: words("catalog.button.update"),
   });
 
-  await act(async () => {
-    await userEvent.click(button);
-  });
+  await userEvent.click(button);
 
   const confirmButton = await screen.findByText(words("yes"));
 
   expect(confirmButton).toBeVisible();
 
-  await act(async () => {
-    await userEvent.click(confirmButton);
-  });
+  await userEvent.click(confirmButton);
 
   expect(confirmButton).not.toBeVisible();
   expect(apiHelper.pendingRequests).toHaveLength(1);

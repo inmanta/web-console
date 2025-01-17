@@ -9,10 +9,10 @@ import {
   ChartStack,
   ChartArea,
   ChartLabel,
-  ChartLabelProps,
   ChartScatter,
   ChartLegend,
   ChartAxisProps,
+  ChartLabelProps,
 } from "@patternfly/react-charts";
 import styled, { css } from "styled-components";
 import { LineChartProps } from "../../Core/Domain";
@@ -84,7 +84,7 @@ export const LineChart: React.FC<LineChartProps> = ({
     <div ref={ref}>
       <Chart
         ariaDesc={title}
-        title={title}
+        ariaTitle={title}
         containerComponent={
           <CursorVoronoiContainer
             labels={({ datum }) => chooseWhichLabelToUse(datum)}

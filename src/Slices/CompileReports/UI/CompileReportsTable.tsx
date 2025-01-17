@@ -1,7 +1,7 @@
 import React from "react";
 import {
   OnSort,
-  Table /* data-codemods */,
+  Table,
   TableVariant,
   Th,
   Thead,
@@ -56,7 +56,7 @@ export const CompileReportsTable: React.FC<Props> = ({
 
   return (
     <Table {...props} variant={TableVariant.compact}>
-      <Thead>
+      <Thead noWrap>
         <Tr>{heads}</Tr>
       </Thead>
       {rows.map((row) => (

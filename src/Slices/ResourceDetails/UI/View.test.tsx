@@ -93,13 +93,11 @@ test("GIVEN The Resource details view WHEN the user clicks on the requires tab T
     await apiHelper.resolve(Either.right({ data: ResourceDetails.a }));
   });
 
-  await act(async () => {
-    await userEvent.click(
-      screen.getAllByRole("tab", {
-        name: words("resources.requires.title"),
-      })[0],
-    );
-  });
+  await userEvent.click(
+    screen.getAllByRole("tab", {
+      name: words("resources.requires.title"),
+    })[0],
+  );
 
   expect(apiHelper.resolvedRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests).toHaveLength(0);
@@ -123,9 +121,7 @@ test("GIVEN The Resource details view THEN shows status label", async () => {
     await apiHelper.resolve(Either.right({ data: ResourceDetails.a }));
   });
 
-  expect(
-    screen.getByRole("generic", { name: "Status-deployed" }),
-  ).toBeVisible();
+  expect(screen.getByTestId("Status-deployed")).toBeVisible();
 
   await act(async () => {
     const results = await axe(document.body);

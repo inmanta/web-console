@@ -1,13 +1,12 @@
 import React from "react";
 import {
   OnSort,
-  Table /* data-codemods */,
+  Table,
   TableVariant,
   Th,
   Thead,
   Tr,
 } from "@patternfly/react-table";
-import styled from "styled-components";
 import { Resource, Sort } from "@/Core";
 import { Row } from "./Row";
 import { VersionResourceTablePresenter } from "./VersionResourceTablePresenter";
@@ -55,14 +54,9 @@ export const VersionResourceTable: React.FC<Props> = ({
         : {};
 
       return (
-        <StyledTh
-          key={displayName}
-          {...sortParams}
-          $characters={displayName.length}
-          $hasSort={hasSort}
-        >
+        <Th key={displayName} {...sortParams} modifier="fitContent">
           {displayName}
-        </StyledTh>
+        </Th>
       );
     });
 
@@ -77,21 +71,3 @@ export const VersionResourceTable: React.FC<Props> = ({
     </Table>
   );
 };
-
-interface HeaderProps {
-  $characters: number;
-  $hasSort: boolean;
-}
-
-const getWidth = ({ $characters, $hasSort }: HeaderProps) => {
-  const base = `${$characters}ch`;
-  const extra = $hasSort ? "60px" : "16px";
-
-  return `calc(${base} + ${extra})`;
-};
-
-const StyledTh = styled(Th)<HeaderProps>`
-  &&& {
-    min-width: ${getWidth};
-  }
-`;

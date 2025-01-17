@@ -2,7 +2,6 @@ import React from "react";
 import { Tooltip } from "@patternfly/react-core";
 import { OutlinedQuestionCircleIcon } from "@patternfly/react-icons";
 import { Td, Tr } from "@patternfly/react-table";
-import styled from "styled-components";
 import { EnvironmentSettings } from "@/Core";
 import { InputActions } from "./InputActions";
 
@@ -17,11 +16,11 @@ export const Row: React.FC<React.PropsWithChildren<Props>> = ({
   <Tr aria-label={`Row-${info.name}`}>
     <Td>
       {info.name}{" "}
-      <StyledTooltip content={getDescription(info)}>
+      <Tooltip content={getDescription(info)}>
         <OutlinedQuestionCircleIcon />
-      </StyledTooltip>
+      </Tooltip>
     </Td>
-    <Td style={{ verticalAlign: "middle" }}>{children}</Td>
+    <Td>{children}</Td>
     <Td>
       <InputActions info={info} />
     </Td>
@@ -37,7 +36,3 @@ const getDescription = (
 
   return `${info.doc}\ndefault: ${info.default}`;
 };
-
-const StyledTooltip = styled(Tooltip)`
-  white-space: pre-line;
-`;

@@ -1,0 +1,3 @@
+description: Update the Environment scenario. Some environment settings have been removed in the Orchestrator, and shouldn't be asserted anymore in the E2E test.
+change-type: patch
+destination-branches: [master]

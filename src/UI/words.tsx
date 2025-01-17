@@ -22,17 +22,26 @@ const dict = {
   confirm: "Confirm",
   cancel: "Cancel",
   deploy: "Deploy",
+  save: "Save",
   yes: "Yes",
   no: "No",
   null: "null",
   loading: "Loading",
   retry: "Retry",
+  add: "Add",
   delete: "Delete",
   empty: "Empty",
   jumpTo: "Jump to",
   hideAll: "Hide All",
   showAll: "Show All",
   back: "Back",
+  edit: "Edit",
+  details: "Details",
+  remove: "Remove",
+  username: "Username",
+  password: "Password",
+  "load.previous": "Load previous",
+  "load.next": "Load next",
 
   /**
    * Error related text
@@ -122,7 +131,7 @@ const dict = {
   "inventory.statusTab.events": "Events",
   "inventory.resourcesTab.empty.title": "No resources found",
   "inventory.resourcesTab.empty.body":
-    "No resources could be found for this instance",
+    "No resources could be found for this instance.",
   "inventory.resourcesTab.failed.title": "Something went wrong",
   "inventory.resourcesTab.failed.body": (error: string) =>
     `There was an error retrieving data: ${error}`,
@@ -163,27 +172,6 @@ const dict = {
   "inventory.form.placeholder.dict": '{"key": "value"}',
   "inventory.form.button": "Form",
   "inventory.editor.button": "JSON-Editor",
-  "inventory.instanceComposer.labelButtonTooltip": "Toggle connection labels",
-  "inventory.instanceComposer.addInstanceButtonTooltip":
-    "Add new instance to the canvas.",
-  "inventory.instanceComposer.orderDescription":
-    "Requested with Instance Composer",
-  "inventory.instanceComposer.errorMessage": "missing Instance Model",
-  "inventory.instanceComposer.editButton": "Edit in Composer",
-  "inventory.instanceComposer.showButton": "Show in Composer",
-  "inventory.instanceComposer.formModal.placeholder": "Choose a Service",
-  "inventory.instanceComposer.formModal.create.title": "Add Entity",
-  "inventory.instanceComposer.formModal.edit.title": "Edit Entity",
-  "inventory.instanceComposer.success": "The request got sent successfully",
-  "inventory.instanceComposer.success.title": "Instance Composed successfully",
-  "inventory.instanceComposer.failed.title": "Instance Composing failed",
-  "inventory.instanceComposer.dictModal": (valueName: string) =>
-    `Values of ${valueName}`,
-  "inventory.instanceComposer.disabled":
-    "Your licence doesn't give you access to the Instance Composer, please contact support for more details.",
-  "inventory.instanceComposer.title": "Instance Composer",
-  "inventory.instanceComposer.title.edit": "Instance Composer Editor",
-  "inventory.instanceComposer.title.view": "Instance Composer Viewer",
   "inventory.deleteInstance.button": "Delete",
   "inventory.deleteInstance.failed": "Deleting instance failed",
   "inventory.deleteInstance.title": "Delete instance",
@@ -216,19 +204,72 @@ const dict = {
   "inventory.error.mermaid": "Error rendering Mermaid diagram",
 
   /**
+   * Instance Composer text
+   */
+
+  "instanceComposer.noData.errorTitle": "No Data",
+  "instanceComposer.error.updateInstanceNotInMap":
+    "Updated instance is not in the map, if error persists please refresh the page.",
+  "instanceComposer.noData.errorMessage": (serviceId) =>
+    `There is no data available to display for the given id: ${serviceId}`,
+  "instanceComposer.noServiceModel.errorTitle": "No Service Model",
+  "instanceComposer.noServiceModel.errorMessage": (serviceName) =>
+    `There is no service model available for ${serviceName}`,
+  "instanceComposer.labelButtonTooltip": "Toggle connection labels",
+  "instanceComposer.addInstanceButtonTooltip":
+    "Add new instance to the canvas.",
+  "instanceComposer.orderDescription": "Requested with Instance Composer",
+  "instanceComposer.errorMessage.missingModel":
+    "The instance attribute model is missing",
+  "instanceComposer.errorMessage.coordinatesRequest":
+    "Failed to save instance coordinates on deploy.",
+  "instanceComposer.editButton": "Edit in Composer",
+  "instanceComposer.showButton": "Show in Composer",
+  "instanceComposer.formModal.placeholder": "Choose a Service",
+  "instanceComposer.formModal.create.title": "Add Entity",
+  "instanceComposer.formModal.edit.title": "Edit Entity",
+  "instanceComposer.formModal.noAttributes":
+    "There are no attribute fields to display.",
+  "instanceComposer.formModal.noElementSelected.title": "No details available",
+  "instanceComposer.formModal.noElementSelected":
+    "Select an element to display the form.",
+  "instanceComposer.success": "The request got sent successfully",
+  "instanceComposer.success.title": "Instance composed successfully",
+  "instanceComposer.failed.title": "Instance Composing failed",
+  "instanceComposer.dictModal": (valueName: string) => `Values of ${valueName}`,
+  "instanceComposer.validation.title": (amount: number) =>
+    `Errors found: ${amount}`,
+  "instanceComposer.missingRelations": (
+    name: string,
+    amount: number,
+    relations: string,
+  ) =>
+    `Expected at least ${amount} ${relations} inter-service relation(s) for ${name}`,
+  "instanceComposer.disabled":
+    "Your license doesn't give you access to the Instance Composer, please contact support for more details.",
+  "instanceComposer.title": "Instance Composer",
+  "instanceComposer.title.edit": "Instance Composer Editor",
+  "instanceComposer.title.view": "Instance Composer Viewer",
+  "instanceComposer.zoomHandler.fullscreen.toggle": "Toggle full screen",
+  "instanceComposer.zoomHandler.fullscreen.exit": "Exit full screen",
+  "instanceComposer.zoomHandler.zoomToFit": "Fit to screen",
+  "instanceComposer.zoomHandler.zoom": "Slide to zoom",
+
+  /**
    * Service Instance Details text
    */
   "instanceDetails.title.tag": (version) => `Version: ${version}`,
-  "instanceDetails.title.latest": "Latest Version",
-  "instanceDetails.button": "Instance Details",
+  "instanceDetails.title.next": "Latest Version",
+  "instanceDetails.button": "Show instance",
   "instanceDetails.page.errorFallback":
     "Something went wrong retrieving the instance details",
   "instanceDetails.page.errorFallback.title": "Error",
   "instanceDetails.page.noData": "There is no data available to display.",
   "instanceDetails.page.noData.errorTitle": "No Data",
   "instanceDetails.history.title": "History",
+  "instanceDetails.history.diagnose": "Diagnose",
   "instanceDetails.history.table.version": "Version",
-  "instanceDetails.history.table.date": "Date",
+  "instanceDetails.history.table.timestamp": "Timestamp",
   "instanceDetails.history.table.status": "Status",
   "instanceDetails.history.error": "Error loading Version History",
   "instanceDetails.details.title": "Details",
@@ -238,8 +279,13 @@ const dict = {
   "instanceDetails.tabs.attributes": "Attributes",
   "instanceDetails.tabs.events": "Events",
   "instanceDetails.tabs.resources": "Resources",
+  "instanceDetails.tabs.resources.deploymentProgress": "Deployment Progress",
+  "instanceDetails.tabs.resources.EmptyResources":
+    "There is no data about deployment progress.",
   "instanceDetails.tabs.documentation.noData":
     "There is no documentation available for this version.",
+  "instanceDetails.tabs.events.noData":
+    "There is no events data available for this version.",
   "instanceDetails.tabs.disabled.resources-tooltip":
     "This tab is only available for the latest version.",
   "instanceDetails.documentation.noAttributeForVersion": (attributeName) =>
@@ -275,6 +321,18 @@ const dict = {
       : "Triggered from the console",
   "instanceDetails.state.noOperation": "no operation",
   "instanceDetails.operation.selectLabel": "Select an operation",
+  "instanceDetails.events.column.eventType": "Event type",
+  "instanceDetails.events.column.timestamp": "Timestamp",
+  "instanceDetails.events.column.sourceState": "Source state",
+  "instanceDetails.events.column.destinationState": "Destination state",
+  "instanceDetails.events.column.report": "Compile Report",
+  "instanceDetails.events.rowDetails.message": "Message",
+  "instanceDetails.events.rowDetails.details": "Event details",
+  "instanceDetails.events.exportReport": "Export",
+  "instanceDetails.events.validationReport": "Validation",
+  "instanceDetails.events.seeAll": "See all events",
+  "instanceDetails.events.dateTooltip": (dateDiff: string) =>
+    `${dateDiff} since last event`,
 
   /**
    * Config related text
@@ -325,6 +383,8 @@ const dict = {
   "history.tabs.attributes": "Attributes",
   "history.tabs.events": "Events",
 
+  "diagnose.action": "Apply",
+
   "diagnose.empty": (instanceId: string) =>
     `No errors were found for instance ${instanceId}`,
   "diagnose.failure.title": "Deployment failure",
@@ -336,6 +396,10 @@ const dict = {
   "diagnose.main.subtitle": (instanceId: string) =>
     `The following errors were found related to instance ${instanceId}`,
   "diagnose.title": "Diagnose Service Instance",
+  "diagnose.slider.title":
+    "The number of lifecycle versions to look back when diagnosing failures.",
+  "diagnose.slider.description":
+    "The slider determines how many lifecycle versions to look back when diagnosing failures.",
 
   /**
    * Orders related text
@@ -399,6 +463,7 @@ const dict = {
     `Are you sure you want to delete service entity ${serviceName}?`,
   "catalog.delete.failed": "Deleting service entity failed",
   "catalog.instances": "Instances",
+  "catalog.callbacks.delete.title": "Delete Callback",
   "catalog.callbacks.delete": (url: string) =>
     `Are you sure you want to delete callback with url "${url}"?`,
   "catalog.callbacks.delete.failed": "Deleting callback failed",
@@ -532,9 +597,11 @@ const dict = {
   /** Discovered Resources related text */
   "discovered.column.resource_id": "Resource Id",
   "discovered.column.managed_resource": "Managed resource",
+  "discovered.column.discovery_resource": "Discovery resource",
   "discovered_resources.title": "Discovered Resources",
   "discovered_resources.values": "values",
-  "discovered_resources.show_resource": "Show managed resource",
+  "discovered_resources.show_resource.managed": "Show managed resource",
+  "discovered_resources.show_resource.discovery": "Show discovery resource",
 
   /** Compile report related text */
   "compileReports.title": "Compile Reports",
@@ -601,7 +668,7 @@ const dict = {
       the <b>{environment}</b> environment and reset it to its initial state.
     </>
   ),
-  "home.environment.promtInput": (environment: string) => (
+  "home.environment.promptInput": (environment: string) => (
     <>
       Please type <b>{environment}</b> to confirm
     </>
@@ -648,6 +715,7 @@ const dict = {
     "Generate authentication tokens for authorizing agents, api or compiler for this specific environment.",
   "settings.tabs.token.generate": "Generate",
   "settings.update": "Setting Changed",
+  "settings.warning.update": "Changed value has not been saved",
 
   /**
    * Status
@@ -690,13 +758,6 @@ const dict = {
   "facts.column.resourceId": "Resource Id",
   "facts.empty.message": "No facts found",
 
-  /** Agent Process */
-  "agentProcess.title": "Agent Process",
-  "agentProcess.hostname": "Hostname",
-  "agentProcess.firstSeen": "First seen",
-  "agentProcess.lastSeen": "Last seen",
-  "agentProcess.expired": "Expired",
-
   /** Desired State */
   "desiredState.title": "Desired State",
   "desiredState.empty.message": "No desired state versions found",
@@ -724,7 +785,7 @@ const dict = {
   "desiredState.compare.action.compareWithSelected": "Compare with selected",
   "desiredState.compare.action.compareWithCurrentState":
     "Compare with current state",
-  "desiredState.compare.selectionLabel": "Compare versions",
+  "desiredState.compare.selectionLabel": "Selected for compare: ",
   "desiredState.compare.deleted": "This resource has been deleted.",
   "desiredState.compare.deleted.action": "Show attributes",
   "desiredState.compare.unmodified": "This resource has not been modified.",
@@ -780,12 +841,16 @@ const dict = {
   /**
    * Banners
    */
+  "banner.expertMode": "LSM expert mode is enabled, proceed with caution. ",
+  "banner.updateBanner": (currentVersion: string) =>
+    `You are running ${currentVersion}, a new version is available! Please hard-reload (Ctrl+F5 | Cmd + Shift + R) your page to load the new version.`,
   "banner.entitlement.expired": (days: number) =>
     `Your license has expired ${days} days ago!`,
   "banner.certificate.expired": (days: number) =>
     `Your license has expired ${days} days ago!`,
   "banner.certificate.will.expire": (days: number) =>
     `Your license will expire in ${days} days.`,
+  "banner.disableExpertMode": "Disable expert mode",
 
   /**
    * Common
@@ -805,6 +870,7 @@ const dict = {
   "common.compileWidget.compiling": "Compiling",
   "common.compileWidget.compilationDisabled.hint":
     "The server_compile setting is disabled. You can enable it on the settings page under the configuration tab.",
+  "common.emptyColumnHeader": "Column header for collapsible-expandable action",
 
   /**
    * Login

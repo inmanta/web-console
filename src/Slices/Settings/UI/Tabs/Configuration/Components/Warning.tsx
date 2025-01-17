@@ -1,22 +1,12 @@
 import React from "react";
 import { Icon, Tooltip } from "@patternfly/react-core";
 import { ExclamationTriangleIcon } from "@patternfly/react-icons";
-import { global_warning_color_100 } from "@patternfly/react-tokens";
-import styled from "styled-components";
+import { words } from "@/UI";
 
-export const Warning: React.FC<{ className?: string }> = ({ className }) => (
-  <Tooltip content="Changed value has not been saved">
-    <IconWrapper className={className} data-testid="Warning">
-      <Icon style={{ color: global_warning_color_100.var }}>
-        <ExclamationTriangleIcon />
-      </Icon>
-    </IconWrapper>
-  </Tooltip>
+export const Warning: React.FC = () => (
+  <Icon status="warning" isInline>
+    <Tooltip content={words("settings.warning.update")}>
+      <ExclamationTriangleIcon data-testid="Warning" />
+    </Tooltip>
+  </Icon>
 );
-
-const IconWrapper = styled.span`
-  font-size: 16px;
-  display: inline-flex;
-  align-items: center;
-  vertical-align: bottom;
-`;

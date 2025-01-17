@@ -1,5 +1,5 @@
 import React from "react";
-import styled from "styled-components";
+import { Flex } from "@patternfly/react-core";
 import { Item, Refs } from "@/UI/Components/DiffWizard/types";
 import { Block } from "./Block";
 
@@ -10,7 +10,7 @@ interface Props {
 
 export const ItemList: React.FC<Props> = ({ items, refs }) => {
   return (
-    <Container aria-label="DiffItemList">
+    <Flex direction={{ default: "column" }} aria-label="DiffItemList">
       {items.map((item) => (
         <Block
           key={item.id}
@@ -23,13 +23,6 @@ export const ItemList: React.FC<Props> = ({ items, refs }) => {
           }
         />
       ))}
-    </Container>
+    </Flex>
   );
 };
-
-const Container = styled.div`
-  height: 100%;
-  display: flex;
-  align-items: stretch;
-  flex-direction: column;
-`;

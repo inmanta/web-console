@@ -1,9 +1,12 @@
 import React, { useContext } from "react";
+import { InstanceAttributeModel } from "@/Core";
 import { useUrlStateWithString } from "@/Data";
 import { InstanceDetailsContext } from "@/Slices/ServiceInstanceDetails/Core/Context";
 import {
+  AttributeSets,
   AttributeViews,
   AttributeViewToggles,
+  getAttributeSetsFromInstance,
   getAvailableAttributesSets,
 } from "@/Slices/ServiceInstanceDetails/Utils";
 import { LoadingView } from "@/UI/Components";
@@ -34,6 +37,7 @@ export const AttributesViewProvider: React.FC<Props> = ({ selectedView }) => {
     key: `version`,
     route: "InstanceDetails",
   });
+  const isLatest = selectedVersion === String(instance.version);
 
   if (logsQuery.isLoading) {
     return <LoadingView />;
@@ -43,10 +47,13 @@ export const AttributesViewProvider: React.FC<Props> = ({ selectedView }) => {
     return NoDataState;
   }
 
-  const attributeSets = getAvailableAttributesSets(
-    logsQuery.data,
-    selectedVersion,
-  );
+  let attributeSets: Partial<Record<AttributeSets, InstanceAttributeModel>>;
+
+  if (!isLatest) {
+    attributeSets = getAvailableAttributesSets(logsQuery.data, selectedVersion);
+  } else {
+    attributeSets = getAttributeSetsFromInstance(instance);
+  }
 
   const dropdownOptions = Object.keys(attributeSets);
 

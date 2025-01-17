@@ -109,9 +109,7 @@ test("GIVEN CompileButton WHEN clicked THEN triggers recompile", async () => {
     name: "RecompileButton",
   });
 
-  await act(async () => {
-    await userEvent.click(button);
-  });
+  await userEvent.click(button);
 
   const toast = screen.getByTestId("ToastAlert");
 
@@ -168,17 +166,13 @@ test("GIVEN CompileButton WHEN clicked on toggle and clicked on Update & Recompi
 
   expect(toggle).toBeEnabled();
 
-  await act(async () => {
-    await userEvent.click(toggle);
-  });
+  await userEvent.click(toggle);
 
   const button = screen.getByRole("menuitem", {
     name: "UpdateAndRecompileButton",
   });
 
-  await act(async () => {
-    await userEvent.click(button);
-  });
+  await userEvent.click(button);
 
   const toast = screen.getByTestId("ToastAlert");
 
@@ -239,9 +233,7 @@ test("GIVEN CompileButton WHEN 'isToastVisible' parameter is false and recompile
 
   const button = screen.getByRole("button", { name: "RecompileButton" });
 
-  await act(async () => {
-    await userEvent.click(button);
-  });
+  await userEvent.click(button);
 
   expect(screen.queryByTestId("ToastAlert")).not.toBeInTheDocument();
 
