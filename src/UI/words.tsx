@@ -470,9 +470,11 @@ const dict = {
   /** Discovered Resources related text */
   "discovered.column.resource_id": "Resource Id",
   "discovered.column.managed_resource": "Managed resource",
+  "discovered.column.discovery_resource": "Discovery resource",
   "discovered_resources.title": "Discovered Resources",
   "discovered_resources.values": "values",
-  "discovered_resources.show_resource": "Show managed resource",
+  "discovered_resources.show_resource.managed": "Show managed resource",
+  "discovered_resources.show_resource.discovery": "Show discovery resource",
 
   /** Compile report related text */
   "compileReports.title": "Compile Reports",
@@ -718,12 +720,16 @@ const dict = {
   /**
    * Banners
    */
+  "banner.expertMode": "LSM expert mode is enabled, proceed with caution. ",
+  "banner.updateBanner": (currentVersion: string) =>
+    `You are running ${currentVersion}, a new version is available! Please hard-reload (Ctrl+F5 | Cmd + Shift + R) your page to load the new version.`,
   "banner.entitlement.expired": (days: number) =>
     `Your license has expired ${days} days ago!`,
   "banner.certificate.expired": (days: number) =>
     `Your license has expired ${days} days ago!`,
   "banner.certificate.will.expire": (days: number) =>
     `Your license will expire in ${days} days.`,
+  "banner.disableExpertMode": "Disable expert mode",
 
   /**
    * Common

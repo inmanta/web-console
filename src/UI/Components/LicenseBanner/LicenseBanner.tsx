@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Banner } from "@patternfly/react-core";
+import { Banner, Flex } from "@patternfly/react-core";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 
@@ -16,7 +16,9 @@ export const LicenseBanner: React.FC = () => {
 
   return expirationMessage ? (
     <Banner isSticky variant="red" aria-label="licenceExpired">
-      {expirationMessage}
+      <Flex justifyContent={{ default: "justifyContentCenter" }}>
+        {expirationMessage}
+      </Flex>
     </Banner>
   ) : null;
 };
