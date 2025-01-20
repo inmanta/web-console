@@ -21,7 +21,7 @@ export const FilterWidget: React.FC<Props> = ({
   states,
 }) => {
   const [filterKind, setFilterKind] = useState<ServiceInstanceParams.Kind>(
-    ServiceInstanceParams.Kind.State,
+    ServiceInstanceParams.Kind.Id,
   );
 
   const updateState = (states: string[]) =>

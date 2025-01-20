@@ -27,6 +27,9 @@ test("GIVEN The Service Inventory WHEN the user filters on something THEN a data
 
   expect(beforeRows.length).toEqual(2);
 
+  await userEvent.click(screen.getByLabelText("FilterPicker"));
+  await userEvent.click(screen.getByRole("option", { name: "State" }));
+
   const input = await screen.findByPlaceholderText(
     words("inventory.filters.state.placeholder"),
   );
