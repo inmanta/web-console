@@ -265,3 +265,31 @@ const removeConnectionData = (
     dispatchUpdateServiceOrderItems(elementCell, ActionEnum.UPDATE);
   }
 };
+
+/**
+ * Function that checks if the cells are colliding and moves them if they are
+ *
+ * @param {dia.Graph} graph - The jointJS graph to which entities are be added.
+ * @param {dia.Cell[]} cells - the array of cells to check for collisions
+ */
+export const moveCellsFromColliding = (graph: dia.Graph, cells: dia.Cell[]) => {
+  cells.map((cell) => {
+    let isColliding = false;
+    do {
+      const overlappingCells = graph
+        .findModelsInArea(cell.getBBox())
+        .filter((el) => el.id !== cell.id);
+      if (overlappingCells.length > 0) {
+        isColliding = true;
+        // an overlap found, change the position
+        const coordinates = cell.position();
+        cell.set("position", {
+          x: coordinates.x,
+          y: coordinates.y + 50,
+        });
+      } else {
+        isColliding = false;
+      }
+    } while (isColliding);
+  });
+};
