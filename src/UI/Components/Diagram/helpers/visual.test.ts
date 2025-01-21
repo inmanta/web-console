@@ -343,6 +343,7 @@ describe("showLinkTools", () => {
 describe("moveCellsFromColliding", () => {
   it("should move cells to avoid collision", () => {
     const graph = new dia.Graph();
+
     new dia.Paper({
       model: graph,
     });
@@ -378,6 +379,7 @@ describe("moveCellsFromColliding", () => {
 
   it("should not move cells if they are not colliding", () => {
     const graph = new dia.Graph();
+
     new dia.Paper({
       model: graph,
     });
