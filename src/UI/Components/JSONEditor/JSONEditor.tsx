@@ -3,7 +3,7 @@ import { Editor, OnValidate, useMonaco } from "@monaco-editor/react";
 import { Spinner } from "@patternfly/react-core";
 import { useGetJSONSchema } from "@/Data/Managers/V2/GETTERS/GetJSONSchema";
 import { DependencyContext, words } from "@/UI";
-import Validation from "../Validation/Validation";
+import { ErrorMessageContainer } from "../ErrorMessageContainer";
 
 interface Props {
   service_entity: string;
@@ -126,11 +126,11 @@ export const JSONEditor: React.FC<Props> = ({
         options={{ domReadOnly: readOnly, readOnly: readOnly }}
       />
       {!readOnly && errors.length > 0 && (
-        <Validation title={words("validation.title")(errors.length)}>
+        <ErrorMessageContainer title={words("validation.title")(errors.length)}>
           {errors.map((error, index) => (
             <p key={index}>{error}</p>
           ))}
-        </Validation>
+        </ErrorMessageContainer>
       )}
     </div>
   );

@@ -13,7 +13,7 @@ interface Props {
  * @param {ReactNode} children - The children of the error message
  * @returns {ReactElement} The error message component
  */
-const Validation: React.FC<PropsWithChildren<Props>> = ({
+export const ErrorMessageContainer: React.FC<PropsWithChildren<Props>> = ({
   children,
   title,
 }) => {
@@ -31,5 +31,3 @@ const Validation: React.FC<PropsWithChildren<Props>> = ({
     </Panel>
   );
 };
-
-export default Validation;

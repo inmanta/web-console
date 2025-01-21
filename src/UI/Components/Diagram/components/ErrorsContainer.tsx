@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { Content } from "@patternfly/react-core";
 import { words } from "@/UI/words";
-import Validation from "../../Validation/Validation";
+import { ErrorMessageContainer } from "../../ErrorMessageContainer";
 import { CanvasContext } from "../Context";
 import { RelationCounterForCell } from "../interfaces";
 
@@ -31,7 +31,7 @@ export const ErrorsContainer: React.FC = () => {
   }
 
   return (
-    <Validation
+    <ErrorMessageContainer
       title={words("validation.title")(
         interServiceRelationsThatAreMissing.length,
       )}
@@ -39,7 +39,7 @@ export const ErrorsContainer: React.FC = () => {
       {interServiceRelationsThatAreMissing.map(([id, value]) => (
         <MissingRelationsForGivenCell key={id} entity={value} />
       ))}
-    </Validation>
+    </ErrorMessageContainer>
   );
 };
 
