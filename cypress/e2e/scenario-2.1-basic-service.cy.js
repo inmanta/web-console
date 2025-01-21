@@ -186,7 +186,11 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="History-Row"]').eq(0).should("contain", "up");
 
       // Selecting a version in the table should change the tags in the heading of the page.
-      cy.get('[aria-label="History-Row"]').eq(1).click();
+      cy.get('[aria-label="History-Row"]')
+        .eq(1)
+        .within(() => {
+          cy.get('[data-label="version"]').click(); //it's done to avoid flake where the tooltip comes in a way and click ins't triggered
+        });
       cy.get('[data-testid="selected-version"]').should(
         "have.text",
         "Version: 2",
@@ -490,7 +494,11 @@ if (Cypress.env("edition") === "iso") {
         .click();
 
       // change version and go to events page. The second version should contain a validation report.
-      cy.get('[aria-label="History-Row"]').eq(7).click();
+      cy.get('[aria-label="History-Row"]')
+        .eq(7)
+        .within(() => {
+          cy.get('[data-label="version"]').click(); //it's done to avoid flake where the tooltip comes in a way and click ins't triggered
+        });
       cy.get('[data-testid="selected-version"]').should(
         "have.text",
         "Version: 2",

@@ -18,6 +18,7 @@ import {
   updateLabelPosition,
   toggleLooseElement,
   showLinkTools,
+  moveCellsFromColliding,
 } from "./visual";
 
 beforeAll(() => {
@@ -336,5 +337,77 @@ describe("showLinkTools", () => {
 
     showLinkTools(paper, graph, linkView, connectionRules);
     expect(linkView.hasTools()).toBeFalsy();
+  });
+});
+
+describe("moveCellsFromColliding", () => {
+  it("should move cells to avoid collision", () => {
+    const graph = new dia.Graph();
+
+    new dia.Paper({
+      model: graph,
+    });
+
+    const entityA = createComposerEntity({
+      serviceModel: Service.a,
+      isCore: false,
+      isEmbeddedEntity: false,
+      isInEditMode: false,
+      attributes: InstanceAttributesA,
+    });
+    const entityB = createComposerEntity({
+      serviceModel: Service.a,
+      isCore: false,
+      isEmbeddedEntity: false,
+      isInEditMode: false,
+      attributes: InstanceAttributesB,
+    });
+
+    graph.addCell(entityA);
+    graph.addCell(entityB);
+
+    entityA.set("position", { x: 0, y: 0 });
+    entityB.set("position", { x: 0, y: 0 });
+
+    moveCellsFromColliding(graph, graph.getCells());
+
+    const updatedCells = graph.getCells();
+
+    expect(updatedCells[0].position()).toEqual({ x: 0, y: 50 });
+    expect(updatedCells[1].position()).toEqual({ x: 0, y: 0 });
+  });
+
+  it("should not move cells if they are not colliding", () => {
+    const graph = new dia.Graph();
+
+    new dia.Paper({
+      model: graph,
+    });
+    const entityA = createComposerEntity({
+      serviceModel: Service.a,
+      isCore: false,
+      isEmbeddedEntity: false,
+      isInEditMode: false,
+      attributes: InstanceAttributesA,
+    });
+    const entityB = createComposerEntity({
+      serviceModel: Service.a,
+      isCore: false,
+      isEmbeddedEntity: false,
+      isInEditMode: false,
+      attributes: InstanceAttributesB,
+    });
+
+    graph.addCell(entityA);
+    graph.addCell(entityB);
+
+    entityA.set("position", { x: 0, y: 0 });
+    entityB.set("position", { x: 200, y: 200 });
+
+    moveCellsFromColliding(graph, graph.getCells());
+    const updatedCells = graph.getCells();
+
+    expect(updatedCells[0].position()).toEqual({ x: 0, y: 0 });
+    expect(updatedCells[1].position()).toEqual({ x: 200, y: 200 });
   });
 });
