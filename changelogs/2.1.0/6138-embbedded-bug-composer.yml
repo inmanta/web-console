@@ -1,0 +1,6 @@
+description: Fix issue when toggling embedded entities of the same type in the instance composer
+issue-nr: 6138
+change-type: patch
+destination-branches: [master]
+sections:
+  bugfix: "{{description}}"

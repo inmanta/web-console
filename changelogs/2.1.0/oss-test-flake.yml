@@ -1,0 +1,3 @@
+description: Updated the E2E timeout to fix the flake in 4th scenario of oss suit.
+change-type: patch
+destination-branches: [master]

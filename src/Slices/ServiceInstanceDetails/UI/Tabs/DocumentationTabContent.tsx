@@ -4,8 +4,6 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionToggle,
-  Flex,
-  Title,
 } from "@patternfly/react-core";
 import { InstanceAttributeModel, ServiceInstanceModel } from "@/Core";
 import { InstanceLog } from "@/Core/Domain/HistoryLog";
@@ -93,13 +91,6 @@ export const DocumentationTabContent: React.FC<Props> = ({
   if (sections.length === 1) {
     return (
       <TabContentWrapper id="documentation">
-        <Flex
-          alignItems={{ default: "alignItemsCenter" }}
-          gap={{ default: "gapSm" }}
-        >
-          <DynamicFAIcon icon={sections[0].iconName} />
-          <Title headingLevel="h2">{sections[0].title}</Title>
-        </Flex>
         <MarkdownCard
           attributeValue={sections[0].value}
           web_title={sections[0].title}

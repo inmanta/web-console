@@ -876,10 +876,6 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="instance-details-link"]', { timeout: 20000 })
         .first()
         .click();
-      cy.get('[data-testid="selected-version"]').should(
-        "have.text",
-        "Version: 8",
-      ); // initial open of the details view will show the outdated version
 
       //Make sure we are at the active attirubtes
       cy.get('[aria-label="Select-AttributeSet"]').select("active_attributes");

@@ -324,19 +324,6 @@ describe("Environment", () => {
       .find(".pf-v6-c-form-control input")
       .should("have.value", "610");
 
-    //Change autostart_agent_deploy_splay_time
-    cy.get('[aria-label="Row-autostart_agent_deploy_splay_time"]')
-      .find(".pf-v6-c-form-control")
-      .type("{selectAll}20");
-    cy.get('[data-testid="Warning"]').should("exist");
-    cy.get('[aria-label="Row-autostart_agent_deploy_splay_time"]')
-      .find('[aria-label="SaveAction"]')
-      .click();
-    cy.get('[data-testid="Warning"]').should("not.exist");
-    cy.get('[aria-label="Row-autostart_agent_deploy_splay_time"]')
-      .find(".pf-v6-c-form-control input")
-      .should("have.value", "20");
-
     //Change autostart_agent_repair_interval
     cy.get('[aria-label="Row-autostart_agent_repair_interval"]')
       .find(".pf-v6-c-form-control")
@@ -349,19 +336,6 @@ describe("Environment", () => {
     cy.get('[aria-label="Row-autostart_agent_repair_interval"]')
       .find(".pf-v6-c-form-control input")
       .should("have.value", "86410");
-
-    //Change autostart_agent_repair_splay_time
-    cy.get('[aria-label="Row-autostart_agent_repair_splay_time"]')
-      .find(".pf-v6-c-form-control")
-      .type("{selectAll}610");
-    cy.get('[data-testid="Warning"]').should("exist");
-    cy.get('[aria-label="Row-autostart_agent_repair_splay_time"]')
-      .find('[aria-label="SaveAction"]')
-      .click();
-    cy.get('[data-testid="Warning"]').should("not.exist");
-    cy.get('[aria-label="Row-autostart_agent_repair_splay_time"]')
-      .find(".pf-v6-c-form-control input")
-      .should("have.value", "610");
 
     //Change autostart_on_start
     cy.get('[aria-label="Row-autostart_on_start"]')
@@ -388,6 +362,39 @@ describe("Environment", () => {
 
     // specific to ISO
     if (Cypress.env("edition") === "iso") {
+      // Change enable_batched_partial_compiles
+      cy.get('[aria-label="Row-enable_batched_partial_compiles"]')
+        .find(".pf-v6-c-switch")
+        .click();
+
+      cy.get('[data-testid="Warning"]').should("exist");
+      cy.get('[aria-label="Row-enable_batched_partial_compiles"]')
+        .find('[aria-label="SaveAction"]')
+        .click();
+      cy.get('[data-testid="Warning"]').should("not.exist");
+
+      // Change lsm_expert_mode
+      cy.get('[aria-label="Row-enable_lsm_expert_mode"]')
+        .find(".pf-v6-c-switch")
+        .click();
+
+      cy.get('[data-testid="Warning"]').should("exist");
+      cy.get('[aria-label="Row-enable_lsm_expert_mode"]')
+        .find('[aria-label="SaveAction"]')
+        .click();
+      cy.get('[data-testid="Warning"]').should("not.exist");
+
+      // Change enable_lsm_transfer_optimization
+      cy.get('[aria-label="Row-enable_lsm_transfer_optimization"]')
+        .find(".pf-v6-c-switch")
+        .click();
+
+      cy.get('[data-testid="Warning"]').should("exist");
+      cy.get('[aria-label="Row-enable_lsm_transfer_optimization"]')
+        .find('[aria-label="SaveAction"]')
+        .click();
+      cy.get('[data-testid="Warning"]').should("not.exist");
+
       // Change lsm_partial_compile
       cy.get('[aria-label="Row-lsm_partial_compile"]')
         .find(".pf-v6-c-switch")
@@ -399,6 +406,15 @@ describe("Environment", () => {
         .click();
       cy.get('[data-testid="Warning"]').should("not.exist");
     }
+
+    //change environment_metrics_retention
+    cy.get('[aria-label="Row-environment_metrics_retention"]')
+      .find(".pf-v6-c-form-control")
+      .type("{selectAll}375");
+    cy.get('[data-testid="Warning"]').should("exist");
+    cy.get('[aria-label="Row-environment_metrics_retention"]')
+      .find('[aria-label="SaveAction"]')
+      .click();
 
     //change notification_retention
     cy.get('[aria-label="Row-notification_retention"]')
@@ -419,6 +435,29 @@ describe("Environment", () => {
       .click();
     cy.get('[data-testid="Warning"]').should("exist");
     cy.get('[aria-label="Row-protected_environment"]')
+      .find('[aria-label="SaveAction"]')
+      .click();
+    cy.get('[data-testid="Warning"]').should("not.exist");
+
+    //Change recompile_backoff
+    cy.get('[aria-label="Row-recompile_backoff"]')
+      .find(".pf-v6-c-form-control")
+      .type("{selectAll}2");
+    cy.get('[data-testid="Warning"]').should("exist");
+    cy.get('[aria-label="Row-recompile_backoff"]')
+      .find('[aria-label="SaveAction"]')
+      .click();
+    cy.get('[data-testid="Warning"]').should("not.exist");
+    cy.get('[aria-label="Row-recompile_backoff"]')
+      .find(".pf-v6-c-form-control input")
+      .should("have.value", "2");
+
+    //Change reset_deploy_progress_on_start
+    cy.get('[aria-label="Row-reset_deploy_progress_on_start"]')
+      .find(".pf-v6-c-switch")
+      .click();
+    cy.get('[data-testid="Warning"]').should("exist");
+    cy.get('[aria-label="Row-reset_deploy_progress_on_start"]')
       .find('[aria-label="SaveAction"]')
       .click();
     cy.get('[data-testid="Warning"]').should("not.exist");

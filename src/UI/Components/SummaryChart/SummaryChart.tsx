@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { ChartDonut, ChartLegend } from "@patternfly/react-charts";
 import {
   t_global_icon_color_status_danger_default,
-  t_global_icon_color_status_info_default,
+  t_global_color_brand_default,
   t_global_icon_color_status_success_default,
   t_global_icon_color_status_warning_default,
   t_global_icon_color_severity_undefined_default,
@@ -161,7 +161,7 @@ const colorsForChart = {
   danger: t_global_icon_color_status_danger_default,
   warning: t_global_icon_color_status_warning_default,
   success: t_global_icon_color_status_success_default,
-  info: t_global_icon_color_status_info_default,
+  info: t_global_color_brand_default,
   no_label: t_global_icon_color_severity_undefined_default,
 };
 

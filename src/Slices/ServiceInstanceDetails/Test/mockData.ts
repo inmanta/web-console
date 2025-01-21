@@ -525,7 +525,19 @@ export const historyData: InstanceLog[] = [
     transfer_context: "auto",
   },
 ];
-
+export const logsResponse = {
+  data: historyData,
+  links: {
+    next: "/lsm/v1/service_inventory/Lab/bd1f6d03-a0fc-4ce1-bb42-45de2de33b0b/log?limit=50&sort=version.desc&end=34",
+    self: "/lsm/v1/service_inventory/Lab/bd1f6d03-a0fc-4ce1-bb42-45de2de33b0b/log?limit=50&sort=version.desc",
+  },
+  metadata: {
+    total: 83,
+    before: 0,
+    after: 33,
+    page_size: 50,
+  },
+};
 export const serviceModel: ServiceModel = {
   attributes: [
     {
@@ -1640,6 +1652,20 @@ export const historyDataWithDocumentation: InstanceLog[] = [
     transfer_context: "auto",
   },
 ];
+
+export const logsWithDocumentationResponse = {
+  data: historyDataWithDocumentation,
+  links: {
+    next: "/lsm/v1/service_inventory/Lab/bd1f6d03-a0fc-4ce1-bb42-45de2de33b0b/log?limit=50&sort=version.desc&end=34",
+    self: "/lsm/v1/service_inventory/Lab/bd1f6d03-a0fc-4ce1-bb42-45de2de33b0b/log?limit=50&sort=version.desc",
+  },
+  metadata: {
+    total: 83,
+    before: 0,
+    after: 33,
+    page_size: 50,
+  },
+};
 
 export const JSONSchema = {
   data: {

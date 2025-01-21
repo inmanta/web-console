@@ -1,7 +1,7 @@
 import React from "react";
 import {
   t_global_icon_color_status_danger_default,
-  t_global_icon_color_status_info_default,
+  t_global_color_brand_default,
   t_global_icon_color_status_success_default,
 } from "@patternfly/react-tokens";
 import { words } from "@/UI";
@@ -95,7 +95,7 @@ const fromProgressToItems = (
       value: Number(
         items.filter((item) => item.status.state === "in_progress").length,
       ),
-      backgroundColor: t_global_icon_color_status_info_default.var,
+      backgroundColor: t_global_color_brand_default.var,
     },
   ].filter((item) => item.value > 0);
 };

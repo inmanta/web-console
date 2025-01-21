@@ -1,0 +1,4 @@
+description: Adjust the info color to be blue instead of the new PF purple color.
+issue-nr: 6149
+change-type: patch
+destination-branches: [master]

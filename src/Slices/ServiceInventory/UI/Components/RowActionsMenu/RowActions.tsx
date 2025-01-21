@@ -70,81 +70,82 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
       popperProps={{ position: "right" }}
     >
       <DropdownList>
-        <DropdownItem
-          itemId="diagnose"
+        <Link
+          variant="plain"
+          pathname={routeManager.getUrl("Diagnose", {
+            service: entity,
+            instance: instanceId,
+          })}
           isDisabled={diagnoseDisabled}
-          icon={<FileMedicalAltIcon />}
         >
+          <DropdownItem
+            itemId="diagnose"
+            isDisabled={diagnoseDisabled}
+            icon={<FileMedicalAltIcon />}
+          >
+            {words("inventory.statustab.diagnose")}
+          </DropdownItem>
+        </Link>
+        {composerEnabled && (
           <Link
             variant="plain"
-            pathname={routeManager.getUrl("Diagnose", {
+            pathname={routeManager.getUrl("InstanceComposerEditor", {
               service: entity,
               instance: instanceId,
             })}
-            isDisabled={diagnoseDisabled}
+            isDisabled={editDisabled}
           >
-            {words("inventory.statustab.diagnose")}
+            <DropdownItem
+              itemId="edit-composer"
+              isDisabled={editDisabled}
+              icon={<ToolsIcon />}
+            >
+              {words("instanceComposer.editButton")}
+            </DropdownItem>
           </Link>
-        </DropdownItem>
-        {composerEnabled && (
+        )}
+        {featureManager.isComposerEnabled() && (
+          <Link
+            variant="plain"
+            pathname={routeManager.getUrl("InstanceComposerViewer", {
+              service: entity,
+              instance: instanceId,
+            })}
+          >
+            <DropdownItem itemId="show-composer" icon={<EyeIcon />}>
+              {words("instanceComposer.showButton")}
+            </DropdownItem>
+          </Link>
+        )}
+        <Link
+          variant="plain"
+          pathname={routeManager.getUrl("EditInstance", {
+            service: entity,
+            instance: instanceId,
+          })}
+          isDisabled={editDisabled}
+        >
           <DropdownItem
-            itemId="edit-composer"
+            itemId="edit"
             isDisabled={editDisabled}
             icon={<ToolsIcon />}
           >
-            <Link
-              variant="plain"
-              pathname={routeManager.getUrl("InstanceComposerEditor", {
-                service: entity,
-                instance: instanceId,
-              })}
-              isDisabled={editDisabled}
-            >
-              {words("instanceComposer.editButton")}
-            </Link>
-          </DropdownItem>
-        )}
-        {featureManager.isComposerEnabled() && (
-          <DropdownItem itemId="show-composer" icon={<EyeIcon />}>
-            <Link
-              variant="plain"
-              pathname={routeManager.getUrl("InstanceComposerViewer", {
-                service: entity,
-                instance: instanceId,
-              })}
-            >
-              {words("instanceComposer.showButton")}
-            </Link>
-          </DropdownItem>
-        )}
-        <DropdownItem
-          itemId="edit"
-          isDisabled={editDisabled}
-          icon={<ToolsIcon />}
-        >
-          <Link
-            variant="plain"
-            pathname={routeManager.getUrl("EditInstance", {
-              service: entity,
-              instance: instanceId,
-            })}
-            isDisabled={editDisabled}
-          >
             {words("inventory.editInstance.button")}
-          </Link>
-        </DropdownItem>
+          </DropdownItem>
+        </Link>
 
-        <DropdownItem itemId="duplicate" icon={<CopyIcon />}>
-          <Link
-            variant="plain"
-            pathname={routeManager.getUrl("DuplicateInstance", {
-              service: entity,
-              instance: instanceId,
-            })}
-          >
+        <Link
+          variant="plain"
+          pathname={routeManager.getUrl("DuplicateInstance", {
+            service: entity,
+            instance: instanceId,
+          })}
+        >
+          <DropdownItem itemId="duplicate" icon={<CopyIcon />}>
             {words("inventory.duplicateInstance.button")}
-          </Link>
-        </DropdownItem>
+          </DropdownItem>
+        </Link>
+
         <Divider component="li" />
         <DeleteAction
           isDisabled={deleteDisabled}

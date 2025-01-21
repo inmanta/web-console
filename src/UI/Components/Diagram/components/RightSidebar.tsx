@@ -10,13 +10,10 @@ import {
 } from "@patternfly/react-core";
 import { CubesIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
-import { Field, InstanceAttributeModel, ServiceModel } from "@/Core";
-import { sanitizeAttributes } from "@/Data";
 import { words } from "@/UI/words";
 import { CanvasContext, InstanceComposerContext } from "../Context/Context";
 import { dispatchUpdateStencil } from "../Context/dispatchers";
-import { updateServiceOrderItems } from "../helpers";
-import { ActionEnum, EventActionEnum } from "../interfaces";
+import { EventActionEnum } from "../interfaces";
 import { toggleDisabledStencil } from "../stencil/helpers";
 import { EntityForm } from "./EntityForm";
 
@@ -42,36 +39,12 @@ interface Props {
  * @returns {React.FC} The RightSidebar component.
  */
 export const RightSidebar: React.FC<Props> = ({ editable }) => {
-  const { cellToEdit, diagramHandlers, setServiceOrderItems, stencilState } =
-    useContext(CanvasContext);
+  const { cellToEdit, stencilState } = useContext(CanvasContext);
   const { mainService } = useContext(InstanceComposerContext);
   const [description, setDescription] = useState<string | null>(null);
   const [isRemovable, setIsRemovable] = useState(false);
-  const [model, setModel] = useState<ServiceModel | null>(null);
   const [isInterServiceRelation, setIsInterServiceRelation] = useState(false);
-  const [attributes, setAttributes] = useState<InstanceAttributeModel>({});
-
-  /**
-   * Handles the save action for the form.
-   * Sanitizes the form attributes and updates the entity in the diagram.
-   * Updates the service order items with the new shape and closes the form.
-   *
-   * @param {Field[]} fields - The fields of the form.
-   * @param {InstanceAttributeModel} formState - The current state of the form.
-   */
-  const onSave = (fields: Field[], formState: InstanceAttributeModel) => {
-    if (cellToEdit && diagramHandlers && model) {
-      const sanitizedAttrs = sanitizeAttributes(fields, formState);
-
-      const shape = diagramHandlers.editEntity(cellToEdit, model, formState);
-
-      shape.set("sanitizedAttrs", sanitizedAttrs);
-
-      setServiceOrderItems((prev) =>
-        updateServiceOrderItems(shape, ActionEnum.UPDATE, prev),
-      );
-    }
-  };
+  const [showForm, setShowForm] = useState(false);
 
   /**
    * Handles the removal of a cell.
@@ -117,15 +90,12 @@ export const RightSidebar: React.FC<Props> = ({ editable }) => {
     const serviceModel = model.get("serviceModel");
     const entityName = model.get("entityName");
     const stencilName = model.get("stencilName");
-    const instanceAttributes = model.get("instanceAttributes");
 
     if (serviceModel) {
       setDescription(serviceModel.description);
-      setModel(serviceModel);
-    }
-
-    if (instanceAttributes) {
-      setAttributes(instanceAttributes);
+      setShowForm(true);
+    } else {
+      setShowForm(false);
     }
 
     setIsInterServiceRelation(!!stencilName);
@@ -168,12 +138,9 @@ export const RightSidebar: React.FC<Props> = ({ editable }) => {
       {description && (
         <Content aria-label="service-description">{description}</Content>
       )}
-      {!!cellToEdit && !!model ? (
+      {!!cellToEdit && showForm ? (
         <EntityForm
-          serviceModel={model}
-          isEdited={cellToEdit.model.get("isInEditMode")}
-          initialState={attributes}
-          onSave={onSave}
+          cellToEdit={cellToEdit}
           isDisabled={!editable || isInterServiceRelation}
           isRemovable={isRemovable}
           onRemove={onRemove}

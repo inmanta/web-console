@@ -18,6 +18,10 @@ export class DiscoveredResourcesTablePresenter
         displayName: words("discovered.column.managed_resource"),
         apiName: "managed_resource_id",
       },
+      {
+        displayName: words("discovered.column.discovery_resource"),
+        apiName: "discovery_resource_uri",
+      },
     ];
     this.numberOfColumns = this.columnHeads.length + 1;
   }

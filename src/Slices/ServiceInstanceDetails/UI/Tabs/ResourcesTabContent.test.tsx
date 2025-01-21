@@ -1,5 +1,5 @@
 import React from "react";
-import { UseQueryResult } from "@tanstack/react-query";
+import { UseInfiniteQueryResult, UseQueryResult } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { ServiceInstanceModel, ServiceModel } from "@/Core";
 import { InstanceLog } from "@/Core/Domain/HistoryLog";
@@ -20,7 +20,7 @@ const setup = (instance: ServiceInstanceModel) => {
       <InstanceDetailsContext.Provider
         value={{
           instance,
-          logsQuery: {} as UseQueryResult<InstanceLog[], Error>,
+          logsQuery: {} as UseInfiniteQueryResult<InstanceLog[], Error>,
           serviceModelQuery: {} as UseQueryResult<ServiceModel, Error>,
         }}
       >

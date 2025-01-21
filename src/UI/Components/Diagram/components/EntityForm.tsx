@@ -1,20 +1,23 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
+import { dia } from "@inmanta/rappid";
 import { Alert, Button, Flex, FlexItem, Form } from "@patternfly/react-core";
 import { set } from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import { Field, InstanceAttributeModel, ServiceModel } from "@/Core";
+import { sanitizeAttributes } from "@/Data";
 import {
   CreateModifierHandler,
   FieldCreator,
 } from "@/UI/Components/ServiceInstanceForm";
 import { FieldInput } from "@/UI/Components/ServiceInstanceForm/Components";
 import { words } from "@/UI/words";
+import { CanvasContext } from "../Context";
+import { updateServiceOrderItems } from "../helpers";
+import { ActionEnum } from "../interfaces";
 
 interface Props {
-  serviceModel: ServiceModel;
-  isEdited: boolean;
-  initialState: InstanceAttributeModel;
-  onSave: (fields: Field[], formState: InstanceAttributeModel) => void;
+  cellToEdit: dia.CellView;
+
   isDisabled: boolean;
   isRemovable: boolean;
   showButtons: boolean;
@@ -41,18 +44,19 @@ interface Props {
  * @returns {React.FC<Props>} The EntityForm component.
  */
 export const EntityForm: React.FC<Props> = ({
-  serviceModel,
-  isEdited,
-  initialState,
-  onSave,
+  cellToEdit,
   isDisabled,
   isRemovable,
   showButtons,
   onRemove,
 }) => {
+  const { diagramHandlers, setServiceOrderItems } = useContext(CanvasContext);
+  const [serviceModel, setServiceModel] = useState<ServiceModel | null>(null);
   const [fields, setFields] = useState<Field[] | null>(null);
-  const [formState, setFormState] =
-    useState<InstanceAttributeModel>(initialState);
+  const [originalState, setOriginalState] = useState<InstanceAttributeModel>(
+    {},
+  );
+  const [formState, setFormState] = useState<InstanceAttributeModel>({});
   const [isDirty, setIsDirty] = useState(false);
 
   /**
@@ -64,9 +68,10 @@ export const EntityForm: React.FC<Props> = ({
    * @returns {void}
    */
   const getUpdate = (path: string, value: unknown, multi = false): void => {
-    if (!fields) {
+    if (!fields || !serviceModel) {
       return;
     }
+
     if (!isDirty) {
       setIsDirty(true);
     }
@@ -86,9 +91,7 @@ export const EntityForm: React.FC<Props> = ({
           selection.push(value as string);
         }
         updatedValue = set(clone, path, selection);
-        onSave(fields, updatedValue); // onSave has to be called within setState to avoid async behavior of setState
 
-        //update the form state with the new selection property with help of _lodash set function
         return updatedValue;
       });
     } else {
@@ -96,9 +99,7 @@ export const EntityForm: React.FC<Props> = ({
         const clone = { ...prev };
 
         updatedValue = set(clone, path, value);
-        onSave(fields, updatedValue); // onSave has to be called within setState to avoid async behavior of setState
 
-        //update the form state with the new value with help of _lodash set function
         return updatedValue;
       });
     }
@@ -113,13 +114,8 @@ export const EntityForm: React.FC<Props> = ({
    * @returns {void}
    */
   const onCancel = (): void => {
-    if (!fields) {
-      return;
-    }
-    onSave(fields, initialState);
+    onSave(originalState);
     createFieldsAndState();
-    setFormState(initialState);
-    setIsDirty(false);
   };
 
   /**
@@ -131,6 +127,11 @@ export const EntityForm: React.FC<Props> = ({
    * @returns {void}
    */
   const createFieldsAndState = useCallback(() => {
+    const { model } = cellToEdit;
+    const serviceModel = model.get("serviceModel") as ServiceModel;
+    const isEdited = model.get("isEdited") as boolean;
+    const instanceAttributes = model.get("instanceAttributes");
+
     const fieldCreator = new FieldCreator(
       new CreateModifierHandler(),
       isEdited,
@@ -140,13 +141,43 @@ export const EntityForm: React.FC<Props> = ({
     );
 
     setFields(selectedFields.map((field) => ({ ...field, id: uuidv4() })));
-    setFormState(initialState);
+    setServiceModel(serviceModel);
+    setFormState(instanceAttributes);
+    setOriginalState(instanceAttributes);
     setIsDirty(false);
-  }, [serviceModel, isEdited, initialState]);
+  }, [cellToEdit]);
+
+  const onSave = useCallback(
+    (formState) => {
+      if (diagramHandlers && fields && serviceModel) {
+        const sanitizedAttrs = sanitizeAttributes(fields, formState);
+
+        const shape = diagramHandlers.editEntity(
+          cellToEdit,
+          serviceModel,
+          formState,
+        );
+
+        shape.set("sanitizedAttrs", sanitizedAttrs);
+        setServiceOrderItems((prev) => {
+          if (prev.has(String(shape.id))) {
+            return updateServiceOrderItems(shape, ActionEnum.UPDATE, prev);
+          } else {
+            return prev;
+          }
+        });
+      }
+    },
+    [cellToEdit, diagramHandlers, fields, serviceModel, setServiceOrderItems],
+  );
 
   useEffect(() => {
     createFieldsAndState();
   }, [createFieldsAndState]);
+
+  useEffect(() => {
+    onSave(formState);
+  }, [onSave, formState]);
 
   return (
     <>
@@ -169,7 +200,7 @@ export const EntityForm: React.FC<Props> = ({
           {fields &&
             fields.map((field) => (
               <FieldInput
-                originalState={initialState}
+                originalState={originalState}
                 key={field.name}
                 field={{
                   ...field,

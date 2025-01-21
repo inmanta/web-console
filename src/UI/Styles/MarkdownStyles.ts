@@ -6,7 +6,7 @@ export const MarkdownStyles = `
   -webkit-text-size-adjust: 100%;
   margin: 0;
   color: var(--pf-t--global--text--color--regular);
-  font-family: var(--pf-t--global--font--family--mono);
+  font-family: var(--pf-t--global--font--family--body);
   font-size: 16px;
   line-height: 1.5;
   word-wrap: break-word;
@@ -62,7 +62,7 @@ export const MarkdownStyles = `
 
 .markdown-body b,
 .markdown-body strong {
-  font-weight: 600;
+  font-weight: var(--pf-t--global--font--weight--200);
 }
 
 .markdown-body dfn {
@@ -71,7 +71,7 @@ export const MarkdownStyles = `
 
 .markdown-body h1 {
   margin: .67em 0;
-  font-weight: 600;
+  font-weight: var(--pf-t--global--font--weight--200);
   padding-bottom: .3em;
   font-size: 2em;
   border-bottom: 1px solid hsla(210,18%,87%,1);
@@ -113,7 +113,7 @@ export const MarkdownStyles = `
 .markdown-body kbd,
 .markdown-body pre,
 .markdown-body samp {
-  font-family: monospace;
+  font-family: var(--pf-t--global--font--family--mono);
   font-size: 1em;
 }
 
@@ -275,34 +275,34 @@ export const MarkdownStyles = `
 .markdown-body h6 {
   margin-top: 24px;
   margin-bottom: 16px;
-  font-weight: 600;
+  font-weight: var(--pf-t--global--font--weight--200);
   line-height: 1.25;
 }
 
 .markdown-body h2 {
-  font-weight: 600;
+  font-weight: var(--pf-t--global--font--weight--200);
   padding-bottom: .3em;
   font-size: 1.5em;
   border-bottom: 1px solid hsla(210,18%,87%,1);
 }
 
 .markdown-body h3 {
-  font-weight: 600;
+  font-weight: var(--pf-t--global--font--weight--200);
   font-size: 1.25em;
 }
 
 .markdown-body h4 {
-  font-weight: 600;
+  font-weight: var(--pf-t--global--font--weight--200);
   font-size: 1em;
 }
 
 .markdown-body h5 {
-  font-weight: 600;
+  font-weight: var(--pf-t--global--font--weight--200);
   font-size: .875em;
 }
 
 .markdown-body h6 {
-  font-weight: 600;
+  font-weight: var(--pf-t--global--font--weight--200);
   font-size: .85em;
   color: #656d76;
 }
@@ -345,14 +345,14 @@ export const MarkdownStyles = `
 .markdown-body tt,
 .markdown-body code,
 .markdown-body samp {
-  font-family: ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace;
+  font-family: var(--pf-t--global--font--family--mono);
   font-size: 12px;
 }
 
 .markdown-body pre {
   margin-top: 0;
   margin-bottom: 0;
-  font-family: ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace;
+  font-family: var(--pf-t--global--font--family--mono);
   font-size: 12px;
   word-wrap: normal;
 }
@@ -562,7 +562,7 @@ export const MarkdownStyles = `
   margin-top: 16px;
   font-size: 1em;
   font-style: italic;
-  font-weight: 600;
+  font-weight: var(--pf-t--global--font--weight--200);
 }
 
 .markdown-body dl dd {
@@ -571,7 +571,7 @@ export const MarkdownStyles = `
 }
 
 .markdown-body table th {
-  font-weight: 600;
+  font-weight: var(--pf-t--global--font--weight--200);
 }
 
 .markdown-body table th,
@@ -790,7 +790,7 @@ export const MarkdownStyles = `
 }
 
 .markdown-body .csv-data th {
-  font-weight: 600;
+  font-weight: var(--pf-t--global--font--weight--200);
   background: #f6f8fa;
   border-top: 0;
 }
@@ -840,7 +840,7 @@ export const MarkdownStyles = `
 }
 
 .markdown-body .footnotes .data-footnote-backref g-emoji {
-  font-family: monospace;
+  font-family: var(--pf-t--global--font--family--mono);
 }
 
 .markdown-body .pl-c {
@@ -900,7 +900,7 @@ export const MarkdownStyles = `
 }
 
 .markdown-body .pl-sr .pl-cce {
-  font-weight: bold;
+  font-weight: var(--pf-t--global--font--weight--200);
   color: #116329;
 }
 
@@ -911,7 +911,7 @@ export const MarkdownStyles = `
 .markdown-body .pl-mh,
 .markdown-body .pl-mh .pl-en,
 .markdown-body .pl-ms {
-  font-weight: bold;
+  font-weight: var(--pf-t--global--font--weight--200);
   color: #0550ae;
 }
 
@@ -921,7 +921,7 @@ export const MarkdownStyles = `
 }
 
 .markdown-body .pl-mb {
-  font-weight: bold;
+  font-weight: var(--pf-t--global--font--weight--200);
   color: #24292f;
 }
 
@@ -946,7 +946,7 @@ export const MarkdownStyles = `
 }
 
 .markdown-body .pl-mdr {
-  font-weight: bold;
+  font-weight: var(--pf-t--global--font--weight--200);
   color: #8250df;
 }
 
@@ -969,7 +969,7 @@ export const MarkdownStyles = `
   font-family: "Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
   font-size: 1em;
   font-style: normal !important;
-  font-weight: 400;
+  font-weight: var(--pf-t--global--font--weight--body);
   line-height: 1;
   vertical-align: -0.075em;
 }
@@ -984,7 +984,7 @@ export const MarkdownStyles = `
 }
 
 .markdown-body .task-list-item label {
-  font-weight: 400;
+  font-weight: var(--pf-t--global--font--weight--body);
 }
 
 .markdown-body .task-list-item.enabled label {
@@ -1042,7 +1042,7 @@ export const MarkdownStyles = `
 
 .markdown-body .markdown-alert .markdown-alert-title {
   display: flex;
-  font-weight: 500;
+  font-weight: var(--pf-t--global--font--weight--heading);
   align-items: center;
   line-height: 1;
 }

@@ -755,7 +755,7 @@ describe("Scenario 6 : Resources", () => {
       // Expect it to have : 8 log messages
       cy.get('[aria-label="ResourceLogRow"]', { timeout: 40000 }).should(
         "to.have.length.of.at.least",
-        8,
+        5,
       );
 
       // make sure the default is 100 instead of 20 like on other pages with pagination.

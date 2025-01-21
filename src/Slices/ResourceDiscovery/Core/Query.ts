@@ -32,6 +32,7 @@ export interface Manifest {
 export interface DiscoveredResource {
   discovered_resource_id: string;
   managed_resource_uri: string | null;
+  discovery_resource_uri: string | null;
   values: unknown;
 }
 
