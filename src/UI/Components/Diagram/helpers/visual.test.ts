@@ -343,7 +343,7 @@ describe("showLinkTools", () => {
 describe("moveCellsFromColliding", () => {
   it("should move cells to avoid collision", () => {
     const graph = new dia.Graph();
-    const paper = new dia.Paper({
+    new dia.Paper({
       model: graph,
     });
 
@@ -371,13 +371,14 @@ describe("moveCellsFromColliding", () => {
     moveCellsFromColliding(graph, graph.getCells());
 
     const updatedCells = graph.getCells();
+
     expect(updatedCells[0].position()).toEqual({ x: 0, y: 50 });
     expect(updatedCells[1].position()).toEqual({ x: 0, y: 0 });
   });
 
   it("should not move cells if they are not colliding", () => {
     const graph = new dia.Graph();
-    const paper = new dia.Paper({
+    new dia.Paper({
       model: graph,
     });
     const entityA = createComposerEntity({

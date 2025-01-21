@@ -275,14 +275,17 @@ const removeConnectionData = (
 export const moveCellsFromColliding = (graph: dia.Graph, cells: dia.Cell[]) => {
   cells.map((cell) => {
     let isColliding = false;
+
     do {
       const overlappingCells = graph
         .findModelsInArea(cell.getBBox())
         .filter((el) => el.id !== cell.id);
+
       if (overlappingCells.length > 0) {
         isColliding = true;
         // an overlap found, change the position
         const coordinates = cell.position();
+
         cell.set("position", {
           x: coordinates.x,
           y: coordinates.y + 50,
