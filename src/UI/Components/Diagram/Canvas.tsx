@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { CanvasContext, InstanceComposerContext } from "./Context";
 import { EventWrapper } from "./Context/EventWrapper";
 import { DictModal, RightSidebar } from "./components";
-import { Validation } from "./components/Validation";
+import { ErrorsContainer } from "./components/ErrorsContainer";
 import { createConnectionRules } from "./helpers";
 import { diagramInit } from "./init";
 import { ActionEnum } from "./interfaces";
@@ -169,7 +169,7 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
         <RightSidebar editable={editable} />
         <ZoomHandlerContainer className="zoom-handler" ref={ZoomHandler} />
       </CanvasWrapper>
-      {editable && <Validation />}
+      {editable && <ErrorsContainer />}
     </EventWrapper>
   );
 };

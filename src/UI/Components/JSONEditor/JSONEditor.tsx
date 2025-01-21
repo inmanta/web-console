@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Editor, OnValidate, useMonaco } from "@monaco-editor/react";
-import { Alert, Panel, Spinner } from "@patternfly/react-core";
-import { InfoAltIcon } from "@patternfly/react-icons";
+import { Spinner } from "@patternfly/react-core";
 import { useGetJSONSchema } from "@/Data/Managers/V2/GETTERS/GetJSONSchema";
-import { DependencyContext } from "@/UI";
+import { DependencyContext, words } from "@/UI";
+import Validation from "../Validation/Validation";
 
 interface Props {
   service_entity: string;
@@ -125,22 +125,12 @@ export const JSONEditor: React.FC<Props> = ({
         onValidate={handleOnValidate}
         options={{ domReadOnly: readOnly, readOnly: readOnly }}
       />
-      {!readOnly && (
-        <Panel data-testid="Error-container">
-          {errors.length > 0 && (
-            <Alert
-              isInline
-              customIcon={<InfoAltIcon />}
-              isExpandable
-              variant="danger"
-              title={`Errors found : ${errors.length}`}
-            >
-              {errors.map((error, index) => (
-                <p key={index}>{error}</p>
-              ))}
-            </Alert>
-          )}
-        </Panel>
+      {!readOnly && errors.length > 0 && (
+        <Validation title={words("validation.title")(errors.length)}>
+          {errors.map((error, index) => (
+            <p key={index}>{error}</p>
+          ))}
+        </Validation>
       )}
     </div>
   );
