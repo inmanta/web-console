@@ -108,7 +108,7 @@ export const CompileStageReportTableRow: React.FC<Props> = ({
                   language="python"
                 /> */}
                 <LogViewerComponent
-                  key="outstream"
+                  key={`${row.id}-outstream`}
                   data={row.outstream}
                 />
               </DescriptionListDescription>

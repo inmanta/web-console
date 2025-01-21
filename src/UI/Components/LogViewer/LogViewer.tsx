@@ -8,7 +8,7 @@ import {
     ToolbarItem,
     ToolbarToggleGroup,    
 } from '@patternfly/react-core';
-import { ArrowDownIcon, DownloadIcon, EllipsisVIcon, ExpandIcon, OutlinedPlayCircleIcon, PauseIcon, PlayIcon } from '@patternfly/react-icons';
+import { ArrowDownIcon, DownloadIcon, EllipsisVIcon } from '@patternfly/react-icons';
 import { LogViewer, LogViewerSearch } from '@patternfly/react-log-viewer';
 
 interface LogViewerProps {
@@ -38,7 +38,6 @@ export const LogViewerComponent: React.FC<LogViewerProps> = ({ data }) => {
     }, [data]);
 
     useEffect(() => {
-        console.log('Buffer updated:', buffer.length);
         if (!isPaused && buffer.length > 0) {
             setCurrentItemCount(buffer.length);
             setRenderData(buffer.join('\n'));
@@ -121,17 +120,6 @@ export const LogViewerComponent: React.FC<LogViewerProps> = ({ data }) => {
             </ToolbarGroup>
         </React.Fragment>
     );
-
-    const FooterButton = () => {
-        const handleClick = (_e: React.MouseEvent<HTMLButtonElement>) => {
-            setIsPaused(false);
-        };
-        return (
-            <Button onClick={handleClick} isBlock icon={<ArrowDownIcon />}>
-                Jump to bottom {linesBehind === 0 ? null : `and show ${linesBehind} lines`}
-            </Button>
-        );
-    };
 
     return (
         <LogViewer
