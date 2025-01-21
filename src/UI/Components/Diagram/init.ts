@@ -10,6 +10,7 @@ import {
   applyCoordinatesToCells,
   getCellsCoordinates,
   getKeyAttributesNames,
+  moveCellsFromColliding,
 } from "./helpers";
 import { toggleLooseElement } from "./helpers";
 import {
@@ -170,6 +171,9 @@ export function diagramInit(
           if (parsedCoordinates.version === "v2") {
             applyCoordinatesToCells(graph, parsedCoordinates.data);
           }
+
+          // check for overlapping cells and adjust the position - this is the case when some cells are added through regular forms
+          moveCellsFromColliding(graph, cells);
         }
       }
 
