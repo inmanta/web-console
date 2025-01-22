@@ -1,5 +1,5 @@
 import { dia, ui } from "@inmanta/rappid";
-import { t_global_text_color_inverse } from "@patternfly/react-tokens";
+import { t_global_background_color_primary_default } from "@patternfly/react-tokens";
 import { ServiceModel } from "@/Core";
 import {
   CreateModifierHandler,
@@ -37,6 +37,7 @@ export class InstanceStencilTab {
       id: "instance-stencil",
       paper: scroller,
       width: 240,
+      height: 400,
       scaleClones: true,
       dropAnimation: true,
       paperOptions: {
@@ -72,7 +73,7 @@ export class InstanceStencilTab {
         centre: false,
         dx: 0,
         dy: 0,
-        background: t_global_text_color_inverse.var,
+        background: t_global_background_color_primary_default.var,
       },
     });
     stencilElement.appendChild(this.stencil.el);

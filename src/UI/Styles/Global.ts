@@ -2,6 +2,11 @@ import { createGlobalStyle } from "styled-components";
 import { MarkdownStyles } from "./MarkdownStyles";
 
 export const GlobalStyles = createGlobalStyle`
+  html {
+    --pf-v5-chart-donut--label--title--Fill: var(--pf-t--global--text--color--subtle);
+    --pf-v5-chart-global--label--Fill: var(--pf-t--global--text--color--regular);
+  }
+
   /** 
    * The standard file upload from patternfly 6 is adding a default inline padding that is different than the ones from other input fields. 
    * This override aligns it with the other fields. 
@@ -64,6 +69,8 @@ export const GlobalStyles = createGlobalStyle`
   .pf-v6-c-select {
     min-width: 180px;
   }
+
+
 
   ${MarkdownStyles}
 `;

@@ -221,7 +221,9 @@ export const CodeHighlighter: React.FC<Props> = ({
                   language={language}
                   style={docco}
                   customStyle={{
-                    backgroundColor: "initial",
+                    backgroundColor:
+                      "var(--pf-t--global--background--color--secondary--default)",
+                    color: "var(--pf-t--global--text--color--regular)",
                     height: height,
                     minHeight,
                     resize: "vertical",

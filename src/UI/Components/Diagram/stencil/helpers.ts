@@ -1,7 +1,9 @@
 import { shapes } from "@inmanta/rappid";
 import {
+  t_global_background_color_primary_default,
   t_global_border_color_200,
-  t_global_text_color_inverse,
+  t_global_font_size_body_default,
+  t_global_text_color_regular,
 } from "@patternfly/react-tokens";
 import { v4 as uuidv4 } from "uuid";
 import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from "@/Core";
@@ -83,7 +85,7 @@ export const createStencilElement = (
         "aria-labelledby": "bodyTwo_" + name,
         width: 240,
         height: 40,
-        fill: t_global_text_color_inverse.var,
+        fill: t_global_background_color_primary_default.var,
         stroke: "none",
       },
       label: {
@@ -92,8 +94,9 @@ export const createStencilElement = (
         x: "10",
         textAnchor: "start",
         fontFamily: "sans-serif",
-        fontSize: 12,
+        fontSize: t_global_font_size_body_default.var,
         text: name,
+        fill: t_global_text_color_regular.var,
       },
       borderBottom: {
         width: 233,

@@ -1,8 +1,11 @@
 import { dia, shapes, util } from "@inmanta/rappid";
 import {
+  t_chart_global_fill_color_white,
+  t_global_background_color_primary_default,
   t_global_border_radius_small,
   t_global_font_family_mono,
-  t_global_text_color_inverse,
+  t_global_font_size_body_default,
+  t_global_font_size_body_lg,
 } from "@patternfly/react-tokens";
 import { updateLabelPosition } from "./helpers";
 import expandButton from "./icons/expand-icon.svg";
@@ -33,18 +36,18 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
             strokeWidth: 0,
             cursor: "default",
             rx: t_global_border_radius_small.value,
+            fill: t_global_background_color_primary_default.var,
           },
           header: {
             strokeWidth: 0,
             cursor: "grab",
             d: "M1,0 h257 q6,0 6,6 v24 h-264 v-24 q0,-6 6,-6",
           },
-
           headerLabel: {
             fontFamily: t_global_font_family_mono.var,
             textTransform: "uppercase",
-            fill: t_global_text_color_inverse.var,
-            fontSize: 14,
+            fill: t_chart_global_fill_color_white.var,
+            fontSize: t_global_font_size_body_lg.var,
             textWrap: {
               ellipsis: true,
               height: 30,
@@ -59,7 +62,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
           },
           itemLabels: {
             class: "joint-entityBlock-itemLabels",
-            fontSize: 12,
+            fontSize: t_global_font_size_body_default.var,
             //pointerEvents: "none",
             cursor: "default",
             itemText: {
@@ -68,7 +71,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
           },
           itemLabels_1: {
             class: "joint-entityBlock-itemLabels-one",
-            fontSize: 12,
+            fontSize: t_global_font_size_body_default.var,
             textAnchor: "end",
             x: `calc(0.5 * w - 10)`,
             cursor: "default",
