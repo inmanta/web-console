@@ -1,0 +1,3 @@
+description: Fix security alert regarding the undici package
+change-type: patch
+destination-branches: [master, iso8, iso7]
