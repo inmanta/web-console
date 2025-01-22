@@ -6,11 +6,19 @@ import { DependencyContext } from "@/UI/Dependency";
 import { RouteOutlet, SearchSanitizer } from "@/UI/Routing";
 import { GlobalStyles } from "@/UI/Styles";
 import { NotFoundPage } from "@S/NotFound/UI";
+import {
+  getThemePreference,
+  setThemePreference,
+} from "../Components/DarkmodeOption";
 import { PageFrame } from "./Components";
 import { PrimaryPageManager } from "./PrimaryPageManager";
 
 export const Root: React.FC = () => {
   const { routeManager } = useContext(DependencyContext);
+
+  const themePreference = getThemePreference();
+
+  setThemePreference(themePreference || "light");
 
   const pageManager = useMemo(
     () => new PrimaryPageManager(routeManager.getRouteDictionary()),

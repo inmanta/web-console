@@ -12,6 +12,7 @@ import {
 } from "@patternfly/react-core";
 import { UserCircleIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
+import { DarkmodeOption } from "@/UI/Components/DarkmodeOption";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 
@@ -98,6 +99,7 @@ export const EnvSelector: React.FC<Props> = ({
             </>
           )}
         </div>
+        <DarkmodeOption />
       </DropdownList>
     </Dropdown>
   );
