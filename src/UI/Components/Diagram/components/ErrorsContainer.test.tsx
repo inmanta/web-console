@@ -2,7 +2,7 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { CanvasContext, defaultCanvasContext } from "../Context";
-import { Validation } from "./Validation";
+import { ErrorsContainer } from "./ErrorsContainer";
 
 describe("Given a Validation component", () => {
   const setup = (
@@ -17,7 +17,7 @@ describe("Given a Validation component", () => {
           interServiceRelationsOnCanvas,
         }}
       >
-        <Validation />
+        <ErrorsContainer />
       </CanvasContext.Provider>
     );
   };
