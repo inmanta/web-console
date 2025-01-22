@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
-import { Alert, Panel, Content } from "@patternfly/react-core";
-import { InfoAltIcon } from "@patternfly/react-icons";
+import { Content } from "@patternfly/react-core";
 import { words } from "@/UI/words";
+import { ErrorMessageContainer } from "../../ErrorMessageContainer";
 import { CanvasContext } from "../Context";
 import { RelationCounterForCell } from "../interfaces";
 
@@ -13,7 +13,7 @@ import { RelationCounterForCell } from "../interfaces";
  *
  * @returns {React.FC | null} The rendered validation component or null if no missing relations are found or the canvas is not edited/dirty.
  */
-export const Validation: React.FC = () => {
+export const ErrorsContainer: React.FC = () => {
   const { isDirty, interServiceRelationsOnCanvas } = useContext(CanvasContext);
 
   const interServiceRelationsThatAreMissing = Array.from(
@@ -31,21 +31,15 @@ export const Validation: React.FC = () => {
   }
 
   return (
-    <Panel data-testid="Error-container">
-      <Alert
-        isInline
-        customIcon={<InfoAltIcon />}
-        isExpandable
-        variant="danger"
-        title={words("instanceComposer.validation.title")(
-          interServiceRelationsThatAreMissing.length,
-        )}
-      >
-        {interServiceRelationsThatAreMissing.map(([id, value]) => (
-          <MissingRelationsForGivenCell key={id} entity={value} />
-        ))}
-      </Alert>
-    </Panel>
+    <ErrorMessageContainer
+      title={words("validation.title")(
+        interServiceRelationsThatAreMissing.length,
+      )}
+    >
+      {interServiceRelationsThatAreMissing.map(([id, value]) => (
+        <MissingRelationsForGivenCell key={id} entity={value} />
+      ))}
+    </ErrorMessageContainer>
   );
 };
 

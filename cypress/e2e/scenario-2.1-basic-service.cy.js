@@ -280,10 +280,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#editorButton").click();
 
       // expect the JSON to be valid
-      cy.get('[data-testid="Error-container"]').should(
-        "not.contain",
-        "Errors found",
-      );
+      cy.get('[data-testid="Error-container"]').should("not.exist");
 
       // delete the JSON entirely
       cy.get(".view-line").last().type("{selectall}{backspace}");
@@ -304,10 +301,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get(".view-line").first().type("{ctrl}z");
 
       // expect the JSON to be valid
-      cy.get('[data-testid="Error-container"]').should(
-        "not.contain",
-        "Errors found",
-      );
+      cy.get('[data-testid="Error-container"]').should("not.exist");
 
       // expect submit button to be enabled
       cy.get('[aria-label="submit"]').should("be.enabled");
