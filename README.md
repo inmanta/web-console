@@ -40,7 +40,7 @@ The frontend uses (Patternfly)[https://www.patternfly.org/] for its UI component
 | `package-cleanup`                   | runs `node clean_up_packages`                                     |
 | `check-circular-deps`               | runs `madge --circular ./src/index.tsx`                           |
 | `install:orchestrator:keycloak`     | creates a docker container with an OSS orchestrator with Keycloak |
-| `install:orchestrator`              | Base command to install more specific versions of the orchestrator. The different arguments are: `version` `release` `branch`. For more details, see [local-setup repo](https://code.inmanta.com/inmanta/local-setup) |
+| `install:orchestrator`              | Base command to install more specific versions of the orchestrator. The different arguments are: `version` `release` `branch`. For more details, see (local-setup repo)[https://code.inmanta.com/inmanta/local-setup] |
 | `install:orchestrator:iso`          | creates a docker container with the latest ISO orchestrator       |
 | `install:orchestrator:oss`          | creates a docker container with the latest dev OSS orchestrator   |
 | `install:orchestrator:ci`           | CI command to setup the orchestrator on Jenkins. Requires different arguments depending on the needed test suite. See `install:orchestrator` |
