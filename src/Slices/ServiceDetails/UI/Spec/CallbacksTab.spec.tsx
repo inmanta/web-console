@@ -6,22 +6,16 @@ import { StoreProvider } from "easy-peasy";
 import { Either, getShortUuidFromRaw } from "@/Core";
 import {
   QueryResolverImpl,
-  ServicesQueryManager,
-  ServicesStateHelper,
   CommandResolverImpl,
   getStoreInstance,
   BaseApiHelper,
   DeleteServiceCommandManager,
-  ServiceQueryManager,
-  ServiceKeyMaker,
-  ServiceStateHelper,
 } from "@/Data";
 import { defaultAuthContext } from "@/Data/Auth/AuthContext";
 import {
   DynamicCommandManagerResolverImpl,
   DynamicQueryManagerResolverImpl,
   Service,
-  StaticScheduler,
   Callback,
   DeferredApiHelper,
   dependencies,
@@ -35,25 +29,16 @@ import {
   DeleteCallbackCommandManager,
 } from "@S/ServiceDetails/Data";
 import { Page } from "@S/ServiceDetails/UI/Page";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { HttpResponse, http } from "msw";
+import { setupServer } from "msw/node";
 
+const server = setupServer();
 function setup() {
+  const client = new QueryClient();
   const store = getStoreInstance();
   const apiHelper = new DeferredApiHelper();
-  const scheduler = new StaticScheduler();
-  const serviceKeyMaker = new ServiceKeyMaker();
 
-  const serviceQueryManager = ServiceQueryManager(
-    apiHelper,
-    ServiceStateHelper(store, serviceKeyMaker),
-    scheduler,
-    serviceKeyMaker,
-  );
-
-  const servicesQueryManager = ServicesQueryManager(
-    apiHelper,
-    ServicesStateHelper(store),
-    scheduler,
-  );
   const callbacksStateHelper = CallbacksStateHelper(store);
   const callbacksQueryManager = CallbacksQueryManager(
     apiHelper,
@@ -61,11 +46,7 @@ function setup() {
   );
 
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolverImpl([
-      serviceQueryManager,
-      servicesQueryManager,
-      callbacksQueryManager,
-    ]),
+    new DynamicQueryManagerResolverImpl([callbacksQueryManager]),
   );
 
   const deleteServiceCommandManager = DeleteServiceCommandManager(
@@ -91,17 +72,19 @@ function setup() {
   );
 
   const component = (
-    <MemoryRouter initialEntries={[`/lsm/catalog/${Service.a.name}/details`]}>
-      <DependencyProvider
-        dependencies={{ ...dependencies, queryResolver, commandResolver }}
-      >
-        <StoreProvider store={store}>
-          <Routes>
-            <Route path="/lsm/catalog/:service/details" element={<Page />} />
-          </Routes>
-        </StoreProvider>
-      </DependencyProvider>
-    </MemoryRouter>
+    <QueryClientProvider client={client}>
+      <MemoryRouter initialEntries={[`/lsm/catalog/${Service.a.name}/details`]}>
+        <DependencyProvider
+          dependencies={{ ...dependencies, queryResolver, commandResolver }}
+        >
+          <StoreProvider store={store}>
+            <Routes>
+              <Route path="/lsm/catalog/:service/details" element={<Page />} />
+            </Routes>
+          </StoreProvider>
+        </DependencyProvider>
+      </MemoryRouter>
+    </QueryClientProvider>
   );
 
   return {
@@ -111,17 +94,19 @@ function setup() {
 }
 
 test("GIVEN ServiceDetails WHEN click on callbacks tab THEN shows callbacks tab", async () => {
+  server.use(
+    http.get("/lsm/v1/service_catalog/service_name_a", () => {
+      return HttpResponse.json({ data: Service.a });
+    }),
+  );
+  server.listen();
   const shortenUUID = getShortUuidFromRaw(Callback.list[0].callback_id);
 
   const { component, apiHelper } = setup();
 
   render(component);
 
-  await act(async () => {
-    await apiHelper.resolve(Either.right({ data: Service.a }));
-  });
-
-  const callbacksButton = screen.getByRole("tab", { name: "Callbacks" });
+  const callbacksButton = await screen.findByRole("tab", { name: "Callbacks" });
 
   await userEvent.click(callbacksButton);
 
@@ -139,4 +124,6 @@ test("GIVEN ServiceDetails WHEN click on callbacks tab THEN shows callbacks tab"
   expect(
     screen.getByRole("row", { name: "CallbackRow-" + shortenUUID }),
   ).toBeVisible();
+
+  server.close();
 });

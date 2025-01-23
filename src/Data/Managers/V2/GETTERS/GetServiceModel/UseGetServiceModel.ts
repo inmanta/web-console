@@ -15,7 +15,6 @@ interface GetServiceModel {
  * React Query hook to fetch the service model
  *
  * @param service {string} - the service entity
- * @param instanceId {string} - the instance ID for which the data needs to be fetched.
  * @param environment {string} - the environment in which the instance belongs
  *
  * @returns {GetServiceModel} An object containing the different available queries.
@@ -37,7 +36,7 @@ export const useGetServiceModel = (
 
   const fetchInstance = async (): Promise<{ data: ServiceModel }> => {
     const response = await fetch(
-      `${baseUrl}/lsm/v1/service_catalog/${service}`,
+      `${baseUrl}/lsm/v1/service_catalog/${service}?instance_summary=True`,
       {
         headers,
       },

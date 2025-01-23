@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   AlertVariant,
   Button,
@@ -7,12 +7,12 @@ import {
   Tooltip,
 } from "@patternfly/react-core";
 import { FileCodeIcon } from "@patternfly/react-icons";
-import { Either } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
 import { ConfirmUserActionForm } from "../ConfirmUserActionForm";
 import { ToastAlert } from "../ToastAlert";
+import { useUpdateCatalog } from "@/Data/Managers/V2/POST/UpdateCatalog/useUpdateCatalog";
 
 /**
  * This component will trigger an update of the Service Catalog.
@@ -27,12 +27,10 @@ import { ToastAlert } from "../ToastAlert";
  */
 export const CatalogActions: React.FC = () => {
   const { triggerModal, closeModal } = useContext(ModalContext);
-  const { commandResolver, urlManager, environmentHandler } =
-    useContext(DependencyContext);
-
-  const trigger = commandResolver.useGetTrigger<"UpdateCatalog">({
-    kind: "UpdateCatalog",
-  });
+  const { urlManager, environmentHandler } = useContext(DependencyContext);
+  const { mutate, isError, error, isSuccess, isPending } = useUpdateCatalog(
+    environmentHandler.useId(),
+  );
 
   const [message, setMessage] = useState("");
   const [toastTitle, setToastTitle] = useState("");
@@ -42,25 +40,12 @@ export const CatalogActions: React.FC = () => {
    * Handles the submission of the form.
    *
    * This function closes the modal and triggers an asynchronous operation.
-   * If the operation is successful, it sets the toast title, message, and type to indicate success.
-   * If the operation fails, it sets the toast title, message, and type to indicate failure.
-   * The message in case of failure is the value of the result.
    *
    * @returns {Promise<void>} A Promise that resolves when the operation is complete.
    */
-  const onSubmit = async (): Promise<void> => {
+  const onSubmit = (): void => {
     closeModal();
-    const result = await trigger();
-
-    if (Either.isRight(result)) {
-      setToastTitle(words("catalog.update.success"));
-      setMessage(words("catalog.update.success.message"));
-      setToastType(AlertVariant.success);
-    } else {
-      setToastTitle(words("catalog.update.failed"));
-      setMessage(result.value);
-      setToastType(AlertVariant.danger);
-    }
+    mutate();
   };
 
   /**
@@ -92,6 +77,18 @@ export const CatalogActions: React.FC = () => {
     });
   };
 
+  useEffect(() => {
+    if (isSuccess) {
+      setToastTitle(words("catalog.update.success"));
+      setMessage(words("catalog.update.success.message"));
+      setToastType(AlertVariant.success);
+    } else if (isError) {
+      setToastTitle(words("catalog.update.failed"));
+      setMessage(error.message);
+      setToastType(AlertVariant.danger);
+    }
+  }, [isError, error, isSuccess]);
+
   return (
     <>
       <ToastAlert
@@ -117,7 +114,9 @@ export const CatalogActions: React.FC = () => {
           ></Button>
         </Tooltip>
         <Tooltip content={words("catalog.update.tooltip")}>
-          <Button onClick={openModal}>{words("catalog.button.update")}</Button>
+          <Button isLoading={isPending} onClick={openModal}>
+            {words("catalog.button.update")}
+          </Button>
         </Tooltip>
       </Flex>
     </>

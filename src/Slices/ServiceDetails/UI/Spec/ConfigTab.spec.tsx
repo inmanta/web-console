@@ -18,7 +18,6 @@ import {
   getStoreInstance,
   DeleteServiceCommandManager,
   BaseApiHelper,
-  ServiceQueryManager,
 } from "@/Data";
 import { defaultAuthContext } from "@/Data/Auth/AuthContext";
 import {
@@ -33,19 +32,18 @@ import {
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { Page } from "@S/ServiceDetails/UI/Page";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { HttpResponse, http } from "msw";
+import { setupServer } from "msw/node";
+
+const server = setupServer();
 
 function setup() {
+  const client = new QueryClient();
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
   const serviceKeyMaker = new ServiceKeyMaker();
-
-  const serviceQueryManager = ServiceQueryManager(
-    apiHelper,
-    ServiceStateHelper(store, serviceKeyMaker),
-    scheduler,
-    serviceKeyMaker,
-  );
 
   const servicesHelper = ServicesQueryManager(
     apiHelper,
@@ -58,7 +56,6 @@ function setup() {
     new ServiceConfigFinalizer(ServiceStateHelper(store, serviceKeyMaker)),
   );
 
-  // { data: Service.a.config }
   const serviceConfigCommandManager = ServiceConfigCommandManager(
     apiHelper,
     ServiceConfigStateHelper(store),
@@ -70,7 +67,6 @@ function setup() {
 
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolverImpl([
-      serviceQueryManager,
       servicesHelper,
       serviceConfigQueryManager,
     ]),
@@ -82,23 +78,25 @@ function setup() {
     ]),
   );
   const component = (
-    <MemoryRouter initialEntries={[`/lsm/catalog/${Service.a.name}/details`]}>
-      <DependencyProvider
-        dependencies={{
-          ...dependencies,
-          queryResolver,
-          commandResolver,
-          environmentModifier: new MockEnvironmentModifier(),
-          environmentHandler: MockEnvironmentHandler(Service.a.environment),
-        }}
-      >
-        <StoreProvider store={store}>
-          <Routes>
-            <Route path="/lsm/catalog/:service/details" element={<Page />} />
-          </Routes>
-        </StoreProvider>
-      </DependencyProvider>
-    </MemoryRouter>
+    <QueryClientProvider client={client}>
+      <MemoryRouter initialEntries={[`/lsm/catalog/${Service.a.name}/details`]}>
+        <DependencyProvider
+          dependencies={{
+            ...dependencies,
+            queryResolver,
+            commandResolver,
+            environmentModifier: new MockEnvironmentModifier(),
+            environmentHandler: MockEnvironmentHandler(Service.a.environment),
+          }}
+        >
+          <StoreProvider store={store}>
+            <Routes>
+              <Route path="/lsm/catalog/:service/details" element={<Page />} />
+            </Routes>
+          </StoreProvider>
+        </DependencyProvider>
+      </MemoryRouter>
+    </QueryClientProvider>
   );
 
   return {
@@ -108,16 +106,28 @@ function setup() {
   };
 }
 
+beforeAll(() => {
+  server.use(
+    http.get("/lsm/v1/service_catalog/service_name_a", () => {
+      return HttpResponse.json({ data: Service.a });
+    }),
+    http.get("/lsm/v1/service_catalog/service_name_a/config", () => {
+      return HttpResponse.json({ data: { test: Service.a.config } });
+    }),
+  );
+  server.listen();
+});
+
+afterAll(() => {
+  server.close();
+});
+
 test("GIVEN ServiceCatalog WHEN click on config tab THEN shows config tab", async () => {
   const { component, apiHelper } = setup();
 
   render(component);
 
-  await act(async () => {
-    await apiHelper.resolve(Either.right({ data: Service.a }));
-  });
-
-  const configButton = screen.getByRole("tab", { name: "Config" });
+  const configButton = await screen.findByRole("tab", { name: "Config" });
 
   await userEvent.click(configButton);
 
@@ -128,17 +138,9 @@ test("GIVEN ServiceCatalog WHEN config tab is active THEN shows SettingsList", a
   const { component, apiHelper } = setup();
 
   render(component);
-  await act(async () => {
-    apiHelper.resolve(Either.right({ data: Service.a }));
-  });
-
-  const configButton = screen.getByRole("tab", { name: "Config" });
+  const configButton = await screen.findByRole("tab", { name: "Config" });
 
   await userEvent.click(configButton);
-
-  await act(async () => {
-    await apiHelper.resolve(Either.right({ data: {} }));
-  });
 
   expect(
     await screen.findByRole("generic", { name: "SettingsList" }),
