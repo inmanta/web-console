@@ -73,6 +73,7 @@ const dict = {
   "codehighlighter.zoom.on": "Enlarge",
   "codehighlighter.zoom.off": "Back to original size",
   "codehighlighter.scrollToBottom": "Scroll down and resume auto-scroll",
+  "validation.title": (amount: number) => `Errors found: ${amount}`,
 
   /**
    * Inventory related text
@@ -237,8 +238,6 @@ const dict = {
   "instanceComposer.success.title": "Instance composed successfully",
   "instanceComposer.failed.title": "Instance Composing failed",
   "instanceComposer.dictModal": (valueName: string) => `Values of ${valueName}`,
-  "instanceComposer.validation.title": (amount: number) =>
-    `Errors found: ${amount}`,
   "instanceComposer.missingRelations": (
     name: string,
     amount: number,
