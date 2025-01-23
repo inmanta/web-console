@@ -278,7 +278,7 @@ const ZoomHandlerContainer = styled.div`
 const CanvasContainer = styled.div`
   width: calc(100% - 540px); //240 left sidebar + 300 right sidebar
   height: 100%;
-  background: var(--pf-t--global--background--color--secondary--default);
+  background: var(--pf-t--global--background--color--primary--default);
 
   &.view_mode {
     width: calc(100% - 300px);
@@ -301,7 +301,7 @@ const CanvasContainer = styled.div`
 const LeftSidebarContainer = styled.div`
   width: 240px;
   height: 100%;
-  background: var(--pf-t--global--background--color--primary--default);
+  background: var(--pf-t--global--background--color--secondary--default);
   filter: drop-shadow(
     0.1rem 0.1rem 0.15rem var(--pf-t--global--box-shadow--color--100)
   );

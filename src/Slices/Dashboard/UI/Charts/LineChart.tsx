@@ -11,24 +11,12 @@ import {
   ChartLabel,
   ChartScatter,
   ChartLegend,
-  ChartAxisProps,
   ChartLabelProps,
 } from "@patternfly/react-charts";
 import styled, { css } from "styled-components";
 import { LineChartProps } from "../../Core/Domain";
 import { interpolateMetrics } from "../helper";
 import { colorTheme } from "../themes";
-
-interface CustomAxisProps extends ChartAxisProps {
-  style: {
-    ticks: {
-      [key: string]: number;
-    };
-  };
-}
-const CustomAxis = ({ ...props }: CustomAxisProps) => {
-  return <ChartAxis {...props} />;
-};
 
 export const LineChart: React.FC<LineChartProps> = ({
   title,
@@ -106,7 +94,12 @@ export const LineChart: React.FC<LineChartProps> = ({
         legendComponent={
           <ChartLegend
             borderPadding={{ top: 25 }}
-            style={{ labels: { fontSize: 16 } }}
+            style={{
+              labels: {
+                fontSize: 16,
+                fill: "var(--pf-t--global--text--color--subtle)",
+              },
+            }}
             orientation="horizontal"
             responsive={true}
           />
@@ -124,7 +117,7 @@ export const LineChart: React.FC<LineChartProps> = ({
         height={isStacked ? 350 : 300}
         width={width}
       >
-        <CustomAxis
+        <ChartAxis
           tickLabelComponent={
             <StyledChartLabel
               dx={({ index }) => (index == timestamps.length - 1 ? -20 : 0)}
@@ -137,7 +130,8 @@ export const LineChart: React.FC<LineChartProps> = ({
             return date[0] + "\n" + date[1];
           }}
           style={{
-            ticks: { size: 10 },
+            axisLabel: { fill: "var(--pf-t--global--text--color--regular)" },
+            tickLabels: { fill: "var(--pf-t--global--text--color--subtle)" },
           }}
         />
         <ChartAxis
@@ -148,7 +142,9 @@ export const LineChart: React.FC<LineChartProps> = ({
           label={label}
           offsetX={100}
           style={{
-            grid: { stroke: "#E5E4E2" },
+            grid: { stroke: "var(--pf-t--global--border--color--default)" },
+            axisLabel: { fill: "var(--pf-t--global--text--color--regular)" },
+            tickLabels: { fill: "var(--pf-t--global--text--color--subtle)" },
           }}
         />
         {isStacked ? (

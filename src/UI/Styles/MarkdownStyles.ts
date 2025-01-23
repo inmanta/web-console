@@ -1,13 +1,11 @@
 export const MarkdownStyles = `
-/*light-theme*/
-
 .markdown-body {
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
   margin: 0;
   color: var(--pf-t--global--text--color--regular);
   font-family: var(--pf-t--global--font--family--body);
-  font-size: 16px;
+  font-size: inherit;
   line-height: 1.5;
   word-wrap: break-word;
   padding: 24px;
@@ -50,7 +48,7 @@ export const MarkdownStyles = `
 
 .markdown-body a {
   background-color: transparent;
-  color: #0969da;
+  color: var(--pf-t--global--text--color--link--default);
   text-decoration: none;
 }
 
@@ -73,13 +71,13 @@ export const MarkdownStyles = `
   margin: .67em 0;
   font-weight: var(--pf-t--global--font--weight--200);
   padding-bottom: .3em;
-  font-size: 2em;
-  border-bottom: 1px solid hsla(210,18%,87%,1);
+  font-size: var(--pf-t--global--font--size--heading--h1);
+  border-bottom: 1px solid var(--pf-t--global--border--color--default);
 }
 
 .markdown-body mark {
-  background-color: #fff8c5;
-  color: #1F2328;
+  background-color: var(--pf-t--chart--theme--colorscales--multi-colored-ordered--colorscale--1400);
+  color: var(--pf-t--chart--theme--colorscales--multi-colored-ordered--colorscale--1500);
 }
 
 .markdown-body small {
@@ -106,7 +104,7 @@ export const MarkdownStyles = `
   border-style: none;
   max-width: 100%;
   box-sizing: content-box;
-  background-color: #ffffff;
+  background-color: var(--pf-t--global--background--color--primary--default);
 }
 
 .markdown-body code,
@@ -125,11 +123,11 @@ export const MarkdownStyles = `
   box-sizing: content-box;
   overflow: hidden;
   background: transparent;
-  border-bottom: 1px solid hsla(210,18%,87%,1);
+  border-bottom: 1px solid var(--pf-t--global--border--color--default);
   height: .25em;
   padding: 0;
   margin: 24px 0;
-  background-color: #d0d7de;
+  background-color: var(--pf-t--global--background--color--secondary--default);
   border: 0;
 }
 
@@ -182,7 +180,7 @@ export const MarkdownStyles = `
 }
 
 .markdown-body ::placeholder {
-  color: #6e7781;
+  color: var(--pf-t--global--text--color--placeholder);
   opacity: 1;
 }
 
@@ -223,7 +221,7 @@ export const MarkdownStyles = `
 .markdown-body [role=button]:focus,
 .markdown-body input[type=radio]:focus,
 .markdown-body input[type=checkbox]:focus {
-  outline: 2px solid #0969da;
+  outline: 2px solid var(--pf-t--global--border--color--clicked);
   outline-offset: -2px;
   box-shadow: none;
 }
@@ -239,7 +237,7 @@ export const MarkdownStyles = `
 .markdown-body [role=button]:focus-visible,
 .markdown-body input[type=radio]:focus-visible,
 .markdown-body input[type=checkbox]:focus-visible {
-  outline: 2px solid #0969da;
+  outline: 2px solid var(--pf-t--global--border--color--clicked);
   outline-offset: -2px;
   box-shadow: none;
 }
@@ -256,15 +254,15 @@ export const MarkdownStyles = `
 .markdown-body kbd {
   display: inline-block;
   padding: 3px 5px;
-  font: 11px ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace;
+  font: var(--pf-t--global--font--size--xs) var(--pf-t--global--font--family--mono);
   line-height: 10px;
-  color: #1F2328;
+  color: var(--pf-t--global--text--color--subtle);
   vertical-align: middle;
-  background-color: #f6f8fa;
-  border: solid 1px rgba(175,184,193,0.2);
-  border-bottom-color: rgba(175,184,193,0.2);
-  border-radius: 6px;
-  box-shadow: inset 0 -1px 0 rgba(175,184,193,0.2);
+  background-color: var(--pf-t--global--background--color--secondary--default);
+  border: solid 1px var(--pf-t--global--border--color--default);
+  border-bottom-color: var(--pf-t--global--border--color--default);
+  border-radius: var(--pf-t--global--border--radius--small);
+  box-shadow: inset 0 -1px 0 var(--pf-t--global--box-shadow--color--md);
 }
 
 .markdown-body h1,
@@ -282,29 +280,29 @@ export const MarkdownStyles = `
 .markdown-body h2 {
   font-weight: var(--pf-t--global--font--weight--200);
   padding-bottom: .3em;
-  font-size: 1.5em;
-  border-bottom: 1px solid hsla(210,18%,87%,1);
+  font-size: var(--pf-t--global--font--size--heading--h2);
+  border-bottom: 1px solid var(--pf-t--global--border--color--default);
 }
 
 .markdown-body h3 {
   font-weight: var(--pf-t--global--font--weight--200);
-  font-size: 1.25em;
+  font-size: var(--pf-t--global--font--size--heading--h3);
 }
 
 .markdown-body h4 {
   font-weight: var(--pf-t--global--font--weight--200);
-  font-size: 1em;
+  font-size: var(--pf-t--global--font--size--heading--h4);
 }
 
 .markdown-body h5 {
   font-weight: var(--pf-t--global--font--weight--200);
-  font-size: .875em;
+  font-size: var(--pf-t--global--font--size--heading--h5);
 }
 
 .markdown-body h6 {
   font-weight: var(--pf-t--global--font--weight--200);
-  font-size: .85em;
-  color: #656d76;
+  font-size: var(--pf-t--global--font--size--heading--h6);
+  color: var(--pf-t--global--text--color--disabled);
 }
 
 .markdown-body p {
@@ -315,8 +313,8 @@ export const MarkdownStyles = `
 .markdown-body blockquote {
   margin: 0;
   padding: 0 1em;
-  color: #656d76;
-  border-left: .25em solid #d0d7de;
+  color: var(--pf-t--global--icon--color--severity--minor--default);
+  border-left: .25em solid var(--pf-t--global--border--color--default);
 }
 
 .markdown-body ul,
@@ -346,14 +344,14 @@ export const MarkdownStyles = `
 .markdown-body code,
 .markdown-body samp {
   font-family: var(--pf-t--global--font--family--mono);
-  font-size: 12px;
+  font-size: var(--pf-t--global--font--size--xs);
 }
 
 .markdown-body pre {
   margin-top: 0;
   margin-bottom: 0;
   font-family: var(--pf-t--global--font--family--mono);
-  font-size: 12px;
+  font-size: var(--pf-t--global--font--size--xs);
   word-wrap: normal;
 }
 
@@ -400,7 +398,7 @@ export const MarkdownStyles = `
 }
 
 .markdown-body .absent {
-  color: #d1242f;
+  color: var(--pf-t--global--text--color--status--danger--default);
 }
 
 .markdown-body .anchor {
@@ -440,7 +438,7 @@ export const MarkdownStyles = `
 .markdown-body h4 .octicon-link,
 .markdown-body h5 .octicon-link,
 .markdown-body h6 .octicon-link {
-  color: #1F2328;
+  color: var(--pf-t--global--text--color--subtle);
   vertical-align: middle;
   visibility: hidden;
 }
@@ -560,7 +558,7 @@ export const MarkdownStyles = `
 .markdown-body dl dt {
   padding: 0;
   margin-top: 16px;
-  font-size: 1em;
+  font-size: var(--pf-t--global--icon--size--font--sm);
   font-style: italic;
   font-weight: var(--pf-t--global--font--weight--200);
 }
@@ -577,7 +575,7 @@ export const MarkdownStyles = `
 .markdown-body table th,
 .markdown-body table td {
   padding: 6px 13px;
-  border: 1px solid #d0d7de;
+  border: 1px solid var(--pf-t--global--border--color--nonstatus--gray--default);
 }
 
 .markdown-body table td>:last-child {
@@ -585,12 +583,12 @@ export const MarkdownStyles = `
 }
 
 .markdown-body table tr {
-  background-color: #ffffff;
-  border-top: 1px solid hsla(210,18%,87%,1);
+  background-color: var(--pf-t--global--background--color--primary--default);
+  border-top: 1px solid var(--pf-t--global--border--color--nonstatus--gray--clicked);
 }
 
 .markdown-body table tr:nth-child(2n) {
-  background-color: #f6f8fa;
+  background-color: var(--pf-t--global--background--color--secondary--default);
 }
 
 .markdown-body table img {
@@ -623,7 +621,7 @@ export const MarkdownStyles = `
   padding: 7px;
   margin: 13px 0 0;
   overflow: hidden;
-  border: 1px solid #d0d7de;
+  border: 1px solid var(--pf-t--global--border--color--nonstatus--gray--default);
 }
 
 .markdown-body span.frame span img {
@@ -635,7 +633,7 @@ export const MarkdownStyles = `
   display: block;
   padding: 5px 0 0;
   clear: both;
-  color: #1F2328;
+  color: var(--pf-t--global--icon--color--status--info--clicked);
 }
 
 .markdown-body span.align-center {
@@ -705,8 +703,9 @@ export const MarkdownStyles = `
   margin: 0;
   font-size: 85%;
   white-space: break-spaces;
-  background-color: rgba(175,184,193,0.2);
-  border-radius: 6px;
+  background-color: var(--pf-t--global--background--color--secondary--default);
+  color: var(--pf-t--global--text--color--regular);
+  border: var(--pf-t--global--border--width--regular) solid var(--pf-t--global--border--color--nonstatus--gray--default);
 }
 
 .markdown-body code br,
@@ -750,9 +749,9 @@ export const MarkdownStyles = `
   overflow: auto;
   font-size: 85%;
   line-height: 1.45;
-  color: #1F2328;
-  background-color: #f6f8fa;
-  border-radius: 6px;
+  color: var(--pf-t--global--text--color--regular);
+  background-color: var(--pf-t--global--background--color--secondary--default);
+  border-radius: var(--pf-t--global--border--radius--small);
 }
 
 .markdown-body pre code,
@@ -772,7 +771,7 @@ export const MarkdownStyles = `
 .markdown-body .csv-data th {
   padding: 5px;
   overflow: hidden;
-  font-size: 12px;
+  font-size: var(--pf-t--global--font--size--body--default);
   line-height: 1;
   text-align: left;
   white-space: nowrap;
@@ -781,7 +780,7 @@ export const MarkdownStyles = `
 .markdown-body .csv-data .blob-num {
   padding: 10px 8px 9px;
   text-align: right;
-  background: #ffffff;
+  background: var(--pf-t--global--background--color--primary--default);
   border: 0;
 }
 
@@ -791,7 +790,7 @@ export const MarkdownStyles = `
 
 .markdown-body .csv-data th {
   font-weight: var(--pf-t--global--font--weight--200);
-  background: #f6f8fa;
+  background: var(--pf-t--global--background--color--secondary--default);
   border-top: 0;
 }
 
@@ -804,9 +803,9 @@ export const MarkdownStyles = `
 }
 
 .markdown-body .footnotes {
-  font-size: 12px;
-  color: #656d76;
-  border-top: 1px solid #d0d7de;
+  font-size: var(--pf-t--global--font--size--body--default);
+  color: var(--pf-t--global--text--color--subtle);
+  border-top: 1px solid var(--pf-t--global--border--color--default);
 }
 
 .markdown-body .footnotes ol {
@@ -831,12 +830,12 @@ export const MarkdownStyles = `
   left: -24px;
   pointer-events: none;
   content: "";
-  border: 2px solid #0969da;
-  border-radius: 6px;
+  border: 2px solid var(--pf-t--global--border--color--nonstatus--blue--default);
+  border-radius: var(--pf-t--global--border--radius--small);
 }
 
 .markdown-body .footnotes li:target {
-  color: #1F2328;
+  color: var(--pf-t--global--color--status--unread--clicked);
 }
 
 .markdown-body .footnotes .data-footnote-backref g-emoji {
@@ -844,30 +843,30 @@ export const MarkdownStyles = `
 }
 
 .markdown-body .pl-c {
-  color: #57606a;
+  color: var(--pf-t--global--border--color--nonstatus--gray--hover);
 }
 
 .markdown-body .pl-c1,
 .markdown-body .pl-s .pl-v {
-  color: #0550ae;
+  color: var(--pf-t--global--border--color--nonstatus--blue--hover);
 }
 
 .markdown-body .pl-e,
 .markdown-body .pl-en {
-  color: #6639ba;
+  color: var(--pf-t--global--border--color--nonstatus--purple--default);
 }
 
 .markdown-body .pl-smi,
 .markdown-body .pl-s .pl-s1 {
-  color: #24292f;
+  color: var(--pf-t--chart--theme--colorscales--multi-colored-ordered--colorscale--2100);
 }
 
 .markdown-body .pl-ent {
-  color: #116329;
+  color: var(--pf-t--global--text--color--status--success--default);
 }
 
 .markdown-body .pl-k {
-  color: #cf222e;
+  color: var(--pf-t--global--border--color--status--danger--default);
 }
 
 .markdown-body .pl-s,
@@ -877,97 +876,97 @@ export const MarkdownStyles = `
 .markdown-body .pl-sr .pl-cce,
 .markdown-body .pl-sr .pl-sre,
 .markdown-body .pl-sr .pl-sra {
-  color: #0a3069;
+  color: var(--pf-t--global--text--color--brand--clicked);
 }
 
 .markdown-body .pl-v,
 .markdown-body .pl-smw {
-  color: #953800;
+  color: var(--pf-t--global--color--nonstatus--orange--default);
 }
 
 .markdown-body .pl-bu {
-  color: #82071e;
+  color: var(--pf-t--global--color--nonstatus--red--default);
 }
 
 .markdown-body .pl-ii {
-  color: #f6f8fa;
-  background-color: #82071e;
+  color: var(--pf-t--global--text--color--status--danger--default);
+  background-color: var(--pf-t--global--color--nonstatus--red--default);
 }
 
 .markdown-body .pl-c2 {
-  color: #f6f8fa;
-  background-color: #cf222e;
+  color: var(--pf-t--global--text--color--status--danger--default);
+  background-color: var(--pf-t--global--color--nonstatus--red--default);
 }
 
 .markdown-body .pl-sr .pl-cce {
   font-weight: var(--pf-t--global--font--weight--200);
-  color: #116329;
+  color: var(--pf-t--global--color--status--success--default);
 }
 
 .markdown-body .pl-ml {
-  color: #3b2300;
+  color: var(--pf-t--global--color--status--unread--attention--default);
 }
 
 .markdown-body .pl-mh,
 .markdown-body .pl-mh .pl-en,
 .markdown-body .pl-ms {
   font-weight: var(--pf-t--global--font--weight--200);
-  color: #0550ae;
+  color: var(--pf-t--global--color--status--unread--default);
 }
 
 .markdown-body .pl-mi {
   font-style: italic;
-  color: #24292f;
+  color: var(--pf-t--global--color--status--unread--clicked);
 }
 
 .markdown-body .pl-mb {
   font-weight: var(--pf-t--global--font--weight--200);
-  color: #24292f;
+  color: var(--pf-t--global--color--status--unread--clicked);
 }
 
 .markdown-body .pl-md {
-  color: #82071e;
-  background-color: #ffebe9;
+  color: var(--pf-t--global--text--color--status--danger--default);
+  background-color: var(--pf-t--global--color--nonstatus--red--default);
 }
 
 .markdown-body .pl-mi1 {
-  color: #116329;
-  background-color: #dafbe1;
+  color: var(--pf-t--global--text--color--status--success--default);
+  background-color: var(--pf-t--global--color--nonstatus--green--default);
 }
 
 .markdown-body .pl-mc {
-  color: #953800;
-  background-color: #ffd8b5;
+  color: var(--pf-t--global--text--color--status--danger--default);
+  background-color: var(--pf-t--global--color--nonstatus--red--default);
 }
 
 .markdown-body .pl-mi2 {
-  color: #eaeef2;
-  background-color: #0550ae;
+  color: var(--pf-t--global--color--nonstatus--blue--default);
+  background-color: var(--pf-t--global--color--brand--default);
 }
 
 .markdown-body .pl-mdr {
   font-weight: var(--pf-t--global--font--weight--200);
-  color: #8250df;
+  color: var(--pf-t--global--border--color--nonstatus--purple--default);
 }
 
 .markdown-body .pl-ba {
-  color: #57606a;
+  color: var(--pf-t--global--border--color--nonstatus--gray--hover);
 }
 
 .markdown-body .pl-sg {
-  color: #8c959f;
+  color: var(--pf-t--global--border--color--nonstatus--gray--default);
 }
 
 .markdown-body .pl-corl {
   text-decoration: underline;
-  color: #0a3069;
+  color: var(--pf-t--global--text--color--brand--clicked);
 }
 
 .markdown-body g-emoji {
   display: inline-block;
   min-width: 1ch;
   font-family: "Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
-  font-size: 1em;
+  font-size: var(--pf-t--global--font--size--body--lg);
   font-style: normal !important;
   font-weight: var(--pf-t--global--font--weight--body);
   line-height: 1;
@@ -1029,7 +1028,7 @@ export const MarkdownStyles = `
   padding: 8px 16px;
   margin-bottom: 16px;
   color: inherit;
-  border-left: .25em solid #d0d7de;
+  border-left: .25em solid var(--pf-t--global--border--color--default);
 }
 
 .markdown-body .markdown-alert>:first-child {
@@ -1048,42 +1047,42 @@ export const MarkdownStyles = `
 }
 
 .markdown-body .markdown-alert.markdown-alert-note {
-  border-left-color: #0969da;
+  border-left-color: var(--pf-t--global--icon--color--brand--default);
 }
 
 .markdown-body .markdown-alert.markdown-alert-note .markdown-alert-title {
-  color: #0969da;
+  color: var(--pf-t--global--icon--color--brand--default);
 }
 
 .markdown-body .markdown-alert.markdown-alert-important {
-  border-left-color: #8250df;
+  border-left-color: var(--pf-t--global--border--color--status--info--default);
 }
 
 .markdown-body .markdown-alert.markdown-alert-important .markdown-alert-title {
-  color: #8250df;
+  color: var(--pf-t--global--text--color--status--info--default);
 }
 
 .markdown-body .markdown-alert.markdown-alert-warning {
-  border-left-color: #9a6700;
+  border-left-color: var(--pf-t--global--border--color--status--warning--default);
 }
 
 .markdown-body .markdown-alert.markdown-alert-warning .markdown-alert-title {
-  color: #9a6700;
+  color: var(--pf-t--global--text--color--status--warning--default);
 }
 
 .markdown-body .markdown-alert.markdown-alert-tip {
-  border-left-color: #1f883d;
+  border-left-color: var(--pf-t--global--border--color--status--success--default);
 }
 
 .markdown-body .markdown-alert.markdown-alert-tip .markdown-alert-title {
-  color: #1a7f37;
+  color: var(--pf-t--global--text--color--status--success--default);
 }
 
 .markdown-body .markdown-alert.markdown-alert-caution {
-  border-left-color: #cf222e;
+  border-left-color: var(--pf-t--global--border--color--status--danger--default);
 }
 
 .markdown-body .markdown-alert.markdown-alert-caution .markdown-alert-title {
-  color: #d1242f;
+  color: var(--pf-t--global--text--color--status--danger--default);
 }
 `;

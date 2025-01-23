@@ -1,5 +1,5 @@
 import { dia, ui } from "@inmanta/rappid";
-import { t_global_text_color_inverse } from "@patternfly/react-tokens";
+import { t_global_background_color_primary_default } from "@patternfly/react-tokens";
 import { ServiceModel } from "@/Core";
 import { Inventories } from "@/Data/Managers/V2/GETTERS/GetInventoryList";
 import { createComposerEntity } from "../actions/general";
@@ -72,6 +72,7 @@ export class InventoryStencilTab {
       className: "joint-stencil hidden",
       paper: scroller,
       width: 240,
+      height: 400,
       scaleClones: true,
       dropAnimation: true,
       marginTop: PADDING_S,
@@ -114,11 +115,15 @@ export class InventoryStencilTab {
         centre: false,
         dx: 0,
         dy: 10,
-        background: t_global_text_color_inverse.var,
+        background: t_global_background_color_primary_default.var,
       },
     });
 
     stencilElement.appendChild(this.stencil.el);
+    this.stencil.el
+      .querySelector(".search")
+      ?.classList.add("pf-v6-c-text-input-group__text-input");
+
     this.stencil.render();
 
     this.stencil.load(groups);

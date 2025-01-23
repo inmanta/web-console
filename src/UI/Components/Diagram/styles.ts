@@ -10,10 +10,22 @@ export const CanvasWrapper = styled.div`
   border-radius: var(--pf-t--global--border--radius--small);
   color: var(--pf-t--global--text--color--regular);
   position: relative;
-  background: var(--pf-t--global--background--color--secondary--default);
   margin: 0;
   overflow: hidden;
   border: 1px solid var(--pf-t--global--border--color--default);
+
+  .joint-toolbar.joint-theme-default {
+    background-color: var(--pf-t--global--background--color--primary--default);
+  }
+  .joint-paper-scroller.joint-theme-default {
+    background-color: var(
+      --pf-t--global--background--color--secondary--default
+    );
+  }
+
+  button.joint-widget.joint-theme-default {
+    background-color: var(--pf-v6-c-button--BackgroundColor);
+  }
 
   &.fullscreen {
     position: fixed;
@@ -26,6 +38,7 @@ export const CanvasWrapper = styled.div`
   .joint-stencil {
     top: 52px;
     border: 0;
+    background-color: var(--pf-t--global--background--color--primary--default);
 
     &.joint-hidden {
       visibility: hidden; //note: display: none breaks the stencil-groups
@@ -65,6 +78,14 @@ export const CanvasWrapper = styled.div`
     border: 1px solid var(--pf-t--global--border--color--default);
     border-bottom: 1px solid var(--pf-t--global--border--color--default);
     border-radius: var(--pf-t--global--border--radius--small);
+    background: var(--pf-t--global--background--color--secondary--default);
+    color: var(--pf-t--global--text--color--regular);
+  }
+
+  .joint-stencil.not-found.searchable:after {
+    top: 60px;
+    background: var(--pf-t--global--background--color--primary--default);
+    color: var(--pf-t--global--text--color--regular);
   }
 
   .joint-stencil.joint-theme-default .search-wrap {

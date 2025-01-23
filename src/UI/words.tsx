@@ -870,6 +870,8 @@ const dict = {
   "common.compileWidget.compilationDisabled.hint":
     "The server_compile setting is disabled. You can enable it on the settings page under the configuration tab.",
   "common.emptyColumnHeader": "Column header for collapsible-expandable action",
+  "theme.toggle": (theme: string) =>
+    `Switch to ${theme === "dark" ? "light" : "dark"} mode`,
 
   /**
    * Login
