@@ -2,8 +2,8 @@ import React, { useContext, useEffect, useState } from "react";
 import { Editor, OnValidate, useMonaco } from "@monaco-editor/react";
 import { Spinner } from "@patternfly/react-core";
 import { useGetJSONSchema } from "@/Data/Managers/V2/GETTERS/GetJSONSchema";
-import { getThemePreference } from "../DarkmodeOption";
 import { DependencyContext, words } from "@/UI";
+import { getThemePreference } from "../DarkmodeOption";
 import { ErrorMessageContainer } from "../ErrorMessageContainer";
 
 interface Props {
