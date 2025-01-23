@@ -202,7 +202,7 @@
     "loader-utils": "2.0.4 || 1.4.2",
     "word-wrap": "^1.2.4",
     "follow-redirects": "^1.15.4",
-    "undici": "^5",
+    "undici": "^5.28.5",
     "ws": "^8.17.1"
   },
   "madge": {
