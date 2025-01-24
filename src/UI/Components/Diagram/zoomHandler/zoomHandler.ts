@@ -93,6 +93,7 @@ export class ZoomHandlerService {
           attrs: {
             button: {
               "data-testid": "fullscreen",
+              class: "pf-v6-c-button pf-m-control",
             },
           },
         },
@@ -103,6 +104,7 @@ export class ZoomHandlerService {
           attrs: {
             button: {
               "data-testid": "fit-to-screen",
+              class: "pf-v6-c-button pf-m-control",
             },
           },
         },

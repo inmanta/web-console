@@ -3,6 +3,7 @@ import { Editor, OnValidate, useMonaco } from "@monaco-editor/react";
 import { Spinner } from "@patternfly/react-core";
 import { useGetJSONSchema } from "@/Data/Managers/V2/GETTERS/GetJSONSchema";
 import { DependencyContext, words } from "@/UI";
+import { getThemePreference } from "../DarkmodeOption";
 import { ErrorMessageContainer } from "../ErrorMessageContainer";
 
 interface Props {
@@ -34,6 +35,7 @@ export const JSONEditor: React.FC<Props> = ({
   readOnly = false,
 }) => {
   const { environmentHandler } = useContext(DependencyContext);
+  const preferedTheme = getThemePreference() || "light";
   const environment = environmentHandler.useId();
 
   const [isLoading, setIsLoading] = useState(true);
@@ -122,6 +124,7 @@ export const JSONEditor: React.FC<Props> = ({
         defaultValue={data}
         value={editorState}
         onChange={handleEditorChange}
+        theme={`vs-${preferedTheme}`}
         onValidate={handleOnValidate}
         options={{ domReadOnly: readOnly, readOnly: readOnly }}
       />

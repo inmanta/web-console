@@ -44,7 +44,7 @@ describe("createStencilElement", () => {
     ).toEqual("body_default");
 
     expect(embeddedElementWithModel.attributes.attrs?.bodyTwo?.fill).toEqual(
-      "var(--pf-t--global--text--color--inverse)",
+      "var(--pf-t--global--background--color--primary--default)",
     );
     expect(
       embeddedElementWithModel.attributes.attrs?.bodyTwo?.["aria-labelledby"],

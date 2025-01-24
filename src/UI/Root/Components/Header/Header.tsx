@@ -16,9 +16,11 @@ import {
 } from "@patternfly/react-core";
 import { BarsIcon } from "@patternfly/react-icons";
 import { Badge } from "@/Slices/Notification/UI/Badge";
+import { getThemePreference } from "@/UI/Components/DarkmodeOption";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import logo from "@images/logo.svg";
+import logo_dark from "@images/logo_dark.svg";
 import { DocumentationLinks } from "./Actions/DocumentationLinks";
 import { StatusButton } from "./Actions/StatusButton";
 import { EnvSelectorWithProvider } from "./EnvSelector";
@@ -48,6 +50,7 @@ interface Props {
  */
 export const Header: React.FC<Props> = ({ noEnv, onNotificationsToggle }) => {
   const { routeManager, environmentHandler } = useContext(DependencyContext);
+  const theme = getThemePreference();
 
   return (
     <>
@@ -67,7 +70,10 @@ export const Header: React.FC<Props> = ({ noEnv, onNotificationsToggle }) => {
                     `?env=${environmentHandler.useId()}`
               }
             >
-              <Brand src={logo} alt="Inmanta-logo" />
+              <Brand
+                src={theme === "dark" ? logo_dark : logo}
+                alt="Inmanta-logo"
+              />
             </MastheadLogo>
           </MastheadBrand>
         </MastheadMain>

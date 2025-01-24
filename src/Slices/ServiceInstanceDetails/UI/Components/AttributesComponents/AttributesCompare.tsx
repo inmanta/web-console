@@ -16,6 +16,7 @@ import {
   getAvailableVersions,
 } from "@/Slices/ServiceInstanceDetails/Utils";
 import { words } from "@/UI";
+import { getThemePreference } from "@/UI/Components/DarkmodeOption";
 
 interface Props {
   instanceLogs: InstanceLog[];
@@ -54,6 +55,8 @@ export const AttributesCompare: React.FC<Props> = ({
   );
 
   const [availabelVersions, setAvailableVersions] = useState<string[]>([]);
+
+  const preferedTheme = getThemePreference() || "light";
 
   useEffect(() => {
     if (instanceLogs && instanceLogs.length) {
@@ -195,6 +198,7 @@ export const AttributesCompare: React.FC<Props> = ({
 
       <DiffEditor
         height={"calc(100vh - 525px)"}
+        theme={`vs-${preferedTheme}`}
         language="json"
         original={JSON.stringify(leftAttributesSets[leftSelectedSet], null, 2)}
         modified={JSON.stringify(

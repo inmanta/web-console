@@ -1,11 +1,11 @@
 import React, { useContext } from "react";
 import { ChartDonut, ChartLegend } from "@patternfly/react-charts";
 import {
-  t_global_icon_color_status_danger_default,
-  t_global_color_brand_default,
-  t_global_icon_color_status_success_default,
-  t_global_icon_color_status_warning_default,
-  t_global_icon_color_severity_undefined_default,
+  chart_global_danger_Color_100,
+  chart_color_blue_300,
+  chart_theme_gray_ColorScale_300,
+  chart_color_green_200,
+  chart_global_warning_Color_100,
 } from "@patternfly/react-tokens";
 import { InstancesByLabel } from "@/Core";
 import { ServiceInventoryContext } from "@/Slices/ServiceInventory/UI/ServiceInventory";
@@ -55,6 +55,12 @@ export const SummaryChart: React.FC<Props> = ({ by_label, total }) => {
         <ChartLegend
           name={"legend"}
           data={legendData}
+          style={{
+            labels: {
+              fontSize: 16,
+              fill: "var(--pf-t--global--text--color--subtle)",
+            },
+          }}
           events={[
             {
               target: "labels",
@@ -139,6 +145,7 @@ export const SummaryChart: React.FC<Props> = ({ by_label, total }) => {
                     return {
                       style: {
                         ...props.style,
+                        color: "var(--pf-t--global--text--color--subtle)",
                         cursor:
                           labelFiltering[label] &&
                           labelFiltering[label].length > 0
@@ -158,11 +165,11 @@ export const SummaryChart: React.FC<Props> = ({ by_label, total }) => {
 };
 
 const colorsForChart = {
-  danger: t_global_icon_color_status_danger_default,
-  warning: t_global_icon_color_status_warning_default,
-  success: t_global_icon_color_status_success_default,
-  info: t_global_color_brand_default,
-  no_label: t_global_icon_color_severity_undefined_default,
+  danger: chart_global_danger_Color_100,
+  warning: chart_global_warning_Color_100,
+  success: chart_color_green_200,
+  info: chart_color_blue_300,
+  no_label: chart_theme_gray_ColorScale_300,
 };
 
 const orderedLabels = ["danger", "warning", "success", "info", "no_label"];
@@ -190,6 +197,6 @@ function getChartData(by_label: InstancesByLabel): ChartData[] {
   return orderedLabels.map((label) => ({
     x: label === "no_label" ? words("catalog.summary.noLabel") : label,
     y: by_label[label],
-    color: colorsForChart[label].value,
+    color: colorsForChart[label].var,
   }));
 }
