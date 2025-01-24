@@ -17,8 +17,7 @@ interface GetServiceConfig {
  * @param environment {string} - the environment in which the instance belongs
  *
  * @returns {GetServiceConfig} An object containing the different available queries.
- * @returns {UseQueryResult<Config, Error>} returns.useOneTime - Fetch the service model with a single query.
- * @returns {UseQueryResult<Config, Error>} returns.useContinuous - Fetch the service model with a recursive query with an interval of 5s.
+ * @returns {UseQueryResult<Config, Error>} returns.useOneTime - Fetch the service config with a single query.
  */
 export const useGetServiceConfig = (
   service: string,
