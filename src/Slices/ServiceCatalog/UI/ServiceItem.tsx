@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   Button,
@@ -17,7 +17,8 @@ import {
   Content,
 } from "@patternfly/react-core";
 import { EllipsisVIcon } from "@patternfly/react-icons";
-import { Maybe, ServiceModel } from "@/Core";
+import { ServiceModel } from "@/Core";
+import { useDeleteService } from "@/Data/Managers/V2/DELETE/DeleteService";
 import { ConfirmUserActionForm, ToastAlert } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
@@ -38,31 +39,23 @@ interface Props {
  */
 export const ServiceItem: React.FC<Props> = ({ service }) => {
   const { triggerModal, closeModal } = useContext(ModalContext);
-  const { routeManager, commandResolver } = useContext(DependencyContext);
-  const rowRefs = useRef<Record<string, HTMLSpanElement | null>>({});
+  const { routeManager, environmentHandler } = useContext(DependencyContext);
+  const env = environmentHandler.useId();
   const [isOpen, setIsOpen] = useState(false);
-  const serviceKey = service.name + "-item";
-  const trigger = commandResolver.useGetTrigger<"DeleteService">({
-    kind: "DeleteService",
-    name: service.name,
-  });
+  const { mutate, isError, error } = useDeleteService(env, service.name);
   const [errorMessage, setErrorMessage] = useState("");
+  const serviceKey = service.name + "-item";
+  const rowRefs = useRef<Record<string, HTMLSpanElement | null>>({});
 
   /**
    * Handles the submission of deleting the service.
-   * if there is an error, it will set the error message, otherwise it will dispatch an event to notify the service has been deleted.
+   * if there is an error, it will set the error message,
    *
    * @returns {Promise<void>} A Promise that resolves when the operation is complete.
    */
   const onSubmit = async (): Promise<void> => {
     closeModal();
-    const result = await trigger();
-
-    if (Maybe.isSome(result)) {
-      setErrorMessage(result.value);
-    } else {
-      document.dispatchEvent(new CustomEvent("service-deleted"));
-    }
+    await mutate();
   };
 
   /**
@@ -90,6 +83,12 @@ export const ServiceItem: React.FC<Props> = ({ service }) => {
       ),
     });
   };
+
+  useEffect(() => {
+    if (isError) {
+      setErrorMessage(error.message);
+    }
+  }, [isError, error]);
 
   return (
     <DataListItem id={service.name} aria-labelledby={serviceKey}>

@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { Flex, FlexItem } from "@patternfly/react-core";
-import { useGetAllServiceModels } from "@/Data/Managers/V2/GETTERS/GetAllServiceModels";
 import { useGetInstanceWithRelations } from "@/Data/Managers/V2/GETTERS/GetInstanceWithRelations";
 import { useGetInventoryList } from "@/Data/Managers/V2/GETTERS/GetInventoryList";
+import { useGetServiceModels } from "@/Data/Managers/V2/GETTERS/GetServiceModels";
 import { DependencyContext, words } from "@/UI";
 import { ErrorView, LoadingView, PageContainer } from "@/UI/Components";
 import { Canvas } from "@/UI/Components/Diagram/Canvas";
@@ -54,8 +54,7 @@ export const ComposerEditorProvider: React.FC<Props> = ({
   const { environmentHandler } = useContext(DependencyContext);
   const environment = environmentHandler.useId();
 
-  const serviceModelsQuery =
-    useGetAllServiceModels(environment).useContinuous();
+  const serviceModelsQuery = useGetServiceModels(environment).useContinuous();
 
   const mainService = useMemo(() => {
     const data = serviceModelsQuery.data;

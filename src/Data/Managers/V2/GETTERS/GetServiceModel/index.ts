@@ -1,1 +1,1 @@
-export * from "./UseGetServiceModel";
+export * from "./useGetServiceModel";

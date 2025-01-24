@@ -154,7 +154,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get("button").contains("Config").click();
 
       // Expect it to have setting in the config
-      cy.get('[aria-label="ServiceConfig"]').should("be.visible");
+      cy.get('[aria-label="ServiceConfig-Success"]').should("be.visible");
       cy.get('[aria-label="SettingsList"]').should("have.length", 1);
 
       // Go to Callback tab

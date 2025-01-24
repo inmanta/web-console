@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { FlexItem, Flex } from "@patternfly/react-core";
-import { useGetAllServiceModels } from "@/Data/Managers/V2/GETTERS/GetAllServiceModels";
 import { useGetInventoryList } from "@/Data/Managers/V2/GETTERS/GetInventoryList";
+import { useGetServiceModels } from "@/Data/Managers/V2/GETTERS/GetServiceModels";
 import { DependencyContext, words } from "@/UI";
 import { ErrorView, LoadingView, PageContainer } from "@/UI/Components";
 import { Canvas } from "@/UI/Components/Diagram/Canvas";
@@ -41,7 +41,7 @@ export const ComposerCreatorProvider: React.FC<Props> = ({ serviceName }) => {
   const { environmentHandler } = useContext(DependencyContext);
   const environment = environmentHandler.useId();
 
-  const serviceModels = useGetAllServiceModels(environment).useContinuous();
+  const serviceModels = useGetServiceModels(environment).useContinuous();
 
   const relatedInventoriesQuery = useGetInventoryList(
     interServiceRelationNames,
