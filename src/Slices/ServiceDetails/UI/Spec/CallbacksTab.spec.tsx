@@ -1,8 +1,11 @@
 import React, { act } from "react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
+import { HttpResponse, http } from "msw";
+import { setupServer } from "msw/node";
 import { Either, getShortUuidFromRaw } from "@/Core";
 import {
   QueryResolverImpl,
@@ -29,11 +32,9 @@ import {
   DeleteCallbackCommandManager,
 } from "@S/ServiceDetails/Data";
 import { Page } from "@S/ServiceDetails/UI/Page";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { HttpResponse, http } from "msw";
-import { setupServer } from "msw/node";
 
 const server = setupServer();
+
 function setup() {
   const client = new QueryClient();
   const store = getStoreInstance();

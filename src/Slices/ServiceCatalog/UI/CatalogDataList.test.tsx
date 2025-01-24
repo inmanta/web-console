@@ -1,5 +1,6 @@
 import React, { act } from "react";
 import { MemoryRouter } from "react-router";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
@@ -8,7 +9,6 @@ import { dependencies, Service } from "@/Test";
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import { CatalogDataList } from "./CatalogDataList";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 expect.extend(toHaveNoViolations);
 

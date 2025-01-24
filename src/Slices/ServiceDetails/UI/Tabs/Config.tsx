@@ -1,9 +1,9 @@
 import React, { useContext } from "react";
 import { Card, CardBody } from "@patternfly/react-core";
+import { useGetServiceConfig } from "@/Data/Managers/V2/GETTERS/GetServiceConfig/useGetServiceConfig";
 import { ErrorView, LoadingView } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { ConfigList } from "./ConfigList";
-import { useGetServiceConfig } from "@/Data/Managers/V2/GETTERS/GetServiceConfig/useGetServiceConfig";
 
 interface Props {
   serviceName: string;

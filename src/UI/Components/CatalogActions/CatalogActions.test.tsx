@@ -1,17 +1,17 @@
 import React, { act } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, cleanup } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
+import { HttpResponse, http } from "msw";
+import { setupServer } from "msw/node";
 import { getStoreInstance } from "@/Data";
 import { dependencies, MockEnvironmentModifier } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
 import { CatalogActions } from "./CatalogActions";
-import { HttpResponse, http } from "msw";
-import { setupServer } from "msw/node";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 expect.extend(toHaveNoViolations);
 
@@ -125,6 +125,7 @@ test("Given CatalogUpdateButton, when user cancels the modal, it should not fire
 
 test("Given CatalogUpdateButton, when user confirms update, it should fire the API call, if success, show a toaster on success and close the modal.", async () => {
   const { component } = setup();
+
   server.use(
     http.post("/lsm/v1/exporter/export_service_definition", () => {
       return HttpResponse.json({ status: 200 });

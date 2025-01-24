@@ -1,9 +1,9 @@
 import React, { useContext } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 import { DependencyContext } from "@/UI/Dependency";
 import { EnvSelectorWithData } from "./EnvSelectorWithData";
 import { EnvironmentSelectorItem } from "./EnvSelectorWrapper";
-import { useQueryClient } from "@tanstack/react-query";
 
 export const Provider: React.FC = () => {
   const client = useQueryClient();
@@ -21,6 +21,7 @@ export const Provider: React.FC = () => {
     if (selected) {
       environmentHandler.set(navigate, location, item.environmentId);
       client.resetQueries();
+
       return;
     }
     const newLocation = {
@@ -29,6 +30,7 @@ export const Provider: React.FC = () => {
         ? routeManager.getUrl("Catalog", undefined)
         : routeManager.getUrl("CompileReports", undefined),
     };
+
     client.resetQueries();
 
     environmentHandler.set(navigate, newLocation, item.environmentId);

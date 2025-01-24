@@ -1,9 +1,11 @@
-import React, { act } from "react";
+import React from "react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
-import { Either } from "@/Core";
+import { HttpResponse, http } from "msw";
+import { setupServer } from "msw/node";
 import {
   QueryResolverImpl,
   ServicesQueryManager,
@@ -32,9 +34,6 @@ import {
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { Page } from "@S/ServiceDetails/UI/Page";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { HttpResponse, http } from "msw";
-import { setupServer } from "msw/node";
 
 const server = setupServer();
 
@@ -101,8 +100,6 @@ function setup() {
 
   return {
     component,
-    apiHelper,
-    scheduler,
   };
 }
 
@@ -123,7 +120,7 @@ afterAll(() => {
 });
 
 test("GIVEN ServiceCatalog WHEN click on config tab THEN shows config tab", async () => {
-  const { component, apiHelper } = setup();
+  const { component } = setup();
 
   render(component);
 
@@ -135,7 +132,7 @@ test("GIVEN ServiceCatalog WHEN click on config tab THEN shows config tab", asyn
 });
 
 test("GIVEN ServiceCatalog WHEN config tab is active THEN shows SettingsList", async () => {
-  const { component, apiHelper } = setup();
+  const { component } = setup();
 
   render(component);
   const configButton = await screen.findByRole("tab", { name: "Config" });

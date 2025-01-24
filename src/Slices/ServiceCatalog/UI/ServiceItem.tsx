@@ -17,15 +17,13 @@ import {
   Content,
 } from "@patternfly/react-core";
 import { EllipsisVIcon } from "@patternfly/react-icons";
-import { useQueryClient } from "@tanstack/react-query";
-import { Maybe, ServiceModel } from "@/Core";
+import { ServiceModel } from "@/Core";
+import { useDeleteService } from "@/Data/Managers/V2/DELETE/DeleteService";
 import { ConfirmUserActionForm, ToastAlert } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
 import { SummaryIcons } from "./SummaryIcons";
-import { useDeleteService } from "@/Data/Managers/V2/DELETE/DeleteService";
-import { env } from "process";
 
 interface Props {
   service: ServiceModel;

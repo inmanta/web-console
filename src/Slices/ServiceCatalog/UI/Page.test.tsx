@@ -1,10 +1,13 @@
 import React, { act } from "react";
 import { MemoryRouter, useLocation } from "react-router-dom";
 import { Page } from "@patternfly/react-core";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { axe, toHaveNoViolations } from "jest-axe";
+import { HttpResponse, http } from "msw";
+import { setupServer } from "msw/node";
 import { RemoteData, ServiceModel } from "@/Core";
 import { getStoreInstance } from "@/Data";
 import { dependencies, Environment, Service } from "@/Test";
@@ -12,9 +15,6 @@ import { words } from "@/UI";
 import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { ServiceCatalogPage } from ".";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { HttpResponse, http } from "msw";
-import { setupServer } from "msw/node";
 
 const server = setupServer();
 
@@ -128,12 +128,14 @@ test("ServiceCatalog shows empty state", async () => {
 
 test("GIVEN ServiceCatalog WHEN service is deleted THEN UI is updated", async () => {
   const data = [Service.a];
+
   server.use(
     http.get("/lsm/v1/service_catalog", () => {
       return HttpResponse.json({ data });
     }),
     http.delete("/lsm/v1/service_catalog/service_name_a", () => {
       data.pop();
+
       return HttpResponse.json({ status: 204 });
     }),
   );
@@ -167,12 +169,14 @@ test("GIVEN ServiceCatalog WHEN service is deleted THEN UI is updated", async ()
 
 test("GIVEN ServiceCatalog WHEN update fo catalog is triggered successfully THEN UI is updated", async () => {
   const data: ServiceModel[] = [];
+
   server.use(
     http.get("/lsm/v1/service_catalog", () => {
       return HttpResponse.json({ data });
     }),
     http.post("/lsm/v1/exporter/export_service_definition", () => {
       data.push(Service.a);
+
       return HttpResponse.json({ status: 200 });
     }),
   );

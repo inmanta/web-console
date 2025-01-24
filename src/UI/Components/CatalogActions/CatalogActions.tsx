@@ -7,12 +7,12 @@ import {
   Tooltip,
 } from "@patternfly/react-core";
 import { FileCodeIcon } from "@patternfly/react-icons";
+import { useUpdateCatalog } from "@/Data/Managers/V2/POST/UpdateCatalog/useUpdateCatalog";
 import { DependencyContext } from "@/UI/Dependency";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
 import { ConfirmUserActionForm } from "../ConfirmUserActionForm";
 import { ToastAlert } from "../ToastAlert";
-import { useUpdateCatalog } from "@/Data/Managers/V2/POST/UpdateCatalog/useUpdateCatalog";
 
 /**
  * This component will trigger an update of the Service Catalog.
