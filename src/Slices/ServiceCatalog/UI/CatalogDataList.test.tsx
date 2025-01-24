@@ -4,20 +4,11 @@ import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { ServiceModel } from "@/Core";
-import {
-  BaseApiHelper,
-  CommandResolverImpl,
-  DeleteServiceCommandManager,
-} from "@/Data";
-import { defaultAuthContext } from "@/Data/Auth/AuthContext";
-import {
-  dependencies,
-  DynamicCommandManagerResolverImpl,
-  Service,
-} from "@/Test";
+import { dependencies, Service } from "@/Test";
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import { CatalogDataList } from "./CatalogDataList";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 expect.extend(toHaveNoViolations);
 
@@ -29,18 +20,16 @@ const axe = configureAxe({
 });
 
 const Component = (services: ServiceModel[]) => {
-  const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolverImpl([
-      DeleteServiceCommandManager(BaseApiHelper(undefined, defaultAuthContext)),
-    ]),
-  );
+  const client = new QueryClient();
 
   return (
-    <MemoryRouter>
-      <DependencyProvider dependencies={{ ...dependencies, commandResolver }}>
-        <CatalogDataList services={services} />
-      </DependencyProvider>
-    </MemoryRouter>
+    <QueryClientProvider client={client}>
+      <MemoryRouter>
+        <DependencyProvider dependencies={dependencies}>
+          <CatalogDataList services={services} />
+        </DependencyProvider>
+      </MemoryRouter>
+    </QueryClientProvider>
   );
 };
 

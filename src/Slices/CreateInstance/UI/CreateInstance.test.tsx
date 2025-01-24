@@ -1,6 +1,6 @@
 import React, { act } from "react";
 import { MemoryRouter } from "react-router-dom";
-import { render, screen, within } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
@@ -24,12 +24,25 @@ import { InterServiceRelations } from "@/Test/Data/Service";
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import { CreateInstance } from "./CreateInstance";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { HttpResponse, http } from "msw";
+import { setupServer } from "msw/node";
+
 expect.extend(toHaveNoViolations);
 
 const axe = configureAxe({
   rules: {
     // disable landmark rules when testing isolated components.
     region: { enabled: false },
+  },
+});
+
+const server = setupServer();
+const client = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+    },
   },
 });
 
@@ -47,23 +60,39 @@ function setup(service) {
   );
 
   const component = (
-    <MemoryRouter>
-      <DependencyProvider
-        dependencies={{
-          ...dependencies,
-          queryResolver,
-          commandResolver,
-        }}
-      >
-        <StoreProvider store={store}>
-          <CreateInstance serviceEntity={service} />
-        </StoreProvider>
-      </DependencyProvider>
-    </MemoryRouter>
+    <QueryClientProvider client={client}>
+      <MemoryRouter>
+        <DependencyProvider
+          dependencies={{
+            ...dependencies,
+            queryResolver,
+            commandResolver,
+          }}
+        >
+          <StoreProvider store={store}>
+            <CreateInstance serviceEntity={service} />
+          </StoreProvider>
+        </DependencyProvider>
+      </MemoryRouter>
+    </QueryClientProvider>
   );
 
   return { component, apiHelper, scheduler };
 }
+
+beforeAll(() => {
+  server.listen();
+  server.use(
+    http.get("/lsm/v1/service_catalog/service_name_a", () => {
+      return HttpResponse.json({ data: Service.withIdentity });
+    }),
+    http.get("/lsm/v1/service_catalog/test_entity", () => {
+      return HttpResponse.json({ data: Service.withIdentity });
+    }),
+  );
+});
+
+afterAll(() => server.close());
 
 test("Given the CreateInstance View When creating an instance with attributes Then the correct request is fired", async () => {
   const { component, apiHelper } = setup(Service.a);
@@ -134,9 +163,8 @@ test("Given the CreateInstance View When creating an instance with Inter-service
 
   render(component);
 
-  await act(async () => {
-    apiHelper.resolve(Either.right({ data: Service.withIdentity }));
-  });
+  await screen.findByPlaceholderText("Select an instance of test_entity"); // await for the relation input be rendered
+
   await act(async () => {
     apiHelper.resolve(
       Either.right({ data: [ServiceInstance.a, ServiceInstance.b] }),
@@ -148,11 +176,15 @@ test("Given the CreateInstance View When creating an instance with Inter-service
     );
   });
 
-  const relationInputField = screen.getByPlaceholderText(
-    words("common.serviceInstance.relations")("test_entity"),
+  const relationInputField = screen.getByLabelText(
+    "test_entity-select-toggleFilterInput",
   );
 
   await userEvent.type(relationInputField, "a");
+
+  await waitFor(() => {
+    expect(apiHelper.pendingRequests.length).toBeGreaterThan(0);
+  });
 
   await act(async () => {
     apiHelper.resolve(Either.right({ data: [ServiceInstance.a] }));
@@ -191,9 +223,6 @@ test("Given the CreateInstance View When creating an instance with Inter-service
 
   render(component);
 
-  await act(async () => {
-    apiHelper.resolve(Either.right({ data: Service.withIdentity }));
-  });
   await act(async () => {
     apiHelper.resolve(
       Either.right({ data: [ServiceInstance.a, ServiceInstance.b] }),
@@ -255,9 +284,6 @@ test("Given the CreateInstance View When creating an instance with Inter-service
 
   render(component);
 
-  await act(async () => {
-    apiHelper.resolve(Either.right({ data: Service.withIdentity }));
-  });
   await act(async () => {
     apiHelper.resolve(
       Either.right({ data: [ServiceInstance.a, ServiceInstance.b] }),
