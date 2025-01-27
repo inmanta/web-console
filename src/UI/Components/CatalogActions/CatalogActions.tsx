@@ -4,6 +4,7 @@ import {
   Button,
   Content,
   Flex,
+  FlexItem,
   Tooltip,
 } from "@patternfly/react-core";
 import { FileCodeIcon } from "@patternfly/react-icons";
@@ -105,20 +106,27 @@ export const CatalogActions: React.FC = () => {
         direction={{ default: "row" }}
         fullWidth={{ default: "fullWidth" }}
         justifyContent={{ default: "justifyContentFlexEnd" }}
+        rowGap={{ default: "rowGap" }}
       >
-        <Tooltip content={words("catalog.API.tooltip")} entryDelay={500}>
-          <Button
-            variant="plain"
-            aria-label="API-Documentation"
-            icon={<FileCodeIcon />}
-            component="a"
-            href={urlManager.getLSMAPILink(environmentHandler.useId())}
-            target="_blank"
-          ></Button>
-        </Tooltip>
-        <Tooltip content={words("catalog.update.tooltip")}>
-          <Button onClick={openModal}>{words("catalog.button.update")}</Button>
-        </Tooltip>
+        <FlexItem>
+          <Tooltip content={words("catalog.API.tooltip")} entryDelay={500}>
+            <Button
+              variant="plain"
+              aria-label="API-Documentation"
+              icon={<FileCodeIcon />}
+              component="a"
+              href={urlManager.getLSMAPILink(environmentHandler.useId())}
+              target="_blank"
+            ></Button>
+          </Tooltip>
+        </FlexItem>
+        <FlexItem>
+          <Tooltip content={words("catalog.update.tooltip")}>
+            <Button onClick={openModal}>
+              {words("catalog.button.update")}
+            </Button>
+          </Tooltip>
+        </FlexItem>
       </Flex>
     </>
   );
