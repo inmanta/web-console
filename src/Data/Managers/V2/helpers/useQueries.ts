@@ -5,6 +5,9 @@ import { useFetchHelpers } from "../helpers";
 /**
  * Custom hook to perform a GET request.
  *
+ * @param {Object} [options] - Optional configuration for the GET request.
+ * @param {string} [options.message] - Optional message to include in the request headers.
+ *
  * This hook constructs the base URL and headers, and provides a function to perform a GET request to the specified path.
  *
  * @returns {Function<ResponseData>} A function that performs a GET request and returns the response data.
@@ -43,10 +46,13 @@ export const useGet = (options?: {
 /**
  * Custom hook to perform a GET request.
  *
+ *  @param {Object} [options] - Optional configuration for the GET request.
+ * @param {string} [options.message] - Optional message to include in the request headers.
+ *
  * This hook constructs the base URL and headers, and provides a function to perform a GET request to the specified path.
  * In comparison to useGet, this hook does not use the environment context, so it can be used only to perform requests that are environment-agnostic.
  *
- * @returns {Function<ResponseData>} A function that performs a GET request and returns the response data.
+ * @returns {Function<Promise<ResponseData>>} A function that performs a GET request and returns the response data.
  *
  * @template ResponseData - The type of the response data.
  */
@@ -77,6 +83,17 @@ export const useGetWithoutEnv = (options?: {
   };
 };
 
+/**
+ * Custom hook to create a POST request function.
+ *
+ * @param {Object} [options] - Optional configuration for the POST request.
+ * @param {string} [options.message] - Optional message to include in the request headers.
+ *
+ * @returns {Function<Promise<ResponseData>>} - A function that performs a POST request.
+ *
+ * @template ResponseData - The expected response data type.
+ * @template Body - The type of the request body.
+ */
 export const usePost = (options?: {
   message?: string;
 }): (<ResponseData, Body>(
@@ -114,6 +131,20 @@ export const usePost = (options?: {
   };
 };
 
+/**
+ * Custom hook to create a POST request function.
+ *
+ * @param {Object} [options] - Optional configuration for the POST request.
+ * @param {string} [options.message] - Optional message to include in the request headers.
+ *
+ * This hook constructs the base URL and headers, and provides a function to perform a POST request to the specified path.
+ * In comparison to usePost, this hook does not use the environment context, so it can be used only to perform requests that are environment-agnostic.
+ *
+ * @returns {Function<Promise<ResponseData>>} - A function that performs a POST request.
+ *
+ * @template ResponseData - The expected response data type.
+ * @template Body - The type of the request body.
+ */
 export const usePostWithoutEnv = (options?: {
   message?: string;
 }): (<ResponseData, Body>(
@@ -149,6 +180,19 @@ export const usePostWithoutEnv = (options?: {
   };
 };
 
+/**
+ * Custom hook to create a PUT request function.
+ *
+ * @param {Object} [options] - Optional configuration for the PUT request.
+ * @param {string} [options.message] - Optional message to include in the request headers.
+ *
+ * This hook constructs the base URL and headers, and provides a function to perform a PUT request to the specified path.
+ *
+ * @returns {Function<Promise<ResponseData>>} - A function that performs a PUT request.
+ *
+ * @template ResponseData - The expected response data type.
+ * @template Body - The type of the request body.
+ */
 export const usePut = (options?: {
   message?: string;
 }): (<ResponseData, Body>(
@@ -186,6 +230,20 @@ export const usePut = (options?: {
   };
 };
 
+/**
+ * Custom hook to create a PUT request function.
+ *
+ * @param {Object} [options] - Optional configuration for the PUT request.
+ * @param {string} [options.message] - Optional message to include in the request headers.
+ *
+ * This hook constructs the base URL and headers, and provides a function to perform a PUT request to the specified path.
+ * In comparison to usePut, this hook does not use the environment context, so it can be used only to perform requests that are environment-agnostic.
+ *
+ * @returns {Function<Promise<ResponseData>>} - A function that performs a PUT request.
+ *
+ * @template ResponseData - The expected response data type.
+ * @template Body - The type of the request body.
+ */
 export const usePutWithoutEnv = (options?: {
   message?: string;
 }): (<ResponseData, Body>(
@@ -221,6 +279,19 @@ export const usePutWithoutEnv = (options?: {
   };
 };
 
+/**
+ * Custom hook to create a PATCH request function.
+ *
+ * @param {Object} [options] - Optional configuration for the PATCH request.
+ * @param {string} [options.message] - Optional message to include in the request headers.
+ *
+ * This hook constructs the base URL and headers, and provides a function to perform a PATCH request to the specified path.
+ *
+ * @returns {Function<Promise<ResponseData>>} - A function that performs a PATCH request.
+ *
+ * @template ResponseData - The expected response data type.
+ * @template Body - The type of the request body.
+ */
 export const usePatch = (options?: {
   message?: string;
 }): (<ResponseData, Body>(
@@ -258,6 +329,20 @@ export const usePatch = (options?: {
   };
 };
 
+/**
+ * Custom hook to create a PATCH request function.
+ *
+ * @param {Object} [options] - Optional configuration for the PATCH request.
+ * @param {string} [options.message] - Optional message to include in the request headers.
+ *
+ * This hook constructs the base URL and headers, and provides a function to perform a PATCH request to the specified path.
+ * In comparison to usePatch, this hook does not use the environment context, so it can be used only to perform requests that are environment-agnostic.
+ *
+ * @returns {Function<Promise<ResponseData>>} - A function that performs a PATCH request.
+ *
+ * @template ResponseData - The expected response data type.
+ * @template Body - The type of the request body.
+ */
 export const usePatchWithoutEnv = (options?: {
   message?: string;
 }): (<ResponseData, Body>(
@@ -293,6 +378,18 @@ export const usePatchWithoutEnv = (options?: {
   };
 };
 
+/**
+ * Custom hook to perform a DELETE request.
+ *
+ * @param {Object} [options] - Optional configuration for the DELETE request.
+ * @param {string} [options.message] - Optional message to include in the request headers.
+ *
+ * This hook constructs the base URL and headers, and provides a function to perform a DELETE request to the specified path.
+ *
+ * @returns {Function<Promise<ResponseData>>} A function that performs a DELETE request and returns the response data.
+ *
+ * @template ResponseData - The type of the response data.
+ */
 export const useDelete = (options?: {
   message?: string;
 }): (<ResponseData>(path: string) => Promise<ResponseData>) => {
@@ -327,6 +424,19 @@ export const useDelete = (options?: {
   };
 };
 
+/**
+ * Custom hook to perform a DELETE request.
+ *
+ * @param {Object} [options] - Optional configuration for the DELETE request.
+ * @param {string} [options.message] - Optional message to include in the request headers.
+ *
+ * This hook constructs the base URL and headers, and provides a function to perform a DELETE request to the specified path.
+ * In comparison to useDelete, this hook does not use the environment context, so it can be used only to perform requests that are environment-agnostic.
+ *
+ * @returns {Function<Promise<ResponseData>>} A function that performs a DELETE request and returns the response data.
+ *
+ * @template ResponseData - The type of the response data.
+ */
 export const useDeleteWithoutEnv = (options?: {
   message?: string;
 }): (<ResponseData>(path: string) => Promise<ResponseData>) => {
