@@ -28,13 +28,13 @@ export const DuplicateForm: React.FC<Props> = ({ serviceEntity, instance }) => {
   const [errorMessage, setErrorMessage] = useState("");
   const isHalted = environmentModifier.useIsHalted();
   const navigate = useNavigate();
-  const url = routeManager.useUrl("Inventory", {
+  const url = routeManager.useUrl("InstanceDetails", {
     service: serviceEntity.name,
+    instance: instance.service_identity_attribute_value || instance.id,
+    instanceId: instance.id,
   });
-  const handleRedirect = useCallback(
-    () => navigate(url),
-    [navigate] /* eslint-disable-line react-hooks/exhaustive-deps */,
-  );
+
+  const handleRedirect = useCallback(() => navigate(url), [navigate, url]);
 
   const attributeInputConverter = new AttributeInputConverterImpl();
   const currentAttributes =
@@ -58,7 +58,15 @@ export const DuplicateForm: React.FC<Props> = ({ serviceEntity, instance }) => {
       setIsDirty(true);
       setErrorMessage(result.value);
     } else {
-      handleRedirect();
+      const newUrl = routeManager.getUrl("InstanceDetails", {
+        service: serviceEntity.name,
+        instance:
+          result.value.data.service_identity_attribute_value ||
+          result.value.data.id,
+        instanceId: result.value.data.id,
+      });
+
+      navigate(`${newUrl}${location.search}`);
     }
   };
 

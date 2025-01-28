@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { InstanceAttributeModel, ServiceModel } from "@/Core";
 import {
   CreateModifierHandler,
@@ -20,16 +20,15 @@ export const CreateInstance: React.FC<Props> = ({ serviceEntity }) => {
     useContext(DependencyContext);
   const fieldCreator = new FieldCreator(new CreateModifierHandler());
   const fields = fieldCreator.create(serviceEntity);
+  const location = useLocation();
   const [errorMessage, setErrorMessage] = useState("");
   const isHalted = environmentModifier.useIsHalted();
   const navigate = useNavigate();
   const url = routeManager.useUrl("Inventory", {
     service: serviceEntity.name,
   });
-  const handleRedirect = useCallback(
-    () => navigate(url),
-    [navigate] /* eslint-disable-line react-hooks/exhaustive-deps */,
-  );
+
+  const handleRedirect = useCallback(() => navigate(url), [navigate, url]);
 
   const trigger = commandResolver.useGetTrigger<"CreateInstance">({
     kind: "CreateInstance",
@@ -48,7 +47,15 @@ export const CreateInstance: React.FC<Props> = ({ serviceEntity }) => {
       setIsDirty(true);
       setErrorMessage(result.value);
     } else {
-      handleRedirect();
+      const newUrl = routeManager.getUrl("InstanceDetails", {
+        service: serviceEntity.name,
+        instance:
+          result.value.data.service_identity_attribute_value ||
+          result.value.data.id,
+        instanceId: result.value.data.id,
+      });
+
+      navigate(`${newUrl}${location.search}`);
     }
   };
 
