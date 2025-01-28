@@ -1,4 +1,4 @@
-description: Improve overal navigation trhough the application.
+description: Improve overal navigation through the application.
 issue-nr: 5950
 change-type: patch
 destination-branches: [master, iso8]
