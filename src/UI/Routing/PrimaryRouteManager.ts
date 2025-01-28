@@ -250,7 +250,7 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
     getRelatedUrlWithoutParams,
     getLineageFromRoute,
     getRouteMatchFromUrl,
-    useUrl: useUrl,
+    useUrl,
     getCrumbs,
     getParamsFromUrl,
   };
