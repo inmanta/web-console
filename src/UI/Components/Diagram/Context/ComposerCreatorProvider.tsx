@@ -1,8 +1,8 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FlexItem, Flex } from "@patternfly/react-core";
 import { useGetInventoryList } from "@/Data/Managers/V2/GETTERS/GetInventoryList";
 import { useGetServiceModels } from "@/Data/Managers/V2/GETTERS/GetServiceModels";
-import { DependencyContext, words } from "@/UI";
+import { words } from "@/UI";
 import { ErrorView, LoadingView, PageContainer } from "@/UI/Components";
 import { Canvas } from "@/UI/Components/Diagram/Canvas";
 import { ComposerActions } from "../components";
@@ -38,14 +38,11 @@ export const ComposerCreatorProvider: React.FC<Props> = ({ serviceName }) => {
   const [interServiceRelationNames, setInterServiceRelationNames] = useState<
     string[]
   >([]);
-  const { environmentHandler } = useContext(DependencyContext);
-  const environment = environmentHandler.useId();
 
-  const serviceModels = useGetServiceModels(environment).useContinuous();
+  const serviceModels = useGetServiceModels().useContinuous();
 
   const relatedInventoriesQuery = useGetInventoryList(
     interServiceRelationNames,
-    environment,
   ).useContinuous();
 
   useEffect(() => {

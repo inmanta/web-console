@@ -39,10 +39,9 @@ interface Props {
  */
 export const ServiceItem: React.FC<Props> = ({ service }) => {
   const { triggerModal, closeModal } = useContext(ModalContext);
-  const { routeManager, environmentHandler } = useContext(DependencyContext);
-  const env = environmentHandler.useId();
+  const { routeManager } = useContext(DependencyContext);
   const [isOpen, setIsOpen] = useState(false);
-  const { mutate, isError, error } = useDeleteService(env, service.name);
+  const { mutate, isError, error } = useDeleteService(service.name);
   const [errorMessage, setErrorMessage] = useState("");
   const serviceKey = service.name + "-item";
   const rowRefs = useRef<Record<string, HTMLSpanElement | null>>({});

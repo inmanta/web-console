@@ -1,8 +1,8 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Editor, OnValidate, useMonaco } from "@monaco-editor/react";
 import { Spinner } from "@patternfly/react-core";
 import { useGetJSONSchema } from "@/Data/Managers/V2/GETTERS/GetJSONSchema";
-import { DependencyContext, words } from "@/UI";
+import { words } from "@/UI";
 import { getThemePreference } from "../DarkmodeOption";
 import { ErrorMessageContainer } from "../ErrorMessageContainer";
 
@@ -34,15 +34,13 @@ export const JSONEditor: React.FC<Props> = ({
   onChange,
   readOnly = false,
 }) => {
-  const { environmentHandler } = useContext(DependencyContext);
   const preferedTheme = getThemePreference() || "light";
-  const environment = environmentHandler.useId();
 
   const [isLoading, setIsLoading] = useState(true);
   const [editorState, setEditorState] = useState<string>(data);
   const [errors, setErrors] = useState<string[]>([]);
 
-  const schema = useGetJSONSchema(service_entity, environment).useOneTime();
+  const schema = useGetJSONSchema(service_entity).useOneTime();
 
   const monaco = useMonaco();
 

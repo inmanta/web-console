@@ -27,7 +27,7 @@ const setup = (flag: boolean) => {
       >
         <QueryClientProvider client={client}>
           <StoreProvider store={store}>
-            <ExpertBanner environmentId="aaa" />
+            <ExpertBanner />
           </StoreProvider>
         </QueryClientProvider>
       </DependencyProvider>

@@ -50,7 +50,6 @@ export const DestroyAction: React.FC<Props> = ({
   const message = words("instanceDetails.API.message.update")(username);
 
   const { mutate, isError, error, isSuccess, isPending } = useDestroyInstance(
-    environment,
     instance_id,
     service_entity,
     version,
@@ -78,7 +77,7 @@ export const DestroyAction: React.FC<Props> = ({
    * async method sending out the request to destroy the instance
    */
   const onSubmitDestroy = async (): Promise<void> => {
-    mutate("");
+    mutate();
   };
 
   useEffect(() => {

@@ -1,9 +1,14 @@
 import React from "react";
+import { MemoryRouter, useLocation } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { renderHook, waitFor } from "@testing-library/react";
+import { StoreProvider } from "easy-peasy";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { ServiceInstanceModel } from "@/Core";
+import { RemoteData, ServiceInstanceModel } from "@/Core";
+import { getStoreInstance } from "@/Data/Store";
+import { dependencies } from "@/Test";
+import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI";
 import {
   childModel,
   testInstance,
@@ -66,7 +71,11 @@ afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
 const createWrapper = () => {
-  // creates a new QueryClient for each test
+  const environmentHandler = EnvironmentHandlerImpl(
+    useLocation,
+    dependencies.routeManager,
+  );
+  const store = getStoreInstance();
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -74,21 +83,51 @@ const createWrapper = () => {
       },
     },
   });
+  const env = {
+    id: "aaa",
+    name: "env-a",
+    project_id: "ppp",
+    repo_branch: "branch",
+    repo_url: "repo",
+    projectName: "project",
+    halted: false,
+    settings: {},
+  };
+
+  store.dispatch.environment.setEnvironments(RemoteData.success([env]));
+
+  store.dispatch.environment.setEnvironmentDetailsById({
+    id: "aaa",
+    value: RemoteData.success(env),
+  });
 
   return ({ children }) => (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    <MemoryRouter
+      initialEntries={[
+        {
+          pathname: "/",
+          search: "?env=aaa",
+        },
+      ]}
+    >
+      <QueryClientProvider client={queryClient}>
+        <DependencyProvider
+          dependencies={{
+            ...dependencies,
+            environmentHandler,
+          }}
+        >
+          <StoreProvider store={store}>{children}</StoreProvider>
+        </DependencyProvider>
+      </QueryClientProvider>
+    </MemoryRouter>
   );
 };
 
 test("if the fetched instance has referenced instance(s), then query will return the given instance with that related instance(s)", async () => {
   const { result } = renderHook(
     () =>
-      useGetInstanceWithRelations(
-        "test_id",
-        "env",
-        false,
-        testService,
-      ).useOneTime(),
+      useGetInstanceWithRelations("test_id", false, testService).useOneTime(),
     {
       wrapper: createWrapper(),
     },
@@ -108,12 +147,7 @@ test("if the fetched instance has referenced instance(s), then query will return
 test("if the fetched instance has inter-service relation(s) in the model, then query will return the given instance with that related instance(s)", async () => {
   const { result } = renderHook(
     () =>
-      useGetInstanceWithRelations(
-        "child_id",
-        "env",
-        false,
-        childModel,
-      ).useOneTime(),
+      useGetInstanceWithRelations("child_id", false, childModel).useOneTime(),
     {
       wrapper: createWrapper(),
     },
@@ -178,12 +212,7 @@ test("if the fetched instance has inter-service relation(s) in the model, and th
   );
   const { result } = renderHook(
     () =>
-      useGetInstanceWithRelations(
-        "child_id",
-        "env",
-        false,
-        childModel,
-      ).useOneTime(),
+      useGetInstanceWithRelations("child_id", false, childModel).useOneTime(),
     {
       wrapper: createWrapper(),
     },
@@ -205,7 +234,6 @@ test("when instance returned has not referenced instance(s), then the query will
     () =>
       useGetInstanceWithRelations(
         "test_mpn_id",
-        "env",
         false,
         testService,
       ).useOneTime(),

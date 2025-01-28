@@ -4,8 +4,7 @@ import {
 } from "@tanstack/react-query";
 import { Pagination } from "@/Core";
 import { InstanceLog } from "@/Core/Domain/HistoryLog";
-import { PrimaryBaseUrlManager } from "@/UI";
-import { useFetchHelpers } from "../../helpers";
+import { useGet } from "../../helpers/useQueries";
 
 export interface LogsResponse {
   data: InstanceLog[];
@@ -27,7 +26,6 @@ interface GetInfiniteInstanceLogs {
  *
  * @param service {string} - the service entity
  * @param instanceId {string} - the instance ID for which the data needs to be fetched.
- * @param environment {string} - the environment in which the instance belongs
  *
  * @returns {GetInfiniteInstanceLogs} An object containing the different available queries.
  * @returns {UseInfiniteQueryResult<InstanceLog[], Error>} returns.useOneTime - Fetch the logs with a single query.
@@ -36,36 +34,8 @@ interface GetInfiniteInstanceLogs {
 export const useGetInfiniteInstanceLogs = (
   service: string,
   instance: string,
-  environment: string,
 ): GetInfiniteInstanceLogs => {
-  const { createHeaders, handleErrors } = useFetchHelpers();
-
-  const headers = createHeaders(environment);
-
-  const baseUrlManager = new PrimaryBaseUrlManager(
-    globalThis.location.origin,
-    globalThis.location.pathname,
-  );
-  const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
-  const fetchInstance = async (
-    { pageParam },
-    selectedVersion,
-  ): Promise<LogsResponse> => {
-    const initialParameters = selectedVersion
-      ? `limit=50&end=${Number(selectedVersion) + 1}`
-      : "limit=50";
-
-    const response = await fetch(
-      `${baseUrl}/lsm/v1/service_inventory/${service}/${instance}/log?${pageParam ? pageParam : initialParameters}`,
-      {
-        headers,
-      },
-    );
-
-    await handleErrors(response, `Failed to fetch logs for: ${instance}`);
-
-    return response.json();
-  };
+  const get = useGet()<LogsResponse>;
 
   return {
     useContinuous: (
@@ -73,7 +43,15 @@ export const useGetInfiniteInstanceLogs = (
     ): UseInfiniteQueryResult<InstanceLog[], Error> =>
       useInfiniteQuery({
         queryKey: ["get_instance_logs-continuous", service, instance],
-        queryFn: (query) => fetchInstance(query, selectedVersion),
+        queryFn: ({ pageParam }) => {
+          const initialParameters = selectedVersion
+            ? `limit=50&end=${Number(selectedVersion) + 1}`
+            : "limit=50";
+
+          return get(
+            `/lsm/v1/service_inventory/${service}/${instance}/log?${pageParam ? pageParam : initialParameters}`,
+          );
+        },
         refetchInterval: 5000,
         select: (data) => {
           return data.pages.flatMap((page) => page.data);

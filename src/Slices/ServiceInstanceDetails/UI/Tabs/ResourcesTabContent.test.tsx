@@ -43,11 +43,6 @@ it("should render error view correctly", async () => {
     await screen.findByLabelText("Error_view-Resources-content"),
   ).toBeVisible();
   expect(screen.getByText("Something went wrong")).toBeVisible();
-  expect(
-    screen.getByText(
-      "Failed to fetch service instance resources for instance of id: 1d96a1ab",
-    ),
-  ).toBeVisible();
 
   server.close();
 });

@@ -5,8 +5,7 @@ import {
   DesiredStateVersion,
   DesiredStateVersionStatus,
 } from "@/Slices/DesiredState/Core/Domain";
-import { PrimaryBaseUrlManager } from "@/UI";
-import { useFetchHelpers } from "../../helpers";
+import { useGet } from "../../helpers/useQueries";
 import { getUrl } from "./getUrl";
 
 /**
@@ -45,48 +44,13 @@ interface GetDesiredStates {
 
 /**
  * React Query hook to fetch a list of desired States
- * @param environment {string} - the environment in which the instance belongs
  *
  * @returns {GetDesiredStates} An object containing the available queries.
  * @returns {UseQueryResult<Result, Error>} returns.useOneTime - Fetch the desired states with a single query.
  * @returns {UseQueryResult<Result, Error>} returns.useContinuous - Fetch the desired states with a recurrent query with an interval of 5s.
  */
-export const useGetDesiredStates = (environment: string): GetDesiredStates => {
-  const { createHeaders, handleErrors } = useFetchHelpers();
-  const headers = createHeaders(environment);
-
-  const baseUrlManager = new PrimaryBaseUrlManager(
-    globalThis.location.origin,
-    globalThis.location.pathname,
-  );
-  const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
-
-  /**
-   * Fetches the desired states from the API.
-   *
-   * @param {PageSize.PageSize} pageSize - The number of desired states to fetch per page.
-   * @param {Filter} filter - The filter to apply to the desired states.
-   * @param {CurrentPage} currentPage - The current page of desired states to fetch.
-   * @returns {Promise<Result>} - A promise that resolves with the fetched desired states.
-   * @throws {Error} If the response is not successful, an error with the error message is thrown.
-   */
-  const fetchDesiredStates = async (
-    pageSize: PageSize.PageSize,
-    filter: Filter,
-    currentPage: CurrentPage,
-  ): Promise<Result> => {
-    const response = await fetch(
-      baseUrl +
-        getUrl({ pageSize, filter, currentPage, kind: "GetDesiredStates" }),
-      {
-        headers,
-      },
-    );
-
-    await handleErrors(response, `Failed to fetch desired states`);
-
-    return response.json();
-  };
+export const useGetDesiredStates = (): GetDesiredStates => {
+  const get = useGet()<Result>;
 
   return {
     useOneTime: (
@@ -101,7 +65,10 @@ export const useGetDesiredStates = (environment: string): GetDesiredStates => {
           filter,
           currentPage,
         ],
-        queryFn: () => fetchDesiredStates(pageSize, filter, currentPage),
+        queryFn: () =>
+          get(
+            getUrl({ pageSize, filter, currentPage, kind: "GetDesiredStates" }),
+          ),
         retry: false,
       }),
     useContinuous: (
@@ -116,7 +83,10 @@ export const useGetDesiredStates = (environment: string): GetDesiredStates => {
           filter,
           currentPage,
         ],
-        queryFn: () => fetchDesiredStates(pageSize, filter, currentPage),
+        queryFn: () =>
+          get(
+            getUrl({ pageSize, filter, currentPage, kind: "GetDesiredStates" }),
+          ),
         refetchInterval: 5000,
       }),
   };

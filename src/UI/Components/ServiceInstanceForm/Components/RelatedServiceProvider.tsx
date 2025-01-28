@@ -1,7 +1,6 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Alert, Button } from "@patternfly/react-core";
 import { useGetServiceModel } from "@/Data/Managers/V2/GETTERS/GetServiceModel";
-import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { AutoCompleteInputProvider } from "./AutoCompleteInputProvider";
 
@@ -41,12 +40,8 @@ export const RelatedServiceProvider: React.FC<Props> = ({
   alreadySelected,
   multi,
 }) => {
-  const { environmentHandler } = useContext(DependencyContext);
-  const env = environmentHandler.useId();
-  const { isError, error, isSuccess, refetch } = useGetServiceModel(
-    serviceName,
-    env,
-  ).useContinuous();
+  const { isError, error, isSuccess, refetch } =
+    useGetServiceModel(serviceName).useContinuous();
 
   if (isError) {
     return (

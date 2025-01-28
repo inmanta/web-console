@@ -1,6 +1,17 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { PrimaryBaseUrlManager } from "@/UI";
-import { useFetchHelpers } from "../../helpers";
+import { usePost } from "../../helpers/useQueries";
+
+interface AddUSerResponse {
+  data: {
+    username: "string";
+    auth_method: "database";
+  };
+}
+
+interface AddUserBody {
+  username: string;
+  password: string;
+}
 
 /**
  * React Query hook for adding a user.
@@ -8,43 +19,10 @@ import { useFetchHelpers } from "../../helpers";
  */
 export const useAddUser = () => {
   const client = useQueryClient();
-  const { createHeaders, handleErrors } = useFetchHelpers();
-  const baseUrlManager = new PrimaryBaseUrlManager(
-    globalThis.location.origin,
-    globalThis.location.pathname,
-  );
-  const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
-
-  /**
-   * Function for making a POST request to add a user.
-   * @param {Object} orderBody - The body of the POST request.
-   * @param {string} orderBody.username - The username of the user.
-   * @param {string} orderBody.password - The password of the user.
-   * @returns {Promise<Object>} The response object containing the added user's information.
-   * @throws {Error} If the response is not successful, an error is thrown with the error message.
-   */
-  const postOrder = async (orderBody: {
-    username: string;
-    password: string;
-  }): Promise<{
-    data: {
-      username: string;
-      auth_method: string;
-    };
-  }> => {
-    const response = await fetch(baseUrl + `/api/v2/user`, {
-      method: "POST",
-      body: JSON.stringify(orderBody),
-      headers: createHeaders(),
-    });
-
-    await handleErrors(response);
-
-    return response.json();
-  };
+  const post = usePost()<AddUSerResponse, AddUserBody>;
 
   return useMutation({
-    mutationFn: postOrder,
+    mutationFn: (body: AddUserBody) => post(`/api/v2/user`, body),
     mutationKey: ["add_user"],
     onSuccess: () => {
       //refetch the users query to update the list

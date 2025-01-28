@@ -66,14 +66,13 @@ export const ExpertStateTransfer: React.FC<Props> = ({
     "rollback",
   ];
 
-  const { environmentHandler, authHelper } = useContext(DependencyContext);
+  const { authHelper } = useContext(DependencyContext);
 
-  const environment = environmentHandler.useId();
   const username = authHelper.getUser();
   const message = words("instanceDetails.API.message.update")(username);
 
   const { mutate, isError, error, isSuccess, isPending } =
-    usePostExpertStateTransfer(environment, instance_id, service_entity);
+    usePostExpertStateTransfer(instance_id, service_entity);
 
   /**
    * When a state is selected in the list, block the interface, open the modal,

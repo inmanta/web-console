@@ -5,8 +5,7 @@ import {
   ServiceInstanceModel,
   ServiceModel,
 } from "@/Core";
-import { PrimaryBaseUrlManager } from "@/UI";
-import { useFetchHelpers } from "../../helpers";
+import { useGet } from "../../helpers/useQueries";
 
 /*
  * interface for the service instance with its related instances and eventual coordinates on canvas
@@ -28,47 +27,18 @@ interface GetInstanceWithRelationsHook {
 /**
  * React Query hook to fetch an instance with its related instances from the API. The related instances are all instances connected with given instance by inter-service relation, both, as a parent and as a child.
  * @param {string} id - The ID of the instance to fetch.
- * @param {string} environment - The environment in which we are looking for instances.
  * @param {boolean} includesReferencedBy - A flag indicating if we should fetch instances that reference our main instance - defaults to false.
  * @param {ServiceModel} [serviceModel] - The service Model of the instance (optional as it can be undefined at the init of the component that use the hook)
  * @returns  {GetInstanceWithRelationsHook} An object containing a custom hook to fetch the instance with its related instances.
  */
 export const useGetInstanceWithRelations = (
   instanceId: string,
-  environment: string,
   includesReferencedBy: boolean = false,
   serviceModel?: ServiceModel,
 ): GetInstanceWithRelationsHook => {
-  //extracted headers to avoid breaking rules of Hooks
-  const { createHeaders, handleErrors } = useFetchHelpers();
-  const headers = createHeaders(environment);
-  const baseUrlManager = new PrimaryBaseUrlManager(
-    globalThis.location.origin,
-    globalThis.location.pathname,
-  );
-  const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
-
-  /**
-   * Fetches a service instance
-   * @param {string} id - The ID of the instance to fetch.
-   * @returns {Promise<{data: ServiceInstanceModel}>} An object containing the fetched instance.
-   * @throws Error if the instance fails to fetch.
-   */
-  const fetchSingleInstance = async (
-    id: string,
-  ): Promise<{ data: ServiceInstanceModel }> => {
-    //we use this endpoint instead /lsm/v1/service_inventory/{service_entity}/{service_id} because referenced_by property includes only ids, without information about service_entity for given ids
-    const response = await fetch(
-      `${baseUrl}/lsm/v1/service_inventory?service_id=${id}&include_deployment_progress=false&exclude_read_only_attributes=false&include_referenced_by=${includesReferencedBy}&include_metadata=true`,
-      {
-        headers,
-      },
-    );
-
-    await handleErrors(response, "Failed to fetch instance with id: " + id);
-
-    return await response.json();
-  };
+  const getUrl = (id: string) =>
+    `/lsm/v1/service_inventory?service_id=${id}&include_deployment_progress=false&exclude_read_only_attributes=false&include_referenced_by=${includesReferencedBy}&include_metadata=true`;
+  const get = useGet()<{ data: ServiceInstanceModel }>;
 
   /**
    * This function is responsible for extracting the names of all inter-service relations from the provided service model or embedded entity.
@@ -171,7 +141,7 @@ export const useGetInstanceWithRelations = (
     id: string,
   ): Promise<InstanceWithRelations> => {
     const interServiceRelations: ServiceInstanceModel[] = [];
-    const { data: instance } = await fetchSingleInstance(id);
+    const { data: instance } = await get(getUrl(id));
     let serviceIds: string[] = [];
 
     if (serviceModel) {
@@ -194,7 +164,7 @@ export const useGetInstanceWithRelations = (
 
     await Promise.all(
       allIds.map(async (relatedId) => {
-        const interServiceRelation = await fetchSingleInstance(relatedId);
+        const interServiceRelation = await get(getUrl(relatedId));
 
         if (interServiceRelation) {
           interServiceRelations.push(interServiceRelation.data);
@@ -217,11 +187,7 @@ export const useGetInstanceWithRelations = (
      */
     useOneTime: (): UseQueryResult<InstanceWithRelations, Error> =>
       useQuery({
-        queryKey: [
-          "get_instance_with_relations-one_time",
-          instanceId,
-          environment,
-        ],
+        queryKey: ["get_instance_with_relations-one_time", instanceId],
         queryFn: () => fetchInstanceWithRelations(instanceId),
         retry: false,
         enabled: serviceModel !== undefined,
@@ -229,11 +195,7 @@ export const useGetInstanceWithRelations = (
       }),
     useContinuous: (): UseQueryResult<InstanceWithRelations, Error> =>
       useQuery({
-        queryKey: [
-          "get_instance_with_relations-continuous",
-          instanceId,
-          environment,
-        ],
+        queryKey: ["get_instance_with_relations-continuous", instanceId],
         queryFn: () => fetchInstanceWithRelations(instanceId),
         retry: false,
         refetchInterval: 5000,

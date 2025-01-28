@@ -1,7 +1,6 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { InstanceLog } from "@/Core/Domain/HistoryLog";
-import { PrimaryBaseUrlManager } from "@/UI";
-import { useFetchHelpers } from "../../helpers";
+import { useGet } from "../../helpers/useQueries";
 
 /**
  * Return Signature of the useGetInstanceLogs React Query
@@ -16,7 +15,6 @@ interface GetInstanceLogs {
  *
  * @param service {string} - the service entity
  * @param instanceId {string} - the instance ID for which the data needs to be fetched.
- * @param environment {string} - the environment in which the instance belongs
  *
  * @returns {GetInstanceLogs} An object containing the different available queries.
  * @returns {UseQueryResult<InstanceLog[], Error>} returns.useOneTime - Fetch the logs with a single query.
@@ -25,42 +23,22 @@ interface GetInstanceLogs {
 export const useGetInstanceLogs = (
   service: string,
   instance: string,
-  environment: string,
 ): GetInstanceLogs => {
-  const { createHeaders, handleErrors } = useFetchHelpers();
-  const headers = createHeaders(environment);
-
-  const baseUrlManager = new PrimaryBaseUrlManager(
-    globalThis.location.origin,
-    globalThis.location.pathname,
-  );
-  const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
-
-  const fetchInstance = async (): Promise<{ data: InstanceLog[] }> => {
-    const response = await fetch(
-      `${baseUrl}/lsm/v1/service_inventory/${service}/${instance}/log`,
-      {
-        headers,
-      },
-    );
-
-    await handleErrors(response, `Failed to fetch logs for: ${instance}`);
-
-    return response.json();
-  };
+  const url = `/lsm/v1/service_inventory/${service}/${instance}/log`;
+  const get = useGet()<{ data: InstanceLog[] }>;
 
   return {
     useOneTime: (): UseQueryResult<InstanceLog[], Error> =>
       useQuery({
         queryKey: ["get_instance_logs-one_time", service, instance],
-        queryFn: fetchInstance,
+        queryFn: () => get(url),
         retry: false,
         select: (data) => data.data,
       }),
     useContinuous: (): UseQueryResult<InstanceLog[], Error> =>
       useQuery({
         queryKey: ["get_instance_logs-continuous", service, instance],
-        queryFn: fetchInstance,
+        queryFn: () => get(url),
         refetchInterval: 5000,
         select: (data) => data.data,
       }),

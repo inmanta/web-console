@@ -1,7 +1,6 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { ServiceInstanceModel } from "@/Core";
-import { PrimaryBaseUrlManager } from "@/UI";
-import { useFetchHelpers } from "../../helpers";
+import { useGet } from "../../helpers/useQueries";
 
 /**
  * Inventories interface
@@ -24,7 +23,6 @@ interface GetInventoryList {
  * React Query hook to fetch the service inventory of each service in the list of service names.
  *
  * @param {string[]} serviceNames - the  array of service names
- * @param environment {string} - the environment in which the instance belongs
  *
  * @returns {GetInventoryList} An object containing the different available queries.
  * @returns {UseQueryResult<Inventories, Error>} returns.useOneTime - Fetch the service inventories as a single query.
@@ -32,41 +30,8 @@ interface GetInventoryList {
  */
 export const useGetInventoryList = (
   serviceNames: string[],
-  environment: string,
 ): GetInventoryList => {
-  const { createHeaders, handleErrors } = useFetchHelpers();
-  const headers = createHeaders(environment);
-
-  const baseUrlManager = new PrimaryBaseUrlManager(
-    globalThis.location.origin,
-    globalThis.location.pathname,
-  );
-  const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
-
-  /**
-   * Fetches the inventory for a single service.
-   *
-   * @param service - The name of the service to fetch the inventory for.
-   * @returns A promise that resolves to an object containing an array of service instance models.
-   * @throws Will throw an error if the fetch operation fails.
-   */
-  const fetchSingleService = async (
-    service: string,
-  ): Promise<{ data: ServiceInstanceModel[] }> => {
-    const response = await fetch(
-      `${baseUrl}/lsm/v1/service_inventory/${service}?limit=1000`,
-      {
-        headers,
-      },
-    );
-
-    await handleErrors(
-      response,
-      `Failed to fetch service inventory for name: ${service}`,
-    );
-
-    return response.json();
-  };
+  const get = useGet()<{ data: ServiceInstanceModel[] }>;
 
   /**
    * Fetches the inventory for all services.
@@ -76,7 +41,9 @@ export const useGetInventoryList = (
    */
   const fetchAllServices = async (): Promise<Inventories> => {
     const responses = await Promise.all(
-      serviceNames.map(async (serviceName) => fetchSingleService(serviceName)),
+      serviceNames.map(async (serviceName) =>
+        get(`/lsm/v1/service_inventory/${serviceName}?limit=1000`),
+      ),
     );
 
     // Map the responses to an object of service names and arrays of service instances for each service

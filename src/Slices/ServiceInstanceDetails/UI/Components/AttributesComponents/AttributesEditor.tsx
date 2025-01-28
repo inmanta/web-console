@@ -44,11 +44,10 @@ export const AttributesEditor: React.FC<Props> = ({
   service_entity,
   selectedVersion,
 }) => {
-  const { environmentHandler, authHelper } = useContext(DependencyContext);
+  const { authHelper } = useContext(DependencyContext);
   const { instance } = useContext(InstanceDetailsContext);
   const isLatestVersion = String(instance.version) === selectedVersion;
 
-  const environment = environmentHandler.useId();
   const username = authHelper.getUser();
 
   const [selectedSet, setSelectedSet] = useState(dropdownOptions[0]);
@@ -62,7 +61,7 @@ export const AttributesEditor: React.FC<Props> = ({
   const [errorMessage, setErrorMessage] = useState<string>("");
 
   const { mutate, isError, error, isPending, isSuccess } =
-    usePatchAttributesExpert(environment, instance.id, instance.service_entity);
+    usePatchAttributesExpert(instance.id, instance.service_entity);
 
   /**
    * Handles the change of the selected attribute Set.

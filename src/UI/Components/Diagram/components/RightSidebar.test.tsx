@@ -47,6 +47,10 @@ describe("RightSidebar.", () => {
           repo_branch: "branch",
           repo_url: "repo",
           projectName: "project",
+          halted: false,
+          settings: {
+            enable_lsm_expert_mode: false,
+          },
         },
         {
           id: "bbb",
@@ -55,6 +59,10 @@ describe("RightSidebar.", () => {
           repo_branch: "branch",
           repo_url: "repo",
           projectName: "project",
+          halted: false,
+          settings: {
+            enable_lsm_expert_mode: false,
+          },
         },
       ]),
     );

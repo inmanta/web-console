@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { Content, TabContent, TabContentBody } from "@patternfly/react-core";
 import { useGetInstanceResources } from "@/Data/Managers/V2/GETTERS/GetInstanceResources";
-import { DependencyContext, words } from "@/UI";
+import { words } from "@/UI";
 import {
   EmptyView,
   ErrorView,
@@ -13,14 +13,11 @@ import { TabContentWrapper } from "./TabContentWrapper";
 
 export const ResourcesTabContent: React.FC = () => {
   const { instance } = useContext(InstanceDetailsContext);
-  const { environmentHandler } = useContext(DependencyContext);
-  const environment = environmentHandler.useId();
 
   const { data, isSuccess, isError, error } = useGetInstanceResources(
     instance.id,
     instance.service_entity,
     String(instance.version),
-    environment,
   ).useContinuous();
 
   if (isSuccess) {

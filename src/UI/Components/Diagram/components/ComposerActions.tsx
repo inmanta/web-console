@@ -48,15 +48,13 @@ export const ComposerActions: React.FC<Props> = ({ serviceName, editable }) => {
     diagramHandlers,
     interServiceRelationsOnCanvas,
   } = useContext(CanvasContext);
-  const { routeManager, environmentHandler } = useContext(DependencyContext);
+  const { routeManager } = useContext(DependencyContext);
 
   const [alertMessage, setAlertMessage] = useState("");
   const [alertType, setAlertType] = useState(AlertVariant.danger);
 
-  const environment = environmentHandler.useId();
-
-  const metadataMutation = usePostMetadata(environment);
-  const orderMutation = usePostOrder(environment);
+  const metadataMutation = usePostMetadata();
+  const orderMutation = usePostOrder();
 
   const navigate = useNavigate();
   const url = routeManager.useUrl("Inventory", {

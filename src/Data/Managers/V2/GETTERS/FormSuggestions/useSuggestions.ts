@@ -1,7 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { FormSuggestion } from "@/Core";
-import { PrimaryBaseUrlManager } from "@/UI";
-import { useFetchHelpers } from "../../helpers";
+import { useGet } from "../../helpers/useQueries";
+
+interface ResponseData {
+  parameter: Record<string, Record<string, unknown>>;
+}
 
 /**
  * React Query hook to handle suggested values for a parameter.
@@ -10,16 +13,13 @@ import { useFetchHelpers } from "../../helpers";
  * if the suggestions are null or undefined, it will return null as data, and a success status.
  *
  * @param suggestions - The suggestions for the parameter.
- * @param environment - The environment for the parameter.
  *
  * @returns The result of the query, {data, status, error, isLoading}.
  */
 export const useSuggestedValues = (
   suggestions: FormSuggestion | null | undefined,
-  environment: string,
 ) => {
-  //extracted headers to avoid breaking rules of Hooks
-  const { createHeaders, handleErrors } = useFetchHelpers();
+  const get = useGet()<ResponseData>;
 
   if (!suggestions) {
     return {
@@ -41,24 +41,6 @@ export const useSuggestedValues = (
       },
     };
   }
-  const baseUrlManager = new PrimaryBaseUrlManager(
-    globalThis.location.origin,
-    globalThis.location.pathname,
-  );
-  const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
-
-  const fetchParameter = async () => {
-    const response = await fetch(
-      `${baseUrl}/api/v1/parameter/${suggestions.parameter_name}`,
-      {
-        headers: createHeaders(environment),
-      },
-    );
-
-    await handleErrors(response);
-
-    return response.json();
-  };
 
   return {
     /**
@@ -67,12 +49,8 @@ export const useSuggestedValues = (
      */
     useOneTime: () =>
       useQuery({
-        queryKey: [
-          "get_parameter-one_time",
-          suggestions.parameter_name,
-          environment,
-        ],
-        queryFn: fetchParameter,
+        queryKey: ["get_parameter-one_time", suggestions.parameter_name],
+        queryFn: () => get(`/api/v1/parameter/${suggestions.parameter_name}`),
         retry: false,
         select: (data) => data.parameter,
       }),

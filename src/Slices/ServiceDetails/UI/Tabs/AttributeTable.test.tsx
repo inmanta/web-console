@@ -20,6 +20,7 @@ import {
 import { multiNestedEditable } from "@/Test/Data/Service/EmbeddedEntity";
 import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI";
 import { AttributeTable } from "./AttributeTable";
+import { halted } from "@/Test/Data/EnvironmentDetails";
 
 expect.extend(toHaveNoViolations);
 
@@ -73,6 +74,7 @@ function setup(service: ServiceModel) {
         repo_branch: "branch",
         repo_url: "repo",
         projectName: "project",
+        halted: false,
         settings: {
           enable_lsm_expert_mode: true,
         },

@@ -44,11 +44,9 @@ export const StateAction: React.FC<Props> = ({
   const [targetState, setTargetState] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
 
-  const { environmentHandler, authHelper } = useContext(DependencyContext);
-  const environment = environmentHandler.useId();
+  const { authHelper } = useContext(DependencyContext);
 
   const { mutate, isError, error, isSuccess, isPending } = usePostStateTransfer(
-    environment,
     instance_id,
     service_entity,
   );

@@ -28,6 +28,7 @@ import {
 } from "@/UI/Dependency";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { CellWithCopyExpert } from "./CellWithCopyExpert";
+import { halted } from "@/Test/Data/EnvironmentDetails";
 
 function setup(props, expertMode = false) {
   const store = getStoreInstance();
@@ -59,6 +60,7 @@ function setup(props, expertMode = false) {
         repo_branch: "branch",
         repo_url: "repo",
         projectName: "project",
+        halted: false,
         settings: {
           enable_lsm_expert_mode: expertMode,
         },

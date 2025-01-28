@@ -1,9 +1,9 @@
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Flex, FlexItem } from "@patternfly/react-core";
 import { useGetInstanceWithRelations } from "@/Data/Managers/V2/GETTERS/GetInstanceWithRelations";
 import { useGetInventoryList } from "@/Data/Managers/V2/GETTERS/GetInventoryList";
 import { useGetServiceModels } from "@/Data/Managers/V2/GETTERS/GetServiceModels";
-import { DependencyContext, words } from "@/UI";
+import { words } from "@/UI";
 import { ErrorView, LoadingView, PageContainer } from "@/UI/Components";
 import { Canvas } from "@/UI/Components/Diagram/Canvas";
 import { ComposerActions } from "../components";
@@ -51,10 +51,8 @@ export const ComposerEditorProvider: React.FC<Props> = ({
   const [interServiceRelationNames, setInterServiceRelationNames] = useState<
     string[]
   >([]);
-  const { environmentHandler } = useContext(DependencyContext);
-  const environment = environmentHandler.useId();
 
-  const serviceModelsQuery = useGetServiceModels(environment).useContinuous();
+  const serviceModelsQuery = useGetServiceModels().useContinuous();
 
   const mainService = useMemo(() => {
     const data = serviceModelsQuery.data;
@@ -68,14 +66,12 @@ export const ComposerEditorProvider: React.FC<Props> = ({
 
   const instanceWithRelationsQuery = useGetInstanceWithRelations(
     instance,
-    environment,
     !editable, //if editable is true, we don't fetch referenced_by instances as they should not be displayed to keep it aligned with the regular instance form, they are only displayed in the composer viewer
     mainService,
   ).useOneTime();
 
   const relatedInventoriesQuery = useGetInventoryList(
     interServiceRelationNames,
-    environment,
   ).useContinuous();
 
   useEffect(() => {

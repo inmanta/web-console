@@ -1,6 +1,5 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
-import { PrimaryBaseUrlManager } from "@/UI";
-import { useFetchHelpers } from "../../helpers";
+import { useGet } from "../../helpers/useQueries";
 
 interface LoggedUser {
   username: string;
@@ -12,23 +11,8 @@ interface LoggedUser {
  * @returns {Query} - An object containing a custom hook to fetch user information.
  */
 export const useGetCurrentUser = () => {
-  const { createHeaders, handleErrors } = useFetchHelpers();
-  const baseUrlManager = new PrimaryBaseUrlManager(
-    globalThis.location.origin,
-    globalThis.location.pathname,
-  );
-
-  const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
-
-  const currentUserOrder = async (): Promise<{ data: LoggedUser }> => {
-    const response = await fetch(baseUrl + `/api/v2/current_user/`, {
-      headers: createHeaders(),
-    });
-
-    await handleErrors(response);
-
-    return response.json();
-  };
+  const url = `/api/v2/current_user/`;
+  const get = useGet()<{ data: LoggedUser }>;
 
   return {
     /**
@@ -37,7 +21,7 @@ export const useGetCurrentUser = () => {
      */
     useOneTime: (): UseQueryResult<LoggedUser, Error> =>
       useQuery({
-        queryFn: currentUserOrder,
+        queryFn: () => get(url),
         queryKey: ["get_current_user"],
         select: (data) => data.data,
       }),

@@ -1,9 +1,9 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useUrlStateWithString } from "@/Data";
 import { useGetInfiniteInstanceLogs } from "@/Data/Managers/V2/GETTERS/GetInfiniteInstanceLogs";
 import { useGetInstance } from "@/Data/Managers/V2/GETTERS/GetInstance";
 import { useGetServiceModel } from "@/Data/Managers/V2/GETTERS/GetServiceModel";
-import { DependencyContext, useRouteParams, words } from "@/UI";
+import { useRouteParams, words } from "@/UI";
 import { ErrorView, LoadingView, PageContainer } from "@/UI/Components";
 import { InstanceDetailsContext } from "../Core/Context";
 import { VersionedPageTitleWithActions } from "./Components/Sections";
@@ -31,25 +31,14 @@ export const ServiceInstanceDetails: React.FC<Props> = ({
   instanceId,
   version,
 }) => {
-  const { environmentHandler } = useContext(DependencyContext);
-  const environment = environmentHandler.useId();
-
-  const instanceDetails = useGetInstance(
-    service,
-    instanceId,
-    environment,
-  ).useContinuous();
+  const instanceDetails = useGetInstance(service, instanceId).useContinuous();
 
   const logsQuery = useGetInfiniteInstanceLogs(
     service,
     instanceId,
-    environment,
   ).useContinuous(version);
 
-  const serviceModelQuery = useGetServiceModel(
-    service,
-    environment,
-  ).useOneTime();
+  const serviceModelQuery = useGetServiceModel(service).useOneTime();
 
   const pageTitle = `${service}: ${instance}`;
 

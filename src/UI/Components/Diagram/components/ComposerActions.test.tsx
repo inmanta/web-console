@@ -45,18 +45,23 @@ describe("ComposerActions.", () => {
     );
     const store = getStoreInstance();
 
-    store.dispatch.environment.setEnvironments(
-      RemoteData.success([
-        {
-          id: "aaa",
-          name: "env-a",
-          project_id: "ppp",
-          repo_branch: "branch",
-          repo_url: "repo",
-          projectName: "project",
-        },
-      ]),
-    );
+    const env = {
+      id: "aaa",
+      name: "env-a",
+      project_id: "ppp",
+      repo_branch: "branch",
+      repo_url: "repo",
+      projectName: "project",
+      halted: false,
+      settings: {},
+    };
+
+    store.dispatch.environment.setEnvironments(RemoteData.success([env]));
+
+    store.dispatch.environment.setEnvironmentDetailsById({
+      id: "aaa",
+      value: RemoteData.success(env),
+    });
 
     return (
       <QueryClientProvider client={client}>
@@ -195,7 +200,9 @@ describe("ComposerActions.", () => {
   it("shows success message and redirects when deploy button is clicked", async () => {
     server.use(
       http.post("/lsm/v2/order", async () => {
-        return HttpResponse.json();
+        return HttpResponse.json({
+          data: [],
+        });
       }),
     );
 
@@ -222,7 +229,9 @@ describe("ComposerActions.", () => {
       http.post("/lsm/v2/order", async () => {
         await delay();
 
-        return HttpResponse.json();
+        return HttpResponse.json({
+          data: [],
+        });
       }),
     );
     const canvasContext = {
