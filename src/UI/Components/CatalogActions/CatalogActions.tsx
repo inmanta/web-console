@@ -4,6 +4,7 @@ import {
   Button,
   Content,
   Flex,
+  FlexItem,
   Tooltip,
 } from "@patternfly/react-core";
 import { FileCodeIcon } from "@patternfly/react-icons";
@@ -28,9 +29,7 @@ import { ToastAlert } from "../ToastAlert";
 export const CatalogActions: React.FC = () => {
   const { triggerModal, closeModal } = useContext(ModalContext);
   const { urlManager, environmentHandler } = useContext(DependencyContext);
-  const { mutate, isError, error, isSuccess, isPending } = useUpdateCatalog(
-    environmentHandler.useId(),
-  );
+  const { mutate, isError, error, isSuccess } = useUpdateCatalog();
 
   const [message, setMessage] = useState("");
   const [toastTitle, setToastTitle] = useState("");
@@ -102,22 +101,27 @@ export const CatalogActions: React.FC = () => {
         direction={{ default: "row" }}
         fullWidth={{ default: "fullWidth" }}
         justifyContent={{ default: "justifyContentFlexEnd" }}
+        rowGap={{ default: "rowGap" }}
       >
-        <Tooltip content={words("catalog.API.tooltip")} entryDelay={500}>
-          <Button
-            variant="plain"
-            aria-label="API-Documentation"
-            icon={<FileCodeIcon />}
-            component="a"
-            href={urlManager.getLSMAPILink(environmentHandler.useId())}
-            target="_blank"
-          ></Button>
-        </Tooltip>
-        <Tooltip content={words("catalog.update.tooltip")}>
-          <Button isLoading={isPending} onClick={openModal}>
-            {words("catalog.button.update")}
-          </Button>
-        </Tooltip>
+        <FlexItem>
+          <Tooltip content={words("catalog.API.tooltip")} entryDelay={500}>
+            <Button
+              variant="plain"
+              aria-label="API-Documentation"
+              icon={<FileCodeIcon />}
+              component="a"
+              href={urlManager.getLSMAPILink(environmentHandler.useId())}
+              target="_blank"
+            ></Button>
+          </Tooltip>
+        </FlexItem>
+        <FlexItem>
+          <Tooltip content={words("catalog.update.tooltip")}>
+            <Button onClick={openModal}>
+              {words("catalog.button.update")}
+            </Button>
+          </Tooltip>
+        </FlexItem>
       </Flex>
     </>
   );
