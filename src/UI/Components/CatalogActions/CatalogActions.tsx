@@ -29,7 +29,7 @@ import { ToastAlert } from "../ToastAlert";
 export const CatalogActions: React.FC = () => {
   const { triggerModal, closeModal } = useContext(ModalContext);
   const { urlManager, environmentHandler } = useContext(DependencyContext);
-  const { mutate, isError, error, isSuccess, isPending } = useUpdateCatalog(
+  const { mutate, isError, error, isSuccess } = useUpdateCatalog(
     environmentHandler.useId(),
   );
 
