@@ -144,7 +144,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#inventory-stencil").should("not.be.visible");
     });
 
-    it("8.2 composer create view can perform it's required functions and deploy created instance", () => {
+    it("8.2 composer create view can perform its required functions and deploy created instance", () => {
       // Select 'test' environment
       cy.visit("/console/");
       cy.get(`[aria-label="Select-environment-test"]`).click();
@@ -221,6 +221,15 @@ if (Cypress.env("edition") === "iso") {
 
       cy.get("button").contains("Deploy").click();
 
+      cy.get('[aria-label="Sidebar-Navigation-Item"]')
+        .contains("Service Catalog")
+        .click();
+
+      // click on Show Inventory of parent service
+      cy.get("#parent-service", { timeout: 60000 })
+        .contains("Show inventory")
+        .click();
+
       cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 1);
 
       //add another parent instance
@@ -236,6 +245,15 @@ if (Cypress.env("edition") === "iso") {
 
       cy.get("button").contains("Deploy").click();
 
+      cy.get('[aria-label="Sidebar-Navigation-Item"]')
+        .contains("Service Catalog")
+        .click();
+
+      // click on Show Inventory of parent service
+      cy.get("#parent-service", { timeout: 60000 })
+        .contains("Show inventory")
+        .click();
+
       cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 2);
       // await until two parent_service are deployed and up
       cy.get('[data-label="State"]', { timeout: 90000 })
@@ -245,10 +263,10 @@ if (Cypress.env("edition") === "iso") {
         .eq(0, { timeout: 90000 })
         .should("have.text", "up", { timeout: 90000 });
 
-      //Add child_service instance
       cy.get('[aria-label="Sidebar-Navigation-Item"]')
         .contains("Service Catalog")
         .click();
+
       // click on Show Inventory of many-defaults service, expect no instances
       cy.get("#many-defaults", { timeout: 60000 })
         .contains("Show inventory")
@@ -545,6 +563,15 @@ if (Cypress.env("edition") === "iso") {
 
       cy.get("button").contains("Deploy").click();
 
+      cy.get('[aria-label="Sidebar-Navigation-Item"]')
+        .contains("Service Catalog")
+        .click();
+
+      // click on Show Inventory of parent service
+      cy.get("#many-defaults", { timeout: 60000 })
+        .contains("Show inventory")
+        .click();
+
       //assert that many-defaults is deployed and up
 
       cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 1);
@@ -676,6 +703,15 @@ if (Cypress.env("edition") === "iso") {
 
       cy.get("button").contains("Deploy").click();
 
+      cy.get('[aria-label="Sidebar-Navigation-Item"]')
+        .contains("Service Catalog")
+        .click();
+
+      // click on Show Inventory of parent service
+      cy.get("#many-defaults", { timeout: 60000 })
+        .contains("Show inventory")
+        .click();
+
       //assert that many-defaults is deployed and up
       cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 1);
       // await until parent_service is deployed and up
@@ -799,6 +835,15 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[data-type="Link"]').should("have.length", 1);
 
       cy.get("button").contains("Deploy").click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]')
+        .contains("Service Catalog")
+        .click();
+
+      // click on Show Inventory of parent service
+      cy.get("#child-service", { timeout: 60000 })
+        .contains("Show inventory")
+        .click();
+
       cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 1);
       // await until parent_service is deployed and up
       cy.get('[data-label="State"]', { timeout: 90000 }).should(
@@ -865,6 +910,15 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[data-testid="Error-container"]').should("not.exist");
 
       cy.get("button").contains("Deploy").click();
+
+      cy.get('[aria-label="Sidebar-Navigation-Item"]')
+        .contains("Service Catalog")
+        .click();
+
+      // click on Show Inventory of parent service
+      cy.get("#child-service", { timeout: 60000 })
+        .contains("Show inventory")
+        .click();
 
       // await until parent_service is deployed and up
       cy.get('[data-label="State"]', { timeout: 90000 }).should(
@@ -990,6 +1044,15 @@ if (Cypress.env("edition") === "iso") {
 
       cy.get("button").contains("Deploy").click();
 
+      cy.get('[aria-label="Sidebar-Navigation-Item"]')
+        .contains("Service Catalog")
+        .click();
+
+      // click on Show Inventory of parent service
+      cy.get("#child-with-many-parents-service", { timeout: 60000 })
+        .contains("Show inventory")
+        .click();
+
       cy.get('[data-label="State"]', { timeout: 90000 })
         .eq(0, { timeout: 90000 })
         .should("have.text", "up", { timeout: 90000 });
@@ -1004,6 +1067,15 @@ if (Cypress.env("edition") === "iso") {
 
       cy.get("button").contains("Remove").click();
       cy.get("button").contains("Deploy").click();
+
+      cy.get('[aria-label="Sidebar-Navigation-Item"]')
+        .contains("Service Catalog")
+        .click();
+
+      // click on Show Inventory of parent service
+      cy.get("#child-with-many-parents-service", { timeout: 60000 })
+        .contains("Show inventory")
+        .click();
 
       cy.get('[data-label="State"]', { timeout: 90000 })
         .eq(0, { timeout: 90000 })

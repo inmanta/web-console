@@ -99,6 +99,11 @@ describe("Scenario 4 Desired State", () => {
       cy.get("#name").type("basic-service");
       cy.get("button").contains("Confirm").click();
 
+      cy.get('[aria-label="Sidebar-Navigation-Item"]')
+        .contains("Service Catalog")
+        .click();
+      cy.get("#basic-service").contains("Show inventory").click();
+
       // Should show the chart
       cy.get(".pf-v5-c-chart").should("be.visible");
 

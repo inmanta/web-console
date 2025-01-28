@@ -105,9 +105,6 @@ if (Cypress.env("edition") === "iso") {
       // Make sure the call to get inventory has been executed
       cy.wait("@GetServiceInventory");
 
-      // Check if the view is still empty, also means we have been redirected as expected.
-      cy.get('[aria-label="ServiceInventory-Success"]').should("to.be.visible");
-
       // Go to the settings, then to the configuration tab
       cy.get('[aria-label="Sidebar-Navigation-Item"]')
         .contains("Settings")
@@ -187,6 +184,8 @@ if (Cypress.env("edition") === "iso") {
       // Go to the attributes tab and select the JSON view
       cy.get('[aria-label="attributes-content"]').click();
       cy.get("#JSON").click();
+
+      cy.get(".monaco-editor", { timeout: 15000 }).should("be.visible"); // assure the editor is loaded before further assertions.
 
       // edit the first line to make editor invalid (Delete the first character of the name property)
       cy.get(".mtk20").contains("name").type("{home}{rightArrow}{del}");

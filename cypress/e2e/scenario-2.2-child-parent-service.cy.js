@@ -82,6 +82,11 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#name").type("parent");
       cy.get("button").contains("Confirm").click();
 
+      cy.get('[aria-label="Sidebar-Navigation-Item"]')
+        .contains("Service Catalog")
+        .click();
+      cy.get("#parent-service").contains("Show inventory").click();
+
       // Should show the ServiceInventory-Success Component.
       cy.get('[aria-label="ServiceInventory-Success"]').should("to.be.visible");
       // Check if only one row has been added to the table.
@@ -102,7 +107,12 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="parent_entity-select-toggleFilterInput"]').click();
       cy.get('[role="option"]').first().click();
       cy.get("button").contains("Confirm").click();
-      // Expect to be redirected to service inventory
+
+      cy.get('[aria-label="Sidebar-Navigation-Item"]')
+        .contains("Service Catalog")
+        .click();
+      cy.get("#child-service").contains("Show inventory").click();
+
       cy.get('[aria-label="ServiceInventory-Success"]').should("to.be.visible");
 
       // Check if only one row has been added to the table.

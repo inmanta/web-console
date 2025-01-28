@@ -185,8 +185,6 @@ describe("5 Compile reports", () => {
       cy.get("#name").type("basic-service");
       cy.get("button").contains("Confirm").click();
 
-      cy.get(".pf-v5-c-chart").should("be.visible");
-
       // Go to compiled Reports page
       cy.get('[aria-label="Sidebar-Navigation-Item"]')
         .contains("Compile Reports")
@@ -257,6 +255,11 @@ describe("5 Compile reports", () => {
       cy.get("#service_id").type("0001");
       cy.get("#name").type("2");
       cy.get("button").contains("Confirm").click();
+
+      cy.get('[aria-label="Sidebar-Navigation-Item"]')
+        .contains("Service Catalog")
+        .click();
+      cy.get("#basic-service").contains("Show inventory").click();
 
       // Expect to see a rejected service instance in the table
       cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {

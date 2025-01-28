@@ -122,8 +122,6 @@ describe("Scenario 6 : Resources", () => {
       cy.get("#name").type("basic-service");
       cy.get("button").contains("Confirm").click();
 
-      cy.get(".pf-v5-c-chart").should("be.visible");
-
       // Go back to Resources page
       cy.get('[aria-label="Sidebar-Navigation-Item"]')
         .contains("Resources")
@@ -336,8 +334,6 @@ describe("Scenario 6 : Resources", () => {
       cy.get("#service_id").type("0009");
 
       cy.get("button").contains("Confirm").click();
-
-      cy.get(".pf-v5-c-chart").should("be.visible");
 
       // Go to Resource page
       cy.get('[aria-label="Sidebar-Navigation-Item"]')
@@ -574,6 +570,11 @@ describe("Scenario 6 : Resources", () => {
       cy.get("button").contains("Add").click();
 
       cy.get("button").contains("Confirm").click();
+
+      cy.get('[aria-label="Sidebar-Navigation-Item"]')
+        .contains("Service Catalog")
+        .click();
+      cy.get("#waiting_entity").contains("Show inventory").click();
 
       // Expect the number in the chart to the success label to be 8
       cy.get(".pf-v5-c-chart").within(() => {

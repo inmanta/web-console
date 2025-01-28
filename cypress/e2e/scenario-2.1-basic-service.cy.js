@@ -142,6 +142,11 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#ip_r2").clear().type("1.2.2.1");
       cy.get("button").contains("Confirm").click();
 
+      cy.get('[aria-label="Sidebar-Navigation-Item"]')
+        .contains("Service Catalog")
+        .click();
+      cy.get("#basic-service").contains("Show inventory").click();
+
       // Should show the chart
       cy.get(".pf-v5-c-chart").should("be.visible");
 
@@ -247,9 +252,6 @@ if (Cypress.env("edition") === "iso") {
       cy.get("button").contains("Confirm").click();
 
       // check attributes on instance details page
-      cy.get('[aria-label="instance-details-link"]', { timeout: 20000 })
-        .first()
-        .click();
       cy.get(".pf-v6-c-tabs__list").contains("Attributes").click();
 
       // Expect to find new value as candidate and old value in active
@@ -333,7 +335,10 @@ if (Cypress.env("edition") === "iso") {
       cy.get("button").contains("Confirm").click();
 
       // expect to land on Service Inventory page
-      cy.get('[aria-label="ServiceInventory-Success"]').should("to.be.visible");
+      cy.get('[aria-label="Sidebar-Navigation-Item"]')
+        .contains("Service Catalog")
+        .click();
+      cy.get("#basic-service").contains("Show inventory").click();
 
       // expect two rows in inventory now
       cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 2);

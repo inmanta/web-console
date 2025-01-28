@@ -107,7 +107,12 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#address").type("1.2.3.7/32");
       cy.get("#vlan_id").type("3");
       cy.get("button").contains("Confirm").click();
-      // check if the view is still empty, also means we have been redirected as expected.
+
+      cy.get('[aria-label="Sidebar-Navigation-Item"]')
+        .contains("Service Catalog")
+        .click();
+      cy.get("#embedded-entity-service").contains("Show inventory").click();
+
       cy.get('[aria-label="ServiceInventory-Success"]').should("to.be.visible");
     });
 
