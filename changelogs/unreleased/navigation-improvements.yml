@@ -1,0 +1,6 @@
+description: Improve overal navigation trhough the application.
+issue-nr: 5950
+change-type: patch
+destination-branches: [master, iso8]
+sections:
+  minor-improvement: "{{description}}"
