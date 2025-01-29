@@ -1,0 +1,6 @@
+description: REplace service queries for react Query
+issue-nr: 5975
+change-type: patch
+destination-branches: [master, iso8]
+sections:
+  minor-improvement: "{{description}}"
