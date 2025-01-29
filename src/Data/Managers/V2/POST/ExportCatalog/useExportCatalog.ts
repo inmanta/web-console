@@ -12,7 +12,7 @@ import { useFetchHelpers } from "../../helpers";
  * @param {string} environment  - The environment to use for creating headers.
  * @returns {UseMutationResult<void, Error, void, unknown>}- The mutation object from `useMutation` hook.
  */
-export const useUpdateCatalog = (
+export const useExportCatalog = (
   environment: string,
 ): UseMutationResult<void, Error, void, unknown> => {
   const client = useQueryClient();
