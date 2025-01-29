@@ -221,7 +221,7 @@ if (Cypress.env("edition") === "iso") {
 
       cy.get("button").contains("Deploy").click();
 
-      cy.get('[aria-label="OrdersView-Success"]', {
+      cy.get('[aria-label="OrderDetailsView-Success"]', {
         timeout: 20000,
       }).should("to.be.visible");
 
@@ -249,7 +249,7 @@ if (Cypress.env("edition") === "iso") {
 
       cy.get("button").contains("Deploy").click();
 
-      cy.get('[aria-label="OrdersView-Success"]', {
+      cy.get('[aria-label="OrderDetailsView-Success"]', {
         timeout: 20000,
       }).should("to.be.visible");
 
@@ -571,7 +571,7 @@ if (Cypress.env("edition") === "iso") {
 
       cy.get("button").contains("Deploy").click();
 
-      cy.get('[aria-label="OrdersView-Success"]', {
+      cy.get('[aria-label="OrderDetailsView-Success"]', {
         timeout: 20000,
       }).should("to.be.visible");
 
@@ -715,7 +715,7 @@ if (Cypress.env("edition") === "iso") {
 
       cy.get("button").contains("Deploy").click();
 
-      cy.get('[aria-label="OrdersView-Success"]', {
+      cy.get('[aria-label="OrderDetailsView-Success"]', {
         timeout: 20000,
       }).should("to.be.visible");
 
@@ -1060,7 +1060,7 @@ if (Cypress.env("edition") === "iso") {
 
       cy.get("button").contains("Deploy").click();
 
-      cy.get('[aria-label="OrdersView-Success"]', {
+      cy.get('[aria-label="OrderDetailsView-Success"]', {
         timeout: 20000,
       }).should("to.be.visible");
 
@@ -1088,7 +1088,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get("button").contains("Remove").click();
       cy.get("button").contains("Deploy").click();
 
-      cy.get('[aria-label="OrdersView-Success"]', {
+      cy.get('[aria-label="OrderDetailsView-Success"]', {
         timeout: 20000,
       }).should("to.be.visible");
 
