@@ -185,6 +185,10 @@ describe("5 Compile reports", () => {
       cy.get("#name").type("basic-service");
       cy.get("button").contains("Confirm").click();
 
+      cy.get('[aria-label="Instance-Details-Success"]', {
+        timeout: 20000,
+      }).should("to.be.visible");
+
       // Go to compiled Reports page
       cy.get('[aria-label="Sidebar-Navigation-Item"]')
         .contains("Compile Reports")
@@ -255,6 +259,10 @@ describe("5 Compile reports", () => {
       cy.get("#service_id").type("0001");
       cy.get("#name").type("2");
       cy.get("button").contains("Confirm").click();
+
+      cy.get('[aria-label="Instance-Details-Success"]', {
+        timeout: 20000,
+      }).should("to.be.visible");
 
       cy.get('[aria-label="Sidebar-Navigation-Item"]')
         .contains("Service Catalog")

@@ -102,6 +102,10 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#name").type("basic-service");
       cy.get("button").contains("Confirm").click();
 
+      cy.get('[aria-label="Instance-Details-Success"]', {
+        timeout: 20000,
+      }).should("to.be.visible");
+
       // Make sure the call to get inventory has been executed
       cy.wait("@GetServiceInventory");
 

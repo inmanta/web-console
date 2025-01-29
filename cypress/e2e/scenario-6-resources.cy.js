@@ -122,6 +122,10 @@ describe("Scenario 6 : Resources", () => {
       cy.get("#name").type("basic-service");
       cy.get("button").contains("Confirm").click();
 
+      cy.get('[aria-label="Instance-Details-Success"]', {
+        timeout: 20000,
+      }).should("to.be.visible");
+
       // Go back to Resources page
       cy.get('[aria-label="Sidebar-Navigation-Item"]')
         .contains("Resources")
@@ -334,6 +338,10 @@ describe("Scenario 6 : Resources", () => {
       cy.get("#service_id").type("0009");
 
       cy.get("button").contains("Confirm").click();
+
+      cy.get('[aria-label="Instance-Details-Success"]', {
+        timeout: 20000,
+      }).should("to.be.visible");
 
       // Go to Resource page
       cy.get('[aria-label="Sidebar-Navigation-Item"]')
@@ -570,6 +578,10 @@ describe("Scenario 6 : Resources", () => {
       cy.get("button").contains("Add").click();
 
       cy.get("button").contains("Confirm").click();
+
+      cy.get('[aria-label="Instance-Details-Success"]', {
+        timeout: 20000,
+      }).should("to.be.visible");
 
       cy.get('[aria-label="Sidebar-Navigation-Item"]')
         .contains("Service Catalog")

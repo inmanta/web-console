@@ -82,6 +82,10 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#name").type("parent");
       cy.get("button").contains("Confirm").click();
 
+      cy.get('[aria-label="Instance-Details-Success"]', {
+        timeout: 20000,
+      }).should("to.be.visible");
+
       cy.get('[aria-label="Sidebar-Navigation-Item"]')
         .contains("Service Catalog")
         .click();
@@ -107,6 +111,10 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="parent_entity-select-toggleFilterInput"]').click();
       cy.get('[role="option"]').first().click();
       cy.get("button").contains("Confirm").click();
+
+      cy.get('[aria-label="Instance-Details-Success"]', {
+        timeout: 20000,
+      }).should("to.be.visible");
 
       cy.get('[aria-label="Sidebar-Navigation-Item"]')
         .contains("Service Catalog")

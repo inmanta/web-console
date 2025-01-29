@@ -221,6 +221,10 @@ if (Cypress.env("edition") === "iso") {
 
       cy.get("button").contains("Deploy").click();
 
+      cy.get('[aria-label="OrdersView-Success"]', {
+        timeout: 20000,
+      }).should("to.be.visible");
+
       cy.get('[aria-label="Sidebar-Navigation-Item"]')
         .contains("Service Catalog")
         .click();
@@ -244,6 +248,10 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="TextInput-service_id"]').type("test_id2");
 
       cy.get("button").contains("Deploy").click();
+
+      cy.get('[aria-label="OrdersView-Success"]', {
+        timeout: 20000,
+      }).should("to.be.visible");
 
       cy.get('[aria-label="Sidebar-Navigation-Item"]')
         .contains("Service Catalog")
@@ -563,6 +571,10 @@ if (Cypress.env("edition") === "iso") {
 
       cy.get("button").contains("Deploy").click();
 
+      cy.get('[aria-label="OrdersView-Success"]', {
+        timeout: 20000,
+      }).should("to.be.visible");
+
       cy.get('[aria-label="Sidebar-Navigation-Item"]')
         .contains("Service Catalog")
         .click();
@@ -702,6 +714,10 @@ if (Cypress.env("edition") === "iso") {
       cy.get("button").contains("Remove").click();
 
       cy.get("button").contains("Deploy").click();
+
+      cy.get('[aria-label="OrdersView-Success"]', {
+        timeout: 20000,
+      }).should("to.be.visible");
 
       cy.get('[aria-label="Sidebar-Navigation-Item"]')
         .contains("Service Catalog")
@@ -1044,6 +1060,10 @@ if (Cypress.env("edition") === "iso") {
 
       cy.get("button").contains("Deploy").click();
 
+      cy.get('[aria-label="OrdersView-Success"]', {
+        timeout: 20000,
+      }).should("to.be.visible");
+
       cy.get('[aria-label="Sidebar-Navigation-Item"]')
         .contains("Service Catalog")
         .click();
@@ -1067,6 +1087,10 @@ if (Cypress.env("edition") === "iso") {
 
       cy.get("button").contains("Remove").click();
       cy.get("button").contains("Deploy").click();
+
+      cy.get('[aria-label="OrdersView-Success"]', {
+        timeout: 20000,
+      }).should("to.be.visible");
 
       cy.get('[aria-label="Sidebar-Navigation-Item"]')
         .contains("Service Catalog")

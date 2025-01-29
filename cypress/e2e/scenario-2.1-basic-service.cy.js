@@ -142,6 +142,10 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#ip_r2").clear().type("1.2.2.1");
       cy.get("button").contains("Confirm").click();
 
+      cy.get('[aria-label="Instance-Details-Success"]', {
+        timeout: 20000,
+      }).should("to.be.visible");
+
       cy.get('[aria-label="Sidebar-Navigation-Item"]')
         .contains("Service Catalog")
         .click();
@@ -334,7 +338,10 @@ if (Cypress.env("edition") === "iso") {
       // submit
       cy.get("button").contains("Confirm").click();
 
-      // expect to land on Service Inventory page
+      cy.get('[aria-label="Instance-Details-Success"]', {
+        timeout: 20000,
+      }).should("to.be.visible");
+
       cy.get('[aria-label="Sidebar-Navigation-Item"]')
         .contains("Service Catalog")
         .click();
