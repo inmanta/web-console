@@ -198,6 +198,15 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#name").type("basic-service");
       cy.get("button").contains("Confirm").click();
 
+      cy.get('[aria-label="Instance-Details-Success"]', {
+        timeout: 20000,
+      }).should("to.be.visible");
+
+      cy.get('[aria-label="Sidebar-Navigation-Item"]')
+        .contains("Service Catalog")
+        .click();
+      cy.get("#basic-service").contains("Show inventory").click();
+
       // expect newly created instance to be visible in table
       cy.get('[aria-label="ServiceInventory-Success"]', {
         timeout: 20000,
@@ -262,6 +271,15 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#name").type("failed");
       cy.get(".pf-v6-c-switch").first().click();
       cy.get("button").contains("Confirm").click();
+
+      cy.get('[aria-label="Instance-Details-Success"]', {
+        timeout: 20000,
+      }).should("to.be.visible");
+
+      cy.get('[aria-label="Sidebar-Navigation-Item"]')
+        .contains("Service Catalog")
+        .click();
+      cy.get("#basic-service").contains("Show inventory").click();
 
       // Expect the number in the chart to be 2
       cy.get(".pf-v5-c-chart").within(() => {

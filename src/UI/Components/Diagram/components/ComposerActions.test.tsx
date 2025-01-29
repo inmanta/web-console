@@ -211,16 +211,10 @@ describe("ComposerActions.", () => {
 
     await userEvent.click(screen.getByRole("button", { name: "Deploy" }));
 
-    expect(
-      await screen.findByText("The request got sent successfully"),
-    ).toBeVisible();
-
-    await waitFor(
-      () =>
-        expect(mockedNavigate).toHaveBeenCalledWith(
-          "/lsm/catalog/child-service/inventory?env=aaa",
-        ),
-      { timeout: 1500 },
+    await waitFor(() =>
+      expect(mockedNavigate).toHaveBeenCalledWith(
+        "/order-details/test?env=aaa",
+      ),
     );
   });
 

@@ -1,6 +1,6 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import "@inmanta/rappid/joint-plus.css";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { AlertVariant, Button, Flex, FlexItem } from "@patternfly/react-core";
 import { usePostMetadata } from "@/Data/Managers/V2/POST/PostMetadata";
 import { usePostOrder } from "@/Data/Managers/V2/POST/PostOrder";
@@ -10,6 +10,7 @@ import { ToastAlert } from "../../ToastAlert";
 import { CanvasContext, InstanceComposerContext } from "../Context/Context";
 import { getServiceOrderItems } from "../helpers";
 import { SavedCoordinates } from "../interfaces";
+import { ServiceOrder } from "@/Slices/Orders/Core/Query";
 
 /**
  * Properties for the ComposerActions component.
@@ -52,9 +53,22 @@ export const ComposerActions: React.FC<Props> = ({ serviceName, editable }) => {
 
   const [alertMessage, setAlertMessage] = useState("");
   const [alertType, setAlertType] = useState(AlertVariant.danger);
+  const location = useLocation();
 
   const metadataMutation = usePostMetadata();
-  const orderMutation = usePostOrder();
+  const orderMutation = usePostOrder({
+    onSuccess: (response: { data: ServiceOrder }) => {
+      const newUrl = routeManager.getUrl("OrderDetails", {
+        id: response.data.id,
+      });
+
+      navigate(`${newUrl}${location.search}`);
+    },
+    onError: (response: Error) => {
+      setAlertType(AlertVariant.danger);
+      setAlertMessage(response.message);
+    },
+  });
 
   const navigate = useNavigate();
   const url = routeManager.useUrl("Inventory", {
@@ -117,22 +131,6 @@ export const ComposerActions: React.FC<Props> = ({ serviceName, editable }) => {
         (relation) => relation.currentAmount < relation.min,
       ).length > 0,
   );
-
-  useEffect(() => {
-    if (orderMutation.isSuccess) {
-      //If response is successful then show feedback notification and redirect user to the service inventory view
-      setAlertType(AlertVariant.success);
-      setAlertMessage(words("instanceComposer.success"));
-
-      setTimeout(() => {
-        navigate(url);
-      }, 1000);
-    } else if (orderMutation.isError) {
-      setAlertType(AlertVariant.danger);
-      setAlertMessage(orderMutation.error.message);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [orderMutation.isSuccess, orderMutation.isError]);
 
   return (
     <Flex
