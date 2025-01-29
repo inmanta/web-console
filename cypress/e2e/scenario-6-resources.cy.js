@@ -586,7 +586,7 @@ describe("Scenario 6 : Resources", () => {
       cy.get('[aria-label="Sidebar-Navigation-Item"]')
         .contains("Service Catalog")
         .click();
-      cy.get("#waiting_entity").contains("Show inventory").click();
+      cy.get("#dependency-service").contains("Show inventory").click();
 
       // Expect the number in the chart to the success label to be 8
       cy.get(".pf-v5-c-chart").within(() => {
