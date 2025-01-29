@@ -15,4 +15,3 @@ export * from "./PostExpertStateTransfer";
 export * from "./PostMetadata";
 export * from "./PostOrder";
 export * from "./PostStateTransfer";
-export * from "./queryKeys";
