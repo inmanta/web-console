@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
-import { RemoteData, ServiceModel } from "@/Core";
+import { ServiceModel } from "@/Core";
+import { useGetServiceModels } from "@/Data/Managers/V2/GETTERS/GetServiceModels";
 import { ErrorView } from "@/UI/Components/ErrorView";
 import { LoadingView } from "@/UI/Components/LoadingView";
 import { DependencyContext } from "@/UI/Dependency";
@@ -15,33 +16,27 @@ export const ServicesProvider: React.FunctionComponent<Props> = ({
   Wrapper,
   Dependant,
 }) => {
-  const { queryResolver } = useContext(DependencyContext);
+  const { environmentHandler } = useContext(DependencyContext);
+  const env = environmentHandler.useId();
+  const { data, isError, error, isSuccess, refetch } =
+    useGetServiceModels(env).useContinuous();
 
-  const [data, retry] = queryResolver.useContinuous<"GetServices">({
-    kind: "GetServices",
-  });
+  if (isError) {
+    <Wrapper aria-label="ServicesProvider-Failed" name={serviceName}>
+      <ErrorView
+        message={error.message}
+        retry={refetch}
+        ariaLabel="ServicesProvider-Failed"
+      />
+    </Wrapper>;
+  }
+  if (isSuccess) {
+    return <Dependant services={data} mainServiceName={serviceName} />;
+  }
 
-  return RemoteData.fold(
-    {
-      notAsked: () => null,
-      loading: () => (
-        <Wrapper aria-label="ServicesProvider-Loading" name={serviceName}>
-          <LoadingView ariaLabel="ServicesProvider-Loading" />
-        </Wrapper>
-      ),
-      failed: (error) => (
-        <Wrapper aria-label="ServicesProvider-Failed" name={serviceName}>
-          <ErrorView
-            message={error}
-            retry={retry}
-            ariaLabel="ServicesProvider-Failed"
-          />
-        </Wrapper>
-      ),
-      success: (services) => (
-        <Dependant services={services} mainServiceName={serviceName} />
-      ),
-    },
-    data,
+  return (
+    <Wrapper aria-label="ServicesProvider-Loading" name={serviceName}>
+      <LoadingView ariaLabel="ServicesProvider-Loading" />
+    </Wrapper>
   );
 };
