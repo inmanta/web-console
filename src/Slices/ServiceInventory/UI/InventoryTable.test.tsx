@@ -37,7 +37,6 @@ import {
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { InventoryTable } from "./InventoryTable";
 import { InventoryTablePresenter } from "./Presenters";
-import { halted } from "@/Test/Data/EnvironmentDetails";
 
 const dummySetter = () => {
   return;

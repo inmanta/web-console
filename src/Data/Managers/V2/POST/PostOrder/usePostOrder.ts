@@ -3,14 +3,15 @@ import {
   UseMutationResult,
   useMutation,
 } from "@tanstack/react-query";
+import { ServiceOrder } from "@/Slices/Orders/Core/Query";
 import { words } from "@/UI";
 import { ComposerServiceOrderItem } from "@/UI/Components/Diagram/interfaces";
 import { usePost } from "../../helpers/useQueries";
-import { ServiceOrder } from "@/Slices/Orders/Core/Query";
 
 interface PostResponse {
   data: ServiceOrder;
 }
+
 interface PostOrderBody {
   service_order_items: ComposerServiceOrderItem[];
   description: string;

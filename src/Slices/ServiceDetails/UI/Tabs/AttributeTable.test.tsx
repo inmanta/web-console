@@ -20,7 +20,6 @@ import {
 import { multiNestedEditable } from "@/Test/Data/Service/EmbeddedEntity";
 import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI";
 import { AttributeTable } from "./AttributeTable";
-import { halted } from "@/Test/Data/EnvironmentDetails";
 
 expect.extend(toHaveNoViolations);
 

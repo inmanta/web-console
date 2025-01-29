@@ -4,13 +4,13 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { AlertVariant, Button, Flex, FlexItem } from "@patternfly/react-core";
 import { usePostMetadata } from "@/Data/Managers/V2/POST/PostMetadata";
 import { usePostOrder } from "@/Data/Managers/V2/POST/PostOrder";
+import { ServiceOrder } from "@/Slices/Orders/Core/Query";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { ToastAlert } from "../../ToastAlert";
 import { CanvasContext, InstanceComposerContext } from "../Context/Context";
 import { getServiceOrderItems } from "../helpers";
 import { SavedCoordinates } from "../interfaces";
-import { ServiceOrder } from "@/Slices/Orders/Core/Query";
 
 /**
  * Properties for the ComposerActions component.
