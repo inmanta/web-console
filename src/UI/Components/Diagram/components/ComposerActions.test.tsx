@@ -201,7 +201,9 @@ describe("ComposerActions.", () => {
     server.use(
       http.post("/lsm/v2/order", async () => {
         return HttpResponse.json({
-          data: [],
+          data: {
+            id: "test",
+          },
         });
       }),
     );
