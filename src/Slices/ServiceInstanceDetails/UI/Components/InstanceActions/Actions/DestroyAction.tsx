@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Alert, DropdownItem, Content } from "@patternfly/react-core";
 import { TrashAltIcon } from "@patternfly/react-icons";
 import { ParsedNumber } from "@/Core";
-import { useDestroyInstance } from "@/Data/Managers/V2/DELETE/DestroyInstance";
+import { useDestroyInstance } from "@/Data/Managers/V2/ServiceInstance";
 import { DependencyContext, words } from "@/UI";
 import { ConfirmationModal } from "../../ConfirmModal";
 import { ToastAlertMessage } from "../../ToastAlert";

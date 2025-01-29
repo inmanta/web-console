@@ -2,8 +2,10 @@ import React, { useCallback, useContext, useState } from "react";
 import "@inmanta/rappid/joint-plus.css";
 import { useLocation, useNavigate } from "react-router-dom";
 import { AlertVariant, Button, Flex, FlexItem } from "@patternfly/react-core";
-import { usePostMetadata } from "@/Data/Managers/V2/POST/PostMetadata";
-import { usePostOrder } from "@/Data/Managers/V2/POST/PostOrder";
+import {
+  usePostMetadata,
+  usePostOrder,
+} from "@/Data/Managers/V2/ServiceInstance";
 import { ServiceOrder } from "@/Slices/Orders/Core/Query";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";

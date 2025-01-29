@@ -7,7 +7,7 @@ import { StoreProvider } from "easy-peasy";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { getStoreInstance } from "@/Data";
-import * as useUpdateEnvConfig from "@/Data/Managers/V2/POST/UpdateEnvConfig/useUpdateEnvConfig"; //import with that exact path is required for mock to work correctly
+import * as useUpdateEnvConfig from "@/Data/Managers/V2/Environment/UpdateEnvConfig/useUpdateEnvConfig"; //import with that exact path is required for mock to work correctly
 import { dependencies } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { ExpertBanner } from "./ExpertBanner";

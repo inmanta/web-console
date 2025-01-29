@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Content, TabContent, TabContentBody } from "@patternfly/react-core";
-import { useGetInstanceResources } from "@/Data/Managers/V2/GETTERS/GetInstanceResources";
+import { useGetInstanceResources } from "@/Data/Managers/V2/ServiceInstance";
 import { words } from "@/UI";
 import {
   EmptyView,

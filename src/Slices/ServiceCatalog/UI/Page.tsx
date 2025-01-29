@@ -1,5 +1,5 @@
 import React from "react";
-import { useGetServiceModels } from "@/Data/Managers/V2/GETTERS/GetServiceModels";
+import { useGetServiceModels } from "@/Data/Managers/V2/Service";
 import {
   EmptyView,
   ErrorView,

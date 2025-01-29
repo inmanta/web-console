@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useUrlStateWithString } from "@/Data";
-import { useGetInfiniteInstanceLogs } from "@/Data/Managers/V2/GETTERS/GetInfiniteInstanceLogs";
-import { useGetInstance } from "@/Data/Managers/V2/GETTERS/GetInstance";
-import { useGetServiceModel } from "@/Data/Managers/V2/GETTERS/GetServiceModel";
+import { useGetServiceModel } from "@/Data/Managers/V2/Service";
+import {
+  useGetInstance,
+  useGetInfiniteInstanceLogs,
+} from "@/Data/Managers/V2/ServiceInstance";
 import { useRouteParams, words } from "@/UI";
 import { ErrorView, LoadingView, PageContainer } from "@/UI/Components";
 import { InstanceDetailsContext } from "../Core/Context";

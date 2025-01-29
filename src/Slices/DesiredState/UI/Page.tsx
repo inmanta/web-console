@@ -3,8 +3,10 @@ import { ParsedNumber, RemoteData } from "@/Core";
 import { useUrlStateWithFilter, useUrlStateWithPageSize } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { getPaginationHandlers } from "@/Data/Managers/Helpers";
-import { useDeleteDesiredStateVersion } from "@/Data/Managers/V2/DELETE/DeleteDesiredStateVersion";
-import { useGetDesiredStates } from "@/Data/Managers/V2/GETTERS/GetDesiredStates";
+import {
+  useDeleteDesiredStateVersion,
+  useGetDesiredStates,
+} from "@/Data/Managers/V2/DesiredState";
 import {
   ToastAlert,
   PageContainer,

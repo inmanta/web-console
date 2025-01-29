@@ -15,7 +15,7 @@ import {
   FormSuggestion,
 } from "@/Core";
 import { toOptionalBoolean } from "@/Data";
-import { useSuggestedValues } from "@/Data/Managers/V2/GETTERS/FormSuggestions";
+import { useSuggestedValues } from "@/Data/Managers/V2/ServiceInstance";
 import { createFormState } from "@/UI/Components/ServiceInstanceForm/Helpers";
 import { words } from "@/UI/words";
 import { BooleanFormInput } from "./BooleanFormInput";

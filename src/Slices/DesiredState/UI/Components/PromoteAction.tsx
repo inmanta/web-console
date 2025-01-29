@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import { DropdownItem } from "@patternfly/react-core";
 import { ParsedNumber } from "@/Core";
-import { usePromoteDesiredStateVersion } from "@/Data/Managers/V2/POST/PromoteDesiredStateVersion";
+import { usePromoteDesiredStateVersion } from "@/Data/Managers/V2/DesiredState";
 import { ActionDisabledTooltip } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";

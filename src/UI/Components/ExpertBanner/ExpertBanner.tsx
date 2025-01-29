@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Banner, Button, Flex, Spinner } from "@patternfly/react-core";
-import { useUpdateEnvConfig } from "@/Data/Managers/V2/POST/UpdateEnvConfig";
+import { useUpdateEnvConfig } from "@/Data/Managers/V2/Environment";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { ToastAlert } from "../ToastAlert";

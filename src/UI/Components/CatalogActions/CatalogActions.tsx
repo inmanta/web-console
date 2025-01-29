@@ -8,7 +8,7 @@ import {
   Tooltip,
 } from "@patternfly/react-core";
 import { FileCodeIcon } from "@patternfly/react-icons";
-import { useExportCatalog } from "@/Data/Managers/V2/POST/ExportCatalog";
+import { useExportCatalog } from "@/Data/Managers/V2/Service";
 import { DependencyContext } from "@/UI/Dependency";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";

@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { DropdownItem, Content } from "@patternfly/react-core";
 import { TrashAltIcon } from "@patternfly/react-icons";
 import { ParsedNumber } from "@/Core";
-import { useDeleteInstance } from "@/Data/Managers/V2/DELETE/DeleteInstance";
+import { useDeleteInstance } from "@/Data/Managers/V2/ServiceInstance";
 import { words } from "@/UI";
 import { ConfirmationModal } from "../../ConfirmModal";
 import { ToastAlertMessage } from "../../ToastAlert";

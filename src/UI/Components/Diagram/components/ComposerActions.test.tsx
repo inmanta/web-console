@@ -12,8 +12,10 @@ import { delay, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { RemoteData } from "@/Core";
 import { getStoreInstance } from "@/Data";
-import { InstanceWithRelations } from "@/Data/Managers/V2/GETTERS/GetInstanceWithRelations";
-import { Inventories } from "@/Data/Managers/V2/GETTERS/GetInventoryList";
+import {
+  InstanceWithRelations,
+  Inventories,
+} from "@/Data/Managers/V2/ServiceInstance";
 import { dependencies } from "@/Test";
 import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
 import { PrimaryRouteManager } from "@/UI/Routing";
