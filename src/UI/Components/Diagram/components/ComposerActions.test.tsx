@@ -195,7 +195,7 @@ describe("ComposerActions.", () => {
   it("shows success message and redirects when deploy button is clicked", async () => {
     server.use(
       http.post("/lsm/v2/order", async () => {
-        return HttpResponse.json();
+        return HttpResponse.json({ data: { id: "test" } });
       }),
     );
 
@@ -204,16 +204,10 @@ describe("ComposerActions.", () => {
 
     await userEvent.click(screen.getByRole("button", { name: "Deploy" }));
 
-    expect(
-      await screen.findByText("The request got sent successfully"),
-    ).toBeVisible();
-
-    await waitFor(
-      () =>
-        expect(mockedNavigate).toHaveBeenCalledWith(
-          "/lsm/catalog/child-service/inventory?env=aaa",
-        ),
-      { timeout: 1500 },
+    await waitFor(() =>
+      expect(mockedNavigate).toHaveBeenCalledWith(
+        "/order-details/test?env=aaa",
+      ),
     );
   });
 

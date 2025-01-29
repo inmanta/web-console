@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Brand,
   Bullseye,
@@ -47,26 +48,32 @@ export const CardView: React.FC<Props> = ({ environments, ...props }) => {
   );
 };
 
-const CreateNewEnvironmentCard: React.FC<{ url: string }> = ({ url }) => (
-  <Card isClickable isCompact variant="secondary">
-    <CardHeader
-      selectableActions={{
-        to: url,
-        selectableActionAriaLabelledby: "Create-environment",
-        selectableActionAriaLabel: "Create environment",
-      }}
-    ></CardHeader>
-    <Bullseye>
-      <Content>
-        <EmptyState variant={EmptyStateVariant.xs} icon={PlusCircleIcon}>
-          <Title headingLevel="h2" size="md">
-            {words("home.create.env.desciption")}
-          </Title>
-        </EmptyState>
-      </Content>
-    </Bullseye>
-  </Card>
-);
+const CreateNewEnvironmentCard: React.FC<{ url: string }> = ({ url }) => {
+  const navigate = useNavigate();
+
+  return (
+    <Card isClickable isCompact variant="secondary">
+      <CardHeader
+        selectableActions={{
+          selectableActionAriaLabelledby: "Create-environment",
+          selectableActionAriaLabel: "Create environment",
+          onClickAction: () => {
+            navigate(url);
+          },
+        }}
+      ></CardHeader>
+      <Bullseye>
+        <Content>
+          <EmptyState variant={EmptyStateVariant.xs} icon={PlusCircleIcon}>
+            <Title headingLevel="h2" size="md">
+              {words("home.create.env.desciption")}
+            </Title>
+          </EmptyState>
+        </Content>
+      </Bullseye>
+    </Card>
+  );
+};
 
 interface EnvironmentCardProps {
   environment: FlatEnvironment;
@@ -77,6 +84,8 @@ const EnvironmentCard: React.FC<EnvironmentCardProps> = ({
   environment,
   pathname,
 }) => {
+  const navigate = useNavigate();
+
   return (
     <Card
       isClickable
@@ -85,9 +94,11 @@ const EnvironmentCard: React.FC<EnvironmentCardProps> = ({
     >
       <CardHeader
         selectableActions={{
-          to: `${pathname}?env=${environment.id}`,
           selectableActionAriaLabelledby: "Select-environment",
           selectableActionAriaLabel: `Select-environment-${environment.name}`,
+          onClickAction: () => {
+            navigate(`${pathname}?env=${environment.id}`);
+          },
         }}
       >
         <Brand

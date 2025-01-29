@@ -32,13 +32,15 @@ export const EditForm: React.FC<Props> = ({ serviceEntity, instance }) => {
   const isHalted = environmentModifier.useIsHalted();
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
-  const url = routeManager.useUrl("Inventory", {
+
+  const url = routeManager.useUrl("InstanceDetails", {
     service: serviceEntity.name,
+    instance: instance.service_identity_attribute_value || instance.id,
+    instanceId: instance.id,
   });
-  const handleRedirect = useCallback(
-    () => navigate(url),
-    [navigate] /* eslint-disable-line react-hooks/exhaustive-deps */,
-  );
+
+  const handleRedirect = useCallback(() => navigate(url), [navigate, url]);
+
   const attributeInputConverter = new AttributeInputConverterImpl();
   const currentAttributes =
     attributeInputConverter.getCurrentAttributes(instance);

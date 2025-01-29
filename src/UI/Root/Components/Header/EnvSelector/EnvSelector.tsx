@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Content,
   Divider,
@@ -32,6 +33,7 @@ export const EnvSelector: React.FC<Props> = ({
   toggleText,
 }) => {
   const { routeManager, authHelper } = useContext(DependencyContext);
+  const navigate = useNavigate();
 
   return (
     <Dropdown
@@ -82,14 +84,18 @@ export const EnvSelector: React.FC<Props> = ({
         <div key="overview-link">
           <Divider />
           <Tooltip content={words("home.navigation.tooltip")} entryDelay={500}>
-            <DropdownItem to={routeManager.getUrl("Home", undefined)}>
+            <DropdownItem
+              onClick={() => navigate(routeManager.getUrl("Home", undefined))}
+            >
               {words("home.navigation.button")}
             </DropdownItem>
           </Tooltip>
           {!authHelper.isDisabled() && (
             <>
               <DropdownItem
-                to={routeManager.getUrl("UserManagement", undefined)}
+                onClick={() =>
+                  navigate(routeManager.getUrl("UserManagement", undefined))
+                }
               >
                 {words("userManagement.title")}
               </DropdownItem>
