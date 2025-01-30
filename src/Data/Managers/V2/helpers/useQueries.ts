@@ -112,6 +112,7 @@ export const usePost = (options?: { message?: string }) => {
       await handleErrors(response);
 
       const contentLength = response.headers.get("Content-Length");
+
       if (contentLength && contentLength !== "0") {
         return response.json();
       }
@@ -156,6 +157,7 @@ export const usePostWithoutEnv = (options?: { message?: string }) => {
       await handleErrors(response);
 
       const contentLength = response.headers.get("Content-Length");
+
       if (contentLength && contentLength !== "0") {
         return response.json();
       }
@@ -203,6 +205,7 @@ export const usePut = (options?: { message?: string }) => {
       await handleErrors(response);
 
       const contentLength = response.headers.get("Content-Length");
+
       if (contentLength && contentLength !== "0") {
         return response.json();
       }
@@ -247,6 +250,7 @@ export const usePutWithoutEnv = (options?: { message?: string }) => {
       await handleErrors(response);
 
       const contentLength = response.headers.get("Content-Length");
+
       if (contentLength && contentLength !== "0") {
         return response.json();
       }
@@ -292,6 +296,7 @@ export const usePatch = (options?: { message?: string }) => {
       await handleErrors(response);
 
       const contentLength = response.headers.get("Content-Length");
+
       if (contentLength && contentLength !== "0") {
         return response.json();
       }
@@ -336,6 +341,7 @@ export const usePatchWithoutEnv = (options?: { message?: string }) => {
       await handleErrors(response);
 
       const contentLength = response.headers.get("Content-Length");
+
       if (contentLength && contentLength !== "0") {
         return response.json();
       }
@@ -383,6 +389,7 @@ export const useDelete = (options?: { message?: string }) => {
       await handleErrors(response);
 
       const contentLength = response.headers.get("Content-Length");
+
       if (contentLength && contentLength !== "0") {
         return response.json();
       }
@@ -425,6 +432,7 @@ export const useDeleteWithoutEnv = (options?: { message?: string }) => {
       await handleErrors(response);
 
       const contentLength = response.headers.get("Content-Length");
+
       if (contentLength && contentLength !== "0") {
         return response.json();
       }
