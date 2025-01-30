@@ -1,4 +1,5 @@
 import {
+  UseMutationOptions,
   UseMutationResult,
   useMutation,
   useQueryClient,
@@ -17,12 +18,9 @@ interface ConfigUpdate {
  *
  * @returns {UseMutationResult<void, Error, ConfigUpdate, unknown>}- The mutation object from `useMutation` hook.
  */
-export const useUpdateEnvConfig = (): UseMutationResult<
-  void,
-  Error,
-  ConfigUpdate,
-  unknown
-> => {
+export const useUpdateEnvConfig = (
+  options?: UseMutationOptions<void, Error, ConfigUpdate, unknown>,
+): UseMutationResult<void, Error, ConfigUpdate, unknown> => {
   const client = useQueryClient();
 
   const post = usePost()<string | boolean | ParsedNumber | Dict>;
@@ -40,5 +38,6 @@ export const useUpdateEnvConfig = (): UseMutationResult<
       });
       document.dispatchEvent(new Event("settings-update"));
     },
+    ...options,
   });
 };

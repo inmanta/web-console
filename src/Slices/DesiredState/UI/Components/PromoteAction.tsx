@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { DropdownItem } from "@patternfly/react-core";
 import { ParsedNumber } from "@/Core";
 import { usePromoteDesiredStateVersion } from "@/Data/Managers/V2/DesiredState";
@@ -25,7 +25,9 @@ interface Props {
 export const PromoteAction: React.FC<Props> = ({ version, isDisabled }) => {
   const { environmentModifier } = useContext(DependencyContext);
   const { setErrorMessage } = useContext(GetDesiredStatesContext);
-  const { mutate, isError, error } = usePromoteDesiredStateVersion();
+  const { mutate } = usePromoteDesiredStateVersion({
+    onError: (error) => setErrorMessage(error.message),
+  });
   const isHalted = environmentModifier.useIsHalted();
 
   /**
@@ -36,13 +38,6 @@ export const PromoteAction: React.FC<Props> = ({ version, isDisabled }) => {
   const onSubmit = () => {
     mutate(version.toString());
   };
-
-  useEffect(() => {
-    if (isError) {
-      setErrorMessage(error.message);
-    }
-  }, [isError, error, setErrorMessage]);
-
   return (
     <ActionDisabledTooltip
       isDisabled={isDisabled || isHalted}

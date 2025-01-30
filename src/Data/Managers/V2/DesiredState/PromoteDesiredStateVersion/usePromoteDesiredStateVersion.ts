@@ -1,4 +1,5 @@
 import {
+  UseMutationOptions,
   UseMutationResult,
   useMutation,
   useQueryClient,
@@ -10,18 +11,16 @@ import { usePost } from "../../helpers/useQueries";
  *
  * @returns {Mutation} The mutation object for sending the request.
  */
-export const usePromoteDesiredStateVersion = (): UseMutationResult<
-  void,
-  Error,
-  string,
-  unknown
-> => {
+export const usePromoteDesiredStateVersion = (
+  options?: UseMutationOptions<void, Error, string>,
+): UseMutationResult<void, Error, string> => {
   const client = useQueryClient();
   const post = usePost()<void>;
 
   return useMutation({
     mutationFn: (version) => post(`/api/v2/desiredstate/${version}/promote`),
     mutationKey: ["promote_version"],
+    ...options,
     onSuccess: () => {
       // Refetch the desired state queries to update the list
       client.invalidateQueries({

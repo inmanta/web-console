@@ -1,4 +1,5 @@
 import {
+  UseMutationOptions,
   UseMutationResult,
   useMutation,
   useQueryClient,
@@ -12,7 +13,8 @@ import { useDelete } from "../../helpers/useQueries";
  */
 export const useDeleteService = (
   service_entity: string,
-): UseMutationResult<void, Error, void, unknown> => {
+  options?: UseMutationOptions<void, Error, void>,
+): UseMutationResult<void, Error, void> => {
   const client = useQueryClient();
   const deleteFn = useDelete();
 
@@ -25,5 +27,6 @@ export const useDeleteService = (
       client.refetchQueries({ queryKey: ["get_service_model-one_time"] });
       client.refetchQueries({ queryKey: ["get_service_model-continuous"] });
     },
+    ...options,
   });
 };

@@ -60,8 +60,14 @@ export const AttributesEditor: React.FC<Props> = ({
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
 
-  const { mutate, isError, error, isPending, isSuccess } =
-    usePatchAttributesExpert(instance.id, instance.service_entity);
+  const { mutate, isPending } = usePatchAttributesExpert(
+    instance.id,
+    instance.service_entity,
+    {
+      onError: (error) => setErrorMessage(error.message),
+      onSuccess: () => setIsModalOpen(false),
+    },
+  );
 
   /**
    * Handles the change of the selected attribute Set.
@@ -122,15 +128,6 @@ export const AttributesEditor: React.FC<Props> = ({
 
     mutate(patchAttributes);
   };
-
-  useEffect(() => {
-    if (isError) {
-      setErrorMessage(error.message);
-    }
-    if (isSuccess) {
-      setIsModalOpen(false);
-    }
-  }, [isSuccess, isError, error]);
 
   useEffect(() => {
     setEditorDataOriginal(JSON.stringify(attributeSets[selectedSet], null, 2));

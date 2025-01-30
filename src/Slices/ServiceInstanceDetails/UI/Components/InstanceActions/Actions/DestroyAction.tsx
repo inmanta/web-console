@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Alert, DropdownItem, Content } from "@patternfly/react-core";
 import { TrashAltIcon } from "@patternfly/react-icons";
@@ -49,11 +49,20 @@ export const DestroyAction: React.FC<Props> = ({
   const username = authHelper.getUser();
   const message = words("instanceDetails.API.message.update")(username);
 
-  const { mutate, isError, error, isSuccess, isPending } = useDestroyInstance(
+  const { mutate, isPending } = useDestroyInstance(
     instance_id,
     service_entity,
     version,
     message,
+    {
+      onSuccess: () =>
+        navigate(
+          `/console/lsm/catalog/${service_entity}/inventory?env=${environment}`,
+        ),
+      onError: (error) => {
+        setErrorMessage(error.message);
+      },
+    },
   );
 
   /**
@@ -79,19 +88,6 @@ export const DestroyAction: React.FC<Props> = ({
   const onSubmitDestroy = async (): Promise<void> => {
     mutate();
   };
-
-  useEffect(() => {
-    if (isError) {
-      setErrorMessage(error.message);
-    }
-
-    if (isSuccess) {
-      // Because the instance gets destroyed, there's nothing left to display. So we redirect to the inventory.
-      navigate(
-        `/console/lsm/catalog/${service_entity}/inventory?env=${environment}`,
-      );
-    }
-  }, [isSuccess, isError, navigate, error, service_entity, environment]);
 
   return (
     <>

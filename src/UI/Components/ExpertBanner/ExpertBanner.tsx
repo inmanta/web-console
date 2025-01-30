@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { Banner, Button, Flex, Spinner } from "@patternfly/react-core";
 import { useUpdateEnvConfig } from "@/Data/Managers/V2/Environment";
 import { DependencyContext } from "@/UI/Dependency";
@@ -14,19 +14,17 @@ import { ToastAlert } from "../ToastAlert";
 export const ExpertBanner: React.FC = () => {
   const [errorMessage, setMessage] = useState<string | undefined>(undefined);
   const { environmentModifier } = useContext(DependencyContext);
-  const { mutate, isError, error } = useUpdateEnvConfig();
-  const [isLoading, setIsLoading] = useState(false); // isLoading is to indicate the asynchronous operation is in progress, as we need to wait until setting will be updated, getters are still in the V1 - task https://github.com/inmanta/web-console/issues/5999
-
-  useEffect(() => {
-    if (isError) {
+  const { mutate } = useUpdateEnvConfig({
+    onError: (error) => {
       setMessage(error.message);
       setIsLoading(false);
-    }
-  }, [isError, error]);
+    },
+  });
+  const [isLoading, setIsLoading] = useState(false); // isLoading is to indicate the asynchronous operation is in progress, as we need to wait until setting will be updated, getters are still in the V1 - task https://github.com/inmanta/web-console/issues/5999
 
   return environmentModifier.useIsExpertModeEnabled() ? (
     <>
-      {isError && errorMessage && (
+      {errorMessage && (
         <ToastAlert
           data-testid="ToastAlert"
           title={words("error")}

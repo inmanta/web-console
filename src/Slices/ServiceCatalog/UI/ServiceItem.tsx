@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   Button,
@@ -41,7 +41,9 @@ export const ServiceItem: React.FC<Props> = ({ service }) => {
   const { triggerModal, closeModal } = useContext(ModalContext);
   const { routeManager } = useContext(DependencyContext);
   const [isOpen, setIsOpen] = useState(false);
-  const { mutate, isError, error } = useDeleteService(service.name);
+  const { mutate } = useDeleteService(service.name, {
+    onError: (error) => setErrorMessage(error.message),
+  });
   const [errorMessage, setErrorMessage] = useState("");
   const serviceKey = service.name + "-item";
   const rowRefs = useRef<Record<string, HTMLSpanElement | null>>({});
@@ -50,11 +52,11 @@ export const ServiceItem: React.FC<Props> = ({ service }) => {
    * Handles the submission of deleting the service.
    * if there is an error, it will set the error message,
    *
-   * @returns {Promise<void>} A Promise that resolves when the operation is complete.
+   * @returns {void}
    */
-  const onSubmit = async (): Promise<void> => {
+  const onSubmit = () => {
     closeModal();
-    await mutate();
+    mutate();
   };
 
   /**
@@ -82,12 +84,6 @@ export const ServiceItem: React.FC<Props> = ({ service }) => {
       ),
     });
   };
-
-  useEffect(() => {
-    if (isError) {
-      setErrorMessage(error.message);
-    }
-  }, [isError, error]);
 
   return (
     <DataListItem id={service.name} aria-labelledby={serviceKey}>
