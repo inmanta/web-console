@@ -38,6 +38,7 @@ export const PromoteAction: React.FC<Props> = ({ version, isDisabled }) => {
   const onSubmit = () => {
     mutate(version.toString());
   };
+
   return (
     <ActionDisabledTooltip
       isDisabled={isDisabled || isHalted}
