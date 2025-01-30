@@ -63,7 +63,9 @@ describe("Given ExpertBanner", () => {
         context: undefined,
         variables: {
           id: "",
-          value: "",
+          updatedValue: {
+            value: "",
+          },
         },
         failureReason: null,
         submittedAt: 0,
@@ -78,7 +80,7 @@ describe("Given ExpertBanner", () => {
 
     expect(mutateSpy).toHaveBeenCalledWith({
       id: "enable_lsm_expert_mode",
-      value: false,
+      updatedValue: { value: false },
     });
     spy.mockRestore();
   });
