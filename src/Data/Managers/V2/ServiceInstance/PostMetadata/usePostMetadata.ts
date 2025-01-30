@@ -23,7 +23,7 @@ export const usePostMetadata = (): UseMutationResult<
   PostMetadataInfo,
   unknown
 > => {
-  const post = usePost()<void, PostMetadataInfo>;
+  const post = usePost()<PostMetadataInfo>;
 
   return useMutation({
     mutationFn: (info) =>

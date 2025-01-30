@@ -12,7 +12,7 @@ export const useDeleteInstance = (
   service_entity: string,
   version: ParsedNumber,
 ): UseMutationResult<void, Error, void, unknown> => {
-  const deleteFn = useDelete()<void>;
+  const deleteFn = useDelete();
 
   return useMutation({
     mutationFn: () =>

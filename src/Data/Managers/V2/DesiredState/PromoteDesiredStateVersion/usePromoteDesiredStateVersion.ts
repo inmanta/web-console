@@ -17,7 +17,7 @@ export const usePromoteDesiredStateVersion = (): UseMutationResult<
   unknown
 > => {
   const client = useQueryClient();
-  const post = usePost()<void, void>;
+  const post = usePost()<void>;
 
   return useMutation({
     mutationFn: (version) => post(`/api/v2/desiredstate/${version}/promote`),

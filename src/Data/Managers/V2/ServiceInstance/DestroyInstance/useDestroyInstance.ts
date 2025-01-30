@@ -14,7 +14,7 @@ export const useDestroyInstance = (
   version: ParsedNumber,
   message: string,
 ): UseMutationResult<void, Error, void, unknown> => {
-  const deleteFn = useDelete({ message })<void>;
+  const deleteFn = useDelete({ message });
 
   return useMutation({
     mutationFn: () =>

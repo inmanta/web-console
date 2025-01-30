@@ -14,7 +14,7 @@ export const useDeleteService = (
   service_entity: string,
 ): UseMutationResult<void, Error, void, unknown> => {
   const client = useQueryClient();
-  const deleteFn = useDelete()<void>;
+  const deleteFn = useDelete();
 
   return useMutation({
     mutationFn: () => deleteFn(`/lsm/v1/service_catalog/${service_entity}`),

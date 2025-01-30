@@ -10,13 +10,11 @@ import { useFetchHelpers } from "../helpers";
  *
  * This hook constructs the base URL and headers, and provides a function to perform a GET request to the specified path.
  *
- * @returns {Function<ResponseData>} A function that performs a GET request and returns the response data.
+ * @returns {Function} A function that performs a GET request and returns the response data.
  *
- * @template ResponseData - The type of the response data.
+ * @template- The type of the response data.
  */
-export const useGet = (options?: {
-  message?: string;
-}): (<ResponseData>(path: string) => Promise<ResponseData>) => {
+export const useGet = (options?: { message?: string }) => {
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
     globalThis.location.pathname,
@@ -27,7 +25,7 @@ export const useGet = (options?: {
   const { createHeaders, handleErrors } = useFetchHelpers();
   const headers = createHeaders({ env, message: options?.message });
 
-  return async <ResponseData>(path: string): Promise<ResponseData> => {
+  return async <Response>(path: string): Promise<Response> => {
     try {
       const response = await fetch(`${baseUrl}${path}`, {
         headers,
@@ -52,13 +50,11 @@ export const useGet = (options?: {
  * This hook constructs the base URL and headers, and provides a function to perform a GET request to the specified path.
  * In comparison to useGet, this hook does not use the environment context, so it can be used only to perform requests that are environment-agnostic.
  *
- * @returns {Function<Promise<ResponseData>>} A function that performs a GET request and returns the response data.
+ * @returns {Function<>} A function that performs a GET request and returns the response data.
  *
- * @template ResponseData - The type of the response data.
+ * @template- The type of the response data.
  */
-export const useGetWithoutEnv = (options?: {
-  message?: string;
-}): (<ResponseData>(path: string) => Promise<ResponseData>) => {
+export const useGetWithoutEnv = (options?: { message?: string }) => {
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
     globalThis.location.pathname,
@@ -67,7 +63,7 @@ export const useGetWithoutEnv = (options?: {
   const { createHeaders, handleErrors } = useFetchHelpers();
   const headers = createHeaders({ message: options?.message });
 
-  return async <ResponseData>(path: string): Promise<ResponseData> => {
+  return async <Response>(path: string): Promise<Response> => {
     try {
       const response = await fetch(`${baseUrl}${path}`, {
         headers,
@@ -89,17 +85,12 @@ export const useGetWithoutEnv = (options?: {
  * @param {Object} [options] - Optional configuration for the POST request.
  * @param {string} [options.message] - Optional message to include in the request headers.
  *
- * @returns {Function<Promise<ResponseData>>} - A function that performs a POST request.
+ * @returns {Function<>} - A function that performs a POST request.
  *
- * @template ResponseData - The expected response data type.
+ * @template- The expected response data type.
  * @template Body - The type of the request body.
  */
-export const usePost = (options?: {
-  message?: string;
-}): (<ResponseData, Body>(
-  path: string,
-  body: Body,
-) => Promise<ResponseData>) => {
+export const usePost = (options?: { message?: string }) => {
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
     globalThis.location.pathname,
@@ -110,10 +101,7 @@ export const usePost = (options?: {
   const { createHeaders, handleErrors } = useFetchHelpers();
   const headers = createHeaders({ env, message: options?.message });
 
-  return async <ResponseData, Body>(
-    path: string,
-    body: Body,
-  ): Promise<ResponseData> => {
+  return async <Body>(path: string, body: Body) => {
     try {
       const response = await fetch(`${baseUrl}${path}`, {
         method: "POST",
@@ -123,7 +111,9 @@ export const usePost = (options?: {
 
       await handleErrors(response);
 
-      return response.json();
+      if (response.headers.get("Content-Length") !== "0") {
+        return response.json();
+      }
     } catch (error) {
       console.error("Error posting data:", error);
       throw error;
@@ -140,17 +130,12 @@ export const usePost = (options?: {
  * This hook constructs the base URL and headers, and provides a function to perform a POST request to the specified path.
  * In comparison to usePost, this hook does not use the environment context, so it can be used only to perform requests that are environment-agnostic.
  *
- * @returns {Function<Promise<ResponseData>>} - A function that performs a POST request.
+ * @returns {Function<>} - A function that performs a POST request.
  *
- * @template ResponseData - The expected response data type.
+ * @template- The expected response data type.
  * @template Body - The type of the request body.
  */
-export const usePostWithoutEnv = (options?: {
-  message?: string;
-}): (<ResponseData, Body>(
-  path: string,
-  body: Body,
-) => Promise<ResponseData>) => {
+export const usePostWithoutEnv = (options?: { message?: string }) => {
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
     globalThis.location.pathname,
@@ -159,10 +144,7 @@ export const usePostWithoutEnv = (options?: {
   const { createHeaders, handleErrors } = useFetchHelpers();
   const headers = createHeaders({ message: options?.message });
 
-  return async <ResponseData, Body>(
-    path: string,
-    body: Body,
-  ): Promise<ResponseData> => {
+  return async <Body>(path: string, body: Body) => {
     try {
       const response = await fetch(`${baseUrl}${path}`, {
         method: "POST",
@@ -172,7 +154,11 @@ export const usePostWithoutEnv = (options?: {
 
       await handleErrors(response);
 
-      return response.json();
+      if (response.headers.get("Content-Length") !== "0") {
+        return response.json();
+      }
+
+      return;
     } catch (error) {
       console.error("Error posting data:", error);
       throw error;
@@ -188,17 +174,12 @@ export const usePostWithoutEnv = (options?: {
  *
  * This hook constructs the base URL and headers, and provides a function to perform a PUT request to the specified path.
  *
- * @returns {Function<Promise<ResponseData>>} - A function that performs a PUT request.
+ * @returns {Function<>} - A function that performs a PUT request.
  *
- * @template ResponseData - The expected response data type.
+ * @template- The expected response data type.
  * @template Body - The type of the request body.
  */
-export const usePut = (options?: {
-  message?: string;
-}): (<ResponseData, Body>(
-  path: string,
-  body: Body,
-) => Promise<ResponseData>) => {
+export const usePut = (options?: { message?: string }) => {
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
     globalThis.location.pathname,
@@ -209,10 +190,7 @@ export const usePut = (options?: {
   const { createHeaders, handleErrors } = useFetchHelpers();
   const headers = createHeaders({ env, message: options?.message });
 
-  return async <ResponseData, Body>(
-    path: string,
-    body: Body,
-  ): Promise<ResponseData> => {
+  return async <Body>(path: string, body: Body) => {
     try {
       const response = await fetch(`${baseUrl}${path}`, {
         method: "PUT",
@@ -222,7 +200,9 @@ export const usePut = (options?: {
 
       await handleErrors(response);
 
-      return response.json();
+      if (response.headers.get("Content-Length") !== "0") {
+        return response.json();
+      }
     } catch (error) {
       console.error("Error putting data:", error);
       throw error;
@@ -239,17 +219,12 @@ export const usePut = (options?: {
  * This hook constructs the base URL and headers, and provides a function to perform a PUT request to the specified path.
  * In comparison to usePut, this hook does not use the environment context, so it can be used only to perform requests that are environment-agnostic.
  *
- * @returns {Function<Promise<ResponseData>>} - A function that performs a PUT request.
+ * @returns {Function<>} - A function that performs a PUT request.
  *
- * @template ResponseData - The expected response data type.
+ * @template- The expected response data type.
  * @template Body - The type of the request body.
  */
-export const usePutWithoutEnv = (options?: {
-  message?: string;
-}): (<ResponseData, Body>(
-  path: string,
-  body: Body,
-) => Promise<ResponseData>) => {
+export const usePutWithoutEnv = (options?: { message?: string }) => {
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
     globalThis.location.pathname,
@@ -258,10 +233,7 @@ export const usePutWithoutEnv = (options?: {
   const { createHeaders, handleErrors } = useFetchHelpers();
   const headers = createHeaders({ message: options?.message });
 
-  return async <ResponseData, Body>(
-    path: string,
-    body: Body,
-  ): Promise<ResponseData> => {
+  return async <Body>(path: string, body: Body) => {
     try {
       const response = await fetch(`${baseUrl}${path}`, {
         method: "PUT",
@@ -271,7 +243,9 @@ export const usePutWithoutEnv = (options?: {
 
       await handleErrors(response);
 
-      return response.json();
+      if (response.headers.get("Content-Length") !== "0") {
+        return response.json();
+      }
     } catch (error) {
       console.error("Error putting data:", error);
       throw error;
@@ -287,17 +261,12 @@ export const usePutWithoutEnv = (options?: {
  *
  * This hook constructs the base URL and headers, and provides a function to perform a PATCH request to the specified path.
  *
- * @returns {Function<Promise<ResponseData>>} - A function that performs a PATCH request.
+ * @returns {Function<>} - A function that performs a PATCH request.
  *
- * @template ResponseData - The expected response data type.
+ * @template- The expected response data type.
  * @template Body - The type of the request body.
  */
-export const usePatch = (options?: {
-  message?: string;
-}): (<ResponseData, Body>(
-  path: string,
-  body: Body,
-) => Promise<ResponseData>) => {
+export const usePatch = (options?: { message?: string }) => {
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
     globalThis.location.pathname,
@@ -308,10 +277,7 @@ export const usePatch = (options?: {
   const { createHeaders, handleErrors } = useFetchHelpers();
   const headers = createHeaders({ env, message: options?.message });
 
-  return async <ResponseData, Body>(
-    path: string,
-    body: Body,
-  ): Promise<ResponseData> => {
+  return async <Body>(path: string, body: Body) => {
     try {
       const response = await fetch(`${baseUrl}${path}`, {
         method: "PATCH",
@@ -321,7 +287,9 @@ export const usePatch = (options?: {
 
       await handleErrors(response);
 
-      return response.json();
+      if (response.headers.get("Content-Length") !== "0") {
+        return response.json();
+      }
     } catch (error) {
       console.error("Error patching data:", error);
       throw error;
@@ -338,17 +306,12 @@ export const usePatch = (options?: {
  * This hook constructs the base URL and headers, and provides a function to perform a PATCH request to the specified path.
  * In comparison to usePatch, this hook does not use the environment context, so it can be used only to perform requests that are environment-agnostic.
  *
- * @returns {Function<Promise<ResponseData>>} - A function that performs a PATCH request.
+ * @returns {Function<>} - A function that performs a PATCH request.
  *
- * @template ResponseData - The expected response data type.
+ * @template- The expected response data type.
  * @template Body - The type of the request body.
  */
-export const usePatchWithoutEnv = (options?: {
-  message?: string;
-}): (<ResponseData, Body>(
-  path: string,
-  body: Body,
-) => Promise<ResponseData>) => {
+export const usePatchWithoutEnv = (options?: { message?: string }) => {
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
     globalThis.location.pathname,
@@ -357,10 +320,7 @@ export const usePatchWithoutEnv = (options?: {
   const { createHeaders, handleErrors } = useFetchHelpers();
   const headers = createHeaders({ message: options?.message });
 
-  return async <ResponseData, Body>(
-    path: string,
-    body: Body,
-  ): Promise<ResponseData> => {
+  return async <Body>(path: string, body: Body) => {
     try {
       const response = await fetch(`${baseUrl}${path}`, {
         method: "PATCH",
@@ -370,7 +330,9 @@ export const usePatchWithoutEnv = (options?: {
 
       await handleErrors(response);
 
-      return response.json();
+      if (response.headers.get("Content-Length") !== "0") {
+        return response.json();
+      }
     } catch (error) {
       console.error("Error patching data:", error);
       throw error;
@@ -386,13 +348,11 @@ export const usePatchWithoutEnv = (options?: {
  *
  * This hook constructs the base URL and headers, and provides a function to perform a DELETE request to the specified path.
  *
- * @returns {Function<Promise<ResponseData>>} A function that performs a DELETE request and returns the response data.
+ * @returns {Function<>} A function that performs a DELETE request and returns the response data.
  *
- * @template ResponseData - The type of the response data.
+ * @template- The type of the response data.
  */
-export const useDelete = (options?: {
-  message?: string;
-}): (<ResponseData>(path: string) => Promise<ResponseData>) => {
+export const useDelete = (options?: { message?: string }) => {
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
     globalThis.location.pathname,
@@ -407,7 +367,7 @@ export const useDelete = (options?: {
     headers.append("message", options.message);
   }
 
-  return async <ResponseData>(path: string): Promise<ResponseData> => {
+  return async (path: string) => {
     try {
       const response = await fetch(`${baseUrl}${path}`, {
         method: "DELETE",
@@ -416,7 +376,9 @@ export const useDelete = (options?: {
 
       await handleErrors(response);
 
-      return response.json();
+      if (response.headers.get("Content-Length") !== "0") {
+        return response.json();
+      }
     } catch (error) {
       console.error("Error deleting data:", error);
       throw error;
@@ -433,13 +395,11 @@ export const useDelete = (options?: {
  * This hook constructs the base URL and headers, and provides a function to perform a DELETE request to the specified path.
  * In comparison to useDelete, this hook does not use the environment context, so it can be used only to perform requests that are environment-agnostic.
  *
- * @returns {Function<Promise<ResponseData>>} A function that performs a DELETE request and returns the response data.
+ * @returns {Function<>} A function that performs a DELETE request and returns the response data.
  *
- * @template ResponseData - The type of the response data.
+ * @template- The type of the response data.
  */
-export const useDeleteWithoutEnv = (options?: {
-  message?: string;
-}): (<ResponseData>(path: string) => Promise<ResponseData>) => {
+export const useDeleteWithoutEnv = (options?: { message?: string }) => {
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
     globalThis.location.pathname,
@@ -448,7 +408,7 @@ export const useDeleteWithoutEnv = (options?: {
   const { createHeaders, handleErrors } = useFetchHelpers();
   const headers = createHeaders({ message: options?.message });
 
-  return async <ResponseData>(path: string): Promise<ResponseData> => {
+  return async (path: string) => {
     try {
       const response = await fetch(`${baseUrl}${path}`, {
         method: "DELETE",
@@ -457,7 +417,9 @@ export const useDeleteWithoutEnv = (options?: {
 
       await handleErrors(response);
 
-      return response.json();
+      if (response.headers.get("Content-Length") !== "0") {
+        return response.json();
+      }
     } catch (error) {
       console.error("Error deleting data:", error);
       throw error;

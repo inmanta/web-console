@@ -22,10 +22,10 @@ interface LoginBody {
  * @returns A tuple containing the mutation function and mutation state.
  */
 export const useLogin = () => {
-  const post = usePostWithoutEnv()<LoginResponse, LoginBody>;
+  const post = usePostWithoutEnv()<LoginBody>;
 
-  return useMutation({
-    mutationFn: (body: LoginBody) => post("/api/v2/login", body),
+  return useMutation<LoginResponse, Error, LoginBody>({
+    mutationFn: (body) => post("/api/v2/login", body),
     mutationKey: ["login"],
   });
 };

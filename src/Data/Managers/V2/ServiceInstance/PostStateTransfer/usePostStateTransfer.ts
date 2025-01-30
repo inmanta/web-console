@@ -29,7 +29,7 @@ export const usePostStateTransfer = (
   service_entity: string,
   options?: UseMutationOptions<StateTransferResponse, Error, PostStateTransfer>,
 ): UseMutationResult<StateTransferResponse, Error, PostStateTransfer> => {
-  const post = usePost()<StateTransferResponse, PostStateTransfer>;
+  const post = usePost()<PostStateTransfer>;
 
   return useMutation({
     mutationFn: (body) =>

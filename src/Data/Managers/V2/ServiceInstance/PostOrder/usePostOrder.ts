@@ -23,13 +23,8 @@ interface PostOrderBody {
  */
 export const usePostOrder = (
   options?: UseMutationOptions<PostResponse, Error, ComposerServiceOrderItem[]>,
-): UseMutationResult<
-  PostResponse,
-  Error,
-  ComposerServiceOrderItem[],
-  unknown
-> => {
-  const post = usePost()<PostResponse, PostOrderBody>;
+): UseMutationResult<PostResponse, Error, ComposerServiceOrderItem[]> => {
+  const post = usePost()<PostOrderBody>;
 
   return useMutation({
     mutationFn: (service_order_items) =>

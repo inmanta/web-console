@@ -25,7 +25,7 @@ export const useUpdateEnvConfig = (): UseMutationResult<
 > => {
   const client = useQueryClient();
 
-  const post = usePost()<void, string | boolean | ParsedNumber | Dict>;
+  const post = usePost()<string | boolean | ParsedNumber | Dict>;
 
   return useMutation({
     mutationFn: ({ id, value }) =>

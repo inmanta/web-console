@@ -19,10 +19,10 @@ interface AddUserBody {
  */
 export const useAddUser = () => {
   const client = useQueryClient();
-  const post = usePost()<AddUSerResponse, AddUserBody>;
+  const post = usePost()<AddUserBody>;
 
-  return useMutation({
-    mutationFn: (body: AddUserBody) => post(`/api/v2/user`, body),
+  return useMutation<AddUSerResponse, Error, AddUserBody>({
+    mutationFn: (body) => post(`/api/v2/user`, body),
     mutationKey: ["add_user"],
     onSuccess: () => {
       //refetch the users query to update the list

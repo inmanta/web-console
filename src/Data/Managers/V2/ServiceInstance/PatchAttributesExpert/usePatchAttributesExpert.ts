@@ -34,7 +34,7 @@ export const usePatchAttributesExpert = (
   instance_id: string,
   service_entity: string,
 ): UseMutationResult<void, Error, ExpertPatchAttributes, unknown> => {
-  const patch = usePatch()<void, ExpertPatchAttributes>;
+  const patch = usePatch()<ExpertPatchAttributes>;
 
   return useMutation({
     mutationFn: (data) =>

@@ -17,7 +17,7 @@ export const useRemoveUser = (): UseMutationResult<
   unknown
 > => {
   const client = useQueryClient();
-  const deleteFn = useDelete()<void>;
+  const deleteFn = useDelete();
 
   return useMutation({
     mutationFn: (username) => deleteFn(`/api/v2/user/${username}`),

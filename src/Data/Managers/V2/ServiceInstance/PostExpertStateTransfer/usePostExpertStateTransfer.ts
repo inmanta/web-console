@@ -23,11 +23,11 @@ export const usePostExpertStateTransfer = (
   instance_id: string,
   service_entity: string,
 ): UseMutationResult<void, Error, PostExpertStateTransfer, unknown> => {
-  const deleteRequest = usePost()<void, PostExpertStateTransfer>;
+  const post = usePost()<PostExpertStateTransfer>;
 
   return useMutation({
     mutationFn: (data) =>
-      deleteRequest(
+      post(
         `/lsm/v1/service_inventory/${service_entity}/${instance_id}/expert/state`,
         data,
       ),

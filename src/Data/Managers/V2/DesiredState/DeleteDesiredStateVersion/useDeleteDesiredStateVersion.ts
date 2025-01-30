@@ -17,7 +17,7 @@ export const useDeleteDesiredStateVersion = (): UseMutationResult<
   unknown
 > => {
   const client = useQueryClient();
-  const deleteFn = useDelete()<void>;
+  const deleteFn = useDelete();
 
   return useMutation({
     mutationFn: (version) => deleteFn(`/api/v1/version/${version}`),

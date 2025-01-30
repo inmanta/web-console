@@ -17,7 +17,7 @@ export const useExportCatalog = (): UseMutationResult<
   unknown
 > => {
   const client = useQueryClient();
-  const post = usePost()<void, void>;
+  const post = usePost()<void>;
 
   return useMutation({
     mutationFn: () => post(`/lsm/v1/exporter/export_service_definition`),
