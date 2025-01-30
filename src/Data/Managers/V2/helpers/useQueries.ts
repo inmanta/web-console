@@ -112,8 +112,8 @@ export const usePost = (options?: { message?: string }) => {
       await handleErrors(response);
 
       const contentLength = response.headers.get("Content-Length");
-
-      if (contentLength && contentLength !== "0") {
+      const isGzip = response.headers.get("Content-Encoding") === "gzip";
+      if ((contentLength && contentLength !== "0") || isGzip) {
         return response.json();
       }
     } catch (error) {
@@ -157,8 +157,8 @@ export const usePostWithoutEnv = (options?: { message?: string }) => {
       await handleErrors(response);
 
       const contentLength = response.headers.get("Content-Length");
-
-      if (contentLength && contentLength !== "0") {
+      const isGzip = response.headers.get("Content-Encoding") === "gzip";
+      if ((contentLength && contentLength !== "0") || isGzip) {
         return response.json();
       }
 
@@ -205,8 +205,8 @@ export const usePut = (options?: { message?: string }) => {
       await handleErrors(response);
 
       const contentLength = response.headers.get("Content-Length");
-
-      if (contentLength && contentLength !== "0") {
+      const isGzip = response.headers.get("Content-Encoding") === "gzip";
+      if ((contentLength && contentLength !== "0") || isGzip) {
         return response.json();
       }
     } catch (error) {
@@ -250,8 +250,8 @@ export const usePutWithoutEnv = (options?: { message?: string }) => {
       await handleErrors(response);
 
       const contentLength = response.headers.get("Content-Length");
-
-      if (contentLength && contentLength !== "0") {
+      const isGzip = response.headers.get("Content-Encoding") === "gzip";
+      if ((contentLength && contentLength !== "0") || isGzip) {
         return response.json();
       }
     } catch (error) {
@@ -296,8 +296,8 @@ export const usePatch = (options?: { message?: string }) => {
       await handleErrors(response);
 
       const contentLength = response.headers.get("Content-Length");
-
-      if (contentLength && contentLength !== "0") {
+      const isGzip = response.headers.get("Content-Encoding") === "gzip";
+      if ((contentLength && contentLength !== "0") || isGzip) {
         return response.json();
       }
     } catch (error) {
@@ -341,8 +341,8 @@ export const usePatchWithoutEnv = (options?: { message?: string }) => {
       await handleErrors(response);
 
       const contentLength = response.headers.get("Content-Length");
-
-      if (contentLength && contentLength !== "0") {
+      const isGzip = response.headers.get("Content-Encoding") === "gzip";
+      if ((contentLength && contentLength !== "0") || isGzip) {
         return response.json();
       }
     } catch (error) {
@@ -389,8 +389,8 @@ export const useDelete = (options?: { message?: string }) => {
       await handleErrors(response);
 
       const contentLength = response.headers.get("Content-Length");
-
-      if (contentLength && contentLength !== "0") {
+      const isGzip = response.headers.get("Content-Encoding") === "gzip";
+      if ((contentLength && contentLength !== "0") || isGzip) {
         return response.json();
       }
     } catch (error) {
@@ -432,8 +432,8 @@ export const useDeleteWithoutEnv = (options?: { message?: string }) => {
       await handleErrors(response);
 
       const contentLength = response.headers.get("Content-Length");
-
-      if (contentLength && contentLength !== "0") {
+      const isGzip = response.headers.get("Content-Encoding") === "gzip";
+      if ((contentLength && contentLength !== "0") || isGzip) {
         return response.json();
       }
     } catch (error) {
