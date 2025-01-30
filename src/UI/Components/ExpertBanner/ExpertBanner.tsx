@@ -48,7 +48,10 @@ export const ExpertBanner: React.FC = () => {
             isInline
             onClick={() => {
               setIsLoading(true);
-              mutate({ id: "enable_lsm_expert_mode", value: false });
+              mutate({
+                id: "enable_lsm_expert_mode",
+                updatedValue: { value: false },
+              });
             }}
           >
             {words("banner.disableExpertMode")}

@@ -10,8 +10,9 @@ import { usePost } from "../../helpers/useQueries";
 
 interface ConfigUpdate {
   id: string;
-  value: string | boolean | ParsedNumber | Dict;
+  updatedValue: UpdateValue;
 }
+type UpdateValue = { value: string | boolean | ParsedNumber | Dict };
 
 /**
  * React Query hook for updating environment configuration settings.
@@ -23,11 +24,11 @@ export const useUpdateEnvConfig = (
 ): UseMutationResult<void, Error, ConfigUpdate, unknown> => {
   const client = useQueryClient();
 
-  const post = usePost()<string | boolean | ParsedNumber | Dict>;
+  const post = usePost()<UpdateValue>;
 
   return useMutation({
-    mutationFn: ({ id, value }) =>
-      post(`/api/v2/environment_settings/${id}`, value),
+    mutationFn: ({ id, updatedValue }) =>
+      post(`/api/v2/environment_settings/${id}`, updatedValue),
     mutationKey: ["update_env_config"],
     onSuccess: () => {
       client.invalidateQueries({
