@@ -12,6 +12,7 @@ interface ConfigUpdate {
   id: string;
   updatedValue: UpdateValue;
 }
+
 type UpdateValue = { value: string | boolean | ParsedNumber | Dict };
 
 /**
