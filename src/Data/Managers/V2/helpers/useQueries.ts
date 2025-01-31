@@ -113,6 +113,7 @@ export const usePost = (options?: { message?: string }) => {
 
       const contentLength = response.headers.get("Content-Length");
       const isGzip = response.headers.get("Content-Encoding") === "gzip";
+
       if ((contentLength && contentLength !== "0") || isGzip) {
         return response.json();
       }
@@ -158,6 +159,7 @@ export const usePostWithoutEnv = (options?: { message?: string }) => {
 
       const contentLength = response.headers.get("Content-Length");
       const isGzip = response.headers.get("Content-Encoding") === "gzip";
+
       if ((contentLength && contentLength !== "0") || isGzip) {
         return response.json();
       }
@@ -206,6 +208,7 @@ export const usePut = (options?: { message?: string }) => {
 
       const contentLength = response.headers.get("Content-Length");
       const isGzip = response.headers.get("Content-Encoding") === "gzip";
+
       if ((contentLength && contentLength !== "0") || isGzip) {
         return response.json();
       }
@@ -251,6 +254,7 @@ export const usePutWithoutEnv = (options?: { message?: string }) => {
 
       const contentLength = response.headers.get("Content-Length");
       const isGzip = response.headers.get("Content-Encoding") === "gzip";
+
       if ((contentLength && contentLength !== "0") || isGzip) {
         return response.json();
       }
@@ -297,6 +301,7 @@ export const usePatch = (options?: { message?: string }) => {
 
       const contentLength = response.headers.get("Content-Length");
       const isGzip = response.headers.get("Content-Encoding") === "gzip";
+
       if ((contentLength && contentLength !== "0") || isGzip) {
         return response.json();
       }
@@ -342,6 +347,7 @@ export const usePatchWithoutEnv = (options?: { message?: string }) => {
 
       const contentLength = response.headers.get("Content-Length");
       const isGzip = response.headers.get("Content-Encoding") === "gzip";
+
       if ((contentLength && contentLength !== "0") || isGzip) {
         return response.json();
       }
@@ -390,6 +396,7 @@ export const useDelete = (options?: { message?: string }) => {
 
       const contentLength = response.headers.get("Content-Length");
       const isGzip = response.headers.get("Content-Encoding") === "gzip";
+
       if ((contentLength && contentLength !== "0") || isGzip) {
         return response.json();
       }
@@ -433,6 +440,7 @@ export const useDeleteWithoutEnv = (options?: { message?: string }) => {
 
       const contentLength = response.headers.get("Content-Length");
       const isGzip = response.headers.get("Content-Encoding") === "gzip";
+
       if ((contentLength && contentLength !== "0") || isGzip) {
         return response.json();
       }
