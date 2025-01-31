@@ -1,5 +1,5 @@
-import React, { useContext } from "react";
-import { useGetServiceModels } from "@/Data/Managers/V2/GETTERS/GetServiceModels";
+import React from "react";
+import { useGetServiceModels } from "@/Data/Managers/V2/Service";
 import {
   EmptyView,
   ErrorView,
@@ -7,15 +7,12 @@ import {
   PageContainer,
 } from "@/UI/Components";
 import { CatalogActions } from "@/UI/Components/CatalogActions";
-import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { CatalogDataList } from "./CatalogDataList";
 
 export const Page: React.FC = () => {
-  const { environmentHandler } = useContext(DependencyContext);
-  const env = environmentHandler.useId();
   const { data, isError, error, isSuccess, refetch } =
-    useGetServiceModels(env).useContinuous();
+    useGetServiceModels().useContinuous();
 
   let component: React.JSX.Element = (
     <LoadingView ariaLabel="ServiceCatalog-Loading" />

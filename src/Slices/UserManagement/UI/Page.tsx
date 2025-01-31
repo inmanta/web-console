@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { Button, Flex, FlexItem } from "@patternfly/react-core";
 import { Table, Tbody, Th, Thead, Tr } from "@patternfly/react-table";
-import { useGetUsers } from "@/Data/Managers/V2/GETTERS/GetUsers";
+import { useGetUsers } from "@/Data/Managers/V2/Auth";
 import { UserCredentialsForm } from "@/Slices/UserManagement/UI/Components/AddUserForm";
 import { words } from "@/UI";
 import {

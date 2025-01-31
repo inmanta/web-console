@@ -12,8 +12,10 @@ import { delay, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { RemoteData } from "@/Core";
 import { getStoreInstance } from "@/Data";
-import { InstanceWithRelations } from "@/Data/Managers/V2/GETTERS/GetInstanceWithRelations";
-import { Inventories } from "@/Data/Managers/V2/GETTERS/GetInventoryList";
+import {
+  InstanceWithRelations,
+  Inventories,
+} from "@/Data/Managers/V2/ServiceInstance";
 import { dependencies } from "@/Test";
 import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
 import { PrimaryRouteManager } from "@/UI/Routing";
@@ -45,18 +47,23 @@ describe("ComposerActions.", () => {
     );
     const store = getStoreInstance();
 
-    store.dispatch.environment.setEnvironments(
-      RemoteData.success([
-        {
-          id: "aaa",
-          name: "env-a",
-          project_id: "ppp",
-          repo_branch: "branch",
-          repo_url: "repo",
-          projectName: "project",
-        },
-      ]),
-    );
+    const env = {
+      id: "aaa",
+      name: "env-a",
+      project_id: "ppp",
+      repo_branch: "branch",
+      repo_url: "repo",
+      projectName: "project",
+      halted: false,
+      settings: {},
+    };
+
+    store.dispatch.environment.setEnvironments(RemoteData.success([env]));
+
+    store.dispatch.environment.setEnvironmentDetailsById({
+      id: "aaa",
+      value: RemoteData.success(env),
+    });
 
     return (
       <QueryClientProvider client={client}>
@@ -195,7 +202,11 @@ describe("ComposerActions.", () => {
   it("shows success message and redirects when deploy button is clicked", async () => {
     server.use(
       http.post("/lsm/v2/order", async () => {
-        return HttpResponse.json({ data: { id: "test" } });
+        return HttpResponse.json({
+          data: {
+            id: "test",
+          },
+        });
       }),
     );
 
@@ -216,7 +227,9 @@ describe("ComposerActions.", () => {
       http.post("/lsm/v2/order", async () => {
         await delay();
 
-        return HttpResponse.json();
+        return HttpResponse.json({
+          data: [],
+        });
       }),
     );
     const canvasContext = {

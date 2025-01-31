@@ -2,8 +2,10 @@ import React, { useCallback, useContext, useState } from "react";
 import "@inmanta/rappid/joint-plus.css";
 import { useLocation, useNavigate } from "react-router-dom";
 import { AlertVariant, Button, Flex, FlexItem } from "@patternfly/react-core";
-import { usePostMetadata } from "@/Data/Managers/V2/POST/PostMetadata";
-import { usePostOrder } from "@/Data/Managers/V2/POST/PostOrder";
+import {
+  usePostMetadata,
+  usePostOrder,
+} from "@/Data/Managers/V2/ServiceInstance";
 import { ServiceOrder } from "@/Slices/Orders/Core/Query";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
@@ -49,17 +51,16 @@ export const ComposerActions: React.FC<Props> = ({ serviceName, editable }) => {
     diagramHandlers,
     interServiceRelationsOnCanvas,
   } = useContext(CanvasContext);
-  const { routeManager, environmentHandler } = useContext(DependencyContext);
+  const { routeManager } = useContext(DependencyContext);
+
   const [alertMessage, setAlertMessage] = useState("");
   const [alertType, setAlertType] = useState(AlertVariant.danger);
   const location = useLocation();
 
-  const environment = environmentHandler.useId();
-
-  const metadataMutation = usePostMetadata(environment);
-
-  const orderMutation = usePostOrder(environment, {
+  const metadataMutation = usePostMetadata();
+  const orderMutation = usePostOrder({
     onSuccess: (response: { data: ServiceOrder }) => {
+      console.log(response);
       const newUrl = routeManager.getUrl("OrderDetails", {
         id: response.data.id,
       });

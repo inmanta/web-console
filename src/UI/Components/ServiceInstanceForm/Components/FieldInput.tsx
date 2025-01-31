@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Button,
   FormFieldGroupExpandable,
@@ -21,9 +15,8 @@ import {
   FormSuggestion,
 } from "@/Core";
 import { toOptionalBoolean } from "@/Data";
-import { useSuggestedValues } from "@/Data/Managers/V2/GETTERS/FormSuggestions";
+import { useSuggestedValues } from "@/Data/Managers/V2/ServiceInstance";
 import { createFormState } from "@/UI/Components/ServiceInstanceForm/Helpers";
-import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { BooleanFormInput } from "./BooleanFormInput";
 import { BooleanToggleInput } from "./BooleanToggleInput";
@@ -85,12 +78,8 @@ export const FieldInput: React.FC<Props> = ({
   isNew = false,
   suggestions,
 }) => {
-  const { environmentHandler } = useContext(DependencyContext);
-  const environment = environmentHandler.useId();
-  const { data, isLoading, error } = useSuggestedValues(
-    suggestions,
-    environment,
-  ).useOneTime();
+  const { data, isLoading, error } =
+    useSuggestedValues(suggestions).useOneTime();
   const [suggestionsList, setSuggestionsList] = useState<string[] | null>(null);
 
   // Get the controlled value for the field

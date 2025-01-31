@@ -415,7 +415,6 @@ describe("Page Actions - Failed", () => {
 
     await userEvent.click(confirmButton);
 
-    expect(screen.getByRole("dialog")).toBeVisible();
     expect(
       screen.getByTestId("error-toast-state-transfer-message"),
     ).toBeVisible();

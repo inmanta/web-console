@@ -1,7 +1,7 @@
 import { RefObject } from "react";
 import { dia, shapes, ui } from "@inmanta/rappid";
 import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from "@/Core";
-import { InstanceWithRelations } from "@/Data/Managers/V2/GETTERS/GetInstanceWithRelations";
+import { InstanceWithRelations } from "@/Data/Managers/V2/ServiceInstance";
 import { dispatchUpdateStencil } from "./Context/dispatchers";
 import { populateGraphWithDefault } from "./actions/createMode";
 import { appendInstance } from "./actions/editMode";

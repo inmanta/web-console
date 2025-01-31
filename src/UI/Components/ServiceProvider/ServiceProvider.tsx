@@ -1,9 +1,8 @@
-import React, { useContext } from "react";
+import React from "react";
 import { ServiceModel } from "@/Core";
-import { useGetServiceModel } from "@/Data/Managers/V2/GETTERS/GetServiceModel";
+import { useGetServiceModel } from "@/Data/Managers/V2/Service";
 import { ErrorView } from "@/UI/Components/ErrorView";
 import { LoadingView } from "@/UI/Components/LoadingView";
-import { DependencyContext } from "@/UI/Dependency";
 
 interface Props {
   serviceName: string;
@@ -16,12 +15,8 @@ export const ServiceProvider: React.FunctionComponent<Props> = ({
   Wrapper,
   Dependant,
 }) => {
-  const { environmentHandler } = useContext(DependencyContext);
-  const env = environmentHandler.useId();
-  const { data, isError, error, isSuccess, refetch } = useGetServiceModel(
-    serviceName,
-    env,
-  ).useContinuous();
+  const { data, isError, error, isSuccess, refetch } =
+    useGetServiceModel(serviceName).useContinuous();
 
   if (isError) {
     <Wrapper aria-label="ServiceProvider-Failed" name={serviceName}>

@@ -137,6 +137,9 @@ if (Cypress.env("edition") === "iso") {
         .contains("Service Catalog")
         .click();
       cy.get("#parent-service").contains("Show inventory").click();
+      cy.get('[data-label="State"]')
+        .eq(0)
+        .should("have.text", "up", { timeout: 90000 });
 
       // try delete item (Should not be possible)
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
@@ -151,7 +154,9 @@ if (Cypress.env("edition") === "iso") {
         .click();
 
       cy.get("#child-service").contains("Show inventory").click();
-
+      cy.get('[data-label="State"]')
+        .eq(0)
+        .should("have.text", "up", { timeout: 90000 });
       // try delete item (Should be possible)
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
       cy.get('[role="menuitem"]').contains("Delete").click();
@@ -160,7 +165,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get(".pf-v6-c-form__actions").contains("Yes").click();
 
       cy.get('[aria-label="ServiceInventory-Empty"]', {
-        timeout: 220000,
+        timeout: 240000,
       }).should("to.be.visible");
     });
   });

@@ -16,6 +16,7 @@ export interface EnvironmentModel {
   repo_url: string;
   description?: string;
   icon?: string;
+  halted: boolean;
 }
 
 export interface FlatEnvironment extends EnvironmentModel {

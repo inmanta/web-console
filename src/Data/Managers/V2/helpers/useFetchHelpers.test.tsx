@@ -28,11 +28,27 @@ describe("createHeaders", () => {
     const env = "1234abcd";
     const wrapper = setup();
 
-    const { result } = renderHook(() => useFetchHelpers().createHeaders(env), {
-      wrapper,
-    });
+    const { result } = renderHook(
+      () => useFetchHelpers().createHeaders({ env }),
+      {
+        wrapper,
+      },
+    );
 
     expect(result.current.get("X-Inmanta-Tid")).toEqual(env);
+  });
+
+  it("should return headers with message when message is defined", () => {
+    const wrapper = setup();
+
+    const { result } = renderHook(
+      () => useFetchHelpers().createHeaders({ message: "test-message" }),
+      {
+        wrapper,
+      },
+    );
+
+    expect(result.current.get("message")).toEqual("test-message");
   });
 
   it("should return headers without environment when env is undefined", () => {

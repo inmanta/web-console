@@ -10,8 +10,10 @@ import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { RemoteData, ServiceModel } from "@/Core";
 import { getStoreInstance } from "@/Data";
-import { InstanceWithRelations } from "@/Data/Managers/V2/GETTERS/GetInstanceWithRelations";
-import { Inventories } from "@/Data/Managers/V2/GETTERS/GetInventoryList";
+import {
+  InstanceWithRelations,
+  Inventories,
+} from "@/Data/Managers/V2/ServiceInstance";
 import { dependencies } from "@/Test";
 import * as customQueries from "@/Test/Utils/custom-queries";
 import {
@@ -62,6 +64,10 @@ const setup = (
         repo_branch: "branch",
         repo_url: "repo",
         projectName: "project",
+        halted: false,
+        settings: {
+          enable_lsm_expert_mode: false,
+        },
       },
       {
         id: "bbb",
@@ -70,6 +76,10 @@ const setup = (
         repo_branch: "branch",
         repo_url: "repo",
         projectName: "project",
+        halted: false,
+        settings: {
+          enable_lsm_expert_mode: false,
+        },
       },
     ]),
   );

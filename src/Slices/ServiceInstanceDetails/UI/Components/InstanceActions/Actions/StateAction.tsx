@@ -1,7 +1,7 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import { DropdownGroup, DropdownItem, Content } from "@patternfly/react-core";
 import { ParsedNumber } from "@/Core";
-import { usePostStateTransfer } from "@/Data/Managers/V2/POST/PostStateTransfer/usePostStateTransfer";
+import { usePostStateTransfer } from "@/Data/Managers/V2/ServiceInstance";
 import { DependencyContext, words } from "@/UI";
 import { ConfirmationModal } from "../../ConfirmModal";
 import { ToastAlertMessage } from "../../ToastAlert";
@@ -44,13 +44,20 @@ export const StateAction: React.FC<Props> = ({
   const [targetState, setTargetState] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
 
-  const { environmentHandler, authHelper } = useContext(DependencyContext);
-  const environment = environmentHandler.useId();
+  const { authHelper } = useContext(DependencyContext);
 
-  const { mutate, isError, error, isSuccess, isPending } = usePostStateTransfer(
-    environment,
+  const { mutate, isPending } = usePostStateTransfer(
     instance_id,
     service_entity,
+    {
+      onSuccess: () => {
+        closeModal();
+      },
+      onError: (error) => {
+        setErrorMessage(error.message);
+        closeModal();
+      },
+    },
   );
 
   /**
@@ -96,16 +103,6 @@ export const StateAction: React.FC<Props> = ({
     setInterfaceBlocked(false);
     onClose();
   }, [setInterfaceBlocked, setIsModalOpen, onClose]);
-
-  useEffect(() => {
-    if (isError && error) {
-      setErrorMessage(error.message);
-    }
-
-    if (isSuccess) {
-      closeModal();
-    }
-  }, [isError, isSuccess, error, closeModal]);
 
   return (
     <>

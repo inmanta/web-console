@@ -1,6 +1,6 @@
 import React from "react";
 import "@testing-library/jest-dom";
-import { Route, Routes } from "react-router-dom";
+import { MemoryRouter, Route, Routes, useLocation } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
@@ -13,6 +13,7 @@ import {
   EnumField,
   InstanceAttributeModel,
   NestedField,
+  RemoteData,
   TextField,
   Textarea,
 } from "@/Core";
@@ -23,9 +24,7 @@ import {
 } from "@/Data";
 import * as Test from "@/Test";
 import { DeferredApiHelper, StaticScheduler, dependencies } from "@/Test";
-import { DependencyProvider } from "@/UI";
-import CustomRouter from "@/UI/Routing/CustomRouter";
-import history from "@/UI/Routing/history";
+import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI";
 import { words } from "@/UI/words";
 import { ServiceInstanceForm } from "./ServiceInstanceForm";
 
@@ -42,6 +41,10 @@ const setup = (
   isEdit = false,
   originalAttributes: InstanceAttributeModel | undefined = undefined,
 ) => {
+  const environmentHandler = EnvironmentHandlerImpl(
+    useLocation,
+    dependencies.routeManager,
+  );
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
@@ -49,9 +52,36 @@ const setup = (
     new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler),
   );
 
+  const env = {
+    id: "aaa",
+    name: "env-a",
+    project_id: "ppp",
+    repo_branch: "branch",
+    repo_url: "repo",
+    projectName: "project",
+    halted: false,
+    settings: {},
+  };
+
+  store.dispatch.environment.setEnvironments(RemoteData.success([env]));
+
+  store.dispatch.environment.setEnvironmentDetailsById({
+    id: "aaa",
+    value: RemoteData.success(env),
+  });
+
   const component = (
-    <CustomRouter history={history}>
-      <DependencyProvider dependencies={{ ...dependencies, queryResolver }}>
+    <MemoryRouter
+      initialEntries={[
+        {
+          pathname: "/",
+          search: "?env=aaa",
+        },
+      ]}
+    >
+      <DependencyProvider
+        dependencies={{ ...dependencies, queryResolver, environmentHandler }}
+      >
         <StoreProvider store={store}>
           <Routes>
             <Route
@@ -70,19 +100,44 @@ const setup = (
           </Routes>
         </StoreProvider>
       </DependencyProvider>
-    </CustomRouter>
+    </MemoryRouter>
   );
 
   return { component, apiHelper, scheduler };
 };
 
-function createQuerryWrapper(children: React.ReactNode) {
+function createQueryWrapper(children: React.ReactNode) {
   const queryClient = new QueryClient();
 
   return (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );
 }
+const server = setupServer();
+
+beforeAll(() => {
+  server.listen();
+  server.use(
+    http.get("/api/v1/parameter/param_name", () => {
+      return HttpResponse.json({
+        parameter: undefined,
+      });
+    }),
+  );
+});
+
+beforeEach(() => {
+  server.resetHandlers();
+  server.use(
+    http.get("/api/v1/parameter/param_name", () => {
+      return HttpResponse.json({
+        parameter: undefined,
+      });
+    }),
+  );
+});
+
+afterAll(() => server.close());
 
 test("GIVEN ServiceInstanceForm WHEN passed a TextField THEN shows that field", async () => {
   const { component } = setup([Test.Field.text]);
@@ -132,10 +187,9 @@ test("GIVEN ServiceInstanceForm WHEN passed a TextField with suggestions THEN sh
 
 test("GIVEN ServiceInstanceForm WHEN passed a TextField with parameter suggestions THEN shows that field", async () => {
   // Provide the server-side API with the request handlers.
-  const server = setupServer(
-    http.get("/api/v1/parameter/:id", ({ params }) => {
-      expect(params.id).toEqual("param_name");
-
+  server.resetHandlers();
+  server.use(
+    http.get("/api/v1/parameter/param_name", () => {
       return HttpResponse.json({
         parameter: {
           value: "metadata",
@@ -154,12 +208,9 @@ test("GIVEN ServiceInstanceForm WHEN passed a TextField with parameter suggestio
     }),
   );
 
-  // Start the interception.
-  server.listen();
-
   const { component } = setup([Test.Field.textSuggestions2]);
 
-  render(createQuerryWrapper(component));
+  render(createQueryWrapper(component));
 
   expect(
     screen.getByRole("generic", {
@@ -178,15 +229,13 @@ test("GIVEN ServiceInstanceForm WHEN passed a TextField with parameter suggestio
 
   expect(suggestions).toHaveLength(3);
 
-  server.close();
+  server.resetHandlers();
 });
 
 test("GIVEN ServiceInstanceForm WHEN passed a TextField with parameter suggestions AND no parameters could be retrieved THEN shows that field without suggestions", async () => {
   // Provide the server-side API with the request handlers.
   const server = setupServer(
-    http.get("/api/v1/parameter/:id", ({ params }) => {
-      expect(params.id).toEqual("param_name");
-
+    http.get("/api/v1/parameter/param_name", () => {
       return HttpResponse.error();
     }),
   );
@@ -196,7 +245,7 @@ test("GIVEN ServiceInstanceForm WHEN passed a TextField with parameter suggestio
 
   const { component } = setup([Test.Field.textSuggestions2]);
 
-  render(createQuerryWrapper(component));
+  render(createQueryWrapper(component));
 
   expect(
     screen.getByRole("generic", {
@@ -214,8 +263,6 @@ test("GIVEN ServiceInstanceForm WHEN passed a TextField with parameter suggestio
   const suggestions = screen.queryAllByRole("menuitem");
 
   expect(suggestions).toHaveLength(0);
-
-  server.close();
 });
 
 test("GIVEN ServiceInstanceForm WHEN passed a BooleanField THEN shows that field", async () => {

@@ -82,6 +82,7 @@ export const SetupWrapper: React.FC<PropsWithChildren<Props>> = ({
         repo_branch: "branch",
         repo_url: "repo",
         projectName: "project",
+        halted: false,
         settings: {
           enable_lsm_expert_mode: expertMode,
         },

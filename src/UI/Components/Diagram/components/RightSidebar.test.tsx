@@ -10,7 +10,7 @@ import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { RemoteData } from "@/Core";
 import { getStoreInstance } from "@/Data";
-import { Inventories } from "@/Data/Managers/V2/GETTERS/GetInventoryList";
+import { Inventories } from "@/Data/Managers/V2/ServiceInstance";
 import { dependencies } from "@/Test";
 import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
 import { PrimaryRouteManager } from "@/UI/Routing";
@@ -47,6 +47,10 @@ describe("RightSidebar.", () => {
           repo_branch: "branch",
           repo_url: "repo",
           projectName: "project",
+          halted: false,
+          settings: {
+            enable_lsm_expert_mode: false,
+          },
         },
         {
           id: "bbb",
@@ -55,6 +59,10 @@ describe("RightSidebar.", () => {
           repo_branch: "branch",
           repo_url: "repo",
           projectName: "project",
+          halted: false,
+          settings: {
+            enable_lsm_expert_mode: false,
+          },
         },
       ]),
     );
