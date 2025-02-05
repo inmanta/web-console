@@ -42,6 +42,7 @@ export const EnvSelector: React.FC<Props> = ({
         position: "end",
       }}
       onOpenChange={(open: boolean) => setIsOpen(open)}
+      onClick={() => setIsOpen(!isOpen)}
       toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
         <MenuToggle
           id="toggle-button"
