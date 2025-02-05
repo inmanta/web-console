@@ -58,6 +58,7 @@ export const Header: React.FC<Props> = ({ noEnv, onNotificationsToggle }) => {
           </MastheadToggle>
           <MastheadBrand>
             <MastheadLogo
+              aria-label="Inmanta-logo"
               href={
                 noEnv
                   ? routeManager.getUrl("Home", undefined)
