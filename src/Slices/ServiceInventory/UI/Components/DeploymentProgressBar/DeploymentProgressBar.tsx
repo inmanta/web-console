@@ -2,7 +2,7 @@ import React from "react";
 import {
   t_global_color_status_success_default,
   t_global_color_status_danger_default,
-  chart_color_blue_300
+  chart_color_blue_300,
 } from "@patternfly/react-tokens";
 import { DeploymentProgress } from "@/Core";
 import { LegendBar, LegendItemDetails } from "@/UI/Components";
