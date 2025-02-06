@@ -10,7 +10,7 @@ import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWi
 import {
   EmptyView,
   PageContainer,
-  PaginationWidget,
+  OldPaginationWidget,
   RemoteDataView,
 } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
@@ -81,7 +81,7 @@ export const Page: React.FC = () => {
       <ResourceTableControls
         summaryWidget={<Summary data={staleData} updateFilter={updateFilter} />}
         paginationWidget={
-          <PaginationWidget
+          <OldPaginationWidget
             data={staleData}
             pageSize={pageSize}
             setPageSize={setPageSize}
@@ -111,7 +111,7 @@ export const Page: React.FC = () => {
               />
               <Flex justifyContent={{ default: "justifyContentFlexEnd" }}>
                 <FlexItem>
-                  <PaginationWidget
+                  <OldPaginationWidget
                     data={staleData}
                     pageSize={pageSize}
                     setPageSize={setPageSize}

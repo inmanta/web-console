@@ -10,7 +10,7 @@ import {
 import {
   ToastAlert,
   PageContainer,
-  PaginationWidget,
+  OldPaginationWidget,
   ConfirmUserActionForm,
   EmptyView,
   LoadingView,
@@ -118,7 +118,7 @@ export const Page: React.FC = () => {
             filter={filter}
             setFilter={setFilter}
             paginationWidget={
-              <PaginationWidget
+              <OldPaginationWidget
                 data={RemoteData.success({
                   handlers,
                   metadata: data.metadata,

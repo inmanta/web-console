@@ -1,21 +1,18 @@
 import React, { useContext } from "react";
 import { Config } from "@/Core";
+import { usePostServiceConfig } from "@/Data/Managers/V2/Service";
 import { BooleanSwitch, EmptyView, SettingsList } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 
 interface Props {
   config: Config;
-  serviceName: string;
+  service_entity: string;
 }
 
-export const ConfigList: React.FC<Props> = ({ config, serviceName }) => {
-  const { commandResolver, environmentModifier } =
-    useContext(DependencyContext);
-  const update = commandResolver.useGetTrigger<"UpdateServiceConfig">({
-    kind: "UpdateServiceConfig",
-    name: serviceName,
-  });
+export const ConfigList: React.FC<Props> = ({ config, service_entity }) => {
+  const { environmentModifier } = useContext(DependencyContext);
+  const { mutate } = usePostServiceConfig(service_entity);
   const isHalted = environmentModifier.useIsHalted();
 
   return Object.keys(config).length <= 0 ? (
@@ -23,7 +20,7 @@ export const ConfigList: React.FC<Props> = ({ config, serviceName }) => {
   ) : (
     <SettingsList
       config={config}
-      onChange={update}
+      onChange={(name, value) => mutate({ values: { [name]: value } })}
       Switch={BooleanSwitch}
       isDisabled={isHalted}
     />

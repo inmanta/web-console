@@ -2,11 +2,11 @@ import React, { useCallback, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   InstanceAttributeModel,
-  Maybe,
   ServiceInstanceModel,
   ServiceModel,
 } from "@/Core";
 import { AttributeInputConverterImpl } from "@/Data";
+import { usePatchAttributes } from "@/Data/Managers/V2/ServiceInstance/PatchAttributes";
 import {
   FieldCreator,
   ServiceInstanceForm,
@@ -22,8 +22,8 @@ interface Props {
 }
 
 export const EditForm: React.FC<Props> = ({ serviceEntity, instance }) => {
-  const { commandResolver, environmentModifier, routeManager } =
-    useContext(DependencyContext);
+  const { environmentModifier, routeManager } = useContext(DependencyContext);
+  const [isDirty, setIsDirty] = useState(false);
 
   const isDisabled = true;
   const fieldCreator = new FieldCreator(new EditModifierHandler(), isDisabled);
@@ -47,29 +47,29 @@ export const EditForm: React.FC<Props> = ({ serviceEntity, instance }) => {
 
   const apiVersion = serviceEntity.strict_modifier_enforcement ? "v2" : "v1";
 
-  const trigger = commandResolver.useGetTrigger<"TriggerInstanceUpdate">({
-    kind: "TriggerInstanceUpdate",
-    service_entity: instance.service_entity,
-    id: instance.id,
-    version: instance.version,
-    apiVersion: apiVersion,
-  });
+  const { mutate } = usePatchAttributes(
+    apiVersion,
+    serviceEntity.name,
+    instance.id,
+    Number(instance.version),
+    {
+      onError: (error) => {
+        setIsDirty(true);
+        setErrorMessage(error.message);
+      },
+      onSuccess: () => {
+        handleRedirect();
+      },
+    },
+  );
 
   const onSubmit = async (
-    attributes: InstanceAttributeModel,
+    updatedAttributes: InstanceAttributeModel,
     setIsDirty: (values: boolean) => void,
   ) => {
-    //as setState used in setIsDirty doesn't change immidiate we cannot use it only before handleRedirect() as it would trigger prompt from ServiceInstanceForm
+    //as setState used in setIsDirty doesn't change immediately we cannot use it only before handleRedirect() as it would trigger prompt from ServiceInstanceForm
     setIsDirty(false);
-
-    const result = await trigger(fields, currentAttributes, attributes);
-
-    if (Maybe.isSome(result)) {
-      setIsDirty(true);
-      setErrorMessage(result.value);
-    } else {
-      handleRedirect();
-    }
+    mutate({ fields, currentAttributes, updatedAttributes });
   };
 
   return (
@@ -91,6 +91,8 @@ export const EditForm: React.FC<Props> = ({ serviceEntity, instance }) => {
         isSubmitDisabled={isHalted}
         originalAttributes={currentAttributes ? currentAttributes : undefined}
         apiVersion={apiVersion}
+        isDirty={isDirty}
+        setIsDirty={setIsDirty}
       />
     </>
   );

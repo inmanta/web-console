@@ -1,10 +1,11 @@
 import React, { useContext, useState } from "react";
 import { MenuItem, Content } from "@patternfly/react-core";
 import { WarningTriangleIcon } from "@patternfly/react-icons";
-import { Maybe, VersionedServiceInstanceIdentifier } from "@/Core";
-import { ServiceInventoryContext } from "@/Slices/ServiceInventory/UI/ServiceInventory";
+import { useQueryClient } from "@tanstack/react-query";
+import { VersionedServiceInstanceIdentifier } from "@/Core";
+import { useDestroyInstance } from "@/Data/Managers/V2/ServiceInstance";
+import { DependencyContext } from "@/UI";
 import { ToastAlert, ConfirmUserActionForm } from "@/UI/Components";
-import { DependencyContext } from "@/UI/Dependency";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
 
@@ -30,15 +31,25 @@ export const DestroyAction: React.FC<Props> = ({
   service_entity,
 }) => {
   const { triggerModal, closeModal } = useContext(ModalContext);
+  const { authHelper } = useContext(DependencyContext);
+  const client = useQueryClient();
   const [errorMessage, setErrorMessage] = useState("");
-  const { commandResolver } = useContext(DependencyContext);
-  const { refetch } = useContext(ServiceInventoryContext);
 
-  const trigger = commandResolver.useGetTrigger<"DestroyInstance">({
-    kind: "DestroyInstance",
-    service_entity,
-    id,
-    version,
+  const username = authHelper.getUser();
+  const message = words("instanceDetails.API.message.update")(username);
+
+  const { mutate } = useDestroyInstance(id, service_entity, version, message, {
+    onError: (error) => {
+      setErrorMessage(error.message);
+    },
+    onSuccess: () => {
+      client.invalidateQueries({
+        queryKey: ["get_instances-one_time", service_entity],
+      });
+      client.refetchQueries({
+        queryKey: ["get_instances-continuous", service_entity],
+      });
+    },
   });
 
   /**
@@ -49,11 +60,7 @@ export const DestroyAction: React.FC<Props> = ({
    */
   const onSubmit = async (): Promise<void> => {
     closeModal();
-    const result = await trigger(refetch);
-
-    if (Maybe.isSome(result)) {
-      setErrorMessage(result.value);
-    }
+    mutate();
   };
 
   /**

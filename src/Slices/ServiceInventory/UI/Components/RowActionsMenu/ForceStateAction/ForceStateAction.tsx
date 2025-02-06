@@ -7,7 +7,8 @@ import {
   Content,
 } from "@patternfly/react-core";
 import { WarningTriangleIcon } from "@patternfly/react-icons";
-import { Maybe, VersionedServiceInstanceIdentifier } from "@/Core";
+import { VersionedServiceInstanceIdentifier } from "@/Core";
+import { usePostExpertStateTransfer } from "@/Data/Managers/V2/ServiceInstance";
 import { ActionDisabledTooltip } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
@@ -52,14 +53,12 @@ export const ForceStateAction: React.FC<Props> = ({
     </MenuItem>
   ));
 
-  const { commandResolver, environmentModifier } =
-    useContext(DependencyContext);
+  const { authHelper, environmentModifier } = useContext(DependencyContext);
 
-  const trigger = commandResolver.useGetTrigger<"TriggerForceState">({
-    kind: "TriggerForceState",
-    service_entity,
-    id,
-    version,
+  const { mutate } = usePostExpertStateTransfer(id, service_entity, {
+    onError: (error) => {
+      setStateErrorMessage(error.message);
+    },
   });
 
   const isHalted = environmentModifier.useIsHalted();
@@ -78,12 +77,16 @@ export const ForceStateAction: React.FC<Props> = ({
      * @returns {Promise<void>} A Promise that resolves when the operation is complete.
      */
     const onSubmit = async () => {
-      const result = await trigger(targetState);
-
-      if (Maybe.isSome(result)) {
-        setStateErrorMessage(result.value);
-      }
       closeModal();
+
+      const username = authHelper.getUser();
+      const message = words("instanceDetails.API.message.update")(username);
+
+      mutate({
+        message: message,
+        current_version: version,
+        target_state: targetState,
+      });
     };
 
     triggerModal({

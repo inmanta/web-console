@@ -9,8 +9,8 @@ import {
   EmptyView,
   ToastAlert,
   PageContainer,
-  PaginationWidget,
   RemoteDataView,
+  OldPaginationWidget,
 } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
@@ -56,7 +56,7 @@ export const Page: React.FC = () => {
         filter={filter}
         setFilter={setFilter}
         paginationWidget={
-          <PaginationWidget
+          <OldPaginationWidget
             data={data}
             pageSize={pageSize}
             setPageSize={setPageSize}

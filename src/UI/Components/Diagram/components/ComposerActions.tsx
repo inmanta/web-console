@@ -60,7 +60,6 @@ export const ComposerActions: React.FC<Props> = ({ serviceName, editable }) => {
   const metadataMutation = usePostMetadata();
   const orderMutation = usePostOrder({
     onSuccess: (response: { data: ServiceOrder }) => {
-      console.log(response);
       const newUrl = routeManager.getUrl("OrderDetails", {
         id: response.data.id,
       });
