@@ -51,6 +51,7 @@ pipeline {
                         timeout(time: 20, unit: 'MINUTES') {
                             dir('web-console') {
                                 sh '''yarn run build;
+                                sudo systemctl restart docker && sudo docker network prune -f;
                                 yarn run install:orchestrator:ci;
                                 yarn run cypress-test:iso;'''
                             }
