@@ -10,6 +10,18 @@ export interface UrlParams extends ServiceInstanceParams {
   name: string;
 }
 
+/**
+ * Constructs a URL for fetching service instances with the given parameters.
+ *
+ * @param {UrlParams} params - The parameters for constructing the URL.
+ * @param {string} params.name - The name of the service instance.
+ * @param {Filter} [params.filter] - The filter criteria for the service instances.
+ * @param {Sort} [params.sort] - The sorting criteria for the service instances.
+ * @param {PageSize} params.pageSize - The number of instances per page.
+ * @param {CurrentPage} params.currentPage - The current page number.
+ * @param {boolean} [includeDeploymentProgress=true] - Whether to include deployment progress in the response.
+ * @returns {string} The constructed URL.
+ */
 export function getUrl(
   { name, filter, sort, pageSize, currentPage }: UrlParams,
   includeDeploymentProgress = true,
