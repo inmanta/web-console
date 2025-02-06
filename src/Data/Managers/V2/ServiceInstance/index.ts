@@ -18,5 +18,5 @@ export * from "./PostMetadata";
 export * from "./PostOrder";
 export * from "./PatchAttributes";
 export * from "./PostStateTransfer";
-export * from "./PostInstanceConfig";
 export * from "./PostInstance";
+export * from "./PostInstanceConfig";

@@ -19,6 +19,19 @@ export interface BodyV2 {
   patch_id: string;
 }
 
+/**
+ * Generates the request body for version 1 of the API.
+ *
+ * This function takes the fields, current attributes, and updated attributes,
+ * sanitizes the updated attributes, and calculates the difference between the
+ * current and updated attributes. The resulting difference is returned as the
+ * request body.
+ *
+ * @param {Field[]} fields - The list of fields that define the structure of the attributes.
+ * @param {InstanceAttributeModel | null} currentAttributes - The current attributes of the instance, or null if there are none.
+ * @param {InstanceAttributeModel} updatedAttributes - The updated attributes of the instance.
+ * @returns The request body containing the attribute differences.
+ */
 export const getBodyV1 = (
   fields: Field[],
   currentAttributes: InstanceAttributeModel | null,
@@ -35,6 +48,19 @@ export const getBodyV1 = (
   return { attributes: attributeDiff };
 };
 
+/**
+ * Generates the request body for version 2 of the API.
+ *
+ * This function takes the fields, updated attributes, service ID, and version,
+ * sanitizes the updated attributes, and constructs the patch data. The resulting
+ * patch data and a unique patch ID are returned as the request body.
+ *
+ * @param {Field[]}  fields - The list of fields that define the structure of the attributes.
+ * @param {InstanceAttributeModel} updatedAttributes - The updated attributes of the instance.
+ * @param {string} service_id - The ID of the service instance.
+ * @param {string} version - The version number of the service instance.
+ * @returns The request body containing the patch data and a unique patch ID.
+ */
 export const getBodyV2 = (
   fields: Field[],
   updatedAttributes: InstanceAttributeModel,

@@ -16,7 +16,7 @@ interface Response {
 }
 
 /**
- * React Query hook for posting service instance .
+ * React Query hook for posting service instance config.
  *
  * @returns {UseMutationResult<Response, Error, Body, unknown>}- The mutation object from `useMutation` hook.
  */
