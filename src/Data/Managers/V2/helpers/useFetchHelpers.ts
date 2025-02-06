@@ -34,7 +34,8 @@ export const useFetchHelpers = () => {
    * @param env - The environment identifier.
    * @returns The headers object.
    */
-  function createHeaders(env?: string) {
+  function createHeaders(options?: { env?: string; message?: string }) {
+    const { env, message } = options || {};
     const headers = new Headers({ "Content-Type": "application/json" });
 
     if (env) {
@@ -43,6 +44,10 @@ export const useFetchHelpers = () => {
 
     if (!!authHelper.getToken()) {
       headers.append("Authorization", `Bearer ${authHelper.getToken()}`);
+    }
+
+    if (message) {
+      headers.append("message", message);
     }
 
     return headers;

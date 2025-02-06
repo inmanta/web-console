@@ -49,6 +49,10 @@ const setup = (instanceId: string, editable: boolean = true) => {
         repo_branch: "branch",
         repo_url: "repo",
         projectName: "project",
+        halted: false,
+        settings: {
+          enable_lsm_expert_mode: false,
+        },
       },
     ]),
   );

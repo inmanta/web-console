@@ -1,8 +1,7 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Card, CardBody } from "@patternfly/react-core";
-import { useGetServiceConfig } from "@/Data/Managers/V2/GETTERS/GetServiceConfig/useGetServiceConfig";
+import { useGetServiceConfig } from "@/Data/Managers/V2/Service";
 import { ErrorView, LoadingView } from "@/UI/Components";
-import { DependencyContext } from "@/UI/Dependency";
 import { ConfigList } from "./ConfigList";
 
 interface Props {
@@ -10,12 +9,8 @@ interface Props {
 }
 
 export const Config: React.FC<Props> = ({ serviceName }) => {
-  const { environmentHandler } = useContext(DependencyContext);
-  const env = environmentHandler.useId();
-  const { data, isSuccess, isError, error, refetch } = useGetServiceConfig(
-    serviceName,
-    env,
-  ).useOneTime();
+  const { data, isSuccess, isError, error, refetch } =
+    useGetServiceConfig(serviceName).useOneTime();
 
   if (isError) {
     <Card aria-label="ServiceConfig-Failed" data-testid="ServiceConfig">

@@ -1,14 +1,13 @@
-import React, { useContext } from "react";
+import React from "react";
 
 import { useUrlStateWithString } from "@/Data";
-import { useGetInstance } from "@/Data/Managers/V2/GETTERS/GetInstance";
+import { useGetInstance } from "@/Data/Managers/V2/ServiceInstance";
 import {
   Description,
   ErrorView,
   LoadingView,
   PageContainer,
 } from "@/UI/Components";
-import { DependencyContext } from "@/UI/Dependency";
 import { useRouteParams } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { Diagnose } from "./Diagnose";
@@ -16,7 +15,6 @@ import { LookBackSlider } from "./LookBackSlider";
 
 export const Page: React.FC = () => {
   const { service, instance } = useRouteParams<"Diagnose">();
-  const { environmentHandler } = useContext(DependencyContext);
 
   const [amountOfVersionToLookBehind, setAmountOfVersionToLookBehind] =
     useUrlStateWithString<string>({
@@ -27,7 +25,6 @@ export const Page: React.FC = () => {
   const { data, error, isError, isSuccess } = useGetInstance(
     service,
     instance,
-    environmentHandler.useId(),
   ).useContinuous();
 
   const handleSliding = (value: number) => {

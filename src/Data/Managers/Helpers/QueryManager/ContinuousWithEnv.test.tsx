@@ -31,6 +31,10 @@ test("GIVEN QueryManager.ContinuousWithEnv WHEN environment changes THEN the api
         repo_branch: "branch",
         repo_url: "repo",
         projectName: "project",
+        halted: false,
+        settings: {
+          enable_lsm_expert_mode: false,
+        },
       },
       {
         id: "bbb",
@@ -39,6 +43,10 @@ test("GIVEN QueryManager.ContinuousWithEnv WHEN environment changes THEN the api
         repo_branch: "branch",
         repo_url: "repo",
         projectName: "project",
+        halted: false,
+        settings: {
+          enable_lsm_expert_mode: false,
+        },
       },
     ]),
   );
