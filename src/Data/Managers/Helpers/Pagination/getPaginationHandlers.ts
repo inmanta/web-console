@@ -1,9 +1,16 @@
 import { Pagination } from "@/Core";
 
 export const getPaginationHandlers = (
-  links: Pagination.Links,
+  links: Pagination.Links | undefined,
   metadata: Pagination.Metadata,
 ): Pagination.Handlers => {
+  if (!links) {
+    return {
+      prev: "",
+      next: "",
+    };
+  }
+
   const { prev, next } = getPaginationHandlerUrls(links, metadata);
 
   return {
@@ -18,9 +25,10 @@ interface Urls {
 }
 
 const getPaginationHandlerUrls = (
-  { prev, next }: Pagination.Links,
+  links: Pagination.Links,
   metadata: Pagination.Metadata,
 ): Urls => {
+  const { next, prev } = links;
   const trimmedNext = next?.split(/(?=end=|start=)/g)[1];
   const trimmedPrev = prev?.split(/(?=end=|start=)/g)[1];
 

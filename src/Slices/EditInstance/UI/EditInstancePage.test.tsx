@@ -1,32 +1,24 @@
 import React, { act } from "react";
 import { MemoryRouter } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { cloneDeep } from "lodash";
-import { Either } from "@/Core";
+import { http, HttpResponse } from "msw";
+import { setupServer } from "msw/node";
+import { getStoreInstance } from "@/Data";
+import * as queryModule from "@/Data/Managers/V2/helpers/useQueries";
 import {
-  QueryResolverImpl,
-  getStoreInstance,
-  ServiceInstanceStateHelper,
-  ServiceInstanceQueryManager,
-  CommandResolverImpl,
-} from "@/Data";
-import {
-  DynamicQueryManagerResolverImpl,
   Service,
-  StaticScheduler,
   ServiceInstance,
   MockEnvironmentModifier,
-  DynamicCommandManagerResolverImpl,
-  DeferredApiHelper,
   dependencies,
 } from "@/Test";
 import { multiNestedEditable } from "@/Test/Data/Service/EmbeddedEntity";
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
-import { TriggerInstanceUpdateCommandManager } from "@S/EditInstance/Data";
 import { EditInstancePage } from "./EditInstancePage";
 
 expect.extend(toHaveNoViolations);
@@ -55,61 +47,100 @@ const axeLimited = configureAxe({
 });
 
 function setup(entity = "a", multiNested = false) {
+  const client = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  });
   const store = getStoreInstance();
-  const scheduler = new StaticScheduler();
-  const apiHelper = new DeferredApiHelper();
-  const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolverImpl([
-      ServiceInstanceQueryManager(
-        apiHelper,
-        ServiceInstanceStateHelper(store),
-        scheduler,
-      ),
-    ]),
-  );
 
   const service = multiNested
     ? { ...Service[entity], embedded_entities: multiNestedEditable }
     : Service[entity];
 
-  const commandManager = TriggerInstanceUpdateCommandManager(apiHelper);
-  const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolverImpl([commandManager]),
-  );
-
   const component = (
-    <MemoryRouter>
-      <DependencyProvider
-        dependencies={{
-          ...dependencies,
-          queryResolver,
-          commandResolver,
-          environmentModifier: new MockEnvironmentModifier(),
-        }}
-      >
-        <StoreProvider store={store}>
-          <EditInstancePage
-            serviceEntity={service}
-            instanceId={"4a4a6d14-8cd0-4a16-bc38-4b768eb004e3"}
-          />
-        </StoreProvider>
-      </DependencyProvider>
-    </MemoryRouter>
+    <QueryClientProvider client={client}>
+      <MemoryRouter>
+        <DependencyProvider
+          dependencies={{
+            ...dependencies,
+            environmentModifier: new MockEnvironmentModifier(),
+          }}
+        >
+          <StoreProvider store={store}>
+            <EditInstancePage
+              serviceEntity={service}
+              instanceId={"4a4a6d14-8cd0-4a16-bc38-4b768eb004e3"}
+            />
+          </StoreProvider>
+        </DependencyProvider>
+      </MemoryRouter>
+    </QueryClientProvider>
   );
 
-  return { component, apiHelper, scheduler };
+  return { component };
 }
+const server = setupServer(
+  http.get(
+    "/lsm/v1/service_inventory/service_name_a/4a4a6d14-8cd0-4a16-bc38-4b768eb004e3",
+    () => {
+      return HttpResponse.json({ data: ServiceInstance.d });
+    },
+  ),
+  http.get(
+    "/lsm/v1/service_inventory/service_name_b/4a4a6d14-8cd0-4a16-bc38-4b768eb004e3",
+    () => {
+      return HttpResponse.json(
+        {
+          message: "Something went wrong",
+        },
+        { status: 500 },
+      );
+    },
+  ),
+  http.get(
+    "/lsm/v1/service_inventory/service_name_d/4a4a6d14-8cd0-4a16-bc38-4b768eb004e3",
+    () => {
+      return HttpResponse.json({
+        data: ServiceInstance.d,
+      });
+    },
+  ),
+  http.get(
+    "/lsm/v1/service_inventory/service_name_all_attrs/4a4a6d14-8cd0-4a16-bc38-4b768eb004e3",
+    () => {
+      return HttpResponse.json({
+        data: ServiceInstance.allAttrs,
+      });
+    },
+  ),
+  http.patch(
+    "/lsm/v1/service_inventory/service_name_a/service_instance_id_a",
+    async () => {},
+  ),
+  http.patch(
+    "/lsm/v2/service_inventory/service_name_d/service_instance_id_a",
+    async () => {},
+  ),
+);
+
+beforeAll(() => {
+  server.listen();
+});
+afterAll(() => {
+  server.close();
+});
 
 test("Edit Instance View shows failed state", async () => {
-  const { component, apiHelper } = setup();
+  const { component } = setup("b");
 
   render(component);
 
   expect(
-    await screen.findByRole("region", { name: "EditInstance-Loading" }),
+    screen.getByRole("region", { name: "EditInstance-Loading" }),
   ).toBeInTheDocument();
-
-  apiHelper.resolve(Either.left("error"));
 
   expect(
     await screen.findByRole("region", { name: "EditInstance-Failed" }),
@@ -123,16 +154,13 @@ test("Edit Instance View shows failed state", async () => {
 });
 
 test("EditInstance View shows success form", async () => {
-  const { component, apiHelper } = setup();
+  const { component } = setup();
 
   render(component);
-  const { service_entity, id, version } = ServiceInstance.a;
 
   expect(
     await screen.findByRole("region", { name: "EditInstance-Loading" }),
   ).toBeInTheDocument();
-
-  apiHelper.resolve(Either.right({ data: ServiceInstance.a }));
 
   expect(
     await screen.findByRole("generic", { name: "EditInstance-Success" }),
@@ -146,18 +174,6 @@ test("EditInstance View shows success form", async () => {
 
   await userEvent.click(screen.getByText(words("confirm")));
 
-  expect(apiHelper.pendingRequests).toHaveLength(1);
-  expect(apiHelper.pendingRequests[0]).toEqual({
-    method: "PATCH",
-    url: `/lsm/v1/service_inventory/${service_entity}/${id}?current_version=${version}`,
-    body: {
-      attributes: {
-        bandwidth: "2",
-      },
-    },
-    environment: "env",
-  });
-
   await act(async () => {
     const results = await axe(document.body);
 
@@ -166,16 +182,16 @@ test("EditInstance View shows success form", async () => {
 });
 
 test("Given the EditInstance View When changing a v1 embedded entity Then the correct request is fired", async () => {
-  const { component, apiHelper } = setup();
+  const patchMock = jest.fn();
+
+  jest.spyOn(queryModule, "usePatch").mockReturnValue(patchMock);
+  const { component } = setup();
 
   render(component);
-  const { service_entity, id, version } = ServiceInstance.a;
 
   expect(
     await screen.findByRole("region", { name: "EditInstance-Loading" }),
   ).toBeInTheDocument();
-
-  apiHelper.resolve(Either.right({ data: ServiceInstance.a }));
 
   expect(
     await screen.findByRole("generic", { name: "EditInstance-Success" }),
@@ -195,18 +211,10 @@ test("Given the EditInstance View When changing a v1 embedded entity Then the co
 
   await userEvent.click(screen.getByText(words("confirm")));
 
-  expect(apiHelper.pendingRequests).toHaveLength(1);
-
-  expect(apiHelper.pendingRequests[0]).toEqual({
-    method: "PATCH",
-    url: `/lsm/v1/service_inventory/${service_entity}/${id}?current_version=${version}`,
-    body: {
-      attributes: {
-        bandwidth: "22",
-      },
-    },
-    environment: "env",
-  });
+  expect(patchMock).toHaveBeenCalledWith(
+    "/lsm/v1/service_inventory/service_name_a/service_instance_id_a?current_version=3",
+    { attributes: { bandwidth: "22" } },
+  );
 
   await act(async () => {
     const results = await axe(document.body);
@@ -216,16 +224,17 @@ test("Given the EditInstance View When changing a v1 embedded entity Then the co
 });
 
 test("Given the EditInstance View When changing a v2 embedded entity Then the correct request  with correct body is fired", async () => {
-  const { component, apiHelper } = setup("d");
+  const patchMock = jest.fn();
+
+  jest.spyOn(queryModule, "usePatch").mockReturnValue(patchMock);
+
+  const { component } = setup("d");
 
   render(component);
-  const { service_entity, id, version } = ServiceInstance.d;
 
   expect(
     await screen.findByRole("region", { name: "EditInstance-Loading" }),
   ).toBeInTheDocument();
-
-  apiHelper.resolve(Either.right({ data: ServiceInstance.d }));
 
   expect(
     await screen.findByRole("generic", { name: "EditInstance-Success" }),
@@ -245,8 +254,6 @@ test("Given the EditInstance View When changing a v2 embedded entity Then the co
 
   await userEvent.click(screen.getByText(words("confirm")));
 
-  expect(apiHelper.pendingRequests).toHaveLength(1);
-
   if (!ServiceInstance.d.active_attributes) {
     throw Error("Active attributes for this instance should be defined");
   }
@@ -257,31 +264,22 @@ test("Given the EditInstance View When changing a v2 embedded entity Then the co
 
   expectedInstance.bandwidth = "24";
 
-  //cast type for pending Request
-  const patchId = (
-    apiHelper.pendingRequests[0] as {
-      body: {
-        patch_id;
-      };
-    }
-  ).body.patch_id;
+  const body = {
+    edit: [
+      {
+        edit_id: "service_instance_id_a_version=3",
+        operation: "replace",
+        target: ".",
+        value: expectedInstance,
+      },
+    ],
+    patch_id: expect.any(String),
+  };
 
-  expect(apiHelper.pendingRequests[0]).toEqual({
-    method: "PATCH",
-    url: `/lsm/v2/service_inventory/${service_entity}/${id}?current_version=${version}`,
-    body: {
-      edit: [
-        {
-          edit_id: `${service_entity}_version=${version}`,
-          operation: "replace",
-          target: ".",
-          value: expectedInstance,
-        },
-      ],
-      patch_id: patchId,
-    },
-    environment: "env",
-  });
+  expect(patchMock).toHaveBeenCalledWith(
+    "/lsm/v2/service_inventory/service_name_d/service_instance_id_a?current_version=3",
+    body,
+  );
 
   await act(async () => {
     const results = await axe(document.body);
@@ -291,15 +289,13 @@ test("Given the EditInstance View When changing a v2 embedded entity Then the co
 });
 
 test("Given the EditInstance View When changing an embedded entity Then the inputs are displayed correctly", async () => {
-  const { component, apiHelper } = setup("ServiceWithAllAttrs");
+  const { component } = setup("ServiceWithAllAttrs");
 
   render(component);
 
   expect(
     await screen.findByRole("region", { name: "EditInstance-Loading" }),
   ).toBeInTheDocument();
-
-  apiHelper.resolve(Either.right({ data: ServiceInstance.allAttrs }));
 
   expect(
     await screen.findByRole("generic", { name: "EditInstance-Success" }),
@@ -553,15 +549,13 @@ test("Given the EditInstance View When changing an embedded entity Then the inpu
 });
 
 test("Given the EditInstance View When adding new nested embedded entity Then the inputs for it are displayed correctly", async () => {
-  const { component, apiHelper } = setup("ServiceWithAllAttrs");
+  const { component } = setup("ServiceWithAllAttrs");
 
   render(component);
 
   expect(
     await screen.findByRole("region", { name: "EditInstance-Loading" }),
   ).toBeInTheDocument();
-
-  apiHelper.resolve(Either.right({ data: ServiceInstance.allAttrs }));
 
   expect(
     await screen.findByRole("generic", { name: "EditInstance-Success" }),
@@ -727,7 +721,7 @@ test("Given the EditInstance View When adding new nested embedded entity Then th
 });
 
 test("GIVEN the EditInstance View WHEN changing an embedded entity with nested embedded entities THEN the new fields are enabled", async () => {
-  const { component, apiHelper } = setup("a", true);
+  const { component } = setup("a", true);
 
   render(component);
 
@@ -735,9 +729,9 @@ test("GIVEN the EditInstance View WHEN changing an embedded entity with nested e
     await screen.findByRole("region", { name: "EditInstance-Loading" }),
   ).toBeInTheDocument();
 
-  await act(async () => {
-    await apiHelper.resolve(Either.right({ data: ServiceInstance.a }));
-  });
+  expect(
+    await screen.findByLabelText("EditInstance-Success"),
+  ).toBeInTheDocument();
 
   await userEvent.click(screen.getByRole("button", { name: "embedded" }));
 

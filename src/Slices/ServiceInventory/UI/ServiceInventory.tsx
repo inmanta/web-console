@@ -134,7 +134,7 @@ export const ServiceInventory: React.FunctionComponent<{
             service={service}
             paginationWidget={
               <PaginationWidget
-                data={{ metadata: data.metadata, handlers: data.links }}
+                data={data}
                 pageSize={pageSize}
                 setPageSize={setPageSize}
                 setCurrentPage={setCurrentPage}
