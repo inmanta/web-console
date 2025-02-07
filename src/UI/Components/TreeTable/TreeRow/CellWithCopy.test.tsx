@@ -1,71 +1,76 @@
 import React from "react";
 import { MemoryRouter } from "react-router-dom";
 import { Table /* data-codemods */, Tbody, Tr } from "@patternfly/react-table";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
-import { Either } from "@/Core";
-import {
-  CommandResolverImpl,
-  defaultAuthContext,
-  getStoreInstance,
-  QueryManagerResolverImpl,
-  QueryResolverImpl,
-} from "@/Data";
-import { UpdateInstanceAttributeCommandManager } from "@/Data/Managers/UpdateInstanceAttribute";
-import {
-  DeferredApiHelper,
-  dependencies,
-  DynamicCommandManagerResolverImpl,
-  ServiceInstance,
-  StaticScheduler,
-} from "@/Test";
+import { http, HttpResponse } from "msw";
+import { setupServer } from "msw/node";
+import { getStoreInstance } from "@/Data";
+import { dependencies, ServiceInstance } from "@/Test";
 import { TreeTableCellContext } from "@/UI/Components/TreeTable/RowReferenceContext";
 import { DependencyProvider } from "@/UI/Dependency";
 import { CellWithCopy } from "./CellWithCopy";
 
 function setup(props) {
+  const client = new QueryClient();
   const store = getStoreInstance();
-  const scheduler = new StaticScheduler();
-  const apiHelper = new DeferredApiHelper();
-  const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler),
-  );
-  const updateAttribute = UpdateInstanceAttributeCommandManager(
-    defaultAuthContext,
-    apiHelper,
-  );
-  const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolverImpl([updateAttribute]),
-  );
+
   const onClickFn = jest.fn();
 
   const component = (
-    <MemoryRouter>
-      <DependencyProvider
-        dependencies={{
-          ...dependencies,
-          queryResolver,
-          commandResolver,
-        }}
-      >
-        <StoreProvider store={store}>
-          <TreeTableCellContext.Provider value={{ onClick: onClickFn }}>
-            <Table>
-              <Tbody>
-                <Tr>
-                  <CellWithCopy {...props} />
-                </Tr>
-              </Tbody>
-            </Table>
-          </TreeTableCellContext.Provider>
-        </StoreProvider>
-      </DependencyProvider>
-    </MemoryRouter>
+    <QueryClientProvider client={client}>
+      <MemoryRouter>
+        <DependencyProvider dependencies={dependencies}>
+          <StoreProvider store={store}>
+            <TreeTableCellContext.Provider value={{ onClick: onClickFn }}>
+              <Table>
+                <Tbody>
+                  <Tr>
+                    <CellWithCopy {...props} />
+                  </Tr>
+                </Tbody>
+              </Table>
+            </TreeTableCellContext.Provider>
+          </StoreProvider>
+        </DependencyProvider>
+      </MemoryRouter>
+    </QueryClientProvider>
   );
 
-  return { component, apiHelper, scheduler, onClickFn };
+  return { component, onClickFn };
 }
+
+const server = setupServer(
+  http.get("/lsm/v1/service_inventory/test_service/someValue", () => {
+    return HttpResponse.json({
+      data: {
+        ...ServiceInstance.a,
+        service_identity_attribute_value: "someValue",
+        name: "test_service",
+        id: "someValue",
+      },
+    });
+  }),
+  http.get("/lsm/v1/service_inventory/test_service/someOtherValue", () => {
+    return HttpResponse.json({
+      data: {
+        ...ServiceInstance.a,
+        service_identity_attribute_value: "someOtherValue",
+        name: "test_service2",
+        id: "someOtherValue",
+      },
+    });
+  }),
+);
+
+beforeAll(() => {
+  server.listen();
+});
+afterAll(() => {
+  server.close();
+});
 
 test("Given CellWithCopy When a cell has a simple value only Then it is shown", async () => {
   const props = { label: "attribute", value: "someValue" };
@@ -87,7 +92,7 @@ test("Given CellWithCopy When a cell has on click Then it is rendered as a link"
 
   await userEvent.click(cell);
 
-  expect(onClickFn).toBeCalledWith(props.value);
+  expect(onClickFn).toHaveBeenCalledWith(props.value);
 });
 
 test("Given CellWithCopy When a cell has entity and on click Then it is rendered as a link", async () => {
@@ -97,18 +102,9 @@ test("Given CellWithCopy When a cell has entity and on click Then it is rendered
     hasRelation: true,
     serviceName: "test_service",
   };
-  const { component, apiHelper, onClickFn } = setup(props);
+  const { component, onClickFn } = setup(props);
 
   render(component);
-
-  apiHelper.resolve(
-    Either.right({
-      data: {
-        ...ServiceInstance.a,
-        service_identity_attribute_value: undefined,
-      },
-    }),
-  );
 
   const cell = await screen.findByText(props.value);
 
@@ -116,7 +112,7 @@ test("Given CellWithCopy When a cell has entity and on click Then it is rendered
 
   await userEvent.click(cell);
 
-  expect(onClickFn).toBeCalledWith(props.value, props.serviceName);
+  expect(onClickFn).toHaveBeenCalledWith(props.value, props.serviceName);
 });
 
 test("Given CellWithCopy When a cell has entity, multiple values and on click Then multiple links are rendered", async () => {
@@ -127,26 +123,9 @@ test("Given CellWithCopy When a cell has entity, multiple values and on click Th
     hasRelation: true,
     serviceName: "test_service",
   };
-  const { component, apiHelper, onClickFn } = setup(props);
+  const { component, onClickFn } = setup(props);
 
   render(component);
-
-  apiHelper.resolve(
-    Either.right({
-      data: {
-        ...ServiceInstance.a,
-        service_identity_attribute_value: undefined,
-      },
-    }),
-  );
-  apiHelper.resolve(
-    Either.right({
-      data: {
-        ...ServiceInstance.b,
-        service_identity_attribute_value: undefined,
-      },
-    }),
-  );
 
   const firstCell = await screen.findByText(someValue);
 
@@ -154,7 +133,7 @@ test("Given CellWithCopy When a cell has entity, multiple values and on click Th
 
   await userEvent.click(firstCell);
 
-  expect(onClickFn).toBeCalledWith(someValue, props.serviceName);
+  expect(onClickFn).toHaveBeenCalledWith(someValue, props.serviceName);
 
   const otherCell = await screen.findByText(someOtherValue);
 
@@ -162,5 +141,5 @@ test("Given CellWithCopy When a cell has entity, multiple values and on click Th
 
   await userEvent.click(otherCell);
 
-  expect(onClickFn).toBeCalledWith(someOtherValue, props.serviceName);
+  expect(onClickFn).toHaveBeenCalledWith(someOtherValue, props.serviceName);
 });

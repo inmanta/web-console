@@ -9,7 +9,6 @@ import { Either } from "@/Core";
 import {
   CommandManagerResolverImpl,
   CommandResolverImpl,
-  defaultAuthContext,
   getStoreInstance,
   QueryManagerResolverImpl,
   QueryResolverImpl,
@@ -37,7 +36,7 @@ const setup = (entries?: string[]) => {
   );
 
   const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolverImpl(store, apiHelper, defaultAuthContext),
+    new CommandManagerResolverImpl(store, apiHelper),
   );
 
   const request = (query: string) => ({

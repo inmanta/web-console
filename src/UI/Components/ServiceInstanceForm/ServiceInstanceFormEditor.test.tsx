@@ -73,6 +73,8 @@ const setup = (
                     isEdit={isEdit}
                     originalAttributes={originalAttributes}
                     service_entity="service_entity"
+                    isDirty={false}
+                    setIsDirty={jest.fn()}
                   />
                 }
               />

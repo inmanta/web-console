@@ -5,7 +5,6 @@ import { StoreProvider } from "easy-peasy";
 import {
   CommandManagerResolverImpl,
   CommandResolverImpl,
-  defaultAuthContext,
   getStoreInstance,
   QueryManagerResolverImpl,
   QueryResolverImpl,
@@ -37,7 +36,7 @@ function setup({
     new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler),
   );
   const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolverImpl(store, apiHelper, defaultAuthContext),
+    new CommandManagerResolverImpl(store, apiHelper),
   );
 
   const environmentModifier = new MockEnvironmentModifier(details);

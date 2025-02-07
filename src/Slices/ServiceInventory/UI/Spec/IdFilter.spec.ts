@@ -1,24 +1,20 @@
-import { act } from "react";
 import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { Either } from "@/Core";
-import { Service, ServiceInstance, Pagination } from "@/Test";
+import { ServiceInstance } from "@/Test";
 import { ServiceInventoryPrepper } from "./ServiceInventoryPrepper";
+import { filterServer } from "./serverSetup";
 
 test("GIVEN The Service Inventory WHEN the user filters on id ('a') THEN only 1 instance is shown", async () => {
-  const { component, apiHelper } = new ServiceInventoryPrepper().prep();
+  filterServer.listen();
+  const { component } = new ServiceInventoryPrepper().prep();
 
   render(component);
 
-  await act(async () => {
-    await apiHelper.resolve(
-      Either.right({
-        data: [ServiceInstance.a, ServiceInstance.b],
-        links: Pagination.links,
-        metadata: Pagination.metadata,
-      }),
-    );
+  const rowsBefore = await screen.findAllByRole("row", {
+    name: "InstanceRow-Intro",
   });
+
+  expect(rowsBefore.length).toEqual(2);
 
   const filterBar = screen.getByRole("toolbar", { name: "FilterBar" });
 
@@ -34,25 +30,13 @@ test("GIVEN The Service Inventory WHEN the user filters on id ('a') THEN only 1 
 
   const input = screen.getByRole("searchbox", { name: "IdFilter" });
 
-  await userEvent.type(input, `${ServiceInstance.a.id}{enter}`);
-
-  expect(apiHelper.pendingRequests[0].url).toEqual(
-    `/lsm/v1/service_inventory/${Service.a.name}?include_deployment_progress=True&limit=20&filter.id_or_service_identity=${ServiceInstance.a.id}&sort=created_at.desc`,
-  );
-
-  await act(async () => {
-    await apiHelper.resolve(
-      Either.right({
-        data: [ServiceInstance.a],
-        links: Pagination.links,
-        metadata: Pagination.metadata,
-      }),
-    );
-  });
+  await userEvent.type(input, `${ServiceInstance.c.id}{enter}`);
 
   const rowsAfter = await screen.findAllByRole("row", {
     name: "InstanceRow-Intro",
   });
 
   expect(rowsAfter.length).toEqual(1);
+
+  filterServer.close();
 });

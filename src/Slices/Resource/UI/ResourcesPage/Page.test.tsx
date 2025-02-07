@@ -11,7 +11,6 @@ import {
   CommandResolverImpl,
   QueryManagerResolverImpl,
   CommandManagerResolverImpl,
-  defaultAuthContext,
 } from "@/Data";
 import {
   DeferredApiHelper,
@@ -45,7 +44,7 @@ function setup(entries?: string[]) {
     new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler),
   );
   const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolverImpl(store, apiHelper, defaultAuthContext),
+    new CommandManagerResolverImpl(store, apiHelper),
   );
   const environment = "34a961ba-db3c-486e-8d85-1438d8e88909";
 
