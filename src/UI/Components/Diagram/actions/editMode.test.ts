@@ -1,6 +1,6 @@
 import { dia } from "@inmanta/rappid";
 import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from "@/Core";
-import { InstanceWithRelations } from "@/Data/Managers/V2/GETTERS/GetInstanceWithRelations";
+import { InstanceWithRelations } from "@/Data/Managers/V2/ServiceInstance";
 import {
   containerModel,
   mockedInstanceWithRelations,

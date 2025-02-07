@@ -1,37 +1,30 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { Banner, Button, Flex, Spinner } from "@patternfly/react-core";
-import { useUpdateEnvConfig } from "@/Data/Managers/V2/POST/UpdateEnvConfig";
+import { useUpdateEnvConfig } from "@/Data/Managers/V2/Environment";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { ToastAlert } from "../ToastAlert";
-
-interface Props {
-  environmentId: string;
-}
 
 /**
  * A React component that displays a banner when the expert mode is enabled.
  *
  * @props {object} props - The properties passed to the component.
- * @prop {string} environmentId -The ID of the environment.
  * @returns { React.FC<Props> | null} The rendered banner if the expert mode is enabled, otherwise null.
  */
-export const ExpertBanner: React.FC<Props> = ({ environmentId }) => {
+export const ExpertBanner: React.FC = () => {
   const [errorMessage, setMessage] = useState<string | undefined>(undefined);
   const { environmentModifier } = useContext(DependencyContext);
-  const { mutate, isError, error } = useUpdateEnvConfig(environmentId);
-  const [isLoading, setIsLoading] = useState(false); // isLoading is to indicate the asynchronous operation is in progress, as we need to wait until setting will be updated, getters are still in the V1 - task https://github.com/inmanta/web-console/issues/5999
-
-  useEffect(() => {
-    if (isError) {
+  const { mutate } = useUpdateEnvConfig({
+    onError: (error) => {
       setMessage(error.message);
       setIsLoading(false);
-    }
-  }, [isError, error]);
+    },
+  });
+  const [isLoading, setIsLoading] = useState(false); // isLoading is to indicate the asynchronous operation is in progress, as we need to wait until setting will be updated, getters are still in the V1 - task https://github.com/inmanta/web-console/issues/5999
 
   return environmentModifier.useIsExpertModeEnabled() ? (
     <>
-      {isError && errorMessage && (
+      {errorMessage && (
         <ToastAlert
           data-testid="ToastAlert"
           title={words("error")}
@@ -55,7 +48,10 @@ export const ExpertBanner: React.FC<Props> = ({ environmentId }) => {
             isInline
             onClick={() => {
               setIsLoading(true);
-              mutate({ id: "enable_lsm_expert_mode", value: false });
+              mutate({
+                id: "enable_lsm_expert_mode",
+                updatedValue: { value: false },
+              });
             }}
           >
             {words("banner.disableExpertMode")}

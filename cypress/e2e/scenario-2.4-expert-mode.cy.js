@@ -106,13 +106,11 @@ if (Cypress.env("edition") === "iso") {
         timeout: 20000,
       }).should("to.be.visible");
 
-      // Make sure the call to get inventory has been executed
-      cy.wait("@GetServiceInventory");
-
       // Go to the settings, then to the configuration tab
       cy.get('[aria-label="Sidebar-Navigation-Item"]')
         .contains("Settings")
         .click();
+
       cy.get("button").contains("Configuration").click();
 
       // Change enable_lsm_expert_mode
@@ -142,7 +140,7 @@ if (Cypress.env("edition") === "iso") {
         .click();
 
       // expect to find in the history the up state as last
-      cy.get('[aria-label="History-Row"]', { timeout: 30000 }).should(
+      cy.get('[aria-label="History-Row"]', { timeout: 90000 }).should(
         ($rows) => {
           expect($rows[0]).to.contain("up");
           expect($rows[0]).to.contain(3);

@@ -13,7 +13,7 @@ import { InstanceAttributeModel } from "@/Core";
 import {
   ExpertPatchAttributes,
   usePatchAttributesExpert,
-} from "@/Data/Managers/V2/PATCH/PatchAttributesExpert";
+} from "@/Data/Managers/V2/ServiceInstance";
 import { InstanceDetailsContext } from "@/Slices/ServiceInstanceDetails/Core/Context";
 import { AttributeSets } from "@/Slices/ServiceInstanceDetails/Utils";
 import { DependencyContext, words } from "@/UI";
@@ -44,11 +44,10 @@ export const AttributesEditor: React.FC<Props> = ({
   service_entity,
   selectedVersion,
 }) => {
-  const { environmentHandler, authHelper } = useContext(DependencyContext);
+  const { authHelper } = useContext(DependencyContext);
   const { instance } = useContext(InstanceDetailsContext);
   const isLatestVersion = String(instance.version) === selectedVersion;
 
-  const environment = environmentHandler.useId();
   const username = authHelper.getUser();
 
   const [selectedSet, setSelectedSet] = useState(dropdownOptions[0]);
@@ -61,8 +60,14 @@ export const AttributesEditor: React.FC<Props> = ({
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
 
-  const { mutate, isError, error, isPending, isSuccess } =
-    usePatchAttributesExpert(environment, instance.id, instance.service_entity);
+  const { mutate, isPending } = usePatchAttributesExpert(
+    instance.id,
+    instance.service_entity,
+    {
+      onError: (error) => setErrorMessage(error.message),
+      onSuccess: () => setIsModalOpen(false),
+    },
+  );
 
   /**
    * Handles the change of the selected attribute Set.
@@ -123,15 +128,6 @@ export const AttributesEditor: React.FC<Props> = ({
 
     mutate(patchAttributes);
   };
-
-  useEffect(() => {
-    if (isError) {
-      setErrorMessage(error.message);
-    }
-    if (isSuccess) {
-      setIsModalOpen(false);
-    }
-  }, [isSuccess, isError, error]);
 
   useEffect(() => {
     setEditorDataOriginal(JSON.stringify(attributeSets[selectedSet], null, 2));

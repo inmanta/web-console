@@ -38,6 +38,7 @@ export const filterable: ProjectModel[] = [
         project_id: "1",
         repo_branch: "master",
         repo_url: "github.com/test",
+        halted: false,
       },
       {
         id: "456",
@@ -45,6 +46,7 @@ export const filterable: ProjectModel[] = [
         project_id: "1",
         repo_branch: "master",
         repo_url: "github.com/test2",
+        halted: false,
       },
     ],
   },
@@ -58,6 +60,7 @@ export const filterable: ProjectModel[] = [
         project_id: "444",
         repo_branch: "master",
         repo_url: "gitlab.com/test",
+        halted: false,
       },
       {
         id: "101",
@@ -65,6 +68,7 @@ export const filterable: ProjectModel[] = [
         project_id: "444",
         repo_branch: "master",
         repo_url: "gitlab.com/test123",
+        halted: false,
       },
     ],
   },

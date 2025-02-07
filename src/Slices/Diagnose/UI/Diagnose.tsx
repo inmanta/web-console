@@ -1,7 +1,6 @@
-import React, { useContext } from "react";
-import { useGetDiagnostics } from "@/Data/Managers/V2/GETTERS/GetDiagnostics";
+import React from "react";
+import { useGetDiagnostics } from "@/Data/Managers/V2/ServiceInstance";
 import { EmptyView, ErrorView, LoadingView } from "@/UI/Components";
-import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { DiagnoseCardLayout } from "./DiagnoseCardLayout";
 
@@ -18,12 +17,9 @@ export const Diagnose: React.FC<Props> = ({
   lookBehind,
   instanceIdentity,
 }) => {
-  const { environmentHandler } = useContext(DependencyContext);
-  const env = environmentHandler.useId();
   const { data, error, isError, isSuccess } = useGetDiagnostics(
     serviceName,
     instanceId,
-    env,
   ).useOneTime(lookBehind);
 
   if (isError) {

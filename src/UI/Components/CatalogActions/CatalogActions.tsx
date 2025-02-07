@@ -8,7 +8,7 @@ import {
   Tooltip,
 } from "@patternfly/react-core";
 import { FileCodeIcon } from "@patternfly/react-icons";
-import { useExportCatalog } from "@/Data/Managers/V2/POST/ExportCatalog";
+import { useExportCatalog } from "@/Data/Managers/V2/Service";
 import { DependencyContext } from "@/UI/Dependency";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
@@ -29,9 +29,7 @@ import { ToastAlert } from "../ToastAlert";
 export const CatalogActions: React.FC = () => {
   const { triggerModal, closeModal } = useContext(ModalContext);
   const { urlManager, environmentHandler } = useContext(DependencyContext);
-  const { mutate, isError, error, isSuccess } = useExportCatalog(
-    environmentHandler.useId(),
-  );
+  const { mutate, isError, error, isSuccess } = useExportCatalog();
 
   const [message, setMessage] = useState("");
   const [toastTitle, setToastTitle] = useState("");
