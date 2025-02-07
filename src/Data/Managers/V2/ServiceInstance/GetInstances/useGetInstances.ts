@@ -23,21 +23,21 @@ interface ResponseBody {
 /**
  * React Query hook to fetch all instances for given service entity.
  *
- * @param {string} service  - the service entity name
- * @param instanceId {string} - the instance ID for which the data needs to be fetched.
+ * @param {string} serviceName  - the service entity serviceName
+ * @param {string} instanceId {string} - the instance ID for which the data needs to be fetched.
  *
  * @returns {GetInstance} An object containing the different available queries.
  * @returns {UseQueryResult<ResponseBody, Error>} returns.useOneTime - Fetch the instances with a single query.
  * @returns {UseQueryResult<ResponseBody, Error>} returns.useContinuous - Fetch the instances with a recurrent query with an interval of 5s.
  */
 export const useGetInstances = (
-  name: string,
+  serviceName: string,
   params: ServiceInstanceParams,
 ): GetInstance => {
   const { filter, sort, pageSize, currentPage } = params;
 
   const url = getUrl({
-    name,
+    name: serviceName,
     sort,
     filter,
     pageSize,
@@ -50,7 +50,7 @@ export const useGetInstances = (
       useQuery({
         queryKey: [
           "get_instances-one_time",
-          name,
+          serviceName,
           filter,
           sort,
           pageSize,
@@ -67,7 +67,7 @@ export const useGetInstances = (
       useQuery({
         queryKey: [
           "get_instances-continuous",
-          name,
+          serviceName,
           filter,
           sort,
           pageSize,

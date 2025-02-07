@@ -26,7 +26,7 @@ interface Props {
  *
  * Note: Parameters responsible for pagination on endpoint doesn't allow to pass numerical range for displayed results, or any other way to navigate through pages other than previous/next page
  */
-export const Provider: React.FC<Props> = ({
+export const OldPaginationWidget: React.FC<Props> = ({
   data,
   pageSize,
   setPageSize,

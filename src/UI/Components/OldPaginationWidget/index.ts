@@ -1,1 +1,1 @@
-export { Provider as OldPaginationWidget } from "./Provider";
+export * from "./Provider";

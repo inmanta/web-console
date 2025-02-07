@@ -11,7 +11,7 @@ interface GetInstanceConfig {
 }
 
 /**
- * React Query hook to fetch a the history logs for an instance
+ * React Query hook to fetch the configuration for an instance
  *
  * @param {string} service - the service entity
  * @param {string} id - the instance ID for which the data needs to be fetched.
