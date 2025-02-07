@@ -4,7 +4,7 @@ import {
 } from "@tanstack/react-query";
 import { Pagination } from "@/Core";
 import { InstanceLog } from "@/Core/Domain/HistoryLog";
-import { useGet } from "../../helpers/useQueries";
+import { useGet } from "../../helpers";
 
 export interface LogsResponse {
   data: InstanceLog[];

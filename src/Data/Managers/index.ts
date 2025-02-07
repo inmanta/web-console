@@ -1,27 +1,15 @@
 import { TriggerDryRun } from "./TriggerDryRun";
 export { TriggerDryRun };
 
-export * from "./DeleteInstance";
-export * from "./DeleteService";
-export * from "./DestroyInstance";
 export * from "./EnvironmentSettings";
 export * from "./GenerateToken";
 export * from "./GetSupportArchive";
-export * from "./GetInstance";
 export * from "./GetServerStatus";
 export * from "./HaltEnvironment";
-export * from "./InstanceConfig";
-export * from "./GetInstanceResources";
 export * from "./ModifyEnvironment";
 export * from "./GetEnvironments";
 export * from "./ResumeEnvironment";
-export * from "./Service";
-export * from "./ServiceConfig";
-export * from "./ServiceInstances";
-export * from "./Services";
 export * from "./TriggerCompile";
-export { TriggerSetStateCommandManager } from "./TriggerSetState";
-export * from "./TriggerForceState";
 export * from "./Deploy";
 export * from "./Repair";
 export * from "./ControlAgent";

@@ -5,7 +5,7 @@ import {
   DesiredStateVersion,
   DesiredStateVersionStatus,
 } from "@/Slices/DesiredState/Core/Domain";
-import { useGet } from "../../helpers/useQueries";
+import { useGet } from "../../helpers";
 import { getUrl } from "./getUrl";
 
 /**

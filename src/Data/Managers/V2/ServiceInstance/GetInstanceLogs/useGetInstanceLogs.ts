@@ -1,6 +1,6 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { InstanceLog } from "@/Core/Domain/HistoryLog";
-import { useGet } from "../../helpers/useQueries";
+import { useGet } from "../../helpers";
 
 /**
  * Return Signature of the useGetInstanceLogs React Query

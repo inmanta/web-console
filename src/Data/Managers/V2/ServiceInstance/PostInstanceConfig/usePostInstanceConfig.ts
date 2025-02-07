@@ -4,7 +4,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { Config } from "@/Core";
-import { usePost } from "../../helpers/useQueries";
+import { usePost } from "../../helpers";
 
 interface Body {
   current_version: number;

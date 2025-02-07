@@ -2,9 +2,10 @@ import {
   UseMutationOptions,
   UseMutationResult,
   useMutation,
+  useQueryClient,
 } from "@tanstack/react-query";
 import { ParsedNumber } from "@/Core";
-import { usePost } from "../../helpers/useQueries";
+import { usePost } from "../../helpers";
 
 export interface PostStateTransfer {
   message: string;
@@ -29,6 +30,7 @@ export const usePostStateTransfer = (
   service_entity: string,
   options?: UseMutationOptions<StateTransferResponse, Error, PostStateTransfer>,
 ): UseMutationResult<StateTransferResponse, Error, PostStateTransfer> => {
+  const client = useQueryClient();
   const post = usePost()<PostStateTransfer>;
 
   return useMutation({
@@ -38,6 +40,17 @@ export const usePostStateTransfer = (
         body,
       ),
     mutationKey: ["post_state_transfer"],
+    onSuccess: () => {
+      client.invalidateQueries({
+        queryKey: [service_entity, instance_id],
+      });
+      client.invalidateQueries({
+        queryKey: ["get_service_instances-one_time"],
+      });
+      client.invalidateQueries({
+        queryKey: ["get_service_instances-continuous"],
+      });
+    },
     ...options,
   });
 };

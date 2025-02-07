@@ -6,7 +6,7 @@ import {
 } from "@tanstack/react-query";
 import { ParsedNumber } from "@/Core";
 import { Dict } from "@/UI/Components";
-import { usePost } from "../../helpers/useQueries";
+import { usePost } from "../../helpers";
 
 interface ConfigUpdate {
   id: string;

@@ -3,7 +3,7 @@ import { Pagination, ServiceInstanceModelWithTargetStates } from "@/Core";
 import { ServiceInstanceParams } from "@/Core/Domain/ServiceInstanceParams";
 
 import { getPaginationHandlers } from "@/Data/Managers/Helpers";
-import { useGet } from "../../helpers/useQueries";
+import { useGet } from "../../helpers";
 import { getUrl } from "./getUrl";
 
 /**
@@ -43,7 +43,7 @@ export const useGetInstances = (
     pageSize,
     currentPage,
   });
-  const get = useGet()<{ data: ResponseBody }>;
+  const get = useGet()<ResponseBody>;
 
   return {
     useOneTime: (): UseQueryResult<ResponseBody, Error> =>
@@ -59,8 +59,8 @@ export const useGetInstances = (
         queryFn: () => get(url),
         retry: false,
         select: (data) => ({
-          ...data.data,
-          handlers: getPaginationHandlers(data.data.links, data.data.metadata),
+          ...data,
+          handlers: getPaginationHandlers(data.links, data.metadata),
         }),
       }),
     useContinuous: (): UseQueryResult<ResponseBody, Error> =>
@@ -76,8 +76,8 @@ export const useGetInstances = (
         queryFn: () => get(url),
         refetchInterval: 5000,
         select: (data) => ({
-          ...data.data,
-          handlers: getPaginationHandlers(data.data.links, data.data.metadata),
+          ...data,
+          handlers: getPaginationHandlers(data.links, data.metadata),
         }),
       }),
   };

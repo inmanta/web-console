@@ -4,7 +4,7 @@ import {
   useMutation,
 } from "@tanstack/react-query";
 import { Field, InstanceAttributeModel, ServiceInstanceModel } from "@/Core";
-import { usePost } from "../../helpers/useQueries";
+import { usePost } from "../../helpers";
 import { prepBody } from "./helper";
 
 interface Params {

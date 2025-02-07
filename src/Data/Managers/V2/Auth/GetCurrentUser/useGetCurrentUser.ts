@@ -1,5 +1,5 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
-import { useGet } from "../../helpers/useQueries";
+import { useGet } from "../../helpers";
 
 interface LoggedUser {
   username: string;

@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { usePost } from "../../helpers/useQueries";
+import { usePost } from "../../helpers";
 
 interface AddUSerResponse {
   data: {

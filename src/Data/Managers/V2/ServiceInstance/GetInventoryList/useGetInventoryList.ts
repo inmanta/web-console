@@ -1,6 +1,6 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { ServiceInstanceModel } from "@/Core";
-import { useGet } from "../../helpers/useQueries";
+import { useGet } from "../../helpers";
 
 /**
  * Inventories interface

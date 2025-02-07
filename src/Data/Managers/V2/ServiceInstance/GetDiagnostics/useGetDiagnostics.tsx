@@ -1,6 +1,6 @@
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { RawDiagnostics } from "@/Slices/Diagnose/Core/Domain";
-import { useGet } from "../../helpers/useQueries";
+import { useGet } from "../../helpers";
 
 /**
  * Return Signature of the useGetDiagnostics React Query

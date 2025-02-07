@@ -24,14 +24,6 @@ import {
   GetEnvironmentsContinuousManifest,
 } from "@/Data/Managers/GetEnvironmentsContinuous/interface";
 import {
-  GetServiceInstance,
-  GetServiceInstanceManifest,
-} from "@/Data/Managers/GetInstance/interface";
-import {
-  GetInstanceResources,
-  GetInstanceResourcesManifest,
-} from "@/Data/Managers/GetInstanceResources/interface";
-import {
   GetServerStatus,
   GetServerStatusManifest,
 } from "@/Data/Managers/GetServerStatus/interface";
@@ -39,26 +31,7 @@ import {
   GetVersionFile,
   GetVersionFileManifest,
 } from "@/Data/Managers/GetVersionFile/interface";
-import {
-  GetInstanceConfig,
-  GetInstanceConfigManifest,
-} from "@/Data/Managers/InstanceConfig/interfaces";
-import {
-  GetService,
-  GetServiceManifest,
-} from "@/Data/Managers/Service/interface";
-import {
-  GetServiceConfig,
-  GetServiceConfigManifest,
-} from "@/Data/Managers/ServiceConfig/interfaces";
-import {
-  GetServiceInstances,
-  GetServiceInstancesManifest,
-} from "@/Data/Managers/ServiceInstances/interface";
-import {
-  GetServices,
-  GetServicesManifest,
-} from "@/Data/Managers/Services/interface";
+
 import * as GetAgents from "@S/Agents/Core/Query";
 import * as GetCompileDetails from "@S/CompileDetails/Core/Query";
 import * as GetCompileReports from "@S/CompileReports/Core/Query";
@@ -87,14 +60,7 @@ import * as GetEnvironmentDetails from "@S/Settings/Core/GetEnvironmentDetailsQu
 import * as GetProjects from "@S/Settings/Core/GetProjectsQuery";
 
 export type Query =
-  | GetServices
-  | GetService
-  | GetServiceInstance
-  | GetServiceInstances
-  | GetServiceConfig
-  | GetInstanceResources
   | GetInstanceEvents.Query
-  | GetInstanceConfig
   | GetMetrics.Query
   | GetDiagnostics.Query
   | GetDiscoveredResources.Query
@@ -136,14 +102,7 @@ export type Type = Query;
  * types related to all the sub queries.
  */
 interface Manifest {
-  GetServices: GetServicesManifest;
-  GetService: GetServiceManifest;
-  GetServiceInstance: GetServiceInstanceManifest;
-  GetServiceInstances: GetServiceInstancesManifest;
-  GetServiceConfig: GetServiceConfigManifest;
-  GetInstanceResources: GetInstanceResourcesManifest;
   GetInstanceEvents: GetInstanceEvents.Manifest;
-  GetInstanceConfig: GetInstanceConfigManifest;
   GetDiagnostics: GetDiagnostics.Manifest;
   GetDiscoveredResources: GetDiscoveredResources.Manifest;
   GetMetrics: GetMetrics.Manifest;

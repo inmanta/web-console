@@ -1,6 +1,6 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { Config } from "@/Core";
-import { useGet } from "../../helpers/useQueries";
+import { useGet } from "../../helpers";
 
 /**
  * Return Signature of the useGetInstanceConfig React Query
