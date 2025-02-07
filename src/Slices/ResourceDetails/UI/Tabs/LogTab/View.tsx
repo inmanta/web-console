@@ -6,7 +6,11 @@ import {
   useUrlStateWithSort,
 } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import { EmptyView, PaginationWidget, RemoteDataView } from "@/UI/Components";
+import {
+  EmptyView,
+  OldPaginationWidget,
+  RemoteDataView,
+} from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { ResourceLogFilter } from "@S/ResourceDetails/Core/ResourceLog";
@@ -62,7 +66,7 @@ export const View: React.FC<Props> = ({ resourceId }) => {
     <>
       <Controls
         paginationWidget={
-          <PaginationWidget
+          <OldPaginationWidget
             data={data}
             pageSize={pageSize}
             setPageSize={setPageSize}

@@ -1,8 +1,9 @@
 import React, { useContext, useState } from "react";
 import { MenuItem } from "@patternfly/react-core";
 import { TrashAltIcon } from "@patternfly/react-icons";
-import { Maybe, VersionedServiceInstanceIdentifier } from "@/Core";
-import { ServiceInventoryContext } from "@/Slices/ServiceInventory/UI/ServiceInventory";
+import { useQueryClient } from "@tanstack/react-query";
+import { VersionedServiceInstanceIdentifier } from "@/Core";
+import { useDeleteInstance } from "@/Data/Managers/V2/ServiceInstance";
 import {
   ToastAlert,
   ActionDisabledTooltip,
@@ -24,18 +25,25 @@ export const DeleteAction: React.FC<Props> = ({
   version,
   service_entity,
 }) => {
+  const client = useQueryClient();
   const { triggerModal, closeModal } = useContext(ModalContext);
   const [errorMessage, setErrorMessage] = useState("");
-  const { commandResolver, environmentModifier } =
-    useContext(DependencyContext);
-  const { refetch } = useContext(ServiceInventoryContext);
+  const { environmentModifier } = useContext(DependencyContext);
 
-  const trigger = commandResolver.useGetTrigger<"DeleteInstance">({
-    kind: "DeleteInstance",
-    service_entity,
-    id,
-    version,
+  const { mutate, isPending } = useDeleteInstance(id, service_entity, version, {
+    onError: (error) => {
+      setErrorMessage(error.message);
+    },
+    onSuccess: () => {
+      client.invalidateQueries({
+        queryKey: ["get_instances-one_time", service_entity],
+      });
+      client.refetchQueries({
+        queryKey: ["get_instances-continuous", service_entity],
+      });
+    },
   });
+
   const isHalted = environmentModifier.useIsHalted();
 
   /**
@@ -66,11 +74,7 @@ export const DeleteAction: React.FC<Props> = ({
    */
   const onSubmit = async (): Promise<void> => {
     closeModal();
-    const result = await trigger(refetch);
-
-    if (Maybe.isSome(result)) {
-      setErrorMessage(result.value);
-    }
+    mutate();
   };
 
   return (
@@ -94,6 +98,7 @@ export const DeleteAction: React.FC<Props> = ({
           itemId="delete"
           onClick={handleModalToggle}
           isDisabled={isDisabled || isHalted}
+          isLoading={isPending}
           icon={<TrashAltIcon />}
           {...(!isDisabled && !isHalted && { isDanger: true })}
         >

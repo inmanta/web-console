@@ -7,8 +7,8 @@ import {
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import {
   EmptyView,
+  OldPaginationWidget,
   PageContainer,
-  PaginationWidget,
   RemoteDataView,
 } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
@@ -57,7 +57,7 @@ export const Page: React.FC = () => {
         filter={filter}
         setFilter={setFilter}
         paginationWidget={
-          <PaginationWidget
+          <OldPaginationWidget
             data={data}
             pageSize={pageSize}
             setPageSize={setPageSize}

@@ -13,7 +13,6 @@ import { ParsedNumber, Attributes, AttributeAnnotations } from "@/Core";
 import { Toggle } from "@/UI/Components/Toggle";
 import { ClipboardCopyButton } from "../../ClipboardCopyButton";
 import { CellWithCopy } from "./CellWithCopy";
-import { CellWithCopyExpert } from "./CellWithCopyExpert";
 import { Indent } from "./Indent";
 import { TreeRow } from "./TreeRow";
 
@@ -39,11 +38,6 @@ const warningMessage =
  *
  * @param {RowProps} props - The props of the component.
  *  @prop {TreeRow} row - The row object.
- *  @prop {string} id - The id of the row.
- *  @prop {string} serviceEntity - The service entity.
- *  @prop {ParsedNumber} version - The version number.
- *  @prop {boolean} showExpertMode - The flag to show the expert mode.
- *  @prop {Attributes} attributes - The attributes object.
  *  @prop {AttributeAnnotations} annotations - The annotations object, optional.
  *  @prop {function} setTab - The callback for setting the active tab, optional.
  *
@@ -51,11 +45,6 @@ const warningMessage =
  */
 export const TreeRowView: React.FC<RowProps> = ({
   row,
-  id,
-  serviceEntity,
-  version,
-  showExpertMode,
-  attributes,
   annotations,
   setTab = () => {},
 }) => {
@@ -77,37 +66,16 @@ export const TreeRowView: React.FC<RowProps> = ({
             </Indent>
           </Td>
           {annotations?.web_presentation !== "documentation" &&
-            row.valueCells.map(({ label, value, hasRelation, serviceName }) =>
-              showExpertMode ? (
-                <CellWithCopyExpert
-                  label={label}
-                  value={
-                    label === "description" && value === "null" ? "" : value
-                  }
-                  hasRelation={hasRelation}
-                  serviceName={serviceName}
-                  className={"pf-v6-c-truncate"}
-                  key={`${label}-${value}-expert`}
-                  path={row.id}
-                  instanceId={id}
-                  version={version}
-                  serviceEntity={serviceEntity}
-                  attributeType={row.type ? row.type : "undefined"}
-                  parentObject={null}
-                />
-              ) : (
-                <CellWithCopy
-                  label={label}
-                  value={
-                    label === "description" && value === "null" ? "" : value
-                  }
-                  hasRelation={hasRelation}
-                  serviceName={serviceName}
-                  className={"pf-v6-c-truncate"}
-                  key={`${label}-${value}`}
-                />
-              ),
-            )}
+            row.valueCells.map(({ label, value, hasRelation, serviceName }) => (
+              <CellWithCopy
+                label={label}
+                value={label === "description" && value === "null" ? "" : value}
+                hasRelation={hasRelation}
+                serviceName={serviceName}
+                className={"pf-v6-c-truncate"}
+                key={`${label}-${value}`}
+              />
+            ))}
         </Tr>
       );
 
@@ -189,33 +157,16 @@ export const TreeRowView: React.FC<RowProps> = ({
               {row.primaryCell.value}
             </Indent>
           </Td>
-          {row.valueCells.map(({ label, value, hasRelation, serviceName }) =>
-            showExpertMode ? (
-              <CellWithCopyExpert
-                label={label}
-                value={label === "description" && value === "null" ? "" : value}
-                hasRelation={hasRelation}
-                serviceName={serviceName}
-                className={"pf-v6-c-truncate"}
-                key={`${label}-${value}-expert`}
-                path={row.id}
-                instanceId={id}
-                version={version}
-                serviceEntity={serviceEntity}
-                attributeType={row.type ? row.type : "undefined"}
-                parentObject={attributes[label]}
-              />
-            ) : (
-              <CellWithCopy
-                label={label}
-                value={label === "description" && value === "null" ? "" : value}
-                hasRelation={hasRelation}
-                serviceName={serviceName}
-                className={"pf-v6-c-truncate"}
-                key={`${label}-${value}`}
-              />
-            ),
-          )}
+          {row.valueCells.map(({ label, value, hasRelation, serviceName }) => (
+            <CellWithCopy
+              label={label}
+              value={label === "description" && value === "null" ? "" : value}
+              hasRelation={hasRelation}
+              serviceName={serviceName}
+              className={"pf-v6-c-truncate"}
+              key={`${label}-${value}`}
+            />
+          ))}
         </Tr>
       );
   }

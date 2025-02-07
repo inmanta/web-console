@@ -33,6 +33,8 @@ interface Props {
   isSubmitDisabled?: boolean;
   apiVersion?: "v1" | "v2";
   isEdit?: boolean;
+  isDirty: boolean;
+  setIsDirty: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 /**
@@ -83,6 +85,8 @@ export const ServiceInstanceForm: React.FC<Props> = ({
   isSubmitDisabled,
   apiVersion = "v1",
   isEdit = false,
+  isDirty,
+  setIsDirty,
 }) => {
   const [formState, setFormState] = useState(
     getFormState(fields, apiVersion, originalAttributes, isEdit),
@@ -92,7 +96,6 @@ export const ServiceInstanceForm: React.FC<Props> = ({
     getFormState(fields, apiVersion, originalAttributes, isEdit),
   );
 
-  const [isDirty, setIsDirty] = useState(false);
   const [shouldPerformCancel, setShouldCancel] = useState(false);
   const [isForm, setIsForm] = useState(true);
   const [isEditorValid, setIsEditorValid] = useState(true);
@@ -135,7 +138,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
         });
       }
     },
-    [isDirty],
+    [isDirty, setIsDirty],
   );
 
   /**
