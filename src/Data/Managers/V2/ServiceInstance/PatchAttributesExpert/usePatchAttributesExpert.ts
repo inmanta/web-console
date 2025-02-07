@@ -4,7 +4,7 @@ import {
   useMutation,
 } from "@tanstack/react-query";
 import { ParsedNumber } from "@/Core";
-import { usePatch } from "../../helpers/useQueries";
+import { usePatch } from "../../helpers";
 
 /**
  * Required attributes to construct the patch request to edit an instance attribute set in Expert mode

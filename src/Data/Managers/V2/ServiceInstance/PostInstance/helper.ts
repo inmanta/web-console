@@ -1,4 +1,4 @@
-import { Field, InstanceAttributeModel, ServiceInstanceModel } from "@/Core";
+import { Field, InstanceAttributeModel } from "@/Core";
 import { sanitizeAttributes } from "@/Data/Common";
 
 export function prepBody(

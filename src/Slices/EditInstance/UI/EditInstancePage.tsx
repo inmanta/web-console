@@ -29,7 +29,9 @@ export const EditInstancePage: React.FC<{
 
   if (isError) {
     return (
-      <ErrorView ariaLabel="DuplicateInstance-Error" message={error.message} />
+      <Wrapper id={instanceId}>
+        <ErrorView message={error.message} ariaLabel="EditInstance-Failed" />
+      </Wrapper>
     );
   }
   if (isSuccess) {
@@ -40,7 +42,9 @@ export const EditInstancePage: React.FC<{
 
     return (
       <Wrapper id={identifier}>
-        <EditForm instance={data} serviceEntity={serviceEntity} />
+        <div aria-label="EditInstance-Success">
+          <EditForm instance={data} serviceEntity={serviceEntity} />
+        </div>
       </Wrapper>
     );
   }

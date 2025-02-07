@@ -4,7 +4,7 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
-import { useDelete } from "../../helpers/useQueries";
+import { useDelete } from "../../helpers";
 
 /**
  * React Query hook for Deleting an Service.

@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { FormSuggestion } from "@/Core";
-import { useGet } from "../../helpers/useQueries";
+import { useGet } from "../../helpers";
 
 interface ResponseData {
   parameter: Record<string, Record<string, unknown>>;
