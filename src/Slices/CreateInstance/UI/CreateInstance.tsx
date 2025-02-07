@@ -16,6 +16,17 @@ interface Props {
   serviceEntity: ServiceModel;
 }
 
+/**
+ * `CreateInstance` is a React functional component responsible for rendering a form
+ * to create a new instance of a given service entity. It handles form submission,
+ * error handling, and redirection upon successful creation.
+ *
+ * @component
+ * @props {Props} props - The props for the component.
+ * @prop {ServiceModel} props.serviceEntity - The service entity for which an instance is being created.
+ *
+ * @returns {React.FC<Props>} A React functional component.
+ */
 export const CreateInstance: React.FC<Props> = ({ serviceEntity }) => {
   const { environmentModifier, routeManager } = useContext(DependencyContext);
   const [isDirty, setIsDirty] = useState(false);

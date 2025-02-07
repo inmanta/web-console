@@ -15,6 +15,13 @@ const Wrapper: React.FC<React.PropsWithChildren<unknown>> = ({
   </PageContainer>
 );
 
+/**
+ * Wrapped component that fetches and displays event details for a specific service instance.
+ *
+ * @prop  {ServiceModel} service - The service model containing details about the service.
+ *
+ * @returns {React.FC<Props>} - A React component that wraps the event details in a page container.
+ */
 const Wrapped: React.FC<{ service: ServiceModel }> = ({ service }) => {
   const { instance } = useRouteParams<"Events">();
   const { data } = useGetInstance(service.name, instance).useOneTime();

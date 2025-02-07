@@ -21,6 +21,16 @@ interface Props {
   instance: ServiceInstanceModel;
 }
 
+/**
+ * DuplicateForm component is responsible for rendering a form to duplicate a service instance.
+ * It handles form submission, validation, and redirection upon success or failure.
+ *
+ * @props {Props} props - The properties object.
+ * @prop {ServiceModel} props.serviceEntity - The service entity model.
+ * @prop {ServiceInstanceModel} props.instance - The service instance model.
+ *
+ * @returns {React.FC<Props>} - The DuplicateForm component.
+ */
 export const DuplicateForm: React.FC<Props> = ({ serviceEntity, instance }) => {
   const { environmentModifier, routeManager } = useContext(DependencyContext);
   const [isDirty, setIsDirty] = useState(false);

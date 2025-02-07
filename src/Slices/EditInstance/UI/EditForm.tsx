@@ -21,6 +21,16 @@ interface Props {
   instance: ServiceInstanceModel;
 }
 
+/**
+ * EditForm component allows users to edit the attributes of a service instance.
+ * It provides a form with fields based on the service entity and handles form submission.
+ *
+ * @props {Props} props - The properties for the EditForm component.
+ * @prop {ServiceModel} props.serviceEntity - The service entity model containing the service details.
+ * @prop {ServiceInstanceModel} props.instance - The service instance model containing the instance details.
+ *
+ * @returns {React.FC<Props>} A React functional component that renders the edit form.
+ */
 export const EditForm: React.FC<Props> = ({ serviceEntity, instance }) => {
   const { environmentModifier, routeManager } = useContext(DependencyContext);
   const [isDirty, setIsDirty] = useState(false);

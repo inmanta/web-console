@@ -5,6 +5,15 @@ import { Description, ErrorView, LoadingView } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { DuplicateForm } from "./DuplicateForm";
 
+/**
+ * DuplicateInstancePage component fetches the instance data based on the provided service entity and instance ID.
+ * It displays an error view if there's an error, a loading view while fetching data, and a form to duplicate the instance upon successful data retrieval.
+ *
+ * @props {Props} props - The properties object.
+ * @prop {ServiceModel} props.serviceEntity - The service entity model.
+ * @prop {string} props.instanceId - The ID of the instance to be duplicated.
+ * @returns {React.FC<Props>} The rendered component.
+ */
 export const DuplicateInstancePage: React.FC<{
   serviceEntity: ServiceModel;
   instanceId: string;

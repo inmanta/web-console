@@ -28,7 +28,7 @@ export const Config: React.FC<Props> = ({ serviceName }) => {
     return (
       <Card aria-label="ServiceConfig-Success" data-testid="ServiceConfig">
         <CardBody>
-          <ConfigList config={data} service_entity={serviceName} />
+          <ConfigList config={data} serviceName={serviceName} />
         </CardBody>
       </Card>
     );
