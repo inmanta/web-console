@@ -11,10 +11,7 @@ import {
   QueryResolverImpl,
   CommandResolverImpl,
   getStoreInstance,
-  BaseApiHelper,
-  DeleteServiceCommandManager,
 } from "@/Data";
-import { defaultAuthContext } from "@/Data/Auth/AuthContext";
 import {
   DynamicCommandManagerResolverImpl,
   DynamicQueryManagerResolverImpl,
@@ -50,10 +47,6 @@ function setup() {
     new DynamicQueryManagerResolverImpl([callbacksQueryManager]),
   );
 
-  const deleteServiceCommandManager = DeleteServiceCommandManager(
-    BaseApiHelper(undefined, defaultAuthContext),
-  );
-
   const deleteCallbackCommandManager = DeleteCallbackCommandManager(
     apiHelper,
     new CallbacksUpdater(CallbacksStateHelper(store), apiHelper),
@@ -66,7 +59,6 @@ function setup() {
 
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolverImpl([
-      deleteServiceCommandManager,
       deleteCallbackCommandManager,
       createCallbackCommandManager,
     ]),

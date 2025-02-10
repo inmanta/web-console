@@ -6,31 +6,12 @@ import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
+import { getStoreInstance } from "@/Data";
 import {
-  QueryResolverImpl,
-  ServicesQueryManager,
-  ServicesStateHelper,
-  ServiceConfigQueryManager,
-  ServiceConfigStateHelper,
-  ServiceStateHelper,
-  ServiceKeyMaker,
-  ServiceConfigCommandManager,
-  ServiceConfigFinalizer,
-  CommandResolverImpl,
-  getStoreInstance,
-  DeleteServiceCommandManager,
-  BaseApiHelper,
-} from "@/Data";
-import { defaultAuthContext } from "@/Data/Auth/AuthContext";
-import {
-  DeferredApiHelper,
   dependencies,
-  DynamicCommandManagerResolverImpl,
-  DynamicQueryManagerResolverImpl,
   MockEnvironmentHandler,
   MockEnvironmentModifier,
   Service,
-  StaticScheduler,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { Page } from "@S/ServiceDetails/UI/Page";
@@ -40,50 +21,13 @@ const server = setupServer();
 function setup() {
   const client = new QueryClient();
   const store = getStoreInstance();
-  const scheduler = new StaticScheduler();
-  const apiHelper = new DeferredApiHelper();
-  const serviceKeyMaker = new ServiceKeyMaker();
 
-  const servicesHelper = ServicesQueryManager(
-    apiHelper,
-    ServicesStateHelper(store),
-    scheduler,
-  );
-  const serviceConfigQueryManager = ServiceConfigQueryManager(
-    apiHelper,
-    ServiceConfigStateHelper(store),
-    new ServiceConfigFinalizer(ServiceStateHelper(store, serviceKeyMaker)),
-  );
-
-  const serviceConfigCommandManager = ServiceConfigCommandManager(
-    apiHelper,
-    ServiceConfigStateHelper(store),
-  );
-
-  const deleteServiceCommandManager = DeleteServiceCommandManager(
-    BaseApiHelper(undefined, defaultAuthContext),
-  );
-
-  const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolverImpl([
-      servicesHelper,
-      serviceConfigQueryManager,
-    ]),
-  );
-  const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolverImpl([
-      serviceConfigCommandManager,
-      deleteServiceCommandManager,
-    ]),
-  );
   const component = (
     <QueryClientProvider client={client}>
       <MemoryRouter initialEntries={[`/lsm/catalog/${Service.a.name}/details`]}>
         <DependencyProvider
           dependencies={{
             ...dependencies,
-            queryResolver,
-            commandResolver,
             environmentModifier: new MockEnvironmentModifier(),
             environmentHandler: MockEnvironmentHandler(Service.a.environment),
           }}

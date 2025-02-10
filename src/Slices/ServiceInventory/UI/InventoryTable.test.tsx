@@ -1,34 +1,12 @@
 import React from "react";
 import { MemoryRouter, useLocation } from "react-router";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { RemoteData } from "@/Core";
-import {
-  QueryResolverImpl,
-  getStoreInstance,
-  CommandResolverImpl,
-  BaseApiHelper,
-  DeleteInstanceCommandManager,
-  DestroyInstanceCommandManager,
-  InstanceResourcesQueryManager,
-  InstanceResourcesStateHelper,
-  ServiceInstancesQueryManager,
-  ServiceInstancesStateHelper,
-  TriggerForceStateCommandManager,
-  TriggerSetStateCommandManager,
-} from "@/Data";
-import { defaultAuthContext } from "@/Data/Auth/AuthContext";
-import { TriggerInstanceUpdateCommandManager } from "@/Slices/EditInstance/Data";
-import {
-  Row,
-  StaticScheduler,
-  dependencies,
-  DeferredApiHelper,
-  DynamicCommandManagerResolverImpl,
-  DynamicQueryManagerResolverImpl,
-  Service,
-} from "@/Test";
+import { getStoreInstance } from "@/Data";
+import { Row, dependencies, Service } from "@/Test";
 import {
   DependencyProvider,
   EnvironmentHandlerImpl,
@@ -46,6 +24,7 @@ const tablePresenterWithIdentity = () =>
   new InventoryTablePresenter("service_id", "Service ID");
 
 function setup(expertMode = false, setSortFn: (props) => void = dummySetter) {
+  const client = new QueryClient();
   const store = getStoreInstance();
 
   store.dispatch.environment.setEnvironments(
@@ -90,54 +69,6 @@ function setup(expertMode = false, setSortFn: (props) => void = dummySetter) {
     }),
   });
 
-  const scheduler = new StaticScheduler();
-  const apiHelper = new DeferredApiHelper();
-
-  const serviceInstancesHelper = ServiceInstancesQueryManager(
-    apiHelper,
-    ServiceInstancesStateHelper(store),
-    scheduler,
-  );
-
-  const resourcesHelper = InstanceResourcesQueryManager(
-    apiHelper,
-    InstanceResourcesStateHelper(store),
-    ServiceInstancesStateHelper(store),
-    scheduler,
-  );
-
-  const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolverImpl([
-      serviceInstancesHelper,
-      resourcesHelper,
-    ]),
-  );
-
-  const triggerUpdateCommandManager =
-    TriggerInstanceUpdateCommandManager(apiHelper);
-  const triggerDestroyInstanceCommandManager =
-    DestroyInstanceCommandManager(apiHelper);
-  const triggerforceStateCommandManager = TriggerForceStateCommandManager(
-    defaultAuthContext,
-    apiHelper,
-  );
-
-  const deleteCommandManager = DeleteInstanceCommandManager(apiHelper);
-
-  const setStateCommandManager = TriggerSetStateCommandManager(
-    defaultAuthContext,
-    BaseApiHelper(undefined, defaultAuthContext),
-  );
-
-  const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolverImpl([
-      triggerUpdateCommandManager,
-      triggerforceStateCommandManager,
-      triggerDestroyInstanceCommandManager,
-      deleteCommandManager,
-      setStateCommandManager,
-    ]),
-  );
   const environmentHandler = EnvironmentHandlerImpl(
     useLocation,
     dependencies.routeManager,
@@ -146,29 +77,29 @@ function setup(expertMode = false, setSortFn: (props) => void = dummySetter) {
 
   environmentModifier.setEnvironment("aaa");
   const component = (
-    <MemoryRouter initialEntries={[{ search: "?env=aaa" }]}>
-      <DependencyProvider
-        dependencies={{
-          ...dependencies,
-          queryResolver,
-          commandResolver,
-          environmentModifier,
-          environmentHandler,
-        }}
-      >
-        <StoreProvider store={store}>
-          <ModalProvider>
-            <InventoryTable
-              rows={[Row.a]}
-              tablePresenter={tablePresenterWithIdentity()}
-              service={Service.withIdentity}
-              setSort={setSortFn}
-              sort={{ name: "created_at", order: "desc" }}
-            />
-          </ModalProvider>
-        </StoreProvider>
-      </DependencyProvider>
-    </MemoryRouter>
+    <QueryClientProvider client={client}>
+      <MemoryRouter initialEntries={[{ search: "?env=aaa" }]}>
+        <DependencyProvider
+          dependencies={{
+            ...dependencies,
+            environmentModifier,
+            environmentHandler,
+          }}
+        >
+          <StoreProvider store={store}>
+            <ModalProvider>
+              <InventoryTable
+                rows={[Row.a]}
+                tablePresenter={tablePresenterWithIdentity()}
+                service={Service.withIdentity}
+                setSort={setSortFn}
+                sort={{ name: "created_at", order: "desc" }}
+              />
+            </ModalProvider>
+          </StoreProvider>
+        </DependencyProvider>
+      </MemoryRouter>
+    </QueryClientProvider>
   );
 
   return component;
