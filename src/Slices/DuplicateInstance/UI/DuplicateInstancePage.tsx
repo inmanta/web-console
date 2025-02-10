@@ -4,7 +4,6 @@ import { useGetInstance } from "@/Data/Managers/V2/ServiceInstance";
 import { Description, ErrorView, LoadingView } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { DuplicateForm } from "./DuplicateForm";
-
 /**
  * DuplicateInstancePage component fetches the instance data based on the provided service entity and instance ID.
  * It displays an error view if there's an error, a loading view while fetching data, and a form to duplicate the instance upon successful data retrieval.
@@ -25,7 +24,7 @@ export const DuplicateInstancePage: React.FC<{
 
   if (isError) {
     return (
-      <ErrorView ariaLabel="DuplicateInstance-Error" message={error.message} />
+      <ErrorView ariaLabel="DuplicateInstance-Failed" message={error.message} />
     );
   }
 
@@ -37,7 +36,9 @@ export const DuplicateInstancePage: React.FC<{
 
     return (
       <Wrapper id={identifier}>
-        <DuplicateForm instance={data} serviceEntity={serviceEntity} />
+        <div aria-label="DuplicateInstance-Success">
+          <DuplicateForm instance={data} serviceEntity={serviceEntity} />
+        </div>
       </Wrapper>
     );
   }

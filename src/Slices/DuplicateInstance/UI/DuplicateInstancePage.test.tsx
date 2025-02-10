@@ -1,31 +1,23 @@
 import React, { act } from "react";
 import { MemoryRouter } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
-import { Either } from "@/Core";
+import { HttpResponse, http } from "msw";
+import { setupServer } from "msw/node";
+import { getStoreInstance } from "@/Data";
 import {
-  CommandManagerResolverImpl,
-  CommandResolverImpl,
-  defaultAuthContext,
-  getStoreInstance,
-  QueryResolverImpl,
-  ServiceInstanceQueryManager,
-  ServiceInstanceStateHelper,
-} from "@/Data";
-import {
-  DeferredApiHelper,
   dependencies,
-  DynamicQueryManagerResolverImpl,
   MockEnvironmentModifier,
   Service,
   ServiceInstance,
-  StaticScheduler,
 } from "@/Test";
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import { DuplicateInstancePage } from "./DuplicateInstancePage";
+import * as queryModule from "@/Data/Managers/V2/helpers/useQueries";
 
 expect.extend(toHaveNoViolations);
 
@@ -37,57 +29,63 @@ const axe = configureAxe({
 });
 
 function setup(entity = "a") {
+  const client = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
   const store = getStoreInstance();
-  const scheduler = new StaticScheduler();
-  const apiHelper = new DeferredApiHelper();
-
-  const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolverImpl([
-      ServiceInstanceQueryManager(
-        apiHelper,
-        ServiceInstanceStateHelper(store),
-        scheduler,
-      ),
-    ]),
-  );
-
-  const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolverImpl(store, apiHelper, defaultAuthContext),
-  );
 
   const component = (
-    <MemoryRouter>
-      <DependencyProvider
-        dependencies={{
-          ...dependencies,
-          queryResolver,
-          commandResolver,
-          environmentModifier: new MockEnvironmentModifier(),
-        }}
-      >
-        <StoreProvider store={store}>
-          <DuplicateInstancePage
-            serviceEntity={Service[entity]}
-            instanceId={"4a4a6d14-8cd0-4a16-bc38-4b768eb004e3"}
-          />
-        </StoreProvider>
-      </DependencyProvider>
-    </MemoryRouter>
+    <QueryClientProvider client={client}>
+      <MemoryRouter>
+        <DependencyProvider
+          dependencies={{
+            ...dependencies,
+            environmentModifier: new MockEnvironmentModifier(),
+          }}
+        >
+          <StoreProvider store={store}>
+            <DuplicateInstancePage
+              serviceEntity={Service[entity]}
+              instanceId={"4a4a6d14-8cd0-4a16-bc38-4b768eb004e3"}
+            />
+          </StoreProvider>
+        </DependencyProvider>
+      </MemoryRouter>
+    </QueryClientProvider>
   );
 
-  return { component, apiHelper, scheduler };
+  return { component };
 }
+const server = setupServer();
+beforeAll(() => {
+  server.listen();
+});
+
+afterEach(() => {
+  server.resetHandlers();
+});
+
+afterAll(() => server.close());
 
 test("Duplicate Instance View shows failed state", async () => {
-  const { component, apiHelper } = setup();
+  server.use(
+    http.get(
+      "/lsm/v1/service_inventory/service_name_a/4a4a6d14-8cd0-4a16-bc38-4b768eb004e3",
+      () => {
+        return HttpResponse.json(
+          { message: "something went wrong" },
+          { status: 500 },
+        );
+      },
+    ),
+  );
+  const { component } = setup();
 
   render(component);
 
   expect(
     await screen.findByRole("region", { name: "DuplicateInstance-Loading" }),
   ).toBeInTheDocument();
-
-  apiHelper.resolve(Either.left("error"));
 
   expect(
     await screen.findByRole("region", { name: "DuplicateInstance-Failed" }),
@@ -101,16 +99,25 @@ test("Duplicate Instance View shows failed state", async () => {
 });
 
 test("DuplicateInstance View shows success form", async () => {
-  const { component, apiHelper } = setup();
+  const mockFn = jest.fn();
+
+  jest.spyOn(queryModule, "usePost").mockReturnValue(mockFn);
+
+  server.use(
+    http.get(
+      "/lsm/v1/service_inventory/service_name_a/4a4a6d14-8cd0-4a16-bc38-4b768eb004e3",
+      () => {
+        return HttpResponse.json({ data: ServiceInstance.a });
+      },
+    ),
+  );
+  const { component } = setup();
 
   render(component);
-  const { service_entity } = ServiceInstance.a;
 
   expect(
     await screen.findByRole("region", { name: "DuplicateInstance-Loading" }),
   ).toBeInTheDocument();
-
-  apiHelper.resolve(Either.right({ data: ServiceInstance.a }));
 
   expect(
     await screen.findByRole("generic", { name: "DuplicateInstance-Success" }),
@@ -130,20 +137,15 @@ test("DuplicateInstance View shows success form", async () => {
     expect(results).toHaveNoViolations();
   });
 
-  expect(apiHelper.pendingRequests).toHaveLength(1);
-
-  expect(apiHelper.pendingRequests[0]).toEqual({
-    method: "POST",
-    url: `/lsm/v1/service_inventory/${service_entity}`,
-    body: {
+  expect(mockFn).toHaveBeenCalledWith(
+    "/lsm/v1/service_inventory/service_name_a",
+    {
       attributes: {
         bandwidth: "3",
         circuits: [
           {
             csp_endpoint: {
-              attributes: {
-                owner_account_id: "666023226898",
-              },
+              attributes: { owner_account_id: "666023226898" },
               cloud_service_provider: "AWS",
               ipx_access: [1000010782, 1000013639],
               region: "us-east-1",
@@ -158,9 +160,7 @@ test("DuplicateInstance View shows success form", async () => {
           },
           {
             csp_endpoint: {
-              attributes: {
-                owner_account_id: "666023226898",
-              },
+              attributes: { owner_account_id: "666023226898" },
               cloud_service_provider: "AWS",
               ipx_access: [1000010782, 1000013639],
               region: "us-east-1",
@@ -180,21 +180,29 @@ test("DuplicateInstance View shows success form", async () => {
         order_id: 9764848531585,
       },
     },
-    environment: "env",
-  });
+  );
 });
 
 test("Given the DuplicateInstance View When changing a embedded entity Then the correct request is fired", async () => {
-  const { component, apiHelper } = setup();
+  const mockFn = jest.fn();
+
+  jest.spyOn(queryModule, "usePost").mockReturnValue(mockFn);
+  server.use(
+    http.get(
+      "/lsm/v1/service_inventory/service_name_a/4a4a6d14-8cd0-4a16-bc38-4b768eb004e3",
+      () => {
+        return HttpResponse.json({ data: ServiceInstance.a });
+      },
+    ),
+  );
+
+  const { component } = setup();
 
   render(component);
-  const { service_entity } = ServiceInstance.a;
 
   expect(
     await screen.findByRole("region", { name: "DuplicateInstance-Loading" }),
   ).toBeInTheDocument();
-
-  apiHelper.resolve(Either.right({ data: ServiceInstance.a }));
 
   expect(
     await screen.findByRole("generic", { name: "DuplicateInstance-Success" }),
@@ -225,21 +233,15 @@ test("Given the DuplicateInstance View When changing a embedded entity Then the 
   await userEvent.type(bandwidthField, "22");
 
   await userEvent.click(screen.getByText(words("confirm")));
-
-  expect(apiHelper.pendingRequests).toHaveLength(1);
-
-  expect(apiHelper.pendingRequests[0]).toEqual({
-    method: "POST",
-    url: `/lsm/v1/service_inventory/${service_entity}`,
-    body: {
+  expect(mockFn).toHaveBeenCalledWith(
+    "/lsm/v1/service_inventory/service_name_a",
+    {
       attributes: {
         bandwidth: "22",
         circuits: [
           {
             csp_endpoint: {
-              attributes: {
-                owner_account_id: "666023226898",
-              },
+              attributes: { owner_account_id: "666023226898" },
               cloud_service_provider: "AWS",
               ipx_access: [1000010782, 1000013639],
               region: "us-east-1",
@@ -254,9 +256,7 @@ test("Given the DuplicateInstance View When changing a embedded entity Then the 
           },
           {
             csp_endpoint: {
-              attributes: {
-                owner_account_id: "666023226898",
-              },
+              attributes: { owner_account_id: "666023226898" },
               cloud_service_provider: "AWS2",
               ipx_access: [1000010782, 1000013639],
               region: "us-east-1",
@@ -276,20 +276,29 @@ test("Given the DuplicateInstance View When changing a embedded entity Then the 
         order_id: 9764848531585,
       },
     },
-    environment: "env",
-  });
+  );
 });
 
 test("Given the DuplicateInstance View When changing an embedded entity Then the inputs are displayed correctly", async () => {
-  const { component, apiHelper } = setup("ServiceWithAllAttrs");
+  const mockFn = jest.fn();
+
+  jest.spyOn(queryModule, "usePost").mockReturnValue(mockFn);
+
+  server.use(
+    http.get(
+      "/lsm/v1/service_inventory/service_name_all_attrs/4a4a6d14-8cd0-4a16-bc38-4b768eb004e3",
+      () => {
+        return HttpResponse.json({ data: ServiceInstance.allAttrs });
+      },
+    ),
+  );
+  const { component } = setup("ServiceWithAllAttrs");
 
   render(component);
 
   expect(
     await screen.findByRole("region", { name: "DuplicateInstance-Loading" }),
   ).toBeInTheDocument();
-
-  apiHelper.resolve(Either.right({ data: ServiceInstance.allAttrs }));
 
   expect(
     await screen.findByRole("generic", { name: "DuplicateInstance-Success" }),
