@@ -1,11 +1,11 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { Pagination, ServiceInstanceModelWithTargetStates } from "@/Core";
+import { Handlers } from "@/Core/Domain/Pagination/Pagination";
 import { ServiceInstanceParams } from "@/Core/Domain/ServiceInstanceParams";
 
 import { getPaginationHandlers } from "@/Data/Managers/Helpers";
 import { useGet } from "../../helpers";
 import { getUrl } from "./getUrl";
-import { Handlers } from "@/Core/Domain/Pagination/Pagination";
 
 /**
  * Return Signature of the useGetInstances React Query
