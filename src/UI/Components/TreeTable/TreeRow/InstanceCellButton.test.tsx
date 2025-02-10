@@ -1,42 +1,25 @@
 import React from "react";
-import { MemoryRouter, useLocation } from "react-router-dom";
+import { MemoryRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
-import { RemoteData } from "@/Core";
 import { getStoreInstance } from "@/Data";
-import { dependencies, ServiceInstance } from "@/Test";
-import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
+import {
+  dependencies,
+  MockEnvironmentHandler,
+  Service,
+  ServiceInstance,
+} from "@/Test";
+import { DependencyProvider } from "@/UI/Dependency";
 import { InstanceCellButton } from "./InstanceCellButton";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { PrimaryRouteManager } from "@/UI/Routing";
 
 function setup(serviceName: string, id: string) {
   const client = new QueryClient({
     defaultOptions: { queries: { retry: false } },
   });
   const store = getStoreInstance();
-  const environmentHandler = EnvironmentHandlerImpl(
-    useLocation,
-    PrimaryRouteManager(""),
-  );
-  store.dispatch.environment.setEnvironments(
-    RemoteData.success([
-      {
-        id: "aaa",
-        name: "env-a",
-        project_id: "ppp",
-        repo_branch: "branch",
-        repo_url: "repo",
-        projectName: "project",
-        halted: false,
-        settings: {
-          enable_lsm_expert_mode: false,
-        },
-      },
-    ]),
-  );
 
   const handleClick = jest.fn();
   const component = (
@@ -45,7 +28,7 @@ function setup(serviceName: string, id: string) {
         <DependencyProvider
           dependencies={{
             ...dependencies,
-            environmentHandler,
+            environmentHandler: MockEnvironmentHandler(Service.a.environment),
           }}
         >
           <StoreProvider store={store}>
