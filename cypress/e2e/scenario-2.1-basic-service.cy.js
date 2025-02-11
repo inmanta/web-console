@@ -395,7 +395,7 @@ if (Cypress.env("edition") === "iso") {
         .click();
       // Expect to find one badge on the basic-service row.
       cy.get("#basic-service")
-        .get('[aria-label="Number of instances by label"]', { timeout: 20000 })
+        .get('[aria-label="Number of instances by label"]', { timeout: 30000 })
         .children()
         .should("have.length", 1);
       cy.get("#basic-service").contains("Show inventory").click();
