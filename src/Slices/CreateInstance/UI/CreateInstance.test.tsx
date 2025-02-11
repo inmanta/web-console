@@ -60,7 +60,6 @@ beforeAll(() => {
       return HttpResponse.json({ data: Service.withIdentity });
     }),
     http.get("/lsm/v1/service_inventory/test_entity", ({ request }) => {
-      console.log(request.url);
       return HttpResponse.json({
         data: [ServiceInstance.a],
         metadata: {
@@ -141,7 +140,7 @@ test("Given the CreateInstance View When creating an instance with attributes Th
   );
 });
 
-test.only("Given the CreateInstance View When creating an instance with Inter-service-relations only Then the correct request is fired", async () => {
+test("Given the CreateInstance View When creating an instance with Inter-service-relations only Then the correct request is fired", async () => {
   const postMock = jest.fn();
 
   jest.spyOn(queryModule, "usePost").mockReturnValue(postMock);
