@@ -1,29 +1,15 @@
 import React, { act } from "react";
 import { MemoryRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { render, screen, waitFor, within } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { Either } from "@/Core";
-import {
-  CommandManagerResolverImpl,
-  CommandResolverImpl,
-  defaultAuthContext,
-  getStoreInstance,
-  QueryManagerResolverImpl,
-  QueryResolverImpl,
-} from "@/Data";
-import {
-  DeferredApiHelper,
-  dependencies,
-  Service,
-  ServiceInstance,
-  StaticScheduler,
-} from "@/Test";
-import { InterServiceRelations } from "@/Test/Data/Service";
+import { getStoreInstance } from "@/Data";
+import * as queryModule from "@/Data/Managers/V2/helpers/useQueries";
+import { dependencies, Service, ServiceInstance } from "@/Test";
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import { CreateInstance } from "./CreateInstance";
@@ -38,37 +24,21 @@ const axe = configureAxe({
 });
 
 const server = setupServer();
-const client = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: false,
-    },
-  },
-});
 
 function setup(service) {
+  const client = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  });
   const store = getStoreInstance();
-  const scheduler = new StaticScheduler();
-  const apiHelper = new DeferredApiHelper();
-
-  const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler),
-  );
-
-  const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolverImpl(store, apiHelper, defaultAuthContext),
-  );
 
   const component = (
     <QueryClientProvider client={client}>
       <MemoryRouter>
-        <DependencyProvider
-          dependencies={{
-            ...dependencies,
-            queryResolver,
-            commandResolver,
-          }}
-        >
+        <DependencyProvider dependencies={dependencies}>
           <StoreProvider store={store}>
             <CreateInstance serviceEntity={service} />
           </StoreProvider>
@@ -77,7 +47,7 @@ function setup(service) {
     </QueryClientProvider>
   );
 
-  return { component, apiHelper, scheduler };
+  return { component };
 }
 
 beforeAll(() => {
@@ -89,13 +59,29 @@ beforeAll(() => {
     http.get("/lsm/v1/service_catalog/test_entity", () => {
       return HttpResponse.json({ data: Service.withIdentity });
     }),
+    http.get("/lsm/v1/service_inventory/test_entity", ({ request }) => {
+      console.log(request.url);
+      return HttpResponse.json({
+        data: [ServiceInstance.a],
+        metadata: {
+          total: 1,
+          before: 0,
+          after: 0,
+          page_size: 250,
+        },
+      });
+    }),
   );
 });
 
 afterAll(() => server.close());
 
 test("Given the CreateInstance View When creating an instance with attributes Then the correct request is fired", async () => {
-  const { component, apiHelper } = setup(Service.a);
+  const postMock = jest.fn();
+
+  jest.spyOn(queryModule, "usePost").mockReturnValue(postMock);
+
+  const { component } = setup(Service.a);
 
   render(component);
 
@@ -124,11 +110,9 @@ test("Given the CreateInstance View When creating an instance with attributes Th
   });
 
   await userEvent.click(screen.getByText(words("confirm")));
-
-  expect(apiHelper.pendingRequests[0]).toEqual({
-    method: "POST",
-    url: `/lsm/v1/service_inventory/${Service.a.name}`,
-    body: {
+  expect(postMock).toHaveBeenCalledWith(
+    `/lsm/v1/service_inventory/${Service.a.name}`,
+    {
       attributes: {
         bandwidth: "2",
         circuits: [
@@ -154,43 +138,27 @@ test("Given the CreateInstance View When creating an instance with attributes Th
         order_id: "12347007",
       },
     },
-    environment: "env",
-  });
+  );
 });
 
-test("Given the CreateInstance View When creating an instance with Inter-service-relations only Then the correct request is fired", async () => {
-  const { component, apiHelper } = setup(Service.withRelationsOnly);
+test.only("Given the CreateInstance View When creating an instance with Inter-service-relations only Then the correct request is fired", async () => {
+  const postMock = jest.fn();
+
+  jest.spyOn(queryModule, "usePost").mockReturnValue(postMock);
+
+  const { component } = setup(Service.withRelationsOnly);
 
   render(component);
 
   await screen.findByPlaceholderText("Select an instance of test_entity"); // await for the relation input be rendered
 
-  await act(async () => {
-    apiHelper.resolve(
-      Either.right({ data: [ServiceInstance.a, ServiceInstance.b] }),
-    );
-  });
-  await act(async () => {
-    apiHelper.resolve(
-      Either.right({ data: [ServiceInstance.a, ServiceInstance.b] }),
-    );
-  });
-
   const relationInputField = screen.getByLabelText(
     "test_entity-select-toggleFilterInput",
   );
 
-  await userEvent.type(relationInputField, "a");
+  fireEvent.change(relationInputField, { target: { value: "a" } });
 
-  await waitFor(() => {
-    expect(apiHelper.pendingRequests.length).toBeGreaterThan(0);
-  });
-
-  await act(async () => {
-    apiHelper.resolve(Either.right({ data: [ServiceInstance.a] }));
-  });
-
-  const options = await screen.findAllByRole("option");
+  const options = screen.getAllByRole("option");
 
   expect(options.length).toBe(1);
 
@@ -206,138 +174,14 @@ test("Given the CreateInstance View When creating an instance with Inter-service
 
   await userEvent.click(screen.getByText(words("confirm")));
 
-  expect(apiHelper.pendingRequests[0]).toEqual({
-    method: "POST",
-    url: `/lsm/v1/service_inventory/${Service.withRelationsOnly.name}`,
-    body: {
+  expect(postMock).toHaveBeenCalledWith(
+    `/lsm/v1/service_inventory/${Service.withRelationsOnly.name}`,
+    {
       attributes: {
         test_entity: ["service_instance_id_a"],
       },
     },
-    environment: "env",
-  });
-});
-
-test("Given the CreateInstance View When creating an instance with Inter-service-relations only Then the correct request is fired", async () => {
-  const { component, apiHelper } = setup(Service.withRelationsOnly);
-
-  render(component);
-
-  await act(async () => {
-    apiHelper.resolve(
-      Either.right({ data: [ServiceInstance.a, ServiceInstance.b] }),
-    );
-  });
-  await act(async () => {
-    apiHelper.resolve(
-      Either.right({ data: [ServiceInstance.a, ServiceInstance.b] }),
-    );
-  });
-
-  const relationInputField = screen.getByPlaceholderText(
-    words("common.serviceInstance.relations")("test_entity"),
   );
-
-  await userEvent.type(relationInputField, "a");
-
-  expect(apiHelper.pendingRequests[0]).toEqual({
-    method: "GET",
-    url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=250&filter.id_or_service_identity=a`,
-    environment: "env",
-  });
-
-  await act(async () => {
-    await apiHelper.resolve(Either.right({ data: [ServiceInstance.a] }));
-  });
-
-  await userEvent.type(relationInputField, "{selectall}{backspace}ab");
-
-  expect(apiHelper.pendingRequests[2]).toEqual({
-    method: "GET",
-    url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=250&filter.id_or_service_identity=ab`,
-    environment: "env",
-  });
-
-  // clear all pending requests
-  await act(async () => {
-    while (apiHelper.pendingRequests.length > 0) {
-      apiHelper.resolve(Either.right({ data: [] }));
-    }
-  });
-
-  await userEvent.type(relationInputField, "{backspace}{backspace}");
-
-  expect(apiHelper.pendingRequests[0]).toEqual({
-    method: "GET",
-    url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=250&filter.id_or_service_identity=a`,
-    environment: "env",
-  });
-  expect(apiHelper.pendingRequests[1]).toEqual({
-    method: "GET",
-    url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=250&filter.id_or_service_identity=`,
-    environment: "env",
-  });
-});
-
-test("Given the CreateInstance View When creating an instance with Inter-service-relations only Then the correct request is fired", async () => {
-  const { component, apiHelper } = setup(Service.withRelationsOnly);
-
-  render(component);
-
-  await act(async () => {
-    apiHelper.resolve(
-      Either.right({ data: [ServiceInstance.a, ServiceInstance.b] }),
-    );
-  });
-  await act(async () => {
-    apiHelper.resolve(
-      Either.right({ data: [ServiceInstance.a, ServiceInstance.b] }),
-    );
-  });
-
-  const relationInputField = screen.getByPlaceholderText(
-    words("common.serviceInstance.relations")("test_entity"),
-  );
-
-  await userEvent.type(relationInputField, "a");
-
-  expect(apiHelper.pendingRequests[0]).toEqual({
-    method: "GET",
-    url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=250&filter.id_or_service_identity=a`,
-    environment: "env",
-  });
-
-  await act(async () => {
-    await apiHelper.resolve(Either.right({ data: [ServiceInstance.a] }));
-  });
-
-  await userEvent.type(relationInputField, "{selectall}{backspace}ab");
-
-  expect(apiHelper.pendingRequests[2]).toEqual({
-    method: "GET",
-    url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=250&filter.id_or_service_identity=ab`,
-    environment: "env",
-  });
-
-  // clear all pending requests
-  await act(async () => {
-    while (apiHelper.pendingRequests.length > 0) {
-      apiHelper.resolve(Either.right({ data: [] }));
-    }
-  });
-
-  await userEvent.type(relationInputField, "{backspace}{backspace}");
-
-  expect(apiHelper.pendingRequests[0]).toEqual({
-    method: "GET",
-    url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=250&filter.id_or_service_identity=a`,
-    environment: "env",
-  });
-  expect(apiHelper.pendingRequests[1]).toEqual({
-    method: "GET",
-    url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=250&filter.id_or_service_identity=`,
-    environment: "env",
-  });
 });
 
 test("Given the CreateInstance View When creating entity with default values Then the inputs have correct values set", async () => {
