@@ -4,6 +4,7 @@ import {
 } from "@/UI/Components/TreeTable/Helpers";
 import { InventoryAttributeHelper } from "./AttributeHelper";
 import { InventoryTreeTableHelper } from "./TreeTableHelper";
+jest.mock("@/Data/Managers/V2/ServiceInstance");
 
 test("TreeTableHelper getExpansionState returns correct expansionState", () => {
   // Arrange
