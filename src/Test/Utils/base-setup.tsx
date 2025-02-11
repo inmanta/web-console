@@ -8,7 +8,6 @@ import {
   CommandResolverImpl,
   QueryManagerResolverImpl,
   CommandManagerResolverImpl,
-  defaultAuthContext,
 } from "@/Data";
 import {
   StaticScheduler,
@@ -30,7 +29,7 @@ export function baseSetup(Page: React.ReactNode, halted: boolean = false) {
     new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler),
   );
   const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolverImpl(store, apiHelper, defaultAuthContext),
+    new CommandManagerResolverImpl(store, apiHelper),
   );
 
   const routeManager = PrimaryRouteManager("");
