@@ -8,7 +8,7 @@ import { Pagination } from "@/Core";
  * @returns {Pagination.Handlers} The pagination handlers.
  */
 export const getPaginationHandlers = (
-  links: Pagination.Links,
+  links: Pagination.Links | undefined,
   metadata: Pagination.Metadata,
 ): Pagination.Handlers => {
   if (!links) {
