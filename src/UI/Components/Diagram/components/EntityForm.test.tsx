@@ -1,13 +1,14 @@
 import React from "react";
 import { MemoryRouter, useLocation } from "react-router-dom";
 import { dia } from "@inmanta/rappid";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { RemoteData } from "@/Core";
 import { getStoreInstance } from "@/Data";
 import { dependencies } from "@/Test";
+import { testClient } from "@/Test/Utils/react-query-setup";
 import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
 import { PrimaryRouteManager } from "@/UI/Routing";
 import { CanvasContext, defaultCanvasContext } from "../Context";
@@ -37,8 +38,6 @@ describe("EntityForm.", () => {
 
     graph.addCell(cell);
     const cellView = paper.findViewByModel(cell);
-
-    const client = new QueryClient();
     const environmentHandler = EnvironmentHandlerImpl(
       useLocation,
       PrimaryRouteManager(""),
@@ -77,7 +76,7 @@ describe("EntityForm.", () => {
     const editEntity = jest.fn().mockReturnValue(cellView.model);
 
     const component = (
-      <QueryClientProvider client={client}>
+      <QueryClientProvider client={testClient}>
         <MemoryRouter initialEntries={[{ search: "?env=aaa" }]}>
           <StoreProvider store={store}>
             <DependencyProvider

@@ -1,15 +1,15 @@
 import React, { act } from "react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { Config, EnvironmentDetails, RemoteData } from "@/Core";
 import { getStoreInstance } from "@/Data";
 import { dependencies, ServiceInstance } from "@/Test";
+import { testClient } from "@/Test/Utils/react-query-setup";
 import { DependencyProvider, EnvironmentModifierImpl } from "@/UI/Dependency";
 import { ConfigDetails } from "./ConfigDetails";
 
 function setup() {
-  const client = new QueryClient();
   const store = getStoreInstance();
 
   store.dispatch.environment.setEnvironmentDetailsById({
@@ -22,7 +22,7 @@ function setup() {
 
   return {
     component: (config: Config) => (
-      <QueryClientProvider client={client}>
+      <QueryClientProvider client={testClient}>
         <DependencyProvider
           dependencies={{
             ...dependencies,

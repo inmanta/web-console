@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { MemoryRouter } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { HttpResponse, http } from "msw";
@@ -8,6 +8,7 @@ import { setupServer } from "msw/node";
 import { getStoreInstance } from "@/Data";
 import * as queryModule from "@/Data/Managers/V2/helpers/useQueries";
 import { dependencies, ServiceInstance } from "@/Test";
+import { testClient } from "@/Test/Utils/react-query-setup";
 import { DependencyProvider } from "@/UI/Dependency";
 import { AutoCompleteInputProvider } from "./AutoCompleteInputProvider";
 
@@ -27,14 +28,11 @@ const server = setupServer(
   }),
 );
 const TestWrapper = () => {
-  const client = new QueryClient({
-    defaultOptions: { queries: { retry: false } },
-  });
   const [value, setValue] = useState("");
   const store = getStoreInstance();
 
   return (
-    <QueryClientProvider client={client}>
+    <QueryClientProvider client={testClient}>
       <MemoryRouter>
         <DependencyProvider dependencies={dependencies}>
           <StoreProvider store={store}>

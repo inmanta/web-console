@@ -1,12 +1,13 @@
 import React from "react";
 import { MemoryRouter, useLocation } from "react-router";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { RemoteData } from "@/Core";
 import { getStoreInstance } from "@/Data";
 import { Row, dependencies, Service } from "@/Test";
+import { testClient } from "@/Test/Utils/react-query-setup";
 import {
   DependencyProvider,
   EnvironmentHandlerImpl,
@@ -24,7 +25,6 @@ const tablePresenterWithIdentity = () =>
   new InventoryTablePresenter("service_id", "Service ID");
 
 function setup(expertMode = false, setSortFn: (props) => void = dummySetter) {
-  const client = new QueryClient();
   const store = getStoreInstance();
 
   store.dispatch.environment.setEnvironments(
@@ -77,7 +77,7 @@ function setup(expertMode = false, setSortFn: (props) => void = dummySetter) {
 
   environmentModifier.setEnvironment("aaa");
   const component = (
-    <QueryClientProvider client={client}>
+    <QueryClientProvider client={testClient}>
       <MemoryRouter initialEntries={[{ search: "?env=aaa" }]}>
         <DependencyProvider
           dependencies={{

@@ -1,17 +1,14 @@
 import React from "react";
 import { MemoryRouter, useLocation } from "react-router-dom";
 import { dia } from "@inmanta/rappid";
-import {
-  QueryClient,
-  QueryClientProvider,
-  UseQueryResult,
-} from "@tanstack/react-query";
+import { QueryClientProvider, UseQueryResult } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { RemoteData } from "@/Core";
 import { getStoreInstance } from "@/Data";
 import { Inventories } from "@/Data/Managers/V2/ServiceInstance";
 import { dependencies } from "@/Test";
+import { testClient } from "@/Test/Utils/react-query-setup";
 import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
 import { PrimaryRouteManager } from "@/UI/Routing";
 import {
@@ -31,7 +28,6 @@ describe("RightSidebar.", () => {
     cellToEdit: dia.CellView | null,
     stencilState: StencilState,
   ) => {
-    const client = new QueryClient();
     const environmentHandler = EnvironmentHandlerImpl(
       useLocation,
       PrimaryRouteManager(""),
@@ -68,7 +64,7 @@ describe("RightSidebar.", () => {
     );
 
     const component = (
-      <QueryClientProvider client={client}>
+      <QueryClientProvider client={testClient}>
         <MemoryRouter initialEntries={[{ search: "?env=aaa" }]}>
           <StoreProvider store={store}>
             <DependencyProvider

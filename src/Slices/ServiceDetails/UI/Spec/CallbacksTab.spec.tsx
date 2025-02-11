@@ -1,6 +1,6 @@
 import React, { act } from "react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
@@ -20,6 +20,7 @@ import {
   DeferredApiHelper,
   dependencies,
 } from "@/Test";
+import { testClient } from "@/Test/Utils/react-query-setup";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
   CallbacksQueryManager,
@@ -33,7 +34,6 @@ import { Page } from "@S/ServiceDetails/UI/Page";
 const server = setupServer();
 
 function setup() {
-  const client = new QueryClient();
   const store = getStoreInstance();
   const apiHelper = new DeferredApiHelper();
 
@@ -65,7 +65,7 @@ function setup() {
   );
 
   const component = (
-    <QueryClientProvider client={client}>
+    <QueryClientProvider client={testClient}>
       <MemoryRouter initialEntries={[`/lsm/catalog/${Service.a.name}/details`]}>
         <DependencyProvider
           dependencies={{ ...dependencies, queryResolver, commandResolver }}

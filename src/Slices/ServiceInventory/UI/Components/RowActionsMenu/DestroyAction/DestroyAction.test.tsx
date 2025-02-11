@@ -1,5 +1,5 @@
 import React, { act } from "react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
@@ -11,18 +11,19 @@ import {
 } from "@/Data";
 import { ServiceInventoryContext } from "@/Slices/ServiceInventory/UI/ServiceInventory";
 import { DeferredApiHelper, dependencies, ServiceInstance } from "@/Test";
+import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { DestroyAction } from "./DestroyAction";
 const mockedMutate = jest.fn();
 
+//mock is used to assert correct function call
 jest.mock("@/Data/Managers/V2/ServiceInstance", () => ({
   useDestroyInstance: () => ({ mutate: mockedMutate }),
 }));
 
 function setup() {
-  const client = new QueryClient();
   const apiHelper = new DeferredApiHelper();
 
   const storeInstance = getStoreInstance();
@@ -42,7 +43,7 @@ function setup() {
 
   return {
     component: () => (
-      <QueryClientProvider client={client}>
+      <QueryClientProvider client={testClient}>
         <StoreProvider store={storeInstance}>
           <DependencyProvider
             dependencies={{

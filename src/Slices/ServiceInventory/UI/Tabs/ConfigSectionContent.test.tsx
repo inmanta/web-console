@@ -38,9 +38,7 @@ import { ConfigSectionContent } from "./ConfigSectionContent";
 function setup(
   environmentModifier: EnvironmentModifier = new MockEnvironmentModifier(),
 ) {
-  const client = new QueryClient({
-    defaultOptions: { queries: { retry: false } },
-  });
+  const client = new QueryClient();
   const store = getStoreInstance();
 
   const instanceIdentifier: VersionedServiceInstanceIdentifier = {
@@ -97,120 +95,122 @@ let data = {
   auto_update_inprogress: false,
 };
 
-const server = setupServer(
-  http.get(
-    "/lsm/v1/service_inventory/service_name_a/service_instance_id_a/config",
-    () => {
-      return HttpResponse.json({
-        data,
-      });
-    },
-  ),
-);
-
-beforeAll(() => {
-  server.listen();
-});
-afterAll(() => {
-  server.close();
-});
-
-test("ConfigTab can reset all settings", async () => {
-  const mockFn = jest.fn().mockImplementation((_url, body) => {
-    data = {
-      ...data,
-      ...body.values,
-    };
-  });
-
-  jest.spyOn(queryModule, "usePost").mockReturnValue(mockFn);
-  const { component } = setup();
-
-  render(component);
-
-  const resetButton = await screen.findByRole("button", {
-    name: words("config.reset"),
-  });
-
-  expect(resetButton).toBeVisible();
-
-  expect(
-    screen.getByRole("switch", { name: "auto_creating-False" }),
-  ).toBeVisible();
-
-  await userEvent.click(resetButton, { skipHover: true });
-
-  expect(mockFn).toHaveBeenCalledWith(
-    "/lsm/v1/service_inventory/service_name_a/service_instance_id_a/config",
-    {
-      current_version: 3,
-      values: {
-        auto_creating: true,
-        auto_designed: true,
-        auto_update_designed: true,
-        auto_update_inprogress: true,
+describe("ConfigSectionContent", () => {
+  const server = setupServer(
+    http.get(
+      "/lsm/v1/service_inventory/service_name_a/service_instance_id_a/config",
+      () => {
+        return HttpResponse.json({
+          data,
+        });
       },
-    },
+    ),
   );
-  expect(
-    await screen.findByRole("switch", { name: "auto_creating-True" }),
-  ).toBeVisible();
-});
 
-test("ConfigTab can change 1 toggle", async () => {
-  data = {
-    auto_creating: false,
-    auto_designed: true,
-    auto_update_designed: false,
-    auto_update_inprogress: false,
-  };
-  const mockFn = jest.fn().mockImplementation((_url, body) => {
-    data = {
-      ...data,
-      ...body.values,
-    };
+  beforeAll(() => {
+    server.listen();
+  });
+  afterAll(() => {
+    server.close();
   });
 
-  jest.spyOn(queryModule, "usePost").mockReturnValue(mockFn);
-  const { component } = setup();
+  test("ConfigTab can reset all settings", async () => {
+    const mockFn = jest.fn().mockImplementation((_url, body) => {
+      data = {
+        ...data,
+        ...body.values,
+      };
+    });
 
-  render(component);
+    jest.spyOn(queryModule, "usePost").mockReturnValue(mockFn);
+    const { component } = setup();
 
-  const toggle = await screen.findByRole("switch", {
-    name: "auto_designed-True",
-  });
+    render(component);
 
-  expect(toggle).toBeVisible();
+    const resetButton = await screen.findByRole("button", {
+      name: words("config.reset"),
+    });
 
-  await userEvent.click(toggle, { skipHover: true });
+    expect(resetButton).toBeVisible();
 
-  expect(mockFn).toHaveBeenCalledWith(
-    "/lsm/v1/service_inventory/service_name_a/service_instance_id_a/config",
-    {
-      current_version: 3,
-      values: {
-        auto_designed: false,
+    expect(
+      screen.getByRole("switch", { name: "auto_creating-False" }),
+    ).toBeVisible();
+
+    await userEvent.click(resetButton, { skipHover: true });
+
+    expect(mockFn).toHaveBeenCalledWith(
+      "/lsm/v1/service_inventory/service_name_a/service_instance_id_a/config",
+      {
+        current_version: 3,
+        values: {
+          auto_creating: true,
+          auto_designed: true,
+          auto_update_designed: true,
+          auto_update_inprogress: true,
+        },
       },
-    },
-  );
-});
-
-test("ConfigTab handles hooks with environment modifier correctly", async () => {
-  const environmentModifier = EnvironmentModifierImpl();
-
-  environmentModifier.setEnvironment(Service.a.environment);
-  const { component, store } = setup(environmentModifier);
-
-  store.dispatch.environment.setEnvironmentDetailsById({
-    id: Service.a.environment,
-    value: RemoteData.success({ halted: true } as EnvironmentDetails),
-  });
-  render(component);
-
-  const toggle = await screen.findByRole("switch", {
-    name: "auto_designed-False",
+    );
+    expect(
+      await screen.findByRole("switch", { name: "auto_creating-True" }),
+    ).toBeVisible();
   });
 
-  expect(toggle).toBeVisible();
-  expect(toggle).toBeDisabled();
+  test("ConfigTab can change 1 toggle", async () => {
+    data = {
+      auto_creating: false,
+      auto_designed: true,
+      auto_update_designed: false,
+      auto_update_inprogress: false,
+    };
+    const mockFn = jest.fn().mockImplementation((_url, body) => {
+      data = {
+        ...data,
+        ...body.values,
+      };
+    });
+
+    jest.spyOn(queryModule, "usePost").mockReturnValue(mockFn);
+    const { component } = setup();
+
+    render(component);
+
+    const toggle = await screen.findByRole("switch", {
+      name: "auto_designed-True",
+    });
+
+    expect(toggle).toBeVisible();
+
+    await userEvent.click(toggle, { skipHover: true });
+
+    expect(mockFn).toHaveBeenCalledWith(
+      "/lsm/v1/service_inventory/service_name_a/service_instance_id_a/config",
+      {
+        current_version: 3,
+        values: {
+          auto_designed: false,
+        },
+      },
+    );
+  });
+
+  test("ConfigTab handles hooks with environment modifier correctly", async () => {
+    const environmentModifier = EnvironmentModifierImpl();
+
+    environmentModifier.setEnvironment(Service.a.environment);
+    const { component, store } = setup(environmentModifier);
+
+    store.dispatch.environment.setEnvironmentDetailsById({
+      id: Service.a.environment,
+      value: RemoteData.success({ halted: true } as EnvironmentDetails),
+    });
+    render(component);
+
+    const toggle = await screen.findByRole("switch", {
+      name: "auto_designed-False",
+    });
+
+    expect(toggle).toBeVisible();
+    expect(toggle).toBeDisabled();
+  });
 });
