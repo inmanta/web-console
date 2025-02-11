@@ -1,14 +1,18 @@
 import { Pagination } from "@/Core";
 
+/**
+ * Returns pagination handlers for the given links and metadata.
+ *
+ * @param {Pagination.Links} links - The pagination links.
+ * @param {Pagination.Metadata} metadata - The pagination metadata.
+ * @returns {Pagination.Handlers} The pagination handlers.
+ */
 export const getPaginationHandlers = (
-  links: Pagination.Links | undefined,
+  links: Pagination.Links,
   metadata: Pagination.Metadata,
 ): Pagination.Handlers => {
   if (!links) {
-    return {
-      prev: "",
-      next: "",
-    };
+    return {};
   }
 
   const { prev, next } = getPaginationHandlerUrls(links, metadata);
