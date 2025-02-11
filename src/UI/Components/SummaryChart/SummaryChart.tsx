@@ -1,11 +1,11 @@
 import React, { useContext } from "react";
 import { ChartDonut, ChartLegend } from "@patternfly/react-charts";
 import {
-  chart_global_danger_Color_100,
+  t_global_color_status_success_default,
   chart_color_blue_300,
-  chart_theme_gray_ColorScale_300,
-  chart_color_green_200,
-  chart_global_warning_Color_100,
+  t_global_color_status_danger_default,
+  t_global_color_status_warning_default,
+  t_global_color_nonstatus_gray_default,
 } from "@patternfly/react-tokens";
 import { InstancesByLabel } from "@/Core";
 import { ServiceInventoryContext } from "@/Slices/ServiceInventory/UI/ServiceInventory";
@@ -165,11 +165,11 @@ export const SummaryChart: React.FC<Props> = ({ by_label, total }) => {
 };
 
 const colorsForChart = {
-  danger: chart_global_danger_Color_100,
-  warning: chart_global_warning_Color_100,
-  success: chart_color_green_200,
+  danger: t_global_color_status_danger_default,
+  warning: t_global_color_status_warning_default,
+  success: t_global_color_status_success_default,
   info: chart_color_blue_300,
-  no_label: chart_theme_gray_ColorScale_300,
+  no_label: t_global_color_nonstatus_gray_default,
 };
 
 const orderedLabels = ["danger", "warning", "success", "info", "no_label"];
