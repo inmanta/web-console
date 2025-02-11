@@ -8,6 +8,7 @@ import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { getStoreInstance } from "@/Data";
+import * as queryModule from "@/Data/Managers/V2/helpers/useQueries";
 import {
   dependencies,
   MockEnvironmentModifier,
@@ -17,7 +18,6 @@ import {
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import { DuplicateInstancePage } from "./DuplicateInstancePage";
-import * as queryModule from "@/Data/Managers/V2/helpers/useQueries";
 
 expect.extend(toHaveNoViolations);
 
@@ -57,6 +57,7 @@ function setup(entity = "a") {
   return { component };
 }
 const server = setupServer();
+
 beforeAll(() => {
   server.listen();
 });

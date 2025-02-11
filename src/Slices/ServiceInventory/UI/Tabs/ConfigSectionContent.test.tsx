@@ -20,8 +20,8 @@ import {
 } from "@/Core";
 import { InstanceLog } from "@/Core/Domain/HistoryLog";
 import { getStoreInstance } from "@/Data";
-import { InstanceDetailsContext } from "@/Slices/ServiceInstanceDetails/Core/Context";
 import * as queryModule from "@/Data/Managers/V2/helpers/useQueries";
+import { InstanceDetailsContext } from "@/Slices/ServiceInstanceDetails/Core/Context";
 
 import {
   dependencies,

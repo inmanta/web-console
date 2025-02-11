@@ -1,19 +1,20 @@
-import * as queryModule from "@/Data/Managers/V2/helpers/useQueries";
 import React, { useState } from "react";
-import { AutoCompleteInputProvider } from "./AutoCompleteInputProvider";
-import { fireEvent, render, screen } from "@testing-library/react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { MemoryRouter } from "react-router-dom";
-import { DependencyProvider } from "@/UI/Dependency";
-import { dependencies, ServiceInstance } from "@/Test";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
-import { getStoreInstance } from "@/Data";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
+import { getStoreInstance } from "@/Data";
+import * as queryModule from "@/Data/Managers/V2/helpers/useQueries";
+import { dependencies, ServiceInstance } from "@/Test";
+import { DependencyProvider } from "@/UI/Dependency";
+import { AutoCompleteInputProvider } from "./AutoCompleteInputProvider";
 
 const server = setupServer(
   http.get("/lsm/v1/service_inventory/test_entity", ({ request }) => {
     console.log(request.url);
+
     return HttpResponse.json({
       data: [ServiceInstance.a],
       metadata: {
@@ -57,6 +58,7 @@ const TestWrapper = () => {
 test("Given the AutoCompleteInputProvider When typing an instance name or id Then the correct request is fired", async () => {
   server.listen();
   const mockFn = jest.fn();
+
   jest.spyOn(queryModule, "useGet").mockReturnValue(async (path) => {
     mockFn(path);
     const response = await fetch(path);
@@ -69,6 +71,7 @@ test("Given the AutoCompleteInputProvider When typing an instance name or id The
   const relationInputField = await screen.findByPlaceholderText(
     "Select an instance of test_entity",
   );
+
   expect(mockFn.mock.calls[0]).toStrictEqual([
     "/lsm/v1/service_inventory/test_entity?include_deployment_progress=True&limit=250&",
   ]);

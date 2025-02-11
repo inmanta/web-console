@@ -14,6 +14,7 @@ test("GIVEN ServiceInventory WHEN on 2nd page with outdated 1st page and user cl
   expect(rowsOnPage.length).toEqual(4);
 
   const nextButton = screen.getByRole("button", { name: "Go to next page" });
+
   expect(nextButton).toBeEnabled();
   await userEvent.click(nextButton);
 
@@ -25,6 +26,7 @@ test("GIVEN ServiceInventory WHEN on 2nd page with outdated 1st page and user cl
   const prevButton = screen.getByRole("button", {
     name: "Go to previous page",
   });
+
   expect(prevButton).toBeEnabled();
 
   //server is set up in a way that if call through prev link was made, it would return different result - see PaginationServer and getPaginationHandlers for more info
