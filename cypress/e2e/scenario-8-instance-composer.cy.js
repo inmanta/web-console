@@ -432,7 +432,7 @@ if (Cypress.env("edition") === "iso") {
           clientX: 800,
           clientY: 500,
         })
-        .trigger("mouseup");
+        .trigger("mouseup", { force: true });
 
       cy.get(".joint-loose_element-highlight").should("be.visible");
 
@@ -458,7 +458,7 @@ if (Cypress.env("edition") === "iso") {
           clientX: 800,
           clientY: 500,
         })
-        .trigger("mouseup");
+        .trigger("mouseup", { force: true });
 
       cy.get(".joint-loose_element-highlight").should("be.visible");
 
@@ -525,7 +525,7 @@ if (Cypress.env("edition") === "iso") {
           clientX: 800,
           clientY: 500,
         })
-        .trigger("mouseup");
+        .trigger("mouseup", { force: true });
 
       //highlighted loose element should be visible
       cy.get(".joint-loose_element-highlight").should("be.visible");
@@ -540,7 +540,7 @@ if (Cypress.env("edition") === "iso") {
           clientX: 800,
           clientY: 500,
         })
-        .trigger("mouseup");
+        .trigger("mouseup", { force: true });
 
       //highlighted loose element should be removed
       cy.get(".joint-loose_element-highlight").should("not.exist");
@@ -915,7 +915,7 @@ if (Cypress.env("edition") === "iso") {
           clientX: 800,
           clientY: 500,
         })
-        .trigger("mouseup");
+        .trigger("mouseup", { force: true });
 
       cy.get('[data-type="app.ServiceEntityBlock"')
         .contains("child-service")
@@ -927,7 +927,7 @@ if (Cypress.env("edition") === "iso") {
           clientX: 800,
           clientY: 500,
         })
-        .trigger("mouseup");
+        .trigger("mouseup", { force: true });
 
       cy.get('[data-testid="Error-container"]').should("not.exist");
 
@@ -1027,7 +1027,7 @@ if (Cypress.env("edition") === "iso") {
           clientX: 800,
           clientY: 500,
         })
-        .trigger("mouseup");
+        .trigger("mouseup", { force: true });
 
       cy.get('[data-type="app.ServiceEntityBlock"')
         .contains("child-with-many")
