@@ -35,6 +35,10 @@ export const EnvSelector: React.FC<Props> = ({
   const { routeManager, authHelper } = useContext(DependencyContext);
   const navigate = useNavigate();
 
+  const handleToggle = () => {
+    setIsOpen(!isOpen);
+  };
+
   return (
     <Dropdown
       isOpen={isOpen}
@@ -42,6 +46,7 @@ export const EnvSelector: React.FC<Props> = ({
         position: "end",
       }}
       onOpenChange={(open: boolean) => setIsOpen(open)}
+      onClick={handleToggle}
       toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
         <MenuToggle
           id="toggle-button"
@@ -49,7 +54,7 @@ export const EnvSelector: React.FC<Props> = ({
           isExpanded={isOpen}
           aria-label={toggleText}
           isFullHeight
-          onClick={() => setIsOpen(!isOpen)}
+          onClick={handleToggle}
           icon={authHelper.getUser() ? <UserCircleIcon /> : null}
         >
           <StyledDiv>
