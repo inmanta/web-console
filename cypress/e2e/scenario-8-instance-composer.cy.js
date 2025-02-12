@@ -856,6 +856,8 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[data-type="Link"]').should("have.length", 1);
 
       cy.get("button").contains("Deploy").click();
+
+      cy.wait(500); //sometimes the navigation is too fast and the redirect isn't being received properly
       cy.get('[aria-label="Sidebar-Navigation-Item"]')
         .contains("Service Catalog")
         .click();
