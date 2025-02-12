@@ -426,8 +426,9 @@ if (Cypress.env("edition") === "iso") {
       //Drag extra_embedded onto canvas and assert that is highlighted as loose element
       cy.get('[aria-labelledby="bodyTwo_extra_embedded"]')
         .trigger("mouseover", { force: true }) // sometimes cypress doesn't trigger the event as text in that element is in front of the component
-        .trigger("mousedown")
+        .trigger("mousedown", { force: true })
         .trigger("mousemove", {
+          force: true,
           clientX: 800,
           clientY: 500,
         })
@@ -450,9 +451,10 @@ if (Cypress.env("edition") === "iso") {
 
       //Drag once again extra_embedded onto canvas and assert that is highlighted as loose element
       cy.get('[aria-labelledby="bodyTwo_extra_embedded"]')
-        .trigger("mouseover")
-        .trigger("mousedown")
+        .trigger("mouseover", { force: true }) // sometimes cypress doesn't trigger the event as text in that element is in front of the component
+        .trigger("mousedown", { force: true })
         .trigger("mousemove", {
+          force: true,
           clientX: 800,
           clientY: 500,
         })
@@ -516,9 +518,10 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#inventory-tab").click();
 
       cy.get('[aria-labelledby="bodyTwo_test_name"]')
-        .trigger("mouseover")
-        .trigger("mousedown")
+        .trigger("mouseover", { force: true }) // sometimes cypress doesn't trigger the event as text in that element is in front of the component
+        .trigger("mousedown", { force: true })
         .trigger("mousemove", {
+          force: true,
           clientX: 800,
           clientY: 500,
         })
@@ -548,9 +551,10 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[data-name="fit-to-screen"]').click();
 
       cy.get('[aria-labelledby="bodyTwo_test_name2"]')
-        .trigger("mouseover")
-        .trigger("mousedown")
+        .trigger("mouseover", { force: true }) // sometimes cypress doesn't trigger the event as text in that element is in front of the component
+        .trigger("mousedown", { force: true })
         .trigger("mousemove", {
+          force: true,
           clientX: 600,
           clientY: 400,
         })
@@ -828,9 +832,10 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#inventory-tab").click();
 
       cy.get('[aria-labelledby="bodyTwo_test_name"]')
-        .trigger("mouseover")
-        .trigger("mousedown")
+        .trigger("mouseover", { force: true }) // sometimes cypress doesn't trigger the event as text in that element is in front of the component
+        .trigger("mousedown", { force: true })
         .trigger("mousemove", {
+          force: true,
           clientX: 800,
           clientY: 600,
         })
@@ -903,9 +908,10 @@ if (Cypress.env("edition") === "iso") {
         .click();
 
       cy.get('[aria-labelledby="bodyTwo_test_name2"]')
-        .trigger("mouseover")
-        .trigger("mousedown")
+        .trigger("mouseover", { force: true }) // sometimes cypress doesn't trigger the event as text in that element is in front of the component
+        .trigger("mousedown", { force: true })
         .trigger("mousemove", {
+          force: true,
           clientX: 800,
           clientY: 500,
         })
@@ -1014,9 +1020,10 @@ if (Cypress.env("edition") === "iso") {
 
       //add first inter-service relation
       cy.get('[aria-labelledby="bodyTwo_test_name"]')
-        .trigger("mouseover")
-        .trigger("mousedown")
+        .trigger("mouseover", { force: true }) // sometimes cypress doesn't trigger the event as text in that element is in front of the component
+        .trigger("mousedown", { force: true })
         .trigger("mousemove", {
+          force: true,
           clientX: 800,
           clientY: 500,
         })
@@ -1036,9 +1043,10 @@ if (Cypress.env("edition") === "iso") {
 
       //add second inter-service relation
       cy.get('[aria-labelledby="bodyTwo_test_name2"]')
-        .trigger("mouseover")
-        .trigger("mousedown")
+        .trigger("mouseover", { force: true }) // sometimes cypress doesn't trigger the event as text in that element is in front of the component
+        .trigger("mousedown", { force: true })
         .trigger("mousemove", {
+          force: true,
           clientX: 800,
           clientY: 700,
         })
