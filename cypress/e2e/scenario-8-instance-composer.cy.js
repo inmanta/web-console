@@ -558,7 +558,7 @@ if (Cypress.env("edition") === "iso") {
           clientX: 600,
           clientY: 400,
         })
-        .trigger("mouseup");
+        .trigger("mouseup", { force: true });
       cy.get('[data-name="fit-to-screen"]').click();
       cy.get('[data-type="app.ServiceEntityBlock"')
         .contains("embedded")
@@ -839,7 +839,7 @@ if (Cypress.env("edition") === "iso") {
           clientX: 800,
           clientY: 600,
         })
-        .trigger("mouseup");
+        .trigger("mouseup", { force: true });
 
       cy.get('[data-type="app.ServiceEntityBlock"')
         .contains("child-service")
@@ -1050,7 +1050,7 @@ if (Cypress.env("edition") === "iso") {
           clientX: 800,
           clientY: 700,
         })
-        .trigger("mouseup");
+        .trigger("mouseup", { force: true });
 
       cy.get('[data-type="app.ServiceEntityBlock"')
         .contains("child-with-many")
