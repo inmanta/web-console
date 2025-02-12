@@ -5,7 +5,7 @@ export function scrollRowIntoView(
   scrollElementIntoView(rowRef.current, options);
 }
 
-export function scrollElementIntoView(
+function scrollElementIntoView(
   element: HTMLSpanElement | null,
   options: ScrollIntoViewOptions = { block: "center" },
 ): void {

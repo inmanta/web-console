@@ -2,7 +2,7 @@ import { DateRange, IntRange, PageSize, Pagination } from "@/Core/Domain";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { DesiredStateVersion, DesiredStateVersionStatus } from "./Domain";
 
-export interface DesiredStateParams {
+interface DesiredStateParams {
   filter?: Filter;
   pageSize: PageSize.PageSize;
   currentPage: CurrentPage;

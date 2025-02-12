@@ -1,7 +1,7 @@
 import { EmbeddedEntity } from "@/Core";
 import { attributesList } from "./Attribute";
 
-export const a: EmbeddedEntity = {
+const a: EmbeddedEntity = {
   attributes: [
     {
       name: "service_id",
@@ -711,7 +711,7 @@ export const multiNestedEditable: EmbeddedEntity[] = [
   },
 ];
 
-export const embedded: EmbeddedEntity = {
+const embedded: EmbeddedEntity = {
   attributes: attributesList,
   embedded_entities: [],
   inter_service_relations: [],
@@ -721,6 +721,7 @@ export const embedded: EmbeddedEntity = {
   lower_limit: 1,
   upper_limit: 4,
 };
+
 export const embedded_base: EmbeddedEntity = {
   attributes: attributesList,
   embedded_entities: [

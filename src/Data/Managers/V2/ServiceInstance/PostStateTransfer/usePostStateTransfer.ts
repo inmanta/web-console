@@ -7,12 +7,13 @@ import {
 import { ParsedNumber } from "@/Core";
 import { usePost } from "../../helpers";
 
-export interface PostStateTransfer {
+interface PostStateTransfer {
   message: string;
   current_version: ParsedNumber;
   target_state: string;
 }
-export interface StateTransferResponse {
+
+interface StateTransferResponse {
   current_version: 0;
   target_state: "string";
   message: "string";

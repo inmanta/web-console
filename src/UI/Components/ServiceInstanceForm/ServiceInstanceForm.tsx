@@ -47,7 +47,7 @@ interface Props {
  * @param {boolean} [isEdit=false] - Whether the form is in edit mode. Default is false.
  * @returns {InstanceAttributeModel} The calculated form state.
  */
-export const getFormState = (
+const getFormState = (
   fields,
   apiVersion,
   originalAttributes,

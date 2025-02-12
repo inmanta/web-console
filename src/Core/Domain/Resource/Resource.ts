@@ -110,7 +110,6 @@ export enum FilterKind {
   Type = "Type",
   Agent = "Agent",
   Value = "Value",
-  Status = "Status",
 }
 
 export type SortKey =
@@ -128,7 +127,7 @@ export interface ResponseFromVersion {
   metadata: Pagination.Metadata;
 }
 
-export interface Id {
+interface Id {
   entityType: string;
   agentName: string;
   attribute: string;

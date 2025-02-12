@@ -51,7 +51,7 @@ import * as CreateCallback from "@S/ServiceDetails/Core/CreateCallback";
 import * as DeleteCallback from "@S/ServiceDetails/Core/DeleteCallback";
 import * as ClearEnvironment from "@S/Settings/Core/ClearEnvironmentCommand";
 
-export type Command =
+type Command =
   | ClearEnvironment.Command
   | ControlAgent
   | CreateCallback.Command

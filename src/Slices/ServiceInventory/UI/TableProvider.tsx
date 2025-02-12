@@ -7,7 +7,7 @@ import {
 import { InventoryTable } from "./InventoryTable";
 import { InventoryTablePresenter } from "./Presenters";
 
-export interface Props {
+interface Props {
   instances: ServiceInstanceModelWithTargetStates[];
   serviceEntity: ServiceModel;
   sort: Sort.Type;
