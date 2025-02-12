@@ -67,10 +67,10 @@ if (Cypress.env("edition") === "iso") {
     /^[0-9a-f]{8}-[0-9a-f]{4}-[4][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
   describe("Scenario 8 - Instance Composer", async () => {
-    // before(() => {
-    //   clearEnvironment();
-    //   forceUpdateEnvironment();
-    // });
+    before(() => {
+      clearEnvironment();
+      forceUpdateEnvironment();
+    });
 
     // Note: The fullscreen mode is tested in Jest. In Cypress this functionality has to be stubbed, and would be redundant with the Unit tests.
     it("8.1 composer opens up has its default panning working", () => {
