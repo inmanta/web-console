@@ -4,7 +4,7 @@ import {
 } from "@/UI/Components/TreeTable/Helpers";
 import { InventoryAttributeHelper } from "./AttributeHelper";
 import { InventoryTreeTableHelper } from "./TreeTableHelper";
-//mock is to avoid TypError - Temporary workaround - to be removed
+//mock is to avoid TypeError - Temporary workaround - to be removed - https://github.com/inmanta/web-console/issues/6194
 jest.mock("@/Data/Managers/V2/ServiceInstance");
 
 test("TreeTableHelper getExpansionState returns correct expansionState", () => {
