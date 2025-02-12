@@ -425,7 +425,7 @@ if (Cypress.env("edition") === "iso") {
 
       //Drag extra_embedded onto canvas and assert that is highlighted as loose element
       cy.get('[aria-labelledby="bodyTwo_extra_embedded"]')
-        .trigger("mouseover")
+        .trigger("mouseover", { force: true }) // sometimes cypress doesn't trigger the event as text in that element is in front of the component
         .trigger("mousedown")
         .trigger("mousemove", {
           clientX: 800,
