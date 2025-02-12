@@ -1,6 +1,6 @@
 import React, { act } from "react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
@@ -11,10 +11,7 @@ import {
   QueryResolverImpl,
   CommandResolverImpl,
   getStoreInstance,
-  BaseApiHelper,
-  DeleteServiceCommandManager,
 } from "@/Data";
-import { defaultAuthContext } from "@/Data/Auth/AuthContext";
 import {
   DynamicCommandManagerResolverImpl,
   DynamicQueryManagerResolverImpl,
@@ -23,6 +20,7 @@ import {
   DeferredApiHelper,
   dependencies,
 } from "@/Test";
+import { testClient } from "@/Test/Utils/react-query-setup";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
   CallbacksQueryManager,
@@ -36,7 +34,6 @@ import { Page } from "@S/ServiceDetails/UI/Page";
 const server = setupServer();
 
 function setup() {
-  const client = new QueryClient();
   const store = getStoreInstance();
   const apiHelper = new DeferredApiHelper();
 
@@ -48,10 +45,6 @@ function setup() {
 
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolverImpl([callbacksQueryManager]),
-  );
-
-  const deleteServiceCommandManager = DeleteServiceCommandManager(
-    BaseApiHelper(undefined, defaultAuthContext),
   );
 
   const deleteCallbackCommandManager = DeleteCallbackCommandManager(
@@ -66,14 +59,13 @@ function setup() {
 
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolverImpl([
-      deleteServiceCommandManager,
       deleteCallbackCommandManager,
       createCallbackCommandManager,
     ]),
   );
 
   const component = (
-    <QueryClientProvider client={client}>
+    <QueryClientProvider client={testClient}>
       <MemoryRouter initialEntries={[`/lsm/catalog/${Service.a.name}/details`]}>
         <DependencyProvider
           dependencies={{ ...dependencies, queryResolver, commandResolver }}

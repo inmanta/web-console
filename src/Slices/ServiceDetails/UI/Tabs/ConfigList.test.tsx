@@ -1,22 +1,12 @@
 import React, { act } from "react";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { Config, EnvironmentDetails, RemoteData } from "@/Core";
-import {
-  BaseApiHelper,
-  CommandResolverImpl,
-  getStoreInstance,
-  ServiceConfigCommandManager,
-  ServiceConfigStateHelper,
-} from "@/Data";
-import { defaultAuthContext } from "@/Data/Auth/AuthContext";
-import {
-  dependencies,
-  DynamicCommandManagerResolverImpl,
-  Service,
-  ServiceInstance,
-} from "@/Test";
+import { getStoreInstance } from "@/Data";
+import { dependencies, Service, ServiceInstance } from "@/Test";
+import { testClient } from "@/Test/Utils/react-query-setup";
 import { DependencyProvider, EnvironmentModifierImpl } from "@/UI/Dependency";
 import { ConfigList } from "./ConfigList";
 
@@ -31,11 +21,6 @@ const axe = configureAxe({
 
 function setup() {
   const store = getStoreInstance();
-  const baseApiHelper = BaseApiHelper(undefined, defaultAuthContext);
-  const commandManager = ServiceConfigCommandManager(
-    baseApiHelper,
-    ServiceConfigStateHelper(store),
-  );
 
   store.dispatch.environment.setEnvironmentDetailsById({
     id: Service.a.environment,
@@ -44,23 +29,21 @@ function setup() {
   const environmentModifier = EnvironmentModifierImpl();
 
   environmentModifier.setEnvironment(Service.a.environment);
-  const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolverImpl([commandManager]),
-  );
 
   return {
     component: (config: Config) => (
-      <DependencyProvider
-        dependencies={{
-          ...dependencies,
-          commandResolver,
-          environmentModifier,
-        }}
-      >
-        <StoreProvider store={store}>
-          <ConfigList serviceName={Service.a.name} config={config} />
-        </StoreProvider>
-      </DependencyProvider>
+      <QueryClientProvider client={testClient}>
+        <DependencyProvider
+          dependencies={{
+            ...dependencies,
+            environmentModifier,
+          }}
+        >
+          <StoreProvider store={store}>
+            <ConfigList serviceName={Service.a.name} config={config} />
+          </StoreProvider>
+        </DependencyProvider>
+      </QueryClientProvider>
     ),
     store,
   };

@@ -5,18 +5,8 @@ import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { AttributeModel, RemoteData, ServiceModel } from "@/Core";
-import {
-  CommandResolverImpl,
-  defaultAuthContext,
-  getStoreInstance,
-} from "@/Data";
-import { UpdateInstanceAttributeCommandManager } from "@/Data/Managers/UpdateInstanceAttribute";
-import {
-  DeferredApiHelper,
-  dependencies,
-  DynamicCommandManagerResolverImpl,
-  Service,
-} from "@/Test";
+import { getStoreInstance } from "@/Data";
+import { dependencies, Service } from "@/Test";
 import { multiNestedEditable } from "@/Test/Data/Service/EmbeddedEntity";
 import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI";
 import { AttributeTable } from "./AttributeTable";
@@ -49,16 +39,8 @@ const attribute2: AttributeModel = {
 };
 
 function setup(service: ServiceModel) {
-  const apiHelper = new DeferredApiHelper();
   const store = getStoreInstance();
 
-  const updateAttribute = UpdateInstanceAttributeCommandManager(
-    defaultAuthContext,
-    apiHelper,
-  );
-  const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolverImpl([updateAttribute]),
-  );
   const environmentHandler = EnvironmentHandlerImpl(
     useLocation,
     dependencies.routeManager,
@@ -86,7 +68,6 @@ function setup(service: ServiceModel) {
       <DependencyProvider
         dependencies={{
           ...dependencies,
-          commandResolver,
           environmentHandler,
         }}
       >

@@ -1,96 +1,116 @@
-import React, { act } from "react";
+import React from "react";
 import { MemoryRouter } from "react-router-dom";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
-import { Either } from "@/Core";
+import { HttpResponse, http } from "msw";
+import { setupServer } from "msw/node";
+import { getStoreInstance } from "@/Data";
 import {
-  getStoreInstance,
-  QueryManagerResolverImpl,
-  QueryResolverImpl,
-} from "@/Data";
-import {
-  DeferredApiHelper,
   dependencies,
+  MockEnvironmentHandler,
+  Service,
   ServiceInstance,
-  StaticScheduler,
 } from "@/Test";
+import { testClient } from "@/Test/Utils/react-query-setup";
 import { DependencyProvider } from "@/UI/Dependency";
 import { InstanceCellButton } from "./InstanceCellButton";
 
-function setup() {
+function setup(serviceName: string, id: string) {
   const store = getStoreInstance();
-  const scheduler = new StaticScheduler();
-  const apiHelper = new DeferredApiHelper();
-  const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler),
-  );
+
   const handleClick = jest.fn();
   const component = (
-    <MemoryRouter>
-      <DependencyProvider
-        dependencies={{
-          ...dependencies,
-          queryResolver,
-        }}
-      >
-        <StoreProvider store={store}>
-          <InstanceCellButton
-            id="id123"
-            serviceName="test_service"
-            onClick={handleClick}
-          />
-        </StoreProvider>
-      </DependencyProvider>
-    </MemoryRouter>
+    <QueryClientProvider client={testClient}>
+      <MemoryRouter initialEntries={[{ search: "?env=aaa" }]}>
+        <DependencyProvider
+          dependencies={{
+            ...dependencies,
+            environmentHandler: MockEnvironmentHandler(Service.a.environment),
+          }}
+        >
+          <StoreProvider store={store}>
+            <InstanceCellButton
+              id={id}
+              serviceName={serviceName}
+              onClick={handleClick}
+            />
+          </StoreProvider>
+        </DependencyProvider>
+      </MemoryRouter>
+    </QueryClientProvider>
   );
 
-  return { component, apiHelper, scheduler };
+  return { component };
 }
 
-test("Given the InstanceCellButton When an instance has an identity Then it is shown instead of the id", async () => {
-  const { component, apiHelper } = setup();
-
-  render(component);
-
-  await act(async () => {
-    apiHelper.resolve(Either.right({ data: ServiceInstance.a }));
-  });
-  expect(
-    await screen.findByText(
-      ServiceInstance.a.service_identity_attribute_value as string,
+describe("InstanceCellButton", () => {
+  const server = setupServer(
+    http.get(
+      "/lsm/v1/service_inventory/service_name_a/service_instance_id_a",
+      () => {
+        return HttpResponse.json({ data: ServiceInstance.a });
+      },
     ),
-  ).toBeVisible();
-});
+    http.get(
+      "/lsm/v1/service_inventory/service_name_a/service_instance_id_b",
+      () => {
+        return HttpResponse.json({
+          data: {
+            ...ServiceInstance.b,
+            service_identity_attribute_value: undefined,
+          },
+        });
+      },
+    ),
+    http.get(
+      "/lsm/v1/service_inventory/service_name_a/service_instance_id_c",
+      () => {
+        return HttpResponse.json(
+          {
+            message: "something happened",
+          },
+          {
+            status: 500,
+          },
+        );
+      },
+    ),
+  );
 
-test("Given the InstanceCellButton When an instance doesn't have an identity Then the id is shown", async () => {
-  const { component, apiHelper } = setup();
-
-  render(component);
-
-  await act(async () => {
-    apiHelper.resolve(
-      Either.right({
-        data: {
-          ...ServiceInstance.a,
-          service_identity_attribute_value: undefined,
-        },
-      }),
-    );
+  beforeAll(() => {
+    server.listen();
   });
-  expect(await screen.findByText("id123")).toBeVisible();
-});
 
-test("Given the InstanceCellButton When the instance request fails Then the id is shown", async () => {
-  const { component, apiHelper } = setup();
-
-  render(component);
-
-  await act(async () => {
-    apiHelper.resolve(
-      Either.left({
-        message: "Something happened",
-      }),
-    );
+  afterAll(() => {
+    server.close();
   });
-  expect(await screen.findByText("id123")).toBeVisible();
+
+  test("Given the InstanceCellButton When an instance has an identity Then it is shown instead of the id", async () => {
+    const { component } = setup("service_name_a", "service_instance_id_a");
+
+    render(component);
+
+    expect(
+      await screen.findByText(
+        ServiceInstance.a.service_identity_attribute_value as string,
+      ),
+    ).toBeVisible();
+  });
+
+  test("Given the InstanceCellButton When an instance doesn't have an identity Then the id is shown", async () => {
+    const { component } = setup("service_name_a", "service_instance_id_b");
+
+    render(component);
+
+    expect(await screen.findByText("service_instance_id_b")).toBeVisible();
+  });
+
+  test("Given the InstanceCellButton When the instance request fails Then the id is shown", async () => {
+    const { component } = setup("service_name_a", "service_instance_id_c");
+
+    render(component);
+
+    expect(await screen.findByText("service_instance_id_c")).toBeVisible();
+  });
 });

@@ -9,7 +9,6 @@ import {
   CommandResolverImpl,
   getStoreInstance,
   CommandManagerResolverImpl,
-  defaultAuthContext,
 } from "@/Data";
 import {
   DeferredApiHelper,
@@ -36,7 +35,7 @@ function setup() {
 
   const store = getStoreInstance();
   const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolverImpl(store, apiHelper, defaultAuthContext),
+    new CommandManagerResolverImpl(store, apiHelper),
   );
 
   const component = (

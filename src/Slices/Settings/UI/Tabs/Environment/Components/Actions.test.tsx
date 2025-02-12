@@ -10,7 +10,6 @@ import {
   QueryResolverImpl,
   CommandManagerResolverImpl,
   QueryManagerResolverImpl,
-  defaultAuthContext,
 } from "@/Data";
 import {
   DeferredApiHelper,
@@ -33,7 +32,7 @@ function setup() {
     new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler),
   );
   const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolverImpl(store, apiHelper, defaultAuthContext),
+    new CommandManagerResolverImpl(store, apiHelper),
   );
 
   dependencies.environmentModifier.setEnvironment("env");

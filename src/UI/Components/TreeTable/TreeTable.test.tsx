@@ -2,13 +2,7 @@ import React, { act } from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { Attributes, EntityLike, ServiceModel } from "@/Core";
-import { CommandResolverImpl, defaultAuthContext } from "@/Data";
-import { UpdateInstanceAttributeCommandManager } from "@/Data/Managers/UpdateInstanceAttribute";
-import {
-  DeferredApiHelper,
-  dependencies,
-  DynamicCommandManagerResolverImpl,
-} from "@/Test";
+import { dependencies } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { CatalogAttributeHelper, CatalogTreeTableHelper } from "./Catalog";
@@ -25,21 +19,10 @@ function inventorySetup(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setTab?: jest.Mock<any, any, any>,
 ) {
-  const apiHelper = new DeferredApiHelper();
-
-  const updateAttribute = UpdateInstanceAttributeCommandManager(
-    defaultAuthContext,
-    apiHelper,
-  );
-  const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolverImpl([updateAttribute]),
-  );
-
   const component = (
     <DependencyProvider
       dependencies={{
         ...dependencies,
-        commandResolver,
       }}
     >
       <TreeTable
@@ -165,21 +148,10 @@ test("TreeTable 2nd level of nested property can be expanded", async () => {
 });
 
 function catalogSetup(service: EntityLike) {
-  const apiHelper = new DeferredApiHelper();
-
-  const updateAttribute = UpdateInstanceAttributeCommandManager(
-    defaultAuthContext,
-    apiHelper,
-  );
-  const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolverImpl([updateAttribute]),
-  );
-
   const component = (
     <DependencyProvider
       dependencies={{
         ...dependencies,
-        commandResolver,
       }}
     >
       <TreeTable

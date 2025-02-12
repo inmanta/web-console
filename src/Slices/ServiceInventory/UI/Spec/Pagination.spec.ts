@@ -1,41 +1,45 @@
-import { act } from "react";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { Either } from "@/Core";
-import { ServiceInstance } from "@/Test";
 import { ServiceInventoryPrepper } from "./ServiceInventoryPrepper";
+import { paginationServer } from "./serverSetup";
 
 test("GIVEN ServiceInventory WHEN on 2nd page with outdated 1st page and user clicks on prev THEN first page is shown", async () => {
-  const { component, apiHelper } = new ServiceInventoryPrepper().prep();
+  paginationServer.listen();
+  const { component } = new ServiceInventoryPrepper().prep();
 
   render(component);
 
-  await act(async () => {
-    await apiHelper.resolve(
-      Either.right({
-        data: [ServiceInstance.a, ServiceInstance.b],
-        links: {
-          first: "first",
-          prev: "/fake-link?start=fake-param",
-          self: "self",
-          next: "fake-link?end=fake-param",
-          last: "last",
-        },
-        metadata: {
-          total: 67,
-          before: 22,
-          after: 25,
-          page_size: 20,
-        },
-      }),
-    );
+  const rowsOnPage = await screen.findAllByLabelText("InstanceRow-Intro");
+
+  expect(rowsOnPage.length).toEqual(4);
+
+  const nextButton = screen.getByRole("button", { name: "Go to next page" });
+
+  expect(nextButton).toBeEnabled();
+  await userEvent.click(nextButton);
+
+  const refreshedRowsOnPage1 =
+    await screen.findAllByLabelText("InstanceRow-Intro");
+
+  expect(refreshedRowsOnPage1.length).toEqual(1);
+
+  const prevButton = screen.getByRole("button", {
+    name: "Go to previous page",
   });
 
-  const button = screen.getByRole("button", { name: "Go to previous page" });
+  expect(prevButton).toBeEnabled();
 
-  expect(button).toBeEnabled();
+  //server is set up in a way that if call through prev link was made, it would return different result - see PaginationServer and getPaginationHandlers for more info
+  await userEvent.click(prevButton);
 
-  await userEvent.click(button);
+  const refreshedRowsOnPage2 =
+    await screen.findAllByLabelText("InstanceRow-Intro");
 
-  expect(apiHelper.pendingRequests).toEqual([]);
+  expect(refreshedRowsOnPage2.length).toEqual(4);
+
+  const refreshed = screen.getByRole("button", { name: "Go to previous page" });
+
+  expect(refreshed).toBeDisabled();
+
+  paginationServer.close();
 });

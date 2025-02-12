@@ -25,7 +25,7 @@ export const DuplicateInstancePage: React.FC<{
 
   if (isError) {
     return (
-      <ErrorView ariaLabel="DuplicateInstance-Error" message={error.message} />
+      <ErrorView ariaLabel="DuplicateInstance-Failed" message={error.message} />
     );
   }
 
@@ -37,7 +37,9 @@ export const DuplicateInstancePage: React.FC<{
 
     return (
       <Wrapper id={identifier}>
-        <DuplicateForm instance={data} serviceEntity={serviceEntity} />
+        <div aria-label="DuplicateInstance-Success">
+          <DuplicateForm instance={data} serviceEntity={serviceEntity} />
+        </div>
       </Wrapper>
     );
   }
