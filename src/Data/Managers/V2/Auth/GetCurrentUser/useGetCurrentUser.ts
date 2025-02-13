@@ -1,5 +1,5 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
-import { useGet } from "../../helpers";
+import { useGetWithoutEnv } from "../../helpers";
 
 interface LoggedUser {
   username: string;
@@ -12,7 +12,7 @@ interface LoggedUser {
  */
 export const useGetCurrentUser = () => {
   const url = `/api/v2/current_user/`;
-  const get = useGet()<{ data: LoggedUser }>;
+  const get = useGetWithoutEnv()<{ data: LoggedUser }>;
 
   return {
     /**
