@@ -1,10 +1,6 @@
 import React from "react";
 import { MemoryRouter, useLocation } from "react-router-dom";
-import {
-  QueryClient,
-  QueryClientProvider,
-  UseQueryResult,
-} from "@tanstack/react-query";
+import { QueryClientProvider, UseQueryResult } from "@tanstack/react-query";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
@@ -17,6 +13,7 @@ import {
   Inventories,
 } from "@/Data/Managers/V2/ServiceInstance";
 import { dependencies } from "@/Test";
+import { testClient } from "@/Test/Utils/react-query-setup";
 import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
 import { PrimaryRouteManager } from "@/UI/Routing";
 import {
@@ -40,7 +37,6 @@ describe("ComposerActions.", () => {
     canvasContext: typeof defaultCanvasContext,
     editable: boolean = true,
   ) => {
-    const client = new QueryClient();
     const environmentHandler = EnvironmentHandlerImpl(
       useLocation,
       PrimaryRouteManager(""),
@@ -66,7 +62,7 @@ describe("ComposerActions.", () => {
     });
 
     return (
-      <QueryClientProvider client={client}>
+      <QueryClientProvider client={testClient}>
         <MemoryRouter initialEntries={[{ search: "?env=aaa" }]}>
           <StoreProvider store={store}>
             <DependencyProvider

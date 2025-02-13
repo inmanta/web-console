@@ -4,7 +4,7 @@ import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWi
 import {
   EmptyView,
   PageContainer,
-  PaginationWidget,
+  OldPaginationWidget,
   RemoteDataView,
 } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
@@ -48,7 +48,7 @@ export const Page: React.FC = () => {
     <PageContainer pageTitle={words("orders.title")}>
       <TableControls
         paginationWidget={
-          <PaginationWidget
+          <OldPaginationWidget
             data={data}
             pageSize={pageSize}
             setPageSize={setPageSize}

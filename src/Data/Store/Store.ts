@@ -65,26 +65,9 @@ import {
 } from "@S/ServiceDetails/Data/CallbacksSlice";
 import { serverStatusSlice, ServerStatusSlice } from "@S/Status/Data/Store";
 import { environmentSlice, EnvironmentSlice } from "./EnvironmentSlice";
-import {
-  InstanceConfigSlice,
-  instanceConfigSlice,
-} from "./InstanceConfigSlice";
-import {
-  instanceResourcesSlice,
-  InstanceResourcesSlice,
-} from "./InstanceResourcesSlice";
+
 import { projectsSlice, ProjectsSlice } from "./ProjectsSlice";
 import { resourcesSlice, ResourcesSlice } from "./ResourcesSlice";
-import { serviceConfigSlice, ServiceConfigSlice } from "./ServiceConfigSlice";
-import {
-  serviceInstanceSlice,
-  ServiceInstanceSlice,
-} from "./ServiceInstanceSlice";
-import {
-  serviceInstancesSlice,
-  ServiceInstancesSlice,
-} from "./ServiceInstancesSlice";
-import { servicesSlice, ServicesSlice } from "./ServicesSlice";
 
 export interface StoreModel {
   agents: AgentsSlice;
@@ -98,8 +81,6 @@ export interface StoreModel {
   environment: EnvironmentSlice;
   events: EventsSlice;
   facts: FactsSlice;
-  instanceConfig: InstanceConfigSlice;
-  instanceResources: InstanceResourcesSlice;
   notification: NotificationSlice;
   parameters: ParametersSlice;
   projects: ProjectsSlice;
@@ -109,10 +90,6 @@ export interface StoreModel {
   resourceLogs: ResourceLogsSlice;
   resources: ResourcesSlice;
   serverStatus: ServerStatusSlice;
-  serviceConfig: ServiceConfigSlice;
-  serviceInstance: ServiceInstanceSlice;
-  serviceInstances: ServiceInstancesSlice;
-  services: ServicesSlice;
   orders: OrdersSlice;
   orderDetails: OrderDetailsSlice;
   versionedResourceDetails: VersionedResourceDetailsSlice;
@@ -131,8 +108,6 @@ export const storeModel: StoreModel = {
   environment: environmentSlice,
   events: eventsSlice,
   facts: factsSlice,
-  instanceConfig: instanceConfigSlice,
-  instanceResources: instanceResourcesSlice,
   notification: notificationSlice,
   parameters: parametersSlice,
   projects: projectsSlice,
@@ -142,10 +117,6 @@ export const storeModel: StoreModel = {
   resourceLogs: resourceLogsSlice,
   resources: resourcesSlice,
   serverStatus: serverStatusSlice,
-  serviceConfig: serviceConfigSlice,
-  serviceInstance: serviceInstanceSlice,
-  serviceInstances: serviceInstancesSlice,
-  services: servicesSlice,
   orders: ordersSlice,
   orderDetails: orderDetailsSlice,
   versionedResourceDetails: versionedResourceDetailsSlice,

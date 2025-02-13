@@ -1,6 +1,7 @@
 import React, { useCallback, useContext, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { InstanceAttributeModel, ServiceModel } from "@/Core";
+import { usePostInstance } from "@/Data/Managers/V2/ServiceInstance";
 import {
   CreateModifierHandler,
   Description,
@@ -15,9 +16,20 @@ interface Props {
   serviceEntity: ServiceModel;
 }
 
+/**
+ * `CreateInstance` is a React functional component responsible for rendering a form
+ * to create a new instance of a given service entity. It handles form submission,
+ * error handling, and redirection upon successful creation.
+ *
+ * @component
+ * @props {Props} props - The props for the component.
+ * @prop {ServiceModel} props.serviceEntity - The service entity for which an instance is being created.
+ *
+ * @returns {React.FC<Props>} A React functional component.
+ */
 export const CreateInstance: React.FC<Props> = ({ serviceEntity }) => {
-  const { commandResolver, environmentModifier, routeManager } =
-    useContext(DependencyContext);
+  const { environmentModifier, routeManager } = useContext(DependencyContext);
+  const [isDirty, setIsDirty] = useState(false);
   const fieldCreator = new FieldCreator(new CreateModifierHandler());
   const fields = fieldCreator.create(serviceEntity);
   const location = useLocation();
@@ -30,9 +42,20 @@ export const CreateInstance: React.FC<Props> = ({ serviceEntity }) => {
 
   const handleRedirect = useCallback(() => navigate(url), [navigate, url]);
 
-  const trigger = commandResolver.useGetTrigger<"CreateInstance">({
-    kind: "CreateInstance",
-    service_entity: serviceEntity.name,
+  const { mutate } = usePostInstance(serviceEntity.name, {
+    onError: (error) => {
+      setIsDirty(true);
+      setErrorMessage(error.message);
+    },
+    onSuccess: ({ data }) => {
+      const newUrl = routeManager.getUrl("InstanceDetails", {
+        service: serviceEntity.name,
+        instance: data.service_identity_attribute_value || data.id,
+        instanceId: data.id,
+      });
+
+      navigate(`${newUrl}${location.search}`);
+    },
   });
 
   const onSubmit = async (
@@ -41,22 +64,7 @@ export const CreateInstance: React.FC<Props> = ({ serviceEntity }) => {
   ) => {
     //as setState used in setIsDirty doesn't change immediately we cannot use it only before handleRedirect() as it would trigger prompt from ServiceInstanceForm
     setIsDirty(false);
-    const result = await trigger(fields, attributes);
-
-    if (result.kind === "Left") {
-      setIsDirty(true);
-      setErrorMessage(result.value);
-    } else {
-      const newUrl = routeManager.getUrl("InstanceDetails", {
-        service: serviceEntity.name,
-        instance:
-          result.value.data.service_identity_attribute_value ||
-          result.value.data.id,
-        instanceId: result.value.data.id,
-      });
-
-      navigate(`${newUrl}${location.search}`);
-    }
+    mutate({ fields, attributes });
   };
 
   return (
@@ -78,6 +86,8 @@ export const CreateInstance: React.FC<Props> = ({ serviceEntity }) => {
         onSubmit={onSubmit}
         onCancel={handleRedirect}
         isSubmitDisabled={isHalted}
+        isDirty={isDirty}
+        setIsDirty={setIsDirty}
       />
     </>
   );

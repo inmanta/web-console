@@ -10,7 +10,11 @@ import {
 import { Query } from "@/Core";
 import { useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import { EmptyView, PaginationWidget, RemoteDataView } from "@/UI/Components";
+import {
+  EmptyView,
+  OldPaginationWidget,
+  RemoteDataView,
+} from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { MomentDatePresenter } from "@/UI/Utils";
 import { words } from "@/UI/words";
@@ -63,7 +67,7 @@ export const ResourceHistoryView: React.FC<Props> = ({
         <Toolbar>
           <ToolbarContent>
             <ToolbarItem variant="pagination">
-              <PaginationWidget
+              <OldPaginationWidget
                 data={data}
                 pageSize={pageSize}
                 setPageSize={setPageSize}

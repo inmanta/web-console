@@ -46,7 +46,6 @@ test("SummaryChart displays only labels summary of the categories that can exist
           no_label: [],
           onClick: testFn,
         },
-        refetch: jest.fn(),
       }}
     >
       <SummaryChart
@@ -75,7 +74,6 @@ test("SummaryChart labels displayed are being clickable with callback passing la
           no_label: [],
           onClick: testFn,
         },
-        refetch: jest.fn(),
       }}
     >
       <SummaryChart

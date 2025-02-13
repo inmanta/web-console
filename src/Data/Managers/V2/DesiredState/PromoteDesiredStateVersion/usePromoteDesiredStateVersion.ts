@@ -4,7 +4,7 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
-import { usePost } from "../../helpers/useQueries";
+import { usePost } from "../../helpers";
 
 /**
  * React Query hook for promoting a version of desired state

@@ -10,7 +10,7 @@ import { DependencyContext } from "@/UI";
 import {
   EmptyView,
   PageContainer,
-  PaginationWidget,
+  OldPaginationWidget,
   RemoteDataView,
 } from "@/UI/Components";
 import { useRouteParams } from "@/UI/Routing";
@@ -65,7 +65,7 @@ export const Page: React.FC<{ version: string }> = ({ version }) => {
     <PageContainer pageTitle={words("desiredState.details.title")}>
       <Controls
         paginationWidget={
-          <PaginationWidget
+          <OldPaginationWidget
             data={data}
             pageSize={pageSize}
             setPageSize={setPageSize}

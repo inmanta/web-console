@@ -1,6 +1,6 @@
 import React from "react";
 import { MemoryRouter } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
@@ -9,12 +9,11 @@ import { setupServer } from "msw/node";
 import { getStoreInstance } from "@/Data";
 import * as useUpdateEnvConfig from "@/Data/Managers/V2/Environment/UpdateEnvConfig/useUpdateEnvConfig"; //import with that exact path is required for mock to work correctly
 import { dependencies } from "@/Test";
+import { testClient } from "@/Test/Utils/react-query-setup";
 import { DependencyProvider } from "@/UI/Dependency";
 import { ExpertBanner } from "./ExpertBanner";
 
 const setup = (flag: boolean) => {
-  const client = new QueryClient();
-
   dependencies.environmentModifier.useIsExpertModeEnabled = jest.fn(() => flag);
   const store = getStoreInstance();
 
@@ -25,7 +24,7 @@ const setup = (flag: boolean) => {
           ...dependencies,
         }}
       >
-        <QueryClientProvider client={client}>
+        <QueryClientProvider client={testClient}>
           <StoreProvider store={store}>
             <ExpertBanner />
           </StoreProvider>

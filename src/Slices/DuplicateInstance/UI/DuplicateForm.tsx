@@ -6,6 +6,7 @@ import {
   ServiceModel,
 } from "@/Core";
 import { AttributeInputConverterImpl } from "@/Data";
+import { usePostInstance } from "@/Data/Managers/V2/ServiceInstance";
 import {
   CreateModifierHandler,
   ToastAlert,
@@ -20,9 +21,19 @@ interface Props {
   instance: ServiceInstanceModel;
 }
 
+/**
+ * DuplicateForm component is responsible for rendering a form to duplicate a service instance.
+ * It handles form submission, validation, and redirection upon success or failure.
+ *
+ * @props {Props} props - The properties object.
+ * @prop {ServiceModel} props.serviceEntity - The service entity model.
+ * @prop {ServiceInstanceModel} props.instance - The service instance model.
+ *
+ * @returns {React.FC<Props>} - The DuplicateForm component.
+ */
 export const DuplicateForm: React.FC<Props> = ({ serviceEntity, instance }) => {
-  const { commandResolver, environmentModifier, routeManager } =
-    useContext(DependencyContext);
+  const { environmentModifier, routeManager } = useContext(DependencyContext);
+  const [isDirty, setIsDirty] = useState(false);
   const fieldCreator = new FieldCreator(new CreateModifierHandler());
   const fields = fieldCreator.create(serviceEntity);
   const [errorMessage, setErrorMessage] = useState("");
@@ -40,9 +51,20 @@ export const DuplicateForm: React.FC<Props> = ({ serviceEntity, instance }) => {
   const currentAttributes =
     attributeInputConverter.getCurrentAttributes(instance);
 
-  const trigger = commandResolver.useGetTrigger<"CreateInstance">({
-    kind: "CreateInstance",
-    service_entity: serviceEntity.name,
+  const { mutate } = usePostInstance(serviceEntity.name, {
+    onError: (error) => {
+      setIsDirty(true);
+      setErrorMessage(error.message);
+    },
+    onSuccess: ({ data }) => {
+      const newUrl = routeManager.getUrl("InstanceDetails", {
+        service: serviceEntity.name,
+        instance: data.service_identity_attribute_value || data.id,
+        instanceId: data.id,
+      });
+
+      navigate(`${newUrl}${location.search}`);
+    },
   });
 
   const onSubmit = async (
@@ -51,23 +73,7 @@ export const DuplicateForm: React.FC<Props> = ({ serviceEntity, instance }) => {
   ) => {
     //as setState used in setIsDirty doesn't change immediately we cannot use it only before handleRedirect() as it would trigger prompt from ServiceInstanceForm
     setIsDirty(false);
-
-    const result = await trigger(fields, attributes);
-
-    if (result.kind === "Left") {
-      setIsDirty(true);
-      setErrorMessage(result.value);
-    } else {
-      const newUrl = routeManager.getUrl("InstanceDetails", {
-        service: serviceEntity.name,
-        instance:
-          result.value.data.service_identity_attribute_value ||
-          result.value.data.id,
-        instanceId: result.value.data.id,
-      });
-
-      navigate(`${newUrl}${location.search}`);
-    }
+    mutate({ fields, attributes });
   };
 
   return (
@@ -87,6 +93,8 @@ export const DuplicateForm: React.FC<Props> = ({ serviceEntity, instance }) => {
         onCancel={handleRedirect}
         originalAttributes={currentAttributes ? currentAttributes : undefined}
         isSubmitDisabled={isHalted}
+        isDirty={isDirty}
+        setIsDirty={setIsDirty}
       />
     </>
   );

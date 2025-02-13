@@ -6,19 +6,12 @@ import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { axe, toHaveNoViolations } from "jest-axe";
 import { Either } from "@/Core";
-import {
-  QueryResolverImpl,
-  getStoreInstance,
-  CommandResolverImpl,
-  defaultAuthContext,
-} from "@/Data";
-import { UpdateInstanceAttributeCommandManager } from "@/Data/Managers/UpdateInstanceAttribute";
+import { QueryResolverImpl, getStoreInstance } from "@/Data";
 import {
   DynamicQueryManagerResolverImpl,
   StaticScheduler,
   DeferredApiHelper,
   dependencies,
-  DynamicCommandManagerResolverImpl,
 } from "@/Test";
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
@@ -44,13 +37,6 @@ function setup() {
       ),
     ]),
   );
-  const updateAttribute = UpdateInstanceAttributeCommandManager(
-    defaultAuthContext,
-    apiHelper,
-  );
-  const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolverImpl([updateAttribute]),
-  );
 
   const component = (
     <MemoryRouter>
@@ -58,7 +44,6 @@ function setup() {
         dependencies={{
           ...dependencies,
           queryResolver,
-          commandResolver,
         }}
       >
         <StoreProvider store={store}>

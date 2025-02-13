@@ -11,7 +11,6 @@ import {
   CommandResolverImpl,
   QueryManagerResolverImpl,
   CommandManagerResolverImpl,
-  defaultAuthContext,
 } from "@/Data";
 import {
   StaticScheduler,
@@ -43,7 +42,7 @@ function setup() {
     new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler),
   );
   const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolverImpl(store, apiHelper, defaultAuthContext),
+    new CommandManagerResolverImpl(store, apiHelper),
   );
 
   const routeManager = PrimaryRouteManager("");

@@ -425,13 +425,14 @@ if (Cypress.env("edition") === "iso") {
 
       //Drag extra_embedded onto canvas and assert that is highlighted as loose element
       cy.get('[aria-labelledby="bodyTwo_extra_embedded"]')
-        .trigger("mouseover")
-        .trigger("mousedown")
+        .trigger("mouseover", { force: true }) // sometimes cypress doesn't trigger the event as text in that element is in front of the component
+        .trigger("mousedown", { force: true })
         .trigger("mousemove", {
+          force: true,
           clientX: 800,
           clientY: 500,
         })
-        .trigger("mouseup");
+        .trigger("mouseup", { force: true });
 
       cy.get(".joint-loose_element-highlight").should("be.visible");
 
@@ -450,13 +451,14 @@ if (Cypress.env("edition") === "iso") {
 
       //Drag once again extra_embedded onto canvas and assert that is highlighted as loose element
       cy.get('[aria-labelledby="bodyTwo_extra_embedded"]')
-        .trigger("mouseover")
-        .trigger("mousedown")
+        .trigger("mouseover", { force: true }) // sometimes cypress doesn't trigger the event as text in that element is in front of the component
+        .trigger("mousedown", { force: true })
         .trigger("mousemove", {
+          force: true,
           clientX: 800,
           clientY: 500,
         })
-        .trigger("mouseup");
+        .trigger("mouseup", { force: true });
 
       cy.get(".joint-loose_element-highlight").should("be.visible");
 
@@ -516,13 +518,14 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#inventory-tab").click();
 
       cy.get('[aria-labelledby="bodyTwo_test_name"]')
-        .trigger("mouseover")
-        .trigger("mousedown")
+        .trigger("mouseover", { force: true }) // sometimes cypress doesn't trigger the event as text in that element is in front of the component
+        .trigger("mousedown", { force: true })
         .trigger("mousemove", {
+          force: true,
           clientX: 800,
           clientY: 500,
         })
-        .trigger("mouseup");
+        .trigger("mouseup", { force: true });
 
       //highlighted loose element should be visible
       cy.get(".joint-loose_element-highlight").should("be.visible");
@@ -537,7 +540,7 @@ if (Cypress.env("edition") === "iso") {
           clientX: 800,
           clientY: 500,
         })
-        .trigger("mouseup");
+        .trigger("mouseup", { force: true });
 
       //highlighted loose element should be removed
       cy.get(".joint-loose_element-highlight").should("not.exist");
@@ -548,13 +551,14 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[data-name="fit-to-screen"]').click();
 
       cy.get('[aria-labelledby="bodyTwo_test_name2"]')
-        .trigger("mouseover")
-        .trigger("mousedown")
+        .trigger("mouseover", { force: true }) // sometimes cypress doesn't trigger the event as text in that element is in front of the component
+        .trigger("mousedown", { force: true })
         .trigger("mousemove", {
+          force: true,
           clientX: 600,
           clientY: 400,
         })
-        .trigger("mouseup");
+        .trigger("mouseup", { force: true });
       cy.get('[data-name="fit-to-screen"]').click();
       cy.get('[data-type="app.ServiceEntityBlock"')
         .contains("embedded")
@@ -828,13 +832,14 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#inventory-tab").click();
 
       cy.get('[aria-labelledby="bodyTwo_test_name"]')
-        .trigger("mouseover")
-        .trigger("mousedown")
+        .trigger("mouseover", { force: true }) // sometimes cypress doesn't trigger the event as text in that element is in front of the component
+        .trigger("mousedown", { force: true })
         .trigger("mousemove", {
+          force: true,
           clientX: 800,
           clientY: 600,
         })
-        .trigger("mouseup");
+        .trigger("mouseup", { force: true });
 
       cy.get('[data-type="app.ServiceEntityBlock"')
         .contains("child-service")
@@ -851,6 +856,8 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[data-type="Link"]').should("have.length", 1);
 
       cy.get("button").contains("Deploy").click();
+
+      cy.wait(500); //sometimes the navigation is too fast and the redirect isn't being received properly
       cy.get('[aria-label="Sidebar-Navigation-Item"]')
         .contains("Service Catalog")
         .click();
@@ -903,13 +910,14 @@ if (Cypress.env("edition") === "iso") {
         .click();
 
       cy.get('[aria-labelledby="bodyTwo_test_name2"]')
-        .trigger("mouseover")
-        .trigger("mousedown")
+        .trigger("mouseover", { force: true }) // sometimes cypress doesn't trigger the event as text in that element is in front of the component
+        .trigger("mousedown", { force: true })
         .trigger("mousemove", {
+          force: true,
           clientX: 800,
           clientY: 500,
         })
-        .trigger("mouseup");
+        .trigger("mouseup", { force: true });
 
       cy.get('[data-type="app.ServiceEntityBlock"')
         .contains("child-service")
@@ -921,7 +929,7 @@ if (Cypress.env("edition") === "iso") {
           clientX: 800,
           clientY: 500,
         })
-        .trigger("mouseup");
+        .trigger("mouseup", { force: true });
 
       cy.get('[data-testid="Error-container"]').should("not.exist");
 
@@ -936,6 +944,11 @@ if (Cypress.env("edition") === "iso") {
         .contains("Show inventory")
         .click();
 
+      // await until parent_service is deployed and up
+      cy.get('[data-label="State"]', { timeout: 90000 }).should(
+        "have.text",
+        "update_start",
+      );
       // await until parent_service is deployed and up
       cy.get('[data-label="State"]', { timeout: 90000 }).should(
         "have.text",
@@ -1014,13 +1027,14 @@ if (Cypress.env("edition") === "iso") {
 
       //add first inter-service relation
       cy.get('[aria-labelledby="bodyTwo_test_name"]')
-        .trigger("mouseover")
-        .trigger("mousedown")
+        .trigger("mouseover", { force: true }) // sometimes cypress doesn't trigger the event as text in that element is in front of the component
+        .trigger("mousedown", { force: true })
         .trigger("mousemove", {
+          force: true,
           clientX: 800,
           clientY: 500,
         })
-        .trigger("mouseup");
+        .trigger("mouseup", { force: true });
 
       cy.get('[data-type="app.ServiceEntityBlock"')
         .contains("child-with-many")
@@ -1036,13 +1050,14 @@ if (Cypress.env("edition") === "iso") {
 
       //add second inter-service relation
       cy.get('[aria-labelledby="bodyTwo_test_name2"]')
-        .trigger("mouseover")
-        .trigger("mousedown")
+        .trigger("mouseover", { force: true }) // sometimes cypress doesn't trigger the event as text in that element is in front of the component
+        .trigger("mousedown", { force: true })
         .trigger("mousemove", {
+          force: true,
           clientX: 800,
           clientY: 700,
         })
-        .trigger("mouseup");
+        .trigger("mouseup", { force: true });
 
       cy.get('[data-type="app.ServiceEntityBlock"')
         .contains("child-with-many")

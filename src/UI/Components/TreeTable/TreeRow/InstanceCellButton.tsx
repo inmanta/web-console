@@ -1,7 +1,6 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Button, Spinner } from "@patternfly/react-core";
-import { RemoteData } from "@/Core";
-import { DependencyContext } from "@/UI/Dependency";
+import { useGetInstance } from "@/Data/Managers/V2/ServiceInstance";
 
 interface Props {
   id: string;
@@ -14,38 +13,35 @@ export const InstanceCellButton: React.FC<Props> = ({
   serviceName,
   onClick,
 }) => {
-  const { queryResolver } = useContext(DependencyContext);
-  const [data] = queryResolver.useOneTime<"GetServiceInstance">({
-    kind: "GetServiceInstance",
+  const { data, isLoading, isError, isSuccess } = useGetInstance(
+    serviceName,
     id,
-    service_entity: serviceName,
-  });
+  ).useOneTime();
 
-  return RemoteData.fold(
-    {
-      notAsked: () => null,
-      failed: () => <>{id}</>,
-      loading: () => <Spinner size="sm" />,
-      success: ({ service_identity_attribute_value }) => {
-        const identifier = service_identity_attribute_value
-          ? service_identity_attribute_value
-          : id;
+  if (isLoading) {
+    return <Spinner size="sm" />;
+  }
 
-        return (
-          <Button
-            variant="link"
-            isInline
-            onClick={
-              serviceName
-                ? () => onClick(identifier, serviceName)
-                : () => onClick(identifier)
-            }
-          >
-            {identifier}
-          </Button>
-        );
-      },
-    },
-    data,
-  );
+  if (isError) {
+    return <>{id}</>;
+  }
+
+  if (isSuccess) {
+    const { service_identity_attribute_value } = data;
+    const identifier = service_identity_attribute_value
+      ? service_identity_attribute_value
+      : id;
+
+    return (
+      <Button
+        variant="link"
+        isInline
+        onClick={() => onClick(identifier, serviceName)}
+      >
+        {identifier}
+      </Button>
+    );
+  }
+
+  return null;
 };

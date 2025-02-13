@@ -5,7 +5,7 @@ import {
   ServiceInstanceModel,
   ServiceModel,
 } from "@/Core";
-import { useGet } from "../../helpers/useQueries";
+import { useGet } from "../../helpers";
 
 /*
  * interface for the service instance with its related instances and eventual coordinates on canvas

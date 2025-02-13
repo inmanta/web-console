@@ -2,19 +2,7 @@ import {
   ControlAgent,
   ControlAgentManifest,
 } from "@/Data/Managers/ControlAgent/interface";
-import {
-  DeleteInstance,
-  DeleteInstanceManifest,
-} from "@/Data/Managers/DeleteInstance/interface";
-import {
-  DeleteService,
-  DeleteServiceManifest,
-} from "@/Data/Managers/DeleteService/interface";
 import { Deploy, DeployManifest } from "@/Data/Managers/Deploy/interface";
-import {
-  DestroyInstance,
-  DestroyInstanceManifest,
-} from "@/Data/Managers/DestroyInstance/interface";
 import {
   ResetEnvironmentSetting,
   ResetEnvironmentSettingManifest,
@@ -36,10 +24,6 @@ import {
   HaltEnvironmentManifest,
 } from "@/Data/Managers/HaltEnvironment/interface";
 import {
-  UpdateInstanceConfig,
-  UpdateInstanceConfigManifest,
-} from "@/Data/Managers/InstanceConfig/interfaces";
-import {
   ModifyEnvironment,
   ModifyEnvironmentManifest,
 } from "@/Data/Managers/ModifyEnvironment/interface";
@@ -49,10 +33,6 @@ import {
   ResumeEnvironmentManifest,
 } from "@/Data/Managers/ResumeEnvironment/interface";
 import {
-  UpdateServiceConfig,
-  UpdateServiceConfigManifest,
-} from "@/Data/Managers/ServiceConfig/interfaces";
-import {
   TriggerCompile,
   TriggerCompileManifest,
 } from "@/Data/Managers/TriggerCompile/interface";
@@ -60,22 +40,6 @@ import {
   TriggerDryRun,
   TriggerDryRunManifest,
 } from "@/Data/Managers/TriggerDryRun/interface";
-import {
-  TriggerForceState,
-  TriggerForceStateManifest,
-} from "@/Data/Managers/TriggerForceState/interface";
-import {
-  TriggerSetState,
-  TriggerSetStateManifest,
-} from "@/Data/Managers/TriggerSetState/interface";
-import {
-  UpdateCatalog,
-  UpdateCatalogManifest,
-} from "@/Data/Managers/UpdateCatalog/interface";
-import {
-  UpdateInstanceAttribute,
-  UpdateInstanceAttributeManifest,
-} from "@/Data/Managers/UpdateInstanceAttribute/interface";
 
 import * as CreateEnvironment from "@S/CreateEnvironment/Core/CreateEnvironmentCommand";
 import * as CreateProject from "@S/CreateEnvironment/Core/CreateProjectCommand";
@@ -96,28 +60,19 @@ export type Command =
   | CreateProject.Command
   | DeleteCallback.Command
   | DeleteEnvironment.Command
-  | DeleteInstance
-  | DestroyInstance
-  | DeleteService
   | Deploy
   | GenerateToken
   | GetSupportArchive
   | HaltEnvironment
   | ModifyEnvironment
-  | UpdateCatalog
   | Repair
   | ResetEnvironmentSetting
   | ResumeEnvironment
   | TriggerCompile
   | TriggerDryRun
   | TriggerInstanceUpdate.Command
-  | TriggerSetState
-  | TriggerForceState
   | UpdateEnvironmentSetting
-  | UpdateInstanceAttribute
-  | UpdateInstanceConfig
-  | UpdateNotification.Command
-  | UpdateServiceConfig;
+  | UpdateNotification.Command;
 
 export type Type = Command;
 
@@ -134,28 +89,19 @@ interface Manifest {
   CreateProject: CreateProject.Manifest;
   DeleteCallback: DeleteCallback.Manifest;
   DeleteEnvironment: DeleteEnvironment.Manifest;
-  DeleteInstance: DeleteInstanceManifest;
-  DestroyInstance: DestroyInstanceManifest;
-  DeleteService: DeleteServiceManifest;
   Deploy: DeployManifest;
   GenerateToken: GenerateTokenManifest;
   GetSupportArchive: GetSupportArchiveManifest;
   HaltEnvironment: HaltEnvironmentManifest;
   ModifyEnvironment: ModifyEnvironmentManifest;
-  UpdateCatalog: UpdateCatalogManifest;
   Repair: RepairManifest;
   ResetEnvironmentSetting: ResetEnvironmentSettingManifest;
   ResumeEnvironment: ResumeEnvironmentManifest;
   TriggerCompile: TriggerCompileManifest;
   TriggerDryRun: TriggerDryRunManifest;
   TriggerInstanceUpdate: TriggerInstanceUpdate.Manifest;
-  TriggerSetState: TriggerSetStateManifest;
-  TriggerForceState: TriggerForceStateManifest;
   UpdateEnvironmentSetting: UpdateEnvironmentSettingManifest;
-  UpdateInstanceAttribute: UpdateInstanceAttributeManifest;
-  UpdateInstanceConfig: UpdateInstanceConfigManifest;
   UpdateNotification: UpdateNotification.Manifest;
-  UpdateServiceConfig: UpdateServiceConfigManifest;
 }
 
 /**
