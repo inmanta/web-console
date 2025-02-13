@@ -41,13 +41,14 @@ export const DatabaseAuthProvider: React.FC<React.PropsWithChildren> = ({
     // If user is not set and token is present, set the user from the local storage or logs out. case where there is an user but not token is handled automatically as lacks of token prompt use to login again
     if (!user && getToken()) {
       const username = localStorage.getItem("inmanta_user");
+
       if (username) {
         setUser(username);
       } else {
         logout();
       }
     }
-  }, [user]);
+  }, [user, logout]);
 
   return (
     <AuthContext.Provider
