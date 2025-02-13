@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   createCookie,
@@ -19,11 +19,11 @@ export const DatabaseAuthProvider: React.FC<React.PropsWithChildren> = ({
 
   const getUser = (): string | null => user;
 
-  const logout = (): void => {
+  const logout = useCallback((): void => {
     removeCookie("inmanta_user");
     localStorage.removeItem("inmanta_user");
     navigate("/login");
-  };
+  }, [navigate]);
 
   const login = (): void => navigate("/login");
 
