@@ -198,7 +198,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="History-Row"]')
         .eq(1)
         .within(() => {
-          cy.get('[data-label="version"]').click(); //it's done to avoid flake where the tooltip comes in a way and click ins't triggered
+          cy.get('[data-label="version"]').trigger("click"); //it's done to avoid flake where the tooltip comes in a way and click isn't triggered
         });
       cy.get('[data-testid="selected-version"]').should(
         "have.text",
