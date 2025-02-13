@@ -6,7 +6,7 @@ import {
 import { Config } from "@/Core";
 import { usePost } from "../../helpers";
 
-interface Params {
+export interface Params {
   values: Config;
 }
 

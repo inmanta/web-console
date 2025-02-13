@@ -59,7 +59,7 @@ import * as GetCallbacks from "@S/ServiceDetails/Core/GetCallbacksQuery";
 import * as GetEnvironmentDetails from "@S/Settings/Core/GetEnvironmentDetailsQuery";
 import * as GetProjects from "@S/Settings/Core/GetProjectsQuery";
 
-type Query =
+export type Query =
   | GetInstanceEvents.Query
   | GetMetrics.Query
   | GetDiagnostics.Query
