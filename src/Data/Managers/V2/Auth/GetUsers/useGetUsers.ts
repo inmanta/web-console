@@ -3,7 +3,8 @@
  * @returns An object containing a custom hook to fetch user information.
  */
 import { useQuery } from "@tanstack/react-query";
-import { useGetWithoutEnv } from "../../helpers";
+import { PrimaryBaseUrlManager } from "@/UI";
+import { useFetchHelpers } from "../../helpers";
 
 /**
  * Represents the user information.
@@ -18,7 +19,29 @@ export interface UserInfo {
  * @returns An object containing a custom hook to fetch user information.
  */
 export const useGetUsers = () => {
-  const get = useGetWithoutEnv()<{ data: UserInfo[] }>;
+  const { handleErrors, createHeaders } = useFetchHelpers();
+  const baseUrlManager = new PrimaryBaseUrlManager(
+    globalThis.location.origin,
+    globalThis.location.pathname,
+  );
+  const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
+
+  /**
+   * Fetches the user information from the API.
+   * @returns A promise that resolves to an object containing the user information.
+   * @throws An error if the API request fails.
+   */
+  const fetchUsers = async (): Promise<{
+    data: UserInfo[];
+  }> => {
+    const response = await fetch(`${baseUrl}/api/v2/user`, {
+      headers: createHeaders(),
+    });
+
+    await handleErrors(response);
+
+    return response.json();
+  };
 
   return {
     /**
@@ -28,7 +51,7 @@ export const useGetUsers = () => {
     useOneTime: () =>
       useQuery({
         queryKey: ["get_users-one_time"],
-        queryFn: () => get("/api/v2/user"),
+        queryFn: fetchUsers,
         retry: false,
         select: (data) => data.data,
       }),

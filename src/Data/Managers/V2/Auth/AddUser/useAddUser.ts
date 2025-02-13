@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { usePostWithoutEnv } from "../../helpers";
+import { usePost } from "../../helpers";
 
 interface AddUSerResponse {
   data: {
@@ -19,7 +19,7 @@ interface AddUserBody {
  */
 export const useAddUser = () => {
   const client = useQueryClient();
-  const post = usePostWithoutEnv()<AddUserBody>;
+  const post = usePost()<AddUserBody>;
 
   return useMutation<AddUSerResponse, Error, AddUserBody>({
     mutationFn: (body) => post(`/api/v2/user`, body),
