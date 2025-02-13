@@ -19,7 +19,7 @@ import { DependencyContext, words } from "@/UI";
 import { Link } from "@/UI/Components";
 import { DeleteAction } from "./DeleteAction";
 
-export interface InstanceActionsProps {
+interface InstanceActionsProps {
   instanceId: string;
   service_identity_attribute_value: string | undefined;
   entity: string;

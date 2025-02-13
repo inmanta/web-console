@@ -13,20 +13,6 @@
 export type ParsedNumber = number | bigint;
 
 /**
- * We define the TimerId type explicitly because for some reason
- * the return type of setInterval is not always the same. In a DOM
- * context it is a number. But in a NodeJS context, it is something
- * more complex. TypeScript for now seems to confuse these 2 return
- * types. So we can't just use number. We need to use TimerId.
- */
-export type TimerId = ReturnType<typeof setInterval>;
-
-export interface Interval {
-  timerId: TimerId;
-  handler: () => void;
-}
-
-/**
  * Toggles a value in the list.
  * - If it is present, remove it.
  * - If it is missing, add it.
@@ -51,11 +37,6 @@ export const isNotNull = <T>(value: T | null): value is NonNullable<T> =>
 export const isNotUndefined = <T>(
   value: T | undefined,
 ): value is NonNullable<T> => typeof value !== "undefined";
-
-export type ValueObject<T> = Readonly<{
-  type: string;
-  value: T;
-}>;
 
 export const objectHasKey = <
   X extends Record<string, unknown>,

@@ -13,7 +13,7 @@ import { DependencyProvider } from "@/UI/Dependency";
 import { EventsQueryManager, EventsStateHelper } from "@S/Events/Data";
 import { Events } from "@S/Events/UI/Events";
 
-export interface Handles {
+interface Handles {
   component: React.ReactElement;
   scheduler: SchedulerImpl;
   apiHelper: DeferredApiHelper;

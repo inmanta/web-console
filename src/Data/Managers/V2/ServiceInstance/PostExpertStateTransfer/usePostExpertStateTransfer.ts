@@ -10,7 +10,7 @@ import { usePost } from "../../helpers";
 /**
  * Required attributes to construct the post request to force update the state of an instance in Expert mode
  */
-export interface PostExpertStateTransfer {
+interface PostExpertStateTransfer {
   message: string;
   current_version: ParsedNumber;
   target_state: string;

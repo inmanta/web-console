@@ -30,7 +30,7 @@ interface Params {
  * @property {(props: Props) => void} triggerModal - The function to trigger a modal.
  * @property {() => void} closeModal - The function to close the modal.
  */
-export interface ModalContextInterface {
+interface ModalContextInterface {
   triggerModal: (params: Params) => void;
   closeModal: () => void;
 }

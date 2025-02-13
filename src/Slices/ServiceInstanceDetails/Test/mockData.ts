@@ -1324,11 +1324,6 @@ export const serviceModelWithConfig: ServiceModel = {
   config: { option1: true },
 };
 
-export const instanceDataWithConfig: ServiceInstanceModel = {
-  ...instanceData,
-  config: { option1: true },
-};
-
 export const instanceDataWithDocumentation: ServiceInstanceModel = {
   ...instanceData,
   active_attributes: {
@@ -1358,7 +1353,7 @@ export const serviceModelWithDocumentation: ServiceModel = {
   ],
 };
 
-export const historyDataWithDocumentation: InstanceLog[] = [
+const historyDataWithDocumentation: InstanceLog[] = [
   {
     service_instance_id: "1d96a1ab",
     environment: "5bfe1994-365f-49ec-bff1-fed77bbbf8e6",

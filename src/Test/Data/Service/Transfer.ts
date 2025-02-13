@@ -1,6 +1,6 @@
 import { TransferModel } from "@/Core";
 
-export const a: TransferModel = {
+const a: TransferModel = {
   source: "start",
   target: "acknowledged",
   error: "rejected",
@@ -16,7 +16,7 @@ export const a: TransferModel = {
   error_operation: null,
 };
 
-export const b: TransferModel = {
+const b: TransferModel = {
   source: "start",
   target: "acknowledged",
   error: "rejected",
@@ -32,7 +32,7 @@ export const b: TransferModel = {
   error_operation: null,
 };
 
-export const c: TransferModel = {
+const c: TransferModel = {
   source: "start",
   target: "acknowledged",
   error: "rejected",
@@ -48,7 +48,7 @@ export const c: TransferModel = {
   error_operation: null,
 };
 
-export const d: TransferModel = {
+const d: TransferModel = {
   source: "start",
   target: "terminated",
   error: "rejected",

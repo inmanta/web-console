@@ -36,17 +36,11 @@ export interface Manifest {
   query: Query;
 }
 
-export interface EventParams {
+interface EventParams {
   filter?: Filter;
   sort?: Sort.Sort;
   pageSize: PageSize.PageSize;
   currentPage: CurrentPage;
-}
-
-export enum AttributeSet {
-  Active = "active_attributes",
-  Candidate = "candidate_attributes",
-  Rollback = "rollback_attributes",
 }
 
 export interface Filter {

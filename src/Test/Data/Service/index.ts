@@ -102,7 +102,7 @@ export const withRelationsOnly: ServiceModel = {
   service_identity_display_name: "User Equipment",
 };
 
-export const allTypesOfAttributes: ServiceModel = {
+const allTypesOfAttributes: ServiceModel = {
   environment: Environment.a.id,
   name: "service_name_a",
   description: "description of service",

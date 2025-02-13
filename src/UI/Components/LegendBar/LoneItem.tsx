@@ -2,7 +2,7 @@ import React from "react";
 import { t_global_text_color_brand_default } from "@patternfly/react-tokens";
 import { Container } from "./Item";
 
-export interface Props {
+interface Props {
   label: string;
 }
 

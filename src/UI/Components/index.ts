@@ -1,10 +1,8 @@
 export * as DiffWizard from "./DiffWizard";
 export * from "./ActionDisabledTooltip";
-export * from "./AttributesSummaryView";
 export * from "./AttributesTable";
 export * from "./BlockingModal";
 export * from "./BooleanSwitch";
-export * from "./ButtonWithCursorHandling";
 export * from "./ClipboardCopyButton";
 export * from "./CodeHighlighter";
 export * from "./CodeText";
@@ -40,7 +38,6 @@ export * from "./ResourceStatus";
 export * from "./ResourceTable";
 export * from "./ServiceInstanceForm";
 export * from "./ServiceProvider";
-export * from "./ServicesProvider";
 export * from "./SettingsList";
 export * from "./SingleTextSelect";
 export * from "./SummaryChart";

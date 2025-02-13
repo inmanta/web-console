@@ -79,7 +79,7 @@ export interface LifecycleModel {
 /**
  * Interface that represents a service identifier.
  */
-export interface ServiceIdentifier {
+interface ServiceIdentifier {
   name: string;
 }
 

@@ -128,7 +128,7 @@ export interface ResponseFromVersion {
   metadata: Pagination.Metadata;
 }
 
-export interface Id {
+interface Id {
   entityType: string;
   agentName: string;
   attribute: string;

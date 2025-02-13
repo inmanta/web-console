@@ -26,7 +26,7 @@ export const defaultStatuses: Status[] = [
   "skipped_for_undefined",
 ];
 
-export interface ValueSet {
+interface ValueSet {
   from_value: unknown;
   to_value: unknown;
   from_value_compare: string;

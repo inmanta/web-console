@@ -57,7 +57,7 @@ export interface ServiceOrderItemStatus {
   instance_state_label: string | null;
 }
 
-export interface ServiceOrderStatus {
+interface ServiceOrderStatus {
   state: ServiceOrderState;
 }
 
@@ -79,7 +79,8 @@ export type ServiceOrderItemState =
   | "failed"
   | "in_progress"
   | "acknowledged";
-export type FailureType =
+
+type FailureType =
   | "INVALID_ORDER_ITEM"
   | "VALIDATION_COMPILE_FAILED"
   | "EXECUTION_FAILED"

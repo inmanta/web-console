@@ -11,7 +11,7 @@ export interface Diagnostics {
   failures: FailureGroup[];
 }
 
-export interface RawRejection {
+interface RawRejection {
   instance_version: ParsedNumber;
   model_version?: ParsedNumber;
   compile_id: string;

@@ -4,10 +4,6 @@ export interface ProjectModel {
   environments: EnvironmentModel[];
 }
 
-export interface EnvironmentIdentifier {
-  environment: string;
-}
-
 export interface EnvironmentModel {
   id: string;
   name: string;
@@ -28,6 +24,7 @@ export interface EnvironmentExpertOnly extends EnvironmentModel {
     enable_lsm_expert_mode: boolean;
   };
 }
+
 export interface Environment extends EnvironmentModel {
   projectName: string;
   settings: {

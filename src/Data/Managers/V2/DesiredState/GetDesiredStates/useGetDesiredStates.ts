@@ -11,7 +11,7 @@ import { getUrl } from "./getUrl";
 /**
  * interface of filter object for desired states
  */
-export interface Filter {
+interface Filter {
   version?: IntRange.IntRange[];
   date?: DateRange.DateRange[];
   status?: DesiredStateVersionStatus[];

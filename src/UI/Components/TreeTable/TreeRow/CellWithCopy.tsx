@@ -72,13 +72,13 @@ export const CellWithCopy: React.FC<Props> = ({
   );
 };
 
-export const StyledPopoverBody = styled.div`
+const StyledPopoverBody = styled.div`
   overflow-y: auto;
   max-height: 50vh;
   white-space: pre-wrap;
 `;
 
-export function formatValue(value: string): string {
+function formatValue(value: string): string {
   return isJson(value) ? JSON.stringify(JSON.parse(value), null, 2) : value;
 }
 
@@ -92,10 +92,7 @@ function isJson(value: string): boolean {
   return true;
 }
 
-export function shouldRenderLink(
-  value: string,
-  hasRelation?: boolean,
-): boolean {
+function shouldRenderLink(value: string, hasRelation?: boolean): boolean {
   return !!(hasRelation && value.length > 0 && value !== "{}");
 }
 
@@ -114,7 +111,7 @@ interface LinkCellProps {
   onClick: (cellValue: string, serviceName?: string | undefined) => void;
 }
 
-export const MultiLinkCell: React.FC<LinkCellProps> = ({
+const MultiLinkCell: React.FC<LinkCellProps> = ({
   value,
   serviceName,
   onClick,
@@ -140,11 +137,7 @@ export const MultiLinkCell: React.FC<LinkCellProps> = ({
   return <LinkCell value={value} serviceName={serviceName} onClick={onClick} />;
 };
 
-export const LinkCell: React.FC<LinkCellProps> = ({
-  value,
-  serviceName,
-  onClick,
-}) =>
+const LinkCell: React.FC<LinkCellProps> = ({ value, serviceName, onClick }) =>
   serviceName && value.length > 0 ? (
     <InstanceCellButton
       id={value}

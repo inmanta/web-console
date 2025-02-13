@@ -2,7 +2,7 @@ import { UseMutationResult, useMutation } from "@tanstack/react-query";
 import { ParsedNumber } from "@/Core";
 import { usePost } from "../../helpers";
 
-export interface PostMetadataInfo {
+interface PostMetadataInfo {
   service_entity: string;
   service_id: string;
   key: string;

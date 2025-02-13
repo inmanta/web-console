@@ -1,6 +1,6 @@
 import { StateModel } from "@/Core";
 
-export const a: StateModel = {
+const a: StateModel = {
   name: "start",
   label: "info",
   export_resources: false,
@@ -8,7 +8,7 @@ export const a: StateModel = {
   deleted: false,
 };
 
-export const b: StateModel = {
+const b: StateModel = {
   name: "creating",
   label: "info",
   export_resources: false,
@@ -16,7 +16,7 @@ export const b: StateModel = {
   deleted: false,
 };
 
-export const c: StateModel = {
+const c: StateModel = {
   name: "acknowledged",
   label: "info",
   export_resources: false,
@@ -24,7 +24,7 @@ export const c: StateModel = {
   deleted: false,
 };
 
-export const d: StateModel = {
+const d: StateModel = {
   name: "rejected",
   label: "warning",
   export_resources: false,
@@ -32,7 +32,7 @@ export const d: StateModel = {
   deleted: false,
 };
 
-export const e: StateModel = {
+const e: StateModel = {
   name: "terminated",
   label: "warning",
   export_resources: false,

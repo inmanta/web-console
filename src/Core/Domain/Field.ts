@@ -49,7 +49,7 @@ export interface Textarea extends BaseField {
   type: string;
 }
 
-export interface TextListField extends BaseField {
+interface TextListField extends BaseField {
   kind: "TextList";
   defaultValue: unknown;
   inputType: TextInputTypes;
@@ -75,14 +75,14 @@ export interface DictListField extends BaseField {
   max?: ParsedNumber | null;
 }
 
-export interface RelationListField extends BaseField {
+interface RelationListField extends BaseField {
   kind: "RelationList";
   serviceEntity: string;
   min: ParsedNumber;
   max?: ParsedNumber | null;
 }
 
-export interface InterServiceRelationField extends BaseField {
+interface InterServiceRelationField extends BaseField {
   kind: "InterServiceRelation";
   serviceEntity: string;
 }

@@ -14,7 +14,7 @@ import {
 import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
 import { ServiceInventory } from "@S/ServiceInventory/UI/ServiceInventory";
 
-export interface Handles {
+interface Handles {
   component: React.ReactElement;
 }
 

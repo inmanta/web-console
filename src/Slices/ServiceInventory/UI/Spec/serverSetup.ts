@@ -40,12 +40,6 @@ const secondPage = {
   },
 };
 
-export const defaultServer = setupServer(
-  http.get("/lsm/v1/service_inventory/service_name_a", () => {
-    return HttpResponse.json(firstPage);
-  }),
-);
-
 export const paginationServer = setupServer(
   http.get("/lsm/v1/service_inventory/service_name_a", ({ request }) => {
     const url = new URL(request.url);

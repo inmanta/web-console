@@ -1,6 +1,6 @@
 import { RawDiagnostics } from "@S/Diagnose/Core/Domain";
 
-export const failure: RawDiagnostics = {
+const failure: RawDiagnostics = {
   failures: [
     {
       resource_id:
@@ -21,7 +21,7 @@ export const failure: RawDiagnostics = {
   rejections: [],
 };
 
-export const rejection: RawDiagnostics = {
+const rejection: RawDiagnostics = {
   failures: [],
   rejections: [
     {
