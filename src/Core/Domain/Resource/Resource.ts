@@ -110,6 +110,7 @@ export enum FilterKind {
   Type = "Type",
   Agent = "Agent",
   Value = "Value",
+  Status = "Status",
 }
 
 export type SortKey =
