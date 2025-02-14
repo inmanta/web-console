@@ -1132,6 +1132,13 @@ if (Cypress.env("edition") === "iso") {
         .first()
         .click();
 
+      // Make sure the we are on the latest version, there is flake where the version selected is 5
+      cy.get('[aria-label="History-Row"]')
+        .eq(0)
+        .within(() => {
+          cy.get('[data-label="version"]').trigger("click");
+        });
+
       //assert that in Active attribute we have only 1 relation
       cy.get('[aria-label="Expand row 2"]').click();
 
