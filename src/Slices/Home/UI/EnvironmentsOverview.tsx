@@ -9,7 +9,7 @@ interface Props {
   environments: FlatEnvironment[];
 }
 
-export interface Filters {
+interface Filters {
   projectFilter?: string[];
   environmentFilter?: string;
 }

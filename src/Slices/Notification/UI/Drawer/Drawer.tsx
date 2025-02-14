@@ -68,12 +68,7 @@ interface ViewProps extends Props {
   trigger(body: Body, ids: string[]): void;
 }
 
-export const View: React.FC<ViewProps> = ({
-  data,
-  onClose,
-  trigger,
-  drawerRef,
-}) => {
+const View: React.FC<ViewProps> = ({ data, onClose, trigger, drawerRef }) => {
   const count = RemoteData.withFallback(
     RemoteData.mapSuccess(
       (info) => info.data.filter((n) => !n.read).length,

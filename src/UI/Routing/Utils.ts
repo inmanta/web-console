@@ -58,7 +58,7 @@ export const useDocumentTitle = (title: string): void => {
   }, [title]);
 };
 
-export const decodeParams = (params: Params): Params => {
+const decodeParams = (params: Params): Params => {
   return mapValues(params, (value) =>
     value === undefined ? value : decodeURIComponent(value),
   );

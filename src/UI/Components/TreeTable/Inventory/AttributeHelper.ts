@@ -303,7 +303,7 @@ export function isMultiLeaf(
  * @param {TreeNode | undefined} node
  * @returns {string | undefined}
  */
-export function getType(node: TreeNode | undefined): string | undefined {
+function getType(node: TreeNode | undefined): string | undefined {
   if (typeof node === "undefined") return undefined;
   if (node.kind !== "Leaf") return undefined;
 
