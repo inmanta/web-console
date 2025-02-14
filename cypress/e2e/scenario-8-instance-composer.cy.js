@@ -857,7 +857,10 @@ if (Cypress.env("edition") === "iso") {
 
       cy.get("button").contains("Deploy").click();
 
-      cy.wait(500); //sometimes the navigation is too fast and the redirect isn't being received properly
+      cy.get('[aria-label="OrderDetailsView-Success"]', {
+        timeout: 20000,
+      }).should("to.be.visible");
+
       cy.get('[aria-label="Sidebar-Navigation-Item"]')
         .contains("Service Catalog")
         .click();
@@ -935,6 +938,10 @@ if (Cypress.env("edition") === "iso") {
 
       cy.get("button").contains("Deploy").click();
 
+      cy.get('[aria-label="OrderDetailsView-Success"]', {
+        timeout: 20000,
+      }).should("to.be.visible");
+
       cy.get('[aria-label="Sidebar-Navigation-Item"]')
         .contains("Service Catalog")
         .click();
@@ -960,7 +967,7 @@ if (Cypress.env("edition") === "iso") {
         .first()
         .click();
 
-      //Make sure we are at the active attirubtes
+      //Make sure we are at the active attributes
       cy.get('[aria-label="Select-AttributeSet"]').select("active_attributes");
 
       cy.get('[aria-label="parent_entity_value"]')
