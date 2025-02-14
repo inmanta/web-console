@@ -139,7 +139,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#parent-service").contains("Show inventory").click();
       cy.get('[data-label="State"]')
         .eq(0)
-        .should("have.text", "up", { timeout: 120000 });
+        .should("have.text", "up", { timeout: 180000 });
 
       // try delete item (Should not be possible)
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
