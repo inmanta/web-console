@@ -1,5 +1,5 @@
 description: Improve Query Management for service and service instance queries with replacement of v1 queries with react-query implementation
-issue-nr: 6178
+issue-nr: 6174
 change-type: patch
 destination-branches: [master, iso8]
 sections:

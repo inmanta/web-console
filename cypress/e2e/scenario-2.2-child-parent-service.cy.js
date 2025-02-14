@@ -86,6 +86,10 @@ if (Cypress.env("edition") === "iso") {
         timeout: 20000,
       }).should("to.be.visible");
 
+      cy.get('[data-label="State"]')
+        .eq(0)
+        .should("have.text", "up", { timeout: 90000 });
+
       cy.get('[aria-label="Sidebar-Navigation-Item"]')
         .contains("Service Catalog")
         .click();
@@ -139,7 +143,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#parent-service").contains("Show inventory").click();
       cy.get('[data-label="State"]')
         .eq(0)
-        .should("have.text", "up", { timeout: 120000 });
+        .should("have.text", "up", { timeout: 180000 });
 
       // try delete item (Should not be possible)
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
