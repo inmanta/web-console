@@ -86,6 +86,10 @@ if (Cypress.env("edition") === "iso") {
         timeout: 20000,
       }).should("to.be.visible");
 
+      cy.get('[data-label="State"]')
+        .eq(0)
+        .should("have.text", "up", { timeout: 90000 });
+
       cy.get('[aria-label="Sidebar-Navigation-Item"]')
         .contains("Service Catalog")
         .click();
@@ -116,6 +120,10 @@ if (Cypress.env("edition") === "iso") {
         timeout: 20000,
       }).should("to.be.visible");
 
+      cy.get('[data-label="State"]')
+        .eq(0)
+        .should("have.text", "up", { timeout: 90000 });
+
       cy.get('[aria-label="Sidebar-Navigation-Item"]')
         .contains("Service Catalog")
         .click();
@@ -129,6 +137,7 @@ if (Cypress.env("edition") === "iso") {
         1,
       );
     });
+
     it("2.2.2 Remove Parent Service and Child Service", () => {
       cy.visit("/console/");
 
