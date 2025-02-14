@@ -1,0 +1,4 @@
+description: Fix Env switching showing invalid data
+issue-nr: 6208
+change-type: patch
+destination-branches: [master, iso8]
