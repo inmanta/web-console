@@ -22,7 +22,7 @@ interface Props {
   data: ViewData;
 }
 
-export const View: React.FC<Props> = ({ data, onClick }) => {
+const View: React.FC<Props> = ({ data, onClick }) => {
   const [error, setError] = useState("");
 
   useEffect(() => {

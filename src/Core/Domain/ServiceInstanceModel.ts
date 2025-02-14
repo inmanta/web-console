@@ -86,15 +86,6 @@ export interface FormAttributeResult {
 }
 
 /**
- * Interface representing the body of a set state request.
- */
-export interface SetStateBody {
-  current_version: ParsedNumber;
-  target_state: string;
-  message: string;
-}
-
-/**
  * Interface representing a suggestions that are stored in the web_suggested_values.
  */
 export interface FormSuggestion {
@@ -107,4 +98,4 @@ export interface FormSuggestion {
  * Type representing a form suggestion type.
  * Can be either "literal" or "parameters".
  */
-export type FormSuggestionType = "literal" | "parameters";
+type FormSuggestionType = "literal" | "parameters";

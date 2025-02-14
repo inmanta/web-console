@@ -31,15 +31,6 @@ export const mapRight = <L, R, NR>(
   return right(mapper(either.value));
 };
 
-export const mapLeft = <L, R, NL>(
-  mapper: (value: L) => NL,
-  either: Either<L, R>,
-): Either<NL, R> => {
-  if (isRight(either)) return either;
-
-  return left(mapper(either.value));
-};
-
 export const withFallback = <L, R, F>(
   fallback: F,
   either: Either<L, R>,

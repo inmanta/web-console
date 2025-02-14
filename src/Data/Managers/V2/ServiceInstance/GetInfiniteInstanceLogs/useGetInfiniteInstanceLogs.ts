@@ -6,7 +6,7 @@ import { Pagination } from "@/Core";
 import { InstanceLog } from "@/Core/Domain/HistoryLog";
 import { useGet } from "../../helpers";
 
-export interface LogsResponse {
+interface LogsResponse {
   data: InstanceLog[];
   links: Pagination.Links;
   metadata: Pagination.Metadata;

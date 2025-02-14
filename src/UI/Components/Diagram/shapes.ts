@@ -480,7 +480,7 @@ export const Link = shapes.standard.Link.define(
   },
 );
 
-export const LinkView = dia.LinkView.extend({
+const LinkView = dia.LinkView.extend({
   update(...theArgs) {
     dia.LinkView.prototype.update.apply(this, theArgs as []);
     this.updateLabels();

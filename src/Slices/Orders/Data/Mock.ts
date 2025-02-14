@@ -1,6 +1,6 @@
 import { ServiceOrder } from "../Core/Query";
 
-export const orderData: ServiceOrder[] = [
+const orderData: ServiceOrder[] = [
   {
     description: "Failed CREATE order",
     id: "3fa85f64-5717-4562-b3fc-2c963f66afa",

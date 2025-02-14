@@ -261,16 +261,6 @@ export const serverFailedActions = setupServer(
 );
 
 /**
- * Setup a test server with a config for the instance
- */
-export const serverWithConfig = setupServer(
-  getServiceModel,
-  getHistoryLogs,
-  getInstanceData,
-  getResources,
-);
-
-/**
  * Setup a test server with documentation for a certain attribute
  */
 export const serverWithDocumentation = setupServer(

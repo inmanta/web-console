@@ -21,7 +21,7 @@ export interface Notification extends Flags {
   uri: string | null;
 }
 
-export interface Flags {
+interface Flags {
   read: boolean;
   cleared: boolean;
 }

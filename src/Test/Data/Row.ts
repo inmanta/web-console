@@ -13,15 +13,3 @@ export const a: Row = {
   deleteDisabled: false,
   editDisabled: false,
 };
-
-export const b: Row = {
-  ...a,
-  id: { full: "service_instance_id_b", short: "id_b" },
-  serviceIdentityValue: "instance2",
-};
-
-export const c: Row = {
-  ...a,
-  id: { full: "service_instance_id_c", short: "id_c" },
-  serviceIdentityValue: "instance3",
-};

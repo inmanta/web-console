@@ -13,5 +13,3 @@ export type PageDictionary = Record<
   Exclude<RouteKind, RestrictedRouteKind>,
   Page
 >;
-
-export type RestrictedPageDictionary = Record<RestrictedRouteKind, Page>;

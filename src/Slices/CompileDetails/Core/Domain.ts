@@ -7,7 +7,7 @@ export interface CompileDetails extends CompileReport {
   reports?: CompileStageReport[];
 }
 
-export interface CompileData {
+interface CompileData {
   errors: CompileError[];
 }
 
