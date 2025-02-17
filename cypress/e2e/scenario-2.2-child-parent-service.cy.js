@@ -68,7 +68,7 @@ if (Cypress.env("edition") === "iso") {
       clearEnvironment();
       forceUpdateEnvironment();
     });
-    xit("2.2.1 Add Instance on parent-service", () => {
+    it("2.2.1 Add Instance on parent-service", () => {
       cy.visit("/console/");
       cy.get(`[aria-label="Select-environment-test"]`).click();
       cy.get('[aria-label="Sidebar-Navigation-Item"]')
@@ -87,7 +87,7 @@ if (Cypress.env("edition") === "iso") {
       }).should("to.be.visible");
 
       // Check the state of the instance is up in the history section.
-      cy.get('[aria-label="History-Row"]', { timeout: 60000 }).should(
+      cy.get('[aria-label="History-Row"]', { timeout: 90000 }).should(
         "contain",
         "up",
       );
@@ -135,7 +135,7 @@ if (Cypress.env("edition") === "iso") {
         1,
       );
     });
-    xit("2.2.2 Remove Parent Service and Child Service", () => {
+    it("2.2.2 Remove Parent Service and Child Service", () => {
       cy.visit("/console/");
 
       cy.get(`[aria-label="Select-environment-test"]`).click();
@@ -144,8 +144,8 @@ if (Cypress.env("edition") === "iso") {
         .click();
       cy.get("#parent-service").contains("Show inventory").click();
       cy.get('[data-label="State"]')
-        .eq(0)
-        .should("have.text", "up", { timeout: 180000 });
+        .eq(0, { timeout: 90000 })
+        .should("have.text", "up");
 
       // try delete item (Should not be possible)
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
@@ -161,8 +161,8 @@ if (Cypress.env("edition") === "iso") {
 
       cy.get("#child-service").contains("Show inventory").click();
       cy.get('[data-label="State"]')
-        .eq(0)
-        .should("have.text", "up", { timeout: 90000 });
+        .eq(0, { timeout: 90000 })
+        .should("have.text", "up");
       // try delete item (Should be possible)
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
       cy.get('[role="menuitem"]').contains("Delete").click();
@@ -171,7 +171,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get(".pf-v6-c-form__actions").contains("Yes").click();
 
       cy.get('[aria-label="ServiceInventory-Empty"]', {
-        timeout: 240000,
+        timeout: 120000,
       }).should("to.be.visible");
     });
   });
