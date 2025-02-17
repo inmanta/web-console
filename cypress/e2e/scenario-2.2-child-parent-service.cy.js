@@ -86,9 +86,11 @@ if (Cypress.env("edition") === "iso") {
         timeout: 20000,
       }).should("to.be.visible");
 
-      cy.get('[data-label="State"]')
-        .eq(0)
-        .should("have.text", "up", { timeout: 90000 });
+      // Check the state of the instance is up in the history section.
+      cy.get('[aria-label="History-Row"]', { timeout: 60000 }).should(
+        "contain",
+        "up",
+      );
 
       cy.get('[aria-label="Sidebar-Navigation-Item"]')
         .contains("Service Catalog")
