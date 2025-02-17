@@ -17,5 +17,3 @@ export enum AgentStatus {
   up = "up",
   down = "down",
 }
-
-export const AgentStatusList = Object.values(AgentStatus);

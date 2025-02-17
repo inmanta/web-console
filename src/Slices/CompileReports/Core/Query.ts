@@ -32,7 +32,7 @@ export interface Manifest {
   query: Query;
 }
 
-export interface CompileReportParams {
+interface CompileReportParams {
   filter?: Filter;
   sort?: Sort.Sort;
   pageSize: PageSize.PageSize;

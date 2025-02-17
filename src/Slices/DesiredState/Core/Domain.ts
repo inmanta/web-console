@@ -19,7 +19,3 @@ export enum DesiredStateVersionStatus {
   retired = "retired",
   skipped_candidate = "skipped_candidate",
 }
-
-export const DesiredStateVersionStatusList = Object.values(
-  DesiredStateVersionStatus,
-);

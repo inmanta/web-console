@@ -8,13 +8,13 @@ export interface IntRange {
 
 export type Type = IntRange;
 
-export const serialize = (range: IntRange): string =>
+const serialize = (range: IntRange): string =>
   `${range.operator}__${range.value}`;
 
 export const serializeList = (ranges: IntRange[]): string[] =>
   ranges.map(serialize);
 
-export const parse = (candidate: unknown): IntRange | undefined => {
+const parse = (candidate: unknown): IntRange | undefined => {
   if (typeof candidate !== "string") return undefined;
   const [operator, valueString] = candidate.split("__");
 

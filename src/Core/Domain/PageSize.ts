@@ -25,8 +25,6 @@ export const from = (value: string): PageSize => {
   return { kind: "PageSize", value };
 };
 
-export const list = listOfValues.map(from);
-
 export const initial = from("20");
 
 export const equals = (a: PageSize, b: PageSize): boolean =>
