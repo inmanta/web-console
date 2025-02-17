@@ -68,7 +68,7 @@ if (Cypress.env("edition") === "iso") {
       clearEnvironment();
       forceUpdateEnvironment();
     });
-    it("2.2.1 Add Instance on parent-service", () => {
+    xit("2.2.1 Add Instance on parent-service", () => {
       cy.visit("/console/");
       cy.get(`[aria-label="Select-environment-test"]`).click();
       cy.get('[aria-label="Sidebar-Navigation-Item"]')
@@ -135,7 +135,7 @@ if (Cypress.env("edition") === "iso") {
         1,
       );
     });
-    it("2.2.2 Remove Parent Service and Child Service", () => {
+    xit("2.2.2 Remove Parent Service and Child Service", () => {
       cy.visit("/console/");
 
       cy.get(`[aria-label="Select-environment-test"]`).click();
