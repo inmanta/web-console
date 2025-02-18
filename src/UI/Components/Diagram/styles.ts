@@ -40,6 +40,16 @@ export const CanvasWrapper = styled.div`
     border: 0;
     background-color: var(--pf-t--global--background--color--primary--default);
 
+    .group > .group-label {
+      text-transform: none;
+      color: var(--pf-t--global--text--color--regular);
+      font-size: var(--pf-t_global_font_size_body_lg);
+
+      &::before {
+        border-top-color: var(--pf-t--global--text--color--regular);
+      }
+    }
+
     &.joint-hidden {
       visibility: hidden; //note: display: none breaks the stencil-groups
     }
