@@ -1,0 +1,6 @@
+description: Prevent stretched buttons in header, and enable token tab in the settings for jwt auth.
+issue-nr: 6215
+change-type: patch
+destination-branches: [master, iso8]
+sections:
+  minor-improvement: "{{description}}"

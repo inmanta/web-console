@@ -14510,16 +14510,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"serialize-javascript@npm:^4.0.0":
-  version: 4.0.0
-  resolution: "serialize-javascript@npm:4.0.0"
-  dependencies:
-    randombytes: "npm:^2.1.0"
-  checksum: 10/df6809168973a84facade7d73e2d6dc418f5dee704d1e6cbe79e92fdb4c10af55237e99d2e67881ae3b29aa96ba596a0dfec4e609bd289ab8ec93c5ae78ede8e
-  languageName: node
-  linkType: hard
-
-"serialize-javascript@npm:^6.0.2":
+"serialize-javascript@npm:6.0.2":
   version: 6.0.2
   resolution: "serialize-javascript@npm:6.0.2"
   dependencies:

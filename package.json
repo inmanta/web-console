@@ -199,6 +199,7 @@
     "nth-check": "^2.0.1",
     "path-to-regexp@^6.2.0": "8.0.0",
     "prismjs": "^1.25.0",
+    "serialize-javascript": "6.0.2",
     "simple-git": "^3.5.0",
     "terser-webpack-plugin": "^1.4.5",
     "terser": "^5.14.2",
