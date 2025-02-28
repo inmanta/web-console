@@ -161,7 +161,7 @@ const getDocumentationSections = (
 /**
  * Retrieves the first attribute set that contains data
  * for a specific version in the log history.
- * Prioritizing the active-attributes.
+ * Prioritizing the candidate-attributes. This is only the case for the documentation tab.
  *
  * @param {InstanceLog[]} logs - The logs that contain the attributeSet history.
  * @param {string} version - The version for which you need the attributeSet
@@ -177,12 +177,12 @@ const getSelectedAttributeSet = (
 
   if (!selectedLog) return; // Return void if no matching log is found
 
-  if (selectedLog.active_attributes) {
-    return selectedLog.active_attributes;
-  }
-
   if (selectedLog.candidate_attributes) {
     return selectedLog.candidate_attributes;
+  }
+
+  if (selectedLog.active_attributes) {
+    return selectedLog.active_attributes;
   }
 
   if (selectedLog.rollback_attributes) {
@@ -194,7 +194,7 @@ const getSelectedAttributeSet = (
 
 /**
  * Retrieves the first attribute set that contains data
- * Prioritizing the active-attributes.
+ * Prioritizing the candidate-attributes. This is only the case for the documentation tab.
  *
  * @param {ServiceInstanceModel} instance - the instance that contains the attributeSets.
  * @returns {InstanceAttributeModel | void}
@@ -202,12 +202,12 @@ const getSelectedAttributeSet = (
 const getSelectedAttributeSetFromInstance = (
   instance: ServiceInstanceModel,
 ): InstanceAttributeModel | void => {
-  if (instance.active_attributes) {
-    return instance.active_attributes;
-  }
-
   if (instance.candidate_attributes) {
     return instance.candidate_attributes;
+  }
+
+  if (instance.active_attributes) {
+    return instance.active_attributes;
   }
 
   if (instance.rollback_attributes) {
