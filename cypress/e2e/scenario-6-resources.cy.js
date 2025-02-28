@@ -153,30 +153,43 @@ describe("Scenario 6 : Resources", () => {
         .click();
 
       // Expect to find this information in table :
-      cy.get(".pf-v6-c-description-list__group")
-        .eq(0)
-        .should("contain", "name")
-        .and("contain", "default-0001");
-      cy.get(".pf-v6-c-description-list__group")
-        .eq(1)
-        .should("contain", "purge_on_delete")
-        .and("contain", "false");
-      cy.get(".pf-v6-c-description-list__group")
-        .eq(2)
-        .should("contain", "purged")
-        .and("contain", "false");
-      cy.get(".pf-v6-c-description-list__group")
-        .eq(3)
-        .should("contain", "receive_events")
-        .and("contain", "true");
-      cy.get(".pf-v6-c-description-list__group")
-        .eq(4)
-        .should("contain", "send_event")
-        .and("contain", "true");
-      cy.get(".pf-v6-c-description-list__group")
-        .eq(5)
-        .should("contain", "should_deploy_fail")
-        .and("contain", "false");
+      cy.get(".pf-v6-c-description-list").within(() => {
+        cy.get(".pf-v6-c-description-list__term")
+          .contains("name")
+          .closest(".pf-v6-c-description-list__group")
+          .find(".pf-v6-c-description-list__description")
+          .should("contain", "default-0001");
+
+        cy.get(".pf-v6-c-description-list__term")
+          .contains("purge_on_delete")
+          .closest(".pf-v6-c-description-list__group")
+          .find(".pf-v6-c-description-list__description")
+          .should("contain", "false");
+
+        cy.get(".pf-v6-c-description-list__term")
+          .contains("purged")
+          .closest(".pf-v6-c-description-list__group")
+          .find(".pf-v6-c-description-list__description")
+          .should("contain", "false");
+
+        cy.get(".pf-v6-c-description-list__term")
+          .contains("receive_events")
+          .closest(".pf-v6-c-description-list__group")
+          .find(".pf-v6-c-description-list__description")
+          .should("contain", "true");
+
+        cy.get(".pf-v6-c-description-list__term")
+          .contains("send_event")
+          .closest(".pf-v6-c-description-list__group")
+          .find(".pf-v6-c-description-list__description")
+          .should("contain", "true");
+
+        cy.get(".pf-v6-c-description-list__term")
+          .contains("should_deploy_fail")
+          .closest(".pf-v6-c-description-list__group")
+          .find(".pf-v6-c-description-list__description")
+          .should("contain", "false");
+      });
 
       // Click on Requires tab
       cy.get("button").contains("Requires").click();
@@ -203,30 +216,45 @@ describe("Scenario 6 : Resources", () => {
       cy.get('[aria-label="Details"]').click();
 
       // Expect content to be the same as on main Desired State tab
-      cy.get(".pf-v6-c-description-list__group")
-        .eq(2)
-        .should("contain", "name")
-        .and("contain", "default-0001");
-      cy.get(".pf-v6-c-description-list__group")
-        .eq(3)
-        .should("contain", "purge_on_delete")
-        .and("contain", "false");
-      cy.get(".pf-v6-c-description-list__group")
-        .eq(4)
-        .should("contain", "purged")
-        .and("contain", "false");
-      cy.get(".pf-v6-c-description-list__group")
-        .eq(5)
-        .should("contain", "receive_events")
-        .and("contain", "true");
-      cy.get(".pf-v6-c-description-list__group")
-        .eq(6)
-        .should("contain", "send_event")
-        .and("contain", "true");
-      cy.get(".pf-v6-c-description-list__group")
-        .eq(7)
-        .should("contain", "should_deploy_fail")
-        .and("contain", "false");
+      cy.get(".pf-v6-c-description-list")
+        .last()
+        .within(() => {
+          cy.get(".pf-v6-c-description-list__term")
+            .contains("name")
+            .closest(".pf-v6-c-description-list__group")
+            .find(".pf-v6-c-description-list__description")
+            .should("contain", "default-0001");
+
+          cy.get(".pf-v6-c-description-list__term")
+            .contains("purge_on_delete")
+            .closest(".pf-v6-c-description-list__group")
+            .find(".pf-v6-c-description-list__description")
+            .should("contain", "false");
+
+          cy.get(".pf-v6-c-description-list__term")
+            .contains("purged")
+            .closest(".pf-v6-c-description-list__group")
+            .find(".pf-v6-c-description-list__description")
+            .should("contain", "false");
+
+          cy.get(".pf-v6-c-description-list__term")
+            .contains("receive_events")
+            .closest(".pf-v6-c-description-list__group")
+            .find(".pf-v6-c-description-list__description")
+            .should("contain", "true");
+
+          cy.get(".pf-v6-c-description-list__term")
+            .contains("send_event")
+            .closest(".pf-v6-c-description-list__group")
+            .find(".pf-v6-c-description-list__description")
+            .should("contain", "true");
+
+          cy.get(".pf-v6-c-description-list__term")
+            .contains("should_deploy_fail")
+            .closest(".pf-v6-c-description-list__group")
+            .find(".pf-v6-c-description-list__description")
+            .should("contain", "false");
+        });
 
       // Expect requires tab to have no requirements
       cy.get(".pf-v6-c-tabs__list")
@@ -679,30 +707,43 @@ describe("Scenario 6 : Resources", () => {
         .click();
 
       // Expect to find the right information on the details page.
-      cy.get(".pf-v6-c-description-list__group")
-        .eq(0)
-        .should("contain", "name")
-        .and("contain", "a");
-      cy.get(".pf-v6-c-description-list__group")
-        .eq(1)
-        .should("contain", "purge_on_delete")
-        .and("contain", "false");
-      cy.get(".pf-v6-c-description-list__group")
-        .eq(2)
-        .should("contain", "purged")
-        .and("contain", "false");
-      cy.get(".pf-v6-c-description-list__group")
-        .eq(3)
-        .should("contain", "receive_events")
-        .and("contain", "true");
-      cy.get(".pf-v6-c-description-list__group")
-        .eq(4)
-        .should("contain", "send_event")
-        .and("contain", "true");
-      cy.get(".pf-v6-c-description-list__group")
-        .eq(5)
-        .should("contain", "should_deploy_fail")
-        .and("contain", "false");
+      cy.get(".pf-v6-c-description-list").within(() => {
+        cy.get(".pf-v6-c-description-list__term")
+          .contains("name")
+          .closest(".pf-v6-c-description-list__group")
+          .find(".pf-v6-c-description-list__description")
+          .should("contain", "a");
+
+        cy.get(".pf-v6-c-description-list__term")
+          .contains("purge_on_delete")
+          .closest(".pf-v6-c-description-list__group")
+          .find(".pf-v6-c-description-list__description")
+          .should("contain", "false");
+
+        cy.get(".pf-v6-c-description-list__term")
+          .contains("purged")
+          .closest(".pf-v6-c-description-list__group")
+          .find(".pf-v6-c-description-list__description")
+          .should("contain", "false");
+
+        cy.get(".pf-v6-c-description-list__term")
+          .contains("receive_events")
+          .closest(".pf-v6-c-description-list__group")
+          .find(".pf-v6-c-description-list__description")
+          .should("contain", "true");
+
+        cy.get(".pf-v6-c-description-list__term")
+          .contains("send_event")
+          .closest(".pf-v6-c-description-list__group")
+          .find(".pf-v6-c-description-list__description")
+          .should("contain", "true");
+
+        cy.get(".pf-v6-c-description-list__term")
+          .contains("should_deploy_fail")
+          .closest(".pf-v6-c-description-list__group")
+          .find(".pf-v6-c-description-list__description")
+          .should("contain", "false");
+      });
 
       // Click on Requires tab
       cy.get("button").contains("Requires").click();
@@ -728,30 +769,43 @@ describe("Scenario 6 : Resources", () => {
       // click row open
       cy.get('[aria-label="Details"]').click();
       // Expect content to be the same as on main Desired State tab
-      cy.get(".pf-v6-c-description-list__group")
-        .eq(2)
-        .should("contain", "name")
-        .and("contain", "a");
-      cy.get(".pf-v6-c-description-list__group")
-        .eq(3)
-        .should("contain", "purge_on_delete")
-        .and("contain", "false");
-      cy.get(".pf-v6-c-description-list__group")
-        .eq(4)
-        .should("contain", "purged")
-        .and("contain", "false");
-      cy.get(".pf-v6-c-description-list__group")
-        .eq(5)
-        .should("contain", "receive_events")
-        .and("contain", "true");
-      cy.get(".pf-v6-c-description-list__group")
-        .eq(6)
-        .should("contain", "send_event")
-        .and("contain", "true");
-      cy.get(".pf-v6-c-description-list__group")
-        .eq(7)
-        .should("contain", "should_deploy_fail")
-        .and("contain", "false");
+      cy.get(".pf-v6-c-description-list").within(() => {
+        cy.get(".pf-v6-c-description-list__term")
+          .contains("name")
+          .closest(".pf-v6-c-description-list__group")
+          .find(".pf-v6-c-description-list__description")
+          .should("contain", "a");
+
+        cy.get(".pf-v6-c-description-list__term")
+          .contains("purge_on_delete")
+          .closest(".pf-v6-c-description-list__group")
+          .find(".pf-v6-c-description-list__description")
+          .should("contain", "false");
+
+        cy.get(".pf-v6-c-description-list__term")
+          .contains("purged")
+          .closest(".pf-v6-c-description-list__group")
+          .find(".pf-v6-c-description-list__description")
+          .should("contain", "false");
+
+        cy.get(".pf-v6-c-description-list__term")
+          .contains("receive_events")
+          .closest(".pf-v6-c-description-list__group")
+          .find(".pf-v6-c-description-list__description")
+          .should("contain", "true");
+
+        cy.get(".pf-v6-c-description-list__term")
+          .contains("send_event")
+          .closest(".pf-v6-c-description-list__group")
+          .find(".pf-v6-c-description-list__description")
+          .should("contain", "true");
+
+        cy.get(".pf-v6-c-description-list__term")
+          .contains("should_deploy_fail")
+          .closest(".pf-v6-c-description-list__group")
+          .find(".pf-v6-c-description-list__description")
+          .should("contain", "false");
+      });
 
       // Expect requires tab to have no requirements
       cy.get(".pf-v6-c-tabs__list")
