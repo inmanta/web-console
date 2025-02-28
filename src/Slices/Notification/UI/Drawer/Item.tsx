@@ -69,7 +69,6 @@ const ActionList: React.FC<Props> = ({ notification, onUpdate }) => {
     setIsOpen(!isOpen);
   };
 
-
   return (
     <Dropdown
       toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
