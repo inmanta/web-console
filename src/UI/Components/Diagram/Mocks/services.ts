@@ -825,6 +825,7 @@ export const testService: ServiceModel = {
   embedded_entities: [
     {
       name: "peerings",
+      type: "peerings",
       description: "desc",
       modifier: "rw+",
       lower_limit: 0,
@@ -1611,6 +1612,7 @@ export const testApiInstanceModel: ServiceModel = {
   embedded_entities: [
     {
       name: "vlan_assigment_r1",
+      type: "vlan_assigment_r1",
       description: "",
       modifier: "rw",
       lower_limit: 1,
@@ -1671,6 +1673,7 @@ export const testApiInstanceModel: ServiceModel = {
     },
     {
       name: "vlan_assigment_r2",
+      type: "vlan_assigment_r2",
       description: "",
       modifier: "rw",
       lower_limit: 1,
@@ -2160,9 +2163,9 @@ export const containerModel: ServiceModel = {
   embedded_entities: [
     {
       name: "child_container",
+      type: "child_container",
       description: "",
       modifier: "rw",
-
       lower_limit: 1,
       upper_limit: 1,
       attributes: [
@@ -5691,6 +5694,7 @@ export const serviceModels: ServiceModel[] = [
     embedded_entities: [
       {
         name: "ro_meta",
+        type: "ro_meta",
         description: null,
         modifier: "rw",
         attribute_annotations: {},
@@ -5738,6 +5742,7 @@ export const serviceModels: ServiceModel[] = [
       },
       {
         name: "rw_meta",
+        type: "rw_meta",
         description: null,
         modifier: "rw+",
         attribute_annotations: {},
@@ -5785,6 +5790,7 @@ export const serviceModels: ServiceModel[] = [
       },
       {
         name: "ro_files",
+        type: "ro_files",
         description: null,
         modifier: "rw+",
         attribute_annotations: {},
@@ -5821,6 +5827,7 @@ export const serviceModels: ServiceModel[] = [
       },
       {
         name: "rw_files",
+        type: "rw_files",
         description: null,
         modifier: "rw",
         attribute_annotations: {},
