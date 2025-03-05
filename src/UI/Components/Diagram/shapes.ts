@@ -255,7 +255,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
       },
     );
 
-    this.set("entityName", name); //name is still assigned to the entityName attribute, not to disturb the existing logic
+    this.set("entityName", name); //regardless of the type, name is still assigned to the entityName attribute, which is then used in all of the logic regarding the keeping track of the loose elements or the stencil state
     this.attr(["headerLabel", "data-testid"], "header-" + usedName);
 
     if (shortenName.includes(`\u2026`)) {
