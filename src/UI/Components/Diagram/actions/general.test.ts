@@ -52,6 +52,38 @@ describe("createComposerEntity", () => {
       "var(--pf-t--chart--color--blue--400, #004d99)",
     );
     expect(embeddedEntity.get("isInEditMode")).toBe(false);
+    expect(embeddedEntity.getName()).toBe(
+      containerModel.embedded_entities[0].name,
+    );
+    expect(embeddedEntity.attr("headerLabel/text")).toBe(
+      containerModel.embedded_entities[0].name,
+    );
+  });
+
+  it("creates a new embedded entit with name equal to type if the type is present", () => {
+    const embeddedEntity = createComposerEntity({
+      serviceModel: {
+        ...containerModel.embedded_entities[0],
+        type: "test-type",
+      },
+      isCore: false,
+      isInEditMode: false,
+      isEmbeddedEntity: true,
+      holderName: containerModel.name,
+    });
+
+    expect(embeddedEntity.get("holderName")).toBe(containerModel.name);
+    expect(embeddedEntity.get("isEmbeddedEntity")).toBe(true);
+    expect(embeddedEntity.get("isCore")).toBe(undefined);
+    expect(embeddedEntity.attr("header/fill")).toBe(
+      "var(--pf-t--chart--color--blue--400, #004d99)",
+    );
+    expect(embeddedEntity.get("isInEditMode")).toBe(false);
+
+    expect(embeddedEntity.getName()).toBe(
+      containerModel.embedded_entities[0].name,
+    );
+    expect(embeddedEntity.attr("headerLabel/text")).toBe("test-type");
   });
 
   it("creates a new entity with inster-service relations", () => {
@@ -112,7 +144,10 @@ describe("createComposerEntity", () => {
 
 describe("updateAttributes", () => {
   it("set attributes, sanitizedAttrs and displayed items on initial update", () => {
-    const instanceAsTable = new ServiceEntityBlock().setName(parentModel.name);
+    const instanceAsTable = new ServiceEntityBlock().setName(
+      parentModel.name,
+      null,
+    );
     const attributes = mockedInstanceWithRelations.instance
       .active_attributes as InstanceAttributeModel; // instance based on parent-service model
     const isInitial = true;
@@ -161,7 +196,10 @@ describe("updateAttributes", () => {
   });
 
   it("when there is no key attributes only attributes and sanitizedAttrs are set", () => {
-    const instanceAsTable = new ServiceEntityBlock().setName(parentModel.name);
+    const instanceAsTable = new ServiceEntityBlock().setName(
+      parentModel.name,
+      null,
+    );
     const attributes = mockedInstanceWithRelations.instance
       .active_attributes as InstanceAttributeModel; // instance based on parent-service model
     const isInitial = true;
@@ -183,7 +221,10 @@ describe("updateAttributes", () => {
 
   it("sanitized Attributes won't be overridden if isInitial property is set to false or if there are sanitizedAttributes already set", () => {
     //sanitizedAttrs property is updated from the sidebar level as it requires fields to be present
-    const instanceAsTable = new ServiceEntityBlock().setName(parentModel.name);
+    const instanceAsTable = new ServiceEntityBlock().setName(
+      parentModel.name,
+      null,
+    );
     const attributes = mockedInstanceWithRelations.instance
       .active_attributes as InstanceAttributeModel; // instance based on parent-service model
     const isInitial = true;

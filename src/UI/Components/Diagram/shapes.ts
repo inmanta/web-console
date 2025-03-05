@@ -241,9 +241,10 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
    * @param {object} [options] - Optional settings for the attribute update.
    * @returns {this} The current instance for method chaining.
    */
-  setName(name: string, options?: object): this {
+  setName(name: string, displayText: string | null, options?: object): this {
+    const usedName = displayText || name; // displayText is used to display the name of the embedded entity, this value is nullable, that's why we fallback it to name
     const shortenName = util.breakText(
-      name,
+      usedName,
       { width: 140, height: 30 },
       {
         "font-size": this.attr("headerLabel/fontSize"),
@@ -254,13 +255,13 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
       },
     );
 
-    this.set("entityName", name);
-    this.attr(["headerLabel", "data-testid"], "header-" + name);
+    this.set("entityName", name); //name is still assigned to the entityName attribute, not to disturb the existing logic
+    this.attr(["headerLabel", "data-testid"], "header-" + usedName);
 
     if (shortenName.includes(`\u2026`)) {
       return this.attr(
         ["headerLabel", "text"],
-        name.replace(/\s+/g, " ").slice(0, 16) + `\u2026`,
+        usedName.replace(/\s+/g, " ").slice(0, 16) + `\u2026`,
         options,
       );
     } else {

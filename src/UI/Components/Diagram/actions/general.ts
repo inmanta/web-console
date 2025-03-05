@@ -1,5 +1,5 @@
 import { dia } from "@inmanta/rappid";
-import { InstanceAttributeModel } from "@/Core";
+import { EmbeddedEntity, InstanceAttributeModel } from "@/Core";
 import { dispatchAddInterServiceRelationToTracker } from "../Context/dispatchers";
 import { getKeyAttributesNames } from "../helpers";
 import {
@@ -42,7 +42,11 @@ export function createComposerEntity({
   //Create shape for Entity
   const instanceAsTable = new ServiceEntityBlock();
 
-  instanceAsTable.setName(serviceModel.name);
+  if (isEmbeddedEntity && "type" in serviceModel) {
+    instanceAsTable.setName(serviceModel.name, serviceModel.type);
+  } else {
+    instanceAsTable.setName(serviceModel.name, null);
+  }
 
   //if there is if provided, we use it, if not we use default one, created by JointJS
   if (id) {
