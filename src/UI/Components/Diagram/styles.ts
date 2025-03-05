@@ -64,10 +64,12 @@ export const CanvasWrapper = styled.div`
     }
 
     .stencil_text-disabled {
+      pointer-events: none;
       fill: var(--pf-t--global--text--color--disabled);
     }
 
     .stencil_accent-disabled {
+      pointer-events: none;
       fill: var(--pf-t--global--text--color--disabled);
     }
   }

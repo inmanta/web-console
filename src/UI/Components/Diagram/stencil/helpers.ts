@@ -95,7 +95,10 @@ export const createStencilElement = (
         textAnchor: "start",
         fontFamily: "sans-serif",
         fontSize: t_global_font_size_body_default.var,
-        text: name,
+        text:
+          "type" in serviceModel && serviceModel.type
+            ? serviceModel.type
+            : name,
         fill: t_global_text_color_regular.var,
       },
       borderBottom: {
