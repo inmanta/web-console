@@ -290,7 +290,7 @@ if (Cypress.env("edition") === "iso") {
       //assert if default entities are present, on init on the canvas we should have already basic required structure for the service instance
       cy.get('[data-type="app.ServiceEntityBlock"').should("have.length", 2);
       cy.get('[data-type="app.ServiceEntityBlock"')
-        .contains("embedded")
+        .contains("EmbeddedWithDefaultsPrimary")
         .should("be.visible");
       cy.get('[data-type="app.ServiceEntityBlock"')
         .contains("many-defaults")
@@ -385,7 +385,7 @@ if (Cypress.env("edition") === "iso") {
 
       //assert that embedded instance have all attributes, this particular embedded entity can't be removed but can be edited
       cy.get('[data-type="app.ServiceEntityBlock"')
-        .contains("embedded")
+        .contains("EmbeddedWithDefaultsPrimary")
         .click();
       cy.get("button")
         .contains("span", "Remove")
@@ -438,7 +438,7 @@ if (Cypress.env("edition") === "iso") {
 
       //assert that extra_embedded instance have all attributes, can be removed
       cy.get('[data-type="app.ServiceEntityBlock"')
-        .contains("extra_embedded")
+        .contains("EmbeddedWithDefaultsSecondary")
         .click();
       cy.get("button").contains("span", "Remove").parent().should("be.enabled");
       cy.get("input").should("have.length", 21);
@@ -446,7 +446,7 @@ if (Cypress.env("edition") === "iso") {
       //remove extra_embedded instance to simulate that user added that by a mistake yet want to remove it
       cy.get("button").contains("Remove").click();
       cy.get('[data-type="app.ServiceEntityBlock"')
-        .contains("extra_embedded")
+        .contains("EmbeddedWithDefaultsSecondary")
         .should("not.exist");
 
       //Drag once again extra_embedded onto canvas and assert that is highlighted as loose element
@@ -463,7 +463,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get(".joint-loose_element-highlight").should("be.visible");
 
       cy.get('[data-type="app.ServiceEntityBlock"')
-        .contains("extra_embedded")
+        .contains("EmbeddedWithDefaultsSecondary")
         .click();
       //fill some of embedded attributes, they are exactly the same as core attributes so we need to check only one fully, as the logic is the same
 
@@ -561,7 +561,7 @@ if (Cypress.env("edition") === "iso") {
         .trigger("mouseup", { force: true });
       cy.get('[data-name="fit-to-screen"]').click();
       cy.get('[data-type="app.ServiceEntityBlock"')
-        .contains("embedded")
+        .contains("EmbeddedWithDefaultsPrimary")
         .click();
       cy.get('[data-action="link"]')
         .trigger("mouseover")
@@ -649,10 +649,10 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[data-type="Link"').should("have.length", 4);
 
       cy.get('[data-type="app.ServiceEntityBlock"]')
-        .contains("embedded")
+        .contains("EmbeddedWithDefaultsPrimary")
         .should("be.visible");
       cy.get('[data-type="app.ServiceEntityBlock"]')
-        .contains("extra_embedded")
+        .contains("EmbeddedWithDefaultsSecondary")
         .should("be.visible");
       cy.get('[data-type="app.ServiceEntityBlock"]')
         .contains("many-defaults")
@@ -692,7 +692,7 @@ if (Cypress.env("edition") === "iso") {
 
       //edit some of embedded attributes
       cy.get('[data-type="app.ServiceEntityBlock"]')
-        .contains("embedded")
+        .contains("EmbeddedWithDefaultsPrimary")
         .click();
       cy.get("button")
         .contains("span", "Remove")
@@ -713,7 +713,7 @@ if (Cypress.env("edition") === "iso") {
 
       //remove extra_embedded instance
       cy.get('[data-type="app.ServiceEntityBlock"]')
-        .contains("extra_embedded")
+        .contains("EmbeddedWithDefaultsSecondary")
         .click();
       cy.get("button").contains("Remove").click();
 
