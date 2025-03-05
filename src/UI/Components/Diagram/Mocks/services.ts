@@ -825,7 +825,7 @@ export const testService: ServiceModel = {
   embedded_entities: [
     {
       name: "peerings",
-      type: "peerings",
+      type: "peering",
       description: "desc",
       modifier: "rw+",
       lower_limit: 0,
@@ -5694,7 +5694,7 @@ export const serviceModels: ServiceModel[] = [
     embedded_entities: [
       {
         name: "ro_meta",
-        type: "ro_meta",
+        type: "RoMeta",
         description: null,
         modifier: "rw",
         attribute_annotations: {},
@@ -5790,7 +5790,7 @@ export const serviceModels: ServiceModel[] = [
       },
       {
         name: "ro_files",
-        type: "ro_files",
+        type: "RoFiles",
         description: null,
         modifier: "rw+",
         attribute_annotations: {},
