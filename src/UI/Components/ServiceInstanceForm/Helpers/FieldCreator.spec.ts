@@ -158,7 +158,6 @@ test("GIVEN FieldCreator WHEN an entity has inter service relations THEN they ar
     {
       kind: "DictList",
       name: "embedded_not_editable",
-      type: "embedded_not_editable",
       isOptional: true,
       fields: [...RelationListFields, ...InterServiceRelationFields],
       min: 0,
@@ -167,7 +166,6 @@ test("GIVEN FieldCreator WHEN an entity has inter service relations THEN they ar
     {
       kind: "DictList",
       name: "embedded_editable",
-      type: "embedded_editable",
       isOptional: true,
       fields: [...RelationListFields, ...InterServiceRelationFields],
       min: 0,
