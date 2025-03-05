@@ -1,5 +1,5 @@
 import { dia } from "@inmanta/rappid";
-import { EmbeddedEntity, InstanceAttributeModel } from "@/Core";
+import { InstanceAttributeModel } from "@/Core";
 import { dispatchAddInterServiceRelationToTracker } from "../Context/dispatchers";
 import { getKeyAttributesNames } from "../helpers";
 import {
