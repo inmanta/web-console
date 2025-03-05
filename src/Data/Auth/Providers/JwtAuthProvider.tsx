@@ -15,7 +15,7 @@ export const JwtAuthProvider: React.FC<React.PropsWithChildren> = ({
   const authContext = useContext(AuthContext);
 
   const getUser = (): string | null => user;
-  const isDisabled = () => true;
+  const isDisabled = () => !getUser();
 
   useEffect(() => {
     if (isSuccess) {

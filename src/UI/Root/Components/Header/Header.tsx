@@ -71,7 +71,7 @@ export const Header: React.FC<Props> = ({ noEnv, onNotificationsToggle }) => {
           </MastheadBrand>
         </MastheadMain>
         <MastheadContent>
-          <Toolbar id="uncontrolled-toolbar" isFullHeight isStatic>
+          <Toolbar id="uncontrolled-toolbar" isStatic>
             <ToolbarContent>
               <ToolbarGroup
                 variant="action-group-plain"
