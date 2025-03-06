@@ -25,6 +25,7 @@ describe("EntityForm.", () => {
     showButtons: boolean,
     isRemovable: boolean,
     isDisabled: boolean,
+    isInEditMode: boolean = false,
   ) => {
     const graph = new dia.Graph();
     const paper = new ComposerPaper({}, graph, true).paper;
@@ -32,7 +33,7 @@ describe("EntityForm.", () => {
     const cell = createComposerEntity({
       serviceModel: parentModel,
       isCore: true,
-      isInEditMode: false,
+      isInEditMode,
       attributes: { name: "", service_id: "", should_deploy_fail: false },
     });
 
@@ -226,5 +227,25 @@ describe("EntityForm.", () => {
     expect(screen.getByRole("button", { name: "Cancel" })).toBeDisabled();
     expect(screen.getByLabelText("TextInput-service_id")).toHaveValue("");
     expect(screen.getByLabelText("TextInput-name")).toHaveValue("");
+  });
+
+  it("when isInEditMode is true, then rw inputs are disabled", () => {
+    const showButtons = true;
+    const isRemovable = false;
+    const isDisabled = false;
+    const isInEditMode = true;
+
+    const { component } = setup(
+      showButtons,
+      isRemovable,
+      isDisabled,
+      isInEditMode,
+    );
+
+    render(component);
+
+    expect(screen.getByLabelText("TextInput-service_id")).toBeDisabled();
+    expect(screen.getByLabelText("TextInput-name")).toBeDisabled();
+    expect(screen.getByLabelText("Toggle-should_deploy_fail")).toBeEnabled();
   });
 });

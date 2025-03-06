@@ -129,7 +129,7 @@ export const EntityForm: React.FC<Props> = ({
   const createFieldsAndState = useCallback(() => {
     const { model } = cellToEdit;
     const serviceModel = model.get("serviceModel") as ServiceModel;
-    const isEdited = model.get("isEdited") as boolean;
+    const isEdited = model.get("isInEditMode") as boolean;
     const instanceAttributes = model.get("instanceAttributes");
 
     const fieldCreator = new FieldCreator(
