@@ -1327,7 +1327,7 @@ export const serviceModelWithConfig: ServiceModel = {
 
 export const instanceDataWithDocumentation: ServiceInstanceModel = {
   ...instanceData,
-  active_attributes: {
+  candidate_attributes: {
     topography: "# Getting started\n\nThis is some markdown\n",
   },
 };

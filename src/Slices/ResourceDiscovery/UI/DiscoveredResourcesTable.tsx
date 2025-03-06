@@ -66,7 +66,7 @@ export const DiscoveredResourcesTable: React.FC<Props> = ({
       <Thead>
         <Tr>
           <Th
-            aria-hidden
+            modifier="fitContent"
             screenReaderText={words("common.emptyColumnHeader")}
           />
           {heads}

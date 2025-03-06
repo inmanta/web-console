@@ -204,94 +204,68 @@ describe("Scenario 4 Desired State", () => {
 
       cy.get("tbody").eq(0).contains("Show Details").click();
 
-      // Go through each row and check value
-      cy.get(".pf-v6-c-description-list__group")
-        .eq(1)
-        .find(".pf-v6-c-description-list__term")
-        .should("have.text", "next_desired_state_version");
+      // Check all values in the description list
+      cy.get(".pf-v6-c-description-list").within(() => {
+        cy.get(".pf-v6-c-description-list__term")
+          .contains("next_desired_state_version")
+          .closest(".pf-v6-c-description-list__group")
+          .find(".pf-v6-c-description-list__description")
+          .should("have.text", "4");
 
-      cy.get(".pf-v6-c-description-list__group")
-        .eq(1)
-        .find(".pf-v6-c-description-list__description")
-        .should("have.text", "4");
+        cy.get(".pf-v6-c-description-list__term")
+          .contains("next_version")
+          .closest(".pf-v6-c-description-list__group")
+          .find(".pf-v6-c-description-list__description")
+          .should("have.text", "4");
 
-      cy.get(".pf-v6-c-description-list__group")
-        .eq(2)
-        .find(".pf-v6-c-description-list__term")
-        .should("have.text", "next_version");
-      cy.get(".pf-v6-c-description-list__group")
-        .eq(2)
-        .find(".pf-v6-c-description-list__description")
-        .should("have.text", "4");
+        cy.get(".pf-v6-c-description-list__term")
+          .contains("purge_on_delete")
+          .closest(".pf-v6-c-description-list__group")
+          .find(".pf-v6-c-description-list__description")
+          .should("have.text", "false");
 
-      cy.get(".pf-v6-c-description-list__group")
-        .eq(3)
-        .find(".pf-v6-c-description-list__term")
-        .should("have.text", "purge_on_delete");
-      cy.get(".pf-v6-c-description-list__group")
-        .eq(3)
-        .find(".pf-v6-c-description-list__description")
-        .should("have.text", "false");
+        cy.get(".pf-v6-c-description-list__term")
+          .contains("purged")
+          .closest(".pf-v6-c-description-list__group")
+          .find(".pf-v6-c-description-list__description")
+          .should("have.text", "false");
 
-      cy.get(".pf-v6-c-description-list__group")
-        .eq(4)
-        .find(".pf-v6-c-description-list__term")
-        .should("have.text", "purged");
-      cy.get(".pf-v6-c-description-list__group")
-        .eq(4)
-        .find(".pf-v6-c-description-list__description")
-        .should("have.text", "false");
+        cy.get(".pf-v6-c-description-list__term")
+          .contains("receive_events")
+          .closest(".pf-v6-c-description-list__group")
+          .find(".pf-v6-c-description-list__description")
+          .should("include.text", "true");
 
-      cy.get(".pf-v6-c-description-list__group")
-        .eq(5)
-        .find(".pf-v6-c-description-list__term")
-        .should("have.text", "receive_events");
-      cy.get(".pf-v6-c-description-list__group")
-        .eq(5)
-        .find(".pf-v6-c-description-list__description")
-        .should("include.text", "true");
+        cy.get(".pf-v6-c-description-list__term")
+          .contains("requires")
+          .closest(".pf-v6-c-description-list__group")
+          .find(".pf-v6-c-description-list__description")
+          .should(
+            "include.text",
+            "frontend_model::TestResource[internal,name=default-0001]",
+          );
 
-      cy.get(".pf-v6-c-description-list__group")
-        .eq(6)
-        .find(".pf-v6-c-description-list__term")
-        .should("have.text", "requires");
-      cy.get(".pf-v6-c-description-list__group")
-        .eq(6)
-        .find(".pf-v6-c-description-list__description")
-        .should(
-          "include.text",
-          "frontend_model::TestResource[internal,name=default-0001]",
-        );
+        cy.get(".pf-v6-c-description-list__term")
+          .contains("resources")
+          .closest(".pf-v6-c-description-list__group")
+          .find(".pf-v6-c-description-list__description")
+          .should(
+            "include.text",
+            '"frontend_model::TestResource[internal,name=default-0001]"',
+          );
 
-      cy.get(".pf-v6-c-description-list__group")
-        .eq(7)
-        .find(".pf-v6-c-description-list__term")
-        .should("have.text", "resources");
-      cy.get(".pf-v6-c-description-list__group")
-        .eq(7)
-        .find(".pf-v6-c-description-list__description")
-        .should(
-          "include.text",
-          '"frontend_model::TestResource[internal,name=default-0001]"',
-        );
+        cy.get(".pf-v6-c-description-list__term")
+          .contains("send_event")
+          .closest(".pf-v6-c-description-list__group")
+          .find(".pf-v6-c-description-list__description")
+          .should("have.text", "false");
 
-      cy.get(".pf-v6-c-description-list__group")
-        .eq(8)
-        .find(".pf-v6-c-description-list__term")
-        .should("have.text", "send_event");
-      cy.get(".pf-v6-c-description-list__group")
-        .eq(8)
-        .find(".pf-v6-c-description-list__description")
-        .should("have.text", "false");
-
-      cy.get(".pf-v6-c-description-list__group")
-        .eq(9)
-        .find(".pf-v6-c-description-list__term")
-        .should("have.text", "service_entity");
-      cy.get(".pf-v6-c-description-list__group")
-        .eq(9)
-        .find(".pf-v6-c-description-list__description")
-        .should("have.text", "basic-service");
+        cy.get(".pf-v6-c-description-list__term")
+          .contains("service_entity")
+          .closest(".pf-v6-c-description-list__group")
+          .find(".pf-v6-c-description-list__description")
+          .should("have.text", "basic-service");
+      });
     }
 
     // Go back to the Desired State page.
