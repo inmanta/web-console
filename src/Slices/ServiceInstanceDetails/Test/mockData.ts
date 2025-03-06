@@ -598,6 +598,7 @@ export const serviceModel: ServiceModel = {
   embedded_entities: [
     {
       name: "site",
+      type: "site",
       description:
         "The site at which the epc should be deployed.  The name should\n\nmatch a site provided in the config file.",
       modifier: "rw",

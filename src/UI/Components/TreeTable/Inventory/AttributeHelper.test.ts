@@ -186,6 +186,7 @@ test("AttributeHelper extracts inter-service relations correctly", () => {
     embedded_entities: [
       {
         name: "embedded",
+        type: "embedded",
         modifier: "rw",
         lower_limit: 0,
         upper_limit: 2,
@@ -203,6 +204,7 @@ test("AttributeHelper extracts inter-service relations correctly", () => {
         embedded_entities: [
           {
             name: "embedded",
+            type: "embedded",
             modifier: "rw",
             lower_limit: 0,
             upper_limit: 2,
@@ -242,6 +244,7 @@ test("AttributeHelper extracts inter-service relations correctly", () => {
       },
       {
         name: "embedded2",
+        type: "embedded2",
         modifier: "rw",
         lower_limit: 0,
         upper_limit: 2,

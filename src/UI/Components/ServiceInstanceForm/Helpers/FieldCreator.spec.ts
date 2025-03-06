@@ -132,6 +132,7 @@ test("GIVEN FieldCreator WHEN an entity has inter service relations THEN they ar
       lower_limit: 0,
       modifier: "rw",
       name: "embedded_not_editable",
+      type: "embedded_not_editable",
       embedded_entities: [],
     },
     {
@@ -140,6 +141,7 @@ test("GIVEN FieldCreator WHEN an entity has inter service relations THEN they ar
       lower_limit: 0,
       modifier: "rw+",
       name: "embedded_editable",
+      type: "embedded_editable",
       embedded_entities: [],
     },
   ];

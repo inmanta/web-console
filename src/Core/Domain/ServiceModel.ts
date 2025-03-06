@@ -150,6 +150,7 @@ export interface InterServiceRelation extends RelationAttribute {
  */
 export interface EmbeddedEntity extends RelationAttribute {
   name: string;
+  type: string | null;
   description?: string | null;
   attributes: AttributeModel[];
   embedded_entities: EmbeddedEntity[];
