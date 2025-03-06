@@ -707,66 +707,6 @@ describe("Scenario 6 : Resources", () => {
         .click();
 
       // Expect to find the right information on the details page.
-      cy.get(".pf-v6-c-description-list__term")
-        .contains("name")
-        .closest(".pf-v6-c-description-list__group")
-        .find(".pf-v6-c-description-list__description")
-        .should("contain", "a");
-
-      cy.get(".pf-v6-c-description-list__term")
-        .contains("purge_on_delete")
-        .closest(".pf-v6-c-description-list__group")
-        .find(".pf-v6-c-description-list__description")
-        .should("contain", "false");
-
-      cy.get(".pf-v6-c-description-list__term")
-        .contains("purged")
-        .closest(".pf-v6-c-description-list__group")
-        .find(".pf-v6-c-description-list__description")
-        .should("contain", "false");
-
-      cy.get(".pf-v6-c-description-list__term")
-        .contains("receive_events")
-        .closest(".pf-v6-c-description-list__group")
-        .find(".pf-v6-c-description-list__description")
-        .should("contain", "true");
-
-      cy.get(".pf-v6-c-description-list__term")
-        .contains("send_event")
-        .closest(".pf-v6-c-description-list__group")
-        .find(".pf-v6-c-description-list__description")
-        .should("contain", "true");
-
-      cy.get(".pf-v6-c-description-list__term")
-        .contains("should_deploy_fail")
-        .closest(".pf-v6-c-description-list__group")
-        .find(".pf-v6-c-description-list__description")
-        .should("contain", "false");
-
-      // Click on Requires tab
-      cy.get("button").contains("Requires").click();
-
-      // Expect it to be empty
-      cy.get('[aria-label="ResourceRequires-Empty"]').should(
-        "contain",
-        "No requirements found",
-      );
-
-      // Click on history tab
-      cy.get("button").contains("History").click();
-
-      // Expect One row to be visible
-      cy.get('[aria-label="Resource History Table Row"]').should(
-        "have.length",
-        1,
-      );
-
-      // Expect row to have 0 Requires
-      cy.get('[data-label="Requires"]').should("contain", "0");
-
-      // click row open
-      cy.get('[aria-label="Details"]').click();
-      // Expect content to be the same as on main Desired State tab
       cy.get(".pf-v6-c-description-list").within(() => {
         cy.get(".pf-v6-c-description-list__term")
           .contains("name")
@@ -804,6 +744,70 @@ describe("Scenario 6 : Resources", () => {
           .find(".pf-v6-c-description-list__description")
           .should("contain", "false");
       });
+
+      // Click on Requires tab
+      cy.get("button").contains("Requires").click();
+
+      // Expect it to be empty
+      cy.get('[aria-label="ResourceRequires-Empty"]').should(
+        "contain",
+        "No requirements found",
+      );
+
+      // Click on history tab
+      cy.get("button").contains("History").click();
+
+      // Expect One row to be visible
+      cy.get('[aria-label="Resource History Table Row"]').should(
+        "have.length",
+        1,
+      );
+
+      // Expect row to have 0 Requires
+      cy.get('[data-label="Requires"]').should("contain", "0");
+
+      // click row open
+      cy.get('[aria-label="Details"]').click();
+      // Expect content to be the same as on main Desired State tab
+      cy.get(".pf-v6-c-description-list")
+        .eq(1)
+        .within(() => {
+          cy.get(".pf-v6-c-description-list__term")
+            .contains("name")
+            .closest(".pf-v6-c-description-list__group")
+            .find(".pf-v6-c-description-list__description")
+            .should("contain", "a");
+
+          cy.get(".pf-v6-c-description-list__term")
+            .contains("purge_on_delete")
+            .closest(".pf-v6-c-description-list__group")
+            .find(".pf-v6-c-description-list__description")
+            .should("contain", "false");
+
+          cy.get(".pf-v6-c-description-list__term")
+            .contains("purged")
+            .closest(".pf-v6-c-description-list__group")
+            .find(".pf-v6-c-description-list__description")
+            .should("contain", "false");
+
+          cy.get(".pf-v6-c-description-list__term")
+            .contains("receive_events")
+            .closest(".pf-v6-c-description-list__group")
+            .find(".pf-v6-c-description-list__description")
+            .should("contain", "true");
+
+          cy.get(".pf-v6-c-description-list__term")
+            .contains("send_event")
+            .closest(".pf-v6-c-description-list__group")
+            .find(".pf-v6-c-description-list__description")
+            .should("contain", "true");
+
+          cy.get(".pf-v6-c-description-list__term")
+            .contains("should_deploy_fail")
+            .closest(".pf-v6-c-description-list__group")
+            .find(".pf-v6-c-description-list__description")
+            .should("contain", "false");
+        });
 
       // Expect requires tab to have no requirements
       cy.get(".pf-v6-c-tabs__list")
