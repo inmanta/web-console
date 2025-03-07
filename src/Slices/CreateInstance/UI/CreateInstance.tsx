@@ -47,20 +47,11 @@ export const CreateInstance: React.FC<Props> = ({ serviceEntity }) => {
       setIsDirty(true);
       setErrorMessage(error.message);
     },
-    onSuccess: (response) => {
-      if (!response || !response.data) {
-        console.warn(
-          "The response failed to return the expected data to redirect.",
-          response,
-        );
-
-        return;
-      }
+    onSuccess: ({ data }) => {
       const newUrl = routeManager.getUrl("InstanceDetails", {
         service: serviceEntity.name,
-        instance:
-          response.data.service_identity_attribute_value || response.data.id,
-        instanceId: response.data.id,
+        instance: data.service_identity_attribute_value || data.id,
+        instanceId: data.id,
       });
 
       navigate(`${newUrl}${location.search}`);
