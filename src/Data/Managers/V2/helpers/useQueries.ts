@@ -101,10 +101,7 @@ export const usePost = (options?: { message?: string }) => {
   const { createHeaders, handleErrors } = useFetchHelpers();
   const headers = createHeaders({ env, message: options?.message });
 
-  return async <Response, Body>(
-    path: string,
-    body: Body,
-  ): Promise<Response | undefined> => {
+  return async <Body>(path: string, body: Body) => {
     try {
       const response = await fetch(`${baseUrl}${path}`, {
         method: "POST",
@@ -116,7 +113,9 @@ export const usePost = (options?: { message?: string }) => {
 
       const text = await response.text();
 
-      return text ? JSON.parse(text) : undefined;
+      if (text) {
+        return JSON.parse(text);
+      }
     } catch (error) {
       console.error("Error posting data:", error);
       throw error;
@@ -159,7 +158,9 @@ export const usePostWithoutEnv = (options?: { message?: string }) => {
 
       const text = await response.text();
 
-      return text ? JSON.parse(text) : undefined;
+      if (text) {
+        return JSON.parse(text);
+      }
 
       return;
     } catch (error) {
@@ -205,7 +206,9 @@ export const usePut = (options?: { message?: string }) => {
 
       const text = await response.text();
 
-      return text ? JSON.parse(text) : undefined;
+      if (text) {
+        return JSON.parse(text);
+      }
     } catch (error) {
       console.error("Error putting data:", error);
       throw error;
@@ -248,7 +251,9 @@ export const usePutWithoutEnv = (options?: { message?: string }) => {
 
       const text = await response.text();
 
-      return text ? JSON.parse(text) : undefined;
+      if (text) {
+        return JSON.parse(text);
+      }
     } catch (error) {
       console.error("Error putting data:", error);
       throw error;
@@ -292,7 +297,9 @@ export const usePatch = (options?: { message?: string }) => {
 
       const text = await response.text();
 
-      return text ? JSON.parse(text) : undefined;
+      if (text) {
+        return JSON.parse(text);
+      }
     } catch (error) {
       console.error("Error patching data:", error);
       throw error;
@@ -335,7 +342,9 @@ export const usePatchWithoutEnv = (options?: { message?: string }) => {
 
       const text = await response.text();
 
-      return text ? JSON.parse(text) : undefined;
+      if (text) {
+        return JSON.parse(text);
+      }
     } catch (error) {
       console.error("Error patching data:", error);
       throw error;
@@ -381,7 +390,9 @@ export const useDelete = (options?: { message?: string }) => {
 
       const text = await response.text();
 
-      return text ? JSON.parse(text) : undefined;
+      if (text) {
+        return JSON.parse(text);
+      }
     } catch (error) {
       console.error("Error deleting data:", error);
       throw error;
@@ -419,10 +430,11 @@ export const useDeleteWithoutEnv = (options?: { message?: string }) => {
       });
 
       await handleErrors(response);
-
       const text = await response.text();
 
-      return text ? JSON.parse(text) : undefined;
+      if (text) {
+        return JSON.parse(text);
+      }
     } catch (error) {
       console.error("Error deleting data:", error);
       throw error;
