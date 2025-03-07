@@ -47,14 +47,19 @@ export const CreateInstance: React.FC<Props> = ({ serviceEntity }) => {
       setIsDirty(true);
       setErrorMessage(error.message);
     },
-    onSuccess: ( response ) => {
+    onSuccess: (response) => {
       if (!response || !response.data) {
-        console.warn("The response failed to return the expected data to redirect.", response);
+        console.warn(
+          "The response failed to return the expected data to redirect.",
+          response,
+        );
+
         return;
       }
       const newUrl = routeManager.getUrl("InstanceDetails", {
         service: serviceEntity.name,
-        instance: response.data.service_identity_attribute_value || response.data.id,
+        instance:
+          response.data.service_identity_attribute_value || response.data.id,
         instanceId: response.data.id,
       });
 
