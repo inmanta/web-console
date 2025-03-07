@@ -111,11 +111,10 @@ export const usePost = (options?: { message?: string }) => {
 
       await handleErrors(response);
 
-      const contentLength = response.headers.get("Content-Length");
-      const isGzip = response.headers.get("Content-Encoding") === "gzip";
+      const text = await response.text();
 
-      if ((contentLength && contentLength !== "0") || isGzip) {
-        return response.json();
+      if (text) {
+        return JSON.parse(text);
       }
     } catch (error) {
       console.error("Error posting data:", error);
@@ -157,11 +156,10 @@ export const usePostWithoutEnv = (options?: { message?: string }) => {
 
       await handleErrors(response);
 
-      const contentLength = response.headers.get("Content-Length");
-      const isGzip = response.headers.get("Content-Encoding") === "gzip";
+      const text = await response.text();
 
-      if ((contentLength && contentLength !== "0") || isGzip) {
-        return response.json();
+      if (text) {
+        return JSON.parse(text);
       }
 
       return;
@@ -206,11 +204,10 @@ export const usePut = (options?: { message?: string }) => {
 
       await handleErrors(response);
 
-      const contentLength = response.headers.get("Content-Length");
-      const isGzip = response.headers.get("Content-Encoding") === "gzip";
+      const text = await response.text();
 
-      if ((contentLength && contentLength !== "0") || isGzip) {
-        return response.json();
+      if (text) {
+        return JSON.parse(text);
       }
     } catch (error) {
       console.error("Error putting data:", error);
@@ -252,11 +249,10 @@ export const usePutWithoutEnv = (options?: { message?: string }) => {
 
       await handleErrors(response);
 
-      const contentLength = response.headers.get("Content-Length");
-      const isGzip = response.headers.get("Content-Encoding") === "gzip";
+      const text = await response.text();
 
-      if ((contentLength && contentLength !== "0") || isGzip) {
-        return response.json();
+      if (text) {
+        return JSON.parse(text);
       }
     } catch (error) {
       console.error("Error putting data:", error);
@@ -299,11 +295,10 @@ export const usePatch = (options?: { message?: string }) => {
 
       await handleErrors(response);
 
-      const contentLength = response.headers.get("Content-Length");
-      const isGzip = response.headers.get("Content-Encoding") === "gzip";
+      const text = await response.text();
 
-      if ((contentLength && contentLength !== "0") || isGzip) {
-        return response.json();
+      if (text) {
+        return JSON.parse(text);
       }
     } catch (error) {
       console.error("Error patching data:", error);
@@ -345,11 +340,10 @@ export const usePatchWithoutEnv = (options?: { message?: string }) => {
 
       await handleErrors(response);
 
-      const contentLength = response.headers.get("Content-Length");
-      const isGzip = response.headers.get("Content-Encoding") === "gzip";
+      const text = await response.text();
 
-      if ((contentLength && contentLength !== "0") || isGzip) {
-        return response.json();
+      if (text) {
+        return JSON.parse(text);
       }
     } catch (error) {
       console.error("Error patching data:", error);
@@ -394,11 +388,10 @@ export const useDelete = (options?: { message?: string }) => {
 
       await handleErrors(response);
 
-      const contentLength = response.headers.get("Content-Length");
-      const isGzip = response.headers.get("Content-Encoding") === "gzip";
+      const text = await response.text();
 
-      if ((contentLength && contentLength !== "0") || isGzip) {
-        return response.json();
+      if (text) {
+        return JSON.parse(text);
       }
     } catch (error) {
       console.error("Error deleting data:", error);
@@ -437,12 +430,10 @@ export const useDeleteWithoutEnv = (options?: { message?: string }) => {
       });
 
       await handleErrors(response);
+      const text = await response.text();
 
-      const contentLength = response.headers.get("Content-Length");
-      const isGzip = response.headers.get("Content-Encoding") === "gzip";
-
-      if ((contentLength && contentLength !== "0") || isGzip) {
-        return response.json();
+      if (text) {
+        return JSON.parse(text);
       }
     } catch (error) {
       console.error("Error deleting data:", error);
