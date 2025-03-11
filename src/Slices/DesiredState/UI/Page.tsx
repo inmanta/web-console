@@ -43,6 +43,13 @@ export const Page: React.FC = () => {
     route: "DesiredState",
   });
   const [filter, setFilter] = useUrlStateWithFilter<Filter>({
+    default: {
+      status: [
+        DesiredStateVersionStatus.active,
+        DesiredStateVersionStatus.candidate,
+        DesiredStateVersionStatus.retired,
+      ],
+    },
     route: "DesiredState",
     keys: { date: "DateRange", version: "IntRange" },
   });
@@ -77,21 +84,6 @@ export const Page: React.FC = () => {
       ),
     });
   };
-
-  useEffect(() => {
-    //set default filter to active, candidate and retired only if the filter is not set, or empty on initial load
-    if (!filter.status || filter.status.length === 0) {
-      setFilter({
-        ...filter,
-        status: [
-          DesiredStateVersionStatus.active,
-          DesiredStateVersionStatus.candidate,
-          DesiredStateVersionStatus.retired,
-        ],
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   useEffect(() => {
     if (deleteVersion.isError) {

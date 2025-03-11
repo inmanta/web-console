@@ -207,7 +207,7 @@ describe("DesiredStatesView", () => {
         //we are expecting that at some point the request will have the filters applied for status and we mock the adequate response
         if (
           request.url.split("?")[1] ===
-          "limit=20&sort=version.desc&filter.status=skipped_candidate"
+          "limit=20&sort=version.desc&filter.status=active&filter.status=candidate&filter.status=retired&filter.status=skipped_candidate"
         ) {
           return HttpResponse.json({
             ...DesiredStateVersions.response,
@@ -495,7 +495,7 @@ describe("DesiredStatesView", () => {
         //we are expecting that at some point the request will have the filters applied for status and we mock the adequate response
         if (
           request.url.split("?")[1] ===
-          "limit=20&sort=version.desc&filter.status=candidate"
+          "limit=20&sort=version.desc&filter.status=active&filter.status=retired"
         ) {
           return HttpResponse.json({
             ...DesiredStateVersions.response,
