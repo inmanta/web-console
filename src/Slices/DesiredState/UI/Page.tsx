@@ -19,11 +19,11 @@ import {
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
 import { Filter } from "@S/DesiredState/Core/Query";
+import { DesiredStateVersionStatus } from "../Core/Domain";
 import { TableControls } from "./Components";
 import { DesiredStatesTable } from "./DesiredStatesTable";
 import { GetDesiredStatesContext } from "./GetDesiredStatesContext";
 import { CompareSelection } from "./Utils";
-import { DesiredStateVersionStatus } from "../Core/Domain";
 
 /**
  * The Page component that renders the desired state page.
@@ -46,7 +46,7 @@ export const Page: React.FC = () => {
     route: "DesiredState",
     keys: { date: "DateRange", version: "IntRange" },
   });
-  status: ["active", "candidate", "retired"];
+
   const [compareSelection, setCompareSelection] = useState<CompareSelection>({
     kind: "None",
   });
@@ -90,6 +90,7 @@ export const Page: React.FC = () => {
         ],
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
