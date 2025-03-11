@@ -1,15 +1,15 @@
-import React, { act } from "react";
+import React from "react";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
+import { http, HttpResponse } from "msw";
+import { setupServer } from "msw/node";
 import { getStoreInstance } from "@/Data";
 import { dependencies, MockEnvironmentModifier } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { Provider } from "./Provider";
-import { setupServer } from "msw/node";
-import { http, HttpResponse } from "msw";
 
 function setup({
   details = {
