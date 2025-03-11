@@ -14,7 +14,6 @@ import {
   DeployCommandManager,
   GetSupportArchiveCommandManager,
   ControlAgentCommandManager,
-  TriggerCompileCommandManager,
   TriggerDryRun,
 } from "@/Data/Managers";
 import { Store } from "@/Data/Store";
@@ -127,7 +126,6 @@ export class CommandManagerResolverImpl implements CommandManagerResolver {
         this.apiHelper,
         new GetAgentsUpdater(this.store, this.apiHelper),
       ),
-      TriggerCompileCommandManager(this.apiHelper),
       TriggerDryRun.CommandManager(this.apiHelper),
       UpdateNotificationCommandManager(this.apiHelper, this.store),
     ];

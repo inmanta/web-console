@@ -10,14 +10,6 @@ import {
 } from "@/Slices/ResourceDiscovery/Data/Store";
 import { agentsSlice, AgentsSlice } from "@S/Agents/Data/Store";
 import {
-  compileDetailsSlice,
-  CompileDetailsSlice,
-} from "@S/CompileDetails/Data/Store";
-import {
-  compileReportsSlice,
-  CompileReportsSlice,
-} from "@S/CompileReports/Data/Store";
-import {
   dryRunReportSlice,
   DryRunReportSlice,
 } from "@S/ComplianceCheck/Data/DryRunReportSlice";
@@ -72,8 +64,6 @@ import { resourcesSlice, ResourcesSlice } from "./ResourcesSlice";
 export interface StoreModel {
   agents: AgentsSlice;
   callbacks: CallbacksSlice;
-  compileDetails: CompileDetailsSlice;
-  compileReports: CompileReportsSlice;
   desiredStateDiff: DesiredStateDiffSlice;
   discoveredResources: DiscoveredResourcesSlice;
   dryRunReport: DryRunReportSlice;
@@ -99,8 +89,6 @@ export interface StoreModel {
 export const storeModel: StoreModel = {
   agents: agentsSlice,
   callbacks: callbacksSlice,
-  compileDetails: compileDetailsSlice,
-  compileReports: compileReportsSlice,
   desiredStateDiff: desiredStateDiffSlice,
   discoveredResources: discoveredResourcesSlice,
   dryRunReport: dryRunReportSlice,

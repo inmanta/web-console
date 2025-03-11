@@ -1,5 +1,10 @@
-import React, { act } from "react";
+import React from "react";
 import { MemoryRouter } from "react-router-dom";
+import {
+  QueryClientProvider,
+  QueryClient,
+  QueryObserverResult,
+} from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { axe, toHaveNoViolations } from "jest-axe";
@@ -11,6 +16,7 @@ import {
   QueryResolverImpl,
   QueryManagerResolverImpl,
 } from "@/Data";
+import * as queryModule from "@/Data/Managers/V2/Compilation/GetCompilerStatus/useGetCompilerStatus";
 import {
   DeferredApiHelper,
   dependencies,
@@ -27,6 +33,7 @@ function setup(
   initialEntries: string[] | undefined,
   serverStatus: ServerStatus,
 ) {
+  const queryClient = new QueryClient();
   const apiHelper = new DeferredApiHelper();
   const scheduler = new StaticScheduler();
   const store = getStoreInstance();
@@ -39,15 +46,17 @@ function setup(
     new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler),
   );
   const component = (
-    <MemoryRouter initialEntries={initialEntries}>
-      <DependencyProvider
-        dependencies={{ ...dependencies, featureManager, queryResolver }}
-      >
-        <StoreProvider store={store}>
-          <Navigation environment="env" />
-        </StoreProvider>
-      </DependencyProvider>
-    </MemoryRouter>
+    <QueryClientProvider client={queryClient}>
+      <MemoryRouter initialEntries={initialEntries}>
+        <DependencyProvider
+          dependencies={{ ...dependencies, featureManager, queryResolver }}
+        >
+          <StoreProvider store={store}>
+            <Navigation environment="env" />
+          </StoreProvider>
+        </DependencyProvider>
+      </MemoryRouter>
+    </QueryClientProvider>
   );
 
   return { component, apiHelper };
@@ -171,24 +180,27 @@ test("GIVEN Navigation WHEN on 'Service Catalog' THEN 'Service Catalog' is highl
   expect(link).toHaveClass("active");
 });
 
-test("GIVEN Navigation WHEN Compilation Reports are pending THEN 'Compile Reports' Indication is visible", async () => {
-  const { component, apiHelper } = setup(
-    ["/lsm/catalog"],
-    TestServerStatus.withLsm,
-  );
+test("GIVEN Navigation WHEN Compilation Reports are not pending THEN 'Compile Reports' Indication does not exist", async () => {
+  const { component } = setup(["/lsm/catalog"], TestServerStatus.withLsm);
 
   render(component);
+  const Indication = screen.queryByLabelText("CompileReportsIndication");
 
-  expect(apiHelper.pendingRequests).toHaveLength(1);
-  expect(apiHelper.pendingRequests[0]).toEqual({
-    method: "HEAD",
-    url: "/api/v1/notify/env",
+  expect(Indication).toBeNull();
+});
+
+test("GIVEN Navigation WHEN Compilation Reports are pending THEN 'Compile Reports' Indication is visible", async () => {
+  jest.spyOn(queryModule, "useGetCompilerStatus").mockReturnValue({
+    useContinuous: () =>
+      ({
+        data: 200,
+        isSuccess: true,
+        isPending: true,
+      }) as unknown as QueryObserverResult<number, Error>,
   });
+  const { component } = setup(["/lsm/catalog"], TestServerStatus.withLsm);
 
-  await act(async () => {
-    await apiHelper.resolve(200);
-  });
-
+  render(component);
   const Indication = screen.getByLabelText("CompileReportsIndication");
 
   expect(Indication).toBeVisible();

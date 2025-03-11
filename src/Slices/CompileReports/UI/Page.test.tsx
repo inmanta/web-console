@@ -1,29 +1,21 @@
 import React, { act } from "react";
 import { MemoryRouter } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
-import { Either, RemoteData } from "@/Core";
-import {
-  QueryResolverImpl,
-  getStoreInstance,
-  CommandResolverImpl,
-  QueryManagerResolverImpl,
-  CommandManagerResolverImpl,
-} from "@/Data";
-import {
-  StaticScheduler,
-  DeferredApiHelper,
-  dependencies,
-  EnvironmentDetails,
-  EnvironmentSettings,
-} from "@/Test";
+import { http, HttpResponse } from "msw";
+import { setupServer } from "msw/node";
+import { RemoteData } from "@/Core";
+import { getStoreInstance } from "@/Data";
+import { dependencies, EnvironmentDetails, EnvironmentSettings } from "@/Test";
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import { PrimaryRouteManager } from "@/UI/Routing";
 import * as Mock from "@S/CompileReports/Core/Mock";
 import { Page } from "./Page";
+
 expect.extend(toHaveNoViolations);
 
 const axe = configureAxe({
@@ -32,18 +24,17 @@ const axe = configureAxe({
     region: { enabled: false },
   },
 });
+const server = setupServer();
 
 function setup() {
-  const apiHelper = new DeferredApiHelper();
-
-  const scheduler = new StaticScheduler();
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  });
   const store = getStoreInstance();
-  const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler),
-  );
-  const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolverImpl(store, apiHelper),
-  );
 
   const routeManager = PrimaryRouteManager("");
 
@@ -61,47 +52,46 @@ function setup() {
   dependencies.environmentModifier.setEnvironment("env");
 
   const component = (
-    <MemoryRouter>
-      <DependencyProvider
-        dependencies={{
-          ...dependencies,
-          queryResolver,
-          commandResolver,
-          routeManager,
-        }}
-      >
-        <StoreProvider store={store}>
-          <Page />
-        </StoreProvider>
-      </DependencyProvider>
-    </MemoryRouter>
+    <QueryClientProvider client={queryClient}>
+      <MemoryRouter>
+        <DependencyProvider
+          dependencies={{
+            ...dependencies,
+            routeManager,
+          }}
+        >
+          <StoreProvider store={store}>
+            <Page />
+          </StoreProvider>
+        </DependencyProvider>
+      </MemoryRouter>
+    </QueryClientProvider>
   );
 
-  return { component, apiHelper, scheduler };
+  return { component };
 }
 
+beforeAll(() => server.listen());
+afterEach(() => server.resetHandlers());
+afterAll(() => server.close());
+
 test("CompileReportsView shows empty table", async () => {
-  const { component, apiHelper } = setup();
-
-  render(component);
-
-  await act(async () => {
-    await apiHelper.resolve(204);
-  });
-
-  expect(
-    await screen.findByRole("region", { name: "CompileReportsView-Loading" }),
-  ).toBeInTheDocument();
-
-  await act(async () => {
-    await apiHelper.resolve(
-      Either.right({
+  server.use(
+    http.get("/api/v2/compilereport", () => {
+      return HttpResponse.json({
         data: [],
         links: { self: "" },
         metadata: { total: 0, before: 0, after: 0, page_size: 1000 },
-      }),
-    );
-  });
+      });
+    }),
+  );
+  const { component } = setup();
+
+  render(component);
+
+  expect(
+    screen.getByRole("region", { name: "CompileReportsView-Loading" }),
+  ).toBeInTheDocument();
 
   expect(
     await screen.findByRole("generic", { name: "CompileReportsView-Empty" }),
@@ -115,24 +105,28 @@ test("CompileReportsView shows empty table", async () => {
 });
 
 test("CompileReportsView shows failed table", async () => {
-  const { component, apiHelper } = setup();
+  server.use(
+    http.get("/api/v2/compilereport", () => {
+      return HttpResponse.json(
+        {
+          message: "error",
+        },
+        {
+          status: 500,
+        },
+      );
+    }),
+  );
+  const { component } = setup();
 
   render(component);
-
-  await act(async () => {
-    await apiHelper.resolve(204);
-  });
 
   expect(
     await screen.findByRole("region", { name: "CompileReportsView-Loading" }),
   ).toBeInTheDocument();
 
-  await act(async () => {
-    await apiHelper.resolve(Either.left("error"));
-  });
-
   expect(
-    await screen.findByRole("region", { name: "CompileReportsView-Failed" }),
+    await screen.findByRole("region", { name: "CompileReportsView-Error" }),
   ).toBeInTheDocument();
 
   await act(async () => {
@@ -143,21 +137,18 @@ test("CompileReportsView shows failed table", async () => {
 });
 
 test("CompileReportsView shows success table", async () => {
-  const { component, apiHelper } = setup();
+  server.use(
+    http.get("/api/v2/compilereport", () => {
+      return HttpResponse.json(Mock.response);
+    }),
+  );
+  const { component } = setup();
 
   render(component);
-
-  await act(async () => {
-    await apiHelper.resolve(204);
-  });
 
   expect(
     await screen.findByRole("region", { name: "CompileReportsView-Loading" }),
   ).toBeInTheDocument();
-
-  await act(async () => {
-    await apiHelper.resolve(Either.right(Mock.response));
-  });
 
   expect(
     await screen.findByRole("grid", { name: "CompileReportsView-Success" }),
@@ -171,40 +162,37 @@ test("CompileReportsView shows success table", async () => {
 });
 
 test("CompileReportsView shows updated table", async () => {
-  const { component, apiHelper, scheduler } = setup();
+  let delay = 0;
+
+  server.use(
+    http.get("/api/v2/compilereport", () => {
+      if (delay === 0) {
+        delay++;
+
+        return HttpResponse.json({
+          data: [],
+          links: { self: "" },
+          metadata: { total: 0, before: 0, after: 0, page_size: 1000 },
+        });
+      }
+
+      return HttpResponse.json(Mock.response);
+    }),
+  );
+
+  const { component } = setup();
 
   render(component);
-
-  await act(async () => {
-    await apiHelper.resolve(204);
-  });
 
   expect(
     await screen.findByRole("region", { name: "CompileReportsView-Loading" }),
   ).toBeInTheDocument();
 
-  await act(async () => {
-    await apiHelper.resolve(
-      Either.right({
-        data: [],
-        links: { self: "" },
-        metadata: { total: 0, before: 0, after: 0, page_size: 1000 },
-      }),
-    );
-  });
-
   expect(
     await screen.findByRole("generic", { name: "CompileReportsView-Empty" }),
   ).toBeInTheDocument();
 
-  scheduler.executeAll();
-
-  await act(async () => {
-    await apiHelper.resolve(204);
-  });
-  await act(async () => {
-    await apiHelper.resolve(Either.right(Mock.response));
-  });
+  await new Promise((resolve) => setTimeout(resolve, 5000));
 
   expect(
     await screen.findByRole("grid", { name: "CompileReportsView-Success" }),
@@ -218,17 +206,21 @@ test("CompileReportsView shows updated table", async () => {
 });
 
 test("When using the status filter with the Success option then the successful compile reports should be fetched and shown", async () => {
-  const { component, apiHelper } = setup();
+  server.use(
+    http.get("/api/v2/compilereport", ({ request }) => {
+      if (request.url.includes("filter.success=true")) {
+        return HttpResponse.json({
+          ...Mock.response,
+          data: Mock.response.data.slice(0, 3),
+        });
+      }
+
+      return HttpResponse.json(Mock.response);
+    }),
+  );
+  const { component } = setup();
 
   render(component);
-
-  await act(async () => {
-    await apiHelper.resolve(204);
-  });
-
-  await act(async () => {
-    await apiHelper.resolve(Either.right(Mock.response));
-  });
 
   const initialRows = await screen.findAllByRole("row", {
     name: "Compile Reports Table Row",
@@ -255,19 +247,6 @@ test("When using the status filter with the Success option then the successful c
 
   await userEvent.click(option);
 
-  expect(apiHelper.pendingRequests[0].url).toEqual(
-    `/api/v2/compilereport?limit=20&sort=requested.desc&filter.success=true`,
-  );
-
-  await act(async () => {
-    await apiHelper.resolve(
-      Either.right({
-        ...Mock.response,
-        data: Mock.response.data.slice(0, 3),
-      }),
-    );
-  });
-
   const rowsAfter = await screen.findAllByRole("row", {
     name: "Compile Reports Table Row",
   });
@@ -282,17 +261,21 @@ test("When using the status filter with the Success option then the successful c
 });
 
 test("When using the status filter with the In Progress opiton then the compile reports of in progress compiles should be fetched and shown", async () => {
-  const { component, apiHelper } = setup();
+  server.use(
+    http.get("/api/v2/compilereport", ({ request }) => {
+      if (request.url.includes("filter.started=true")) {
+        return HttpResponse.json({
+          ...Mock.response,
+          data: Mock.response.data.slice(0, 3),
+        });
+      }
+
+      return HttpResponse.json(Mock.response);
+    }),
+  );
+  const { component } = setup();
 
   render(component);
-
-  await act(async () => {
-    await apiHelper.resolve(204);
-  });
-
-  await act(async () => {
-    await apiHelper.resolve(Either.right(Mock.response));
-  });
 
   const initialRows = await screen.findAllByRole("row", {
     name: "Compile Reports Table Row",
@@ -325,19 +308,6 @@ test("When using the status filter with the In Progress opiton then the compile 
 
   await userEvent.click(option);
 
-  expect(apiHelper.pendingRequests[0].url).toEqual(
-    `/api/v2/compilereport?limit=20&sort=requested.desc&filter.started=true&filter.completed=false`,
-  );
-
-  await act(async () => {
-    await apiHelper.resolve(
-      Either.right({
-        ...Mock.response,
-        data: Mock.response.data.slice(0, 3),
-      }),
-    );
-  });
-
   const rowsAfter = await screen.findAllByRole("row", {
     name: "Compile Reports Table Row",
   });
@@ -351,18 +321,26 @@ test("When using the status filter with the In Progress opiton then the compile 
   });
 });
 
-it("When using the Date filter then the compile reports within the range selected range should be fetched and shown", async () => {
-  const { component, apiHelper } = setup();
+test("When using the Date filter then the compile reports within the range selected range should be fetched and shown", async () => {
+  server.use(
+    http.get("/api/v2/compilereport", ({ request }) => {
+      if (
+        request.url.includes(
+          "filter.requested=ge%3A2021-09-27%2B22%3A00%3A00&filter.requested=le%3A2021-09-29%2B22%3A00%3A00",
+        )
+      ) {
+        return HttpResponse.json({
+          ...Mock.response,
+          data: Mock.response.data.slice(0, 3),
+        });
+      }
+
+      return HttpResponse.json(Mock.response);
+    }),
+  );
+  const { component } = setup();
 
   render(component);
-
-  await act(async () => {
-    await apiHelper.resolve(204);
-  });
-
-  await act(async () => {
-    await apiHelper.resolve(Either.right(Mock.response));
-  });
 
   const initialRows = await screen.findAllByRole("row", {
     name: "Compile Reports Table Row",
@@ -393,19 +371,6 @@ it("When using the Date filter then the compile reports within the range selecte
 
   await userEvent.click(await screen.findByLabelText("Apply date filter"));
 
-  expect(apiHelper.pendingRequests[0].url).toMatch(
-    `/api/v2/compilereport?limit=20&sort=requested.desc&filter.requested=ge%3A2021-09-`,
-  );
-
-  await act(async () => {
-    await apiHelper.resolve(
-      Either.right({
-        ...Mock.response,
-        data: Mock.response.data.slice(0, 3),
-      }),
-    );
-  });
-
   const rowsAfter = await screen.findAllByRole("row", {
     name: "Compile Reports Table Row",
   });
@@ -433,17 +398,34 @@ it("When using the Date filter then the compile reports within the range selecte
 });
 
 test("Given CompileReportsView When recompile is triggered Then table is updated", async () => {
-  const { component, apiHelper } = setup();
+  let update = false;
+
+  server.use(
+    http.get("/api/v2/compilereport", () => {
+      if (update) {
+        return HttpResponse.json(Mock.response);
+      }
+
+      return HttpResponse.json({
+        ...Mock.response,
+        data: Mock.response.data.slice(0, 3),
+      });
+    }),
+    http.post("/api/v1/notify/env", () => {
+      update = true;
+
+      return HttpResponse.json({});
+    }),
+  );
+  const { component } = setup();
 
   render(component);
 
-  await act(async () => {
-    await apiHelper.resolve(204);
+  const initialRows = await screen.findAllByRole("row", {
+    name: "Compile Reports Table Row",
   });
 
-  await act(async () => {
-    await apiHelper.resolve(Either.right(Mock.response));
-  });
+  expect(initialRows).toHaveLength(3);
 
   const button = screen.getByRole("button", { name: "RecompileButton" });
 
@@ -457,35 +439,24 @@ test("Given CompileReportsView When recompile is triggered Then table is updated
 
   await userEvent.click(button);
 
-  await act(async () => {
-    await apiHelper.resolve(Either.right({}));
+  const updatedRows = await screen.findAllByRole("row", {
+    name: "Compile Reports Table Row",
   });
 
-  await act(async () => {
-    await apiHelper.resolve(200);
-  });
-
-  expect(apiHelper.pendingRequests).toEqual([
-    {
-      method: "GET",
-      url: "/api/v2/compilereport?limit=20&sort=requested.desc",
-      environment: "env",
-    },
-  ]);
+  expect(updatedRows).toHaveLength(8);
 });
 
 test("GIVEN CompileReportsView WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async () => {
-  const { component, apiHelper } = setup();
+  server.use(
+    http.get("/api/v2/compilereport", ({ request }) => {
+      if (request.url.includes("end=fake-first-param")) {
+        return HttpResponse.json({
+          ...Mock.response,
+          data: Mock.response.data.slice(0, 3),
+        });
+      }
 
-  render(component);
-
-  await act(async () => {
-    await apiHelper.resolve(204);
-  });
-  //mock that response has more than one site
-  await act(async () => {
-    apiHelper.resolve(
-      Either.right({
+      return HttpResponse.json({
         data: Mock.response.data,
         metadata: {
           total: 23,
@@ -497,35 +468,34 @@ test("GIVEN CompileReportsView WHEN sorting changes AND we are not on the first 
           self: Mock.response.links.self,
           next: "/fake-link?end=fake-first-param",
         },
-      }),
-    );
+      });
+    }),
+  );
+  const { component } = setup();
+
+  render(component);
+
+  expect(
+    await screen.findByRole("grid", { name: "CompileReportsView-Success" }),
+  ).toBeInTheDocument();
+
+  const initialRows = await screen.findAllByRole("row", {
+    name: "Compile Reports Table Row",
   });
+
+  expect(initialRows).toHaveLength(8);
 
   expect(screen.getByLabelText("Go to next page")).toBeEnabled();
 
   await userEvent.click(screen.getByLabelText("Go to next page"));
 
-  //expect the api url to contain start and end keywords that are used for pagination when we are moving to the next page
-  expect(apiHelper.pendingRequests[0].url).toMatch(/(&start=|&end=)/);
-  expect(apiHelper.pendingRequests[0].url).toMatch(/(&sort=requested.desc)/);
-
-  await act(async () => {
-    apiHelper.resolve(
-      Either.right({
-        ...Mock.response,
-        metadata: {
-          total: 23,
-          before: 0,
-          after: 3,
-          page_size: 20,
-        },
-        links: {
-          self: "",
-          next: "/fake-link?end=fake-first-param",
-        },
-      }),
-    );
+  const updatedRows = await screen.findAllByRole("row", {
+    name: "Compile Reports Table Row",
   });
+
+  expect(updatedRows).toHaveLength(3);
+
+  expect(screen.getByLabelText("Go to next page")).toBeDisabled();
 
   //sort on the second page
   const resourceIdButton = await screen.findByText("Requested");
@@ -534,8 +504,11 @@ test("GIVEN CompileReportsView WHEN sorting changes AND we are not on the first 
 
   await userEvent.click(resourceIdButton);
 
-  // expect the api url to not contain start and end keywords that are used for pagination to assert we are back on the first page.
-  // we are asserting on the second request as the first request is for the updated sorting event, and second is chained to back to the first page with still correct sorting
-  expect(apiHelper.pendingRequests[1].url).not.toMatch(/(&start=|&end=)/);
-  expect(apiHelper.pendingRequests[1].url).toMatch(/(&sort=requested.asc)/);
+  const updatedRows2 = await screen.findAllByRole("row", {
+    name: "Compile Reports Table Row",
+  });
+
+  expect(updatedRows2).toHaveLength(8);
+
+  expect(screen.getByLabelText("Go to next page")).toBeEnabled();
 });

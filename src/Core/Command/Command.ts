@@ -33,10 +33,6 @@ import {
   ResumeEnvironmentManifest,
 } from "@/Data/Managers/ResumeEnvironment/interface";
 import {
-  TriggerCompile,
-  TriggerCompileManifest,
-} from "@/Data/Managers/TriggerCompile/interface";
-import {
   TriggerDryRun,
   TriggerDryRunManifest,
 } from "@/Data/Managers/TriggerDryRun/interface";
@@ -68,7 +64,6 @@ type Command =
   | Repair
   | ResetEnvironmentSetting
   | ResumeEnvironment
-  | TriggerCompile
   | TriggerDryRun
   | TriggerInstanceUpdate.Command
   | UpdateEnvironmentSetting
@@ -97,7 +92,6 @@ interface Manifest {
   Repair: RepairManifest;
   ResetEnvironmentSetting: ResetEnvironmentSettingManifest;
   ResumeEnvironment: ResumeEnvironmentManifest;
-  TriggerCompile: TriggerCompileManifest;
   TriggerDryRun: TriggerDryRunManifest;
   TriggerInstanceUpdate: TriggerInstanceUpdate.Manifest;
   UpdateEnvironmentSetting: UpdateEnvironmentSettingManifest;

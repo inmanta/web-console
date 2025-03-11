@@ -1,4 +1,5 @@
 import React, { act } from "react";
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
@@ -29,7 +30,7 @@ function setup({
   isToastVisible = true,
 } = {}) {
   const apiHelper = new DeferredApiHelper();
-
+  const queryClient = new QueryClient();
   const scheduler = new StaticScheduler();
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
@@ -42,18 +43,20 @@ function setup({
   const environmentModifier = new MockEnvironmentModifier(details);
 
   const component = (
-    <StoreProvider store={store}>
-      <DependencyProvider
-        dependencies={{
-          ...dependencies,
-          environmentModifier,
-          commandResolver,
-          queryResolver,
-        }}
-      >
-        <Provider isToastVisible={isToastVisible} />
-      </DependencyProvider>
-    </StoreProvider>
+    <QueryClientProvider client={queryClient}>
+      <StoreProvider store={store}>
+        <DependencyProvider
+          dependencies={{
+            ...dependencies,
+            environmentModifier,
+            commandResolver,
+            queryResolver,
+          }}
+        >
+          <Provider isToastVisible={isToastVisible} />
+        </DependencyProvider>
+      </StoreProvider>
+    </QueryClientProvider>
   );
 
   return { component, apiHelper, scheduler };

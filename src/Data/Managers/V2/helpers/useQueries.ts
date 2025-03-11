@@ -441,3 +441,25 @@ export const useDeleteWithoutEnv = (options?: { message?: string }) => {
     }
   };
 };
+
+export const useHead = () => {
+  const baseUrlManager = new PrimaryBaseUrlManager(
+    globalThis.location.origin,
+    globalThis.location.pathname,
+  );
+  const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
+  const { createHeaders } = useFetchHelpers();
+
+  return async (path: string) => {
+    try {
+      const response = await fetch(`${baseUrl}${path}`, {
+        method: "HEAD",
+        headers: createHeaders(),
+      });
+
+      return response.status;
+    } catch (_error) {
+      return 500;
+    }
+  };
+};
