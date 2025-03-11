@@ -193,10 +193,11 @@ test("GIVEN Navigation WHEN Compilation Reports are pending THEN 'Compile Report
   jest.spyOn(queryModule, "useGetCompilerStatus").mockReturnValue({
     useContinuous: () =>
       ({
-        data: 200,
+        data: {
+          isCompiling: true,
+        },
         isSuccess: true,
-        isPending: true,
-      }) as unknown as QueryObserverResult<number, Error>,
+      }) as unknown as QueryObserverResult<{ isCompiling: boolean }, Error>,
   });
   const { component } = setup(["/lsm/catalog"], TestServerStatus.withLsm);
 

@@ -102,7 +102,7 @@ const CompileReportItem: React.FC<Label & Url> = ({ label, url }) => {
         aria-label="Sidebar-Navigation-Item"
       >
         {label}
-        {isSuccess && data === 200 && (
+        {isSuccess && data.isCompiling && (
           <Tooltip key={"ongoing-compilation-tooltip"} content={"Compiling"}>
             <CompileReportsIndication
               role="presentation"

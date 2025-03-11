@@ -474,9 +474,9 @@ export const useHead = () => {
         headers: createHeaders(),
       });
 
-      return response.status;
-    } catch (_error) {
-      return 500;
+      return response;
+    } catch (error) {
+      throw error;
     }
   };
 };

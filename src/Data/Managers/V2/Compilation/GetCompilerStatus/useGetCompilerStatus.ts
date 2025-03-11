@@ -3,7 +3,9 @@ import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { DependencyContext } from "@/UI/Dependency";
 import { useHead } from "../../helpers";
 
-type HookResponse = number;
+type HookResponse = {
+  isCompiling: boolean;
+};
 
 interface GetCompilerStatus {
   useContinuous: () => UseQueryResult<HookResponse, Error>;
@@ -31,6 +33,9 @@ export const useGetCompilerStatus = (): GetCompilerStatus => {
       useQuery({
         queryKey: ["get_compiler_status-continuous"],
         queryFn: () => head(url),
+        select: (response) => ({
+          isCompiling: response.status === 200,
+        }),
         refetchInterval: 2000,
       }),
   };
