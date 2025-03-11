@@ -23,6 +23,7 @@ import { TableControls } from "./Components";
 import { DesiredStatesTable } from "./DesiredStatesTable";
 import { GetDesiredStatesContext } from "./GetDesiredStatesContext";
 import { CompareSelection } from "./Utils";
+import { DesiredStateVersionStatus } from "../Core/Domain";
 
 /**
  * The Page component that renders the desired state page.
@@ -45,7 +46,7 @@ export const Page: React.FC = () => {
     route: "DesiredState",
     keys: { date: "DateRange", version: "IntRange" },
   });
-
+  status: ["active", "candidate", "retired"];
   const [compareSelection, setCompareSelection] = useState<CompareSelection>({
     kind: "None",
   });
@@ -76,6 +77,20 @@ export const Page: React.FC = () => {
       ),
     });
   };
+
+  useEffect(() => {
+    //set default filter to active, candidate and retired only if the filter is not set, or empty on initial load
+    if (!filter.status || filter.status.length === 0) {
+      setFilter({
+        ...filter,
+        status: [
+          DesiredStateVersionStatus.active,
+          DesiredStateVersionStatus.candidate,
+          DesiredStateVersionStatus.retired,
+        ],
+      });
+    }
+  }, []);
 
   useEffect(() => {
     if (deleteVersion.isError) {
