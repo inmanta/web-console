@@ -44,7 +44,10 @@ const parseValue = (
 };
 
 export function handleUrlStateWithFilter<Data>(
-  config: Pick<StateConfig<Data>, "route"> & Keys,
+  config: Pick<StateConfig<Data>, "route"> &
+    Keys & {
+      default?: Data;
+    },
   location: Location,
   replace: Replace,
 ): [Data, Update<Data>] {
@@ -77,7 +80,7 @@ export function handleUrlStateWithFilter<Data>(
 
   return handleUrlState<Data>(
     {
-      default: {} as Data,
+      default: config.default || ({} as Data),
       key: "filter",
       route: config.route,
       equals: (a: Data, b: Data): boolean =>

@@ -19,6 +19,7 @@ import {
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
 import { Filter } from "@S/DesiredState/Core/Query";
+import { DesiredStateVersionStatus } from "../Core/Domain";
 import { TableControls } from "./Components";
 import { DesiredStatesTable } from "./DesiredStatesTable";
 import { GetDesiredStatesContext } from "./GetDesiredStatesContext";
@@ -42,6 +43,13 @@ export const Page: React.FC = () => {
     route: "DesiredState",
   });
   const [filter, setFilter] = useUrlStateWithFilter<Filter>({
+    default: {
+      status: [
+        DesiredStateVersionStatus.active,
+        DesiredStateVersionStatus.candidate,
+        DesiredStateVersionStatus.retired,
+      ],
+    },
     route: "DesiredState",
     keys: { date: "DateRange", version: "IntRange" },
   });

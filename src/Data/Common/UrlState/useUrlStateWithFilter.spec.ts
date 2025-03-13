@@ -63,3 +63,65 @@ test.each`
     expect(value).toEqual(expectedValue);
   },
 );
+
+test("GIVEN handleUrlState with Filter WHEN search is empty THEN returns default value", async () => {
+  const [value] = handleUrlStateWithFilter(
+    {
+      route: "Inventory",
+      keys: {
+        timestamp: "DateRange",
+        version: "IntRange",
+        success: "Boolean",
+        details: "Boolean",
+      },
+      default: {
+        timestamp: [],
+        version: [
+          { operator: "from", value: 10 },
+          { operator: "to", value: 20 },
+        ],
+        success: false,
+        details: false,
+      },
+    },
+    { pathname: "", search: "", hash: "" },
+    () => undefined,
+  );
+
+  expect(value).toEqual({
+    timestamp: [],
+    version: [
+      { operator: "from", value: 10 },
+      { operator: "to", value: 20 },
+    ],
+    success: false,
+    details: false,
+  });
+
+  const [value2] = handleUrlStateWithFilter(
+    {
+      route: "Inventory",
+      keys: {
+        timestamp: "DateRange",
+        version: "IntRange",
+        success: "Boolean",
+        details: "Boolean",
+      },
+      default: {
+        timestamp: [],
+        version: [],
+        success: false,
+        details: false,
+      },
+    },
+    { pathname: "", search: "", hash: "" },
+    () => undefined,
+  );
+
+  expect(value2).toEqual({
+    timestamp: [],
+    version: [],
+    success: false,
+    details: false,
+  });
+});
