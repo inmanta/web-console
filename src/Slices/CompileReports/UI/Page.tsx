@@ -1,26 +1,24 @@
-import React, { useContext, useEffect } from "react";
-
+import React, { useEffect } from "react";
 import {
   useUrlStateWithFilter,
   useUrlStateWithPageSize,
   useUrlStateWithSort,
 } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
+import { useGetCompileReports } from "@/Data/Managers/V2/Compilation/GetCompileReports/useGetCompileReports";
 import {
   EmptyView,
   PageContainer,
-  OldPaginationWidget,
-  RemoteDataView,
+  ErrorView,
+  PaginationWidget,
+  LoadingView,
 } from "@/UI/Components";
-import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { Filter } from "@S/CompileReports/Core/Query";
 import { CompileReportsTableControls } from "./CompileReportsTableControls";
 import { TableProvider } from "./TableProvider";
 
 export const Page: React.FC = () => {
-  const { queryResolver } = useContext(DependencyContext);
-
   const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({
     route: "CompileReports",
   });
@@ -35,13 +33,12 @@ export const Page: React.FC = () => {
     default: { name: "requested", order: "desc" },
     route: "CompileReports",
   });
-  const [data, retry] = queryResolver.useContinuous<"GetCompileReports">({
-    kind: "GetCompileReports",
+  const { data, refetch, isSuccess, isError, error } = useGetCompileReports({
     filter,
     sort,
     pageSize,
     currentPage,
-  });
+  }).useContinuous();
 
   //when sorting is triggered, reset the current page
   useEffect(() => {
@@ -49,41 +46,54 @@ export const Page: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sort.order]);
 
+  if (isError) {
+    return (
+      <PageContainer pageTitle={words("compileReports.title")}>
+        <ErrorView
+          message={error.message}
+          retry={() => refetch()}
+          ariaLabel="CompileReportsView-Error"
+        />
+      </PageContainer>
+    );
+  }
+
+  if (isSuccess) {
+    return (
+      <PageContainer pageTitle={words("compileReports.title")}>
+        <CompileReportsTableControls
+          filter={filter}
+          setFilter={setFilter}
+          paginationWidget={
+            <PaginationWidget
+              data={data}
+              pageSize={pageSize}
+              setPageSize={setPageSize}
+              setCurrentPage={setCurrentPage}
+            />
+          }
+          afterRecompile={() => refetch()}
+        />
+        {data.data.length <= 0 ? (
+          <EmptyView
+            message={words("compileReports.empty.message")}
+            aria-label="CompileReportsView-Empty"
+          />
+        ) : (
+          <TableProvider
+            compileReports={data.data}
+            aria-label="CompileReportsView-Success"
+            sort={sort}
+            setSort={setSort}
+          />
+        )}
+      </PageContainer>
+    );
+  }
+
   return (
     <PageContainer pageTitle={words("compileReports.title")}>
-      <CompileReportsTableControls
-        filter={filter}
-        setFilter={setFilter}
-        paginationWidget={
-          <OldPaginationWidget
-            data={data}
-            pageSize={pageSize}
-            setPageSize={setPageSize}
-            setCurrentPage={setCurrentPage}
-          />
-        }
-        afterRecompile={retry}
-      />
-      <RemoteDataView
-        data={data}
-        retry={retry}
-        label="CompileReportsView"
-        SuccessView={(compileReports) =>
-          compileReports.data.length <= 0 ? (
-            <EmptyView
-              message={words("compileReports.empty.message")}
-              aria-label="CompileReportsView-Empty"
-            />
-          ) : (
-            <TableProvider
-              compileReports={compileReports.data}
-              aria-label="CompileReportsView-Success"
-              sort={sort}
-              setSort={setSort}
-            />
-          )
-        }
-      />
+      <LoadingView ariaLabel="CompileReportsView-Loading" />
     </PageContainer>
   );
 };

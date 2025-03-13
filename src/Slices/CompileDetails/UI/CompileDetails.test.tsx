@@ -1,15 +1,13 @@
 import React, { act } from "react";
 import { MemoryRouter } from "react-router-dom";
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
-import { Either } from "@/Core";
-import {
-  getStoreInstance,
-  QueryManagerResolverImpl,
-  QueryResolverImpl,
-} from "@/Data";
-import { DeferredApiHelper, dependencies, StaticScheduler } from "@/Test";
+import { http, HttpResponse } from "msw";
+import { setupServer } from "msw/node";
+import { getStoreInstance } from "@/Data";
+import { dependencies } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { UrlManagerImpl } from "@/UI/Utils";
 import * as Mock from "@S/CompileDetails/Core/Mock";
@@ -24,59 +22,75 @@ const axe = configureAxe({
 });
 
 function setup() {
-  const apiHelper = new DeferredApiHelper();
-  const scheduler = new StaticScheduler();
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  });
   const store = getStoreInstance();
-  const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler),
-  );
   const urlManager = new UrlManagerImpl(dependencies.featureManager, "");
 
   const component = (
-    <MemoryRouter>
-      <DependencyProvider
-        dependencies={{ ...dependencies, queryResolver, urlManager }}
-      >
-        <StoreProvider store={store}>
-          <CompileDetails id="123" />
-        </StoreProvider>
-      </DependencyProvider>
-    </MemoryRouter>
+    <QueryClientProvider client={queryClient}>
+      <MemoryRouter>
+        <DependencyProvider dependencies={{ ...dependencies, urlManager }}>
+          <StoreProvider store={store}>
+            <CompileDetails id="123" />
+          </StoreProvider>
+        </DependencyProvider>
+      </MemoryRouter>
+    </QueryClientProvider>
   );
 
-  return { component, apiHelper, scheduler };
+  return { component };
 }
+const server = setupServer();
+
+beforeAll(() => server.listen());
+afterEach(() => server.resetHandlers());
+afterAll(() => server.close());
 
 test("CompileDetailsView shows failed view", async () => {
-  const { component, apiHelper } = setup();
+  server.use(
+    http.get("api/v2/compilereport/123", () => {
+      return HttpResponse.json(
+        {
+          message: "error",
+        },
+        {
+          status: 500,
+        },
+      );
+    }),
+  );
+  const { component } = setup();
 
-  await render(component);
+  render(component);
 
   expect(
-    await screen.findByRole("region", { name: "CompileDetailsView-Loading" }),
+    screen.getByRole("region", { name: "CompileDetailsView-Loading" }),
   ).toBeInTheDocument();
 
-  await act(async () => {
-    apiHelper.resolve(Either.left("error"));
-  });
-
   expect(
-    await screen.findByRole("region", { name: "CompileDetailsView-Failed" }),
+    await screen.findByRole("region", { name: "CompileDetailsView-Error" }),
   ).toBeInTheDocument();
 });
 
 test("CompileDetailsView shows completed table with success: true", async () => {
-  const { component, apiHelper } = setup();
+  server.use(
+    http.get("api/v2/compilereport/123", () => {
+      return HttpResponse.json({ data: Mock.data });
+    }),
+  );
+  const { component } = setup();
 
   await render(component);
 
   expect(
     await screen.findByRole("region", { name: "CompileDetailsView-Loading" }),
   ).toBeInTheDocument();
-
-  await act(async () => {
-    await apiHelper.resolve(Either.right({ data: Mock.data }));
-  });
 
   expect(
     await screen.findByRole("generic", { name: "CompileDetailsView-Success" }),
@@ -91,17 +105,18 @@ test("CompileDetailsView shows completed table with success: true", async () => 
 });
 
 test("CompileDetailsView shows completed table with success: false, error indication should appear", async () => {
-  const { component, apiHelper } = setup();
+  server.use(
+    http.get("api/v2/compilereport/123", () => {
+      return HttpResponse.json({ data: Mock.DataFailed });
+    }),
+  );
+  const { component } = setup();
 
   await render(component);
 
   expect(
     await screen.findByRole("region", { name: "CompileDetailsView-Loading" }),
   ).toBeInTheDocument();
-
-  await act(async () => {
-    apiHelper.resolve(Either.right({ data: Mock.DataFailed }));
-  });
 
   expect(
     await screen.findByRole("generic", { name: "CompileDetailsView-Success" }),

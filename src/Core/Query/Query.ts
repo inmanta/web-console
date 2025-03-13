@@ -8,14 +8,6 @@ import {
   GetEnvironmentSettingsManifest,
 } from "@/Data/Managers/EnvironmentSettings/GetEnvironmentSettings/interface";
 import {
-  GetCompilationState,
-  GetCompilationStateManifest,
-} from "@/Data/Managers/GetCompilationState/interface";
-import {
-  GetCompilerStatus,
-  GetCompilerStatusManifest,
-} from "@/Data/Managers/GetCompilerStatus/interface";
-import {
   GetEnvironments,
   GetEnvironmentsManifest,
 } from "@/Data/Managers/GetEnvironments/interface";
@@ -33,8 +25,6 @@ import {
 } from "@/Data/Managers/GetVersionFile/interface";
 
 import * as GetAgents from "@S/Agents/Core/Query";
-import * as GetCompileDetails from "@S/CompileDetails/Core/Query";
-import * as GetCompileReports from "@S/CompileReports/Core/Query";
 import * as GetDryRunReport from "@S/ComplianceCheck/Core/DryRunReportQuery";
 import * as GetDryRuns from "@S/ComplianceCheck/Core/DryRunsQuery";
 import * as GetMetrics from "@S/Dashboard/Core/Query";
@@ -72,8 +62,6 @@ export type Query =
   | GetOrders.Query
   | GetOrderDetails.Query
   | GetEnvironmentDetails.Query
-  | GetCompileReports.Query
-  | GetCompileDetails.Query
   | GetServerStatus
   | GetCallbacks.Query
   | GetEnvironmentSettings
@@ -85,14 +73,12 @@ export type Query =
   | GetAgents.Query
   | GetDesiredStates.Query
   | GetVersionResources.Query
-  | GetCompilerStatus
   | GetParameters.Query
   | GetDesiredStateDiff.Query
   | GetDryRuns.Query
   | GetDryRunReport.Query
   | GetVersionedResourceDetails.Query
   | GetNotifications.Query
-  | GetCompilationState
   | GetVersionFile;
 
 export type Type = Query;
@@ -115,9 +101,6 @@ interface Manifest {
   GetOrders: GetOrders.Manifest;
   GetOrderDetails: GetOrderDetails.Manifest;
   GetEnvironmentDetails: GetEnvironmentDetails.Manifest;
-  GetCompileReports: GetCompileReports.Manifest;
-  GetCompileDetails: GetCompileDetails.Manifest;
-  GetCompilationState: GetCompilationStateManifest;
   GetCallbacks: GetCallbacks.Manifest;
   GetEnvironmentSettings: GetEnvironmentSettingsManifest;
   GetEnvironmentSetting: GetEnvironmentSettingManifest;
@@ -127,7 +110,6 @@ interface Manifest {
   GetAgents: GetAgents.Manifest;
   GetDesiredStates: GetDesiredStates.Manifest;
   GetVersionResources: GetVersionResources.Manifest;
-  GetCompilerStatus: GetCompilerStatusManifest;
   GetParameters: GetParameters.Manifest;
   GetFacts: GetFacts.Manifest;
   GetDesiredStateDiff: GetDesiredStateDiff.Manifest;
