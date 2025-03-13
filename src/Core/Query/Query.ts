@@ -1,21 +1,5 @@
 import { RemoteData } from "@/Core/Language";
 import {
-  GetEnvironmentSetting,
-  GetEnvironmentSettingManifest,
-} from "@/Data/Managers/EnvironmentSettings/GetEnvironmentSettingInterface";
-import {
-  GetEnvironmentSettings,
-  GetEnvironmentSettingsManifest,
-} from "@/Data/Managers/EnvironmentSettings/GetEnvironmentSettings/interface";
-import {
-  GetEnvironments,
-  GetEnvironmentsManifest,
-} from "@/Data/Managers/GetEnvironments/interface";
-import {
-  GetEnvironmentsContinuous,
-  GetEnvironmentsContinuousManifest,
-} from "@/Data/Managers/GetEnvironmentsContinuous/interface";
-import {
   GetServerStatus,
   GetServerStatusManifest,
 } from "@/Data/Managers/GetServerStatus/interface";
@@ -23,7 +7,6 @@ import {
   GetVersionFile,
   GetVersionFileManifest,
 } from "@/Data/Managers/GetVersionFile/interface";
-
 import * as GetAgents from "@S/Agents/Core/Query";
 import * as GetDryRunReport from "@S/ComplianceCheck/Core/DryRunReportQuery";
 import * as GetDryRuns from "@S/ComplianceCheck/Core/DryRunsQuery";
@@ -46,28 +29,20 @@ import * as GetResourceHistory from "@S/ResourceDetails/Core/GetResourceHistoryQ
 import * as GetResourceLogs from "@S/ResourceDetails/Core/GetResourceLogsQuery";
 import * as GetDiscoveredResources from "@S/ResourceDiscovery/Core/Query";
 import * as GetCallbacks from "@S/ServiceDetails/Core/GetCallbacksQuery";
-import * as GetEnvironmentDetails from "@S/Settings/Core/GetEnvironmentDetailsQuery";
-import * as GetProjects from "@S/Settings/Core/GetProjectsQuery";
 
 export type Query =
   | GetInstanceEvents.Query
   | GetMetrics.Query
   | GetDiagnostics.Query
   | GetDiscoveredResources.Query
-  | GetProjects.Query
   | GetResources.Query
   | GetResourceDetails.Query
   | GetResourceHistory.Query
   | GetResourceLogs.Query
   | GetOrders.Query
   | GetOrderDetails.Query
-  | GetEnvironmentDetails.Query
   | GetServerStatus
   | GetCallbacks.Query
-  | GetEnvironmentSettings
-  | GetEnvironmentSetting
-  | GetEnvironments
-  | GetEnvironmentsContinuous
   | GetFacts.Query
   | GetResourceFacts.Query
   | GetAgents.Query
@@ -92,7 +67,6 @@ interface Manifest {
   GetDiagnostics: GetDiagnostics.Manifest;
   GetDiscoveredResources: GetDiscoveredResources.Manifest;
   GetMetrics: GetMetrics.Manifest;
-  GetProjects: GetProjects.Manifest;
   GetServerStatus: GetServerStatusManifest;
   GetResources: GetResources.Manifest;
   GetResourceDetails: GetResourceDetails.Manifest;
@@ -100,12 +74,7 @@ interface Manifest {
   GetResourceLogs: GetResourceLogs.Manifest;
   GetOrders: GetOrders.Manifest;
   GetOrderDetails: GetOrderDetails.Manifest;
-  GetEnvironmentDetails: GetEnvironmentDetails.Manifest;
   GetCallbacks: GetCallbacks.Manifest;
-  GetEnvironmentSettings: GetEnvironmentSettingsManifest;
-  GetEnvironmentSetting: GetEnvironmentSettingManifest;
-  GetEnvironments: GetEnvironmentsManifest;
-  GetEnvironmentsContinuous: GetEnvironmentsContinuousManifest;
   GetResourceFacts: GetResourceFacts.Manifest;
   GetAgents: GetAgents.Manifest;
   GetDesiredStates: GetDesiredStates.Manifest;
