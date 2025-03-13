@@ -1,5 +1,6 @@
 import React, { useContext, useState } from "react";
 import { AlertVariant } from "@patternfly/react-core";
+import { useTriggerCompile } from "@/Data/Managers/V2/Compilation/TriggerCompile";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { ToastAlert } from "../ToastAlert";
@@ -14,29 +15,29 @@ export const Provider: React.FC<Props> = ({
   afterTrigger,
   isToastVisible = false,
 }) => {
-  const { commandResolver, queryResolver, environmentModifier } =
+  const { environmentModifier, environmentHandler } =
     useContext(DependencyContext);
   const [toastMessage, setToastMessage] = useState("");
   const isServerCompileEnabled =
     environmentModifier.useIsServerCompileEnabled();
-  const trigger = commandResolver.useGetTrigger<"TriggerCompile">({
-    kind: "TriggerCompile",
-  });
-  const [, refetch] = queryResolver.useContinuous<"GetCompilerStatus">({
-    kind: "GetCompilerStatus",
+  const env = environmentHandler.useId();
+
+  const { mutate } = useTriggerCompile({
+    onMutate: ({ update }) => {
+      if (isToastVisible) {
+        setToastMessage(words("common.compileWidget.toast")(update));
+        setTimeout(() => {
+          setToastMessage("");
+        }, 2000);
+      }
+    },
+    onSuccess: () => {
+      afterTrigger && afterTrigger();
+    },
   });
 
-  const onRecompile = (update: boolean) => async () => {
-    if (isToastVisible) {
-      setToastMessage(words("common.compileWidget.toast")(update));
-      setTimeout(() => {
-        setToastMessage("");
-      }, 2000);
-    }
-    await trigger(update);
-    document.dispatchEvent(new CustomEvent("CompileTrigger"));
-    refetch();
-    afterTrigger && afterTrigger();
+  const onRecompile = (update: boolean) => () => {
+    mutate({ env, update });
   };
 
   return (

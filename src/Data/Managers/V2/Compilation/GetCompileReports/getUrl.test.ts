@@ -1,6 +1,6 @@
-import { CompileStatus, PageSize, Query } from "@/Core";
+import { CompileStatus, PageSize } from "@/Core";
 import { getUrl } from "./getUrl";
-
+import { CompileReportsParams } from "./useGetCompileReports";
 test.each`
   filter                                  | sort                                    | sortTxt             | pageSize | currentPage                                                  | url
   ${undefined}                            | ${undefined}                            | ${"undefined"}      | ${"20"}  | ${""}                                                        | ${`/api/v2/compilereport?limit=20`}
@@ -16,8 +16,7 @@ test.each`
 `(
   "getUrl returns correct url for compile reports with sort: $sortTxt, filter $filter, currentPage: $currentPage: and pageSize: $pageSize",
   ({ filter, sort, pageSize, url, currentPage }) => {
-    const query: Query.SubQuery<"GetCompileReports"> = {
-      kind: "GetCompileReports",
+    const query: CompileReportsParams = {
       pageSize: PageSize.from(pageSize),
       filter,
       sort,

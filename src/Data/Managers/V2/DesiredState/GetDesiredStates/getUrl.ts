@@ -14,7 +14,7 @@ export function getUrl(
   { pageSize, filter, currentPage }: Query.SubQuery<"GetDesiredStates">,
   timezone = moment.tz.guess(),
 ): string {
-  const defaultFilter = { status: ["active", "candidate", "retired"] };
+  const defaultFilter = {};
   const filterWithDefaults =
     filter && filter.status && filter.status?.length > 0
       ? filter

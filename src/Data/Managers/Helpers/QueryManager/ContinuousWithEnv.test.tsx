@@ -6,6 +6,7 @@ import { StoreProvider } from "easy-peasy";
 import { Either, RemoteData } from "@/Core";
 import { QueryManagerResolverImpl, QueryResolverImpl } from "@/Data";
 import { getStoreInstance } from "@/Data/Store";
+import { drawerQuery } from "@/Slices/Notification/Core/Query";
 import { DeferredApiHelper, dependencies, StaticScheduler } from "@/Test";
 import {
   DependencyContext,
@@ -83,7 +84,7 @@ test("GIVEN QueryManager.ContinuousWithEnv WHEN environment changes THEN the api
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
     method: "GET",
-    url: "/api/v2/compilereport/123",
+    url: "/api/v2/notification?limit=100&filter.cleared=false",
     environment: "aaa",
   });
 
@@ -97,7 +98,7 @@ test("GIVEN QueryManager.ContinuousWithEnv WHEN environment changes THEN the api
 
   expect(apiHelper.pendingRequests[0]).toEqual({
     method: "GET",
-    url: "/api/v2/compilereport/123",
+    url: "/api/v2/notification?limit=100&filter.cleared=false",
     environment: "bbb",
   });
 });
@@ -107,10 +108,7 @@ const Component: React.FC = () => {
 
   const { queryResolver } = useContext(DependencyContext);
 
-  queryResolver.useContinuous<"GetCompileDetails">({
-    kind: "GetCompileDetails",
-    id: "123",
-  });
+  queryResolver.useContinuous<"GetNotifications">(drawerQuery);
 
   return (
     <div>

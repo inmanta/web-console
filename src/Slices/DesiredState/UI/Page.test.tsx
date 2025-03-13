@@ -7,20 +7,8 @@ import { StoreProvider } from "easy-peasy";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import {
-  QueryResolverImpl,
-  getStoreInstance,
-  CommandResolverImpl,
-  GetCompilerStatusQueryManager,
-  TriggerCompileCommandManager,
-} from "@/Data";
-import {
-  DynamicQueryManagerResolverImpl,
-  StaticScheduler,
-  DeferredApiHelper,
-  dependencies,
-  DynamicCommandManagerResolverImpl,
-} from "@/Test";
+import { getStoreInstance } from "@/Data";
+import { StaticScheduler, DeferredApiHelper, dependencies } from "@/Test";
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
@@ -47,28 +35,12 @@ function setup() {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
-  const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolverImpl([
-      GetCompilerStatusQueryManager(apiHelper, scheduler),
-    ]),
-  );
-  const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolverImpl([
-      TriggerCompileCommandManager(apiHelper),
-    ]),
-  );
 
   const component = (
     <QueryClientProvider client={queryClient}>
       <ModalProvider>
         <MemoryRouter>
-          <DependencyProvider
-            dependencies={{
-              ...dependencies,
-              queryResolver,
-              commandResolver,
-            }}
-          >
+          <DependencyProvider dependencies={dependencies}>
             <StoreProvider store={store}>
               <Page />
             </StoreProvider>
@@ -207,7 +179,7 @@ describe("DesiredStatesView", () => {
         //we are expecting that at some point the request will have the filters applied for status and we mock the adequate response
         if (
           request.url.split("?")[1] ===
-          "limit=20&sort=version.desc&filter.status=skipped_candidate"
+          "limit=20&sort=version.desc&filter.status=active&filter.status=candidate&filter.status=retired&filter.status=skipped_candidate"
         ) {
           return HttpResponse.json({
             ...DesiredStateVersions.response,
@@ -495,7 +467,7 @@ describe("DesiredStatesView", () => {
         //we are expecting that at some point the request will have the filters applied for status and we mock the adequate response
         if (
           request.url.split("?")[1] ===
-          "limit=20&sort=version.desc&filter.status=candidate"
+          "limit=20&sort=version.desc&filter.status=active&filter.status=retired"
         ) {
           return HttpResponse.json({
             ...DesiredStateVersions.response,

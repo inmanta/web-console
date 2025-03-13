@@ -12,8 +12,6 @@ import {
   GetEnvironmentSettingsStateHelper,
   GetEnvironmentsQueryManager,
   GetEnvironmentsStateHelper,
-  GetCompilationStateQueryManager,
-  GetCompilerStatusQueryManager,
 } from "@/Data/Managers";
 import { Store } from "@/Data/Store";
 import { GetOrdersQueryManager } from "@/Slices/Orders/Data/QueryManager";
@@ -25,8 +23,6 @@ import {
 } from "@/Slices/Settings/Data/GetEnvironmentDetails";
 import { GetProjectsQueryManager } from "@/Slices/Settings/Data/GetProjects";
 import { GetAgentsQueryManager } from "@S/Agents/Data";
-import { CompileDetailsQueryManager } from "@S/CompileDetails/Data";
-import { CompileReportsQueryManager } from "@S/CompileReports/Data";
 import {
   GetDryRunReportQueryManager,
   GetDryRunsQueryManager,
@@ -154,8 +150,6 @@ export class QueryManagerResolverImpl implements QueryManagerResolver {
       ),
       EnvironmentDetailsOneTimeQueryManager(this.store, this.apiHelper),
       CallbacksQueryManager(this.apiHelper, CallbacksStateHelper(this.store)),
-      CompileReportsQueryManager(this.store, this.apiHelper, this.scheduler),
-      CompileDetailsQueryManager(this.store, this.apiHelper, this.scheduler),
       ResourceLogsQueryManager(
         this.apiHelper,
         ResourceLogsStateHelper(this.store),
@@ -172,8 +166,6 @@ export class QueryManagerResolverImpl implements QueryManagerResolver {
         GetVersionResourcesStateHelper(this.store),
         this.scheduler,
       ),
-      GetCompilerStatusQueryManager(this.apiHelper, this.scheduler),
-      GetCompilationStateQueryManager(this.apiHelper, this.scheduler),
       GetParametersQueryManager(
         this.apiHelper,
         GetParametersStateHelper(this.store),

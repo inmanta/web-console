@@ -1,11 +1,15 @@
 import moment from "moment-timezone";
 import qs from "qs";
-import { CompileStatus, Query, RangeOperator } from "@/Core";
+import { CompileStatus, RangeOperator } from "@/Core";
+import { Filter } from "@/Slices/CompileReports/Core/Query";
+import { CompileReportsParams } from "./useGetCompileReports";
 
 export function getUrl(
-  { pageSize, sort, filter, currentPage }: Query.SubQuery<"GetCompileReports">,
+  params: CompileReportsParams,
   timezone = moment.tz.guess(),
 ): string {
+  const { pageSize, sort, filter, currentPage } = params;
+
   const serializedFilters =
     filter && Object.keys(filter).length > 0
       ? `&${qs.stringify(
@@ -22,8 +26,6 @@ export function getUrl(
     currentPage.value ? `&${currentPage.value}` : ""
   }`;
 }
-
-type Filter = NonNullable<Query.SubQuery<"GetCompileReports">["filter"]>;
 
 const filterToParam = (filter: Filter, timezone: string) => {
   if (typeof filter === "undefined") return {};

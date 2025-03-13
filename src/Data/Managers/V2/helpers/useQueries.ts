@@ -441,3 +441,42 @@ export const useDeleteWithoutEnv = (options?: { message?: string }) => {
     }
   };
 };
+
+/**
+ * Custom hook to perform a HEAD request.
+ *
+ * This hook constructs the base URL and headers, and provides a function to perform a HEAD request to the specified path.
+ * The hook is environment-agnostic and can be used to check resource existence or get response headers without fetching the body.
+ *
+ * @returns {Function} A function that performs a HEAD request and returns the HTTP status code.
+ * If the request fails, it returns 500 as a status code.
+ *
+ * @example
+ * const head = useHead();
+ * const status = await head('/api/resource');
+ * if (status === 200) {
+ *   // Resource exists
+ * }
+ */
+
+export const useHead = () => {
+  const baseUrlManager = new PrimaryBaseUrlManager(
+    globalThis.location.origin,
+    globalThis.location.pathname,
+  );
+  const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
+  const { createHeaders } = useFetchHelpers();
+
+  return async (path: string) => {
+    try {
+      const response = await fetch(`${baseUrl}${path}`, {
+        method: "HEAD",
+        headers: createHeaders(),
+      });
+
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  };
+};
