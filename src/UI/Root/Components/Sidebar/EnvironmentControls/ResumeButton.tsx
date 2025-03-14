@@ -1,7 +1,8 @@
 import React, { useContext } from "react";
 import { Button, Icon, Tooltip } from "@patternfly/react-core";
 import { PlayIcon } from "@patternfly/react-icons";
-import { DependencyContext } from "@/UI/Dependency";
+import { useResumeEnvironment } from "@/Data/Managers/V2/Environment/ResumeEnvironment";
+import { useQueryControl } from "@/Data/Managers/V2/helpers/QueryControlContext";
 import { words } from "@/UI/words";
 import { ModalContext } from "../../ModalProvider";
 
@@ -11,13 +12,15 @@ import { ModalContext } from "../../ModalProvider";
  * @returns {React.FC} A button with a tooltip that triggers a modal when clicked.
  */
 export const ResumeButton: React.FC = () => {
-  const { queryResolver, commandResolver } = useContext(DependencyContext);
   const { triggerModal, closeModal } = useContext(ModalContext);
-
-  const resumeEnvironmentTrigger =
-    commandResolver.useGetTrigger<"ResumeEnvironment">({
-      kind: "ResumeEnvironment",
-    });
+  const { enableQueries } = useQueryControl();
+  const { mutate, isPending } = useResumeEnvironment({
+    onSuccess: () => {
+      document.dispatchEvent(new CustomEvent("resume-event"));
+      enableQueries();
+      closeModal();
+    },
+  });
 
   /**
    * Handles the toggling of the modal.
@@ -37,13 +40,9 @@ export const ResumeButton: React.FC = () => {
         <Button
           key="confirm"
           variant="primary"
+          isLoading={isPending}
           onClick={() => {
-            resumeEnvironmentTrigger().then((_result) => {
-              queryResolver.resumeAllContinuousManagers();
-              document.dispatchEvent(new CustomEvent("resume-event"));
-            });
-            closeModal();
-            document.dispatchEvent(new CustomEvent("resume-event"));
+            mutate();
           }}
         >
           {words("yes")}
@@ -56,18 +55,15 @@ export const ResumeButton: React.FC = () => {
   };
 
   return (
-    <Tooltip
-      content={<div>{words("environment.resume.tooltip")}</div>}
-      position="right"
-    >
+    <Tooltip content={words("environment.resume.tooltip")}>
       <Button
+        variant="control"
+        onClick={handleModalToggle}
         icon={
           <Icon status="success">
             <PlayIcon />
           </Icon>
         }
-        variant="control"
-        onClick={handleModalToggle}
       >
         {words("environment.resume.button")}
       </Button>

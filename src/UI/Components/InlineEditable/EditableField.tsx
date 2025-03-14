@@ -21,7 +21,7 @@ export interface FieldProps {
   isRequired?: boolean;
   initialValue: string;
   initiallyEditable?: boolean;
-  onSubmit: (value: string) => Promise<Maybe.Type<string>>;
+  onSubmit: (value: string) => Promise<void>;
 }
 
 export type EditViewComponent = React.FC<{

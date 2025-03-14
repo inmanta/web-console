@@ -4,11 +4,6 @@ import {
   Scheduler,
   QueryManagerResolver,
 } from "@/Core";
-import {
-  GetServerStatusOneTimeQueryManager,
-  GetServerStatusContinuousQueryManager,
-  GetServerStatusStateHelper,
-} from "@/Data/Managers";
 import { Store } from "@/Data/Store";
 import { GetOrdersQueryManager } from "@/Slices/Orders/Data/QueryManager";
 import { GetDiscoveredResourcesQueryManager } from "@/Slices/ResourceDiscovery/Data/QueryManager";
@@ -85,15 +80,6 @@ export class QueryManagerResolverImpl implements QueryManagerResolver {
 
   private getManagers(): QueryManager[] {
     return [
-      GetServerStatusOneTimeQueryManager(
-        this.apiHelper,
-        GetServerStatusStateHelper(this.store),
-      ),
-      GetServerStatusContinuousQueryManager(
-        this.apiHelper,
-        GetServerStatusStateHelper(this.store),
-        this.slowScheduler,
-      ),
       GetMetricsQueryManager(this.apiHelper, GetMetricsStateHelper(this.store)),
       EventsQueryManager(
         this.apiHelper,
