@@ -1,6 +1,9 @@
-import React, { useContext } from "react";
+import React from "react";
 import { DescriptionList } from "@patternfly/react-core";
-import { FlatEnvironment, Maybe, ProjectModel } from "@/Core";
+import { ProjectModel, Maybe, FlatEnvironment } from "@/Core";
+import { useGetProjects } from "@/Data/Managers/V2/Environment";
+import { useModifyEnvironment } from "@/Data/Managers/V2/Environment/ModifyEnvironment";
+import { useCreateProject } from "@/Data/Managers/V2/Project/CreateProject";
 import {
   EditableTextField,
   EditableMultiTextField,
@@ -8,7 +11,6 @@ import {
   EditableImageField,
   EditableTextAreaField,
 } from "@/UI/Components";
-import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { Actions } from "./Components";
 
@@ -21,49 +23,53 @@ export const EnvironmentSettings: React.FC<Props> = ({
   environment,
   projects,
 }) => {
-  const { commandResolver } = useContext(DependencyContext);
-  const modifyEnvironmentTrigger =
-    commandResolver.useGetTrigger<"ModifyEnvironment">({
-      kind: "ModifyEnvironment",
-    });
-  const createProject = commandResolver.useGetTrigger<"CreateProject">({
-    kind: "CreateProject",
-  });
+  const { mutate: modifyEnvironment } = useModifyEnvironment(environment.id);
+  const { data, isError, error, refetch, isSuccess } =
+    useGetProjects().useOneTime();
+  const { mutate: createProject } = useCreateProject();
 
-  const onNameSubmit = (name: string) =>
-    modifyEnvironmentTrigger({ name: name });
+  const onNameSubmit = async (name: string) => {
+    modifyEnvironment({ name });
 
-  const onRepoSubmit = (fields: Record<string, string>) =>
-    modifyEnvironmentTrigger({
+    return Maybe.none();
+  };
+
+  const onRepoSubmit = async (fields: Record<string, string>) => {
+    modifyEnvironment({
       name: environment.name,
       repository: fields["repo_url"],
       branch: fields["repo_branch"],
     });
 
-  const onProjectSubmit = async (projectName: string) => {
+    return Maybe.none();
+  };
+
+  const onProjectSubmit = (projectName: string): string | void => {
     const match = projects.find((project) => project.name === projectName);
 
     if (!match) {
-      return Maybe.some(`No matching project found for name '${projectName}'`);
+      return `No matching project found for name '${projectName}'`;
     }
 
-    return modifyEnvironmentTrigger({
+    modifyEnvironment({
       name: environment.name,
       project_id: match.id,
     });
   };
 
-  const onIconSubmit = async (icon: string) =>
-    modifyEnvironmentTrigger({
+  const onIconSubmit = async (icon: string) => {
+    modifyEnvironment({
       name: environment.name,
       icon,
     });
+  };
 
-  const onDescriptionSubmit = async (description: string) =>
-    modifyEnvironmentTrigger({
+  const onDescriptionSubmit = async (description: string) => {
+    modifyEnvironment({
       name: environment.name,
       description,
     });
+  };
 
   return (
     <DescriptionList>

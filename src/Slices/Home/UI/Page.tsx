@@ -1,53 +1,63 @@
-import React, { useContext } from "react";
+import React from "react";
 import { PageSection } from "@patternfly/react-core";
-import { RemoteData } from "@/Core";
-import { DependencyContext, words } from "@/UI";
+import {
+  useGetEnvironments,
+  useGetProjects,
+} from "@/Data/Managers/V2/Environment";
+import { words } from "@/UI";
 import { ErrorView, LoadingView, PageSectionWithTitle } from "@/UI/Components";
 import { EnvironmentsOverview } from "./EnvironmentsOverview";
 import { EmptyFilterToolbar } from "./FilterToolbar";
+import { Environment } from "@/Core";
 
 export const Page: React.FC = () => {
-  const { queryResolver } = useContext(DependencyContext);
-  const [data] = queryResolver.useContinuous<"GetEnvironmentsContinuous">({
-    kind: "GetEnvironmentsContinuous",
-    details: true,
-  });
+  const { data, isError, error, isSuccess, refetch } =
+    useGetEnvironments().useContinuous(true);
+  const projects = useGetProjects().useOneTime();
+
+  if (isError) {
+    return (
+      <>
+        <PageSectionWithTitle title={words("home.title")} />
+        <EmptyFilterToolbar />
+        <PageSection hasBodyWrapper={false}>
+          <ErrorView
+            title={words("error")}
+            message={words("error.general")(error.message)}
+            retry={refetch}
+            ariaLabel="Overview-Failed"
+          />
+        </PageSection>
+      </>
+    );
+  }
+
+  if (isSuccess && projects.isSuccess) {
+    const envsWithProjectName: Environment[] = data.map((env) => ({
+      ...env,
+      projectName:
+        projects.data.find((project) => project.id === env.project_id)?.name ||
+        "",
+    }));
+
+    return (
+      <>
+        <PageSectionWithTitle title={words("home.title")} />
+        <EnvironmentsOverview
+          environments={envsWithProjectName}
+          aria-label="Overview-Success"
+        />
+      </>
+    );
+  }
 
   return (
     <>
       <PageSectionWithTitle title={words("home.title")} />
-      {RemoteData.fold(
-        {
-          notAsked: () => null,
-          loading: () => (
-            <>
-              <EmptyFilterToolbar />
-              <PageSection hasBodyWrapper={false}>
-                <LoadingView ariaLabel="Overview-Loading" />
-              </PageSection>
-            </>
-          ),
-          failed: (error) => (
-            <>
-              <EmptyFilterToolbar />
-              <PageSection hasBodyWrapper={false}>
-                <ErrorView
-                  title={words("error")}
-                  message={words("error.general")(error)}
-                  ariaLabel="Overview-Failed"
-                />
-              </PageSection>
-            </>
-          ),
-          success: (environments) => (
-            <EnvironmentsOverview
-              environments={environments}
-              aria-label="Overview-Success"
-            />
-          ),
-        },
-        data,
-      )}
+      <EmptyFilterToolbar />
+      <PageSection hasBodyWrapper={false}>
+        <LoadingView ariaLabel="Overview-Loading" />
+      </PageSection>
     </>
   );
 };

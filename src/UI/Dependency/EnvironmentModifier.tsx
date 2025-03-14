@@ -2,33 +2,26 @@ import {
   EnvironmentDetails,
   EnvironmentModifier,
   EnvironmentSettings,
+  FlatEnvironment,
   Maybe,
   RemoteData,
 } from "@/Core";
+import { useGetEnvironmentDetails } from "@/Data/Managers/V2/Environment/GetEnvironmentDetails";
+import { useGetEnvironments } from "@/Data/Managers/V2/Environment/GetEnvironments";
+import { useGetEnvironmentSettings } from "@/Data/Managers/V2/Environment/GetEnvironmentSettings";
 import { useStoreState } from "@/Data/Store";
+import { useState } from "react";
 
 export function EnvironmentModifierImpl(): EnvironmentModifier {
-  let environment: Maybe.Type<string> = Maybe.none();
+  const [envId, setEnvId] = useState<null | string>(null);
+
+  const allEnvironments = useGetEnvironments().useContinuous();
+  const envDetails = useGetEnvironmentDetails().useContinuous(envId);
+  const envSettings = useGetEnvironmentSettings().useOneTime(envId);
 
   function useCurrentEnvironment(): EnvironmentDetails | null {
     const storeState = useStoreState(
       (state) => state.environment.environmentDetailsById,
-    );
-
-    if (Maybe.isSome(environment)) {
-      const state = storeState[environment.value];
-
-      if (state !== undefined && RemoteData.isSuccess(state)) {
-        return state.value;
-      }
-    }
-
-    return null;
-  }
-
-  function useEnvironmentSettings(): EnvironmentSettings.EnvironmentSettings | null {
-    const storeState = useStoreState(
-      (state) => state.environment.settingsByEnv,
     );
 
     if (Maybe.isSome(environment)) {
