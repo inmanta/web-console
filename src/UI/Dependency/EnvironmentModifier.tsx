@@ -2,33 +2,32 @@ import {
   EnvironmentDetails,
   EnvironmentModifier,
   EnvironmentSettings,
-  FlatEnvironment,
-  Maybe,
-  RemoteData,
 } from "@/Core";
+import { EnvironmentSettings as EnvironmentSettingsType } from "@/Core/Domain/EnvironmentSettings";
 import { useGetEnvironmentDetails } from "@/Data/Managers/V2/Environment/GetEnvironmentDetails";
-import { useGetEnvironments } from "@/Data/Managers/V2/Environment/GetEnvironments";
 import { useGetEnvironmentSettings } from "@/Data/Managers/V2/Environment/GetEnvironmentSettings";
-import { useStoreState } from "@/Data/Store";
 import { useState } from "react";
 
 export function EnvironmentModifierImpl(): EnvironmentModifier {
   const [envId, setEnvId] = useState<null | string>(null);
 
-  const allEnvironments = useGetEnvironments().useContinuous();
-  const envDetails = useGetEnvironmentDetails().useContinuous(envId);
-  const envSettings = useGetEnvironmentSettings().useOneTime(envId);
+  const envDetails = useGetEnvironmentDetails().useContinuous(envId || "");
+  const envSettings = useGetEnvironmentSettings().useOneTime(envId || "");
 
   function useCurrentEnvironment(): EnvironmentDetails | null {
-    const storeState = useStoreState(
-      (state) => state.environment.environmentDetailsById,
-    );
+    if (envId) {
+      if (envDetails.isSuccess) {
+        return envDetails.data;
+      }
+    }
 
-    if (Maybe.isSome(environment)) {
-      const state = storeState[environment.value];
+    return null;
+  }
 
-      if (state !== undefined && RemoteData.isSuccess(state)) {
-        return state.value;
+  function useEnvironmentSettings(): EnvironmentSettingsType | null {
+    if (envId) {
+      if (envSettings.isSuccess) {
+        return envSettings.data;
       }
     }
 
@@ -36,7 +35,7 @@ export function EnvironmentModifierImpl(): EnvironmentModifier {
   }
 
   function setEnvironment(environmentToSet: string): void {
-    environment = Maybe.some(environmentToSet);
+    setEnvId(environmentToSet);
   }
 
   function useIsHalted(): boolean {

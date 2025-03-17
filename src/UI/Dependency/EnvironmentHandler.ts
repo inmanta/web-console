@@ -3,16 +3,16 @@ import {
   EnvironmentHandler,
   FlatEnvironment,
   Navigate,
-  RemoteData,
   RouteManager,
 } from "@/Core";
-import { useStoreState } from "@/Data/Store";
 import { SearchHelper } from "@/UI/Routing/SearchHelper";
+import { useGetEnvironments } from "@/Data/Managers/V2/Environment";
 
 export function EnvironmentHandlerImpl(
   useLocation: () => Location,
   routeManager: RouteManager,
 ): EnvironmentHandler {
+  const environmentsData = useGetEnvironments().useContinuous();
   function set(
     navigate: Navigate,
     location: Location,
@@ -40,24 +40,18 @@ export function EnvironmentHandlerImpl(
   }
 
   function useSelected(): FlatEnvironment | undefined {
-    const allEnvironments = useStoreState(
-      (state) => state.environment.environments,
-    );
     const { search } = useLocation();
 
-    return determineSelected(allEnvironments, search);
+    return determineSelected(search);
   }
 
-  function determineSelected(
-    allEnvironments: RemoteData.Type<string, FlatEnvironment[]>,
-    search: string,
-  ): FlatEnvironment | undefined {
+  function determineSelected(search: string): FlatEnvironment | undefined {
     const searchHelper = new SearchHelper();
     const parsed = searchHelper.parse(search);
     const envId = parsed["env"];
 
-    if (envId && allEnvironments.kind === "Success") {
-      const env = allEnvironments.value.find(
+    if (envId && environmentsData.isSuccess) {
+      const env = environmentsData.data.find(
         (environment) => environment.id === envId,
       );
 

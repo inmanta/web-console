@@ -1,29 +1,34 @@
-import React, { useContext } from "react";
-import { RemoteData } from "@/Core";
-import { DependencyContext } from "@/UI";
+import React from "react";
 import { ErrorView, LoadingView } from "@/UI/Components";
 import { Provider } from "./Provider";
+import { useGetEnvironmentSettings } from "@/Data/Managers/V2/Environment/GetEnvironmentSettings";
 
 interface Props {
   environmentId: string;
 }
 
 export const Tab: React.FC<Props> = ({ environmentId }) => {
-  const { queryResolver } = useContext(DependencyContext);
-  const [settings] = queryResolver.useOneTime<"GetEnvironmentSettings">({
-    kind: "GetEnvironmentSettings",
-    environment: environmentId,
-  });
+  const {
+    data: settings,
+    isError,
+    error,
+    refetch,
+    isSuccess,
+  } = useGetEnvironmentSettings().useOneTime(environmentId);
 
-  return RemoteData.fold(
-    {
-      notAsked: () => null,
-      loading: () => <LoadingView ariaLabel="EnvironmentSettings-Loading" />,
-      failed: (error) => (
-        <ErrorView ariaLabel="EnvironmentSettings-Failed" message={error} />
-      ),
-      success: (settings) => <Provider settings={settings} />,
-    },
-    settings,
-  );
+  if (isError) {
+    return (
+      <ErrorView
+        ariaLabel="EnvironmentSettings-Failed"
+        message={error.message}
+        retry={refetch}
+      />
+    );
+  }
+
+  if (isSuccess) {
+    return <Provider settings={settings} />;
+  }
+
+  return <LoadingView ariaLabel="EnvironmentSettings-Loading" />;
 };

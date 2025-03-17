@@ -1,6 +1,5 @@
 import { createMemoryHistory } from "history";
 import { RemoteData } from "@/Core";
-import { getStoreInstance } from "@/Data";
 import { Environment } from "@/Test";
 import { PrimaryRouteManager } from "@/UI/Routing";
 import { EnvironmentHandlerImpl } from ".";
@@ -11,12 +10,7 @@ test("EnvironmentHandler updates environment correctly", () => {
   const history = createMemoryHistory({
     initialEntries: ["/resources?env=123"],
   });
-  const store = getStoreInstance();
   const env = Environment.filterable[0];
-
-  store
-    .getActions()
-    .environment.setEnvironments(RemoteData.success(Environment.filterable));
 
   const environmentHandler = EnvironmentHandlerImpl(
     () => history.location,

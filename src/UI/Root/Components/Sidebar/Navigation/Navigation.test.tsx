@@ -8,11 +8,10 @@ import {
 import { render, screen, within } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { axe, toHaveNoViolations } from "jest-axe";
-import { RemoteData, ServerStatus } from "@/Core";
+import { ServerStatus } from "@/Core";
 import {
   PrimaryFeatureManager,
   getStoreInstance,
-  GetServerStatusStateHelper,
   QueryResolverImpl,
   QueryManagerResolverImpl,
 } from "@/Data";
@@ -38,10 +37,7 @@ function setup(
   const scheduler = new StaticScheduler();
   const store = getStoreInstance();
 
-  store.dispatch.serverStatus.setData(RemoteData.success(serverStatus));
-  const featureManager = new PrimaryFeatureManager(
-    GetServerStatusStateHelper(store),
-  );
+  const featureManager = PrimaryFeatureManager();
   const queryResolver = new QueryResolverImpl(
     new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler),
   );

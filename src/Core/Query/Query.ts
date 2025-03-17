@@ -1,9 +1,5 @@
 import { RemoteData } from "@/Core/Language";
 import {
-  GetServerStatus,
-  GetServerStatusManifest,
-} from "@/Data/Managers/GetServerStatus/interface";
-import {
   GetVersionFile,
   GetVersionFileManifest,
 } from "@/Data/Managers/GetVersionFile/interface";
@@ -41,7 +37,6 @@ export type Query =
   | GetResourceLogs.Query
   | GetOrders.Query
   | GetOrderDetails.Query
-  | GetServerStatus
   | GetCallbacks.Query
   | GetFacts.Query
   | GetResourceFacts.Query
@@ -67,7 +62,6 @@ interface Manifest {
   GetDiagnostics: GetDiagnostics.Manifest;
   GetDiscoveredResources: GetDiscoveredResources.Manifest;
   GetMetrics: GetMetrics.Manifest;
-  GetServerStatus: GetServerStatusManifest;
   GetResources: GetResources.Manifest;
   GetResourceDetails: GetResourceDetails.Manifest;
   GetResourceHistory: GetResourceHistory.Manifest;

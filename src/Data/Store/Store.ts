@@ -55,10 +55,6 @@ import {
   CallbacksSlice,
   callbacksSlice,
 } from "@S/ServiceDetails/Data/CallbacksSlice";
-import { serverStatusSlice, ServerStatusSlice } from "@S/Status/Data/Store";
-import { environmentSlice, EnvironmentSlice } from "./EnvironmentSlice";
-
-import { projectsSlice, ProjectsSlice } from "./ProjectsSlice";
 import { resourcesSlice, ResourcesSlice } from "./ResourcesSlice";
 
 export interface StoreModel {
@@ -68,18 +64,15 @@ export interface StoreModel {
   discoveredResources: DiscoveredResourcesSlice;
   dryRunReport: DryRunReportSlice;
   dryRuns: DryRunsSlice;
-  environment: EnvironmentSlice;
   events: EventsSlice;
   facts: FactsSlice;
   notification: NotificationSlice;
   parameters: ParametersSlice;
-  projects: ProjectsSlice;
   resourceDetails: ResourceDetailsSlice;
   resourceFacts: ResourceFactsSlice;
   resourceHistory: ResourceHistorySlice;
   resourceLogs: ResourceLogsSlice;
   resources: ResourcesSlice;
-  serverStatus: ServerStatusSlice;
   orders: OrdersSlice;
   orderDetails: OrderDetailsSlice;
   versionedResourceDetails: VersionedResourceDetailsSlice;
@@ -93,18 +86,15 @@ export const storeModel: StoreModel = {
   discoveredResources: discoveredResourcesSlice,
   dryRunReport: dryRunReportSlice,
   dryRuns: dryRunsSlice,
-  environment: environmentSlice,
   events: eventsSlice,
   facts: factsSlice,
   notification: notificationSlice,
   parameters: parametersSlice,
-  projects: projectsSlice,
   resourceDetails: resourceDetailsSlice,
   resourceFacts: resourceFactsSlice,
   resourceHistory: resourceHistorySlice,
   resourceLogs: resourceLogsSlice,
   resources: resourcesSlice,
-  serverStatus: serverStatusSlice,
   orders: ordersSlice,
   orderDetails: orderDetailsSlice,
   versionedResourceDetails: versionedResourceDetailsSlice,

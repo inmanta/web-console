@@ -1,7 +1,6 @@
 import React from "react";
 import { DescriptionList } from "@patternfly/react-core";
 import { ProjectModel, Maybe, FlatEnvironment } from "@/Core";
-import { useGetProjects } from "@/Data/Managers/V2/Environment";
 import { useModifyEnvironment } from "@/Data/Managers/V2/Environment/ModifyEnvironment";
 import { useCreateProject } from "@/Data/Managers/V2/Project/CreateProject";
 import {
@@ -24,8 +23,6 @@ export const EnvironmentSettings: React.FC<Props> = ({
   projects,
 }) => {
   const { mutate: modifyEnvironment } = useModifyEnvironment(environment.id);
-  const { data, isError, error, refetch, isSuccess } =
-    useGetProjects().useOneTime();
   const { mutate: createProject } = useCreateProject();
 
   const onNameSubmit = async (name: string) => {

@@ -21,13 +21,6 @@ function setup(definition: DefinitionMap) {
   const environmentId = "env";
   const store = getStoreInstance();
 
-  store.dispatch.environment.setSettingsData({
-    environment: environmentId,
-    value: RemoteData.success({
-      settings: {},
-      definition,
-    }),
-  });
   const environmentModifier = EnvironmentModifierImpl();
 
   environmentModifier.setEnvironment(environmentId);
@@ -46,37 +39,14 @@ test("Given the environmentModifier When the server compile setting is requested
   );
 
   // No setting is specified, and the default is true
-  store.dispatch.environment.setEnvironmentDetailsById({
-    id: environmentId,
-    value: RemoteData.success({ ...EnvironmentDetails.a, settings: {} }),
-  });
-
   render(component);
 
   expect(await screen.findByTestId("server-compile-enabled")).toBeVisible();
 
   // Set the option explicitly to false
-  await act(async () => {
-    store.dispatch.environment.setEnvironmentDetailsById({
-      id: environmentId,
-      value: RemoteData.success({
-        ...EnvironmentDetails.a,
-        settings: { server_compile: false },
-      }),
-    });
-  });
   expect(await screen.findByTestId("server-compile-disabled")).toBeVisible();
 
   // Set the option explicitly to true
-  await act(async () => {
-    store.dispatch.environment.setEnvironmentDetailsById({
-      id: environmentId,
-      value: RemoteData.success({
-        ...EnvironmentDetails.a,
-        settings: { server_compile: true },
-      }),
-    });
-  });
   expect(await screen.findByTestId("server-compile-enabled")).toBeVisible();
 });
 
@@ -89,11 +59,6 @@ test("Given the environmentModifier When the missing setting is requested Then r
   );
 
   // No setting is specified, and the dafault is missing
-  store.dispatch.environment.setEnvironmentDetailsById({
-    id: environmentId,
-    value: RemoteData.success({ ...EnvironmentDetails.a, settings: {} }),
-  });
-
   render(component);
   //expect to see div element that indicates false value of the setting by its aria-label instead of error boundary pa
   expect(await screen.findByTestId("server-compile-disabled")).toBeVisible();

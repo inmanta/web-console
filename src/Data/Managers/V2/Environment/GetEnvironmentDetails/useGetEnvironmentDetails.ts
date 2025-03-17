@@ -1,6 +1,6 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { Environment } from "@/Core";
-import { useGet } from "../../helpers";
+import { useGetWithoutEnv } from "../../helpers";
 
 /**
  * Return Signature of the useGetEnvironmentDetails React Query
@@ -18,7 +18,7 @@ interface GetEnvironmentDetails {
  * @returns {UseQueryResult<Environment, Error>} returns.useContinuous - Fetch environment details with continuous polling.
  */
 export const useGetEnvironmentDetails = (): GetEnvironmentDetails => {
-  const get = useGet()<{ data: Environment }>;
+  const get = useGetWithoutEnv()<{ data: Environment }>;
 
   return {
     useOneTime: (id: string): UseQueryResult<Environment, Error> =>
