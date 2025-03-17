@@ -3,7 +3,7 @@ import {
   UseMutationResult,
   useMutation,
 } from "@tanstack/react-query";
-import { useGet, useGetZipWithoutEnv } from "../../helpers";
+import { useGetZipWithoutEnv } from "../../helpers";
 
 /**
  * React Query hook for downloading support archive.

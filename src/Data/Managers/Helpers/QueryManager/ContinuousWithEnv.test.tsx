@@ -6,7 +6,6 @@ import { StoreProvider } from "easy-peasy";
 import { Either, RemoteData } from "@/Core";
 import { QueryManagerResolverImpl, QueryResolverImpl } from "@/Data";
 import { getStoreInstance } from "@/Data/Store";
-import { drawerQuery } from "@/Slices/Notification/Core/Query";
 import { DeferredApiHelper, dependencies, StaticScheduler } from "@/Test";
 import {
   DependencyContext,
@@ -108,7 +107,10 @@ const Component: React.FC = () => {
 
   const { queryResolver } = useContext(DependencyContext);
 
-  queryResolver.useContinuous<"GetNotifications">(drawerQuery);
+  queryResolver.useContinuous<"GetEnvironments">({
+    kind: "GetEnvironments",
+    details: true,
+  });
 
   return (
     <div>

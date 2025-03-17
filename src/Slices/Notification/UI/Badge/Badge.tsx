@@ -1,80 +1,78 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   NotificationBadge,
   NotificationBadgeVariant,
 } from "@patternfly/react-core";
-import { RemoteData } from "@/Core";
+import { UseQueryResult } from "@tanstack/react-query";
+import { PageSize } from "@/Core";
+import {
+  NotificationResponse,
+  useGetNotifications,
+} from "@/Data/Managers/V2/Notification/GetNotifications";
 import { ToastAlert } from "@/UI/Components";
-import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { Notification } from "@S/Notification/Core/Domain";
-import { drawerQuery, ViewData } from "@S/Notification/Core/Query";
 
 export const Badge: React.FC<{ onClick(): void }> = ({ onClick }) => {
-  const { queryResolver } = useContext(DependencyContext);
-  const [data] = queryResolver.useContinuous<"GetNotifications">(drawerQuery);
+  const response = useGetNotifications({
+    pageSize: PageSize.from("250"),
+    origin: "drawer",
+    currentPage: { kind: "CurrentPage", value: "" },
+  }).useContinuous();
 
-  return <View {...{ data, onClick }} />;
+  return <View {...{ response, onClick }} />;
 };
 
 interface Props {
   onClick(): void;
-  data: ViewData;
+  response: UseQueryResult<NotificationResponse, Error>;
 }
 
-const View: React.FC<Props> = ({ data, onClick }) => {
+const View: React.FC<Props> = ({ response, onClick }) => {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (!RemoteData.isFailed(data)) return;
-    setError(data.value);
-  }, [data]);
+    if (!response.isError) return;
+    setError(response.error.message);
+  }, [response]);
 
-  return RemoteData.fold(
-    {
-      notAsked: () => (
+  if (response.isSuccess) {
+    const variant = getVariantFromNotifications(response.data.data);
+
+    return (
+      <NotificationBadge
+        aria-label="Badge"
+        data-variant={variant}
+        variant={variant}
+        onClick={onClick}
+      />
+    );
+  }
+
+  if (response.isError) {
+    return (
+      <>
+        <ToastAlert
+          data-testid="ToastAlert"
+          message={error}
+          title={words("error")}
+          setMessage={setError}
+        />
         <NotificationBadge
           aria-label="Badge"
           variant={NotificationBadgeVariant.read}
           isDisabled
         />
-      ),
-      loading: () => (
-        <NotificationBadge
-          aria-label="Badge"
-          variant={NotificationBadgeVariant.read}
-          isDisabled
-        />
-      ),
-      failed: () => (
-        <>
-          <ToastAlert
-            data-testid="ToastAlert"
-            message={error}
-            title={words("error")}
-            setMessage={setError}
-          />
-          <NotificationBadge
-            aria-label="Badge"
-            variant={NotificationBadgeVariant.read}
-            isDisabled
-          />
-        </>
-      ),
-      success: ({ data: notifications }) => {
-        const variant = getVariantFromNotifications(notifications);
+      </>
+    );
+  }
 
-        return (
-          <NotificationBadge
-            aria-label="Badge"
-            data-variant={variant}
-            variant={variant}
-            onClick={onClick}
-          />
-        );
-      },
-    },
-    data,
+  return (
+    <NotificationBadge
+      aria-label="Badge"
+      variant={NotificationBadgeVariant.read}
+      isDisabled
+    />
   );
 };
 

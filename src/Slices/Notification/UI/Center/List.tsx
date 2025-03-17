@@ -1,10 +1,10 @@
 import React from "react";
 import { DataList } from "@patternfly/react-core";
-import { Manifest } from "@S/Notification/Core/Query";
+import { NotificationResponse } from "@/Data/Managers/V2/Notification/GetNotifications";
 import { Item } from "./Item";
 
 interface Props {
-  data: Manifest["usedData"]["data"];
+  data: NotificationResponse["data"];
   onUpdate(): void;
 }
 

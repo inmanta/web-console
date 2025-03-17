@@ -35,7 +35,6 @@ import * as GetVersionedResourceDetails from "@S/DesiredStateResourceDetails/Cor
 import * as GetDiagnostics from "@S/Diagnose/Core/Query";
 import * as GetInstanceEvents from "@S/Events/Core/Query";
 import * as GetFacts from "@S/Facts/Core/Query";
-import * as GetNotifications from "@S/Notification/Core/Query";
 import * as GetOrderDetails from "@S/OrderDetails/Core/Query";
 import * as GetOrders from "@S/Orders/Core/Query";
 import * as GetParameters from "@S/Parameters/Core/Query";
@@ -78,7 +77,6 @@ export type Query =
   | GetDryRuns.Query
   | GetDryRunReport.Query
   | GetVersionedResourceDetails.Query
-  | GetNotifications.Query
   | GetVersionFile;
 
 export type Type = Query;
@@ -116,7 +114,6 @@ interface Manifest {
   GetDryRuns: GetDryRuns.Manifest;
   GetDryRunReport: GetDryRunReport.Manifest;
   GetVersionedResourceDetails: GetVersionedResourceDetails.Manifest;
-  GetNotifications: GetNotifications.Manifest;
   GetVersionFile: GetVersionFileManifest;
 }
 

@@ -16,12 +16,16 @@ import {
   NotificationDrawerList,
 } from "@patternfly/react-core";
 import { EllipsisVIcon } from "@patternfly/react-icons";
-import { RemoteData } from "@/Core";
+import { UseQueryResult } from "@tanstack/react-query";
+import { PageSize } from "@/Core";
+import {
+  NotificationResponse,
+  useGetNotifications,
+} from "@/Data/Managers/V2/Notification/GetNotifications";
 import { DependencyContext } from "@/UI/Dependency";
 import { useNavigateTo } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { Body } from "@S/Notification/Core/Domain";
-import { drawerQuery, ViewData } from "@S/Notification/Core/Query";
 import { Item, OnUpdate } from "./Item";
 
 interface Props {
@@ -35,8 +39,12 @@ export const Drawer: React.FC<Props> = ({
   isDrawerOpen,
   drawerRef,
 }) => {
-  const { commandResolver, queryResolver } = useContext(DependencyContext);
-  const data = queryResolver.useReadOnly<"GetNotifications">(drawerQuery);
+  const { commandResolver } = useContext(DependencyContext);
+  const response = useGetNotifications({
+    pageSize: PageSize.from("250"),
+    origin: "drawer",
+    currentPage: { kind: "CurrentPage", value: "" },
+  }).useContinuous();
 
   const trigger = commandResolver.useGetTrigger<"UpdateNotification">({
     kind: "UpdateNotification",
@@ -60,22 +68,23 @@ export const Drawer: React.FC<Props> = ({
     };
   }, [drawerRef, isDrawerOpen, onClose]);
 
-  return <View {...{ data, onClose, isDrawerOpen, trigger, drawerRef }} />;
+  return <View {...{ response, onClose, isDrawerOpen, trigger, drawerRef }} />;
 };
 
 interface ViewProps extends Props {
-  data: ViewData;
+  response: UseQueryResult<NotificationResponse, Error>;
   trigger(body: Body, ids: string[]): void;
 }
 
-const View: React.FC<ViewProps> = ({ data, onClose, trigger, drawerRef }) => {
-  const count = RemoteData.withFallback(
-    RemoteData.mapSuccess(
-      (info) => info.data.filter((n) => !n.read).length,
-      data,
-    ),
-    undefined,
-  );
+const View: React.FC<ViewProps> = ({
+  response,
+  onClose,
+  trigger,
+  drawerRef,
+}) => {
+  const count = response.isSuccess
+    ? response.data.data.filter((n) => !n.read).length
+    : 0;
 
   const getOnUpdate =
     (ids: string[]): OnUpdate =>
@@ -84,17 +93,17 @@ const View: React.FC<ViewProps> = ({ data, onClose, trigger, drawerRef }) => {
     };
 
   const onClearAll = () => {
-    if (!RemoteData.isSuccess(data)) return;
-    getOnUpdate(data.value.data.map((notification) => notification.id))({
+    if (!response.isSuccess) return;
+    getOnUpdate(response.data.data.map((notification) => notification.id))({
       read: true,
       cleared: true,
     });
   };
 
   const onReadAll = () => {
-    if (!RemoteData.isSuccess(data)) return;
+    if (!response.isSuccess) return;
     getOnUpdate(
-      data.value.data
+      response.data.data
         .filter((notification) => !notification.read)
         .map((notification) => notification.id),
     )({ read: true });
@@ -111,23 +120,16 @@ const View: React.FC<ViewProps> = ({ data, onClose, trigger, drawerRef }) => {
       </NotificationDrawerHeader>
       <NotificationDrawerBody>
         <NotificationDrawerList>
-          {RemoteData.fold(
-            {
-              notAsked: () => null,
-              loading: () => null,
-              failed: () => null,
-              success: ({ data }) =>
-                data.map((notification) => (
-                  <Item
-                    data-testid="menuitem"
-                    {...{ notification }}
-                    key={notification.id}
-                    onUpdate={getOnUpdate([notification.id])}
-                  />
-                )),
-            },
-            data,
-          )}
+          {response.isSuccess
+            ? response.data.data.map((notification) => (
+                <Item
+                  data-testid="menuitem"
+                  {...{ notification }}
+                  key={notification.id}
+                  onUpdate={getOnUpdate([notification.id])}
+                />
+              ))
+            : null}
         </NotificationDrawerList>
       </NotificationDrawerBody>
     </NotificationDrawer>

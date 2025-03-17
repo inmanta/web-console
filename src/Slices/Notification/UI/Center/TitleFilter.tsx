@@ -1,11 +1,11 @@
 import React from "react";
 import { FreeTextFilter } from "@/UI/Components/Filters";
 import { words } from "@/UI/words";
-import { Filter } from "@S/Notification/Core/Query";
+import { NotificationFilter } from "@/Data/Managers/V2/Notification/GetNotifications";
 
 interface Props {
-  filter: Filter;
-  setFilter: (filter: Filter) => void;
+  filter: NotificationFilter;
+  setFilter: (filter: NotificationFilter) => void;
 }
 
 export const TitleFilter: React.FC<Props> = ({ filter, setFilter }) => {

@@ -38,10 +38,6 @@ import {
 import { GetDesiredStateResourceDetailsQueryManager } from "@S/DesiredStateResourceDetails/Data";
 import { EventsQueryManager, EventsStateHelper } from "@S/Events/Data";
 import { GetFactsQueryManager } from "@S/Facts/Data";
-import {
-  NotificationContinuousQueryManager,
-  NotificationReadOnlyQueryManager,
-} from "@S/Notification/Data";
 import { GetOrderDetailsQueryManager } from "@S/OrderDetails/Data/QueryManager";
 import { GetOrdersStateHelper } from "@S/Orders/Data/StateHelper";
 import {
@@ -186,12 +182,6 @@ export class QueryManagerResolverImpl implements QueryManagerResolver {
         this.store,
         this.scheduler,
       ),
-      NotificationContinuousQueryManager(
-        this.apiHelper,
-        this.store,
-        this.scheduler,
-      ),
-      NotificationReadOnlyQueryManager(this.store),
     ];
   }
 }

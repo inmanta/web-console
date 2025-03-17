@@ -1,5 +1,6 @@
-import { PageSize, Query } from "@/Core";
+import { PageSize } from "@/Core";
 import { getUrl } from "./getUrl";
+import { GetNotificationsParams } from "./useGetNotifications";
 
 it.each`
   filter                 | currentPage                                         | pageSize | url
@@ -9,9 +10,8 @@ it.each`
 `(
   "getUrl returns correct url for agents with filter $filter, currentPage: $currentPage, and pageSize: $pageSize",
   ({ filter, pageSize, url, currentPage }) => {
-    const query: Query.SubQuery<"GetNotifications"> = {
+    const query: GetNotificationsParams = {
       origin: "center",
-      kind: "GetNotifications",
       pageSize: PageSize.from(pageSize),
       filter,
       currentPage: { kind: "CurrentPage", value: currentPage },

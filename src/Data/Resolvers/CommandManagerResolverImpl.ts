@@ -27,7 +27,6 @@ import {
   CreateProjectCommandManager,
 } from "@S/CreateEnvironment/Data";
 import { DeleteEnvironmentCommandManager, ProjectsUpdater } from "@S/Home/Data";
-import { UpdateNotificationCommandManager } from "@S/Notification/Data/CommandManager";
 import {
   CallbacksStateHelper,
   CallbacksUpdater,
@@ -125,7 +124,6 @@ export class CommandManagerResolverImpl implements CommandManagerResolver {
         new GetAgentsUpdater(this.store, this.apiHelper),
       ),
       TriggerDryRun.CommandManager(this.apiHelper),
-      UpdateNotificationCommandManager(this.apiHelper, this.store),
     ];
   }
 }

@@ -30,10 +30,6 @@ import {
   VersionedResourceDetailsSlice,
 } from "@S/DesiredStateResourceDetails/Data/Store";
 import { factsSlice, FactsSlice } from "@S/Facts/Data/Store";
-import {
-  notificationSlice,
-  NotificationSlice,
-} from "@S/Notification/Data/Store";
 import { parametersSlice, ParametersSlice } from "@S/Parameters/Data/Store";
 import {
   resourceDetailsSlice,
@@ -71,7 +67,6 @@ export interface StoreModel {
   environment: EnvironmentSlice;
   events: EventsSlice;
   facts: FactsSlice;
-  notification: NotificationSlice;
   parameters: ParametersSlice;
   projects: ProjectsSlice;
   resourceDetails: ResourceDetailsSlice;
@@ -96,7 +91,6 @@ export const storeModel: StoreModel = {
   environment: environmentSlice,
   events: eventsSlice,
   facts: factsSlice,
-  notification: notificationSlice,
   parameters: parametersSlice,
   projects: projectsSlice,
   resourceDetails: resourceDetailsSlice,

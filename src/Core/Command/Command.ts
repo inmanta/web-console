@@ -16,10 +16,6 @@ import {
   GenerateTokenManifest,
 } from "@/Data/Managers/GenerateToken/interface";
 import {
-  GetSupportArchive,
-  GetSupportArchiveManifest,
-} from "@/Data/Managers/GetSupportArchive/interface";
-import {
   HaltEnvironment,
   HaltEnvironmentManifest,
 } from "@/Data/Managers/HaltEnvironment/interface";
@@ -58,7 +54,6 @@ type Command =
   | DeleteEnvironment.Command
   | Deploy
   | GenerateToken
-  | GetSupportArchive
   | HaltEnvironment
   | ModifyEnvironment
   | Repair
@@ -86,7 +81,6 @@ interface Manifest {
   DeleteEnvironment: DeleteEnvironment.Manifest;
   Deploy: DeployManifest;
   GenerateToken: GenerateTokenManifest;
-  GetSupportArchive: GetSupportArchiveManifest;
   HaltEnvironment: HaltEnvironmentManifest;
   ModifyEnvironment: ModifyEnvironmentManifest;
   Repair: RepairManifest;
