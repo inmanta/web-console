@@ -1,16 +1,17 @@
 import React, { act } from "react";
 import { Page } from "@patternfly/react-core";
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { axe, toHaveNoViolations } from "jest-axe";
+import { delay, http, HttpResponse } from "msw";
+import { setupServer } from "msw/node";
 import { ArchiveHelper, Deferred, Either, RemoteData } from "@/Core";
 import {
-  CommandResolverImpl,
   GetServerStatusContinuousQueryManager,
   GetServerStatusStateHelper,
   getStoreInstance,
-  GetSupportArchiveCommandManager,
   PrimaryArchiveHelper,
   PrimaryFeatureManager,
   QueryResolverImpl,
@@ -18,7 +19,6 @@ import {
 import {
   DeferredApiHelper,
   dependencies,
-  DynamicCommandManagerResolverImpl,
   DynamicQueryManagerResolverImpl,
   ServerStatus,
   StaticScheduler,
@@ -26,7 +26,6 @@ import {
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import { StatusPage } from ".";
-
 expect.extend(toHaveNoViolations);
 
 export class MockArchiveHelper implements ArchiveHelper {
@@ -48,6 +47,7 @@ export class MockArchiveHelper implements ArchiveHelper {
 }
 
 function setup(useMockArchiveHelper = false) {
+  const client = new QueryClient();
   const store = getStoreInstance();
 
   store.dispatch.serverStatus.setData(
@@ -62,12 +62,6 @@ function setup(useMockArchiveHelper = false) {
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolverImpl([getServerStatusQueryManager]),
   );
-  const getSupportArchiveCommandManager = new GetSupportArchiveCommandManager(
-    apiHelper,
-  );
-  const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolverImpl([getSupportArchiveCommandManager]),
-  );
 
   const featureManager = new PrimaryFeatureManager(
     GetServerStatusStateHelper(store),
@@ -77,21 +71,22 @@ function setup(useMockArchiveHelper = false) {
     useMockArchiveHelper ? new MockArchiveHelper() : dependencies.archiveHelper;
 
   const component = (
-    <DependencyProvider
-      dependencies={{
-        ...dependencies,
-        queryResolver,
-        commandResolver,
-        featureManager,
-        archiveHelper,
-      }}
-    >
-      <StoreProvider store={store}>
-        <Page>
-          <StatusPage />
-        </Page>
-      </StoreProvider>
-    </DependencyProvider>
+    <QueryClientProvider client={client}>
+      <DependencyProvider
+        dependencies={{
+          ...dependencies,
+          queryResolver,
+          featureManager,
+          archiveHelper,
+        }}
+      >
+        <StoreProvider store={store}>
+          <Page>
+            <StatusPage />
+          </Page>
+        </StoreProvider>
+      </DependencyProvider>
+    </QueryClientProvider>
   );
 
   return {
@@ -100,6 +95,11 @@ function setup(useMockArchiveHelper = false) {
     archiveHelper,
   };
 }
+const server = setupServer();
+
+beforeAll(() => server.listen());
+afterEach(() => server.resetHandlers());
+afterAll(() => server.close());
 
 test("GIVEN StatusPage THEN shows server status", async () => {
   const { component, apiHelper } = setup();
@@ -183,6 +183,13 @@ test("GIVEN StatusPage with support extension THEN download button is present", 
 });
 
 test("GIVEN StatusPage with support extension WHEN user click download THEN an archive is created", async () => {
+  server.use(
+    http.get("/api/v2/support", async () => {
+      await delay(100);
+
+      return HttpResponse.json(ServerStatus.supportArchiveBase64);
+    }),
+  );
   const { component, apiHelper } = setup();
 
   render(component);
@@ -205,15 +212,6 @@ test("GIVEN StatusPage with support extension WHEN user click download THEN an a
     words("status.supportArchive.action.downloading"),
   );
 
-  expect(apiHelper.pendingRequests).toEqual([
-    { method: "GET", url: "/api/v2/support" },
-  ]);
-
-  await act(async () => {
-    await apiHelper.resolve(
-      Either.right({ data: ServerStatus.supportArchiveBase64 }),
-    );
-  });
   await waitFor(() =>
     expect(downloadButton).toHaveTextContent(
       words("status.supportArchive.action.download"),
@@ -228,6 +226,13 @@ test("GIVEN StatusPage with support extension WHEN user click download THEN an a
 });
 
 test("GIVEN StatusPage with support extension WHEN user click download THEN button goes through correct phases", async () => {
+  server.use(
+    http.get("/api/v2/support", async () => {
+      await delay(100);
+
+      return HttpResponse.json(ServerStatus.supportArchiveBase64);
+    }),
+  );
   const { component, apiHelper, archiveHelper } = setup(true);
 
   render(component);
@@ -249,16 +254,6 @@ test("GIVEN StatusPage with support extension WHEN user click download THEN butt
     words("status.supportArchive.action.downloading"),
   );
 
-  expect(apiHelper.pendingRequests).toEqual([
-    { method: "GET", url: "/api/v2/support" },
-  ]);
-
-  await act(async () => {
-    await apiHelper.resolve(
-      Either.right({ data: ServerStatus.supportArchiveBase64 }),
-    );
-  });
-
   (archiveHelper as MockArchiveHelper).resolve(
     new Blob(["testing"], { type: "application/octet-stream" }),
   );
@@ -276,6 +271,11 @@ test("GIVEN StatusPage with support extension WHEN user click download THEN butt
 });
 
 test("GIVEN StatusPage with support extension WHEN user click download and response is error THEN error is shown", async () => {
+  server.use(
+    http.get("/api/v2/support", () => {
+      return HttpResponse.json({ message: "error" }, { status: 500 });
+    }),
+  );
   const { component, apiHelper } = setup();
 
   render(component);
@@ -289,10 +289,6 @@ test("GIVEN StatusPage with support extension WHEN user click download and respo
   });
 
   await userEvent.click(downloadButton);
-
-  await act(async () => {
-    await apiHelper.resolve(Either.left("error"));
-  });
 
   expect(downloadButton).toHaveTextContent(
     words("status.supportArchive.action.download"),

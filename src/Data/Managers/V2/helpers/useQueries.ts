@@ -80,6 +80,83 @@ export const useGetWithoutEnv = (options?: { message?: string }) => {
 };
 
 /**
+ * Custom hook to perform a GET Zip request.
+ *
+ * @param {Object} [options] - Optional configuration for the GET request.
+ * @param {string} [options.message] - Optional message to include in the request headers.
+ *
+ * This hook constructs the base URL and headers, and provides a function to perform a GET request to the specified path.
+ *
+ * @returns {Function} A function that performs a GET zip request and returns the response blob.
+ *
+ * @template- The type of the response data.
+ */
+export const useGetZip = (options?: { message?: string }) => {
+  const baseUrlManager = new PrimaryBaseUrlManager(
+    globalThis.location.origin,
+    globalThis.location.pathname,
+  );
+  const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
+  const { environmentHandler } = useContext(DependencyContext);
+  const env = environmentHandler.useId();
+  const { createHeaders, handleErrors } = useFetchHelpers();
+  const headers = createHeaders({ env, message: options?.message });
+
+  return async (path: string): Promise<Blob> => {
+    try {
+      const response = await fetch(`${baseUrl}${path}`, {
+        headers,
+      });
+
+      await handleErrors(response);
+
+      return response.blob();
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      throw error;
+    }
+  };
+};
+
+/**
+ * Custom hook to perform a GET zip request.
+ *
+ *  @param {Object} [options] - Optional configuration for the GET request.
+ * @param {string} [options.message] - Optional message to include in the request headers.
+ *
+ * This hook constructs the base URL and headers, and provides a function to perform a GET request to the specified path.
+ * In comparison to useGet, this hook does not use the environment context, so it can be used only to perform requests that are environment-agnostic.
+ *
+ * @returns {Function<>} A function that performs a GET zip  request and returns the response blob.
+ *
+ * @template- The type of the response data.
+ */
+export const useGetZipWithoutEnv = (options?: { message?: string }) => {
+  const baseUrlManager = new PrimaryBaseUrlManager(
+    globalThis.location.origin,
+    globalThis.location.pathname,
+  );
+  const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
+  const { createHeaders, handleErrors } = useFetchHelpers();
+  const headers = createHeaders({ message: options?.message });
+
+  return async (path: string): Promise<Blob> => {
+    try {
+      const response = await fetch(`${baseUrl}${path}`, {
+        headers,
+      });
+
+      await handleErrors(response);
+
+      return response.blob();
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      throw error;
+    }
+  };
+};
+
+/**
  * Custom hook to create a POST request function.
  *
  * @param {Object} [options] - Optional configuration for the POST request.

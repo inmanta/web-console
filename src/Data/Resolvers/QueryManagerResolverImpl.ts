@@ -67,8 +67,6 @@ import {
   GetEnvironmentsContinuousQueryManager,
   GetEnvironmentsContinuousStateHelper,
 } from "../Managers/GetEnvironmentsContinuous";
-import { GetMetricsQueryManager } from "../Managers/GetMetrics";
-import { GetMetricsStateHelper } from "../Managers/GetMetrics/StateHelper";
 
 export class QueryManagerResolverImpl implements QueryManagerResolver {
   private managers: QueryManager[] = [];
@@ -117,7 +115,6 @@ export class QueryManagerResolverImpl implements QueryManagerResolver {
         GetServerStatusStateHelper(this.store),
         this.slowScheduler,
       ),
-      GetMetricsQueryManager(this.apiHelper, GetMetricsStateHelper(this.store)),
       GetEnvironmentSettingsQueryManager(
         this.apiHelper,
         GetEnvironmentSettingsStateHelper(this.store),

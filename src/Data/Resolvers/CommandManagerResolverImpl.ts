@@ -12,7 +12,6 @@ import {
   GenerateTokenCommandManager,
   RepairCommandManager,
   DeployCommandManager,
-  GetSupportArchiveCommandManager,
   ControlAgentCommandManager,
   TriggerDryRun,
 } from "@/Data/Managers";
@@ -88,7 +87,6 @@ export class CommandManagerResolverImpl implements CommandManagerResolver {
           this.apiHelper,
         ),
       ),
-      new GetSupportArchiveCommandManager(this.apiHelper),
       HaltEnvironmentCommandManager(
         this.apiHelper,
         environmentDetailsStateHelper,
