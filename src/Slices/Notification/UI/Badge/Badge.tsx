@@ -41,7 +41,7 @@ const View: React.FC<Props> = ({ response, onClick }) => {
 
     return (
       <NotificationBadge
-        aria-label="Badge"
+        aria-label="Badge-Success"
         data-variant={variant}
         variant={variant}
         onClick={onClick}
@@ -59,7 +59,7 @@ const View: React.FC<Props> = ({ response, onClick }) => {
           setMessage={setError}
         />
         <NotificationBadge
-          aria-label="Badge"
+          aria-label="Badge-Error"
           variant={NotificationBadgeVariant.read}
           isDisabled
         />

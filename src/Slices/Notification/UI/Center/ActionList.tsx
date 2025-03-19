@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import {
   Dropdown,
   DropdownItem,
@@ -6,7 +6,7 @@ import {
   MenuToggleElement,
 } from "@patternfly/react-core";
 import { EllipsisVIcon } from "@patternfly/react-icons";
-import { DependencyContext } from "@/UI/Dependency";
+import { useUpdateNotification } from "@/Data/Managers/V2/Notification/UpdateNotification";
 import { words } from "@/UI/words";
 
 interface Props {
@@ -16,15 +16,15 @@ interface Props {
 }
 
 export const ActionList: React.FC<Props> = ({ read, id, onUpdate }) => {
-  const { commandResolver } = useContext(DependencyContext);
   const [isOpen, setIsOpen] = useState(false);
-  const trigger = commandResolver.useGetTrigger<"UpdateNotification">({
-    kind: "UpdateNotification",
-    origin: "center",
+  const { mutate } = useUpdateNotification({
+    onSuccess: () => {
+      onUpdate();
+    },
   });
 
-  const onRead = () => trigger({ read: true }, [id], onUpdate);
-  const onUnread = () => trigger({ read: false }, [id], onUpdate);
+  const onRead = () => mutate({ body: { read: true }, ids: [id] });
+  const onUnread = () => mutate({ body: { read: false }, ids: [id] });
 
   const onToggleClick = () => {
     setIsOpen(!isOpen);

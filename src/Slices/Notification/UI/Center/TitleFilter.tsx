@@ -1,7 +1,7 @@
 import React from "react";
+import { NotificationFilter } from "@/Data/Managers/V2/Notification/GetNotifications";
 import { FreeTextFilter } from "@/UI/Components/Filters";
 import { words } from "@/UI/words";
-import { NotificationFilter } from "@/Data/Managers/V2/Notification/GetNotifications";
 
 interface Props {
   filter: NotificationFilter;

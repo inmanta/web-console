@@ -1,8 +1,4 @@
-import {
-  UseQueryResult,
-  useQuery,
-  UseQueryOptions,
-} from "@tanstack/react-query";
+import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { PageSize, Pagination } from "@/Core/Domain";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { getPaginationHandlers } from "@/Data/Managers/Helpers/Pagination/getPaginationHandlers";
@@ -53,7 +49,6 @@ interface GetNotifications {
  */
 export const useGetNotifications = (
   params: GetNotificationsParams,
-  options?: UseQueryOptions<NotificationResponse, Error>,
 ): GetNotifications => {
   const get = useGet()<ResponseBody>;
 
@@ -72,7 +67,6 @@ export const useGetNotifications = (
           ...data,
           handlers: getPaginationHandlers(data.links, data.metadata),
         }),
-        ...options,
       }),
     useContinuous: () =>
       useQuery({
@@ -89,7 +83,6 @@ export const useGetNotifications = (
           ...data,
           handlers: getPaginationHandlers(data.links, data.metadata),
         }),
-        ...options,
       }),
   };
 };

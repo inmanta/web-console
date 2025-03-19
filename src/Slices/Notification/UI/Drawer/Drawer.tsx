@@ -1,9 +1,4 @@
-import React, {
-  MutableRefObject,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import React, { MutableRefObject, useEffect, useState } from "react";
 import {
   Dropdown,
   DropdownItem,
@@ -16,16 +11,18 @@ import {
   NotificationDrawerList,
 } from "@patternfly/react-core";
 import { EllipsisVIcon } from "@patternfly/react-icons";
-import { UseQueryResult } from "@tanstack/react-query";
+import { UseMutateFunction, UseQueryResult } from "@tanstack/react-query";
 import { PageSize } from "@/Core";
 import {
   NotificationResponse,
   useGetNotifications,
 } from "@/Data/Managers/V2/Notification/GetNotifications";
-import { DependencyContext } from "@/UI/Dependency";
+import {
+  UpdateNotificationParams,
+  useUpdateNotification,
+} from "@/Data/Managers/V2/Notification/UpdateNotification";
 import { useNavigateTo } from "@/UI/Routing";
 import { words } from "@/UI/words";
-import { Body } from "@S/Notification/Core/Domain";
 import { Item, OnUpdate } from "./Item";
 
 interface Props {
@@ -39,16 +36,17 @@ export const Drawer: React.FC<Props> = ({
   isDrawerOpen,
   drawerRef,
 }) => {
-  const { commandResolver } = useContext(DependencyContext);
   const response = useGetNotifications({
     pageSize: PageSize.from("250"),
     origin: "drawer",
     currentPage: { kind: "CurrentPage", value: "" },
   }).useContinuous();
 
-  const trigger = commandResolver.useGetTrigger<"UpdateNotification">({
-    kind: "UpdateNotification",
-    origin: "drawer",
+  const { mutate } = useUpdateNotification({
+    onSuccess: () => {
+      onClose();
+      response.refetch();
+    },
   });
 
   useEffect(() => {
@@ -68,18 +66,18 @@ export const Drawer: React.FC<Props> = ({
     };
   }, [drawerRef, isDrawerOpen, onClose]);
 
-  return <View {...{ response, onClose, isDrawerOpen, trigger, drawerRef }} />;
+  return <View {...{ response, onClose, isDrawerOpen, mutate, drawerRef }} />;
 };
 
 interface ViewProps extends Props {
   response: UseQueryResult<NotificationResponse, Error>;
-  trigger(body: Body, ids: string[]): void;
+  mutate: UseMutateFunction<void, Error, UpdateNotificationParams, unknown>;
 }
 
 const View: React.FC<ViewProps> = ({
   response,
   onClose,
-  trigger,
+  mutate,
   drawerRef,
 }) => {
   const count = response.isSuccess
@@ -88,8 +86,8 @@ const View: React.FC<ViewProps> = ({
 
   const getOnUpdate =
     (ids: string[]): OnUpdate =>
-    async (body) => {
-      trigger(body, ids);
+    (body) => {
+      mutate({ body, ids });
     };
 
   const onClearAll = () => {
