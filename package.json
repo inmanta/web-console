@@ -182,6 +182,13 @@
   },
   "resolutions": {
     "micromatch": "^4.0.8",
+    "minimist": "^1.2.6",
+    "nanoid": "^3.3.8",
+    "node-forge": "^1.0.0",
+    "nth-check": "^2.0.1",
+    "path-to-regexp@^6.2.0": "8.0.0",
+    "serialize-javascript": "6.0.2",
+    "undici": "^5.28.5",
     "webpack": "^5.94.0",
     "path-to-regexp@0.1.7": "0.1.10",
     "path-to-regexp": "8.0.0",
@@ -191,19 +198,15 @@
     "trim": "^0.0.3",
     "glob-parent": "^5.1.2",
     "ansi-regex": "^5.0.1",
-    "nth-check": "^2.0.1",
     "browserslist": "^4.16.5",
     "json-schema": "^0.4.0",
-    "node-forge": "^1.0.0",
-    "minimist": "^1.2.6",
     "simple-git": "^3.5.0",
     "async": "^3.2.2",
     "terser": "^5.14.2",
     "loader-utils": "2.0.4 || 1.4.2",
     "word-wrap": "^1.2.4",
-    "follow-redirects": "^1.15.4",
-    "undici": "^5.28.5",
-    "ws": "^8.17.1"
+    "ws": "^8.17.1",
+    "@babel/runtime": "^7.26.10"
   },
   "madge": {
     "fileExtensions": [
