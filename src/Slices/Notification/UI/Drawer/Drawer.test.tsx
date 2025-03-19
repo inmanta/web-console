@@ -98,239 +98,241 @@ const server = setupServer(
   }),
 );
 
-beforeAll(() => {
-  server.listen();
-});
-beforeEach(() => {
-  response = [Mock.unread, Mock.error, Mock.read, Mock.withoutUri];
-  server.resetHandlers();
-});
-afterAll(() => {
-  server.close();
-});
-
-test("Given Drawer Then a list of notifications are shown", async () => {
-  const { component } = setup();
-
-  render(component);
-
-  expect(
-    await screen.findByRole("generic", { name: "NotificationDrawer" }),
-  ).toBeVisible();
-
-  expect(
-    await screen.findAllByRole("listitem", { name: "NotificationItem" }),
-  ).toHaveLength(4);
-
-  await act(async () => {
-    const results = await axe(document.body);
-
-    expect(results).toHaveNoViolations();
+describe("Drawer", () => {
+  beforeAll(() => {
+    server.listen();
   });
-});
+  beforeEach(() => {
+    response = [Mock.unread, Mock.error, Mock.read, Mock.withoutUri];
+    server.resetHandlers();
+  });
+  afterAll(() => {
+    server.close();
+  });
 
-test("Given Drawer When clicking on 'Clear all' Then all notifications are cleared", async () => {
-  const { component } = setup();
+  test("Given Drawer Then a list of notifications are shown", async () => {
+    const { component } = setup();
 
-  render(component);
+    render(component);
 
-  await userEvent.click(
-    await screen.findByRole("button", { name: "NotificationListActions" }),
-  );
-
-  await userEvent.click(screen.getByRole("menuitem", { name: "Clear all" }));
-
-  await waitFor(() => {
     expect(
-      screen.queryAllByRole("listitem", { name: "NotificationItem" }),
-    ).toStrictEqual([]);
+      await screen.findByRole("generic", { name: "NotificationDrawer" }),
+    ).toBeVisible();
+
+    expect(
+      await screen.findAllByRole("listitem", { name: "NotificationItem" }),
+    ).toHaveLength(4);
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 
-  await act(async () => {
-    const results = await axe(document.body);
+  test("Given Drawer When clicking on 'Clear all' Then all notifications are cleared", async () => {
+    const { component } = setup();
 
-    expect(results).toHaveNoViolations();
-  });
-});
+    render(component);
 
-test("Given Drawer When user clicks on 'Read all' Then all notifications are read", async () => {
-  const { component } = setup();
+    await userEvent.click(
+      await screen.findByRole("button", { name: "NotificationListActions" }),
+    );
 
-  render(component);
+    await userEvent.click(screen.getByRole("menuitem", { name: "Clear all" }));
 
-  await userEvent.click(
-    await screen.findByRole("button", { name: "NotificationListActions" }),
-  );
+    await waitFor(() => {
+      expect(
+        screen.queryAllByRole("listitem", { name: "NotificationItem" }),
+      ).toStrictEqual([]);
+    });
 
-  await userEvent.click(
-    screen.getByRole("menuitem", { name: "Mark all as read" }),
-  );
+    await act(async () => {
+      const results = await axe(document.body);
 
-  const notifications = screen.getAllByRole("listitem", {
-    name: "NotificationItem",
-  });
-
-  expect(
-    await screen.findAllByRole("listitem", { name: "NotificationItem" }),
-  ).toHaveLength(4);
-
-  notifications.forEach(async (notification) => {
-    expect(notification).toHaveTextContent("read");
+      expect(results).toHaveNoViolations();
+    });
   });
 
-  await act(async () => {
-    const results = await axe(document.body);
+  test("Given Drawer When user clicks on 'Read all' Then all notifications are read", async () => {
+    const { component } = setup();
 
-    expect(results).toHaveNoViolations();
-  });
-});
+    render(component);
 
-test("Given Drawer When user clicks a notification Then it becomes read", async () => {
-  const { component } = setup();
+    await userEvent.click(
+      await screen.findByRole("button", { name: "NotificationListActions" }),
+    );
 
-  render(component);
+    await userEvent.click(
+      screen.getByRole("menuitem", { name: "Mark all as read" }),
+    );
 
-  const items = await screen.findAllByRole("listitem", {
-    name: "NotificationItem",
-  });
+    const notifications = screen.getAllByRole("listitem", {
+      name: "NotificationItem",
+    });
 
-  expect(items).toHaveLength(4);
+    expect(
+      await screen.findAllByRole("listitem", { name: "NotificationItem" }),
+    ).toHaveLength(4);
 
-  await userEvent.click(items[0]);
+    notifications.forEach(async (notification) => {
+      expect(notification).toHaveTextContent("read");
+    });
 
-  const updatedItems = await screen.findAllByRole("listitem", {
-    name: "NotificationItem",
-  });
+    await act(async () => {
+      const results = await axe(document.body);
 
-  expect(updatedItems).toHaveLength(4);
-
-  expect(updatedItems[0]).toHaveTextContent("read");
-
-  await act(async () => {
-    const results = await axe(document.body);
-
-    expect(results).toHaveNoViolations();
-  });
-});
-
-test("Given Drawer When user clicks a notification with an uri then go to the uri", async () => {
-  const { component, history } = setup();
-
-  render(component);
-
-  await act(async () => {
-    const results = await axe(document.body);
-
-    expect(results).toHaveNoViolations();
+      expect(results).toHaveNoViolations();
+    });
   });
 
-  const items = screen.getAllByRole("listitem", { name: "NotificationItem" });
+  test("Given Drawer When user clicks a notification Then it becomes read", async () => {
+    const { component } = setup();
 
-  await userEvent.click(items[0]);
+    render(component);
 
-  expect(history.location.pathname).toBe(
-    "/compilereports/f2c68117-24bd-43cf-a9dc-ce42b934a614",
-  );
-});
+    const items = await screen.findAllByRole("listitem", {
+      name: "NotificationItem",
+    });
 
-test("Given Drawer When user clicks a notification without an uri then nothing happens", async () => {
-  const { component, history } = setup();
+    expect(items).toHaveLength(4);
 
-  render(component);
+    await userEvent.click(items[0]);
 
-  const items = await screen.findAllByRole("listitem", {
-    name: "NotificationItem",
+    const updatedItems = await screen.findAllByRole("listitem", {
+      name: "NotificationItem",
+    });
+
+    expect(updatedItems).toHaveLength(4);
+
+    expect(updatedItems[0]).toHaveTextContent("read");
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 
-  await act(async () => {
-    const results = await axe(document.body);
+  test("Given Drawer When user clicks a notification with an uri then go to the uri", async () => {
+    const { component, history } = setup();
 
-    expect(results).toHaveNoViolations();
+    render(component);
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
+
+    const items = screen.getAllByRole("listitem", { name: "NotificationItem" });
+
+    await userEvent.click(items[0]);
+
+    expect(history.location.pathname).toBe(
+      "/compilereports/f2c68117-24bd-43cf-a9dc-ce42b934a614",
+    );
   });
 
-  await userEvent.click(items[3]);
+  test("Given Drawer When user clicks a notification without an uri then nothing happens", async () => {
+    const { component, history } = setup();
 
-  expect(history.location.pathname).toBe("/");
-});
+    render(component);
 
-test("Given Drawer When user clicks a notification toggle with an uri then do not go to uri", async () => {
-  const { component, history } = setup();
+    const items = await screen.findAllByRole("listitem", {
+      name: "NotificationItem",
+    });
 
-  render(component);
+    await act(async () => {
+      const results = await axe(document.body);
 
-  const items = screen.getAllByRole("button", {
-    name: "NotificationListActions",
+      expect(results).toHaveNoViolations();
+    });
+
+    await userEvent.click(items[3]);
+
+    expect(history.location.pathname).toBe("/");
   });
 
-  await act(async () => {
-    const results = await axe(document.body);
+  test("Given Drawer When user clicks a notification toggle with an uri then do not go to uri", async () => {
+    const { component, history } = setup();
 
-    expect(results).toHaveNoViolations();
+    render(component);
+
+    const items = screen.getAllByRole("button", {
+      name: "NotificationListActions",
+    });
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
+
+    await userEvent.click(items[0]);
+
+    expect(history.location.pathname).toBe("/");
   });
 
-  await userEvent.click(items[0]);
+  test("Given Drawer When user clicks on 'unread' for 1 notification Then it becomes unread", async () => {
+    const { component } = setup();
 
-  expect(history.location.pathname).toBe("/");
-});
+    render(component);
 
-test("Given Drawer When user clicks on 'unread' for 1 notification Then it becomes unread", async () => {
-  const { component } = setup();
+    const items = await screen.findAllByRole("listitem", {
+      name: "NotificationItem",
+    });
+    const actions = within(items[2]).getByRole("button", {
+      name: "NotificationListItemActions",
+    });
 
-  render(component);
+    await userEvent.click(actions);
 
-  const items = await screen.findAllByRole("listitem", {
-    name: "NotificationItem",
-  });
-  const actions = within(items[2]).getByRole("button", {
-    name: "NotificationListItemActions",
-  });
+    await userEvent.click(
+      screen.getByRole("menuitem", { name: "Mark as unread" }),
+    );
+    const updatedItems = await screen.findAllByRole("listitem", {
+      name: "NotificationItem",
+    });
 
-  await userEvent.click(actions);
+    expect(updatedItems).toHaveLength(4);
 
-  await userEvent.click(
-    screen.getByRole("menuitem", { name: "Mark as unread" }),
-  );
-  const updatedItems = await screen.findAllByRole("listitem", {
-    name: "NotificationItem",
-  });
+    expect(updatedItems[2]).toHaveTextContent("unread");
 
-  expect(updatedItems).toHaveLength(4);
+    await act(async () => {
+      const results = await axe(document.body);
 
-  expect(updatedItems[2]).toHaveTextContent("unread");
-
-  await act(async () => {
-    const results = await axe(document.body);
-
-    expect(results).toHaveNoViolations();
-  });
-});
-
-test("Given Drawer When user clicks on 'Clear' for 1 notification Then it is cleared", async () => {
-  const { component } = setup();
-
-  render(component);
-
-  const items = await screen.findAllByRole("listitem", {
-    name: "NotificationItem",
+      expect(results).toHaveNoViolations();
+    });
   });
 
-  expect(items).toHaveLength(4);
+  test("Given Drawer When user clicks on 'Clear' for 1 notification Then it is cleared", async () => {
+    const { component } = setup();
 
-  const actions = within(items[2]).getByRole("button", {
-    name: "NotificationListItemActions",
-  });
+    render(component);
 
-  await userEvent.click(actions);
+    const items = await screen.findAllByRole("listitem", {
+      name: "NotificationItem",
+    });
 
-  await userEvent.click(screen.getByRole("menuitem", { name: "Clear" }));
+    expect(items).toHaveLength(4);
 
-  expect(
-    await screen.findAllByRole("listitem", { name: "NotificationItem" }),
-  ).toHaveLength(3);
+    const actions = within(items[2]).getByRole("button", {
+      name: "NotificationListItemActions",
+    });
 
-  await act(async () => {
-    const results = await axe(document.body);
+    await userEvent.click(actions);
 
-    expect(results).toHaveNoViolations();
+    await userEvent.click(screen.getByRole("menuitem", { name: "Clear" }));
+
+    expect(
+      await screen.findAllByRole("listitem", { name: "NotificationItem" }),
+    ).toHaveLength(3);
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

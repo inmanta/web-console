@@ -36,7 +36,7 @@ interface Props {
  *  @prop {boolean} shouldBeDisabled - Whether the attribute should be disabled. Default is false.
  *  @prop {function} handleInputChange - The callback for handling input changes.
  *
- * @returns {JSX.Element} The SelectFormInput component.
+ * @returns {React.FC} The SelectFormInput component.
  */
 export const SelectFormInput: React.FC<Props> = ({
   options,
@@ -88,7 +88,7 @@ export const SelectFormInput: React.FC<Props> = ({
    *
    * @param {React.Ref<MenuToggleElement>} toggleRef - The toggle reference.
    *
-   * @returns {JSX.Element} The toggle element.
+   * @returns {React.FC} The toggle element.
    */
   const toggle = (toggleRef: React.Ref<MenuToggleElement>) => (
     <MenuToggle

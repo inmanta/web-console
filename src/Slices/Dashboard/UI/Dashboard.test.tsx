@@ -22,10 +22,6 @@ const server = setupServer(
   }),
 );
 
-beforeAll(() => server.listen());
-afterEach(() => server.resetHandlers());
-afterAll(() => server.close());
-
 const setup = (isLsmEnabled = false) => {
   const store = getStoreInstance();
 
@@ -47,6 +43,10 @@ const setup = (isLsmEnabled = false) => {
 };
 
 describe("Dashboard", () => {
+  beforeAll(() => server.listen());
+  afterEach(() => server.resetHandlers());
+  afterAll(() => server.close());
+
   it("should show loading state initially", () => {
     const { component } = setup();
 

@@ -48,7 +48,7 @@ export const Drawer: React.FC<Props> = ({
   drawerRef,
 }) => {
   const response = useGetNotifications({
-    pageSize: PageSize.from("250"),
+    pageSize: PageSize.from("50"),
     origin: "drawer",
     currentPage: { kind: "CurrentPage", value: "" },
   }).useContinuous();
@@ -102,7 +102,7 @@ const View: React.FC<ViewProps> = ({
   drawerRef,
 }) => {
   const count = response.isSuccess
-    ? response.data.data.filter((n) => !n.read).length
+    ? response.data.data.filter((notification) => !notification.read).length
     : 0;
 
   const getOnUpdate =

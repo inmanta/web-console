@@ -10,7 +10,7 @@ import { useGetZipWithoutEnv } from "../../helpers";
  *
  * @returns {UseMutationResult<Blob, Error>} A mutation result containing the support archive blob or an error.
  */
-export const useGetSupportArchive = (
+export const useCreateSupportArchive = (
   options?: UseMutationOptions<Blob, Error>,
 ): UseMutationResult<Blob, Error, void> => {
   const get = useGetZipWithoutEnv();

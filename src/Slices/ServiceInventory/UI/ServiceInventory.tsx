@@ -48,7 +48,7 @@ export const ServiceInventoryContext = createContext<Props>({
  * @param {string} serviceName - The name of the service.
  * @param {ServiceModel} service - The service model.
  * @param {ReactElement | null} intro - The summary chart component as introduction for the inventory view.
- * @returns {JSX.Element} - The rendered Service Inventory component.
+ * @returns {React.FC} - The rendered Service Inventory component.
  */
 export const ServiceInventory: React.FunctionComponent<{
   serviceName: string;

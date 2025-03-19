@@ -7,6 +7,9 @@ import { Origin } from "@S/Notification/Core/Utils";
 import { useGet } from "../../helpers";
 import { getUrl } from "./getUrl";
 
+/**
+ * Interface for filtering notifications based on various criteria
+ */
 export interface NotificationFilter {
   title?: string[];
   message?: string[];
@@ -15,6 +18,9 @@ export interface NotificationFilter {
   severity?: Severity;
 }
 
+/**
+ * Interface for parameters required to fetch notifications
+ */
 export interface GetNotificationsParams {
   filter?: NotificationFilter;
   pageSize: PageSize.PageSize;
@@ -22,12 +28,18 @@ export interface GetNotificationsParams {
   currentPage: CurrentPage;
 }
 
+/**
+ * Interface for the raw API response body containing notification data and pagination info
+ */
 interface ResponseBody {
   data: Notification[];
   links: Pagination.Links;
   metadata: Pagination.Metadata;
 }
 
+/**
+ * Extended interface that includes pagination handlers for the notification response
+ */
 export interface NotificationResponse extends ResponseBody {
   handlers: Pagination.Handlers;
 }

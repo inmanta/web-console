@@ -69,259 +69,263 @@ const setup = (entries?: string[]) => {
 };
 const server = setupServer();
 
-beforeAll(() => server.listen());
-afterEach(() => server.resetHandlers());
-afterAll(() => server.close());
+describe("NotificationCenterPage", () => {
+  beforeAll(() => server.listen());
+  afterEach(() => server.resetHandlers());
+  afterAll(() => server.close());
 
-test("Given Notification Center page THEN fetches notifications", async () => {
-  server.use(
-    http.get("/api/v2/notification", () => {
-      return HttpResponse.json({ data: Mock.list, links, metadata });
-    }),
-  );
-  const { component } = setup();
+  test("Given Notification Center page THEN fetches notifications", async () => {
+    server.use(
+      http.get("/api/v2/notification", () => {
+        return HttpResponse.json({ data: Mock.list, links, metadata });
+      }),
+    );
+    const { component } = setup();
 
-  render(component);
+    render(component);
 
-  expect(
-    await screen.findAllByRole("listitem", { name: "NotificationItem" }),
-  ).toHaveLength(4);
+    expect(
+      await screen.findAllByRole("listitem", { name: "NotificationItem" }),
+    ).toHaveLength(4);
 
-  await act(async () => {
-    const results = await axe(document.body);
+    await act(async () => {
+      const results = await axe(document.body);
 
-    expect(results).toHaveNoViolations();
+      expect(results).toHaveNoViolations();
+    });
   });
-});
 
-test("Given Notification Center page When user filters on severity Then executes correct request", async () => {
-  server.use(
-    http.get("/api/v2/notification", ({ request }) => {
-      if (request.url.includes("filter.severity=message")) {
-        return HttpResponse.json({
-          data: [Mock.read, Mock.unread],
-          links,
-          metadata,
-        });
-      }
+  test("Given Notification Center page When user filters on severity Then executes correct request", async () => {
+    server.use(
+      http.get("/api/v2/notification", ({ request }) => {
+        if (request.url.includes("filter.severity=message")) {
+          return HttpResponse.json({
+            data: [Mock.read, Mock.unread],
+            links,
+            metadata,
+          });
+        }
 
-      return HttpResponse.json({ data: Mock.list, links, metadata });
-    }),
-  );
-  const { component } = setup();
+        return HttpResponse.json({ data: Mock.list, links, metadata });
+      }),
+    );
+    const { component } = setup();
 
-  render(component);
+    render(component);
 
-  expect(
-    await screen.findAllByRole("listitem", { name: "NotificationItem" }),
-  ).toHaveLength(4);
+    expect(
+      await screen.findAllByRole("listitem", { name: "NotificationItem" }),
+    ).toHaveLength(4);
 
-  await userEvent.click(
-    screen.getByRole("combobox", { name: "SeverityFilterInput" }),
-  );
+    await userEvent.click(
+      screen.getByRole("combobox", { name: "SeverityFilterInput" }),
+    );
 
-  await userEvent.click(screen.getByRole("option", { name: "message" }));
+    await userEvent.click(screen.getByRole("option", { name: "message" }));
 
-  expect(
-    await screen.findAllByRole("listitem", { name: "NotificationItem" }),
-  ).toHaveLength(2);
+    expect(
+      await screen.findAllByRole("listitem", { name: "NotificationItem" }),
+    ).toHaveLength(2);
 
-  await userEvent.click(
-    screen.getByRole("combobox", { name: "SeverityFilterInput" }),
-  );
+    await userEvent.click(
+      screen.getByRole("combobox", { name: "SeverityFilterInput" }),
+    );
 
-  await userEvent.click(
-    screen.getByRole("button", { name: "Clear input value" }),
-  );
+    await userEvent.click(
+      screen.getByRole("button", { name: "Clear input value" }),
+    );
 
-  expect(
-    await screen.findAllByRole("listitem", { name: "NotificationItem" }),
-  ).toHaveLength(4);
+    expect(
+      await screen.findAllByRole("listitem", { name: "NotificationItem" }),
+    ).toHaveLength(4);
 
-  await act(async () => {
-    const results = await axe(document.body);
+    await act(async () => {
+      const results = await axe(document.body);
 
-    expect(results).toHaveNoViolations();
+      expect(results).toHaveNoViolations();
+    });
   });
-});
 
-test("Given Notification Center page When user filters on read THEN executes correct request", async () => {
-  server.use(
-    http.get("/api/v2/notification", ({ request }) => {
-      if (request.url.includes("filter.read=true")) {
-        return HttpResponse.json({
-          data: [Mock.read, Mock.unread],
-          links,
-          metadata,
-        });
-      }
+  test("Given Notification Center page When user filters on read THEN executes correct request", async () => {
+    server.use(
+      http.get("/api/v2/notification", ({ request }) => {
+        if (request.url.includes("filter.read=true")) {
+          return HttpResponse.json({
+            data: [Mock.read, Mock.unread],
+            links,
+            metadata,
+          });
+        }
 
-      return HttpResponse.json({ data: Mock.list, links, metadata });
-    }),
-  );
-  const { component } = setup();
+        return HttpResponse.json({ data: Mock.list, links, metadata });
+      }),
+    );
+    const { component } = setup();
 
-  render(component);
+    render(component);
 
-  expect(
-    await screen.findAllByRole("listitem", { name: "NotificationItem" }),
-  ).toHaveLength(4);
+    expect(
+      await screen.findAllByRole("listitem", { name: "NotificationItem" }),
+    ).toHaveLength(4);
 
-  await userEvent.click(
-    screen.getByRole("combobox", { name: "ReadFilterInput" }),
-  );
+    await userEvent.click(
+      screen.getByRole("combobox", { name: "ReadFilterInput" }),
+    );
 
-  await userEvent.click(screen.getByRole("option", { name: "read" }));
+    await userEvent.click(screen.getByRole("option", { name: "read" }));
 
-  expect(
-    await screen.findAllByRole("listitem", {
-      name: "NotificationItem",
-    }),
-  ).toHaveLength(2);
+    expect(
+      await screen.findAllByRole("listitem", {
+        name: "NotificationItem",
+      }),
+    ).toHaveLength(2);
 
-  await userEvent.click(
-    screen.getByRole("combobox", { name: "ReadFilterInput" }),
-  );
+    await userEvent.click(
+      screen.getByRole("combobox", { name: "ReadFilterInput" }),
+    );
 
-  await userEvent.click(
-    screen.getByRole("button", { name: "Clear input value" }),
-  );
+    await userEvent.click(
+      screen.getByRole("button", { name: "Clear input value" }),
+    );
 
-  expect(
-    await screen.findAllByRole("listitem", { name: "NotificationItem" }),
-  ).toHaveLength(4);
+    expect(
+      await screen.findAllByRole("listitem", { name: "NotificationItem" }),
+    ).toHaveLength(4);
 
-  await act(async () => {
-    const results = await axe(document.body);
+    await act(async () => {
+      const results = await axe(document.body);
 
-    expect(results).toHaveNoViolations();
+      expect(results).toHaveNoViolations();
+    });
   });
-});
 
-test("Given Notification Center page When user filters on message Then executes correct request", async () => {
-  server.use(
-    http.get("/api/v2/notification", ({ request }) => {
-      if (request.url.includes("filter.message=abc")) {
-        return HttpResponse.json({
-          data: [Mock.read, Mock.unread],
-          links,
-          metadata,
-        });
-      }
+  test("Given Notification Center page When user filters on message Then executes correct request", async () => {
+    server.use(
+      http.get("/api/v2/notification", ({ request }) => {
+        if (request.url.includes("filter.message=abc")) {
+          return HttpResponse.json({
+            data: [Mock.read, Mock.unread],
+            links,
+            metadata,
+          });
+        }
 
-      return HttpResponse.json({ data: Mock.list, links, metadata });
-    }),
-  );
-  const { component } = setup();
+        return HttpResponse.json({ data: Mock.list, links, metadata });
+      }),
+    );
+    const { component } = setup();
 
-  render(component);
+    render(component);
 
-  expect(
-    await screen.findAllByRole("listitem", { name: "NotificationItem" }),
-  ).toHaveLength(4);
+    expect(
+      await screen.findAllByRole("listitem", { name: "NotificationItem" }),
+    ).toHaveLength(4);
 
-  await userEvent.type(
-    screen.getByRole("textbox", { name: "MessageFilter" }),
-    "abc{enter}",
-  );
+    await userEvent.type(
+      screen.getByRole("textbox", { name: "MessageFilter" }),
+      "abc{enter}",
+    );
 
-  expect(
-    await screen.findAllByRole("listitem", {
-      name: "NotificationItem",
-    }),
-  ).toHaveLength(2);
+    expect(
+      await screen.findAllByRole("listitem", {
+        name: "NotificationItem",
+      }),
+    ).toHaveLength(2);
 
-  await userEvent.click(screen.getByRole("button", { name: /close abc/i }));
+    await userEvent.click(screen.getByRole("button", { name: /close abc/i }));
 
-  expect(
-    await screen.findAllByRole("listitem", { name: "NotificationItem" }),
-  ).toHaveLength(4);
+    expect(
+      await screen.findAllByRole("listitem", { name: "NotificationItem" }),
+    ).toHaveLength(4);
 
-  await act(async () => {
-    const results = await axe(document.body);
+    await act(async () => {
+      const results = await axe(document.body);
 
-    expect(results).toHaveNoViolations();
+      expect(results).toHaveNoViolations();
+    });
   });
-});
 
-test("Given Notification Center page When user filters on title Then executes correct request", async () => {
-  server.use(
-    http.get("/api/v2/notification", ({ request }) => {
-      if (request.url.includes("filter.title=abc")) {
-        return HttpResponse.json({
-          data: [Mock.read, Mock.unread],
-          links,
-          metadata,
-        });
-      }
+  test("Given Notification Center page When user filters on title Then executes correct request", async () => {
+    server.use(
+      http.get("/api/v2/notification", ({ request }) => {
+        if (request.url.includes("filter.title=abc")) {
+          return HttpResponse.json({
+            data: [Mock.read, Mock.unread],
+            links,
+            metadata,
+          });
+        }
 
-      return HttpResponse.json({ data: Mock.list, links, metadata });
-    }),
-  );
-  const { component } = setup();
+        return HttpResponse.json({ data: Mock.list, links, metadata });
+      }),
+    );
+    const { component } = setup();
 
-  render(component);
+    render(component);
 
-  expect(
-    await screen.findAllByRole("listitem", { name: "NotificationItem" }),
-  ).toHaveLength(4);
+    expect(
+      await screen.findAllByRole("listitem", { name: "NotificationItem" }),
+    ).toHaveLength(4);
 
-  await userEvent.type(
-    screen.getByRole("textbox", { name: "TitleFilter" }),
-    "abc{enter}",
-  );
+    await userEvent.type(
+      screen.getByRole("textbox", { name: "TitleFilter" }),
+      "abc{enter}",
+    );
 
-  expect(
-    await screen.findAllByRole("listitem", { name: "NotificationItem" }),
-  ).toHaveLength(2);
+    expect(
+      await screen.findAllByRole("listitem", { name: "NotificationItem" }),
+    ).toHaveLength(2);
 
-  await userEvent.click(screen.getByRole("button", { name: /close abc/i }));
+    await userEvent.click(screen.getByRole("button", { name: /close abc/i }));
 
-  expect(
-    await screen.findAllByRole("listitem", { name: "NotificationItem" }),
-  ).toHaveLength(4);
+    expect(
+      await screen.findAllByRole("listitem", { name: "NotificationItem" }),
+    ).toHaveLength(4);
 
-  await act(async () => {
-    const results = await axe(document.body);
+    await act(async () => {
+      const results = await axe(document.body);
 
-    expect(results).toHaveNoViolations();
+      expect(results).toHaveNoViolations();
+    });
   });
-});
 
-test("Given Notification Center page When user clicks next page Then fetches next page", async () => {
-  const { component } = setup(["/?state.NotificationCenter.pageSize=20"]);
+  test("Given Notification Center page When user clicks next page Then fetches next page", async () => {
+    const { component } = setup(["/?state.NotificationCenter.pageSize=20"]);
 
-  server.use(
-    http.get("/api/v2/notification", ({ request }) => {
-      if (request.url.includes("end=fake-param")) {
-        return HttpResponse.json({
-          data: [Mock.read, Mock.unread],
-          links,
-          metadata,
-        });
-      }
+    server.use(
+      http.get("/api/v2/notification", ({ request }) => {
+        if (request.url.includes("end=fake-param")) {
+          return HttpResponse.json({
+            data: [Mock.read, Mock.unread],
+            links,
+            metadata,
+          });
+        }
 
-      return HttpResponse.json({ data: Mock.list, links, metadata });
-    }),
-  );
+        return HttpResponse.json({ data: Mock.list, links, metadata });
+      }),
+    );
 
-  render(component);
+    render(component);
 
-  const button = await screen.findByRole("button", { name: "Go to next page" });
+    const button = await screen.findByRole("button", {
+      name: "Go to next page",
+    });
 
-  expect(button).toBeEnabled();
+    expect(button).toBeEnabled();
 
-  await userEvent.click(button);
+    await userEvent.click(button);
 
-  expect(
-    await screen.findAllByRole("listitem", {
-      name: "NotificationItem",
-    }),
-  ).toHaveLength(2);
+    expect(
+      await screen.findAllByRole("listitem", {
+        name: "NotificationItem",
+      }),
+    ).toHaveLength(2);
 
-  await act(async () => {
-    const results = await axe(document.body);
+    await act(async () => {
+      const results = await axe(document.body);
 
-    expect(results).toHaveNoViolations();
+      expect(results).toHaveNoViolations();
+    });
   });
 });

@@ -4,24 +4,24 @@ import {
   AlertActionCloseButton,
   AlertGroup,
 } from "@patternfly/react-core";
-import { useGetSupportArchive } from "@/Data/Managers/V2/Support/GetSupportArchive";
+import { useCreateSupportArchive } from "@/Data/Managers/V2/Miscellaneous/CreateSupportArchive";
 import { DependencyContext } from "@/UI/Dependency";
 import { DownloadButton, Phase } from "./Components";
 
 /**
  * SupportArchive component is responsible for managing the download
- * of the support archive. It utilizes the useGetSupportArchive hook
+ * of the support archive. It utilizes the useCreateSupportArchive hook
  * to handle the download process and provides user feedback through
  * a DownloadButton and alerts for any errors that may occur during
  * the download.
  *
- * @returns {JSX.Element} The rendered component.
+ * @returns {React.FC} The rendered component.
  */
 export const SupportArchive: React.FC = () => {
   const { archiveHelper } = useContext(DependencyContext);
   const [phase, setPhase] = useState<Phase>("Default");
   const [error, setError] = useState<null | string>(null);
-  const { mutate } = useGetSupportArchive({
+  const { mutate } = useCreateSupportArchive({
     onSuccess: (data) => {
       try {
         archiveHelper.triggerDownload(data);
@@ -36,7 +36,6 @@ export const SupportArchive: React.FC = () => {
       }
     },
     onError: (error) => {
-      setPhase("Default");
       setError(error.message || "Failed to download support archive");
     },
   });

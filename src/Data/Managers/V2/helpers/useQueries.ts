@@ -10,9 +10,9 @@ import { useFetchHelpers } from "../helpers";
  *
  * This hook constructs the base URL and headers, and provides a function to perform a GET request to the specified path.
  *
- * @returns {Function} A function that performs a GET request and returns the response data.
+ * @returns {Function(path: string): Promise<Response>} A function that performs a GET request and returns the response data.
  *
- * @template- The type of the response data.
+ * @template Response - The type of the response data.
  */
 export const useGet = (options?: { message?: string }) => {
   const baseUrlManager = new PrimaryBaseUrlManager(
@@ -50,9 +50,9 @@ export const useGet = (options?: { message?: string }) => {
  * This hook constructs the base URL and headers, and provides a function to perform a GET request to the specified path.
  * In comparison to useGet, this hook does not use the environment context, so it can be used only to perform requests that are environment-agnostic.
  *
- * @returns {Function<>} A function that performs a GET request and returns the response data.
+ * @returns {Function(path: string): Promise<Response>} A function that performs a GET request and returns the response data.
  *
- * @template- The type of the response data.
+ * @template Response - The type of the response data.
  */
 export const useGetWithoutEnv = (options?: { message?: string }) => {
   const baseUrlManager = new PrimaryBaseUrlManager(
@@ -87,9 +87,7 @@ export const useGetWithoutEnv = (options?: { message?: string }) => {
  *
  * This hook constructs the base URL and headers, and provides a function to perform a GET request to the specified path.
  *
- * @returns {Function} A function that performs a GET zip request and returns the response blob.
- *
- * @template- The type of the response data.
+ * @returns {Function<Blob>} A function that performs a GET zip request and returns the response blob.
  */
 export const useGetZip = (options?: { message?: string }) => {
   const baseUrlManager = new PrimaryBaseUrlManager(
@@ -127,9 +125,7 @@ export const useGetZip = (options?: { message?: string }) => {
  * This hook constructs the base URL and headers, and provides a function to perform a GET request to the specified path.
  * In comparison to useGet, this hook does not use the environment context, so it can be used only to perform requests that are environment-agnostic.
  *
- * @returns {Function<>} A function that performs a GET zip  request and returns the response blob.
- *
- * @template- The type of the response data.
+ * @returns {Function(path: string): Promise<Blob>} A function that performs a GET zip  request and returns the response blob.
  */
 export const useGetZipWithoutEnv = (options?: { message?: string }) => {
   const baseUrlManager = new PrimaryBaseUrlManager(
@@ -162,9 +158,8 @@ export const useGetZipWithoutEnv = (options?: { message?: string }) => {
  * @param {Object} [options] - Optional configuration for the POST request.
  * @param {string} [options.message] - Optional message to include in the request headers.
  *
- * @returns {Function<>} - A function that performs a POST request.
+ * @returns {Function(path: string, body: Body): Promise<Response>} - A function that performs a POST request.
  *
- * @template- The expected response data type.
  * @template Body - The type of the request body.
  */
 export const usePost = (options?: { message?: string }) => {
@@ -209,9 +204,8 @@ export const usePost = (options?: { message?: string }) => {
  * This hook constructs the base URL and headers, and provides a function to perform a POST request to the specified path.
  * In comparison to usePost, this hook does not use the environment context, so it can be used only to perform requests that are environment-agnostic.
  *
- * @returns {Function<>} - A function that performs a POST request.
+ * @returns {Function(path: string, body: Body): Promise<Response>} - A function that performs a POST request.
  *
- * @template- The expected response data type.
  * @template Body - The type of the request body.
  */
 export const usePostWithoutEnv = (options?: { message?: string }) => {
@@ -255,9 +249,8 @@ export const usePostWithoutEnv = (options?: { message?: string }) => {
  *
  * This hook constructs the base URL and headers, and provides a function to perform a PUT request to the specified path.
  *
- * @returns {Function<>} - A function that performs a PUT request.
+ * @returns {Function(path: string, body: Body): Promise<Response>} - A function that performs a PUT request.
  *
- * @template- The expected response data type.
  * @template Body - The type of the request body.
  */
 export const usePut = (options?: { message?: string }) => {
@@ -302,9 +295,8 @@ export const usePut = (options?: { message?: string }) => {
  * This hook constructs the base URL and headers, and provides a function to perform a PUT request to the specified path.
  * In comparison to usePut, this hook does not use the environment context, so it can be used only to perform requests that are environment-agnostic.
  *
- * @returns {Function<>} - A function that performs a PUT request.
+ * @returns {Function(path: string, body: Body): Promise<Response>} - A function that performs a PUT request.
  *
- * @template- The expected response data type.
  * @template Body - The type of the request body.
  */
 export const usePutWithoutEnv = (options?: { message?: string }) => {
@@ -346,9 +338,8 @@ export const usePutWithoutEnv = (options?: { message?: string }) => {
  *
  * This hook constructs the base URL and headers, and provides a function to perform a PATCH request to the specified path.
  *
- * @returns {Function<>} - A function that performs a PATCH request.
+ * @returns {Function(path: string, body: Body): Promise<Response>} - A function that performs a PATCH request.
  *
- * @template- The expected response data type.
  * @template Body - The type of the request body.
  */
 export const usePatch = (options?: { message?: string }) => {
@@ -393,9 +384,8 @@ export const usePatch = (options?: { message?: string }) => {
  * This hook constructs the base URL and headers, and provides a function to perform a PATCH request to the specified path.
  * In comparison to usePatch, this hook does not use the environment context, so it can be used only to perform requests that are environment-agnostic.
  *
- * @returns {Function<>} - A function that performs a PATCH request.
+ * @returns {Function(path: string, body: Body): Promise<Response>} - A function that performs a PATCH request.
  *
- * @template- The expected response data type.
  * @template Body - The type of the request body.
  */
 export const usePatchWithoutEnv = (options?: { message?: string }) => {
@@ -437,9 +427,7 @@ export const usePatchWithoutEnv = (options?: { message?: string }) => {
  *
  * This hook constructs the base URL and headers, and provides a function to perform a DELETE request to the specified path.
  *
- * @returns {Function<>} A function that performs a DELETE request and returns the response data.
- *
- * @template- The type of the response data.
+ * @returns {Function} A function that performs a DELETE request and returns the response data.
  */
 export const useDelete = (options?: { message?: string }) => {
   const baseUrlManager = new PrimaryBaseUrlManager(
@@ -486,9 +474,7 @@ export const useDelete = (options?: { message?: string }) => {
  * This hook constructs the base URL and headers, and provides a function to perform a DELETE request to the specified path.
  * In comparison to useDelete, this hook does not use the environment context, so it can be used only to perform requests that are environment-agnostic.
  *
- * @returns {Function<>} A function that performs a DELETE request and returns the response data.
- *
- * @template- The type of the response data.
+ * @returns {Function} A function that performs a DELETE request and returns the response data.
  */
 export const useDeleteWithoutEnv = (options?: { message?: string }) => {
   const baseUrlManager = new PrimaryBaseUrlManager(

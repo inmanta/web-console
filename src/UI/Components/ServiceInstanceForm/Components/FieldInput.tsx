@@ -67,7 +67,7 @@ const makePath = (path: string | null, next: string): string =>
  *   @prop {boolean} isNew - Flag indicating whether the field is newly added. Default is false.
  *   @prop {FormSuggestion | null} suggestions - The suggestions for the field. Default is null.
  *
- * @returns {JSX.Element} The rendered FieldInput component.
+ * @returns {React.FC} The rendered FieldInput component.
  */
 export const FieldInput: React.FC<Props> = ({
   field,
@@ -370,7 +370,7 @@ interface NestedProps {
  *   @prop {OriginalState} originalState - The original state of the nested field.
  *   @prop {Function} getUpdate - Function to update and get updates for the nested field.
  *   @prop {string} path - The path of the nested field.
- * @returns {JSX.Element} The rendered NestedFieldInput component.
+ * @returns {React.FC} The rendered NestedFieldInput component.
  */
 const NestedFieldInput: React.FC<NestedProps> = ({
   field,
@@ -472,7 +472,7 @@ interface DictListProps {
  *   @prop {OriginalState} originalState - The original state of the dictionary list field.
  *   @prop {Function} getUpdate - Function to update and get updates for the dictionary list field.
  *   @prop {string} path - The path of the dictionary list field.
- * @returns {JSX.Element} The rendered DictListFieldInput component.
+ * @returns {React.FC} The rendered DictListFieldInput component.
  */
 const DictListFieldInput: React.FC<DictListProps> = ({
   field,

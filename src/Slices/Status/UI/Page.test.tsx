@@ -97,210 +97,212 @@ function setup(useMockArchiveHelper = false) {
 }
 const server = setupServer();
 
-beforeAll(() => server.listen());
-afterEach(() => server.resetHandlers());
-afterAll(() => server.close());
+describe("StatusPage", () => {
+  beforeAll(() => server.listen());
+  afterEach(() => server.resetHandlers());
+  afterAll(() => server.close());
 
-test("GIVEN StatusPage THEN shows server status", async () => {
-  const { component, apiHelper } = setup();
+  test("GIVEN StatusPage THEN shows server status", async () => {
+    const { component, apiHelper } = setup();
 
-  render(component);
+    render(component);
 
-  expect(apiHelper.pendingRequests).toHaveLength(1);
-  expect(apiHelper.pendingRequests[0]).toEqual({
-    method: "GET",
-    url: `/api/v1/serverstatus`,
+    expect(apiHelper.pendingRequests).toHaveLength(1);
+    expect(apiHelper.pendingRequests[0]).toEqual({
+      method: "GET",
+      url: `/api/v1/serverstatus`,
+    });
+
+    await act(async () => {
+      await apiHelper.resolve(Either.right({ data: ServerStatus.withLsm }));
+    });
+
+    expect(screen.getByRole("list", { name: "StatusList" })).toBeVisible();
+    expect(
+      screen.getByRole("listitem", {
+        name: "StatusItem-Inmanta Service Orchestrator",
+      }),
+    ).toBeVisible();
+    expect(
+      screen.getByRole("listitem", {
+        name: "StatusItem-lsm",
+      }),
+    ).toBeVisible();
+    expect(
+      screen.getByRole("listitem", {
+        name: "StatusItem-lsm.database",
+      }),
+    ).toBeVisible();
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 
-  await act(async () => {
-    await apiHelper.resolve(Either.right({ data: ServerStatus.withLsm }));
+  test("GIVEN StatusPage without support extension THEN download button is not present", async () => {
+    const { component, apiHelper } = setup();
+
+    render(component);
+
+    await act(async () => {
+      await apiHelper.resolve(
+        Either.right({ data: ServerStatus.withoutSupport }),
+      );
+    });
+
+    expect(
+      screen.queryByRole("button", { name: "DownloadArchiveButton" }),
+    ).not.toBeInTheDocument();
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 
-  expect(screen.getByRole("list", { name: "StatusList" })).toBeVisible();
-  expect(
-    screen.getByRole("listitem", {
-      name: "StatusItem-Inmanta Service Orchestrator",
-    }),
-  ).toBeVisible();
-  expect(
-    screen.getByRole("listitem", {
-      name: "StatusItem-lsm",
-    }),
-  ).toBeVisible();
-  expect(
-    screen.getByRole("listitem", {
-      name: "StatusItem-lsm.database",
-    }),
-  ).toBeVisible();
+  test("GIVEN StatusPage with support extension THEN download button is present", async () => {
+    const { component, apiHelper } = setup();
 
-  await act(async () => {
-    const results = await axe(document.body);
+    render(component);
 
-    expect(results).toHaveNoViolations();
+    await act(async () => {
+      await apiHelper.resolve(Either.right({ data: ServerStatus.withSupport }));
+    });
+
+    expect(
+      screen.getByRole("button", { name: "DownloadArchiveButton" }),
+    ).toBeVisible();
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
   });
-});
 
-test("GIVEN StatusPage without support extension THEN download button is not present", async () => {
-  const { component, apiHelper } = setup();
+  test("GIVEN StatusPage with support extension WHEN user click download THEN an archive is created", async () => {
+    server.use(
+      http.get("/api/v2/support", async () => {
+        await delay(100);
 
-  render(component);
-
-  await act(async () => {
-    await apiHelper.resolve(
-      Either.right({ data: ServerStatus.withoutSupport }),
+        return HttpResponse.json(ServerStatus.supportArchiveBase64);
+      }),
     );
-  });
+    const { component, apiHelper } = setup();
 
-  expect(
-    screen.queryByRole("button", { name: "DownloadArchiveButton" }),
-  ).not.toBeInTheDocument();
+    render(component);
 
-  await act(async () => {
-    const results = await axe(document.body);
+    await act(async () => {
+      await apiHelper.resolve(Either.right({ data: ServerStatus.withSupport }));
+    });
 
-    expect(results).toHaveNoViolations();
-  });
-});
+    const downloadButton = screen.getByRole("button", {
+      name: "DownloadArchiveButton",
+    });
 
-test("GIVEN StatusPage with support extension THEN download button is present", async () => {
-  const { component, apiHelper } = setup();
-
-  render(component);
-
-  await act(async () => {
-    await apiHelper.resolve(Either.right({ data: ServerStatus.withSupport }));
-  });
-
-  expect(
-    screen.getByRole("button", { name: "DownloadArchiveButton" }),
-  ).toBeVisible();
-
-  await act(async () => {
-    const results = await axe(document.body);
-
-    expect(results).toHaveNoViolations();
-  });
-});
-
-test("GIVEN StatusPage with support extension WHEN user click download THEN an archive is created", async () => {
-  server.use(
-    http.get("/api/v2/support", async () => {
-      await delay(100);
-
-      return HttpResponse.json(ServerStatus.supportArchiveBase64);
-    }),
-  );
-  const { component, apiHelper } = setup();
-
-  render(component);
-
-  await act(async () => {
-    await apiHelper.resolve(Either.right({ data: ServerStatus.withSupport }));
-  });
-
-  const downloadButton = screen.getByRole("button", {
-    name: "DownloadArchiveButton",
-  });
-
-  expect(downloadButton).toHaveTextContent(
-    words("status.supportArchive.action.download"),
-  );
-
-  await userEvent.click(downloadButton);
-
-  expect(downloadButton).toHaveTextContent(
-    words("status.supportArchive.action.downloading"),
-  );
-
-  await waitFor(() =>
     expect(downloadButton).toHaveTextContent(
       words("status.supportArchive.action.download"),
-    ),
-  );
+    );
 
-  await act(async () => {
-    const results = await axe(document.body);
+    await userEvent.click(downloadButton);
 
-    expect(results).toHaveNoViolations();
-  });
-});
+    expect(downloadButton).toHaveTextContent(
+      words("status.supportArchive.action.downloading"),
+    );
 
-test("GIVEN StatusPage with support extension WHEN user click download THEN button goes through correct phases", async () => {
-  server.use(
-    http.get("/api/v2/support", async () => {
-      await delay(100);
+    await waitFor(() =>
+      expect(downloadButton).toHaveTextContent(
+        words("status.supportArchive.action.download"),
+      ),
+    );
 
-      return HttpResponse.json(ServerStatus.supportArchiveBase64);
-    }),
-  );
-  const { component, apiHelper, archiveHelper } = setup(true);
+    await act(async () => {
+      const results = await axe(document.body);
 
-  render(component);
-  await act(async () => {
-    await apiHelper.resolve(Either.right({ data: ServerStatus.withSupport }));
+      expect(results).toHaveNoViolations();
+    });
   });
 
-  const downloadButton = screen.getByRole("button", {
-    name: "DownloadArchiveButton",
-  });
+  test("GIVEN StatusPage with support extension WHEN user click download THEN button goes through correct phases", async () => {
+    server.use(
+      http.get("/api/v2/support", async () => {
+        await delay(100);
 
-  expect(downloadButton).toHaveTextContent(
-    words("status.supportArchive.action.download"),
-  );
+        return HttpResponse.json(ServerStatus.supportArchiveBase64);
+      }),
+    );
+    const { component, apiHelper, archiveHelper } = setup(true);
 
-  await userEvent.click(downloadButton);
+    render(component);
+    await act(async () => {
+      await apiHelper.resolve(Either.right({ data: ServerStatus.withSupport }));
+    });
 
-  expect(downloadButton).toHaveTextContent(
-    words("status.supportArchive.action.downloading"),
-  );
+    const downloadButton = screen.getByRole("button", {
+      name: "DownloadArchiveButton",
+    });
 
-  (archiveHelper as MockArchiveHelper).resolve(
-    new Blob(["testing"], { type: "application/octet-stream" }),
-  );
-  await waitFor(() =>
     expect(downloadButton).toHaveTextContent(
       words("status.supportArchive.action.download"),
-    ),
-  );
+    );
 
-  await act(async () => {
-    const results = await axe(document.body);
+    await userEvent.click(downloadButton);
 
-    expect(results).toHaveNoViolations();
-  });
-});
+    expect(downloadButton).toHaveTextContent(
+      words("status.supportArchive.action.downloading"),
+    );
 
-test("GIVEN StatusPage with support extension WHEN user click download and response is error THEN error is shown", async () => {
-  server.use(
-    http.get("/api/v2/support", () => {
-      return HttpResponse.json({ message: "error" }, { status: 500 });
-    }),
-  );
-  const { component, apiHelper } = setup();
+    (archiveHelper as MockArchiveHelper).resolve(
+      new Blob(["testing"], { type: "application/octet-stream" }),
+    );
+    await waitFor(() =>
+      expect(downloadButton).toHaveTextContent(
+        words("status.supportArchive.action.download"),
+      ),
+    );
 
-  render(component);
+    await act(async () => {
+      const results = await axe(document.body);
 
-  await act(async () => {
-    await apiHelper.resolve(Either.right({ data: ServerStatus.withSupport }));
-  });
-
-  const downloadButton = screen.getByRole("button", {
-    name: "DownloadArchiveButton",
+      expect(results).toHaveNoViolations();
+    });
   });
 
-  await userEvent.click(downloadButton);
+  test("GIVEN StatusPage with support extension WHEN user click download and response is error THEN error is shown", async () => {
+    server.use(
+      http.get("/api/v2/support", () => {
+        return HttpResponse.json({ message: "error" }, { status: 500 });
+      }),
+    );
+    const { component, apiHelper } = setup();
 
-  expect(downloadButton).toHaveTextContent(
-    words("status.supportArchive.action.download"),
-  );
-  const errorContainer = screen.getByTestId("ToastAlert");
+    render(component);
 
-  expect(errorContainer).toBeVisible();
-  expect(within(errorContainer).getByText("error")).toBeVisible();
+    await act(async () => {
+      await apiHelper.resolve(Either.right({ data: ServerStatus.withSupport }));
+    });
 
-  await act(async () => {
-    const results = await axe(document.body);
+    const downloadButton = screen.getByRole("button", {
+      name: "DownloadArchiveButton",
+    });
 
-    expect(results).toHaveNoViolations();
+    await userEvent.click(downloadButton);
+
+    expect(downloadButton).toHaveTextContent(
+      words("status.supportArchive.action.download"),
+    );
+    const errorContainer = screen.getByTestId("ToastAlert");
+
+    expect(errorContainer).toBeVisible();
+    expect(within(errorContainer).getByText("error")).toBeVisible();
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });
