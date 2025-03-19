@@ -25,12 +25,23 @@ import { useNavigateTo } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { Item, OnUpdate } from "./Item";
 
+/**
+ * Props for the Drawer component.
+ *
+ * @property {(event?: MouseEvent) => void} onClose - Function to handle drawer closing
+ * @property {boolean} isDrawerOpen - Whether the drawer is currently open
+ * @property {MutableRefObject<HTMLDivElement | undefined>} drawerRef - Ref to the drawer DOM element
+ */
 interface Props {
   onClose(event?: MouseEvent): void;
   isDrawerOpen: boolean;
   drawerRef: MutableRefObject<HTMLDivElement | undefined>;
 }
 
+/**
+ * Main notification drawer component that displays a list of notifications.
+ * Provides functionality to view, mark as read/unread, and clear notifications.
+ */
 export const Drawer: React.FC<Props> = ({
   onClose,
   isDrawerOpen,
@@ -69,11 +80,21 @@ export const Drawer: React.FC<Props> = ({
   return <View {...{ response, onClose, isDrawerOpen, mutate, drawerRef }} />;
 };
 
+/**
+ * Props for the View component that extends the main Drawer props.
+ *
+ * @property {UseQueryResult<NotificationResponse, Error>} response - Query result containing notification data
+ * @property {UseMutateFunction<void, Error, UpdateNotificationParams, unknown>} mutate - Function to update notifications
+ */
 interface ViewProps extends Props {
   response: UseQueryResult<NotificationResponse, Error>;
   mutate: UseMutateFunction<void, Error, UpdateNotificationParams, unknown>;
 }
 
+/**
+ * Internal view component that renders the notification drawer content.
+ * Handles the display of notifications and provides actions for managing them.
+ */
 const View: React.FC<ViewProps> = ({
   response,
   onClose,
@@ -134,12 +155,23 @@ const View: React.FC<ViewProps> = ({
   );
 };
 
+/**
+ * Props for the ActionList component.
+ *
+ * @property {() => void} onClearAll - Function to clear all notifications
+ * @property {() => void} onReadAll - Function to mark all notifications as read
+ * @property {() => void} onClose - Function to close the drawer
+ */
 interface ActionListProps {
   onClearAll(): void;
   onReadAll(): void;
   onClose(): void;
 }
 
+/**
+ * Component that renders a dropdown menu with actions for all notifications.
+ * Provides options to clear all, mark all as read, and navigate to notifications page.
+ */
 const ActionList: React.FC<ActionListProps> = ({
   onClearAll,
   onReadAll,

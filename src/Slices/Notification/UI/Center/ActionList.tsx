@@ -9,12 +9,23 @@ import { EllipsisVIcon } from "@patternfly/react-icons";
 import { useUpdateNotification } from "@/Data/Managers/V2/Notification/UpdateNotification";
 import { words } from "@/UI/words";
 
+/**
+ * Props for the ActionList component.
+ *
+ * @property {boolean} read - Whether the notification is read
+ * @property {string} id - The unique identifier of the notification
+ * @property {() => void} onUpdate - Callback function triggered after a successful update
+ */
 interface Props {
   read: boolean;
   id: string;
   onUpdate(): void;
 }
 
+/**
+ * Component that renders a dropdown menu with actions for a notification.
+ * Provides options to mark notifications as read/unread.
+ */
 export const ActionList: React.FC<Props> = ({ read, id, onUpdate }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { mutate } = useUpdateNotification({

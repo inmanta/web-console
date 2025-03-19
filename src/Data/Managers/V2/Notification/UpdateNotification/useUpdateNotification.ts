@@ -6,11 +6,23 @@ import {
 } from "@tanstack/react-query";
 import { usePatch } from "../../helpers";
 
+/**
+ * Body parameters for updating a notification.
+ *
+ * @property {boolean} [read] - Whether the notification has been read
+ * @property {boolean} [cleared] - Whether the notification has been cleared
+ */
 export interface UpdateNotificationBody {
   read?: boolean;
   cleared?: boolean;
 }
 
+/**
+ * Parameters for the notification update mutation.
+ *
+ * @property {UpdateNotificationBody} body - The update payload
+ * @property {string[]} ids - Array of notification IDs to update
+ */
 export interface UpdateNotificationParams {
   body: UpdateNotificationBody;
   ids: string[];

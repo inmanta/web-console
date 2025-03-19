@@ -13,6 +13,12 @@ import { ToastAlert } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { Notification } from "@S/Notification/Core/Domain";
 
+/**
+ * Notification badge component that displays a visual indicator for notifications.
+ * Shows different variants based on the notification status (read/unread, error/non-error).
+ *
+ * @param {() => void} onClick - Callback function triggered when the badge is clicked
+ */
 export const Badge: React.FC<{ onClick(): void }> = ({ onClick }) => {
   const response = useGetNotifications({
     pageSize: PageSize.from("250"),
@@ -23,11 +29,21 @@ export const Badge: React.FC<{ onClick(): void }> = ({ onClick }) => {
   return <View {...{ response, onClick }} />;
 };
 
+/**
+ * Props for the View component.
+ *
+ * @property {() => void} onClick - Callback function triggered when the badge is clicked
+ * @property {UseQueryResult<NotificationResponse, Error>} response - Query result containing notification data
+ */
 interface Props {
   onClick(): void;
   response: UseQueryResult<NotificationResponse, Error>;
 }
 
+/**
+ * Internal view component that renders the notification badge based on the query response.
+ * Handles loading, error, and success states.
+ */
 const View: React.FC<Props> = ({ response, onClick }) => {
   const [error, setError] = useState("");
 
@@ -76,6 +92,14 @@ const View: React.FC<Props> = ({ response, onClick }) => {
   );
 };
 
+/**
+ * Determines the badge variant based on the notification list.
+ * Returns 'attention' for unread error notifications, 'unread' for any unread notifications,
+ * and 'read' for all other cases.
+ *
+ * @param {Notification[]} notifications - List of notifications to analyze
+ * @returns {NotificationBadgeVariant} The appropriate badge variant
+ */
 const getVariantFromNotifications = (
   notifications: Notification[],
 ): NotificationBadgeVariant => {
@@ -87,10 +111,28 @@ const getVariantFromNotifications = (
   return NotificationBadgeVariant.read;
 };
 
+/**
+ * Checks if a notification is both unread and has error severity.
+ *
+ * @param {Notification} notification - The notification to check
+ * @returns {boolean} True if the notification is unread and has error severity
+ */
 const isUnreadError = (notification: Notification) =>
   isUnread(notification) && isError(notification);
 
+/**
+ * Checks if a notification has error severity.
+ *
+ * @param {Notification} notification - The notification to check
+ * @returns {boolean} True if the notification has error severity
+ */
 const isError = (notification: Notification) =>
   notification.severity === "error";
 
+/**
+ * Checks if a notification is unread.
+ *
+ * @param {Notification} notification - The notification to check
+ * @returns {boolean} True if the notification is unread
+ */
 const isUnread = (notification: Notification) => notification.read === false;

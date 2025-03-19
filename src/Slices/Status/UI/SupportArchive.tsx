@@ -8,6 +8,15 @@ import { useGetSupportArchive } from "@/Data/Managers/V2/Support/GetSupportArchi
 import { DependencyContext } from "@/UI/Dependency";
 import { DownloadButton, Phase } from "./Components";
 
+/**
+ * SupportArchive component is responsible for managing the download
+ * of the support archive. It utilizes the useGetSupportArchive hook
+ * to handle the download process and provides user feedback through
+ * a DownloadButton and alerts for any errors that may occur during
+ * the download.
+ *
+ * @returns {JSX.Element} The rendered component.
+ */
 export const SupportArchive: React.FC = () => {
   const { archiveHelper } = useContext(DependencyContext);
   const [phase, setPhase] = useState<Phase>("Default");
