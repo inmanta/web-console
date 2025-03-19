@@ -285,16 +285,17 @@ describe("StatusPage", () => {
       await apiHelper.resolve(Either.right({ data: ServerStatus.withSupport }));
     });
 
-    const downloadButton = screen.getByRole("button", {
+    const downloadButton = await screen.findByRole("button", {
       name: "DownloadArchiveButton",
     });
-
-    await userEvent.click(downloadButton);
 
     expect(downloadButton).toHaveTextContent(
       words("status.supportArchive.action.download"),
     );
-    const errorContainer = screen.getByTestId("ToastAlert");
+
+    await userEvent.click(downloadButton);
+
+    const errorContainer = await screen.findByTestId("ToastAlert");
 
     expect(errorContainer).toBeVisible();
     expect(within(errorContainer).getByText("error")).toBeVisible();
