@@ -29,6 +29,7 @@ interface GetMetrics {
  */
 export const useGetMetrics = (): GetMetrics => {
   const get = useGet()<{ data: BackendMetricData }>;
+
   return {
     useOneTime: (
       params: GetMetricsParams,
