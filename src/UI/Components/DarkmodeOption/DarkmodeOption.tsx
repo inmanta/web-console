@@ -35,7 +35,7 @@ export const setThemePreference = (theme: string) => {
 /**
  * A React component that provides a dropdown item to toggle between dark and light themes.
  * The user's theme preference is stored in localStorage and applied to the document.
- * @returns {JSX.Element} The rendered component.
+ * @returns {React.FC} The rendered component.
  */
 export const DarkmodeOption: React.FC = () => {
   const [theme, setTheme] = useState<string>(getThemePreference() || "light");

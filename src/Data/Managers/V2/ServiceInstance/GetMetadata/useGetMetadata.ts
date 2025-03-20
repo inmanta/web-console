@@ -46,7 +46,7 @@ export const useGetMetadata = (
           key,
           instanceVersion,
         ],
-        retry: false,
+
         enabled: instanceVersion !== null,
         select: (data) => data.data,
       }),

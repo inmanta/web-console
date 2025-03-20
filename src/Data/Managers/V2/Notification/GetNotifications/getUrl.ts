@@ -1,11 +1,11 @@
 import qs from "qs";
-import { Query } from "@/Core";
+import { GetNotificationsParams } from "./useGetNotifications";
 
 export function getUrl({
   filter,
   pageSize,
   currentPage,
-}: Query.SubQuery<"GetNotifications">): string {
+}: GetNotificationsParams): string {
   const filterParam =
     filter && Object.keys(filter).length > 0
       ? `&${qs.stringify(

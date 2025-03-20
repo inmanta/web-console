@@ -3,10 +3,9 @@ import { MemoryRouter, useLocation, useNavigate } from "react-router-dom";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
-import { Either, RemoteData } from "@/Core";
+import { Either, PageSize, RemoteData } from "@/Core";
 import { QueryManagerResolverImpl, QueryResolverImpl } from "@/Data";
 import { getStoreInstance } from "@/Data/Store";
-import { drawerQuery } from "@/Slices/Notification/Core/Query";
 import { DeferredApiHelper, dependencies, StaticScheduler } from "@/Test";
 import {
   DependencyContext,
@@ -84,7 +83,7 @@ test("GIVEN QueryManager.ContinuousWithEnv WHEN environment changes THEN the api
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
     method: "GET",
-    url: "/api/v2/notification?limit=100&filter.cleared=false",
+    url: "/api/v2/parameters?limit=100&1",
     environment: "aaa",
   });
 
@@ -98,7 +97,7 @@ test("GIVEN QueryManager.ContinuousWithEnv WHEN environment changes THEN the api
 
   expect(apiHelper.pendingRequests[0]).toEqual({
     method: "GET",
-    url: "/api/v2/notification?limit=100&filter.cleared=false",
+    url: "/api/v2/parameters?limit=100&1",
     environment: "bbb",
   });
 });
@@ -108,7 +107,11 @@ const Component: React.FC = () => {
 
   const { queryResolver } = useContext(DependencyContext);
 
-  queryResolver.useContinuous<"GetNotifications">(drawerQuery);
+  queryResolver.useContinuous<"GetParameters">({
+    kind: "GetParameters",
+    pageSize: PageSize.from("100"),
+    currentPage: { kind: "CurrentPage", value: "1" },
+  });
 
   return (
     <div>

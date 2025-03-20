@@ -32,7 +32,6 @@ export const useGetInstance = (
       useQuery({
         queryKey: ["get_instance-one_time", service, instanceId],
         queryFn: () => get(url),
-        retry: false,
         select: (data): ServiceInstanceModel => data.data,
       }),
     useContinuous: (): UseQueryResult<ServiceInstanceModel, Error> =>

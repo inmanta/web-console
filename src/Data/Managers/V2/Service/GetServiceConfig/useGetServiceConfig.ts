@@ -25,7 +25,6 @@ export const useGetServiceConfig = (service: string): GetServiceConfig => {
       useQuery({
         queryKey: ["get_service_config-one_time", service],
         queryFn: () => get(`/lsm/v1/service_catalog/${service}/config`),
-        retry: false,
         select: (data) => data.data,
       }),
   };

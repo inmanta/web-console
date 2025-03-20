@@ -25,7 +25,7 @@ interface Props {
  *  @prop {function} onCancel - callback method when the Modal is closed without confirmation
  *  @prop {boolean} isModalOpen - whether the Modal should be open or not
  *  @prop {boolean} isPending - display a spinner in the YES button, and disable it
- *  @prop {JSX.Element} children - any additional content that needs to be displayed within the Modal
+ *  @prop {React.FC} children - any additional content that needs to be displayed within the Modal
  * @returns {React.FC<Props>} A React Component displaying a modal to confirm a user action
  */
 export const ConfirmationModal: React.FC<Props> = ({

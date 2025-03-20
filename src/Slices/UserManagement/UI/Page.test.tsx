@@ -16,7 +16,13 @@ import { UserManagementPage } from "./Page";
 expect.extend(toHaveNoViolations);
 
 const setup = () => {
-  const queryClient = new QueryClient();
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  });
 
   const component = (
     <MemoryRouter>

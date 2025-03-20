@@ -31,7 +31,6 @@ export const useGetDiagnostics = (
       useQuery({
         queryKey: ["get_diagnostics-one_time", service, instanceId, lookBehind],
         queryFn: () => get(url(lookBehind)),
-        retry: false,
         select: (data) => data.data,
       }),
   };

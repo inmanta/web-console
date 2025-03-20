@@ -2,20 +2,36 @@ import React, { useContext, useState } from "react";
 import { Button, Flex } from "@patternfly/react-core";
 import moment from "moment";
 import styled from "styled-components";
-import { RemoteData } from "@/Core";
+import { useGetMetrics } from "@/Data/Managers/V2/Dashboard/GetMetrics";
 import { ErrorView, LoadingView } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { Section } from "./Section";
 
+/**
+ * Dashboard component that displays metrics data in sections
+ *
+ * Fetches metrics for a date range (default last 7 days) and displays them in sections.
+ * Includes a refresh button to update the data to the latest 7 day period.
+ * Conditionally renders LSM (Lifecycle Service Manager) metrics if the feature is enabled.
+ * Shows loading and error states appropriately.
+ *
+ * @returns React component that renders the metrics dashboard
+ */
+
 export const Dashboard: React.FC = () => {
-  const { queryResolver, featureManager } = useContext(DependencyContext);
+  const { featureManager } = useContext(DependencyContext);
   const [startDate, setStartDate] = useState(
     moment().add(-7, "days").toISOString(),
   );
   const [endDate, setEndDate] = useState(moment().toISOString());
-  const [data, retry] = queryResolver.useOneTime<"GetMetrics">({
-    kind: "GetMetrics",
+  const {
+    data: metrics,
+    error,
+    isError,
+    isSuccess,
+    refetch,
+  } = useGetMetrics().useOneTime({
     startDate,
     endDate,
     isLsmAvailable: featureManager.isLsmEnabled(),
@@ -26,56 +42,50 @@ export const Dashboard: React.FC = () => {
     setEndDate(moment().toISOString());
   };
 
-  return (
-    <>
-      {RemoteData.fold(
-        {
-          notAsked: () => null,
-          loading: () => <LoadingView ariaLabel="Metrics-Loading" />,
-          failed: (error) => (
-            <ErrorView
-              message={error}
-              retry={retry}
-              ariaLabel="Metrics-Failed"
+  if (isError) {
+    return (
+      <ErrorView
+        message={error.message}
+        retry={refetch}
+        ariaLabel="Metrics-Failed"
+      />
+    );
+  }
+
+  if (isSuccess) {
+    return (
+      <Wrapper aria-label="Metrics-Success">
+        <RefreshWrapper>
+          <Button variant="secondary" onClick={updateCharts}>
+            {words("dashboard.refresh")}
+          </Button>
+        </RefreshWrapper>
+        <Flex direction={{ default: "column" }} gap={{ default: "gapLg" }}>
+          {featureManager.isLsmEnabled() && (
+            <Section
+              title={words("navigation.lifecycleServiceManager")}
+              metricType="lsm"
+              metrics={metrics}
             />
-          ),
-          success: (metrics) => (
-            <Wrapper aria-label="Metrics-Success">
-              <RefreshWrapper>
-                <Button variant="secondary" onClick={updateCharts}>
-                  {words("dashboard.refresh")}
-                </Button>
-              </RefreshWrapper>
-              <Flex
-                direction={{ default: "column" }}
-                gap={{ default: "gapLg" }}
-              >
-                {featureManager.isLsmEnabled() && (
-                  <Section
-                    title={words("navigation.lifecycleServiceManager")}
-                    metricType="lsm"
-                    metrics={metrics}
-                  />
-                )}
-                <Section
-                  title={words("navigation.orchestrationEngine")}
-                  metricType="orchestrator"
-                  metrics={metrics}
-                />
-                <Section
-                  title={words("navigation.resourceManager")}
-                  metricType="resource"
-                  metrics={metrics}
-                />
-              </Flex>
-            </Wrapper>
-          ),
-        },
-        data,
-      )}
-    </>
-  );
+          )}
+          <Section
+            title={words("navigation.orchestrationEngine")}
+            metricType="orchestrator"
+            metrics={metrics}
+          />
+          <Section
+            title={words("navigation.resourceManager")}
+            metricType="resource"
+            metrics={metrics}
+          />
+        </Flex>
+      </Wrapper>
+    );
+  }
+
+  return <LoadingView ariaLabel="Metrics-Loading" />;
 };
+
 const Wrapper = styled.div`
   position: relative;
 `;

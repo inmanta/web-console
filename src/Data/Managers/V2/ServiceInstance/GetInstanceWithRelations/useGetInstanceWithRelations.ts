@@ -189,7 +189,7 @@ export const useGetInstanceWithRelations = (
       useQuery({
         queryKey: ["get_instance_with_relations-one_time", instanceId],
         queryFn: () => fetchInstanceWithRelations(instanceId),
-        retry: false,
+
         enabled: serviceModel !== undefined,
         gcTime: 0,
       }),
@@ -197,7 +197,7 @@ export const useGetInstanceWithRelations = (
       useQuery({
         queryKey: ["get_instance_with_relations-continuous", instanceId],
         queryFn: () => fetchInstanceWithRelations(instanceId),
-        retry: false,
+
         refetchInterval: 5000,
         enabled: serviceModel !== undefined,
       }),

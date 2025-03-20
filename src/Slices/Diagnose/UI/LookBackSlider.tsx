@@ -26,7 +26,7 @@ interface Props {
  * @prop {number} initialLookBehind - The initial version to be selected on the slider.
  * @prop {Function} setSelectedVersion - The function to call when the selected version changes.
  *
- * @returns {JSX.Element} The rendered LookBackSlider component.
+ * @returns {React.FC} The rendered LookBackSlider component.
  */
 export const LookBackSlider: React.FC<Props> = ({
   instanceVersion,

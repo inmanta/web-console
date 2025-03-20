@@ -53,7 +53,13 @@ export const SetupWrapper: React.FC<PropsWithChildren<Props>> = ({
   children,
   expertMode,
 }) => {
-  const queryClient = new QueryClient();
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  });
   const store = getStoreInstance();
 
   const environmentHandler = EnvironmentHandlerImpl(

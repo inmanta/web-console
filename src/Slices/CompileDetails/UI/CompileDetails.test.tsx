@@ -48,85 +48,91 @@ function setup() {
 }
 const server = setupServer();
 
-beforeAll(() => server.listen());
-afterEach(() => server.resetHandlers());
-afterAll(() => server.close());
+describe("CompileDetails", () => {
+  beforeAll(() => server.listen());
+  afterEach(() => server.resetHandlers());
+  afterAll(() => server.close());
 
-test("CompileDetailsView shows failed view", async () => {
-  server.use(
-    http.get("api/v2/compilereport/123", () => {
-      return HttpResponse.json(
-        {
-          message: "error",
-        },
-        {
-          status: 500,
-        },
-      );
-    }),
-  );
-  const { component } = setup();
+  test("CompileDetailsView shows failed view", async () => {
+    server.use(
+      http.get("api/v2/compilereport/123", () => {
+        return HttpResponse.json(
+          {
+            message: "error",
+          },
+          {
+            status: 500,
+          },
+        );
+      }),
+    );
+    const { component } = setup();
 
-  render(component);
+    render(component);
 
-  expect(
-    screen.getByRole("region", { name: "CompileDetailsView-Loading" }),
-  ).toBeInTheDocument();
+    expect(
+      screen.getByRole("region", { name: "CompileDetailsView-Loading" }),
+    ).toBeInTheDocument();
 
-  expect(
-    await screen.findByRole("region", { name: "CompileDetailsView-Error" }),
-  ).toBeInTheDocument();
-});
-
-test("CompileDetailsView shows completed table with success: true", async () => {
-  server.use(
-    http.get("api/v2/compilereport/123", () => {
-      return HttpResponse.json({ data: Mock.data });
-    }),
-  );
-  const { component } = setup();
-
-  await render(component);
-
-  expect(
-    await screen.findByRole("region", { name: "CompileDetailsView-Loading" }),
-  ).toBeInTheDocument();
-
-  expect(
-    await screen.findByRole("generic", { name: "CompileDetailsView-Success" }),
-  ).toBeInTheDocument();
-  expect(await screen.findAllByLabelText("done-state")).toHaveLength(3);
-
-  await act(async () => {
-    const results = await axe(document.body);
-
-    expect(results).toHaveNoViolations();
+    expect(
+      await screen.findByRole("region", { name: "CompileDetailsView-Error" }),
+    ).toBeInTheDocument();
   });
-});
 
-test("CompileDetailsView shows completed table with success: false, error indication should appear", async () => {
-  server.use(
-    http.get("api/v2/compilereport/123", () => {
-      return HttpResponse.json({ data: Mock.DataFailed });
-    }),
-  );
-  const { component } = setup();
+  test("CompileDetailsView shows completed table with success: true", async () => {
+    server.use(
+      http.get("api/v2/compilereport/123", () => {
+        return HttpResponse.json({ data: Mock.data });
+      }),
+    );
+    const { component } = setup();
 
-  await render(component);
+    await render(component);
 
-  expect(
-    await screen.findByRole("region", { name: "CompileDetailsView-Loading" }),
-  ).toBeInTheDocument();
+    expect(
+      await screen.findByRole("region", { name: "CompileDetailsView-Loading" }),
+    ).toBeInTheDocument();
 
-  expect(
-    await screen.findByRole("generic", { name: "CompileDetailsView-Success" }),
-  ).toBeInTheDocument();
+    expect(
+      await screen.findByRole("generic", {
+        name: "CompileDetailsView-Success",
+      }),
+    ).toBeInTheDocument();
+    expect(await screen.findAllByLabelText("done-state")).toHaveLength(3);
 
-  expect(await screen.findByLabelText("error-state")).toBeInTheDocument();
+    await act(async () => {
+      const results = await axe(document.body);
 
-  await act(async () => {
-    const results = await axe(document.body);
+      expect(results).toHaveNoViolations();
+    });
+  });
 
-    expect(results).toHaveNoViolations();
+  test("CompileDetailsView shows completed table with success: false, error indication should appear", async () => {
+    server.use(
+      http.get("api/v2/compilereport/123", () => {
+        return HttpResponse.json({ data: Mock.DataFailed });
+      }),
+    );
+    const { component } = setup();
+
+    await render(component);
+
+    expect(
+      await screen.findByRole("region", { name: "CompileDetailsView-Loading" }),
+    ).toBeInTheDocument();
+
+    expect(
+      await screen.findByRole("generic", {
+        name: "CompileDetailsView-Success",
+      }),
+    ).toBeInTheDocument();
+
+    expect(await screen.findByLabelText("error-state")).toBeInTheDocument();
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

@@ -4,35 +4,47 @@ import {
   AlertActionCloseButton,
   AlertGroup,
 } from "@patternfly/react-core";
-import { Either } from "@/Core";
+import { useCreateSupportArchive } from "@/Data/Managers/V2/Miscellaneous/CreateSupportArchive";
 import { DependencyContext } from "@/UI/Dependency";
-import { DownloadButton, Phase } from "./Components";
+import { DownloadButton } from "./Components";
 
+/**
+ * SupportArchive component is responsible for managing the download
+ * of the support archive. It utilizes the useCreateSupportArchive hook
+ * to handle the download process and provides user feedback through
+ * a DownloadButton and alerts for any errors that may occur during
+ * the download.
+ *
+ * @returns {React.FC} The rendered component.
+ */
 export const SupportArchive: React.FC = () => {
-  const { commandResolver, archiveHelper } = useContext(DependencyContext);
-  const [phase, setPhase] = useState<Phase>("Default");
+  const { archiveHelper } = useContext(DependencyContext);
   const [error, setError] = useState<null | string>(null);
-  const trigger = commandResolver.useGetTrigger<"GetSupportArchive">({
-    kind: "GetSupportArchive",
+  const { mutate, isPending } = useCreateSupportArchive({
+    onSuccess: (data) => {
+      try {
+        archiveHelper.triggerDownload(data);
+      } catch (err) {
+        setError(
+          err instanceof Error
+            ? err.message
+            : "Failed to download support archive",
+        );
+      }
+    },
+    onError: (error) => {
+      setError(error.message || "Failed to download support archive");
+    },
   });
 
   const onClick = async () => {
-    setPhase("Downloading");
     setError(null);
-    const result = await trigger();
-
-    if (Either.isLeft(result)) {
-      setPhase("Default");
-      setError(result.value);
-    } else {
-      archiveHelper.triggerDownload(result.value);
-      setPhase("Default");
-    }
+    mutate();
   };
 
   return (
     <>
-      <DownloadButton phase={phase} onClick={onClick} />
+      <DownloadButton isPending={isPending} onClick={onClick} />
       {error && (
         <AlertGroup isToast isLiveRegion>
           <Alert

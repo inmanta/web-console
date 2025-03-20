@@ -39,7 +39,7 @@ interface Props {
  * @param {Function} props.setIsOpen - The callback function to set the open state of the popover.
  * @param {boolean} props.isOpen - The current open state of the popover.
  * @param {React.RefObject<NonNullable<HTMLInputElement>>} props.ref - The ref for the input element.
- * @returns {JSX.Element} The rendered SuggestionsPopover component.
+ * @returns {React.FC} The rendered SuggestionsPopover component.
  */
 export const SuggestionsPopover = forwardRef<
   NonNullable<HTMLInputElement>,

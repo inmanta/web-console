@@ -1,13 +1,23 @@
 import React from "react";
+import { NotificationFilter } from "@/Data/Managers/V2/Notification/GetNotifications";
 import { FreeTextFilter } from "@/UI/Components/Filters";
 import { words } from "@/UI/words";
-import { Filter } from "@S/Notification/Core/Query";
 
+/**
+ * Props for the TitleFilter component.
+ *
+ * @property {NotificationFilter} filter - Current filter state for notifications
+ * @property {(filter: NotificationFilter) => void} setFilter - Function to update the filter state
+ */
 interface Props {
-  filter: Filter;
-  setFilter: (filter: Filter) => void;
+  filter: NotificationFilter;
+  setFilter: (filter: NotificationFilter) => void;
 }
 
+/**
+ * Component that provides a free text filter for notification titles.
+ * Allows users to filter notifications based on their titles.
+ */
 export const TitleFilter: React.FC<Props> = ({ filter, setFilter }) => {
   const update = (values: string[]) => {
     setFilter({

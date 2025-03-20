@@ -16,10 +16,6 @@ import {
   GenerateTokenManifest,
 } from "@/Data/Managers/GenerateToken/interface";
 import {
-  GetSupportArchive,
-  GetSupportArchiveManifest,
-} from "@/Data/Managers/GetSupportArchive/interface";
-import {
   HaltEnvironment,
   HaltEnvironmentManifest,
 } from "@/Data/Managers/HaltEnvironment/interface";
@@ -42,7 +38,6 @@ import * as CreateProject from "@S/CreateEnvironment/Core/CreateProjectCommand";
 import * as CreateInstance from "@S/CreateInstance/Core/Command";
 import * as TriggerInstanceUpdate from "@S/EditInstance/Core/Command";
 import * as DeleteEnvironment from "@S/Home/Core/DeleteEnvironmentCommand";
-import * as UpdateNotification from "@S/Notification/Core/Command";
 import * as CreateCallback from "@S/ServiceDetails/Core/CreateCallback";
 import * as DeleteCallback from "@S/ServiceDetails/Core/DeleteCallback";
 import * as ClearEnvironment from "@S/Settings/Core/ClearEnvironmentCommand";
@@ -58,7 +53,6 @@ type Command =
   | DeleteEnvironment.Command
   | Deploy
   | GenerateToken
-  | GetSupportArchive
   | HaltEnvironment
   | ModifyEnvironment
   | Repair
@@ -66,8 +60,7 @@ type Command =
   | ResumeEnvironment
   | TriggerDryRun
   | TriggerInstanceUpdate.Command
-  | UpdateEnvironmentSetting
-  | UpdateNotification.Command;
+  | UpdateEnvironmentSetting;
 
 export type Type = Command;
 
@@ -86,7 +79,6 @@ interface Manifest {
   DeleteEnvironment: DeleteEnvironment.Manifest;
   Deploy: DeployManifest;
   GenerateToken: GenerateTokenManifest;
-  GetSupportArchive: GetSupportArchiveManifest;
   HaltEnvironment: HaltEnvironmentManifest;
   ModifyEnvironment: ModifyEnvironmentManifest;
   Repair: RepairManifest;
@@ -95,7 +87,6 @@ interface Manifest {
   TriggerDryRun: TriggerDryRunManifest;
   TriggerInstanceUpdate: TriggerInstanceUpdate.Manifest;
   UpdateEnvironmentSetting: UpdateEnvironmentSettingManifest;
-  UpdateNotification: UpdateNotification.Manifest;
 }
 
 /**
