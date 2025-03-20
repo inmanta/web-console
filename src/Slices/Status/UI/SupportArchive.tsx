@@ -6,7 +6,7 @@ import {
 } from "@patternfly/react-core";
 import { useCreateSupportArchive } from "@/Data/Managers/V2/Miscellaneous/CreateSupportArchive";
 import { DependencyContext } from "@/UI/Dependency";
-import { DownloadButton, Phase } from "./Components";
+import { DownloadButton } from "./Components";
 
 /**
  * SupportArchive component is responsible for managing the download

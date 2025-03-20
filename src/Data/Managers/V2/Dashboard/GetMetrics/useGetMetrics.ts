@@ -37,7 +37,6 @@ export const useGetMetrics = (): GetMetrics => {
       useQuery({
         queryKey: ["get_metrics-one_time", params],
         queryFn: () => get(getUrl(params)),
-        retry: false,
         select: (data) => data.data,
       }),
 
@@ -47,7 +46,6 @@ export const useGetMetrics = (): GetMetrics => {
       useQuery({
         queryKey: ["get_metrics-continuous", params],
         queryFn: () => get(getUrl(params)),
-        retry: false,
         select: (data) => data.data,
         refetchInterval: 5000,
       }),

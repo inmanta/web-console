@@ -40,7 +40,6 @@ export const useGetCompileDetails = (
       useQuery({
         queryKey: ["get_compile_details-one_time", params.id],
         queryFn: () => get(url),
-        retry: false,
         select: (data) => data,
       }),
     useContinuous: (): UseQueryResult<ResponseBody, Error> =>

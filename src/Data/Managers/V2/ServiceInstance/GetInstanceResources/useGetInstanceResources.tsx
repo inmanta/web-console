@@ -34,7 +34,6 @@ export const useGetInstanceResources = (
       useQuery({
         queryKey: ["get_instance_resources-one_time", id],
         queryFn: () => get(url),
-        retry: false,
       }),
     useContinuous: (): UseQueryResult<InstanceResourceModel[], Error> =>
       useQuery({
@@ -42,7 +41,6 @@ export const useGetInstanceResources = (
         queryFn: () => get(url),
         refetchInterval: 5000,
         select: (data): InstanceResourceModel[] => data.data,
-        retry: false,
       }),
   };
 };

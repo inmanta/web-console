@@ -24,7 +24,6 @@ export const useGetJSONSchema = (service_id: string): GetJSONSchema => {
       useQuery({
         queryKey: ["get_JSON_schema-one_time", service_id],
         queryFn: () => get(`/lsm/v1/service_catalog/${service_id}/schema`),
-        retry: false,
         select: (data) => data.data,
       }),
   };

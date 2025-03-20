@@ -60,7 +60,6 @@ export const useGetCompileReports = (
           params.currentPage,
         ],
         queryFn: () => get(url),
-        retry: false,
         select: (data) => ({
           ...data,
           handlers: getPaginationHandlers(data.links, data.metadata),

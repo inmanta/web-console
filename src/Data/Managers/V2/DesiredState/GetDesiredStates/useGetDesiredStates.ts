@@ -69,7 +69,6 @@ export const useGetDesiredStates = (): GetDesiredStates => {
           get(
             getUrl({ pageSize, filter, currentPage, kind: "GetDesiredStates" }),
           ),
-        retry: false,
       }),
     useContinuous: (
       pageSize: PageSize.PageSize,

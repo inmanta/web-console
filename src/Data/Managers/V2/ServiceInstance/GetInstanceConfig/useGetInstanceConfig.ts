@@ -32,7 +32,6 @@ export const useGetInstanceConfig = (
       useQuery({
         queryKey: ["get_instance_config-one_time", service, id],
         queryFn: () => get(url),
-        retry: false,
         select: (data) => data.data,
       }),
     useContinuous: (): UseQueryResult<Config, Error> =>
