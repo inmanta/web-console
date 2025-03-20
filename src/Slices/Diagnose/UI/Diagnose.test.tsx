@@ -26,7 +26,13 @@ const axe = configureAxe({
 
 function setup() {
   const store = getStoreInstance();
-  const queryClient = new QueryClient();
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  });
 
   const environmentHandler = EnvironmentHandlerImpl(
     useLocation,
