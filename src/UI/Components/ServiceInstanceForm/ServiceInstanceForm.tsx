@@ -74,7 +74,7 @@ const getFormState = (
  *   @prop {boolean} isSubmitDisabled - Indicates whether the submit button is disabled.
  *   @prop {string} [apiVersion="v1"] - API version ("v1" or "v2"). Default is "v1".
  *   @prop {boolean} [isEdit=false] - Whether the form is in edit mode. Default is false.
- * @returns {React.FC} The rendered ServiceInstanceForm component.
+ * @returns {React.FC<Props>} The rendered ServiceInstanceForm component.
  */
 export const ServiceInstanceForm: React.FC<Props> = ({
   service_entity,

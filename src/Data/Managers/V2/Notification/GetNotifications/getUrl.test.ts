@@ -10,13 +10,13 @@ it.each`
 `(
   "getUrl returns correct url for notifications with filter $filter, currentPage: $currentPage, and pageSize: $pageSize",
   ({ filter, pageSize, url, currentPage }) => {
-    const query: GetNotificationsParams = {
+    const queryParams: GetNotificationsParams = {
       origin: "center",
       pageSize: PageSize.from(pageSize),
       filter,
       currentPage: { kind: "CurrentPage", value: currentPage },
     };
 
-    expect(getUrl(query)).toEqual(url);
+    expect(getUrl(queryParams)).toEqual(url);
   },
 );

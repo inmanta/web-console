@@ -19,15 +19,12 @@ import { DownloadButton, Phase } from "./Components";
  */
 export const SupportArchive: React.FC = () => {
   const { archiveHelper } = useContext(DependencyContext);
-  const [phase, setPhase] = useState<Phase>("Default");
   const [error, setError] = useState<null | string>(null);
-  const { mutate } = useCreateSupportArchive({
+  const { mutate, isPending } = useCreateSupportArchive({
     onSuccess: (data) => {
       try {
         archiveHelper.triggerDownload(data);
-        setPhase("Default");
       } catch (err) {
-        setPhase("Default");
         setError(
           err instanceof Error
             ? err.message
@@ -41,14 +38,13 @@ export const SupportArchive: React.FC = () => {
   });
 
   const onClick = async () => {
-    setPhase("Downloading");
     setError(null);
     mutate();
   };
 
   return (
     <>
-      <DownloadButton phase={phase} onClick={onClick} />
+      <DownloadButton isPending={isPending} onClick={onClick} />
       {error && (
         <AlertGroup isToast isLiveRegion>
           <Alert
