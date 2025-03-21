@@ -1,12 +1,14 @@
 import qs from "qs";
-import { Query } from "@/Core";
+import { GetDiscoveredResourcesParams } from "./useGetDiscoveredResources";
 
-export function getUrl({
-  filter,
-  pageSize,
-  sort,
-  currentPage,
-}: Query.SubQuery<"GetDiscoveredResources">): string {
+/**
+ * Constructs a URL for fetching discovered resources
+ *
+ * @param {GetDiscoveredResourcesParams} params - The query parameters
+ * @returns {string} The constructed URL
+ */
+export const getUrl = (params: GetDiscoveredResourcesParams): string => {
+  const { filter, sort, pageSize, currentPage } = params;
   const filterParam =
     filter && Object.keys(filter).length > 0
       ? `&${qs.stringify(
@@ -23,4 +25,4 @@ export function getUrl({
   return `/api/v2/discovered?limit=${pageSize.value}${filterParam}${sortParam}${
     currentPage.value ? `&${currentPage.value}` : ""
   }`;
-}
+};

@@ -1,5 +1,6 @@
-import { PageSize, Query } from "@/Core";
+import { PageSize } from "@/Core";
 import { getUrl } from "./getUrl";
+import { GetDiscoveredResourcesParams } from "./useGetDiscoveredResources";
 
 it.each`
   filter                                  | sort                               | pageSize | currentPage | url
@@ -9,8 +10,7 @@ it.each`
 `(
   "getUrl returns correct url for discovered resources with currentPage: $currentPage and pageSize: $pageSize",
   ({ filter, pageSize, sort, url, currentPage }) => {
-    const query: Query.SubQuery<"GetDiscoveredResources"> = {
-      kind: "GetDiscoveredResources",
+    const query: GetDiscoveredResourcesParams = {
       pageSize: PageSize.from(pageSize),
       filter,
       sort,

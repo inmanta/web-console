@@ -15,8 +15,6 @@ import {
 } from "@/Data/Managers";
 import { Store } from "@/Data/Store";
 import { GetOrdersQueryManager } from "@/Slices/Orders/Data/QueryManager";
-import { GetDiscoveredResourcesQueryManager } from "@/Slices/ResourceDiscovery/Data/QueryManager";
-import { GetDiscoveredResourcesStateHelper } from "@/Slices/ResourceDiscovery/Data/StateHelper";
 import {
   EnvironmentDetailsContinuousQueryManager,
   EnvironmentDetailsOneTimeQueryManager,
@@ -125,11 +123,6 @@ export class QueryManagerResolverImpl implements QueryManagerResolver {
       EventsQueryManager(
         this.apiHelper,
         EventsStateHelper(this.store),
-        this.scheduler,
-      ),
-      GetDiscoveredResourcesQueryManager(
-        this.apiHelper,
-        GetDiscoveredResourcesStateHelper(this.store),
         this.scheduler,
       ),
       GetResourcesQueryManager(this.store, this.apiHelper, this.scheduler),

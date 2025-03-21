@@ -4,10 +4,6 @@ import {
   orderDetailsSlice,
 } from "@/Slices/OrderDetails/Data/Store";
 import { ordersSlice, OrdersSlice } from "@/Slices/Orders/Data/Store";
-import {
-  DiscoveredResourcesSlice,
-  discoveredResourcesSlice,
-} from "@/Slices/ResourceDiscovery/Data/Store";
 import { agentsSlice, AgentsSlice } from "@S/Agents/Data/Store";
 import {
   dryRunReportSlice,
@@ -65,7 +61,6 @@ export interface StoreModel {
   agents: AgentsSlice;
   callbacks: CallbacksSlice;
   desiredStateDiff: DesiredStateDiffSlice;
-  discoveredResources: DiscoveredResourcesSlice;
   dryRunReport: DryRunReportSlice;
   dryRuns: DryRunsSlice;
   environment: EnvironmentSlice;
@@ -90,7 +85,6 @@ export const storeModel: StoreModel = {
   agents: agentsSlice,
   callbacks: callbacksSlice,
   desiredStateDiff: desiredStateDiffSlice,
-  discoveredResources: discoveredResourcesSlice,
   dryRunReport: dryRunReportSlice,
   dryRuns: dryRunsSlice,
   environment: environmentSlice,
