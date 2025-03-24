@@ -1,5 +1,6 @@
-import { PageSize, Query } from "@/Core";
+import { PageSize } from "@/Core";
 import { getUrl } from "./getUrl";
+import { GetResourceLogsParams } from "./useGetResourceLogs";
 
 it.each`
   resourceId       | filter                                                                     | filterTxt                  | pageSize | currentPage                                         | url
@@ -13,8 +14,7 @@ it.each`
 `(
   "getUrl returns correct url for resource logs with filter: $filterTxt, currentPage: $currentPage and pageSize: $pageSize",
   ({ resourceId, filter, pageSize, url, currentPage }) => {
-    const query: Query.SubQuery<"GetResourceLogs"> = {
-      kind: "GetResourceLogs",
+    const query: GetResourceLogsParams = {
       id: resourceId,
       pageSize: PageSize.from(pageSize),
       filter,

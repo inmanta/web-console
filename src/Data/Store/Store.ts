@@ -32,14 +32,6 @@ import {
 } from "@S/Notification/Data/Store";
 import { parametersSlice, ParametersSlice } from "@S/Parameters/Data/Store";
 import {
-  resourceHistorySlice,
-  ResourceHistorySlice,
-} from "@S/ResourceDetails/Data/ResourceHistorySlice";
-import {
-  resourceLogsSlice,
-  ResourceLogsSlice,
-} from "@S/ResourceDetails/Data/ResourceLogsSlice";
-import {
   CallbacksSlice,
   callbacksSlice,
 } from "@S/ServiceDetails/Data/CallbacksSlice";
@@ -59,8 +51,6 @@ export interface StoreModel {
   notification: NotificationSlice;
   parameters: ParametersSlice;
   projects: ProjectsSlice;
-  resourceHistory: ResourceHistorySlice;
-  resourceLogs: ResourceLogsSlice;
   serverStatus: ServerStatusSlice;
   orders: OrdersSlice;
   orderDetails: OrderDetailsSlice;
@@ -80,8 +70,6 @@ export const storeModel: StoreModel = {
   notification: notificationSlice,
   parameters: parametersSlice,
   projects: projectsSlice,
-  resourceHistory: resourceHistorySlice,
-  resourceLogs: resourceLogsSlice,
   serverStatus: serverStatusSlice,
   orders: ordersSlice,
   orderDetails: orderDetailsSlice,

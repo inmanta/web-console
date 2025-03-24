@@ -1,14 +1,21 @@
 import moment from "moment-timezone";
 import qs from "qs";
-import { Query, DateRange, RangeOperator } from "@/Core";
+import { DateRange, RangeOperator } from "@/Core";
+import { GetResourceLogsParams } from "./useGetResourceLogs";
 
+/**
+ * Constructs a URL for fetching resource logs with filtering, sorting, and pagination
+ *
+ * @param {GetResourceLogsParams} params - The query parameters
+ * @returns {string} The constructed URL
+ */
 export function getUrl({
   id,
   sort,
   filter,
   pageSize,
   currentPage,
-}: Query.SubQuery<"GetResourceLogs">): string {
+}: GetResourceLogsParams): string {
   const filterParam =
     filter && Object.keys(filter).length > 0
       ? `&${qs.stringify(
