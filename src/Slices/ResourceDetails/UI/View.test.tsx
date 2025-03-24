@@ -6,20 +6,15 @@ import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { axe, toHaveNoViolations } from "jest-axe";
 import { Either } from "@/Core";
-import { getStoreInstance, QueryResolverImpl } from "@/Data";
+import { getStoreInstance } from "@/Data";
 import {
   DeferredApiHelper,
   dependencies,
-  DynamicQueryManagerResolverImpl,
   StaticScheduler,
   Resource,
 } from "@/Test";
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
-import {
-  ResourceDetailsQueryManager,
-  ResourceDetailsStateHelper,
-} from "@S/ResourceDetails/Data";
 import { ResourceDetails } from "@S/ResourceDetails/Data/Mock";
 import { View } from "./View";
 
@@ -29,24 +24,10 @@ function setup() {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
-  const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolverImpl([
-      ResourceDetailsQueryManager(
-        apiHelper,
-        ResourceDetailsStateHelper(store),
-        scheduler,
-      ),
-    ]),
-  );
 
   const component = (
     <MemoryRouter>
-      <DependencyProvider
-        dependencies={{
-          ...dependencies,
-          queryResolver,
-        }}
-      >
+      <DependencyProvider dependencies={dependencies}>
         <StoreProvider store={store}>
           <Page>
             <View id={Resource.id} />

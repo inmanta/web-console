@@ -4,39 +4,18 @@ import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { Either } from "@/Core";
-import { QueryResolverImpl, getStoreInstance } from "@/Data";
-import {
-  Resource,
-  DynamicQueryManagerResolverImpl,
-  StaticScheduler,
-  DeferredApiHelper,
-  dependencies,
-} from "@/Test";
+import { getStoreInstance } from "@/Data";
+import { Resource, dependencies } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
-import {
-  ResourceLogsQueryManager,
-  ResourceLogsStateHelper,
-} from "@S/ResourceDetails/Data";
 import { ResourceLogs } from "@S/ResourceDetails/Data/Mock";
 import { View } from "./View";
 
 function setup() {
   const store = getStoreInstance();
-  const apiHelper = new DeferredApiHelper();
-  const resourceLogsStateHelper = ResourceLogsStateHelper(store);
-  const resourceLogsQueryManager = ResourceLogsQueryManager(
-    apiHelper,
-    resourceLogsStateHelper,
-    new StaticScheduler(),
-  );
-
-  const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolverImpl([resourceLogsQueryManager]),
-  );
 
   const component = (
     <MemoryRouter>
-      <DependencyProvider dependencies={{ ...dependencies, queryResolver }}>
+      <DependencyProvider dependencies={dependencies}>
         <StoreProvider store={store}>
           <View resourceId={Resource.id} />
         </StoreProvider>
@@ -46,7 +25,6 @@ function setup() {
 
   return {
     component,
-    apiHelper,
   };
 }
 

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useEffect } from "react";
 import {
   Divider,
   Stack,
@@ -7,15 +7,16 @@ import {
   ToolbarContent,
   ToolbarItem,
 } from "@patternfly/react-core";
-import { Query } from "@/Core";
+import { Details } from "@/Core/Domain/Resource/Resource";
 import { useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
+import { useGetResourceHistory } from "@/Data/Managers/V2/Resource/GetResourceHistory/useGetResourceHistory";
 import {
   EmptyView,
-  OldPaginationWidget,
-  RemoteDataView,
+  ErrorView,
+  LoadingView,
+  PaginationWidget,
 } from "@/UI/Components";
-import { DependencyContext } from "@/UI/Dependency";
 import { MomentDatePresenter } from "@/UI/Utils";
 import { words } from "@/UI/words";
 import { ResourceHistoryTable } from "./ResourceHistoryTable";
@@ -24,15 +25,13 @@ import { ResourceHistoryTablePresenter } from "./TablePresenter";
 
 interface Props {
   resourceId: string;
-  details: Query.UsedApiData<"GetResourceDetails">;
+  details: Details;
 }
 
 export const ResourceHistoryView: React.FC<Props> = ({
   resourceId,
   details,
 }) => {
-  const { queryResolver } = useContext(DependencyContext);
-
   const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({
     route: "ResourceDetails",
   });
@@ -43,13 +42,12 @@ export const ResourceHistoryView: React.FC<Props> = ({
     default: { name: "date", order: "desc" },
     route: "ResourceDetails",
   });
-  const [data, retry] = queryResolver.useContinuous<"GetResourceHistory">({
-    kind: "GetResourceHistory",
+  const { data, isSuccess, isError, error, refetch } = useGetResourceHistory({
     id: resourceId,
     sort,
     pageSize,
     currentPage,
-  });
+  }).useOneTime();
 
   //when sorting is triggered, reset the current page
   useEffect(() => {
@@ -57,55 +55,58 @@ export const ResourceHistoryView: React.FC<Props> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sort.order]);
 
-  return (
-    <Stack hasGutter>
-      <StackItem>
-        <ResourceTemporalData data={details} />
-      </StackItem>
-      <Divider />
-      <StackItem isFilled>
-        <Toolbar>
-          <ToolbarContent>
-            <ToolbarItem variant="pagination">
-              <OldPaginationWidget
-                data={data}
-                pageSize={pageSize}
-                setPageSize={setPageSize}
-                setCurrentPage={setCurrentPage}
-              />
-            </ToolbarItem>
-          </ToolbarContent>
-        </Toolbar>
-        <RemoteDataView
-          data={data}
-          retry={retry}
-          label="ResourceHistory"
-          SuccessView={(history) => {
-            if (history.data.length <= 0) {
-              return (
-                <EmptyView
-                  message={words("resources.history.empty.message")}
-                  aria-label="ResourceHistory-Empty"
-                />
-              );
-            }
-            const tablePresenter = new ResourceHistoryTablePresenter(
-              new MomentDatePresenter(),
-            );
-            const rows = tablePresenter.createRows(history.data);
+  if (isError) {
+    return (
+      <ErrorView
+        message={error.message}
+        retry={refetch}
+        aria-label="ResourceHistory-Error"
+      />
+    );
+  }
+  if (isSuccess) {
+    const tablePresenter = new ResourceHistoryTablePresenter(
+      new MomentDatePresenter(),
+    );
+    const rows = tablePresenter.createRows(data.data);
 
-            return (
-              <ResourceHistoryTable
-                aria-label="ResourceHistory-Success"
-                rows={rows}
-                sort={sort}
-                setSort={setSort}
-                tablePresenter={tablePresenter}
-              />
-            );
-          }}
-        />
-      </StackItem>
-    </Stack>
-  );
+    return (
+      <Stack hasGutter>
+        <StackItem>
+          <ResourceTemporalData details={details} />
+        </StackItem>
+        <Divider />
+        <StackItem isFilled>
+          <Toolbar>
+            <ToolbarContent>
+              <ToolbarItem variant="pagination">
+                <PaginationWidget
+                  data={data}
+                  pageSize={pageSize}
+                  setPageSize={setPageSize}
+                  setCurrentPage={setCurrentPage}
+                />
+              </ToolbarItem>
+            </ToolbarContent>
+          </Toolbar>
+          {data.data.length <= 0 ? (
+            <EmptyView
+              message={words("resources.history.empty.message")}
+              aria-label="ResourceHistory-Empty"
+            />
+          ) : (
+            <ResourceHistoryTable
+              aria-label="ResourceHistory-Success"
+              rows={rows}
+              sort={sort}
+              setSort={setSort}
+              tablePresenter={tablePresenter}
+            />
+          )}
+        </StackItem>
+      </Stack>
+    );
+  }
+
+  return <LoadingView aria-label="ResourceHistory-Loading" />;
 };

@@ -1,30 +1,26 @@
 import React from "react";
-import { Query } from "@/Core";
-import { EmptyView, RemoteDataView, RequiresTable } from "@/UI/Components";
+import { Details } from "@/Core/Domain/Resource/Resource";
+import { EmptyView, RequiresTable } from "@/UI/Components";
 import { words } from "@/UI/words";
 
 interface Props {
-  data: Query.UsedApiData<"GetResourceDetails">;
+  details: Details;
 }
 
-export const RequiresTab: React.FC<Props> = ({ data }) => {
+export const RequiresTab: React.FC<Props> = ({ details }) => {
+  if (Object.keys(details.requires_status).length <= 0) {
+    return (
+      <EmptyView
+        message={words("resources.requires.empty.message")}
+        aria-label="ResourceRequires-Empty"
+      />
+    );
+  }
+
   return (
-    <RemoteDataView
-      data={data}
-      label="ResourceRequires"
-      SuccessView={(resourceDetails) =>
-        Object.keys(resourceDetails.requires_status).length <= 0 ? (
-          <EmptyView
-            message={words("resources.requires.empty.message")}
-            aria-label="ResourceRequires-Empty"
-          />
-        ) : (
-          <RequiresTable
-            aria-label="ResourceRequires-Success"
-            requiresStatus={resourceDetails.requires_status}
-          />
-        )
-      }
+    <RequiresTable
+      aria-label="ResourceRequires-Success"
+      requiresStatus={details.requires_status}
     />
   );
 };

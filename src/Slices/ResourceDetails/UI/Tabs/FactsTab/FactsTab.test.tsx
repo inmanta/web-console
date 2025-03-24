@@ -3,45 +3,19 @@ import { MemoryRouter } from "react-router";
 import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { Either } from "@/Core";
-import { getStoreInstance, QueryResolverImpl } from "@/Data";
-import {
-  DeferredApiHelper,
-  dependencies,
-  DynamicQueryManagerResolverImpl,
-  Resource,
-  StaticScheduler,
-} from "@/Test";
+import { getStoreInstance } from "@/Data";
+import { dependencies, Resource } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { Mock } from "@S/Facts/Test";
-import {
-  GetResourceFactsQueryManager,
-  GetResourceFactsStateHelper,
-} from "@S/ResourceDetails/Data";
 import { FactsTab } from "./FactsTab";
 import { sortFactRows } from "./FactsTable";
 
 function setup() {
   const store = getStoreInstance();
-  const apiHelper = new DeferredApiHelper();
-  const scheduler = new StaticScheduler();
-  const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolverImpl([
-      GetResourceFactsQueryManager(
-        apiHelper,
-        GetResourceFactsStateHelper(store),
-        scheduler,
-      ),
-    ]),
-  );
 
   const component = (
     <MemoryRouter>
-      <DependencyProvider
-        dependencies={{
-          ...dependencies,
-          queryResolver,
-        }}
-      >
+      <DependencyProvider dependencies={dependencies}>
         <StoreProvider store={store}>
           <FactsTab resourceId={Resource.id} />
         </StoreProvider>
@@ -49,7 +23,7 @@ function setup() {
     </MemoryRouter>
   );
 
-  return { component, apiHelper, scheduler };
+  return { component };
 }
 
 test("Given the FactsTab When the backend response is an error Then shows failed view", async () => {

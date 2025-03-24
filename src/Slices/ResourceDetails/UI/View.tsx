@@ -1,14 +1,15 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Flex, FlexItem } from "@patternfly/react-core";
-import { Query, RemoteData } from "@/Core";
 import { useUrlStateWithString } from "@/Data";
+import { useGetResourceDetails } from "@/Data/Managers/V2/Resource";
 import {
   Description,
+  ErrorView,
   labelColorConfig,
+  LoadingView,
   PageContainer,
   ResourceStatusLabel,
 } from "@/UI/Components";
-import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { TabKey, Tabs } from "./Tabs";
 
@@ -17,43 +18,50 @@ interface Props {
 }
 
 export const View: React.FC<Props> = ({ id }) => {
-  const { queryResolver } = useContext(DependencyContext);
   const [activeTab, setActiveTab] = useUrlStateWithString<TabKey>({
     default: TabKey.Attributes,
     key: `tab`,
     route: "ResourceDetails",
   });
 
-  const [data] = queryResolver.useContinuous<"GetResourceDetails">({
-    kind: "GetResourceDetails",
-    id,
-  });
+  const { data, isSuccess, isError, error, refetch } =
+    useGetResourceDetails().useContinuous(id);
+
+  if (isError) {
+    return (
+      <PageContainer pageTitle={words("resources.details.title")}>
+        <ErrorView
+          message={error.message}
+          aria-label="ResourceDetails-Error"
+          retry={refetch}
+        />
+      </PageContainer>
+    );
+  }
+
+  if (isSuccess) {
+    return (
+      <PageContainer pageTitle={words("resources.details.title")}>
+        <Flex>
+          <FlexItem>
+            <Description>{id}</Description>
+          </FlexItem>
+          <FlexItem>
+            <ResourceStatusLabel
+              status={labelColorConfig[data.status]}
+              label={data.status}
+            />
+          </FlexItem>
+        </Flex>
+
+        <Tabs {...{ id, data, activeTab, setActiveTab }} />
+      </PageContainer>
+    );
+  }
 
   return (
     <PageContainer pageTitle={words("resources.details.title")}>
-      <Flex>
-        <FlexItem>
-          <Description>{id}</Description>
-        </FlexItem>
-        <FlexItem>
-          <StatusLabel {...{ data }} />
-        </FlexItem>
-      </Flex>
-
-      <Tabs {...{ id, data, activeTab, setActiveTab }} />
+      <LoadingView aria-label="ResourceDetails-Loading" />;{" "}
     </PageContainer>
-  );
-};
-
-const StatusLabel: React.FC<{
-  data: Query.UsedApiData<"GetResourceDetails">;
-}> = ({ data }) => {
-  if (!RemoteData.isSuccess(data)) return null;
-
-  return (
-    <ResourceStatusLabel
-      status={labelColorConfig[data.value.status]}
-      label={data.value.status}
-    />
   );
 };

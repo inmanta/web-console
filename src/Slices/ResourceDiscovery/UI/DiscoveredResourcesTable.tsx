@@ -9,13 +9,13 @@ import {
 } from "@patternfly/react-table";
 import { Sort } from "@/Core";
 import { useExpansion } from "@/Data";
-import { words } from "@/UI";
-import { DiscoveredResourceRow } from "./DiscoveredResourcesRow";
-import { DiscoveredResourcesTablePresenter } from "./DiscoveredResourcesTablePresenter";
 import {
   DiscoveredResource,
   SortKey,
 } from "@/Data/Managers/V2/DiscoveredResources/useGetDiscoveredResources";
+import { words } from "@/UI";
+import { DiscoveredResourceRow } from "./DiscoveredResourcesRow";
+import { DiscoveredResourcesTablePresenter } from "./DiscoveredResourcesTablePresenter";
 
 interface Props {
   tablePresenter: DiscoveredResourcesTablePresenter;

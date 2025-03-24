@@ -3,56 +3,27 @@ import { MemoryRouter } from "react-router";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
-import { Either, RemoteData } from "@/Core";
-import { QueryResolverImpl, getStoreInstance } from "@/Data";
-import {
-  DeferredApiHelper,
-  dependencies,
-  DynamicQueryManagerResolverImpl,
-  StaticScheduler,
-} from "@/Test";
+import { Either } from "@/Core";
+import { getStoreInstance } from "@/Data";
+import { DeferredApiHelper, dependencies, StaticScheduler } from "@/Test";
 import { Resource } from "@/Test/Data";
 import { DependencyProvider } from "@/UI/Dependency";
-import {
-  ResourceDetailsQueryManager,
-  ResourceDetailsStateHelper,
-  ResourceHistoryQueryManager,
-  ResourceHistoryStateHelper,
-} from "@S/ResourceDetails/Data";
 import { ResourceHistory } from "@S/ResourceDetails/Data/Mock";
+import { ResourceDetails } from "@S/ResourceDetails/Data/Mock";
 import { ResourceHistoryView } from "./ResourceHistoryView";
 
 function setup() {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
-  const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolverImpl([
-      ResourceHistoryQueryManager(
-        apiHelper,
-        ResourceHistoryStateHelper(store),
-        scheduler,
-      ),
-      ResourceDetailsQueryManager(
-        apiHelper,
-        ResourceDetailsStateHelper(store),
-        scheduler,
-      ),
-    ]),
-  );
 
   const component = (
     <MemoryRouter>
-      <DependencyProvider
-        dependencies={{
-          ...dependencies,
-          queryResolver,
-        }}
-      >
+      <DependencyProvider dependencies={dependencies}>
         <StoreProvider store={store}>
           <ResourceHistoryView
             resourceId={Resource.id}
-            details={RemoteData.notAsked()}
+            details={ResourceDetails.response.data}
           />
         </StoreProvider>
       </DependencyProvider>
