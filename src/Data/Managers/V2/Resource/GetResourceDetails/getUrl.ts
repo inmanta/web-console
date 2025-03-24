@@ -1,5 +1,3 @@
-import { Query } from "@/Core";
-
 /**
  * Constructs the URL for fetching resource details based on the provided query parameters.
  *

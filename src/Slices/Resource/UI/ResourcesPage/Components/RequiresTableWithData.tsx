@@ -1,4 +1,5 @@
 import React from "react";
+import { useGetResourceDetails } from "@/Data/Managers/V2/Resource";
 import {
   RequiresTable,
   LoadingRequiresTable,
@@ -6,7 +7,6 @@ import {
 } from "@/UI/Components";
 import { EmptyView } from "@/UI/Components/EmptyView";
 import { words } from "@/UI/words";
-import { useGetResourceDetails } from "@/Data/Managers/V2/Resource";
 
 interface Props {
   id: string;
@@ -16,7 +16,7 @@ interface Props {
 export const RequiresTableWithData: React.FC<Props> = ({ id, deps }) => {
   const { data, isSuccess, isError, error, refetch } =
     useGetResourceDetails().useContinuous(id);
-  console.log(isSuccess, isError);
+
   if (isError) {
     <ErrorView
       message={words("error.general")(error?.message)}
