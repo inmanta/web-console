@@ -1,6 +1,6 @@
 import { ColumnHead, TablePresenter } from "@/UI/Presenters";
 import { words } from "@/UI/words";
-import { DiscoveredResource } from "../Core/Query";
+import { DiscoveredResource } from "@/Data/Managers/V2/DiscoveredResources/useGetDiscoveredResources";
 
 export class DiscoveredResourcesTablePresenter
   implements TablePresenter<DiscoveredResource, DiscoveredResource>

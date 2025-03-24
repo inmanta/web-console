@@ -39,12 +39,10 @@ import * as GetNotifications from "@S/Notification/Core/Query";
 import * as GetOrderDetails from "@S/OrderDetails/Core/Query";
 import * as GetOrders from "@S/Orders/Core/Query";
 import * as GetParameters from "@S/Parameters/Core/Query";
-import * as GetResources from "@S/Resource/Core/Query";
 import * as GetResourceDetails from "@S/ResourceDetails/Core/GetResourceDetailsQuery";
 import * as GetResourceFacts from "@S/ResourceDetails/Core/GetResourceFactsQuery";
 import * as GetResourceHistory from "@S/ResourceDetails/Core/GetResourceHistoryQuery";
 import * as GetResourceLogs from "@S/ResourceDetails/Core/GetResourceLogsQuery";
-import * as GetDiscoveredResources from "@S/ResourceDiscovery/Core/Query";
 import * as GetCallbacks from "@S/ServiceDetails/Core/GetCallbacksQuery";
 import * as GetEnvironmentDetails from "@S/Settings/Core/GetEnvironmentDetailsQuery";
 import * as GetProjects from "@S/Settings/Core/GetProjectsQuery";
@@ -53,9 +51,7 @@ export type Query =
   | GetInstanceEvents.Query
   | GetMetrics.Query
   | GetDiagnostics.Query
-  | GetDiscoveredResources.Query
   | GetProjects.Query
-  | GetResources.Query
   | GetResourceDetails.Query
   | GetResourceHistory.Query
   | GetResourceLogs.Query
@@ -90,11 +86,9 @@ export type Type = Query;
 interface Manifest {
   GetInstanceEvents: GetInstanceEvents.Manifest;
   GetDiagnostics: GetDiagnostics.Manifest;
-  GetDiscoveredResources: GetDiscoveredResources.Manifest;
   GetMetrics: GetMetrics.Manifest;
   GetProjects: GetProjects.Manifest;
   GetServerStatus: GetServerStatusManifest;
-  GetResources: GetResources.Manifest;
   GetResourceDetails: GetResourceDetails.Manifest;
   GetResourceHistory: GetResourceHistory.Manifest;
   GetResourceLogs: GetResourceLogs.Manifest;

@@ -1,9 +1,9 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { PageSize, Pagination } from "@/Core/Domain";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
+import { getPaginationHandlers } from "../../Helpers/Pagination/getPaginationHandlers";
 import { useGet } from "../helpers/useQueries";
 import { getUrl } from "./getUrl";
-import { getPaginationHandlers } from "../../Helpers/Pagination/getPaginationHandlers";
 
 /**
  * Interface for filtering discovered resources
