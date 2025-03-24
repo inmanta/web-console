@@ -1,13 +1,12 @@
-import React, { useContext } from "react";
-import { RemoteData } from "@/Core";
+import React from "react";
 import {
   RequiresTable,
   LoadingRequiresTable,
   ErrorView,
 } from "@/UI/Components";
 import { EmptyView } from "@/UI/Components/EmptyView";
-import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
+import { useGetResourceDetails } from "@/Data/Managers/V2/Resource";
 
 interface Props {
   id: string;
@@ -15,30 +14,21 @@ interface Props {
 }
 
 export const RequiresTableWithData: React.FC<Props> = ({ id, deps }) => {
-  const { queryResolver } = useContext(DependencyContext);
+  const { data, isSuccess, isError, error, refetch } =
+    useGetResourceDetails().useContinuous(id);
+  console.log(isSuccess, isError);
+  if (isError) {
+    <ErrorView
+      message={words("error.general")(error?.message)}
+      ariaLabel="ResourceRequires-Failed"
+      retry={refetch}
+    />;
+  }
 
-  const [data] = queryResolver.useContinuous<"GetResourceDetails">({
-    kind: "GetResourceDetails",
-    id,
-  });
-
-  return RemoteData.fold(
-    {
-      notAsked: () => null,
-      loading: () => (
-        <LoadingRequiresTable
-          numberOfRows={deps}
-          aria-label="ResourceRequires-Loading"
-        />
-      ),
-      failed: (error) => (
-        <ErrorView
-          message={words("error.general")(error)}
-          ariaLabel="ResourceRequires-Failed"
-        />
-      ),
-      success: (resourceDetails) =>
-        Object.keys(resourceDetails.requires_status).length <= 0 ? (
+  if (isSuccess) {
+    return (
+      <>
+        {Object.keys(data.requires_status).length <= 0 ? (
           <EmptyView
             message={words("resources.requires.empty.message")}
             aria-label="ResourceRequires-Empty"
@@ -46,10 +36,17 @@ export const RequiresTableWithData: React.FC<Props> = ({ id, deps }) => {
         ) : (
           <RequiresTable
             aria-label="ResourceRequires-Success"
-            requiresStatus={resourceDetails.requires_status}
+            requiresStatus={data.requires_status}
           />
-        ),
-    },
-    data,
+        )}
+      </>
+    );
+  }
+
+  return (
+    <LoadingRequiresTable
+      numberOfRows={deps}
+      aria-label="ResourceRequires-Loading"
+    />
   );
 };

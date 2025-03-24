@@ -14,6 +14,7 @@ import { FactsTab } from "./FactsTab";
 import { ResourceHistoryView } from "./HistoryTab/ResourceHistoryView";
 import { ResourceLogView } from "./LogTab";
 import { RequiresTab } from "./RequiresTab";
+import { Details } from "@/Core/Domain/Resource/Resource";
 
 export enum TabKey {
   Requires = "Requires",
@@ -27,7 +28,7 @@ interface Props {
   id: string;
   activeTab: TabKey;
   setActiveTab: (tab: TabKey) => void;
-  data: Query.UsedApiData<"GetResourceDetails">;
+  data: Details | undefined;
 }
 
 export const Tabs: React.FC<Props> = ({
