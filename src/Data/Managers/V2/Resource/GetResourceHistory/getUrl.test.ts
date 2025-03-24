@@ -1,6 +1,6 @@
-import { PageSize, Query } from "@/Core";
+import { PageSize } from "@/Core";
 import { getUrl } from "./getUrl";
-
+import { GetResourceHistoryParams } from "./useGetResourceHistory";
 it.each`
   resourceId       | sort                               | sortTxt        | pageSize | currentPage                                         | url
   ${"resourceId1"} | ${undefined}                       | ${"undefined"} | ${"20"}  | ${""}                                               | ${`/api/v2/resource/resourceId1/history?limit=20`}
@@ -11,8 +11,7 @@ it.each`
 `(
   "getUrl returns correct url for resource history with sort: $sortTxt, currentPage: $currentPage and pageSize: $pageSize",
   ({ resourceId, sort, pageSize, url, currentPage }) => {
-    const query: Query.SubQuery<"GetResourceHistory"> = {
-      kind: "GetResourceHistory",
+    const query: GetResourceHistoryParams = {
       id: resourceId,
       pageSize: PageSize.from(pageSize),
       sort,
