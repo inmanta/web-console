@@ -46,12 +46,7 @@ import {
   GetParametersQueryManager,
   GetParametersStateHelper,
 } from "@S/Parameters/Data";
-import { GetResourcesQueryManager } from "@S/Resource/Data";
 import {
-  GetResourceFactsQueryManager,
-  GetResourceFactsStateHelper,
-  ResourceDetailsQueryManager,
-  ResourceDetailsStateHelper,
   ResourceHistoryQueryManager,
   ResourceHistoryStateHelper,
   ResourceLogsQueryManager,
@@ -125,12 +120,6 @@ export class QueryManagerResolverImpl implements QueryManagerResolver {
         EventsStateHelper(this.store),
         this.scheduler,
       ),
-      GetResourcesQueryManager(this.store, this.apiHelper, this.scheduler),
-      ResourceDetailsQueryManager(
-        this.apiHelper,
-        ResourceDetailsStateHelper(this.store),
-        this.scheduler,
-      ),
       ResourceHistoryQueryManager(
         this.apiHelper,
         ResourceHistoryStateHelper(this.store),
@@ -146,11 +135,6 @@ export class QueryManagerResolverImpl implements QueryManagerResolver {
       ResourceLogsQueryManager(
         this.apiHelper,
         ResourceLogsStateHelper(this.store),
-        this.scheduler,
-      ),
-      GetResourceFactsQueryManager(
-        this.apiHelper,
-        GetResourceFactsStateHelper(this.store),
         this.scheduler,
       ),
       GetAgentsQueryManager(this.store, this.apiHelper, this.scheduler),

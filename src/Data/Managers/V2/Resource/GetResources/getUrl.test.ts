@@ -1,5 +1,6 @@
-import { PageSize, Query } from "@/Core";
+import { PageSize } from "@/Core";
 import { getUrl } from "./getUrl";
+import { GetResourcesParams } from "./useGetResources";
 
 describe("getUrl for latest released resources ", () => {
   it.each`
@@ -13,15 +14,14 @@ describe("getUrl for latest released resources ", () => {
   `(
     "returns correct url $url page size $size currentPage $currentPage",
     ({ filter, sort, size, url, currentPage }) => {
-      const query: Query.SubQuery<"GetResources"> = {
-        kind: "GetResources",
+      const params: GetResourcesParams = {
         pageSize: PageSize.from(size),
         filter,
         sort,
         currentPage: { kind: "CurrentPage", value: currentPage },
       };
 
-      expect(getUrl(query)).toEqual(url);
+      expect(getUrl(params)).toEqual(url);
     },
   );
 });

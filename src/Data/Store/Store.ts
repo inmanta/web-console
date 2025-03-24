@@ -32,14 +32,6 @@ import {
 } from "@S/Notification/Data/Store";
 import { parametersSlice, ParametersSlice } from "@S/Parameters/Data/Store";
 import {
-  resourceDetailsSlice,
-  ResourceDetailsSlice,
-} from "@S/ResourceDetails/Data/ResourceDetailsSlice";
-import {
-  resourceFactsSlice,
-  ResourceFactsSlice,
-} from "@S/ResourceDetails/Data/ResourceFactsSlice";
-import {
   resourceHistorySlice,
   ResourceHistorySlice,
 } from "@S/ResourceDetails/Data/ResourceHistorySlice";
@@ -53,9 +45,7 @@ import {
 } from "@S/ServiceDetails/Data/CallbacksSlice";
 import { serverStatusSlice, ServerStatusSlice } from "@S/Status/Data/Store";
 import { environmentSlice, EnvironmentSlice } from "./EnvironmentSlice";
-
 import { projectsSlice, ProjectsSlice } from "./ProjectsSlice";
-import { resourcesSlice, ResourcesSlice } from "./ResourcesSlice";
 
 export interface StoreModel {
   agents: AgentsSlice;
@@ -69,11 +59,8 @@ export interface StoreModel {
   notification: NotificationSlice;
   parameters: ParametersSlice;
   projects: ProjectsSlice;
-  resourceDetails: ResourceDetailsSlice;
-  resourceFacts: ResourceFactsSlice;
   resourceHistory: ResourceHistorySlice;
   resourceLogs: ResourceLogsSlice;
-  resources: ResourcesSlice;
   serverStatus: ServerStatusSlice;
   orders: OrdersSlice;
   orderDetails: OrderDetailsSlice;
@@ -93,11 +80,8 @@ export const storeModel: StoreModel = {
   notification: notificationSlice,
   parameters: parametersSlice,
   projects: projectsSlice,
-  resourceDetails: resourceDetailsSlice,
-  resourceFacts: resourceFactsSlice,
   resourceHistory: resourceHistorySlice,
   resourceLogs: resourceLogsSlice,
-  resources: resourcesSlice,
   serverStatus: serverStatusSlice,
   orders: ordersSlice,
   orderDetails: orderDetailsSlice,
