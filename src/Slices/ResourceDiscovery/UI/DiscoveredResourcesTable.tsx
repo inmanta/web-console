@@ -9,8 +9,11 @@ import {
 } from "@patternfly/react-table";
 import { Sort } from "@/Core";
 import { useExpansion } from "@/Data";
+import {
+  DiscoveredResource,
+  SortKey,
+} from "@/Data/Managers/V2/DiscoveredResources/useGetDiscoveredResources";
 import { words } from "@/UI";
-import { DiscoveredResource, SortKey } from "../Core/Query";
 import { DiscoveredResourceRow } from "./DiscoveredResourcesRow";
 import { DiscoveredResourcesTablePresenter } from "./DiscoveredResourcesTablePresenter";
 

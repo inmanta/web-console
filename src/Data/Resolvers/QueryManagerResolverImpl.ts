@@ -15,8 +15,6 @@ import {
 } from "@/Data/Managers";
 import { Store } from "@/Data/Store";
 import { GetOrdersQueryManager } from "@/Slices/Orders/Data/QueryManager";
-import { GetDiscoveredResourcesQueryManager } from "@/Slices/ResourceDiscovery/Data/QueryManager";
-import { GetDiscoveredResourcesStateHelper } from "@/Slices/ResourceDiscovery/Data/StateHelper";
 import {
   EnvironmentDetailsContinuousQueryManager,
   EnvironmentDetailsOneTimeQueryManager,
@@ -31,10 +29,6 @@ import {
   GetDesiredStateDiffQueryManager,
   GetDesiredStateDiffStateHelper,
 } from "@S/DesiredStateCompare/Data";
-import {
-  GetVersionResourcesQueryManager,
-  GetVersionResourcesStateHelper,
-} from "@S/DesiredStateDetails/Data";
 import { GetDesiredStateResourceDetailsQueryManager } from "@S/DesiredStateResourceDetails/Data";
 import { EventsQueryManager, EventsStateHelper } from "@S/Events/Data";
 import { GetFactsQueryManager } from "@S/Facts/Data";
@@ -44,17 +38,6 @@ import {
   GetParametersQueryManager,
   GetParametersStateHelper,
 } from "@S/Parameters/Data";
-import { GetResourcesQueryManager } from "@S/Resource/Data";
-import {
-  GetResourceFactsQueryManager,
-  GetResourceFactsStateHelper,
-  ResourceDetailsQueryManager,
-  ResourceDetailsStateHelper,
-  ResourceHistoryQueryManager,
-  ResourceHistoryStateHelper,
-  ResourceLogsQueryManager,
-  ResourceLogsStateHelper,
-} from "@S/ResourceDetails/Data";
 import {
   CallbacksQueryManager,
   CallbacksStateHelper,
@@ -120,22 +103,6 @@ export class QueryManagerResolverImpl implements QueryManagerResolver {
         EventsStateHelper(this.store),
         this.scheduler,
       ),
-      GetDiscoveredResourcesQueryManager(
-        this.apiHelper,
-        GetDiscoveredResourcesStateHelper(this.store),
-        this.scheduler,
-      ),
-      GetResourcesQueryManager(this.store, this.apiHelper, this.scheduler),
-      ResourceDetailsQueryManager(
-        this.apiHelper,
-        ResourceDetailsStateHelper(this.store),
-        this.scheduler,
-      ),
-      ResourceHistoryQueryManager(
-        this.apiHelper,
-        ResourceHistoryStateHelper(this.store),
-        this.scheduler,
-      ),
       EnvironmentDetailsContinuousQueryManager(
         this.store,
         this.apiHelper,
@@ -143,22 +110,7 @@ export class QueryManagerResolverImpl implements QueryManagerResolver {
       ),
       EnvironmentDetailsOneTimeQueryManager(this.store, this.apiHelper),
       CallbacksQueryManager(this.apiHelper, CallbacksStateHelper(this.store)),
-      ResourceLogsQueryManager(
-        this.apiHelper,
-        ResourceLogsStateHelper(this.store),
-        this.scheduler,
-      ),
-      GetResourceFactsQueryManager(
-        this.apiHelper,
-        GetResourceFactsStateHelper(this.store),
-        this.scheduler,
-      ),
       GetAgentsQueryManager(this.store, this.apiHelper, this.scheduler),
-      GetVersionResourcesQueryManager(
-        this.apiHelper,
-        GetVersionResourcesStateHelper(this.store),
-        this.scheduler,
-      ),
       GetParametersQueryManager(
         this.apiHelper,
         GetParametersStateHelper(this.store),
