@@ -9,7 +9,10 @@ export const response = {
         requires: ["std::Directory[internal,path=/tmp/dir1],v=4"],
       },
       attribute_hash: "ab754aecaa21b8f3003b671df71a905f",
-      requires: ["std::Directory[internal,path=/tmp/dir1]"],
+      requires: [
+        "std::Directory[internal,path=/tmp/dir1]",
+        "std::Directory[internal,path=/tmp/dir1]",
+      ],
     },
     {
       resource_id: "std::File[internal,path=/tmp/dir1/file2]",
