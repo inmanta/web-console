@@ -16,7 +16,7 @@ export const FactsTab: React.FC<Props> = ({ resourceId }) => {
       <ErrorView
         message={error.message}
         retry={refetch}
-        aria-label="ResourceFacts-Error"
+        ariaLabel="ResourceFacts-Error"
       />
     );
   }
@@ -25,5 +25,5 @@ export const FactsTab: React.FC<Props> = ({ resourceId }) => {
     return <FactsTable facts={data} />;
   }
 
-  return <LoadingView aria-label="ResourceFacts-Loading" />;
+  return <LoadingView ariaLabel="ResourceFacts-Loading" />;
 };

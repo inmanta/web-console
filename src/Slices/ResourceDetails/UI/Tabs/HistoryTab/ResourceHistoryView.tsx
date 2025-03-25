@@ -60,7 +60,7 @@ export const ResourceHistoryView: React.FC<Props> = ({
       <ErrorView
         message={error.message}
         retry={refetch}
-        aria-label="ResourceHistory-Error"
+        ariaLabel="ResourceHistory-Error"
       />
     );
   }
@@ -108,5 +108,5 @@ export const ResourceHistoryView: React.FC<Props> = ({
     );
   }
 
-  return <LoadingView aria-label="ResourceHistory-Loading" />;
+  return <LoadingView ariaLabel="ResourceHistory-Loading" />;
 };

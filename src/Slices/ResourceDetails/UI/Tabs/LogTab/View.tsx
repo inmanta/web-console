@@ -65,7 +65,7 @@ export const View: React.FC<Props> = ({ resourceId }) => {
     return (
       <ErrorView
         message={error.message}
-        aria-label="ResourceLogs-Error"
+        ariaLabel="ResourceLogs-Error"
         retry={refetch}
       />
     );
@@ -103,5 +103,5 @@ export const View: React.FC<Props> = ({ resourceId }) => {
     );
   }
 
-  return <LoadingView aria-label="ResourceLogs-Loading" />;
+  return <LoadingView ariaLabel="ResourceLogs-Loading" />;
 };

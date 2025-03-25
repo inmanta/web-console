@@ -32,7 +32,7 @@ export const View: React.FC<Props> = ({ id }) => {
       <PageContainer pageTitle={words("resources.details.title")}>
         <ErrorView
           message={error.message}
-          aria-label="ResourceDetails-Error"
+          ariaLabel="ResourceDetails-Error"
           retry={refetch}
         />
       </PageContainer>
@@ -41,7 +41,10 @@ export const View: React.FC<Props> = ({ id }) => {
 
   if (isSuccess) {
     return (
-      <PageContainer pageTitle={words("resources.details.title")}>
+      <PageContainer
+        pageTitle={words("resources.details.title")}
+        aria-label="ResourceDetails-Success"
+      >
         <Flex>
           <FlexItem>
             <Description>{id}</Description>
@@ -61,7 +64,7 @@ export const View: React.FC<Props> = ({ id }) => {
 
   return (
     <PageContainer pageTitle={words("resources.details.title")}>
-      <LoadingView aria-label="ResourceDetails-Loading" />;{" "}
+      <LoadingView ariaLabel="ResourceDetails-Loading" />;{" "}
     </PageContainer>
   );
 };
