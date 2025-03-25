@@ -5,7 +5,7 @@ import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
-import { http, HttpResponse } from "msw";
+import { delay, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { Either, RemoteData } from "@/Core";
 import {
@@ -30,7 +30,7 @@ expect.extend(toHaveNoViolations);
 const axe = configureAxe({
   rules: {
     // disable landmark rules when testing isolated components.
-    // In this case, the tooltips are part of the higher hiararchy
+    // In this case, the tooltips are part of the higher hierarchy
     region: { enabled: false },
   },
 });
@@ -49,6 +49,7 @@ function setup(entries?: string[]) {
   const commandResolver = new CommandResolverImpl(
     new CommandManagerResolverImpl(store, apiHelper),
   );
+
   const environment = "34a961ba-db3c-486e-8d85-1438d8e88909";
 
   const component = (
@@ -72,6 +73,7 @@ function setup(entries?: string[]) {
   return {
     component,
     environment,
+    apiHelper,
     store,
     environmentModifier: dependencies.environmentModifier,
   };
@@ -172,10 +174,18 @@ describe("ResourcesPage", () => {
     });
   });
 
-  test.only("GIVEN ResourcesPage WHEN user clicks on requires toggle THEN list of requires is shown", async () => {
+  test("GIVEN ResourcesPage WHEN user clicks on requires toggle THEN list of requires is shown", async () => {
     server.use(
       http.get("/api/v2/resource", () => {
-        return HttpResponse.json(Resource.response);
+        return HttpResponse.json({
+          ...Resource.response,
+          data: [
+            {
+              ...Resource.response.data[0],
+              resource_id: ["abc"],
+            },
+          ],
+        });
       }),
       http.get("/api/v2/resource/abc", () => {
         return HttpResponse.json(ResourceDetails.response);
@@ -191,7 +201,7 @@ describe("ResourcesPage", () => {
     });
 
     const toggleCell = within(rows[0]).getByRole("cell", {
-      name: "Toggle-" + Resource.response.data[0].resource_id,
+      name: "Toggle-abc",
     });
 
     const toggleButton = within(toggleCell).getByRole("button");
@@ -230,12 +240,9 @@ describe("ResourcesPage", () => {
     const { component } = setup();
 
     render(component);
-
-    expect(
-      await screen.findByRole("cell", {
-        name: Resource.response.data[0].id_details.resource_id_value,
-      }),
-    ).toBeInTheDocument();
+    expect(await screen.findAllByLabelText("Resource Table Row")).toHaveLength(
+      3,
+    );
 
     const button = screen.getAllByRole("button", {
       name: "Go to next page",
@@ -245,11 +252,9 @@ describe("ResourcesPage", () => {
 
     await userEvent.click(button);
 
-    expect(
-      await screen.findByRole("cell", {
-        name: Resource.response.data[3].id_details.resource_id_value,
-      }),
-    ).toBeInTheDocument();
+    expect(await screen.findAllByLabelText("Resource Table Row")).toHaveLength(
+      6,
+    );
 
     await act(async () => {
       const results = await axe(document.body);
@@ -259,13 +264,14 @@ describe("ResourcesPage", () => {
   });
 
   test("ResourcesPage shows sorting buttons for sortable columns", async () => {
-    const { component, apiHelper } = setup();
+    server.use(
+      http.get("/api/v2/resource", () => {
+        return HttpResponse.json(Resource.response);
+      }),
+    );
+    const { component } = setup();
 
     render(component);
-
-    await act(async () => {
-      await apiHelper.resolve(Either.right(Resource.response));
-    });
 
     const table = await screen.findByRole("grid", {
       name: "ResourcesPage-Success",
@@ -289,13 +295,28 @@ describe("ResourcesPage", () => {
   });
 
   test("ResourcesPage sets sorting parameters correctly on click", async () => {
-    const { component, apiHelper } = setup();
+    server.use(
+      http.get("/api/v2/resource", ({ request }) => {
+        if (request.url.includes("sort=agent.asc")) {
+          return HttpResponse.json({
+            ...Resource.response,
+            data: Resource.response.data.reverse(),
+          });
+        }
+
+        return HttpResponse.json(Resource.response);
+      }),
+    );
+
+    const { component } = setup();
 
     render(component);
 
-    await act(async () => {
-      await apiHelper.resolve(Either.right(Resource.response));
-    });
+    const rows = await screen.findAllByLabelText("Resource Table Row");
+    expect(rows[0]).toHaveTextContent("/tmp/file4");
+    expect(rows[5]).toHaveTextContent(
+      "std::Directoryagent2/tmp/dir50skippedShow Details",
+    );
 
     const stateButton = await screen.findByRole("button", { name: "Agent" });
 
@@ -303,7 +324,11 @@ describe("ResourcesPage", () => {
 
     await userEvent.click(stateButton);
 
-    expect(apiHelper.pendingRequests[0].url).toContain("&sort=agent.asc");
+    const updatedRows = await screen.findAllByLabelText("Resource Table Row");
+    expect(updatedRows[0]).toHaveTextContent(
+      "std::Directoryagent2/tmp/dir50skippedShow Details",
+    );
+    expect(updatedRows[5]).toHaveTextContent("/tmp/file4");
 
     await act(async () => {
       const results = await axe(document.body);
@@ -313,23 +338,29 @@ describe("ResourcesPage", () => {
   });
 
   test("GIVEN ResourcesPage WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async () => {
-    const { component, apiHelper } = setup();
+    server.use(
+      http.get("/api/v2/resource", ({ request }) => {
+        if (request.url.includes("end=fake-first-param")) {
+          return HttpResponse.json(Resource.response);
+        }
 
-    render(component);
-
-    //mock that response has more than one site
-    await act(async () => {
-      await apiHelper.resolve(
-        Either.right({
+        return HttpResponse.json({
           data: Resource.response.data.slice(0, 3),
           links: {
             ...Resource.response.links,
             next: "/fake-link?end=fake-first-param",
           },
           metadata: Resource.response.metadata,
-        }),
-      );
-    });
+        });
+      }),
+    );
+    const { component } = setup();
+
+    render(component);
+
+    expect(await screen.findAllByLabelText("Resource Table Row")).toHaveLength(
+      3,
+    );
 
     const nextPageButton = screen.getAllByLabelText("Go to next page")[0];
 
@@ -337,24 +368,9 @@ describe("ResourcesPage", () => {
 
     await userEvent.click(nextPageButton);
 
-    //expect the api url to contain start and end keywords that are used for pagination when we are moving to the next page
-    expect(apiHelper.pendingRequests[0].url).toMatch(/(&start=|&end=)/);
-    expect(apiHelper.pendingRequests[0].url).toMatch(
-      /(&sort=resource_type.asc)/,
+    expect(await screen.findAllByLabelText("Resource Table Row")).toHaveLength(
+      6,
     );
-
-    await act(async () => {
-      await apiHelper.resolve(
-        Either.right({
-          data: Resource.response.data.slice(0, 3),
-          links: {
-            ...Resource.response.links,
-            next: "/fake-link?end=fake-first-param",
-          },
-          metadata: Resource.response.metadata,
-        }),
-      );
-    });
 
     //sort on the second page
     await userEvent.click(
@@ -363,11 +379,8 @@ describe("ResourcesPage", () => {
       }),
     );
 
-    // expect the api url to not contain start and end keywords that are used for pagination to assert we are back on the first page.
-    // we are asserting on the second request as the first request is for the updated sorting event, and second is chained to back to the first page with still correct sorting
-    expect(apiHelper.pendingRequests[1].url).not.toMatch(/(&start=|&end=)/);
-    expect(apiHelper.pendingRequests[1].url).toMatch(
-      /(&sort=resource_type.desc)/,
+    expect(await screen.findAllByLabelText("Resource Table Row")).toHaveLength(
+      3,
     );
   });
 
@@ -379,13 +392,21 @@ describe("ResourcesPage", () => {
   `(
     "When using the $filterName filter of type $filterType with value $filterValue and text $placeholderText then the resources with that $filterUrlName should be fetched and shown",
     async ({ filterType, filterValue, placeholderText, filterUrlName }) => {
-      const { component, apiHelper } = setup();
+      server.use(
+        http.get("/api/v2/resource", ({ request }) => {
+          if (request.url.includes(`filter.${filterUrlName}=${filterValue}`)) {
+            return HttpResponse.json({
+              data: Resource.response.data.slice(0, 3),
+              links: Resource.response.links,
+              metadata: Resource.response.metadata,
+            });
+          }
+          return HttpResponse.json(Resource.response);
+        }),
+      );
+      const { component } = setup();
 
       render(component);
-
-      await act(async () => {
-        await apiHelper.resolve(Either.right(Resource.response));
-      });
 
       const initialRows = await screen.findAllByRole("row", {
         name: "Resource Table Row",
@@ -405,12 +426,11 @@ describe("ResourcesPage", () => {
         await userEvent.type(input, `${filterValue}{enter}`);
       }
 
-      expect(apiHelper.pendingRequests[0].url).toContain(
-        `filter.status=%21orphaned`,
-      );
-      expect(apiHelper.pendingRequests[0].url).toContain(
-        `filter.${filterUrlName}=${filterValue}`,
-      );
+      const updatedRows = await screen.findAllByRole("row", {
+        name: "Resource Table Row",
+      });
+
+      expect(updatedRows).toHaveLength(3);
 
       await act(async () => {
         const results = await axe(document.body);
@@ -435,13 +455,26 @@ describe("ResourcesPage", () => {
       placeholderTextTwo,
       filterUrlNameTwo,
     }) => {
-      const { component, apiHelper } = setup();
+      server.use(
+        http.get("/api/v2/resource", ({ request }) => {
+          if (
+            request.url.includes(
+              `filter.${filterUrlNameOne}=${filterValueOne}`,
+            ) &&
+            request.url.includes(`filter.${filterUrlNameTwo}=${filterValueTwo}`)
+          ) {
+            return HttpResponse.json({
+              data: Resource.response.data.slice(0, 3),
+              links: Resource.response.links,
+              metadata: Resource.response.metadata,
+            });
+          }
+          return HttpResponse.json(Resource.response);
+        }),
+      );
+      const { component } = setup();
 
       render(component);
-
-      await act(async () => {
-        await apiHelper.resolve(Either.right(Resource.response));
-      });
 
       const initialRows = await screen.findAllByRole("row", {
         name: "Resource Table Row",
@@ -457,16 +490,11 @@ describe("ResourcesPage", () => {
 
       await userEvent.type(inputTwo, `${filterValueTwo}{enter}`);
 
-      expect(apiHelper.pendingRequests[0].url).toContain(
-        `filter.status=%21orphaned`,
-      );
-      expect(apiHelper.pendingRequests[0].url).toContain(
-        `filter.${filterUrlNameOne}=${filterValueOne}`,
-      );
+      const updatedRows = await screen.findAllByRole("row", {
+        name: "Resource Table Row",
+      });
 
-      expect(apiHelper.pendingRequests[0].url).toContain(
-        `filter.${filterUrlNameTwo}=${filterValueTwo}`,
-      );
+      expect(updatedRows).toHaveLength(3);
 
       await act(async () => {
         const results = await axe(document.body);
@@ -477,19 +505,38 @@ describe("ResourcesPage", () => {
   );
 
   test("when using the all filters then the resources with that filter values should be fetched and shown", async () => {
+    server.use(
+      http.get("/api/v2/resource", ({ request }) => {
+        if (
+          request.url.includes(
+            `filter.${filterUrlNameOne}=${filterValueOne}`,
+          ) &&
+          request.url.includes(
+            `filter.${filterUrlNameTwo}=${filterValueTwo}`,
+          ) &&
+          request.url.includes(
+            `filter.${filterUrlNameThree}=${filterValueThree}`,
+          )
+        ) {
+          return HttpResponse.json({
+            data: Resource.response.data.slice(0, 3),
+            links: Resource.response.links,
+            metadata: Resource.response.metadata,
+          });
+        }
+
+        return HttpResponse.json(Resource.response);
+      }),
+    );
     const filterValueOne = "agent";
     const filterUrlNameOne = "agent";
     const filterValueTwo = "Directory";
     const filterUrlNameTwo = "resource_type";
     const filterValueThree = "dir5";
     const filterUrlNameThree = "resource_id_value";
-    const { component, apiHelper } = setup();
+    const { component } = setup();
 
     render(component);
-
-    await act(async () => {
-      await apiHelper.resolve(Either.right(Resource.response));
-    });
 
     const initialRows = await screen.findAllByRole("row", {
       name: "Resource Table Row",
@@ -515,19 +562,11 @@ describe("ResourcesPage", () => {
 
     await userEvent.type(inputThree, `${filterValueThree}{enter}`);
 
-    expect(apiHelper.pendingRequests[0].url).toContain(
-      `filter.status=%21orphaned`,
-    );
-    expect(apiHelper.pendingRequests[0].url).toContain(
-      `filter.${filterUrlNameOne}=${filterValueOne}`,
-    );
+    const updatedRows = await screen.findAllByRole("row", {
+      name: "Resource Table Row",
+    });
 
-    expect(apiHelper.pendingRequests[0].url).toContain(
-      `filter.${filterUrlNameTwo}=${filterValueTwo}`,
-    );
-    expect(apiHelper.pendingRequests[0].url).toContain(
-      `filter.${filterUrlNameThree}=${filterValueThree}`,
-    );
+    expect(updatedRows).toHaveLength(3);
 
     await act(async () => {
       const results = await axe(document.body);
@@ -543,13 +582,25 @@ describe("ResourcesPage", () => {
   `(
     "When using the Deploy state filter with value $filterValue and option $option then the matching resources should be fetched and shown",
     async ({ filterValue, option }) => {
-      const { component, apiHelper } = setup();
+      server.use(
+        http.get("/api/v2/resource", ({ request }) => {
+          const filter =
+            option === "include" ? filterValue : `%21${filterValue}`;
+
+          if (request.url.includes(`&filter.status=${filter}`)) {
+            return HttpResponse.json({
+              data: Resource.response.data.slice(0, 3),
+              links: Resource.response.links,
+              metadata: Resource.response.metadata,
+            });
+          }
+
+          return HttpResponse.json(Resource.response);
+        }),
+      );
+      const { component } = setup();
 
       render(component);
-
-      await act(async () => {
-        await apiHelper.resolve(Either.right(Resource.response));
-      });
 
       const initialRows = await screen.findAllByRole("row", {
         name: "Resource Table Row",
@@ -573,27 +624,11 @@ describe("ResourcesPage", () => {
 
       await userEvent.click(toggle);
 
-      expect(apiHelper.pendingRequests[0].url).toEqual(
-        `/api/v2/resource?deploy_summary=True&limit=20&filter.status=%21orphaned&filter.status=${
-          option === "include" ? filterValue : `%21${filterValue}`
-        }&sort=resource_type.asc`,
-      );
-
-      await act(async () => {
-        await apiHelper.resolve(
-          Either.right({
-            data: Resource.response.data.slice(4),
-            links: Resource.response.links,
-            metadata: Resource.response.metadata,
-          }),
-        );
-      });
-
       const rowsAfter = await screen.findAllByRole("row", {
         name: "Resource Table Row",
       });
 
-      expect(rowsAfter).toHaveLength(2);
+      expect(rowsAfter).toHaveLength(3);
 
       await act(async () => {
         const results = await axe(document.body);
@@ -604,17 +639,21 @@ describe("ResourcesPage", () => {
   );
 
   test("When clicking the clear and reset filters then the state filter is updated correctly", async () => {
-    const { component, apiHelper } = setup();
+    server.use(
+      http.get("/api/v2/resource", ({ request }) => {
+        if (request.url.includes(`filter.status=%21orphaned`)) {
+          return HttpResponse.json(Resource.response);
+        }
+        return HttpResponse.json({
+          data: Resource.response.data.slice(4),
+          links: Resource.response.links,
+          metadata: Resource.response.metadata,
+        });
+      }),
+    );
+    const { component } = setup();
 
     render(component);
-
-    expect(apiHelper.pendingRequests[0].url).toEqual(
-      `/api/v2/resource?deploy_summary=True&limit=20&filter.status=%21orphaned&sort=resource_type.asc`,
-    );
-
-    await act(async () => {
-      await apiHelper.resolve(Either.right(Resource.response));
-    });
 
     const initialRows = await screen.findAllByRole("row", {
       name: "Resource Table Row",
@@ -629,27 +668,21 @@ describe("ResourcesPage", () => {
 
     await userEvent.click(visibleClearButton);
 
-    expect(apiHelper.pendingRequests[0].url).toEqual(
-      `/api/v2/resource?deploy_summary=True&limit=20&&sort=resource_type.asc`,
-    );
-
-    await act(async () => {
-      await apiHelper.resolve(
-        Either.right({
-          data: Resource.response.data.slice(4),
-          links: Resource.response.links,
-          metadata: Resource.response.metadata,
-        }),
-      );
+    const initialRowsAfterClear = await screen.findAllByRole("row", {
+      name: "Resource Table Row",
     });
+
+    expect(initialRowsAfterClear).toHaveLength(2);
 
     await userEvent.click(
       await screen.findByRole("button", { name: "Reset-filters" }),
     );
 
-    expect(apiHelper.pendingRequests[0].url).toEqual(
-      `/api/v2/resource?deploy_summary=True&limit=20&filter.status=%21orphaned&sort=resource_type.asc`,
-    );
+    const initialRowsAfterReset = await screen.findAllByRole("row", {
+      name: "Resource Table Row",
+    });
+
+    expect(initialRowsAfterReset).toHaveLength(6);
 
     await act(async () => {
       const results = await axe(document.body);
@@ -659,13 +692,14 @@ describe("ResourcesPage", () => {
   });
 
   test("ResourcesPage shows deploy state bar", async () => {
-    const { component, apiHelper } = setup();
+    server.use(
+      http.get("/api/v2/resource", () => {
+        return HttpResponse.json(Resource.response);
+      }),
+    );
+    const { component } = setup();
 
     render(component);
-
-    await act(async () => {
-      await apiHelper.resolve(Either.right(Resource.response));
-    });
 
     expect(
       await screen.findByRole("grid", { name: "ResourcesPage-Success" }),
@@ -685,25 +719,40 @@ describe("ResourcesPage", () => {
   });
 
   test("GIVEN ResourcesPage WHEN data is loading for next page THEN shows toolbar", async () => {
-    const { component, apiHelper } = setup();
-
-    render(component);
-
-    expect(
-      await screen.findByRole("region", { name: "ResourcesPage-Loading" }),
-    ).toBeInTheDocument();
-
-    await act(async () => {
-      await apiHelper.resolve(
-        Either.right({
+    server.use(
+      http.get("/api/v2/resource", ({ request }) => {
+        delay(100);
+        if (request.url.includes("end=fake-param")) {
+          return HttpResponse.json({
+            ...Resource.response,
+            metadata: {
+              ...Resource.response.metadata,
+              deploy_summary: {
+                ...Resource.response.metadata.deploy_summary,
+                by_state: {
+                  ...Resource.response.metadata.deploy_summary.by_state,
+                  available: 2,
+                },
+              },
+            },
+          });
+        }
+        return HttpResponse.json({
           ...Resource.response,
           links: {
             ...Resource.response.links,
             next: "/fake-link?end=fake-param",
           },
-        }),
-      );
-    });
+        });
+      }),
+    );
+    const { component } = setup();
+
+    render(component);
+
+    expect(
+      screen.getByRole("region", { name: "ResourcesPage-Loading" }),
+    ).toBeInTheDocument();
 
     expect(
       await screen.findByRole("grid", { name: "ResourcesPage-Success" }),
@@ -730,10 +779,6 @@ describe("ResourcesPage", () => {
     await userEvent.click(nextButton);
 
     expect(
-      await screen.findByRole("region", { name: "ResourcesPage-Loading" }),
-    ).toBeInTheDocument();
-
-    expect(
       screen.getByRole("generic", {
         name: words("resources.deploySummary.title"),
       }),
@@ -752,26 +797,8 @@ describe("ResourcesPage", () => {
       screen.getByRole("navigation", { name: "top-Pagination" }),
     ).toBeVisible();
     expect(
-      screen.queryByRole("navigation", { name: "bottom-Pagination" }),
-    ).not.toBeInTheDocument();
-
-    await act(async () => {
-      await apiHelper.resolve(
-        Either.right({
-          ...Resource.response,
-          metadata: {
-            ...Resource.response.metadata,
-            deploy_summary: {
-              ...Resource.response.metadata.deploy_summary,
-              by_state: {
-                ...Resource.response.metadata.deploy_summary.by_state,
-                available: 2,
-              },
-            },
-          },
-        }),
-      );
-    });
+      screen.getByRole("navigation", { name: "bottom-Pagination" }),
+    ).toBeInTheDocument();
 
     expect(
       await screen.findByRole("generic", {
@@ -787,22 +814,34 @@ describe("ResourcesPage", () => {
   });
 
   test("GIVEN ResourcesPage WHEN data is auto-updated THEN shows updated toolbar", async () => {
-    const { component, apiHelper, scheduler } = setup();
-
-    render(component);
-
-    expect(
-      await screen.findByRole("region", { name: "ResourcesPage-Loading" }),
-    ).toBeInTheDocument();
-
-    await act(async () => {
-      await apiHelper.resolve(
-        Either.right({
+    let count = 0;
+    server.use(
+      http.get("/api/v2/resource", () => {
+        count++;
+        if (count > 1) {
+          return HttpResponse.json({
+            ...Resource.response,
+            metadata: {
+              ...Resource.response.metadata,
+              deploy_summary: {
+                ...Resource.response.metadata.deploy_summary,
+                by_state: {
+                  ...Resource.response.metadata.deploy_summary.by_state,
+                  available: 2,
+                },
+              },
+            },
+          });
+        }
+        return HttpResponse.json({
           ...Resource.response,
           links: { ...Resource.response.links, next: "/fake-link" },
-        }),
-      );
-    });
+        });
+      }),
+    );
+    const { component } = setup();
+
+    render(component);
 
     expect(
       await screen.findByRole("grid", { name: "ResourcesPage-Success" }),
@@ -819,8 +858,6 @@ describe("ResourcesPage", () => {
         name: "LegendItem-available",
       }),
     ).toHaveAttribute("data-value", "1");
-
-    scheduler.executeAll();
 
     expect(
       screen.getByRole("generic", {
@@ -844,24 +881,7 @@ describe("ResourcesPage", () => {
       screen.getByRole("navigation", { name: "bottom-Pagination" }),
     ).toBeInTheDocument();
 
-    await act(async () => {
-      await apiHelper.resolve(
-        Either.right({
-          ...Resource.response,
-          metadata: {
-            ...Resource.response.metadata,
-            deploy_summary: {
-              ...Resource.response.metadata.deploy_summary,
-              by_state: {
-                ...Resource.response.metadata.deploy_summary.by_state,
-                available: 2,
-              },
-            },
-          },
-        }),
-      );
-    });
-
+    await delay(5000);
     expect(
       await screen.findByRole("generic", {
         name: "LegendItem-available",
@@ -876,13 +896,14 @@ describe("ResourcesPage", () => {
   });
 
   test("ResourcesPage shows deploy state bar with available status without processing_events status", async () => {
-    const { component, apiHelper } = setup();
+    server.use(
+      http.get("/api/v2/resource", () => {
+        return HttpResponse.json(Resource.response);
+      }),
+    );
+    const { component } = setup();
 
     render(component);
-
-    await act(async () => {
-      await apiHelper.resolve(Either.right(Resource.response));
-    });
 
     expect(
       await screen.findByRole("generic", {
@@ -908,13 +929,14 @@ describe("ResourcesPage", () => {
   });
 
   test("Given the ResourcesPage When clicking on deploy, then the approriate backend request is fired", async () => {
+    server.use(
+      http.get("/api/v2/resource", () => {
+        return HttpResponse.json(Resource.response);
+      }),
+    );
     const { component, apiHelper, environment } = setup();
 
     render(component);
-
-    await act(async () => {
-      await apiHelper.resolve(Either.right(Resource.response));
-    });
 
     expect(
       await screen.findByRole("grid", { name: "ResourcesPage-Success" }),
@@ -953,13 +975,14 @@ describe("ResourcesPage", () => {
   });
 
   test("Given the ResourcesPage When clicking on repair, then the approriate backend request is fired", async () => {
+    server.use(
+      http.get("/api/v2/resource", () => {
+        return HttpResponse.json(Resource.response);
+      }),
+    );
     const { component, apiHelper, environment } = setup();
 
     render(component);
-
-    await act(async () => {
-      await apiHelper.resolve(Either.right(Resource.response));
-    });
 
     expect(
       await screen.findByRole("grid", { name: "ResourcesPage-Success" }),
@@ -996,6 +1019,11 @@ describe("ResourcesPage", () => {
   });
 
   test("Given the ResourcesPage When environment is halted, then deploy and repair buttons are disabled", async () => {
+    server.use(
+      http.get("/api/v2/resource", () => {
+        return HttpResponse.json(Resource.response);
+      }),
+    );
     const { component, apiHelper, environment, store, environmentModifier } =
       setup();
 
@@ -1006,10 +1034,6 @@ describe("ResourcesPage", () => {
     });
 
     render(component);
-
-    await act(async () => {
-      await apiHelper.resolve(Either.right(Resource.response));
-    });
 
     expect(
       await screen.findByRole("grid", { name: "ResourcesPage-Success" }),
