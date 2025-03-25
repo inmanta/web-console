@@ -1,19 +1,18 @@
-import React, { act } from "react";
+import React from "react";
 import { MemoryRouter } from "react-router";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
-import { Either } from "@/Core";
+import { delay, HttpResponse } from "msw";
+import { http } from "msw";
+import { setupServer } from "msw/node";
 import { getStoreInstance } from "@/Data";
-import { Resource, dependencies } from "@/Test";
+import { dependencies } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { ResourceLogs } from "@S/ResourceDetails/Data/Mock";
 import { View } from "./View";
-import { QueryClientProvider } from "@tanstack/react-query";
-import { QueryClient } from "@tanstack/react-query";
-import { delay, HttpResponse } from "msw";
-import { setupServer } from "msw/node";
-import { http } from "msw";
 
 function setup() {
   const store = getStoreInstance();
@@ -51,6 +50,7 @@ describe("ResourceLogsView", () => {
     server.use(
       http.get("/api/v2/resource/abc/logs", () => {
         delay(100);
+
         return HttpResponse.json(ResourceLogs.response);
       }),
     );
@@ -82,6 +82,7 @@ describe("ResourceLogsView", () => {
             data: [ResourceLogs.response.data[0]],
           });
         }
+
         return HttpResponse.json(ResourceLogs.response);
       }),
     );
@@ -111,6 +112,7 @@ describe("ResourceLogsView", () => {
             data: ResourceLogs.response.data.slice(0, 1),
           });
         }
+
         return HttpResponse.json({
           ...ResourceLogs.response,
           metadata: {
@@ -129,6 +131,7 @@ describe("ResourceLogsView", () => {
     const rows = await screen.findAllByRole("rowgroup", {
       name: "ResourceLogRow",
     });
+
     expect(rows).toHaveLength(3);
     expect(screen.getByLabelText("Go to next page")).toBeEnabled();
 
@@ -137,6 +140,7 @@ describe("ResourceLogsView", () => {
     const updatedRows = await screen.findAllByRole("rowgroup", {
       name: "ResourceLogRow",
     });
+
     expect(updatedRows).toHaveLength(1);
 
     //sort on the second page
@@ -145,6 +149,7 @@ describe("ResourceLogsView", () => {
     const initialRows = await screen.findAllByRole("rowgroup", {
       name: "ResourceLogRow",
     });
+
     expect(initialRows).toHaveLength(3);
   });
 });

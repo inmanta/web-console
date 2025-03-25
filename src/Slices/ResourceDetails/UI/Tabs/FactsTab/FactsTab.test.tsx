@@ -1,18 +1,17 @@
+import { clear } from "console";
 import React from "react";
 import { MemoryRouter } from "react-router";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
-import { Either } from "@/Core";
+import { delay, http, HttpResponse } from "msw";
+import { setupServer } from "msw/node";
 import { getStoreInstance } from "@/Data";
-import { dependencies, Resource } from "@/Test";
+import { dependencies } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { Mock } from "@S/Facts/Test";
 import { FactsTab } from "./FactsTab";
 import { sortFactRows } from "./FactsTable";
-import { setupServer } from "msw/node";
-import { delay, http, HttpResponse } from "msw";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { clear } from "console";
 
 function setup() {
   const store = getStoreInstance();
@@ -48,6 +47,7 @@ describe("FactsTab", () => {
     server.use(
       http.get("/api/v2/resource/abc/facts", () => {
         delay(100);
+
         return HttpResponse.json({ message: "error" }, { status: 500 });
       }),
     );
@@ -69,6 +69,7 @@ describe("FactsTab", () => {
     server.use(
       http.get("/api/v2/resource/abc/facts", () => {
         delay(100);
+
         return HttpResponse.json(Mock.response);
       }),
     );
@@ -79,7 +80,7 @@ describe("FactsTab", () => {
     expect(
       await screen.findByRole("region", { name: "ResourceFacts-Loading" }),
     ).toBeInTheDocument();
-    clear;
+
     expect(
       await screen.findByRole("grid", { name: "ResourceFacts-Success" }),
     ).toBeInTheDocument();

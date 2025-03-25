@@ -1,21 +1,19 @@
 import React, { act } from "react";
 import { MemoryRouter } from "react-router-dom";
 import { Page } from "@patternfly/react-core";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { axe, toHaveNoViolations } from "jest-axe";
-import { Either } from "@/Core";
+import { http, HttpResponse } from "msw";
+import { setupServer } from "msw/node";
 import { getStoreInstance } from "@/Data";
 import { dependencies } from "@/Test";
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import { ResourceDetails } from "@S/ResourceDetails/Data/Mock";
 import { View } from "./View";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { delay } from "msw";
-import { http, HttpResponse } from "msw";
-import { setupServer } from "msw/node";
 
 expect.extend(toHaveNoViolations);
 
