@@ -1,21 +1,19 @@
-import React, { act } from "react";
+import React from "react";
 import { MemoryRouter } from "react-router";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
-import { Either } from "@/Core";
+import { http } from "msw";
+import { HttpResponse } from "msw";
+import { delay } from "msw";
+import { setupServer } from "msw/node";
 import { getStoreInstance } from "@/Data";
 import { dependencies } from "@/Test";
-import { Resource } from "@/Test/Data";
 import { DependencyProvider } from "@/UI/Dependency";
 import { ResourceHistory } from "@S/ResourceDetails/Data/Mock";
 import { ResourceDetails } from "@S/ResourceDetails/Data/Mock";
 import { ResourceHistoryView } from "./ResourceHistoryView";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { setupServer } from "msw/node";
-import { http } from "msw";
-import { HttpResponse } from "msw";
-import { delay } from "msw";
 function setup() {
   const store = getStoreInstance();
   const queryClient = new QueryClient({
@@ -54,6 +52,7 @@ describe("ResourceHistoryView", () => {
     server.use(
       http.get("/api/v2/resource/abc/history", () => {
         delay(100);
+
         return HttpResponse.json({
           data: [],
           metadata: { total: 0, before: 0, after: 0, page_size: 10 },
@@ -129,6 +128,7 @@ describe("ResourceHistoryView", () => {
     expect(stateButton).toBeVisible();
 
     const rows = await screen.findAllByLabelText("Resource History Table Row");
+
     expect(rows[0]).toHaveTextContent("4 years ago2");
     expect(rows[1]).toHaveTextContent("4 years ago1");
 
@@ -137,6 +137,7 @@ describe("ResourceHistoryView", () => {
     const updatedRows = await screen.findAllByLabelText(
       "Resource History Table Row",
     );
+
     expect(updatedRows[0]).toHaveTextContent("4 years ago1");
     expect(updatedRows[1]).toHaveTextContent("4 years ago2");
   });
@@ -201,6 +202,7 @@ describe("ResourceHistoryView", () => {
     render(component);
 
     const rows = await screen.findAllByLabelText("Resource History Table Row");
+
     expect(rows).toHaveLength(2);
 
     const nextPageButton = screen.getByLabelText("Go to next page");
@@ -212,6 +214,7 @@ describe("ResourceHistoryView", () => {
     const updatedRows = await screen.findAllByLabelText(
       "Resource History Table Row",
     );
+
     expect(updatedRows).toHaveLength(1);
 
     //sort on the second page
@@ -220,6 +223,7 @@ describe("ResourceHistoryView", () => {
     const updatedRows1 = await screen.findAllByLabelText(
       "Resource History Table Row",
     );
+
     expect(updatedRows1).toHaveLength(2);
   });
 });

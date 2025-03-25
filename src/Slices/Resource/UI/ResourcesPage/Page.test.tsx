@@ -7,7 +7,7 @@ import { StoreProvider } from "easy-peasy";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { delay, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { Either, RemoteData } from "@/Core";
+import { RemoteData } from "@/Core";
 import {
   getStoreInstance,
   CommandResolverImpl,
@@ -313,6 +313,7 @@ describe("ResourcesPage", () => {
     render(component);
 
     const rows = await screen.findAllByLabelText("Resource Table Row");
+
     expect(rows[0]).toHaveTextContent("/tmp/file4");
     expect(rows[5]).toHaveTextContent(
       "std::Directoryagent2/tmp/dir50skippedShow Details",
@@ -325,6 +326,7 @@ describe("ResourcesPage", () => {
     await userEvent.click(stateButton);
 
     const updatedRows = await screen.findAllByLabelText("Resource Table Row");
+
     expect(updatedRows[0]).toHaveTextContent(
       "std::Directoryagent2/tmp/dir50skippedShow Details",
     );
@@ -401,6 +403,7 @@ describe("ResourcesPage", () => {
               metadata: Resource.response.metadata,
             });
           }
+
           return HttpResponse.json(Resource.response);
         }),
       );
@@ -469,6 +472,7 @@ describe("ResourcesPage", () => {
               metadata: Resource.response.metadata,
             });
           }
+
           return HttpResponse.json(Resource.response);
         }),
       );
@@ -644,6 +648,7 @@ describe("ResourcesPage", () => {
         if (request.url.includes(`filter.status=%21orphaned`)) {
           return HttpResponse.json(Resource.response);
         }
+
         return HttpResponse.json({
           data: Resource.response.data.slice(4),
           links: Resource.response.links,
@@ -737,6 +742,7 @@ describe("ResourcesPage", () => {
             },
           });
         }
+
         return HttpResponse.json({
           ...Resource.response,
           links: {
@@ -815,6 +821,7 @@ describe("ResourcesPage", () => {
 
   test("GIVEN ResourcesPage WHEN data is auto-updated THEN shows updated toolbar", async () => {
     let count = 0;
+
     server.use(
       http.get("/api/v2/resource", () => {
         count++;
@@ -833,6 +840,7 @@ describe("ResourcesPage", () => {
             },
           });
         }
+
         return HttpResponse.json({
           ...Resource.response,
           links: { ...Resource.response.links, next: "/fake-link" },
@@ -1024,8 +1032,7 @@ describe("ResourcesPage", () => {
         return HttpResponse.json(Resource.response);
       }),
     );
-    const { component, apiHelper, environment, store, environmentModifier } =
-      setup();
+    const { component, environment, store, environmentModifier } = setup();
 
     environmentModifier.setEnvironment(environment);
     store.dispatch.environment.setEnvironmentDetailsById({
