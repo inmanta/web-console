@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import { Content, TabContent, TabContentBody } from "@patternfly/react-core";
 import { useGetInstanceResources } from "@/Data/Managers/V2/ServiceInstance";
 import { words } from "@/UI";
