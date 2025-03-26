@@ -10,6 +10,7 @@ import {
   errorServerInstance,
   emptyResourcesServer,
   defaultServer,
+  versionErrorResourceServerInstance,
 } from "../../Test/mockServer";
 import { SetupWrapper } from "../../Test/mockSetup";
 import { ResourcesTabContent } from "./ResourcesTabContent";
@@ -43,6 +44,18 @@ it("should render error view correctly", async () => {
     await screen.findByLabelText("Error_view-Resources-content"),
   ).toBeVisible();
   expect(screen.getByText("Something went wrong")).toBeVisible();
+
+  server.close();
+});
+
+it("in case of version conflict, should render loading view correctly", async () => {
+  const server = versionErrorResourceServerInstance;
+
+  server.listen();
+
+  render(setup(instanceData));
+
+  expect(await screen.findByLabelText("Resources-Loading")).toBeVisible();
 
   server.close();
 });

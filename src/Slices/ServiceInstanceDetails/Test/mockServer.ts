@@ -142,6 +142,19 @@ const getResourcesError = http.get(
   },
 );
 
+const getResourcesVersionError = http.get(
+  "/lsm/v1/service_inventory/mobileCore/1d96a1ab/resources",
+  () => {
+    return HttpResponse.json(
+      {
+        message:
+          "Request conflicts with the current state of the resource: The given current version (31) doesn't match the actual current version (32) of service instance 5ec0ebc2-1c26-4d89-9442-7e50ab062bea in environment test-123(c102f3c3-7e1e-48f3-b497-4229b2082a30)",
+      },
+      { status: 409 },
+    );
+  },
+);
+
 const destroyInstance = http.delete(
   "/lsm/v2/service_inventory/mobileCore/1d96a1ab/expert",
   async () => {
@@ -216,6 +229,16 @@ export const errorServerInstance = setupServer(
   getHistoryLogsError,
   getInstanceError,
   getResourcesError,
+);
+
+/**
+ * Setup a test server where all the initial GET queries return with an error
+ */
+export const versionErrorResourceServerInstance = setupServer(
+  getServiceModelError,
+  getHistoryLogsError,
+  getInstanceError,
+  getResourcesVersionError,
 );
 
 /**

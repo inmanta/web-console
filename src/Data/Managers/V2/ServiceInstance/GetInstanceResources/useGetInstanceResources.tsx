@@ -32,12 +32,23 @@ export const useGetInstanceResources = (
   return {
     useOneTime: (): UseQueryResult<InstanceResourceModel[], Error> =>
       useQuery({
-        queryKey: ["get_instance_resources-one_time", id],
+        queryKey: [
+          "get_instance_resources-one_time",
+          id,
+          version,
+          service_entity,
+        ],
         queryFn: () => get(url),
+        select: (data): InstanceResourceModel[] => data.data,
       }),
     useContinuous: (): UseQueryResult<InstanceResourceModel[], Error> =>
       useQuery({
-        queryKey: ["get_instance_resources-continuous", id],
+        queryKey: [
+          "get_instance_resources-continuous",
+          id,
+          version,
+          service_entity,
+        ],
         queryFn: () => get(url),
         refetchInterval: 5000,
         select: (data): InstanceResourceModel[] => data.data,
