@@ -223,9 +223,18 @@ export const FieldInput: React.FC<Props> = ({
             !isNew
           }
           type={field.inputType}
-          handleInputChange={(value, _event) =>
-            getUpdate(makePath(path, field.name), value)
-          }
+          handleInputChange={(value, _event) => {
+            if (field.type.includes("dict")) {
+              try {
+                getUpdate(makePath(path, field.name), JSON.parse(value));
+              } catch (_error) {
+                // If the value is not a valid JSON string, we fallback to the value as is, as we are trying convert value that is either a stringified object or a stringified partially correct object
+                getUpdate(makePath(path, field.name), value);
+              }
+            } else {
+              getUpdate(makePath(path, field.name), value);
+            }
+          }}
           placeholder={getPlaceholderForType(field.type)}
           typeHint={getTypeHintForType(field.type)}
           key={field.id || field.name}

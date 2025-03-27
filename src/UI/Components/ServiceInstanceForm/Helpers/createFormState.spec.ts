@@ -20,7 +20,7 @@ test("GIVEN createFormState WHEN passed a dict field with a default value THEN c
   const formState = createFormState(fields);
 
   expect(formState).toEqual({
-    [Field.dictionary.name]: "{}",
+    [Field.dictionary.name]: {},
   });
 });
 
@@ -34,7 +34,7 @@ test("Given createEditFormState v1 WHEN passed editable nested fields and curren
   expect(formState).toMatchObject({
     id_attr: "val",
     other_attr1: "test",
-    other_attr2: '{"a":"b"}',
+    other_attr2: { a: "b" },
     another_embedded: [
       {
         my_other_attr: "asdasd",
@@ -50,7 +50,7 @@ test("Given createEditFormState v1 WHEN passed editable nested fields and curren
         },
         my_attr: 0,
         bool_attr: null,
-        dict_attr: "{}",
+        dict_attr: {},
       },
     ],
   });
