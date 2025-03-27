@@ -130,7 +130,13 @@ export const TextFormInput: React.FC<Props> = ({
             aria-describedby={`${attributeName}-helper`}
             aria-label={`TextInput-${attributeName}`}
             value={inputValue}
-            onChange={(_event, value) => handleChange(value)}
+            onChange={(_event, value) => {
+              if (type === "number") {
+                handleChange(value === "" ? null : Number(value));
+              } else {
+                handleChange(value);
+              }
+            }}
             isDisabled={shouldBeDisabled}
             onFocus={() => setIsOpen(true)}
           />

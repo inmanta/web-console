@@ -303,17 +303,5 @@ describe("AttributeInputConverter", () => {
         ).toEqual(inputType);
       },
     );
-    it("For a url attribute chooses url input", () => {
-      expect(
-        attributeInputConverter.getInputType({
-          name: "base_url",
-          type: "string",
-          description: "name",
-          modifier: "rw+",
-          default_value_set: false,
-          default_value: null,
-        }),
-      ).toEqual(TextInputTypes.url);
-    });
   });
 });

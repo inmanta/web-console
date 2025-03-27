@@ -13,9 +13,7 @@ import { DependencyProvider } from "@/UI/Dependency";
 import { AutoCompleteInputProvider } from "./AutoCompleteInputProvider";
 
 const server = setupServer(
-  http.get("/lsm/v1/service_inventory/test_entity", ({ request }) => {
-    console.log(request.url);
-
+  http.get("/lsm/v1/service_inventory/test_entity", () => {
     return HttpResponse.json({
       data: [ServiceInstance.a],
       metadata: {

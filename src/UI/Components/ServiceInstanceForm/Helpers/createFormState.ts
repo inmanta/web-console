@@ -17,9 +17,14 @@ export const createFormState = (
       case "Text":
       case "Textarea":
       case "TextList": {
-        acc[curr.name] = curr.type.includes("dict")
-          ? stringifyDict(curr.defaultValue)
-          : curr.defaultValue;
+        if (curr.type === "int?" || curr.type === "float?") {
+          acc[curr.name] =
+            curr.defaultValue === "" ? null : Number(curr.defaultValue);
+        } else if (curr.type === "dict?") {
+          acc[curr.name] = curr.defaultValue === "" ? null : curr.defaultValue;
+        } else {
+          acc[curr.name] = curr.defaultValue;
+        }
 
         return acc;
       }
@@ -93,9 +98,19 @@ export const createEditFormState = (
         case "Textarea":
         case "TextList":
         case "Text": {
-          acc[curr.name] = curr.type.includes("dict")
-            ? stringifyDict(originalAttributes?.[curr.name])
-            : cloneDeep(originalAttributes?.[curr.name]);
+          if (curr.type === "int?" || curr.type === "float?") {
+            acc[curr.name] =
+              originalAttributes?.[curr.name] === ""
+                ? null
+                : Number(originalAttributes?.[curr.name]);
+          } else if (curr.type === "dict?") {
+            acc[curr.name] =
+              originalAttributes?.[curr.name] === ""
+                ? null
+                : cloneDeep(originalAttributes?.[curr.name]);
+          } else {
+            acc[curr.name] = cloneDeep(originalAttributes?.[curr.name]);
+          }
 
           return acc;
         }
@@ -173,9 +188,19 @@ export const createDuplicateFormState = (
         case "Textarea":
         case "TextList":
         case "Text": {
-          acc[curr.name] = curr.type.includes("dict")
-            ? stringifyDict(originalAttributes?.[curr.name])
-            : cloneDeep(originalAttributes?.[curr.name]);
+          if (curr.type === "int?" || curr.type === "float?") {
+            acc[curr.name] =
+              originalAttributes?.[curr.name] === ""
+                ? null
+                : Number(originalAttributes?.[curr.name]);
+          } else if (curr.type === "dict?") {
+            acc[curr.name] =
+              originalAttributes?.[curr.name] === ""
+                ? null
+                : cloneDeep(originalAttributes?.[curr.name]);
+          } else {
+            acc[curr.name] = cloneDeep(originalAttributes?.[curr.name]);
+          }
 
           return acc;
         }
@@ -229,13 +254,3 @@ export const createDuplicateFormState = (
     }
   }, {});
 };
-
-/**
- * Convert a value to a JSON string, or return an empty string if the value is an empty string.
- *
- * @param {unknown} value - The value to stringify.
- * @returns {string} The JSON string representation of the value, or an empty string if the value is an empty string.
- */
-function stringifyDict(value: unknown) {
-  return value === "" ? "" : JSON.stringify(value);
-}
