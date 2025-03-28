@@ -29,6 +29,8 @@ import {
   GetDesiredStateDiffQueryManager,
   GetDesiredStateDiffStateHelper,
 } from "@S/DesiredStateCompare/Data";
+import { GetVersionResourcesQueryManager } from "@S/DesiredStateDetails/Data";
+import { GetVersionResourcesStateHelper } from "@S/DesiredStateDetails/Data/StateHelper";
 import { GetDesiredStateResourceDetailsQueryManager } from "@S/DesiredStateResourceDetails/Data";
 import { EventsQueryManager, EventsStateHelper } from "@S/Events/Data";
 import { GetFactsQueryManager } from "@S/Facts/Data";
@@ -52,8 +54,6 @@ import {
 } from "../Managers/GetEnvironmentsContinuous";
 import { GetMetricsQueryManager } from "../Managers/GetMetrics";
 import { GetMetricsStateHelper } from "../Managers/GetMetrics/StateHelper";
-import { GetVersionResourcesQueryManager } from "@S/DesiredStateDetails/Data";
-import { GetVersionResourcesStateHelper } from "@S/DesiredStateDetails/Data/StateHelper";
 export class QueryManagerResolverImpl implements QueryManagerResolver {
   private managers: QueryManager[] = [];
 
