@@ -3,13 +3,11 @@ import {
   GenerateTokenCommandManager,
   RepairCommandManager,
   DeployCommandManager,
-  GetSupportArchiveCommandManager,
   ControlAgentCommandManager,
   TriggerDryRun,
 } from "@/Data/Managers";
 import { Store } from "@/Data/Store";
 import { GetAgentsUpdater } from "@S/Agents/Data/Updater";
-import { UpdateNotificationCommandManager } from "@S/Notification/Data/CommandManager";
 import {
   CallbacksStateHelper,
   CallbacksUpdater,
@@ -38,7 +36,6 @@ export class CommandManagerResolverImpl implements CommandManagerResolver {
     );
 
     return [
-      new GetSupportArchiveCommandManager(this.apiHelper),
       DeleteCallbackCommandManager(this.apiHelper, callbacksUpdater),
       CreateCallbackCommandManager(this.apiHelper, callbacksUpdater),
       GenerateTokenCommandManager(this.apiHelper),
@@ -49,7 +46,6 @@ export class CommandManagerResolverImpl implements CommandManagerResolver {
         new GetAgentsUpdater(this.store, this.apiHelper),
       ),
       TriggerDryRun.CommandManager(this.apiHelper),
-      UpdateNotificationCommandManager(this.apiHelper, this.store),
     ];
   }
 }

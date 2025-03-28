@@ -23,7 +23,7 @@ describe("ServiceInstanceDetailsPage", () => {
     render(component);
 
     expect(
-      await screen.findByRole("region", { name: "Instance-Details-Loading" }),
+      screen.getByRole("region", { name: "Instance-Details-Loading" }),
     ).toBeInTheDocument();
 
     expect(
@@ -80,15 +80,11 @@ describe("ServiceInstanceDetailsPage", () => {
     render(component);
 
     expect(
-      await screen.findByRole("region", { name: "Instance-Details-Loading" }),
+      screen.getByRole("region", { name: "Instance-Details-Loading" }),
     ).toBeInTheDocument();
 
     expect(
       await screen.findByRole("region", { name: "Instance-Details-Success" }),
-    ).toBeInTheDocument();
-
-    expect(
-      await screen.findByRole("region", { name: "History-Loading" }),
     ).toBeInTheDocument();
 
     await act(async () => {

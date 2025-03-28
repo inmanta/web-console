@@ -17,7 +17,16 @@ import ErrorBoundary from "./UI/Utils/ErrorBoundary";
 const store = getStoreInstance();
 const container = document.getElementById("root") as HTMLElement;
 const root = createRoot(container);
-const queryClient = new QueryClient();
+
+// We don't want to retry requests, especially in the continuous queries, there it would could result in infinite loop if the request takes longer than the interval.
+// Fail fast is the better option here, especially as we display functionality to refetch the data.
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+    },
+  },
+});
 
 root.render(
   <ErrorBoundary>

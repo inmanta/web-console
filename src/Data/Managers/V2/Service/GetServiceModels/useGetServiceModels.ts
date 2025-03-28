@@ -27,7 +27,6 @@ export const useGetServiceModels = (): GetServiceModels => {
       useQuery({
         queryKey: ["get_service_models-one_time"],
         queryFn: () => get("/lsm/v1/service_catalog?instance_summary=True"),
-        retry: false,
         select: (data) => data.data,
       }),
     useContinuous: (): UseQueryResult<ServiceModel[], Error> =>

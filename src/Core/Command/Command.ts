@@ -7,10 +7,7 @@ import {
   GenerateToken,
   GenerateTokenManifest,
 } from "@/Data/Managers/GenerateToken/interface";
-import {
-  GetSupportArchive,
-  GetSupportArchiveManifest,
-} from "@/Data/Managers/GetSupportArchive/interface";
+
 import { Repair, RepairManifest } from "@/Data/Managers/Repair/interface";
 import {
   TriggerDryRun,
@@ -18,7 +15,6 @@ import {
 } from "@/Data/Managers/TriggerDryRun/interface";
 import * as CreateInstance from "@S/CreateInstance/Core/Command";
 import * as TriggerInstanceUpdate from "@S/EditInstance/Core/Command";
-import * as UpdateNotification from "@S/Notification/Core/Command";
 import * as CreateCallback from "@S/ServiceDetails/Core/CreateCallback";
 import * as DeleteCallback from "@S/ServiceDetails/Core/DeleteCallback";
 
@@ -29,11 +25,9 @@ type Command =
   | DeleteCallback.Command
   | Deploy
   | GenerateToken
-  | GetSupportArchive
   | Repair
   | TriggerDryRun
-  | TriggerInstanceUpdate.Command
-  | UpdateNotification.Command;
+  | TriggerInstanceUpdate.Command;
 
 export type Type = Command;
 
@@ -48,11 +42,9 @@ interface Manifest {
   DeleteCallback: DeleteCallback.Manifest;
   Deploy: DeployManifest;
   GenerateToken: GenerateTokenManifest;
-  GetSupportArchive: GetSupportArchiveManifest;
   Repair: RepairManifest;
   TriggerDryRun: TriggerDryRunManifest;
   TriggerInstanceUpdate: TriggerInstanceUpdate.Manifest;
-  UpdateNotification: UpdateNotification.Manifest;
 }
 
 /**

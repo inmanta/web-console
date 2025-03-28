@@ -1,21 +1,17 @@
 import React, { act } from "react";
 import { Router } from "react-router-dom";
 import { Masthead, Page } from "@patternfly/react-core";
-import { render, screen, within } from "@testing-library/react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { createMemoryHistory } from "history";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
-import { Either, Maybe } from "@/Core";
-import {
-  CommandManagerResolverImpl,
-  CommandResolverImpl,
-  getStoreInstance,
-  QueryManagerResolverImpl,
-  QueryResolverImpl,
-} from "@/Data";
-import { Body } from "@/Slices/Notification/Core/Domain";
-import { DeferredApiHelper, dependencies, StaticScheduler } from "@/Test";
+import { http, HttpResponse } from "msw";
+import { setupServer } from "msw/node";
+import { getStoreInstance } from "@/Data";
+import { dependencies } from "@/Test";
+import { links, metadata } from "@/Test/Data/Pagination";
 import { DependencyProvider } from "@/UI/Dependency";
 import * as Mock from "@S/Notification/Core/Mock";
 import { Badge } from "@S/Notification/UI/Badge";
@@ -31,394 +27,312 @@ const axe = configureAxe({
 });
 
 function setup() {
-  const apiHelper = new DeferredApiHelper();
+  const client = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  });
   const history = createMemoryHistory();
-  const scheduler = new StaticScheduler();
   const store = getStoreInstance();
-
-  const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler),
-  );
-
-  const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolverImpl(store, apiHelper),
-  );
 
   const closeCallback = jest.fn();
   const toggleCallback = jest.fn();
 
-  const updateRequest = (id: string, body: Body) => ({
-    method: "PATCH",
-    url: `/api/v2/notification/${id}`,
-    environment: "env",
-    body,
-  });
-
-  const getAllRequest = {
-    method: "GET",
-    environment: "env",
-    url: "/api/v2/notification?limit=100&filter.cleared=false",
-  };
-
   const component = (
-    <StoreProvider store={store}>
-      <Router location={history.location} navigator={history}>
-        <DependencyProvider
-          dependencies={{ ...dependencies, queryResolver, commandResolver }}
-        >
-          <Page
-            notificationDrawer={
-              <Drawer
-                onClose={closeCallback}
-                isDrawerOpen
-                drawerRef={{ current: undefined }}
-              />
-            }
-            isNotificationDrawerExpanded={true}
-            masthead={
-              <Masthead>
-                <Badge onClick={toggleCallback} />
-              </Masthead>
-            }
-          />
-        </DependencyProvider>
-      </Router>
-    </StoreProvider>
+    <QueryClientProvider client={client}>
+      <StoreProvider store={store}>
+        <Router location={history.location} navigator={history}>
+          <DependencyProvider dependencies={dependencies}>
+            <Page
+              notificationDrawer={
+                <Drawer
+                  onClose={closeCallback}
+                  isDrawerOpen
+                  drawerRef={{ current: undefined }}
+                />
+              }
+              isNotificationDrawerExpanded={true}
+              masthead={
+                <Masthead>
+                  <Badge onClick={toggleCallback} />
+                </Masthead>
+              }
+            />
+          </DependencyProvider>
+        </Router>
+      </StoreProvider>
+    </QueryClientProvider>
   );
 
   return {
     component,
-    apiHelper,
     closeCallback,
-    updateRequest,
-    getAllRequest,
     history,
   };
 }
 
-test("Given Drawer Then a list of notifications are shown", async () => {
-  const { component, apiHelper, getAllRequest } = setup();
+let response = [Mock.unread, Mock.error, Mock.read, Mock.withoutUri];
+const server = setupServer(
+  http.get("/api/v2/notification", () => {
+    return HttpResponse.json({ data: response, links, metadata });
+  }),
 
-  render(component);
-  expect(apiHelper.pendingRequests).toEqual([getAllRequest]);
-  await act(async () => {
-    await apiHelper.resolve(Either.right(Mock.response));
+  http.patch("/api/v2/notification/:id", async ({ params, request }) => {
+    const id = params.id;
+
+    const item = response.find((item) => item.id === id);
+    const req = await request.json();
+
+    if (item && req) {
+      if (req["read"] !== undefined) {
+        item.read = req["read"];
+      }
+      if (req["cleared"]) {
+        response = response.filter((item) => item.id !== id);
+      }
+    }
+
+    return HttpResponse.json(item);
+  }),
+);
+
+describe("Drawer", () => {
+  beforeAll(() => {
+    server.listen();
+  });
+  beforeEach(() => {
+    response = [Mock.unread, Mock.error, Mock.read, Mock.withoutUri];
+    server.resetHandlers();
+  });
+  afterAll(() => {
+    server.close();
   });
 
-  expect(
-    screen.getByRole("generic", { name: "NotificationDrawer" }),
-  ).toBeVisible();
+  test("Given Drawer Then a list of notifications are shown", async () => {
+    const { component } = setup();
 
-  expect(
-    screen.getAllByRole("listitem", { name: "NotificationItem" }),
-  ).toHaveLength(4);
+    render(component);
 
-  await act(async () => {
-    const results = await axe(document.body);
+    expect(
+      await screen.findByRole("generic", { name: "NotificationDrawer" }),
+    ).toBeVisible();
 
-    expect(results).toHaveNoViolations();
-  });
-});
+    expect(
+      await screen.findAllByRole("listitem", { name: "NotificationItem" }),
+    ).toHaveLength(4);
 
-test("Given Drawer When clicking on 'Clear all' Then all notifications are cleared", async () => {
-  const { component, apiHelper, updateRequest, getAllRequest } = setup();
+    await act(async () => {
+      const results = await axe(document.body);
 
-  render(component);
-
-  await act(async () => {
-    await apiHelper.resolve(Either.right(Mock.response));
+      expect(results).toHaveNoViolations();
+    });
   });
 
-  await userEvent.click(
-    screen.getByRole("button", { name: "NotificationListActions" }),
-  );
+  test("Given Drawer When clicking on 'Clear all' Then all notifications are cleared", async () => {
+    const { component } = setup();
 
-  await userEvent.click(screen.getByRole("menuitem", { name: "Clear all" }));
+    render(component);
 
-  expect(apiHelper.pendingRequests).toEqual([
-    updateRequest("abcdefgh01", { read: true, cleared: true }),
-    updateRequest("abcdefgh02", { read: true, cleared: true }),
-    updateRequest("abcdefgh03", { read: true, cleared: true }),
-    updateRequest("abcdefgh04", { read: true, cleared: true }),
-  ]);
+    await userEvent.click(
+      await screen.findByRole("button", { name: "NotificationListActions" }),
+    );
 
-  await act(async () => {
-    await apiHelper.resolve(Maybe.none());
-    await apiHelper.resolve(Maybe.none());
-    await apiHelper.resolve(Maybe.none());
-    await apiHelper.resolve(Maybe.none());
+    await userEvent.click(screen.getByRole("menuitem", { name: "Clear all" }));
+
+    await waitFor(() => {
+      expect(
+        screen.queryAllByRole("listitem", { name: "NotificationItem" }),
+      ).toStrictEqual([]);
+    });
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 
-  expect(apiHelper.pendingRequests).toEqual([getAllRequest]);
+  test("Given Drawer When user clicks on 'Read all' Then all notifications are read", async () => {
+    const { component } = setup();
 
-  await act(async () => {
-    await apiHelper.resolve(Either.right({ ...Mock.response, data: [] }));
+    render(component);
+
+    await userEvent.click(
+      await screen.findByRole("button", { name: "NotificationListActions" }),
+    );
+
+    await userEvent.click(
+      screen.getByRole("menuitem", { name: "Mark all as read" }),
+    );
+
+    const notifications = screen.getAllByRole("listitem", {
+      name: "NotificationItem",
+    });
+
+    expect(
+      await screen.findAllByRole("listitem", { name: "NotificationItem" }),
+    ).toHaveLength(4);
+
+    notifications.forEach(async (notification) => {
+      expect(notification).toHaveTextContent("read");
+    });
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 
-  expect(
-    screen.queryByRole("listitem", { name: "NotificationItem" }),
-  ).not.toBeInTheDocument();
+  test("Given Drawer When user clicks a notification Then it becomes read", async () => {
+    const { component } = setup();
 
-  await act(async () => {
-    const results = await axe(document.body);
+    render(component);
 
-    expect(results).toHaveNoViolations();
-  });
-});
+    const items = await screen.findAllByRole("listitem", {
+      name: "NotificationItem",
+    });
 
-test("Given Drawer When user clicks on 'Read all' Then all notifications are read", async () => {
-  const { component, apiHelper, updateRequest, getAllRequest } = setup();
+    expect(items).toHaveLength(4);
 
-  render(component);
+    await userEvent.click(items[0]);
 
-  await act(async () => {
-    await apiHelper.resolve(Either.right(Mock.response));
-  });
+    const updatedItems = await screen.findAllByRole("listitem", {
+      name: "NotificationItem",
+    });
 
-  await userEvent.click(
-    screen.getByRole("button", { name: "NotificationListActions" }),
-  );
+    expect(updatedItems).toHaveLength(4);
 
-  await userEvent.click(
-    screen.getByRole("menuitem", { name: "Mark all as read" }),
-  );
+    expect(updatedItems[0]).toHaveTextContent("read");
 
-  expect(apiHelper.pendingRequests).toEqual([
-    updateRequest("abcdefgh01", { read: true }),
-    updateRequest("abcdefgh02", { read: true }),
-    updateRequest("abcdefgh04", { read: true }),
-  ]);
-  await act(async () => {
-    await apiHelper.resolve(Maybe.none());
-    await apiHelper.resolve(Maybe.none());
-    await apiHelper.resolve(Maybe.none());
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 
-  expect(apiHelper.pendingRequests).toEqual([getAllRequest]);
+  test("Given Drawer When user clicks a notification with an uri then go to the uri", async () => {
+    const { component, history } = setup();
 
-  await act(async () => {
-    await apiHelper.resolve(
-      Either.right({
-        ...Mock.response,
-        data: [
-          { ...Mock.unread, read: true },
-          { ...Mock.error, read: true },
-          Mock.read,
-          { ...Mock.withoutUri, read: true },
-        ],
-      }),
+    render(component);
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
+
+    const items = screen.getAllByRole("listitem", { name: "NotificationItem" });
+
+    await userEvent.click(items[0]);
+
+    expect(history.location.pathname).toBe(
+      "/compilereports/f2c68117-24bd-43cf-a9dc-ce42b934a614",
     );
   });
 
-  expect(
-    screen.getAllByRole("listitem", { name: "NotificationItem" }),
-  ).toHaveLength(4);
+  test("Given Drawer When user clicks a notification without an uri then nothing happens", async () => {
+    const { component, history } = setup();
 
-  await act(async () => {
-    const results = await axe(document.body);
+    render(component);
 
-    expect(results).toHaveNoViolations();
+    const items = await screen.findAllByRole("listitem", {
+      name: "NotificationItem",
+    });
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
+
+    await userEvent.click(items[3]);
+
+    expect(history.location.pathname).toBe("/");
   });
-});
 
-test("Given Drawer When user clicks a notification Then it becomes read", async () => {
-  const { component, apiHelper, getAllRequest, updateRequest } = setup();
+  test("Given Drawer When user clicks a notification toggle with an uri then do not go to uri", async () => {
+    const { component, history } = setup();
 
-  render(component);
-  await act(async () => {
-    await apiHelper.resolve(Either.right(Mock.response));
+    render(component);
+
+    const items = screen.getAllByRole("button", {
+      name: "NotificationListActions",
+    });
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
+
+    await userEvent.click(items[0]);
+
+    expect(history.location.pathname).toBe("/");
   });
 
-  const items = screen.getAllByRole("listitem", { name: "NotificationItem" });
+  test("Given Drawer When user clicks on 'unread' for 1 notification Then it becomes unread", async () => {
+    const { component } = setup();
 
-  await userEvent.click(items[0]);
+    render(component);
 
-  expect(apiHelper.pendingRequests).toEqual([
-    updateRequest("abcdefgh01", { read: true }),
-  ]);
-  await act(async () => {
-    await apiHelper.resolve(Maybe.none());
-  });
-  expect(apiHelper.pendingRequests).toEqual([getAllRequest]);
+    const items = await screen.findAllByRole("listitem", {
+      name: "NotificationItem",
+    });
+    const actions = within(items[2]).getByRole("button", {
+      name: "NotificationListItemActions",
+    });
 
-  await act(async () => {
-    await apiHelper.resolve(
-      Either.right({
-        ...Mock.response,
-        data: [{ ...Mock.unread, read: true }, Mock.error, Mock.read],
-      }),
+    await userEvent.click(actions);
+
+    await userEvent.click(
+      screen.getByRole("menuitem", { name: "Mark as unread" }),
     );
+    const updatedItems = await screen.findAllByRole("listitem", {
+      name: "NotificationItem",
+    });
+
+    expect(updatedItems).toHaveLength(4);
+
+    expect(updatedItems[2]).toHaveTextContent("unread");
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 
-  expect(
-    screen.getAllByRole("listitem", { name: "NotificationItem" }),
-  ).toHaveLength(3);
+  test("Given Drawer When user clicks on 'Clear' for 1 notification Then it is cleared", async () => {
+    const { component } = setup();
 
-  await act(async () => {
-    const results = await axe(document.body);
+    render(component);
 
-    expect(results).toHaveNoViolations();
-  });
-});
+    const items = await screen.findAllByRole("listitem", {
+      name: "NotificationItem",
+    });
 
-test("Given Drawer When user clicks a notification with an uri then go to the uri", async () => {
-  const { component, apiHelper, history } = setup();
+    expect(items).toHaveLength(4);
 
-  render(component);
-  await act(async () => {
-    await apiHelper.resolve(Either.right(Mock.response));
-  });
+    const actions = within(items[2]).getByRole("button", {
+      name: "NotificationListItemActions",
+    });
 
-  await act(async () => {
-    const results = await axe(document.body);
+    await userEvent.click(actions);
 
-    expect(results).toHaveNoViolations();
-  });
+    await userEvent.click(screen.getByRole("menuitem", { name: "Clear" }));
 
-  const items = screen.getAllByRole("listitem", { name: "NotificationItem" });
+    expect(
+      await screen.findAllByRole("listitem", { name: "NotificationItem" }),
+    ).toHaveLength(3);
 
-  await userEvent.click(items[0]);
+    await act(async () => {
+      const results = await axe(document.body);
 
-  expect(history.location.pathname).toBe(
-    "/compilereports/f2c68117-24bd-43cf-a9dc-ce42b934a614",
-  );
-});
-
-test("Given Drawer When user clicks a notification without an uri then nothing happens", async () => {
-  const { component, apiHelper, history } = setup();
-
-  render(component);
-  await act(async () => {
-    await apiHelper.resolve(Either.right(Mock.response));
-  });
-
-  const items = screen.getAllByRole("listitem", { name: "NotificationItem" });
-
-  await act(async () => {
-    const results = await axe(document.body);
-
-    expect(results).toHaveNoViolations();
-  });
-
-  await userEvent.click(items[3]);
-
-  expect(history.location.pathname).toBe("/");
-});
-
-test("Given Drawer When user clicks a notification toggle with an uri then do not go to uri", async () => {
-  const { component, apiHelper, history } = setup();
-
-  render(component);
-  await act(async () => {
-    await apiHelper.resolve(Either.right(Mock.response));
-  });
-
-  const items = screen.getAllByRole("button", {
-    name: "NotificationListActions",
-  });
-
-  await act(async () => {
-    const results = await axe(document.body);
-
-    expect(results).toHaveNoViolations();
-  });
-
-  await userEvent.click(items[0]);
-
-  expect(history.location.pathname).toBe("/");
-});
-
-test("Given Drawer When user clicks on 'unread' for 1 notification Then it becomes unread", async () => {
-  const { component, apiHelper, getAllRequest, updateRequest } = setup();
-
-  render(component);
-  await act(async () => {
-    await apiHelper.resolve(Either.right(Mock.response));
-  });
-
-  const items = screen.getAllByRole("listitem", { name: "NotificationItem" });
-  const actions = within(items[2]).getByRole("button", {
-    name: "NotificationListItemActions",
-  });
-
-  await userEvent.click(actions);
-
-  await userEvent.click(
-    screen.getByRole("menuitem", { name: "Mark as unread" }),
-  );
-
-  expect(apiHelper.pendingRequests).toEqual([
-    updateRequest("abcdefgh03", { read: false }),
-  ]);
-
-  await act(async () => {
-    await apiHelper.resolve(Maybe.none());
-  });
-  expect(apiHelper.pendingRequests).toEqual([getAllRequest]);
-
-  await act(async () => {
-    await apiHelper.resolve(
-      Either.right({
-        ...Mock.response,
-        data: [Mock.unread, Mock.error, { ...Mock.read, read: false }],
-      }),
-    );
-  });
-
-  expect(
-    screen.getAllByRole("listitem", { name: "NotificationItem" }),
-  ).toHaveLength(3);
-
-  await act(async () => {
-    const results = await axe(document.body);
-
-    expect(results).toHaveNoViolations();
-  });
-});
-
-test("Given Drawer When user clicks on 'Clear' for 1 notification Then it is cleared", async () => {
-  const { component, apiHelper, getAllRequest, updateRequest } = setup();
-
-  render(component);
-  await act(async () => {
-    await apiHelper.resolve(Either.right(Mock.response));
-  });
-
-  const items = screen.getAllByRole("listitem", { name: "NotificationItem" });
-
-  const actions = within(items[2]).getByRole("button", {
-    name: "NotificationListItemActions",
-  });
-
-  await userEvent.click(actions);
-
-  await userEvent.click(screen.getByRole("menuitem", { name: "Clear" }));
-
-  expect(apiHelper.pendingRequests).toEqual([
-    updateRequest("abcdefgh03", { read: true, cleared: true }),
-  ]);
-
-  await act(async () => {
-    await apiHelper.resolve(Maybe.none());
-  });
-  expect(apiHelper.pendingRequests).toEqual([getAllRequest]);
-
-  await act(async () => {
-    await apiHelper.resolve(
-      Either.right({
-        ...Mock.response,
-        data: [Mock.unread, Mock.error],
-      }),
-    );
-  });
-
-  expect(
-    screen.getAllByRole("listitem", { name: "NotificationItem" }),
-  ).toHaveLength(2);
-
-  await act(async () => {
-    const results = await axe(document.body);
-
-    expect(results).toHaveNoViolations();
+      expect(results).toHaveNoViolations();
+    });
   });
 });

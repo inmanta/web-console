@@ -58,99 +58,101 @@ const server = setupServer(
   }),
 );
 
-beforeAll(() => server.listen());
-afterAll(() => server.close());
+describe("CompileWidgetProvider", () => {
+  beforeAll(() => server.listen());
+  afterAll(() => server.close());
 
-test("GIVEN CompileButton WHEN clicked THEN triggers recompile", async () => {
-  const { component, afterTrigger } = setup();
+  test("GIVEN CompileButton WHEN clicked THEN triggers recompile", async () => {
+    const { component, afterTrigger } = setup();
 
-  render(component);
+    render(component);
 
-  const button = screen.getByRole("button", {
-    name: "RecompileButton",
+    const button = screen.getByRole("button", {
+      name: "RecompileButton",
+    });
+
+    await userEvent.click(button);
+
+    const toast = screen.getByTestId("ToastAlert");
+
+    expect(toast).toBeVisible();
+    expect(toast).toHaveTextContent(words("common.compileWidget.toast")(false));
+    await waitFor(() => {
+      expect(afterTrigger).toHaveBeenCalled();
+    });
+
+    expect(button).toBeEnabled();
   });
 
-  await userEvent.click(button);
+  test("GIVEN CompileButton WHEN clicked on toggle and clicked on Update & Recompile option THEN triggers recompile with update", async () => {
+    const { component, afterTrigger } = setup();
 
-  const toast = screen.getByTestId("ToastAlert");
+    render(component);
 
-  expect(toast).toBeVisible();
-  expect(toast).toHaveTextContent(words("common.compileWidget.toast")(false));
-  await waitFor(() => {
-    expect(afterTrigger).toHaveBeenCalled();
+    const widget = screen.getByRole("button", { name: "RecompileButton" });
+
+    expect(widget).toBeVisible();
+
+    const toggle = screen.getByRole("button", {
+      name: "Toggle",
+    });
+
+    expect(toggle).toBeEnabled();
+
+    await userEvent.click(toggle);
+
+    const button = screen.getByRole("menuitem", {
+      name: "UpdateAndRecompileButton",
+    });
+
+    await userEvent.click(button);
+
+    const toast = screen.getByTestId("ToastAlert");
+
+    expect(toast).toBeVisible();
+    expect(toast).toHaveTextContent(words("common.compileWidget.toast")(true));
+
+    await waitFor(() => {
+      expect(afterTrigger).toHaveBeenCalled();
+    });
   });
 
-  expect(button).toBeEnabled();
-});
+  test("GIVEN CompileButton WHEN environmentSetting server_compile is disabled THEN button is disabled", async () => {
+    const { component } = setup({
+      details: {
+        halted: false,
+        server_compile: false,
+        protected_environment: false,
+        enable_lsm_expert_mode: false,
+      },
+    });
 
-test("GIVEN CompileButton WHEN clicked on toggle and clicked on Update & Recompile option THEN triggers recompile with update", async () => {
-  const { component, afterTrigger } = setup();
+    render(component);
 
-  render(component);
+    const button = screen.getByRole("button", { name: "RecompileButton" });
 
-  const widget = screen.getByRole("button", { name: "RecompileButton" });
-
-  expect(widget).toBeVisible();
-
-  const toggle = screen.getByRole("button", {
-    name: "Toggle",
+    expect(button).toBeDisabled();
   });
 
-  expect(toggle).toBeEnabled();
+  test("GIVEN CompileButton WHEN 'isToastVisible' parameter is false and recompile clicked THEN toast won't appear", async () => {
+    const { component } = setup({
+      details: {
+        halted: false,
+        server_compile: true,
+        protected_environment: false,
+        enable_lsm_expert_mode: false,
+      },
+      isToastVisible: false,
+    });
 
-  await userEvent.click(toggle);
+    render(component);
 
-  const button = screen.getByRole("menuitem", {
-    name: "UpdateAndRecompileButton",
+    const button = screen.getByRole("button", { name: "RecompileButton" });
+
+    await userEvent.click(button);
+
+    expect(screen.queryByTestId("ToastAlert")).not.toBeInTheDocument();
+
+    expect(button).toBeEnabled();
   });
-
-  await userEvent.click(button);
-
-  const toast = screen.getByTestId("ToastAlert");
-
-  expect(toast).toBeVisible();
-  expect(toast).toHaveTextContent(words("common.compileWidget.toast")(true));
-
-  await waitFor(() => {
-    expect(afterTrigger).toHaveBeenCalled();
-  });
-});
-
-test("GIVEN CompileButton WHEN environmentSetting server_compile is disabled THEN button is disabled", async () => {
-  const { component } = setup({
-    details: {
-      halted: false,
-      server_compile: false,
-      protected_environment: false,
-      enable_lsm_expert_mode: false,
-    },
-  });
-
-  render(component);
-
-  const button = screen.getByRole("button", { name: "RecompileButton" });
-
-  expect(button).toBeDisabled();
-});
-
-test("GIVEN CompileButton WHEN 'isToastVisible' parameter is false and recompile clicked THEN toast won't appear", async () => {
-  const { component } = setup({
-    details: {
-      halted: false,
-      server_compile: true,
-      protected_environment: false,
-      enable_lsm_expert_mode: false,
-    },
-    isToastVisible: false,
-  });
-
-  render(component);
-
-  const button = screen.getByRole("button", { name: "RecompileButton" });
-
-  await userEvent.click(button);
-
-  expect(screen.queryByTestId("ToastAlert")).not.toBeInTheDocument();
-
-  expect(button).toBeEnabled();
 });

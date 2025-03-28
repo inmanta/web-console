@@ -14,7 +14,7 @@ interface Props {
  * @param {Props} props - The component props.
  *  @prop {unknown} attributeValue - The value of the attribute.
  *  @prop {string} web_title - The title of the web page.
- * @returns {JSX.Element} The rendered MarkdownCard component.
+ * @returns {React.FC} The rendered MarkdownCard component.
  */
 export const MarkdownCard = ({ attributeValue, web_title }: Props) => {
   const data =

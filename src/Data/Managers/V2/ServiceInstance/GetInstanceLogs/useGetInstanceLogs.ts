@@ -32,7 +32,6 @@ export const useGetInstanceLogs = (
       useQuery({
         queryKey: ["get_instance_logs-one_time", service, instance],
         queryFn: () => get(url),
-        retry: false,
         select: (data) => data.data,
       }),
     useContinuous: (): UseQueryResult<InstanceLog[], Error> =>

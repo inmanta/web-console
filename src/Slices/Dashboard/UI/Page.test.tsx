@@ -1,12 +1,11 @@
 import React, { act } from "react";
 import { MemoryRouter } from "react-router";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { Either } from "@/Core";
 import { getStoreInstance, QueryResolverImpl } from "@/Data";
-import { GetMetricsQueryManager } from "@/Data/Managers/GetMetrics";
-import { GetMetricsStateHelper } from "@/Data/Managers/GetMetrics/StateHelper";
 import { EnvironmentDetailsOneTimeQueryManager } from "@/Slices/Settings/Data/GetEnvironmentDetails";
 import {
   DeferredApiHelper,
@@ -33,30 +32,25 @@ function setup() {
     store,
     apiHelper,
   );
-  const metricsQueryManager = GetMetricsQueryManager(
-    apiHelper,
-    GetMetricsStateHelper(store),
-  );
 
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolverImpl([
-      environmentDetailsQueryManager,
-      metricsQueryManager,
-    ]),
+    new DynamicQueryManagerResolverImpl([environmentDetailsQueryManager]),
   );
   const component = (
-    <MemoryRouter>
-      <StoreProvider store={store}>
-        <DependencyProvider
-          dependencies={{
-            ...dependencies,
-            queryResolver,
-          }}
-        >
-          <Page />
-        </DependencyProvider>
-      </StoreProvider>
-    </MemoryRouter>
+    <QueryClientProvider client={new QueryClient()}>
+      <MemoryRouter>
+        <StoreProvider store={store}>
+          <DependencyProvider
+            dependencies={{
+              ...dependencies,
+              queryResolver,
+            }}
+          >
+            <Page />
+          </DependencyProvider>
+        </StoreProvider>
+      </MemoryRouter>
+    </QueryClientProvider>
   );
 
   return { component, apiHelper };

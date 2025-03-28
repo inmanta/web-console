@@ -57,7 +57,6 @@ export const useGetInventoryList = (
       useQuery({
         queryKey: ["get_inventory_list-one_time", serviceNames],
         queryFn: fetchAllServices,
-        retry: false,
       }),
     useContinuous: (): UseQueryResult<Inventories, Error> =>
       useQuery({
