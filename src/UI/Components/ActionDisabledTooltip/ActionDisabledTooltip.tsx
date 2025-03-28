@@ -31,5 +31,11 @@ export const ActionDisabledTooltip: React.FC<
 };
 
 const CursorNotAllowedContainer = styled.span`
+  margin-block-start: calc(-1 * var(--pf-v6-c-form__actions--MarginBlockStart));
+  margin-block-end: calc(-1 * var(--pf-v6-c-form__actions--MarginBlockEnd));
+  margin-inline-start: calc(
+    -1 * var(--pf-v6-c-form__actions--MarginInlineStart)
+  );
+  margin-inline-end: calc(-1 * var(--pf-v6-c-form__actions--MarginInlineEnd));
   cursor: not-allowed;
 `;
