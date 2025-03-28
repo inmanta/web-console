@@ -6,27 +6,9 @@ import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { axe, toHaveNoViolations } from "jest-axe";
 import { Either } from "@/Core";
-import {
-  QueryResolverImpl,
-  getStoreInstance,
-  GetServerStatusOneTimeQueryManager,
-  GetServerStatusStateHelper,
-  GetEnvironmentsStateHelper,
-  GetEnvironmentsQueryManager,
-} from "@/Data";
+import { getStoreInstance } from "@/Data";
 import { defaultAuthContext } from "@/Data/Auth/AuthContext";
-import {
-  GetEnvironmentsContinuousQueryManager,
-  GetEnvironmentsContinuousStateHelper,
-} from "@/Data/Managers/GetEnvironmentsContinuous";
-import {
-  DeferredApiHelper,
-  dependencies,
-  DynamicQueryManagerResolverImpl,
-  Project,
-  ServerStatus,
-  StaticScheduler,
-} from "@/Test";
+import { DeferredApiHelper, dependencies, Project, ServerStatus } from "@/Test";
 import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
 import { Root } from "./Root";
 
@@ -35,31 +17,6 @@ function setup() {
 
   const store = getStoreInstance();
   const apiHelper = new DeferredApiHelper();
-  const scheduler = new StaticScheduler();
-  const environmentsStateHelper = GetEnvironmentsStateHelper(store);
-  const environmentManagerOneTime = GetEnvironmentsQueryManager(
-    apiHelper,
-    environmentsStateHelper,
-  );
-
-  const environmentsManager = GetEnvironmentsContinuousQueryManager(
-    apiHelper,
-    scheduler,
-    GetEnvironmentsContinuousStateHelper(store),
-  );
-
-  const getServerStatusManager = GetServerStatusOneTimeQueryManager(
-    apiHelper,
-    GetServerStatusStateHelper(store),
-  );
-
-  const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolverImpl([
-      environmentsManager,
-      environmentManagerOneTime,
-      getServerStatusManager,
-    ]),
-  );
 
   const environmentHandler = EnvironmentHandlerImpl(
     useLocation,
@@ -73,7 +30,6 @@ function setup() {
           <DependencyProvider
             dependencies={{
               ...dependencies,
-              queryResolver,
               environmentHandler,
               authHelper: {
                 ...defaultAuthContext,

@@ -1,7 +1,8 @@
 import React, { useContext } from "react";
 import { Button, Tooltip } from "@patternfly/react-core";
 import { StopIcon } from "@patternfly/react-icons";
-import { DependencyContext } from "@/UI/Dependency";
+import { useHaltEnvironment } from "@/Data/Managers/V2/Environment/HaltEnvironment";
+import { useQueryControl } from "@/Data/Managers/V2/helpers/QueryControlContext";
 import { words } from "@/UI/words";
 import { ModalContext } from "../../ModalProvider";
 
@@ -11,12 +12,15 @@ import { ModalContext } from "../../ModalProvider";
  * @returns {React.FC} A button with a tooltip that triggers a modal when clicked.
  */
 export const HaltButton: React.FC = () => {
-  const { queryResolver, commandResolver } = useContext(DependencyContext);
   const { triggerModal, closeModal } = useContext(ModalContext);
-  const haltEnvironmentTrigger =
-    commandResolver.useGetTrigger<"HaltEnvironment">({
-      kind: "HaltEnvironment",
-    });
+  const { disableQueries } = useQueryControl();
+  const { mutate, isPending } = useHaltEnvironment({
+    onSuccess: () => {
+      document.dispatchEvent(new CustomEvent("halt-event"));
+      disableQueries();
+      closeModal();
+    },
+  });
 
   /**
    * Handles the toggling of the modal.
@@ -37,14 +41,9 @@ export const HaltButton: React.FC = () => {
           key="confirm"
           variant="primary"
           onClick={() => {
-            queryResolver.pauseAllContinuousManagers();
-            haltEnvironmentTrigger().then((_result) => {
-              queryResolver.resumeAllContinuousManagers();
-              document.dispatchEvent(new CustomEvent("halt-event"));
-            });
-            closeModal();
-            document.dispatchEvent(new CustomEvent("halt-event"));
+            mutate();
           }}
+          isLoading={isPending}
         >
           {words("yes")}
         </Button>,
@@ -56,15 +55,11 @@ export const HaltButton: React.FC = () => {
   };
 
   return (
-    <Tooltip
-      content={<div>{words("environment.halt.button.tooltip")}</div>}
-      position="right"
-    >
+    <Tooltip content={words("environment.halt.tooltip")}>
       <Button
-        variant="stateful"
-        state="attention"
-        icon={<StopIcon />}
+        variant="secondary"
         onClick={handleModalToggle}
+        icon={<StopIcon />}
       >
         {words("environment.halt.button")}
       </Button>
