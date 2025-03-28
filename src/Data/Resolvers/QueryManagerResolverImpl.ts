@@ -52,7 +52,8 @@ import {
 } from "../Managers/GetEnvironmentsContinuous";
 import { GetMetricsQueryManager } from "../Managers/GetMetrics";
 import { GetMetricsStateHelper } from "../Managers/GetMetrics/StateHelper";
-
+import { GetVersionResourcesQueryManager } from "@S/DesiredStateDetails/Data";
+import { GetVersionResourcesStateHelper } from "@S/DesiredStateDetails/Data/StateHelper";
 export class QueryManagerResolverImpl implements QueryManagerResolver {
   private managers: QueryManager[] = [];
 
@@ -144,6 +145,11 @@ export class QueryManagerResolverImpl implements QueryManagerResolver {
       NotificationContinuousQueryManager(
         this.apiHelper,
         this.store,
+        this.scheduler,
+      ),
+      GetVersionResourcesQueryManager(
+        this.apiHelper,
+        GetVersionResourcesStateHelper(this.store),
         this.scheduler,
       ),
       NotificationReadOnlyQueryManager(this.store),
