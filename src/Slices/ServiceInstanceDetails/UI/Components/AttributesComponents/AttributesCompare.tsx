@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { DiffEditor } from "@monaco-editor/react";
+import * as monaco from "monaco-editor";
+import { DiffEditor, loader } from "@monaco-editor/react";
 import {
   Divider,
   Flex,
@@ -22,6 +23,7 @@ interface Props {
   instanceLogs: InstanceLog[];
   selectedVersion: string;
 }
+loader.config({ monaco });
 
 /**
  * The AttributesCompare Component.

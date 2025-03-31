@@ -19,6 +19,16 @@ module.exports = merge(common, {
         minify: CssMinimizerPlugin.cleanCssMinify,
       }),
     ],
+    splitChunks: {
+      chunks: "all",
+      cacheGroups: {
+        monaco: {
+          test: /[\\/]node_modules[\\/]monaco-editor[\\/]/,
+          name: "monaco-editor",
+          priority: 10,
+        },
+      },
+    },
   },
   plugins: [
     new MiniCssExtractPlugin({
@@ -44,6 +54,7 @@ module.exports = merge(common, {
         include: [
           path.resolve(__dirname, "src"),
           path.resolve(__dirname, "node_modules/patternfly"),
+          path.resolve(__dirname, "node_modules/monaco-editor"),
           path.resolve(__dirname, "node_modules/@patternfly/patternfly"),
           path.resolve(__dirname, "node_modules/@patternfly/react-styles/css"),
           path.resolve(

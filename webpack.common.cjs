@@ -2,10 +2,11 @@ const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
 const { GitRevisionPlugin } = require("git-revision-webpack-plugin");
 const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
+const MonacoWebpackPlugin = require("monaco-editor-webpack-plugin");
 const webpack = require("webpack");
 const VersionFile = require("webpack-version-file");
 const gitRevisionPlugin = new GitRevisionPlugin();
-
+var MONACO_DIR = path.join(__dirname, "node_modules/monaco-editor");
 module.exports = {
   entry: {
     app: path.resolve(__dirname, "src", "index.tsx"),
@@ -31,6 +32,11 @@ module.exports = {
     }),
     new webpack.ProvidePlugin({
       process: "process/browser",
+    }),
+    new MonacoWebpackPlugin({
+      // available options:
+      languages: ["javascript", "typescript", "json"], // specify languages you need
+      features: ["!gotoSymbol"], // customize features
     }),
   ],
   module: {
