@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { DiffEditor } from "@monaco-editor/react";
+import { DiffEditor, loader } from "@monaco-editor/react";
 import {
   Divider,
   Flex,
@@ -7,6 +7,7 @@ import {
   FormSelect,
   FormSelectOption,
 } from "@patternfly/react-core";
+import * as monaco from "monaco-editor";
 import styled from "styled-components";
 import { InstanceAttributeModel } from "@/Core";
 import { InstanceLog } from "@/Core/Domain/HistoryLog";
@@ -22,6 +23,7 @@ interface Props {
   instanceLogs: InstanceLog[];
   selectedVersion: string;
 }
+loader.config({ monaco });
 
 /**
  * The AttributesCompare Component.

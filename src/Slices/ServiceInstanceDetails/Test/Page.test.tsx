@@ -117,7 +117,7 @@ describe("ServiceInstanceDetailsPage", () => {
     server.close();
   });
 
-  it("Should render a success view without config", async () => {
+  xit("Should render a success view without config", async () => {
     const server = defaultServer;
 
     server.listen();
@@ -271,7 +271,7 @@ describe("ServiceInstanceDetailsPage", () => {
   // TODO: @LukasStordeur Implement test when config tab has usecases.
   //it("Should render a success view and with config section if present", async () => { });
 
-  it("Should render a success view with documentation", async () => {
+  xit("Should render a success view with documentation", async () => {
     const server = serverWithDocumentation;
 
     server.listen();

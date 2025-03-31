@@ -27,6 +27,8 @@ module.exports = {
     "^@joint/core$": "<rootDir>/node_modules/@inmanta/rappid",
     // Force module uuid to resolve with the CJS entry point, because Jest does not support package.json.exports. See https://github.com/uuidjs/uuid/issues/451
     uuid: require.resolve("uuid"),
+    "^monaco-editor$":
+      "<rootDir>/node_modules/monaco-editor/esm/vs/editor/editor.api.d.ts",
   },
 
   // A preset that is used as a base for Jest's configuration
@@ -56,7 +58,7 @@ module.exports = {
 
   // The react-syntax-highlighter, mermaid and @inmanta/rappid esm modules have to be handled by jest
   transformIgnorePatterns: [
-    "node_modules/(?!react-syntax-highlighter|@inmanta/rappid|mermaid/dist/mermaid.js)",
+    "node_modules/(?!react-syntax-highlighter|@inmanta/rappid|mermaid/dist/mermaid.js|monaco-editor)",
   ],
   globals: {
     "ts-jest": {
