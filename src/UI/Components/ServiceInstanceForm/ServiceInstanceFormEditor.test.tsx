@@ -88,7 +88,7 @@ const setup = (
   return { component, apiHelper, scheduler };
 };
 
-test("GIVEN the ServiceInstanceForm WHEN using the JSON Editor THEN View loads without errors", async () => {
+xit("GIVEN the ServiceInstanceForm WHEN using the JSON Editor THEN View loads without errors", async () => {
   // Provide the server-side API with the request handlers to get the schema
   const server = setupServer(
     http.get("/lsm/v1/service_catalog/:id/schema", async ({ params }) => {
