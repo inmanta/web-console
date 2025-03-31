@@ -1,12 +1,12 @@
 const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
 const { GitRevisionPlugin } = require("git-revision-webpack-plugin");
-const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 const MonacoWebpackPlugin = require("monaco-editor-webpack-plugin");
+const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 const webpack = require("webpack");
 const VersionFile = require("webpack-version-file");
 const gitRevisionPlugin = new GitRevisionPlugin();
-var MONACO_DIR = path.join(__dirname, "node_modules/monaco-editor");
+
 module.exports = {
   entry: {
     app: path.resolve(__dirname, "src", "index.tsx"),

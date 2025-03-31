@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import * as monaco from "monaco-editor";
 import { DiffEditor, loader } from "@monaco-editor/react";
 import {
   Divider,
@@ -8,6 +7,7 @@ import {
   FormSelect,
   FormSelectOption,
 } from "@patternfly/react-core";
+import * as monaco from "monaco-editor";
 import styled from "styled-components";
 import { InstanceAttributeModel } from "@/Core";
 import { InstanceLog } from "@/Core/Domain/HistoryLog";
