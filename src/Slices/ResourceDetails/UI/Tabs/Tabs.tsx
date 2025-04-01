@@ -30,6 +30,19 @@ interface Props {
   data: Details;
 }
 
+/**
+ * The Tabs component.
+ *
+ * This component is responsible of displaying the tabs of the resource details.
+ *
+ * @Props {Props} - The props of the component
+ *  @prop {string} id - The id of the resource
+ *  @prop {TabKey} activeTab - The active tab
+ *  @prop {(tab: TabKey) => void} setActiveTab - The function to set the active tab
+ *  @prop {Details} data - The data of the resource
+ *
+ * @returns {React.FC<Props>} A React Component displaying the tabs of the resource details
+ */
 export const Tabs: React.FC<Props> = ({
   id,
   activeTab,

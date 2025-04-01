@@ -23,6 +23,13 @@ import { DiscoveredResourcesTable } from "./DiscoveredResourcesTable";
 import { DiscoveredResourcesTablePresenter } from "./DiscoveredResourcesTablePresenter";
 import { TableControls } from "./TableControls";
 
+/**
+ * The Page component.
+ *
+ * This component is responsible of displaying the discovered resources.
+ *
+ * @returns {React.FC} A React Component displaying the discovered resources
+ */
 export const Page: React.FC = () => {
   const { featureManager } = useContext(DependencyContext);
 

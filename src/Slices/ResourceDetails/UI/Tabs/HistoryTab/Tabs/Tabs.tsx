@@ -24,6 +24,19 @@ interface Props {
   setActiveTab: (tab: TabKey) => void;
 }
 
+/**
+ * The Tabs component.
+ *
+ * This component is responsible of displaying the tabs of the history tab.
+ *
+ * @Props {Props} - The props of the component
+ *  @prop {Record<string, unknown>} attributes - The attributes of the resource
+ *  @prop {string[]} requires - The requires of the resource
+ *  @prop {TabKey} activeTab - The active tab
+ *  @prop {(tab: TabKey) => void} setActiveTab - The function to set the active tab
+ *
+ * @returns {React.FC<Props>} A React Component displaying the tabs of the history tab
+ */
 export const Tabs: React.FC<Props> = ({
   attributes,
   requires,
@@ -39,6 +52,16 @@ export const Tabs: React.FC<Props> = ({
   );
 };
 
+/**
+ * The attributes tab.
+ *
+ * This component is responsible of displaying the attributes of the resource.
+ *
+ * @Props {Props} - The props of the component
+ *  @prop {Record<string, unknown>} attributes - The attributes of the resource
+ *
+ * @returns {TabDescriptor<TabKey>} A TabDescriptor
+ */
 const attributesTab = (
   attributes: Record<string, unknown>,
 ): TabDescriptor<TabKey> => ({
@@ -55,6 +78,16 @@ const requiresTab = (requires: string[]): TabDescriptor<TabKey> => ({
   view: <RequiresTab requires={requires} />,
 });
 
+/**
+ * The attributes tab.
+ *
+ * This component is responsible of displaying the attributes of the resource.
+ *
+ * @Props {Props} - The props of the component
+ *  @prop {Record<string, unknown>} attributes - The attributes of the resource
+ *
+ * @returns {React.FC<{ attributes: Record<string, unknown> }>} A React Component displaying the attributes of the resource
+ */
 const AttributesTab: React.FC<{ attributes: Record<string, unknown> }> = ({
   attributes,
 }) => {
@@ -73,6 +106,16 @@ const AttributesTab: React.FC<{ attributes: Record<string, unknown> }> = ({
   );
 };
 
+/**
+ * The requires tab.
+ *
+ * This component is responsible of displaying the requires of the resource.
+ *
+ * @Props {Props} - The props of the component
+ *  @prop {string[]} requires - The requires of the resource
+ *
+ * @returns {React.FC<{ requires: string[] }>} A React Component displaying the requires of the resource
+ */
 const RequiresTab: React.FC<{ requires: string[] }> = ({ requires }) => (
   <Table aria-label={words("resources.history.tabs.requires")}>
     <Thead>

@@ -17,6 +17,16 @@ interface Props {
   id: string;
 }
 
+/**
+ * The View component.
+ *
+ * This component is responsible of displaying the resource details.
+ *
+ * @Props {Props} - The props of the component
+ *  @prop {string} id - The id of the resource
+ *
+ * @returns {React.FC<Props>} A React Component displaying the resource details
+ */
 export const View: React.FC<Props> = ({ id }) => {
   const [activeTab, setActiveTab] = useUrlStateWithString<TabKey>({
     default: TabKey.Attributes,

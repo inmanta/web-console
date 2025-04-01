@@ -22,6 +22,16 @@ interface Props {
   resourceId: string;
 }
 
+/**
+ * The LogTab component.
+ *
+ * This component is responsible of displaying the logs of a resource.
+ *
+ * @Props {Props} - The props of the component
+ *  @prop {string} resourceId - The id of the resource
+ *
+ * @returns {React.FC<Props>} A React Component displaying the logs of a resource
+ */
 export const View: React.FC<Props> = ({ resourceId }) => {
   const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({
     route: "ResourceDetails",

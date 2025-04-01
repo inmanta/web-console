@@ -8,6 +8,15 @@ interface Props {
   details: Details;
 }
 
+/**
+ * The AttributesTab component.
+ *
+ * This component is responsible of displaying the attributes of a resource.
+ *
+ * @Props {Props} - The props of the component
+ *  @prop {Details} details - The details of the resource
+ * @returns {React.FC<Props>} A React Component displaying the attributes of a resource
+ */
 export const AttributesTab: React.FC<Props> = ({ details }) => {
   const classifier = new AttributeClassifier(
     new JsonFormatter(),
