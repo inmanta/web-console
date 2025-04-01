@@ -19,6 +19,7 @@ export const createFormState = (
       case "TextList": {
         if (curr.type === "int?" || curr.type === "float?") {
           const value = curr.defaultValue;
+
           //empty string assertion is for converting input form to JSON Editor
           acc[curr.name] =
             value === "" || value === null ? null : Number(curr.defaultValue);
@@ -102,6 +103,7 @@ export const createEditFormState = (
         case "Text": {
           if (curr.type === "int?" || curr.type === "float?") {
             const value = originalAttributes?.[curr.name];
+
             //empty string assertion is for converting input form to JSON Editor
             acc[curr.name] =
               value === "" || value === null
@@ -194,6 +196,7 @@ export const createDuplicateFormState = (
         case "Text": {
           if (curr.type === "int?" || curr.type === "float?") {
             const value = originalAttributes?.[curr.name];
+
             //empty string assertion is for convertin input form to JSON Editor
             acc[curr.name] =
               value === "" || value === null
