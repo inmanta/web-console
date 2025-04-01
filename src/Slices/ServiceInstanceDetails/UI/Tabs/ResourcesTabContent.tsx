@@ -43,11 +43,7 @@ export const ResourcesTabContent: React.FC = () => {
 
   if (isError) {
     // If the error is because of the version, we don't want to show the error view, and fall back to the loading view as the process of updating version is still ongoing
-    if (
-      !error.message.includes(
-        "Request conflicts with the current state of the resource: The given current version",
-      )
-    ) {
+    if (error.status !== 409) {
       return (
         <TabContent role="tabpanel" id={"Resources-content"}>
           <ErrorView

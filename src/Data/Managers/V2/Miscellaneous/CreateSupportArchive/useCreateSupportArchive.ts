@@ -3,15 +3,15 @@ import {
   UseMutationResult,
   useMutation,
 } from "@tanstack/react-query";
-import { useGetZipWithoutEnv } from "../../helpers";
+import { CustomError, useGetZipWithoutEnv } from "../../helpers";
 
 /**
  * React Query hook for downloading support archive.
  *
- * @returns {UseMutationResult<Blob, Error>} A mutation result containing the support archive blob or an error.
+ * @returns {UseMutationResult<Blob, CustomError>} A mutation result containing the support archive blob or an error.
  */
 export const useCreateSupportArchive = (
-  options?: UseMutationOptions<Blob, Error>,
+  options?: UseMutationOptions<Blob, CustomError>,
 ): UseMutationResult<Blob, Error, void> => {
   const get = useGetZipWithoutEnv();
 

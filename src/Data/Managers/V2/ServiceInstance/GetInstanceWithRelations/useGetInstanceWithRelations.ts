@@ -5,7 +5,7 @@ import {
   ServiceInstanceModel,
   ServiceModel,
 } from "@/Core";
-import { useGet } from "../../helpers";
+import { CustomError, useGet } from "../../helpers";
 
 /*
  * interface for the service instance with its related instances and eventual coordinates on canvas
@@ -20,8 +20,8 @@ export interface InstanceWithRelations {
  * Return Signature of the useServiceModel React Query
  */
 interface GetInstanceWithRelationsHook {
-  useOneTime: () => UseQueryResult<InstanceWithRelations, Error>;
-  useContinuous: () => UseQueryResult<InstanceWithRelations, Error>;
+  useOneTime: () => UseQueryResult<InstanceWithRelations, CustomError>;
+  useContinuous: () => UseQueryResult<InstanceWithRelations, CustomError>;
 }
 
 /**
@@ -185,7 +185,7 @@ export const useGetInstanceWithRelations = (
      * Custom hook to fetch the parameter from the API once.
      * @returns The result of the query, including the parameter data.
      */
-    useOneTime: (): UseQueryResult<InstanceWithRelations, Error> =>
+    useOneTime: (): UseQueryResult<InstanceWithRelations, CustomError> =>
       useQuery({
         queryKey: ["get_instance_with_relations-one_time", instanceId],
         queryFn: () => fetchInstanceWithRelations(instanceId),
@@ -193,7 +193,7 @@ export const useGetInstanceWithRelations = (
         enabled: serviceModel !== undefined,
         gcTime: 0,
       }),
-    useContinuous: (): UseQueryResult<InstanceWithRelations, Error> =>
+    useContinuous: (): UseQueryResult<InstanceWithRelations, CustomError> =>
       useQuery({
         queryKey: ["get_instance_with_relations-continuous", instanceId],
         queryFn: () => fetchInstanceWithRelations(instanceId),
