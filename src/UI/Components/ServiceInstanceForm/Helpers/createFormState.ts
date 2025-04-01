@@ -18,8 +18,10 @@ export const createFormState = (
       case "Textarea":
       case "TextList": {
         if (curr.type === "int?" || curr.type === "float?") {
+          const value = curr.defaultValue;
+          //empty string assertion is for converting input form to JSON Editor
           acc[curr.name] =
-            curr.defaultValue === "" ? null : Number(curr.defaultValue);
+            value === "" || value === null ? null : Number(curr.defaultValue);
         } else if (curr.type === "dict?") {
           acc[curr.name] = curr.defaultValue === "" ? null : curr.defaultValue;
         } else {
@@ -99,8 +101,10 @@ export const createEditFormState = (
         case "TextList":
         case "Text": {
           if (curr.type === "int?" || curr.type === "float?") {
+            const value = originalAttributes?.[curr.name];
+            //empty string assertion is for converting input form to JSON Editor
             acc[curr.name] =
-              originalAttributes?.[curr.name] === ""
+              value === "" || value === null
                 ? null
                 : Number(originalAttributes?.[curr.name]);
           } else if (curr.type === "dict?") {
@@ -189,8 +193,10 @@ export const createDuplicateFormState = (
         case "TextList":
         case "Text": {
           if (curr.type === "int?" || curr.type === "float?") {
+            const value = originalAttributes?.[curr.name];
+            //empty string assertion is for convertin input form to JSON Editor
             acc[curr.name] =
-              originalAttributes?.[curr.name] === ""
+              value === "" || value === null
                 ? null
                 : Number(originalAttributes?.[curr.name]);
           } else if (curr.type === "dict?") {
