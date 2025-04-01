@@ -233,14 +233,14 @@ export const ServiceInstanceForm: React.FC<Props> = ({
           testingId={words("confirm")}
           tooltipContent={words("environment.halt.tooltip")}
         >
-          <Button
+          <StyledButton
             variant="primary"
             onClick={onConfirm}
             isDisabled={isSubmitDisabled || !isEditorValid}
             aria-label="submit"
           >
             {words("confirm")}
-          </Button>
+          </StyledButton>
         </ActionDisabledTooltip>
 
         <Button
@@ -262,4 +262,16 @@ export const ServiceInstanceForm: React.FC<Props> = ({
 
 const StyledForm = styled(Form)`
   min-height: 0;
+  .display-blocks {
+    display: block;
+  }
+`;
+
+const StyledButton = styled(Button)`
+  //when tooltip is in the document, it wraps button and removes following styling that are inherited from form-actions
+  //these styling will be in line with the button styling when it's not wrapped in tooltip
+  margin-block-start: var(--pf-v6-c-form__actions--child--MarginBlockStart);
+  margin-block-end: var(--pf-v6-c-form__actions--child--MarginBlockEnd);
+  margin-inline-start: var(--pf-v6-c-form__actions--child--MarginInlineStart);
+  margin-inline-end: var(--pf-v6-c-form__actions--child--MarginInlineEnd);
 `;
