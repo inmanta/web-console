@@ -1,6 +1,10 @@
 import { useContext } from "react";
 import { DependencyContext } from "@/UI";
 
+export interface CustomError extends Error {
+  status?: number;
+}
+
 /**
  * React Query hook that provides HTTP helper functions.
  *
@@ -22,9 +26,12 @@ export const useFetchHelpers = () => {
     }
 
     if (!response.ok) {
-      throw new Error(
+      const error: CustomError = new Error(
         customErrorMessage || JSON.parse(await response.text()).message,
       );
+
+      error.status = response.status;
+      throw error;
     }
   }
 

@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Editor, OnValidate, useMonaco, loader } from "@monaco-editor/react";
+import { Editor, OnValidate, useMonaco } from "@monaco-editor/react";
 import { Spinner } from "@patternfly/react-core";
-import * as monaco from "monaco-editor";
+
 import { useGetJSONSchema } from "@/Data/Managers/V2/ServiceInstance";
 import { words } from "@/UI";
 import { getThemePreference } from "../DarkmodeOption";
 import { ErrorMessageContainer } from "../ErrorMessageContainer";
-
-loader.config({ monaco });
 
 interface Props {
   service_entity: string;

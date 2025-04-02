@@ -5,7 +5,7 @@ import {
   DesiredStateVersion,
   DesiredStateVersionStatus,
 } from "@/Slices/DesiredState/Core/Domain";
-import { useGet } from "../../helpers";
+import { CustomError, useGet } from "../../helpers";
 import { getUrl } from "./getUrl";
 
 /**
@@ -34,20 +34,20 @@ interface GetDesiredStates {
     pageSize: PageSize.PageSize,
     filter: Filter,
     currentPage: CurrentPage,
-  ) => UseQueryResult<Result, Error>;
+  ) => UseQueryResult<Result, CustomError>;
   useContinuous: (
     pageSize: PageSize.PageSize,
     filter: Filter,
     currentPage: CurrentPage,
-  ) => UseQueryResult<Result, Error>;
+  ) => UseQueryResult<Result, CustomError>;
 }
 
 /**
  * React Query hook to fetch a list of desired States
  *
  * @returns {GetDesiredStates} An object containing the available queries.
- * @returns {UseQueryResult<Result, Error>} returns.useOneTime - Fetch the desired states with a single query.
- * @returns {UseQueryResult<Result, Error>} returns.useContinuous - Fetch the desired states with a recurrent query with an interval of 5s.
+ * @returns {UseQueryResult<Result, CustomError>} returns.useOneTime - Fetch the desired states with a single query.
+ * @returns {UseQueryResult<Result, CustomError>} returns.useContinuous - Fetch the desired states with a recurrent query with an interval of 5s.
  */
 export const useGetDesiredStates = (): GetDesiredStates => {
   const get = useGet()<Result>;
@@ -57,7 +57,7 @@ export const useGetDesiredStates = (): GetDesiredStates => {
       pageSize: PageSize.PageSize,
       filter: Filter,
       currentPage: CurrentPage,
-    ): UseQueryResult<Result, Error> =>
+    ): UseQueryResult<Result, CustomError> =>
       useQuery({
         queryKey: [
           "get_desired_states-one_time",
@@ -74,7 +74,7 @@ export const useGetDesiredStates = (): GetDesiredStates => {
       pageSize: PageSize.PageSize,
       filter: Filter,
       currentPage: CurrentPage,
-    ): UseQueryResult<Result, Error> =>
+    ): UseQueryResult<Result, CustomError> =>
       useQuery({
         queryKey: [
           "get_desired_states-continuous",

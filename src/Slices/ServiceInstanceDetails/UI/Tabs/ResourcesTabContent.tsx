@@ -13,7 +13,6 @@ import { TabContentWrapper } from "./TabContentWrapper";
 
 export const ResourcesTabContent: React.FC = () => {
   const { instance } = useContext(InstanceDetailsContext);
-
   const { data, isSuccess, isError, error } = useGetInstanceResources(
     instance.id,
     instance.service_entity,
@@ -43,14 +42,17 @@ export const ResourcesTabContent: React.FC = () => {
   }
 
   if (isError) {
-    return (
-      <TabContent role="tabpanel" id={"Resources-content"}>
-        <ErrorView
-          message={error.message}
-          ariaLabel="Error_view-Resources-content"
-        />
-      </TabContent>
-    );
+    // If the error is because of the version, we don't want to show the error view, and fall back to the loading view as the process of updating version is still ongoing
+    if (error.status !== 409) {
+      return (
+        <TabContent role="tabpanel" id={"Resources-content"}>
+          <ErrorView
+            message={error.message}
+            ariaLabel="Error_view-Resources-content"
+          />
+        </TabContent>
+      );
+    }
   }
 
   return (

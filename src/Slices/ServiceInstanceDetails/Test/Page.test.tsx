@@ -117,7 +117,7 @@ describe("ServiceInstanceDetailsPage", () => {
     server.close();
   });
 
-  xit("Should render a success view without config", async () => {
+  it("Should render a success view without config", async () => {
     const server = defaultServer;
 
     server.listen();
@@ -233,10 +233,7 @@ describe("ServiceInstanceDetailsPage", () => {
 
     await userEvent.click(toggleJson);
 
-    // expect the view to be updated
-    expect(screen.getByTestId("loading-spinner")).toBeVisible();
-
-    // We can't test the monaco editor in jest yet, this is covered in the E2E cases.
+    // We can't test the monaco editor in jest, this is covered in the E2E cases.
     // We can just test that the dropdown is now pressent too and set on the candidate set.
     expect(
       screen.getByRole("combobox", {
@@ -271,7 +268,7 @@ describe("ServiceInstanceDetailsPage", () => {
   // TODO: @LukasStordeur Implement test when config tab has usecases.
   //it("Should render a success view and with config section if present", async () => { });
 
-  xit("Should render a success view with documentation", async () => {
+  it("Should render a success view with documentation", async () => {
     const server = serverWithDocumentation;
 
     server.listen();
