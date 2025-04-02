@@ -1,61 +1,36 @@
 import { InstanceAttributeModel } from "@/Core";
 import { Field, ServiceInstance } from "@/Test";
-import {
-  createDuplicateFormState,
-  createEditFormState,
-  createFormState,
-} from "./createFormState";
+import { createEditFormState, createFormState } from "./createFormState";
 
-test("GIVEN createFormState WHEN passed a number field with default value equals empty string THEN creates formState correctly", () => {
-  const fields = [Field.dictList([Field.number])];
-  const formState = createFormState(fields);
+test.each`
+  numberValue             | fields                                      | expectedValue
+  ${"default - (null)"}   | ${[Field.number]}                           | ${{ [Field.number.name]: null }}
+  ${"empty string"}       | ${[{ ...Field.number, defaultValue: "" }]}  | ${{ [Field.number.name]: null }}
+  ${"stringified number"} | ${[{ ...Field.number, defaultValue: "1" }]} | ${{ [Field.number.name]: 1 }}
+  ${"null"}               | ${[{ ...Field.number, defaultValue: 1 }]}   | ${{ [Field.number.name]: 1 }}
+`(
+  "GIVEN createFormState WHEN passed a number field with a ($dictValue) value THEN creates formState correctly",
+  ({ fields, expectedValue }) => {
+    const cFormState = createFormState(fields);
 
-  expect(formState).toMatchObject({
-    [Field.dictList().name]: [
-      {
-        [Field.number.name]: null,
-      },
-    ],
-  });
-});
+    expect(cFormState).toEqual(expectedValue);
+  },
+);
 
-test("GIVEN createFormState WHEN passed a number field with default value equals empty string THEN creates formState correctly", () => {
-  const fields = [Field.dictList([Field.number])];
-  const formState = createEditFormState(fields, "v1", {
-    [Field.dictList().name]: [
-      {
-        [Field.number.name]: "",
-      },
-    ],
-  });
+test.each`
+  numberValue                      | fields                                           | expectedValue
+  ${"default - (null)"}            | ${[Field.numberArr]}                             | ${{ [Field.numberArr.name]: [1, 2] }}
+  ${"empty string"}                | ${[{ ...Field.numberArr, defaultValue: "" }]}    | ${{ [Field.numberArr.name]: [] }}
+  ${"stringified array of number"} | ${[{ ...Field.numberArr, defaultValue: "[1]" }]} | ${{ [Field.numberArr.name]: [1] }}
+  ${"null"}                        | ${[{ ...Field.numberArr, defaultValue: null }]}  | ${{ [Field.numberArr.name]: null }}
+`(
+  "GIVEN createFormState WHEN passed a numberArr field with a ($dictValue) value THEN creates formState correctly",
+  ({ fields, expectedValue }) => {
+    const cFormState = createFormState(fields);
 
-  expect(formState).toMatchObject({
-    [Field.dictList().name]: [
-      {
-        [Field.number.name]: null,
-      },
-    ],
-  });
-});
-
-test("GIVEN createFormState WHEN passed a number field with default value equals empty string THEN creates formState correctly", () => {
-  const fields = [Field.dictList([Field.number])];
-  const formState = createDuplicateFormState(fields, {
-    [Field.dictList().name]: [
-      {
-        [Field.number.name]: "",
-      },
-    ],
-  });
-
-  expect(formState).toMatchObject({
-    [Field.dictList().name]: [
-      {
-        [Field.number.name]: null,
-      },
-    ],
-  });
-});
+    expect(cFormState).toEqual(expectedValue);
+  },
+);
 
 test("GIVEN fieldsToFormState WHEN passed a DictListField THEN creates formState correctly", () => {
   const fields = [Field.dictList([Field.text])];
@@ -70,27 +45,20 @@ test("GIVEN fieldsToFormState WHEN passed a DictListField THEN creates formState
   });
 });
 
-test("GIVEN fieldsToFormState WHEN passed a DictListField THEN creates formState correctly", () => {
-  const fields = [Field.dictList([Field.text])];
-  const formState = createFormState(fields);
+test.each`
+  dictValue             | fields                                           | expectedValue
+  ${"default"}          | ${[Field.dictionary]}                            | ${{ [Field.dictionary.name]: {} }}
+  ${"empty string"}     | ${[{ ...Field.dictionary, defaultValue: "" }]}   | ${{ [Field.dictionary.name]: null }}
+  ${"stringified dict"} | ${[{ ...Field.dictionary, defaultValue: "{}" }]} | ${{ [Field.dictionary.name]: {} }}
+  ${"null"}             | ${[{ ...Field.dictionary, defaultValue: null }]} | ${{ [Field.dictionary.name]: null }}
+`(
+  "GIVEN createFormState WHEN passed a dict field with a ($dictValue) value THEN creates formState correctly",
+  ({ fields, expectedValue }) => {
+    const formState = createFormState(fields);
 
-  expect(formState).toMatchObject({
-    [Field.dictList().name]: [
-      {
-        [Field.text.name]: Field.text.defaultValue,
-      },
-    ],
-  });
-});
-
-test("GIVEN createFormState WHEN passed a dict field with a default value THEN creates formState correctly", () => {
-  const fields = [Field.dictionary];
-  const formState = createFormState(fields);
-
-  expect(formState).toEqual({
-    [Field.dictionary.name]: {},
-  });
-});
+    expect(formState).toEqual(expectedValue);
+  },
+);
 
 test("Given creteFormState WHEN passed nested fields state THEN creates formState correctly", () => {
   const formState = createFormState(Field.nestedEditable);

@@ -128,6 +128,15 @@ export const number: TextField = {
   inputType: TextInputTypes.number,
   type: "float?",
 };
+export const numberArr: TextField = {
+  kind: "Text",
+  name: "attr4",
+  defaultValue: [1, 2],
+  inputType: TextInputTypes.text,
+  type: "int[]",
+  isOptional: false,
+  isDisabled: false,
+};
 
 export const dictionary: TextField = {
   kind: "Text",

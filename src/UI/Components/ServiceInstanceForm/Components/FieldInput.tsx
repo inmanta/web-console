@@ -225,12 +225,7 @@ export const FieldInput: React.FC<Props> = ({
           type={field.inputType}
           handleInputChange={(value, _event) => {
             if (field.type.includes("dict")) {
-              try {
-                getUpdate(makePath(path, field.name), JSON.parse(value));
-              } catch (_error) {
-                // If the value is not a valid JSON string, we fallback to the value as is, as we are trying convert value that is either a stringified object or a stringified partially correct object
-                getUpdate(makePath(path, field.name), value);
-              }
+              getUpdate(makePath(path, field.name), tryParseJSON(value));
             } else {
               getUpdate(makePath(path, field.name), value);
             }
@@ -655,4 +650,20 @@ const DictListFieldInput: React.FC<DictListProps> = ({
       ))}
     </FormFieldGroupExpandable>
   );
+};
+
+/**
+ * Attempts to parse a value as JSON, returning the original value if parsing fails.
+ * This is a safe wrapper around JSON.parse that prevents throwing errors for invalid JSON.
+ *
+ * @param {unknown} value - The value to attempt to parse as JSON
+ * @returns The parsed JSON value if successful, or the original value if parsing fails
+ */
+export const tryParseJSON = (value: unknown) => {
+  try {
+    return JSON.parse(value);
+  } catch (_error) {
+    // If the value is not a valid JSON string, return the original value
+    return value;
+  }
 };

@@ -1,5 +1,6 @@
 import { times, cloneDeep } from "lodash-es";
 import { FieldLikeWithFormState, InstanceAttributeModel } from "@/Core";
+import { tryParseJSON } from "../Components";
 
 /**
  * Create an form state based on the provided fields.
@@ -17,17 +18,7 @@ export const createFormState = (
       case "Text":
       case "Textarea":
       case "TextList": {
-        if (curr.type === "int?" || curr.type === "float?") {
-          const value = curr.defaultValue;
-
-          //empty string assertion is for converting input form to JSON Editor
-          acc[curr.name] =
-            value === "" || value === null ? null : Number(curr.defaultValue);
-        } else if (curr.type === "dict?") {
-          acc[curr.name] = curr.defaultValue === "" ? null : curr.defaultValue;
-        } else {
-          acc[curr.name] = curr.defaultValue;
-        }
+        acc[curr.name] = convertValueOnType(curr.type, curr.defaultValue);
 
         return acc;
       }
@@ -101,22 +92,10 @@ export const createEditFormState = (
         case "Textarea":
         case "TextList":
         case "Text": {
-          if (curr.type === "int?" || curr.type === "float?") {
-            const value = originalAttributes?.[curr.name];
-
-            //empty string assertion is for converting input form to JSON Editor
-            acc[curr.name] =
-              value === "" || value === null
-                ? null
-                : Number(originalAttributes?.[curr.name]);
-          } else if (curr.type === "dict?") {
-            acc[curr.name] =
-              originalAttributes?.[curr.name] === ""
-                ? null
-                : cloneDeep(originalAttributes?.[curr.name]);
-          } else {
-            acc[curr.name] = cloneDeep(originalAttributes?.[curr.name]);
-          }
+          acc[curr.name] = convertValueOnType(
+            curr.type,
+            originalAttributes?.[curr.name],
+          );
 
           return acc;
         }
@@ -194,22 +173,10 @@ export const createDuplicateFormState = (
         case "Textarea":
         case "TextList":
         case "Text": {
-          if (curr.type === "int?" || curr.type === "float?") {
-            const value = originalAttributes?.[curr.name];
-
-            //empty string assertion is for convertin input form to JSON Editor
-            acc[curr.name] =
-              value === "" || value === null
-                ? null
-                : Number(originalAttributes?.[curr.name]);
-          } else if (curr.type === "dict?") {
-            acc[curr.name] =
-              originalAttributes?.[curr.name] === ""
-                ? null
-                : cloneDeep(originalAttributes?.[curr.name]);
-          } else {
-            acc[curr.name] = cloneDeep(originalAttributes?.[curr.name]);
-          }
+          acc[curr.name] = convertValueOnType(
+            curr.type,
+            originalAttributes?.[curr.name],
+          );
 
           return acc;
         }
@@ -262,4 +229,34 @@ export const createDuplicateFormState = (
       return acc;
     }
   }, {});
+};
+
+/**
+ * Converts a value to the appropriate type based on the provided type string.
+ * Handles various data types including integers, floats, arrays, and dictionaries.
+ *
+ * @param {string} type  - The type string indicating the expected data type (e.g., "int", "float", "dict", "int[]")
+ * @param {unknown} value - The value to convert
+ * @returns The converted value with the appropriate type, or null for empty values
+ *
+ * @example
+ * convertValueOnType("int", "42") // returns 42
+ * convertValueOnType("float[]", "") // returns []
+ * convertValueOnType("dict", "") // returns null
+ */
+const convertValueOnType = (type: string, value: unknown) => {
+  if (type.includes("int") || type.includes("float")) {
+    //empty string assertion and `Number(value)` is for converting input form to JSON Editor
+    if (type.includes("[]")) {
+      if (typeof value === "string") {
+        return value === "" ? [] : tryParseJSON(value);
+      }
+      return value === null ? null : cloneDeep(value);
+    }
+    return value === "" || value === null ? null : Number(value);
+  } else if (type.includes("dict")) {
+    return value === "" ? null : cloneDeep(tryParseJSON(value));
+  } else {
+    return cloneDeep(value);
+  }
 };
