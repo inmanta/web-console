@@ -60,7 +60,7 @@ test.each`
   },
 );
 
-test("Given creteFormState WHEN passed nested fields state THEN creates formState correctly", () => {
+test("Given createFormState WHEN passed nested fields state THEN creates formState correctly", () => {
   const formState = createFormState(Field.nestedEditable);
 
   expect(formState).toMatchObject({
