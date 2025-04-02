@@ -45,16 +45,6 @@ export const JSONEditor: React.FC<Props> = ({
 
   const monaco = useMonaco();
 
-  // Add cleanup effect to dispose models when component unmounts
-  useEffect(() => {
-    return () => {
-      if (monaco) {
-        // Dispose all models when component unmounts
-        monaco.editor.getModels().forEach((model) => model.dispose());
-      }
-    };
-  }, [monaco]);
-
   // local method to update state when the editor content changes
   const handleEditorChange = (value: string | undefined, _event) => {
     value && setEditorState(value);
