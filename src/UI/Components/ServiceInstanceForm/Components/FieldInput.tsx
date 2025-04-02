@@ -661,6 +661,9 @@ const DictListFieldInput: React.FC<DictListProps> = ({
  */
 export const tryParseJSON = (value: unknown) => {
   try {
+    if (typeof value === "string") {
+      return JSON.parse(value);
+    }
     return JSON.parse(JSON.stringify(value));
   } catch (_error) {
     // If the value is not a valid JSON string, return the original value
