@@ -1,13 +1,13 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { InstanceResourceModel } from "@/Core";
-import { useGet } from "../../helpers";
+import { CustomError, useGet } from "../../helpers";
 
 /**
  * Return Signature of the useGetInstanceResources React Query
  */
 interface getInstanceResources {
-  useOneTime: () => UseQueryResult<InstanceResourceModel[], Error>;
-  useContinuous: () => UseQueryResult<InstanceResourceModel[], Error>;
+  useOneTime: () => UseQueryResult<InstanceResourceModel[], CustomError>;
+  useContinuous: () => UseQueryResult<InstanceResourceModel[], CustomError>;
 }
 
 /**
@@ -18,8 +18,8 @@ interface getInstanceResources {
  * @param {string} version - the version of service instance
  *
  * @returns {getInstanceResources} An object containing the different available queries.
- * @returns {UseQueryResult<InstanceResourceModel[], Error>} returns.useOneTime - Fetch the service instance resources ies as a single query.
- * @returns {UseQueryResult<InstanceResourceModel[], Error>} returns.useContinuous - Fetch the service instance resources with a recursive query with an interval of 5s.
+ * @returns {UseQueryResult<InstanceResourceModel[], CustomError>} returns.useOneTime - Fetch the service instance resources ies as a single query.
+ * @returns {UseQueryResult<InstanceResourceModel[], CustomError>} returns.useContinuous - Fetch the service instance resources with a recursive query with an interval of 5s.
  */
 export const useGetInstanceResources = (
   id: string,
@@ -30,14 +30,25 @@ export const useGetInstanceResources = (
   const get = useGet()<{ data: InstanceResourceModel[] }>;
 
   return {
-    useOneTime: (): UseQueryResult<InstanceResourceModel[], Error> =>
+    useOneTime: (): UseQueryResult<InstanceResourceModel[], CustomError> =>
       useQuery({
-        queryKey: ["get_instance_resources-one_time", id],
+        queryKey: [
+          "get_instance_resources-one_time",
+          id,
+          version,
+          service_entity,
+        ],
         queryFn: () => get(url),
+        select: (data): InstanceResourceModel[] => data.data,
       }),
-    useContinuous: (): UseQueryResult<InstanceResourceModel[], Error> =>
+    useContinuous: (): UseQueryResult<InstanceResourceModel[], CustomError> =>
       useQuery({
-        queryKey: ["get_instance_resources-continuous", id],
+        queryKey: [
+          "get_instance_resources-continuous",
+          id,
+          version,
+          service_entity,
+        ],
         queryFn: () => get(url),
         refetchInterval: 5000,
         select: (data): InstanceResourceModel[] => data.data,

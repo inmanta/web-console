@@ -1,6 +1,6 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { ParsedNumber } from "@/Core";
-import { useGet } from "../../helpers";
+import { CustomError, useGet } from "../../helpers";
 
 /**
  *  Interface containing the metadata.
@@ -13,7 +13,7 @@ interface Metadata {
  * Return Signature of the useServiceModel React Query
  */
 interface GetMetadataHook {
-  useOneTime: () => UseQueryResult<string | undefined, Error>;
+  useOneTime: () => UseQueryResult<string | undefined, CustomError>;
 }
 
 /**

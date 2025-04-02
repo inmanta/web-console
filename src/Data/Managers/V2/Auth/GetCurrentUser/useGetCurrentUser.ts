@@ -1,5 +1,5 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
-import { useGetWithoutEnv } from "../../helpers";
+import { CustomError, useGetWithoutEnv } from "../../helpers";
 
 interface LoggedUser {
   username: string;
@@ -17,9 +17,9 @@ export const useGetCurrentUser = () => {
   return {
     /**
      * Custom hook to fetch the user information from the API once.
-     * @returns {UseQueryResult<LoggedUser, Error>} The result of the query, including the current user information.
+     * @returns {UseQueryResult<LoggedUser, CustomError>} The result of the query, including the current user information.
      */
-    useOneTime: (): UseQueryResult<LoggedUser, Error> =>
+    useOneTime: (): UseQueryResult<LoggedUser, CustomError> =>
       useQuery({
         queryFn: () => get(url),
         queryKey: ["get_current_user"],

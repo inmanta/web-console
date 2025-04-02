@@ -4,7 +4,7 @@ import { DateRange } from "@/Core/Domain";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { getPaginationHandlers } from "@/Data/Managers/Helpers";
 import { CompileReport } from "@/Slices/CompileReports/Core/Domain";
-import { useGet } from "../../helpers";
+import { CustomError, useGet } from "../../helpers";
 import { getUrl } from "./getUrl";
 
 interface Filter {
@@ -30,8 +30,8 @@ interface HookResponse extends ResponseBody {
 }
 
 interface GetCompileReports {
-  useOneTime: () => UseQueryResult<HookResponse, Error>;
-  useContinuous: () => UseQueryResult<HookResponse, Error>;
+  useOneTime: () => UseQueryResult<HookResponse, CustomError>;
+  useContinuous: () => UseQueryResult<HookResponse, CustomError>;
 }
 
 /**
@@ -40,8 +40,8 @@ interface GetCompileReports {
  * @param params {CompileReportsParams} - Parameters for filtering, sorting and pagination
  *
  * @returns {GetCompileReports} An object containing the different available queries
- * @returns {UseQueryResult<HookResponse, Error>} returns.useOneTime - Fetch compile reports with a single query
- * @returns {UseQueryResult<HookResponse, Error>} returns.useContinuous - Fetch compile reports with a recursive query with an interval of 5s
+ * @returns {UseQueryResult<HookResponse, CustomError>} returns.useOneTime - Fetch compile reports with a single query
+ * @returns {UseQueryResult<HookResponse, CustomError>} returns.useContinuous - Fetch compile reports with a recursive query with an interval of 5s
  */
 export const useGetCompileReports = (
   params: CompileReportsParams,
@@ -50,7 +50,7 @@ export const useGetCompileReports = (
   const get = useGet()<ResponseBody>;
 
   return {
-    useOneTime: (): UseQueryResult<HookResponse, Error> =>
+    useOneTime: (): UseQueryResult<HookResponse, CustomError> =>
       useQuery({
         queryKey: [
           "get_compile_reports-one_time",
@@ -65,7 +65,7 @@ export const useGetCompileReports = (
           handlers: getPaginationHandlers(data.links, data.metadata),
         }),
       }),
-    useContinuous: (): UseQueryResult<HookResponse, Error> =>
+    useContinuous: (): UseQueryResult<HookResponse, CustomError> =>
       useQuery({
         queryKey: [
           "get_compile_reports-continuous",
