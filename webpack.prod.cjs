@@ -13,6 +13,8 @@ module.exports = merge(common, {
   optimization: {
     minimizer: [
       new CssMinimizerPlugin({
+        test: /\.css$/i,
+        exclude: /monaco-editor/,
         minimizerOptions: {
           sourceMap: false,
         },

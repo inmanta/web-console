@@ -12,6 +12,8 @@ import {
   EnvironmentModifierImpl,
 } from "@/UI";
 import { ServiceInstanceDetails } from "../UI/Page";
+import { loader } from "@monaco-editor/react";
+import * as monaco from "monaco-editor";
 
 /**
  * Mock setup for the test cases of the Instance Details page.
@@ -61,6 +63,9 @@ export const SetupWrapper: React.FC<PropsWithChildren<Props>> = ({
     },
   });
   const store = getStoreInstance();
+
+  loader.config({ monaco });
+  loader.init();
 
   const environmentHandler = EnvironmentHandlerImpl(
     useLocation,

@@ -12,6 +12,11 @@ import { Injector } from "./Injector";
 import CustomRouter from "./UI/Routing/CustomRouter";
 import history from "./UI/Routing/history";
 import ErrorBoundary from "./UI/Utils/ErrorBoundary";
+import * as monaco from "monaco-editor";
+import loader from "@monaco-editor/loader";
+
+loader.config({ monaco });
+loader.init();
 
 const store = getStoreInstance();
 const container = document.getElementById("root") as HTMLElement;
