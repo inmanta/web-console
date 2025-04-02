@@ -7,7 +7,6 @@ import { words } from "@/UI";
 import { getThemePreference } from "../DarkmodeOption";
 import { ErrorMessageContainer } from "../ErrorMessageContainer";
 
-
 interface Props {
   service_entity: string;
   data: string;
