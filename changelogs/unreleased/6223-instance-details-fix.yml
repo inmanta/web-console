@@ -1,0 +1,4 @@
+description: Change the way we handle the version issue of the instance when fetching resources in the instance details page
+issue-nr: 6233
+change-type: patch
+destination-branches: [master, iso8]

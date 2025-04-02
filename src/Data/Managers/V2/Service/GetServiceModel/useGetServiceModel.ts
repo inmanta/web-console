@@ -1,13 +1,13 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { ServiceModel } from "@/Core";
-import { useGet } from "../../helpers";
+import { CustomError, useGet } from "../../helpers";
 
 /**
  * Return Signature of the useGetServiceModel React Query
  */
 interface GetServiceModel {
-  useOneTime: () => UseQueryResult<ServiceModel, Error>;
-  useContinuous: () => UseQueryResult<ServiceModel, Error>;
+  useOneTime: () => UseQueryResult<ServiceModel, CustomError>;
+  useContinuous: () => UseQueryResult<ServiceModel, CustomError>;
 }
 
 /**
@@ -16,21 +16,21 @@ interface GetServiceModel {
  * @param service {string} - the service entity
  *
  * @returns {GetServiceModel} An object containing the different available queries.
- * @returns {UseQueryResult<ServiceModel, Error>} returns.useOneTime - Fetch the service model with a single query.
- * @returns {UseQueryResult<ServiceModel, Error>} returns.useContinuous - Fetch the service model with a recursive query with an interval of 5s.
+ * @returns {UseQueryResult<ServiceModel, CustomError>} returns.useOneTime - Fetch the service model with a single query.
+ * @returns {UseQueryResult<ServiceModel, CustomError>} returns.useContinuous - Fetch the service model with a recursive query with an interval of 5s.
  */
 export const useGetServiceModel = (service: string): GetServiceModel => {
   const get = useGet()<{ data: ServiceModel }>;
 
   return {
-    useOneTime: (): UseQueryResult<ServiceModel, Error> =>
+    useOneTime: (): UseQueryResult<ServiceModel, CustomError> =>
       useQuery({
         queryKey: ["get_service_model-one_time", service],
         queryFn: () =>
           get(`/lsm/v1/service_catalog/${service}?instance_summary=True`),
         select: (data) => data.data,
       }),
-    useContinuous: (): UseQueryResult<ServiceModel, Error> =>
+    useContinuous: (): UseQueryResult<ServiceModel, CustomError> =>
       useQuery({
         queryKey: ["get_service_model-continuous", service],
         queryFn: () =>

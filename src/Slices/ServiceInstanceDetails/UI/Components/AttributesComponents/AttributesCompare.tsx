@@ -33,6 +33,10 @@ interface Props {
  *  @prop {InstanceLog[]} instanceLogs - The instanceLogs containing the versions with the attributesSets
  *  @prop {string} selectedVersion - the selected version of the InstanceDetails Page.
  * @returns {React.FC<Props>} A React Component displaying the AttributeSets in a DiffEditor
+ *
+ * @note See https://github.com/microsoft/vscode/pull/230713
+ * The DiffEditor doesn't make correct use of the cleanup lyfecycles. It doesn't dispose of the model as it should, creating a memory leak.
+ * There's a PR in progress on the Monaco library side.
  */
 export const AttributesCompare: React.FC<Props> = ({
   instanceLogs,

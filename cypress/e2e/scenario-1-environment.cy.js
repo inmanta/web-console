@@ -2,6 +2,7 @@ const testProjectName = (id) => "Test Project Name " + id;
 const testName = (id) => "TestName " + id;
 
 beforeEach(() => {
+  localStorage.setItem("theme-preference", "light");
   cy.fixture("test-icon.png", { encoding: null }).as("icon");
   cy.intercept("POST", "/api/v2/environment_settings/**").as(
     "postEnvConfigEdit",

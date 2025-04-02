@@ -1,6 +1,6 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { CompileDetails } from "@/Slices/CompileDetails/Core/Domain";
-import { useGet } from "../../helpers";
+import { CustomError, useGet } from "../../helpers";
 
 interface CompileDetailsParams {
   id: string;
@@ -11,8 +11,8 @@ interface ResponseBody {
 }
 
 interface GetCompileDetails {
-  useOneTime: () => UseQueryResult<ResponseBody, Error>;
-  useContinuous: () => UseQueryResult<ResponseBody, Error>;
+  useOneTime: () => UseQueryResult<ResponseBody, CustomError>;
+  useContinuous: () => UseQueryResult<ResponseBody, CustomError>;
 }
 
 function getUrl(params: CompileDetailsParams): string {
@@ -26,8 +26,8 @@ function getUrl(params: CompileDetailsParams): string {
  *  @param {string} params.id - The ID of the compile report to fetch details for
  *
  * @returns {GetCompileDetails} An object containing the different available queries
- * @returns {UseQueryResult<ResponseBody, Error>} returns.useOneTime - Fetch compile details with a single query
- * @returns {UseQueryResult<ResponseBody, Error>} returns.useContinuous - Fetch compile details with a recursive query with an interval of 5s
+ * @returns {UseQueryResult<ResponseBody, CustomError>} returns.useOneTime - Fetch compile details with a single query
+ * @returns {UseQueryResult<ResponseBody, CustomError>} returns.useContinuous - Fetch compile details with a recursive query with an interval of 5s
  */
 export const useGetCompileDetails = (
   params: CompileDetailsParams,
@@ -36,13 +36,13 @@ export const useGetCompileDetails = (
   const get = useGet()<ResponseBody>;
 
   return {
-    useOneTime: (): UseQueryResult<ResponseBody, Error> =>
+    useOneTime: (): UseQueryResult<ResponseBody, CustomError> =>
       useQuery({
         queryKey: ["get_compile_details-one_time", params.id],
         queryFn: () => get(url),
         select: (data) => data,
       }),
-    useContinuous: (): UseQueryResult<ResponseBody, Error> =>
+    useContinuous: (): UseQueryResult<ResponseBody, CustomError> =>
       useQuery({
         queryKey: ["get_compile_details-continuous", params.id],
         queryFn: () => get(url),
