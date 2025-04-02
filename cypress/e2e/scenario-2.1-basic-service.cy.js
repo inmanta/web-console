@@ -393,6 +393,7 @@ if (Cypress.env("edition") === "iso") {
 
     it("2.1.6 Instance Details page", () => {
       cy.visit("/console/");
+
       cy.get(`[aria-label="Select-environment-test"]`).click();
       cy.get('[aria-label="Sidebar-Navigation-Item"]')
         .contains("Service Catalog")
