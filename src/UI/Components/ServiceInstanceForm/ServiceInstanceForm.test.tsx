@@ -396,6 +396,105 @@ test("GIVEN ServiceInstanceForm and a NestedField WHEN clicking the toggle THEN 
     screen.getByRole("textbox", { name: `TextInput-${Test.Field.text.name}` }),
   ).toBeVisible();
 });
+test("GIVEN ServiceInstanceForm and a NestedField WHEN rendering optional inputs THEN the form structure is correct", async () => {
+  //simplified version of form state that was causing bug on production
+  const { component } = setup([
+    {
+      kind: "Nested",
+      name: "nested_field",
+      description: "description",
+      isOptional: true,
+      isDisabled: false,
+      fields: [
+        {
+          kind: "Nested",
+          name: "double_nested_field",
+          description: "description",
+          isOptional: true,
+          isDisabled: false,
+          fields: [
+            {
+              kind: "Boolean",
+              name: "boolean_field",
+              description: "description",
+              isOptional: true,
+              isDisabled: false,
+              defaultValue: null,
+              type: "bool?",
+            },
+            {
+              kind: "Boolean",
+              name: "boolean_field_2",
+              description: "description",
+              isOptional: true,
+              isDisabled: false,
+              defaultValue: true,
+              type: "bool?",
+            },
+          ],
+        },
+      ],
+    },
+  ]);
+
+  render(component);
+
+  const group = screen.getByRole("group", {
+    name: "nested_field",
+  });
+
+  expect(group).toBeVisible();
+
+  await userEvent.click(
+    within(group).getByRole("button", {
+      name: words("add"),
+    }),
+  );
+
+  await userEvent.click(
+    within(group).getByRole("button", { name: "nested_field" }),
+  );
+
+  const nestedGroup = screen.getByRole("group", {
+    name: "double_nested_field",
+  });
+
+  expect(nestedGroup).toBeVisible();
+
+  expect(
+    screen.queryByRole("generic", {
+      name: `BooleanFieldInput-boolean_field`,
+    }),
+  ).not.toBeInTheDocument();
+
+  expect(
+    screen.queryByRole("generic", {
+      name: `BooleanFieldInput-boolean_field_2`,
+    }),
+  ).not.toBeInTheDocument();
+
+  await userEvent.click(
+    within(nestedGroup).getByRole("button", {
+      name: words("add"),
+    }),
+  );
+
+  await userEvent.click(
+    within(group).getByRole("button", { name: "double_nested_field" }),
+  );
+
+  expect(
+    screen.getByRole("generic", {
+      name: `BooleanFieldInput-boolean_field_2`,
+    }),
+  ).toBeVisible();
+
+  expect(
+    screen.getByRole("generic", {
+      name: `BooleanFieldInput-boolean_field_2`,
+    }),
+  ).toBeVisible();
+});
 
 test("GIVEN ServiceInstanceForm and a DictListField WHEN clicking all toggles open THEN the nested FlatField is shown", async () => {
   const { component } = setup([Test.Field.dictList([Test.Field.text])]);
