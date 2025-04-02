@@ -62,6 +62,10 @@ const forceUpdateEnvironment = (nameEnvironment = "test") => {
   });
 };
 
+beforeEach(() => {
+  localStorage.setItem("theme-preference", "light");
+});
+
 if (Cypress.env("edition") === "iso") {
   describe("Scenario 2.1 Service Catalog - basic-service", () => {
     before(() => {
