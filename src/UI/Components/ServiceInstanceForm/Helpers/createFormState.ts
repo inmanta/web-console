@@ -251,8 +251,10 @@ const convertValueOnType = (type: string, value: unknown) => {
       if (typeof value === "string") {
         return value === "" ? [] : tryParseJSON(value);
       }
+
       return value === null ? null : cloneDeep(value);
     }
+
     return value === "" || value === null ? null : Number(value);
   } else if (type.includes("dict")) {
     return value === "" ? null : cloneDeep(tryParseJSON(value));
