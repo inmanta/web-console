@@ -32,7 +32,7 @@
       "@S/*": ["src/Slices/*"]
     }
   },
-  "include": ["**/*.ts", "**/*.tsx", "**/*.jsx", "jestSetupAfterEnv.cjs", "cypress/support/e2e.js"],
+  "include": ["**/*.ts", "**/*.tsx", "**/*.jsx", "jestSetupAfterEnv.cjs"],
   "exclude": ["node_modules"],
   "ts-node": {
     "compilerOptions": {

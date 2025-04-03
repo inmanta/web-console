@@ -50,7 +50,6 @@ module.exports = merge(common, {
         include: [
           path.resolve(__dirname, "src"),
           path.resolve(__dirname, "node_modules/patternfly"),
-          path.resolve(__dirname, "node_modules/monaco-editor"),
           path.resolve(__dirname, "node_modules/@patternfly/patternfly"),
           path.resolve(__dirname, "node_modules/@patternfly/react-styles/css"),
           path.resolve(

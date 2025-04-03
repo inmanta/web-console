@@ -15,7 +15,7 @@ module.exports = defineConfig({
   },
   e2e: {
     baseUrl: "http://127.0.0.1:8888",
-    supportFile: "cypress/support/e2e.js",
+    supportFile: false,
     defaultCommandTimeout: 10000,
     requestTimeout: 10000,
   },
