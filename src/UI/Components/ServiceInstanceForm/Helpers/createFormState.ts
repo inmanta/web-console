@@ -249,7 +249,7 @@ const convertValueOnType = (type: string, value: unknown) => {
     //empty string assertion and `Number(value)` is for converting input form to JSON Editor
     if (type.includes("[]")) {
       if (typeof value === "string") {
-        return value === "" ? [] : tryParseJSON(value);
+        return value === "" ? null : tryParseJSON(value);
       }
 
       return value === null ? null : cloneDeep(value);
