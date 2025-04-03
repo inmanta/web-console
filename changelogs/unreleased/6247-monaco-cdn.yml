@@ -1,0 +1,4 @@
+description: Moved Monaco Editor away from default initialization through CDN to local import
+issue-nr: 6247
+change-type: patch
+destination-branches: [master, iso8]

@@ -1,8 +1,10 @@
 import React, { PropsWithChildren } from "react";
 import { MemoryRouter, useLocation } from "react-router-dom";
+import { loader } from "@monaco-editor/react";
 import { Page } from "@patternfly/react-core";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { StoreProvider } from "easy-peasy";
+import * as monaco from "monaco-editor";
 import { RemoteData } from "@/Core";
 import { getStoreInstance } from "@/Data";
 import { dependencies } from "@/Test";
@@ -61,6 +63,9 @@ export const SetupWrapper: React.FC<PropsWithChildren<Props>> = ({
     },
   });
   const store = getStoreInstance();
+
+  loader.config({ monaco });
+  loader.init();
 
   const environmentHandler = EnvironmentHandlerImpl(
     useLocation,

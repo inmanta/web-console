@@ -35,7 +35,6 @@ export const useGet = (options?: { message?: string }) => {
 
       return response.json();
     } catch (error) {
-      console.error("Error fetching data:", error);
       throw error;
     }
   };
@@ -73,7 +72,6 @@ export const useGetWithoutEnv = (options?: { message?: string }) => {
 
       return response.json();
     } catch (error) {
-      console.error("Error fetching data:", error);
       throw error;
     }
   };
@@ -110,7 +108,6 @@ export const useGetZip = (options?: { message?: string }) => {
 
       return response.blob();
     } catch (error) {
-      console.error("Error fetching data:", error);
       throw error;
     }
   };
@@ -146,7 +143,6 @@ export const useGetZipWithoutEnv = (options?: { message?: string }) => {
 
       return response.blob();
     } catch (error) {
-      console.error("Error fetching data:", error);
       throw error;
     }
   };
@@ -189,7 +185,6 @@ export const usePost = (options?: { message?: string }) => {
         return JSON.parse(text);
       }
     } catch (error) {
-      console.error("Error posting data:", error);
       throw error;
     }
   };
@@ -235,7 +230,6 @@ export const usePostWithoutEnv = (options?: { message?: string }) => {
 
       return;
     } catch (error) {
-      console.error("Error posting data:", error);
       throw error;
     }
   };
@@ -280,7 +274,6 @@ export const usePut = (options?: { message?: string }) => {
         return JSON.parse(text);
       }
     } catch (error) {
-      console.error("Error putting data:", error);
       throw error;
     }
   };
@@ -324,7 +317,6 @@ export const usePutWithoutEnv = (options?: { message?: string }) => {
         return JSON.parse(text);
       }
     } catch (error) {
-      console.error("Error putting data:", error);
       throw error;
     }
   };
@@ -369,7 +361,6 @@ export const usePatch = (options?: { message?: string }) => {
         return JSON.parse(text);
       }
     } catch (error) {
-      console.error("Error patching data:", error);
       throw error;
     }
   };
@@ -413,7 +404,6 @@ export const usePatchWithoutEnv = (options?: { message?: string }) => {
         return JSON.parse(text);
       }
     } catch (error) {
-      console.error("Error patching data:", error);
       throw error;
     }
   };
@@ -459,7 +449,6 @@ export const useDelete = (options?: { message?: string }) => {
         return JSON.parse(text);
       }
     } catch (error) {
-      console.error("Error deleting data:", error);
       throw error;
     }
   };
@@ -499,7 +488,6 @@ export const useDeleteWithoutEnv = (options?: { message?: string }) => {
         return JSON.parse(text);
       }
     } catch (error) {
-      console.error("Error deleting data:", error);
       throw error;
     }
   };

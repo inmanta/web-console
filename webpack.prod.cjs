@@ -13,12 +13,24 @@ module.exports = merge(common, {
   optimization: {
     minimizer: [
       new CssMinimizerPlugin({
+        test: /\.css$/i,
+        exclude: /monaco-editor/,
         minimizerOptions: {
           sourceMap: false,
         },
         minify: CssMinimizerPlugin.cleanCssMinify,
       }),
     ],
+    splitChunks: {
+      chunks: "all",
+      cacheGroups: {
+        monaco: {
+          test: /[\\/]node_modules[\\/]monaco-editor[\\/]/,
+          name: "monaco-editor",
+          priority: 10,
+        },
+      },
+    },
   },
   plugins: [
     new MiniCssExtractPlugin({
@@ -39,6 +51,11 @@ module.exports = merge(common, {
   ],
   module: {
     rules: [
+      {
+        test: /\.css$/,
+        include: [path.resolve(__dirname, "node_modules/monaco-editor")],
+        use: ["style-loader", "css-loader"],
+      },
       {
         test: /\.css$/,
         include: [
