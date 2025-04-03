@@ -385,7 +385,7 @@ const NestedFieldInput: React.FC<NestedProps> = ({
   isNew = false,
 }) => {
   const [showList, setShowList] = useState(
-    !field.isOptional || formState[field.name] !== null,
+    !field.isOptional || get(formState, makePath(path, field.name)) !== null,
   );
 
   const onAdd = () => {
