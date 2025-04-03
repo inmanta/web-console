@@ -149,7 +149,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 1);
 
       // check whether there are two options available in the dropdown to copy the id/identifier.
-      cy.get('[aria-label="IdentityCell-basic-service"]').click();
+      cy.get('[aria-label="Copy to clipboard"]').eq(0).click();
       cy.get('[role="menuitem"]').should("have.length", 2);
     });
 
