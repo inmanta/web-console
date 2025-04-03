@@ -95,13 +95,13 @@ export default function mermaidPlugin(
       svgString = svg;
       // Call bindFunctions if available
       bindFunctions?.(element);
-    } catch (e) {
+    } catch (error) {
       // Create an error card svg with a red dotted border, and a title, and the error message in the body
       svgString = `
         <svg xmlns="http://www.w3.org/2000/svg" width="300" height="180">
           <rect x="10" y="10" width="280" height="160" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(255,0,0)" />
           <text x="50%" y="50%" alignment-baseline="middle" text-anchor="middle" font-family="Arial" font-size="16" fill="red">${words("inventory.error.mermaid")}</text>
-          <text x="50%" y="70%" alignment-baseline="middle" text-anchor="middle" font-family="Arial" font-size="12" fill="red">${e}</text>
+          <text x="50%" y="70%" alignment-baseline="middle" text-anchor="middle" font-family="Arial" font-size="12" fill="red">${error}</text>
         </svg>
       `;
     } finally {

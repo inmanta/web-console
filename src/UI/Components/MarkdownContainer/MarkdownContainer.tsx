@@ -41,12 +41,12 @@ export const MarkdownContainer = ({ text, web_title }: Props) => {
 
     if (!container) return;
 
-    const handleImageClick = (e: Event) => {
-      const img = e.target as HTMLImageElement;
+    const handleImageClick = (event: Event) => {
+      const img = event.target as HTMLImageElement;
 
       if (!img.matches('.mermaid-diagram[data-zoomable="true"]')) return;
 
-      e.stopPropagation();
+      event.stopPropagation();
 
       const isZoomed = img.classList.contains("zoomed");
 
@@ -66,8 +66,8 @@ export const MarkdownContainer = ({ text, web_title }: Props) => {
       }
     };
 
-    const handleDocumentClick = (e: Event) => {
-      if (!container.contains(e.target as Node)) {
+    const handleDocumentClick = (event: Event) => {
+      if (!container.contains(event.target as Node)) {
         container.querySelectorAll(".mermaid-diagram.zoomed").forEach((img) => {
           img.classList.remove("zoomed");
         });
@@ -75,8 +75,8 @@ export const MarkdownContainer = ({ text, web_title }: Props) => {
       }
     };
 
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
         container.querySelectorAll(".mermaid-diagram.zoomed").forEach((img) => {
           img.classList.remove("zoomed");
         });
