@@ -266,7 +266,4 @@ export const ServiceInstanceForm: React.FC<Props> = ({
 
 const StyledForm = styled(Form)`
   min-height: 0;
-  .display-blocks {
-    display: block;
-  }
 `;
