@@ -56,6 +56,7 @@ module.exports = {
       },
       {
         test: /\.(svg|ttf|eot|woff|woff2)$/,
+        type: "asset/resource",
         // only process modules with this loader
         // if they live under a 'fonts' or 'pficon' directory
         include: [
@@ -77,15 +78,6 @@ module.exports = {
             "node_modules/@patternfly/patternfly/assets/pficon",
           ),
         ],
-        use: {
-          loader: "file-loader",
-          options: {
-            // Limit at 50k. larger files emited into separate files
-            limit: 5000,
-            outputPath: "fonts",
-            name: "[name].[ext]",
-          },
-        },
       },
       {
         test: /\.svg$/,
@@ -125,9 +117,20 @@ module.exports = {
             "node_modules/@patternfly/react-inline-edit-extension/node_modules/@patternfly/react-styles/css/assets/images",
           ),
         ],
-        type: "asset/resource",
+        type: "asset/inline",
+        use: [
+          {
+            options: {
+              limit: 5000,
+              outputPath: "images",
+              name: "[name].[ext]",
+            },
+          },
+        ],
       },
       {
+        // this configuration is used to ensure that Webpack can correctly handle and resolve both .js and .mjs files,
+        // even if the paths to these modules are not fully specified. This can help avoid issues with module resolution and improve compatibility with various libraries and codebase
         test: /\.m?js$/,
         resolve: {
           fullySpecified: false,
