@@ -239,6 +239,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
               variant="primary"
               onClick={onConfirm}
               isDisabled={isSubmitDisabled || !isEditorValid}
+              aria-disabled={isSubmitDisabled || !isEditorValid}
               aria-label="submit"
             >
               {words("confirm")}
