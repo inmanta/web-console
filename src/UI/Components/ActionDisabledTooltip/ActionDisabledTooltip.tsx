@@ -30,6 +30,6 @@ export const ActionDisabledTooltip: React.FC<
   }
 };
 
-const CursorNotAllowedContainer = styled.div`
+const CursorNotAllowedContainer = styled.span`
   cursor: not-allowed;
 `;
