@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import {
-  ActionGroup,
+  ActionList,
+  ActionListItem,
   Alert,
   Button,
   Form,
@@ -227,35 +228,38 @@ export const ServiceInstanceForm: React.FC<Props> = ({
         />
       )}
 
-      <ActionGroup>
-        <ActionDisabledTooltip
-          isDisabled={isSubmitDisabled}
-          testingId={words("confirm")}
-          tooltipContent={words("environment.halt.tooltip")}
-        >
-          <StyledButton
-            variant="primary"
-            onClick={onConfirm}
-            isDisabled={isSubmitDisabled || !isEditorValid}
-            aria-label="submit"
+      <ActionList>
+        <ActionListItem>
+          <ActionDisabledTooltip
+            isDisabled={isSubmitDisabled}
+            testingId={words("confirm")}
+            tooltipContent={words("environment.halt.tooltip")}
           >
-            {words("confirm")}
-          </StyledButton>
-        </ActionDisabledTooltip>
-
-        <Button
-          variant="link"
-          aria-label="cancel"
-          onClick={() => {
-            if (isDirty) {
-              setIsDirty(false);
-            }
-            setShouldCancel(true);
-          }}
-        >
-          {words("cancel")}
-        </Button>
-      </ActionGroup>
+            <Button
+              variant="primary"
+              onClick={onConfirm}
+              isDisabled={isSubmitDisabled || !isEditorValid}
+              aria-label="submit"
+            >
+              {words("confirm")}
+            </Button>
+          </ActionDisabledTooltip>
+        </ActionListItem>
+        <ActionListItem>
+          <Button
+            variant="link"
+            aria-label="cancel"
+            onClick={() => {
+              if (isDirty) {
+                setIsDirty(false);
+              }
+              setShouldCancel(true);
+            }}
+          >
+            {words("cancel")}
+          </Button>
+        </ActionListItem>
+      </ActionList>
     </StyledForm>
   );
 };
@@ -265,13 +269,4 @@ const StyledForm = styled(Form)`
   .display-blocks {
     display: block;
   }
-`;
-
-const StyledButton = styled(Button)`
-  //when tooltip is in the document, it wraps button and removes following styling that are inherited from form-actions
-  //these styling will be in line with the button styling when it's not wrapped in tooltip
-  margin-block-start: var(--pf-v6-c-form__actions--child--MarginBlockStart);
-  margin-block-end: var(--pf-v6-c-form__actions--child--MarginBlockEnd);
-  margin-inline-start: var(--pf-v6-c-form__actions--child--MarginInlineStart);
-  margin-inline-end: var(--pf-v6-c-form__actions--child--MarginInlineEnd);
 `;
