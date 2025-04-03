@@ -16,6 +16,7 @@ const dict = {
   /**
    * General text
    */
+  add: "add",
   true: "True",
   false: "False",
   submit: "Submit",
