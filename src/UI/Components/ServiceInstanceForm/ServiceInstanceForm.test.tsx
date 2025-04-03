@@ -393,7 +393,7 @@ test("GIVEN ServiceInstanceForm and a NestedField WHEN rendering optional inputs
 
   await userEvent.click(
     within(group).getByRole("button", {
-      name: words("add"),
+      name: words("catalog.callbacks.add"),
     }),
   );
 
@@ -421,7 +421,7 @@ test("GIVEN ServiceInstanceForm and a NestedField WHEN rendering optional inputs
 
   await userEvent.click(
     within(nestedGroup).getByRole("button", {
-      name: words("add"),
+      name: words("catalog.callbacks.add"),
     }),
   );
 
