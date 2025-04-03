@@ -20,7 +20,7 @@ test.each`
 test.each`
   numberValue                      | fields                                           | expectedValue
   ${"default - (null)"}            | ${[Field.numberArr]}                             | ${{ [Field.numberArr.name]: [1, 2] }}
-  ${"empty string"}                | ${[{ ...Field.numberArr, defaultValue: "" }]}    | ${{ [Field.numberArr.name]: [] }}
+  ${"empty string"}                | ${[{ ...Field.numberArr, defaultValue: "" }]}    | ${{ [Field.numberArr.name]: null }}
   ${"stringified array of number"} | ${[{ ...Field.numberArr, defaultValue: "[1]" }]} | ${{ [Field.numberArr.name]: [1] }}
   ${"null"}                        | ${[{ ...Field.numberArr, defaultValue: null }]}  | ${{ [Field.numberArr.name]: null }}
 `(
