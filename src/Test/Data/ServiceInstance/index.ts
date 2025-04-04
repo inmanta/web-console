@@ -62,6 +62,8 @@ export const nestedEditable: ServiceInstanceModelWithTargetStates = {
   state: "a",
   candidate_attributes: {
     id_attr: "val",
+    int_attr: 10,
+    int_attr2: 12,
     embedded: [
       {
         my_attr: 0,

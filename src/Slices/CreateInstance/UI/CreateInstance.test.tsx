@@ -109,7 +109,7 @@ test("Given the CreateInstance View When creating an instance with attributes Th
         circuits: [
           {
             csp_endpoint: {
-              attributes: "",
+              attributes: null,
               cloud_service_provider: "",
               ipx_access: null,
               region: "",
