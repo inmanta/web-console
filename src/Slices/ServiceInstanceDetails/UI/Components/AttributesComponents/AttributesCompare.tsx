@@ -199,9 +199,12 @@ export const AttributesCompare: React.FC<Props> = ({
           </FlexItem>
         </Flex>
       </Flex>
-
       <DiffEditor
         height={"calc(100vh - 525px)"}
+        options={{
+          readOnly: true,
+          renderSideBySide: true,
+        }}
         theme={`vs-${preferedTheme}`}
         language="json"
         original={JSON.stringify(leftAttributesSets[leftSelectedSet], null, 2)}
