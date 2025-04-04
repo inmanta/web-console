@@ -195,6 +195,9 @@ if (Cypress.env("edition") === "iso") {
       // expect the Force Update to be disabled
       cy.get('[aria-label="Expert-Submit-Button"]').should("be.disabled");
 
+      // Scroll the editor to ensure the element is visible
+      cy.get(".monaco-editor").scrollIntoView();
+
       // Adjust the name property of the instance and make editor valid again
       cy.get(".mtk20").contains("ame").type("{home}{rightArrow}n");
 
