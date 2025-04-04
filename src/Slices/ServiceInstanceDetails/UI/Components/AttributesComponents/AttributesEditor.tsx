@@ -165,6 +165,7 @@ export const AttributesEditor: React.FC<Props> = ({
             <Button
               isDisabled={!isEditorValid}
               aria-label="Expert-Submit-Button"
+              aria-disabled={!isEditorValid}
               variant="danger"
               onClick={() => setIsModalOpen(true)}
             >
