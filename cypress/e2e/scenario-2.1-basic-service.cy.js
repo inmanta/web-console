@@ -62,6 +62,10 @@ const forceUpdateEnvironment = (nameEnvironment = "test") => {
   });
 };
 
+beforeEach(() => {
+  localStorage.setItem("theme-preference", "light");
+});
+
 if (Cypress.env("edition") === "iso") {
   describe("Scenario 2.1 Service Catalog - basic-service", () => {
     before(() => {
@@ -389,6 +393,7 @@ if (Cypress.env("edition") === "iso") {
 
     it("2.1.6 Instance Details page", () => {
       cy.visit("/console/");
+
       cy.get(`[aria-label="Select-environment-test"]`).click();
       cy.get('[aria-label="Sidebar-Navigation-Item"]')
         .contains("Service Catalog")

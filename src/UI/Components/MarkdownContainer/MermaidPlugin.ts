@@ -3,13 +3,23 @@ import MarkdownIt from "markdown-it";
 import Mermaid from "mermaid";
 import { words } from "@/UI";
 
+// Define types for Mermaid API
+interface MermaidAPI {
+  initialize: (config: any) => void;
+  render: (
+    id: string,
+    text: string,
+  ) => Promise<{
+    svg: string;
+    bindFunctions?: (element: HTMLElement) => void;
+  }>;
+}
+
+// Assert Mermaid as MermaidAPI
+const mermaid = Mermaid as unknown as MermaidAPI;
+
 /**
  * A plugin for markdown-it that renders Mermaid diagrams.
- *
- * @Note We are using Mermaid v9.0.0 because structuredClone isn't yet available in JSDom and Jest v29.0.0
- * see : https://github.com/jsdom/jsdom/issues/3363
- * Mermaid V9.0.0 is the last version that doesn't use structuredClone.
- * It also still gets security updates as it is widely used.
  *
  * @param md - The markdown-it instance to use.
  * @param baseId - The base id to use for the mermaid elements.
@@ -21,7 +31,7 @@ export default function mermaidPlugin(
   options: any,
 ) {
   // Setup Mermaid
-  Mermaid.initialize({
+  mermaid.initialize({
     securityLevel: "loose",
     ...options,
   });
@@ -34,7 +44,7 @@ export default function mermaidPlugin(
   const defaultFenceRenderer = md.renderer.rules.fence;
 
   // Render custom code types as SVGs, letting the fence parser do all the heavy lifting.
-  function customFenceRenderer(
+  async function customFenceRenderer(
     tokens: any[],
     idx: number,
     options: any,
@@ -66,32 +76,32 @@ export default function mermaidPlugin(
     try {
       const container_id = `${baseId}-${idx}`;
 
-      Mermaid.render(
+      // New async render API in Mermaid v10+
+      const { svg, bindFunctions } = await mermaid.render(
         container_id,
         token.content,
-        (html: string) => {
-          // We need to forcibly extract the max-width/height attributes to set on img tag
-          // Mermaid will render the svg in the container_id.
-          const svg = document.getElementById(container_id);
-
-          if (svg !== null) {
-            imageAttrs.push([
-              "style",
-              `max-width:${svg.style.maxWidth};max-height:${svg.style.maxHeight}`,
-            ]);
-          }
-          // Store HTML
-          svgString = html;
-        },
-        element,
       );
-    } catch (e) {
+
+      // Extract max-width/height from the rendered SVG element
+      const renderedSvg = document.getElementById(container_id);
+
+      if (renderedSvg !== null) {
+        imageAttrs.push([
+          "style",
+          `max-width:${renderedSvg.style.maxWidth};max-height:${renderedSvg.style.maxHeight};cursor:zoom-in;transition:transform 0.2s ease-in-out;`,
+        ]);
+      }
+
+      svgString = svg;
+      // Call bindFunctions if available
+      bindFunctions?.(element);
+    } catch (error) {
       // Create an error card svg with a red dotted border, and a title, and the error message in the body
       svgString = `
         <svg xmlns="http://www.w3.org/2000/svg" width="300" height="180">
           <rect x="10" y="10" width="280" height="160" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(255,0,0)" />
           <text x="50%" y="50%" alignment-baseline="middle" text-anchor="middle" font-family="Arial" font-size="16" fill="red">${words("inventory.error.mermaid")}</text>
-          <text x="50%" y="70%" alignment-baseline="middle" text-anchor="middle" font-family="Arial" font-size="12" fill="red">${e}</text>
+          <text x="50%" y="70%" alignment-baseline="middle" text-anchor="middle" font-family="Arial" font-size="12" fill="red">${error}</text>
         </svg>
       `;
     } finally {
@@ -104,8 +114,28 @@ export default function mermaidPlugin(
       `data:image/svg+xml,${encodeURIComponent(svgString)}`,
     ]);
 
+    // Add class and data attributes for zoom functionality
+    imageAttrs.push(["class", "mermaid-diagram"]);
+    imageAttrs.push(["data-zoomable", "true"]);
+    imageAttrs.push(["alt", "Mermaid diagram"]);
+
     return `<img ${slf.renderAttrs({ attrs: imageAttrs })}>`;
   }
 
-  md.renderer.rules.fence = customFenceRenderer;
+  // Replace the fence renderer with our async version
+  md.renderer.rules.fence = (...args) => {
+    // We need to handle the async nature of the new renderer
+    // Return a placeholder that will be replaced once rendering is complete
+    const tempId = `mermaid-temp-${args[1]}`;
+
+    customFenceRenderer(...args).then((result) => {
+      const placeholder = document.getElementById(tempId);
+
+      if (placeholder) {
+        placeholder.outerHTML = result;
+      }
+    });
+
+    return `<div id="${tempId}">Loading diagram...</div>`;
+  };
 }

@@ -4,7 +4,7 @@ import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { getPaginationHandlers } from "@/Data/Managers/Helpers/Pagination/getPaginationHandlers";
 import { Notification, Severity } from "@S/Notification/Core/Domain";
 import { Origin } from "@S/Notification/Core/Utils";
-import { useGet } from "../../helpers";
+import { CustomError, useGet } from "../../helpers";
 import { getUrl } from "./getUrl";
 
 /**
@@ -48,8 +48,8 @@ export interface NotificationResponse extends ResponseBody {
  * Return Signature of the useGetInstance React Query
  */
 interface GetNotifications {
-  useOneTime: () => UseQueryResult<NotificationResponse, Error>;
-  useContinuous: () => UseQueryResult<NotificationResponse, Error>;
+  useOneTime: () => UseQueryResult<NotificationResponse, CustomError>;
+  useContinuous: () => UseQueryResult<NotificationResponse, CustomError>;
 }
 
 /**
@@ -65,7 +65,7 @@ export const useGetNotifications = (
   const get = useGet()<ResponseBody>;
 
   return {
-    useOneTime: (): UseQueryResult<NotificationResponse, Error> =>
+    useOneTime: (): UseQueryResult<NotificationResponse, CustomError> =>
       useQuery({
         queryKey: [
           "get_notifications",

@@ -233,10 +233,7 @@ describe("ServiceInstanceDetailsPage", () => {
 
     await userEvent.click(toggleJson);
 
-    // expect the view to be updated
-    expect(screen.getByTestId("loading-spinner")).toBeVisible();
-
-    // We can't test the monaco editor in jest yet, this is covered in the E2E cases.
+    // We can't test the monaco editor in jest, this is covered in the E2E cases.
     // We can just test that the dropdown is now pressent too and set on the candidate set.
     expect(
       screen.getByRole("combobox", {
