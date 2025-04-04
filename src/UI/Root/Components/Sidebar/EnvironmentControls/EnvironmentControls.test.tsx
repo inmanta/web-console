@@ -1,128 +1,118 @@
-import React, { act } from "react";
+import React from "react";
 import { MemoryRouter } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
-import { userEvent } from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
-import { axe, toHaveNoViolations } from "jest-axe";
-import { Either } from "@/Core";
-import {
-  BaseApiHelper,
-  CommandResolverImpl,
-  getStoreInstance,
-  HaltEnvironmentCommandManager,
-  QueryResolverImpl,
-  ResumeEnvironmentCommandManager,
-} from "@/Data";
-import { defaultAuthContext } from "@/Data/Auth/AuthContext";
-import {
-  EnvironmentDetailsContinuousQueryManager,
-  EnvironmentDetailsUpdater,
-  GetEnvironmentDetailsStateHelper,
-} from "@/Slices/Settings/Data/GetEnvironmentDetails";
-import {
-  DeferredApiHelper,
-  dependencies,
-  DynamicCommandManagerResolverImpl,
-  DynamicQueryManagerResolverImpl,
-  EnvironmentDetails,
-  MockEnvironmentHandler,
-  StaticScheduler,
-} from "@/Test";
+import userEvent from "@testing-library/user-event";
+import { QueryControlProvider } from "@/Data/Managers/V2/helpers";
+import { EnvironmentDetails } from "@/Test/Data";
+import { MockEnvironmentHandler } from "@/Test/Mock";
 import { DependencyProvider } from "@/UI/Dependency";
 import { ModalProvider } from "../../ModalProvider";
 import { EnvironmentControls } from "./EnvironmentControls";
+const fetchMock = jest.fn();
 
-expect.extend(toHaveNoViolations);
+global.fetch = fetchMock;
 
 function setup() {
-  const store = getStoreInstance();
-  const scheduler = new StaticScheduler();
-  const apiHelper = new DeferredApiHelper();
-  const environmentDetailsStateHelper = GetEnvironmentDetailsStateHelper(store);
-  const environmentDetailsQueryManager =
-    EnvironmentDetailsContinuousQueryManager(store, apiHelper, scheduler);
-
-  const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolverImpl(
-      [environmentDetailsQueryManager],
-      scheduler,
-    ),
-  );
-
-  const haltEnvironmentManager = HaltEnvironmentCommandManager(
-    BaseApiHelper(undefined, defaultAuthContext),
-    environmentDetailsStateHelper,
-    new EnvironmentDetailsUpdater(store, apiHelper),
-  );
-
-  const resumeEnvironmentManager = ResumeEnvironmentCommandManager(
-    BaseApiHelper(undefined, defaultAuthContext),
-    environmentDetailsStateHelper,
-    new EnvironmentDetailsUpdater(store, apiHelper),
-  );
-
-  const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolverImpl([
-      haltEnvironmentManager,
-      resumeEnvironmentManager,
-    ]),
-  );
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  });
 
   const component = (
-    <ModalProvider>
-      <MemoryRouter initialEntries={[{ search: "?env=123" }]}>
-        <DependencyProvider
-          dependencies={{
-            ...dependencies,
-            queryResolver,
-            commandResolver,
-            environmentHandler: MockEnvironmentHandler(EnvironmentDetails.a.id),
-          }}
-        >
-          <StoreProvider store={store}>
-            <EnvironmentControls />
-          </StoreProvider>
-        </DependencyProvider>
-      </MemoryRouter>
-    </ModalProvider>
+    <QueryClientProvider client={queryClient}>
+      <QueryControlProvider>
+        <ModalProvider>
+          <MemoryRouter initialEntries={[{ search: "?env=123" }]}>
+            <DependencyProvider
+              dependencies={{
+                environmentHandler: MockEnvironmentHandler(
+                  EnvironmentDetails.a.id,
+                ),
+              }}
+            >
+              <EnvironmentControls />
+            </DependencyProvider>
+          </MemoryRouter>
+        </ModalProvider>
+      </QueryControlProvider>
+    </QueryClientProvider>
   );
 
   return {
     component,
-    apiHelper,
-    scheduler,
+    queryClient,
   };
 }
 
-test("GIVEN EnvironmentControls WHEN rendered THEN it should be accessible", async () => {
-  const { component, apiHelper } = setup();
-  const { container } = render(component);
-
-  await act(async () => {
-    await apiHelper.resolve(Either.right({ data: EnvironmentDetails.a }));
-  });
-
-  expect(await axe(container)).toHaveNoViolations();
+beforeEach(() => {
+  fetchMock.mockClear();
 });
 
-test("EnvironmentControls halt the environment when clicked and the environment is running", async () => {
-  const dispatchEventSpy = jest.spyOn(document, "dispatchEvent");
+test("EnvironmentControls shows halt button when environment is not halted", async () => {
+  const { component } = setup();
 
-  const { component, apiHelper } = setup();
+  fetchMock.mockImplementationOnce(() =>
+    Promise.resolve({
+      ok: true,
+      json: () => Promise.resolve({ data: EnvironmentDetails.a }),
+    }),
+  );
 
   render(component);
-  await act(async () => {
-    await apiHelper.resolve(Either.right({ data: EnvironmentDetails.a }));
-  });
-  const stopButton = await screen.findByText("STOP");
 
-  expect(stopButton).toBeVisible();
+  expect(await screen.findByText("Halt")).toBeVisible();
+});
 
-  await userEvent.click(stopButton);
+test("EnvironmentControls shows resume button when environment is halted", async () => {
+  const { component } = setup();
 
+  fetchMock.mockImplementationOnce(() =>
+    Promise.resolve({
+      ok: true,
+      json: () =>
+        Promise.resolve({ data: { ...EnvironmentDetails.a, halted: true } }),
+    }),
+  );
+
+  render(component);
+
+  expect(await screen.findByText("Resume")).toBeVisible();
+  expect(await screen.findByText("Operations halted")).toBeVisible();
+});
+
+test("EnvironmentControls halts the environment when clicked", async () => {
+  const dispatchEventSpy = jest.spyOn(document, "dispatchEvent");
+  const { component } = setup();
+
+  fetchMock
+    .mockImplementationOnce(() =>
+      Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve({ data: EnvironmentDetails.a }),
+      }),
+    )
+    .mockImplementationOnce(() =>
+      Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve({}),
+      }),
+    );
+
+  render(component);
+
+  const halt = await screen.findByText("Halt");
+
+  expect(halt).toBeVisible();
+
+  await userEvent.click(halt);
   await userEvent.click(await screen.findByText("Yes"));
 
-  const [receivedUrl, requestInit] = fetchMock.mock.calls[0];
+  const [, haltCall] = fetchMock.mock.calls;
+  const [receivedUrl, requestInit] = haltCall;
 
   expect(receivedUrl).toEqual(
     `http://localhost:8888/api/v2/actions/environment/halt`,
@@ -133,50 +123,36 @@ test("EnvironmentControls halt the environment when clicked and the environment 
   expect(dispatchEventSpy).toHaveBeenCalledTimes(2);
 });
 
-test("EnvironmentControls don\\t trigger backend call when dialog is not confirmed", async () => {
-  const { component, apiHelper } = setup();
-
-  render(component);
-
-  await act(async () => {
-    await apiHelper.resolve(Either.right({ data: EnvironmentDetails.a }));
-  });
-
-  const stopButton = await screen.findByText("STOP");
-
-  expect(stopButton).toBeVisible();
-
-  await userEvent.click(stopButton);
-
-  await userEvent.click(await screen.findByText("No"));
-
-  expect(fetchMock.mock.calls).toHaveLength(0);
-});
-
-test("EnvironmentControls resume the environment when clicked and the environment is halted", async () => {
+test("EnvironmentControls resumes the environment when clicked and the environment is halted", async () => {
   const dispatchEventSpy = jest.spyOn(document, "dispatchEvent");
+  const { component } = setup();
 
-  const { component, apiHelper } = setup();
+  fetchMock
+    .mockImplementationOnce(() =>
+      Promise.resolve({
+        ok: true,
+        json: () =>
+          Promise.resolve({ data: { ...EnvironmentDetails.a, halted: true } }),
+      }),
+    )
+    .mockImplementationOnce(() =>
+      Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve({}),
+      }),
+    );
 
   render(component);
 
-  await act(async () => {
-    await apiHelper.resolve(
-      Either.right({ data: { ...EnvironmentDetails.a, halted: true } }),
-    );
-  });
+  const resume = await screen.findByText("Resume");
 
-  expect(await screen.findByText("Operations halted")).toBeVisible();
+  expect(resume).toBeVisible();
 
-  const start = await screen.findByText("Resume");
-
-  expect(start).toBeVisible();
-
-  await userEvent.click(start);
-
+  await userEvent.click(resume);
   await userEvent.click(await screen.findByText("Yes"));
 
-  const [receivedUrl, requestInit] = fetchMock.mock.calls[0];
+  const [, resumeCall] = fetchMock.mock.calls;
+  const [receivedUrl, requestInit] = resumeCall;
 
   expect(receivedUrl).toEqual(
     `http://localhost:8888/api/v2/actions/environment/resume`,

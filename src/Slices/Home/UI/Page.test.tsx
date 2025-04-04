@@ -4,18 +4,8 @@ import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { Either } from "@/Core";
-import { getStoreInstance, QueryResolverImpl } from "@/Data";
-import {
-  GetEnvironmentsContinuousQueryManager,
-  GetEnvironmentsContinuousStateHelper,
-} from "@/Data/Managers/GetEnvironmentsContinuous";
-import {
-  DeferredApiHelper,
-  dependencies,
-  DynamicQueryManagerResolverImpl,
-  Project,
-  StaticScheduler,
-} from "@/Test";
+import { getStoreInstance } from "@/Data";
+import { DeferredApiHelper, dependencies, Project } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { Page } from "./Page";
 
@@ -31,23 +21,10 @@ const axe = configureAxe({
 function setup() {
   const store = getStoreInstance();
   const apiHelper = new DeferredApiHelper();
-  const scheduler = new StaticScheduler();
-  const environmentsManager = GetEnvironmentsContinuousQueryManager(
-    apiHelper,
-    scheduler,
-    GetEnvironmentsContinuousStateHelper(store),
-  );
-  const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolverImpl([environmentsManager]),
-  );
+
   const component = (
     <MemoryRouter>
-      <DependencyProvider
-        dependencies={{
-          ...dependencies,
-          queryResolver,
-        }}
-      >
+      <DependencyProvider dependencies={dependencies}>
         <StoreProvider store={store}>
           <Page />
         </StoreProvider>

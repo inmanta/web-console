@@ -4,40 +4,37 @@ import { ErrorView, LoadingView, PageContainer } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { Dashboard } from "./Dashboard";
+import { useGetEnvironmentDetails } from "@/Data/Managers/V2/Environment";
 
 export const Page: React.FC = () => {
-  const { queryResolver, environmentHandler } = useContext(DependencyContext);
+  const { environmentHandler } = useContext(DependencyContext);
 
-  const [envData, retry] = queryResolver.useOneTime<"GetEnvironmentDetails">({
-    kind: "GetEnvironmentDetails",
-    details: true,
-    id: environmentHandler.useId(),
-  });
+  const {
+    data: envData,
+    refetch,
+    isError,
+    isSuccess,
+    error,
+  } = useGetEnvironmentDetails().useOneTime(environmentHandler.useId());
 
-  return (
-    <>
-      {RemoteData.fold(
-        {
-          notAsked: () => null,
-          loading: () => <LoadingView ariaLabel="Dashboard-Loading" />,
-          failed: (error) => (
-            <ErrorView
-              message={error}
-              retry={retry}
-              ariaLabel="Dashboard-Failed"
-            />
-          ),
-          success: (value) => (
-            <PageContainer
-              pageTitle={words("dashboard.title")(value.name)}
-              aria-label="Dashboard-Success"
-            >
-              <Dashboard />
-            </PageContainer>
-          ),
-        },
-        envData,
-      )}
-    </>
-  );
+  if (isError) {
+    return (
+      <ErrorView
+        message={error.message}
+        retry={refetch}
+        ariaLabel="Dashboard-Failed"
+      />
+    );
+  }
+  if (isSuccess) {
+    return (
+      <PageContainer
+        pageTitle={words("dashboard.title")(envData.name)}
+        aria-label="Dashboard-Success"
+      >
+        <Dashboard />
+      </PageContainer>
+    );
+  }
+  return <LoadingView ariaLabel="Dashboard-Loading" />;
 };
