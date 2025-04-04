@@ -1,5 +1,6 @@
 import { times, cloneDeep } from "lodash-es";
 import { FieldLikeWithFormState, InstanceAttributeModel } from "@/Core";
+import { tryParseJSON } from "../Components";
 
 /**
  * Create an form state based on the provided fields.
@@ -17,9 +18,7 @@ export const createFormState = (
       case "Text":
       case "Textarea":
       case "TextList": {
-        acc[curr.name] = curr.type.includes("dict")
-          ? stringifyDict(curr.defaultValue)
-          : curr.defaultValue;
+        acc[curr.name] = convertValueOnType(curr.type, curr.defaultValue);
 
         return acc;
       }
@@ -93,9 +92,10 @@ export const createEditFormState = (
         case "Textarea":
         case "TextList":
         case "Text": {
-          acc[curr.name] = curr.type.includes("dict")
-            ? stringifyDict(originalAttributes?.[curr.name])
-            : cloneDeep(originalAttributes?.[curr.name]);
+          acc[curr.name] = convertValueOnType(
+            curr.type,
+            originalAttributes?.[curr.name],
+          );
 
           return acc;
         }
@@ -173,9 +173,10 @@ export const createDuplicateFormState = (
         case "Textarea":
         case "TextList":
         case "Text": {
-          acc[curr.name] = curr.type.includes("dict")
-            ? stringifyDict(originalAttributes?.[curr.name])
-            : cloneDeep(originalAttributes?.[curr.name]);
+          acc[curr.name] = convertValueOnType(
+            curr.type,
+            originalAttributes?.[curr.name],
+          );
 
           return acc;
         }
@@ -231,11 +232,33 @@ export const createDuplicateFormState = (
 };
 
 /**
- * Convert a value to a JSON string, or return an empty string if the value is an empty string.
+ * Converts a value to the appropriate type based on the provided type string.
+ * Handles various data types including integers, floats, arrays, and dictionaries.
  *
- * @param {unknown} value - The value to stringify.
- * @returns {string} The JSON string representation of the value, or an empty string if the value is an empty string.
+ * @param {string} type  - The type string indicating the expected data type (e.g., "int", "float", "dict", "int[]")
+ * @param {unknown} value - The value to convert
+ * @returns The converted value with the appropriate type, or null for empty values
+ *
+ * @example
+ * convertValueOnType("int", "42") // returns 42
+ * convertValueOnType("float[]", "") // returns []
+ * convertValueOnType("dict", "") // returns null
  */
-function stringifyDict(value: unknown) {
-  return value === "" ? "" : JSON.stringify(value);
-}
+const convertValueOnType = (type: string, value: unknown) => {
+  if (type.includes("int") || type.includes("float")) {
+    //empty string assertion and `Number(value)` is for converting input form to JSON Editor
+    if (type.includes("[]")) {
+      if (typeof value === "string") {
+        return value === "" ? null : tryParseJSON(value);
+      }
+
+      return value === null ? null : cloneDeep(value);
+    }
+
+    return value === "" || value === null ? null : Number(value);
+  } else if (type.includes("dict")) {
+    return value === "" ? null : cloneDeep(tryParseJSON(value));
+  } else {
+    return cloneDeep(value);
+  }
+};

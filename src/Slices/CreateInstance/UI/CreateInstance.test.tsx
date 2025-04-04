@@ -112,7 +112,7 @@ describe("CreateInstance", () => {
           circuits: [
             {
               csp_endpoint: {
-                attributes: "",
+                attributes: null,
                 cloud_service_provider: "",
                 ipx_access: null,
                 region: "",
