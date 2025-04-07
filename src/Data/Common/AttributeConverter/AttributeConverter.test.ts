@@ -11,10 +11,7 @@ describe("AttributeResultConverter ", () => {
     it("With a single difference", () => {
       const originalAttributes = { name: "inmanta", bool_param: false };
       const afterChanges = { name: "inmanta", bool_param: true };
-      const diff = attributeResultConverter.calculateDiff(
-        afterChanges,
-        originalAttributes,
-      );
+      const diff = attributeResultConverter.calculateDiff(afterChanges, originalAttributes);
 
       expect(diff).toEqual({ bool_param: true });
     });
@@ -22,10 +19,7 @@ describe("AttributeResultConverter ", () => {
     it("With no difference", () => {
       const originalAttributes = { name: "inmanta", bool_param: true };
       const afterChanges = { name: "inmanta", bool_param: true };
-      const diff = attributeResultConverter.calculateDiff(
-        afterChanges,
-        originalAttributes,
-      );
+      const diff = attributeResultConverter.calculateDiff(afterChanges, originalAttributes);
 
       expect(diff).toEqual({});
     });
@@ -41,10 +35,7 @@ describe("AttributeResultConverter ", () => {
         bool_param: false,
         another_attribute: "same",
       };
-      const diff = attributeResultConverter.calculateDiff(
-        afterChanges,
-        originalAttributes,
-      );
+      const diff = attributeResultConverter.calculateDiff(afterChanges, originalAttributes);
 
       expect(diff).toEqual({ name: "inmanta2", bool_param: false });
     });
@@ -56,10 +47,7 @@ describe("AttributeResultConverter ", () => {
         bool_param: false,
         another_attribute: "same",
       };
-      const diff = attributeResultConverter.calculateDiff(
-        afterChanges,
-        originalAttributes,
-      );
+      const diff = attributeResultConverter.calculateDiff(afterChanges, originalAttributes);
 
       expect(diff).toEqual(afterChanges);
     });
@@ -71,10 +59,7 @@ describe("AttributeResultConverter ", () => {
         bool_param: false,
         another_attribute: "same",
       };
-      const diff = attributeResultConverter.calculateDiff(
-        afterChanges,
-        originalAttributes,
-      );
+      const diff = attributeResultConverter.calculateDiff(afterChanges, originalAttributes);
 
       expect(diff).toEqual(afterChanges);
     });
@@ -86,10 +71,7 @@ describe("AttributeResultConverter ", () => {
         bool_param: false,
         another_attribute: null,
       };
-      const diff = attributeResultConverter.calculateDiff(
-        afterChanges,
-        originalAttributes,
-      );
+      const diff = attributeResultConverter.calculateDiff(afterChanges, originalAttributes);
 
       expect(diff).toEqual({ bool_param: false });
     });
@@ -105,10 +87,7 @@ describe("AttributeResultConverter ", () => {
         bool_param: true,
         another_attribute: null,
       };
-      const diff = attributeResultConverter.calculateDiff(
-        afterChanges,
-        originalAttributes,
-      );
+      const diff = attributeResultConverter.calculateDiff(afterChanges, originalAttributes);
 
       expect(diff).toEqual({ name: "inmanta2", another_attribute: null });
     });
@@ -122,10 +101,7 @@ describe("AttributeResultConverter ", () => {
         name: "inmanta2",
         embedded: [{ a: 2 }, { a: { c: "d" } }],
       };
-      const diff = attributeResultConverter.calculateDiff(
-        afterChanges,
-        originalAttributes,
-      );
+      const diff = attributeResultConverter.calculateDiff(afterChanges, originalAttributes);
 
       expect(diff).toEqual({
         name: "inmanta2",
@@ -142,10 +118,7 @@ describe("AttributeResultConverter ", () => {
         name: "inmanta2",
         embedded: [{ a: 1, unchanged: "same" }],
       };
-      const diff = attributeResultConverter.calculateDiff(
-        afterChanges,
-        originalAttributes,
-      );
+      const diff = attributeResultConverter.calculateDiff(afterChanges, originalAttributes);
 
       expect(diff).toEqual({ name: "inmanta2" });
     });
@@ -174,21 +147,14 @@ describe("AttributeResultConverter ", () => {
       ${"1,2"}                 | ${"int[]"}    | ${[1, 2]}
       ${"1, 2 ,a"}             | ${"int[]"}    | ${[1, 2, "a"]}
       ${"1.2,3.4"}             | ${"float[]"}  | ${[1.2, 3.4]}
-    `(
-      "converts $value of type $type to $parsedValue",
-      ({ value, type, parsedValue }) => {
-        const result = attributeResultConverter.ensureAttributeType(
-          value,
-          type,
-        );
+    `("converts $value of type $type to $parsedValue", ({ value, type, parsedValue }) => {
+      const result = attributeResultConverter.ensureAttributeType(value, type);
 
-        expect(result).toEqual(parsedValue);
-      },
-    );
+      expect(result).toEqual(parsedValue);
+    });
     it("Converts an empty array of attributes to correct types", () => {
       const attributes = [];
-      const result =
-        attributeResultConverter.parseAttributesToCorrectTypes(attributes);
+      const result = attributeResultConverter.parseAttributesToCorrectTypes(attributes);
 
       expect(result).toEqual({});
     });
@@ -198,8 +164,7 @@ describe("AttributeResultConverter ", () => {
         { name: "attribute2", value: "hi", type: "string" },
         { name: "attribute3", value: "true", type: "bool?" },
       ];
-      const result =
-        attributeResultConverter.parseAttributesToCorrectTypes(attributes);
+      const result = attributeResultConverter.parseAttributesToCorrectTypes(attributes);
 
       expect(result).toEqual({
         attribute1: 42,
@@ -266,13 +231,9 @@ describe("AttributeInputConverter", () => {
       "if default value is set ($defaultValueSet) to $defaultValue, inputType is $inputType sets defaultValue to $expectedDefaultValue",
       ({ defaultValueSet, defaultValue, inputType, expectedDefaultValue }) => {
         expect(
-          attributeInputConverter.getFormDefaultValue(
-            inputType,
-            defaultValueSet,
-            defaultValue,
-          ),
+          attributeInputConverter.getFormDefaultValue(inputType, defaultValueSet, defaultValue)
         ).toEqual(expectedDefaultValue);
-      },
+      }
     );
   });
   describe("Determines correct input type ", () => {
@@ -288,20 +249,17 @@ describe("AttributeInputConverter", () => {
       ${"string"}  | ${TextInputTypes.text}
       ${"int[]"}   | ${TextInputTypes.text}
       ${"float[]"} | ${TextInputTypes.text}
-    `(
-      "For $inmantaType inmantaType chooses $inputType input",
-      ({ inmantaType, inputType }) => {
-        expect(
-          attributeInputConverter.getInputType({
-            name: "name",
-            type: inmantaType,
-            description: "name",
-            modifier: "rw+",
-            default_value_set: false,
-            default_value: null,
-          }),
-        ).toEqual(inputType);
-      },
-    );
+    `("For $inmantaType inmantaType chooses $inputType input", ({ inmantaType, inputType }) => {
+      expect(
+        attributeInputConverter.getInputType({
+          name: "name",
+          type: inmantaType,
+          description: "name",
+          modifier: "rw+",
+          default_value_set: false,
+          default_value: null,
+        })
+      ).toEqual(inputType);
+    });
   });
 });

@@ -12,12 +12,7 @@ interface Props {
   className?: string;
 }
 
-export const Container: React.FC<Props> = ({
-  infos,
-  errorMessage,
-  onErrorClose,
-  className,
-}) => {
+export const Container: React.FC<Props> = ({ infos, errorMessage, onErrorClose, className }) => {
   const [showUpdateBanner, setShowUpdateBanner] = useState(false);
 
   useEffect(() => {
@@ -51,11 +46,7 @@ export const Container: React.FC<Props> = ({
           variant="success"
           title={words("settings.update")}
           aria-live="polite"
-          actionClose={
-            <AlertActionCloseButton
-              onClose={() => setShowUpdateBanner(false)}
-            />
-          }
+          actionClose={<AlertActionCloseButton onClose={() => setShowUpdateBanner(false)} />}
           isInline
         />
       )}

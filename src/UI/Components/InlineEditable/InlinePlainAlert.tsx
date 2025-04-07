@@ -22,10 +22,7 @@ export const InlinePlainAlert: React.FC<Props> = ({
     isPlain
     title={errorMessage}
     actionClose={
-      <AlertActionCloseButton
-        aria-label={closeButtonAriaLabel}
-        onClick={onCloseAlert}
-      />
+      <AlertActionCloseButton aria-label={closeButtonAriaLabel} onClick={onCloseAlert} />
     }
   />
 );

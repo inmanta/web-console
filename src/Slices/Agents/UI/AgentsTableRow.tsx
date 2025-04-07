@@ -3,12 +3,7 @@ import { Tbody, Td, Tr } from "@patternfly/react-table";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { AgentRow } from "@S/Agents/Core/Domain";
-import {
-  ActionButton,
-  AgentStatusLabel,
-  KebabDropdown,
-  OnResumeToggle,
-} from "./Components";
+import { ActionButton, AgentStatusLabel, KebabDropdown, OnResumeToggle } from "./Components";
 
 interface Props {
   row: AgentRow;
@@ -27,10 +22,7 @@ export const AgentsTableRow: React.FC<Props> = ({ row }) => {
         </Td>
         {isHalted && (
           <Td dataLabel={words("agents.columns.unpause")}>
-            <OnResumeToggle
-              name={row.name}
-              unpauseOnResume={row.unpause_on_resume}
-            />
+            <OnResumeToggle name={row.name} unpauseOnResume={row.unpause_on_resume} />
           </Td>
         )}
         <Td modifier="fitContent" isActionCell>

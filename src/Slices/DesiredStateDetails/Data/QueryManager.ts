@@ -1,16 +1,11 @@
-import {
-  Scheduler,
-  ApiHelper,
-  stringifyObjectOrUndefined,
-  StateHelperWithEnv,
-} from "@/Core";
+import { Scheduler, ApiHelper, stringifyObjectOrUndefined, StateHelperWithEnv } from "@/Core";
 import { getPaginationHandlers, QueryManager } from "@/Data/Managers/Helpers";
 import { getUrl } from "./getUrl";
 
 export function GetVersionResourcesQueryManager(
   apiHelper: ApiHelper,
   stateHelper: StateHelperWithEnv<"GetVersionResources">,
-  scheduler: Scheduler,
+  scheduler: Scheduler
 ) {
   return QueryManager.ContinuousWithEnv<"GetVersionResources">(
     apiHelper,
@@ -35,6 +30,6 @@ export function GetVersionResourcesQueryManager(
         handlers: getPaginationHandlers(links, metadata),
         metadata,
       };
-    },
+    }
   );
 }

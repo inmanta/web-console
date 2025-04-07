@@ -43,9 +43,7 @@ export class FactsTablePresenter implements TablePresenter<Fact, Fact> {
   }
 
   public getIndexForColumnName(columnName?: string): number {
-    return this.columnHeads.findIndex(
-      (columnHead) => columnHead.apiName === columnName,
-    );
+    return this.columnHeads.findIndex((columnHead) => columnHead.apiName === columnName);
   }
 
   public getSortableColumnNames(): string[] {

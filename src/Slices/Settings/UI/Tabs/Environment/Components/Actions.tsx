@@ -40,11 +40,7 @@ export const Actions: React.FC<Props> = ({ environment }) => {
   const openModal = (type: EnvActions): void => {
     triggerModal({
       title: words("home.environment.delete.warning"),
-      description: (
-        <p>
-          {words(`home.environment.${type}.confirmation`)(environment.name)}
-        </p>
-      ),
+      description: <p>{words(`home.environment.${type}.confirmation`)(environment.name)}</p>,
       iconVariant: "danger",
       content: <ConfirmationForm environment={environment} type={type} />,
     });
@@ -53,14 +49,9 @@ export const Actions: React.FC<Props> = ({ environment }) => {
   return (
     <>
       <DescriptionListGroup>
-        <DescriptionListTerm>
-          {words("settings.tabs.environment.id")}
-        </DescriptionListTerm>
+        <DescriptionListTerm>{words("settings.tabs.environment.id")}</DescriptionListTerm>
         <DescriptionListDescription>
-          <TextWithCopy
-            value={environment.id}
-            tooltipContent={words("home.environment.copy")}
-          />
+          <TextWithCopy value={environment.id} tooltipContent={words("home.environment.copy")} />
         </DescriptionListDescription>
       </DescriptionListGroup>
       <DescriptionListGroup>

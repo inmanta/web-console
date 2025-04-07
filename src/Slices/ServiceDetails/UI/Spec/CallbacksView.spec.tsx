@@ -4,11 +4,7 @@ import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { Either, getShortUuidFromRaw, Maybe } from "@/Core";
-import {
-  QueryResolverImpl,
-  CommandResolverImpl,
-  getStoreInstance,
-} from "@/Data";
+import { QueryResolverImpl, CommandResolverImpl, getStoreInstance } from "@/Data";
 import {
   DynamicCommandManagerResolverImpl,
   DynamicQueryManagerResolverImpl,
@@ -34,34 +30,22 @@ function setup() {
   const store = getStoreInstance();
   const apiHelper = new DeferredApiHelper();
   const callbacksStateHelper = CallbacksStateHelper(store);
-  const callbacksQueryManager = CallbacksQueryManager(
-    apiHelper,
-    callbacksStateHelper,
-  );
+  const callbacksQueryManager = CallbacksQueryManager(apiHelper, callbacksStateHelper);
 
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolverImpl([callbacksQueryManager]),
+    new DynamicQueryManagerResolverImpl([callbacksQueryManager])
   );
 
-  const callbacksUpdater = new CallbacksUpdater(
-    CallbacksStateHelper(store),
-    apiHelper,
-  );
-  const deleteCallbackCommandManager = DeleteCallbackCommandManager(
-    apiHelper,
-    callbacksUpdater,
-  );
+  const callbacksUpdater = new CallbacksUpdater(CallbacksStateHelper(store), apiHelper);
+  const deleteCallbackCommandManager = DeleteCallbackCommandManager(apiHelper, callbacksUpdater);
 
-  const createCallbackCommandManager = CreateCallbackCommandManager(
-    apiHelper,
-    callbacksUpdater,
-  );
+  const createCallbackCommandManager = CreateCallbackCommandManager(apiHelper, callbacksUpdater);
 
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolverImpl([
       deleteCallbackCommandManager,
       createCallbackCommandManager,
-    ]),
+    ])
   );
 
   const component = (
@@ -98,13 +82,9 @@ test("GIVEN CallbacksTab WHEN user click on delete and confirms THEN callback is
     apiHelper.resolve(Either.right({ data: Callback.list }));
   });
 
-  expect(
-    await screen.findByRole("grid", { name: "CallbacksTable" }),
-  ).toBeVisible();
+  expect(await screen.findByRole("grid", { name: "CallbacksTable" })).toBeVisible();
 
-  expect(
-    screen.getByRole("row", { name: "CallbackRow-" + shortenUUID }),
-  ).toBeVisible();
+  expect(screen.getByRole("row", { name: "CallbackRow-" + shortenUUID })).toBeVisible();
 
   const deleteButton = await screen.findByRole("button", {
     name: "DeleteCallback-" + shortenUUID,
@@ -128,9 +108,7 @@ test("GIVEN CallbacksTab WHEN user click on delete and confirms THEN callback is
     apiHelper.resolve(Either.right({ data: rest }));
   });
 
-  expect(
-    screen.queryByRole("row", { name: "CallbackRow-" + shortenUUID }),
-  ).not.toBeInTheDocument();
+  expect(screen.queryByRole("row", { name: "CallbackRow-" + shortenUUID })).not.toBeInTheDocument();
 });
 
 test("GIVEN CallbacksTab WHEN user fills in form and clicks on Add THEN callback is created", async () => {
@@ -142,13 +120,9 @@ test("GIVEN CallbacksTab WHEN user fills in form and clicks on Add THEN callback
     apiHelper.resolve(Either.right({ data: Callback.list }));
   });
 
-  expect(
-    await screen.findByRole("grid", { name: "CallbacksTable" }),
-  ).toBeVisible();
+  expect(await screen.findByRole("grid", { name: "CallbacksTable" })).toBeVisible();
 
-  expect(
-    screen.getByRole("row", { name: "CallbackRow-" + shortenUUID }),
-  ).toBeVisible();
+  expect(screen.getByRole("row", { name: "CallbackRow-" + shortenUUID })).toBeVisible();
 
   const callbackUrlInput = screen.getByRole("textbox", {
     name: "callbackUrl",
@@ -195,11 +169,9 @@ test("GIVEN CallbacksTab WHEN user fills in form and clicks on Add THEN callback
     await apiHelper.resolve(
       Either.right({
         data: [...Callback.list, { ...Callback.a, callback_id: "1234" }],
-      }),
+      })
     );
   });
 
-  expect(
-    await screen.findByRole("row", { name: "CallbackRow-1234" }),
-  ).toBeVisible();
+  expect(await screen.findByRole("row", { name: "CallbackRow-1234" })).toBeVisible();
 });

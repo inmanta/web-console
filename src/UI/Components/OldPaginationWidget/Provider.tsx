@@ -46,9 +46,7 @@ export const OldPaginationWidget: React.FC<Props> = ({
             perPageSuffix: "",
             paginationAriaLabel: `${variant}-Pagination`,
           }}
-          page={
-            Math.floor(Number(metadata.before) / Number(metadata.page_size)) + 1
-          }
+          page={Math.floor(Number(metadata.before) / Number(metadata.page_size)) + 1}
           onNextClick={() =>
             setCurrentPage({
               kind: "CurrentPage",
@@ -65,13 +63,12 @@ export const OldPaginationWidget: React.FC<Props> = ({
           widgetId={`PaginationWidget-${variant}`}
           onPerPageSelect={(
             _event: React.MouseEvent | React.KeyboardEvent | MouseEvent,
-            newPerPage: number,
+            newPerPage: number
           ) => {
             //default Pagination value are set to match PageSize.Type, but they are converted to numbers "under the hood"
             setPageSize({
               kind: "PageSize",
-              value:
-                newPerPage.toString() as unknown as PageSize.PageSize["value"],
+              value: newPerPage.toString() as unknown as PageSize.PageSize["value"],
             });
           }}
           perPageOptions={PaginationPageSizes}
@@ -80,7 +77,7 @@ export const OldPaginationWidget: React.FC<Props> = ({
         />
       ),
     },
-    data,
+    data
   );
 const Filler = styled.div`
   height: 36px;

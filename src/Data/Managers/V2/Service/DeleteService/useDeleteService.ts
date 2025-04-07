@@ -13,7 +13,7 @@ import { useDelete } from "../../helpers";
  */
 export const useDeleteService = (
   service_entity: string,
-  options?: UseMutationOptions<void, Error, void>,
+  options?: UseMutationOptions<void, Error, void>
 ): UseMutationResult<void, Error, void> => {
   const client = useQueryClient();
   const deleteFn = useDelete();

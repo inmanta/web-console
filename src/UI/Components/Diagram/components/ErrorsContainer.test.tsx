@@ -7,7 +7,7 @@ import { ErrorsContainer } from "./ErrorsContainer";
 describe("Given a Validation component", () => {
   const setup = (
     isDirty: boolean,
-    interServiceRelationsOnCanvas: typeof defaultCanvasContext.interServiceRelationsOnCanvas,
+    interServiceRelationsOnCanvas: typeof defaultCanvasContext.interServiceRelationsOnCanvas
   ) => {
     return (
       <CanvasContext.Provider
@@ -34,7 +34,7 @@ describe("Given a Validation component", () => {
     ({ isDirty, interServiceRelationsOnCanvas }) => {
       render(setup(isDirty, interServiceRelationsOnCanvas));
       expect(screen.queryByTestId("Error-container")).toBeNull();
-    },
+    }
   );
 
   it("when requirements for render are  met should render", async () => {
@@ -51,9 +51,7 @@ describe("Given a Validation component", () => {
     await userEvent.click(screen.getByLabelText("Danger alert details"));
 
     expect(
-      screen.getByText(
-        "Expected at least 1 relation-test inter-service relation(s) for test",
-      ),
+      screen.getByText("Expected at least 1 relation-test inter-service relation(s) for test")
     ).toBeDefined();
   });
 });

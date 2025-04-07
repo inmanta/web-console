@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  OnSort,
-  Table,
-  TableVariant,
-  Th,
-  Thead,
-  Tr,
-} from "@patternfly/react-table";
+import { OnSort, Table, TableVariant, Th, Thead, Tr } from "@patternfly/react-table";
 import { Sort } from "@/Core";
 import { TablePresenter } from "@/UI/Presenters";
 import { CompileReport, CompileReportRow } from "@S/CompileReports/Core/Domain";
@@ -30,29 +23,27 @@ export const CompileReportsTable: React.FC<Props> = ({
     setSort({ ...sort, order });
   };
   // The compile reports table is only sortable by one column
-  const heads = tablePresenter
-    .getColumnHeadDisplayNames()
-    .map((column, columnIndex) => {
-      const sortParams =
-        columnIndex == 0
-          ? {
-              sort: {
-                sortBy: {
-                  index: 0,
-                  direction: sort.order,
-                },
-                onSort,
-                columnIndex,
+  const heads = tablePresenter.getColumnHeadDisplayNames().map((column, columnIndex) => {
+    const sortParams =
+      columnIndex == 0
+        ? {
+            sort: {
+              sortBy: {
+                index: 0,
+                direction: sort.order,
               },
-            }
-          : {};
+              onSort,
+              columnIndex,
+            },
+          }
+        : {};
 
-      return (
-        <Th key={column} {...sortParams}>
-          {column}
-        </Th>
-      );
-    });
+    return (
+      <Th key={column} {...sortParams}>
+        {column}
+      </Th>
+    );
+  });
 
   return (
     <Table {...props} variant={TableVariant.compact}>

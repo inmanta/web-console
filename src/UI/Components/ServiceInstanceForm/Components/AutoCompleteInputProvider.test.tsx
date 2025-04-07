@@ -23,7 +23,7 @@ const server = setupServer(
         page_size: 250,
       },
     });
-  }),
+  })
 );
 const TestWrapper = () => {
   const [value, setValue] = useState("");
@@ -65,7 +65,7 @@ test("Given the AutoCompleteInputProvider When typing an instance name or id The
   render(<TestWrapper />);
 
   const relationInputField = await screen.findByPlaceholderText(
-    "Select an instance of test_entity",
+    "Select an instance of test_entity"
   );
 
   expect(mockFn.mock.calls[0]).toStrictEqual([

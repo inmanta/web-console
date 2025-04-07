@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  PageSidebar,
-  Stack,
-  StackItem,
-  PageSidebarBody,
-} from "@patternfly/react-core";
+import { PageSidebar, Stack, StackItem, PageSidebarBody } from "@patternfly/react-core";
 import { EnvironmentControls } from "./EnvironmentControls";
 import { Navigation } from "./Navigation";
 

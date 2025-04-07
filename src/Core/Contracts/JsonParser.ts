@@ -5,5 +5,4 @@ export interface JsonParser {
 
 export type JsonParserId = "BigInt" | "Native";
 
-export const isJsonParserId = (id: string): id is JsonParserId =>
-  ["BigInt", "Native"].includes(id);
+export const isJsonParserId = (id: string): id is JsonParserId => ["BigInt", "Native"].includes(id);

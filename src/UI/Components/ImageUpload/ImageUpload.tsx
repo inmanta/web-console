@@ -1,11 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { DropEvent, FileRejection } from "react-dropzone";
-import {
-  Alert,
-  AlertActionCloseButton,
-  FileUpload,
-  FileUploadProps,
-} from "@patternfly/react-core";
+import { Alert, AlertActionCloseButton, FileUpload, FileUploadProps } from "@patternfly/react-core";
 import { Maybe } from "@/Core";
 import { ImageHelper } from "@/Data";
 import { words } from "@/UI/words";
@@ -41,10 +36,7 @@ export const ImageUpload: React.FC<Props> = ({
     setFilename(extension ? `icon.${extension}` : "icon");
   };
 
-  const onDataChange: FileUploadProps["onDataChange"] = (
-    _event,
-    newDataUrl,
-  ) => {
+  const onDataChange: FileUploadProps["onDataChange"] = (_event, newDataUrl) => {
     setDataUrl(newDataUrl);
     onComplete(ImageHelper.stripDataScheme(newDataUrl));
     setFilenameFromDataUrl(newDataUrl);
@@ -68,10 +60,7 @@ export const ImageUpload: React.FC<Props> = ({
     setIsLoading(false);
   };
 
-  const onDropRejected = (
-    fileRejections: FileRejection[],
-    _event: DropEvent,
-  ) => {
+  const onDropRejected = (fileRejections: FileRejection[], _event: DropEvent) => {
     fileRejections.forEach((FileRejection: FileRejection) => {
       const file = FileRejection.file;
       const errors = ImageHelper.validateFile(file);
@@ -88,16 +77,13 @@ export const ImageUpload: React.FC<Props> = ({
         return;
       }
 
-      setError(
-        words("error.image.size")(file.name, ImageHelper.formatFileSize(file)),
-      );
+      setError(words("error.image.size")(file.name, ImageHelper.formatFileSize(file)));
     });
 
     return;
   };
 
-  const validated =
-    error !== null ? "error" : dataUrl !== "" ? "success" : "default";
+  const validated = error !== null ? "error" : dataUrl !== "" ? "success" : "default";
 
   useEffect(() => {
     if (initialDataUrl === "") {
@@ -137,9 +123,7 @@ export const ImageUpload: React.FC<Props> = ({
             isInline
             variant="danger"
             title={words("error.image.title")}
-            actionClose={
-              <AlertActionCloseButton onClose={() => setError(null)} />
-            }
+            actionClose={<AlertActionCloseButton onClose={() => setError(null)} />}
           >
             <p>{error}</p>
           </Alert>

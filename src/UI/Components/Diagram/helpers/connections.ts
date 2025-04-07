@@ -19,12 +19,13 @@ export const createConnectionRules = (
   services: (ServiceModel | EmbeddedEntity)[],
   rules: {
     [serviceName: string]: (EmbeddedRule | InterServiceRule)[];
-  },
+  }
 ): ConnectionRules => {
   services.map((service) => {
     if (rules[service.name] === undefined) {
       rules[service.name] = [];
     }
+
     const tempRules: (EmbeddedRule | InterServiceRule)[] = [];
 
     service.embedded_entities.map((entity) => {
@@ -73,7 +74,7 @@ export const checkIfConnectionIsAllowed = (
   graph: dia.Graph,
   targetView: dia.CellView | dia.ElementView | undefined,
   sourceView: dia.CellView | dia.ElementView,
-  rules: ConnectionRules,
+  rules: ConnectionRules
 ): boolean => {
   if (!targetView) {
     return false;
@@ -86,39 +87,24 @@ export const checkIfConnectionIsAllowed = (
   const targetName = (targetView.model as ServiceEntityBlock).getName();
   const sourceName = (sourceView.model as ServiceEntityBlock).getName();
 
-  const targetRule = rules[targetName].find(
-    (object) => object.name === sourceName,
-  );
+  const targetRule = rules[targetName].find((object) => object.name === sourceName);
 
-  const sourceRule = rules[sourceName].find(
-    (object) => object.name === targetName,
-  );
+  const sourceRule = rules[sourceName].find((object) => object.name === targetName);
 
   //to receive neighbors we need to convert celView to Element
   const allElements = graph.getElements();
-  const sourceAsElement = allElements.find(
-    (element) => element.cid === sourceView.model.cid,
-  );
-  const targetAsElement = allElements.find(
-    (element) => element.cid === targetView.model.cid,
-  );
+  const sourceAsElement = allElements.find((element) => element.cid === sourceView.model.cid);
+  const targetAsElement = allElements.find((element) => element.cid === targetView.model.cid);
 
   if (sourceAsElement && targetAsElement) {
-    const connectedElementsToSource = graph.getNeighbors(
-      sourceAsElement,
-    ) as ServiceEntityBlock[];
-    const connectedElementsToTarget = graph.getNeighbors(
-      targetAsElement,
-    ) as ServiceEntityBlock[];
+    const connectedElementsToSource = graph.getNeighbors(sourceAsElement) as ServiceEntityBlock[];
+    const connectedElementsToTarget = graph.getNeighbors(targetAsElement) as ServiceEntityBlock[];
 
-    const isTargetInEditMode: boolean | undefined =
-      targetAsElement.get("isInEditMode");
-    const isSourceInEditMode: boolean | undefined =
-      sourceAsElement.get("isInEditMode");
+    const isTargetInEditMode: boolean | undefined = targetAsElement.get("isInEditMode");
+    const isSourceInEditMode: boolean | undefined = sourceAsElement.get("isInEditMode");
 
-    const isSourceBlockedFromEditing: boolean | undefined = sourceAsElement.get(
-      "isBlockedFromEditing",
-    );
+    const isSourceBlockedFromEditing: boolean | undefined =
+      sourceAsElement.get("isBlockedFromEditing");
 
     if (isSourceBlockedFromEditing) {
       const targetHolder = targetAsElement.get("holderName");
@@ -132,31 +118,28 @@ export const checkIfConnectionIsAllowed = (
     areTargetConnectionExhausted = checkWhetherConnectionRulesAreExhausted(
       connectedElementsToTarget,
       targetRule,
-      !!isTargetInEditMode,
+      !!isTargetInEditMode
     );
     areSourceConnectionsExhausted = checkWhetherConnectionRulesAreExhausted(
       connectedElementsToSource,
       sourceRule,
-      !!isSourceInEditMode,
+      !!isSourceInEditMode
     );
 
-    doesTargetIsEmbeddedWithExhaustedConnections =
-      doesElementIsEmbeddedWithExhaustedConnections(
-        targetAsElement,
-        connectedElementsToTarget,
-        sourceAsElement,
-      );
+    doesTargetIsEmbeddedWithExhaustedConnections = doesElementIsEmbeddedWithExhaustedConnections(
+      targetAsElement,
+      connectedElementsToTarget,
+      sourceAsElement
+    );
 
-    doesSourceIsEmbeddedWithExhaustedConnections =
-      doesElementIsEmbeddedWithExhaustedConnections(
-        sourceAsElement,
-        connectedElementsToSource,
-        targetAsElement,
-      );
+    doesSourceIsEmbeddedWithExhaustedConnections = doesElementIsEmbeddedWithExhaustedConnections(
+      sourceAsElement,
+      connectedElementsToSource,
+      targetAsElement
+    );
   }
 
-  const elementsCanBeConnected =
-    sourceRule !== undefined || targetRule !== undefined;
+  const elementsCanBeConnected = sourceRule !== undefined || targetRule !== undefined;
   //the info about the connection between elements can be one directional
   const connectionIsInterServiceRelation =
     (sourceRule && sourceRule.kind === TypeEnum.INTERSERVICE) ||
@@ -168,8 +151,7 @@ export const checkIfConnectionIsAllowed = (
       return !areSourceConnectionsExhausted && !areTargetConnectionExhausted;
     } else {
       return !(
-        doesTargetIsEmbeddedWithExhaustedConnections ||
-        doesSourceIsEmbeddedWithExhaustedConnections
+        doesTargetIsEmbeddedWithExhaustedConnections || doesSourceIsEmbeddedWithExhaustedConnections
       );
     }
   }
@@ -188,20 +170,21 @@ export const checkIfConnectionIsAllowed = (
 export const checkWhetherConnectionRulesAreExhausted = (
   connectedElements: ServiceEntityBlock[],
   rule: EmbeddedRule | InterServiceRule | undefined,
-  editMode: boolean,
+  editMode: boolean
 ): boolean => {
   if (!rule) {
     return false;
   }
 
   const targetConnectionsForGivenRule = connectedElements.filter(
-    (element) => element.getName() === rule.name,
+    (element) => element.getName() === rule.name
   );
 
   //if is in edit mode and its modifier is r/rw then the connections are basically exhausted
   if (editMode && rule && rule.modifier !== "rw+") {
     return true;
   }
+
   //undefined and null are equal to no limit
   if (rule.upperLimit !== undefined && rule.upperLimit !== null) {
     return targetConnectionsForGivenRule.length >= rule.upperLimit;
@@ -224,7 +207,7 @@ export const checkWhetherConnectionRulesAreExhausted = (
 const doesElementIsEmbeddedWithExhaustedConnections = (
   source: dia.Element,
   connectedElementsToSource: ServiceEntityBlock[],
-  target: dia.Element,
+  target: dia.Element
 ): boolean => {
   const isSourceEmbedded = source.get("isEmbeddedEntity");
   const sourceHolderName = source.get("holderName");
@@ -234,6 +217,7 @@ const doesElementIsEmbeddedWithExhaustedConnections = (
   if (isSourceEmbedded && isTargetBlocked) {
     return true;
   }
+
   const targetName = target.get("entityName");
 
   if (isSourceEmbedded && sourceHolderName !== undefined) {

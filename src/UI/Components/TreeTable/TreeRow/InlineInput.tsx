@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  Button,
-  Icon,
-  Switch,
-  TextInput,
-  TextInputTypes,
-} from "@patternfly/react-core";
+import { Button, Icon, Switch, TextInput, TextInputTypes } from "@patternfly/react-core";
 import { CheckIcon } from "@patternfly/react-icons";
 import { words } from "@/UI/words";
 import { TextListFormInput } from "../../ServiceInstanceForm/Components/TextListFormInput";
@@ -16,7 +10,7 @@ interface Props {
   type: string;
   onChange: (
     event: React.FormEvent<HTMLInputElement> | null,
-    value: string | number | boolean | string[],
+    value: string | number | boolean | string[]
   ) => void;
   toggleModal: () => void;
 }
@@ -33,7 +27,7 @@ export const InlineInput: React.FC<Props> = ({
   type: string;
   onChange: (
     event: React.FormEvent<HTMLInputElement> | null,
-    value: string | number | boolean | string[],
+    value: string | number | boolean | string[]
   ) => void;
   toggleModal: () => void;
 }) => {
@@ -55,6 +49,7 @@ export const InlineInput: React.FC<Props> = ({
     } else {
       formattedValue = value;
     }
+
     input = (
       <TextListFormInput
         aria-label="new-attribute-input"

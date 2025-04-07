@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  ColumnsIcon,
-  HistoryIcon,
-  ListIcon,
-  ModuleIcon,
-  TableIcon,
-} from "@patternfly/react-icons";
+import { ColumnsIcon, HistoryIcon, ListIcon, ModuleIcon, TableIcon } from "@patternfly/react-icons";
 import { Query } from "@/Core";
 import { IconTabs, TabDescriptor } from "@/UI/Components";
 import { words } from "@/UI/words";
@@ -30,12 +24,7 @@ interface Props {
   data: Query.UsedApiData<"GetResourceDetails">;
 }
 
-export const Tabs: React.FC<Props> = ({
-  id,
-  activeTab,
-  setActiveTab,
-  data,
-}) => {
+export const Tabs: React.FC<Props> = ({ id, activeTab, setActiveTab, data }) => {
   return (
     <IconTabs
       activeTab={activeTab}
@@ -51,18 +40,14 @@ export const Tabs: React.FC<Props> = ({
   );
 };
 
-const requiresTab = (
-  data: Query.UsedApiData<"GetResourceDetails">,
-): TabDescriptor<TabKey> => ({
+const requiresTab = (data: Query.UsedApiData<"GetResourceDetails">): TabDescriptor<TabKey> => ({
   id: TabKey.Requires,
   title: words("resources.requires.title"),
   icon: <ModuleIcon />,
   view: <RequiresTab {...{ data }} />,
 });
 
-const attributesTab = (
-  data: Query.UsedApiData<"GetResourceDetails">,
-): TabDescriptor<TabKey> => ({
+const attributesTab = (data: Query.UsedApiData<"GetResourceDetails">): TabDescriptor<TabKey> => ({
   id: TabKey.Attributes,
   title: words("resources.attributes.title"),
   icon: <ListIcon />,
@@ -71,7 +56,7 @@ const attributesTab = (
 
 const historyTab = (
   id: string,
-  data: Query.UsedApiData<"GetResourceDetails">,
+  data: Query.UsedApiData<"GetResourceDetails">
 ): TabDescriptor<TabKey> => ({
   id: TabKey.History,
   title: words("resources.history.title"),

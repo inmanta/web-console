@@ -41,10 +41,7 @@ function setup({
             environmentModifier,
           }}
         >
-          <Provider
-            afterTrigger={afterTrigger}
-            isToastVisible={isToastVisible}
-          />
+          <Provider afterTrigger={afterTrigger} isToastVisible={isToastVisible} />
         </DependencyProvider>
       </StoreProvider>
     </QueryClientProvider>
@@ -55,7 +52,7 @@ function setup({
 const server = setupServer(
   http.post("/api/v1/notify/env", async () => {
     return HttpResponse.json({});
-  }),
+  })
 );
 
 describe("CompileWidgetProvider", () => {

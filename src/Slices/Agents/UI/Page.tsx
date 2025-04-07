@@ -1,9 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import {
-  useUrlStateWithFilter,
-  useUrlStateWithPageSize,
-  useUrlStateWithSort,
-} from "@/Data";
+import { useUrlStateWithFilter, useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import {
   EmptyView,
@@ -64,9 +60,7 @@ export const Page: React.FC = () => {
           />
         }
       />
-      <GetAgentsContext.Provider
-        value={{ filter, sort, pageSize, currentPage, setErrorMessage }}
-      >
+      <GetAgentsContext.Provider value={{ filter, sort, pageSize, currentPage, setErrorMessage }}>
         <ToastAlert
           data-testid="ToastAlert"
           title={words("agents.actions.failed")}
@@ -79,10 +73,7 @@ export const Page: React.FC = () => {
           label="AgentsView"
           SuccessView={(agents) =>
             agents.data.length <= 0 ? (
-              <EmptyView
-                message={words("agents.empty.message")}
-                aria-label="AgentsView-Empty"
-              />
+              <EmptyView message={words("agents.empty.message")} aria-label="AgentsView-Empty" />
             ) : (
               <TableProvider
                 agents={agents.data}

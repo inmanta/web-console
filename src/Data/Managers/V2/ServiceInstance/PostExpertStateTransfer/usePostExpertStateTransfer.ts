@@ -27,17 +27,14 @@ interface PostExpertStateTransfer {
 export const usePostExpertStateTransfer = (
   instance_id: string,
   service_entity: string,
-  options?: UseMutationOptions<void, Error, PostExpertStateTransfer>,
+  options?: UseMutationOptions<void, Error, PostExpertStateTransfer>
 ): UseMutationResult<void, Error, PostExpertStateTransfer, unknown> => {
   const client = useQueryClient();
   const post = usePost()<PostExpertStateTransfer>;
 
   return useMutation({
     mutationFn: (data) =>
-      post(
-        `/lsm/v1/service_inventory/${service_entity}/${instance_id}/expert/state`,
-        data,
-      ),
+      post(`/lsm/v1/service_inventory/${service_entity}/${instance_id}/expert/state`, data),
     mutationKey: ["post_state_transfer_expert"],
     onSuccess: () => {
       client.invalidateQueries({

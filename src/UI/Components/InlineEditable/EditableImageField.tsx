@@ -1,12 +1,7 @@
 import React from "react";
 import { ImageUpload } from "@/UI/Components/ImageUpload";
 import { ImagePreview } from "../ImageUpload/ImagePreview";
-import {
-  EditableField,
-  EditViewComponent,
-  FieldProps,
-  StaticViewComponent,
-} from "./EditableField";
+import { EditableField, EditViewComponent, FieldProps, StaticViewComponent } from "./EditableField";
 
 export const EditableImageField: React.FC<FieldProps> = ({
   isRequired,

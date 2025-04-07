@@ -40,11 +40,7 @@ export const LifecycleTable: React.FunctionComponent<{
     const config = transferRow.config_name ? (
       <Tooltip
         key={"config-tooltip"}
-        content={
-          "This transfer is enabled when " +
-          transferRow.config_name +
-          " is set to true"
-        }
+        content={"This transfer is enabled when " + transferRow.config_name + " is set to true"}
       >
         <Badge key={"config_name"} isRead={!transferRow.config_name}>
           {transferRow.config_name}
@@ -62,7 +58,7 @@ export const LifecycleTable: React.FunctionComponent<{
             trigger
               .split("_")
               .map((word) => word.charAt(0).toUpperCase() + word.substring(1))
-              .join(" "),
+              .join(" ")
           )}
       </Badge>
     );

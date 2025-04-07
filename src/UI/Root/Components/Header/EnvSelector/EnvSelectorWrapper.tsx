@@ -4,9 +4,7 @@ import { EnvSelector } from "./EnvSelector";
 interface Props {
   selectorItems: EnvironmentSelectorItem[];
   environmentNames: string[];
-  onSelectEnvironment: (
-    selectedProjectAndEnvironment: EnvironmentSelectorItem,
-  ) => void;
+  onSelectEnvironment: (selectedProjectAndEnvironment: EnvironmentSelectorItem) => void;
   defaultToggleText: string;
 }
 
@@ -34,9 +32,7 @@ export const EnvSelectorWrapper: React.FC<Props> = ({
   const onSelect = (value: string) => {
     setIsOpen(!isOpen);
 
-    const matchingEnvItem = selectorItems.find(
-      (envItem) => envItem.displayName === value,
-    );
+    const matchingEnvItem = selectorItems.find((envItem) => envItem.displayName === value);
 
     if (matchingEnvItem) {
       setToggleText(value);

@@ -1,15 +1,8 @@
 import { dia, ui } from "@inmanta/rappid";
 import { t_global_background_color_primary_default } from "@patternfly/react-tokens";
 import { ServiceModel } from "@/Core";
-import {
-  CreateModifierHandler,
-  FieldCreator,
-  createFormState,
-} from "../../ServiceInstanceForm";
-import {
-  dispatchUpdateServiceOrderItems,
-  dispatchUpdateStencil,
-} from "../Context/dispatchers";
+import { CreateModifierHandler, FieldCreator, createFormState } from "../../ServiceInstanceForm";
+import { dispatchUpdateServiceOrderItems, dispatchUpdateStencil } from "../Context/dispatchers";
 import { createComposerEntity } from "../actions/general";
 import { ActionEnum, EventActionEnum } from "../interfaces";
 import { transformEmbeddedToStencilElements } from "./helpers";
@@ -28,11 +21,7 @@ export class InstanceStencilTab {
    * @param {ui.PaperScroller} scroller - The jointJS scroller associated with the stencil.
    * @param {ServiceModel} service - The service model used to populate the stencil with corresponding Elements.
    */
-  constructor(
-    stencilElement: HTMLElement,
-    scroller: ui.PaperScroller,
-    service: ServiceModel,
-  ) {
+  constructor(stencilElement: HTMLElement, scroller: ui.PaperScroller, service: ServiceModel) {
     this.stencil = new ui.Stencil({
       id: "instance-stencil",
       paper: scroller,
@@ -61,8 +50,7 @@ export class InstanceStencilTab {
           holderName: cell.get("holderName"),
         });
       },
-      dragEndClone: (el) =>
-        el.clone().set("items", el.get("items")).set("id", el.get("id")), //cloned element loses key value pairs, so we need to set them again
+      dragEndClone: (el) => el.clone().set("items", el.get("items")).set("id", el.get("id")), //cloned element loses key value pairs, so we need to set them again
       layout: {
         columns: 1,
         rowHeight: "compact",
@@ -82,10 +70,7 @@ export class InstanceStencilTab {
 
     this.stencil.on("element:drop", (elementView) => {
       if (elementView.model.get("isEmbeddedEntity")) {
-        dispatchUpdateStencil(
-          elementView.model.get("name"),
-          EventActionEnum.ADD,
-        );
+        dispatchUpdateStencil(elementView.model.get("name"), EventActionEnum.ADD);
       }
 
       dispatchUpdateServiceOrderItems(elementView.model, ActionEnum.CREATE);

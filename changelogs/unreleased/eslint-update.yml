@@ -1,0 +1,3 @@
+description: Update eslint configuration, final migration to V9 flat configuration.
+change-type: patch
+destination-branches: [master, iso8]

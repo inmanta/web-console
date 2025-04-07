@@ -1,8 +1,4 @@
-import {
-  UseMutationOptions,
-  UseMutationResult,
-  useMutation,
-} from "@tanstack/react-query";
+import { UseMutationOptions, UseMutationResult, useMutation } from "@tanstack/react-query";
 import { Field, InstanceAttributeModel, ServiceInstanceModel } from "@/Core";
 import { usePost } from "../../helpers";
 import { prepBody } from "./helper";
@@ -27,16 +23,13 @@ interface Response {
  */
 export const usePostInstance = (
   service_entity: string,
-  options?: UseMutationOptions<Response, Error, Params>,
+  options?: UseMutationOptions<Response, Error, Params>
 ): UseMutationResult<Response, Error, Params, unknown> => {
   const post = usePost()<Body>;
 
   return useMutation({
     mutationFn: ({ fields, attributes }) =>
-      post(
-        `/lsm/v1/service_inventory/${service_entity}`,
-        prepBody(fields, attributes),
-      ),
+      post(`/lsm/v1/service_inventory/${service_entity}`, prepBody(fields, attributes)),
     mutationKey: ["post_instance"],
     ...options,
   });

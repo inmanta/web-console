@@ -113,11 +113,7 @@ export enum FilterKind {
   Status = "Status",
 }
 
-export type SortKey =
-  | "agent"
-  | "status"
-  | "resource_type"
-  | "resource_id_value";
+export type SortKey = "agent" | "status" | "resource_type" | "resource_id_value";
 
 export type FilterFromVersion = Omit<Filter, "status">;
 export type SortKeyFromVersion = Exclude<SortKey, "status">;

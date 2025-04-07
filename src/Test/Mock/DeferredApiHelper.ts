@@ -40,7 +40,7 @@ export class DeferredApiHelper implements ApiHelper {
 
   private resolvePendingRequest(
     { resolve, promise, request }: PendingRequest,
-    data: unknown,
+    data: unknown
   ): Promise<unknown> {
     this.resolvedRequests.push({ ...request, data });
     resolve(data);
@@ -62,9 +62,7 @@ export class DeferredApiHelper implements ApiHelper {
   }
 
   private extractPendingRequest(request: Request): PendingRequest | undefined {
-    return remove(this._pendingRequests, (req) =>
-      isEqual(req.request, request),
-    )[0];
+    return remove(this._pendingRequests, (req) => isEqual(req.request, request))[0];
   }
 
   /**
@@ -106,10 +104,7 @@ export class DeferredApiHelper implements ApiHelper {
     return promise as Promise<Maybe.Type<string>>;
   }
 
-  get<Data>(
-    url: string,
-    environment: string,
-  ): Promise<Either.Type<string, Data>> {
+  get<Data>(url: string, environment: string): Promise<Either.Type<string, Data>> {
     const { promise, resolve } = new Deferred();
 
     this._pendingRequests.push({
@@ -123,7 +118,7 @@ export class DeferredApiHelper implements ApiHelper {
 
   getWithHTTPCode<Data>(
     url: string,
-    environment: string,
+    environment: string
   ): Promise<Either.Type<ErrorWithHTTPCode, Data>> {
     const { promise, resolve } = new Deferred();
 
@@ -148,9 +143,7 @@ export class DeferredApiHelper implements ApiHelper {
     return promise as Promise<Either.Type<string, Data>>;
   }
 
-  getZipWithoutEnvironment<Blob>(
-    url: string,
-  ): Promise<Either.Type<string, Blob>> {
+  getZipWithoutEnvironment<Blob>(url: string): Promise<Either.Type<string, Blob>> {
     const { promise, resolve } = new Deferred();
 
     this._pendingRequests.push({
@@ -165,7 +158,7 @@ export class DeferredApiHelper implements ApiHelper {
   post<Data, Body = unknown>(
     url: string,
     environment: string,
-    body: Body,
+    body: Body
   ): Promise<Either.Type<string, Data>> {
     const { promise, resolve } = new Deferred();
 
@@ -181,7 +174,7 @@ export class DeferredApiHelper implements ApiHelper {
   postWithoutResponse<Body>(
     url: string,
     environment: string,
-    body: Body,
+    body: Body
   ): Promise<Maybe.Type<string>> {
     const { promise, resolve } = new Deferred();
 
@@ -194,10 +187,7 @@ export class DeferredApiHelper implements ApiHelper {
     return promise as Promise<Maybe.Type<string>>;
   }
 
-  postWithoutResponseAndEnvironment<Body>(
-    url: string,
-    body: Body,
-  ): Promise<Maybe.Type<string>> {
+  postWithoutResponseAndEnvironment<Body>(url: string, body: Body): Promise<Maybe.Type<string>> {
     const { promise, resolve } = new Deferred();
 
     this._pendingRequests.push({
@@ -209,10 +199,7 @@ export class DeferredApiHelper implements ApiHelper {
     return promise as Promise<Maybe.Type<string>>;
   }
 
-  putWithoutEnvironment<Data, Body>(
-    url: string,
-    body: Body,
-  ): Promise<Either.Type<string, Data>> {
+  putWithoutEnvironment<Data, Body>(url: string, body: Body): Promise<Either.Type<string, Data>> {
     const { promise, resolve } = new Deferred();
 
     this._pendingRequests.push({
@@ -224,11 +211,7 @@ export class DeferredApiHelper implements ApiHelper {
     return promise as Promise<Either.Type<string, Data>>;
   }
 
-  patch<Body = unknown>(
-    url: string,
-    environment: string,
-    body: Body,
-  ): Promise<Maybe.Type<string>> {
+  patch<Body = unknown>(url: string, environment: string, body: Body): Promise<Maybe.Type<string>> {
     const { promise, resolve } = new Deferred();
 
     this._pendingRequests.push({

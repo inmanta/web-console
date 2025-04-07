@@ -5,10 +5,7 @@ import { DarkmodeOption } from "./DarkmodeOption";
 describe("DarkmodeOption", () => {
   beforeEach(() => {
     localStorage.clear();
-    document.documentElement.classList.remove(
-      "pf-v6-theme-dark",
-      "pf-v6-theme-light",
-    );
+    document.documentElement.classList.remove("pf-v6-theme-dark", "pf-v6-theme-light");
   });
 
   it("should render the correct initial theme based on localStorage", () => {
@@ -38,9 +35,7 @@ describe("DarkmodeOption", () => {
 
     fireEvent.click(button);
     expect(localStorage.getItem("theme-preference")).toBe("light");
-    expect(
-      document.documentElement.classList.contains("pf-v6-theme-light"),
-    ).toBe(true);
+    expect(document.documentElement.classList.contains("pf-v6-theme-light")).toBe(true);
     expect(getByText("Switch to dark mode")).toBeInTheDocument();
   });
 
@@ -51,9 +46,7 @@ describe("DarkmodeOption", () => {
 
     fireEvent.click(button);
     expect(localStorage.getItem("theme-preference")).toBe("light");
-    expect(
-      document.documentElement.classList.contains("pf-v6-theme-light"),
-    ).toBe(true);
+    expect(document.documentElement.classList.contains("pf-v6-theme-light")).toBe(true);
     expect(getByText("Switch to dark mode")).toBeInTheDocument();
   });
 });

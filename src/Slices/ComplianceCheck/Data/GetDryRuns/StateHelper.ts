@@ -20,6 +20,6 @@ export function StateHelper(store: Store) {
       if (slice === undefined) return undefined;
 
       return slice[version];
-    },
+    }
   );
 }

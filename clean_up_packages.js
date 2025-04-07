@@ -7,6 +7,7 @@ function getLinkToNextPage(headerObj) {
   if (!headerObj.has("link")) {
     return null;
   }
+
   const linkHeader = headerObj.get("link");
   const splittedLinkHeader = linkHeader.trim().split(",");
 
@@ -46,7 +47,7 @@ async function getOldDevVersions() {
         },
         method: "GET",
       },
-      (error) => console.log(error),
+      (error) => console.log(error)
     );
     const packages = await queryResults.json();
     const response_headers = queryResults.headers;
@@ -67,10 +68,8 @@ async function getOldDevVersions() {
     // Take the versions that are older than 30 days
     const oldDevVersions = devVersionsWithDate.filter(
       (devPackageVersion) =>
-        Math.floor(
-          (new Date() - new Date(devPackageVersion.updatedAt)) /
-            (1000 * 60 * 60 * 24),
-        ) > 30,
+        Math.floor((new Date() - new Date(devPackageVersion.updatedAt)) / (1000 * 60 * 60 * 24)) >
+        30
     );
 
     if (result.length > 0 && oldDevVersions.length === 0) {
@@ -78,7 +77,9 @@ async function getOldDevVersions() {
       // Don't go further back in history to limit the amount of requests.
       return result;
     }
+
     result = result.concat(oldDevVersions);
+
     if (result.length > 5) {
       // Return as soon as we have at least five packages to not execute too many requests at once.
       return result;
@@ -107,27 +108,26 @@ getOldDevVersions().then(
 
       return;
     }
+
     // Make sure we're not starting too many requests at once
     if (oldDevVersions.length > 5) {
       oldDevVersions = oldDevVersions.slice(0, 5);
     }
+
     oldDevVersions.map((oldDevVersion) => {
       const idToDelete = oldDevVersion.id;
 
       console.log(
-        `Attempting to delete version ${oldDevVersion.version} with id ${idToDelete} from ${oldDevVersion.updatedAt}`,
+        `Attempting to delete version ${oldDevVersion.version} with id ${idToDelete} from ${oldDevVersion.updatedAt}`
       );
-      fetch(
-        `https://api.github.com/orgs/inmanta/packages/npm/web-console/versions/${idToDelete}`,
-        {
-          headers: {
-            Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
-            Accept: "application/vnd.github+json",
-            "X-GitHub-Api-Version": "2022-11-28",
-          },
-          method: "DELETE",
+      fetch(`https://api.github.com/orgs/inmanta/packages/npm/web-console/versions/${idToDelete}`, {
+        headers: {
+          Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+          Accept: "application/vnd.github+json",
+          "X-GitHub-Api-Version": "2022-11-28",
         },
-      ).then(
+        method: "DELETE",
+      }).then(
         (response) => {
           if (response.ok) {
             console.log(`Successfully deleted package ${idToDelete}`);
@@ -140,11 +140,11 @@ getOldDevVersions().then(
         },
         (reason) => {
           console.log(reason);
-        },
+        }
       );
     });
   },
   (reason) => {
     console.log(`Failed to retrieve dev packages: ${reason}`);
-  },
+  }
 );

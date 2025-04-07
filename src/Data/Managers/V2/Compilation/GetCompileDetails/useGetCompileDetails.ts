@@ -29,9 +29,7 @@ function getUrl(params: CompileDetailsParams): string {
  * @returns {UseQueryResult<ResponseBody, CustomError>} returns.useOneTime - Fetch compile details with a single query
  * @returns {UseQueryResult<ResponseBody, CustomError>} returns.useContinuous - Fetch compile details with a recursive query with an interval of 5s
  */
-export const useGetCompileDetails = (
-  params: CompileDetailsParams,
-): GetCompileDetails => {
+export const useGetCompileDetails = (params: CompileDetailsParams): GetCompileDetails => {
   const url = getUrl(params);
   const get = useGet()<ResponseBody>;
 

@@ -29,16 +29,8 @@ export const IntRangeFilter: React.FC<Props> = ({
   const [to, setTo] = useState<number | undefined>();
 
   const onApply = () => {
-    const withNewFrom = insertNewValue(
-      intRangeFilters,
-      from,
-      RangeOperator.Operator.From,
-    );
-    const withNewTo = insertNewValue(
-      withNewFrom,
-      to,
-      RangeOperator.Operator.To,
-    );
+    const withNewFrom = insertNewValue(intRangeFilters, from, RangeOperator.Operator.From);
+    const withNewTo = insertNewValue(withNewFrom, to, RangeOperator.Operator.To);
 
     update(withNewTo);
     setFrom(undefined);
@@ -51,9 +43,8 @@ export const IntRangeFilter: React.FC<Props> = ({
     update(
       reject(
         intRangeFilters,
-        (element) =>
-          element.value === raw.value && element.operator == raw.operator,
-      ),
+        (element) => element.value === raw.value && element.operator == raw.operator
+      )
     );
   };
   const onFromChange = (value: string) => {
@@ -134,13 +125,10 @@ export const IntRangeFilter: React.FC<Props> = ({
 function insertNewValue(
   intRangeFilters: IntRange.Type[],
   value: number | undefined,
-  operator: RangeOperator.Operator,
+  operator: RangeOperator.Operator
 ): IntRange.Type[] {
   if (value !== undefined) {
-    return [
-      ...reject(intRangeFilters, (ts) => ts.operator === operator),
-      { value, operator },
-    ];
+    return [...reject(intRangeFilters, (ts) => ts.operator === operator), { value, operator }];
   }
 
   return intRangeFilters;

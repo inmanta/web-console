@@ -39,9 +39,7 @@ export const CopyMultiOptions: React.FC<Props> = ({
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const tooltipText = copied
-    ? words("copy.feedback")
-    : tooltipContent || words("copy");
+  const tooltipText = copied ? words("copy.feedback") : tooltipContent || words("copy");
 
   const onToggleClick = () => {
     setIsOpen(!isOpen);
@@ -52,7 +50,7 @@ export const CopyMultiOptions: React.FC<Props> = ({
    */
   const onSelect = (
     _event: React.MouseEvent<Element, MouseEvent> | undefined,
-    value: string | number | undefined,
+    value: string | number | undefined
   ) => {
     // copy value to clipboard
     copy(String(value));
@@ -79,9 +77,7 @@ export const CopyMultiOptions: React.FC<Props> = ({
       aria-label="Copy to clipboard"
       icon={
         <Icon>
-          <CopyIcon
-            style={{ color: "var(--pf-t--global--icon--color--subtle)" }}
-          />
+          <CopyIcon style={{ color: "var(--pf-t--global--icon--color--subtle)" }} />
         </Icon>
       }
     >
@@ -98,12 +94,7 @@ export const CopyMultiOptions: React.FC<Props> = ({
     >
       <DropdownList>
         {options.map((value, index) => (
-          <Tooltip
-            key={index}
-            content={<div>{tooltipText}</div>}
-            entryDelay={200}
-            position="right"
-          >
+          <Tooltip key={index} content={<div>{tooltipText}</div>} entryDelay={200} position="right">
             <DropdownItem value={value}>{value}</DropdownItem>
           </Tooltip>
         ))}

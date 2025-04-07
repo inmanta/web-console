@@ -8,11 +8,7 @@ import {
 } from "@patternfly/react-core";
 import { Maybe } from "@/Core";
 import { convertToTitleCase } from "@/UI/Utils";
-import {
-  CancelEditButton,
-  EnableEditButton,
-  SubmitEditButton,
-} from "./InlineEditButtons";
+import { CancelEditButton, EnableEditButton, SubmitEditButton } from "./InlineEditButtons";
 import { InlineEditButtonFiller, InlineLabelItem } from "./InlineFillers";
 import { InlinePlainAlert } from "./InlinePlainAlert";
 
@@ -50,8 +46,7 @@ export const EditableField: React.FC<Props> = ({
   StaticView,
   alignActions,
 }) => {
-  const alignment =
-    alignActions === "end" ? "alignSelfFlexEnd" : "alignSelfFlexStart";
+  const alignment = alignActions === "end" ? "alignSelfFlexEnd" : "alignSelfFlexStart";
   const [editable, setEditable] = useState(initiallyEditable);
   const [submitError, setSubmitError] = useState("");
   const [value, setValue] = useState(initialValue);
@@ -81,10 +76,7 @@ export const EditableField: React.FC<Props> = ({
   return (
     <DescriptionListGroup key={label}>
       <DescriptionListTerm>
-        <Flex
-          direction={{ default: "row" }}
-          spaceItems={{ default: "spaceItemsNone" }}
-        >
+        <Flex direction={{ default: "row" }} spaceItems={{ default: "spaceItemsNone" }}>
           <InlineLabelItem aria-label={`${label}-label`}>
             {convertToTitleCase(label)}
             {isRequired && (
@@ -96,10 +88,7 @@ export const EditableField: React.FC<Props> = ({
           </InlineLabelItem>
           <FlexItem>
             {!editable ? (
-              <EnableEditButton
-                aria-label={`${label}-toggle-edit`}
-                onClick={onEditClick}
-              />
+              <EnableEditButton aria-label={`${label}-toggle-edit`} onClick={onEditClick} />
             ) : (
               <InlineEditButtonFiller />
             )}
@@ -115,9 +104,7 @@ export const EditableField: React.FC<Props> = ({
         />
       )}
       <DescriptionListDescription>
-        {!editable && (
-          <StaticView aria-label={`${label}-value`} value={value} />
-        )}
+        {!editable && <StaticView aria-label={`${label}-value`} value={value} />}
         {editable && (
           <Flex spaceItems={{ default: "spaceItemsNone" }}>
             <FlexItem grow={{ default: "grow" }}>
@@ -131,16 +118,10 @@ export const EditableField: React.FC<Props> = ({
               />
             </FlexItem>
             <FlexItem alignSelf={{ default: alignment }}>
-              <SubmitEditButton
-                aria-label={`${label}-submit-edit`}
-                onClick={onSubmitClick}
-              />
+              <SubmitEditButton aria-label={`${label}-submit-edit`} onClick={onSubmitClick} />
             </FlexItem>
             <FlexItem alignSelf={{ default: alignment }}>
-              <CancelEditButton
-                aria-label={`${label}-cancel-edit`}
-                onClick={onCancelEditClick}
-              />
+              <CancelEditButton aria-label={`${label}-cancel-edit`} onClick={onCancelEditClick} />
             </FlexItem>
           </Flex>
         )}

@@ -25,8 +25,7 @@ describe("MarkdownContainer", () => {
   });
 
   it("renders the Markdown content with Mermaid diagrams correctly", async () => {
-    const markdownContent =
-      "```mermaid\ngraph LR\n    A --> B\n    B --> C\n```";
+    const markdownContent = "```mermaid\ngraph LR\n    A --> B\n    B --> C\n```";
     const webTitle = "Container_id";
 
     render(<MarkdownContainer text={markdownContent} web_title={webTitle} />);
@@ -42,7 +41,7 @@ describe("MarkdownContainer", () => {
       expect(img).toBeInTheDocument();
       // Verify the image source contains our mock SVG
       expect(img.getAttribute("src")).toContain(
-        encodeURIComponent("<svg>Mock Mermaid Diagram</svg>"),
+        encodeURIComponent("<svg>Mock Mermaid Diagram</svg>")
       );
     });
   });

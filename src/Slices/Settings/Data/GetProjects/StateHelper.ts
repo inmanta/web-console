@@ -10,6 +10,6 @@ export function StateHelper(store: Store) {
 
       store.dispatch.projects.setProjects(unwrapped);
     },
-    (state) => state.projects.projects,
+    (state) => state.projects.projects
   );
 }

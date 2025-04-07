@@ -35,21 +35,15 @@ interface Props {
  * @returns {React.FC<Props>} The ComposerCreatorProvider component.
  */
 export const ComposerCreatorProvider: React.FC<Props> = ({ serviceName }) => {
-  const [interServiceRelationNames, setInterServiceRelationNames] = useState<
-    string[]
-  >([]);
+  const [interServiceRelationNames, setInterServiceRelationNames] = useState<string[]>([]);
 
   const serviceModels = useGetServiceModels().useContinuous();
 
-  const relatedInventoriesQuery = useGetInventoryList(
-    interServiceRelationNames,
-  ).useContinuous();
+  const relatedInventoriesQuery = useGetInventoryList(interServiceRelationNames).useContinuous();
 
   useEffect(() => {
     if (serviceModels.isSuccess) {
-      const mainService = serviceModels.data.find(
-        (service) => service.name === serviceName,
-      );
+      const mainService = serviceModels.data.find((service) => service.name === serviceName);
 
       if (mainService) {
         setInterServiceRelationNames(findInterServiceRelations(mainService));
@@ -66,9 +60,7 @@ export const ComposerCreatorProvider: React.FC<Props> = ({ serviceName }) => {
   }
 
   if (relatedInventoriesQuery.isError) {
-    const message = words("error.general")(
-      relatedInventoriesQuery.error.message,
-    );
+    const message = words("error.general")(relatedInventoriesQuery.error.message);
     const retry = relatedInventoriesQuery.refetch;
     const ariaLabel = "ComposerCreatorProvider-RelatedInventoriesQuery_failed";
 
@@ -76,14 +68,10 @@ export const ComposerCreatorProvider: React.FC<Props> = ({ serviceName }) => {
   }
 
   if (serviceModels.isSuccess) {
-    const mainService = serviceModels.data.find(
-      (service) => service.name === serviceName,
-    );
+    const mainService = serviceModels.data.find((service) => service.name === serviceName);
 
     if (!mainService) {
-      const message = words("instanceComposer.noServiceModel.errorMessage")(
-        serviceName,
-      );
+      const message = words("instanceComposer.noServiceModel.errorMessage")(serviceName);
       const retry = serviceModels.refetch;
       const ariaLabel = "ComposerCreatorProvider-NoServiceModel_failed";
 
@@ -132,7 +120,7 @@ export const ComposerCreatorProvider: React.FC<Props> = ({ serviceName }) => {
 export const renderErrorView = (
   message: string,
   ariaLabel: string,
-  retry: () => void,
+  retry: () => void
 ): React.ReactElement => (
   <ErrorView
     data-testid="ErrorView"

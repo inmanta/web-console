@@ -17,10 +17,9 @@ export const Diagnose: React.FC<Props> = ({
   lookBehind,
   instanceIdentity,
 }) => {
-  const { data, error, isError, isSuccess } = useGetDiagnostics(
-    serviceName,
-    instanceId,
-  ).useOneTime(lookBehind);
+  const { data, error, isError, isSuccess } = useGetDiagnostics(serviceName, instanceId).useOneTime(
+    lookBehind
+  );
 
   if (isError) {
     return <ErrorView ariaLabel="Diagnostics-Error" message={error.message} />;

@@ -52,5 +52,5 @@ root.render(
         </CustomRouter>
       </StoreProvider>
     </QueryClientProvider>
-  </ErrorBoundary>,
+  </ErrorBoundary>
 );

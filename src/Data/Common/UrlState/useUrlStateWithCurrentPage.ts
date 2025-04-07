@@ -6,9 +6,7 @@ import { handleUrlState } from "./useUrlState";
  * Hook that wrap handleUrlStateWithCurrentPage function in provider that feeds function with the useLocation() useNavigation() functions,
  * to simplify reusage of said function
  */
-export const useUrlStateWithCurrentPage = provide(
-  handleUrlStateWithCurrentPage,
-);
+export const useUrlStateWithCurrentPage = provide(handleUrlStateWithCurrentPage);
 
 /**
  * Checks whether the value passed is an Array of strings.
@@ -49,7 +47,7 @@ export interface CurrentPage {
 export function handleUrlStateWithCurrentPage(
   config: Pick<StateConfig<CurrentPage>, "route">,
   location: Location,
-  replace: Replace,
+  replace: Replace
 ): [CurrentPage, Update<CurrentPage>] {
   return handleUrlState<CurrentPage>(
     {
@@ -61,7 +59,7 @@ export function handleUrlStateWithCurrentPage(
       equals: (a, b) => isEqual(a, b),
     },
     location,
-    replace,
+    replace
   );
 }
 

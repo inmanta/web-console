@@ -1,10 +1,7 @@
 import { Action, action } from "easy-peasy";
 import { RemoteData, Query } from "@/Core";
 
-type Data = RemoteData.Type<
-  Query.Error<"GetDesiredStateDiff">,
-  Query.Data<"GetDesiredStateDiff">
->;
+type Data = RemoteData.Type<Query.Error<"GetDesiredStateDiff">, Query.Data<"GetDesiredStateDiff">>;
 
 export interface DesiredStateDiffSlice {
   listByEnv: Record<string, Data>;

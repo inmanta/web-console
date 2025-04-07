@@ -62,20 +62,18 @@ describe("CompileDetails", () => {
           },
           {
             status: 500,
-          },
+          }
         );
-      }),
+      })
     );
     const { component } = setup();
 
     render(component);
 
-    expect(
-      screen.getByRole("region", { name: "CompileDetailsView-Loading" }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("region", { name: "CompileDetailsView-Loading" })).toBeInTheDocument();
 
     expect(
-      await screen.findByRole("region", { name: "CompileDetailsView-Error" }),
+      await screen.findByRole("region", { name: "CompileDetailsView-Error" })
     ).toBeInTheDocument();
   });
 
@@ -83,20 +81,20 @@ describe("CompileDetails", () => {
     server.use(
       http.get("api/v2/compilereport/123", () => {
         return HttpResponse.json({ data: Mock.data });
-      }),
+      })
     );
     const { component } = setup();
 
     await render(component);
 
     expect(
-      await screen.findByRole("region", { name: "CompileDetailsView-Loading" }),
+      await screen.findByRole("region", { name: "CompileDetailsView-Loading" })
     ).toBeInTheDocument();
 
     expect(
       await screen.findByRole("generic", {
         name: "CompileDetailsView-Success",
-      }),
+      })
     ).toBeInTheDocument();
     expect(await screen.findAllByLabelText("done-state")).toHaveLength(3);
 
@@ -111,20 +109,20 @@ describe("CompileDetails", () => {
     server.use(
       http.get("api/v2/compilereport/123", () => {
         return HttpResponse.json({ data: Mock.DataFailed });
-      }),
+      })
     );
     const { component } = setup();
 
     await render(component);
 
     expect(
-      await screen.findByRole("region", { name: "CompileDetailsView-Loading" }),
+      await screen.findByRole("region", { name: "CompileDetailsView-Loading" })
     ).toBeInTheDocument();
 
     expect(
       await screen.findByRole("generic", {
         name: "CompileDetailsView-Success",
-      }),
+      })
     ).toBeInTheDocument();
 
     expect(await screen.findByLabelText("error-state")).toBeInTheDocument();

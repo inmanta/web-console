@@ -12,10 +12,7 @@ const TotalContainer = styled.div`
   line-height: 36px;
 `;
 
-export const Total: React.FC<{ total: Total; value: number }> = ({
-  total,
-  value,
-}) =>
+export const Total: React.FC<{ total: Total; value: number }> = ({ total, value }) =>
   total.label ? (
     <Tooltip content={total.label} position="top" distance={4} enableFlip>
       <TotalContainer>{total.format(value)}</TotalContainer>

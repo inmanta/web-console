@@ -4,20 +4,13 @@ import { RouteManager, RouteKind } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
 import { SearchSanitizer } from "./SearchSanitizer";
 
-export const Provider: React.FC<React.PropsWithChildren<unknown>> = ({
-  children,
-}) => {
+export const Provider: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {
   const { routeManager } = useContext(DependencyContext);
   const { pathname, search, hash } = useLocation();
   const navigate = useNavigate();
   const sanitizer = new SearchSanitizer(routeManager);
 
-  const [sanitizedSearch, routeKind] = getSearchResult(
-    sanitizer,
-    routeManager,
-    pathname,
-    search,
-  );
+  const [sanitizedSearch, routeKind] = getSearchResult(sanitizer, routeManager, pathname, search);
 
   useEffect(() => {
     if (sanitizedSearch !== null && sanitizedSearch !== search) {
@@ -36,7 +29,7 @@ const getSearchResult = (
   sanitizer: SearchSanitizer,
   routeManager: RouteManager,
   pathname: string,
-  search: string,
+  search: string
 ): [string | null, RouteKind | null] => {
   const match = routeManager.getRouteMatchFromUrl(pathname);
 

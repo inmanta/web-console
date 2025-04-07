@@ -1,10 +1,7 @@
 import { Action, action } from "easy-peasy";
 import { RemoteData, Query } from "@/Core";
 
-type Data = RemoteData.Type<
-  Query.Error<"GetOrderDetails">,
-  Query.Data<"GetOrderDetails">
->;
+type Data = RemoteData.Type<Query.Error<"GetOrderDetails">, Query.Data<"GetOrderDetails">>;
 
 /**
  * The Order Details Slice stores the ServiceOrderItem of orders, by order id.

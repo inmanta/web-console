@@ -34,8 +34,7 @@ interface Loading {
 
 export const loading = (): Loading => ({ kind: "Loading" });
 
-export const isLoading = <F, S>(data: RemoteData<F, S>): data is Loading =>
-  data.kind === "Loading";
+export const isLoading = <F, S>(data: RemoteData<F, S>): data is Loading => data.kind === "Loading";
 
 interface Failed<V> {
   kind: "Failed";
@@ -44,8 +43,7 @@ interface Failed<V> {
 
 export const failed = <V>(value: V): Failed<V> => ({ kind: "Failed", value });
 
-export const isFailed = <F, S>(data: RemoteData<F, S>): data is Failed<F> =>
-  data.kind === "Failed";
+export const isFailed = <F, S>(data: RemoteData<F, S>): data is Failed<F> => data.kind === "Failed";
 
 interface Success<V> {
   kind: "Success";
@@ -62,16 +60,14 @@ export const isSuccess = <F, S>(data: RemoteData<F, S>): data is Success<S> =>
 
 export const mapSuccess = <F, S, N>(
   mapper: (s: S) => N,
-  data: RemoteData<F, S>,
+  data: RemoteData<F, S>
 ): RemoteData<F, N> => {
   if (!isSuccess(data)) return data;
 
   return success(mapper(data.value));
 };
 
-export const fromEither = <L, R>(
-  either: Either.Type<L, R>,
-): RemoteData<L, R> => {
+export const fromEither = <L, R>(either: Either.Type<L, R>): RemoteData<L, R> => {
   if (Either.isLeft(either)) {
     return failed(either.value);
   }
@@ -86,7 +82,7 @@ export const fold = <F, S, R>(
     failed: (value: F) => R;
     success: (value: S) => R;
   },
-  data: RemoteData<F, S>,
+  data: RemoteData<F, S>
 ): R => {
   switch (data.kind) {
     case "NotAsked":
@@ -110,11 +106,14 @@ export const fold = <F, S, R>(
  */
 export const merge = <F1, S1, F2, S2>(
   data1: RemoteData<F1, S1>,
-  data2: RemoteData<F2, S2>,
+  data2: RemoteData<F2, S2>
 ): RemoteData<F1 | F2, [S1, S2]> => {
   if (isNotAsked(data1) || isNotAsked(data2)) return notAsked();
+
   if (isLoading(data1) || isLoading(data2)) return loading();
+
   if (isFailed(data1)) return failed(data1.value);
+
   if (isFailed(data2)) return failed(data2.value);
 
   return success([data1.value, data2.value] as [S1, S2]);

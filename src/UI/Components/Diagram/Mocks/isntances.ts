@@ -97,10 +97,7 @@ export const interServiceRelations: ComposerServiceOrderItem[] = [
       service_id: "123test",
       should_deploy_fail: false,
     },
-    relatedTo: new Map().set(
-      "6af44f75-ba4b-4fba-9186-cc61c3c9463c",
-      "parent_entity",
-    ),
+    relatedTo: new Map().set("6af44f75-ba4b-4fba-9186-cc61c3c9463c", "parent_entity"),
   },
   {
     instance_id: "a4218978-c9ad-4fd8-95e4-b9e9a8c3c653",
@@ -122,10 +119,7 @@ export const interServiceRelations: ComposerServiceOrderItem[] = [
       name: "child123",
     },
     embeddedTo: "a4218978-c9ad-4fd8-95e4-b9e9a8c3c653",
-    relatedTo: new Map().set(
-      "6af44f75-ba4b-4fba-9186-cc61c3c9463c",
-      "parent_entity",
-    ),
+    relatedTo: new Map().set("6af44f75-ba4b-4fba-9186-cc61c3c9463c", "parent_entity"),
   },
 ];
 

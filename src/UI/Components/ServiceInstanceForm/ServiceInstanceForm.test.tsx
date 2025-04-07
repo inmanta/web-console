@@ -17,11 +17,7 @@ import {
   TextField,
   Textarea,
 } from "@/Core";
-import {
-  getStoreInstance,
-  QueryResolverImpl,
-  QueryManagerResolverImpl,
-} from "@/Data";
+import { getStoreInstance, QueryResolverImpl, QueryManagerResolverImpl } from "@/Data";
 import * as Test from "@/Test";
 import { DeferredApiHelper, StaticScheduler, dependencies } from "@/Test";
 import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI";
@@ -29,27 +25,17 @@ import { words } from "@/UI/words";
 import { ServiceInstanceForm } from "./ServiceInstanceForm";
 
 const setup = (
-  fields: (
-    | TextField
-    | BooleanField
-    | NestedField
-    | DictListField
-    | EnumField
-    | Textarea
-  )[],
+  fields: (TextField | BooleanField | NestedField | DictListField | EnumField | Textarea)[],
   func: undefined | jest.Mock = undefined,
   isEdit = false,
-  originalAttributes: InstanceAttributeModel | undefined = undefined,
+  originalAttributes: InstanceAttributeModel | undefined = undefined
 ) => {
-  const environmentHandler = EnvironmentHandlerImpl(
-    useLocation,
-    dependencies.routeManager,
-  );
+  const environmentHandler = EnvironmentHandlerImpl(useLocation, dependencies.routeManager);
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
   const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler),
+    new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler)
   );
 
   const env = {
@@ -79,9 +65,7 @@ const setup = (
         },
       ]}
     >
-      <DependencyProvider
-        dependencies={{ ...dependencies, queryResolver, environmentHandler }}
-      >
+      <DependencyProvider dependencies={{ ...dependencies, queryResolver, environmentHandler }}>
         <StoreProvider store={store}>
           <Routes>
             <Route
@@ -111,9 +95,7 @@ const setup = (
 function createQueryWrapper(children: React.ReactNode) {
   const queryClient = new QueryClient();
 
-  return (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-  );
+  return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
 }
 const server = setupServer();
 
@@ -124,7 +106,7 @@ beforeAll(() => {
       return HttpResponse.json({
         parameter: undefined,
       });
-    }),
+    })
   );
 });
 
@@ -135,7 +117,7 @@ beforeEach(() => {
       return HttpResponse.json({
         parameter: undefined,
       });
-    }),
+    })
   );
 });
 
@@ -149,7 +131,7 @@ test("GIVEN ServiceInstanceForm WHEN passed a TextField THEN shows that field", 
   expect(
     screen.getByRole("generic", {
       name: `TextFieldInput-${Test.Field.text.name}`,
-    }),
+    })
   ).toBeVisible();
 
   const textBox = screen.getByRole("textbox", {
@@ -172,7 +154,7 @@ test("GIVEN ServiceInstanceForm WHEN passed a TextField with suggestions THEN sh
   expect(
     screen.getByRole("generic", {
       name: `TextFieldInput-${Test.Field.text.name}`,
-    }),
+    })
   ).toBeVisible();
 
   const textBox = screen.getByRole("textbox", {
@@ -207,7 +189,7 @@ test("GIVEN ServiceInstanceForm WHEN passed a TextField with parameter suggestio
           expires: false,
         },
       });
-    }),
+    })
   );
 
   const { component } = setup([Test.Field.textSuggestions2]);
@@ -217,7 +199,7 @@ test("GIVEN ServiceInstanceForm WHEN passed a TextField with parameter suggestio
   expect(
     screen.getByRole("generic", {
       name: `TextFieldInput-${Test.Field.text.name}`,
-    }),
+    })
   ).toBeVisible();
 
   const textBox = screen.getByRole("textbox", {
@@ -239,7 +221,7 @@ test("GIVEN ServiceInstanceForm WHEN passed a TextField with parameter suggestio
   const server = setupServer(
     http.get("/api/v1/parameter/param_name", () => {
       return HttpResponse.error();
-    }),
+    })
   );
 
   // Start the interception.
@@ -252,7 +234,7 @@ test("GIVEN ServiceInstanceForm WHEN passed a TextField with parameter suggestio
   expect(
     screen.getByRole("generic", {
       name: `TextFieldInput-${Test.Field.text.name}`,
-    }),
+    })
   ).toBeVisible();
 
   const textBox = screen.getByRole("textbox", {
@@ -275,7 +257,7 @@ test("GIVEN ServiceInstanceForm WHEN passed a BooleanField THEN shows that field
   expect(
     screen.getByRole("generic", {
       name: `BooleanFieldInput-${Test.Field.bool.name}`,
-    }),
+    })
   ).toBeVisible();
 
   expect(screen.getAllByRole("radio")).toHaveLength(3);
@@ -295,12 +277,10 @@ test("GIVEN ServiceInstanceForm WHEN passed an EnumField THEN shows that field",
   expect(
     screen.getByRole("generic", {
       name: `EnumFieldInput-${Test.Field.enumField.name}`,
-    }),
+    })
   ).toBeVisible();
 
-  const select = screen.getByTestId(
-    `${Test.Field.enumField.name}-select-toggle`,
-  );
+  const select = screen.getByTestId(`${Test.Field.enumField.name}-select-toggle`);
 
   expect(select).toHaveTextContent("local");
 
@@ -326,15 +306,11 @@ test("GIVEN ServiceInstanceForm WHEN passed an EnumField with more than one valu
 
   expect(field).toBeVisible();
 
-  const placeholder = screen.getByText(
-    `Select value for ${Test.Field.enumFieldTwoOptions.name}`,
-  );
+  const placeholder = screen.getByText(`Select value for ${Test.Field.enumFieldTwoOptions.name}`);
 
   expect(placeholder).toBeVisible();
 
-  const select = screen.getByTestId(
-    `${Test.Field.enumFieldTwoOptions.name}-select-toggle`,
-  );
+  const select = screen.getByTestId(`${Test.Field.enumFieldTwoOptions.name}-select-toggle`);
 
   await userEvent.click(select);
 
@@ -354,9 +330,7 @@ test("GIVEN ServiceInstanceForm WHEN passed an EnumField with only one value THE
 
   expect(field).toBeVisible();
 
-  const select = screen.getByTestId(
-    `${Test.Field.enumFieldSingleOption.name}-select-toggle`,
-  );
+  const select = screen.getByTestId(`${Test.Field.enumFieldSingleOption.name}-select-toggle`);
 
   expect(select).toHaveTextContent("local");
 
@@ -381,20 +355,14 @@ test("GIVEN ServiceInstanceForm and a NestedField WHEN clicking the toggle THEN 
   await userEvent.click(
     within(group).getByRole("button", {
       name: words("add"),
-    }),
+    })
   );
 
-  expect(
-    screen.queryByRole("textbox", { name: Test.Field.text.name }),
-  ).not.toBeInTheDocument();
+  expect(screen.queryByRole("textbox", { name: Test.Field.text.name })).not.toBeInTheDocument();
 
-  await userEvent.click(
-    within(group).getByRole("button", { name: "nested_field" }),
-  );
+  await userEvent.click(within(group).getByRole("button", { name: "nested_field" }));
 
-  expect(
-    screen.getByRole("textbox", { name: `TextInput-${Test.Field.text.name}` }),
-  ).toBeVisible();
+  expect(screen.getByRole("textbox", { name: `TextInput-${Test.Field.text.name}` })).toBeVisible();
 });
 test("GIVEN ServiceInstanceForm and a NestedField WHEN rendering optional inputs THEN the form structure is correct", async () => {
   //simplified version of form state that was causing bug on production
@@ -448,12 +416,10 @@ test("GIVEN ServiceInstanceForm and a NestedField WHEN rendering optional inputs
   await userEvent.click(
     within(group).getByRole("button", {
       name: words("add"),
-    }),
+    })
   );
 
-  await userEvent.click(
-    within(group).getByRole("button", { name: "nested_field" }),
-  );
+  await userEvent.click(within(group).getByRole("button", { name: "nested_field" }));
 
   const nestedGroup = screen.getByRole("group", {
     name: "double_nested_field",
@@ -463,36 +429,34 @@ test("GIVEN ServiceInstanceForm and a NestedField WHEN rendering optional inputs
 
   expect(
     screen.queryByRole("generic", {
-      name: `BooleanFieldInput-boolean_field`,
-    }),
+      name: "BooleanFieldInput-boolean_field",
+    })
   ).not.toBeInTheDocument();
 
   expect(
     screen.queryByRole("generic", {
-      name: `BooleanFieldInput-boolean_field_2`,
-    }),
+      name: "BooleanFieldInput-boolean_field_2",
+    })
   ).not.toBeInTheDocument();
 
   await userEvent.click(
     within(nestedGroup).getByRole("button", {
       name: words("add"),
-    }),
+    })
   );
 
-  await userEvent.click(
-    within(group).getByRole("button", { name: "double_nested_field" }),
-  );
+  await userEvent.click(within(group).getByRole("button", { name: "double_nested_field" }));
 
   expect(
     screen.getByRole("generic", {
-      name: `BooleanFieldInput-boolean_field_2`,
-    }),
+      name: "BooleanFieldInput-boolean_field_2",
+    })
   ).toBeVisible();
 
   expect(
     screen.getByRole("generic", {
-      name: `BooleanFieldInput-boolean_field_2`,
-    }),
+      name: "BooleanFieldInput-boolean_field_2",
+    })
   ).toBeVisible();
 });
 
@@ -507,35 +471,29 @@ test("GIVEN ServiceInstanceForm and a DictListField WHEN clicking all toggles op
 
   expect(group).toBeVisible();
 
-  expect(
-    screen.queryByRole("textbox", { name: Test.Field.text.name }),
-  ).not.toBeInTheDocument();
+  expect(screen.queryByRole("textbox", { name: Test.Field.text.name })).not.toBeInTheDocument();
 
   await userEvent.click(
     within(group).getByRole("button", {
       name: "dict_list_field",
-    }),
+    })
   );
 
   await userEvent.click(within(group).getByRole("button", { name: "0" }));
 
-  expect(
-    screen.getByRole("textbox", { name: `TextInput-${Test.Field.text.name}` }),
-  ).toBeVisible();
+  expect(screen.getByRole("textbox", { name: `TextInput-${Test.Field.text.name}` })).toBeVisible();
 });
 
 test("GIVEN ServiceInstanceForm and a nested DictListField WHEN in EDIT mode, new items should be enabled.", async () => {
   const originalAttributes = {
-    nested_dict_list_field: [
-      { dict_list_field: [{ text_field_disabled: "a" }] },
-    ],
+    nested_dict_list_field: [{ dict_list_field: [{ text_field_disabled: "a" }] }],
   };
 
   const { component } = setup(
     [Test.Field.nestedDictList([Test.Field.textDisabled])],
     undefined,
     true,
-    originalAttributes,
+    originalAttributes
   );
 
   render(component);
@@ -547,13 +505,13 @@ test("GIVEN ServiceInstanceForm and a nested DictListField WHEN in EDIT mode, ne
   expect(group).toBeVisible();
 
   expect(
-    screen.queryByRole("textbox", { name: Test.Field.textDisabled.name }),
+    screen.queryByRole("textbox", { name: Test.Field.textDisabled.name })
   ).not.toBeInTheDocument();
 
   await userEvent.click(
     within(group).getByRole("button", {
       name: "nested_dict_list_field",
-    }),
+    })
   );
 
   await userEvent.click(within(group).getByRole("button", { name: "0" }));
@@ -561,7 +519,7 @@ test("GIVEN ServiceInstanceForm and a nested DictListField WHEN in EDIT mode, ne
   expect(
     screen.queryByRole("textbox", {
       name: `TextInput-${Test.Field.textDisabled.name}`,
-    }),
+    })
   ).not.toBeInTheDocument();
 
   const nestedGroup = screen.getByRole("group", {
@@ -573,7 +531,7 @@ test("GIVEN ServiceInstanceForm and a nested DictListField WHEN in EDIT mode, ne
   await userEvent.click(
     within(nestedGroup).getByRole("button", {
       name: "dict_list_field",
-    }),
+    })
   );
 
   await userEvent.click(within(nestedGroup).getByRole("button", { name: "0" }));
@@ -584,9 +542,7 @@ test("GIVEN ServiceInstanceForm and a nested DictListField WHEN in EDIT mode, ne
 
   expect(disabledNestedTextField).toBeDisabled();
 
-  await userEvent.click(
-    within(nestedGroup).getByRole("button", { name: "Add" }),
-  );
+  await userEvent.click(within(nestedGroup).getByRole("button", { name: "Add" }));
 
   await userEvent.click(within(nestedGroup).getByRole("button", { name: "1" }));
 
@@ -599,9 +555,7 @@ test("GIVEN ServiceInstanceForm and a nested DictListField WHEN in EDIT mode, ne
 });
 
 test("GIVEN ServiceInstanceForm WHEN Deleting an item that isn't the last index, removes the correct item", async () => {
-  const dictListField = Test.Field.dictList([
-    { ...Test.Field.text, name: "flat_field" },
-  ]);
+  const dictListField = Test.Field.dictList([{ ...Test.Field.text, name: "flat_field" }]);
   const fields = [dictListField];
   const originalAttributes = {
     dict_list_field: [
@@ -621,9 +575,7 @@ test("GIVEN ServiceInstanceForm WHEN Deleting an item that isn't the last index,
 
   expect(group).toBeVisible();
 
-  await userEvent.click(
-    screen.getByRole("button", { name: dictListField.name }),
-  );
+  await userEvent.click(screen.getByRole("button", { name: dictListField.name }));
 
   // Open all the collapsible sections
   await userEvent.click(screen.getByRole("button", { name: "0" }));
@@ -636,14 +588,10 @@ test("GIVEN ServiceInstanceForm WHEN Deleting an item that isn't the last index,
   expect(textBoxes[0]).toHaveValue("flat_field_text_1");
 
   // expect the first delete button to be disabled
-  expect(
-    screen.getAllByRole("button", { name: words("delete") })[0],
-  ).toBeDisabled();
+  expect(screen.getAllByRole("button", { name: words("delete") })[0]).toBeDisabled();
 
   // Delete the second item of the list.
-  await userEvent.click(
-    within(group).getAllByRole("button", { name: words("delete") })[1],
-  );
+  await userEvent.click(within(group).getAllByRole("button", { name: words("delete") })[1]);
 
   const updatedTextBoxes = screen.getAllByRole("textbox");
 
@@ -653,12 +601,8 @@ test("GIVEN ServiceInstanceForm WHEN Deleting an item that isn't the last index,
 });
 
 test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is executed with formState", async () => {
-  const nestedField = Test.Field.nested([
-    { ...Test.Field.text, name: "flat_field_text_2" },
-  ]);
-  const dictListField = Test.Field.dictList([
-    { ...Test.Field.text, name: "flat_field_text_3" },
-  ]);
+  const nestedField = Test.Field.nested([{ ...Test.Field.text, name: "flat_field_text_2" }]);
+  const dictListField = Test.Field.dictList([{ ...Test.Field.text, name: "flat_field_text_3" }]);
   const fields = [Test.Field.text, Test.Field.bool, nestedField, dictListField];
   const submitCb = jest.fn();
 
@@ -668,7 +612,7 @@ test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is
 
   await userEvent.type(
     screen.getByRole("textbox", { name: `TextInput-${fields[0].name}` }),
-    "test text",
+    "test text"
   );
 
   await userEvent.click(screen.getByRole("radio", { name: words("true") }));
@@ -680,7 +624,7 @@ test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is
   await userEvent.click(
     within(group).getByRole("button", {
       name: words("add"),
-    }),
+    })
   );
 
   await userEvent.click(screen.getByRole("button", { name: nestedField.name }));
@@ -689,12 +633,10 @@ test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is
     screen.getByRole("textbox", {
       name: `TextInput-${nestedField.fields[0].name}`,
     }),
-    "test text 2",
+    "test text 2"
   );
 
-  await userEvent.click(
-    screen.getByRole("button", { name: dictListField.name }),
-  );
+  await userEvent.click(screen.getByRole("button", { name: dictListField.name }));
 
   await userEvent.click(screen.getByRole("button", { name: "0" }));
 
@@ -702,7 +644,7 @@ test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is
     screen.getByRole("textbox", {
       name: `TextInput-${dictListField.fields[0].name}`,
     }),
-    "test text 3",
+    "test text 3"
   );
 
   await userEvent.click(screen.getByText(words("confirm")));
@@ -714,7 +656,7 @@ test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is
       [nestedField.name]: { [nestedField.fields[0].name]: "test text 2" },
       [dictListField.name]: [{ [dictListField.fields[0].name]: "test text 3" }],
     },
-    expect.any(Function),
+    expect.any(Function)
   );
 });
 
@@ -734,7 +676,7 @@ test.each`
     await userEvent.type(screen.getByLabelText(label), newValue);
 
     expect(screen.getByLabelText(label)).toHaveValue(newValue);
-  },
+  }
 );
 
 test.each`
@@ -754,11 +696,8 @@ test.each`
     expect(screen.getByLabelText(label)).toHaveValue(value);
 
     await userEvent.clear(screen.getByLabelText(label));
-    await userEvent.type(
-      screen.getByLabelText(label),
-      "{selectAll}{backspace}" + newValue,
-    );
+    await userEvent.type(screen.getByLabelText(label), "{selectAll}{backspace}" + newValue);
 
     expect(screen.getByLabelText(label)).toHaveValue(newValue);
-  },
+  }
 );

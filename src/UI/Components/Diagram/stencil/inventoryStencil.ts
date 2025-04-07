@@ -26,44 +26,37 @@ export class InventoryStencilTab {
     stencilElement: HTMLElement,
     scroller: ui.PaperScroller,
     serviceInventories: Inventories,
-    serviceModels: ServiceModel[],
+    serviceModels: ServiceModel[]
   ) {
     const groups = {};
 
     //Create object with service names as keys and all of the service instances as StencilElements, to be used in the Stencil Sidebar
     Object.keys(serviceInventories).forEach((serviceName) => {
-      const serviceModel = serviceModels.find(
-        (model) => model.name === serviceName,
-      );
+      const serviceModel = serviceModels.find((model) => model.name === serviceName);
 
       if (!serviceModel) {
         return;
       }
 
-      return (groups[serviceName] = serviceInventories[serviceName].map(
-        (instance, index) => {
-          const attributes =
-            instance.candidate_attributes ||
-            instance.active_attributes ||
-            undefined;
+      return (groups[serviceName] = serviceInventories[serviceName].map((instance, index) => {
+        const attributes = instance.candidate_attributes || instance.active_attributes || undefined;
 
-          const displayName = instance.service_identity_attribute_value
-            ? instance.service_identity_attribute_value
-            : instance.id;
+        const displayName = instance.service_identity_attribute_value
+          ? instance.service_identity_attribute_value
+          : instance.id;
 
-          //add the instance id to the attributes object, to then pass it to the actual object on canvas
-          return createStencilElement(
-            displayName,
-            serviceModel,
-            {
-              ...attributes,
-              id: instance.id,
-            },
-            false,
-            index === 0,
-          );
-        },
-      ));
+        //add the instance id to the attributes object, to then pass it to the actual object on canvas
+        return createStencilElement(
+          displayName,
+          serviceModel,
+          {
+            ...attributes,
+            id: instance.id,
+          },
+          false,
+          index === 0
+        );
+      }));
     });
 
     this.stencil = new ui.Stencil({
@@ -103,8 +96,7 @@ export class InventoryStencilTab {
 
         return entity;
       },
-      dragEndClone: (el) =>
-        el.clone().set("id", el.get("id")).set("items", el.get("items")), //cloned element loses key value pairs, so we need to set them again
+      dragEndClone: (el) => el.clone().set("id", el.get("id")).set("items", el.get("items")), //cloned element loses key value pairs, so we need to set them again
       layout: {
         columns: 1,
         rowHeight: "compact",
@@ -120,9 +112,7 @@ export class InventoryStencilTab {
     });
 
     stencilElement.appendChild(this.stencil.el);
-    this.stencil.el
-      .querySelector(".search")
-      ?.classList.add("pf-v6-c-text-input-group__text-input");
+    this.stencil.el.querySelector(".search")?.classList.add("pf-v6-c-text-input-group__text-input");
 
     this.stencil.render();
 

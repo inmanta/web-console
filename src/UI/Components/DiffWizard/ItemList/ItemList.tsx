@@ -17,9 +17,7 @@ export const ItemList: React.FC<Props> = ({ items, refs }) => {
           item={item}
           refs={refs}
           classify={(title, attribute) =>
-            title.startsWith("std::File") && attribute === "hash"
-              ? "File"
-              : "Default"
+            title.startsWith("std::File") && attribute === "hash" ? "File" : "Default"
           }
         />
       ))}

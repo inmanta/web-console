@@ -1,11 +1,4 @@
-import {
-  RouteKind,
-  Route,
-  RouteParams,
-  RouteMatch,
-  Crumb,
-  RouteKindWithId,
-} from "@/Core/Domain";
+import { RouteKind, Route, RouteParams, RouteMatch, Crumb, RouteKindWithId } from "@/Core/Domain";
 
 export type RouteDictionary = Record<RouteKind, Route>;
 

@@ -49,21 +49,13 @@ export const DestroyAction: React.FC<Props> = ({
   const username = authHelper.getUser();
   const message = words("instanceDetails.API.message.update")(username);
 
-  const { mutate, isPending } = useDestroyInstance(
-    instance_id,
-    service_entity,
-    version,
-    message,
-    {
-      onSuccess: () =>
-        navigate(
-          `/console/lsm/catalog/${service_entity}/inventory?env=${environment}`,
-        ),
-      onError: (error) => {
-        setErrorMessage(error.message);
-      },
+  const { mutate, isPending } = useDestroyInstance(instance_id, service_entity, version, message, {
+    onSuccess: () =>
+      navigate(`/console/lsm/catalog/${service_entity}/inventory?env=${environment}`),
+    onError: (error) => {
+      setErrorMessage(error.message);
     },
-  );
+  });
 
   /**
    * When the destroy action is selected, block the interface and open the modal
@@ -108,17 +100,10 @@ export const DestroyAction: React.FC<Props> = ({
         isPending={isPending}
       >
         <Content component="p">
-          {words("inventory.destroyInstance.header")(
-            instance_display_identity,
-            service_entity,
-          )}
+          {words("inventory.destroyInstance.header")(instance_display_identity, service_entity)}
         </Content>
         <br />
-        <Alert
-          variant="danger"
-          title={words("instanceDetails.expert.confirm.warning")}
-          isInline
-        />
+        <Alert variant="danger" title={words("instanceDetails.expert.confirm.warning")} isInline />
       </ConfirmationModal>
       {errorMessage && (
         <ToastAlertMessage

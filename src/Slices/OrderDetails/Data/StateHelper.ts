@@ -10,6 +10,6 @@ export function GetOrderDetailsStateHelper(store: Store) {
 
       store.dispatch.orderDetails.setData({ id, data: value });
     },
-    (state, { id }) => state.orderDetails.byId[id],
+    (state, { id }) => state.orderDetails.byId[id]
   );
 }

@@ -21,11 +21,7 @@ export const Page: React.FC = () => {
           notAsked: () => null,
           loading: () => <LoadingView ariaLabel="Dashboard-Loading" />,
           failed: (error) => (
-            <ErrorView
-              message={error}
-              retry={retry}
-              ariaLabel="Dashboard-Failed"
-            />
+            <ErrorView message={error} retry={retry} ariaLabel="Dashboard-Failed" />
           ),
           success: (value) => (
             <PageContainer
@@ -36,7 +32,7 @@ export const Page: React.FC = () => {
             </PageContainer>
           ),
         },
-        envData,
+        envData
       )}
     </>
   );

@@ -30,10 +30,5 @@ export const CancelEditButton: React.FC<{
   onClick: () => void;
   "aria-label": string;
 }> = ({ onClick, ...props }) => (
-  <Button
-    icon={<TimesIcon />}
-    aria-label={props["aria-label"]}
-    onClick={onClick}
-    variant="plain"
-  />
+  <Button icon={<TimesIcon />} aria-label={props["aria-label"]} onClick={onClick} variant="plain" />
 );

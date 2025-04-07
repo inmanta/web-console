@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  Button,
-  MenuFooter,
-  TextInput,
-  ToolbarGroup,
-  ToolbarItem,
-} from "@patternfly/react-core";
+import { Button, MenuFooter, TextInput, ToolbarGroup, ToolbarItem } from "@patternfly/react-core";
 import { Diff } from "@/Core";
 import { StatusDescriptor } from "@/UI/Components/DiffWizard/StatusDescriptor";
 import { words } from "@/UI/words";

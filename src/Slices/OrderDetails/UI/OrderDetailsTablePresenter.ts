@@ -113,8 +113,6 @@ export class OrderDetailsTablePresenter
    * @returns number
    */
   getIndexForColumnName(columnName?: string): number {
-    return this.columnHeads.findIndex(
-      (columnHead) => columnHead.apiName === columnName,
-    );
+    return this.columnHeads.findIndex((columnHead) => columnHead.apiName === columnName);
   }
 }

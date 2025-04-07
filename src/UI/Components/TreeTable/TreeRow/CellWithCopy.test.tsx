@@ -62,7 +62,7 @@ describe("CellWithCopy", () => {
           id: "someOtherValue",
         },
       });
-    }),
+    })
   );
 
   beforeAll(() => {

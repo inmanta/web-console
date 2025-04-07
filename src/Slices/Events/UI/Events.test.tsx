@@ -33,17 +33,14 @@ function setup() {
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolverImpl([
       EventsQueryManager(apiHelper, EventsStateHelper(store), scheduler),
-    ]),
+    ])
   );
 
   const component = (
     <MemoryRouter>
       <DependencyProvider dependencies={{ ...dependencies, queryResolver }}>
         <StoreProvider store={store}>
-          <Events
-            service={Service.a}
-            instanceId={"4a4a6d14-8cd0-4a16-bc38-4b768eb004e3"}
-          />
+          <Events service={Service.a} instanceId={"4a4a6d14-8cd0-4a16-bc38-4b768eb004e3"} />
         </StoreProvider>
       </DependencyProvider>
     </MemoryRouter>
@@ -57,21 +54,17 @@ test("EventsView shows empty table", async () => {
 
   render(component);
 
-  expect(
-    await screen.findByRole("region", { name: "EventTable-Loading" }),
-  ).toBeInTheDocument();
+  expect(await screen.findByRole("region", { name: "EventTable-Loading" })).toBeInTheDocument();
 
   apiHelper.resolve(
     Either.right({
       data: [],
       links: { self: "" },
       metadata: { before: 0, after: 0, page_size: 20, total: 0 },
-    }),
+    })
   );
 
-  expect(
-    await screen.findByRole("generic", { name: "EventTable-Empty" }),
-  ).toBeInTheDocument();
+  expect(await screen.findByRole("generic", { name: "EventTable-Empty" })).toBeInTheDocument();
 
   await act(async () => {
     const results = await axe(document.body);
@@ -85,15 +78,11 @@ test("EventsView shows failed table", async () => {
 
   render(component);
 
-  expect(
-    await screen.findByRole("region", { name: "EventTable-Loading" }),
-  ).toBeInTheDocument();
+  expect(await screen.findByRole("region", { name: "EventTable-Loading" })).toBeInTheDocument();
 
   apiHelper.resolve(Either.left("error"));
 
-  expect(
-    await screen.findByRole("region", { name: "EventTable-Failed" }),
-  ).toBeInTheDocument();
+  expect(await screen.findByRole("region", { name: "EventTable-Failed" })).toBeInTheDocument();
 
   await act(async () => {
     const results = await axe(document.body);
@@ -107,9 +96,7 @@ test("EventsView shows success table", async () => {
 
   render(component);
 
-  expect(
-    await screen.findByRole("region", { name: "EventTable-Loading" }),
-  ).toBeInTheDocument();
+  expect(await screen.findByRole("region", { name: "EventTable-Loading" })).toBeInTheDocument();
 
   apiHelper.resolve(
     Either.right({
@@ -133,12 +120,10 @@ test("EventsView shows success table", async () => {
       ],
       links: { self: "" },
       metadata: { before: 0, after: 0, page_size: 20, total: 2 },
-    }),
+    })
   );
 
-  expect(
-    await screen.findByRole("grid", { name: "EventTable-Success" }),
-  ).toBeInTheDocument();
+  expect(await screen.findByRole("grid", { name: "EventTable-Success" })).toBeInTheDocument();
 
   await act(async () => {
     const results = await axe(document.body);
@@ -152,21 +137,17 @@ test("EventsView shows updated table", async () => {
 
   render(component);
 
-  expect(
-    await screen.findByRole("region", { name: "EventTable-Loading" }),
-  ).toBeInTheDocument();
+  expect(await screen.findByRole("region", { name: "EventTable-Loading" })).toBeInTheDocument();
 
   apiHelper.resolve(
     Either.right({
       data: [],
       links: { self: "" },
       metadata: { before: 0, after: 0, page_size: 20, total: 0 },
-    }),
+    })
   );
 
-  expect(
-    await screen.findByRole("generic", { name: "EventTable-Empty" }),
-  ).toBeInTheDocument();
+  expect(await screen.findByRole("generic", { name: "EventTable-Empty" })).toBeInTheDocument();
 
   scheduler.executeAll();
 
@@ -192,12 +173,10 @@ test("EventsView shows updated table", async () => {
       ],
       links: { self: "" },
       metadata: { before: 0, after: 0, page_size: 20, total: 1 },
-    }),
+    })
   );
 
-  expect(
-    await screen.findByRole("grid", { name: "EventTable-Success" }),
-  ).toBeInTheDocument();
+  expect(await screen.findByRole("grid", { name: "EventTable-Success" })).toBeInTheDocument();
 
   await act(async () => {
     const results = await axe(document.body);
