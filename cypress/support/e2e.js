@@ -10,4 +10,6 @@ beforeEach(() => {
     // Allow other uncaught exceptions to fail tests
     return true;
   });
+
+  localStorage.setItem("theme-preference", "light");
 });
