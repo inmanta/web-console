@@ -1,6 +1,7 @@
 import { RouteKind } from "@/Core";
 import { InstanceComposer } from "@/Slices/InstanceComposerCreator";
 import { InstanceComposerViewer } from "@/Slices/InstanceComposerViewer";
+import { MarkdownPreviewer } from "@/Slices/MarkdownPreviewer";
 import { InstanceDetails } from "@/Slices/ServiceInstanceDetails";
 import { Agents } from "@S/Agents";
 import { CompileDetails } from "@S/CompileDetails";
@@ -20,7 +21,6 @@ import { Events } from "@S/Events";
 import { Facts } from "@S/Facts";
 import { Home } from "@S/Home";
 import { InstanceComposerEditor } from "@S/InstanceComposerEditor";
-import { MarkdownPreviewer } from "@/Slices/MarkdownPreviewer";
 import { Notification } from "@S/Notification";
 import { OrderDetails } from "@S/OrderDetails";
 import { Orders } from "@S/Orders";

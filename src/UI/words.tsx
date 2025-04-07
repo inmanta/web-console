@@ -892,6 +892,18 @@ const dict = {
   "userManagement.deleteUserMessage": (username: string) =>
     `Are you sure you want to delete user ${username}?`,
   "userManagement.empty.message": "No users found",
+
+  /**
+   * Markdown Previewer related text
+   */
+  "markdownPreviewer.hint.title": "Preview Only",
+  "markdownPreviewer.hint.body":
+    "This editor is for preview purposes only. Changes made here will not be saved. To make permanent changes, please update the documentation attribute(s) in the service instance.",
+  "markdownPreviewer.pageTitle": (service: string, instance: string) =>
+    `Markdown Preview: ${service}: ${instance}`,
+  "markdownPreviewer.download.tooltip": "Download markdown file",
+  "markdownPreviewer.route.label": (instance: string) =>
+    `Markdown Preview: ${instance}`,
 };
 
 type Key = keyof typeof dict;

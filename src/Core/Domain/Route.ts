@@ -102,8 +102,8 @@ interface RouteParamKeysManifest {
 
 export type RouteParams<K extends RouteKind> =
   K extends keyof RouteParamKeysManifest
-  ? Record<RouteParamKeysManifest[K], string>
-  : undefined;
+    ? Record<RouteParamKeysManifest[K], string>
+    : undefined;
 
 export interface RouteMatch {
   params: RouteParams<RouteKind>;

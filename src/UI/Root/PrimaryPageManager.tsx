@@ -3,6 +3,7 @@ import { PageManager, Page, RouteDictionary, PageDictionary } from "@/Core";
 import { InstanceComposerPage } from "@/Slices/InstanceComposerCreator/UI";
 import { InstanceComposerEditorPage } from "@/Slices/InstanceComposerEditor/UI";
 import { InstanceComposerViewerPage } from "@/Slices/InstanceComposerViewer/UI";
+import { MarkdownPreviewerPage } from "@/Slices/MarkdownPreviewer/UI";
 import { OrderDetailsPage } from "@/Slices/OrderDetails/UI";
 import { OrdersPage } from "@/Slices/Orders/UI";
 import { DiscoveredResourcesPage } from "@/Slices/ResourceDiscovery/UI";
@@ -34,7 +35,6 @@ import { ServiceCatalogPage } from "@S/ServiceCatalog/UI";
 import { ServiceInventoryPage } from "@S/ServiceInventory/UI";
 import { SettingsPage } from "@S/Settings/UI";
 import { StatusPage } from "@S/Status/UI";
-import { MarkdownPreviewerPage } from "@/Slices/MarkdownPreviewer/UI";
 
 export class PrimaryPageManager implements PageManager {
   private pageDictionary: PageDictionary;

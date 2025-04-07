@@ -12,6 +12,7 @@ import { MarkdownCard } from "@/Slices/ServiceInventory/UI/Tabs/MarkdownCard";
 import { words } from "@/UI";
 import { ErrorView, LoadingView } from "@/UI/Components";
 import { DynamicFAIcon } from "@/UI/Components/FaIcon";
+import { DependencyContext } from "@/UI/Dependency";
 import { useNavigateTo } from "@/UI/Routing";
 import { InstanceDetailsContext } from "../../Core/Context";
 import { TabContentWrapper } from ".";
@@ -49,6 +50,7 @@ export const DocumentationTabContent: React.FC<Props> = ({
   selectedVersion,
 }) => {
   const { logsQuery, instance } = useContext(InstanceDetailsContext);
+  const { environmentModifier } = useContext(DependencyContext);
   const [expanded, setExpanded] = useState(0);
   const navigateTo = useNavigateTo();
 
@@ -92,14 +94,20 @@ export const DocumentationTabContent: React.FC<Props> = ({
   };
 
   const MarkdownPreviewerButton = () => {
+    if (!environmentModifier.useIsExpertModeEnabled()) {
+      return null;
+    }
+
     return (
       <div style={{ marginBottom: "1rem" }}>
         <Button
           variant="secondary"
+          isDanger
           onClick={() => {
             navigateTo("MarkdownPreviewer", {
               service: instance.service_entity,
-              instance: instance.service_identity_attribute_value || instance.id,
+              instance:
+                instance.service_identity_attribute_value || instance.id,
               instanceId: instance.id,
             });
           }}
