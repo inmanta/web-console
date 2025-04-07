@@ -134,11 +134,11 @@ export default [
       ],
 
       "@stylistic/padding-line-between-statements": [
-        "warn",
+        "error",
         {
           blankLine: "always",
           prev: "*",
-          next: ["enum", "interface", "type", "return"],
+          next: ["enum", "interface", "type", "return", "function", "class"],
         },
         { blankLine: "always", prev: ["const", "let", "var"], next: "*" },
         {
@@ -149,7 +149,7 @@ export default [
       ],
 
       "@stylistic/lines-around-comment": [
-        "warn",
+        "error",
         {
           beforeBlockComment: true,
           allowEnumStart: true,
@@ -161,6 +161,17 @@ export default [
           allowArrayStart: true,
         },
       ],
+
+      "@stylistic/indent": ["error", 2],
+      "@stylistic/semi": ["error", "always"],
+      "@stylistic/quotes": ["error", "double"],
+      "@stylistic/space-before-blocks": ["error", "always"],
+      "@stylistic/space-before-function-paren": ["error", "always"],
+      "@stylistic/space-infix-ops": "error",
+      "@stylistic/keyword-spacing": "error",
+      "@stylistic/brace-style": ["error", "1tbs", { "allowSingleLine": true }],
+      "@stylistic/comma-spacing": "error",
+      "@stylistic/func-call-spacing": "error",
     },
   },
 
