@@ -1,2 +1,37 @@
-# Ignore build folder
+# Build output
 dist
+build
+coverage
+
+# Dependencies
+node_modules
+.yarn
+
+# Generated files
+*.min.js
+*.min.css
+
+# IDE and editor files
+.idea
+.vscode
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Test files
+cypress/videos
+cypress/screenshots
+
+# Config files that should maintain their format
+package.json
+package-lock.json
+yarn.lock
+tsconfig.json
+.eslintrc.js
+.prettierrc.cjs
+
+# Documentation and changelogs
+changelogs/**

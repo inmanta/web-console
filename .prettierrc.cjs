@@ -1,19 +1,33 @@
 /**
- * By using an empty config we use all the default options.
+ * Prettier configuration that matches our ESLint rules
  */
 module.exports = {
+  // Basic formatting
   printWidth: 100,
   tabWidth: 2,
   useTabs: false,
   semi: true,
+
+  // Quotes
   singleQuote: false,
-  quoteProps: "as-needed",
   jsxSingleQuote: false,
-  trailingComma: "es5",
+  quoteProps: "as-needed",
+
+  // Spacing
   bracketSpacing: true,
   bracketSameLine: false,
   arrowParens: "always",
+
+  // Line endings and wrapping
   endOfLine: "auto",
   proseWrap: "preserve",
   embeddedLanguageFormatting: "auto",
+
+  // Additional settings to match ESLint
+  singleAttributePerLine: false,
+  htmlWhitespaceSensitivity: "css",
+  vueIndentScriptAndStyle: false,
+
+  // Trailing commas
+  trailingComma: "es5",
 };

@@ -75,10 +75,7 @@ export default [
         { allowShortCircuit: true, allowTernary: true },
       ],
 
-      "@typescript-eslint/no-empty-function": [
-        "error",
-        { allow: ["arrowFunctions"] },
-      ],
+      "@typescript-eslint/no-empty-function": ["error", { allow: ["arrowFunctions"] }],
 
       "react-hooks/rules-of-hooks": "error",
       "react-hooks/exhaustive-deps": "warn",
@@ -119,7 +116,20 @@ export default [
         {
           blankLine: "always",
           prev: "*",
-          next: ["enum", "interface", "type", "return", "function", "class", "if", "for", "while", "do", "switch", "try"],
+          next: [
+            "enum",
+            "interface",
+            "type",
+            "return",
+            "function",
+            "class",
+            "if",
+            "for",
+            "while",
+            "do",
+            "switch",
+            "try",
+          ],
         },
         { blankLine: "always", prev: ["const", "let", "var"], next: "*" },
         {
@@ -147,12 +157,12 @@ export default [
 
       "@stylistic/indent": ["error", 2],
       "@stylistic/semi": ["warn", "always"],
-      "@stylistic/quotes": ["warn", "double", { "avoidEscape": true }],
+      "@stylistic/quotes": ["warn", "double", { avoidEscape: true }],
       "@stylistic/space-before-blocks": ["warn", "always"],
       "@stylistic/space-before-function-paren": ["warn", "never"],
       "@stylistic/space-infix-ops": "warn",
       "@stylistic/keyword-spacing": "warn",
-      "@stylistic/brace-style": ["warn", "1tbs", { "allowSingleLine": true }],
+      "@stylistic/brace-style": ["warn", "1tbs", { allowSingleLine: true }],
       "@stylistic/comma-spacing": "warn",
       "@stylistic/func-call-spacing": "warn",
     },
@@ -167,7 +177,7 @@ export default [
   {
     files: ["**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "**/*.spec.tsx", "cypress/**/*"],
     rules: {
-      "@stylistic/quotes": ["warn", "double", { "avoidEscape": true }],
+      "@stylistic/quotes": ["warn", "double", { avoidEscape: true }],
     },
   },
   {
