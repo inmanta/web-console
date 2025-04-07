@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Resource } from "@/Core";
 import {
   useUrlStateWithFilter,
@@ -6,18 +6,19 @@ import {
   useUrlStateWithSort,
 } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import { DependencyContext } from "@/UI";
 import {
   EmptyView,
   PageContainer,
-  OldPaginationWidget,
-  RemoteDataView,
+  ErrorView,
+  LoadingView,
+  PaginationWidget,
 } from "@/UI/Components";
 import { useRouteParams } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { Controls } from "./Controls";
 import { VersionResourceTable } from "./VersionResourceTable";
 import { VersionResourceTablePresenter } from "./VersionResourceTablePresenter";
+import { useGetVersionResources } from "@/Data/Managers/V2/DesiredState";
 
 export const Provider: React.FC = () => {
   const { version } = useRouteParams<"DesiredStateDetails">();
@@ -26,8 +27,6 @@ export const Provider: React.FC = () => {
 };
 
 export const Page: React.FC<{ version: string }> = ({ version }) => {
-  const { queryResolver } = useContext(DependencyContext);
-
   const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({
     route: "DesiredStateDetails",
   });
@@ -44,14 +43,13 @@ export const Page: React.FC<{ version: string }> = ({ version }) => {
     },
   );
 
-  const [data, retry] = queryResolver.useContinuous<"GetVersionResources">({
-    kind: "GetVersionResources",
+  const { data, isSuccess, isError, error, refetch } = useGetVersionResources({
     version,
     pageSize,
     filter,
     sort,
     currentPage,
-  });
+  }).useContinuous();
 
   const presenter = new VersionResourceTablePresenter();
 
@@ -61,42 +59,47 @@ export const Page: React.FC<{ version: string }> = ({ version }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sort.order]);
 
-  return (
-    <PageContainer pageTitle={words("desiredState.details.title")}>
-      <Controls
-        paginationWidget={
-          <OldPaginationWidget
-            data={data}
-            pageSize={pageSize}
-            setPageSize={setPageSize}
-            setCurrentPage={setCurrentPage}
+  if (isError) {
+    return (
+      <ErrorView
+        ariaLabel="VersionResourcesTable-Error"
+        retry={refetch}
+        message={error.message}
+      />
+    );
+  }
+  if (isSuccess) {
+    return (
+      <PageContainer pageTitle={words("desiredState.details.title")}>
+        <Controls
+          paginationWidget={
+            <PaginationWidget
+              data={data}
+              pageSize={pageSize}
+              setPageSize={setPageSize}
+              setCurrentPage={setCurrentPage}
+            />
+          }
+          filter={filter}
+          setFilter={setFilter}
+        />
+        {data?.data.length <= 0 ? (
+          <EmptyView
+            message={words("resources.empty.message")}
+            aria-label="VersionResourcesTable-Empty"
           />
-        }
-        filter={filter}
-        setFilter={setFilter}
-      />
-      <RemoteDataView
-        data={data}
-        retry={retry}
-        label="VersionResourcesTable"
-        SuccessView={(resources) =>
-          resources.data.length <= 0 ? (
-            <EmptyView
-              message={words("resources.empty.message")}
-              aria-label="VersionResourcesTable-Empty"
-            />
-          ) : (
-            <VersionResourceTable
-              aria-label="VersionResourcesTable-Success"
-              version={version}
-              rows={presenter.createRows(resources.data)}
-              tablePresenter={new VersionResourceTablePresenter()}
-              sort={sort}
-              setSort={setSort}
-            />
-          )
-        }
-      />
-    </PageContainer>
-  );
+        ) : (
+          <VersionResourceTable
+            aria-label="VersionResourcesTable-Success"
+            version={version}
+            rows={presenter.createRows(data.data)}
+            tablePresenter={new VersionResourceTablePresenter()}
+            sort={sort}
+            setSort={setSort}
+          />
+        )}
+      </PageContainer>
+    );
+  }
+  return <LoadingView ariaLabel="VersionResourcesTable-Loading" />;
 };
