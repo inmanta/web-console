@@ -50,23 +50,16 @@ interface Props {
  *  @prop {Partial<Record<AttributeSets, InstanceAttributeModel>>} attributeSets - The attributeSets available for the selected version.
  * @returns {React.FC<Props>} A React Component displaying the Attributes in a TreeRowTable
  */
-export const AttributesTable: React.FC<Props> = ({
-  dropdownOptions,
-  attributeSets,
-}) => {
+export const AttributesTable: React.FC<Props> = ({ dropdownOptions, attributeSets }) => {
   const [selectedSet, setSelectedSet] = useState(dropdownOptions[0]);
   const [expandedNodeIds, setExpandedNodeIds] = useState<string[]>([""]);
 
   // Sort direction of the currently sorted column
-  const [activeSortDirection, setActiveSortDirection] = useState<
-    "asc" | "desc" | undefined
-  >();
+  const [activeSortDirection, setActiveSortDirection] = useState<"asc" | "desc" | undefined>();
   const [activeSortIndex, setActiveSortIndex] = useState<number | undefined>();
 
   // expandedDetailsNodeIds is used for the responsive view of the TreeTable.
-  const [expandedDetailsNodeIds, setExpandedDetailsNodeIds] = useState<
-    string[]
-  >([""]);
+  const [expandedDetailsNodeIds, setExpandedDetailsNodeIds] = useState<string[]>([""]);
   const [tableData, setTableData] = useState<TreeRowData[]>([]);
   const [isToggleOpen, setIsToggleOpen] = useState(false);
 
@@ -94,10 +87,7 @@ export const AttributesTable: React.FC<Props> = ({
    * @param {React.FormEvent<HTMLSelectElement>} _event
    * @param {string} value
    */
-  const onSetSelectionChange = (
-    _event: React.FormEvent<HTMLSelectElement>,
-    value: string,
-  ) => {
+  const onSetSelectionChange = (_event: React.FormEvent<HTMLSelectElement>, value: string) => {
     setSelectedSet(value);
   };
 
@@ -142,7 +132,7 @@ export const AttributesTable: React.FC<Props> = ({
    */
   const onSelect = (
     _event: React.MouseEvent<Element, MouseEvent> | undefined,
-    value: string | number | undefined,
+    value: string | number | undefined
   ) => {
     switch (value) {
       case "Expand-all":
@@ -227,7 +217,7 @@ export const AttributesTable: React.FC<Props> = ({
     level = 1,
     posinset = 1,
     rowIndex = 0,
-    isHidden = false,
+    isHidden = false
   ): React.ReactNode[] => {
     if (!node) {
       return [];
@@ -241,19 +231,13 @@ export const AttributesTable: React.FC<Props> = ({
     const treeRow: TdProps["treeRow"] = {
       onCollapse: () =>
         setExpandedNodeIds((prevExpanded) => {
-          const otherExpandedNodeNames = prevExpanded.filter(
-            (id) => id !== node.id,
-          );
+          const otherExpandedNodeNames = prevExpanded.filter((id) => id !== node.id);
 
-          return isExpanded
-            ? otherExpandedNodeNames
-            : [...otherExpandedNodeNames, node.id];
+          return isExpanded ? otherExpandedNodeNames : [...otherExpandedNodeNames, node.id];
         }),
       onToggleRowDetails: () =>
         setExpandedDetailsNodeIds((prevDetailsExpanded) => {
-          const otherDetailsExpandedNodeNames = prevDetailsExpanded.filter(
-            (id) => id !== node.id,
-          );
+          const otherDetailsExpandedNodeNames = prevDetailsExpanded.filter((id) => id !== node.id);
 
           return isDetailsExpanded
             ? otherDetailsExpandedNodeNames
@@ -272,13 +256,7 @@ export const AttributesTable: React.FC<Props> = ({
 
     const childRows =
       node.children && node.children.length
-        ? renderRows(
-          node.children,
-          level + 1,
-          1,
-          rowIndex + 1,
-          !isExpanded || isHidden,
-        )
+        ? renderRows(node.children, level + 1, 1, rowIndex + 1, !isExpanded || isHidden)
         : [];
 
     return [
@@ -302,13 +280,7 @@ export const AttributesTable: React.FC<Props> = ({
         </Td>
       </TreeRowWrapper>,
       ...childRows,
-      ...renderRows(
-        remainingNodes,
-        level,
-        posinset + 1,
-        rowIndex + 1 + childRows.length,
-        isHidden,
-      ),
+      ...renderRows(remainingNodes, level, posinset + 1, rowIndex + 1 + childRows.length, isHidden),
     ];
   };
 
@@ -326,9 +298,7 @@ export const AttributesTable: React.FC<Props> = ({
 
   useEffect(() => {
     if (activeSortDirection) {
-      setTableData((prevTableData) =>
-        sortTreeRows(prevTableData, activeSortDirection),
-      );
+      setTableData((prevTableData) => sortTreeRows(prevTableData, activeSortDirection));
     }
   }, [activeSortDirection]);
 
@@ -361,25 +331,13 @@ export const AttributesTable: React.FC<Props> = ({
             popperProps={{ position: "right" }}
           >
             <DropdownList>
-              <DropdownItem
-                aria-label="Collapse-all"
-                value="Collapse-all"
-                key="Collapse-all"
-              >
+              <DropdownItem aria-label="Collapse-all" value="Collapse-all" key="Collapse-all">
                 {words("instanceDetails.collapseAll")}
               </DropdownItem>
-              <DropdownItem
-                aria-label="Expand-all"
-                value="Expand-all"
-                key="Expand-all"
-              >
+              <DropdownItem aria-label="Expand-all" value="Expand-all" key="Expand-all">
                 {words("instanceDetails.expandAll")}
               </DropdownItem>
-              <DropdownItem
-                aria-label="Reset-sort"
-                value="Reset-sort"
-                key="Reset-sort"
-              >
+              <DropdownItem aria-label="Reset-sort" value="Reset-sort" key="Reset-sort">
                 {words("instanceDetails.resetSort")}
               </DropdownItem>
             </DropdownList>

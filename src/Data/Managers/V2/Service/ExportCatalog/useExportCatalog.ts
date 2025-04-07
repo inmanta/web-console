@@ -1,8 +1,4 @@
-import {
-  UseMutationResult,
-  useMutation,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { UseMutationResult, useMutation, useQueryClient } from "@tanstack/react-query";
 import { usePost } from "../../helpers";
 
 /**
@@ -10,12 +6,7 @@ import { usePost } from "../../helpers";
  *
  * @returns {UseMutationResult<void, Error, void, unknown>}- The mutation object from `useMutation` hook.
  */
-export const useExportCatalog = (): UseMutationResult<
-  void,
-  Error,
-  void,
-  unknown
-> => {
+export const useExportCatalog = (): UseMutationResult<void, Error, void, unknown> => {
   const client = useQueryClient();
   const post = usePost()<void>;
 

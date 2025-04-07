@@ -24,17 +24,15 @@ export const shapesDataTransform = (
   parentInstance: ComposerServiceOrderItem,
   instances: ComposerServiceOrderItem[],
   serviceModel: ServiceModel | EmbeddedEntity,
-  isEmbeddedEntity = false,
+  isEmbeddedEntity = false
 ): ComposerServiceOrderItem => {
   let areEmbeddedEdited = false;
   const matchingInstances = instances.filter(
-    (checkedInstance) =>
-      checkedInstance.embeddedTo === parentInstance.instance_id,
+    (checkedInstance) => checkedInstance.embeddedTo === parentInstance.instance_id
   );
 
   const notMatchingInstances = instances.filter(
-    (checkedInstance) =>
-      checkedInstance.embeddedTo !== parentInstance.instance_id,
+    (checkedInstance) => checkedInstance.embeddedTo !== parentInstance.instance_id
   );
 
   //iterate through matching (embedded)instances and group them according to property type to be able to put them in the Array if needed at once
@@ -50,7 +48,7 @@ export const shapesDataTransform = (
     if (parentInstance.attributes) {
       const updated: InstanceAttributeModel[] = [];
       const embeddedModel = serviceModel.embedded_entities.find(
-        (entity) => entity.name === instancesToEmbed[0].service_entity,
+        (entity) => entity.name === instancesToEmbed[0].service_entity
       );
 
       //iterate through instancesToEmbed to recursively join potential nested embedded entities into correct objects in correct state
@@ -60,27 +58,21 @@ export const shapesDataTransform = (
             instanceToEmbed,
             notMatchingInstances,
             embeddedModel,
-            !!embeddedModel,
+            !!embeddedModel
           );
 
           if (!areEmbeddedEdited) {
-            areEmbeddedEdited =
-              !parentInstance.action && updatedInstance.action !== null;
+            areEmbeddedEdited = !parentInstance.action && updatedInstance.action !== null;
           }
 
-          if (
-            updatedInstance.action !== "delete" &&
-            updatedInstance.attributes
-          ) {
+          if (updatedInstance.action !== "delete" && updatedInstance.attributes) {
             updated.push(updatedInstance.attributes);
           }
         }
       });
 
       parentInstance.attributes[key] =
-        updated.length === 1 && isSingularRelation(embeddedModel)
-          ? updated[0]
-          : updated;
+        updated.length === 1 && isSingularRelation(embeddedModel) ? updated[0] : updated;
     }
   }
 
@@ -91,26 +83,22 @@ export const shapesDataTransform = (
     serviceModel.inter_service_relations.forEach((relation) => {
       if (parentInstance.relatedTo) {
         const relations = Array.from(parentInstance.relatedTo).filter(
-          ([_id, attributeName]) => attributeName === relation.name,
+          ([_id, attributeName]) => attributeName === relation.name
         );
 
         if (relation.upper_limit !== 1) {
           tempHolderForRelation[relation.name] = relations.map(([id]) => id);
         } else {
-          tempHolderForRelation[relation.name] = relations[0]
-            ? relations[0][0]
-            : undefined;
+          tempHolderForRelation[relation.name] = relations[0] ? relations[0][0] : undefined;
         }
       }
     });
 
-    Array.from(Object.entries(tempHolderForRelation)).forEach(
-      ([key, value]) => {
-        if (parentInstance.attributes) {
-          parentInstance.attributes[key] = value;
-        }
-      },
-    );
+    Array.from(Object.entries(tempHolderForRelation)).forEach(([key, value]) => {
+      if (parentInstance.attributes) {
+        parentInstance.attributes[key] = value;
+      }
+    });
   }
 
   //if any of its embedded instances were edited, and its action is indicating no changes to main attributes, change it to "update"
@@ -150,44 +138,34 @@ export const shapesDataTransform = (
  */
 export const getServiceOrderItems = (
   instances: Map<string, ComposerServiceOrderItem>,
-  services: ServiceModel[],
+  services: ServiceModel[]
 ): ComposerServiceOrderItem[] => {
   const mapToArray = Array.from(instances, (instance) => instance[1]); //only value, the id is stored in the object anyway
-  const deepCopiedMapToArray: ComposerServiceOrderItem[] = JSON.parse(
-    JSON.stringify(mapToArray),
-  ); //only value, the id is stored in the object anyway
+  const deepCopiedMapToArray: ComposerServiceOrderItem[] = JSON.parse(JSON.stringify(mapToArray)); //only value, the id is stored in the object anyway
 
   //we need also deep copy relatedTo Map separately
   deepCopiedMapToArray.forEach((instance, index) => {
     instance.relatedTo = mapToArray[index].relatedTo
-      ? JSON.parse(
-        JSON.stringify(
-          Array.from(mapToArray[index].relatedTo as Map<string, string>),
-        ),
-      )
+      ? JSON.parse(JSON.stringify(Array.from(mapToArray[index].relatedTo as Map<string, string>)))
       : mapToArray[index].relatedTo;
   });
   const topServicesNames = services.map((service) => service.name);
 
   // topInstances are instances that have top-level attributes from given serviceModel, and theoretically are the ones accepting embedded-entities
   const topInstances = deepCopiedMapToArray.filter((instance) =>
-    topServicesNames.includes(instance.service_entity),
+    topServicesNames.includes(instance.service_entity)
   );
   const embeddedInstances = deepCopiedMapToArray.filter(
-    (instance) => !topServicesNames.includes(instance.service_entity),
+    (instance) => !topServicesNames.includes(instance.service_entity)
   );
 
   const mergedInstances: ComposerServiceOrderItem[] = [];
 
   topInstances.forEach((instance) => {
-    const serviceModel = services.find(
-      (service) => service.name === instance.service_entity,
-    );
+    const serviceModel = services.find((service) => service.name === instance.service_entity);
 
     if (serviceModel) {
-      mergedInstances.push(
-        shapesDataTransform(instance, embeddedInstances, serviceModel),
-      );
+      mergedInstances.push(shapesDataTransform(instance, embeddedInstances, serviceModel));
     }
   });
 
@@ -228,7 +206,7 @@ export const getCellsCoordinates = (graph: dia.Graph): SavedCoordinates[] => {
  */
 export const applyCoordinatesToCells = (
   graph: dia.Graph,
-  coordinates: SavedCoordinates[],
+  coordinates: SavedCoordinates[]
 ): void => {
   const cells = graph.getCells();
 
@@ -237,7 +215,7 @@ export const applyCoordinatesToCells = (
       (cell) =>
         element.id === cell.id ||
         (element.name === cell.attributes.entityName &&
-          isEqual(element.attributes, cell.attributes.instanceAttributes)),
+          isEqual(element.attributes, cell.attributes.instanceAttributes))
     );
 
     if (correspondingCell) {
@@ -260,7 +238,7 @@ export const applyCoordinatesToCells = (
 export const updateServiceOrderItems = (
   cell: ServiceEntityBlock,
   action: ActionEnum,
-  serviceOrderItems: Map<string, ComposerServiceOrderItem>,
+  serviceOrderItems: Map<string, ComposerServiceOrderItem>
 ): Map<string, ComposerServiceOrderItem> => {
   const newInstance: ComposerServiceOrderItem = {
     instance_id: cell.id,
@@ -284,9 +262,7 @@ export const updateServiceOrderItems = (
 
       //action in the instance isn't the same as action passed to this function, this assertion is to make sure that the update action won't change the action state of newly created instance.
       newInstance.action =
-        updatedInstance.action === ActionEnum.CREATE
-          ? ActionEnum.CREATE
-          : ActionEnum.UPDATE;
+        updatedInstance.action === ActionEnum.CREATE ? ActionEnum.CREATE : ActionEnum.UPDATE;
       copiedInstances.set(String(cell.id), newInstance);
       break;
     case ActionEnum.CREATE:
@@ -296,8 +272,7 @@ export const updateServiceOrderItems = (
     default:
       if (
         updatedInstance &&
-        (updatedInstance.action === null ||
-          updatedInstance.action === ActionEnum.UPDATE)
+        (updatedInstance.action === null || updatedInstance.action === ActionEnum.UPDATE)
       ) {
         copiedInstances.set(String(cell.id), {
           instance_id: cell.id,
@@ -328,9 +303,7 @@ export const updateServiceOrderItems = (
  * @param {ServiceModel | EmbeddedEntity} serviceModel - The service model or embedded entity from which to extract key attribute names.
  * @returns {string[]} An array of key attribute names.
  */
-export const getKeyAttributesNames = (
-  serviceModel: ServiceModel | EmbeddedEntity,
-): string[] => {
+export const getKeyAttributesNames = (serviceModel: ServiceModel | EmbeddedEntity): string[] => {
   let keyAttributes = serviceModel.key_attributes || [];
 
   //service_identity is a unique attribute to Service model, but doesn't exist in the Embedded Entity model

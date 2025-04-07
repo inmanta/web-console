@@ -13,7 +13,7 @@ describe("DiffPageFilter", () => {
         setStatuses={() => {}}
         setSearchFilter={() => {}}
         searchFilter=""
-      />,
+      />
     );
 
     expect(container).toBeDefined();
@@ -28,7 +28,7 @@ describe("DiffPageFilter", () => {
         setStatuses={() => {}}
         setSearchFilter={setSearchFilterMock}
         searchFilter=""
-      />,
+      />
     );
 
     const searchInput = screen.getByLabelText("SearchFilter");

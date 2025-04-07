@@ -2,12 +2,7 @@ import React, { useContext } from "react";
 import { Content, TabContent, TabContentBody } from "@patternfly/react-core";
 import { useGetInstanceResources } from "@/Data/Managers/V2/ServiceInstance";
 import { words } from "@/UI";
-import {
-  EmptyView,
-  ErrorView,
-  LoadingView,
-  ResourceTable,
-} from "@/UI/Components";
+import { EmptyView, ErrorView, LoadingView, ResourceTable } from "@/UI/Components";
 import { InstanceDetailsContext } from "../../Core/Context";
 import { TabContentWrapper } from "./TabContentWrapper";
 
@@ -16,7 +11,7 @@ export const ResourcesTabContent: React.FC = () => {
   const { data, isSuccess, isError, error } = useGetInstanceResources(
     instance.id,
     instance.service_entity,
-    String(instance.version),
+    String(instance.version)
   ).useContinuous();
 
   if (isSuccess) {
@@ -30,9 +25,7 @@ export const ResourcesTabContent: React.FC = () => {
         ) : (
           <TabContentBody>
             {!instance.deployment_progress && (
-              <Content>
-                {words("instanceDetails.tabs.resources.EmptyResources")}
-              </Content>
+              <Content>{words("instanceDetails.tabs.resources.EmptyResources")}</Content>
             )}
             <ResourceTable resources={data} aria-label="Resource-table" />
           </TabContentBody>
@@ -46,10 +39,7 @@ export const ResourcesTabContent: React.FC = () => {
     if (error.status !== 409) {
       return (
         <TabContent role="tabpanel" id={"Resources-content"}>
-          <ErrorView
-            message={error.message}
-            ariaLabel="Error_view-Resources-content"
-          />
+          <ErrorView message={error.message} ariaLabel="Error_view-Resources-content" />
         </TabContent>
       );
     }

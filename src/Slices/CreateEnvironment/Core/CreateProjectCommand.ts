@@ -9,7 +9,5 @@ export interface Manifest {
   apiData: string;
   body: { name: string };
   command: Command;
-  trigger: (
-    name: string,
-  ) => Promise<Either.Type<string, { data: ProjectModel }>>;
+  trigger: (name: string) => Promise<Either.Type<string, { data: ProjectModel }>>;
 }

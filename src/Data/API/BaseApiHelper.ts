@@ -1,12 +1,5 @@
 import { identity } from "lodash-es";
-import {
-  ApiHelper,
-  Either,
-  Maybe,
-  objectHasKey,
-  isObject,
-  ErrorWithHTTPCode,
-} from "@/Core";
+import { ApiHelper, Either, Maybe, objectHasKey, isObject, ErrorWithHTTPCode } from "@/Core";
 import { words } from "@/UI/words";
 import { AuthContextInterface } from "../Auth/AuthContext";
 import { BigIntJsonParser } from "./BigIntJsonParser";
@@ -16,7 +9,7 @@ import { BigIntJsonParser } from "./BigIntJsonParser";
  */
 export const BaseApiHelper = (
   baseUrl: string = "http://localhost:8888",
-  authHelper: AuthContextInterface,
+  authHelper: AuthContextInterface
 ): ApiHelper => {
   const jsonParser = new BigIntJsonParser();
 
@@ -79,7 +72,7 @@ export const BaseApiHelper = (
     }
 
     return words("error.server.intro")(
-      `${response.status} ${response.statusText} \n${errorMessage}`,
+      `${response.status} ${response.statusText} \n${errorMessage}`
     );
   }
 
@@ -107,7 +100,7 @@ export const BaseApiHelper = (
     return execute<Data, string>(
       async(response) => jsonParser.parse(await response.text()),
       identity,
-      ...params,
+      ...params
     );
   }
 
@@ -122,7 +115,7 @@ export const BaseApiHelper = (
     const result = await execute<string, string>(
       (response) => response.text(),
       identity,
-      ...params,
+      ...params
     );
 
     return Either.isLeft(result) ? Maybe.some(result.value) : Maybe.none();
@@ -143,10 +136,7 @@ export const BaseApiHelper = (
    * @param environment The environment for which the request is made.
    * @returns A promise resolving to either the response data or an error message.
    */
-  async function get<Data>(
-    url: string,
-    environment: string,
-  ): Promise<Either.Type<string, Data>> {
+  async function get<Data>(url: string, environment: string): Promise<Either.Type<string, Data>> {
     return executeJson<Data>(getFullUrl(url), {
       headers: getHeaders(environment),
     });
@@ -157,9 +147,7 @@ export const BaseApiHelper = (
    * @param url The URL to make the GET request to.
    * @returns A promise resolving to either the response data or an error message.
    */
-  async function getWithoutEnvironment<Data>(
-    url: string,
-  ): Promise<Either.Type<string, Data>> {
+  async function getWithoutEnvironment<Data>(url: string): Promise<Either.Type<string, Data>> {
     return executeJson<Data>(getFullUrl(url), {
       headers: getHeaders(),
     });
@@ -170,9 +158,7 @@ export const BaseApiHelper = (
    * @param url The URL to make the GET request to.
    * @returns A promise resolving to either the response data or an error message.
    */
-  async function getZipWithoutEnvironment<Blob>(
-    url: string,
-  ): Promise<Either.Type<string, Blob>> {
+  async function getZipWithoutEnvironment<Blob>(url: string): Promise<Either.Type<string, Blob>> {
     return executeBlob<Blob, string>(identity, getFullUrl(url), {
       headers: getHeaders(),
     });
@@ -188,7 +174,7 @@ export const BaseApiHelper = (
   async function post<Data, Body>(
     url: string,
     environment: string,
-    body: Body,
+    body: Body
   ): Promise<Either.Type<string, Data>> {
     return executeJson<Data>(getFullUrl(url), {
       headers: {
@@ -210,7 +196,7 @@ export const BaseApiHelper = (
   async function postWithoutResponse<Body>(
     url: string,
     environment: string,
-    body: Body,
+    body: Body
   ): Promise<Maybe.Type<string>> {
     return executeWithoutResponse(getFullUrl(url), {
       headers: {
@@ -230,7 +216,7 @@ export const BaseApiHelper = (
    */
   async function postWithoutResponseAndEnvironment<Body>(
     url: string,
-    body: Body,
+    body: Body
   ): Promise<Maybe.Type<string>> {
     return executeWithoutResponse(getFullUrl(url), {
       headers: {
@@ -250,7 +236,7 @@ export const BaseApiHelper = (
    */
   function putWithoutEnvironment<Data, Body>(
     url: string,
-    body: Body,
+    body: Body
   ): Promise<Either.Type<string, Data>> {
     return executeJson(getFullUrl(url), {
       headers: {
@@ -272,7 +258,7 @@ export const BaseApiHelper = (
   async function patch<Body>(
     url: string,
     environment: string,
-    body: Body,
+    body: Body
   ): Promise<Maybe.Type<string>> {
     return executeWithoutResponse(getFullUrl(url), {
       headers: {
@@ -290,10 +276,7 @@ export const BaseApiHelper = (
    * @param environment The environment for which the request is made.
    * @returns A promise resolving to maybe a string if an error occurred, or none if request was successful.
    */
-  async function toDelete(
-    url: string,
-    environment: string,
-  ): Promise<Maybe.Type<string>> {
+  async function toDelete(url: string, environment: string): Promise<Maybe.Type<string>> {
     return executeWithoutResponse(getFullUrl(url), {
       headers: {
         "Content-Type": "application/json",
@@ -311,13 +294,13 @@ export const BaseApiHelper = (
    */
   function getWithHTTPCode<Data>(
     url: string,
-    environment: string,
+    environment: string
   ): Promise<Either.Type<ErrorWithHTTPCode, Data>> {
     return execute<Data, ErrorWithHTTPCode>(
       async(response) => jsonParser.parse(await response.text()),
       async(message, status) => ({ message, status }),
       getFullUrl(url),
-      { headers: getHeaders(environment) },
+      { headers: getHeaders(environment) }
     );
   }
 
@@ -342,7 +325,7 @@ export const BaseApiHelper = (
         })
         .catch(() => {
           throw new Error(
-            "\nConnection to the server was either denied or blocked. \nPlease check server status.",
+            "\nConnection to the server was either denied or blocked. \nPlease check server status."
           );
         });
 
@@ -354,19 +337,13 @@ export const BaseApiHelper = (
 
       return Either.left(
         await transformError(
-          formatError(
-            jsonParser.parse(await response.text()).message,
-            response,
-          ),
-          response.status,
-        ),
+          formatError(jsonParser.parse(await response.text()).message, response),
+          response.status
+        )
       );
     } catch (error) {
       return Either.left(
-        await transformError(
-          errorHasMessage(error) ? error.message : `Error: ${error}`,
-          0,
-        ),
+        await transformError(errorHasMessage(error) ? error.message : `Error: ${error}`, 0)
       );
     }
   }
@@ -394,7 +371,7 @@ export const BaseApiHelper = (
         })
         .catch(() => {
           throw new Error(
-            "\nConnection to the server was either denied or blocked. \nPlease check server status.",
+            "\nConnection to the server was either denied or blocked. \nPlease check server status."
           );
         });
 
@@ -406,19 +383,13 @@ export const BaseApiHelper = (
 
       return Either.left(
         await transformError(
-          formatError(
-            jsonParser.parse(await response.text()).message,
-            response,
-          ),
-          response.status,
-        ),
+          formatError(jsonParser.parse(await response.text()).message, response),
+          response.status
+        )
       );
     } catch (error) {
       return Either.left(
-        await transformError(
-          errorHasMessage(error) ? error.message : `Error: ${error}`,
-          0,
-        ),
+        await transformError(errorHasMessage(error) ? error.message : `Error: ${error}`, 0)
       );
     }
   }

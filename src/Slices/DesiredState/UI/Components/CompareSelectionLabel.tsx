@@ -9,10 +9,7 @@ interface Props {
   selection: CompareSelection;
 }
 
-export const CompareSelectionLabel: React.FC<Props> = ({
-  selection,
-  onDelete,
-}) => {
+export const CompareSelectionLabel: React.FC<Props> = ({ selection, onDelete }) => {
   return Maybe.isSome(selection) ? (
     <LabelGroup categoryName={words("desiredState.compare.selectionLabel")}>
       <Label onClose={onDelete}>{selection.value}</Label>

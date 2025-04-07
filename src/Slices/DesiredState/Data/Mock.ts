@@ -19,8 +19,7 @@ export const response = {
       labels: [
         {
           name: "param",
-          message:
-            "Recompile model because one or more parameters were updated",
+          message: "Recompile model because one or more parameters were updated",
         },
       ],
       status: "candidate",
@@ -44,8 +43,7 @@ export const response = {
       labels: [
         {
           name: "param",
-          message:
-            "Recompile model because one or more parameters were updated",
+          message: "Recompile model because one or more parameters were updated",
         },
       ],
       status: "skipped_candidate",
@@ -69,8 +67,7 @@ export const response = {
       labels: [
         {
           name: "param",
-          message:
-            "Recompile model because one or more parameters were updated",
+          message: "Recompile model because one or more parameters were updated",
         },
       ],
       status: "skipped_candidate",
@@ -94,8 +91,7 @@ export const response = {
       labels: [
         {
           name: "param",
-          message:
-            "Recompile model because one or more parameters were updated",
+          message: "Recompile model because one or more parameters were updated",
         },
       ],
       status: "retired",

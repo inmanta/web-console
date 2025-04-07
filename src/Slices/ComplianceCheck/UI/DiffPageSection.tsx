@@ -14,12 +14,7 @@ interface Props {
   searchFilter: string;
 }
 
-export const DiffPageSection: React.FC<Props> = ({
-  report,
-  version,
-  statuses,
-  searchFilter,
-}) =>
+export const DiffPageSection: React.FC<Props> = ({ report, version, statuses, searchFilter }) =>
   Maybe.isNone(report) ? null : (
     <DiffView
       id={report.value.id}
@@ -61,29 +56,21 @@ const DiffView: React.FC<{
   }, [todo, id]); //keeping refetch in the dependency creates issue with call on every update of the data, but we want to align it with the continuous call
 
   const diffData = RemoteData.mapSuccess(
-    (report) =>
-      report.diff.filter((resource) => statuses.includes(resource.status)),
-    reportData,
+    (report) => report.diff.filter((resource) => statuses.includes(resource.status)),
+    reportData
   );
 
   return (
     <>
       <PageSection hasBodyWrapper={false} hasShadowBottom>
-        <DiffWizard.Controls
-          data={diffData}
-          refs={refs}
-          from={"current"}
-          to={version}
-        />
+        <DiffWizard.Controls data={diffData} refs={refs} from={"current"} to={version} />
       </PageSection>
       <PageSection hasBodyWrapper={false} isFilled>
         <RemoteDataView
           data={reportData}
           SuccessView={(data) => (
             <>
-              {data.summary.todo > 0 && (
-                <LoadingIndicator progress={getProgress(data.summary)} />
-              )}
+              {data.summary.todo > 0 && <LoadingIndicator progress={getProgress(data.summary)} />}
               {data.diff.length <= 0 ? (
                 <EmptyView message={words("desiredState.compare.empty")} />
               ) : (
@@ -94,7 +81,7 @@ const DiffView: React.FC<{
                         statuses.includes(resource.status) &&
                         resource.resource_id
                           .toLocaleLowerCase()
-                          .includes(searchFilter.toLocaleLowerCase()),
+                          .includes(searchFilter.toLocaleLowerCase())
                     )
                     .map(DiffWizard.fromResourceToItem)}
                   refs={refs}
@@ -108,8 +95,5 @@ const DiffView: React.FC<{
   );
 };
 
-const getProgress = (summary: {
-  todo: ParsedNumber;
-  total: ParsedNumber;
-}): string =>
+const getProgress = (summary: { todo: ParsedNumber; total: ParsedNumber }): string =>
   `${Number(summary.total) - Number(summary.todo)}/${Number(summary.total)}`;

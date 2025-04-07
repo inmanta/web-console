@@ -17,7 +17,7 @@ import { useFetchHelpers } from "../helpers";
 export const useGet = (options?: { message?: string }) => {
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
-    globalThis.location.pathname,
+    globalThis.location.pathname
   );
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
   const { environmentHandler } = useContext(DependencyContext);
@@ -56,7 +56,7 @@ export const useGet = (options?: { message?: string }) => {
 export const useGetWithoutEnv = (options?: { message?: string }) => {
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
-    globalThis.location.pathname,
+    globalThis.location.pathname
   );
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
   const { createHeaders, handleErrors } = useFetchHelpers();
@@ -90,7 +90,7 @@ export const useGetWithoutEnv = (options?: { message?: string }) => {
 export const useGetZip = (options?: { message?: string }) => {
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
-    globalThis.location.pathname,
+    globalThis.location.pathname
   );
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
   const { environmentHandler } = useContext(DependencyContext);
@@ -127,7 +127,7 @@ export const useGetZip = (options?: { message?: string }) => {
 export const useGetZipWithoutEnv = (options?: { message?: string }) => {
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
-    globalThis.location.pathname,
+    globalThis.location.pathname
   );
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
   const { createHeaders, handleErrors } = useFetchHelpers();
@@ -161,7 +161,7 @@ export const useGetZipWithoutEnv = (options?: { message?: string }) => {
 export const usePost = (options?: { message?: string }) => {
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
-    globalThis.location.pathname,
+    globalThis.location.pathname
   );
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
   const { environmentHandler } = useContext(DependencyContext);
@@ -206,7 +206,7 @@ export const usePost = (options?: { message?: string }) => {
 export const usePostWithoutEnv = (options?: { message?: string }) => {
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
-    globalThis.location.pathname,
+    globalThis.location.pathname
   );
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
   const { createHeaders, handleErrors } = useFetchHelpers();
@@ -250,7 +250,7 @@ export const usePostWithoutEnv = (options?: { message?: string }) => {
 export const usePut = (options?: { message?: string }) => {
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
-    globalThis.location.pathname,
+    globalThis.location.pathname
   );
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
   const { environmentHandler } = useContext(DependencyContext);
@@ -295,7 +295,7 @@ export const usePut = (options?: { message?: string }) => {
 export const usePutWithoutEnv = (options?: { message?: string }) => {
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
-    globalThis.location.pathname,
+    globalThis.location.pathname
   );
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
   const { createHeaders, handleErrors } = useFetchHelpers();
@@ -337,7 +337,7 @@ export const usePutWithoutEnv = (options?: { message?: string }) => {
 export const usePatch = (options?: { message?: string }) => {
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
-    globalThis.location.pathname,
+    globalThis.location.pathname
   );
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
   const { environmentHandler } = useContext(DependencyContext);
@@ -382,7 +382,7 @@ export const usePatch = (options?: { message?: string }) => {
 export const usePatchWithoutEnv = (options?: { message?: string }) => {
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
-    globalThis.location.pathname,
+    globalThis.location.pathname
   );
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
   const { createHeaders, handleErrors } = useFetchHelpers();
@@ -422,7 +422,7 @@ export const usePatchWithoutEnv = (options?: { message?: string }) => {
 export const useDelete = (options?: { message?: string }) => {
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
-    globalThis.location.pathname,
+    globalThis.location.pathname
   );
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
   const { environmentHandler } = useContext(DependencyContext);
@@ -468,7 +468,7 @@ export const useDelete = (options?: { message?: string }) => {
 export const useDeleteWithoutEnv = (options?: { message?: string }) => {
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
-    globalThis.location.pathname,
+    globalThis.location.pathname
   );
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
   const { createHeaders, handleErrors } = useFetchHelpers();
@@ -513,7 +513,7 @@ export const useDeleteWithoutEnv = (options?: { message?: string }) => {
 export const useHead = () => {
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
-    globalThis.location.pathname,
+    globalThis.location.pathname
   );
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
   const { createHeaders } = useFetchHelpers();

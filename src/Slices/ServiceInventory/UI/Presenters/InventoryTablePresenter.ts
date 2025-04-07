@@ -14,14 +14,13 @@ import { words } from "@/UI/words";
  * This class should only hold config data and pure functions.
  * This class should not hold state as state should be kept in the Redux Store.
  */
-export class InventoryTablePresenter
-implements TablePresenter<ServiceInstanceModel, Row> {
+export class InventoryTablePresenter implements TablePresenter<ServiceInstanceModel, Row> {
   readonly columnHeads: ColumnHead[];
   readonly numberOfColumns: number;
 
   constructor(
     private serviceIdentity?: string,
-    private serviceIdentityDisplayName?: string | null,
+    private serviceIdentityDisplayName?: string | null
   ) {
     this.columnHeads = [
       {
@@ -47,7 +46,7 @@ implements TablePresenter<ServiceInstanceModel, Row> {
 
   public createRows(
     instances: ServiceInstanceModelWithTargetStates[],
-    service: ServiceModel,
+    service: ServiceModel
   ): Row[] {
     return instances.map((instance) => this.instanceToRow(instance, service));
   }
@@ -69,9 +68,7 @@ implements TablePresenter<ServiceInstanceModel, Row> {
   }
 
   public getIndexForColumnName(columnName?: string): number {
-    return this.columnHeads.findIndex(
-      (columnHead) => columnHead.apiName === columnName,
-    );
+    return this.columnHeads.findIndex((columnHead) => columnHead.apiName === columnName);
   }
 
   public getSortableColumnNames(): string[] {
@@ -110,10 +107,7 @@ implements TablePresenter<ServiceInstanceModel, Row> {
     return this.numberOfColumns;
   }
 
-  private instanceToRow(
-    instance: ServiceInstanceModel,
-    service: ServiceModel,
-  ): Row {
+  private instanceToRow(instance: ServiceInstanceModel, service: ServiceModel): Row {
     const {
       id,
       created_at,

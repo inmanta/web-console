@@ -27,7 +27,7 @@ export const updateLabelPosition = (
   _refBBox: g.Rect,
   _node: SVGSVGElement,
   _attrs: { [key: string]: unknown },
-  linkView: LabelLinkView, //dia.LinkView & dia.Link doesn't have sourceView or targetView properties in the model
+  linkView: LabelLinkView //dia.LinkView & dia.Link doesn't have sourceView or targetView properties in the model
 ): { textAnchor: "start" | "end"; x: number; y: number } => {
   let textAnchor, tx, ty, viewCoordinates, anchorCoordinates;
 
@@ -49,8 +49,7 @@ export const updateLabelPosition = (
     }
   }
 
-  const isTargetBelow =
-    linkView.getEndAnchor("target").y < linkView.getEndAnchor("source").y;
+  const isTargetBelow = linkView.getEndAnchor("target").y < linkView.getEndAnchor("source").y;
 
   switch (side) {
     case "target":
@@ -71,10 +70,7 @@ export const updateLabelPosition = (
  *
  * @returns {void}
  */
-export const toggleLooseElement = (
-  cellView: dia.CellView,
-  kind: EventActionEnum,
-): void => {
+export const toggleLooseElement = (cellView: dia.CellView, kind: EventActionEnum): void => {
   switch (kind) {
     case EventActionEnum.ADD:
       highlighters.mask.add(cellView, "root", "loose_element", {
@@ -118,7 +114,7 @@ export function showLinkTools(
   paper: dia.Paper,
   graph: dia.Graph,
   linkView: dia.LinkView,
-  connectionRules: ConnectionRules,
+  connectionRules: ConnectionRules
 ) {
   const source = linkView.model.source();
   const target = linkView.model.target();
@@ -138,33 +134,23 @@ export function showLinkTools(
    */
   const shouldHideLinkTool = (
     cellOne: ServiceEntityBlock,
-    cellTwo: ServiceEntityBlock,
+    cellTwo: ServiceEntityBlock
   ): boolean => {
     const nameOne = cellOne.getName();
     const nameTwo = cellTwo.getName();
 
-    const elementConnectionRule = connectionRules[nameOne].find(
-      (rule) => rule.name === nameTwo,
-    );
+    const elementConnectionRule = connectionRules[nameOne].find((rule) => rule.name === nameTwo);
 
-    const isElementInEditMode: boolean | undefined =
-      cellOne.get("isInEditMode");
+    const isElementInEditMode: boolean | undefined = cellOne.get("isInEditMode");
 
-    if (
-      isElementInEditMode &&
-      elementConnectionRule &&
-      elementConnectionRule.modifier !== "rw+"
-    ) {
+    if (isElementInEditMode && elementConnectionRule && elementConnectionRule.modifier !== "rw+") {
       return true;
     }
 
     return false;
   };
 
-  if (
-    shouldHideLinkTool(sourceCell, targetCell) ||
-    shouldHideLinkTool(targetCell, sourceCell)
-  ) {
+  if (shouldHideLinkTool(sourceCell, targetCell) || shouldHideLinkTool(targetCell, sourceCell)) {
     return;
   }
 
@@ -199,12 +185,8 @@ export function showLinkTools(
           const source = model.source();
           const target = model.target();
 
-          const sourceCell = graph.getCell(
-            source.id as dia.Cell.ID,
-          ) as ServiceEntityBlock;
-          const targetCell = graph.getCell(
-            target.id as dia.Cell.ID,
-          ) as ServiceEntityBlock;
+          const sourceCell = graph.getCell(source.id as dia.Cell.ID) as ServiceEntityBlock;
+          const targetCell = graph.getCell(target.id as dia.Cell.ID) as ServiceEntityBlock;
 
           //as the connection between two cells is bidirectional we need attempt to remove data from both cells
           removeConnectionData(paper, graph, sourceCell, targetCell);
@@ -231,7 +213,7 @@ const removeConnectionData = (
   paper: dia.Paper,
   graph: dia.Graph,
   elementCell: ServiceEntityBlock,
-  cellToDisconnect: ServiceEntityBlock,
+  cellToDisconnect: ServiceEntityBlock
 ): void => {
   const elementRelations = elementCell.getRelations();
 
@@ -247,23 +229,18 @@ const removeConnectionData = (
 
     //filter out every cell that is either embedded entity to the cellToDisconnect or is core or the cellToDisconnect is embedded to it
     const interServiceRelations = disconnectedCellNeighbors.filter(
-      (cell) =>
-        !(cell.get("embeddedTo") === cellToDisconnect.id) ||
-        !(embeddedToID === cell.id),
+      (cell) => !(cell.get("embeddedTo") === cellToDisconnect.id) || !(embeddedToID === cell.id)
     );
 
     //all cells left are the inter-service relation connections, if there is only one then we should highlight the cell, if more then it's not loose inter-service relation cell, zero shouldn't be possible as we are including current connection in the array
     if (interServiceRelations.length === 1) {
-      toggleLooseElement(
-        paper.findViewByModel(cellToDisconnect),
-        EventActionEnum.ADD,
-      );
+      toggleLooseElement(paper.findViewByModel(cellToDisconnect), EventActionEnum.ADD);
     }
 
     dispatchUpdateInterServiceRelations(
       EventActionEnum.REMOVE,
       cellToDisconnect.get("entityName"),
-      elementCell.id,
+      elementCell.id
     );
 
     dispatchUpdateServiceOrderItems(elementCell, ActionEnum.UPDATE);

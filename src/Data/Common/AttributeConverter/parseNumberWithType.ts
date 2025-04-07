@@ -1,7 +1,4 @@
-export function parseNumberWithType(
-  type: string,
-  value: string,
-): bigint | number | string | null {
+export function parseNumberWithType(type: string, value: string): bigint | number | string | null {
   if (value === null) {
     return value;
   }

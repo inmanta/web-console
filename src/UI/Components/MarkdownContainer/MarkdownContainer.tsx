@@ -44,7 +44,7 @@ export const MarkdownContainer = ({ text, web_title }: Props) => {
     const handleImageClick = (event: Event) => {
       const img = event.target as HTMLImageElement;
 
-      if (!img.matches(".mermaid-diagram[data-zoomable=\"true\"]")) return;
+      if (!img.matches('.mermaid-diagram[data-zoomable="true"]')) return;
 
       event.stopPropagation();
 
@@ -89,7 +89,7 @@ export const MarkdownContainer = ({ text, web_title }: Props) => {
         mutation.addedNodes.forEach((node) => {
           if (
             node instanceof HTMLImageElement &&
-            node.matches(".mermaid-diagram[data-zoomable=\"true\"]")
+            node.matches('.mermaid-diagram[data-zoomable="true"]')
           ) {
             node.addEventListener("click", handleImageClick);
           }
@@ -104,11 +104,9 @@ export const MarkdownContainer = ({ text, web_title }: Props) => {
     });
 
     // Add initial event listeners
-    container
-      .querySelectorAll(".mermaid-diagram[data-zoomable=\"true\"]")
-      .forEach((img) => {
-        img.addEventListener("click", handleImageClick);
-      });
+    container.querySelectorAll('.mermaid-diagram[data-zoomable="true"]').forEach((img) => {
+      img.addEventListener("click", handleImageClick);
+    });
 
     document.addEventListener("click", handleDocumentClick);
     document.addEventListener("keydown", handleKeyDown);
@@ -117,11 +115,9 @@ export const MarkdownContainer = ({ text, web_title }: Props) => {
       observer.disconnect();
       document.removeEventListener("click", handleDocumentClick);
       document.removeEventListener("keydown", handleKeyDown);
-      container
-        .querySelectorAll(".mermaid-diagram[data-zoomable=\"true\"]")
-        .forEach((img) => {
-          img.removeEventListener("click", handleImageClick);
-        });
+      container.querySelectorAll('.mermaid-diagram[data-zoomable="true"]').forEach((img) => {
+        img.removeEventListener("click", handleImageClick);
+      });
       document.body.style.overflow = "";
     };
   }, [text]);

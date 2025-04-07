@@ -42,9 +42,7 @@ enum TabKeys {
 export const TabView: React.FC = () => {
   const { serviceModelQuery, instance } = useContext(InstanceDetailsContext);
 
-  const docAttributeDescriptors = getDocumentationAttributeDescriptors(
-    serviceModelQuery.data,
-  );
+  const docAttributeDescriptors = getDocumentationAttributeDescriptors(serviceModelQuery.data);
   const docsAttributeLength = docAttributeDescriptors.length;
 
   const [activeTab, setActiveTab] = useUrlStateWithString<TabKeys>({
@@ -60,38 +58,22 @@ export const TabView: React.FC = () => {
   });
 
   const handleTabClick = (
-    _event:
-      | React.MouseEvent<HTMLElement, MouseEvent>
-      | React.KeyboardEvent
-      | MouseEvent,
-    tabIndex: string | number,
+    _event: React.MouseEvent<HTMLElement, MouseEvent> | React.KeyboardEvent | MouseEvent,
+    tabIndex: string | number
   ) => {
     setActiveTab(tabIndex as TabKeys);
   };
 
   const disabledResourceTabTooltip =
     String(instance.version) !== selectedVersion ? (
-      <Tooltip
-        content={words("instanceDetails.tabs.disabled.resources-tooltip")}
-      />
+      <Tooltip content={words("instanceDetails.tabs.disabled.resources-tooltip")} />
     ) : undefined;
 
   useEffect(() => {
-    if (
-      selectedVersion !== String(instance.version) &&
-      activeTab === TabKeys.RESOURCES
-    ) {
-      setActiveTab(
-        docsAttributeLength ? TabKeys.DOCUMENTATION : TabKeys.ATTRIBUTES,
-      );
+    if (selectedVersion !== String(instance.version) && activeTab === TabKeys.RESOURCES) {
+      setActiveTab(docsAttributeLength ? TabKeys.DOCUMENTATION : TabKeys.ATTRIBUTES);
     }
-  }, [
-    selectedVersion,
-    setActiveTab,
-    activeTab,
-    docsAttributeLength,
-    instance.version,
-  ]);
+  }, [selectedVersion, setActiveTab, activeTab, docsAttributeLength, instance.version]);
 
   return (
     <Panel variant="raised">
@@ -106,11 +88,7 @@ export const TabView: React.FC = () => {
             {docsAttributeLength > 0 && (
               <Tab
                 eventKey={TabKeys.DOCUMENTATION}
-                title={
-                  <TabTitleText>
-                    {words("instanceDetails.tabs.documentation")}
-                  </TabTitleText>
-                }
+                title={<TabTitleText>{words("instanceDetails.tabs.documentation")}</TabTitleText>}
                 aria-label="documentation-content"
               >
                 <DocumentationTabContent
@@ -121,33 +99,21 @@ export const TabView: React.FC = () => {
             )}
             <Tab
               eventKey={TabKeys.ATTRIBUTES}
-              title={
-                <TabTitleText>
-                  {words("instanceDetails.tabs.attributes")}
-                </TabTitleText>
-              }
+              title={<TabTitleText>{words("instanceDetails.tabs.attributes")}</TabTitleText>}
               aria-label="attributes-content"
             >
               <AttributesTabContent />
             </Tab>
             <Tab
               eventKey={TabKeys.EVENTS}
-              title={
-                <TabTitleText>
-                  {words("instanceDetails.tabs.events")}
-                </TabTitleText>
-              }
+              title={<TabTitleText>{words("instanceDetails.tabs.events")}</TabTitleText>}
               aria-label="events-content"
             >
               <EventsTabContent selectedVersion={selectedVersion} />
             </Tab>
             <Tab
               eventKey={TabKeys.RESOURCES}
-              title={
-                <TabTitleText>
-                  {words("instanceDetails.tabs.resources")}
-                </TabTitleText>
-              }
+              title={<TabTitleText>{words("instanceDetails.tabs.resources")}</TabTitleText>}
               aria-label="resources-content"
               isDisabled={String(instance.version) !== selectedVersion}
               isAriaDisabled={String(instance.version) !== selectedVersion}
@@ -171,7 +137,7 @@ export const TabView: React.FC = () => {
  * @returns DocAttributeDescriptors[]
  */
 const getDocumentationAttributeDescriptors = (
-  serviceModel?: ServiceModel,
+  serviceModel?: ServiceModel
 ): DocAttributeDescriptors[] => {
   const docAttributeDescriptors: DocAttributeDescriptors[] = [];
 

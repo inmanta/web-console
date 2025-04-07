@@ -4,11 +4,7 @@ import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { Either } from "@/Core";
-import {
-  getStoreInstance,
-  QueryManagerResolverImpl,
-  QueryResolverImpl,
-} from "@/Data";
+import { getStoreInstance, QueryManagerResolverImpl, QueryResolverImpl } from "@/Data";
 import { DeferredApiHelper, dependencies, StaticScheduler } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import * as VersionedResourceDetails from "@S/DesiredStateResourceDetails/Data/Mock";
@@ -28,7 +24,7 @@ function setup() {
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
   const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler),
+    new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler)
   );
 
   const component = (
@@ -60,9 +56,7 @@ test("GIVEN DesiredStateResourceDetails page WHEN api returns details THEN shows
     await apiHelper.resolve(Either.right({ data: VersionedResourceDetails.a }));
   });
 
-  expect(
-    screen.getByRole("generic", { name: "ResourceDetails-Success" }),
-  ).toBeVisible();
+  expect(screen.getByRole("generic", { name: "ResourceDetails-Success" })).toBeVisible();
   expect(screen.getByText("requires")).toBeVisible();
 
   await act(async() => {

@@ -9,13 +9,7 @@ import {
 import inlineStyles from "@patternfly/react-styles/css/components/InlineEdit/inline-edit";
 import { ExpandableRowContent, Tbody, Td, Tr } from "@patternfly/react-table";
 import styled from "styled-components";
-import {
-  Maybe,
-  LogLevelsList,
-  EventTypesList,
-  LogLevelString,
-  EventType,
-} from "@/Core";
+import { Maybe, LogLevelsList, EventTypesList, LogLevelString, EventType } from "@/Core";
 import { MultiTextSelect, SingleTextSelect } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
@@ -25,10 +19,7 @@ interface Props {
   numberOfColumns: number;
 }
 
-export const CreateCallbackForm: React.FC<Props> = ({
-  service_entity,
-  numberOfColumns,
-}) => {
+export const CreateCallbackForm: React.FC<Props> = ({ service_entity, numberOfColumns }) => {
   const [url, setUrl] = useState<string | null>(null);
   const [id, setId] = useState<string | null>(null);
   const [logLevel, setLogLevel] = useState<string | null>(null);
@@ -44,10 +35,8 @@ export const CreateCallbackForm: React.FC<Props> = ({
     callback_url: url || "",
     callback_id: id || undefined,
     service_entity,
-    minimal_log_level:
-      logLevel === null ? undefined : (logLevel as LogLevelString),
-    event_types:
-      eventTypes.length <= 0 ? undefined : (eventTypes as EventType[]),
+    minimal_log_level: logLevel === null ? undefined : (logLevel as LogLevelString),
+    event_types: eventTypes.length <= 0 ? undefined : (eventTypes as EventType[]),
   });
 
   const onCreate = async() => {
@@ -130,9 +119,7 @@ export const CreateCallbackForm: React.FC<Props> = ({
                 isInline
                 variant="danger"
                 title="Something went wrong"
-                actionClose={
-                  <AlertActionCloseButton onClose={() => setError("")} />
-                }
+                actionClose={<AlertActionCloseButton onClose={() => setError("")} />}
               >
                 <p>{error}</p>
               </Alert>

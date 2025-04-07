@@ -19,7 +19,7 @@ const server = setupServer(
     return HttpResponse.json({
       data: mockedMetrics,
     });
-  }),
+  })
 );
 
 const setup = (isLsmEnabled = false) => {
@@ -59,7 +59,7 @@ describe("Dashboard", () => {
     server.use(
       http.get("/api/v2/metrics", () => {
         return HttpResponse.error();
-      }),
+      })
     );
 
     const { component } = setup();
@@ -81,12 +81,8 @@ describe("Dashboard", () => {
     });
 
     // Verify sections are rendered
-    expect(
-      screen.getByText(words("navigation.orchestrationEngine")),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText(words("navigation.resourceManager")),
-    ).toBeInTheDocument();
+    expect(screen.getByText(words("navigation.orchestrationEngine"))).toBeInTheDocument();
+    expect(screen.getByText(words("navigation.resourceManager"))).toBeInTheDocument();
   });
 
   it("should show LSM section when LSM is enabled", async() => {
@@ -98,9 +94,7 @@ describe("Dashboard", () => {
       expect(screen.getByLabelText("Metrics-Success")).toBeInTheDocument();
     });
 
-    expect(
-      screen.getByText(words("navigation.lifecycleServiceManager")),
-    ).toBeInTheDocument();
+    expect(screen.getByText(words("navigation.lifecycleServiceManager"))).toBeInTheDocument();
   });
 
   it("should not show LSM section when LSM is disabled", async() => {
@@ -112,9 +106,7 @@ describe("Dashboard", () => {
       expect(screen.getByLabelText("Metrics-Success")).toBeInTheDocument();
     });
 
-    expect(
-      screen.queryByText(words("navigation.lifecycleServiceManager")),
-    ).not.toBeInTheDocument();
+    expect(screen.queryByText(words("navigation.lifecycleServiceManager"))).not.toBeInTheDocument();
   });
 
   it("should update date range when refresh button is clicked", async() => {
@@ -127,7 +119,7 @@ describe("Dashboard", () => {
         return HttpResponse.json({
           data: mockedMetrics,
         });
-      }),
+      })
     );
 
     const { component } = setup();

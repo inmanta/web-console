@@ -13,10 +13,7 @@ import {
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { Mock } from "@S/Facts/Test";
-import {
-  GetResourceFactsQueryManager,
-  GetResourceFactsStateHelper,
-} from "@S/ResourceDetails/Data";
+import { GetResourceFactsQueryManager, GetResourceFactsStateHelper } from "@S/ResourceDetails/Data";
 import { FactsTab } from "./FactsTab";
 import { sortFactRows } from "./FactsTable";
 
@@ -26,12 +23,8 @@ function setup() {
   const scheduler = new StaticScheduler();
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolverImpl([
-      GetResourceFactsQueryManager(
-        apiHelper,
-        GetResourceFactsStateHelper(store),
-        scheduler,
-      ),
-    ]),
+      GetResourceFactsQueryManager(apiHelper, GetResourceFactsStateHelper(store), scheduler),
+    ])
   );
 
   const component = (
@@ -57,15 +50,11 @@ test("Given the FactsTab When the backend response is an error Then shows failed
 
   render(component);
 
-  expect(
-    await screen.findByRole("region", { name: "Facts-Loading" }),
-  ).toBeInTheDocument();
+  expect(await screen.findByRole("region", { name: "Facts-Loading" })).toBeInTheDocument();
 
   apiHelper.resolve(Either.left("error"));
 
-  expect(
-    await screen.findByRole("region", { name: "Facts-Failed" }),
-  ).toBeInTheDocument();
+  expect(await screen.findByRole("region", { name: "Facts-Failed" })).toBeInTheDocument();
 });
 
 test("Given the FactsTab When the backend response is successful Then shows success table", async() => {
@@ -73,9 +62,7 @@ test("Given the FactsTab When the backend response is successful Then shows succ
 
   render(component);
 
-  expect(
-    await screen.findByRole("region", { name: "Facts-Loading" }),
-  ).toBeInTheDocument();
+  expect(await screen.findByRole("region", { name: "Facts-Loading" })).toBeInTheDocument();
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
@@ -86,24 +73,18 @@ test("Given the FactsTab When the backend response is successful Then shows succ
 
   apiHelper.resolve(Either.right(Mock.response));
 
-  expect(
-    await screen.findByRole("grid", { name: "Facts-Success" }),
-  ).toBeInTheDocument();
+  expect(await screen.findByRole("grid", { name: "Facts-Success" })).toBeInTheDocument();
 });
 
 test("Given sortFactRows When sorting by different columns Then the result is correct", async() => {
   const sortedByNameAsc = sortFactRows(Mock.response.data, "name", "asc");
 
   expect(sortedByNameAsc[0].name).toEqual("awsDevice");
-  expect(sortedByNameAsc[sortedByNameAsc.length - 1].name).toEqual(
-    "partnerName",
-  );
+  expect(sortedByNameAsc[sortedByNameAsc.length - 1].name).toEqual("partnerName");
   const sortedByNameDesc = sortFactRows(Mock.response.data, "name", "desc");
 
   expect(sortedByNameDesc[0].name).toEqual("partnerName");
-  expect(sortedByNameDesc[sortedByNameDesc.length - 1].name).toEqual(
-    "awsDevice",
-  );
+  expect(sortedByNameDesc[sortedByNameDesc.length - 1].name).toEqual("awsDevice");
 
   const sortedByDateAsc = sortFactRows(Mock.response.data, "updated", "asc");
 
@@ -113,9 +94,7 @@ test("Given sortFactRows When sorting by different columns Then the result is co
   const sortedByDateDesc = sortFactRows(Mock.response.data, "updated", "desc");
 
   expect(sortedByDateDesc[0].name).toEqual("location");
-  expect(sortedByDateDesc[sortedByDateDesc.length - 1].name).toEqual(
-    "jumboFrameCapable",
-  );
+  expect(sortedByDateDesc[sortedByDateDesc.length - 1].name).toEqual("jumboFrameCapable");
 
   const sortedByValueAsc = sortFactRows(Mock.response.data, "value", "asc");
 
@@ -125,23 +104,15 @@ test("Given sortFactRows When sorting by different columns Then the result is co
   const sortedByValueDesc = sortFactRows(Mock.response.data, "value", "desc");
 
   expect(sortedByValueDesc[0].value).toEqual("no");
-  expect(sortedByValueDesc[sortedByValueDesc.length - 1].value).toEqual(
-    "available",
-  );
+  expect(sortedByValueDesc[sortedByValueDesc.length - 1].value).toEqual("available");
 
   const factsWithUndefinedDate = [
     ...Mock.response.data,
     { name: "no_date", updated: undefined, value: "yes", id: "123" },
   ];
 
-  const sortedByDateWithUndefined = sortFactRows(
-    factsWithUndefinedDate,
-    "updated",
-    "asc",
-  );
+  const sortedByDateWithUndefined = sortFactRows(factsWithUndefinedDate, "updated", "asc");
 
   expect(sortedByDateWithUndefined[0].name).toEqual("no_date");
-  expect(
-    sortedByDateWithUndefined[sortedByDateWithUndefined.length - 1].name,
-  ).toEqual("location");
+  expect(sortedByDateWithUndefined[sortedByDateWithUndefined.length - 1].name).toEqual("location");
 });

@@ -8,11 +8,7 @@ interface ToggleProps {
   [k: string]: unknown;
 }
 
-export const Toggle: React.FC<ToggleProps> = ({
-  expanded,
-  onToggle,
-  ...props
-}) => (
+export const Toggle: React.FC<ToggleProps> = ({ expanded, onToggle, ...props }) => (
   <Button
     icon={expanded ? <AngleDownIcon /> : <AngleRightIcon />}
     variant="plain"

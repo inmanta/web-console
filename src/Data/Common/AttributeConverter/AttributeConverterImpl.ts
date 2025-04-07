@@ -6,24 +6,17 @@ import {
   InstanceAttributeModel,
   ServiceInstanceModel,
 } from "@/Core";
-import {
-  AttributeInputConverter,
-  AttributeResultConverter,
-  InputType,
-} from "./AttributeConverter";
+import { AttributeInputConverter, AttributeResultConverter, InputType } from "./AttributeConverter";
 import { parseNumberWithType } from "./parseNumberWithType";
 
 function isNumberArray(type: string): boolean {
-  return (
-    ["float", "int"].filter((numberLike) => type.includes(`${numberLike}[]`))
-      .length > 0
-  );
+  return ["float", "int"].filter((numberLike) => type.includes(`${numberLike}[]`)).length > 0;
 }
 
 function isNumberType(type: string): boolean {
   return (
-    ["float", "int"].filter((numberLike) => type.includes(numberLike)).length >
-      0 && !isNumberArray(type)
+    ["float", "int"].filter((numberLike) => type.includes(numberLike)).length > 0 &&
+    !isNumberArray(type)
   );
 }
 
@@ -48,7 +41,7 @@ export class AttributeInputConverterImpl implements AttributeInputConverter {
       | null
       | boolean
       | string[]
-      | { [x: string]: string | null | boolean | string[] },
+      | { [x: string]: string | null | boolean | string[] }
   ):
     | string
     | null
@@ -79,13 +72,9 @@ export class AttributeInputConverterImpl implements AttributeInputConverter {
    * and to the active attribute set otherwise
    */
   getCurrentAttributes(
-    instance: Pick<
-      ServiceInstanceModel,
-      "candidate_attributes" | "active_attributes"
-    >,
+    instance: Pick<ServiceInstanceModel, "candidate_attributes" | "active_attributes">
   ): InstanceAttributeModel | null {
-    return instance.candidate_attributes &&
-      !isEmpty(instance.candidate_attributes)
+    return instance.candidate_attributes && !isEmpty(instance.candidate_attributes)
       ? instance.candidate_attributes
       : instance.active_attributes;
   }
@@ -100,7 +89,7 @@ export class AttributeResultConverterImpl implements AttributeResultConverter {
   ensureAttributeType(
     /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
     value: any,
-    type: string,
+    type: string
   ): unknown {
     let parsedValue = value;
 
@@ -145,19 +134,14 @@ export class AttributeResultConverterImpl implements AttributeResultConverter {
    * Creates a type-correct object from the attribute list, that can be used for communication with the backend
    * @param attributes The results from a form
    */
-  parseAttributesToCorrectTypes(
-    attributes: FormAttributeResult[],
-  ): InstanceAttributeModel {
+  parseAttributesToCorrectTypes(attributes: FormAttributeResult[]): InstanceAttributeModel {
     const attributesTypeCorrect = Object.assign(
       {},
       ...attributes.map((attribute) => {
         return {
-          [attribute.name]: this.ensureAttributeType(
-            attribute.value,
-            attribute.type,
-          ),
+          [attribute.name]: this.ensureAttributeType(attribute.value, attribute.type),
         };
-      }),
+      })
     );
 
     return attributesTypeCorrect;
@@ -171,7 +155,7 @@ export class AttributeResultConverterImpl implements AttributeResultConverter {
    */
   calculateDiff(
     attributesAfterChanges: InstanceAttributeModel,
-    originalAttributes: InstanceAttributeModel | null,
+    originalAttributes: InstanceAttributeModel | null
   ): InstanceAttributeModel {
     if (!originalAttributes) {
       return attributesAfterChanges;
@@ -185,11 +169,8 @@ export class AttributeResultConverterImpl implements AttributeResultConverter {
     // Don't include changes from undefined to null, but allow setting a value explicitly to null
     const changedAttributeNames = Object.keys(richDiff).filter(
       (attributeName) =>
-        !(
-          originalAttributes[attributeName] === undefined &&
-          richDiff[attributeName] === null
-        ) &&
-        !isEqual(richDiff[attributeName], originalAttributes[attributeName]),
+        !(originalAttributes[attributeName] === undefined && richDiff[attributeName] === null) &&
+        !isEqual(richDiff[attributeName], originalAttributes[attributeName])
     );
     const updatedAttributes = {};
 
@@ -201,9 +182,7 @@ export class AttributeResultConverterImpl implements AttributeResultConverter {
   }
 }
 
-export function toOptionalBoolean(
-  value?: string | null | boolean,
-): boolean | null {
+export function toOptionalBoolean(value?: string | null | boolean): boolean | null {
   if (typeof value === "boolean") {
     return value;
   }

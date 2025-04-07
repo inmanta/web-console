@@ -10,10 +10,7 @@ import {
   UnknownDefinition,
 } from "@/Core/Domain/EnvironmentSettings";
 
-type Update = (
-  id: string,
-  value: EnvironmentSettings.Value,
-) => Promise<Maybe.Type<string>>;
+type Update = (id: string, value: EnvironmentSettings.Value) => Promise<Maybe.Type<string>>;
 
 type Reset = (id: string) => Promise<Maybe.Type<string>>;
 
@@ -22,13 +19,13 @@ export class InputInfoCreator {
     private readonly setValues: (values: EnvironmentSettings.ValuesMap) => void,
     private readonly update: Update,
     private readonly reset: Reset,
-    private readonly setError: (message: string) => void,
+    private readonly setError: (message: string) => void
   ) {}
 
   create(
     settingsMap: EnvironmentSettings.ValuesMap,
     definitionMap: EnvironmentSettings.DefinitionMap,
-    values: EnvironmentSettings.ValuesMap,
+    values: EnvironmentSettings.ValuesMap
   ): EnvironmentSettings.InputInfo[] {
     return Object.values(definitionMap)
       .map((definition) =>
@@ -36,16 +33,13 @@ export class InputInfoCreator {
           settingsMap[definition.name],
           values[definition.name],
           definition,
-          (value) => this.setValues({ ...values, [definition.name]: value }),
-        ),
+          (value) => this.setValues({ ...values, [definition.name]: value })
+        )
       )
       .sort(this.compare);
   }
 
-  private compare(
-    a: EnvironmentSettings.InputInfo,
-    b: EnvironmentSettings.InputInfo,
-  ): number {
+  private compare(a: EnvironmentSettings.InputInfo, b: EnvironmentSettings.InputInfo): number {
     return a.name < b.name ? -1 : 1;
   }
 
@@ -53,7 +47,7 @@ export class InputInfoCreator {
     initial: EnvironmentSettings.Value,
     value: EnvironmentSettings.Value | undefined,
     definition: EnvironmentSettings.Definition,
-    setValue: (value: EnvironmentSettings.Value) => void,
+    setValue: (value: EnvironmentSettings.Value) => void
   ): EnvironmentSettings.InputInfo {
     const update = async(value: EnvironmentSettings.Value) => {
       const error = await this.update(definition.name, value);
@@ -145,10 +139,7 @@ export class InputInfoCreator {
           ...dictDefinition,
           type: "dict",
           initial: initial as EnvironmentSettings.Dict,
-          value: this.undefinedFallback(
-            value,
-            dictDefinition.default as EnvironmentSettings.Dict,
-          ),
+          value: this.undefinedFallback(value, dictDefinition.default as EnvironmentSettings.Dict),
           set: (value) => setValue(value),
           update,
           reset,

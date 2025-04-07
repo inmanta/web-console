@@ -17,21 +17,16 @@ interface Props {
   projects: ProjectModel[];
 }
 
-export const EnvironmentSettings: React.FC<Props> = ({
-  environment,
-  projects,
-}) => {
+export const EnvironmentSettings: React.FC<Props> = ({ environment, projects }) => {
   const { commandResolver } = useContext(DependencyContext);
-  const modifyEnvironmentTrigger =
-    commandResolver.useGetTrigger<"ModifyEnvironment">({
-      kind: "ModifyEnvironment",
-    });
+  const modifyEnvironmentTrigger = commandResolver.useGetTrigger<"ModifyEnvironment">({
+    kind: "ModifyEnvironment",
+  });
   const createProject = commandResolver.useGetTrigger<"CreateProject">({
     kind: "CreateProject",
   });
 
-  const onNameSubmit = (name: string) =>
-    modifyEnvironmentTrigger({ name: name });
+  const onNameSubmit = (name: string) => modifyEnvironmentTrigger({ name: name });
 
   const onRepoSubmit = (fields: Record<string, string>) =>
     modifyEnvironmentTrigger({

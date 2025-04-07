@@ -16,14 +16,13 @@ export const Tab: React.FC = () => {
   const isClientTypeSelected = (clientType: ClientType): boolean =>
     clientTypes.includes(clientType);
 
-  const getClientTypeSelector =
-    (clientType: ClientType) => (selected: boolean) => {
-      if (selected && clientTypes.includes(clientType)) return;
+  const getClientTypeSelector = (clientType: ClientType) => (selected: boolean) => {
+    if (selected && clientTypes.includes(clientType)) return;
 
-      if (!selected && !clientTypes.includes(clientType)) return;
+    if (!selected && !clientTypes.includes(clientType)) return;
 
-      setClientTypes(toggleValueInList(clientType, clientTypes));
-    };
+    setClientTypes(toggleValueInList(clientType, clientTypes));
+  };
 
   const onGenerate = async() => {
     setError(Maybe.none());

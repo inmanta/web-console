@@ -18,5 +18,5 @@ it.each`
     };
 
     expect(getUrl(queryParams)).toEqual(url);
-  },
+  }
 );

@@ -14,11 +14,7 @@ interface Props {
   update: (deleted: ServiceInstanceParams.DeletedRule) => void;
 }
 
-export const DeletedFilter: React.FC<Props> = ({
-  isVisible,
-  update,
-  deleted,
-}) => {
+export const DeletedFilter: React.FC<Props> = ({ isVisible, update, deleted }) => {
   const [isFilterOpen, setFilterOpen] = useState(false);
 
   const onSelect = (event, selection) => {
@@ -70,11 +66,7 @@ export const DeletedFilter: React.FC<Props> = ({
         >
           Include
         </SelectOption>
-        <SelectOption
-          value="Only"
-          description="Only show deleted instances"
-          aria-label="Only"
-        >
+        <SelectOption value="Only" description="Only show deleted instances" aria-label="Only">
           Only
         </SelectOption>
       </Select>

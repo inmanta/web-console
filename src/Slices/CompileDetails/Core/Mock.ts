@@ -31,7 +31,7 @@ export const data: CompileDetails = {
       started: "2021-09-10T09:05:30.000000",
       completed: "2021-09-10T09:05:40.000000",
       command:
-        "/opt/inmanta/bin/python3 -m inmanta.app -vvv export -X -e f7e84432-855c-4d04-b422-50c3ab925a4a --server_address localhost --server_port 8888 --metadata {\"message\": \"Recompile model because state transition\", \"type\": \"lsm_export\", \"event_type\": \"RESOURCE_TRANSITION\", \"event_correlation_id\": \"01d857cc-adf8-4f9b-beb7-ccdc0519a5ae\"} --export-compile-data --export-compile-data-file /tmp/tmps4cy92q4",
+        '/opt/inmanta/bin/python3 -m inmanta.app -vvv export -X -e f7e84432-855c-4d04-b422-50c3ab925a4a --server_address localhost --server_port 8888 --metadata {"message": "Recompile model because state transition", "type": "lsm_export", "event_type": "RESOURCE_TRANSITION", "event_correlation_id": "01d857cc-adf8-4f9b-beb7-ccdc0519a5ae"} --export-compile-data --export-compile-data-file /tmp/tmps4cy92q4',
       name: "Recompiling configuration model",
       errstream: "error",
       outstream: "success",
@@ -71,7 +71,7 @@ export const DataFailed: CompileDetails = {
       started: "2021-09-10T09:05:30.000000",
       completed: "2021-09-10T09:05:40.000000",
       command:
-        "/opt/inmanta/bin/python3 -m inmanta.app -vvv export -X -e f7e84432-855c-4d04-b422-50c3ab925a4a --server_address localhost --server_port 8888 --metadata {\"message\": \"Recompile model because state transition\", \"type\": \"lsm_export\", \"event_type\": \"RESOURCE_TRANSITION\", \"event_correlation_id\": \"01d857cc-adf8-4f9b-beb7-ccdc0519a5ae\"} --export-compile-data --export-compile-data-file /tmp/tmps4cy92q4",
+        '/opt/inmanta/bin/python3 -m inmanta.app -vvv export -X -e f7e84432-855c-4d04-b422-50c3ab925a4a --server_address localhost --server_port 8888 --metadata {"message": "Recompile model because state transition", "type": "lsm_export", "event_type": "RESOURCE_TRANSITION", "event_correlation_id": "01d857cc-adf8-4f9b-beb7-ccdc0519a5ae"} --export-compile-data --export-compile-data-file /tmp/tmps4cy92q4',
       name: "Recompiling configuration model",
       errstream: "error",
       outstream: "success",

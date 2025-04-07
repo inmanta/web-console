@@ -59,29 +59,17 @@ export const EnvSelector: React.FC<Props> = ({
         >
           <StyledDiv>
             <div>
-              {authHelper.getUser() && (
-                <StyledText>{authHelper.getUser()}</StyledText>
-              )}
-              <div>
-                {toggleText.length > 28
-                  ? toggleText.slice(0, 20) + "..."
-                  : toggleText}
-              </div>
+              {authHelper.getUser() && <StyledText>{authHelper.getUser()}</StyledText>}
+              <div>{toggleText.length > 28 ? toggleText.slice(0, 20) + "..." : toggleText}</div>
             </div>
           </StyledDiv>
         </MenuToggle>
       )}
     >
       <DropdownList>
-        <DropdownGroup
-          label={words("home.environment.selector")}
-          key="envs-group"
-        >
+        <DropdownGroup label={words("home.environment.selector")} key="envs-group">
           {items.map((item, index) => (
-            <DropdownItem
-              onClick={() => onSelect(item)}
-              key={`env-${index}-${item}`}
-            >
+            <DropdownItem onClick={() => onSelect(item)} key={`env-${index}-${item}`}>
               {item.length > 28 ? item.slice(0, 20) + "..." : item}
             </DropdownItem>
           ))}
@@ -89,18 +77,14 @@ export const EnvSelector: React.FC<Props> = ({
         <div key="overview-link">
           <Divider />
           <Tooltip content={words("home.navigation.tooltip")} entryDelay={500}>
-            <DropdownItem
-              onClick={() => navigate(routeManager.getUrl("Home", undefined))}
-            >
+            <DropdownItem onClick={() => navigate(routeManager.getUrl("Home", undefined))}>
               {words("home.navigation.button")}
             </DropdownItem>
           </Tooltip>
           {!authHelper.isDisabled() && (
             <>
               <DropdownItem
-                onClick={() =>
-                  navigate(routeManager.getUrl("UserManagement", undefined))
-                }
+                onClick={() => navigate(routeManager.getUrl("UserManagement", undefined))}
               >
                 {words("userManagement.title")}
               </DropdownItem>

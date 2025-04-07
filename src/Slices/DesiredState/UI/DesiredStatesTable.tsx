@@ -17,9 +17,7 @@ export const DesiredStatesTable: React.FC<Props> = ({ rows, ...props }) => {
     words("desiredState.columns.resources"),
     words("desiredState.columns.labels"),
   ];
-  const heads = columnNames.map((displayName) => (
-    <Th key={displayName}>{displayName}</Th>
-  ));
+  const heads = columnNames.map((displayName) => <Th key={displayName}>{displayName}</Th>);
 
   return (
     <Table {...props} variant={TableVariant.compact}>

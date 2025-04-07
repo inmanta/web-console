@@ -62,8 +62,7 @@ export const MultiTextSelect: React.FC<Props> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [inputValue, setInputValue] = useState<string>("");
-  const [selectOptions, setSelectOptions] =
-    useState<SelectOptionProps[]>(options);
+  const [selectOptions, setSelectOptions] = useState<SelectOptionProps[]>(options);
   const [focusedItemIndex, setFocusedItemIndex] = useState<number | null>(null);
   const [activeItem, setActiveItem] = useState<string | null>(null);
   const textInputRef = useRef<HTMLInputElement>();
@@ -115,10 +114,7 @@ export const MultiTextSelect: React.FC<Props> = ({
 
       if (key === "ArrowDown") {
         // When no index is set or at the last index, focus to the first, otherwise increment focus index
-        if (
-          focusedItemIndex === null ||
-          focusedItemIndex === selectOptions.length - 1
-        ) {
+        if (focusedItemIndex === null || focusedItemIndex === selectOptions.length - 1) {
           indexToFocus = 0;
         } else {
           indexToFocus = focusedItemIndex + 1;
@@ -126,24 +122,16 @@ export const MultiTextSelect: React.FC<Props> = ({
       }
 
       setFocusedItemIndex(indexToFocus);
-      const focusedItem = selectOptions.filter((option) => !option.isDisabled)[
-        indexToFocus
-      ];
+      const focusedItem = selectOptions.filter((option) => !option.isDisabled)[indexToFocus];
 
-      setActiveItem(
-        `select-multi-typeahead-${focusedItem.value.replace(" ", "-")}`,
-      );
+      setActiveItem(`select-multi-typeahead-${focusedItem.value.replace(" ", "-")}`);
     }
   };
 
   const onInputKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    const enabledMenuItems = selectOptions.filter(
-      (menuItem) => !menuItem.isDisabled,
-    );
+    const enabledMenuItems = selectOptions.filter((menuItem) => !menuItem.isDisabled);
     const [firstMenuItem] = enabledMenuItems;
-    const focusedItem = focusedItemIndex
-      ? enabledMenuItems[focusedItemIndex]
-      : firstMenuItem;
+    const focusedItem = focusedItemIndex ? enabledMenuItems[focusedItemIndex] : firstMenuItem;
 
     switch (event.key) {
       // Select the first available option
@@ -176,10 +164,7 @@ export const MultiTextSelect: React.FC<Props> = ({
     setIsOpen(!isOpen);
   };
 
-  const onTextInputChange = (
-    _event: React.FormEvent<HTMLInputElement>,
-    value: string,
-  ) => {
+  const onTextInputChange = (_event: React.FormEvent<HTMLInputElement>, value: string) => {
     setInputValue(value);
   };
 
@@ -240,13 +225,7 @@ export const MultiTextSelect: React.FC<Props> = ({
           <TextInputGroupUtilities>
             {selected.length > 0 && (
               <Button
-                icon={
-                  props.toggleIcon ? (
-                    props.toggleIcon
-                  ) : (
-                    <TimesIcon aria-hidden />
-                  )
-                }
+                icon={props.toggleIcon ? props.toggleIcon : <TimesIcon aria-hidden />}
                 disabled={props.isDisabled}
                 variant="plain"
                 onClick={() => {

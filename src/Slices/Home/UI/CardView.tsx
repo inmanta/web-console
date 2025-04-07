@@ -33,9 +33,7 @@ export const CardView: React.FC<Props> = ({ environments, ...props }) => {
   return (
     <PageSection hasBodyWrapper={false}>
       <Gallery hasGutter {...props}>
-        <CreateNewEnvironmentCard
-          url={routeManager.getUrl("CreateEnvironment", undefined)}
-        />
+        <CreateNewEnvironmentCard url={routeManager.getUrl("CreateEnvironment", undefined)} />
         {environments.map((environment) => (
           <EnvironmentCard
             pathname={pathname}
@@ -80,18 +78,11 @@ interface EnvironmentCardProps {
   pathname: string;
 }
 
-const EnvironmentCard: React.FC<EnvironmentCardProps> = ({
-  environment,
-  pathname,
-}) => {
+const EnvironmentCard: React.FC<EnvironmentCardProps> = ({ environment, pathname }) => {
   const navigate = useNavigate();
 
   return (
-    <Card
-      isClickable
-      aria-label="Environment card"
-      data-testid="Environment card"
-    >
+    <Card isClickable aria-label="Environment card" data-testid="Environment card">
       <CardHeader
         selectableActions={{
           selectableActionAriaLabelledby: "Select-environment",

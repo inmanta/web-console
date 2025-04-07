@@ -51,9 +51,7 @@ test("GIVEN CatalogDataList WHEN 1 service THEN 1 service is shown", async() => 
 
   const list = screen.getByRole("list", { name: "List of service entities" });
 
-  expect(
-    within(list).getByRole("listitem", { name: Service.a.name }),
-  ).toBeInTheDocument();
+  expect(within(list).getByRole("listitem", { name: Service.a.name })).toBeInTheDocument();
 
   await act(async() => {
     const results = await axe(document.body);
@@ -67,12 +65,8 @@ test("GIVEN CatalogDataList WHEN 2 services THEN 2 services are shown", async() 
 
   const list = screen.getByRole("list", { name: "List of service entities" });
 
-  expect(
-    within(list).getByRole("listitem", { name: Service.a.name }),
-  ).toBeInTheDocument();
-  expect(
-    within(list).getByRole("listitem", { name: Service.b.name }),
-  ).toBeInTheDocument();
+  expect(within(list).getByRole("listitem", { name: Service.a.name })).toBeInTheDocument();
+  expect(within(list).getByRole("listitem", { name: Service.b.name })).toBeInTheDocument();
 
   await act(async() => {
     const results = await axe(document.body);
@@ -93,10 +87,7 @@ test("GIVEN CatalogDataList WHEN service THEN service inventory has correct link
   });
 
   expect(link).toBeInTheDocument();
-  expect(link).toHaveAttribute(
-    "href",
-    `/lsm/catalog/${Service.a.name}/inventory`,
-  );
+  expect(link).toHaveAttribute("href", `/lsm/catalog/${Service.a.name}/inventory`);
 
   await act(async() => {
     const results = await axe(document.body);
@@ -122,10 +113,7 @@ test("GIVEN CatalogDataList WHEN service THEN service details has correct link",
   });
 
   expect(link).toBeInTheDocument();
-  expect(link).toHaveAttribute(
-    "href",
-    `/lsm/catalog/${Service.a.name}/details`,
-  );
+  expect(link).toHaveAttribute("href", `/lsm/catalog/${Service.a.name}/details`);
 
   await act(async() => {
     const results = await axe(document.body);
@@ -139,9 +127,7 @@ test("GIVEN CatalogDataList WHEN description available THEN should show descript
 
   const list = screen.getByRole("list", { name: "List of service entities" });
   const listItem = within(list).getByRole("listitem", { name: Service.a.name });
-  const description = within(listItem).queryByText(
-    Service.a.description as string,
-  );
+  const description = within(listItem).queryByText(Service.a.description as string);
 
   expect(description).toBeVisible();
 

@@ -22,9 +22,7 @@ export class ImageHelper {
   }
 
   private static isFileTypeValid(file: FileType): boolean {
-    return ["image/png", "image/jpeg", "image/webp", "image/svg+xml"].includes(
-      file.type,
-    );
+    return ["image/png", "image/jpeg", "image/webp", "image/svg+xml"].includes(file.type);
   }
 
   private static isFileSizeValid(file: FileSize): boolean {

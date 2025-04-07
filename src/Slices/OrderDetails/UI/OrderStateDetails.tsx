@@ -47,22 +47,14 @@ export const OrderStateDetails: React.FC<Props> = ({ state }) => {
         <PaddedDescriptionList isHorizontal>
           {state.failure_type && (
             <DescriptionListGroup>
-              <DescriptionListTerm>
-                {words("orders.row.failureType")}
-              </DescriptionListTerm>
-              <DescriptionListDescription>
-                {state.failure_type}
-              </DescriptionListDescription>
+              <DescriptionListTerm>{words("orders.row.failureType")}</DescriptionListTerm>
+              <DescriptionListDescription>{state.failure_type}</DescriptionListDescription>
             </DescriptionListGroup>
           )}
           {state.reason && (
             <DescriptionListGroup>
-              <DescriptionListTerm>
-                {words("orders.row.reason")}
-              </DescriptionListTerm>
-              <DescriptionListDescription>
-                {state.reason}
-              </DescriptionListDescription>
+              <DescriptionListTerm>{words("orders.row.reason")}</DescriptionListTerm>
+              <DescriptionListDescription>{state.reason}</DescriptionListDescription>
             </DescriptionListGroup>
           )}
           {state.validation_compile_id && (

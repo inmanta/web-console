@@ -79,18 +79,12 @@ describe("Scenario 6 : Resources", () => {
     cy.get('[aria-label="Select-environment-test"]').click();
 
     // Go to Resources page by clicking on navbar
-    cy.get('[aria-label="Sidebar-Navigation-Item"]')
-      .contains("Resources")
-      .click();
+    cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
 
     // Expect 0/0 resources to be visible
-    cy.get('[aria-label="Deployment state summary"]').should(
-      "contain",
-      isIso ? "0 / 0" : "5 / 5",
-    );
+    cy.get('[aria-label="Deployment state summary"]').should("contain", isIso ? "0 / 0" : "5 / 5");
     // Expect table to be empty in case of ISO project
-    isIso &&
-      cy.get('[aria-label="ResourcesView-Empty"]').should("to.be.visible");
+    isIso && cy.get('[aria-label="ResourcesView-Empty"]').should("to.be.visible");
   });
 
   if (isIso) {
@@ -101,9 +95,7 @@ describe("Scenario 6 : Resources", () => {
       cy.get('[aria-label="Select-environment-test"]').click();
 
       // Go to Service Catalog
-      cy.get('[aria-label="Sidebar-Navigation-Item"]')
-        .contains("Service Catalog")
-        .click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
 
       // Select Show Inventory on basic-service
       cy.get("#basic-service").contains("Show inventory").click();
@@ -127,23 +119,16 @@ describe("Scenario 6 : Resources", () => {
       }).should("to.be.visible");
 
       // Go back to Resources page
-      cy.get('[aria-label="Sidebar-Navigation-Item"]')
-        .contains("Resources")
-        .click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
 
       // Expect two rows to be added to the table
       // lsm::LifecycleTransfer
       // frontend_model::TestResource
-      cy.get('[aria-label="Resource Table Row"]', { timeout: 30000 }).should(
-        "have.length",
-        2,
-      );
+      cy.get('[aria-label="Resource Table Row"]', { timeout: 30000 }).should("have.length", 2);
       cy.get('[aria-label="Resource Table Row"]')
         .eq(0)
         .should("contain", "frontend_model::TestResource");
-      cy.get('[aria-label="Resource Table Row"]')
-        .eq(1)
-        .should("contain", "lsm::LifecycleTransfer");
+      cy.get('[aria-label="Resource Table Row"]').eq(1).should("contain", "lsm::LifecycleTransfer");
 
       // click on frontend_model::TestResource Show Details
       cy.get('[aria-label="Resource Table Row"]')
@@ -195,19 +180,13 @@ describe("Scenario 6 : Resources", () => {
       cy.get("button").contains("Requires").click();
 
       // Expect it to be empty
-      cy.get('[aria-label="ResourceRequires-Empty"]').should(
-        "contain",
-        "No requirements found",
-      );
+      cy.get('[aria-label="ResourceRequires-Empty"]').should("contain", "No requirements found");
 
       // Click on history tab
       cy.get("button").contains("History").click();
 
       // Expect One row to be visible
-      cy.get('[aria-label="Resource History Table Row"]').should(
-        "have.length",
-        1,
-      );
+      cy.get('[aria-label="Resource History Table Row"]').should("have.length", 1);
 
       // Expect row to have 0 Requires
       cy.get('[data-label="Requires"]').should("contain", "0");
@@ -257,14 +236,8 @@ describe("Scenario 6 : Resources", () => {
         });
 
       // Expect requires tab to have no requirements
-      cy.get(".pf-v6-c-tabs__list")
-        .eq(1)
-        .find("button")
-        .contains("Requires")
-        .click();
-      cy.get('[aria-label="Requires"]')
-        .find("tbody")
-        .should("contain", "No requirements found");
+      cy.get(".pf-v6-c-tabs__list").eq(1).find("button").contains("Requires").click();
+      cy.get('[aria-label="Requires"]').find("tbody").should("contain", "No requirements found");
 
       // Go to logs tab
       cy.get("button").contains("Logs").click();
@@ -272,16 +245,12 @@ describe("Scenario 6 : Resources", () => {
       // Expect it to have : 7 log messages
       cy.get('[aria-label="ResourceLogRow"]', { timeout: 40000 }).should(
         "to.have.length.of.at.least",
-        7,
+        7
       );
 
       // make sure the default is 100 instead of 20 like on other pages with pagination.
-      cy.get(
-        '[aria-label="PaginationWidget-top"] .pf-v6-c-menu-toggle',
-      ).click();
-      cy.contains(".pf-v6-c-menu__list-item", "100")
-        .find("svg")
-        .should("exist");
+      cy.get('[aria-label="PaginationWidget-top"] .pf-v6-c-menu-toggle').click();
+      cy.contains(".pf-v6-c-menu__list-item", "100").find("svg").should("exist");
 
       // Expect last log message to be "Setting deployed due to known good status"
       cy.get('[aria-label="ResourceLogRow"]')
@@ -294,7 +263,7 @@ describe("Scenario 6 : Resources", () => {
       // Expect to find "Setting deployed due to known good status" displayed in expansion.
       cy.get(".pf-v6-c-description-list__text").should(
         "contain",
-        "Setting deployed due to known good status",
+        "Setting deployed due to known good status"
       );
     });
 
@@ -304,9 +273,7 @@ describe("Scenario 6 : Resources", () => {
       cy.get('[aria-label="Select-environment-test"]').click();
 
       // Go to Resources page
-      cy.get('[aria-label="Sidebar-Navigation-Item"]')
-        .contains("Resources")
-        .click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
 
       // click on frontend_model::TestResource Show Details
       cy.get('[aria-label="Resource Table Row"]')
@@ -323,19 +290,13 @@ describe("Scenario 6 : Resources", () => {
       cy.get('[role="option"]').contains("INFO").click();
 
       // Expect the amount of rows to be max  6
-      cy.get('[aria-label="ResourceLogRow"]').should(
-        "to.have.length.of.at.most",
-        6,
-      );
+      cy.get('[aria-label="ResourceLogRow"]').should("to.have.length.of.at.most", 6);
 
       // Remove INFO filter
       cy.get('[aria-label="Close INFO"]').click();
 
       // Expect amount of rows to be bigger than before filtering.
-      cy.get('[aria-label="ResourceLogRow"]').should(
-        "to.have.length.of.at.least",
-        7,
-      );
+      cy.get('[aria-label="ResourceLogRow"]').should("to.have.length.of.at.least", 7);
     });
 
     it("6.4 Resources with multiple dependencies", () => {
@@ -344,9 +305,7 @@ describe("Scenario 6 : Resources", () => {
       cy.get('[aria-label="Select-environment-test"]').click();
 
       // Go to Service Catalog page
-      cy.get('[aria-label="Sidebar-Navigation-Item"]')
-        .contains("Service Catalog")
-        .click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
 
       // Click on Show Inventory on dependency-service
       cy.get("#dependency-service").contains("Show inventory").click();
@@ -372,22 +331,15 @@ describe("Scenario 6 : Resources", () => {
       }).should("to.be.visible");
 
       // Go to Resource page
-      cy.get('[aria-label="Sidebar-Navigation-Item"]')
-        .contains("Resources")
-        .click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
 
       // Expect to find 7 rows now in the resource table.
-      cy.get('[aria-label="Resource Table Row"]', { timeout: 60000 }).should(
-        "have.length",
-        7,
-      );
+      cy.get('[aria-label="Resource Table Row"]', { timeout: 60000 }).should("have.length", 7);
       // Expect to find a resource with value: a, b, c
       cy.get('[aria-label="Resource Table Row"]').eq(0).should("contain", "a");
       cy.get('[aria-label="Resource Table Row"]').eq(1).should("contain", "b");
       cy.get('[aria-label="Resource Table Row"]').eq(2).should("contain", "c");
-      cy.get('[aria-label="Resource Table Row"]')
-        .eq(3)
-        .should("contain", "default-0001");
+      cy.get('[aria-label="Resource Table Row"]').eq(3).should("contain", "default-0001");
 
       // Expect resource with value a,b,c,default-0001 to have 0 Requires
       cy.get('[data-label="Requires"]').eq(0).should("contain", 0);
@@ -401,7 +353,7 @@ describe("Scenario 6 : Resources", () => {
       // Click open collapsible row for resource waiting-entity
       cy.get(
         '[aria-label="Toggle-frontend_model::TestResource[internal,name=waiting-entity]"] > button',
-        { timeout: 20000 },
+        { timeout: 20000 }
       ).click();
       // Expect to find three rows with
       cy.get('[aria-label="ResourceRequires-Success"]', {
@@ -413,13 +365,13 @@ describe("Scenario 6 : Resources", () => {
         expect($rows).to.have.length(4);
 
         expect($rows.eq(1).find("button"), "a-row").to.have.text(
-          "frontend_model::TestResource[internal,name=a]",
+          "frontend_model::TestResource[internal,name=a]"
         );
         expect($rows.eq(2).find("button"), "b-row").to.have.text(
-          "frontend_model::TestResource[internal,name=b]",
+          "frontend_model::TestResource[internal,name=b]"
         );
         expect($rows.eq(3).find("button"), "c-row").to.have.text(
-          "frontend_model::TestResource[internal,name=c]",
+          "frontend_model::TestResource[internal,name=c]"
         );
       });
 
@@ -446,23 +398,20 @@ describe("Scenario 6 : Resources", () => {
         expect($rows).to.have.length(4);
 
         expect($rows.eq(1).find("button"), "a-row").to.have.text(
-          "frontend_model::TestResource[internal,name=a]",
+          "frontend_model::TestResource[internal,name=a]"
         );
         expect($rows.eq(2).find("button"), "b-row").to.have.text(
-          "frontend_model::TestResource[internal,name=b]",
+          "frontend_model::TestResource[internal,name=b]"
         );
         expect($rows.eq(3).find("button"), "c-row").to.have.text(
-          "frontend_model::TestResource[internal,name=c]",
+          "frontend_model::TestResource[internal,name=c]"
         );
       });
 
       // go to history tab
       cy.get("button").contains("History").click();
 
-      cy.get('[aria-label="Resource History Table Row"]').should(
-        "have.length",
-        1,
-      );
+      cy.get('[aria-label="Resource History Table Row"]').should("have.length", 1);
 
       // expect to find one collapsible with 3 Requires
       cy.get('[data-label="Requires"]').should("contain", "3");
@@ -471,9 +420,7 @@ describe("Scenario 6 : Resources", () => {
       cy.get("button").contains("Requires").click();
 
       // click on first required resource link frontend_model::TestResource[internal,name=a]
-      cy.get("button")
-        .contains("frontend_model::TestResource[internal,name=a]")
-        .click();
+      cy.get("button").contains("frontend_model::TestResource[internal,name=a]").click();
 
       // check title from this page, should have the name of the resource
       cy.get(".pf-v6-c-content")
@@ -481,9 +428,7 @@ describe("Scenario 6 : Resources", () => {
         .should("to.be.visible");
 
       // go back to Resource page
-      cy.get('[aria-label="Sidebar-Navigation-Item"]')
-        .contains("Resources")
-        .click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
 
       // click show details on resource with value waiting-entity
       cy.get('[aria-label="Resource Table Row"]')
@@ -495,9 +440,7 @@ describe("Scenario 6 : Resources", () => {
       cy.get("button").contains("Requires").click();
 
       // click on first resource frontend_model::TestResource[internal,name=a]
-      cy.get("button")
-        .contains("frontend_model::TestResource[internal,name=a]")
-        .click();
+      cy.get("button").contains("frontend_model::TestResource[internal,name=a]").click();
 
       // Expect to be on the same page with same title as before.
       cy.get(".pf-v6-c-content")
@@ -512,9 +455,7 @@ describe("Scenario 6 : Resources", () => {
       cy.get('[aria-label="Select-environment-test"]').click();
 
       // Go to Service Catalog
-      cy.get('[aria-label="Sidebar-Navigation-Item"]')
-        .contains("Service Catalog")
-        .click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
 
       // Select Show Inventory on dependency-service and add one with 41 dependencies
       cy.get("#dependency-service").contains("Show inventory").click();
@@ -611,17 +552,12 @@ describe("Scenario 6 : Resources", () => {
         timeout: 20000,
       }).should("to.be.visible");
 
-      cy.get('[aria-label="Sidebar-Navigation-Item"]')
-        .contains("Service Catalog")
-        .click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       cy.get("#dependency-service").contains("Show inventory").click();
 
       // Expect the number in the chart to the success label to be 8
       cy.get(".pf-v5-c-chart").within(() => {
-        cy.get("#legend-ChartLabel-2", { timeout: 90000 }).should(
-          "contain",
-          "success: 2",
-        );
+        cy.get("#legend-ChartLabel-2", { timeout: 90000 }).should("contain", "success: 2");
       });
 
       //Wait for compilation to end
@@ -630,30 +566,25 @@ describe("Scenario 6 : Resources", () => {
       }).should("not.to.exist");
 
       //Go to resources page
-      cy.get('[aria-label="Sidebar-Navigation-Item"]')
-        .contains("Resources")
-        .click();
-      cy.get('[aria-label="LegendItem-deployed"]', { timeout: 60000 }).should(
-        "have.text",
-        "49",
-      );
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
+      cy.get('[aria-label="LegendItem-deployed"]', { timeout: 60000 }).should("have.text", "49");
 
       cy.get(
-        "#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type",
+        "#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type"
       ).should("have.text", "1 - 20");
 
       //Go to next page
       cy.get('[aria-label="Go to next page"]').first().click();
       cy.get('[aria-label="ResourcesView-Success"]').should("be.visible");
       cy.get(
-        "#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type",
+        "#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type"
       ).should("have.text", "21 - 40");
 
       //Go to last page
       cy.get('[aria-label="Go to next page"]').first().click();
       cy.get('[aria-label="ResourcesView-Success"]').should("be.visible");
       cy.get(
-        "#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type",
+        "#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type"
       ).should("have.text", "41 - 49");
 
       //Go to previous page
@@ -661,13 +592,13 @@ describe("Scenario 6 : Resources", () => {
       cy.get('[aria-label="ResourcesView-Success"]').should("be.visible");
 
       cy.get(
-        "#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type",
+        "#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type"
       ).should("have.text", "21 - 40");
 
       // Change sorting and expect to be redirected to the first page of the table
       cy.get("button").contains("Type").click();
       cy.get(
-        "#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type",
+        "#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type"
       ).should("have.text", "1 - 20");
     });
   } else {
@@ -676,14 +607,9 @@ describe("Scenario 6 : Resources", () => {
 
       cy.get('[aria-label="Select-environment-test"]').click();
 
-      cy.get('[aria-label="Sidebar-Navigation-Item"]')
-        .contains("Resources")
-        .click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
 
-      cy.get('[aria-label="Resource Table Row"]', { timeout: 30000 }).should(
-        "have.length",
-        5,
-      );
+      cy.get('[aria-label="Resource Table Row"]', { timeout: 30000 }).should("have.length", 5);
       cy.get('[aria-label="Resource Table Row"]')
         .eq(0)
         .should("contain", "frontend_model::TestResource");
@@ -749,19 +675,13 @@ describe("Scenario 6 : Resources", () => {
       cy.get("button").contains("Requires").click();
 
       // Expect it to be empty
-      cy.get('[aria-label="ResourceRequires-Empty"]').should(
-        "contain",
-        "No requirements found",
-      );
+      cy.get('[aria-label="ResourceRequires-Empty"]').should("contain", "No requirements found");
 
       // Click on history tab
       cy.get("button").contains("History").click();
 
       // Expect One row to be visible
-      cy.get('[aria-label="Resource History Table Row"]').should(
-        "have.length",
-        1,
-      );
+      cy.get('[aria-label="Resource History Table Row"]').should("have.length", 1);
 
       // Expect row to have 0 Requires
       cy.get('[data-label="Requires"]').should("contain", "0");
@@ -810,30 +730,20 @@ describe("Scenario 6 : Resources", () => {
         });
 
       // Expect requires tab to have no requirements
-      cy.get(".pf-v6-c-tabs__list")
-        .eq(1)
-        .find("button")
-        .contains("Requires")
-        .click();
-      cy.get('[aria-label="Requires"]')
-        .find("tbody")
-        .should("contain", "No requirements found");
+      cy.get(".pf-v6-c-tabs__list").eq(1).find("button").contains("Requires").click();
+      cy.get('[aria-label="Requires"]').find("tbody").should("contain", "No requirements found");
 
       // Go to logs tab
       cy.get("button").contains("Logs").click();
       // Expect it to have : 8 log messages
       cy.get('[aria-label="ResourceLogRow"]', { timeout: 40000 }).should(
         "to.have.length.of.at.least",
-        5,
+        5
       );
 
       // make sure the default is 100 instead of 20 like on other pages with pagination.
-      cy.get(
-        '[aria-label="PaginationWidget-top"] .pf-v6-c-menu-toggle',
-      ).click();
-      cy.contains(".pf-v6-c-menu__list-item", "100")
-        .find("svg")
-        .should("exist");
+      cy.get('[aria-label="PaginationWidget-top"] .pf-v6-c-menu-toggle').click();
+      cy.contains(".pf-v6-c-menu__list-item", "100").find("svg").should("exist");
 
       // Expect last log message to contain "Setting deployed due to known good status"
       cy.get('[aria-label="ResourceLogRow"]')
@@ -846,7 +756,7 @@ describe("Scenario 6 : Resources", () => {
       // Expect to find "Setting deployed due to known good status" displayed in expansion.
       cy.get(".pf-v6-c-description-list__text").should(
         "contain",
-        "Setting deployed due to known good status",
+        "Setting deployed due to known good status"
       );
     });
   }

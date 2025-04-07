@@ -87,8 +87,7 @@ const Picker: React.FC<PickerProps> = ({
         } as React.CSSProperties
       }
     >
-      <Progress report={reportsData.value[0]} />{" "}
-      {datePresenter.getFull(selectedReport.value.date)}
+      <Progress report={reportsData.value[0]} /> {datePresenter.getFull(selectedReport.value.date)}
     </MenuToggle>
   );
 
@@ -118,9 +117,7 @@ const DisabledToggle = () => (
   </MenuToggle>
 );
 
-const EmptyPicker: React.FC = () => (
-  <Select toggle={DisabledToggle} aria-label="ReportList" />
-);
+const EmptyPicker: React.FC = () => <Select toggle={DisabledToggle} aria-label="ReportList" />;
 
 const Progress: React.FC<{ report: DomainProgress }> = ({ report }) => {
   const tot = Number(report.total);

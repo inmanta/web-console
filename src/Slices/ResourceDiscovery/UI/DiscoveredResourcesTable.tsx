@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  OnSort,
-  Table,
-  TableVariant,
-  Th,
-  Thead,
-  Tr,
-} from "@patternfly/react-table";
+import { OnSort, Table, TableVariant, Th, Thead, Tr } from "@patternfly/react-table";
 import { Sort } from "@/Core";
 import { useExpansion } from "@/Data";
 import { words } from "@/UI";
@@ -36,39 +29,32 @@ export const DiscoveredResourcesTable: React.FC<Props> = ({
     });
   };
 
-  const heads = tablePresenter
-    .getColumnHeads()
-    .map(({ apiName, displayName }, columnIndex) => {
-      const sortParams = tablePresenter
-        .getSortableColumnNames()
-        .includes(apiName)
-        ? {
-          sort: {
-            sortBy: {
-              index: tablePresenter.getIndexForColumnName(sort.name),
-              direction: sort.order,
-            },
-            onSort,
-            columnIndex,
+  const heads = tablePresenter.getColumnHeads().map(({ apiName, displayName }, columnIndex) => {
+    const sortParams = tablePresenter.getSortableColumnNames().includes(apiName)
+      ? {
+        sort: {
+          sortBy: {
+            index: tablePresenter.getIndexForColumnName(sort.name),
+            direction: sort.order,
           },
-        }
-        : {};
+          onSort,
+          columnIndex,
+        },
+      }
+      : {};
 
-      return (
-        <Th key={displayName} {...sortParams}>
-          {displayName}
-        </Th>
-      );
-    });
+    return (
+      <Th key={displayName} {...sortParams}>
+        {displayName}
+      </Th>
+    );
+  });
 
   return (
     <Table {...props} variant={TableVariant.compact}>
       <Thead>
         <Tr>
-          <Th
-            modifier="fitContent"
-            screenReaderText={words("common.emptyColumnHeader")}
-          />
+          <Th modifier="fitContent" screenReaderText={words("common.emptyColumnHeader")} />
           {heads}
         </Tr>
       </Thead>

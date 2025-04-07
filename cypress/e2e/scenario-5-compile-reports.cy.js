@@ -78,9 +78,7 @@ describe("5 Compile reports", () => {
     cy.get('[aria-label="Select-environment-test"]').click();
 
     // go to compile reports page
-    cy.get('[aria-label="Sidebar-Navigation-Item"]')
-      .contains("Compile Reports")
-      .click();
+    cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Compile Reports").click();
 
     // expect it to have 2 item shown in the table, or 3 if it is the OSS edition
     cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
@@ -91,7 +89,7 @@ describe("5 Compile reports", () => {
       expect($rows.eq(0), "top-row-message").to.contain(
         isIso
           ? "Recompile model to generate resources using the updated service definition and modules"
-          : "Compile triggered from the console",
+          : "Compile triggered from the console"
       );
       expect($rows.eq(0), "top-row-status").to.contain("success");
     });
@@ -103,9 +101,7 @@ describe("5 Compile reports", () => {
     cy.get("tbody").should(($tableBody) => {
       const $rows = $tableBody.find("tr");
 
-      expect($rows.eq(0), "top-row-message").to.contain(
-        "Compile triggered from the console",
-      );
+      expect($rows.eq(0), "top-row-message").to.contain("Compile triggered from the console");
 
       expect($rows).length.to.be.at.least(isIso ? 2 : 4);
     });
@@ -114,9 +110,7 @@ describe("5 Compile reports", () => {
     cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
       const $rows = $tableBody.find("tr");
 
-      expect($rows.eq(0), "top-row-message").to.contain(
-        "Compile triggered from the console",
-      );
+      expect($rows.eq(0), "top-row-message").to.contain("Compile triggered from the console");
       expect($rows.eq(0), "top-row-status").to.contain("success");
     });
 
@@ -151,7 +145,7 @@ describe("5 Compile reports", () => {
         expect($rowGroups.eq(0), "Command-row").to.contain("Empty");
         expect($rowGroups.eq(1), "Return-code-row").to.contain("0");
         expect($rowGroups.eq(2), "Output-stream-row").to.contain(
-          "Using extra environment variables during compile",
+          "Using extra environment variables during compile"
         );
       });
   });
@@ -163,9 +157,7 @@ describe("5 Compile reports", () => {
 
       // click on test environment card
       cy.get('[aria-label="Select-environment-test"]').click();
-      cy.get('[aria-label="Sidebar-Navigation-Item"]')
-        .contains("Service Catalog")
-        .click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
 
       // Click on Show Inventory on basic service
       cy.get("#basic-service").contains("Show inventory").click();
@@ -190,9 +182,7 @@ describe("5 Compile reports", () => {
       }).should("to.be.visible");
 
       // Go to compiled Reports page
-      cy.get('[aria-label="Sidebar-Navigation-Item"]')
-        .contains("Compile Reports")
-        .click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Compile Reports").click();
 
       // Expect all compiles to be succesful
       cy.get("tbody", { timeout: 60000 }).should(($tableBody) => {
@@ -202,13 +192,13 @@ describe("5 Compile reports", () => {
 
         // Expect latest row to be having the message: Recompile model because of state transition from creating to up
         expect($rows.eq(0), "top-row-message").to.contain(
-          "Recompile model because of state transition from creating to up",
+          "Recompile model because of state transition from creating to up"
         );
         expect($rows.eq(1), "second-row-message").to.contain(
-          "Recompile model because of state transition from start to creating",
+          "Recompile model because of state transition from start to creating"
         );
         expect($rows.eq(2), "third-row-message").to.contain(
-          "Recompile model to validate state transition from start to creating",
+          "Recompile model to validate state transition from start to creating"
         );
         expect($rows.eq(0), "top-row-status").to.contain("success");
         expect($rows.eq(1), "second-row-status").to.contain("success");
@@ -224,15 +214,10 @@ describe("5 Compile reports", () => {
       cy.get("h1").contains("Compile Details").should("to.exist");
 
       // Expect trigger to be lsm_export
-      cy.get(".pf-v6-c-description-list__group")
-        .eq(4)
-        .should("contain", "lsm_export");
+      cy.get(".pf-v6-c-description-list__group").eq(4).should("contain", "lsm_export");
 
       // Expect environment variables inmanta_model_state: active
-      cy.get("pre")
-        .eq(0)
-        .should("contain", "active")
-        .and("contain", "inmanta_model_state");
+      cy.get("pre").eq(0).should("contain", "active").and("contain", "inmanta_model_state");
     });
 
     it("5.3 Compile after adding a rejected Service Instance", () => {
@@ -241,17 +226,13 @@ describe("5 Compile reports", () => {
 
       // click on test environment card
       cy.get('[aria-label="Select-environment-test"]').click();
-      cy.get('[aria-label="Sidebar-Navigation-Item"]')
-        .contains("Service Catalog")
-        .click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
 
       // Click on Show Inventory on basic-service
       cy.get("#basic-service").contains("Show inventory").click();
 
       // click on duplicate instance
-      cy.get('[aria-label="row actions toggle"]', { timeout: 60000 })
-        .eq(0)
-        .click();
+      cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).eq(0).click();
       cy.get('[role="menuitem"]').contains("Duplicate").click();
 
       // Add Instance
@@ -264,9 +245,7 @@ describe("5 Compile reports", () => {
         timeout: 20000,
       }).should("to.be.visible");
 
-      cy.get('[aria-label="Sidebar-Navigation-Item"]')
-        .contains("Service Catalog")
-        .click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       cy.get("#basic-service").contains("Show inventory").click();
 
       // Expect to see a rejected service instance in the table
@@ -279,9 +258,7 @@ describe("5 Compile reports", () => {
       });
 
       // Go to the compile report page
-      cy.get('[aria-label="Sidebar-Navigation-Item"]')
-        .contains("Compile Reports")
-        .click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Compile Reports").click();
 
       // expect the last compile to be failed.
       cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
@@ -291,7 +268,7 @@ describe("5 Compile reports", () => {
 
         // Expect one row to be having the message: Recompile model to validate state transition from start to creating
         expect($rows.eq(0), "top-row-message").to.contain(
-          "Recompile model to validate state transition from start to creating",
+          "Recompile model to validate state transition from start to creating"
         );
         expect($rows.eq(0), "top-row-status").to.contain("failed");
       });
@@ -317,17 +294,13 @@ describe("5 Compile reports", () => {
 
       // click on test environment card
       cy.get('[aria-label="Select-environment-test"]').click();
-      cy.get('[aria-label="Sidebar-Navigation-Item"]')
-        .contains("Service Catalog")
-        .click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
 
       // Click on Show Inventory on basic-service
       cy.get("#basic-service").contains("Show inventory").click();
 
       // Delete rejected instance row
-      cy.get('[aria-label="row actions toggle"]', { timeout: 60000 })
-        .eq(0)
-        .click();
+      cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).eq(0).click();
 
       cy.get('[role="menuitem"]').contains("Delete").click();
 
@@ -335,9 +308,7 @@ describe("5 Compile reports", () => {
       cy.get(".pf-v6-c-form__actions").contains("Yes").click();
 
       // go back to Compile Reports
-      cy.get('[aria-label="Sidebar-Navigation-Item"]')
-        .contains("Compile Reports")
-        .click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Compile Reports").click();
 
       // Expect no new compiles to be visible. The last compile report is a failed one.
       cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
@@ -347,7 +318,7 @@ describe("5 Compile reports", () => {
 
         // Expect one row to be having the message: Recompile model to validate state transition from start to creating
         expect($rows.eq(0), "top-row-message").to.contain(
-          "Recompile model to validate state transition from start to creating",
+          "Recompile model to validate state transition from start to creating"
         );
         expect($rows.eq(0), "top-row-status").to.contain("failed");
       });
@@ -362,9 +333,7 @@ describe("5 Compile reports", () => {
         expect($rows).to.have.length(8);
 
         // Expect one row to be having the message: Recompile model because state transition (validate)
-        expect($rows.eq(0), "top-row-message").to.contain(
-          "Compile triggered from the console",
-        );
+        expect($rows.eq(0), "top-row-message").to.contain("Compile triggered from the console");
         expect($rows.eq(0), "top-row-status").to.contain("success");
       });
     });
@@ -377,9 +346,7 @@ describe("5 Compile reports", () => {
       cy.get('[aria-label="Select-environment-test"]').click();
 
       // Go to the compile report page
-      cy.get('[aria-label="Sidebar-Navigation-Item"]')
-        .contains("Compile Reports")
-        .click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Compile Reports").click();
 
       // Click on filter dropdown
       cy.get('[aria-label="StatusFilterInput"]').click();
@@ -395,7 +362,7 @@ describe("5 Compile reports", () => {
 
         // Expect one row to be having the message: Recompile model to validate state transition from start to creating
         expect($rows.eq(0), "top-row-message").to.contain(
-          "Recompile model to validate state transition from start to creating",
+          "Recompile model to validate state transition from start to creating"
         );
         expect($rows.eq(0), "top-row-status").to.contain("failed");
       });

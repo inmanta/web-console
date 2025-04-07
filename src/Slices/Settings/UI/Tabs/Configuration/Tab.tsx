@@ -19,11 +19,9 @@ export const Tab: React.FC<Props> = ({ environmentId }) => {
     {
       notAsked: () => null,
       loading: () => <LoadingView ariaLabel="EnvironmentSettings-Loading" />,
-      failed: (error) => (
-        <ErrorView ariaLabel="EnvironmentSettings-Failed" message={error} />
-      ),
+      failed: (error) => <ErrorView ariaLabel="EnvironmentSettings-Failed" message={error} />,
       success: (settings) => <Provider settings={settings} />,
     },
-    settings,
+    settings
   );
 };

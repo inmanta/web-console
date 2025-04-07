@@ -2,8 +2,7 @@ import { EventRow, InstanceEvent } from "@/Core";
 import { TablePresenter } from "@/UI/Presenters";
 import { words } from "@/UI/words";
 
-export class EventsTablePresenter
-implements TablePresenter<InstanceEvent, EventRow> {
+export class EventsTablePresenter implements TablePresenter<InstanceEvent, EventRow> {
   readonly columnHeads = [
     words("events.column.eventType"),
     words("events.column.date"),

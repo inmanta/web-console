@@ -19,7 +19,7 @@ import { ModifierHandler } from "./ModifierHandler";
 export class FieldCreator {
   constructor(
     private readonly fieldModifierHandler: ModifierHandler,
-    private fieldsForEditForm: boolean = false,
+    private fieldsForEditForm: boolean = false
   ) {}
 
   /**
@@ -30,19 +30,13 @@ export class FieldCreator {
    * These can be mapped to the result coming from the API to generate the form.
    */
   create(
-    service: Pick<
-      ServiceModel,
-      "attributes" | "embedded_entities" | "inter_service_relations"
-    >,
+    service: Pick<ServiceModel, "attributes" | "embedded_entities" | "inter_service_relations">
   ): Field[] {
-    const fieldsFromAttributes: Field[] = this.attributesToFields(
-      service.attributes,
-    );
+    const fieldsFromAttributes: Field[] = this.attributesToFields(service.attributes);
 
     if (
       service.embedded_entities.length <= 0 &&
-      (!service.inter_service_relations ||
-        service.inter_service_relations.length <= 0)
+      (!service.inter_service_relations || service.inter_service_relations.length <= 0)
     ) {
       return fieldsFromAttributes;
     }
@@ -51,24 +45,15 @@ export class FieldCreator {
       .map((entity) => this.embeddedEntityToField(entity))
       .filter(isNotNull);
 
-    if (
-      !service.inter_service_relations ||
-      service.inter_service_relations.length <= 0
-    ) {
+    if (!service.inter_service_relations || service.inter_service_relations.length <= 0) {
       return [...fieldsFromAttributes, ...fieldsFromEmbeddedEntities];
     }
 
     const fieldsFromRelations = service.inter_service_relations
-      .map((interServiceRelation) =>
-        this.interServiceRelationToFields(interServiceRelation),
-      )
+      .map((interServiceRelation) => this.interServiceRelationToFields(interServiceRelation))
       .filter(isNotNull);
 
-    return [
-      ...fieldsFromAttributes,
-      ...fieldsFromEmbeddedEntities,
-      ...fieldsFromRelations,
-    ];
+    return [...fieldsFromAttributes, ...fieldsFromEmbeddedEntities, ...fieldsFromRelations];
   }
 
   private isOptional(entity: Pick<RelationAttribute, "lower_limit">): boolean {
@@ -90,10 +75,7 @@ export class FieldCreator {
       return null;
     }
 
-    const fieldsFromAttributes: Field[] = this.attributesToFields(
-      entity.attributes,
-      true,
-    );
+    const fieldsFromAttributes: Field[] = this.attributesToFields(entity.attributes, true);
 
     const fieldsFromEmbeddedEntities = entity.embedded_entities
       .map((entity) => this.embeddedEntityToField(entity))
@@ -102,7 +84,7 @@ export class FieldCreator {
     const fieldsFromRelations = entity.inter_service_relations
       ? entity.inter_service_relations
         .map((interServiceRelation) =>
-          this.interServiceRelationToFields(interServiceRelation, true),
+          this.interServiceRelationToFields(interServiceRelation, true)
         )
         .filter(isNotNull)
       : [];
@@ -113,11 +95,7 @@ export class FieldCreator {
         name: entity.name,
         description: entity.description,
         isOptional: this.isOptional(entity),
-        fields: [
-          ...fieldsFromAttributes,
-          ...fieldsFromEmbeddedEntities,
-          ...fieldsFromRelations,
-        ],
+        fields: [...fieldsFromAttributes, ...fieldsFromEmbeddedEntities, ...fieldsFromRelations],
         min: entity.lower_limit,
         max: entity.upper_limit,
         isDisabled: this.shouldFieldBeDisabled(entity),
@@ -128,25 +106,16 @@ export class FieldCreator {
       name: entity.name,
       description: entity.description,
       isOptional: this.isOptional(entity),
-      fields: [
-        ...fieldsFromAttributes,
-        ...fieldsFromEmbeddedEntities,
-        ...fieldsFromRelations,
-      ],
+      fields: [...fieldsFromAttributes, ...fieldsFromEmbeddedEntities, ...fieldsFromRelations],
       isDisabled: this.shouldFieldBeDisabled(entity),
     };
   }
 
   private interServiceRelationToFields(
     interServiceRelation: InterServiceRelation,
-    embedded?: boolean,
+    embedded?: boolean
   ): Field | null {
-    if (
-      !this.fieldModifierHandler.validateModifier(
-        interServiceRelation.modifier,
-        embedded,
-      )
-    ) {
+    if (!this.fieldModifierHandler.validateModifier(interServiceRelation.modifier, embedded)) {
       return null;
     }
 
@@ -172,25 +141,19 @@ export class FieldCreator {
     };
   }
 
-  attributesToFields(
-    attributes: AttributeModel[],
-    embedded?: boolean,
-  ): Field[] {
+  attributesToFields(attributes: AttributeModel[], embedded?: boolean): Field[] {
     const converter = new AttributeInputConverterImpl();
 
     return attributes
       .filter((attribute) =>
-        this.fieldModifierHandler.validateModifier(
-          attribute.modifier,
-          embedded,
-        ),
+        this.fieldModifierHandler.validateModifier(attribute.modifier, embedded)
       )
       .map((attribute) => {
         const type = converter.getInputType(attribute);
         const defaultValue = converter.getFormDefaultValue(
           type,
           attribute.default_value_set,
-          attribute.default_value,
+          attribute.default_value
         );
 
         if (type === "bool") {
@@ -205,10 +168,7 @@ export class FieldCreator {
           };
         }
 
-        if (
-          attribute.validation_type === "enum" ||
-          attribute.validation_type === "enum?"
-        ) {
+        if (attribute.validation_type === "enum" || attribute.validation_type === "enum?") {
           return {
             kind: "Enum",
             name: attribute.name,
@@ -218,8 +178,7 @@ export class FieldCreator {
             isOptional: attribute.type.includes("?"),
             options: attribute.validation_parameters.names,
             isDisabled: this.shouldFieldBeDisabled(attribute),
-            suggestion:
-              attribute.attribute_annotations?.web_suggested_values || null,
+            suggestion: attribute.attribute_annotations?.web_suggested_values || null,
           };
         }
 
@@ -233,8 +192,7 @@ export class FieldCreator {
             type: attribute.type,
             isOptional: this.isTextFieldOptional(attribute),
             isDisabled: this.shouldFieldBeDisabled(attribute),
-            suggestion:
-              attribute.attribute_annotations?.web_suggested_values || null,
+            suggestion: attribute.attribute_annotations?.web_suggested_values || null,
           };
         }
 
@@ -255,8 +213,7 @@ export class FieldCreator {
             type: attribute.type,
             isOptional: this.isTextFieldOptional(attribute),
             isDisabled: this.shouldFieldBeDisabled(attribute),
-            suggestion:
-              attribute.attribute_annotations?.web_suggested_values || null,
+            suggestion: attribute.attribute_annotations?.web_suggested_values || null,
           };
         }
 
@@ -269,8 +226,7 @@ export class FieldCreator {
           type: attribute.type,
           isOptional: this.isTextFieldOptional(attribute),
           isDisabled: this.shouldFieldBeDisabled(attribute),
-          suggestion:
-            attribute.attribute_annotations?.web_suggested_values || null,
+          suggestion: attribute.attribute_annotations?.web_suggested_values || null,
         };
       });
   }
@@ -282,7 +238,7 @@ export class FieldCreator {
     );
   }
   private shouldFieldBeDisabled(
-    object: AttributeModel | InterServiceRelation | EmbeddedEntity,
+    object: AttributeModel | InterServiceRelation | EmbeddedEntity
   ): boolean {
     return this.fieldsForEditForm && object.modifier !== "rw+";
   }

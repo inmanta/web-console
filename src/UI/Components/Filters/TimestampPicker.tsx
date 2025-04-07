@@ -36,7 +36,7 @@ export const TimestampPicker: React.FC<Props> = ({
   const onDateChange = (
     _event: React.FormEvent,
     inputString: string,
-    inputDate: Date | undefined,
+    inputDate: Date | undefined
   ) => {
     if (
       timestamp &&
@@ -49,11 +49,7 @@ export const TimestampPicker: React.FC<Props> = ({
       inputDate.setMinutes(timestamp.getMinutes());
     }
 
-    if (
-      inputDate &&
-      isValidDate(inputDate) &&
-      validateDateFormat(inputString, inputDate)
-    ) {
+    if (inputDate && isValidDate(inputDate) && validateDateFormat(inputString, inputDate)) {
       onChange(new Date(inputDate));
     }
   };
@@ -80,9 +76,7 @@ export const TimestampPicker: React.FC<Props> = ({
   return (
     <StyledInputGroup>
       <DatePicker
-        value={
-          timestamp && isValidDate(timestamp) ? yyyyMMddFormat(timestamp) : ""
-        }
+        value={timestamp && isValidDate(timestamp) ? yyyyMMddFormat(timestamp) : ""}
         dateParse={parseDate}
         onChange={onDateChange}
         rangeStart={from}
@@ -116,10 +110,7 @@ const isValidSlashedFormat = (dateString: string): boolean =>
 const isValidDashedFormat = (dateString: string): boolean =>
   moment(dateString, "YYYY-MM-DD", true).isValid();
 
-const validateDateFormat = (
-  dateString: string,
-  date: Date | string,
-): boolean => {
+const validateDateFormat = (dateString: string, date: Date | string): boolean => {
   let formattedDate;
 
   if (typeof date === "string") {

@@ -33,10 +33,7 @@ function setup(service = Service.a, pageSize = "") {
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
 
-  const environmentHandler = EnvironmentHandlerImpl(
-    useLocation,
-    dependencies.routeManager,
-  );
+  const environmentHandler = EnvironmentHandlerImpl(useLocation, dependencies.routeManager);
 
   store.dispatch.environment.setEnvironments(
     RemoteData.success([
@@ -52,7 +49,7 @@ function setup(service = Service.a, pageSize = "") {
           enable_lsm_expert_mode: false,
         },
       },
-    ]),
+    ])
   );
   const component = (
     <QueryClientProvider client={testClient}>
@@ -98,7 +95,7 @@ describe("ServiceInventory", () => {
     server.use(
       http.get("/lsm/v1/service_inventory/service_name_a", () => {
         return HttpResponse.json({ data: [], metadata: Pagination.metadata });
-      }),
+      })
     );
 
     const { component } = setup();
@@ -106,11 +103,11 @@ describe("ServiceInventory", () => {
     render(component);
 
     expect(
-      await screen.findByRole("region", { name: "ServiceInventory-Loading" }),
+      await screen.findByRole("region", { name: "ServiceInventory-Loading" })
     ).toBeInTheDocument();
 
     expect(
-      await screen.findByRole("generic", { name: "ServiceInventory-Empty" }),
+      await screen.findByRole("generic", { name: "ServiceInventory-Empty" })
     ).toBeInTheDocument();
   });
 
@@ -122,10 +119,7 @@ describe("ServiceInventory", () => {
         if (queryCount === 0) {
           queryCount++;
 
-          return HttpResponse.json(
-            { message: "something went wrong" },
-            { status: 500 },
-          );
+          return HttpResponse.json({ message: "something went wrong" }, { status: 500 });
         }
 
         return HttpResponse.json({
@@ -133,20 +127,20 @@ describe("ServiceInventory", () => {
           links: Pagination.links,
           metadata: Pagination.metadata,
         });
-      }),
+      })
     );
     const { component } = setup();
 
     render(component);
 
     expect(
-      await screen.findByRole("region", { name: "ServiceInventory-Failed" }),
+      await screen.findByRole("region", { name: "ServiceInventory-Failed" })
     ).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "Retry" }));
 
     expect(
-      await screen.findByRole("grid", { name: "ServiceInventory-Success" }),
+      await screen.findByRole("grid", { name: "ServiceInventory-Success" })
     ).toBeInTheDocument();
 
     await act(async() => {
@@ -189,7 +183,7 @@ describe("ServiceInventory", () => {
             },
           ],
         });
-      }),
+      })
     );
     const { component } = setup(Service.a, "&state.Inventory.pageSize=10");
 
@@ -197,13 +191,9 @@ describe("ServiceInventory", () => {
 
     expect(await screen.findByLabelText("IdCell-a")).toBeInTheDocument();
 
-    await userEvent.click(
-      screen.getByRole("button", { name: "Go to next page" }),
-    );
+    await userEvent.click(screen.getByRole("button", { name: "Go to next page" }));
 
-    expect(
-      await screen.findByRole("cell", { name: "IdCell-b" }),
-    ).toBeInTheDocument();
+    expect(await screen.findByRole("cell", { name: "IdCell-b" })).toBeInTheDocument();
 
     await act(async() => {
       const results = await axe(document.body);
@@ -218,7 +208,7 @@ describe("ServiceInventory", () => {
     render(component);
 
     expect(
-      await screen.findByRole("img", { name: words("catalog.summary.title") }),
+      await screen.findByRole("img", { name: words("catalog.summary.title") })
     ).toBeInTheDocument();
   });
 
@@ -235,16 +225,14 @@ describe("ServiceInventory", () => {
           links: Pagination.links,
           metadata: Pagination.metadata,
         });
-      }),
+      })
     );
 
     const { component } = setup(Service.a);
 
     render(component);
 
-    await userEvent.click(
-      await screen.findByRole("button", { name: "AddInstanceToggle" }),
-    );
+    await userEvent.click(await screen.findByRole("button", { name: "AddInstanceToggle" }));
 
     expect(await screen.findByText("Add in Composer")).toBeEnabled();
 
@@ -272,15 +260,13 @@ describe("ServiceInventory", () => {
           links: Pagination.links,
           metadata: Pagination.metadata,
         });
-      }),
+      })
     );
     const { component } = setup({ ...Service.a, owner: "owner" });
 
     render(component);
 
-    await userEvent.click(
-      await screen.findByRole("button", { name: "AddInstanceToggle" }),
-    );
+    await userEvent.click(await screen.findByRole("button", { name: "AddInstanceToggle" }));
 
     expect(screen.getByText("Add in Composer")).toBeInTheDocument();
 
@@ -329,7 +315,7 @@ describe("ServiceInventory", () => {
             page_size: 20,
           },
         });
-      }),
+      })
     );
 
     const { component } = setup({ ...Service.a, owner: "owner" });
@@ -357,12 +343,11 @@ describe("ServiceInventory", () => {
     await userEvent.click(
       within(columnheader).getByRole("button", {
         name: /state/i,
-      }),
+      })
     );
 
     expect(await screen.findByLabelText("IdCell-a")).toBeInTheDocument();
-    const refreshedNextButton2 =
-      await screen.findByLabelText("Go to next page");
+    const refreshedNextButton2 = await screen.findByLabelText("Go to next page");
 
     expect(refreshedNextButton2).toBeEnabled();
   });

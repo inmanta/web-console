@@ -1,8 +1,6 @@
 import { EnvironmentHandler, FlatEnvironment } from "@/Core";
 
-export function MockEnvironmentHandler(
-  environment: string,
-): EnvironmentHandler {
+export function MockEnvironmentHandler(environment: string): EnvironmentHandler {
   function useId(): string {
     return environment;
   }

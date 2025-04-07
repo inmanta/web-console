@@ -119,8 +119,7 @@ export const RightSidebar: React.FC<Props> = ({ editable }) => {
 
       const lowerLimit = entityState.min;
 
-      const isLowerLimitReached =
-        lowerLimit && entityState.currentAmount <= lowerLimit;
+      const isLowerLimitReached = lowerLimit && entityState.currentAmount <= lowerLimit;
 
       return !isCellCore && canBeRemoved && !isLowerLimitReached;
     });
@@ -136,9 +135,7 @@ export const RightSidebar: React.FC<Props> = ({ editable }) => {
       <FlexItem alignSelf={{ default: "alignSelfCenter" }}>
         <Title headingLevel="h1">{words("details")}</Title>
       </FlexItem>
-      {description && (
-        <Content aria-label="service-description">{description}</Content>
-      )}
+      {description && <Content aria-label="service-description">{description}</Content>}
       {!!cellToEdit && showForm ? (
         <EntityForm
           cellToEdit={cellToEdit}
@@ -148,21 +145,14 @@ export const RightSidebar: React.FC<Props> = ({ editable }) => {
           showButtons={editable}
         />
       ) : (
-        <Flex
-          flex={{ default: "flex_1" }}
-          alignItems={{ default: "alignItemsCenter" }}
-        >
+        <Flex flex={{ default: "flex_1" }} alignItems={{ default: "alignItemsCenter" }}>
           <EmptyState
             headingLevel="h4"
             variant={EmptyStateVariant.sm}
             icon={CubesIcon}
-            titleText={words(
-              "instanceComposer.formModal.noElementSelected.title",
-            )}
+            titleText={words("instanceComposer.formModal.noElementSelected.title")}
           >
-            <EmptyStateBody>
-              {words("instanceComposer.formModal.noElementSelected")}
-            </EmptyStateBody>
+            <EmptyStateBody>{words("instanceComposer.formModal.noElementSelected")}</EmptyStateBody>
           </EmptyState>
         </Flex>
       )}
@@ -179,8 +169,6 @@ const Wrapper = styled(Flex)`
   right: 1px;
   background: var(--pf-t--global--background--color--primary--default);
   padding: 16px;
-  filter: drop-shadow(
-    -0.1rem 0.1rem 0.15rem var(--pf-t--global--box-shadow--color--100)
-  );
+  filter: drop-shadow(-0.1rem 0.1rem 0.15rem var(--pf-t--global--box-shadow--color--100));
   overflow: auto;
 `;

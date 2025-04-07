@@ -9,8 +9,7 @@ interface Left<V> {
 
 export const left = <V>(value: V): Left<V> => ({ kind: "Left", value });
 
-export const isLeft = <L, R>(either: Either<L, R>): either is Left<L> =>
-  either.kind === "Left";
+export const isLeft = <L, R>(either: Either<L, R>): either is Left<L> => either.kind === "Left";
 
 interface Right<V> {
   kind: "Right";
@@ -19,22 +18,18 @@ interface Right<V> {
 
 export const right = <V>(value: V): Right<V> => ({ kind: "Right", value });
 
-export const isRight = <L, R>(either: Either<L, R>): either is Right<R> =>
-  either.kind === "Right";
+export const isRight = <L, R>(either: Either<L, R>): either is Right<R> => either.kind === "Right";
 
 export const mapRight = <L, R, NR>(
   mapper: (value: R) => NR,
-  either: Either<L, R>,
+  either: Either<L, R>
 ): Either<L, NR> => {
   if (isLeft(either)) return either;
 
   return right(mapper(either.value));
 };
 
-export const withFallback = <L, R, F>(
-  fallback: F,
-  either: Either<L, R>,
-): R | F => {
+export const withFallback = <L, R, F>(fallback: F, either: Either<L, R>): R | F => {
   if (isLeft(either)) return fallback;
 
   return either.value;

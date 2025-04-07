@@ -34,10 +34,7 @@ function setup() {
     },
   });
 
-  const environmentHandler = EnvironmentHandlerImpl(
-    useLocation,
-    dependencies.routeManager,
-  );
+  const environmentHandler = EnvironmentHandlerImpl(useLocation, dependencies.routeManager);
 
   store.dispatch.environment.setEnvironments(
     RemoteData.success([
@@ -53,7 +50,7 @@ function setup() {
           enable_lsm_expert_mode: false,
         },
       },
-    ]),
+    ])
   );
   history.push("/?env=aaa");
 
@@ -61,9 +58,7 @@ function setup() {
     <QueryClientProvider client={queryClient}>
       <CustomRouter history={history}>
         {" "}
-        <DependencyProvider
-          dependencies={{ ...dependencies, environmentHandler }}
-        >
+        <DependencyProvider dependencies={{ ...dependencies, environmentHandler }}>
           <StoreProvider store={store}>
             <Diagnose
               serviceName={Service.a.name}
@@ -90,8 +85,8 @@ const server = setupServer(
           rejections: [],
         },
       });
-    },
-  ),
+    }
+  )
 );
 
 describe("Diagnose", () => {
@@ -108,13 +103,9 @@ describe("Diagnose", () => {
 
     render(component);
 
-    expect(
-      screen.getByRole("region", { name: "Diagnostics-Loading" }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("region", { name: "Diagnostics-Loading" })).toBeInTheDocument();
 
-    expect(
-      await screen.findByRole("generic", { name: "Diagnostics-Empty" }),
-    ).toBeInTheDocument();
+    expect(await screen.findByRole("generic", { name: "Diagnostics-Empty" })).toBeInTheDocument();
 
     await act(async() => {
       const results = await axe(document.body);
@@ -134,19 +125,17 @@ describe("Diagnose", () => {
             },
             {
               status: 400,
-            },
+            }
           );
-        },
-      ),
+        }
+      )
     );
 
     const { component } = setup();
 
     render(component);
 
-    expect(
-      await screen.findByRole("region", { name: "Diagnostics-Error" }),
-    ).toBeInTheDocument();
+    expect(await screen.findByRole("region", { name: "Diagnostics-Error" })).toBeInTheDocument();
 
     await act(async() => {
       const results = await axe(document.body);
@@ -161,16 +150,14 @@ describe("Diagnose", () => {
         "/lsm/v1/service_inventory/service_name_a/4a4a6d14-8cd0-4a16-bc38-4b768eb004e3/diagnose",
         () => {
           return HttpResponse.json({ data: failureAndRejection });
-        },
-      ),
+        }
+      )
     );
     const { component } = setup();
 
     render(component);
 
-    expect(
-      await screen.findByRole("generic", { name: "Diagnostics-Success" }),
-    ).toBeInTheDocument();
+    expect(await screen.findByRole("generic", { name: "Diagnostics-Success" })).toBeInTheDocument();
 
     await act(async() => {
       const results = await axe(document.body);

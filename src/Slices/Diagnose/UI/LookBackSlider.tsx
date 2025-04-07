@@ -34,13 +34,12 @@ export const LookBackSlider: React.FC<Props> = ({
   setSelectedVersion,
 }) => {
   const [valueContinuous, setValueContinuous] = useState(initialLookBehind);
-  const [inputValueContinuous, setInputValueContinuous] =
-    useState(initialLookBehind);
+  const [inputValueContinuous, setInputValueContinuous] = useState(initialLookBehind);
   const handleChange = (
     _event: SliderOnChangeEvent,
     value: number,
     inputValue?: number,
-    setLocalInputValue?: React.Dispatch<React.SetStateAction<number>>,
+    setLocalInputValue?: React.Dispatch<React.SetStateAction<number>>
   ) => {
     let newValue;
 
@@ -72,16 +71,11 @@ export const LookBackSlider: React.FC<Props> = ({
     <Flex gap={{ default: "gapSm" }} direction={{ default: "column" }}>
       <FlexItem>
         <Content component="h2">{words("diagnose.slider.title")}</Content>
-        <Content component="small">
-          {words("diagnose.slider.description")}
-        </Content>
+        <Content component="small">{words("diagnose.slider.description")}</Content>
       </FlexItem>
       <FlexItem>
         <Flex alignItems={{ default: "alignItemsCenter" }}>
-          <FlexItem
-            flex={{ default: "flex_2" }}
-            spacer={{ default: "spacerSm" }}
-          >
+          <FlexItem flex={{ default: "flex_2" }} spacer={{ default: "spacerSm" }}>
             <Slider
               value={valueContinuous}
               inputValue={inputValueContinuous}
@@ -98,10 +92,7 @@ export const LookBackSlider: React.FC<Props> = ({
         </Flex>
       </FlexItem>
       <FlexItem>
-        <Button
-          variant="primary"
-          onClick={() => setSelectedVersion(valueContinuous)}
-        >
+        <Button variant="primary" onClick={() => setSelectedVersion(valueContinuous)}>
           {words("diagnose.action")}
         </Button>
       </FlexItem>

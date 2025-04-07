@@ -11,14 +11,12 @@ export const LicenseBanner: React.FC = () => {
   const status = featureManager.getLicenseInformation();
   const expirationMessage = getExpirationMessage(
     status?.entitlement_valid_until,
-    status?.cert_valid_until,
+    status?.cert_valid_until
   );
 
   return expirationMessage ? (
     <Banner isSticky color="red" aria-label="licenceExpired">
-      <Flex justifyContent={{ default: "justifyContentCenter" }}>
-        {expirationMessage}
-      </Flex>
+      <Flex justifyContent={{ default: "justifyContentCenter" }}>{expirationMessage}</Flex>
     </Banner>
   ) : null;
 };
@@ -61,9 +59,7 @@ const getExpirationMessage = (entitlementDate, certificateDate) => {
   }
 
   if (diffTimeCertificate < 15) {
-    return words("banner.certificate.will.expire")(
-      Math.abs(diffTimeCertificate),
-    );
+    return words("banner.certificate.will.expire")(Math.abs(diffTimeCertificate));
   } else if (diffTimeEntitlement < 0) {
     return words("banner.entitlement.expired")(Math.abs(diffTimeEntitlement));
   }

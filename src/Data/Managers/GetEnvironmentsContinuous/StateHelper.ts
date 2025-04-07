@@ -8,19 +8,14 @@ type Data = RemoteData.Type<
 >;
 
 export function GetEnvironmentsContinuousStateHelper(store: Store) {
-  function getData(
-    state: State,
-    { details }: Query.SubQuery<"GetEnvironmentsContinuous">,
-  ): Data {
-    return details
-      ? state.environment.environmentsWithDetails
-      : state.environment.environments;
+  function getData(state: State, { details }: Query.SubQuery<"GetEnvironmentsContinuous">): Data {
+    return details ? state.environment.environmentsWithDetails : state.environment.environments;
   }
 
   function setData(
     store: Dispatch,
     { details }: Query.SubQuery<"GetEnvironmentsContinuous">,
-    data: Data,
+    data: Data
   ) {
     if (details) {
       store.environment.setEnvironmentsWithDetails(data);
@@ -47,6 +42,6 @@ export function GetEnvironmentsContinuousStateHelper(store: Store) {
 
       setData(store.dispatch, query, unwrapped);
     },
-    (state, query) => getData(state, query),
+    (state, query) => getData(state, query)
   );
 }

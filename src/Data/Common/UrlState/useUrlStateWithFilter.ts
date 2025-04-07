@@ -1,11 +1,5 @@
 import { isEqual, pickBy } from "lodash-es";
-import {
-  isObject,
-  DateRange,
-  isNotUndefined,
-  IntRange,
-  stringToBoolean,
-} from "@/Core";
+import { isObject, DateRange, isNotUndefined, IntRange, stringToBoolean } from "@/Core";
 import { provide, Location, StateConfig, Update, Replace } from "./helpers";
 import { handleUrlState } from "./useUrlState";
 
@@ -17,7 +11,7 @@ export const useUrlStateWithFilter = provide(handleUrlStateWithFilter);
 
 const serializeValue = (
   kind: "IntRange" | "DateRange" | "Boolean",
-  value: unknown,
+  value: unknown
 ): string | string[] => {
   switch (kind) {
     case "Boolean":
@@ -31,7 +25,7 @@ const serializeValue = (
 
 const parseValue = (
   kind: "IntRange" | "DateRange" | "Boolean",
-  value: unknown,
+  value: unknown
 ): boolean | undefined | DateRange.DateRange[] | IntRange.IntRange[] => {
   switch (kind) {
     case "Boolean":
@@ -49,7 +43,7 @@ export function handleUrlStateWithFilter<Data>(
       default?: Data;
     },
   location: Location,
-  replace: Replace,
+  replace: Replace
 ): [Data, Update<Data>] {
   const serialize = (data: Data): Data => {
     if (config.keys === undefined) return data;
@@ -89,12 +83,12 @@ export function handleUrlStateWithFilter<Data>(
       equals: (a: Data, b: Data): boolean =>
         isEqual(
           pickBy(a as Record<string, unknown>, isNotUndefined),
-          pickBy(b as Record<string, unknown>, isNotUndefined),
+          pickBy(b as Record<string, unknown>, isNotUndefined)
         ),
       serialize,
       parse,
     },
     location,
-    replace,
+    replace
   );
 }

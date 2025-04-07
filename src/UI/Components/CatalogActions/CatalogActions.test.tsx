@@ -29,7 +29,7 @@ function setup(
     server_compile: true,
     protected_environment: false,
     enable_lsm_expert_mode: false,
-  },
+  }
 ) {
   const store = getStoreInstance();
   const environmentModifier = new MockEnvironmentModifier(details);
@@ -81,9 +81,7 @@ describe("CatalogActions", () => {
 
     await userEvent.click(button);
 
-    expect(
-      await screen.findByText(words("catalog.update.modal.title")),
-    ).toBeVisible();
+    expect(await screen.findByText(words("catalog.update.modal.title"))).toBeVisible();
 
     await act(async() => {
       const results = await axe(document.body);
@@ -96,7 +94,7 @@ describe("CatalogActions", () => {
     server.use(
       http.post("/lsm/v1/exporter/export_service_definition", () => {
         return HttpResponse.json({ status: 200 });
-      }),
+      })
     );
 
     const { component } = setup();
@@ -121,9 +119,7 @@ describe("CatalogActions", () => {
 
     await userEvent.click(cancelButton);
 
-    expect(
-      await screen.queryByText(words("catalog.update.success")),
-    ).toBeNull();
+    expect(await screen.queryByText(words("catalog.update.success"))).toBeNull();
   });
 
   test("Given CatalogUpdateButton, when user confirms update, it should fire the API call, if success, show a toaster on success and close the modal.", async() => {
@@ -132,7 +128,7 @@ describe("CatalogActions", () => {
     server.use(
       http.post("/lsm/v1/exporter/export_service_definition", () => {
         return HttpResponse.json({ status: 200 });
-      }),
+      })
     );
 
     render(component);
@@ -157,19 +153,14 @@ describe("CatalogActions", () => {
 
     expect(confirmButton).not.toBeVisible();
 
-    expect(
-      await screen.queryByText(words("catalog.update.success")),
-    ).toBeVisible();
+    expect(await screen.queryByText(words("catalog.update.success"))).toBeVisible();
   });
 
   test("Given CatalogUpdateButton, when user confirms the update, it should fire the API call, if failure, it should show an error toast and close the modal.", async() => {
     server.use(
       http.post("/lsm/v1/exporter/export_service_definition", () => {
-        return HttpResponse.json(
-          { message: "Something went wrong" },
-          { status: 400 },
-        );
-      }),
+        return HttpResponse.json({ message: "Something went wrong" }, { status: 400 });
+      })
     );
     const { component } = setup();
 
@@ -199,9 +190,6 @@ describe("CatalogActions", () => {
       name: "API-Documentation",
     });
 
-    expect(button).toHaveAttribute(
-      "href",
-      "/lsm/v1/service_catalog_docs?environment=env",
-    );
+    expect(button).toHaveAttribute("href", "/lsm/v1/service_catalog_docs?environment=env");
   });
 });

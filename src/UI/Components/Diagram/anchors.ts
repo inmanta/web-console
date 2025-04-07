@@ -13,7 +13,7 @@ const customAnchor = function(
   this: any,
   view: dia.ElementView,
   magnet: SVGElement,
-  ref: g.Point,
+  ref: g.Point
 ) {
   const { model } = view;
   const bbox = view.getNodeUnrotatedBBox(magnet);
@@ -28,8 +28,7 @@ const customAnchor = function(
   }
 
   refPoint.rotate(center, angle);
-  const anchor =
-    refPoint.x <= bbox.x + bbox.width ? bbox.leftMiddle() : bbox.rightMiddle();
+  const anchor = refPoint.x <= bbox.x + bbox.width ? bbox.leftMiddle() : bbox.rightMiddle();
 
   return anchor.rotate(center, -angle);
 };

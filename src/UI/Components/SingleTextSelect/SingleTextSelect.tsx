@@ -57,8 +57,7 @@ export const SingleTextSelect: React.FC<Props> = ({
   const [isOpen, setIsOpen] = useState(false);
   const [inputValue, setInputValue] = useState<string>(selected || "");
   const [filterValue, setFilterValue] = useState("");
-  const [selectOptions, setSelectOptions] =
-    useState<SelectOptionProps[]>(options);
+  const [selectOptions, setSelectOptions] = useState<SelectOptionProps[]>(options);
   const [focusedItemIndex, setFocusedItemIndex] = useState<number | null>(null);
   const [activeItem, setActiveItem] = useState<string | null>(null);
   const textInputRef = useRef<HTMLInputElement>();
@@ -72,15 +71,10 @@ export const SingleTextSelect: React.FC<Props> = ({
       let newSelectOptions: SelectOptionProps[] = options;
 
       newSelectOptions = options.filter((menuItem) =>
-        String(menuItem.children)
-          .toLowerCase()
-          .includes(filterValue.toLowerCase()),
+        String(menuItem.children).toLowerCase().includes(filterValue.toLowerCase())
       );
 
-      if (
-        !checkIfOptionMatchInput(options, filterValue) ||
-        !newSelectOptions.length
-      ) {
+      if (!checkIfOptionMatchInput(options, filterValue) || !newSelectOptions.length) {
         newSelectOptions = [
           { children: `Create "${filterValue}"`, value: "create" },
           ...newSelectOptions,
@@ -105,14 +99,8 @@ export const SingleTextSelect: React.FC<Props> = ({
           isDisabled: true,
         },
       ]);
-    } else if (
-      options.length === 0 &&
-      hasCreation &&
-      filterValue.trim() != ""
-    ) {
-      setSelectOptions([
-        { children: `Create "${inputValue}"`, value: "create" },
-      ]);
+    } else if (options.length === 0 && hasCreation && filterValue.trim() != "") {
+      setSelectOptions([{ children: `Create "${inputValue}"`, value: "create" }]);
     } else {
       setSelectOptions(options);
 
@@ -139,7 +127,7 @@ export const SingleTextSelect: React.FC<Props> = ({
 
   const onSelect = (
     _event: React.MouseEvent<Element, MouseEvent> | undefined,
-    value: string | number | undefined,
+    value: string | number | undefined
   ) => {
     switch (value) {
       case "create":
@@ -162,10 +150,7 @@ export const SingleTextSelect: React.FC<Props> = ({
     setActiveItem(null);
   };
 
-  const onTextInputChange = (
-    _event: React.FormEvent<HTMLInputElement>,
-    value: string,
-  ) => {
+  const onTextInputChange = (_event: React.FormEvent<HTMLInputElement>, value: string) => {
     setInputValue(value);
     setFilterValue(value);
   };
@@ -185,10 +170,7 @@ export const SingleTextSelect: React.FC<Props> = ({
 
       if (key === "ArrowDown") {
         // When no index is set or at the last index, focus to the first, otherwise increment focus index
-        if (
-          focusedItemIndex === null ||
-          focusedItemIndex === selectOptions.length - 1
-        ) {
+        if (focusedItemIndex === null || focusedItemIndex === selectOptions.length - 1) {
           indexToFocus = 0;
         } else {
           indexToFocus = focusedItemIndex + 1;
@@ -196,22 +178,16 @@ export const SingleTextSelect: React.FC<Props> = ({
       }
 
       setFocusedItemIndex(indexToFocus);
-      const focusedItem = selectOptions.filter((option) => !option.isDisabled)[
-        indexToFocus
-      ];
+      const focusedItem = selectOptions.filter((option) => !option.isDisabled)[indexToFocus];
 
       setActiveItem(`select-typeahead-${focusedItem.value.replace(" ", "-")}`);
     }
   };
 
   const onInputKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    const enabledMenuItems = selectOptions.filter(
-      (option) => !option.isDisabled,
-    );
+    const enabledMenuItems = selectOptions.filter((option) => !option.isDisabled);
     const [firstMenuItem] = enabledMenuItems;
-    const focusedItem = focusedItemIndex
-      ? enabledMenuItems[focusedItemIndex]
-      : firstMenuItem;
+    const focusedItem = focusedItemIndex ? enabledMenuItems[focusedItemIndex] : firstMenuItem;
 
     switch (event.key) {
       // Select the first available option
@@ -273,9 +249,7 @@ export const SingleTextSelect: React.FC<Props> = ({
         <TextInputGroupUtilities>
           {!!inputValue && (
             <Button
-              icon={
-                props.toggleIcon ? props.toggleIcon : <TimesIcon aria-hidden />
-              }
+              icon={props.toggleIcon ? props.toggleIcon : <TimesIcon aria-hidden />}
               variant="plain"
               onClick={() => {
                 setSelected("");
@@ -322,11 +296,6 @@ export const SingleTextSelect: React.FC<Props> = ({
   );
 };
 
-export const checkIfOptionMatchInput = (
-  options: SelectOptionProps[],
-  input: string,
-) => {
-  return options.some(
-    (option) => option.children?.toLocaleString() === input.toLocaleLowerCase(),
-  );
+export const checkIfOptionMatchInput = (options: SelectOptionProps[], input: string) => {
+  return options.some((option) => option.children?.toLocaleString() === input.toLocaleLowerCase());
 };

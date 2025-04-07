@@ -42,20 +42,16 @@ const setup = (entries?: string[]) => {
   const scheduler = new StaticScheduler();
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler),
+    new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler)
   );
 
-  const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolverImpl(store, apiHelper),
-  );
+  const commandResolver = new CommandResolverImpl(new CommandManagerResolverImpl(store, apiHelper));
 
   const component = (
     <QueryClientProvider client={client}>
       <MemoryRouter initialEntries={entries}>
         <StoreProvider store={store}>
-          <DependencyProvider
-            dependencies={{ ...dependencies, queryResolver, commandResolver }}
-          >
+          <DependencyProvider dependencies={{ ...dependencies, queryResolver, commandResolver }}>
             <Page>
               <NotificationCenterPage />
             </Page>
@@ -78,15 +74,13 @@ describe("NotificationCenterPage", () => {
     server.use(
       http.get("/api/v2/notification", () => {
         return HttpResponse.json({ data: Mock.list, links, metadata });
-      }),
+      })
     );
     const { component } = setup();
 
     render(component);
 
-    expect(
-      await screen.findAllByRole("listitem", { name: "NotificationItem" }),
-    ).toHaveLength(4);
+    expect(await screen.findAllByRole("listitem", { name: "NotificationItem" })).toHaveLength(4);
 
     await act(async() => {
       const results = await axe(document.body);
@@ -107,37 +101,25 @@ describe("NotificationCenterPage", () => {
         }
 
         return HttpResponse.json({ data: Mock.list, links, metadata });
-      }),
+      })
     );
     const { component } = setup();
 
     render(component);
 
-    expect(
-      await screen.findAllByRole("listitem", { name: "NotificationItem" }),
-    ).toHaveLength(4);
+    expect(await screen.findAllByRole("listitem", { name: "NotificationItem" })).toHaveLength(4);
 
-    await userEvent.click(
-      screen.getByRole("combobox", { name: "SeverityFilterInput" }),
-    );
+    await userEvent.click(screen.getByRole("combobox", { name: "SeverityFilterInput" }));
 
     await userEvent.click(screen.getByRole("option", { name: "message" }));
 
-    expect(
-      await screen.findAllByRole("listitem", { name: "NotificationItem" }),
-    ).toHaveLength(2);
+    expect(await screen.findAllByRole("listitem", { name: "NotificationItem" })).toHaveLength(2);
 
-    await userEvent.click(
-      screen.getByRole("combobox", { name: "SeverityFilterInput" }),
-    );
+    await userEvent.click(screen.getByRole("combobox", { name: "SeverityFilterInput" }));
 
-    await userEvent.click(
-      screen.getByRole("button", { name: "Clear input value" }),
-    );
+    await userEvent.click(screen.getByRole("button", { name: "Clear input value" }));
 
-    expect(
-      await screen.findAllByRole("listitem", { name: "NotificationItem" }),
-    ).toHaveLength(4);
+    expect(await screen.findAllByRole("listitem", { name: "NotificationItem" })).toHaveLength(4);
 
     await act(async() => {
       const results = await axe(document.body);
@@ -158,39 +140,29 @@ describe("NotificationCenterPage", () => {
         }
 
         return HttpResponse.json({ data: Mock.list, links, metadata });
-      }),
+      })
     );
     const { component } = setup();
 
     render(component);
 
-    expect(
-      await screen.findAllByRole("listitem", { name: "NotificationItem" }),
-    ).toHaveLength(4);
+    expect(await screen.findAllByRole("listitem", { name: "NotificationItem" })).toHaveLength(4);
 
-    await userEvent.click(
-      screen.getByRole("combobox", { name: "ReadFilterInput" }),
-    );
+    await userEvent.click(screen.getByRole("combobox", { name: "ReadFilterInput" }));
 
     await userEvent.click(screen.getByRole("option", { name: "read" }));
 
     expect(
       await screen.findAllByRole("listitem", {
         name: "NotificationItem",
-      }),
+      })
     ).toHaveLength(2);
 
-    await userEvent.click(
-      screen.getByRole("combobox", { name: "ReadFilterInput" }),
-    );
+    await userEvent.click(screen.getByRole("combobox", { name: "ReadFilterInput" }));
 
-    await userEvent.click(
-      screen.getByRole("button", { name: "Clear input value" }),
-    );
+    await userEvent.click(screen.getByRole("button", { name: "Clear input value" }));
 
-    expect(
-      await screen.findAllByRole("listitem", { name: "NotificationItem" }),
-    ).toHaveLength(4);
+    expect(await screen.findAllByRole("listitem", { name: "NotificationItem" })).toHaveLength(4);
 
     await act(async() => {
       const results = await axe(document.body);
@@ -211,32 +183,25 @@ describe("NotificationCenterPage", () => {
         }
 
         return HttpResponse.json({ data: Mock.list, links, metadata });
-      }),
+      })
     );
     const { component } = setup();
 
     render(component);
 
-    expect(
-      await screen.findAllByRole("listitem", { name: "NotificationItem" }),
-    ).toHaveLength(4);
+    expect(await screen.findAllByRole("listitem", { name: "NotificationItem" })).toHaveLength(4);
 
-    await userEvent.type(
-      screen.getByRole("textbox", { name: "MessageFilter" }),
-      "abc{enter}",
-    );
+    await userEvent.type(screen.getByRole("textbox", { name: "MessageFilter" }), "abc{enter}");
 
     expect(
       await screen.findAllByRole("listitem", {
         name: "NotificationItem",
-      }),
+      })
     ).toHaveLength(2);
 
     await userEvent.click(screen.getByRole("button", { name: /close abc/i }));
 
-    expect(
-      await screen.findAllByRole("listitem", { name: "NotificationItem" }),
-    ).toHaveLength(4);
+    expect(await screen.findAllByRole("listitem", { name: "NotificationItem" })).toHaveLength(4);
 
     await act(async() => {
       const results = await axe(document.body);
@@ -257,30 +222,21 @@ describe("NotificationCenterPage", () => {
         }
 
         return HttpResponse.json({ data: Mock.list, links, metadata });
-      }),
+      })
     );
     const { component } = setup();
 
     render(component);
 
-    expect(
-      await screen.findAllByRole("listitem", { name: "NotificationItem" }),
-    ).toHaveLength(4);
+    expect(await screen.findAllByRole("listitem", { name: "NotificationItem" })).toHaveLength(4);
 
-    await userEvent.type(
-      screen.getByRole("textbox", { name: "TitleFilter" }),
-      "abc{enter}",
-    );
+    await userEvent.type(screen.getByRole("textbox", { name: "TitleFilter" }), "abc{enter}");
 
-    expect(
-      await screen.findAllByRole("listitem", { name: "NotificationItem" }),
-    ).toHaveLength(2);
+    expect(await screen.findAllByRole("listitem", { name: "NotificationItem" })).toHaveLength(2);
 
     await userEvent.click(screen.getByRole("button", { name: /close abc/i }));
 
-    expect(
-      await screen.findAllByRole("listitem", { name: "NotificationItem" }),
-    ).toHaveLength(4);
+    expect(await screen.findAllByRole("listitem", { name: "NotificationItem" })).toHaveLength(4);
 
     await act(async() => {
       const results = await axe(document.body);
@@ -303,7 +259,7 @@ describe("NotificationCenterPage", () => {
         }
 
         return HttpResponse.json({ data: Mock.list, links, metadata });
-      }),
+      })
     );
 
     render(component);
@@ -319,7 +275,7 @@ describe("NotificationCenterPage", () => {
     expect(
       await screen.findAllByRole("listitem", {
         name: "NotificationItem",
-      }),
+      })
     ).toHaveLength(2);
 
     await act(async() => {

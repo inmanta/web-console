@@ -1,10 +1,4 @@
-import {
-  getKeysExcluding,
-  isObject,
-  keepKeys,
-  RouteManager,
-  RouteKind,
-} from "@/Core";
+import { getKeysExcluding, isObject, keepKeys, RouteManager, RouteKind } from "@/Core";
 import { PageStateSanitizer } from "@/UI/Routing/PageStateSanitizer";
 import { SearchHelper } from "@/UI/Routing/SearchHelper";
 
@@ -27,8 +21,7 @@ export class SearchSanitizer {
   private getValidKeys(routeKind: RouteKind): string[] {
     const route = this.routeManager.getRoute(routeKind);
 
-    if (route.environmentRole === "Forbidden")
-      return this.validKeys.filter((k) => k !== "env");
+    if (route.environmentRole === "Forbidden") return this.validKeys.filter((k) => k !== "env");
 
     return this.validKeys;
   }
@@ -39,14 +32,10 @@ export class SearchSanitizer {
    */
   sanitize(routeKind: RouteKind, search: string): string {
     const parsedSearch = this.searchHelper.parse(search);
-    const sanitizedSearch = keepKeys(
-      this.getValidKeys(routeKind),
-      parsedSearch,
-    );
+    const sanitizedSearch = keepKeys(this.getValidKeys(routeKind), parsedSearch);
     const { state } = sanitizedSearch;
 
-    if (typeof state === "undefined")
-      return this.searchHelper.stringify(sanitizedSearch);
+    if (typeof state === "undefined") return this.searchHelper.stringify(sanitizedSearch);
 
     if (!isObject(state)) {
       return this.searchHelper.stringify(keepKeys(["env"], sanitizedSearch));
@@ -55,7 +44,7 @@ export class SearchSanitizer {
     return this.searchHelper.stringify(
       Object.assign(sanitizedSearch, {
         state: this.pageStateSanitizer.sanitize(routeKind, state),
-      }),
+      })
     );
   }
 
@@ -65,8 +54,7 @@ export class SearchSanitizer {
   isSanitized(routeKind: RouteKind, search: string): boolean {
     const parsedSearch = this.searchHelper.parse(search);
 
-    if (getKeysExcluding(this.getValidKeys(routeKind), parsedSearch).length > 0)
-      return false;
+    if (getKeysExcluding(this.getValidKeys(routeKind), parsedSearch).length > 0) return false;
 
     const { state } = parsedSearch;
 

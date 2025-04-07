@@ -71,8 +71,10 @@ export const ExpertStateTransfer: React.FC<Props> = ({
   const username = authHelper.getUser();
   const message = words("instanceDetails.API.message.update")(username);
 
-  const { mutate, isError, error, isSuccess, isPending } =
-    usePostExpertStateTransfer(instance_id, service_entity);
+  const { mutate, isError, error, isSuccess, isPending } = usePostExpertStateTransfer(
+    instance_id,
+    service_entity
+  );
 
   /**
    * When a state is selected in the list, block the interface, open the modal,
@@ -130,11 +132,7 @@ export const ExpertStateTransfer: React.FC<Props> = ({
     <>
       <DropdownGroup label={words("instanceDetails.forceState.label")}>
         {targets.map((target) => (
-          <DropdownItem
-            isDanger
-            onClick={() => onStateSelect(target)}
-            key={uniqueId(target)}
-          >
+          <DropdownItem isDanger onClick={() => onStateSelect(target)} key={uniqueId(target)}>
             {target}
           </DropdownItem>
         ))}
@@ -150,40 +148,26 @@ export const ExpertStateTransfer: React.FC<Props> = ({
         <Content component="p">
           {words("instanceDetails.expert.confirm.state.message")(
             instance_display_identity,
-            targetState,
+            targetState
           )}
         </Content>
         <br />
         <Form>
-          <FormGroup
-            label={words("instanceDetails.operation.selectLabel")}
-            fieldId="operation"
-          >
+          <FormGroup label={words("instanceDetails.operation.selectLabel")} fieldId="operation">
             <FormSelect
               id="operation-select"
               value={selectedOperation}
               onChange={(_event, value) => onSelectOperation(value)}
             >
-              <FormSelectOption
-                key="no-op"
-                label={words("instanceDetails.state.noOperation")}
-              />
+              <FormSelectOption key="no-op" label={words("instanceDetails.state.noOperation")} />
               {expertStateOperations.map((operation, index) => (
-                <FormSelectOption
-                  key={index}
-                  value={operation}
-                  label={operation}
-                />
+                <FormSelectOption key={index} value={operation} label={operation} />
               ))}
             </FormSelect>
           </FormGroup>
         </Form>
         <br />
-        <Alert
-          variant="danger"
-          title={words("instanceDetails.expert.confirm.warning")}
-          isInline
-        />
+        <Alert variant="danger" title={words("instanceDetails.expert.confirm.warning")} isInline />
       </ConfirmationModal>
       {errorMessage && (
         <ToastAlertMessage

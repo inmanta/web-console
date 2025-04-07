@@ -4,11 +4,7 @@ import { mapValues } from "lodash-es";
 import { RouteKind, RouteParams } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
 
-type NavigateTo = (
-  kind: RouteKind,
-  params: RouteParams<typeof kind>,
-  search?: string,
-) => void;
+type NavigateTo = (kind: RouteKind, params: RouteParams<typeof kind>, search?: string) => void;
 
 /**
  * The useNavigateTo hook returns a navigateTo function which navigates to a route.
@@ -61,13 +57,9 @@ export const useDocumentTitle = (title: string): void => {
 };
 
 const decodeParams = (params: Params): Params => {
-  return mapValues(params, (value) =>
-    value === undefined ? value : decodeURIComponent(value),
-  );
+  return mapValues(params, (value) => (value === undefined ? value : decodeURIComponent(value)));
 };
 
 export const encodeParams = (params: Params): Params => {
-  return mapValues(params, (value) =>
-    value === undefined ? value : encodeURIComponent(value),
-  );
+  return mapValues(params, (value) => (value === undefined ? value : encodeURIComponent(value)));
 };

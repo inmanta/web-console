@@ -41,11 +41,9 @@ function setup(entries?: string[]) {
   const scheduler = new StaticScheduler();
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler),
+    new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler)
   );
-  const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolverImpl(store, apiHelper),
-  );
+  const commandResolver = new CommandResolverImpl(new CommandManagerResolverImpl(store, apiHelper));
   const environment = "34a961ba-db3c-486e-8d85-1438d8e88909";
 
   const component = (
@@ -80,9 +78,7 @@ test("ResourcesView shows empty table", async() => {
 
   render(component);
 
-  expect(
-    await screen.findByRole("region", { name: "ResourcesView-Loading" }),
-  ).toBeInTheDocument();
+  expect(await screen.findByRole("region", { name: "ResourcesView-Loading" })).toBeInTheDocument();
 
   await act(async() => {
     apiHelper.resolve(
@@ -96,13 +92,11 @@ test("ResourcesView shows empty table", async() => {
           deploy_summary: { total: 0, by_state: {} },
         },
         links: { self: "" },
-      }),
+      })
     );
   });
 
-  expect(
-    await screen.findByRole("generic", { name: "ResourcesView-Empty" }),
-  ).toBeInTheDocument();
+  expect(await screen.findByRole("generic", { name: "ResourcesView-Empty" })).toBeInTheDocument();
 
   await act(async() => {
     const results = await axe(document.body);
@@ -116,17 +110,13 @@ test("ResourcesView shows failed table", async() => {
 
   render(component);
 
-  expect(
-    await screen.findByRole("region", { name: "ResourcesView-Loading" }),
-  ).toBeInTheDocument();
+  expect(await screen.findByRole("region", { name: "ResourcesView-Loading" })).toBeInTheDocument();
 
   await act(async() => {
     await apiHelper.resolve(Either.left("error"));
   });
 
-  expect(
-    await screen.findByRole("region", { name: "ResourcesView-Failed" }),
-  ).toBeInTheDocument();
+  expect(await screen.findByRole("region", { name: "ResourcesView-Failed" })).toBeInTheDocument();
 
   await act(async() => {
     const results = await axe(document.body);
@@ -140,17 +130,13 @@ test("ResourcesView shows success table", async() => {
 
   render(component);
 
-  expect(
-    await screen.findByRole("region", { name: "ResourcesView-Loading" }),
-  ).toBeInTheDocument();
+  expect(await screen.findByRole("region", { name: "ResourcesView-Loading" })).toBeInTheDocument();
 
   await act(async() => {
     await apiHelper.resolve(Either.right(Resource.response));
   });
 
-  expect(
-    await screen.findByRole("grid", { name: "ResourcesView-Success" }),
-  ).toBeInTheDocument();
+  expect(await screen.findByRole("grid", { name: "ResourcesView-Success" })).toBeInTheDocument();
 
   await act(async() => {
     const results = await axe(document.body);
@@ -184,9 +170,7 @@ test("GIVEN ResourcesView WHEN user clicks on requires toggle THEN list of requi
     await apiHelper.resolve(Either.right(ResourceDetails.response));
   });
 
-  expect(
-    await screen.findByRole("grid", { name: "ResourceRequires-Success" }),
-  ).toBeVisible();
+  expect(await screen.findByRole("grid", { name: "ResourceRequires-Success" })).toBeVisible();
 
   await act(async() => {
     const results = await axe(document.body);
@@ -209,14 +193,14 @@ test("ResourcesView shows next page of resources", async() => {
           next: "/fake-link?end=fake-first-param",
         },
         metadata: Resource.response.metadata,
-      }),
+      })
     );
   });
 
   expect(
     await screen.findByRole("cell", {
       name: Resource.response.data[0].id_details.resource_id_value,
-    }),
+    })
   ).toBeInTheDocument();
 
   const button = screen.getAllByRole("button", { name: "Go to next page" })[0];
@@ -234,14 +218,14 @@ test("ResourcesView shows next page of resources", async() => {
           next: "/fake-link?end=fake-first-param",
         },
         metadata: Resource.response.metadata,
-      }),
+      })
     );
   });
 
   expect(
     await screen.findByRole("cell", {
       name: Resource.response.data[3].id_details.resource_id_value,
-    }),
+    })
   ).toBeInTheDocument();
 
   await act(async() => {
@@ -271,7 +255,7 @@ test("ResourcesView shows sorting buttons for sortable columns", async() => {
   expect(
     within(table).getByRole("button", {
       name: words("resources.column.deployState"),
-    }),
+    })
   ).toBeVisible();
 
   await act(async() => {
@@ -320,7 +304,7 @@ test("GIVEN ResourcesView WHEN sorting changes AND we are not on the first page 
           next: "/fake-link?end=fake-first-param",
         },
         metadata: Resource.response.metadata,
-      }),
+      })
     );
   });
 
@@ -343,7 +327,7 @@ test("GIVEN ResourcesView WHEN sorting changes AND we are not on the first page 
           next: "/fake-link?end=fake-first-param",
         },
         metadata: Resource.response.metadata,
-      }),
+      })
     );
   });
 
@@ -351,15 +335,13 @@ test("GIVEN ResourcesView WHEN sorting changes AND we are not on the first page 
   await userEvent.click(
     screen.getByRole("button", {
       name: "Type",
-    }),
+    })
   );
 
   // expect the api url to not contain start and end keywords that are used for pagination to assert we are back on the first page.
   // we are asserting on the second request as the first request is for the updated sorting event, and second is chained to back to the first page with still correct sorting
   expect(apiHelper.pendingRequests[1].url).not.toMatch(/(&start=|&end=)/);
-  expect(apiHelper.pendingRequests[1].url).toMatch(
-    /(&sort=resource_type.desc)/,
-  );
+  expect(apiHelper.pendingRequests[1].url).toMatch(/(&sort=resource_type.desc)/);
 });
 
 it.each`
@@ -396,19 +378,15 @@ it.each`
       await userEvent.type(input, `${filterValue}{enter}`);
     }
 
-    expect(apiHelper.pendingRequests[0].url).toContain(
-      "filter.status=%21orphaned",
-    );
-    expect(apiHelper.pendingRequests[0].url).toContain(
-      `filter.${filterUrlName}=${filterValue}`,
-    );
+    expect(apiHelper.pendingRequests[0].url).toContain("filter.status=%21orphaned");
+    expect(apiHelper.pendingRequests[0].url).toContain(`filter.${filterUrlName}=${filterValue}`);
 
     await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
     });
-  },
+  }
 );
 
 it.each`
@@ -448,15 +426,13 @@ it.each`
 
     await userEvent.type(inputTwo, `${filterValueTwo}{enter}`);
 
+    expect(apiHelper.pendingRequests[0].url).toContain("filter.status=%21orphaned");
     expect(apiHelper.pendingRequests[0].url).toContain(
-      "filter.status=%21orphaned",
-    );
-    expect(apiHelper.pendingRequests[0].url).toContain(
-      `filter.${filterUrlNameOne}=${filterValueOne}`,
+      `filter.${filterUrlNameOne}=${filterValueOne}`
     );
 
     expect(apiHelper.pendingRequests[0].url).toContain(
-      `filter.${filterUrlNameTwo}=${filterValueTwo}`,
+      `filter.${filterUrlNameTwo}=${filterValueTwo}`
     );
 
     await act(async() => {
@@ -464,7 +440,7 @@ it.each`
 
       expect(results).toHaveNoViolations();
     });
-  },
+  }
 );
 
 test("when using the all filters then the resources with that filter values should be fetched and shown", async() => {
@@ -488,36 +464,30 @@ test("when using the all filters then the resources with that filter values shou
 
   expect(initialRows).toHaveLength(6);
 
-  const inputOne = await screen.findByPlaceholderText(
-    words("resources.filters.agent.placeholder"),
-  );
+  const inputOne = await screen.findByPlaceholderText(words("resources.filters.agent.placeholder"));
 
   await userEvent.type(inputOne, `${filterValueOne}`);
 
-  const inputTwo = await screen.findByPlaceholderText(
-    words("resources.filters.type.placeholder"),
-  );
+  const inputTwo = await screen.findByPlaceholderText(words("resources.filters.type.placeholder"));
 
   await userEvent.type(inputTwo, `${filterValueTwo}`);
 
   const inputThree = await screen.findByPlaceholderText(
-    words("resources.filters.value.placeholder"),
+    words("resources.filters.value.placeholder")
   );
 
   await userEvent.type(inputThree, `${filterValueThree}{enter}`);
 
+  expect(apiHelper.pendingRequests[0].url).toContain("filter.status=%21orphaned");
   expect(apiHelper.pendingRequests[0].url).toContain(
-    "filter.status=%21orphaned",
-  );
-  expect(apiHelper.pendingRequests[0].url).toContain(
-    `filter.${filterUrlNameOne}=${filterValueOne}`,
+    `filter.${filterUrlNameOne}=${filterValueOne}`
   );
 
   expect(apiHelper.pendingRequests[0].url).toContain(
-    `filter.${filterUrlNameTwo}=${filterValueTwo}`,
+    `filter.${filterUrlNameTwo}=${filterValueTwo}`
   );
   expect(apiHelper.pendingRequests[0].url).toContain(
-    `filter.${filterUrlNameThree}=${filterValueThree}`,
+    `filter.${filterUrlNameThree}=${filterValueThree}`
   );
 
   await act(async() => {
@@ -567,7 +537,7 @@ test.each`
     expect(apiHelper.pendingRequests[0].url).toEqual(
       `/api/v2/resource?deploy_summary=True&limit=20&filter.status=%21orphaned&filter.status=${
         option === "include" ? filterValue : `%21${filterValue}`
-      }&sort=resource_type.asc`,
+      }&sort=resource_type.asc`
     );
 
     await act(async() => {
@@ -576,7 +546,7 @@ test.each`
           data: Resource.response.data.slice(4),
           links: Resource.response.links,
           metadata: Resource.response.metadata,
-        }),
+        })
       );
     });
 
@@ -591,7 +561,7 @@ test.each`
 
       expect(results).toHaveNoViolations();
     });
-  },
+  }
 );
 
 test("When clicking the clear and reset filters then the state filter is updated correctly", async() => {
@@ -600,7 +570,7 @@ test("When clicking the clear and reset filters then the state filter is updated
   render(component);
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
-    "/api/v2/resource?deploy_summary=True&limit=20&filter.status=%21orphaned&sort=resource_type.asc",
+    "/api/v2/resource?deploy_summary=True&limit=20&filter.status=%21orphaned&sort=resource_type.asc"
   );
 
   await act(async() => {
@@ -621,7 +591,7 @@ test("When clicking the clear and reset filters then the state filter is updated
   await userEvent.click(visibleClearButton);
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
-    "/api/v2/resource?deploy_summary=True&limit=20&&sort=resource_type.asc",
+    "/api/v2/resource?deploy_summary=True&limit=20&&sort=resource_type.asc"
   );
 
   await act(async() => {
@@ -630,16 +600,14 @@ test("When clicking the clear and reset filters then the state filter is updated
         data: Resource.response.data.slice(4),
         links: Resource.response.links,
         metadata: Resource.response.metadata,
-      }),
+      })
     );
   });
 
-  await userEvent.click(
-    await screen.findByRole("button", { name: "Reset-filters" }),
-  );
+  await userEvent.click(await screen.findByRole("button", { name: "Reset-filters" }));
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
-    "/api/v2/resource?deploy_summary=True&limit=20&filter.status=%21orphaned&sort=resource_type.asc",
+    "/api/v2/resource?deploy_summary=True&limit=20&filter.status=%21orphaned&sort=resource_type.asc"
   );
 
   await act(async() => {
@@ -658,14 +626,12 @@ test("ResourcesView shows deploy state bar", async() => {
     await apiHelper.resolve(Either.right(Resource.response));
   });
 
-  expect(
-    await screen.findByRole("grid", { name: "ResourcesView-Success" }),
-  ).toBeInTheDocument();
+  expect(await screen.findByRole("grid", { name: "ResourcesView-Success" })).toBeInTheDocument();
 
   expect(
     await screen.findByRole("generic", {
       name: words("resources.deploySummary.title"),
-    }),
+    })
   ).toBeInTheDocument();
 
   await act(async() => {
@@ -680,9 +646,7 @@ test("GIVEN ResourcesView WHEN data is loading for next page THEN shows toolbar"
 
   render(component);
 
-  expect(
-    await screen.findByRole("region", { name: "ResourcesView-Loading" }),
-  ).toBeInTheDocument();
+  expect(await screen.findByRole("region", { name: "ResourcesView-Loading" })).toBeInTheDocument();
 
   await act(async() => {
     await apiHelper.resolve(
@@ -692,24 +656,22 @@ test("GIVEN ResourcesView WHEN data is loading for next page THEN shows toolbar"
           ...Resource.response.links,
           next: "/fake-link?end=fake-param",
         },
-      }),
+      })
     );
   });
 
-  expect(
-    await screen.findByRole("grid", { name: "ResourcesView-Success" }),
-  ).toBeInTheDocument();
+  expect(await screen.findByRole("grid", { name: "ResourcesView-Success" })).toBeInTheDocument();
 
   expect(
     await screen.findByRole("generic", {
       name: words("resources.deploySummary.title"),
-    }),
+    })
   ).toBeInTheDocument();
 
   expect(
     screen.getByRole("generic", {
       name: "LegendItem-available",
-    }),
+    })
   ).toHaveAttribute("data-value", "1");
 
   const nextButton = screen.getAllByRole("button", {
@@ -720,31 +682,25 @@ test("GIVEN ResourcesView WHEN data is loading for next page THEN shows toolbar"
 
   await userEvent.click(nextButton);
 
-  expect(
-    await screen.findByRole("region", { name: "ResourcesView-Loading" }),
-  ).toBeInTheDocument();
+  expect(await screen.findByRole("region", { name: "ResourcesView-Loading" })).toBeInTheDocument();
 
   expect(
     screen.getByRole("generic", {
       name: words("resources.deploySummary.title"),
-    }),
+    })
   ).toBeVisible();
   expect(
     screen.getByRole("button", {
       name: words("resources.deploySummary.repair"),
-    }),
+    })
   ).toBeVisible();
   expect(
     screen.getByRole("button", {
       name: words("resources.deploySummary.deploy"),
-    }),
+    })
   ).toBeVisible();
-  expect(
-    screen.getByRole("navigation", { name: "top-Pagination" }),
-  ).toBeVisible();
-  expect(
-    screen.queryByRole("navigation", { name: "bottom-Pagination" }),
-  ).not.toBeInTheDocument();
+  expect(screen.getByRole("navigation", { name: "top-Pagination" })).toBeVisible();
+  expect(screen.queryByRole("navigation", { name: "bottom-Pagination" })).not.toBeInTheDocument();
 
   await act(async() => {
     await apiHelper.resolve(
@@ -760,14 +716,14 @@ test("GIVEN ResourcesView WHEN data is loading for next page THEN shows toolbar"
             },
           },
         },
-      }),
+      })
     );
   });
 
   expect(
     await screen.findByRole("generic", {
       name: "LegendItem-available",
-    }),
+    })
   ).toHaveAttribute("data-value", "2");
 
   await act(async() => {
@@ -782,33 +738,29 @@ test("GIVEN ResourcesView WHEN data is auto-updated THEN shows updated toolbar",
 
   render(component);
 
-  expect(
-    await screen.findByRole("region", { name: "ResourcesView-Loading" }),
-  ).toBeInTheDocument();
+  expect(await screen.findByRole("region", { name: "ResourcesView-Loading" })).toBeInTheDocument();
 
   await act(async() => {
     await apiHelper.resolve(
       Either.right({
         ...Resource.response,
         links: { ...Resource.response.links, next: "/fake-link" },
-      }),
+      })
     );
   });
 
-  expect(
-    await screen.findByRole("grid", { name: "ResourcesView-Success" }),
-  ).toBeInTheDocument();
+  expect(await screen.findByRole("grid", { name: "ResourcesView-Success" })).toBeInTheDocument();
 
   expect(
     await screen.findByRole("generic", {
       name: words("resources.deploySummary.title"),
-    }),
+    })
   ).toBeInTheDocument();
 
   expect(
     screen.getByRole("generic", {
       name: "LegendItem-available",
-    }),
+    })
   ).toHaveAttribute("data-value", "1");
 
   scheduler.executeAll();
@@ -816,24 +768,20 @@ test("GIVEN ResourcesView WHEN data is auto-updated THEN shows updated toolbar",
   expect(
     screen.getByRole("generic", {
       name: words("resources.deploySummary.title"),
-    }),
+    })
   ).toBeVisible();
   expect(
     screen.getByRole("button", {
       name: words("resources.deploySummary.repair"),
-    }),
+    })
   ).toBeVisible();
   expect(
     screen.getByRole("button", {
       name: words("resources.deploySummary.deploy"),
-    }),
+    })
   ).toBeVisible();
-  expect(
-    screen.getByRole("navigation", { name: "top-Pagination" }),
-  ).toBeVisible();
-  expect(
-    screen.getByRole("navigation", { name: "bottom-Pagination" }),
-  ).toBeInTheDocument();
+  expect(screen.getByRole("navigation", { name: "top-Pagination" })).toBeVisible();
+  expect(screen.getByRole("navigation", { name: "bottom-Pagination" })).toBeInTheDocument();
 
   await act(async() => {
     await apiHelper.resolve(
@@ -849,14 +797,14 @@ test("GIVEN ResourcesView WHEN data is auto-updated THEN shows updated toolbar",
             },
           },
         },
-      }),
+      })
     );
   });
 
   expect(
     await screen.findByRole("generic", {
       name: "LegendItem-available",
-    }),
+    })
   ).toHaveAttribute("data-value", "2");
 
   await act(async() => {
@@ -878,7 +826,7 @@ test("ResourcesView shows deploy state bar with available status without process
   expect(
     await screen.findByRole("generic", {
       name: words("resources.deploySummary.title"),
-    }),
+    })
   ).toBeInTheDocument();
 
   const availableItem = screen.getByRole("generic", {
@@ -907,20 +855,18 @@ test("Given the ResourcesView When clicking on deploy, then the approriate backe
     await apiHelper.resolve(Either.right(Resource.response));
   });
 
-  expect(
-    await screen.findByRole("grid", { name: "ResourcesView-Success" }),
-  ).toBeInTheDocument();
+  expect(await screen.findByRole("grid", { name: "ResourcesView-Success" })).toBeInTheDocument();
 
   await userEvent.click(
     await screen.findByRole("button", {
       name: words("resources.deploySummary.deploy"),
-    }),
+    })
   );
 
   expect(
     await screen.findByRole("button", {
       name: words("resources.deploySummary.deploy"),
-    }),
+    })
   ).toBeDisabled();
 
   expect(screen.getByTestId("dot-indication")).toBeInTheDocument();
@@ -952,20 +898,18 @@ test("Given the ResourcesView When clicking on repair, then the approriate backe
     await apiHelper.resolve(Either.right(Resource.response));
   });
 
-  expect(
-    await screen.findByRole("grid", { name: "ResourcesView-Success" }),
-  ).toBeInTheDocument();
+  expect(await screen.findByRole("grid", { name: "ResourcesView-Success" })).toBeInTheDocument();
 
   await userEvent.click(
     await screen.findByRole("button", {
       name: words("resources.deploySummary.repair"),
-    }),
+    })
   );
 
   expect(
     await screen.findByRole("button", {
       name: words("resources.deploySummary.repair"),
-    }),
+    })
   ).toBeDisabled();
 
   expect(apiHelper.pendingRequests).toEqual([
@@ -987,8 +931,7 @@ test("Given the ResourcesView When clicking on repair, then the approriate backe
 });
 
 test("Given the ResourcesView When environment is halted, then deploy and repair buttons are disabled", async() => {
-  const { component, apiHelper, environment, store, environmentModifier } =
-    setup();
+  const { component, apiHelper, environment, store, environmentModifier } = setup();
 
   environmentModifier.setEnvironment(environment);
   store.dispatch.environment.setEnvironmentDetailsById({
@@ -1002,19 +945,17 @@ test("Given the ResourcesView When environment is halted, then deploy and repair
     await apiHelper.resolve(Either.right(Resource.response));
   });
 
-  expect(
-    await screen.findByRole("grid", { name: "ResourcesView-Success" }),
-  ).toBeInTheDocument();
+  expect(await screen.findByRole("grid", { name: "ResourcesView-Success" })).toBeInTheDocument();
 
   expect(
     await screen.findByRole("button", {
       name: words("resources.deploySummary.repair"),
-    }),
+    })
   ).toBeDisabled();
   expect(
     await screen.findByRole("button", {
       name: words("resources.deploySummary.deploy"),
-    }),
+    })
   ).toBeDisabled();
 
   await act(async() => {

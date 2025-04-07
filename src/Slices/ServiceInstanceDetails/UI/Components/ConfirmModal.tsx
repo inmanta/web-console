@@ -62,12 +62,7 @@ export const ConfirmationModal: React.FC<Props> = ({
           {words("yes")}
           {isPending && <Spinner size="sm" />}
         </Button>,
-        <Button
-          key="cancel"
-          variant="link"
-          data-testid={`${id}-modal-cancel`}
-          onClick={onCancel}
-        >
+        <Button key="cancel" variant="link" data-testid={`${id}-modal-cancel`} onClick={onCancel}>
           {words("no")}
         </Button>,
       ]}

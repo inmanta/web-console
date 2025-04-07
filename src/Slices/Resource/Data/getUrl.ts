@@ -18,14 +18,12 @@ export function getUrl({
             resource_id_value: filter.value,
           },
         },
-        { allowDots: true, arrayFormat: "repeat" },
+        { allowDots: true, arrayFormat: "repeat" }
       )}`
       : "";
   const sortParam = sort ? `&sort=${sort.name}.${sort.order}` : "";
 
-  return `/api/v2/resource?deploy_summary=True&limit=${
-    pageSize.value
-  }${filterParam}${sortParam}${
+  return `/api/v2/resource?deploy_summary=True&limit=${pageSize.value}${filterParam}${sortParam}${
     currentPage.value ? `&${currentPage.value}` : ""
   }`;
 }

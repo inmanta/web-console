@@ -9,12 +9,7 @@ import { createMemoryHistory } from "history";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { FlatEnvironment, RemoteData } from "@/Core";
-import {
-  AuthProvider,
-  getStoreInstance,
-  KeycloakAuthConfig,
-  LocalConfig,
-} from "@/Data";
+import { AuthProvider, getStoreInstance, KeycloakAuthConfig, LocalConfig } from "@/Data";
 import { AuthTestWrapper, Environment, dependencies } from "@/Test";
 import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
 import ErrorBoundary from "@/UI/Utils/ErrorBoundary";
@@ -24,13 +19,10 @@ import { EnvironmentSelectorItem } from "./EnvSelectorWrapper";
 const setup = (
   onSelectEnvironment: (item: EnvironmentSelectorItem) => void = () => {},
   config: KeycloakAuthConfig | LocalConfig | undefined = undefined,
-  environments: FlatEnvironment[] = Environment.filterable,
+  environments: FlatEnvironment[] = Environment.filterable
 ) => {
   const queryClient = new QueryClient();
-  const environmentHandler = EnvironmentHandlerImpl(
-    useLocation,
-    dependencies.routeManager,
-  );
+  const environmentHandler = EnvironmentHandlerImpl(useLocation, dependencies.routeManager);
   const store = getStoreInstance();
 
   store.dispatch.environment.setEnvironments(RemoteData.success(environments));
@@ -51,9 +43,7 @@ const setup = (
         ]}
       >
         <QueryClientProvider client={queryClient}>
-          <DependencyProvider
-            dependencies={{ ...dependencies, environmentHandler }}
-          >
+          <DependencyProvider dependencies={{ ...dependencies, environmentHandler }}>
             <StoreProvider store={store}>
               <AuthProvider config={config}>
                 <AuthTestWrapper dependencies={dependencies}>
@@ -86,7 +76,7 @@ test("GIVEN EnvironmentSelector WHEN there are no environments THEN redirects", 
           selectedEnvironment={undefined}
         />
       </DependencyProvider>
-    </Router>,
+    </Router>
   );
   expect(screen.getByText("Select an environment")).toBeVisible();
   expect(history.location.pathname).toEqual("/");
@@ -130,7 +120,7 @@ test("GIVEN EnvironmentSelector and populated store WHEN user clicks on an item 
   expect(
     screen.queryByRole("button", {
       name: `${envB.name} (${envB.projectName})`,
-    }),
+    })
   ).toBeVisible();
   expect(selectedEnv).toEqual(envB.id);
 });
@@ -157,7 +147,7 @@ test("GIVEN EnvironmentSelector and environments with identical names WHEN user 
   expect(
     screen.getByRole("button", {
       name: `${envB.name} (${envB.projectName})`,
-    }),
+    })
   );
 
   expect(selectedEnv).toEqual(envB.id);
@@ -172,7 +162,7 @@ test("GIVEN EnvironmentSelector WHEN jwt auth is enabled will display fetched us
           username: "test_user",
         },
       });
-    }),
+    })
   );
 
   server.listen();
@@ -195,9 +185,9 @@ test("GIVEN EnvironmentSelector WHEN jwt auth is enabled and current_user reques
           message:
             "Request or referenced resource does not exist: No current user found, probably an API token is used.",
         },
-        { status: 404 },
+        { status: 404 }
       );
-    }),
+    })
   );
 
   server.listen();

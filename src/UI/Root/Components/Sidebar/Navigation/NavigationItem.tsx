@@ -65,10 +65,7 @@ const LockedItem: React.FC<Label> = ({ label }) => (
     disabled
     preventDefault
     icon={
-      <Tooltip
-        content={"Select an environment to enable this link"}
-        position="right"
-      >
+      <Tooltip content={"Select an environment to enable this link"} position="right">
         <LockIcon />
       </Tooltip>
     }
@@ -79,12 +76,7 @@ const LockedItem: React.FC<Label> = ({ label }) => (
 
 const ExternalItem: React.FC<Label & Url> = ({ label, url }) => (
   <NavItem itemId={label}>
-    <a
-      href={url}
-      target="_blank"
-      rel="noreferrer"
-      aria-label="Sidebar-Navigation-Item-External"
-    >
+    <a href={url} target="_blank" rel="noreferrer" aria-label="Sidebar-Navigation-Item-External">
       {label}
     </a>
   </NavItem>
@@ -106,10 +98,7 @@ const CompileReportItem: React.FC<Label & Url> = ({ label, url }) => {
         {label}
         {isSuccess && data.isCompiling && (
           <Tooltip key={"ongoing-compilation-tooltip"} content={"Compiling"}>
-            <CompileReportsIndication
-              role="presentation"
-              aria-label="CompileReportsIndication"
-            />
+            <CompileReportsIndication role="presentation" aria-label="CompileReportsIndication" />
           </Tooltip>
         )}
       </NavLink>

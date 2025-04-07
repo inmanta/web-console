@@ -40,16 +40,11 @@ export const RelatedServiceProvider: React.FC<Props> = ({
   alreadySelected,
   multi,
 }) => {
-  const { isError, error, isSuccess, refetch } =
-    useGetServiceModel(serviceName).useContinuous();
+  const { isError, error, isSuccess, refetch } = useGetServiceModel(serviceName).useContinuous();
 
   if (isError) {
     return (
-      <Alert
-        variant="danger"
-        isInline
-        title={words("inventory.service.failed")}
-      >
+      <Alert variant="danger" isInline title={words("inventory.service.failed")}>
         {error.message}
         <div>
           <Button variant="link" isInline onClick={() => refetch()}>

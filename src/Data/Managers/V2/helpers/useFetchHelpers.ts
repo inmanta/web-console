@@ -27,7 +27,7 @@ export const useFetchHelpers = () => {
 
     if (!response.ok) {
       const error: CustomError = new Error(
-        customErrorMessage || JSON.parse(await response.text()).message,
+        customErrorMessage || JSON.parse(await response.text()).message
       );
 
       error.status = response.status;

@@ -38,17 +38,10 @@ export const VersionedPageTitleWithActions: React.FC<Props> = ({ title }) => {
 
   return (
     <Flex justifyContent={{ default: "justifyContentSpaceBetween" }}>
-      <Flex
-        alignItems={{ default: "alignItemsCenter" }}
-        gap={{ default: "gapSm" }}
-      >
+      <Flex alignItems={{ default: "alignItemsCenter" }} gap={{ default: "gapSm" }}>
         {title}
         {!isLatest && [
-          <Label
-            data-testid="selected-version"
-            key="selected-version"
-            color="purple"
-          >
+          <Label data-testid="selected-version" key="selected-version" color="purple">
             {words("instanceDetails.title.tag")(selectedVersion)}
           </Label>,
         ]}

@@ -24,16 +24,10 @@ export function OneTime<Kind extends Query.Kind>(
   kind: Kind,
   getUrl: GetUrl<Kind>,
   toUsed: ToUsed<Kind>,
-  strategy: "MERGE" | "RELOAD",
+  strategy: "MERGE" | "RELOAD"
 ): OneTimeQueryManager<Kind> {
-  async function update(
-    query: Query.SubQuery<Kind>,
-    url: string,
-  ): Promise<void> {
-    stateHelper.set(
-      RemoteData.fromEither(await apiHelper.getWithoutEnvironment(url)),
-      query,
-    );
+  async function update(query: Query.SubQuery<Kind>, url: string): Promise<void> {
+    stateHelper.set(RemoteData.fromEither(await apiHelper.getWithoutEnvironment(url)), query);
   }
 
   function useOneTime(query: Query.SubQuery<Kind>): Data<Kind> {
@@ -44,10 +38,7 @@ export function OneTime<Kind extends Query.Kind>(
     }, getDependencies(query));
 
     useEffect(() => {
-      if (
-        strategy === "RELOAD" ||
-        RemoteData.isNotAsked(stateHelper.getOnce(query))
-      ) {
+      if (strategy === "RELOAD" || RemoteData.isNotAsked(stateHelper.getOnce(query))) {
         stateHelper.set(RemoteData.loading(), query);
       }
 
@@ -55,18 +46,12 @@ export function OneTime<Kind extends Query.Kind>(
     }, [url]);
 
     return [
-      RemoteData.mapSuccess(
-        (d) => toUsed(d, setUrl),
-        stateHelper.useGetHooked(query),
-      ),
+      RemoteData.mapSuccess((d) => toUsed(d, setUrl), stateHelper.useGetHooked(query)),
       () => update(query, url),
     ];
   }
 
-  function matches(
-    query: Query.SubQuery<Kind>,
-    matchingKind: QueryManagerKind,
-  ): boolean {
+  function matches(query: Query.SubQuery<Kind>, matchingKind: QueryManagerKind): boolean {
     return query.kind === kind && matchingKind === "OneTime";
   }
 

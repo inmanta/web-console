@@ -37,20 +37,17 @@ function setup() {
   const apiHelper = new DeferredApiHelper();
   const scheduler = new StaticScheduler();
   const environmentsStateHelper = GetEnvironmentsStateHelper(store);
-  const environmentManagerOneTime = GetEnvironmentsQueryManager(
-    apiHelper,
-    environmentsStateHelper,
-  );
+  const environmentManagerOneTime = GetEnvironmentsQueryManager(apiHelper, environmentsStateHelper);
 
   const environmentsManager = GetEnvironmentsContinuousQueryManager(
     apiHelper,
     scheduler,
-    GetEnvironmentsContinuousStateHelper(store),
+    GetEnvironmentsContinuousStateHelper(store)
   );
 
   const getServerStatusManager = GetServerStatusOneTimeQueryManager(
     apiHelper,
-    GetServerStatusStateHelper(store),
+    GetServerStatusStateHelper(store)
   );
 
   const queryResolver = new QueryResolverImpl(
@@ -58,13 +55,10 @@ function setup() {
       environmentsManager,
       environmentManagerOneTime,
       getServerStatusManager,
-    ]),
+    ])
   );
 
-  const environmentHandler = EnvironmentHandlerImpl(
-    useLocation,
-    dependencies.routeManager,
-  );
+  const environmentHandler = EnvironmentHandlerImpl(useLocation, dependencies.routeManager);
 
   const component = (
     <QueryClientProvider client={queryClient}>
@@ -140,7 +134,5 @@ test("GIVEN the app THEN the documentation link should be visible", async() => {
     await apiHelper.resolve(Either.right({ data: Project.list }));
   });
 
-  expect(
-    screen.getByRole("button", { name: "documentation link" }),
-  ).toBeVisible();
+  expect(screen.getByRole("button", { name: "documentation link" })).toBeVisible();
 });

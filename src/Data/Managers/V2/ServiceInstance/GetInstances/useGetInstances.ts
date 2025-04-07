@@ -38,7 +38,7 @@ interface GetInstance {
  */
 export const useGetInstances = (
   serviceName: string,
-  params: ServiceInstanceParams,
+  params: ServiceInstanceParams
 ): GetInstance => {
   const { filter, sort, pageSize, currentPage } = params;
 
@@ -54,14 +54,7 @@ export const useGetInstances = (
   return {
     useOneTime: (): UseQueryResult<HookResponse, CustomError> =>
       useQuery({
-        queryKey: [
-          "get_instances-one_time",
-          serviceName,
-          filter,
-          sort,
-          pageSize,
-          currentPage,
-        ],
+        queryKey: ["get_instances-one_time", serviceName, filter, sort, pageSize, currentPage],
         queryFn: () => get(url),
         select: (data) => ({
           ...data,
@@ -70,14 +63,7 @@ export const useGetInstances = (
       }),
     useContinuous: (): UseQueryResult<HookResponse, CustomError> =>
       useQuery({
-        queryKey: [
-          "get_instances-continuous",
-          serviceName,
-          filter,
-          sort,
-          pageSize,
-          currentPage,
-        ],
+        queryKey: ["get_instances-continuous", serviceName, filter, sort, pageSize, currentPage],
         queryFn: () => get(url),
         refetchInterval: 5000,
         select: (data) => ({

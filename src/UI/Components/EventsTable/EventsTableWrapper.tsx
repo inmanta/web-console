@@ -1,13 +1,5 @@
 import React from "react";
-import {
-  OnSort,
-  Table,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Tr,
-} from "@patternfly/react-table";
+import { OnSort, Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
 import { Sort } from "@/Core";
 import { words } from "@/UI/words";
 import { EventsTablePresenter } from "./EventsTablePresenter";
@@ -30,25 +22,16 @@ export const EventsTableWrapper: React.FC<React.PropsWithChildren<Props>> = ({
 }) => {
   const heads =
     sort && setSort ? (
-      <HeadsWithSort
-        sort={sort}
-        setSort={setSort}
-        tablePresenter={tablePresenter}
-      />
+      <HeadsWithSort sort={sort} setSort={setSort} tablePresenter={tablePresenter} />
     ) : (
-      tablePresenter
-        .getColumnHeadDisplayNames()
-        .map((column) => <Th key={column}>{column}</Th>)
+      tablePresenter.getColumnHeadDisplayNames().map((column) => <Th key={column}>{column}</Th>)
     );
 
   return (
     <Table aria-label={props["aria-label"]}>
       <Thead>
         <Tr>
-          <Th
-            aria-hidden
-            screenReaderText={words("common.emptyColumnHeader")}
-          />
+          <Th aria-hidden screenReaderText={words("common.emptyColumnHeader")} />
           {heads}
         </Tr>
       </Thead>
@@ -65,36 +48,36 @@ export const EventsTableWrapper: React.FC<React.PropsWithChildren<Props>> = ({
   );
 };
 
-const HeadsWithSort: React.FC<
-  Required<Pick<Props, "setSort" | "sort" | "tablePresenter">>
-> = ({ sort, setSort, tablePresenter }) => {
+const HeadsWithSort: React.FC<Required<Pick<Props, "setSort" | "sort" | "tablePresenter">>> = ({
+  sort,
+  setSort,
+  tablePresenter,
+}) => {
   const onSort: OnSort = (event, index, order) => {
     setSort({ name: sort.name, order });
   };
   // The events table is only sortable by one column
-  const heads = tablePresenter
-    .getColumnHeadDisplayNames()
-    .map((column, columnIndex) => {
-      const sortParams =
-        columnIndex == 1
-          ? {
-            sort: {
-              sortBy: {
-                index: 1,
-                direction: sort.order,
-              },
-              onSort,
-              columnIndex,
+  const heads = tablePresenter.getColumnHeadDisplayNames().map((column, columnIndex) => {
+    const sortParams =
+      columnIndex == 1
+        ? {
+          sort: {
+            sortBy: {
+              index: 1,
+              direction: sort.order,
             },
-          }
-          : {};
+            onSort,
+            columnIndex,
+          },
+        }
+        : {};
 
-      return (
-        <Th key={column} {...sortParams}>
-          {column}
-        </Th>
-      );
-    });
+    return (
+      <Th key={column} {...sortParams}>
+        {column}
+      </Th>
+    );
+  });
 
   return <>{heads}</>;
 };

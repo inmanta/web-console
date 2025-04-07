@@ -31,19 +31,14 @@ export function toggleValueInList<T>(value: T, list: T[]): T[] {
   return clone;
 }
 
-export const isNotNull = <T>(value: T | null): value is NonNullable<T> =>
-  value !== null;
+export const isNotNull = <T>(value: T | null): value is NonNullable<T> => value !== null;
 
-export const isNotUndefined = <T>(
-  value: T | undefined,
-): value is NonNullable<T> => typeof value !== "undefined";
+export const isNotUndefined = <T>(value: T | undefined): value is NonNullable<T> =>
+  typeof value !== "undefined";
 
-export const objectHasKey = <
-  X extends Record<string, unknown>,
-  Y extends PropertyKey,
->(
+export const objectHasKey = <X extends Record<string, unknown>, Y extends PropertyKey>(
   obj: X,
-  prop: Y,
+  prop: Y
 ): obj is X & Record<Y, unknown> => prop in obj;
 
 export const isObject = (value: unknown): value is Record<string, unknown> => {
@@ -61,16 +56,15 @@ export const isObject = (value: unknown): value is Record<string, unknown> => {
 export const stringifyList = (items: string[]): string =>
   items.length <= 0 ? "" : items.reduce((acc, curr) => `${acc}, ${curr}`);
 
-export const isObjectEmpty = (
-  obj: Record<string, unknown>,
-): obj is Record<string, never> => Object.entries(obj).length <= 0;
+export const isObjectEmpty = (obj: Record<string, unknown>): obj is Record<string, never> =>
+  Object.entries(obj).length <= 0;
 
 /**
  * Get the keys of the provided object excluding the provided keys.
  */
 export const getKeysExcluding = (
   excludedKeys: string[],
-  object: Record<string, unknown>,
+  object: Record<string, unknown>
 ): string[] => Object.keys(object).filter((key) => !excludedKeys.includes(key));
 
 /**
@@ -79,7 +73,7 @@ export const getKeysExcluding = (
  */
 export const keepKeys = (
   keys: string[],
-  object: Record<string, unknown>,
+  object: Record<string, unknown>
 ): Record<string, unknown> =>
   Object.keys(object).reduce((acc, cur) => {
     if (keys.includes(cur)) {
@@ -90,15 +84,12 @@ export const keepKeys = (
   }, {});
 
 export const resolvePromiseRecord = async(
-  record: Record<string, Promise<unknown>>,
+  record: Record<string, Promise<unknown>>
 ): Promise<Record<string, unknown>> => {
   const list = Object.entries(record);
   const promises = list.map(([, promise]) => promise);
   const results = await Promise.all(promises);
-  const resultList: [string, unknown][] = results.map((result, index) => [
-    list[index][0],
-    result,
-  ]);
+  const resultList: [string, unknown][] = results.map((result, index) => [list[index][0], result]);
 
   return resultList.reduce<Record<string, unknown>>((acc, [id, result]) => {
     acc[id] = result;

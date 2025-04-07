@@ -15,10 +15,7 @@ import {
 } from "@/Test";
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
-import {
-  GetParametersQueryManager,
-  GetParametersStateHelper,
-} from "@S/Parameters/Data";
+import { GetParametersQueryManager, GetParametersStateHelper } from "@S/Parameters/Data";
 import * as Parameters from "@S/Parameters/Data/Mock";
 import { ParametersPage } from ".";
 
@@ -30,12 +27,8 @@ function setup() {
   const apiHelper = new DeferredApiHelper();
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolverImpl([
-      GetParametersQueryManager(
-        apiHelper,
-        GetParametersStateHelper(store),
-        scheduler,
-      ),
-    ]),
+      GetParametersQueryManager(apiHelper, GetParametersStateHelper(store), scheduler),
+    ])
   );
 
   const component = (
@@ -73,14 +66,12 @@ test("When using the name filter then only the matching parameters should be fet
 
   expect(initialRows).toHaveLength(10);
 
-  const input = screen.getByPlaceholderText(
-    words("parameters.filters.name.placeholder"),
-  );
+  const input = screen.getByPlaceholderText(words("parameters.filters.name.placeholder"));
 
   await userEvent.type(input, "param{enter}");
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
-    "/api/v2/parameters?limit=20&sort=name.asc&filter.name=param",
+    "/api/v2/parameters?limit=20&sort=name.asc&filter.name=param"
   );
 
   await act(async() => {
@@ -88,7 +79,7 @@ test("When using the name filter then only the matching parameters should be fet
       Either.right({
         ...Parameters.response,
         data: Parameters.response.data.slice(0, 3),
-      }),
+      })
     );
   });
 
@@ -121,24 +112,19 @@ test("When using the source filter then only the matching parameters should be f
   expect(initialRows).toHaveLength(10);
 
   await userEvent.click(
-    within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
-      "button",
-      { name: "FilterPicker" },
-    ),
+    within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole("button", {
+      name: "FilterPicker",
+    })
   );
 
-  await userEvent.click(
-    screen.getByRole("option", { name: words("parameters.columns.source") }),
-  );
+  await userEvent.click(screen.getByRole("option", { name: words("parameters.columns.source") }));
 
-  const input = screen.getByPlaceholderText(
-    words("parameters.filters.source.placeholder"),
-  );
+  const input = screen.getByPlaceholderText(words("parameters.filters.source.placeholder"));
 
   await userEvent.type(input, "plugin{enter}");
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
-    "/api/v2/parameters?limit=20&sort=name.asc&filter.source=plugin",
+    "/api/v2/parameters?limit=20&sort=name.asc&filter.source=plugin"
   );
 
   await act(async() => {
@@ -146,7 +132,7 @@ test("When using the source filter then only the matching parameters should be f
       Either.right({
         ...Parameters.response,
         data: Parameters.response.data.slice(0, 3),
-      }),
+      })
     );
   });
 
@@ -179,16 +165,15 @@ test("When using the Updated filter then the parameters within the range selecte
   expect(initialRows).toHaveLength(10);
 
   await userEvent.click(
-    within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
-      "button",
-      { name: "FilterPicker" },
-    ),
+    within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole("button", {
+      name: "FilterPicker",
+    })
   );
 
   await userEvent.click(
     screen.getByRole("option", {
       name: words("parameters.columns.updated.tests"),
-    }),
+    })
   );
 
   const fromDatePicker = screen.getByLabelText("From Date Picker");
@@ -202,7 +187,7 @@ test("When using the Updated filter then the parameters within the range selecte
   await userEvent.click(screen.getByLabelText("Apply date filter"));
 
   expect(apiHelper.pendingRequests[0].url).toMatch(
-    "/api/v2/parameters?limit=20&sort=name.asc&filter.updated=ge%3A2022-01-30%2B23%3A00%3A00&filter.updated=le%3A2022-01-31%2B23%3A00%3A00",
+    "/api/v2/parameters?limit=20&sort=name.asc&filter.updated=ge%3A2022-01-30%2B23%3A00%3A00&filter.updated=le%3A2022-01-31%2B23%3A00%3A00"
   );
 
   await act(async() => {
@@ -210,7 +195,7 @@ test("When using the Updated filter then the parameters within the range selecte
       Either.right({
         ...Parameters.response,
         data: Parameters.response.data.slice(0, 3),
-      }),
+      })
     );
   });
 
@@ -226,12 +211,8 @@ test("When using the Updated filter then the parameters within the range selecte
     window.dispatchEvent(new Event("resize"));
   });
 
-  expect(
-    await screen.findByText("from | 2022/01/31 00:00:00", { exact: false }),
-  ).toBeVisible();
-  expect(
-    await screen.findByText("to | 2022/02/01 00:00:00", { exact: false }),
-  ).toBeVisible();
+  expect(await screen.findByText("from | 2022/01/31 00:00:00", { exact: false })).toBeVisible();
+  expect(await screen.findByText("to | 2022/02/01 00:00:00", { exact: false })).toBeVisible();
 
   await act(async() => {
     const results = await axe(document.body);
@@ -260,7 +241,7 @@ test("GIVEN ParametersView WHEN sorting changes AND we are not on the first page
           after: 3,
           page_size: 100,
         },
-      }),
+      })
     );
   });
 

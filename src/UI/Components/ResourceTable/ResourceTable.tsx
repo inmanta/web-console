@@ -2,10 +2,7 @@ import React from "react";
 import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
 import { InstanceResourceModel } from "@/Core";
 import { ResourceLink } from "@/UI/Components/ResourceLink";
-import {
-  labelColorConfig,
-  ResourceStatusLabel,
-} from "@/UI/Components/ResourceStatus";
+import { labelColorConfig, ResourceStatusLabel } from "@/UI/Components/ResourceStatus";
 import { getResourceIdFromResourceVersionId } from "@/UI/Utils";
 
 interface Props {

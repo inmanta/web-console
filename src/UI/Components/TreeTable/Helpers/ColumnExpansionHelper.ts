@@ -10,20 +10,16 @@ export class ColumnExpansionHelper {
   constructor(
     private readonly sumColumnWidth: number,
     private readonly numberOfColumns: number,
-    private readonly minColumnWidth: number,
+    private readonly minColumnWidth: number
   ) {
-    this.maxColumnWidth =
-      sumColumnWidth - (numberOfColumns - 1) * minColumnWidth;
+    this.maxColumnWidth = sumColumnWidth - (numberOfColumns - 1) * minColumnWidth;
   }
 
   isExpanded(columnWidth: number): boolean {
     return this.maxColumnWidth === columnWidth;
   }
 
-  getDefaultState(
-    columns: string[],
-    emptyColumns: string[],
-  ): Record<string, number> {
+  getDefaultState(columns: string[], emptyColumns: string[]): Record<string, number> {
     if (this.numberOfColumns === emptyColumns.length) {
       const equalColumnWidth = this.sumColumnWidth / this.numberOfColumns;
 
@@ -35,16 +31,13 @@ export class ColumnExpansionHelper {
       (this.numberOfColumns - emptyColumns.length);
 
     return Object.fromEntries(
-      columns.map((k) => [
-        k,
-        emptyColumns.includes(k) ? this.minColumnWidth : nonCollapsedWidth,
-      ]),
+      columns.map((k) => [k, emptyColumns.includes(k) ? this.minColumnWidth : nonCollapsedWidth])
     );
   }
 
   expandColumn(
     currentColumnWidths: Record<string, number>,
-    columnName: string,
+    columnName: string
   ): Record<string, number> {
     const entries = Object.entries(currentColumnWidths).map(([col]) => {
       if (col === columnName) {

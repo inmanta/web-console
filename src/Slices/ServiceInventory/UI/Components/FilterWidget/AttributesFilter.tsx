@@ -29,11 +29,7 @@ interface Props {
   isVisible: boolean;
 }
 
-export const AttributesFilter: React.FC<Props> = ({
-  sets,
-  update,
-  isVisible,
-}) => {
+export const AttributesFilter: React.FC<Props> = ({ sets, update, isVisible }) => {
   const [attributeSetFilter, setAttributeSetFilter] = useState<
     ServiceInstanceParams.AttributeSet | undefined
   >(undefined);
@@ -46,7 +42,7 @@ export const AttributesFilter: React.FC<Props> = ({
       createNewSets(sets, {
         id: attributeSetFilter,
         rule,
-      }),
+      })
     );
   };
 
@@ -61,9 +57,7 @@ export const AttributesFilter: React.FC<Props> = ({
     }
   };
 
-  const onAttributeSetChange = (
-    attributeSet: ServiceInstanceParams.AttributeSet,
-  ) => {
+  const onAttributeSetChange = (attributeSet: ServiceInstanceParams.AttributeSet) => {
     setAttributeSetFilter((current) => {
       if (current === attributeSet) return undefined;
 
@@ -75,10 +69,7 @@ export const AttributesFilter: React.FC<Props> = ({
     <>
       {isVisible && (
         <ToolbarItem>
-          <AttributeSetPicker
-            attributeSet={attributeSetFilter}
-            onChange={onAttributeSetChange}
-          />
+          <AttributeSetPicker attributeSet={attributeSetFilter} onChange={onAttributeSetChange} />
         </ToolbarItem>
       )}
       <ToolbarFilter
@@ -97,10 +88,7 @@ export const AttributesFilter: React.FC<Props> = ({
   );
 };
 
-function createNewSets(
-  { empty, notEmpty }: AttributeSets,
-  { id, rule }: Raw,
-): AttributeSets {
+function createNewSets({ empty, notEmpty }: AttributeSets, { id, rule }: Raw): AttributeSets {
   switch (rule) {
     case AttributeRule.Empty: {
       if (empty.includes(id)) {
@@ -133,9 +121,7 @@ function createNewSets(
 }
 
 function getChips({ empty, notEmpty }: AttributeSets): Pretty[] {
-  const prettyEmpty = empty
-    .map((id) => ({ id, rule: AttributeRule.Empty }))
-    .map(rawToPretty);
+  const prettyEmpty = empty.map((id) => ({ id, rule: AttributeRule.Empty })).map(rawToPretty);
   const prettyNotEmpty = notEmpty
     .map((id) => ({ id, rule: AttributeRule.NotEmpty }))
     .map(rawToPretty);
@@ -146,17 +132,11 @@ function getChips({ empty, notEmpty }: AttributeSets): Pretty[] {
 function rawToPretty({ id, rule }: Raw): Pretty {
   switch (id) {
     case ServiceInstanceParams.AttributeSet.Active:
-      return rule === AttributeRule.Empty
-        ? "Active (empty)"
-        : "Active (not empty)";
+      return rule === AttributeRule.Empty ? "Active (empty)" : "Active (not empty)";
     case ServiceInstanceParams.AttributeSet.Candidate:
-      return rule === AttributeRule.Empty
-        ? "Candidate (empty)"
-        : "Candidate (not empty)";
+      return rule === AttributeRule.Empty ? "Candidate (empty)" : "Candidate (not empty)";
     case ServiceInstanceParams.AttributeSet.Rollback:
-      return rule === AttributeRule.Empty
-        ? "Rollback (empty)"
-        : "Rollback (not empty)";
+      return rule === AttributeRule.Empty ? "Rollback (empty)" : "Rollback (not empty)";
   }
 }
 
@@ -197,7 +177,7 @@ function prettyToRaw(pretty: Pretty): Raw {
 
 function getRuleForAttributeSet(
   { empty, notEmpty }: AttributeSets,
-  attributeSet: ServiceInstanceParams.AttributeSet | undefined,
+  attributeSet: ServiceInstanceParams.AttributeSet | undefined
 ): AttributeRule | undefined {
   if (typeof attributeSet === "undefined") return undefined;
 

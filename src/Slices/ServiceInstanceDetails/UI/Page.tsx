@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useUrlStateWithString } from "@/Data";
 import { useGetServiceModel } from "@/Data/Managers/V2/Service";
-import {
-  useGetInstance,
-  useGetInfiniteInstanceLogs,
-} from "@/Data/Managers/V2/ServiceInstance";
+import { useGetInstance, useGetInfiniteInstanceLogs } from "@/Data/Managers/V2/ServiceInstance";
 import { useRouteParams, words } from "@/UI";
 import { ErrorView, LoadingView, PageContainer } from "@/UI/Components";
 import { InstanceDetailsContext } from "../Core/Context";
@@ -35,10 +32,7 @@ export const ServiceInstanceDetails: React.FC<Props> = ({
 }) => {
   const instanceDetails = useGetInstance(service, instanceId).useContinuous();
 
-  const logsQuery = useGetInfiniteInstanceLogs(
-    service,
-    instanceId,
-  ).useContinuous(version);
+  const logsQuery = useGetInfiniteInstanceLogs(service, instanceId).useContinuous(version);
 
   const serviceModelQuery = useGetServiceModel(service).useOneTime();
 
@@ -50,10 +44,7 @@ export const ServiceInstanceDetails: React.FC<Props> = ({
         <ErrorView
           ariaLabel="Instance-Details-Error"
           title={words("instanceDetails.page.errorFallback.title")}
-          message={
-            instanceDetails.error?.message ||
-            words("instanceDetails.page.errorFallback")
-          }
+          message={instanceDetails.error?.message || words("instanceDetails.page.errorFallback")}
           retry={instanceDetails.refetch}
         />
       </PageContainer>

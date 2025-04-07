@@ -48,8 +48,7 @@ const defaultModalContext: ModalContextInterface = {
  *
  * @type {React.Context<ModalContextInterface>}
  */
-export const ModalContext =
-  createContext<ModalContextInterface>(defaultModalContext);
+export const ModalContext = createContext<ModalContextInterface>(defaultModalContext);
 
 /**
  * `ModalProvider` is a React functional component that provides the `ModalContext`.
@@ -71,9 +70,7 @@ export const ModalProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const [content, setContent] = useState<React.ReactNode>();
   const [actions, setAction] = useState<React.ReactNode>([]);
   const [variant, setVariant] = useState<ModalVariant>(ModalVariant.small);
-  const [iconVariant, setIconVariant] = useState<IconVariant | undefined>(
-    "info",
-  );
+  const [iconVariant, setIconVariant] = useState<IconVariant | undefined>("info");
 
   /**
    * Triggers the modal with the provided properties.

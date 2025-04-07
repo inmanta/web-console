@@ -21,11 +21,7 @@ interface Props {
  *
  * @returns {React.React.FC<Props>} The rendered Component to delete a callback.
  */
-export const DeleteButton: React.FC<Props> = ({
-  service_entity,
-  callback,
-  ...props
-}) => {
+export const DeleteButton: React.FC<Props> = ({ service_entity, callback, ...props }) => {
   const { commandResolver } = useContext(DependencyContext);
   const { triggerModal, closeModal } = useContext(ModalContext);
   const onDelete = commandResolver.useGetTrigger<"DeleteCallback">({
@@ -68,10 +64,7 @@ export const DeleteButton: React.FC<Props> = ({
             content: (
               <>
                 {words("catalog.callbacks.delete")(callback.url)}
-                <ConfirmUserActionForm
-                  onSubmit={onSubmit}
-                  onCancel={closeModal}
-                />
+                <ConfirmUserActionForm onSubmit={onSubmit} onCancel={closeModal} />
               </>
             ),
           });

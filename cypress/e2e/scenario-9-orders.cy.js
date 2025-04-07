@@ -74,9 +74,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="Select-environment-test"]').click();
 
       // go to the Orders page
-      cy.get('[aria-label="Sidebar-Navigation-Item"]')
-        .contains("Orders")
-        .click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Orders").click();
 
       // it shouldn't have any orders yet
       cy.get('[aria-label="ServiceOrderRow"]').should("not.to.exist");
@@ -143,16 +141,10 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="ServiceOrderRow"]').should("contain", "in progress");
 
       // wait until status is partial
-      cy.get('[aria-label="ServiceOrderRow"]', { timeout: 30000 }).should(
-        "contain",
-        "partial",
-      );
+      cy.get('[aria-label="ServiceOrderRow"]', { timeout: 30000 }).should("contain", "partial");
 
       // description should be "Ordered by Composer"
-      cy.get('[aria-label="ServiceOrderRow"]').should(
-        "contain",
-        "Ordered by Composer",
-      );
+      cy.get('[aria-label="ServiceOrderRow"]').should("contain", "Ordered by Composer");
 
       // it should have a deployment progress bar with one failed item, and two completed
       cy.get('[aria-label="LegendItem-failed"]').should("contain", 1);
@@ -175,15 +167,9 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="ServiceOrderDetailsRow"]').should("have.length", 3);
 
       // two rows should be completed, one should be failed
-      cy.get('[aria-label="ServiceOrderDetailsRow"]')
-        .eq(0)
-        .should("include.text", "failed");
-      cy.get('[aria-label="ServiceOrderDetailsRow"]')
-        .eq(1)
-        .should("include.text", "completed");
-      cy.get('[aria-label="ServiceOrderDetailsRow"]')
-        .eq(2)
-        .should("include.text", "completed");
+      cy.get('[aria-label="ServiceOrderDetailsRow"]').eq(0).should("include.text", "failed");
+      cy.get('[aria-label="ServiceOrderDetailsRow"]').eq(1).should("include.text", "completed");
+      cy.get('[aria-label="ServiceOrderDetailsRow"]').eq(2).should("include.text", "completed");
 
       // expand the failed row
       cy.get('[aria-label="ServiceOrderDetailsRow"]')

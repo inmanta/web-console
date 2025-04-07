@@ -24,7 +24,7 @@ export const EditInstancePage: React.FC<{
 }> = ({ serviceEntity, instanceId }) => {
   const { data, isError, error, isSuccess } = useGetInstance(
     serviceEntity.name,
-    instanceId,
+    instanceId
   ).useContinuous();
 
   if (isError) {
@@ -57,15 +57,10 @@ export const EditInstancePage: React.FC<{
   );
 };
 
-const Wrapper: React.FC<PropsWithChildren<{ id: string }>> = ({
-  id,
-  children,
-}) => {
+const Wrapper: React.FC<PropsWithChildren<{ id: string }>> = ({ id, children }) => {
   return (
     <>
-      <Description withSpace>
-        {words("inventory.duplicateInstance.header")(id)}
-      </Description>
+      <Description withSpace>{words("inventory.duplicateInstance.header")(id)}</Description>
       {children}
     </>
   );

@@ -1,9 +1,4 @@
-import {
-  StateHelper,
-  Scheduler,
-  ApiHelper,
-  stringifyObjectOrUndefined,
-} from "@/Core";
+import { StateHelper, Scheduler, ApiHelper, stringifyObjectOrUndefined } from "@/Core";
 import { getPaginationHandlers, QueryManager } from "@/Data/Managers/Helpers";
 import { Filter } from "@S/Events/Core/Query";
 import { getUrl } from "./getUrl";
@@ -11,7 +6,7 @@ import { getUrl } from "./getUrl";
 export function EventsQueryManager(
   apiHelper: ApiHelper,
   stateHelper: StateHelper<"GetInstanceEvents">,
-  scheduler: Scheduler,
+  scheduler: Scheduler
 ) {
   return QueryManager.ContinuousWithEnv<"GetInstanceEvents">(
     apiHelper,
@@ -38,7 +33,7 @@ export function EventsQueryManager(
         handlers: getPaginationHandlers(links, metadata),
         metadata,
       };
-    },
+    }
   );
 }
 

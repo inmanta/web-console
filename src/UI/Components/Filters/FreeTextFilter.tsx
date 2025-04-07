@@ -1,10 +1,5 @@
 import React, { useState } from "react";
-import {
-  ToolbarFilter,
-  InputGroup,
-  InputGroupItem,
-  SearchInput,
-} from "@patternfly/react-core";
+import { ToolbarFilter, InputGroup, InputGroupItem, SearchInput } from "@patternfly/react-core";
 
 interface Props {
   isHidden?: boolean;

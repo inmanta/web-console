@@ -20,11 +20,7 @@ export const ServiceProvider: React.FunctionComponent<Props> = ({
 
   if (isError) {
     <Wrapper aria-label="ServiceProvider-Failed" name={serviceName}>
-      <ErrorView
-        message={error.message}
-        retry={refetch}
-        ariaLabel="ServiceProvider-Failed"
-      />
+      <ErrorView message={error.message} retry={refetch} ariaLabel="ServiceProvider-Failed" />
     </Wrapper>;
   }
 

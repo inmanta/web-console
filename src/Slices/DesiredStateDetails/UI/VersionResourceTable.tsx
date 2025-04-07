@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  OnSort,
-  Table,
-  TableVariant,
-  Th,
-  Thead,
-  Tr,
-} from "@patternfly/react-table";
+import { OnSort, Table, TableVariant, Th, Thead, Tr } from "@patternfly/react-table";
 import { Resource, Sort } from "@/Core";
 import { Row } from "./Row";
 import { VersionResourceTablePresenter } from "./VersionResourceTablePresenter";
@@ -29,36 +22,32 @@ export const VersionResourceTable: React.FC<Props> = ({
 }) => {
   const onSort: OnSort = (event, index, order) => {
     setSort({
-      name: tablePresenter.getColumnNameForIndex(
-        index,
-      ) as Resource.SortKeyFromVersion,
+      name: tablePresenter.getColumnNameForIndex(index) as Resource.SortKeyFromVersion,
       order,
     });
   };
   const activeSortIndex = tablePresenter.getIndexForColumnName(sort.name);
-  const heads = tablePresenter
-    .getColumnHeads()
-    .map(({ apiName, displayName }, columnIndex) => {
-      const hasSort = tablePresenter.getSortableColumnNames().includes(apiName);
-      const sortParams = hasSort
-        ? {
-          sort: {
-            sortBy: {
-              index: activeSortIndex,
-              direction: sort.order,
-            },
-            onSort,
-            columnIndex,
+  const heads = tablePresenter.getColumnHeads().map(({ apiName, displayName }, columnIndex) => {
+    const hasSort = tablePresenter.getSortableColumnNames().includes(apiName);
+    const sortParams = hasSort
+      ? {
+        sort: {
+          sortBy: {
+            index: activeSortIndex,
+            direction: sort.order,
           },
-        }
-        : {};
+          onSort,
+          columnIndex,
+        },
+      }
+      : {};
 
-      return (
-        <Th key={displayName} {...sortParams} modifier="fitContent">
-          {displayName}
-        </Th>
-      );
-    });
+    return (
+      <Th key={displayName} {...sortParams} modifier="fitContent">
+        {displayName}
+      </Th>
+    );
+  });
 
   return (
     <Table {...props} variant={TableVariant.compact}>

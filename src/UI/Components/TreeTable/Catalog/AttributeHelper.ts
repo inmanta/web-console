@@ -2,18 +2,17 @@ import { AttributeHelper } from "@/UI/Components/TreeTable/Helpers/AttributeHelp
 import { MultiAttributeNodeDict } from "@/UI/Components/TreeTable/Helpers/AttributeNode";
 import { CatalogAttributeTree } from "@/UI/Components/TreeTable/types";
 
-export class CatalogAttributeHelper
-implements AttributeHelper<CatalogAttributeTree> {
+export class CatalogAttributeHelper implements AttributeHelper<CatalogAttributeTree> {
   constructor(private readonly separator: string) {}
 
   public getPaths(container: CatalogAttributeTree["source"]): string[] {
-    return Object.keys(this.getNodesFromEntities("", container)).sort(
-      (pathA, pathB) => pathA.localeCompare(pathB),
+    return Object.keys(this.getNodesFromEntities("", container)).sort((pathA, pathB) =>
+      pathA.localeCompare(pathB)
     );
   }
 
   public getMultiAttributeNodes(
-    container: CatalogAttributeTree["source"],
+    container: CatalogAttributeTree["source"]
   ): MultiAttributeNodeDict<CatalogAttributeTree["target"]> {
     return this.getNodesFromEntities("", container);
   }
@@ -24,7 +23,7 @@ implements AttributeHelper<CatalogAttributeTree> {
 
   private getNodesFromEntities(
     prefix: string,
-    container: CatalogAttributeTree["source"],
+    container: CatalogAttributeTree["source"]
   ): MultiAttributeNodeDict<CatalogAttributeTree["target"]> {
     let entries = container.attributes.reduce((acc, cur) => {
       acc[`${prefix}${cur.name}`] = {
@@ -39,25 +38,19 @@ implements AttributeHelper<CatalogAttributeTree> {
       return acc;
     }, {});
 
-    if (
-      container.inter_service_relations &&
-      container.inter_service_relations.length > 0
-    ) {
-      const entriesFromRelations = container.inter_service_relations.reduce(
-        (acc, cur) => {
-          acc[`${prefix}${cur.name}`] = {
-            kind: "Leaf",
-            value: {
-              type: cur.entity_type,
-              description: cur.description ? cur.description : "",
-            },
-            hasRelation: true,
-          };
+    if (container.inter_service_relations && container.inter_service_relations.length > 0) {
+      const entriesFromRelations = container.inter_service_relations.reduce((acc, cur) => {
+        acc[`${prefix}${cur.name}`] = {
+          kind: "Leaf",
+          value: {
+            type: cur.entity_type,
+            description: cur.description ? cur.description : "",
+          },
+          hasRelation: true,
+        };
 
-          return acc;
-        },
-        {},
-      );
+        return acc;
+      }, {});
 
       entries = { ...entries, ...entriesFromRelations };
     }
@@ -67,10 +60,7 @@ implements AttributeHelper<CatalogAttributeTree> {
         entries[`${prefix}${entity.name}`] = { kind: "Branch" };
         entries = {
           ...entries,
-          ...this.getNodesFromEntities(
-            `${prefix}${entity.name}${this.separator}`,
-            entity,
-          ),
+          ...this.getNodesFromEntities(`${prefix}${entity.name}${this.separator}`, entity),
         };
       });
     }

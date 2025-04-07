@@ -1,10 +1,7 @@
 import { Action, action } from "easy-peasy";
 import { RemoteData, Query } from "@/Core";
 
-type Data = RemoteData.Type<
-  Query.Error<"GetVersionResources">,
-  Query.Data<"GetVersionResources">
->;
+type Data = RemoteData.Type<Query.Error<"GetVersionResources">, Query.Data<"GetVersionResources">>;
 
 export interface VersionResourcesSlice {
   byEnv: Record<string, Data>;

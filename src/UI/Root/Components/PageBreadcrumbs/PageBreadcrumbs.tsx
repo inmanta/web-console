@@ -13,11 +13,7 @@ export const PageBreadcrumbs: React.FC = () => {
   return (
     <Breadcrumb>
       {crumbs.map((crumb) => (
-        <BreadcrumbItem
-          key={crumb.kind}
-          isActive={crumb.active}
-          aria-label={"BreadcrumbItem"}
-        >
+        <BreadcrumbItem key={crumb.kind} isActive={crumb.active} aria-label={"BreadcrumbItem"}>
           {crumb.active ? (
             crumb.label
           ) : (

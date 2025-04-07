@@ -28,13 +28,10 @@ const axe = configureAxe({
 function setup() {
   const store = getStoreInstance();
   const apiHelper = new DeferredApiHelper();
-  const environmentDetailsQueryManager = EnvironmentDetailsOneTimeQueryManager(
-    store,
-    apiHelper,
-  );
+  const environmentDetailsQueryManager = EnvironmentDetailsOneTimeQueryManager(store, apiHelper);
 
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolverImpl([environmentDetailsQueryManager]),
+    new DynamicQueryManagerResolverImpl([environmentDetailsQueryManager])
   );
   const component = (
     <QueryClientProvider client={new QueryClient()}>
@@ -61,15 +58,11 @@ test("Home view shows failed table", async() => {
 
   render(component);
 
-  expect(
-    await screen.findByRole("region", { name: "Dashboard-Loading" }),
-  ).toBeInTheDocument();
+  expect(await screen.findByRole("region", { name: "Dashboard-Loading" })).toBeInTheDocument();
 
   apiHelper.resolve(Either.left("error"));
 
-  expect(
-    await screen.findByRole("region", { name: "Dashboard-Failed" }),
-  ).toBeInTheDocument();
+  expect(await screen.findByRole("region", { name: "Dashboard-Failed" })).toBeInTheDocument();
 
   await act(async() => {
     const results = await axe(document.body);
@@ -83,19 +76,15 @@ test("Home View shows success table", async() => {
 
   render(component);
 
-  expect(
-    await screen.findByRole("region", { name: "Dashboard-Loading" }),
-  ).toBeInTheDocument();
+  expect(await screen.findByRole("region", { name: "Dashboard-Loading" })).toBeInTheDocument();
 
   apiHelper.resolve(
     Either.right({
       data: EnvironmentDetails.a,
-    }),
+    })
   );
   expect(
-    await screen.findByText(
-      words("dashboard.title")(EnvironmentDetails.a.name),
-    ),
+    await screen.findByText(words("dashboard.title")(EnvironmentDetails.a.name))
   ).toBeInTheDocument();
 
   await act(async() => {

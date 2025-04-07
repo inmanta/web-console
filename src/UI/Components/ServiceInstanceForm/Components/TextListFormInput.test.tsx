@@ -16,7 +16,7 @@ describe("TextListInputField", () => {
         description="a text list input field"
         handleInputChange={handleClick}
         isOptional={false}
-      />,
+      />
     );
 
     const chips = screen.getAllByRole("listitem");
@@ -33,7 +33,7 @@ describe("TextListInputField", () => {
         description="a text list input field"
         handleInputChange={handleClick}
         isOptional={false}
-      />,
+      />
     );
 
     const input = screen.getByRole("textbox");
@@ -47,10 +47,7 @@ describe("TextListInputField", () => {
     const chips = screen.getAllByRole("listitem");
 
     expect(chips.length).toBe(4);
-    expect(handleClick).toHaveBeenCalledWith(
-      ["value1", "value2", "value3", "test"],
-      null,
-    );
+    expect(handleClick).toHaveBeenCalledWith(["value1", "value2", "value3", "test"], null);
   });
 
   it("Should remove one chip from the input on delete.", async() => {
@@ -62,7 +59,7 @@ describe("TextListInputField", () => {
         description="a text list input field"
         handleInputChange={handleClick}
         isOptional={false}
-      />,
+      />
     );
 
     const deleteButton = screen.getByRole("button", {
@@ -86,7 +83,7 @@ describe("TextListInputField", () => {
         description="a text list input field"
         handleInputChange={handleClick}
         isOptional={false}
-      />,
+      />
     );
 
     const deleteButton = screen.getByRole("button", {
@@ -112,7 +109,7 @@ describe("TextListInputField", () => {
         handleInputChange={handleClick}
         isOptional={false}
         suggestions={["apple", "banana", "cherry"]}
-      />,
+      />
     );
 
     // Open the suggestions popover

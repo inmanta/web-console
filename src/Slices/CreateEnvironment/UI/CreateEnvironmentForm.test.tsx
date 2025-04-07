@@ -12,13 +12,7 @@ import {
   CommandManagerResolverImpl,
   QueryManagerResolverImpl,
 } from "@/Data";
-import {
-  DeferredApiHelper,
-  dependencies,
-  Environment,
-  Project,
-  StaticScheduler,
-} from "@/Test";
+import { DeferredApiHelper, dependencies, Environment, Project, StaticScheduler } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { Page } from "./Page";
 expect.extend(toHaveNoViolations);
@@ -36,18 +30,14 @@ function setup() {
   const scheduler = new StaticScheduler();
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler),
+    new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler)
   );
-  const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolverImpl(store, apiHelper),
-  );
+  const commandResolver = new CommandResolverImpl(new CommandManagerResolverImpl(store, apiHelper));
 
   const component = (
     <MemoryRouter>
       <StoreProvider store={store}>
-        <DependencyProvider
-          dependencies={{ ...dependencies, queryResolver, commandResolver }}
-        >
+        <DependencyProvider dependencies={{ ...dependencies, queryResolver, commandResolver }}>
           <Page />
         </DependencyProvider>
       </StoreProvider>
@@ -66,7 +56,7 @@ test("Given CreateEnvironmentForm When project and environment are not set Then 
     apiHelper.resolve(
       Either.right({
         data: Project.filterable,
-      }),
+      })
     );
   });
 
@@ -88,7 +78,7 @@ test("Given CreateEnvironmentForm When no projects are known, THEN cannot add em
     apiHelper.resolve(
       Either.right({
         data: [],
-      }),
+      })
     );
   });
 
@@ -127,19 +117,17 @@ test("Given CreateEnvironmentForm When an existing project and valid environment
     apiHelper.resolve(
       Either.right({
         data: Project.filterable,
-      }),
+      })
     );
   });
 
   await userEvent.click(
     await screen.findByRole("combobox", {
       name: "Project Name-select-toggleFilterInput",
-    }),
+    })
   );
 
-  await userEvent.click(
-    await screen.findByRole("option", { name: Project.filterable[0].name }),
-  );
+  await userEvent.click(await screen.findByRole("option", { name: Project.filterable[0].name }));
 
   const textBox = await screen.findByRole("textbox", { name: "Name-input" });
 
@@ -175,19 +163,17 @@ test("Given CreateEnvironmentForm When an existing project, a valid environment 
     apiHelper.resolve(
       Either.right({
         data: Project.filterable,
-      }),
+      })
     );
   });
 
   await userEvent.click(
     await screen.findByRole("combobox", {
       name: "Project Name-select-toggleFilterInput",
-    }),
+    })
   );
 
-  await userEvent.click(
-    await screen.findByRole("option", { name: Project.filterable[0].name }),
-  );
+  await userEvent.click(await screen.findByRole("option", { name: Project.filterable[0].name }));
 
   const textBox = await screen.findByRole("textbox", { name: "Name-input" });
 
@@ -245,26 +231,24 @@ test("Given CreateEnvironmentForm When a new project and valid environment are s
     apiHelper.resolve(
       Either.right({
         data: Project.filterable,
-      }),
+      })
     );
   });
 
   await userEvent.click(
     await screen.findByRole("combobox", {
       name: "Project Name-select-toggleFilterInput",
-    }),
+    })
   );
 
   await userEvent.type(
     await screen.findByRole("combobox", {
       name: "Project Name-select-toggleFilterInput",
     }),
-    "new-project",
+    "new-project"
   );
 
-  await userEvent.click(
-    await screen.findByRole("option", { name: 'Create "new-project"' }),
-  );
+  await userEvent.click(await screen.findByRole("option", { name: 'Create "new-project"' }));
 
   await act(async() => {
     const results = await axe(document.body);
@@ -335,26 +319,24 @@ test("Given CreateEnvironmentForm When creating a new project is not successful 
     apiHelper.resolve(
       Either.right({
         data: Project.filterable,
-      }),
+      })
     );
   });
 
   await userEvent.click(
     await screen.findByRole("combobox", {
       name: "Project Name-select-toggleFilterInput",
-    }),
+    })
   );
 
   await userEvent.type(
     await screen.findByRole("combobox", {
       name: "Project Name-select-toggleFilterInput",
     }),
-    "new-project",
+    "new-project"
   );
 
-  await userEvent.click(
-    screen.getByRole("option", { name: 'Create "new-project"' }),
-  );
+  await userEvent.click(screen.getByRole("option", { name: 'Create "new-project"' }));
 
   const request = apiHelper.pendingRequests[0];
 
@@ -367,21 +349,15 @@ test("Given CreateEnvironmentForm When creating a new project is not successful 
   });
 
   await act(async() => {
-    await apiHelper.resolve(
-      Either.left("Unexpected error while trying to create new project"),
-    );
+    await apiHelper.resolve(Either.left("Unexpected error while trying to create new project"));
   });
 
-  expect(
-    await screen.findByRole("generic", { name: "Project Name-error-message" }),
-  ).toBeVisible();
+  expect(await screen.findByRole("generic", { name: "Project Name-error-message" })).toBeVisible();
 
-  await userEvent.click(
-    screen.getByRole("button", { name: "Project Name-close-error" }),
-  );
+  await userEvent.click(screen.getByRole("button", { name: "Project Name-close-error" }));
 
   expect(
-    screen.queryByRole("generic", { name: "Project Name-error-message" }),
+    screen.queryByRole("generic", { name: "Project Name-error-message" })
   ).not.toBeInTheDocument();
 });
 
@@ -395,7 +371,7 @@ test(`Given CreateEnvironmentForm When an existing project and invalid environme
     apiHelper.resolve(
       Either.right({
         data: Project.filterable,
-      }),
+      })
     );
   });
 
@@ -403,12 +379,10 @@ test(`Given CreateEnvironmentForm When an existing project and invalid environme
   await userEvent.click(
     await screen.findByRole("combobox", {
       name: "Project Name-select-toggleFilterInput",
-    }),
+    })
   );
 
-  await userEvent.click(
-    await screen.findByRole("option", { name: Project.filterable[0].name }),
-  );
+  await userEvent.click(await screen.findByRole("option", { name: Project.filterable[0].name }));
 
   const textBox = await screen.findByRole("textbox", { name: "Name-input" });
 
@@ -437,17 +411,11 @@ test(`Given CreateEnvironmentForm When an existing project and invalid environme
 
   expect(apiHelper.pendingRequests).toHaveLength(0);
   // Alert is visible and can be closed
-  expect(
-    await screen.findByRole("generic", { name: "submit-error-message" }),
-  ).toBeVisible();
+  expect(await screen.findByRole("generic", { name: "submit-error-message" })).toBeVisible();
 
-  await userEvent.click(
-    screen.getByRole("button", { name: "submit-close-error" }),
-  );
+  await userEvent.click(screen.getByRole("button", { name: "submit-close-error" }));
 
-  expect(
-    screen.queryByRole("generic", { name: "submit-error-message" }),
-  ).not.toBeInTheDocument();
+  expect(screen.queryByRole("generic", { name: "submit-error-message" })).not.toBeInTheDocument();
 });
 
 test("Given CreateEnvironmentForm When an existing project, a valid environment and description are set and submit is clicked Then sends the correct requests", async() => {
@@ -459,19 +427,17 @@ test("Given CreateEnvironmentForm When an existing project, a valid environment 
     apiHelper.resolve(
       Either.right({
         data: Project.filterable,
-      }),
+      })
     );
   });
 
   await userEvent.click(
     await screen.findByRole("combobox", {
       name: "Project Name-select-toggleFilterInput",
-    }),
+    })
   );
 
-  await userEvent.click(
-    await screen.findByRole("option", { name: Project.filterable[0].name }),
-  );
+  await userEvent.click(await screen.findByRole("option", { name: Project.filterable[0].name }));
 
   const textBox = await screen.findByRole("textbox", { name: "Name-input" });
 
@@ -512,19 +478,17 @@ test("Given CreateEnvironmentForm When an existing project, a valid environment 
     apiHelper.resolve(
       Either.right({
         data: Project.filterable,
-      }),
+      })
     );
   });
 
   await userEvent.click(
     await screen.findByRole("combobox", {
       name: "Project Name-select-toggleFilterInput",
-    }),
+    })
   );
 
-  await userEvent.click(
-    await screen.findByRole("option", { name: Project.filterable[0].name }),
-  );
+  await userEvent.click(await screen.findByRole("option", { name: Project.filterable[0].name }));
 
   const textBox = await screen.findByRole("textbox", { name: "Name-input" });
 

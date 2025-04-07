@@ -44,17 +44,10 @@ export const OrderDetailsRow: React.FC<Props> = ({
     <>
       <Tr aria-label="ServiceOrderDetailsRow">
         <Td>
-          <Toggle
-            expanded={isExpanded}
-            onToggle={onToggle}
-            aria-label={"Toggle-DetailsRow"}
-          />
+          <Toggle expanded={isExpanded} onToggle={onToggle} aria-label={"Toggle-DetailsRow"} />
         </Td>
         <Td width={35} dataLabel={words("orders.column.instanceId")}>
-          <TextWithCopy
-            value={row.instance_id}
-            tooltipContent={words("serviceIdentity.copy")}
-          />
+          <TextWithCopy value={row.instance_id} tooltipContent={words("serviceIdentity.copy")} />
         </Td>
         <Td width={25} dataLabel={words("orders.column.serviceEntity")}>
           {row.service_entity}
@@ -77,27 +70,19 @@ export const OrderDetailsRow: React.FC<Props> = ({
               }}
             >
               <TopAlignedLayout aria-label="Expanded-Details">
-                <DescriptionListTerm>
-                  {words("orders.row.details")}
-                </DescriptionListTerm>
+                <DescriptionListTerm>{words("orders.row.details")}</DescriptionListTerm>
                 <DescriptionListDescription>
                   <OrderStateDetails state={row.status} />
                 </DescriptionListDescription>
               </TopAlignedLayout>
               <TopAlignedLayout aria-label="Expanded-Dependencies">
-                <DescriptionListTerm>
-                  {words("orders.row.dependencies")}
-                </DescriptionListTerm>
+                <DescriptionListTerm>{words("orders.row.dependencies")}</DescriptionListTerm>
                 <DescriptionListDescription>
-                  <OrderDependencies
-                    dependencies={row.status.direct_dependencies}
-                  />
+                  <OrderDependencies dependencies={row.status.direct_dependencies} />
                 </DescriptionListDescription>
               </TopAlignedLayout>
               <TopAlignedLayout aria-label="Expanded-Config">
-                <DescriptionListTerm>
-                  {words("orders.row.config")}
-                </DescriptionListTerm>
+                <DescriptionListTerm>{words("orders.row.config")}</DescriptionListTerm>
                 <DescriptionListDescription>
                   {row.config && Object.keys(row.config).length ? (
                     <CodeHighlighter
@@ -106,11 +91,7 @@ export const OrderDetailsRow: React.FC<Props> = ({
                       language="json"
                     />
                   ) : (
-                    <Label
-                      color="blue"
-                      variant="outline"
-                      icon={<InfoAltIcon />}
-                    >
+                    <Label color="blue" variant="outline" icon={<InfoAltIcon />}>
                       {words("orders.row.empty")}
                     </Label>
                   )}
@@ -118,17 +99,11 @@ export const OrderDetailsRow: React.FC<Props> = ({
               </TopAlignedLayout>
               {(row.attributes || row.edits) && (
                 <TopAlignedLayout aria-label="Expanded-Body">
-                  <DescriptionListTerm>
-                    {words("orders.row.body")}
-                  </DescriptionListTerm>
+                  <DescriptionListTerm>{words("orders.row.body")}</DescriptionListTerm>
                   <DescriptionListDescription>
                     <CodeHighlighter
                       keyId="Json"
-                      code={JSON.stringify(
-                        row.attributes || row.edits,
-                        null,
-                        2,
-                      )}
+                      code={JSON.stringify(row.attributes || row.edits, null, 2)}
                       language="json"
                     />
                   </DescriptionListDescription>

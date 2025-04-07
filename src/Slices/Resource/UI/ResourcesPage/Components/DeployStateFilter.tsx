@@ -21,9 +21,7 @@ export const DeployStateFilter: React.FC<Props> = ({ filter, setFilter }) => {
       isVisible={true}
       filterPropertyName={words("resources.column.deployState")}
       placeholder={words("resources.filters.status.placeholder")}
-      possibleStates={Object.keys(Resource.Status).map(
-        (k) => Resource.Status[k],
-      )}
+      possibleStates={Object.keys(Resource.Status).map((k) => Resource.Status[k])}
       selectedStates={filter.status ? filter.status : []}
       update={updateStatus}
     />

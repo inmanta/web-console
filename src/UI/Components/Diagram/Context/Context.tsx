@@ -2,10 +2,7 @@ import { createContext } from "react";
 import { dia } from "@inmanta/rappid";
 import { UseQueryResult } from "@tanstack/react-query";
 import { Field, InstanceAttributeModel, ServiceModel } from "@/Core";
-import {
-  InstanceWithRelations,
-  Inventories,
-} from "@/Data/Managers/V2/ServiceInstance";
+import { InstanceWithRelations, Inventories } from "@/Data/Managers/V2/ServiceInstance";
 import { DiagramHandlers } from "../init";
 import {
   ComposerServiceOrderItem,
@@ -29,13 +26,12 @@ interface InstanceComposerCreatorProviderInterface {
  * InstanceComposerContext
  * Should be used to provide context to the Composer Page.
  */
-export const InstanceComposerContext =
-  createContext<InstanceComposerCreatorProviderInterface>({
-    instance: null,
-    serviceModels: [],
-    mainService: {} as ServiceModel,
-    relatedInventoriesQuery: {} as UseQueryResult<Inventories, Error>,
-  });
+export const InstanceComposerContext = createContext<InstanceComposerCreatorProviderInterface>({
+  instance: null,
+  serviceModels: [],
+  mainService: {} as ServiceModel,
+  relatedInventoriesQuery: {} as UseQueryResult<Inventories, Error>,
+});
 
 /**
  * The CanvasProviderInterface
@@ -61,9 +57,7 @@ interface CanvasProviderInterface {
   setLooseElement: (value: Set<string>) => void;
 
   serviceOrderItems: Map<string, ComposerServiceOrderItem>;
-  setServiceOrderItems: React.Dispatch<
-    React.SetStateAction<Map<string, ComposerServiceOrderItem>>
-  >;
+  setServiceOrderItems: React.Dispatch<React.SetStateAction<Map<string, ComposerServiceOrderItem>>>;
 
   interServiceRelationsOnCanvas: Map<string, RelationCounterForCell>;
   setInterServiceRelationsOnCanvas: React.Dispatch<
@@ -124,5 +118,4 @@ export const defaultCanvasContext: CanvasProviderInterface = {
  * @prop {React.Dispatch<React.SetStateAction<StencilState | null>>} setStencilState: Function to set the state of the stencil.
  * @prop {boolean} isDirty: A flag indicating whether the canvas is dirty, which mean that service instance was modified.
  */
-export const CanvasContext =
-  createContext<CanvasProviderInterface>(defaultCanvasContext);
+export const CanvasContext = createContext<CanvasProviderInterface>(defaultCanvasContext);

@@ -7,12 +7,7 @@ import { StoreProvider } from "easy-peasy";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { getStoreInstance } from "@/Data";
-import {
-  dependencies,
-  MockEnvironmentHandler,
-  MockEnvironmentModifier,
-  Service,
-} from "@/Test";
+import { dependencies, MockEnvironmentHandler, MockEnvironmentModifier, Service } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { DependencyProvider } from "@/UI/Dependency";
 import { Page } from "@S/ServiceDetails/UI/Page";
@@ -54,7 +49,7 @@ describe("ServiceCatalog", () => {
       }),
       http.get("/lsm/v1/service_catalog/service_name_a/config", () => {
         return HttpResponse.json({ data: { test: Service.a.config } });
-      }),
+      })
     );
     server.listen();
   });
@@ -83,8 +78,6 @@ describe("ServiceCatalog", () => {
 
     await userEvent.click(configButton);
 
-    expect(
-      await screen.findByRole("generic", { name: "SettingsList" }),
-    ).toBeVisible();
+    expect(await screen.findByRole("generic", { name: "SettingsList" })).toBeVisible();
   });
 });

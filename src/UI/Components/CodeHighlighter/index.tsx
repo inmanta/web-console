@@ -150,9 +150,7 @@ export const CodeHighlighter: React.FC<Props> = ({
     </>
   );
 
-  const setScrollPositionBottom = (
-    element: HTMLPreElement | null | undefined,
-  ) => {
+  const setScrollPositionBottom = (element: HTMLPreElement | null | undefined) => {
     if (scrollBottom && element && allowScrollState && isScrollable(element)) {
       element.scrollTo(0, element.scrollHeight);
     }
@@ -222,15 +220,13 @@ export const CodeHighlighter: React.FC<Props> = ({
                   language={language}
                   style={docco}
                   customStyle={{
-                    backgroundColor:
-                      "var(--pf-t--global--background--color--secondary--default)",
+                    backgroundColor: "var(--pf-t--global--background--color--secondary--default)",
                     color: "var(--pf-t--global--text--color--regular)",
                     height: height,
                     minHeight,
                     resize: "vertical",
                     scrollbarGutter: "stable",
-                    borderRight:
-                      "var(--pf-t--global--border--color--brand--default)",
+                    borderRight: "var(--pf-t--global--border--color--brand--default)",
                   }}
                   showLineNumbers={showLineNumbers}
                   showInlineLineNumbers
@@ -259,10 +255,7 @@ export const CodeHighlighter: React.FC<Props> = ({
 };
 
 function isScrollable(element) {
-  return (
-    element.scrollWidth > element.clientWidth ||
-    element.scrollHeight > element.clientHeight
-  );
+  return element.scrollWidth > element.clientWidth || element.scrollHeight > element.clientHeight;
 }
 
 function isEmpty(code: string) {

@@ -39,9 +39,7 @@ export const InventoryTable: React.FC<Props> = ({
   };
   const activeSortIndex = tablePresenter.getIndexForColumnName(sort.name);
   const heads = tablePresenter.getColumnHeads().map((column, columnIndex) => {
-    const sortParams = tablePresenter
-      .getSortableColumnNames()
-      .includes(column.apiName)
+    const sortParams = tablePresenter.getSortableColumnNames().includes(column.apiName)
       ? {
         sort: {
           sortBy: {
@@ -55,11 +53,7 @@ export const InventoryTable: React.FC<Props> = ({
       : {};
 
     return (
-      <Th
-        width={getColumnWidth(column.apiName)}
-        key={column.displayName}
-        {...sortParams}
-      >
+      <Th width={getColumnWidth(column.apiName)} key={column.displayName} {...sortParams}>
         {column.displayName}
       </Th>
     );

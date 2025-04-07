@@ -62,9 +62,7 @@ export const FactsTable: React.FC<Props> = ({ facts }) => {
         {rows.map((fact) => (
           <Tr key={fact.id} aria-label="Facts table row">
             <Td>{fact.name}</Td>
-            <Td>
-              {fact.updated && new MomentDatePresenter().getFull(fact.updated)}
-            </Td>
+            <Td>{fact.updated && new MomentDatePresenter().getFull(fact.updated)}</Td>
             <Td>{fact.value}</Td>
           </Tr>
         ))}
@@ -85,11 +83,7 @@ function columnNameToIndex(columnName: string): number {
   return columns.indexOf(columnName);
 }
 
-export function sortFactRows(
-  rows: FactRow[],
-  columnName: string,
-  direction: Order,
-): FactRow[] {
+export function sortFactRows(rows: FactRow[], columnName: string, direction: Order): FactRow[] {
   return rows.sort((a: FactRow, b: FactRow) => {
     // sort by date
     if (columnName === "updated") {

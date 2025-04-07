@@ -1,10 +1,7 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { DateRange, IntRange, PageSize, Pagination } from "@/Core";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import {
-  DesiredStateVersion,
-  DesiredStateVersionStatus,
-} from "@/Slices/DesiredState/Core/Domain";
+import { DesiredStateVersion, DesiredStateVersionStatus } from "@/Slices/DesiredState/Core/Domain";
 import { CustomError, useGet } from "../../helpers";
 import { getUrl } from "./getUrl";
 
@@ -33,12 +30,12 @@ interface GetDesiredStates {
   useOneTime: (
     pageSize: PageSize.PageSize,
     filter: Filter,
-    currentPage: CurrentPage,
+    currentPage: CurrentPage
   ) => UseQueryResult<Result, CustomError>;
   useContinuous: (
     pageSize: PageSize.PageSize,
     filter: Filter,
-    currentPage: CurrentPage,
+    currentPage: CurrentPage
   ) => UseQueryResult<Result, CustomError>;
 }
 
@@ -56,36 +53,20 @@ export const useGetDesiredStates = (): GetDesiredStates => {
     useOneTime: (
       pageSize: PageSize.PageSize,
       filter: Filter,
-      currentPage: CurrentPage,
+      currentPage: CurrentPage
     ): UseQueryResult<Result, CustomError> =>
       useQuery({
-        queryKey: [
-          "get_desired_states-one_time",
-          pageSize,
-          filter,
-          currentPage,
-        ],
-        queryFn: () =>
-          get(
-            getUrl({ pageSize, filter, currentPage, kind: "GetDesiredStates" }),
-          ),
+        queryKey: ["get_desired_states-one_time", pageSize, filter, currentPage],
+        queryFn: () => get(getUrl({ pageSize, filter, currentPage, kind: "GetDesiredStates" })),
       }),
     useContinuous: (
       pageSize: PageSize.PageSize,
       filter: Filter,
-      currentPage: CurrentPage,
+      currentPage: CurrentPage
     ): UseQueryResult<Result, CustomError> =>
       useQuery({
-        queryKey: [
-          "get_desired_states-continuous",
-          pageSize,
-          filter,
-          currentPage,
-        ],
-        queryFn: () =>
-          get(
-            getUrl({ pageSize, filter, currentPage, kind: "GetDesiredStates" }),
-          ),
+        queryKey: ["get_desired_states-continuous", pageSize, filter, currentPage],
+        queryFn: () => get(getUrl({ pageSize, filter, currentPage, kind: "GetDesiredStates" })),
         refetchInterval: 5000,
       }),
   };

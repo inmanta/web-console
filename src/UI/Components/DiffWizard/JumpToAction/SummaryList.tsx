@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  DropdownItem,
-  DropdownList,
-  Flex,
-  Truncate,
-} from "@patternfly/react-core";
+import { DropdownItem, DropdownList, Flex, Truncate } from "@patternfly/react-core";
 import { StatusDescriptor } from "@/UI/Components/DiffWizard/StatusDescriptor";
 import { Item, Refs } from "@/UI/Components/DiffWizard/types";
 

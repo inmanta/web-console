@@ -3,9 +3,7 @@ const testName = (id) => "TestName " + id;
 
 beforeEach(() => {
   cy.fixture("test-icon.png", { encoding: null }).as("icon");
-  cy.intercept("POST", "/api/v2/environment_settings/**").as(
-    "postEnvConfigEdit",
-  );
+  cy.intercept("POST", "/api/v2/environment_settings/**").as("postEnvConfigEdit");
 
   // delete projects excluding test one before each test to have unified conditions for each test case
   cy.intercept("/api/v2/environment").as("createEnv");
@@ -34,9 +32,7 @@ const fillCreateEnvForm = ({
   shouldPassEnvName = true,
   fillOptionalInputs = false,
 }) => {
-  cy.get('[aria-label="Project Name-select-toggleFilterInput"]').type(
-    projectName,
-  );
+  cy.get('[aria-label="Project Name-select-toggleFilterInput"]').type(projectName);
   cy.get('[role="option"]').contains(projectName).click();
 
   if (shouldPassEnvName) {
@@ -56,7 +52,7 @@ const fillCreateEnvForm = ({
       {
         action: "drag-drop",
         force: true,
-      },
+      }
     );
   }
 };
@@ -92,10 +88,7 @@ describe("Environment", () => {
   it("1.1 cancel creation of an environment", function() {
     cy.visit("/console/");
     cy.get('[aria-label="Overview-Success"] > :first-child').click();
-    cy.url().should(
-      "eq",
-      Cypress.config().baseUrl + "/console/environment/create",
-    );
+    cy.url().should("eq", Cypress.config().baseUrl + "/console/environment/create");
     fillCreateEnvForm({
       envName: testName(1),
       projectName: testProjectName(1),
@@ -105,9 +98,7 @@ describe("Environment", () => {
   });
 
   it("1.2 Create new  environment", function() {
-    cy.intercept("/lsm/v1/service_catalog?instance_summary=True").as(
-      "getCatalog",
-    );
+    cy.intercept("/lsm/v1/service_catalog?instance_summary=True").as("getCatalog");
 
     //fill the form and submit
     cy.visit("/console/environment/create");
@@ -173,10 +164,7 @@ describe("Environment", () => {
     cy.get('[aria-label="Description-input"]').clear();
     cy.get('[aria-label="Description-input"]').type("New Value Description");
     cy.get('[aria-label="Description-submit-edit"]').click();
-    cy.get('[aria-label="Description-value"]').should(
-      "contain",
-      "New Value Description",
-    );
+    cy.get('[aria-label="Description-value"]').should("contain", "New Value Description");
 
     //change Repository Branch value
     cy.wait(1000);
@@ -185,10 +173,7 @@ describe("Environment", () => {
     //delay is needed to fix error that says that this input is disabled
     cy.get('[aria-label="repo_branch-input"]').type("New Value Repo Branch");
     cy.get('[aria-label="Repository Settings-submit-edit"]:enabled').click();
-    cy.get('[aria-label="repo_branch-value"]').should(
-      "contain",
-      "New Value Repo Branch",
-    );
+    cy.get('[aria-label="repo_branch-value"]').should("contain", "New Value Repo Branch");
 
     //change Repository url value
     cy.wait(1000);
@@ -199,18 +184,13 @@ describe("Environment", () => {
       delay: 10,
     });
     cy.get('[aria-label="Repository Settings-submit-edit"]:enabled').click();
-    cy.get('[aria-label="repo_url-value"]').should(
-      "contain",
-      "New Value Repo Url",
-    );
+    cy.get('[aria-label="repo_url-value"]').should("contain", "New Value Repo Url");
 
     //change Project Name value
     cy.wait(1000);
     cy.get('[aria-label="Project Name-toggle-edit"]:enabled').click();
     cy.get('[aria-label="Project Name-select-toggleFilterInput"]').clear();
-    cy.get('[aria-label="Project Name-select-toggleFilterInput"]').type(
-      "New Value Project Name",
-    );
+    cy.get('[aria-label="Project Name-select-toggleFilterInput"]').type("New Value Project Name");
 
     cy.get("button").contains('Create "New Value Project Name"').click();
     cy.get('[aria-label="Project Name-submit-edit"]').click();
@@ -225,9 +205,7 @@ describe("Environment", () => {
       // Fill The form and submit
       cy.visit("/console/");
       cy.get('[aria-label="Select-environment-test"]').click();
-      cy.get('[aria-label="Sidebar-Navigation-Item"]')
-        .contains("Service Catalog")
-        .click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       cy.get('[aria-label="ServiceCatalog-Empty"]', {
         timeout: 10000,
       }).should("to.be.visible");
@@ -240,9 +218,7 @@ describe("Environment", () => {
       cy.get("button").contains("Cancel").click();
       cy.visit("/console/");
       cy.get('[aria-label="Select-environment-test"]').click();
-      cy.get('[aria-label="Sidebar-Navigation-Item"]')
-        .contains("Service Catalog")
-        .click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
 
       cy.get('[aria-label="ServiceCatalog-Empty"]', {
         timeout: 10000,
@@ -254,14 +230,10 @@ describe("Environment", () => {
       // Clear Env
       cy.get("button").contains("Clear environment").click();
       cy.get('[aria-label="clear environment check"]').type("test");
-      cy.get("button")
-        .contains("I understand the consequences, clear this environment")
-        .click();
+      cy.get("button").contains("I understand the consequences, clear this environment").click();
       cy.visit("/console/");
       cy.get('[aria-label="Select-environment-test"]').click();
-      cy.get('[aria-label="Sidebar-Navigation-Item"]')
-        .contains("Service Catalog")
-        .click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       cy.get('[aria-label="ServiceCatalog-Empty"]').should("to.be.visible");
 
       cy.get("button").contains("Update Service Catalog").click();
@@ -297,18 +269,14 @@ describe("Environment", () => {
     //Change auto_deploy
     cy.get('[aria-label="Row-auto_deploy"]').find(".pf-v6-c-switch").click();
     cy.get('[data-testid="Warning"]').should("exist");
-    cy.get('[aria-label="Row-auto_deploy"]')
-      .find('[aria-label="SaveAction"]')
-      .click();
+    cy.get('[aria-label="Row-auto_deploy"]').find('[aria-label="SaveAction"]').click();
     cy.get('[data-testid="Warning"]').should("not.exist");
 
     //Change auto_full_compile
     cy.get('[aria-label="Row-auto_full_compile"]').clear();
     cy.get('[aria-label="Row-auto_full_compile"]').type("1 2 3 4 5");
     cy.get('[data-testid="Warning"]').should("exist");
-    cy.get('[aria-label="Row-auto_full_compile"]')
-      .find('[aria-label="SaveAction"]')
-      .click();
+    cy.get('[aria-label="Row-auto_full_compile"]').find('[aria-label="SaveAction"]').click();
     cy.get('[data-testid="Warning"]').should("not.exist");
     cy.get('[aria-label="Row-auto_full_compile"]')
       .find(".pf-v6-c-form-control input")
@@ -341,13 +309,9 @@ describe("Environment", () => {
       .should("have.value", "86410");
 
     //Change autostart_on_start
-    cy.get('[aria-label="Row-autostart_on_start"]')
-      .find(".pf-v6-c-switch")
-      .click();
+    cy.get('[aria-label="Row-autostart_on_start"]').find(".pf-v6-c-switch").click();
     cy.get('[data-testid="Warning"]').should("exist");
-    cy.get('[aria-label="Row-autostart_on_start"]')
-      .find('[aria-label="SaveAction"]')
-      .click();
+    cy.get('[aria-label="Row-autostart_on_start"]').find('[aria-label="SaveAction"]').click();
     cy.get('[data-testid="Warning"]').should("not.exist");
 
     //Change available_versions_to_keep
@@ -366,9 +330,7 @@ describe("Environment", () => {
     // specific to ISO
     if (Cypress.env("edition") === "iso") {
       // Change enable_batched_partial_compiles
-      cy.get('[aria-label="Row-enable_batched_partial_compiles"]')
-        .find(".pf-v6-c-switch")
-        .click();
+      cy.get('[aria-label="Row-enable_batched_partial_compiles"]').find(".pf-v6-c-switch").click();
 
       cy.get('[data-testid="Warning"]').should("exist");
       cy.get('[aria-label="Row-enable_batched_partial_compiles"]')
@@ -377,20 +339,14 @@ describe("Environment", () => {
       cy.get('[data-testid="Warning"]').should("not.exist");
 
       // Change lsm_expert_mode
-      cy.get('[aria-label="Row-enable_lsm_expert_mode"]')
-        .find(".pf-v6-c-switch")
-        .click();
+      cy.get('[aria-label="Row-enable_lsm_expert_mode"]').find(".pf-v6-c-switch").click();
 
       cy.get('[data-testid="Warning"]').should("exist");
-      cy.get('[aria-label="Row-enable_lsm_expert_mode"]')
-        .find('[aria-label="SaveAction"]')
-        .click();
+      cy.get('[aria-label="Row-enable_lsm_expert_mode"]').find('[aria-label="SaveAction"]').click();
       cy.get('[data-testid="Warning"]').should("not.exist");
 
       // Change enable_lsm_transfer_optimization
-      cy.get('[aria-label="Row-enable_lsm_transfer_optimization"]')
-        .find(".pf-v6-c-switch")
-        .click();
+      cy.get('[aria-label="Row-enable_lsm_transfer_optimization"]').find(".pf-v6-c-switch").click();
 
       cy.get('[data-testid="Warning"]').should("exist");
       cy.get('[aria-label="Row-enable_lsm_transfer_optimization"]')
@@ -399,14 +355,10 @@ describe("Environment", () => {
       cy.get('[data-testid="Warning"]').should("not.exist");
 
       // Change lsm_partial_compile
-      cy.get('[aria-label="Row-lsm_partial_compile"]')
-        .find(".pf-v6-c-switch")
-        .click();
+      cy.get('[aria-label="Row-lsm_partial_compile"]').find(".pf-v6-c-switch").click();
 
       cy.get('[data-testid="Warning"]').should("exist");
-      cy.get('[aria-label="Row-lsm_partial_compile"]')
-        .find('[aria-label="SaveAction"]')
-        .click();
+      cy.get('[aria-label="Row-lsm_partial_compile"]').find('[aria-label="SaveAction"]').click();
       cy.get('[data-testid="Warning"]').should("not.exist");
     }
 
@@ -424,22 +376,16 @@ describe("Environment", () => {
       .find(".pf-v6-c-form-control")
       .type("{selectAll}375");
     cy.get('[data-testid="Warning"]').should("exist");
-    cy.get('[aria-label="Row-notification_retention"]')
-      .find('[aria-label="SaveAction"]')
-      .click();
+    cy.get('[aria-label="Row-notification_retention"]').find('[aria-label="SaveAction"]').click();
     cy.get('[data-testid="Warning"]').should("not.exist");
     cy.get('[aria-label="Row-notification_retention"]')
       .find(".pf-v6-c-form-control input")
       .should("have.value", "375");
 
     //Change protected_environment
-    cy.get('[aria-label="Row-protected_environment"]')
-      .find(".pf-v6-c-switch")
-      .click();
+    cy.get('[aria-label="Row-protected_environment"]').find(".pf-v6-c-switch").click();
     cy.get('[data-testid="Warning"]').should("exist");
-    cy.get('[aria-label="Row-protected_environment"]')
-      .find('[aria-label="SaveAction"]')
-      .click();
+    cy.get('[aria-label="Row-protected_environment"]').find('[aria-label="SaveAction"]').click();
     cy.get('[data-testid="Warning"]').should("not.exist");
 
     //Change recompile_backoff
@@ -447,18 +393,14 @@ describe("Environment", () => {
       .find(".pf-v6-c-form-control")
       .type("{selectAll}2");
     cy.get('[data-testid="Warning"]').should("exist");
-    cy.get('[aria-label="Row-recompile_backoff"]')
-      .find('[aria-label="SaveAction"]')
-      .click();
+    cy.get('[aria-label="Row-recompile_backoff"]').find('[aria-label="SaveAction"]').click();
     cy.get('[data-testid="Warning"]').should("not.exist");
     cy.get('[aria-label="Row-recompile_backoff"]')
       .find(".pf-v6-c-form-control input")
       .should("have.value", "2");
 
     //Change reset_deploy_progress_on_start
-    cy.get('[aria-label="Row-reset_deploy_progress_on_start"]')
-      .find(".pf-v6-c-switch")
-      .click();
+    cy.get('[aria-label="Row-reset_deploy_progress_on_start"]').find(".pf-v6-c-switch").click();
     cy.get('[data-testid="Warning"]').should("exist");
     cy.get('[aria-label="Row-reset_deploy_progress_on_start"]')
       .find('[aria-label="SaveAction"]')
@@ -481,25 +423,16 @@ describe("Environment", () => {
     //change server_compile
     cy.get('[aria-label="Row-server_compile"]').find(".pf-v6-c-switch").click();
     cy.get('[data-testid="Warning"]').should("exist");
-    cy.get('[aria-label="Row-server_compile"]')
-      .find('[aria-label="SaveAction"]')
-      .click();
+    cy.get('[aria-label="Row-server_compile"]').find('[aria-label="SaveAction"]').click();
     cy.get('[data-testid="Warning"]').should("not.exist");
 
     //re-enable to delete env
-    cy.get('[aria-label="Row-protected_environment"]')
-      .find(".pf-v6-c-switch")
-      .click();
+    cy.get('[aria-label="Row-protected_environment"]').find(".pf-v6-c-switch").click();
     cy.get('[data-testid="Warning"]').should("exist");
-    cy.get('[aria-label="Row-protected_environment"]')
-      .find('[aria-label="SaveAction"]')
-      .click();
+    cy.get('[aria-label="Row-protected_environment"]').find('[aria-label="SaveAction"]').click();
     cy.get('[data-testid="Warning"]').should("not.exist");
 
-    cy.get(".pf-v6-c-tabs__list")
-      .find("button")
-      .contains("Environment")
-      .click();
+    cy.get(".pf-v6-c-tabs__list").find("button").contains("Environment").click();
     deleteEnv(testName(6), testProjectName(6));
   });
 });

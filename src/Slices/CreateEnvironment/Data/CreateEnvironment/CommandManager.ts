@@ -5,20 +5,15 @@ import { CreateEnvironmentParams } from "@S/CreateEnvironment/Core/CreateEnviron
 export class CreateEnvironmentCommandManager extends CommandManagerWithoutEnv<"CreateEnvironment"> {
   constructor(
     private readonly apiHelper: ApiHelper,
-    private readonly environmentsUpdater: Updater<"GetEnvironments">,
+    private readonly environmentsUpdater: Updater<"GetEnvironments">
   ) {
-    super(
-      "CreateEnvironment",
-      (command) => (body) => this.submit(command, body),
-    );
+    super("CreateEnvironment", (command) => (body) => this.submit(command, body));
   }
 
   private async submit(
     command: Command.SubCommand<"CreateEnvironment">,
-    body: CreateEnvironmentParams,
-  ): Promise<
-      Either.Type<Command.Error<"CreateEnvironment">, { data: EnvironmentModel }>
-    > {
+    body: CreateEnvironmentParams
+  ): Promise<Either.Type<Command.Error<"CreateEnvironment">, { data: EnvironmentModel }>> {
     const result = await this.apiHelper.putWithoutEnvironment<
       { data: EnvironmentModel },
       Command.Body<"CreateEnvironment">

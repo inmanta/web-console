@@ -14,20 +14,13 @@ export const CompileDetails: React.FC<Props> = ({ id }) => {
 
   if (isError) {
     return (
-      <ErrorView
-        message={error.message}
-        retry={refetch}
-        ariaLabel="CompileDetailsView-Error"
-      />
+      <ErrorView message={error.message} retry={refetch} ariaLabel="CompileDetailsView-Error" />
     );
   }
 
   if (isSuccess) {
     return (
-      <CompileDetailsSections
-        compileDetails={data.data}
-        aria-label="CompileDetailsView-Success"
-      />
+      <CompileDetailsSections compileDetails={data.data} aria-label="CompileDetailsView-Success" />
     );
   }
 

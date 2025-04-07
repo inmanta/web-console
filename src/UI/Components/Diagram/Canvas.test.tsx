@@ -1,37 +1,21 @@
 import React, { act } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
-import {
-  QueryClient,
-  QueryClientProvider,
-  UseQueryResult,
-} from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider, UseQueryResult } from "@tanstack/react-query";
 import { render, queries, within as baseWithin } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { RemoteData, ServiceModel } from "@/Core";
 import { getStoreInstance } from "@/Data";
-import {
-  InstanceWithRelations,
-  Inventories,
-} from "@/Data/Managers/V2/ServiceInstance";
+import { InstanceWithRelations, Inventories } from "@/Data/Managers/V2/ServiceInstance";
 import { dependencies } from "@/Test";
 import * as customQueries from "@/Test/Utils/custom-queries";
-import {
-  DependencyProvider,
-  EnvironmentHandlerImpl,
-  PrimaryRouteManager,
-  words,
-} from "@/UI";
+import { DependencyProvider, EnvironmentHandlerImpl, PrimaryRouteManager, words } from "@/UI";
 import { Canvas } from "@/UI/Components/Diagram/Canvas";
 import CustomRouter from "@/UI/Routing/CustomRouter";
 import history from "@/UI/Routing/history";
 import { CanvasProvider } from "./Context/CanvasProvider";
 import { InstanceComposerContext } from "./Context/Context";
-import {
-  mockedInstanceTwo,
-  mockedInstanceTwoServiceModel,
-  serviceModels,
-} from "./Mocks";
+import { mockedInstanceTwo, mockedInstanceTwoServiceModel, serviceModels } from "./Mocks";
 import "@testing-library/jest-dom";
 import { defineObjectsForJointJS } from "./testSetup";
 
@@ -46,14 +30,11 @@ const setup = (
   mainService: ServiceModel,
   instance?: InstanceWithRelations,
   models: ServiceModel[] = serviceModels,
-  editable: boolean = true,
+  editable: boolean = true
 ) => {
   const queryClient = new QueryClient();
   const store = getStoreInstance();
-  const environmentHandler = EnvironmentHandlerImpl(
-    useLocation,
-    PrimaryRouteManager(""),
-  );
+  const environmentHandler = EnvironmentHandlerImpl(useLocation, PrimaryRouteManager(""));
 
   store.dispatch.environment.setEnvironments(
     RemoteData.success([
@@ -81,7 +62,7 @@ const setup = (
           enable_lsm_expert_mode: false,
         },
       },
-    ]),
+    ])
   );
   history.push("/?env=aaa");
 
@@ -89,27 +70,19 @@ const setup = (
     <QueryClientProvider client={queryClient}>
       <CustomRouter history={history}>
         <StoreProvider store={store}>
-          <DependencyProvider
-            dependencies={{ ...dependencies, environmentHandler }}
-          >
+          <DependencyProvider dependencies={{ ...dependencies, environmentHandler }}>
             <InstanceComposerContext.Provider
               value={{
                 instance: instance || null,
                 serviceModels: models,
                 mainService: mainService,
-                relatedInventoriesQuery: { data: {} } as UseQueryResult<
-                  Inventories,
-                  Error
-                >,
+                relatedInventoriesQuery: { data: {} } as UseQueryResult<Inventories, Error>,
               }}
             >
               <CanvasProvider>
                 <Routes>
                   <Route path="/" element={<Canvas editable={editable} />} />
-                  <Route
-                    path="/lsm/catalog/test-service/inventory"
-                    element={<></>}
-                  />
+                  <Route path="/lsm/catalog/test-service/inventory" element={<></>} />
                 </Routes>
               </CanvasProvider>
             </InstanceComposerContext.Provider>
@@ -150,7 +123,7 @@ describe("Canvas.tsx", () => {
     const header = screen.getByJointSelector("header");
 
     expect(header.getAttribute("fill")).toContain(
-      "var(--pf-t--chart--color--yellow--300, #dca614)",
+      "var(--pf-t--chart--color--yellow--300, #dca614)"
     );
   });
 
@@ -161,9 +134,7 @@ describe("Canvas.tsx", () => {
 
     render(component);
 
-    const dictValue = await screen.findByJointSelector(
-      "itemLabel_dictOne_value",
-    );
+    const dictValue = await screen.findByJointSelector("itemLabel_dictOne_value");
 
     await act(async() => {
       await user.click(dictValue.children[0]);
@@ -175,9 +146,7 @@ describe("Canvas.tsx", () => {
 
     const title = document.querySelector("#dict-modal-title");
 
-    expect(title).toHaveTextContent(
-      words("instanceComposer.dictModal")("dictOne"),
-    );
+    expect(title).toHaveTextContent(words("instanceComposer.dictModal")("dictOne"));
 
     const value = document.querySelector("#dict-modal-body");
 
@@ -209,7 +178,7 @@ describe("Canvas.tsx", () => {
       mockedInstanceTwoServiceModel,
       mockedInstanceTwo,
       [mockedInstanceTwoServiceModel],
-      false,
+      false
     );
 
     render(component);
@@ -230,7 +199,7 @@ describe("Canvas.tsx", () => {
       mockedInstanceTwoServiceModel,
       mockedInstanceTwo,
       [mockedInstanceTwoServiceModel],
-      true,
+      true
     );
 
     render(component);

@@ -9,25 +9,17 @@ import { DefaultEntry } from "./DefaultEntry";
 import { DiffView } from "./DiffView";
 import { Title } from "./utils";
 
-export const FileEntry: React.FC<EntryInfo> = ({
-  title,
-  fromValue,
-  toValue,
-}) => {
+export const FileEntry: React.FC<EntryInfo> = ({ title, fromValue, toValue }) => {
   const { fileFetcher } = useContext(DependencyContext);
-  const [files, setFiles] = useState<
-    RemoteData.RemoteData<string, Diff.Values>
-  >(RemoteData.notAsked());
+  const [files, setFiles] = useState<RemoteData.RemoteData<string, Diff.Values>>(
+    RemoteData.notAsked()
+  );
 
   const onShow = async() => {
     setFiles(RemoteData.loading());
     const [from, to] = await Promise.all([
-      fromValue.length > 0
-        ? fileFetcher.get(fromValue)
-        : Promise.resolve(Either.right("")),
-      toValue.length > 0
-        ? fileFetcher.get(toValue)
-        : Promise.resolve(Either.right("")),
+      fromValue.length > 0 ? fileFetcher.get(fromValue) : Promise.resolve(Either.right("")),
+      toValue.length > 0 ? fileFetcher.get(toValue) : Promise.resolve(Either.right("")),
     ]);
 
     if (Either.isLeft(from)) return setFiles(RemoteData.failed(from.value));
@@ -54,7 +46,7 @@ export const FileEntry: React.FC<EntryInfo> = ({
               failed: (error) => <FailedView {...{ error, onShow }} />,
               success: (files) => <SuccessView {...{ onHide, files }} />,
             },
-            files,
+            files
           )}
         </GridItem>
       </Grid>
@@ -62,10 +54,7 @@ export const FileEntry: React.FC<EntryInfo> = ({
   );
 };
 
-const DefaultView: React.FC<{ isLoading?: boolean; onShow(): void }> = ({
-  isLoading,
-  onShow,
-}) => (
+const DefaultView: React.FC<{ isLoading?: boolean; onShow(): void }> = ({ isLoading, onShow }) => (
   <Message>
     <Button
       variant="link"
@@ -79,10 +68,7 @@ const DefaultView: React.FC<{ isLoading?: boolean; onShow(): void }> = ({
   </Message>
 );
 
-const FailedView: React.FC<{ error: string; onShow(): void }> = ({
-  error,
-  onShow,
-}) => (
+const FailedView: React.FC<{ error: string; onShow(): void }> = ({ error, onShow }) => (
   <ErrorMessage aria-label="ErrorDiffView">
     <p>
       {words("error")}

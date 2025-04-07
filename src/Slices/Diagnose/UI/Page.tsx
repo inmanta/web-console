@@ -2,12 +2,7 @@ import React from "react";
 
 import { useUrlStateWithString } from "@/Data";
 import { useGetInstance } from "@/Data/Managers/V2/ServiceInstance";
-import {
-  Description,
-  ErrorView,
-  LoadingView,
-  PageContainer,
-} from "@/UI/Components";
+import { Description, ErrorView, LoadingView, PageContainer } from "@/UI/Components";
 import { useRouteParams } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { Diagnose } from "./Diagnose";
@@ -22,10 +17,7 @@ export const Page: React.FC = () => {
       key: "lookBehind",
       route: "Diagnose",
     });
-  const { data, error, isError, isSuccess } = useGetInstance(
-    service,
-    instance,
-  ).useContinuous();
+  const { data, error, isError, isSuccess } = useGetInstance(service, instance).useContinuous();
 
   const handleSliding = (value: number) => {
     setAmountOfVersionToLookBehind(value.toString());
@@ -46,9 +38,7 @@ export const Page: React.FC = () => {
           initialLookBehind={Number(amountOfVersionToLookBehind)}
           setSelectedVersion={handleSliding}
         />
-        <Description withSpace>
-          {words("diagnose.main.subtitle")(id)}
-        </Description>
+        <Description withSpace>{words("diagnose.main.subtitle")(id)}</Description>
         <Diagnose
           serviceName={service}
           instanceId={instance}

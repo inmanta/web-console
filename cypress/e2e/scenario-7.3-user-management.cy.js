@@ -25,9 +25,7 @@ if (Cypress.env("local-auth")) {
     cy.get('[aria-label="confirm-button"]').click();
 
     cy.get("span")
-      .contains(
-        "Invalid request: the password should be at least 8 characters long",
-      )
+      .contains("Invalid request: the password should be at least 8 characters long")
       .should("be.visible");
 
     cy.get('[aria-label="input-password"]').clear().type("password");
@@ -54,17 +52,10 @@ if (Cypress.env("local-auth")) {
 
     cy.get('[data-testid="user-row"]').should("have.length", 2);
 
-    cy.get('[data-testid="user-row"]')
-      .eq(1)
-      .find("button")
-      .contains("Delete")
-      .click();
+    cy.get('[data-testid="user-row"]').eq(1).find("button").contains("Delete").click();
 
     cy.get("button").contains("Yes").click();
 
-    cy.get('[data-testid="user-row"]', { timeout: 20000 }).should(
-      "have.length",
-      1,
-    );
+    cy.get('[data-testid="user-row"]', { timeout: 20000 }).should("have.length", 1);
   });
 }

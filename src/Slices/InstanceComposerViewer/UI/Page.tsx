@@ -11,24 +11,14 @@ import { ComposerEditorProvider } from "@/UI/Components/Diagram/Context/Composer
  * @returns {React.FC} The Page component.
  */
 export const Page: React.FC = () => {
-  const { service: serviceName, instance } =
-    useRouteParams<"InstanceComposerViewer">();
+  const { service: serviceName, instance } = useRouteParams<"InstanceComposerViewer">();
   const { featureManager } = useContext(DependencyContext);
 
   if (!featureManager.isComposerEnabled()) {
     return (
-      <EmptyView
-        message={words("instanceComposer.disabled")}
-        aria-label="ComposerView-Disabled"
-      />
+      <EmptyView message={words("instanceComposer.disabled")} aria-label="ComposerView-Disabled" />
     );
   }
 
-  return (
-    <ComposerEditorProvider
-      serviceName={serviceName}
-      instance={instance}
-      editable={false}
-    />
-  );
+  return <ComposerEditorProvider serviceName={serviceName} instance={instance} editable={false} />;
 };

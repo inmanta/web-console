@@ -33,7 +33,7 @@ export const classified: ClassifiedAttribute[] = [
   {
     kind: "Json",
     key: "d",
-    value: "{\n    \"key\": \"value\"\n}",
+    value: '{\n    "key": "value"\n}',
   },
   { kind: "Undefined", key: "e" },
   {
@@ -66,8 +66,7 @@ export const classified: ClassifiedAttribute[] = [
   {
     kind: "SingleLine",
     key: "wrongXml1",
-    value:
-      "<class 'AttributeError'>: 'RPCError' object has no attribute '_tag'",
+    value: "<class 'AttributeError'>: 'RPCError' object has no attribute '_tag'",
   },
   {
     kind: "Xml",

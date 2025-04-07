@@ -28,12 +28,9 @@ describe("createHeaders", () => {
     const env = "1234abcd";
     const wrapper = setup();
 
-    const { result } = renderHook(
-      () => useFetchHelpers().createHeaders({ env }),
-      {
-        wrapper,
-      },
-    );
+    const { result } = renderHook(() => useFetchHelpers().createHeaders({ env }), {
+      wrapper,
+    });
 
     expect(result.current.get("X-Inmanta-Tid")).toEqual(env);
   });
@@ -45,7 +42,7 @@ describe("createHeaders", () => {
       () => useFetchHelpers().createHeaders({ message: "test-message" }),
       {
         wrapper,
-      },
+      }
     );
 
     expect(result.current.get("message")).toEqual("test-message");

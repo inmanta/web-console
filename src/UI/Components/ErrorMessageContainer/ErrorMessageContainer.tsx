@@ -13,19 +13,10 @@ interface Props {
  * @param {ReactNode} children - The children of the error message
  * @returns {ReactElement} The error message component
  */
-export const ErrorMessageContainer: React.FC<PropsWithChildren<Props>> = ({
-  children,
-  title,
-}) => {
+export const ErrorMessageContainer: React.FC<PropsWithChildren<Props>> = ({ children, title }) => {
   return (
     <Panel data-testid="Error-container">
-      <Alert
-        isInline
-        customIcon={<InfoAltIcon />}
-        isExpandable
-        variant="danger"
-        title={title}
-      >
+      <Alert isInline customIcon={<InfoAltIcon />} isExpandable variant="danger" title={title}>
         {children}
       </Alert>
     </Panel>

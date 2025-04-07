@@ -42,11 +42,7 @@ interface Props {
  * Main notification drawer component that displays a list of notifications.
  * Provides functionality to view, mark as read/unread, and clear notifications.
  */
-export const Drawer: React.FC<Props> = ({
-  onClose,
-  isDrawerOpen,
-  drawerRef,
-}) => {
+export const Drawer: React.FC<Props> = ({ onClose, isDrawerOpen, drawerRef }) => {
   const response = useGetNotifications({
     pageSize: PageSize.from("50"),
     origin: "drawer",
@@ -95,12 +91,7 @@ interface ViewProps extends Props {
  * Internal view component that renders the notification drawer content.
  * Handles the display of notifications and provides actions for managing them.
  */
-const View: React.FC<ViewProps> = ({
-  response,
-  onClose,
-  mutate,
-  drawerRef,
-}) => {
+const View: React.FC<ViewProps> = ({ response, onClose, mutate, drawerRef }) => {
   const count = response.isSuccess
     ? response.data.data.filter((notification) => !notification.read).length
     : 0;
@@ -126,16 +117,12 @@ const View: React.FC<ViewProps> = ({
     getOnUpdate(
       response.data.data
         .filter((notification) => !notification.read)
-        .map((notification) => notification.id),
+        .map((notification) => notification.id)
     )({ read: true });
   };
 
   return (
-    <NotificationDrawer
-      ref={drawerRef}
-      aria-label="NotificationDrawer"
-      id="notificationDrawer"
-    >
+    <NotificationDrawer ref={drawerRef} aria-label="NotificationDrawer" id="notificationDrawer">
       <NotificationDrawerHeader count={count} onClose={() => onClose()}>
         <ActionList {...{ onClearAll, onReadAll, onClose }} />
       </NotificationDrawerHeader>
@@ -174,11 +161,7 @@ interface ActionListProps {
  * Component that renders a dropdown menu with actions for all notifications.
  * Provides options to clear all, mark all as read, and navigate to notifications page.
  */
-const ActionList: React.FC<ActionListProps> = ({
-  onClearAll,
-  onReadAll,
-  onClose,
-}) => {
+const ActionList: React.FC<ActionListProps> = ({ onClearAll, onReadAll, onClose }) => {
   const navigateTo = useNavigateTo();
   const [isOpen, setIsOpen] = useState(false);
 

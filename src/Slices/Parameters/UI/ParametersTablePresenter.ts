@@ -2,8 +2,7 @@ import { Parameter } from "@/Core";
 import { ColumnHead, TablePresenter } from "@/UI/Presenters";
 import { words } from "@/UI/words";
 
-export class ParametersTablePresenter
-implements TablePresenter<Parameter, Parameter> {
+export class ParametersTablePresenter implements TablePresenter<Parameter, Parameter> {
   readonly columnHeads: ColumnHead[];
   readonly numberOfColumns: number;
 
@@ -55,8 +54,6 @@ implements TablePresenter<Parameter, Parameter> {
   }
 
   getIndexForColumnName(columnName?: string): number {
-    return this.columnHeads.findIndex(
-      (columnHead) => columnHead.apiName === columnName,
-    );
+    return this.columnHeads.findIndex((columnHead) => columnHead.apiName === columnName);
   }
 }

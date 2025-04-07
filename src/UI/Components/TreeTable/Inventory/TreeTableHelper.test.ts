@@ -1,7 +1,4 @@
-import {
-  PathHelper,
-  TreeExpansionManager,
-} from "@/UI/Components/TreeTable/Helpers";
+import { PathHelper, TreeExpansionManager } from "@/UI/Components/TreeTable/Helpers";
 import { InventoryAttributeHelper } from "./AttributeHelper";
 import { InventoryTreeTableHelper } from "./TreeTableHelper";
 //mock is to avoid TypeError - Temporary workaround - to be removed - https://github.com/inmanta/web-console/issues/6194
@@ -13,7 +10,7 @@ test("TreeTableHelper getExpansionState returns correct expansionState", () => {
     new PathHelper("."),
     new TreeExpansionManager("."),
     new InventoryAttributeHelper("."),
-    { candidate: null, active: { a: "b" }, rollback: null },
+    { candidate: null, active: { a: "b" }, rollback: null }
   );
   // Act
   const expansionState = treeTableHelper.getExpansionState();
@@ -30,7 +27,7 @@ test("TreeTableHelper createRows returns correct list", () => {
     new PathHelper("."),
     new TreeExpansionManager("."),
     new InventoryAttributeHelper("."),
-    { candidate: null, active: { a: "b", c: { d: "e" } }, rollback: null },
+    { candidate: null, active: { a: "b", c: { d: "e" } }, rollback: null }
   );
   // Act
 
@@ -92,7 +89,7 @@ test("TreeTableHelper createRows returns correctly ordered list", () => {
           "network_interfaces[name=eth1].allocated_id": 456789,
         },
       },
-    },
+    }
   );
   // Act
   const cb = jest.fn;

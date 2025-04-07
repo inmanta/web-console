@@ -24,20 +24,13 @@ export const FilterForm: React.FC<Props> = ({ filter, setFilter }) => {
     //assingment is neccesary to avoid ts error due to it's limitation to recognize square brackets property
     const chosenProperty = filter[prop];
 
-    updateType(
-      chosenProperty ? chosenProperty.filter((value) => value !== id) : [],
-      prop,
-    );
+    updateType(chosenProperty ? chosenProperty.filter((value) => value !== id) : [], prop);
   };
   const onTextInput = (event) => {
     event.preventDefault();
     let newFilter = { ...filter };
 
-    if (
-      !typeTextInput.length &&
-      !agentTextInput.length &&
-      !valueTextInput.length
-    ) {
+    if (!typeTextInput.length && !agentTextInput.length && !valueTextInput.length) {
       return;
     }
 
@@ -51,9 +44,7 @@ export const FilterForm: React.FC<Props> = ({ filter, setFilter }) => {
     if (agentTextInput.length) {
       newFilter = {
         ...newFilter,
-        agent: filter.agent
-          ? [...filter.agent, agentTextInput]
-          : [agentTextInput],
+        agent: filter.agent ? [...filter.agent, agentTextInput] : [agentTextInput],
       };
     }
 
@@ -61,9 +52,7 @@ export const FilterForm: React.FC<Props> = ({ filter, setFilter }) => {
       newFilter = {
         ...newFilter,
 
-        value: filter.value
-          ? [...filter.value, valueTextInput]
-          : [valueTextInput],
+        value: filter.value ? [...filter.value, valueTextInput] : [valueTextInput],
       };
     }
 

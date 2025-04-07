@@ -1,8 +1,7 @@
 import { GetMetricsParams } from "./useGetMetrics";
 
 export const getUrl = (params: GetMetricsParams) => {
-  const lsmMetrics =
-    "metrics=lsm.service_count&metrics=lsm.service_instance_count&";
+  const lsmMetrics = "metrics=lsm.service_count&metrics=lsm.service_instance_count&";
 
   return `/api/v2/metrics?${
     params.isLsmAvailable ? lsmMetrics : ""

@@ -18,7 +18,7 @@ import { HeaderColor, StencilState } from "../interfaces";
  * @returns {shapes.standard.Path[]} An array of stencil elements created from the embedded entities
  */
 export const transformEmbeddedToStencilElements = (
-  service: ServiceModel | EmbeddedEntity,
+  service: ServiceModel | EmbeddedEntity
 ): shapes.standard.Path[] => {
   return service.embedded_entities
     .filter((embedded_entity) => embedded_entity.modifier !== "r") // filter out read-only embedded entities from the stencil as they can't be created by the user
@@ -29,10 +29,9 @@ export const transformEmbeddedToStencilElements = (
         {},
         true,
         index === 0,
-        service.name,
+        service.name
       );
-      const nestedStencilElements =
-        transformEmbeddedToStencilElements(embedded_entity);
+      const nestedStencilElements = transformEmbeddedToStencilElements(embedded_entity);
 
       return [stencilElement, ...nestedStencilElements];
     });
@@ -55,7 +54,7 @@ export const createStencilElement = (
   instanceAttributes: InstanceAttributeModel,
   isEmbeddedEntity: boolean = false,
   showBorderTop: boolean = false,
-  holderName?: string,
+  holderName?: string
 ): shapes.standard.Path => {
   let id = uuidv4();
 
@@ -95,10 +94,7 @@ export const createStencilElement = (
         textAnchor: "start",
         fontFamily: "sans-serif",
         fontSize: t_global_font_size_body_default.var,
-        text:
-          "type" in serviceModel && serviceModel.type
-            ? serviceModel.type
-            : name,
+        text: "type" in serviceModel && serviceModel.type ? serviceModel.type : name,
         fill: t_global_text_color_regular.var,
       },
       borderBottom: {
@@ -153,10 +149,7 @@ export const createStencilElement = (
  *
  * @returns {void}
  */
-export const toggleDisabledStencil = (
-  stencilName: string,
-  force?: boolean,
-): void => {
+export const toggleDisabledStencil = (stencilName: string, force?: boolean): void => {
   //disable Inventory Stencil for inter-service relation instance
   const elements = [
     {
@@ -191,7 +184,7 @@ export const toggleDisabledStencil = (
  */
 export const createStencilState = (
   serviceModel: ServiceModel | EmbeddedEntity,
-  isInEditMode = false,
+  isInEditMode = false
 ): StencilState => {
   let stencilState: StencilState = {};
 

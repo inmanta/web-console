@@ -27,19 +27,19 @@ describe("Test GraphCard with LineChart component", () => {
           name: availableKeys[1],
           data: mockedMetrics.metrics[availableKeys[1]],
         }}
-      />,
+      />
     );
 
     expect(
       await screen.findByRole("heading", {
         name: words(`dashboard.${availableKeys[1] as MetricName}.title`),
-      }),
+      })
     ).toBeVisible();
 
     expect(
       screen.getByRole("img", {
         name: /service counter/i,
-      }),
+      })
     ).toBeVisible();
 
     await act(async() => {
@@ -60,19 +60,19 @@ describe("Test GraphCard with LineChart component", () => {
           name: availableKeys[6],
           data: mockedMetrics.metrics[availableKeys[6]],
         }}
-      />,
+      />
     );
 
     expect(
       await screen.findByRole("heading", {
         name: words(`dashboard.${availableKeys[6] as MetricName}.title`),
-      }),
+      })
     ).toBeVisible();
 
     expect(
       screen.getByRole("img", {
         name: /agents count/i,
-      }),
+      })
     ).toBeVisible();
 
     await act(async() => {

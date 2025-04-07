@@ -15,10 +15,8 @@ test.each`
 `(
   "GIVEN RouteManager.getRelatedUrlWithoutParams WHEN $inputUrl THEN returns $outputUrl",
   async({ inputUrl, outputUrl }) => {
-    expect(routeManager.getRelatedUrlWithoutParams(inputUrl)).toEqual(
-      outputUrl,
-    );
-  },
+    expect(routeManager.getRelatedUrlWithoutParams(inputUrl)).toEqual(outputUrl);
+  }
 );
 
 const { Home, Catalog, Inventory, CreateInstance, Events, Diagnose } =
@@ -38,7 +36,7 @@ it.each`
 
     expect(routes).toHaveLength(length);
     expect(routes).toEqual(result);
-  },
+  }
 );
 
 it.each`
@@ -53,7 +51,7 @@ it.each`
   "GIVEN getRouteWithParamsFromUrl WHEN passed '$url' THEN returns $resultTxt",
   ({ url, result }) => {
     expect(routeManager.getRouteMatchFromUrl(url)).toEqual(result);
-  },
+  }
 );
 
 test("Given getUrlForApiUri When uri is unknown Then returns undefined", () => {
@@ -61,9 +59,7 @@ test("Given getUrlForApiUri When uri is unknown Then returns undefined", () => {
 });
 
 test("Given getUrlForApiUri When uri is known Then returns url", () => {
-  expect(routeManager.getUrlForApiUri("/api/v2/compilereport/123")).toMatch(
-    "/compilereports/123",
-  );
+  expect(routeManager.getUrlForApiUri("/api/v2/compilereport/123")).toMatch("/compilereports/123");
 });
 
 test("GIVEN '/lsm/catalog' THEN breadcrumbs should be ['Home','Catalog']", () => {

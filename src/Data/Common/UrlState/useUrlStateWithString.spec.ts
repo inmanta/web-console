@@ -10,9 +10,9 @@ test.each`
     const [value] = handleUrlStateWithString(
       { default: "Info", key: "tab", route: "Inventory" },
       { pathname: "", search, hash: "" },
-      () => undefined,
+      () => undefined
     );
 
     expect(value).toEqual(expectedValue);
-  },
+  }
 );

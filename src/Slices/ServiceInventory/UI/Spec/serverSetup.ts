@@ -69,7 +69,7 @@ export const paginationServer = setupServer(
         page_size: 20,
       },
     });
-  }),
+  })
 );
 
 export const filterServer = setupServer(
@@ -97,5 +97,5 @@ export const filterServer = setupServer(
     }
 
     return HttpResponse.json(firstPage);
-  }),
+  })
 );

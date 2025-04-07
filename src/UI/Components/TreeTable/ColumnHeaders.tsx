@@ -11,13 +11,9 @@ interface Props {
 }
 
 export const ColumnHeaders: React.FC<Props> = ({ columns, emptyColumns }) => {
-  const columnExpansionHelper = new ColumnExpansionHelper(
-    60,
-    columns.length,
-    10,
-  );
+  const columnExpansionHelper = new ColumnExpansionHelper(60, columns.length, 10);
   const [columnWidths, setColumnWidths] = useState<Record<string, number>>(
-    columnExpansionHelper.getDefaultState(columns, emptyColumns),
+    columnExpansionHelper.getDefaultState(columns, emptyColumns)
   );
 
   return (
@@ -30,12 +26,8 @@ export const ColumnHeaders: React.FC<Props> = ({ columns, emptyColumns }) => {
           isExpanded={!columnExpansionHelper.isExpanded(columnWidths[column])}
           onClick={() =>
             columnExpansionHelper.isExpanded(columnWidths[column])
-              ? setColumnWidths(
-                columnExpansionHelper.getDefaultState(columns, emptyColumns),
-              )
-              : setColumnWidths(
-                columnExpansionHelper.expandColumn(columnWidths, column),
-              )
+              ? setColumnWidths(columnExpansionHelper.getDefaultState(columns, emptyColumns))
+              : setColumnWidths(columnExpansionHelper.expandColumn(columnWidths, column))
           }
         />
       ))}
@@ -50,12 +42,7 @@ interface SingleHeaderProps {
   onClick: () => void;
 }
 
-const ColumnHeader: React.FC<SingleHeaderProps> = ({
-  column,
-  width,
-  isExpanded,
-  onClick,
-}) => (
+const ColumnHeader: React.FC<SingleHeaderProps> = ({ column, width, isExpanded, onClick }) => (
   <StyledHeader key={column} $width={width}>
     <Button
       variant="control"

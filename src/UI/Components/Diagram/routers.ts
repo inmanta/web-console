@@ -16,12 +16,7 @@ export const routerNamespace = { ...routers };
  * @param {number} padding - padding of the Link
  * @returns {g.Point} - Point object with x and y coordinates
  */
-function getOutsidePoint(
-  bbox: g.Rect,
-  angle: number,
-  anchor: g.Point,
-  padding: number,
-) {
+function getOutsidePoint(bbox: g.Rect, angle: number, anchor: g.Point, padding: number) {
   const ref = anchor.clone();
   const center = bbox.center();
 
@@ -51,7 +46,7 @@ function getOutsidePoint(
 const customRouter = function(
   vertices: Array<g.Point>,
   routerOptions: RouterOptions,
-  linkView: dia.LinkView,
+  linkView: dia.LinkView
 ): g.Point[] {
   const link = linkView.model;
   const route: g.Point[] = [];
@@ -64,8 +59,8 @@ const customRouter = function(
         source.getBBox(),
         source.angle(),
         linkView.getEndAnchor("source"),
-        routerOptions.padding || routerOptions.sourcePadding || DEFAULT_PADDING,
-      ),
+        routerOptions.padding || routerOptions.sourcePadding || DEFAULT_PADDING
+      )
     );
   }
 
@@ -81,8 +76,8 @@ const customRouter = function(
         target.getBBox(),
         target.angle(),
         linkView.getEndAnchor("target"),
-        routerOptions.padding || routerOptions.targetPadding || DEFAULT_PADDING,
-      ),
+        routerOptions.padding || routerOptions.targetPadding || DEFAULT_PADDING
+      )
     );
   }
 

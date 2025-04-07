@@ -25,7 +25,7 @@ const createHalo = (
   graph: dia.Graph,
   paper: dia.Paper,
   cellView: dia.CellView,
-  connectionRules: ConnectionRules,
+  connectionRules: ConnectionRules
 ) => {
   const halo = new ui.Halo({
     cellView: cellView,
@@ -54,8 +54,7 @@ const createHalo = (
     connectedElements.forEach((element) => {
       const elementAsService = element as ServiceEntityBlock;
       const isEmbeddedEntity = element.get("isEmbeddedEntity");
-      const isEmbeddedToThisCell =
-        element.get("embeddedTo") === cellView.model.id;
+      const isEmbeddedToThisCell = element.get("embeddedTo") === cellView.model.id;
 
       let didElementChange = false;
 
@@ -74,14 +73,14 @@ const createHalo = (
 
       if (relations) {
         const wasThereRelationToRemove = elementAsService.removeRelation(
-          cellView.model.id as string,
+          cellView.model.id as string
         );
 
         if (wasThereRelationToRemove) {
           dispatchUpdateInterServiceRelations(
             EventActionEnum.REMOVE,
             cellView.model.get("entityName"),
-            elementAsService.id,
+            elementAsService.id
           );
         }
 
@@ -108,21 +107,14 @@ const createHalo = (
 
   halo.on("action:link:pointerdown", function() {
     const area = paper.getArea();
-    const elements = paper
-      .findViewsInArea(area)
-      .filter((shape) => shape.cid !== cellView.cid);
+    const elements = paper.findViewsInArea(area).filter((shape) => shape.cid !== cellView.cid);
 
     //cellView.model has the same structure as dia.Element needed as parameter to .getNeighbors() yet typescript complains
     const connectedElements = graph.getNeighbors(cellView.model as dia.Element);
 
     elements.forEach((element) => {
       element.getBBox();
-      const isAllowed = checkIfConnectionIsAllowed(
-        graph,
-        cellView,
-        element,
-        connectionRules,
-      );
+      const isAllowed = checkIfConnectionIsAllowed(graph, cellView, element, connectionRules);
 
       if (!isAllowed) {
         return;
@@ -144,10 +136,7 @@ const createHalo = (
             filter: "drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4))",
           },
         });
-        const looseElementHighlight = dia.HighlighterView.get(
-          element,
-          "loose_element",
-        );
+        const looseElementHighlight = dia.HighlighterView.get(element, "loose_element");
 
         if (looseElementHighlight) {
           looseElementHighlight.el.classList.add("-hidden");
@@ -162,19 +151,13 @@ const createHalo = (
     const shapes = paper.findViewsInArea(area);
 
     shapes.map((shape) => {
-      const highlighter = dia.HighlighterView.get(
-        shape,
-        "available-to-connect",
-      );
+      const highlighter = dia.HighlighterView.get(shape, "available-to-connect");
 
       if (highlighter) {
         highlighter.remove();
       }
 
-      const looseElementHighlight = dia.HighlighterView.get(
-        shape,
-        "loose_element",
-      );
+      const looseElementHighlight = dia.HighlighterView.get(shape, "loose_element");
 
       if (looseElementHighlight) {
         looseElementHighlight.el.classList.remove("-hidden");

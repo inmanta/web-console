@@ -99,7 +99,7 @@ describe("DesiredStatesView", () => {
           links: { self: "" },
           metadata: { total: 0, before: 0, after: 0, page_size: 1000 },
         });
-      }),
+      })
     );
 
     const { component } = setup();
@@ -107,11 +107,11 @@ describe("DesiredStatesView", () => {
     render(component);
 
     expect(
-      await screen.findByRole("region", { name: "DesiredStatesView-Loading" }),
+      await screen.findByRole("region", { name: "DesiredStatesView-Loading" })
     ).toBeInTheDocument();
 
     expect(
-      await screen.findByRole("generic", { name: "DesiredStatesView-Empty" }),
+      await screen.findByRole("generic", { name: "DesiredStatesView-Empty" })
     ).toBeInTheDocument();
 
     await act(async() => {
@@ -125,7 +125,7 @@ describe("DesiredStatesView", () => {
     server.use(
       http.get("/api/v2/desiredstate", async() => {
         return HttpResponse.json({ message: "Not Found" }, { status: 404 });
-      }),
+      })
     );
 
     const { component } = setup();
@@ -133,11 +133,11 @@ describe("DesiredStatesView", () => {
     render(component);
 
     expect(
-      await screen.findByRole("region", { name: "DesiredStatesView-Loading" }),
+      await screen.findByRole("region", { name: "DesiredStatesView-Loading" })
     ).toBeInTheDocument();
 
     expect(
-      await screen.findByRole("region", { name: "DesiredStatesView-Failed" }),
+      await screen.findByRole("region", { name: "DesiredStatesView-Failed" })
     ).toBeInTheDocument();
 
     await act(async() => {
@@ -151,7 +151,7 @@ describe("DesiredStatesView", () => {
     server.use(
       http.get("/api/v2/desiredstate", async() => {
         return HttpResponse.json(DesiredStateVersions.response);
-      }),
+      })
     );
 
     const { component } = setup();
@@ -159,11 +159,11 @@ describe("DesiredStatesView", () => {
     render(component);
 
     expect(
-      await screen.findByRole("region", { name: "DesiredStatesView-Loading" }),
+      await screen.findByRole("region", { name: "DesiredStatesView-Loading" })
     ).toBeInTheDocument();
 
     expect(
-      await screen.findByRole("grid", { name: "DesiredStatesView-Success" }),
+      await screen.findByRole("grid", { name: "DesiredStatesView-Success" })
     ).toBeInTheDocument();
 
     await act(async() => {
@@ -188,7 +188,7 @@ describe("DesiredStatesView", () => {
         } else {
           return HttpResponse.json(DesiredStateVersions.response);
         }
-      }),
+      })
     );
 
     const { component } = setup();
@@ -202,16 +202,15 @@ describe("DesiredStatesView", () => {
     expect(initialRows).toHaveLength(9);
 
     await userEvent.click(
-      within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
-        "button",
-        { name: "FilterPicker" },
-      ),
+      within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole("button", {
+        name: "FilterPicker",
+      })
     );
 
     await userEvent.click(
       screen.getByRole("option", {
         name: words("desiredState.columns.status"),
-      }),
+      })
     );
 
     const input = screen.getByRole("combobox", { name: "StatusFilterInput" });
@@ -256,7 +255,7 @@ describe("DesiredStatesView", () => {
         } else {
           return HttpResponse.json(DesiredStateVersions.response);
         }
-      }),
+      })
     );
 
     const { component } = setup();
@@ -270,16 +269,15 @@ describe("DesiredStatesView", () => {
     expect(initialRows).toHaveLength(9);
 
     await userEvent.click(
-      within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
-        "button",
-        { name: "FilterPicker" },
-      ),
+      within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole("button", {
+        name: "FilterPicker",
+      })
     );
 
     await userEvent.click(
       screen.getByRole("option", {
         name: words("desiredState.columns.date"),
-      }),
+      })
     );
 
     const fromDatePicker = screen.getByLabelText("From Date Picker");
@@ -304,12 +302,8 @@ describe("DesiredStatesView", () => {
       window.dispatchEvent(new Event("resize"));
     });
 
-    expect(
-      await screen.findByText("from | 2021/12/06 00:00:00", { exact: false }),
-    ).toBeVisible();
-    expect(
-      await screen.findByText("to | 2021/12/07 00:00:00", { exact: false }),
-    ).toBeVisible();
+    expect(await screen.findByText("from | 2021/12/06 00:00:00", { exact: false })).toBeVisible();
+    expect(await screen.findByText("to | 2021/12/07 00:00:00", { exact: false })).toBeVisible();
 
     await act(async() => {
       const results = await axe(document.body);
@@ -333,7 +327,7 @@ describe("DesiredStatesView", () => {
         } else {
           return HttpResponse.json(DesiredStateVersions.response);
         }
-      }),
+      })
     );
 
     const { component } = setup();
@@ -347,16 +341,15 @@ describe("DesiredStatesView", () => {
     expect(initialRows).toHaveLength(9);
 
     await userEvent.click(
-      within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
-        "button",
-        { name: "FilterPicker" },
-      ),
+      within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole("button", {
+        name: "FilterPicker",
+      })
     );
 
     await userEvent.click(
       screen.getByRole("option", {
         name: words("desiredState.columns.version"),
-      }),
+      })
     );
 
     const fromDatePicker = await screen.findByLabelText("Version range from");
@@ -398,7 +391,7 @@ describe("DesiredStatesView", () => {
       }),
       http.post("/api/v2/desiredstate/9/promote", async() => {
         return HttpResponse.json({ status: 200 });
-      }),
+      })
     );
 
     const { component } = setup();
@@ -415,32 +408,32 @@ describe("DesiredStatesView", () => {
     await userEvent.click(
       within(rows[8]).getByRole("button", {
         name: "actions-toggle",
-      }),
+      })
     );
 
     expect(
       within(rows[8]).getByRole("button", {
         name: "actions-toggle",
-      }),
+      })
     ).toHaveAttribute("aria-expanded", "true");
 
     expect(
       screen.getByRole("menuitem", {
         name: words("desiredState.actions.promote"),
-      }),
+      })
     ).toBeDisabled();
 
     // close first opened popup, to avoid conflict with the next one.
     await userEvent.click(
       within(rows[8]).getByRole("button", {
         name: "actions-toggle",
-      }),
+      })
     );
 
     await userEvent.click(
       within(rows[0]).getByRole("button", {
         name: "actions-toggle",
-      }),
+      })
     );
 
     await userEvent.click(screen.getByRole("menuitem", { name: /promote/i }));
@@ -479,7 +472,7 @@ describe("DesiredStatesView", () => {
       }),
       http.post("/api/v2/desiredstate/9/promote", async() => {
         return HttpResponse.json({ status: 200 });
-      }),
+      })
     );
 
     const { component } = setup();
@@ -493,21 +486,18 @@ describe("DesiredStatesView", () => {
     expect(initialRows).toHaveLength(9);
 
     await userEvent.click(
-      within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
-        "button",
-        { name: "FilterPicker" },
-      ),
+      within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole("button", {
+        name: "FilterPicker",
+      })
     );
 
     await userEvent.click(
       screen.getByRole("option", {
         name: words("desiredState.columns.status"),
-      }),
+      })
     );
 
-    const input = screen.getByPlaceholderText(
-      words("desiredState.filters.status.placeholder"),
-    );
+    const input = screen.getByPlaceholderText(words("desiredState.filters.status.placeholder"));
 
     await userEvent.click(input);
 
@@ -527,13 +517,13 @@ describe("DesiredStatesView", () => {
     await userEvent.click(
       within(rows[0]).getByRole("button", {
         name: "actions-toggle",
-      }),
+      })
     );
 
     await userEvent.click(
       screen.getByRole("menuitem", {
         name: words("desiredState.actions.promote"),
-      }),
+      })
     );
 
     const rowsAfter = await screen.findAllByRole("row", {
@@ -557,11 +547,8 @@ describe("DesiredStatesView", () => {
         return HttpResponse.json(DesiredStateVersions.response);
       }),
       http.post("/api/v2/desiredstate/9/promote", async() => {
-        return HttpResponse.json(
-          { message: "something happened" },
-          { status: 500 },
-        );
-      }),
+        return HttpResponse.json({ message: "something happened" }, { status: 500 });
+      })
     );
     const { component } = setup();
 
@@ -574,13 +561,13 @@ describe("DesiredStatesView", () => {
     await userEvent.click(
       within(rows[0]).getByRole("button", {
         name: "actions-toggle",
-      }),
+      })
     );
 
     await userEvent.click(
       screen.getByRole("menuitem", {
         name: words("desiredState.actions.promote"),
-      }),
+      })
     );
 
     expect(await screen.findByText("something happened")).toBeVisible();
@@ -590,15 +577,13 @@ describe("DesiredStatesView", () => {
     server.use(
       http.get("/api/v2/desiredstate", async() => {
         return HttpResponse.json(DesiredStateVersions.response);
-      }),
+      })
     );
     const { component } = setup();
 
     render(component);
 
-    expect(
-      await screen.findByRole("button", { name: "RecompileButton" }),
-    ).toBeVisible();
+    expect(await screen.findByRole("button", { name: "RecompileButton" })).toBeVisible();
   });
 
   describe("DeleteModal ", () => {
@@ -606,7 +591,7 @@ describe("DesiredStatesView", () => {
       server.use(
         http.get("/api/v2/desiredstate", async() => {
           return HttpResponse.json(DesiredStateVersions.response);
-        }),
+        })
       );
       const { component } = setup();
 
@@ -618,14 +603,12 @@ describe("DesiredStatesView", () => {
       await userEvent.click(
         within(rows[0]).getByRole("button", {
           name: "actions-toggle",
-        }),
+        })
       );
 
       await userEvent.click(screen.getByRole("menuitem", { name: "Delete" }));
 
-      expect(
-        await screen.findByText(words("inventory.deleteVersion.header")(9)),
-      ).toBeVisible();
+      expect(await screen.findByText(words("inventory.deleteVersion.header")(9))).toBeVisible();
       expect(await screen.findByText("Yes")).toBeVisible();
       expect(await screen.findByText("No")).toBeVisible();
 
@@ -640,7 +623,7 @@ describe("DesiredStatesView", () => {
       server.use(
         http.get("/api/v2/desiredstate", async() => {
           return HttpResponse.json(DesiredStateVersions.response);
-        }),
+        })
       );
 
       const { component } = setup();
@@ -655,7 +638,7 @@ describe("DesiredStatesView", () => {
       await userEvent.click(
         within(rows[0]).getByRole("button", {
           name: "actions-toggle",
-        }),
+        })
       );
 
       await userEvent.click(screen.getByRole("menuitem", { name: "Delete" }));
@@ -670,7 +653,7 @@ describe("DesiredStatesView", () => {
       await userEvent.click(
         within(rows[0]).getByRole("button", {
           name: "actions-toggle",
-        }),
+        })
       );
 
       await userEvent.click(screen.getByRole("menuitem", { name: "Delete" }));
@@ -695,7 +678,7 @@ describe("DesiredStatesView", () => {
         }),
         http.delete("/api/v1/version/9", async() => {
           return HttpResponse.json({ status: 204 });
-        }),
+        })
       );
 
       const { component } = setup();
@@ -714,7 +697,7 @@ describe("DesiredStatesView", () => {
       await userEvent.click(
         within(rows[0]).getByRole("button", {
           name: "actions-toggle",
-        }),
+        })
       );
 
       await userEvent.click(screen.getByRole("menuitem", { name: "Delete" }));

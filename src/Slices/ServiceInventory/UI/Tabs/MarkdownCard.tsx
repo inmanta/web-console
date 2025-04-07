@@ -17,10 +17,7 @@ interface Props {
  * @returns {React.FC} The rendered MarkdownCard component.
  */
 export const MarkdownCard = ({ attributeValue, web_title }: Props) => {
-  const data =
-    typeof attributeValue === "string"
-      ? attributeValue
-      : JSON.stringify(attributeValue);
+  const data = typeof attributeValue === "string" ? attributeValue : JSON.stringify(attributeValue);
 
   return (
     <Panel>

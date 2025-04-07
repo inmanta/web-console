@@ -1,8 +1,4 @@
-import {
-  UseMutationOptions,
-  UseMutationResult,
-  useMutation,
-} from "@tanstack/react-query";
+import { UseMutationOptions, UseMutationResult, useMutation } from "@tanstack/react-query";
 import { ServiceOrder } from "@/Slices/Orders/Core/Query";
 import { words } from "@/UI";
 import { ComposerServiceOrderItem } from "@/UI/Components/Diagram/interfaces";
@@ -22,7 +18,7 @@ interface PostOrderBody {
  * @returns {Mutation} The mutation object for sending an order.
  */
 export const usePostOrder = (
-  options?: UseMutationOptions<PostResponse, Error, ComposerServiceOrderItem[]>,
+  options?: UseMutationOptions<PostResponse, Error, ComposerServiceOrderItem[]>
 ): UseMutationResult<PostResponse, Error, ComposerServiceOrderItem[]> => {
   const post = usePost()<PostOrderBody>;
 

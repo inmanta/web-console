@@ -1,10 +1,7 @@
 import { capitalize } from "@patternfly/react-core";
 import qs from "qs";
 import { Sort } from "@/Core";
-import {
-  ServiceInstanceParams,
-  Filter,
-} from "@/Core/Domain/ServiceInstanceParams";
+import { ServiceInstanceParams, Filter } from "@/Core/Domain/ServiceInstanceParams";
 
 export interface UrlParams extends ServiceInstanceParams {
   name: string;
@@ -24,20 +21,19 @@ export interface UrlParams extends ServiceInstanceParams {
  */
 export function getUrl(
   { name, filter, sort, pageSize, currentPage }: UrlParams,
-  includeDeploymentProgress = true,
+  includeDeploymentProgress = true
 ): string {
   const filterParam = filter
     ? `&${qs.stringify(
       { filter: filterToRaw(filter) },
-      { allowDots: true, arrayFormat: "repeat" },
+      { allowDots: true, arrayFormat: "repeat" }
     )}`
     : "";
   const sortParam = sort ? `&sort=${Sort.serialize(sort)}` : "";
-  const includeDeletedParam =
-    filter?.deleted === "Include" ? "&include_deleted=true" : "";
+  const includeDeletedParam = filter?.deleted === "Include" ? "&include_deleted=true" : "";
 
   return `/lsm/v1/service_inventory/${name}?include_deployment_progress=${capitalize(
-    includeDeploymentProgress.toString(),
+    includeDeploymentProgress.toString()
   )}&limit=${pageSize.value}${filterParam}${sortParam}${includeDeletedParam}${
     currentPage.value ? `&${currentPage.value}` : ""
   }`;

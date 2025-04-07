@@ -31,11 +31,7 @@ export const Row: React.FC<Props> = ({
       <Tr aria-label={`CallbackRow-${shortUuid}`}>
         <Td>
           {callback.event_types ? (
-            <Toggle
-              text={callback.url}
-              onClick={onToggle}
-              isExpanded={isExpanded}
-            />
+            <Toggle text={callback.url} onClick={onToggle} isExpanded={isExpanded} />
           ) : (
             <Content>{callback.url}</Content>
           )}
@@ -51,9 +47,7 @@ export const Row: React.FC<Props> = ({
           </Tooltip>
         </Td>
         <Td>{callback.minimal_log_level_text}</Td>
-        <Td>
-          {callback.event_types && callback.event_types.length + " Event Types"}
-        </Td>
+        <Td>{callback.event_types && callback.event_types.length + " Event Types"}</Td>
         <Td>
           <DeleteButton
             callback={callback}

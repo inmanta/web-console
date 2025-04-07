@@ -10,7 +10,7 @@ export class FileFetcherImpl implements FileFetcher {
 
   constructor(
     private readonly apiHelper: ApiHelper,
-    environment?: string,
+    environment?: string
   ) {
     if (typeof environment === "undefined") return;
 
@@ -37,16 +37,11 @@ export class FileFetcherImpl implements FileFetcher {
 
   async get(fileId: string): Promise<Either.Type<string, string>> {
     return this.unpack(
-      await this.apiHelper.get<RawResponse>(
-        this.getUrl(fileId),
-        this.getEnvironment(),
-      ),
+      await this.apiHelper.get<RawResponse>(this.getUrl(fileId), this.getEnvironment())
     );
   }
 
-  private unpack(
-    either: Either.Type<string, RawResponse>,
-  ): Either.Type<string, string> {
+  private unpack(either: Either.Type<string, RawResponse>): Either.Type<string, string> {
     if (Either.isRight(either)) {
       const response = either.value;
 

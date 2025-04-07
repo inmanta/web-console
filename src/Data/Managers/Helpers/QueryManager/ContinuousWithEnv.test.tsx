@@ -7,11 +7,7 @@ import { Either, PageSize, RemoteData } from "@/Core";
 import { QueryManagerResolverImpl, QueryResolverImpl } from "@/Data";
 import { getStoreInstance } from "@/Data/Store";
 import { DeferredApiHelper, dependencies, StaticScheduler } from "@/Test";
-import {
-  DependencyContext,
-  DependencyProvider,
-  EnvironmentHandlerImpl,
-} from "@/UI/Dependency";
+import { DependencyContext, DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
 import { PrimaryRouteManager } from "@/UI/Routing";
 
 test("GIVEN QueryManager.ContinuousWithEnv WHEN environment changes THEN the api call uses the correct url", async() => {
@@ -19,7 +15,7 @@ test("GIVEN QueryManager.ContinuousWithEnv WHEN environment changes THEN the api
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
   const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler),
+    new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler)
   );
 
   store.dispatch.environment.setEnvironments(
@@ -48,21 +44,14 @@ test("GIVEN QueryManager.ContinuousWithEnv WHEN environment changes THEN the api
           enable_lsm_expert_mode: false,
         },
       },
-    ]),
+    ])
   );
 
-  const Wrapper: React.FC<React.PropsWithChildren<unknown>> = ({
-    children,
-  }) => {
-    const environmentHandler = EnvironmentHandlerImpl(
-      useLocation,
-      PrimaryRouteManager(""),
-    );
+  const Wrapper: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {
+    const environmentHandler = EnvironmentHandlerImpl(useLocation, PrimaryRouteManager(""));
 
     return (
-      <DependencyProvider
-        dependencies={{ ...dependencies, queryResolver, environmentHandler }}
-      >
+      <DependencyProvider dependencies={{ ...dependencies, queryResolver, environmentHandler }}>
         {children}
       </DependencyProvider>
     );
@@ -115,10 +104,7 @@ const Component: React.FC = () => {
 
   return (
     <div>
-      <button
-        aria-label="change-env"
-        onClick={() => navigate(`${location}?env=bbb`)}
-      >
+      <button aria-label="change-env" onClick={() => navigate(`${location}?env=bbb`)}>
         change-env
       </button>
     </div>

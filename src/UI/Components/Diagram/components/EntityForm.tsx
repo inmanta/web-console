@@ -5,10 +5,7 @@ import { set } from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import { Field, InstanceAttributeModel, ServiceModel } from "@/Core";
 import { sanitizeAttributes } from "@/Data";
-import {
-  CreateModifierHandler,
-  FieldCreator,
-} from "@/UI/Components/ServiceInstanceForm";
+import { CreateModifierHandler, FieldCreator } from "@/UI/Components/ServiceInstanceForm";
 import { FieldInput } from "@/UI/Components/ServiceInstanceForm/Components";
 import { words } from "@/UI/words";
 import { CanvasContext } from "../Context";
@@ -53,9 +50,7 @@ export const EntityForm: React.FC<Props> = ({
   const { diagramHandlers, setServiceOrderItems } = useContext(CanvasContext);
   const [serviceModel, setServiceModel] = useState<ServiceModel | null>(null);
   const [fields, setFields] = useState<Field[] | null>(null);
-  const [originalState, setOriginalState] = useState<InstanceAttributeModel>(
-    {},
-  );
+  const [originalState, setOriginalState] = useState<InstanceAttributeModel>({});
   const [formState, setFormState] = useState<InstanceAttributeModel>({});
   const [isDirty, setIsDirty] = useState(false);
 
@@ -133,13 +128,8 @@ export const EntityForm: React.FC<Props> = ({
     const isEdited = model.get("isInEditMode") as boolean;
     const instanceAttributes = model.get("instanceAttributes");
 
-    const fieldCreator = new FieldCreator(
-      new CreateModifierHandler(),
-      isEdited,
-    );
-    const selectedFields = fieldCreator.attributesToFields(
-      serviceModel.attributes,
-    );
+    const fieldCreator = new FieldCreator(new CreateModifierHandler(), isEdited);
+    const selectedFields = fieldCreator.attributesToFields(serviceModel.attributes);
 
     setFields(selectedFields.map((field) => ({ ...field, id: uuidv4() })));
     setServiceModel(serviceModel);
@@ -153,11 +143,7 @@ export const EntityForm: React.FC<Props> = ({
       if (diagramHandlers && fields && serviceModel) {
         const sanitizedAttrs = sanitizeAttributes(fields, formState);
 
-        const shape = diagramHandlers.editEntity(
-          cellToEdit,
-          serviceModel,
-          formState,
-        );
+        const shape = diagramHandlers.editEntity(cellToEdit, serviceModel, formState);
 
         shape.set("sanitizedAttrs", sanitizedAttrs);
         setServiceOrderItems((prev) => {
@@ -169,7 +155,7 @@ export const EntityForm: React.FC<Props> = ({
         });
       }
     },
-    [cellToEdit, diagramHandlers, fields, serviceModel, setServiceOrderItems],
+    [cellToEdit, diagramHandlers, fields, serviceModel, setServiceOrderItems]
   );
 
   useEffect(() => {
@@ -184,11 +170,7 @@ export const EntityForm: React.FC<Props> = ({
     <>
       {fields && fields.length <= 0 && (
         <FlexItem>
-          <Alert
-            variant="info"
-            isInline
-            title={words("instanceComposer.formModal.noAttributes")}
-          />
+          <Alert variant="info" isInline title={words("instanceComposer.formModal.noAttributes")} />
         </FlexItem>
       )}
       <FlexItem flex={{ default: "flex_1" }}>
@@ -218,22 +200,12 @@ export const EntityForm: React.FC<Props> = ({
       {showButtons && (
         <Flex justifyContent={{ default: "justifyContentCenter" }}>
           <FlexItem>
-            <Button
-              variant="danger"
-              width={200}
-              onClick={onRemove}
-              isDisabled={!isRemovable}
-            >
+            <Button variant="danger" width={200} onClick={onRemove} isDisabled={!isRemovable}>
               {words("remove")}
             </Button>
           </FlexItem>
           <FlexItem>
-            <Button
-              variant="tertiary"
-              width={200}
-              isDisabled={!isDirty}
-              onClick={onCancel}
-            >
+            <Button variant="tertiary" width={200} isDisabled={!isDirty} onClick={onCancel}>
               {words("cancel")}
             </Button>
           </FlexItem>

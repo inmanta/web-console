@@ -47,11 +47,7 @@ function setup() {
           <DependencyProvider dependencies={dependencies}>
             <Page
               notificationDrawer={
-                <Drawer
-                  onClose={closeCallback}
-                  isDrawerOpen
-                  drawerRef={{ current: undefined }}
-                />
+                <Drawer onClose={closeCallback} isDrawerOpen drawerRef={{ current: undefined }} />
               }
               isNotificationDrawerExpanded={true}
               masthead={
@@ -96,7 +92,7 @@ const server = setupServer(
     }
 
     return HttpResponse.json(item);
-  }),
+  })
 );
 
 describe("Drawer", () => {
@@ -116,13 +112,9 @@ describe("Drawer", () => {
 
     render(component);
 
-    expect(
-      await screen.findByRole("generic", { name: "NotificationDrawer" }),
-    ).toBeVisible();
+    expect(await screen.findByRole("generic", { name: "NotificationDrawer" })).toBeVisible();
 
-    expect(
-      await screen.findAllByRole("listitem", { name: "NotificationItem" }),
-    ).toHaveLength(4);
+    expect(await screen.findAllByRole("listitem", { name: "NotificationItem" })).toHaveLength(4);
 
     await act(async() => {
       const results = await axe(document.body);
@@ -136,16 +128,12 @@ describe("Drawer", () => {
 
     render(component);
 
-    await userEvent.click(
-      await screen.findByRole("button", { name: "NotificationListActions" }),
-    );
+    await userEvent.click(await screen.findByRole("button", { name: "NotificationListActions" }));
 
     await userEvent.click(screen.getByRole("menuitem", { name: "Clear all" }));
 
     await waitFor(() => {
-      expect(
-        screen.queryAllByRole("listitem", { name: "NotificationItem" }),
-      ).toStrictEqual([]);
+      expect(screen.queryAllByRole("listitem", { name: "NotificationItem" })).toStrictEqual([]);
     });
 
     await act(async() => {
@@ -160,21 +148,15 @@ describe("Drawer", () => {
 
     render(component);
 
-    await userEvent.click(
-      await screen.findByRole("button", { name: "NotificationListActions" }),
-    );
+    await userEvent.click(await screen.findByRole("button", { name: "NotificationListActions" }));
 
-    await userEvent.click(
-      screen.getByRole("menuitem", { name: "Mark all as read" }),
-    );
+    await userEvent.click(screen.getByRole("menuitem", { name: "Mark all as read" }));
 
     const notifications = screen.getAllByRole("listitem", {
       name: "NotificationItem",
     });
 
-    expect(
-      await screen.findAllByRole("listitem", { name: "NotificationItem" }),
-    ).toHaveLength(4);
+    expect(await screen.findAllByRole("listitem", { name: "NotificationItem" })).toHaveLength(4);
 
     notifications.forEach(async(notification) => {
       expect(notification).toHaveTextContent("read");
@@ -230,9 +212,7 @@ describe("Drawer", () => {
 
     await userEvent.click(items[0]);
 
-    expect(history.location.pathname).toBe(
-      "/compilereports/f2c68117-24bd-43cf-a9dc-ce42b934a614",
-    );
+    expect(history.location.pathname).toBe("/compilereports/f2c68117-24bd-43cf-a9dc-ce42b934a614");
   });
 
   test("Given Drawer When user clicks a notification without an uri then nothing happens", async() => {
@@ -289,9 +269,7 @@ describe("Drawer", () => {
 
     await userEvent.click(actions);
 
-    await userEvent.click(
-      screen.getByRole("menuitem", { name: "Mark as unread" }),
-    );
+    await userEvent.click(screen.getByRole("menuitem", { name: "Mark as unread" }));
     const updatedItems = await screen.findAllByRole("listitem", {
       name: "NotificationItem",
     });
@@ -326,9 +304,7 @@ describe("Drawer", () => {
 
     await userEvent.click(screen.getByRole("menuitem", { name: "Clear" }));
 
-    expect(
-      await screen.findAllByRole("listitem", { name: "NotificationItem" }),
-    ).toHaveLength(3);
+    expect(await screen.findAllByRole("listitem", { name: "NotificationItem" })).toHaveLength(3);
 
     await act(async() => {
       const results = await axe(document.body);

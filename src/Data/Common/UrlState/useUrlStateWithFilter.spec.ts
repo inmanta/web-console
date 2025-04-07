@@ -2,11 +2,8 @@ import moment from "moment";
 import { handleUrlStateWithFilter } from "./useUrlStateWithFilter";
 
 const fromDate = {
-  search:
-    "?state.Inventory.filter.timestamp[0]=from__2021-10-11T22%3A30%3A00.000Z",
-  value: [
-    { operator: "from", date: moment("2021-10-11T22:30:00.000Z").toDate() },
-  ],
+  search: "?state.Inventory.filter.timestamp[0]=from__2021-10-11T22%3A30%3A00.000Z",
+  value: [{ operator: "from", date: moment("2021-10-11T22:30:00.000Z").toDate() }],
 };
 
 const fromAndToDate = {
@@ -24,8 +21,7 @@ const fromInt = {
 };
 
 const fromAndToInt = {
-  search:
-    "?state.Inventory.filter.version[0]=from__10&state.Inventory.filter.version[1]=to__20",
+  search: "?state.Inventory.filter.version[0]=from__10&state.Inventory.filter.version[1]=to__20",
   value: [
     { operator: "from", value: 10 },
     { operator: "to", value: 20 },
@@ -57,11 +53,11 @@ test.each`
         },
       },
       { pathname: "", search, hash: "" },
-      () => undefined,
+      () => undefined
     );
 
     expect(value).toEqual(expectedValue);
-  },
+  }
 );
 
 test("GIVEN handleUrlState with Filter WHEN search is empty THEN returns default value", async() => {
@@ -85,7 +81,7 @@ test("GIVEN handleUrlState with Filter WHEN search is empty THEN returns default
       },
     },
     { pathname: "", search: "", hash: "" },
-    () => undefined,
+    () => undefined
   );
 
   expect(value).toEqual({
@@ -115,7 +111,7 @@ test("GIVEN handleUrlState with Filter WHEN search is empty THEN returns default
       },
     },
     { pathname: "", search: "", hash: "" },
-    () => undefined,
+    () => undefined
   );
 
   expect(value2).toEqual({

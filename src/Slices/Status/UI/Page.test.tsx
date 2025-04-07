@@ -50,25 +50,22 @@ function setup(useMockArchiveHelper = false) {
   const client = new QueryClient();
   const store = getStoreInstance();
 
-  store.dispatch.serverStatus.setData(
-    RemoteData.success(ServerStatus.withoutFeatures),
-  );
+  store.dispatch.serverStatus.setData(RemoteData.success(ServerStatus.withoutFeatures));
   const apiHelper = new DeferredApiHelper();
   const getServerStatusQueryManager = GetServerStatusContinuousQueryManager(
     apiHelper,
     GetServerStatusStateHelper(store),
-    new StaticScheduler(),
+    new StaticScheduler()
   );
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolverImpl([getServerStatusQueryManager]),
+    new DynamicQueryManagerResolverImpl([getServerStatusQueryManager])
   );
 
-  const featureManager = new PrimaryFeatureManager(
-    GetServerStatusStateHelper(store),
-  );
+  const featureManager = new PrimaryFeatureManager(GetServerStatusStateHelper(store));
 
-  const archiveHelper: MockArchiveHelper | PrimaryArchiveHelper =
-    useMockArchiveHelper ? new MockArchiveHelper() : dependencies.archiveHelper;
+  const archiveHelper: MockArchiveHelper | PrimaryArchiveHelper = useMockArchiveHelper
+    ? new MockArchiveHelper()
+    : dependencies.archiveHelper;
 
   const component = (
     <QueryClientProvider client={client}>
@@ -121,17 +118,17 @@ describe("StatusPage", () => {
     expect(
       screen.getByRole("listitem", {
         name: "StatusItem-Inmanta Service Orchestrator",
-      }),
+      })
     ).toBeVisible();
     expect(
       screen.getByRole("listitem", {
         name: "StatusItem-lsm",
-      }),
+      })
     ).toBeVisible();
     expect(
       screen.getByRole("listitem", {
         name: "StatusItem-lsm.database",
-      }),
+      })
     ).toBeVisible();
 
     await act(async() => {
@@ -147,14 +144,10 @@ describe("StatusPage", () => {
     render(component);
 
     await act(async() => {
-      await apiHelper.resolve(
-        Either.right({ data: ServerStatus.withoutSupport }),
-      );
+      await apiHelper.resolve(Either.right({ data: ServerStatus.withoutSupport }));
     });
 
-    expect(
-      screen.queryByRole("button", { name: "DownloadArchiveButton" }),
-    ).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "DownloadArchiveButton" })).not.toBeInTheDocument();
 
     await act(async() => {
       const results = await axe(document.body);
@@ -172,9 +165,7 @@ describe("StatusPage", () => {
       await apiHelper.resolve(Either.right({ data: ServerStatus.withSupport }));
     });
 
-    expect(
-      screen.getByRole("button", { name: "DownloadArchiveButton" }),
-    ).toBeVisible();
+    expect(screen.getByRole("button", { name: "DownloadArchiveButton" })).toBeVisible();
 
     await act(async() => {
       const results = await axe(document.body);
@@ -189,7 +180,7 @@ describe("StatusPage", () => {
         await delay(100);
 
         return HttpResponse.json(ServerStatus.supportArchiveBase64);
-      }),
+      })
     );
     const { component, apiHelper } = setup();
 
@@ -203,20 +194,14 @@ describe("StatusPage", () => {
       name: "DownloadArchiveButton",
     });
 
-    expect(downloadButton).toHaveTextContent(
-      words("status.supportArchive.action.download"),
-    );
+    expect(downloadButton).toHaveTextContent(words("status.supportArchive.action.download"));
 
     await userEvent.click(downloadButton);
 
-    expect(downloadButton).toHaveTextContent(
-      words("status.supportArchive.action.downloading"),
-    );
+    expect(downloadButton).toHaveTextContent(words("status.supportArchive.action.downloading"));
 
     await waitFor(() =>
-      expect(downloadButton).toHaveTextContent(
-        words("status.supportArchive.action.download"),
-      ),
+      expect(downloadButton).toHaveTextContent(words("status.supportArchive.action.download"))
     );
 
     await act(async() => {
@@ -232,7 +217,7 @@ describe("StatusPage", () => {
         await delay(100);
 
         return HttpResponse.json(ServerStatus.supportArchiveBase64);
-      }),
+      })
     );
     const { component, apiHelper, archiveHelper } = setup(true);
 
@@ -245,23 +230,17 @@ describe("StatusPage", () => {
       name: "DownloadArchiveButton",
     });
 
-    expect(downloadButton).toHaveTextContent(
-      words("status.supportArchive.action.download"),
-    );
+    expect(downloadButton).toHaveTextContent(words("status.supportArchive.action.download"));
 
     await userEvent.click(downloadButton);
 
-    expect(downloadButton).toHaveTextContent(
-      words("status.supportArchive.action.downloading"),
-    );
+    expect(downloadButton).toHaveTextContent(words("status.supportArchive.action.downloading"));
 
     (archiveHelper as MockArchiveHelper).resolve(
-      new Blob(["testing"], { type: "application/octet-stream" }),
+      new Blob(["testing"], { type: "application/octet-stream" })
     );
     await waitFor(() =>
-      expect(downloadButton).toHaveTextContent(
-        words("status.supportArchive.action.download"),
-      ),
+      expect(downloadButton).toHaveTextContent(words("status.supportArchive.action.download"))
     );
 
     await act(async() => {
@@ -275,7 +254,7 @@ describe("StatusPage", () => {
     server.use(
       http.get("/api/v2/support", () => {
         return HttpResponse.json({ message: "error" }, { status: 500 });
-      }),
+      })
     );
     const { component, apiHelper } = setup();
 
@@ -289,9 +268,7 @@ describe("StatusPage", () => {
       name: "DownloadArchiveButton",
     });
 
-    expect(downloadButton).toHaveTextContent(
-      words("status.supportArchive.action.download"),
-    );
+    expect(downloadButton).toHaveTextContent(words("status.supportArchive.action.download"));
 
     await userEvent.click(downloadButton);
 

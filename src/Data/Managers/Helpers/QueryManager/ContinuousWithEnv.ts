@@ -16,13 +16,7 @@ import {
   StateHelperWithEnv,
 } from "@/Core";
 import { DependencyContext } from "@/UI";
-import {
-  Data,
-  GetUniqueWithEnv,
-  GetDependenciesWithEnv,
-  GetUrlWithEnv,
-  ToUsed,
-} from "./types";
+import { Data, GetUniqueWithEnv, GetDependenciesWithEnv, GetUrlWithEnv, ToUsed } from "./types";
 import { usePrevious } from "./usePrevious";
 import { urlEncodeParams } from "./utils";
 
@@ -34,17 +28,17 @@ export function ContinuousWithEnv<Kind extends Query.Kind>(
   getDependencies: GetDependenciesWithEnv<Kind>,
   kind: Kind,
   getUrl: GetUrlWithEnv<Kind>,
-  toUsed: ToUsed<Kind>,
+  toUsed: ToUsed<Kind>
 ): ContinuousQueryManager<Kind> {
   async function update(
     query: Query.SubQuery<Kind>,
     url: string,
-    environment: string,
+    environment: string
   ): Promise<void> {
     stateHelper.set(
       RemoteData.fromEither(await apiHelper.get(url, environment)),
       query,
-      environment,
+      environment
     );
   }
 
@@ -58,12 +52,11 @@ export function ContinuousWithEnv<Kind extends Query.Kind>(
       () => {
         setUrl(getUrl(urlEncodeParams(query), environment));
       },
-      getDependencies(query, environment),
+      getDependencies(query, environment)
     );
 
     const task = {
-      effect: async() =>
-        RemoteData.fromEither(await apiHelper.get(url, environment)),
+      effect: async() => RemoteData.fromEither(await apiHelper.get(url, environment)),
       update: (data) => stateHelper.set(data, query, environment),
     };
 
@@ -72,9 +65,7 @@ export function ContinuousWithEnv<Kind extends Query.Kind>(
       // If the environment changed, use the url derived from the query
       // Otherwise the url has changed, use it to not lose e.g. paging state
       const urlToUse =
-        environment !== previousEnvironment
-          ? getUrl(urlEncodeParams(query), environment)
-          : url;
+        environment !== previousEnvironment ? getUrl(urlEncodeParams(query), environment) : url;
 
       update(query, urlToUse, environment);
       scheduler.register(getUnique(query, environment), task);
@@ -87,16 +78,13 @@ export function ContinuousWithEnv<Kind extends Query.Kind>(
     return [
       RemoteData.mapSuccess(
         (data) => toUsed(data, setUrl),
-        stateHelper.useGetHooked(query, environment),
+        stateHelper.useGetHooked(query, environment)
       ),
       () => update(query, url, environment),
     ];
   }
 
-  function matches(
-    query: Query.SubQuery<Kind>,
-    matchingKind: QueryManagerKind,
-  ): boolean {
+  function matches(query: Query.SubQuery<Kind>, matchingKind: QueryManagerKind): boolean {
     return query.kind === kind && matchingKind === "Continuous";
   }
 

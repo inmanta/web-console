@@ -50,9 +50,7 @@ describe("HistorySection infinite query", () => {
 
     render(component);
 
-    expect(
-      screen.getByRole("grid", { name: "VersionHistoryTable" }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("grid", { name: "VersionHistoryTable" })).toBeInTheDocument();
 
     const buttonPrevious = screen.queryByRole("button", {
       name: "Load previous",

@@ -1,8 +1,4 @@
-import {
-  UseBaseMutationResult,
-  useMutation,
-  UseMutationOptions,
-} from "@tanstack/react-query";
+import { UseBaseMutationResult, useMutation, UseMutationOptions } from "@tanstack/react-query";
 import { usePostWithoutEnv } from "../../helpers";
 
 interface Body {
@@ -25,7 +21,7 @@ interface Params {
  * @returns {Promise<void>} Function to trigger a compile with optional update parameter
  */
 export const useTriggerCompile = (
-  options?: UseMutationOptions<void, Error, Params>,
+  options?: UseMutationOptions<void, Error, Params>
 ): UseBaseMutationResult<void, Error, Params> => {
   const post = usePostWithoutEnv()<Body>;
 

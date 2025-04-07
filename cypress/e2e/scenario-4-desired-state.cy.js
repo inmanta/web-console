@@ -78,9 +78,7 @@ describe("Scenario 4 Desired State", () => {
     cy.get('[aria-label="Select-environment-test"]').click();
 
     if (isIso) {
-      cy.get('[aria-label="Sidebar-Navigation-Item"]')
-        .contains("Service Catalog")
-        .click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       cy.get("#basic-service").contains("Show inventory").click();
       cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
 
@@ -103,9 +101,7 @@ describe("Scenario 4 Desired State", () => {
         timeout: 20000,
       }).should("to.be.visible");
 
-      cy.get('[aria-label="Sidebar-Navigation-Item"]')
-        .contains("Service Catalog")
-        .click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       cy.get("#basic-service").contains("Show inventory").click();
 
       // Should show the chart
@@ -118,9 +114,7 @@ describe("Scenario 4 Desired State", () => {
     }
 
     //got to desired stated page
-    cy.get('[aria-label="Sidebar-Navigation-Item"]')
-      .contains("Desired State")
-      .click();
+    cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Desired State").click();
 
     if (!isIso) {
       // Hit the compile button; OSS don't get compiled on initial state.
@@ -143,10 +137,7 @@ describe("Scenario 4 Desired State", () => {
       cy.get('[aria-label="DesiredStatesView-Success"]', { timeout: 60000 })
         .find("tbody", { timeout: 60000 })
         .should("have.length", 3);
-      cy.get("tbody")
-        .eq(0)
-        .should("contain", "lsm_export")
-        .and("contain", "active");
+      cy.get("tbody").eq(0).should("contain", "lsm_export").and("contain", "active");
 
       cy.wrap(3).as("TABLE_LENGTH");
     }
@@ -159,16 +150,10 @@ describe("Scenario 4 Desired State", () => {
       .find("tbody")
       .should("have.length", isIso ? 2 : 5);
 
-    cy.get("tbody")
-      .eq(0)
-      .should("contain", "frontend_model::TestResource")
-      .and("contain", "0");
+    cy.get("tbody").eq(0).should("contain", "frontend_model::TestResource").and("contain", "0");
 
     if (isIso) {
-      cy.get("tbody")
-        .eq(1)
-        .should("contain", "lsm::LifecycleTransfer")
-        .and("contain", "1");
+      cy.get("tbody").eq(1).should("contain", "lsm::LifecycleTransfer").and("contain", "1");
     }
 
     // filter on value : default to have same table on iso and oss
@@ -178,7 +163,7 @@ describe("Scenario 4 Desired State", () => {
     cy.get("tbody").eq(0).contains("Show Details").click();
     cy.get(".pf-v6-c-content--small").should(
       "have.text",
-      "frontend_model::TestResource[internal,name=default-0001]",
+      "frontend_model::TestResource[internal,name=default-0001]"
     );
 
     // Intercept the update filter call to make sure it is cleared before setting a new filter to avoid race condition.
@@ -191,9 +176,7 @@ describe("Scenario 4 Desired State", () => {
     cy.get('[aria-label="BreadcrumbItem"]').contains("Details").click();
 
     // Clear the filter
-    cy.get("button", { timeout: 30000 })
-      .contains("Clear all filters")
-      .click({ force: true });
+    cy.get("button", { timeout: 30000 }).contains("Clear all filters").click({ force: true });
 
     cy.wait("@FILTER_UPDATE");
 
@@ -240,19 +223,13 @@ describe("Scenario 4 Desired State", () => {
           .contains("requires")
           .closest(".pf-v6-c-description-list__group")
           .find(".pf-v6-c-description-list__description")
-          .should(
-            "include.text",
-            "frontend_model::TestResource[internal,name=default-0001]",
-          );
+          .should("include.text", "frontend_model::TestResource[internal,name=default-0001]");
 
         cy.get(".pf-v6-c-description-list__term")
           .contains("resources")
           .closest(".pf-v6-c-description-list__group")
           .find(".pf-v6-c-description-list__description")
-          .should(
-            "include.text",
-            '"frontend_model::TestResource[internal,name=default-0001]"',
-          );
+          .should("include.text", '"frontend_model::TestResource[internal,name=default-0001]"');
 
         cy.get(".pf-v6-c-description-list__term")
           .contains("send_event")
@@ -286,10 +263,7 @@ describe("Scenario 4 Desired State", () => {
     cy.get("#cancel").click();
 
     cy.get("@TABLE_LENGTH").then((length) => {
-      cy.get("tbody", { timeout: 30000 }).should(
-        "have.length",
-        isIso ? length : length + 1,
-      );
+      cy.get("tbody", { timeout: 30000 }).should("have.length", isIso ? length : length + 1);
     });
 
     cy.get("tbody").eq(1).find('[aria-label="actions-toggle"]').click();
@@ -298,25 +272,16 @@ describe("Scenario 4 Desired State", () => {
 
     // The active version should remain in the table.
     cy.get("@TABLE_LENGTH").then((length) => {
-      cy.get("tbody", { timeout: 30000 }).should(
-        "have.length",
-        isIso ? length - 1 : length,
-      );
+      cy.get("tbody", { timeout: 30000 }).should("have.length", isIso ? length - 1 : length);
     });
 
-    cy.get("tbody")
-      .eq(0)
-      .find('[data-label="Status"]')
-      .should("have.text", "active");
+    cy.get("tbody").eq(0).find('[data-label="Status"]').should("have.text", "active");
 
     // Recompile to get at least one older version ready to promote.
     cy.get("button", { timeout: 60000 }).contains("Recompile").click();
 
     cy.get("@TABLE_LENGTH").then((length) => {
-      cy.get("tbody", { timeout: 30000 }).should(
-        "have.length",
-        isIso ? length : length + 1,
-      );
+      cy.get("tbody", { timeout: 30000 }).should("have.length", isIso ? length : length + 1);
 
       // the first element in the table shouldn't be available to promote, since it is already active.
       cy.get("tbody").eq(0).find('[aria-label="actions-toggle"]').click();
@@ -324,19 +289,13 @@ describe("Scenario 4 Desired State", () => {
     });
 
     // Update the settings to disable the auto-deploy setting.
-    cy.get('[aria-label="Sidebar-Navigation-Item"]')
-      .contains("Settings")
-      .click();
+    cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Settings").click();
     cy.get(".pf-v6-c-tabs__link").contains("Configuration").click();
     cy.get('[aria-label="Row-auto_deploy"]').find(".pf-v6-c-switch").click();
-    cy.get('[aria-label="Row-auto_deploy"]')
-      .find('[aria-label="SaveAction"]')
-      .click();
+    cy.get('[aria-label="Row-auto_deploy"]').find('[aria-label="SaveAction"]').click();
 
     // Go back to the desired state page.
-    cy.get('[aria-label="Sidebar-Navigation-Item"]')
-      .contains("Desired State")
-      .click();
+    cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Desired State").click();
 
     // Recompile, to get a candidate version.
     cy.get("button", { timeout: 30000 }).contains("Recompile").click();
@@ -351,31 +310,19 @@ describe("Scenario 4 Desired State", () => {
 
       cy.get("tbody").eq(0).find('[aria-label="actions-toggle"]').click();
       cy.get('[role="menuitem"]').contains("Promote").click();
-      cy.get("tbody")
-        .eq(0)
-        .find('[data-label="Status"]')
-        .should("have.text", "active");
+      cy.get("tbody").eq(0).find('[data-label="Status"]').should("have.text", "active");
 
-      cy.get("tbody")
-        .eq(1)
-        .find('[data-label="Status"]')
-        .should("have.text", "retired");
+      cy.get("tbody").eq(1).find('[data-label="Status"]').should("have.text", "retired");
     });
 
     // Turn back the auto-deploy setting to true.
-    cy.get('[aria-label="Sidebar-Navigation-Item"]')
-      .contains("Settings")
-      .click();
+    cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Settings").click();
     cy.get(".pf-v6-c-tabs__link").contains("Configuration").click();
     cy.get('[aria-label="Row-auto_deploy"]').find(".pf-v6-c-switch").click();
-    cy.get('[aria-label="Row-auto_deploy"]')
-      .find('[aria-label="SaveAction"]')
-      .click();
+    cy.get('[aria-label="Row-auto_deploy"]').find('[aria-label="SaveAction"]').click();
 
     // Get back to the Desired State page.
-    cy.get('[aria-label="Sidebar-Navigation-Item"]')
-      .contains("Desired State")
-      .click();
+    cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Desired State").click();
 
     cy.get("tbody").eq(0).find('[aria-label="actions-toggle"]').click();
     cy.get('[role="menuitem"]').contains("Select for compare").click();
@@ -383,9 +330,7 @@ describe("Scenario 4 Desired State", () => {
     cy.get('[role="menuitem"]').contains("Compare with selected").click();
     cy.get("h1").eq(0).should("have.text", "Compare");
     //go back
-    cy.get('[aria-label="Sidebar-Navigation-Item"]')
-      .contains("Desired State")
-      .click();
+    cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Desired State").click();
 
     cy.get("tbody")
       .eq(isIso ? -2 : -1)
@@ -395,24 +340,17 @@ describe("Scenario 4 Desired State", () => {
     cy.get('[role="menuitem"]').contains("Compare with current state").click();
 
     cy.get("h1").should("have.text", "Compliance Check");
-    cy.get('[aria-label="ReportListSelect"]')
-      .contains("No Dry runs exist")
-      .should("be.visible");
+    cy.get('[aria-label="ReportListSelect"]').contains("No Dry runs exist").should("be.visible");
     cy.get(".pf-v6-c-button").contains("Perform dry run").click();
 
     cy.get('[aria-label="StatusFilter"]').click();
     cy.get('[role="option"]').contains("unmodified").click();
     cy.get('[aria-label="StatusFilter"]').click();
 
-    cy.get('[aria-label="DiffItemList"]', { timeout: 20000 }).should(
-      "be.visible",
-    );
+    cy.get('[aria-label="DiffItemList"]', { timeout: 20000 }).should("be.visible");
 
     // make sure all the rows are in the view before toggling them open.
-    cy.get('[aria-label="Details"]', { timeout: 20000 }).should(
-      "have.length",
-      isIso ? 2 : 5,
-    );
+    cy.get('[aria-label="Details"]', { timeout: 20000 }).should("have.length", isIso ? 2 : 5);
     cy.get('[aria-label="DiffItemList"]').within(() => {
       if (isIso) {
         cy.get('[aria-label="Details"]').eq(0).click();
@@ -427,30 +365,24 @@ describe("Scenario 4 Desired State", () => {
     });
 
     // expect diff module to say No changes have been found
-    cy.get(".pf-v6-c-card__expandable-content", { timeout: 20000 }).should(
-      ($expandableRow) => {
-        expect($expandableRow).to.have.length(isIso ? 2 : 5);
+    cy.get(".pf-v6-c-card__expandable-content", { timeout: 20000 }).should(($expandableRow) => {
+      expect($expandableRow).to.have.length(isIso ? 2 : 5);
 
-        expect($expandableRow.eq(0), "first-row").to.have.text(
-          "This resource has not been modified.",
+      expect($expandableRow.eq(0), "first-row").to.have.text(
+        "This resource has not been modified."
+      );
+
+      if (isIso) {
+        expect($expandableRow.eq(1), "second-row").to.contain("next_version-3+4");
+      } else {
+        expect($expandableRow.eq(1), "second-row").to.have.text(
+          "This resource has not been modified."
         );
-
-        if (isIso) {
-          expect($expandableRow.eq(1), "second-row").to.contain(
-            "next_version-3+4",
-          );
-        } else {
-          expect($expandableRow.eq(1), "second-row").to.have.text(
-            "This resource has not been modified.",
-          );
-        }
-      },
-    );
+      }
+    });
 
     // go back to desired state page
-    cy.get('[aria-label="Sidebar-Navigation-Item"]')
-      .contains("Desired State")
-      .click();
+    cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Desired State").click();
 
     // click on version latest kebab menu
     cy.get("tbody").eq(0).find('[aria-label="actions-toggle"]').click();
@@ -462,14 +394,9 @@ describe("Scenario 4 Desired State", () => {
     cy.get("h1").should("have.text", "Compliance Check");
 
     // Expect diff-module to be empty
-    cy.get(".pf-v6-c-page__main-section")
-      .eq(1)
-      .children()
-      .should("have.length", 1);
+    cy.get(".pf-v6-c-page__main-section").eq(1).children().should("have.length", 1);
 
-    cy.get('[aria-label="ReportListSelect"]')
-      .contains("No Dry runs exist")
-      .should("be.visible");
+    cy.get('[aria-label="ReportListSelect"]').contains("No Dry runs exist").should("be.visible");
 
     // perform dry-run
     cy.get(".pf-v6-c-button").contains("Perform dry run").click();
@@ -479,10 +406,7 @@ describe("Scenario 4 Desired State", () => {
     cy.get('[aria-label="StatusFilter"]').click();
 
     // make sure all the rows are in the view before toggling them open.
-    cy.get('[aria-label="Details"]', { timeout: 20000 }).should(
-      "have.length",
-      isIso ? 2 : 5,
-    );
+    cy.get('[aria-label="Details"]', { timeout: 20000 }).should("have.length", isIso ? 2 : 5);
     cy.get('[aria-label="DiffItemList"]').within(() => {
       if (isIso) {
         cy.get('[aria-label="Details"]').eq(0).click();
@@ -497,20 +421,16 @@ describe("Scenario 4 Desired State", () => {
     });
 
     // await the end of the dry-run and expect to find two rows with expandable content.
-    cy.get(".pf-v6-c-card__expandable-content", { timeout: 20000 }).should(
-      ($expandableRow) => {
-        expect($expandableRow).to.have.length(isIso ? 2 : 5);
-        expect($expandableRow.eq(0), "first-row").to.have.text(
-          "This resource has not been modified.",
-        );
+    cy.get(".pf-v6-c-card__expandable-content", { timeout: 20000 }).should(($expandableRow) => {
+      expect($expandableRow).to.have.length(isIso ? 2 : 5);
+      expect($expandableRow.eq(0), "first-row").to.have.text(
+        "This resource has not been modified."
+      );
 
-        if (isIso) {
-          expect($expandableRow.eq(1), "second-row").to.contain(
-            "next_version-3+4",
-          );
-        }
-      },
-    );
+      if (isIso) {
+        expect($expandableRow.eq(1), "second-row").to.contain("next_version-3+4");
+      }
+    });
 
     // click on filter by status dropdown
     cy.get('[aria-label="StatusFilter"]').click();
@@ -521,23 +441,17 @@ describe("Scenario 4 Desired State", () => {
 
     // expect diff-module to only show the modified file.Only for ISO, the table would be empty on OSS.
     if (isIso) {
-      cy.get(".pf-v6-c-card__expandable-content", { timeout: 20000 }).should(
-        ($expandableRow) => {
-          expect($expandableRow).to.have.length(1);
+      cy.get(".pf-v6-c-card__expandable-content", { timeout: 20000 }).should(($expandableRow) => {
+        expect($expandableRow).to.have.length(1);
 
-          if (isIso) {
-            expect($expandableRow.eq(0), "first-row").to.contain(
-              "next_version-3+4",
-            );
-          }
-        },
-      );
+        if (isIso) {
+          expect($expandableRow.eq(0), "first-row").to.contain("next_version-3+4");
+        }
+      });
     }
 
     // go back to desired state
-    cy.get('[aria-label="Sidebar-Navigation-Item"]')
-      .contains("Desired State")
-      .click();
+    cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Desired State").click();
 
     // click again on kebab menu of version 5
     cy.get("tbody").eq(0).find('[aria-label="actions-toggle"]').click();
@@ -560,20 +474,16 @@ describe("Scenario 4 Desired State", () => {
       }
     });
     // expect the view to still contain the diff of the last dry-run comparison
-    cy.get(".pf-v6-c-card__expandable-content", { timeout: 20000 }).should(
-      ($expandableRow) => {
-        expect($expandableRow).to.have.length(isIso ? 2 : 5);
-        expect($expandableRow.eq(0), "first-row").to.have.text(
-          "This resource has not been modified.",
-        );
+    cy.get(".pf-v6-c-card__expandable-content", { timeout: 20000 }).should(($expandableRow) => {
+      expect($expandableRow).to.have.length(isIso ? 2 : 5);
+      expect($expandableRow.eq(0), "first-row").to.have.text(
+        "This resource has not been modified."
+      );
 
-        if (isIso) {
-          expect($expandableRow.eq(1), "second-row").to.contain(
-            "next_version-3+4",
-          );
-        }
-      },
-    );
+      if (isIso) {
+        expect($expandableRow.eq(1), "second-row").to.contain("next_version-3+4");
+      }
+    });
 
     // click on Perform dry run
     cy.get(".pf-v6-c-button").contains("Perform dry run").click();

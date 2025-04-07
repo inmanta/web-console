@@ -10,9 +10,9 @@ test.each`
     const [value] = handleUrlStateWithSort(
       { default: { name: "timestamp", order: "desc" }, route: "Inventory" },
       { pathname: "", search, hash: "" },
-      () => undefined,
+      () => undefined
     );
 
     expect(value).toEqual(expectedValue);
-  },
+  }
 );

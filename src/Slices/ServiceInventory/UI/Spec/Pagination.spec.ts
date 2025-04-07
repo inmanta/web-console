@@ -18,8 +18,7 @@ test("GIVEN ServiceInventory WHEN on 2nd page with outdated 1st page and user cl
   expect(nextButton).toBeEnabled();
   await userEvent.click(nextButton);
 
-  const refreshedRowsOnPage1 =
-    await screen.findAllByLabelText("InstanceRow-Intro");
+  const refreshedRowsOnPage1 = await screen.findAllByLabelText("InstanceRow-Intro");
 
   expect(refreshedRowsOnPage1.length).toEqual(1);
 
@@ -32,8 +31,7 @@ test("GIVEN ServiceInventory WHEN on 2nd page with outdated 1st page and user cl
   //server is set up in a way that if call through prev link was made, it would return different result - see PaginationServer and getPaginationHandlers for more info
   await userEvent.click(prevButton);
 
-  const refreshedRowsOnPage2 =
-    await screen.findAllByLabelText("InstanceRow-Intro");
+  const refreshedRowsOnPage2 = await screen.findAllByLabelText("InstanceRow-Intro");
 
   expect(refreshedRowsOnPage2.length).toEqual(4);
 

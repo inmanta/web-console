@@ -10,11 +10,7 @@ import {
 import { Query } from "@/Core";
 import { useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import {
-  EmptyView,
-  OldPaginationWidget,
-  RemoteDataView,
-} from "@/UI/Components";
+import { EmptyView, OldPaginationWidget, RemoteDataView } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { MomentDatePresenter } from "@/UI/Utils";
 import { words } from "@/UI/words";
@@ -27,10 +23,7 @@ interface Props {
   details: Query.UsedApiData<"GetResourceDetails">;
 }
 
-export const ResourceHistoryView: React.FC<Props> = ({
-  resourceId,
-  details,
-}) => {
+export const ResourceHistoryView: React.FC<Props> = ({ resourceId, details }) => {
   const { queryResolver } = useContext(DependencyContext);
 
   const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({
@@ -90,9 +83,7 @@ export const ResourceHistoryView: React.FC<Props> = ({
               );
             }
 
-            const tablePresenter = new ResourceHistoryTablePresenter(
-              new MomentDatePresenter(),
-            );
+            const tablePresenter = new ResourceHistoryTablePresenter(new MomentDatePresenter());
             const rows = tablePresenter.createRows(history.data);
 
             return (

@@ -61,10 +61,7 @@ export const DictEditor: React.FC<Props> = ({
 };
 
 const getEntries = (value: Dict): Entry[] => {
-  const entries: Entry[] = Object.entries(value).map(([k, v]) => [
-    k,
-    v.toString(),
-  ]);
+  const entries: Entry[] = Object.entries(value).map(([k, v]) => [k, v.toString()]);
 
   return entries.sort();
 };

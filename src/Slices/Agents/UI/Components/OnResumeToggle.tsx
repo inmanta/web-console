@@ -17,8 +17,7 @@ export const OnResumeToggle: React.FC<Props> = ({ name, unpauseOnResume }) => {
     name,
     action: unpauseOnResume ? "keep_paused_on_resume" : "unpause_on_resume",
   });
-  const { filter, sort, pageSize, currentPage, setErrorMessage } =
-    useContext(GetAgentsContext);
+  const { filter, sort, pageSize, currentPage, setErrorMessage } = useContext(GetAgentsContext);
   const onChange = async() => {
     const result = await agentActionTrigger({
       kind: "GetAgents",

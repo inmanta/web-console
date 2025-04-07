@@ -1,11 +1,6 @@
 import React from "react";
 import { TextInput } from "@patternfly/react-core";
-import {
-  EditableField,
-  EditViewComponent,
-  FieldProps,
-  StaticViewComponent,
-} from "./EditableField";
+import { EditableField, EditViewComponent, FieldProps, StaticViewComponent } from "./EditableField";
 import { InlineValue } from "./InlineFillers";
 
 export const EditableTextField: React.FC<FieldProps> = ({

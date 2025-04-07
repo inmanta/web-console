@@ -8,21 +8,12 @@ type EnvironmentSettingsData = RemoteData.Type<
 
 export interface EnvironmentSlice {
   environments: RemoteData.Type<string, FlatEnvironment[]>;
-  setEnvironments: Action<
-    EnvironmentSlice,
-    RemoteData.Type<string, FlatEnvironment[]>
-  >;
+  setEnvironments: Action<EnvironmentSlice, RemoteData.Type<string, FlatEnvironment[]>>;
   environmentsWithDetails: RemoteData.Type<string, FlatEnvironment[]>;
-  setEnvironmentsWithDetails: Action<
-    EnvironmentSlice,
-    RemoteData.Type<string, FlatEnvironment[]>
-  >;
+  setEnvironmentsWithDetails: Action<EnvironmentSlice, RemoteData.Type<string, FlatEnvironment[]>>;
   environmentDetailsById: Record<
     string,
-    RemoteData.Type<
-      Query.Error<"GetEnvironmentDetails">,
-      Query.Data<"GetEnvironmentDetails">
-    >
+    RemoteData.Type<Query.Error<"GetEnvironmentDetails">, Query.Data<"GetEnvironmentDetails">>
   >;
   setEnvironmentDetailsById: Action<
     EnvironmentSlice,
@@ -42,19 +33,13 @@ export interface EnvironmentSlice {
     EnvironmentSlice,
     {
       id: string;
-      value: RemoteData.Type<
-        Query.Error<"GetMetrics">,
-        Query.Data<"GetMetrics">
-      >;
+      value: RemoteData.Type<Query.Error<"GetMetrics">, Query.Data<"GetMetrics">>;
     }
   >;
 
   environmentDetailsWithIconById: Record<
     string,
-    RemoteData.Type<
-      Query.Error<"GetEnvironmentDetails">,
-      Query.Data<"GetEnvironmentDetails">
-    >
+    RemoteData.Type<Query.Error<"GetEnvironmentDetails">, Query.Data<"GetEnvironmentDetails">>
   >;
   setEnvironmentDetailsWithIconById: Action<
     EnvironmentSlice,
@@ -108,7 +93,7 @@ export const environmentSlice: EnvironmentSlice = {
 
 function mergeData(
   prev: EnvironmentSettingsData,
-  next: EnvironmentSettingsData,
+  next: EnvironmentSettingsData
 ): EnvironmentSettingsData {
   if (RemoteData.isSuccess(prev) && RemoteData.isSuccess(next)) {
     return RemoteData.success({

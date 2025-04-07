@@ -4,11 +4,7 @@ import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { EnvironmentDetails, RemoteData } from "@/Core";
-import {
-  CommandManagerResolverImpl,
-  CommandResolverImpl,
-  getStoreInstance,
-} from "@/Data";
+import { CommandManagerResolverImpl, CommandResolverImpl, getStoreInstance } from "@/Data";
 import { ServiceInventoryContext } from "@/Slices/ServiceInventory/UI/ServiceInventory";
 import { DeferredApiHelper, dependencies, ServiceInstance } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
@@ -33,12 +29,10 @@ function setup() {
     value: RemoteData.success({ halted: false } as EnvironmentDetails),
   });
 
-  dependencies.environmentModifier.setEnvironment(
-    ServiceInstance.a.environment,
-  );
+  dependencies.environmentModifier.setEnvironment(ServiceInstance.a.environment);
 
   const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolverImpl(storeInstance, apiHelper),
+    new CommandManagerResolverImpl(storeInstance, apiHelper)
   );
 
   return {
@@ -67,8 +61,7 @@ function setup() {
                 <DeleteAction
                   id={ServiceInstance.a.id}
                   instance_identity={
-                    ServiceInstance.a.service_identity_attribute_value ??
-                    ServiceInstance.a.id
+                    ServiceInstance.a.service_identity_attribute_value ?? ServiceInstance.a.id
                   }
                   version={ServiceInstance.a.version}
                   isDisabled={isDisabled}
@@ -141,8 +134,6 @@ describe("DeleteModal ", () => {
       });
     });
     rerender(component(false));
-    expect(
-      await screen.findByRole("menuitem", { name: words("delete") }),
-    ).toBeDisabled();
+    expect(await screen.findByRole("menuitem", { name: words("delete") })).toBeDisabled();
   });
 });

@@ -13,20 +13,10 @@ export const ConfirmUserActionForm: React.FunctionComponent<{
   return (
     <Form onSubmit={preventDefault}>
       <ActionGroup>
-        <Button
-          variant="primary"
-          id="submit"
-          data-testid="dialog-submit"
-          onClick={onSubmit}
-        >
+        <Button variant="primary" id="submit" data-testid="dialog-submit" onClick={onSubmit}>
           {words("yes")}
         </Button>
-        <Button
-          variant="secondary"
-          id="cancel"
-          data-testid="dialog-cancel"
-          onClick={onCancel}
-        >
+        <Button variant="secondary" id="cancel" data-testid="dialog-cancel" onClick={onCancel}>
           {words("no")}
         </Button>
       </ActionGroup>

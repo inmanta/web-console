@@ -1,10 +1,7 @@
 import { Action, action } from "easy-peasy";
 import { RemoteData, Query } from "@/Core";
 
-type Data = RemoteData.Type<
-  Query.Error<"GetParameters">,
-  Query.Data<"GetParameters">
->;
+type Data = RemoteData.Type<Query.Error<"GetParameters">, Query.Data<"GetParameters">>;
 
 export interface ParametersSlice {
   listByEnv: Record<string, Data>;

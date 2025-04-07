@@ -24,9 +24,7 @@ test("BaseApiHelper.post executes a POST request with correct url & env", async(
   const env = "environment_a";
 
   fetchMock.mockResponse(JSON.stringify({ data: [] }));
-  expect(await apiHelper.post(url, env, {})).toEqual(
-    Either.right({ data: [] }),
-  );
+  expect(await apiHelper.post(url, env, {})).toEqual(Either.right({ data: [] }));
 
   const [receivedUrl, requestInit] = fetchMock.mock.calls[0];
 
@@ -50,8 +48,8 @@ test("BaseApiHelper.get handles a failed a GET request", async() => {
   //Polyfill required for msw changed 400 response text from 'Bad Request' to empty string
   expect(response).toEqual(
     Either.left(
-      "The following error occured while communicating with the server: 400  \nSomething happened",
-    ),
+      "The following error occured while communicating with the server: 400  \nSomething happened"
+    )
   );
 });
 

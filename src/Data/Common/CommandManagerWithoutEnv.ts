@@ -1,12 +1,9 @@
 import { Command, CommandManager } from "@/Core";
 
-export class CommandManagerWithoutEnv<Kind extends Command.Kind>
-implements CommandManager {
+export class CommandManagerWithoutEnv<Kind extends Command.Kind> implements CommandManager {
   constructor(
     private readonly kind: Kind,
-    private readonly customGetTrigger: (
-      command: Command.SubCommand<Kind>,
-    ) => Command.Trigger<Kind>,
+    private readonly customGetTrigger: (command: Command.SubCommand<Kind>) => Command.Trigger<Kind>
   ) {}
 
   matches(command: Command.SubCommand<Kind>): boolean {

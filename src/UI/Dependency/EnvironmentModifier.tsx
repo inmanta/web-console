@@ -11,9 +11,7 @@ export function EnvironmentModifierImpl(): EnvironmentModifier {
   let environment: Maybe.Type<string> = Maybe.none();
 
   function useCurrentEnvironment(): EnvironmentDetails | null {
-    const storeState = useStoreState(
-      (state) => state.environment.environmentDetailsById,
-    );
+    const storeState = useStoreState((state) => state.environment.environmentDetailsById);
 
     if (Maybe.isSome(environment)) {
       const state = storeState[environment.value];
@@ -27,9 +25,7 @@ export function EnvironmentModifierImpl(): EnvironmentModifier {
   }
 
   function useEnvironmentSettings(): EnvironmentSettings.EnvironmentSettings | null {
-    const storeState = useStoreState(
-      (state) => state.environment.settingsByEnv,
-    );
+    const storeState = useStoreState((state) => state.environment.settingsByEnv);
 
     if (Maybe.isSome(environment)) {
       const state = storeState[environment.value];
@@ -54,14 +50,11 @@ export function EnvironmentModifierImpl(): EnvironmentModifier {
     return environmentDetails.halted;
   }
 
-  function useSetting(
-    settingName: keyof EnvironmentSettings.DefinitionMap,
-  ): boolean {
+  function useSetting(settingName: keyof EnvironmentSettings.DefinitionMap): boolean {
     const environmentDetails = useCurrentEnvironment();
     const environmentSettings = useEnvironmentSettings();
 
-    if (environmentDetails === null || environmentSettings === null)
-      return false;
+    if (environmentDetails === null || environmentSettings === null) return false;
 
     if (
       environmentDetails.settings[settingName] !== undefined &&

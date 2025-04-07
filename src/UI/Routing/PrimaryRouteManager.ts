@@ -1,9 +1,4 @@
-import {
-  generatePath,
-  matchPath,
-  PathMatch,
-  useLocation,
-} from "react-router-dom";
+import { generatePath, matchPath, PathMatch, useLocation } from "react-router-dom";
 import {
   RouteDictionary,
   RouteManager,
@@ -155,16 +150,10 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
     return routeDictionary[kind] as Route<K>;
   }
 
-  function getUrl<K extends RouteKind>(
-    kind: K,
-    params: RouteParams<K>,
-  ): string {
+  function getUrl<K extends RouteKind>(kind: K, params: RouteParams<K>): string {
     const route = getRoute(kind);
 
-    return generatePath(
-      route.path,
-      params === undefined ? params : encodeParams(params),
-    );
+    return generatePath(route.path, params === undefined ? params : encodeParams(params));
   }
 
   function getUrlForApiUri(uri: string): string | undefined {
@@ -180,9 +169,7 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
     return getUrl("CompileDetails", { id: match.params.id });
   }
 
-  function getParamsFromUrl(
-    uri: string,
-  ): RouteKindWithId<"CompileDetails"> | undefined {
+  function getParamsFromUrl(uri: string): RouteKindWithId<"CompileDetails"> | undefined {
     if (uri.length <= 0) return undefined;
 
     const pattern = "/api/v2/compilereport/:id";
@@ -201,12 +188,9 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
   }
 
   function getRouteMatchFromUrl(url: string): RouteMatch | undefined {
-    const routeMatchPairs = getRoutes().map((route) => [
-      route,
-      matchPath(route.path, url),
-    ]);
+    const routeMatchPairs = getRoutes().map((route) => [route, matchPath(route.path, url)]);
     const routeWithMatch = routeMatchPairs.find(
-      (pair): pair is [Route, PathMatch] => pair[1] !== null,
+      (pair): pair is [Route, PathMatch] => pair[1] !== null
     );
 
     if (typeof routeWithMatch === "undefined") return undefined;
@@ -225,10 +209,7 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
   function useUrl(kind: RouteKind, params: RouteParams<RouteKind>): string {
     const { search } = useLocation();
     const route = getRoute(kind);
-    const path = generatePath(
-      route.path,
-      params === undefined ? params : encodeParams(params),
-    );
+    const path = generatePath(route.path, params === undefined ? params : encodeParams(params));
 
     return `${path}${search}`;
   }

@@ -78,7 +78,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
           },
         },
       },
-      super.defaults,
+      super.defaults
     );
   }
 
@@ -121,7 +121,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
         },
         {
           ellipsis: true,
-        },
+        }
       );
 
       if (truncatedName.includes("\u2026")) {
@@ -138,11 +138,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
         label: "",
       };
 
-      if (
-        typeof item.value === "object" &&
-        !Array.isArray(item.value) &&
-        item.value !== null
-      ) {
+      if (typeof item.value === "object" && !Array.isArray(item.value) && item.value !== null) {
         value.label = "{...}";
 
         ///Add event and add data to display in Dictionary Modal
@@ -152,7 +148,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
           JSON.stringify({
             title: item.name,
             value: item.value,
-          }),
+          })
         );
         this.attr(`itemLabel_${item.name}_value/cursor`, "pointer");
       } else {
@@ -169,13 +165,11 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
             },
             {
               ellipsis: true,
-            },
+            }
           );
 
           if (reproducedDisplayText.includes("\u2026")) {
-            value.label =
-              item.value.toString().replace(/\s+/g, " ").slice(0, 16) +
-              "\u2026";
+            value.label = item.value.toString().replace(/\s+/g, " ").slice(0, 16) + "\u2026";
             this.attr(`itemLabel_${item.name}_value/data-tooltip`, item.value);
           }
         }
@@ -254,7 +248,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
       },
       {
         ellipsis: true,
-      },
+      }
     );
 
     this.set("entityName", name); //regardless of the type, name is still assigned to the entityName attribute, which is then used in all of the logic regarding the keeping track of the loose elements or the stencil state
@@ -264,7 +258,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
       return this.attr(
         ["headerLabel", "text"],
         usedName.replace(/\s+/g, " ").slice(0, 16) + "\u2026",
-        options,
+        options
       );
     } else {
       return this.attr(["headerLabel", "text"], shortenName, options);
@@ -480,7 +474,7 @@ export const Link = shapes.standard.Link.define(
         set: updateLabelPosition,
       },
     },
-  },
+  }
 );
 
 const LinkView = dia.LinkView.extend({

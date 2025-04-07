@@ -41,10 +41,7 @@ const attribute2: AttributeModel = {
 function setup(service: ServiceModel) {
   const store = getStoreInstance();
 
-  const environmentHandler = EnvironmentHandlerImpl(
-    useLocation,
-    dependencies.routeManager,
-  );
+  const environmentHandler = EnvironmentHandlerImpl(useLocation, dependencies.routeManager);
 
   store.dispatch.environment.setEnvironments(
     RemoteData.success([
@@ -60,7 +57,7 @@ function setup(service: ServiceModel) {
           enable_lsm_expert_mode: true,
         },
       },
-    ]),
+    ])
   );
 
   const component = (
@@ -107,9 +104,7 @@ test("GIVEN AttributeTable WHEN passed 1 attribute THEN 1 row is shown", async()
 
   render(component);
 
-  expect(
-    await screen.findByRole("row", { name: "Row-order_id" }),
-  ).toBeVisible();
+  expect(await screen.findByRole("row", { name: "Row-order_id" })).toBeVisible();
 
   await act(async() => {
     const results = await axe(document.body);
@@ -127,12 +122,8 @@ test("GIVEN AttributeTable WHEN passed 2 attributes THEN 2 rows are shown", asyn
 
   render(component);
 
-  expect(
-    await screen.findByRole("row", { name: "Row-order_id" }),
-  ).toBeVisible();
-  expect(
-    await screen.findByRole("row", { name: "Row-service_mtu" }),
-  ).toBeVisible();
+  expect(await screen.findByRole("row", { name: "Row-order_id" })).toBeVisible();
+  expect(await screen.findByRole("row", { name: "Row-service_mtu" })).toBeVisible();
 
   await act(async() => {
     const results = await axe(document.body);
@@ -149,9 +140,7 @@ test("GIVEN AttributeTable WHEN passed no attributes but some embedded entities 
 
   render(component);
 
-  expect(
-    await screen.findByRole("row", { name: "Row-circuits" }),
-  ).toBeVisible();
+  expect(await screen.findByRole("row", { name: "Row-circuits" })).toBeVisible();
 
   await act(async() => {
     const results = await axe(document.body);
@@ -169,12 +158,8 @@ test("GIVEN AttributeTable WHEN passed 2 attributes THEN 2 rows are shown", asyn
 
   render(component);
 
-  expect(
-    await screen.findByRole("row", { name: "Row-order_id" }),
-  ).toBeVisible();
-  expect(
-    await screen.findByRole("row", { name: "Row-service_mtu" }),
-  ).toBeVisible();
+  expect(await screen.findByRole("row", { name: "Row-order_id" })).toBeVisible();
+  expect(await screen.findByRole("row", { name: "Row-service_mtu" })).toBeVisible();
 
   await act(async() => {
     const results = await axe(document.body);
@@ -193,9 +178,7 @@ test("GIVEN AttributeTable WHEN passed embedded attributes THEN expendable rows 
   render(component);
 
   //default embedded entity
-  expect(
-    await screen.findByRole("row", { name: "Row-bandwidth" }),
-  ).toBeVisible();
+  expect(await screen.findByRole("row", { name: "Row-bandwidth" })).toBeVisible();
 
   //scenario to expand and hide one child
   const toggleButton = await screen.findByRole("button", {

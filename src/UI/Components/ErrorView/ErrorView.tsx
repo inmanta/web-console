@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  Button,
-  EmptyState,
-  EmptyStateBody,
-  EmptyStateFooter,
-} from "@patternfly/react-core";
+import { Button, EmptyState, EmptyStateBody, EmptyStateFooter } from "@patternfly/react-core";
 import { ExclamationTriangleIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { Delayed } from "@/UI/Utils";

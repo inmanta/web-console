@@ -1,9 +1,6 @@
 import { DatePresenter, TablePresenter } from "@/UI/Presenters";
 import { words } from "@/UI/words";
-import {
-  CompileStageReport,
-  CompileStageReportRow,
-} from "@S/CompileDetails/Core/Domain";
+import { CompileStageReport, CompileStageReportRow } from "@S/CompileDetails/Core/Domain";
 
 export class CompileStageReportTablePresenter
 implements TablePresenter<CompileStageReport, CompileStageReportRow> {
@@ -16,7 +13,7 @@ implements TablePresenter<CompileStageReport, CompileStageReportRow> {
 
   constructor(
     private readonly datePresenter: DatePresenter,
-    private readonly compileStarted?: string | null,
+    private readonly compileStarted?: string | null
   ) {}
 
   createRows(sourceData: CompileStageReport[]): CompileStageReportRow[] {
@@ -25,9 +22,7 @@ implements TablePresenter<CompileStageReport, CompileStageReportRow> {
         name: report.name,
         id: report.id,
         command: report.command,
-        shortCommand: report.command
-          ? `${report.command.substr(0, 80)}...`
-          : "",
+        shortCommand: report.command ? `${report.command.substr(0, 80)}...` : "",
         completed: report.completed,
         errstream: report.errstream,
         outstream: report.outstream,
@@ -35,9 +30,7 @@ implements TablePresenter<CompileStageReport, CompileStageReportRow> {
           ? this.datePresenter.diff(report.started, this.compileStarted)
           : "",
         started: report.started,
-        duration: report.completed
-          ? this.datePresenter.diff(report.completed, report.started)
-          : "",
+        duration: report.completed ? this.datePresenter.diff(report.completed, report.started) : "",
         returncode: report.returncode,
       };
     });

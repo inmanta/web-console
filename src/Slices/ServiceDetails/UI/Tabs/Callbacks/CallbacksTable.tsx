@@ -11,10 +11,7 @@ interface Props {
   service_entity: string;
 }
 
-export const CallbacksTable: React.FC<Props> = ({
-  callbacks,
-  service_entity,
-}) => {
+export const CallbacksTable: React.FC<Props> = ({ callbacks, service_entity }) => {
   const [isExpanded, onExpansion] = useUrlStateWithExpansion({
     key: "callbacks-expansion",
     route: "Catalog",

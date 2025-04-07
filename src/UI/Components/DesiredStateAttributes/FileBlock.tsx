@@ -1,10 +1,5 @@
 import React, { useState, useContext } from "react";
-import {
-  Alert,
-  AlertActionCloseButton,
-  Button,
-  Spinner,
-} from "@patternfly/react-core";
+import { Alert, AlertActionCloseButton, Button, Spinner } from "@patternfly/react-core";
 import { DownloadIcon } from "@patternfly/react-icons";
 import { RemoteData } from "@/Core";
 import { CodeHighlighter } from "@/UI/Components/CodeHighlighter";
@@ -14,9 +9,9 @@ import { Delayed } from "@/UI/Utils";
 
 export const FileBlock: React.FC<{ hash: string }> = ({ hash }) => {
   const { fileFetcher } = useContext(DependencyContext);
-  const [fileContent, setFileContent] = useState<
-    RemoteData.Type<string, string>
-  >(RemoteData.notAsked());
+  const [fileContent, setFileContent] = useState<RemoteData.Type<string, string>>(
+    RemoteData.notAsked()
+  );
 
   const getFile = async() => {
     setFileContent(RemoteData.loading());
@@ -31,9 +26,7 @@ export const FileBlock: React.FC<{ hash: string }> = ({ hash }) => {
         variant="link"
         icon={<DownloadIcon />}
         onClick={getFile}
-        isDisabled={
-          RemoteData.isSuccess(fileContent) || RemoteData.isLoading(fileContent)
-        }
+        isDisabled={RemoteData.isSuccess(fileContent) || RemoteData.isLoading(fileContent)}
       >
         Get File
       </Button>
@@ -58,15 +51,10 @@ export const FileBlock: React.FC<{ hash: string }> = ({ hash }) => {
             </Alert>
           ),
           success: (content) => (
-            <CodeHighlighter
-              keyId="fileblock"
-              code={content}
-              language="text"
-              close={close}
-            />
+            <CodeHighlighter keyId="fileblock" code={content} language="text" close={close} />
           ),
         },
-        fileContent,
+        fileContent
       )}
     </>
   );

@@ -78,7 +78,7 @@ export class ZoomHandlerService {
 
   constructor(
     private element: HTMLElement,
-    private scroller: ui.PaperScroller,
+    private scroller: ui.PaperScroller
   ) {
     this.toolbar = new ui.Toolbar({
       autoToggle: true,
@@ -143,9 +143,7 @@ export class ZoomHandlerService {
       padding: 16,
     });
 
-    const fullscreenButton = this.toolbar.getWidgetByName(
-      "fit-to-screen",
-    ) as IconButton;
+    const fullscreenButton = this.toolbar.getWidgetByName("fit-to-screen") as IconButton;
 
     fullscreenButton.setIcon(`${fitToScreen}`); //set the icon of the button as adding icons through object properties wasn't loading the icons properly
 
@@ -208,8 +206,7 @@ export class ZoomHandlerService {
    */
   updateSliderProgressBar(slider: HTMLInputElement) {
     const value =
-      ((Number(slider.value) - Number(slider.min)) /
-        (Number(slider.max) - Number(slider.min))) *
+      ((Number(slider.value) - Number(slider.min)) / (Number(slider.max) - Number(slider.min))) *
       100;
 
     slider.style.setProperty(
@@ -218,7 +215,7 @@ export class ZoomHandlerService {
         var(--pf-t--global--border--color--brand--default) 0%, 
         var(--pf-t--global--border--color--brand--default), ${value.toFixed(0)}%, 
         var(--pf-t--global--border--color--nonstatus--gray--default) ${value.toFixed(0)}%, 
-        var(--pf-t--global--border--color--nonstatus--gray--default) 100%)`,
+        var(--pf-t--global--border--color--nonstatus--gray--default) 100%)`
     );
   }
 
@@ -261,9 +258,7 @@ export class ZoomHandlerService {
    * @method
    */
   updateFullscreenStyling() {
-    const fullscreenButton = this.toolbar.getWidgetByName(
-      "fullscreen",
-    ) as IconButton;
+    const fullscreenButton = this.toolbar.getWidgetByName("fullscreen") as IconButton;
 
     const canvas = document.querySelector("#canvas-wrapper");
     const banners = document.querySelectorAll(".pf-v6-c-banner"); // TODO: Needs to be updated to avoid targetting a class
@@ -274,10 +269,7 @@ export class ZoomHandlerService {
 
     if (banners) {
       banners.forEach(
-        (el) =>
-          ((el as HTMLElement).style.display = document.fullscreenElement
-            ? "none"
-            : "block"),
+        (el) => ((el as HTMLElement).style.display = document.fullscreenElement ? "none" : "block")
       );
     }
 
@@ -286,27 +278,20 @@ export class ZoomHandlerService {
       this.changeDisplay("#page-header", "none");
 
       fullscreenButton.setIcon(`${exitFullscreen}`);
-      fullscreenButton.setTooltip(
-        words("instanceComposer.zoomHandler.fullscreen.exit"),
-      );
+      fullscreenButton.setTooltip(words("instanceComposer.zoomHandler.fullscreen.exit"));
     } else {
       this.changeDisplay("#page-sidebar", "flex");
       this.changeDisplay("#page-header", "grid");
 
       fullscreenButton.setIcon(`${requestFullscreen}`);
-      fullscreenButton.setTooltip(
-        words("instanceComposer.zoomHandler.fullscreen.toggle"),
-      );
+      fullscreenButton.setTooltip(words("instanceComposer.zoomHandler.fullscreen.toggle"));
     }
   }
 
   remove() {
     this.toolbar.remove();
 
-    document.removeEventListener(
-      "fullscreenchange",
-      this.updateFullscreenStyling,
-    );
+    document.removeEventListener("fullscreenchange", this.updateFullscreenStyling);
 
     const zoomSlider = document.getElementById("zoomSlider");
 

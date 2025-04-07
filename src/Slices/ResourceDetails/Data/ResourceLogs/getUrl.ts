@@ -20,30 +20,24 @@ export function getUrl({
             timestamp: serializeTimestampFilter(filter.timestamp),
           },
         },
-        { allowDots: true, arrayFormat: "repeat" },
+        { allowDots: true, arrayFormat: "repeat" }
       )}`
       : "";
   const sortParam = sort ? `&sort=${sort.name}.${sort.order}` : "";
 
-  return `/api/v2/resource/${id}/logs?limit=${
-    pageSize.value
-  }${filterParam}${sortParam}${
+  return `/api/v2/resource/${id}/logs?limit=${pageSize.value}${filterParam}${sortParam}${
     currentPage.value ? `&${currentPage.value}` : ""
   }`;
 }
 
-const serializeTimestampFilter = (
-  filter?: DateRange.Type[],
-): string[] | undefined => {
+const serializeTimestampFilter = (filter?: DateRange.Type[]): string[] | undefined => {
   if (typeof filter === "undefined") return undefined;
 
   return filter.map(
     (timestampWithOperator) =>
-      `${RangeOperator.serializeOperator(
-        timestampWithOperator.operator,
-      )}:${moment
+      `${RangeOperator.serializeOperator(timestampWithOperator.operator)}:${moment
         .tz(timestampWithOperator.date, moment.tz.guess())
         .utc()
-        .format("YYYY-MM-DD+HH:mm:ss")}`,
+        .format("YYYY-MM-DD+HH:mm:ss")}`
   );
 };

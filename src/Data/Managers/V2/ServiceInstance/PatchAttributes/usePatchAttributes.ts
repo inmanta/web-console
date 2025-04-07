@@ -1,8 +1,4 @@
-import {
-  UseMutationOptions,
-  UseMutationResult,
-  useMutation,
-} from "@tanstack/react-query";
+import { UseMutationOptions, UseMutationResult, useMutation } from "@tanstack/react-query";
 import { Config, Field, InstanceAttributeModel } from "@/Core";
 
 import { usePatch } from "../../helpers";
@@ -28,7 +24,7 @@ export const usePatchAttributes = (
   service_entity: string,
   id: string,
   version: number,
-  options: UseMutationOptions<Response, Error, MutationBody>,
+  options: UseMutationOptions<Response, Error, MutationBody>
 ): UseMutationResult<Response, Error, MutationBody, unknown> => {
   const url = `/lsm/${apiVersion}/service_inventory/${service_entity}/${id}?current_version=${version}`;
   const patch = usePatch()<BodyV1 | BodyV2>;
@@ -43,13 +39,7 @@ export const usePatchAttributes = (
 
       return patch(url, convertedBody);
     },
-    mutationKey: [
-      "post_instance_config",
-      service_entity,
-      id,
-      version,
-      apiVersion,
-    ],
+    mutationKey: ["post_instance_config", service_entity, id, version, apiVersion],
     ...options,
   });
 };

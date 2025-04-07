@@ -10,15 +10,12 @@ export function GetServerStatusStateHelper(store: Store) {
         store.getState().serverStatus.status;
       const newStatus = RemoteData.mapSuccess((wrapped) => wrapped.data, data);
 
-      if (
-        RemoteData.isLoading(newStatus) &&
-        !RemoteData.isNotAsked(currentStatus)
-      ) {
+      if (RemoteData.isLoading(newStatus) && !RemoteData.isNotAsked(currentStatus)) {
         return;
       }
 
       store.dispatch.serverStatus.setData(newStatus);
     },
-    (state) => state.serverStatus.status,
+    (state) => state.serverStatus.status
   );
 }

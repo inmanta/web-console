@@ -2,9 +2,7 @@ import React from "react";
 import { Bullseye, Spinner } from "@patternfly/react-core";
 import styled from "styled-components";
 
-export const LoadingIndicator: React.FC<{ progress: string }> = ({
-  progress,
-}) => (
+export const LoadingIndicator: React.FC<{ progress: string }> = ({ progress }) => (
   <Bullseye style={{ paddingBottom: "24px" }}>
     <Spinner size="lg" /> <Progress>{progress}</Progress>
   </Bullseye>
