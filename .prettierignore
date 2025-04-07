@@ -33,5 +33,5 @@ tsconfig.json
 .eslintrc.js
 .prettierrc.cjs
 
-# Documentation and changelogs
+# Changelogs
 changelogs/**
