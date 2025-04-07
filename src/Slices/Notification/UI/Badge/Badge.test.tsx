@@ -1,19 +1,19 @@
-import React from 'react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { render, screen } from '@testing-library/react';
-import { StoreProvider } from 'easy-peasy';
-import { delay, http, HttpResponse } from 'msw';
-import { setupServer } from 'msw/node';
+import React from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { render, screen } from "@testing-library/react";
+import { StoreProvider } from "easy-peasy";
+import { delay, http, HttpResponse } from "msw";
+import { setupServer } from "msw/node";
 import {
   getStoreInstance,
   QueryManagerResolverImpl,
   QueryResolverImpl,
-} from '@/Data';
-import { DeferredApiHelper, dependencies, StaticScheduler } from '@/Test';
-import { metadata, links } from '@/Test/Data/Pagination';
-import { DependencyProvider } from '@/UI/Dependency';
-import * as Mock from '@S/Notification/Core/Mock';
-import { Badge } from './Badge';
+} from "@/Data";
+import { DeferredApiHelper, dependencies, StaticScheduler } from "@/Test";
+import { metadata, links } from "@/Test/Data/Pagination";
+import { DependencyProvider } from "@/UI/Dependency";
+import * as Mock from "@S/Notification/Core/Mock";
+import { Badge } from "./Badge";
 
 function setup() {
   const apiHelper = new DeferredApiHelper();
@@ -45,35 +45,35 @@ function setup() {
 }
 const server = setupServer();
 
-describe('Badge', () => {
+describe("Badge", () => {
   beforeAll(() => server.listen());
   afterEach(() => server.resetHandlers());
   afterAll(() => server.close());
 
-  test('Given Badge WHEN request fails THEN error is shown', async() => {
+  test("Given Badge WHEN request fails THEN error is shown", async() => {
     server.use(
-      http.get('/api/v2/notification', () => {
-        return HttpResponse.json({ message: 'error' }, { status: 500 });
+      http.get("/api/v2/notification", () => {
+        return HttpResponse.json({ message: "error" }, { status: 500 });
       }),
     );
     const { component } = setup();
 
     render(component);
-    expect(await screen.findByTestId('ToastAlert')).toBeVisible();
+    expect(await screen.findByTestId("ToastAlert")).toBeVisible();
   });
 
   test.each`
     data                                    | condition                  | variant
-    ${[Mock.read]}                          | ${'only read'}             | ${'read'}
-    ${[Mock.unread]}                        | ${'an unread'}             | ${'unread'}
-    ${[Mock.unread, Mock.read]}             | ${'unread + read'}         | ${'unread'}
-    ${[Mock.error]}                         | ${'an unread error'}       | ${'attention'}
-    ${[Mock.error, Mock.unread, Mock.read]} | ${'error + unread + read'} | ${'attention'}
+    ${[Mock.read]}                          | ${"only read"}             | ${"read"}
+    ${[Mock.unread]}                        | ${"an unread"}             | ${"unread"}
+    ${[Mock.unread, Mock.read]}             | ${"unread + read"}         | ${"unread"}
+    ${[Mock.error]}                         | ${"an unread error"}       | ${"attention"}
+    ${[Mock.error, Mock.unread, Mock.read]} | ${"error + unread + read"} | ${"attention"}
   `(
-    'Given Badge WHEN notifications contain $condition THEN $variant variant is shown',
+    "Given Badge WHEN notifications contain $condition THEN $variant variant is shown",
     async({ data, variant }) => {
       server.use(
-        http.get('/api/v2/notification', () => {
+        http.get("/api/v2/notification", () => {
           return HttpResponse.json({ data, links, metadata });
         }),
       );
@@ -81,18 +81,18 @@ describe('Badge', () => {
 
       render(component);
 
-      const button = await screen.findByRole('button', {
-        name: 'Badge-Success',
+      const button = await screen.findByRole("button", {
+        name: "Badge-Success",
       });
 
       expect(button).toBeVisible();
-      expect(button).toHaveAttribute('data-variant', variant);
+      expect(button).toHaveAttribute("data-variant", variant);
     },
   );
 
-  test('Given Badge WHEN request is loading THEN variant is not shown and badge is disabled', () => {
+  test("Given Badge WHEN request is loading THEN variant is not shown and badge is disabled", () => {
     server.use(
-      http.get('/api/v2/notification', () => {
+      http.get("/api/v2/notification", () => {
         delay(100);
 
         return HttpResponse.json({ data: [], links, metadata });
@@ -102,10 +102,10 @@ describe('Badge', () => {
 
     render(component);
 
-    const badge = screen.getByRole('button', { name: 'Badge' });
+    const badge = screen.getByRole("button", { name: "Badge" });
 
     expect(badge).toBeVisible();
     expect(badge).toBeDisabled();
-    expect(badge).not.toHaveAttribute('data-variant');
+    expect(badge).not.toHaveAttribute("data-variant");
   });
 });

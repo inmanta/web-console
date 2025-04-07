@@ -1,15 +1,15 @@
-import { AttributesPresenter } from './AttributesPresenter';
+import { AttributesPresenter } from "./AttributesPresenter";
 
-test('AttributesPresenter', () => {
+test("AttributesPresenter", () => {
   // Arrange
   const attributes = {
-    a: 'value',
-    b: ['value', 'value'],
+    a: "value",
+    b: ["value", "value"],
     c: false,
     d: 123,
     e: null,
   };
-  const string = JSON.stringify('value');
+  const string = JSON.stringify("value");
   const attributesPresenter = new AttributesPresenter();
 
   // Act
@@ -17,10 +17,10 @@ test('AttributesPresenter', () => {
 
   // Assert
   expect(printed).toEqual([
-    ['a', string],
-    ['b', `${string}, ${string}`],
-    ['c', 'false'],
-    ['d', '123'],
-    ['e', 'null'],
+    ["a", string],
+    ["b", `${string}, ${string}`],
+    ["c", "false"],
+    ["d", "123"],
+    ["e", "null"],
   ]);
 });

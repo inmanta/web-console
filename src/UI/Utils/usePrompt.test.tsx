@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
-import { Link, Route, Routes } from 'react-router-dom';
-import { render, screen } from '@testing-library/react';
-import { userEvent } from '@testing-library/user-event';
-import CustomRouter from '../Routing/CustomRouter';
-import history from '../Routing/history';
-import { usePrompt } from './usePrompt';
+import React, { useState } from "react";
+import { Link, Route, Routes } from "react-router-dom";
+import { render, screen } from "@testing-library/react";
+import { userEvent } from "@testing-library/user-event";
+import CustomRouter from "../Routing/CustomRouter";
+import history from "../Routing/history";
+import { usePrompt } from "./usePrompt";
 
 const setup = () => {
   const Component: React.FC = () => {
     const [promptValue, setPromptValue] = useState(false);
 
-    usePrompt('Prompt message', promptValue);
+    usePrompt("Prompt message", promptValue);
 
     return (
       <>
@@ -45,52 +45,52 @@ const setup = () => {
 
 test("GIVEN usePrompt WHEN hook's parameter is equal true and user cancel alert window THEN page doesn't change", async() => {
   // prompt window isn't reachable through testing library, so I had to mock user input
-  const prompt = jest.spyOn(window, 'confirm').mockImplementation(() => false);
+  const prompt = jest.spyOn(window, "confirm").mockImplementation(() => false);
 
   render(setup());
-  const button = screen.getByText('Click');
+  const button = screen.getByText("Click");
 
   await userEvent.click(button);
 
-  const link = screen.getByText('Link');
+  const link = screen.getByText("Link");
 
   await userEvent.click(link);
 
   expect(prompt).toHaveBeenCalledTimes(1);
-  expect(window.location.pathname).toMatch('/');
+  expect(window.location.pathname).toMatch("/");
 });
 
 test("GIVEN usePrompt WHEN hook's parameter is equal false THEN page is changed", async() => {
-  const prompt = jest.spyOn(window, 'confirm');
+  const prompt = jest.spyOn(window, "confirm");
 
   render(setup());
 
-  const link = screen.getByText('Link');
+  const link = screen.getByText("Link");
 
   await userEvent.click(link);
 
   expect(prompt).toHaveBeenCalledTimes(0);
-  expect(window.location.pathname).toMatch('/page');
+  expect(window.location.pathname).toMatch("/page");
 });
 
 test("GIVEN usePrompt WHEN hook's parameter is equal true and user confirm alert window THEN page is changed", async() => {
-  const prompt = jest.spyOn(window, 'confirm').mockImplementation(() => true);
+  const prompt = jest.spyOn(window, "confirm").mockImplementation(() => true);
 
   render(setup());
 
   //cleanup doesn't reset page url so I had to manually go back to "/"
-  const homeLink = screen.getByText('Home');
+  const homeLink = screen.getByText("Home");
 
   await userEvent.click(homeLink);
 
-  const button = screen.getByText('Click');
+  const button = screen.getByText("Click");
 
   await userEvent.click(button);
 
-  const link = screen.getByText('Link');
+  const link = screen.getByText("Link");
 
   await userEvent.click(link);
 
   expect(prompt).toHaveBeenCalledTimes(1);
-  expect(window.location.pathname).toMatch('/page');
+  expect(window.location.pathname).toMatch("/page");
 });

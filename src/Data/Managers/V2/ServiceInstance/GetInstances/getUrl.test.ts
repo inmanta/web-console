@@ -1,9 +1,9 @@
-import { PageSize } from '@/Core';
-import { initialCurrentPage } from '@/Data/Common/UrlState/useUrlStateWithCurrentPage';
-import { getUrl, UrlParams } from './getUrl';
+import { PageSize } from "@/Core";
+import { initialCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
+import { getUrl, UrlParams } from "./getUrl";
 
-test('getUrl returns correct url for no filter & no sort', () => {
-  const name = 'service_a';
+test("getUrl returns correct url for no filter & no sort", () => {
+  const name = "service_a";
   const query: UrlParams = {
     name,
     filter: undefined,
@@ -17,15 +17,15 @@ test('getUrl returns correct url for no filter & no sort', () => {
   );
 });
 
-test('getUrl returns correct url for filter & no sort', () => {
-  const name = 'service_a';
+test("getUrl returns correct url for filter & no sort", () => {
+  const name = "service_a";
   const query: UrlParams = {
     name,
     filter: {
-      state: ['up', 'creating'],
+      state: ["up", "creating"],
     },
     sort: undefined,
-    pageSize: PageSize.from('100'),
+    pageSize: PageSize.from("100"),
     currentPage: initialCurrentPage,
   };
 
@@ -34,14 +34,14 @@ test('getUrl returns correct url for filter & no sort', () => {
   );
 });
 
-test('getUrl returns correct url for sort & no filter', () => {
-  const name = 'service_a';
+test("getUrl returns correct url for sort & no filter", () => {
+  const name = "service_a";
   const query: UrlParams = {
     name,
     filter: undefined,
     sort: {
-      name: 'state',
-      order: 'asc',
+      name: "state",
+      order: "asc",
     },
     pageSize: PageSize.initial,
     currentPage: initialCurrentPage,
@@ -52,16 +52,16 @@ test('getUrl returns correct url for sort & no filter', () => {
   );
 });
 
-test('getUrl returns correct url for sort & filter', () => {
-  const name = 'service_a';
+test("getUrl returns correct url for sort & filter", () => {
+  const name = "service_a";
   const query: UrlParams = {
     name,
     filter: {
-      state: ['up', 'creating'],
+      state: ["up", "creating"],
     },
     sort: {
-      name: 'state',
-      order: 'asc',
+      name: "state",
+      order: "asc",
     },
     pageSize: PageSize.initial,
     currentPage: initialCurrentPage,
@@ -72,8 +72,8 @@ test('getUrl returns correct url for sort & filter', () => {
   );
 });
 
-test('getUrl returns correct url for empty filter', () => {
-  const name = 'service_a';
+test("getUrl returns correct url for empty filter", () => {
+  const name = "service_a";
   const query: UrlParams = {
     name,
     filter: {
@@ -82,7 +82,7 @@ test('getUrl returns correct url for empty filter', () => {
       attributeSetEmpty: [],
       attributeSetNotEmpty: [],
     },
-    pageSize: PageSize.from('50'),
+    pageSize: PageSize.from("50"),
     currentPage: initialCurrentPage,
   };
 
@@ -91,16 +91,16 @@ test('getUrl returns correct url for empty filter', () => {
   );
 });
 
-test('getUrl returns correct url for no filter & no sort', () => {
-  const name = 'service_a';
-  const startQuery = 'start=2023-12-13T08%3A33%3A15.180818%2B00%3A00';
+test("getUrl returns correct url for no filter & no sort", () => {
+  const name = "service_a";
+  const startQuery = "start=2023-12-13T08%3A33%3A15.180818%2B00%3A00";
   const query: UrlParams = {
     name,
     filter: undefined,
     sort: undefined,
     pageSize: PageSize.initial,
     currentPage: {
-      kind: 'CurrentPage',
+      kind: "CurrentPage",
       value: startQuery,
     },
   };
@@ -109,13 +109,13 @@ test('getUrl returns correct url for no filter & no sort', () => {
     `/lsm/v1/service_inventory/${name}?include_deployment_progress=True&limit=20&${startQuery}`,
   );
 
-  const endQuery = 'end=%3D2023-12-13T08%253A33%253A15.192674%252B00%253A00';
+  const endQuery = "end=%3D2023-12-13T08%253A33%253A15.192674%252B00%253A00";
 
   expect(
     getUrl({
       ...query,
       currentPage: {
-        kind: 'CurrentPage',
+        kind: "CurrentPage",
         value: endQuery,
       },
     }),

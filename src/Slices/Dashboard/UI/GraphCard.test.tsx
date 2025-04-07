@@ -1,10 +1,10 @@
-import React, { act } from 'react';
-import { render, screen } from '@testing-library/react';
-import { configureAxe, toHaveNoViolations } from 'jest-axe';
-import { words } from '@/UI';
-import { MetricName } from '../Core/Domain';
-import { mockedMetrics } from '../Core/Mock';
-import { GraphCard } from './GraphCard';
+import React, { act } from "react";
+import { render, screen } from "@testing-library/react";
+import { configureAxe, toHaveNoViolations } from "jest-axe";
+import { words } from "@/UI";
+import { MetricName } from "../Core/Domain";
+import { mockedMetrics } from "../Core/Mock";
+import { GraphCard } from "./GraphCard";
 
 expect.extend(toHaveNoViolations);
 
@@ -15,8 +15,8 @@ const axe = configureAxe({
   },
 });
 
-describe('Test GraphCard with LineChart component', () => {
-  it('Line Chart version', async() => {
+describe("Test GraphCard with LineChart component", () => {
+  it("Line Chart version", async() => {
     const availableKeys = Object.keys(mockedMetrics.metrics);
 
     render(
@@ -31,13 +31,13 @@ describe('Test GraphCard with LineChart component', () => {
     );
 
     expect(
-      await screen.findByRole('heading', {
+      await screen.findByRole("heading", {
         name: words(`dashboard.${availableKeys[1] as MetricName}.title`),
       }),
     ).toBeVisible();
 
     expect(
-      screen.getByRole('img', {
+      screen.getByRole("img", {
         name: /service counter/i,
       }),
     ).toBeVisible();
@@ -49,7 +49,7 @@ describe('Test GraphCard with LineChart component', () => {
     });
   });
 
-  it('Area Chart version', async() => {
+  it("Area Chart version", async() => {
     const availableKeys = Object.keys(mockedMetrics.metrics);
 
     render(
@@ -64,13 +64,13 @@ describe('Test GraphCard with LineChart component', () => {
     );
 
     expect(
-      await screen.findByRole('heading', {
+      await screen.findByRole("heading", {
         name: words(`dashboard.${availableKeys[6] as MetricName}.title`),
       }),
     ).toBeVisible();
 
     expect(
-      screen.getByRole('img', {
+      screen.getByRole("img", {
         name: /agents count/i,
       }),
     ).toBeVisible();

@@ -1,31 +1,31 @@
-import { dia } from '@inmanta/rappid';
-import { Service } from '@/Test';
+import { dia } from "@inmanta/rappid";
+import { Service } from "@/Test";
 import {
   a as InstanceAttributesA,
   b as InstanceAttributesB,
-} from '@/Test/Data/ServiceInstance/Attributes';
+} from "@/Test/Data/ServiceInstance/Attributes";
 import {
   EventActionEnum,
   LabelLinkView,
-} from '@/UI/Components/Diagram/interfaces';
-import { childModel, parentModel } from '../Mocks';
-import { createComposerEntity } from '../actions/general';
-import { ComposerPaper } from '../paper';
-import { Link } from '../shapes';
-import { defineObjectsForJointJS } from '../testSetup';
-import { createConnectionRules } from './connections';
+} from "@/UI/Components/Diagram/interfaces";
+import { childModel, parentModel } from "../Mocks";
+import { createComposerEntity } from "../actions/general";
+import { ComposerPaper } from "../paper";
+import { Link } from "../shapes";
+import { defineObjectsForJointJS } from "../testSetup";
+import { createConnectionRules } from "./connections";
 import {
   updateLabelPosition,
   toggleLooseElement,
   showLinkTools,
   moveCellsFromColliding,
-} from './visual';
+} from "./visual";
 
 beforeAll(() => {
   defineObjectsForJointJS();
 });
 
-describe('updateLabelPosition', () => {
+describe("updateLabelPosition", () => {
   /**
    * Function that creates graph, paper, two entities which are then manually placed into passed coordinates and connected by link to align with real life scenarios
    * @param {number} sourceX X coordinate for source cell
@@ -67,20 +67,20 @@ describe('updateLabelPosition', () => {
     graph.addCell(sourceService);
     graph.addCell(targetService);
 
-    sourceService.set('position', { x: sourceX, y: sourceY });
-    targetService.set('position', { x: targetX, y: targetY });
+    sourceService.set("position", { x: sourceX, y: sourceY });
+    targetService.set("position", { x: targetX, y: targetY });
 
     const connection = new Link();
 
     connection.source(sourceService, {
       anchor: {
-        name: 'center',
+        name: "center",
         args: { dx: sourceAnchorX, dy: sourceY + 25 },
       },
     });
     connection.target(targetService, {
       anchor: {
-        name: 'center',
+        name: "center",
         args: { dx: targetAnchorX, dy: targetY + 25 },
       },
     });
@@ -92,12 +92,12 @@ describe('updateLabelPosition', () => {
     linkView.model.appendLabel({
       attrs: {
         rect: {
-          fill: 'none',
+          fill: "none",
         },
         text: {
           text: sourceService.getName(),
-          autoOrient: 'target',
-          class: 'joint-label-text',
+          autoOrient: "target",
+          class: "joint-label-text",
         },
       },
       position: {
@@ -107,12 +107,12 @@ describe('updateLabelPosition', () => {
     linkView.model.appendLabel({
       attrs: {
         rect: {
-          fill: 'none',
+          fill: "none",
         },
         text: {
           text: targetService.getName(),
-          autoOrient: 'source',
-          class: 'joint-label-text',
+          autoOrient: "source",
+          class: "joint-label-text",
         },
       },
       position: {
@@ -125,14 +125,14 @@ describe('updateLabelPosition', () => {
 
   it.each`
     sourceX | sourceY | sourceAnchorX | targetX | targetY | targetAnchorX | sourceResult                              | targetResult
-    ${500}  | ${500}  | ${500}        | ${0}    | ${0}    | ${264}        | ${{ textAnchor: 'end', x: -15, y: 15 }}   | ${{ textAnchor: 'start', x: 15, y: -15 }}
-    ${0}    | ${0}    | ${264}        | ${500}  | ${500}  | ${500}        | ${{ textAnchor: 'start', x: 15, y: -15 }} | ${{ textAnchor: 'end', x: -15, y: 15 }}
-    ${500}  | ${0}    | ${500}        | ${0}    | ${500}  | ${264}        | ${{ textAnchor: 'end', x: -15, y: -15 }}  | ${{ textAnchor: 'start', x: 15, y: 15 }}
-    ${0}    | ${500}  | ${264}        | ${500}  | ${0}    | ${500}        | ${{ textAnchor: 'start', x: 15, y: 15 }}  | ${{ textAnchor: 'end', x: -15, y: -15 }}
-    ${0}    | ${0}    | ${0}          | ${0}    | ${500}  | ${0}          | ${{ textAnchor: 'end', x: -15, y: -15 }}  | ${{ textAnchor: 'end', x: -15, y: 15 }}
-    ${0}    | ${500}  | ${0}          | ${0}    | ${0}    | ${0}          | ${{ textAnchor: 'end', x: -15, y: 15 }}   | ${{ textAnchor: 'end', x: -15, y: -15 }}
+    ${500}  | ${500}  | ${500}        | ${0}    | ${0}    | ${264}        | ${{ textAnchor: "end", x: -15, y: 15 }}   | ${{ textAnchor: "start", x: 15, y: -15 }}
+    ${0}    | ${0}    | ${264}        | ${500}  | ${500}  | ${500}        | ${{ textAnchor: "start", x: 15, y: -15 }} | ${{ textAnchor: "end", x: -15, y: 15 }}
+    ${500}  | ${0}    | ${500}        | ${0}    | ${500}  | ${264}        | ${{ textAnchor: "end", x: -15, y: -15 }}  | ${{ textAnchor: "start", x: 15, y: 15 }}
+    ${0}    | ${500}  | ${264}        | ${500}  | ${0}    | ${500}        | ${{ textAnchor: "start", x: 15, y: 15 }}  | ${{ textAnchor: "end", x: -15, y: -15 }}
+    ${0}    | ${0}    | ${0}          | ${0}    | ${500}  | ${0}          | ${{ textAnchor: "end", x: -15, y: -15 }}  | ${{ textAnchor: "end", x: -15, y: 15 }}
+    ${0}    | ${500}  | ${0}          | ${0}    | ${0}    | ${0}          | ${{ textAnchor: "end", x: -15, y: 15 }}   | ${{ textAnchor: "end", x: -15, y: -15 }}
   `(
-    'return adequate position of the link label depending on coordinates of the source and target',
+    "return adequate position of the link label depending on coordinates of the source and target",
     ({
       sourceX,
       sourceY,
@@ -155,7 +155,7 @@ describe('updateLabelPosition', () => {
       const labelCloseToSource = linkView.findLabelNode(1) as SVGSVGElement;
 
       const result2 = updateLabelPosition(
-        'source',
+        "source",
         linkView.getBBox(),
         labelCloseToSource,
         {},
@@ -165,7 +165,7 @@ describe('updateLabelPosition', () => {
       expect(result2).toEqual(sourceResult);
 
       const result = updateLabelPosition(
-        'target',
+        "target",
         linkView.getBBox(),
         labelCloseToTarget,
         {},
@@ -177,9 +177,9 @@ describe('updateLabelPosition', () => {
   );
 });
 
-describe('toggleLooseElement', () => {
-  it('dispatch a proper event with id when called', () => {
-    const dispatchEventSpy = jest.spyOn(document, 'dispatchEvent');
+describe("toggleLooseElement", () => {
+  it("dispatch a proper event with id when called", () => {
+    const dispatchEventSpy = jest.spyOn(document, "dispatchEvent");
 
     const graph = new dia.Graph();
     const paper = new dia.Paper({
@@ -201,25 +201,25 @@ describe('toggleLooseElement', () => {
 
     //assert the arguments of the first call - calls is array of the arguments of each call
     expect((dispatchEventSpy.mock.calls[0][0] as CustomEvent).detail).toEqual(
-      JSON.stringify({ kind: 'add', id: entity.id }),
+      JSON.stringify({ kind: "add", id: entity.id }),
     );
     expect(
-      dia.HighlighterView.get(paper.findViewByModel(entity), 'loose_element'),
+      dia.HighlighterView.get(paper.findViewByModel(entity), "loose_element"),
     ).not.toBeNull();
 
     //remove
     toggleLooseElement(paper.findViewByModel(entity), EventActionEnum.REMOVE);
     expect(
-      dia.HighlighterView.get(paper.findViewByModel(entity), 'loose_element'),
+      dia.HighlighterView.get(paper.findViewByModel(entity), "loose_element"),
     ).toBeNull();
 
     //assert the arguments of the second call
     expect((dispatchEventSpy.mock.calls[1][0] as CustomEvent).detail).toEqual(
-      JSON.stringify({ kind: 'remove', id: entity.id }),
+      JSON.stringify({ kind: "remove", id: entity.id }),
     );
   });
 
-  it('appends and removes a highlighted object from an entity', () => {
+  it("appends and removes a highlighted object from an entity", () => {
     const graph = new dia.Graph();
     const paper = new dia.Paper({
       model: graph,
@@ -237,21 +237,21 @@ describe('toggleLooseElement', () => {
 
     toggleLooseElement(paper.findViewByModel(entity), EventActionEnum.ADD);
     expect(
-      dia.HighlighterView.get(paper.findViewByModel(entity), 'loose_element'),
+      dia.HighlighterView.get(paper.findViewByModel(entity), "loose_element"),
     ).not.toBeNull();
 
     toggleLooseElement(paper.findViewByModel(entity), EventActionEnum.REMOVE);
     expect(
-      dia.HighlighterView.get(paper.findViewByModel(entity), 'loose_element'),
+      dia.HighlighterView.get(paper.findViewByModel(entity), "loose_element"),
     ).toBeNull();
   });
 });
 
-describe('showLinkTools', () => {
+describe("showLinkTools", () => {
   const setup = (
     isParentInEditMode: boolean,
     isChildInEditMode: boolean,
-    modifier: 'rw+' | 'rw',
+    modifier: "rw+" | "rw",
   ) => {
     const editable = true;
     const graph = new dia.Graph({});
@@ -292,7 +292,7 @@ describe('showLinkTools', () => {
   it("adds tools to the link when instances aren't in EditMode and there is no rule with rw modifier", () => {
     const isParentInEditMode = false;
     const isChildInEditMode = false;
-    const modifier = 'rw+';
+    const modifier = "rw+";
     const { paper, graph, linkView, connectionRules } = setup(
       isParentInEditMode,
       isChildInEditMode,
@@ -306,10 +306,10 @@ describe('showLinkTools', () => {
     expect(linkView.hasTools()).toBeTruthy();
   });
 
-  it('adds tools to the link when only instance without rule is in edit mode', () => {
+  it("adds tools to the link when only instance without rule is in edit mode", () => {
     const isParentInEditMode = true;
     const isChildInEditMode = false;
-    const modifier = 'rw';
+    const modifier = "rw";
     const { paper, graph, linkView, connectionRules } = setup(
       isParentInEditMode,
       isChildInEditMode,
@@ -326,7 +326,7 @@ describe('showLinkTools', () => {
   it("doesn't add tools to the link when instance with rw rule is in edit mode", () => {
     const isParentInEditMode = false;
     const isChildInEditMode = true;
-    const modifier = 'rw';
+    const modifier = "rw";
     const { paper, graph, linkView, connectionRules } = setup(
       isParentInEditMode,
       isChildInEditMode,
@@ -340,8 +340,8 @@ describe('showLinkTools', () => {
   });
 });
 
-describe('moveCellsFromColliding', () => {
-  it('should move cells to avoid collision', () => {
+describe("moveCellsFromColliding", () => {
+  it("should move cells to avoid collision", () => {
     const graph = new dia.Graph();
 
     new dia.Paper({
@@ -366,8 +366,8 @@ describe('moveCellsFromColliding', () => {
     graph.addCell(entityA);
     graph.addCell(entityB);
 
-    entityA.set('position', { x: 0, y: 0 });
-    entityB.set('position', { x: 0, y: 0 });
+    entityA.set("position", { x: 0, y: 0 });
+    entityB.set("position", { x: 0, y: 0 });
 
     moveCellsFromColliding(graph, graph.getCells());
 
@@ -377,7 +377,7 @@ describe('moveCellsFromColliding', () => {
     expect(updatedCells[1].position()).toEqual({ x: 0, y: 0 });
   });
 
-  it('should not move cells if they are not colliding', () => {
+  it("should not move cells if they are not colliding", () => {
     const graph = new dia.Graph();
 
     new dia.Paper({
@@ -401,8 +401,8 @@ describe('moveCellsFromColliding', () => {
     graph.addCell(entityA);
     graph.addCell(entityB);
 
-    entityA.set('position', { x: 0, y: 0 });
-    entityB.set('position', { x: 200, y: 200 });
+    entityA.set("position", { x: 0, y: 0 });
+    entityB.set("position", { x: 200, y: 200 });
 
     moveCellsFromColliding(graph, graph.getCells());
     const updatedCells = graph.getCells();

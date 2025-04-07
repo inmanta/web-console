@@ -165,7 +165,7 @@ export default [
   {
     files: ["**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "**/*.spec.tsx", "cypress/**/*"],
     rules: {
-      "@stylistic/quotes": ["warn", "single", { "avoidEscape": true }],
+      "@stylistic/quotes": ["warn", "double", { "avoidEscape": true }],
     },
   },
   {

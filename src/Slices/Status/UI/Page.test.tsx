@@ -1,13 +1,13 @@
-import React, { act } from 'react';
-import { Page } from '@patternfly/react-core';
-import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
-import { render, screen, waitFor, within } from '@testing-library/react';
-import { userEvent } from '@testing-library/user-event';
-import { StoreProvider } from 'easy-peasy';
-import { axe, toHaveNoViolations } from 'jest-axe';
-import { delay, http, HttpResponse } from 'msw';
-import { setupServer } from 'msw/node';
-import { ArchiveHelper, Deferred, Either, RemoteData } from '@/Core';
+import React, { act } from "react";
+import { Page } from "@patternfly/react-core";
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import { render, screen, waitFor, within } from "@testing-library/react";
+import { userEvent } from "@testing-library/user-event";
+import { StoreProvider } from "easy-peasy";
+import { axe, toHaveNoViolations } from "jest-axe";
+import { delay, http, HttpResponse } from "msw";
+import { setupServer } from "msw/node";
+import { ArchiveHelper, Deferred, Either, RemoteData } from "@/Core";
 import {
   GetServerStatusContinuousQueryManager,
   GetServerStatusStateHelper,
@@ -15,17 +15,17 @@ import {
   PrimaryArchiveHelper,
   PrimaryFeatureManager,
   QueryResolverImpl,
-} from '@/Data';
+} from "@/Data";
 import {
   DeferredApiHelper,
   dependencies,
   DynamicQueryManagerResolverImpl,
   ServerStatus,
   StaticScheduler,
-} from '@/Test';
-import { words } from '@/UI';
-import { DependencyProvider } from '@/UI/Dependency';
-import { StatusPage } from '.';
+} from "@/Test";
+import { words } from "@/UI";
+import { DependencyProvider } from "@/UI/Dependency";
+import { StatusPage } from ".";
 expect.extend(toHaveNoViolations);
 
 export class MockArchiveHelper implements ArchiveHelper {
@@ -97,40 +97,40 @@ function setup(useMockArchiveHelper = false) {
 }
 const server = setupServer();
 
-describe('StatusPage', () => {
+describe("StatusPage", () => {
   beforeAll(() => server.listen());
   afterEach(() => server.resetHandlers());
   afterAll(() => server.close());
 
-  test('GIVEN StatusPage THEN shows server status', async() => {
+  test("GIVEN StatusPage THEN shows server status", async() => {
     const { component, apiHelper } = setup();
 
     render(component);
 
     expect(apiHelper.pendingRequests).toHaveLength(1);
     expect(apiHelper.pendingRequests[0]).toEqual({
-      method: 'GET',
-      url: '/api/v1/serverstatus',
+      method: "GET",
+      url: "/api/v1/serverstatus",
     });
 
     await act(async() => {
       await apiHelper.resolve(Either.right({ data: ServerStatus.withLsm }));
     });
 
-    expect(screen.getByRole('list', { name: 'StatusList' })).toBeVisible();
+    expect(screen.getByRole("list", { name: "StatusList" })).toBeVisible();
     expect(
-      screen.getByRole('listitem', {
-        name: 'StatusItem-Inmanta Service Orchestrator',
+      screen.getByRole("listitem", {
+        name: "StatusItem-Inmanta Service Orchestrator",
       }),
     ).toBeVisible();
     expect(
-      screen.getByRole('listitem', {
-        name: 'StatusItem-lsm',
+      screen.getByRole("listitem", {
+        name: "StatusItem-lsm",
       }),
     ).toBeVisible();
     expect(
-      screen.getByRole('listitem', {
-        name: 'StatusItem-lsm.database',
+      screen.getByRole("listitem", {
+        name: "StatusItem-lsm.database",
       }),
     ).toBeVisible();
 
@@ -141,7 +141,7 @@ describe('StatusPage', () => {
     });
   });
 
-  test('GIVEN StatusPage without support extension THEN download button is not present', async() => {
+  test("GIVEN StatusPage without support extension THEN download button is not present", async() => {
     const { component, apiHelper } = setup();
 
     render(component);
@@ -153,7 +153,7 @@ describe('StatusPage', () => {
     });
 
     expect(
-      screen.queryByRole('button', { name: 'DownloadArchiveButton' }),
+      screen.queryByRole("button", { name: "DownloadArchiveButton" }),
     ).not.toBeInTheDocument();
 
     await act(async() => {
@@ -163,7 +163,7 @@ describe('StatusPage', () => {
     });
   });
 
-  test('GIVEN StatusPage with support extension THEN download button is present', async() => {
+  test("GIVEN StatusPage with support extension THEN download button is present", async() => {
     const { component, apiHelper } = setup();
 
     render(component);
@@ -173,7 +173,7 @@ describe('StatusPage', () => {
     });
 
     expect(
-      screen.getByRole('button', { name: 'DownloadArchiveButton' }),
+      screen.getByRole("button", { name: "DownloadArchiveButton" }),
     ).toBeVisible();
 
     await act(async() => {
@@ -183,9 +183,9 @@ describe('StatusPage', () => {
     });
   });
 
-  test('GIVEN StatusPage with support extension WHEN user click download THEN an archive is created', async() => {
+  test("GIVEN StatusPage with support extension WHEN user click download THEN an archive is created", async() => {
     server.use(
-      http.get('/api/v2/support', async() => {
+      http.get("/api/v2/support", async() => {
         await delay(100);
 
         return HttpResponse.json(ServerStatus.supportArchiveBase64);
@@ -199,23 +199,23 @@ describe('StatusPage', () => {
       await apiHelper.resolve(Either.right({ data: ServerStatus.withSupport }));
     });
 
-    const downloadButton = screen.getByRole('button', {
-      name: 'DownloadArchiveButton',
+    const downloadButton = screen.getByRole("button", {
+      name: "DownloadArchiveButton",
     });
 
     expect(downloadButton).toHaveTextContent(
-      words('status.supportArchive.action.download'),
+      words("status.supportArchive.action.download"),
     );
 
     await userEvent.click(downloadButton);
 
     expect(downloadButton).toHaveTextContent(
-      words('status.supportArchive.action.downloading'),
+      words("status.supportArchive.action.downloading"),
     );
 
     await waitFor(() =>
       expect(downloadButton).toHaveTextContent(
-        words('status.supportArchive.action.download'),
+        words("status.supportArchive.action.download"),
       ),
     );
 
@@ -226,9 +226,9 @@ describe('StatusPage', () => {
     });
   });
 
-  test('GIVEN StatusPage with support extension WHEN user click download THEN button goes through correct phases', async() => {
+  test("GIVEN StatusPage with support extension WHEN user click download THEN button goes through correct phases", async() => {
     server.use(
-      http.get('/api/v2/support', async() => {
+      http.get("/api/v2/support", async() => {
         await delay(100);
 
         return HttpResponse.json(ServerStatus.supportArchiveBase64);
@@ -241,26 +241,26 @@ describe('StatusPage', () => {
       await apiHelper.resolve(Either.right({ data: ServerStatus.withSupport }));
     });
 
-    const downloadButton = screen.getByRole('button', {
-      name: 'DownloadArchiveButton',
+    const downloadButton = screen.getByRole("button", {
+      name: "DownloadArchiveButton",
     });
 
     expect(downloadButton).toHaveTextContent(
-      words('status.supportArchive.action.download'),
+      words("status.supportArchive.action.download"),
     );
 
     await userEvent.click(downloadButton);
 
     expect(downloadButton).toHaveTextContent(
-      words('status.supportArchive.action.downloading'),
+      words("status.supportArchive.action.downloading"),
     );
 
     (archiveHelper as MockArchiveHelper).resolve(
-      new Blob(['testing'], { type: 'application/octet-stream' }),
+      new Blob(["testing"], { type: "application/octet-stream" }),
     );
     await waitFor(() =>
       expect(downloadButton).toHaveTextContent(
-        words('status.supportArchive.action.download'),
+        words("status.supportArchive.action.download"),
       ),
     );
 
@@ -271,10 +271,10 @@ describe('StatusPage', () => {
     });
   });
 
-  test('GIVEN StatusPage with support extension WHEN user click download and response is error THEN error is shown', async() => {
+  test("GIVEN StatusPage with support extension WHEN user click download and response is error THEN error is shown", async() => {
     server.use(
-      http.get('/api/v2/support', () => {
-        return HttpResponse.json({ message: 'error' }, { status: 500 });
+      http.get("/api/v2/support", () => {
+        return HttpResponse.json({ message: "error" }, { status: 500 });
       }),
     );
     const { component, apiHelper } = setup();
@@ -285,20 +285,20 @@ describe('StatusPage', () => {
       await apiHelper.resolve(Either.right({ data: ServerStatus.withSupport }));
     });
 
-    const downloadButton = await screen.findByRole('button', {
-      name: 'DownloadArchiveButton',
+    const downloadButton = await screen.findByRole("button", {
+      name: "DownloadArchiveButton",
     });
 
     expect(downloadButton).toHaveTextContent(
-      words('status.supportArchive.action.download'),
+      words("status.supportArchive.action.download"),
     );
 
     await userEvent.click(downloadButton);
 
-    const errorContainer = await screen.findByTestId('ToastAlert');
+    const errorContainer = await screen.findByTestId("ToastAlert");
 
     expect(errorContainer).toBeVisible();
-    expect(within(errorContainer).getByText('error')).toBeVisible();
+    expect(within(errorContainer).getByText("error")).toBeVisible();
 
     await act(async() => {
       const results = await axe(document.body);

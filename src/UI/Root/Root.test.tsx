@@ -1,11 +1,11 @@
-import React, { act } from 'react';
-import { MemoryRouter } from 'react-router';
-import { useLocation } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { render, screen } from '@testing-library/react';
-import { StoreProvider } from 'easy-peasy';
-import { axe, toHaveNoViolations } from 'jest-axe';
-import { Either } from '@/Core';
+import React, { act } from "react";
+import { MemoryRouter } from "react-router";
+import { useLocation } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { render, screen } from "@testing-library/react";
+import { StoreProvider } from "easy-peasy";
+import { axe, toHaveNoViolations } from "jest-axe";
+import { Either } from "@/Core";
 import {
   QueryResolverImpl,
   getStoreInstance,
@@ -13,12 +13,12 @@ import {
   GetServerStatusStateHelper,
   GetEnvironmentsStateHelper,
   GetEnvironmentsQueryManager,
-} from '@/Data';
-import { defaultAuthContext } from '@/Data/Auth/AuthContext';
+} from "@/Data";
+import { defaultAuthContext } from "@/Data/Auth/AuthContext";
 import {
   GetEnvironmentsContinuousQueryManager,
   GetEnvironmentsContinuousStateHelper,
-} from '@/Data/Managers/GetEnvironmentsContinuous';
+} from "@/Data/Managers/GetEnvironmentsContinuous";
 import {
   DeferredApiHelper,
   dependencies,
@@ -26,9 +26,9 @@ import {
   Project,
   ServerStatus,
   StaticScheduler,
-} from '@/Test';
-import { DependencyProvider, EnvironmentHandlerImpl } from '@/UI/Dependency';
-import { Root } from './Root';
+} from "@/Test";
+import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
+import { Root } from "./Root";
 
 function setup() {
   const queryClient = new QueryClient();
@@ -68,7 +68,7 @@ function setup() {
 
   const component = (
     <QueryClientProvider client={queryClient}>
-      <MemoryRouter initialEntries={['/']}>
+      <MemoryRouter initialEntries={["/"]}>
         <StoreProvider store={store}>
           <DependencyProvider
             dependencies={{
@@ -77,8 +77,8 @@ function setup() {
               environmentHandler,
               authHelper: {
                 ...defaultAuthContext,
-                getUser: () => 'mocked_user',
-                getToken: () => 'mocked_token',
+                getUser: () => "mocked_user",
+                getToken: () => "mocked_token",
               },
             }}
           >
@@ -97,7 +97,7 @@ function setup() {
 
 expect.extend(toHaveNoViolations);
 
-test('GIVEN the app THEN the app should be accessible', async() => {
+test("GIVEN the app THEN the app should be accessible", async() => {
   fetchMock.mockResponse(JSON.stringify({}));
   const { component, apiHelper } = setup();
 
@@ -115,7 +115,7 @@ test('GIVEN the app THEN the app should be accessible', async() => {
   });
 });
 
-test('GIVEN the app THEN the navigation toggle button should be visible', async() => {
+test("GIVEN the app THEN the navigation toggle button should be visible", async() => {
   fetchMock.mockResponse(JSON.stringify({}));
   const { component, apiHelper } = setup();
 
@@ -126,10 +126,10 @@ test('GIVEN the app THEN the navigation toggle button should be visible', async(
     await apiHelper.resolve(Either.right({ data: Project.list }));
   });
 
-  expect(screen.getByRole('button', { name: 'Main Navigation' })).toBeVisible();
+  expect(screen.getByRole("button", { name: "Main Navigation" })).toBeVisible();
 });
 
-test('GIVEN the app THEN the documentation link should be visible', async() => {
+test("GIVEN the app THEN the documentation link should be visible", async() => {
   fetchMock.mockResponse(JSON.stringify({}));
   const { component, apiHelper } = setup();
 
@@ -141,6 +141,6 @@ test('GIVEN the app THEN the documentation link should be visible', async() => {
   });
 
   expect(
-    screen.getByRole('button', { name: 'documentation link' }),
+    screen.getByRole("button", { name: "documentation link" }),
   ).toBeVisible();
 });

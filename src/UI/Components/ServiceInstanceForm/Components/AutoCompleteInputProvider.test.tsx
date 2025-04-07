@@ -1,19 +1,19 @@
-import React, { useState } from 'react';
-import { MemoryRouter } from 'react-router-dom';
-import { QueryClientProvider } from '@tanstack/react-query';
-import { fireEvent, render, screen } from '@testing-library/react';
-import { StoreProvider } from 'easy-peasy';
-import { HttpResponse, http } from 'msw';
-import { setupServer } from 'msw/node';
-import { getStoreInstance } from '@/Data';
-import * as queryModule from '@/Data/Managers/V2/helpers/useQueries';
-import { dependencies, ServiceInstance } from '@/Test';
-import { testClient } from '@/Test/Utils/react-query-setup';
-import { DependencyProvider } from '@/UI/Dependency';
-import { AutoCompleteInputProvider } from './AutoCompleteInputProvider';
+import React, { useState } from "react";
+import { MemoryRouter } from "react-router-dom";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { fireEvent, render, screen } from "@testing-library/react";
+import { StoreProvider } from "easy-peasy";
+import { HttpResponse, http } from "msw";
+import { setupServer } from "msw/node";
+import { getStoreInstance } from "@/Data";
+import * as queryModule from "@/Data/Managers/V2/helpers/useQueries";
+import { dependencies, ServiceInstance } from "@/Test";
+import { testClient } from "@/Test/Utils/react-query-setup";
+import { DependencyProvider } from "@/UI/Dependency";
+import { AutoCompleteInputProvider } from "./AutoCompleteInputProvider";
 
 const server = setupServer(
-  http.get('/lsm/v1/service_inventory/test_entity', () => {
+  http.get("/lsm/v1/service_inventory/test_entity", () => {
     return HttpResponse.json({
       data: [ServiceInstance.a],
       metadata: {
@@ -26,7 +26,7 @@ const server = setupServer(
   }),
 );
 const TestWrapper = () => {
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState("");
   const store = getStoreInstance();
 
   return (
@@ -36,12 +36,12 @@ const TestWrapper = () => {
           <StoreProvider store={store}>
             <AutoCompleteInputProvider
               alreadySelected={[]}
-              attributeName={'test_attribute'}
+              attributeName={"test_attribute"}
               attributeValue={value}
               isOptional={false}
-              description={''}
+              description={""}
               handleInputChange={setValue}
-              serviceName={'test_entity'}
+              serviceName={"test_entity"}
               multi={false}
             />
           </StoreProvider>
@@ -51,11 +51,11 @@ const TestWrapper = () => {
   );
 };
 
-test('Given the AutoCompleteInputProvider When typing an instance name or id Then the correct request is fired', async() => {
+test("Given the AutoCompleteInputProvider When typing an instance name or id Then the correct request is fired", async() => {
   server.listen();
   const mockFn = jest.fn();
 
-  jest.spyOn(queryModule, 'useGet').mockReturnValue(async(path) => {
+  jest.spyOn(queryModule, "useGet").mockReturnValue(async(path) => {
     mockFn(path);
     const response = await fetch(path);
 
@@ -65,31 +65,31 @@ test('Given the AutoCompleteInputProvider When typing an instance name or id The
   render(<TestWrapper />);
 
   const relationInputField = await screen.findByPlaceholderText(
-    'Select an instance of test_entity',
+    "Select an instance of test_entity",
   );
 
   expect(mockFn.mock.calls[0]).toStrictEqual([
-    '/lsm/v1/service_inventory/test_entity?include_deployment_progress=True&limit=250&',
+    "/lsm/v1/service_inventory/test_entity?include_deployment_progress=True&limit=250&",
   ]);
 
   expect(mockFn.mock.calls[1]).toStrictEqual([
-    '/lsm/v1/service_inventory/test_entity?include_deployment_progress=True&limit=250&filter.id_or_service_identity=',
+    "/lsm/v1/service_inventory/test_entity?include_deployment_progress=True&limit=250&filter.id_or_service_identity=",
   ]);
-  fireEvent.change(relationInputField, { target: { value: 'a' } });
+  fireEvent.change(relationInputField, { target: { value: "a" } });
 
   expect(mockFn.mock.calls[2]).toStrictEqual([
-    '/lsm/v1/service_inventory/test_entity?include_deployment_progress=True&limit=250&filter.id_or_service_identity=a',
+    "/lsm/v1/service_inventory/test_entity?include_deployment_progress=True&limit=250&filter.id_or_service_identity=a",
   ]);
 
-  fireEvent.change(relationInputField, { target: { value: 'ab' } });
+  fireEvent.change(relationInputField, { target: { value: "ab" } });
 
   expect(mockFn.mock.calls[3]).toStrictEqual([
-    '/lsm/v1/service_inventory/test_entity?include_deployment_progress=True&limit=250&filter.id_or_service_identity=ab',
+    "/lsm/v1/service_inventory/test_entity?include_deployment_progress=True&limit=250&filter.id_or_service_identity=ab",
   ]);
 
-  fireEvent.change(relationInputField, { target: { value: '' } });
+  fireEvent.change(relationInputField, { target: { value: "" } });
   expect(mockFn.mock.calls[4]).toStrictEqual([
-    '/lsm/v1/service_inventory/test_entity?include_deployment_progress=True&limit=250&filter.id_or_service_identity=',
+    "/lsm/v1/service_inventory/test_entity?include_deployment_progress=True&limit=250&filter.id_or_service_identity=",
   ]);
 
   server.close();

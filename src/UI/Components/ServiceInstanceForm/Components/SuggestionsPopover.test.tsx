@@ -1,17 +1,17 @@
-import React, { RefObject } from 'react';
-import { Button } from '@patternfly/react-core';
-import { fireEvent, render, screen } from '@testing-library/react';
-import { SuggestionsPopover } from './SuggestionsPopover';
+import React, { RefObject } from "react";
+import { Button } from "@patternfly/react-core";
+import { fireEvent, render, screen } from "@testing-library/react";
+import { SuggestionsPopover } from "./SuggestionsPopover";
 
-describe('SuggestionsPopover', () => {
-  const suggestions = ['apple', 'banana', 'cherry'];
+describe("SuggestionsPopover", () => {
+  const suggestions = ["apple", "banana", "cherry"];
   const handleSuggestionClick = jest.fn();
-  const filter = 'a';
+  const filter = "a";
   const setIsOpen = jest.fn();
   const isOpen = true;
   const ref: RefObject<HTMLInputElement> = React.createRef();
 
-  it('renders the popover component', () => {
+  it("renders the popover component", () => {
     render(
       <SuggestionsPopover
         suggestions={suggestions}
@@ -24,13 +24,13 @@ describe('SuggestionsPopover', () => {
     );
 
     // Assert that the popover component is rendered
-    expect(screen.getByText('apple')).toBeInTheDocument();
-    expect(screen.getByText('banana')).toBeInTheDocument();
+    expect(screen.getByText("apple")).toBeInTheDocument();
+    expect(screen.getByText("banana")).toBeInTheDocument();
     // the filter contains 'a' so 'cherry' should not be rendered
-    expect(screen.queryByText('cherry')).not.toBeInTheDocument();
+    expect(screen.queryByText("cherry")).not.toBeInTheDocument();
   });
 
-  it('calls handleSuggestionClick when a suggestion is clicked', () => {
+  it("calls handleSuggestionClick when a suggestion is clicked", () => {
     render(
       <>
         <input ref={ref} />
@@ -46,13 +46,13 @@ describe('SuggestionsPopover', () => {
     );
 
     // Simulate a click on the 'apple' suggestion
-    fireEvent.click(screen.getByLabelText('apple'));
+    fireEvent.click(screen.getByLabelText("apple"));
 
     // Assert that handleSuggestionClick is called with the correct suggestion
-    expect(handleSuggestionClick).toHaveBeenCalledWith('apple');
+    expect(handleSuggestionClick).toHaveBeenCalledWith("apple");
   });
 
-  it('calls setIsOpen when the popover is closed', () => {
+  it("calls setIsOpen when the popover is closed", () => {
     render(
       <>
         <SuggestionsPopover
@@ -69,13 +69,13 @@ describe('SuggestionsPopover', () => {
     );
 
     // Simulate a click outside the popover
-    fireEvent.click(screen.getByText('Some button'));
+    fireEvent.click(screen.getByText("Some button"));
 
     // Assert that setIsOpen is called with false
     expect(setIsOpen).toHaveBeenCalledWith(false);
   });
 
-  it('handles menu key events', () => {
+  it("handles menu key events", () => {
     render(
       <>
         <input ref={ref} />
@@ -90,16 +90,16 @@ describe('SuggestionsPopover', () => {
       </>,
     );
 
-    const input = screen.getByRole('textbox');
+    const input = screen.getByRole("textbox");
 
     // Simulate pressing the down arrow key
-    fireEvent.keyDown(input, { key: 'ArrowDown' });
+    fireEvent.keyDown(input, { key: "ArrowDown" });
 
     // Assert that the first suggestion is focused
-    expect(screen.getByRole('menuitem', { name: 'apple' })).toHaveFocus();
+    expect(screen.getByRole("menuitem", { name: "apple" })).toHaveFocus();
 
     // simulate pressing the escape key
-    fireEvent.keyDown(input, { key: 'Escape' });
+    fireEvent.keyDown(input, { key: "Escape" });
 
     // Assert that setIsOpen is called with false
     expect(setIsOpen).toHaveBeenCalledWith(false);
@@ -108,10 +108,10 @@ describe('SuggestionsPopover', () => {
     fireEvent.click(input);
 
     // Assert that the popover is opened
-    expect(screen.getByText('apple')).toBeInTheDocument();
+    expect(screen.getByText("apple")).toBeInTheDocument();
 
     // simulate pressing the up tab key
-    fireEvent.keyDown(input, { key: 'Tab' });
+    fireEvent.keyDown(input, { key: "Tab" });
 
     // Assert that the popover is closed
     expect(setIsOpen).toHaveBeenCalledWith(false);
@@ -120,14 +120,14 @@ describe('SuggestionsPopover', () => {
     fireEvent.click(input);
 
     // simulate pressing the arrow down key
-    fireEvent.keyDown(input, { key: 'ArrowDown' });
+    fireEvent.keyDown(input, { key: "ArrowDown" });
 
     // simulate pressing the enter key on the focused suggestion
-    const firstOption = screen.getByText('apple');
+    const firstOption = screen.getByText("apple");
 
-    fireEvent.keyDown(firstOption, { key: 'Enter' });
+    fireEvent.keyDown(firstOption, { key: "Enter" });
 
     // Assert that handleSuggestionClick is called with the correct suggestion
-    expect(handleSuggestionClick).toHaveBeenCalledWith('apple');
+    expect(handleSuggestionClick).toHaveBeenCalledWith("apple");
   });
 });

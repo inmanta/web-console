@@ -1,15 +1,15 @@
-import React from 'react';
-import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
-import { render, screen, waitFor } from '@testing-library/react';
-import { userEvent } from '@testing-library/user-event';
-import { StoreProvider } from 'easy-peasy';
-import { http, HttpResponse } from 'msw';
-import { setupServer } from 'msw/node';
-import { getStoreInstance } from '@/Data';
-import { dependencies, MockEnvironmentModifier } from '@/Test';
-import { DependencyProvider } from '@/UI/Dependency';
-import { words } from '@/UI/words';
-import { Provider } from './Provider';
+import React from "react";
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import { render, screen, waitFor } from "@testing-library/react";
+import { userEvent } from "@testing-library/user-event";
+import { StoreProvider } from "easy-peasy";
+import { http, HttpResponse } from "msw";
+import { setupServer } from "msw/node";
+import { getStoreInstance } from "@/Data";
+import { dependencies, MockEnvironmentModifier } from "@/Test";
+import { DependencyProvider } from "@/UI/Dependency";
+import { words } from "@/UI/words";
+import { Provider } from "./Provider";
 
 function setup({
   details = {
@@ -53,30 +53,30 @@ function setup({
   return { component, afterTrigger };
 }
 const server = setupServer(
-  http.post('/api/v1/notify/env', async() => {
+  http.post("/api/v1/notify/env", async() => {
     return HttpResponse.json({});
   }),
 );
 
-describe('CompileWidgetProvider', () => {
+describe("CompileWidgetProvider", () => {
   beforeAll(() => server.listen());
   afterAll(() => server.close());
 
-  test('GIVEN CompileButton WHEN clicked THEN triggers recompile', async() => {
+  test("GIVEN CompileButton WHEN clicked THEN triggers recompile", async() => {
     const { component, afterTrigger } = setup();
 
     render(component);
 
-    const button = screen.getByRole('button', {
-      name: 'RecompileButton',
+    const button = screen.getByRole("button", {
+      name: "RecompileButton",
     });
 
     await userEvent.click(button);
 
-    const toast = screen.getByTestId('ToastAlert');
+    const toast = screen.getByTestId("ToastAlert");
 
     expect(toast).toBeVisible();
-    expect(toast).toHaveTextContent(words('common.compileWidget.toast')(false));
+    expect(toast).toHaveTextContent(words("common.compileWidget.toast")(false));
     await waitFor(() => {
       expect(afterTrigger).toHaveBeenCalled();
     });
@@ -84,40 +84,40 @@ describe('CompileWidgetProvider', () => {
     expect(button).toBeEnabled();
   });
 
-  test('GIVEN CompileButton WHEN clicked on toggle and clicked on Update & Recompile option THEN triggers recompile with update', async() => {
+  test("GIVEN CompileButton WHEN clicked on toggle and clicked on Update & Recompile option THEN triggers recompile with update", async() => {
     const { component, afterTrigger } = setup();
 
     render(component);
 
-    const widget = screen.getByRole('button', { name: 'RecompileButton' });
+    const widget = screen.getByRole("button", { name: "RecompileButton" });
 
     expect(widget).toBeVisible();
 
-    const toggle = screen.getByRole('button', {
-      name: 'Toggle',
+    const toggle = screen.getByRole("button", {
+      name: "Toggle",
     });
 
     expect(toggle).toBeEnabled();
 
     await userEvent.click(toggle);
 
-    const button = screen.getByRole('menuitem', {
-      name: 'UpdateAndRecompileButton',
+    const button = screen.getByRole("menuitem", {
+      name: "UpdateAndRecompileButton",
     });
 
     await userEvent.click(button);
 
-    const toast = screen.getByTestId('ToastAlert');
+    const toast = screen.getByTestId("ToastAlert");
 
     expect(toast).toBeVisible();
-    expect(toast).toHaveTextContent(words('common.compileWidget.toast')(true));
+    expect(toast).toHaveTextContent(words("common.compileWidget.toast")(true));
 
     await waitFor(() => {
       expect(afterTrigger).toHaveBeenCalled();
     });
   });
 
-  test('GIVEN CompileButton WHEN environmentSetting server_compile is disabled THEN button is disabled', async() => {
+  test("GIVEN CompileButton WHEN environmentSetting server_compile is disabled THEN button is disabled", async() => {
     const { component } = setup({
       details: {
         halted: false,
@@ -129,7 +129,7 @@ describe('CompileWidgetProvider', () => {
 
     render(component);
 
-    const button = screen.getByRole('button', { name: 'RecompileButton' });
+    const button = screen.getByRole("button", { name: "RecompileButton" });
 
     expect(button).toBeDisabled();
   });
@@ -147,11 +147,11 @@ describe('CompileWidgetProvider', () => {
 
     render(component);
 
-    const button = screen.getByRole('button', { name: 'RecompileButton' });
+    const button = screen.getByRole("button", { name: "RecompileButton" });
 
     await userEvent.click(button);
 
-    expect(screen.queryByTestId('ToastAlert')).not.toBeInTheDocument();
+    expect(screen.queryByTestId("ToastAlert")).not.toBeInTheDocument();
 
     expect(button).toBeEnabled();
   });

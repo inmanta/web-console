@@ -1,9 +1,9 @@
-import { ColumnExpansionHelper } from './ColumnExpansionHelper';
+import { ColumnExpansionHelper } from "./ColumnExpansionHelper";
 
-test('Given the ColumnExpansionHelper with parameters used by the attributes table, When expanding columns and resetting their state Then returns the correct column widths', () => {
+test("Given the ColumnExpansionHelper with parameters used by the attributes table, When expanding columns and resetting their state Then returns the correct column widths", () => {
   const columnExpansionHelper = new ColumnExpansionHelper(60, 3, 10);
   const defaultState = columnExpansionHelper.getDefaultState(
-    ['candidate', 'active', 'rollback'],
+    ["candidate", "active", "rollback"],
     [],
   );
 
@@ -11,21 +11,21 @@ test('Given the ColumnExpansionHelper with parameters used by the attributes tab
 
   const activeExpanded = columnExpansionHelper.expandColumn(
     defaultState,
-    'active',
+    "active",
   );
 
   expect(activeExpanded).toEqual({ candidate: 10, active: 40, rollback: 10 });
 
   const anotherExpanded = columnExpansionHelper.expandColumn(
     activeExpanded,
-    'candidate',
+    "candidate",
   );
 
   expect(anotherExpanded).toEqual({ candidate: 40, active: 10, rollback: 10 });
 
   const defaultWithOneEmpty = columnExpansionHelper.getDefaultState(
-    ['candidate', 'active', 'rollback'],
-    ['candidate'],
+    ["candidate", "active", "rollback"],
+    ["candidate"],
   );
 
   expect(defaultWithOneEmpty).toEqual({
@@ -35,8 +35,8 @@ test('Given the ColumnExpansionHelper with parameters used by the attributes tab
   });
 
   const defaultWithTwoEmpty = columnExpansionHelper.getDefaultState(
-    ['candidate', 'active', 'rollback'],
-    ['candidate', 'active'],
+    ["candidate", "active", "rollback"],
+    ["candidate", "active"],
   );
 
   expect(defaultWithTwoEmpty).toEqual({
@@ -46,8 +46,8 @@ test('Given the ColumnExpansionHelper with parameters used by the attributes tab
   });
 
   const defaultWithAllEmpty = columnExpansionHelper.getDefaultState(
-    ['candidate', 'active', 'rollback'],
-    ['candidate', 'active', 'rollback'],
+    ["candidate", "active", "rollback"],
+    ["candidate", "active", "rollback"],
   );
 
   expect(defaultWithAllEmpty).toEqual({
