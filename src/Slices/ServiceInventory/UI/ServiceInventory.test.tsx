@@ -1,15 +1,15 @@
-import React, { act } from "react";
-import { MemoryRouter, useLocation } from "react-router-dom";
-import { Page } from "@patternfly/react-core";
-import { QueryClientProvider } from "@tanstack/react-query";
-import { fireEvent, render, screen, within } from "@testing-library/react";
-import { userEvent } from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
-import { axe, toHaveNoViolations } from "jest-axe";
-import { HttpResponse, http } from "msw";
-import { setupServer } from "msw/node";
-import { RemoteData } from "@/Core";
-import { getStoreInstance } from "@/Data";
+import React, { act } from 'react';
+import { MemoryRouter, useLocation } from 'react-router-dom';
+import { Page } from '@patternfly/react-core';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { fireEvent, render, screen, within } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
+import { StoreProvider } from 'easy-peasy';
+import { axe, toHaveNoViolations } from 'jest-axe';
+import { HttpResponse, http } from 'msw';
+import { setupServer } from 'msw/node';
+import { RemoteData } from '@/Core';
+import { getStoreInstance } from '@/Data';
 import {
   Service,
   ServiceInstance,
@@ -18,17 +18,17 @@ import {
   MockEnvironmentModifier,
   DeferredApiHelper,
   dependencies,
-} from "@/Test";
-import { testClient } from "@/Test/Utils/react-query-setup";
-import { words } from "@/UI";
-import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
-import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
-import { Chart } from "./Components";
-import { ServiceInventory } from "./ServiceInventory";
+} from '@/Test';
+import { testClient } from '@/Test/Utils/react-query-setup';
+import { words } from '@/UI';
+import { DependencyProvider, EnvironmentHandlerImpl } from '@/UI/Dependency';
+import { ModalProvider } from '@/UI/Root/Components/ModalProvider';
+import { Chart } from './Components';
+import { ServiceInventory } from './ServiceInventory';
 
 expect.extend(toHaveNoViolations);
 
-function setup(service = Service.a, pageSize = "") {
+function setup(service = Service.a, pageSize = '') {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
@@ -41,12 +41,12 @@ function setup(service = Service.a, pageSize = "") {
   store.dispatch.environment.setEnvironments(
     RemoteData.success([
       {
-        id: "aaa",
-        name: "env-a",
-        project_id: "ppp",
-        repo_branch: "branch",
-        repo_url: "repo",
-        projectName: "project",
+        id: 'aaa',
+        name: 'env-a',
+        project_id: 'ppp',
+        repo_branch: 'branch',
+        repo_url: 'repo',
+        projectName: 'project',
         halted: false,
         settings: {
           enable_lsm_expert_mode: false,
@@ -87,16 +87,16 @@ function setup(service = Service.a, pageSize = "") {
   };
 }
 
-describe("ServiceInventory", () => {
+describe('ServiceInventory', () => {
   const server = setupServer();
 
   beforeAll(() => server.listen());
   afterEach(() => server.resetHandlers());
   afterAll(() => server.close());
 
-  test("ServiceInventory shows empty view instances", async() => {
+  test('ServiceInventory shows empty view instances', async() => {
     server.use(
-      http.get("/lsm/v1/service_inventory/service_name_a", () => {
+      http.get('/lsm/v1/service_inventory/service_name_a', () => {
         return HttpResponse.json({ data: [], metadata: Pagination.metadata });
       }),
     );
@@ -106,24 +106,24 @@ describe("ServiceInventory", () => {
     render(component);
 
     expect(
-      await screen.findByRole("region", { name: "ServiceInventory-Loading" }),
+      await screen.findByRole('region', { name: 'ServiceInventory-Loading' }),
     ).toBeInTheDocument();
 
     expect(
-      await screen.findByRole("generic", { name: "ServiceInventory-Empty" }),
+      await screen.findByRole('generic', { name: 'ServiceInventory-Empty' }),
     ).toBeInTheDocument();
   });
 
-  test("ServiceInventory shows error with retry", async() => {
+  test('ServiceInventory shows error with retry', async() => {
     let queryCount = 0;
 
     server.use(
-      http.get("/lsm/v1/service_inventory/service_name_a", () => {
+      http.get('/lsm/v1/service_inventory/service_name_a', () => {
         if (queryCount === 0) {
           queryCount++;
 
           return HttpResponse.json(
-            { message: "something went wrong" },
+            { message: 'something went wrong' },
             { status: 500 },
           );
         }
@@ -140,13 +140,13 @@ describe("ServiceInventory", () => {
     render(component);
 
     expect(
-      await screen.findByRole("region", { name: "ServiceInventory-Failed" }),
+      await screen.findByRole('region', { name: 'ServiceInventory-Failed' }),
     ).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: "Retry" }));
+    fireEvent.click(screen.getByRole('button', { name: 'Retry' }));
 
     expect(
-      await screen.findByRole("grid", { name: "ServiceInventory-Success" }),
+      await screen.findByRole('grid', { name: 'ServiceInventory-Success' }),
     ).toBeInTheDocument();
 
     await act(async() => {
@@ -156,16 +156,16 @@ describe("ServiceInventory", () => {
     });
   });
 
-  test("ServiceInventory shows next page of instances", async() => {
+  test('ServiceInventory shows next page of instances', async() => {
     let queryCount = 0;
 
     server.use(
-      http.get("/lsm/v1/service_inventory/service_name_a", () => {
+      http.get('/lsm/v1/service_inventory/service_name_a', () => {
         const response = {
           data: [
             {
               ...ServiceInstance.a,
-              id: "a",
+              id: 'a',
               service_identity_attribute_value: undefined,
             },
           ],
@@ -184,25 +184,25 @@ describe("ServiceInventory", () => {
           data: [
             {
               ...ServiceInstance.a,
-              id: "b",
+              id: 'b',
               service_identity_attribute_value: undefined,
             },
           ],
         });
       }),
     );
-    const { component } = setup(Service.a, "&state.Inventory.pageSize=10");
+    const { component } = setup(Service.a, '&state.Inventory.pageSize=10');
 
     render(component);
 
-    expect(await screen.findByLabelText("IdCell-a")).toBeInTheDocument();
+    expect(await screen.findByLabelText('IdCell-a')).toBeInTheDocument();
 
     await userEvent.click(
-      screen.getByRole("button", { name: "Go to next page" }),
+      screen.getByRole('button', { name: 'Go to next page' }),
     );
 
     expect(
-      await screen.findByRole("cell", { name: "IdCell-b" }),
+      await screen.findByRole('cell', { name: 'IdCell-b' }),
     ).toBeInTheDocument();
 
     await act(async() => {
@@ -212,24 +212,24 @@ describe("ServiceInventory", () => {
     });
   });
 
-  test("ServiceInventory shows instance summary chart", async() => {
+  test('ServiceInventory shows instance summary chart', async() => {
     const { component } = setup(Service.withInstanceSummary);
 
     render(component);
 
     expect(
-      await screen.findByRole("img", { name: words("catalog.summary.title") }),
+      await screen.findByRole('img', { name: words('catalog.summary.title') }),
     ).toBeInTheDocument();
   });
 
-  test("ServiceInventory shows enabled composer buttons for root instances ", async() => {
+  test('ServiceInventory shows enabled composer buttons for root instances ', async() => {
     server.use(
-      http.get("/lsm/v1/service_inventory/service_name_a", () => {
+      http.get('/lsm/v1/service_inventory/service_name_a', () => {
         return HttpResponse.json({
           data: [
             {
               ...ServiceInstance.a,
-              id: "a",
+              id: 'a',
             },
           ],
           links: Pagination.links,
@@ -243,30 +243,30 @@ describe("ServiceInventory", () => {
     render(component);
 
     await userEvent.click(
-      await screen.findByRole("button", { name: "AddInstanceToggle" }),
+      await screen.findByRole('button', { name: 'AddInstanceToggle' }),
     );
 
-    expect(await screen.findByText("Add in Composer")).toBeEnabled();
+    expect(await screen.findByText('Add in Composer')).toBeEnabled();
 
-    const menuToggle = await screen.findByRole("button", {
-      name: "row actions toggle",
+    const menuToggle = await screen.findByRole('button', {
+      name: 'row actions toggle',
     });
 
     await userEvent.click(menuToggle);
 
-    expect(await screen.findByText("Edit in Composer")).toBeEnabled();
+    expect(await screen.findByText('Edit in Composer')).toBeEnabled();
 
-    expect(screen.queryByText("Show in Composer")).toBeEnabled();
+    expect(screen.queryByText('Show in Composer')).toBeEnabled();
   });
 
-  test("ServiceInventory shows only button to display instance in the composer for non-root", async() => {
+  test('ServiceInventory shows only button to display instance in the composer for non-root', async() => {
     server.use(
-      http.get("/lsm/v1/service_inventory/service_name_a", () => {
+      http.get('/lsm/v1/service_inventory/service_name_a', () => {
         return HttpResponse.json({
           data: [
             {
               ...ServiceInstance.a,
-              id: "a",
+              id: 'a',
             },
           ],
           links: Pagination.links,
@@ -274,36 +274,36 @@ describe("ServiceInventory", () => {
         });
       }),
     );
-    const { component } = setup({ ...Service.a, owner: "owner" });
+    const { component } = setup({ ...Service.a, owner: 'owner' });
 
     render(component);
 
     await userEvent.click(
-      await screen.findByRole("button", { name: "AddInstanceToggle" }),
+      await screen.findByRole('button', { name: 'AddInstanceToggle' }),
     );
 
-    expect(screen.getByText("Add in Composer")).toBeInTheDocument();
+    expect(screen.getByText('Add in Composer')).toBeInTheDocument();
 
-    const menuToggle = await screen.findByRole("button", {
-      name: "row actions toggle",
+    const menuToggle = await screen.findByRole('button', {
+      name: 'row actions toggle',
     });
 
     await userEvent.click(menuToggle);
 
-    expect(await screen.findByText("Show in Composer")).toBeEnabled();
+    expect(await screen.findByText('Show in Composer')).toBeEnabled();
 
-    expect(screen.getByText("Edit in Composer")).toBeInTheDocument();
+    expect(screen.getByText('Edit in Composer')).toBeInTheDocument();
   });
 
-  test("GIVEN ServiceInventory WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async() => {
+  test('GIVEN ServiceInventory WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page', async() => {
     server.use(
-      http.get("/lsm/v1/service_inventory/service_name_a", ({ request }) => {
+      http.get('/lsm/v1/service_inventory/service_name_a', ({ request }) => {
         const url = new URL(request.url);
-        const endParam = url.searchParams.get("end");
+        const endParam = url.searchParams.get('end');
 
-        if (endParam === "fake-param") {
+        if (endParam === 'fake-param') {
           return HttpResponse.json({
-            data: [{ ...ServiceInstance.a, id: "b" }],
+            data: [{ ...ServiceInstance.a, id: 'b' }],
             links: { ...Pagination.links },
             metadata: {
               total: 23,
@@ -318,7 +318,7 @@ describe("ServiceInventory", () => {
           data: [
             {
               ...ServiceInstance.a,
-              id: "a",
+              id: 'a',
             },
           ],
           links: Pagination.links,
@@ -332,37 +332,37 @@ describe("ServiceInventory", () => {
       }),
     );
 
-    const { component } = setup({ ...Service.a, owner: "owner" });
+    const { component } = setup({ ...Service.a, owner: 'owner' });
 
     render(component);
 
-    expect(await screen.findByLabelText("IdCell-a")).toBeInTheDocument();
-    const nextPageButton = await screen.findByLabelText("Go to next page");
+    expect(await screen.findByLabelText('IdCell-a')).toBeInTheDocument();
+    const nextPageButton = await screen.findByLabelText('Go to next page');
 
     expect(nextPageButton).toBeEnabled();
 
     await userEvent.click(nextPageButton);
 
-    expect(await screen.findByLabelText("IdCell-b")).toBeInTheDocument();
+    expect(await screen.findByLabelText('IdCell-b')).toBeInTheDocument();
 
-    const refreshedNextButton = await screen.findByLabelText("Go to next page");
+    const refreshedNextButton = await screen.findByLabelText('Go to next page');
 
     expect(refreshedNextButton).toBeDisabled();
 
     //sort on the second page
-    const columnheader = screen.getByRole("columnheader", {
+    const columnheader = screen.getByRole('columnheader', {
       name: /state/i,
     });
 
     await userEvent.click(
-      within(columnheader).getByRole("button", {
+      within(columnheader).getByRole('button', {
         name: /state/i,
       }),
     );
 
-    expect(await screen.findByLabelText("IdCell-a")).toBeInTheDocument();
+    expect(await screen.findByLabelText('IdCell-a')).toBeInTheDocument();
     const refreshedNextButton2 =
-      await screen.findByLabelText("Go to next page");
+      await screen.findByLabelText('Go to next page');
 
     expect(refreshedNextButton2).toBeEnabled();
   });

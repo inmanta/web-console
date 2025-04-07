@@ -1,27 +1,27 @@
-import React from "react";
-import { MemoryRouter } from "react-router-dom";
+import React from 'react';
+import { MemoryRouter } from 'react-router-dom';
 import {
   QueryClient,
   QueryClientProvider,
   UseInfiniteQueryResult,
   UseQueryResult,
-} from "@tanstack/react-query";
-import { render, screen } from "@testing-library/react";
-import { userEvent } from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
-import { HttpResponse, http } from "msw";
-import { setupServer } from "msw/node";
+} from '@tanstack/react-query';
+import { render, screen } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
+import { StoreProvider } from 'easy-peasy';
+import { HttpResponse, http } from 'msw';
+import { setupServer } from 'msw/node';
 import {
   EnvironmentDetails,
   EnvironmentModifier,
   RemoteData,
   ServiceModel,
   VersionedServiceInstanceIdentifier,
-} from "@/Core";
-import { InstanceLog } from "@/Core/Domain/HistoryLog";
-import { getStoreInstance } from "@/Data";
-import * as queryModule from "@/Data/Managers/V2/helpers/useQueries";
-import { InstanceDetailsContext } from "@/Slices/ServiceInstanceDetails/Core/Context";
+} from '@/Core';
+import { InstanceLog } from '@/Core/Domain/HistoryLog';
+import { getStoreInstance } from '@/Data';
+import * as queryModule from '@/Data/Managers/V2/helpers/useQueries';
+import { InstanceDetailsContext } from '@/Slices/ServiceInstanceDetails/Core/Context';
 
 import {
   dependencies,
@@ -29,11 +29,11 @@ import {
   MockEnvironmentModifier,
   Service,
   ServiceInstance,
-} from "@/Test";
-import { words } from "@/UI";
-import { DependencyProvider } from "@/UI/Dependency";
-import { EnvironmentModifierImpl } from "@/UI/Dependency/EnvironmentModifier";
-import { ConfigSectionContent } from "./ConfigSectionContent";
+} from '@/Test';
+import { words } from '@/UI';
+import { DependencyProvider } from '@/UI/Dependency';
+import { EnvironmentModifierImpl } from '@/UI/Dependency/EnvironmentModifier';
+import { ConfigSectionContent } from './ConfigSectionContent';
 
 function setup(
   environmentModifier: EnvironmentModifier = new MockEnvironmentModifier(),
@@ -49,7 +49,7 @@ function setup(
 
   const component = (
     <QueryClientProvider client={client}>
-      <MemoryRouter initialEntries={[{ search: "?env=aaa" }]}>
+      <MemoryRouter initialEntries={[{ search: '?env=aaa' }]}>
         <DependencyProvider
           dependencies={{
             ...dependencies,
@@ -95,10 +95,10 @@ let data = {
   auto_update_inprogress: false,
 };
 
-describe("ConfigSectionContent", () => {
+describe('ConfigSectionContent', () => {
   const server = setupServer(
     http.get(
-      "/lsm/v1/service_inventory/service_name_a/service_instance_id_a/config",
+      '/lsm/v1/service_inventory/service_name_a/service_instance_id_a/config',
       () => {
         return HttpResponse.json({
           data,
@@ -114,7 +114,7 @@ describe("ConfigSectionContent", () => {
     server.close();
   });
 
-  test("ConfigTab can reset all settings", async() => {
+  test('ConfigTab can reset all settings', async() => {
     const mockFn = jest.fn().mockImplementation((_url, body) => {
       data = {
         ...data,
@@ -122,25 +122,25 @@ describe("ConfigSectionContent", () => {
       };
     });
 
-    jest.spyOn(queryModule, "usePost").mockReturnValue(mockFn);
+    jest.spyOn(queryModule, 'usePost').mockReturnValue(mockFn);
     const { component } = setup();
 
     render(component);
 
-    const resetButton = await screen.findByRole("button", {
-      name: words("config.reset"),
+    const resetButton = await screen.findByRole('button', {
+      name: words('config.reset'),
     });
 
     expect(resetButton).toBeVisible();
 
     expect(
-      screen.getByRole("switch", { name: "auto_creating-False" }),
+      screen.getByRole('switch', { name: 'auto_creating-False' }),
     ).toBeVisible();
 
     await userEvent.click(resetButton, { skipHover: true });
 
     expect(mockFn).toHaveBeenCalledWith(
-      "/lsm/v1/service_inventory/service_name_a/service_instance_id_a/config",
+      '/lsm/v1/service_inventory/service_name_a/service_instance_id_a/config',
       {
         current_version: 3,
         values: {
@@ -152,11 +152,11 @@ describe("ConfigSectionContent", () => {
       },
     );
     expect(
-      await screen.findByRole("switch", { name: "auto_creating-True" }),
+      await screen.findByRole('switch', { name: 'auto_creating-True' }),
     ).toBeVisible();
   });
 
-  test("ConfigTab can change 1 toggle", async() => {
+  test('ConfigTab can change 1 toggle', async() => {
     data = {
       auto_creating: false,
       auto_designed: true,
@@ -170,13 +170,13 @@ describe("ConfigSectionContent", () => {
       };
     });
 
-    jest.spyOn(queryModule, "usePost").mockReturnValue(mockFn);
+    jest.spyOn(queryModule, 'usePost').mockReturnValue(mockFn);
     const { component } = setup();
 
     render(component);
 
-    const toggle = await screen.findByRole("switch", {
-      name: "auto_designed-True",
+    const toggle = await screen.findByRole('switch', {
+      name: 'auto_designed-True',
     });
 
     expect(toggle).toBeVisible();
@@ -184,7 +184,7 @@ describe("ConfigSectionContent", () => {
     await userEvent.click(toggle, { skipHover: true });
 
     expect(mockFn).toHaveBeenCalledWith(
-      "/lsm/v1/service_inventory/service_name_a/service_instance_id_a/config",
+      '/lsm/v1/service_inventory/service_name_a/service_instance_id_a/config',
       {
         current_version: 3,
         values: {
@@ -194,7 +194,7 @@ describe("ConfigSectionContent", () => {
     );
   });
 
-  test("ConfigTab handles hooks with environment modifier correctly", async() => {
+  test('ConfigTab handles hooks with environment modifier correctly', async() => {
     const environmentModifier = EnvironmentModifierImpl();
 
     environmentModifier.setEnvironment(Service.a.environment);
@@ -206,8 +206,8 @@ describe("ConfigSectionContent", () => {
     });
     render(component);
 
-    const toggle = await screen.findByRole("switch", {
-      name: "auto_designed-False",
+    const toggle = await screen.findByRole('switch', {
+      name: 'auto_designed-False',
     });
 
     expect(toggle).toBeVisible();

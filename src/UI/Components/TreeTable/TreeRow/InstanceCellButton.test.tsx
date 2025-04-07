@@ -1,20 +1,20 @@
-import React from "react";
-import { MemoryRouter } from "react-router-dom";
-import { QueryClientProvider } from "@tanstack/react-query";
-import { render, screen } from "@testing-library/react";
-import { StoreProvider } from "easy-peasy";
-import { HttpResponse, http } from "msw";
-import { setupServer } from "msw/node";
-import { getStoreInstance } from "@/Data";
+import React from 'react';
+import { MemoryRouter } from 'react-router-dom';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { render, screen } from '@testing-library/react';
+import { StoreProvider } from 'easy-peasy';
+import { HttpResponse, http } from 'msw';
+import { setupServer } from 'msw/node';
+import { getStoreInstance } from '@/Data';
 import {
   dependencies,
   MockEnvironmentHandler,
   Service,
   ServiceInstance,
-} from "@/Test";
-import { testClient } from "@/Test/Utils/react-query-setup";
-import { DependencyProvider } from "@/UI/Dependency";
-import { InstanceCellButton } from "./InstanceCellButton";
+} from '@/Test';
+import { testClient } from '@/Test/Utils/react-query-setup';
+import { DependencyProvider } from '@/UI/Dependency';
+import { InstanceCellButton } from './InstanceCellButton';
 
 function setup(serviceName: string, id: string) {
   const store = getStoreInstance();
@@ -22,7 +22,7 @@ function setup(serviceName: string, id: string) {
   const handleClick = jest.fn();
   const component = (
     <QueryClientProvider client={testClient}>
-      <MemoryRouter initialEntries={[{ search: "?env=aaa" }]}>
+      <MemoryRouter initialEntries={[{ search: '?env=aaa' }]}>
         <DependencyProvider
           dependencies={{
             ...dependencies,
@@ -44,16 +44,16 @@ function setup(serviceName: string, id: string) {
   return { component };
 }
 
-describe("InstanceCellButton", () => {
+describe('InstanceCellButton', () => {
   const server = setupServer(
     http.get(
-      "/lsm/v1/service_inventory/service_name_a/service_instance_id_a",
+      '/lsm/v1/service_inventory/service_name_a/service_instance_id_a',
       () => {
         return HttpResponse.json({ data: ServiceInstance.a });
       },
     ),
     http.get(
-      "/lsm/v1/service_inventory/service_name_a/service_instance_id_b",
+      '/lsm/v1/service_inventory/service_name_a/service_instance_id_b',
       () => {
         return HttpResponse.json({
           data: {
@@ -64,11 +64,11 @@ describe("InstanceCellButton", () => {
       },
     ),
     http.get(
-      "/lsm/v1/service_inventory/service_name_a/service_instance_id_c",
+      '/lsm/v1/service_inventory/service_name_a/service_instance_id_c',
       () => {
         return HttpResponse.json(
           {
-            message: "something happened",
+            message: 'something happened',
           },
           {
             status: 500,
@@ -86,8 +86,8 @@ describe("InstanceCellButton", () => {
     server.close();
   });
 
-  test("Given the InstanceCellButton When an instance has an identity Then it is shown instead of the id", async() => {
-    const { component } = setup("service_name_a", "service_instance_id_a");
+  test('Given the InstanceCellButton When an instance has an identity Then it is shown instead of the id', async() => {
+    const { component } = setup('service_name_a', 'service_instance_id_a');
 
     render(component);
 
@@ -99,18 +99,18 @@ describe("InstanceCellButton", () => {
   });
 
   test("Given the InstanceCellButton When an instance doesn't have an identity Then the id is shown", async() => {
-    const { component } = setup("service_name_a", "service_instance_id_b");
+    const { component } = setup('service_name_a', 'service_instance_id_b');
 
     render(component);
 
-    expect(await screen.findByText("service_instance_id_b")).toBeVisible();
+    expect(await screen.findByText('service_instance_id_b')).toBeVisible();
   });
 
-  test("Given the InstanceCellButton When the instance request fails Then the id is shown", async() => {
-    const { component } = setup("service_name_a", "service_instance_id_c");
+  test('Given the InstanceCellButton When the instance request fails Then the id is shown', async() => {
+    const { component } = setup('service_name_a', 'service_instance_id_c');
 
     render(component);
 
-    expect(await screen.findByText("service_instance_id_c")).toBeVisible();
+    expect(await screen.findByText('service_instance_id_c')).toBeVisible();
   });
 });

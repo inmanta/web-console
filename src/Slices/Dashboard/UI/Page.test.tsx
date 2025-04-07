@@ -1,21 +1,21 @@
-import React, { act } from "react";
-import { MemoryRouter } from "react-router";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { render, screen } from "@testing-library/react";
-import { StoreProvider } from "easy-peasy";
-import { configureAxe, toHaveNoViolations } from "jest-axe";
-import { Either } from "@/Core";
-import { getStoreInstance, QueryResolverImpl } from "@/Data";
-import { EnvironmentDetailsOneTimeQueryManager } from "@/Slices/Settings/Data/GetEnvironmentDetails";
+import React, { act } from 'react';
+import { MemoryRouter } from 'react-router';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { render, screen } from '@testing-library/react';
+import { StoreProvider } from 'easy-peasy';
+import { configureAxe, toHaveNoViolations } from 'jest-axe';
+import { Either } from '@/Core';
+import { getStoreInstance, QueryResolverImpl } from '@/Data';
+import { EnvironmentDetailsOneTimeQueryManager } from '@/Slices/Settings/Data/GetEnvironmentDetails';
 import {
   DeferredApiHelper,
   dependencies,
   DynamicQueryManagerResolverImpl,
   EnvironmentDetails,
-} from "@/Test";
-import { words } from "@/UI";
-import { DependencyProvider } from "@/UI/Dependency";
-import { Page } from "./Page";
+} from '@/Test';
+import { words } from '@/UI';
+import { DependencyProvider } from '@/UI/Dependency';
+import { Page } from './Page';
 expect.extend(toHaveNoViolations);
 
 const axe = configureAxe({
@@ -56,19 +56,19 @@ function setup() {
   return { component, apiHelper };
 }
 
-test("Home view shows failed table", async() => {
+test('Home view shows failed table', async() => {
   const { component, apiHelper } = setup();
 
   render(component);
 
   expect(
-    await screen.findByRole("region", { name: "Dashboard-Loading" }),
+    await screen.findByRole('region', { name: 'Dashboard-Loading' }),
   ).toBeInTheDocument();
 
-  apiHelper.resolve(Either.left("error"));
+  apiHelper.resolve(Either.left('error'));
 
   expect(
-    await screen.findByRole("region", { name: "Dashboard-Failed" }),
+    await screen.findByRole('region', { name: 'Dashboard-Failed' }),
   ).toBeInTheDocument();
 
   await act(async() => {
@@ -78,13 +78,13 @@ test("Home view shows failed table", async() => {
   });
 });
 
-test("Home View shows success table", async() => {
+test('Home View shows success table', async() => {
   const { component, apiHelper } = setup();
 
   render(component);
 
   expect(
-    await screen.findByRole("region", { name: "Dashboard-Loading" }),
+    await screen.findByRole('region', { name: 'Dashboard-Loading' }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(
@@ -94,7 +94,7 @@ test("Home View shows success table", async() => {
   );
   expect(
     await screen.findByText(
-      words("dashboard.title")(EnvironmentDetails.a.name),
+      words('dashboard.title')(EnvironmentDetails.a.name),
     ),
   ).toBeInTheDocument();
 

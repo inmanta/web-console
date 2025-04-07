@@ -1,17 +1,17 @@
-import React, { act } from "react";
-import { MemoryRouter } from "react-router-dom";
-import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
-import { render, screen } from "@testing-library/react";
-import { StoreProvider } from "easy-peasy";
-import { configureAxe, toHaveNoViolations } from "jest-axe";
-import { http, HttpResponse } from "msw";
-import { setupServer } from "msw/node";
-import { getStoreInstance } from "@/Data";
-import { dependencies } from "@/Test";
-import { DependencyProvider } from "@/UI/Dependency";
-import { UrlManagerImpl } from "@/UI/Utils";
-import * as Mock from "@S/CompileDetails/Core/Mock";
-import { CompileDetails } from "./CompileDetails";
+import React, { act } from 'react';
+import { MemoryRouter } from 'react-router-dom';
+import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
+import { render, screen } from '@testing-library/react';
+import { StoreProvider } from 'easy-peasy';
+import { configureAxe, toHaveNoViolations } from 'jest-axe';
+import { http, HttpResponse } from 'msw';
+import { setupServer } from 'msw/node';
+import { getStoreInstance } from '@/Data';
+import { dependencies } from '@/Test';
+import { DependencyProvider } from '@/UI/Dependency';
+import { UrlManagerImpl } from '@/UI/Utils';
+import * as Mock from '@S/CompileDetails/Core/Mock';
+import { CompileDetails } from './CompileDetails';
 expect.extend(toHaveNoViolations);
 
 const axe = configureAxe({
@@ -30,7 +30,7 @@ function setup() {
     },
   });
   const store = getStoreInstance();
-  const urlManager = new UrlManagerImpl(dependencies.featureManager, "");
+  const urlManager = new UrlManagerImpl(dependencies.featureManager, '');
 
   const component = (
     <QueryClientProvider client={queryClient}>
@@ -48,17 +48,17 @@ function setup() {
 }
 const server = setupServer();
 
-describe("CompileDetails", () => {
+describe('CompileDetails', () => {
   beforeAll(() => server.listen());
   afterEach(() => server.resetHandlers());
   afterAll(() => server.close());
 
-  test("CompileDetailsView shows failed view", async() => {
+  test('CompileDetailsView shows failed view', async() => {
     server.use(
-      http.get("api/v2/compilereport/123", () => {
+      http.get('api/v2/compilereport/123', () => {
         return HttpResponse.json(
           {
-            message: "error",
+            message: 'error',
           },
           {
             status: 500,
@@ -71,17 +71,17 @@ describe("CompileDetails", () => {
     render(component);
 
     expect(
-      screen.getByRole("region", { name: "CompileDetailsView-Loading" }),
+      screen.getByRole('region', { name: 'CompileDetailsView-Loading' }),
     ).toBeInTheDocument();
 
     expect(
-      await screen.findByRole("region", { name: "CompileDetailsView-Error" }),
+      await screen.findByRole('region', { name: 'CompileDetailsView-Error' }),
     ).toBeInTheDocument();
   });
 
-  test("CompileDetailsView shows completed table with success: true", async() => {
+  test('CompileDetailsView shows completed table with success: true', async() => {
     server.use(
-      http.get("api/v2/compilereport/123", () => {
+      http.get('api/v2/compilereport/123', () => {
         return HttpResponse.json({ data: Mock.data });
       }),
     );
@@ -90,15 +90,15 @@ describe("CompileDetails", () => {
     await render(component);
 
     expect(
-      await screen.findByRole("region", { name: "CompileDetailsView-Loading" }),
+      await screen.findByRole('region', { name: 'CompileDetailsView-Loading' }),
     ).toBeInTheDocument();
 
     expect(
-      await screen.findByRole("generic", {
-        name: "CompileDetailsView-Success",
+      await screen.findByRole('generic', {
+        name: 'CompileDetailsView-Success',
       }),
     ).toBeInTheDocument();
-    expect(await screen.findAllByLabelText("done-state")).toHaveLength(3);
+    expect(await screen.findAllByLabelText('done-state')).toHaveLength(3);
 
     await act(async() => {
       const results = await axe(document.body);
@@ -107,9 +107,9 @@ describe("CompileDetails", () => {
     });
   });
 
-  test("CompileDetailsView shows completed table with success: false, error indication should appear", async() => {
+  test('CompileDetailsView shows completed table with success: false, error indication should appear', async() => {
     server.use(
-      http.get("api/v2/compilereport/123", () => {
+      http.get('api/v2/compilereport/123', () => {
         return HttpResponse.json({ data: Mock.DataFailed });
       }),
     );
@@ -118,16 +118,16 @@ describe("CompileDetails", () => {
     await render(component);
 
     expect(
-      await screen.findByRole("region", { name: "CompileDetailsView-Loading" }),
+      await screen.findByRole('region', { name: 'CompileDetailsView-Loading' }),
     ).toBeInTheDocument();
 
     expect(
-      await screen.findByRole("generic", {
-        name: "CompileDetailsView-Success",
+      await screen.findByRole('generic', {
+        name: 'CompileDetailsView-Success',
       }),
     ).toBeInTheDocument();
 
-    expect(await screen.findByLabelText("error-state")).toBeInTheDocument();
+    expect(await screen.findByLabelText('error-state')).toBeInTheDocument();
 
     await act(async() => {
       const results = await axe(document.body);

@@ -1,27 +1,27 @@
-import React, { act } from "react";
-import { MemoryRouter } from "react-router-dom";
-import { Page } from "@patternfly/react-core";
-import { render, screen } from "@testing-library/react";
-import { userEvent } from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
-import { axe, toHaveNoViolations } from "jest-axe";
-import { Either } from "@/Core";
-import { getStoreInstance, QueryResolverImpl } from "@/Data";
+import React, { act } from 'react';
+import { MemoryRouter } from 'react-router-dom';
+import { Page } from '@patternfly/react-core';
+import { render, screen } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
+import { StoreProvider } from 'easy-peasy';
+import { axe, toHaveNoViolations } from 'jest-axe';
+import { Either } from '@/Core';
+import { getStoreInstance, QueryResolverImpl } from '@/Data';
 import {
   DeferredApiHelper,
   dependencies,
   DynamicQueryManagerResolverImpl,
   StaticScheduler,
   Resource,
-} from "@/Test";
-import { words } from "@/UI";
-import { DependencyProvider } from "@/UI/Dependency";
+} from '@/Test';
+import { words } from '@/UI';
+import { DependencyProvider } from '@/UI/Dependency';
 import {
   ResourceDetailsQueryManager,
   ResourceDetailsStateHelper,
-} from "@S/ResourceDetails/Data";
-import { ResourceDetails } from "@S/ResourceDetails/Data/Mock";
-import { View } from "./View";
+} from '@S/ResourceDetails/Data';
+import { ResourceDetails } from '@S/ResourceDetails/Data/Mock';
+import { View } from './View';
 
 expect.extend(toHaveNoViolations);
 
@@ -59,7 +59,7 @@ function setup() {
   return { component, scheduler, apiHelper };
 }
 
-test("GIVEN The Resource details view THEN details data is fetched immediately", async() => {
+test('GIVEN The Resource details view THEN details data is fetched immediately', async() => {
   const { component, apiHelper } = setup();
 
   render(component);
@@ -84,7 +84,7 @@ test("GIVEN The Resource details view THEN details data is fetched immediately",
   });
 });
 
-test("GIVEN The Resource details view WHEN the user clicks on the requires tab THEN the requires table is shown", async() => {
+test('GIVEN The Resource details view WHEN the user clicks on the requires tab THEN the requires table is shown', async() => {
   const { component, apiHelper } = setup();
 
   render(component);
@@ -94,8 +94,8 @@ test("GIVEN The Resource details view WHEN the user clicks on the requires tab T
   });
 
   await userEvent.click(
-    screen.getAllByRole("tab", {
-      name: words("resources.requires.title"),
+    screen.getAllByRole('tab', {
+      name: words('resources.requires.title'),
     })[0],
   );
 
@@ -103,7 +103,7 @@ test("GIVEN The Resource details view WHEN the user clicks on the requires tab T
   expect(apiHelper.pendingRequests).toHaveLength(0);
 
   expect(
-    await screen.findByRole("grid", { name: "ResourceRequires-Success" }),
+    await screen.findByRole('grid', { name: 'ResourceRequires-Success' }),
   ).toBeVisible();
 
   await act(async() => {
@@ -113,7 +113,7 @@ test("GIVEN The Resource details view WHEN the user clicks on the requires tab T
   });
 });
 
-test("GIVEN The Resource details view THEN shows status label", async() => {
+test('GIVEN The Resource details view THEN shows status label', async() => {
   const { component, apiHelper } = setup();
 
   render(component);
@@ -121,7 +121,7 @@ test("GIVEN The Resource details view THEN shows status label", async() => {
     await apiHelper.resolve(Either.right({ data: ResourceDetails.a }));
   });
 
-  expect(screen.getByTestId("Status-deployed")).toBeVisible();
+  expect(screen.getByTestId('Status-deployed')).toBeVisible();
 
   await act(async() => {
     const results = await axe(document.body);

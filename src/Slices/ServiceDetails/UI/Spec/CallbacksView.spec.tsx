@@ -1,14 +1,14 @@
-import React, { act } from "react";
-import { MemoryRouter } from "react-router";
-import { render, screen } from "@testing-library/react";
-import { userEvent } from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
-import { Either, getShortUuidFromRaw, Maybe } from "@/Core";
+import React, { act } from 'react';
+import { MemoryRouter } from 'react-router';
+import { render, screen } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
+import { StoreProvider } from 'easy-peasy';
+import { Either, getShortUuidFromRaw, Maybe } from '@/Core';
 import {
   QueryResolverImpl,
   CommandResolverImpl,
   getStoreInstance,
-} from "@/Data";
+} from '@/Data';
 import {
   DynamicCommandManagerResolverImpl,
   DynamicQueryManagerResolverImpl,
@@ -16,17 +16,17 @@ import {
   Callback,
   DeferredApiHelper,
   dependencies,
-} from "@/Test";
-import { DependencyProvider } from "@/UI/Dependency";
-import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
+} from '@/Test';
+import { DependencyProvider } from '@/UI/Dependency';
+import { ModalProvider } from '@/UI/Root/Components/ModalProvider';
 import {
   CallbacksQueryManager,
   CallbacksStateHelper,
   CallbacksUpdater,
   CreateCallbackCommandManager,
   DeleteCallbackCommandManager,
-} from "@S/ServiceDetails/Data";
-import { CallbacksView } from "@S/ServiceDetails/UI/Tabs/Callbacks";
+} from '@S/ServiceDetails/Data';
+import { CallbacksView } from '@S/ServiceDetails/UI/Tabs/Callbacks';
 
 const shortenUUID = getShortUuidFromRaw(Callback.list[0].callback_id);
 
@@ -89,7 +89,7 @@ function setup() {
   };
 }
 
-test("GIVEN CallbacksTab WHEN user click on delete and confirms THEN callback is deleted", async() => {
+test('GIVEN CallbacksTab WHEN user click on delete and confirms THEN callback is deleted', async() => {
   const { component, apiHelper } = setup();
 
   render(component);
@@ -99,22 +99,22 @@ test("GIVEN CallbacksTab WHEN user click on delete and confirms THEN callback is
   });
 
   expect(
-    await screen.findByRole("grid", { name: "CallbacksTable" }),
+    await screen.findByRole('grid', { name: 'CallbacksTable' }),
   ).toBeVisible();
 
   expect(
-    screen.getByRole("row", { name: "CallbackRow-" + shortenUUID }),
+    screen.getByRole('row', { name: 'CallbackRow-' + shortenUUID }),
   ).toBeVisible();
 
-  const deleteButton = await screen.findByRole("button", {
-    name: "DeleteCallback-" + shortenUUID,
+  const deleteButton = await screen.findByRole('button', {
+    name: 'DeleteCallback-' + shortenUUID,
   });
 
   await userEvent.click(deleteButton);
 
-  expect(screen.getByRole("dialog", { name: "Delete Callback" })).toBeVisible();
+  expect(screen.getByRole('dialog', { name: 'Delete Callback' })).toBeVisible();
 
-  const yesButton = screen.getByRole("button", { name: "Yes" });
+  const yesButton = screen.getByRole('button', { name: 'Yes' });
 
   await userEvent.click(yesButton);
 
@@ -129,11 +129,11 @@ test("GIVEN CallbacksTab WHEN user click on delete and confirms THEN callback is
   });
 
   expect(
-    screen.queryByRole("row", { name: "CallbackRow-" + shortenUUID }),
+    screen.queryByRole('row', { name: 'CallbackRow-' + shortenUUID }),
   ).not.toBeInTheDocument();
 });
 
-test("GIVEN CallbacksTab WHEN user fills in form and clicks on Add THEN callback is created", async() => {
+test('GIVEN CallbacksTab WHEN user fills in form and clicks on Add THEN callback is created', async() => {
   const { component, apiHelper } = setup();
 
   render(component);
@@ -143,63 +143,63 @@ test("GIVEN CallbacksTab WHEN user fills in form and clicks on Add THEN callback
   });
 
   expect(
-    await screen.findByRole("grid", { name: "CallbacksTable" }),
+    await screen.findByRole('grid', { name: 'CallbacksTable' }),
   ).toBeVisible();
 
   expect(
-    screen.getByRole("row", { name: "CallbackRow-" + shortenUUID }),
+    screen.getByRole('row', { name: 'CallbackRow-' + shortenUUID }),
   ).toBeVisible();
 
-  const callbackUrlInput = screen.getByRole("textbox", {
-    name: "callbackUrl",
+  const callbackUrlInput = screen.getByRole('textbox', {
+    name: 'callbackUrl',
   });
 
-  await userEvent.type(callbackUrlInput, "http://www.example.com/");
+  await userEvent.type(callbackUrlInput, 'http://www.example.com/');
 
-  const minimalLogLevelInput = screen.getByRole("combobox", {
-    name: "MinimalLogLevelFilterInput",
+  const minimalLogLevelInput = screen.getByRole('combobox', {
+    name: 'MinimalLogLevelFilterInput',
   });
 
   await userEvent.click(minimalLogLevelInput);
 
-  const criticalOption = screen.getByRole("option", { name: "CRITICAL" });
+  const criticalOption = screen.getByRole('option', { name: 'CRITICAL' });
 
   await userEvent.click(criticalOption);
 
-  const eventTypesInput = screen.getByRole("combobox", {
-    name: "EventTypesFilterInput",
+  const eventTypesInput = screen.getByRole('combobox', {
+    name: 'EventTypesFilterInput',
   });
 
   await userEvent.click(eventTypesInput);
 
-  const allocationUpdateOption = screen.getByRole("option", {
-    name: "ALLOCATION_UPDATE",
+  const allocationUpdateOption = screen.getByRole('option', {
+    name: 'ALLOCATION_UPDATE',
   });
 
   await userEvent.click(allocationUpdateOption);
 
-  const addButton = screen.getByRole("button", {
-    name: "Add",
+  const addButton = screen.getByRole('button', {
+    name: 'Add',
   });
 
   await userEvent.click(addButton);
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
-  expect(apiHelper.pendingRequests[0].url).toMatch("/lsm/v1/callbacks");
+  expect(apiHelper.pendingRequests[0].url).toMatch('/lsm/v1/callbacks');
 
   await act(async() => {
-    await apiHelper.resolve(Either.right({ data: "callbackId" }));
+    await apiHelper.resolve(Either.right({ data: 'callbackId' }));
   });
 
   await act(async() => {
     await apiHelper.resolve(
       Either.right({
-        data: [...Callback.list, { ...Callback.a, callback_id: "1234" }],
+        data: [...Callback.list, { ...Callback.a, callback_id: '1234' }],
       }),
     );
   });
 
   expect(
-    await screen.findByRole("row", { name: "CallbackRow-1234" }),
+    await screen.findByRole('row', { name: 'CallbackRow-1234' }),
   ).toBeVisible();
 });

@@ -163,6 +163,12 @@ export default [
     },
   },
   {
+    files: ["**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "**/*.spec.tsx", "cypress/**/*"],
+    rules: {
+      "@stylistic/quotes": ["warn", "single", { "avoidEscape": true }],
+    },
+  },
+  {
     files: ["**/*webpack*", "**/*jest.polyfills*", "**/*cypress.config*"],
     rules: {
       "@typescript-eslint/no-var-requires": "off",

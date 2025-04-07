@@ -1,12 +1,12 @@
-import React from "react";
-import { render, fireEvent, screen } from "@testing-library/react";
-import { Diff } from "@/Core";
-import { DiffPageFilter } from "./DiffPageFilter";
+import React from 'react';
+import { render, fireEvent, screen } from '@testing-library/react';
+import { Diff } from '@/Core';
+import { DiffPageFilter } from './DiffPageFilter';
 
-const mockStatuses: Diff.Status[] = ["added", "modified", "deleted"];
+const mockStatuses: Diff.Status[] = ['added', 'modified', 'deleted'];
 
-describe("DiffPageFilter", () => {
-  it("renders without errors", async() => {
+describe('DiffPageFilter', () => {
+  it('renders without errors', async() => {
     const { container } = render(
       <DiffPageFilter
         statuses={mockStatuses}
@@ -19,7 +19,7 @@ describe("DiffPageFilter", () => {
     expect(container).toBeDefined();
   });
 
-  it("updates search filter correctly", () => {
+  it('updates search filter correctly', () => {
     const setSearchFilterMock = jest.fn();
 
     render(
@@ -31,10 +31,10 @@ describe("DiffPageFilter", () => {
       />,
     );
 
-    const searchInput = screen.getByLabelText("SearchFilter");
+    const searchInput = screen.getByLabelText('SearchFilter');
 
-    fireEvent.change(searchInput, { target: { value: "example" } });
+    fireEvent.change(searchInput, { target: { value: 'example' } });
 
-    expect(setSearchFilterMock).toHaveBeenCalledWith("example");
+    expect(setSearchFilterMock).toHaveBeenCalledWith('example');
   });
 });

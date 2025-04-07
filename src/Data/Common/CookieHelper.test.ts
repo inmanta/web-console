@@ -1,38 +1,38 @@
-import { createCookie, getCookie, removeCookie } from "./CookieHelper";
+import { createCookie, getCookie, removeCookie } from './CookieHelper';
 
-describe("createCookie", () => {
-  test("creates a new cookie with the specified name, value, and expiration time", () => {
-    createCookie("testCookie", "testValue", 1);
+describe('createCookie', () => {
+  test('creates a new cookie with the specified name, value, and expiration time', () => {
+    createCookie('testCookie', 'testValue', 1);
 
     // Retrieve created cookie
-    const cookieArray = document.cookie.split(";");
+    const cookieArray = document.cookie.split(';');
     const createdCookie = cookieArray.find((cookie) =>
-      cookie.includes("testCookie"),
+      cookie.includes('testCookie'),
     );
 
     // Expectations
     expect(createdCookie).toBeDefined();
-    expect(createdCookie!.trim()).toEqual("testCookie=testValue");
+    expect(createdCookie!.trim()).toEqual('testCookie=testValue');
   });
 });
 
 // Test cases for getCookie function
-describe("getCookie", () => {
-  test("retrieves the value of the specified cookie", () => {
-    document.cookie = "testCookie=testValue";
+describe('getCookie', () => {
+  test('retrieves the value of the specified cookie', () => {
+    document.cookie = 'testCookie=testValue';
 
     // Retrieve cookie value
-    const cookieValue = getCookie("testCookie");
+    const cookieValue = getCookie('testCookie');
 
     // Expectations
-    expect(cookieValue).toEqual("testValue");
+    expect(cookieValue).toEqual('testValue');
   });
 
-  test("returns null if the specified cookie is not found", () => {
-    document.cookie = "";
+  test('returns null if the specified cookie is not found', () => {
+    document.cookie = '';
 
     // Retrieve cookie value
-    const cookieValue = getCookie("nonExistingCookie");
+    const cookieValue = getCookie('nonExistingCookie');
 
     // Expectations
     expect(cookieValue).toBeNull();
@@ -40,16 +40,16 @@ describe("getCookie", () => {
 });
 
 // Test cases for removeCookie function
-describe("removeCookie", () => {
-  test("removes the specified cookie", () => {
+describe('removeCookie', () => {
+  test('removes the specified cookie', () => {
     // Add a cookie first
-    document.cookie = "testCookie=testValue";
+    document.cookie = 'testCookie=testValue';
 
     // Remove the cookie
-    removeCookie("testCookie");
+    removeCookie('testCookie');
 
     // Retrieve cookie value
-    const cookieValue = getCookie("testCookie");
+    const cookieValue = getCookie('testCookie');
 
     // Expectations
     expect(cookieValue).toBeNull();

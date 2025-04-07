@@ -1,9 +1,9 @@
-import { Maybe } from "@/Core";
-import { JsonFormatter, XmlFormatter } from "@/Data";
-import { AttributeClassifier } from "./AttributeClassifier";
-import { attributes, classified } from "./Data";
+import { Maybe } from '@/Core';
+import { JsonFormatter, XmlFormatter } from '@/Data';
+import { AttributeClassifier } from './AttributeClassifier';
+import { attributes, classified } from './Data';
 
-test("GIVEN AttributeClassifier WHEN provided with a mixed attributes object THEN returns the correct list of ClassifiedAttributes", () => {
+test('GIVEN AttributeClassifier WHEN provided with a mixed attributes object THEN returns the correct list of ClassifiedAttributes', () => {
   const classifier = new AttributeClassifier(
     new JsonFormatter(),
     new XmlFormatter(),
@@ -12,26 +12,26 @@ test("GIVEN AttributeClassifier WHEN provided with a mixed attributes object THE
   expect(classifier.classify(attributes)).toEqual(classified);
 });
 
-test("GIVEN AttributeClassifier WHEN provided with a custom multiline classifier THEN returns the correct list of ClassifiedAttributes", () => {
+test('GIVEN AttributeClassifier WHEN provided with a custom multiline classifier THEN returns the correct list of ClassifiedAttributes', () => {
   const classifier = new AttributeClassifier(
     new JsonFormatter(),
     new XmlFormatter(),
-    (key: string, value: string) => Maybe.some({ kind: "Python", key, value }),
+    (key: string, value: string) => Maybe.some({ kind: 'Python', key, value }),
   );
 
   expect(
-    classifier.classify({ f: attributes["f"], ff: attributes["ff"] }),
+    classifier.classify({ f: attributes['f'], ff: attributes['ff'] }),
   ).toEqual([
     {
-      kind: "Python",
-      key: "f",
+      kind: 'Python',
+      key: 'f',
       value:
-        "This text has a length longer than 80. abcdefghijklmnopqrstvuwxyz abcdefghijklmnopqrstvuwxyz",
+        'This text has a length longer than 80. abcdefghijklmnopqrstvuwxyz abcdefghijklmnopqrstvuwxyz',
     },
     {
-      kind: "Python",
-      key: "ff",
-      value: "This text contains a newline.\nblablabla...",
+      kind: 'Python',
+      key: 'ff',
+      value: 'This text contains a newline.\nblablabla...',
     },
   ]);
 });

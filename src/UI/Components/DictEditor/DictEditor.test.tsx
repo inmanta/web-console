@@ -1,7 +1,7 @@
-import React from "react";
-import { render, screen, within } from "@testing-library/react";
-import { userEvent } from "@testing-library/user-event";
-import { DictEditor } from "./DictEditor";
+import React from 'react';
+import { render, screen, within } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
+import { DictEditor } from './DictEditor';
 
 function setup() {
   const setValue = jest.fn();
@@ -11,7 +11,7 @@ function setup() {
     <DictEditor
       value={value}
       setValue={setValue}
-      newEntry={["", ""]}
+      newEntry={['', '']}
       setNewEntry={setNewEntry}
       isDeleteEntryAllowed={isDeleteEntryAllowed}
     />
@@ -20,30 +20,30 @@ function setup() {
   return { component, setValue, setNewEntry };
 }
 
-test("GIVEN DictEditor WHEN given data THEN shows keys and values", () => {
+test('GIVEN DictEditor WHEN given data THEN shows keys and values', () => {
   const { component } = setup();
 
-  render(component({ keyA: "valA" }));
+  render(component({ keyA: 'valA' }));
 
-  const row = screen.getByRole("row", { name: "Row-keyA" });
-  const keyInput = within(row).getByRole("textbox", { name: "editEntryKey" });
+  const row = screen.getByRole('row', { name: 'Row-keyA' });
+  const keyInput = within(row).getByRole('textbox', { name: 'editEntryKey' });
 
-  expect(keyInput).toHaveValue("keyA");
-  const valueInput = within(row).getByRole("textbox", {
-    name: "editEntryValue",
+  expect(keyInput).toHaveValue('keyA');
+  const valueInput = within(row).getByRole('textbox', {
+    name: 'editEntryValue',
   });
 
-  expect(valueInput).toHaveValue("valA");
+  expect(valueInput).toHaveValue('valA');
 });
 
-test("GIVEN DictEditor WHEN deleteEntry clicked THEN that entry is removed", async() => {
+test('GIVEN DictEditor WHEN deleteEntry clicked THEN that entry is removed', async() => {
   const { component, setValue } = setup();
-  const { rerender } = render(component({ keyA: "valA", keyB: "valB" }));
+  const { rerender } = render(component({ keyA: 'valA', keyB: 'valB' }));
 
-  const rowA = screen.getByRole("row", { name: "Row-keyA" });
-  const rowB = screen.getByRole("row", { name: "Row-keyB" });
-  const deleteA = within(rowA).getByRole("button", {
-    name: "DeleteEntryAction",
+  const rowA = screen.getByRole('row', { name: 'Row-keyA' });
+  const rowB = screen.getByRole('row', { name: 'Row-keyB' });
+  const deleteA = within(rowA).getByRole('button', {
+    name: 'DeleteEntryAction',
   });
 
   expect(deleteA).toBeEnabled();
@@ -52,7 +52,7 @@ test("GIVEN DictEditor WHEN deleteEntry clicked THEN that entry is removed", asy
 
   expect(setValue).toHaveBeenCalledTimes(1);
 
-  rerender(component({ keyB: "valB" }));
+  rerender(component({ keyB: 'valB' }));
 
   expect(rowA).not.toBeInTheDocument();
   expect(rowB).toBeInTheDocument();

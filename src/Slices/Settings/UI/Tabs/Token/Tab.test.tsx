@@ -1,15 +1,15 @@
-import React, { act } from "react";
-import { render, screen, within } from "@testing-library/react";
-import { userEvent } from "@testing-library/user-event";
-import { Either } from "@/Core";
-import { CommandResolverImpl, GenerateTokenCommandManager } from "@/Data";
+import React, { act } from 'react';
+import { render, screen, within } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
+import { Either } from '@/Core';
+import { CommandResolverImpl, GenerateTokenCommandManager } from '@/Data';
 import {
   DeferredApiHelper,
   dependencies,
   DynamicCommandManagerResolverImpl,
-} from "@/Test";
-import { DependencyProvider, words } from "@/UI";
-import { Tab } from "./Tab";
+} from '@/Test';
+import { DependencyProvider, words } from '@/UI';
+import { Tab } from './Tab';
 
 function setup() {
   const apiHelper = new DeferredApiHelper();
@@ -27,12 +27,12 @@ function setup() {
   return { component, apiHelper };
 }
 
-test("GIVEN TokenTab WHEN generate button is clicked THEN generate call is executed", async() => {
+test('GIVEN TokenTab WHEN generate button is clicked THEN generate call is executed', async() => {
   const { component, apiHelper } = setup();
 
   render(component);
-  const generateButton = screen.getByRole("button", {
-    name: words("settings.tabs.token.generate"),
+  const generateButton = screen.getByRole('button', {
+    name: words('settings.tabs.token.generate'),
   });
 
   expect(generateButton).toBeVisible();
@@ -43,76 +43,76 @@ test("GIVEN TokenTab WHEN generate button is clicked THEN generate call is execu
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
-    method: "POST",
+    method: 'POST',
     body: { client_types: [] },
-    url: "/api/v2/environment_auth",
-    environment: "env",
+    url: '/api/v2/environment_auth',
+    environment: 'env',
   });
 });
 
-test("GIVEN TokenTab WHEN api clientType is selected and generate button is clicked THEN generate call is executed with clientType set", async() => {
+test('GIVEN TokenTab WHEN api clientType is selected and generate button is clicked THEN generate call is executed with clientType set', async() => {
   const { component, apiHelper } = setup();
 
   render(component);
 
-  await userEvent.click(screen.getByRole("button", { name: "AgentOption" }));
+  await userEvent.click(screen.getByRole('button', { name: 'AgentOption' }));
 
   await userEvent.click(
-    screen.getByRole("button", {
-      name: words("settings.tabs.token.generate"),
+    screen.getByRole('button', {
+      name: words('settings.tabs.token.generate'),
     }),
   );
 
   expect(apiHelper.pendingRequests[0]).toEqual({
-    method: "POST",
-    body: { client_types: ["agent"] },
-    url: "/api/v2/environment_auth",
-    environment: "env",
+    method: 'POST',
+    body: { client_types: ['agent'] },
+    url: '/api/v2/environment_auth',
+    environment: 'env',
   });
 });
 
-test("GIVEN TokenTab WHEN generate fails THEN the error is shown", async() => {
+test('GIVEN TokenTab WHEN generate fails THEN the error is shown', async() => {
   const { component, apiHelper } = setup();
 
   render(component);
 
   await userEvent.click(
-    screen.getByRole("button", {
-      name: words("settings.tabs.token.generate"),
+    screen.getByRole('button', {
+      name: words('settings.tabs.token.generate'),
     }),
   );
 
   await act(async() => {
-    await apiHelper.resolve(Either.left("error message"));
+    await apiHelper.resolve(Either.left('error message'));
   });
 
-  const errorContainer = screen.getByTestId("ToastError");
+  const errorContainer = screen.getByTestId('ToastError');
 
   expect(errorContainer).toBeVisible();
-  expect(within(errorContainer).getByText("error message")).toBeVisible();
+  expect(within(errorContainer).getByText('error message')).toBeVisible();
 });
 
-test("GIVEN TokenTab WHEN generate succeeds THEN the token is shown", async() => {
+test('GIVEN TokenTab WHEN generate succeeds THEN the token is shown', async() => {
   const { component, apiHelper } = setup();
 
   render(component);
 
-  const copyButton = screen.getByRole("button", { name: "Copy to clipboard" });
-  const tokenOutput = screen.getByRole("textbox", { name: "TokenOutput" });
+  const copyButton = screen.getByRole('button', { name: 'Copy to clipboard' });
+  const tokenOutput = screen.getByRole('textbox', { name: 'TokenOutput' });
 
   expect(copyButton).toBeDisabled();
-  expect(tokenOutput).toHaveValue("");
+  expect(tokenOutput).toHaveValue('');
 
   await userEvent.click(
-    screen.getByRole("button", {
-      name: words("settings.tabs.token.generate"),
+    screen.getByRole('button', {
+      name: words('settings.tabs.token.generate'),
     }),
   );
 
   await act(async() => {
-    await apiHelper.resolve(Either.right({ data: "tokenstring123" }));
+    await apiHelper.resolve(Either.right({ data: 'tokenstring123' }));
   });
 
   expect(copyButton).toBeEnabled();
-  expect(tokenOutput).toHaveValue("tokenstring123");
+  expect(tokenOutput).toHaveValue('tokenstring123');
 });
