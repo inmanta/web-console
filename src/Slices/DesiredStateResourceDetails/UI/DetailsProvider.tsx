@@ -1,7 +1,10 @@
-import React, { useContext } from "react";
-import { RemoteDataView } from "@/UI/Components";
-import { DependencyContext } from "@/UI/Dependency";
+import React from "react";
+import { ErrorView, LoadingView } from "@/UI/Components";
 import { Details } from "./Details";
+import {
+  useGetDesiredStateResourceDetails,
+  useGetVersionResources,
+} from "@/Data/Managers/V2/DesiredState";
 
 interface Props {
   version: string;
@@ -12,21 +15,22 @@ export const DetailsProvider: React.FC<Props> = ({
   version,
   resourceId: id,
 }) => {
-  const { queryResolver } = useContext(DependencyContext);
+  const { data, isSuccess, isError, error, refetch } =
+    useGetDesiredStateResourceDetails(version, id).useContinuous();
 
-  const [data] = queryResolver.useContinuous<"GetVersionedResourceDetails">({
-    kind: "GetVersionedResourceDetails",
-    version,
-    id,
-  });
+  if (isError) {
+    return (
+      <ErrorView
+        ariaLabel="ResourceDetails-Error"
+        message={error.message}
+        retry={refetch}
+      />
+    );
+  }
 
-  return (
-    <RemoteDataView
-      data={data}
-      label="ResourceDetails"
-      SuccessView={(details) => (
-        <Details details={details} aria-label="ResourceDetails-Success" />
-      )}
-    />
-  );
+  if (isSuccess) {
+    return <Details details={data} aria-label="ResourceDetails-Success" />;
+  }
+
+  return <LoadingView ariaLabel="ResourceDetails-Loading" />;
 };
