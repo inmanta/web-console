@@ -1,1 +1,1 @@
-export * from "./CompileStatusLabel";
+export * from './CompileStatusLabel';

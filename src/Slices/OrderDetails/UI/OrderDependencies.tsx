@@ -1,11 +1,11 @@
-import React from "react";
-import { Card, Label } from "@patternfly/react-core";
-import { InfoAltIcon } from "@patternfly/react-icons";
-import { Table, Tbody, Td, Tr } from "@patternfly/react-table";
-import { ServiceOrderItemDependencies } from "@/Slices/Orders/Core/Query";
-import { OrderStatusLabel } from "@/Slices/Orders/UI/OrderStatusLabel";
-import { words } from "@/UI";
-import { TextWithCopy } from "@/UI/Components";
+import React from 'react';
+import { Card, Label } from '@patternfly/react-core';
+import { InfoAltIcon } from '@patternfly/react-icons';
+import { Table, Tbody, Td, Tr } from '@patternfly/react-table';
+import { ServiceOrderItemDependencies } from '@/Slices/Orders/Core/Query';
+import { OrderStatusLabel } from '@/Slices/Orders/UI/OrderStatusLabel';
+import { words } from '@/UI';
+import { TextWithCopy } from '@/UI/Components';
 
 interface Props {
   dependencies: ServiceOrderItemDependencies;
@@ -25,7 +25,7 @@ export const OrderDependencies: React.FC<Props> = ({ dependencies }) => {
   if (!Object.keys(dependencies).length) {
     return (
       <Label color="blue" variant="outline" icon={<InfoAltIcon />}>
-        {words("orders.row.empty")}
+        {words('orders.row.empty')}
       </Label>
     );
   }
@@ -39,7 +39,7 @@ export const OrderDependencies: React.FC<Props> = ({ dependencies }) => {
               <Td>
                 <TextWithCopy
                   value={instance_id}
-                  tooltipContent={words("serviceIdentity.copy")}
+                  tooltipContent={words('serviceIdentity.copy')}
                 />
               </Td>
               <Td>

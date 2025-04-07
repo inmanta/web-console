@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 // The height is calculated to fit the tabs neatly into the page.
 // The 330px equals total height of the elements above the tabs with a short margin.

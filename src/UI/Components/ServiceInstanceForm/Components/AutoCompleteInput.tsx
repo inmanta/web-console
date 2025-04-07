@@ -1,13 +1,13 @@
-import React from "react";
+import React from 'react';
 import {
   FormGroup,
   FormHelperText,
   HelperText,
   HelperTextItem,
-} from "@patternfly/react-core";
-import { words } from "@/UI/words";
-import { MultiTextSelect } from "../../MultiTextSelect";
-import { SingleTextSelect } from "../../SingleTextSelect";
+} from '@patternfly/react-core';
+import { words } from '@/UI/words';
+import { MultiTextSelect } from '../../MultiTextSelect';
+import { SingleTextSelect } from '../../SingleTextSelect';
 
 /**
  * The option interface, based on the expected format for PF-select elements.
@@ -89,7 +89,7 @@ export const AutoCompleteInput: React.FC<Props> = ({
           isDisabled={shouldBeDisabled}
           setSelected={handleInputChange}
           selected={selected as string[]}
-          placeholderText={words("common.serviceInstance.relations")(
+          placeholderText={words('common.serviceInstance.relations')(
             serviceEntity,
           )}
           onSearchTextChanged={onSearchTextChanged}
@@ -102,7 +102,7 @@ export const AutoCompleteInput: React.FC<Props> = ({
           isDisabled={shouldBeDisabled}
           setSelected={handleInputChange}
           selected={selected as string | null}
-          placeholderText={words("common.serviceInstance.relation")(
+          placeholderText={words('common.serviceInstance.relation')(
             serviceEntity,
           )}
           onSearchTextChanged={onSearchTextChanged}

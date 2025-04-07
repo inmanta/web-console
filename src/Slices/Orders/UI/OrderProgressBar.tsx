@@ -1,12 +1,12 @@
-import React from "react";
+import React from 'react';
 import {
   t_global_icon_color_status_danger_default,
   t_global_color_brand_default,
   t_global_icon_color_status_success_default,
-} from "@patternfly/react-tokens";
-import { words } from "@/UI";
-import { LegendBar, LegendItemDetails } from "@/UI/Components";
-import { ServiceOrderItem } from "../Core/Query";
+} from '@patternfly/react-tokens';
+import { words } from '@/UI';
+import { LegendBar, LegendItemDetails } from '@/UI/Components';
+import { ServiceOrderItem } from '../Core/Query';
 
 interface Props {
   serviceOrderItems: ServiceOrderItem[];
@@ -48,7 +48,7 @@ export const OrderProgressBar: React.FC<Props> = ({
  */
 const getTotalDoneState = (items: ServiceOrderItem[]) => {
   const done: number = items.filter((item) => {
-    return item.status.state === "completed" || item.status.state === "failed";
+    return item.status.state === 'completed' || item.status.state === 'failed';
   }).length;
 
   return done;
@@ -66,34 +66,34 @@ const fromProgressToItems = (
 ): LegendItemDetails[] => {
   return [
     {
-      id: "acknowledged",
-      label: words("orders.status.acknowledged"),
+      id: 'acknowledged',
+      label: words('orders.status.acknowledged'),
       value: Number(
-        items.filter((item) => item.status.state === "acknowledged").length,
+        items.filter((item) => item.status.state === 'acknowledged').length,
       ),
       backgroundColor: t_global_icon_color_status_success_default.var,
     },
     {
-      id: "failed",
-      label: words("orders.status.failed"),
+      id: 'failed',
+      label: words('orders.status.failed'),
       value: Number(
-        items.filter((item) => item.status.state === "failed").length,
+        items.filter((item) => item.status.state === 'failed').length,
       ),
       backgroundColor: t_global_icon_color_status_danger_default.var,
     },
     {
-      id: "completed",
-      label: words("orders.status.completed"),
+      id: 'completed',
+      label: words('orders.status.completed'),
       value: Number(
-        items.filter((item) => item.status.state === "completed").length,
+        items.filter((item) => item.status.state === 'completed').length,
       ),
       backgroundColor: t_global_icon_color_status_success_default.var,
     },
     {
-      id: "in_progress",
-      label: words("orders.status.in_progress"),
+      id: 'in_progress',
+      label: words('orders.status.in_progress'),
       value: Number(
-        items.filter((item) => item.status.state === "in_progress").length,
+        items.filter((item) => item.status.state === 'in_progress').length,
       ),
       backgroundColor: t_global_color_brand_default.var,
     },

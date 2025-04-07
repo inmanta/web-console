@@ -1,1 +1,1 @@
-export * from "./DateWithTooltip";
+export * from './DateWithTooltip';

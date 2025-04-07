@@ -1,12 +1,12 @@
-import React from "react";
-import { Tabs, Tab, TabContentBody } from "@patternfly/react-core";
-import { ServiceModel } from "@/Core";
-import { useUrlStateWithString } from "@/Data";
-import { AttributeTable } from "./AttributeTable";
-import { CallbacksView } from "./Callbacks";
-import { Config } from "./Config";
-import { Details } from "./Details";
-import { LifecycleTable } from "./LifecycleTable";
+import React from 'react';
+import { Tabs, Tab, TabContentBody } from '@patternfly/react-core';
+import { ServiceModel } from '@/Core';
+import { useUrlStateWithString } from '@/Data';
+import { AttributeTable } from './AttributeTable';
+import { CallbacksView } from './Callbacks';
+import { Config } from './Config';
+import { Details } from './Details';
+import { LifecycleTable } from './LifecycleTable';
 
 interface Props {
   service: ServiceModel;
@@ -14,9 +14,9 @@ interface Props {
 
 export const CatalogTabs: React.FunctionComponent<Props> = ({ service }) => {
   const [activeTabKey, setActiveTabKey] = useUrlStateWithString({
-    default: "details",
+    default: 'details',
     key: `tab-${service.name}`,
-    route: "Catalog",
+    route: 'Catalog',
   });
   const handleTabClick = (event, tabIndex) => {
     setActiveTabKey(tabIndex);

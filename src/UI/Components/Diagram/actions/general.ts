@@ -1,13 +1,13 @@
-import { dia } from "@inmanta/rappid";
-import { InstanceAttributeModel } from "@/Core";
-import { dispatchAddInterServiceRelationToTracker } from "../Context/dispatchers";
-import { getKeyAttributesNames } from "../helpers";
+import { dia } from '@inmanta/rappid';
+import { InstanceAttributeModel } from '@/Core';
+import { dispatchAddInterServiceRelationToTracker } from '../Context/dispatchers';
+import { getKeyAttributesNames } from '../helpers';
 import {
   ComposerEntityOptions,
   EntityType,
   InterServiceRelationOnCanvasWithMin,
-} from "../interfaces";
-import { Link, ServiceEntityBlock } from "../shapes";
+} from '../interfaces';
+import { Link, ServiceEntityBlock } from '../shapes';
 
 /**
  * Function that creates, appends and returns created Entity
@@ -26,13 +26,13 @@ import { Link, ServiceEntityBlock } from "../shapes";
  *
  * @returns {ServiceEntityBlock} created JointJS shape
  */
-export function createComposerEntity({
+export function createComposerEntity ({
   serviceModel,
   isCore,
   isInEditMode,
   attributes,
   isEmbeddedEntity = false,
-  holderName = "",
+  holderName = '',
   embeddedTo,
   isBlockedFromEditing = false,
   cantBeRemoved = false,
@@ -42,7 +42,7 @@ export function createComposerEntity({
   //Create shape for Entity
   const instanceAsTable = new ServiceEntityBlock();
 
-  if (isEmbeddedEntity && "type" in serviceModel) {
+  if (isEmbeddedEntity && 'type' in serviceModel) {
     instanceAsTable.setName(serviceModel.name, serviceModel.type);
   } else {
     instanceAsTable.setName(serviceModel.name, null);
@@ -50,29 +50,29 @@ export function createComposerEntity({
 
   //if there is if provided, we use it, if not we use default one, created by JointJS
   if (id) {
-    instanceAsTable.set("id", id);
+    instanceAsTable.set('id', id);
   }
 
   if (isEmbeddedEntity) {
     instanceAsTable.setTabColor(EntityType.EMBEDDED);
-    instanceAsTable.set("embeddedTo", embeddedTo);
-    instanceAsTable.set("isEmbeddedEntity", isEmbeddedEntity);
-    instanceAsTable.set("holderName", holderName);
+    instanceAsTable.set('embeddedTo', embeddedTo);
+    instanceAsTable.set('isEmbeddedEntity', isEmbeddedEntity);
+    instanceAsTable.set('holderName', holderName);
   } else if (isCore) {
-    instanceAsTable.set("isCore", isCore);
+    instanceAsTable.set('isCore', isCore);
     instanceAsTable.setTabColor(EntityType.CORE);
   } else {
     instanceAsTable.setTabColor(EntityType.RELATION);
-    instanceAsTable.set("stencilName", stencilName);
+    instanceAsTable.set('stencilName', stencilName);
   }
 
-  instanceAsTable.set("isInEditMode", isInEditMode);
-  instanceAsTable.set("serviceModel", serviceModel);
-  instanceAsTable.set("isBlockedFromEditing", isBlockedFromEditing);
-  instanceAsTable.set("cantBeRemoved", cantBeRemoved);
+  instanceAsTable.set('isInEditMode', isInEditMode);
+  instanceAsTable.set('serviceModel', serviceModel);
+  instanceAsTable.set('isBlockedFromEditing', isBlockedFromEditing);
+  instanceAsTable.set('cantBeRemoved', cantBeRemoved);
 
   if (serviceModel.inter_service_relations.length > 0) {
-    instanceAsTable.set("relatedTo", new Map());
+    instanceAsTable.set('relatedTo', new Map());
     const relations: InterServiceRelationOnCanvasWithMin[] = [];
 
     serviceModel.inter_service_relations.forEach((relation) => {
@@ -119,12 +119,12 @@ export const connectEntities = (
     const link = new Link();
 
     if (isBlocked) {
-      link.set("isBlockedFromEditing", isBlocked);
+      link.set('isBlockedFromEditing', isBlocked);
     }
     link.source(source);
     link.target(target);
     graph.addCell(link);
-    graph.trigger("link:connect", link);
+    graph.trigger('link:connect', link);
   });
 };
 
@@ -146,11 +146,11 @@ export const updateAttributes = (
   const attributesToDisplay = keyAttributes.map((key) => {
     const value = serviceInstanceAttributes
       ? (serviceInstanceAttributes[key] as string)
-      : "";
+      : '';
 
     return {
       name: key,
-      value: value || "",
+      value: value || '',
     };
   });
 
@@ -163,10 +163,10 @@ export const updateAttributes = (
     );
   }
 
-  serviceEntity.set("instanceAttributes", serviceInstanceAttributes);
+  serviceEntity.set('instanceAttributes', serviceInstanceAttributes);
 
-  if (isInitial && !serviceEntity.get("sanitizedAttrs")) {
+  if (isInitial && !serviceEntity.get('sanitizedAttrs')) {
     //for initial appending instanceAttributes are equal sanitized ones
-    serviceEntity.set("sanitizedAttrs", serviceInstanceAttributes);
+    serviceEntity.set('sanitizedAttrs', serviceInstanceAttributes);
   }
 };

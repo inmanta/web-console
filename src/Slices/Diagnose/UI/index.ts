@@ -1,1 +1,1 @@
-export { Page as DiagnosePage } from "./Page";
+export { Page as DiagnosePage } from './Page';

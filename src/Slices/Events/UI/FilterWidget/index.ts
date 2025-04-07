@@ -1,1 +1,1 @@
-export * from "./EventsFilterWidget";
+export * from './EventsFilterWidget';

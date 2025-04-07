@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect } from 'react';
 import {
   Button,
   FormGroup,
@@ -9,9 +9,9 @@ import {
   TextArea,
   TextInput,
   TextInputTypes,
-} from "@patternfly/react-core";
-import { HelpIcon } from "@patternfly/react-icons";
-import { SuggestionsPopover } from "./SuggestionsPopover";
+} from '@patternfly/react-core';
+import { HelpIcon } from '@patternfly/react-icons';
+import { SuggestionsPopover } from './SuggestionsPopover';
 
 interface Props {
   attributeName: string;
@@ -108,7 +108,7 @@ export const TextFormInput: React.FC<Props> = ({
       </FormHelperText>
       {isTextarea ? (
         <TextArea
-          value={inputValue || ""}
+          value={inputValue || ''}
           onChange={(_event, value) => handleChange(value)}
           id={attributeName}
           name={attributeName}
@@ -131,8 +131,8 @@ export const TextFormInput: React.FC<Props> = ({
             aria-label={`TextInput-${attributeName}`}
             value={inputValue}
             onChange={(_event, value) => {
-              if (type === "number") {
-                handleChange(value === "" ? null : Number(value));
+              if (type === 'number') {
+                handleChange(value === '' ? null : Number(value));
               } else {
                 handleChange(value);
               }
@@ -143,7 +143,7 @@ export const TextFormInput: React.FC<Props> = ({
           {suggestions && suggestions.length > 0 && (
             <SuggestionsPopover
               suggestions={suggestions}
-              filter={inputRef.current?.value || ""}
+              filter={inputRef.current?.value || ''}
               handleSuggestionClick={(suggestion) => {
                 if (inputRef.current) {
                   handleChange(suggestion);

@@ -1,63 +1,63 @@
 import {
   PathHelper,
   TreeExpansionManager,
-} from "@/UI/Components/TreeTable/Helpers";
-import { CatalogAttributeHelper } from "./AttributeHelper";
-import { CatalogTreeTableHelper } from "./TreeTableHelper";
+} from '@/UI/Components/TreeTable/Helpers';
+import { CatalogAttributeHelper } from './AttributeHelper';
+import { CatalogTreeTableHelper } from './TreeTableHelper';
 //mock is to avoid TypeError - Temporary workaround - to be removed - https://github.com/inmanta/web-console/issues/6194
-jest.mock("@/Data/Managers/V2/ServiceInstance");
+jest.mock('@/Data/Managers/V2/ServiceInstance');
 
-test("TreeTableHelper getExpansionState returns correct expansionState", () => {
+test('TreeTableHelper getExpansionState returns correct expansionState', () => {
   const service = {
-    attributes: [{ name: "e", type: "string", description: "" }],
+    attributes: [{ name: 'e', type: 'string', description: '' }],
     embedded_entities: [
       {
-        name: "a",
-        description: "",
-        attributes: [{ name: "b", type: "int?", description: "desc" }],
+        name: 'a',
+        description: '',
+        attributes: [{ name: 'b', type: 'int?', description: 'desc' }],
         embedded_entities: [],
       },
     ],
   };
   const treeTableHelper = new CatalogTreeTableHelper(
-    new PathHelper("."),
-    new TreeExpansionManager("."),
-    new CatalogAttributeHelper("."),
+    new PathHelper('.'),
+    new TreeExpansionManager('.'),
+    new CatalogAttributeHelper('.'),
     service,
   );
   const expansionState = treeTableHelper.getExpansionState();
 
   expect(expansionState).toEqual({
     a: false,
-    "a.b": false,
+    'a.b': false,
     e: false,
   });
 });
 
-test("TreeTableHelper createRows returns correctly ordered list", () => {
+test('TreeTableHelper createRows returns correctly ordered list', () => {
   const service = {
-    attributes: [{ name: "e", type: "string", description: "" }],
+    attributes: [{ name: 'e', type: 'string', description: '' }],
     embedded_entities: [
       {
-        name: "f",
-        description: "description",
+        name: 'f',
+        description: 'description',
         attributes: [
-          { name: "g", type: "dict?", description: "sample", modifier: "rw" },
+          { name: 'g', type: 'dict?', description: 'sample', modifier: 'rw' },
         ],
         embedded_entities: [],
       },
       {
-        name: "a",
-        description: "",
+        name: 'a',
+        description: '',
         attributes: [
-          { name: "b", type: "int?", description: "desc", modifier: "rw+" },
+          { name: 'b', type: 'int?', description: 'desc', modifier: 'rw+' },
         ],
         embedded_entities: [
           {
-            name: "c",
-            description: "desc",
+            name: 'c',
+            description: 'desc',
             attributes: [
-              { name: "d", type: "int", description: "desc", modifier: "r" },
+              { name: 'd', type: 'int', description: 'desc', modifier: 'r' },
             ],
             embedded_entities: [],
           },
@@ -67,9 +67,9 @@ test("TreeTableHelper createRows returns correctly ordered list", () => {
   };
 
   const treeTableHelper = new CatalogTreeTableHelper(
-    new PathHelper("$"),
-    new TreeExpansionManager("$"),
-    new CatalogAttributeHelper("$"),
+    new PathHelper('$'),
+    new TreeExpansionManager('$'),
+    new CatalogAttributeHelper('$'),
     service,
   );
 
@@ -77,129 +77,129 @@ test("TreeTableHelper createRows returns correctly ordered list", () => {
   const { rows } = treeTableHelper.createRows(
     {
       a: false,
-      "a.b": false,
+      'a.b': false,
       e: false,
     },
     cb,
   );
   const expectedRows = [
     {
-      kind: "Root",
-      id: "a",
+      kind: 'Root',
+      id: 'a',
       primaryCell: {
-        label: "name",
-        value: "a",
+        label: 'name',
+        value: 'a',
       },
     },
     {
-      kind: "Leaf",
-      id: "a$b",
+      kind: 'Leaf',
+      id: 'a$b',
       level: 1,
       primaryCell: {
-        label: "name",
-        value: "b",
+        label: 'name',
+        value: 'b',
       },
       valueCells: [
         {
           hasRelation: undefined,
-          label: "type",
-          value: "int?",
+          label: 'type',
+          value: 'int?',
         },
         {
-          label: "modifier",
-          value: "rw+",
+          label: 'modifier',
+          value: 'rw+',
         },
         {
-          label: "description",
-          value: "desc",
+          label: 'description',
+          value: 'desc',
         },
       ],
     },
     {
-      kind: "Branch",
-      id: "a$c",
+      kind: 'Branch',
+      id: 'a$c',
       level: 1,
       primaryCell: {
-        label: "name",
-        value: "c",
+        label: 'name',
+        value: 'c',
       },
     },
     {
-      kind: "Leaf",
-      id: "a$c$d",
+      kind: 'Leaf',
+      id: 'a$c$d',
       level: 2,
       primaryCell: {
-        label: "name",
-        value: "d",
+        label: 'name',
+        value: 'd',
       },
       valueCells: [
         {
           hasRelation: undefined,
-          label: "type",
-          value: "int",
+          label: 'type',
+          value: 'int',
         },
         {
-          label: "modifier",
-          value: "r",
+          label: 'modifier',
+          value: 'r',
         },
         {
-          label: "description",
-          value: "desc",
+          label: 'description',
+          value: 'desc',
         },
       ],
     },
     {
-      kind: "Flat",
-      id: "e",
+      kind: 'Flat',
+      id: 'e',
       primaryCell: {
-        label: "name",
-        value: "e",
+        label: 'name',
+        value: 'e',
       },
       valueCells: [
         {
           hasRelation: undefined,
-          label: "type",
-          value: "string",
+          label: 'type',
+          value: 'string',
         },
         {
-          label: "modifier",
-          value: "",
+          label: 'modifier',
+          value: '',
         },
         {
-          label: "description",
-          value: "",
+          label: 'description',
+          value: '',
         },
       ],
     },
     {
-      kind: "Root",
-      id: "f",
+      kind: 'Root',
+      id: 'f',
       primaryCell: {
-        label: "name",
-        value: "f",
+        label: 'name',
+        value: 'f',
       },
     },
     {
-      kind: "Leaf",
-      id: "f$g",
+      kind: 'Leaf',
+      id: 'f$g',
       level: 1,
       primaryCell: {
-        label: "name",
-        value: "g",
+        label: 'name',
+        value: 'g',
       },
       valueCells: [
         {
           hasRelation: undefined,
-          label: "type",
-          value: "dict?",
+          label: 'type',
+          value: 'dict?',
         },
         {
-          label: "modifier",
-          value: "rw",
+          label: 'modifier',
+          value: 'rw',
         },
         {
-          label: "description",
-          value: "sample",
+          label: 'description',
+          value: 'sample',
         },
       ],
     },

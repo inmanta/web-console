@@ -1,4 +1,4 @@
-import { identity } from "lodash-es";
+import { identity } from 'lodash-es';
 import {
   ApiHelper,
   Either,
@@ -6,16 +6,16 @@ import {
   objectHasKey,
   isObject,
   ErrorWithHTTPCode,
-} from "@/Core";
-import { words } from "@/UI/words";
-import { AuthContextInterface } from "../Auth/AuthContext";
-import { BigIntJsonParser } from "./BigIntJsonParser";
+} from '@/Core';
+import { words } from '@/UI/words';
+import { AuthContextInterface } from '../Auth/AuthContext';
+import { BigIntJsonParser } from './BigIntJsonParser';
 
 /**
  * Helper class for making API calls.
  */
 export const BaseApiHelper = (
-  baseUrl: string = "http://localhost:8888",
+  baseUrl: string = 'http://localhost:8888',
   authHelper: AuthContextInterface,
 ): ApiHelper => {
   const jsonParser = new BigIntJsonParser();
@@ -25,10 +25,10 @@ export const BaseApiHelper = (
    * @param url The URL to make the HEAD request to.
    * @returns A promise resolving to the HTTP status code of the response.
    */
-  async function head(url: string): Promise<number> {
+  async function head (url: string): Promise<number> {
     try {
       const response = await fetch(getFullUrl(url), {
-        method: "HEAD",
+        method: 'HEAD',
         headers: getHeaders(),
       });
 
@@ -42,7 +42,7 @@ export const BaseApiHelper = (
    * Gets the bearer token for authentication based on the available authentication method.
    * @returns An object containing the authorization header with the bearer token if available.
    */
-  function getBearerToken(): { Authorization: string } | Record<string, never> {
+  function getBearerToken (): { Authorization: string } | Record<string, never> {
     if (authHelper.getToken()) {
       return { Authorization: `Bearer ${authHelper.getToken()}` };
     }
@@ -56,9 +56,9 @@ export const BaseApiHelper = (
    * @returns Headers object including bearer token and environment information if provided.
    */
 
-  function getHeaders(environment?: string): Record<string, string> {
+  function getHeaders (environment?: string): Record<string, string> {
     return {
-      ...(environment ? { "X-Inmanta-Tid": environment } : {}),
+      ...(environment ? { 'X-Inmanta-Tid': environment } : {}),
       ...getBearerToken(),
     };
   }
@@ -69,16 +69,16 @@ export const BaseApiHelper = (
    * @param response The response object.
    * @returns Formatted error message including status code and status text.
    */
-  function formatError(message: string, response: Response): string {
+  function formatError (message: string, response: Response): string {
     let errorMessage = message;
 
     if (response.status === 401 || response.status === 403) {
-      errorMessage += ` ${words("error.authorizationFailed")}`;
+      errorMessage += ` ${words('error.authorizationFailed')}`;
 
       authHelper.login();
     }
 
-    return words("error.server.intro")(
+    return words('error.server.intro')(
       `${response.status} ${response.statusText} \n${errorMessage}`,
     );
   }
@@ -88,11 +88,11 @@ export const BaseApiHelper = (
    * @param error The error object to check.
    * @returns True if the error object has a message property, false otherwise.
    */
-  function errorHasMessage(error: unknown): error is { message: string } {
+  function errorHasMessage (error: unknown): error is { message: string } {
     if (!isObject(error)) return false;
-    if (!objectHasKey(error, "message")) return false;
+    if (!objectHasKey(error, 'message')) return false;
 
-    return typeof error.message === "string";
+    return typeof error.message === 'string';
   }
 
   /**
@@ -100,7 +100,7 @@ export const BaseApiHelper = (
    * @param params Parameters for the fetch function.
    * @returns A promise resolving to an either type containing either the response data or an error message.
    */
-  async function executeJson<Data>(
+  async function executeJson<Data> (
     ...params: Parameters<typeof fetch>
   ): Promise<Either.Type<string, Data>> {
     return execute<Data, string>(
@@ -115,7 +115,7 @@ export const BaseApiHelper = (
    * @param params Parameters for the fetch function.
    * @returns A promise resolving to maybe a string if an error occurred, or none if request was successful.
    */
-  async function executeWithoutResponse(
+  async function executeWithoutResponse (
     ...params: Parameters<typeof fetch>
   ): Promise<Maybe.Type<string>> {
     const result = await execute<string, string>(
@@ -132,7 +132,7 @@ export const BaseApiHelper = (
    * @param url The URL to append to the base URL.
    * @returns The full URL.
    */
-  function getFullUrl(url: string): string {
+  function getFullUrl (url: string): string {
     return `${baseUrl}${url}`;
   }
 
@@ -142,7 +142,7 @@ export const BaseApiHelper = (
    * @param environment The environment for which the request is made.
    * @returns A promise resolving to either the response data or an error message.
    */
-  async function get<Data>(
+  async function get<Data> (
     url: string,
     environment: string,
   ): Promise<Either.Type<string, Data>> {
@@ -156,7 +156,7 @@ export const BaseApiHelper = (
    * @param url The URL to make the GET request to.
    * @returns A promise resolving to either the response data or an error message.
    */
-  async function getWithoutEnvironment<Data>(
+  async function getWithoutEnvironment<Data> (
     url: string,
   ): Promise<Either.Type<string, Data>> {
     return executeJson<Data>(getFullUrl(url), {
@@ -169,7 +169,7 @@ export const BaseApiHelper = (
    * @param url The URL to make the GET request to.
    * @returns A promise resolving to either the response data or an error message.
    */
-  async function getZipWithoutEnvironment<Blob>(
+  async function getZipWithoutEnvironment<Blob> (
     url: string,
   ): Promise<Either.Type<string, Blob>> {
     return executeBlob<Blob, string>(identity, getFullUrl(url), {
@@ -184,17 +184,17 @@ export const BaseApiHelper = (
    * @param body The request body.
    * @returns A promise resolving to either the response data or an error message.
    */
-  async function post<Data, Body>(
+  async function post<Data, Body> (
     url: string,
     environment: string,
     body: Body,
   ): Promise<Either.Type<string, Data>> {
     return executeJson<Data>(getFullUrl(url), {
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         ...getHeaders(environment),
       },
-      method: "POST",
+      method: 'POST',
       body: jsonParser.stringify(body),
     });
   }
@@ -206,17 +206,17 @@ export const BaseApiHelper = (
    * @param body The request body.
    * @returns A promise resolving to maybe a string if an error occurred, or none if request was successful.
    */
-  async function postWithoutResponse<Body>(
+  async function postWithoutResponse<Body> (
     url: string,
     environment: string,
     body: Body,
   ): Promise<Maybe.Type<string>> {
     return executeWithoutResponse(getFullUrl(url), {
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         ...getHeaders(environment),
       },
-      method: "POST",
+      method: 'POST',
       body: jsonParser.stringify(body),
     });
   }
@@ -227,16 +227,16 @@ export const BaseApiHelper = (
    * @param body The request body.
    * @returns A promise resolving to maybe a string if an error occurred, or none if request was successful.
    */
-  async function postWithoutResponseAndEnvironment<Body>(
+  async function postWithoutResponseAndEnvironment<Body> (
     url: string,
     body: Body,
   ): Promise<Maybe.Type<string>> {
     return executeWithoutResponse(getFullUrl(url), {
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         ...getHeaders(),
       },
-      method: "POST",
+      method: 'POST',
       body: jsonParser.stringify(body),
     });
   }
@@ -247,16 +247,16 @@ export const BaseApiHelper = (
    * @param body The request body.
    * @returns A promise resolving to either the response data or an error message.
    */
-  function putWithoutEnvironment<Data, Body>(
+  function putWithoutEnvironment<Data, Body> (
     url: string,
     body: Body,
   ): Promise<Either.Type<string, Data>> {
     return executeJson(getFullUrl(url), {
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         ...getHeaders(),
       },
-      method: "PUT",
+      method: 'PUT',
       body: jsonParser.stringify(body),
     });
   }
@@ -268,17 +268,17 @@ export const BaseApiHelper = (
    * @param body The request body.
    * @returns A promise resolving to maybe a string if an error occurred, or none if request was successful.
    */
-  async function patch<Body>(
+  async function patch<Body> (
     url: string,
     environment: string,
     body: Body,
   ): Promise<Maybe.Type<string>> {
     return executeWithoutResponse(getFullUrl(url), {
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         ...getHeaders(environment),
       },
-      method: "PATCH",
+      method: 'PATCH',
       body: jsonParser.stringify(body),
     });
   }
@@ -289,16 +289,16 @@ export const BaseApiHelper = (
    * @param environment The environment for which the request is made.
    * @returns A promise resolving to maybe a string if an error occurred, or none if request was successful.
    */
-  async function toDelete(
+  async function toDelete (
     url: string,
     environment: string,
   ): Promise<Maybe.Type<string>> {
     return executeWithoutResponse(getFullUrl(url), {
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         ...getHeaders(environment),
       },
-      method: "DELETE",
+      method: 'DELETE',
     });
   }
 
@@ -308,7 +308,7 @@ export const BaseApiHelper = (
    * @param environment The environment for which the request is made.
    * @returns A promise resolving to either the response data or an error message with HTTP code.
    */
-  function getWithHTTPCode<Data>(
+  function getWithHTTPCode<Data> (
     url: string,
     environment: string,
   ): Promise<Either.Type<ErrorWithHTTPCode, Data>> {
@@ -328,7 +328,7 @@ export const BaseApiHelper = (
    * @param params Parameters for the fetch function.
    * @returns A promise resolving to either the response Blob data or an error message.
    */
-  async function executeBlob<Blob, Error>(
+  async function executeBlob<Blob, Error> (
     transformError: (message: string, status: number) => Promise<Error>,
     ...params: Parameters<typeof fetch>
   ): Promise<Either.Type<Error, Blob>> {
@@ -341,7 +341,7 @@ export const BaseApiHelper = (
         })
         .catch(() => {
           throw new Error(
-            "\nConnection to the server was either denied or blocked. \nPlease check server status.",
+            '\nConnection to the server was either denied or blocked. \nPlease check server status.',
           );
         });
 
@@ -379,7 +379,7 @@ export const BaseApiHelper = (
    * @param params Parameters for the fetch function.
    * @returns A promise resolving to an either type containing either the response data or an error message.
    */
-  async function execute<Data, Error>(
+  async function execute<Data, Error> (
     transform: (response: Response) => Promise<Data>,
     transformError: (message: string, status: number) => Promise<Error>,
     ...params: Parameters<typeof fetch>
@@ -393,7 +393,7 @@ export const BaseApiHelper = (
         })
         .catch(() => {
           throw new Error(
-            "\nConnection to the server was either denied or blocked. \nPlease check server status.",
+            '\nConnection to the server was either denied or blocked. \nPlease check server status.',
           );
         });
       if (response.ok) {

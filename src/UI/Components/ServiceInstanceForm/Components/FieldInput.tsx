@@ -1,29 +1,29 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Button,
   FormFieldGroupExpandable,
   FormFieldGroupHeader,
-} from "@patternfly/react-core";
-import { PlusIcon } from "@patternfly/react-icons";
-import { get } from "lodash-es";
-import { v4 as uuidv4 } from "uuid";
+} from '@patternfly/react-core';
+import { PlusIcon } from '@patternfly/react-icons';
+import { get } from 'lodash-es';
+import { v4 as uuidv4 } from 'uuid';
 import {
   InstanceAttributeModel,
   DictListField,
   Field,
   NestedField,
   FormSuggestion,
-} from "@/Core";
-import { toOptionalBoolean } from "@/Data";
-import { useSuggestedValues } from "@/Data/Managers/V2/ServiceInstance";
-import { createFormState } from "@/UI/Components/ServiceInstanceForm/Helpers";
-import { words } from "@/UI/words";
-import { BooleanFormInput } from "./BooleanFormInput";
-import { BooleanToggleInput } from "./BooleanToggleInput";
-import { RelatedServiceProvider } from "./RelatedServiceProvider";
-import { SelectFormInput } from "./SelectFormInput";
-import { TextFormInput } from "./TextFormInput";
-import { TextListFormInput } from "./TextListFormInput";
+} from '@/Core';
+import { toOptionalBoolean } from '@/Data';
+import { useSuggestedValues } from '@/Data/Managers/V2/ServiceInstance';
+import { createFormState } from '@/UI/Components/ServiceInstanceForm/Helpers';
+import { words } from '@/UI/words';
+import { BooleanFormInput } from './BooleanFormInput';
+import { BooleanToggleInput } from './BooleanToggleInput';
+import { RelatedServiceProvider } from './RelatedServiceProvider';
+import { SelectFormInput } from './SelectFormInput';
+import { TextFormInput } from './TextFormInput';
+import { TextListFormInput } from './TextListFormInput';
 
 interface Props {
   field: Field;
@@ -84,12 +84,12 @@ export const FieldInput: React.FC<Props> = ({
 
   // Get the controlled value for the field
   // If the value is an object or an array, it needs to be converted.
-  function getControlledValue(value) {
+  function getControlledValue (value) {
     if (value === null || value === undefined) {
-      return "";
+      return '';
     } else if (Array.isArray(value)) {
-      return value.join(", ");
-    } else if (typeof value === "object") {
+      return value.join(', ');
+    } else if (typeof value === 'object') {
       return JSON.stringify(value);
     } else {
       return value;
@@ -115,7 +115,7 @@ export const FieldInput: React.FC<Props> = ({
         data.metadata.values &&
         Array.isArray(data.metadata.values) &&
         // TODO: remove this when the API returns a fixed format.
-        data.metadata.values.every((value) => typeof value === "string")
+        data.metadata.values.every((value) => typeof value === 'string')
       ) {
         setSuggestionsList(data.metadata.values);
       }
@@ -125,7 +125,7 @@ export const FieldInput: React.FC<Props> = ({
   }, [suggestions, data, isLoading, error]);
 
   switch (field.kind) {
-    case "Boolean":
+    case 'Boolean':
       return field.isOptional ? (
         <BooleanFormInput
           aria-label={`BooleanFieldInput-${field.name}`}
@@ -160,17 +160,17 @@ export const FieldInput: React.FC<Props> = ({
           }
         />
       );
-    case "TextList":
+    case 'TextList':
       return (
         <TextListFormInput
           aria-label={`TextFieldInput-${field.name}`}
           attributeName={field.name}
-          attributeValue={get(formState, makePath(path, field.name).split("."))}
+          attributeValue={get(formState, makePath(path, field.name).split('.'))}
           description={field.description}
           isOptional={field.isOptional}
           shouldBeDisabled={
             field.isDisabled &&
-            get(originalState, makePath(path, field.name).split(".")) !==
+            get(originalState, makePath(path, field.name).split('.')) !==
               undefined &&
             !isNew
           }
@@ -184,7 +184,7 @@ export const FieldInput: React.FC<Props> = ({
           suggestions={suggestionsList}
         />
       );
-    case "Textarea":
+    case 'Textarea':
       return (
         <TextFormInput
           aria-label={`TextFieldInput-${field.name}`}
@@ -207,7 +207,7 @@ export const FieldInput: React.FC<Props> = ({
           isTextarea
         />
       );
-    case "Text":
+    case 'Text':
       return (
         <TextFormInput
           aria-label={`TextFieldInput-${field.name}`}
@@ -224,7 +224,7 @@ export const FieldInput: React.FC<Props> = ({
           }
           type={field.inputType}
           handleInputChange={(value, _event) => {
-            if (field.type.includes("dict")) {
+            if (field.type.includes('dict')) {
               getUpdate(makePath(path, field.name), tryParseJSON(value));
             } else {
               getUpdate(makePath(path, field.name), value);
@@ -236,7 +236,7 @@ export const FieldInput: React.FC<Props> = ({
           suggestions={suggestionsList}
         />
       );
-    case "InterServiceRelation":
+    case 'InterServiceRelation':
       return (
         <RelatedServiceProvider
           alreadySelected={
@@ -255,7 +255,7 @@ export const FieldInput: React.FC<Props> = ({
           }
         />
       );
-    case "Enum":
+    case 'Enum':
       return (
         <SelectFormInput
           aria-label={`EnumFieldInput-${field.name}`}
@@ -273,7 +273,7 @@ export const FieldInput: React.FC<Props> = ({
           }
         />
       );
-    case "Nested":
+    case 'Nested':
       return (
         <NestedFieldInput
           field={field}
@@ -284,7 +284,7 @@ export const FieldInput: React.FC<Props> = ({
           isNew={isNew}
         />
       );
-    case "DictList":
+    case 'DictList':
       return (
         <DictListFieldInput
           field={field}
@@ -295,7 +295,7 @@ export const FieldInput: React.FC<Props> = ({
           isNew={isNew}
         />
       );
-    case "RelationList":
+    case 'RelationList':
       return (
         <RelatedServiceProvider
           alreadySelected={
@@ -304,7 +304,7 @@ export const FieldInput: React.FC<Props> = ({
           key={makePath(path, field.name)}
           serviceName={field.serviceEntity}
           attributeName={field.name}
-          description={field.description !== null ? field.description : ""}
+          description={field.description !== null ? field.description : ''}
           attributeValue={
             get(formState, makePath(path, field.name), []) as string[]
           }
@@ -325,14 +325,14 @@ export const FieldInput: React.FC<Props> = ({
  * @returns {string | undefined} The placeholder string for the given data type, or undefined if not found.
  */
 const getPlaceholderForType = (typeName: string): string | undefined => {
-  if (typeName === "int[]") {
-    return words("inventory.form.placeholder.intList");
-  } else if (typeName === "float[]") {
-    return words("inventory.form.placeholder.floatList");
-  } else if (typeName.endsWith("[]")) {
-    return words("inventory.form.placeholder.stringList");
-  } else if (typeName.includes("dict")) {
-    return words("inventory.form.placeholder.dict");
+  if (typeName === 'int[]') {
+    return words('inventory.form.placeholder.intList');
+  } else if (typeName === 'float[]') {
+    return words('inventory.form.placeholder.floatList');
+  } else if (typeName.endsWith('[]')) {
+    return words('inventory.form.placeholder.stringList');
+  } else if (typeName.includes('dict')) {
+    return words('inventory.form.placeholder.dict');
   }
 
   return undefined;
@@ -345,12 +345,12 @@ const getPlaceholderForType = (typeName: string): string | undefined => {
  * @returns {string | undefined} The type hint string for the given data type, or undefined if not found.
  */
 const getTypeHintForType = (typeName: string): string | undefined => {
-  if (typeName.endsWith("[]")) {
-    return words("inventory.form.typeHint.list")(
-      typeName.substring(0, typeName.indexOf("[")),
+  if (typeName.endsWith('[]')) {
+    return words('inventory.form.typeHint.list')(
+      typeName.substring(0, typeName.indexOf('[')),
     );
-  } else if (typeName.includes("dict")) {
-    return words("inventory.form.typeHint.dict");
+  } else if (typeName.includes('dict')) {
+    return words('inventory.form.typeHint.dict');
   }
 
   return undefined;
@@ -426,14 +426,14 @@ const NestedFieldInput: React.FC<NestedProps> = ({
                     showList
                   }
                 >
-                  {words("add")}
+                  {words('add')}
                 </Button>
                 <Button
                   variant="link"
                   onClick={getOnDelete()}
                   isDisabled={!isNew && (field.isDisabled || !showList)}
                 >
-                  {words("delete")}
+                  {words('delete')}
                 </Button>
               </>
             )
@@ -575,8 +575,8 @@ const DictListFieldInput: React.FC<DictListProps> = ({
             id: `DictListFieldInput-${makePath(path, field.name)}`,
           }}
           titleDescription={`${
-            field.description !== null ? field.description : ""
-          } (${words("inventory.createInstance.items")(list.length)})`}
+            field.description !== null ? field.description : ''
+          } (${words('inventory.createInstance.items')(list.length)})`}
           actions={
             <Button
               variant="link"
@@ -589,7 +589,7 @@ const DictListFieldInput: React.FC<DictListProps> = ({
                 (!!field.max && list.length >= field.max)
               }
             >
-              {words("add")}
+              {words('add')}
             </Button>
           }
         />
@@ -623,7 +623,7 @@ const DictListFieldInput: React.FC<DictListProps> = ({
                     field.min > index
                   }
                 >
-                  {words("delete")}
+                  {words('delete')}
                 </Button>
               }
             />
@@ -661,7 +661,7 @@ const DictListFieldInput: React.FC<DictListProps> = ({
  */
 export const tryParseJSON = (value: unknown) => {
   try {
-    if (typeof value === "string") {
+    if (typeof value === 'string') {
       return JSON.parse(value);
     }
 

@@ -1,3 +1,3 @@
-export * from "./DeleteDesiredStateVersion";
-export * from "./GetDesiredStates";
-export * from "./PromoteDesiredStateVersion";
+export * from './DeleteDesiredStateVersion';
+export * from './GetDesiredStates';
+export * from './PromoteDesiredStateVersion';

@@ -1,1 +1,1 @@
-export * as Diff from "./Diff";
+export * as Diff from './Diff';

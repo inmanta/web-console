@@ -1,8 +1,8 @@
-import React from "react";
-import { Toolbar, ToolbarItem, ToolbarContent } from "@patternfly/react-core";
-import { FreeTextFilter } from "@/UI/Components";
-import { words } from "@/UI/words";
-import { Filter } from "@S/Facts/Core/Query";
+import React from 'react';
+import { Toolbar, ToolbarItem, ToolbarContent } from '@patternfly/react-core';
+import { FreeTextFilter } from '@/UI/Components';
+import { words } from '@/UI/words';
+import { Filter } from '@S/Facts/Core/Query';
 
 interface Props {
   filter: Filter;
@@ -28,16 +28,16 @@ export const TableControls: React.FC<Props> = ({
     >
       <ToolbarContent>
         <FreeTextFilter
-          filterPropertyName={"Name"}
+          filterPropertyName={'Name'}
           searchEntries={filter.name}
           update={updateName}
-          placeholder={words("facts.filters.name.placeholder")}
+          placeholder={words('facts.filters.name.placeholder')}
         />
         <FreeTextFilter
-          filterPropertyName={"Resource Id"}
+          filterPropertyName={'Resource Id'}
           searchEntries={filter.resource_id}
           update={updateResourceId}
-          placeholder={words("facts.filters.resourceId.placeholder")}
+          placeholder={words('facts.filters.resourceId.placeholder')}
         />
         <ToolbarItem variant="pagination">{paginationWidget}</ToolbarItem>
       </ToolbarContent>

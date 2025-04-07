@@ -1,6 +1,6 @@
-import { useContext } from "react";
-import { DependencyContext, PrimaryBaseUrlManager } from "@/UI";
-import { useFetchHelpers } from "../helpers";
+import { useContext } from 'react';
+import { DependencyContext, PrimaryBaseUrlManager } from '@/UI';
+import { useFetchHelpers } from '../helpers';
 
 /**
  * Custom hook to perform a GET request.
@@ -172,7 +172,7 @@ export const usePost = (options?: { message?: string }) => {
   return async <Body>(path: string, body: Body) => {
     try {
       const response = await fetch(`${baseUrl}${path}`, {
-        method: "POST",
+        method: 'POST',
         headers,
         body: JSON.stringify(body),
       });
@@ -215,7 +215,7 @@ export const usePostWithoutEnv = (options?: { message?: string }) => {
   return async <Body>(path: string, body: Body) => {
     try {
       const response = await fetch(`${baseUrl}${path}`, {
-        method: "POST",
+        method: 'POST',
         headers,
         body: JSON.stringify(body),
       });
@@ -261,7 +261,7 @@ export const usePut = (options?: { message?: string }) => {
   return async <Body>(path: string, body: Body) => {
     try {
       const response = await fetch(`${baseUrl}${path}`, {
-        method: "PUT",
+        method: 'PUT',
         headers,
         body: JSON.stringify(body),
       });
@@ -304,7 +304,7 @@ export const usePutWithoutEnv = (options?: { message?: string }) => {
   return async <Body>(path: string, body: Body) => {
     try {
       const response = await fetch(`${baseUrl}${path}`, {
-        method: "PUT",
+        method: 'PUT',
         headers,
         body: JSON.stringify(body),
       });
@@ -348,7 +348,7 @@ export const usePatch = (options?: { message?: string }) => {
   return async <Body>(path: string, body: Body) => {
     try {
       const response = await fetch(`${baseUrl}${path}`, {
-        method: "PATCH",
+        method: 'PATCH',
         headers,
         body: JSON.stringify(body),
       });
@@ -391,7 +391,7 @@ export const usePatchWithoutEnv = (options?: { message?: string }) => {
   return async <Body>(path: string, body: Body) => {
     try {
       const response = await fetch(`${baseUrl}${path}`, {
-        method: "PATCH",
+        method: 'PATCH',
         headers,
         body: JSON.stringify(body),
       });
@@ -431,13 +431,13 @@ export const useDelete = (options?: { message?: string }) => {
   const headers = createHeaders({ env, message: options?.message });
 
   if (options?.message) {
-    headers.append("message", options.message);
+    headers.append('message', options.message);
   }
 
   return async (path: string) => {
     try {
       const response = await fetch(`${baseUrl}${path}`, {
-        method: "DELETE",
+        method: 'DELETE',
         headers,
       });
 
@@ -477,7 +477,7 @@ export const useDeleteWithoutEnv = (options?: { message?: string }) => {
   return async (path: string) => {
     try {
       const response = await fetch(`${baseUrl}${path}`, {
-        method: "DELETE",
+        method: 'DELETE',
         headers,
       });
 
@@ -521,7 +521,7 @@ export const useHead = () => {
   return async (path: string) => {
     try {
       const response = await fetch(`${baseUrl}${path}`, {
-        method: "HEAD",
+        method: 'HEAD',
         headers: createHeaders(),
       });
 

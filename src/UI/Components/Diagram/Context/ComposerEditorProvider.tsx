@@ -1,18 +1,18 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { Flex, FlexItem } from "@patternfly/react-core";
-import { useGetServiceModels } from "@/Data/Managers/V2/Service";
+import React, { useEffect, useMemo, useState } from 'react';
+import { Flex, FlexItem } from '@patternfly/react-core';
+import { useGetServiceModels } from '@/Data/Managers/V2/Service';
 import {
   useGetInstanceWithRelations,
   useGetInventoryList,
-} from "@/Data/Managers/V2/ServiceInstance";
-import { words } from "@/UI";
-import { ErrorView, LoadingView, PageContainer } from "@/UI/Components";
-import { Canvas } from "@/UI/Components/Diagram/Canvas";
-import { ComposerActions } from "../components";
-import { findInterServiceRelations } from "../helpers";
-import { CanvasProvider } from "./CanvasProvider";
-import { InstanceComposerContext } from "./Context";
-import { renderErrorView } from ".";
+} from '@/Data/Managers/V2/ServiceInstance';
+import { words } from '@/UI';
+import { ErrorView, LoadingView, PageContainer } from '@/UI/Components';
+import { Canvas } from '@/UI/Components/Diagram/Canvas';
+import { ComposerActions } from '../components';
+import { findInterServiceRelations } from '../helpers';
+import { CanvasProvider } from './CanvasProvider';
+import { InstanceComposerContext } from './Context';
+import { renderErrorView } from '.';
 
 /**
  * Props interface for the ComposerEditorProvider component
@@ -93,8 +93,8 @@ export const ComposerEditorProvider: React.FC<Props> = ({
     return (
       <ErrorView
         data-testid="ErrorView"
-        title={words("error")}
-        message={words("error.general")(serviceModelsQuery.error.message)}
+        title={words('error')}
+        message={words('error.general')(serviceModelsQuery.error.message)}
         ariaLabel="ComposerEditorProvider-ServiceModelsQuery_failed"
         retry={serviceModelsQuery.refetch}
       />
@@ -102,32 +102,32 @@ export const ComposerEditorProvider: React.FC<Props> = ({
   }
 
   if (instanceWithRelationsQuery.isError) {
-    const message = words("error.general")(
+    const message = words('error.general')(
       instanceWithRelationsQuery.error.message,
     );
     const retry = instanceWithRelationsQuery.refetch;
     const ariaLabel =
-      "ComposerEditorProvider-InstanceWithRelationsQuery_failed";
+      'ComposerEditorProvider-InstanceWithRelationsQuery_failed';
 
     return renderErrorView(message, ariaLabel, retry);
   }
 
   if (relatedInventoriesQuery.isError) {
-    const message = words("error.general")(
+    const message = words('error.general')(
       relatedInventoriesQuery.error.message,
     );
     const retry = relatedInventoriesQuery.refetch;
-    const ariaLabel = "ComposerEditorProvider-RelatedInventoriesQuery_failed";
+    const ariaLabel = 'ComposerEditorProvider-RelatedInventoriesQuery_failed';
 
     return renderErrorView(message, ariaLabel, retry);
   }
 
   if (serviceModelsQuery.isSuccess && !mainService) {
-    const message = words("instanceComposer.noServiceModel.errorMessage")(
+    const message = words('instanceComposer.noServiceModel.errorMessage')(
       serviceName,
     );
     const retry = serviceModelsQuery.refetch;
-    const ariaLabel = "ComposerEditorProvider-NoServiceModel_failed";
+    const ariaLabel = 'ComposerEditorProvider-NoServiceModel_failed';
 
     return renderErrorView(message, ariaLabel, retry);
   }
@@ -150,12 +150,12 @@ export const ComposerEditorProvider: React.FC<Props> = ({
         <CanvasProvider>
           <PageContainer
             pageTitle={
-              <Flex justifyContent={{ default: "justifyContentSpaceBetween" }}>
+              <Flex justifyContent={{ default: 'justifyContentSpaceBetween' }}>
                 <FlexItem>
                   {words(
                     editable
-                      ? "instanceComposer.title.edit"
-                      : "instanceComposer.title.view",
+                      ? 'instanceComposer.title.edit'
+                      : 'instanceComposer.title.view',
                   )}
                 </FlexItem>
                 <FlexItem>

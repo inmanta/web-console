@@ -1,6 +1,6 @@
-import React from "react";
-import { Content, ContentVariants } from "@patternfly/react-core";
-import styled from "styled-components";
+import React from 'react';
+import { Content, ContentVariants } from '@patternfly/react-core';
+import styled from 'styled-components';
 
 interface Props {
   className?: string;
@@ -18,5 +18,5 @@ export const Description: React.FC<React.PropsWithChildren<Props>> = ({
 );
 
 const StyledTextContent = styled(Content)<{ $withSpace?: boolean }>`
-  ${(p) => (p.$withSpace ? "padding-bottom: 16px" : "")};
+  ${(p) => (p.$withSpace ? 'padding-bottom: 16px' : '')};
 `;

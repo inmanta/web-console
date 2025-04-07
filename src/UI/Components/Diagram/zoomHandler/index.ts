@@ -1,1 +1,1 @@
-export * from "./zoomHandler";
+export * from './zoomHandler';

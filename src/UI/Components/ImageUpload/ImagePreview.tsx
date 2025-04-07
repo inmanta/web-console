@@ -1,12 +1,12 @@
-import React from "react";
-import styled, { css } from "styled-components";
-import { ImageHelper } from "@/Data";
+import React from 'react';
+import styled, { css } from 'styled-components';
+import { ImageHelper } from '@/Data';
 
 export const ImagePreview: React.FC<{ dataUrl: string }> = ({
   dataUrl,
   ...props
 }) =>
-  dataUrl !== "" ? (
+  dataUrl !== '' ? (
     <StyledImage
       {...props}
       src={ImageHelper.addDataScheme(dataUrl)}

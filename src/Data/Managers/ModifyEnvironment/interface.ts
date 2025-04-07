@@ -1,8 +1,8 @@
-import { ModifyEnvironmentParams } from "@/Core/Domain";
-import { Maybe } from "@/Core/Language";
+import { ModifyEnvironmentParams } from '@/Core/Domain';
+import { Maybe } from '@/Core/Language';
 
 export interface ModifyEnvironment {
-  kind: "ModifyEnvironment";
+  kind: 'ModifyEnvironment';
 }
 
 export interface ModifyEnvironmentManifest {

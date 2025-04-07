@@ -1,11 +1,11 @@
-import React, { useCallback, useState } from "react";
-import { DropdownItem, Content } from "@patternfly/react-core";
-import { TrashAltIcon } from "@patternfly/react-icons";
-import { ParsedNumber } from "@/Core";
-import { useDeleteInstance } from "@/Data/Managers/V2/ServiceInstance";
-import { words } from "@/UI";
-import { ConfirmationModal } from "../../ConfirmModal";
-import { ToastAlertMessage } from "../../ToastAlert";
+import React, { useCallback, useState } from 'react';
+import { DropdownItem, Content } from '@patternfly/react-core';
+import { TrashAltIcon } from '@patternfly/react-icons';
+import { ParsedNumber } from '@/Core';
+import { useDeleteInstance } from '@/Data/Managers/V2/ServiceInstance';
+import { words } from '@/UI';
+import { ConfirmationModal } from '../../ConfirmModal';
+import { ToastAlertMessage } from '../../ToastAlert';
 
 interface Props {
   isDisabled: boolean;
@@ -41,7 +41,7 @@ export const DeleteAction: React.FC<Props> = ({
   setInterfaceBlocked,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
   const { mutate, isPending } = useDeleteInstance(
     instance_id,
@@ -90,10 +90,10 @@ export const DeleteAction: React.FC<Props> = ({
         icon={<TrashAltIcon />}
         onClick={() => onDeleteSelect()}
       >
-        {words("inventory.deleteInstance.button")}
+        {words('inventory.deleteInstance.button')}
       </DropdownItem>
       <ConfirmationModal
-        title={words("inventory.deleteInstance.title")}
+        title={words('inventory.deleteInstance.title')}
         onConfirm={onSubmitDelete}
         id={instance_display_identity}
         isModalOpen={isModalOpen}
@@ -101,7 +101,7 @@ export const DeleteAction: React.FC<Props> = ({
         isPending={isPending}
       >
         <Content component="p">
-          {words("inventory.deleteInstance.header")(
+          {words('inventory.deleteInstance.header')(
             instance_display_identity,
             service_entity,
           )}

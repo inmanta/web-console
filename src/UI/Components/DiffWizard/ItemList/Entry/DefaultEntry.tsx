@@ -1,8 +1,8 @@
-import React from "react";
-import { Grid, GridItem } from "@patternfly/react-core";
-import { EntryInfo } from "@/UI/Components/DiffWizard/types";
-import { DiffView } from "./DiffView";
-import { Title } from "./utils";
+import React from 'react';
+import { Grid, GridItem } from '@patternfly/react-core';
+import { EntryInfo } from '@/UI/Components/DiffWizard/types';
+import { DiffView } from './DiffView';
+import { Title } from './utils';
 
 export const DefaultEntry: React.FC<EntryInfo> = ({
   title,

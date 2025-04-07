@@ -1,5 +1,5 @@
-import React, { useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Content,
   Divider,
@@ -10,12 +10,12 @@ import {
   MenuToggle,
   MenuToggleElement,
   Tooltip,
-} from "@patternfly/react-core";
-import { UserCircleIcon } from "@patternfly/react-icons";
-import styled from "styled-components";
-import { DarkmodeOption } from "@/UI/Components/DarkmodeOption";
-import { DependencyContext } from "@/UI/Dependency";
-import { words } from "@/UI/words";
+} from '@patternfly/react-core';
+import { UserCircleIcon } from '@patternfly/react-icons';
+import styled from 'styled-components';
+import { DarkmodeOption } from '@/UI/Components/DarkmodeOption';
+import { DependencyContext } from '@/UI/Dependency';
+import { words } from '@/UI/words';
 
 interface Props {
   items: string[];
@@ -43,7 +43,7 @@ export const EnvSelector: React.FC<Props> = ({
     <Dropdown
       isOpen={isOpen}
       popperProps={{
-        position: "end",
+        position: 'end',
       }}
       onOpenChange={(open: boolean) => setIsOpen(open)}
       onClick={handleToggle}
@@ -64,7 +64,7 @@ export const EnvSelector: React.FC<Props> = ({
               )}
               <div>
                 {toggleText.length > 28
-                  ? toggleText.slice(0, 20) + "..."
+                  ? toggleText.slice(0, 20) + '...'
                   : toggleText}
               </div>
             </div>
@@ -74,7 +74,7 @@ export const EnvSelector: React.FC<Props> = ({
     >
       <DropdownList>
         <DropdownGroup
-          label={words("home.environment.selector")}
+          label={words('home.environment.selector')}
           key="envs-group"
         >
           {items.map((item, index) => (
@@ -82,30 +82,30 @@ export const EnvSelector: React.FC<Props> = ({
               onClick={() => onSelect(item)}
               key={`env-${index}-${item}`}
             >
-              {item.length > 28 ? item.slice(0, 20) + "..." : item}
+              {item.length > 28 ? item.slice(0, 20) + '...' : item}
             </DropdownItem>
           ))}
         </DropdownGroup>
         <div key="overview-link">
           <Divider />
-          <Tooltip content={words("home.navigation.tooltip")} entryDelay={500}>
+          <Tooltip content={words('home.navigation.tooltip')} entryDelay={500}>
             <DropdownItem
-              onClick={() => navigate(routeManager.getUrl("Home", undefined))}
+              onClick={() => navigate(routeManager.getUrl('Home', undefined))}
             >
-              {words("home.navigation.button")}
+              {words('home.navigation.button')}
             </DropdownItem>
           </Tooltip>
           {!authHelper.isDisabled() && (
             <>
               <DropdownItem
                 onClick={() =>
-                  navigate(routeManager.getUrl("UserManagement", undefined))
+                  navigate(routeManager.getUrl('UserManagement', undefined))
                 }
               >
-                {words("userManagement.title")}
+                {words('userManagement.title')}
               </DropdownItem>
               <DropdownItem onClick={() => authHelper.logout()}>
-                {words("dashboard.logout")}
+                {words('dashboard.logout')}
               </DropdownItem>
             </>
           )}

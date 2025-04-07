@@ -1,5 +1,5 @@
-import _ from "lodash";
-import { EnvironmentSettings, Maybe } from "@/Core";
+import _ from 'lodash';
+import { EnvironmentSettings, Maybe } from '@/Core';
 import {
   BooleanDefinition,
   DictDefinition,
@@ -8,7 +8,7 @@ import {
   PositiveFloatDefinition,
   StrDefinition,
   UnknownDefinition,
-} from "@/Core/Domain/EnvironmentSettings";
+} from '@/Core/Domain/EnvironmentSettings';
 
 type Update = (
   id: string,
@@ -18,14 +18,14 @@ type Update = (
 type Reset = (id: string) => Promise<Maybe.Type<string>>;
 
 export class InputInfoCreator {
-  constructor(
+  constructor (
     private readonly setValues: (values: EnvironmentSettings.ValuesMap) => void,
     private readonly update: Update,
     private readonly reset: Reset,
     private readonly setError: (message: string) => void,
   ) {}
 
-  create(
+  create (
     settingsMap: EnvironmentSettings.ValuesMap,
     definitionMap: EnvironmentSettings.DefinitionMap,
     values: EnvironmentSettings.ValuesMap,
@@ -42,14 +42,14 @@ export class InputInfoCreator {
       .sort(this.compare);
   }
 
-  private compare(
+  private compare (
     a: EnvironmentSettings.InputInfo,
     b: EnvironmentSettings.InputInfo,
   ): number {
     return a.name < b.name ? -1 : 1;
   }
 
-  private definitionToInputInfo(
+  private definitionToInputInfo (
     initial: EnvironmentSettings.Value,
     value: EnvironmentSettings.Value | undefined,
     definition: EnvironmentSettings.Definition,
@@ -58,7 +58,7 @@ export class InputInfoCreator {
     const update = async (value: EnvironmentSettings.Value) => {
       const error = await this.update(definition.name, value);
 
-      this.setError(Maybe.withFallback(error, ""));
+      this.setError(Maybe.withFallback(error, ''));
 
       return error;
     };
@@ -71,7 +71,7 @@ export class InputInfoCreator {
       } else {
         const error = await this.reset(definition.name);
 
-        this.setError(Maybe.withFallback(error, ""));
+        this.setError(Maybe.withFallback(error, ''));
 
         return error;
       }
@@ -86,12 +86,12 @@ export class InputInfoCreator {
     };
 
     switch (definition.type) {
-      case "bool":
+      case 'bool':
         const BooleanDefinition = definition as BooleanDefinition;
 
         return {
           ...BooleanDefinition,
-          type: "bool",
+          type: 'bool',
           initial: initial as boolean,
           value: this.undefinedFallback(value, BooleanDefinition.default),
           set: (value) => setValue(value),
@@ -99,12 +99,12 @@ export class InputInfoCreator {
           reset,
           isUpdateable,
         };
-      case "int":
+      case 'int':
         const intDefinition = definition as IntDefinition;
 
         return {
           ...intDefinition,
-          type: "int",
+          type: 'int',
           initial: initial as number,
           value: this.undefinedFallback(value, intDefinition.default),
           set: (value) => setValue(value),
@@ -112,12 +112,12 @@ export class InputInfoCreator {
           reset,
           isUpdateable,
         };
-      case "positive_float":
+      case 'positive_float':
         const positiveFloatDefinition = definition as PositiveFloatDefinition;
 
         return {
           ...positiveFloatDefinition,
-          type: "positive_float",
+          type: 'positive_float',
           initial: initial as number,
           value: this.undefinedFallback(value, positiveFloatDefinition.default),
           set: (value) => setValue(value),
@@ -125,12 +125,12 @@ export class InputInfoCreator {
           reset,
           isUpdateable,
         };
-      case "enum":
+      case 'enum':
         const enumerationDefinition = definition as EnumDefinition;
 
         return {
           ...enumerationDefinition,
-          type: "enum",
+          type: 'enum',
           initial: initial as string,
           value: this.undefinedFallback(value, enumerationDefinition.default),
           set: (value) => setValue(value),
@@ -138,12 +138,12 @@ export class InputInfoCreator {
           reset,
           isUpdateable,
         };
-      case "dict":
+      case 'dict':
         const dictDefinition = definition as DictDefinition;
 
         return {
           ...dictDefinition,
-          type: "dict",
+          type: 'dict',
           initial: initial as EnvironmentSettings.Dict,
           value: this.undefinedFallback(
             value,
@@ -154,12 +154,12 @@ export class InputInfoCreator {
           reset,
           isUpdateable,
         };
-      case "str":
+      case 'str':
         const strDefinition = definition as StrDefinition;
 
         return {
           ...strDefinition,
-          type: "str",
+          type: 'str',
           initial: initial as string,
           value: this.undefinedFallback(value, strDefinition.default),
           set: (value) => setValue(value),
@@ -172,7 +172,7 @@ export class InputInfoCreator {
 
         return {
           ...unknown,
-          type: "str",
+          type: 'str',
           initial: initial as string,
           value: this.undefinedFallback(value, unknown.default),
           set: (value) => setValue(value),
@@ -184,6 +184,6 @@ export class InputInfoCreator {
   }
 
   private undefinedFallback<V>(value: unknown | undefined, fallback: V): V {
-    return typeof value === "undefined" ? fallback : (value as V);
+    return typeof value === 'undefined' ? fallback : (value as V);
   }
 }

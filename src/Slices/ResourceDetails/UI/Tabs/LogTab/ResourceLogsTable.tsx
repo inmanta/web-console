@@ -1,11 +1,11 @@
-import React from "react";
-import { OnSort, Table, Th, Thead, Tr } from "@patternfly/react-table";
-import { Sort } from "@/Core";
-import { useUrlStateWithExpansion } from "@/Data";
-import { words } from "@/UI/words";
-import { ResourceLog } from "@S/ResourceDetails/Core/ResourceLog";
-import { Row } from "./Row";
-import { ToggleActionType } from "./RowOptions";
+import React from 'react';
+import { OnSort, Table, Th, Thead, Tr } from '@patternfly/react-table';
+import { Sort } from '@/Core';
+import { useUrlStateWithExpansion } from '@/Data';
+import { words } from '@/UI/words';
+import { ResourceLog } from '@S/ResourceDetails/Core/ResourceLog';
+import { Row } from './Row';
+import { ToggleActionType } from './RowOptions';
 
 interface Props {
   logs: ResourceLog[];
@@ -21,8 +21,8 @@ export const ResourceLogsTable: React.FC<Props> = ({
   setSort,
 }) => {
   const [isExpanded, onExpansion] = useUrlStateWithExpansion({
-    key: "logs-expansion",
-    route: "ResourceDetails",
+    key: 'logs-expansion',
+    route: 'ResourceDetails',
   });
 
   const onSort: OnSort = (_event, _index, order) => {
@@ -35,7 +35,7 @@ export const ResourceLogsTable: React.FC<Props> = ({
         <Tr>
           <Th
             aria-hidden
-            screenReaderText={words("common.emptyColumnHeader")}
+            screenReaderText={words('common.emptyColumnHeader')}
           />
           <Th
             sort={{
@@ -44,11 +44,11 @@ export const ResourceLogsTable: React.FC<Props> = ({
               columnIndex: 0,
             }}
           >
-            {words("resources.logs.timestamp")}
+            {words('resources.logs.timestamp')}
           </Th>
-          <Th width={15}>{words("resources.logs.actionType")}</Th>
-          <Th width={15}>{words("resources.logs.logLevel")}</Th>
-          <Th>{words("resources.logs.message")}</Th>
+          <Th width={15}>{words('resources.logs.actionType')}</Th>
+          <Th width={15}>{words('resources.logs.logLevel')}</Th>
+          <Th>{words('resources.logs.message')}</Th>
         </Tr>
       </Thead>
       {logs.map((log, index) => (
@@ -66,6 +66,6 @@ export const ResourceLogsTable: React.FC<Props> = ({
   );
 };
 
-function getUniqueId(log: ResourceLog): string {
+function getUniqueId (log: ResourceLog): string {
   return `${log.action_id}_${log.timestamp}`;
 }

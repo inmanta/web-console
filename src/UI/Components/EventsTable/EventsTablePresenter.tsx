@@ -1,30 +1,29 @@
-import { EventRow, InstanceEvent } from "@/Core";
-import { TablePresenter } from "@/UI/Presenters";
-import { words } from "@/UI/words";
+import { EventRow, InstanceEvent } from '@/Core';
+import { TablePresenter } from '@/UI/Presenters';
+import { words } from '@/UI/words';
 
 export class EventsTablePresenter
-  implements TablePresenter<InstanceEvent, EventRow>
-{
+implements TablePresenter<InstanceEvent, EventRow> {
   readonly columnHeads = [
-    words("events.column.eventType"),
-    words("events.column.date"),
-    words("events.column.instanceVersion"),
-    words("events.column.sourceState"),
-    words("events.column.destinationState"),
+    words('events.column.eventType'),
+    words('events.column.date'),
+    words('events.column.instanceVersion'),
+    words('events.column.sourceState'),
+    words('events.column.destinationState'),
   ];
   readonly numberOfColumns = this.columnHeads.length + 1;
 
-  public getColumnHeadDisplayNames(): string[] {
+  public getColumnHeadDisplayNames (): string[] {
     return this.columnHeads;
   }
 
-  public getNumberOfColumns(): number {
+  public getNumberOfColumns (): number {
     return this.numberOfColumns;
   }
-  public createRows(events: InstanceEvent[]): EventRow[] {
+  public createRows (events: InstanceEvent[]): EventRow[] {
     return events.map((instance) => this.instanceToRow(instance));
   }
-  private instanceToRow(event: InstanceEvent): EventRow {
+  private instanceToRow (event: InstanceEvent): EventRow {
     const {
       id,
       service_instance_id,

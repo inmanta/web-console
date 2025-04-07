@@ -1,5 +1,5 @@
-import { Action, action } from "easy-peasy";
-import { ProjectModel, RemoteData } from "@/Core";
+import { Action, action } from 'easy-peasy';
+import { ProjectModel, RemoteData } from '@/Core';
 
 export interface ProjectsSlice {
   projects: RemoteData.Type<string, ProjectModel[]>;

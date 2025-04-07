@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext } from 'react';
 import {
   Divider,
   MenuToggle,
@@ -6,18 +6,18 @@ import {
   MenuToggleElement,
   DropdownList,
   DropdownItem,
-} from "@patternfly/react-core";
+} from '@patternfly/react-core';
 import {
   CopyIcon,
   EllipsisVIcon,
   EyeIcon,
   FileMedicalAltIcon,
   ToolsIcon,
-} from "@patternfly/react-icons";
-import { ParsedNumber } from "@/Core";
-import { DependencyContext, words } from "@/UI";
-import { Link } from "@/UI/Components";
-import { DeleteAction } from "./DeleteAction";
+} from '@patternfly/react-icons';
+import { ParsedNumber } from '@/Core';
+import { DependencyContext, words } from '@/UI';
+import { Link } from '@/UI/Components';
+import { DeleteAction } from './DeleteAction';
 
 interface InstanceActionsProps {
   instanceId: string;
@@ -67,12 +67,12 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
       onOpenChange={(isOpen: boolean) => setIsOpen(isOpen)}
       onSelect={() => setIsOpen(false)}
       isOpen={isOpen}
-      popperProps={{ position: "right" }}
+      popperProps={{ position: 'right' }}
     >
       <DropdownList>
         <Link
           variant="plain"
-          pathname={routeManager.getUrl("Diagnose", {
+          pathname={routeManager.getUrl('Diagnose', {
             service: entity,
             instance: instanceId,
           })}
@@ -83,13 +83,13 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
             isDisabled={diagnoseDisabled}
             icon={<FileMedicalAltIcon />}
           >
-            {words("inventory.statustab.diagnose")}
+            {words('inventory.statustab.diagnose')}
           </DropdownItem>
         </Link>
         {composerEnabled && (
           <Link
             variant="plain"
-            pathname={routeManager.getUrl("InstanceComposerEditor", {
+            pathname={routeManager.getUrl('InstanceComposerEditor', {
               service: entity,
               instance: instanceId,
             })}
@@ -100,26 +100,26 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
               isDisabled={editDisabled}
               icon={<ToolsIcon />}
             >
-              {words("instanceComposer.editButton")}
+              {words('instanceComposer.editButton')}
             </DropdownItem>
           </Link>
         )}
         {featureManager.isComposerEnabled() && (
           <Link
             variant="plain"
-            pathname={routeManager.getUrl("InstanceComposerViewer", {
+            pathname={routeManager.getUrl('InstanceComposerViewer', {
               service: entity,
               instance: instanceId,
             })}
           >
             <DropdownItem itemId="show-composer" icon={<EyeIcon />}>
-              {words("instanceComposer.showButton")}
+              {words('instanceComposer.showButton')}
             </DropdownItem>
           </Link>
         )}
         <Link
           variant="plain"
-          pathname={routeManager.getUrl("EditInstance", {
+          pathname={routeManager.getUrl('EditInstance', {
             service: entity,
             instance: instanceId,
           })}
@@ -130,19 +130,19 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
             isDisabled={editDisabled}
             icon={<ToolsIcon />}
           >
-            {words("inventory.editInstance.button")}
+            {words('inventory.editInstance.button')}
           </DropdownItem>
         </Link>
 
         <Link
           variant="plain"
-          pathname={routeManager.getUrl("DuplicateInstance", {
+          pathname={routeManager.getUrl('DuplicateInstance', {
             service: entity,
             instance: instanceId,
           })}
         >
           <DropdownItem itemId="duplicate" icon={<CopyIcon />}>
-            {words("inventory.duplicateInstance.button")}
+            {words('inventory.duplicateInstance.button')}
           </DropdownItem>
         </Link>
 

@@ -1,12 +1,12 @@
-import React from "react";
-import styled from "styled-components";
-import { Frame } from "./Frame";
+import React from 'react';
+import styled from 'styled-components';
+import { Frame } from './Frame';
 import {
   Timestamp,
   RequestedTimestampLabel,
   StartedTimestampLabel,
   CompletedTimestampLabel,
-} from "./Timestamp";
+} from './Timestamp';
 
 interface Props {
   requested: Timestamp;

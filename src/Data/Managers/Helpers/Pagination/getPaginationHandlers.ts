@@ -1,4 +1,4 @@
-import { Pagination } from "@/Core";
+import { Pagination } from '@/Core';
 
 /**
  * Returns pagination handlers for the given links and metadata.
@@ -37,7 +37,7 @@ const getPaginationHandlerUrls = (
   const trimmedPrev = prev?.split(/(?=end=|start=)/g)[1];
 
   return {
-    prev: shouldUseFirst(metadata) ? "" : trimmedPrev,
+    prev: shouldUseFirst(metadata) ? '' : trimmedPrev,
     next: trimmedNext,
   };
 };

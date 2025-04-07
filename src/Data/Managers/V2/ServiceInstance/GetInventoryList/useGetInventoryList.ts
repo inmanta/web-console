@@ -1,6 +1,6 @@
-import { UseQueryResult, useQuery } from "@tanstack/react-query";
-import { ServiceInstanceModel } from "@/Core";
-import { CustomError, useGet } from "../../helpers";
+import { UseQueryResult, useQuery } from '@tanstack/react-query';
+import { ServiceInstanceModel } from '@/Core';
+import { CustomError, useGet } from '../../helpers';
 
 /**
  * Inventories interface
@@ -55,12 +55,12 @@ export const useGetInventoryList = (
   return {
     useOneTime: (): UseQueryResult<Inventories, CustomError> =>
       useQuery({
-        queryKey: ["get_inventory_list-one_time", serviceNames],
+        queryKey: ['get_inventory_list-one_time', serviceNames],
         queryFn: fetchAllServices,
       }),
     useContinuous: (): UseQueryResult<Inventories, CustomError> =>
       useQuery({
-        queryKey: ["get_inventory_list-continuous", serviceNames],
+        queryKey: ['get_inventory_list-continuous', serviceNames],
         queryFn: fetchAllServices,
         refetchInterval: 5000,
       }),

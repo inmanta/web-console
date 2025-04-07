@@ -1,1 +1,1 @@
-export * from "./useGetCurrentUser";
+export * from './useGetCurrentUser';

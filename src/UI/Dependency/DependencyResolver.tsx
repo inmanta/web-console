@@ -1,5 +1,5 @@
-import React, { useContext } from "react";
-import { DependencyContext } from "./Dependency";
+import React, { useContext } from 'react';
+import { DependencyContext } from './Dependency';
 
 interface Props {
   environment: string;

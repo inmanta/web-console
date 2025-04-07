@@ -1,4 +1,4 @@
-import { DateRange, LogLevelString } from "@/Core/Domain";
+import { DateRange, LogLevelString } from '@/Core/Domain';
 
 export interface ResourceLog {
   level: LogLevelString;
@@ -18,11 +18,11 @@ export interface ResourceLogFilter {
 }
 
 export const actionTypes = [
-  "store",
-  "push",
-  "pull",
-  "deploy",
-  "dryrun",
-  "getfact",
-  "other",
+  'store',
+  'push',
+  'pull',
+  'deploy',
+  'dryrun',
+  'getfact',
+  'other',
 ];

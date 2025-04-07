@@ -1,7 +1,7 @@
-import React, { useContext } from "react";
-import { RemoteDataView } from "@/UI/Components";
-import { DependencyContext } from "@/UI/Dependency";
-import { FactsTable } from "./FactsTable";
+import React, { useContext } from 'react';
+import { RemoteDataView } from '@/UI/Components';
+import { DependencyContext } from '@/UI/Dependency';
+import { FactsTable } from './FactsTable';
 
 interface Props {
   resourceId: string;
@@ -10,8 +10,8 @@ interface Props {
 export const FactsTab: React.FC<Props> = ({ resourceId }) => {
   const { queryResolver } = useContext(DependencyContext);
 
-  const [data] = queryResolver.useContinuous<"GetResourceFacts">({
-    kind: "GetResourceFacts",
+  const [data] = queryResolver.useContinuous<'GetResourceFacts'>({
+    kind: 'GetResourceFacts',
     resourceId,
   });
 

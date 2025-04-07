@@ -3,9 +3,9 @@ import {
   UseMutationResult,
   useMutation,
   useQueryClient,
-} from "@tanstack/react-query";
-import { ParsedNumber } from "@/Core";
-import { usePost } from "../../helpers";
+} from '@tanstack/react-query';
+import { ParsedNumber } from '@/Core';
+import { usePost } from '../../helpers';
 
 interface PostStateTransfer {
   message: string;
@@ -15,8 +15,8 @@ interface PostStateTransfer {
 
 interface StateTransferResponse {
   current_version: 0;
-  target_state: "string";
-  message: "string";
+  target_state: 'string';
+  message: 'string';
 }
 
 /**
@@ -40,16 +40,16 @@ export const usePostStateTransfer = (
         `/lsm/v1/service_inventory/${service_entity}/${instance_id}/state`,
         body,
       ),
-    mutationKey: ["post_state_transfer"],
+    mutationKey: ['post_state_transfer'],
     onSuccess: () => {
       client.invalidateQueries({
         queryKey: [service_entity, instance_id],
       });
       client.invalidateQueries({
-        queryKey: ["get_service_instances-one_time"],
+        queryKey: ['get_service_instances-one_time'],
       });
       client.invalidateQueries({
-        queryKey: ["get_service_instances-continuous"],
+        queryKey: ['get_service_instances-continuous'],
       });
     },
     ...options,

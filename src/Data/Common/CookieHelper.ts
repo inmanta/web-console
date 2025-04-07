@@ -14,9 +14,9 @@ export const createCookie = (
   date.setTime(date.getTime() + hoursToExpire * 60 * 60 * 1000);
   document.cookie =
     cookieName +
-    " = " +
+    ' = ' +
     cookieValue +
-    ";Path=/; Expires = " +
+    ';Path=/; Expires = ' +
     date.toUTCString();
 };
 
@@ -26,7 +26,7 @@ export const createCookie = (
  * @returns {string | null} The value of the cookie if found, otherwise null.
  */
 export const getCookie = (cookieName: string): string | null => {
-  const cookieArray = document.cookie.split(";");
+  const cookieArray = document.cookie.split(';');
   const searchedCookie = cookieArray.find((cookie: string) =>
     cookie.includes(cookieName),
   );

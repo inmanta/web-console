@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState } from 'react';
 import {
   DropdownList,
   MenuToggle,
@@ -8,14 +8,14 @@ import {
   NotificationDrawerListItemHeader,
   Dropdown,
   DropdownItem,
-} from "@patternfly/react-core";
-import { EllipsisVIcon } from "@patternfly/react-icons";
-import { RouteKindWithId } from "@/Core";
-import { useNavigateTo, words } from "@/UI";
-import { DependencyContext } from "@/UI/Dependency";
-import { MomentDatePresenter } from "@/UI/Utils";
-import { Notification, Body } from "@S/Notification/Core/Domain";
-import { getSeverityForNotification } from "@S/Notification/UI/Utils";
+} from '@patternfly/react-core';
+import { EllipsisVIcon } from '@patternfly/react-icons';
+import { RouteKindWithId } from '@/Core';
+import { useNavigateTo, words } from '@/UI';
+import { DependencyContext } from '@/UI/Dependency';
+import { MomentDatePresenter } from '@/UI/Utils';
+import { Notification, Body } from '@S/Notification/Core/Domain';
+import { getSeverityForNotification } from '@S/Notification/UI/Utils';
 
 export type OnUpdate = (body: Body) => void;
 
@@ -26,8 +26,8 @@ interface Props {
 
 export const Item: React.FC<Props> = ({ notification, onUpdate }) => {
   const { routeManager } = useContext(DependencyContext);
-  const detailsLink: RouteKindWithId<"CompileDetails"> | undefined =
-    routeManager.getParamsFromUrl(notification.uri || "");
+  const detailsLink: RouteKindWithId<'CompileDetails'> | undefined =
+    routeManager.getParamsFromUrl(notification.uri || '');
   const navigate = useNavigateTo();
 
   const onClick = (): void => {
@@ -82,7 +82,7 @@ const ActionList: React.FC<Props> = ({ notification, onUpdate }) => {
         />
       )}
       onSelect={() => setIsOpen(false)}
-      popperProps={{ position: "right" }}
+      popperProps={{ position: 'right' }}
       isOpen={isOpen}
     >
       <DropdownList>
@@ -95,7 +95,7 @@ const ActionList: React.FC<Props> = ({ notification, onUpdate }) => {
           }}
           isDisabled={!notification.read}
         >
-          {words("notification.unread")}
+          {words('notification.unread')}
         </DropdownItem>
         <DropdownItem
           key="cleared"
@@ -105,7 +105,7 @@ const ActionList: React.FC<Props> = ({ notification, onUpdate }) => {
             onUpdate({ read: true, cleared: true });
           }}
         >
-          {words("notification.drawer.clear")}
+          {words('notification.drawer.clear')}
         </DropdownItem>
       </DropdownList>
     </Dropdown>

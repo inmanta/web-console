@@ -1,1 +1,1 @@
-export { Page as FactsPage } from "./Page";
+export { Page as FactsPage } from './Page';

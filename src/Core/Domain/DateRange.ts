@@ -1,5 +1,5 @@
-import { isNotUndefined } from "@/Core/Language";
-import { isValidOperator, Operator } from "./RangeOperator";
+import { isNotUndefined } from '@/Core/Language';
+import { isValidOperator, Operator } from './RangeOperator';
 
 export interface DateRange {
   date: Date;
@@ -15,8 +15,8 @@ export const serializeList = (ranges: DateRange[]): string[] =>
   ranges.map(serialize);
 
 const parse = (candidate: unknown): DateRange | undefined => {
-  if (typeof candidate !== "string") return undefined;
-  const [operator, dateString] = candidate.split("__");
+  if (typeof candidate !== 'string') return undefined;
+  const [operator, dateString] = candidate.split('__');
 
   if (!isValidOperator(operator) || !isValidDate(dateString)) return undefined;
 
@@ -33,4 +33,4 @@ export const parseList = (candidate: unknown): DateRange[] | undefined => {
 };
 
 const isValidDate = (value: unknown): value is string =>
-  typeof value === "string" && !isNaN(Date.parse(value));
+  typeof value === 'string' && !isNaN(Date.parse(value));

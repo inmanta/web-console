@@ -1,16 +1,16 @@
-import React, { useState } from "react";
-import { Button, Tooltip, ButtonProps } from "@patternfly/react-core";
-import { CopyIcon } from "@patternfly/react-icons";
-import copy from "copy-to-clipboard";
-import styled from "styled-components";
-import { words } from "@/UI/words";
+import React, { useState } from 'react';
+import { Button, Tooltip, ButtonProps } from '@patternfly/react-core';
+import { CopyIcon } from '@patternfly/react-icons';
+import copy from 'copy-to-clipboard';
+import styled from 'styled-components';
+import { words } from '@/UI/words';
 
 interface Props {
   value: string;
   tooltipContent?: string;
   isDisabled?: boolean;
   className?: string;
-  variant?: ButtonProps["variant"];
+  variant?: ButtonProps['variant'];
 }
 
 export const ClipboardCopyButton: React.FC<Props> = ({
@@ -31,15 +31,15 @@ export const ClipboardCopyButton: React.FC<Props> = ({
   };
 
   const tooltipText = copied
-    ? words("copy.feedback")
-    : tooltipContent || words("copy");
+    ? words('copy.feedback')
+    : tooltipContent || words('copy');
 
   return (
     <WidthLimitedTooltip content={<div>{tooltipText}</div>} entryDelay={200}>
       <Button
         icon={<CopyIcon />}
         {...props}
-        variant={variant || "plain"}
+        variant={variant || 'plain'}
         aria-label="Copy to clipboard"
         className={className}
         onClick={onClick}

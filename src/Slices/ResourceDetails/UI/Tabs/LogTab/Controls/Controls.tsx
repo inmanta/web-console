@@ -1,15 +1,15 @@
-import React from "react";
+import React from 'react';
 import {
   Toolbar,
   ToolbarItem,
   ToolbarContent,
   Divider,
-} from "@patternfly/react-core";
-import { ResourceLogFilter } from "@S/ResourceDetails/Core/ResourceLog";
-import { ActionFilter } from "./ActionFilter";
-import { LogLevelFilter } from "./LogLevelFilter";
-import { MessageFilter } from "./MessageFilter";
-import { TimestampFilter } from "./TimestampFilter";
+} from '@patternfly/react-core';
+import { ResourceLogFilter } from '@S/ResourceDetails/Core/ResourceLog';
+import { ActionFilter } from './ActionFilter';
+import { LogLevelFilter } from './LogLevelFilter';
+import { MessageFilter } from './MessageFilter';
+import { TimestampFilter } from './TimestampFilter';
 
 interface Props {
   paginationWidget: React.ReactNode;

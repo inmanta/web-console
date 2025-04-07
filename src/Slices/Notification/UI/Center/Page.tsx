@@ -1,37 +1,37 @@
-import React from "react";
-import { useUrlStateWithFilter, useUrlStateWithPageSize } from "@/Data";
-import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
+import React from 'react';
+import { useUrlStateWithFilter, useUrlStateWithPageSize } from '@/Data';
+import { useUrlStateWithCurrentPage } from '@/Data/Common/UrlState/useUrlStateWithCurrentPage';
 import {
   NotificationFilter,
   useGetNotifications,
-} from "@/Data/Managers/V2/Notification/GetNotifications";
+} from '@/Data/Managers/V2/Notification/GetNotifications';
 import {
   EmptyView,
   PageContainer,
   PaginationWidget,
   LoadingView,
   ErrorView,
-} from "@/UI/Components";
-import { words } from "@/UI/words";
-import { Controls } from "./Controls";
-import { List } from "./List";
+} from '@/UI/Components';
+import { words } from '@/UI/words';
+import { Controls } from './Controls';
+import { List } from './List';
 export const Page: React.FC = () => {
   const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({
-    route: "NotificationCenter",
+    route: 'NotificationCenter',
   });
   const [pageSize, setPageSize] = useUrlStateWithPageSize({
-    route: "NotificationCenter",
+    route: 'NotificationCenter',
   });
   const [filter, setFilter] = useUrlStateWithFilter<NotificationFilter>({
-    route: "NotificationCenter",
-    keys: { read: "Boolean" },
+    route: 'NotificationCenter',
+    keys: { read: 'Boolean' },
   });
 
   const { data, isError, isSuccess, error, refetch } = useGetNotifications({
     pageSize,
     filter,
     currentPage,
-    origin: "center",
+    origin: 'center',
   }).useContinuous();
 
   if (isError) {
@@ -40,7 +40,7 @@ export const Page: React.FC = () => {
 
   if (isSuccess) {
     return (
-      <PageContainer pageTitle={words("notification.center.title")}>
+      <PageContainer pageTitle={words('notification.center.title')}>
         <Controls
           paginationWidget={
             <PaginationWidget
@@ -54,7 +54,7 @@ export const Page: React.FC = () => {
           setFilter={setFilter}
         />
         {data.data.length <= 0 ? (
-          <EmptyView message={words("notification.center.empty")} />
+          <EmptyView message={words('notification.center.empty')} />
         ) : (
           <List {...{ data: data.data }} onUpdate={refetch} />
         )}

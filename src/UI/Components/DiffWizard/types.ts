@@ -1,4 +1,4 @@
-import { Diff } from "@/Core";
+import { Diff } from '@/Core';
 
 export interface Item {
   id: string;
@@ -14,4 +14,4 @@ export interface EntryInfo {
 
 export type Refs = React.MutableRefObject<Record<string, HTMLElement>>;
 
-export type Classification = "Default" | "File";
+export type Classification = 'Default' | 'File';

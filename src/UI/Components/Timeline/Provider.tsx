@@ -1,7 +1,7 @@
-import React from "react";
-import moment from "moment";
-import { MomentDatePresenter, useTickerWithInterval } from "@/UI/Utils";
-import { Timeline } from "./Timeline";
+import React from 'react';
+import moment from 'moment';
+import { MomentDatePresenter, useTickerWithInterval } from '@/UI/Utils';
+import { Timeline } from './Timeline';
 
 interface Props {
   requested: string;
@@ -18,7 +18,7 @@ export const Provider: React.FC<Props> = ({
   completed,
   success,
 }) => {
-  useTickerWithInterval(!(started && completed) ? "OneSecond" : "Never");
+  useTickerWithInterval(!(started && completed) ? 'OneSecond' : 'Never');
   const now = new Date(Date.now()).toISOString();
 
   return (
@@ -32,9 +32,9 @@ export const Provider: React.FC<Props> = ({
         !started
           ? undefined
           : {
-              day: datePresenter.getDate(started),
-              time: datePresenter.getTime(started),
-            }
+            day: datePresenter.getDate(started),
+            time: datePresenter.getTime(started),
+          }
       }
       startedDiff={
         !started ? undefined : getDiff(completed ? completed : now, started)
@@ -43,9 +43,9 @@ export const Provider: React.FC<Props> = ({
         !completed
           ? undefined
           : {
-              day: datePresenter.getDate(completed),
-              time: datePresenter.getTime(completed),
-            }
+            day: datePresenter.getDate(completed),
+            time: datePresenter.getTime(completed),
+          }
       }
       success={success}
     />
@@ -58,5 +58,5 @@ const getDiff = (timestampA: string, timestampB: string): string => {
     .asSeconds();
   const rounded = Math.round(seconds);
 
-  return rounded === 1 ? `1 second` : `${rounded} seconds`;
+  return rounded === 1 ? '1 second' : `${rounded} seconds`;
 };

@@ -3,8 +3,8 @@ import {
   UseMutationResult,
   useMutation,
   useQueryClient,
-} from "@tanstack/react-query";
-import { useDelete } from "../../helpers";
+} from '@tanstack/react-query';
+import { useDelete } from '../../helpers';
 
 /**
  * React Query hook for Deleting an Service.
@@ -20,12 +20,12 @@ export const useDeleteService = (
 
   return useMutation({
     mutationFn: () => deleteFn(`/lsm/v1/service_catalog/${service_entity}`),
-    mutationKey: ["delete_service"],
+    mutationKey: ['delete_service'],
     onSuccess: () => {
-      client.refetchQueries({ queryKey: ["get_service_models-continuous"] });
-      client.refetchQueries({ queryKey: ["get_service_models-one_time"] });
-      client.refetchQueries({ queryKey: ["get_service_model-one_time"] });
-      client.refetchQueries({ queryKey: ["get_service_model-continuous"] });
+      client.refetchQueries({ queryKey: ['get_service_models-continuous'] });
+      client.refetchQueries({ queryKey: ['get_service_models-one_time'] });
+      client.refetchQueries({ queryKey: ['get_service_model-one_time'] });
+      client.refetchQueries({ queryKey: ['get_service_model-continuous'] });
     },
     ...options,
   });

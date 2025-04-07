@@ -1,44 +1,44 @@
-import React from "react";
-import { PageManager, Page, RouteDictionary, PageDictionary } from "@/Core";
-import { InstanceComposerPage } from "@/Slices/InstanceComposerCreator/UI";
-import { InstanceComposerEditorPage } from "@/Slices/InstanceComposerEditor/UI";
-import { InstanceComposerViewerPage } from "@/Slices/InstanceComposerViewer/UI";
-import { OrderDetailsPage } from "@/Slices/OrderDetails/UI";
-import { OrdersPage } from "@/Slices/Orders/UI";
-import { DiscoveredResourcesPage } from "@/Slices/ResourceDiscovery/UI";
-import { ServiceDetailsPage } from "@/Slices/ServiceDetails/UI";
-import { ServiceInstanceDetailsPage } from "@/Slices/ServiceInstanceDetails/UI";
-import { UserManagementPage } from "@/Slices/UserManagement/UI/Page";
-import { AgentsPage } from "@S/Agents/UI";
-import { CompileDetailsPage } from "@S/CompileDetails/UI";
-import { CompileReportsPage } from "@S/CompileReports/UI";
-import { ComplianceCheckPage } from "@S/ComplianceCheck/UI";
-import { CreateEnvironmentPage } from "@S/CreateEnvironment/UI";
-import { CreateInstancePage } from "@S/CreateInstance/UI";
-import { DashboardPage } from "@S/Dashboard/UI";
-import { DesiredStatePage } from "@S/DesiredState/UI";
-import { DesiredStateComparePage } from "@S/DesiredStateCompare/UI";
-import { DesiredStateDetailsPage } from "@S/DesiredStateDetails/UI";
-import { DesiredStateResourceDetailsPage } from "@S/DesiredStateResourceDetails/UI";
-import { DiagnosePage } from "@S/Diagnose/UI";
-import { DuplicateInstancePage } from "@S/DuplicateInstance/UI";
-import { EditInstancePage } from "@S/EditInstance/UI";
-import { EventsPage } from "@S/Events/UI";
-import { FactsPage } from "@S/Facts/UI";
-import { HomePage } from "@S/Home/UI";
-import { NotificationCenterPage } from "@S/Notification/UI/Center";
-import { ParametersPage } from "@S/Parameters/UI";
-import { ResourcesPage } from "@S/Resource/UI/ResourcesPage";
-import { ResourceDetailsPage } from "@S/ResourceDetails/UI";
-import { ServiceCatalogPage } from "@S/ServiceCatalog/UI";
-import { ServiceInventoryPage } from "@S/ServiceInventory/UI";
-import { SettingsPage } from "@S/Settings/UI";
-import { StatusPage } from "@S/Status/UI";
+import React from 'react';
+import { PageManager, Page, RouteDictionary, PageDictionary } from '@/Core';
+import { InstanceComposerPage } from '@/Slices/InstanceComposerCreator/UI';
+import { InstanceComposerEditorPage } from '@/Slices/InstanceComposerEditor/UI';
+import { InstanceComposerViewerPage } from '@/Slices/InstanceComposerViewer/UI';
+import { OrderDetailsPage } from '@/Slices/OrderDetails/UI';
+import { OrdersPage } from '@/Slices/Orders/UI';
+import { DiscoveredResourcesPage } from '@/Slices/ResourceDiscovery/UI';
+import { ServiceDetailsPage } from '@/Slices/ServiceDetails/UI';
+import { ServiceInstanceDetailsPage } from '@/Slices/ServiceInstanceDetails/UI';
+import { UserManagementPage } from '@/Slices/UserManagement/UI/Page';
+import { AgentsPage } from '@S/Agents/UI';
+import { CompileDetailsPage } from '@S/CompileDetails/UI';
+import { CompileReportsPage } from '@S/CompileReports/UI';
+import { ComplianceCheckPage } from '@S/ComplianceCheck/UI';
+import { CreateEnvironmentPage } from '@S/CreateEnvironment/UI';
+import { CreateInstancePage } from '@S/CreateInstance/UI';
+import { DashboardPage } from '@S/Dashboard/UI';
+import { DesiredStatePage } from '@S/DesiredState/UI';
+import { DesiredStateComparePage } from '@S/DesiredStateCompare/UI';
+import { DesiredStateDetailsPage } from '@S/DesiredStateDetails/UI';
+import { DesiredStateResourceDetailsPage } from '@S/DesiredStateResourceDetails/UI';
+import { DiagnosePage } from '@S/Diagnose/UI';
+import { DuplicateInstancePage } from '@S/DuplicateInstance/UI';
+import { EditInstancePage } from '@S/EditInstance/UI';
+import { EventsPage } from '@S/Events/UI';
+import { FactsPage } from '@S/Facts/UI';
+import { HomePage } from '@S/Home/UI';
+import { NotificationCenterPage } from '@S/Notification/UI/Center';
+import { ParametersPage } from '@S/Parameters/UI';
+import { ResourcesPage } from '@S/Resource/UI/ResourcesPage';
+import { ResourceDetailsPage } from '@S/ResourceDetails/UI';
+import { ServiceCatalogPage } from '@S/ServiceCatalog/UI';
+import { ServiceInventoryPage } from '@S/ServiceInventory/UI';
+import { SettingsPage } from '@S/Settings/UI';
+import { StatusPage } from '@S/Status/UI';
 
 export class PrimaryPageManager implements PageManager {
   private pageDictionary: PageDictionary;
 
-  constructor(private readonly routeDictionary: RouteDictionary) {
+  constructor (private readonly routeDictionary: RouteDictionary) {
     this.pageDictionary = {
       /**
        * Main
@@ -175,7 +175,7 @@ export class PrimaryPageManager implements PageManager {
     };
   }
 
-  getPages(): Page[] {
+  getPages (): Page[] {
     return Object.values(this.pageDictionary);
   }
 }

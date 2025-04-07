@@ -4,10 +4,10 @@ import {
   ServiceInstanceModelWithTargetStates,
   ServiceModel,
   getUuidFromRaw,
-} from "@/Core";
-import { isTransferDisabled } from "@/Slices/ServiceInstanceDetails/Utils";
-import { TablePresenter, ColumnHead } from "@/UI/Presenters";
-import { words } from "@/UI/words";
+} from '@/Core';
+import { isTransferDisabled } from '@/Slices/ServiceInstanceDetails/Utils';
+import { TablePresenter, ColumnHead } from '@/UI/Presenters';
+import { words } from '@/UI/words';
 
 /**
  * The TablePresenter is responsible for formatting the domain data.
@@ -15,12 +15,11 @@ import { words } from "@/UI/words";
  * This class should not hold state as state should be kept in the Redux Store.
  */
 export class InventoryTablePresenter
-  implements TablePresenter<ServiceInstanceModel, Row>
-{
+implements TablePresenter<ServiceInstanceModel, Row> {
   readonly columnHeads: ColumnHead[];
   readonly numberOfColumns: number;
 
-  constructor(
+  constructor (
     private serviceIdentity?: string,
     private serviceIdentityDisplayName?: string | null,
   ) {
@@ -29,39 +28,39 @@ export class InventoryTablePresenter
         displayName: this.getIdColumnName(),
         apiName: this.getIdColumnApiName(),
       },
-      { displayName: words("inventory.column.state"), apiName: "state" },
+      { displayName: words('inventory.column.state'), apiName: 'state' },
       {
-        displayName: words("inventory.collumn.deploymentProgress"),
-        apiName: "deployment_progress",
+        displayName: words('inventory.collumn.deploymentProgress'),
+        apiName: 'deployment_progress',
       },
       {
-        displayName: words("inventory.column.createdAt"),
-        apiName: "created_at",
+        displayName: words('inventory.column.createdAt'),
+        apiName: 'created_at',
       },
       {
-        displayName: words("inventory.column.updatedAt"),
-        apiName: "last_updated",
+        displayName: words('inventory.column.updatedAt'),
+        apiName: 'last_updated',
       },
     ];
     this.numberOfColumns = this.columnHeads.length + 1;
   }
 
-  public createRows(
+  public createRows (
     instances: ServiceInstanceModelWithTargetStates[],
     service: ServiceModel,
   ): Row[] {
     return instances.map((instance) => this.instanceToRow(instance, service));
   }
 
-  public getColumnHeadDisplayNames(): string[] {
+  public getColumnHeadDisplayNames (): string[] {
     return this.columnHeads.map((columnhead) => columnhead.displayName);
   }
 
-  public getColumnHeads(): ColumnHead[] {
+  public getColumnHeads (): ColumnHead[] {
     return this.columnHeads;
   }
 
-  public getColumnNameForIndex(index: number): string | undefined {
+  public getColumnNameForIndex (index: number): string | undefined {
     if (index > -1 && index < this.getNumberOfColumns()) {
       return this.getColumnHeads()[index].apiName;
     }
@@ -69,14 +68,14 @@ export class InventoryTablePresenter
     return undefined;
   }
 
-  public getIndexForColumnName(columnName?: string): number {
+  public getIndexForColumnName (columnName?: string): number {
     return this.columnHeads.findIndex(
       (columnHead) => columnHead.apiName === columnName,
     );
   }
 
-  public getSortableColumnNames(): string[] {
-    const sortableColumns = ["state", "created_at", "last_updated"];
+  public getSortableColumnNames (): string[] {
+    const sortableColumns = ['state', 'created_at', 'last_updated'];
 
     if (this.serviceIdentity) {
       sortableColumns.push(this.serviceIdentity);
@@ -85,33 +84,33 @@ export class InventoryTablePresenter
     return sortableColumns;
   }
 
-  public getIdColumnName(): string {
+  public getIdColumnName (): string {
     if (this.serviceIdentityDisplayName && this.serviceIdentity) {
       return this.serviceIdentityDisplayName;
     } else if (this.serviceIdentity) {
       return this.serviceIdentity;
     } else {
-      return words("inventory.column.id");
+      return words('inventory.column.id');
     }
   }
 
-  public getIdColumnApiName(): string {
+  public getIdColumnApiName (): string {
     if (this.serviceIdentity) {
       return this.serviceIdentity;
     } else {
-      return "id";
+      return 'id';
     }
   }
 
-  public shouldUseServiceIdentity(): boolean {
+  public shouldUseServiceIdentity (): boolean {
     return !!this.serviceIdentity;
   }
 
-  public getNumberOfColumns(): number {
+  public getNumberOfColumns (): number {
     return this.numberOfColumns;
   }
 
-  private instanceToRow(
+  private instanceToRow (
     instance: ServiceInstanceModel,
     service: ServiceModel,
   ): Row {
@@ -139,8 +138,8 @@ export class InventoryTablePresenter
       deploymentProgress: deployment_progress,
       serviceIdentityValue: service_identity_attribute_value,
       deleted,
-      editDisabled: isTransferDisabled(instance, "on_update", service),
-      deleteDisabled: isTransferDisabled(instance, "on_delete", service),
+      editDisabled: isTransferDisabled(instance, 'on_update', service),
+      deleteDisabled: isTransferDisabled(instance, 'on_delete', service),
     };
   }
 }

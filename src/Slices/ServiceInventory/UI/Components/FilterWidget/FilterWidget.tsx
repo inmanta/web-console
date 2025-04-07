@@ -1,12 +1,12 @@
-import React, { useState } from "react";
-import { ToolbarGroup } from "@patternfly/react-core";
-import { ServiceInstanceParams } from "@/Core";
-import { FilterPicker } from "@/UI/Components";
-import { SelectOptionFilter } from "@/UI/Components/Filters";
-import { words } from "@/UI/words";
-import { AttributeSets, AttributesFilter } from "./AttributesFilter";
-import { DeletedFilter } from "./DeletedFilter";
-import { IdFilter } from "./IdFilter";
+import React, { useState } from 'react';
+import { ToolbarGroup } from '@patternfly/react-core';
+import { ServiceInstanceParams } from '@/Core';
+import { FilterPicker } from '@/UI/Components';
+import { SelectOptionFilter } from '@/UI/Components/Filters';
+import { words } from '@/UI/words';
+import { AttributeSets, AttributesFilter } from './AttributesFilter';
+import { DeletedFilter } from './DeletedFilter';
+import { IdFilter } from './IdFilter';
 
 interface Props {
   filter: ServiceInstanceParams.Filter;
@@ -52,7 +52,7 @@ export const FilterWidget: React.FC<Props> = ({
       <SelectOptionFilter
         isVisible={filterKind === ServiceInstanceParams.Kind.State}
         filterPropertyName={ServiceInstanceParams.Kind.State}
-        placeholder={words("inventory.filters.state.placeholder")}
+        placeholder={words('inventory.filters.state.placeholder')}
         possibleStates={states}
         selectedStates={filter.state ? filter.state : []}
         update={updateState}

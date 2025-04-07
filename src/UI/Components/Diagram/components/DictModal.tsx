@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState } from 'react';
 import {
   ClipboardCopyButton,
   CodeBlock,
@@ -7,8 +7,8 @@ import {
   Modal,
   ModalBody,
   ModalHeader,
-} from "@patternfly/react-core";
-import { CanvasContext } from "../Context/Context";
+} from '@patternfly/react-core';
+import { CanvasContext } from '../Context/Context';
 
 /**
  * Modal to display the values of a dictionary.
@@ -31,7 +31,7 @@ export const DictModal: React.FC = () => {
       }}
     >
       <ModalHeader
-        title={"Values of " + dictToDisplay.title}
+        title={'Values of ' + dictToDisplay.title}
         labelId="dict-modal-title"
       />
       <ModalBody
@@ -58,8 +58,8 @@ export const DictModal: React.FC = () => {
                   onTooltipHidden={() => setCopied(false)}
                 >
                   {copied
-                    ? "Successfully copied to clipboard!"
-                    : "Copy to clipboard"}
+                    ? 'Successfully copied to clipboard!'
+                    : 'Copy to clipboard'}
                 </ClipboardCopyButton>
               </CodeBlockAction>
             }

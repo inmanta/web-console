@@ -1,8 +1,8 @@
 /* istanbul ignore file */
 //It's a JointJS file that is hard to test with Jest due to the fact that JointJS base itself on native browser functions that aren't supported by Jest environement
 
-import { dia, g, routers } from "@inmanta/rappid";
-import { RouterOptions } from "./interfaces";
+import { dia, g, routers } from '@inmanta/rappid';
+import { RouterOptions } from './interfaces';
 
 const DEFAULT_PADDING = 30;
 
@@ -16,7 +16,7 @@ export const routerNamespace = { ...routers };
  * @param {number} padding - padding of the Link
  * @returns {g.Point} - Point object with x and y coordinates
  */
-function getOutsidePoint(
+function getOutsidePoint (
   bbox: g.Rect,
   angle: number,
   anchor: g.Point,
@@ -61,7 +61,7 @@ const customRouter = function (
       getOutsidePoint(
         source.getBBox(),
         source.angle(),
-        linkView.getEndAnchor("source"),
+        linkView.getEndAnchor('source'),
         routerOptions.padding || routerOptions.sourcePadding || DEFAULT_PADDING,
       ),
     );
@@ -78,7 +78,7 @@ const customRouter = function (
       getOutsidePoint(
         target.getBBox(),
         target.angle(),
-        linkView.getEndAnchor("target"),
+        linkView.getEndAnchor('target'),
         routerOptions.padding || routerOptions.targetPadding || DEFAULT_PADDING,
       ),
     );

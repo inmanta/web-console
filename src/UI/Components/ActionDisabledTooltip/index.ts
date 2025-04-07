@@ -1,1 +1,1 @@
-export * from "./ActionDisabledTooltip";
+export * from './ActionDisabledTooltip';

@@ -1,1 +1,1 @@
-export { Provider as PageFrame } from "./Provider";
+export { Provider as PageFrame } from './Provider';

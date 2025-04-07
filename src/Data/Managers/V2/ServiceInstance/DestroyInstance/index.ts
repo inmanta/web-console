@@ -1,1 +1,1 @@
-export * from "./useDestroyInstance";
+export * from './useDestroyInstance';

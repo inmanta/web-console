@@ -1,7 +1,7 @@
-import React from "react";
-import { Tooltip } from "@patternfly/react-core";
-import { words } from "@/UI";
-import { MomentDatePresenter, useTickerWithUnixMs } from "@/UI/Utils";
+import React from 'react';
+import { Tooltip } from '@patternfly/react-core';
+import { words } from '@/UI';
+import { MomentDatePresenter, useTickerWithUnixMs } from '@/UI/Utils';
 
 const datePresenter = new MomentDatePresenter();
 
@@ -35,7 +35,7 @@ export const DateWithTimeDiffTooltip: React.FC<Props> = ({
 
   return (
     <Tooltip
-      content={words("instanceDetails.events.dateTooltip")(dateDiff)}
+      content={words('instanceDetails.events.dateTooltip')(dateDiff)}
       entryDelay={200}
     >
       <span>{date.dateTimeMilliseconds}</span>

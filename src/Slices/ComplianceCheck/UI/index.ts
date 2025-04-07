@@ -1,1 +1,1 @@
-export { Page as ComplianceCheckPage } from "./Page";
+export { Page as ComplianceCheckPage } from './Page';

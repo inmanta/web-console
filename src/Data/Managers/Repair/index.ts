@@ -1,1 +1,1 @@
-export * from "./CommandManager";
+export * from './CommandManager';

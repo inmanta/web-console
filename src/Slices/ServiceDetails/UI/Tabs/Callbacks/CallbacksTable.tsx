@@ -1,10 +1,10 @@
-import React from "react";
-import { Table, Th, Thead, Tr } from "@patternfly/react-table";
-import { useUrlStateWithExpansion } from "@/Data";
-import { words } from "@/UI/words";
-import { Callback } from "@S/ServiceDetails/Core/Callback";
-import { CreateCallbackForm } from "./CreateCallbackForm";
-import { Row } from "./Row";
+import React from 'react';
+import { Table, Th, Thead, Tr } from '@patternfly/react-table';
+import { useUrlStateWithExpansion } from '@/Data';
+import { words } from '@/UI/words';
+import { Callback } from '@S/ServiceDetails/Core/Callback';
+import { CreateCallbackForm } from './CreateCallbackForm';
+import { Row } from './Row';
 
 interface Props {
   callbacks: Callback[];
@@ -16,19 +16,19 @@ export const CallbacksTable: React.FC<Props> = ({
   service_entity,
 }) => {
   const [isExpanded, onExpansion] = useUrlStateWithExpansion({
-    key: "callbacks-expansion",
-    route: "Catalog",
+    key: 'callbacks-expansion',
+    route: 'Catalog',
   });
 
   return (
     <Table aria-label="CallbacksTable">
       <Thead>
         <Tr>
-          <Th>{words("catalog.callbacks.url")}</Th>
-          <Th>{words("catalog.callbacks.id")}</Th>
-          <Th>{words("catalog.callbacks.minimalLogLevel")}</Th>
-          <Th>{words("catalog.callbacks.eventTypes")}</Th>
-          <Th>{words("catalog.callbacks.actions")}</Th>
+          <Th>{words('catalog.callbacks.url')}</Th>
+          <Th>{words('catalog.callbacks.id')}</Th>
+          <Th>{words('catalog.callbacks.minimalLogLevel')}</Th>
+          <Th>{words('catalog.callbacks.eventTypes')}</Th>
+          <Th>{words('catalog.callbacks.actions')}</Th>
         </Tr>
       </Thead>
       <CreateCallbackForm service_entity={service_entity} numberOfColumns={5} />

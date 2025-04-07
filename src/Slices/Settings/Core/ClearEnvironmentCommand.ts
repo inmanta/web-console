@@ -1,7 +1,7 @@
-import { Maybe } from "@/Core/Language";
+import { Maybe } from '@/Core/Language';
 
 export interface Command {
-  kind: "ClearEnvironment";
+  kind: 'ClearEnvironment';
   id: string;
 }
 

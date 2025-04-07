@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import {
   TimePicker,
   DatePicker,
   isValidDate,
   yyyyMMddFormat,
   InputGroup,
-} from "@patternfly/react-core";
-import moment from "moment";
-import styled from "styled-components";
+} from '@patternfly/react-core';
+import moment from 'moment';
+import styled from 'styled-components';
 
 interface Props {
   timestamp: Date | undefined;
@@ -25,11 +25,11 @@ export const TimestampPicker: React.FC<Props> = ({
   datePickerLabel,
   timePickerLabel,
 }) => {
-  const [timeText, setTimeText] = useState("");
+  const [timeText, setTimeText] = useState('');
 
   useEffect(() => {
     if (timestamp === undefined) {
-      setTimeText("");
+      setTimeText('');
     }
   }, [timestamp]);
 
@@ -59,8 +59,8 @@ export const TimestampPicker: React.FC<Props> = ({
 
   const onTimeChange = (_event, time) => {
     setTimeText(time);
-    if (timestamp && isValidDate(timestamp) && time.split(":").length === 2) {
-      const [hour, minute] = time.split(":");
+    if (timestamp && isValidDate(timestamp) && time.split(':').length === 2) {
+      const [hour, minute] = time.split(':');
       const updatedDate = new Date(timestamp);
 
       if (hour.length === 2) {
@@ -77,7 +77,7 @@ export const TimestampPicker: React.FC<Props> = ({
     <StyledInputGroup>
       <DatePicker
         value={
-          timestamp && isValidDate(timestamp) ? yyyyMMddFormat(timestamp) : ""
+          timestamp && isValidDate(timestamp) ? yyyyMMddFormat(timestamp) : ''
         }
         dateParse={parseDate}
         onChange={onDateChange}
@@ -86,7 +86,7 @@ export const TimestampPicker: React.FC<Props> = ({
       />
 
       <TimePicker
-        style={{ width: "150px" }}
+        style={{ width: '150px' }}
         onChange={onTimeChange}
         time={timeText}
         is24Hour
@@ -103,14 +103,14 @@ const StyledInputGroup = styled(InputGroup)`
 `;
 
 const formatDateWithSlashes = (date: Date): string => {
-  return moment(date).format("YYYY/MM/DD");
+  return moment(date).format('YYYY/MM/DD');
 };
 
 const isValidSlashedFormat = (dateString: string): boolean =>
-  moment(dateString, "YYYY/MM/DD", true).isValid();
+  moment(dateString, 'YYYY/MM/DD', true).isValid();
 
 const isValidDashedFormat = (dateString: string): boolean =>
-  moment(dateString, "YYYY-MM-DD", true).isValid();
+  moment(dateString, 'YYYY-MM-DD', true).isValid();
 
 const validateDateFormat = (
   dateString: string,
@@ -118,7 +118,7 @@ const validateDateFormat = (
 ): boolean => {
   let formattedDate;
 
-  if (typeof date === "string") {
+  if (typeof date === 'string') {
     formattedDate = new Date(date);
   } else {
     formattedDate = date;
@@ -132,7 +132,7 @@ const validateDateFormat = (
 
 const parseDate = (val: string): Date => {
   if (isValidSlashedFormat(val)) {
-    return moment(val, "YYYY/MM/DD", true).toDate();
+    return moment(val, 'YYYY/MM/DD', true).toDate();
   } else if (isValidDashedFormat(val)) {
     return new Date(`${val}T00:00:00`);
   }

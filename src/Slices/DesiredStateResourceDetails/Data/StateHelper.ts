@@ -1,9 +1,9 @@
-import { RemoteData } from "@/Core";
-import { PrimaryStateHelper } from "@/Data/Common";
-import { Store } from "@/Data/Store";
+import { RemoteData } from '@/Core';
+import { PrimaryStateHelper } from '@/Data/Common';
+import { Store } from '@/Data/Store';
 
-export function GetDesiredStateResourceDetailsStateHelper(store: Store) {
-  return PrimaryStateHelper<"GetVersionedResourceDetails">(
+export function GetDesiredStateResourceDetailsStateHelper (store: Store) {
+  return PrimaryStateHelper<'GetVersionedResourceDetails'>(
     store,
     (data, query) => {
       const unwrapped = RemoteData.mapSuccess((wrapped) => wrapped.data, data);

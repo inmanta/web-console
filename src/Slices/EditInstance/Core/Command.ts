@@ -2,11 +2,11 @@ import {
   InstanceAttributeModel,
   VersionedServiceInstanceIdentifier,
   Field,
-} from "@/Core/Domain";
-import { Maybe } from "@/Core/Language";
+} from '@/Core/Domain';
+import { Maybe } from '@/Core/Language';
 
 export interface Command extends VersionedServiceInstanceIdentifier {
-  kind: "TriggerInstanceUpdate";
+  kind: 'TriggerInstanceUpdate';
   apiVersion?: string;
 }
 

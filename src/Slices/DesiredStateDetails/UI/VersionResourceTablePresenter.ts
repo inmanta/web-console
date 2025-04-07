@@ -1,33 +1,32 @@
-import { Resource } from "@/Core";
-import { ColumnHead, TablePresenter } from "@/UI/Presenters";
-import { words } from "@/UI/words";
+import { Resource } from '@/Core';
+import { ColumnHead, TablePresenter } from '@/UI/Presenters';
+import { words } from '@/UI/words';
 
 export class VersionResourceTablePresenter
-  implements TablePresenter<Resource.FromVersion, Resource.RowFromVersion>
-{
+implements TablePresenter<Resource.FromVersion, Resource.RowFromVersion> {
   readonly columnHeads: ColumnHead[];
   readonly numberOfColumns: number;
 
-  constructor() {
+  constructor () {
     this.columnHeads = [
-      { displayName: words("resources.column.type"), apiName: "resource_type" },
+      { displayName: words('resources.column.type'), apiName: 'resource_type' },
       {
-        displayName: words("resources.column.agent"),
-        apiName: "agent",
+        displayName: words('resources.column.agent'),
+        apiName: 'agent',
       },
       {
-        displayName: words("resources.column.value"),
-        apiName: "resource_id_value",
+        displayName: words('resources.column.value'),
+        apiName: 'resource_id_value',
       },
       {
-        displayName: words("resources.column.requires"),
-        apiName: "requires",
+        displayName: words('resources.column.requires'),
+        apiName: 'requires',
       },
     ];
     this.numberOfColumns = this.columnHeads.length + 2;
   }
 
-  createRows(sourceData: Resource.FromVersion[]): Resource.RowFromVersion[] {
+  createRows (sourceData: Resource.FromVersion[]): Resource.RowFromVersion[] {
     return sourceData.map((resource) => ({
       type: resource.id_details.resource_type,
       value: resource.id_details.resource_id_value,
@@ -36,15 +35,15 @@ export class VersionResourceTablePresenter
       id: resource.resource_id,
     }));
   }
-  getColumnHeadDisplayNames(): string[] {
+  getColumnHeadDisplayNames (): string[] {
     return this.columnHeads.map((columnHead) => columnHead.displayName);
   }
 
-  public getColumnHeads(): ColumnHead[] {
+  public getColumnHeads (): ColumnHead[] {
     return this.columnHeads;
   }
 
-  public getColumnNameForIndex(index: number): string | undefined {
+  public getColumnNameForIndex (index: number): string | undefined {
     if (index > -1 && index < this.getNumberOfColumns()) {
       return this.getColumnHeads()[index].apiName;
     }
@@ -52,17 +51,17 @@ export class VersionResourceTablePresenter
     return undefined;
   }
 
-  public getIndexForColumnName(columnName?: string): number {
+  public getIndexForColumnName (columnName?: string): number {
     return this.columnHeads.findIndex(
       (columnHead) => columnHead.apiName === columnName,
     );
   }
 
-  public getSortableColumnNames(): string[] {
-    return ["resource_type", "agent", "resource_id_value"];
+  public getSortableColumnNames (): string[] {
+    return ['resource_type', 'agent', 'resource_id_value'];
   }
 
-  getNumberOfColumns(): number {
+  getNumberOfColumns (): number {
     return this.numberOfColumns;
   }
 }

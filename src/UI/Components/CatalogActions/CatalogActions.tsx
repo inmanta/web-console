@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from 'react';
 import {
   AlertVariant,
   Button,
@@ -6,14 +6,14 @@ import {
   Flex,
   FlexItem,
   Tooltip,
-} from "@patternfly/react-core";
-import { FileCodeIcon } from "@patternfly/react-icons";
-import { useExportCatalog } from "@/Data/Managers/V2/Service";
-import { DependencyContext } from "@/UI/Dependency";
-import { ModalContext } from "@/UI/Root/Components/ModalProvider";
-import { words } from "@/UI/words";
-import { ConfirmUserActionForm } from "../ConfirmUserActionForm";
-import { ToastAlert } from "../ToastAlert";
+} from '@patternfly/react-core';
+import { FileCodeIcon } from '@patternfly/react-icons';
+import { useExportCatalog } from '@/Data/Managers/V2/Service';
+import { DependencyContext } from '@/UI/Dependency';
+import { ModalContext } from '@/UI/Root/Components/ModalProvider';
+import { words } from '@/UI/words';
+import { ConfirmUserActionForm } from '../ConfirmUserActionForm';
+import { ToastAlert } from '../ToastAlert';
 
 /**
  * This component will trigger an update of the Service Catalog.
@@ -31,8 +31,8 @@ export const CatalogActions: React.FC = () => {
   const { urlManager, environmentHandler } = useContext(DependencyContext);
   const { mutate, isError, error, isSuccess } = useExportCatalog();
 
-  const [message, setMessage] = useState("");
-  const [toastTitle, setToastTitle] = useState("");
+  const [message, setMessage] = useState('');
+  const [toastTitle, setToastTitle] = useState('');
   const [toastType, setToastType] = useState(AlertVariant.custom);
 
   /**
@@ -54,22 +54,22 @@ export const CatalogActions: React.FC = () => {
    */
   const openModal = (): void => {
     triggerModal({
-      title: words("catalog.update.modal.title"),
+      title: words('catalog.update.modal.title'),
       content: (
         <>
-          <Content>{words("catalog.update.confirmation.p1")}</Content>
+          <Content>{words('catalog.update.confirmation.p1')}</Content>
           <Content>
-            <b>{words("catalog.update.confirmation.p2")}</b>
+            <b>{words('catalog.update.confirmation.p2')}</b>
           </Content>
           <Content component="ul">
             <Content component="li">
-              - <b>{words("catalog.update.confirmation.p3")}</b>
+              - <b>{words('catalog.update.confirmation.p3')}</b>
             </Content>
             <Content component="li">
-              - <b>{words("catalog.update.confirmation.p4")}</b>
+              - <b>{words('catalog.update.confirmation.p4')}</b>
             </Content>
           </Content>
-          <Content>{words("catalog.update.confirmation.p5")}</Content>
+          <Content>{words('catalog.update.confirmation.p5')}</Content>
           <ConfirmUserActionForm onSubmit={onSubmit} onCancel={closeModal} />
         </>
       ),
@@ -78,11 +78,11 @@ export const CatalogActions: React.FC = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      setToastTitle(words("catalog.update.success"));
-      setMessage(words("catalog.update.success.message"));
+      setToastTitle(words('catalog.update.success'));
+      setMessage(words('catalog.update.success.message'));
       setToastType(AlertVariant.success);
     } else if (isError) {
-      setToastTitle(words("catalog.update.failed"));
+      setToastTitle(words('catalog.update.failed'));
       setMessage(error.message);
       setToastType(AlertVariant.danger);
     }
@@ -98,13 +98,13 @@ export const CatalogActions: React.FC = () => {
         type={toastType}
       />
       <Flex
-        direction={{ default: "row" }}
-        fullWidth={{ default: "fullWidth" }}
-        justifyContent={{ default: "justifyContentFlexEnd" }}
-        rowGap={{ default: "rowGap" }}
+        direction={{ default: 'row' }}
+        fullWidth={{ default: 'fullWidth' }}
+        justifyContent={{ default: 'justifyContentFlexEnd' }}
+        rowGap={{ default: 'rowGap' }}
       >
         <FlexItem>
-          <Tooltip content={words("catalog.API.tooltip")} entryDelay={500}>
+          <Tooltip content={words('catalog.API.tooltip')} entryDelay={500}>
             <Button
               variant="plain"
               aria-label="API-Documentation"
@@ -116,9 +116,9 @@ export const CatalogActions: React.FC = () => {
           </Tooltip>
         </FlexItem>
         <FlexItem>
-          <Tooltip content={words("catalog.update.tooltip")}>
+          <Tooltip content={words('catalog.update.tooltip')}>
             <Button onClick={openModal}>
-              {words("catalog.button.update")}
+              {words('catalog.button.update')}
             </Button>
           </Tooltip>
         </FlexItem>

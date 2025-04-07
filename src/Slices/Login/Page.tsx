@@ -1,9 +1,9 @@
-import React from "react";
-import { LoginPage, ListVariant } from "@patternfly/react-core";
-import styled from "styled-components";
-import { words } from "@/UI";
-import logo from "@images/logo.svg";
-import { LoginForm } from "./UI/LoginForm";
+import React from 'react';
+import { LoginPage, ListVariant } from '@patternfly/react-core';
+import styled from 'styled-components';
+import { words } from '@/UI';
+import logo from '@images/logo.svg';
+import { LoginForm } from './UI/LoginForm';
 
 /**
  * PF-MIGRATION TODO : UPDATE based on new guidelines
@@ -20,10 +20,10 @@ export const Login: React.FC = () => {
         brandImgSrc={logo}
         footerListVariants={ListVariant.inline}
         brandImgAlt="Inmanta logo"
-        loginTitle={words("login.title")}
-        loginSubtitle={words("login.subtitle")}
+        loginTitle={words('login.title')}
+        loginSubtitle={words('login.subtitle')}
       >
-        <LoginForm submitButtonText={words("login.login")} />
+        <LoginForm submitButtonText={words('login.login')} />
       </LoginPage>
     </Wrapper>
   );

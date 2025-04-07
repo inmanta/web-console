@@ -1,1 +1,1 @@
-export { Page as InstanceComposerEditorPage } from "./Page";
+export { Page as InstanceComposerEditorPage } from './Page';

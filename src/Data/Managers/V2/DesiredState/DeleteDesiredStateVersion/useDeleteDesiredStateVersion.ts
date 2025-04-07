@@ -2,8 +2,8 @@ import {
   UseMutationResult,
   useMutation,
   useQueryClient,
-} from "@tanstack/react-query";
-import { useDelete } from "../../helpers";
+} from '@tanstack/react-query';
+import { useDelete } from '../../helpers';
 
 /**
  * React Query hook for deleting version of Desired State
@@ -21,14 +21,14 @@ export const useDeleteDesiredStateVersion = (): UseMutationResult<
 
   return useMutation({
     mutationFn: (version) => deleteFn(`/api/v1/version/${version}`),
-    mutationKey: ["delete_desired_state_version"],
+    mutationKey: ['delete_desired_state_version'],
     onSuccess: () => {
       //invalidate the desired state queries to update the list
       client.invalidateQueries({
-        queryKey: ["get_desired_states-continuous"],
+        queryKey: ['get_desired_states-continuous'],
       });
       client.invalidateQueries({
-        queryKey: ["get_desired_states-one_time"],
+        queryKey: ['get_desired_states-one_time'],
       });
     },
   });

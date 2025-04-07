@@ -2,9 +2,9 @@ import {
   UseMutationOptions,
   UseMutationResult,
   useMutation,
-} from "@tanstack/react-query";
-import { ParsedNumber } from "@/Core";
-import { usePatch } from "../../helpers";
+} from '@tanstack/react-query';
+import { ParsedNumber } from '@/Core';
+import { usePatch } from '../../helpers';
 
 /**
  * Required attributes to construct the patch request to edit an instance attribute set in Expert mode
@@ -47,7 +47,7 @@ export const usePatchAttributesExpert = (
         `/lsm/v2/service_inventory/${service_entity}/${instance_id}/expert`,
         data,
       ),
-    mutationKey: ["patch_expert_edit"],
+    mutationKey: ['patch_expert_edit'],
     ...options,
   });
 };

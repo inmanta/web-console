@@ -1,18 +1,18 @@
-import React from "react";
-import { useGetServiceModel } from "@/Data/Managers/V2/Service";
-import { ErrorView, LoadingView, PageContainer } from "@/UI/Components";
-import { useRouteParams } from "@/UI/Routing";
-import { words } from "@/UI/words";
-import { CreateInstance } from "./CreateInstance";
+import React from 'react';
+import { useGetServiceModel } from '@/Data/Managers/V2/Service';
+import { ErrorView, LoadingView, PageContainer } from '@/UI/Components';
+import { useRouteParams } from '@/UI/Routing';
+import { words } from '@/UI/words';
+import { CreateInstance } from './CreateInstance';
 
 export const Page: React.FC = () => {
-  const { service: serviceName } = useRouteParams<"CreateInstance">();
+  const { service: serviceName } = useRouteParams<'CreateInstance'>();
 
   const { data, isError, error, isSuccess, refetch } =
     useGetServiceModel(serviceName).useContinuous();
 
   if (isError) {
-    <PageContainer pageTitle={words("inventory.createInstance.title")}>
+    <PageContainer pageTitle={words('inventory.createInstance.title')}>
       <ErrorView
         message={error.message}
         retry={refetch}
@@ -23,7 +23,7 @@ export const Page: React.FC = () => {
 
   if (isSuccess) {
     return (
-      <PageContainer pageTitle={words("inventory.createInstance.title")}>
+      <PageContainer pageTitle={words('inventory.createInstance.title')}>
         <div aria-label="AddInstance-Success">
           <CreateInstance serviceEntity={data} />
         </div>
@@ -32,7 +32,7 @@ export const Page: React.FC = () => {
   }
 
   return (
-    <PageContainer pageTitle={words("inventory.createInstance.title")}>
+    <PageContainer pageTitle={words('inventory.createInstance.title')}>
       <LoadingView ariaLabel="ServicesProvider-Loading" />
     </PageContainer>
   );

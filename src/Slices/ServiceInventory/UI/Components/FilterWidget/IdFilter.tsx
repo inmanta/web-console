@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   Button,
   ToolbarFilter,
@@ -6,8 +6,8 @@ import {
   TextInput,
   ButtonVariant,
   InputGroupItem,
-} from "@patternfly/react-core";
-import { SearchIcon } from "@patternfly/react-icons";
+} from '@patternfly/react-core';
+import { SearchIcon } from '@patternfly/react-icons';
 
 interface Props {
   id?: string;
@@ -16,14 +16,14 @@ interface Props {
 }
 
 export const IdFilter: React.FC<Props> = ({ id, isVisible, update }) => {
-  const [idInput, setIdInput] = useState("");
+  const [idInput, setIdInput] = useState('');
 
   const removeChip = () => update();
 
   const onIdInput = (event) => {
-    if (event.key && event.key !== "Enter") return;
+    if (event.key && event.key !== 'Enter') return;
     update(idInput);
-    setIdInput("");
+    setIdInput('');
   };
 
   const chips = id ? [id] : [];

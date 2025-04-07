@@ -1,23 +1,23 @@
-import React, { act } from "react";
-import { MemoryRouter } from "react-router";
-import { render, screen } from "@testing-library/react";
-import { StoreProvider } from "easy-peasy";
-import { configureAxe, toHaveNoViolations } from "jest-axe";
-import { Either } from "@/Core";
-import { getStoreInstance, QueryResolverImpl } from "@/Data";
+import React, { act } from 'react';
+import { MemoryRouter } from 'react-router';
+import { render, screen } from '@testing-library/react';
+import { StoreProvider } from 'easy-peasy';
+import { configureAxe, toHaveNoViolations } from 'jest-axe';
+import { Either } from '@/Core';
+import { getStoreInstance, QueryResolverImpl } from '@/Data';
 import {
   GetEnvironmentsContinuousQueryManager,
   GetEnvironmentsContinuousStateHelper,
-} from "@/Data/Managers/GetEnvironmentsContinuous";
+} from '@/Data/Managers/GetEnvironmentsContinuous';
 import {
   DeferredApiHelper,
   dependencies,
   DynamicQueryManagerResolverImpl,
   Project,
   StaticScheduler,
-} from "@/Test";
-import { DependencyProvider } from "@/UI/Dependency";
-import { Page } from "./Page";
+} from '@/Test';
+import { DependencyProvider } from '@/UI/Dependency';
+import { Page } from './Page';
 
 expect.extend(toHaveNoViolations);
 
@@ -28,7 +28,7 @@ const axe = configureAxe({
   },
 });
 
-function setup() {
+function setup () {
   const store = getStoreInstance();
   const apiHelper = new DeferredApiHelper();
   const scheduler = new StaticScheduler();
@@ -58,19 +58,19 @@ function setup() {
   return { component, apiHelper };
 }
 
-test("Home view shows failed table", async () => {
+test('Home view shows failed table', async () => {
   const { component, apiHelper } = setup();
 
   render(component);
 
   expect(
-    await screen.findByRole("region", { name: "Overview-Loading" }),
+    await screen.findByRole('region', { name: 'Overview-Loading' }),
   ).toBeInTheDocument();
 
-  apiHelper.resolve(Either.left("error"));
+  apiHelper.resolve(Either.left('error'));
 
   expect(
-    await screen.findByRole("region", { name: "Overview-Failed" }),
+    await screen.findByRole('region', { name: 'Overview-Failed' }),
   ).toBeInTheDocument();
 
   await act(async () => {
@@ -80,13 +80,13 @@ test("Home view shows failed table", async () => {
   });
 });
 
-test("Home View shows success table", async () => {
+test('Home View shows success table', async () => {
   const { component, apiHelper } = setup();
 
   render(component);
 
   expect(
-    await screen.findByRole("region", { name: "Overview-Loading" }),
+    await screen.findByRole('region', { name: 'Overview-Loading' }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(
@@ -96,7 +96,7 @@ test("Home View shows success table", async () => {
   );
 
   expect(
-    await screen.findByRole("generic", { name: "Overview-Success" }),
+    await screen.findByRole('generic', { name: 'Overview-Success' }),
   ).toBeInTheDocument();
 
   await act(async () => {

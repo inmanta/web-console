@@ -1,1 +1,1 @@
-export * from "./useGetCompileDetails";
+export * from './useGetCompileDetails';

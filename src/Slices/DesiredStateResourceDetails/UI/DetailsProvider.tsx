@@ -1,7 +1,7 @@
-import React, { useContext } from "react";
-import { RemoteDataView } from "@/UI/Components";
-import { DependencyContext } from "@/UI/Dependency";
-import { Details } from "./Details";
+import React, { useContext } from 'react';
+import { RemoteDataView } from '@/UI/Components';
+import { DependencyContext } from '@/UI/Dependency';
+import { Details } from './Details';
 
 interface Props {
   version: string;
@@ -14,8 +14,8 @@ export const DetailsProvider: React.FC<Props> = ({
 }) => {
   const { queryResolver } = useContext(DependencyContext);
 
-  const [data] = queryResolver.useContinuous<"GetVersionedResourceDetails">({
-    kind: "GetVersionedResourceDetails",
+  const [data] = queryResolver.useContinuous<'GetVersionedResourceDetails'>({
+    kind: 'GetVersionedResourceDetails',
     version,
     id,
   });

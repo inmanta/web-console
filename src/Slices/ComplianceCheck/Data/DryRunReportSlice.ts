@@ -1,6 +1,6 @@
-import { Action, action } from "easy-peasy";
-import { RemoteData } from "@/Core";
-import { Report } from "@S/ComplianceCheck/Core/Domain";
+import { Action, action } from 'easy-peasy';
+import { RemoteData } from '@/Core';
+import { Report } from '@S/ComplianceCheck/Core/Domain';
 
 export interface DryRunReportSlice {
   byId: Record<string, RemoteData.RemoteData<string, Report>>;

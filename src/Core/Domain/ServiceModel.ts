@@ -1,7 +1,7 @@
-import { ParsedNumber } from "@/Core/Language";
-import { AttributeValidation } from "./AttributeValidation";
-import { Config } from "./Config";
-import { FormSuggestion } from "./ServiceInstanceModel";
+import { ParsedNumber } from '@/Core/Language';
+import { AttributeValidation } from './AttributeValidation';
+import { Config } from './Config';
+import { FormSuggestion } from './ServiceInstanceModel';
 
 /**
  * Type that represents an attribute in the service model.
@@ -38,9 +38,9 @@ export interface AttributeAnnotations {
  */
 export interface StateModel {
   deleted: boolean;
-  label?: "info" | "success" | "warning" | "danger" | null;
-  validate_self?: "candidate" | "active" | null;
-  validate_others?: "candidate" | "active" | null;
+  label?: 'info' | 'success' | 'warning' | 'danger' | null;
+  validate_self?: 'candidate' | 'active' | null;
+  validate_others?: 'candidate' | 'active' | null;
   export_resources: boolean;
   name: string;
   purge_resources: boolean;
@@ -166,10 +166,10 @@ export interface EmbeddedEntity extends RelationAttribute {
 interface MinimalEmbeddedEntity {
   name: string;
   description?: string | null;
-  attributes: Pick<AttributeModel, "name" | "type" | "description">[];
+  attributes: Pick<AttributeModel, 'name' | 'type' | 'description'>[];
   inter_service_relations?: Pick<
     InterServiceRelation,
-    "name" | "entity_type" | "description"
+    'name' | 'entity_type' | 'description'
   >[];
   embedded_entities: MinimalEmbeddedEntity[];
 }
@@ -178,12 +178,12 @@ interface MinimalEmbeddedEntity {
  * Interface that represents an entity-like object.
  */
 export type EntityLike = {
-  attributes: (Pick<AttributeModel, "name" | "type" | "description"> & {
-    modifier?: AttributeModel["modifier"];
+  attributes: (Pick<AttributeModel, 'name' | 'type' | 'description'> & {
+    modifier?: AttributeModel['modifier'];
   })[];
   embedded_entities: MinimalEmbeddedEntity[];
   inter_service_relations?: Pick<
     InterServiceRelation,
-    "name" | "entity_type" | "description"
+    'name' | 'entity_type' | 'description'
   >[];
 };

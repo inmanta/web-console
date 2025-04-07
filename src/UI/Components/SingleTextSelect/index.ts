@@ -1,1 +1,1 @@
-export * from "./SingleTextSelect";
+export * from './SingleTextSelect';

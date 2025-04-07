@@ -2,9 +2,9 @@ import {
   UseMutationOptions,
   UseMutationResult,
   useMutation,
-} from "@tanstack/react-query";
-import { ParsedNumber } from "@/Core";
-import { useDelete } from "../../helpers";
+} from '@tanstack/react-query';
+import { ParsedNumber } from '@/Core';
+import { useDelete } from '../../helpers';
 
 /**
  * React Query hook for Deleting an instance.
@@ -24,7 +24,7 @@ export const useDeleteInstance = (
       deleteFn(
         `/lsm/v1/service_inventory/${service_entity}/${instance_id}?current_version=${version}`,
       ),
-    mutationKey: ["delete_instance"],
+    mutationKey: ['delete_instance'],
     ...options,
   });
 };

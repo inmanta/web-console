@@ -1,22 +1,22 @@
-import React, { ReactElement, createContext, useEffect } from "react";
-import { ServiceModel, ServiceInstanceParams } from "@/Core";
+import React, { ReactElement, createContext, useEffect } from 'react';
+import { ServiceModel, ServiceInstanceParams } from '@/Core';
 import {
   useUrlStateWithFilter,
   useUrlStateWithPageSize,
   useUrlStateWithSort,
-} from "@/Data";
-import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import { useGetInstances } from "@/Data/Managers/V2/ServiceInstance";
+} from '@/Data';
+import { useUrlStateWithCurrentPage } from '@/Data/Common/UrlState/useUrlStateWithCurrentPage';
+import { useGetInstances } from '@/Data/Managers/V2/ServiceInstance';
 import {
   EmptyView,
   ErrorView,
   LoadingView,
   PaginationWidget,
-} from "@/UI/Components";
-import { words } from "@/UI/words";
-import { TableControls } from "./Components";
-import { TableProvider } from "./TableProvider";
-import { Wrapper } from "./Wrapper";
+} from '@/UI/Components';
+import { words } from '@/UI/words';
+import { TableControls } from './Components';
+import { TableProvider } from './TableProvider';
+import { Wrapper } from './Wrapper';
 
 interface Props {
   labelFiltering: {
@@ -56,20 +56,20 @@ export const ServiceInventory: React.FunctionComponent<{
   intro?: ReactElement | null;
 }> = ({ serviceName, service, intro }) => {
   const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({
-    route: "Inventory",
+    route: 'Inventory',
   });
 
   const [sort, setSort] = useUrlStateWithSort<string>({
-    default: { name: "created_at", order: "desc" },
-    route: "Inventory",
+    default: { name: 'created_at', order: 'desc' },
+    route: 'Inventory',
   });
 
   const [pageSize, setPageSize] = useUrlStateWithPageSize({
-    route: "Inventory",
+    route: 'Inventory',
   });
 
   const [filter, setFilter] =
-    useUrlStateWithFilter<ServiceInstanceParams.Filter>({ route: "Inventory" });
+    useUrlStateWithFilter<ServiceInstanceParams.Filter>({ route: 'Inventory' });
 
   const { data, isError, error, isSuccess, refetch } = useGetInstances(
     serviceName,
@@ -94,7 +94,7 @@ export const ServiceInventory: React.FunctionComponent<{
 
   //when sorting is triggered, reset the current page
   useEffect(() => {
-    setCurrentPage({ kind: "CurrentPage", value: "" });
+    setCurrentPage({ kind: 'CurrentPage', value: '' });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sort.order]);
 
@@ -116,10 +116,10 @@ export const ServiceInventory: React.FunctionComponent<{
       <ServiceInventoryContext.Provider
         value={{
           labelFiltering: {
-            danger: filterLabels("danger"),
-            warning: filterLabels("warning"),
-            success: filterLabels("success"),
-            info: filterLabels("info"),
+            danger: filterLabels('danger'),
+            warning: filterLabels('warning'),
+            success: filterLabels('success'),
+            info: filterLabels('info'),
             no_label: filterLabels(null),
             onClick: (labels) => setFilter({ ...filter, state: labels }),
           },
@@ -151,7 +151,7 @@ export const ServiceInventory: React.FunctionComponent<{
             />
           ) : (
             <EmptyView
-              message={words("inventory.empty.message")(serviceName)}
+              message={words('inventory.empty.message')(serviceName)}
               aria-label="ServiceInventory-Empty"
             />
           )}

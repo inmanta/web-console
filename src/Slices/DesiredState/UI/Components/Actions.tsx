@@ -1,15 +1,15 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   Dropdown,
   DropdownList,
   MenuToggle,
   MenuToggleElement,
-} from "@patternfly/react-core";
-import { EllipsisVIcon } from "@patternfly/react-icons";
-import { ParsedNumber } from "@/Core";
-import { CompareAction } from "./CompareAction";
-import { DeleteAction } from "./DeleteAction";
-import { PromoteAction } from "./PromoteAction";
+} from '@patternfly/react-core';
+import { EllipsisVIcon } from '@patternfly/react-icons';
+import { ParsedNumber } from '@/Core';
+import { CompareAction } from './CompareAction';
+import { DeleteAction } from './DeleteAction';
+import { PromoteAction } from './PromoteAction';
 
 interface Props {
   version: ParsedNumber;
@@ -38,7 +38,7 @@ export const Actions: React.FC<Props> = ({ version, isPromoteDisabled }) => {
       isOpen={isOpen}
       onOpenChange={(isOpen: boolean) => setIsOpen(isOpen)}
       onSelect={() => setIsOpen(false)}
-      popperProps={{ position: "right" }}
+      popperProps={{ position: 'right' }}
     >
       <DropdownList>
         <DeleteAction key="delete" version={version} />

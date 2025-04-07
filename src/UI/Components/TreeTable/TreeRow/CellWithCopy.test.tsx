@@ -1,20 +1,20 @@
-import React from "react";
-import { MemoryRouter } from "react-router-dom";
-import { Table /* data-codemods */, Tbody, Tr } from "@patternfly/react-table";
-import { QueryClientProvider } from "@tanstack/react-query";
-import { render, screen } from "@testing-library/react";
-import { userEvent } from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
-import { http, HttpResponse } from "msw";
-import { setupServer } from "msw/node";
-import { getStoreInstance } from "@/Data";
-import { dependencies, ServiceInstance } from "@/Test";
-import { testClient } from "@/Test/Utils/react-query-setup";
-import { TreeTableCellContext } from "@/UI/Components/TreeTable/RowReferenceContext";
-import { DependencyProvider } from "@/UI/Dependency";
-import { CellWithCopy } from "./CellWithCopy";
+import React from 'react';
+import { MemoryRouter } from 'react-router-dom';
+import { Table /* data-codemods */, Tbody, Tr } from '@patternfly/react-table';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { render, screen } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
+import { StoreProvider } from 'easy-peasy';
+import { http, HttpResponse } from 'msw';
+import { setupServer } from 'msw/node';
+import { getStoreInstance } from '@/Data';
+import { dependencies, ServiceInstance } from '@/Test';
+import { testClient } from '@/Test/Utils/react-query-setup';
+import { TreeTableCellContext } from '@/UI/Components/TreeTable/RowReferenceContext';
+import { DependencyProvider } from '@/UI/Dependency';
+import { CellWithCopy } from './CellWithCopy';
 
-function setup(props) {
+function setup (props) {
   const store = getStoreInstance();
 
   const onClickFn = jest.fn();
@@ -41,25 +41,25 @@ function setup(props) {
 
   return { component, onClickFn };
 }
-describe("CellWithCopy", () => {
+describe('CellWithCopy', () => {
   const server = setupServer(
-    http.get("/lsm/v1/service_inventory/test_service/someValue", () => {
+    http.get('/lsm/v1/service_inventory/test_service/someValue', () => {
       return HttpResponse.json({
         data: {
           ...ServiceInstance.a,
-          service_identity_attribute_value: "someValue",
-          name: "test_service",
-          id: "someValue",
+          service_identity_attribute_value: 'someValue',
+          name: 'test_service',
+          id: 'someValue',
         },
       });
     }),
-    http.get("/lsm/v1/service_inventory/test_service/someOtherValue", () => {
+    http.get('/lsm/v1/service_inventory/test_service/someOtherValue', () => {
       return HttpResponse.json({
         data: {
           ...ServiceInstance.a,
-          service_identity_attribute_value: "someOtherValue",
-          name: "test_service2",
-          id: "someOtherValue",
+          service_identity_attribute_value: 'someOtherValue',
+          name: 'test_service2',
+          id: 'someOtherValue',
         },
       });
     }),
@@ -72,8 +72,8 @@ describe("CellWithCopy", () => {
     server.close();
   });
 
-  test("Given CellWithCopy When a cell has a simple value only Then it is shown", async () => {
-    const props = { label: "attribute", value: "someValue" };
+  test('Given CellWithCopy When a cell has a simple value only Then it is shown', async () => {
+    const props = { label: 'attribute', value: 'someValue' };
     const { component } = setup(props);
 
     render(component);
@@ -81,8 +81,8 @@ describe("CellWithCopy", () => {
     expect(await screen.findByText(props.value)).toBeVisible();
   });
 
-  test("Given CellWithCopy When a cell has on click Then it is rendered as a link", async () => {
-    const props = { label: "attribute", value: "someValue", hasRelation: true };
+  test('Given CellWithCopy When a cell has on click Then it is rendered as a link', async () => {
+    const props = { label: 'attribute', value: 'someValue', hasRelation: true };
     const { component, onClickFn } = setup(props);
 
     render(component);
@@ -95,12 +95,12 @@ describe("CellWithCopy", () => {
     expect(onClickFn).toHaveBeenCalledWith(props.value);
   });
 
-  test("Given CellWithCopy When a cell has entity and on click Then it is rendered as a link", async () => {
+  test('Given CellWithCopy When a cell has entity and on click Then it is rendered as a link', async () => {
     const props = {
-      label: "attribute",
-      value: "someValue",
+      label: 'attribute',
+      value: 'someValue',
       hasRelation: true,
-      serviceName: "test_service",
+      serviceName: 'test_service',
     };
     const { component, onClickFn } = setup(props);
 
@@ -115,13 +115,13 @@ describe("CellWithCopy", () => {
     expect(onClickFn).toHaveBeenCalledWith(props.value, props.serviceName);
   });
 
-  test("Given CellWithCopy When a cell has entity, multiple values and on click Then multiple links are rendered", async () => {
-    const [someValue, someOtherValue] = ["someValue", "someOtherValue"];
+  test('Given CellWithCopy When a cell has entity, multiple values and on click Then multiple links are rendered', async () => {
+    const [someValue, someOtherValue] = ['someValue', 'someOtherValue'];
     const props = {
-      label: "attribute",
-      value: "someValue,someOtherValue",
+      label: 'attribute',
+      value: 'someValue,someOtherValue',
       hasRelation: true,
-      serviceName: "test_service",
+      serviceName: 'test_service',
     };
     const { component, onClickFn } = setup(props);
 

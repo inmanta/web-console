@@ -1,9 +1,9 @@
 // Wrap in before() to ensure it runs before any test
 beforeEach(() => {
-  cy.on("uncaught:exception", (err) => {
+  cy.on('uncaught:exception', (err) => {
     // Only ignore the specific Monaco editor disposal error
     console.log(err.message);
-    if (err.message.includes("TextModel")) {
+    if (err.message.includes('TextModel')) {
       return false; // Prevents the error from failing tests
     }
 
@@ -11,5 +11,5 @@ beforeEach(() => {
     return true;
   });
 
-  localStorage.setItem("theme-preference", "light");
+  localStorage.setItem('theme-preference', 'light');
 });

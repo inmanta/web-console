@@ -1,4 +1,4 @@
-import { Maybe, ParsedNumber } from "@/Core/Language";
+import { Maybe, ParsedNumber } from '@/Core/Language';
 
 export interface EnvironmentSettings {
   settings: ValuesMap;
@@ -37,33 +37,33 @@ export interface UnknownDefinition extends BaseDefinition {
 }
 
 export interface BooleanDefinition extends BaseDefinition {
-  type: "bool";
+  type: 'bool';
   default: boolean;
 }
 
 export interface EnumDefinition extends BaseDefinition {
-  type: "enum";
+  type: 'enum';
   default: string;
   allowed_values: string[];
 }
 
 export interface IntDefinition extends BaseDefinition {
-  type: "int";
+  type: 'int';
   default: ParsedNumber;
 }
 
 export interface PositiveFloatDefinition extends BaseDefinition {
-  type: "positive_float";
+  type: 'positive_float';
   default: ParsedNumber;
 }
 
 export interface DictDefinition extends BaseDefinition {
-  type: "dict";
+  type: 'dict';
   default: Dict;
 }
 
 export interface StrDefinition extends BaseDefinition {
-  type: "str";
+  type: 'str';
   default: string;
 }
 
@@ -93,5 +93,5 @@ export type InputInfo =
   | PositiveFloatInputInfo;
 
 export type IsUpdateable = (
-  info: Pick<InputInfo, "initial" | "value" | "default">,
+  info: Pick<InputInfo, 'initial' | 'value' | 'default'>,
 ) => boolean;

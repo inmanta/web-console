@@ -1,1 +1,1 @@
-export { Page as ParametersPage } from "./Page";
+export { Page as ParametersPage } from './Page';

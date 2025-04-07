@@ -1,6 +1,6 @@
-import moment from "moment-timezone";
-import qs from "qs";
-import { Query, RangeOperator } from "@/Core";
+import moment from 'moment-timezone';
+import qs from 'qs';
+import { Query, RangeOperator } from '@/Core';
 
 /**
  * Constructs the URL for fetching desired states based on the provided query parameters.
@@ -10,8 +10,8 @@ import { Query, RangeOperator } from "@/Core";
  * @param timezone - The timezone to use for date conversions (default: guessed timezone).
  * @returns The constructed URL for fetching desired states.
  */
-export function getUrl(
-  { pageSize, filter, currentPage }: Query.SubQuery<"GetDesiredStates">,
+export function getUrl (
+  { pageSize, filter, currentPage }: Query.SubQuery<'GetDesiredStates'>,
   timezone = moment.tz.guess(),
 ): string {
   const defaultFilter = {};
@@ -22,32 +22,32 @@ export function getUrl(
   const filterParam =
     filterWithDefaults && Object.keys(filterWithDefaults).length > 0
       ? `&${qs.stringify(
-          {
-            filter: {
-              status: filterWithDefaults.status,
-              date: filterWithDefaults.date?.map(
-                (timestampWithOperator) =>
-                  `${RangeOperator.serializeOperator(
-                    timestampWithOperator.operator,
-                  )}:${moment
-                    .tz(timestampWithOperator.date, timezone)
-                    .utc()
-                    .format("YYYY-MM-DD+HH:mm:ss")}`,
-              ),
-              version: filterWithDefaults.version?.map(
-                ({ value, operator }) =>
-                  `${RangeOperator.serializeOperator(operator)}:${value}`,
-              ),
-            },
+        {
+          filter: {
+            status: filterWithDefaults.status,
+            date: filterWithDefaults.date?.map(
+              (timestampWithOperator) =>
+                `${RangeOperator.serializeOperator(
+                  timestampWithOperator.operator,
+                )}:${moment
+                  .tz(timestampWithOperator.date, timezone)
+                  .utc()
+                  .format('YYYY-MM-DD+HH:mm:ss')}`,
+            ),
+            version: filterWithDefaults.version?.map(
+              ({ value, operator }) =>
+                `${RangeOperator.serializeOperator(operator)}:${value}`,
+            ),
           },
-          { allowDots: true, arrayFormat: "repeat" },
-        )}`
-      : "";
-  const sortParam = `&sort=version.desc`;
+        },
+        { allowDots: true, arrayFormat: 'repeat' },
+      )}`
+      : '';
+  const sortParam = '&sort=version.desc';
 
   return `/api/v2/desiredstate?limit=${
     pageSize.value
   }${sortParam}${filterParam}${
-    currentPage.value ? `&${currentPage.value}` : ""
+    currentPage.value ? `&${currentPage.value}` : ''
   }`;
 }

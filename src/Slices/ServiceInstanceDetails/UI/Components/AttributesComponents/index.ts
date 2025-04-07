@@ -1,1 +1,1 @@
-export * from "./AttributesViewProvider";
+export * from './AttributesViewProvider';

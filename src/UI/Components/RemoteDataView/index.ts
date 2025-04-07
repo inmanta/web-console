@@ -1,1 +1,1 @@
-export * from "./RemoteDataView";
+export * from './RemoteDataView';

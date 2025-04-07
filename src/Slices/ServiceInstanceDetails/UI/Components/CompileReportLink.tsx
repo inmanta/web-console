@@ -1,8 +1,8 @@
-import React, { useContext } from "react";
-import { Link } from "react-router-dom";
-import { Button } from "@patternfly/react-core";
-import { DependencyContext } from "@/UI/Dependency";
-import { words } from "@/UI/words";
+import React, { useContext } from 'react';
+import { Link } from 'react-router-dom';
+import { Button } from '@patternfly/react-core';
+import { DependencyContext } from '@/UI/Dependency';
+import { words } from '@/UI/words';
 
 interface Props {
   compileId: string;
@@ -28,7 +28,7 @@ export const CompileReportLink: React.FC<Props> = ({ compileId, isExport }) => {
   return (
     <Link
       to={{
-        pathname: routeManager.getUrl("CompileDetails", {
+        pathname: routeManager.getUrl('CompileDetails', {
           id: compileId,
         }),
         search: location.search,
@@ -36,8 +36,8 @@ export const CompileReportLink: React.FC<Props> = ({ compileId, isExport }) => {
     >
       <Button variant="link" isInline>
         {isExport
-          ? words("instanceDetails.events.exportReport")
-          : words("instanceDetails.events.validationReport")}
+          ? words('instanceDetails.events.exportReport')
+          : words('instanceDetails.events.validationReport')}
       </Button>
     </Link>
   );

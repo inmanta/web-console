@@ -1,11 +1,11 @@
-import { Route } from "@/Core";
+import { Route } from '@/Core';
 
-export const path = "/lsm/catalog/:service/inventory";
+export const path = '/lsm/catalog/:service/inventory';
 
-export const route = (base: string): Route<"Inventory"> => ({
-  kind: "Inventory",
-  parent: "Catalog",
+export const route = (base: string): Route<'Inventory'> => ({
+  kind: 'Inventory',
+  parent: 'Catalog',
   path: `${base}${path}`,
   generateLabel: (params) => `Service Inventory: ${params.service}`,
-  environmentRole: "Required",
+  environmentRole: 'Required',
 });

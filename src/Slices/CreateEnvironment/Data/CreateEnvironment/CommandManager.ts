@@ -1,32 +1,32 @@
-import { ApiHelper, Command, Either, EnvironmentModel, Updater } from "@/Core";
-import { CommandManagerWithoutEnv } from "@/Data/Common";
-import { CreateEnvironmentParams } from "@S/CreateEnvironment/Core/CreateEnvironmentCommand";
+import { ApiHelper, Command, Either, EnvironmentModel, Updater } from '@/Core';
+import { CommandManagerWithoutEnv } from '@/Data/Common';
+import { CreateEnvironmentParams } from '@S/CreateEnvironment/Core/CreateEnvironmentCommand';
 
-export class CreateEnvironmentCommandManager extends CommandManagerWithoutEnv<"CreateEnvironment"> {
-  constructor(
+export class CreateEnvironmentCommandManager extends CommandManagerWithoutEnv<'CreateEnvironment'> {
+  constructor (
     private readonly apiHelper: ApiHelper,
-    private readonly environmentsUpdater: Updater<"GetEnvironments">,
+    private readonly environmentsUpdater: Updater<'GetEnvironments'>,
   ) {
     super(
-      "CreateEnvironment",
+      'CreateEnvironment',
       (command) => (body) => this.submit(command, body),
     );
   }
 
-  private async submit(
-    command: Command.SubCommand<"CreateEnvironment">,
+  private async submit (
+    command: Command.SubCommand<'CreateEnvironment'>,
     body: CreateEnvironmentParams,
   ): Promise<
-    Either.Type<Command.Error<"CreateEnvironment">, { data: EnvironmentModel }>
-  > {
+      Either.Type<Command.Error<'CreateEnvironment'>, { data: EnvironmentModel }>
+    > {
     const result = await this.apiHelper.putWithoutEnvironment<
       { data: EnvironmentModel },
-      Command.Body<"CreateEnvironment">
+      Command.Body<'CreateEnvironment'>
     >(this.getUrl(), body);
 
     if (Either.isRight(result)) {
       await this.environmentsUpdater.update({
-        kind: "GetEnvironments",
+        kind: 'GetEnvironments',
         details: false,
       });
     }
@@ -34,7 +34,7 @@ export class CreateEnvironmentCommandManager extends CommandManagerWithoutEnv<"C
     return result;
   }
 
-  private getUrl(): string {
-    return `/api/v2/environment`;
+  private getUrl (): string {
+    return '/api/v2/environment';
   }
 }

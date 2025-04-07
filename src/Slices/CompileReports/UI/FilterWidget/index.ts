@@ -1,1 +1,1 @@
-export * from "./CompileReportsFilterWidget";
+export * from './CompileReportsFilterWidget';

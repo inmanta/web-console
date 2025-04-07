@@ -1,2 +1,2 @@
-export * from "./DeleteEnvironmentCommandManager";
-export * from "./Updater";
+export * from './DeleteEnvironmentCommandManager';
+export * from './Updater';

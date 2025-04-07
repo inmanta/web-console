@@ -1,13 +1,13 @@
-import { AttributeAnnotations } from "@/Core";
-import { AttributeTree } from "@/UI/Components/TreeTable/types";
-import { MultiAttributeNodeDict } from "./AttributeNode";
+import { AttributeAnnotations } from '@/Core';
+import { AttributeTree } from '@/UI/Components/TreeTable/types';
+import { MultiAttributeNodeDict } from './AttributeNode';
 
 export interface AttributeHelper<Kind extends AttributeTree> {
-  getPaths(attributes: Kind["source"]): string[];
+  getPaths(attributes: Kind['source']): string[];
 
   getAttributeAnnotations(key: string): AttributeAnnotations;
 
   getMultiAttributeNodes(
-    attributes: Kind["source"],
-  ): MultiAttributeNodeDict<Kind["target"]>;
+    attributes: Kind['source'],
+  ): MultiAttributeNodeDict<Kind['target']>;
 }

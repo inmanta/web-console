@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   MenuToggle,
   MenuToggleElement,
   Select,
   SelectOption,
-} from "@patternfly/react-core";
-import { ServiceInstanceParams } from "@/Core";
+} from '@patternfly/react-core';
+import { ServiceInstanceParams } from '@/Core';
 
 interface Props {
   attributeSet: ServiceInstanceParams.AttributeSet | undefined;
@@ -31,11 +31,11 @@ export const AttributeSetPicker: React.FC<Props> = ({
       aria-label="Select AttributeSet"
       style={
         {
-          width: "200px",
+          width: '200px',
         } as React.CSSProperties
       }
     >
-      {attributeSet || "Select an AttributeSet..."}
+      {attributeSet || 'Select an AttributeSet...'}
     </MenuToggle>
   );
 

@@ -1,13 +1,13 @@
-import { shapes } from "@inmanta/rappid";
+import { shapes } from '@inmanta/rappid';
 import {
   t_global_background_color_primary_default,
   t_global_border_color_200,
   t_global_font_size_body_default,
   t_global_text_color_regular,
-} from "@patternfly/react-tokens";
-import { v4 as uuidv4 } from "uuid";
-import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from "@/Core";
-import { HeaderColor, StencilState } from "../interfaces";
+} from '@patternfly/react-tokens';
+import { v4 as uuidv4 } from 'uuid';
+import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from '@/Core';
+import { HeaderColor, StencilState } from '../interfaces';
 
 /**
  * It recursively goes through embedded entities in the service model or embedded entity and creates stencil elements for each of them.
@@ -21,7 +21,7 @@ export const transformEmbeddedToStencilElements = (
   service: ServiceModel | EmbeddedEntity,
 ): shapes.standard.Path[] => {
   return service.embedded_entities
-    .filter((embedded_entity) => embedded_entity.modifier !== "r") // filter out read-only embedded entities from the stencil as they can't be created by the user
+    .filter((embedded_entity) => embedded_entity.modifier !== 'r') // filter out read-only embedded entities from the stencil as they can't be created by the user
     .flatMap((embedded_entity, index) => {
       const stencilElement = createStencilElement(
         embedded_entity.name,
@@ -64,7 +64,7 @@ export const createStencilElement = (
   }
 
   return new shapes.standard.Path({
-    type: "standard.Path",
+    type: 'standard.Path',
     size: { width: 240, height: 40 },
     name: name,
     serviceModel,
@@ -74,29 +74,29 @@ export const createStencilElement = (
     id,
     attrs: {
       body: {
-        "aria-labelledby": "body_" + name,
+        'aria-labelledby': 'body_' + name,
         width: 7,
         height: 40,
         x: 233,
         fill: isEmbeddedEntity ? HeaderColor.EMBEDDED : HeaderColor.RELATION,
-        stroke: "none",
+        stroke: 'none',
       },
       bodyTwo: {
-        "aria-labelledby": "bodyTwo_" + name,
+        'aria-labelledby': 'bodyTwo_' + name,
         width: 240,
         height: 40,
         fill: t_global_background_color_primary_default.var,
-        stroke: "none",
+        stroke: 'none',
       },
       label: {
-        "aria-labelledby": "text_" + name,
+        'aria-labelledby': 'text_' + name,
         refX: undefined, // reset the default
-        x: "10",
-        textAnchor: "start",
-        fontFamily: "sans-serif",
+        x: '10',
+        textAnchor: 'start',
+        fontFamily: 'sans-serif',
         fontSize: t_global_font_size_body_default.var,
         text:
-          "type" in serviceModel && serviceModel.type
+          'type' in serviceModel && serviceModel.type
             ? serviceModel.type
             : name,
         fill: t_global_text_color_regular.var,
@@ -107,7 +107,7 @@ export const createStencilElement = (
         x: 0,
         y: 39,
         fill: t_global_border_color_200.var,
-        stroke: "none",
+        stroke: 'none',
       },
       borderTop: {
         width: 233,
@@ -115,29 +115,29 @@ export const createStencilElement = (
         x: 0,
         y: 0,
         fill: t_global_border_color_200.var,
-        stroke: "none",
+        stroke: 'none',
       },
     },
     markup: [
       {
-        tagName: "rect",
-        selector: "bodyTwo",
+        tagName: 'rect',
+        selector: 'bodyTwo',
       },
       {
-        tagName: "rect",
-        selector: "body",
+        tagName: 'rect',
+        selector: 'body',
       },
       {
-        tagName: "text",
-        selector: "label",
+        tagName: 'text',
+        selector: 'label',
       },
       {
-        tagName: "rect",
-        selector: "borderBottom",
+        tagName: 'rect',
+        selector: 'borderBottom',
       },
       {
-        tagName: "rect",
-        selector: "borderTop",
+        tagName: 'rect',
+        selector: 'borderTop',
       },
     ],
   });
@@ -161,15 +161,15 @@ export const toggleDisabledStencil = (
   const elements = [
     {
       selector: `[aria-labelledby="body_${stencilName}"]`,
-      className: "stencil_accent-disabled",
+      className: 'stencil_accent-disabled',
     },
     {
       selector: `[aria-labelledby="bodyTwo_${stencilName}"]`,
-      className: "stencil_body-disabled",
+      className: 'stencil_body-disabled',
     },
     {
       selector: `[aria-labelledby="text_${stencilName}"]`,
-      className: "stencil_text-disabled",
+      className: 'stencil_text-disabled',
     },
   ];
 
@@ -198,7 +198,7 @@ export const createStencilState = (
   serviceModel.embedded_entities.forEach((entity) => {
     stencilState[entity.name] = {
       min: entity.lower_limit,
-      max: entity.modifier === "rw" && isInEditMode ? 0 : entity.upper_limit,
+      max: entity.modifier === 'rw' && isInEditMode ? 0 : entity.upper_limit,
       currentAmount: 0,
     };
     if (entity.embedded_entities) {

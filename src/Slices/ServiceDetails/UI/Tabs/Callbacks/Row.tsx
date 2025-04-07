@@ -1,13 +1,13 @@
-import React from "react";
-import { Button, Content, Tooltip } from "@patternfly/react-core";
-import { AngleDownIcon, AngleRightIcon } from "@patternfly/react-icons";
-import { ExpandableRowContent, Tbody, Td, Tr } from "@patternfly/react-table";
-import { getShortUuidFromRaw } from "@/Core";
-import { TextWithCopy } from "@/UI/Components";
-import { words } from "@/UI/words";
-import { Callback } from "@S/ServiceDetails/Core/Callback";
-import { DeleteButton } from "./DeleteButton";
-import { Details } from "./Details";
+import React from 'react';
+import { Button, Content, Tooltip } from '@patternfly/react-core';
+import { AngleDownIcon, AngleRightIcon } from '@patternfly/react-icons';
+import { ExpandableRowContent, Tbody, Td, Tr } from '@patternfly/react-table';
+import { getShortUuidFromRaw } from '@/Core';
+import { TextWithCopy } from '@/UI/Components';
+import { words } from '@/UI/words';
+import { Callback } from '@S/ServiceDetails/Core/Callback';
+import { DeleteButton } from './DeleteButton';
+import { Details } from './Details';
 
 interface Props {
   callback: Callback;
@@ -44,7 +44,7 @@ export const Row: React.FC<Props> = ({
           <Tooltip content={callback.callback_id}>
             <TextWithCopy
               value={callback.callback_id}
-              tooltipContent={words("catalog.callbacks.uuid.copy")}
+              tooltipContent={words('catalog.callbacks.uuid.copy')}
             >
               {shortUuid}
             </TextWithCopy>
@@ -52,7 +52,7 @@ export const Row: React.FC<Props> = ({
         </Td>
         <Td>{callback.minimal_log_level_text}</Td>
         <Td>
-          {callback.event_types && callback.event_types.length + " Event Types"}
+          {callback.event_types && callback.event_types.length + ' Event Types'}
         </Td>
         <Td>
           <DeleteButton

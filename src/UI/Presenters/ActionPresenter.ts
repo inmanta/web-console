@@ -1,4 +1,4 @@
-import { ReactElement } from "react";
+import { ReactElement } from 'react';
 
 /**
  * An ActionPresenter is responsible for presenting actions.

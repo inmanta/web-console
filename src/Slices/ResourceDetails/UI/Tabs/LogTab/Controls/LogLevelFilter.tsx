@@ -1,9 +1,9 @@
-import React from "react";
-import { SelectOptionProps, ToolbarFilter } from "@patternfly/react-core";
-import { LogLevelsList } from "@/Core";
-import { SingleTextSelect } from "@/UI/Components";
-import { words } from "@/UI/words";
-import { ResourceLogFilter } from "@S/ResourceDetails/Core/ResourceLog";
+import React from 'react';
+import { SelectOptionProps, ToolbarFilter } from '@patternfly/react-core';
+import { LogLevelsList } from '@/Core';
+import { SingleTextSelect } from '@/UI/Components';
+import { words } from '@/UI/words';
+import { ResourceLogFilter } from '@S/ResourceDetails/Core/ResourceLog';
 
 interface Props {
   filter: ResourceLogFilter;
@@ -21,7 +21,7 @@ export const LogLevelFilter: React.FC<Props> = ({ filter, setFilter }) => {
     });
 
   const onSelect = (selection) => {
-    update(selection === null || selection === "" ? undefined : selection);
+    update(selection === null || selection === '' ? undefined : selection);
   };
 
   const deleteChip = () =>
@@ -41,7 +41,7 @@ export const LogLevelFilter: React.FC<Props> = ({ filter, setFilter }) => {
         selected={filter.minimal_log_level || null}
         setSelected={onSelect}
         toggleAriaLabel="MinimalLogLevel"
-        placeholderText={words("resources.logs.logLevel.placeholder")}
+        placeholderText={words('resources.logs.logLevel.placeholder')}
       />
     </ToolbarFilter>
   );

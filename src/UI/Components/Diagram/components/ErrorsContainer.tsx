@@ -1,9 +1,9 @@
-import React, { useContext } from "react";
-import { Content } from "@patternfly/react-core";
-import { words } from "@/UI/words";
-import { ErrorMessageContainer } from "../../ErrorMessageContainer";
-import { CanvasContext } from "../Context";
-import { RelationCounterForCell } from "../interfaces";
+import React, { useContext } from 'react';
+import { Content } from '@patternfly/react-core';
+import { words } from '@/UI/words';
+import { ErrorMessageContainer } from '../../ErrorMessageContainer';
+import { CanvasContext } from '../Context';
+import { RelationCounterForCell } from '../interfaces';
 
 /**
  * Validation component that currently checks for missing inter-service relations on the canvas and displays an alert if any are found.
@@ -32,7 +32,7 @@ export const ErrorsContainer: React.FC = () => {
 
   return (
     <ErrorMessageContainer
-      title={words("validation.title")(
+      title={words('validation.title')(
         interServiceRelationsThatAreMissing.length,
       )}
     >
@@ -66,7 +66,7 @@ const MissingRelationsForGivenCell: React.FC<Props> = ({ entity }) => {
       key={`missingRelationsParagraph-${name}_${relation.name}_${index}`}
       aria-label={`missingRelationsParagraph-${name}_${relation.name}_${index}`}
     >
-      {words("instanceComposer.missingRelations")(
+      {words('instanceComposer.missingRelations')(
         name,
         Number(relation.min),
         relation.name,

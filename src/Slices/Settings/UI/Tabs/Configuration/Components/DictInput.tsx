@@ -1,32 +1,32 @@
-import React, { useState } from "react";
-import { Flex, FlexItem } from "@patternfly/react-core";
-import { EnvironmentSettings, Maybe } from "@/Core";
-import { DictEditor, Entry, Dict } from "@/UI/Components";
-import { Row } from "./Row";
-import { Warning } from "./Warning";
+import React, { useState } from 'react';
+import { Flex, FlexItem } from '@patternfly/react-core';
+import { EnvironmentSettings, Maybe } from '@/Core';
+import { DictEditor, Entry, Dict } from '@/UI/Components';
+import { Row } from './Row';
+import { Warning } from './Warning';
 
 interface Props {
   info: EnvironmentSettings.DictInputInfo;
 }
 
 export const DictInputWithRow: React.FC<Props> = ({ info }) => {
-  const [newEntry, setNewEntry] = useState<Entry>(["", ""]);
+  const [newEntry, setNewEntry] = useState<Entry>(['', '']);
   const customInfo = {
     ...info,
-    update: async (value: EnvironmentSettings.DictInputInfo["value"]) => {
+    update: async (value: EnvironmentSettings.DictInputInfo['value']) => {
       const error = await info.update({
         ...value,
         ...getSanitizedNewEntry(newEntry),
       });
 
-      if (Maybe.isNone(error)) setNewEntry(["", ""]);
+      if (Maybe.isNone(error)) setNewEntry(['', '']);
 
       return error;
     },
     reset: async () => {
       const error = await info.reset();
 
-      if (Maybe.isNone(error)) setNewEntry(["", ""]);
+      if (Maybe.isNone(error)) setNewEntry(['', '']);
 
       return error;
     },
@@ -37,8 +37,8 @@ export const DictInputWithRow: React.FC<Props> = ({ info }) => {
 
   return (
     <Row info={customInfo}>
-      <Flex direction={{ default: "row" }}>
-        <FlexItem grow={{ default: "grow" }}>
+      <Flex direction={{ default: 'row' }}>
+        <FlexItem grow={{ default: 'grow' }}>
           <DictEditor
             value={info.value}
             setValue={info.set}
@@ -48,7 +48,7 @@ export const DictInputWithRow: React.FC<Props> = ({ info }) => {
           />
         </FlexItem>
 
-        <FlexItem style={{ minWidth: "20px" }}>
+        <FlexItem style={{ minWidth: '20px' }}>
           {customInfo.isUpdateable() && <Warning />}
         </FlexItem>
       </Flex>

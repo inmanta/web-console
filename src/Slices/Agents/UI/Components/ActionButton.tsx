@@ -1,9 +1,9 @@
-import React, { useContext } from "react";
-import { Button } from "@patternfly/react-core";
-import { Maybe } from "@/Core";
-import { DependencyContext, words } from "@/UI";
-import { ActionDisabledTooltip } from "@/UI/Components";
-import { GetAgentsContext } from "@S/Agents/UI/GetAgentsContext";
+import React, { useContext } from 'react';
+import { Button } from '@patternfly/react-core';
+import { Maybe } from '@/Core';
+import { DependencyContext, words } from '@/UI';
+import { ActionDisabledTooltip } from '@/UI/Components';
+import { GetAgentsContext } from '@S/Agents/UI/GetAgentsContext';
 
 interface Props {
   name: string;
@@ -15,14 +15,14 @@ export const ActionButton: React.FC<Props> = ({ name, paused }) => {
     useContext(DependencyContext);
   const { filter, sort, pageSize, currentPage, setErrorMessage } =
     useContext(GetAgentsContext);
-  const agentActionTrigger = commandResolver.useGetTrigger<"ControlAgent">({
-    kind: "ControlAgent",
+  const agentActionTrigger = commandResolver.useGetTrigger<'ControlAgent'>({
+    kind: 'ControlAgent',
     name,
-    action: paused ? "unpause" : "pause",
+    action: paused ? 'unpause' : 'pause',
   });
   const onSubmit = async () => {
     const result = await agentActionTrigger({
-      kind: "GetAgents",
+      kind: 'GetAgents',
       filter,
       sort,
       pageSize,
@@ -38,8 +38,8 @@ export const ActionButton: React.FC<Props> = ({ name, paused }) => {
   return (
     <ActionDisabledTooltip
       isDisabled={isHalted}
-      testingId={"agentAction"}
-      tooltipContent={words("environment.halt.tooltip")}
+      testingId={'agentAction'}
+      tooltipContent={words('environment.halt.tooltip')}
     >
       <Button
         variant="secondary"
@@ -49,8 +49,8 @@ export const ActionButton: React.FC<Props> = ({ name, paused }) => {
         onClick={onSubmit}
       >
         {paused
-          ? words("agents.actions.unpause")
-          : words("agents.actions.pause")}
+          ? words('agents.actions.unpause')
+          : words('agents.actions.pause')}
       </Button>
     </ActionDisabledTooltip>
   );

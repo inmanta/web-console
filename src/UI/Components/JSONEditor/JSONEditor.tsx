@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { Editor, OnValidate, useMonaco } from "@monaco-editor/react";
-import { Spinner } from "@patternfly/react-core";
+import React, { useEffect, useState } from 'react';
+import { Editor, OnValidate, useMonaco } from '@monaco-editor/react';
+import { Spinner } from '@patternfly/react-core';
 
-import { useGetJSONSchema } from "@/Data/Managers/V2/ServiceInstance";
-import { words } from "@/UI";
-import { getThemePreference } from "../DarkmodeOption";
-import { ErrorMessageContainer } from "../ErrorMessageContainer";
+import { useGetJSONSchema } from '@/Data/Managers/V2/ServiceInstance';
+import { words } from '@/UI';
+import { getThemePreference } from '../DarkmodeOption';
+import { ErrorMessageContainer } from '../ErrorMessageContainer';
 
 interface Props {
   service_entity: string;
@@ -35,7 +35,7 @@ export const JSONEditor: React.FC<Props> = ({
   onChange,
   readOnly = false,
 }) => {
-  const preferedTheme = getThemePreference() || "light";
+  const preferedTheme = getThemePreference() || 'light';
 
   const [isLoading, setIsLoading] = useState(true);
   const [editorState, setEditorState] = useState<string>(data);
@@ -96,12 +96,12 @@ export const JSONEditor: React.FC<Props> = ({
       });
       monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
         validate: true,
-        schemaValidation: "error",
+        schemaValidation: 'error',
         schemas: [
           {
             schema: schema.data,
-            fileMatch: ["*"],
-            uri: "",
+            fileMatch: ['*'],
+            uri: '',
           },
         ],
       });
@@ -117,8 +117,8 @@ export const JSONEditor: React.FC<Props> = ({
   ) : (
     <div data-testid="JSON-Editor-Wrapper">
       <Editor
-        height={"calc(100vh - 550px)"}
-        width={"100%"}
+        height={'calc(100vh - 550px)'}
+        width={'100%'}
         defaultLanguage="json"
         defaultValue={data}
         value={editorState}
@@ -128,7 +128,7 @@ export const JSONEditor: React.FC<Props> = ({
         options={{ domReadOnly: readOnly, readOnly: readOnly }}
       />
       {!readOnly && errors.length > 0 && (
-        <ErrorMessageContainer title={words("validation.title")(errors.length)}>
+        <ErrorMessageContainer title={words('validation.title')(errors.length)}>
           {errors.map((error, index) => (
             <p key={index}>{error}</p>
           ))}

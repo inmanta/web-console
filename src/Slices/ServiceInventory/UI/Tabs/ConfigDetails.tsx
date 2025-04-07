@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState } from 'react';
 import {
   Button,
   Card,
@@ -7,12 +7,12 @@ import {
   CardHeader,
   Title,
   Tooltip,
-} from "@patternfly/react-core";
-import { Config, VersionedServiceInstanceIdentifier } from "@/Core";
-import { usePostInstanceConfig } from "@/Data/Managers/V2/ServiceInstance";
-import { DefaultSwitch, EmptyView, SettingsList } from "@/UI/Components";
-import { DependencyContext } from "@/UI/Dependency";
-import { words } from "@/UI/words";
+} from '@patternfly/react-core';
+import { Config, VersionedServiceInstanceIdentifier } from '@/Core';
+import { usePostInstanceConfig } from '@/Data/Managers/V2/ServiceInstance';
+import { DefaultSwitch, EmptyView, SettingsList } from '@/UI/Components';
+import { DependencyContext } from '@/UI/Dependency';
+import { words } from '@/UI/words';
 
 interface Props {
   config: Config;
@@ -39,7 +39,7 @@ export const ConfigDetails: React.FC<Props> = ({
   return Object.keys(config).length <= 0 ? (
     <Card isPlain>
       <CardBody>
-        <EmptyView message={words("config.empty")} />
+        <EmptyView message={words('config.empty')} />
       </CardBody>
     </Card>
   ) : (
@@ -48,16 +48,16 @@ export const ConfigDetails: React.FC<Props> = ({
         onExpand={onExpand}
         isToggleRightAligned
         toggleButtonProps={{
-          id: "toggle-button-config",
-          "aria-label": "Config",
-          "aria-labelledby": "config-expandable-card toggle-button-config",
-          "aria-expanded": isExpanded,
+          id: 'toggle-button-config',
+          'aria-label': 'Config',
+          'aria-labelledby': 'config-expandable-card toggle-button-config',
+          'aria-expanded': isExpanded,
         }}
         actions={{
           actions: (
             <>
               <Tooltip
-                content={words("config.reset.description")}
+                content={words('config.reset.description')}
                 entryDelay={200}
               >
                 <Button
@@ -69,7 +69,7 @@ export const ConfigDetails: React.FC<Props> = ({
                     })
                   }
                 >
-                  {words("config.reset")}
+                  {words('config.reset')}
                 </Button>
               </Tooltip>
             </>

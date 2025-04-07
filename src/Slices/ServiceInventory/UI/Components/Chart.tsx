@@ -1,7 +1,7 @@
-import React from "react";
-import styled from "styled-components";
-import { InstanceSummary } from "@/Core";
-import { SummaryChart } from "@/UI/Components";
+import React from 'react';
+import styled from 'styled-components';
+import { InstanceSummary } from '@/Core';
+import { SummaryChart } from '@/UI/Components';
 
 interface Props {
   summary?: InstanceSummary | null;

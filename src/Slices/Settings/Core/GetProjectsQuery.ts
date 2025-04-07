@@ -1,7 +1,7 @@
-import { ProjectModel } from "@/Core/Domain";
+import { ProjectModel } from '@/Core/Domain';
 
 export interface Query {
-  kind: "GetProjects";
+  kind: 'GetProjects';
   environmentDetails: boolean;
 }
 

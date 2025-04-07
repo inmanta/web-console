@@ -1,4 +1,4 @@
-export function parseNumberWithType(
+export function parseNumberWithType (
   type: string,
   value: string,
 ): bigint | number | string | null {
@@ -16,7 +16,7 @@ export function parseNumberWithType(
 
       return number;
     }
-    if (type.includes("int") || Number.isNaN(number)) return value;
+    if (type.includes('int') || Number.isNaN(number)) return value;
 
     return number;
   } catch (_e) {

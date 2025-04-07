@@ -1,1 +1,1 @@
-export * as ComplianceCheck from "./Core/Route";
+export * as ComplianceCheck from './Core/Route';

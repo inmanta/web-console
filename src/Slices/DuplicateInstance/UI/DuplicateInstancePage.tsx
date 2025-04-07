@@ -1,9 +1,9 @@
-import React, { PropsWithChildren } from "react";
-import { ServiceModel } from "@/Core";
-import { useGetInstance } from "@/Data/Managers/V2/ServiceInstance";
-import { Description, ErrorView, LoadingView } from "@/UI/Components";
-import { words } from "@/UI/words";
-import { DuplicateForm } from "./DuplicateForm";
+import React, { PropsWithChildren } from 'react';
+import { ServiceModel } from '@/Core';
+import { useGetInstance } from '@/Data/Managers/V2/ServiceInstance';
+import { Description, ErrorView, LoadingView } from '@/UI/Components';
+import { words } from '@/UI/words';
+import { DuplicateForm } from './DuplicateForm';
 
 /**
  * DuplicateInstancePage component fetches the instance data based on the provided service entity and instance ID.
@@ -58,7 +58,7 @@ const Wrapper: React.FC<PropsWithChildren<{ id: string }>> = ({
   return (
     <>
       <Description withSpace>
-        {words("inventory.duplicateInstance.header")(id)}
+        {words('inventory.duplicateInstance.header')(id)}
       </Description>
       {children}
     </>

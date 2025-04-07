@@ -1,26 +1,26 @@
-import React, { useEffect, useState } from "react";
-import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
-import { Sort } from "@/Core";
-import { Order } from "@/Core/Domain/Sort";
-import { ColumnHead } from "@/UI/Presenters";
-import { MomentDatePresenter } from "@/UI/Utils";
-import { words } from "@/UI/words";
-import { Fact } from "@S/Facts/Core/Domain";
+import React, { useEffect, useState } from 'react';
+import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
+import { Sort } from '@/Core';
+import { Order } from '@/Core/Domain/Sort';
+import { ColumnHead } from '@/UI/Presenters';
+import { MomentDatePresenter } from '@/UI/Utils';
+import { words } from '@/UI/words';
+import { Fact } from '@S/Facts/Core/Domain';
 
-type FactRow = Pick<Fact, "id" | "name" | "updated" | "value">;
+type FactRow = Pick<Fact, 'id' | 'name' | 'updated' | 'value'>;
 
 interface Props {
   facts: FactRow[];
 }
 
 const factsColumnHeads: ColumnHead[] = [
-  { apiName: "name", displayName: words("resources.facts.columns.name") },
-  { apiName: "updated", displayName: words("resources.facts.columns.updated") },
-  { apiName: "value", displayName: words("resources.facts.columns.value") },
+  { apiName: 'name', displayName: words('resources.facts.columns.name') },
+  { apiName: 'updated', displayName: words('resources.facts.columns.updated') },
+  { apiName: 'value', displayName: words('resources.facts.columns.value') },
 ];
 
 export const FactsTable: React.FC<Props> = ({ facts }) => {
-  const [sort, setSort] = useState<Sort.Type>({ name: "name", order: "asc" });
+  const [sort, setSort] = useState<Sort.Type>({ name: 'name', order: 'asc' });
   const [rows, setRows] = useState(sortFactRows(facts, sort.name, sort.order));
   const onSort = (event, index, direction) => {
     const updatedSortColumn = indexToColumnName(index);
@@ -47,7 +47,7 @@ export const FactsTable: React.FC<Props> = ({ facts }) => {
                 sortBy: {
                   index: columnNameToIndex(sort.name),
                   direction: sort.order,
-                  defaultDirection: "asc",
+                  defaultDirection: 'asc',
                 },
                 columnIndex: idx,
                 onSort,
@@ -73,30 +73,30 @@ export const FactsTable: React.FC<Props> = ({ facts }) => {
   );
 };
 
-function indexToColumnName(index: number): string {
+function indexToColumnName (index: number): string {
   const columns = factsColumnHeads.map((head) => head.apiName);
 
   return columns[index];
 }
 
-function columnNameToIndex(columnName: string): number {
+function columnNameToIndex (columnName: string): number {
   const columns = factsColumnHeads.map((head) => head.apiName);
 
   return columns.indexOf(columnName);
 }
 
-export function sortFactRows(
+export function sortFactRows (
   rows: FactRow[],
   columnName: string,
   direction: Order,
 ): FactRow[] {
   return rows.sort((a: FactRow, b: FactRow) => {
     // sort by date
-    if (columnName === "updated") {
+    if (columnName === 'updated') {
       const aDate = coalesceDateToMin(a[columnName]);
       const bDate = coalesceDateToMin(b[columnName]);
 
-      if (direction === "asc") {
+      if (direction === 'asc') {
         return aDate - bDate;
       }
 
@@ -105,7 +105,7 @@ export function sortFactRows(
       const aValue = a[columnName];
       const bValue = b[columnName];
 
-      if (direction === "asc") {
+      if (direction === 'asc') {
         return aValue.localeCompare(bValue);
       }
 
@@ -114,7 +114,7 @@ export function sortFactRows(
   });
 }
 
-function coalesceDateToMin(date?: string) {
+function coalesceDateToMin (date?: string) {
   const definedDate = date ? date : 0;
 
   return new Date(definedDate).getTime();

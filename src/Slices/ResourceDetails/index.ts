@@ -1,1 +1,1 @@
-export * as ResourceDetails from "./Core/Route";
+export * as ResourceDetails from './Core/Route';

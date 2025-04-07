@@ -1,1 +1,1 @@
-export * as Facts from "./Core/Route";
+export * as Facts from './Core/Route';

@@ -1,11 +1,11 @@
-import { UseQueryResult, useQuery } from "@tanstack/react-query";
-import { CompileStatus, Sort, PageSize, Pagination } from "@/Core/Domain";
-import { DateRange } from "@/Core/Domain";
-import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import { getPaginationHandlers } from "@/Data/Managers/Helpers";
-import { CompileReport } from "@/Slices/CompileReports/Core/Domain";
-import { CustomError, useGet } from "../../helpers";
-import { getUrl } from "./getUrl";
+import { UseQueryResult, useQuery } from '@tanstack/react-query';
+import { CompileStatus, Sort, PageSize, Pagination } from '@/Core/Domain';
+import { DateRange } from '@/Core/Domain';
+import { CurrentPage } from '@/Data/Common/UrlState/useUrlStateWithCurrentPage';
+import { getPaginationHandlers } from '@/Data/Managers/Helpers';
+import { CompileReport } from '@/Slices/CompileReports/Core/Domain';
+import { CustomError, useGet } from '../../helpers';
+import { getUrl } from './getUrl';
 
 interface Filter {
   requested?: DateRange.DateRange[];
@@ -53,7 +53,7 @@ export const useGetCompileReports = (
     useOneTime: (): UseQueryResult<HookResponse, CustomError> =>
       useQuery({
         queryKey: [
-          "get_compile_reports-one_time",
+          'get_compile_reports-one_time',
           params.filter,
           params.sort,
           params.pageSize,
@@ -68,7 +68,7 @@ export const useGetCompileReports = (
     useContinuous: (): UseQueryResult<HookResponse, CustomError> =>
       useQuery({
         queryKey: [
-          "get_compile_reports-continuous",
+          'get_compile_reports-continuous',
           params.filter,
           params.sort,
           params.pageSize,

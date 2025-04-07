@@ -1,15 +1,15 @@
-import { Scheduler, ApiHelper, stringifyObjectOrUndefined } from "@/Core";
-import { getPaginationHandlers, QueryManager } from "@/Data/Managers/Helpers";
-import { Store } from "@/Data/Store";
-import { StateHelper } from "./StateHelper";
-import { getUrl } from "./getUrl";
+import { Scheduler, ApiHelper, stringifyObjectOrUndefined } from '@/Core';
+import { getPaginationHandlers, QueryManager } from '@/Data/Managers/Helpers';
+import { Store } from '@/Data/Store';
+import { StateHelper } from './StateHelper';
+import { getUrl } from './getUrl';
 
-export function GetFactsQueryManager(
+export function GetFactsQueryManager (
   store: Store,
   apiHelper: ApiHelper,
   scheduler: Scheduler,
 ) {
-  return QueryManager.ContinuousWithEnv<"GetFacts">(
+  return QueryManager.ContinuousWithEnv<'GetFacts'>(
     apiHelper,
     StateHelper(store),
     scheduler,
@@ -22,10 +22,10 @@ export function GetFactsQueryManager(
       stringifyObjectOrUndefined(filter),
       stringifyObjectOrUndefined(currentPage.value),
     ],
-    "GetFacts",
+    'GetFacts',
     getUrl,
     ({ data, links, metadata }) => {
-      if (typeof links === "undefined") {
+      if (typeof links === 'undefined') {
         return { data: data, handlers: {}, metadata };
       }
 

@@ -1,14 +1,14 @@
-import React from "react";
-import { Content, Flex, FlexItem, Icon } from "@patternfly/react-core";
-import { ArrowsAltHIcon } from "@patternfly/react-icons";
-import { Diff } from "@/Core";
+import React from 'react';
+import { Content, Flex, FlexItem, Icon } from '@patternfly/react-core';
+import { ArrowsAltHIcon } from '@patternfly/react-icons';
+import { Diff } from '@/Core';
 
 export const Versus: React.FC<Diff.Identifiers> = ({ from, to }) => (
   <Flex
-    direction={{ default: "row" }}
-    alignItems={{ default: "alignItemsBaseline" }}
-    fullWidth={{ default: "fullWidth" }}
-    justifyContent={{ default: "justifyContentCenter" }}
+    direction={{ default: 'row' }}
+    alignItems={{ default: 'alignItemsBaseline' }}
+    fullWidth={{ default: 'fullWidth' }}
+    justifyContent={{ default: 'justifyContentCenter' }}
   >
     <FlexItem>
       <Content component="h2">{from}</Content>

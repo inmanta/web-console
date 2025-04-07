@@ -1,1 +1,1 @@
-export * as DiscoveredResources from "./Core/Route";
+export * as DiscoveredResources from './Core/Route';

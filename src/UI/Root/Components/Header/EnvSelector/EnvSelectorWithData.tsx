@@ -1,11 +1,11 @@
-import React from "react";
-import { Alert, Dropdown, MenuToggle } from "@patternfly/react-core";
-import { FlatEnvironment, RemoteData } from "@/Core";
-import { words } from "@/UI/words";
+import React from 'react';
+import { Alert, Dropdown, MenuToggle } from '@patternfly/react-core';
+import { FlatEnvironment, RemoteData } from '@/Core';
+import { words } from '@/UI/words';
 import {
   EnvironmentSelectorItem,
   EnvSelectorWrapper,
-} from "./EnvSelectorWrapper";
+} from './EnvSelectorWrapper';
 
 interface Props {
   environments: RemoteData.Type<string, FlatEnvironment[]>;
@@ -35,11 +35,11 @@ export const EnvSelectorWithData: React.FC<Props> = ({
         <>
           <Dropdown
             aria-label="EnvSelector-Failed"
-            toggle={() => <MenuToggle>{words("error")}</MenuToggle>}
+            toggle={() => <MenuToggle>{words('error')}</MenuToggle>}
           ></Dropdown>
           <Alert
             variant="danger"
-            title={words("error")}
+            title={words('error')}
             data-testid="AlertError"
           >
             <p>{error}</p>
@@ -54,7 +54,7 @@ export const EnvSelectorWithData: React.FC<Props> = ({
           defaultToggleText={
             selectedEnvironment
               ? environmentToName(selectedEnvironment)
-              : words("common.environment.select")
+              : words('common.environment.select')
           }
         />
       ),
@@ -75,5 +75,5 @@ const environmentToSelector = ({
 const environmentToName = ({
   name,
   projectName,
-}: Pick<FlatEnvironment, "name" | "projectName">): string =>
+}: Pick<FlatEnvironment, 'name' | 'projectName'>): string =>
   `${name} (${projectName})`;

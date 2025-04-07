@@ -1,4 +1,4 @@
-import { EnvironmentModifier } from "@/Core";
+import { EnvironmentModifier } from '@/Core';
 
 interface Details {
   server_compile: boolean;
@@ -8,21 +8,21 @@ interface Details {
 }
 
 export class MockEnvironmentModifier implements EnvironmentModifier {
-  constructor(private readonly details?: Details) {}
-  useIsProtectedEnvironment(): boolean {
+  constructor (private readonly details?: Details) {}
+  useIsProtectedEnvironment (): boolean {
     return this.details ? this.details.protected_environment : false;
   }
 
-  useIsServerCompileEnabled(): boolean {
+  useIsServerCompileEnabled (): boolean {
     return this.details ? this.details.server_compile : false;
   }
-  useIsHalted(): boolean {
+  useIsHalted (): boolean {
     return this.details ? this.details.halted : false;
   }
-  useIsExpertModeEnabled(): boolean {
+  useIsExpertModeEnabled (): boolean {
     return this.details ? this.details.enable_lsm_expert_mode : false;
   }
-  setEnvironment(): void {
+  setEnvironment (): void {
     return;
   }
 }

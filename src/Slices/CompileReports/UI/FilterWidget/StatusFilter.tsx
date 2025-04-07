@@ -1,9 +1,9 @@
-import React from "react";
-import { SelectOptionProps, ToolbarFilter } from "@patternfly/react-core";
-import { CompileStatus } from "@/Core";
-import { SingleTextSelect } from "@/UI/Components";
-import { words } from "@/UI/words";
-import { Kind } from "@S/CompileReports/Core/Query";
+import React from 'react';
+import { SelectOptionProps, ToolbarFilter } from '@patternfly/react-core';
+import { CompileStatus } from '@/Core';
+import { SingleTextSelect } from '@/UI/Components';
+import { words } from '@/UI/words';
+import { Kind } from '@S/CompileReports/Core/Query';
 
 interface Props {
   isVisible: boolean;
@@ -32,7 +32,7 @@ export const StatusFilter: React.FC<Props> = ({
     >
       <SingleTextSelect
         toggleAriaLabel={Kind.Status}
-        placeholderText={words("compileReports.filters.status.placeholder")}
+        placeholderText={words('compileReports.filters.status.placeholder')}
         options={compileStatuses}
         selected={selected}
         setSelected={setSelected}

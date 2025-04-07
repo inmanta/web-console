@@ -1,5 +1,5 @@
 interface Leaf<Value> {
-  kind: "Leaf";
+  kind: 'Leaf';
   value: Value;
   hasRelation?: boolean;
   entity?: string;
@@ -7,7 +7,7 @@ interface Leaf<Value> {
 }
 
 interface Branch {
-  kind: "Branch";
+  kind: 'Branch';
 }
 
 export type TreeNode<Value = unknown> = Branch | Leaf<Value>;

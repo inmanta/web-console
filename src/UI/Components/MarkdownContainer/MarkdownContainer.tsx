@@ -1,8 +1,8 @@
-import React, { useEffect, useRef } from "react";
-import markdownit from "markdown-it";
-import { full } from "markdown-it-emoji";
-import mermaidPlugin from "./MermaidPlugin";
-import "./styles.css";
+import React, { useEffect, useRef } from 'react';
+import markdownit from 'markdown-it';
+import { full } from 'markdown-it-emoji';
+import mermaidPlugin from './MermaidPlugin';
+import './styles.css';
 
 /**
  * Props for the MarkdownContainer component.
@@ -48,39 +48,39 @@ export const MarkdownContainer = ({ text, web_title }: Props) => {
 
       event.stopPropagation();
 
-      const isZoomed = img.classList.contains("zoomed");
+      const isZoomed = img.classList.contains('zoomed');
 
       // Remove zoomed class from all other images
-      container.querySelectorAll(".mermaid-diagram.zoomed").forEach((el) => {
+      container.querySelectorAll('.mermaid-diagram.zoomed').forEach((el) => {
         if (el !== img) {
-          el.classList.remove("zoomed");
+          el.classList.remove('zoomed');
         }
       });
 
       if (isZoomed) {
-        img.classList.remove("zoomed");
-        document.body.style.overflow = "";
+        img.classList.remove('zoomed');
+        document.body.style.overflow = '';
       } else {
-        img.classList.add("zoomed");
-        document.body.style.overflow = "hidden";
+        img.classList.add('zoomed');
+        document.body.style.overflow = 'hidden';
       }
     };
 
     const handleDocumentClick = (event: Event) => {
       if (!container.contains(event.target as Node)) {
-        container.querySelectorAll(".mermaid-diagram.zoomed").forEach((img) => {
-          img.classList.remove("zoomed");
+        container.querySelectorAll('.mermaid-diagram.zoomed').forEach((img) => {
+          img.classList.remove('zoomed');
         });
-        document.body.style.overflow = "";
+        document.body.style.overflow = '';
       }
     };
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        container.querySelectorAll(".mermaid-diagram.zoomed").forEach((img) => {
-          img.classList.remove("zoomed");
+      if (event.key === 'Escape') {
+        container.querySelectorAll('.mermaid-diagram.zoomed').forEach((img) => {
+          img.classList.remove('zoomed');
         });
-        document.body.style.overflow = "";
+        document.body.style.overflow = '';
       }
     };
 
@@ -91,7 +91,7 @@ export const MarkdownContainer = ({ text, web_title }: Props) => {
             node instanceof HTMLImageElement &&
             node.matches('.mermaid-diagram[data-zoomable="true"]')
           ) {
-            node.addEventListener("click", handleImageClick);
+            node.addEventListener('click', handleImageClick);
           }
         });
       });
@@ -107,22 +107,22 @@ export const MarkdownContainer = ({ text, web_title }: Props) => {
     container
       .querySelectorAll('.mermaid-diagram[data-zoomable="true"]')
       .forEach((img) => {
-        img.addEventListener("click", handleImageClick);
+        img.addEventListener('click', handleImageClick);
       });
 
-    document.addEventListener("click", handleDocumentClick);
-    document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener('click', handleDocumentClick);
+    document.addEventListener('keydown', handleKeyDown);
 
     return () => {
       observer.disconnect();
-      document.removeEventListener("click", handleDocumentClick);
-      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener('click', handleDocumentClick);
+      document.removeEventListener('keydown', handleKeyDown);
       container
         .querySelectorAll('.mermaid-diagram[data-zoomable="true"]')
         .forEach((img) => {
-          img.removeEventListener("click", handleImageClick);
+          img.removeEventListener('click', handleImageClick);
         });
-      document.body.style.overflow = "";
+      document.body.style.overflow = '';
     };
   }, [text]);
 

@@ -3,10 +3,10 @@ import {
   UseMutationResult,
   useMutation,
   useQueryClient,
-} from "@tanstack/react-query";
-import { ParsedNumber } from "@/Core";
-import { Dict } from "@/UI/Components";
-import { usePost } from "../../helpers";
+} from '@tanstack/react-query';
+import { ParsedNumber } from '@/Core';
+import { Dict } from '@/UI/Components';
+import { usePost } from '../../helpers';
 
 interface ConfigUpdate {
   id: string;
@@ -30,15 +30,15 @@ export const useUpdateEnvConfig = (
   return useMutation({
     mutationFn: ({ id, updatedValue }) =>
       post(`/api/v2/environment_settings/${id}`, updatedValue),
-    mutationKey: ["update_env_config"],
+    mutationKey: ['update_env_config'],
     onSuccess: () => {
       client.invalidateQueries({
-        queryKey: ["get_env_config"], //for the future rework of the env getter
+        queryKey: ['get_env_config'], //for the future rework of the env getter
       });
       client.invalidateQueries({
-        queryKey: ["get_env_details"], //for the future rework of the env getter
+        queryKey: ['get_env_details'], //for the future rework of the env getter
       });
-      document.dispatchEvent(new Event("settings-update"));
+      document.dispatchEvent(new Event('settings-update'));
     },
     ...options,
   });

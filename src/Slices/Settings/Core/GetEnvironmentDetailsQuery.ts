@@ -1,7 +1,7 @@
-import { EnvironmentDetails } from "@/Core/Domain";
+import { EnvironmentDetails } from '@/Core/Domain';
 
 export interface Query {
-  kind: "GetEnvironmentDetails";
+  kind: 'GetEnvironmentDetails';
   details: boolean;
   id: string;
 }

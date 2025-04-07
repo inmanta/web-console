@@ -1,5 +1,5 @@
-import React from "react";
-import { Toolbar, ToolbarItem, ToolbarContent } from "@patternfly/react-core";
+import React from 'react';
+import { Toolbar, ToolbarItem, ToolbarContent } from '@patternfly/react-core';
 
 interface Props {
   paginationWidget: React.ReactNode;

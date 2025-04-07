@@ -1,11 +1,11 @@
 export class PathHelper {
-  constructor(private readonly separator: string) {}
+  constructor (private readonly separator: string) {}
 
-  public isNested(path: string): boolean {
+  public isNested (path: string): boolean {
     return path.includes(this.separator);
   }
 
-  public getParent(path: string): string {
+  public getParent (path: string): string {
     if (!this.isNested(path)) return path;
     const parts = path.split(this.separator);
 
@@ -14,13 +14,13 @@ export class PathHelper {
     return parts.join(this.separator);
   }
 
-  public getSelf(path: string): string {
+  public getSelf (path: string): string {
     if (!this.isNested(path)) return path;
 
     return path.split(this.separator).pop() as string;
   }
 
-  public getLevel(path: string): number {
+  public getLevel (path: string): number {
     return path.split(this.separator).length - 1;
   }
 }

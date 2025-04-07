@@ -1,19 +1,19 @@
-import React, { useState } from "react";
-import { ToolbarGroup, ToolbarItem } from "@patternfly/react-core";
-import { Resource } from "@/Core";
-import { words } from "@/UI/words";
-import { FreeTextFilter } from "./FreeTextFilter";
+import React, { useState } from 'react';
+import { ToolbarGroup, ToolbarItem } from '@patternfly/react-core';
+import { Resource } from '@/Core';
+import { words } from '@/UI/words';
+import { FreeTextFilter } from './FreeTextFilter';
 
-type Properties = "type" | "agent" | "value";
+type Properties = 'type' | 'agent' | 'value';
 
 interface Props {
   filter: Resource.Filter;
   setFilter: (filter: Resource.Filter) => void;
 }
 export const FilterForm: React.FC<Props> = ({ filter, setFilter }) => {
-  const [typeTextInput, setTypeTextInput] = useState("");
-  const [agentTextInput, setAgentTextInput] = useState("");
-  const [valueTextInput, setValueTextInput] = useState("");
+  const [typeTextInput, setTypeTextInput] = useState('');
+  const [agentTextInput, setAgentTextInput] = useState('');
+  const [valueTextInput, setValueTextInput] = useState('');
   const updateType = (types: string[], property: Properties) => {
     return setFilter({
       ...filter,
@@ -65,9 +65,9 @@ export const FilterForm: React.FC<Props> = ({ filter, setFilter }) => {
       };
     }
     setFilter(newFilter);
-    setTypeTextInput("");
-    setAgentTextInput("");
-    setValueTextInput("");
+    setTypeTextInput('');
+    setAgentTextInput('');
+    setValueTextInput('');
   };
 
   return (
@@ -78,8 +78,8 @@ export const FilterForm: React.FC<Props> = ({ filter, setFilter }) => {
             <FreeTextFilter
               searchEntries={filter.type}
               filterPropertyName={Resource.FilterKind.Type}
-              placeholder={words("resources.filters.type.placeholder")}
-              removeChip={(cat, id) => removeChip(id, "type")}
+              placeholder={words('resources.filters.type.placeholder')}
+              removeChip={(cat, id) => removeChip(id, 'type')}
               value={typeTextInput}
               setValue={setTypeTextInput}
             />
@@ -88,8 +88,8 @@ export const FilterForm: React.FC<Props> = ({ filter, setFilter }) => {
             <FreeTextFilter
               searchEntries={filter.agent}
               filterPropertyName={Resource.FilterKind.Agent}
-              placeholder={words("resources.filters.agent.placeholder")}
-              removeChip={(cat, id) => removeChip(id, "agent")}
+              placeholder={words('resources.filters.agent.placeholder')}
+              removeChip={(cat, id) => removeChip(id, 'agent')}
               value={agentTextInput}
               setValue={setAgentTextInput}
             />
@@ -98,8 +98,8 @@ export const FilterForm: React.FC<Props> = ({ filter, setFilter }) => {
             <FreeTextFilter
               searchEntries={filter.value}
               filterPropertyName={Resource.FilterKind.Value}
-              placeholder={words("resources.filters.value.placeholder")}
-              removeChip={(cat, id) => removeChip(id, "value")}
+              placeholder={words('resources.filters.value.placeholder')}
+              removeChip={(cat, id) => removeChip(id, 'value')}
               value={valueTextInput}
               setValue={setValueTextInput}
               isSubmitVisible

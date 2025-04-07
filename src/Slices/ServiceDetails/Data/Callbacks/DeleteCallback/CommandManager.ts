@@ -1,25 +1,25 @@
-import { ApiHelper, Command, UpdaterWithEnv } from "@/Core";
-import { CommandManagerWithEnv } from "@/Data/Common";
+import { ApiHelper, Command, UpdaterWithEnv } from '@/Core';
+import { CommandManagerWithEnv } from '@/Data/Common';
 
-export function DeleteCallbackCommandManager(
+export function DeleteCallbackCommandManager (
   apiHelper: ApiHelper,
-  updater: UpdaterWithEnv<"GetCallbacks">,
+  updater: UpdaterWithEnv<'GetCallbacks'>,
 ) {
-  function getUrl({
+  function getUrl ({
     callbackId,
-  }: Command.SubCommand<"DeleteCallback">): string {
+  }: Command.SubCommand<'DeleteCallback'>): string {
     return `/lsm/v1/callbacks/${callbackId}`;
   }
 
-  return CommandManagerWithEnv<"DeleteCallback">(
-    "DeleteCallback",
+  return CommandManagerWithEnv<'DeleteCallback'>(
+    'DeleteCallback',
     (command, environment) => {
       return async () => {
         const result = await apiHelper.delete(getUrl(command), environment);
 
         await updater.update(
           {
-            kind: "GetCallbacks",
+            kind: 'GetCallbacks',
             service_entity: command.service_entity,
           },
           environment,

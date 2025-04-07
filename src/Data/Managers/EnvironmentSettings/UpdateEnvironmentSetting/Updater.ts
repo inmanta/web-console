@@ -3,18 +3,17 @@ import {
   RemoteData,
   StateHelperWithEnv,
   UpdaterWithEnv,
-} from "@/Core";
-import { GetEnvironmentSetting } from "@/Data/Managers/EnvironmentSettings/GetEnvironmentSettingInterface";
+} from '@/Core';
+import { GetEnvironmentSetting } from '@/Data/Managers/EnvironmentSettings/GetEnvironmentSettingInterface';
 
 export class EnvironmentSettingUpdater
-  implements UpdaterWithEnv<"GetEnvironmentSetting">
-{
-  constructor(
+implements UpdaterWithEnv<'GetEnvironmentSetting'> {
+  constructor (
     private readonly apiHelper: ApiHelper,
-    private readonly stateHelper: StateHelperWithEnv<"GetEnvironmentSetting">,
+    private readonly stateHelper: StateHelperWithEnv<'GetEnvironmentSetting'>,
   ) {}
 
-  async update(
+  async update (
     query: GetEnvironmentSetting,
     environment: string,
   ): Promise<void> {

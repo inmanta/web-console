@@ -1,11 +1,11 @@
-import React, { useContext } from "react";
-import { DropdownItem } from "@patternfly/react-core";
-import { ParsedNumber } from "@/Core";
-import { usePromoteDesiredStateVersion } from "@/Data/Managers/V2/DesiredState";
-import { ActionDisabledTooltip } from "@/UI/Components";
-import { DependencyContext } from "@/UI/Dependency";
-import { words } from "@/UI/words";
-import { GetDesiredStatesContext } from "@S/DesiredState/UI/GetDesiredStatesContext";
+import React, { useContext } from 'react';
+import { DropdownItem } from '@patternfly/react-core';
+import { ParsedNumber } from '@/Core';
+import { usePromoteDesiredStateVersion } from '@/Data/Managers/V2/DesiredState';
+import { ActionDisabledTooltip } from '@/UI/Components';
+import { DependencyContext } from '@/UI/Dependency';
+import { words } from '@/UI/words';
+import { GetDesiredStatesContext } from '@S/DesiredState/UI/GetDesiredStatesContext';
 
 interface Props {
   version: ParsedNumber;
@@ -42,15 +42,15 @@ export const PromoteAction: React.FC<Props> = ({ version, isDisabled }) => {
   return (
     <ActionDisabledTooltip
       isDisabled={isDisabled || isHalted}
-      testingId={"promote"}
+      testingId={'promote'}
       tooltipContent={
         isHalted
-          ? words("environment.halt.tooltip")
-          : words("desiredState.actions.promote.disabledTooltip")
+          ? words('environment.halt.tooltip')
+          : words('desiredState.actions.promote.disabledTooltip')
       }
     >
       <DropdownItem isDisabled={isDisabled || isHalted} onClick={onSubmit}>
-        {words("desiredState.actions.promote")}
+        {words('desiredState.actions.promote')}
       </DropdownItem>
     </ActionDisabledTooltip>
   );

@@ -1,6 +1,6 @@
-import React from "react";
-import styled, { css } from "styled-components";
-import { Diff } from "@/Core";
+import React from 'react';
+import styled, { css } from 'styled-components';
+import { Diff } from '@/Core';
 
 interface Props {
   status: Diff.Status;
@@ -9,17 +9,17 @@ interface Props {
 
 export const StatusDescriptor: React.FC<Props> = ({ status, className }) => {
   switch (status) {
-    case "added":
+    case 'added':
       return <Added className={className}>A</Added>;
-    case "deleted":
+    case 'deleted':
       return <Deleted className={className}>D</Deleted>;
-    case "modified":
+    case 'modified':
       return <Modified className={className}>M</Modified>;
-    case "unmodified":
+    case 'unmodified':
       return <Unmodified className={className}>?</Unmodified>;
-    case "agent_down":
-    case "undefined":
-    case "skipped_for_undefined":
+    case 'agent_down':
+    case 'undefined':
+    case 'skipped_for_undefined':
       return <Missing className={className}>!</Missing>;
     default:
       return null;

@@ -1,19 +1,19 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState } from 'react';
 import {
   Button,
   Divider,
   DrilldownMenu,
   MenuItem,
   Content,
-} from "@patternfly/react-core";
-import { WarningTriangleIcon } from "@patternfly/react-icons";
-import { VersionedServiceInstanceIdentifier } from "@/Core";
-import { usePostExpertStateTransfer } from "@/Data/Managers/V2/ServiceInstance";
-import { ActionDisabledTooltip } from "@/UI/Components";
-import { DependencyContext } from "@/UI/Dependency";
-import { ModalContext } from "@/UI/Root/Components/ModalProvider";
-import { words } from "@/UI/words";
-import { ToastAlertMessage } from "../../ToastAlertMessage";
+} from '@patternfly/react-core';
+import { WarningTriangleIcon } from '@patternfly/react-icons';
+import { VersionedServiceInstanceIdentifier } from '@/Core';
+import { usePostExpertStateTransfer } from '@/Data/Managers/V2/ServiceInstance';
+import { ActionDisabledTooltip } from '@/UI/Components';
+import { DependencyContext } from '@/UI/Dependency';
+import { ModalContext } from '@/UI/Root/Components/ModalProvider';
+import { words } from '@/UI/words';
+import { ToastAlertMessage } from '../../ToastAlertMessage';
 
 interface Props extends VersionedServiceInstanceIdentifier {
   instance_identity: string;
@@ -40,7 +40,7 @@ export const ForceStateAction: React.FC<Props> = ({
   availableStates,
 }) => {
   const { triggerModal, closeModal } = useContext(ModalContext);
-  const [stateErrorMessage, setStateErrorMessage] = useState<string>("");
+  const [stateErrorMessage, setStateErrorMessage] = useState<string>('');
 
   const menuItems = availableStates.sort().map((target) => (
     <MenuItem
@@ -80,7 +80,7 @@ export const ForceStateAction: React.FC<Props> = ({
       closeModal();
 
       const username = authHelper.getUser();
-      const message = words("instanceDetails.API.message.update")(username);
+      const message = words('instanceDetails.API.message.update')(username);
 
       mutate({
         message: message,
@@ -90,8 +90,8 @@ export const ForceStateAction: React.FC<Props> = ({
     };
 
     triggerModal({
-      title: words("inventory.statustab.forceState.confirmTitle"),
-      iconVariant: "danger",
+      title: words('inventory.statustab.forceState.confirmTitle'),
+      iconVariant: 'danger',
       actions: [
         <Button
           key="confirm"
@@ -99,7 +99,7 @@ export const ForceStateAction: React.FC<Props> = ({
           data-testid={`${id}-state-modal-confirm`}
           onClick={onSubmit}
         >
-          {words("yes")}
+          {words('yes')}
         </Button>,
         <Button
           key="cancel"
@@ -107,23 +107,23 @@ export const ForceStateAction: React.FC<Props> = ({
           data-testid={`${id}-state-modal-cancel`}
           onClick={closeModal}
         >
-          {words("no")}
+          {words('no')}
         </Button>,
       ],
       content: (
         <>
           <Content component="p">
-            {words("inventory.statustab.forceState.message")(
+            {words('inventory.statustab.forceState.message')(
               instance_identity,
               targetState,
             )}
           </Content>
           <br />
           <Content component="p">
-            {words("inventory.statustab.forceState.confirmMessage")}
+            {words('inventory.statustab.forceState.confirmMessage')}
           </Content>
           <Content component="p">
-            {words("inventory.statustab.forceState.confirmQuestion")}
+            {words('inventory.statustab.forceState.confirmQuestion')}
           </Content>
         </>
       ),
@@ -150,11 +150,11 @@ export const ForceStateAction: React.FC<Props> = ({
         />
       )}
       <ActionDisabledTooltip
-        testingId={words("inventory.statustab.forceState")}
+        testingId={words('inventory.statustab.forceState')}
         tooltipContent={
           isHalted
-            ? words("environment.halt.tooltip")
-            : words("inventory.statustab.actionDisabled")
+            ? words('environment.halt.tooltip')
+            : words('inventory.statustab.actionDisabled')
         }
       >
         <MenuItem
@@ -165,7 +165,7 @@ export const ForceStateAction: React.FC<Props> = ({
           direction="down"
           style={{
             backgroundColor:
-              "var(--pf-t--global--color--nonstatus--red--default)",
+              'var(--pf-t--global--color--nonstatus--red--default)',
           }}
           drilldownMenu={
             <DrilldownMenu
@@ -175,7 +175,7 @@ export const ForceStateAction: React.FC<Props> = ({
               <MenuItem
                 style={{
                   backgroundColor:
-                    "var(--pf-t--global--color--nonstatus--red--default)",
+                    'var(--pf-t--global--color--nonstatus--red--default)',
                 }}
                 icon={<WarningTriangleIcon />}
                 itemId="group:expertstate_breadcrumb"

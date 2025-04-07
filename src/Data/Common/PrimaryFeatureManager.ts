@@ -10,8 +10,8 @@ import {
   StatusLicense,
   EXTENSION_LIST,
   FEATURE_LIST,
-} from "@/Core";
-import { VoidLogger } from "./VoidLogger";
+} from '@/Core';
+import { VoidLogger } from './VoidLogger';
 
 /**
  * Represents the primary feature manager.
@@ -26,12 +26,12 @@ export class PrimaryFeatureManager implements FeatureManager {
    * @param commitHash - The commit hash of the application. Defaults to an empty string.
    * @param appVersion - The version of the application. Defaults to an empty string.
    */
-  constructor(
-    private readonly stateHelper: StateHelper<"GetServerStatus">,
+  constructor (
+    private readonly stateHelper: StateHelper<'GetServerStatus'>,
     private readonly logger: Logger = new VoidLogger(),
-    private readonly jsonParserId: JsonParserId = "Native",
-    private readonly commitHash: string = "",
-    private readonly appVersion: string = "",
+    private readonly jsonParserId: JsonParserId = 'Native',
+    private readonly commitHash: string = '',
+    private readonly appVersion: string = '',
   ) {
     this.logger.log(
       `Application configured with ${jsonParserId} JSON parser, Version : ${appVersion}, Commit: ${commitHash}`,
@@ -42,7 +42,7 @@ export class PrimaryFeatureManager implements FeatureManager {
    * Gets the version of the application.
    * @returns The version of the application.
    */
-  getAppVersion(): string {
+  getAppVersion (): string {
     return this.appVersion;
   }
 
@@ -50,15 +50,15 @@ export class PrimaryFeatureManager implements FeatureManager {
    * Gets the commit hash of the application.
    * @returns The commit hash of the application.
    */
-  getCommitHash(): string {
+  getCommitHash (): string {
     return this.commitHash;
   }
 
-  private get(): ServerStatus {
-    const serverStatus = this.stateHelper.getOnce({ kind: "GetServerStatus" });
+  private get (): ServerStatus {
+    const serverStatus = this.stateHelper.getOnce({ kind: 'GetServerStatus' });
 
     if (!RemoteData.isSuccess(serverStatus)) {
-      throw new Error("ServerStatus has not yet been set.");
+      throw new Error('ServerStatus has not yet been set.');
     }
 
     return serverStatus.value;
@@ -70,7 +70,7 @@ export class PrimaryFeatureManager implements FeatureManager {
    *
    * @returns The extensions of the ServerStatus object.
    */
-  private getExtensions(): string[] {
+  private getExtensions (): string[] {
     return this.get().extensions.map((extension) => extension.name);
   }
 
@@ -81,7 +81,7 @@ export class PrimaryFeatureManager implements FeatureManager {
    * @param extension - The name of the extension.
    * @returns True if the extension is enabled, false otherwise.
    */
-  private isExtensionEnabled(extension: Extention): boolean {
+  private isExtensionEnabled (extension: Extention): boolean {
     return this.getExtensions().includes(extension);
   }
 
@@ -91,7 +91,7 @@ export class PrimaryFeatureManager implements FeatureManager {
    * @param featureSlice - The slice of the feature.
    * @returns True if the feature is enabled, false otherwise.
    */
-  public isLicencedFeatureEnabled(featureSlice: Feature): boolean {
+  public isLicencedFeatureEnabled (featureSlice: Feature): boolean {
     return this.get().features.some(
       (feature) => feature.slice === featureSlice && feature.value === true,
     );
@@ -101,7 +101,7 @@ export class PrimaryFeatureManager implements FeatureManager {
    * Gets the ID of the JSON parser.
    * @returns The ID of the JSON parser.
    */
-  getJsonParser(): JsonParserId {
+  getJsonParser (): JsonParserId {
     return this.jsonParserId;
   }
 
@@ -109,7 +109,7 @@ export class PrimaryFeatureManager implements FeatureManager {
    * Checks if the "support" extension is enabled.
    * @returns True if the "support" extension is enabled, false otherwise.
    */
-  isSupportEnabled(): boolean {
+  isSupportEnabled (): boolean {
     return this.isExtensionEnabled(EXTENSION_LIST.support);
   }
 
@@ -117,7 +117,7 @@ export class PrimaryFeatureManager implements FeatureManager {
    * Checks if the "lsm" extension is enabled.
    * @returns True if the "lsm" extension is enabled, false otherwise.
    */
-  isLsmEnabled(): boolean {
+  isLsmEnabled (): boolean {
     return this.isExtensionEnabled(EXTENSION_LIST.lsm);
   }
 
@@ -125,7 +125,7 @@ export class PrimaryFeatureManager implements FeatureManager {
    * Checks if the "resource-discovery" feature is enabled.
    * @returns True if the "resource-discovery" feature is enabled, false otherwise.
    */
-  isResourceDiscoveryEnabled(): boolean {
+  isResourceDiscoveryEnabled (): boolean {
     return this.isLicencedFeatureEnabled(FEATURE_LIST.resource);
   }
 
@@ -133,7 +133,7 @@ export class PrimaryFeatureManager implements FeatureManager {
    * Checks if the "orderview"  is enabled.
    * @returns True if the "orderview" is enabled, false otherwise.
    */
-  isOrderViewEnabled(): boolean {
+  isOrderViewEnabled (): boolean {
     return this.isLicencedFeatureEnabled(FEATURE_LIST.order);
   }
 
@@ -141,7 +141,7 @@ export class PrimaryFeatureManager implements FeatureManager {
    * Checks if the "composer" feature is enabled.
    * @returns True if the composer feature is enabled, false otherwise.
    */
-  isComposerEnabled(): boolean {
+  isComposerEnabled (): boolean {
     return this.isLicencedFeatureEnabled(FEATURE_LIST.composer);
   }
 
@@ -149,21 +149,21 @@ export class PrimaryFeatureManager implements FeatureManager {
    * Gets the major version of the server.
    * @returns The major version of the server.
    */
-  getServerMajorVersion(): string {
+  getServerMajorVersion (): string {
     const serverStatus = this.get();
 
-    return serverStatus.version.split(".")[0];
+    return serverStatus.version.split('.')[0];
   }
 
   /**
    * Gets the full version of the server.
    * @returns The full version of the server.
    */
-  getServerVersion(): string {
+  getServerVersion (): string {
     const fullVersion = this.get().version;
 
-    return fullVersion.indexOf(".dev") > -1
-      ? fullVersion.substring(0, fullVersion.indexOf(".dev"))
+    return fullVersion.indexOf('.dev') > -1
+      ? fullVersion.substring(0, fullVersion.indexOf('.dev'))
       : fullVersion;
   }
 
@@ -171,7 +171,7 @@ export class PrimaryFeatureManager implements FeatureManager {
    * Gets the edition of the server.
    * @returns The edition of the server.
    */
-  getEdition(): string {
+  getEdition (): string {
     return this.get().edition;
   }
 
@@ -179,10 +179,10 @@ export class PrimaryFeatureManager implements FeatureManager {
    * Gets the license information of the server.
    * @returns The license information of the server, or undefined if not available.
    */
-  getLicenseInformation(): StatusLicense | undefined {
+  getLicenseInformation (): StatusLicense | undefined {
     const serverStatus = this.get();
     const licenceInformation = serverStatus.slices.find(
-      (slice) => slice.name === "license.license",
+      (slice) => slice.name === 'license.license',
     );
 
     return licenceInformation?.status;

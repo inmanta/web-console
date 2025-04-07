@@ -5,7 +5,7 @@
 
 /* eslint-disable react-hooks/exhaustive-deps */
 
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 import {
   RemoteData,
   Query,
@@ -14,11 +14,11 @@ import {
   StateHelper,
   Scheduler,
   ApiHelper,
-} from "@/Core";
-import { GetDependencies, Data, GetUnique, GetUrl, ToUsed } from "./types";
-import { urlEncodeParams } from "./utils";
+} from '@/Core';
+import { GetDependencies, Data, GetUnique, GetUrl, ToUsed } from './types';
+import { urlEncodeParams } from './utils';
 
-export function Continuous<Kind extends Query.Kind>(
+export function Continuous<Kind extends Query.Kind> (
   apiHelper: ApiHelper,
   stateHelper: StateHelper<Kind>,
   scheduler: Scheduler,
@@ -28,7 +28,7 @@ export function Continuous<Kind extends Query.Kind>(
   getUrl: GetUrl<Kind>,
   toUsed: ToUsed<Kind>,
 ): ContinuousQueryManager<Kind> {
-  async function update(
+  async function update (
     query: Query.SubQuery<Kind>,
     url: string,
   ): Promise<void> {
@@ -38,7 +38,7 @@ export function Continuous<Kind extends Query.Kind>(
     );
   }
 
-  function useContinuous(query: Query.SubQuery<Kind>): Data<Kind> {
+  function useContinuous (query: Query.SubQuery<Kind>): Data<Kind> {
     const [url, setUrl] = useState(getUrl(urlEncodeParams(query)));
 
     useEffect(() => {
@@ -70,11 +70,11 @@ export function Continuous<Kind extends Query.Kind>(
     ];
   }
 
-  function matches(
+  function matches (
     query: Query.SubQuery<Kind>,
     matchingKind: QueryManagerKind,
   ): boolean {
-    return query.kind === kind && matchingKind === "Continuous";
+    return query.kind === kind && matchingKind === 'Continuous';
   }
 
   return {

@@ -1,12 +1,12 @@
-import { UseQueryResult, useQuery } from "@tanstack/react-query";
-import { DateRange, IntRange, PageSize, Pagination } from "@/Core";
-import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
+import { UseQueryResult, useQuery } from '@tanstack/react-query';
+import { DateRange, IntRange, PageSize, Pagination } from '@/Core';
+import { CurrentPage } from '@/Data/Common/UrlState/useUrlStateWithCurrentPage';
 import {
   DesiredStateVersion,
   DesiredStateVersionStatus,
-} from "@/Slices/DesiredState/Core/Domain";
-import { CustomError, useGet } from "../../helpers";
-import { getUrl } from "./getUrl";
+} from '@/Slices/DesiredState/Core/Domain';
+import { CustomError, useGet } from '../../helpers';
+import { getUrl } from './getUrl';
 
 /**
  * interface of filter object for desired states
@@ -60,14 +60,14 @@ export const useGetDesiredStates = (): GetDesiredStates => {
     ): UseQueryResult<Result, CustomError> =>
       useQuery({
         queryKey: [
-          "get_desired_states-one_time",
+          'get_desired_states-one_time',
           pageSize,
           filter,
           currentPage,
         ],
         queryFn: () =>
           get(
-            getUrl({ pageSize, filter, currentPage, kind: "GetDesiredStates" }),
+            getUrl({ pageSize, filter, currentPage, kind: 'GetDesiredStates' }),
           ),
       }),
     useContinuous: (
@@ -77,14 +77,14 @@ export const useGetDesiredStates = (): GetDesiredStates => {
     ): UseQueryResult<Result, CustomError> =>
       useQuery({
         queryKey: [
-          "get_desired_states-continuous",
+          'get_desired_states-continuous',
           pageSize,
           filter,
           currentPage,
         ],
         queryFn: () =>
           get(
-            getUrl({ pageSize, filter, currentPage, kind: "GetDesiredStates" }),
+            getUrl({ pageSize, filter, currentPage, kind: 'GetDesiredStates' }),
           ),
         refetchInterval: 5000,
       }),

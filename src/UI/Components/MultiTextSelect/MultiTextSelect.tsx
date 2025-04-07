@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Label,
   LabelGroup,
@@ -12,10 +12,10 @@ import {
   TextInputGroup,
   TextInputGroupMain,
   TextInputGroupUtilities,
-} from "@patternfly/react-core";
+} from '@patternfly/react-core';
 
-import { TimesIcon } from "@patternfly/react-icons";
-import { checkIfOptionMatchInput } from "../SingleTextSelect";
+import { TimesIcon } from '@patternfly/react-icons';
+import { checkIfOptionMatchInput } from '../SingleTextSelect';
 
 interface Props {
   selected: string[];
@@ -61,7 +61,7 @@ export const MultiTextSelect: React.FC<Props> = ({
   ...props
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [inputValue, setInputValue] = useState<string>("");
+  const [inputValue, setInputValue] = useState<string>('');
   const [selectOptions, setSelectOptions] =
     useState<SelectOptionProps[]>(options);
   const [focusedItemIndex, setFocusedItemIndex] = useState<number | null>(null);
@@ -84,7 +84,7 @@ export const MultiTextSelect: React.FC<Props> = ({
       setSelectOptions([
         {
           children: `No results found for "${inputValue}"`,
-          value: "no results",
+          value: 'no results',
           isDisabled: true,
         },
       ]);
@@ -104,7 +104,7 @@ export const MultiTextSelect: React.FC<Props> = ({
     let indexToFocus;
 
     if (isOpen) {
-      if (key === "ArrowUp") {
+      if (key === 'ArrowUp') {
         // When no index is set or at the first index, focus to the last, otherwise decrement focus index
         if (focusedItemIndex === null || focusedItemIndex === 0) {
           indexToFocus = selectOptions.length - 1;
@@ -113,7 +113,7 @@ export const MultiTextSelect: React.FC<Props> = ({
         }
       }
 
-      if (key === "ArrowDown") {
+      if (key === 'ArrowDown') {
         // When no index is set or at the last index, focus to the first, otherwise increment focus index
         if (
           focusedItemIndex === null ||
@@ -131,7 +131,7 @@ export const MultiTextSelect: React.FC<Props> = ({
       ];
 
       setActiveItem(
-        `select-multi-typeahead-${focusedItem.value.replace(" ", "-")}`,
+        `select-multi-typeahead-${focusedItem.value.replace(' ', '-')}`,
       );
     }
   };
@@ -147,23 +147,23 @@ export const MultiTextSelect: React.FC<Props> = ({
 
     switch (event.key) {
       // Select the first available option
-      case "Enter":
+      case 'Enter':
         if (!isOpen) {
           setIsOpen((prevIsOpen) => !prevIsOpen);
-        } else if (isOpen && focusedItem.value !== "no results") {
+        } else if (isOpen && focusedItem.value !== 'no results') {
           onSelect(focusedItem.value as string);
         }
         if (inputValue && checkIfOptionMatchInput(options, inputValue)) {
           onSelect(inputValue);
         }
         break;
-      case "Tab":
-      case "Escape":
+      case 'Tab':
+      case 'Escape':
         setIsOpen(false);
         setActiveItem(null);
         break;
-      case "ArrowUp":
-      case "ArrowDown":
+      case 'ArrowUp':
+      case 'ArrowDown':
         event.preventDefault();
         handleMenuArrowKeys(event.key);
         break;
@@ -182,7 +182,7 @@ export const MultiTextSelect: React.FC<Props> = ({
   };
 
   const onSelect = (value: string) => {
-    if (value && value !== "no results") {
+    if (value && value !== 'no results') {
       setSelected(value as string);
     }
 
@@ -191,7 +191,7 @@ export const MultiTextSelect: React.FC<Props> = ({
 
   const toggle = (toggleRef: React.Ref<MenuToggleElement>) => (
     <MenuToggle
-      variant={noInputField ? "default" : "typeahead"}
+      variant={noInputField ? 'default' : 'typeahead'}
       onClick={onToggleClick}
       ref={toggleRef}
       isExpanded={isOpen}
@@ -209,8 +209,8 @@ export const MultiTextSelect: React.FC<Props> = ({
             onKeyDown={onInputKeyDown}
             autoComplete="off"
             innerRef={textInputRef}
-            placeholder={placeholderText || "Select..."}
-            {...(activeItem && { "aria-activedescendant": activeItem })}
+            placeholder={placeholderText || 'Select...'}
+            {...(activeItem && { 'aria-activedescendant': activeItem })}
             role="combobox"
             isExpanded={isOpen}
             aria-controls={`select-listbox-${toggleAriaLabel}`}
@@ -248,7 +248,7 @@ export const MultiTextSelect: React.FC<Props> = ({
                 disabled={props.isDisabled}
                 variant="plain"
                 onClick={() => {
-                  setInputValue("");
+                  setInputValue('');
                   textInputRef?.current?.focus();
                 }}
                 aria-label="Clear input value"
@@ -280,7 +280,7 @@ export const MultiTextSelect: React.FC<Props> = ({
             isFocused={focusedItemIndex === index}
             isSelected={option.isSelected}
             className={option.className}
-            id={`select-multi-typeahead-${option.value.replace(" ", "-")}`}
+            id={`select-multi-typeahead-${option.value.replace(' ', '-')}`}
             aria-label={`${option.value || option.children}`}
             {...option}
             ref={null}

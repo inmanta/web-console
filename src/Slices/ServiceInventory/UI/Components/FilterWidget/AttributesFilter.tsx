@@ -1,17 +1,17 @@
-import React, { useState } from "react";
-import { ToolbarFilter, ToolbarItem } from "@patternfly/react-core";
-import { without } from "lodash-es";
-import { ServiceInstanceParams } from "@/Core";
-import { AttributeRulePicker, AttributeRule } from "./AttributeRulePicker";
-import { AttributeSetPicker } from "./AttributeSetPicker";
+import React, { useState } from 'react';
+import { ToolbarFilter, ToolbarItem } from '@patternfly/react-core';
+import { without } from 'lodash-es';
+import { ServiceInstanceParams } from '@/Core';
+import { AttributeRulePicker, AttributeRule } from './AttributeRulePicker';
+import { AttributeSetPicker } from './AttributeSetPicker';
 
 type Pretty =
-  | "Active (empty)"
-  | "Active (not empty)"
-  | "Candidate (empty)"
-  | "Candidate (not empty)"
-  | "Rollback (empty)"
-  | "Rollback (not empty)";
+  | 'Active (empty)'
+  | 'Active (not empty)'
+  | 'Candidate (empty)'
+  | 'Candidate (not empty)'
+  | 'Rollback (empty)'
+  | 'Rollback (not empty)';
 
 export interface AttributeSets {
   empty: ServiceInstanceParams.AttributeSet[];
@@ -39,7 +39,7 @@ export const AttributesFilter: React.FC<Props> = ({
   >(undefined);
 
   const onAttributeRuleChange = (rule: AttributeRule) => {
-    if (typeof attributeSetFilter === "undefined") return;
+    if (typeof attributeSetFilter === 'undefined') return;
 
     setAttributeSetFilter(undefined);
     update(
@@ -90,14 +90,14 @@ export const AttributesFilter: React.FC<Props> = ({
         <AttributeRulePicker
           rule={getRuleForAttributeSet(sets, attributeSetFilter)}
           onChange={onAttributeRuleChange}
-          isDisabled={typeof attributeSetFilter === "undefined"}
+          isDisabled={typeof attributeSetFilter === 'undefined'}
         />
       </ToolbarFilter>
     </>
   );
 };
 
-function createNewSets(
+function createNewSets (
   { empty, notEmpty }: AttributeSets,
   { id, rule }: Raw,
 ): AttributeSets {
@@ -132,7 +132,7 @@ function createNewSets(
   }
 }
 
-function getChips({ empty, notEmpty }: AttributeSets): Pretty[] {
+function getChips ({ empty, notEmpty }: AttributeSets): Pretty[] {
   const prettyEmpty = empty
     .map((id) => ({ id, rule: AttributeRule.Empty }))
     .map(rawToPretty);
@@ -143,51 +143,51 @@ function getChips({ empty, notEmpty }: AttributeSets): Pretty[] {
   return [...prettyEmpty, ...prettyNotEmpty];
 }
 
-function rawToPretty({ id, rule }: Raw): Pretty {
+function rawToPretty ({ id, rule }: Raw): Pretty {
   switch (id) {
     case ServiceInstanceParams.AttributeSet.Active:
       return rule === AttributeRule.Empty
-        ? `Active (empty)`
-        : `Active (not empty)`;
+        ? 'Active (empty)'
+        : 'Active (not empty)';
     case ServiceInstanceParams.AttributeSet.Candidate:
       return rule === AttributeRule.Empty
-        ? `Candidate (empty)`
-        : `Candidate (not empty)`;
+        ? 'Candidate (empty)'
+        : 'Candidate (not empty)';
     case ServiceInstanceParams.AttributeSet.Rollback:
       return rule === AttributeRule.Empty
-        ? `Rollback (empty)`
-        : `Rollback (not empty)`;
+        ? 'Rollback (empty)'
+        : 'Rollback (not empty)';
   }
 }
 
-function prettyToRaw(pretty: Pretty): Raw {
+function prettyToRaw (pretty: Pretty): Raw {
   switch (pretty) {
-    case "Active (empty)":
+    case 'Active (empty)':
       return {
         id: ServiceInstanceParams.AttributeSet.Active,
         rule: AttributeRule.Empty,
       };
-    case "Active (not empty)":
+    case 'Active (not empty)':
       return {
         id: ServiceInstanceParams.AttributeSet.Active,
         rule: AttributeRule.NotEmpty,
       };
-    case "Candidate (empty)":
+    case 'Candidate (empty)':
       return {
         id: ServiceInstanceParams.AttributeSet.Candidate,
         rule: AttributeRule.Empty,
       };
-    case "Candidate (not empty)":
+    case 'Candidate (not empty)':
       return {
         id: ServiceInstanceParams.AttributeSet.Candidate,
         rule: AttributeRule.NotEmpty,
       };
-    case "Rollback (empty)":
+    case 'Rollback (empty)':
       return {
         id: ServiceInstanceParams.AttributeSet.Rollback,
         rule: AttributeRule.Empty,
       };
-    case "Rollback (not empty)":
+    case 'Rollback (not empty)':
       return {
         id: ServiceInstanceParams.AttributeSet.Rollback,
         rule: AttributeRule.NotEmpty,
@@ -195,11 +195,11 @@ function prettyToRaw(pretty: Pretty): Raw {
   }
 }
 
-function getRuleForAttributeSet(
+function getRuleForAttributeSet (
   { empty, notEmpty }: AttributeSets,
   attributeSet: ServiceInstanceParams.AttributeSet | undefined,
 ): AttributeRule | undefined {
-  if (typeof attributeSet === "undefined") return undefined;
+  if (typeof attributeSet === 'undefined') return undefined;
   if (empty.includes(attributeSet)) return AttributeRule.Empty;
   if (notEmpty.includes(attributeSet)) return AttributeRule.NotEmpty;
 

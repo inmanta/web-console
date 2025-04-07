@@ -1,1 +1,1 @@
-export * from "./useGetInstances";
+export * from './useGetInstances';

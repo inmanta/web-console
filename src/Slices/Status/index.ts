@@ -1,1 +1,1 @@
-export * as Status from "./Core/Route";
+export * as Status from './Core/Route';

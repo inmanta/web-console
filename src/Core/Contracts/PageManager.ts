@@ -1,5 +1,5 @@
-import { ReactElement } from "react";
-import { RestrictedRouteKind, Route, RouteKind } from "@/Core/Domain";
+import { ReactElement } from 'react';
+import { RestrictedRouteKind, Route, RouteKind } from '@/Core/Domain';
 
 export interface Page extends Route {
   element: ReactElement | null;

@@ -1,7 +1,7 @@
-import { Pagination, Resource } from "@/Core/Domain";
+import { Pagination, Resource } from '@/Core/Domain';
 
 export interface Query extends Resource.ResourceParams {
-  kind: "GetResources";
+  kind: 'GetResources';
 }
 
 export interface Manifest {

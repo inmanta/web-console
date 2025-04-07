@@ -1,51 +1,50 @@
-import { ColumnHead, TablePresenter } from "@/UI/Presenters";
-import { words } from "@/UI/words";
-import { DiscoveredResource } from "../Core/Query";
+import { ColumnHead, TablePresenter } from '@/UI/Presenters';
+import { words } from '@/UI/words';
+import { DiscoveredResource } from '../Core/Query';
 
 export class DiscoveredResourcesTablePresenter
-  implements TablePresenter<DiscoveredResource, DiscoveredResource>
-{
+implements TablePresenter<DiscoveredResource, DiscoveredResource> {
   readonly columnHeads: ColumnHead[];
   readonly numberOfColumns: number;
 
-  constructor() {
+  constructor () {
     this.columnHeads = [
       {
-        displayName: words("discovered.column.resource_id"),
-        apiName: "discovered_resource_id",
+        displayName: words('discovered.column.resource_id'),
+        apiName: 'discovered_resource_id',
       },
       {
-        displayName: words("discovered.column.managed_resource"),
-        apiName: "managed_resource_id",
+        displayName: words('discovered.column.managed_resource'),
+        apiName: 'managed_resource_id',
       },
       {
-        displayName: words("discovered.column.discovery_resource"),
-        apiName: "discovery_resource_uri",
+        displayName: words('discovered.column.discovery_resource'),
+        apiName: 'discovery_resource_uri',
       },
     ];
     this.numberOfColumns = this.columnHeads.length + 1;
   }
 
-  createRows(sourceData: DiscoveredResource[]): DiscoveredResource[] {
+  createRows (sourceData: DiscoveredResource[]): DiscoveredResource[] {
     return sourceData;
   }
-  getColumnHeadDisplayNames(): string[] {
+  getColumnHeadDisplayNames (): string[] {
     return this.columnHeads.map(({ displayName }) => displayName);
   }
-  getSortableColumnNames(): string[] {
-    const sortableColumns = ["discovered_resource_id"];
+  getSortableColumnNames (): string[] {
+    const sortableColumns = ['discovered_resource_id'];
 
     return sortableColumns;
   }
-  getColumnHeads(): ColumnHead[] {
+  getColumnHeads (): ColumnHead[] {
     return this.columnHeads;
   }
 
-  getNumberOfColumns(): number {
+  getNumberOfColumns (): number {
     return this.numberOfColumns;
   }
 
-  getColumnNameForIndex(index: number): string | undefined {
+  getColumnNameForIndex (index: number): string | undefined {
     if (index > -1 && index < this.getNumberOfColumns()) {
       return this.getColumnHeads()[index].apiName;
     }
@@ -53,7 +52,7 @@ export class DiscoveredResourcesTablePresenter
     return undefined;
   }
 
-  getIndexForColumnName(columnName?: string): number {
+  getIndexForColumnName (columnName?: string): number {
     return this.columnHeads.findIndex(
       (columnHead) => columnHead.apiName === columnName,
     );

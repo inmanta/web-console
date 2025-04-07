@@ -1,7 +1,7 @@
-import { Report } from "./Domain";
+import { Report } from './Domain';
 
 export interface Query {
-  kind: "GetDryRunReport";
+  kind: 'GetDryRunReport';
   version: string;
   reportId: string;
 }

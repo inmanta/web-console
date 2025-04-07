@@ -1,1 +1,1 @@
-export * as CreateInstance from "./Core/Route";
+export * as CreateInstance from './Core/Route';

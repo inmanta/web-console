@@ -1,1 +1,1 @@
-export * from "./CatalogTabs";
+export * from './CatalogTabs';

@@ -1,18 +1,18 @@
-import { createContext } from "react";
-import { dia } from "@inmanta/rappid";
-import { UseQueryResult } from "@tanstack/react-query";
-import { Field, InstanceAttributeModel, ServiceModel } from "@/Core";
+import { createContext } from 'react';
+import { dia } from '@inmanta/rappid';
+import { UseQueryResult } from '@tanstack/react-query';
+import { Field, InstanceAttributeModel, ServiceModel } from '@/Core';
 import {
   InstanceWithRelations,
   Inventories,
-} from "@/Data/Managers/V2/ServiceInstance";
-import { DiagramHandlers } from "../init";
+} from '@/Data/Managers/V2/ServiceInstance';
+import { DiagramHandlers } from '../init';
 import {
   ComposerServiceOrderItem,
   DictDialogData,
   StencilState,
   RelationCounterForCell,
-} from "../interfaces";
+} from '../interfaces';
 
 /**
  * The InstanceComposerCreatorProviderInterface

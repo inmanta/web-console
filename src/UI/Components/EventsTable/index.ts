@@ -1,3 +1,3 @@
-export * from "./EventsTableWrapper";
-export * from "./EventsTablePresenter";
-export * from "./EventsTableBody";
+export * from './EventsTableWrapper';
+export * from './EventsTablePresenter';
+export * from './EventsTableBody';

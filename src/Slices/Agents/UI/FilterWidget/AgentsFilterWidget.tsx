@@ -1,14 +1,14 @@
-import React, { useState } from "react";
-import { ToolbarGroup } from "@patternfly/react-core";
-import { FilterPicker } from "@/UI/Components";
-import { FreeTextFilter, SelectOptionFilter } from "@/UI/Components/Filters";
-import { words } from "@/UI/words";
-import { AgentStatus } from "@S/Agents/Core/Domain";
-import { Filter } from "@S/Agents/Core/Query";
+import React, { useState } from 'react';
+import { ToolbarGroup } from '@patternfly/react-core';
+import { FilterPicker } from '@/UI/Components';
+import { FreeTextFilter, SelectOptionFilter } from '@/UI/Components/Filters';
+import { words } from '@/UI/words';
+import { AgentStatus } from '@S/Agents/Core/Domain';
+import { Filter } from '@S/Agents/Core/Query';
 
 enum Kind {
-  Name = "Name",
-  Status = "Status",
+  Name = 'Name',
+  Status = 'Status',
 }
 
 interface Props {
@@ -42,7 +42,7 @@ export const AgentsFilterWidget: React.FC<Props> = ({ filter, setFilter }) => {
       />
       <SelectOptionFilter
         filterPropertyName={Kind.Status}
-        placeholder={words("agents.filters.status.placeholder")}
+        placeholder={words('agents.filters.status.placeholder')}
         isVisible={filterKind === Kind.Status}
         possibleStates={agentStatuses}
         selectedStates={filter.status ? filter.status : []}
@@ -53,7 +53,7 @@ export const AgentsFilterWidget: React.FC<Props> = ({ filter, setFilter }) => {
         filterPropertyName={Kind.Name}
         searchEntries={filter.name}
         update={updateName}
-        placeholder={words("agents.filters.name.placeholder")}
+        placeholder={words('agents.filters.name.placeholder')}
       />
     </ToolbarGroup>
   );

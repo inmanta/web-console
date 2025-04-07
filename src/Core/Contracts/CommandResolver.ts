@@ -1,3 +1,3 @@
-import { TriggerProvider } from "./TriggerProvider";
+import { TriggerProvider } from './TriggerProvider';
 
 export type CommandResolver = TriggerProvider;

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect } from 'react';
 import {
   Panel,
   PanelMain,
@@ -7,25 +7,25 @@ import {
   TabTitleText,
   Tabs,
   Tooltip,
-} from "@patternfly/react-core";
-import { ServiceModel } from "@/Core";
-import { useUrlStateWithString } from "@/Data";
-import { words } from "@/UI";
+} from '@patternfly/react-core';
+import { ServiceModel } from '@/Core';
+import { useUrlStateWithString } from '@/Data';
+import { words } from '@/UI';
 
-import { InstanceDetailsContext } from "../../Core/Context";
+import { InstanceDetailsContext } from '../../Core/Context';
 import {
   AttributesTabContent,
   DocAttributeDescriptors,
   DocumentationTabContent,
   EventsTabContent,
   ResourcesTabContent,
-} from ".";
+} from '.';
 
 enum TabKeys {
-  DOCUMENTATION = "Documentation",
-  ATTRIBUTES = "Attributes",
-  EVENTS = "Events",
-  RESOURCES = "Resources",
+  DOCUMENTATION = 'Documentation',
+  ATTRIBUTES = 'Attributes',
+  EVENTS = 'Events',
+  RESOURCES = 'Resources',
 }
 
 /**
@@ -49,14 +49,14 @@ export const TabView: React.FC = () => {
 
   const [activeTab, setActiveTab] = useUrlStateWithString<TabKeys>({
     default: docsAttributeLength ? TabKeys.DOCUMENTATION : TabKeys.ATTRIBUTES,
-    key: `tab`,
-    route: "InstanceDetails",
+    key: 'tab',
+    route: 'InstanceDetails',
   });
 
   const [selectedVersion] = useUrlStateWithString<string>({
     default: String(instance.version),
-    key: `version`,
-    route: "InstanceDetails",
+    key: 'version',
+    route: 'InstanceDetails',
   });
 
   const handleTabClick = (
@@ -72,7 +72,7 @@ export const TabView: React.FC = () => {
   const disabledResourceTabTooltip =
     String(instance.version) !== selectedVersion ? (
       <Tooltip
-        content={words("instanceDetails.tabs.disabled.resources-tooltip")}
+        content={words('instanceDetails.tabs.disabled.resources-tooltip')}
       />
     ) : undefined;
 
@@ -108,7 +108,7 @@ export const TabView: React.FC = () => {
                 eventKey={TabKeys.DOCUMENTATION}
                 title={
                   <TabTitleText>
-                    {words("instanceDetails.tabs.documentation")}
+                    {words('instanceDetails.tabs.documentation')}
                   </TabTitleText>
                 }
                 aria-label="documentation-content"
@@ -123,7 +123,7 @@ export const TabView: React.FC = () => {
               eventKey={TabKeys.ATTRIBUTES}
               title={
                 <TabTitleText>
-                  {words("instanceDetails.tabs.attributes")}
+                  {words('instanceDetails.tabs.attributes')}
                 </TabTitleText>
               }
               aria-label="attributes-content"
@@ -134,7 +134,7 @@ export const TabView: React.FC = () => {
               eventKey={TabKeys.EVENTS}
               title={
                 <TabTitleText>
-                  {words("instanceDetails.tabs.events")}
+                  {words('instanceDetails.tabs.events')}
                 </TabTitleText>
               }
               aria-label="events-content"
@@ -145,7 +145,7 @@ export const TabView: React.FC = () => {
               eventKey={TabKeys.RESOURCES}
               title={
                 <TabTitleText>
-                  {words("instanceDetails.tabs.resources")}
+                  {words('instanceDetails.tabs.resources')}
                 </TabTitleText>
               }
               aria-label="resources-content"
@@ -180,11 +180,11 @@ const getDocumentationAttributeDescriptors = (
       if (
         attribute.attribute_annotations &&
         attribute.attribute_annotations.web_title &&
-        attribute.attribute_annotations.web_presentation === "documentation"
+        attribute.attribute_annotations.web_presentation === 'documentation'
       ) {
         docAttributeDescriptors.push({
           title: attribute.attribute_annotations.web_title,
-          iconName: attribute.attribute_annotations.web_icon || "FaBook",
+          iconName: attribute.attribute_annotations.web_icon || 'FaBook',
           attributeName: attribute.name,
         });
       }

@@ -3,16 +3,16 @@ import {
   StateHelper,
   ApiHelper,
   stringifyObjectOrUndefined,
-} from "@/Core";
-import { getPaginationHandlers, QueryManager } from "@/Data/Managers/Helpers";
-import { getUrl } from "./getUrl";
+} from '@/Core';
+import { getPaginationHandlers, QueryManager } from '@/Data/Managers/Helpers';
+import { getUrl } from './getUrl';
 
-export function ResourceHistoryQueryManager(
+export function ResourceHistoryQueryManager (
   apiHelper: ApiHelper,
-  stateHelper: StateHelper<"GetResourceHistory">,
+  stateHelper: StateHelper<'GetResourceHistory'>,
   scheduler: Scheduler,
 ) {
-  return QueryManager.ContinuousWithEnv<"GetResourceHistory">(
+  return QueryManager.ContinuousWithEnv<'GetResourceHistory'>(
     apiHelper,
     stateHelper,
     scheduler,
@@ -24,10 +24,10 @@ export function ResourceHistoryQueryManager(
       sort?.order,
       stringifyObjectOrUndefined(currentPage.value),
     ],
-    "GetResourceHistory",
+    'GetResourceHistory',
     getUrl,
     ({ data, links, metadata }) => {
-      if (typeof links === "undefined")
+      if (typeof links === 'undefined')
         return { data: data, handlers: {}, metadata };
 
       return {

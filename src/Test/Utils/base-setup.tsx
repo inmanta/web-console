@@ -1,26 +1,26 @@
-import React from "react";
-import { MemoryRouter } from "react-router-dom";
-import { StoreProvider } from "easy-peasy";
-import { RemoteData } from "@/Core";
+import React from 'react';
+import { MemoryRouter } from 'react-router-dom';
+import { StoreProvider } from 'easy-peasy';
+import { RemoteData } from '@/Core';
 import {
   QueryResolverImpl,
   getStoreInstance,
   CommandResolverImpl,
   QueryManagerResolverImpl,
   CommandManagerResolverImpl,
-} from "@/Data";
+} from '@/Data';
 import {
   StaticScheduler,
   DeferredApiHelper,
   dependencies,
   EnvironmentDetails,
   EnvironmentSettings,
-} from "@/Test";
-import { UrlManagerImpl } from "@/UI";
-import { DependencyProvider } from "@/UI/Dependency";
-import { PrimaryRouteManager } from "@/UI/Routing";
+} from '@/Test';
+import { UrlManagerImpl } from '@/UI';
+import { DependencyProvider } from '@/UI/Dependency';
+import { PrimaryRouteManager } from '@/UI/Routing';
 
-export function baseSetup(Page: React.ReactNode, halted: boolean = false) {
+export function baseSetup (Page: React.ReactNode, halted: boolean = false) {
   const apiHelper = new DeferredApiHelper();
 
   const scheduler = new StaticScheduler();
@@ -32,21 +32,21 @@ export function baseSetup(Page: React.ReactNode, halted: boolean = false) {
     new CommandManagerResolverImpl(store, apiHelper),
   );
 
-  const routeManager = PrimaryRouteManager("");
-  const urlManager = new UrlManagerImpl(dependencies.featureManager, "");
+  const routeManager = PrimaryRouteManager('');
+  const urlManager = new UrlManagerImpl(dependencies.featureManager, '');
 
   store.dispatch.environment.setEnvironmentDetailsById({
-    id: "env",
-    value: RemoteData.success(EnvironmentDetails[halted ? "halted" : "a"]),
+    id: 'env',
+    value: RemoteData.success(EnvironmentDetails[halted ? 'halted' : 'a']),
   });
   store.dispatch.environment.setSettingsData({
-    environment: "env",
+    environment: 'env',
     value: RemoteData.success({
       settings: {},
       definition: EnvironmentSettings.definition,
     }),
   });
-  dependencies.environmentModifier.setEnvironment("env");
+  dependencies.environmentModifier.setEnvironment('env');
 
   const component = (
     <MemoryRouter>

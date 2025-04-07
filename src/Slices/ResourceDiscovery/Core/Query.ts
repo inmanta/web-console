@@ -1,8 +1,8 @@
-import { PageSize, Pagination, Sort } from "@/Core/Domain";
-import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
+import { PageSize, Pagination, Sort } from '@/Core/Domain';
+import { CurrentPage } from '@/Data/Common/UrlState/useUrlStateWithCurrentPage';
 
 export interface Query {
-  kind: "GetDiscoveredResources";
+  kind: 'GetDiscoveredResources';
   sort?: Sort.Sort<SortKey>;
   filter?: Filter;
   pageSize: PageSize.PageSize;
@@ -41,4 +41,4 @@ export interface Filter {
   discovered_resource_id?: string[];
 }
 
-export type SortKey = "discovered_resource_id";
+export type SortKey = 'discovered_resource_id';

@@ -1,1 +1,1 @@
-export * as ServiceDetails from "./Core/Route";
+export * as ServiceDetails from './Core/Route';

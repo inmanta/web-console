@@ -3,16 +3,16 @@ import {
   ApiHelper,
   StateHelperWithEnv,
   stringifyObjectOrUndefined,
-} from "@/Core";
-import { getPaginationHandlers, QueryManager } from "@/Data/Managers/Helpers";
-import { getUrl } from "./getUrl";
+} from '@/Core';
+import { getPaginationHandlers, QueryManager } from '@/Data/Managers/Helpers';
+import { getUrl } from './getUrl';
 
-export function GetParametersQueryManager(
+export function GetParametersQueryManager (
   apiHelper: ApiHelper,
-  stateHelper: StateHelperWithEnv<"GetParameters">,
+  stateHelper: StateHelperWithEnv<'GetParameters'>,
   scheduler: Scheduler,
 ) {
-  return QueryManager.ContinuousWithEnv<"GetParameters">(
+  return QueryManager.ContinuousWithEnv<'GetParameters'>(
     apiHelper,
     stateHelper,
     scheduler,
@@ -25,10 +25,10 @@ export function GetParametersQueryManager(
       stringifyObjectOrUndefined(filter),
       stringifyObjectOrUndefined(currentPage.value),
     ],
-    "GetParameters",
+    'GetParameters',
     (query) => getUrl(query),
     ({ data, links, metadata }) => {
-      if (typeof links === "undefined") {
+      if (typeof links === 'undefined') {
         return { data: data, handlers: {}, metadata };
       }
 

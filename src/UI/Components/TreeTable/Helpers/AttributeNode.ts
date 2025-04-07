@@ -1,4 +1,4 @@
-import { TreeNode } from "@/Core";
+import { TreeNode } from '@/Core';
 
 type AttributeNode = TreeNode<unknown>;
 

@@ -1,1 +1,1 @@
-export { Page as InstanceComposerViewerPage } from "./Page";
+export { Page as InstanceComposerViewerPage } from './Page';

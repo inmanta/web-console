@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   Dropdown,
   DropdownItem,
@@ -7,10 +7,10 @@ import {
   MenuToggle,
   MenuToggleElement,
   Tooltip,
-} from "@patternfly/react-core";
-import { CopyIcon } from "@patternfly/react-icons";
-import copy from "copy-to-clipboard";
-import { words } from "@/UI";
+} from '@patternfly/react-core';
+import { CopyIcon } from '@patternfly/react-icons';
+import copy from 'copy-to-clipboard';
+import { words } from '@/UI';
 
 interface Props {
   text?: string;
@@ -34,14 +34,14 @@ export const CopyMultiOptions: React.FC<Props> = ({
   options,
   tooltipContent,
   isDisabled,
-  text = "",
+  text = '',
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
 
   const tooltipText = copied
-    ? words("copy.feedback")
-    : tooltipContent || words("copy");
+    ? words('copy.feedback')
+    : tooltipContent || words('copy');
 
   const onToggleClick = () => {
     setIsOpen(!isOpen);
@@ -80,7 +80,7 @@ export const CopyMultiOptions: React.FC<Props> = ({
       icon={
         <Icon>
           <CopyIcon
-            style={{ color: "var(--pf-t--global--icon--color--subtle)" }}
+            style={{ color: 'var(--pf-t--global--icon--color--subtle)' }}
           />
         </Icon>
       }

@@ -1,12 +1,12 @@
-import React from "react";
-import { TextInput } from "@patternfly/react-core";
+import React from 'react';
+import { TextInput } from '@patternfly/react-core';
 import {
   EditableField,
   EditViewComponent,
   FieldProps,
   StaticViewComponent,
-} from "./EditableField";
-import { InlineValue } from "./InlineFillers";
+} from './EditableField';
+import { InlineValue } from './InlineFillers';
 
 export const EditableTextField: React.FC<FieldProps> = ({
   isRequired,
@@ -32,7 +32,7 @@ const EditView: EditViewComponent = ({ value, onChange, onSubmit, label }) => (
     value={value}
     onChange={(_event, value) => onChange(value)}
     onKeyDown={(event) => {
-      if (event.key && event.key !== "Enter") return;
+      if (event.key && event.key !== 'Enter') return;
       onSubmit();
     }}
   />

@@ -1,10 +1,10 @@
 import {
   UseInfiniteQueryResult,
   useInfiniteQuery,
-} from "@tanstack/react-query";
-import { Pagination } from "@/Core";
-import { InstanceLog } from "@/Core/Domain/HistoryLog";
-import { CustomError, useGet } from "../../helpers";
+} from '@tanstack/react-query';
+import { Pagination } from '@/Core';
+import { InstanceLog } from '@/Core/Domain/HistoryLog';
+import { CustomError, useGet } from '../../helpers';
 
 interface LogsResponse {
   data: InstanceLog[];
@@ -42,11 +42,11 @@ export const useGetInfiniteInstanceLogs = (
       selectedVersion: string,
     ): UseInfiniteQueryResult<InstanceLog[], CustomError> =>
       useInfiniteQuery({
-        queryKey: ["get_instance_logs-continuous", service, instance],
+        queryKey: ['get_instance_logs-continuous', service, instance],
         queryFn: ({ pageParam }) => {
           const initialParameters = selectedVersion
             ? `limit=50&end=${Number(selectedVersion) + 1}`
-            : "limit=50";
+            : 'limit=50';
 
           return get(
             `/lsm/v1/service_inventory/${service}/${instance}/log?${pageParam ? pageParam : initialParameters}`,
@@ -61,16 +61,16 @@ export const useGetInfiniteInstanceLogs = (
             return undefined;
           }
 
-          return lastPage.links.prev.split("?")[1];
+          return lastPage.links.prev.split('?')[1];
         },
         getNextPageParam: (lastPage, _pages) => {
           if (!lastPage.links.next) {
             return undefined;
           }
 
-          return lastPage.links.next.split("?")[1];
+          return lastPage.links.next.split('?')[1];
         },
-        initialPageParam: "",
+        initialPageParam: '',
       }),
   };
 };

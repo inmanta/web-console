@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Button,
   MenuToggle,
@@ -10,8 +10,8 @@ import {
   TextInputGroup,
   TextInputGroupMain,
   TextInputGroupUtilities,
-} from "@patternfly/react-core";
-import { TimesIcon } from "@patternfly/react-icons";
+} from '@patternfly/react-core';
+import { TimesIcon } from '@patternfly/react-icons';
 
 interface Props {
   selected: string | null;
@@ -55,8 +55,8 @@ export const SingleTextSelect: React.FC<Props> = ({
   ...props
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [inputValue, setInputValue] = useState<string>(selected || "");
-  const [filterValue, setFilterValue] = useState("");
+  const [inputValue, setInputValue] = useState<string>(selected || '');
+  const [filterValue, setFilterValue] = useState('');
   const [selectOptions, setSelectOptions] =
     useState<SelectOptionProps[]>(options);
   const [focusedItemIndex, setFocusedItemIndex] = useState<number | null>(null);
@@ -82,7 +82,7 @@ export const SingleTextSelect: React.FC<Props> = ({
         !newSelectOptions.length
       ) {
         newSelectOptions = [
-          { children: `Create "${filterValue}"`, value: "create" },
+          { children: `Create "${filterValue}"`, value: 'create' },
           ...newSelectOptions,
         ];
       }
@@ -101,17 +101,17 @@ export const SingleTextSelect: React.FC<Props> = ({
       setSelectOptions([
         {
           children: `No results found for "${filterValue}"`,
-          value: "no results",
+          value: 'no results',
           isDisabled: true,
         },
       ]);
     } else if (
       options.length === 0 &&
       hasCreation &&
-      filterValue.trim() != ""
+      filterValue.trim() != ''
     ) {
       setSelectOptions([
-        { children: `Create "${inputValue}"`, value: "create" },
+        { children: `Create "${inputValue}"`, value: 'create' },
       ]);
     } else {
       setSelectOptions(options);
@@ -134,7 +134,7 @@ export const SingleTextSelect: React.FC<Props> = ({
       return String(selectedItem.children);
     }
 
-    return value || "";
+    return value || '';
   };
 
   const onSelect = (
@@ -142,14 +142,14 @@ export const SingleTextSelect: React.FC<Props> = ({
     value: string | number | undefined,
   ) => {
     switch (value) {
-      case "create":
+      case 'create':
         onCreate(inputValue);
         setFilterValue(inputValue);
         setSelected(inputValue);
         break;
       default:
-        if (value && value !== "no results") {
-          setFilterValue("");
+        if (value && value !== 'no results') {
+          setFilterValue('');
           setInputValue(getDisplayValue(String(value)));
           setSelected(String(value));
         }
@@ -173,7 +173,7 @@ export const SingleTextSelect: React.FC<Props> = ({
     let indexToFocus;
 
     if (isOpen) {
-      if (key === "ArrowUp") {
+      if (key === 'ArrowUp') {
         // When no index is set or at the first index, focus to the last, otherwise decrement focus index
         if (focusedItemIndex === null || focusedItemIndex === 0) {
           indexToFocus = selectOptions.length - 1;
@@ -182,7 +182,7 @@ export const SingleTextSelect: React.FC<Props> = ({
         }
       }
 
-      if (key === "ArrowDown") {
+      if (key === 'ArrowDown') {
         // When no index is set or at the last index, focus to the first, otherwise increment focus index
         if (
           focusedItemIndex === null ||
@@ -199,7 +199,7 @@ export const SingleTextSelect: React.FC<Props> = ({
         indexToFocus
       ];
 
-      setActiveItem(`select-typeahead-${focusedItem.value.replace(" ", "-")}`);
+      setActiveItem(`select-typeahead-${focusedItem.value.replace(' ', '-')}`);
     }
   };
 
@@ -214,10 +214,10 @@ export const SingleTextSelect: React.FC<Props> = ({
 
     switch (event.key) {
       // Select the first available option
-      case "Enter":
-        if (isOpen && focusedItem.value !== "no results") {
+      case 'Enter':
+        if (isOpen && focusedItem.value !== 'no results') {
           setInputValue(String(focusedItem.children));
-          setFilterValue("");
+          setFilterValue('');
           setSelected(String(focusedItem.children));
         }
 
@@ -230,13 +230,13 @@ export const SingleTextSelect: React.FC<Props> = ({
         setActiveItem(null);
 
         break;
-      case "Tab":
-      case "Escape":
+      case 'Tab':
+      case 'Escape':
         setIsOpen(false);
         setActiveItem(null);
         break;
-      case "ArrowUp":
-      case "ArrowDown":
+      case 'ArrowUp':
+      case 'ArrowDown':
         event.preventDefault();
         handleMenuArrowKeys(event.key);
         break;
@@ -262,7 +262,7 @@ export const SingleTextSelect: React.FC<Props> = ({
           autoComplete="off"
           innerRef={textInputRef}
           placeholder={placeholderText}
-          {...(activeItem && { "aria-activedescendant": activeItem })}
+          {...(activeItem && { 'aria-activedescendant': activeItem })}
           role="combobox"
           isExpanded={isOpen}
           aria-controls="select-typeahead-listbox"
@@ -277,9 +277,9 @@ export const SingleTextSelect: React.FC<Props> = ({
               }
               variant="plain"
               onClick={() => {
-                setSelected("");
-                setInputValue("");
-                setFilterValue("");
+                setSelected('');
+                setInputValue('');
+                setFilterValue('');
                 textInputRef?.current?.focus();
               }}
               aria-label="Clear input value"
@@ -311,7 +311,7 @@ export const SingleTextSelect: React.FC<Props> = ({
             isSelected={option.isSelected}
             className={option.className}
             onClick={() => setSelected(option.value)}
-            id={`select-typeahead-${option.value.replace(" ", "-")}`}
+            id={`select-typeahead-${option.value.replace(' ', '-')}`}
             {...option}
             ref={null}
           />

@@ -1,11 +1,11 @@
-import { UseQueryResult, useQuery } from "@tanstack/react-query";
+import { UseQueryResult, useQuery } from '@tanstack/react-query';
 import {
   EmbeddedEntity,
   InstanceAttributeModel,
   ServiceInstanceModel,
   ServiceModel,
-} from "@/Core";
-import { CustomError, useGet } from "../../helpers";
+} from '@/Core';
+import { CustomError, useGet } from '../../helpers';
 
 /*
  * interface for the service instance with its related instances and eventual coordinates on canvas
@@ -100,7 +100,7 @@ export const useGetInstanceWithRelations = (
     // Map relation names to corresponding IDs from attributes
     const relationIds = relationNames
       .flatMap((relationName) => attributes[relationName]) //relations can be in the array of strings so we need to flatten it just in case
-      .filter((id): id is string => typeof id === "string"); // Filter to ensure only you only keep strings
+      .filter((id): id is string => typeof id === 'string'); // Filter to ensure only you only keep strings
 
     // Extract IDs from embedded relations recursively
     const embeddedRelationsIds = embeddedNames.flatMap((embeddedName) => {
@@ -187,7 +187,7 @@ export const useGetInstanceWithRelations = (
      */
     useOneTime: (): UseQueryResult<InstanceWithRelations, CustomError> =>
       useQuery({
-        queryKey: ["get_instance_with_relations-one_time", instanceId],
+        queryKey: ['get_instance_with_relations-one_time', instanceId],
         queryFn: () => fetchInstanceWithRelations(instanceId),
 
         enabled: serviceModel !== undefined,
@@ -195,7 +195,7 @@ export const useGetInstanceWithRelations = (
       }),
     useContinuous: (): UseQueryResult<InstanceWithRelations, CustomError> =>
       useQuery({
-        queryKey: ["get_instance_with_relations-continuous", instanceId],
+        queryKey: ['get_instance_with_relations-continuous', instanceId],
         queryFn: () => fetchInstanceWithRelations(instanceId),
 
         refetchInterval: 5000,

@@ -1,7 +1,7 @@
-import qs from "qs";
-import { GetNotificationsParams } from "./useGetNotifications";
+import qs from 'qs';
+import { GetNotificationsParams } from './useGetNotifications';
 
-export function getUrl({
+export function getUrl ({
   filter,
   pageSize,
   currentPage,
@@ -9,20 +9,20 @@ export function getUrl({
   const filterParam =
     filter && Object.keys(filter).length > 0
       ? `&${qs.stringify(
-          {
-            filter: {
-              title: filter.title,
-              message: filter.message,
-              read: filter.read,
-              cleared: filter.cleared,
-              severity: filter.severity,
-            },
+        {
+          filter: {
+            title: filter.title,
+            message: filter.message,
+            read: filter.read,
+            cleared: filter.cleared,
+            severity: filter.severity,
           },
-          { allowDots: true, arrayFormat: "repeat" },
-        )}`
-      : "";
+        },
+        { allowDots: true, arrayFormat: 'repeat' },
+      )}`
+      : '';
 
   return `/api/v2/notification?limit=${pageSize.value}${filterParam}${
-    currentPage.value ? `&${currentPage.value}` : ""
+    currentPage.value ? `&${currentPage.value}` : ''
   }`;
 }

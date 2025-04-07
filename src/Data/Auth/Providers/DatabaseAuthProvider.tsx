@@ -1,11 +1,11 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useCallback, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   createCookie,
   getCookie,
   removeCookie,
-} from "../../Common/CookieHelper";
-import { AuthContext } from "../AuthContext";
+} from '../../Common/CookieHelper';
+import { AuthContext } from '../AuthContext';
 
 /**
  * DatabaseAuthProvider component provides authentication functionality using a database.
@@ -20,19 +20,19 @@ export const DatabaseAuthProvider: React.FC<React.PropsWithChildren> = ({
   const getUser = (): string | null => user;
 
   const logout = useCallback((): void => {
-    removeCookie("inmanta_user");
-    localStorage.removeItem("inmanta_user");
-    navigate("/login");
+    removeCookie('inmanta_user');
+    localStorage.removeItem('inmanta_user');
+    navigate('/login');
   }, [navigate]);
 
-  const login = (): void => navigate("/login");
+  const login = (): void => navigate('/login');
 
-  const getToken = (): string | null => getCookie("inmanta_user");
+  const getToken = (): string | null => getCookie('inmanta_user');
 
   const updateUser = (username: string, token: string) => {
     setUser(username);
-    localStorage.setItem("inmanta_user", username);
-    createCookie("inmanta_user", token, 1);
+    localStorage.setItem('inmanta_user', username);
+    createCookie('inmanta_user', token, 1);
   };
 
   const isDisabled = () => !getToken();
@@ -40,7 +40,7 @@ export const DatabaseAuthProvider: React.FC<React.PropsWithChildren> = ({
   useEffect(() => {
     // If user is not set and token is present, set the user from the local storage or logs out. case where there is an user but not token is handled automatically as lacks of token prompt use to login again
     if (!user && getToken()) {
-      const username = localStorage.getItem("inmanta_user");
+      const username = localStorage.getItem('inmanta_user');
 
       if (username) {
         setUser(username);

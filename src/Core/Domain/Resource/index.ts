@@ -1,1 +1,1 @@
-export * as Resource from "./Resource";
+export * as Resource from './Resource';

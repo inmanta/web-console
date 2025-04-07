@@ -1,3 +1,3 @@
-import { Maybe } from "@/Core";
+import { Maybe } from '@/Core';
 
 export type CompareSelection = Maybe.Maybe<number>;

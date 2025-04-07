@@ -1,1 +1,1 @@
-export { Page as DesiredStateResourceDetailsPage } from "./Page";
+export { Page as DesiredStateResourceDetailsPage } from './Page';

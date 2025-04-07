@@ -1,1 +1,1 @@
-export * from "./useCreateSupportArchive";
+export * from './useCreateSupportArchive';

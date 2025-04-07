@@ -1,1 +1,1 @@
-export { Page as ResourceDetailsPage } from "./Page";
+export { Page as ResourceDetailsPage } from './Page';

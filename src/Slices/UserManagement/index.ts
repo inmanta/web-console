@@ -1,1 +1,1 @@
-export * as UserManagement from "./Core/Route";
+export * as UserManagement from './Core/Route';

@@ -1,7 +1,7 @@
-import React from "react";
-import { Label, Spinner } from "@patternfly/react-core";
-import { words } from "@/UI";
-import { ServiceOrderItemState, ServiceOrderState } from "../Core/Query";
+import React from 'react';
+import { Label, Spinner } from '@patternfly/react-core';
+import { words } from '@/UI';
+import { ServiceOrderItemState, ServiceOrderState } from '../Core/Query';
 
 /**
  * Custom label tag for orders and serviceOrderItems
@@ -17,27 +17,27 @@ export const OrderStatusLabel: React.FC<{
   status: ServiceOrderItemState | ServiceOrderState;
 }> = ({ status }) => {
   switch (status) {
-    case "acknowledged":
-    case "success":
-    case "completed":
+    case 'acknowledged':
+    case 'success':
+    case 'completed':
       return (
         <Label status="success" variant="outline">
           {status}
         </Label>
       );
-    case "failed":
+    case 'failed':
       return (
         <Label status="danger" variant="outline">
           {status}
         </Label>
       );
-    case "in_progress":
+    case 'in_progress':
       return (
         <Label color="blue" icon={<Spinner size="sm" />} variant="outline">
-          {words("orders.status.in_progress")}
+          {words('orders.status.in_progress')}
         </Label>
       );
-    case "partial":
+    case 'partial':
       return <Label status="warning">{status}</Label>;
   }
 };

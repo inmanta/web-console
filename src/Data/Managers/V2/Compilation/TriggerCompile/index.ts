@@ -1,1 +1,1 @@
-export * from "./useTriggerCompile";
+export * from './useTriggerCompile';

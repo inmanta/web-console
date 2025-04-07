@@ -1,14 +1,14 @@
-import React, { useContext, useEffect } from "react";
-import { updateServiceOrderItems } from "../helpers";
+import React, { useContext, useEffect } from 'react';
+import { updateServiceOrderItems } from '../helpers';
 import {
   ActionEnum,
   EventActionEnum,
   RelationCounterForCell,
   StencilState,
-} from "../interfaces";
-import { ServiceEntityBlock } from "../shapes";
-import { toggleDisabledStencil } from "../stencil/helpers";
-import { CanvasContext } from "./Context";
+} from '../interfaces';
+import { ServiceEntityBlock } from '../shapes';
+import { toggleDisabledStencil } from '../stencil/helpers';
+import { CanvasContext } from './Context';
 
 /**
  * EventWrapper component
@@ -49,7 +49,7 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
     );
     const newSet = new Set(looseElement);
 
-    if (eventData.kind === "remove") {
+    if (eventData.kind === 'remove') {
       newSet.delete(eventData.id);
     } else {
       newSet.add(eventData.id);
@@ -246,46 +246,46 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
   };
 
   useEffect(() => {
-    document.addEventListener("openDictsModal", handleDictEvent);
-    document.addEventListener("sendCellToSidebar", handleEditEvent);
-    document.addEventListener("looseElement", handleLooseElementEvent);
+    document.addEventListener('openDictsModal', handleDictEvent);
+    document.addEventListener('sendCellToSidebar', handleEditEvent);
+    document.addEventListener('looseElement', handleLooseElementEvent);
     document.addEventListener(
-      "updateServiceOrderItems",
+      'updateServiceOrderItems',
       handleUpdateServiceOrderItems,
     );
-    document.addEventListener("updateStencil", handleUpdateStencilState);
+    document.addEventListener('updateStencil', handleUpdateStencilState);
     document.addEventListener(
-      "addInterServiceRelationToTracker",
+      'addInterServiceRelationToTracker',
       handleAddCellWithInterServiceRelations,
     );
     document.addEventListener(
-      "removeInterServiceRelationFromTracker",
+      'removeInterServiceRelationFromTracker',
       handleRemoveCellWithInterServiceRelations,
     );
     document.addEventListener(
-      "updateInterServiceRelations",
+      'updateInterServiceRelations',
       handleUpdateOfInterServiceRelationsInCell,
     );
 
     return () => {
-      document.removeEventListener("openDictsModal", handleDictEvent);
-      document.removeEventListener("sendCellToSidebar", handleEditEvent);
-      document.removeEventListener("looseElement", handleLooseElementEvent);
+      document.removeEventListener('openDictsModal', handleDictEvent);
+      document.removeEventListener('sendCellToSidebar', handleEditEvent);
+      document.removeEventListener('looseElement', handleLooseElementEvent);
       document.removeEventListener(
-        "updateServiceOrderItems",
+        'updateServiceOrderItems',
         handleUpdateServiceOrderItems,
       );
-      document.removeEventListener("updateStencil", handleUpdateStencilState);
+      document.removeEventListener('updateStencil', handleUpdateStencilState);
       document.removeEventListener(
-        "addInterServiceRelationToTracker",
+        'addInterServiceRelationToTracker',
         handleAddCellWithInterServiceRelations,
       );
       document.removeEventListener(
-        "removeInterServiceRelationFromTracker",
+        'removeInterServiceRelationFromTracker',
         handleRemoveCellWithInterServiceRelations,
       );
       document.addEventListener(
-        "updateInterServiceRelations",
+        'updateInterServiceRelations',
         handleUpdateOfInterServiceRelationsInCell,
       );
     };

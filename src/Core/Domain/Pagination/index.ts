@@ -1,1 +1,1 @@
-export * as Pagination from "./Pagination";
+export * as Pagination from './Pagination';

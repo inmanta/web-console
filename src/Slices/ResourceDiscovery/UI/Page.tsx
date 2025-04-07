@@ -1,43 +1,43 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect } from 'react';
 import {
   useUrlStateWithFilter,
   useUrlStateWithPageSize,
   useUrlStateWithSort,
-} from "@/Data";
-import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
+} from '@/Data';
+import { useUrlStateWithCurrentPage } from '@/Data/Common/UrlState/useUrlStateWithCurrentPage';
 import {
   EmptyView,
   PageContainer,
   OldPaginationWidget,
   RemoteDataView,
-} from "@/UI/Components";
-import { DependencyContext } from "@/UI/Dependency";
-import { words } from "@/UI/words";
-import { Filter, SortKey } from "@S/ResourceDiscovery/Core/Query";
-import { DiscoveredResourcesTable } from "./DiscoveredResourcesTable";
-import { DiscoveredResourcesTablePresenter } from "./DiscoveredResourcesTablePresenter";
-import { TableControls } from "./TableControls";
+} from '@/UI/Components';
+import { DependencyContext } from '@/UI/Dependency';
+import { words } from '@/UI/words';
+import { Filter, SortKey } from '@S/ResourceDiscovery/Core/Query';
+import { DiscoveredResourcesTable } from './DiscoveredResourcesTable';
+import { DiscoveredResourcesTablePresenter } from './DiscoveredResourcesTablePresenter';
+import { TableControls } from './TableControls';
 
 export const Page: React.FC = () => {
   const { queryResolver, featureManager } = useContext(DependencyContext);
 
   const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({
-    route: "DiscoveredResources",
+    route: 'DiscoveredResources',
   });
   const [pageSize, setPageSize] = useUrlStateWithPageSize({
-    route: "DiscoveredResources",
+    route: 'DiscoveredResources',
   });
   // The filters are currently empty, but can easily be added at a later stage when the endpoint supports it.
   const [filter, _setFilter] = useUrlStateWithFilter<Filter>({
-    route: "DiscoveredResources",
+    route: 'DiscoveredResources',
   });
   const [sort, setSort] = useUrlStateWithSort<SortKey>({
-    default: { name: "discovered_resource_id", order: "asc" },
-    route: "DiscoveredResources",
+    default: { name: 'discovered_resource_id', order: 'asc' },
+    route: 'DiscoveredResources',
   });
 
-  const [data, retry] = queryResolver.useContinuous<"GetDiscoveredResources">({
-    kind: "GetDiscoveredResources",
+  const [data, retry] = queryResolver.useContinuous<'GetDiscoveredResources'>({
+    kind: 'GetDiscoveredResources',
     sort,
     filter,
     pageSize,
@@ -49,12 +49,12 @@ export const Page: React.FC = () => {
 
   //when sorting is triggered, reset the current page
   useEffect(() => {
-    setCurrentPage({ kind: "CurrentPage", value: "" });
+    setCurrentPage({ kind: 'CurrentPage', value: '' });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sort.order]);
 
   return (
-    <PageContainer pageTitle={words("discovered_resources.title")}>
+    <PageContainer pageTitle={words('discovered_resources.title')}>
       <TableControls
         paginationWidget={
           <OldPaginationWidget
@@ -74,8 +74,8 @@ export const Page: React.FC = () => {
             <EmptyView
               message={
                 disabledDiscoveredResourcesView
-                  ? words("resources.discovery.disabled")
-                  : words("resources.empty.message")
+                  ? words('resources.discovery.disabled')
+                  : words('resources.empty.message')
               }
               aria-label="ResourcesView-Empty"
             />

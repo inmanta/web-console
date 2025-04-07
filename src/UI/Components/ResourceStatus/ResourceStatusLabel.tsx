@@ -1,16 +1,16 @@
-import React from "react";
-import { Label, LabelProps } from "@patternfly/react-core";
-import { Resource } from "@/Core";
+import React from 'react';
+import { Label, LabelProps } from '@patternfly/react-core';
+import { Resource } from '@/Core';
 
 interface Props {
-  status: NonNullable<LabelProps["status"] | LabelProps["color"]>;
+  status: NonNullable<LabelProps['status'] | LabelProps['color']>;
   label: Resource.Status;
 }
 
-const nonStatus: LabelProps["color"][] = ["grey", "purple"];
+const nonStatus: LabelProps['color'][] = ['grey', 'purple'];
 
 // type guard function that checks if a value is a valid LabelProps["color"]
-const isColor = (value): value is LabelProps["color"] => {
+const isColor = (value): value is LabelProps['color'] => {
   return nonStatus.includes(value);
 };
 

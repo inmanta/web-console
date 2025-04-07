@@ -1,11 +1,11 @@
-import React, { useState } from "react";
-import { ToolbarGroup } from "@patternfly/react-core";
-import { CompileStatus, DateRange } from "@/Core";
-import { FilterPicker } from "@/UI/Components";
-import { TimestampFilter } from "@/UI/Components/Filters";
-import { MomentDatePresenter } from "@/UI/Utils";
-import { Filter, Kind, List } from "@S/CompileReports/Core/Query";
-import { StatusFilter } from "./StatusFilter";
+import React, { useState } from 'react';
+import { ToolbarGroup } from '@patternfly/react-core';
+import { CompileStatus, DateRange } from '@/Core';
+import { FilterPicker } from '@/UI/Components';
+import { TimestampFilter } from '@/UI/Components/Filters';
+import { MomentDatePresenter } from '@/UI/Utils';
+import { Filter, Kind, List } from '@S/CompileReports/Core/Query';
+import { StatusFilter } from './StatusFilter';
 
 interface Props {
   filter: Filter;
@@ -22,7 +22,7 @@ export const CompileReportsFilterWidget: React.FC<Props> = ({
     setFilter({
       ...filter,
       status: selectedCompileStatus
-        ? CompileStatus[selectedCompileStatus.replace(/\s+/g, "")]
+        ? CompileStatus[selectedCompileStatus.replace(/\s+/g, '')]
         : undefined,
     });
 

@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   OnSort,
   Table,
@@ -6,11 +6,11 @@ import {
   Th,
   Thead,
   Tr,
-} from "@patternfly/react-table";
-import { Sort } from "@/Core";
-import { AgentRow } from "@S/Agents/Core/Domain";
-import { AgentsTablePresenter } from "./AgentsTablePresenter";
-import { AgentsTableRow } from "./AgentsTableRow";
+} from '@patternfly/react-table';
+import { Sort } from '@/Core';
+import { AgentRow } from '@S/Agents/Core/Domain';
+import { AgentsTablePresenter } from './AgentsTablePresenter';
+import { AgentsTableRow } from './AgentsTableRow';
 
 interface Props {
   tablePresenter: AgentsTablePresenter;
@@ -39,15 +39,15 @@ export const AgentsTable: React.FC<Props> = ({
       const hasSort = tablePresenter.getSortableColumnNames().includes(apiName);
       const sortParams = hasSort
         ? {
-            sort: {
-              sortBy: {
-                index: activeSortIndex,
-                direction: sort.order,
-              },
-              onSort,
-              columnIndex,
+          sort: {
+            sortBy: {
+              index: activeSortIndex,
+              direction: sort.order,
             },
-          }
+            onSort,
+            columnIndex,
+          },
+        }
         : {};
 
       return (

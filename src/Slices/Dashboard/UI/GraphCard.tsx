@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Card,
   CardTitle,
@@ -8,11 +8,11 @@ import {
   Flex,
   FlexItem,
   Content,
-} from "@patternfly/react-core";
-import { words } from "@/UI";
-import { GraphCardProps, Metric, MetricName } from "../Core/Domain";
-import { LineChart } from "./Charts/LineChart";
-import { formatLegendData, formatMetricsToStacked } from "./helper";
+} from '@patternfly/react-core';
+import { words } from '@/UI';
+import { GraphCardProps, Metric, MetricName } from '../Core/Domain';
+import { LineChart } from './Charts/LineChart';
+import { formatLegendData, formatMetricsToStacked } from './helper';
 
 export const GraphCard: React.FC<GraphCardProps> = ({
   isStacked,
@@ -25,8 +25,8 @@ export const GraphCard: React.FC<GraphCardProps> = ({
     <Card id={`trend-card-${metrics.name}`} component="div">
       <CardHeader>
         <Flex
-          direction={{ default: "column" }}
-          spaceItems={{ default: "spaceItemsNone" }}
+          direction={{ default: 'column' }}
+          spaceItems={{ default: 'spaceItemsNone' }}
         >
           <FlexItem>
             <CardTitle>

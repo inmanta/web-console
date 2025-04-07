@@ -1,22 +1,22 @@
-import React, { useEffect, useState } from "react";
-import { DiffEditor } from "@monaco-editor/react";
+import React, { useEffect, useState } from 'react';
+import { DiffEditor } from '@monaco-editor/react';
 import {
   Divider,
   Flex,
   FlexItem,
   FormSelect,
   FormSelectOption,
-} from "@patternfly/react-core";
-import styled from "styled-components";
-import { InstanceAttributeModel } from "@/Core";
-import { InstanceLog } from "@/Core/Domain/HistoryLog";
+} from '@patternfly/react-core';
+import styled from 'styled-components';
+import { InstanceAttributeModel } from '@/Core';
+import { InstanceLog } from '@/Core/Domain/HistoryLog';
 import {
   AttributeSets,
   getAvailableAttributesSets,
   getAvailableVersions,
-} from "@/Slices/ServiceInstanceDetails/Utils";
-import { words } from "@/UI";
-import { getThemePreference } from "@/UI/Components/DarkmodeOption";
+} from '@/Slices/ServiceInstanceDetails/Utils';
+import { words } from '@/UI';
+import { getThemePreference } from '@/UI/Components/DarkmodeOption';
 
 interface Props {
   instanceLogs: InstanceLog[];
@@ -53,14 +53,14 @@ export const AttributesCompare: React.FC<Props> = ({
   >({});
 
   const [leftSelectedSet, setLeftSelectedSet] =
-    useState<AttributeSets>("active_attributes");
+    useState<AttributeSets>('active_attributes');
   const [rightSelectedSet, setRightSelectedSet] = useState<AttributeSets>(
-    "candidate_attributes",
+    'candidate_attributes',
   );
 
   const [availabelVersions, setAvailableVersions] = useState<string[]>([]);
 
-  const preferedTheme = getThemePreference() || "light";
+  const preferedTheme = getThemePreference() || 'light';
 
   useEffect(() => {
     if (instanceLogs && instanceLogs.length) {
@@ -110,7 +110,7 @@ export const AttributesCompare: React.FC<Props> = ({
 
   return (
     <>
-      <Flex justifyContent={{ default: "justifyContentSpaceBetween" }}>
+      <Flex justifyContent={{ default: 'justifyContentSpaceBetween' }}>
         <Flex>
           <FlexItem>
             <StyledVersionSelect
@@ -154,7 +154,7 @@ export const AttributesCompare: React.FC<Props> = ({
 
         <Divider
           orientation={{
-            default: "vertical",
+            default: 'vertical',
           }}
         />
 
@@ -200,7 +200,7 @@ export const AttributesCompare: React.FC<Props> = ({
         </Flex>
       </Flex>
       <DiffEditor
-        height={"calc(100vh - 525px)"}
+        height={'calc(100vh - 525px)'}
         options={{
           readOnly: true,
           renderSideBySide: true,

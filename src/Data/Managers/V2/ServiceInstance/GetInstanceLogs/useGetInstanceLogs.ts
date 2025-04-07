@@ -1,6 +1,6 @@
-import { UseQueryResult, useQuery } from "@tanstack/react-query";
-import { InstanceLog } from "@/Core/Domain/HistoryLog";
-import { CustomError, useGet } from "../../helpers";
+import { UseQueryResult, useQuery } from '@tanstack/react-query';
+import { InstanceLog } from '@/Core/Domain/HistoryLog';
+import { CustomError, useGet } from '../../helpers';
 
 /**
  * Return Signature of the useGetInstanceLogs React Query
@@ -30,13 +30,13 @@ export const useGetInstanceLogs = (
   return {
     useOneTime: (): UseQueryResult<InstanceLog[], CustomError> =>
       useQuery({
-        queryKey: ["get_instance_logs-one_time", service, instance],
+        queryKey: ['get_instance_logs-one_time', service, instance],
         queryFn: () => get(url),
         select: (data) => data.data,
       }),
     useContinuous: (): UseQueryResult<InstanceLog[], CustomError> =>
       useQuery({
-        queryKey: ["get_instance_logs-continuous", service, instance],
+        queryKey: ['get_instance_logs-continuous', service, instance],
         queryFn: () => get(url),
         refetchInterval: 5000,
         select: (data) => data.data,

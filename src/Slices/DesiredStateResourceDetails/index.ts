@@ -1,1 +1,1 @@
-export * as DesiredStateResourceDetails from "./Core/Route";
+export * as DesiredStateResourceDetails from './Core/Route';

@@ -1,12 +1,12 @@
-import React, { useContext, useState } from "react";
-import { Button, Flex } from "@patternfly/react-core";
-import moment from "moment";
-import styled from "styled-components";
-import { useGetMetrics } from "@/Data/Managers/V2/Dashboard/GetMetrics";
-import { ErrorView, LoadingView } from "@/UI/Components";
-import { DependencyContext } from "@/UI/Dependency";
-import { words } from "@/UI/words";
-import { Section } from "./Section";
+import React, { useContext, useState } from 'react';
+import { Button, Flex } from '@patternfly/react-core';
+import moment from 'moment';
+import styled from 'styled-components';
+import { useGetMetrics } from '@/Data/Managers/V2/Dashboard/GetMetrics';
+import { ErrorView, LoadingView } from '@/UI/Components';
+import { DependencyContext } from '@/UI/Dependency';
+import { words } from '@/UI/words';
+import { Section } from './Section';
 
 /**
  * Dashboard component that displays metrics data in sections
@@ -22,7 +22,7 @@ import { Section } from "./Section";
 export const Dashboard: React.FC = () => {
   const { featureManager } = useContext(DependencyContext);
   const [startDate, setStartDate] = useState(
-    moment().add(-7, "days").toISOString(),
+    moment().add(-7, 'days').toISOString(),
   );
   const [endDate, setEndDate] = useState(moment().toISOString());
   const {
@@ -38,7 +38,7 @@ export const Dashboard: React.FC = () => {
   });
 
   const updateCharts = () => {
-    setStartDate(moment().add(-7, "days").toISOString());
+    setStartDate(moment().add(-7, 'days').toISOString());
     setEndDate(moment().toISOString());
   };
 
@@ -57,24 +57,24 @@ export const Dashboard: React.FC = () => {
       <Wrapper aria-label="Metrics-Success">
         <RefreshWrapper>
           <Button variant="secondary" onClick={updateCharts}>
-            {words("dashboard.refresh")}
+            {words('dashboard.refresh')}
           </Button>
         </RefreshWrapper>
-        <Flex direction={{ default: "column" }} gap={{ default: "gapLg" }}>
+        <Flex direction={{ default: 'column' }} gap={{ default: 'gapLg' }}>
           {featureManager.isLsmEnabled() && (
             <Section
-              title={words("navigation.lifecycleServiceManager")}
+              title={words('navigation.lifecycleServiceManager')}
               metricType="lsm"
               metrics={metrics}
             />
           )}
           <Section
-            title={words("navigation.orchestrationEngine")}
+            title={words('navigation.orchestrationEngine')}
             metricType="orchestrator"
             metrics={metrics}
           />
           <Section
-            title={words("navigation.resourceManager")}
+            title={words('navigation.resourceManager')}
             metricType="resource"
             metrics={metrics}
           />

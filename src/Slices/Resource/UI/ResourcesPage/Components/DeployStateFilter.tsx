@@ -1,7 +1,7 @@
-import React from "react";
-import { Resource } from "@/Core";
-import { words } from "@/UI/words";
-import { SelectIncludeExcludeFilter } from "./SelectIncludeExcludeFilter";
+import React from 'react';
+import { Resource } from '@/Core';
+import { words } from '@/UI/words';
+import { SelectIncludeExcludeFilter } from './SelectIncludeExcludeFilter';
 
 interface Props {
   filter: Resource.Filter;
@@ -19,8 +19,8 @@ export const DeployStateFilter: React.FC<Props> = ({ filter, setFilter }) => {
   return (
     <SelectIncludeExcludeFilter
       isVisible={true}
-      filterPropertyName={words("resources.column.deployState")}
-      placeholder={words("resources.filters.status.placeholder")}
+      filterPropertyName={words('resources.column.deployState')}
+      placeholder={words('resources.filters.status.placeholder')}
       possibleStates={Object.keys(Resource.Status).map(
         (k) => Resource.Status[k],
       )}

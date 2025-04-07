@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import MarkdownIt from "markdown-it";
-import Mermaid from "mermaid";
-import { words } from "@/UI";
+import MarkdownIt from 'markdown-it';
+import Mermaid from 'mermaid';
+import { words } from '@/UI';
 
 // Define types for Mermaid API
 interface MermaidAPI {
@@ -25,18 +25,18 @@ const mermaid = Mermaid as unknown as MermaidAPI;
  * @param baseId - The base id to use for the mermaid elements.
  * @param options - The options to use for rendering the mermaid diagrams.
  */
-export default function mermaidPlugin(
+export default function mermaidPlugin (
   md: MarkdownIt,
   baseId: string,
   options: any,
 ) {
   // Setup Mermaid
   mermaid.initialize({
-    securityLevel: "loose",
+    securityLevel: 'loose',
     ...options,
   });
 
-  function getLangName(info: string): string {
+  function getLangName (info: string): string {
     return info.split(/\s+/g)[0];
   }
 
@@ -44,7 +44,7 @@ export default function mermaidPlugin(
   const defaultFenceRenderer = md.renderer.rules.fence;
 
   // Render custom code types as SVGs, letting the fence parser do all the heavy lifting.
-  async function customFenceRenderer(
+  async function customFenceRenderer (
     tokens: any[],
     idx: number,
     options: any,
@@ -53,22 +53,22 @@ export default function mermaidPlugin(
   ) {
     const token = tokens[idx];
     const info = token.info.trim();
-    const langName = info ? getLangName(info) : "";
+    const langName = info ? getLangName(info) : '';
 
-    if (["mermaid", "{mermaid}"].indexOf(langName) === -1) {
+    if (['mermaid', '{mermaid}'].indexOf(langName) === -1) {
       if (defaultFenceRenderer !== undefined) {
         return defaultFenceRenderer(tokens, idx, options, env, slf);
       }
 
       // Missing fence renderer!
-      return "";
+      return '';
     }
 
-    let svgString: string = "";
+    let svgString: string = '';
     const imageAttrs: string[][] = [];
 
     // Create element to render into
-    const element = document.createElement("div");
+    const element = document.createElement('div');
 
     document.body.appendChild(element);
 
@@ -87,7 +87,7 @@ export default function mermaidPlugin(
 
       if (renderedSvg !== null) {
         imageAttrs.push([
-          "style",
+          'style',
           `max-width:${renderedSvg.style.maxWidth};max-height:${renderedSvg.style.maxHeight};cursor:zoom-in;transition:transform 0.2s ease-in-out;`,
         ]);
       }
@@ -100,7 +100,7 @@ export default function mermaidPlugin(
       svgString = `
         <svg xmlns="http://www.w3.org/2000/svg" width="300" height="180">
           <rect x="10" y="10" width="280" height="160" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(255,0,0)" />
-          <text x="50%" y="50%" alignment-baseline="middle" text-anchor="middle" font-family="Arial" font-size="16" fill="red">${words("inventory.error.mermaid")}</text>
+          <text x="50%" y="50%" alignment-baseline="middle" text-anchor="middle" font-family="Arial" font-size="16" fill="red">${words('inventory.error.mermaid')}</text>
           <text x="50%" y="70%" alignment-baseline="middle" text-anchor="middle" font-family="Arial" font-size="12" fill="red">${error}</text>
         </svg>
       `;
@@ -110,14 +110,14 @@ export default function mermaidPlugin(
 
     // Store encoded image data
     imageAttrs.push([
-      "src",
+      'src',
       `data:image/svg+xml,${encodeURIComponent(svgString)}`,
     ]);
 
     // Add class and data attributes for zoom functionality
-    imageAttrs.push(["class", "mermaid-diagram"]);
-    imageAttrs.push(["data-zoomable", "true"]);
-    imageAttrs.push(["alt", "Mermaid diagram"]);
+    imageAttrs.push(['class', 'mermaid-diagram']);
+    imageAttrs.push(['data-zoomable', 'true']);
+    imageAttrs.push(['alt', 'Mermaid diagram']);
 
     return `<img ${slf.renderAttrs({ attrs: imageAttrs })}>`;
   }

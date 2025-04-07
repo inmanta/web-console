@@ -1,9 +1,9 @@
-import { Action, action } from "easy-peasy";
-import { RemoteData, Query } from "@/Core";
+import { Action, action } from 'easy-peasy';
+import { RemoteData, Query } from '@/Core';
 
 type Data = RemoteData.Type<
-  Query.Error<"GetVersionedResourceDetails">,
-  Query.Data<"GetVersionedResourceDetails">
+  Query.Error<'GetVersionedResourceDetails'>,
+  Query.Data<'GetVersionedResourceDetails'>
 >;
 
 export interface VersionedResourceDetailsSlice {

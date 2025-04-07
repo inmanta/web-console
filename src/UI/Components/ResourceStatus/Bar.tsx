@@ -1,9 +1,9 @@
-import React from "react";
-import styled from "styled-components";
-import { ParsedNumber, Resource } from "@/Core";
-import { words } from "@/UI";
-import { LegendBar, LegendItemDetails } from "@/UI/Components/LegendBar";
-import { colorConfig } from "./ColorConfig";
+import React from 'react';
+import styled from 'styled-components';
+import { ParsedNumber, Resource } from '@/Core';
+import { words } from '@/UI';
+import { LegendBar, LegendItemDetails } from '@/UI/Components/LegendBar';
+import { colorConfig } from './ColorConfig';
 
 interface Props {
   summary: Resource.DeploySummary;
@@ -33,12 +33,12 @@ export const ResourceStatusBar: React.FC<Props> = ({
       total={{
         format: (total) => `${done} / ${total}`,
       }}
-      aria-label={words("resources.deploySummary.title")}
+      aria-label={words('resources.deploySummary.title')}
     />
   );
 };
 
-function getResourcesInDoneState(
+function getResourcesInDoneState (
   by_state: Record<string, ParsedNumber>,
 ): number {
   return Object.entries(by_state)
@@ -47,7 +47,7 @@ function getResourcesInDoneState(
     .reduce((acc, current) => acc + current, 0);
 }
 
-export function infoToLegendItem(
+export function infoToLegendItem (
   info: InfoWithTotal,
   onClick: (ids: Resource.Status[]) => void,
 ): LegendItemDetails {
@@ -60,7 +60,7 @@ export function infoToLegendItem(
   };
 }
 
-function addTotal(
+function addTotal (
   info: Info,
   byState: Record<string, ParsedNumber>,
 ): InfoWithTotal {

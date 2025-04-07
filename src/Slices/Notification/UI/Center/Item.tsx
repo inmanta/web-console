@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   DataListAction,
   DataListCell,
@@ -6,16 +6,16 @@ import {
   DataListItemCells,
   DataListItemRow,
   variantIcons,
-} from "@patternfly/react-core";
-import styled from "styled-components";
-import { DateWithTooltip } from "@/UI/Components";
-import { Notification, Severity } from "@S/Notification/Core/Domain";
+} from '@patternfly/react-core';
+import styled from 'styled-components';
+import { DateWithTooltip } from '@/UI/Components';
+import { Notification, Severity } from '@S/Notification/Core/Domain';
 import {
   getColorForVisualSeverity,
   getSeverityForNotification,
   VisualSeverity,
-} from "@S/Notification/UI/Utils";
-import { ActionList } from "./ActionList";
+} from '@S/Notification/UI/Utils';
+import { ActionList } from './ActionList';
 
 interface Props {
   notification: Notification;
@@ -74,7 +74,7 @@ const IconWrapper = styled.span<{ $severity: VisualSeverity }>`
 `;
 
 const Title = styled.span<{ $read: boolean }>`
-  font-weight: ${(p) => (p.$read ? "normal" : "bold")};
+  font-weight: ${(p) => (p.$read ? 'normal' : 'bold')};
 `;
 
 interface CustomItemProps {
@@ -84,5 +84,5 @@ interface CustomItemProps {
 
 const CustomItem = styled(DataListItem)<CustomItemProps>`
   --pf-v6-c-data-list__item--before--BackgroundColor: ${(p) =>
-    p.$read ? "transparent" : getColorForVisualSeverity(p.$severity)};
+    p.$read ? 'transparent' : getColorForVisualSeverity(p.$severity)};
 `;

@@ -1,6 +1,6 @@
-import React, { PropsWithChildren } from "react";
-import { Alert, Panel } from "@patternfly/react-core";
-import { InfoAltIcon } from "@patternfly/react-icons";
+import React, { PropsWithChildren } from 'react';
+import { Alert, Panel } from '@patternfly/react-core';
+import { InfoAltIcon } from '@patternfly/react-icons';
 
 interface Props {
   title: string;

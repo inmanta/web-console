@@ -1,8 +1,8 @@
-import React from "react";
-import { Flex, FlexItem, SelectOptionProps } from "@patternfly/react-core";
-import { EnvironmentSettings } from "@/Core";
-import { SingleTextSelect } from "@/UI/Components";
-import { Warning } from "./Warning";
+import React from 'react';
+import { Flex, FlexItem, SelectOptionProps } from '@patternfly/react-core';
+import { EnvironmentSettings } from '@/Core';
+import { SingleTextSelect } from '@/UI/Components';
+import { Warning } from './Warning';
 
 interface Props {
   info: EnvironmentSettings.EnumInputInfo;
@@ -15,8 +15,8 @@ export const EnumInput: React.FC<Props> = ({ info }) => {
   });
 
   return (
-    <Flex direction={{ default: "row" }}>
-      <FlexItem grow={{ default: "grow" }}>
+    <Flex direction={{ default: 'row' }}>
+      <FlexItem grow={{ default: 'grow' }}>
         <SingleTextSelect
           selected={info.value}
           setSelected={setSelected}
@@ -25,7 +25,7 @@ export const EnumInput: React.FC<Props> = ({ info }) => {
         />
       </FlexItem>
 
-      <FlexItem style={{ minWidth: "20px" }}>
+      <FlexItem style={{ minWidth: '20px' }}>
         {info.isUpdateable(info) && <Warning />}
       </FlexItem>
     </Flex>

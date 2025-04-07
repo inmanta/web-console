@@ -1,6 +1,6 @@
-import React from "react";
-import { Tooltip } from "@patternfly/react-core";
-import styled from "styled-components";
+import React from 'react';
+import { Tooltip } from '@patternfly/react-core';
+import styled from 'styled-components';
 
 /**
  * @param id must be unique
@@ -36,9 +36,9 @@ export const Item: React.FC<Props> = ({
   </Tooltip>
 );
 
-export const Container = styled.div<Omit<Props, "id" | "label">>`
+export const Container = styled.div<Omit<Props, 'id' | 'label'>>`
   background-color: ${(p) => p.backgroundColor};
-  color: ${(p) => p.color || "white"};
+  color: ${(p) => p.color || 'white'};
   flex-basis: auto;
   flex-grow: ${(p) => p.value};
   flex-shrink: ${(p) => p.value};
@@ -46,6 +46,6 @@ export const Container = styled.div<Omit<Props, "id" | "label">>`
   text-align: center;
   line-height: 36px;
   padding: 0 8px;
-  cursor: ${(p) => (p.onClick ? "pointer" : "inherit")};
+  cursor: ${(p) => (p.onClick ? 'pointer' : 'inherit')};
   user-select: none;
 `;

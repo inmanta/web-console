@@ -1,1 +1,1 @@
-export * as InstanceComposerEditor from "./Core/Route";
+export * as InstanceComposerEditor from './Core/Route';

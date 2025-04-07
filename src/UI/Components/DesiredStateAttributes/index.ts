@@ -1,2 +1,2 @@
-export * from "./AttributeClassifier";
-export * from "./AttributeList";
+export * from './AttributeClassifier';
+export * from './AttributeList';

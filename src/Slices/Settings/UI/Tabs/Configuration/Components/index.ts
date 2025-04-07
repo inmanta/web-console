@@ -1,1 +1,1 @@
-export * from "./InputRow";
+export * from './InputRow';

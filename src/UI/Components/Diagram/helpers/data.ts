@@ -1,14 +1,14 @@
-import { dia } from "@inmanta/rappid";
-import { isEqual } from "lodash";
-import { v4 as uuidv4 } from "uuid";
-import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from "@/Core";
+import { dia } from '@inmanta/rappid';
+import { isEqual } from 'lodash';
+import { v4 as uuidv4 } from 'uuid';
+import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from '@/Core';
 import {
   ComposerServiceOrderItem,
   SavedCoordinates,
   ActionEnum,
-} from "@/UI/Components/Diagram/interfaces";
-import { words } from "@/UI/words";
-import { ServiceEntityBlock } from "../shapes";
+} from '@/UI/Components/Diagram/interfaces';
+import { words } from '@/UI/words';
+import { ServiceEntityBlock } from '../shapes';
 
 /**
  * Function that will merge state from Instance Composer to proper object for order_api endpoint.
@@ -68,7 +68,7 @@ export const shapesDataTransform = (
               !parentInstance.action && updatedInstance.action !== null;
           }
           if (
-            updatedInstance.action !== "delete" &&
+            updatedInstance.action !== 'delete' &&
             updatedInstance.attributes
           ) {
             updated.push(updatedInstance.attributes);
@@ -114,17 +114,17 @@ export const shapesDataTransform = (
 
   //if any of its embedded instances were edited, and its action is indicating no changes to main attributes, change it to "update"
   if (areEmbeddedEdited) {
-    parentInstance.action = "update";
+    parentInstance.action = 'update';
   }
 
   //if its action is "update" and instance isn't embedded change value property to edit as that's what api expect in the body
-  if (parentInstance.action === "update" && !isEmbeddedEntity) {
+  if (parentInstance.action === 'update' && !isEmbeddedEntity) {
     if (!!parentInstance.attributes && !parentInstance.edits) {
       parentInstance.edits = [
         {
           edit_id: `${parentInstance.instance_id}_order_update-${uuidv4()}`,
-          operation: "replace",
-          target: ".",
+          operation: 'replace',
+          target: '.',
           value: parentInstance.attributes,
         },
       ];
@@ -159,10 +159,10 @@ export const getServiceOrderItems = (
   deepCopiedMapToArray.forEach((instance, index) => {
     instance.relatedTo = mapToArray[index].relatedTo
       ? JSON.parse(
-          JSON.stringify(
-            Array.from(mapToArray[index].relatedTo as Map<string, string>),
-          ),
-        )
+        JSON.stringify(
+          Array.from(mapToArray[index].relatedTo as Map<string, string>),
+        ),
+      )
       : mapToArray[index].relatedTo;
   });
   const topServicesNames = services.map((service) => service.name);
@@ -207,7 +207,7 @@ export const getCellsCoordinates = (graph: dia.Graph): SavedCoordinates[] => {
   const cells = graph.getCells();
 
   return cells
-    .filter((cell) => cell.attributes.type === "app.ServiceEntityBlock")
+    .filter((cell) => cell.attributes.type === 'app.ServiceEntityBlock')
     .map((cell) => ({
       id: cell.id,
       name: cell.attributes.entityName,
@@ -239,7 +239,7 @@ export const applyCoordinatesToCells = (
     );
 
     if (correspondingCell) {
-      correspondingCell.set("position", {
+      correspondingCell.set('position', {
         x: element.coordinates.x,
         y: element.coordinates.y,
       });
@@ -265,9 +265,9 @@ export const updateServiceOrderItems = (
     service_entity: cell.getName(),
     config: {},
     action: null,
-    attributes: cell.get("sanitizedAttrs"),
+    attributes: cell.get('sanitizedAttrs'),
     edits: null,
-    embeddedTo: cell.get("embeddedTo"),
+    embeddedTo: cell.get('embeddedTo'),
     relatedTo: cell.getRelations(),
   };
   const copiedInstances = new Map(serviceOrderItems); // copy
@@ -277,7 +277,7 @@ export const updateServiceOrderItems = (
   switch (action) {
     case ActionEnum.UPDATE:
       if (!updatedInstance) {
-        throw new Error(words("instanceComposer.error.updateInstanceNotInMap")); //updating instance that doesn't exist in the map shouldn't happen
+        throw new Error(words('instanceComposer.error.updateInstanceNotInMap')); //updating instance that doesn't exist in the map shouldn't happen
       }
 
       //action in the instance isn't the same as action passed to this function, this assertion is to make sure that the update action won't change the action state of newly created instance.
@@ -331,7 +331,7 @@ export const getKeyAttributesNames = (
   let keyAttributes = serviceModel.key_attributes || [];
 
   //service_identity is a unique attribute to Service model, but doesn't exist in the Embedded Entity model
-  if ("service_identity" in serviceModel && serviceModel.service_identity) {
+  if ('service_identity' in serviceModel && serviceModel.service_identity) {
     keyAttributes.push(serviceModel.service_identity);
 
     keyAttributes = Array.from(new Set(keyAttributes)); //remove possible duplicates

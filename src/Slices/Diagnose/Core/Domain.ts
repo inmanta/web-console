@@ -1,5 +1,5 @@
-import { ParsedNumber } from "@/Core/Language";
-import { CompileError } from "../../../Core/Domain/CompileError";
+import { ParsedNumber } from '@/Core/Language';
+import { CompileError } from '../../../Core/Domain/CompileError';
 
 export interface RawDiagnostics {
   rejections: RawRejection[];

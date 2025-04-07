@@ -1,10 +1,10 @@
-import React from "react";
-import { Button, TextInput } from "@patternfly/react-core";
-import { TrashAltIcon } from "@patternfly/react-icons";
-import { Table, Tbody, Td, Tr } from "@patternfly/react-table";
-import { omit } from "lodash-es";
-import styled from "styled-components";
-import { ParsedNumber } from "@/Core";
+import React from 'react';
+import { Button, TextInput } from '@patternfly/react-core';
+import { TrashAltIcon } from '@patternfly/react-icons';
+import { Table, Tbody, Td, Tr } from '@patternfly/react-table';
+import { omit } from 'lodash-es';
+import styled from 'styled-components';
+import { ParsedNumber } from '@/Core';
 
 export type Dict = Record<string, string | ParsedNumber | boolean>;
 export type Entry = [string, string];
@@ -26,11 +26,11 @@ export const DictEditor: React.FC<Props> = ({
 }) => {
   const updateEntry =
     (key: string) =>
-    ([k, v]: Entry) =>
-      setValue({ ...omit(value, key), [k]: v });
+      ([k, v]: Entry) =>
+        setValue({ ...omit(value, key), [k]: v });
   const clearEntry = (key) => setValue(omit(value, key));
   const clearNewEntry = () => {
-    setNewEntry(["", ""]);
+    setNewEntry(['', '']);
   };
 
   return (
@@ -114,7 +114,7 @@ const Row: React.FC<RowProps> = ({
         <Button
           icon={<TrashAltIcon />}
           onClick={onClear}
-          variant={isDeleteable ? "link" : "plain"}
+          variant={isDeleteable ? 'link' : 'plain'}
           isDanger
           size="sm"
           isDisabled={!isDeleteable}

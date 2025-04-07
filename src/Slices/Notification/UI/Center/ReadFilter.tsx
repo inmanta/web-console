@@ -1,11 +1,11 @@
-import React from "react";
-import { SelectOptionProps, ToolbarFilter } from "@patternfly/react-core";
-import { NotificationFilter } from "@/Data/Managers/V2/Notification/GetNotifications";
-import { SingleTextSelect } from "@/UI/Components";
-import { words } from "@/UI/words";
+import React from 'react';
+import { SelectOptionProps, ToolbarFilter } from '@patternfly/react-core';
+import { NotificationFilter } from '@/Data/Managers/V2/Notification/GetNotifications';
+import { SingleTextSelect } from '@/UI/Components';
+import { words } from '@/UI/words';
 
-type Read = "read" | "unread";
-const list: Read[] = ["read", "unread"];
+type Read = 'read' | 'unread';
+const list: Read[] = ['read', 'unread'];
 
 interface Props {
   filter: NotificationFilter;
@@ -19,7 +19,7 @@ export const ReadFilter: React.FC<Props> = ({ filter, setFilter }) => {
   const onSelect = (selection) => {
     setFilter({
       ...filter,
-      read: selection === "" ? undefined : selection === "read",
+      read: selection === '' ? undefined : selection === 'read',
     });
   };
 
@@ -41,7 +41,7 @@ export const ReadFilter: React.FC<Props> = ({ filter, setFilter }) => {
         selected={filterToSelected(filter)}
         setSelected={onSelect}
         toggleAriaLabel="Read"
-        placeholderText={words("notification.read.placeholder")}
+        placeholderText={words('notification.read.placeholder')}
       />
     </ToolbarFilter>
   );
@@ -52,9 +52,9 @@ const filterToSelected = (filter: NotificationFilter): Read | null => {
     case undefined:
       return null;
     case true:
-      return "read";
+      return 'read';
     case false:
-      return "unread";
+      return 'unread';
   }
 };
 
@@ -63,8 +63,8 @@ const filterToChips = (filter: NotificationFilter): string[] => {
     case undefined:
       return [];
     case true:
-      return ["read"];
+      return ['read'];
     case false:
-      return ["unread"];
+      return ['unread'];
   }
 };

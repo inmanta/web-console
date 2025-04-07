@@ -3,23 +3,23 @@ import {
   CommandResolver,
   CommandManager,
   CommandManagerResolver,
-} from "@/Core";
+} from '@/Core';
 
 export class CommandResolverImpl implements CommandResolver {
-  constructor(private readonly managerResolver: CommandManagerResolver) {}
+  constructor (private readonly managerResolver: CommandManagerResolver) {}
 
-  useGetTrigger(command: Command.Type): Command.Trigger<typeof command.kind> {
+  useGetTrigger (command: Command.Type): Command.Trigger<typeof command.kind> {
     const manager = this.getManager(command);
 
     return manager.useGetTrigger(command);
   }
 
-  private getManager(command: Command.Type): CommandManager {
+  private getManager (command: Command.Type): CommandManager {
     const manager = this.managerResolver
       .get()
       .find((manager) => manager.matches(command));
 
-    if (typeof manager !== "undefined") return manager;
+    if (typeof manager !== 'undefined') return manager;
     throw new Error(`Can't find CommandManager for command ${command.kind}`);
   }
 }

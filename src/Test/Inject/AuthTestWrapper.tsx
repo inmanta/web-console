@@ -1,6 +1,6 @@
-import React, { useContext } from "react";
-import { AuthContext } from "@/Data/Auth/AuthContext";
-import { Dependencies, DependencyProvider } from "@/UI";
+import React, { useContext } from 'react';
+import { AuthContext } from '@/Data/Auth/AuthContext';
+import { Dependencies, DependencyProvider } from '@/UI';
 
 type Props = {
   dependencies: Partial<Dependencies>;

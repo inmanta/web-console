@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Content,
   EmptyState,
@@ -7,15 +7,15 @@ import {
   Flex,
   FlexItem,
   Title,
-} from "@patternfly/react-core";
-import { CubesIcon } from "@patternfly/react-icons";
-import styled from "styled-components";
-import { words } from "@/UI/words";
-import { CanvasContext, InstanceComposerContext } from "../Context/Context";
-import { dispatchUpdateStencil } from "../Context/dispatchers";
-import { EventActionEnum } from "../interfaces";
-import { toggleDisabledStencil } from "../stencil/helpers";
-import { EntityForm } from "./EntityForm";
+} from '@patternfly/react-core';
+import { CubesIcon } from '@patternfly/react-icons';
+import styled from 'styled-components';
+import { words } from '@/UI/words';
+import { CanvasContext, InstanceComposerContext } from '../Context/Context';
+import { dispatchUpdateStencil } from '../Context/dispatchers';
+import { EventActionEnum } from '../interfaces';
+import { toggleDisabledStencil } from '../stencil/helpers';
+import { EntityForm } from './EntityForm';
 
 interface Props {
   editable: boolean;
@@ -63,16 +63,16 @@ export const RightSidebar: React.FC<Props> = ({ editable }) => {
     const { model } = cellToEdit;
 
     //logic of deleting cell stayed in the halo which triggers the event
-    cellToEdit.trigger("action:delete");
-    const isEmbeddedEntity = model.get("isEmbeddedEntity");
+    cellToEdit.trigger('action:delete');
+    const isEmbeddedEntity = model.get('isEmbeddedEntity');
 
     if (isEmbeddedEntity) {
       //dispatch event instead of calling function directly from context
-      dispatchUpdateStencil(model.get("entityName"), EventActionEnum.REMOVE);
+      dispatchUpdateStencil(model.get('entityName'), EventActionEnum.REMOVE);
     }
 
     //stencilName is only available for inter-service relation entities
-    const stencilName = model.get("stencilName");
+    const stencilName = model.get('stencilName');
 
     if (stencilName) {
       toggleDisabledStencil(stencilName, false);
@@ -87,9 +87,9 @@ export const RightSidebar: React.FC<Props> = ({ editable }) => {
     }
 
     const { model } = cellToEdit;
-    const serviceModel = model.get("serviceModel");
-    const entityName = model.get("entityName");
-    const stencilName = model.get("stencilName");
+    const serviceModel = model.get('serviceModel');
+    const entityName = model.get('entityName');
+    const stencilName = model.get('stencilName');
 
     if (serviceModel) {
       setDescription(serviceModel.description);
@@ -101,10 +101,10 @@ export const RightSidebar: React.FC<Props> = ({ editable }) => {
     setIsInterServiceRelation(!!stencilName);
 
     setIsRemovable(() => {
-      const isCellCore = model.get("isCore");
+      const isCellCore = model.get('isCore');
 
       //children entities are not allowed to be removed, as well as rw embedded entities in the edit form
-      const canBeRemoved = !model.get("cantBeRemoved");
+      const canBeRemoved = !model.get('cantBeRemoved');
 
       if (!stencilState) {
         return !isCellCore && canBeRemoved;
@@ -128,12 +128,12 @@ export const RightSidebar: React.FC<Props> = ({ editable }) => {
 
   return (
     <Wrapper
-      direction={{ default: "column" }}
-      spaceItems={{ default: "spaceItemsSm" }}
-      flexWrap={{ default: "nowrap" }}
+      direction={{ default: 'column' }}
+      spaceItems={{ default: 'spaceItemsSm' }}
+      flexWrap={{ default: 'nowrap' }}
     >
-      <FlexItem alignSelf={{ default: "alignSelfCenter" }}>
-        <Title headingLevel="h1">{words("details")}</Title>
+      <FlexItem alignSelf={{ default: 'alignSelfCenter' }}>
+        <Title headingLevel="h1">{words('details')}</Title>
       </FlexItem>
       {description && (
         <Content aria-label="service-description">{description}</Content>
@@ -148,19 +148,19 @@ export const RightSidebar: React.FC<Props> = ({ editable }) => {
         />
       ) : (
         <Flex
-          flex={{ default: "flex_1" }}
-          alignItems={{ default: "alignItemsCenter" }}
+          flex={{ default: 'flex_1' }}
+          alignItems={{ default: 'alignItemsCenter' }}
         >
           <EmptyState
             headingLevel="h4"
             variant={EmptyStateVariant.sm}
             icon={CubesIcon}
             titleText={words(
-              "instanceComposer.formModal.noElementSelected.title",
+              'instanceComposer.formModal.noElementSelected.title',
             )}
           >
             <EmptyStateBody>
-              {words("instanceComposer.formModal.noElementSelected")}
+              {words('instanceComposer.formModal.noElementSelected')}
             </EmptyStateBody>
           </EmptyState>
         </Flex>

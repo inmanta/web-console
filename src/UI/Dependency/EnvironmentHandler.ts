@@ -1,19 +1,19 @@
-import { Location } from "history";
+import { Location } from 'history';
 import {
   EnvironmentHandler,
   FlatEnvironment,
   Navigate,
   RemoteData,
   RouteManager,
-} from "@/Core";
-import { useStoreState } from "@/Data/Store";
-import { SearchHelper } from "@/UI/Routing/SearchHelper";
+} from '@/Core';
+import { useStoreState } from '@/Data/Store';
+import { SearchHelper } from '@/UI/Routing/SearchHelper';
 
-export function EnvironmentHandlerImpl(
+export function EnvironmentHandlerImpl (
   useLocation: () => Location,
   routeManager: RouteManager,
 ): EnvironmentHandler {
-  function set(
+  function set (
     navigate: Navigate,
     location: Location,
     environmentId: string,
@@ -21,25 +21,25 @@ export function EnvironmentHandlerImpl(
     const { pathname, search } = location;
     const params = new URLSearchParams(search);
 
-    if (params.get("env") !== environmentId) {
-      params.set("env", environmentId);
+    if (params.get('env') !== environmentId) {
+      params.set('env', environmentId);
       navigate(
         routeManager.getRelatedUrlWithoutParams(pathname) + `?${params}`,
       );
     }
   }
 
-  function useId(): string {
+  function useId (): string {
     const environment = useSelected();
 
-    if (typeof environment === "undefined") {
-      throw new Error("environment required but missing");
+    if (typeof environment === 'undefined') {
+      throw new Error('environment required but missing');
     }
 
     return environment.id;
   }
 
-  function useSelected(): FlatEnvironment | undefined {
+  function useSelected (): FlatEnvironment | undefined {
     const allEnvironments = useStoreState(
       (state) => state.environment.environments,
     );
@@ -48,15 +48,15 @@ export function EnvironmentHandlerImpl(
     return determineSelected(allEnvironments, search);
   }
 
-  function determineSelected(
+  function determineSelected (
     allEnvironments: RemoteData.Type<string, FlatEnvironment[]>,
     search: string,
   ): FlatEnvironment | undefined {
     const searchHelper = new SearchHelper();
     const parsed = searchHelper.parse(search);
-    const envId = parsed["env"];
+    const envId = parsed['env'];
 
-    if (envId && allEnvironments.kind === "Success") {
+    if (envId && allEnvironments.kind === 'Success') {
       const env = allEnvironments.value.find(
         (environment) => environment.id === envId,
       );

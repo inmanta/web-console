@@ -1,7 +1,7 @@
-import React from "react";
-import { useGetCompileDetails } from "@/Data/Managers/V2/Compilation/GetCompileDetails/useGetCompileDetails";
-import { ErrorView, LoadingView } from "@/UI/Components";
-import { CompileDetailsSections } from "./CompileDetailsSections";
+import React from 'react';
+import { useGetCompileDetails } from '@/Data/Managers/V2/Compilation/GetCompileDetails/useGetCompileDetails';
+import { ErrorView, LoadingView } from '@/UI/Components';
+import { CompileDetailsSections } from './CompileDetailsSections';
 
 interface Props {
   id: string;

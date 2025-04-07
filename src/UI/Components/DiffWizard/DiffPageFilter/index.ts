@@ -1,1 +1,1 @@
-export * from "./DiffPageFilter";
+export * from './DiffPageFilter';

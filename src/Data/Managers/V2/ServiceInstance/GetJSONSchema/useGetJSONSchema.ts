@@ -1,5 +1,5 @@
-import { UseQueryResult, useQuery } from "@tanstack/react-query";
-import { CustomError, useGet } from "../../helpers";
+import { UseQueryResult, useQuery } from '@tanstack/react-query';
+import { CustomError, useGet } from '../../helpers';
 
 /**
  * Return Signature of the useGetJSONSchema React Query
@@ -22,7 +22,7 @@ export const useGetJSONSchema = (service_id: string): GetJSONSchema => {
   return {
     useOneTime: () =>
       useQuery({
-        queryKey: ["get_JSON_schema-one_time", service_id],
+        queryKey: ['get_JSON_schema-one_time', service_id],
         queryFn: () => get(`/lsm/v1/service_catalog/${service_id}/schema`),
         select: (data) => data.data,
       }),

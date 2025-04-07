@@ -8,12 +8,12 @@ export enum LogLevelNumber {
 }
 
 export enum LogLevelString {
-  CRITICAL = "CRITICAL",
-  ERROR = "ERROR",
-  WARNING = "WARNING",
-  INFO = "INFO",
-  DEBUG = "DEBUG",
-  TRACE = "TRACE",
+  CRITICAL = 'CRITICAL',
+  ERROR = 'ERROR',
+  WARNING = 'WARNING',
+  INFO = 'INFO',
+  DEBUG = 'DEBUG',
+  TRACE = 'TRACE',
 }
 
 export const LogLevelsList = Object.values(LogLevelString);

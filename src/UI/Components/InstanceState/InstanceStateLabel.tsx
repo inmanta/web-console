@@ -1,6 +1,6 @@
-import React from "react";
-import { Content, Label } from "@patternfly/react-core";
-import { State } from "@/Core";
+import React from 'react';
+import { Content, Label } from '@patternfly/react-core';
+import { State } from '@/Core';
 
 export const InstanceStateLabel: React.FC<State> = ({ name, label }) => {
   if (label) {

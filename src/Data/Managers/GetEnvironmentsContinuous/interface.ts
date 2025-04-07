@@ -1,7 +1,7 @@
-import { FlatEnvironment, ProjectModel } from "@/Core/Domain";
+import { FlatEnvironment, ProjectModel } from '@/Core/Domain';
 
 export interface GetEnvironmentsContinuous {
-  kind: "GetEnvironmentsContinuous";
+  kind: 'GetEnvironmentsContinuous';
   details: boolean;
 }
 

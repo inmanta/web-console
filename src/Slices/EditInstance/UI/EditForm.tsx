@@ -1,20 +1,20 @@
-import React, { useCallback, useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useCallback, useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   InstanceAttributeModel,
   ServiceInstanceModel,
   ServiceModel,
-} from "@/Core";
-import { AttributeInputConverterImpl } from "@/Data";
-import { usePatchAttributes } from "@/Data/Managers/V2/ServiceInstance/PatchAttributes";
+} from '@/Core';
+import { AttributeInputConverterImpl } from '@/Data';
+import { usePatchAttributes } from '@/Data/Managers/V2/ServiceInstance/PatchAttributes';
 import {
   FieldCreator,
   ServiceInstanceForm,
   EditModifierHandler,
   ToastAlert,
-} from "@/UI/Components";
-import { DependencyContext } from "@/UI/Dependency";
-import { words } from "@/UI/words";
+} from '@/UI/Components';
+import { DependencyContext } from '@/UI/Dependency';
+import { words } from '@/UI/words';
 
 interface Props {
   serviceEntity: ServiceModel;
@@ -40,10 +40,10 @@ export const EditForm: React.FC<Props> = ({ serviceEntity, instance }) => {
   const fields = fieldCreator.create(serviceEntity);
 
   const isHalted = environmentModifier.useIsHalted();
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
-  const url = routeManager.useUrl("InstanceDetails", {
+  const url = routeManager.useUrl('InstanceDetails', {
     service: serviceEntity.name,
     instance: instance.service_identity_attribute_value || instance.id,
     instanceId: instance.id,
@@ -55,7 +55,7 @@ export const EditForm: React.FC<Props> = ({ serviceEntity, instance }) => {
   const currentAttributes =
     attributeInputConverter.getCurrentAttributes(instance);
 
-  const apiVersion = serviceEntity.strict_modifier_enforcement ? "v2" : "v1";
+  const apiVersion = serviceEntity.strict_modifier_enforcement ? 'v2' : 'v1';
 
   const { mutate } = usePatchAttributes(
     apiVersion,
@@ -87,7 +87,7 @@ export const EditForm: React.FC<Props> = ({ serviceEntity, instance }) => {
       {errorMessage && (
         <ToastAlert
           data-testid="ToastAlert"
-          title={words("inventory.editInstance.failed")}
+          title={words('inventory.editInstance.failed')}
           message={errorMessage}
           setMessage={setErrorMessage}
         />

@@ -1,18 +1,18 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
-import "@inmanta/rappid/joint-plus.css";
-import { ui } from "@inmanta/rappid";
-import styled from "styled-components";
-import { CanvasContext, InstanceComposerContext } from "./Context";
-import { EventWrapper } from "./Context/EventWrapper";
-import { DictModal, RightSidebar } from "./components";
-import { ErrorsContainer } from "./components/ErrorsContainer";
-import { createConnectionRules } from "./helpers";
-import { diagramInit } from "./init";
-import { ActionEnum } from "./interfaces";
-import { StencilSidebar } from "./stencil";
-import { createStencilState } from "./stencil/helpers";
-import { CanvasWrapper } from "./styles";
-import { ZoomHandlerService } from "./zoomHandler";
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import '@inmanta/rappid/joint-plus.css';
+import { ui } from '@inmanta/rappid';
+import styled from 'styled-components';
+import { CanvasContext, InstanceComposerContext } from './Context';
+import { EventWrapper } from './Context/EventWrapper';
+import { DictModal, RightSidebar } from './components';
+import { ErrorsContainer } from './components/ErrorsContainer';
+import { createConnectionRules } from './helpers';
+import { diagramInit } from './init';
+import { ActionEnum } from './interfaces';
+import { StencilSidebar } from './stencil';
+import { createStencilState } from './stencil/helpers';
+import { CanvasWrapper } from './styles';
+import { ZoomHandlerService } from './zoomHandler';
 
 /**
  * Properties for the Canvas component.
@@ -128,12 +128,12 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
       cells.forEach((cell) => {
         newInstances.set(cell.id, {
           instance_id: cell.id,
-          service_entity: cell.get("entityName"),
+          service_entity: cell.get('entityName'),
           config: {},
           action: instance ? null : ActionEnum.CREATE,
-          attributes: cell.get("instanceAttributes"),
-          embeddedTo: cell.get("embeddedTo"),
-          relatedTo: cell.get("relatedTo"),
+          attributes: cell.get('instanceAttributes'),
+          embeddedTo: cell.get('embeddedTo'),
+          relatedTo: cell.get('relatedTo'),
         });
       });
 
@@ -157,12 +157,12 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
       <DictModal />
       <CanvasWrapper id="canvas-wrapper" data-testid="Composer-Container">
         <LeftSidebarContainer
-          className={`left_sidebar ${!editable && "view_mode"}`}
+          className={`left_sidebar ${!editable && 'view_mode'}`}
           data-testid="left_sidebar"
           ref={LeftSidebar}
         />
         <CanvasContainer
-          className={`canvas ${!editable && "view_mode"}`}
+          className={`canvas ${!editable && 'view_mode'}`}
           data-testid="canvas"
           ref={Canvas}
         />

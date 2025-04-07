@@ -1,11 +1,11 @@
-import React from "react";
-import { Table, TableVariant, Th, Thead, Tr } from "@patternfly/react-table";
-import { useExpansion } from "@/Data";
-import { words } from "@/UI";
-import { MomentDatePresenter } from "@/UI/Utils";
-import { CompileStageReport } from "@S/CompileDetails/Core/Domain";
-import { CompileStageReportTablePresenter } from "./CompileStageReportTablePresenter";
-import { CompileStageReportTableRow } from "./CompileStageReportTableRow";
+import React from 'react';
+import { Table, TableVariant, Th, Thead, Tr } from '@patternfly/react-table';
+import { useExpansion } from '@/Data';
+import { words } from '@/UI';
+import { MomentDatePresenter } from '@/UI/Utils';
+import { CompileStageReport } from '@S/CompileDetails/Core/Domain';
+import { CompileStageReportTablePresenter } from './CompileStageReportTablePresenter';
+import { CompileStageReportTableRow } from './CompileStageReportTableRow';
 
 interface Props {
   compileStarted?: string | null;
@@ -35,7 +35,7 @@ export const CompileStageReportTable: React.FC<Props> = ({
           <Th
             aria-hidden
             key="toggle"
-            screenReaderText={words("common.emptyColumnHeader")}
+            screenReaderText={words('common.emptyColumnHeader')}
           />
           {heads}
         </Tr>

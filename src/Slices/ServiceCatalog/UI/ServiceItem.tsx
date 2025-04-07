@@ -1,5 +1,5 @@
-import React, { useContext, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useContext, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
   Button,
   DataListItem,
@@ -15,15 +15,15 @@ import {
   DropdownList,
   DropdownItem,
   Content,
-} from "@patternfly/react-core";
-import { EllipsisVIcon } from "@patternfly/react-icons";
-import { ServiceModel } from "@/Core";
-import { useDeleteService } from "@/Data/Managers/V2/Service";
-import { ConfirmUserActionForm, ToastAlert } from "@/UI/Components";
-import { DependencyContext } from "@/UI/Dependency";
-import { ModalContext } from "@/UI/Root/Components/ModalProvider";
-import { words } from "@/UI/words";
-import { SummaryIcons } from "./SummaryIcons";
+} from '@patternfly/react-core';
+import { EllipsisVIcon } from '@patternfly/react-icons';
+import { ServiceModel } from '@/Core';
+import { useDeleteService } from '@/Data/Managers/V2/Service';
+import { ConfirmUserActionForm, ToastAlert } from '@/UI/Components';
+import { DependencyContext } from '@/UI/Dependency';
+import { ModalContext } from '@/UI/Root/Components/ModalProvider';
+import { words } from '@/UI/words';
+import { SummaryIcons } from './SummaryIcons';
 
 interface Props {
   service: ServiceModel;
@@ -44,8 +44,8 @@ export const ServiceItem: React.FC<Props> = ({ service }) => {
   const { mutate } = useDeleteService(service.name, {
     onError: (error) => setErrorMessage(error.message),
   });
-  const [errorMessage, setErrorMessage] = useState("");
-  const serviceKey = service.name + "-item";
+  const [errorMessage, setErrorMessage] = useState('');
+  const serviceKey = service.name + '-item';
   const rowRefs = useRef<Record<string, HTMLSpanElement | null>>({});
 
   /**
@@ -75,10 +75,10 @@ export const ServiceItem: React.FC<Props> = ({ service }) => {
    */
   const openModal = (): void => {
     triggerModal({
-      title: words("catalog.delete.modal.title"),
+      title: words('catalog.delete.modal.title'),
       content: (
         <>
-          {words("catalog.delete.title")(service.name)}
+          {words('catalog.delete.title')(service.name)}
           <ConfirmUserActionForm onSubmit={onSubmit} onCancel={closeModal} />
         </>
       ),
@@ -89,7 +89,7 @@ export const ServiceItem: React.FC<Props> = ({ service }) => {
     <DataListItem id={service.name} aria-labelledby={serviceKey}>
       <ToastAlert
         data-testid="ToastAlert"
-        title={words("catalog.delete.failed")}
+        title={words('catalog.delete.failed')}
         message={errorMessage}
         setMessage={setErrorMessage}
       />
@@ -99,8 +99,8 @@ export const ServiceItem: React.FC<Props> = ({ service }) => {
           dataListCells={[
             <DataListCell key="primary content">
               <Flex
-                alignItems={{ default: "alignItemsFlexStart" }}
-                columnGap={{ default: "columnGapMd" }}
+                alignItems={{ default: 'alignItemsFlexStart' }}
+                columnGap={{ default: 'columnGapMd' }}
               >
                 <Content id={serviceKey} component="h2">
                   {service.name}
@@ -123,24 +123,24 @@ export const ServiceItem: React.FC<Props> = ({ service }) => {
           ]}
         />
         <DataListAction
-          aria-labelledby={service.name + "-inventory"}
-          id={service.name + "-inventory"}
+          aria-labelledby={service.name + '-inventory'}
+          id={service.name + '-inventory'}
           aria-label="Inventory Link"
         >
           <Link
             to={{
-              pathname: routeManager.getUrl("Inventory", {
+              pathname: routeManager.getUrl('Inventory', {
                 service: service.name,
               }),
               search: location.search,
             }}
           >
-            <Button variant="link">{words("catalog.button.inventory")}</Button>
+            <Button variant="link">{words('catalog.button.inventory')}</Button>
           </Link>
         </DataListAction>
         <DataListAction
-          aria-labelledby={service.name + "-action"}
-          id={service.name + "-action"}
+          aria-labelledby={service.name + '-action'}
+          id={service.name + '-action'}
           aria-label="Actions"
         >
           <Dropdown
@@ -156,7 +156,7 @@ export const ServiceItem: React.FC<Props> = ({ service }) => {
               </MenuToggle>
             )}
             onOpenChange={(isOpen: boolean) => setIsOpen(isOpen)}
-            popperProps={{ position: "right" }}
+            popperProps={{ position: 'right' }}
             isOpen={isOpen}
             onSelect={() => setIsOpen(false)}
             aria-label="Actions-details"
@@ -164,23 +164,23 @@ export const ServiceItem: React.FC<Props> = ({ service }) => {
             <DropdownList>
               <DropdownItem>
                 <Link
-                  key={service.name + "-detailsLink"}
+                  key={service.name + '-detailsLink'}
                   to={{
-                    pathname: routeManager.getUrl("ServiceDetails", {
+                    pathname: routeManager.getUrl('ServiceDetails', {
                       service: service.name,
                     }),
                     search: location.search,
                   }}
                 >
-                  {words("catalog.button.details")}
+                  {words('catalog.button.details')}
                 </Link>
               </DropdownItem>
               <DropdownItem
                 onClick={openModal}
-                key={service.name + "-deleteButton"}
-                aria-label={service.name + "-deleteButton"}
+                key={service.name + '-deleteButton'}
+                aria-label={service.name + '-deleteButton'}
               >
-                {words("delete")}
+                {words('delete')}
               </DropdownItem>
             </DropdownList>
           </Dropdown>

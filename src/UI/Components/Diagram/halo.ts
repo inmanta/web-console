@@ -1,14 +1,14 @@
-import { dia, highlighters, ui } from "@inmanta/rappid";
-import { t_global_border_radius_small } from "@patternfly/react-tokens";
+import { dia, highlighters, ui } from '@inmanta/rappid';
+import { t_global_border_radius_small } from '@patternfly/react-tokens';
 import {
   dispatchRemoveInterServiceRelationFromTracker,
   dispatchUpdateInterServiceRelations,
   dispatchUpdateServiceOrderItems,
-} from "./Context/dispatchers";
-import { checkIfConnectionIsAllowed } from "./helpers";
-import { toggleLooseElement } from "./helpers";
-import { ActionEnum, ConnectionRules, EventActionEnum } from "./interfaces";
-import { ServiceEntityBlock } from "./shapes";
+} from './Context/dispatchers';
+import { checkIfConnectionIsAllowed } from './helpers';
+import { toggleLooseElement } from './helpers';
+import { ActionEnum, ConnectionRules, EventActionEnum } from './interfaces';
+import { ServiceEntityBlock } from './shapes';
 
 /**
  * Creates a halo around a cell view in a graph.
@@ -29,23 +29,23 @@ const createHalo = (
 ) => {
   const halo = new ui.Halo({
     cellView: cellView,
-    type: "toolbar",
+    type: 'toolbar',
     rx: t_global_border_radius_small.value,
   });
 
-  halo.removeHandle("clone");
-  halo.removeHandle("resize");
-  halo.removeHandle("rotate");
-  halo.removeHandle("fork");
-  halo.removeHandle("unlink");
-  halo.removeHandle("remove");
+  halo.removeHandle('clone');
+  halo.removeHandle('resize');
+  halo.removeHandle('rotate');
+  halo.removeHandle('fork');
+  halo.removeHandle('unlink');
+  halo.removeHandle('remove');
 
   // this change is purely to keep order of the halo buttons
-  halo.changeHandle("link", {
-    name: "link",
+  halo.changeHandle('link', {
+    name: 'link',
   });
 
-  halo.listenTo(cellView, "action:delete", function () {
+  halo.listenTo(cellView, 'action:delete', function () {
     //cellView.model has the same structure as dia.Element needed as parameter to .getNeighbors() yet typescript complains
     const connectedElements = graph.getNeighbors(cellView.model as dia.Element);
 
@@ -53,19 +53,19 @@ const createHalo = (
 
     connectedElements.forEach((element) => {
       const elementAsService = element as ServiceEntityBlock;
-      const isEmbeddedEntity = element.get("isEmbeddedEntity");
+      const isEmbeddedEntity = element.get('isEmbeddedEntity');
       const isEmbeddedToThisCell =
-        element.get("embeddedTo") === cellView.model.id;
+        element.get('embeddedTo') === cellView.model.id;
 
       let didElementChange = false;
 
       //if one of those were embedded into other then update connectedElement as it's got indirectly edited
       if (isEmbeddedEntity && isEmbeddedToThisCell) {
-        element.set("embeddedTo", undefined);
+        element.set('embeddedTo', undefined);
         toggleLooseElement(paper.findViewByModel(element), EventActionEnum.ADD);
         didElementChange = true;
       }
-      if (element.id === cellView.model.get("embeddedTo")) {
+      if (element.id === cellView.model.get('embeddedTo')) {
         didElementChange = true;
       }
 
@@ -79,7 +79,7 @@ const createHalo = (
         if (wasThereRelationToRemove) {
           dispatchUpdateInterServiceRelations(
             EventActionEnum.REMOVE,
-            cellView.model.get("entityName"),
+            cellView.model.get('entityName'),
             elementAsService.id,
           );
         }
@@ -92,7 +92,7 @@ const createHalo = (
     });
     dispatchUpdateServiceOrderItems(cellView.model, ActionEnum.DELETE);
 
-    if (cellView.model.get("relatedTo")) {
+    if (cellView.model.get('relatedTo')) {
       dispatchRemoveInterServiceRelationFromTracker(cellView.model.id);
     }
 
@@ -101,10 +101,10 @@ const createHalo = (
     halo.remove();
     graph.removeCells([cellView.model]);
     //trigger click on blank canvas to clear right sidebar
-    paper.trigger("blank:pointerdown");
+    paper.trigger('blank:pointerdown');
   });
 
-  halo.on("action:link:pointerdown", function () {
+  halo.on('action:link:pointerdown', function () {
     const area = paper.getArea();
     const elements = paper
       .findViewsInArea(area)
@@ -131,37 +131,37 @@ const createHalo = (
       });
 
       if (unconnectedShape === undefined) {
-        highlighters.mask.add(element, "body", "available-to-connect", {
+        highlighters.mask.add(element, 'body', 'available-to-connect', {
           padding: 0,
-          className: "halo-highlight",
+          className: 'halo-highlight',
           attrs: {
-            "stroke-opacity": 0.5,
-            "stroke-width": 5,
+            'stroke-opacity': 0.5,
+            'stroke-width': 5,
             rx: t_global_border_radius_small.value,
-            filter: "drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4))",
+            filter: 'drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4))',
           },
         });
         const looseElementHighlight = dia.HighlighterView.get(
           element,
-          "loose_element",
+          'loose_element',
         );
 
         if (looseElementHighlight) {
-          looseElementHighlight.el.classList.add("-hidden");
+          looseElementHighlight.el.classList.add('-hidden');
         }
       }
     });
   });
 
   //this event is fired even if we hang connection outside other shape
-  halo.on("action:link:add", function () {
+  halo.on('action:link:add', function () {
     const area = paper.getArea();
     const shapes = paper.findViewsInArea(area);
 
     shapes.map((shape) => {
       const highlighter = dia.HighlighterView.get(
         shape,
-        "available-to-connect",
+        'available-to-connect',
       );
 
       if (highlighter) {
@@ -169,11 +169,11 @@ const createHalo = (
       }
       const looseElementHighlight = dia.HighlighterView.get(
         shape,
-        "loose_element",
+        'loose_element',
       );
 
       if (looseElementHighlight) {
-        looseElementHighlight.el.classList.remove("-hidden");
+        looseElementHighlight.el.classList.remove('-hidden');
       }
     });
   });

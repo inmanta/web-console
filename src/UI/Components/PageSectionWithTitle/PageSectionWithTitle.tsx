@@ -1,5 +1,5 @@
-import React from "react";
-import { Content, PageSection, PageSectionProps } from "@patternfly/react-core";
+import React from 'react';
+import { Content, PageSection, PageSectionProps } from '@patternfly/react-core';
 
 interface Props extends PageSectionProps {
   title: string;

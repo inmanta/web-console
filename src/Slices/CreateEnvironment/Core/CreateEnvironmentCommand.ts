@@ -1,8 +1,8 @@
-import { EnvironmentModel } from "@/Core/Domain";
-import { Either } from "@/Core/Language";
+import { EnvironmentModel } from '@/Core/Domain';
+import { Either } from '@/Core/Language';
 
 export interface Command {
-  kind: "CreateEnvironment";
+  kind: 'CreateEnvironment';
 }
 
 export interface Manifest {

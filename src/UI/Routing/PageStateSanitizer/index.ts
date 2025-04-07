@@ -1,1 +1,1 @@
-export * from "./PageStateSanitizer";
+export * from './PageStateSanitizer';

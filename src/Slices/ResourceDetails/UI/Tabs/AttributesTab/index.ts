@@ -1,1 +1,1 @@
-export * from "./AttributesTab";
+export * from './AttributesTab';

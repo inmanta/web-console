@@ -3,23 +3,23 @@
  * When you edit this file, turn the rule off so you know you are not missing anything.
  */
 
-import { useContext } from "react";
+import { useContext } from 'react';
 import {
   RemoteData,
   Query,
   QueryManagerKind,
   StateHelperWithEnv,
   ReadOnlyQueryManager,
-} from "@/Core";
-import { DependencyContext } from "@/UI";
-import { ReadOnlyToUsed } from "./types";
+} from '@/Core';
+import { DependencyContext } from '@/UI';
+import { ReadOnlyToUsed } from './types';
 
-export function ReadOnlyWithEnv<Kind extends Query.Kind>(
+export function ReadOnlyWithEnv<Kind extends Query.Kind> (
   stateHelper: StateHelperWithEnv<Kind>,
   kind: Kind,
   toUsed: ReadOnlyToUsed<Kind>,
 ): ReadOnlyQueryManager<Kind> {
-  function useReadOnly(
+  function useReadOnly (
     query: Query.SubQuery<Kind>,
   ): RemoteData.Type<Query.Error<Kind>, Query.UsedData<Kind>> {
     const { environmentHandler } = useContext(DependencyContext);
@@ -31,11 +31,11 @@ export function ReadOnlyWithEnv<Kind extends Query.Kind>(
     );
   }
 
-  function matches(
+  function matches (
     query: Query.SubQuery<Kind>,
     matchingKind: QueryManagerKind,
   ): boolean {
-    return query.kind === kind && matchingKind === "ReadOnly";
+    return query.kind === kind && matchingKind === 'ReadOnly';
   }
 
   return {

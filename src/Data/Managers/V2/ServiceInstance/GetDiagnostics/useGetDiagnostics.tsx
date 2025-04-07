@@ -1,6 +1,6 @@
-import { useQuery, UseQueryResult } from "@tanstack/react-query";
-import { RawDiagnostics } from "@/Slices/Diagnose/Core/Domain";
-import { CustomError, useGet } from "../../helpers";
+import { useQuery, UseQueryResult } from '@tanstack/react-query';
+import { RawDiagnostics } from '@/Slices/Diagnose/Core/Domain';
+import { CustomError, useGet } from '../../helpers';
 
 /**
  * Return Signature of the useGetDiagnostics React Query
@@ -33,7 +33,7 @@ export const useGetDiagnostics = (
       lookBehind: string,
     ): UseQueryResult<RawDiagnostics, CustomError> =>
       useQuery({
-        queryKey: ["get_diagnostics-one_time", service, instanceId, lookBehind],
+        queryKey: ['get_diagnostics-one_time', service, instanceId, lookBehind],
         queryFn: () => get(url(lookBehind)),
         select: (data) => data.data,
       }),

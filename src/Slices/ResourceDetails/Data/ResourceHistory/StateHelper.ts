@@ -1,9 +1,9 @@
-import { RemoteData } from "@/Core";
-import { PrimaryStateHelper } from "@/Data/Common";
-import { Store } from "@/Data/Store";
+import { RemoteData } from '@/Core';
+import { PrimaryStateHelper } from '@/Data/Common';
+import { Store } from '@/Data/Store';
 
-export function ResourceHistoryStateHelper(store: Store) {
-  return PrimaryStateHelper<"GetResourceHistory">(
+export function ResourceHistoryStateHelper (store: Store) {
+  return PrimaryStateHelper<'GetResourceHistory'>(
     store,
     (data, query) => {
       const value = RemoteData.mapSuccess((data) => data, data);

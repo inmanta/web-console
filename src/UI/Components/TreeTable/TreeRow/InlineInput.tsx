@@ -1,14 +1,14 @@
-import React from "react";
+import React from 'react';
 import {
   Button,
   Icon,
   Switch,
   TextInput,
   TextInputTypes,
-} from "@patternfly/react-core";
-import { CheckIcon } from "@patternfly/react-icons";
-import { words } from "@/UI/words";
-import { TextListFormInput } from "../../ServiceInstanceForm/Components/TextListFormInput";
+} from '@patternfly/react-core';
+import { CheckIcon } from '@patternfly/react-icons';
+import { words } from '@/UI/words';
+import { TextListFormInput } from '../../ServiceInstanceForm/Components/TextListFormInput';
 
 interface Props {
   label: string;
@@ -39,19 +39,19 @@ export const InlineInput: React.FC<Props> = ({
 }) => {
   let input;
 
-  if (type.includes("bool")) {
+  if (type.includes('bool')) {
     input = (
       <Switch
-        isChecked={value.toString().toLowerCase() === "true"}
+        isChecked={value.toString().toLowerCase() === 'true'}
         onChange={(event, checked) => onChange(event, checked)}
         aria-label={`new-attribute-toggle-${label}`}
       />
     );
-  } else if (type.includes("string[]")) {
+  } else if (type.includes('string[]')) {
     let formattedValue;
 
-    if (typeof value !== "object") {
-      formattedValue = (value as string).replace(/\s/g, "").split(",");
+    if (typeof value !== 'object') {
+      formattedValue = (value as string).replace(/\s/g, '').split(',');
     } else {
       formattedValue = value;
     }
@@ -62,25 +62,25 @@ export const InlineInput: React.FC<Props> = ({
         isOptional={true}
         type={TextInputTypes.text}
         handleInputChange={(value, event) => onChange(event, value)}
-        placeholder={words("inventory.editAttribute.placeholder")}
-        attributeName={""}
+        placeholder={words('inventory.editAttribute.placeholder')}
+        attributeName={''}
       />
     );
   } else {
     input = (
       <TextInput
         value={value as string | number | undefined}
-        type={type.toLowerCase().includes("int") ? "number" : "text"}
+        type={type.toLowerCase().includes('int') ? 'number' : 'text'}
         onChange={(event, value) => onChange(event, value)}
         aria-label="new-attribute-input"
-        placeholder={words("inventory.editAttribute.placeholder")}
+        placeholder={words('inventory.editAttribute.placeholder')}
       />
     );
   }
 
   return (
     <>
-      {" "}
+      {' '}
       {input}
       <Button
         icon={

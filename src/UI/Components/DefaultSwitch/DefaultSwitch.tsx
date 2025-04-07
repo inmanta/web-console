@@ -1,7 +1,7 @@
-import React from "react";
-import { Config } from "@/Core";
-import { BooleanSwitch } from "@/UI/Components/BooleanSwitch";
-import { words } from "@/UI/words";
+import React from 'react';
+import { Config } from '@/Core';
+import { BooleanSwitch } from '@/UI/Components/BooleanSwitch';
+import { words } from '@/UI/words';
 
 interface Props {
   name: string;
@@ -29,14 +29,14 @@ export const DefaultSwitch: React.FC<Props> = ({
 
 const getLabel =
   (defaultValue: boolean) =>
-  (value: boolean): string => {
-    if (value) {
-      return defaultValue
-        ? words("setting.label.trueDefault")
-        : words("setting.label.true");
-    }
+    (value: boolean): string => {
+      if (value) {
+        return defaultValue
+          ? words('setting.label.trueDefault')
+          : words('setting.label.true');
+      }
 
-    return !defaultValue
-      ? words("setting.label.falseDefault")
-      : words("setting.label.false");
-  };
+      return !defaultValue
+        ? words('setting.label.falseDefault')
+        : words('setting.label.false');
+    };

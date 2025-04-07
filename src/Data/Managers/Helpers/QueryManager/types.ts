@@ -1,4 +1,4 @@
-import { Query, RemoteData } from "@/Core";
+import { Query, RemoteData } from '@/Core';
 
 export type Data<Kind extends Query.Kind> = [
   RemoteData.Type<Query.Error<Kind>, Query.UsedData<Kind>>,
@@ -10,9 +10,9 @@ type GetDependenciesWith<
   WithEnv,
 > = WithEnv extends true
   ? (
-      query: Query.SubQuery<Kind>,
-      environment: string,
-    ) => (string | number | boolean | undefined)[]
+    query: Query.SubQuery<Kind>,
+    environment: string,
+  ) => (string | number | boolean | undefined)[]
   : (query: Query.SubQuery<Kind>) => (string | number | boolean | undefined)[];
 
 export type GetDependencies<Kind extends Query.Kind> = GetDependenciesWith<

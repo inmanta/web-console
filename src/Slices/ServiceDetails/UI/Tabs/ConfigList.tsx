@@ -1,9 +1,9 @@
-import React, { useContext } from "react";
-import { Config } from "@/Core";
-import { usePostServiceConfig } from "@/Data/Managers/V2/Service";
-import { BooleanSwitch, EmptyView, SettingsList } from "@/UI/Components";
-import { DependencyContext } from "@/UI/Dependency";
-import { words } from "@/UI/words";
+import React, { useContext } from 'react';
+import { Config } from '@/Core';
+import { usePostServiceConfig } from '@/Data/Managers/V2/Service';
+import { BooleanSwitch, EmptyView, SettingsList } from '@/UI/Components';
+import { DependencyContext } from '@/UI/Dependency';
+import { words } from '@/UI/words';
 
 interface Props {
   config: Config;
@@ -26,7 +26,7 @@ export const ConfigList: React.FC<Props> = ({ config, serviceName }) => {
   const isHalted = environmentModifier.useIsHalted();
 
   return Object.keys(config).length <= 0 ? (
-    <EmptyView message={words("config.empty")} />
+    <EmptyView message={words('config.empty')} />
   ) : (
     <SettingsList
       config={config}

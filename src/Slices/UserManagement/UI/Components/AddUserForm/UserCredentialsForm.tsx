@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from 'react';
 import {
   FormHelperText,
   HelperText,
@@ -13,15 +13,15 @@ import {
   ValidatedOptions,
   Spinner,
   Content,
-} from "@patternfly/react-core";
+} from '@patternfly/react-core';
 import {
   ExclamationCircleIcon,
   EyeIcon,
   EyeSlashIcon,
-} from "@patternfly/react-icons";
-import { useAddUser } from "@/Data/Managers/V2/Auth";
-import { words } from "@/UI";
-import { ModalContext } from "@/UI/Root/Components/ModalProvider";
+} from '@patternfly/react-icons';
+import { useAddUser } from '@/Data/Managers/V2/Auth';
+import { words } from '@/UI';
+import { ModalContext } from '@/UI/Root/Components/ModalProvider';
 
 interface UserCredentialsFormProps {
   submitButtonText: string;
@@ -38,13 +38,13 @@ interface UserCredentialsFormProps {
  */
 export const UserCredentialsForm: React.FC<UserCredentialsFormProps> = ({
   submitButtonText,
-  submitButtonLabel = "login-button",
+  submitButtonLabel = 'login-button',
 }) => {
   const { mutate, isSuccess, isError, error, isPending } = useAddUser();
   const { closeModal } = useContext(ModalContext);
 
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [isPasswordHidden, setIsPasswordHidden] = useState(true);
 
   /**
@@ -104,7 +104,7 @@ export const UserCredentialsForm: React.FC<UserCredentialsFormProps> = ({
         <FormHelperText>
           <HelperText>
             <HelperTextItem
-              variant={isError ? "error" : "default"}
+              variant={isError ? 'error' : 'default'}
               icon={<ExclamationCircleIcon />}
               aria-label="error-message"
             >
@@ -114,7 +114,7 @@ export const UserCredentialsForm: React.FC<UserCredentialsFormProps> = ({
         </FormHelperText>
       )}
       <FormGroup
-        label={words("username")}
+        label={words('username')}
         isRequired
         fieldId="pf-login-username-id"
       >
@@ -130,7 +130,7 @@ export const UserCredentialsForm: React.FC<UserCredentialsFormProps> = ({
         />
       </FormGroup>
       <FormGroup
-        label={words("password")}
+        label={words('password')}
         isRequired
         fieldId="pf-login-password-id"
       >
@@ -138,7 +138,7 @@ export const UserCredentialsForm: React.FC<UserCredentialsFormProps> = ({
           <InputGroupItem isFill>
             <TextInput
               isRequired
-              type={isPasswordHidden ? "password" : "text"}
+              type={isPasswordHidden ? 'password' : 'text'}
               id="pf-login-password-id"
               name="pf-login-password-id"
               aria-label="input-password"
@@ -151,7 +151,7 @@ export const UserCredentialsForm: React.FC<UserCredentialsFormProps> = ({
             <Button
               variant="control"
               onClick={() => setIsPasswordHidden(!isPasswordHidden)}
-              aria-label={isPasswordHidden ? "show-password" : "hide-password"}
+              aria-label={isPasswordHidden ? 'show-password' : 'hide-password'}
             >
               {isPasswordHidden ? <EyeIcon /> : <EyeSlashIcon />}
             </Button>

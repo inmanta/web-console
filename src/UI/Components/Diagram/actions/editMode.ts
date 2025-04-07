@@ -1,16 +1,16 @@
-import { dia } from "@inmanta/rappid";
-import { DirectedGraph } from "@joint/layout-directed-graph";
-import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from "@/Core";
-import { InstanceWithRelations } from "@/Data/Managers/V2/ServiceInstance";
-import { words } from "@/UI/words";
-import { dispatchUpdateStencil } from "../Context/dispatchers";
-import { findCorrespondingId, findFullInterServiceRelations } from "../helpers";
-import activeImage from "../icons/active-icon.svg";
-import candidateImage from "../icons/candidate-icon.svg";
-import { EventActionEnum, relationId } from "../interfaces";
-import { ServiceEntityBlock } from "../shapes";
-import { toggleDisabledStencil } from "../stencil/helpers";
-import { connectEntities, createComposerEntity } from "./general";
+import { dia } from '@inmanta/rappid';
+import { DirectedGraph } from '@joint/layout-directed-graph';
+import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from '@/Core';
+import { InstanceWithRelations } from '@/Data/Managers/V2/ServiceInstance';
+import { words } from '@/UI/words';
+import { dispatchUpdateStencil } from '../Context/dispatchers';
+import { findCorrespondingId, findFullInterServiceRelations } from '../helpers';
+import activeImage from '../icons/active-icon.svg';
+import candidateImage from '../icons/candidate-icon.svg';
+import { EventActionEnum, relationId } from '../interfaces';
+import { ServiceEntityBlock } from '../shapes';
+import { toggleDisabledStencil } from '../stencil/helpers';
+import { connectEntities, createComposerEntity } from './general';
 
 /**
  * This function converts Instance attributes to display them on the Smart Service Composer canvas.
@@ -25,7 +25,7 @@ import { connectEntities, createComposerEntity } from "./general";
  *
  * @returns {ServiceEntityBlock} appendedInstance to allow connect related by inter-service relations Instances added concurrently
  */
-export function appendInstance(
+export function appendInstance (
   paper: dia.Paper,
   graph: dia.Graph,
   instanceWithRelations: InstanceWithRelations,
@@ -39,7 +39,7 @@ export function appendInstance(
   );
 
   if (!serviceInstanceModel) {
-    throw Error(words("instanceComposer.errorMessage.missingModel"));
+    throw Error(words('instanceComposer.errorMessage.missingModel'));
   }
 
   const attributes =
@@ -76,10 +76,10 @@ export function appendInstance(
       instanceAsTable,
       serviceInstanceModel,
       serviceInstance.candidate_attributes,
-      "candidate",
+      'candidate',
       isBlockedFromEditing,
     );
-    addInfoIcon(instanceAsTable, "candidate");
+    addInfoIcon(instanceAsTable, 'candidate');
   } else if (serviceInstance.active_attributes) {
     embeddedEntities = addEmbeddedEntities(
       graph,
@@ -87,10 +87,10 @@ export function appendInstance(
       instanceAsTable,
       serviceInstanceModel,
       serviceInstance.active_attributes,
-      "active",
+      'active',
       isBlockedFromEditing,
     );
-    addInfoIcon(instanceAsTable, "active");
+    addInfoIcon(instanceAsTable, 'active');
   }
 
   //map through inter-service related instances and either append them and connect to them or connect to already existing ones
@@ -111,7 +111,7 @@ export function appendInstance(
           isBlockedFromEditing,
         );
 
-        toggleDisabledStencil(appendedInstances[0].get("stencilName"), true);
+        toggleDisabledStencil(appendedInstances[0].get('stencilName'), true);
       } else {
         //If cell is already in the graph, we need to check if it got in its inter-service relations the one with id that corresponds with created instanceAsTable
         let isConnected = false;
@@ -178,7 +178,7 @@ export function appendInstance(
   DirectedGraph.layout(graph, {
     nodeSep: 80,
     edgeSep: 80,
-    rankDir: "BT",
+    rankDir: 'BT',
   });
 
   return [...embeddedEntities, instanceAsTable];
@@ -197,13 +197,13 @@ export function appendInstance(
  *
  * @returns {ServiceEntityBlock[]} - returns array of created embedded entities, that are connected to given entity
  */
-function addEmbeddedEntities(
+function addEmbeddedEntities (
   graph: dia.Graph,
   paper: dia.Paper,
   instanceAsTable: ServiceEntityBlock,
   serviceModel: ServiceModel,
   attributesValues: InstanceAttributeModel,
-  presentedAttr: "candidate" | "active",
+  presentedAttr: 'candidate' | 'active',
   isBlockedFromEditing = false,
 ): ServiceEntityBlock[] {
   const { embedded_entities } = serviceModel;
@@ -211,7 +211,7 @@ function addEmbeddedEntities(
   //we are basing iteration on service Model, if there is no value in the instance and if the value has modifier set to "r", skip that entity - "r" entities are read-only, they can't be edited and can be in multiple places which would result with enormous tree of cells in the graph and the canvas which would discourage user from using the Instance Composer
   const createdEmbedded = embedded_entities
     .filter(
-      (entity) => !!attributesValues[entity.name] && entity.modifier !== "r",
+      (entity) => !!attributesValues[entity.name] && entity.modifier !== 'r',
     )
     .flatMap((entity) => {
       const appendedEntities = appendEmbeddedEntity(
@@ -269,14 +269,14 @@ function addEmbeddedEntities(
  *
  * @returns {ServiceEntityBlock[]} created JointJS shapes
  */
-export function appendEmbeddedEntity(
+export function appendEmbeddedEntity (
   paper: dia.Paper,
   graph: dia.Graph,
   embeddedEntity: EmbeddedEntity,
   entityAttributes: InstanceAttributeModel | InstanceAttributeModel[],
   embeddedTo: string | dia.Cell.ID,
   holderName: string,
-  presentedAttr?: "candidate" | "active",
+  presentedAttr?: 'candidate' | 'active',
   isBlockedFromEditing?: boolean,
 ): ServiceEntityBlock[] {
   //Create shape for Entity
@@ -288,7 +288,7 @@ export function appendEmbeddedEntity(
    * @param {InstanceAttributeModel} entityInstance instance of entity Attributes
    * @returns {ServiceEntityBlock} appended embedded entity to the graph
    */
-  function appendSingleEntity(
+  function appendSingleEntity (
     entityInstance: InstanceAttributeModel,
   ): ServiceEntityBlock {
     //Create shape for Entity
@@ -301,7 +301,7 @@ export function appendEmbeddedEntity(
       holderName,
       embeddedTo,
       isBlockedFromEditing,
-      cantBeRemoved: embeddedEntity.modifier !== "rw+",
+      cantBeRemoved: embeddedEntity.modifier !== 'rw+',
     });
 
     if (presentedAttr) {
@@ -315,7 +315,7 @@ export function appendEmbeddedEntity(
 
     //iterate through embedded entities to create and connect them
     embeddedEntity.embedded_entities
-      .filter((entity) => entity.modifier !== "r") // filter out read-only embedded entities to de-clutter the view as they can't be edited and can be in multiple places which would result with enormous tree of cells in the graph and the canvas
+      .filter((entity) => entity.modifier !== 'r') // filter out read-only embedded entities to de-clutter the view as they can't be edited and can be in multiple places which would result with enormous tree of cells in the graph and the canvas
       .forEach((entity) => {
         const appendedEntity = appendEmbeddedEntity(
           paper,
@@ -362,22 +362,22 @@ export function appendEmbeddedEntity(
  * @param {"candidate" | "active"=} presentedAttrs *optional* indentify used set of attributes if they are taken from Service Instance
  * @returns {void}
  */
-export function addInfoIcon(
+export function addInfoIcon (
   instanceAsTable: ServiceEntityBlock,
-  presentedAttrs: "candidate" | "active",
+  presentedAttrs: 'candidate' | 'active',
 ): void {
   const infoAttrs = {
-    preserveAspectRatio: "none",
-    cursor: "pointer",
-    x: "calc(0.85*w)",
+    preserveAspectRatio: 'none',
+    cursor: 'pointer',
+    x: 'calc(0.85*w)',
   };
 
-  if (presentedAttrs === "candidate") {
+  if (presentedAttrs === 'candidate') {
     instanceAsTable.attr({
       info: {
         ...infoAttrs,
-        "xlink:href": candidateImage,
-        "data-tooltip": words("attributes.candidate"),
+        'xlink:href': candidateImage,
+        'data-tooltip': words('attributes.candidate'),
         y: 6,
         width: 15,
         height: 15,
@@ -387,8 +387,8 @@ export function addInfoIcon(
     instanceAsTable.attr({
       info: {
         ...infoAttrs,
-        "xlink:href": activeImage,
-        "data-tooltip": words("attributes.active"),
+        'xlink:href': activeImage,
+        'data-tooltip': words('attributes.active'),
         y: 8,
         width: 14,
         height: 14,
@@ -410,8 +410,8 @@ const connectAppendedEntities = (
   graph: dia.Graph,
 ): void => {
   appendedEntities.forEach((cell) => {
-    const relationMap = cell.get("relatedTo") as Map<string, string>;
-    const model = cell.get("serviceModel") as ServiceModel;
+    const relationMap = cell.get('relatedTo') as Map<string, string>;
+    const model = cell.get('serviceModel') as ServiceModel;
     const relations = findFullInterServiceRelations(model);
 
     //if there is relationMap, we iterate through them, and search for cell with corresponding id
@@ -427,12 +427,12 @@ const connectAppendedEntities = (
 
           //if it has, we connect them
           if (relation) {
-            relatedCell.set("cantBeRemoved", relation.modifier !== "rw+");
+            relatedCell.set('cantBeRemoved', relation.modifier !== 'rw+');
             connectEntities(
               graph,
               relatedCell,
               [cell],
-              relation.modifier !== "rw+",
+              relation.modifier !== 'rw+',
             );
           }
         }

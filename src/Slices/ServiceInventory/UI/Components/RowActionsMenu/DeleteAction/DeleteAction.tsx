@@ -1,17 +1,17 @@
-import React, { useContext, useState } from "react";
-import { MenuItem } from "@patternfly/react-core";
-import { TrashAltIcon } from "@patternfly/react-icons";
-import { useQueryClient } from "@tanstack/react-query";
-import { VersionedServiceInstanceIdentifier } from "@/Core";
-import { useDeleteInstance } from "@/Data/Managers/V2/ServiceInstance";
+import React, { useContext, useState } from 'react';
+import { MenuItem } from '@patternfly/react-core';
+import { TrashAltIcon } from '@patternfly/react-icons';
+import { useQueryClient } from '@tanstack/react-query';
+import { VersionedServiceInstanceIdentifier } from '@/Core';
+import { useDeleteInstance } from '@/Data/Managers/V2/ServiceInstance';
 import {
   ToastAlert,
   ActionDisabledTooltip,
   ConfirmUserActionForm,
-} from "@/UI/Components";
-import { DependencyContext } from "@/UI/Dependency";
-import { ModalContext } from "@/UI/Root/Components/ModalProvider";
-import { words } from "@/UI/words";
+} from '@/UI/Components';
+import { DependencyContext } from '@/UI/Dependency';
+import { ModalContext } from '@/UI/Root/Components/ModalProvider';
+import { words } from '@/UI/words';
 
 interface Props extends VersionedServiceInstanceIdentifier {
   instance_identity: string;
@@ -27,7 +27,7 @@ export const DeleteAction: React.FC<Props> = ({
 }) => {
   const client = useQueryClient();
   const { triggerModal, closeModal } = useContext(ModalContext);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState('');
   const { environmentModifier } = useContext(DependencyContext);
 
   const { mutate, isPending } = useDeleteInstance(id, service_entity, version, {
@@ -36,10 +36,10 @@ export const DeleteAction: React.FC<Props> = ({
     },
     onSuccess: () => {
       client.invalidateQueries({
-        queryKey: ["get_instances-one_time", service_entity],
+        queryKey: ['get_instances-one_time', service_entity],
       });
       client.refetchQueries({
-        queryKey: ["get_instances-continuous", service_entity],
+        queryKey: ['get_instances-continuous', service_entity],
       });
     },
   });
@@ -53,10 +53,10 @@ export const DeleteAction: React.FC<Props> = ({
    */
   const handleModalToggle = (): void => {
     triggerModal({
-      title: words("inventory.deleteInstance.title"),
+      title: words('inventory.deleteInstance.title'),
       content: (
         <>
-          {words("inventory.deleteInstance.header")(
+          {words('inventory.deleteInstance.header')(
             instance_identity,
             service_entity,
           )}
@@ -81,17 +81,17 @@ export const DeleteAction: React.FC<Props> = ({
     <>
       <ToastAlert
         data-testid="ToastAlert"
-        title={words("inventory.deleteInstance.failed")}
+        title={words('inventory.deleteInstance.failed')}
         message={errorMessage}
         setMessage={setErrorMessage}
       />
       <ActionDisabledTooltip
         isDisabled={isDisabled || isHalted}
-        testingId={words("inventory.deleteInstance.button")}
+        testingId={words('inventory.deleteInstance.button')}
         tooltipContent={
           isHalted
-            ? words("environment.halt.tooltip")
-            : words("inventory.statustab.actionDisabled")
+            ? words('environment.halt.tooltip')
+            : words('inventory.statustab.actionDisabled')
         }
       >
         <MenuItem
@@ -102,7 +102,7 @@ export const DeleteAction: React.FC<Props> = ({
           icon={<TrashAltIcon />}
           {...(!isDisabled && !isHalted && { isDanger: true })}
         >
-          {words("inventory.deleteInstance.button")}
+          {words('inventory.deleteInstance.button')}
         </MenuItem>
       </ActionDisabledTooltip>
     </>

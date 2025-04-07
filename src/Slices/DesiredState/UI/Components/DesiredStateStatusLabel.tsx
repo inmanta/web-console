@@ -1,7 +1,7 @@
-import React from "react";
-import { Label } from "@patternfly/react-core";
-import { InfoAltIcon } from "@patternfly/react-icons";
-import { DesiredStateVersionStatus } from "@S/DesiredState/Core/Domain";
+import React from 'react';
+import { Label } from '@patternfly/react-core';
+import { InfoAltIcon } from '@patternfly/react-icons';
+import { DesiredStateVersionStatus } from '@S/DesiredState/Core/Domain';
 
 /**
  * DesiredStateStatusLabel Component

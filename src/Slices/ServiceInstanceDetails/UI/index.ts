@@ -1,1 +1,1 @@
-export { Page as ServiceInstanceDetailsPage } from "./Page";
+export { Page as ServiceInstanceDetailsPage } from './Page';

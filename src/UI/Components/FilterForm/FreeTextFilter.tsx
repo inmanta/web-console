@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Button,
   ToolbarFilter,
@@ -8,8 +8,8 @@ import {
   ToolbarLabelGroup,
   ToolbarItem,
   ToolbarGroup,
-} from "@patternfly/react-core";
-import { words } from "@/UI/words";
+} from '@patternfly/react-core';
+import { words } from '@/UI/words';
 
 interface Props {
   isHidden?: boolean;
@@ -63,7 +63,7 @@ export const FreeTextFilter: React.FC<Props> = ({
               value={filterPropertyName}
               name={filterPropertyName}
             >
-              {words("resources.filters.filter")}
+              {words('resources.filters.filter')}
             </Button>
           </ToolbarItem>
         )}

@@ -1,1 +1,1 @@
-export { Provider as PaginationWidget } from "./Provider";
+export { Provider as PaginationWidget } from './Provider';

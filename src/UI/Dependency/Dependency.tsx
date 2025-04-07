@@ -1,4 +1,4 @@
-import React, { createContext } from "react";
+import React, { createContext } from 'react';
 import {
   CommandResolver,
   FileFetcher,
@@ -9,11 +9,11 @@ import {
   EnvironmentHandler,
   FeatureManager,
   ArchiveHelper,
-} from "@/Core";
+} from '@/Core';
 import {
   AuthContextInterface,
   defaultAuthContext,
-} from "@/Data/Auth/AuthContext";
+} from '@/Data/Auth/AuthContext';
 import {
   DummyCommandResolver,
   DummyEnvironmentModifier,
@@ -24,7 +24,7 @@ import {
   DummyRouteManager,
   DummyEnvironmentHandler,
   DummyArchiveHelper,
-} from "./Dummy";
+} from './Dummy';
 
 export interface Dependencies {
   commandResolver: CommandResolver;

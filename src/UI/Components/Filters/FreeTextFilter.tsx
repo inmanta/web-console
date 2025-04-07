@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   ToolbarFilter,
   InputGroup,
   InputGroupItem,
   SearchInput,
-} from "@patternfly/react-core";
+} from '@patternfly/react-core';
 
 interface Props {
   isHidden?: boolean;
@@ -21,16 +21,16 @@ export const FreeTextFilter: React.FC<Props> = ({
   isHidden,
   update,
 }) => {
-  const [textInput, setTextInput] = useState("");
+  const [textInput, setTextInput] = useState('');
 
   const removeChip = (cat, id) =>
     update(searchEntries ? searchEntries.filter((value) => value !== id) : []);
 
   const onTextInput = (event) => {
-    if (event.key && event.key !== "Enter") return;
+    if (event.key && event.key !== 'Enter') return;
     if (textInput.length <= 0) return;
     update(searchEntries ? [...searchEntries, textInput] : [textInput]);
-    setTextInput("");
+    setTextInput('');
   };
 
   return (

@@ -1,1 +1,1 @@
-export * from "./FilterPicker";
+export * from './FilterPicker';

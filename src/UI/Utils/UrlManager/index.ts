@@ -1,1 +1,1 @@
-export * from "./UrlManagerImpl";
+export * from './UrlManagerImpl';

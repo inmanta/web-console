@@ -1,1 +1,1 @@
-export * from "./ConfirmUserActionForm";
+export * from './ConfirmUserActionForm';

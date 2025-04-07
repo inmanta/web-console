@@ -1,5 +1,5 @@
-import React, { useContext } from "react";
-import { Link } from "react-router-dom";
+import React, { useContext } from 'react';
+import { Link } from 'react-router-dom';
 import {
   Card,
   CardBody,
@@ -8,11 +8,11 @@ import {
   DescriptionListGroup,
   DescriptionListTerm,
   Label,
-} from "@patternfly/react-core";
-import { InfoAltIcon } from "@patternfly/react-icons";
-import styled from "styled-components";
-import { ServiceOrderItemStatus } from "@/Slices/Orders/Core/Query";
-import { DependencyContext, words } from "@/UI";
+} from '@patternfly/react-core';
+import { InfoAltIcon } from '@patternfly/react-icons';
+import styled from 'styled-components';
+import { ServiceOrderItemStatus } from '@/Slices/Orders/Core/Query';
+import { DependencyContext, words } from '@/UI';
 
 interface Props {
   state: ServiceOrderItemStatus;
@@ -36,7 +36,7 @@ export const OrderStateDetails: React.FC<Props> = ({ state }) => {
   if (!state.failure_type && !state.reason && !state.validation_compile_id) {
     return (
       <Label color="blue" variant="outline" icon={<InfoAltIcon />}>
-        {words("orders.row.empty")}
+        {words('orders.row.empty')}
       </Label>
     );
   }
@@ -48,7 +48,7 @@ export const OrderStateDetails: React.FC<Props> = ({ state }) => {
           {state.failure_type && (
             <DescriptionListGroup>
               <DescriptionListTerm>
-                {words("orders.row.failureType")}
+                {words('orders.row.failureType')}
               </DescriptionListTerm>
               <DescriptionListDescription>
                 {state.failure_type}
@@ -58,7 +58,7 @@ export const OrderStateDetails: React.FC<Props> = ({ state }) => {
           {state.reason && (
             <DescriptionListGroup>
               <DescriptionListTerm>
-                {words("orders.row.reason")}
+                {words('orders.row.reason')}
               </DescriptionListTerm>
               <DescriptionListDescription>
                 {state.reason}
@@ -71,13 +71,13 @@ export const OrderStateDetails: React.FC<Props> = ({ state }) => {
                 <Link
                   target="_blank"
                   to={{
-                    pathname: routeManager.getUrl("CompileDetails", {
+                    pathname: routeManager.getUrl('CompileDetails', {
                       id: state.validation_compile_id,
                     }),
                     search: location.search,
                   }}
                 >
-                  {words("orders.row.compilerReport")}
+                  {words('orders.row.compilerReport')}
                 </Link>
               </DescriptionListDescription>
             </DescriptionListGroup>

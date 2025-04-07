@@ -1,1 +1,1 @@
-export { Page as CompileDetailsPage } from "./Page";
+export { Page as CompileDetailsPage } from './Page';

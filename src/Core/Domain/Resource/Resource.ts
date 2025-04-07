@@ -1,8 +1,8 @@
-import { Pagination } from "@/Core/Domain/Pagination";
-import { Maybe, ParsedNumber } from "@/Core/Language";
-import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import { PageSize } from "../PageSize";
-import { Sort } from "../Sort";
+import { Pagination } from '@/Core/Domain/Pagination';
+import { Maybe, ParsedNumber } from '@/Core/Language';
+import { CurrentPage } from '@/Data/Common/UrlState/useUrlStateWithCurrentPage';
+import { PageSize } from '../PageSize';
+import { Sort } from '../Sort';
 
 export interface Resource {
   resource_id: string;
@@ -11,7 +11,7 @@ export interface Resource {
   id_details: IdDetails;
 }
 
-export interface FromVersion extends Omit<Resource, "status"> {
+export interface FromVersion extends Omit<Resource, 'status'> {
   resource_version_id: string;
 }
 
@@ -23,17 +23,17 @@ export interface IdDetails {
 }
 
 export enum Status {
-  unavailable = "unavailable",
-  skipped = "skipped",
-  dry = "dry",
-  deployed = "deployed",
-  failed = "failed",
-  deploying = "deploying",
-  available = "available",
-  cancelled = "cancelled",
-  undefined = "undefined",
-  skipped_for_undefined = "skipped_for_undefined",
-  orphaned = "orphaned",
+  unavailable = 'unavailable',
+  skipped = 'skipped',
+  dry = 'dry',
+  deployed = 'deployed',
+  failed = 'failed',
+  deploying = 'deploying',
+  available = 'available',
+  cancelled = 'cancelled',
+  undefined = 'undefined',
+  skipped_for_undefined = 'skipped_for_undefined',
+  orphaned = 'orphaned',
 }
 
 export interface Row {
@@ -45,7 +45,7 @@ export interface Row {
   id: string;
 }
 
-export type RowFromVersion = Omit<Row, "deployState">;
+export type RowFromVersion = Omit<Row, 'deployState'>;
 
 interface BaseDetails {
   resource_id: string;
@@ -86,7 +86,7 @@ export interface Metadata extends Pagination.Metadata {
   deploy_summary: DeploySummary;
 }
 
-export const TRANSIENT_STATES = ["available", "deploying", "processing_events"];
+export const TRANSIENT_STATES = ['available', 'deploying', 'processing_events'];
 
 export interface ResourceParams {
   sort?: Sort<SortKey>;
@@ -107,20 +107,20 @@ export interface FilterWithDefaultHandling extends Filter {
 }
 
 export enum FilterKind {
-  Type = "Type",
-  Agent = "Agent",
-  Value = "Value",
-  Status = "Status",
+  Type = 'Type',
+  Agent = 'Agent',
+  Value = 'Value',
+  Status = 'Status',
 }
 
 export type SortKey =
-  | "agent"
-  | "status"
-  | "resource_type"
-  | "resource_id_value";
+  | 'agent'
+  | 'status'
+  | 'resource_type'
+  | 'resource_id_value';
 
-export type FilterFromVersion = Omit<Filter, "status">;
-export type SortKeyFromVersion = Exclude<SortKey, "status">;
+export type FilterFromVersion = Omit<Filter, 'status'>;
+export type SortKeyFromVersion = Exclude<SortKey, 'status'>;
 
 export interface ResponseFromVersion {
   data: FromVersion[];
@@ -139,7 +139,7 @@ export class IdParser {
   private static readonly parseIdRegex =
     /^(?<id>(?<type>(?<ns>[\w-]+(::[\w-]+)*)::(?<class>[\w-]+))\[(?<hostname>[^,]+),(?<attr>[^=]+)=(?<value>[^\]]+)\])(,v=(?<version>[0-9]+))?$/;
 
-  public static parse(idStr: string): Maybe.Maybe<Id> {
+  public static parse (idStr: string): Maybe.Maybe<Id> {
     const groups = idStr.match(IdParser.parseIdRegex)?.groups;
 
     if (!groups) {
@@ -154,7 +154,7 @@ export class IdParser {
     });
   }
 
-  public static getAgentName(idStr: string): Maybe.Maybe<Id["agentName"]> {
+  public static getAgentName (idStr: string): Maybe.Maybe<Id['agentName']> {
     const id = IdParser.parse(idStr);
 
     return Maybe.isSome(id) ? Maybe.some(id.value.agentName) : Maybe.none();

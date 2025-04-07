@@ -1,5 +1,5 @@
-import { useMutation } from "@tanstack/react-query";
-import { usePostWithoutEnv } from "../../helpers";
+import { useMutation } from '@tanstack/react-query';
+import { usePostWithoutEnv } from '../../helpers';
 
 interface LoginResponse {
   data: {
@@ -25,7 +25,7 @@ export const useLogin = () => {
   const post = usePostWithoutEnv()<LoginBody>;
 
   return useMutation<LoginResponse, Error, LoginBody>({
-    mutationFn: (body) => post("/api/v2/login", body),
-    mutationKey: ["login"],
+    mutationFn: (body) => post('/api/v2/login', body),
+    mutationKey: ['login'],
   });
 };

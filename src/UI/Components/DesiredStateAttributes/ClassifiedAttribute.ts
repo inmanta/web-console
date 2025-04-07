@@ -14,21 +14,21 @@ interface Base<Kind> {
   value: string;
 }
 
-type SingleLine = Base<"SingleLine">;
+type SingleLine = Base<'SingleLine'>;
 
-type MultiLine = Base<"MultiLine">;
+type MultiLine = Base<'MultiLine'>;
 
-type Json = Base<"Json">;
+type Json = Base<'Json'>;
 
-type Xml = Base<"Xml">;
+type Xml = Base<'Xml'>;
 
-type Password = Base<"Password">;
+type Password = Base<'Password'>;
 
-type File = Base<"File">;
+type File = Base<'File'>;
 
-type Python = Base<"Python">;
+type Python = Base<'Python'>;
 
 interface Undefined {
-  kind: "Undefined";
+  kind: 'Undefined';
   key: string;
 }

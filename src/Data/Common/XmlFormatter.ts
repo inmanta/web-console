@@ -1,12 +1,12 @@
-import formatXml from "xml-formatter";
-import { Formatter } from "@/Core";
+import formatXml from 'xml-formatter';
+import { Formatter } from '@/Core';
 
 export class XmlFormatter implements Formatter {
-  format(source: string): string {
+  format (source: string): string {
     try {
       return formatXml(source, {
         collapseContent: true,
-        lineSeparator: "\n",
+        lineSeparator: '\n',
       });
     } catch {
       return source;

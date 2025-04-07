@@ -1,1 +1,1 @@
-export * from "./CopyMultiOptions";
+export * from './CopyMultiOptions';

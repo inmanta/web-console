@@ -1,1 +1,1 @@
-export * from "./usePatchAttributesExpert";
+export * from './usePatchAttributesExpert';

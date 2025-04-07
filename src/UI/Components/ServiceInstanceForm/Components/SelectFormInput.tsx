@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   FormGroup,
   FormHelperText,
@@ -9,9 +9,9 @@ import {
   Select,
   SelectList,
   SelectOption,
-} from "@patternfly/react-core";
-import { ParsedNumber } from "@/Core";
-import { words } from "@/UI";
+} from '@patternfly/react-core';
+import { ParsedNumber } from '@/Core';
+import { words } from '@/UI';
 
 interface Props {
   options: Record<string, string | ParsedNumber>;
@@ -99,14 +99,14 @@ export const SelectFormInput: React.FC<Props> = ({
       isDisabled={shouldBeDisabled}
       style={
         {
-          width: "100%",
+          width: '100%',
         } as React.CSSProperties
       }
     >
       {selectOptions.length === 1
         ? selectOptions[0]
         : attributeValue ||
-          words("common.serviceInstance.select")(attributeName)}
+          words('common.serviceInstance.select')(attributeName)}
     </MenuToggle>
   );
 

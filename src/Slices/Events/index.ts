@@ -1,1 +1,1 @@
-export * as Events from "./Core/Route";
+export * as Events from './Core/Route';

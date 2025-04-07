@@ -1,4 +1,4 @@
-import React, { useEffect, forwardRef } from "react";
+import React, { useEffect, forwardRef } from 'react';
 import {
   Menu,
   MenuContent,
@@ -6,8 +6,8 @@ import {
   MenuItem,
   MenuList,
   Popper,
-} from "@patternfly/react-core";
-import styled from "styled-components";
+} from '@patternfly/react-core';
+import styled from 'styled-components';
 
 interface Props {
   suggestions: string[];
@@ -47,7 +47,7 @@ export const SuggestionsPopover = forwardRef<
 >(({ suggestions, handleSuggestionClick, filter, setIsOpen, isOpen }, ref) => {
   if (!ref) {
     throw new Error(
-      "You need to define a ref for the SuggestionsPopover component.",
+      'You need to define a ref for the SuggestionsPopover component.',
     );
   }
 
@@ -105,26 +105,26 @@ export const SuggestionsPopover = forwardRef<
     ) {
       switch (event.key) {
         // the up and down arrow keys navigate the autocomplete menu.
-        case "ArrowUp":
-        case "ArrowDown":
+        case 'ArrowUp':
+        case 'ArrowDown':
           const firstElement: HTMLButtonElement | null =
-            autocompleteRef.current.querySelector("li > button:not(:disabled)");
+            autocompleteRef.current.querySelector('li > button:not(:disabled)');
 
           firstElement && firstElement.focus();
           event.preventDefault(); // by default, the up and down arrow keys scroll the window
           break;
         // the escape key will close the menu and return browser focus to the input.
-        case "Escape":
+        case 'Escape':
           setIsOpen(false);
           reference.current && reference.current.focus();
           // the tab, and enter keys will close the menu, and the tab key will move browser
           // focus forward one element (by default)
           break;
-        case "Enter":
+        case 'Enter':
           event.preventDefault();
           setIsOpen(false);
           break;
-        case "Tab":
+        case 'Tab':
           setIsOpen(false);
           break;
         default:
@@ -136,7 +136,7 @@ export const SuggestionsPopover = forwardRef<
       isOpen &&
       autocompleteRef.current &&
       autocompleteRef.current.contains(event.target) &&
-      event.key === "Tab"
+      event.key === 'Tab'
     ) {
       event.preventDefault();
       setIsOpen(false);
@@ -175,12 +175,12 @@ export const SuggestionsPopover = forwardRef<
   }, [filter, suggestions]);
 
   useEffect(() => {
-    window.addEventListener("keydown", handleMenuKeys);
-    window.addEventListener("click", handleClickOutside);
+    window.addEventListener('keydown', handleMenuKeys);
+    window.addEventListener('click', handleClickOutside);
 
     return () => {
-      window.removeEventListener("keydown", handleMenuKeys);
-      window.removeEventListener("click", handleClickOutside);
+      window.removeEventListener('keydown', handleMenuKeys);
+      window.removeEventListener('click', handleClickOutside);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);

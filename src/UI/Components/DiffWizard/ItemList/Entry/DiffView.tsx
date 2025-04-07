@@ -1,18 +1,18 @@
-import React from "react";
-import ReactDiffViewer, { DiffMethod } from "react-diff-viewer-continued";
-import { Diff } from "@/Core";
+import React from 'react';
+import ReactDiffViewer, { DiffMethod } from 'react-diff-viewer-continued';
+import { Diff } from '@/Core';
 
 export const DiffView: React.FC<Diff.Values> = ({ from, to }) => (
   <ReactDiffViewer
     showDiffOnly={false}
     styles={{
-      marker: { display: "none" },
+      marker: { display: 'none' },
       wordDiff: { padding: 0 },
-      contentText: { lineHeight: "29px !important" },
-      line: { display: "flex" },
+      contentText: { lineHeight: '29px !important' },
+      line: { display: 'flex' },
       content: {
-        overflowWrap: "anywhere",
-        padding: "0 4px",
+        overflowWrap: 'anywhere',
+        padding: '0 4px',
       },
     }}
     compareMethod={
@@ -24,4 +24,4 @@ export const DiffView: React.FC<Diff.Values> = ({ from, to }) => (
   />
 );
 
-const isMultiLine = (value: string): boolean => value.indexOf("\n") >= 0;
+const isMultiLine = (value: string): boolean => value.indexOf('\n') >= 0;

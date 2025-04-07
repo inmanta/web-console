@@ -1,8 +1,8 @@
-import { TokenInfo } from "@/Core/Domain";
-import { Either } from "@/Core/Language";
+import { TokenInfo } from '@/Core/Domain';
+import { Either } from '@/Core/Language';
 
 export interface GenerateToken {
-  kind: "GenerateToken";
+  kind: 'GenerateToken';
 }
 
 export interface GenerateTokenManifest {

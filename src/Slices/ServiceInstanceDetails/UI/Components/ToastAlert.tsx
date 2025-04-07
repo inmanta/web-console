@@ -1,15 +1,15 @@
-import React from "react";
+import React from 'react';
 import {
   Alert,
   AlertActionCloseButton,
   AlertGroup,
-} from "@patternfly/react-core";
+} from '@patternfly/react-core';
 
 interface Props {
   message: string;
   id: string;
   setMessage: React.Dispatch<React.SetStateAction<string>>;
-  variant: "danger" | "success";
+  variant: 'danger' | 'success';
 }
 
 /**
@@ -37,7 +37,7 @@ export const ToastAlertMessage: React.FC<Props> = ({
         actionClose={
           <AlertActionCloseButton
             data-testid={`${id}-close-message`}
-            onClose={() => setMessage("")}
+            onClose={() => setMessage('')}
           />
         }
       />

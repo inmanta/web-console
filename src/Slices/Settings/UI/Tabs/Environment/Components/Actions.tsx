@@ -1,22 +1,22 @@
-import React, { useContext } from "react";
+import React, { useContext } from 'react';
 import {
   Button,
   DescriptionListDescription,
   DescriptionListGroup,
   DescriptionListTerm,
-} from "@patternfly/react-core";
-import { TrashAltIcon } from "@patternfly/react-icons";
-import { FlatEnvironment } from "@/Core";
-import { ActionDisabledTooltip, TextWithCopy } from "@/UI/Components";
-import { DependencyContext } from "@/UI/Dependency";
-import { ModalContext } from "@/UI/Root/Components/ModalProvider";
-import { words } from "@/UI/words";
-import { ConfirmationForm } from "./ConfirmationForm";
+} from '@patternfly/react-core';
+import { TrashAltIcon } from '@patternfly/react-icons';
+import { FlatEnvironment } from '@/Core';
+import { ActionDisabledTooltip, TextWithCopy } from '@/UI/Components';
+import { DependencyContext } from '@/UI/Dependency';
+import { ModalContext } from '@/UI/Root/Components/ModalProvider';
+import { words } from '@/UI/words';
+import { ConfirmationForm } from './ConfirmationForm';
 
-export type EnvActions = "delete" | "clear";
+export type EnvActions = 'delete' | 'clear';
 
 interface Props {
-  environment: Pick<FlatEnvironment, "id" | "name">;
+  environment: Pick<FlatEnvironment, 'id' | 'name'>;
 }
 
 /**
@@ -39,13 +39,13 @@ export const Actions: React.FC<Props> = ({ environment }) => {
    */
   const openModal = (type: EnvActions): void => {
     triggerModal({
-      title: words("home.environment.delete.warning"),
+      title: words('home.environment.delete.warning'),
       description: (
         <p>
           {words(`home.environment.${type}.confirmation`)(environment.name)}
         </p>
       ),
-      iconVariant: "danger",
+      iconVariant: 'danger',
       content: <ConfirmationForm environment={environment} type={type} />,
     });
   };
@@ -54,12 +54,12 @@ export const Actions: React.FC<Props> = ({ environment }) => {
     <>
       <DescriptionListGroup>
         <DescriptionListTerm>
-          {words("settings.tabs.environment.id")}
+          {words('settings.tabs.environment.id')}
         </DescriptionListTerm>
         <DescriptionListDescription>
           <TextWithCopy
             value={environment.id}
-            tooltipContent={words("home.environment.copy")}
+            tooltipContent={words('home.environment.copy')}
           />
         </DescriptionListDescription>
       </DescriptionListGroup>
@@ -67,16 +67,16 @@ export const Actions: React.FC<Props> = ({ environment }) => {
         <DescriptionListDescription>
           <ActionDisabledTooltip
             isDisabled={isProtected}
-            testingId={"clear"}
-            tooltipContent={words("environment.protected.tooltip")}
+            testingId={'clear'}
+            tooltipContent={words('environment.protected.tooltip')}
           >
             <Button
               variant="secondary"
               isDanger
-              onClick={() => openModal("clear")}
+              onClick={() => openModal('clear')}
               isDisabled={isProtected}
             >
-              {words("home.environment.clear")}
+              {words('home.environment.clear')}
             </Button>
           </ActionDisabledTooltip>
         </DescriptionListDescription>
@@ -85,16 +85,16 @@ export const Actions: React.FC<Props> = ({ environment }) => {
         <DescriptionListDescription>
           <ActionDisabledTooltip
             isDisabled={isProtected}
-            testingId={"delete"}
-            tooltipContent={words("environment.protected.tooltip")}
+            testingId={'delete'}
+            tooltipContent={words('environment.protected.tooltip')}
           >
             <Button
               variant="danger"
-              onClick={() => openModal("delete")}
+              onClick={() => openModal('delete')}
               icon={<TrashAltIcon />}
               isDisabled={isProtected}
             >
-              {words("home.environment.delete")}
+              {words('home.environment.delete')}
             </Button>
           </ActionDisabledTooltip>
         </DescriptionListDescription>

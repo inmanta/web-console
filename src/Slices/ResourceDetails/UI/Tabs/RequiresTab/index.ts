@@ -1,1 +1,1 @@
-export * from "./RequiresTab";
+export * from './RequiresTab';

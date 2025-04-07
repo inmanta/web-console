@@ -1,7 +1,7 @@
-import React, { useContext } from "react";
-import { DependencyContext, useRouteParams, words } from "@/UI";
-import { EmptyView } from "@/UI/Components";
-import { ComposerEditorProvider } from "@/UI/Components/Diagram/Context/ComposerEditorProvider";
+import React, { useContext } from 'react';
+import { DependencyContext, useRouteParams, words } from '@/UI';
+import { EmptyView } from '@/UI/Components';
+import { ComposerEditorProvider } from '@/UI/Components/Diagram/Context/ComposerEditorProvider';
 
 /**
  * Renders the Page component for the Instance Composer Viewer Page.
@@ -12,13 +12,13 @@ import { ComposerEditorProvider } from "@/UI/Components/Diagram/Context/Composer
  */
 export const Page: React.FC = () => {
   const { service: serviceName, instance } =
-    useRouteParams<"InstanceComposerViewer">();
+    useRouteParams<'InstanceComposerViewer'>();
   const { featureManager } = useContext(DependencyContext);
 
   if (!featureManager.isComposerEnabled()) {
     return (
       <EmptyView
-        message={words("instanceComposer.disabled")}
+        message={words('instanceComposer.disabled')}
         aria-label="ComposerView-Disabled"
       />
     );

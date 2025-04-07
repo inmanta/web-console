@@ -1,1 +1,1 @@
-export * from "./useDeleteDesiredStateVersion";
+export * from './useDeleteDesiredStateVersion';

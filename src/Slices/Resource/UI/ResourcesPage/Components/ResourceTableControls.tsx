@@ -1,14 +1,14 @@
-import React from "react";
+import React from 'react';
 import {
   Toolbar,
   ToolbarItem,
   ToolbarContent,
   Button,
-} from "@patternfly/react-core";
-import { Resource } from "@/Core";
-import { FilterForm } from "@/UI/Components";
-import { words } from "@/UI/words";
-import { DeployStateFilter } from "./DeployStateFilter";
+} from '@patternfly/react-core';
+import { Resource } from '@/Core';
+import { FilterForm } from '@/UI/Components';
+import { words } from '@/UI/words';
+import { DeployStateFilter } from './DeployStateFilter';
 
 interface Props {
   summaryWidget: React.ReactNode;
@@ -46,7 +46,7 @@ export const ResourceTableControls: React.FC<Props> = ({
             onClick={() => setFilter({})}
             aria-label="Reset-filters"
           >
-            {words("resources.filters.reset")}
+            {words('resources.filters.reset')}
           </Button>
         </ToolbarItem>
       </ToolbarContent>

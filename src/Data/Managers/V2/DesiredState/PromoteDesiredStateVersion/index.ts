@@ -1,1 +1,1 @@
-export * from "./usePromoteDesiredStateVersion";
+export * from './usePromoteDesiredStateVersion';

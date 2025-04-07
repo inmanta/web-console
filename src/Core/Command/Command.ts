@@ -1,46 +1,46 @@
 import {
   ControlAgent,
   ControlAgentManifest,
-} from "@/Data/Managers/ControlAgent/interface";
-import { Deploy, DeployManifest } from "@/Data/Managers/Deploy/interface";
+} from '@/Data/Managers/ControlAgent/interface';
+import { Deploy, DeployManifest } from '@/Data/Managers/Deploy/interface';
 import {
   ResetEnvironmentSetting,
   ResetEnvironmentSettingManifest,
-} from "@/Data/Managers/EnvironmentSettings/ResetEnvironmentSetting/interface";
+} from '@/Data/Managers/EnvironmentSettings/ResetEnvironmentSetting/interface';
 import {
   UpdateEnvironmentSetting,
   UpdateEnvironmentSettingManifest,
-} from "@/Data/Managers/EnvironmentSettings/UpdateEnvironmentSetting/interface";
+} from '@/Data/Managers/EnvironmentSettings/UpdateEnvironmentSetting/interface';
 import {
   GenerateToken,
   GenerateTokenManifest,
-} from "@/Data/Managers/GenerateToken/interface";
+} from '@/Data/Managers/GenerateToken/interface';
 import {
   HaltEnvironment,
   HaltEnvironmentManifest,
-} from "@/Data/Managers/HaltEnvironment/interface";
+} from '@/Data/Managers/HaltEnvironment/interface';
 import {
   ModifyEnvironment,
   ModifyEnvironmentManifest,
-} from "@/Data/Managers/ModifyEnvironment/interface";
-import { Repair, RepairManifest } from "@/Data/Managers/Repair/interface";
+} from '@/Data/Managers/ModifyEnvironment/interface';
+import { Repair, RepairManifest } from '@/Data/Managers/Repair/interface';
 import {
   ResumeEnvironment,
   ResumeEnvironmentManifest,
-} from "@/Data/Managers/ResumeEnvironment/interface";
+} from '@/Data/Managers/ResumeEnvironment/interface';
 import {
   TriggerDryRun,
   TriggerDryRunManifest,
-} from "@/Data/Managers/TriggerDryRun/interface";
+} from '@/Data/Managers/TriggerDryRun/interface';
 
-import * as CreateEnvironment from "@S/CreateEnvironment/Core/CreateEnvironmentCommand";
-import * as CreateProject from "@S/CreateEnvironment/Core/CreateProjectCommand";
-import * as CreateInstance from "@S/CreateInstance/Core/Command";
-import * as TriggerInstanceUpdate from "@S/EditInstance/Core/Command";
-import * as DeleteEnvironment from "@S/Home/Core/DeleteEnvironmentCommand";
-import * as CreateCallback from "@S/ServiceDetails/Core/CreateCallback";
-import * as DeleteCallback from "@S/ServiceDetails/Core/DeleteCallback";
-import * as ClearEnvironment from "@S/Settings/Core/ClearEnvironmentCommand";
+import * as CreateEnvironment from '@S/CreateEnvironment/Core/CreateEnvironmentCommand';
+import * as CreateProject from '@S/CreateEnvironment/Core/CreateProjectCommand';
+import * as CreateInstance from '@S/CreateInstance/Core/Command';
+import * as TriggerInstanceUpdate from '@S/EditInstance/Core/Command';
+import * as DeleteEnvironment from '@S/Home/Core/DeleteEnvironmentCommand';
+import * as CreateCallback from '@S/ServiceDetails/Core/CreateCallback';
+import * as DeleteCallback from '@S/ServiceDetails/Core/DeleteCallback';
+import * as ClearEnvironment from '@S/Settings/Core/ClearEnvironmentCommand';
 
 type Command =
   | ClearEnvironment.Command
@@ -92,9 +92,9 @@ interface Manifest {
 /**
  * Command Utilities
  */
-export type Kind = Command["kind"];
-export type Error<K extends Kind> = Manifest[K]["error"];
-export type Body<K extends Kind> = Manifest[K]["body"];
-export type ApiData<K extends Kind> = Manifest[K]["apiData"];
-export type SubCommand<K extends Kind> = Manifest[K]["command"];
-export type Trigger<K extends Kind> = Manifest[K]["trigger"];
+export type Kind = Command['kind'];
+export type Error<K extends Kind> = Manifest[K]['error'];
+export type Body<K extends Kind> = Manifest[K]['body'];
+export type ApiData<K extends Kind> = Manifest[K]['apiData'];
+export type SubCommand<K extends Kind> = Manifest[K]['command'];
+export type Trigger<K extends Kind> = Manifest[K]['trigger'];

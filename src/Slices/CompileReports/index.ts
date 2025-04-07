@@ -1,1 +1,1 @@
-export * as CompileReports from "./Core/Route";
+export * as CompileReports from './Core/Route';

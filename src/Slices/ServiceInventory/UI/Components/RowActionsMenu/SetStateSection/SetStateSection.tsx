@@ -1,12 +1,12 @@
-import React, { useContext, useState } from "react";
-import { Button, MenuItem, Content } from "@patternfly/react-core";
-import { VersionedServiceInstanceIdentifier } from "@/Core";
-import { usePostStateTransfer } from "@/Data/Managers/V2/ServiceInstance";
-import { ActionDisabledTooltip } from "@/UI/Components";
-import { DependencyContext } from "@/UI/Dependency";
-import { ModalContext } from "@/UI/Root/Components/ModalProvider";
-import { words } from "@/UI/words";
-import { ToastAlertMessage } from "../../ToastAlertMessage";
+import React, { useContext, useState } from 'react';
+import { Button, MenuItem, Content } from '@patternfly/react-core';
+import { VersionedServiceInstanceIdentifier } from '@/Core';
+import { usePostStateTransfer } from '@/Data/Managers/V2/ServiceInstance';
+import { ActionDisabledTooltip } from '@/UI/Components';
+import { DependencyContext } from '@/UI/Dependency';
+import { ModalContext } from '@/UI/Root/Components/ModalProvider';
+import { words } from '@/UI/words';
+import { ToastAlertMessage } from '../../ToastAlertMessage';
 
 interface Props extends VersionedServiceInstanceIdentifier {
   targets: string[] | null;
@@ -34,7 +34,7 @@ export const SetStateSection: React.FC<Props> = ({
   targets,
 }) => {
   const { triggerModal, closeModal } = useContext(ModalContext);
-  const [stateErrorMessage, setStateErrorMessage] = useState<string>("");
+  const [stateErrorMessage, setStateErrorMessage] = useState<string>('');
 
   const onSelect = (value: string) => {
     openModal(value);
@@ -67,7 +67,7 @@ export const SetStateSection: React.FC<Props> = ({
       closeModal();
 
       const username = authHelper.getUser();
-      const message = words("instanceDetails.API.message.update")(username);
+      const message = words('instanceDetails.API.message.update')(username);
 
       mutate({
         message: message,
@@ -77,7 +77,7 @@ export const SetStateSection: React.FC<Props> = ({
     };
 
     triggerModal({
-      title: words("inventory.statustab.confirmTitle"),
+      title: words('inventory.statustab.confirmTitle'),
       actions: [
         <Button
           key="confirm"
@@ -85,7 +85,7 @@ export const SetStateSection: React.FC<Props> = ({
           data-testid={`${id}-state-modal-confirm`}
           onClick={onSubmit}
         >
-          {words("yes")}
+          {words('yes')}
         </Button>,
         <Button
           key="cancel"
@@ -93,12 +93,12 @@ export const SetStateSection: React.FC<Props> = ({
           data-testid={`${id}-state-modal-cancel`}
           onClick={closeModal}
         >
-          {words("no")}
+          {words('no')}
         </Button>,
       ],
       content: (
         <Content component="p">
-          {words("inventory.statustab.confirmMessage")(
+          {words('inventory.statustab.confirmMessage')(
             instance_identity,
             targetState,
           )}
@@ -127,11 +127,11 @@ export const SetStateSection: React.FC<Props> = ({
         >
           <ActionDisabledTooltip
             isDisabled={isDisabled || isHalted}
-            testingId={words("inventory.statustab.setInstanceState")}
+            testingId={words('inventory.statustab.setInstanceState')}
             tooltipContent={
               isHalted
-                ? words("environment.halt.tooltip")
-                : words("inventory.statustab.actionDisabled")
+                ? words('environment.halt.tooltip')
+                : words('inventory.statustab.actionDisabled')
             }
           >
             {target}
@@ -140,9 +140,9 @@ export const SetStateSection: React.FC<Props> = ({
       ))}
       {(!targets || targets.length < 1) && (
         <MenuItem
-          key={"no value"}
-          value={"no value"}
-          itemId={"no value"}
+          key={'no value'}
+          value={'no value'}
+          itemId={'no value'}
           isDisabled
         >
           None available

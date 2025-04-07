@@ -1,6 +1,6 @@
-import { ParsedNumber } from "@/Core/Language";
-import { DeploymentProgress } from "./ServiceInstanceModel";
-import { Uuid } from "./Uuid";
+import { ParsedNumber } from '@/Core/Language';
+import { DeploymentProgress } from './ServiceInstanceModel';
+import { Uuid } from './Uuid';
 
 export interface DateInfo {
   full: string;
@@ -39,5 +39,5 @@ export interface Row {
 
 export interface State {
   name: string;
-  label?: "info" | "success" | "danger" | "warning" | null;
+  label?: 'info' | 'success' | 'danger' | 'warning' | null;
 }

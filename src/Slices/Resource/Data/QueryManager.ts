@@ -3,18 +3,18 @@ import {
   Resource,
   ApiHelper,
   stringifyObjectOrUndefined,
-} from "@/Core";
-import { getPaginationHandlers, QueryManager } from "@/Data/Managers/Helpers";
-import { Store } from "@/Data/Store";
-import { StateHelper } from "./StateHelper";
-import { getUrl } from "./getUrl";
+} from '@/Core';
+import { getPaginationHandlers, QueryManager } from '@/Data/Managers/Helpers';
+import { Store } from '@/Data/Store';
+import { StateHelper } from './StateHelper';
+import { getUrl } from './getUrl';
 
-export function GetResourcesQueryManager(
+export function GetResourcesQueryManager (
   store: Store,
   apiHelper: ApiHelper,
   scheduler: Scheduler,
 ) {
-  return QueryManager.ContinuousWithEnv<"GetResources">(
+  return QueryManager.ContinuousWithEnv<'GetResources'>(
     apiHelper,
     StateHelper(store),
     scheduler,
@@ -27,10 +27,10 @@ export function GetResourcesQueryManager(
       stringifyFilter(filter),
       stringifyObjectOrUndefined(currentPage.value),
     ],
-    "GetResources",
+    'GetResources',
     getUrl,
     ({ data, links, metadata }) => {
-      if (typeof links === "undefined") {
+      if (typeof links === 'undefined') {
         return { data: data, handlers: {}, metadata };
       }
 
@@ -43,6 +43,6 @@ export function GetResourcesQueryManager(
   );
 }
 
-function stringifyFilter(filter: Resource.Filter | undefined): string {
-  return typeof filter === "undefined" ? "undefined" : JSON.stringify(filter);
+function stringifyFilter (filter: Resource.Filter | undefined): string {
+  return typeof filter === 'undefined' ? 'undefined' : JSON.stringify(filter);
 }

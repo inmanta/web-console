@@ -1,8 +1,8 @@
-import React from "react";
-import { Alert, Button } from "@patternfly/react-core";
-import { useGetServiceModel } from "@/Data/Managers/V2/Service";
-import { words } from "@/UI/words";
-import { AutoCompleteInputProvider } from "./AutoCompleteInputProvider";
+import React from 'react';
+import { Alert, Button } from '@patternfly/react-core';
+import { useGetServiceModel } from '@/Data/Managers/V2/Service';
+import { words } from '@/UI/words';
+import { AutoCompleteInputProvider } from './AutoCompleteInputProvider';
 
 interface Props {
   serviceName: string;
@@ -48,12 +48,12 @@ export const RelatedServiceProvider: React.FC<Props> = ({
       <Alert
         variant="danger"
         isInline
-        title={words("inventory.service.failed")}
+        title={words('inventory.service.failed')}
       >
         {error.message}
         <div>
           <Button variant="link" isInline onClick={() => refetch()}>
-            {words("retry")}
+            {words('retry')}
           </Button>
         </div>
       </Alert>

@@ -1,6 +1,6 @@
-import React from "react";
-import { Panel } from "@patternfly/react-core";
-import { MarkdownContainer } from "@/UI/Components/MarkdownContainer";
+import React from 'react';
+import { Panel } from '@patternfly/react-core';
+import { MarkdownContainer } from '@/UI/Components/MarkdownContainer';
 
 interface Props {
   attributeValue: unknown;
@@ -18,7 +18,7 @@ interface Props {
  */
 export const MarkdownCard = ({ attributeValue, web_title }: Props) => {
   const data =
-    typeof attributeValue === "string"
+    typeof attributeValue === 'string'
       ? attributeValue
       : JSON.stringify(attributeValue);
 

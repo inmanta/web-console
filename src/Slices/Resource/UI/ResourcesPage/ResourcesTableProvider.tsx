@@ -1,7 +1,7 @@
-import React from "react";
-import { Resource, Sort } from "@/Core";
-import { ResourcesTable } from "./ResourcesTable";
-import { ResourcesTablePresenter } from "./ResourcesTablePresenter";
+import React from 'react';
+import { Resource, Sort } from '@/Core';
+import { ResourcesTable } from './ResourcesTable';
+import { ResourcesTablePresenter } from './ResourcesTablePresenter';
 
 interface Props {
   resources: Resource.Resource[];

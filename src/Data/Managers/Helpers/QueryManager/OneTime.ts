@@ -5,7 +5,7 @@
 
 /* eslint-disable react-hooks/exhaustive-deps */
 
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 import {
   RemoteData,
   Query,
@@ -13,20 +13,20 @@ import {
   QueryManagerKind,
   StateHelper,
   ApiHelper,
-} from "@/Core";
-import { GetDependencies, Data, GetUrl, ToUsed } from "./types";
-import { urlEncodeParams } from "./utils";
+} from '@/Core';
+import { GetDependencies, Data, GetUrl, ToUsed } from './types';
+import { urlEncodeParams } from './utils';
 
-export function OneTime<Kind extends Query.Kind>(
+export function OneTime<Kind extends Query.Kind> (
   apiHelper: ApiHelper,
   stateHelper: StateHelper<Kind>,
   getDependencies: GetDependencies<Kind>,
   kind: Kind,
   getUrl: GetUrl<Kind>,
   toUsed: ToUsed<Kind>,
-  strategy: "MERGE" | "RELOAD",
+  strategy: 'MERGE' | 'RELOAD',
 ): OneTimeQueryManager<Kind> {
-  async function update(
+  async function update (
     query: Query.SubQuery<Kind>,
     url: string,
   ): Promise<void> {
@@ -36,7 +36,7 @@ export function OneTime<Kind extends Query.Kind>(
     );
   }
 
-  function useOneTime(query: Query.SubQuery<Kind>): Data<Kind> {
+  function useOneTime (query: Query.SubQuery<Kind>): Data<Kind> {
     const [url, setUrl] = useState(getUrl(urlEncodeParams(query)));
 
     useEffect(() => {
@@ -45,7 +45,7 @@ export function OneTime<Kind extends Query.Kind>(
 
     useEffect(() => {
       if (
-        strategy === "RELOAD" ||
+        strategy === 'RELOAD' ||
         RemoteData.isNotAsked(stateHelper.getOnce(query))
       ) {
         stateHelper.set(RemoteData.loading(), query);
@@ -62,11 +62,11 @@ export function OneTime<Kind extends Query.Kind>(
     ];
   }
 
-  function matches(
+  function matches (
     query: Query.SubQuery<Kind>,
     matchingKind: QueryManagerKind,
   ): boolean {
-    return query.kind === kind && matchingKind === "OneTime";
+    return query.kind === kind && matchingKind === 'OneTime';
   }
 
   return {

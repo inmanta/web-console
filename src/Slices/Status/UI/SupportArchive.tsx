@@ -1,12 +1,12 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState } from 'react';
 import {
   Alert,
   AlertActionCloseButton,
   AlertGroup,
-} from "@patternfly/react-core";
-import { useCreateSupportArchive } from "@/Data/Managers/V2/Miscellaneous/CreateSupportArchive";
-import { DependencyContext } from "@/UI/Dependency";
-import { DownloadButton } from "./Components";
+} from '@patternfly/react-core';
+import { useCreateSupportArchive } from '@/Data/Managers/V2/Miscellaneous/CreateSupportArchive';
+import { DependencyContext } from '@/UI/Dependency';
+import { DownloadButton } from './Components';
 
 /**
  * SupportArchive component is responsible for managing the download
@@ -28,12 +28,12 @@ export const SupportArchive: React.FC = () => {
         setError(
           err instanceof Error
             ? err.message
-            : "Failed to download support archive",
+            : 'Failed to download support archive',
         );
       }
     },
     onError: (error) => {
-      setError(error.message || "Failed to download support archive");
+      setError(error.message || 'Failed to download support archive');
     },
   });
 

@@ -13,7 +13,7 @@ export interface Agent extends AgentRow {
 }
 
 export enum AgentStatus {
-  paused = "paused",
-  up = "up",
-  down = "down",
+  paused = 'paused',
+  up = 'up',
+  down = 'down',
 }

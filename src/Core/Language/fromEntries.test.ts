@@ -1,6 +1,6 @@
-import { fromEntries } from "./fromEntries";
+import { fromEntries } from './fromEntries';
 
-test("fromEntries", () => {
+test('fromEntries', () => {
   const entries = [
     [0, false],
     [1, true],

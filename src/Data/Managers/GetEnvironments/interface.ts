@@ -1,7 +1,7 @@
-import { FlatEnvironment, ProjectModel } from "@/Core/Domain";
+import { FlatEnvironment, ProjectModel } from '@/Core/Domain';
 
 export interface GetEnvironments {
-  kind: "GetEnvironments";
+  kind: 'GetEnvironments';
   details: boolean;
 }
 

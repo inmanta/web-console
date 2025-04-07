@@ -4,12 +4,12 @@ import {
   PageSize,
   DateRange,
   CompileStatus,
-} from "@/Core/Domain";
-import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import { CompileReport } from "./Domain";
+} from '@/Core/Domain';
+import { CurrentPage } from '@/Data/Common/UrlState/useUrlStateWithCurrentPage';
+import { CompileReport } from './Domain';
 
 export interface Query extends CompileReportParams {
-  kind: "GetCompileReports";
+  kind: 'GetCompileReports';
 }
 
 export interface Manifest {
@@ -45,8 +45,8 @@ export interface Filter {
 }
 
 export enum Kind {
-  Requested = "Requested",
-  Status = "Status",
+  Requested = 'Requested',
+  Status = 'Status',
 }
 
 export const List: Kind[] = [Kind.Requested, Kind.Status];

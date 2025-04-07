@@ -1,1 +1,1 @@
-export { Page as DiscoveredResourcesPage } from "./Page";
+export { Page as DiscoveredResourcesPage } from './Page';

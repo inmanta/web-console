@@ -1,13 +1,13 @@
-import { ApiHelper, Maybe, Updater, UpdaterWithEnv } from "@/Core";
-import { CommandManagerWithEnv } from "@/Data/Common";
+import { ApiHelper, Maybe, Updater, UpdaterWithEnv } from '@/Core';
+import { CommandManagerWithEnv } from '@/Data/Common';
 
-export function ResetEnvironmentSettingCommandManager(
+export function ResetEnvironmentSettingCommandManager (
   apiHelper: ApiHelper,
-  updater: UpdaterWithEnv<"GetEnvironmentSetting">,
-  environmentUpdater: Updater<"GetEnvironmentDetails">,
+  updater: UpdaterWithEnv<'GetEnvironmentSetting'>,
+  environmentUpdater: Updater<'GetEnvironmentDetails'>,
 ) {
-  return CommandManagerWithEnv<"ResetEnvironmentSetting">(
-    "ResetEnvironmentSetting",
+  return CommandManagerWithEnv<'ResetEnvironmentSetting'>(
+    'ResetEnvironmentSetting',
     (command, environment) => {
       return async (id) => {
         const error = await apiHelper.delete(
@@ -17,11 +17,11 @@ export function ResetEnvironmentSettingCommandManager(
 
         if (Maybe.isNone(error)) {
           await updater.update(
-            { kind: "GetEnvironmentSetting", id },
+            { kind: 'GetEnvironmentSetting', id },
             environment,
           );
           await environmentUpdater.update({
-            kind: "GetEnvironmentDetails",
+            kind: 'GetEnvironmentDetails',
             details: false,
             id: environment,
           });

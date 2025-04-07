@@ -1,9 +1,9 @@
-import { dia, ui } from "@inmanta/rappid";
-import { t_global_background_color_primary_default } from "@patternfly/react-tokens";
-import { ServiceModel } from "@/Core";
-import { Inventories } from "@/Data/Managers/V2/ServiceInstance";
-import { createComposerEntity } from "../actions/general";
-import { toggleDisabledStencil, createStencilElement } from "./helpers";
+import { dia, ui } from '@inmanta/rappid';
+import { t_global_background_color_primary_default } from '@patternfly/react-tokens';
+import { ServiceModel } from '@/Core';
+import { Inventories } from '@/Data/Managers/V2/ServiceInstance';
+import { createComposerEntity } from '../actions/general';
+import { toggleDisabledStencil, createStencilElement } from './helpers';
 
 const GRID_SIZE = 8;
 const PADDING_S = GRID_SIZE;
@@ -22,7 +22,7 @@ export class InventoryStencilTab {
    * @param {ui.PaperScroller} scroller - The jointJS scroller associated with the stencil.
    * @param {Inventories} serviceInventories - The service inventories used to populate the stencil with corresponding Elements.
    */
-  constructor(
+  constructor (
     stencilElement: HTMLElement,
     scroller: ui.PaperScroller,
     serviceInventories: Inventories,
@@ -67,9 +67,9 @@ export class InventoryStencilTab {
     });
 
     this.stencil = new ui.Stencil({
-      id: "inventory-stencil",
-      testid: "inventory-stencil",
-      className: "joint-stencil hidden",
+      id: 'inventory-stencil',
+      testid: 'inventory-stencil',
+      className: 'joint-stencil hidden',
       paper: scroller,
       width: 240,
       height: 400,
@@ -84,32 +84,32 @@ export class InventoryStencilTab {
       },
       groups,
       search: {
-        "*": ["attrs/label/text"],
-        "standard.Image": ["description"],
-        "standard.Path": ["description"],
+        '*': ['attrs/label/text'],
+        'standard.Image': ['description'],
+        'standard.Path': ['description'],
       },
       dragStartClone: (cell: dia.Cell) => {
         const entity = createComposerEntity({
-          serviceModel: cell.get("serviceModel"),
+          serviceModel: cell.get('serviceModel'),
           isCore: false,
           isInEditMode: false,
-          attributes: cell.get("instanceAttributes"),
+          attributes: cell.get('instanceAttributes'),
         });
 
         //set id to the one that is stored in the stencil which equal to the instance id
-        entity.set("id", cell.get("id"));
-        entity.set("isBlockedFromEditing", true);
-        entity.set("stencilName", cell.get("name"));
+        entity.set('id', cell.get('id'));
+        entity.set('isBlockedFromEditing', true);
+        entity.set('stencilName', cell.get('name'));
 
         return entity;
       },
       dragEndClone: (el) =>
-        el.clone().set("id", el.get("id")).set("items", el.get("items")), //cloned element loses key value pairs, so we need to set them again
+        el.clone().set('id', el.get('id')).set('items', el.get('items')), //cloned element loses key value pairs, so we need to set them again
       layout: {
         columns: 1,
-        rowHeight: "compact",
+        rowHeight: 'compact',
         marginY: 10,
-        horizontalAlign: "left",
+        horizontalAlign: 'left',
         // reset defaults
         resizeToFit: false,
         centre: false,
@@ -121,16 +121,16 @@ export class InventoryStencilTab {
 
     stencilElement.appendChild(this.stencil.el);
     this.stencil.el
-      .querySelector(".search")
-      ?.classList.add("pf-v6-c-text-input-group__text-input");
+      .querySelector('.search')
+      ?.classList.add('pf-v6-c-text-input-group__text-input');
 
     this.stencil.render();
 
     this.stencil.load(groups);
     this.stencil.freeze(); //freeze by default as this tab is not active on init
 
-    this.stencil.on("element:drop", (elementView) => {
-      const stencilName = elementView.model.get("stencilName");
+    this.stencil.on('element:drop', (elementView) => {
+      const stencilName = elementView.model.get('stencilName');
 
       if (stencilName) {
         toggleDisabledStencil(stencilName, true);

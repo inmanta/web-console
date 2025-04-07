@@ -1,7 +1,7 @@
-import { Action, action } from "easy-peasy";
-import { RemoteData, Query } from "@/Core";
+import { Action, action } from 'easy-peasy';
+import { RemoteData, Query } from '@/Core';
 
-type Data = RemoteData.Type<Query.Error<"GetOrders">, Query.Data<"GetOrders">>;
+type Data = RemoteData.Type<Query.Error<'GetOrders'>, Query.Data<'GetOrders'>>;
 
 export interface OrdersSlice {
   listByEnv: Record<string, Data>;

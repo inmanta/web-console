@@ -1,1 +1,1 @@
-export * as InstanceDetails from "./Core/Route";
+export * as InstanceDetails from './Core/Route';

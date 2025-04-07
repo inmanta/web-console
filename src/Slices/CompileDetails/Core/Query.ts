@@ -1,7 +1,7 @@
-import { CompileDetails } from "./Domain";
+import { CompileDetails } from './Domain';
 
 export interface Query {
-  kind: "GetCompileDetails";
+  kind: 'GetCompileDetails';
   id: string;
 }
 

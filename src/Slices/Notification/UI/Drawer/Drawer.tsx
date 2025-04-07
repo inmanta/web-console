@@ -1,4 +1,4 @@
-import React, { MutableRefObject, useEffect, useState } from "react";
+import React, { MutableRefObject, useEffect, useState } from 'react';
 import {
   Dropdown,
   DropdownItem,
@@ -9,21 +9,21 @@ import {
   NotificationDrawerBody,
   NotificationDrawerHeader,
   NotificationDrawerList,
-} from "@patternfly/react-core";
-import { EllipsisVIcon } from "@patternfly/react-icons";
-import { UseMutateFunction, UseQueryResult } from "@tanstack/react-query";
-import { PageSize } from "@/Core";
+} from '@patternfly/react-core';
+import { EllipsisVIcon } from '@patternfly/react-icons';
+import { UseMutateFunction, UseQueryResult } from '@tanstack/react-query';
+import { PageSize } from '@/Core';
 import {
   NotificationResponse,
   useGetNotifications,
-} from "@/Data/Managers/V2/Notification/GetNotifications";
+} from '@/Data/Managers/V2/Notification/GetNotifications';
 import {
   UpdateNotificationParams,
   useUpdateNotification,
-} from "@/Data/Managers/V2/Notification/UpdateNotification";
-import { useNavigateTo } from "@/UI/Routing";
-import { words } from "@/UI/words";
-import { Item, OnUpdate } from "./Item";
+} from '@/Data/Managers/V2/Notification/UpdateNotification';
+import { useNavigateTo } from '@/UI/Routing';
+import { words } from '@/UI/words';
+import { Item, OnUpdate } from './Item';
 
 /**
  * Props for the Drawer component.
@@ -48,9 +48,9 @@ export const Drawer: React.FC<Props> = ({
   drawerRef,
 }) => {
   const response = useGetNotifications({
-    pageSize: PageSize.from("50"),
-    origin: "drawer",
-    currentPage: { kind: "CurrentPage", value: "" },
+    pageSize: PageSize.from('50'),
+    origin: 'drawer',
+    currentPage: { kind: 'CurrentPage', value: '' },
   }).useContinuous();
 
   const { mutate } = useUpdateNotification({
@@ -70,10 +70,10 @@ export const Drawer: React.FC<Props> = ({
       }
     };
 
-    document.addEventListener("click", close);
+    document.addEventListener('click', close);
 
     return () => {
-      document.removeEventListener("click", close);
+      document.removeEventListener('click', close);
     };
   }, [drawerRef, isDrawerOpen, onClose]);
 
@@ -107,9 +107,9 @@ const View: React.FC<ViewProps> = ({
 
   const getOnUpdate =
     (ids: string[]): OnUpdate =>
-    (body) => {
-      mutate({ body, ids });
-    };
+      (body) => {
+        mutate({ body, ids });
+      };
 
   const onClearAll = () => {
     if (!response.isSuccess) return;
@@ -141,13 +141,13 @@ const View: React.FC<ViewProps> = ({
         <NotificationDrawerList>
           {response.isSuccess
             ? response.data.data.map((notification) => (
-                <Item
-                  data-testid="menuitem"
-                  {...{ notification }}
-                  key={notification.id}
-                  onUpdate={getOnUpdate([notification.id])}
-                />
-              ))
+              <Item
+                data-testid="menuitem"
+                {...{ notification }}
+                key={notification.id}
+                onUpdate={getOnUpdate([notification.id])}
+              />
+            ))
             : null}
         </NotificationDrawerList>
       </NotificationDrawerBody>
@@ -181,7 +181,7 @@ const ActionList: React.FC<ActionListProps> = ({
   const [isOpen, setIsOpen] = useState(false);
 
   const onShowAll = () => {
-    navigateTo("NotificationCenter", undefined);
+    navigateTo('NotificationCenter', undefined);
     onClose();
   };
 
@@ -204,18 +204,18 @@ const ActionList: React.FC<ActionListProps> = ({
       )}
       isOpen={isOpen}
       onOpenChange={(isOpen: boolean) => setIsOpen(isOpen)}
-      popperProps={{ position: "center" }}
+      popperProps={{ position: 'center' }}
       id="notification-0"
     >
       <DropdownList>
         <DropdownItem key="readAll" component="button" onClick={onReadAll}>
-          {words("notification.drawer.readAll")}
+          {words('notification.drawer.readAll')}
         </DropdownItem>
         <DropdownItem key="clearAll" component="button" onClick={onClearAll}>
-          {words("notification.drawer.clearAll")}
+          {words('notification.drawer.clearAll')}
         </DropdownItem>
         <DropdownItem key="seeAll" component="button" onClick={onShowAll}>
-          {words("notification.drawer.showAll")}
+          {words('notification.drawer.showAll')}
         </DropdownItem>
       </DropdownList>
     </Dropdown>

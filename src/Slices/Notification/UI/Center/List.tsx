@@ -1,10 +1,10 @@
-import React from "react";
-import { DataList } from "@patternfly/react-core";
-import { NotificationResponse } from "@/Data/Managers/V2/Notification/GetNotifications";
-import { Item } from "./Item";
+import React from 'react';
+import { DataList } from '@patternfly/react-core';
+import { NotificationResponse } from '@/Data/Managers/V2/Notification/GetNotifications';
+import { Item } from './Item';
 
 interface Props {
-  data: NotificationResponse["data"];
+  data: NotificationResponse['data'];
   onUpdate(): void;
 }
 

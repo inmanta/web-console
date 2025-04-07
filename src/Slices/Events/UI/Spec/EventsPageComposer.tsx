@@ -1,17 +1,17 @@
-import React from "react";
-import { MemoryRouter } from "react-router-dom";
-import { StoreProvider } from "easy-peasy";
-import { SchedulerImpl, ServiceModel } from "@/Core";
-import { QueryResolverImpl, getStoreInstance } from "@/Data";
+import React from 'react';
+import { MemoryRouter } from 'react-router-dom';
+import { StoreProvider } from 'easy-peasy';
+import { SchedulerImpl, ServiceModel } from '@/Core';
+import { QueryResolverImpl, getStoreInstance } from '@/Data';
 import {
   DeferredApiHelper,
   dependencies,
   DynamicQueryManagerResolverImpl,
   Service,
-} from "@/Test";
-import { DependencyProvider } from "@/UI/Dependency";
-import { EventsQueryManager, EventsStateHelper } from "@S/Events/Data";
-import { Events } from "@S/Events/UI/Events";
+} from '@/Test';
+import { DependencyProvider } from '@/UI/Dependency';
+import { EventsQueryManager, EventsStateHelper } from '@S/Events/Data';
+import { Events } from '@S/Events/UI/Events';
 
 interface Handles {
   component: React.ReactElement;
@@ -20,7 +20,7 @@ interface Handles {
 }
 
 export class EventsPageComposer {
-  compose(service: ServiceModel = Service.a): Handles {
+  compose (service: ServiceModel = Service.a): Handles {
     const store = getStoreInstance();
     const scheduler = new SchedulerImpl(5000);
     const apiHelper = new DeferredApiHelper();

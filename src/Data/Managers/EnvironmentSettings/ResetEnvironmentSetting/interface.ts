@@ -1,8 +1,8 @@
-import { EnvironmentSettings } from "@/Core/Domain";
-import { Maybe } from "@/Core/Language";
+import { EnvironmentSettings } from '@/Core/Domain';
+import { Maybe } from '@/Core/Language';
 
 export interface ResetEnvironmentSetting {
-  kind: "ResetEnvironmentSetting";
+  kind: 'ResetEnvironmentSetting';
 }
 
 export interface ResetEnvironmentSettingManifest {

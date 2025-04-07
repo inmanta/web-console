@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState } from 'react';
 import {
   Toolbar,
   ToolbarGroup,
@@ -11,13 +11,13 @@ import {
   MenuToggleElement,
   DropdownList,
   DropdownItem,
-} from "@patternfly/react-core";
-import { PlusIcon } from "@patternfly/react-icons";
-import { ServiceModel, ServiceInstanceParams } from "@/Core";
-import { Link } from "@/UI/Components";
-import { DependencyContext } from "@/UI/Dependency";
-import { words } from "@/UI/words";
-import { FilterWidget } from "@S/ServiceInventory/UI/Components/FilterWidget";
+} from '@patternfly/react-core';
+import { PlusIcon } from '@patternfly/react-icons';
+import { ServiceModel, ServiceInstanceParams } from '@/Core';
+import { Link } from '@/UI/Components';
+import { DependencyContext } from '@/UI/Dependency';
+import { words } from '@/UI/words';
+import { FilterWidget } from '@S/ServiceInventory/UI/Components/FilterWidget';
 
 interface Props {
   serviceName: string;
@@ -54,7 +54,7 @@ export const TableControls: React.FC<Props> = ({
       splitButtonItems={[
         <Link
           key="main-action"
-          pathname={routeManager.getUrl("CreateInstance", {
+          pathname={routeManager.getUrl('CreateInstance', {
             service: serviceName,
           })}
           search={location.search}
@@ -64,7 +64,7 @@ export const TableControls: React.FC<Props> = ({
             aria-label="add-instance-button"
             id="add-instance-button"
           >
-            <PlusIcon /> {words("inventory.addInstance.button")}
+            <PlusIcon /> {words('inventory.addInstance.button')}
           </MenuToggleAction>
         </Link>,
       ]}
@@ -76,7 +76,7 @@ export const TableControls: React.FC<Props> = ({
     <Toolbar clearAllFilters={() => setFilter({})}>
       <ToolbarContent>
         <FilterWidget filter={filter} setFilter={setFilter} states={states} />
-        <ToolbarGroup align={{ default: "alignEnd" }}>
+        <ToolbarGroup align={{ default: 'alignEnd' }}>
           {composerEnabled ? (
             <ToolbarItem>
               <Dropdown
@@ -88,7 +88,7 @@ export const TableControls: React.FC<Props> = ({
                   <Link
                     variant="plain"
                     key="add-instance-composer-button"
-                    pathname={routeManager.getUrl("InstanceComposer", {
+                    pathname={routeManager.getUrl('InstanceComposer', {
                       service: serviceName,
                     })}
                     search={location.search}
@@ -97,7 +97,7 @@ export const TableControls: React.FC<Props> = ({
                       id="add-instance-composer-button"
                       icon={<PlusIcon />}
                     >
-                      {words("inventory.addInstance.composerButton")}
+                      {words('inventory.addInstance.composerButton')}
                     </DropdownItem>
                   </Link>
                 </DropdownList>
@@ -106,13 +106,13 @@ export const TableControls: React.FC<Props> = ({
           ) : (
             <ToolbarItem>
               <Link
-                pathname={routeManager.getUrl("CreateInstance", {
+                pathname={routeManager.getUrl('CreateInstance', {
                   service: serviceName,
                 })}
                 search={location.search}
               >
                 <Button icon={<PlusIcon />} id="add-instance-button">
-                  {words("inventory.addInstance.button")}
+                  {words('inventory.addInstance.button')}
                 </Button>
               </Link>
             </ToolbarItem>

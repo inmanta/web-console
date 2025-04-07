@@ -1,9 +1,9 @@
-import { PageSize, Pagination, Sort } from "@/Core/Domain";
-import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import { Fact } from "./Domain";
+import { PageSize, Pagination, Sort } from '@/Core/Domain';
+import { CurrentPage } from '@/Data/Common/UrlState/useUrlStateWithCurrentPage';
+import { Fact } from './Domain';
 
 export interface Query {
-  kind: "GetFacts";
+  kind: 'GetFacts';
   sort?: Sort.Sort<SortKey>;
   filter?: Filter;
   pageSize: PageSize.PageSize;
@@ -35,4 +35,4 @@ export interface Filter {
   resource_id?: string[];
 }
 
-export type SortKey = "name" | "resource_id";
+export type SortKey = 'name' | 'resource_id';

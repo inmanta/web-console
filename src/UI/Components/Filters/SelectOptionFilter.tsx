@@ -1,9 +1,9 @@
-import React from "react";
-import { ToolbarFilter } from "@patternfly/react-core";
-import { SearchIcon } from "@patternfly/react-icons";
-import { uniq } from "lodash-es";
-import { toggleValueInList } from "@/Core";
-import { MultiTextSelect } from "../MultiTextSelect";
+import React from 'react';
+import { ToolbarFilter } from '@patternfly/react-core';
+import { SearchIcon } from '@patternfly/react-icons';
+import { uniq } from 'lodash-es';
+import { toggleValueInList } from '@/Core';
+import { MultiTextSelect } from '../MultiTextSelect';
 
 interface Props {
   filterPropertyName: string;

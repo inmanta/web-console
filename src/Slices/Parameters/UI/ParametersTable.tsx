@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   OnSort,
   Table,
@@ -6,11 +6,11 @@ import {
   Th,
   Thead,
   Tr,
-} from "@patternfly/react-table";
-import { Sort, Parameter } from "@/Core";
-import { SortKey } from "@S/Parameters/Core/Query";
-import { ParametersTablePresenter } from "./ParametersTablePresenter";
-import { ParametersTableRow } from "./ParametersTableRow";
+} from '@patternfly/react-table';
+import { Sort, Parameter } from '@/Core';
+import { SortKey } from '@S/Parameters/Core/Query';
+import { ParametersTablePresenter } from './ParametersTablePresenter';
+import { ParametersTableRow } from './ParametersTableRow';
 
 interface Props {
   tablePresenter: ParametersTablePresenter;
@@ -40,15 +40,15 @@ export const ParametersTable: React.FC<Props> = ({
         .getSortableColumnNames()
         .includes(apiName)
         ? {
-            sort: {
-              sortBy: {
-                index: tablePresenter.getIndexForColumnName(sort.name),
-                direction: sort.order,
-              },
-              onSort,
-              columnIndex,
+          sort: {
+            sortBy: {
+              index: tablePresenter.getIndexForColumnName(sort.name),
+              direction: sort.order,
             },
-          }
+            onSort,
+            columnIndex,
+          },
+        }
         : {};
 
       return (

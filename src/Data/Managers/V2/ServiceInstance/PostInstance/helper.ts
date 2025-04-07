@@ -1,7 +1,7 @@
-import { Field, InstanceAttributeModel } from "@/Core";
-import { sanitizeAttributes } from "@/Data/Common";
+import { Field, InstanceAttributeModel } from '@/Core';
+import { sanitizeAttributes } from '@/Data/Common';
 
-export function prepBody(
+export function prepBody (
   fields: Field[],
   attributes: InstanceAttributeModel,
 ): { attributes: InstanceAttributeModel } {

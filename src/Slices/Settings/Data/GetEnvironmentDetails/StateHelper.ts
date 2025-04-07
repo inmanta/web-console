@@ -1,25 +1,25 @@
-import { Query, RemoteData } from "@/Core";
-import { PrimaryStateHelper } from "@/Data/Common";
-import { Store, State, Dispatch } from "@/Data/Store";
+import { Query, RemoteData } from '@/Core';
+import { PrimaryStateHelper } from '@/Data/Common';
+import { Store, State, Dispatch } from '@/Data/Store';
 
 type Data = RemoteData.Type<
-  Query.Error<"GetEnvironmentDetails">,
-  Query.Data<"GetEnvironmentDetails">
+  Query.Error<'GetEnvironmentDetails'>,
+  Query.Data<'GetEnvironmentDetails'>
 >;
 
-export function StateHelper(store: Store) {
-  function getData(
+export function StateHelper (store: Store) {
+  function getData (
     state: State,
-    { details, id }: Query.SubQuery<"GetEnvironmentDetails">,
+    { details, id }: Query.SubQuery<'GetEnvironmentDetails'>,
   ): Data {
     return details
       ? state.environment.environmentDetailsWithIconById[id]
       : state.environment.environmentDetailsById[id];
   }
 
-  function setData(
+  function setData (
     store: Dispatch,
-    { details, id }: Query.SubQuery<"GetEnvironmentDetails">,
+    { details, id }: Query.SubQuery<'GetEnvironmentDetails'>,
     data: Data,
   ) {
     if (details) {
@@ -41,7 +41,7 @@ export function StateHelper(store: Store) {
     }
   }
 
-  return PrimaryStateHelper<"GetEnvironmentDetails">(
+  return PrimaryStateHelper<'GetEnvironmentDetails'>(
     store,
     (data, query) => {
       const unwrapped = RemoteData.mapSuccess((wrapped) => wrapped.data, data);

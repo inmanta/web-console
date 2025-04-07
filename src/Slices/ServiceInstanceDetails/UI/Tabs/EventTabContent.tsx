@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState } from 'react';
 import {
   DescriptionList,
   DescriptionListDescription,
@@ -8,7 +8,7 @@ import {
   FlexItem,
   Stack,
   TabContent,
-} from "@patternfly/react-core";
+} from '@patternfly/react-core';
 import {
   ExpandableRowContent,
   Table,
@@ -17,20 +17,20 @@ import {
   Th,
   Thead,
   Tr,
-} from "@patternfly/react-table";
-import { InstanceEvent } from "@/Core";
-import { InstanceLog } from "@/Core/Domain/HistoryLog";
-import { DependencyContext, words } from "@/UI";
+} from '@patternfly/react-table';
+import { InstanceEvent } from '@/Core';
+import { InstanceLog } from '@/Core/Domain/HistoryLog';
+import { DependencyContext, words } from '@/UI';
 import {
   ErrorView,
   EventIcon,
   LoadingView,
   DateWithTimeDiffTooltip,
   Link,
-} from "@/UI/Components";
-import { InstanceDetailsContext } from "../../Core/Context";
-import { CompileReportLink } from "../Components/CompileReportLink";
-import { TabContentWrapper } from "./TabContentWrapper";
+} from '@/UI/Components';
+import { InstanceDetailsContext } from '../../Core/Context';
+import { CompileReportLink } from '../Components/CompileReportLink';
+import { TabContentWrapper } from './TabContentWrapper';
 
 interface Props {
   selectedVersion: string;
@@ -88,7 +88,7 @@ export const EventsTabContent: React.FC<Props> = ({ selectedVersion }) => {
   if (!logsQuery.data) {
     return (
       <TabContentWrapper id="events">
-        <ErrorView message={words("instanceDetails.tabs.events.noData")} />
+        <ErrorView message={words('instanceDetails.tabs.events.noData')} />
       </TabContentWrapper>
     );
   }
@@ -163,15 +163,15 @@ export const EventsTabContent: React.FC<Props> = ({ selectedVersion }) => {
       <TabContentWrapper>
         <Stack hasGutter>
           <Flex>
-            <FlexItem align={{ default: "alignRight" }}>
+            <FlexItem align={{ default: 'alignRight' }}>
               <Link
                 aria-label="See-all-events"
-                pathname={routeManager.getUrl("Events", {
+                pathname={routeManager.getUrl('Events', {
                   service: instance.service_entity,
                   instance: instance.id,
                 })}
               >
-                {words("instanceDetails.events.seeAll")}
+                {words('instanceDetails.events.seeAll')}
               </Link>
             </FlexItem>
           </Flex>
@@ -184,19 +184,19 @@ export const EventsTabContent: React.FC<Props> = ({ selectedVersion }) => {
               <Tr>
                 <Th screenReaderText="Row expansion column" />
                 <Th width={15} key="eventType">
-                  {words("instanceDetails.events.column.eventType")}
+                  {words('instanceDetails.events.column.eventType')}
                 </Th>
                 <Th width={20} key="timestamp">
-                  {words("instanceDetails.events.column.timestamp")}
+                  {words('instanceDetails.events.column.timestamp')}
                 </Th>
                 <Th width={20} key="source-state">
-                  {words("instanceDetails.events.column.sourceState")}
+                  {words('instanceDetails.events.column.sourceState')}
                 </Th>
                 <Th width={20} key="destination-state">
-                  {words("instanceDetails.events.column.destinationState")}
+                  {words('instanceDetails.events.column.destinationState')}
                 </Th>
                 <Th width={25} key="report">
-                  {words("instanceDetails.events.column.report")}
+                  {words('instanceDetails.events.column.report')}
                 </Th>
               </Tr>
             </Thead>
@@ -206,7 +206,7 @@ export const EventsTabContent: React.FC<Props> = ({ selectedVersion }) => {
                   key={index}
                   id={`event-row-${event.id}`}
                   aria-label="Event-table-row"
-                  className={event.is_error_transition ? "warning" : ""}
+                  className={event.is_error_transition ? 'warning' : ''}
                 >
                   <Td
                     expand={{
@@ -241,14 +241,14 @@ export const EventsTabContent: React.FC<Props> = ({ selectedVersion }) => {
                 <Tr
                   isExpanded={isExpanded(event.id)}
                   data-testid={`details_${event.id}`}
-                  className={event.is_error_transition ? "warning" : ""}
+                  className={event.is_error_transition ? 'warning' : ''}
                 >
                   <Td colSpan={6}>
                     <ExpandableRowContent>
                       <DescriptionList>
                         <DescriptionListGroup>
                           <DescriptionListTerm>
-                            {words("events.column.message")}
+                            {words('events.column.message')}
                           </DescriptionListTerm>
                           <DescriptionListDescription
                             aria-label={`Event-message-${index}`}
@@ -258,15 +258,15 @@ export const EventsTabContent: React.FC<Props> = ({ selectedVersion }) => {
                         </DescriptionListGroup>
                         <DescriptionListGroup>
                           <DescriptionListTerm>
-                            {words("events.details.title")}
+                            {words('events.details.title')}
                           </DescriptionListTerm>
                           <DescriptionListDescription
                             aria-label={`Event-details-${index}`}
                           >
                             <pre
                               style={{
-                                whiteSpace: "pre-wrap",
-                                fontFamily: "Liberation Mono",
+                                whiteSpace: 'pre-wrap',
+                                fontFamily: 'Liberation Mono',
                               }}
                             >
                               <code>{JSON.stringify(event, null, 2)}</code>

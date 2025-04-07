@@ -3,7 +3,7 @@ import {
   ApiHelper,
   Scheduler,
   QueryManagerResolver,
-} from "@/Core";
+} from '@/Core';
 import {
   GetServerStatusOneTimeQueryManager,
   GetServerStatusContinuousQueryManager,
@@ -12,39 +12,39 @@ import {
   GetEnvironmentSettingsStateHelper,
   GetEnvironmentsQueryManager,
   GetEnvironmentsStateHelper,
-} from "@/Data/Managers";
-import { Store } from "@/Data/Store";
-import { GetOrdersQueryManager } from "@/Slices/Orders/Data/QueryManager";
-import { GetDiscoveredResourcesQueryManager } from "@/Slices/ResourceDiscovery/Data/QueryManager";
-import { GetDiscoveredResourcesStateHelper } from "@/Slices/ResourceDiscovery/Data/StateHelper";
+} from '@/Data/Managers';
+import { Store } from '@/Data/Store';
+import { GetOrdersQueryManager } from '@/Slices/Orders/Data/QueryManager';
+import { GetDiscoveredResourcesQueryManager } from '@/Slices/ResourceDiscovery/Data/QueryManager';
+import { GetDiscoveredResourcesStateHelper } from '@/Slices/ResourceDiscovery/Data/StateHelper';
 import {
   EnvironmentDetailsContinuousQueryManager,
   EnvironmentDetailsOneTimeQueryManager,
-} from "@/Slices/Settings/Data/GetEnvironmentDetails";
-import { GetProjectsQueryManager } from "@/Slices/Settings/Data/GetProjects";
-import { GetAgentsQueryManager } from "@S/Agents/Data";
+} from '@/Slices/Settings/Data/GetEnvironmentDetails';
+import { GetProjectsQueryManager } from '@/Slices/Settings/Data/GetProjects';
+import { GetAgentsQueryManager } from '@S/Agents/Data';
 import {
   GetDryRunReportQueryManager,
   GetDryRunsQueryManager,
-} from "@S/ComplianceCheck/Data";
+} from '@S/ComplianceCheck/Data';
 import {
   GetDesiredStateDiffQueryManager,
   GetDesiredStateDiffStateHelper,
-} from "@S/DesiredStateCompare/Data";
+} from '@S/DesiredStateCompare/Data';
 import {
   GetVersionResourcesQueryManager,
   GetVersionResourcesStateHelper,
-} from "@S/DesiredStateDetails/Data";
-import { GetDesiredStateResourceDetailsQueryManager } from "@S/DesiredStateResourceDetails/Data";
-import { EventsQueryManager, EventsStateHelper } from "@S/Events/Data";
-import { GetFactsQueryManager } from "@S/Facts/Data";
-import { GetOrderDetailsQueryManager } from "@S/OrderDetails/Data/QueryManager";
-import { GetOrdersStateHelper } from "@S/Orders/Data/StateHelper";
+} from '@S/DesiredStateDetails/Data';
+import { GetDesiredStateResourceDetailsQueryManager } from '@S/DesiredStateResourceDetails/Data';
+import { EventsQueryManager, EventsStateHelper } from '@S/Events/Data';
+import { GetFactsQueryManager } from '@S/Facts/Data';
+import { GetOrderDetailsQueryManager } from '@S/OrderDetails/Data/QueryManager';
+import { GetOrdersStateHelper } from '@S/Orders/Data/StateHelper';
 import {
   GetParametersQueryManager,
   GetParametersStateHelper,
-} from "@S/Parameters/Data";
-import { GetResourcesQueryManager } from "@S/Resource/Data";
+} from '@S/Parameters/Data';
+import { GetResourcesQueryManager } from '@S/Resource/Data';
 import {
   GetResourceFactsQueryManager,
   GetResourceFactsStateHelper,
@@ -54,20 +54,20 @@ import {
   ResourceHistoryStateHelper,
   ResourceLogsQueryManager,
   ResourceLogsStateHelper,
-} from "@S/ResourceDetails/Data";
+} from '@S/ResourceDetails/Data';
 import {
   CallbacksQueryManager,
   CallbacksStateHelper,
-} from "@S/ServiceDetails/Data";
+} from '@S/ServiceDetails/Data';
 import {
   GetEnvironmentsContinuousQueryManager,
   GetEnvironmentsContinuousStateHelper,
-} from "../Managers/GetEnvironmentsContinuous";
+} from '../Managers/GetEnvironmentsContinuous';
 
 export class QueryManagerResolverImpl implements QueryManagerResolver {
   private managers: QueryManager[] = [];
 
-  constructor(
+  constructor (
     private readonly store: Store,
     private readonly apiHelper: ApiHelper,
     private readonly scheduler: Scheduler,
@@ -76,21 +76,21 @@ export class QueryManagerResolverImpl implements QueryManagerResolver {
     this.managers = this.getManagers();
   }
 
-  get(): QueryManager[] {
+  get (): QueryManager[] {
     return this.managers;
   }
 
-  pauseContinuous(): void {
+  pauseContinuous (): void {
     this.scheduler.pauseTasks();
     this.slowScheduler.pauseTasks();
   }
 
-  resumeContinuous(): void {
+  resumeContinuous (): void {
     this.scheduler.resumeTasks();
     this.slowScheduler.resumeTasks();
   }
 
-  private getManagers(): QueryManager[] {
+  private getManagers (): QueryManager[] {
     return [
       GetProjectsQueryManager(this.store, this.apiHelper),
       GetEnvironmentsContinuousQueryManager(

@@ -1,17 +1,17 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   Dropdown,
   MenuToggle,
   MenuToggleElement,
   Spinner,
-} from "@patternfly/react-core";
+} from '@patternfly/react-core';
 
-import { Item, Refs } from "@/UI/Components/DiffWizard/types";
-import { words } from "@/UI/words";
-import { SummaryList } from "./SummaryList";
+import { Item, Refs } from '@/UI/Components/DiffWizard/types';
+import { words } from '@/UI/words';
+import { SummaryList } from './SummaryList';
 
 interface Props {
-  items: Pick<Item, "id" | "status">[];
+  items: Pick<Item, 'id' | 'status'>[];
   refs: Refs;
 }
 
@@ -23,14 +23,14 @@ export const JumpToAction: React.FC<Props> = ({ items, refs }) => {
       onSelect={() => setIsOpen(false)}
       onOpenChange={(open) => setIsOpen(open)}
       isScrollable
-      popperProps={{ preventOverflow: true, maxWidth: "800px" }}
+      popperProps={{ preventOverflow: true, maxWidth: '800px' }}
       toggle={(toggleref: React.Ref<MenuToggleElement>) => (
         <MenuToggle
           ref={toggleref}
           onClick={() => setIsOpen(!isOpen)}
           isExpanded={isOpen}
         >
-          {words("jumpTo")}
+          {words('jumpTo')}
         </MenuToggle>
       )}
       isOpen={isOpen}

@@ -1,20 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import {
   DescriptionListDescription,
   DescriptionListGroup,
   DescriptionListTerm,
   Flex,
   FlexItem,
-} from "@patternfly/react-core";
-import { Maybe } from "@/Core";
-import { convertToTitleCase } from "@/UI/Utils";
+} from '@patternfly/react-core';
+import { Maybe } from '@/Core';
+import { convertToTitleCase } from '@/UI/Utils';
 import {
   CancelEditButton,
   EnableEditButton,
   SubmitEditButton,
-} from "./InlineEditButtons";
-import { InlineEditButtonFiller, InlineLabelItem } from "./InlineFillers";
-import { InlinePlainAlert } from "./InlinePlainAlert";
+} from './InlineEditButtons';
+import { InlineEditButtonFiller, InlineLabelItem } from './InlineFillers';
+import { InlinePlainAlert } from './InlinePlainAlert';
 
 export interface FieldProps {
   label: string;
@@ -37,7 +37,7 @@ export type StaticViewComponent = React.FC<{ value: string }>;
 interface Props extends FieldProps {
   EditView: EditViewComponent;
   StaticView: StaticViewComponent;
-  alignActions?: "start" | "end";
+  alignActions?: 'start' | 'end';
 }
 
 export const EditableField: React.FC<Props> = ({
@@ -51,9 +51,9 @@ export const EditableField: React.FC<Props> = ({
   alignActions,
 }) => {
   const alignment =
-    alignActions === "end" ? "alignSelfFlexEnd" : "alignSelfFlexStart";
+    alignActions === 'end' ? 'alignSelfFlexEnd' : 'alignSelfFlexStart';
   const [editable, setEditable] = useState(initiallyEditable);
-  const [submitError, setSubmitError] = useState("");
+  const [submitError, setSubmitError] = useState('');
   const [value, setValue] = useState(initialValue);
   const onSubmitRequest = async (value: string) => {
     setEditable(false);
@@ -65,14 +65,14 @@ export const EditableField: React.FC<Props> = ({
   };
   const onEditClick = () => {
     setEditable(true);
-    setSubmitError("");
+    setSubmitError('');
   };
   const onSubmitClick = () => onSubmitRequest(value);
   const onCancelEditClick = () => {
     setEditable(false);
     setValue(initialValue);
   };
-  const onCloseAlert = () => setSubmitError("");
+  const onCloseAlert = () => setSubmitError('');
 
   useEffect(() => {
     setValue(initialValue);
@@ -82,14 +82,14 @@ export const EditableField: React.FC<Props> = ({
     <DescriptionListGroup key={label}>
       <DescriptionListTerm>
         <Flex
-          direction={{ default: "row" }}
-          spaceItems={{ default: "spaceItemsNone" }}
+          direction={{ default: 'row' }}
+          spaceItems={{ default: 'spaceItemsNone' }}
         >
           <InlineLabelItem aria-label={`${label}-label`}>
             {convertToTitleCase(label)}
             {isRequired && (
-              <span aria-hidden="true" style={{ color: "red" }}>
-                {" "}
+              <span aria-hidden="true" style={{ color: 'red' }}>
+                {' '}
                 *
               </span>
             )}
@@ -119,8 +119,8 @@ export const EditableField: React.FC<Props> = ({
           <StaticView aria-label={`${label}-value`} value={value} />
         )}
         {editable && (
-          <Flex spaceItems={{ default: "spaceItemsNone" }}>
-            <FlexItem grow={{ default: "grow" }}>
+          <Flex spaceItems={{ default: 'spaceItemsNone' }}>
+            <FlexItem grow={{ default: 'grow' }}>
               <EditView
                 aria-label={`${label}-input`}
                 label={convertToTitleCase(label)}

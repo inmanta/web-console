@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   FormHelperText,
   HelperText,
@@ -14,14 +14,14 @@ import {
   ValidatedOptions,
   Spinner,
   Content,
-} from "@patternfly/react-core";
+} from '@patternfly/react-core';
 import {
   ExclamationCircleIcon,
   EyeIcon,
   EyeSlashIcon,
-} from "@patternfly/react-icons";
-import { useLogin } from "@/Data/Managers/V2/Auth";
-import { DependencyContext, words } from "@/UI";
+} from '@patternfly/react-icons';
+import { useLogin } from '@/Data/Managers/V2/Auth';
+import { DependencyContext, words } from '@/UI';
 
 interface Props {
   submitButtonText: string;
@@ -38,15 +38,15 @@ interface Props {
  */
 export const LoginForm: React.FC<Props> = ({
   submitButtonText,
-  submitButtonLabel = "login-button",
+  submitButtonLabel = 'login-button',
 }) => {
   const { authHelper } = useContext(DependencyContext);
   const navigate = useNavigate();
 
   const { data, mutate, isSuccess, isError, error, isPending } = useLogin();
 
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [isPasswordHidden, setIsPasswordHidden] = useState(true);
 
   /**
@@ -97,7 +97,7 @@ export const LoginForm: React.FC<Props> = ({
   useEffect(() => {
     if (isSuccess) {
       authHelper.updateUser(data.data.user.username, data.data.token);
-      navigate("/");
+      navigate('/');
     }
   }, [isSuccess, navigate, data, authHelper]);
 
@@ -117,7 +117,7 @@ export const LoginForm: React.FC<Props> = ({
         </FormHelperText>
       )}
       <FormGroup
-        label={words("username")}
+        label={words('username')}
         isRequired
         fieldId="pf-login-username-id"
       >
@@ -133,7 +133,7 @@ export const LoginForm: React.FC<Props> = ({
         />
       </FormGroup>
       <FormGroup
-        label={words("password")}
+        label={words('password')}
         isRequired
         fieldId="pf-login-password-id"
       >
@@ -142,7 +142,7 @@ export const LoginForm: React.FC<Props> = ({
             <InputGroupItem isFill>
               <TextInput
                 isRequired
-                type={isPasswordHidden ? "password" : "text"}
+                type={isPasswordHidden ? 'password' : 'text'}
                 id="pf-login-password-id"
                 name="pf-login-password-id"
                 aria-label="input-password"
@@ -156,7 +156,7 @@ export const LoginForm: React.FC<Props> = ({
                 variant="control"
                 onClick={() => setIsPasswordHidden(!isPasswordHidden)}
                 aria-label={
-                  isPasswordHidden ? "show-password" : "hide-password"
+                  isPasswordHidden ? 'show-password' : 'hide-password'
                 }
               >
                 {isPasswordHidden ? <EyeIcon /> : <EyeSlashIcon />}

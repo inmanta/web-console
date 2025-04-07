@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Chart,
   ChartAxis,
@@ -12,11 +12,11 @@ import {
   ChartScatter,
   ChartLegend,
   ChartLabelProps,
-} from "@patternfly/react-charts";
-import styled, { css } from "styled-components";
-import { LineChartProps } from "../../Core/Domain";
-import { interpolateMetrics } from "../helper";
-import { colorTheme } from "../themes";
+} from '@patternfly/react-charts';
+import styled, { css } from 'styled-components';
+import { LineChartProps } from '../../Core/Domain';
+import { interpolateMetrics } from '../helper';
+import { colorTheme } from '../themes';
 
 export const LineChart: React.FC<LineChartProps> = ({
   title,
@@ -31,7 +31,7 @@ export const LineChart: React.FC<LineChartProps> = ({
   const [width, setWidth] = useState(0);
 
   // Note: Container order is important
-  const CursorVoronoiContainer = createContainer("voronoi", "voronoi");
+  const CursorVoronoiContainer = createContainer('voronoi', 'voronoi');
   const formatValueForChart = (value: null | number) => {
     if (value === null) {
       return null;
@@ -41,17 +41,17 @@ export const LineChart: React.FC<LineChartProps> = ({
   };
   const chooseWhichLabelToUse = (datum) => {
     if (
-      (isStacked && !datum.childName.includes("scatter-")) ||
-      (!isStacked && datum.childName.includes("scatter-"))
+      (isStacked && !datum.childName.includes('scatter-')) ||
+      (!isStacked && datum.childName.includes('scatter-'))
     ) {
-      return `${datum.y !== null ? datum.y : "no data"}`;
+      return `${datum.y !== null ? datum.y : 'no data'}`;
     } else {
       return null;
     }
   };
 
   useEffect(() => {
-    function handleResize() {
+    function handleResize () {
       // Set window width to state if width from ref is available
       if (
         ref.current?.parentElement?.getBoundingClientRect().width !== undefined
@@ -60,12 +60,12 @@ export const LineChart: React.FC<LineChartProps> = ({
       }
     }
     // Add event listener
-    window.addEventListener("resize", handleResize);
+    window.addEventListener('resize', handleResize);
     // Call handler right away so state gets updated with initial window size
     handleResize();
 
     // Remove event listener on cleanup
-    return () => window.removeEventListener("resize", handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   return (
@@ -80,7 +80,7 @@ export const LineChart: React.FC<LineChartProps> = ({
               <ChartLegendTooltip
                 legendData={legendData}
                 title={(datum) =>
-                  datum.x ? new Date(datum.x).toLocaleString() : "No data"
+                  datum.x ? new Date(datum.x).toLocaleString() : 'No data'
                 }
                 flyoutWidth={250}
               />
@@ -97,7 +97,7 @@ export const LineChart: React.FC<LineChartProps> = ({
             style={{
               labels: {
                 fontSize: 16,
-                fill: "var(--pf-t--global--text--color--subtle)",
+                fill: 'var(--pf-t--global--text--color--subtle)',
               },
             }}
             orientation="horizontal"
@@ -125,13 +125,13 @@ export const LineChart: React.FC<LineChartProps> = ({
             />
           }
           tickFormat={(x) => {
-            const date = new Date(x).toLocaleString().split(",");
+            const date = new Date(x).toLocaleString().split(',');
 
-            return date[0] + "\n" + date[1];
+            return date[0] + '\n' + date[1];
           }}
           style={{
-            axisLabel: { fill: "var(--pf-t--global--text--color--regular)" },
-            tickLabels: { fill: "var(--pf-t--global--text--color--subtle)" },
+            axisLabel: { fill: 'var(--pf-t--global--text--color--regular)' },
+            tickLabels: { fill: 'var(--pf-t--global--text--color--subtle)' },
           }}
         />
         <ChartAxis
@@ -142,9 +142,9 @@ export const LineChart: React.FC<LineChartProps> = ({
           label={label}
           offsetX={100}
           style={{
-            grid: { stroke: "var(--pf-t--global--border--color--default)" },
-            axisLabel: { fill: "var(--pf-t--global--text--color--regular)" },
-            tickLabels: { fill: "var(--pf-t--global--text--color--subtle)" },
+            grid: { stroke: 'var(--pf-t--global--border--color--default)' },
+            axisLabel: { fill: 'var(--pf-t--global--text--color--regular)' },
+            tickLabels: { fill: 'var(--pf-t--global--text--color--subtle)' },
           }}
         />
         {isStacked ? (
@@ -208,8 +208,8 @@ export const LineChart: React.FC<LineChartProps> = ({
                     y: formatValueForChart(value),
                   };
                 })}
-                name={"scatter-" + name}
-                key={"scatter-" + name + metricIndex}
+                name={'scatter-' + name}
+                key={'scatter-' + name + metricIndex}
                 style={{
                   data: {
                     fill:
@@ -232,7 +232,7 @@ const StyledChartLabel = styled(ChartLabel)<ChartLabelProps>`
     return css`
       tspan {
         font-size: 16px !important;
-        ${(index as number) % 2 === 1 ? "visibility: hidden !important" : ""}
+        ${(index as number) % 2 === 1 ? 'visibility: hidden !important' : ''}
       }
     `;
   }}

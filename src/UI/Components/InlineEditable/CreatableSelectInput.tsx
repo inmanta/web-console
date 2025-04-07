@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import { FormGroup } from "@patternfly/react-core";
-import { Either } from "@/Core";
-import { SingleTextSelect } from "../SingleTextSelect";
-import { InlinePlainAlert } from "./InlinePlainAlert";
+import React, { useState } from 'react';
+import { FormGroup } from '@patternfly/react-core';
+import { Either } from '@/Core';
+import { SingleTextSelect } from '../SingleTextSelect';
+import { InlinePlainAlert } from './InlinePlainAlert';
 
 interface Props {
   label: string;
@@ -23,18 +23,18 @@ export const CreatableSelectInput: React.FC<Props> = ({
   onCreate,
   onSelect,
 }) => {
-  const [submitError, setSubmitError] = useState("");
+  const [submitError, setSubmitError] = useState('');
   const onCreateOption = async (newValue: string) => {
     const result = await onCreate(newValue);
 
     if (Either.isLeft(result)) {
       setSubmitError(result.value);
-      onSelect("");
+      onSelect('');
     } else {
       onSelect(newValue);
     }
   };
-  const onCloseAlert = () => setSubmitError("");
+  const onCloseAlert = () => setSubmitError('');
 
   const errorView = submitError && (
     <InlinePlainAlert

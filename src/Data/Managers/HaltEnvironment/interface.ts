@@ -1,7 +1,7 @@
-import { Maybe } from "@/Core/Language";
+import { Maybe } from '@/Core/Language';
 
 export interface HaltEnvironment {
-  kind: "HaltEnvironment";
+  kind: 'HaltEnvironment';
 }
 
 export interface HaltEnvironmentManifest {

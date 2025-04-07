@@ -1,11 +1,11 @@
-import React, { useState, MouseEvent, useContext } from "react";
-import { Button, Flex, FlexItem, Popover } from "@patternfly/react-core";
-import { Td } from "@patternfly/react-table";
-import styled from "styled-components";
-import { ClipboardCopyButton } from "@/UI/Components/ClipboardCopyButton";
-import { words } from "@/UI/words";
-import { TreeTableCellContext } from "../RowReferenceContext";
-import { InstanceCellButton } from "./InstanceCellButton";
+import React, { useState, MouseEvent, useContext } from 'react';
+import { Button, Flex, FlexItem, Popover } from '@patternfly/react-core';
+import { Td } from '@patternfly/react-table';
+import styled from 'styled-components';
+import { ClipboardCopyButton } from '@/UI/Components/ClipboardCopyButton';
+import { words } from '@/UI/words';
+import { TreeTableCellContext } from '../RowReferenceContext';
+import { InstanceCellButton } from './InstanceCellButton';
 
 interface Props {
   className: string;
@@ -59,7 +59,7 @@ export const CellWithCopy: React.FC<Props> = ({
           <StyledPopoverBody>{formatValue(value)}</StyledPopoverBody>
           <ClipboardCopyButton
             value={value}
-            tooltipContent={words("attribute.value.copy")}
+            tooltipContent={words('attribute.value.copy')}
           />
         </>
       }
@@ -78,11 +78,11 @@ const StyledPopoverBody = styled.div`
   white-space: pre-wrap;
 `;
 
-function formatValue(value: string): string {
+function formatValue (value: string): string {
   return isJson(value) ? JSON.stringify(JSON.parse(value), null, 2) : value;
 }
 
-function isJson(value: string): boolean {
+function isJson (value: string): boolean {
   try {
     JSON.parse(value);
   } catch (_e) {
@@ -92,16 +92,17 @@ function isJson(value: string): boolean {
   return true;
 }
 
-function shouldRenderLink(value: string, hasRelation?: boolean): boolean {
-  return !!(hasRelation && value.length > 0 && value !== "{}");
+function shouldRenderLink (value: string, hasRelation?: boolean): boolean {
+  return !!(hasRelation && value.length > 0 && value !== '{}');
 }
 
-function splitValue(value: string): string[] {
-  const parts = value.split(",").map((val) => val.trim());
+function splitValue (value: string): string[] {
+  const parts = value.split(',').map((val) => val.trim());
 
   return parts;
 }
-function isValueOfMultipleIds(value: string): boolean {
+
+function isValueOfMultipleIds (value: string): boolean {
   return splitValue(value).length > 0;
 }
 
@@ -121,9 +122,9 @@ const MultiLinkCell: React.FC<LinkCellProps> = ({
 
     return (
       <Flex
-        direction={{ default: "column" }}
-        spaceItems={{ default: "spaceItemsNone" }}
-        display={{ default: "inlineFlex" }}
+        direction={{ default: 'column' }}
+        spaceItems={{ default: 'spaceItemsNone' }}
+        display={{ default: 'inlineFlex' }}
       >
         {ids.map((id) => (
           <FlexItem key={id}>

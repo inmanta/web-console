@@ -7,7 +7,7 @@ export class ColumnExpansionHelper {
    * @param numberOfColumns How many columns should be handled
    * @param minColumnWidth The columns will be at least as wide as this value (in percentage).
    */
-  constructor(
+  constructor (
     private readonly sumColumnWidth: number,
     private readonly numberOfColumns: number,
     private readonly minColumnWidth: number,
@@ -16,11 +16,11 @@ export class ColumnExpansionHelper {
       sumColumnWidth - (numberOfColumns - 1) * minColumnWidth;
   }
 
-  isExpanded(columnWidth: number): boolean {
+  isExpanded (columnWidth: number): boolean {
     return this.maxColumnWidth === columnWidth;
   }
 
-  getDefaultState(
+  getDefaultState (
     columns: string[],
     emptyColumns: string[],
   ): Record<string, number> {
@@ -41,7 +41,7 @@ export class ColumnExpansionHelper {
     );
   }
 
-  expandColumn(
+  expandColumn (
     currentColumnWidths: Record<string, number>,
     columnName: string,
   ): Record<string, number> {

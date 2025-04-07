@@ -1,9 +1,9 @@
-import React, { useContext } from "react";
-import { Button, Icon, Tooltip } from "@patternfly/react-core";
-import { PlayIcon } from "@patternfly/react-icons";
-import { DependencyContext } from "@/UI/Dependency";
-import { words } from "@/UI/words";
-import { ModalContext } from "../../ModalProvider";
+import React, { useContext } from 'react';
+import { Button, Icon, Tooltip } from '@patternfly/react-core';
+import { PlayIcon } from '@patternfly/react-icons';
+import { DependencyContext } from '@/UI/Dependency';
+import { words } from '@/UI/words';
+import { ModalContext } from '../../ModalProvider';
 
 /**
  * `ResumeButton` is a React functional component that renders a button with a tooltip.
@@ -15,8 +15,8 @@ export const ResumeButton: React.FC = () => {
   const { triggerModal, closeModal } = useContext(ModalContext);
 
   const resumeEnvironmentTrigger =
-    commandResolver.useGetTrigger<"ResumeEnvironment">({
-      kind: "ResumeEnvironment",
+    commandResolver.useGetTrigger<'ResumeEnvironment'>({
+      kind: 'ResumeEnvironment',
     });
 
   /**
@@ -31,8 +31,8 @@ export const ResumeButton: React.FC = () => {
    */
   const handleModalToggle = (): void => {
     triggerModal({
-      content: words("environment.resume.details"),
-      title: words("environment.resume.title"),
+      content: words('environment.resume.details'),
+      title: words('environment.resume.title'),
       actions: [
         <Button
           key="confirm"
@@ -40,16 +40,16 @@ export const ResumeButton: React.FC = () => {
           onClick={() => {
             resumeEnvironmentTrigger().then((_result) => {
               queryResolver.resumeAllContinuousManagers();
-              document.dispatchEvent(new CustomEvent("resume-event"));
+              document.dispatchEvent(new CustomEvent('resume-event'));
             });
             closeModal();
-            document.dispatchEvent(new CustomEvent("resume-event"));
+            document.dispatchEvent(new CustomEvent('resume-event'));
           }}
         >
-          {words("yes")}
+          {words('yes')}
         </Button>,
         <Button key="cancel" variant="link" onClick={closeModal}>
-          {words("no")}
+          {words('no')}
         </Button>,
       ],
     });
@@ -57,7 +57,7 @@ export const ResumeButton: React.FC = () => {
 
   return (
     <Tooltip
-      content={<div>{words("environment.resume.tooltip")}</div>}
+      content={<div>{words('environment.resume.tooltip')}</div>}
       position="right"
     >
       <Button
@@ -69,7 +69,7 @@ export const ResumeButton: React.FC = () => {
         variant="control"
         onClick={handleModalToggle}
       >
-        {words("environment.resume.button")}
+        {words('environment.resume.button')}
       </Button>
     </Tooltip>
   );

@@ -1,13 +1,13 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState } from 'react';
 import {
   Dropdown,
   DropdownItem,
   DropdownList,
   MenuToggle,
   MenuToggleElement,
-} from "@patternfly/react-core";
-import { EllipsisVIcon } from "@patternfly/react-icons";
-import { DependencyContext, words } from "@/UI";
+} from '@patternfly/react-core';
+import { EllipsisVIcon } from '@patternfly/react-icons';
+import { DependencyContext, words } from '@/UI';
 
 interface Props {
   name: string;
@@ -16,8 +16,8 @@ interface Props {
 
 export const KebabDropdown: React.FC<Props> = ({ name, paused }) => {
   const { commandResolver } = useContext(DependencyContext);
-  const deploy = commandResolver.useGetTrigger<"Deploy">({ kind: "Deploy" });
-  const repair = commandResolver.useGetTrigger<"Repair">({ kind: "Repair" });
+  const deploy = commandResolver.useGetTrigger<'Deploy'>({ kind: 'Deploy' });
+  const repair = commandResolver.useGetTrigger<'Repair'>({ kind: 'Repair' });
   const [isOpen, setIsOpen] = useState(false);
 
   const onToggleClick = () => {
@@ -38,7 +38,7 @@ export const KebabDropdown: React.FC<Props> = ({ name, paused }) => {
       )}
       isOpen={isOpen}
       onOpenChange={(isOpen: boolean) => setIsOpen(isOpen)}
-      popperProps={{ position: "center" }}
+      popperProps={{ position: 'center' }}
       onSelect={() => setIsOpen(false)}
     >
       <DropdownList>
@@ -48,7 +48,7 @@ export const KebabDropdown: React.FC<Props> = ({ name, paused }) => {
           onClick={() => deploy([name])}
           component="button"
         >
-          {words("agents.actions.deploy")}
+          {words('agents.actions.deploy')}
         </DropdownItem>
         <DropdownItem
           key="repair"
@@ -56,7 +56,7 @@ export const KebabDropdown: React.FC<Props> = ({ name, paused }) => {
           onClick={() => repair([name])}
           component="button"
         >
-          {words("agents.actions.repair")}
+          {words('agents.actions.repair')}
         </DropdownItem>
       </DropdownList>
     </Dropdown>

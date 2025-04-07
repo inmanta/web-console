@@ -1,12 +1,12 @@
-import { ApiHelper, UpdaterWithEnv } from "@/Core";
-import { CommandManagerWithEnv } from "@/Data/Common";
+import { ApiHelper, UpdaterWithEnv } from '@/Core';
+import { CommandManagerWithEnv } from '@/Data/Common';
 
-export function ControlAgentCommandManager(
+export function ControlAgentCommandManager (
   apiHelper: ApiHelper,
-  updater: UpdaterWithEnv<"GetAgents">,
+  updater: UpdaterWithEnv<'GetAgents'>,
 ) {
-  return CommandManagerWithEnv<"ControlAgent">(
-    "ControlAgent",
+  return CommandManagerWithEnv<'ControlAgent'>(
+    'ControlAgent',
     ({ name, action }, environment) => {
       return async (query) => {
         const result = await apiHelper.postWithoutResponse(

@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   OnSort,
   Table,
@@ -6,20 +6,20 @@ import {
   Th,
   Thead,
   Tr,
-} from "@patternfly/react-table";
-import { Sort } from "@/Core";
-import { useUrlStateWithExpansion } from "@/Data";
-import { words } from "@/UI";
-import { ResourceHistoryRow } from "@S/ResourceDetails/Core/ResourceHistory";
-import { ResourceHistoryTableRow } from "./ResourceHistoryTableRow";
-import { ResourceHistoryTablePresenter } from "./TablePresenter";
+} from '@patternfly/react-table';
+import { Sort } from '@/Core';
+import { useUrlStateWithExpansion } from '@/Data';
+import { words } from '@/UI';
+import { ResourceHistoryRow } from '@S/ResourceDetails/Core/ResourceHistory';
+import { ResourceHistoryTableRow } from './ResourceHistoryTableRow';
+import { ResourceHistoryTablePresenter } from './TablePresenter';
 
 interface Props {
   tablePresenter: ResourceHistoryTablePresenter;
   sort: Sort.Type;
   setSort: (sort: Sort.Type) => void;
   rows: ResourceHistoryRow[];
-  "aria-label"?: string;
+  'aria-label'?: string;
 }
 
 export const ResourceHistoryTable: React.FC<Props> = ({
@@ -30,8 +30,8 @@ export const ResourceHistoryTable: React.FC<Props> = ({
   ...props
 }) => {
   const [isExpanded, onExpansion] = useUrlStateWithExpansion({
-    route: "ResourceDetails",
-    key: "history-expansion",
+    route: 'ResourceDetails',
+    key: 'history-expansion',
   });
   const onSort: OnSort = (event, index, order) => {
     setSort({ ...sort, order });
@@ -43,15 +43,15 @@ export const ResourceHistoryTable: React.FC<Props> = ({
       const sortParams =
         columnIndex == 0
           ? {
-              sort: {
-                sortBy: {
-                  index: 0,
-                  direction: sort.order,
-                },
-                onSort,
-                columnIndex,
+            sort: {
+              sortBy: {
+                index: 0,
+                direction: sort.order,
               },
-            }
+              onSort,
+              columnIndex,
+            },
+          }
           : {};
 
       return (
@@ -67,7 +67,7 @@ export const ResourceHistoryTable: React.FC<Props> = ({
         <Tr>
           <Th
             aria-hidden
-            screenReaderText={words("common.emptyColumnHeader")}
+            screenReaderText={words('common.emptyColumnHeader')}
           />
           {heads}
         </Tr>

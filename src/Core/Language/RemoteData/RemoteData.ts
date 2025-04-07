@@ -1,4 +1,4 @@
-import * as Either from "@/Core/Language/Either";
+import * as Either from '@/Core/Language/Either';
 
 /**
  * The RemoteData type is a synchronous container for async data.
@@ -20,45 +20,45 @@ export type RemoteData<F, S> = NotAsked | Loading | Failed<F> | Success<S>;
 export type Type<F, S> = RemoteData<F, S>;
 
 interface NotAsked {
-  kind: "NotAsked";
+  kind: 'NotAsked';
 }
 
-export const notAsked = (): NotAsked => ({ kind: "NotAsked" });
+export const notAsked = (): NotAsked => ({ kind: 'NotAsked' });
 
 export const isNotAsked = <F, S>(data: RemoteData<F, S>): data is NotAsked =>
-  data.kind === "NotAsked";
+  data.kind === 'NotAsked';
 
 interface Loading {
-  kind: "Loading";
+  kind: 'Loading';
 }
 
-export const loading = (): Loading => ({ kind: "Loading" });
+export const loading = (): Loading => ({ kind: 'Loading' });
 
 export const isLoading = <F, S>(data: RemoteData<F, S>): data is Loading =>
-  data.kind === "Loading";
+  data.kind === 'Loading';
 
 interface Failed<V> {
-  kind: "Failed";
+  kind: 'Failed';
   value: V;
 }
 
-export const failed = <V>(value: V): Failed<V> => ({ kind: "Failed", value });
+export const failed = <V>(value: V): Failed<V> => ({ kind: 'Failed', value });
 
 export const isFailed = <F, S>(data: RemoteData<F, S>): data is Failed<F> =>
-  data.kind === "Failed";
+  data.kind === 'Failed';
 
 interface Success<V> {
-  kind: "Success";
+  kind: 'Success';
   value: V;
 }
 
 export const success = <V>(value: V): Success<V> => ({
-  kind: "Success",
+  kind: 'Success',
   value,
 });
 
 export const isSuccess = <F, S>(data: RemoteData<F, S>): data is Success<S> =>
-  data.kind === "Success";
+  data.kind === 'Success';
 
 export const mapSuccess = <F, S, N>(
   mapper: (s: S) => N,
@@ -89,13 +89,13 @@ export const fold = <F, S, R>(
   data: RemoteData<F, S>,
 ): R => {
   switch (data.kind) {
-    case "NotAsked":
+    case 'NotAsked':
       return handlers.notAsked();
-    case "Loading":
+    case 'Loading':
       return handlers.loading();
-    case "Failed":
+    case 'Failed':
       return handlers.failed(data.value);
-    case "Success":
+    case 'Success':
       return handlers.success(data.value);
   }
 };

@@ -1,10 +1,10 @@
-import React from "react";
-import { ToolbarItem } from "@patternfly/react-core";
-import styled from "styled-components";
-import { RemoteData, Resource } from "@/Core";
-import { ResourceStatusBar } from "@/UI/Components";
-import { ViewData } from "@S/Resource/Core/Utils";
-import { DeployButton, RepairButton } from "./Components";
+import React from 'react';
+import { ToolbarItem } from '@patternfly/react-core';
+import styled from 'styled-components';
+import { RemoteData, Resource } from '@/Core';
+import { ResourceStatusBar } from '@/UI/Components';
+import { ViewData } from '@S/Resource/Core/Utils';
+import { DeployButton, RepairButton } from './Components';
 
 interface Props {
   data: ViewData;

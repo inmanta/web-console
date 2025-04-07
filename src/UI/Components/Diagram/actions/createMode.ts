@@ -1,15 +1,15 @@
-import { dia } from "@inmanta/rappid";
-import { DirectedGraph } from "@joint/layout-directed-graph";
-import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from "@/Core";
+import { dia } from '@inmanta/rappid';
+import { DirectedGraph } from '@joint/layout-directed-graph';
+import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from '@/Core';
 import {
   CreateModifierHandler,
   FieldCreator,
   createFormState,
-} from "@/UI/Components/ServiceInstanceForm";
-import { dispatchUpdateStencil } from "../Context/dispatchers";
-import { EventActionEnum } from "../interfaces";
-import { ServiceEntityBlock } from "../shapes";
-import { connectEntities, createComposerEntity } from "./general";
+} from '@/UI/Components/ServiceInstanceForm';
+import { dispatchUpdateStencil } from '../Context/dispatchers';
+import { EventActionEnum } from '../interfaces';
+import { ServiceEntityBlock } from '../shapes';
+import { connectEntities, createComposerEntity } from './general';
 
 /**
  * Populates a graph with default required entities derived from a service model.
@@ -18,7 +18,7 @@ import { connectEntities, createComposerEntity } from "./general";
  * @param {ServiceModel} serviceModel - The service model to use for populating the graph.
  * @returns {void}
  */
-export function populateGraphWithDefault(
+export function populateGraphWithDefault (
   graph: dia.Graph,
   serviceModel: ServiceModel,
 ): void {
@@ -39,14 +39,14 @@ export function populateGraphWithDefault(
   const defaultEntities = addDefaultEntities(graph, serviceModel);
 
   defaultEntities.forEach((entity) => {
-    entity.set("embeddedTo", coreEntity.id);
+    entity.set('embeddedTo', coreEntity.id);
   });
   connectEntities(graph, coreEntity, defaultEntities);
 
   DirectedGraph.layout(graph, {
     nodeSep: 80,
     edgeSep: 80,
-    rankDir: "BT",
+    rankDir: 'BT',
   });
 }
 
@@ -57,7 +57,7 @@ export function populateGraphWithDefault(
  * @param {ServiceModel | EmbeddedEntity} service - The service model or embedded entity used to generate the default entities.
  * @returns {ServiceEntityBlock[]} An array of service entity blocks that have been added to the graph.
  */
-export function addDefaultEntities(
+export function addDefaultEntities (
   graph: dia.Graph,
   service: ServiceModel | EmbeddedEntity,
 ): ServiceEntityBlock[] {
@@ -118,7 +118,7 @@ const addSingleEntity = (
   const subEmbeddedEntities = addDefaultEntities(graph, model);
 
   subEmbeddedEntities.forEach((entity) => {
-    entity.set("embeddedTo", embeddedEntity.id);
+    entity.set('embeddedTo', embeddedEntity.id);
   });
   connectEntities(graph, embeddedEntity, subEmbeddedEntities);
 

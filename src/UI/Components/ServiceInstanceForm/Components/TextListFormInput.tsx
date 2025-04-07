@@ -1,7 +1,7 @@
 /**
  * A form input component for managing a list of text values.
  */
-import React, { useEffect } from "react";
+import React, { useEffect } from 'react';
 import {
   Label,
   LabelGroup,
@@ -16,11 +16,11 @@ import {
   TextInputGroupUtilities,
   TextInputTypes,
   Truncate,
-} from "@patternfly/react-core";
+} from '@patternfly/react-core';
 
-import { HelpIcon, TimesIcon } from "@patternfly/react-icons";
-import { words } from "@/UI/words";
-import { SuggestionsPopover } from "./SuggestionsPopover";
+import { HelpIcon, TimesIcon } from '@patternfly/react-icons';
+import { words } from '@/UI/words';
+import { SuggestionsPopover } from './SuggestionsPopover';
 
 /**
  * Props for the TextListFormInput component.
@@ -70,7 +70,7 @@ export const TextListFormInput: React.FC<Props> = ({
   suggestions = [],
   ...props
 }) => {
-  const [inputValue, setInputValue] = React.useState("");
+  const [inputValue, setInputValue] = React.useState('');
   const [currentChips, setCurrentChips] = React.useState<string[]>([]);
   const [isOpen, setIsOpen] = React.useState(false);
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -112,7 +112,7 @@ export const TextListFormInput: React.FC<Props> = ({
       currentChips.push(inputValue);
       setCurrentChips(currentChips);
       handleInputChange(currentChips, null);
-      setInputValue("");
+      setInputValue('');
     }
   };
 
@@ -122,7 +122,7 @@ export const TextListFormInput: React.FC<Props> = ({
   const clearChipsAndInput = () => {
     setCurrentChips([]);
     handleInputChange([], null);
-    setInputValue("");
+    setInputValue('');
   };
 
   useEffect(() => {
@@ -137,7 +137,7 @@ export const TextListFormInput: React.FC<Props> = ({
       isRequired={!isOptional}
       fieldId={attributeName}
       label={attributeName}
-      className={shouldBeDisabled ? "is-disabled" : ""}
+      className={shouldBeDisabled ? 'is-disabled' : ''}
       labelHelp={
         typeHint ? (
           <Popover bodyContent={<div>{typeHint}</div>}>
@@ -195,7 +195,7 @@ export const TextListFormInput: React.FC<Props> = ({
         </TextInputGroupMain>
         <TextInputGroupUtilities>
           <Button
-            icon={words("catalog.callbacks.add")}
+            icon={words('catalog.callbacks.add')}
             variant="plain"
             onClick={addChip}
             isDisabled={shouldBeDisabled}

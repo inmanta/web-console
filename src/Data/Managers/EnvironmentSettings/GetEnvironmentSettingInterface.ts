@@ -1,7 +1,7 @@
-import { EnvironmentSettings } from "@/Core/Domain";
+import { EnvironmentSettings } from '@/Core/Domain';
 
 export interface GetEnvironmentSetting {
-  kind: "GetEnvironmentSetting";
+  kind: 'GetEnvironmentSetting';
   id: string;
 }
 

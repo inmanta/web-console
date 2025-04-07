@@ -1,25 +1,25 @@
-import React from "react";
-import { MemoryRouter, useLocation } from "react-router";
-import { Router } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { render, screen, waitFor } from "@testing-library/react";
-import { userEvent } from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
-import { createMemoryHistory } from "history";
-import { HttpResponse, http } from "msw";
-import { setupServer } from "msw/node";
-import { FlatEnvironment, RemoteData } from "@/Core";
+import React from 'react';
+import { MemoryRouter, useLocation } from 'react-router';
+import { Router } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { render, screen, waitFor } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
+import { StoreProvider } from 'easy-peasy';
+import { createMemoryHistory } from 'history';
+import { HttpResponse, http } from 'msw';
+import { setupServer } from 'msw/node';
+import { FlatEnvironment, RemoteData } from '@/Core';
 import {
   AuthProvider,
   getStoreInstance,
   KeycloakAuthConfig,
   LocalConfig,
-} from "@/Data";
-import { AuthTestWrapper, Environment, dependencies } from "@/Test";
-import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
-import ErrorBoundary from "@/UI/Utils/ErrorBoundary";
-import { EnvSelectorWithData as EnvironmentSelector } from "./EnvSelectorWithData";
-import { EnvironmentSelectorItem } from "./EnvSelectorWrapper";
+} from '@/Data';
+import { AuthTestWrapper, Environment, dependencies } from '@/Test';
+import { DependencyProvider, EnvironmentHandlerImpl } from '@/UI/Dependency';
+import ErrorBoundary from '@/UI/Utils/ErrorBoundary';
+import { EnvSelectorWithData as EnvironmentSelector } from './EnvSelectorWithData';
+import { EnvironmentSelectorItem } from './EnvSelectorWrapper';
 
 const setup = (
   onSelectEnvironment: (item: EnvironmentSelectorItem) => void = () => {},
@@ -36,7 +36,7 @@ const setup = (
   store.dispatch.environment.setEnvironments(RemoteData.success(environments));
 
   store.dispatch.environment.setEnvironmentDetailsById({
-    id: "123",
+    id: '123',
     value: RemoteData.success(Environment.filterable[0]),
   });
 
@@ -45,8 +45,8 @@ const setup = (
       <MemoryRouter
         initialEntries={[
           {
-            pathname: "/",
-            search: "?env=123",
+            pathname: '/',
+            search: '?env=123',
           },
         ]}
       >
@@ -72,7 +72,7 @@ const setup = (
   );
 };
 
-test("GIVEN EnvironmentSelector WHEN there are no environments THEN redirects", async () => {
+test('GIVEN EnvironmentSelector WHEN there are no environments THEN redirects', async () => {
   const history = createMemoryHistory();
 
   render(
@@ -88,11 +88,11 @@ test("GIVEN EnvironmentSelector WHEN there are no environments THEN redirects", 
       </DependencyProvider>
     </Router>,
   );
-  expect(screen.getByText(`Select an environment`)).toBeVisible();
-  expect(history.location.pathname).toEqual("/");
+  expect(screen.getByText('Select an environment')).toBeVisible();
+  expect(history.location.pathname).toEqual('/');
 });
 
-test("GIVEN EnvironmentSelector and a project WHEN user clicks on toggle THEN list of projects is shown", async () => {
+test('GIVEN EnvironmentSelector and a project WHEN user clicks on toggle THEN list of projects is shown', async () => {
   const envA = Environment.filterable[0];
   const envB = Environment.filterable[2];
 
@@ -107,7 +107,7 @@ test("GIVEN EnvironmentSelector and a project WHEN user clicks on toggle THEN li
   expect(listItem).toBeVisible();
 });
 
-test("GIVEN EnvironmentSelector and populated store WHEN user clicks on an item THEN selected environment is changed", async () => {
+test('GIVEN EnvironmentSelector and populated store WHEN user clicks on an item THEN selected environment is changed', async () => {
   let selectedEnv;
   const onSelectEnv = (item) => {
     selectedEnv = item.environmentId;
@@ -128,14 +128,14 @@ test("GIVEN EnvironmentSelector and populated store WHEN user clicks on an item 
   await userEvent.click(listItem);
 
   expect(
-    screen.queryByRole("button", {
+    screen.queryByRole('button', {
       name: `${envB.name} (${envB.projectName})`,
     }),
   ).toBeVisible();
   expect(selectedEnv).toEqual(envB.id);
 });
 
-test("GIVEN EnvironmentSelector and environments with identical names WHEN user clicks on an environment THEN the correct environment is selected", async () => {
+test('GIVEN EnvironmentSelector and environments with identical names WHEN user clicks on an environment THEN the correct environment is selected', async () => {
   let selectedEnv;
   const onSelectEnv = (item) => {
     selectedEnv = item.environmentId;
@@ -144,18 +144,18 @@ test("GIVEN EnvironmentSelector and environments with identical names WHEN user 
   const envB = Environment.filterable[2];
 
   render(setup(onSelectEnv));
-  const toggle = screen.getByRole("button", {
+  const toggle = screen.getByRole('button', {
     name: `${envA.name} (${envA.projectName})`,
   });
 
   await userEvent.click(toggle);
 
-  const menuItems = screen.getAllByRole("menuitem");
+  const menuItems = screen.getAllByRole('menuitem');
 
   await userEvent.click(menuItems[2]);
 
   expect(
-    screen.getByRole("button", {
+    screen.getByRole('button', {
       name: `${envB.name} (${envB.projectName})`,
     }),
   );
@@ -163,37 +163,37 @@ test("GIVEN EnvironmentSelector and environments with identical names WHEN user 
   expect(selectedEnv).toEqual(envB.id);
 });
 
-test("GIVEN EnvironmentSelector WHEN jwt auth is enabled will display fetched username on load", async () => {
+test('GIVEN EnvironmentSelector WHEN jwt auth is enabled will display fetched username on load', async () => {
   const onSelectEnv = () => {};
   const server = setupServer(
-    http.get("/api/v2/current_user", async () => {
+    http.get('/api/v2/current_user', async () => {
       return HttpResponse.json({
         data: {
-          username: "test_user",
+          username: 'test_user',
         },
       });
     }),
   );
 
   server.listen();
-  render(setup(onSelectEnv, { method: "jwt" }));
+  render(setup(onSelectEnv, { method: 'jwt' }));
 
   await waitFor(() => {
-    expect(screen.getByText("test_user")).toBeVisible();
+    expect(screen.getByText('test_user')).toBeVisible();
   });
-  expect(screen.getByText("test-env1 (default)")).toBeVisible();
+  expect(screen.getByText('test-env1 (default)')).toBeVisible();
 
   server.close();
 });
 
-test("GIVEN EnvironmentSelector WHEN jwt auth is enabled and current_user request returns 404 we should display Selector as is by default", async () => {
+test('GIVEN EnvironmentSelector WHEN jwt auth is enabled and current_user request returns 404 we should display Selector as is by default', async () => {
   const onSelectEnv = () => {};
   const server = setupServer(
-    http.get("/api/v2/current_user", async () => {
+    http.get('/api/v2/current_user', async () => {
       return HttpResponse.json(
         {
           message:
-            "Request or referenced resource does not exist: No current user found, probably an API token is used.",
+            'Request or referenced resource does not exist: No current user found, probably an API token is used.',
         },
         { status: 404 },
       );
@@ -201,12 +201,12 @@ test("GIVEN EnvironmentSelector WHEN jwt auth is enabled and current_user reques
   );
 
   server.listen();
-  render(setup(onSelectEnv, { method: "jwt" }));
+  render(setup(onSelectEnv, { method: 'jwt' }));
 
   await waitFor(() => {
-    expect(screen.queryByText("test_user")).not.toBeInTheDocument();
+    expect(screen.queryByText('test_user')).not.toBeInTheDocument();
   });
-  expect(screen.getByText("test-env1 (default)")).toBeVisible();
+  expect(screen.getByText('test-env1 (default)')).toBeVisible();
 
   server.close();
 });

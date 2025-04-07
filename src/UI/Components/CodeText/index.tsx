@@ -1,5 +1,5 @@
-import React from "react";
-import styled from "styled-components";
+import React from 'react';
+import styled from 'styled-components';
 
 interface Props {
   singleLine?: boolean;
@@ -13,8 +13,8 @@ export const CodeText: React.FC<Props> = ({ children, singleLine = false }) => (
 );
 
 const StyledPre = styled.pre<{ singleLine: boolean }>`
-  white-space: ${(p) => (p.singleLine ? "nowrap" : "pre-wrap")};
+  white-space: ${(p) => (p.singleLine ? 'nowrap' : 'pre-wrap')};
   ${({ singleLine }) =>
-    singleLine ? "overflow: hidden; text-overflow: ellipsis;" : ""}
+    singleLine ? 'overflow: hidden; text-overflow: ellipsis;' : ''}
   font-family: "Liberation Mono";
 `;

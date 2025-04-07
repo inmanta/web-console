@@ -1,8 +1,8 @@
-import { ProjectModel } from "@/Core/Domain";
-import { Either } from "@/Core/Language";
+import { ProjectModel } from '@/Core/Domain';
+import { Either } from '@/Core/Language';
 
 export interface Command {
-  kind: "CreateProject";
+  kind: 'CreateProject';
 }
 export interface Manifest {
   error: string;

@@ -1,1 +1,1 @@
-export { View as ResourceLogView } from "./View";
+export { View as ResourceLogView } from './View';

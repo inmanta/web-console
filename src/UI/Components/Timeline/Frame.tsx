@@ -1,11 +1,11 @@
-import React from "react";
-import { Icon, Spinner } from "@patternfly/react-core";
+import React from 'react';
+import { Icon, Spinner } from '@patternfly/react-core';
 import {
   CheckCircleIcon,
   ExclamationCircleIcon,
-} from "@patternfly/react-icons";
-import styled from "styled-components";
-import { Timestamp } from "./Timestamp";
+} from '@patternfly/react-icons';
+import styled from 'styled-components';
+import { Timestamp } from './Timestamp';
 
 interface FrameProps {
   started?: Timestamp;

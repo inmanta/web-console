@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Card,
   CardBody,
@@ -10,21 +10,21 @@ import {
   Title,
   Gallery,
   GalleryItem,
-} from "@patternfly/react-core";
-import { words } from "@/UI";
-import { Metric, MetricName } from "../Core/Domain";
+} from '@patternfly/react-core';
+import { words } from '@/UI';
+import { Metric, MetricName } from '../Core/Domain';
 
 export const NumericCard = ({ metrics }: { metrics: Metric }) => {
   const lastData = metrics.data[metrics.data.length - 1];
 
   return (
-    <Gallery hasGutter maxWidths={{ default: "300px" }}>
+    <Gallery hasGutter maxWidths={{ default: '300px' }}>
       <GalleryItem>
         <Card id={`trend-card-${metrics.name}`} component="div">
           <CardHeader>
             <Flex
-              direction={{ default: "column" }}
-              spaceItems={{ default: "spaceItemsNone" }}
+              direction={{ default: 'column' }}
+              spaceItems={{ default: 'spaceItemsNone' }}
             >
               <FlexItem>
                 <CardTitle>
@@ -53,7 +53,7 @@ export const NumericCard = ({ metrics }: { metrics: Metric }) => {
                 paddingLeft: lastData === null ? 0 : 100,
               }}
             >
-              {lastData == null ? "no data" : Math.round(lastData)}
+              {lastData == null ? 'no data' : Math.round(lastData)}
             </Content>
           </CardBody>
         </Card>

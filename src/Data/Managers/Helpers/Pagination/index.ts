@@ -1,1 +1,1 @@
-export * from "./getPaginationHandlers";
+export * from './getPaginationHandlers';

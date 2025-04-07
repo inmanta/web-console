@@ -1,11 +1,11 @@
-import { UseQueryResult, useQuery } from "@tanstack/react-query";
-import { PageSize, Pagination } from "@/Core/Domain";
-import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import { getPaginationHandlers } from "@/Data/Managers/Helpers/Pagination/getPaginationHandlers";
-import { Notification, Severity } from "@S/Notification/Core/Domain";
-import { Origin } from "@S/Notification/Core/Utils";
-import { CustomError, useGet } from "../../helpers";
-import { getUrl } from "./getUrl";
+import { UseQueryResult, useQuery } from '@tanstack/react-query';
+import { PageSize, Pagination } from '@/Core/Domain';
+import { CurrentPage } from '@/Data/Common/UrlState/useUrlStateWithCurrentPage';
+import { getPaginationHandlers } from '@/Data/Managers/Helpers/Pagination/getPaginationHandlers';
+import { Notification, Severity } from '@S/Notification/Core/Domain';
+import { Origin } from '@S/Notification/Core/Utils';
+import { CustomError, useGet } from '../../helpers';
+import { getUrl } from './getUrl';
 
 /**
  * Interface for filtering notifications based on various criteria
@@ -68,7 +68,7 @@ export const useGetNotifications = (
     useOneTime: (): UseQueryResult<NotificationResponse, CustomError> =>
       useQuery({
         queryKey: [
-          "get_notifications",
+          'get_notifications',
           params.pageSize.value,
           params.filter,
           params.currentPage.value,
@@ -83,7 +83,7 @@ export const useGetNotifications = (
     useContinuous: () =>
       useQuery({
         queryKey: [
-          "get_notifications",
+          'get_notifications',
           params.pageSize.value,
           params.filter,
           params.currentPage.value,

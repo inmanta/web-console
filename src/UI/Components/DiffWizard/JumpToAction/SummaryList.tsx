@@ -1,15 +1,15 @@
-import React from "react";
+import React from 'react';
 import {
   DropdownItem,
   DropdownList,
   Flex,
   Truncate,
-} from "@patternfly/react-core";
-import { StatusDescriptor } from "@/UI/Components/DiffWizard/StatusDescriptor";
-import { Item, Refs } from "@/UI/Components/DiffWizard/types";
+} from '@patternfly/react-core';
+import { StatusDescriptor } from '@/UI/Components/DiffWizard/StatusDescriptor';
+import { Item, Refs } from '@/UI/Components/DiffWizard/types';
 
 interface Props {
-  items: Pick<Item, "id" | "status">[];
+  items: Pick<Item, 'id' | 'status'>[];
   refs: Refs;
 }
 
@@ -18,7 +18,7 @@ export const SummaryList: React.FC<Props> = ({ items, refs }) => {
     if (itemId === undefined) return;
     if (refs.current[itemId] === undefined) return;
     refs.current[itemId].scrollIntoView({
-      behavior: "smooth",
+      behavior: 'smooth',
     });
     refs.current[itemId].focus();
   };
@@ -39,9 +39,9 @@ export const SummaryList: React.FC<Props> = ({ items, refs }) => {
   );
 };
 
-const Descriptor: React.FC<Pick<Item, "id" | "status">> = ({ id, status }) => {
+const Descriptor: React.FC<Pick<Item, 'id' | 'status'>> = ({ id, status }) => {
   return (
-    <Flex flexWrap={{ default: "nowrap" }}>
+    <Flex flexWrap={{ default: 'nowrap' }}>
       <StatusDescriptor status={status} />
       <Truncate content={id} tooltipPosition="top" position="end" />
     </Flex>

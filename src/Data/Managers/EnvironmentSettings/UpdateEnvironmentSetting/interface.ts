@@ -1,8 +1,8 @@
-import { EnvironmentSettings } from "@/Core/Domain";
-import { Maybe } from "@/Core/Language";
+import { EnvironmentSettings } from '@/Core/Domain';
+import { Maybe } from '@/Core/Language';
 
 export interface UpdateEnvironmentSetting {
-  kind: "UpdateEnvironmentSetting";
+  kind: 'UpdateEnvironmentSetting';
 }
 
 export interface UpdateEnvironmentSettingManifest {

@@ -1,7 +1,7 @@
-import { ServerStatus } from "@/Core/Domain";
+import { ServerStatus } from '@/Core/Domain';
 
 export interface GetServerStatus {
-  kind: "GetServerStatus";
+  kind: 'GetServerStatus';
 }
 
 export interface GetServerStatusManifest {

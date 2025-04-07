@@ -1,7 +1,7 @@
-import { DryRun } from "@S/ComplianceCheck/Core/Domain";
+import { DryRun } from '@S/ComplianceCheck/Core/Domain';
 
 export interface Query {
-  kind: "GetDryRuns";
+  kind: 'GetDryRuns';
   version: number;
 }
 

@@ -1,1 +1,1 @@
-export * as CreateEnvironment from "./Core/Route";
+export * as CreateEnvironment from './Core/Route';

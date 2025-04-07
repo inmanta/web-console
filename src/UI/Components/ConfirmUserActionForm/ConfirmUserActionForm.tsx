@@ -1,6 +1,6 @@
-import React from "react";
-import { Form, ActionGroup, Button } from "@patternfly/react-core";
-import { words } from "@/UI/words";
+import React from 'react';
+import { Form, ActionGroup, Button } from '@patternfly/react-core';
+import { words } from '@/UI/words';
 
 export const ConfirmUserActionForm: React.FunctionComponent<{
   onSubmit: () => void;
@@ -19,7 +19,7 @@ export const ConfirmUserActionForm: React.FunctionComponent<{
           data-testid="dialog-submit"
           onClick={onSubmit}
         >
-          {words("yes")}
+          {words('yes')}
         </Button>
         <Button
           variant="secondary"
@@ -27,7 +27,7 @@ export const ConfirmUserActionForm: React.FunctionComponent<{
           data-testid="dialog-cancel"
           onClick={onCancel}
         >
-          {words("no")}
+          {words('no')}
         </Button>
       </ActionGroup>
     </Form>

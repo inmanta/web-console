@@ -1,20 +1,20 @@
-import React, { useCallback, useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useCallback, useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   InstanceAttributeModel,
   ServiceInstanceModel,
   ServiceModel,
-} from "@/Core";
-import { AttributeInputConverterImpl } from "@/Data";
-import { usePostInstance } from "@/Data/Managers/V2/ServiceInstance";
+} from '@/Core';
+import { AttributeInputConverterImpl } from '@/Data';
+import { usePostInstance } from '@/Data/Managers/V2/ServiceInstance';
 import {
   CreateModifierHandler,
   ToastAlert,
   FieldCreator,
   ServiceInstanceForm,
-} from "@/UI/Components";
-import { DependencyContext } from "@/UI/Dependency";
-import { words } from "@/UI/words";
+} from '@/UI/Components';
+import { DependencyContext } from '@/UI/Dependency';
+import { words } from '@/UI/words';
 
 interface Props {
   serviceEntity: ServiceModel;
@@ -36,10 +36,10 @@ export const DuplicateForm: React.FC<Props> = ({ serviceEntity, instance }) => {
   const [isDirty, setIsDirty] = useState(false);
   const fieldCreator = new FieldCreator(new CreateModifierHandler());
   const fields = fieldCreator.create(serviceEntity);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState('');
   const isHalted = environmentModifier.useIsHalted();
   const navigate = useNavigate();
-  const url = routeManager.useUrl("InstanceDetails", {
+  const url = routeManager.useUrl('InstanceDetails', {
     service: serviceEntity.name,
     instance: instance.service_identity_attribute_value || instance.id,
     instanceId: instance.id,
@@ -57,7 +57,7 @@ export const DuplicateForm: React.FC<Props> = ({ serviceEntity, instance }) => {
       setErrorMessage(error.message);
     },
     onSuccess: ({ data }) => {
-      const newUrl = routeManager.getUrl("InstanceDetails", {
+      const newUrl = routeManager.getUrl('InstanceDetails', {
         service: serviceEntity.name,
         instance: data.service_identity_attribute_value || data.id,
         instanceId: data.id,
@@ -81,7 +81,7 @@ export const DuplicateForm: React.FC<Props> = ({ serviceEntity, instance }) => {
       {errorMessage && (
         <ToastAlert
           data-testid="ToastAlert"
-          title={words("inventory.addInstance.failed")}
+          title={words('inventory.addInstance.failed')}
           message={errorMessage}
           setMessage={setErrorMessage}
         />

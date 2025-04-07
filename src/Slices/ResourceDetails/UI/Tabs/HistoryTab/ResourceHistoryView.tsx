@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect } from 'react';
 import {
   Divider,
   Stack,
@@ -6,25 +6,25 @@ import {
   Toolbar,
   ToolbarContent,
   ToolbarItem,
-} from "@patternfly/react-core";
-import { Query } from "@/Core";
-import { useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
-import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
+} from '@patternfly/react-core';
+import { Query } from '@/Core';
+import { useUrlStateWithPageSize, useUrlStateWithSort } from '@/Data';
+import { useUrlStateWithCurrentPage } from '@/Data/Common/UrlState/useUrlStateWithCurrentPage';
 import {
   EmptyView,
   OldPaginationWidget,
   RemoteDataView,
-} from "@/UI/Components";
-import { DependencyContext } from "@/UI/Dependency";
-import { MomentDatePresenter } from "@/UI/Utils";
-import { words } from "@/UI/words";
-import { ResourceHistoryTable } from "./ResourceHistoryTable";
-import { ResourceTemporalData } from "./ResourceTemporalData";
-import { ResourceHistoryTablePresenter } from "./TablePresenter";
+} from '@/UI/Components';
+import { DependencyContext } from '@/UI/Dependency';
+import { MomentDatePresenter } from '@/UI/Utils';
+import { words } from '@/UI/words';
+import { ResourceHistoryTable } from './ResourceHistoryTable';
+import { ResourceTemporalData } from './ResourceTemporalData';
+import { ResourceHistoryTablePresenter } from './TablePresenter';
 
 interface Props {
   resourceId: string;
-  details: Query.UsedApiData<"GetResourceDetails">;
+  details: Query.UsedApiData<'GetResourceDetails'>;
 }
 
 export const ResourceHistoryView: React.FC<Props> = ({
@@ -34,17 +34,17 @@ export const ResourceHistoryView: React.FC<Props> = ({
   const { queryResolver } = useContext(DependencyContext);
 
   const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({
-    route: "ResourceDetails",
+    route: 'ResourceDetails',
   });
   const [pageSize, setPageSize] = useUrlStateWithPageSize({
-    route: "ResourceDetails",
+    route: 'ResourceDetails',
   });
   const [sort, setSort] = useUrlStateWithSort<string>({
-    default: { name: "date", order: "desc" },
-    route: "ResourceDetails",
+    default: { name: 'date', order: 'desc' },
+    route: 'ResourceDetails',
   });
-  const [data, retry] = queryResolver.useContinuous<"GetResourceHistory">({
-    kind: "GetResourceHistory",
+  const [data, retry] = queryResolver.useContinuous<'GetResourceHistory'>({
+    kind: 'GetResourceHistory',
     id: resourceId,
     sort,
     pageSize,
@@ -53,7 +53,7 @@ export const ResourceHistoryView: React.FC<Props> = ({
 
   //when sorting is triggered, reset the current page
   useEffect(() => {
-    setCurrentPage({ kind: "CurrentPage", value: "" });
+    setCurrentPage({ kind: 'CurrentPage', value: '' });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sort.order]);
 
@@ -84,7 +84,7 @@ export const ResourceHistoryView: React.FC<Props> = ({
             if (history.data.length <= 0) {
               return (
                 <EmptyView
-                  message={words("resources.history.empty.message")}
+                  message={words('resources.history.empty.message')}
                   aria-label="ResourceHistory-Empty"
                 />
               );

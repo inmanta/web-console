@@ -1,9 +1,9 @@
-import React from "react";
-import { Alert, AlertActionCloseButton } from "@patternfly/react-core";
-import styled from "styled-components";
+import React from 'react';
+import { Alert, AlertActionCloseButton } from '@patternfly/react-core';
+import styled from 'styled-components';
 
 interface Props {
-  "aria-label": string;
+  'aria-label': string;
   errorMessage: string;
   closeButtonAriaLabel: string;
   onCloseAlert: () => void;
@@ -16,7 +16,7 @@ export const InlinePlainAlert: React.FC<Props> = ({
   ...props
 }) => (
   <WidthLimitedAlert
-    aria-label={props["aria-label"]}
+    aria-label={props['aria-label']}
     variant="danger"
     isInline
     isPlain

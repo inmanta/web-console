@@ -2,8 +2,8 @@ import {
   UseBaseMutationResult,
   useMutation,
   UseMutationOptions,
-} from "@tanstack/react-query";
-import { usePostWithoutEnv } from "../../helpers";
+} from '@tanstack/react-query';
+import { usePostWithoutEnv } from '../../helpers';
 
 interface Body {
   update: boolean;
@@ -34,11 +34,11 @@ export const useTriggerCompile = (
       post(`/api/v1/notify/${env}`, {
         update,
         metadata: {
-          type: "console",
-          message: "Compile triggered from the console",
+          type: 'console',
+          message: 'Compile triggered from the console',
         },
       }),
-    mutationKey: ["trigger_compile"],
+    mutationKey: ['trigger_compile'],
     ...options,
   });
 };

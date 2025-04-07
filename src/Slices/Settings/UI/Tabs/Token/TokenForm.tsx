@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Alert,
   AlertActionCloseButton,
@@ -9,16 +9,16 @@ import {
   TextInput,
   ToggleGroup,
   ToggleGroupItem,
-} from "@patternfly/react-core";
+} from '@patternfly/react-core';
 import {
   ClusterIcon,
   ProcessAutomationIcon,
   UserIcon,
-} from "@patternfly/react-icons";
-import styled from "styled-components";
-import { ClientType, Maybe } from "@/Core";
-import { ClipboardCopyButton, Description } from "@/UI/Components";
-import { words } from "@/UI/words";
+} from '@patternfly/react-icons';
+import styled from 'styled-components';
+import { ClientType, Maybe } from '@/Core';
+import { ClipboardCopyButton, Description } from '@/UI/Components';
+import { words } from '@/UI/words';
 
 interface Props {
   onGenerate(): void;
@@ -40,7 +40,7 @@ export const TokenForm: React.FC<Props> = ({
   isBusy,
 }) => (
   <Container>
-    <Description>{words("settings.tabs.token.description")}</Description>
+    <Description>{words('settings.tabs.token.description')}</Description>
     <PaddedFlex>
       <FlexItem>
         <ToggleGroup aria-label="ClientTypes">
@@ -48,9 +48,9 @@ export const TokenForm: React.FC<Props> = ({
             icon={<UserIcon />}
             text="agent"
             aria-label="AgentOption"
-            isSelected={isClientTypeSelected("agent")}
+            isSelected={isClientTypeSelected('agent')}
             onChange={(_event, selected) =>
-              getClientTypeSelector("agent")(selected)
+              getClientTypeSelector('agent')(selected)
             }
             isDisabled={isBusy}
           />
@@ -58,9 +58,9 @@ export const TokenForm: React.FC<Props> = ({
             icon={<ClusterIcon />}
             text="api"
             aria-label="ApiOption"
-            isSelected={isClientTypeSelected("api")}
+            isSelected={isClientTypeSelected('api')}
             onChange={(_event, selected) =>
-              getClientTypeSelector("api")(selected)
+              getClientTypeSelector('api')(selected)
             }
             isDisabled={isBusy}
           />
@@ -68,9 +68,9 @@ export const TokenForm: React.FC<Props> = ({
             icon={<ProcessAutomationIcon />}
             text="compiler"
             aria-label="CompilerOption"
-            isSelected={isClientTypeSelected("compiler")}
+            isSelected={isClientTypeSelected('compiler')}
             onChange={(_event, selected) =>
-              getClientTypeSelector("compiler")(selected)
+              getClientTypeSelector('compiler')(selected)
             }
             isDisabled={isBusy}
           />
@@ -78,7 +78,7 @@ export const TokenForm: React.FC<Props> = ({
       </FlexItem>
       <FlexItem>
         <Button variant="primary" onClick={onGenerate} isDisabled={isBusy}>
-          {words("settings.tabs.token.generate")}
+          {words('settings.tabs.token.generate')}
         </Button>
       </FlexItem>
     </PaddedFlex>
@@ -88,11 +88,11 @@ export const TokenForm: React.FC<Props> = ({
         id="token"
         type="text"
         aria-label="TokenOutput"
-        value={Maybe.withFallback(token, "")}
+        value={Maybe.withFallback(token, '')}
         readOnlyVariant="default"
       />
       <ClipboardCopyButton
-        value={Maybe.withFallback(token, "")}
+        value={Maybe.withFallback(token, '')}
         isDisabled={Maybe.isNone(token)}
         variant="control"
         aria-label="CopyTokenToClipboard"

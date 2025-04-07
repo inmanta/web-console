@@ -1,8 +1,8 @@
-import React from "react";
-import { useRouteParams } from "@/UI";
-import { PageContainer, ServiceProvider } from "@/UI/Components";
-import { words } from "@/UI/words";
-import { DuplicateInstancePage } from "./DuplicateInstancePage";
+import React from 'react';
+import { useRouteParams } from '@/UI';
+import { PageContainer, ServiceProvider } from '@/UI/Components';
+import { words } from '@/UI/words';
+import { DuplicateInstancePage } from './DuplicateInstancePage';
 
 const PageWrapper: React.FC<React.PropsWithChildren<unknown>> = ({
   children,
@@ -10,7 +10,7 @@ const PageWrapper: React.FC<React.PropsWithChildren<unknown>> = ({
 }) => (
   <PageContainer
     {...props}
-    pageTitle={words("inventory.duplicateInstance.title")}
+    pageTitle={words('inventory.duplicateInstance.title')}
   >
     {children}
   </PageContainer>
@@ -18,7 +18,7 @@ const PageWrapper: React.FC<React.PropsWithChildren<unknown>> = ({
 
 export const Page: React.FC = () => {
   const { service: serviceName, instance } =
-    useRouteParams<"DuplicateInstance">();
+    useRouteParams<'DuplicateInstance'>();
 
   return (
     <ServiceProvider

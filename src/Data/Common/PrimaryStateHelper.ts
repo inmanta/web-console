@@ -1,7 +1,7 @@
-import { State } from "easy-peasy";
-import { isEqual } from "lodash-es";
-import { Query, RemoteData, StateHelper, StateHelperWithEnv } from "@/Core";
-import { Store, StoreModel, useStoreState } from "@/Data/Store";
+import { State } from 'easy-peasy';
+import { isEqual } from 'lodash-es';
+import { Query, RemoteData, StateHelper, StateHelperWithEnv } from '@/Core';
+import { Store, StoreModel, useStoreState } from '@/Data/Store';
 
 type Data<Kind extends Query.Kind> = RemoteData.Type<
   Query.Error<Kind>,
@@ -13,7 +13,7 @@ type ApiData<Kind extends Query.Kind> = RemoteData.Type<
   Query.ApiResponse<Kind>
 >;
 
-export function PrimaryStateHelper<Kind extends Query.Kind>(
+export function PrimaryStateHelper<Kind extends Query.Kind> (
   store: Store,
   customSet: (data: ApiData<Kind>, query: Query.SubQuery<Kind>) => void,
   customGet: (
@@ -21,21 +21,21 @@ export function PrimaryStateHelper<Kind extends Query.Kind>(
     query: Query.SubQuery<Kind>,
   ) => Data<Kind>,
 ): StateHelper<Kind> {
-  function set(data: ApiData<Kind>, query: Query.SubQuery<Kind>): void {
+  function set (data: ApiData<Kind>, query: Query.SubQuery<Kind>): void {
     customSet(data, query);
   }
 
-  function useGetHooked(query: Query.SubQuery<Kind>): Data<Kind> {
+  function useGetHooked (query: Query.SubQuery<Kind>): Data<Kind> {
     return useStoreState((state) => enforce(customGet(state, query)), isEqual);
   }
 
-  function enforce(value: undefined | Data<Kind>): Data<Kind> {
-    if (typeof value === "undefined") return RemoteData.notAsked();
+  function enforce (value: undefined | Data<Kind>): Data<Kind> {
+    if (typeof value === 'undefined') return RemoteData.notAsked();
 
     return value;
   }
 
-  function getOnce(query: Query.SubQuery<Kind>): Data<Kind> {
+  function getOnce (query: Query.SubQuery<Kind>): Data<Kind> {
     return enforce(customGet(store.getState(), query));
   }
 
@@ -46,7 +46,7 @@ export function PrimaryStateHelper<Kind extends Query.Kind>(
   };
 }
 
-export function PrimaryStateHelperWithEnv<Kind extends Query.Kind>(
+export function PrimaryStateHelperWithEnv<Kind extends Query.Kind> (
   store: Store,
   customSet: (
     data: ApiData<Kind>,
@@ -59,7 +59,7 @@ export function PrimaryStateHelperWithEnv<Kind extends Query.Kind>(
     environment: string,
   ) => Data<Kind> | undefined,
 ): StateHelperWithEnv<Kind> {
-  function set(
+  function set (
     data: ApiData<Kind>,
     query: Query.SubQuery<Kind>,
     environment: string,
@@ -67,7 +67,7 @@ export function PrimaryStateHelperWithEnv<Kind extends Query.Kind>(
     customSet(data, query, environment);
   }
 
-  function useGetHooked(
+  function useGetHooked (
     query: Query.SubQuery<Kind>,
     environment: string,
   ): Data<Kind> {
@@ -77,13 +77,13 @@ export function PrimaryStateHelperWithEnv<Kind extends Query.Kind>(
     );
   }
 
-  function enforce(value: undefined | Data<Kind>): Data<Kind> {
-    if (typeof value === "undefined") return RemoteData.notAsked();
+  function enforce (value: undefined | Data<Kind>): Data<Kind> {
+    if (typeof value === 'undefined') return RemoteData.notAsked();
 
     return value;
   }
 
-  function getOnce(
+  function getOnce (
     query: Query.SubQuery<Kind>,
     environment: string,
   ): Data<Kind> {

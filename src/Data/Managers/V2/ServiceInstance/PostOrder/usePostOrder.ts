@@ -2,11 +2,11 @@ import {
   UseMutationOptions,
   UseMutationResult,
   useMutation,
-} from "@tanstack/react-query";
-import { ServiceOrder } from "@/Slices/Orders/Core/Query";
-import { words } from "@/UI";
-import { ComposerServiceOrderItem } from "@/UI/Components/Diagram/interfaces";
-import { usePost } from "../../helpers";
+} from '@tanstack/react-query';
+import { ServiceOrder } from '@/Slices/Orders/Core/Query';
+import { words } from '@/UI';
+import { ComposerServiceOrderItem } from '@/UI/Components/Diagram/interfaces';
+import { usePost } from '../../helpers';
 
 interface PostResponse {
   data: ServiceOrder;
@@ -28,11 +28,11 @@ export const usePostOrder = (
 
   return useMutation({
     mutationFn: (service_order_items) =>
-      post(`/lsm/v2/order`, {
+      post('/lsm/v2/order', {
         service_order_items,
-        description: words("instanceComposer.orderDescription"),
+        description: words('instanceComposer.orderDescription'),
       }),
-    mutationKey: ["post_order"],
+    mutationKey: ['post_order'],
     ...options,
   });
 };

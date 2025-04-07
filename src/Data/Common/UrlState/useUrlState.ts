@@ -1,28 +1,28 @@
-import { isObject } from "@/Core";
-import { SearchHelper } from "@/UI/Routing";
-import { provide, Location, Replace, Update, StateConfig } from "./helpers";
+import { isObject } from '@/Core';
+import { SearchHelper } from '@/UI/Routing';
+import { provide, Location, Replace, Update, StateConfig } from './helpers';
 
 const searchHelper = new SearchHelper();
 
 export const useUrlState = provide(handleUrlState);
 
-export function handleUrlState<Data>(
+export function handleUrlState<Data> (
   config: StateConfig<Data>,
   location: Location,
   replace: Replace,
 ): [Data, Update<Data>] {
   const parsedSearch = searchHelper.parse(location.search);
-  const state = getKeyOrEmpty(parsedSearch, "state");
+  const state = getKeyOrEmpty(parsedSearch, 'state');
   const routeState = getKeyOrEmpty(state, config.route);
   const candidateValue = routeState[config.key];
 
   const parsedValue =
-    typeof candidateValue !== "undefined"
+    typeof candidateValue !== 'undefined'
       ? config.parse(candidateValue)
       : candidateValue;
 
   const currentValue =
-    typeof parsedValue !== "undefined" ? parsedValue : config.default;
+    typeof parsedValue !== 'undefined' ? parsedValue : config.default;
 
   const areEqual = (a: Data, b: Data): boolean => config.equals(a, b);
 

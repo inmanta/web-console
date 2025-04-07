@@ -1,14 +1,14 @@
-import React from "react";
-import { Grid, GridItem } from "@patternfly/react-core";
-import { Diff, RemoteData } from "@/Core";
+import React from 'react';
+import { Grid, GridItem } from '@patternfly/react-core';
+import { Diff, RemoteData } from '@/Core';
 import {
   EmptyJumpToAction,
   JumpToAction,
   LoadingJumpToAction,
-} from "./JumpToAction";
-import { Versus } from "./Versus";
-import { fromResourceToItem } from "./fromResourceToItem";
-import { Refs } from "./types";
+} from './JumpToAction';
+import { Versus } from './Versus';
+import { fromResourceToItem } from './fromResourceToItem';
+import { Refs } from './types';
 
 interface Props extends Diff.Identifiers {
   data: RemoteData.RemoteData<string, Diff.Resource[]>;

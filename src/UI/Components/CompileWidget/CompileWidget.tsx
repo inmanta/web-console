@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   Dropdown,
   DropdownList,
@@ -7,8 +7,8 @@ import {
   MenuToggleAction,
   MenuToggleElement,
   DropdownItem,
-} from "@patternfly/react-core";
-import { words } from "@/UI/words";
+} from '@patternfly/react-core';
+import { words } from '@/UI/words';
 
 interface Props {
   onRecompile(): void;
@@ -72,7 +72,7 @@ const Widget: React.FC<WidgetProps> = ({
             aria-label="RecompileButton"
             isDisabled={isDisabled}
           >
-            {words("common.compileWidget.recompile")}
+            {words('common.compileWidget.recompile')}
           </MenuToggleAction>,
         ]}
         onClick={(value) => onToggle(value)}
@@ -88,7 +88,7 @@ const Widget: React.FC<WidgetProps> = ({
         onClick={onUpdateAndRecompile}
         isDisabled={isDisabled}
       >
-        {words("common.compileWidget.updateAndRecompile")}
+        {words('common.compileWidget.updateAndRecompile')}
       </DropdownItem>
     </DropdownList>
   </Dropdown>

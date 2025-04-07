@@ -5,7 +5,7 @@
 
 /* eslint-disable react-hooks/exhaustive-deps */
 
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from 'react';
 import {
   RemoteData,
   Query,
@@ -14,19 +14,19 @@ import {
   Scheduler,
   ApiHelper,
   StateHelperWithEnv,
-} from "@/Core";
-import { DependencyContext } from "@/UI";
+} from '@/Core';
+import { DependencyContext } from '@/UI';
 import {
   Data,
   GetUniqueWithEnv,
   GetDependenciesWithEnv,
   GetUrlWithEnv,
   ToUsed,
-} from "./types";
-import { usePrevious } from "./usePrevious";
-import { urlEncodeParams } from "./utils";
+} from './types';
+import { usePrevious } from './usePrevious';
+import { urlEncodeParams } from './utils';
 
-export function ContinuousWithEnv<Kind extends Query.Kind>(
+export function ContinuousWithEnv<Kind extends Query.Kind> (
   apiHelper: ApiHelper,
   stateHelper: StateHelperWithEnv<Kind>,
   scheduler: Scheduler,
@@ -36,7 +36,7 @@ export function ContinuousWithEnv<Kind extends Query.Kind>(
   getUrl: GetUrlWithEnv<Kind>,
   toUsed: ToUsed<Kind>,
 ): ContinuousQueryManager<Kind> {
-  async function update(
+  async function update (
     query: Query.SubQuery<Kind>,
     url: string,
     environment: string,
@@ -48,7 +48,7 @@ export function ContinuousWithEnv<Kind extends Query.Kind>(
     );
   }
 
-  function useContinuous(query: Query.SubQuery<Kind>): Data<Kind> {
+  function useContinuous (query: Query.SubQuery<Kind>): Data<Kind> {
     const { environmentHandler } = useContext(DependencyContext);
     const environment = environmentHandler.useId();
     const [url, setUrl] = useState(getUrl(urlEncodeParams(query), environment));
@@ -93,11 +93,11 @@ export function ContinuousWithEnv<Kind extends Query.Kind>(
     ];
   }
 
-  function matches(
+  function matches (
     query: Query.SubQuery<Kind>,
     matchingKind: QueryManagerKind,
   ): boolean {
-    return query.kind === kind && matchingKind === "Continuous";
+    return query.kind === kind && matchingKind === 'Continuous';
   }
 
   return {

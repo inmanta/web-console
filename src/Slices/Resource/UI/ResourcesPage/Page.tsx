@@ -1,26 +1,26 @@
-import React, { useContext, useEffect, useState } from "react";
-import { Flex, FlexItem } from "@patternfly/react-core";
-import { RemoteData, Resource } from "@/Core";
+import React, { useContext, useEffect, useState } from 'react';
+import { Flex, FlexItem } from '@patternfly/react-core';
+import { RemoteData, Resource } from '@/Core';
 import {
   useUrlStateWithFilter,
   useUrlStateWithPageSize,
   useUrlStateWithSort,
-} from "@/Data";
-import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
+} from '@/Data';
+import { useUrlStateWithCurrentPage } from '@/Data/Common/UrlState/useUrlStateWithCurrentPage';
 import {
   EmptyView,
   PageContainer,
   OldPaginationWidget,
   RemoteDataView,
-} from "@/UI/Components";
-import { DependencyContext } from "@/UI/Dependency";
-import { words } from "@/UI/words";
-import { ResourceTableControls } from "./Components";
-import { ResourcesTableProvider } from "./ResourcesTableProvider";
-import { Summary } from "./Summary";
+} from '@/UI/Components';
+import { DependencyContext } from '@/UI/Dependency';
+import { words } from '@/UI/words';
+import { ResourceTableControls } from './Components';
+import { ResourcesTableProvider } from './ResourcesTableProvider';
+import { Summary } from './Summary';
 
 const Wrapper: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => (
-  <PageContainer pageTitle={words("inventory.tabs.resources")}>
+  <PageContainer pageTitle={words('inventory.tabs.resources')}>
     {children}
   </PageContainer>
 );
@@ -28,28 +28,28 @@ const Wrapper: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => (
 export const Page: React.FC = () => {
   const { queryResolver } = useContext(DependencyContext);
   const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({
-    route: "Resources",
+    route: 'Resources',
   });
   const [pageSize, setPageSize] = useUrlStateWithPageSize({
-    route: "Resources",
+    route: 'Resources',
   });
   const [filter, setFilter] =
     useUrlStateWithFilter<Resource.FilterWithDefaultHandling>({
-      route: "Resources",
-      keys: { disregardDefault: "Boolean" },
+      route: 'Resources',
+      keys: { disregardDefault: 'Boolean' },
     });
   const [sort, setSort] = useUrlStateWithSort<Resource.SortKey>({
-    default: { name: "resource_type", order: "asc" },
-    route: "Resources",
+    default: { name: 'resource_type', order: 'asc' },
+    route: 'Resources',
   });
 
   const filterWithDefaults =
     !filter.disregardDefault && !filter.status
-      ? { ...filter, status: ["!orphaned"] }
+      ? { ...filter, status: ['!orphaned'] }
       : filter;
 
-  const [data, retry] = queryResolver.useContinuous<"GetResources">({
-    kind: "GetResources",
+  const [data, retry] = queryResolver.useContinuous<'GetResources'>({
+    kind: 'GetResources',
     sort,
     filter: filterWithDefaults,
     pageSize,
@@ -60,7 +60,7 @@ export const Page: React.FC = () => {
 
   //when sorting is triggered, reset the current page
   useEffect(() => {
-    setCurrentPage({ kind: "CurrentPage", value: "" });
+    setCurrentPage({ kind: 'CurrentPage', value: '' });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sort.order]);
 
@@ -96,7 +96,7 @@ export const Page: React.FC = () => {
         SuccessView={(resources) =>
           resources.data.length <= 0 ? (
             <EmptyView
-              message={words("resources.empty.message")}
+              message={words('resources.empty.message')}
               aria-label="ResourcesView-Empty"
             />
           ) : (
@@ -107,7 +107,7 @@ export const Page: React.FC = () => {
                 resources={resources.data}
                 aria-label="ResourcesView-Success"
               />
-              <Flex justifyContent={{ default: "justifyContentFlexEnd" }}>
+              <Flex justifyContent={{ default: 'justifyContentFlexEnd' }}>
                 <FlexItem>
                   <OldPaginationWidget
                     data={staleData}

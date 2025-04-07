@@ -1,16 +1,16 @@
-import React from "react";
+import React from 'react';
 import {
   DescriptionList,
   DescriptionListDescription,
   DescriptionListGroup,
   DescriptionListTerm,
   Icon,
-} from "@patternfly/react-core";
-import { ExclamationCircleIcon } from "@patternfly/react-icons";
-import { Td, Tr, Tbody } from "@patternfly/react-table";
-import { CodeHighlighter } from "@/UI/Components";
-import { words } from "@/UI/words";
-import { CompileStageReportRow } from "@S/CompileDetails/Core/Domain";
+} from '@patternfly/react-core';
+import { ExclamationCircleIcon } from '@patternfly/react-icons';
+import { Td, Tr, Tbody } from '@patternfly/react-table';
+import { CodeHighlighter } from '@/UI/Components';
+import { words } from '@/UI/words';
+import { CompileStageReportRow } from '@S/CompileDetails/Core/Domain';
 
 interface Props {
   row: CompileStageReportRow;
@@ -42,25 +42,25 @@ export const CompileStageReportTableRow: React.FC<Props> = ({
             onToggle,
           }}
         />
-        <Td dataLabel={words("compileDetails.stages.columns.name")}>
+        <Td dataLabel={words('compileDetails.stages.columns.name')}>
           {failed && (
             <Icon status="danger">
               <ExclamationCircleIcon />
             </Icon>
-          )}{" "}
+          )}{' '}
           {row.name}
         </Td>
-        <Td dataLabel={words("compileDetails.stages.columns.command")}>
+        <Td dataLabel={words('compileDetails.stages.columns.command')}>
           {row.shortCommand}
         </Td>
         <Td
-          dataLabel={words("compileDetails.stages.columns.delay")}
+          dataLabel={words('compileDetails.stages.columns.delay')}
           modifier="fitContent"
         >
           {row.startDelay}
         </Td>
         <Td
-          dataLabel={words("compileDetails.stages.columns.duration")}
+          dataLabel={words('compileDetails.stages.columns.duration')}
           modifier="fitContent"
         >
           {row.duration}
@@ -73,12 +73,12 @@ export const CompileStageReportTableRow: React.FC<Props> = ({
             isFillColumns
             style={{
               paddingTop:
-                "var(--pf-t--global--spacer--control--vertical--default",
+                'var(--pf-t--global--spacer--control--vertical--default',
             }}
           >
             <DescriptionListGroup>
               <DescriptionListTerm>
-                {words("compileDetails.stages.columns.command")}
+                {words('compileDetails.stages.columns.command')}
               </DescriptionListTerm>
               <DescriptionListDescription>
                 <CodeHighlighter
@@ -90,7 +90,7 @@ export const CompileStageReportTableRow: React.FC<Props> = ({
             </DescriptionListGroup>
             <DescriptionListGroup>
               <DescriptionListTerm>
-                {words("compileDetails.stages.columns.returnCode")}
+                {words('compileDetails.stages.columns.returnCode')}
               </DescriptionListTerm>
               <DescriptionListDescription>
                 {row.returncode as React.ReactNode}
@@ -98,7 +98,7 @@ export const CompileStageReportTableRow: React.FC<Props> = ({
             </DescriptionListGroup>
             <DescriptionListGroup>
               <DescriptionListTerm>
-                {words("compileDetails.stages.columns.outstream")}
+                {words('compileDetails.stages.columns.outstream')}
               </DescriptionListTerm>
               <DescriptionListDescription>
                 <CodeHighlighter
@@ -111,7 +111,7 @@ export const CompileStageReportTableRow: React.FC<Props> = ({
             </DescriptionListGroup>
             <DescriptionListGroup>
               <DescriptionListTerm>
-                {words("compileDetails.stages.columns.errstream")}
+                {words('compileDetails.stages.columns.errstream')}
               </DescriptionListTerm>
               <DescriptionListDescription>
                 <CodeHighlighter

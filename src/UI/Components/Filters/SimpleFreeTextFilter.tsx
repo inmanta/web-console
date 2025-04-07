@@ -1,10 +1,10 @@
-import React from "react";
+import React from 'react';
 import {
   ToolbarFilter,
   InputGroup,
   InputGroupItem,
   SearchInput,
-} from "@patternfly/react-core";
+} from '@patternfly/react-core';
 
 interface Props {
   isVisible: boolean;

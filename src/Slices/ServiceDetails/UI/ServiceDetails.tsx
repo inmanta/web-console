@@ -1,8 +1,8 @@
-import React from "react";
-import { ServiceModel } from "@/Core";
+import React from 'react';
+import { ServiceModel } from '@/Core';
 
-import { CatalogTabs } from "./Tabs";
-import { Wrapper } from "./Wrapper";
+import { CatalogTabs } from './Tabs';
+import { Wrapper } from './Wrapper';
 
 export const ServiceDetails: React.FunctionComponent<{
   serviceName: string;

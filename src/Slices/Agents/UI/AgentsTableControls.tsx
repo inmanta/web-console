@@ -1,7 +1,7 @@
-import React from "react";
-import { Toolbar, ToolbarItem, ToolbarContent } from "@patternfly/react-core";
-import { Filter } from "@S/Agents/Core/Query";
-import { AgentsFilterWidget } from "./FilterWidget/AgentsFilterWidget";
+import React from 'react';
+import { Toolbar, ToolbarItem, ToolbarContent } from '@patternfly/react-core';
+import { Filter } from '@S/Agents/Core/Query';
+import { AgentsFilterWidget } from './FilterWidget/AgentsFilterWidget';
 
 interface Props {
   filter: Filter;

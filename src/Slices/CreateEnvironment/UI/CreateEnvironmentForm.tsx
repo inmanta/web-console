@@ -1,14 +1,14 @@
-import React, { useContext, useState } from "react";
-import { Button, Flex, FlexItem, Form } from "@patternfly/react-core";
-import { Either, ProjectModel } from "@/Core";
-import { CreatableSelectInput, InlinePlainAlert } from "@/UI/Components";
-import { DependencyContext } from "@/UI/Dependency";
-import { useNavigateTo } from "@/UI/Routing";
-import { words } from "@/UI/words";
-import { CreateEnvironmentParams } from "@S/CreateEnvironment/Core/CreateEnvironmentCommand";
-import { ImageField } from "./ImageField";
-import { TextAreaField } from "./TextAreaField";
-import { TextField } from "./TextField";
+import React, { useContext, useState } from 'react';
+import { Button, Flex, FlexItem, Form } from '@patternfly/react-core';
+import { Either, ProjectModel } from '@/Core';
+import { CreatableSelectInput, InlinePlainAlert } from '@/UI/Components';
+import { DependencyContext } from '@/UI/Dependency';
+import { useNavigateTo } from '@/UI/Routing';
+import { words } from '@/UI/words';
+import { CreateEnvironmentParams } from '@S/CreateEnvironment/Core/CreateEnvironmentCommand';
+import { ImageField } from './ImageField';
+import { TextAreaField } from './TextAreaField';
+import { TextField } from './TextField';
 
 interface Props {
   projects: ProjectModel[];
@@ -21,17 +21,17 @@ export const CreateEnvironmentForm: React.FC<Props> = ({
   const { commandResolver, featureManager } = useContext(DependencyContext);
   const isLsmEnabled = featureManager.isLsmEnabled();
   const navigateTo = useNavigateTo();
-  const navigateToHome = () => navigateTo("Home", undefined);
-  const createProject = commandResolver.useGetTrigger<"CreateProject">({
-    kind: "CreateProject",
+  const navigateToHome = () => navigateTo('Home', undefined);
+  const createProject = commandResolver.useGetTrigger<'CreateProject'>({
+    kind: 'CreateProject',
   });
-  const createEnvironment = commandResolver.useGetTrigger<"CreateEnvironment">({
-    kind: "CreateEnvironment",
+  const createEnvironment = commandResolver.useGetTrigger<'CreateEnvironment'>({
+    kind: 'CreateEnvironment',
   });
   const [createEnvironmentBody, setCreateEnvironmentBody] =
-    useState<CreateEnvironmentParams>({ project_id: "", name: "" });
-  const [errorMessage, setErrorMessage] = useState("");
-  const [projectName, setProjectName] = useState<string | null>("");
+    useState<CreateEnvironmentParams>({ project_id: '', name: '' });
+  const [errorMessage, setErrorMessage] = useState('');
+  const [projectName, setProjectName] = useState<string | null>('');
   const setName = (name: string) => {
     setCreateEnvironmentBody({ ...createEnvironmentBody, name });
   };
@@ -76,7 +76,7 @@ export const CreateEnvironmentForm: React.FC<Props> = ({
         if (Either.isLeft(result)) {
           setErrorMessage(result.value);
         } else {
-          const target = isLsmEnabled ? "Catalog" : "DesiredState";
+          const target = isLsmEnabled ? 'Catalog' : 'DesiredState';
 
           navigateTo(target, undefined, `?env=${result.value.data.id}`);
         }
@@ -84,23 +84,23 @@ export const CreateEnvironmentForm: React.FC<Props> = ({
     }
   };
 
-  const onCloseAlert = () => setErrorMessage("");
+  const onCloseAlert = () => setErrorMessage('');
 
   return (
-    <Form isWidthLimited aria-label={props["aria-label"]}>
+    <Form isWidthLimited aria-label={props['aria-label']}>
       {errorMessage && (
         <InlinePlainAlert
-          aria-label={`submit-error-message`}
+          aria-label={'submit-error-message'}
           errorMessage={errorMessage}
-          closeButtonAriaLabel={`submit-close-error`}
+          closeButtonAriaLabel={'submit-close-error'}
           onCloseAlert={onCloseAlert}
         />
       )}
       <CreatableSelectInput
         isRequired
         withLabel
-        label={words("createEnv.projectName")}
-        value={projectName || ""}
+        label={words('createEnv.projectName')}
+        value={projectName || ''}
         options={projects.map((project) => project.name)}
         onCreate={createProject}
         onSelect={setProjectName}
@@ -108,27 +108,27 @@ export const CreateEnvironmentForm: React.FC<Props> = ({
       <TextField
         isRequired
         value={createEnvironmentBody.name}
-        label={words("createEnv.name")}
+        label={words('createEnv.name')}
         onChange={setName}
       />
       <TextAreaField
-        value={createEnvironmentBody.description || ""}
-        label={words("createEnv.description")}
+        value={createEnvironmentBody.description || ''}
+        label={words('createEnv.description')}
         onChange={(_event, value) => setDescription(value)}
       />
       <TextField
-        value={createEnvironmentBody.branch || ""}
-        label={words("createEnv.branch")}
+        value={createEnvironmentBody.branch || ''}
+        label={words('createEnv.branch')}
         onChange={setBranch}
       />
       <TextField
-        value={createEnvironmentBody.repository || ""}
-        label={words("createEnv.repository")}
+        value={createEnvironmentBody.repository || ''}
+        label={words('createEnv.repository')}
         onChange={setRepository}
       />
       <ImageField
-        value={createEnvironmentBody.icon || ""}
-        label={words("createEnv.icon")}
+        value={createEnvironmentBody.icon || ''}
+        label={words('createEnv.icon')}
         onChange={setIcon}
       />
       <FormControls
@@ -145,19 +145,19 @@ const FormControls: React.FC<{
   onSubmit: () => void;
   onCancel: () => void;
 }> = ({ isSubmitDisabled, onSubmit, onCancel }) => (
-  <Flex direction={{ default: "row" }} rowGap={{ default: "rowGap2xl" }}>
+  <Flex direction={{ default: 'row' }} rowGap={{ default: 'rowGap2xl' }}>
     <FlexItem>
       <Button
         aria-label="submit"
         onClick={onSubmit}
         isDisabled={isSubmitDisabled}
       >
-        {words("submit")}
+        {words('submit')}
       </Button>
     </FlexItem>
     <FlexItem>
       <Button aria-label="cancel" variant="link" onClick={onCancel}>
-        {words("cancel")}
+        {words('cancel')}
       </Button>
     </FlexItem>
   </Flex>

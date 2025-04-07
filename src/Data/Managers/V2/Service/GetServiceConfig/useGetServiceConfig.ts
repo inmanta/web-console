@@ -1,6 +1,6 @@
-import { UseQueryResult, useQuery } from "@tanstack/react-query";
-import { Config } from "@/Core";
-import { CustomError, useGet } from "../../helpers";
+import { UseQueryResult, useQuery } from '@tanstack/react-query';
+import { Config } from '@/Core';
+import { CustomError, useGet } from '../../helpers';
 
 /**
  * Return Signature of the useGetServiceConfig React Query
@@ -23,7 +23,7 @@ export const useGetServiceConfig = (service: string): GetServiceConfig => {
   return {
     useOneTime: (): UseQueryResult<Config, CustomError> =>
       useQuery({
-        queryKey: ["get_service_config-one_time", service],
+        queryKey: ['get_service_config-one_time', service],
         queryFn: () => get(`/lsm/v1/service_catalog/${service}/config`),
         select: (data) => data.data,
       }),

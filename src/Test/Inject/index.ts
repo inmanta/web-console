@@ -1,2 +1,2 @@
-export * from "./dependencies";
-export * from "./AuthTestWrapper";
+export * from './dependencies';
+export * from './AuthTestWrapper';

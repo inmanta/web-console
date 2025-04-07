@@ -1,26 +1,26 @@
-import { RefObject } from "react";
-import { dia, shapes, ui } from "@inmanta/rappid";
-import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from "@/Core";
-import { InstanceWithRelations } from "@/Data/Managers/V2/ServiceInstance";
-import { dispatchUpdateStencil } from "./Context/dispatchers";
-import { populateGraphWithDefault } from "./actions/createMode";
-import { appendInstance } from "./actions/editMode";
-import { updateAttributes } from "./actions/general";
+import { RefObject } from 'react';
+import { dia, shapes, ui } from '@inmanta/rappid';
+import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from '@/Core';
+import { InstanceWithRelations } from '@/Data/Managers/V2/ServiceInstance';
+import { dispatchUpdateStencil } from './Context/dispatchers';
+import { populateGraphWithDefault } from './actions/createMode';
+import { appendInstance } from './actions/editMode';
+import { updateAttributes } from './actions/general';
 import {
   applyCoordinatesToCells,
   getCellsCoordinates,
   getKeyAttributesNames,
   moveCellsFromColliding,
-} from "./helpers";
-import { toggleLooseElement } from "./helpers";
+} from './helpers';
+import { toggleLooseElement } from './helpers';
 import {
   ConnectionRules,
   EventActionEnum,
   SavedCoordinates,
-} from "./interfaces";
-import { ComposerPaper } from "./paper";
-import { ServiceEntityBlock } from "./shapes";
-import { toggleDisabledStencil } from "./stencil/helpers";
+} from './interfaces';
+import { ComposerPaper } from './paper';
+import { ServiceEntityBlock } from './shapes';
+import { toggleDisabledStencil } from './stencil/helpers';
 
 /**
  * Initializes the diagram.
@@ -36,7 +36,7 @@ import { toggleDisabledStencil } from "./stencil/helpers";
  *
  * @returns {DiagramHandlers} An object containing handlers for various diagram actions.
  */
-export function diagramInit(
+export function diagramInit (
   canvasRef: RefObject<HTMLDivElement>,
   setScroller,
   connectionRules: ConnectionRules,
@@ -55,7 +55,7 @@ export function diagramInit(
 
   const scroller = new ui.PaperScroller({
     paper,
-    cursor: "grab",
+    cursor: 'grab',
     baseWidth: 1000,
     baseHeight: 1000,
     inertia: { friction: 0.8 },
@@ -63,7 +63,7 @@ export function diagramInit(
     contentOptions: function () {
       return {
         useModelGeometry: true,
-        allowNewOrigin: "any",
+        allowNewOrigin: 'any',
         padding: 40,
         allowNegativeBottomRight: true,
       };
@@ -73,30 +73,30 @@ export function diagramInit(
   setScroller(scroller);
 
   //trigger highlighter when user drag element from stencil
-  graph.on("add", function (cell) {
+  graph.on('add', function (cell) {
     //if it's a link, we don't want to assert any highlighting, if the canvas is not editable then there shouldn't be any highlighting in the first place as there are no loose elements by default and no way to add them
-    if (cell.get("type") === "Link" || !editable) {
+    if (cell.get('type') === 'Link' || !editable) {
       return;
     }
 
     const paperRepresentation = paper.findViewByModel(cell);
 
-    if (!cell.get("isCore") && paperRepresentation) {
+    if (!cell.get('isCore') && paperRepresentation) {
       toggleLooseElement(paperRepresentation, EventActionEnum.ADD);
     }
   });
 
   //programmatically trigger link:connect event, when we connect elements not by user interaction
-  graph.on("link:connect", (link: dia.Link) => {
+  graph.on('link:connect', (link: dia.Link) => {
     const linkView = paper.findViewByModel(link);
 
     if (linkView) {
-      paper.trigger("link:connect", linkView);
+      paper.trigger('link:connect', linkView);
     }
   });
 
   paper.on(
-    "blank:pointerdown",
+    'blank:pointerdown',
     (evt: dia.Event) => evt && scroller.startPanning(evt),
   );
 
@@ -107,8 +107,8 @@ export function diagramInit(
   scroller.centerContent();
 
   new ui.Tooltip({
-    rootTarget: ".canvas",
-    target: "[data-tooltip]",
+    rootTarget: '.canvas',
+    target: '[data-tooltip]',
     padding: 20,
   });
 
@@ -119,18 +119,18 @@ export function diagramInit(
     loadState: (graphJSON: any) => {
       graph.fromJSON(graphJSON);
       graph.getCells().forEach((cell) => {
-        if (cell.get("type") !== "Link") {
+        if (cell.get('type') !== 'Link') {
           const copy = graphJSON.cells.find((c) => c.id === cell.id);
-          const stencilName = cell.get("stencilName");
+          const stencilName = cell.get('stencilName');
 
-          if (cell.get("isEmbeddedEntity")) {
-            dispatchUpdateStencil(cell.get("entityName"));
+          if (cell.get('isEmbeddedEntity')) {
+            dispatchUpdateStencil(cell.get('entityName'));
           }
 
           if (stencilName) {
             toggleDisabledStencil(stencilName, true);
           }
-          cell.set("items", copy.items); // converted cells lacks "items" attribute
+          cell.set('items', copy.items); // converted cells lacks "items" attribute
         }
       });
     },
@@ -155,7 +155,7 @@ export function diagramInit(
         cells = graph
           .getCells()
           .filter(
-            (cell) => cell.get("type") !== "Link",
+            (cell) => cell.get('type') !== 'Link',
           ) as ServiceEntityBlock[];
       } else {
         cells = appendInstance(paper, graph, instance, services);
@@ -168,7 +168,7 @@ export function diagramInit(
             instance.instance.metadata.coordinates,
           );
 
-          if (parsedCoordinates.version === "v2") {
+          if (parsedCoordinates.version === 'v2') {
             applyCoordinatesToCells(graph, parsedCoordinates.data);
           }
 
@@ -194,7 +194,7 @@ export function diagramInit(
       const keyAttributes = getKeyAttributesNames(serviceModel);
 
       //line below resolves issue that appendColumns did update values in the model, but visual representation wasn't updated
-      cellView.model.set("items", []);
+      cellView.model.set('items', []);
       updateAttributes(
         cellView.model as ServiceEntityBlock,
         keyAttributes,

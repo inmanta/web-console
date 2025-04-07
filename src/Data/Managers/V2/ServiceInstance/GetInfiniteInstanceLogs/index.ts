@@ -1,1 +1,1 @@
-export * from "./useGetInfiniteInstanceLogs";
+export * from './useGetInfiniteInstanceLogs';

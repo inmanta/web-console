@@ -4,8 +4,8 @@ import {
   Store as _Store,
   State as _State,
   Dispatch as _Dispatch,
-} from "easy-peasy";
-import { StoreModel, storeModel } from "./Store";
+} from 'easy-peasy';
+import { StoreModel, storeModel } from './Store';
 
 export const { useStoreState } = createTypedHooks<StoreModel>();
 

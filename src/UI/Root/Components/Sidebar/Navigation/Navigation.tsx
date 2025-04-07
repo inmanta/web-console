@@ -1,13 +1,13 @@
-import React, { useContext } from "react";
-import { Nav, NavGroup } from "@patternfly/react-core";
-import { DependencyContext } from "@/UI/Dependency";
+import React, { useContext } from 'react';
+import { Nav, NavGroup } from '@patternfly/react-core';
+import { DependencyContext } from '@/UI/Dependency';
 import {
   envrionment,
   lifecycleServiceManager,
   orchestrationEngine,
   resourceManager,
-} from "./Group";
-import { NavigationItem } from "./NavigationItem";
+} from './Group';
+import { NavigationItem } from './NavigationItem';
 
 /**
  * Navigation component
@@ -20,7 +20,7 @@ export const Navigation: React.FC<{ environment: string | undefined }> = ({
 }) => {
   const { featureManager, routeManager } = useContext(DependencyContext);
 
-  const isEnvPresent = typeof environment !== "undefined";
+  const isEnvPresent = typeof environment !== 'undefined';
   const groups = [
     envrionment(routeManager, isEnvPresent),
     ...(featureManager.isLsmEnabled()

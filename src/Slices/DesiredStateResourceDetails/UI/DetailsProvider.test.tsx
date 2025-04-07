@@ -1,18 +1,18 @@
-import React, { act } from "react";
-import { MemoryRouter } from "react-router-dom";
-import { render, screen } from "@testing-library/react";
-import { StoreProvider } from "easy-peasy";
-import { configureAxe, toHaveNoViolations } from "jest-axe";
-import { Either } from "@/Core";
+import React, { act } from 'react';
+import { MemoryRouter } from 'react-router-dom';
+import { render, screen } from '@testing-library/react';
+import { StoreProvider } from 'easy-peasy';
+import { configureAxe, toHaveNoViolations } from 'jest-axe';
+import { Either } from '@/Core';
 import {
   getStoreInstance,
   QueryManagerResolverImpl,
   QueryResolverImpl,
-} from "@/Data";
-import { DeferredApiHelper, dependencies, StaticScheduler } from "@/Test";
-import { DependencyProvider } from "@/UI/Dependency";
-import * as VersionedResourceDetails from "@S/DesiredStateResourceDetails/Data/Mock";
-import { DetailsProvider } from "./DetailsProvider";
+} from '@/Data';
+import { DeferredApiHelper, dependencies, StaticScheduler } from '@/Test';
+import { DependencyProvider } from '@/UI/Dependency';
+import * as VersionedResourceDetails from '@S/DesiredStateResourceDetails/Data/Mock';
+import { DetailsProvider } from './DetailsProvider';
 
 expect.extend(toHaveNoViolations);
 
@@ -23,7 +23,7 @@ const axe = configureAxe({
   },
 });
 
-function setup() {
+function setup () {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
@@ -44,15 +44,15 @@ function setup() {
   return { component, apiHelper, scheduler };
 }
 
-test("GIVEN DesiredStateResourceDetails page WHEN api returns details THEN shows details", async () => {
+test('GIVEN DesiredStateResourceDetails page WHEN api returns details THEN shows details', async () => {
   const { component, apiHelper } = setup();
 
   render(component);
   expect(apiHelper.pendingRequests).toEqual([
     {
-      method: "GET",
-      url: `/api/v2/desiredstate/123/resource/abc`,
-      environment: "env",
+      method: 'GET',
+      url: '/api/v2/desiredstate/123/resource/abc',
+      environment: 'env',
     },
   ]);
 
@@ -61,9 +61,9 @@ test("GIVEN DesiredStateResourceDetails page WHEN api returns details THEN shows
   });
 
   expect(
-    screen.getByRole("generic", { name: "ResourceDetails-Success" }),
+    screen.getByRole('generic', { name: 'ResourceDetails-Success' }),
   ).toBeVisible();
-  expect(screen.getByText("requires")).toBeVisible();
+  expect(screen.getByText('requires')).toBeVisible();
 
   await act(async () => {
     const results = await axe(document.body);

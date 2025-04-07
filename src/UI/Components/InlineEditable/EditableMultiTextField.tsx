@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import {
   DescriptionList,
   DescriptionListDescription,
@@ -7,16 +7,16 @@ import {
   Flex,
   FlexItem,
   TextInput,
-} from "@patternfly/react-core";
-import { Maybe } from "@/Core";
-import { convertToTitleCase } from "@/UI/Utils";
+} from '@patternfly/react-core';
+import { Maybe } from '@/Core';
+import { convertToTitleCase } from '@/UI/Utils';
 import {
   CancelEditButton,
   EnableEditButton,
   SubmitEditButton,
-} from "./InlineEditButtons";
-import { InlineValue } from "./InlineFillers";
-import { InlinePlainAlert } from "./InlinePlainAlert";
+} from './InlineEditButtons';
+import { InlineValue } from './InlineFillers';
+import { InlinePlainAlert } from './InlinePlainAlert';
 
 interface Props {
   groupName: string;
@@ -35,7 +35,7 @@ export const EditableMultiTextField: React.FC<Props> = ({
 }) => {
   const [editable, setEditable] = useState(initiallyEditable);
   const [fieldValues, setFieldValues] = useState(initialValues);
-  const [submitError, setSubmitError] = useState("");
+  const [submitError, setSubmitError] = useState('');
   const onSubmitRequest = async (values: Record<string, string>) => {
     setEditable(false);
     const error = await onSubmit(values);
@@ -45,19 +45,19 @@ export const EditableMultiTextField: React.FC<Props> = ({
     }
   };
   const onKeyDown = (event) => {
-    if (event.key && event.key !== "Enter") return;
+    if (event.key && event.key !== 'Enter') return;
     onSubmitRequest(fieldValues);
   };
   const onEditClick = () => {
     setEditable(true);
-    setSubmitError("");
+    setSubmitError('');
   };
   const onSubmitClick = () => onSubmitRequest(fieldValues);
   const onCancelEditClick = () => {
     setEditable(false);
     setFieldValues(initialValues);
   };
-  const onCloseAlert = () => setSubmitError("");
+  const onCloseAlert = () => setSubmitError('');
   const onChange = (label: string) => (input: string) => {
     const updated = { ...fieldValues };
 
@@ -114,8 +114,8 @@ export const EditableMultiTextField: React.FC<Props> = ({
                   </InlineValue>
                 )}
                 {editable && (
-                  <Flex spaceItems={{ default: "spaceItemsNone" }}>
-                    <FlexItem grow={{ default: "grow" }}>
+                  <Flex spaceItems={{ default: 'spaceItemsNone' }}>
+                    <FlexItem grow={{ default: 'grow' }}>
                       <TextInput
                         aria-label={`${label}-input`}
                         value={value}

@@ -1,14 +1,14 @@
-import React from "react";
+import React from 'react';
 import {
   Button,
   EmptyState,
   EmptyStateBody,
   EmptyStateFooter,
-} from "@patternfly/react-core";
-import { ExclamationTriangleIcon } from "@patternfly/react-icons";
-import styled from "styled-components";
-import { Delayed } from "@/UI/Utils";
-import { words } from "@/UI/words";
+} from '@patternfly/react-core';
+import { ExclamationTriangleIcon } from '@patternfly/react-icons';
+import styled from 'styled-components';
+import { Delayed } from '@/UI/Utils';
+import { words } from '@/UI/words';
 
 interface Props {
   message: string;
@@ -31,7 +31,7 @@ export const ErrorView: React.FC<Props> = ({
       <EmptyState
         headingLevel="h2"
         icon={ExclamationTriangleIcon}
-        titleText={<>{title || words("error")}</>}
+        titleText={<>{title || words('error')}</>}
         {...props}
         aria-label={ariaLabel}
         role="region"
@@ -42,7 +42,7 @@ export const ErrorView: React.FC<Props> = ({
         <EmptyStateFooter>
           {retry && (
             <Button variant="primary" onClick={retry}>
-              {words("retry")}
+              {words('retry')}
             </Button>
           )}
         </EmptyStateFooter>

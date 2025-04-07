@@ -1,13 +1,13 @@
-import React, { useContext, useState } from "react";
-import { Bullseye, Button, Grid, GridItem } from "@patternfly/react-core";
-import styled from "styled-components";
-import { Diff, Either, RemoteData } from "@/Core";
-import { EntryInfo } from "@/UI/Components/DiffWizard/types";
-import { DependencyContext } from "@/UI/Dependency";
-import { words } from "@/UI/words";
-import { DefaultEntry } from "./DefaultEntry";
-import { DiffView } from "./DiffView";
-import { Title } from "./utils";
+import React, { useContext, useState } from 'react';
+import { Bullseye, Button, Grid, GridItem } from '@patternfly/react-core';
+import styled from 'styled-components';
+import { Diff, Either, RemoteData } from '@/Core';
+import { EntryInfo } from '@/UI/Components/DiffWizard/types';
+import { DependencyContext } from '@/UI/Dependency';
+import { words } from '@/UI/words';
+import { DefaultEntry } from './DefaultEntry';
+import { DiffView } from './DiffView';
+import { Title } from './utils';
 
 export const FileEntry: React.FC<EntryInfo> = ({
   title,
@@ -24,10 +24,10 @@ export const FileEntry: React.FC<EntryInfo> = ({
     const [from, to] = await Promise.all([
       fromValue.length > 0
         ? fileFetcher.get(fromValue)
-        : Promise.resolve(Either.right("")),
+        : Promise.resolve(Either.right('')),
       toValue.length > 0
         ? fileFetcher.get(toValue)
-        : Promise.resolve(Either.right("")),
+        : Promise.resolve(Either.right('')),
     ]);
 
     if (Either.isLeft(from)) return setFiles(RemoteData.failed(from.value));
@@ -43,7 +43,7 @@ export const FileEntry: React.FC<EntryInfo> = ({
       <DefaultEntry {...{ title, fromValue, toValue }} />
       <Grid>
         <GridItem span={2}>
-          <Title>{words("desiredState.compare.file.attributeLabel")}</Title>
+          <Title>{words('desiredState.compare.file.attributeLabel')}</Title>
         </GridItem>
         <GridItem span={10}>
           {RemoteData.fold(
@@ -70,10 +70,10 @@ const DefaultView: React.FC<{ isLoading?: boolean; onShow(): void }> = ({
       variant="link"
       isInline
       onClick={onShow}
-      style={{ lineHeight: "29px" }}
+      style={{ lineHeight: '29px' }}
       isDisabled={isLoading}
     >
-      {words("desiredState.compare.file.show")}
+      {words('desiredState.compare.file.show')}
     </Button>
   </Message>
 );
@@ -84,9 +84,9 @@ const FailedView: React.FC<{ error: string; onShow(): void }> = ({
 }) => (
   <ErrorMessage aria-label="ErrorDiffView">
     <p>
-      {words("error")}
+      {words('error')}
       <RetryButton variant="link" isInline onClick={onShow}>
-        {words("retry")}
+        {words('retry')}
       </RetryButton>
     </p>
     <div>{error}</div>
@@ -101,7 +101,7 @@ const SuccessView: React.FC<{
     <div>
       <Message>
         <StyledButton variant="link" isInline onClick={onHide}>
-          {words("desiredState.compare.file.hide")}
+          {words('desiredState.compare.file.hide')}
         </StyledButton>
       </Message>
     </div>

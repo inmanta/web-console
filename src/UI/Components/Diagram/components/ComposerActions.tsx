@@ -1,18 +1,18 @@
-import React, { useCallback, useContext, useState } from "react";
-import "@inmanta/rappid/joint-plus.css";
-import { useLocation, useNavigate } from "react-router-dom";
-import { AlertVariant, Button, Flex, FlexItem } from "@patternfly/react-core";
+import React, { useCallback, useContext, useState } from 'react';
+import '@inmanta/rappid/joint-plus.css';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { AlertVariant, Button, Flex, FlexItem } from '@patternfly/react-core';
 import {
   usePostMetadata,
   usePostOrder,
-} from "@/Data/Managers/V2/ServiceInstance";
-import { ServiceOrder } from "@/Slices/Orders/Core/Query";
-import { DependencyContext } from "@/UI/Dependency";
-import { words } from "@/UI/words";
-import { ToastAlert } from "../../ToastAlert";
-import { CanvasContext, InstanceComposerContext } from "../Context/Context";
-import { getServiceOrderItems } from "../helpers";
-import { SavedCoordinates } from "../interfaces";
+} from '@/Data/Managers/V2/ServiceInstance';
+import { ServiceOrder } from '@/Slices/Orders/Core/Query';
+import { DependencyContext } from '@/UI/Dependency';
+import { words } from '@/UI/words';
+import { ToastAlert } from '../../ToastAlert';
+import { CanvasContext, InstanceComposerContext } from '../Context/Context';
+import { getServiceOrderItems } from '../helpers';
+import { SavedCoordinates } from '../interfaces';
 
 /**
  * Properties for the ComposerActions component.
@@ -53,14 +53,14 @@ export const ComposerActions: React.FC<Props> = ({ serviceName, editable }) => {
   } = useContext(CanvasContext);
   const { routeManager } = useContext(DependencyContext);
 
-  const [alertMessage, setAlertMessage] = useState("");
+  const [alertMessage, setAlertMessage] = useState('');
   const [alertType, setAlertType] = useState(AlertVariant.danger);
   const location = useLocation();
 
   const metadataMutation = usePostMetadata();
   const orderMutation = usePostOrder({
     onSuccess: (response: { data: ServiceOrder }) => {
-      const newUrl = routeManager.getUrl("OrderDetails", {
+      const newUrl = routeManager.getUrl('OrderDetails', {
         id: response.data.id,
       });
 
@@ -73,7 +73,7 @@ export const ComposerActions: React.FC<Props> = ({ serviceName, editable }) => {
   });
 
   const navigate = useNavigate();
-  const url = routeManager.useUrl("Inventory", {
+  const url = routeManager.useUrl('Inventory', {
     service: serviceName,
   });
   const handleRedirect = useCallback(() => navigate(url), [navigate, url]);
@@ -88,7 +88,7 @@ export const ComposerActions: React.FC<Props> = ({ serviceName, editable }) => {
     if (!diagramHandlers) {
       setAlertType(AlertVariant.danger);
       setAlertMessage(
-        words("instanceComposer.errorMessage.coordinatesRequest"),
+        words('instanceComposer.errorMessage.coordinatesRequest'),
       );
     } else {
       coordinates = diagramHandlers.getCoordinates();
@@ -100,7 +100,7 @@ export const ComposerActions: React.FC<Props> = ({ serviceName, editable }) => {
         ...instance,
         metadata: {
           coordinates: JSON.stringify({
-            version: "v2",
+            version: 'v2',
             data: coordinates,
           }),
         },
@@ -112,11 +112,11 @@ export const ComposerActions: React.FC<Props> = ({ serviceName, editable }) => {
       metadataMutation.mutate({
         service_entity: mainService.name,
         service_id: instance.instance.id,
-        key: "coordinates",
+        key: 'coordinates',
         body: {
           current_version: instance.instance.version,
           value: JSON.stringify({
-            version: "v2",
+            version: 'v2',
             data: coordinates,
           }),
         },
@@ -137,17 +137,17 @@ export const ComposerActions: React.FC<Props> = ({ serviceName, editable }) => {
   return (
     <Flex
       justifyContent={{
-        default: "justifyContentFlexEnd",
+        default: 'justifyContentFlexEnd',
       }}
-      alignItems={{ default: "alignItemsFlexEnd" }}
+      alignItems={{ default: 'alignItemsFlexEnd' }}
     >
       {alertMessage && (
         <ToastAlert
           data-testid="ToastAlert"
           title={
             alertType === AlertVariant.success
-              ? words("instanceComposer.success.title")
-              : words("instanceComposer.failed.title")
+              ? words('instanceComposer.success.title')
+              : words('instanceComposer.failed.title')
           }
           message={alertMessage}
           setMessage={setAlertMessage}
@@ -156,11 +156,11 @@ export const ComposerActions: React.FC<Props> = ({ serviceName, editable }) => {
       )}
       <FlexItem>
         <Flex
-          spacer={{ default: "spacerMd" }}
-          alignItems={{ default: "alignItemsCenter" }}
+          spacer={{ default: 'spacerMd' }}
+          alignItems={{ default: 'alignItemsCenter' }}
         >
           <Button variant="tertiary" width={200} onClick={handleRedirect}>
-            {words("cancel")}
+            {words('cancel')}
           </Button>
           <Button
             variant="primary"
@@ -174,7 +174,7 @@ export const ComposerActions: React.FC<Props> = ({ serviceName, editable }) => {
               missingInterServiceRelations.length > 0
             }
           >
-            {words("deploy")}
+            {words('deploy')}
           </Button>
         </Flex>
       </FlexItem>

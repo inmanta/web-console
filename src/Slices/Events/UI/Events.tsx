@@ -1,11 +1,11 @@
-import React, { useContext, useEffect } from "react";
-import { ServiceModel } from "@/Core";
+import React, { useContext, useEffect } from 'react';
+import { ServiceModel } from '@/Core';
 import {
   useUrlStateWithFilter,
   useUrlStateWithPageSize,
   useUrlStateWithSort,
-} from "@/Data";
-import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
+} from '@/Data';
+import { useUrlStateWithCurrentPage } from '@/Data/Common/UrlState/useUrlStateWithCurrentPage';
 import {
   EventsTablePresenter,
   EventsTableWrapper,
@@ -13,11 +13,11 @@ import {
   EventsTableBody,
   OldPaginationWidget,
   RemoteDataView,
-} from "@/UI/Components";
-import { DependencyContext } from "@/UI/Dependency";
-import { words } from "@/UI/words";
-import { Filter } from "@S/Events/Core/Query";
-import { EventsTableControls } from "./EventsTableControls";
+} from '@/UI/Components';
+import { DependencyContext } from '@/UI/Dependency';
+import { words } from '@/UI/words';
+import { Filter } from '@S/Events/Core/Query';
+import { EventsTableControls } from './EventsTableControls';
 
 interface Props {
   service: ServiceModel;
@@ -28,19 +28,19 @@ export const Events: React.FC<Props> = ({ service, instanceId }) => {
   const { queryResolver } = useContext(DependencyContext);
 
   const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({
-    route: "Events",
+    route: 'Events',
   });
   const [sort, setSort] = useUrlStateWithSort<string>({
-    default: { name: "timestamp", order: "desc" },
-    route: "Events",
+    default: { name: 'timestamp', order: 'desc' },
+    route: 'Events',
   });
   const [filter, setFilter] = useUrlStateWithFilter<Filter>({
-    route: "Events",
-    keys: { timestamp: "DateRange" },
+    route: 'Events',
+    keys: { timestamp: 'DateRange' },
   });
-  const [pageSize, setPageSize] = useUrlStateWithPageSize({ route: "Events" });
-  const [data] = queryResolver.useContinuous<"GetInstanceEvents">({
-    kind: "GetInstanceEvents",
+  const [pageSize, setPageSize] = useUrlStateWithPageSize({ route: 'Events' });
+  const [data] = queryResolver.useContinuous<'GetInstanceEvents'>({
+    kind: 'GetInstanceEvents',
     id: instanceId,
     service_entity: service.name,
     filter,
@@ -53,7 +53,7 @@ export const Events: React.FC<Props> = ({ service, instanceId }) => {
 
   //when sorting is triggered, reset the current page
   useEffect(() => {
-    setCurrentPage({ kind: "CurrentPage", value: "" });
+    setCurrentPage({ kind: 'CurrentPage', value: '' });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sort.order]);
 
@@ -78,8 +78,8 @@ export const Events: React.FC<Props> = ({ service, instanceId }) => {
         SuccessView={(events) =>
           events.data.length === 0 ? (
             <EmptyView
-              title={words("events.empty.title")}
-              message={words("events.empty.body")}
+              title={words('events.empty.title')}
+              message={words('events.empty.body')}
               aria-label="EventTable-Empty"
             />
           ) : (

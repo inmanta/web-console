@@ -1,5 +1,5 @@
-import { useContext } from "react";
-import { DependencyContext } from "@/UI";
+import { useContext } from 'react';
+import { DependencyContext } from '@/UI';
 
 export interface CustomError extends Error {
   status?: number;
@@ -20,7 +20,7 @@ export const useFetchHelpers = () => {
    * @param customErrorMessage - Optional custom error message.
    * @throws An error with the error message from the API response.
    */
-  async function handleErrors(response: Response, customErrorMessage?: string) {
+  async function handleErrors (response: Response, customErrorMessage?: string) {
     if (response.status === 401 || response.status === 403) {
       authHelper.login();
     }
@@ -41,20 +41,20 @@ export const useFetchHelpers = () => {
    * @param env - The environment identifier.
    * @returns The headers object.
    */
-  function createHeaders(options?: { env?: string; message?: string }) {
+  function createHeaders (options?: { env?: string; message?: string }) {
     const { env, message } = options || {};
     const headers = new Headers();
 
     if (env) {
-      headers.append("X-Inmanta-Tid", env);
+      headers.append('X-Inmanta-Tid', env);
     }
 
     if (!!authHelper.getToken()) {
-      headers.append("Authorization", `Bearer ${authHelper.getToken()}`);
+      headers.append('Authorization', `Bearer ${authHelper.getToken()}`);
     }
 
     if (message) {
-      headers.append("message", message);
+      headers.append('message', message);
     }
 
     return headers;

@@ -1,1 +1,1 @@
-export * as Notification from "./Core/Route";
+export * as Notification from './Core/Route';

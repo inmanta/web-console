@@ -1,17 +1,17 @@
-import React, { useContext, useRef } from "react";
-import { TabContentBody, Tooltip } from "@patternfly/react-core";
-import { CogIcon, InfoCircleIcon, KeyIcon } from "@patternfly/react-icons";
-import { ErrorView, IconTabs, TabDescriptor } from "@/UI/Components";
-import { DependencyContext } from "@/UI/Dependency";
-import { words } from "@/UI/words";
-import { ConfigurationTab } from "./Configuration";
-import { EnvironmentTab } from "./Environment";
-import { TokenTab } from "./Token";
+import React, { useContext, useRef } from 'react';
+import { TabContentBody, Tooltip } from '@patternfly/react-core';
+import { CogIcon, InfoCircleIcon, KeyIcon } from '@patternfly/react-icons';
+import { ErrorView, IconTabs, TabDescriptor } from '@/UI/Components';
+import { DependencyContext } from '@/UI/Dependency';
+import { words } from '@/UI/words';
+import { ConfigurationTab } from './Configuration';
+import { EnvironmentTab } from './Environment';
+import { TokenTab } from './Token';
 
 export enum TabKey {
-  Environment = "Environment",
-  Configuration = "Configuration",
-  Tokens = "Tokens",
+  Environment = 'Environment',
+  Configuration = 'Configuration',
+  Tokens = 'Tokens',
 }
 
 interface Props {
@@ -29,7 +29,7 @@ export const Tabs: React.FC<Props> = ({ activeTab, setActiveTab }) => {
     return (
       <ErrorView
         ariaLabel="Environment-Failed"
-        message={words("error.environment.missing")}
+        message={words('error.environment.missing')}
       />
     );
   }
@@ -47,7 +47,7 @@ export const Tabs: React.FC<Props> = ({ activeTab, setActiveTab }) => {
       />
       {tokenTabDisabled && (
         <Tooltip
-          content={words("settings.tabs.token.disabledInfo")}
+          content={words('settings.tabs.token.disabledInfo')}
           triggerRef={tokenTooltipRef}
         />
       )}
@@ -57,7 +57,7 @@ export const Tabs: React.FC<Props> = ({ activeTab, setActiveTab }) => {
 
 const environmentTab = (): TabDescriptor<TabKey> => ({
   id: TabKey.Environment,
-  title: words("settings.tabs.environment"),
+  title: words('settings.tabs.environment'),
   icon: <InfoCircleIcon />,
   view: (
     <TabContentBody hasPadding>
@@ -68,7 +68,7 @@ const environmentTab = (): TabDescriptor<TabKey> => ({
 
 const configurationTab = (environmentId: string): TabDescriptor<TabKey> => ({
   id: TabKey.Configuration,
-  title: words("settings.tabs.configuration"),
+  title: words('settings.tabs.configuration'),
   icon: <CogIcon />,
   view: <ConfigurationTab environmentId={environmentId} />,
 });
@@ -78,7 +78,7 @@ const tokensTab = (
   ref: React.MutableRefObject<HTMLElement | undefined>,
 ): TabDescriptor<TabKey> => ({
   id: TabKey.Tokens,
-  title: words("settings.tabs.tokens"),
+  title: words('settings.tabs.tokens'),
   icon: <KeyIcon />,
   view: <TokenTab />,
   isDisabled,

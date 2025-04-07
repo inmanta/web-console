@@ -1,12 +1,12 @@
-import React from "react";
-import { Flex, FlexItem, Title } from "@patternfly/react-core";
-import { BackendMetricData } from "../Core/Domain";
-import { GraphCard } from "./GraphCard";
-import { NumericCard } from "./NumericCard";
+import React from 'react';
+import { Flex, FlexItem, Title } from '@patternfly/react-core';
+import { BackendMetricData } from '../Core/Domain';
+import { GraphCard } from './GraphCard';
+import { NumericCard } from './NumericCard';
 
 interface Props {
   title: string;
-  metricType: "lsm" | "orchestrator" | "resource";
+  metricType: 'lsm' | 'orchestrator' | 'resource';
   metrics: BackendMetricData;
 }
 
@@ -19,17 +19,17 @@ export const Section: React.FC<Props> = ({ title, metricType, metrics }) => {
     <FlexItem>
       <Title
         headingLevel="h2"
-        style={{ paddingBottom: "20px", fontWeight: 700 }}
+        style={{ paddingBottom: '20px', fontWeight: 700 }}
         size="xl"
       >
         {title}
       </Title>
       <Flex
-        direction={{ default: "column" }}
-        spaceItems={{ default: "spaceItemsXl" }}
+        direction={{ default: 'column' }}
+        spaceItems={{ default: 'spaceItemsXl' }}
       >
         {availableKeys.map((key, index) =>
-          key.includes("service_count") ? (
+          key.includes('service_count') ? (
             <FlexItem key={`flex-card${key}-${index}`}>
               <NumericCard
                 metrics={{
@@ -40,14 +40,14 @@ export const Section: React.FC<Props> = ({ title, metricType, metrics }) => {
             </FlexItem>
           ) : (
             <FlexItem
-              fullWidth={{ default: "fullWidth" }}
+              fullWidth={{ default: 'fullWidth' }}
               key={`flex-card${key}-${index}`}
             >
               <GraphCard
                 isStacked={
-                  key.includes("resource_count") ||
-                  key.includes("agent_count") ||
-                  key.includes("service_instance_count")
+                  key.includes('resource_count') ||
+                  key.includes('agent_count') ||
+                  key.includes('service_instance_count')
                 }
                 timestamps={metrics.timestamps}
                 metrics={{

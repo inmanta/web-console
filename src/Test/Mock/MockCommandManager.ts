@@ -1,10 +1,10 @@
-import { CommandManager, Command } from "@/Core";
+import { CommandManager, Command } from '@/Core';
 
 export class MockCommandManager implements CommandManager {
-  matches(): boolean {
+  matches (): boolean {
     return true;
   }
-  useGetTrigger(): Command.Trigger<Command.Kind> {
+  useGetTrigger (): Command.Trigger<Command.Kind> {
     //with removed one of types undefined became highlighted by the tsc.
     // I decided the easiest approach is to temporarily type it as any as we are in the process to get rid of the Command Manager completely
 

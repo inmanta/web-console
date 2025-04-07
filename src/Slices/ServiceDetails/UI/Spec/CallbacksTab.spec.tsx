@@ -1,17 +1,17 @@
-import React, { act } from "react";
-import { MemoryRouter, Route, Routes } from "react-router-dom";
-import { QueryClientProvider } from "@tanstack/react-query";
-import { render, screen } from "@testing-library/react";
-import { userEvent } from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
-import { HttpResponse, http } from "msw";
-import { setupServer } from "msw/node";
-import { Either, getShortUuidFromRaw } from "@/Core";
+import React, { act } from 'react';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { render, screen } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
+import { StoreProvider } from 'easy-peasy';
+import { HttpResponse, http } from 'msw';
+import { setupServer } from 'msw/node';
+import { Either, getShortUuidFromRaw } from '@/Core';
 import {
   QueryResolverImpl,
   CommandResolverImpl,
   getStoreInstance,
-} from "@/Data";
+} from '@/Data';
 import {
   DynamicCommandManagerResolverImpl,
   DynamicQueryManagerResolverImpl,
@@ -19,21 +19,21 @@ import {
   Callback,
   DeferredApiHelper,
   dependencies,
-} from "@/Test";
-import { testClient } from "@/Test/Utils/react-query-setup";
-import { DependencyProvider } from "@/UI/Dependency";
+} from '@/Test';
+import { testClient } from '@/Test/Utils/react-query-setup';
+import { DependencyProvider } from '@/UI/Dependency';
 import {
   CallbacksQueryManager,
   CallbacksStateHelper,
   CallbacksUpdater,
   CreateCallbackCommandManager,
   DeleteCallbackCommandManager,
-} from "@S/ServiceDetails/Data";
-import { Page } from "@S/ServiceDetails/UI/Page";
+} from '@S/ServiceDetails/Data';
+import { Page } from '@S/ServiceDetails/UI/Page';
 
 const server = setupServer();
 
-function setup() {
+function setup () {
   const store = getStoreInstance();
   const apiHelper = new DeferredApiHelper();
 
@@ -86,9 +86,9 @@ function setup() {
   };
 }
 
-test("GIVEN ServiceDetails WHEN click on callbacks tab THEN shows callbacks tab", async () => {
+test('GIVEN ServiceDetails WHEN click on callbacks tab THEN shows callbacks tab', async () => {
   server.use(
-    http.get("/lsm/v1/service_catalog/service_name_a", () => {
+    http.get('/lsm/v1/service_catalog/service_name_a', () => {
       return HttpResponse.json({ data: Service.a });
     }),
   );
@@ -99,12 +99,12 @@ test("GIVEN ServiceDetails WHEN click on callbacks tab THEN shows callbacks tab"
 
   render(component);
 
-  const callbacksButton = await screen.findByRole("tab", { name: "Callbacks" });
+  const callbacksButton = await screen.findByRole('tab', { name: 'Callbacks' });
 
   await userEvent.click(callbacksButton);
 
   expect(
-    screen.getByRole("region", { name: "Callbacks-Loading" }),
+    screen.getByRole('region', { name: 'Callbacks-Loading' }),
   ).toBeVisible();
 
   await act(async () => {
@@ -112,10 +112,10 @@ test("GIVEN ServiceDetails WHEN click on callbacks tab THEN shows callbacks tab"
   });
 
   expect(
-    await screen.findByRole("grid", { name: "CallbacksTable" }),
+    await screen.findByRole('grid', { name: 'CallbacksTable' }),
   ).toBeVisible();
   expect(
-    screen.getByRole("row", { name: "CallbackRow-" + shortenUUID }),
+    screen.getByRole('row', { name: 'CallbackRow-' + shortenUUID }),
   ).toBeVisible();
 
   server.close();

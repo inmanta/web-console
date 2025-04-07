@@ -1,6 +1,6 @@
-import { isEqual, isArray } from "lodash";
-import { provide, Location, Replace, StateConfig, Update } from "./helpers";
-import { handleUrlState } from "./useUrlState";
+import { isEqual, isArray } from 'lodash';
+import { provide, Location, Replace, StateConfig, Update } from './helpers';
+import { handleUrlState } from './useUrlState';
 
 /**
  * Hook that wrap handleUrlStateWithCurrentPage function in provider that feeds function with the useLocation() useNavigation() functions,
@@ -15,17 +15,17 @@ export const useUrlStateWithCurrentPage = provide(
  * @returns boolean
  */
 const valueIsValid = (value: unknown): value is string[] => {
-  return isArray(value) && value.every((param) => typeof param === "string");
+  return isArray(value) && value.every((param) => typeof param === 'string');
 };
 
 const from = (value: string[]): CurrentPage => {
   return {
-    kind: "CurrentPage",
-    value: valueIsValid(value) ? value.join("&") : "",
+    kind: 'CurrentPage',
+    value: valueIsValid(value) ? value.join('&') : '',
   };
 };
 const serialize = (currentPage: CurrentPage): string[] => {
-  return currentPage.value.split("&");
+  return currentPage.value.split('&');
 };
 
 const parse = (candidate: unknown): CurrentPage | undefined => {
@@ -33,7 +33,7 @@ const parse = (candidate: unknown): CurrentPage | undefined => {
 };
 
 export interface CurrentPage {
-  kind: "CurrentPage";
+  kind: 'CurrentPage';
   value: string;
 }
 
@@ -46,15 +46,15 @@ export interface CurrentPage {
  * @param replace function based on reactRouter navigate() to change/update url
  * @returns main handleUrlState instance set up for given configuration
  */
-export function handleUrlStateWithCurrentPage(
-  config: Pick<StateConfig<CurrentPage>, "route">,
+export function handleUrlStateWithCurrentPage (
+  config: Pick<StateConfig<CurrentPage>, 'route'>,
   location: Location,
   replace: Replace,
 ): [CurrentPage, Update<CurrentPage>] {
   return handleUrlState<CurrentPage>(
     {
       default: initialCurrentPage,
-      key: "currentPage",
+      key: 'currentPage',
       route: config.route,
       serialize: serialize,
       parse: parse,
@@ -66,6 +66,6 @@ export function handleUrlStateWithCurrentPage(
 }
 
 export const initialCurrentPage: CurrentPage = {
-  kind: "CurrentPage",
-  value: "",
+  kind: 'CurrentPage',
+  value: '',
 };

@@ -1,9 +1,9 @@
-import React, { PropsWithChildren } from "react";
-import { ServiceModel } from "@/Core";
-import { useGetInstance } from "@/Data/Managers/V2/ServiceInstance";
-import { Description, ErrorView, LoadingView } from "@/UI/Components";
-import { words } from "@/UI/words";
-import { EditForm } from "./EditForm";
+import React, { PropsWithChildren } from 'react';
+import { ServiceModel } from '@/Core';
+import { useGetInstance } from '@/Data/Managers/V2/ServiceInstance';
+import { Description, ErrorView, LoadingView } from '@/UI/Components';
+import { words } from '@/UI/words';
+import { EditForm } from './EditForm';
 
 /**
  * EditInstancePage component is responsible for rendering the edit page of a service instance.
@@ -63,7 +63,7 @@ const Wrapper: React.FC<PropsWithChildren<{ id: string }>> = ({
   return (
     <>
       <Description withSpace>
-        {words("inventory.duplicateInstance.header")(id)}
+        {words('inventory.duplicateInstance.header')(id)}
       </Description>
       {children}
     </>

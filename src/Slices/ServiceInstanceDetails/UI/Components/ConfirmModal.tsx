@@ -1,7 +1,7 @@
-import React from "react";
-import { Button, Spinner } from "@patternfly/react-core";
-import { Modal, ModalVariant } from "@patternfly/react-core/deprecated";
-import { words } from "@/UI";
+import React from 'react';
+import { Button, Spinner } from '@patternfly/react-core';
+import { Modal, ModalVariant } from '@patternfly/react-core/deprecated';
+import { words } from '@/UI';
 
 interface Props {
   title: string;
@@ -59,7 +59,7 @@ export const ConfirmationModal: React.FC<Props> = ({
           onClick={handleConfirm}
           isDisabled={isPending}
         >
-          {words("yes")}
+          {words('yes')}
           {isPending && <Spinner size="sm" />}
         </Button>,
         <Button
@@ -68,7 +68,7 @@ export const ConfirmationModal: React.FC<Props> = ({
           data-testid={`${id}-modal-cancel`}
           onClick={onCancel}
         >
-          {words("no")}
+          {words('no')}
         </Button>,
       ]}
     >

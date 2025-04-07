@@ -1,1 +1,1 @@
-export * from "./usePostMetadata";
+export * from './usePostMetadata';

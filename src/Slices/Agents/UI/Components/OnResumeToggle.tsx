@@ -1,9 +1,9 @@
-import React, { useContext } from "react";
-import { Switch, Tooltip } from "@patternfly/react-core";
-import { Maybe } from "@/Core";
-import { DependencyContext } from "@/UI/Dependency";
-import { words } from "@/UI/words";
-import { GetAgentsContext } from "@S/Agents/UI/GetAgentsContext";
+import React, { useContext } from 'react';
+import { Switch, Tooltip } from '@patternfly/react-core';
+import { Maybe } from '@/Core';
+import { DependencyContext } from '@/UI/Dependency';
+import { words } from '@/UI/words';
+import { GetAgentsContext } from '@S/Agents/UI/GetAgentsContext';
 
 interface Props {
   name: string;
@@ -12,16 +12,16 @@ interface Props {
 
 export const OnResumeToggle: React.FC<Props> = ({ name, unpauseOnResume }) => {
   const { commandResolver } = useContext(DependencyContext);
-  const agentActionTrigger = commandResolver.useGetTrigger<"ControlAgent">({
-    kind: "ControlAgent",
+  const agentActionTrigger = commandResolver.useGetTrigger<'ControlAgent'>({
+    kind: 'ControlAgent',
     name,
-    action: unpauseOnResume ? "keep_paused_on_resume" : "unpause_on_resume",
+    action: unpauseOnResume ? 'keep_paused_on_resume' : 'unpause_on_resume',
   });
   const { filter, sort, pageSize, currentPage, setErrorMessage } =
     useContext(GetAgentsContext);
   const onChange = async () => {
     const result = await agentActionTrigger({
-      kind: "GetAgents",
+      kind: 'GetAgents',
       filter,
       sort,
       pageSize,
@@ -34,7 +34,7 @@ export const OnResumeToggle: React.FC<Props> = ({ name, unpauseOnResume }) => {
   };
 
   return (
-    <Tooltip content={words("agents.actions.onResume")}>
+    <Tooltip content={words('agents.actions.onResume')}>
       <Switch
         aria-label={`${name}-on-resume-toggle`}
         isChecked={!!unpauseOnResume}

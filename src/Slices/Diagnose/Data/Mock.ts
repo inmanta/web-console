@@ -1,19 +1,19 @@
-import { RawDiagnostics } from "@S/Diagnose/Core/Domain";
+import { RawDiagnostics } from '@S/Diagnose/Core/Domain';
 
 const failure: RawDiagnostics = {
   failures: [
     {
       resource_id:
-        "unittest::Resource[internal,name=0a5ec450-5f3e-4dab-81cd-60c158ffb66f],v=2",
+        'unittest::Resource[internal,name=0a5ec450-5f3e-4dab-81cd-60c158ffb66f],v=2',
       failures: [
         {
           instance_version: 3,
           model_version: 2,
           resource_id:
-            "unittest::Resource[internal,name=0a5ec450-5f3e-4dab-81cd-60c158ffb66f],v=2",
-          time: new Date("2021-05-03T13:10:05.978048"),
+            'unittest::Resource[internal,name=0a5ec450-5f3e-4dab-81cd-60c158ffb66f],v=2',
+          time: new Date('2021-05-03T13:10:05.978048'),
           message:
-            "An error occurred during deployment of unittest::Resource[internal,name=0a5ec450-5f3e-4dab-81cd-60c158ffb66f],v=2 (exception: InvalidOperation()) An error occurred during deployment of unittest::Resource[internal,name=0a5ec450-5f3e-4dab-81cd-60c158ffb66f],v=2 (exception: InvalidOperation()) An error occurred during deployment of unittest::Resource[internal,name=0a5ec450-5f3e-4dab-81cd-60c158ffb66f],v=2 (exception: InvalidOperation())",
+            'An error occurred during deployment of unittest::Resource[internal,name=0a5ec450-5f3e-4dab-81cd-60c158ffb66f],v=2 (exception: InvalidOperation()) An error occurred during deployment of unittest::Resource[internal,name=0a5ec450-5f3e-4dab-81cd-60c158ffb66f],v=2 (exception: InvalidOperation()) An error occurred during deployment of unittest::Resource[internal,name=0a5ec450-5f3e-4dab-81cd-60c158ffb66f],v=2 (exception: InvalidOperation())',
         },
       ],
     },
@@ -27,13 +27,13 @@ const rejection: RawDiagnostics = {
     {
       instance_version: 2,
       model_version: undefined,
-      compile_id: "2369b94d-7a3e-4a73-86ef-ef476ca088db",
+      compile_id: '2369b94d-7a3e-4a73-86ef-ef476ca088db',
       errors: [
         {
           // category: "runtime_error",
-          type: "inmanta.ast.DoubleSetException",
+          type: 'inmanta.ast.DoubleSetException',
           message:
-            "value set twice:\n\told value: 1\n\t\tset at ./main.cf:30\n\tnew value: 0\n\t\tset at ./main.cf:29\n",
+            'value set twice:\n\told value: 1\n\t\tset at ./main.cf:30\n\tnew value: 0\n\t\tset at ./main.cf:29\n',
         },
       ],
       trace:

@@ -1,1 +1,1 @@
-export * as DuplicateInstance from "./Core/Route";
+export * as DuplicateInstance from './Core/Route';

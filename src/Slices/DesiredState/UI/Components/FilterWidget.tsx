@@ -1,17 +1,17 @@
-import React, { useState } from "react";
-import { ToolbarGroup } from "@patternfly/react-core";
-import { DateRange, IntRange } from "@/Core";
+import React, { useState } from 'react';
+import { ToolbarGroup } from '@patternfly/react-core';
+import { DateRange, IntRange } from '@/Core';
 
-import { MomentDatePresenter } from "@/UI";
-import { FilterPicker } from "@/UI/Components";
+import { MomentDatePresenter } from '@/UI';
+import { FilterPicker } from '@/UI/Components';
 import {
   IntRangeFilter,
   SelectOptionFilter,
   TimestampFilter,
-} from "@/UI/Components/Filters";
-import { words } from "@/UI/words";
-import { DesiredStateVersionStatus } from "@S/DesiredState/Core/Domain";
-import { Filter, FilterKind, FilterList } from "@S/DesiredState/Core/Query";
+} from '@/UI/Components/Filters';
+import { words } from '@/UI/words';
+import { DesiredStateVersionStatus } from '@S/DesiredState/Core/Domain';
+import { Filter, FilterKind, FilterList } from '@S/DesiredState/Core/Query';
 
 interface Props {
   filter: Filter;
@@ -55,7 +55,7 @@ export const FilterWidget: React.FC<Props> = ({ filter, setFilter }) => {
       />
       <SelectOptionFilter
         filterPropertyName={FilterKind.Status}
-        placeholder={words("desiredState.filters.status.placeholder")}
+        placeholder={words('desiredState.filters.status.placeholder')}
         isVisible={filterKind === FilterKind.Status}
         possibleStates={desiredStateStatuses}
         selectedStates={filter.status ? filter.status : []}

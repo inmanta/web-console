@@ -1,1 +1,1 @@
-export * from "./BooleanSwitch";
+export * from './BooleanSwitch';

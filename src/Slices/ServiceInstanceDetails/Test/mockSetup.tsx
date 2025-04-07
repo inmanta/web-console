@@ -1,19 +1,19 @@
-import React, { PropsWithChildren } from "react";
-import { MemoryRouter, useLocation } from "react-router-dom";
-import { loader } from "@monaco-editor/react";
-import { Page } from "@patternfly/react-core";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { StoreProvider } from "easy-peasy";
-import * as monaco from "monaco-editor";
-import { RemoteData } from "@/Core";
-import { getStoreInstance } from "@/Data";
-import { dependencies } from "@/Test";
+import React, { PropsWithChildren } from 'react';
+import { MemoryRouter, useLocation } from 'react-router-dom';
+import { loader } from '@monaco-editor/react';
+import { Page } from '@patternfly/react-core';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { StoreProvider } from 'easy-peasy';
+import * as monaco from 'monaco-editor';
+import { RemoteData } from '@/Core';
+import { getStoreInstance } from '@/Data';
+import { dependencies } from '@/Test';
 import {
   DependencyProvider,
   EnvironmentHandlerImpl,
   EnvironmentModifierImpl,
-} from "@/UI";
-import { ServiceInstanceDetails } from "../UI/Page";
+} from '@/UI';
+import { ServiceInstanceDetails } from '../UI/Page';
 
 /**
  * Mock setup for the test cases of the Instance Details page.
@@ -75,7 +75,7 @@ export const SetupWrapper: React.FC<PropsWithChildren<Props>> = ({
   const environmentModifier = EnvironmentModifierImpl();
 
   store.dispatch.environment.setSettingsData({
-    environment: "aaa",
+    environment: 'aaa',
     value: RemoteData.success({
       settings: {
         enable_lsm_expert_mode: expertMode,
@@ -87,12 +87,12 @@ export const SetupWrapper: React.FC<PropsWithChildren<Props>> = ({
   store.dispatch.environment.setEnvironments(
     RemoteData.success([
       {
-        id: "aaa",
-        name: "env-a",
-        project_id: "ppp",
-        repo_branch: "branch",
-        repo_url: "repo",
-        projectName: "project",
+        id: 'aaa',
+        name: 'env-a',
+        project_id: 'ppp',
+        repo_branch: 'branch',
+        repo_url: 'repo',
+        projectName: 'project',
         halted: false,
         settings: {
           enable_lsm_expert_mode: expertMode,
@@ -102,14 +102,14 @@ export const SetupWrapper: React.FC<PropsWithChildren<Props>> = ({
   );
 
   store.dispatch.environment.setEnvironmentDetailsById({
-    id: "aaa",
+    id: 'aaa',
     value: RemoteData.success({
-      id: "aaa",
-      name: "env-a",
-      project_id: "ppp",
-      repo_branch: "branch",
-      repo_url: "repo",
-      projectName: "project",
+      id: 'aaa',
+      name: 'env-a',
+      project_id: 'ppp',
+      repo_branch: 'branch',
+      repo_url: 'repo',
+      projectName: 'project',
       halted: false,
       settings: {
         enable_lsm_expert_mode: expertMode,
@@ -117,14 +117,14 @@ export const SetupWrapper: React.FC<PropsWithChildren<Props>> = ({
     }),
   });
 
-  environmentModifier.setEnvironment("aaa");
+  environmentModifier.setEnvironment('aaa');
 
   return (
     <MemoryRouter
       initialEntries={[
         {
-          pathname: "/lsm/catalog/mobileCore/inventory/core1/1d96a1ab/details",
-          search: "?env=aaa",
+          pathname: '/lsm/catalog/mobileCore/inventory/core1/1d96a1ab/details',
+          search: '?env=aaa',
         },
       ]}
     >

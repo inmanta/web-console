@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   OnSort,
   Table,
@@ -6,12 +6,12 @@ import {
   Th,
   Thead,
   Tr,
-} from "@patternfly/react-table";
-import { Sort } from "@/Core";
-import { Fact } from "@S/Facts/Core/Domain";
-import { SortKey } from "@S/Facts/Core/Query";
-import { FactsRow } from "./FactsRow";
-import { FactsTablePresenter } from "./FactsTablePresenter";
+} from '@patternfly/react-table';
+import { Sort } from '@/Core';
+import { Fact } from '@S/Facts/Core/Domain';
+import { SortKey } from '@S/Facts/Core/Query';
+import { FactsRow } from './FactsRow';
+import { FactsTablePresenter } from './FactsTablePresenter';
 
 interface Props {
   rows: Fact[];
@@ -39,15 +39,15 @@ export const FactsTable: React.FC<Props> = ({
       const hasSort = tablePresenter.getSortableColumnNames().includes(apiName);
       const sortParams = hasSort
         ? {
-            sort: {
-              sortBy: {
-                index: activeSortIndex,
-                direction: sort.order,
-              },
-              onSort,
-              columnIndex,
+          sort: {
+            sortBy: {
+              index: activeSortIndex,
+              direction: sort.order,
             },
-          }
+            onSort,
+            columnIndex,
+          },
+        }
         : {};
 
       return (

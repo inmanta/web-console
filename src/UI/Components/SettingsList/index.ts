@@ -1,1 +1,1 @@
-export * from "./SettingsList";
+export * from './SettingsList';

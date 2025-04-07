@@ -1,6 +1,6 @@
-import { ServiceOrderItem } from "@/Slices/Orders/Core/Query";
-import { ColumnHead, TablePresenter } from "@/UI/Presenters";
-import { words } from "@/UI/words";
+import { ServiceOrderItem } from '@/Slices/Orders/Core/Query';
+import { ColumnHead, TablePresenter } from '@/UI/Presenters';
+import { words } from '@/UI/words';
 
 /**
  * OrderDetailsTablePresenter @Class
@@ -10,28 +10,27 @@ import { words } from "@/UI/words";
  *
  */
 export class OrderDetailsTablePresenter
-  implements TablePresenter<ServiceOrderItem, ServiceOrderItem>
-{
+implements TablePresenter<ServiceOrderItem, ServiceOrderItem> {
   readonly columnHeads: ColumnHead[];
   readonly numberOfColumns: number;
 
-  constructor() {
+  constructor () {
     this.columnHeads = [
       {
-        displayName: words("orders.column.instanceId"),
-        apiName: "instance_id",
+        displayName: words('orders.column.instanceId'),
+        apiName: 'instance_id',
       },
       {
-        displayName: words("orders.column.serviceEntity"),
-        apiName: "service_entity",
+        displayName: words('orders.column.serviceEntity'),
+        apiName: 'service_entity',
       },
       {
-        displayName: words("orders.column.action"),
-        apiName: "action",
+        displayName: words('orders.column.action'),
+        apiName: 'action',
       },
       {
-        displayName: words("orders.column.status"),
-        apiName: "status",
+        displayName: words('orders.column.status'),
+        apiName: 'status',
       },
     ];
     this.numberOfColumns = this.columnHeads.length + 1;
@@ -44,7 +43,7 @@ export class OrderDetailsTablePresenter
    * @param sourceData ServiceOrderItem[]
    * @returns ServiceOrderItem[]
    */
-  createRows(sourceData: ServiceOrderItem[]): ServiceOrderItem[] {
+  createRows (sourceData: ServiceOrderItem[]): ServiceOrderItem[] {
     return sourceData;
   }
 
@@ -54,7 +53,7 @@ export class OrderDetailsTablePresenter
    *
    * @returns string[]
    */
-  getColumnHeadDisplayNames(): string[] {
+  getColumnHeadDisplayNames (): string[] {
     return this.columnHeads.map(({ displayName }) => displayName);
   }
 
@@ -64,7 +63,7 @@ export class OrderDetailsTablePresenter
    *
    * @returns string[]
    */
-  getSortableColumnNames(): string[] {
+  getSortableColumnNames (): string[] {
     const sortableColumns = [];
 
     return sortableColumns;
@@ -76,7 +75,7 @@ export class OrderDetailsTablePresenter
    *
    * @returns ColumnHead[]
    */
-  getColumnHeads(): ColumnHead[] {
+  getColumnHeads (): ColumnHead[] {
     return this.columnHeads;
   }
 
@@ -86,7 +85,7 @@ export class OrderDetailsTablePresenter
    *
    * @returns number
    */
-  getNumberOfColumns(): number {
+  getNumberOfColumns (): number {
     return this.numberOfColumns;
   }
 
@@ -97,7 +96,7 @@ export class OrderDetailsTablePresenter
    * @param index number
    * @returns string | undefined
    */
-  getColumnNameForIndex(index: number): string | undefined {
+  getColumnNameForIndex (index: number): string | undefined {
     if (index > -1 && index < this.getNumberOfColumns()) {
       return this.getColumnHeads()[index].apiName;
     }
@@ -112,7 +111,7 @@ export class OrderDetailsTablePresenter
    * @param columnName string
    * @returns number
    */
-  getIndexForColumnName(columnName?: string): number {
+  getIndexForColumnName (columnName?: string): number {
     return this.columnHeads.findIndex(
       (columnHead) => columnHead.apiName === columnName,
     );

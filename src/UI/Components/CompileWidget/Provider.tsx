@@ -1,10 +1,10 @@
-import React, { useContext, useState } from "react";
-import { AlertVariant } from "@patternfly/react-core";
-import { useTriggerCompile } from "@/Data/Managers/V2/Compilation/TriggerCompile";
-import { DependencyContext } from "@/UI/Dependency";
-import { words } from "@/UI/words";
-import { ToastAlert } from "../ToastAlert";
-import { CompileWidget } from "./CompileWidget";
+import React, { useContext, useState } from 'react';
+import { AlertVariant } from '@patternfly/react-core';
+import { useTriggerCompile } from '@/Data/Managers/V2/Compilation/TriggerCompile';
+import { DependencyContext } from '@/UI/Dependency';
+import { words } from '@/UI/words';
+import { ToastAlert } from '../ToastAlert';
+import { CompileWidget } from './CompileWidget';
 
 interface Props {
   afterTrigger?(): void;
@@ -17,7 +17,7 @@ export const Provider: React.FC<Props> = ({
 }) => {
   const { environmentModifier, environmentHandler } =
     useContext(DependencyContext);
-  const [toastMessage, setToastMessage] = useState("");
+  const [toastMessage, setToastMessage] = useState('');
   const isServerCompileEnabled =
     environmentModifier.useIsServerCompileEnabled();
   const env = environmentHandler.useId();
@@ -25,9 +25,9 @@ export const Provider: React.FC<Props> = ({
   const { mutate } = useTriggerCompile({
     onMutate: ({ update }) => {
       if (isToastVisible) {
-        setToastMessage(words("common.compileWidget.toast")(update));
+        setToastMessage(words('common.compileWidget.toast')(update));
         setTimeout(() => {
-          setToastMessage("");
+          setToastMessage('');
         }, 2000);
       }
     },
@@ -48,7 +48,7 @@ export const Provider: React.FC<Props> = ({
           type={AlertVariant.info}
           message={toastMessage}
           setMessage={setToastMessage}
-          title={words("common.compileWidget.toastTitle")}
+          title={words('common.compileWidget.toastTitle')}
         />
       )}
       <CompileWidget
@@ -58,7 +58,7 @@ export const Provider: React.FC<Props> = ({
         hint={
           isServerCompileEnabled
             ? undefined
-            : words("common.compileWidget.compilationDisabled.hint")
+            : words('common.compileWidget.compilationDisabled.hint')
         }
       />
     </>
