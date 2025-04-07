@@ -47,12 +47,12 @@ function setup() {
   return { component, apiHelper };
 }
 
-test("Given CreateEnvironmentForm When project and environment are not set Then the submit button is disabled", async() => {
+test("Given CreateEnvironmentForm When project and environment are not set Then the submit button is disabled", async () => {
   const { component, apiHelper } = setup();
 
   render(component);
 
-  await act(async() => {
+  await act(async () => {
     apiHelper.resolve(
       Either.right({
         data: Project.filterable,
@@ -62,19 +62,19 @@ test("Given CreateEnvironmentForm When project and environment are not set Then 
 
   expect(await screen.findByRole("button", { name: "submit" })).toBeDisabled();
 
-  await act(async() => {
+  await act(async () => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("Given CreateEnvironmentForm When no projects are known, THEN cannot add empty project name", async() => {
+test("Given CreateEnvironmentForm When no projects are known, THEN cannot add empty project name", async () => {
   const { component, apiHelper } = setup();
 
   render(component);
 
-  await act(async() => {
+  await act(async () => {
     apiHelper.resolve(
       Either.right({
         data: [],
@@ -102,18 +102,18 @@ test("Given CreateEnvironmentForm When no projects are known, THEN cannot add em
 
   expect(screen.getByRole("option")).toBeInTheDocument();
 
-  await act(async() => {
+  await act(async () => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("Given CreateEnvironmentForm When an existing project and valid environment are set and submit is clicked Then sends the correct request", async() => {
+test("Given CreateEnvironmentForm When an existing project and valid environment are set and submit is clicked Then sends the correct request", async () => {
   const { component, apiHelper } = setup();
 
   render(component);
-  await act(async() => {
+  await act(async () => {
     apiHelper.resolve(
       Either.right({
         data: Project.filterable,
@@ -135,7 +135,7 @@ test("Given CreateEnvironmentForm When an existing project and valid environment
 
   await userEvent.type(textBox, "dev{enter}");
 
-  await act(async() => {
+  await act(async () => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
@@ -154,12 +154,12 @@ test("Given CreateEnvironmentForm When an existing project and valid environment
   });
 });
 
-test("Given CreateEnvironmentForm When an existing project, a valid environment and repository settings are set and submit is clicked Then sends the correct request", async() => {
+test("Given CreateEnvironmentForm When an existing project, a valid environment and repository settings are set and submit is clicked Then sends the correct request", async () => {
   const { component, apiHelper } = setup();
 
   render(component);
 
-  await act(async() => {
+  await act(async () => {
     apiHelper.resolve(
       Either.right({
         data: Project.filterable,
@@ -196,7 +196,7 @@ test("Given CreateEnvironmentForm When an existing project, a valid environment 
   await userEvent.clear(urlTextBox);
   await userEvent.type(urlTextBox, repository);
 
-  await act(async() => {
+  await act(async () => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
@@ -220,14 +220,14 @@ test("Given CreateEnvironmentForm When an existing project, a valid environment 
   });
 });
 
-test("Given CreateEnvironmentForm When a new project and valid environment are set and submit is clicked Then sends the correct requests", async() => {
+test("Given CreateEnvironmentForm When a new project and valid environment are set and submit is clicked Then sends the correct requests", async () => {
   const { component, apiHelper } = setup();
 
-  await act(async() => {
+  await act(async () => {
     render(component);
   });
 
-  await act(async() => {
+  await act(async () => {
     apiHelper.resolve(
       Either.right({
         data: Project.filterable,
@@ -250,7 +250,7 @@ test("Given CreateEnvironmentForm When a new project and valid environment are s
 
   await userEvent.click(await screen.findByRole("option", { name: 'Create "new-project"' }));
 
-  await act(async() => {
+  await act(async () => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
@@ -266,7 +266,7 @@ test("Given CreateEnvironmentForm When a new project and valid environment are s
     url: "/api/v2/project",
   });
 
-  await act(async() => {
+  await act(async () => {
     await apiHelper.resolve(Either.right({ data: Project.a }));
   });
 
@@ -276,7 +276,7 @@ test("Given CreateEnvironmentForm When a new project and valid environment are s
     { name: "new-project", id: "proj-id-new", environments: [] },
   ];
 
-  await act(async() => {
+  await act(async () => {
     apiHelper.resolve(Either.right({ data: updatedProjects }));
   });
 
@@ -300,7 +300,7 @@ test("Given CreateEnvironmentForm When a new project and valid environment are s
     url: "/api/v2/environment",
   });
 
-  await act(async() => {
+  await act(async () => {
     apiHelper.resolve(Either.right({ data: Environment.a }));
   });
 
@@ -310,12 +310,12 @@ test("Given CreateEnvironmentForm When a new project and valid environment are s
   });
 });
 
-test("Given CreateEnvironmentForm When creating a new project is not successful Then shows error message", async() => {
+test("Given CreateEnvironmentForm When creating a new project is not successful Then shows error message", async () => {
   const { component, apiHelper } = setup();
 
   render(component);
 
-  await act(async() => {
+  await act(async () => {
     apiHelper.resolve(
       Either.right({
         data: Project.filterable,
@@ -348,7 +348,7 @@ test("Given CreateEnvironmentForm When creating a new project is not successful 
     url: "/api/v2/project",
   });
 
-  await act(async() => {
+  await act(async () => {
     await apiHelper.resolve(Either.left("Unexpected error while trying to create new project"));
   });
 
@@ -362,12 +362,12 @@ test("Given CreateEnvironmentForm When creating a new project is not successful 
 });
 
 test(`Given CreateEnvironmentForm When an existing project and invalid environment are set and submit is clicked 
-      Then shows the error message`, async() => {
+      Then shows the error message`, async () => {
   const { component, apiHelper } = setup();
 
   render(component);
 
-  await act(async() => {
+  await act(async () => {
     apiHelper.resolve(
       Either.right({
         data: Project.filterable,
@@ -405,7 +405,7 @@ test(`Given CreateEnvironmentForm When an existing project and invalid environme
     url: "/api/v2/environment",
   });
 
-  await act(async() => {
+  await act(async () => {
     await apiHelper.resolve(Either.left("Environment already exists"));
   });
 
@@ -418,12 +418,12 @@ test(`Given CreateEnvironmentForm When an existing project and invalid environme
   expect(screen.queryByRole("generic", { name: "submit-error-message" })).not.toBeInTheDocument();
 });
 
-test("Given CreateEnvironmentForm When an existing project, a valid environment and description are set and submit is clicked Then sends the correct requests", async() => {
+test("Given CreateEnvironmentForm When an existing project, a valid environment and description are set and submit is clicked Then sends the correct requests", async () => {
   const { component, apiHelper } = setup();
 
   render(component);
 
-  await act(async() => {
+  await act(async () => {
     apiHelper.resolve(
       Either.right({
         data: Project.filterable,
@@ -469,12 +469,12 @@ test("Given CreateEnvironmentForm When an existing project, a valid environment 
   });
 });
 
-test("Given CreateEnvironmentForm When an existing project, a valid environment and repository settings are set then removed and submit is clicked Then sends the correct request", async() => {
+test("Given CreateEnvironmentForm When an existing project, a valid environment and repository settings are set then removed and submit is clicked Then sends the correct request", async () => {
   const { component, apiHelper } = setup();
 
   render(component);
 
-  await act(async() => {
+  await act(async () => {
     apiHelper.resolve(
       Either.right({
         data: Project.filterable,

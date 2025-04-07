@@ -3,7 +3,8 @@ import { ColumnHead, TablePresenter } from "@/UI/Presenters";
 import { words } from "@/UI/words";
 
 export class VersionResourceTablePresenter
-implements TablePresenter<Resource.FromVersion, Resource.RowFromVersion> {
+  implements TablePresenter<Resource.FromVersion, Resource.RowFromVersion>
+{
   readonly columnHeads: ColumnHead[];
   readonly numberOfColumns: number;
 

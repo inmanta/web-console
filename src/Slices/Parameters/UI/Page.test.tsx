@@ -51,12 +51,12 @@ function setup() {
   return { component, apiHelper, scheduler };
 }
 
-test("When using the name filter then only the matching parameters should be fetched and shown", async() => {
+test("When using the name filter then only the matching parameters should be fetched and shown", async () => {
   const { component, apiHelper } = setup();
 
   render(component);
 
-  await act(async() => {
+  await act(async () => {
     await apiHelper.resolve(Either.right(Parameters.response));
   });
 
@@ -74,7 +74,7 @@ test("When using the name filter then only the matching parameters should be fet
     "/api/v2/parameters?limit=20&sort=name.asc&filter.name=param"
   );
 
-  await act(async() => {
+  await act(async () => {
     await apiHelper.resolve(
       Either.right({
         ...Parameters.response,
@@ -89,19 +89,19 @@ test("When using the name filter then only the matching parameters should be fet
 
   expect(rowsAfter).toHaveLength(3);
 
-  await act(async() => {
+  await act(async () => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("When using the source filter then only the matching parameters should be fetched and shown", async() => {
+test("When using the source filter then only the matching parameters should be fetched and shown", async () => {
   const { component, apiHelper } = setup();
 
   render(component);
 
-  await act(async() => {
+  await act(async () => {
     await apiHelper.resolve(Either.right(Parameters.response));
   });
 
@@ -127,7 +127,7 @@ test("When using the source filter then only the matching parameters should be f
     "/api/v2/parameters?limit=20&sort=name.asc&filter.source=plugin"
   );
 
-  await act(async() => {
+  await act(async () => {
     await apiHelper.resolve(
       Either.right({
         ...Parameters.response,
@@ -142,19 +142,19 @@ test("When using the source filter then only the matching parameters should be f
 
   expect(rowsAfter).toHaveLength(3);
 
-  await act(async() => {
+  await act(async () => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("When using the Updated filter then the parameters within the range selected range should be fetched and shown", async() => {
+test("When using the Updated filter then the parameters within the range selected range should be fetched and shown", async () => {
   const { component, apiHelper } = setup();
 
   render(component);
 
-  await act(async() => {
+  await act(async () => {
     await apiHelper.resolve(Either.right(Parameters.response));
   });
 
@@ -190,7 +190,7 @@ test("When using the Updated filter then the parameters within the range selecte
     "/api/v2/parameters?limit=20&sort=name.asc&filter.updated=ge%3A2022-01-30%2B23%3A00%3A00&filter.updated=le%3A2022-01-31%2B23%3A00%3A00"
   );
 
-  await act(async() => {
+  await act(async () => {
     await apiHelper.resolve(
       Either.right({
         ...Parameters.response,
@@ -207,27 +207,27 @@ test("When using the Updated filter then the parameters within the range selecte
 
   // The chips are hidden in small windows, so resize it
   window = Object.assign(window, { innerWidth: 1200 });
-  await act(async() => {
+  await act(async () => {
     window.dispatchEvent(new Event("resize"));
   });
 
   expect(await screen.findByText("from | 2022/01/31 00:00:00", { exact: false })).toBeVisible();
   expect(await screen.findByText("to | 2022/02/01 00:00:00", { exact: false })).toBeVisible();
 
-  await act(async() => {
+  await act(async () => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("GIVEN ParametersView WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async() => {
+test("GIVEN ParametersView WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async () => {
   const { component, apiHelper } = setup();
 
   render(component);
 
   //mock that response has more than one site
-  await act(async() => {
+  await act(async () => {
     apiHelper.resolve(
       Either.right({
         ...Parameters.response,
@@ -253,7 +253,7 @@ test("GIVEN ParametersView WHEN sorting changes AND we are not on the first page
   expect(apiHelper.pendingRequests[0].url).toMatch(/(&start=|&end=)/);
   expect(apiHelper.pendingRequests[0].url).toMatch(/(&sort=name.asc)/);
 
-  await act(async() => {
+  await act(async () => {
     apiHelper.resolve(Either.right(Parameters.response));
   });
 

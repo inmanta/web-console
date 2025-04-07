@@ -43,7 +43,7 @@ function setup() {
   };
 }
 
-test("GIVEN Facts page THEN shows table", async() => {
+test("GIVEN Facts page THEN shows table", async () => {
   const { component, apiHelper } = setup();
 
   render(component);
@@ -73,14 +73,14 @@ test("GIVEN Facts page THEN shows table", async() => {
   expect(rows).toHaveLength(8);
   expect(within(rows[0]).getByRole("cell", { name: "2021/03/18 18:10:43" })).toBeVisible();
 
-  await act(async() => {
+  await act(async () => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("GIVEN Facts page THEN sets sorting parameters correctly on click", async() => {
+test("GIVEN Facts page THEN sets sorting parameters correctly on click", async () => {
   const { component, apiHelper } = setup();
 
   render(component);
@@ -106,7 +106,7 @@ test("GIVEN Facts page THEN sets sorting parameters correctly on click", async()
 
   expect(apiHelper.pendingRequests[0].url).toContain("&sort=resource_id.asc");
 
-  await act(async() => {
+  await act(async () => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
@@ -119,7 +119,7 @@ test.each`
   ${"id123"}       | ${words("facts.filters.resourceId.placeholder")} | ${"resource_id"}
 `(
   "When using the $filterName filter of type $filterType with value $filterValue and text $placeholderText then the facts with that $filterUrlName should be fetched and shown",
-  async({ filterValue, placeholderText, filterUrlName }) => {
+  async ({ filterValue, placeholderText, filterUrlName }) => {
     const { component, apiHelper } = setup();
 
     render(component);
@@ -162,7 +162,7 @@ test.each`
 
     expect(await screen.findAllByRole("row", { name: "FactsRow" })).toHaveLength(4);
 
-    await act(async() => {
+    await act(async () => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
@@ -170,13 +170,13 @@ test.each`
   }
 );
 
-test("GIVEN FactsView WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async() => {
+test("GIVEN FactsView WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async () => {
   const { component, apiHelper } = setup();
 
   render(component);
 
   //mock that response has more than one site
-  await act(async() => {
+  await act(async () => {
     apiHelper.resolve(
       Either.right({
         data: Mock.list,
@@ -202,7 +202,7 @@ test("GIVEN FactsView WHEN sorting changes AND we are not on the first page THEN
   expect(apiHelper.pendingRequests[0].url).toMatch(/(&start=|&end=)/);
   expect(apiHelper.pendingRequests[0].url).toMatch(/(&sort=name.asc)/);
 
-  await act(async() => {
+  await act(async () => {
     apiHelper.resolve(
       Either.right({
         data: Mock.list,

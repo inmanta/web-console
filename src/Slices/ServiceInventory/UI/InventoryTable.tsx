@@ -41,15 +41,15 @@ export const InventoryTable: React.FC<Props> = ({
   const heads = tablePresenter.getColumnHeads().map((column, columnIndex) => {
     const sortParams = tablePresenter.getSortableColumnNames().includes(column.apiName)
       ? {
-        sort: {
-          sortBy: {
-            index: activeSortIndex,
-            direction: sort.order,
+          sort: {
+            sortBy: {
+              index: activeSortIndex,
+              direction: sort.order,
+            },
+            onSort,
+            columnIndex,
           },
-          onSort,
-          columnIndex,
-        },
-      }
+        }
       : {};
 
     return (

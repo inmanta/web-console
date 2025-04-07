@@ -16,7 +16,7 @@ test.each`
   ${"?state.Resources.currentPage[0]=" + endParameter + "&state.Resources.currentPage[1]=" + lastIdParameter}    | ${endParameter + "&" + lastIdParameter}    | ${endParameter + "&" + lastIdParameter}    | ${endParameter + "&" + lastIdParameter}
 `(
   "GIVEN handleUrlState with PageSize WHEN search is $searchText THEN returns $valueText",
-  async({ search, expectedValue }) => {
+  async ({ search, expectedValue }) => {
     const [value] = handleUrlStateWithCurrentPage(
       { route: "Resources" },
       { pathname: "", search, hash: "" },

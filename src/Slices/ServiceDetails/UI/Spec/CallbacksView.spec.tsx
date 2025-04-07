@@ -73,12 +73,12 @@ function setup() {
   };
 }
 
-test("GIVEN CallbacksTab WHEN user click on delete and confirms THEN callback is deleted", async() => {
+test("GIVEN CallbacksTab WHEN user click on delete and confirms THEN callback is deleted", async () => {
   const { component, apiHelper } = setup();
 
   render(component);
 
-  await act(async() => {
+  await act(async () => {
     apiHelper.resolve(Either.right({ data: Callback.list }));
   });
 
@@ -98,25 +98,25 @@ test("GIVEN CallbacksTab WHEN user click on delete and confirms THEN callback is
 
   await userEvent.click(yesButton);
 
-  await act(async() => {
+  await act(async () => {
     apiHelper.resolve(Maybe.none());
   });
 
   const [, ...rest] = Callback.list;
 
-  await act(async() => {
+  await act(async () => {
     apiHelper.resolve(Either.right({ data: rest }));
   });
 
   expect(screen.queryByRole("row", { name: "CallbackRow-" + shortenUUID })).not.toBeInTheDocument();
 });
 
-test("GIVEN CallbacksTab WHEN user fills in form and clicks on Add THEN callback is created", async() => {
+test("GIVEN CallbacksTab WHEN user fills in form and clicks on Add THEN callback is created", async () => {
   const { component, apiHelper } = setup();
 
   render(component);
 
-  await act(async() => {
+  await act(async () => {
     apiHelper.resolve(Either.right({ data: Callback.list }));
   });
 
@@ -161,11 +161,11 @@ test("GIVEN CallbacksTab WHEN user fills in form and clicks on Add THEN callback
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0].url).toMatch("/lsm/v1/callbacks");
 
-  await act(async() => {
+  await act(async () => {
     await apiHelper.resolve(Either.right({ data: "callbackId" }));
   });
 
-  await act(async() => {
+  await act(async () => {
     await apiHelper.resolve(
       Either.right({
         data: [...Callback.list, { ...Callback.a, callback_id: "1234" }],

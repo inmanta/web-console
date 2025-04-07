@@ -12,16 +12,16 @@ export function getUrl({
   const filterParam =
     filter && Object.keys(filter).length > 0
       ? `&${qs.stringify(
-        {
-          filter: {
-            minimal_log_level: filter.minimal_log_level,
-            action: filter.action,
-            message: filter.message,
-            timestamp: serializeTimestampFilter(filter.timestamp),
+          {
+            filter: {
+              minimal_log_level: filter.minimal_log_level,
+              action: filter.action,
+              message: filter.message,
+              timestamp: serializeTimestampFilter(filter.timestamp),
+            },
           },
-        },
-        { allowDots: true, arrayFormat: "repeat" }
-      )}`
+          { allowDots: true, arrayFormat: "repeat" }
+        )}`
       : "";
   const sortParam = sort ? `&sort=${sort.name}.${sort.order}` : "";
 

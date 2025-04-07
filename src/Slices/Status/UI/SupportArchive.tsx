@@ -29,7 +29,7 @@ export const SupportArchive: React.FC = () => {
     },
   });
 
-  const onClick = async() => {
+  const onClick = async () => {
     setError(null);
     mutate();
   };

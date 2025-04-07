@@ -27,18 +27,18 @@ export const Provider: React.FC<Props> = ({ requested, started, completed, succe
         !started
           ? undefined
           : {
-            day: datePresenter.getDate(started),
-            time: datePresenter.getTime(started),
-          }
+              day: datePresenter.getDate(started),
+              time: datePresenter.getTime(started),
+            }
       }
       startedDiff={!started ? undefined : getDiff(completed ? completed : now, started)}
       completed={
         !completed
           ? undefined
           : {
-            day: datePresenter.getDate(completed),
-            time: datePresenter.getTime(completed),
-          }
+              day: datePresenter.getDate(completed),
+              time: datePresenter.getTime(completed),
+            }
       }
       success={success}
     />

@@ -65,7 +65,7 @@ test("GIVEN Breadcrumbs on Inventory WHEN url contains env THEN catalog breadcru
   expect(link).toHaveAttribute("href", "/lsm/catalog?env=env1");
 });
 
-test("GIVEN Breadcrumbs on Inventory WHEN user clicks catalog breadcrumb link THEN only plain catalog breadcrumb is shown", async() => {
+test("GIVEN Breadcrumbs on Inventory WHEN user clicks catalog breadcrumb link THEN only plain catalog breadcrumb is shown", async () => {
   const { component } = setup(["/lsm/catalog/service/inventory?env=env1"]);
 
   render(component);
@@ -91,7 +91,7 @@ test("GIVEN Breadcrumbs on Inventory WHEN user clicks catalog breadcrumb link TH
   expect(within(crumb).getByText("Service Catalog")).toBeInTheDocument();
 });
 
-test("GIVEN Breadcrumbs on Add Instance WHEN user clicks inventory breadcrumb link THEN Add instance breadcrumb is removed", async() => {
+test("GIVEN Breadcrumbs on Add Instance WHEN user clicks inventory breadcrumb link THEN Add instance breadcrumb is removed", async () => {
   const { component } = setup(["/lsm/catalog/service/inventory/add?env=env1"]);
 
   render(component);

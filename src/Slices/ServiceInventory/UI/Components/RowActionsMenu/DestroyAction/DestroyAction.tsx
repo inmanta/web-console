@@ -58,7 +58,7 @@ export const DestroyAction: React.FC<Props> = ({
    *
    * @returns {Promise<void>}  A Promise that resolves when the operation is complete.
    */
-  const onSubmit = async(): Promise<void> => {
+  const onSubmit = async (): Promise<void> => {
     closeModal();
     mutate();
   };

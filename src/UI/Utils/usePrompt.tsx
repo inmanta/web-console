@@ -40,7 +40,7 @@ export function usePrompt(message: string, when = true) {
   useEffect(() => {
     if (when) {
       Object.defineProperty(window, "onbeforeunload", {
-        value: function() {
+        value: function () {
           return message;
         },
         configurable: true,

@@ -11,15 +11,15 @@ export function getUrl({
   const filterParam =
     filter && Object.keys(filter).length > 0
       ? `&${qs.stringify(
-        {
-          filter: {
-            agent: filter.agent,
-            resource_id_value: filter.value,
-            resource_type: filter.type,
+          {
+            filter: {
+              agent: filter.agent,
+              resource_id_value: filter.value,
+              resource_type: filter.type,
+            },
           },
-        },
-        { allowDots: true, arrayFormat: "repeat" }
-      )}`
+          { allowDots: true, arrayFormat: "repeat" }
+        )}`
       : "";
   const sortParam = sort ? `&sort=${sort.name}.${sort.order}` : "";
 

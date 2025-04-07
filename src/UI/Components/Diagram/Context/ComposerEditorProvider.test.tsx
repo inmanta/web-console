@@ -72,17 +72,17 @@ const setup = (instanceId: string, editable: boolean = true) => {
 };
 
 const server = setupServer(
-  http.get("/lsm/v1/service_catalog", async() => {
+  http.get("/lsm/v1/service_catalog", async () => {
     return HttpResponse.json({
       data: [parentModel, childModel, containerModel],
     });
   }),
-  http.get("/lsm/v1/service_inventory", async() => {
+  http.get("/lsm/v1/service_inventory", async () => {
     return HttpResponse.json({
       data: mockedInstanceWithRelations.interServiceRelations[0], // child-service instance
     });
   }),
-  http.get("/lsm/v1/service_inventory/parent-service", async() => {
+  http.get("/lsm/v1/service_inventory/parent-service", async () => {
     return HttpResponse.json({
       data: [],
     });
@@ -103,9 +103,9 @@ describe("ComposerEditorProvider", () => {
     server.close();
   });
 
-  it("if there is error when fetching service models the error view is shown", async() => {
+  it("if there is error when fetching service models the error view is shown", async () => {
     server.use(
-      http.get("/lsm/v1/service_catalog", async() => {
+      http.get("/lsm/v1/service_catalog", async () => {
         return HttpResponse.json({ message: "Something went wrong" }, { status: 400 });
       })
     );
@@ -129,11 +129,11 @@ describe("ComposerEditorProvider", () => {
     expect(await screen.findByText("Something went wrong")).toBeInTheDocument();
   });
 
-  it("if there is error when fetching related inventories the error view is shown", async() => {
+  it("if there is error when fetching related inventories the error view is shown", async () => {
     render(setup("13920268-cce0-4491-93b5-11316aa2fc37"));
 
     server.use(
-      http.get("/lsm/v1/service_inventory/parent-service", async() => {
+      http.get("/lsm/v1/service_inventory/parent-service", async () => {
         return HttpResponse.json({ message: "Something went wrong" }, { status: 400 });
       })
     );
@@ -155,11 +155,11 @@ describe("ComposerEditorProvider", () => {
     expect(await screen.findByText("Something went wrong")).toBeInTheDocument();
   });
 
-  it("if there is error when fetching instance with relations the error view is shown", async() => {
+  it("if there is error when fetching instance with relations the error view is shown", async () => {
     render(setup("13920268-cce0-4491-93b5-11316aa2fc37"));
 
     server.use(
-      http.get("/lsm/v1/service_inventory", async() => {
+      http.get("/lsm/v1/service_inventory", async () => {
         return HttpResponse.json({ message: "Something went wrong" }, { status: 400 });
       })
     );
@@ -181,9 +181,9 @@ describe("ComposerEditorProvider", () => {
     expect(await screen.findByText("Something went wrong")).toBeInTheDocument();
   });
 
-  it("if there is error no main service model the error view is shown", async() => {
+  it("if there is error no main service model the error view is shown", async () => {
     server.use(
-      http.get("/lsm/v1/service_catalog", async() => {
+      http.get("/lsm/v1/service_catalog", async () => {
         return HttpResponse.json({
           data: [parentModel, containerModel],
         });
@@ -211,7 +211,7 @@ describe("ComposerEditorProvider", () => {
     ).toBeInTheDocument();
   });
 
-  it("if provider is editable show Instance Composer Editor title ", async() => {
+  it("if provider is editable show Instance Composer Editor title ", async () => {
     render(setup("13920268-cce0-4491-93b5-11316aa2fc37"));
 
     const title = await screen.findByText("Instance Composer Editor");
@@ -219,7 +219,7 @@ describe("ComposerEditorProvider", () => {
     expect(title).toBeInTheDocument();
   });
 
-  it("if provider is not editable show Instance Composer Viewer title ", async() => {
+  it("if provider is not editable show Instance Composer Viewer title ", async () => {
     render(setup("13920268-cce0-4491-93b5-11316aa2fc37", false));
 
     const title = await screen.findByText("Instance Composer Viewer");
@@ -227,7 +227,7 @@ describe("ComposerEditorProvider", () => {
     expect(title).toBeInTheDocument();
   });
 
-  it("navigating out of the View works correctly", async() => {
+  it("navigating out of the View works correctly", async () => {
     render(setup("13920268-cce0-4491-93b5-11316aa2fc37"));
 
     expect(window.location.pathname).toEqual("/");

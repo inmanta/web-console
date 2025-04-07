@@ -83,10 +83,10 @@ export class FieldCreator {
 
     const fieldsFromRelations = entity.inter_service_relations
       ? entity.inter_service_relations
-        .map((interServiceRelation) =>
-          this.interServiceRelationToFields(interServiceRelation, true)
-        )
-        .filter(isNotNull)
+          .map((interServiceRelation) =>
+            this.interServiceRelationToFields(interServiceRelation, true)
+          )
+          .filter(isNotNull)
       : [];
 
     if (this.isList(entity))

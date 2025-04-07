@@ -12,7 +12,7 @@ export const useCreateSupportArchive = (
   const get = useGetZipWithoutEnv();
 
   return useMutation({
-    mutationFn: async() => {
+    mutationFn: async () => {
       const response = await get("/api/v2/support");
 
       return response;

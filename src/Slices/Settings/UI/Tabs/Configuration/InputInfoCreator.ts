@@ -49,7 +49,7 @@ export class InputInfoCreator {
     definition: EnvironmentSettings.Definition,
     setValue: (value: EnvironmentSettings.Value) => void
   ): EnvironmentSettings.InputInfo {
-    const update = async(value: EnvironmentSettings.Value) => {
+    const update = async (value: EnvironmentSettings.Value) => {
       const error = await this.update(definition.name, value);
 
       this.setError(Maybe.withFallback(error, ""));
@@ -57,7 +57,7 @@ export class InputInfoCreator {
       return error;
     };
 
-    const reset = async() => {
+    const reset = async () => {
       if (initial === definition.default && value !== definition.default) {
         setValue(definition.default);
 

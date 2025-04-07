@@ -43,7 +43,7 @@ function getOutsidePoint(bbox: g.Rect, angle: number, anchor: g.Point, padding: 
 /**
  * https://resources.jointjs.com/docs/jointjs/v3.6/joint.html#routers.custom
  */
-const customRouter = function(
+const customRouter = function (
   vertices: Array<g.Point>,
   routerOptions: RouterOptions,
   linkView: dia.LinkView

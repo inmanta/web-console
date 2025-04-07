@@ -83,7 +83,7 @@ export const keepKeys = (
     return acc;
   }, {});
 
-export const resolvePromiseRecord = async(
+export const resolvePromiseRecord = async (
   record: Record<string, Promise<unknown>>
 ): Promise<Record<string, unknown>> => {
   const list = Object.entries(record);

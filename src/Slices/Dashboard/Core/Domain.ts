@@ -15,17 +15,17 @@ export interface StackedMetric {
   data: (
     | { down: number; paused: number; up: number }
     | {
-      available: number;
-      cancelled: number;
-      deployed: number;
-      deploying: number;
-      dry: number;
-      failed: number;
-      skipped: number;
-      skipped_for_undefined: number;
-      unavailable: number;
-      undefined: number;
-    }
+        available: number;
+        cancelled: number;
+        deployed: number;
+        deploying: number;
+        dry: number;
+        failed: number;
+        skipped: number;
+        skipped_for_undefined: number;
+        unavailable: number;
+        undefined: number;
+      }
     | null
   )[];
 }

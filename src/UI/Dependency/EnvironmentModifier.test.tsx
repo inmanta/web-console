@@ -40,7 +40,7 @@ function setup(definition: DefinitionMap) {
   return { component, store, environmentId };
 }
 
-test("Given the environmentModifier When the server compile setting is requested Then returns the correct value", async() => {
+test("Given the environmentModifier When the server compile setting is requested Then returns the correct value", async () => {
   const { component, store, environmentId } = setup(EnvironmentSettings.definition);
 
   // No setting is specified, and the default is true
@@ -54,7 +54,7 @@ test("Given the environmentModifier When the server compile setting is requested
   expect(await screen.findByTestId("server-compile-enabled")).toBeVisible();
 
   // Set the option explicitly to false
-  await act(async() => {
+  await act(async () => {
     store.dispatch.environment.setEnvironmentDetailsById({
       id: environmentId,
       value: RemoteData.success({
@@ -66,7 +66,7 @@ test("Given the environmentModifier When the server compile setting is requested
   expect(await screen.findByTestId("server-compile-disabled")).toBeVisible();
 
   // Set the option explicitly to true
-  await act(async() => {
+  await act(async () => {
     store.dispatch.environment.setEnvironmentDetailsById({
       id: environmentId,
       value: RemoteData.success({
@@ -78,7 +78,7 @@ test("Given the environmentModifier When the server compile setting is requested
   expect(await screen.findByTestId("server-compile-enabled")).toBeVisible();
 });
 
-test("Given the environmentModifier When the missing setting is requested Then render component as the value would be false without throwing an error", async() => {
+test("Given the environmentModifier When the missing setting is requested Then render component as the value would be false without throwing an error", async () => {
   const consoleError = jest.spyOn(console, "error");
 
   delete EnvironmentSettings.definition.server_compile;

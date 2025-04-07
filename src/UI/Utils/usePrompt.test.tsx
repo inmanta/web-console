@@ -43,7 +43,7 @@ const setup = () => {
   return component;
 };
 
-test("GIVEN usePrompt WHEN hook's parameter is equal true and user cancel alert window THEN page doesn't change", async() => {
+test("GIVEN usePrompt WHEN hook's parameter is equal true and user cancel alert window THEN page doesn't change", async () => {
   // prompt window isn't reachable through testing library, so I had to mock user input
   const prompt = jest.spyOn(window, "confirm").mockImplementation(() => false);
 
@@ -60,7 +60,7 @@ test("GIVEN usePrompt WHEN hook's parameter is equal true and user cancel alert 
   expect(window.location.pathname).toMatch("/");
 });
 
-test("GIVEN usePrompt WHEN hook's parameter is equal false THEN page is changed", async() => {
+test("GIVEN usePrompt WHEN hook's parameter is equal false THEN page is changed", async () => {
   const prompt = jest.spyOn(window, "confirm");
 
   render(setup());
@@ -73,7 +73,7 @@ test("GIVEN usePrompt WHEN hook's parameter is equal false THEN page is changed"
   expect(window.location.pathname).toMatch("/page");
 });
 
-test("GIVEN usePrompt WHEN hook's parameter is equal true and user confirm alert window THEN page is changed", async() => {
+test("GIVEN usePrompt WHEN hook's parameter is equal true and user confirm alert window THEN page is changed", async () => {
   const prompt = jest.spyOn(window, "confirm").mockImplementation(() => true);
 
   render(setup());

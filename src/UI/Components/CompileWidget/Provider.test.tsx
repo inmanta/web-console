@@ -50,7 +50,7 @@ function setup({
   return { component, afterTrigger };
 }
 const server = setupServer(
-  http.post("/api/v1/notify/env", async() => {
+  http.post("/api/v1/notify/env", async () => {
     return HttpResponse.json({});
   })
 );
@@ -59,7 +59,7 @@ describe("CompileWidgetProvider", () => {
   beforeAll(() => server.listen());
   afterAll(() => server.close());
 
-  test("GIVEN CompileButton WHEN clicked THEN triggers recompile", async() => {
+  test("GIVEN CompileButton WHEN clicked THEN triggers recompile", async () => {
     const { component, afterTrigger } = setup();
 
     render(component);
@@ -81,7 +81,7 @@ describe("CompileWidgetProvider", () => {
     expect(button).toBeEnabled();
   });
 
-  test("GIVEN CompileButton WHEN clicked on toggle and clicked on Update & Recompile option THEN triggers recompile with update", async() => {
+  test("GIVEN CompileButton WHEN clicked on toggle and clicked on Update & Recompile option THEN triggers recompile with update", async () => {
     const { component, afterTrigger } = setup();
 
     render(component);
@@ -114,7 +114,7 @@ describe("CompileWidgetProvider", () => {
     });
   });
 
-  test("GIVEN CompileButton WHEN environmentSetting server_compile is disabled THEN button is disabled", async() => {
+  test("GIVEN CompileButton WHEN environmentSetting server_compile is disabled THEN button is disabled", async () => {
     const { component } = setup({
       details: {
         halted: false,
@@ -131,7 +131,7 @@ describe("CompileWidgetProvider", () => {
     expect(button).toBeDisabled();
   });
 
-  test("GIVEN CompileButton WHEN 'isToastVisible' parameter is false and recompile clicked THEN toast won't appear", async() => {
+  test("GIVEN CompileButton WHEN 'isToastVisible' parameter is false and recompile clicked THEN toast won't appear", async () => {
     const { component } = setup({
       details: {
         halted: false,

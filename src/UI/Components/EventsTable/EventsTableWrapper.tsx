@@ -61,15 +61,15 @@ const HeadsWithSort: React.FC<Required<Pick<Props, "setSort" | "sort" | "tablePr
     const sortParams =
       columnIndex == 1
         ? {
-          sort: {
-            sortBy: {
-              index: 1,
-              direction: sort.order,
+            sort: {
+              sortBy: {
+                index: 1,
+                direction: sort.order,
+              },
+              onSort,
+              columnIndex,
             },
-            onSort,
-            columnIndex,
-          },
-        }
+          }
         : {};
 
     return (

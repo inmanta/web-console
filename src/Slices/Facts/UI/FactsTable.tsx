@@ -24,15 +24,15 @@ export const FactsTable: React.FC<Props> = ({ rows, tablePresenter, sort, setSor
     const hasSort = tablePresenter.getSortableColumnNames().includes(apiName);
     const sortParams = hasSort
       ? {
-        sort: {
-          sortBy: {
-            index: activeSortIndex,
-            direction: sort.order,
+          sort: {
+            sortBy: {
+              index: activeSortIndex,
+              direction: sort.order,
+            },
+            onSort,
+            columnIndex,
           },
-          onSort,
-          columnIndex,
-        },
-      }
+        }
       : {};
 
     return (

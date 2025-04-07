@@ -98,7 +98,7 @@ describe("Diagnose", () => {
   // Clean up after the tests are finished.
   afterAll(() => server.close());
 
-  test("Diagnose View shows empty table", async() => {
+  test("Diagnose View shows empty table", async () => {
     const { component } = setup();
 
     render(component);
@@ -107,14 +107,14 @@ describe("Diagnose", () => {
 
     expect(await screen.findByRole("generic", { name: "Diagnostics-Empty" })).toBeInTheDocument();
 
-    await act(async() => {
+    await act(async () => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
     });
   });
 
-  test("Diagnose View shows failed table", async() => {
+  test("Diagnose View shows failed table", async () => {
     server.use(
       http.get(
         "/lsm/v1/service_inventory/service_name_a/4a4a6d14-8cd0-4a16-bc38-4b768eb004e3/diagnose",
@@ -137,14 +137,14 @@ describe("Diagnose", () => {
 
     expect(await screen.findByRole("region", { name: "Diagnostics-Error" })).toBeInTheDocument();
 
-    await act(async() => {
+    await act(async () => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
     });
   });
 
-  test("Diagnose View shows success table", async() => {
+  test("Diagnose View shows success table", async () => {
     server.use(
       http.get(
         "/lsm/v1/service_inventory/service_name_a/4a4a6d14-8cd0-4a16-bc38-4b768eb004e3/diagnose",
@@ -159,7 +159,7 @@ describe("Diagnose", () => {
 
     expect(await screen.findByRole("generic", { name: "Diagnostics-Success" })).toBeInTheDocument();
 
-    await act(async() => {
+    await act(async () => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();

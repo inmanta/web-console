@@ -14,7 +14,7 @@ import { setupServiceInstanceDetails } from "./mockSetup";
 expect.extend(toHaveNoViolations);
 
 describe("ServiceInstanceDetailsPage", () => {
-  it("Should render the view in its loading states", async() => {
+  it("Should render the view in its loading states", async () => {
     const server = loadingServer;
 
     server.listen();
@@ -30,7 +30,7 @@ describe("ServiceInstanceDetailsPage", () => {
 
     expect(await screen.findByRole("region", { name: "History-Loading" })).toBeInTheDocument();
 
-    await act(async() => {
+    await act(async () => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
@@ -39,7 +39,7 @@ describe("ServiceInstanceDetailsPage", () => {
     server.close();
   });
 
-  it("Should render an error view when the query isError", async() => {
+  it("Should render an error view when the query isError", async () => {
     const server = errorServerInstance;
 
     server.listen();
@@ -47,7 +47,7 @@ describe("ServiceInstanceDetailsPage", () => {
 
     render(component);
 
-    await act(async() => {
+    await act(async () => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
@@ -67,7 +67,7 @@ describe("ServiceInstanceDetailsPage", () => {
     server.close();
   });
 
-  it("Should render success view without config when there's instance data, but error view in the history section when there are no logs", async() => {
+  it("Should render success view without config when there's instance data, but error view in the history section when there are no logs", async () => {
     const server = errorServerHistory;
 
     server.listen();
@@ -81,7 +81,7 @@ describe("ServiceInstanceDetailsPage", () => {
       await screen.findByRole("region", { name: "Instance-Details-Success" })
     ).toBeInTheDocument();
 
-    await act(async() => {
+    await act(async () => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
@@ -107,7 +107,7 @@ describe("ServiceInstanceDetailsPage", () => {
     server.close();
   });
 
-  it("Should render a success view without config", async() => {
+  it("Should render a success view without config", async () => {
     const server = defaultServer;
 
     server.listen();
@@ -256,7 +256,7 @@ describe("ServiceInstanceDetailsPage", () => {
   // TODO: @LukasStordeur Implement test when config tab has usecases.
   //it("Should render a success view and with config section if present", async () => { });
 
-  it("Should render a success view with documentation", async() => {
+  it("Should render a success view with documentation", async () => {
     const server = serverWithDocumentation;
 
     server.listen();

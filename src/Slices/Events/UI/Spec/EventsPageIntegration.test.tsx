@@ -16,12 +16,12 @@ describe("Given the Events Page", () => {
     ${"Version"}     | ${"number"} | ${"1"}                 | ${"Filter by version..."}          | ${"version"}
   `(
     "When using the $filterName filter of type $filterType with value $filterValue and text $placeholderText then the events with that $filterUrlName should be fetched and shown",
-    async({ filterName, filterType, filterValue, placeholderText, filterUrlName }) => {
+    async ({ filterName, filterType, filterValue, placeholderText, filterUrlName }) => {
       const { component, apiHelper } = new EventsPageComposer().compose(Service.a);
 
       render(component);
 
-      await act(async() => {
+      await act(async () => {
         await apiHelper.resolve(
           Either.right({
             data: InstanceEvent.listA,
@@ -61,7 +61,7 @@ describe("Given the Events Page", () => {
         `/lsm/v1/service_inventory/${Service.a.name}/id1/events?limit=20&sort=timestamp.desc&filter.${filterUrlName}=${filterValue}`
       );
 
-      await act(async() => {
+      await act(async () => {
         await apiHelper.resolve(
           Either.right({
             data: InstanceEvent.listB,
@@ -79,12 +79,12 @@ describe("Given the Events Page", () => {
     }
   );
 
-  it("When using the Date filter then the events with from and to the events in the range should be fetched and shown", async() => {
+  it("When using the Date filter then the events with from and to the events in the range should be fetched and shown", async () => {
     const { component, apiHelper } = new EventsPageComposer().compose(Service.a);
 
     render(component);
 
-    await act(async() => {
+    await act(async () => {
       await apiHelper.resolve(
         Either.right({
           data: InstanceEvent.listA,
@@ -122,7 +122,7 @@ describe("Given the Events Page", () => {
       `/lsm/v1/service_inventory/${Service.a.name}/id1/events?limit=20&sort=timestamp.desc&filter.timestamp=ge%3A2021-04-`
     );
 
-    await act(async() => {
+    await act(async () => {
       await apiHelper.resolve(
         Either.right({
           data: InstanceEvent.listB,
@@ -140,7 +140,7 @@ describe("Given the Events Page", () => {
 
     // The chips are hidden in small windows, so resize it
     window = Object.assign(window, { innerWidth: 1200 });
-    await act(async() => {
+    await act(async () => {
       window.dispatchEvent(new Event("resize"));
     });
     expect(await screen.findByText("from | 2021/04/28 00:00:00", { exact: false })).toBeVisible();
@@ -153,12 +153,12 @@ describe("Given the Events Page", () => {
     ${"To"}    | ${"2021-05-30"} | ${"le"}  | ${"to | 2021/05/30 00:00:00"}
   `(
     "When using the Date filter then the events with only $filterType filter, the matching should be fetched and a chip shown",
-    async({ filterType, value, operator, chip }) => {
+    async ({ filterType, value, operator, chip }) => {
       const { component, apiHelper } = new EventsPageComposer().compose(Service.a);
 
       render(component);
 
-      await act(async() => {
+      await act(async () => {
         await apiHelper.resolve(
           Either.right({
             data: InstanceEvent.listA,
@@ -192,7 +192,7 @@ describe("Given the Events Page", () => {
         `/lsm/v1/service_inventory/${Service.a.name}/id1/events?limit=20&sort=timestamp.desc&filter.timestamp=${operator}%3A2021-05-`
       );
 
-      await act(async() => {
+      await act(async () => {
         await apiHelper.resolve(
           Either.right({
             data: InstanceEvent.listB,
@@ -210,7 +210,7 @@ describe("Given the Events Page", () => {
 
       // The chips are hidden in small windows, so resize it
       window = Object.assign(window, { innerWidth: 1200 });
-      await act(async() => {
+      await act(async () => {
         window.dispatchEvent(new Event("resize"));
       });
 

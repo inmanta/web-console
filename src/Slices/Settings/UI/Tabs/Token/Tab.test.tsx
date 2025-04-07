@@ -23,7 +23,7 @@ function setup() {
   return { component, apiHelper };
 }
 
-test("GIVEN TokenTab WHEN generate button is clicked THEN generate call is executed", async() => {
+test("GIVEN TokenTab WHEN generate button is clicked THEN generate call is executed", async () => {
   const { component, apiHelper } = setup();
 
   render(component);
@@ -46,7 +46,7 @@ test("GIVEN TokenTab WHEN generate button is clicked THEN generate call is execu
   });
 });
 
-test("GIVEN TokenTab WHEN api clientType is selected and generate button is clicked THEN generate call is executed with clientType set", async() => {
+test("GIVEN TokenTab WHEN api clientType is selected and generate button is clicked THEN generate call is executed with clientType set", async () => {
   const { component, apiHelper } = setup();
 
   render(component);
@@ -67,7 +67,7 @@ test("GIVEN TokenTab WHEN api clientType is selected and generate button is clic
   });
 });
 
-test("GIVEN TokenTab WHEN generate fails THEN the error is shown", async() => {
+test("GIVEN TokenTab WHEN generate fails THEN the error is shown", async () => {
   const { component, apiHelper } = setup();
 
   render(component);
@@ -78,7 +78,7 @@ test("GIVEN TokenTab WHEN generate fails THEN the error is shown", async() => {
     })
   );
 
-  await act(async() => {
+  await act(async () => {
     await apiHelper.resolve(Either.left("error message"));
   });
 
@@ -88,7 +88,7 @@ test("GIVEN TokenTab WHEN generate fails THEN the error is shown", async() => {
   expect(within(errorContainer).getByText("error message")).toBeVisible();
 });
 
-test("GIVEN TokenTab WHEN generate succeeds THEN the token is shown", async() => {
+test("GIVEN TokenTab WHEN generate succeeds THEN the token is shown", async () => {
   const { component, apiHelper } = setup();
 
   render(component);
@@ -105,7 +105,7 @@ test("GIVEN TokenTab WHEN generate succeeds THEN the token is shown", async() =>
     })
   );
 
-  await act(async() => {
+  await act(async () => {
     await apiHelper.resolve(Either.right({ data: "tokenstring123" }));
   });
 

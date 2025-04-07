@@ -8,7 +8,7 @@ export const anchorNamespace = { ...anchors };
  *  creates new custom anchor
  *  https://resources.jointjs.com/docs/jointjs/v3.6/joint.html#anchors.custom
  */
-const customAnchor = function(
+const customAnchor = function (
   /* eslint-disable @typescript-eslint/no-explicit-any */
   this: any,
   view: dia.ElementView,

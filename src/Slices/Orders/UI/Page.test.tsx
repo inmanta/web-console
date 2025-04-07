@@ -16,7 +16,7 @@ const OrderPage = (
   </Page>
 );
 
-test("OrdersView shows empty table", async() => {
+test("OrdersView shows empty table", async () => {
   const { component, apiHelper } = baseSetup(OrderPage);
 
   render(component);
@@ -30,20 +30,20 @@ test("OrdersView shows empty table", async() => {
     environment: "env",
   });
 
-  await act(async() => {
+  await act(async () => {
     await apiHelper.resolve(Either.right(emptyResponse));
   });
 
   expect(await screen.findByRole("generic", { name: "OrdersView-Empty" })).toBeInTheDocument();
 
-  await act(async() => {
+  await act(async () => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("OrdersView shows failed table", async() => {
+test("OrdersView shows failed table", async () => {
   const { component, apiHelper } = baseSetup(OrderPage);
 
   render(component);
@@ -57,20 +57,20 @@ test("OrdersView shows failed table", async() => {
     environment: "env",
   });
 
-  await act(async() => {
+  await act(async () => {
     await apiHelper.resolve(Either.left("error"));
   });
 
   expect(await screen.findByRole("region", { name: "OrdersView-Failed" })).toBeInTheDocument();
 
-  await act(async() => {
+  await act(async () => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("OrdersView shows success table", async() => {
+test("OrdersView shows success table", async () => {
   const { component, apiHelper } = baseSetup(OrderPage);
 
   render(component);
@@ -84,7 +84,7 @@ test("OrdersView shows success table", async() => {
     environment: "env",
   });
 
-  await act(async() => {
+  await act(async () => {
     await apiHelper.resolve(Either.right(orderResponse));
   });
 
@@ -96,14 +96,14 @@ test("OrdersView shows success table", async() => {
 
   expect(rows).toHaveLength(4);
 
-  await act(async() => {
+  await act(async () => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("OrdersView shows updated table", async() => {
+test("OrdersView shows updated table", async () => {
   const { component, apiHelper, scheduler } = baseSetup(OrderPage);
 
   render(component);
@@ -117,7 +117,7 @@ test("OrdersView shows updated table", async() => {
     environment: "env",
   });
 
-  await act(async() => {
+  await act(async () => {
     await apiHelper.resolve(Either.right(emptyResponse));
   });
 
@@ -125,26 +125,26 @@ test("OrdersView shows updated table", async() => {
 
   scheduler.executeAll();
 
-  await act(async() => {
+  await act(async () => {
     await apiHelper.resolve(Either.right(orderResponse));
   });
 
   expect(await screen.findByRole("generic", { name: "OrdersView-Success" })).toBeInTheDocument();
 
-  await act(async() => {
+  await act(async () => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("GIVEN OrdersView WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async() => {
+test("GIVEN OrdersView WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async () => {
   const { component, apiHelper } = baseSetup(OrderPage);
 
   render(component);
 
   //mock that response has more than one site
-  await act(async() => {
+  await act(async () => {
     apiHelper.resolve(
       Either.right({
         ...orderResponse,
@@ -172,7 +172,7 @@ test("GIVEN OrdersView WHEN sorting changes AND we are not on the first page THE
   expect(apiHelper.pendingRequests[0].url).toMatch(/(&start=|&end=)/);
   expect(apiHelper.pendingRequests[0].url).toMatch(/(&sort=created_at.desc)/);
 
-  await act(async() => {
+  await act(async () => {
     apiHelper.resolve(
       Either.right({
         ...orderResponse,

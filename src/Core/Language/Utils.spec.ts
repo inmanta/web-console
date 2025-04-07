@@ -38,7 +38,7 @@ test("keepKeys", () => {
   expect(keepKeys(["a", "b"], { a: 1, c: 2, d: 3 })).toEqual({ a: 1 });
 });
 
-test("resolvePromiseRecord", async() => {
+test("resolvePromiseRecord", async () => {
   const promiseRecord: Record<string, Promise<unknown>> = {
     a: new Promise((resolve) => resolve(123)),
     b: new Promise((resolve) => resolve("blabla")),

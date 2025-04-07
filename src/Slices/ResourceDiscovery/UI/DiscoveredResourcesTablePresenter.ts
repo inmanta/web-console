@@ -3,7 +3,8 @@ import { words } from "@/UI/words";
 import { DiscoveredResource } from "../Core/Query";
 
 export class DiscoveredResourcesTablePresenter
-implements TablePresenter<DiscoveredResource, DiscoveredResource> {
+  implements TablePresenter<DiscoveredResource, DiscoveredResource>
+{
   readonly columnHeads: ColumnHead[];
   readonly numberOfColumns: number;
 

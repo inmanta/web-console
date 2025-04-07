@@ -9,21 +9,21 @@ export function getUrl(
   const filterParam =
     filter && Object.keys(filter).length > 0
       ? `&${qs.stringify(
-        {
-          filter: {
-            name: filter.name,
-            source: filter.source,
-            updated: filter.updated?.map(
-              (timestampWithOperator) =>
-                `${RangeOperator.serializeOperator(timestampWithOperator.operator)}:${moment
-                  .tz(timestampWithOperator.date, timezone)
-                  .utc()
-                  .format("YYYY-MM-DD+HH:mm:ss")}`
-            ),
+          {
+            filter: {
+              name: filter.name,
+              source: filter.source,
+              updated: filter.updated?.map(
+                (timestampWithOperator) =>
+                  `${RangeOperator.serializeOperator(timestampWithOperator.operator)}:${moment
+                    .tz(timestampWithOperator.date, timezone)
+                    .utc()
+                    .format("YYYY-MM-DD+HH:mm:ss")}`
+              ),
+            },
           },
-        },
-        { allowDots: true, arrayFormat: "repeat" }
-      )}`
+          { allowDots: true, arrayFormat: "repeat" }
+        )}`
       : "";
   const sortParam = sort ? `&sort=${sort.name}.${sort.order}` : "";
 

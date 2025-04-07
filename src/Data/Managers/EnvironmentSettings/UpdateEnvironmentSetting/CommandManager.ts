@@ -9,7 +9,7 @@ export function UpdateEnvironmentSettingCommandManager(
   return CommandManagerWithEnv<"UpdateEnvironmentSetting">(
     "UpdateEnvironmentSetting",
     (command, environment) => {
-      return async(id, value) => {
+      return async (id, value) => {
         const error = await apiHelper.postWithoutResponse(
           `/api/v2/environment_settings/${id}`,
           environment,

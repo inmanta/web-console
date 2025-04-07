@@ -10,13 +10,13 @@ export function getUrl({
   const filterParam =
     filter && Object.keys(filter).length > 0
       ? `&${qs.stringify(
-        {
-          filter: {
-            discovered_resource_id: filter.discovered_resource_id,
+          {
+            filter: {
+              discovered_resource_id: filter.discovered_resource_id,
+            },
           },
-        },
-        { allowDots: true, arrayFormat: "repeat" }
-      )}`
+          { allowDots: true, arrayFormat: "repeat" }
+        )}`
       : "";
   const sortParam = sort ? `&sort=${sort.name}.${sort.order}` : "";
 

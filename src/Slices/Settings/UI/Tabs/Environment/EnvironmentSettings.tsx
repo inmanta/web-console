@@ -35,7 +35,7 @@ export const EnvironmentSettings: React.FC<Props> = ({ environment, projects }) 
       branch: fields["repo_branch"],
     });
 
-  const onProjectSubmit = async(projectName: string) => {
+  const onProjectSubmit = async (projectName: string) => {
     const match = projects.find((project) => project.name === projectName);
 
     if (!match) {
@@ -48,13 +48,13 @@ export const EnvironmentSettings: React.FC<Props> = ({ environment, projects }) 
     });
   };
 
-  const onIconSubmit = async(icon: string) =>
+  const onIconSubmit = async (icon: string) =>
     modifyEnvironmentTrigger({
       name: environment.name,
       icon,
     });
 
-  const onDescriptionSubmit = async(description: string) =>
+  const onDescriptionSubmit = async (description: string) =>
     modifyEnvironmentTrigger({
       name: environment.name,
       description,

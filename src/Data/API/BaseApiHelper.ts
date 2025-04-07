@@ -98,7 +98,7 @@ export const BaseApiHelper = (
     ...params: Parameters<typeof fetch>
   ): Promise<Either.Type<string, Data>> {
     return execute<Data, string>(
-      async(response) => jsonParser.parse(await response.text()),
+      async (response) => jsonParser.parse(await response.text()),
       identity,
       ...params
     );
@@ -297,8 +297,8 @@ export const BaseApiHelper = (
     environment: string
   ): Promise<Either.Type<ErrorWithHTTPCode, Data>> {
     return execute<Data, ErrorWithHTTPCode>(
-      async(response) => jsonParser.parse(await response.text()),
-      async(message, status) => ({ message, status }),
+      async (response) => jsonParser.parse(await response.text()),
+      async (message, status) => ({ message, status }),
       getFullUrl(url),
       { headers: getHeaders(environment) }
     );
@@ -320,7 +320,7 @@ export const BaseApiHelper = (
       let response;
 
       await fetch(...params)
-        .then(async(res) => {
+        .then(async (res) => {
           response = res;
         })
         .catch(() => {
@@ -366,7 +366,7 @@ export const BaseApiHelper = (
       let response;
 
       await fetch(...params)
-        .then(async(res) => {
+        .then(async (res) => {
           response = res;
         })
         .catch(() => {

@@ -10,14 +10,14 @@ export function getUrl({
   const filterParam =
     filter && Object.keys(filter).length > 0
       ? `&${qs.stringify(
-        {
-          filter: {
-            name: filter.name,
-            resource_id: filter.resource_id,
+          {
+            filter: {
+              name: filter.name,
+              resource_id: filter.resource_id,
+            },
           },
-        },
-        { allowDots: true, arrayFormat: "repeat" }
-      )}`
+          { allowDots: true, arrayFormat: "repeat" }
+        )}`
       : "";
   const sortParam = sort ? `&sort=${sort.name}.${sort.order}` : "";
 

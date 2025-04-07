@@ -85,7 +85,7 @@ const openSettings = (envName) => {
 };
 
 describe("Environment", () => {
-  it("1.1 cancel creation of an environment", function() {
+  it("1.1 cancel creation of an environment", function () {
     cy.visit("/console/");
     cy.get('[aria-label="Overview-Success"] > :first-child').click();
     cy.url().should("eq", Cypress.config().baseUrl + "/console/environment/create");
@@ -97,7 +97,7 @@ describe("Environment", () => {
     cy.url().should("eq", Cypress.config().baseUrl + "/console");
   });
 
-  it("1.2 Create new  environment", function() {
+  it("1.2 Create new  environment", function () {
     cy.intercept("/lsm/v1/service_catalog?instance_summary=True").as("getCatalog");
 
     //fill the form and submit
@@ -130,7 +130,7 @@ describe("Environment", () => {
     deleteEnv(testName(2), testProjectName(2));
   });
 
-  it("1.4 Edit created environment", function() {
+  it("1.4 Edit created environment", function () {
     //Fill The form and submit
     cy.visit("/console/environment/create");
     fillCreateEnvForm({
@@ -201,7 +201,7 @@ describe("Environment", () => {
 
   // specific to ISO
   if (Cypress.env("edition") === "iso") {
-    it("1.5 Clear environment", function() {
+    it("1.5 Clear environment", function () {
       // Fill The form and submit
       cy.visit("/console/");
       cy.get('[aria-label="Select-environment-test"]').click();
@@ -246,7 +246,7 @@ describe("Environment", () => {
     });
   }
 
-  it("1.6 Edit environment configuration", function() {
+  it("1.6 Edit environment configuration", function () {
     cy.visit("/console/environment/create");
     fillCreateEnvForm({
       envName: testName(6),

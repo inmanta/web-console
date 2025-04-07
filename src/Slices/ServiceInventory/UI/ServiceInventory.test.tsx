@@ -91,7 +91,7 @@ describe("ServiceInventory", () => {
   afterEach(() => server.resetHandlers());
   afterAll(() => server.close());
 
-  test("ServiceInventory shows empty view instances", async() => {
+  test("ServiceInventory shows empty view instances", async () => {
     server.use(
       http.get("/lsm/v1/service_inventory/service_name_a", () => {
         return HttpResponse.json({ data: [], metadata: Pagination.metadata });
@@ -111,7 +111,7 @@ describe("ServiceInventory", () => {
     ).toBeInTheDocument();
   });
 
-  test("ServiceInventory shows error with retry", async() => {
+  test("ServiceInventory shows error with retry", async () => {
     let queryCount = 0;
 
     server.use(
@@ -143,14 +143,14 @@ describe("ServiceInventory", () => {
       await screen.findByRole("grid", { name: "ServiceInventory-Success" })
     ).toBeInTheDocument();
 
-    await act(async() => {
+    await act(async () => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
     });
   });
 
-  test("ServiceInventory shows next page of instances", async() => {
+  test("ServiceInventory shows next page of instances", async () => {
     let queryCount = 0;
 
     server.use(
@@ -195,14 +195,14 @@ describe("ServiceInventory", () => {
 
     expect(await screen.findByRole("cell", { name: "IdCell-b" })).toBeInTheDocument();
 
-    await act(async() => {
+    await act(async () => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
     });
   });
 
-  test("ServiceInventory shows instance summary chart", async() => {
+  test("ServiceInventory shows instance summary chart", async () => {
     const { component } = setup(Service.withInstanceSummary);
 
     render(component);
@@ -212,7 +212,7 @@ describe("ServiceInventory", () => {
     ).toBeInTheDocument();
   });
 
-  test("ServiceInventory shows enabled composer buttons for root instances ", async() => {
+  test("ServiceInventory shows enabled composer buttons for root instances ", async () => {
     server.use(
       http.get("/lsm/v1/service_inventory/service_name_a", () => {
         return HttpResponse.json({
@@ -247,7 +247,7 @@ describe("ServiceInventory", () => {
     expect(screen.queryByText("Show in Composer")).toBeEnabled();
   });
 
-  test("ServiceInventory shows only button to display instance in the composer for non-root", async() => {
+  test("ServiceInventory shows only button to display instance in the composer for non-root", async () => {
     server.use(
       http.get("/lsm/v1/service_inventory/service_name_a", () => {
         return HttpResponse.json({
@@ -281,7 +281,7 @@ describe("ServiceInventory", () => {
     expect(screen.getByText("Edit in Composer")).toBeInTheDocument();
   });
 
-  test("GIVEN ServiceInventory WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async() => {
+  test("GIVEN ServiceInventory WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async () => {
     server.use(
       http.get("/lsm/v1/service_inventory/service_name_a", ({ request }) => {
         const url = new URL(request.url);

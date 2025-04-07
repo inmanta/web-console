@@ -101,7 +101,7 @@ function setup(expertMode = false, setSortFn: (props) => void = dummySetter) {
   return component;
 }
 
-test("ServiceInventory shows service identity if it's defined", async() => {
+test("ServiceInventory shows service identity if it's defined", async () => {
   const component = setup();
 
   render(component);
@@ -111,7 +111,7 @@ test("ServiceInventory shows service identity if it's defined", async() => {
   expect(await screen.findByText("instance1")).toBeVisible();
 });
 
-test("ServiceInventory shows sorting buttons for sortable columns", async() => {
+test("ServiceInventory shows sorting buttons for sortable columns", async () => {
   const component = setup();
 
   render(component);
@@ -121,7 +121,7 @@ test("ServiceInventory shows sorting buttons for sortable columns", async() => {
   expect(screen.queryByRole("button", { name: /attributes/i })).not.toBeInTheDocument();
 });
 
-test("ServiceInventory sets sorting parameters correctly on click", async() => {
+test("ServiceInventory sets sorting parameters correctly on click", async () => {
   let sort;
   const expertMode = false;
   const component = setup(expertMode, (value) => (sort = value));
@@ -138,7 +138,7 @@ test("ServiceInventory sets sorting parameters correctly on click", async() => {
 });
 
 describe("Actions", () => {
-  it("Should have 6 options in total", async() => {
+  it("Should have 6 options in total", async () => {
     const component = setup();
 
     render(component);

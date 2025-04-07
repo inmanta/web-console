@@ -3,7 +3,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { LookBackSlider } from "./LookBackSlider";
 
-it("LookBackSlider calls callback with adequate value on apply", async() => {
+it("LookBackSlider calls callback with adequate value on apply", async () => {
   const callback = jest.fn();
 
   render(

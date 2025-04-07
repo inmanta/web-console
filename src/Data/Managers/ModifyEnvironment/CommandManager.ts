@@ -8,7 +8,7 @@ export function ModifyEnvironmentCommandManager(
 ) {
   return CommandManagerWithEnv<"ModifyEnvironment">(
     "ModifyEnvironment",
-    (command, environment) => async(body: ModifyEnvironmentParams) => {
+    (command, environment) => async (body: ModifyEnvironmentParams) => {
       const error = await apiHelper.postWithoutResponseAndEnvironment(
         `/api/v2/environment/${environment}`,
         body

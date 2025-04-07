@@ -43,7 +43,7 @@ function setup() {
   };
 }
 
-test("GIVEN Discovered Resources page THEN shows table", async() => {
+test("GIVEN Discovered Resources page THEN shows table", async () => {
   const { component, apiHelper } = setup();
 
   render(component);
@@ -104,14 +104,14 @@ test("GIVEN Discovered Resources page THEN shows table", async() => {
   expect(within(rows[3]).getByTestId("Managed resource")).toHaveTextContent("");
   expect(within(rows[3]).getByTestId("Discovery resource")).toHaveTextContent("");
 
-  await act(async() => {
+  await act(async () => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("GIVEN Discovered Resources page THEN sets sorting parameters correctly on click", async() => {
+test("GIVEN Discovered Resources page THEN sets sorting parameters correctly on click", async () => {
   const { component, apiHelper } = setup();
 
   render(component);
@@ -127,20 +127,20 @@ test("GIVEN Discovered Resources page THEN sets sorting parameters correctly on 
 
   expect(apiHelper.pendingRequests[0].url).toContain("&sort=discovered_resource_id.desc");
 
-  await act(async() => {
+  await act(async () => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("GIVEN Discovered Resources WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async() => {
+test("GIVEN Discovered Resources WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async () => {
   const { component, apiHelper } = setup();
 
   render(component);
 
   //mock that response has more than one site
-  await act(async() => {
+  await act(async () => {
     apiHelper.resolve(
       Either.right({
         ...DiscoveredResources.response,
@@ -166,7 +166,7 @@ test("GIVEN Discovered Resources WHEN sorting changes AND we are not on the firs
   expect(apiHelper.pendingRequests[0].url).toMatch(/(&start=|&end=)/);
   expect(apiHelper.pendingRequests[0].url).toMatch(/(&sort=discovered_resource_id.asc)/);
 
-  await act(async() => {
+  await act(async () => {
     apiHelper.resolve(Either.right(DiscoveredResources.response));
   });
 

@@ -62,7 +62,7 @@ const setup = (
   );
 };
 
-test("GIVEN EnvironmentSelector WHEN there are no environments THEN redirects", async() => {
+test("GIVEN EnvironmentSelector WHEN there are no environments THEN redirects", async () => {
   const history = createMemoryHistory();
 
   render(
@@ -82,7 +82,7 @@ test("GIVEN EnvironmentSelector WHEN there are no environments THEN redirects", 
   expect(history.location.pathname).toEqual("/");
 });
 
-test("GIVEN EnvironmentSelector and a project WHEN user clicks on toggle THEN list of projects is shown", async() => {
+test("GIVEN EnvironmentSelector and a project WHEN user clicks on toggle THEN list of projects is shown", async () => {
   const envA = Environment.filterable[0];
   const envB = Environment.filterable[2];
 
@@ -97,7 +97,7 @@ test("GIVEN EnvironmentSelector and a project WHEN user clicks on toggle THEN li
   expect(listItem).toBeVisible();
 });
 
-test("GIVEN EnvironmentSelector and populated store WHEN user clicks on an item THEN selected environment is changed", async() => {
+test("GIVEN EnvironmentSelector and populated store WHEN user clicks on an item THEN selected environment is changed", async () => {
   let selectedEnv;
   const onSelectEnv = (item) => {
     selectedEnv = item.environmentId;
@@ -125,7 +125,7 @@ test("GIVEN EnvironmentSelector and populated store WHEN user clicks on an item 
   expect(selectedEnv).toEqual(envB.id);
 });
 
-test("GIVEN EnvironmentSelector and environments with identical names WHEN user clicks on an environment THEN the correct environment is selected", async() => {
+test("GIVEN EnvironmentSelector and environments with identical names WHEN user clicks on an environment THEN the correct environment is selected", async () => {
   let selectedEnv;
   const onSelectEnv = (item) => {
     selectedEnv = item.environmentId;
@@ -153,10 +153,10 @@ test("GIVEN EnvironmentSelector and environments with identical names WHEN user 
   expect(selectedEnv).toEqual(envB.id);
 });
 
-test("GIVEN EnvironmentSelector WHEN jwt auth is enabled will display fetched username on load", async() => {
+test("GIVEN EnvironmentSelector WHEN jwt auth is enabled will display fetched username on load", async () => {
   const onSelectEnv = () => {};
   const server = setupServer(
-    http.get("/api/v2/current_user", async() => {
+    http.get("/api/v2/current_user", async () => {
       return HttpResponse.json({
         data: {
           username: "test_user",
@@ -176,10 +176,10 @@ test("GIVEN EnvironmentSelector WHEN jwt auth is enabled will display fetched us
   server.close();
 });
 
-test("GIVEN EnvironmentSelector WHEN jwt auth is enabled and current_user request returns 404 we should display Selector as is by default", async() => {
+test("GIVEN EnvironmentSelector WHEN jwt auth is enabled and current_user request returns 404 we should display Selector as is by default", async () => {
   const onSelectEnv = () => {};
   const server = setupServer(
-    http.get("/api/v2/current_user", async() => {
+    http.get("/api/v2/current_user", async () => {
       return HttpResponse.json(
         {
           message:

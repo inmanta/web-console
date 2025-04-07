@@ -51,11 +51,11 @@ const TestWrapper = () => {
   );
 };
 
-test("Given the AutoCompleteInputProvider When typing an instance name or id Then the correct request is fired", async() => {
+test("Given the AutoCompleteInputProvider When typing an instance name or id Then the correct request is fired", async () => {
   server.listen();
   const mockFn = jest.fn();
 
-  jest.spyOn(queryModule, "useGet").mockReturnValue(async(path) => {
+  jest.spyOn(queryModule, "useGet").mockReturnValue(async (path) => {
     mockFn(path);
     const response = await fetch(path);
 

@@ -6,7 +6,7 @@ test.each`
   ${"?state.Inventory.tab=Attributes"} | ${"Attributes"} | ${"Attributes"} | ${"Attributes"}
 `(
   "GIVEN handleUrlState with String WHEN search is $searchText THEN returns $valueText",
-  async({ search, expectedValue }) => {
+  async ({ search, expectedValue }) => {
     const [value] = handleUrlStateWithString(
       { default: "Info", key: "tab", route: "Inventory" },
       { pathname: "", search, hash: "" },

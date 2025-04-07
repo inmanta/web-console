@@ -4,7 +4,7 @@ import { BaseApiHelper } from "./BaseApiHelper";
 
 const baseUrl = "http://localhost:8888";
 
-test("BaseApiHelper.get executes a GET request with correct url & env", async() => {
+test("BaseApiHelper.get executes a GET request with correct url & env", async () => {
   const apiHelper = BaseApiHelper(undefined, defaultAuthContext);
   const url = "/test-url";
   const env = "environment_a";
@@ -18,7 +18,7 @@ test("BaseApiHelper.get executes a GET request with correct url & env", async() 
   expect(requestInit?.headers).toEqual({ "X-Inmanta-Tid": env });
 });
 
-test("BaseApiHelper.post executes a POST request with correct url & env", async() => {
+test("BaseApiHelper.post executes a POST request with correct url & env", async () => {
   const apiHelper = BaseApiHelper(undefined, defaultAuthContext);
   const url = "/test-url";
   const env = "environment_a";
@@ -35,7 +35,7 @@ test("BaseApiHelper.post executes a POST request with correct url & env", async(
   });
 });
 
-test("BaseApiHelper.get handles a failed a GET request", async() => {
+test("BaseApiHelper.get handles a failed a GET request", async () => {
   const apiHelper = BaseApiHelper(undefined, defaultAuthContext);
   const url = "/test-url";
   const env = "environment_a";
@@ -53,7 +53,7 @@ test("BaseApiHelper.get handles a failed a GET request", async() => {
   );
 });
 
-test("BaseApiHelper.delete executes a DELETE request with correct url & env", async() => {
+test("BaseApiHelper.delete executes a DELETE request with correct url & env", async () => {
   const apiHelper = BaseApiHelper(undefined, defaultAuthContext);
   const url = "/test-url";
   const env = "environment_a";
@@ -70,7 +70,7 @@ test("BaseApiHelper.delete executes a DELETE request with correct url & env", as
   });
 });
 
-test("GIVEN BaseApiHelper WHEN response json contains large integers THEN integers are converted to bigints", async() => {
+test("GIVEN BaseApiHelper WHEN response json contains large integers THEN integers are converted to bigints", async () => {
   const apiHelper = BaseApiHelper(undefined, defaultAuthContext);
 
   fetchMock.mockResponse('{"foo": 9223372036854775807}');
@@ -81,7 +81,7 @@ test("GIVEN BaseApiHelper WHEN response json contains large integers THEN intege
   expect(response.value.foo).toEqual(9223372036854775807n);
 });
 
-test("GIVEN BaseApiHelper with getWithHTTPCode WHEN request fails with 409 THEN response has code 409", async() => {
+test("GIVEN BaseApiHelper with getWithHTTPCode WHEN request fails with 409 THEN response has code 409", async () => {
   const apiHelper = BaseApiHelper(undefined, defaultAuthContext);
 
   fetchMock.mockResponse('{"foo": 9223372036854775807}', { status: 409 });

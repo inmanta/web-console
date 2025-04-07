@@ -8,7 +8,7 @@ const ONE_SECOND = 1000;
 const ONE_MINUTE = 60000;
 const ONE_HOUR = 3600000;
 
-test("GIVEN useTickerWithInterval WHEN provided with interval THEN executes at that interval", async() => {
+test("GIVEN useTickerWithInterval WHEN provided with interval THEN executes at that interval", async () => {
   const callback = jest.fn();
   const Component: React.FC = () => {
     useTickerWithInterval("OneSecond");
@@ -19,14 +19,14 @@ test("GIVEN useTickerWithInterval WHEN provided with interval THEN executes at t
 
   render(<Component />);
 
-  await act(async() => {
+  await act(async () => {
     await jest.advanceTimersByTime(ONE_SECOND);
   });
 
   expect(callback).toHaveBeenCalledTimes(2);
 });
 
-test("GIVEN useTickerWithUnixMs WHEN provided with timestamp longer than 1 hour ago THEN executes every minute", async() => {
+test("GIVEN useTickerWithUnixMs WHEN provided with timestamp longer than 1 hour ago THEN executes every minute", async () => {
   const callback = jest.fn();
   const value = new Date(Date.now() - 3 * ONE_HOUR).valueOf();
 
@@ -39,14 +39,14 @@ test("GIVEN useTickerWithUnixMs WHEN provided with timestamp longer than 1 hour 
 
   render(<Component />);
 
-  await act(async() => {
+  await act(async () => {
     await jest.advanceTimersByTime(10 * ONE_MINUTE + 100);
   });
 
   expect(callback).toHaveBeenCalledTimes(2);
 });
 
-test("GIVEN useTickerWithUnixMs WHEN provided with timestamp less than 1 minute ago THEN executes every second until 1 minute is reached", async() => {
+test("GIVEN useTickerWithUnixMs WHEN provided with timestamp less than 1 minute ago THEN executes every second until 1 minute is reached", async () => {
   const callback = jest.fn();
   const value = new Date(Date.now() - 50 * ONE_SECOND).valueOf();
   const Component: React.FC = () => {
@@ -58,19 +58,19 @@ test("GIVEN useTickerWithUnixMs WHEN provided with timestamp less than 1 minute 
 
   render(<Component />);
 
-  await act(async() => {
+  await act(async () => {
     await jest.advanceTimersByTime(9 * ONE_SECOND + 100);
   });
 
   expect(callback).toHaveBeenCalledTimes(2);
 
-  await act(async() => {
+  await act(async () => {
     await jest.advanceTimersByTime(ONE_SECOND);
   });
 
   expect(callback).toHaveBeenCalledTimes(3);
 
-  await act(async() => {
+  await act(async () => {
     await jest.advanceTimersByTime(10 * ONE_SECOND + 100);
   });
 

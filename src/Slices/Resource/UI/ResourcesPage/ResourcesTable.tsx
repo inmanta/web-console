@@ -32,15 +32,15 @@ export const ResourcesTable: React.FC<Props> = ({
     const hasSort = tablePresenter.getSortableColumnNames().includes(apiName);
     const sortParams = hasSort
       ? {
-        sort: {
-          sortBy: {
-            index: activeSortIndex,
-            direction: sort.order,
+          sort: {
+            sortBy: {
+              index: activeSortIndex,
+              direction: sort.order,
+            },
+            onSort,
+            columnIndex,
           },
-          onSort,
-          columnIndex,
-        },
-      }
+        }
       : {};
 
     const widthModifier = smallHeaders.includes(apiName) ? "fitContent" : "nowrap";

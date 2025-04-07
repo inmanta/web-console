@@ -46,7 +46,7 @@ describe("ModalProvider", () => {
     expect(document.querySelector("div")).toBeDefined();
   });
 
-  it("should open a model with correct content when triggerModal is triggered and close it when cancel navigation is triggered", async() => {
+  it("should open a model with correct content when triggerModal is triggered and close it when cancel navigation is triggered", async () => {
     render(setup());
 
     expect(screen.getByText("Click me")).toBeVisible();
@@ -66,7 +66,7 @@ describe("ModalProvider", () => {
     expect(screen.queryByText("Title")).toBeNull();
   });
 
-  it("should close modal when button with closeModal function from provider is triggered", async() => {
+  it("should close modal when button with closeModal function from provider is triggered", async () => {
     render(setup());
 
     expect(screen.getByText("Click me")).toBeVisible();

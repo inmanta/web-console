@@ -58,7 +58,7 @@ export const CreateInstance: React.FC<Props> = ({ serviceEntity }) => {
     },
   });
 
-  const onSubmit = async(
+  const onSubmit = async (
     attributes: InstanceAttributeModel,
     setIsDirty: (values: boolean) => void
   ) => {

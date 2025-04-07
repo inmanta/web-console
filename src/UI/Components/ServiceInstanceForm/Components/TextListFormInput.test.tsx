@@ -24,7 +24,7 @@ describe("TextListInputField", () => {
     expect(chips.length).toBe(3);
   });
 
-  it("Should add an new chip when a new value is added.", async() => {
+  it("Should add an new chip when a new value is added.", async () => {
     render(
       <TextListFormInput
         attributeName="text_list"
@@ -50,7 +50,7 @@ describe("TextListInputField", () => {
     expect(handleClick).toHaveBeenCalledWith(["value1", "value2", "value3", "test"], null);
   });
 
-  it("Should remove one chip from the input on delete.", async() => {
+  it("Should remove one chip from the input on delete.", async () => {
     render(
       <TextListFormInput
         attributeName="text_list"
@@ -74,7 +74,7 @@ describe("TextListInputField", () => {
     expect(handleClick).toHaveBeenCalledWith(["value2", "value3"], null);
   });
 
-  it("Should remove all chips when the clear button is used.", async() => {
+  it("Should remove all chips when the clear button is used.", async () => {
     render(
       <TextListFormInput
         attributeName="text_list"

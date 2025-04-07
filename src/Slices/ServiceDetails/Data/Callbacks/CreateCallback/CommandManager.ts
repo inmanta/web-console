@@ -7,7 +7,7 @@ export function CreateCallbackCommandManager(
   updater: UpdaterWithEnv<"GetCallbacks">
 ) {
   return CommandManagerWithEnv<"CreateCallback">("CreateCallback", (command, environment) => {
-    return async() => {
+    return async () => {
       const result = await apiHelper.post("/lsm/v1/callbacks", environment, omit(command, "kind"));
 
       if (Either.isLeft(result)) {

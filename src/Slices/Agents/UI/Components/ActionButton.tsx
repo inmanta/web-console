@@ -18,7 +18,7 @@ export const ActionButton: React.FC<Props> = ({ name, paused }) => {
     name,
     action: paused ? "unpause" : "pause",
   });
-  const onSubmit = async() => {
+  const onSubmit = async () => {
     const result = await agentActionTrigger({
       kind: "GetAgents",
       filter,

@@ -77,7 +77,7 @@ function setup() {
   };
 }
 
-test("GIVEN ServiceDetails WHEN click on callbacks tab THEN shows callbacks tab", async() => {
+test("GIVEN ServiceDetails WHEN click on callbacks tab THEN shows callbacks tab", async () => {
   server.use(
     http.get("/lsm/v1/service_catalog/service_name_a", () => {
       return HttpResponse.json({ data: Service.a });
@@ -96,7 +96,7 @@ test("GIVEN ServiceDetails WHEN click on callbacks tab THEN shows callbacks tab"
 
   expect(screen.getByRole("region", { name: "Callbacks-Loading" })).toBeVisible();
 
-  await act(async() => {
+  await act(async () => {
     apiHelper.resolve(Either.right({ data: Callback.list }));
   });
 

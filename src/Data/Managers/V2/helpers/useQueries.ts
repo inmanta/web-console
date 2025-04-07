@@ -98,7 +98,7 @@ export const useGetZip = (options?: { message?: string }) => {
   const { createHeaders, handleErrors } = useFetchHelpers();
   const headers = createHeaders({ env, message: options?.message });
 
-  return async(path: string): Promise<Blob> => {
+  return async (path: string): Promise<Blob> => {
     try {
       const response = await fetch(`${baseUrl}${path}`, {
         headers,
@@ -133,7 +133,7 @@ export const useGetZipWithoutEnv = (options?: { message?: string }) => {
   const { createHeaders, handleErrors } = useFetchHelpers();
   const headers = createHeaders({ message: options?.message });
 
-  return async(path: string): Promise<Blob> => {
+  return async (path: string): Promise<Blob> => {
     try {
       const response = await fetch(`${baseUrl}${path}`, {
         headers,
@@ -434,7 +434,7 @@ export const useDelete = (options?: { message?: string }) => {
     headers.append("message", options.message);
   }
 
-  return async(path: string) => {
+  return async (path: string) => {
     try {
       const response = await fetch(`${baseUrl}${path}`, {
         method: "DELETE",
@@ -474,7 +474,7 @@ export const useDeleteWithoutEnv = (options?: { message?: string }) => {
   const { createHeaders, handleErrors } = useFetchHelpers();
   const headers = createHeaders({ message: options?.message });
 
-  return async(path: string) => {
+  return async (path: string) => {
     try {
       const response = await fetch(`${baseUrl}${path}`, {
         method: "DELETE",
@@ -518,7 +518,7 @@ export const useHead = () => {
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
   const { createHeaders } = useFetchHelpers();
 
-  return async(path: string) => {
+  return async (path: string) => {
     try {
       const response = await fetch(`${baseUrl}${path}`, {
         method: "HEAD",

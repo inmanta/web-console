@@ -7,7 +7,7 @@ export class CreateProjectCommandManager extends CommandManagerWithoutEnv<"Creat
     private readonly updater: Updater<"GetProjects">
   ) {
     super("CreateProject", () => {
-      return async(name: string) => {
+      return async (name: string) => {
         const result = await this.apiHelper.putWithoutEnvironment<
           { data: ProjectModel },
           Command.Body<"CreateProject">

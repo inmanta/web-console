@@ -48,7 +48,7 @@ function setup() {
   return { apiHelper, component };
 }
 
-test("GIVEN DesiredStateCompare THEN shows list of diff blocks", async() => {
+test("GIVEN DesiredStateCompare THEN shows list of diff blocks", async () => {
   const { apiHelper, component } = setup();
 
   render(component);
@@ -60,7 +60,7 @@ test("GIVEN DesiredStateCompare THEN shows list of diff blocks", async() => {
     environment: "env",
   });
 
-  await act(async() => {
+  await act(async () => {
     await apiHelper.resolve(Either.right(DesiredStateDiff.response));
   });
 
@@ -68,19 +68,19 @@ test("GIVEN DesiredStateCompare THEN shows list of diff blocks", async() => {
 
   expect(blocks).toHaveLength(11);
 
-  await act(async() => {
+  await act(async () => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("GIVEN DesiredStateCompare THEN shows 'Jump To' action with dropdown", async() => {
+test("GIVEN DesiredStateCompare THEN shows 'Jump To' action with dropdown", async () => {
   const { apiHelper, component } = setup();
 
   render(component);
 
-  await act(async() => {
+  await act(async () => {
     await apiHelper.resolve(Either.right(DesiredStateDiff.response));
   });
 
@@ -102,19 +102,19 @@ test("GIVEN DesiredStateCompare THEN shows 'Jump To' action with dropdown", asyn
 
   expect(items).toHaveLength(11);
 
-  await act(async() => {
+  await act(async () => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("GIVEN DesiredStateCompare WHEN StatusFilter = 'Added' THEN only 'Added' resources are shown", async() => {
+test("GIVEN DesiredStateCompare WHEN StatusFilter = 'Added' THEN only 'Added' resources are shown", async () => {
   const { apiHelper, component } = setup();
 
   render(component);
 
-  await act(async() => {
+  await act(async () => {
     await apiHelper.resolve(Either.right(DesiredStateDiff.response));
   });
 
@@ -146,19 +146,19 @@ test("GIVEN DesiredStateCompare WHEN StatusFilter = 'Added' THEN only 'Added' re
 
   expect(await screen.findAllByTestId("DiffBlock")).toHaveLength(2);
 
-  await act(async() => {
+  await act(async () => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("GIVEN DesiredStateCompare WHEN File Resource THEN it shows prompt that can fetch file content", async() => {
+test("GIVEN DesiredStateCompare WHEN File Resource THEN it shows prompt that can fetch file content", async () => {
   const { apiHelper, component } = setup();
 
   render(component);
 
-  await act(async() => {
+  await act(async () => {
     await apiHelper.resolve(Either.right(DesiredStateDiff.response));
   });
 
@@ -191,7 +191,7 @@ test("GIVEN DesiredStateCompare WHEN File Resource THEN it shows prompt that can
     })
   ).toBeDisabled();
 
-  await act(async() => {
+  await act(async () => {
     await apiHelper.resolve(Either.right({ content: window.btoa("abcdefgh") }));
     await apiHelper.resolve(Either.right({ content: window.btoa("efghijkl") }));
   });
@@ -214,26 +214,26 @@ test("GIVEN DesiredStateCompare WHEN File Resource THEN it shows prompt that can
     })
   );
 
-  await act(async() => {
+  await act(async () => {
     await apiHelper.resolve(Either.left("errormessage"));
     await apiHelper.resolve(Either.left("errormessage"));
   });
 
   expect(within(blocks[1]).getByRole("generic", { name: "ErrorDiffView" })).toBeVisible();
 
-  await act(async() => {
+  await act(async () => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("GIVEN DesiredStateCompare page WHEN SearchFilter is used, ONLY show the resources matching the search value", async() => {
+test("GIVEN DesiredStateCompare page WHEN SearchFilter is used, ONLY show the resources matching the search value", async () => {
   const { apiHelper, component } = setup();
 
   render(component);
 
-  await act(async() => {
+  await act(async () => {
     await apiHelper.resolve(Either.right(DesiredStateDiff.response));
   });
 
@@ -255,7 +255,7 @@ test("GIVEN DesiredStateCompare page WHEN SearchFilter is used, ONLY show the re
 
   expect(await screen.findAllByTestId("DiffBlock")).toHaveLength(11);
 
-  await act(async() => {
+  await act(async () => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();

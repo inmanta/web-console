@@ -25,9 +25,9 @@ export function getUrl(
 ): string {
   const filterParam = filter
     ? `&${qs.stringify(
-      { filter: filterToRaw(filter) },
-      { allowDots: true, arrayFormat: "repeat" }
-    )}`
+        { filter: filterToRaw(filter) },
+        { allowDots: true, arrayFormat: "repeat" }
+      )}`
     : "";
   const sortParam = sort ? `&sort=${Sort.serialize(sort)}` : "";
   const includeDeletedParam = filter?.deleted === "Include" ? "&include_deleted=true" : "";

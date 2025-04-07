@@ -49,7 +49,7 @@ function setup() {
   return { component, apiHelper, scheduler };
 }
 
-test("EventsView shows empty table", async() => {
+test("EventsView shows empty table", async () => {
   const { component, apiHelper } = setup();
 
   render(component);
@@ -66,14 +66,14 @@ test("EventsView shows empty table", async() => {
 
   expect(await screen.findByRole("generic", { name: "EventTable-Empty" })).toBeInTheDocument();
 
-  await act(async() => {
+  await act(async () => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("EventsView shows failed table", async() => {
+test("EventsView shows failed table", async () => {
   const { component, apiHelper } = setup();
 
   render(component);
@@ -84,14 +84,14 @@ test("EventsView shows failed table", async() => {
 
   expect(await screen.findByRole("region", { name: "EventTable-Failed" })).toBeInTheDocument();
 
-  await act(async() => {
+  await act(async () => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("EventsView shows success table", async() => {
+test("EventsView shows success table", async () => {
   const { component, apiHelper } = setup();
 
   render(component);
@@ -125,14 +125,14 @@ test("EventsView shows success table", async() => {
 
   expect(await screen.findByRole("grid", { name: "EventTable-Success" })).toBeInTheDocument();
 
-  await act(async() => {
+  await act(async () => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("EventsView shows updated table", async() => {
+test("EventsView shows updated table", async () => {
   const { component, apiHelper, scheduler } = setup();
 
   render(component);
@@ -178,14 +178,14 @@ test("EventsView shows updated table", async() => {
 
   expect(await screen.findByRole("grid", { name: "EventTable-Success" })).toBeInTheDocument();
 
-  await act(async() => {
+  await act(async () => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("GIVEN EventsView WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async() => {
+test("GIVEN EventsView WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async () => {
   const response = {
     data: [
       {
@@ -221,7 +221,7 @@ test("GIVEN EventsView WHEN sorting changes AND we are not on the first page THE
   render(component);
 
   //mock that response has more than one site
-  await act(async() => {
+  await act(async () => {
     apiHelper.resolve(Either.right(response));
   });
 
@@ -235,7 +235,7 @@ test("GIVEN EventsView WHEN sorting changes AND we are not on the first page THE
   expect(apiHelper.pendingRequests[0].url).toMatch(/(&start=|&end=)/);
   expect(apiHelper.pendingRequests[0].url).toMatch(/(&sort=timestamp.desc)/);
 
-  await act(async() => {
+  await act(async () => {
     apiHelper.resolve(Either.right(response));
   });
 

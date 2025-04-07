@@ -7,7 +7,7 @@ export function ResumeEnvironmentCommandManager(
   updater: Updater<"GetEnvironmentDetails">
 ) {
   return CommandManagerWithEnv<"ResumeEnvironment">("ResumeEnvironment", (command, environment) => {
-    return async() => {
+    return async () => {
       stateHelper.set(RemoteData.loading(), {
         kind: "GetEnvironmentDetails",
         details: false,

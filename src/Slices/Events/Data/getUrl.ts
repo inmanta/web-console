@@ -9,9 +9,9 @@ export function getUrl(
   const filterParam =
     filter && Object.keys(filter).length > 0
       ? `&${qs.stringify(
-        { filter: filterToParam(filter, timezone) },
-        { allowDots: true, arrayFormat: "repeat" }
-      )}`
+          { filter: filterToParam(filter, timezone) },
+          { allowDots: true, arrayFormat: "repeat" }
+        )}`
       : "";
   const sortParam = sort ? `&sort=${sort.name}.${sort.order}` : "";
 

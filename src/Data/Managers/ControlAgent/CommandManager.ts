@@ -6,7 +6,7 @@ export function ControlAgentCommandManager(
   updater: UpdaterWithEnv<"GetAgents">
 ) {
   return CommandManagerWithEnv<"ControlAgent">("ControlAgent", ({ name, action }, environment) => {
-    return async(query) => {
+    return async (query) => {
       const result = await apiHelper.postWithoutResponse(
         `/api/v2/agent/${encodeURIComponent(name)}/${action}`,
         environment,

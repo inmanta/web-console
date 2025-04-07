@@ -10,7 +10,7 @@ export function DeleteCallbackCommandManager(
   }
 
   return CommandManagerWithEnv<"DeleteCallback">("DeleteCallback", (command, environment) => {
-    return async() => {
+    return async () => {
       const result = await apiHelper.delete(getUrl(command), environment);
 
       await updater.update(

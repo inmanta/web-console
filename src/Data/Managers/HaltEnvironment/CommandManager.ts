@@ -7,7 +7,7 @@ export function HaltEnvironmentCommandManager(
   updater: Updater<"GetEnvironmentDetails">
 ) {
   return CommandManagerWithEnv<"HaltEnvironment">("HaltEnvironment", (command, environment) => {
-    return async() => {
+    return async () => {
       stateHelper.set(RemoteData.loading(), {
         kind: "GetEnvironmentDetails",
         details: false,

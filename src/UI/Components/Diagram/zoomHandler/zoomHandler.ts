@@ -22,7 +22,7 @@ interface IconButton extends ui.widgets.button {
  *
  */
 const IconButton = ui.widgets.button.extend({
-  render: function() {
+  render: function () {
     const size = this.options.size || 20;
     const imageEl = document.createElement("img");
 
@@ -42,7 +42,7 @@ const IconButton = ui.widgets.button.extend({
    *
    * @param {string} icon - The source of the icon to set. Defaults to an empty string, which will clear the current icon.
    */
-  setIcon: function(icon = "") {
+  setIcon: function (icon = "") {
     this.el.querySelector("img").src = icon;
   },
 
@@ -55,7 +55,7 @@ const IconButton = ui.widgets.button.extend({
    * @param {string} tooltip - The text of the tooltip to set. Defaults to an empty string, which will clear the current tooltip.
    * @param {string} direction - The position of the tooltip. Defaults to "right".
    */
-  setTooltip: function(tooltip = "", direction = "right") {
+  setTooltip: function (tooltip = "", direction = "right") {
     this.el.dataset.tooltip = tooltip;
     this.el.dataset.tooltipPosition = direction;
   },

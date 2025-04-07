@@ -3,7 +3,8 @@ import { words } from "@/UI/words";
 import { CompileStageReport, CompileStageReportRow } from "@S/CompileDetails/Core/Domain";
 
 export class CompileStageReportTablePresenter
-implements TablePresenter<CompileStageReport, CompileStageReportRow> {
+  implements TablePresenter<CompileStageReport, CompileStageReportRow>
+{
   private readonly columnHeads: string[] = [
     words("compileDetails.stages.columns.name"),
     words("compileDetails.stages.columns.command"),

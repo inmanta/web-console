@@ -26,8 +26,8 @@ export const DictEditor: React.FC<Props> = ({
 }) => {
   const updateEntry =
     (key: string) =>
-      ([k, v]: Entry) =>
-        setValue({ ...omit(value, key), [k]: v });
+    ([k, v]: Entry) =>
+      setValue({ ...omit(value, key), [k]: v });
   const clearEntry = (key) => setValue(omit(value, key));
   const clearNewEntry = () => {
     setNewEntry(["", ""]);

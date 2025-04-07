@@ -13,7 +13,7 @@ export const FileBlock: React.FC<{ hash: string }> = ({ hash }) => {
     RemoteData.notAsked()
   );
 
-  const getFile = async() => {
+  const getFile = async () => {
     setFileContent(RemoteData.loading());
     setFileContent(RemoteData.fromEither(await fileFetcher.get(hash)));
   };

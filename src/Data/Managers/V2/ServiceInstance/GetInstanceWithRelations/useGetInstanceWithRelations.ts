@@ -124,7 +124,7 @@ export const useGetInstanceWithRelations = (
    * @returns {Promise<InstanceWithRelations>} An object containing the fetched instance and its related instances.
    * @throws Error if the instance fails to fetch.
    */
-  const fetchInstanceWithRelations = async(id: string): Promise<InstanceWithRelations> => {
+  const fetchInstanceWithRelations = async (id: string): Promise<InstanceWithRelations> => {
     const interServiceRelations: ServiceInstanceModel[] = [];
     const { data: instance } = await get(getUrl(id));
     let serviceIds: string[] = [];
@@ -141,7 +141,7 @@ export const useGetInstanceWithRelations = (
     const allIds = [...new Set([...serviceIds, ...(instance.referenced_by || [])])];
 
     await Promise.all(
-      allIds.map(async(relatedId) => {
+      allIds.map(async (relatedId) => {
         const interServiceRelation = await get(getUrl(relatedId));
 
         if (interServiceRelation) {

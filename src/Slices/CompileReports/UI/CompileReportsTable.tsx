@@ -27,15 +27,15 @@ export const CompileReportsTable: React.FC<Props> = ({
     const sortParams =
       columnIndex == 0
         ? {
-          sort: {
-            sortBy: {
-              index: 0,
-              direction: sort.order,
+            sort: {
+              sortBy: {
+                index: 0,
+                direction: sort.order,
+              },
+              onSort,
+              columnIndex,
             },
-            onSort,
-            columnIndex,
-          },
-        }
+          }
         : {};
 
     return (

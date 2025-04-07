@@ -45,7 +45,7 @@ const createHalo = (
     name: "link",
   });
 
-  halo.listenTo(cellView, "action:delete", function() {
+  halo.listenTo(cellView, "action:delete", function () {
     //cellView.model has the same structure as dia.Element needed as parameter to .getNeighbors() yet typescript complains
     const connectedElements = graph.getNeighbors(cellView.model as dia.Element);
 
@@ -105,7 +105,7 @@ const createHalo = (
     paper.trigger("blank:pointerdown");
   });
 
-  halo.on("action:link:pointerdown", function() {
+  halo.on("action:link:pointerdown", function () {
     const area = paper.getArea();
     const elements = paper.findViewsInArea(area).filter((shape) => shape.cid !== cellView.cid);
 
@@ -146,7 +146,7 @@ const createHalo = (
   });
 
   //this event is fired even if we hang connection outside other shape
-  halo.on("action:link:add", function() {
+  halo.on("action:link:add", function () {
     const area = paper.getArea();
     const shapes = paper.findViewsInArea(area);
 

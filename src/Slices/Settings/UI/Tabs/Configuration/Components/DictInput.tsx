@@ -13,7 +13,7 @@ export const DictInputWithRow: React.FC<Props> = ({ info }) => {
   const [newEntry, setNewEntry] = useState<Entry>(["", ""]);
   const customInfo = {
     ...info,
-    update: async(value: EnvironmentSettings.DictInputInfo["value"]) => {
+    update: async (value: EnvironmentSettings.DictInputInfo["value"]) => {
       const error = await info.update({
         ...value,
         ...getSanitizedNewEntry(newEntry),
@@ -23,7 +23,7 @@ export const DictInputWithRow: React.FC<Props> = ({ info }) => {
 
       return error;
     },
-    reset: async() => {
+    reset: async () => {
       const error = await info.reset();
 
       if (Maybe.isNone(error)) setNewEntry(["", ""]);

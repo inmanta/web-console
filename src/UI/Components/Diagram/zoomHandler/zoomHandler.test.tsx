@@ -28,7 +28,7 @@ describe("ZoomHandler", () => {
     expect(screen.getByTestId("zoomHandler")).toBeInTheDocument();
   });
 
-  it("should fire requestFullscreen() function when clicking fullscreen button", async() => {
+  it("should fire requestFullscreen() function when clicking fullscreen button", async () => {
     //jest + jsdom doesn't implement the fullscreen API, they are mocked in the testSetup()
     const fullScreenSpy = jest.spyOn(document.documentElement, "requestFullscreen");
 
@@ -39,7 +39,7 @@ describe("ZoomHandler", () => {
     expect(fullScreenSpy).toHaveBeenCalled();
   });
 
-  it("should fire exitFullscreen() function when clicking fullscreen button and the fullscreenElement exist", async() => {
+  it("should fire exitFullscreen() function when clicking fullscreen button and the fullscreenElement exist", async () => {
     //mock that fullscreen is active, by default it's null
     Object.defineProperty(document, "fullscreenElement", {
       writable: false,
@@ -55,7 +55,7 @@ describe("ZoomHandler", () => {
     expect(exitFullScreenSpy).toHaveBeenCalled();
   });
 
-  it("should fire scroller's function zoomToFit() when clicking fit-to-screen button", async() => {
+  it("should fire scroller's function zoomToFit() when clicking fit-to-screen button", async () => {
     //we aren't testing the zoomToFit function itself as that is part of JointJS which use logic that isn't supported by Jest
     const zoomToFit = jest.spyOn(scroller, "zoomToFit");
 
@@ -66,7 +66,7 @@ describe("ZoomHandler", () => {
     expect(zoomToFit).toHaveBeenCalled();
   });
 
-  it("should update slider input & output element when slider is triggered", async() => {
+  it("should update slider input & output element when slider is triggered", async () => {
     const initialSliderOutput = screen.getByTestId("slider-output");
 
     expect(initialSliderOutput).toHaveTextContent("100");
@@ -80,7 +80,7 @@ describe("ZoomHandler", () => {
     expect(sliderOutput).toHaveTextContent("120");
   });
 
-  it("should remove zoomHandler from the dom when remove() method is fired", async() => {
+  it("should remove zoomHandler from the dom when remove() method is fired", async () => {
     zoomHandler.remove();
 
     expect(screen.queryByTestId("zoomHandler")).not.toBeInTheDocument();

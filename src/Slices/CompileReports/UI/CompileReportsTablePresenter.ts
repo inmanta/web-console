@@ -4,7 +4,8 @@ import { words } from "@/UI/words";
 import { CompileReport, CompileReportRow } from "@S/CompileReports/Core/Domain";
 
 export class CompileReportsTablePresenter
-implements TablePresenter<CompileReport, CompileReportRow> {
+  implements TablePresenter<CompileReport, CompileReportRow>
+{
   readonly columnHeads: string[];
   readonly numberOfColumns: number;
 

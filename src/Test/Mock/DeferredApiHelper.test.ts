@@ -1,6 +1,6 @@
 import { DeferredApiHelper } from "./DeferredApiHelper";
 
-test("GIVEN DeferredApiHelper WHEN ignore THEN removes first pending request", async() => {
+test("GIVEN DeferredApiHelper WHEN ignore THEN removes first pending request", async () => {
   const helper = new DeferredApiHelper();
 
   helper.get("url1", "env1");
@@ -10,7 +10,7 @@ test("GIVEN DeferredApiHelper WHEN ignore THEN removes first pending request", a
   expect(helper.pendingRequests).toEqual([{ method: "GET", url: "url2", environment: "env2" }]);
 });
 
-test("GIVEN DeferredApiHelper WHEN ignoreRequest THEN removes first matching request", async() => {
+test("GIVEN DeferredApiHelper WHEN ignoreRequest THEN removes first matching request", async () => {
   const helper = new DeferredApiHelper();
 
   helper.get("url1", "env1");
@@ -33,7 +33,7 @@ test("GIVEN DeferredApiHelper WHEN ignoreRequest THEN removes first matching req
   expect(helper.pendingRequests).toEqual([{ method: "GET", url: "url1", environment: "env1" }]);
 });
 
-test("GIVEN DeferredApiHelper WHEN resolve THEN resolves first pending request", async() => {
+test("GIVEN DeferredApiHelper WHEN resolve THEN resolves first pending request", async () => {
   const helper = new DeferredApiHelper();
 
   helper.get("url1", "env1");
@@ -48,7 +48,7 @@ test("GIVEN DeferredApiHelper WHEN resolve THEN resolves first pending request",
   ]);
 });
 
-test("GIVEN DeferredApiHelper WHEN resolveRequest THEN resolves first matching request", async() => {
+test("GIVEN DeferredApiHelper WHEN resolveRequest THEN resolves first matching request", async () => {
   const helper = new DeferredApiHelper();
 
   helper.get("url1", "env1");
@@ -80,7 +80,7 @@ test("GIVEN DeferredApiHelper WHEN resolveRequest THEN resolves first matching r
   });
 });
 
-test("GIVEN DeferredApiHelper WHEN resolveRequest THEN resolves first matching request", async() => {
+test("GIVEN DeferredApiHelper WHEN resolveRequest THEN resolves first matching request", async () => {
   const helper = new DeferredApiHelper();
 
   expect(() =>

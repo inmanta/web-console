@@ -51,7 +51,7 @@ function setup(initialEntries: string[] | undefined, serverStatus: ServerStatus)
   return { component, apiHelper };
 }
 
-test("GIVEN Navigation THEN it should be accessible", async() => {
+test("GIVEN Navigation THEN it should be accessible", async () => {
   const { component } = setup(undefined, TestServerStatus.withLsm);
   const { container } = render(component);
 
@@ -163,7 +163,7 @@ test("GIVEN Navigation WHEN on 'Service Catalog' THEN 'Service Catalog' is highl
   expect(link).toHaveClass("active");
 });
 
-test("GIVEN Navigation WHEN Compilation Reports are not pending THEN 'Compile Reports' Indication does not exist", async() => {
+test("GIVEN Navigation WHEN Compilation Reports are not pending THEN 'Compile Reports' Indication does not exist", async () => {
   const { component } = setup(["/lsm/catalog"], TestServerStatus.withLsm);
 
   render(component);
@@ -172,7 +172,7 @@ test("GIVEN Navigation WHEN Compilation Reports are not pending THEN 'Compile Re
   expect(Indication).toBeNull();
 });
 
-test("GIVEN Navigation WHEN Compilation Reports are pending THEN 'Compile Reports' Indication is visible", async() => {
+test("GIVEN Navigation WHEN Compilation Reports are pending THEN 'Compile Reports' Indication is visible", async () => {
   jest.spyOn(queryModule, "useGetCompilerStatus").mockReturnValue({
     useContinuous: () =>
       ({

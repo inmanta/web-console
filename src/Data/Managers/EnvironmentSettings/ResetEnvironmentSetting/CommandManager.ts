@@ -9,7 +9,7 @@ export function ResetEnvironmentSettingCommandManager(
   return CommandManagerWithEnv<"ResetEnvironmentSetting">(
     "ResetEnvironmentSetting",
     (command, environment) => {
-      return async(id) => {
+      return async (id) => {
         const error = await apiHelper.delete(`/api/v2/environment_settings/${id}`, environment);
 
         if (Maybe.isNone(error)) {

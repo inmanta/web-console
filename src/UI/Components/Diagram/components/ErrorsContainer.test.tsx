@@ -37,7 +37,7 @@ describe("Given a Validation component", () => {
     }
   );
 
-  it("when requirements for render are  met should render", async() => {
+  it("when requirements for render are  met should render", async () => {
     const isDirty = true;
     const interServiceRelationsOnCanvas = new Map().set("1", {
       name: "test",

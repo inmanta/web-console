@@ -91,31 +91,31 @@ function setup() {
 
 expect.extend(toHaveNoViolations);
 
-test("GIVEN the app THEN the app should be accessible", async() => {
+test("GIVEN the app THEN the app should be accessible", async () => {
   fetchMock.mockResponse(JSON.stringify({}));
   const { component, apiHelper } = setup();
 
   render(component);
 
-  await act(async() => {
+  await act(async () => {
     await apiHelper.resolve(Either.right({ data: ServerStatus.withLsm }));
     await apiHelper.resolve(Either.right({ data: Project.list }));
   });
 
-  await act(async() => {
+  await act(async () => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("GIVEN the app THEN the navigation toggle button should be visible", async() => {
+test("GIVEN the app THEN the navigation toggle button should be visible", async () => {
   fetchMock.mockResponse(JSON.stringify({}));
   const { component, apiHelper } = setup();
 
   render(component);
 
-  await act(async() => {
+  await act(async () => {
     await apiHelper.resolve(Either.right({ data: ServerStatus.withLsm }));
     await apiHelper.resolve(Either.right({ data: Project.list }));
   });
@@ -123,13 +123,13 @@ test("GIVEN the app THEN the navigation toggle button should be visible", async(
   expect(screen.getByRole("button", { name: "Main Navigation" })).toBeVisible();
 });
 
-test("GIVEN the app THEN the documentation link should be visible", async() => {
+test("GIVEN the app THEN the documentation link should be visible", async () => {
   fetchMock.mockResponse(JSON.stringify({}));
   const { component, apiHelper } = setup();
 
   render(component);
 
-  await act(async() => {
+  await act(async () => {
     await apiHelper.resolve(Either.right({ data: ServerStatus.withLsm }));
     await apiHelper.resolve(Either.right({ data: Project.list }));
   });

@@ -91,7 +91,7 @@ export const ExpertStateTransfer: React.FC<Props> = ({
   /**
    * async method sending out the request to force update the state of the instance
    */
-  const onSubmitForceState = async(): Promise<void> => {
+  const onSubmitForceState = async (): Promise<void> => {
     mutate({
       message: message,
       current_version: version,

@@ -10,7 +10,7 @@ import { DeferredApiHelper, dependencies, StaticScheduler } from "@/Test";
 import { DependencyContext, DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
 import { PrimaryRouteManager } from "@/UI/Routing";
 
-test("GIVEN QueryManager.ContinuousWithEnv WHEN environment changes THEN the api call uses the correct url", async() => {
+test("GIVEN QueryManager.ContinuousWithEnv WHEN environment changes THEN the api call uses the correct url", async () => {
   const apiHelper = new DeferredApiHelper();
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
@@ -76,7 +76,7 @@ test("GIVEN QueryManager.ContinuousWithEnv WHEN environment changes THEN the api
     environment: "aaa",
   });
 
-  await act(async() => {
+  await act(async () => {
     await apiHelper.resolve(Either.right({ data: null }));
   });
 

@@ -46,7 +46,7 @@ describe("Badge", () => {
   afterEach(() => server.resetHandlers());
   afterAll(() => server.close());
 
-  test("Given Badge WHEN request fails THEN error is shown", async() => {
+  test("Given Badge WHEN request fails THEN error is shown", async () => {
     server.use(
       http.get("/api/v2/notification", () => {
         return HttpResponse.json({ message: "error" }, { status: 500 });
@@ -67,7 +67,7 @@ describe("Badge", () => {
     ${[Mock.error, Mock.unread, Mock.read]} | ${"error + unread + read"} | ${"attention"}
   `(
     "Given Badge WHEN notifications contain $condition THEN $variant variant is shown",
-    async({ data, variant }) => {
+    async ({ data, variant }) => {
       server.use(
         http.get("/api/v2/notification", () => {
           return HttpResponse.json({ data, links, metadata });

@@ -50,7 +50,7 @@ function setup() {
   return { component, apiHelper, store };
 }
 
-test("GIVEN Environment Actions and delete modal WHEN empty or wrong env THEN delete disabled", async() => {
+test("GIVEN Environment Actions and delete modal WHEN empty or wrong env THEN delete disabled", async () => {
   const { component } = setup();
 
   render(component);
@@ -77,7 +77,7 @@ test("GIVEN Environment Actions and delete modal WHEN empty or wrong env THEN de
   expect(deleteButton).toBeDisabled();
 });
 
-test("GIVEN Environment Actions and delete modal WHEN correct env THEN delete enabled", async() => {
+test("GIVEN Environment Actions and delete modal WHEN correct env THEN delete enabled", async () => {
   const { component } = setup();
 
   render(component);
@@ -98,7 +98,7 @@ test("GIVEN Environment Actions and delete modal WHEN correct env THEN delete en
   expect(deleteButton).toBeEnabled();
 });
 
-test("GIVEN Environment Actions and delete modal WHEN correct env & delete button pressed THEN delete executed", async() => {
+test("GIVEN Environment Actions and delete modal WHEN correct env & delete button pressed THEN delete executed", async () => {
   const { component, apiHelper } = setup();
 
   render(component);
@@ -124,14 +124,14 @@ test("GIVEN Environment Actions and delete modal WHEN correct env & delete butto
     url: "/api/v2/environment/env",
   });
 
-  await act(async() => {
+  await act(async () => {
     await apiHelper.resolve(Maybe.none());
   });
 
   expect(apiHelper.resolvedRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests).toHaveLength(1);
 
-  await act(async() => {
+  await act(async () => {
     await apiHelper.resolve(Either.right({ data: Project.list }));
   });
 
@@ -139,7 +139,7 @@ test("GIVEN Environment Actions and delete modal WHEN correct env & delete butto
   expect(apiHelper.pendingRequests).toHaveLength(0);
 });
 
-test("GIVEN Environment Actions and delete modal WHEN delete executed and error THEN error is shown", async() => {
+test("GIVEN Environment Actions and delete modal WHEN delete executed and error THEN error is shown", async () => {
   const { component, apiHelper } = setup();
 
   render(component);
@@ -154,7 +154,7 @@ test("GIVEN Environment Actions and delete modal WHEN delete executed and error 
 
   await userEvent.click(screen.getByRole("button", { name: "delete" }));
 
-  await act(async() => {
+  await act(async () => {
     await apiHelper.resolve(Maybe.some("error message"));
   });
 
@@ -163,7 +163,7 @@ test("GIVEN Environment Actions and delete modal WHEN delete executed and error 
   expect(within(errorAlert).getByText("error message")).toBeVisible();
 });
 
-test("GIVEN Environment Actions and delete modal WHEN form is valid and enter is pressed THEN delete is executed", async() => {
+test("GIVEN Environment Actions and delete modal WHEN form is valid and enter is pressed THEN delete is executed", async () => {
   const { component, apiHelper } = setup();
 
   render(component);
@@ -180,7 +180,7 @@ test("GIVEN Environment Actions and delete modal WHEN form is valid and enter is
   });
 });
 
-test("GIVEN Environment Actions and clear modal WHEN form is valid and enter is pressed THEN clear is executed", async() => {
+test("GIVEN Environment Actions and clear modal WHEN form is valid and enter is pressed THEN clear is executed", async () => {
   const { component, apiHelper } = setup();
 
   render(component);
@@ -197,7 +197,7 @@ test("GIVEN Environment Actions and clear modal WHEN form is valid and enter is 
   });
 });
 
-test("GIVEN Environment Actions and clear modal WHEN correct env & clear button pressed THEN clear is executed", async() => {
+test("GIVEN Environment Actions and clear modal WHEN correct env & clear button pressed THEN clear is executed", async () => {
   const { component, apiHelper } = setup();
 
   render(component);
@@ -222,14 +222,14 @@ test("GIVEN Environment Actions and clear modal WHEN correct env & clear button 
     url: "/api/v2/decommission/env",
   });
 
-  await act(async() => {
+  await act(async () => {
     await apiHelper.resolve(Maybe.none());
   });
   expect(apiHelper.resolvedRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests).toHaveLength(0);
 });
 
-test("GIVEN Environment Actions WHEN the environment is protected THEN clear and delete are disabled", async() => {
+test("GIVEN Environment Actions WHEN the environment is protected THEN clear and delete are disabled", async () => {
   const { component, store } = setup();
 
   store.dispatch.environment.setSettingsData({

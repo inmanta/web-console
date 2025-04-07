@@ -10,16 +10,16 @@ export function getUrl({
   const filterParam =
     filter && Object.keys(filter).length > 0
       ? `&${qs.stringify(
-        {
-          filter: {
-            agent: filter.agent,
-            status: filter.status,
-            resource_type: filter.type,
-            resource_id_value: filter.value,
+          {
+            filter: {
+              agent: filter.agent,
+              status: filter.status,
+              resource_type: filter.type,
+              resource_id_value: filter.value,
+            },
           },
-        },
-        { allowDots: true, arrayFormat: "repeat" }
-      )}`
+          { allowDots: true, arrayFormat: "repeat" }
+        )}`
       : "";
   const sortParam = sort ? `&sort=${sort.name}.${sort.order}` : "";
 

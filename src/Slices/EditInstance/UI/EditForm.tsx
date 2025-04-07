@@ -68,7 +68,7 @@ export const EditForm: React.FC<Props> = ({ serviceEntity, instance }) => {
     }
   );
 
-  const onSubmit = async(
+  const onSubmit = async (
     updatedAttributes: InstanceAttributeModel,
     setIsDirty: (values: boolean) => void
   ) => {

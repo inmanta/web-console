@@ -123,7 +123,7 @@ beforeEach(() => {
 
 afterAll(() => server.close());
 
-test("GIVEN ServiceInstanceForm WHEN passed a TextField THEN shows that field", async() => {
+test("GIVEN ServiceInstanceForm WHEN passed a TextField THEN shows that field", async () => {
   const { component } = setup([Test.Field.text]);
 
   render(component);
@@ -146,7 +146,7 @@ test("GIVEN ServiceInstanceForm WHEN passed a TextField THEN shows that field", 
   expect(textBox).toHaveValue(value);
 });
 
-test("GIVEN ServiceInstanceForm WHEN passed a TextField with suggestions THEN shows that field", async() => {
+test("GIVEN ServiceInstanceForm WHEN passed a TextField with suggestions THEN shows that field", async () => {
   const { component } = setup([Test.Field.textSuggestions]);
 
   render(component);
@@ -169,7 +169,7 @@ test("GIVEN ServiceInstanceForm WHEN passed a TextField with suggestions THEN sh
   expect(textBox).toHaveValue(value);
 });
 
-test("GIVEN ServiceInstanceForm WHEN passed a TextField with parameter suggestions THEN shows that field", async() => {
+test("GIVEN ServiceInstanceForm WHEN passed a TextField with parameter suggestions THEN shows that field", async () => {
   // Provide the server-side API with the request handlers.
   server.resetHandlers();
   server.use(
@@ -216,7 +216,7 @@ test("GIVEN ServiceInstanceForm WHEN passed a TextField with parameter suggestio
   server.resetHandlers();
 });
 
-test("GIVEN ServiceInstanceForm WHEN passed a TextField with parameter suggestions AND no parameters could be retrieved THEN shows that field without suggestions", async() => {
+test("GIVEN ServiceInstanceForm WHEN passed a TextField with parameter suggestions AND no parameters could be retrieved THEN shows that field without suggestions", async () => {
   // Provide the server-side API with the request handlers.
   const server = setupServer(
     http.get("/api/v1/parameter/param_name", () => {
@@ -249,7 +249,7 @@ test("GIVEN ServiceInstanceForm WHEN passed a TextField with parameter suggestio
   expect(suggestions).toHaveLength(0);
 });
 
-test("GIVEN ServiceInstanceForm WHEN passed a BooleanField THEN shows that field", async() => {
+test("GIVEN ServiceInstanceForm WHEN passed a BooleanField THEN shows that field", async () => {
   const { component } = setup([Test.Field.bool]);
 
   render(component);
@@ -269,7 +269,7 @@ test("GIVEN ServiceInstanceForm WHEN passed a BooleanField THEN shows that field
   expect(trueRadioButton).toBeChecked();
 });
 
-test("GIVEN ServiceInstanceForm WHEN passed an EnumField THEN shows that field", async() => {
+test("GIVEN ServiceInstanceForm WHEN passed an EnumField THEN shows that field", async () => {
   const { component } = setup([Test.Field.enumField]);
 
   render(component);
@@ -295,7 +295,7 @@ test("GIVEN ServiceInstanceForm WHEN passed an EnumField THEN shows that field",
   expect(select).toHaveTextContent("ci");
 });
 
-test("GIVEN ServiceInstanceForm WHEN passed an EnumField with more than one value THEN shows that field with default prompt", async() => {
+test("GIVEN ServiceInstanceForm WHEN passed an EnumField with more than one value THEN shows that field with default prompt", async () => {
   const { component } = setup([Test.Field.enumFieldTwoOptions]);
 
   render(component);
@@ -319,7 +319,7 @@ test("GIVEN ServiceInstanceForm WHEN passed an EnumField with more than one valu
   expect(options).toHaveLength(2);
 });
 
-test("GIVEN ServiceInstanceForm WHEN passed an EnumField with only one value THEN shows that field with preselected option", async() => {
+test("GIVEN ServiceInstanceForm WHEN passed an EnumField with only one value THEN shows that field with preselected option", async () => {
   const { component } = setup([Test.Field.enumFieldSingleOption]);
 
   render(component);
@@ -341,7 +341,7 @@ test("GIVEN ServiceInstanceForm WHEN passed an EnumField with only one value THE
   expect(option).toBeInTheDocument();
 });
 
-test("GIVEN ServiceInstanceForm and a NestedField WHEN clicking the toggle THEN the nested FlatField is shown", async() => {
+test("GIVEN ServiceInstanceForm and a NestedField WHEN clicking the toggle THEN the nested FlatField is shown", async () => {
   const { component } = setup([Test.Field.nested([Test.Field.text])]);
 
   render(component);
@@ -364,7 +364,7 @@ test("GIVEN ServiceInstanceForm and a NestedField WHEN clicking the toggle THEN 
 
   expect(screen.getByRole("textbox", { name: `TextInput-${Test.Field.text.name}` })).toBeVisible();
 });
-test("GIVEN ServiceInstanceForm and a NestedField WHEN rendering optional inputs THEN the form structure is correct", async() => {
+test("GIVEN ServiceInstanceForm and a NestedField WHEN rendering optional inputs THEN the form structure is correct", async () => {
   //simplified version of form state that was causing bug on production
   const { component } = setup([
     {
@@ -460,7 +460,7 @@ test("GIVEN ServiceInstanceForm and a NestedField WHEN rendering optional inputs
   ).toBeVisible();
 });
 
-test("GIVEN ServiceInstanceForm and a DictListField WHEN clicking all toggles open THEN the nested FlatField is shown", async() => {
+test("GIVEN ServiceInstanceForm and a DictListField WHEN clicking all toggles open THEN the nested FlatField is shown", async () => {
   const { component } = setup([Test.Field.dictList([Test.Field.text])]);
 
   render(component);
@@ -484,7 +484,7 @@ test("GIVEN ServiceInstanceForm and a DictListField WHEN clicking all toggles op
   expect(screen.getByRole("textbox", { name: `TextInput-${Test.Field.text.name}` })).toBeVisible();
 });
 
-test("GIVEN ServiceInstanceForm and a nested DictListField WHEN in EDIT mode, new items should be enabled.", async() => {
+test("GIVEN ServiceInstanceForm and a nested DictListField WHEN in EDIT mode, new items should be enabled.", async () => {
   const originalAttributes = {
     nested_dict_list_field: [{ dict_list_field: [{ text_field_disabled: "a" }] }],
   };
@@ -554,7 +554,7 @@ test("GIVEN ServiceInstanceForm and a nested DictListField WHEN in EDIT mode, ne
   expect(nestedTextFields[1]).toBeEnabled();
 });
 
-test("GIVEN ServiceInstanceForm WHEN Deleting an item that isn't the last index, removes the correct item", async() => {
+test("GIVEN ServiceInstanceForm WHEN Deleting an item that isn't the last index, removes the correct item", async () => {
   const dictListField = Test.Field.dictList([{ ...Test.Field.text, name: "flat_field" }]);
   const fields = [dictListField];
   const originalAttributes = {
@@ -600,7 +600,7 @@ test("GIVEN ServiceInstanceForm WHEN Deleting an item that isn't the last index,
   expect(updatedTextBoxes[1]).toHaveValue("flat_field_text_3");
 });
 
-test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is executed with formState", async() => {
+test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is executed with formState", async () => {
   const nestedField = Test.Field.nested([{ ...Test.Field.text, name: "flat_field_text_2" }]);
   const dictListField = Test.Field.dictList([{ ...Test.Field.text, name: "flat_field_text_3" }]);
   const fields = [Test.Field.text, Test.Field.bool, nestedField, dictListField];
@@ -666,7 +666,7 @@ test.each`
   ${Test.Field.text}     | ${"TextInput-text_field"}         | ${"new text"}
 `(
   "Given ServiceInstanceForm and InputField WHEN updating the input THEN current value is correctly displayed",
-  async({ input, label, newValue }) => {
+  async ({ input, label, newValue }) => {
     const { component } = setup([input], undefined, false, undefined);
 
     render(component);
@@ -685,7 +685,7 @@ test.each`
   ${Test.Field.text}     | ${"TextInput-text_field"}         | ${"test text"} | ${"new text"}
 `(
   "Given ServiceInstanceForm and InputField WHEN updating the input THEN current value is correctly displayed",
-  async({ input, label, value, newValue }) => {
+  async ({ input, label, value, newValue }) => {
     const originalAttributes = {
       [input.name]: value,
     };

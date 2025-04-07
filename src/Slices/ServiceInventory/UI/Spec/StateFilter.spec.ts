@@ -3,7 +3,7 @@ import { userEvent } from "@testing-library/user-event";
 import { ServiceInventoryPrepper } from "./ServiceInventoryPrepper";
 import { filterServer } from "./serverSetup";
 
-test("GIVEN The Service Inventory WHEN the user filters on state ('creating') THEN only that type of instance is fetched and shown", async() => {
+test("GIVEN The Service Inventory WHEN the user filters on state ('creating') THEN only that type of instance is fetched and shown", async () => {
   filterServer.listen();
   const { component } = new ServiceInventoryPrepper().prep();
 

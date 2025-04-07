@@ -128,7 +128,7 @@ describe("EntityForm.", () => {
     expect(screen.getByRole("button", { name: "Remove" })).toBeDisabled();
   });
 
-  it("when Remove is clicked then onRemove is being called", async() => {
+  it("when Remove is clicked then onRemove is being called", async () => {
     const showButtons = true;
     const isRemovable = true;
     const isDisabled = false;
@@ -171,7 +171,7 @@ describe("EntityForm.", () => {
     expect(screen.queryByText("Cancel")).toBeNull();
   });
 
-  it("when form state will get updated cancel button will change state form disabled to enabled and when clicked then form is being cleared to initial state and cancel button will be back disabled", async() => {
+  it("when form state will get updated cancel button will change state form disabled to enabled and when clicked then form is being cleared to initial state and cancel button will be back disabled", async () => {
     const showButtons = true;
     const isRemovable = false;
     const isDisabled = false;

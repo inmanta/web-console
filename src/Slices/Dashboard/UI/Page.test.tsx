@@ -53,7 +53,7 @@ function setup() {
   return { component, apiHelper };
 }
 
-test("Home view shows failed table", async() => {
+test("Home view shows failed table", async () => {
   const { component, apiHelper } = setup();
 
   render(component);
@@ -64,14 +64,14 @@ test("Home view shows failed table", async() => {
 
   expect(await screen.findByRole("region", { name: "Dashboard-Failed" })).toBeInTheDocument();
 
-  await act(async() => {
+  await act(async () => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("Home View shows success table", async() => {
+test("Home View shows success table", async () => {
   const { component, apiHelper } = setup();
 
   render(component);
@@ -87,7 +87,7 @@ test("Home View shows success table", async() => {
     await screen.findByText(words("dashboard.title")(EnvironmentDetails.a.name))
   ).toBeInTheDocument();
 
-  await act(async() => {
+  await act(async () => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();

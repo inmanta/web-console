@@ -78,7 +78,7 @@ function setup() {
 }
 
 describe("DeleteModal ", () => {
-  it("Shows form when clicking on modal button", async() => {
+  it("Shows form when clicking on modal button", async () => {
     const { component } = setup();
 
     render(component());
@@ -90,7 +90,7 @@ describe("DeleteModal ", () => {
     expect(await screen.findByText(words("no"))).toBeVisible();
   });
 
-  it("Closes modal when cancelled", async() => {
+  it("Closes modal when cancelled", async () => {
     const { component } = setup();
 
     render(component());
@@ -106,7 +106,7 @@ describe("DeleteModal ", () => {
     expect(screen.queryByText(words("yes"))).not.toBeInTheDocument();
   });
 
-  it("Sends request when submitted", async() => {
+  it("Sends request when submitted", async () => {
     const { component } = setup();
 
     render(component());
@@ -123,11 +123,11 @@ describe("DeleteModal ", () => {
     expect(mockedMutate).toHaveBeenCalled();
   });
 
-  it("Takes environment halted status in account", async() => {
+  it("Takes environment halted status in account", async () => {
     const { component, storeInstance } = setup();
     const { rerender } = render(component(true));
 
-    await act(async() => {
+    await act(async () => {
       storeInstance.dispatch.environment.setEnvironmentDetailsById({
         id: ServiceInstance.a.environment,
         value: RemoteData.success({ halted: true } as EnvironmentDetails),

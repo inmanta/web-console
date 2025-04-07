@@ -18,7 +18,7 @@ export const TriggerDryRunAction: React.FC<Props> = ({ version, updateList }) =>
     version,
   });
 
-  const onTrigger = async() => {
+  const onTrigger = async () => {
     const error = await trigger();
 
     if (Maybe.isSome(error)) {

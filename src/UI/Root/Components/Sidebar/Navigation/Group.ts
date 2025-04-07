@@ -77,15 +77,15 @@ export const lifecycleServiceManager = (
     },
     ...(featureManager.isOrderViewEnabled()
       ? [
-        {
-          id: "Orders",
-          label: routeManager.getRoute("Orders").generateLabel(undefined),
-          url: routeManager.getRoute("Orders").path,
-          external: false,
-          locked: !isEnvPresent,
-          statusIndication: false,
-        },
-      ]
+          {
+            id: "Orders",
+            label: routeManager.getRoute("Orders").generateLabel(undefined),
+            url: routeManager.getRoute("Orders").path,
+            external: false,
+            locked: !isEnvPresent,
+            statusIndication: false,
+          },
+        ]
       : []),
   ],
 });
@@ -154,15 +154,15 @@ export const resourceManager = (
     },
     ...(featureManager.isResourceDiscoveryEnabled()
       ? [
-        {
-          id: "Discovered Resources",
-          label: routeManager.getRoute("DiscoveredResources").generateLabel(undefined),
-          url: routeManager.getRoute("DiscoveredResources").path,
-          external: false,
-          locked: !isEnvPresent,
-          statusIndication: false,
-        },
-      ]
+          {
+            id: "Discovered Resources",
+            label: routeManager.getRoute("DiscoveredResources").generateLabel(undefined),
+            url: routeManager.getRoute("DiscoveredResources").path,
+            external: false,
+            locked: !isEnvPresent,
+            statusIndication: false,
+          },
+        ]
       : []),
     {
       id: "Agents",

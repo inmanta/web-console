@@ -10,9 +10,9 @@ export function getUrl(params: CompileReportsParams, timezone = moment.tz.guess(
   const serializedFilters =
     filter && Object.keys(filter).length > 0
       ? `&${qs.stringify(
-        { filter: filterToParam(filter, timezone) },
-        { allowDots: true, arrayFormat: "repeat" }
-      )}`
+          { filter: filterToParam(filter, timezone) },
+          { allowDots: true, arrayFormat: "repeat" }
+        )}`
       : "";
   const filterParam = serializedFilters.length > 1 ? serializedFilters : "";
   const sortParam = sort ? `&sort=${sort.name}.${sort.order}` : "";

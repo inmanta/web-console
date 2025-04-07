@@ -62,12 +62,12 @@ const setup = () => {
   );
 };
 const server = setupServer(
-  http.get("/lsm/v1/service_catalog", async() => {
+  http.get("/lsm/v1/service_catalog", async () => {
     return HttpResponse.json({
       data: [parentModel, childModel, containerModel],
     });
   }),
-  http.get("/lsm/v1/service_inventory/parent-service", async() => {
+  http.get("/lsm/v1/service_inventory/parent-service", async () => {
     return HttpResponse.json({
       data: [],
     });
@@ -86,9 +86,9 @@ describe("ComposerCreatorProvider", () => {
     server.close();
   });
 
-  it("if there is error when fetching service models the error view is shown", async() => {
+  it("if there is error when fetching service models the error view is shown", async () => {
     server.use(
-      http.get("/lsm/v1/service_catalog", async() => {
+      http.get("/lsm/v1/service_catalog", async () => {
         return HttpResponse.json({ message: "Something went wrong" }, { status: 400 });
       })
     );
@@ -111,10 +111,10 @@ describe("ComposerCreatorProvider", () => {
     expect(await screen.findByText("Something went wrong")).toBeInTheDocument();
   });
 
-  it("if there is error when related inventories the error view is shown", async() => {
+  it("if there is error when related inventories the error view is shown", async () => {
     render(setup());
     server.use(
-      http.get("/lsm/v1/service_inventory/parent-service", async() => {
+      http.get("/lsm/v1/service_inventory/parent-service", async () => {
         return HttpResponse.json({ message: "Something went wrong" }, { status: 400 });
       })
     );
@@ -135,9 +135,9 @@ describe("ComposerCreatorProvider", () => {
     expect(await screen.findByText("Something went wrong")).toBeInTheDocument();
   });
 
-  it("if there is error no main service model the error view is shown", async() => {
+  it("if there is error no main service model the error view is shown", async () => {
     server.use(
-      http.get("/lsm/v1/service_catalog", async() => {
+      http.get("/lsm/v1/service_catalog", async () => {
         return HttpResponse.json({
           data: [parentModel, containerModel],
         });
@@ -165,7 +165,7 @@ describe("ComposerCreatorProvider", () => {
     ).toBeInTheDocument();
   });
 
-  it("navigating out of the View works correctly", async() => {
+  it("navigating out of the View works correctly", async () => {
     render(setup());
     expect(window.location.pathname).toEqual("/");
 

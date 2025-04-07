@@ -15,7 +15,7 @@ export const FileEntry: React.FC<EntryInfo> = ({ title, fromValue, toValue }) =>
     RemoteData.notAsked()
   );
 
-  const onShow = async() => {
+  const onShow = async () => {
     setFiles(RemoteData.loading());
     const [from, to] = await Promise.all([
       fromValue.length > 0 ? fileFetcher.get(fromValue) : Promise.resolve(Either.right("")),

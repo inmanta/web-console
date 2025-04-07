@@ -6,7 +6,7 @@ export class DeleteEnvironmentCommandManager extends CommandManagerWithoutEnv<"D
     private readonly apiHelper: ApiHelper,
     private readonly updater: Updater<"GetEnvironments">
   ) {
-    super("DeleteEnvironment", ({ id }) => async() => {
+    super("DeleteEnvironment", ({ id }) => async () => {
       const error = await this.apiHelper.delete(`/api/v2/environment/${id}`, id);
 
       if (Maybe.isSome(error)) return error;

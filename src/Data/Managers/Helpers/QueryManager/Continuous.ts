@@ -40,7 +40,7 @@ export function Continuous<Kind extends Query.Kind>(
     }, getDependencies(query));
 
     const task = {
-      effect: async() => RemoteData.fromEither(await apiHelper.getWithoutEnvironment(url)),
+      effect: async () => RemoteData.fromEither(await apiHelper.getWithoutEnvironment(url)),
       update: (data) => stateHelper.set(data, query),
     };
 

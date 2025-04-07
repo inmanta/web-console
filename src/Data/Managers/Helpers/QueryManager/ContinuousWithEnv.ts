@@ -56,7 +56,7 @@ export function ContinuousWithEnv<Kind extends Query.Kind>(
     );
 
     const task = {
-      effect: async() => RemoteData.fromEither(await apiHelper.get(url, environment)),
+      effect: async () => RemoteData.fromEither(await apiHelper.get(url, environment)),
       update: (data) => stateHelper.set(data, query, environment),
     };
 

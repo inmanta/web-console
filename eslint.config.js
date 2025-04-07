@@ -111,36 +111,6 @@ export default [
         },
       ],
 
-      "@stylistic/padding-line-between-statements": [
-        "error",
-        {
-          blankLine: "always",
-          prev: "*",
-          next: [
-            "enum",
-            "interface",
-            "type",
-            "return",
-            "function",
-            "class",
-            "if",
-            "for",
-            "while",
-            "do",
-            "switch",
-            "try",
-          ],
-        },
-        { blankLine: "always", prev: ["const", "let", "var"], next: "*" },
-        {
-          blankLine: "any",
-          prev: ["const", "let", "var"],
-          next: ["const", "let", "var"],
-        },
-        { blankLine: "always", prev: ["if", "for", "while", "do", "switch", "try"], next: "*" },
-        { blankLine: "always", prev: "*", next: ["if", "for", "while", "do", "switch", "try"] },
-      ],
-
       "@stylistic/lines-around-comment": [
         "error",
         {
@@ -155,14 +125,11 @@ export default [
         },
       ],
 
-      "@stylistic/indent": ["error", 2],
       "@stylistic/semi": ["warn", "always"],
       "@stylistic/quotes": ["warn", "double", { avoidEscape: true }],
       "@stylistic/space-before-blocks": ["warn", "always"],
-      "@stylistic/space-before-function-paren": ["warn", "never"],
       "@stylistic/space-infix-ops": "warn",
       "@stylistic/keyword-spacing": "warn",
-      "@stylistic/brace-style": ["warn", "1tbs", { allowSingleLine: true }],
       "@stylistic/comma-spacing": "warn",
       "@stylistic/func-call-spacing": "warn",
     },

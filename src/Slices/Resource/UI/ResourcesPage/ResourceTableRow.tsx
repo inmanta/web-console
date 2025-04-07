@@ -28,10 +28,10 @@ export const ResourceTableRow: React.FC<Props> = ({
         expand={
           row.numberOfDependencies > 0
             ? {
-              rowIndex: index,
-              isExpanded: isExpanded,
-              onToggle: onToggle,
-            }
+                rowIndex: index,
+                isExpanded: isExpanded,
+                onToggle: onToggle,
+              }
             : undefined
         }
       ></Td>

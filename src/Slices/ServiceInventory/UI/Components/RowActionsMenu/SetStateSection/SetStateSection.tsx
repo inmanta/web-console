@@ -63,7 +63,7 @@ export const SetStateSection: React.FC<Props> = ({
      *
      * @returns {Promise<void>} A Promise that resolves when the operation is complete.
      */
-    const onSubmit = async() => {
+    const onSubmit = async () => {
       closeModal();
 
       const username = authHelper.getUser();

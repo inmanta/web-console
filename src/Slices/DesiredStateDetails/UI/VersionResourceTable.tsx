@@ -31,15 +31,15 @@ export const VersionResourceTable: React.FC<Props> = ({
     const hasSort = tablePresenter.getSortableColumnNames().includes(apiName);
     const sortParams = hasSort
       ? {
-        sort: {
-          sortBy: {
-            index: activeSortIndex,
-            direction: sort.order,
+          sort: {
+            sortBy: {
+              index: activeSortIndex,
+              direction: sort.order,
+            },
+            onSort,
+            columnIndex,
           },
-          onSort,
-          columnIndex,
-        },
-      }
+        }
       : {};
 
     return (

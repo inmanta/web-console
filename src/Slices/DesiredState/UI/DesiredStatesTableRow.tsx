@@ -28,10 +28,10 @@ export const DesiredStatesTableRow: React.FC<Props> = ({ row }) => (
       <Td dataLabel={words("desiredState.columns.labels")} width={20}>
         {row.labels && row.labels.length > 0
           ? row.labels.map(({ name, message }, idx) => (
-            <Tooltip entryDelay={200} content={message} key={`${idx}-${name}`}>
-              <span>{name}</span>
-            </Tooltip>
-          ))
+              <Tooltip entryDelay={200} content={message} key={`${idx}-${name}`}>
+                <span>{name}</span>
+              </Tooltip>
+            ))
           : null}
       </Td>
       <Td>

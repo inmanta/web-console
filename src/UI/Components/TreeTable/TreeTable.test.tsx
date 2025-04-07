@@ -39,7 +39,7 @@ function inventorySetup(
 
   return component;
 }
-test("TreeTable 1st level of nested property can be expanded", async() => {
+test("TreeTable 1st level of nested property can be expanded", async () => {
   // Arrange
   render(
     inventorySetup({
@@ -57,7 +57,7 @@ test("TreeTable 1st level of nested property can be expanded", async() => {
   expect(screen.getByRole("row", { name: "Row-a$b" })).toBeVisible();
 });
 
-test("TreeTable with 1st level of attributes containing annotations should not render a value but be a link to the right tab.", async() => {
+test("TreeTable with 1st level of attributes containing annotations should not render a value but be a link to the right tab.", async () => {
   const serviceModel: ServiceModel = {
     name: "service",
     environment: "env",
@@ -120,7 +120,7 @@ test("TreeTable with 1st level of attributes containing annotations should not r
   expect(setTab).toHaveBeenCalled();
 });
 
-test("TreeTable 2nd level of nested property can be expanded", async() => {
+test("TreeTable 2nd level of nested property can be expanded", async () => {
   // Arrange
   render(
     inventorySetup({
@@ -163,7 +163,7 @@ function catalogSetup(service: EntityLike) {
 
   return component;
 }
-test("TreeTable with catalog entries can be expanded", async() => {
+test("TreeTable with catalog entries can be expanded", async () => {
   const service = {
     attributes: [],
     embedded_entities: [
@@ -193,7 +193,7 @@ test("TreeTable with catalog entries can be expanded", async() => {
   expect(screen.getByRole("row", { name: "Row-a$c$d" })).toBeVisible();
 });
 
-test("TreeTable with catalog entries all can be expanded at once", async() => {
+test("TreeTable with catalog entries all can be expanded at once", async () => {
   const service = {
     attributes: [],
     embedded_entities: [

@@ -58,7 +58,7 @@ describe("ServiceCatalog", () => {
     server.close();
   });
 
-  test("GIVEN ServiceCatalog WHEN click on config tab THEN shows config tab", async() => {
+  test("GIVEN ServiceCatalog WHEN click on config tab THEN shows config tab", async () => {
     const { component } = setup();
 
     render(component);
@@ -70,7 +70,7 @@ describe("ServiceCatalog", () => {
     expect(screen.getByTestId("ServiceConfig")).toBeVisible();
   });
 
-  test("GIVEN ServiceCatalog WHEN config tab is active THEN shows SettingsList", async() => {
+  test("GIVEN ServiceCatalog WHEN config tab is active THEN shows SettingsList", async () => {
     const { component } = setup();
 
     render(component);
